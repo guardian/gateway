@@ -2,7 +2,8 @@ FROM node:12.13.1-alpine
 
 WORKDIR /app
 COPY package.json yarn.lock ./
-RUN npm install
+RUN yarn
 ADD . .
-
-CMD ["yarn", "run", "build"]
+RUN yarn run build
+ENV PORT 8080
+CMD ["yarn", "start"]
