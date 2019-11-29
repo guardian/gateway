@@ -5,4 +5,4 @@ COPY package.json yarn.lock ./
 RUN npm install
 ADD . .
 
-CMD ["npm", "run", "build"]
+CMD ["yarn", "run", "build"]

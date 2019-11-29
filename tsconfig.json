@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "noUnusedLocals": true,
+    "outDir": "build",
+    "strict": true,
+    "target": "esnext"
+  }
+}
