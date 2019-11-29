@@ -13,8 +13,8 @@ docker build -t profile .
 
 ## Running
 ```
-docker run --rm -it profile
+docker run --rm -it -p 8080:8080 profile
 ```
 
 ## Development
-docker run --rm -it -v $(pwd):/app profile /bin/sh
+docker run --rm -it -p 8080:8080 -v $(pwd):/app profile /bin/sh
