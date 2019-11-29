@@ -1,5 +1,8 @@
 # Profile
 
+## Requirements
+* Docker
+
 ## Description
 profile.theguardian.com
 
@@ -12,3 +15,6 @@ docker build -t profile .
 ```
 docker run --rm -it profile
 ```
+
+## Development
+docker run --rm -it -v $(pwd):/app profile /bin/sh

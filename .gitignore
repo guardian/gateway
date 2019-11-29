@@ -1,5 +1,8 @@
 # From https://github.com/github/gitignore
 
+# Project
+build
+
 # Logs
 logs
 *.log
