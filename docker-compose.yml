@@ -1,0 +1,9 @@
+version: '3'
+services:
+  profile:
+    build: .
+    ports: 
+      - "8080:8080"
+    volumes:
+      - .:/app/
+    command: yarn start
