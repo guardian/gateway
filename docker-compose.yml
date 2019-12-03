@@ -1,9 +1,11 @@
-version: '3'
+version: '3.7'
 services:
   profile:
-    build: .
+    build:
+      context: .
+      target: base
     ports: 
       - "8080:8080"
     volumes:
       - .:/app/
-    command: yarn start
+    command: sh -c "yarn --audit && yarn build && yarn start"
