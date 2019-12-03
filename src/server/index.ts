@@ -1,7 +1,10 @@
 import { default as express, Express, Response } from 'express';
+import path from "path";
 
 const { PORT } = process.env;
 const server: Express = express();
+
+server.use('/static', express.static(path.resolve(__dirname, 'static')));
 
 server.use((_, res: Response) => {
   const html = `
@@ -12,8 +15,9 @@ server.use((_, res: Response) => {
       <meta charset='utf-8' />
     </head>
     <body>
-      <h1>Profile App</h1>
+      <div id="app"></div>
     </body>
+    <script src="/static/bundle.js"></script>
   </html>`;
   res.type('html');
   res.send(html);

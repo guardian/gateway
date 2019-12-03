@@ -1,6 +1,6 @@
 const path = require('path');
 
-module.exports = {
+const server = {
   entry: './src/server/index.ts',
   module: {
     rules: [
@@ -16,6 +16,10 @@ module.exports = {
       }
     ]
   },
+  node: {
+    __dirname: false,
+    __filename: false
+  },
   output: {
     filename: 'server.js',
     path: path.resolve(__dirname, 'build')
@@ -25,3 +29,34 @@ module.exports = {
   },
   target: 'node'
 };
+
+const client = {
+  entry: './src/client/index.tsx',
+  module: {
+    rules: [
+      {
+        test: /\.ts(x?)/,
+        use: [{
+          loader: 'ts-loader',
+          options: {
+            onlyCompileBundledFiles: true
+          }
+        }],
+        exclude: /node_modules/
+      }
+    ],
+  },
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'build/static/')
+  },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js']
+  },
+  target: 'web'
+};
+
+module.exports = [
+  client,
+  server
+];
