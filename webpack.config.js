@@ -1,18 +1,23 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/index.ts',
+  entry: './src/server/index.ts',
   module: {
     rules: [
       {
         test: /\.ts$/,
-        use: 'ts-loader',
+        use: [{
+          loader: 'ts-loader',
+          options: {
+            onlyCompileBundledFiles: true
+          }
+        }],
         exclude: /node_modules/
       }
     ]
   },
   output: {
-    filename: 'bundle.js',
+    filename: 'server.js',
     path: path.resolve(__dirname, 'build')
   },
   resolve: {

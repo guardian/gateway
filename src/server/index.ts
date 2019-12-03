@@ -4,7 +4,19 @@ const { PORT } = process.env;
 const server: Express = express();
 
 server.use((_, res: Response) => {
-  res.json('OK');
+  const html = `
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>Profile</title>
+      <meta charset='utf-8' />
+    </head>
+    <body>
+      <h1>Profile App</h1>
+    </body>
+  </html>`;
+  res.type('html');
+  res.send(html);
 });
 
 server.listen(PORT);
