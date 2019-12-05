@@ -10,5 +10,5 @@ RUN yarn run build
 FROM node:12.13.1-alpine
 WORKDIR /app
 COPY --from=build /app .
-ENV PORT 8080
+ENV PORT=8080
 CMD ["yarn", "start"]
