@@ -6,6 +6,8 @@
   "private": true,
   "scripts": {
     "build": "webpack",
+    "watch:server": "nodemon ./build/server.js",
+    "watch": "webpack --watch",
     "start": "node ./build/server.js"
   },
   "devDependencies": {
@@ -13,6 +15,7 @@
     "@types/node": "^12.12.14",
     "@types/react": "^16.9.13",
     "@types/react-dom": "^16.9.4",
+    "nodemon": "^2.0.1",
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.2",
     "webpack": "^4.41.2",
