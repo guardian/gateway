@@ -1,4 +1,10 @@
 import React, { FC } from "react";
+import { palette } from "@guardian/src-foundations";
+
+const main = {
+  backgroundColor: palette.background.brand.primary,
+  color: palette.text.brand.primary
+};
 
 type MainProps = {
   title: string
@@ -6,8 +12,8 @@ type MainProps = {
 
 export const Main: FC<MainProps> = (props) => {
   return (
-    <main>
-      <h1>{props.title}</h1> 
+    <main css={main}>
+      <h1>{props.title}</h1>
     </main>
   );
 };

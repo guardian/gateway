@@ -1,18 +1,40 @@
 const path = require('path');
 
+const babel = {
+  presets: [
+    "@babel/typescript",
+    "@babel/react"
+  ]
+};
+
+const watchOptions = {
+  ignored: /node_modules/
+};
+
 const server = {
   entry: './src/server/index.ts',
   module: {
     rules: [
       {
+        exclude: /node_modules/,
         test: /\.ts$/,
         use: [{
-          loader: 'ts-loader',
+          loader: 'babel-loader',
           options: {
-            onlyCompileBundledFiles: true
+            presets: [
+              [
+                "@babel/env",
+                {
+                  targets: {
+                    node: true,
+                  },
+                  ignoreBrowserslistConfig: true
+                }
+              ],
+              ...babel.presets
+            ]
           }
-        }],
-        exclude: /node_modules/
+        }]
       }
     ]
   },
@@ -27,7 +49,8 @@ const server = {
   resolve: {
     extensions: ['.ts', '.js']
   },
-  target: 'node'
+  target: 'node',
+  watchOptions
 };
 
 const client = {
@@ -35,14 +58,18 @@ const client = {
   module: {
     rules: [
       {
+        exclude: /node_modules/,
         test: /\.ts(x?)/,
         use: [{
-          loader: 'ts-loader',
+          loader: 'babel-loader',
           options: {
-            onlyCompileBundledFiles: true
+            presets: [
+              "@babel/env",
+              ...babel.presets,
+              "@emotion/babel-preset-css-prop",
+            ]
           }
         }],
-        exclude: /node_modules/
       }
     ],
   },
@@ -53,7 +80,8 @@ const client = {
   resolve: {
     extensions: ['.ts', '.tsx', '.js']
   },
-  target: 'web'
+  target: 'web',
+  watchOptions
 };
 
 module.exports = [
