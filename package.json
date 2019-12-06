@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@emotion/core": "^10.0.22",
+    "@guardian/src-button": "^0.4.1",
     "@guardian/src-foundations": "^0.8.0",
     "express": "^4.17.1",
     "react": "^16.12.0",

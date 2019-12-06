@@ -11,10 +11,11 @@ server.use((_, res: Response) => {
   <!DOCTYPE html>
   <html>
     <head>
-      <title>Profile</title>
       <meta charset='utf-8' />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Profile</title>
     </head>
-    <body>
+    <body style="margin:0">
       <div id="app"></div>
     </body>
     <script src="/static/bundle.js"></script>
