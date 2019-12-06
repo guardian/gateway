@@ -1,7 +1,7 @@
 # Profile
 
 ## Description
-profile.theguardian.com - PROTOTYPE
+profile.theguardian.com - PROTOTYPE. Note: all choices made in this project are subject to change ... including the project name!
 
 ## Requirements
 * [Docker]("https://www.docker.com/")
