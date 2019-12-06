@@ -1,5 +1,7 @@
 const path = require('path');
 
+const mode = process.env.ENVIRONMENT === 'production' ? 'production' : 'development';
+
 const babel = {
   presets: [
     "@babel/typescript",
@@ -13,6 +15,7 @@ const watchOptions = {
 
 const server = {
   entry: './src/server/index.ts',
+  mode,
   module: {
     rules: [
       {
@@ -55,6 +58,7 @@ const server = {
 
 const client = {
   entry: './src/client/index.tsx',
+  mode,
   module: {
     rules: [
       {
