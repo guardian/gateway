@@ -6,6 +6,8 @@
   "private": true,
   "scripts": {
     "build": "webpack",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "yarn lint --fix",
     "watch:server": "nodemon ./build/server.js",
     "watch": "webpack --watch",
     "start": "node ./build/server.js"
@@ -20,7 +22,11 @@
     "@types/node": "^12.12.14",
     "@types/react": "^16.9.13",
     "@types/react-dom": "^16.9.4",
+    "@typescript-eslint/eslint-plugin": "^2.10.0",
+    "@typescript-eslint/parser": "^2.10.0",
     "babel-loader": "^8.0.6",
+    "eslint": "^6.7.2",
+    "eslint-plugin-react": "^7.17.0",
     "nodemon": "^2.0.1",
     "typescript": "^3.7.2",
     "webpack": "^4.41.2",

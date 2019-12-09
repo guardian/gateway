@@ -16,7 +16,7 @@ const h2 = css`
 `
 
 type MainProps = {
-  title: string
+  title: string;
 };
 
 export const Main: FC<MainProps> = (props) => {
