@@ -1,4 +1,7 @@
 import { default as express, Express, Response } from "express";
+import ReactDOMServer from "react-dom/server";
+import React from "react";
+import { Main } from "../client/main";
 import path from "path";
 
 const { PORT } = process.env;
@@ -7,6 +10,7 @@ const server: Express = express();
 server.use("/static", express.static(path.resolve(__dirname, "static")));
 
 server.use((_, res: Response) => {
+  const react = ReactDOMServer.renderToString(React.createElement(Main));
   const html = `
   <!DOCTYPE html>
   <html>
@@ -16,7 +20,7 @@ server.use((_, res: Response) => {
       <title>Profile</title>
     </head>
     <body style="margin:0">
-      <div id="app"></div>
+      <div id="app">${react}</div>
     </body>
     <script src="/static/bundle.js"></script>
   </html>`;

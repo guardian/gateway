@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 import { css, Global } from "@emotion/core";
 import { palette } from "@guardian/src-foundations";
 import {
@@ -19,11 +19,7 @@ const h2 = css`
   ${headline.medium()}
 `;
 
-type MainProps = {
-  title: string;
-};
-
-export const Main: FC<MainProps> = props => {
+export const Main = () => {
   return (
     <main>
       <Global
@@ -34,7 +30,7 @@ export const Main: FC<MainProps> = props => {
           }
         `}
       />
-      <h1 css={h1}>{props.title}</h1>
+      <h1 css={h1}>Profile</h1>
       <h2 css={h2}>Prototype application</h2>
       <p>A skeleton app for development into a new profile application</p>
       <Button onClick={() => console.log("Button event fired")}>

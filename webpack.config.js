@@ -5,7 +5,8 @@ const mode = process.env.ENVIRONMENT === 'production' ? 'production' : 'developm
 const babel = {
   presets: [
     "@babel/typescript",
-    "@babel/react"
+    "@babel/react",
+    "@emotion/babel-preset-css-prop"
   ]
 };
 
@@ -20,7 +21,7 @@ const server = {
     rules: [
       {
         exclude: /node_modules/,
-        test: /\.ts$/,
+        test: /\.ts(x?)$/,
         use: [{
           loader: 'babel-loader',
           options: {
@@ -50,7 +51,7 @@ const server = {
     path: path.resolve(__dirname, 'build')
   },
   resolve: {
-    extensions: ['.ts', '.js']
+    extensions: ['.ts', '.tsx', '.js']
   },
   target: 'node',
   watchOptions
@@ -69,8 +70,7 @@ const client = {
           options: {
             presets: [
               "@babel/env",
-              ...babel.presets,
-              "@emotion/babel-preset-css-prop",
+              ...babel.presets
             ]
           }
         }],
