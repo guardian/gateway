@@ -1,10 +1,10 @@
-import { default as express, Express, Response } from 'express';
+import { default as express, Express, Response } from "express";
 import path from "path";
 
 const { PORT } = process.env;
 const server: Express = express();
 
-server.use('/static', express.static(path.resolve(__dirname, 'static')));
+server.use("/static", express.static(path.resolve(__dirname, "static")));
 
 server.use((_, res: Response) => {
   const html = `
@@ -20,7 +20,7 @@ server.use((_, res: Response) => {
     </body>
     <script src="/static/bundle.js"></script>
   </html>`;
-  res.type('html');
+  res.type("html");
   res.send(html);
 });
 

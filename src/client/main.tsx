@@ -1,7 +1,11 @@
 import React, { FC } from "react";
 import { css, Global } from "@emotion/core";
 import { palette } from "@guardian/src-foundations";
-import { titlepiece, headline, body } from "@guardian/src-foundations/typography";
+import {
+  titlepiece,
+  headline,
+  body
+} from "@guardian/src-foundations/typography";
 import { Button } from "@guardian/src-button";
 
 const h1 = css`
@@ -12,28 +16,30 @@ const h1 = css`
 `;
 
 const h2 = css`
- ${headline.medium()}
-`
+  ${headline.medium()}
+`;
 
 type MainProps = {
   title: string;
 };
 
-export const Main: FC<MainProps> = (props) => {
+export const Main: FC<MainProps> = props => {
   return (
     <main>
-      <Global styles={css`
-        html, body {
-          ${body.medium()}
-        }
-      `} />
+      <Global
+        styles={css`
+          html,
+          body {
+            ${body.medium()}
+          }
+        `}
+      />
       <h1 css={h1}>{props.title}</h1>
       <h2 css={h2}>Prototype application</h2>
       <p>A skeleton app for development into a new profile application</p>
-      <Button onClick={() => console.log("Button event fired")} >
+      <Button onClick={() => console.log("Button event fired")}>
         Test Button
       </Button>
     </main>
   );
 };
-
