@@ -10,6 +10,8 @@ const babel = {
   ]
 };
 
+const extensions = ['.ts', '.tsx', '.js'];
+
 const watchOptions = {
   ignored: /node_modules/
 };
@@ -51,7 +53,7 @@ const server = {
     path: path.resolve(__dirname, 'build')
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js']
+    extensions
   },
   target: 'node',
   watchOptions
@@ -82,7 +84,7 @@ const client = {
     path: path.resolve(__dirname, 'build/static/')
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js']
+    extensions
   },
   target: 'web',
   watchOptions
