@@ -3,4 +3,4 @@ import * as ReactDOM from "react-dom";
 
 import { Main } from "./main";
 
-ReactDOM.render(<Main title="Gateway" />, document.getElementById("app"));
+ReactDOM.hydrate(<Main />, document.getElementById("app"));

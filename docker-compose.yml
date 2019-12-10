@@ -4,7 +4,7 @@ services:
     build:
       context: .
       target: base
-    command: sh -c "yarn --audit && yarn build && (yarn watch:server & yarn watch & wait)"
+    command: sh -c "yarn && yarn build && (yarn watch:server & yarn watch & wait)"
     environment:
       - PORT=8080
       - ENVIRONMENT=development
