@@ -30,9 +30,9 @@ export const Main = () => {
           }
         `}
       />
-      <h1 css={h1}>Profile</h1>
+      <h1 css={h1}>Gateway</h1>
       <h2 css={h2}>Prototype application</h2>
-      <p>A skeleton app for development into a new profile application</p>
+      <p>A skeleton app for development into a new gateway application</p>
       <Button onClick={() => console.log("Button event fired")}>
         Test Button
       </Button>
