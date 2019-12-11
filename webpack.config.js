@@ -1,6 +1,7 @@
-const path = require('path');
+const path = require("path");
+const nodeExternals = require("webpack-node-externals");
 
-const mode = process.env.ENVIRONMENT === 'production' ? 'production' : 'development';
+const mode = process.env.ENVIRONMENT === "production" ? "production" : "development";
 
 const babel = {
   presets: [
@@ -10,14 +11,15 @@ const babel = {
   ]
 };
 
-const extensions = ['.ts', '.tsx', '.js'];
+const extensions = [".ts", ".tsx", ".js"];
 
 const watchOptions = {
   ignored: /node_modules/
 };
 
 const server = {
-  entry: './src/server/index.ts',
+  entry: "./src/server/index.ts",
+  externals: nodeExternals(),
   mode,
   module: {
     rules: [
@@ -25,7 +27,7 @@ const server = {
         exclude: /node_modules/,
         test: /\.ts(x?)$/,
         use: [{
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
             presets: [
               [
@@ -49,18 +51,18 @@ const server = {
     __filename: false
   },
   output: {
-    filename: 'server.js',
-    path: path.resolve(__dirname, 'build')
+    filename: "server.js",
+    path: path.resolve(__dirname, "build")
   },
   resolve: {
     extensions
   },
-  target: 'node',
+  target: "node",
   watchOptions
 };
 
 const client = {
-  entry: './src/client/index.tsx',
+  entry: "./src/client/index.tsx",
   mode,
   module: {
     rules: [
@@ -68,7 +70,7 @@ const client = {
         exclude: /node_modules/,
         test: /\.ts(x?)/,
         use: [{
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
             presets: [
               "@babel/env",
@@ -80,13 +82,13 @@ const client = {
     ],
   },
   output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'build/static/')
+    filename: "bundle.js",
+    path: path.resolve(__dirname, "build/static/")
   },
   resolve: {
     extensions
   },
-  target: 'web',
+  target: "web",
   watchOptions
 };
 

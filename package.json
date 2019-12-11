@@ -41,6 +41,7 @@
     "@guardian/src-foundations": "^0.8.0",
     "express": "^4.17.1",
     "react": "^16.12.0",
-    "react-dom": "^16.12.0"
+    "react-dom": "^16.12.0",
+    "webpack-node-externals": "^1.7.2"
   }
 }
