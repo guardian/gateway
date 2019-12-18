@@ -8,10 +8,11 @@
     "build": "webpack",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "yarn lint --fix",
-    "watch:server": "nodemon ./build/server.js",
-    "watch": "webpack --watch",
+    "riffraff": "npx @guardian/node-riffraff-artifact",
     "start": "node ./build/server.js",
-    "test": "jest"
+    "test": "jest",
+    "watch:server": "nodemon ./build/server.js",
+    "watch": "webpack --watch"
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",

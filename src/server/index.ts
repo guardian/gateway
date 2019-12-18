@@ -8,7 +8,9 @@ const { PORT } = process.env;
 const server: Express = express();
 
 server.use("/static", express.static(path.resolve(__dirname, "static")));
-
+server.get("/healthcheck", (_, res: Response) => {
+  res.sendStatus(204);
+});
 server.use((_, res: Response) => {
   const react = ReactDOMServer.renderToString(React.createElement(Main));
   const html = `
