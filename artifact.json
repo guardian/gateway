@@ -11,5 +11,6 @@
       "action": "gateway-app-cf",
       "path": "cloudformation.yaml",
       "compress": false
+    }
   ]
 }
