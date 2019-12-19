@@ -1,0 +1,17 @@
+stacks:
+  - identity
+regions:
+  - eu-west-1
+deployments:
+  gateway-cloudformation:
+    type: cloud-formation
+    parameters:
+      amiTags:
+        Recipe: gateway
+        AmigoStage: PROD
+      template-path: cloudformation.yaml
+  gateway-app:
+    type: autoscaling
+    dependencies:
+      - gateway-cloudformation
+
