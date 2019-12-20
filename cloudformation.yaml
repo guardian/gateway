@@ -3,8 +3,12 @@ Description: gateway
 Parameters:
   AMI:
     Description: AMI to use in the autoscaling group
-    Type: String
     Default: ami-05a8d665c3c0cbb0a
+    Type: String
+  App:
+    Description: Application name
+    Default: gateway
+    Type: String
   BastionSecurityGroup:
     Description: Bastion security group for SSH
     Type: String
@@ -18,6 +22,12 @@ Parameters:
     Description: tag
     Default: identity
     Type: String
+  Stage:
+    Description: Deployment enviroment
+    Default: CODE
+    Type: String
+    AllowedValues:
+      - CODE
   VpcId:
     Description: VPC id of VPC for this service to use
     Type: String
@@ -49,6 +59,16 @@ Resources:
       MaxSize: 2
       TargetGroupARNS: !Ref TargetGroup
       VPCZoneIdentifier: !Ref PrivateVpcSubnets
+      Tags:
+        - Key: App
+          Value: !Ref App
+          PropagateAtLaunch: true
+        - Key: Stack
+          Value: !Ref Stack
+          PropagateAtLaunch: true
+        - Key: Stage
+          Value: !Ref Stage
+          PropagateAtLaunch: true
   LaunchConfig:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
@@ -85,10 +105,17 @@ Resources:
   LoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Name: identity-gateway-CODE
+      Name: !Sub '${Stack}-${App}-${Stage}'
       Subnets: !Ref PublicVpcSubnets
       SecurityGroups:
         - !Ref LoadBalancerSecurityGroup
+      Tags:
+        - Key: App
+          Value: !Ref App
+        - Key: Stack
+          Value: !Ref Stack
+        - Key: Stage
+          Value: !Ref Stage
   LoadBalancerListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
@@ -120,7 +147,7 @@ Resources:
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: identity-gateway-CODE
+      Name: !Sub '${Stack}-${App}-${Stage}'
       Port: 9233
       Protocol: HTTP
       VpcId:
