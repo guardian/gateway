@@ -9,9 +9,6 @@ Parameters:
     Description: Application name
     Default: gateway
     Type: String
-  BastionSecurityGroup:
-    Description: Bastion security group for SSH
-    Type: String
   PrivateVpcSubnets:
     Description: Private VPC Subnet for the EC2 instances.
     Type: List<AWS::EC2::Subnet::Id>
@@ -89,10 +86,6 @@ Resources:
       GroupDescription: Allow SSH and HTTPS access
       VpcId: !Ref VpcId
       SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 22
-          ToPort: 22
-          SourceSecurityGroupId: !Ref BastionSecurityGroup
         - IpProtocol: tcp
           FromPort: 9233
           ToPort: 9233
