@@ -5,13 +5,17 @@ regions:
 deployments:
   gateway-cloudformation:
     type: cloud-formation
+    app: gateway-app
     parameters:
       amiTags:
         Recipe: gateway
         AmigoStage: PROD
-      template-path: cloudformation.yaml
+      templatePath: cloudformation.yaml
+      amiEncrypted: true
   gateway-app:
     type: autoscaling
     dependencies:
       - gateway-cloudformation
+    parameters:
+      bucket: identity-artifacts
 
