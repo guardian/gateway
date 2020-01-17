@@ -1,0 +1,198 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: gateway
+Parameters:
+  AMI:
+    Description: AMI to use in the autoscaling group
+    Default: ami-05a8d665c3c0cbb0a
+    Type: String
+  App:
+    Description: Application name
+    Default: gateway
+    Type: String
+  PrivateVpcSubnets:
+    Description: Private VPC Subnet for the EC2 instances.
+    Type: List<AWS::EC2::Subnet::Id>
+  PublicVpcSubnets:
+    Description: Public VPC Subnet for the ELB
+    Type: List<AWS::EC2::Subnet::Id>
+  Stack:
+    Description: tag
+    Default: identity
+    Type: String
+  Stage:
+    Description: Deployment enviroment
+    Default: CODE
+    Type: String
+    AllowedValues:
+      - CODE
+  VpcId:
+    Description: VPC id of VPC for this service to use
+    Type: String
+
+Resources:
+  AppRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+      ManagedPolicyArns:
+        - !Sub arn:aws:iam::${AWS::AccountId}:policy/guardian-ec2-role-for-ssm
+      Path: "/"
+  AutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      LaunchConfigurationName: !Ref LaunchConfig
+      HealthCheck: ELB
+      HealthCheckGracePeriod: 300
+      MinSize: 1
+      MaxSize: 2
+      TargetGroupARNS: !Ref TargetGroup
+      VPCZoneIdentifier: !Ref PrivateVpcSubnets
+      Tags:
+        - Key: App
+          Value: !Ref App
+          PropagateAtLaunch: true
+        - Key: Stack
+          Value: !Ref Stack
+          PropagateAtLaunch: true
+        - Key: Stage
+          Value: !Ref Stage
+          PropagateAtLaunch: true
+  LaunchConfig:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AssociatedPublicIpAddress: false
+      ImageId: !Ref AMI
+      InstanceProfile: !Ref InstanceProfile
+      InstanceType: t3.small
+      SecurityGroups: !Ref InstanceSecurityGroup
+      UserData:
+        Fn::Base64: !Sub |
+            #!/bin/bash -ev
+
+            # Get Riff Raff deployed artefact S3
+            aws --region ${AWS::Region} s3 cp s3://identity-artifacts/${Stage}-${App}/identity-gateway.tgz /tmp
+            mkdir /etc/gu
+            tar -xvzf /tmp/identity-gateway.tgz --directory /etc/gu/
+
+            # Setup user
+            groupadd identity-gateway
+            useradd -r -s /usr/bin/nologin -g identity-gateway identity-gateway
+
+            # Setup logs
+            touch /var/log/identity-gateway.log
+            chown -R identity-gateway:identity-gateway /etc/gu
+            chown identity-gateway:identity-gateway /var/log/identity-gateway.log
+
+            # systemd setup
+            cat >/etc/systemd/system/identity-gateway.service <<EOL
+            [Service]
+            ExecStart=/usr/bin/node /etc/gu/build/server.js
+            Restart=always
+            StandardOutput=syslog
+            StandardError=syslog
+            SyslogIdentifier=identity-gateway
+            User=identity-gateway
+            Group=identity-gateway
+            Environment=NODE_ENV=production
+            Environment=PORT=9233
+            [Install]
+            WantedBy=multi-user.target
+            EOL
+
+            # Run
+            systemctl enable identity-gateway
+            systemctl start identity-gateway
+            /opt/cloudwatch-logs/configure-logs application ${Stack} ${Stage} ${App} /var/log/identity-gateway.log
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles:
+        - !Ref AppRole
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow SSH and HTTPS access
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 9233
+          ToPort: 9233
+          SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: !Sub '${Stack}-${App}-${Stage}'
+      Subnets: !Ref PublicVpcSubnets
+      SecurityGroups:
+        - !Ref LoadBalancerSecurityGroup
+      Tags:
+        - Key: App
+          Value: !Ref App
+        - Key: Stack
+          Value: !Ref Stack
+        - Key: Stage
+          Value: !Ref Stage
+  LoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      Certificates:
+        - CertificateArn: arn:aws:acm:eu-west-1:942464564246:certificate/32564d7d-3546-4500-8c03-b0dad72a38da
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn:
+            Ref: TargetGroup
+      LoadBalancerArn:
+        Ref: LoadBalancer
+      Port: 443
+      Protocol: HTTPS
+  LoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow HTTPS traffic and egress to 9233
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 9233
+          ToPort: 9233
+          CidrIp: 0.0.0.0/0
+  TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: !Sub '${Stack}-${App}-${Stage}'
+      Port: 9233
+      Protocol: HTTP
+      VpcId:
+        Ref: VpcId
+      HealthCheckIntervalSeconds: 10
+      HealthCheckPath: /healthcheck
+      HealthCheckPort: 9233
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 5
+      HealthyThreasholdCount: 2
+      UnHealthyThreasholdCount: 2
+      TargetGroupAttributes:
+        - Key: deregistration_delay.timeout_seconds
+          Value: 45
+      DependsOn:
+        - LoadBalancer
+

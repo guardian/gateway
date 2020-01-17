@@ -1,0 +1,16 @@
+{
+  "projectName": "identity:gateway",
+  "vcsURL": "https://github.com/guardian/gateway",
+  "actions": [
+    {
+      "action": "gateway-server",
+      "path": "build",
+      "compress": "zip"
+    },
+    {
+      "action": "gateway-app-cf",
+      "path": "cloudformation.yaml",
+      "compress": false
+    }
+  ]
+}
