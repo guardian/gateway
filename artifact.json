@@ -4,7 +4,7 @@
   "actions": [
     {
       "action": "gateway-server",
-      "path": "build/server.js",
+      "path": "build/*",
       "compress": "zip"
     },
     {
