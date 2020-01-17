@@ -5,7 +5,7 @@ regions:
 deployments:
   gateway-cloudformation:
     type: cloud-formation
-    app: gateway-app
+    app: identity-gateway
     parameters:
       amiTags:
         Recipe: gateway
