@@ -25,6 +25,9 @@ Parameters:
     Type: String
     AllowedValues:
       - CODE
+  SsmManagedPolicyArn:
+    Description: The ARN for the ssm iam role
+    Type: String
   VpcId:
     Description: VPC id of VPC for this service to use
     Type: String
@@ -33,6 +36,7 @@ Resources:
   AppRole:
     Type: AWS::IAM::Role
     Properties:
+      Path: "/"
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
@@ -40,12 +44,20 @@ Resources:
               Service:
                 - ec2.amazonaws.com
             Action:
-              - logs:CreateLogGroup
-              - logs:CreateLogStream
-              - logs:PutLogEvents
+              sts:AssumeRole
       ManagedPolicyArns:
-        - !Sub arn:aws:iam::${AWS::AccountId}:policy/guardian-ec2-role-for-ssm
-      Path: "/"
+        - !Ref SsmManagedPolicyArn
+      Policies:
+        - PolicyName: PushLogs
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: '*'
   AutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
@@ -188,11 +200,11 @@ Resources:
       HealthCheckPort: 9233
       HealthCheckProtocol: HTTP
       HealthCheckTimeoutSeconds: 5
-      HealthyThreasholdCount: 2
-      UnHealthyThreasholdCount: 2
+      HealthyThresholdCount: 2
+      UnhealthyThresholdCount: 2
       TargetGroupAttributes:
         - Key: deregistration_delay.timeout_seconds
           Value: 45
-      DependsOn:
+    DependsOn:
         - LoadBalancer
 
