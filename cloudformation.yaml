@@ -79,9 +79,9 @@ Resources:
           Value: !Ref Stage
           PropagateAtLaunch: true
   LaunchConfig:
-    Type: AWS::AutoScaling::AutoScalingGroup
+    Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
-      AssociatedPublicIpAddress: false
+      AssociatePublicIpAddress: false
       ImageId: !Ref AMI
       InstanceProfile: !Ref InstanceProfile
       InstanceType: t3.small
