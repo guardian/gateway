@@ -62,11 +62,12 @@ Resources:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
       LaunchConfigurationName: !Ref LaunchConfig
-      HealthCheck: ELB
+      HealthCheckType: ELB
       HealthCheckGracePeriod: 300
       MinSize: 1
       MaxSize: 2
-      TargetGroupARNS: !Ref TargetGroup
+      TargetGroupARNs:
+      - !Ref TargetGroup
       VPCZoneIdentifier: !Ref PrivateVpcSubnets
       Tags:
         - Key: App
@@ -83,9 +84,10 @@ Resources:
     Properties:
       AssociatePublicIpAddress: false
       ImageId: !Ref AMI
-      InstanceProfile: !Ref InstanceProfile
+      IamInstanceProfile: !Ref InstanceProfile
       InstanceType: t3.small
-      SecurityGroups: !Ref InstanceSecurityGroup
+      SecurityGroups:
+        - !Ref InstanceSecurityGroup
       UserData:
         Fn::Base64: !Sub |
             #!/bin/bash -ev
@@ -190,7 +192,7 @@ Resources:
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: !Sub '${Stack}-${App}-${Stage}'
+      Name: !Sub ${Stage}:${Stack}-${App}
       Port: 9233
       Protocol: HTTP
       VpcId:
