@@ -18,4 +18,5 @@ deployments:
       - gateway-cloudformation
     parameters:
       bucket: identity-artifacts
+      prefixStack: false
 

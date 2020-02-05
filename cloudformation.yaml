@@ -9,6 +9,9 @@ Parameters:
     Description: Application name
     Default: gateway
     Type: String
+  KeyName:
+    Description: The EC2 Key Pair to allow SSH access to the instances
+    Type: AWS::EC2::KeyPair::KeyName
   PrivateVpcSubnets:
     Description: Private VPC Subnet for the EC2 instances.
     Type: List<AWS::EC2::Subnet::Id>
@@ -25,6 +28,9 @@ Parameters:
     Type: String
     AllowedValues:
       - CODE
+  SshAccessSecurityGroup:
+    Description: Security group that is allowed SSH access to the instances
+    Type: AWS::EC2::SecurityGroup::Id
   SsmManagedPolicyArn:
     Description: The ARN for the ssm iam role
     Type: String
@@ -70,6 +76,9 @@ Resources:
       - !Ref TargetGroup
       VPCZoneIdentifier: !Ref PrivateVpcSubnets
       Tags:
+        - Key: Name
+          Value: !Sub '${Stage}:${App}'
+          PropagateAtLaunch: 'true'
         - Key: App
           Value: !Ref App
           PropagateAtLaunch: true
@@ -87,13 +96,14 @@ Resources:
       IamInstanceProfile: !Ref InstanceProfile
       InstanceType: t3.small
       SecurityGroups:
-        - !Ref InstanceSecurityGroup
+        - !Ref 'InstanceSecurityGroup'
+        - !Ref 'SshAccessSecurityGroup'
       UserData:
         Fn::Base64: !Sub |
             #!/bin/bash -ev
 
             # Get Riff Raff deployed artefact S3
-            aws --region ${AWS::Region} s3 cp s3://identity-artifacts/${Stage}-${App}/identity-gateway.tgz /tmp
+            aws --region ${AWS::Region} s3 cp s3://identity-artifacts/${Stage}/${App}/identity-gateway.tgz /tmp
             mkdir /etc/gu
             tar -xvzf /tmp/identity-gateway.tgz --directory /etc/gu/
 
@@ -192,7 +202,7 @@ Resources:
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Name: !Sub ${Stage}:${Stack}-${App}
+      Name: !Sub ${Stage}-${Stack}-${App}
       Port: 9233
       Protocol: HTTP
       VpcId:
