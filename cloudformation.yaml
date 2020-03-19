@@ -117,7 +117,7 @@ Resources:
             chown identity-gateway:identity-gateway /var/log/identity-gateway.log
 
             # systemd setup
-            cat >/etc/systemd/system/identity-gateway.service <<EOL
+            cat > /etc/systemd/system/identity-gateway.service <<EOL
             [Service]
             ExecStart=/usr/bin/node /etc/gu/build/server.js
             Restart=always
