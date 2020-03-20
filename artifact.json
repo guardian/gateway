@@ -8,7 +8,7 @@
       "compress": "zip"
     },
     {
-      "action": "gateway-app-cf",
+      "action": "gateway-cloudformation",
       "path": "cloudformation.yaml",
       "compress": false
     }
