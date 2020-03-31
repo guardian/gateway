@@ -3,7 +3,7 @@
   "vcsURL": "https://github.com/guardian/gateway",
   "actions": [
     {
-      "action": "gateway-server",
+      "action": "identity-gateway",
       "path": "build",
       "compress": "zip"
     },
