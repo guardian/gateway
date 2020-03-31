@@ -7,7 +7,7 @@ Parameters:
     Type: String
   App:
     Description: Application name
-    Default: gateway
+    Default: identity-gateway
     Type: String
   KeyName:
     Description: The EC2 Key Pair to allow SSH access to the instances
@@ -54,6 +54,14 @@ Resources:
       ManagedPolicyArns:
         - !Ref SsmManagedPolicyArn
       Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: s3:GetObject
+                Resource:
+                  - !Sub arn:aws:s3:::identity-artifacts/${Stage}/${App}/*
         - PolicyName: PushLogs
           PolicyDocument:
             Version: 2012-10-17
