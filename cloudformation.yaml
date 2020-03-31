@@ -110,6 +110,8 @@ Resources:
         Fn::Base64: !Sub |
             #!/bin/bash -ev
 
+            mkdir /etc/gu
+
             # Get Riff Raff deployed artefact S3
             aws s3 cp s3://identity-artifacts/${Stage}/${App}/${App}.zip /etc/gu
             unzip -o /etc/gu/${App}.zip -d /etc/gu
@@ -117,10 +119,10 @@ Resources:
             # Setup user
             groupadd identity-gateway
             useradd -r -s /usr/bin/nologin -g identity-gateway identity-gateway
+            chown -R identity-gateway:identity-gateway /etc/gu
 
             # Setup logs
             touch /var/log/identity-gateway.log
-            chown -R identity-gateway:identity-gateway /etc/gu
             chown identity-gateway:identity-gateway /var/log/identity-gateway.log
 
             # systemd setup
