@@ -128,7 +128,7 @@ Resources:
             # systemd setup
             cat > /etc/systemd/system/identity-gateway.service <<EOL
             [Service]
-            ExecStart=/usr/bin/node /etc/gu/build/server.js
+            ExecStart=/usr/bin/node /etc/gu/server.js
             Restart=always
             StandardOutput=syslog
             StandardError=syslog
