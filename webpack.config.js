@@ -19,7 +19,7 @@ const watchOptions = {
 
 const server = {
   entry: "./src/server/index.ts",
-  externals: nodeExternals(),
+  externals: [nodeExternals()],
   mode,
   module: {
     rules: [
