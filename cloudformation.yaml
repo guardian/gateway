@@ -111,9 +111,8 @@ Resources:
             #!/bin/bash -ev
 
             # Get Riff Raff deployed artefact S3
-            aws --region ${AWS::Region} s3 cp s3://identity-artifacts/${Stage}/${App}/identity-gateway.tgz /tmp
-            mkdir /etc/gu
-            tar -xvzf /tmp/identity-gateway.tgz --directory /etc/gu/
+            aws s3 cp s3://identity-artifacts/${Stage}/${App}/${App}.zip /etc/gu
+            unzip -o /etc/gu/${App}.zip -d /etc/gu
 
             # Setup user
             groupadd identity-gateway

@@ -5,7 +5,7 @@
     {
       "action": "identity-gateway",
       "path": "build",
-      "compress": "tar"
+      "compress": "zip"
     },
     {
       "action": "gateway-cloudformation",
