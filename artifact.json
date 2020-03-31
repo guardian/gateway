@@ -1,5 +1,5 @@
 {
-  "projectName": "identity:gateway",
+  "projectName": "identity:identity-gateway",
   "vcsURL": "https://github.com/guardian/gateway",
   "actions": [
     {
