@@ -13,7 +13,7 @@ deployments:
         AmigoStage: PROD
       templatePath: cloudformation.yaml
       amiEncrypted: true
-  gateway-server:
+  identity-gateway:
     type: autoscaling
     dependencies:
       - gateway-cloudformation
