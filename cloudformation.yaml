@@ -9,6 +9,9 @@ Parameters:
     Description: Application name
     Default: identity-gateway
     Type: String
+  CertificateArn:
+    Description: ARN of certificate for loadbalancer use.
+    Type: String
   KeyName:
     Description: The EC2 Key Pair to allow SSH access to the instances
     Type: AWS::EC2::KeyPair::KeyName
@@ -184,7 +187,7 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       Certificates:
-        - CertificateArn: arn:aws:acm:eu-west-1:942464564246:certificate/32564d7d-3546-4500-8c03-b0dad72a38da
+        - CertificateArn: !Ref CertificateArn
       DefaultActions:
         - Type: forward
           TargetGroupArn:
