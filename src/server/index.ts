@@ -1,6 +1,7 @@
 import { default as express, Express, Response } from "express";
 import ReactDOMServer from "react-dom/server";
 import React from "react";
+import { logger } from "@/server/lib/logger";
 import { Main } from "../client/main";
 import path from "path";
 import { getConfiguration } from "@/server/lib/configuration";
@@ -32,3 +33,4 @@ server.use((_, res: Response) => {
 });
 
 server.listen(port);
+logger.info(`server running on port ${port}`);

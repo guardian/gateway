@@ -1,6 +1,6 @@
-import { Configuration } from "../models/Configuration";
+import { Configuration } from "@/server/models/Configuration";
 
-export function getConfiguration(): Configuration {
+export const getConfiguration = (): Configuration => {
   const port = process.env.PORT;
 
   if (!port) {
@@ -10,4 +10,4 @@ export function getConfiguration(): Configuration {
   return {
     port: +port
   };
-}
+};
