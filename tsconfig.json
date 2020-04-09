@@ -9,7 +9,11 @@
     "strict": true,
     "target": "esnext",
     "types": [
-      "@emotion/core"
+      "@emotion/core",
+      "jest"
     ]
-  }
+  },
+  "include": [
+    "src"
+  ]
 }

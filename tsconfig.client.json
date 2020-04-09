@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": [
+    "src/server"
+  ],
+  "compilerOptions": {
+    "baseUrl": "src/client",
+    "paths": {
+      "lib/*": ["lib/*"]
+    }
+  }
+}

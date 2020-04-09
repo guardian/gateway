@@ -1,7 +1,8 @@
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
 
-const mode = process.env.ENVIRONMENT === "production" ? "production" : "development";
+const mode =
+  process.env.ENVIRONMENT === "production" ? "production" : "development";
 
 const babel = {
   presets: [
@@ -26,23 +27,25 @@ const server = {
       {
         exclude: /node_modules/,
         test: /\.ts(x?)$/,
-        use: [{
-          loader: "babel-loader",
-          options: {
-            presets: [
-              [
-                "@babel/env",
-                {
-                  targets: {
-                    node: true,
-                  },
-                  ignoreBrowserslistConfig: true
-                }
-              ],
-              ...babel.presets
-            ]
+        use: [
+          {
+            loader: "babel-loader",
+            options: {
+              presets: [
+                [
+                  "@babel/env",
+                  {
+                    targets: {
+                      node: true
+                    },
+                    ignoreBrowserslistConfig: true
+                  }
+                ],
+                ...babel.presets
+              ]
+            }
           }
-        }]
+        ]
       }
     ]
   },
@@ -55,7 +58,10 @@ const server = {
     path: path.resolve(__dirname, "build")
   },
   resolve: {
-    extensions
+    extensions,
+    alias: {
+      lib: path.join(__dirname, "src/server/lib")
+    }
   },
   target: "node",
   watchOptions
@@ -69,30 +75,29 @@ const client = {
       {
         exclude: /node_modules/,
         test: /\.ts(x?)/,
-        use: [{
-          loader: "babel-loader",
-          options: {
-            presets: [
-              "@babel/env",
-              ...babel.presets
-            ]
+        use: [
+          {
+            loader: "babel-loader",
+            options: {
+              presets: ["@babel/env", ...babel.presets]
+            }
           }
-        }],
+        ]
       }
-    ],
+    ]
   },
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "build/static/")
   },
   resolve: {
-    extensions
+    extensions,
+    alias: {
+      lib: path.join(__dirname, "src/client/lib")
+    }
   },
   target: "web",
   watchOptions
 };
 
-module.exports = [
-  client,
-  server
-];
+module.exports = [client, server];
