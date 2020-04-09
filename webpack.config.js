@@ -60,7 +60,7 @@ const server = {
   resolve: {
     extensions,
     alias: {
-      lib: path.join(__dirname, "src/server/lib")
+      "@": path.join(__dirname, "src")
     }
   },
   target: "node",
@@ -93,7 +93,7 @@ const client = {
   resolve: {
     extensions,
     alias: {
-      lib: path.join(__dirname, "src/client/lib")
+      "@": path.join(__dirname, "src")
     }
   },
   target: "web",

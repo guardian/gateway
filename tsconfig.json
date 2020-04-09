@@ -11,7 +11,11 @@
     "types": [
       "@emotion/core",
       "jest"
-    ]
+    ],
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"]
+    }
   },
   "include": [
     "src"
