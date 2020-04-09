@@ -3,8 +3,9 @@ import ReactDOMServer from "react-dom/server";
 import React from "react";
 import { Main } from "../client/main";
 import path from "path";
+import { getConfiguration } from "@/server/lib/configuration";
 
-const { PORT } = process.env;
+const { port } = getConfiguration();
 const server: Express = express();
 
 server.use("/static", express.static(path.resolve(__dirname, "static")));
@@ -30,4 +31,4 @@ server.use((_, res: Response) => {
   res.send(html);
 });
 
-server.listen(PORT);
+server.listen(port);
