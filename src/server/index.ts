@@ -1,4 +1,10 @@
-import { default as express, Express, Response } from "express";
+import {
+  default as express,
+  Express,
+  NextFunction,
+  Request,
+  Response
+} from "express";
 import ReactDOMServer from "react-dom/server";
 import React from "react";
 import { logger } from "@/server/lib/logger";
@@ -9,6 +15,12 @@ import { getConfiguration } from "@/server/lib/configuration";
 const { port } = getConfiguration();
 const server: Express = express();
 
+const loggerMiddleware = (req: Request, _, next: NextFunction) => {
+  logger.info(`${req.method}, ${req.path}`);
+  next();
+};
+
+server.use(loggerMiddleware);
 server.use("/static", express.static(path.resolve(__dirname, "static")));
 server.get("/healthcheck", (_, res: Response) => {
   res.sendStatus(204);
