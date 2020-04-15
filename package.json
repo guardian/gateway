@@ -44,9 +44,10 @@
     "webpack-node-externals": "^1.7.2"
   },
   "dependencies": {
-    "@emotion/core": "^10.0.22",
+    "@emotion/core": "^10.0.27",
     "@guardian/src-button": "^0.17.0",
     "@guardian/src-foundations": "^0.17.0",
+    "emotion-theming": "^10.0.27",
     "express": "^4.17.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
