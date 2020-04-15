@@ -25,6 +25,7 @@
     "@types/node": "^12.12.14",
     "@types/react": "^16.9.13",
     "@types/react-dom": "^16.9.4",
+    "@types/react-router-dom": "^5.1.4",
     "@typescript-eslint/eslint-plugin": "^2.10.0",
     "@typescript-eslint/parser": "^2.10.0",
     "babel-jest": "^25.3.0",
@@ -44,11 +45,12 @@
   },
   "dependencies": {
     "@emotion/core": "^10.0.22",
-    "@guardian/src-button": "^0.4.1",
-    "@guardian/src-foundations": "^0.8.0",
+    "@guardian/src-button": "^0.17.0",
+    "@guardian/src-foundations": "^0.17.0",
     "express": "^4.17.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "react-router-dom": "^5.1.2",
     "winston": "^3.2.1"
   }
 }
