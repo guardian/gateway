@@ -8,6 +8,7 @@ import {
 } from "@guardian/src-foundations/typography";
 import { Link, Route, Switch } from "react-router-dom";
 import { Button } from "@guardian/src-button";
+import { fontFaces } from "@/client/lib/fonts";
 
 const h1 = css`
   margin: 0 0 13px 0;
@@ -27,7 +28,7 @@ export const Main = () => {
         styles={css`
           html,
           body {
-            ${body.medium()}
+            ${fontFaces}
           }
         `}
       />
