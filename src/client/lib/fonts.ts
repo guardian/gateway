@@ -1,42 +1,114 @@
-import { CSSObject, css, SerializedStyles } from "@emotion/core";
+import { CSSObject } from "@emotion/core";
+import {
+  FontFace,
+  FontWeightName,
+  FontWeightNumber,
+  FontStyle,
+  FontFamily,
+  FontFamilyPath
+} from "@/client/models/Font";
 
-const fontFiles = [
-  "fonts/guardian-headline/noalts-not-hinted/GHGuardianHeadline-Light.woff2",
-  "fonts/guardian-headline/noalts-not-hinted/GHGuardianHeadline-LightItalic.woff2",
-  "fonts/guardian-headline/noalts-not-hinted/GHGuardianHeadline-Medium.woff2",
-  "fonts/guardian-headline/noalts-not-hinted/GHGuardianHeadline-MediumItalic.woff2",
-  "fonts/guardian-headline/noalts-not-hinted/GHGuardianHeadline-Bold.woff2",
-  "fonts/guardian-textegyptian/noalts-not-hinted/GuardianTextEgyptian-Regular.woff2",
-  "fonts/guardian-textegyptian/noalts-not-hinted/GuardianTextEgyptian-RegularItalic.woff2",
-  "fonts/guardian-textegyptian/noalts-not-hinted/GuardianTextEgyptian-Bold.woff2",
-  "fonts/guardian-textsans/noalts-not-hinted/GuardianTextSans-Regular.woff2",
-  "fonts/guardian-textsans/noalts-not-hinted/GuardianTextSans-RegularItalic.woff2",
-  "fonts/guardian-textsans/noalts-not-hinted/GuardianTextSans-Bold.woff2"
+// font formats
+const formats: string[] = ["woff2", "woff", "ttf"];
+
+// fonts to load on page
+const fonts: FontFace[] = [
+  {
+    family: FontFamily.TITLEPIECE,
+    path: `${FontFamilyPath.TITLEPIECE}-${FontWeightName.BOLD}`,
+    weight: FontWeightNumber.BOLD
+  },
+  {
+    family: FontFamily.HEADLINE,
+    path: `${FontFamilyPath.HEADLINE}-${FontWeightName.BOLD}`,
+    weight: FontWeightNumber.BOLD
+  },
+  {
+    family: FontFamily.HEADLINE,
+    path: `${FontFamilyPath.HEADLINE}-${FontWeightName.MEDIUM}`,
+    weight: FontWeightNumber.MEDIUM
+  },
+  {
+    family: FontFamily.HEADLINE,
+    path: `${FontFamilyPath.HEADLINE}-${FontWeightName.MEDIUM}${FontStyle.ITALIC}`,
+    weight: FontWeightNumber.MEDIUM,
+    style: FontStyle.ITALIC.toLowerCase()
+  },
+  {
+    family: FontFamily.HEADLINE,
+    path: `${FontFamilyPath.HEADLINE}-${FontWeightName.LIGHT}`,
+    weight: FontWeightNumber.LIGHT
+  },
+  {
+    family: FontFamily.HEADLINE,
+    path: `${FontFamilyPath.HEADLINE}-${FontWeightName.LIGHT}${FontStyle.ITALIC}`,
+    weight: FontWeightNumber.LIGHT,
+    style: FontStyle.ITALIC.toLowerCase()
+  },
+  {
+    family: FontFamily.EGYPTIAN,
+    path: `${FontFamilyPath.EGYPTIAN}-${FontWeightName.BOLD}`,
+    weight: FontWeightNumber.BOLD
+  },
+  {
+    family: FontFamily.EGYPTIAN,
+    path: `${FontFamilyPath.EGYPTIAN}-${FontWeightName.BOLD}${FontStyle.ITALIC}`,
+    weight: FontWeightNumber.BOLD,
+    style: FontStyle.ITALIC.toLowerCase()
+  },
+  {
+    family: FontFamily.EGYPTIAN,
+    path: `${FontFamilyPath.EGYPTIAN}-${FontWeightName.REGULAR}`,
+    weight: FontWeightNumber.REGULAR
+  },
+  {
+    family: FontFamily.EGYPTIAN,
+    path: `${FontFamilyPath.EGYPTIAN}-${FontWeightName.REGULAR}${FontStyle.ITALIC}`,
+    weight: FontWeightNumber.REGULAR,
+    style: FontStyle.ITALIC.toLowerCase()
+  },
+  {
+    family: FontFamily.SANS,
+    path: `${FontFamilyPath.SANS}-${FontWeightName.BOLD}`,
+    weight: FontWeightNumber.BOLD
+  },
+  {
+    family: FontFamily.SANS,
+    path: `${FontFamilyPath.SANS}-${FontWeightName.REGULAR}`,
+    weight: FontWeightNumber.REGULAR
+  },
+  {
+    family: FontFamily.SANS,
+    path: `${FontFamilyPath.SANS}-${FontWeightName.REGULAR}${FontStyle.ITALIC}`,
+    weight: FontWeightNumber.REGULAR,
+    style: FontStyle.ITALIC.toLowerCase()
+  }
 ];
-
-// GU_STAGE is set in cloudformation.yml, so will be undefined locally
-// const stage =
-//   typeof process.env.GU_STAGE === "string"
-//     ? process.env.GU_STAGE.toUpperCase()
-//     : process.env.GU_STAGE;
-// const CDN = stage
-//   ? `//assets${stage === "CODE" ? "-code" : ""}.guim.co.uk/`
-//   : "/";
 
 const CDN = "https://assets.guim.co.uk/";
 
-const getStatic = (path: string): string => `${CDN}static/frontend/${path}`;
+const getStatic: (path: string) => string = path =>
+  `${CDN}static/frontend/${path}`;
 
-const fontFace = (url: string, family: string, weight?: number): CSSObject => ({
-  fontFamily: family,
-  fontWeights: weight,
-  src: `url(${getStatic(url)})`
-});
-
-export const fontFaces: CSSObject = {
-  "@font-face": fontFace(
-    "fonts/guardian-titlepiece/noalts-not-hinted/GTGuardianTitlepiece-Bold.woff2",
-    "GT Guardian Titlepiece"
-    // 700
-  )
+const fontFace: (fontFace: FontFace) => CSSObject = ({
+  family,
+  path,
+  weight,
+  style
+}) => {
+  const url = getStatic(path);
+  return {
+    fontFamily: family,
+    fontWeights: weight,
+    fontStyle: style,
+    // generating a string which has the url of all the font formats
+    src: formats.reduce(
+      (p, c, i) => `${p}${i !== 0 ? "," : ""} url(${url}.${c}) format('${c}')`,
+      ""
+    )
+  };
 };
+
+export const fontFaces: CSSObject[] = fonts.map(font => ({
+  "@font-face": fontFace(font)
+}));
