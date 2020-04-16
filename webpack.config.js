@@ -20,7 +20,11 @@ const watchOptions = {
 
 const server = {
   entry: "./src/server/index.ts",
-  externals: [nodeExternals()],
+  externals: [
+    nodeExternals({
+      whitelist: [/^@guardian/]
+    })
+  ],
   mode,
   module: {
     rules: [
@@ -35,9 +39,6 @@ const server = {
                 [
                   "@babel/env",
                   {
-                    targets: {
-                      node: true
-                    },
                     ignoreBrowserslistConfig: true
                   }
                 ],
