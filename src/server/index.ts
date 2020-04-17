@@ -26,6 +26,10 @@ server.use("/static", express.static(path.resolve(__dirname, "static")));
 server.get("/healthcheck", (_, res: Response) => {
   res.sendStatus(204);
 });
+
+server.post("/hello", (req: Request, res: Response) => {
+  res.json("hello");
+});
 server.use((req: Request, res: Response) => {
   const context = {};
 

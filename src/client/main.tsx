@@ -1,42 +1,61 @@
-import React from "react";
+import React, { FormEvent } from "react";
 import { css, Global } from "@emotion/core";
-import { palette } from "@guardian/src-foundations";
-import { titlepiece, body } from "@guardian/src-foundations/typography";
+import { palette, brand, space } from "@guardian/src-foundations";
+import { body } from "@guardian/src-foundations/typography";
 import { Route, Switch } from "react-router-dom";
 import { fontFaces } from "@/client/lib/fonts";
-
-const h1 = css`
-  margin: 0 0 13px 0;
-  background-color: ${palette.background.primary};
-  color: ${palette.text.primary};
-  ${titlepiece.large()}
-`;
+import { GuardianRoundel } from "@/client/components/GuardianRoundel";
 
 const p = css`
+  color: ${palette.text.primary};
   ${body.medium()};
 `;
 
-export const Main = () => {
-  return (
-    <main>
-      <Global
-        styles={css`
-          html,
-          body {
-            ${fontFaces}
-          }
-        `}
-      />
-      <h1 css={h1}>Gateway</h1>
+const header = css`
+  display: flex;
+  justify-content: end;
+  padding: ${space[1]}px ${space[3]}px;
+  background-color: ${brand[400]};
+`;
 
-      <Switch>
-        <Route exact path="/">
-          <p css={p}>Gateway</p>
-        </Route>
-        <Route exact path="/reset">
-          <p css={p}>Reset Password</p>
-        </Route>
-      </Switch>
-    </main>
+const footer = css`
+  background-color: ${brand[400]};
+`;
+
+export const Main = () => {
+  const submit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(e);
+  };
+
+  return (
+    <>
+      <header css={header}>
+        <GuardianRoundel />
+      </header>
+      <main>
+        <Global
+          styles={css`
+            html,
+            body {
+              ${fontFaces}
+            }
+          `}
+        />
+        <Switch>
+          <Route exact path="/">
+            <p css={p}>Gateway</p>
+          </Route>
+          <Route exact path="/reset">
+            <p css={p}>Reset Password</p>
+            <form method="post" action="/hello" onSubmit={submit}>
+              <input name="lol" type="text"></input>
+              <input type="submit" value="submit" />
+            </form>
+          </Route>
+        </Switch>
+      </main>
+      <footer css={footer}></footer>
+    </>
   );
 };
