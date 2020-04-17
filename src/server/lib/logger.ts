@@ -1,8 +1,8 @@
-import { Logger, LogLevel } from "@/server/models/Logger";
-import { createLogger, transports } from "winston";
+import { Logger, LogLevel } from '@/server/models/Logger';
+import { createLogger, transports } from 'winston';
 
 const winstonLogger = createLogger({
-  transports: [new transports.Console()]
+  transports: [new transports.Console()],
 });
 
 export const logger: Logger = {
@@ -17,5 +17,5 @@ export const logger: Logger = {
   },
   info(message: string) {
     logger.log(LogLevel.INFO, message);
-  }
+  },
 };

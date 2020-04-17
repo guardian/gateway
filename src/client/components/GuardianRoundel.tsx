@@ -1,8 +1,8 @@
 // Ruthlessly stolen from https://github.com/guardian/source/pull/323/commits/37c28595a2dc74cd5d87c027162fcfd21eb99fda
-import React from "react";
-import { css } from "@emotion/core";
+import React from 'react';
+import { css } from '@emotion/core';
 
-import { brand, neutral } from "@guardian/src-foundations/palette";
+import { brand, neutral } from '@guardian/src-foundations/palette';
 
 export const GuardianRoundel = () => {
   return (

@@ -1,10 +1,10 @@
-import React, { FormEvent } from "react";
-import { css, Global } from "@emotion/core";
-import { palette, brand, space } from "@guardian/src-foundations";
-import { body } from "@guardian/src-foundations/typography";
-import { Route, Switch } from "react-router-dom";
-import { fontFaces } from "@/client/lib/fonts";
-import { GuardianRoundel } from "@/client/components/GuardianRoundel";
+import React, { FormEvent } from 'react';
+import { css, Global } from '@emotion/core';
+import { palette, brand, space } from '@guardian/src-foundations';
+import { body } from '@guardian/src-foundations/typography';
+import { Route, Switch } from 'react-router-dom';
+import { fontFaces } from '@/client/lib/fonts';
+import { GuardianRoundel } from '@/client/components/GuardianRoundel';
 
 const p = css`
   color: ${palette.text.primary};
