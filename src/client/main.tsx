@@ -33,6 +33,9 @@ export const Main = () => {
         <Route exact path="/">
           <p css={p}>Gateway</p>
         </Route>
+        <Route exact path="/reset">
+          <p css={p}>Reset Password</p>
+        </Route>
       </Switch>
     </main>
   );
