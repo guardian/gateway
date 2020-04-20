@@ -1,29 +1,29 @@
-const path = require("path");
-const nodeExternals = require("webpack-node-externals");
+const path = require('path');
+const nodeExternals = require('webpack-node-externals');
 
 const mode =
-  process.env.ENVIRONMENT === "production" ? "production" : "development";
+  process.env.ENVIRONMENT === 'production' ? 'production' : 'development';
 
 const babel = {
   presets: [
-    "@babel/typescript",
-    "@babel/react",
-    "@emotion/babel-preset-css-prop"
-  ]
+    '@babel/typescript',
+    '@babel/react',
+    '@emotion/babel-preset-css-prop',
+  ],
 };
 
-const extensions = [".ts", ".tsx", ".js"];
+const extensions = ['.ts', '.tsx', '.js'];
 
 const watchOptions = {
-  ignored: /node_modules/
+  ignored: /node_modules/,
 };
 
 const server = {
-  entry: "./src/server/index.ts",
+  entry: './src/server/index.ts',
   externals: [
     nodeExternals({
-      whitelist: [/^@guardian/]
-    })
+      whitelist: [/^@guardian/],
+    }),
   ],
   mode,
   module: {
@@ -33,43 +33,43 @@ const server = {
         test: /\.ts(x?)$/,
         use: [
           {
-            loader: "babel-loader",
+            loader: 'babel-loader',
             options: {
               presets: [
                 [
-                  "@babel/env",
+                  '@babel/env',
                   {
-                    ignoreBrowserslistConfig: true
-                  }
+                    ignoreBrowserslistConfig: true,
+                  },
                 ],
-                ...babel.presets
-              ]
-            }
-          }
-        ]
-      }
-    ]
+                ...babel.presets,
+              ],
+            },
+          },
+        ],
+      },
+    ],
   },
   node: {
     __dirname: false,
-    __filename: false
+    __filename: false,
   },
   output: {
-    filename: "server.js",
-    path: path.resolve(__dirname, "build")
+    filename: 'server.js',
+    path: path.resolve(__dirname, 'build'),
   },
   resolve: {
     extensions,
     alias: {
-      "@": path.join(__dirname, "src")
-    }
+      '@': path.join(__dirname, 'src'),
+    },
   },
-  target: "node",
-  watchOptions
+  target: 'node',
+  watchOptions,
 };
 
 const client = {
-  entry: "./src/client/index.tsx",
+  entry: './src/client/index.tsx',
   mode,
   module: {
     rules: [
@@ -78,27 +78,27 @@ const client = {
         test: /\.ts(x?)/,
         use: [
           {
-            loader: "babel-loader",
+            loader: 'babel-loader',
             options: {
-              presets: ["@babel/env", ...babel.presets]
-            }
-          }
-        ]
-      }
-    ]
+              presets: ['@babel/env', ...babel.presets],
+            },
+          },
+        ],
+      },
+    ],
   },
   output: {
-    filename: "bundle.js",
-    path: path.resolve(__dirname, "build/static/")
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'build/static/'),
   },
   resolve: {
     extensions,
     alias: {
-      "@": path.join(__dirname, "src")
-    }
+      '@': path.join(__dirname, 'src'),
+    },
   },
-  target: "web",
-  watchOptions
+  target: 'web',
+  watchOptions,
 };
 
 module.exports = [client, server];
