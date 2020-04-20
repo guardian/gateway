@@ -48,10 +48,13 @@ export const Main = () => {
           </Route>
           <Route exact path="/reset">
             <p css={p}>Reset Password</p>
-            <form method="post" action="/hello" onSubmit={submit}>
-              <input name="lol" type="text"></input>
+            <form method="post" action="/reset" onSubmit={submit}>
+              <input name="email" type="text"></input>
               <input type="submit" value="submit" />
             </form>
+          </Route>
+          <Route exact path="/reset/sent">
+            <p css={p}>Testing form submit</p>
           </Route>
         </Switch>
       </main>
