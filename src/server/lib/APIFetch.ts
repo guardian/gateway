@@ -1,4 +1,7 @@
 import fetch, { RequestInit, Response } from 'node-fetch';
+import { getConfiguration } from '@/server/lib/configuration';
+
+const { idapiBaseUrl, idapiClientAccessToken } = getConfiguration();
 
 const handleResponseFailure = async (response: Response) => {
   let err;
@@ -19,6 +22,16 @@ const handleResponseSuccess = async (response: Response) => {
   }
 };
 
+const getAPIOptionsForMethod = (method: string) => (
+  payload: any,
+): RequestInit => ({
+  method,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(payload),
+});
+
 export const APIFetch = (baseUrl: string) => async (
   url: string,
   options?: RequestInit,
@@ -32,3 +45,19 @@ export const APIFetch = (baseUrl: string) => async (
     return await handleResponseSuccess(response);
   }
 };
+
+export const APIPostOptions = getAPIOptionsForMethod('POST');
+
+export const APIAddClientAccessToken = (options: RequestInit, ip: string) => {
+  const headers = {
+    ...options.headers,
+    'X-GU-ID-Client-Access-Token': `Bearer ${idapiClientAccessToken}`,
+    'X-Forwarded-For': ip,
+  };
+  return {
+    ...options,
+    headers,
+  };
+};
+
+export const idapiFetch = APIFetch(idapiBaseUrl);

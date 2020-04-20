@@ -2,24 +2,24 @@ import { Configuration } from '@/server/models/Configuration';
 
 export const getConfiguration = (): Configuration => {
   const port = process.env.PORT;
-  const apiEndpoint = process.env.IDAPI_ENDPOINT;
-  const apiKey = process.env.IDAPI_API_KEY;
+  const idapiBaseUrl = process.env.IDAPI_BASE_URL;
+  const idapiClientAccessToken = process.env.IDAPI_CLIENT_ACCESS_TOKEN;
 
   if (!port) {
     throw Error('Port configuration missing.');
   }
 
-  if (!apiEndpoint) {
-    throw Error('IDAPI Endpoint missing.');
+  if (!idapiBaseUrl) {
+    throw Error('IDAPI Base URL Missing.');
   }
 
-  if (!apiKey) {
-    throw Error('IDAPI API Key missing.');
+  if (!idapiClientAccessToken) {
+    throw Error('IDAPI Client Access Token missing.');
   }
 
   return {
     port: +port,
-    apiEndpoint,
-    apiKey,
+    idapiBaseUrl,
+    idapiClientAccessToken,
   };
 };

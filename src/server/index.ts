@@ -12,9 +12,9 @@ import { logger } from '@/server/lib/logger';
 import { Main } from '../client/main';
 import path from 'path';
 import { getConfiguration } from '@/server/lib/configuration';
-import { APIFetch } from '@/server/lib/APIFetch';
+import { create as resetPassword } from '@/server/lib/idapi/resetPassword';
 
-const { port, apiKey, apiEndpoint } = getConfiguration();
+const { port } = getConfiguration();
 const server: Express = express();
 
 const loggerMiddleware = (req: Request, _, next: NextFunction) => {
@@ -30,23 +30,9 @@ server.get('/healthcheck', (_, res: Response) => {
 });
 
 server.post('/reset', async (req: Request, res: Response) => {
-  // @TODO: REFACTOR
   const { email = '' } = req.body;
-  const fetch = APIFetch(apiEndpoint);
-  const options = {
-    method: 'POST',
-    headers: {
-      'X-GU-ID-Client-Access-Token': `Bearer ${apiKey}`,
-      'X-Forwarded-For': req.ip,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      'email-address': email,
-      returnUrl: '',
-    }),
-  };
   try {
-    const result = await fetch(`/pwd-reset/send-password-reset-email`, options);
+    const result = await resetPassword(email, req.ip);
     console.log('RESULT:', result);
   } catch (e) {
     console.log(e);
