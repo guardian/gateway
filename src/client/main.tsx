@@ -1,9 +1,9 @@
-import React from "react";
-import { css, Global } from "@emotion/core";
-import { palette } from "@guardian/src-foundations";
-import { titlepiece, body } from "@guardian/src-foundations/typography";
-import { Route, Switch } from "react-router-dom";
-import { fontFaces } from "@/client/lib/fonts";
+import React from 'react';
+import { css, Global } from '@emotion/core';
+import { palette } from '@guardian/src-foundations';
+import { titlepiece, body } from '@guardian/src-foundations/typography';
+import { Route, Switch } from 'react-router-dom';
+import { fontFaces } from '@/client/lib/fonts';
 
 const h1 = css`
   margin: 0 0 13px 0;
