@@ -12,7 +12,7 @@ import { logger } from '@/server/lib/logger';
 import { Main } from '../client/main';
 import path from 'path';
 import { getConfiguration } from '@/server/lib/configuration';
-import { create as resetPassword } from '@/server/lib/idapi/resetPassword';
+import resetRoute from '@/server/routes/reset';
 
 const { port } = getConfiguration();
 const server: Express = express();
@@ -29,16 +29,7 @@ server.get('/healthcheck', (_, res: Response) => {
   res.sendStatus(204);
 });
 
-server.post('/reset', async (req: Request, res: Response) => {
-  const { email = '' } = req.body;
-  try {
-    const result = await resetPassword(email, req.ip);
-    console.log('RESULT:', result);
-  } catch (e) {
-    console.log(e);
-  }
-  res.redirect(303, '/reset/sent');
-});
+server.use(resetRoute);
 
 server.use((req: Request, res: Response) => {
   const context = {};
