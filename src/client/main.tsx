@@ -13,7 +13,7 @@ const p = css`
 
 const header = css`
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   padding: ${space[1]}px ${space[3]}px;
   background-color: ${brand[400]};
 `;
