@@ -16,7 +16,7 @@ import { default as routes } from '@/server/routes';
 const { port } = getConfiguration();
 const server: Express = express();
 
-const loggerMiddleware = (req: Request, _, next: NextFunction) => {
+const loggerMiddleware = (req: Request, _: Response, next: NextFunction) => {
   logger.info(`${req.method}, ${req.path}`);
   next();
 };

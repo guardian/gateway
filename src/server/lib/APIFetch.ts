@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import fetch, { RequestInit, Response } from 'node-fetch';
 import { getConfiguration } from '@/server/lib/configuration';
 

@@ -48,6 +48,8 @@
     "@emotion/core": "^10.0.27",
     "@guardian/src-button": "^0.17.0",
     "@guardian/src-foundations": "^0.17.0",
+    "@guardian/src-svgs": "^0.17.0",
+    "@guardian/src-text-input": "^0.17.0",
     "emotion-theming": "^10.0.27",
     "express": "^4.17.1",
     "node-fetch": "^2.6.0",

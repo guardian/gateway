@@ -1,64 +1,63 @@
-import React, { FormEvent } from 'react';
+import React from 'react';
 import { css, Global } from '@emotion/core';
-import { palette, brand, space } from '@guardian/src-foundations';
+import { palette, space } from '@guardian/src-foundations';
 import { body } from '@guardian/src-foundations/typography';
 import { Route, Switch } from 'react-router-dom';
 import { fontFaces } from '@/client/lib/fonts';
-import { GuardianRoundel } from '@/client/components/GuardianRoundel';
+import { ResetPasswordPage } from '@/client/pages/ResetPasswordPage';
+import { ResetSentPage } from '@/client/pages/ResetSentPage';
+import { Header } from '@/client/components/Header';
+import { Footer } from '@/client/components/Footer';
 
 const p = css`
   color: ${palette.text.primary};
   ${body.medium()};
 `;
 
-const header = css`
-  display: flex;
-  justify-content: flex-end;
-  padding: ${space[1]}px ${space[3]}px;
-  background-color: ${brand[400]};
-`;
-
-const footer = css`
-  background-color: ${brand[400]};
+const main = css`
+  flex-grow: 1;
 `;
 
 export const Main = () => {
-  const submit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log(e);
-  };
-
   return (
     <>
-      <header css={header}>
-        <GuardianRoundel />
-      </header>
-      <main>
-        <Global
-          styles={css`
-            html,
-            body {
-              ${fontFaces}
-            }
-          `}
-        />
+      <Global
+        styles={css`
+          ${fontFaces}
+          html {
+            height: 100%;
+          }
+          body {
+            height: 100%;
+          }
+          #app {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+          }
+          p {
+            ${p}
+          }
+          * {
+            box-sizing: border-box;
+          }
+        `}
+      />
+      <Header />
+      <main css={main}>
         <Switch>
           <Route exact path="/">
-            <p css={p}>Gateway</p>
+            <p>Gateway</p>
           </Route>
           <Route exact path="/reset">
-            <p css={p}>Reset Password</p>
-            <form method="post" action="/reset" onSubmit={submit}>
-              <input name="email" type="text"></input>
-              <input type="submit" value="submit" />
-            </form>
+            <ResetPasswordPage />
           </Route>
           <Route exact path="/reset/sent">
-            <p css={p}>Testing form submit</p>
+            <ResetSentPage />
           </Route>
         </Switch>
       </main>
-      <footer css={footer}></footer>
+      <Footer />
     </>
   );
 };

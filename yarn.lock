@@ -1186,10 +1186,26 @@
   dependencies:
     "@guardian/src-foundations" "^0.17.0"
 
+"@guardian/src-inline-error@^0.17.0":
+  version "0.17.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-inline-error/-/src-inline-error-0.17.0.tgz#fb31aca092bd7e2033e4c82887c5a24122b7bfc8"
+  integrity sha512-d+A2nO1eXxXTfREMbkNFoI9SvNLJsfVcyk8nmYecYHi5z1IOzQzOHPG6LvjwIoOtaTdvsDGcYjYyj+gHtWjnNQ==
+  dependencies:
+    "@guardian/src-helpers" "^0.17.0"
+    "@guardian/src-svgs" "^0.17.0"
+
 "@guardian/src-svgs@^0.17.0":
   version "0.17.0"
   resolved "https://registry.yarnpkg.com/@guardian/src-svgs/-/src-svgs-0.17.0.tgz#7fc944a0d4708d2b3102144fa8ae66c9987e4657"
   integrity sha512-8913E5P9xEUs7zktJxx5vJBqJOw4fb4AagbAG1lWwGYqLhvSx8xw3u0U/zFydEyx/+IOGfp0xWmLaulv7o7pzw==
+
+"@guardian/src-text-input@^0.17.0":
+  version "0.17.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-text-input/-/src-text-input-0.17.0.tgz#8b5a4f9385615e9fde710a518ec3db6f55a5f057"
+  integrity sha512-u9lAx1ZjvCXB9jrKyeW8zqr0AWzmOVZtcKvbcHEhxmEvmuGRrA27vnNsKt1CYlVp9kZntDztj2o+j1oFhSME1A==
+  dependencies:
+    "@guardian/src-helpers" "^0.17.0"
+    "@guardian/src-inline-error" "^0.17.0"
 
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.0.0"
