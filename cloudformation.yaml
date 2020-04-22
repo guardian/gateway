@@ -75,6 +75,16 @@ Resources:
                   - logs:CreateLogStream
                   - logs:PutLogEvents
                 Resource: '*'
+        - PolicyName: GetParameters
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ssm:GetParameter
+                  - ssm:GetParameters
+                  - ssm:GetParametersByPath
+                Resource:
+                  - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${Stack}/${App}/${Stage}/*
   AutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
@@ -140,7 +150,7 @@ Resources:
             Group=identity-gateway
             Environment=NODE_ENV=production
             Environment=PORT=9233
-            Enviornment=IDAPI_CLIENT_ACCESS_TOKEN={{resolve:ssm-secure:/identity/gateway/CODE/idapi-client-access-token}}
+            Environment=IDAPI_CLIENT_ACCESS_TOKEN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/idapi-client-access-token' --region eu-west-1 --query="Parameter.Value" --output="text")
             Environment=IDAPI_BASE_URL=https://idapi.code.dev-theguardian.com
             [Install]
             WantedBy=multi-user.target
