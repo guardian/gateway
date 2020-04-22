@@ -9,6 +9,9 @@ Parameters:
     Description: Application name
     Default: identity-gateway
     Type: String
+  IdapiBaseUrl:
+    Description: The base url for idapi
+    Type: AWS::SSM::Parameter::Value<String>
   CertificateArn:
     Description: ARN of certificate for loadbalancer use.
     Type: String
@@ -120,49 +123,47 @@ Resources:
         - !Ref 'InstanceSecurityGroup'
         - !Ref 'SshAccessSecurityGroup'
       UserData:
-        Fn::Base64: !Sub 
-          - |+
-            #!/bin/bash -ev
+        Fn::Base64: !Sub |
+          #!/bin/bash -ev
 
-            mkdir /etc/gu
+          mkdir /etc/gu
 
-            # Get Riff Raff deployed artefact S3
-            aws s3 cp s3://identity-artifacts/${Stage}/${App}/${App}.zip /etc/gu
-            unzip -o /etc/gu/${App}.zip -d /etc/gu
+          # Get Riff Raff deployed artefact S3
+          aws s3 cp s3://identity-artifacts/${Stage}/${App}/${App}.zip /etc/gu
+          unzip -o /etc/gu/${App}.zip -d /etc/gu
 
-            # Setup user
-            groupadd identity-gateway
-            useradd -r -s /usr/bin/nologin -g identity-gateway identity-gateway
-            chown -R identity-gateway:identity-gateway /etc/gu
+          # Setup user
+          groupadd identity-gateway
+          useradd -r -s /usr/bin/nologin -g identity-gateway identity-gateway
+          chown -R identity-gateway:identity-gateway /etc/gu
 
-            # Setup logs
-            touch /var/log/identity-gateway.log
-            chown identity-gateway:identity-gateway /var/log/identity-gateway.log
+          # Setup logs
+          touch /var/log/identity-gateway.log
+          chown identity-gateway:identity-gateway /var/log/identity-gateway.log
 
-            # systemd setup
-            cat > /etc/systemd/system/identity-gateway.service <<EOL
-            [Service]
-            ExecStart=/usr/bin/node /etc/gu/server.js
-            Restart=always
-            StandardOutput=syslog
-            StandardError=syslog
-            SyslogIdentifier=identity-gateway
-            User=identity-gateway
-            Group=identity-gateway
-            Environment=NODE_ENV=production
-            Environment=PORT=9233
-            Environment=IDAPI_CLIENT_ACCESS_TOKEN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/idapi-client-access-token' --region eu-west-1 --query="Parameter.Value" --output="text")
-            Environment=IDAPI_BASE_URL=https://idapi.code.dev-theguardian.com
-            [Install]
-            WantedBy=multi-user.target
-            EOL
+          # systemd setup
+          cat > /etc/systemd/system/identity-gateway.service <<EOL
+          [Service]
+          ExecStart=/usr/bin/node /etc/gu/server.js
+          Restart=always
+          StandardOutput=syslog
+          StandardError=syslog
+          SyslogIdentifier=identity-gateway
+          User=identity-gateway
+          Group=identity-gateway
+          Environment=NODE_ENV=production
+          Environment=PORT=9233
+          Environment=IDAPI_CLIENT_ACCESS_TOKEN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/idapi-client-access-token' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+          Environment=IDAPI_BASE_URL=${IdapiBaseUrl}
+          [Install]
+          WantedBy=multi-user.target
+          EOL
 
-            # Run
-            systemctl enable identity-gateway
-            systemctl start identity-gateway
-            /opt/cloudwatch-logs/configure-logs application ${Stack} ${Stage} ${App} /var/log/identity-gateway.log
+          # Run
+          systemctl enable identity-gateway
+          systemctl start identity-gateway
+          /opt/cloudwatch-logs/configure-logs application ${Stack} ${Stage} ${App} /var/log/identity-gateway.log
 
-          - IdapiBaseUrl: '{{resolve:ssm:/${Stack}/${App}/${Stage}/idapi-base-url:1}}'
   InstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
