@@ -41,3 +41,6 @@ node_modules/
 
 # IntelliJ meta data
 .idea/
+
+# Environment Variable File
+.env

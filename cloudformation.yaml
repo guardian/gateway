@@ -140,6 +140,8 @@ Resources:
             Group=identity-gateway
             Environment=NODE_ENV=production
             Environment=PORT=9233
+            Enviornment=IDAPI_CLIENT_ACCESS_TOKEN={{resolve:ssm-secure:/identity/gateway/CODE/idapi-client-access-token}}
+            Environment=IDAPI_BASE_URL=https://idapi.code.dev-theguardian.com
             [Install]
             WantedBy=multi-user.target
             EOL
