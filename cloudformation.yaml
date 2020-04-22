@@ -120,7 +120,8 @@ Resources:
         - !Ref 'InstanceSecurityGroup'
         - !Ref 'SshAccessSecurityGroup'
       UserData:
-        Fn::Base64: !Sub |
+        Fn::Base64: !Sub 
+          - |+
             #!/bin/bash -ev
 
             mkdir /etc/gu
@@ -160,6 +161,8 @@ Resources:
             systemctl enable identity-gateway
             systemctl start identity-gateway
             /opt/cloudwatch-logs/configure-logs application ${Stack} ${Stage} ${App} /var/log/identity-gateway.log
+
+          - IdapiBaseUrl: '{{resolve:ssm:/${Stack}/${App}/${Stage}/idapi-base-url:1}}'
   InstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
