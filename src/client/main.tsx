@@ -1,6 +1,6 @@
 import React from 'react';
 import { css, Global } from '@emotion/core';
-import { palette, space } from '@guardian/src-foundations';
+import { palette } from '@guardian/src-foundations';
 import { body } from '@guardian/src-foundations/typography';
 import { Route, Switch } from 'react-router-dom';
 import { fontFaces } from '@/client/lib/fonts';
@@ -8,6 +8,7 @@ import { ResetPasswordPage } from '@/client/pages/ResetPasswordPage';
 import { ResetSentPage } from '@/client/pages/ResetSentPage';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
+import { MaxWidth } from '@/client/models/Style';
 
 const p = css`
   color: ${palette.text.primary};
@@ -16,6 +17,9 @@ const p = css`
 
 const main = css`
   flex-grow: 1;
+  width: 100%;
+  max-width: ${MaxWidth.TABLET}px;
+  margin: 0 auto;
 `;
 
 export const Main = () => {
