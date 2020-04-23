@@ -10,10 +10,7 @@ Parameters:
     Default: identity-gateway
     Type: String
   IdapiBaseUrl:
-    Description: SSM Parameter for IDAPI BaseURL
-    Type: AWS::SSM::Parameter::Value<String>
-  IdapiClientAccessToken:
-    Description: SSM Parameter for IDAPI client access token
+    Description: The base url for idapi
     Type: AWS::SSM::Parameter::Value<String>
   CertificateArn:
     Description: ARN of certificate for loadbalancer use.
@@ -156,7 +153,7 @@ Resources:
           Group=identity-gateway
           Environment=NODE_ENV=production
           Environment=PORT=9233
-          Environment=IDAPI_CLIENT_ACCESS_TOKEN=${IdapiClientAccessToken}
+          Environment=IDAPI_CLIENT_ACCESS_TOKEN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/idapi-client-access-token' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
           Environment=IDAPI_BASE_URL=${IdapiBaseUrl}
           [Install]
           WantedBy=multi-user.target
