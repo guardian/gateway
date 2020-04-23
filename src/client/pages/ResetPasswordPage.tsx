@@ -6,6 +6,9 @@ import { css } from '@emotion/core';
 import { space, brandAlt } from '@guardian/src-foundations';
 import { textSans } from '@guardian/src-foundations/typography';
 import { ThemeProvider } from 'emotion-theming';
+import { from } from '@guardian/src-foundations/mq';
+
+const border = `2px solid #dcdcdc`;
 
 const textInput = css`
   margin-bottom: ${space[3]}px;
@@ -14,10 +17,16 @@ const textInput = css`
 const header = css`
   background-color: ${brandAlt[400]};
   padding: ${space[2]}px ${space[3]}px;
+  border: 2px solid transparent;
+
+  ${from.tablet} {
+    margin-top: ${space[12]}px;
+  }
 `;
 
 const main = css`
   padding: ${space[3]}px ${space[3]}px;
+  border: ${border};
 `;
 
 const p = css`
