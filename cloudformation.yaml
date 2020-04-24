@@ -43,6 +43,10 @@ Parameters:
   VpcId:
     Description: VPC id of VPC for this service to use
     Type: String
+  KinesisStream:
+    Description: Kinesis Stream name for logging
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /account/services/logging.stream/name
 
 Resources:
   AppRole:
@@ -68,24 +72,18 @@ Resources:
                 Action: s3:GetObject
                 Resource:
                   - !Sub arn:aws:s3:::identity-artifacts/${Stage}/${App}/*
-        - PolicyName: PushLogs
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
               - Effect: Allow
                 Action:
-                  - logs:CreateLogGroup
-                  - logs:CreateLogStream
-                  - logs:PutLogEvents
-                Resource: '*'
+                - kinesis:Describe*
+                - kinesis:Put*
+                Resource:
+                - !Sub arn:aws:kinesis:${AWS::Region}:${AWS::AccountId}:stream/${KinesisStream}
         - PolicyName: GetParameters
           PolicyDocument:
             Statement:
               - Effect: Allow
                 Action:
                   - ssm:GetParameter
-                  - ssm:GetParameters
-                  - ssm:GetParametersByPath
                 Resource:
                   - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${Stack}/${App}/${Stage}/*
   AutoScalingGroup:
@@ -159,10 +157,45 @@ Resources:
           WantedBy=multi-user.target
           EOL
 
+          # logstash setup
+          sed -i 's/-Xms.*/-Xms256m/g' /etc/logstash/jvm.options
+          sed -i 's/-Xmx.*/-Xmx256m/g' /etc/logstash/jvm.options
+
+          cat > /etc/logstash/conf.d/logstash.conf <<__END__
+          input {
+            stdin {
+              add_field => {
+                'app' => '${App}'
+                'stage' => '${Stage}'
+                'stack' => '${Stack}'
+                'ec2_instance' => '$instanceid'
+              }
+              type => "app"
+            }
+          }
+          output {
+            kinesis {
+              stream_name => "${KinesisStream}"
+              region => "${AWS::Region}"
+            }
+          }
+          filter {
+              if [type] == "app" {
+                  multiline {
+                      pattern => "^\s"
+                      what => "previous"
+                    }
+              }
+              date {
+                  match => [ "timestamp" , "yyyy-MM-dd HH:mm:ss,SSS" ]
+              }
+          }
+          __END__
+
           # Run
+          systemctl start logstash
           systemctl enable identity-gateway
           systemctl start identity-gateway
-          /opt/cloudwatch-logs/configure-logs application ${Stack} ${Stage} ${App} /var/log/identity-gateway.log
 
   InstanceProfile:
     Type: AWS::IAM::InstanceProfile
