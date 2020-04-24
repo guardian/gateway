@@ -2,7 +2,10 @@ import { Logger, LogLevel } from '@/server/models/Logger';
 import { createLogger, transports } from 'winston';
 
 const winstonLogger = createLogger({
-  transports: [new transports.Console()],
+  transports: [
+    new transports.Console(),
+    new transports.File({ filename: process.env.LOG_FILE }),
+  ],
 });
 
 export const logger: Logger = {

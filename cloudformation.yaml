@@ -158,8 +158,8 @@ Resources:
           EOL
 
           # logstash setup
-          sed -i 's/-Xms.*/-Xms256m/g' /etc/logstash/jvm.options
-          sed -i 's/-Xmx.*/-Xmx256m/g' /etc/logstash/jvm.options
+          sed -i 's/-Xms.*/-Xms512m/g' /etc/logstash/jvm.options
+          sed -i 's/-Xmx.*/-Xmx512m/g' /etc/logstash/jvm.options
 
           cat > /etc/logstash/conf.d/logstash.conf <<__END__
           input {
