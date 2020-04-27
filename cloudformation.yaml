@@ -162,6 +162,8 @@ Resources:
           sed -i 's/-Xms.*/-Xms512m/g' /etc/logstash/jvm.options
           sed -i 's/-Xmx.*/-Xmx512m/g' /etc/logstash/jvm.options
 
+          instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+
           cat > /etc/logstash/conf.d/logstash.conf <<__END__
           input {
             stdin {}
@@ -170,7 +172,7 @@ Resources:
                 'app' => '${App}'
                 'stage' => '${Stage}'
                 'stack' => '${Stack}'
-                'ec2_instance' => '${AWS::EC2::Instance}'
+                'ec2_instance' => '$instanceid'
               }
               path => "/var/logs/identity-gateway.log"
               type => "app"
