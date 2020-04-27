@@ -174,7 +174,7 @@ Resources:
                 'stack' => '${Stack}'
                 'ec2_instance' => '$instanceid'
               }
-              path => "/var/logs/identity-gateway.log"
+              path => "/var/log/identity-gateway.log"
               type => "app"
               start_position => "beginning"
             }
