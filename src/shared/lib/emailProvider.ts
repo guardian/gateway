@@ -16,7 +16,7 @@ const emailProviders: EmailProvider[] = [
   {
     id: 'bt',
     name: 'BT Mail',
-    inboxLink: 'https://btmail.bt.com/cp/ps/main/index#mail',
+    inboxLink: 'https://www.bt.com/email',
     matches: ['@btinternet.'],
   },
   {
