@@ -2,6 +2,7 @@ import { Request, Response, Router } from 'express';
 import { create as resetPassword } from '@/server/lib/idapi/resetPassword';
 import { getProviderForEmail } from '@/shared/lib/emailProvider';
 import qs, { ParsedUrlQueryInput } from 'querystring';
+import { logger } from '@/server/lib/logger';
 
 interface ResetSentQuery {
   emailProvider?: string;
@@ -11,11 +12,11 @@ const router = Router();
 
 router.post('/', async (req: Request, res: Response) => {
   const { email = '' } = req.body;
+
   try {
-    const result = await resetPassword(email, req.ip);
-    console.log('RESULT:', result);
+    await resetPassword(email, req.ip);
   } catch (e) {
-    console.log(e);
+    logger.error(e);
   }
 
   const query: ResetSentQuery = {};
