@@ -39,6 +39,9 @@ const server = {
                 [
                   "@babel/env",
                   {
+                    targets: {
+                      node: "current"
+                    },
                     ignoreBrowserslistConfig: true
                   }
                 ],

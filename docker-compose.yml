@@ -6,9 +6,11 @@ services:
       target: base
     command: sh -c "yarn && yarn build && (yarn watch:server & yarn watch & wait)"
     environment:
-      - PORT=8080
-      - ENVIRONMENT=development
+      - PORT=${PORT}
+      - ENVIRONMENT={ENVIRONMENT}
+      - IDAPI_CLIENT_ACCESS_TOKEN=${IDAPI_CLIENT_ACCESS_TOKEN}
+      - IDAPI_BASE_URL=${IDAPI_BASE_URL}
     ports:
-      - "8080:8080"
+      - "${PORT}:${PORT}"
     volumes:
       - .:/app/

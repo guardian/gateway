@@ -13,9 +13,14 @@ describe('getConfiguration', () => {
 
   test('it returns the configuration object with the correct values', () => {
     process.env.PORT = '9000';
+    process.env.IDAPI_CLIENT_ACCESS_TOKEN = 'idapi_api_key';
+    process.env.IDAPI_BASE_URL = 'http://localhost:1234';
+
     const output = getConfiguration();
     const expected = {
       port: 9000,
+      idapiClientAccessToken: 'idapi_api_key',
+      idapiBaseUrl: 'http://localhost:1234',
     };
     expect(output).toEqual(expected);
   });

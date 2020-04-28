@@ -20,4 +20,13 @@ deployments:
     parameters:
       bucket: identity-artifacts
       prefixStack: false
-
+  update-ami:
+    type: ami-cloudformation-parameter
+    parameters:
+      cloudFormationStackByTags: false
+      cloudFormationStackName: gateway
+      amiParametersToTags:
+        AMI:
+          Recipe: gateway
+          AmigoStage: PROD
+      amiEncrypted: true

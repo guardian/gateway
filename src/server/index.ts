@@ -9,23 +9,23 @@ import ReactDOMServer from 'react-dom/server';
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { logger } from '@/server/lib/logger';
-import { Main } from '../client/main';
-import path from 'path';
+import { Main } from '@/client/main';
 import { getConfiguration } from '@/server/lib/configuration';
+import { default as routes } from '@/server/routes';
 
 const { port } = getConfiguration();
 const server: Express = express();
 
-const loggerMiddleware = (req: Request, _, next: NextFunction) => {
+const loggerMiddleware = (req: Request, _: Response, next: NextFunction) => {
   logger.info(`${req.method}, ${req.path}`);
   next();
 };
 
+server.use(express.urlencoded({ extended: true }));
 server.use(loggerMiddleware);
-server.use('/static', express.static(path.resolve(__dirname, 'static')));
-server.get('/healthcheck', (_, res: Response) => {
-  res.sendStatus(204);
-});
+
+server.use(routes);
+
 server.use((req: Request, res: Response) => {
   const context = {};
 
@@ -51,7 +51,6 @@ server.use((req: Request, res: Response) => {
     <body style="margin:0">
       <div id="app">${react}</div>
     </body>
-    <script src="/static/bundle.js"></script>
   </html>`;
   res.type('html');
   res.send(html);
