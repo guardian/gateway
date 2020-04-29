@@ -12,6 +12,7 @@ import { MaxWidth } from '@/client/models/Style';
 import { GlobalStateProvider } from '@/client/components/GlobalState';
 import { GlobalState } from '@/shared/model/GlobalState';
 import { Routes } from '@/shared/model/Routes';
+import { GlobalError } from './components/GlobalError';
 
 const p = css`
   color: ${palette.text.primary};
@@ -52,6 +53,7 @@ export const Main = (props: GlobalState) => {
       />
       <GlobalStateProvider globalState={props}>
         <Header />
+        {props.error && <GlobalError error={props.error} />}
         <main css={main}>
           <Switch>
             <Route exact path="/">
