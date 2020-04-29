@@ -1,14 +1,9 @@
 import { Request, Response, Router } from 'express';
 import { create as resetPassword } from '@/server/lib/idapi/resetPassword';
 import { getProviderForEmail } from '@/shared/lib/emailProvider';
-import qs, { ParsedUrlQueryInput } from 'querystring';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { GlobalState } from '@/shared/model/GlobalState';
-
-interface ResetSentQuery {
-  emailProvider?: string;
-}
 
 const router = Router();
 
@@ -26,16 +21,10 @@ router.post('/', async (req: Request, res: Response) => {
     return;
   }
 
-  const query: ResetSentQuery = {};
   const emailProvider = getProviderForEmail(email);
-  if (emailProvider) query.emailProvider = emailProvider.id;
+  if (emailProvider) state.emailProvider = emailProvider.id;
 
-  const querystring = qs.stringify(query as ParsedUrlQueryInput);
-
-  const html = renderer(
-    `/reset/sent${querystring ? `?${querystring}` : ''}`,
-    state,
-  );
+  const html = renderer(`/reset/sent`, state);
   res.type('html').send(html);
 });
 

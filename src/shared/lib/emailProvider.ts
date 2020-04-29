@@ -5,7 +5,7 @@ const emailProviders: EmailProvider[] = [
     id: 'gmail',
     name: 'Gmail',
     inboxLink: 'https://mail.google.com/mail',
-    matches: ['@gmail.', '@googlemail.'],
+    matches: ['@gmail.', '@googlemail.', '@guardian.', '@theguardian.'],
   },
   {
     id: 'yahoo',
@@ -33,7 +33,7 @@ const emailProviders: EmailProvider[] = [
   },
 ];
 
-export const getProviderById: (id: string) => EmailProvider | undefined = id =>
+export const getProviderById: (id?: string) => EmailProvider | undefined = id =>
   emailProviders.find(ep => ep.id === id);
 
 export const getProviderForEmail: (
