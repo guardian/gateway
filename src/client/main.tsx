@@ -11,6 +11,8 @@ import { Footer } from '@/client/components/Footer';
 import { MaxWidth } from '@/client/models/Style';
 import { GlobalStateProvider } from '@/client/components/GlobalState';
 import { GlobalState } from '@/shared/model/GlobalState';
+import { Routes } from '@/shared/model/Routes';
+
 const p = css`
   color: ${palette.text.primary};
   ${body.medium()};
@@ -55,10 +57,10 @@ export const Main = (props: GlobalState) => {
             <Route exact path="/">
               <p>Gateway</p>
             </Route>
-            <Route exact path="/reset">
+            <Route exact path={Routes.RESET}>
               <ResetPasswordPage />
             </Route>
-            <Route exact path="/reset/sent">
+            <Route exact path={Routes.RESET_SENT}>
               <ResetSentPage />
             </Route>
           </Switch>
