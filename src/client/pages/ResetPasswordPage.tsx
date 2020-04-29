@@ -3,7 +3,7 @@ import { TextInput } from '@guardian/src-text-input';
 import { Button, buttonReaderRevenue } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-svgs';
 import { css } from '@emotion/core';
-import { space, brandAlt } from '@guardian/src-foundations';
+import { space, brandAlt, error, neutral } from '@guardian/src-foundations';
 import { textSans } from '@guardian/src-foundations/typography';
 import { ThemeProvider } from 'emotion-theming';
 import { from } from '@guardian/src-foundations/mq';
@@ -40,12 +40,27 @@ const form = css`
   padding: ${space[2]}px 0px;
 `;
 
+const errorDiv = css`
+  padding: ${space[2]}px ${space[3]}px;
+  background-color: ${error[400]};
+`;
+
+const errorP = css`
+  margin: 0;
+  color: ${neutral[100]};
+  ${textSans.medium()}
+`;
+
 export const ResetPasswordPage = () => {
   const globalState: GlobalState = useContext(GlobalStateContext);
   const { error } = globalState;
   return (
     <>
-      {error && <h3>{error}</h3>}
+      {error && (
+        <div css={errorDiv}>
+          <p css={errorP}>{error}</p>
+        </div>
+      )}
       <div css={header}>
         <p css={p}>Forgotten or need to set your password?</p>
       </div>
