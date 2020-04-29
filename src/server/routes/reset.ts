@@ -22,7 +22,7 @@ router.post(Routes.RESET, async (req: Request, res: Response) => {
     await resetPassword(email, req.ip);
   } catch (e) {
     logger.error(e);
-    state.error = 'There was an error!';
+    state.error = e;
     res.type('html').send(renderer(Routes.RESET, state));
     return;
   }
