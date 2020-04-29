@@ -8,6 +8,11 @@ import { Routes } from '@/shared/model/Routes';
 
 const router = Router();
 
+router.get(Routes.RESET, (req: Request, res: Response) => {
+  const html = renderer(Routes.RESET);
+  res.type('html').send(html);
+});
+
 router.post(Routes.RESET, async (req: Request, res: Response) => {
   const { email = '' } = req.body;
 

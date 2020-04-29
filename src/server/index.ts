@@ -24,9 +24,9 @@ server.use(loggerMiddleware);
 server.use(routes);
 
 server.use((req: Request, res: Response) => {
-  const html = renderer(req.url);
+  const html = renderer('/404');
   res.type('html');
-  res.send(html);
+  res.status(404).send(html);
 });
 
 server.listen(port);

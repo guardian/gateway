@@ -63,6 +63,9 @@ export const Main = (props: GlobalState) => {
             <Route exact path={Routes.RESET_SENT}>
               <ResetSentPage />
             </Route>
+            <Route>
+              <p>404</p>
+            </Route>
           </Switch>
         </main>
         <Footer />
