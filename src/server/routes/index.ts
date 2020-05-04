@@ -6,6 +6,6 @@ import { default as reset } from './reset';
 const router = Router();
 
 router.use(core);
-router.use('/reset', reset);
+router.use(reset);
 
 export default router;

@@ -1,11 +1,12 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import { css } from '@emotion/core';
 import { space, brandAlt } from '@guardian/src-foundations';
 import { textSans } from '@guardian/src-foundations/typography';
 import { from } from '@guardian/src-foundations/mq';
-import { useLocation } from 'react-router-dom';
 import { getProviderById } from '@/shared/lib/emailProvider';
 import { LinkButton } from '@guardian/src-button';
+import { GlobalState } from '@/shared/model/GlobalState';
+import { GlobalStateContext } from '@/client/components/GlobalState';
 
 const border = `2px solid #dcdcdc`;
 
@@ -34,14 +35,10 @@ const headerP = css`
   ${textSans.medium({ fontWeight: 'bold', lineHeight: 'regular' })}
 `;
 
-const useQuery: () => URLSearchParams = () => {
-  return new URLSearchParams(useLocation().search);
-};
-
 export const ResetSentPage = () => {
-  const query: URLSearchParams = useQuery();
-  const emailProviderQueryParam = query.get('emailProvider') || '';
-  const emailProvider = getProviderById(emailProviderQueryParam);
+  const globalState: GlobalState = useContext(GlobalStateContext);
+  const { emailProvider: emailProviderId } = globalState;
+  const emailProvider = getProviderById(emailProviderId);
 
   return (
     <>

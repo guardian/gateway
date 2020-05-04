@@ -9,7 +9,8 @@ const babel = {
     "@babel/typescript",
     "@babel/react",
     "@emotion/babel-preset-css-prop"
-  ]
+  ],
+  plugins: ["@babel/plugin-proposal-optional-chaining"]
 };
 
 const extensions = [".ts", ".tsx", ".js"];

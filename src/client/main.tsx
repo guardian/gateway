@@ -9,6 +9,10 @@ import { ResetSentPage } from '@/client/pages/ResetSentPage';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { MaxWidth } from '@/client/models/Style';
+import { GlobalStateProvider } from '@/client/components/GlobalState';
+import { GlobalState } from '@/shared/model/GlobalState';
+import { Routes } from '@/shared/model/Routes';
+import { GlobalError } from './components/GlobalError';
 
 const p = css`
   color: ${palette.text.primary};
@@ -22,7 +26,7 @@ const main = css`
   margin: 0 auto;
 `;
 
-export const Main = () => {
+export const Main = (props: GlobalState) => {
   return (
     <>
       <Global
@@ -47,21 +51,27 @@ export const Main = () => {
           }
         `}
       />
-      <Header />
-      <main css={main}>
-        <Switch>
-          <Route exact path="/">
-            <p>Gateway</p>
-          </Route>
-          <Route exact path="/reset">
-            <ResetPasswordPage />
-          </Route>
-          <Route exact path="/reset/sent">
-            <ResetSentPage />
-          </Route>
-        </Switch>
-      </main>
-      <Footer />
+      <GlobalStateProvider globalState={props}>
+        <Header />
+        {props.error && <GlobalError error={props.error} />}
+        <main css={main}>
+          <Switch>
+            <Route exact path="/">
+              <p>Gateway</p>
+            </Route>
+            <Route exact path={Routes.RESET}>
+              <ResetPasswordPage />
+            </Route>
+            <Route exact path={Routes.RESET_SENT}>
+              <ResetSentPage />
+            </Route>
+            <Route>
+              <p>404</p>
+            </Route>
+          </Switch>
+        </main>
+        <Footer />
+      </GlobalStateProvider>
     </>
   );
 };

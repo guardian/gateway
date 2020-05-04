@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { TextInput } from '@guardian/src-text-input';
 import { Button, buttonReaderRevenue } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-svgs';
