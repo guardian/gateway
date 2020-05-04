@@ -3,6 +3,7 @@ import { css } from '@emotion/core';
 import { space, error, neutral } from '@guardian/src-foundations';
 import { textSans } from '@guardian/src-foundations/typography';
 import { SvgAlert } from '@guardian/src-svgs';
+import locations from '@/client/lib/locations';
 
 interface GlobalErrorProps {
   error: string;
@@ -28,6 +29,10 @@ const errorP = css`
   }
 `;
 
+const errorLink = css`
+  color: ${neutral[100]};
+`;
+
 const svg = css`
   height: 30px;
   width: 30px;
@@ -38,6 +43,10 @@ export const GlobalError = ({ error }: GlobalErrorProps) => (
     <p css={errorP}>
       <SvgAlert css={svg} />
       {error}
+      &nbsp;
+      <a css={errorLink} href={locations.REPORT_ISSUE}>
+        Report this error
+      </a>
     </p>
   </div>
 );
