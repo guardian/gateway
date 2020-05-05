@@ -5,11 +5,19 @@ import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { GlobalState } from '@/shared/model/GlobalState';
 import { Routes } from '@/shared/model/Routes';
+import { getEmailFromPlaySessionCookie } from '@/server/lib/playSessionCookie';
 
 const router = Router();
 
 router.get(Routes.RESET, (req: Request, res: Response) => {
-  const html = renderer(Routes.RESET);
+  const state: GlobalState = {};
+
+  const emailFromPlaySession = getEmailFromPlaySessionCookie(req);
+  if (emailFromPlaySession) {
+    state.email = emailFromPlaySession;
+  }
+
+  const html = renderer(Routes.RESET, state);
   res.type('html').send(html);
 });
 
@@ -28,7 +36,9 @@ router.post(Routes.RESET, async (req: Request, res: Response) => {
   }
 
   const emailProvider = getProviderForEmail(email);
-  if (emailProvider) state.emailProvider = emailProvider.id;
+  if (emailProvider) {
+    state.emailProvider = emailProvider.id;
+  }
 
   const html = renderer(Routes.RESET_SENT, state);
   res.type('html').send(html);

@@ -5,6 +5,7 @@ import {
   Request,
   Response,
 } from 'express';
+import cookieParser from 'cookie-parser';
 import { logger } from '@/server/lib/logger';
 import { getConfiguration } from '@/server/lib/configuration';
 import { default as routes } from '@/server/routes';
@@ -19,6 +20,8 @@ const loggerMiddleware = (req: Request, _: Response, next: NextFunction) => {
 };
 
 server.use(express.urlencoded({ extended: true }));
+server.use(cookieParser());
+
 server.use(loggerMiddleware);
 
 server.use(routes);
