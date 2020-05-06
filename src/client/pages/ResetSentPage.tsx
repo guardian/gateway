@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { css } from '@emotion/core';
-import { space, brandAlt } from '@guardian/src-foundations';
+import { space, brandAlt, neutral } from '@guardian/src-foundations';
 import { textSans } from '@guardian/src-foundations/typography';
 import { from } from '@guardian/src-foundations/mq';
 import { getProviderById } from '@/shared/lib/emailProvider';
@@ -8,7 +8,7 @@ import { LinkButton } from '@guardian/src-button';
 import { GlobalState } from '@/shared/model/GlobalState';
 import { GlobalStateContext } from '@/client/components/GlobalState';
 
-const border = `2px solid #dcdcdc`;
+const border = `2px solid ${neutral[86]}`;
 
 const header = css`
   background-color: ${brandAlt[400]};

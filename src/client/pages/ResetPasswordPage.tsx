@@ -3,7 +3,7 @@ import { TextInput } from '@guardian/src-text-input';
 import { Button, buttonReaderRevenue } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-svgs';
 import { css } from '@emotion/core';
-import { space, brandAlt } from '@guardian/src-foundations';
+import { space, brandAlt, neutral } from '@guardian/src-foundations';
 import { textSans } from '@guardian/src-foundations/typography';
 import { ThemeProvider } from 'emotion-theming';
 import { from } from '@guardian/src-foundations/mq';
@@ -11,7 +11,7 @@ import { GlobalState } from '@/shared/model/GlobalState';
 import { GlobalStateContext } from '@/client/components/GlobalState';
 import { Routes } from '@/shared/model/Routes';
 
-const border = `2px solid #dcdcdc`;
+const border = `2px solid ${neutral[86]}`;
 
 const textInput = css`
   margin-bottom: ${space[3]}px;

@@ -2,7 +2,7 @@ import React from 'react';
 import { css } from '@emotion/core';
 import { textSans, headline } from '@guardian/src-foundations/typography';
 import locations from '@/client/lib/locations';
-import { space } from '@guardian/src-foundations';
+import { space, neutral } from '@guardian/src-foundations';
 import { Link } from '@guardian/src-link';
 import { from } from '@guardian/src-foundations/mq';
 
@@ -17,7 +17,7 @@ const h1 = css`
 `;
 
 const hr = css`
-  color: #dcdcdc;
+  color: ${neutral[86]};
   margin-left: ${space[3]}px;
   margin-right: ${space[3]}px;
 `;
