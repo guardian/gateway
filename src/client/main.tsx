@@ -12,7 +12,8 @@ import { MaxWidth } from '@/client/models/Style';
 import { GlobalStateProvider } from '@/client/components/GlobalState';
 import { GlobalState } from '@/shared/model/GlobalState';
 import { Routes } from '@/shared/model/Routes';
-import { GlobalError } from './components/GlobalError';
+import { GlobalError } from '@/client/components/GlobalError';
+import { NotFound } from '@/client/pages/NotFound';
 
 const p = css`
   color: ${palette.text.primary};
@@ -66,7 +67,7 @@ export const Main = (props: GlobalState) => {
               <ResetSentPage />
             </Route>
             <Route>
-              <p>404</p>
+              <NotFound />
             </Route>
           </Switch>
         </main>
