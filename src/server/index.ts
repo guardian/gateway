@@ -6,7 +6,7 @@ import {
   Response,
 } from 'express';
 import cookieParser from 'cookie-parser';
-import helmet from 'helmet';
+import { default as helmet, IHelmetConfiguration } from 'helmet';
 import { logger } from '@/server/lib/logger';
 import { getConfiguration } from '@/server/lib/configuration';
 import { default as routes } from '@/server/routes';
@@ -20,9 +20,26 @@ const loggerMiddleware = (req: Request, _: Response, next: NextFunction) => {
   next();
 };
 
+enum HELMET_OPTIONS {
+  SELF = "'self'",
+  NONE = "'none'",
+}
+
+const helmetConfig: IHelmetConfiguration = {
+  contentSecurityPolicy: {
+    directives: {
+      baseUri: [HELMET_OPTIONS.SELF],
+      defaultSrc: [HELMET_OPTIONS.SELF],
+      formAction: [HELMET_OPTIONS.NONE],
+      frameAncestors: [HELMET_OPTIONS.NONE],
+      pluginTypes: [HELMET_OPTIONS.NONE],
+    },
+  },
+};
+
+server.use(helmet(helmetConfig));
 server.use(express.urlencoded({ extended: true }));
 server.use(cookieParser());
-server.use(helmet());
 
 server.use(loggerMiddleware);
 
