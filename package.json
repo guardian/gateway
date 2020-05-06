@@ -57,6 +57,7 @@
     "cookie-parser": "^1.4.5",
     "emotion-theming": "^10.0.27",
     "express": "^4.17.1",
+    "helmet": "^3.22.0",
     "jsonwebtoken": "^8.5.1",
     "node-fetch": "^2.6.0",
     "react": "^16.12.0",

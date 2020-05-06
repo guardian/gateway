@@ -6,6 +6,7 @@ import {
   Response,
 } from 'express';
 import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 import { logger } from '@/server/lib/logger';
 import { getConfiguration } from '@/server/lib/configuration';
 import { default as routes } from '@/server/routes';
@@ -21,6 +22,7 @@ const loggerMiddleware = (req: Request, _: Response, next: NextFunction) => {
 
 server.use(express.urlencoded({ extended: true }));
 server.use(cookieParser());
+server.use(helmet());
 
 server.use(loggerMiddleware);
 
