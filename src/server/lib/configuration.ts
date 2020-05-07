@@ -1,31 +1,37 @@
 import { Configuration } from '@/server/models/Configuration';
 
+const getOrThrow = (value: string | undefined, errorMessage: string) => {
+  if (!value) {
+    throw Error(errorMessage);
+  }
+  return value;
+};
+
 export const getConfiguration = (): Configuration => {
-  const port = process.env.PORT;
-  const idapiBaseUrl = process.env.IDAPI_BASE_URL;
-  const idapiClientAccessToken = process.env.IDAPI_CLIENT_ACCESS_TOKEN;
-  const playSessionCookieSecret = process.env.PLAY_SESSION_COOKIE_SECRET;
+  const port = getOrThrow(process.env.PORT, 'Port configuration missing.');
 
-  if (!port) {
-    throw Error('Port configuration missing.');
-  }
+  const idapiBaseUrl = getOrThrow(
+    process.env.IDAPI_BASE_URL,
+    'IDAPI Base URL missing.',
+  );
 
-  if (!idapiBaseUrl) {
-    throw Error('IDAPI Base URL missing.');
-  }
+  const idapiClientAccessToken = getOrThrow(
+    process.env.IDAPI_CLIENT_ACCESS_TOKEN,
+    'IDAPI Client Access Token missing.',
+  );
 
-  if (!idapiClientAccessToken) {
-    throw Error('IDAPI Client Access Token missing.');
-  }
+  const playSessionCookieSecret = getOrThrow(
+    process.env.PLAY_SESSION_COOKIE_SECRET,
+    'Play Session Cookie Secret missing.',
+  );
 
-  if (!playSessionCookieSecret) {
-    throw Error('Play Session Cookie Secret missing.');
-  }
+  const baseUri = getOrThrow(process.env.BASE_URI, 'Base URI missing.');
 
   return {
     port: +port,
     idapiBaseUrl,
     idapiClientAccessToken,
     playSessionCookieSecret,
+    baseUri,
   };
 };

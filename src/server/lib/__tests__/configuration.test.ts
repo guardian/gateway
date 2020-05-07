@@ -16,6 +16,7 @@ describe('getConfiguration', () => {
     process.env.IDAPI_CLIENT_ACCESS_TOKEN = 'idapi_api_key';
     process.env.IDAPI_BASE_URL = 'http://localhost:1234';
     process.env.PLAY_SESSION_COOKIE_SECRET = 'play-secret';
+    process.env.BASE_URI = 'base-uri';
 
     const output = getConfiguration();
     const expected = {
@@ -23,6 +24,7 @@ describe('getConfiguration', () => {
       idapiClientAccessToken: 'idapi_api_key',
       idapiBaseUrl: 'http://localhost:1234',
       playSessionCookieSecret: 'play-secret',
+      baseUri: 'base-uri',
     };
     expect(output).toEqual(expected);
   });

@@ -11,8 +11,9 @@ import { logger } from '@/server/lib/logger';
 import { getConfiguration } from '@/server/lib/configuration';
 import { default as routes } from '@/server/routes';
 import { renderer } from '@/server/lib/renderer';
+import { Routes } from '@/shared/model/Routes';
 
-const { port } = getConfiguration();
+const { port, baseUri } = getConfiguration();
 const server: Express = express();
 
 const loggerMiddleware = (req: Request, _: Response, next: NextFunction) => {
@@ -23,15 +24,19 @@ const loggerMiddleware = (req: Request, _: Response, next: NextFunction) => {
 enum HELMET_OPTIONS {
   SELF = "'self'",
   NONE = "'none'",
+  UNSAFE_INLINE = "'unsafe-inline'",
 }
 
 const helmetConfig: IHelmetConfiguration = {
   contentSecurityPolicy: {
     directives: {
-      baseUri: [HELMET_OPTIONS.NONE],
+      baseUri: [baseUri],
       defaultSrc: [HELMET_OPTIONS.NONE],
-      formAction: [HELMET_OPTIONS.NONE],
+      formAction: [`${baseUri}${Routes.RESET}`],
       frameAncestors: [HELMET_OPTIONS.NONE],
+      styleSrc: [HELMET_OPTIONS.UNSAFE_INLINE],
+      imgSrc: ['static.guim.co.uk'],
+      fontSrc: ['assets.guim.co.uk'],
     },
   },
 };
