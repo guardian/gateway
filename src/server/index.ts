@@ -28,11 +28,10 @@ enum HELMET_OPTIONS {
 const helmetConfig: IHelmetConfiguration = {
   contentSecurityPolicy: {
     directives: {
-      baseUri: [HELMET_OPTIONS.SELF],
-      defaultSrc: [HELMET_OPTIONS.SELF],
+      baseUri: [HELMET_OPTIONS.NONE],
+      defaultSrc: [HELMET_OPTIONS.NONE],
       formAction: [HELMET_OPTIONS.NONE],
       frameAncestors: [HELMET_OPTIONS.NONE],
-      pluginTypes: [HELMET_OPTIONS.NONE],
     },
   },
 };
