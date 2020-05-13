@@ -6,7 +6,7 @@ const router = Router();
 router.use('/static', express.static(path.resolve(__dirname, 'static')));
 
 router.get('/healthcheck', (_, res: Response) => {
-  res.sendStatus(204);
+  res.status(200).send('200 OK');
 });
 
 export default router;
