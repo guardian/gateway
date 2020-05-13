@@ -30,7 +30,7 @@ enum HELMET_OPTIONS {
 const helmetConfig: IHelmetConfiguration = {
   contentSecurityPolicy: {
     directives: {
-      baseUri: [baseUri],
+      baseUri: [HELMET_OPTIONS.NONE],
       defaultSrc: [HELMET_OPTIONS.NONE],
       formAction: [`${baseUri}${Routes.RESET}`],
       frameAncestors: [HELMET_OPTIONS.NONE],
