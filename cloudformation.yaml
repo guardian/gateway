@@ -47,7 +47,10 @@ Parameters:
     Description: Kinesis Stream name for logging
     Type: AWS::SSM::Parameter::Value<String>
     Default: /account/services/logging.stream/name
-
+Mappings:
+  StageVariables:
+    CODE:
+      BaseUri: gateway-origin.code.dev-theguardian.com
 Resources:
   AppRole:
     Type: AWS::IAM::Role
@@ -121,87 +124,93 @@ Resources:
         - !Ref 'InstanceSecurityGroup'
         - !Ref 'SshAccessSecurityGroup'
       UserData:
-        Fn::Base64: !Sub |
-          #!/bin/bash -ev
+        Fn::Base64: !Sub 
+          - |+
+            #!/bin/bash -ev
 
-          mkdir /etc/gu
+            mkdir /etc/gu
 
-          # Get Riff Raff deployed artefact S3
-          aws s3 cp s3://identity-artifacts/${Stage}/${App}/${App}.zip /etc/gu
-          unzip -o /etc/gu/${App}.zip -d /etc/gu
+            # Get Riff Raff deployed artefact S3
+            aws s3 cp s3://identity-artifacts/${Stage}/${App}/${App}.zip /etc/gu
+            unzip -o /etc/gu/${App}.zip -d /etc/gu
 
-          # Setup user
-          groupadd identity-gateway
-          useradd -r -s /usr/bin/nologin -g identity-gateway identity-gateway
-          chown -R identity-gateway:identity-gateway /etc/gu
+            # Setup user
+            groupadd identity-gateway
+            useradd -r -s /usr/bin/nologin -g identity-gateway identity-gateway
+            chown -R identity-gateway:identity-gateway /etc/gu
 
-          # Setup logs
-          touch /var/log/identity-gateway.log
-          chown identity-gateway:identity-gateway /var/log/identity-gateway.log
+            # Setup logs
+            touch /var/log/identity-gateway.log
+            chown identity-gateway:identity-gateway /var/log/identity-gateway.log
 
-          # systemd setup
-          cat > /etc/systemd/system/identity-gateway.service <<EOL
-          [Service]
-          ExecStart=/bin/sh -ec '/usr/bin/node /etc/gu/server.js > /var/log/identity-gateway.log 2>&1'
-          Restart=always
-          StandardOutput=syslog
-          StandardError=syslog
-          SyslogIdentifier=identity-gateway
-          User=identity-gateway
-          Group=identity-gateway
-          Environment=NODE_ENV=production
-          Environment=PORT=9233
-          Environment=IDAPI_CLIENT_ACCESS_TOKEN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/idapi-client-access-token' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
-          Environment=IDAPI_BASE_URL=${IdapiBaseUrl}
+            # systemd setup
+            cat > /etc/systemd/system/identity-gateway.service <<EOL
+            [Service]
+            ExecStart=/bin/sh -ec '/usr/bin/node /etc/gu/server.js > /var/log/identity-gateway.log 2>&1'
+            Restart=always
+            StandardOutput=syslog
+            StandardError=syslog
+            SyslogIdentifier=identity-gateway
+            User=identity-gateway
+            Group=identity-gateway
+            Environment=NODE_ENV=production
+            Environment=PORT=9233
+            Environment=IDAPI_CLIENT_ACCESS_TOKEN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/idapi-client-access-token' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+            Environment=IDAPI_BASE_URL=${IdapiBaseUrl}
+            Environment=BASE_URI=${BaseUri}
+            Environment=PLAY_SESSION_COOKIE_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/frontendPlaySecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
 
-          [Install]
-          WantedBy=multi-user.target
-          EOL
+            [Install]
+            WantedBy=multi-user.target
+            EOL
 
-          # logstash setup
-          sed -i 's/-Xms.*/-Xms512m/g' /etc/logstash/jvm.options
-          sed -i 's/-Xmx.*/-Xmx512m/g' /etc/logstash/jvm.options
+            # logstash setup
+            sed -i 's/-Xms.*/-Xms512m/g' /etc/logstash/jvm.options
+            sed -i 's/-Xmx.*/-Xmx512m/g' /etc/logstash/jvm.options
 
-          instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+            instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
 
-          cat > /etc/logstash/conf.d/logstash.conf <<__END__
-          input {
-            stdin {}
-            file {
-              add_field => {
-                'app' => '${App}'
-                'stage' => '${Stage}'
-                'stack' => '${Stack}'
-                'ec2_instance' => '$instanceid'
+            cat > /etc/logstash/conf.d/logstash.conf <<__END__
+            input {
+              stdin {}
+              file {
+                add_field => {
+                  'app' => '${App}'
+                  'stage' => '${Stage}'
+                  'stack' => '${Stack}'
+                  'ec2_instance' => '$instanceid'
+                }
+                path => "/var/log/identity-gateway.log"
+                type => "app"
+                start_position => "beginning"
               }
-              path => "/var/log/identity-gateway.log"
-              type => "app"
-              start_position => "beginning"
             }
-          }
-          output {
-            kinesis {
-              stream_name => "${KinesisStream}"
-              region => "${AWS::Region}"
+            output {
+              kinesis {
+                stream_name => "${KinesisStream}"
+                region => "${AWS::Region}"
+              }
             }
-          }
-          filter {
-              if [type] == "app" {
-                  multiline {
-                      pattern => "^\s"
-                      what => "previous"
-                    }
-              }
-              date {
-                  match => [ "timestamp" , "yyyy-MM-dd HH:mm:ss,SSS" ]
-              }
-          }
-          __END__
+            filter {
+                if [type] == "app" {
+                    multiline {
+                        pattern => "^\s"
+                        what => "previous"
+                      }
+                }
+                date {
+                    match => [ "timestamp" , "yyyy-MM-dd HH:mm:ss,SSS" ]
+                }
+            }
+            __END__
 
-          # Run
-          systemctl start logstash
-          systemctl enable identity-gateway
-          systemctl start identity-gateway
+            # Run
+            systemctl start logstash
+            systemctl enable identity-gateway
+            systemctl start identity-gateway
+
+          - BaseUri:
+              !FindInMap [StageVariables, !Ref Stage, BaseUri]
 
   InstanceProfile:
     Type: AWS::IAM::InstanceProfile
