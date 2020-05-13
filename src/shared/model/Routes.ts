@@ -1,4 +1,4 @@
 export enum Routes {
-  RESET = '/gateway/reset',
-  RESET_SENT = '/gateway/reset/sent',
+  RESET = '/reset',
+  RESET_SENT = '/reset/sent',
 }
