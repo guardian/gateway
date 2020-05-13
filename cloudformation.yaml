@@ -291,7 +291,7 @@ Resources:
       HealthyThresholdCount: 2
       UnhealthyThresholdCount: 2
       Matcher: 
-        HttpCode: 204
+        HttpCode: 200
       TargetGroupAttributes:
         - Key: deregistration_delay.timeout_seconds
           Value: 45
