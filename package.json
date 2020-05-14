@@ -12,7 +12,8 @@
     "start": "node ./build/server.js",
     "test": "jest",
     "watch:server": "nodemon ./build/server.js",
-    "watch": "webpack --watch"
+    "watch": "webpack --watch",
+    "dev-local": "yarn build && (yarn watch:server & yarn watch & wait)"
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",
@@ -22,6 +23,7 @@
     "@babel/preset-typescript": "^7.7.4",
     "@emotion/babel-preset-css-prop": "^10.0.23",
     "@types/cookie-parser": "^1.4.2",
+    "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.1",
     "@types/helmet": "^0.0.46",
     "@types/jest": "^24.0.23",
@@ -56,6 +58,7 @@
     "@guardian/src-svgs": "^1.0.0",
     "@guardian/src-text-input": "^1.0.0",
     "cookie-parser": "^1.4.5",
+    "dotenv": "^8.2.0",
     "emotion-theming": "^10.0.27",
     "express": "^4.17.1",
     "helmet": "^3.22.0",

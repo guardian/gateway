@@ -6,6 +6,7 @@ services:
       target: base
     command: sh -c "yarn && yarn build && (yarn watch:server & yarn watch & wait)"
     environment:
+      - IS_DOCKER=true
       - PORT=${PORT}
       - ENVIRONMENT={ENVIRONMENT}
       - IDAPI_CLIENT_ACCESS_TOKEN=${IDAPI_CLIENT_ACCESS_TOKEN}

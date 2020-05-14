@@ -1,3 +1,4 @@
+import '@/server/lib/env';
 import {
   default as express,
   Express,

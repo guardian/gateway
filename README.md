@@ -8,8 +8,8 @@ Note: all choices made in this project are subject to change!
 Need help? Contact the Identity team on [Digital/Identity](https://chat.google.com/room/AAAAFdv9gK8).
 
 ## Requirements
-* [Docker]("https://www.docker.com/")
-* [docker-compose]("https://docs.docker.com/compose/")
+* [Docker](https://www.docker.com/)
+* [docker-compose](https://docs.docker.com/compose/)
 
 ## Installation
 ```
@@ -47,3 +47,5 @@ And to access the container shell
 ```sh
 $ docker-compose exec gateway /bin/sh
 ```
+
+While using docker and docker-compose is preferable, you can still run this locally by installing dependencies using `yarn`, followed by `yarn dev-local` to run the development server.
