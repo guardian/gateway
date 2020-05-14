@@ -30,6 +30,7 @@ describe('getConfiguration', () => {
   });
 
   test('it throws and exception if the port is not set', () => {
+    process.env = {};
     expect(() => getConfiguration()).toThrow();
   });
 });

@@ -5,7 +5,7 @@ const emailProviders: EmailProvider[] = [
     id: 'gmail',
     name: 'Gmail',
     inboxLink: 'https://mail.google.com/mail',
-    matches: ['@gmail.', '@googlemail.', '@guardian.', '@theguardian.'],
+    matches: ['@gmail.', '@googlemail.'],
   },
   {
     id: 'yahoo',
