@@ -1,4 +1,3 @@
-import '@/server/lib/env';
 import { default as express, Express } from 'express';
 import { logger } from '@/server/lib/logger';
 import { getConfiguration } from '@/server/lib/configuration';

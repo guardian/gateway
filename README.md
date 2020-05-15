@@ -48,4 +48,4 @@ And to access the container shell
 $ docker-compose exec gateway /bin/sh
 ```
 
-While using docker and docker-compose is preferable, you can still run this locally by installing dependencies using `yarn`, followed by `yarn dev-local` to run the development server.
+While using docker and docker-compose is preferable, you can still run this locally by installing dependencies using `yarn`, followed by `(set -a && source .env && yarn watch:server)` to run the development server.
