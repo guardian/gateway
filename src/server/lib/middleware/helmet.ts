@@ -21,6 +21,7 @@ const helmetConfig: IHelmetConfiguration = {
       imgSrc: ['static.guim.co.uk'],
       fontSrc: ['assets.guim.co.uk'],
     },
+    browserSniff: false,
   },
 };
 

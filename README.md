@@ -49,3 +49,11 @@ $ docker-compose exec gateway /bin/sh
 ```
 
 While using docker and docker-compose is preferable, you can still run this locally by installing dependencies using `yarn`, followed by `(set -a && source .env && yarn watch:server)` to run the development server.
+
+## Accessing Gateway
+To access gateway routes on `CODE` (and soon `PROD`) alongside the current profile routes, add the
+`GU_GATEWAY=true` to your cookies. Here's a javascript snippet which will do just that. You'll have to be on `https://profile.code.dev-theguardian.com` or `https://profile.theguardian.com`.
+
+```js
+document.cookie = `GU_GATEWAY=true;path=/reset;expires=${(Date.now() + 24 * 60 * 60 * 1000)}
+```
