@@ -1,0 +1,10 @@
+[
+  {
+    "description": "Has a valid email",
+    "email": "patrick.orrell+codetest5@theguardian.com"
+  },
+  {
+    "description": "Has an no registered email",
+    "email": "patrick.orrell+emailnonexistant@theguardian.com"
+  }
+]
