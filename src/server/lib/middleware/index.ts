@@ -1,4 +1,4 @@
-import { Express, urlencoded } from 'express';
+import { default as express, Express, urlencoded } from 'express';
 import cookieParser from 'cookie-parser';
 import { helmetMiddleware } from './helmet';
 import { loggerMiddleware } from './logger';
@@ -10,6 +10,8 @@ export const applyMiddleware = (server: Express): void => {
 
   server.use(urlencoded({ extended: true }));
   server.use(cookieParser());
+
+  server.use('/static', express.static('static'));
 
   // logging middleware
   server.use(loggerMiddleware);

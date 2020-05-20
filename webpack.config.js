@@ -73,18 +73,17 @@ const server = {
 };
 
 const client = {
-  entry: "./src/client/index.tsx",
-  mode,
+  entry: "./src/client/lib/analytics/ophan.js",
   module: {
     rules: [
       {
         exclude: /node_modules/,
-        test: /\.ts(x?)/,
+        test: /\.js/,
         use: [
           {
             loader: "babel-loader",
             options: {
-              presets: ["@babel/env", ...babel.presets]
+              presets: ["@babel/env"]
             }
           }
         ]
