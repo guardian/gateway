@@ -4,14 +4,16 @@ const BASE_URL = 'localhost:8080';
 
 describe("Password reset flow", () => {
   const pageUrl = `${BASE_URL}/reset`;
-  beforeEach(() => {
+  beforeEach(function() {
+    cy.fixture('users').as('users');
     cy.visit(pageUrl);
   });
   
   context("Valid email already exits", () => {
-    it("successfully submits the request", () => {
+    it("successfully submits the request", function () {
+      const { email } = this.users.validEmail;
       cy.get('input[name="email"]')
-        .type('patrick.orrell+codetest5@theguardian.com');
+        .type(email);
       
       cy.contains('Reset Password')
         .click();
@@ -21,9 +23,10 @@ describe("Password reset flow", () => {
   });
 
   context("Email doesn't exist", () => {
-    it('shows a message saying the email address does not exist', () => {
+    it('shows a message saying the email address does not exist', function () {
+      const { email } = this.users.emailNotRegistered;
       cy.get('input[name="email"]')
-        .type('patrick.orrell+doesntexist@theguardian.com');
+        .type(email);
       
       cy.contains('Reset Password')
         .click();
