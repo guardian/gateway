@@ -34,6 +34,7 @@ Parameters:
     Type: String
     AllowedValues:
       - CODE
+      - PROD
   SshAccessSecurityGroup:
     Description: Security group that is allowed SSH access to the instances
     Type: AWS::EC2::SecurityGroup::Id
@@ -51,19 +52,24 @@ Mappings:
   StageVariables:
     CODE:
       BaseUri: profile.code.dev-theguardian.com
+      MaxInstances: 2
+      MinInstances: 1
+    PROD:
+      BaseUri: profile.theguardian.com
+      MaxInstances: 6
+      MinInstances: 3
 Resources:
   AppRole:
     Type: AWS::IAM::Role
     Properties:
-      Path: "/"
+      Path: '/'
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
             Principal:
               Service:
                 - ec2.amazonaws.com
-            Action:
-              sts:AssumeRole
+            Action: sts:AssumeRole
       ManagedPolicyArns:
         - !Ref SsmManagedPolicyArn
       Policies:
@@ -77,10 +83,10 @@ Resources:
                   - !Sub arn:aws:s3:::identity-artifacts/${Stage}/${App}/*
               - Effect: Allow
                 Action:
-                - kinesis:Describe*
-                - kinesis:Put*
+                  - kinesis:Describe*
+                  - kinesis:Put*
                 Resource:
-                - !Sub arn:aws:kinesis:${AWS::Region}:${AWS::AccountId}:stream/${KinesisStream}
+                  - !Sub arn:aws:kinesis:${AWS::Region}:${AWS::AccountId}:stream/${KinesisStream}
         - PolicyName: GetParameters
           PolicyDocument:
             Statement:
@@ -95,10 +101,10 @@ Resources:
       LaunchConfigurationName: !Ref LaunchConfig
       HealthCheckType: ELB
       HealthCheckGracePeriod: 300
-      MinSize: 1
-      MaxSize: 2
+      MinSize: !FindInMap [StageVariables, !Ref Stage, MinInstances]
+      MaxSize: !FindInMap [StageVariables, !Ref Stage, MaxInstances]
       TargetGroupARNs:
-      - !Ref TargetGroup
+        - !Ref TargetGroup
       VPCZoneIdentifier: !Ref PrivateVpcSubnets
       Tags:
         - Key: Name
@@ -124,7 +130,7 @@ Resources:
         - !Ref 'InstanceSecurityGroup'
         - !Ref 'SshAccessSecurityGroup'
       UserData:
-        Fn::Base64: !Sub 
+        Fn::Base64: !Sub
           - |+
             #!/bin/bash -ev
 
@@ -209,13 +215,12 @@ Resources:
             systemctl enable identity-gateway
             systemctl start identity-gateway
 
-          - BaseUri:
-              !FindInMap [StageVariables, !Ref Stage, BaseUri]
+          - BaseUri: !FindInMap [StageVariables, !Ref Stage, BaseUri]
 
   InstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
-      Path: "/"
+      Path: '/'
       Roles:
         - !Ref AppRole
   InstanceSecurityGroup:
@@ -290,11 +295,10 @@ Resources:
       HealthCheckTimeoutSeconds: 5
       HealthyThresholdCount: 2
       UnhealthyThresholdCount: 2
-      Matcher: 
+      Matcher:
         HttpCode: 200
       TargetGroupAttributes:
         - Key: deregistration_delay.timeout_seconds
           Value: 45
     DependsOn:
-        - LoadBalancer
-
+      - LoadBalancer
