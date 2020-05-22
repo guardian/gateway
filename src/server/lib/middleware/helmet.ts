@@ -18,7 +18,7 @@ const helmetConfig: IHelmetConfiguration = {
       formAction: [`${baseUri}${Routes.RESET}`],
       frameAncestors: [HELMET_OPTIONS.NONE],
       styleSrc: [HELMET_OPTIONS.UNSAFE_INLINE],
-      scriptSrc: [`${baseUri}`, HELMET_OPTIONS.UNSAFE_INLINE],
+      scriptSrc: [`${baseUri}`],
       imgSrc: ['static.guim.co.uk', 'ophan.theguardian.com'],
       fontSrc: ['assets.guim.co.uk'],
     },
