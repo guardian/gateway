@@ -44,3 +44,9 @@ node_modules/
 
 # Environment Variable File
 .env
+
+# Cypress videos
+cypress/videos
+
+# Cypress screenshots
+cypress/screenshots
