@@ -4,3 +4,7 @@ export enum MaxWidth {
   TABLET = 740,
   MOBILE = 660,
 }
+
+export enum MinWidth {
+  MOBILE = 320,
+}

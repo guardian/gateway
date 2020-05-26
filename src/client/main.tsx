@@ -21,10 +21,12 @@ const p = css`
 `;
 
 const main = css`
-  flex-grow: 1;
-  width: 100%;
+  flex: 1;
   max-width: ${MaxWidth.TABLET}px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
 `;
 
 export const Main = (props: GlobalState) => {
