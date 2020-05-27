@@ -11,5 +11,7 @@ jobs:
           node-version: '12.x'
       - name: install dependencies
         run: yarn
+      - name: unit tests
+        run: yarn test
       - name: Cypress run
         uses: cypress-io/github-action@v1
