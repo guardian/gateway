@@ -338,3 +338,52 @@ Resources:
           Value: !GetAtt 'LoadBalancer.LoadBalancerFullName'
         - Name: TargetGroup
           Value: !GetAtt 'TargetGroup.TargetGroupFullName'
+  Alarm5XXHigh:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      ActionsEnabled: 'true'
+      AlarmDescription: 'Server errors detected'
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Threshold: 3
+      EvaluationPeriods: 2
+      TreatMissingData: notBreaching
+      Metrics:
+        - Id: Total5XXCount
+          Expression: Backend5XX + ELB5XX
+          Label: 'Count of Backend AND ELB 5XX'
+        - Id: Backend5XX
+          MetricStat:
+            Metric:
+              Namespace: AWS/ApplicationELB
+              MetricName: HTTPCode_Target_5XX_Count
+              Dimensions:
+                - Name: LoadBalancer
+                  Value: !GetAtt LoadBalancer.LoadBalancerFullName
+                - Name: TargetGroup
+                  Value: !GetAtt TargetGroup.TargetGroupFullName
+            Period: 60
+            Stat: Sum
+            Unit: Count
+          ReturnData: false
+        - Id: ELB5XX
+          MetricStat:
+            Metric:
+              Namespace: AWS/ApplicationELB
+              MetricName: HTTPCode_ELB_5XX_Count
+              Dimensions:
+                - Name: LoadBalancer
+                  Value: !GetAtt LoadBalancer.LoadBalancerFullName
+            Period: 60
+            Stat: Sum
+            Unit: Count
+          ReturnData: false
+      AlarmActions:
+        - !Ref 'TopicSendEmail'
+      OKActions:
+        - !Ref 'TopicSendEmail'
+      Dimensions:
+        - Name: LoadBalancer
+          Value: !GetAtt 'LoadBalancer.LoadBalancerFullName'
+        - Name: TargetGroup
+          Value: !GetAtt 'TargetGroup.TargetGroupFullName'
