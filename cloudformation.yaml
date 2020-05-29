@@ -308,6 +308,7 @@ Resources:
       - LoadBalancer
   TopicSendEmail:
     Type: AWS::SNS::Topic
+    Condition: IsProd
     Properties:
       DisplayName: SendEmailToIdentityDev
       Subscription:
