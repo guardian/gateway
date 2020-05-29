@@ -382,8 +382,3 @@ Resources:
         - !Ref 'TopicSendEmail'
       OKActions:
         - !Ref 'TopicSendEmail'
-      Dimensions:
-        - Name: LoadBalancer
-          Value: !GetAtt 'LoadBalancer.LoadBalancerFullName'
-        - Name: TargetGroup
-          Value: !GetAtt 'TargetGroup.TargetGroupFullName'
