@@ -3,7 +3,6 @@ Description: gateway
 Parameters:
   AMI:
     Description: AMI to use in the autoscaling group
-    Default: ami-05a8d665c3c0cbb0a
     Type: String
   App:
     Description: Application name
@@ -18,6 +17,9 @@ Parameters:
   KeyName:
     Description: The EC2 Key Pair to allow SSH access to the instances
     Type: AWS::EC2::KeyPair::KeyName
+  AlarmEmailAddress:
+    Description: Email address to send CloudWatch alerts
+    Type: String
   PrivateVpcSubnets:
     Description: Private VPC Subnet for the EC2 instances.
     Type: List<AWS::EC2::Subnet::Id>
@@ -58,6 +60,8 @@ Mappings:
       BaseUri: profile.theguardian.com
       MaxInstances: 6
       MinInstances: 3
+Conditions:
+  IsProd: !Equals [!Ref Stage, PROD]
 Resources:
   AppRole:
     Type: AWS::IAM::Role
@@ -302,3 +306,32 @@ Resources:
           Value: 45
     DependsOn:
       - LoadBalancer
+  TopicSendEmail:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: SendEmailToIdentityDev
+      Subscription:
+        - Endpoint: !Ref 'AlarmEmailAddress'
+          Protocol: email
+  AlarmNoHealthyHosts:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      ActionsEnabled: 'true'
+      AlarmDescription: There are insufficient healthy hosts
+      ComparisonOperator: LessThanThreshold
+      EvaluationPeriods: '1'
+      MetricName: HealthyHostCount
+      Namespace: AWS/ELB
+      Period: '60'
+      Statistic: Average
+      Threshold: !FindInMap [StageVariables, !Ref 'Stage', DesiredInstances]
+      AlarmActions:
+        - !Ref 'TopicSendEmail'
+      InsufficientDataActions:
+        - !Ref 'TopicSendEmail'
+      OKActions:
+        - !Ref 'TopicSendEmail'
+      Dimensions:
+        - Name: LoadBalancerName
+          Value: !Ref 'LoadBalancer'
