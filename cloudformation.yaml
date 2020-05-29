@@ -321,10 +321,10 @@ Resources:
       ActionsEnabled: 'true'
       AlarmDescription: There are insufficient healthy hosts
       ComparisonOperator: LessThanThreshold
-      EvaluationPeriods: '1'
+      EvaluationPeriods: 1
       MetricName: HealthyHostCount
-      Namespace: AWS/ELB
-      Period: '60'
+      Namespace: AWS/ApplicationELB
+      Period: 60
       Statistic: Average
       Threshold: !FindInMap [StageVariables, !Ref 'Stage', MinInstances]
       AlarmActions:
@@ -334,5 +334,7 @@ Resources:
       OKActions:
         - !Ref 'TopicSendEmail'
       Dimensions:
-        - Name: LoadBalancerName
-          Value: !Ref 'LoadBalancer'
+        - Name: LoadBalancer
+          Value: !GetAtt 'ApplicationLoadBalancer.LoadBalancerFullName'
+        - Name: TargetGroup
+          Value: !GetAtt 'TargetGroup.TargetGroupFullName'
