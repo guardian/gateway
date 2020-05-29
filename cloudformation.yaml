@@ -326,7 +326,7 @@ Resources:
       Namespace: AWS/ELB
       Period: '60'
       Statistic: Average
-      Threshold: !FindInMap [StageVariables, !Ref 'Stage', DesiredInstances]
+      Threshold: !FindInMap [StageVariables, !Ref 'Stage', MinInstances]
       AlarmActions:
         - !Ref 'TopicSendEmail'
       InsufficientDataActions:
