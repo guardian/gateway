@@ -1,0 +1,8 @@
+{
+  "validEmail": {
+    "email": "patrick.orrell+codetest5@theguardian.com"
+  },
+  "emailNotRegistered": {
+    "email": "patrick.orrell+emailnonexistant@theguardian.com"
+  }
+}
