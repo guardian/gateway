@@ -11,10 +11,8 @@
     "riffraff": "npx @guardian/node-riffraff-artifact",
     "start": "node ./build/server.js",
     "test": "jest",
-    "waiton": "wait-on",
     "watch:server": "nodemon ./build/server.js",
     "watch": "webpack --watch"
-
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",
@@ -47,7 +45,6 @@
     "nodemon": "^2.0.1",
     "prettier": "^1.19.1",
     "typescript": "^3.7.2",
-    "wait-on": "^5.0.0",
     "webpack": "^4.41.3",
     "webpack-cli": "^3.3.10",
     "webpack-node-externals": "^1.7.2"
