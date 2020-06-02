@@ -1,12 +1,12 @@
 import {
   idapiFetch,
   APIAddClientAccessToken,
-  APIPostOptions,
+  APIGetOptions,
 } from '@/server/lib/APIFetch';
 import { ResetPasswordErrors, IdapiErrorMessages } from '@/shared/model/Errors';
 import { ApiRoutes } from '@/shared/model/Routes';
 
-const PATH = ApiRoutes.RESET_REQUEST_EMAIL;
+const PATH = ApiRoutes.CHANGE_PASSWORD_TOKEN_VALIDATION;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleError = (response: any) => {
@@ -27,13 +27,10 @@ const handleError = (response: any) => {
   throw ResetPasswordErrors.GENERIC;
 };
 
-export function create(email: string, ip: string) {
-  const options = APIPostOptions({
-    'email-address': email,
-    returnUrl: '',
-  });
-
-  return idapiFetch(PATH, APIAddClientAccessToken(options, ip)).catch(
-    handleError,
-  );
+export function get(token: string, ip: string) {
+  const options = APIGetOptions();
+  return idapiFetch(
+    `${PATH}?token=${token}`,
+    APIAddClientAccessToken(options, ip),
+  ).catch(handleError);
 }

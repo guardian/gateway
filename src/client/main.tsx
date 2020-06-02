@@ -14,6 +14,7 @@ import { GlobalState } from '@/shared/model/GlobalState';
 import { Routes } from '@/shared/model/Routes';
 import { GlobalError } from '@/client/components/GlobalError';
 import { NotFound } from '@/client/pages/NotFound';
+import { ChangePasswordPage } from '@/client/pages/ChangePassword';
 
 const p = css`
   color: ${palette.text.primary};
@@ -67,6 +68,15 @@ export const Main = (props: GlobalState) => {
             </Route>
             <Route exact path={Routes.RESET_SENT}>
               <ResetSentPage />
+            </Route>
+            <Route
+              exact
+              path={`${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`}
+            >
+              <ChangePasswordPage />
+            </Route>
+            <Route path={Routes.CHANGE_PASSWORD_SENT}>
+              <p>Reset password sent</p>
             </Route>
             <Route>
               <NotFound />
