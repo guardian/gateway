@@ -15,7 +15,10 @@ const helmetConfig: IHelmetConfiguration = {
     directives: {
       baseUri: [HELMET_OPTIONS.NONE],
       defaultSrc: [HELMET_OPTIONS.NONE],
-      formAction: [`${baseUri}${Routes.RESET}`],
+      formAction: [
+        `${baseUri}${Routes.RESET}`,
+        `${baseUri}${Routes.CHANGE_PASSWORD}/`,
+      ],
       frameAncestors: [HELMET_OPTIONS.NONE],
       styleSrc: [HELMET_OPTIONS.UNSAFE_INLINE],
       scriptSrc: [`${baseUri}`],

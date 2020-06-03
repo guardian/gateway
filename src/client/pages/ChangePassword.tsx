@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { css } from '@emotion/core';
 import { space } from '@guardian/src-foundations';
@@ -8,6 +8,9 @@ import { TextInput } from '@guardian/src-text-input';
 import { ThemeProvider } from 'emotion-theming';
 import { buttonReaderRevenue, Button } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-svgs';
+import { GlobalState } from '@/shared/model/GlobalState';
+import { GlobalStateContext } from '../components/GlobalState';
+import { Routes } from '@/shared/model/Routes';
 
 const h1 = css`
   margin: 0;
@@ -34,13 +37,19 @@ const textInput = css`
 `;
 
 export const ChangePasswordPage = () => {
+  const globalState: GlobalState = useContext(GlobalStateContext);
+  const { email = '' } = globalState;
   const { token } = useParams();
 
   return (
     <>
-      <h1 css={h1}>Please enter your new password for {`{ email }`}</h1>
+      <h1 css={h1}>Please enter your new password for {email}</h1>
       <p css={p}>Reset Password Token: {token}</p>
-      <form css={form}>
+      <form
+        css={form}
+        method="post"
+        action={`${Routes.CHANGE_PASSWORD}/${token}`}
+      >
         <TextInput
           css={textInput}
           label="New Password"
@@ -51,7 +60,7 @@ export const ChangePasswordPage = () => {
         <TextInput
           css={textInput}
           label="Repeat Password"
-          name="password-confirm"
+          name="password_confirm"
           type="password"
         />
         <ThemeProvider theme={buttonReaderRevenue}>

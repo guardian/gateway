@@ -2,35 +2,42 @@ import {
   idapiFetch,
   APIAddClientAccessToken,
   APIGetOptions,
+  APIPostOptions,
 } from '@/server/lib/APIFetch';
-import { ResetPasswordErrors, IdapiErrorMessages } from '@/shared/model/Errors';
 import { ApiRoutes } from '@/shared/model/Routes';
+import { stringify } from 'querystring';
 
-const PATH = ApiRoutes.CHANGE_PASSWORD_TOKEN_VALIDATION;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleError = (response: any) => {
-  if (response.status === 'error' && response.errors?.length) {
-    const error = response.errors[0];
-    const message = error?.message;
-
-    switch (message) {
-      case IdapiErrorMessages.NOT_FOUND:
-        throw ResetPasswordErrors.NO_ACCOUNT;
-      case IdapiErrorMessages.MISSING_FIELD:
-        throw ResetPasswordErrors.NO_EMAIL;
-      default:
-        break;
-    }
-  }
-
-  throw ResetPasswordErrors.GENERIC;
-};
-
-export function get(token: string, ip: string) {
+export async function validate(
+  token: string,
+  ip: string,
+): Promise<string | undefined> {
   const options = APIGetOptions();
-  return idapiFetch(
-    `${PATH}?token=${token}`,
+
+  const params = {
+    token,
+  };
+
+  const qs = stringify(params);
+
+  const result = await idapiFetch(
+    `${ApiRoutes.CHANGE_PASSWORD_TOKEN_VALIDATION}?${qs}`,
     APIAddClientAccessToken(options, ip),
-  ).catch(handleError);
+  );
+  return result.user?.primaryEmailAddress;
+}
+
+export async function change(password: string, token: string, ip: string) {
+  const options = APIPostOptions({
+    password,
+    token,
+  });
+
+  const result = await idapiFetch(
+    ApiRoutes.CHANGE_PASSWORD,
+    APIAddClientAccessToken(options, ip),
+  );
+
+  console.log(result);
+
+  return result;
 }

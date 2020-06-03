@@ -27,7 +27,7 @@ const handleError = (response: any) => {
   throw ResetPasswordErrors.GENERIC;
 };
 
-export function create(email: string, ip: string) {
+export async function create(email: string, ip: string) {
   const options = APIPostOptions({
     'email-address': email,
     returnUrl: '',
