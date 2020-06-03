@@ -4,8 +4,8 @@ import { palette } from '@guardian/src-foundations';
 import { body } from '@guardian/src-foundations/typography';
 import { Route, Switch } from 'react-router-dom';
 import { fontFaces } from '@/client/lib/fonts';
-import { ResetPasswordPage } from '@/client/pages/ResetPasswordPage';
-import { ResetSentPage } from '@/client/pages/ResetSentPage';
+import { ResetPasswordPage } from '@/client/pages/ResetPassword';
+import { ResetSentPage } from '@/client/pages/ResetSent';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { MaxWidth } from '@/client/models/Style';
@@ -15,6 +15,7 @@ import { Routes } from '@/shared/model/Routes';
 import { GlobalError } from '@/client/components/GlobalError';
 import { NotFound } from '@/client/pages/NotFound';
 import { ChangePasswordPage } from '@/client/pages/ChangePassword';
+import { ChangePasswordSentPage } from '@/client/pages/ChangePasswordSent';
 
 const p = css`
   color: ${palette.text.primary};
@@ -76,7 +77,7 @@ export const Main = (props: GlobalState) => {
               <ChangePasswordPage />
             </Route>
             <Route path={Routes.CHANGE_PASSWORD_SENT}>
-              <p>Reset password sent</p>
+              <ChangePasswordSentPage />
             </Route>
             <Route>
               <NotFound />

@@ -37,7 +37,5 @@ export async function change(password: string, token: string, ip: string) {
     APIAddClientAccessToken(options, ip),
   );
 
-  console.log(result);
-
-  return result;
+  return result.cookies;
 }

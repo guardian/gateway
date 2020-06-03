@@ -8,6 +8,9 @@ import {
   change as changePassword,
 } from '@/server/lib/idapi/changePassword';
 import { ResetPasswordErrors } from '@/shared/model/Errors';
+import { getConfiguration } from '@/server/lib/configuration';
+
+const { baseUri } = getConfiguration();
 
 const router = Router();
 
@@ -47,7 +50,31 @@ router.post(
         throw ResetPasswordErrors.GENERIC;
       }
 
-      await changePassword(password, token, req.ip);
+      const {
+        values: cookieValues,
+        expiresAt: cookieExpiry,
+      } = await changePassword(password, token, req.ip);
+
+      cookieValues.forEach(
+        ({
+          key,
+          value,
+          sessionCookie = false,
+        }: {
+          key: string;
+          value: string;
+          sessionCookie: boolean;
+        }) => {
+          console.log(key, value, sessionCookie);
+          res.cookie(key, value, {
+            domain: `*.${baseUri}`,
+            expires: sessionCookie ? undefined : new Date(cookieExpiry),
+            httpOnly: key !== 'GU_U', // unless GU_U cookie, set to true
+            secure: key !== 'GU_U', // unless GU_U cookie, set to true
+            sameSite: 'strict',
+          });
+        },
+      );
     } catch (error) {
       logger.error(error);
       state.error = error;
@@ -55,7 +82,8 @@ router.post(
       return;
     }
 
-    return res.redirect(301, Routes.CHANGE_PASSWORD_SENT);
+    const html = renderer(Routes.CHANGE_PASSWORD_SENT);
+    return res.type('html').send(html);
   },
 );
 
