@@ -7,12 +7,39 @@ import {
   validate as validateToken,
   change as changePassword,
 } from '@/server/lib/idapi/changePassword';
-import { ResetPasswordErrors } from '@/shared/model/Errors';
+import { ChangePasswordErrors } from '@/shared/model/Errors';
 import { getConfiguration } from '@/server/lib/configuration';
 
 const { baseUri } = getConfiguration();
 
 const router = Router();
+
+export interface FieldError {
+  field: string;
+  message: string;
+}
+
+const validatePasswordChangeRequired = (
+  password: string,
+  passwordConfirm: string,
+): Array<FieldError> => {
+  const errors: Array<FieldError> = [];
+  if (!password) {
+    errors.push({
+      field: 'password',
+      message: ChangePasswordErrors.PASSWORD_BLANK,
+    });
+  }
+
+  if (!passwordConfirm) {
+    errors.push({
+      field: 'password_confirm',
+      message: ChangePasswordErrors.REPEAT_PASSWORD_BLANK,
+    });
+  }
+
+  return errors;
+};
 
 router.get(
   `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
@@ -44,8 +71,19 @@ router.post(
     const { password, password_confirm: passwordConfirm } = req.body;
 
     try {
-      if (!password || !passwordConfirm || password !== passwordConfirm) {
-        throw ResetPasswordErrors.GENERIC;
+      const fieldErrors = validatePasswordChangeRequired(
+        password,
+        passwordConfirm,
+      );
+
+      if (fieldErrors.length) {
+        state.fieldErrors = fieldErrors;
+        const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, state);
+        return res.type('html').send(html);
+      }
+
+      if (password !== passwordConfirm) {
+        throw ChangePasswordErrors.PASSWORD_NO_MATCH;
       }
 
       const {
@@ -63,7 +101,6 @@ router.post(
           value: string;
           sessionCookie: boolean;
         }) => {
-          console.log(key, value, sessionCookie);
           res.cookie(key, value, {
             domain: `*.${baseUri}`,
             expires: sessionCookie ? undefined : new Date(cookieExpiry),
@@ -76,8 +113,8 @@ router.post(
     } catch (error) {
       logger.error(error);
       state.error = error;
-      res.sendStatus(403);
-      return;
+      const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, state);
+      return res.type('html').send(html);
     }
 
     const html = renderer(Routes.CHANGE_PASSWORD_SENT);

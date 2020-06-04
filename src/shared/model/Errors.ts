@@ -13,4 +13,7 @@ export enum ResetPasswordErrors {
 export enum ChangePasswordErrors {
   GENERIC = 'There was a problem changing your password, please try again.',
   INVALID_TOKEN = 'The token that was supplied has expired, please try again.',
+  PASSWORD_BLANK = 'Password field must not be blank',
+  REPEAT_PASSWORD_BLANK = 'Repeat Password field must not be blank',
+  PASSWORD_NO_MATCH = 'The passwords do not match, please try again',
 }
