@@ -26,9 +26,7 @@ router.get(
       state.email = email;
     } catch (error) {
       logger.error(error);
-      state.error = error;
-      res.sendStatus(403);
-      return;
+      return res.type('html').send(renderer(Routes.RESET_RESEND, state));
     }
 
     const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, state);
