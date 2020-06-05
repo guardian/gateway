@@ -11,8 +11,6 @@ export const applyMiddleware = (server: Express): void => {
   server.use(urlencoded({ extended: true }));
   server.use(cookieParser());
 
-  server.use('/static', express.static('static'));
-
   // logging middleware
   server.use(loggerMiddleware);
 

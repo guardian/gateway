@@ -37,7 +37,7 @@ export const renderer: (url: string, globalState?: GlobalState) => string = (
         <meta name="theme-color" content="${brandBackground.primary}" />
         <link rel="icon" href="https://static.guim.co.uk/images/${favicon}">
         <title>Gateway | The Guardian</title>
-        <script src="/static/bundle.js" defer></script>
+        <script src="/gateway-static/bundle.js" defer></script>
       </head>
       <body style="margin:0">
         <div id="app">${react}</div>
