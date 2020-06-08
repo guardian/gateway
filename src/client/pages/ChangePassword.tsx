@@ -15,9 +15,12 @@ import { Routes } from '@/shared/model/Routes';
 const h1 = css`
   margin: 0;
   padding: ${space[2]}px ${space[3]}px;
-  ${headline.small()}
+  width: 100vw;
+  overflow-wrap: break-word;
+  ${headline.xsmall()}
 
   ${from.tablet} {
+    width: auto;
     ${headline.large()}
   }
 `;
