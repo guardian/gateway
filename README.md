@@ -55,5 +55,5 @@ To access gateway routes on `CODE` (and soon `PROD`) alongside the current profi
 `GU_GATEWAY=true` to your cookies. Here's a javascript snippet which will do just that. You'll have to be on `https://profile.code.dev-theguardian.com` or `https://profile.theguardian.com`.
 
 ```js
-document.cookie = `GU_GATEWAY=true;path=/reset;expires=${(Date.now() + 24 * 60 * 60 * 1000)}
+document.cookie = `GU_GATEWAY=true;path=/;expires=${(Date.now() + 24 * 60 * 60 * 1000)}`
 ```
