@@ -17,6 +17,7 @@ describe('getConfiguration', () => {
     process.env.IDAPI_BASE_URL = 'http://localhost:1234';
     process.env.PLAY_SESSION_COOKIE_SECRET = 'play-secret';
     process.env.BASE_URI = 'base-uri';
+    process.env.DEFAULT_RETURN_URI = 'default-return-uri';
 
     const output = getConfiguration();
     const expected = {
@@ -25,6 +26,7 @@ describe('getConfiguration', () => {
       idapiBaseUrl: 'http://localhost:1234',
       playSessionCookieSecret: 'play-secret',
       baseUri: 'base-uri',
+      defaultReturnUri: 'default-return-uri',
     };
     expect(output).toEqual(expected);
   });

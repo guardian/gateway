@@ -4,4 +4,5 @@ export interface Configuration {
   idapiBaseUrl: string;
   playSessionCookieSecret: string;
   baseUri: string;
+  defaultReturnUri: string;
 }

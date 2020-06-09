@@ -27,11 +27,17 @@ export const getConfiguration = (): Configuration => {
 
   const baseUri = getOrThrow(process.env.BASE_URI, 'Base URI missing.');
 
+  const defaultReturnUri = getOrThrow(
+    process.env.DEFAULT_RETURN_URI,
+    'Default return URI missing.',
+  );
+
   return {
     port: +port,
     idapiBaseUrl,
     idapiClientAccessToken,
     playSessionCookieSecret,
     baseUri,
+    defaultReturnUri,
   };
 };

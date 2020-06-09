@@ -12,7 +12,8 @@ services:
       - IDAPI_BASE_URL=${IDAPI_BASE_URL}
       - PLAY_SESSION_COOKIE_SECRET=${PLAY_SESSION_COOKIE_SECRET}
       - BASE_URI=${BASE_URI}
+      - DEFAULT_RETURN_URI=${DEFAULT_RETURN_URI}
     ports:
-      - "${PORT}:${PORT}"
+      - '${PORT}:${PORT}'
     volumes:
       - .:/app/
