@@ -4,8 +4,8 @@ import { palette } from '@guardian/src-foundations';
 import { body } from '@guardian/src-foundations/typography';
 import { Route, Switch } from 'react-router-dom';
 import { fontFaces } from '@/client/lib/fonts';
-import { ResetPasswordPage } from '@/client/pages/ResetPasswordPage';
-import { ResetSentPage } from '@/client/pages/ResetSentPage';
+import { ResetPasswordPage } from '@/client/pages/ResetPassword';
+import { ResetSentPage } from '@/client/pages/ResetSent';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { MaxWidth } from '@/client/models/Style';
@@ -14,6 +14,9 @@ import { GlobalState } from '@/shared/model/GlobalState';
 import { Routes } from '@/shared/model/Routes';
 import { GlobalError } from '@/client/components/GlobalError';
 import { NotFound } from '@/client/pages/NotFound';
+import { ChangePasswordPage } from '@/client/pages/ChangePassword';
+import { ChangePasswordSentPage } from '@/client/pages/ChangePasswordSent';
+import { ResendPasswordPage } from './pages/ResendPassword';
 
 const p = css`
   color: ${palette.text.primary};
@@ -67,6 +70,18 @@ export const Main = (props: GlobalState) => {
             </Route>
             <Route exact path={Routes.RESET_SENT}>
               <ResetSentPage />
+            </Route>
+            <Route
+              exact
+              path={`${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`}
+            >
+              <ChangePasswordPage />
+            </Route>
+            <Route path={Routes.CHANGE_PASSWORD_SENT}>
+              <ChangePasswordSentPage />
+            </Route>
+            <Route exact path={Routes.RESET_RESEND}>
+              <ResendPasswordPage />
             </Route>
             <Route>
               <NotFound />

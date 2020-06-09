@@ -4,8 +4,9 @@ import {
   APIPostOptions,
 } from '@/server/lib/APIFetch';
 import { ResetPasswordErrors, IdapiErrorMessages } from '@/shared/model/Errors';
+import { ApiRoutes } from '@/shared/model/Routes';
 
-const PATH = '/pwd-reset/send-password-reset-email';
+const PATH = ApiRoutes.RESET_REQUEST_EMAIL;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleError = (response: any) => {
@@ -26,7 +27,7 @@ const handleError = (response: any) => {
   throw ResetPasswordErrors.GENERIC;
 };
 
-export function create(email: string, ip: string) {
+export async function create(email: string, ip: string) {
   const options = APIPostOptions({
     'email-address': email,
     returnUrl: '',
