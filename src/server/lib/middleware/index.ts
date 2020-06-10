@@ -1,4 +1,4 @@
-import { default as express, Express, urlencoded } from 'express';
+import { Express, urlencoded } from 'express';
 import cookieParser from 'cookie-parser';
 import { helmetMiddleware } from './helmet';
 import { loggerMiddleware } from './logger';

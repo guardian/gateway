@@ -1,4 +1,4 @@
-import { getParams } from '@/server/lib/queryParams';
+import { parseExpressQueryParams } from '@/server/lib/queryParams';
 import { getConfiguration } from '@/server/lib/configuration';
 
 // mock configuration to return a default uri
@@ -16,7 +16,7 @@ describe('queryParams', () => {
           'https://www.theguardian.com/games/2020/mar/16/animal-crossing-new-horizons-review-nintendo-switch',
       };
 
-      const output = getParams(input);
+      const output = parseExpressQueryParams(input);
 
       expect(output).toEqual(input);
     });
@@ -28,7 +28,7 @@ describe('queryParams', () => {
         returnUrl: defaultReturnUri,
       };
 
-      const output = getParams(input);
+      const output = parseExpressQueryParams(input);
 
       expect(output).toEqual(expected);
     });
@@ -42,7 +42,7 @@ describe('queryParams', () => {
         returnUrl: defaultReturnUri,
       };
 
-      const output = getParams(input);
+      const output = parseExpressQueryParams(input);
 
       expect(output).toEqual(expected);
     });
@@ -56,7 +56,7 @@ describe('queryParams', () => {
         returnUrl: defaultReturnUri,
       };
 
-      const output = getParams(input);
+      const output = parseExpressQueryParams(input);
 
       expect(output).toEqual(expected);
     });

@@ -1,8 +1,5 @@
 import { getConfiguration } from '@/server/lib/configuration';
-
-interface QueryParams {
-  returnUrl: string;
-}
+import { QueryParams } from '@/server/models/QueryParams';
 
 const validHostnames = [
   '.theguardian.com',
@@ -35,7 +32,7 @@ const validateReturnUrl = (returnUrl = ''): string => {
   }
 };
 
-export const getParams = ({
+export const parseExpressQueryParams = ({
   returnUrl,
 }: {
   returnUrl?: string;

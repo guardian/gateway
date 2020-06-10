@@ -16,7 +16,7 @@ import { GlobalError } from '@/client/components/GlobalError';
 import { NotFound } from '@/client/pages/NotFound';
 import { ChangePasswordPage } from '@/client/pages/ChangePassword';
 import { ChangePasswordSentPage } from '@/client/pages/ChangePasswordSent';
-import { ResendPasswordPage } from './pages/ResendPassword';
+import { ResendPasswordPage } from '@/client/pages/ResendPassword';
 
 const p = css`
   color: ${palette.text.primary};

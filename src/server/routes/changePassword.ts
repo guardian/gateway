@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express';
+import { Request, Router } from 'express';
 import { Routes } from '@/shared/model/Routes';
 import { renderer } from '@/server/lib/renderer';
 import { logger } from '@/server/lib/logger';
@@ -9,6 +9,7 @@ import {
 } from '@/server/lib/idapi/changePassword';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
 import { getConfiguration } from '@/server/lib/configuration';
+import { ResponseWithLocals } from '@/server/models/Express';
 
 const { baseUri } = getConfiguration();
 
@@ -43,7 +44,7 @@ const validatePasswordChangeRequired = (
 
 router.get(
   `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: ResponseWithLocals) => {
     const { token } = req.params;
     const state: GlobalState = {};
 
@@ -53,17 +54,25 @@ router.get(
       state.email = email;
     } catch (error) {
       logger.error(error);
-      return res.type('html').send(renderer(Routes.RESET_RESEND, state));
+      return res.type('html').send(
+        renderer(Routes.RESET_RESEND, {
+          globalState: state,
+          queryParams: res.locals.queryParams,
+        }),
+      );
     }
 
-    const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, state);
+    const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
+      globalState: state,
+      queryParams: res.locals.queryParams,
+    });
     return res.type('html').send(html);
   },
 );
 
 router.post(
   `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: ResponseWithLocals) => {
     const state: GlobalState = {};
 
     const { token } = req.params;
@@ -78,7 +87,10 @@ router.post(
 
       if (fieldErrors.length) {
         state.fieldErrors = fieldErrors;
-        const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, state);
+        const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
+          globalState: state,
+          queryParams: res.locals.queryParams,
+        });
         return res.type('html').send(html);
       }
 
@@ -113,18 +125,30 @@ router.post(
     } catch (error) {
       logger.error(error);
       state.error = error;
-      const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, state);
+      const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
+        globalState: state,
+        queryParams: res.locals.queryParams,
+      });
       return res.type('html').send(html);
     }
 
-    const html = renderer(Routes.CHANGE_PASSWORD_SENT);
+    const html = renderer(Routes.CHANGE_PASSWORD_SENT, {
+      globalState: state,
+      queryParams: res.locals.queryParams,
+    });
+
     return res.type('html').send(html);
   },
 );
 
-router.get(Routes.CHANGE_PASSWORD_SENT, (req: Request, res: Response) => {
-  const html = renderer(Routes.CHANGE_PASSWORD_SENT);
-  return res.type('html').send(html);
-});
+router.get(
+  Routes.CHANGE_PASSWORD_SENT,
+  (_: Request, res: ResponseWithLocals) => {
+    const html = renderer(Routes.CHANGE_PASSWORD_SENT, {
+      queryParams: res.locals.queryParams,
+    });
+    return res.type('html').send(html);
+  },
+);
 
 export default router;
