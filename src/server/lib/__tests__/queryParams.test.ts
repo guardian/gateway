@@ -7,9 +7,9 @@ jest.mock('@/server/lib/configuration', () => ({
 }));
 
 describe('queryParams', () => {
-  describe('returnUrl', () => {
-    const { defaultReturnUri } = getConfiguration();
+  const { defaultReturnUri } = getConfiguration();
 
+  describe('returnUrl', () => {
     test('it returns query params when returnUrl is passed in', () => {
       const input = {
         returnUrl:
@@ -32,33 +32,27 @@ describe('queryParams', () => {
 
       expect(output).toEqual(expected);
     });
+  });
 
-    test('it returns query params with with default returnUrl if the passed in returnUrl includes an invalid hostname', () => {
+  describe('clientId', () => {
+    test('it returns clientId in query params if valid', () => {
       const input = {
-        returnUrl: 'https://example.com/example/path',
-      };
-
-      const expected = {
-        returnUrl: defaultReturnUri,
+        clientId: 'jobs',
       };
 
       const output = parseExpressQueryParams(input);
 
-      expect(output).toEqual(expected);
+      expect(output).toEqual({ ...input, returnUrl: defaultReturnUri });
     });
 
-    test('it returns query params with default returnUrl if the passed in returnUrl includes an invalid path', () => {
+    test('it returns undefined clientId in query params if not valid', () => {
       const input = {
-        returnUrl: 'https://www.theguardian.com/signin',
-      };
-
-      const expected = {
-        returnUrl: defaultReturnUri,
+        clientId: 'invalidClientId',
       };
 
       const output = parseExpressQueryParams(input);
 
-      expect(output).toEqual(expected);
+      expect(output).toEqual({ returnUrl: defaultReturnUri });
     });
   });
 });
