@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextInput } from '@guardian/src-text-input';
 import { Button, buttonReaderRevenue } from '@guardian/src-button';
-import { SvgArrowRightStraight } from '@guardian/src-svgs';
+import { SvgArrowRightStraight } from '@guardian/src-icons';
 import { css } from '@emotion/core';
 import { space } from '@guardian/src-foundations';
 import { ThemeProvider } from 'emotion-theming';

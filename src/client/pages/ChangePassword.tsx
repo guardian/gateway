@@ -7,7 +7,7 @@ import { from } from '@guardian/src-foundations/mq';
 import { TextInput } from '@guardian/src-text-input';
 import { ThemeProvider } from 'emotion-theming';
 import { buttonReaderRevenue, Button } from '@guardian/src-button';
-import { SvgArrowRightStraight } from '@guardian/src-svgs';
+import { SvgArrowRightStraight } from '@guardian/src-icons';
 import { GlobalState } from '@/shared/model/GlobalState';
 import { GlobalStateContext } from '@/client/components/GlobalState';
 import { Routes } from '@/shared/model/Routes';

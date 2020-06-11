@@ -2,7 +2,7 @@ import React from 'react';
 import { css } from '@emotion/core';
 import { space, error, neutral } from '@guardian/src-foundations';
 import { textSans } from '@guardian/src-foundations/typography';
-import { SvgAlert } from '@guardian/src-svgs';
+import { SvgAlert } from '@guardian/src-icons';
 import locations from '@/client/lib/locations';
 
 interface GlobalErrorProps {
