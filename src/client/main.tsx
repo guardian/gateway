@@ -15,7 +15,7 @@ import { Routes } from '@/shared/model/Routes';
 import { GlobalError } from '@/client/components/GlobalError';
 import { NotFound } from '@/client/pages/NotFound';
 import { ChangePasswordPage } from '@/client/pages/ChangePassword';
-import { ChangePasswordSentPage } from '@/client/pages/ChangePasswordSent';
+import { ChangePasswordCompletePage } from '@/client/pages/ChangePasswordComplete';
 import { ResendPasswordPage } from '@/client/pages/ResendPassword';
 
 const p = css`
@@ -77,8 +77,8 @@ export const Main = (props: GlobalState) => {
             >
               <ChangePasswordPage />
             </Route>
-            <Route path={Routes.CHANGE_PASSWORD_SENT}>
-              <ChangePasswordSentPage />
+            <Route path={Routes.CHANGE_PASSWORD_COMPLETE}>
+              <ChangePasswordCompletePage />
             </Route>
             <Route exact path={Routes.RESET_RESEND}>
               <ResendPasswordPage />

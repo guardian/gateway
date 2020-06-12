@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { QueryParams } from '@/server/models/QueryParams';
+import { QueryParams } from '@/shared/model/QueryParams';
 
 export interface ResponseWithLocals extends Response {
   locals: {

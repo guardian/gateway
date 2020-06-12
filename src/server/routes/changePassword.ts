@@ -132,7 +132,7 @@ router.post(
       return res.type('html').send(html);
     }
 
-    const html = renderer(Routes.CHANGE_PASSWORD_SENT, {
+    const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
       globalState: state,
       queryParams: res.locals.queryParams,
     });
@@ -142,9 +142,9 @@ router.post(
 );
 
 router.get(
-  Routes.CHANGE_PASSWORD_SENT,
+  Routes.CHANGE_PASSWORD_COMPLETE,
   (_: Request, res: ResponseWithLocals) => {
-    const html = renderer(Routes.CHANGE_PASSWORD_SENT, {
+    const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
       queryParams: res.locals.queryParams,
     });
     return res.type('html').send(html);

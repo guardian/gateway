@@ -1,4 +1,4 @@
-import { QueryParams } from '@/server/models/QueryParams';
+import { QueryParams } from '@/shared/model/QueryParams';
 import { validateReturnUrl } from '@/server/lib/returnUrl';
 import { validateClientId } from '@/server/lib/clientId';
 

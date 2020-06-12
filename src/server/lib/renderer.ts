@@ -4,7 +4,7 @@ import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { Main } from '@/client/main';
 import { brandBackground } from '@guardian/src-foundations/palette';
-import { QueryParams } from '@/server/models/QueryParams';
+import { QueryParams } from '@/shared/model/QueryParams';
 import qs from 'qs';
 
 // favicon shamefully stolen from dcr
