@@ -54,10 +54,12 @@ Mappings:
   StageVariables:
     CODE:
       BaseUri: profile.code.dev-theguardian.com
+      DefaultReturnUri: https://m.code.dev-theguardian.com
       MaxInstances: 2
       MinInstances: 1
     PROD:
       BaseUri: profile.theguardian.com
+      DefaultReturnUri: https://theguardian.com
       MaxInstances: 6
       MinInstances: 3
 Conditions:
@@ -169,6 +171,7 @@ Resources:
             Environment=IDAPI_BASE_URL=${IdapiBaseUrl}
             Environment=BASE_URI=${BaseUri}
             Environment=PLAY_SESSION_COOKIE_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/frontendPlaySecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+            Environment=DEFAULT_RETURN_URI=${DefaultReturnUri}
 
             [Install]
             WantedBy=multi-user.target
@@ -220,6 +223,8 @@ Resources:
             systemctl start identity-gateway
 
           - BaseUri: !FindInMap [StageVariables, !Ref Stage, BaseUri]
+          - DefaultReturnUri:
+              !FindInMap [StageVariables, !Ref Stage, DefaultReturnUri]
 
   InstanceProfile:
     Type: AWS::IAM::InstanceProfile

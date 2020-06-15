@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { css } from '@emotion/core';
 import { space } from '@guardian/src-foundations';
 import { headline } from '@guardian/src-foundations/typography';
@@ -7,9 +7,9 @@ import { from } from '@guardian/src-foundations/mq';
 import { TextInput } from '@guardian/src-text-input';
 import { ThemeProvider } from 'emotion-theming';
 import { buttonReaderRevenue, Button } from '@guardian/src-button';
-import { SvgArrowRightStraight } from '@guardian/src-svgs';
+import { SvgArrowRightStraight } from '@guardian/src-icons';
 import { GlobalState } from '@/shared/model/GlobalState';
-import { GlobalStateContext } from '../components/GlobalState';
+import { GlobalStateContext } from '@/client/components/GlobalState';
 import { Routes } from '@/shared/model/Routes';
 
 const h1 = css`
@@ -34,6 +34,7 @@ const textInput = css`
 `;
 
 export const ChangePasswordPage = () => {
+  const { search } = useLocation();
   const globalState: GlobalState = useContext(GlobalStateContext);
   const { email = '', fieldErrors = [] } = globalState;
   const { token } = useParams();
@@ -44,7 +45,7 @@ export const ChangePasswordPage = () => {
       <form
         css={form}
         method="post"
-        action={`${Routes.CHANGE_PASSWORD}/${token}`}
+        action={`${Routes.CHANGE_PASSWORD}/${token}${search}`}
       >
         <TextInput
           css={textInput}

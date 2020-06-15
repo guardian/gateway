@@ -4,6 +4,8 @@ import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { Main } from '@/client/main';
 import { brandBackground } from '@guardian/src-foundations/palette';
+import { QueryParams } from '@/shared/model/QueryParams';
+import qs from 'qs';
 
 // favicon shamefully stolen from dcr
 const favicon =
@@ -11,17 +13,28 @@ const favicon =
     ? 'favicon-32x32.ico'
     : 'favicon-32x32-dev-yellow.ico';
 
-export const renderer: (url: string, globalState?: GlobalState) => string = (
+interface RendererOpts {
+  globalState?: GlobalState;
+  queryParams?: QueryParams;
+}
+
+export const renderer: (url: string, opts?: RendererOpts) => string = (
   url,
-  globalState = {},
+  opts = {},
 ) => {
+  const { globalState = {}, queryParams = {} } = opts;
+
   const context = {};
+
+  const queryString = qs.stringify(queryParams);
+
+  const location = `${url}${queryString ? `?${queryString}` : ''}`;
 
   const react = ReactDOMServer.renderToString(
     React.createElement(
       StaticRouter,
       {
-        location: url,
+        location,
         context,
       },
       React.createElement(Main, globalState),

@@ -4,7 +4,7 @@ export enum Routes {
   RESET_RESEND = '/reset/resend',
   CHANGE_PASSWORD = '/reset-password',
   CHANGE_PASSWORD_TOKEN = '/:token',
-  CHANGE_PASSWORD_SENT = '/password/reset-confirmation',
+  CHANGE_PASSWORD_COMPLETE = '/password/reset-confirmation',
 }
 
 export enum ApiRoutes {

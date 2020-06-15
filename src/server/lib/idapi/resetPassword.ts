@@ -27,10 +27,10 @@ const handleError = (response: any) => {
   throw ResetPasswordErrors.GENERIC;
 };
 
-export async function create(email: string, ip: string) {
+export async function create(email: string, ip: string, returnUrl: string) {
   const options = APIPostOptions({
     'email-address': email,
-    returnUrl: '',
+    returnUrl,
   });
 
   return idapiFetch(PATH, APIAddClientAccessToken(options, ip)).catch(
