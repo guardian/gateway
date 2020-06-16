@@ -33,7 +33,6 @@ const div = css`
 `;
 
 const h1 = css`
-  max-width: ${MaxWidth.TABLET}px;
   width: 100%;
   margin: 0;
   padding: ${space[1]}px ${space[2]}px;
@@ -41,7 +40,7 @@ const h1 = css`
   border: 1px solid ${brand[600]};
   box-sizing: border-box;
 
-  ${headline.small({ fontWeight: 'bold', lineHeight: 'regular' })}
+  ${headline.small({ fontWeight: 'bold', lineHeight: 'loose' })}
 
   ${from.tablet} {
     ${headline.large({ fontWeight: 'bold', lineHeight: 'regular' })}
