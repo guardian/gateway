@@ -1,18 +1,11 @@
 import React from 'react';
 import { TextInput } from '@guardian/src-text-input';
-import { Button, buttonReaderRevenue } from '@guardian/src-button';
+import { Button } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
 import { css } from '@emotion/core';
 import { space } from '@guardian/src-foundations';
-import { ThemeProvider } from 'emotion-theming';
 import { Routes } from '@/shared/model/Routes';
-import {
-  resetPasswordBox,
-  header,
-  main,
-  pHeader,
-  pMain,
-} from '@/client/styles/Reset';
+import { header, main, h2, p } from '@/client/styles/Reset';
 
 interface PasswordResetDialogProps {
   email?: string;
@@ -38,12 +31,12 @@ export const PasswordResetDialog = ({
   queryString = '',
 }: PasswordResetDialogProps) => {
   return (
-    <div css={resetPasswordBox}>
+    <div>
       <div css={header}>
-        <p css={pHeader}>{headerText}</p>
+        <h2 css={h2}>{headerText}</h2>
       </div>
       <div css={main}>
-        <p css={pMain}>{bodyText}</p>
+        <p css={p}>{bodyText}</p>
         <form css={form} method="post" action={`${Routes.RESET}${queryString}`}>
           <TextInput
             css={textInput}
@@ -52,15 +45,13 @@ export const PasswordResetDialog = ({
             type="email"
             defaultValue={email}
           />
-          <ThemeProvider theme={buttonReaderRevenue}>
-            <Button
-              type="submit"
-              icon={<SvgArrowRightStraight />}
-              iconSide="right"
-            >
-              {buttonText}
-            </Button>
-          </ThemeProvider>
+          <Button
+            type="submit"
+            icon={<SvgArrowRightStraight />}
+            iconSide="right"
+          >
+            {buttonText}
+          </Button>
         </form>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { css, Global } from '@emotion/core';
-import { palette } from '@guardian/src-foundations';
+import { palette, space } from '@guardian/src-foundations';
 import { body } from '@guardian/src-foundations/typography';
 import { Route, Switch } from 'react-router-dom';
 import { fontFaces } from '@/client/lib/fonts';
@@ -26,7 +26,9 @@ const p = css`
 
 const main = css`
   flex: 1;
+  padding: ${space[6]}px ${space[3]}px;
   max-width: ${MaxWidth.TABLET}px;
+  width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;

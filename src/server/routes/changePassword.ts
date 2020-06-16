@@ -151,4 +151,9 @@ router.get(
   },
 );
 
+router.get(Routes.RESET_RESEND, (req: Request, res: ResponseWithLocals) => {
+  const html = renderer(Routes.RESET_RESEND);
+  res.type('html').send(html);
+});
+
 export default router;

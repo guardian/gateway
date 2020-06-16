@@ -10,8 +10,8 @@ export const ResendPasswordPage = () => {
   return (
     <PasswordResetDialog
       email={email}
-      headerText="Oh no! The reset password link has expired"
-      bodyText="Enter your email address and we'll send you another."
+      headerText="Forgotten password link expired"
+      bodyText="Oh no! The link has expired. Enter your email address and we'll send you another link to change or set your password."
       buttonText="Send me another"
     />
   );

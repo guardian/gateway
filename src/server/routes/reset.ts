@@ -58,4 +58,9 @@ router.post(Routes.RESET, async (req: Request, res: ResponseWithLocals) => {
   res.type('html').send(html);
 });
 
+router.get(Routes.RESET_SENT, (req: Request, res: ResponseWithLocals) => {
+  const html = renderer(Routes.RESET_SENT);
+  res.type('html').send(html);
+});
+
 export default router;
