@@ -1,7 +1,6 @@
 import React from 'react';
-import { LinkButton, buttonReaderRevenue } from '@guardian/src-button';
+import { LinkButton } from '@guardian/src-button';
 import { useQuery } from '@/client/lib/useQuery';
-import { ThemeProvider } from 'emotion-theming';
 import { PageBox } from '@/client/components/PageBox';
 import { PageHeader } from '@/client/components/PageHeader';
 import { PageBodyText } from '@/client/components/PageBodyText';
@@ -19,11 +18,9 @@ export const ChangePasswordCompletePage = () => {
           the button below to jump back to the Guardian.
         </PageBodyText>
       </PageBody>
-      <ThemeProvider theme={buttonReaderRevenue}>
-        <LinkButton css={linkButton} showIcon href={returnUrl}>
-          Continue
-        </LinkButton>
-      </ThemeProvider>
+      <LinkButton css={linkButton} showIcon href={returnUrl}>
+        Continue to The Guardian
+      </LinkButton>
     </PageBox>
   );
 };

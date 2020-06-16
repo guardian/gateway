@@ -2,13 +2,12 @@ import React from 'react';
 import { TextInput } from '@guardian/src-text-input';
 import { Button } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
-import { css } from '@emotion/core';
-import { space } from '@guardian/src-foundations';
 import { Routes } from '@/shared/model/Routes';
 import { PageHeader } from '@/client/components/PageHeader';
 import { PageBox } from '@/client/components/PageBox';
 import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
+import { form, textInput, button } from '@/client/styles/Shared';
 
 interface PasswordResetDialogProps {
   email?: string;
@@ -17,14 +16,6 @@ interface PasswordResetDialogProps {
   buttonText: string;
   queryString?: string;
 }
-
-const textInput = css`
-  margin-bottom: ${space[3]}px;
-`;
-
-const form = css`
-  padding: ${space[2]}px 0px;
-`;
 
 export const PasswordResetDialog = ({
   email = '',
@@ -45,7 +36,12 @@ export const PasswordResetDialog = ({
           type="email"
           defaultValue={email}
         />
-        <Button type="submit" icon={<SvgArrowRightStraight />} iconSide="right">
+        <Button
+          css={button}
+          type="submit"
+          icon={<SvgArrowRightStraight />}
+          iconSide="right"
+        >
           {buttonText}
         </Button>
       </form>
