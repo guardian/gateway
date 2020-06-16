@@ -17,6 +17,7 @@ import { NotFound } from '@/client/pages/NotFound';
 import { ChangePasswordPage } from '@/client/pages/ChangePassword';
 import { ChangePasswordCompletePage } from '@/client/pages/ChangePasswordComplete';
 import { ResendPasswordPage } from '@/client/pages/ResendPassword';
+import { Titlepiece } from '@/client/components/Titlepiece';
 
 const p = css`
   color: ${palette.text.primary};
@@ -59,6 +60,7 @@ export const Main = (props: GlobalState) => {
       />
       <GlobalStateProvider globalState={props}>
         <Header />
+        <Titlepiece />
         {props.error && <GlobalError error={props.error} />}
         <main css={main}>
           <Switch>
