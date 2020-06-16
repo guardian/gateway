@@ -5,7 +5,10 @@ import { SvgArrowRightStraight } from '@guardian/src-icons';
 import { css } from '@emotion/core';
 import { space } from '@guardian/src-foundations';
 import { Routes } from '@/shared/model/Routes';
-import { header, main, h2, p } from '@/client/styles/Reset';
+import { PageHeader } from '@/client/components/PageHeader';
+import { PageBox } from '@/client/components/PageBox';
+import { PageBody } from '@/client/components/PageBody';
+import { PageBodyText } from '@/client/components/PageBodyText';
 
 interface PasswordResetDialogProps {
   email?: string;
@@ -29,31 +32,23 @@ export const PasswordResetDialog = ({
   bodyText,
   buttonText,
   queryString = '',
-}: PasswordResetDialogProps) => {
-  return (
-    <div>
-      <div css={header}>
-        <h2 css={h2}>{headerText}</h2>
-      </div>
-      <div css={main}>
-        <p css={p}>{bodyText}</p>
-        <form css={form} method="post" action={`${Routes.RESET}${queryString}`}>
-          <TextInput
-            css={textInput}
-            label="Email address"
-            name="email"
-            type="email"
-            defaultValue={email}
-          />
-          <Button
-            type="submit"
-            icon={<SvgArrowRightStraight />}
-            iconSide="right"
-          >
-            {buttonText}
-          </Button>
-        </form>
-      </div>
-    </div>
-  );
-};
+}: PasswordResetDialogProps) => (
+  <PageBox>
+    <PageHeader>{headerText}</PageHeader>
+    <PageBody>
+      <PageBodyText>{bodyText}</PageBodyText>
+      <form css={form} method="post" action={`${Routes.RESET}${queryString}`}>
+        <TextInput
+          css={textInput}
+          label="Email address"
+          name="email"
+          type="email"
+          defaultValue={email}
+        />
+        <Button type="submit" icon={<SvgArrowRightStraight />} iconSide="right">
+          {buttonText}
+        </Button>
+      </form>
+    </PageBody>
+  </PageBox>
+);
