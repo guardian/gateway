@@ -3,6 +3,18 @@
 const PageResetPassword = require('../support/pages/reset_password_page');
 const PageResetSent = require('../support/pages/reset_sent_page');
 
+const MOCKING_ENDPOINT = 'localhost:9000/mock';
+
+const getMockOptions = (status, body = {}) => ({
+  headers: {
+    'Content-Type': 'application/json',
+    "x-status": status,
+  },
+  method: 'POST',
+  body: JSON.stringify(body),
+  url: MOCKING_ENDPOINT, 
+});
+
 describe("Password reset flow", () => {
   const page = new PageResetPassword();
 
@@ -14,6 +26,7 @@ describe("Password reset flow", () => {
   context("Valid email already exits", () => {
     it("successfully submits the request", function () {
       const { email } = this.users.validEmail;
+      cy.request(getMockOptions(200)); 
       page.submitEmailAddress(email);
       cy.contains(PageResetSent.CONTENT.CONFIRMATION);
     });
@@ -22,6 +35,10 @@ describe("Password reset flow", () => {
   context("Email doesn't exist", () => {
     it('shows a message saying the email address does not exist', function () {
       const { email } = this.users.emailNotRegistered;
+      cy.request(getMockOptions(404, { 
+        status: 'error', 
+        errors: [{message: 'Not found'}]
+      })); 
       page.submitEmailAddress(email);
       cy.contains(PageResetPassword.CONTENT.ERRORS.NO_ACCOUNT);
     });
@@ -29,8 +46,20 @@ describe("Password reset flow", () => {
 
   context("Email field is left blank", () => {
     it('displays a message saying an email address is needed', () => {
+      cy.request(getMockOptions(500, { 
+        status: 'error', 
+        errors: [{message: 'Required field missing'}]
+      })); 
       page.clickResetPassword();
       cy.contains(PageResetPassword.CONTENT.ERRORS.NO_EMAIL);
     });
   });
+
+  context("General IDAPI failure", () => {
+    it('displays a generic error message', () => {
+      cy.request(getMockOptions(500));
+      page.clickResetPassword();
+      cy.contains(PageResetPassword.CONTENT.ERRORS.GENERIC);
+    });
+  })
 });

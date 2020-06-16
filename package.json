@@ -8,6 +8,7 @@
     "build": "webpack --mode production && copy-node-modules . ./build",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "yarn lint --fix",
+    "mock-server": "node cypress/support/mock-server.js",
     "riffraff": "npx @guardian/node-riffraff-artifact",
     "start": "node ./build/server.js",
     "test": "jest",
