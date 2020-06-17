@@ -30,6 +30,15 @@ const div = css`
   max-width: ${MaxWidth.TABLET}px;
   width: 100%;
   padding: 0 ${space[3]}px;
+  margin-right: 0;
+
+  ${from.mobileMedium} {
+    margin-right: ${space[24]}px;
+  }
+
+  ${from.tablet} {
+    margin-right: 0;
+  }
 `;
 
 const h1 = css`
@@ -39,10 +48,10 @@ const h1 = css`
   color: ${neutral[100]};
   border: 1px solid ${brand[600]};
   box-sizing: border-box;
-
-  ${headline.small({ fontWeight: 'bold', lineHeight: 'loose' })}
+  ${headline.xsmall({ fontWeight: 'bold', lineHeight: 'tight' })}
 
   ${from.tablet} {
+    margin: 0;
     ${headline.large({ fontWeight: 'bold', lineHeight: 'regular' })}
   }
 `;
