@@ -114,7 +114,9 @@ router.post(
           sessionCookie: boolean;
         }) => {
           res.cookie(key, value, {
-            domain: `*.${baseUri}`,
+            // base uri in format profile.theguardian.com, whereas we want cookie domain *.theguardian.com
+            // so replace profile. string in baseUri with empty string, rather than having to set another variable
+            domain: `*.${baseUri.replace('profile.', '')}`,
             expires: sessionCookie ? undefined : new Date(cookieExpiry),
             httpOnly: key !== 'GU_U', // unless GU_U cookie, set to true
             secure: key !== 'GU_U', // unless GU_U cookie, set to true
