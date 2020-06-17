@@ -223,8 +223,7 @@ Resources:
             systemctl start identity-gateway
 
           - BaseUri: !FindInMap [StageVariables, !Ref Stage, BaseUri]
-          - DefaultReturnUri:
-              !FindInMap [StageVariables, !Ref Stage, DefaultReturnUri]
+            DefaultReturnUri: !FindInMap [StageVariables, !Ref Stage, DefaultReturnUri]
 
   InstanceProfile:
     Type: AWS::IAM::InstanceProfile
