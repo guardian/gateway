@@ -18,12 +18,12 @@ jobs:
       - name: cypress run
         uses: cypress-io/github-action@v1
         with:
-          start: 'yarn mock-server & ; yarn start'
+          start: 'yarn e2e:server'
           wait-on: 'http://localhost:8080/healthcheck'
         env:
           PORT: 8080
           BASE_URI: localhost:8080
-          IDAPI_BASE_URL: 'localhost:9000'
+          IDAPI_BASE_URL: 'http://localhost:9000'
           IDAPI_CLIENT_ACCESS_TOKEN: fakekey 
           PLAY_SESSION_COOKIE_SECRET: faketoken
           DEFAULT_RETURN_URI: 'https://m.code.dev-theguardian.com'

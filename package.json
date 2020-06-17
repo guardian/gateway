@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "build": "webpack --mode production && copy-node-modules . ./build",
+    "e2e:server": "yarn mock-server & yarn start",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "yarn lint --fix",
     "mock-server": "node cypress/support/mock-server.js",
