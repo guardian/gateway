@@ -13,6 +13,12 @@ const responses = [];
 
 app.use(bodyParser.json());
 
+app.get('/mock/purge', (_, res) => {
+  console.log('purging all mocks');
+  responses.length = 0;
+  res.sendStatus(204);
+});
+
 app.post('/mock', (req, res) => {
   responses.unshift({
     status: req.get('X-status'),
@@ -22,6 +28,7 @@ app.post('/mock', (req, res) => {
 });
 
 app.use('*', (req, res) => {
+  console.log(`Mocking: ${req.originalUrl}`);
   if(responses.length === 0) {
     res.status(DEFAULT_RESPONSE.status).json(DEFAULT_RESPONSE.body);
   } else {

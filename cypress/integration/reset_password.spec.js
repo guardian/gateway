@@ -18,6 +18,10 @@ const getMockOptions = (status, body = {}) => ({
 describe("Password reset flow", () => {
   const page = new PageResetPassword();
 
+  before(() => {
+    cy.request(MOCKING_ENDPOINT + '/purge');
+  });
+
   beforeEach(function() {
     cy.fixture('users').as('users');
     page.goto();
