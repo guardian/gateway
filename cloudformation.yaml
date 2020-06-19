@@ -100,7 +100,7 @@ Resources:
                 Action:
                   - ssm:GetParameter
                 Resource:
-                  - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${Stack}/${App}/${Stage}/*]
+                  - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${Stack}/${App}/${Stage}/*
         - PolicyName: PushMetrics
           PolicyDocument:
             Version: 2012-10-17
