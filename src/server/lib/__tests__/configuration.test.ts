@@ -18,6 +18,7 @@ describe('getConfiguration', () => {
     process.env.PLAY_SESSION_COOKIE_SECRET = 'play-secret';
     process.env.BASE_URI = 'base-uri';
     process.env.DEFAULT_RETURN_URI = 'default-return-uri';
+    process.env.STAGE = 'DEV';
 
     const output = getConfiguration();
     const expected = {
@@ -27,6 +28,7 @@ describe('getConfiguration', () => {
       playSessionCookieSecret: 'play-secret',
       baseUri: 'base-uri',
       defaultReturnUri: 'default-return-uri',
+      stage: 'DEV',
     };
     expect(output).toEqual(expected);
   });

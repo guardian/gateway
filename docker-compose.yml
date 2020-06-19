@@ -13,7 +13,9 @@ services:
       - PLAY_SESSION_COOKIE_SECRET=${PLAY_SESSION_COOKIE_SECRET}
       - BASE_URI=${BASE_URI}
       - DEFAULT_RETURN_URI=${DEFAULT_RETURN_URI}
+      - STAGE=${STAGE}
     ports:
       - '${PORT}:${PORT}'
     volumes:
       - .:/app/
+      - ~/.aws/credentials:/root/.aws/credentials:ro

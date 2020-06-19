@@ -5,4 +5,5 @@ export interface Configuration {
   playSessionCookieSecret: string;
   baseUri: string;
   defaultReturnUri: string;
+  stage: string;
 }

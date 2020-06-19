@@ -172,6 +172,7 @@ Resources:
             Environment=BASE_URI=${BaseUri}
             Environment=PLAY_SESSION_COOKIE_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/frontendPlaySecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
             Environment=DEFAULT_RETURN_URI=${DefaultReturnUri}
+            Environment=STAGE=${Stage}
 
             [Install]
             WantedBy=multi-user.target
@@ -223,7 +224,8 @@ Resources:
             systemctl start identity-gateway
 
           - BaseUri: !FindInMap [StageVariables, !Ref Stage, BaseUri]
-            DefaultReturnUri: !FindInMap [StageVariables, !Ref Stage, DefaultReturnUri]
+            DefaultReturnUri:
+              !FindInMap [StageVariables, !Ref Stage, DefaultReturnUri]
 
   InstanceProfile:
     Type: AWS::IAM::InstanceProfile
