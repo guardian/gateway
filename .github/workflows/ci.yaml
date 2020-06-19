@@ -27,3 +27,4 @@ jobs:
           IDAPI_CLIENT_ACCESS_TOKEN: ${{secrets.CODE_IDAPI_KEY}}
           PLAY_SESSION_COOKIE_SECRET: faketoken
           DEFAULT_RETURN_URI: 'https://m.code.dev-theguardian.com'
+          STAGE: DEV
