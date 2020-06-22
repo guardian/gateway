@@ -34,8 +34,17 @@ describe('Password change flow', () => {
     });
   });
 
-  context.skip('Enter password is left blank')
-  context.skip('Enter and Confirm passwords left blank');
+  context('Enter and Confirm passwords left blank', () => {
+    it('shows password blanks errors', () => {
+      const fakeToken = 'abcde';
+      cy.idapiMock(200);
+      page.goto(fakeToken);
+      page.clickPasswordChange();
+      cy.contains(ChangePasswordPage.CONTENT.ERRORS.PASSWORD_BLANK);
+      cy.contains(ChangePasswordPage.CONTENT.ERRORS.CONFIRM_PASSWORD_BLANK);
+    });
+  });
+
   context.skip('Valid password entered');
   context.skip('General IDAPI failure');
 
