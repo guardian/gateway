@@ -24,7 +24,16 @@ describe('Password change flow', () => {
     });
   });
 
-  context.skip('Passwords do not match');
+  context('Passwords do not match', () => {
+    it('shows a password mismatch error message', () => {
+      const fakeToken = 'abcde';
+      cy.idapiMock(200);
+      page.goto(fakeToken);
+      page.submitPasswordChange('password', 'mismatch');
+      cy.contains(ChangePasswordPage.CONTENT.ERRORS.PASSWORD_MISMATCH);
+    });
+  });
+
   context.skip('Enter password is left blank')
   context.skip('Enter and Confirm passwords left blank');
   context.skip('Valid password entered');
