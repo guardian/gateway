@@ -12,8 +12,8 @@ export const ResetPasswordPage = () => {
   return (
     <PasswordResetDialog
       email={email}
-      headerText="Forgotten or need to set your password?"
-      bodyText="We will email you a link to reset it."
+      headerText="Forgotten password"
+      bodyText="Forgotten or need to set your password? We will email you a link to change or set it."
       buttonText="Reset Password"
       queryString={search}
     />

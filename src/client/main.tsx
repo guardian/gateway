@@ -1,6 +1,6 @@
 import React from 'react';
 import { css, Global } from '@emotion/core';
-import { palette } from '@guardian/src-foundations';
+import { palette, space } from '@guardian/src-foundations';
 import { body } from '@guardian/src-foundations/typography';
 import { Route, Switch } from 'react-router-dom';
 import { fontFaces } from '@/client/lib/fonts';
@@ -17,6 +17,7 @@ import { NotFound } from '@/client/pages/NotFound';
 import { ChangePasswordPage } from '@/client/pages/ChangePassword';
 import { ChangePasswordCompletePage } from '@/client/pages/ChangePasswordComplete';
 import { ResendPasswordPage } from '@/client/pages/ResendPassword';
+import { Titlepiece } from '@/client/components/Titlepiece';
 
 const p = css`
   color: ${palette.text.primary};
@@ -25,7 +26,9 @@ const p = css`
 
 const main = css`
   flex: 1;
+  padding: ${space[6]}px ${space[3]}px;
   max-width: ${MaxWidth.TABLET}px;
+  width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -59,6 +62,7 @@ export const Main = (props: GlobalState) => {
       />
       <GlobalStateProvider globalState={props}>
         <Header />
+        <Titlepiece />
         {props.error && <GlobalError error={props.error} />}
         <main css={main}>
           <Switch>
