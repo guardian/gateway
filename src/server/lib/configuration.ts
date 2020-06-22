@@ -32,6 +32,8 @@ export const getConfiguration = (): Configuration => {
     'Default return URI missing.',
   );
 
+  const stage = getOrThrow(process.env.STAGE, 'Stage variable missing.');
+
   return {
     port: +port,
     idapiBaseUrl,
@@ -39,5 +41,6 @@ export const getConfiguration = (): Configuration => {
     playSessionCookieSecret,
     baseUri,
     defaultReturnUri,
+    stage,
   };
 };

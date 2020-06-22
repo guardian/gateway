@@ -56,6 +56,7 @@
     "@guardian/src-icons": "^1.4.0",
     "@guardian/src-link": "^1.4.0",
     "@guardian/src-text-input": "^1.4.0",
+    "aws-sdk": "^2.700.0",
     "cookie-parser": "^1.4.5",
     "emotion-theming": "^10.0.27",
     "express": "^4.17.1",
