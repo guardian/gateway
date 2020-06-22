@@ -1,38 +1,25 @@
 /// <reference types="cypress" />
 
 const ChangePasswordPage = require('../support/pages/change_password_page');
-const { get } = require('http');
-
-const MOCKING_ENDPOINT = 'localhost:9000/mock';
-
-const getMockOptions = (status, body = {}) => ({
-  headers: {
-    'Content-Type': 'application/json',
-    "x-status": status,
-  },
-  method: 'POST',
-  body: JSON.stringify(body),
-  url: MOCKING_ENDPOINT, 
-});
 
 describe('Password change flow', () => {
   const page =  new ChangePasswordPage();
 
   before(() => {
-    cy.request(MOCKING_ENDPOINT + '/purge');
+    cy.idapiMockPurge();
   });
-  
+
   context('An expired/invalid token is used', () => {
     it('shows a resend password page', () => {
       const fakeToken = 'abcde';
-      cy.request(getMockOptions(500, {
+      cy.idapiMock(500, {
         status: 'error',
         errors: [
           {
             message: 'Invalid token'
           }
         ]
-      }));
+      });
       page.goto(fakeToken);
     });
   });
