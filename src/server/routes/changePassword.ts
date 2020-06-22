@@ -10,6 +10,8 @@ import {
 import { ChangePasswordErrors } from '@/shared/model/Errors';
 import { getConfiguration } from '@/server/lib/configuration';
 import { ResponseWithLocals } from '@/server/models/Express';
+import { trackMetric } from '@/server/lib/AWS';
+import { Metrics } from '@/server/models/Metrics';
 
 const { baseUri } = getConfiguration();
 
@@ -126,6 +128,9 @@ router.post(
       );
     } catch (error) {
       logger.error(error);
+
+      trackMetric(Metrics.CHANGE_PASSWORD_FAILURE);
+
       state.error = error;
       const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
         globalState: state,
@@ -133,6 +138,8 @@ router.post(
       });
       return res.type('html').send(html);
     }
+
+    trackMetric(Metrics.CHANGE_PASSWORD_SUCCESS);
 
     const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
       globalState: state,
