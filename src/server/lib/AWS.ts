@@ -26,16 +26,29 @@ const standardAwsConfig = {
 
 const CloudWatch = new AWS.CloudWatch(standardAwsConfig);
 
+export const defaultDimensions = {
+  Stage,
+  // ApiMode is the service name, using both ApiMode and Stage will keep
+  // gateway in line with other identity metrics
+  ApiMode: 'identity-gateway',
+};
+
 export const trackMetric = (
   metricName: Metrics,
-  dimensions: MetricDimensions = { Stage },
-) =>
-  CloudWatch.putMetricData({
+  dimensions?: MetricDimensions,
+) => {
+  // merge defaultDimensions with dimensions from parameter in case some were changed,
+  const mergedDimensions = {
+    ...defaultDimensions,
+    ...dimensions,
+  };
+
+  return CloudWatch.putMetricData({
     Namespace: 'Gateway',
     MetricData: [
       {
         MetricName: metricName,
-        Dimensions: Object.entries(dimensions).map(([Name, Value]) => ({
+        Dimensions: Object.entries(mergedDimensions).map(([Name, Value]) => ({
           Name,
           Value,
         })),
@@ -48,3 +61,4 @@ export const trackMetric = (
     .catch((error: AWSError) => {
       logger.error(error.message);
     });
+};
