@@ -12,6 +12,7 @@ import { getConfiguration } from '@/server/lib/configuration';
 import { ResponseWithLocals } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';
+import { noCache } from '@/server/lib/middleware/cache';
 
 const { baseUri } = getConfiguration();
 
@@ -46,6 +47,7 @@ const validatePasswordChangeRequired = (
 
 router.get(
   `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
+  noCache,
   async (req: Request, res: ResponseWithLocals) => {
     const { token } = req.params;
     const state: GlobalState = {};
@@ -74,6 +76,7 @@ router.get(
 
 router.post(
   `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
+  noCache,
   async (req: Request, res: ResponseWithLocals) => {
     const state: GlobalState = {};
 
@@ -152,6 +155,7 @@ router.post(
 
 router.get(
   Routes.CHANGE_PASSWORD_COMPLETE,
+  noCache,
   (_: Request, res: ResponseWithLocals) => {
     const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
       queryParams: res.locals.queryParams,
