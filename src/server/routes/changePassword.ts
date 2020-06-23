@@ -22,7 +22,7 @@ export interface FieldError {
   message: string;
 }
 
-const validatePasswordChangeRequired = (
+const validatePasswordChangeFields = (
   password: string,
   passwordConfirm: string,
 ): Array<FieldError> => {
@@ -38,6 +38,23 @@ const validatePasswordChangeRequired = (
     errors.push({
       field: 'password_confirm',
       message: ChangePasswordErrors.REPEAT_PASSWORD_BLANK,
+    });
+  }
+
+  if (password && (password.length < 6 || password.length > 72)) {
+    errors.push({
+      field: 'password',
+      message: ChangePasswordErrors.PASSWORD_LENGTH,
+    });
+  }
+
+  if (
+    passwordConfirm &&
+    (passwordConfirm.length < 6 || passwordConfirm.length > 72)
+  ) {
+    errors.push({
+      field: 'password_confirm',
+      message: ChangePasswordErrors.PASSWORD_LENGTH,
     });
   }
 
@@ -82,7 +99,7 @@ router.post(
     const { password, password_confirm: passwordConfirm } = req.body;
 
     try {
-      const fieldErrors = validatePasswordChangeRequired(
+      const fieldErrors = validatePasswordChangeFields(
         password,
         passwordConfirm,
       );

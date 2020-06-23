@@ -16,4 +16,5 @@ export enum ChangePasswordErrors {
   PASSWORD_BLANK = 'Password field must not be blank',
   REPEAT_PASSWORD_BLANK = 'Repeat Password field must not be blank',
   PASSWORD_NO_MATCH = 'The passwords do not match, please try again',
+  PASSWORD_LENGTH = 'Password must be between 6 and 72 characters',
 }
