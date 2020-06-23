@@ -1,5 +1,6 @@
 const bodyParser = require('body-parser');
 const express = require('express');
+const { inspect } = require('util');
 const PORT = 9000;
 
 const DEFAULT_RESPONSE = {
@@ -33,6 +34,7 @@ app.use('*', (req, res) => {
     res.status(DEFAULT_RESPONSE.status).json(DEFAULT_RESPONSE.body);
   } else {
     const { status, payload } = responses.pop();
+    console.log(`Mocking: ${req.originalUrl}: ${status} ${inspect(payload)}`);
     res.status(status).json(payload);
   }
 })

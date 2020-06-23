@@ -3,7 +3,7 @@
 const ChangePasswordPage = require('../support/pages/change_password_page');
 
 describe('Password change flow', () => {
-  const page =  new ChangePasswordPage();
+  const page = new ChangePasswordPage();
 
   before(() => {
     cy.idapiMockPurge();
@@ -45,7 +45,51 @@ describe('Password change flow', () => {
     });
   });
 
-  context.skip('Valid password entered');
+  context('Valid password entered', () => {
+    it('shows password change success screen, with a default redirect button.', () => {
+      const fakeToken = 'abcde';
+      const fakeSuccessResponse = {
+        cookies: {
+          values: [
+            {
+              key: 'GU_U',
+              value: 'FAKE_VALUE_0'
+            },
+            {
+              key: 'SC_GU_LA',
+              value: 'FAKE_VALUE_1',
+              sessionCookie: true
+            },
+            {
+              key: 'SC_GU_U',
+              value: 'FAKE_VALUE_2'
+            }
+          ],
+          expiresAt: 1
+        }
+      };
+
+      cy.idapiMock(200);
+      cy.idapiMock(200, fakeSuccessResponse);
+      page.goto(fakeToken);
+      page.submitPasswordChange('password123', 'password123');
+      cy.contains(ChangePasswordPage.CONTENT.PASSWORD_CHANGE_SUCCESS_TITLE);
+      cy.contains(ChangePasswordPage.CONTENT.CONTINUE_BUTTON_TEXT)
+        .should('have.attr', 'href', `${Cypress.env('DEFAULT_RETURN_URI')}/`);
+
+      // Not currently possible to test login cookie,
+      // Cookie is not set to domain we can access, even in cypress.
+      // e.g.
+      // cy.getCookie('GU_U')
+      //  .should('have.property', 'value', 'FAKE_VALUE_0');
+    });
+  });
+
+  context.skip('password too long');
+  context.skip('password too short');
+
+  context.skip('Valid password entered and a valid return url is specified.');
+  context.skip('Valid password entered and an invalid return url is specified.');
   context.skip('General IDAPI failure');
 
 });
