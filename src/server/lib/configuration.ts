@@ -1,10 +1,25 @@
-import { Configuration } from '@/server/models/Configuration';
+import {
+  Configuration,
+  GA_UID,
+  GA_UID_HASH,
+} from '@/server/models/Configuration';
 
 const getOrThrow = (value: string | undefined, errorMessage: string) => {
   if (!value) {
     throw Error(errorMessage);
   }
   return value;
+};
+
+const getGaUIDFromStage = (stage: string): string[] => {
+  switch (stage) {
+    case 'PROD':
+      return [GA_UID.PROD, GA_UID_HASH.PROD];
+    case 'CODE':
+      return [GA_UID.CODE, GA_UID_HASH.CODE];
+    default:
+      return [GA_UID.DEV, GA_UID_HASH.DEV];
+  }
 };
 
 export const getConfiguration = (): Configuration => {
@@ -34,6 +49,8 @@ export const getConfiguration = (): Configuration => {
 
   const stage = getOrThrow(process.env.STAGE, 'Stage variable missing.');
 
+  const [gaId, gaIdHash] = getGaUIDFromStage(stage);
+
   return {
     port: +port,
     idapiBaseUrl,
@@ -42,5 +59,9 @@ export const getConfiguration = (): Configuration => {
     baseUri,
     defaultReturnUri,
     stage,
+    gaUID: {
+      id: gaId,
+      hash: gaIdHash,
+    },
   };
 };

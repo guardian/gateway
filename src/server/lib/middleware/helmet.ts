@@ -8,7 +8,7 @@ enum HELMET_OPTIONS {
   UNSAFE_INLINE = "'unsafe-inline'",
 }
 
-const { baseUri } = getConfiguration();
+const { baseUri, gaUID } = getConfiguration();
 
 const helmetConfig: IHelmetConfiguration = {
   contentSecurityPolicy: {
@@ -21,8 +21,16 @@ const helmetConfig: IHelmetConfiguration = {
       ],
       frameAncestors: [HELMET_OPTIONS.NONE],
       styleSrc: [HELMET_OPTIONS.UNSAFE_INLINE],
-      scriptSrc: [`${baseUri}`],
-      imgSrc: ['static.guim.co.uk', 'ophan.theguardian.com'],
+      scriptSrc: [
+        `${baseUri}`,
+        gaUID.hash, // google analytics id
+        `www.google-analytics.com`,
+      ],
+      imgSrc: [
+        'static.guim.co.uk',
+        'ophan.theguardian.com',
+        'www.google-analytics.com',
+      ],
       fontSrc: ['assets.guim.co.uk'],
     },
     browserSniff: false,

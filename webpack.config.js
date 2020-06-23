@@ -73,7 +73,7 @@ const server = {
 };
 
 const client = {
-  entry: "./src/client/lib/analytics/ophan.js",
+  entry: "./src/client/lib/analytics/index.js",
   module: {
     rules: [
       {

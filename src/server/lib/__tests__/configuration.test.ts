@@ -1,4 +1,5 @@
 import { getConfiguration } from '@/server/lib/configuration';
+import { GA_UID, GA_UID_HASH } from '@/server/models/Configuration';
 
 describe('getConfiguration', () => {
   const ORIGINAL_ENVIRONMENT_VARIABLES = process.env;
@@ -29,6 +30,10 @@ describe('getConfiguration', () => {
       baseUri: 'base-uri',
       defaultReturnUri: 'default-return-uri',
       stage: 'DEV',
+      gaUID: {
+        id: GA_UID.DEV,
+        hash: GA_UID_HASH.DEV,
+      },
     };
     expect(output).toEqual(expected);
   });
