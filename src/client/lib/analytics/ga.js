@@ -34,7 +34,6 @@ const buildGoogleAnalyticsEvent = event => ({
 });
 
 export const init = () => {
-  console.log('init');
   loadGA();
   ga('create', window.gaUID, 'auto', gaTracker);
   ga(gaTracker + '.send', 'pageview');
