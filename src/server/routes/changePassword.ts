@@ -12,7 +12,7 @@ import { getConfiguration } from '@/server/lib/configuration';
 import { ResponseWithLocals } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';
-import { noCache } from '@/server/lib/middleware/cache';
+import { removeNoCache } from '@/server/lib/middleware/cache';
 
 const { baseUri } = getConfiguration();
 
@@ -64,7 +64,6 @@ const validatePasswordChangeFields = (
 
 router.get(
   `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
-  noCache,
   async (req: Request, res: ResponseWithLocals) => {
     const { token } = req.params;
     const state: GlobalState = {};
@@ -93,7 +92,6 @@ router.get(
 
 router.post(
   `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
-  noCache,
   async (req: Request, res: ResponseWithLocals) => {
     const state: GlobalState = {};
 
@@ -172,7 +170,6 @@ router.post(
 
 router.get(
   Routes.CHANGE_PASSWORD_COMPLETE,
-  noCache,
   (_: Request, res: ResponseWithLocals) => {
     const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
       queryParams: res.locals.queryParams,
@@ -181,9 +178,13 @@ router.get(
   },
 );
 
-router.get(Routes.RESET_RESEND, (req: Request, res: ResponseWithLocals) => {
-  const html = renderer(Routes.RESET_RESEND);
-  res.type('html').send(html);
-});
+router.get(
+  Routes.RESET_RESEND,
+  removeNoCache,
+  (_: Request, res: ResponseWithLocals) => {
+    const html = renderer(Routes.RESET_RESEND);
+    res.type('html').send(html);
+  },
+);
 
 export default router;

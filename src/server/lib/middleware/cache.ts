@@ -8,3 +8,14 @@ export const noCache = (_: Request, res: Response, next: NextFunction) => {
 
   next();
 };
+
+export const removeNoCache = (
+  _: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  res.removeHeader('Cache-Control');
+  res.removeHeader('Pragma');
+
+  next();
+};
