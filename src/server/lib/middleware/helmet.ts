@@ -32,6 +32,7 @@ const helmetConfig: IHelmetConfiguration = {
         'www.google-analytics.com',
       ],
       fontSrc: ['assets.guim.co.uk'],
+      connectSrc: ['www.google-analytics.com'],
     },
     browserSniff: false,
   },
