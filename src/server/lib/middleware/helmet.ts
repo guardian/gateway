@@ -8,6 +8,13 @@ enum HELMET_OPTIONS {
   UNSAFE_INLINE = "'unsafe-inline'",
 }
 
+enum CSP_VALID_URI {
+  GOOGLE_ANALYTICS = 'www.google-analytics.com',
+  GUARDIAN_STATIC = 'static.guim.co.uk',
+  GUARDIAN_ASSETS = 'assets.guim.co.uk',
+  OPHAN = 'ophan.theguardian.com',
+}
+
 const { baseUri, gaUID } = getConfiguration();
 
 const helmetConfig: IHelmetConfiguration = {
@@ -24,14 +31,15 @@ const helmetConfig: IHelmetConfiguration = {
       scriptSrc: [
         `${baseUri}`,
         gaUID.hash, // google analytics id
-        `www.google-analytics.com`,
+        CSP_VALID_URI.GOOGLE_ANALYTICS,
       ],
       imgSrc: [
-        'static.guim.co.uk',
-        'ophan.theguardian.com',
-        'www.google-analytics.com',
+        CSP_VALID_URI.GUARDIAN_STATIC,
+        CSP_VALID_URI.OPHAN,
+        CSP_VALID_URI.GOOGLE_ANALYTICS,
       ],
-      fontSrc: ['assets.guim.co.uk'],
+      fontSrc: [CSP_VALID_URI.GUARDIAN_ASSETS],
+      connectSrc: [CSP_VALID_URI.GOOGLE_ANALYTICS],
     },
     browserSniff: false,
   },

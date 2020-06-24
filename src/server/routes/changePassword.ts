@@ -12,6 +12,7 @@ import { getConfiguration } from '@/server/lib/configuration';
 import { ResponseWithLocals } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';
+import { removeNoCache } from '@/server/lib/middleware/cache';
 
 const { baseUri } = getConfiguration();
 
@@ -177,9 +178,13 @@ router.get(
   },
 );
 
-router.get(Routes.RESET_RESEND, (req: Request, res: ResponseWithLocals) => {
-  const html = renderer(Routes.RESET_RESEND);
-  res.type('html').send(html);
-});
+router.get(
+  Routes.RESET_RESEND,
+  removeNoCache,
+  (_: Request, res: ResponseWithLocals) => {
+    const html = renderer(Routes.RESET_RESEND);
+    res.type('html').send(html);
+  },
+);
 
 export default router;

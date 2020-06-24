@@ -9,6 +9,7 @@ import { getEmailFromPlaySessionCookie } from '@/server/lib/playSessionCookie';
 import { ResponseWithLocals } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';
+import { removeNoCache } from '@/server/lib/middleware/cache';
 
 const router = Router();
 
@@ -64,9 +65,13 @@ router.post(Routes.RESET, async (req: Request, res: ResponseWithLocals) => {
   return res.type('html').send(html);
 });
 
-router.get(Routes.RESET_SENT, (req: Request, res: ResponseWithLocals) => {
-  const html = renderer(Routes.RESET_SENT);
-  res.type('html').send(html);
-});
+router.get(
+  Routes.RESET_SENT,
+  removeNoCache,
+  (_: Request, res: ResponseWithLocals) => {
+    const html = renderer(Routes.RESET_SENT);
+    res.type('html').send(html);
+  },
+);
 
 export default router;
