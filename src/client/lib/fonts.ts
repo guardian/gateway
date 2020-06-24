@@ -106,6 +106,7 @@ const fontFace: (fontFace: FontFace) => CSSObject = ({
       (p, c, i) => `${p}${i !== 0 ? ',' : ''} url(${url}.${c}) format('${c}')`,
       '',
     ),
+    fontDisplay: 'swap',
   };
 };
 
