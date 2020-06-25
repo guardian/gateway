@@ -11,8 +11,12 @@ class ChangePasswordPage {
     CONTINUE_BUTTON_TEXT: 'Continue to The Guardian'
   }
 
-  goto(token) {
-    cy.visit(`${ChangePasswordPage.URL}/${token}`);
+  goto(token, returnUrl) {
+    let url = `${ChangePasswordPage.URL}/${token}`;
+    if(returnUrl) {
+      url += `?returnUrl=${returnUrl}`
+    }
+    cy.visit(url);
   }
 
   clickPasswordChange() {

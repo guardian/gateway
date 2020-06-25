@@ -85,11 +85,79 @@ describe('Password change flow', () => {
     });
   });
 
+  context('Valid password entered and a return url with a Guardian domain is specified.', () => {
+    it('shows password change success screen, with a redirect button linking to the return url.', () => {
+      const fakeToken = 'abcde';
+      const returnUrl = 'https://news.theguardian.com';
+      const fakeSuccessResponse = {
+        cookies: {
+          values: [
+            {
+              key: 'GU_U',
+              value: 'FAKE_VALUE_0'
+            },
+            {
+              key: 'SC_GU_LA',
+              value: 'FAKE_VALUE_1',
+              sessionCookie: true
+            },
+            {
+              key: 'SC_GU_U',
+              value: 'FAKE_VALUE_2'
+            }
+          ],
+          expiresAt: 1
+        }
+      };
+
+      cy.idapiMock(200);
+      cy.idapiMock(200, fakeSuccessResponse);
+      page.goto(fakeToken, returnUrl);
+      page.submitPasswordChange('password123', 'password123');
+      cy.contains(ChangePasswordPage.CONTENT.PASSWORD_CHANGE_SUCCESS_TITLE);
+      cy.contains(ChangePasswordPage.CONTENT.CONTINUE_BUTTON_TEXT)
+        .should('have.attr', 'href', `${returnUrl}/`);
+    });
+  });
+
+  context('Valid password entered and an return url from a non-Guardian domain is specified.', () => {
+    it('shows password change success screen, with a default redirect button.', () => {
+      const fakeToken = 'abcde';
+      const returnUrl = 'https://news.badsite.com';
+      const fakeSuccessResponse = {
+        cookies: {
+          values: [
+            {
+              key: 'GU_U',
+              value: 'FAKE_VALUE_0'
+            },
+            {
+              key: 'SC_GU_LA',
+              value: 'FAKE_VALUE_1',
+              sessionCookie: true
+            },
+            {
+              key: 'SC_GU_U',
+              value: 'FAKE_VALUE_2'
+            }
+          ],
+          expiresAt: 1
+        }
+      };
+
+      cy.idapiMock(200);
+      cy.idapiMock(200, fakeSuccessResponse);
+      page.goto(fakeToken, returnUrl);
+      page.submitPasswordChange('password123', 'password123');
+      cy.contains(ChangePasswordPage.CONTENT.PASSWORD_CHANGE_SUCCESS_TITLE);
+      cy.contains(ChangePasswordPage.CONTENT.CONTINUE_BUTTON_TEXT)
+        .should('have.attr', 'href', `${Cypress.env('DEFAULT_RETURN_URI')}/`);
+    });
+  });
   context.skip('password too long');
   context.skip('password too short');
 
-  context.skip('Valid password entered and a valid return url is specified.');
-  context.skip('Valid password entered and an invalid return url is specified.');
+
   context.skip('General IDAPI failure');
 
 });
