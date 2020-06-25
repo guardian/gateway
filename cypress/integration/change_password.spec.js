@@ -154,9 +154,26 @@ describe('Password change flow', () => {
         .should('have.attr', 'href', `${Cypress.env('DEFAULT_RETURN_URI')}/`);
     });
   });
-  context.skip('password too long');
-  context.skip('password too short');
 
+  context('password too short', () => {
+    it('shows an error showing the password length must be within certain limits', () => {
+      const fakeToken = 'abcde';
+      cy.idapiMock(200);
+      page.goto(fakeToken);
+      page.submitPasswordChange('p', 'p');
+      cy.contains(ChangePasswordPage.CONTENT.ERRORS.PASSWORD_INVALID_LENGTH);
+    });
+  });
+  context('password too long', () => {
+    it('shows an error showing the password length must be within certain limits', () => {
+      const fakeToken;
+      const excessivelyLongPassword = Array.from(Array(73), () => 'a').join('');
+      cy.idapiMock(200);
+      page.goto(fakeToken);
+      page.submitPasswordChange(excessivelyLongPassword, excessivelyLongPassword);
+      cy.contains(ChangePasswordPage.CONTENT.ERRORS.PASSWORD_INVALID_LENGTH);
+    });
+  });
 
   context.skip('General IDAPI failure');
 
