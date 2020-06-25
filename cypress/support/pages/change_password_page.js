@@ -2,6 +2,7 @@ class ChangePasswordPage {
   static URL = '/reset-password';
   static CONTENT = {
     ERRORS: {
+      GENERIC: 'There was a problem changing your password, please try again.',
       PASSWORD_MISMATCH: 'The passwords do not match, please try again',
       PASSWORD_BLANK: 'Password field must not be blank',
       CONFIRM_PASSWORD_BLANK: 'Repeat Password field must not be blank',

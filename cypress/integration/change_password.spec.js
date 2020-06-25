@@ -1,6 +1,8 @@
 /// <reference types="cypress" />
 
 const ChangePasswordPage = require('../support/pages/change_password_page');
+const ResendPasswordPage = require('../support/pages/resend_password_page');
+const ResendPasswordResetPage = require('../support/pages/resend_password_page');
 
 describe('Password change flow', () => {
   const page = new ChangePasswordPage();
@@ -21,6 +23,7 @@ describe('Password change flow', () => {
         ]
       });
       page.goto(fakeToken);
+      cy.contains(ResendPasswordResetPage.CONTENT.PAGE_TITLE);
     });
   });
 
@@ -166,7 +169,7 @@ describe('Password change flow', () => {
   });
   context('password too long', () => {
     it('shows an error showing the password length must be within certain limits', () => {
-      const fakeToken;
+      const fakeToken = 'abcde';
       const excessivelyLongPassword = Array.from(Array(73), () => 'a').join('');
       cy.idapiMock(200);
       page.goto(fakeToken);
@@ -175,6 +178,23 @@ describe('Password change flow', () => {
     });
   });
 
-  context.skip('General IDAPI failure');
+  context('General IDAPI failure on token read', () => {
+    it('displays the password resend page', () => {
+      const fakeToken = 'abcde';
+      cy.idapiMock(500);
+      page.goto(fakeToken);
+      cy.contains(ResendPasswordResetPage.CONTENT.PAGE_TITLE);
+    });
+  });
 
+  context('General IDAPI failure on password change', () => {
+    it('displays a generic error message', () => {
+      const fakeToken = 'abcde';
+      cy.idapiMock(200);
+      cy.idapiMock(500);
+      page.goto(fakeToken);
+      page.submitPasswordChange('password123', 'password123');
+      cy.contains(ChangePasswordPage.CONTENT.ERRORS.GENERIC);
+    });
+  });
 });
