@@ -57,15 +57,15 @@ Mappings:
       DefaultReturnUri: https://m.code.dev-theguardian.com
       MaxInstances: 2
       MinInstances: 1
-      LatencyAlarmThreshold: 0.5
-      LatencyAlarmPeriod: 60
+      LatencyAlarmThreshold: 5
+      LatencyAlarmPeriod: 1200
     PROD:
       BaseUri: profile.theguardian.com
       DefaultReturnUri: https://theguardian.com
       MaxInstances: 6
       MinInstances: 3
-      LatencyAlarmThreshold: 5
-      LatencyAlarmPeriod: 1200
+      LatencyAlarmThreshold: 0.5
+      LatencyAlarmPeriod: 60
 Conditions:
   IsProd: !Equals [!Ref Stage, PROD]
 Resources:
