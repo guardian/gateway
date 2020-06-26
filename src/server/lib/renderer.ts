@@ -53,8 +53,16 @@ export const renderer: (url: string, opts?: RendererOpts) => string = (
         <meta name="theme-color" content="${brandBackground.primary}" />
         <link rel="icon" href="https://static.guim.co.uk/images/${favicon}">
         <title>Gateway | The Guardian</title>
-        <script>window.gaUID = "${gaUID.id}"</script>
-        <script src="/gateway-static/bundle.js" defer></script>
+        
+        ${
+          // disable client bundle in test e.g. analytics/cmp
+          process.env.NODE_ENV !== 'test'
+            ? `
+              <script>window.gaUID = "${gaUID.id}"</script>
+              <script src="/gateway-static/bundle.js" defer></script
+            `
+            : ''
+        }
       </head>
       <body style="margin:0">
         <div id="app">${react}</div>
