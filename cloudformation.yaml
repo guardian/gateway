@@ -57,11 +57,15 @@ Mappings:
       DefaultReturnUri: https://m.code.dev-theguardian.com
       MaxInstances: 2
       MinInstances: 1
+      LatencyAlarmThreshold: 5
+      LatencyAlarmPeriod: 1200
     PROD:
       BaseUri: profile.theguardian.com
       DefaultReturnUri: https://theguardian.com
       MaxInstances: 6
       MinInstances: 3
+      LatencyAlarmThreshold: 0.5
+      LatencyAlarmPeriod: 60
 Conditions:
   IsProd: !Equals [!Ref Stage, PROD]
 Resources:
@@ -327,6 +331,43 @@ Resources:
       Subscription:
         - Endpoint: !Ref 'AlarmEmailAddress'
           Protocol: email
+  HighLatencyAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: !Sub
+        - 'Scale-Up if latency is greater than ${Threshold} seconds over last ${Period} seconds'
+        - Period: !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmPeriod]
+          Threshold:
+            !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmThreshold]
+      Namespace: AWS/ELB
+      MetricName: Latency
+      Statistic: Average
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+        - Name: LoadBalancer
+          Value: !Ref 'LoadBalancer'
+      Threshold:
+        !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmThreshold]
+      Period: !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmPeriod]
+      EvaluationPeriods: '1'
+      AlarmActions:
+        - !Ref 'ScaleUpPolicy'
+      OKActions:
+        - !Ref 'ScaleDownPolicy'
+  ScaleUpPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AutoScalingGroupName: !Ref 'AutoScalingGroup'
+      AdjustmentType: ChangeInCapacity
+      ScalingAdjustment: 1
+      Cooldown: 300
+  ScaleDownPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AdjustmentType: ChangeInCapacity
+      AutoScalingGroupName: !Ref 'AutoScalingGroup'
+      Cooldown: 1800
+      ScalingAdjustment: -1
   AlarmNoHealthyHosts:
     Type: AWS::CloudWatch::Alarm
     Condition: IsProd
