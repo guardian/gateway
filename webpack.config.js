@@ -93,7 +93,9 @@ const client = {
   },
   output: {
     filename: "bundle.js",
-    path: path.resolve(__dirname, "build/static/")
+    chunkFilename: '[name].bundle.js',
+    path: path.resolve(__dirname, "build/static/"),
+    publicPath: 'gateway-static/'
   },
   resolve: {
     extensions,
