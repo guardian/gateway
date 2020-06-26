@@ -6,6 +6,7 @@ const ResendPasswordResetPage = require('../support/pages/resend_password_page')
 
 describe('Password change flow', () => {
   const page = new ChangePasswordPage();
+  const fakeToken = 'abcde';
 
   before(() => {
     cy.idapiMockPurge();
@@ -13,7 +14,6 @@ describe('Password change flow', () => {
 
   context('An expired/invalid token is used', () => {
     it('shows a resend password page', () => {
-      const fakeToken = 'abcde';
       cy.idapiMock(500, {
         status: 'error',
         errors: [
@@ -29,7 +29,6 @@ describe('Password change flow', () => {
 
   context('Passwords do not match', () => {
     it('shows a password mismatch error message', () => {
-      const fakeToken = 'abcde';
       cy.idapiMock(200);
       page.goto(fakeToken);
       page.submitPasswordChange('password', 'mismatch');
@@ -39,7 +38,6 @@ describe('Password change flow', () => {
 
   context('Enter and Confirm passwords left blank', () => {
     it('shows password blanks errors', () => {
-      const fakeToken = 'abcde';
       cy.idapiMock(200);
       page.goto(fakeToken);
       page.clickPasswordChange();
@@ -50,7 +48,6 @@ describe('Password change flow', () => {
 
   context('Valid password entered', () => {
     it('shows password change success screen, with a default redirect button.', () => {
-      const fakeToken = 'abcde';
       const fakeSuccessResponse = {
         cookies: {
           values: [
@@ -90,7 +87,6 @@ describe('Password change flow', () => {
 
   context('Valid password entered and a return url with a Guardian domain is specified.', () => {
     it('shows password change success screen, with a redirect button linking to the return url.', () => {
-      const fakeToken = 'abcde';
       const returnUrl = 'https://news.theguardian.com';
       const fakeSuccessResponse = {
         cookies: {
@@ -125,7 +121,6 @@ describe('Password change flow', () => {
 
   context('Valid password entered and an return url from a non-Guardian domain is specified.', () => {
     it('shows password change success screen, with a default redirect button.', () => {
-      const fakeToken = 'abcde';
       const returnUrl = 'https://news.badsite.com';
       const fakeSuccessResponse = {
         cookies: {
@@ -160,7 +155,6 @@ describe('Password change flow', () => {
 
   context('password too short', () => {
     it('shows an error showing the password length must be within certain limits', () => {
-      const fakeToken = 'abcde';
       cy.idapiMock(200);
       page.goto(fakeToken);
       page.submitPasswordChange('p', 'p');
@@ -169,7 +163,6 @@ describe('Password change flow', () => {
   });
   context('password too long', () => {
     it('shows an error showing the password length must be within certain limits', () => {
-      const fakeToken = 'abcde';
       const excessivelyLongPassword = Array.from(Array(73), () => 'a').join('');
       cy.idapiMock(200);
       page.goto(fakeToken);
@@ -180,7 +173,6 @@ describe('Password change flow', () => {
 
   context('General IDAPI failure on token read', () => {
     it('displays the password resend page', () => {
-      const fakeToken = 'abcde';
       cy.idapiMock(500);
       page.goto(fakeToken);
       cy.contains(ResendPasswordResetPage.CONTENT.PAGE_TITLE);
@@ -189,7 +181,6 @@ describe('Password change flow', () => {
 
   context('General IDAPI failure on password change', () => {
     it('displays a generic error message', () => {
-      const fakeToken = 'abcde';
       cy.idapiMock(200);
       cy.idapiMock(500);
       page.goto(fakeToken);

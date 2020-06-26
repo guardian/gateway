@@ -1,8 +1,7 @@
 /// <reference types="cypress" />
 
-const URL = '/reset';
-
 class ResetPasswordPage {
+  static URL = '/reset';
   static CONTENT = {
     ERRORS: {
       GENERIC: 'There was a problem resetting your password, please try again.',
@@ -12,7 +11,7 @@ class ResetPasswordPage {
   }
 
   goto() {
-    cy.visit(URL);
+    cy.visit(ResetPasswordPage.URL);
   }
 
   submitEmailAddress(email) {
