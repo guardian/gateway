@@ -1,46 +1,57 @@
 /// <reference types="cypress" />
 
-const BASE_URL = 'localhost:8080';
+const PageResetPassword = require('../support/pages/reset_password_page');
+const PageResetSent = require('../support/pages/reset_sent_page');
 
 describe("Password reset flow", () => {
-  const pageUrl = `${BASE_URL}/reset`;
-  beforeEach(function() {
-    cy.fixture('users').as('users');
-    cy.visit(pageUrl);
+  const page = new PageResetPassword();
+
+  before(() => {
+    cy.idapiMockPurge();
   });
-  
+
+  beforeEach(function () {
+    cy.fixture('users').as('users');
+    page.goto();
+  });
+
   context("Valid email already exits", () => {
     it("successfully submits the request", function () {
       const { email } = this.users.validEmail;
-      cy.get('input[name="email"]')
-        .type(email);
-      
-      cy.contains('Reset Password')
-        .click();
-      
-      cy.contains('We’ve sent you an email – please open it up and click on the button');
+      cy.idapiMock(200);
+      page.submitEmailAddress(email);
+      cy.contains(PageResetSent.CONTENT.CONFIRMATION);
     });
   });
 
   context("Email doesn't exist", () => {
     it('shows a message saying the email address does not exist', function () {
       const { email } = this.users.emailNotRegistered;
-      cy.get('input[name="email"]')
-        .type(email);
-      
-      cy.contains('Reset Password')
-        .click();
-
-      cy.contains('There is no account for that email address, please check for typos or create an account');
+      cy.idapiMock(404, {
+        status: 'error',
+        errors: [{ message: 'Not found' }]
+      });
+      page.submitEmailAddress(email);
+      cy.contains(PageResetPassword.CONTENT.ERRORS.NO_ACCOUNT);
     });
   });
 
   context("Email field is left blank", () => {
     it('displays a message saying an email address is needed', () => {
-      cy.contains('Reset Password')
-      .click();
- 
-      cy.contains('Email field must not be blank.');
+      cy.idapiMock(500, {
+        status: 'error',
+        errors: [{ message: 'Required field missing' }]
+      });
+      page.clickResetPassword();
+      cy.contains(PageResetPassword.CONTENT.ERRORS.NO_EMAIL);
     });
   });
+
+  context("General IDAPI failure", () => {
+    it('displays a generic error message', () => {
+      cy.idapiMock(500);
+      page.clickResetPassword();
+      cy.contains(PageResetPassword.CONTENT.ERRORS.GENERIC);
+    });
+  })
 });
