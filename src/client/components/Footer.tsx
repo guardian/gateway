@@ -44,7 +44,7 @@ const ul = css`
   column-count: 2;
   column-gap: 0;
   ${from.tablet} {
-    flex: 1;
+    flex: 1 1 auto;
     column-count: auto;
     column-width: 10rem;
     padding: 0px ${space[6]}px;

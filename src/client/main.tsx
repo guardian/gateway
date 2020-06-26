@@ -19,7 +19,7 @@ import { ResendPasswordPage } from '@/client/pages/ResendPassword';
 import { Titlepiece } from '@/client/components/Titlepiece';
 
 const main = css`
-  flex: 1;
+  flex: 1 1 auto;
   padding: ${space[6]}px ${space[3]}px;
   max-width: ${MaxWidth.TABLET}px;
   width: 100%;
