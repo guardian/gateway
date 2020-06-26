@@ -73,17 +73,18 @@ const server = {
 };
 
 const client = {
-  entry: "./src/client/lib/analytics/index.js",
+  entry: "./src/client/static/index.tsx",
+  mode: "production",
   module: {
     rules: [
       {
         exclude: /node_modules/,
-        test: /\.js/,
+        test: /\.(j|t)s(x?)/,
         use: [
           {
             loader: "babel-loader",
             options: {
-              presets: ["@babel/env"]
+              presets: ["@babel/env", ...babel.presets]
             }
           }
         ]

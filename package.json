@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "@emotion/core": "^10.0.27",
+    "@guardian/consent-management-platform": "^3.4.3",
     "@guardian/src-button": "^1.4.0",
     "@guardian/src-foundations": "^1.4.0",
     "@guardian/src-icons": "^1.4.0",
