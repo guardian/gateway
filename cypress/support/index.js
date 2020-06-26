@@ -17,6 +17,6 @@
 import './commands';
 
 // disable the consents management platform from appearing using this cookie
-Cypress.Cookies.defaults({
-  euconsent: 'consents-management-platform-cookie',
+beforeEach(() => {
+  cy.setCookie('euconsent', 'consents-management-platform-cookie');
 });
