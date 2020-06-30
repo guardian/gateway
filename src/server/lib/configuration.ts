@@ -2,6 +2,8 @@ import {
   Configuration,
   GA_UID,
   GA_UID_HASH,
+  GU_API_DOMAIN,
+  GU_DOMAIN,
 } from '@/server/models/Configuration';
 
 const getOrThrow = (value: string | undefined, errorMessage: string) => {
@@ -11,7 +13,7 @@ const getOrThrow = (value: string | undefined, errorMessage: string) => {
   return value;
 };
 
-const getGaUIDFromStage = (stage: string): string[] => {
+const gaUIDFromStage = (stage: string): [string, string] => {
   switch (stage) {
     case 'PROD':
       return [GA_UID.PROD, GA_UID_HASH.PROD];
@@ -19,6 +21,17 @@ const getGaUIDFromStage = (stage: string): string[] => {
       return [GA_UID.CODE, GA_UID_HASH.CODE];
     default:
       return [GA_UID.DEV, GA_UID_HASH.DEV];
+  }
+};
+
+const guardianDomainFromStage = (stage: string): [string, string] => {
+  switch (stage) {
+    case 'PROD':
+      return [GU_DOMAIN.PROD, GU_API_DOMAIN.PROD];
+    case 'CODE':
+      return [GU_DOMAIN.CODE, GU_API_DOMAIN.CODE];
+    default:
+      return [GU_DOMAIN.DEV, GU_API_DOMAIN.DEV];
   }
 };
 
@@ -49,7 +62,9 @@ export const getConfiguration = (): Configuration => {
 
   const stage = getOrThrow(process.env.STAGE, 'Stage variable missing.');
 
-  const [gaId, gaIdHash] = getGaUIDFromStage(stage);
+  const [gaId, gaIdHash] = gaUIDFromStage(stage);
+
+  const [domain, apiDomain] = guardianDomainFromStage(stage);
 
   return {
     port: +port,
@@ -63,5 +78,7 @@ export const getConfiguration = (): Configuration => {
       id: gaId,
       hash: gaIdHash,
     },
+    domain,
+    apiDomain,
   };
 };

@@ -35,21 +35,21 @@ const buildGoogleAnalyticsEvent = event => ({
 
 export const init = () => {
   loadGA();
-  ga('create', window.gaUID, 'auto', gaTracker);
-  ga(gaTracker + '.send', 'pageview');
+  window.ga('create', window.gaUID, 'auto', gaTracker);
+  window.ga(gaTracker + '.send', 'pageview');
 };
 
 export const customMetric = event => {
-  ga(gaTracker + '.send', 'event', buildGoogleAnalyticsEvent(event));
+  window.ga(gaTracker + '.send', 'event', buildGoogleAnalyticsEvent(event));
 };
 
 export const fetchTracker = callback => {
-  ga(function() {
-    const tracker = ga.getByName(gaTracker);
+  window.ga(function() {
+    const tracker = window.ga.getByName(gaTracker);
     return callback(tracker);
   });
 };
 
 export const pageView = (path = location.pathname) => {
-  ga(gaTracker + '.send', 'pageview', path);
+  window.ga(gaTracker + '.send', 'pageview', path);
 };
