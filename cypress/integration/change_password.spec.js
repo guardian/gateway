@@ -161,6 +161,7 @@ describe('Password change flow', () => {
       cy.contains(ChangePasswordPage.CONTENT.ERRORS.PASSWORD_INVALID_LENGTH);
     });
   });
+
   context('password too long', () => {
     it('shows an error showing the password length must be within certain limits', () => {
       const excessivelyLongPassword = Array.from(Array(73), () => 'a').join('');
