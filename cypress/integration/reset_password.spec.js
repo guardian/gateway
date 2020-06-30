@@ -47,6 +47,45 @@ describe("Password reset flow", () => {
     });
   });
 
+  // This is a lot of tests. May not need to test them all. This is also not a comprehensive test, just one email pattern for each provider.
+  [
+    {
+      name: 'Gmail',
+      inboxLink: 'https://mail.google.com/mail',
+      testEmail: 'test@gmail.com'
+    },
+    {
+      name: 'Yahoo!',
+      inboxLink: 'https://mail.yahoo.com',
+      testEmail: 'test@yahoomail.com'
+    },
+    {
+      name: 'BT Mail',
+      inboxLink: 'https://www.bt.com/email',
+      testEmail: 'test@btinternet.com',
+    },
+    {
+      name: 'AOL Mail',
+      inboxLink: 'https://mail.aol.com/',
+      testEmail: 'test@aol.com'
+    },
+    {
+      name: 'Outlook',
+      inboxLink: 'https://outlook.live.com/',
+      testEmail: 'test@outlook.com'
+    },
+  ].forEach((emailProvider) => {
+    context(`An ${emailProvider.name} email client is specified`, () => {
+      it("links to the web email client", () => {
+        const email = emailProvider.testEmail;
+        cy.idapiMock(200);
+        page.submitEmailAddress(email);
+        cy.contains(`Go to your ${emailProvider.name} inbox`)
+          .should('have.attr', 'href', `${emailProvider.inboxLink}`);
+      });
+    });
+  });
+
   context("General IDAPI failure", () => {
     it('displays a generic error message', () => {
       cy.idapiMock(500);
