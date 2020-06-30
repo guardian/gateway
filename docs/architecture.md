@@ -20,7 +20,7 @@ Gateway is primarily a [TypeScript](https://www.typescriptlang.org/), [React](ht
 
 ## Browser Support
 
-**Our core line in the sand is that core functionality and features must NOT require any client-side JavaScript.** To this end Gateway is set up as a completley SSR (Server-side Rendered) React application.
+**Our core line in the sand is that core functionality and features must NOT require any client-side JavaScript.** To this end Gateway is set up as a completely SSR (Server-side Rendered) React application.
 
 This has the added benefit that since we're only serving HTML, we can target a wider range of browsers compared to doing client side hydration, pretty much any browser thats supports [TLS 1.2](https://caniuse.com/#feat=tls1-2) will get functional support. As far as styling/css go, we target the recommended browsers from [guardian/dotcom-rendering](https://github.com/guardian/dotcom-rendering/blob/master/docs/principles/browser-support.md#recommended-browsers).
 

@@ -19,12 +19,12 @@ jobs:
         uses: cypress-io/github-action@v1
         with:
           start: 'yarn e2e:server'
-          wait-on: 'http://localhost:8080/healthcheck'
+          wait-on: 'http://localhost:8861/healthcheck'
         env:
-          PORT: 8080
-          BASE_URI: localhost:8080
+          PORT: 8861
+          BASE_URI: localhost:8861
           IDAPI_BASE_URL: 'http://localhost:9000'
-          IDAPI_CLIENT_ACCESS_TOKEN: fakekey 
+          IDAPI_CLIENT_ACCESS_TOKEN: fakekey
           PLAY_SESSION_COOKIE_SECRET: faketoken
           DEFAULT_RETURN_URI: 'https://m.code.dev-theguardian.com'
           STAGE: DEV
