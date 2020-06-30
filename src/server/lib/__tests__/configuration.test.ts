@@ -1,5 +1,10 @@
 import { getConfiguration } from '@/server/lib/configuration';
-import { GA_UID, GA_UID_HASH } from '@/server/models/Configuration';
+import {
+  GA_UID,
+  GA_UID_HASH,
+  GU_DOMAIN,
+  GU_API_DOMAIN,
+} from '@/server/models/Configuration';
 
 describe('getConfiguration', () => {
   const ORIGINAL_ENVIRONMENT_VARIABLES = process.env;
@@ -34,6 +39,8 @@ describe('getConfiguration', () => {
         id: GA_UID.DEV,
         hash: GA_UID_HASH.DEV,
       },
+      domain: GU_DOMAIN.DEV,
+      apiDomain: GU_API_DOMAIN.DEV,
     };
     expect(output).toEqual(expected);
   });

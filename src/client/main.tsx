@@ -1,7 +1,6 @@
 import React from 'react';
 import { css, Global } from '@emotion/core';
-import { palette, space } from '@guardian/src-foundations';
-import { body } from '@guardian/src-foundations/typography';
+import { space } from '@guardian/src-foundations';
 import { Route, Switch } from 'react-router-dom';
 import { fontFaces } from '@/client/lib/fonts';
 import { ResetPasswordPage } from '@/client/pages/ResetPassword';
@@ -19,13 +18,8 @@ import { ChangePasswordCompletePage } from '@/client/pages/ChangePasswordComplet
 import { ResendPasswordPage } from '@/client/pages/ResendPassword';
 import { Titlepiece } from '@/client/components/Titlepiece';
 
-const p = css`
-  color: ${palette.text.primary};
-  ${body.medium()};
-`;
-
 const main = css`
-  flex: 1;
+  flex: 1 1 auto;
   padding: ${space[6]}px ${space[3]}px;
   max-width: ${MaxWidth.TABLET}px;
   width: 100%;
@@ -52,9 +46,6 @@ export const Main = (props: GlobalState) => {
             display: flex;
             flex-direction: column;
           }
-          p {
-            ${p}
-          }
           * {
             box-sizing: border-box;
           }
@@ -66,9 +57,6 @@ export const Main = (props: GlobalState) => {
         {props.error && <GlobalError error={props.error} />}
         <main css={main}>
           <Switch>
-            <Route exact path="/">
-              <p>Gateway</p>
-            </Route>
             <Route exact path={Routes.RESET}>
               <ResetPasswordPage />
             </Route>

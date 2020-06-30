@@ -13,9 +13,11 @@ enum CSP_VALID_URI {
   GUARDIAN_STATIC = 'static.guim.co.uk',
   GUARDIAN_ASSETS = 'assets.guim.co.uk',
   OPHAN = 'ophan.theguardian.com',
+  VENDORLIST_CMP = 'vendorlist.consensu.org',
+  GUARDIAN_CONSENTS_LOGS = 'consent-logs.',
 }
 
-const { baseUri, gaUID } = getConfiguration();
+const { baseUri, gaUID, apiDomain } = getConfiguration();
 
 const helmetConfig: IHelmetConfiguration = {
   contentSecurityPolicy: {
@@ -39,7 +41,11 @@ const helmetConfig: IHelmetConfiguration = {
         CSP_VALID_URI.GOOGLE_ANALYTICS,
       ],
       fontSrc: [CSP_VALID_URI.GUARDIAN_ASSETS],
-      connectSrc: [CSP_VALID_URI.GOOGLE_ANALYTICS],
+      connectSrc: [
+        CSP_VALID_URI.GOOGLE_ANALYTICS,
+        CSP_VALID_URI.VENDORLIST_CMP,
+        `${CSP_VALID_URI.GUARDIAN_CONSENTS_LOGS}${apiDomain}`,
+      ],
     },
     browserSniff: false,
   },
