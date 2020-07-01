@@ -34,7 +34,19 @@ When using nginx, be sure to set `BASE_URI` environment variable in `.env` to `p
 
 ### S3 Config
 
-TODO: Add development .env files to s3 private config for easier development setup.
+You can get a preset `.env` file from the S3 private config. Be sure to have the `identity` Janus credentials.
+
+Without nginx (localhost:8861):
+
+```sh
+$ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway/env-localhost .env
+```
+
+With nginx (profile.thegulocal.com):
+
+```sh
+$ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway/env-thegulocal .env
+```
 
 ## Running
 
