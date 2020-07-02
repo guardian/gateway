@@ -1,22 +1,15 @@
 import React from 'react';
 import { css, Global } from '@emotion/core';
 import { space } from '@guardian/src-foundations';
-import { Route, Switch } from 'react-router-dom';
 import { fontFaces } from '@/client/lib/fonts';
-import { ResetPasswordPage } from '@/client/pages/ResetPassword';
-import { ResetSentPage } from '@/client/pages/ResetSent';
+import { GlobalError } from '@/client/components/GlobalError';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { MaxWidth } from '@/client/models/Style';
 import { GlobalStateProvider } from '@/client/components/GlobalState';
 import { GlobalState } from '@/shared/model/GlobalState';
-import { Routes } from '@/shared/model/Routes';
-import { GlobalError } from '@/client/components/GlobalError';
-import { NotFound } from '@/client/pages/NotFound';
-import { ChangePasswordPage } from '@/client/pages/ChangePassword';
-import { ChangePasswordCompletePage } from '@/client/pages/ChangePasswordComplete';
-import { ResendPasswordPage } from '@/client/pages/ResendPassword';
 import { Titlepiece } from '@/client/components/Titlepiece';
+import { GatewayRoutes } from './routes';
 
 const main = css`
   flex: 1 1 auto;
@@ -56,29 +49,7 @@ export const Main = (props: GlobalState) => {
         <Titlepiece />
         {props.error && <GlobalError error={props.error} />}
         <main css={main}>
-          <Switch>
-            <Route exact path={Routes.RESET}>
-              <ResetPasswordPage />
-            </Route>
-            <Route exact path={Routes.RESET_SENT}>
-              <ResetSentPage />
-            </Route>
-            <Route
-              exact
-              path={`${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`}
-            >
-              <ChangePasswordPage />
-            </Route>
-            <Route path={Routes.CHANGE_PASSWORD_COMPLETE}>
-              <ChangePasswordCompletePage />
-            </Route>
-            <Route exact path={Routes.RESET_RESEND}>
-              <ResendPasswordPage />
-            </Route>
-            <Route>
-              <NotFound />
-            </Route>
-          </Switch>
+          <GatewayRoutes />
         </main>
         <Footer />
       </GlobalStateProvider>

@@ -14,7 +14,7 @@ router.use(core);
 // request reset password routes
 router.use(noCache, queryParamsMiddleware, reset);
 
-// change password routes\
+// change password routes
 router.use(noCache, queryParamsMiddleware, changePassword);
 
 export default router;
