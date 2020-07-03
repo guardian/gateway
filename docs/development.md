@@ -89,12 +89,71 @@ router.use(noCache, queryParamsMiddleware, reset);
 
 The route should now be accessible.
 
-## Global State
+## State Management
 
-- whats it used for
-- example
+### Global State
 
-## Query Params
+Sometimes data is needed by the client to render a specific component, e.g. an error. However due to SSR without client side hydration it's not possible to simply pass some JSON to the client and expect it to utilise the data.
+
+Instead it's possible to pass a state (properties in the [`GlobalState`](../src/shared/model/GlobalState.ts) interface) to the renderer method. This is passed to the [`Main` app component](../src/client/main.tsx) in React as a prop. The `Main` component utilises a [`GlobalStateProvider`](../src/client/components/GlobalState.tsx) which wraps the app with a [Context Provider](https://reactjs.org/docs/context.html) making it possible to access data further down a component tree without having to manually pass props down at each level.
+
+It's then possible to access the state through the [`useContext`](https://reactjs.org/docs/hooks-reference.html#usecontext) hook in a descendent component.
+
+On the server side, it's possible to populate the state by creating a `GlobalState` object, adding values to it, and passing it to the renderer (example below).
+
+Here's an example of adding some test data to the global state.
+
+Firstly define it in the [`GlobalState`](../src/shared/model/GlobalState.ts) interface. It should be optional property.
+
+```ts
+...
+export interface GlobalState {
+  // other data in the state
+  ...
+  test?: string;
+}
+```
+
+On the server, add it to the state somewhere in an express handler, and passing it to the renderer:
+
+```ts
+...
+// define the state object
+const state: GlobalState = {};
+...
+// add stuff to the test property
+state.test = 'This is some test string!';
+// or from an variable
+state.test = testString;
+...
+// render and respond with the html and state
+const html = renderer('/path', {
+  globalState: state,
+});
+return res.type('html').send(html);
+...
+```
+
+It's then possible to access it somewhere in the React app using the [`useContext`](https://reactjs.org/docs/hooks-reference.html#usecontext) hook:
+
+```tsx
+import React, { useContext } from 'react';
+import { GlobalStateContext } from '@/client/components/GlobalState';
+
+// export some react component
+export const TestComponent = () => {
+  // get the global state from the context
+  const globalState: GlobalState = useContext(GlobalStateContext);
+  // extract the data we need from the state
+  const { test } = globalState;
+
+  // use the test state
+  return <h1>{test}</h1>;
+  // renders <h1>This is some test string!</h1>
+};
+```
+
+### Query Params
 
 - whats it used for
 - example
