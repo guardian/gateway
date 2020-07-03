@@ -155,8 +155,42 @@ export const TestComponent = () => {
 
 ### Query Params
 
-- whats it used for
-- example
+In some cases, some state may need to persist from request to request, or passed through the request chain, for example the `returnUrl`. Rather than just persist the querystring as is through the flow, a middleware is used to parse the querystring for expected values and use them, this gives control over exactly what query parameters are available and usable.
+
+The [`QueryParams`](../src/shared/model/QueryParams.ts) interface is used to determine which parameters are available. To make sure the query params are parsed, make sure to add the param to the [`parseExpressQueryParams`](../src/server/lib/queryParams.ts) and the [`unit tests`](../src/server/lib/__tests__/queryParams.test.ts) too.
+
+```ts
+// src/shared/model/QueryParams.ts
+export interface QueryParams {
+  returnUrl: string;
+  clientId?: string;
+  testParam?: string;
+}
+
+// src/server/lib/queryParams.ts#
+export const parseExpressQueryParams = ({
+  returnUrl,
+  clientId,
+  testParam,
+}: {
+  returnUrl?: string;
+  clientId?: string;
+  testParam?: string;
+}): QueryParams => {
+  return {
+    returnUrl: validateReturnUrl(returnUrl),
+    clientId: validateClientId(clientId),
+    testParam: validateTestParam(testParams), // method to check if the parameter is valid, defined elsewhere
+  };
+};
+```
+
+Then simply include the [`queryParamsMiddleware`](../src/server/lib/middleware/queryParams.ts) on any routes that should parse the querystring.
+
+```ts
+// example on all reset password routes
+router.use(noCache, queryParamsMiddleware, reset);
+```
 
 ## Styling
 
