@@ -326,5 +326,12 @@ try {
 
 ## CSP (Content Secure Policy)
 
-- updating csp
-- csp errors
+Content Security Policy (CSP) is an added layer of security that helps to detect and mitigate certain types of attacks, including Cross Site Scripting (XSS) and data injection attacks. These attacks are used for everything from data theft to site defacement to distribution of malware.
+
+We use [helmet](https://helmetjs.github.io/docs/csp/) to add the `Content-Security-Policy` header. You can see the middleware configuration in the [`src/server/lib/middleware/helmet.ts`](../src/server/lib/middleware/helmet.ts) file.
+
+Essentially you need to add directives for all the content you're loading on the page. The helmet docs and the [MDN CSP](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) docs are super handy for more info.
+
+CSP Violations show up in the browser console, so it's easy to tell if theres a violation of the policy. Here's an example screenshot.
+
+_ADD CSP VIOLATION SCREENSHOT_
