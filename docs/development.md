@@ -194,19 +194,81 @@ router.use(noCache, queryParamsMiddleware, reset);
 
 ## Styling
 
-- guardian design system
-- emotion.sh
-- close to component as possible
-- shared styles
+Styling is done in JS (or TSX in our case) using the [Emotion](https://emotion.sh) CSS-in-JS library, which allows for the definitions of styles at the component level, which means once rendered, the html sent to the client only contains the CSS required for that page.
+
+It's also used as [The Guardian Source Design System](https://theguardian.design/) components are built using Emotion too, allowing the use for those components in our project.
+
+Example of styling and adding it to a `p` tag using Emotion and Source:
+
+```tsx
+import * as React from 'react';
+import { css } from '@emotion/core';
+import { textSans } from '@guardian/src-foundations/typography';
+import { palette } from '@guardian/src-foundations';
+
+// style the tag using the css string literal
+const p = css`
+  color: ${palette.neutral[100]};
+  margin: 0;
+  ${textSans.small()};
+`;
+
+// example component with the css attribute to add the styling
+export const Text = () => <p css={p}>Some styled text!</p>;
+```
+
+Try to keep the styling as close to the component as possible to the component being styled as possible to avoid conflict, and making it easier to change styles on that component in the future.
+
+Shared styles used by multiple components can be added to and imported from the [src/client/styles/Shared.ts](../src/client/styles/Shared.ts) file.
 
 ## Environment Variables
 
-- .env file
-- .env.example
-- docker-compose
-- github actions
-- configuration + test
-- possibly cypress too
+As mentioned in the setup guide, some environment variables are required to start the application. However this section focuses on adding or removing an environment variable.
+
+Environment variables appear in a lot of places, so it's likely you'll need to update all these places.
+
+1. `.env` file
+   - Determines all the environment variables available on local development
+   - Should **not** be committed, gitignored by default.
+   - e.g. `ENV_KEY=ENV_VALUE`
+2. `.env.example`
+   - Example file for `.env` without populated values
+   - Should be committed, but make sure not to include any values that should be secret.
+   - e.g. `ENV_KEY=`
+3. `docker-compose.yml`
+   - Since docker can also be used for development, the environment variables must also be defined in this file
+   - By default it picks up values from the `.env` file, but they need to be registered under `environment` first.
+   - Use the `${...}` syntax to populate the value from the name.
+   ```yml
+   environment:
+     - ENV_KEY=${ENV_KEY}
+   ```
+4. Configuration and Tests
+
+   - Environment Variables should only be accessible on the server, as not to possibly leak them.
+   - To register them with the server, first add it to the [`Configuration`](../src/server/models/Configuration.ts) interface.
+   - Next make sure it's exported in the config object in the [`getConfiguration`](../src/server/lib/configuration.ts) method. The `getOrThrow` method makes sure that it's in the environment variables, otherwise the server will not start.
+   - Finally fix the [configuration unit tests](../src/server/lib/__tests__/configuration.test.ts).
+   - You can then use the `getConfiguration` method to access the environment variable when you need it e.g.
+
+   ```ts
+   const { envKey } = getConfiguration();
+
+   // use the envKey
+   thisMethodNeedsTheKey(envKey);
+   ```
+
+5. Github Actions (`.github/workflows/ci.yaml`)
+   - For GitHub Actions CI
+   - Add development values to allow tests to pass
+   - For secret values, use a fake value
+   ```yml
+   env:
+     ENV_KEY: ENV_VALUE
+   ```
+6. S3 Config
+   - If an environment variable has been changed/added/deleted, it might be useful to update the default S3 private DEV config for the project to help other developers
+   - AWS `identity` account, in the `s3://identity-private-config/DEV/identity-gateway/` folder.
 
 ## Client Side Scripts
 
