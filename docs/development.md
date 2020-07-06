@@ -272,11 +272,57 @@ Environment variables appear in a lot of places, so it's likely you'll need to u
 
 ## Client Side Scripts
 
-- client/static folder
-- analytics/cmp etc.
-- code not directly related to core functionality
-- compiled separately
-- dynamic imports
+Although the app itself is server side rendered, there may need to be some scripts that fire on the client side, for example for analytics, or the consents management platform.
+
+To facilitate this, a client bundle is created at build time to the `build/static` folder. This corresponds to the script imported in the [`src/client/static/index.tsx`](../src/client/static/index.tsx) file, with a script tag pointing to the bundle delivered along with the rendered html.
+
+To keep the initial bundle size as small as possible it is beneficial to dynamically import certain scripts depending on conditionals. For example:
+
+```ts
+...
+// shouldShow returns a boolean to check if we should import the module
+if (shouldShow()) {
+  // if evaluated to true, import the larger bundle
+  // this happens asynchronously, since the import method uses promises
+  // in this case since we just need to load the bundle, we don't
+  // need to worry about handling the promise
+  import('./cmp');
+}
+...
+
+// it's possible to provide a callback to the import method to run some code
+// after it's imported
+import('./cmp', (cmp) => {
+  // cmp contains exported methods
+
+  // do stuff here e.g.
+  cmp.doStuff()
+})
+
+// or use the then catch promise methods
+import('./cmp')
+  .then((cmp) => {
+    // cmp contains exported methods
+
+    // do stuff here e.g.
+    cmp.doStuff()
+  })
+  .catch((error) => {
+    // error importing module
+    console.error(error)
+  })
+
+// or even async await syntax
+try {
+  const cmp = await import('./cmp');
+  // cmp contains exported methods
+  // do stuff here e.g.
+  cmp.doStuff()
+} catch (error) {
+  // error importing module
+  console.error(error)
+}
+```
 
 ## CSP (Content Secure Policy)
 
