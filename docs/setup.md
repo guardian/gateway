@@ -167,9 +167,9 @@ Once this cookie value is `true`, you'll automatically be directed to the `gatew
 
 ### Visual Studio Code (VSCode)
 
-We recommend using VSCode thanks to it's support for TypeScript and JavaScript, but also for it's extensions and settings that can be shared.
+We recommend using VSCode thanks to it's support for TypeScript and JavaScript, but also for it's extensions that can be shared.
 
-We've included some recommended [extensions](.vscode/extensions.json) and [settings](.vscode/settings.json) which VSCode will prompt you to install and use on opening this project.
+We've included some recommended [extensions](.vscode/extensions.json) which VSCode will prompt you to install and use on opening this project.
 
 Here's a list of recommended extensions and why we include them:
 
