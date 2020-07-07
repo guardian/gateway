@@ -1,69 +1,69 @@
 # Gateway
 
 ## Description
-The (new) profile (dot) theguardian (dot) com - PROTOTYPE.
 
-Note: all choices made in this project are subject to change!
+The (new) profile (dot) theguardian (dot) com
+
+Gateway is the new frontend to login and registration at The Guardian at [profile.theguardian.com](https://profile.theguardian.com).
 
 Need help? Contact the Identity team on [Digital/Identity](https://chat.google.com/room/AAAAFdv9gK8).
 
-## Requirements
-* [Docker](https://www.docker.com/)
-* [docker-compose](https://docs.docker.com/compose/)
+## Architecture
 
-## Installation
-```
-docker build -t gateway .
-```
+See the [architecture](docs/architecture.md) doc.
 
 ## Setup
+
+A detailed setup guide can be found in [docs/setup](docs/setup.md).
+
+### Quick Start
+
 Populate a `.env` file by using the examples from `.env.example`. The `.env` file should **never** be committed.
 
-Depending on which stage (`DEV` or `CODE`) you want to connect to [IDAPI](https://github.com/guardian/identity), the `IDAPI_CLIENT_ACCESS_TOKEN` and `IDAPI_BASE_URL` variables will be different.
+#### Docker
 
-`PLAY_SESSION_COOKIE_SECRET` should be the `play.crypto.secret` used by [Identity Frontend](https://github.com/guardian/identity-frontend), as found in the `DEV` private configuration. This is used to decode the scala play session cookie, and will only be in use while migration from play is ongoing, and will be removed when migration is complete, or is no longer required.
+Start development server:
 
-## Development
-Development mode can be handled using `docker-compose` using the service name `gateway`.
-
-For example to start the service in the background:
 ```sh
 $ docker-compose up -d
 ```
 
-For access to logs:
+Logs:
+
 ```sh
 $ docker-compose logs -f
 ```
 
-For running commands:
+#### Without Docker
+
+Install dependencies:
+
 ```sh
-$ docker-compose run gateway <COMMAND>
-# example
-$ docker-compose run gateway yarn
+$ yarn
 ```
 
-And to access the container shell
+Start development server:
+
 ```sh
-$ docker-compose exec gateway /bin/sh
+$ (set -a && source .env && yarn watch:server & yarn watch & wait)
 ```
 
-While using docker and docker-compose is preferable, you can still run this locally by installing dependencies using `yarn`, followed by `(set -a && source .env && yarn watch:server)` to run the development server.
+## Development Guides
 
-## Integration Tests
-Integration tests are provided by [Cypress](https://cypress.io). To use the runner:
-```sh
-yarn cypress open
-```
-To run the tests headlessly and automatically (how they are run on CI)
-```sh
-yarn cypress run
-```
+Need help? Check the [development guide](docs/development.md) first!
 
-## Accessing Gateway
-To access gateway routes on `CODE` (and soon `PROD`) alongside the current profile routes, add the
-`GU_GATEWAY=true` to your cookies. Here's a javascript snippet which will do just that. You'll have to be on `https://profile.code.dev-theguardian.com` or `https://profile.theguardian.com`.
+Other documentation in the [docs](docs) folder.
 
-```js
-document.cookie = `GU_GATEWAY=true;path=/;expires=${(Date.now() + 7 * 24 * 60 * 60 * 1000)}`
-```
+## Contributing
+
+1. Branch off of `main`, name your branch related to the feature you're
+   implementing, prefix with your initials (e.g. `mm/feature-name`)
+2. Do your thing
+3. Ensure unit tests pass locally with `yarn test`, and integration tests with `yarn cypress run`
+4. Make sure your branch is up to date with `main`
+   - by merging or (preferably, if possible) rebasing onto `main`
+   - this makes sure any conflicts are resolved prior to code review
+5. Open a pull request
+6. Code will be reviewed and require a 👍 from a team member before it
+   will be merged
+7. The merger is required to ensure the change is deployed to production.
