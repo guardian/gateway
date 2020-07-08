@@ -6,7 +6,7 @@ Need help? Contact the Identity team on [Digital/Identity](https://chat.google.c
 
 Make sure you have one or the other or both:
 
-- [Node.js](https://nodejs.org) - Version is specified by [.nvmrc](.nvmrc), run [`$ nvm use`](https://github.com/creationix/nvm#nvmrc) to use it.
+- [Node.js](https://nodejs.org) - Version is specified by [.nvmrc](../.nvmrc), run [`$ nvm use`](https://github.com/creationix/nvm#nvmrc) to use it.
 
   - We use [`yarn`](https://classic.yarnpkg.com/en/) for dependency management, so if using Node, make sure to get yarn too.
   - Node and Yarn are not required if running everything through docker.
@@ -18,7 +18,7 @@ Make sure you have one or the other or both:
 
 ### Environment File
 
-Populate a `.env` file by using the examples from [`.env.example`](.env.example). The `.env` file should **never** be committed.
+Populate a `.env` file by using the examples from [`.env.example`](../.env.example). The `.env` file should **never** be committed.
 
 Depending on which stage (`DEV` or `CODE`) you want to connect to [Identity API (IDAPI)](https://github.com/guardian/identity), the `IDAPI_CLIENT_ACCESS_TOKEN` and `IDAPI_BASE_URL` variables will be different. If using the S3 config, it will point to the `CODE` instance of IDAPI.
 
@@ -169,7 +169,7 @@ Once this cookie value is `true`, you'll automatically be directed to the `gatew
 
 We recommend using VSCode thanks to it's support for TypeScript and JavaScript, but also for it's extensions that can be shared.
 
-We've included some recommended [extensions](.vscode/extensions.json) which VSCode will prompt you to install and use on opening this project.
+We've included some recommended [extensions](../.vscode/extensions.json) which VSCode will prompt you to install and use on opening this project.
 
 Here's a list of recommended extensions and why we include them:
 
