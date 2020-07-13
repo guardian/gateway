@@ -23,7 +23,7 @@ const server = {
   entry: "./src/server/index.ts",
   externals: [
     nodeExternals({
-      whitelist: [/^@guardian/]
+      allowlist: [/^@guardian/]
     })
   ],
   mode,
