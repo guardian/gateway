@@ -10,6 +10,7 @@ import { ResponseWithLocals } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';
 import { removeNoCache } from '@/server/lib/middleware/cache';
+import { PageTitle } from '@/shared/model/PageTitle';
 
 const router = Router();
 
@@ -24,6 +25,7 @@ router.get(Routes.RESET, (req: Request, res: ResponseWithLocals) => {
   const html = renderer(Routes.RESET, {
     globalState: state,
     queryParams: res.locals.queryParams,
+    pageTitle: PageTitle.RESET,
   });
   res.type('html').send(html);
 });
@@ -47,6 +49,7 @@ router.post(Routes.RESET, async (req: Request, res: ResponseWithLocals) => {
     const html = renderer(Routes.RESET, {
       globalState: state,
       queryParams: res.locals.queryParams,
+      pageTitle: PageTitle.RESET,
     });
     return res.type('html').send(html);
   }
@@ -61,6 +64,7 @@ router.post(Routes.RESET, async (req: Request, res: ResponseWithLocals) => {
   const html = renderer(Routes.RESET_SENT, {
     globalState: state,
     queryParams: res.locals.queryParams,
+    pageTitle: PageTitle.RESET_SENT,
   });
   return res.type('html').send(html);
 });
@@ -69,7 +73,9 @@ router.get(
   Routes.RESET_SENT,
   removeNoCache,
   (_: Request, res: ResponseWithLocals) => {
-    const html = renderer(Routes.RESET_SENT);
+    const html = renderer(Routes.RESET_SENT, {
+      pageTitle: PageTitle.RESET_SENT,
+    });
     res.type('html').send(html);
   },
 );

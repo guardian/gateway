@@ -13,6 +13,7 @@ import { ResponseWithLocals } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';
 import { removeNoCache } from '@/server/lib/middleware/cache';
+import { PageTitle } from '@/shared/model/PageTitle';
 
 const { baseUri } = getConfiguration();
 
@@ -78,6 +79,7 @@ router.get(
         renderer(Routes.RESET_RESEND, {
           globalState: state,
           queryParams: res.locals.queryParams,
+          pageTitle: PageTitle.RESET_RESEND,
         }),
       );
     }
@@ -85,6 +87,7 @@ router.get(
     const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
       globalState: state,
       queryParams: res.locals.queryParams,
+      pageTitle: PageTitle.CHANGE_PASSWORD,
     });
     return res.type('html').send(html);
   },
@@ -110,6 +113,7 @@ router.post(
         const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
           globalState: state,
           queryParams: res.locals.queryParams,
+          pageTitle: PageTitle.CHANGE_PASSWORD,
         });
         return res.type('html').send(html);
       }
@@ -153,6 +157,7 @@ router.post(
       const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
         globalState: state,
         queryParams: res.locals.queryParams,
+        pageTitle: PageTitle.CHANGE_PASSWORD,
       });
       return res.type('html').send(html);
     }
@@ -162,6 +167,7 @@ router.post(
     const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
       globalState: state,
       queryParams: res.locals.queryParams,
+      pageTitle: PageTitle.CHANGE_PASSWORD_COMPLETE,
     });
 
     return res.type('html').send(html);
@@ -173,6 +179,7 @@ router.get(
   (_: Request, res: ResponseWithLocals) => {
     const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
       queryParams: res.locals.queryParams,
+      pageTitle: PageTitle.CHANGE_PASSWORD_COMPLETE,
     });
     return res.type('html').send(html);
   },
