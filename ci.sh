@@ -2,7 +2,7 @@
 
 set -ae
 
-trap 'kill $(jobs -pr)' SIGINT SIGTERM EXIT
+trap 'kill $(jobs -pr)' INT TERM EXIT
 
 yarn
 yarn test
