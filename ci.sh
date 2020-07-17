@@ -2,12 +2,12 @@
 
 set -ae
 
-trap 'kill $(jobs -pr)' INT TERM EXIT
+trap 'kill $(jobs -p)' INT TERM EXIT
 
 yarn
 yarn test
 yarn build
-source ci.env
+. ci.env
 yarn mock-server &
 yarn wait-on:mock-server
 yarn start &
