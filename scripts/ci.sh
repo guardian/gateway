@@ -4,13 +4,13 @@ set -ae
 
 trap 'kill $(jobs -pr)' SIGINT SIGTERM EXIT
 
-source ci.env
-
 yarn
-yarn build
 yarn test
+yarn build
+source ci.env
 yarn mock-server &
+yarn wait-on:mock-server
 yarn start &
-# WAITON
+yarn wait-on:server
 yarn cypress:ci
 
