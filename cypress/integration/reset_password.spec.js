@@ -8,10 +8,10 @@ describe('Password reset flow', () => {
 
   before(() => {
     cy.idapiMockPurge();
+    cy.fixture('users').as('users');
   });
 
   beforeEach(function () {
-    cy.fixture('users').as('users');
     page.goto();
   });
 
@@ -37,13 +37,16 @@ describe('Password reset flow', () => {
   });
 
   context('Email field is left blank', () => {
-    it('displays a message saying an email address is needed', () => {
-      cy.idapiMock(500, {
-        status: 'error',
-        errors: [{ message: 'Required field missing' }],
-      });
+    it('displays the standard HTML validation', () => {
       page.clickResetPassword();
-      cy.contains(PageResetPassword.CONTENT.ERRORS.NO_EMAIL);
+      page.getInvalidEmailAddressField().should('have.length', 1);
+    });
+  });
+
+  context('Email is invalid', () => {
+    it('displays the standard HTML validation', () => {
+      page.submitEmailAddress('bademail£');
+      page.getInvalidEmailAddressField().should('have.length', 1);
     });
   });
 
@@ -90,9 +93,10 @@ describe('Password reset flow', () => {
   });
 
   context('General IDAPI failure', () => {
-    it('displays a generic error message', () => {
+    it('displays a generic error message', function () {
+      const { email } = this.users.validEmail;
       cy.idapiMock(500);
-      page.clickResetPassword();
+      page.submitEmailAddress(email);
       cy.contains(PageResetPassword.CONTENT.ERRORS.GENERIC);
     });
   });
