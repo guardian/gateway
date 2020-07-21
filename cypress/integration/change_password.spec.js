@@ -36,12 +36,12 @@ describe('Password change flow', () => {
   });
 
   context('Enter and Confirm passwords left blank', () => {
-    it('shows password blanks errors', () => {
+    it('uses the standard HTML5 empty field validation', () => {
       cy.idapiMock(200);
       page.goto(fakeToken);
       page.clickPasswordChange();
-      cy.contains(ChangePasswordPage.CONTENT.ERRORS.PASSWORD_BLANK);
-      cy.contains(ChangePasswordPage.CONTENT.ERRORS.CONFIRM_PASSWORD_BLANK);
+      page.getInvalidPasswordChangeField().should('have.length', 1);
+      page.getInvalidPasswordChangeConfirmField().should('have.length', 1);
     });
   });
 
