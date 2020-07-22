@@ -1,22 +1,22 @@
-/// <reference types="cypress" />
+/// <reference types='cypress' />
 
 const PageResetPassword = require('../support/pages/reset_password_page');
 const PageResetSent = require('../support/pages/reset_sent_page');
 
-describe("Password reset flow", () => {
+describe('Password reset flow', () => {
   const page = new PageResetPassword();
 
   before(() => {
     cy.idapiMockPurge();
+    cy.fixture('users').as('users');
   });
 
   beforeEach(function () {
-    cy.fixture('users').as('users');
     page.goto();
   });
 
-  context("Valid email already exits", () => {
-    it("successfully submits the request", function () {
+  context('Valid email already exits', () => {
+    it('successfully submits the request', function () {
       const { email } = this.users.validEmail;
       cy.idapiMock(200);
       page.submitEmailAddress(email);
@@ -24,26 +24,29 @@ describe("Password reset flow", () => {
     });
   });
 
-  context("Email doesn't exist", () => {
+  context(`Email doesn't exist`, () => {
     it('shows a message saying the email address does not exist', function () {
       const { email } = this.users.emailNotRegistered;
       cy.idapiMock(404, {
         status: 'error',
-        errors: [{ message: 'Not found' }]
+        errors: [{ message: 'Not found' }],
       });
       page.submitEmailAddress(email);
       cy.contains(PageResetPassword.CONTENT.ERRORS.NO_ACCOUNT);
     });
   });
 
-  context("Email field is left blank", () => {
-    it('displays a message saying an email address is needed', () => {
-      cy.idapiMock(500, {
-        status: 'error',
-        errors: [{ message: 'Required field missing' }]
-      });
+  context('Email field is left blank', () => {
+    it('displays the standard HTML validation', () => {
       page.clickResetPassword();
-      cy.contains(PageResetPassword.CONTENT.ERRORS.NO_EMAIL);
+      page.getInvalidEmailAddressField().should('have.length', 1);
+    });
+  });
+
+  context('Email is invalid', () => {
+    it('displays the standard HTML validation', () => {
+      page.submitEmailAddress('bademail£');
+      page.getInvalidEmailAddressField().should('have.length', 1);
     });
   });
 
@@ -52,12 +55,12 @@ describe("Password reset flow", () => {
     {
       name: 'Gmail',
       inboxLink: 'https://mail.google.com/mail',
-      testEmail: 'test@gmail.com'
+      testEmail: 'test@gmail.com',
     },
     {
       name: 'Yahoo!',
       inboxLink: 'https://mail.yahoo.com',
-      testEmail: 'test@yahoomail.com'
+      testEmail: 'test@yahoomail.com',
     },
     {
       name: 'BT Mail',
@@ -67,30 +70,34 @@ describe("Password reset flow", () => {
     {
       name: 'AOL Mail',
       inboxLink: 'https://mail.aol.com/',
-      testEmail: 'test@aol.com'
+      testEmail: 'test@aol.com',
     },
     {
       name: 'Outlook',
       inboxLink: 'https://outlook.live.com/',
-      testEmail: 'test@outlook.com'
+      testEmail: 'test@outlook.com',
     },
   ].forEach((emailProvider) => {
     context(`An ${emailProvider.name} email client is specified`, () => {
-      it("links to the web email client", () => {
+      it('links to the web email client', () => {
         const email = emailProvider.testEmail;
         cy.idapiMock(200);
         page.submitEmailAddress(email);
-        cy.contains(`Go to your ${emailProvider.name} inbox`)
-          .should('have.attr', 'href', `${emailProvider.inboxLink}`);
+        cy.contains(`Go to your ${emailProvider.name} inbox`).should(
+          'have.attr',
+          'href',
+          `${emailProvider.inboxLink}`,
+        );
       });
     });
   });
 
-  context("General IDAPI failure", () => {
-    it('displays a generic error message', () => {
+  context('General IDAPI failure', () => {
+    it('displays a generic error message', function () {
+      const { email } = this.users.validEmail;
       cy.idapiMock(500);
-      page.clickResetPassword();
+      page.submitEmailAddress(email);
       cy.contains(PageResetPassword.CONTENT.ERRORS.GENERIC);
     });
-  })
+  });
 });
