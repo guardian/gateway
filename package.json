@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "@emotion/core": "^10.0.28",
-    "@guardian/consent-management-platform": "^3.4.8",
+    "@guardian/consent-management-platform": "^3.4.9",
     "@guardian/src-button": "^2.0.0",
     "@guardian/src-foundations": "^2.0.0",
     "@guardian/src-icons": "^2.0.0",
