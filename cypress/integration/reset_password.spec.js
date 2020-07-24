@@ -12,6 +12,7 @@ describe('Password reset flow', () => {
   });
 
   beforeEach(function () {
+    cy.consentBannerChoiceMade();
     page.goto();
   });
 

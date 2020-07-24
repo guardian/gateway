@@ -23,3 +23,7 @@ Cypress.Commands.add('idapiMock', (status, body) => {
 Cypress.Commands.add('idapiMockPurge', () => {
   cy.request(MOCKING_ENDPOINT + '/purge');
 });
+
+Cypress.Commands.add('consentBannerChoiceMade', () => {
+  cy.setCookie('euconsent', 'consents-management-platform-cookie');
+});

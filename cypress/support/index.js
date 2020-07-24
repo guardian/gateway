@@ -15,8 +15,3 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands';
-
-// disable the consents management platform from appearing using this cookie
-beforeEach(() => {
-  cy.setCookie('euconsent', 'consents-management-platform-cookie');
-});
