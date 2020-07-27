@@ -7,20 +7,23 @@
 const MOCKING_ENDPOINT = 'localhost:9000/mock';
 
 Cypress.Commands.add('idapiMock', (status, body) => {
-
   const getMockOptions = (status, body = {}) => ({
     headers: {
       'Content-Type': 'application/json',
-      "x-status": status,
+      'x-status': status,
     },
     method: 'POST',
     body: JSON.stringify(body),
-    url: MOCKING_ENDPOINT, 
+    url: MOCKING_ENDPOINT,
   });
-  
+
   cy.request(getMockOptions(status, body));
 });
 
 Cypress.Commands.add('idapiMockPurge', () => {
   cy.request(MOCKING_ENDPOINT + '/purge');
+});
+
+Cypress.Commands.add('consentBannerChoiceMade', () => {
+  cy.setCookie('euconsent', 'consents-management-platform-cookie');
 });
