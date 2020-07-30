@@ -3,6 +3,7 @@ import { Routes } from '@/shared/model/Routes';
 import { verifyEmail } from '@/server/lib/idapi/verifyEmail';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { logger } from '@/server/lib/logger';
+import { renderer } from '@/server/lib/renderer';
 
 const router = Router();
 
@@ -17,8 +18,13 @@ router.get(
     } catch (e) {
       logger.error(e);
     }
-    res.send('OK');
+    res.redirect(301, Routes.CONSENTS);
   },
 );
+
+router.get(Routes.CONSENTS, (req: Request, res: Response) => {
+  const html = renderer(Routes.CONSENTS);
+  res.type('html').send(html);
+});
 
 export default router;
