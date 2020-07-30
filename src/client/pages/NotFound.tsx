@@ -6,23 +6,26 @@ import { PageBox } from '@/client/components/PageBox';
 import { PageHeader } from '@/client/components/PageHeader';
 import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
+import { SignInLayout } from '../layouts/signin';
 
 const link = css`
   display: inline-block;
 `;
 
 export const NotFound = () => (
-  <PageBox>
-    <PageHeader>Sorry – the page does not exist</PageHeader>
-    <PageBody>
-      <PageBodyText>
-        You may have followed an outdated link, or have mistyped a URL. If you
-        believe this to be an error, please{' '}
-        <Link css={link} href={locations.REPORT_ISSUE}>
-          report it
-        </Link>
-        .
-      </PageBodyText>
-    </PageBody>
-  </PageBox>
+  <SignInLayout>
+    <PageBox>
+      <PageHeader>Sorry – the page does not exist</PageHeader>
+      <PageBody>
+        <PageBodyText>
+          You may have followed an outdated link, or have mistyped a URL. If you
+          believe this to be an error, please{' '}
+          <Link css={link} href={locations.REPORT_ISSUE}>
+            report it
+          </Link>
+          .
+        </PageBodyText>
+      </PageBody>
+    </PageBox>
+  </SignInLayout>
 );
