@@ -11,6 +11,7 @@ import {
   ChangePasswordErrors,
 } from '@/shared/model/Errors';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleError = (response: any) => {
   if (response.status === 'error' && response.errors?.length) {
     const error = response.errors[0];

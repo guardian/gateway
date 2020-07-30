@@ -8,14 +8,12 @@ import {
   change as changePassword,
 } from '@/server/lib/idapi/changePassword';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
-import { getConfiguration } from '@/server/lib/configuration';
 import { ResponseWithLocals } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';
 import { removeNoCache } from '@/server/lib/middleware/cache';
 import { PageTitle } from '@/shared/model/PageTitle';
-
-const { baseUri } = getConfiguration();
+import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 
 const router = Router();
 
@@ -122,32 +120,9 @@ router.post(
         throw ChangePasswordErrors.PASSWORD_NO_MATCH;
       }
 
-      const {
-        values: cookieValues,
-        expiresAt: cookieExpiry,
-      } = await changePassword(password, token, req.ip);
+      const cookies = await changePassword(password, token, req.ip);
 
-      cookieValues.forEach(
-        ({
-          key,
-          value,
-          sessionCookie = false,
-        }: {
-          key: string;
-          value: string;
-          sessionCookie: boolean;
-        }) => {
-          res.cookie(key, value, {
-            // base uri in format profile.theguardian.com, whereas we want cookie domain theguardian.com
-            // so replace profile. string in baseUri with empty string, rather than having to set another variable
-            domain: `${baseUri.replace('profile.', '')}`,
-            expires: sessionCookie ? undefined : new Date(cookieExpiry),
-            httpOnly: key !== 'GU_U', // unless GU_U cookie, set to true
-            secure: key !== 'GU_U', // unless GU_U cookie, set to true
-            sameSite: 'strict',
-          });
-        },
-      );
+      setIDAPICookies(res, cookies);
     } catch (error) {
       logger.error(error);
 
