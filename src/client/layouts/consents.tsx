@@ -7,8 +7,11 @@ import { GlobalError } from '@/client/components/GlobalError';
 import { css } from '@emotion/core';
 import { space } from '@guardian/src-foundations';
 import { MaxWidth } from '@/client/models/Style';
+import { Lines } from '@/client/components/Lines';
+import { PageProgression } from '../components/PageProgression';
 
 const main = css`
+  background-color: white;
   flex: 1 1 auto;
   padding: ${space[6]}px ${space[3]}px;
   max-width: ${MaxWidth.TABLET}px;
@@ -27,7 +30,13 @@ export const ConsentsLayout: FunctionComponent = (props) => {
     <>
       <Header />
       {error && <GlobalError error={error} />}
-      <main css={main}>{props.children}</main>
+      <h2>Your registration</h2>
+      <Lines n={3} />
+      <h1>Your data</h1>
+      <main css={main}>
+        <PageProgression />
+        {props.children}
+      </main>
       <Footer />
     </>
   );
