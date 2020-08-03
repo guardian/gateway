@@ -6,6 +6,9 @@ import { textSans } from '@guardian/src-foundations/typography';
 const PAGES = ['Your data', 'Contact', 'Newsletters', 'Review'];
 const N = PAGES.length;
 
+const BORDER_SIZE = 2;
+const CIRCLE_DIAMETER = 24;
+
 const ul = css`
   display: flex;
   list-style: none;
@@ -15,12 +18,13 @@ const ul = css`
 
 const circle = `
   content: ' ';
+  box-sizing: content-box;
   border-radius: 50%;
-  height: 24px;
+  height: ${CIRCLE_DIAMETER}px;
   position: absolute;
   left: 0;
   top: 0;
-  width: 24px;
+  width: ${CIRCLE_DIAMETER}px;
 `;
 
 const li = css`
@@ -36,23 +40,24 @@ const li = css`
   &:after {
     content: ' ';
     background-color: ${neutral[60]};
-    height: 2px;
+    height: ${BORDER_SIZE}px;
     position: absolute;
-    top: 13px;
-    left: 28px;
+    // Border position from top is distance of a semicircle minus half the border thickness
+    top: ${CIRCLE_DIAMETER / 2 + BORDER_SIZE - BORDER_SIZE / 2}px;
+    left: ${CIRCLE_DIAMETER + 2 * BORDER_SIZE}px;
     right: 0;
   }
   &:last-child:after {
     display: none;
   }
   &:before {
-    border: 2px solid ${neutral[60]};
+    border: ${BORDER_SIZE}px solid ${neutral[60]};
     border-radius: 50%;
     ${circle}
   }
   &.active:before {
     background-color: ${brand[400]};
-    border: 2px solid ${brand[400]};
+    border: ${BORDER_SIZE}px solid ${brand[400]};
     ${circle}
   }
 `;
