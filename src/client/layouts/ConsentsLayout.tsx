@@ -11,6 +11,8 @@ import { space } from '@guardian/src-foundations';
 import { MaxWidth } from '@/client/models/Style';
 import { Lines } from '@/client/components/Lines';
 import { PageProgression } from '../components/PageProgression';
+import { Button } from '@guardian/src-button';
+import { SvgArrowRightStraight } from '@guardian/src-icons';
 
 const pageHead = css`
   background-color: ${brand[800]};
@@ -26,6 +28,11 @@ const main = css`
   display: flex;
   flex-direction: column;
   align-items: left;
+`;
+
+const controls = css`
+  background-color: ${brand[800]};
+  padding: ${space[9]}px ${space[3]}px ${space[24]}px;
 `;
 
 const h1 = css`
@@ -59,6 +66,15 @@ export const ConsentsLayout: FunctionComponent = (props) => {
         <PageProgression />
         {props.children}
       </main>
+      <div css={controls}>
+        <Button
+          iconSide="right"
+          nudgeIcon={true}
+          icon={<SvgArrowRightStraight />}
+        >
+          Continue
+        </Button>
+      </div>
       <Footer />
     </>
   );
