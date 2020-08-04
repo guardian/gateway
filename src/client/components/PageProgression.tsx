@@ -14,6 +14,7 @@ const ul = css`
   list-style: none;
   height: 54px;
   padding: 0;
+  margin: 0;
 `;
 
 const circle = `
