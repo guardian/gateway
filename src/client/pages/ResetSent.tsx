@@ -8,7 +8,7 @@ import { PageBox } from '@/client/components/PageBox';
 import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
 import { linkButton } from '@/client/styles/Shared';
-import { SignInLayout } from '@/client/layouts/signin';
+import { SignInLayout } from '@/client/layouts/SignInLayout';
 
 export const ResetSentPage = () => {
   const globalState: GlobalState = useContext(GlobalStateContext);

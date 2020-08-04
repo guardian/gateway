@@ -6,7 +6,7 @@ import { PageBox } from '@/client/components/PageBox';
 import { PageHeader } from '@/client/components/PageHeader';
 import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
-import { SignInLayout } from '../layouts/signin';
+import { SignInLayout } from '../layouts/SignInLayout';
 
 const link = css`
   display: inline-block;

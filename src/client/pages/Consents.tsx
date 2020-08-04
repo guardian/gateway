@@ -1,5 +1,5 @@
 import React from 'react';
-import { ConsentsLayout } from '@/client/layouts/consents';
+import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 
 export const ConsentsPage = () => {
   return (

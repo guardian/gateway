@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { GlobalState } from '@/shared/model/GlobalState';
 import { GlobalStateContext } from '@/client/components/GlobalState';
 import { PasswordResetDialog } from '@/client/components/PasswordResetDialog';
-import { SignInLayout } from '../layouts/signin';
+import { SignInLayout } from '../layouts/SignInLayout';
 
 export const ResendPasswordPage = () => {
   const globalState: GlobalState = useContext(GlobalStateContext);
