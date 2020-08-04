@@ -5,11 +5,16 @@ import { GlobalState } from '@/shared/model/GlobalState';
 import { GlobalStateContext } from '@/client/components/GlobalState';
 import { GlobalError } from '@/client/components/GlobalError';
 import { brand } from '@guardian/src-foundations/palette';
+import { titlepiece, textSans } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/core';
 import { space } from '@guardian/src-foundations';
 import { MaxWidth } from '@/client/models/Style';
 import { Lines } from '@/client/components/Lines';
 import { PageProgression } from '../components/PageProgression';
+
+const pageHead = css`
+  background-color: ${brand[800]};
+`;
 
 const main = css`
   background-color: white;
@@ -23,6 +28,20 @@ const main = css`
   align-items: left;
 `;
 
+const h1 = css`
+  color: ${brand[400]};
+  margin: ${space[4]}px 0 ${space[12]}px 0;
+  padding: 0 ${space[3]}px;
+  ${titlepiece.small({ fontWeight: 'bold' })}
+`;
+
+const h2 = css`
+  color: ${brand[100]};
+  margin: ${space[4]}px 0 ${space[3]}px 0;
+  padding: 0 ${space[3]}px;
+  ${textSans.large()}
+`;
+
 export const ConsentsLayout: FunctionComponent = (props) => {
   const globalState: GlobalState = useContext(GlobalStateContext);
   const { error } = globalState;
@@ -31,9 +50,11 @@ export const ConsentsLayout: FunctionComponent = (props) => {
     <>
       <Header />
       {error && <GlobalError error={error} />}
-      <h2>Your registration</h2>
-      <Lines n={3} color={brand[400]} />
-      <h1>Your data</h1>
+      <div css={pageHead}>
+        <h2 css={h2}>Your registration</h2>
+        <Lines n={3} color={brand[400]} />
+        <h1 css={h1}>Your data</h1>
+      </div>
       <main css={main}>
         <PageProgression />
         {props.children}
