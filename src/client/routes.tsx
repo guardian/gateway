@@ -7,7 +7,6 @@ import { NotFound } from '@/client/pages/NotFound';
 import { ChangePasswordPage } from '@/client/pages/ChangePassword';
 import { ChangePasswordCompletePage } from '@/client/pages/ChangePasswordComplete';
 import { ResendPasswordPage } from '@/client/pages/ResendPassword';
-import { ConsentsPage } from '@/client/pages/Consents';
 
 export const GatewayRoutes = () => (
   <Switch>
@@ -28,9 +27,6 @@ export const GatewayRoutes = () => (
     </Route>
     <Route exact path={Routes.RESET_RESEND}>
       <ResendPasswordPage />
-    </Route>
-    <Route exact path={Routes.CONSENTS}>
-      <ConsentsPage />
     </Route>
     <Route>
       <NotFound />

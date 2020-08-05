@@ -2,7 +2,6 @@ import { Router } from 'express';
 
 import { default as core } from './core';
 import { default as reset } from './reset';
-import { default as consents } from './consents';
 import { default as changePassword } from './changePassword';
 import { queryParamsMiddleware } from '@/server/lib/middleware/queryParams';
 import { noCache } from '@/server/lib/middleware/cache';
@@ -17,8 +16,5 @@ router.use(noCache, queryParamsMiddleware, reset);
 
 // change password routes
 router.use(noCache, queryParamsMiddleware, changePassword);
-
-// consents route
-router.use(noCache, queryParamsMiddleware, consents);
 
 export default router;
