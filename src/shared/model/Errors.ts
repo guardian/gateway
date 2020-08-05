@@ -18,3 +18,7 @@ export enum ChangePasswordErrors {
   PASSWORD_NO_MATCH = 'The passwords do not match, please try again',
   PASSWORD_LENGTH = 'Password must be between 6 and 72 characters',
 }
+
+export enum VerifyEmailErrors {
+  GENERIC = 'There was problem verifying your email, please try again.',
+}

@@ -11,6 +11,7 @@ import { PageHeader } from '@/client/components/PageHeader';
 import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
 import { form, textInput, button } from '@/client/styles/Shared';
+import { SignInLayout } from '../layouts/SignInLayout';
 
 export const ChangePasswordPage = () => {
   const { search } = useLocation();
@@ -19,47 +20,52 @@ export const ChangePasswordPage = () => {
   const { token } = useParams();
 
   return (
-    <PageBox>
-      <PageHeader>Reset Password</PageHeader>
-      <PageBody>
-        <PageBodyText>Please enter your new password for {email}</PageBodyText>
-        <form
-          css={form}
-          method="post"
-          action={`${Routes.CHANGE_PASSWORD}/${token}${search}`}
-        >
-          <TextInput
-            css={textInput}
-            label="New Password"
-            supporting="Between 6 and 72 characters"
-            name="password"
-            type="password"
-            error={
-              fieldErrors.find(fieldError => fieldError.field === 'password')
-                ?.message
-            }
-          />
-          <TextInput
-            css={textInput}
-            label="Repeat Password"
-            name="password_confirm"
-            type="password"
-            error={
-              fieldErrors.find(
-                fieldError => fieldError.field === 'password_confirm',
-              )?.message
-            }
-          />
-          <Button
-            css={button}
-            type="submit"
-            icon={<SvgArrowRightStraight />}
-            iconSide="right"
+    <SignInLayout>
+      <PageBox>
+        <PageHeader>Reset Password</PageHeader>
+        <PageBody>
+          <PageBodyText>
+            Please enter your new password for {email}
+          </PageBodyText>
+          <form
+            css={form}
+            method="post"
+            action={`${Routes.CHANGE_PASSWORD}/${token}${search}`}
           >
-            Save Password
-          </Button>
-        </form>
-      </PageBody>
-    </PageBox>
+            <TextInput
+              css={textInput}
+              label="New Password"
+              supporting="Between 6 and 72 characters"
+              name="password"
+              type="password"
+              error={
+                fieldErrors.find(
+                  (fieldError) => fieldError.field === 'password',
+                )?.message
+              }
+            />
+            <TextInput
+              css={textInput}
+              label="Repeat Password"
+              name="password_confirm"
+              type="password"
+              error={
+                fieldErrors.find(
+                  (fieldError) => fieldError.field === 'password_confirm',
+                )?.message
+              }
+            />
+            <Button
+              css={button}
+              type="submit"
+              icon={<SvgArrowRightStraight />}
+              iconSide="right"
+            >
+              Save Password
+            </Button>
+          </form>
+        </PageBody>
+      </PageBox>
+    </SignInLayout>
   );
 };
