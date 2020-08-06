@@ -2,19 +2,22 @@ import { css } from '@emotion/core';
 import { space } from '@guardian/src-foundations';
 import { from } from '@guardian/src-foundations/mq';
 
-enum COLUMNS {
+export enum COLUMNS {
   MOBILE = 4,
   TABLET = 12,
+  WIDE = 16,
 }
 
 enum COLUMN_WIDTH {
   MOBILE = 'minmax(0, 1fr)',
   TABLET = '40px',
+  WIDE = '60px',
 }
 
 enum SPACING {
   MOBILE = space[3],
   TABLET = space[5],
+  WIDE = space[5],
 }
 
 interface SpanDefinitionStartSpan {
@@ -25,6 +28,7 @@ interface SpanDefinitionStartSpan {
 interface SpanDefinition {
   MOBILE?: SpanDefinitionStartSpan;
   TABLET?: SpanDefinitionStartSpan;
+  WIDE?: SpanDefinitionStartSpan;
 }
 
 const defaultSpanDefinition: Required<SpanDefinition> = {
@@ -33,6 +37,7 @@ const defaultSpanDefinition: Required<SpanDefinition> = {
     span: COLUMNS.MOBILE,
   },
   TABLET: { start: 1, span: COLUMNS.TABLET },
+  WIDE: { start: 1, span: COLUMNS.WIDE },
 };
 
 const px = (num: number) => `${num}px`;
@@ -41,7 +46,8 @@ const mw = (c: number, cw: number, gw: number, pw: number): number =>
   cw * c + (c - 1) * gw + 2 * pw;
 
 export enum MAX_WIDTH {
-  TABLET = mw(12, 40, space[5], space[5]),
+  TABLET = mw(COLUMNS.TABLET, 40, space[5], space[5]),
+  WIDE = mw(COLUMNS.WIDE, 60, space[5], space[5]),
 }
 
 export const gridRow = css`
@@ -58,10 +64,20 @@ export const gridRow = css`
     padding-right: ${px(SPACING.TABLET)};
     max-width: ${px(MAX_WIDTH.TABLET)};
   }
+
+  ${from.wide} {
+    grid-template-columns: repeat(${COLUMNS.WIDE}, ${COLUMN_WIDTH.WIDE});
+    padding-left: ${px(SPACING.WIDE)};
+    padding-right: ${px(SPACING.WIDE)};
+    max-width: ${px(MAX_WIDTH.WIDE)};
+  }
 `;
 
 export const gridItem = (spanDefinition?: SpanDefinition) => {
-  const { MOBILE, TABLET } = { ...defaultSpanDefinition, ...spanDefinition };
+  const { MOBILE, TABLET, WIDE } = {
+    ...defaultSpanDefinition,
+    ...spanDefinition,
+  };
 
   return css`
     grid-column: ${MOBILE.start} / span ${MOBILE.span};
@@ -69,9 +85,14 @@ export const gridItem = (spanDefinition?: SpanDefinition) => {
     ${from.tablet} {
       grid-column: ${TABLET.start} / span ${TABLET.span};
     }
+
+    ${from.wide} {
+      grid-column: ${WIDE.start} / span ${WIDE.span};
+    }
   `;
 };
 
 export const gridItemColumnConsents: SpanDefinition = {
   TABLET: { start: 2, span: 10 },
+  WIDE: { start: 3, span: 12 },
 };

@@ -17,6 +17,7 @@ import {
   gridItem,
   MAX_WIDTH,
   gridItemColumnConsents,
+  COLUMNS,
 } from '@/client/styles/Grid';
 import { from } from '@guardian/src-foundations/mq';
 
@@ -74,13 +75,19 @@ const h2 = css`
   color: ${brand[100]};
   margin: ${space[4]}px 0 ${space[3]}px 0;
   ${textSans.large()}
-  ${gridItem(gridItemColumnConsents)}
+  ${gridItem({
+    ...gridItemColumnConsents,
+    ...{ WIDE: { start: 1, span: COLUMNS.WIDE } },
+  })}
 `;
 
 const lines = css`
   ${blueBorder}
   ${from.tablet} {
     max-width: ${MAX_WIDTH.TABLET}px;
+  }
+  ${from.wide} {
+    max-width: ${MAX_WIDTH.WIDE}px;
   }
 `;
 
