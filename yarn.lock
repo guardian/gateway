@@ -1150,13 +1150,6 @@
   resolved "https://registry.yarnpkg.com/@guardian/src-foundations/-/src-foundations-2.1.0.tgz#7d4abd30c7cca6df02cd61b125e43f18ac9b801f"
   integrity sha512-1ELb3CtDEhkhUWcv2zVwFqonokYg7pbizQqYMmRfNnHIzNp3+aJl48BHMRTd9Nqqcx+As9syUXPs09CeaAOMfg==
 
-"@guardian/src-grid@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@guardian/src-grid/-/src-grid-2.1.0.tgz#af0991d26116cb97beb64d20dcdf812f7d0f189a"
-  integrity sha512-ltY/aYh/Ce4ICa6CAsJwApZkUEuDiar0yAtpOR3crn1QK0ufM8A1hqe3GHzK1eCWrHRCJ7RVgFZpD7Q8RHcfpA==
-  dependencies:
-    "@guardian/src-helpers" "^2.1.0"
-
 "@guardian/src-helpers@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@guardian/src-helpers/-/src-helpers-2.1.0.tgz#1b2f5d243a8794105b887a1ae46fdf5ce23355f3"

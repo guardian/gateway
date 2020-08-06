@@ -63,7 +63,6 @@
     "@guardian/consent-management-platform": "^3.4.10",
     "@guardian/src-button": "^2.0.0",
     "@guardian/src-foundations": "^2.0.0",
-    "@guardian/src-grid": "^2.1.0",
     "@guardian/src-icons": "^2.0.0",
     "@guardian/src-link": "^2.0.0",
     "@guardian/src-radio": "^2.1.0-rc.0",
