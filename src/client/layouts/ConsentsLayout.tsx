@@ -12,22 +12,54 @@ import { Lines } from '@/client/components/Lines';
 import { PageProgression } from '@/client/components/PageProgression';
 import { Button } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
-import { gridRow, gridItem } from '@/client/styles/Grid';
+import {
+  gridRow,
+  gridItem,
+  MAX_WIDTH,
+  gridItemColumnConsents,
+} from '@/client/styles/Grid';
+import { from } from '@guardian/src-foundations/mq';
 
-const pageHead = css`
+const consentsBackground = css`
   background-color: ${brand[800]};
 `;
 
-const main = css`
+const mainBackground = css`
+  background-color: white;
+  position: relative;
+  z-index: 0;
+  &:before {
+    content: ' ';
+    background-color: ${brand[800]};
+    opacity: 0.3;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+  }
+`;
+
+const blueBorder = css`
+  margin 0 auto;
+  
+  ${from.tablet} {
+    border-left: 1px solid ${brand[400]};
+    border-right: 1px solid ${brand[400]};
+  }
+`;
+
+const content = css`
   ${gridRow}
   background-color: white;
   width: 100%;
   padding-top: ${space[5]}px;
   padding-bottom: ${space[3]}px;
+  ${blueBorder}
 `;
 
 const controls = css`
-  background-color: ${brand[800]};
   padding: ${space[9]}px 0 ${space[24]}px 0;
 `;
 
@@ -35,14 +67,21 @@ const h1 = css`
   color: ${brand[400]};
   margin: ${space[4]}px 0 ${space[12]}px 0;
   ${titlepiece.small({ fontWeight: 'bold' })};
-  ${gridItem()}
+  ${gridItem(gridItemColumnConsents)}
 `;
 
 const h2 = css`
   color: ${brand[100]};
   margin: ${space[4]}px 0 ${space[3]}px 0;
   ${textSans.large()}
-  ${gridItem()}
+  ${gridItem(gridItemColumnConsents)}
+`;
+
+const lines = css`
+  ${blueBorder}
+  ${from.tablet} {
+    max-width: ${MAX_WIDTH.TABLET}px;
+  }
 `;
 
 export const ConsentsLayout: FunctionComponent = (props) => {
@@ -53,24 +92,26 @@ export const ConsentsLayout: FunctionComponent = (props) => {
     <>
       <Header />
       {error && <GlobalError error={error} />}
-      <div css={pageHead}>
-        <div css={gridRow}>
+      <div css={consentsBackground}>
+        <div css={[gridRow, blueBorder]}>
           <h2 css={h2}>Your registration</h2>
         </div>
-        <Lines n={3} color={brand[400]} />
-        <div css={gridRow}>
+        <Lines n={3} color={brand[400]} cssOverrides={lines} />
+        <div css={[gridRow, blueBorder]}>
           <h1 css={h1}>Your data</h1>
         </div>
       </div>
-      <main css={main}>
-        <div css={gridItem()}>
-          <PageProgression />
+      <main css={mainBackground}>
+        <div css={content}>
+          <div css={gridItem(gridItemColumnConsents)}>
+            <PageProgression />
+          </div>
+          {props.children}
         </div>
-        {props.children}
       </main>
-      <div css={controls}>
-        <div css={gridRow}>
-          <div css={gridItem()}>
+      <div css={consentsBackground}>
+        <div css={[gridRow, blueBorder]}>
+          <div css={[gridItem(gridItemColumnConsents), controls]}>
             <Button
               iconSide="right"
               nudgeIcon={true}

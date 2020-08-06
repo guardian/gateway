@@ -5,7 +5,7 @@ import { titlepiece, textSans } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/core';
 import { brand, space, neutral } from '@guardian/src-foundations';
 import { RadioGroup, Radio } from '@guardian/src-radio';
-import { gridItem } from '@/client/styles/Grid';
+import { gridItem, gridItemColumnConsents } from '@/client/styles/Grid';
 
 const h3 = css`
   color: ${brand[400]};
@@ -13,7 +13,7 @@ const h3 = css`
   ${titlepiece.small()};
   // Overrides
   font-size: 17px;
-  ${gridItem()}
+  ${gridItem(gridItemColumnConsents)}
   &:nth-of-type(2) {
     margin-top: ${space[9]}px;
   }
@@ -22,7 +22,7 @@ const h3 = css`
 const p = css`
   margin: 0;
   ${textSans.medium()}
-  ${gridItem()}
+  ${gridItem(gridItemColumnConsents)}
 `;
 
 const fieldset = css`
@@ -30,7 +30,7 @@ const fieldset = css`
   padding: 0;
   margin: ${space[9]}px 0 0 0;
   ${textSans.medium()}
-  ${gridItem()}
+  ${gridItem(gridItemColumnConsents)}
 `;
 
 const legend = css`
