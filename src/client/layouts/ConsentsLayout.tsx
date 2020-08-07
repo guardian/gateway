@@ -53,6 +53,16 @@ const blueBorder = css`
 
 const content = css`
   ${gridRow}
+
+  /*
+    IE HACK START
+    For the content we can't use ms-grid at the text overflows
+    So use flexbox to layout main content instead
+  */
+  display: -ms-flexbox;
+  -ms-flex-direction: column;
+  /* IE HACK END */
+
   background-color: white;
   width: 100%;
   padding-top: ${space[6]}px;
@@ -105,6 +115,12 @@ const height100 = css`
   height: 100%;
 `;
 
+// fixes overlapping text issue in IE
+// derived from this solution https://stackoverflow.com/a/49368815
+const ieFlexFix = css`
+  flex: 0 0 auto;
+`;
+
 export const ConsentsLayout: FunctionComponent = (props) => {
   const globalState: GlobalState = useContext(GlobalStateContext);
   const { error } = globalState;
@@ -122,7 +138,7 @@ export const ConsentsLayout: FunctionComponent = (props) => {
           <h1 css={h1}>Your data</h1>
         </div>
       </div>
-      <main css={mainBackground}>
+      <main css={[mainBackground, ieFlexFix]}>
         <div css={content}>
           <div css={gridItem(gridItemColumnConsents)}>
             <PageProgression />

@@ -57,7 +57,9 @@ export enum MAX_WIDTH {
 }
 
 export const gridRow = css`
+  display: -ms-grid;
   display: grid;
+  -ms-grid-columns: (${COLUMN_WIDTH.MOBILE})[${COLUMNS.MOBILE}];
   grid-template-columns: repeat(${COLUMNS.MOBILE}, ${COLUMN_WIDTH.MOBILE});
   column-gap: ${px(space[5])};
   padding-left: ${px(SPACING.MOBILE)};
@@ -65,6 +67,7 @@ export const gridRow = css`
   width: 100%;
 
   ${from.tablet} {
+    -ms-grid-columns: (${COLUMN_WIDTH.TABLET})[${COLUMNS.TABLET}];
     grid-template-columns: repeat(${COLUMNS.TABLET}, ${COLUMN_WIDTH.TABLET});
     padding-left: ${px(SPACING.TABLET)};
     padding-right: ${px(SPACING.TABLET)};
@@ -72,6 +75,7 @@ export const gridRow = css`
   }
 
   ${from.desktop} {
+    -ms-grid-columns: (${COLUMN_WIDTH.DESKTOP})[${COLUMNS.DESKTOP}];
     grid-template-columns: repeat(${COLUMNS.DESKTOP}, ${COLUMN_WIDTH.DESKTOP});
     padding-left: ${px(SPACING.DESKTOP)};
     padding-right: ${px(SPACING.DESKTOP)};
@@ -79,6 +83,7 @@ export const gridRow = css`
   }
 
   ${from.wide} {
+    -ms-grid-columns: (${COLUMN_WIDTH.WIDE})[${COLUMNS.WIDE}];
     grid-template-columns: repeat(${COLUMNS.WIDE}, ${COLUMN_WIDTH.WIDE});
     padding-left: ${px(SPACING.WIDE)};
     padding-right: ${px(SPACING.WIDE)};
@@ -93,17 +98,25 @@ export const gridItem = (spanDefinition?: SpanDefinition) => {
   };
 
   return css`
+    -ms-grid-column: ${MOBILE.start};
+    -ms-grid-column-span: ${MOBILE.span};
     grid-column: ${MOBILE.start} / span ${MOBILE.span};
 
     ${from.tablet} {
+      -ms-grid-column: ${TABLET.start};
+      -ms-grid-column-span: ${TABLET.span};
       grid-column: ${TABLET.start} / span ${TABLET.span};
     }
 
     ${from.desktop} {
+      -ms-grid-column: ${DESKTOP.start};
+      -ms-grid-column-span: ${DESKTOP.span};
       grid-column: ${DESKTOP.start} / span ${DESKTOP.span};
     }
 
     ${from.wide} {
+      -ms-grid-column: ${WIDE.start};
+      -ms-grid-column-span: ${WIDE.span};
       grid-column: ${WIDE.start} / span ${WIDE.span};
     }
   `;
