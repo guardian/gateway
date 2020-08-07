@@ -83,9 +83,15 @@ const h2 = css`
 
 const lines = css`
   ${blueBorder}
+
   ${from.tablet} {
     max-width: ${MAX_WIDTH.TABLET}px;
   }
+
+  ${from.desktop} {
+    max-width: ${MAX_WIDTH.DESKTOP}px;
+  }
+
   ${from.wide} {
     max-width: ${MAX_WIDTH.WIDE}px;
   }

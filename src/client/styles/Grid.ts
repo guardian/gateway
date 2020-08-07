@@ -5,18 +5,21 @@ import { from } from '@guardian/src-foundations/mq';
 export enum COLUMNS {
   MOBILE = 4,
   TABLET = 12,
+  DESKTOP = 12,
   WIDE = 16,
 }
 
 enum COLUMN_WIDTH {
   MOBILE = 'minmax(0, 1fr)',
   TABLET = '40px',
+  DESKTOP = '60px',
   WIDE = '60px',
 }
 
 enum SPACING {
   MOBILE = space[3],
   TABLET = space[5],
+  DESKTOP = space[5],
   WIDE = space[5],
 }
 
@@ -28,6 +31,7 @@ interface SpanDefinitionStartSpan {
 interface SpanDefinition {
   MOBILE?: SpanDefinitionStartSpan;
   TABLET?: SpanDefinitionStartSpan;
+  DESKTOP?: SpanDefinitionStartSpan;
   WIDE?: SpanDefinitionStartSpan;
 }
 
@@ -37,6 +41,7 @@ const defaultSpanDefinition: Required<SpanDefinition> = {
     span: COLUMNS.MOBILE,
   },
   TABLET: { start: 1, span: COLUMNS.TABLET },
+  DESKTOP: { start: 1, span: COLUMNS.DESKTOP },
   WIDE: { start: 1, span: COLUMNS.WIDE },
 };
 
@@ -47,6 +52,7 @@ const mw = (c: number, cw: number, gw: number, pw: number): number =>
 
 export enum MAX_WIDTH {
   TABLET = mw(COLUMNS.TABLET, 40, space[5], space[5]),
+  DESKTOP = mw(COLUMNS.DESKTOP, 60, space[5], space[5]),
   WIDE = mw(COLUMNS.WIDE, 60, space[5], space[5]),
 }
 
@@ -65,6 +71,13 @@ export const gridRow = css`
     max-width: ${px(MAX_WIDTH.TABLET)};
   }
 
+  ${from.desktop} {
+    grid-template-columns: repeat(${COLUMNS.DESKTOP}, ${COLUMN_WIDTH.DESKTOP});
+    padding-left: ${px(SPACING.DESKTOP)};
+    padding-right: ${px(SPACING.DESKTOP)};
+    max-width: ${px(MAX_WIDTH.DESKTOP)};
+  }
+
   ${from.wide} {
     grid-template-columns: repeat(${COLUMNS.WIDE}, ${COLUMN_WIDTH.WIDE});
     padding-left: ${px(SPACING.WIDE)};
@@ -74,7 +87,7 @@ export const gridRow = css`
 `;
 
 export const gridItem = (spanDefinition?: SpanDefinition) => {
-  const { MOBILE, TABLET, WIDE } = {
+  const { MOBILE, TABLET, DESKTOP, WIDE } = {
     ...defaultSpanDefinition,
     ...spanDefinition,
   };
@@ -86,6 +99,10 @@ export const gridItem = (spanDefinition?: SpanDefinition) => {
       grid-column: ${TABLET.start} / span ${TABLET.span};
     }
 
+    ${from.desktop} {
+      grid-column: ${DESKTOP.start} / span ${DESKTOP.span};
+    }
+
     ${from.wide} {
       grid-column: ${WIDE.start} / span ${WIDE.span};
     }
@@ -94,5 +111,6 @@ export const gridItem = (spanDefinition?: SpanDefinition) => {
 
 export const gridItemColumnConsents: SpanDefinition = {
   TABLET: { start: 2, span: 10 },
+  DESKTOP: { start: 2, span: 10 },
   WIDE: { start: 3, span: 12 },
 };
