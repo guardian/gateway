@@ -43,8 +43,8 @@ const mainBackground = css`
 `;
 
 const blueBorder = css`
-  margin 0 auto;
-  
+  margin: 0 auto;
+
   ${from.tablet} {
     border-left: 1px solid ${brand[400]};
     border-right: 1px solid ${brand[400]};
@@ -55,8 +55,8 @@ const content = css`
   ${gridRow}
   background-color: white;
   width: 100%;
-  padding-top: ${space[5]}px;
-  padding-bottom: ${space[3]}px;
+  padding-top: ${space[6]}px;
+  padding-bottom: ${space[6]}px;
   ${blueBorder}
 `;
 
@@ -91,6 +91,14 @@ const lines = css`
   }
 `;
 
+const flex = css`
+  flex: 1 1 auto;
+`;
+
+const height100 = css`
+  height: 100%;
+`;
+
 export const ConsentsLayout: FunctionComponent = (props) => {
   const globalState: GlobalState = useContext(GlobalStateContext);
   const { error } = globalState;
@@ -116,8 +124,8 @@ export const ConsentsLayout: FunctionComponent = (props) => {
           {props.children}
         </div>
       </main>
-      <div css={consentsBackground}>
-        <div css={[gridRow, blueBorder]}>
+      <div css={[consentsBackground, flex]}>
+        <div css={[gridRow, blueBorder, height100]}>
           <div css={[gridItem(gridItemColumnConsents), controls]}>
             <Button
               iconSide="right"

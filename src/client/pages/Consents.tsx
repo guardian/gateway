@@ -28,14 +28,14 @@ const p = css`
 const fieldset = css`
   border: 0;
   padding: 0;
-  margin: ${space[9]}px 0 0 0;
+  margin: ${space[6]}px 0 0 0;
   ${textSans.medium()}
   ${gridItem(gridItemColumnConsents)}
 `;
 
 const legend = css`
   color: ${neutral[46]};
-  margin: 0 0 ${space[5]}px 0;
+  margin: 0 0 ${space[1]}px 0;
   padding: 0;
 `;
 
