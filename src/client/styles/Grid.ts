@@ -56,39 +56,66 @@ export enum MAX_WIDTH {
   WIDE = mw(COLUMNS.WIDE, 60, space[5], space[5]),
 }
 
+const generateGridRowCss = (
+  padding: number,
+  columnWidth: string,
+  columnNumber: number,
+  maxWidth?: number,
+) => `
+    -ms-grid-columns: (${columnWidth} 20px\)[${
+  columnNumber - 1
+}] ${columnWidth};
+    grid-template-columns: repeat(${columnNumber}, ${columnWidth});
+    padding-left: ${px(padding)};
+    padding-right: ${px(padding)};
+    max-width: ${maxWidth ? px(maxWidth) : '100%'};
+`;
+
 export const gridRow = css`
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: (${COLUMN_WIDTH.MOBILE})[${COLUMNS.MOBILE}];
-  grid-template-columns: repeat(${COLUMNS.MOBILE}, ${COLUMN_WIDTH.MOBILE});
+  width: 100%;
   column-gap: ${px(space[5])};
+
+  -ms-grid-columns: (${COLUMN_WIDTH.MOBILE}\)[${COLUMNS.MOBILE}];
+  grid-template-columns: repeat(${COLUMNS.MOBILE}, ${COLUMN_WIDTH.MOBILE});
   padding-left: ${px(SPACING.MOBILE)};
   padding-right: ${px(SPACING.MOBILE)};
-  width: 100%;
+
+  ${generateGridRowCss(SPACING.MOBILE, COLUMN_WIDTH.MOBILE, COLUMNS.MOBILE)}
 
   ${from.tablet} {
-    -ms-grid-columns: (${COLUMN_WIDTH.TABLET})[${COLUMNS.TABLET}];
-    grid-template-columns: repeat(${COLUMNS.TABLET}, ${COLUMN_WIDTH.TABLET});
-    padding-left: ${px(SPACING.TABLET)};
-    padding-right: ${px(SPACING.TABLET)};
-    max-width: ${px(MAX_WIDTH.TABLET)};
+    ${generateGridRowCss(
+      SPACING.TABLET,
+      COLUMN_WIDTH.TABLET,
+      COLUMNS.TABLET,
+      MAX_WIDTH.TABLET,
+    )}
   }
 
   ${from.desktop} {
-    -ms-grid-columns: (${COLUMN_WIDTH.DESKTOP})[${COLUMNS.DESKTOP}];
-    grid-template-columns: repeat(${COLUMNS.DESKTOP}, ${COLUMN_WIDTH.DESKTOP});
-    padding-left: ${px(SPACING.DESKTOP)};
-    padding-right: ${px(SPACING.DESKTOP)};
-    max-width: ${px(MAX_WIDTH.DESKTOP)};
+    ${generateGridRowCss(
+      SPACING.DESKTOP,
+      COLUMN_WIDTH.DESKTOP,
+      COLUMNS.DESKTOP,
+      MAX_WIDTH.DESKTOP,
+    )}
   }
 
   ${from.wide} {
-    -ms-grid-columns: (${COLUMN_WIDTH.WIDE})[${COLUMNS.WIDE}];
-    grid-template-columns: repeat(${COLUMNS.WIDE}, ${COLUMN_WIDTH.WIDE});
-    padding-left: ${px(SPACING.WIDE)};
-    padding-right: ${px(SPACING.WIDE)};
-    max-width: ${px(MAX_WIDTH.WIDE)};
+    ${generateGridRowCss(
+      SPACING.WIDE,
+      COLUMN_WIDTH.WIDE,
+      COLUMNS.WIDE,
+      MAX_WIDTH.WIDE,
+    )}
   }
+`;
+
+const generateGridItemCss = (columnStart: number, columnSpan: number) => `
+  -ms-grid-column: ${columnStart * 2 - 1};
+  -ms-grid-column-span: ${columnSpan * 2};
+  grid-column: ${columnStart} / span ${columnSpan};
 `;
 
 export const gridItem = (spanDefinition?: SpanDefinition) => {
@@ -98,26 +125,18 @@ export const gridItem = (spanDefinition?: SpanDefinition) => {
   };
 
   return css`
-    -ms-grid-column: ${MOBILE.start};
-    -ms-grid-column-span: ${MOBILE.span};
-    grid-column: ${MOBILE.start} / span ${MOBILE.span};
+    ${generateGridItemCss(MOBILE.start, MOBILE.span)}
 
     ${from.tablet} {
-      -ms-grid-column: ${TABLET.start};
-      -ms-grid-column-span: ${TABLET.span};
-      grid-column: ${TABLET.start} / span ${TABLET.span};
+      ${generateGridItemCss(TABLET.start, TABLET.span)}
     }
 
     ${from.desktop} {
-      -ms-grid-column: ${DESKTOP.start};
-      -ms-grid-column-span: ${DESKTOP.span};
-      grid-column: ${DESKTOP.start} / span ${DESKTOP.span};
+      ${generateGridItemCss(DESKTOP.start, DESKTOP.span)}
     }
 
     ${from.wide} {
-      -ms-grid-column: ${WIDE.start};
-      -ms-grid-column-span: ${WIDE.span};
-      grid-column: ${WIDE.start} / span ${WIDE.span};
+      ${generateGridItemCss(WIDE.start, WIDE.span)}
     }
   `;
 };
@@ -126,4 +145,14 @@ export const gridItemColumnConsents: SpanDefinition = {
   TABLET: { start: 2, span: 10 },
   DESKTOP: { start: 2, span: 10 },
   WIDE: { start: 3, span: 12 },
+};
+
+export const getAutoRow = (offset = 0, spanDefinition?: SpanDefinition) => {
+  let row = offset;
+  return () => {
+    return css`
+      ${gridItem(spanDefinition)}
+      -ms-grid-row: ${++row};
+    `;
+  };
 };

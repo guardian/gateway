@@ -5,7 +5,7 @@ import { titlepiece, textSans } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/core';
 import { brand, space, neutral } from '@guardian/src-foundations';
 import { RadioGroup, Radio } from '@guardian/src-radio';
-import { gridItem, gridItemColumnConsents } from '@/client/styles/Grid';
+import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 
 const h3 = css`
   color: ${brand[400]};
@@ -13,7 +13,6 @@ const h3 = css`
   ${titlepiece.small()};
   // Overrides
   font-size: 17px;
-  ${gridItem(gridItemColumnConsents)}
   &:nth-of-type(2) {
     margin-top: ${space[9]}px;
   }
@@ -22,7 +21,6 @@ const h3 = css`
 const p = css`
   margin: 0;
   ${textSans.medium()}
-  ${gridItem(gridItemColumnConsents)}
 `;
 
 const fieldset = css`
@@ -30,7 +28,6 @@ const fieldset = css`
   padding: 0;
   margin: ${space[6]}px 0 0 0;
   ${textSans.medium()}
-  ${gridItem(gridItemColumnConsents)}
 `;
 
 const legend = css`
@@ -40,10 +37,12 @@ const legend = css`
 `;
 
 export const ConsentsPage = () => {
+  const autoRow = getAutoRow(1, gridItemColumnConsents);
+
   return (
     <ConsentsLayout>
-      <h3 css={h3}>Our commitment to you</h3>
-      <p css={p}>
+      <h3 css={[h3, autoRow()]}>Our commitment to you</h3>
+      <p css={[p, autoRow()]}>
         We think carefully about our use of personal data and use it
         responsibly. We never share it without your permission and we have a
         team who are dedicated to keeping any data we collect safe and secure.
@@ -54,8 +53,8 @@ export const ConsentsPage = () => {
         </a>{' '}
         of the website.
       </p>
-      <h3 css={h3}>Using your data for marketing analysis</h3>
-      <p css={p}>
+      <h3 css={[h3, autoRow()]}>Using your data for marketing analysis</h3>
+      <p css={[p, autoRow()]}>
         From time to time we may use your personal data for marketing analysis.
         That includes looking at what products or services you have bought from
         us and what pages you have been viewing on theguardian.com and other
@@ -63,7 +62,7 @@ export const ConsentsPage = () => {
         to understand your interests and preferences so that we can make our
         marketing communication more relevant to you.
       </p>
-      <fieldset css={fieldset}>
+      <fieldset css={[fieldset, autoRow()]}>
         <legend css={legend}>
           I am happy for The Guardian to use my personal data for market
           analysis purposes.

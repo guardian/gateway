@@ -54,15 +54,6 @@ const blueBorder = css`
 const content = css`
   ${gridRow}
 
-  /*
-    IE HACK START
-    For the content we can't use ms-grid at the text overflows
-    So use flexbox to layout main content instead
-  */
-  display: -ms-flexbox;
-  -ms-flex-direction: column;
-  /* IE HACK END */
-
   background-color: white;
   width: 100%;
   padding-top: ${space[6]}px;
