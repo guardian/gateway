@@ -1,8 +1,11 @@
 // method to check if the cmp should show
-import { shouldShow } from '@guardian/consent-management-platform';
+import { cmp } from '@guardian/consent-management-platform';
+
+// country code helper
+import { getCountryCode } from './countryCode';
 
 // loading a js file without types, so ignore ts
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { init as gaInit } from './analytics/ga';
 
@@ -13,7 +16,8 @@ import './analytics/ophan';
 gaInit();
 
 // load cmp if it should show
-// use dymamic import to reduce delivered bundle size
-if (shouldShow()) {
-  import('./cmp');
-}
+(async () => {
+  const isInUsa = (await getCountryCode()) === 'US';
+
+  cmp.init({ isInUsa });
+})();

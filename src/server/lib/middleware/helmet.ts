@@ -12,9 +12,11 @@ enum CSP_VALID_URI {
   GOOGLE_ANALYTICS = 'www.google-analytics.com',
   GUARDIAN_STATIC = 'static.guim.co.uk',
   GUARDIAN_ASSETS = 'assets.guim.co.uk',
+  GUARDIAN_API = 'api.nextgen.guardianapps.co.uk',
   OPHAN = 'ophan.theguardian.com',
   VENDORLIST_CMP = 'vendorlist.consensu.org',
   GUARDIAN_CONSENTS_LOGS = 'consent-logs.',
+  CMP = `consent.theguardian.com gdpr-tcfv2.sp-prod.net ccpa.sp-prod.net ccpa-service.sp-prod.net ccpa-notice.sp-prod.net cdn.privacy-mgmt.com 'unsafe-eval'`,
 }
 
 const { baseUri, gaUID, apiDomain } = getConfiguration();
@@ -34,6 +36,7 @@ const helmetConfig: IHelmetConfiguration = {
         `${baseUri}`,
         gaUID.hash, // google analytics id
         CSP_VALID_URI.GOOGLE_ANALYTICS,
+        CSP_VALID_URI.CMP,
       ],
       imgSrc: [
         CSP_VALID_URI.GUARDIAN_STATIC,
@@ -45,7 +48,10 @@ const helmetConfig: IHelmetConfiguration = {
         CSP_VALID_URI.GOOGLE_ANALYTICS,
         CSP_VALID_URI.VENDORLIST_CMP,
         `${CSP_VALID_URI.GUARDIAN_CONSENTS_LOGS}${apiDomain}`,
+        CSP_VALID_URI.CMP,
+        CSP_VALID_URI.GUARDIAN_API,
       ],
+      frameSrc: [CSP_VALID_URI.CMP],
     },
     browserSniff: false,
   },
