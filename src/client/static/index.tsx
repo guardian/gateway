@@ -1,3 +1,9 @@
+interface GatewayWindow extends Window {
+  Cypress: unknown;
+}
+
+declare let window: GatewayWindow;
+
 // method to check if the cmp should show
 import { cmp } from '@guardian/consent-management-platform';
 
@@ -15,9 +21,12 @@ import './analytics/ophan';
 // initialise google analytics
 gaInit();
 
-// load cmp if it should show
-(async () => {
-  const isInUsa = (await getCountryCode()) === 'US';
+// don't load this if running in cypress
+if (!window.Cypress) {
+  // load cmp if it should show
+  (async () => {
+    const isInUsa = (await getCountryCode()) === 'US';
 
-  cmp.init({ isInUsa });
-})();
+    cmp.init({ isInUsa });
+  })();
+}
