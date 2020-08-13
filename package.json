@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
-    "build": "webpack --mode production && copy-node-modules . ./build",
+    "build": "webpack --mode production && node scripts/copyNodeModules.js",
     "cypress": "cypress",
     "cypress:ci": "cypress run",
     "e2e:server": "yarn mock-server & yarn start",
@@ -61,7 +61,7 @@
   },
   "dependencies": {
     "@emotion/core": "^10.0.28",
-    "@guardian/consent-management-platform": "^4.0.0-14",
+    "@guardian/consent-management-platform": "^4.0.0",
     "@guardian/src-button": "^2.0.0",
     "@guardian/src-foundations": "^2.0.0",
     "@guardian/src-icons": "^2.0.0",
