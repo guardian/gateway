@@ -10,7 +10,6 @@ describe('Your data page', () => {
   });
 
   beforeEach(function () {
-    cy.consentBannerChoiceMade();
     page.goto();
   });
 
