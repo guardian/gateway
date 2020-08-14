@@ -11,10 +11,6 @@ describe('Password change flow', () => {
     cy.idapiMockPurge();
   });
 
-  beforeEach(() => {
-    cy.consentBannerChoiceMade();
-  });
-
   context('An expired/invalid token is used', () => {
     it('shows a resend password page', () => {
       cy.idapiMock(500, {

@@ -1,9 +1,11 @@
 import React, { FunctionComponent } from 'react';
+import { SerializedStyles } from '@emotion/core';
 
 interface LinesProps {
   n: number;
   color?: string;
   margin?: string;
+  cssOverrides?: SerializedStyles;
 }
 
 export const Lines: FunctionComponent<LinesProps> = (props) => {
@@ -16,15 +18,18 @@ export const Lines: FunctionComponent<LinesProps> = (props) => {
   return (
     <>
       <hr
-        css={{
-          backgroundImage: `repeating-linear-gradient(to bottom, ${color}, ${color}, ${thickness}px, transparent ${thickness}px, transparent ${distance}px)`,
-          backgroundRepeat: 'repeat',
-          backgroundPosition: 'top',
-          height: `${height}px`,
-          border: 0,
-          margin: margin ? margin : '12px auto 6px',
-          width: '100%',
-        }}
+        css={[
+          {
+            backgroundImage: `repeating-linear-gradient(to bottom, ${color}, ${color}, ${thickness}px, transparent ${thickness}px, transparent ${distance}px)`,
+            backgroundRepeat: 'repeat',
+            backgroundPosition: 'top',
+            height: `${height}px`,
+            border: 0,
+            margin: margin ? margin : '12px auto 6px',
+            width: '100%',
+          },
+          props.cssOverrides,
+        ]}
       />
     </>
   );
