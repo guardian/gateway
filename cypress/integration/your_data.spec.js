@@ -41,6 +41,4 @@ describe('Your data page', () => {
       cy.contains(PageYourData.CONTENT.PAGE_TITLE);
     });
   });
-  context.skip('Invalid verification token');
-  context.skip('General IDAPI failure');
 });
