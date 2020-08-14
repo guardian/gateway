@@ -10,7 +10,7 @@ const babel = {
     "@babel/react",
     "@emotion/babel-preset-css-prop"
   ],
-  plugins: ["@babel/plugin-proposal-optional-chaining"]
+  plugins: ["@babel/plugin-proposal-optional-chaining", "@babel/plugin-transform-runtime"]
 };
 
 const extensions = [".ts", ".tsx", ".js"];
@@ -47,7 +47,8 @@ const server = {
                   }
                 ],
                 ...babel.presets
-              ]
+              ],
+              plugins: [...babel.plugins]
             }
           }
         ]
@@ -84,7 +85,8 @@ const client = {
           {
             loader: "babel-loader",
             options: {
-              presets: ["@babel/env", ...babel.presets]
+              presets: ["@babel/env", ...babel.presets],
+              plugins: [...babel.plugins]
             }
           }
         ]
