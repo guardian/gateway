@@ -40,7 +40,7 @@ export const ConsentsPage = () => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
 
   return (
-    <ConsentsLayout>
+    <ConsentsLayout title="Your data">
       <h3 css={[h3, autoRow()]}>Our commitment to you</h3>
       <p css={[p, autoRow()]}>
         We think carefully about our use of personal data and use it

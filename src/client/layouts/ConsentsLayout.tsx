@@ -21,6 +21,11 @@ import {
 } from '@/client/styles/Grid';
 import { from } from '@guardian/src-foundations/mq';
 
+interface ConsentsLayoutProps {
+  children?: React.ReactNode;
+  title: string;
+}
+
 const consentsBackground = css`
   background-color: ${brand[800]};
 `;
@@ -112,7 +117,10 @@ const ieFlexFix = css`
   flex: 0 0 auto;
 `;
 
-export const ConsentsLayout: FunctionComponent = (props) => {
+export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
+  children,
+  title,
+}) => {
   const globalState: GlobalState = useContext(GlobalStateContext);
   const { error } = globalState;
 
@@ -126,7 +134,7 @@ export const ConsentsLayout: FunctionComponent = (props) => {
         </div>
         <Lines n={3} color={brand[400]} cssOverrides={lines} />
         <div css={[gridRow, blueBorder]}>
-          <h1 css={h1}>Your data</h1>
+          <h1 css={h1}>{title}</h1>
         </div>
       </div>
       <main css={[mainBackground, ieFlexFix]}>
@@ -134,7 +142,7 @@ export const ConsentsLayout: FunctionComponent = (props) => {
           <div css={gridItem(gridItemColumnConsents)}>
             <PageProgression />
           </div>
-          {props.children}
+          {children}
         </div>
       </main>
       <div css={[consentsBackground, flex]}>
