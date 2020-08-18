@@ -1,17 +1,9 @@
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
+const babelConfig = require("./babel.config");
 
 const mode =
   process.env.ENVIRONMENT === "production" ? "production" : "development";
-
-const babel = {
-  presets: [
-    "@babel/typescript",
-    "@babel/react",
-    "@emotion/babel-preset-css-prop"
-  ],
-  plugins: ["@babel/plugin-proposal-optional-chaining", "@babel/plugin-transform-runtime"]
-};
 
 const extensions = [".ts", ".tsx", ".js"];
 
@@ -46,9 +38,9 @@ const server = {
                     ignoreBrowserslistConfig: true
                   }
                 ],
-                ...babel.presets
+                ...babelConfig.presets
               ],
-              plugins: [...babel.plugins]
+              plugins: [...babelConfig.plugins]
             }
           }
         ]
@@ -85,8 +77,8 @@ const client = {
           {
             loader: "babel-loader",
             options: {
-              presets: ["@babel/env", ...babel.presets],
-              plugins: [...babel.plugins]
+              presets: ["@babel/env", ...babelConfig.presets],
+              plugins: [...babelConfig.plugins]
             }
           }
         ]

@@ -1,0 +1,338 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PageProgression component when no active page is set shows the first step as the active step 1`] = `
+<ul
+  css={
+    Object {
+      "map": undefined,
+      "name": "48yusx",
+      "next": undefined,
+      "styles": "
+  display: flex;
+  list-style: none;
+  height: 54px;
+  padding: 0;
+  margin: 0;
+",
+      "toString": [Function],
+    }
+  }
+>
+  <li
+    className="active"
+    css={
+      Object {
+        "map": undefined,
+        "name": "1kktmkd",
+        "next": undefined,
+        "styles": "
+  
+	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	font-weight: 400;
+	;
+
+  position: relative;
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  &.active {
+    
+	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	font-weight: 700;
+	;
+
+  }
+  &:after {
+    content: ' ';
+    background-color: #999999;
+    height: 2px;
+    position: absolute;
+    // Border position from top is distance of a semicircle minus half the border thickness
+    top: 13px;
+    left: 28px;
+    right: 0;
+  }
+  &:last-child:after {
+    display: none;
+  }
+  &:before {
+    border: 2px solid #999999;
+    border-radius: 50%;
+    
+  content: ' ';
+  box-sizing: content-box;
+  border-radius: 50%;
+  height: 24px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+
+  }
+  &.active:before {
+    background-color: #052962;
+    border: 2px solid #052962;
+    
+  content: ' ';
+  box-sizing: content-box;
+  border-radius: 50%;
+  height: 24px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+
+  }
+",
+        "toString": [Function],
+      }
+    }
+  >
+    <div>
+      Your data
+    </div>
+  </li>
+  <li
+    className=""
+    css={
+      Object {
+        "map": undefined,
+        "name": "1kktmkd",
+        "next": undefined,
+        "styles": "
+  
+	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	font-weight: 400;
+	;
+
+  position: relative;
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  &.active {
+    
+	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	font-weight: 700;
+	;
+
+  }
+  &:after {
+    content: ' ';
+    background-color: #999999;
+    height: 2px;
+    position: absolute;
+    // Border position from top is distance of a semicircle minus half the border thickness
+    top: 13px;
+    left: 28px;
+    right: 0;
+  }
+  &:last-child:after {
+    display: none;
+  }
+  &:before {
+    border: 2px solid #999999;
+    border-radius: 50%;
+    
+  content: ' ';
+  box-sizing: content-box;
+  border-radius: 50%;
+  height: 24px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+
+  }
+  &.active:before {
+    background-color: #052962;
+    border: 2px solid #052962;
+    
+  content: ' ';
+  box-sizing: content-box;
+  border-radius: 50%;
+  height: 24px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+
+  }
+",
+        "toString": [Function],
+      }
+    }
+  >
+    <div>
+      Contact
+    </div>
+  </li>
+  <li
+    className=""
+    css={
+      Object {
+        "map": undefined,
+        "name": "1kktmkd",
+        "next": undefined,
+        "styles": "
+  
+	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	font-weight: 400;
+	;
+
+  position: relative;
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  &.active {
+    
+	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	font-weight: 700;
+	;
+
+  }
+  &:after {
+    content: ' ';
+    background-color: #999999;
+    height: 2px;
+    position: absolute;
+    // Border position from top is distance of a semicircle minus half the border thickness
+    top: 13px;
+    left: 28px;
+    right: 0;
+  }
+  &:last-child:after {
+    display: none;
+  }
+  &:before {
+    border: 2px solid #999999;
+    border-radius: 50%;
+    
+  content: ' ';
+  box-sizing: content-box;
+  border-radius: 50%;
+  height: 24px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+
+  }
+  &.active:before {
+    background-color: #052962;
+    border: 2px solid #052962;
+    
+  content: ' ';
+  box-sizing: content-box;
+  border-radius: 50%;
+  height: 24px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+
+  }
+",
+        "toString": [Function],
+      }
+    }
+  >
+    <div>
+      Newsletters
+    </div>
+  </li>
+  <li
+    className=""
+    css={
+      Object {
+        "map": undefined,
+        "name": "1kktmkd",
+        "next": undefined,
+        "styles": "
+  
+	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	font-weight: 400;
+	;
+
+  position: relative;
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  &.active {
+    
+	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	font-weight: 700;
+	;
+
+  }
+  &:after {
+    content: ' ';
+    background-color: #999999;
+    height: 2px;
+    position: absolute;
+    // Border position from top is distance of a semicircle minus half the border thickness
+    top: 13px;
+    left: 28px;
+    right: 0;
+  }
+  &:last-child:after {
+    display: none;
+  }
+  &:before {
+    border: 2px solid #999999;
+    border-radius: 50%;
+    
+  content: ' ';
+  box-sizing: content-box;
+  border-radius: 50%;
+  height: 24px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+
+  }
+  &.active:before {
+    background-color: #052962;
+    border: 2px solid #052962;
+    
+  content: ' ';
+  box-sizing: content-box;
+  border-radius: 50%;
+  height: 24px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+
+  }
+",
+        "toString": [Function],
+      }
+    }
+  >
+    <div>
+      Review
+    </div>
+  </li>
+</ul>
+`;
