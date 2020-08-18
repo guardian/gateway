@@ -1155,14 +1155,22 @@
     js-cookie "2.2.1"
     whatwg-fetch "3.0.0"
 
-"@guardian/src-button@^2.0.0":
+"@guardian/src-button@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@guardian/src-button/-/src-button-2.1.0.tgz#59e4bec31dce699debcb2c49c128251e00e96ecc"
   integrity sha512-9k/HudQOVePp4kjBd/NgZTR46X+VRQ2flWkaewxu1v8wcnBMC4Sm4wYgqsj6Jo7qAf1q3r4kLV/nG8rnd7BETQ==
   dependencies:
     "@guardian/src-helpers" "^2.1.0"
 
-"@guardian/src-foundations@^2.0.0", "@guardian/src-foundations@^2.1.0":
+"@guardian/src-checkbox@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-checkbox/-/src-checkbox-2.1.0.tgz#a17a5abd2b19e096cdd3dda0f434687f1b3a0d70"
+  integrity sha512-QZnLnlpWdCKjzCa/lN6FWFRJT0aZ8UlLZx7tOp8GJ5K2Wlie0khDuiL08PxKPMNUNYS0mqUymYCLBDWTcreG5A==
+  dependencies:
+    "@guardian/src-helpers" "^2.1.0"
+    "@guardian/src-user-feedback" "^2.1.0"
+
+"@guardian/src-foundations@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@guardian/src-foundations/-/src-foundations-2.1.0.tgz#7d4abd30c7cca6df02cd61b125e43f18ac9b801f"
   integrity sha512-1ELb3CtDEhkhUWcv2zVwFqonokYg7pbizQqYMmRfNnHIzNp3+aJl48BHMRTd9Nqqcx+As9syUXPs09CeaAOMfg==
@@ -1174,19 +1182,19 @@
   dependencies:
     "@guardian/src-foundations" "^2.1.0"
 
-"@guardian/src-icons@^2.0.0", "@guardian/src-icons@^2.1.0":
+"@guardian/src-icons@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@guardian/src-icons/-/src-icons-2.1.0.tgz#2a5106de9866d31d2171ef14cf8b42017b84bd00"
   integrity sha512-gZlYOaIjWbXwAUuEmxgEKlXtRl1UCm+4Nt5NDiUnZiGFIbHwJDjdXaHYN/Qu0wLfY9bsESVGg6kGcaupo51GGw==
 
-"@guardian/src-link@^2.0.0":
+"@guardian/src-link@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@guardian/src-link/-/src-link-2.1.0.tgz#667417b1d0a2343b046ee6c701f798763b9940c0"
   integrity sha512-deBHyKziYE4XFAPbDin6H/IzTIjVWT6d0/P1OlVzuZbYWprSNOpbX2+QhEDuIMn9+H0yAJen6uUj7p3ajMG2WQ==
   dependencies:
     "@guardian/src-helpers" "^2.1.0"
 
-"@guardian/src-radio@^2.1.0-rc.0":
+"@guardian/src-radio@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@guardian/src-radio/-/src-radio-2.1.0.tgz#9d56765b0372d24b3f0a67c35c6af3417f883315"
   integrity sha512-nwrwdZB4AFgbw4gfpEuaFfbPA4wyQz2LmmC9KZAX3iljiQ8lXA+6nJhAC4XkOHWG79I5tg8sx1qmMHH31mHkIA==
@@ -1194,7 +1202,7 @@
     "@guardian/src-helpers" "^2.1.0"
     "@guardian/src-user-feedback" "^2.1.0"
 
-"@guardian/src-text-input@^2.0.0":
+"@guardian/src-text-input@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@guardian/src-text-input/-/src-text-input-2.1.0.tgz#79cf4ceb2c250a541e81bc82fc3414885a8103ec"
   integrity sha512-JG4jbNH/GNwnu6s34bWycyYurPRf/XhhRZWZXwjA6xzSizJRCBXuYPrhx9TN2RTDYrORhJ7eowey+AZkMzhweQ==
