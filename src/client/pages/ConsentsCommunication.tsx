@@ -39,7 +39,7 @@ const legend = css`
 const communicationCardContainer = css`
   display: flex;
   flex-flow: row wrap;
-  padding: ${space[9]}px 0;
+  margin-top: ${space[6]}px;
 `;
 
 export const ConsentsCommunicationPage = () => {

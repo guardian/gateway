@@ -20,22 +20,20 @@ const communicationCard = css`
   margin: ${space[2]}px 0px;
 
   ${from.tablet} {
-    margin: ${space[3]}px 0px;
     width: 50%;
   }
 
-  ${from.wide} {
-    width: calc(100% / 3);
+  ${from.desktop} {
+    width: 33.33%;
   }
 `;
 
 const communicationCardHeadingContainer = css`
   background-color: ${palette.background.ctaPrimary};
-  height: 45%;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: ${space[24]}px ${space[3]}px ${space[2]}px ${space[3]}px;
+  padding: ${space[12]}px ${space[3]}px ${space[2]}px ${space[3]}px;
 `;
 
 const communicationCardHeadingText = css`
@@ -50,7 +48,7 @@ const communicationCardBodyContainer = css`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  height: 40%;
+  flex: 1 1 auto;
   background-color: #eaeef5;
   padding: ${space[2]}px ${space[3]}px;
 `;
@@ -66,7 +64,6 @@ const communicationCardForm = css`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  height: 15%;
   background-color: #eaeef5;
   padding: ${space[2]}px ${space[3]}px;
 `;
