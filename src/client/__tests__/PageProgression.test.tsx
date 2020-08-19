@@ -9,4 +9,16 @@ describe('PageProgression component', () => {
       expect(rendered.toJSON()).toMatchSnapshot();
     });
   });
+  describe('when an active section is supplied', () => {
+    it('marks the previous sections as done and the current one as active', () => {
+      const rendered = create(<PageProgression current={'Newsletters'} />);
+      expect(rendered.toJSON()).toMatchSnapshot();
+    });
+  });
+  describe('when on the last section', () => {
+    it('marks the previous sections as done and the last one as active', () => {
+      const rendered = create(<PageProgression current={'Review'} />);
+      expect(rendered.toJSON()).toMatchSnapshot();
+    });
+  });
 });

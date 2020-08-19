@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import { css } from '@emotion/core';
 import { brand, neutral } from '@guardian/src-foundations/palette';
 import { textSans } from '@guardian/src-foundations/typography';
+import { SvgCheckmark } from '@guardian/src-icons';
 
 const PAGES = ['Your data', 'Contact', 'Newsletters', 'Review'];
 const N = PAGES.length;
@@ -38,7 +39,8 @@ const li = css`
   &.active {
     ${textSans.small({ fontWeight: 'bold' })}
   }
-  &:after {
+  &::after,
+  &.complete::after {
     content: ' ';
     background-color: ${neutral[60]};
     height: ${BORDER_SIZE}px;
@@ -48,27 +50,68 @@ const li = css`
     left: ${CIRCLE_DIAMETER + 2 * BORDER_SIZE}px;
     right: 0;
   }
-  &:last-child:after {
+  &.complete::after {
+    height: ${BORDER_SIZE * 2}px;
+    background-color: ${brand[400]};
+  }
+  &:last-child::after {
     display: none;
   }
-  &:before {
+  &::before {
     border: ${BORDER_SIZE}px solid ${neutral[60]};
     border-radius: 50%;
     ${circle}
   }
-  &.active:before {
+  &.active::before,
+  &.complete::before {
+    content: ' ';
     background-color: ${brand[400]};
     border: ${BORDER_SIZE}px solid ${brand[400]};
     ${circle}
   }
+  & svg {
+    display: none;
+  }
+  &.complete svg {
+    position: absolute;
+    display: block;
+    stroke: white;
+    fill: white;
+    height: ${CIRCLE_DIAMETER}px;
+    width: ${CIRCLE_DIAMETER}px;
+    margin: ${BORDER_SIZE}px;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
 `;
 
-export const PageProgression = () => (
-  <ul css={ul}>
-    {PAGES.map((page, i) => (
-      <li className={i === 0 ? 'active' : ''} key={i} css={li}>
-        <div>{page}</div>
-      </li>
-    ))}
-  </ul>
-);
+interface PageProgressionProps {
+  current?: string;
+}
+
+export const PageProgression: FunctionComponent<PageProgressionProps> = (
+  props,
+) => {
+  const active = props.current ? PAGES.indexOf(props.current) : 0;
+  const getClassName = (i: number) => {
+    switch (true) {
+      case i === active:
+        return 'active';
+      case i < active:
+        return 'complete';
+      default:
+        return '';
+    }
+  };
+  return (
+    <ul css={ul}>
+      {PAGES.map((page, i) => (
+        <li className={getClassName(i)} key={i} css={li}>
+          <SvgCheckmark />
+          <div>{page}</div>
+        </li>
+      ))}
+    </ul>
+  );
+};
