@@ -71,6 +71,12 @@ const communicationCardForm = css`
   padding: ${space[2]}px ${space[3]}px;
 `;
 
+// TODO: hacked background colour, should be fixed in future source checkbox implementation
+const communicationCardCheckbox = css`
+  background: ${palette.neutral[100]};
+  z-index: 0 !important;
+`;
+
 export const CommunicationCard: FunctionComponent<CommunicationCardProps> = ({
   titleTop,
   titleBottom,
@@ -90,8 +96,13 @@ export const CommunicationCard: FunctionComponent<CommunicationCardProps> = ({
         <p css={communicationCardBodyText}>{body}</p>
       </div>
       <form css={communicationCardForm}>
-        <CheckboxGroup name="emails">
-          <Checkbox value={value} label="Sign Up" checked={false} />
+        <CheckboxGroup name={value}>
+          <Checkbox
+            cssOverrides={communicationCardCheckbox}
+            value={value}
+            label="Sign Up"
+            checked={false}
+          />
         </CheckboxGroup>
       </form>
     </div>

@@ -15,6 +15,9 @@ import { getCountryCode } from './countryCode';
 // @ts-ignore
 import { init as gaInit } from './analytics/ga';
 
+// initialise source accessibility
+import './sourceAccessibility';
+
 // initalise ophan
 import './analytics/ophan';
 
