@@ -6,6 +6,7 @@ import { brand, space, neutral } from '@guardian/src-foundations';
 import { RadioGroup, Radio } from '@guardian/src-radio';
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { CommunicationCard } from '../components/ConsentsCommunicationCard';
+import CardJobImage from '@/client/assets/gu-jobs.png';
 
 const h3 = css`
   color: ${brand[400]};
@@ -64,6 +65,7 @@ export const ConsentsCommunicationPage = () => {
           titleBottom="Jobs"
           body="Receive tips, Job Match recommendations, and advice from Guardian Jobs on taking your next career step."
           value="jobs"
+          image={CardJobImage}
         />
         <CommunicationCard
           titleTop="Holidays"

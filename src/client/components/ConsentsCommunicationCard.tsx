@@ -10,6 +10,7 @@ interface CommunicationCardProps {
   titleBottom: string;
   body: string;
   value: string;
+  image?: string;
 }
 
 const communicationCard = css`
@@ -28,8 +29,18 @@ const communicationCard = css`
   }
 `;
 
-const communicationCardHeadingContainer = css`
+const communicationCardHeadingImage = (image: string) => css`
+  background-image: url(${image});
+  background-position: bottom 0px right 0px;
+  background-repeat: no-repeat;
+  background-size: 75%;
+`;
+
+const communicationCardHeadingContainer = (image?: string) => css`
   background-color: ${palette.background.ctaPrimary};
+
+  ${image && communicationCardHeadingImage(image)}
+
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -79,10 +90,11 @@ export const CommunicationCard: FunctionComponent<CommunicationCardProps> = ({
   titleBottom,
   body,
   value,
+  image,
 }) => {
   return (
     <div css={communicationCard}>
-      <div css={communicationCardHeadingContainer}>
+      <div css={communicationCardHeadingContainer(image)}>
         <h3 css={communicationCardHeadingText}>
           {titleTop}
           <br />

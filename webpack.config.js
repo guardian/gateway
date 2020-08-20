@@ -52,6 +52,19 @@ const server = {
             }
           }
         ]
+      },
+      {
+        test: /\.(jpe?g|png|gif)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'static/',
+              publicPath: '/gateway-static/'
+            }
+          }
+        ]
       }
     ]
   },
