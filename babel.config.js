@@ -1,8 +1,12 @@
 // babel.config.js
 module.exports = {
   presets: [
-    ['@babel/preset-env', { targets: { node: 'current' } }],
-    '@babel/preset-typescript',
+    '@babel/typescript',
+    '@babel/react',
+    '@emotion/babel-preset-css-prop',
   ],
-  plugins: ['@babel/plugin-proposal-optional-chaining'],
+  plugins: [
+    '@babel/plugin-proposal-optional-chaining',
+    '@babel/plugin-transform-runtime',
+  ],
 };
