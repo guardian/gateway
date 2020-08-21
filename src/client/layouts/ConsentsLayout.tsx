@@ -23,6 +23,7 @@ import { from } from '@guardian/src-foundations/mq';
 
 interface ConsentsLayoutProps {
   children?: React.ReactNode;
+  current?: string;
   title: string;
 }
 
@@ -120,6 +121,7 @@ const ieFlexFix = css`
 export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
   children,
   title,
+  current,
 }) => {
   const globalState: GlobalState = useContext(GlobalStateContext);
   const { error } = globalState;
@@ -140,7 +142,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
       <main css={[mainBackground, ieFlexFix]}>
         <div css={content}>
           <div css={gridItem(gridItemColumnConsents)}>
-            <PageProgression />
+            <PageProgression current={current} />
           </div>
           {children}
         </div>

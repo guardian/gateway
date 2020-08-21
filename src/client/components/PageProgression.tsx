@@ -4,7 +4,7 @@ import { brand, neutral } from '@guardian/src-foundations/palette';
 import { textSans } from '@guardian/src-foundations/typography';
 import { SvgCheckmark } from '@guardian/src-icons';
 
-const PAGES = ['Your data', 'Contact', 'Newsletters', 'Review'];
+export const PAGES = ['Your data', 'Contact', 'Newsletters', 'Review'];
 const N = PAGES.length;
 
 const BORDER_SIZE = 2;
