@@ -30,7 +30,7 @@ const communicationCard = css`
 `;
 
 const communicationCardHeadingImage = (image: string) => css`
-  background-image: url(${image});
+  background-image: url("${image}");
   background-position: bottom 0px right 0px;
   background-repeat: no-repeat;
   background-size: 75%;
