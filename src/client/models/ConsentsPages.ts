@@ -1,0 +1,13 @@
+export enum CONSENTS_PAGES {
+  YOUR_DATA = 'Your data',
+  CONTACT = 'Contact',
+  NEWSLETTERS = 'Newsletters',
+  REVIEW = 'Review',
+}
+
+export const CONSENTS_PAGES_ARR = [
+  CONSENTS_PAGES.YOUR_DATA,
+  CONSENTS_PAGES.CONTACT,
+  CONSENTS_PAGES.NEWSLETTERS,
+  CONSENTS_PAGES.REVIEW,
+];

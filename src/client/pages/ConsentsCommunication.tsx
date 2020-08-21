@@ -5,9 +5,9 @@ import { css } from '@emotion/core';
 import { brand, space, neutral } from '@guardian/src-foundations';
 import { RadioGroup, Radio } from '@guardian/src-radio';
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
-import { CommunicationCard } from '../components/ConsentsCommunicationCard';
+import { CommunicationCard } from '@/client/components/ConsentsCommunicationCard';
 import CardJobImage from '@/client/assets/gu-jobs.png';
-import { PAGES } from '../components/PageProgression';
+import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 
 const h3 = css`
   color: ${brand[400]};
@@ -48,7 +48,10 @@ export const ConsentsCommunicationPage = () => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
 
   return (
-    <ConsentsLayout title="Guardian communication" current={PAGES[1]}>
+    <ConsentsLayout
+      title="Guardian communication"
+      current={CONSENTS_PAGES.CONTACT}
+    >
       <h3 css={[h3, autoRow()]}>Guardian products, services & events </h3>
       <p css={[p, autoRow()]}>
         Stay informed and up to date with all that The Guardian has to offer.

@@ -20,6 +20,7 @@ import {
   COLUMNS,
 } from '@/client/styles/Grid';
 import { from } from '@guardian/src-foundations/mq';
+import { CONSENTS_PAGES_ARR } from '@/client/models/ConsentsPages';
 
 interface ConsentsLayoutProps {
   children?: React.ReactNode;
@@ -142,7 +143,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
       <main css={[mainBackground, ieFlexFix]}>
         <div css={content}>
           <div css={gridItem(gridItemColumnConsents)}>
-            <PageProgression current={current} />
+            <PageProgression pages={CONSENTS_PAGES_ARR} current={current} />
           </div>
           {children}
         </div>

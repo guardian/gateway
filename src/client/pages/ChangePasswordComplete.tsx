@@ -6,7 +6,7 @@ import { PageHeader } from '@/client/components/PageHeader';
 import { PageBodyText } from '@/client/components/PageBodyText';
 import { PageBody } from '@/client/components/PageBody';
 import { linkButton } from '@/client/styles/Shared';
-import { SignInLayout } from '../layouts/SignInLayout';
+import { SignInLayout } from '@/client/layouts/SignInLayout';
 
 export const ChangePasswordCompletePage = () => {
   const { returnUrl } = useQuery();

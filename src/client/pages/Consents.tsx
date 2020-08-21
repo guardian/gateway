@@ -6,7 +6,7 @@ import { css } from '@emotion/core';
 import { brand, space, neutral } from '@guardian/src-foundations';
 import { RadioGroup, Radio } from '@guardian/src-radio';
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
-import { PAGES } from '../components/PageProgression';
+import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 
 const h3 = css`
   color: ${brand[400]};
@@ -41,7 +41,7 @@ export const ConsentsPage = () => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
 
   return (
-    <ConsentsLayout title="Your data" current={PAGES[0]}>
+    <ConsentsLayout title="Your data" current={CONSENTS_PAGES.YOUR_DATA}>
       <h3 css={[h3, autoRow()]}>Our commitment to you</h3>
       <p css={[p, autoRow()]}>
         We think carefully about our use of personal data and use it
