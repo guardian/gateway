@@ -334,6 +334,7 @@ Resources:
   HighLatencyAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
+      AlarmName: !Sub '${App}-${Stage} high load balancer latency'
       AlarmDescription: !Sub
         - 'Scale-Up if latency is greater than ${Threshold} seconds over last ${Period} seconds'
         - Period: !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmPeriod]
@@ -373,6 +374,7 @@ Resources:
     Condition: IsProd
     Properties:
       ActionsEnabled: 'true'
+      AlarmName: !Sub '${App}-${Stage} insufficient healthy hosts'
       AlarmDescription: There are insufficient healthy hosts
       ComparisonOperator: LessThanThreshold
       EvaluationPeriods: 1
@@ -400,6 +402,7 @@ Resources:
     Condition: IsProd
     Properties:
       ActionsEnabled: 'true'
+      AlarmName: !Sub '${App}-${Stage} high 5xx errors'
       AlarmDescription: 'Server errors detected'
       AlarmActions:
         - !Ref 'TopicSendEmail'
