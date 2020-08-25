@@ -3,7 +3,7 @@ import { GlobalState } from '@/shared/model/GlobalState';
 import { GlobalStateContext } from '@/client/components/GlobalState';
 import { PasswordResetDialog } from '@/client/components/PasswordResetDialog';
 import { useLocation } from 'react-router-dom';
-import { SignInLayout } from '../layouts/SignInLayout';
+import { SignInLayout } from '@/client/layouts/SignInLayout';
 
 export const ResetPasswordPage = () => {
   const { search } = useLocation();

@@ -4,9 +4,6 @@ import { brand, neutral } from '@guardian/src-foundations/palette';
 import { textSans } from '@guardian/src-foundations/typography';
 import { SvgCheckmark } from '@guardian/src-icons';
 
-const PAGES = ['Your data', 'Contact', 'Newsletters', 'Review'];
-const N = PAGES.length;
-
 const BORDER_SIZE = 2;
 const CIRCLE_DIAMETER = 24;
 
@@ -29,10 +26,10 @@ const circle = `
   width: ${CIRCLE_DIAMETER}px;
 `;
 
-const li = css`
+const li = (numPages: number) => css`
   ${textSans.small()}
   position: relative;
-  width: ${100 / N}%;
+  width: ${100 / numPages}%;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -87,13 +84,15 @@ const li = css`
 `;
 
 interface PageProgressionProps {
+  pages: string[];
   current?: string;
 }
 
-export const PageProgression: FunctionComponent<PageProgressionProps> = (
-  props,
-) => {
-  const active = props.current ? PAGES.indexOf(props.current) : 0;
+export const PageProgression: FunctionComponent<PageProgressionProps> = ({
+  pages,
+  current,
+}) => {
+  const active = current ? pages.indexOf(current) : 0;
   const getClassName = (i: number) => {
     switch (true) {
       case i === active:
@@ -106,8 +105,8 @@ export const PageProgression: FunctionComponent<PageProgressionProps> = (
   };
   return (
     <ul css={ul}>
-      {PAGES.map((page, i) => (
-        <li className={getClassName(i)} key={i} css={li}>
+      {pages.map((page, i) => (
+        <li className={getClassName(i)} key={i} css={li(pages.length)}>
           <SvgCheckmark />
           <div>{page}</div>
         </li>

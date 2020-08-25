@@ -39,6 +39,7 @@ const helmetConfig: IHelmetConfiguration = {
         CSP_VALID_URI.CMP,
       ],
       imgSrc: [
+        `${baseUri}`,
         CSP_VALID_URI.GUARDIAN_STATIC,
         CSP_VALID_URI.OPHAN,
         CSP_VALID_URI.GOOGLE_ANALYTICS,
