@@ -9,6 +9,7 @@ import { from } from '@guardian/src-foundations/mq';
 const footer = css`
   background-color: ${brand[400]};
   padding: ${space[1]}px ${space[3]}px;
+  flex: 0 0 auto;
 `;
 
 const container = css`
