@@ -8,6 +8,7 @@ const header = css`
   justify-content: flex-end;
   padding: ${space[1]}px ${space[3]}px;
   background-color: ${brand[400]};
+  flex: 0 0 auto;
 `;
 
 export const Header = () => (
