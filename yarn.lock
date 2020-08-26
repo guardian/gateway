@@ -1155,6 +1155,11 @@
     js-cookie "2.2.1"
     whatwg-fetch "3.0.0"
 
+"@guardian/src-brand@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-brand/-/src-brand-2.2.0.tgz#45794aa108e5526889bc870bdddd8fbc8cdbdb1c"
+  integrity sha512-aMv0FIB8YO2bAUtgBfYp4JRgV1PUy8cXb4nXkxZEt74A1dSNNTQ952i0n0OMPJfG3tEDgKGAJgr0ZGT0yo8GBw==
+
 "@guardian/src-button@^2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@guardian/src-button/-/src-button-2.1.0.tgz#59e4bec31dce699debcb2c49c128251e00e96ecc"
