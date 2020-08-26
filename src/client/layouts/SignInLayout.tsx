@@ -10,7 +10,7 @@ import { space } from '@guardian/src-foundations';
 import { MaxWidth } from '@/client/models/Style';
 
 const main = css`
-  flex: 1 1 auto;
+  flex: 1 0 auto;
   padding: ${space[6]}px ${space[3]}px;
   max-width: ${MaxWidth.TABLET}px;
   width: 100%;
