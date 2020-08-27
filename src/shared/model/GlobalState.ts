@@ -5,4 +5,5 @@ export interface GlobalState {
   emailProvider?: string;
   email?: string;
   fieldErrors?: Array<FieldError>;
+  pageData?: unknown;
 }

@@ -1,5 +1,6 @@
 import { idapiFetch, APIGetOptions } from '../APIFetch';
 import { NewslettersErrors } from '@/shared/model/Errors';
+import { logger } from '@/server/lib/logger';
 
 const API_ROUTE = '/newsletters';
 
@@ -42,7 +43,7 @@ export const read = async (): Promise<NewsLetter[]> => {
       options,
     )) as NewsletterAPIResponse[]).map(responseToEntity);
   } catch (e) {
-    console.error(e);
+    logger.error(e);
     return handleError();
   }
 };
