@@ -45,7 +45,7 @@ $ yarn
 Start development server:
 
 ```sh
-$ (set -a && source .env && yarn watch:server & yarn watch & wait)
+$ (set -a && source .env && yarn watch:server & yarn watch & yarn idapi-proxy & wait)
 ```
 
 ## Development Guides
