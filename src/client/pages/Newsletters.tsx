@@ -7,6 +7,7 @@ import { gridItem, gridItemColumnConsents } from '../styles/Grid';
 import { GlobalStateContext } from '../components/GlobalState';
 import { CONSENTS_PAGES } from '../models/ConsentsPages';
 import { GlobalState } from '@/shared/model/GlobalState';
+import { NewsletterCard } from '../components/NewsletterCard';
 
 const h3 = css`
   color: ${brand[400]};
@@ -23,6 +24,16 @@ const p = css`
   ${gridItem(gridItemColumnConsents)}
 `;
 
+const newsletterGridDef = {
+  TABLET: { start: 2, span: 10 },
+  DESKTOP: { start: 2, span: 10 },
+  WIDE: { start: 2, span: 16 },
+};
+
+const newslettercard = css`
+  ${gridItem(newsletterGridDef)}
+`;
+
 export const NewslettersPage = () => {
   const globalState = useContext<GlobalState>(GlobalStateContext);
   const newsletters = globalState?.pageData?.newsletters ?? [];
@@ -33,8 +44,14 @@ export const NewslettersPage = () => {
         Our newsletters help you get closer to our quality, independent
         journalism.
       </p>
-      {newsletters.map((e, i) => (
-        <p key={i}>{e.name}</p>
+      {newsletters.map((newsletter) => (
+        <NewsletterCard
+          title={newsletter.name}
+          description={newsletter.description}
+          frequency={newsletter.frequency}
+          key={newsletter.id}
+          cssOverides={newslettercard}
+        />
       ))}
     </ConsentsLayout>
   );

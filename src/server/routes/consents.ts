@@ -30,10 +30,14 @@ router.get(Routes.CONSENTS, (req: Request, res: Response) => {
 });
 
 router.get(Routes.CONSENTS_NEWSLETTERS, async (req: Request, res: Response) => {
+  const NEWSLETTER_FILTER = [4137, 4147, 4153, 4165];
+
   const state: GlobalState = {};
   try {
     const newsletters = await getNewsletters();
-    state.pageData = { newsletters };
+    state.pageData = {
+      newsletters: newsletters.filter((n) => NEWSLETTER_FILTER.includes(+n.id)),
+    };
   } catch (e) {
     state.error = e;
   }
