@@ -6,6 +6,7 @@ import { titlepiece, textSans } from '@guardian/src-foundations/typography';
 import { gridItem, gridItemColumnConsents } from '../styles/Grid';
 import { GlobalStateContext } from '../components/GlobalState';
 import { CONSENTS_PAGES } from '../models/ConsentsPages';
+import { GlobalState } from '@/shared/model/GlobalState';
 
 const h3 = css`
   color: ${brand[400]};
@@ -23,7 +24,8 @@ const p = css`
 `;
 
 export const NewslettersPage = () => {
-  const globalState = useContext(GlobalStateContext);
+  const globalState = useContext<GlobalState>(GlobalStateContext);
+  const newsletters = globalState?.pageData?.newsletters ?? [];
   return (
     <ConsentsLayout title="Newsletters" current={CONSENTS_PAGES.NEWSLETTERS}>
       <h3 css={h3}>Free newsletters from The Guardian</h3>
@@ -31,6 +33,9 @@ export const NewslettersPage = () => {
         Our newsletters help you get closer to our quality, independent
         journalism.
       </p>
+      {newsletters.map((e, i) => (
+        <p key={i}>{e.name}</p>
+      ))}
     </ConsentsLayout>
   );
 };

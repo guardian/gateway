@@ -1,15 +1,9 @@
 import { idapiFetch, APIGetOptions } from '../APIFetch';
 import { NewslettersErrors } from '@/shared/model/Errors';
 import { logger } from '@/server/lib/logger';
+import { NewsLetter } from '@/shared/model/Newsletter';
 
 const API_ROUTE = '/newsletters';
-
-export interface NewsLetter {
-  id: string;
-  description: string;
-  frequency?: string;
-  name: string;
-}
 
 interface NewsletterAPIResponse {
   id: string;
