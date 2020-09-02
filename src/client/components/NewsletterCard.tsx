@@ -16,7 +16,7 @@ interface NewsletterCardProps {
 
 const img = css`
   // PLACEHOLDER IMAGE
-  padding: 204px calc(100% - 6px) 0 0;
+  padding: 55% calc(100% - 6px) 0 0;
   border: 3px solid black;
   background: linear-gradient(
       to top right,
