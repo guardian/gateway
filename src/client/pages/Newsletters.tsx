@@ -8,6 +8,7 @@ import { GlobalStateContext } from '../components/GlobalState';
 import { CONSENTS_PAGES } from '../models/ConsentsPages';
 import { GlobalState } from '@/shared/model/GlobalState';
 import { NewsletterCard } from '../components/NewsletterCard';
+import { from } from '@guardian/src-foundations/mq';
 
 const h3 = css`
   color: ${brand[400]};
@@ -36,10 +37,18 @@ const getNewsletterCardCss = (index: number) => {
     WIDE: { start: 3 + column * 6, span: 6 },
   };
 
-  return css`{
+  return css`
     ${gridItem(gridDef)}
     -ms-grid-row: ${row};
-  }`;
+
+    margin-bottom: ${space[5]}px;
+    ${from.tablet} {
+      margin-bottom: ${space[6]}px;
+    }
+    ${from.desktop} {
+      margin-bottom: ${space[9]}px;
+    }
+  `;
 };
 
 export const NewslettersPage = () => {
