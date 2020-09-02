@@ -20,7 +20,7 @@ const h3 = css`
 `;
 
 const p = css`
-  margin: 0;
+  margin: 0 0 ${space[6]}px 0;
   ${textSans.medium()}
   ${gridItem(gridItemColumnConsents)}
 `;
