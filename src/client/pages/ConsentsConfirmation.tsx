@@ -2,14 +2,18 @@ import React, { FunctionComponent, useContext } from 'react';
 import { headline } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/core';
 import { space, palette } from '@guardian/src-foundations';
-import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
+import {
+  getAutoRow,
+  gridItemColumnConsents,
+  SpanDefinition,
+} from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { from } from '@guardian/src-foundations/mq';
 import { SvgRoundel } from '@guardian/src-brand';
 import { GlobalState } from '@/shared/model/GlobalState';
-import { GlobalStateContext } from '../components/GlobalState';
-import { Header } from '../components/Header';
-import { GlobalError } from '../components/GlobalError';
+import { GlobalStateContext } from '@/client/components/GlobalState';
+import { Header } from '@/client/components/Header';
+import { GlobalError } from '@/client/components/GlobalError';
 import {
   ConsentsHeader,
   mainBackground,
@@ -17,9 +21,10 @@ import {
   ConsentsContent,
   ConsentsBlueBackground,
   ConsentsProgression,
-} from '../layouts/shared/Consents';
-import { Footer } from '../components/Footer';
-import { headingWithMq, text } from '../styles/Consents';
+} from '@/client/layouts/shared/Consents';
+import { Footer } from '@/client/components/Footer';
+import { headingWithMq, text } from '@/client/styles/Consents';
+import { Link } from '@guardian/src-link';
 
 const homepageCardContainer = css`
   display: flex;
@@ -149,8 +154,27 @@ const returnBox = css`
   }
 `;
 
+const newsletters = css`
+  padding-bottom: ${space[24]}px;
+`;
+
+const confirmationSpanDefinition: SpanDefinition = {
+  TABLET: {
+    start: 2,
+    span: 9,
+  },
+  DESKTOP: {
+    start: 2,
+    span: 8,
+  },
+  WIDE: {
+    start: 3,
+    span: 10,
+  },
+};
+
 export const ConsentsConfirmationPage = () => {
-  const autoRow = getAutoRow(1, gridItemColumnConsents);
+  const autoRow = getAutoRow(1, confirmationSpanDefinition);
   const globalState: GlobalState = useContext(GlobalStateContext);
   const { error } = globalState;
 
@@ -186,7 +210,7 @@ export const ConsentsConfirmationPage = () => {
           </div>
         </ConsentsContent>
         <ConsentsBlueBackground>
-          <div css={[returnBox, autoRow()]}>
+          <div css={[returnBox, autoRow(gridItemColumnConsents)]}>
             <h3 css={headingWithMq}>Get back to where you left off</h3>
             <div css={homepageCardContainer}>
               <a css={homepageCard} href="https://theguardian.com">
@@ -205,13 +229,16 @@ export const ConsentsConfirmationPage = () => {
             </div>
           </div>
         </ConsentsBlueBackground>
-        <ConsentsContent>
+        <ConsentsContent cssOverrides={newsletters}>
           <h3 css={[headingWithMq, autoRow()]}>Sign up to more newsletters</h3>
           <p css={[text, autoRow()]}>
             We have over 40 different emails that focus on a range of diverse
             topics - from politics and the latest tech to documentaries, sport
-            and scientific breakthroughs. Sign up to more in Guardian
-            newsletters.
+            and scientific breakthroughs. Sign up to more in{' '}
+            <Link href="https://manage.theguardian.com/email-prefs">
+              Guardian newsletters
+            </Link>
+            .
           </p>
         </ConsentsContent>
       </main>

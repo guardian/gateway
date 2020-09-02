@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { brand } from '@guardian/src-foundations/palette';
 import { titlepiece, textSans } from '@guardian/src-foundations/typography';
-import { css } from '@emotion/core';
+import { css, SerializedStyles } from '@emotion/core';
 import { space } from '@guardian/src-foundations';
 import { Lines } from '@/client/components/Lines';
 import {
@@ -120,8 +120,10 @@ export const ConsentsHeader: FunctionComponent<{ title: string }> = ({
   </div>
 );
 
-export const ConsentsContent: FunctionComponent = ({ children }) => (
-  <div css={content}>{children}</div>
+export const ConsentsContent: FunctionComponent<{
+  cssOverrides?: SerializedStyles;
+}> = ({ children, cssOverrides }) => (
+  <div css={[content, cssOverrides]}>{children}</div>
 );
 
 export const ConsentsBlueBackground: FunctionComponent = ({ children }) => (

@@ -8,7 +8,7 @@ import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { CommunicationCard } from '@/client/components/ConsentsCommunicationCard';
 import CardJobImage from '@/client/assets/gu-jobs.png';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
-import { heading, text } from '../styles/Consents';
+import { heading, text } from '@/client/styles/Consents';
 
 const fieldset = css`
   border: 0;

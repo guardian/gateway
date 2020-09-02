@@ -7,7 +7,7 @@ import { space, neutral } from '@guardian/src-foundations';
 import { RadioGroup, Radio } from '@guardian/src-radio';
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
-import { heading, text, headingMarginSpace6 } from '../styles/Consents';
+import { heading, text, headingMarginSpace6 } from '@/client/styles/Consents';
 
 const fieldset = css`
   border: 0;

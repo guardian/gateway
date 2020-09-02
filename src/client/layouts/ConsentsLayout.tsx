@@ -16,7 +16,7 @@ import {
   ConsentsBlueBackground,
   ieFlexFix,
   ConsentsProgression,
-} from './shared/Consents';
+} from '@/client/layouts/shared/Consents';
 
 interface ConsentsLayoutProps {
   children?: React.ReactNode;
