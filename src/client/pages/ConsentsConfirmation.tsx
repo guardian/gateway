@@ -188,7 +188,11 @@ export const ConsentsConfirmationPage = () => {
           <ConsentsProgression current={CONSENTS_PAGES.REVIEW} />
           <h3 css={[headingWithMq, autoRow()]}>Your selections</h3>
           <p css={[text, autoRow()]}>
-            You can change these setting anytime by going to My Preferences.
+            You can change these setting anytime by going to{' '}
+            <Link href="https://manage.theguardian.com/email-prefs">
+              My Preferences
+            </Link>
+            .
           </p>
           <div css={[reviewTableContainer, autoRow()]}>
             <ReviewTableRow title="Marketing analysis">
