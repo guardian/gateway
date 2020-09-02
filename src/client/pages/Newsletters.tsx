@@ -3,7 +3,7 @@ import { ConsentsLayout } from '../layouts/ConsentsLayout';
 import { css } from '@emotion/core';
 import { brand, space } from '@guardian/src-foundations';
 import { titlepiece, textSans } from '@guardian/src-foundations/typography';
-import { gridItem, gridItemColumnConsents } from '../styles/Grid';
+import { gridItem, gridItemColumnConsents, getAutoRow } from '../styles/Grid';
 import { GlobalStateContext } from '../components/GlobalState';
 import { CONSENTS_PAGES } from '../models/ConsentsPages';
 import { GlobalState } from '@/shared/model/GlobalState';
@@ -24,33 +24,42 @@ const p = css`
   ${gridItem(gridItemColumnConsents)}
 `;
 
-const newsletterGridDef = {
-  TABLET: { start: 2, span: 10 },
-  DESKTOP: { start: 2, span: 10 },
-  WIDE: { start: 2, span: 16 },
-};
+const getNewsletterCardCss = (index: number) => {
+  const ITEMS_PER_ROW = 2;
+  const OFFSET = 4;
+  const row = Math.trunc(index / ITEMS_PER_ROW) + OFFSET;
+  const column = index % ITEMS_PER_ROW;
 
-const newslettercard = css`
-  ${gridItem(newsletterGridDef)}
-`;
+  const gridDef = {
+    TABLET: { start: 2 + column * 5, span: 5 },
+    DESKTOP: { start: 2 + column * 5, span: 5 },
+    WIDE: { start: 3 + column * 6, span: 6 },
+  };
+
+  return css`{
+    ${gridItem(gridDef)}
+    -ms-grid-row: ${row};
+  }`;
+};
 
 export const NewslettersPage = () => {
   const globalState = useContext<GlobalState>(GlobalStateContext);
   const newsletters = globalState?.pageData?.newsletters ?? [];
+  const autoRow = getAutoRow(1, gridItemColumnConsents);
   return (
     <ConsentsLayout title="Newsletters" current={CONSENTS_PAGES.NEWSLETTERS}>
-      <h3 css={h3}>Free newsletters from The Guardian</h3>
-      <p css={p}>
+      <h3 css={[h3, autoRow()]}>Free newsletters from The Guardian</h3>
+      <p css={[p, autoRow()]}>
         Our newsletters help you get closer to our quality, independent
         journalism.
       </p>
-      {newsletters.map((newsletter) => (
+      {newsletters.map((newsletter, i) => (
         <NewsletterCard
           title={newsletter.name}
           description={newsletter.description}
           frequency={newsletter.frequency}
           key={newsletter.id}
-          cssOverides={newslettercard}
+          cssOverides={getNewsletterCardCss(i)}
         />
       ))}
     </ConsentsLayout>
