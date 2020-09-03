@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { SerializedStyles, css } from '@emotion/core';
-import { brand, space } from '@guardian/src-foundations';
+import { CheckboxGroup, Checkbox } from '@guardian/src-checkbox';
+import { brand, space, palette } from '@guardian/src-foundations';
 import {
   titlepiece,
   textSans,
@@ -16,6 +17,7 @@ interface NewsletterCardProps {
 
 const img = css`
   // PLACEHOLDER IMAGE
+  display: block;
   padding: 55% calc(100% - 6px) 0 0;
   border: 3px solid black;
   background: linear-gradient(
@@ -37,7 +39,7 @@ const img = css`
 const h1 = css`
   color: ${brand[400]};
   ${titlepiece.small()};
-  margin: ${space[3]}px ${space[3]}px ${space[1]}px ${space[3]}px;
+  margin: 0 0 ${space[1]}px 0;
   //Override
   font-size: 24px;
 `;
@@ -45,19 +47,34 @@ const h1 = css`
 const h2 = css`
   color: ${brand[600]};
   ${textSans.small()};
-  margin: 0 ${space[3]}px ${space[6]}px ${space[3]}px;
+  margin: 0 0 ${space[6]}px 0;
 `;
 
 const p = css`
   color: ${brand[400]};
   margin: 0;
   ${body.small()};
-  margin: 0 ${space[3]}px ${space[3]}px ${space[3]}px;
+  flex: 2 0 auto;
+`;
+
+const borderDiv = css`
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  border-left: 2px solid ${brand[500]};
+  padding: ${space[3]}px ${space[3]}px ${space[3]}px ${space[3]}px;
 `;
 
 const article = css`
-  border-left: 2px solid ${brand[500]};
+  display: flex;
+  flex-direction: column;
   background-color: ${brand[800]};
+`;
+
+// @TODO: hacked background colour, should be fixed in future source checkbox implementation
+const checkBoxBackgroundColorBugFix = css`
+  background: ${palette.neutral[100]};
+  z-index: 0 !important;
 `;
 
 export const NewsletterCard: FunctionComponent<NewsletterCardProps> = (
@@ -68,9 +85,19 @@ export const NewsletterCard: FunctionComponent<NewsletterCardProps> = (
   return (
     <article css={[article, props.cssOverides]}>
       <img css={img} />
-      <h1 css={h1}>{title}</h1>
-      {subtitle}
-      <p css={p}>{description}</p>
+      <div css={borderDiv}>
+        <h1 css={h1}>{title}</h1>
+        {subtitle}
+        <p css={p}>{description}</p>
+        <CheckboxGroup name={'sup'}>
+          <Checkbox
+            cssOverrides={checkBoxBackgroundColorBugFix}
+            value={'sup'}
+            label="Sign Up"
+            checked={false}
+          />
+        </CheckboxGroup>
+      </div>
     </article>
   );
 };
