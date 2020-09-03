@@ -23,14 +23,18 @@ const img = css`
   background: linear-gradient(
       to top right,
       transparent 49.5%,
-      black 49.5% 50.5%,
-      transparent 50.5% 100%
+      black 49.5%,
+      black 50.5%,
+      transparent 50.5%,
+      transparent 100%
     ),
     linear-gradient(
       to top left,
       transparent 49.5%,
-      black 49.5% 50.5%,
-      transparent 50.5% 100%
+      black 49.5%,
+      black 50.5%,
+      transparent 50.5%,
+      transparent 100%
     );
   height: 0;
   width: 0;
@@ -114,10 +118,10 @@ export const NewsletterCard: FunctionComponent<NewsletterCardProps> = (
         <h1 css={h1}>{title}</h1>
         {subtitle}
         <p css={p}>{description}</p>
-        <CheckboxGroup name={'sup'}>
+        <CheckboxGroup name={'PlaceholderNameToBeReplaced'}>
           <Checkbox
             cssOverrides={checkBoxBackgroundColorBugFix}
-            value={'sup'}
+            value={'PlaceholderNameToBeReplaced'}
             label="Sign Up"
             checked={false}
           />
