@@ -47,12 +47,12 @@ const h1 = css`
 const h2 = css`
   color: ${brand[600]};
   ${textSans.small()};
-  margin: 0 0 ${space[6]}px 0;
+  margin: 0;
 `;
 
 const p = css`
   color: ${brand[400]};
-  margin: 0;
+  margin: 0 0 ${space[3]}px;
   ${body.small()};
   flex: 2 0 auto;
 `;
@@ -71,17 +71,42 @@ const article = css`
   background-color: ${brand[800]};
 `;
 
+const subtitleDiv = css`
+  display: flex;
+  align-items: center;
+  margin: 0 0 ${space[6]}px 0;
+  & > svg {
+    margin: 0 ${space[1]}px 0 0;
+  }
+`;
+
 // @TODO: hacked background colour, should be fixed in future source checkbox implementation
 const checkBoxBackgroundColorBugFix = css`
   background: ${palette.neutral[100]};
   z-index: 0 !important;
 `;
 
+const clockSVG = (
+  <svg
+    css={{ fill: palette.neutral[60] }}
+    width="15px"
+    height="15px"
+    viewBox="0 0 11 11"
+  >
+    <path d="M5.4 0C2.4 0 0 2.4 0 5.4s2.4 5.4 5.4 5.4 5.4-2.4 5.4-5.4S8.4 0 5.4 0zm3 6.8H4.7V1.7h.7L6 5.4l2.4.6v.8z" />
+  </svg>
+);
+
 export const NewsletterCard: FunctionComponent<NewsletterCardProps> = (
   props,
 ) => {
   const { description, frequency, title } = props;
-  const subtitle = frequency ? <h2 css={h2}>{frequency}</h2> : null;
+  const subtitle = frequency ? (
+    <div css={subtitleDiv}>
+      {clockSVG}
+      <h2 css={h2}>{frequency}</h2>
+    </div>
+  ) : null;
   return (
     <article css={[article, props.cssOverides]}>
       <img css={img} />
