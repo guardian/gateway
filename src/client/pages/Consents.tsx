@@ -1,28 +1,13 @@
 import React from 'react';
 import Locations from '@/client/lib/locations';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
-import { titlepiece, textSans } from '@guardian/src-foundations/typography';
+import { textSans } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/core';
-import { brand, space, neutral } from '@guardian/src-foundations';
+import { space, neutral } from '@guardian/src-foundations';
 import { RadioGroup, Radio } from '@guardian/src-radio';
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
-
-const h3 = css`
-  color: ${brand[400]};
-  margin: ${space[12]}px 0 ${space[3]}px 0;
-  ${titlepiece.small()};
-  // Overrides
-  font-size: 17px;
-  &:nth-of-type(2) {
-    margin-top: ${space[9]}px;
-  }
-`;
-
-const p = css`
-  margin: 0;
-  ${textSans.medium()}
-`;
+import { heading, text, headingMarginSpace6 } from '@/client/styles/Consents';
 
 const fieldset = css`
   border: 0;
@@ -42,8 +27,8 @@ export const ConsentsPage = () => {
 
   return (
     <ConsentsLayout title="Your data" current={CONSENTS_PAGES.YOUR_DATA}>
-      <h3 css={[h3, autoRow()]}>Our commitment to you</h3>
-      <p css={[p, autoRow()]}>
+      <h3 css={[heading, autoRow()]}>Our commitment to you</h3>
+      <p css={[text, autoRow()]}>
         We think carefully about our use of personal data and use it
         responsibly. We never share it without your permission and we have a
         team who are dedicated to keeping any data we collect safe and secure.
@@ -54,8 +39,10 @@ export const ConsentsPage = () => {
         </a>{' '}
         of the website.
       </p>
-      <h3 css={[h3, autoRow()]}>Using your data for marketing analysis</h3>
-      <p css={[p, autoRow()]}>
+      <h3 css={[heading, headingMarginSpace6, autoRow()]}>
+        Using your data for marketing analysis
+      </h3>
+      <p css={[text, autoRow()]}>
         From time to time we may use your personal data for marketing analysis.
         That includes looking at what products or services you have bought from
         us and what pages you have been viewing on theguardian.com and other

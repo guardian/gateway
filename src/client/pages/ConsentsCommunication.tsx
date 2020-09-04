@@ -1,29 +1,14 @@
 import React from 'react';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
-import { titlepiece, textSans } from '@guardian/src-foundations/typography';
+import { textSans } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/core';
-import { brand, space, neutral } from '@guardian/src-foundations';
+import { space, neutral } from '@guardian/src-foundations';
 import { RadioGroup, Radio } from '@guardian/src-radio';
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { CommunicationCard } from '@/client/components/ConsentsCommunicationCard';
 import CardJobImage from '@/client/assets/gu-jobs.png';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
-
-const h3 = css`
-  color: ${brand[400]};
-  margin: ${space[12]}px 0 ${space[3]}px 0;
-  ${titlepiece.small()};
-  // Overrides
-  font-size: 17px;
-  &:nth-of-type(2) {
-    margin-top: ${space[9]}px;
-  }
-`;
-
-const p = css`
-  margin: 0;
-  ${textSans.medium()}
-`;
+import { heading, text } from '@/client/styles/Consents';
 
 const fieldset = css`
   border: 0;
@@ -41,7 +26,7 @@ const legend = css`
 const communicationCardContainer = css`
   display: flex;
   flex-flow: row wrap;
-  margin-top: ${space[6]}px;
+  margin: ${space[6]}px 0;
 `;
 
 export const ConsentsCommunicationPage = () => {
@@ -52,8 +37,8 @@ export const ConsentsCommunicationPage = () => {
       title="Guardian communication"
       current={CONSENTS_PAGES.CONTACT}
     >
-      <h3 css={[h3, autoRow()]}>Guardian products, services & events </h3>
-      <p css={[p, autoRow()]}>
+      <h3 css={[heading, autoRow()]}>Guardian products, services & events</h3>
+      <p css={[text, autoRow()]}>
         Stay informed and up to date with all that The Guardian has to offer.
         From time to time we can send you information about our latest products,
         services and events.
@@ -89,8 +74,8 @@ export const ConsentsCommunicationPage = () => {
           value="offers"
         />
       </div>
-      <h3 css={[h3, autoRow()]}>Using your data for market research</h3>
-      <p css={[p, autoRow()]}>
+      <h3 css={[heading, autoRow()]}>Using your data for market research</h3>
+      <p css={[text, autoRow()]}>
         From time to time we may contact you for market research purposes
         inviting you to complete a survey, or take part in a group discussion.
         Normally, this invitation would be sent via email, but we may also

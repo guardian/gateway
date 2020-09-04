@@ -28,7 +28,7 @@ interface SpanDefinitionStartSpan {
   span: number;
 }
 
-interface SpanDefinition {
+export interface SpanDefinition {
   MOBILE?: SpanDefinitionStartSpan;
   TABLET?: SpanDefinitionStartSpan;
   DESKTOP?: SpanDefinitionStartSpan;
@@ -77,7 +77,7 @@ export const gridRow = css`
   width: 100%;
   column-gap: ${px(space[5])};
 
-  -ms-grid-columns: (${COLUMN_WIDTH.MOBILE}\)[${COLUMNS.MOBILE}];
+  -ms-grid-columns: \(${COLUMN_WIDTH.MOBILE}\)\[${COLUMNS.MOBILE}\];
   grid-template-columns: repeat(${COLUMNS.MOBILE}, ${COLUMN_WIDTH.MOBILE});
   padding-left: ${px(SPACING.MOBILE)};
   padding-right: ${px(SPACING.MOBILE)};
@@ -149,10 +149,14 @@ export const gridItemColumnConsents: SpanDefinition = {
 
 export const getAutoRow = (offset = 0, spanDefinition?: SpanDefinition) => {
   let row = offset;
-  return () => {
-    return css`
-      ${gridItem(spanDefinition)}
-      -ms-grid-row: ${++row};
-    `;
-  };
+  return (customSpanDefinition = spanDefinition) => css`
+    ${gridItem(customSpanDefinition)}
+    -ms-grid-row: ${++row};
+  `;
 };
+
+export const manualRow = (row: number, spanDefinition?: SpanDefinition) => css`
+  ${gridItem(spanDefinition)}
+  -ms-grid-row: ${row};
+  grid-row: ${row};
+`;
