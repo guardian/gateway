@@ -114,7 +114,7 @@ export const gridRow = css`
 
 const generateGridItemCss = (columnStart: number, columnSpan: number) => `
   -ms-grid-column: ${columnStart * 2 - 1};
-  -ms-grid-column-span: ${columnSpan * 2};
+  -ms-grid-column-span: ${columnSpan * 2 - 1};
   grid-column: ${columnStart} / span ${columnSpan};
 `;
 

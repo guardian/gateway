@@ -22,3 +22,7 @@ export enum ChangePasswordErrors {
 export enum VerifyEmailErrors {
   GENERIC = 'There was problem verifying your email, please try again.',
 }
+
+export enum NewslettersErrors {
+  GENERIC = 'There was a problem displaying newsletter options, please try again.',
+}

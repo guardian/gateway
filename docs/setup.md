@@ -24,6 +24,14 @@ Depending on which stage (`DEV` or `CODE`) you want to connect to [Identity API 
 
 `PLAY_SESSION_COOKIE_SECRET` should be the `play.crypto.secret` used by [Identity Frontend](https://github.com/guardian/identity-frontend), as found in the `DEV` private configuration. This is used to decode the scala play session cookie, and will only be in use while migration from play is ongoing, and will be removed when migration is complete, or is no longer required.
 
+For development it is recommended that the `idapi-proxy` is used to talk to IDAPI endpoints that automatically apply CORS policies. The following environment variables are used for `idapi-proxy`:
+
+| variable           | description                                                                 |
+| ------------------ | --------------------------------------------------------------------------- |
+| IDAPI_PROXY_TARGET | The idapi url to proxy to                                                   |
+| IDAPI_PROXY_ORIGIN | The Guardian based origin to be used, e.g. profile.code.dev-theguardian.com |
+| IDAPI_PROXY_PORT   | The port to run the proxy server on.                                        |
+
 ### Nginx
 
 You can setup gateway to use a domain name locally (`https://profile.thegulocal.com`) and alongside identity-frontend by following the instructions from [`identity-platform/nginx`](https://github.com/guardian/identity-platform/tree/master/nginx).

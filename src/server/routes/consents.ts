@@ -4,6 +4,9 @@ import { verifyEmail } from '@/server/lib/idapi/verifyEmail';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
+import { read as getNewsletters } from '@/server/lib/idapi/newsletters';
+import { GlobalState } from '@/shared/model/GlobalState';
+import { Newsletters } from '@/shared/model/Newsletter';
 
 const router = Router();
 
@@ -24,6 +27,29 @@ router.get(
 
 router.get(Routes.CONSENTS, (req: Request, res: Response) => {
   const html = renderer(Routes.CONSENTS);
+  res.type('html').send(html);
+});
+
+router.get(Routes.CONSENTS_NEWSLETTERS, async (req: Request, res: Response) => {
+  const NEWSLETTER_FILTER = [
+    Newsletters.BOOKMARKS,
+    Newsletters.GREENLIGHT,
+    Newsletters.LABNOTES,
+    Newsletters.THELONGREAD,
+  ];
+
+  const state: GlobalState = {};
+  try {
+    const newsletters = await getNewsletters();
+    state.pageData = {
+      newsletters: newsletters.filter((n) => NEWSLETTER_FILTER.includes(+n.id)),
+    };
+  } catch (e) {
+    state.error = e;
+  }
+  const html = renderer(Routes.CONSENTS_NEWSLETTERS, {
+    globalState: state,
+  });
   res.type('html').send(html);
 });
 
