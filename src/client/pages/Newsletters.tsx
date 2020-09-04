@@ -1,29 +1,14 @@
 import React, { useContext } from 'react';
 import { ConsentsLayout } from '../layouts/ConsentsLayout';
 import { css } from '@emotion/core';
-import { brand, space } from '@guardian/src-foundations';
-import { titlepiece, textSans } from '@guardian/src-foundations/typography';
+import { space } from '@guardian/src-foundations';
 import { gridItem, gridItemColumnConsents, getAutoRow } from '../styles/Grid';
 import { GlobalStateContext } from '../components/GlobalState';
 import { CONSENTS_PAGES } from '../models/ConsentsPages';
 import { GlobalState } from '@/shared/model/GlobalState';
 import { NewsletterCard } from '../components/NewsletterCard';
 import { from } from '@guardian/src-foundations/mq';
-
-const h3 = css`
-  color: ${brand[400]};
-  margin: ${space[12]}px 0 ${space[3]}px 0;
-  ${titlepiece.small()};
-  ${gridItem(gridItemColumnConsents)}
-  // Overrides
-  font-size: 17px;
-`;
-
-const p = css`
-  margin: 0 0 ${space[6]}px 0;
-  ${textSans.medium()}
-  ${gridItem(gridItemColumnConsents)}
-`;
+import { heading, text } from '@/client/styles/Consents';
 
 const getNewsletterCardCss = (index: number) => {
   const ITEMS_PER_ROW = 2;
@@ -57,8 +42,8 @@ export const NewslettersPage = () => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
   return (
     <ConsentsLayout title="Newsletters" current={CONSENTS_PAGES.NEWSLETTERS}>
-      <h3 css={[h3, autoRow()]}>Free newsletters from The Guardian</h3>
-      <p css={[p, autoRow()]}>
+      <h3 css={[heading, autoRow()]}>Free newsletters from The Guardian</h3>
+      <p css={[text, autoRow()]}>
         Our newsletters help you get closer to our quality, independent
         journalism.
       </p>
