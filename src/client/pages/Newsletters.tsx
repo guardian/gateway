@@ -64,9 +64,7 @@ export const NewslettersPage = () => {
       </p>
       {newsletters.map((newsletter, i) => (
         <NewsletterCard
-          title={newsletter.name}
-          description={newsletter.description}
-          frequency={newsletter.frequency}
+          newsletter={newsletter}
           key={newsletter.id}
           cssOverides={getNewsletterCardCss(i)}
         />

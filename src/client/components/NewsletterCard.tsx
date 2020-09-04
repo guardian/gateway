@@ -7,11 +7,10 @@ import {
   textSans,
   body,
 } from '@guardian/src-foundations/typography';
+import { NewsLetter } from '@/shared/model/Newsletter';
 
 interface NewsletterCardProps {
-  description: string;
-  frequency?: string;
-  title: string;
+  newsletter: NewsLetter;
   cssOverides?: SerializedStyles;
 }
 
@@ -104,7 +103,7 @@ const clockSVG = (
 export const NewsletterCard: FunctionComponent<NewsletterCardProps> = (
   props,
 ) => {
-  const { description, frequency, title } = props;
+  const { description, frequency, name } = props.newsletter;
   const subtitle = frequency ? (
     <div css={subtitleDiv}>
       {clockSVG}
@@ -115,7 +114,7 @@ export const NewsletterCard: FunctionComponent<NewsletterCardProps> = (
     <article css={[article, props.cssOverides]}>
       <img css={img} />
       <div css={borderDiv}>
-        <h1 css={h1}>{title}</h1>
+        <h1 css={h1}>{name}</h1>
         {subtitle}
         <p css={p}>{description}</p>
         <CheckboxGroup name={'PlaceholderNameToBeReplaced'}>
