@@ -6,6 +6,7 @@ import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { read as getNewsletters } from '@/server/lib/idapi/newsletters';
 import { GlobalState } from '@/shared/model/GlobalState';
+import { Newsletters } from '@/shared/model/Newsletter';
 
 const router = Router();
 
@@ -30,7 +31,12 @@ router.get(Routes.CONSENTS, (req: Request, res: Response) => {
 });
 
 router.get(Routes.CONSENTS_NEWSLETTERS, async (req: Request, res: Response) => {
-  const NEWSLETTER_FILTER = [4137, 4147, 4153, 4165];
+  const NEWSLETTER_FILTER = [
+    Newsletters.BOOKMARKS,
+    Newsletters.GREENLIGHT,
+    Newsletters.LABNOTES,
+    Newsletters.THELONGREAD,
+  ];
 
   const state: GlobalState = {};
   try {
