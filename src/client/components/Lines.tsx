@@ -20,7 +20,7 @@ export const Lines: FunctionComponent<LinesProps> = (props) => {
       <hr
         css={[
           {
-            backgroundImage: `repeating-linear-gradient(to bottom, ${color}, ${color}, ${thickness}px, transparent ${thickness}px, transparent ${distance}px)`,
+            backgroundImage: `repeating-linear-gradient(to bottom, ${color}, ${color} ${thickness}px, transparent ${thickness}px, transparent ${distance}px)`,
             backgroundRepeat: 'repeat',
             backgroundPosition: 'top',
             height: `${height}px`,

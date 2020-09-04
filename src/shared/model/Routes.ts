@@ -8,6 +8,7 @@ export enum Routes {
   VERIFY_EMAIL = '/verify-email',
   VERIFY_EMAIL_TOKEN = '/:token',
   CONSENTS = '/consents',
+  CONSENTS_NEWSLETTERS = '/consents/newsletters',
 }
 
 export enum ApiRoutes {
