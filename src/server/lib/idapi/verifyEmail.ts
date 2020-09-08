@@ -8,7 +8,7 @@ import { VerifyEmailErrors } from '@/shared/model/Errors';
 import { ApiRoutes } from '@/shared/model/Routes';
 
 const handleError = () => {
-  throw VerifyEmailErrors.GENERIC;
+  throw { message: VerifyEmailErrors.GENERIC, status: 500 };
 };
 
 export async function verifyEmail(token: string, ip: string) {

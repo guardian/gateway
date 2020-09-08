@@ -40,18 +40,19 @@ router.post(Routes.RESET, async (req: Request, res: ResponseWithLocals) => {
   try {
     await resetPassword(email, req.ip, returnUrl);
   } catch (error) {
+    const { message, status } = error;
     logger.error(error);
 
     trackMetric(Metrics.SEND_PASSWORD_RESET_FAILURE);
 
-    state.error = error;
+    state.error = message;
 
     const html = renderer(Routes.RESET, {
       globalState: state,
       queryParams: res.locals.queryParams,
       pageTitle: PageTitle.RESET,
     });
-    return res.type('html').send(html);
+    return res.status(status).type('html').send(html);
   }
 
   trackMetric(Metrics.SEND_PASSWORD_RESET_SUCCESS);

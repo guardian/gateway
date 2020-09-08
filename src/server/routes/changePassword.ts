@@ -113,28 +113,29 @@ router.post(
           queryParams: res.locals.queryParams,
           pageTitle: PageTitle.CHANGE_PASSWORD,
         });
-        return res.type('html').send(html);
+        return res.status(422).type('html').send(html);
       }
 
       if (password !== passwordConfirm) {
-        throw ChangePasswordErrors.PASSWORD_NO_MATCH;
+        throw { message: ChangePasswordErrors.PASSWORD_NO_MATCH, status: 422 };
       }
 
       const cookies = await changePassword(password, token, req.ip);
 
       setIDAPICookies(res, cookies);
     } catch (error) {
+      const { message, status } = error;
       logger.error(error);
 
       trackMetric(Metrics.CHANGE_PASSWORD_FAILURE);
 
-      state.error = error;
+      state.error = message;
       const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
         globalState: state,
         queryParams: res.locals.queryParams,
         pageTitle: PageTitle.CHANGE_PASSWORD,
       });
-      return res.type('html').send(html);
+      return res.status(status).type('html').send(html);
     }
 
     trackMetric(Metrics.CHANGE_PASSWORD_SUCCESS);
