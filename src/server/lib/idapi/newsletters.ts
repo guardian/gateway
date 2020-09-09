@@ -16,7 +16,7 @@ interface NewsletterAPIResponse {
 }
 
 const handleError = () => {
-  throw NewslettersErrors.GENERIC;
+  throw { message: NewslettersErrors.GENERIC, status: 500 };
 };
 
 const responseToEntity = (newsletter: NewsletterAPIResponse): NewsLetter => {

@@ -5,7 +5,14 @@ import { getConfiguration } from '@/server/lib/configuration';
 
 const { idapiBaseUrl, idapiClientAccessToken } = getConfiguration();
 
-const handleResponseFailure = async (response: Response) => {
+export interface IDAPIError {
+  error: any;
+  status: number;
+}
+
+const handleResponseFailure = async (
+  response: Response,
+): Promise<IDAPIError> => {
   let err;
   const raw = await response.text();
   try {
@@ -13,7 +20,7 @@ const handleResponseFailure = async (response: Response) => {
   } catch (_) {
     err = raw;
   }
-  throw err;
+  throw { error: err, status: response.status };
 };
 
 const handleResponseSuccess = async (response: Response) => {

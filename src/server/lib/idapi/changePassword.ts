@@ -3,6 +3,7 @@ import {
   APIAddClientAccessToken,
   APIGetOptions,
   APIPostOptions,
+  IDAPIError,
 } from '@/server/lib/APIFetch';
 import { ApiRoutes } from '@/shared/model/Routes';
 import { stringify } from 'querystring';
@@ -11,21 +12,20 @@ import {
   ChangePasswordErrors,
 } from '@/shared/model/Errors';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleError = (response: any) => {
-  if (response.status === 'error' && response.errors?.length) {
-    const error = response.errors[0];
-    const { message } = error;
+const handleError = ({ error, status = 500 }: IDAPIError) => {
+  if (error.status === 'error' && error.errors?.length) {
+    const err = error.errors[0];
+    const { message } = err;
 
     switch (message) {
       case IdapiErrorMessages.INVALID_TOKEN:
-        throw ChangePasswordErrors.INVALID_TOKEN;
+        throw { message: ChangePasswordErrors.INVALID_TOKEN, status };
       default:
         break;
     }
   }
 
-  throw ChangePasswordErrors.GENERIC;
+  throw { message: ChangePasswordErrors.GENERIC, status: status };
 };
 
 export async function validate(
