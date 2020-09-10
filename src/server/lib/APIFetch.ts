@@ -49,14 +49,31 @@ export const APIFetch = (baseUrl: string) => async (
 };
 
 export const APIGetOptions = getAPIOptionsForMethod('GET');
-
+export const APIPatchOptions = getAPIOptionsForMethod('PATCH');
 export const APIPostOptions = getAPIOptionsForMethod('POST');
 
-export const APIAddClientAccessToken = (options: RequestInit, ip: string) => {
+export const APIAddClientAccessToken = (
+  options: RequestInit,
+  ip: string,
+): RequestInit => {
   const headers = {
     ...options.headers,
     'X-GU-ID-Client-Access-Token': `Bearer ${idapiClientAccessToken}`,
     'X-Forwarded-For': ip,
+  };
+  return {
+    ...options,
+    headers,
+  };
+};
+
+export const APIForwardSessionIdentifier = (
+  options: RequestInit,
+  id: string,
+) => {
+  const headers = {
+    ...options.headers,
+    'X-GU-ID-FOWARDED-SC-GU-U': id,
   };
   return {
     ...options,

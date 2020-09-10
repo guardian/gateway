@@ -26,3 +26,7 @@ export enum VerifyEmailErrors {
 export enum NewslettersErrors {
   GENERIC = 'There was a problem displaying newsletter options, please try again.',
 }
+
+export enum ConsentsErrors {
+  GENERIC = 'There was a problem saving your choice, please try again.',
+}

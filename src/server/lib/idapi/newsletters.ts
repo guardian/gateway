@@ -37,7 +37,7 @@ export const read = async (): Promise<NewsLetter[]> => {
       options,
     )) as NewsletterAPIResponse[]).map(responseToEntity);
   } catch (e) {
-    logger.error(e);
+    logger.error(e.toString());
     return handleError();
   }
 };
