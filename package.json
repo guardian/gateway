@@ -16,7 +16,7 @@
     "riffraff": "npx @guardian/node-riffraff-artifact",
     "start": "node ./build/server.js",
     "test": "yarn type-check && yarn test:unit",
-    "test:unit": "jest",
+    "test:unit": "jest --ci",
     "type-check": "tsc --noEmit --skipLibCheck",
     "watch:server": "nodemon ./build/server.js",
     "watch": "webpack --watch",
