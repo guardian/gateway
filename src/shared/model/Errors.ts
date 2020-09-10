@@ -29,4 +29,5 @@ export enum NewslettersErrors {
 
 export enum ConsentsErrors {
   GENERIC = 'There was a problem saving your choice, please try again.',
+  USER = 'There was a problem retrieving your details, please try again.',
 }
