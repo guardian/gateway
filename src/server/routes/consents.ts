@@ -23,11 +23,11 @@ router.get(
     } catch (e) {
       logger.error(e);
     }
-    res.redirect(301, Routes.CONSENTS);
+    res.redirect(301, Routes.CONSENTS_DATA);
   },
 );
 
-router.get(Routes.CONSENTS, async (req: Request, res: Response) => {
+router.get(Routes.CONSENTS_DATA, async (req: Request, res: Response) => {
   const sc_gu_u = req.cookies.SC_GU_U;
   const state: GlobalState = {};
   try {
@@ -40,7 +40,7 @@ router.get(Routes.CONSENTS, async (req: Request, res: Response) => {
   } catch (e) {
     state.error = e;
   }
-  const html = renderer(Routes.CONSENTS, { globalState: state });
+  const html = renderer(Routes.CONSENTS_DATA, { globalState: state });
   res.type('html').send(html);
 });
 

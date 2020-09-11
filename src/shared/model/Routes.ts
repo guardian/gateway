@@ -7,7 +7,7 @@ export enum Routes {
   CHANGE_PASSWORD_COMPLETE = '/password/reset-confirmation',
   VERIFY_EMAIL = '/verify-email',
   VERIFY_EMAIL_TOKEN = '/:token',
-  CONSENTS = '/consents',
+  CONSENTS_DATA = '/consents',
   CONSENTS_NEWSLETTERS = '/consents/newsletters',
 }
 
