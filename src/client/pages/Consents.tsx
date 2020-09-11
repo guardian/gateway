@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Locations from '@/client/lib/locations';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { textSans } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/core';
 import { space, neutral } from '@guardian/src-foundations';
 import { RadioGroup, Radio } from '@guardian/src-radio';
+import { GlobalStateContext } from '../components/GlobalState';
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { heading, text, headingMarginSpace6 } from '@/client/styles/Consents';
+import { GlobalState } from '@/shared/model/GlobalState';
 
 const fieldset = css`
   border: 0;
@@ -24,7 +26,9 @@ const legend = css`
 
 export const ConsentsPage = () => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
-
+  const globalState = useContext<GlobalState>(GlobalStateContext);
+  const consents = globalState?.pageData?.consents ?? [];
+  const profiling_consent = consents[0];
   return (
     <ConsentsLayout title="Your data" current={CONSENTS_PAGES.YOUR_DATA}>
       <h3 css={[heading, autoRow()]}>Our commitment to you</h3>
@@ -56,8 +60,12 @@ export const ConsentsPage = () => {
           analysis purposes.
         </legend>
         <RadioGroup orientation="horizontal" name="binary">
-          <Radio value="yes" label="Yes" defaultChecked={true} />
-          <Radio value="no" label="No" />
+          <Radio
+            value="yes"
+            label="Yes"
+            checked={!profiling_consent.consented}
+          />
+          <Radio value="no" label="No" checked={profiling_consent.consented} />
         </RadioGroup>
       </fieldset>
     </ConsentsLayout>
