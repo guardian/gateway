@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { Routes } from '@/shared/model/Routes';
 import { verifyEmail } from '@/server/lib/idapi/verifyEmail';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
@@ -31,7 +31,7 @@ router.get(Routes.CONSENTS_DATA, async (req: Request, res: Response) => {
   const sc_gu_u = req.cookies.SC_GU_U;
   const state: GlobalState = {};
   try {
-    const consents = await (await getUser(req.ip, sc_gu_u)).consents.filter(
+    const consents = (await getUser(req.ip, sc_gu_u)).consents.filter(
       (c) => c.id === Consents.PROFILING,
     );
     state.pageData = {
