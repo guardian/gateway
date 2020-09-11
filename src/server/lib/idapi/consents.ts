@@ -6,6 +6,7 @@ import {
 } from '../APIFetch';
 import { logger } from '../logger';
 import { ConsentsErrors } from '@/shared/model/Errors';
+import { Consent } from '@/shared/model/Consent';
 
 const API_ROUTE = '/users/me/consents';
 
@@ -13,13 +14,11 @@ const handleError = () => {
   throw ConsentsErrors.GENERIC;
 };
 
-export const update = async (ip: string, sc_gu_u: string) => {
-  const payload = [
-    {
-      id: 'profiling_optout',
-      consented: true,
-    },
-  ];
+export const update = async (
+  ip: string,
+  sc_gu_u: string,
+  payload: Consent[],
+) => {
   const options = APIForwardSessionIdentifier(
     APIAddClientAccessToken(APIPatchOptions(payload), ip),
     sc_gu_u,
