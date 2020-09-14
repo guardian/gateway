@@ -54,7 +54,6 @@ const helmetConfig: IHelmetConfiguration = {
       ],
       frameSrc: [CSP_VALID_URI.CMP],
     },
-    browserSniff: false,
   },
 };
 
