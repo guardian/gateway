@@ -50,6 +50,9 @@ Parameters:
     Description: Kinesis Stream name for logging
     Type: AWS::SSM::Parameter::Value<String>
     Default: /account/services/logging.stream/name
+  LoadBalancerLogsS3Bucket:
+    Description: S3 Bucket to write ELB access logs to
+    Type: String
 Mappings:
   StageVariables:
     CODE:
@@ -273,6 +276,13 @@ Resources:
           Value: !Ref Stack
         - Key: Stage
           Value: !Ref Stage
+      LoadBalancerAttributes:
+        - Key: access_logs.s3.enabled
+          Value: true
+        - Key: access_logs.s3.bucket
+          Value: !Ref 'LoadBalancerLogsS3Bucket'
+        - Key: access_logs.s3.prefix
+          Value: !Sub 'ELBLogs/${Stack}/${App}/${Stage}'
   LoadBalancerListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:

@@ -1,4 +1,4 @@
-import { default as helmet, IHelmetConfiguration } from 'helmet';
+import { default as helmet } from 'helmet';
 import { getConfiguration } from '@/server/lib/configuration';
 import { Routes } from '@/shared/model/Routes';
 
@@ -21,7 +21,7 @@ enum CSP_VALID_URI {
 
 const { baseUri, gaUID, apiDomain } = getConfiguration();
 
-const helmetConfig: IHelmetConfiguration = {
+const helmetConfig = {
   contentSecurityPolicy: {
     directives: {
       baseUri: [HELMET_OPTIONS.NONE],
@@ -54,7 +54,6 @@ const helmetConfig: IHelmetConfiguration = {
       ],
       frameSrc: [CSP_VALID_URI.CMP],
     },
-    browserSniff: false,
   },
 };
 

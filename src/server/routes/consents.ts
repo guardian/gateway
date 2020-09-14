@@ -59,7 +59,9 @@ router.get(Routes.CONSENTS_NEWSLETTERS, async (req: Request, res: Response) => {
       newsletters: newsletters.filter((n) => NEWSLETTER_FILTER.includes(+n.id)),
     };
   } catch (e) {
-    state.error = e;
+    const { message } = e;
+    logger.error(e);
+    state.error = message;
   }
   const html = renderer(Routes.CONSENTS_NEWSLETTERS, {
     globalState: state,
