@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Locations from '@/client/lib/locations';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { textSans } from '@guardian/src-foundations/typography';
@@ -10,6 +10,7 @@ import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { heading, text, headingMarginSpace6 } from '@/client/styles/Consents';
 import { GlobalState } from '@/shared/model/GlobalState';
+import { Routes } from '@/shared/model/Routes';
 
 const fieldset = css`
   border: 0;
@@ -24,11 +25,13 @@ const legend = css`
   padding: 0;
 `;
 
-export const ConsentsPage = () => {
+export const ConsentsDataPage = () => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
+
   const globalState = useContext<GlobalState>(GlobalStateContext);
   const consents = globalState?.pageData?.consents ?? [];
-  const profiling_consent = consents[0];
+  const profiling_optout = consents?.[0] || { consented: true };
+
   return (
     <ConsentsLayout title="Your data" current={CONSENTS_PAGES.YOUR_DATA}>
       <h3 css={[heading, autoRow()]}>Our commitment to you</h3>
@@ -59,15 +62,16 @@ export const ConsentsPage = () => {
           I am happy for The Guardian to use my personal data for market
           analysis purposes.
         </legend>
-        <RadioGroup orientation="horizontal" name="binary">
+        <RadioGroup orientation="horizontal" name="profiling_optout">
           <Radio
-            value="yes"
+            value="false"
             label="Yes"
-            checked={!profiling_consent.consented}
+            checked={!profiling_optout.consented}
           />
-          <Radio value="no" label="No" checked={profiling_consent.consented} />
+          <Radio value="true" label="No" checked={profiling_optout.consented} />
         </RadioGroup>
       </fieldset>
+      <input type="hidden" name="page" value={Routes.CONSENTS_DATA.slice(1)} />
     </ConsentsLayout>
   );
 };

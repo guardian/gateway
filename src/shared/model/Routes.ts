@@ -7,8 +7,11 @@ export enum Routes {
   CHANGE_PASSWORD_COMPLETE = '/password/reset-confirmation',
   VERIFY_EMAIL = '/verify-email',
   VERIFY_EMAIL_TOKEN = '/:token',
-  CONSENTS_DATA = '/consents',
-  CONSENTS_NEWSLETTERS = '/consents/newsletters',
+  CONSENTS = '/consents',
+  CONSENTS_DATA = '/data',
+  CONSENTS_COMMUNICATION = '/communication',
+  CONSENTS_NEWSLETTERS = '/newsletters',
+  CONSENTS_REVIEW = '/review',
 }
 
 export enum ApiRoutes {

@@ -58,23 +58,26 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
       <Header />
       {error && <GlobalError error={error} />}
       <ConsentsHeader title={title} />
-      <main css={[mainBackground, ieFlexFix]}>
-        <ConsentsContent>
-          <ConsentsProgression current={current} />
-          {children}
-        </ConsentsContent>
-      </main>
-      <ConsentsBlueBackground>
-        <div css={[gridItem(gridItemColumnConsents), controls]}>
-          <Button
-            iconSide="right"
-            nudgeIcon={true}
-            icon={<SvgArrowRightStraight />}
-          >
-            Continue
-          </Button>
-        </div>
-      </ConsentsBlueBackground>
+      <form action="/consents" method="post">
+        <main css={[mainBackground, ieFlexFix]}>
+          <ConsentsContent>
+            <ConsentsProgression current={current} />
+            {children}
+          </ConsentsContent>
+        </main>
+        <ConsentsBlueBackground>
+          <div css={[gridItem(gridItemColumnConsents), controls]}>
+            <Button
+              iconSide="right"
+              nudgeIcon={true}
+              icon={<SvgArrowRightStraight />}
+              type="submit"
+            >
+              Continue
+            </Button>
+          </div>
+        </ConsentsBlueBackground>
+      </form>
       <Footer />
     </>
   );
