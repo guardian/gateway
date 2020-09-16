@@ -7,6 +7,10 @@ import { GlobalState } from '@/shared/model/GlobalState';
 import { Routes } from '@/shared/model/Routes';
 import { getEmailFromPlaySessionCookie } from '@/server/lib/playSessionCookie';
 import { ResponseWithLocals } from '@/server/models/Express';
+import { trackMetric } from '@/server/lib/AWS';
+import { Metrics } from '@/server/models/Metrics';
+import { removeNoCache } from '@/server/lib/middleware/cache';
+import { PageTitle } from '@/shared/model/PageTitle';
 
 const router = Router();
 
@@ -21,6 +25,7 @@ router.get(Routes.RESET, (req: Request, res: ResponseWithLocals) => {
   const html = renderer(Routes.RESET, {
     globalState: state,
     queryParams: res.locals.queryParams,
+    pageTitle: PageTitle.RESET,
   });
   res.type('html').send(html);
 });
@@ -34,17 +39,23 @@ router.post(Routes.RESET, async (req: Request, res: ResponseWithLocals) => {
 
   try {
     await resetPassword(email, req.ip, returnUrl);
-  } catch (e) {
-    logger.error(e);
-    state.error = e;
-    res.type('html').send(
-      renderer(Routes.RESET, {
-        globalState: state,
-        queryParams: res.locals.queryParams,
-      }),
-    );
-    return;
+  } catch (error) {
+    const { message, status } = error;
+    logger.error(error);
+
+    trackMetric(Metrics.SEND_PASSWORD_RESET_FAILURE);
+
+    state.error = message;
+
+    const html = renderer(Routes.RESET, {
+      globalState: state,
+      queryParams: res.locals.queryParams,
+      pageTitle: PageTitle.RESET,
+    });
+    return res.status(status).type('html').send(html);
   }
+
+  trackMetric(Metrics.SEND_PASSWORD_RESET_SUCCESS);
 
   const emailProvider = getProviderForEmail(email);
   if (emailProvider) {
@@ -54,8 +65,20 @@ router.post(Routes.RESET, async (req: Request, res: ResponseWithLocals) => {
   const html = renderer(Routes.RESET_SENT, {
     globalState: state,
     queryParams: res.locals.queryParams,
+    pageTitle: PageTitle.RESET_SENT,
   });
-  res.type('html').send(html);
+  return res.type('html').send(html);
 });
+
+router.get(
+  Routes.RESET_SENT,
+  removeNoCache,
+  (_: Request, res: ResponseWithLocals) => {
+    const html = renderer(Routes.RESET_SENT, {
+      pageTitle: PageTitle.RESET_SENT,
+    });
+    res.type('html').send(html);
+  },
+);
 
 export default router;

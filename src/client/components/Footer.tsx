@@ -9,6 +9,7 @@ import { from } from '@guardian/src-foundations/mq';
 const footer = css`
   background-color: ${brand[400]};
   padding: ${space[1]}px ${space[3]}px;
+  flex: 0 0 auto;
 `;
 
 const container = css`
@@ -44,7 +45,7 @@ const ul = css`
   column-count: 2;
   column-gap: 0;
   ${from.tablet} {
-    flex: 1;
+    flex: 1 1 auto;
     column-count: auto;
     column-width: 10rem;
     padding: 0px ${space[6]}px;

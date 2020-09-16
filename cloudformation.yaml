@@ -50,6 +50,9 @@ Parameters:
     Description: Kinesis Stream name for logging
     Type: AWS::SSM::Parameter::Value<String>
     Default: /account/services/logging.stream/name
+  LoadBalancerLogsS3Bucket:
+    Description: S3 Bucket to write ELB access logs to
+    Type: String
 Mappings:
   StageVariables:
     CODE:
@@ -57,11 +60,15 @@ Mappings:
       DefaultReturnUri: https://m.code.dev-theguardian.com
       MaxInstances: 2
       MinInstances: 1
+      LatencyAlarmThreshold: 5
+      LatencyAlarmPeriod: 1200
     PROD:
       BaseUri: profile.theguardian.com
       DefaultReturnUri: https://theguardian.com
       MaxInstances: 6
       MinInstances: 3
+      LatencyAlarmThreshold: 0.5
+      LatencyAlarmPeriod: 60
 Conditions:
   IsProd: !Equals [!Ref Stage, PROD]
 Resources:
@@ -101,6 +108,13 @@ Resources:
                   - ssm:GetParameter
                 Resource:
                   - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${Stack}/${App}/${Stage}/*
+        - PolicyName: PushMetrics
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: cloudwatch:PutMetricData
+                Resource: '*'
   AutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
@@ -172,6 +186,7 @@ Resources:
             Environment=BASE_URI=${BaseUri}
             Environment=PLAY_SESSION_COOKIE_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/frontendPlaySecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
             Environment=DEFAULT_RETURN_URI=${DefaultReturnUri}
+            Environment=STAGE=${Stage}
 
             [Install]
             WantedBy=multi-user.target
@@ -223,7 +238,8 @@ Resources:
             systemctl start identity-gateway
 
           - BaseUri: !FindInMap [StageVariables, !Ref Stage, BaseUri]
-            DefaultReturnUri: !FindInMap [StageVariables, !Ref Stage, DefaultReturnUri]
+            DefaultReturnUri:
+              !FindInMap [StageVariables, !Ref Stage, DefaultReturnUri]
 
   InstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -260,6 +276,13 @@ Resources:
           Value: !Ref Stack
         - Key: Stage
           Value: !Ref Stage
+      LoadBalancerAttributes:
+        - Key: access_logs.s3.enabled
+          Value: true
+        - Key: access_logs.s3.bucket
+          Value: !Ref 'LoadBalancerLogsS3Bucket'
+        - Key: access_logs.s3.prefix
+          Value: !Sub 'ELBLogs/${Stack}/${App}/${Stage}'
   LoadBalancerListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
@@ -319,11 +342,50 @@ Resources:
       Subscription:
         - Endpoint: !Ref 'AlarmEmailAddress'
           Protocol: email
+  HighLatencyAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub '${App}-${Stage} high load balancer latency'
+      AlarmDescription: !Sub
+        - 'Scale-Up if latency is greater than ${Threshold} seconds over last ${Period} seconds'
+        - Period: !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmPeriod]
+          Threshold:
+            !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmThreshold]
+      Namespace: AWS/ELB
+      MetricName: Latency
+      Statistic: Average
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+        - Name: LoadBalancer
+          Value: !Ref 'LoadBalancer'
+      Threshold:
+        !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmThreshold]
+      Period: !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmPeriod]
+      EvaluationPeriods: '1'
+      AlarmActions:
+        - !Ref 'ScaleUpPolicy'
+      OKActions:
+        - !Ref 'ScaleDownPolicy'
+  ScaleUpPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AutoScalingGroupName: !Ref 'AutoScalingGroup'
+      AdjustmentType: ChangeInCapacity
+      ScalingAdjustment: 1
+      Cooldown: 300
+  ScaleDownPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AdjustmentType: ChangeInCapacity
+      AutoScalingGroupName: !Ref 'AutoScalingGroup'
+      Cooldown: 1800
+      ScalingAdjustment: -1
   AlarmNoHealthyHosts:
     Type: AWS::CloudWatch::Alarm
     Condition: IsProd
     Properties:
       ActionsEnabled: 'true'
+      AlarmName: !Sub '${App}-${Stage} insufficient healthy hosts'
       AlarmDescription: There are insufficient healthy hosts
       ComparisonOperator: LessThanThreshold
       EvaluationPeriods: 1
@@ -351,6 +413,7 @@ Resources:
     Condition: IsProd
     Properties:
       ActionsEnabled: 'true'
+      AlarmName: !Sub '${App}-${Stage} high 5xx errors'
       AlarmDescription: 'Server errors detected'
       AlarmActions:
         - !Ref 'TopicSendEmail'

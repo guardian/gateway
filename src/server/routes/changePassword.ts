@@ -8,10 +8,12 @@ import {
   change as changePassword,
 } from '@/server/lib/idapi/changePassword';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
-import { getConfiguration } from '@/server/lib/configuration';
 import { ResponseWithLocals } from '@/server/models/Express';
-
-const { baseUri } = getConfiguration();
+import { trackMetric } from '@/server/lib/AWS';
+import { Metrics } from '@/server/models/Metrics';
+import { removeNoCache } from '@/server/lib/middleware/cache';
+import { PageTitle } from '@/shared/model/PageTitle';
+import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 
 const router = Router();
 
@@ -20,7 +22,7 @@ export interface FieldError {
   message: string;
 }
 
-const validatePasswordChangeRequired = (
+const validatePasswordChangeFields = (
   password: string,
   passwordConfirm: string,
 ): Array<FieldError> => {
@@ -36,6 +38,23 @@ const validatePasswordChangeRequired = (
     errors.push({
       field: 'password_confirm',
       message: ChangePasswordErrors.REPEAT_PASSWORD_BLANK,
+    });
+  }
+
+  if (password && (password.length < 6 || password.length > 72)) {
+    errors.push({
+      field: 'password',
+      message: ChangePasswordErrors.PASSWORD_LENGTH,
+    });
+  }
+
+  if (
+    passwordConfirm &&
+    (passwordConfirm.length < 6 || passwordConfirm.length > 72)
+  ) {
+    errors.push({
+      field: 'password_confirm',
+      message: ChangePasswordErrors.PASSWORD_LENGTH,
     });
   }
 
@@ -58,6 +77,7 @@ router.get(
         renderer(Routes.RESET_RESEND, {
           globalState: state,
           queryParams: res.locals.queryParams,
+          pageTitle: PageTitle.RESET_RESEND,
         }),
       );
     }
@@ -65,6 +85,7 @@ router.get(
     const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
       globalState: state,
       queryParams: res.locals.queryParams,
+      pageTitle: PageTitle.CHANGE_PASSWORD,
     });
     return res.type('html').send(html);
   },
@@ -80,7 +101,7 @@ router.post(
     const { password, password_confirm: passwordConfirm } = req.body;
 
     try {
-      const fieldErrors = validatePasswordChangeRequired(
+      const fieldErrors = validatePasswordChangeFields(
         password,
         passwordConfirm,
       );
@@ -90,53 +111,39 @@ router.post(
         const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
           globalState: state,
           queryParams: res.locals.queryParams,
+          pageTitle: PageTitle.CHANGE_PASSWORD,
         });
-        return res.type('html').send(html);
+        return res.status(422).type('html').send(html);
       }
 
       if (password !== passwordConfirm) {
-        throw ChangePasswordErrors.PASSWORD_NO_MATCH;
+        throw { message: ChangePasswordErrors.PASSWORD_NO_MATCH, status: 422 };
       }
 
-      const {
-        values: cookieValues,
-        expiresAt: cookieExpiry,
-      } = await changePassword(password, token, req.ip);
+      const cookies = await changePassword(password, token, req.ip);
 
-      cookieValues.forEach(
-        ({
-          key,
-          value,
-          sessionCookie = false,
-        }: {
-          key: string;
-          value: string;
-          sessionCookie: boolean;
-        }) => {
-          res.cookie(key, value, {
-            // base uri in format profile.theguardian.com, whereas we want cookie domain theguardian.com
-            // so replace profile. string in baseUri with empty string, rather than having to set another variable
-            domain: `${baseUri.replace('profile.', '')}`,
-            expires: sessionCookie ? undefined : new Date(cookieExpiry),
-            httpOnly: key !== 'GU_U', // unless GU_U cookie, set to true
-            secure: key !== 'GU_U', // unless GU_U cookie, set to true
-            sameSite: 'strict',
-          });
-        },
-      );
+      setIDAPICookies(res, cookies);
     } catch (error) {
+      const { message, status } = error;
       logger.error(error);
-      state.error = error;
+
+      trackMetric(Metrics.CHANGE_PASSWORD_FAILURE);
+
+      state.error = message;
       const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
         globalState: state,
         queryParams: res.locals.queryParams,
+        pageTitle: PageTitle.CHANGE_PASSWORD,
       });
-      return res.type('html').send(html);
+      return res.status(status).type('html').send(html);
     }
+
+    trackMetric(Metrics.CHANGE_PASSWORD_SUCCESS);
 
     const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
       globalState: state,
       queryParams: res.locals.queryParams,
+      pageTitle: PageTitle.CHANGE_PASSWORD_COMPLETE,
     });
 
     return res.type('html').send(html);
@@ -148,8 +155,18 @@ router.get(
   (_: Request, res: ResponseWithLocals) => {
     const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
       queryParams: res.locals.queryParams,
+      pageTitle: PageTitle.CHANGE_PASSWORD_COMPLETE,
     });
     return res.type('html').send(html);
+  },
+);
+
+router.get(
+  Routes.RESET_RESEND,
+  removeNoCache,
+  (_: Request, res: ResponseWithLocals) => {
+    const html = renderer(Routes.RESET_RESEND);
+    res.type('html').send(html);
   },
 );
 

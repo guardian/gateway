@@ -1,10 +1,38 @@
-import { Configuration } from '@/server/models/Configuration';
+import {
+  Configuration,
+  GA_UID,
+  GA_UID_HASH,
+  GU_API_DOMAIN,
+  GU_DOMAIN,
+} from '@/server/models/Configuration';
 
 const getOrThrow = (value: string | undefined, errorMessage: string) => {
   if (!value) {
     throw Error(errorMessage);
   }
   return value;
+};
+
+const gaUIDFromStage = (stage: string): [string, string] => {
+  switch (stage) {
+    case 'PROD':
+      return [GA_UID.PROD, GA_UID_HASH.PROD];
+    case 'CODE':
+      return [GA_UID.CODE, GA_UID_HASH.CODE];
+    default:
+      return [GA_UID.DEV, GA_UID_HASH.DEV];
+  }
+};
+
+const guardianDomainFromStage = (stage: string): [string, string] => {
+  switch (stage) {
+    case 'PROD':
+      return [GU_DOMAIN.PROD, GU_API_DOMAIN.PROD];
+    case 'CODE':
+      return [GU_DOMAIN.CODE, GU_API_DOMAIN.CODE];
+    default:
+      return [GU_DOMAIN.DEV, GU_API_DOMAIN.DEV];
+  }
 };
 
 export const getConfiguration = (): Configuration => {
@@ -32,6 +60,12 @@ export const getConfiguration = (): Configuration => {
     'Default return URI missing.',
   );
 
+  const stage = getOrThrow(process.env.STAGE, 'Stage variable missing.');
+
+  const [gaId, gaIdHash] = gaUIDFromStage(stage);
+
+  const [domain, apiDomain] = guardianDomainFromStage(stage);
+
   return {
     port: +port,
     idapiBaseUrl,
@@ -39,5 +73,12 @@ export const getConfiguration = (): Configuration => {
     playSessionCookieSecret,
     baseUri,
     defaultReturnUri,
+    stage,
+    gaUID: {
+      id: gaId,
+      hash: gaIdHash,
+    },
+    domain,
+    apiDomain,
   };
 };

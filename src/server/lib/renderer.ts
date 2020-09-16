@@ -6,6 +6,7 @@ import { Main } from '@/client/main';
 import { brandBackground } from '@guardian/src-foundations/palette';
 import { QueryParams } from '@/shared/model/QueryParams';
 import qs from 'query-string';
+import { getConfiguration } from '@/server/lib/configuration';
 
 // favicon shamefully stolen from dcr
 const favicon =
@@ -16,13 +17,16 @@ const favicon =
 interface RendererOpts {
   globalState?: GlobalState;
   queryParams?: QueryParams;
+  pageTitle?: string;
 }
+
+const { gaUID } = getConfiguration();
 
 export const renderer: (url: string, opts?: RendererOpts) => string = (
   url,
   opts = {},
 ) => {
-  const { globalState = {}, queryParams = {} } = opts;
+  const { globalState = {}, queryParams = {}, pageTitle = 'Gateway' } = opts;
 
   const context = {};
 
@@ -49,7 +53,8 @@ export const renderer: (url: string, opts?: RendererOpts) => string = (
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="${brandBackground.primary}" />
         <link rel="icon" href="https://static.guim.co.uk/images/${favicon}">
-        <title>Gateway | The Guardian</title>
+        <title>${pageTitle} | The Guardian</title>
+        <script>window.gaUID = "${gaUID.id}"</script>
         <script src="/gateway-static/bundle.js" defer></script>
       </head>
       <body style="margin:0">

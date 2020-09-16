@@ -99,13 +99,14 @@ const fontFace: (fontFace: FontFace) => CSSObject = ({
   const url = getStatic(path);
   return {
     fontFamily: family,
-    fontWeights: weight,
+    fontWeight: weight,
     fontStyle: style,
     // generating a string which has the url of all the font formats
     src: formats.reduce(
       (p, c, i) => `${p}${i !== 0 ? ',' : ''} url(${url}.${c}) format('${c}')`,
       '',
     ),
+    fontDisplay: 'swap',
   };
 };
 

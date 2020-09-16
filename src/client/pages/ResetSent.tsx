@@ -3,13 +3,12 @@ import { getProviderById } from '@/shared/lib/emailProvider';
 import { LinkButton } from '@guardian/src-button';
 import { GlobalState } from '@/shared/model/GlobalState';
 import { GlobalStateContext } from '@/client/components/GlobalState';
-import {
-  resetPasswordBox,
-  header,
-  main,
-  pHeader,
-  pMain,
-} from '@/client/styles/Reset';
+import { PageHeader } from '@/client/components/PageHeader';
+import { PageBox } from '@/client/components/PageBox';
+import { PageBody } from '@/client/components/PageBody';
+import { PageBodyText } from '@/client/components/PageBodyText';
+import { linkButton } from '@/client/styles/Shared';
+import { SignInLayout } from '@/client/layouts/SignInLayout';
 
 export const ResetSentPage = () => {
   const globalState: GlobalState = useContext(GlobalStateContext);
@@ -17,22 +16,23 @@ export const ResetSentPage = () => {
   const emailProvider = getProviderById(emailProviderId);
 
   return (
-    <div css={resetPasswordBox}>
-      <div css={header}>
-        <p css={pHeader}>Please check your inbox</p>
-      </div>
-      <div css={main}>
-        <p css={pMain}>
-          We’ve sent you an email – please open it up and click on the button.
-          This is so we can verify it’s you and help you create a password to
-          complete your Guardian account.
-        </p>
-        <p css={pMain}>
-          Note that the link is only valid for 30 minutes, so be sure to open it
-          soon! Thank you.
-        </p>
+    <SignInLayout>
+      <PageBox>
+        <PageHeader>Please check your inbox</PageHeader>
+        <PageBody>
+          <PageBodyText>
+            We’ve sent you an email – please open it up and click on the button.
+            This is so we can verify it’s you and help you create a password to
+            complete your Guardian account.
+          </PageBodyText>
+          <PageBodyText>
+            Note that the link is only valid for 30 minutes, so be sure to open
+            it soon! Thank you.
+          </PageBodyText>
+        </PageBody>
         {emailProvider && (
           <LinkButton
+            css={linkButton}
             href={emailProvider.inboxLink}
             priority="tertiary"
             showIcon={true}
@@ -40,7 +40,7 @@ export const ResetSentPage = () => {
             Go to your {emailProvider.name} inbox
           </LinkButton>
         )}
-      </div>
-    </div>
+      </PageBox>
+    </SignInLayout>
   );
 };

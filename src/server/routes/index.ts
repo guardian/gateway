@@ -2,13 +2,19 @@ import { Router } from 'express';
 
 import { default as core } from './core';
 import { default as reset } from './reset';
-import { default as resetPassword } from './changePassword';
+import { default as changePassword } from './changePassword';
 import { queryParamsMiddleware } from '@/server/lib/middleware/queryParams';
+import { noCache } from '@/server/lib/middleware/cache';
 
 const router = Router();
 
+// core routes for the app, e.g. healthcheck, static routes
 router.use(core);
-router.use(queryParamsMiddleware, reset);
-router.use(queryParamsMiddleware, resetPassword);
+
+// request reset password routes
+router.use(noCache, queryParamsMiddleware, reset);
+
+// change password routes
+router.use(noCache, queryParamsMiddleware, changePassword);
 
 export default router;

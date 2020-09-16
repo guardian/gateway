@@ -1,17 +1,9 @@
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
+const babelConfig = require("./babel.config");
 
 const mode =
   process.env.ENVIRONMENT === "production" ? "production" : "development";
-
-const babel = {
-  presets: [
-    "@babel/typescript",
-    "@babel/react",
-    "@emotion/babel-preset-css-prop"
-  ],
-  plugins: ["@babel/plugin-proposal-optional-chaining"]
-};
 
 const extensions = [".ts", ".tsx", ".js"];
 
@@ -23,7 +15,7 @@ const server = {
   entry: "./src/server/index.ts",
   externals: [
     nodeExternals({
-      whitelist: [/^@guardian/]
+      allowlist: [/^@guardian/]
     })
   ],
   mode,
@@ -46,8 +38,45 @@ const server = {
                     ignoreBrowserslistConfig: true
                   }
                 ],
-                ...babel.presets
-              ]
+                ...babelConfig.presets
+              ],
+              plugins: [...babelConfig.plugins]
+            }
+          }
+        ]
+      },
+      {
+        test: /\.(jpe?g|png|gif)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[hash].[ext]',
+              outputPath: 'static/',
+              publicPath: '/gateway-static/'
+            }
+          },
+          {
+            loader: 'image-webpack-loader',
+            options: {
+              mozjpeg: {
+                progressive: true,
+                quality: 65
+              },
+              optipng: {
+                enabled: true,
+              },
+              pngquant: {
+                quality: [0.65, 0.90],
+                speed: 4
+              },
+              gifsicle: {
+                interlaced: false,
+              },
+              // the webp option will enable WEBP
+              webp: {
+                quality: 75
+              }
             }
           }
         ]
@@ -73,17 +102,19 @@ const server = {
 };
 
 const client = {
-  entry: "./src/client/lib/analytics/ophan.js",
+  entry: "./src/client/static/index.tsx",
+  mode: "production",
   module: {
     rules: [
       {
         exclude: /node_modules/,
-        test: /\.js/,
+        test: /\.(j|t)s(x?)/,
         use: [
           {
             loader: "babel-loader",
             options: {
-              presets: ["@babel/env"]
+              presets: ["@babel/env", ...babelConfig.presets],
+              plugins: [...babelConfig.plugins]
             }
           }
         ]
@@ -92,7 +123,9 @@ const client = {
   },
   output: {
     filename: "bundle.js",
-    path: path.resolve(__dirname, "build/static/")
+    chunkFilename: '[name].bundle.js',
+    path: path.resolve(__dirname, "build/static/"),
+    publicPath: 'gateway-static/'
   },
   resolve: {
     extensions,

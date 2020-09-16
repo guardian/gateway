@@ -7,7 +7,7 @@
     "noUnusedLocals": true,
     "outDir": "build",
     "strict": true,
-    "target": "esnext",
+    "target": "ES2019",
     "types": [
       "@emotion/core",
       "jest"
@@ -15,7 +15,8 @@
     "baseUrl": "src",
     "paths": {
       "@/*": ["*"]
-    }
+    },
+    "lib": ["ES2019", "DOM"],
   },
   "include": [
     "src"
