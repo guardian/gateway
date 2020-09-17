@@ -10,5 +10,7 @@ export interface GlobalState {
   pageData?: {
     newsletters?: NewsLetter[];
     consents?: Consent[];
+    previousPage?: string;
+    page?: string;
   };
 }

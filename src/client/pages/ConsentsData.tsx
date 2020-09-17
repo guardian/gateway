@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import Locations from '@/client/lib/locations';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { textSans } from '@guardian/src-foundations/typography';
@@ -10,7 +10,6 @@ import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { heading, text, headingMarginSpace6 } from '@/client/styles/Consents';
 import { GlobalState } from '@/shared/model/GlobalState';
-import { Routes } from '@/shared/model/Routes';
 
 const fieldset = css`
   border: 0;
@@ -29,7 +28,11 @@ export const ConsentsDataPage = () => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
 
   const globalState = useContext<GlobalState>(GlobalStateContext);
-  const consents = globalState?.pageData?.consents ?? [];
+
+  const { pageData = {} } = globalState;
+
+  const { consents = [], page } = pageData;
+
   const profiling_optout = consents?.[0] || { consented: true };
 
   return (
@@ -71,7 +74,7 @@ export const ConsentsDataPage = () => {
           <Radio value="true" label="No" checked={profiling_optout.consented} />
         </RadioGroup>
       </fieldset>
-      <input type="hidden" name="page" value={Routes.CONSENTS_DATA.slice(1)} />
+      <input type="hidden" name="page" value={page} />
     </ConsentsLayout>
   );
 };

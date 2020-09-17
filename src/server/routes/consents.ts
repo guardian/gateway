@@ -9,7 +9,7 @@ import { read as getNewsletters } from '@/server/lib/idapi/newsletters';
 import { read as getUser } from '@/server/lib/idapi/user';
 import { GlobalState } from '@/shared/model/GlobalState';
 import { Newsletters } from '@/shared/model/Newsletter';
-import { Consent, Consents } from '@/shared/model/Consent';
+import { Consent, Consents, ConsentsData } from '@/shared/model/Consent';
 
 const router = Router();
 
@@ -32,7 +32,7 @@ router.get(
       logger.error(e);
     }
 
-    res.redirect(301, Routes.CONSENTS);
+    res.redirect(303, `${Routes.CONSENTS}/${consentsFlow[0]}`);
   },
 );
 
@@ -58,12 +58,10 @@ const mergeConsents = (
 ): Consent[] => {
   switch (page) {
     case consentsFlow[0]:
-      const pageConsents: string[] = [Consents.PROFILING];
-
       return consents.map((consent) => {
         const { id } = consent;
 
-        if (pageConsents.includes(id) && body[id]) {
+        if (ConsentsData.includes(id) && body[id]) {
           consent.consented = body[id] === 'true';
         }
 
@@ -81,10 +79,18 @@ const consentsController = async (req: Request, res: Response) => {
   const { page = consentsFlow[0] } = req.params;
 
   try {
+    const currentPageIndex = consentsFlow.indexOf(page);
+    if (currentPageIndex === -1) {
+      throw new Error(`Invalid Consents Page: ${page}`);
+    }
+    const previousPage = consentsFlow[currentPageIndex - 1] ?? null;
+
     const consents = await consentsForPage(page, req.ip, sc_gu_u);
 
     state.pageData = {
       consents,
+      page,
+      previousPage,
     };
   } catch (e) {
     state.error = e;
@@ -102,18 +108,27 @@ router.get(`${Routes.CONSENTS}/:page`, consentsController);
 router.post('/consents', async (req, res) => {
   const sc_gu_u = req.cookies.SC_GU_U;
   const state: GlobalState = {};
+
   const { page = consentsFlow[0] } = req.body;
 
   try {
+    const currentPageIndex = consentsFlow.indexOf(page);
+
+    if (currentPageIndex === -1) {
+      throw new Error(`Invalid Consents Page: ${page}`);
+    }
+
     const consents = await consentsForPage(page, req.ip, sc_gu_u);
     const mergedConsents = mergeConsents(page, consents, req.body);
 
     await patchConsents(req.ip, sc_gu_u, mergedConsents);
 
-    state.pageData = {
-      consents: mergedConsents,
-    };
+    // get next page to render
+    const nextPage = consentsFlow[currentPageIndex + 1] ?? null;
+
+    return res.redirect(303, `${Routes.CONSENTS}/${nextPage}`);
   } catch (e) {
+    console.log(e);
     state.error = e;
   }
 
