@@ -296,6 +296,7 @@ Resources:
         Ref: LoadBalancer
       Port: 443
       Protocol: HTTPS
+      SslPolicy: ELBSecurityPolicy-TLS-1-2-2017-01
   LoadBalancerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
