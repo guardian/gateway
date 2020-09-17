@@ -31,7 +31,7 @@ export const ConsentsDataPage = () => {
 
   const { pageData = {} } = globalState;
 
-  const { consents = [], page } = pageData;
+  const { consents = [] } = pageData;
 
   const profiling_optout = consents?.[0] || { consented: true };
 
@@ -74,7 +74,7 @@ export const ConsentsDataPage = () => {
           <Radio value="true" label="No" checked={profiling_optout.consented} />
         </RadioGroup>
       </fieldset>
-      <input type="hidden" name="page" value={page} />
+      <input type="hidden" name="page" value="data" />
     </ConsentsLayout>
   );
 };
