@@ -19,7 +19,7 @@ interface ConsentPage {
   update: (
     ip: string,
     sc_gu_u: string,
-    body: { [key: string]: string },
+    body: { [key: string]: string | boolean },
   ) => Promise<void>;
 }
 
@@ -36,6 +36,7 @@ const consentPages: ConsentPage[] = [
 
         return {
           consents,
+          page: Routes.CONSENTS_DATA.slice(1),
         };
       } catch (error) {
         throw error;
@@ -46,6 +47,62 @@ const consentPages: ConsentPage[] = [
         {
           id: Consents.PROFILING,
           consented: body[Consents.PROFILING] === 'true',
+        },
+      ];
+
+      await patchConsents(ip, sc_gu_u, consents);
+    },
+  },
+  {
+    page: Routes.CONSENTS_COMMUNICATION.slice(1),
+    read: async (ip, sc_gu_u) => {
+      try {
+        const ConsentsCommunicationsPage: string[] = [
+          Consents.MARKET_RESEARCH,
+          Consents.SUPPORTER,
+          Consents.JOBS,
+          Consents.HOLIDAYS,
+          Consents.EVENTS,
+          Consents.OFFERS,
+        ];
+
+        const consents = (await getUser(ip, sc_gu_u)).consents.filter((c) =>
+          ConsentsCommunicationsPage.includes(c.id),
+        );
+
+        return {
+          consents,
+          page: Routes.CONSENTS_COMMUNICATION.slice(1),
+        };
+      } catch (error) {
+        throw error;
+      }
+    },
+    update: async (ip, sc_gu_u, body) => {
+      const consents = [
+        {
+          id: Consents.MARKET_RESEARCH,
+          consented: body[Consents.MARKET_RESEARCH] === 'true',
+        },
+        {
+          id: Consents.SUPPORTER,
+          consented: !!body[Consents.SUPPORTER],
+        },
+        {
+          id: Consents.JOBS,
+          consented: !!body[Consents.JOBS],
+        },
+        {
+          id: Consents.HOLIDAYS,
+          consented: !!body[Consents.HOLIDAYS],
+        },
+        {
+          id: Consents.EVENTS,
+          consented: !!body[Consents.EVENTS],
+        },
+        {
+          id: Consents.OFFERS,
+          consented: !!body[Consents.OFFERS],
         },
       ];
 
@@ -80,8 +137,13 @@ router.get(`${Routes.CONSENTS}/:page`, async (req: Request, res: Response) => {
 
   const { page } = req.params;
 
+  const pageIndex = consentPages.findIndex((elem) => elem.page === page);
+  if (pageIndex === -1) {
+    return res.redirect(404, `${Routes.CONSENTS}/${page}`);
+  }
+
   try {
-    const { read } = consentPages[0];
+    const { read } = consentPages[pageIndex];
 
     state.pageData = await read(req.ip, sc_gu_u);
   } catch (e) {
@@ -93,16 +155,26 @@ router.get(`${Routes.CONSENTS}/:page`, async (req: Request, res: Response) => {
   res.type('html').send(html);
 });
 
-router.post('/consents', async (req, res) => {
+router.post(`${Routes.CONSENTS}/:page`, async (req, res) => {
   const sc_gu_u = req.cookies.SC_GU_U;
   const state: GlobalState = {};
 
-  const { page } = req.body;
+  const { page } = req.params;
+
+  const pageIndex = consentPages.findIndex((elem) => elem.page === page);
+  if (pageIndex === -1) {
+    return res.redirect(404, `${Routes.CONSENTS}/${page}`);
+  }
 
   try {
-    const { update } = consentPages[0];
+    const { update } = consentPages[pageIndex];
 
     await update(req.ip, sc_gu_u, req.body);
+
+    return res.redirect(
+      303,
+      `${Routes.CONSENTS}/${consentPages[pageIndex + 1].page}`,
+    );
   } catch (e) {
     console.log(e);
     state.error = e;

@@ -17,6 +17,7 @@ import {
   ieFlexFix,
   ConsentsProgression,
 } from '@/client/layouts/shared/Consents';
+import { Routes } from '@/shared/model/Routes';
 
 interface ConsentsLayoutProps {
   children?: React.ReactNode;
@@ -51,14 +52,15 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
   current,
 }) => {
   const globalState: GlobalState = useContext(GlobalStateContext);
-  const { error } = globalState;
+  const { error, pageData = {} } = globalState;
+  const { page = '' } = pageData;
 
   return (
     <>
       <Header />
       {error && <GlobalError error={error} />}
       <ConsentsHeader title={title} />
-      <form action="/consents" method="post">
+      <form action={`${Routes.CONSENTS}/${page}`} method="post">
         <main css={[mainBackground, ieFlexFix]}>
           <ConsentsContent>
             <ConsentsProgression current={current} />
@@ -73,7 +75,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
               icon={<SvgArrowRightStraight />}
               type="submit"
             >
-              Continue
+              Save and Continue
             </Button>
           </div>
         </ConsentsBlueBackground>

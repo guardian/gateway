@@ -5,6 +5,7 @@ import { NewsLetter } from './Newsletter';
 export interface PageData {
   newsletters?: NewsLetter[];
   consents?: Consent[];
+  page?: string;
 }
 
 export interface GlobalState {

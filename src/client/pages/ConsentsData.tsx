@@ -10,6 +10,7 @@ import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { heading, text, headingMarginSpace6 } from '@/client/styles/Consents';
 import { GlobalState } from '@/shared/model/GlobalState';
+import { Consents } from '@/shared/model/Consent';
 
 const fieldset = css`
   border: 0;
@@ -30,10 +31,11 @@ export const ConsentsDataPage = () => {
   const globalState = useContext<GlobalState>(GlobalStateContext);
 
   const { pageData = {} } = globalState;
-
   const { consents = [] } = pageData;
 
-  const profiling_optout = consents?.[0] || { consented: true };
+  const profiling_optout = consents.find(
+    (consent) => consent.id === Consents.PROFILING,
+  ) || { consented: true };
 
   return (
     <ConsentsLayout title="Your data" current={CONSENTS_PAGES.YOUR_DATA}>
@@ -65,7 +67,7 @@ export const ConsentsDataPage = () => {
           I am happy for The Guardian to use my personal data for market
           analysis purposes.
         </legend>
-        <RadioGroup orientation="horizontal" name="profiling_optout">
+        <RadioGroup orientation="horizontal" name={Consents.PROFILING}>
           <Radio
             value="false"
             label="Yes"
@@ -74,7 +76,6 @@ export const ConsentsDataPage = () => {
           <Radio value="true" label="No" checked={profiling_optout.consented} />
         </RadioGroup>
       </fieldset>
-      <input type="hidden" name="page" value="data" />
     </ConsentsLayout>
   );
 };

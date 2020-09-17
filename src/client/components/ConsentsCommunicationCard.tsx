@@ -10,6 +10,7 @@ interface CommunicationCardProps {
   titleBottom: string;
   body: string;
   value: string;
+  checked: boolean;
   image?: string;
 }
 
@@ -30,7 +31,7 @@ const communicationCard = css`
 `;
 
 const communicationCardHeadingImage = (image: string) => css`
-  background-image: url("${image}");
+  background-image: url('${image}');
   background-position: bottom 0px right 0px;
   background-repeat: no-repeat;
   background-size: 75%;
@@ -71,7 +72,7 @@ const communicationCardBodyText = css`
   ${textSans.small({ lineHeight: 'tight' })};
 `;
 
-const communicationCardForm = css`
+const communicationCardCheckboxContainer = css`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -91,6 +92,7 @@ export const CommunicationCard: FunctionComponent<CommunicationCardProps> = ({
   body,
   value,
   image,
+  checked,
 }) => {
   return (
     <div css={communicationCard}>
@@ -104,16 +106,16 @@ export const CommunicationCard: FunctionComponent<CommunicationCardProps> = ({
       <div css={communicationCardBodyContainer}>
         <p css={communicationCardBodyText}>{body}</p>
       </div>
-      <form css={communicationCardForm}>
+      <div css={communicationCardCheckboxContainer}>
         <CheckboxGroup name={value}>
           <Checkbox
             cssOverrides={communicationCardCheckbox}
             value={value}
             label="Sign Up"
-            checked={false}
+            checked={checked}
           />
         </CheckboxGroup>
-      </form>
+      </div>
     </div>
   );
 };
