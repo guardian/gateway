@@ -46,6 +46,12 @@ const controls = css`
   padding: ${space[9]}px 0 ${space[24]}px 0;
 `;
 
+const form = css`
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+`;
+
 export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
   children,
   title,
@@ -60,7 +66,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
       <Header />
       {error && <GlobalError error={error} />}
       <ConsentsHeader title={title} />
-      <form action={`${Routes.CONSENTS}/${page}`} method="post">
+      <form css={form} action={`${Routes.CONSENTS}/${page}`} method="post">
         <main css={[mainBackground, ieFlexFix]}>
           <ConsentsContent>
             <ConsentsProgression current={current} />
