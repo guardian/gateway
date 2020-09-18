@@ -1,7 +1,12 @@
-import { idapiFetch, APIGetOptions } from '../APIFetch';
+import {
+  idapiFetch,
+  APIGetOptions,
+  APIPatchOptions,
+  APIAddClientAccessToken,
+  APIForwardSessionIdentifier,
+} from '../APIFetch';
 import { NewslettersErrors } from '@/shared/model/Errors';
-import { logger } from '@/server/lib/logger';
-import { NewsLetter } from '@/shared/model/Newsletter';
+import { NewsLetter, NewsletterPatch } from '@/shared/model/Newsletter';
 
 const API_ROUTE = '/newsletters';
 
@@ -37,7 +42,45 @@ export const read = async (): Promise<NewsLetter[]> => {
       options,
     )) as NewsletterAPIResponse[]).map(responseToEntity);
   } catch (e) {
-    logger.error(e.toString());
+    return handleError();
+  }
+};
+
+export const update = async (
+  ip: string,
+  sc_gu_u: string,
+  payload: NewsletterPatch[],
+) => {
+  const url = '/users/me/newsletters';
+  const options = APIForwardSessionIdentifier(
+    APIAddClientAccessToken(APIPatchOptions(payload), ip),
+    sc_gu_u,
+  );
+
+  try {
+    await idapiFetch(url, options);
+    return;
+  } catch (e) {
+    return handleError();
+  }
+};
+
+interface Subscription {
+  listId: number;
+}
+
+export const readUserNewsletters = async (ip: string, sc_gu_u: string) => {
+  const url = '/users/me/newsletters';
+  const options = APIForwardSessionIdentifier(
+    APIAddClientAccessToken(APIGetOptions(), ip),
+    sc_gu_u,
+  );
+
+  try {
+    return (
+      await idapiFetch(url, options)
+    ).result.subscriptions.map((s: Subscription) => s.listId.toString());
+  } catch (e) {
     return handleError();
   }
 };

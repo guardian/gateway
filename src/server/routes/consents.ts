@@ -5,10 +5,14 @@ import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { update as patchConsents } from '@/server/lib/idapi/consents';
+import {
+  update as patchNewsletters,
+  readUserNewsletters,
+} from '@/server/lib/idapi/newsletters';
 import { read as getNewsletters } from '@/server/lib/idapi/newsletters';
 import { read as getUser } from '@/server/lib/idapi/user';
 import { GlobalState, PageData } from '@/shared/model/GlobalState';
-import { Newsletters } from '@/shared/model/Newsletter';
+import { NewsletterPatch, Newsletters } from '@/shared/model/Newsletter';
 import { Consents } from '@/shared/model/Consent';
 
 const router = Router();
@@ -109,6 +113,59 @@ const consentPages: ConsentPage[] = [
       await patchConsents(ip, sc_gu_u, consents);
     },
   },
+  {
+    page: Routes.CONSENTS_NEWSLETTERS.slice(1),
+    read: async (ip, sc_gu_u) => {
+      try {
+        const NEWSLETTER_FILTER = [
+          Newsletters.BOOKMARKS,
+          Newsletters.GREENLIGHT,
+          Newsletters.LABNOTES,
+          Newsletters.THELONGREAD,
+        ];
+
+        const newsletters = await getNewsletters();
+
+        const userSub = await readUserNewsletters(ip, sc_gu_u);
+
+        return {
+          page: Routes.CONSENTS_NEWSLETTERS.slice(1),
+          newsletters: newsletters
+            .filter((n) => NEWSLETTER_FILTER.includes(n.id as Newsletters))
+            .map((n) => {
+              if (userSub.includes(n.id)) {
+                n.subscribed = true;
+              }
+              return n;
+            }),
+        };
+      } catch (error) {
+        throw error;
+      }
+    },
+    update: async (ip, sc_gu_u, body) => {
+      const newsletters: NewsletterPatch[] = [
+        {
+          id: Newsletters.BOOKMARKS,
+          subscribed: !!body[Newsletters.BOOKMARKS],
+        },
+        {
+          id: Newsletters.GREENLIGHT,
+          subscribed: !!body[Newsletters.GREENLIGHT],
+        },
+        {
+          id: Newsletters.LABNOTES,
+          subscribed: !!body[Newsletters.LABNOTES],
+        },
+        {
+          id: Newsletters.THELONGREAD,
+          subscribed: !!body[Newsletters.THELONGREAD],
+        },
+      ];
+
+      // await patchNewsletters(ip, sc_gu_u, newsletters);
+    },
+  },
 ];
 
 router.get(
@@ -176,36 +233,10 @@ router.post(`${Routes.CONSENTS}/:page`, async (req, res) => {
       `${Routes.CONSENTS}/${consentPages[pageIndex + 1].page}`,
     );
   } catch (e) {
-    console.log(e);
     state.error = e;
   }
 
   const html = renderer(`${Routes.CONSENTS}/${page}`, { globalState: state });
-  res.type('html').send(html);
-});
-
-router.get(Routes.CONSENTS_NEWSLETTERS, async (req: Request, res: Response) => {
-  const NEWSLETTER_FILTER = [
-    Newsletters.BOOKMARKS,
-    Newsletters.GREENLIGHT,
-    Newsletters.LABNOTES,
-    Newsletters.THELONGREAD,
-  ];
-
-  const state: GlobalState = {};
-  try {
-    const newsletters = await getNewsletters();
-    state.pageData = {
-      newsletters: newsletters.filter((n) => NEWSLETTER_FILTER.includes(+n.id)),
-    };
-  } catch (e) {
-    const { message } = e;
-    logger.error(e);
-    state.error = message;
-  }
-  const html = renderer(Routes.CONSENTS_NEWSLETTERS, {
-    globalState: state,
-  });
   res.type('html').send(html);
 });
 
