@@ -163,7 +163,7 @@ const consentPages: ConsentPage[] = [
         },
       ];
 
-      // await patchNewsletters(ip, sc_gu_u, newsletters);
+      await patchNewsletters(ip, sc_gu_u, newsletters);
     },
   },
 ];
