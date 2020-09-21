@@ -15,8 +15,16 @@ import {
 import { read as getNewsletters } from '@/server/lib/idapi/newsletters';
 import { read as getUser } from '@/server/lib/idapi/user';
 import { GlobalState, PageData } from '@/shared/model/GlobalState';
-import { NewsletterPatch, Newsletters } from '@/shared/model/Newsletter';
-import { Consents } from '@/shared/model/Consent';
+import {
+  NewsLetter,
+  NewsletterPatch,
+  NEWSLETTERS_PAGE,
+} from '@/shared/model/Newsletter';
+import {
+  Consent,
+  CONSENTS_COMMUNICATION_PAGE,
+  CONSENTS_DATA_PAGE,
+} from '@/shared/model/Consent';
 
 const router = Router();
 
@@ -26,32 +34,78 @@ interface ConsentPage {
   update?: (
     ip: string,
     sc_gu_u: string,
-    body: { [key: string]: string | boolean },
+    body: { [key: string]: string },
   ) => Promise<void>;
 }
+
+const getConsentValueFromRequestBody = (
+  key: string,
+  body: { [key: string]: string },
+): boolean => {
+  if (body[key] === undefined || typeof body[key] !== 'string') {
+    return false;
+  }
+
+  switch (body[key]) {
+    case 'true':
+      return true;
+    case 'false':
+      return false;
+    default:
+      return !!body[key];
+  }
+};
+
+const getUserConsentsForPage = async (
+  pageConsents: string[],
+  ip: string,
+  sc_gu_u: string,
+): Promise<Consent[]> => {
+  const allConsents = await readConsents();
+  const userConsents = (await getUser(ip, sc_gu_u)).consents;
+
+  return allConsents
+    .filter((consent) => pageConsents.includes(consent.id))
+    .map((consent) => {
+      const userConsent = userConsents.find((uc) => uc.id === consent.id);
+
+      if (userConsent) {
+        consent.consented = userConsent.consented;
+      }
+
+      return consent;
+    });
+};
+
+const getUserNewsletterSubscriptions = async (
+  newslettersOnPage: string[],
+  ip: string,
+  sc_gu_u: string,
+): Promise<NewsLetter[]> => {
+  const allNewsletters = await getNewsletters();
+  const userNewsletterSubscriptions = await readUserNewsletters(ip, sc_gu_u);
+
+  return allNewsletters
+    .filter((newslettter) => newslettersOnPage.includes(newslettter.id))
+    .map((newsletter) => {
+      if (userNewsletterSubscriptions.includes(newsletter.id)) {
+        newsletter.subscribed = true;
+      }
+      return newsletter;
+    });
+};
 
 const consentPages: ConsentPage[] = [
   {
     page: Routes.CONSENTS_DATA.slice(1),
     read: async (ip, sc_gu_u) => {
       try {
-        const ConsentsDataPage: string[] = [Consents.PROFILING];
-
-        const consents = await readConsents();
-        const userConsents = (await getUser(ip, sc_gu_u)).consents;
-
         return {
-          consents: consents
-            .filter((c) => ConsentsDataPage.includes(c.id))
-            .map((c) => {
-              const userConsent = userConsents.find((uc) => uc.id === c.id);
-
-              if (userConsent) {
-                c.consented = userConsent.consented;
-              }
-
-              return c;
-            }),
+          consents: await getUserConsentsForPage(
+            CONSENTS_DATA_PAGE,
+            ip,
+            sc_gu_u,
+          ),
           page: Routes.CONSENTS_DATA.slice(1),
         };
       } catch (error) {
@@ -59,12 +113,10 @@ const consentPages: ConsentPage[] = [
       }
     },
     update: async (ip, sc_gu_u, body) => {
-      const consents = [
-        {
-          id: Consents.PROFILING,
-          consented: body[Consents.PROFILING] === 'true',
-        },
-      ];
+      const consents = CONSENTS_DATA_PAGE.map((id) => ({
+        id,
+        consented: getConsentValueFromRequestBody(id, body),
+      }));
 
       await patchConsents(ip, sc_gu_u, consents);
     },
@@ -73,30 +125,12 @@ const consentPages: ConsentPage[] = [
     page: Routes.CONSENTS_COMMUNICATION.slice(1),
     read: async (ip, sc_gu_u) => {
       try {
-        const ConsentsCommunicationsPage: string[] = [
-          Consents.MARKET_RESEARCH,
-          Consents.SUPPORTER,
-          Consents.JOBS,
-          Consents.HOLIDAYS,
-          Consents.EVENTS,
-          Consents.OFFERS,
-        ];
-
-        const consents = await readConsents();
-        const userConsents = (await getUser(ip, sc_gu_u)).consents;
-
         return {
-          consents: consents
-            .filter((c) => ConsentsCommunicationsPage.includes(c.id))
-            .map((c) => {
-              const userConsent = userConsents.find((uc) => uc.id === c.id);
-
-              if (userConsent) {
-                c.consented = userConsent.consented;
-              }
-
-              return c;
-            }),
+          consents: await getUserConsentsForPage(
+            CONSENTS_COMMUNICATION_PAGE,
+            ip,
+            sc_gu_u,
+          ),
           page: Routes.CONSENTS_COMMUNICATION.slice(1),
         };
       } catch (error) {
@@ -104,32 +138,10 @@ const consentPages: ConsentPage[] = [
       }
     },
     update: async (ip, sc_gu_u, body) => {
-      const consents = [
-        {
-          id: Consents.MARKET_RESEARCH,
-          consented: body[Consents.MARKET_RESEARCH] === 'true',
-        },
-        {
-          id: Consents.SUPPORTER,
-          consented: !!body[Consents.SUPPORTER],
-        },
-        {
-          id: Consents.JOBS,
-          consented: !!body[Consents.JOBS],
-        },
-        {
-          id: Consents.HOLIDAYS,
-          consented: !!body[Consents.HOLIDAYS],
-        },
-        {
-          id: Consents.EVENTS,
-          consented: !!body[Consents.EVENTS],
-        },
-        {
-          id: Consents.OFFERS,
-          consented: !!body[Consents.OFFERS],
-        },
-      ];
+      const consents = CONSENTS_COMMUNICATION_PAGE.map((id) => ({
+        id,
+        consented: getConsentValueFromRequestBody(id, body),
+      }));
 
       await patchConsents(ip, sc_gu_u, consents);
     },
@@ -138,51 +150,23 @@ const consentPages: ConsentPage[] = [
     page: Routes.CONSENTS_NEWSLETTERS.slice(1),
     read: async (ip, sc_gu_u) => {
       try {
-        const NEWSLETTER_FILTER = [
-          Newsletters.BOOKMARKS,
-          Newsletters.GREENLIGHT,
-          Newsletters.LABNOTES,
-          Newsletters.THELONGREAD,
-        ];
-
-        const newsletters = await getNewsletters();
-
-        const userSub = await readUserNewsletters(ip, sc_gu_u);
-
         return {
           page: Routes.CONSENTS_NEWSLETTERS.slice(1),
-          newsletters: newsletters
-            .filter((n) => NEWSLETTER_FILTER.includes(n.id as Newsletters))
-            .map((n) => {
-              if (userSub.includes(n.id)) {
-                n.subscribed = true;
-              }
-              return n;
-            }),
+          newsletters: await getUserNewsletterSubscriptions(
+            NEWSLETTERS_PAGE,
+            ip,
+            sc_gu_u,
+          ),
         };
       } catch (error) {
         throw error;
       }
     },
     update: async (ip, sc_gu_u, body) => {
-      const newsletters: NewsletterPatch[] = [
-        {
-          id: Newsletters.BOOKMARKS,
-          subscribed: !!body[Newsletters.BOOKMARKS],
-        },
-        {
-          id: Newsletters.GREENLIGHT,
-          subscribed: !!body[Newsletters.GREENLIGHT],
-        },
-        {
-          id: Newsletters.LABNOTES,
-          subscribed: !!body[Newsletters.LABNOTES],
-        },
-        {
-          id: Newsletters.THELONGREAD,
-          subscribed: !!body[Newsletters.THELONGREAD],
-        },
-      ];
+      const newsletters: NewsletterPatch[] = NEWSLETTERS_PAGE.map((id) => ({
+        id,
+        subscribed: !!body[id],
+      }));
 
       await patchNewsletters(ip, sc_gu_u, newsletters);
     },
@@ -190,50 +174,19 @@ const consentPages: ConsentPage[] = [
   {
     page: Routes.CONSENTS_REVIEW.slice(1),
     read: async (ip, sc_gu_u) => {
-      const ConsentsReviewPage: string[] = [
-        Consents.PROFILING,
-        Consents.MARKET_RESEARCH,
-        Consents.SUPPORTER,
-        Consents.JOBS,
-        Consents.HOLIDAYS,
-        Consents.EVENTS,
-        Consents.OFFERS,
+      const ALL_CONSENT = [
+        ...CONSENTS_DATA_PAGE,
+        ...CONSENTS_COMMUNICATION_PAGE,
       ];
-
-      const NEWSLETTER_FILTER = [
-        Newsletters.BOOKMARKS,
-        Newsletters.GREENLIGHT,
-        Newsletters.LABNOTES,
-        Newsletters.THELONGREAD,
-      ];
-
-      const consents = await readConsents();
-      const userConsents = (await getUser(ip, sc_gu_u)).consents;
-
-      const newsletters = await getNewsletters();
-      const userSub = await readUserNewsletters(ip, sc_gu_u);
 
       return {
         page: Routes.CONSENTS_REVIEW.slice(1),
-        consents: consents
-          .filter((c) => ConsentsReviewPage.includes(c.id))
-          .map((c) => {
-            const userConsent = userConsents.find((uc) => uc.id === c.id);
-
-            if (userConsent) {
-              c.consented = userConsent.consented;
-            }
-
-            return c;
-          }),
-        newsletters: newsletters
-          .filter((n) => NEWSLETTER_FILTER.includes(n.id as Newsletters))
-          .map((n) => {
-            if (userSub.includes(n.id)) {
-              n.subscribed = true;
-            }
-            return n;
-          }),
+        consents: await getUserConsentsForPage(ALL_CONSENT, ip, sc_gu_u),
+        newsletters: await getUserNewsletterSubscriptions(
+          NEWSLETTERS_PAGE,
+          ip,
+          sc_gu_u,
+        ),
       };
     },
   },

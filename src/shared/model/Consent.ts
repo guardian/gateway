@@ -14,3 +14,14 @@ export enum Consents {
   EVENTS = 'events',
   OFFERS = 'offers',
 }
+
+export const CONSENTS_DATA_PAGE: string[] = [Consents.PROFILING];
+
+export const CONSENTS_COMMUNICATION_PAGE: string[] = [
+  Consents.MARKET_RESEARCH,
+  Consents.SUPPORTER,
+  Consents.JOBS,
+  Consents.HOLIDAYS,
+  Consents.EVENTS,
+  Consents.OFFERS,
+];

@@ -17,3 +17,10 @@ export enum Newsletters {
   LABNOTES = '4153',
   THELONGREAD = '4165',
 }
+
+export const NEWSLETTERS_PAGE: string[] = [
+  Newsletters.BOOKMARKS,
+  Newsletters.GREENLIGHT,
+  Newsletters.LABNOTES,
+  Newsletters.THELONGREAD,
+];
