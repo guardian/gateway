@@ -20,7 +20,7 @@ const router = Router();
 interface ConsentPage {
   page: string;
   read: (ip: string, sc_gu_u: string) => Promise<PageData>;
-  update: (
+  update?: (
     ip: string,
     sc_gu_u: string,
     body: { [key: string]: string | boolean },
@@ -166,6 +166,47 @@ const consentPages: ConsentPage[] = [
       await patchNewsletters(ip, sc_gu_u, newsletters);
     },
   },
+  {
+    page: Routes.CONSENTS_REVIEW.slice(1),
+    read: async (ip, sc_gu_u) => {
+      const ConsentsReviewPage: string[] = [
+        Consents.PROFILING,
+        Consents.MARKET_RESEARCH,
+        Consents.SUPPORTER,
+        Consents.JOBS,
+        Consents.HOLIDAYS,
+        Consents.EVENTS,
+        Consents.OFFERS,
+      ];
+
+      const NEWSLETTER_FILTER = [
+        Newsletters.BOOKMARKS,
+        Newsletters.GREENLIGHT,
+        Newsletters.LABNOTES,
+        Newsletters.THELONGREAD,
+      ];
+
+      const consents = (await getUser(ip, sc_gu_u)).consents.filter((c) =>
+        ConsentsReviewPage.includes(c.id),
+      );
+
+      const newsletters = await getNewsletters();
+      const userSub = await readUserNewsletters(ip, sc_gu_u);
+
+      return {
+        page: Routes.CONSENTS_REVIEW.slice(1),
+        consents,
+        newsletters: newsletters
+          .filter((n) => NEWSLETTER_FILTER.includes(n.id as Newsletters))
+          .map((n) => {
+            if (userSub.includes(n.id)) {
+              n.subscribed = true;
+            }
+            return n;
+          }),
+      };
+    },
+  },
 ];
 
 router.get(
@@ -226,7 +267,9 @@ router.post(`${Routes.CONSENTS}/:page`, async (req, res) => {
   try {
     const { update } = consentPages[pageIndex];
 
-    await update(req.ip, sc_gu_u, req.body);
+    if (update) {
+      await update(req.ip, sc_gu_u, req.body);
+    }
 
     return res.redirect(
       303,
