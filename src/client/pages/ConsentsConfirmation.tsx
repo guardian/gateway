@@ -221,7 +221,7 @@ export const ConsentsConfirmationPage = () => {
               {productConsents.length ? (
                 productConsents.map((c) => (
                   <p key={c.id} css={text}>
-                    {c.id}
+                    {c.name}
                   </p>
                 ))
               ) : (

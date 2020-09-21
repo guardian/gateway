@@ -8,7 +8,7 @@ import {
 import { NewslettersErrors } from '@/shared/model/Errors';
 import { NewsLetter, NewsletterPatch } from '@/shared/model/Newsletter';
 
-const API_ROUTE = '/newsletters';
+const API_ROUTE = '/users/me/newsletters';
 
 interface NewsletterAPIResponse {
   id: string;
@@ -38,7 +38,7 @@ export const read = async (): Promise<NewsLetter[]> => {
   const options = APIGetOptions();
   try {
     return ((await idapiFetch(
-      API_ROUTE,
+      '/newsletters',
       options,
     )) as NewsletterAPIResponse[]).map(responseToEntity);
   } catch (e) {
@@ -51,14 +51,13 @@ export const update = async (
   sc_gu_u: string,
   payload: NewsletterPatch[],
 ) => {
-  const url = '/users/me/newsletters';
   const options = APIForwardSessionIdentifier(
     APIAddClientAccessToken(APIPatchOptions(payload), ip),
     sc_gu_u,
   );
 
   try {
-    await idapiFetch(url, options);
+    await idapiFetch(API_ROUTE, options);
     return;
   } catch (e) {
     return handleError();
@@ -70,7 +69,6 @@ interface Subscription {
 }
 
 export const readUserNewsletters = async (ip: string, sc_gu_u: string) => {
-  const url = '/users/me/newsletters';
   const options = APIForwardSessionIdentifier(
     APIAddClientAccessToken(APIGetOptions(), ip),
     sc_gu_u,
@@ -78,7 +76,7 @@ export const readUserNewsletters = async (ip: string, sc_gu_u: string) => {
 
   try {
     return (
-      await idapiFetch(url, options)
+      await idapiFetch(API_ROUTE, options)
     ).result.subscriptions.map((s: Subscription) => s.listId.toString());
   } catch (e) {
     return handleError();

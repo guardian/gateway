@@ -1,5 +1,8 @@
-import { Consent } from './Consent';
-
 export default interface User {
-  consents: Consent[];
+  consents: UserConsent[];
+}
+
+export interface UserConsent {
+  id: string;
+  consented: boolean;
 }

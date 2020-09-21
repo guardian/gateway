@@ -4,7 +4,10 @@ import { verifyEmail } from '@/server/lib/idapi/verifyEmail';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
-import { update as patchConsents } from '@/server/lib/idapi/consents';
+import {
+  update as patchConsents,
+  read as readConsents,
+} from '@/server/lib/idapi/consents';
 import {
   update as patchNewsletters,
   readUserNewsletters,
@@ -34,12 +37,21 @@ const consentPages: ConsentPage[] = [
       try {
         const ConsentsDataPage: string[] = [Consents.PROFILING];
 
-        const consents = (await getUser(ip, sc_gu_u)).consents.filter((c) =>
-          ConsentsDataPage.includes(c.id),
-        );
+        const consents = await readConsents();
+        const userConsents = (await getUser(ip, sc_gu_u)).consents;
 
         return {
-          consents,
+          consents: consents
+            .filter((c) => ConsentsDataPage.includes(c.id))
+            .map((c) => {
+              const userConsent = userConsents.find((uc) => uc.id === c.id);
+
+              if (userConsent) {
+                c.consented = userConsent.consented;
+              }
+
+              return c;
+            }),
           page: Routes.CONSENTS_DATA.slice(1),
         };
       } catch (error) {
@@ -70,12 +82,21 @@ const consentPages: ConsentPage[] = [
           Consents.OFFERS,
         ];
 
-        const consents = (await getUser(ip, sc_gu_u)).consents.filter((c) =>
-          ConsentsCommunicationsPage.includes(c.id),
-        );
+        const consents = await readConsents();
+        const userConsents = (await getUser(ip, sc_gu_u)).consents;
 
         return {
-          consents,
+          consents: consents
+            .filter((c) => ConsentsCommunicationsPage.includes(c.id))
+            .map((c) => {
+              const userConsent = userConsents.find((uc) => uc.id === c.id);
+
+              if (userConsent) {
+                c.consented = userConsent.consented;
+              }
+
+              return c;
+            }),
           page: Routes.CONSENTS_COMMUNICATION.slice(1),
         };
       } catch (error) {
@@ -186,16 +207,25 @@ const consentPages: ConsentPage[] = [
         Newsletters.THELONGREAD,
       ];
 
-      const consents = (await getUser(ip, sc_gu_u)).consents.filter((c) =>
-        ConsentsReviewPage.includes(c.id),
-      );
+      const consents = await readConsents();
+      const userConsents = (await getUser(ip, sc_gu_u)).consents;
 
       const newsletters = await getNewsletters();
       const userSub = await readUserNewsletters(ip, sc_gu_u);
 
       return {
         page: Routes.CONSENTS_REVIEW.slice(1),
-        consents,
+        consents: consents
+          .filter((c) => ConsentsReviewPage.includes(c.id))
+          .map((c) => {
+            const userConsent = userConsents.find((uc) => uc.id === c.id);
+
+            if (userConsent) {
+              c.consented = userConsent.consented;
+            }
+
+            return c;
+          }),
         newsletters: newsletters
           .filter((n) => NEWSLETTER_FILTER.includes(n.id as Newsletters))
           .map((n) => {

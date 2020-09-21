@@ -1,6 +1,8 @@
 export interface Consent {
   id: string;
-  consented: boolean;
+  name: string;
+  description: string;
+  consented?: boolean;
 }
 
 export enum Consents {
