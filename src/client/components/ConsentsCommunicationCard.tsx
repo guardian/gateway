@@ -6,8 +6,7 @@ import { CheckboxGroup, Checkbox } from '@guardian/src-checkbox';
 import { from } from '@guardian/src-foundations/mq';
 
 interface CommunicationCardProps {
-  titleTop?: string;
-  titleBottom: string;
+  title: string;
   body: string;
   value: string;
   checked: boolean;
@@ -45,7 +44,8 @@ const communicationCardHeadingContainer = (image?: string) => css`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: ${space[12]}px ${space[3]}px ${space[2]}px ${space[3]}px;
+  padding: ${space[2]}px ${space[3]}px ${space[2]}px ${space[3]}px;
+  height: calc(${space[24]}px + ${space[6]}px);
 `;
 
 const communicationCardHeadingText = css`
@@ -87,8 +87,7 @@ const communicationCardCheckbox = css`
 `;
 
 export const CommunicationCard: FunctionComponent<CommunicationCardProps> = ({
-  titleTop,
-  titleBottom,
+  title,
   body,
   value,
   image,
@@ -97,11 +96,7 @@ export const CommunicationCard: FunctionComponent<CommunicationCardProps> = ({
   return (
     <div css={communicationCard}>
       <div css={communicationCardHeadingContainer(image)}>
-        <h3 css={communicationCardHeadingText}>
-          {titleTop}
-          <br />
-          {titleBottom}
-        </h3>
+        <h3 css={communicationCardHeadingText}>{title}</h3>
       </div>
       <div css={communicationCardBodyContainer}>
         <p css={communicationCardBodyText}>{body}</p>

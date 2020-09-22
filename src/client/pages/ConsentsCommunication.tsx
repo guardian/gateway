@@ -44,29 +44,9 @@ export const ConsentsCommunicationPage = () => {
     (consent) => consent.id === Consents.MARKET_RESEARCH,
   ) || { consented: true };
 
-  const supporter = consents.find(
-    (consent) => consent.id === Consents.SUPPORTER,
-  ) || {
-    consented: false,
-  };
-
-  const jobs = consents.find((consent) => consent.id === Consents.JOBS) || {
-    consented: false,
-  };
-
-  const holidays = consents.find(
-    (consent) => consent.id === Consents.HOLIDAYS,
-  ) || {
-    consented: false,
-  };
-
-  const events = consents.find((consent) => consent.id === Consents.EVENTS) || {
-    consented: false,
-  };
-
-  const offers = consents.find((consent) => consent.id === Consents.OFFERS) || {
-    consented: false,
-  };
+  const consentsWithoutOptout = consents.filter(
+    (consent) => !consent.id.includes('_optout'),
+  );
 
   return (
     <ConsentsLayout
@@ -80,40 +60,15 @@ export const ConsentsCommunicationPage = () => {
         services and events.
       </p>
       <div css={[communicationCardContainer, autoRow()]}>
-        <CommunicationCard
-          titleTop="News"
-          titleBottom="& Offers"
-          body="News and offers from The Guardian, The Observer and Guardian Weekly."
-          value={Consents.SUPPORTER}
-          checked={!!supporter.consented}
-        />
-        <CommunicationCard
-          titleBottom="Jobs"
-          body="Receive tips, Job Match recommendations, and advice from Guardian Jobs on taking your next career step."
-          image={CardJobImage}
-          value={Consents.JOBS}
-          checked={!!jobs.consented}
-        />
-        <CommunicationCard
-          titleTop="Holidays"
-          titleBottom="& Vacations"
-          body="Ideas and inspiration for your next trip away, as well as the latest offers from Guardian Holidays in the UK and Guardian Vacations."
-          value={Consents.HOLIDAYS}
-          checked={!!holidays.consented}
-        />
-        <CommunicationCard
-          titleTop="Events"
-          titleBottom="& Masterclass"
-          body="Learn from leading minds at our Guardian live events, including discussions and debates, short courses and bespoke training."
-          value={Consents.EVENTS}
-          checked={!!events.consented}
-        />
-        <CommunicationCard
-          titleBottom="Offers"
-          body="Offers and competitions from The Guardian and other carefully selected and trusted partners that we think you might like."
-          value={Consents.OFFERS}
-          checked={!!offers.consented}
-        />
+        {consentsWithoutOptout.map((consent) => (
+          <CommunicationCard
+            key={consent.id}
+            title={consent.name}
+            body={consent.description}
+            value={consent.id}
+            checked={!!consent.consented}
+          />
+        ))}
       </div>
       <h3 css={[heading, autoRow()]}>Using your data for market research</h3>
       <p css={[text, autoRow()]}>

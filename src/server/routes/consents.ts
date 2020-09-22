@@ -64,17 +64,20 @@ const getUserConsentsForPage = async (
   const allConsents = await readConsents();
   const userConsents = (await getUser(ip, sc_gu_u)).consents;
 
-  return allConsents
-    .filter((consent) => pageConsents.includes(consent.id))
+  return pageConsents
+    .map((id) => allConsents.find((consent) => consent.id === id))
     .map((consent) => {
-      const userConsent = userConsents.find((uc) => uc.id === consent.id);
+      if (consent) {
+        const userConsent = userConsents.find((uc) => uc.id === consent.id);
 
-      if (userConsent) {
-        consent.consented = userConsent.consented;
+        if (userConsent) {
+          consent.consented = userConsent.consented;
+        }
+
+        return consent;
       }
-
-      return consent;
-    });
+    })
+    .filter(Boolean) as Consent[];
 };
 
 const getUserNewsletterSubscriptions = async (
@@ -85,14 +88,17 @@ const getUserNewsletterSubscriptions = async (
   const allNewsletters = await getNewsletters();
   const userNewsletterSubscriptions = await readUserNewsletters(ip, sc_gu_u);
 
-  return allNewsletters
-    .filter((newslettter) => newslettersOnPage.includes(newslettter.id))
+  return newslettersOnPage
+    .map((id) => allNewsletters.find((newsletter) => newsletter.id === id))
     .map((newsletter) => {
-      if (userNewsletterSubscriptions.includes(newsletter.id)) {
-        newsletter.subscribed = true;
+      if (newsletter) {
+        if (userNewsletterSubscriptions.includes(newsletter.id)) {
+          newsletter.subscribed = true;
+        }
+        return newsletter;
       }
-      return newsletter;
-    });
+    })
+    .filter(Boolean) as NewsLetter[];
 };
 
 const consentPages: ConsentPage[] = [
