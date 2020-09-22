@@ -6,7 +6,6 @@ import { space, neutral } from '@guardian/src-foundations';
 import { RadioGroup, Radio } from '@guardian/src-radio';
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { CommunicationCard } from '@/client/components/ConsentsCommunicationCard';
-import CardJobImage from '@/client/assets/gu-jobs.png';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { heading, text } from '@/client/styles/Consents';
 import { GlobalState } from '@/shared/model/GlobalState';

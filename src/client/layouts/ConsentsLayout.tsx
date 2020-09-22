@@ -64,7 +64,6 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
   const globalState: GlobalState = useContext(GlobalStateContext);
   const { error, pageData = {} } = globalState;
   const { page = '', previousPage } = pageData;
-  console.log(previousPage);
   return (
     <>
       <Header />
