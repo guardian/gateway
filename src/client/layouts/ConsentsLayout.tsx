@@ -7,7 +7,7 @@ import { GlobalError } from '@/client/components/GlobalError';
 import { brand } from '@guardian/src-foundations/palette';
 import { css } from '@emotion/core';
 import { space } from '@guardian/src-foundations';
-import { Button } from '@guardian/src-button';
+import { Button, LinkButton } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
 import { gridItem, gridItemColumnConsents } from '@/client/styles/Grid';
 import {
@@ -52,6 +52,10 @@ const form = css`
   flex-direction: column;
 `;
 
+const linkButton = css`
+  margin-left: ${space[5]}px;
+`;
+
 export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
   children,
   title,
@@ -59,8 +63,8 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
 }) => {
   const globalState: GlobalState = useContext(GlobalStateContext);
   const { error, pageData = {} } = globalState;
-  const { page = '' } = pageData;
-
+  const { page = '', previousPage } = pageData;
+  console.log(previousPage);
   return (
     <>
       <Header />
@@ -83,6 +87,15 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
             >
               Save and Continue
             </Button>
+            {previousPage && (
+              <LinkButton
+                css={linkButton}
+                href={`${Routes.CONSENTS}/${previousPage}`}
+                priority="subdued"
+              >
+                Go Back
+              </LinkButton>
+            )}
           </div>
         </ConsentsBlueBackground>
       </form>

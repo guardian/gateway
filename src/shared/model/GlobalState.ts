@@ -6,6 +6,7 @@ export interface PageData {
   newsletters?: NewsLetter[];
   consents?: Consent[];
   page?: string;
+  previousPage?: string;
 }
 
 export interface GlobalState {
