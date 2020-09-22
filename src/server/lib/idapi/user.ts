@@ -37,7 +37,7 @@ export const read = async (ip: string, sc_gu_u: string): Promise<User> => {
     const response = (await idapiFetch(API_ROUTE, options)) as APIResponse;
     return responseToEntity(response);
   } catch (e) {
-    logger.error(e.toString());
+    logger.error(e);
     return handleError();
   }
 };

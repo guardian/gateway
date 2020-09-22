@@ -41,6 +41,7 @@ export const read = async (): Promise<Consent[]> => {
       options,
     )) as ConsentAPIResponse[]).map(responseToEntity);
   } catch (e) {
+    logger.error(e);
     return handleError();
   }
 };
@@ -58,7 +59,7 @@ export const update = async (
     await idapiFetch(API_ROUTE, options);
     return;
   } catch (e) {
-    logger.error(e.toString());
+    logger.error(e);
     return handleError();
   }
 };

@@ -7,6 +7,7 @@ import {
 } from '../APIFetch';
 import { NewslettersErrors } from '@/shared/model/Errors';
 import { NewsLetter, NewsletterPatch } from '@/shared/model/Newsletter';
+import { logger } from '../logger';
 
 const API_ROUTE = '/users/me/newsletters';
 
@@ -42,6 +43,7 @@ export const read = async (): Promise<NewsLetter[]> => {
       options,
     )) as NewsletterAPIResponse[]).map(responseToEntity);
   } catch (e) {
+    logger.error(e);
     return handleError();
   }
 };
@@ -60,6 +62,7 @@ export const update = async (
     await idapiFetch(API_ROUTE, options);
     return;
   } catch (e) {
+    logger.error(e);
     return handleError();
   }
 };
@@ -79,6 +82,7 @@ export const readUserNewsletters = async (ip: string, sc_gu_u: string) => {
       await idapiFetch(API_ROUTE, options)
     ).result.subscriptions.map((s: Subscription) => s.listId.toString());
   } catch (e) {
+    logger.error(e);
     return handleError();
   }
 };
