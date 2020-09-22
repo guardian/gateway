@@ -107,7 +107,7 @@ export const CommunicationCard: FunctionComponent<CommunicationCardProps> = ({
             cssOverrides={communicationCardCheckbox}
             value={value}
             label="Sign Up"
-            checked={checked}
+            defaultChecked={checked}
           />
         </CheckboxGroup>
       </div>

@@ -85,12 +85,12 @@ export const ConsentsCommunicationPage = () => {
           <Radio
             value="false"
             label="Yes"
-            checked={!market_research_optout.consented}
+            defaultChecked={!market_research_optout.consented}
           />
           <Radio
             value="true"
             label="No"
-            checked={market_research_optout.consented}
+            defaultChecked={market_research_optout.consented}
           />
         </RadioGroup>
       </fieldset>

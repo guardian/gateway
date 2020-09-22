@@ -71,9 +71,13 @@ export const ConsentsDataPage = () => {
           <Radio
             value="false"
             label="Yes"
-            checked={!profiling_optout.consented}
+            defaultChecked={!profiling_optout.consented}
           />
-          <Radio value="true" label="No" checked={profiling_optout.consented} />
+          <Radio
+            value="true"
+            label="No"
+            defaultChecked={profiling_optout.consented}
+          />
         </RadioGroup>
       </fieldset>
     </ConsentsLayout>
