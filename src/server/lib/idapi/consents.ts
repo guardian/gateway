@@ -12,8 +12,8 @@ import { UserConsent } from '@/shared/model/User';
 
 const API_ROUTE = '/users/me/consents';
 
-const handleError = () => {
-  throw ConsentsErrors.GENERIC;
+const handleError = (): never => {
+  throw { message: ConsentsErrors.GENERIC, status: 500 };
 };
 
 interface ConsentAPIResponse {

@@ -14,8 +14,8 @@ interface APIResponse {
 
 const API_ROUTE = '/user/me';
 
-const handleError = () => {
-  throw ConsentsErrors.USER;
+const handleError = (): never => {
+  throw { message: ConsentsErrors.USER, status: 500 };
 };
 
 const responseToEntity = (response: APIResponse): User => {

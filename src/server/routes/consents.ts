@@ -209,6 +209,7 @@ router.get(
       const cookies = await verifyEmail(token, req.ip);
       setIDAPICookies(res, cookies);
     } catch (e) {
+      // @TODO: Handling here to be done in upcoming ticket.
       logger.error(e);
     }
 
@@ -225,6 +226,7 @@ router.get(`${Routes.CONSENTS}/:page`, async (req: Request, res: Response) => {
   const state: GlobalState = {};
 
   const { page } = req.params;
+  let status = 200;
 
   const pageIndex = consentPages.findIndex((elem) => elem.page === page);
   if (pageIndex === -1) {
@@ -236,12 +238,13 @@ router.get(`${Routes.CONSENTS}/:page`, async (req: Request, res: Response) => {
 
     state.pageData = await read(req.ip, sc_gu_u);
   } catch (e) {
-    state.error = e;
+    status = e.status;
+    state.error = e.message;
   }
 
   const html = renderer(`${Routes.CONSENTS}/${page}`, { globalState: state });
 
-  res.type('html').send(html);
+  res.type('html').status(status).send(html);
 });
 
 router.post(`${Routes.CONSENTS}/:page`, async (req, res) => {
@@ -249,6 +252,7 @@ router.post(`${Routes.CONSENTS}/:page`, async (req, res) => {
   const state: GlobalState = {};
 
   const { page } = req.params;
+  let status = 200;
 
   const pageIndex = consentPages.findIndex((elem) => elem.page === page);
   if (pageIndex === -1) {
@@ -267,11 +271,12 @@ router.post(`${Routes.CONSENTS}/:page`, async (req, res) => {
       `${Routes.CONSENTS}/${consentPages[pageIndex + 1].page}`,
     );
   } catch (e) {
-    state.error = e;
+    status = e.status;
+    state.error = e.message;
   }
 
   const html = renderer(`${Routes.CONSENTS}/${page}`, { globalState: state });
-  res.type('html').send(html);
+  res.type('html').status(status).send(html);
 });
 
 export default router;
