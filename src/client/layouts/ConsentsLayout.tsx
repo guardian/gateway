@@ -48,7 +48,7 @@ const controls = css`
 
 const form = css`
   display: flex;
-  height: 100%;
+  flex: 1 0 auto;
   flex-direction: column;
 `;
 
