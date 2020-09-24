@@ -36,7 +36,7 @@ const getNewsletterCardCss = (index: number) => {
   `;
 };
 
-export const NewslettersPage = () => {
+export const ConsentsNewslettersPage = () => {
   const globalState = useContext<GlobalState>(GlobalStateContext);
   const newsletters = globalState?.pageData?.newsletters ?? [];
   const autoRow = getAutoRow(1, gridItemColumnConsents);

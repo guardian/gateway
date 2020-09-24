@@ -117,12 +117,12 @@ export const NewsletterCard: FunctionComponent<NewsletterCardProps> = (
         <h1 css={h1}>{name}</h1>
         {subtitle}
         <p css={p}>{description}</p>
-        <CheckboxGroup name={'PlaceholderNameToBeReplaced'}>
+        <CheckboxGroup name={props.newsletter.id}>
           <Checkbox
+            value={props.newsletter.id}
             cssOverrides={checkBoxBackgroundColorBugFix}
-            value={'PlaceholderNameToBeReplaced'}
             label="Sign Up"
-            checked={false}
+            checked={props.newsletter.subscribed}
           />
         </CheckboxGroup>
       </div>

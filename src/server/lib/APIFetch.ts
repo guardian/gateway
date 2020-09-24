@@ -3,7 +3,22 @@
 import fetch, { RequestInit, Response } from 'node-fetch';
 import { getConfiguration } from '@/server/lib/configuration';
 
-const { idapiBaseUrl, idapiClientAccessToken } = getConfiguration();
+const {
+  idapiBaseUrl,
+  idapiClientAccessToken,
+  stage,
+  baseUri,
+} = getConfiguration();
+
+const getOrigin = (stage: string): string => {
+  switch (stage) {
+    case 'CODE':
+    case 'PROD':
+      return `https://${baseUri}`;
+    default:
+      return 'https://profile.thegulocal.com';
+  }
+};
 
 export interface IDAPIError {
   error: any;
@@ -37,6 +52,7 @@ const getAPIOptionsForMethod = (method: string) => (
   method,
   headers: {
     'Content-Type': 'application/json',
+    Origin: getOrigin(stage),
   },
   body: payload ? JSON.stringify(payload) : undefined,
 });
@@ -56,14 +72,31 @@ export const APIFetch = (baseUrl: string) => async (
 };
 
 export const APIGetOptions = getAPIOptionsForMethod('GET');
-
+export const APIPatchOptions = getAPIOptionsForMethod('PATCH');
 export const APIPostOptions = getAPIOptionsForMethod('POST');
 
-export const APIAddClientAccessToken = (options: RequestInit, ip: string) => {
+export const APIAddClientAccessToken = (
+  options: RequestInit,
+  ip: string,
+): RequestInit => {
   const headers = {
     ...options.headers,
     'X-GU-ID-Client-Access-Token': `Bearer ${idapiClientAccessToken}`,
     'X-Forwarded-For': ip,
+  };
+  return {
+    ...options,
+    headers,
+  };
+};
+
+export const APIForwardSessionIdentifier = (
+  options: RequestInit,
+  id: string,
+) => {
+  const headers = {
+    ...options.headers,
+    'X-GU-ID-FOWARDED-SC-GU-U': id,
   };
   return {
     ...options,

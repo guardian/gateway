@@ -7,7 +7,7 @@ import { GlobalError } from '@/client/components/GlobalError';
 import { brand } from '@guardian/src-foundations/palette';
 import { css } from '@emotion/core';
 import { space } from '@guardian/src-foundations';
-import { Button } from '@guardian/src-button';
+import { Button, LinkButton } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
 import { gridItem, gridItemColumnConsents } from '@/client/styles/Grid';
 import {
@@ -17,6 +17,7 @@ import {
   ieFlexFix,
   ConsentsProgression,
 } from '@/client/layouts/shared/Consents';
+import { Routes } from '@/shared/model/Routes';
 
 interface ConsentsLayoutProps {
   children?: React.ReactNode;
@@ -45,36 +46,58 @@ const controls = css`
   padding: ${space[9]}px 0 ${space[24]}px 0;
 `;
 
+const form = css`
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+`;
+
+const linkButton = css`
+  margin-left: ${space[5]}px;
+`;
+
 export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
   children,
   title,
   current,
 }) => {
   const globalState: GlobalState = useContext(GlobalStateContext);
-  const { error } = globalState;
-
+  const { error, pageData = {} } = globalState;
+  const { page = '', previousPage } = pageData;
   return (
     <>
       <Header />
       {error && <GlobalError error={error} />}
       <ConsentsHeader title={title} />
-      <main css={[mainBackground, ieFlexFix]}>
-        <ConsentsContent>
-          <ConsentsProgression current={current} />
-          {children}
-        </ConsentsContent>
-      </main>
-      <ConsentsBlueBackground>
-        <div css={[gridItem(gridItemColumnConsents), controls]}>
-          <Button
-            iconSide="right"
-            nudgeIcon={true}
-            icon={<SvgArrowRightStraight />}
-          >
-            Continue
-          </Button>
-        </div>
-      </ConsentsBlueBackground>
+      <form css={form} action={`${Routes.CONSENTS}/${page}`} method="post">
+        <main css={[mainBackground, ieFlexFix]}>
+          <ConsentsContent>
+            <ConsentsProgression current={current} />
+            {children}
+          </ConsentsContent>
+        </main>
+        <ConsentsBlueBackground>
+          <div css={[gridItem(gridItemColumnConsents), controls]}>
+            <Button
+              iconSide="right"
+              nudgeIcon={true}
+              icon={<SvgArrowRightStraight />}
+              type="submit"
+            >
+              Save and Continue
+            </Button>
+            {previousPage && (
+              <LinkButton
+                css={linkButton}
+                href={`${Routes.CONSENTS}/${previousPage}`}
+                priority="subdued"
+              >
+                Go Back
+              </LinkButton>
+            )}
+          </div>
+        </ConsentsBlueBackground>
+      </form>
       <Footer />
     </>
   );

@@ -25,6 +25,7 @@ import {
 import { Footer } from '@/client/components/Footer';
 import { headingWithMq, text } from '@/client/styles/Consents';
 import { Link } from '@guardian/src-link';
+import { Consents } from '@/shared/model/Consent';
 
 const homepageCardContainer = css`
   display: flex;
@@ -154,7 +155,7 @@ const returnBox = css`
   }
 `;
 
-const newsletters = css`
+const newslettersBox = css`
   padding-bottom: ${space[24]}px;
 `;
 
@@ -176,7 +177,23 @@ const confirmationSpanDefinition: SpanDefinition = {
 export const ConsentsConfirmationPage = () => {
   const autoRow = getAutoRow(1, confirmationSpanDefinition);
   const globalState: GlobalState = useContext(GlobalStateContext);
-  const { error } = globalState;
+  const { error, pageData = {} } = globalState;
+
+  const { consents = [], newsletters = [] } = pageData;
+
+  const profiling_optout = consents.find(
+    (consent) => consent.id === Consents.PROFILING,
+  ) || { consented: true };
+
+  const market_research_optout = consents.find(
+    (consent) => consent.id === Consents.MARKET_RESEARCH,
+  ) || { consented: true };
+
+  const productConsents = consents.filter(
+    (c) => !c.id.includes('_optout') && c.consented,
+  );
+
+  const subscribedNewsletters = newsletters.filter((n) => n.subscribed);
 
   return (
     <>
@@ -196,20 +213,36 @@ export const ConsentsConfirmationPage = () => {
           </p>
           <div css={[reviewTableContainer, autoRow()]}>
             <ReviewTableRow title="Marketing analysis">
-              <p css={text}>Opted in</p>
+              <p css={text}>
+                {profiling_optout.consented ? 'Opted out' : 'Opted in'}
+              </p>
             </ReviewTableRow>
             <ReviewTableRow title="Products & services">
-              <p css={text}>Supporting the Guardian</p>
-              <p css={text}>Jobs</p>
-              <p css={text}>Events & Masterclasses</p>
+              {productConsents.length ? (
+                productConsents.map((c) => (
+                  <p key={c.id} css={text}>
+                    {c.name}
+                  </p>
+                ))
+              ) : (
+                <p css={text}>N/A</p>
+              )}
             </ReviewTableRow>
             <ReviewTableRow title="Marketing research">
-              <p css={text}>Opted in</p>
+              <p css={text}>
+                {market_research_optout.consented ? 'Opted out' : 'Opted in'}
+              </p>
             </ReviewTableRow>
             <ReviewTableRow title="Newsletters">
-              <p css={text}>The Guardian Today</p>
-              <p css={text}>The Long Read</p>
-              <p css={text}>Global Dispatch</p>
+              {subscribedNewsletters.length ? (
+                subscribedNewsletters.map((n) => (
+                  <p key={n.id} css={text}>
+                    {n.name}
+                  </p>
+                ))
+              ) : (
+                <p css={text}>N/A</p>
+              )}
             </ReviewTableRow>
           </div>
         </ConsentsContent>
@@ -233,7 +266,7 @@ export const ConsentsConfirmationPage = () => {
             </div>
           </div>
         </ConsentsBlueBackground>
-        <ConsentsContent cssOverrides={newsletters}>
+        <ConsentsContent cssOverrides={newslettersBox}>
           <h3 css={[headingWithMq, autoRow()]}>Sign up to more newsletters</h3>
           <p css={[text, autoRow()]}>
             We have over 40 different emails that focus on a range of diverse

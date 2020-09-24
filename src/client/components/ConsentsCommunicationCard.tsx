@@ -6,10 +6,10 @@ import { CheckboxGroup, Checkbox } from '@guardian/src-checkbox';
 import { from } from '@guardian/src-foundations/mq';
 
 interface CommunicationCardProps {
-  titleTop?: string;
-  titleBottom: string;
+  title: string;
   body: string;
   value: string;
+  checked: boolean;
   image?: string;
 }
 
@@ -30,7 +30,7 @@ const communicationCard = css`
 `;
 
 const communicationCardHeadingImage = (image: string) => css`
-  background-image: url("${image}");
+  background-image: url('${image}');
   background-position: bottom 0px right 0px;
   background-repeat: no-repeat;
   background-size: 75%;
@@ -44,7 +44,8 @@ const communicationCardHeadingContainer = (image?: string) => css`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: ${space[12]}px ${space[3]}px ${space[2]}px ${space[3]}px;
+  padding: ${space[2]}px ${space[3]}px ${space[2]}px ${space[3]}px;
+  height: calc(${space[24]}px + ${space[6]}px);
 `;
 
 const communicationCardHeadingText = css`
@@ -71,7 +72,7 @@ const communicationCardBodyText = css`
   ${textSans.small({ lineHeight: 'tight' })};
 `;
 
-const communicationCardForm = css`
+const communicationCardCheckboxContainer = css`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -86,34 +87,30 @@ const communicationCardCheckbox = css`
 `;
 
 export const CommunicationCard: FunctionComponent<CommunicationCardProps> = ({
-  titleTop,
-  titleBottom,
+  title,
   body,
   value,
   image,
+  checked,
 }) => {
   return (
     <div css={communicationCard}>
       <div css={communicationCardHeadingContainer(image)}>
-        <h3 css={communicationCardHeadingText}>
-          {titleTop}
-          <br />
-          {titleBottom}
-        </h3>
+        <h3 css={communicationCardHeadingText}>{title}</h3>
       </div>
       <div css={communicationCardBodyContainer}>
         <p css={communicationCardBodyText}>{body}</p>
       </div>
-      <form css={communicationCardForm}>
+      <div css={communicationCardCheckboxContainer}>
         <CheckboxGroup name={value}>
           <Checkbox
             cssOverrides={communicationCardCheckbox}
             value={value}
             label="Sign Up"
-            checked={false}
+            defaultChecked={checked}
           />
         </CheckboxGroup>
-      </form>
+      </div>
     </div>
   );
 };
