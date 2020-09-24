@@ -3,7 +3,22 @@
 import fetch, { RequestInit, Response } from 'node-fetch';
 import { getConfiguration } from '@/server/lib/configuration';
 
-const { idapiBaseUrl, idapiClientAccessToken } = getConfiguration();
+const {
+  idapiBaseUrl,
+  idapiClientAccessToken,
+  stage,
+  baseUri,
+} = getConfiguration();
+
+const getOrigin = (stage: string): string => {
+  switch (stage) {
+    case 'CODE':
+    case 'PROD':
+      return `https://${baseUri}`;
+    default:
+      return 'https://profile.thegulocal.com';
+  }
+};
 
 export interface IDAPIError {
   error: any;
@@ -37,6 +52,7 @@ const getAPIOptionsForMethod = (method: string) => (
   method,
   headers: {
     'Content-Type': 'application/json',
+    Origin: getOrigin(stage),
   },
   body: payload ? JSON.stringify(payload) : undefined,
 });

@@ -244,7 +244,10 @@ router.get(`${Routes.CONSENTS}/:page`, async (req: Request, res: Response) => {
 
   const html = renderer(`${Routes.CONSENTS}/${page}`, { globalState: state });
 
-  res.type('html').status(status).send(html);
+  res
+    .type('html')
+    .status(status ?? 500)
+    .send(html);
 });
 
 router.post(`${Routes.CONSENTS}/:page`, async (req, res) => {
@@ -276,7 +279,10 @@ router.post(`${Routes.CONSENTS}/:page`, async (req, res) => {
   }
 
   const html = renderer(`${Routes.CONSENTS}/${page}`, { globalState: state });
-  res.type('html').status(status).send(html);
+  res
+    .type('html')
+    .status(status ?? 500)
+    .send(html);
 });
 
 export default router;
