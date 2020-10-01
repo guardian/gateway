@@ -11,6 +11,9 @@ Parameters:
   IdapiBaseUrl:
     Description: The base url for idapi
     Type: AWS::SSM::Parameter::Value<String>
+  SignInPageUrl:
+    Description: Sign in page URL used as a fallback if auth redirect retrieval fails.
+    Type: AWS::SSM::Parameter::Value<String>
   CertificateArn:
     Description: ARN of certificate for loadbalancer use.
     Type: String
@@ -183,6 +186,7 @@ Resources:
             Environment=PORT=9233
             Environment=IDAPI_CLIENT_ACCESS_TOKEN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/idapi-client-access-token' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
             Environment=IDAPI_BASE_URL=${IdapiBaseUrl}
+            Environment=SIGN_IN_PAGE_URL=${SignInPageUrl}
             Environment=BASE_URI=${BaseUri}
             Environment=PLAY_SESSION_COOKIE_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/frontendPlaySecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
             Environment=DEFAULT_RETURN_URI=${DefaultReturnUri}
