@@ -10,12 +10,18 @@ export const loginMiddleware = async (
 ) => {
   const config = getConfiguration();
   const LOGIN_REDIRECT_URL = config.signInPageUrl;
+  const RETURN_URL = config.baseUri + '/signin';
+
+  const generateRedirectUrl = (url: string): string => {
+    const divider = url.includes('?') ? '&' : '?';
+    return `${url}/signin${divider}returnUrl=${RETURN_URL}`;
+  };
 
   const sc_gu_u = req.cookies.SC_GU_U;
   const sc_gu_la = req.cookies.SC_GU_LA;
 
   if (!sc_gu_u || !sc_gu_la) {
-    res.redirect(LOGIN_REDIRECT_URL);
+    res.redirect(generateRedirectUrl(LOGIN_REDIRECT_URL));
     return;
   }
 
@@ -25,15 +31,15 @@ export const loginMiddleware = async (
       next();
     } else {
       if (auth.redirect) {
-        const redirect = auth.redirect.url;
+        const redirect = generateRedirectUrl(auth.redirect.url);
         res.redirect(redirect);
         return;
       } else {
-        res.redirect(LOGIN_REDIRECT_URL);
+        res.redirect(generateRedirectUrl(LOGIN_REDIRECT_URL));
         return;
       }
     }
   } catch (e) {
-    res.redirect(LOGIN_REDIRECT_URL);
+    res.redirect(generateRedirectUrl(LOGIN_REDIRECT_URL));
   }
 };
