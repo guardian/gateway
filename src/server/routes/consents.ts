@@ -208,12 +208,22 @@ router.get(
     try {
       const cookies = await verifyEmail(token, req.ip);
       setIDAPICookies(res, cookies);
-    } catch (e) {
-      // @TODO: Handling here to be done in upcoming ticket.
-      logger.error(e);
+    } catch (error) {
+      const { message, status } = error;
+      logger.error(error);
+
+      const state: GlobalState = {
+        error: message,
+      };
+
+      const html = renderer(Routes.VERIFY_EMAIL, {
+        globalState: state,
+      });
+
+      return res.status(status).type('html').send(html);
     }
 
-    res.redirect(303, `${Routes.CONSENTS}/${consentPages[0].page}`);
+    return res.redirect(303, `${Routes.CONSENTS}/${consentPages[0].page}`);
   },
 );
 

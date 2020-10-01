@@ -2,6 +2,7 @@ export enum IdapiErrorMessages {
   NOT_FOUND = 'Not found',
   MISSING_FIELD = 'Required field missing',
   INVALID_TOKEN = 'Invalid token',
+  TOKEN_EXPIRED = 'Token expired',
 }
 
 export enum ResetPasswordErrors {
@@ -21,6 +22,8 @@ export enum ChangePasswordErrors {
 
 export enum VerifyEmailErrors {
   GENERIC = 'There was problem verifying your email, please try again.',
+  TOKEN_EXPIRED = 'The activation token is no longer valid.',
+  INVALID_TOKEN = 'The token you supplied could not be parsed.',
 }
 
 export enum NewslettersErrors {

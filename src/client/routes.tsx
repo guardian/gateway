@@ -44,6 +44,9 @@ export const GatewayRoutes = () => (
     <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_REVIEW}`}>
       <ConsentsConfirmationPage />
     </Route>
+    <Route exact path={Routes.VERIFY_EMAIL}>
+      <h1>todo</h1>
+    </Route>
     <Route>
       <NotFound />
     </Route>
