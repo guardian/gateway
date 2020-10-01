@@ -14,7 +14,9 @@ export const loginMiddleware = async (
 
   const generateRedirectUrl = (url: string): string => {
     const divider = url.includes('?') ? '&' : '?';
-    return `${url}/signin${divider}returnUrl=${RETURN_URL}`;
+    return `${url}/signin${divider}returnUrl=${encodeURIComponent(
+      RETURN_URL + req.path,
+    )}`;
   };
 
   const sc_gu_u = req.cookies.SC_GU_U;
