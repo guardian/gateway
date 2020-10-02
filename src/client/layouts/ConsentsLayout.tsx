@@ -4,6 +4,7 @@ import { Footer } from '@/client/components/Footer';
 import { GlobalState } from '@/shared/model/GlobalState';
 import { GlobalStateContext } from '@/client/components/GlobalState';
 import { GlobalError } from '@/client/components/GlobalError';
+import { getErrorLink } from '@/client/lib/ErrorLink';
 import { brand } from '@guardian/src-foundations/palette';
 import { css } from '@emotion/core';
 import { space } from '@guardian/src-foundations';
@@ -67,7 +68,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
   return (
     <>
       <Header />
-      {error && <GlobalError error={error} />}
+      {error && <GlobalError error={error} link={getErrorLink(error)} />}
       <ConsentsHeader title={title} />
       <form css={form} action={`${Routes.CONSENTS}/${page}`} method="post">
         <main css={[mainBackground, ieFlexFix]}>
