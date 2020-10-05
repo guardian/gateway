@@ -11,6 +11,8 @@ export const loginMiddleware = async (
   const config = getConfiguration();
   const LOGIN_REDIRECT_URL = config.signInPageUrl;
 
+  const FATAL_ERROR_REDIRECT_URL = `${LOGIN_REDIRECT_URL}/signin?error=signin-error-bad-request`;
+
   const generateRedirectUrl = (url: string): string => {
     const divider = url.includes('?') ? '&' : '?';
     return `${url}${divider}returnUrl=${encodeURIComponent(
@@ -41,6 +43,6 @@ export const loginMiddleware = async (
       }
     }
   } catch (e) {
-    res.redirect(generateRedirectUrl(LOGIN_REDIRECT_URL));
+    res.redirect(generateRedirectUrl(FATAL_ERROR_REDIRECT_URL));
   }
 };
