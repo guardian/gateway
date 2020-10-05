@@ -10,7 +10,6 @@ export const loginMiddleware = async (
 ) => {
   const config = getConfiguration();
   const LOGIN_REDIRECT_URL = config.signInPageUrl;
-  const RETURN_URL = config.baseUri;
 
   const generateRedirectUrl = (url: string): string => {
     const divider = url.includes('?') ? '&' : '?';
