@@ -10,11 +10,11 @@ export const loginMiddleware = async (
 ) => {
   const config = getConfiguration();
   const LOGIN_REDIRECT_URL = config.signInPageUrl;
-  const RETURN_URL = config.baseUri + '/signin';
+  const RETURN_URL = config.baseUri;
 
   const generateRedirectUrl = (url: string): string => {
     const divider = url.includes('?') ? '&' : '?';
-    return `${url}/signin${divider}returnUrl=${encodeURIComponent(
+    return `${url}${divider}returnUrl=${encodeURIComponent(
       RETURN_URL + req.path,
     )}`;
   };
