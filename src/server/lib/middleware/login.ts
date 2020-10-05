@@ -15,7 +15,7 @@ export const loginMiddleware = async (
   const generateRedirectUrl = (url: string): string => {
     const divider = url.includes('?') ? '&' : '?';
     return `${url}${divider}returnUrl=${encodeURIComponent(
-      RETURN_URL + req.path,
+      'https://' + config.baseUri + req.path,
     )}`;
   };
 
