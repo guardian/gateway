@@ -8,6 +8,7 @@ import { GlobalError } from '@/client/components/GlobalError';
 import { css } from '@emotion/core';
 import { space } from '@guardian/src-foundations';
 import { MaxWidth } from '@/client/models/Style';
+import { getErrorLink } from '@/client/lib/ErrorLink';
 
 const main = css`
   flex: 1 0 auto;
@@ -28,7 +29,7 @@ export const SignInLayout: FunctionComponent = (props) => {
     <>
       <Header />
       <Titlepiece />
-      {error && <GlobalError error={error} />}
+      {error && <GlobalError error={error} link={getErrorLink(error)} />}
       <main css={main}>{props.children}</main>
       <Footer />
     </>

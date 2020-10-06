@@ -26,6 +26,7 @@ import { Footer } from '@/client/components/Footer';
 import { headingWithMq, text } from '@/client/styles/Consents';
 import { Link } from '@guardian/src-link';
 import { Consents } from '@/shared/model/Consent';
+import { getErrorLink } from '@/client/lib/ErrorLink';
 
 const homepageCardContainer = css`
   display: flex;
@@ -198,7 +199,7 @@ export const ConsentsConfirmationPage = () => {
   return (
     <>
       <Header />
-      {error && <GlobalError error={error} />}
+      {error && <GlobalError error={error} link={getErrorLink(error)} />}
       <ConsentsHeader title="Your registration is complete" />
       <main css={[mainBackground, ieFlexFix]}>
         <ConsentsContent>

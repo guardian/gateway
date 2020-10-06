@@ -25,6 +25,7 @@ import {
   CONSENTS_COMMUNICATION_PAGE,
   CONSENTS_DATA_PAGE,
 } from '@/shared/model/Consent';
+import { loginMiddleware } from '@/server/lib/middleware/login';
 
 const router = Router();
 
@@ -231,34 +232,38 @@ router.get(Routes.CONSENTS, (_: Request, res: Response) => {
   res.redirect(303, `${Routes.CONSENTS}/${consentPages[0].page}`);
 });
 
-router.get(`${Routes.CONSENTS}/:page`, async (req: Request, res: Response) => {
-  const sc_gu_u = req.cookies.SC_GU_U;
-  const state: GlobalState = {};
+router.get(
+  `${Routes.CONSENTS}/:page`,
+  loginMiddleware,
+  async (req: Request, res: Response) => {
+    const sc_gu_u = req.cookies.SC_GU_U;
+    const state: GlobalState = {};
 
-  const { page } = req.params;
-  let status = 200;
+    const { page } = req.params;
+    let status = 200;
 
-  const pageIndex = consentPages.findIndex((elem) => elem.page === page);
-  if (pageIndex === -1) {
-    return res.redirect(404, `${Routes.CONSENTS}/${page}`);
-  }
+    const pageIndex = consentPages.findIndex((elem) => elem.page === page);
+    if (pageIndex === -1) {
+      return res.redirect(404, `${Routes.CONSENTS}/${page}`);
+    }
 
-  try {
-    const { read } = consentPages[pageIndex];
+    try {
+      const { read } = consentPages[pageIndex];
 
-    state.pageData = await read(req.ip, sc_gu_u);
-  } catch (e) {
-    status = e.status;
-    state.error = e.message;
-  }
+      state.pageData = await read(req.ip, sc_gu_u);
+    } catch (e) {
+      status = e.status;
+      state.error = e.message;
+    }
 
-  const html = renderer(`${Routes.CONSENTS}/${page}`, { globalState: state });
+    const html = renderer(`${Routes.CONSENTS}/${page}`, { globalState: state });
 
-  res
-    .type('html')
-    .status(status ?? 500)
-    .send(html);
-});
+    res
+      .type('html')
+      .status(status ?? 500)
+      .send(html);
+  },
+);
 
 router.post(`${Routes.CONSENTS}/:page`, async (req, res) => {
   const sc_gu_u = req.cookies.SC_GU_U;
