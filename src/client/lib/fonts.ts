@@ -87,7 +87,7 @@ const fonts: FontFace[] = [
 
 const CDN = 'https://assets.guim.co.uk/';
 
-const getStatic: (path: string) => string = path =>
+const getStatic: (path: string) => string = (path) =>
   `${CDN}static/frontend/${path}`;
 
 const fontFace: (fontFace: FontFace) => CSSObject = ({
@@ -110,6 +110,6 @@ const fontFace: (fontFace: FontFace) => CSSObject = ({
   };
 };
 
-export const fontFaces: CSSObject[] = fonts.map(font => ({
+export const fontFaces: CSSObject[] = fonts.map((font) => ({
   '@font-face': fontFace(font),
 }));
