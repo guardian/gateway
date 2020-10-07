@@ -4,10 +4,10 @@ import {
   APIPatchOptions,
   APIAddClientAccessToken,
   APIForwardSessionIdentifier,
-} from '../APIFetch';
+} from '@/server/lib/APIFetch';
 import { NewslettersErrors } from '@/shared/model/Errors';
 import { NewsLetter, NewsletterPatch } from '@/shared/model/Newsletter';
-import { logger } from '../logger';
+import { logger } from '@/server/lib/logger';
 
 const API_ROUTE = '/users/me/newsletters';
 

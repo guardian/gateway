@@ -8,7 +8,7 @@ import {
 
 import { IdapiErrorMessages, VerifyEmailErrors } from '@/shared/model/Errors';
 import { ApiRoutes } from '@/shared/model/Routes';
-import { logger } from '../logger';
+import { logger } from '@/server/lib/logger';
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
   if (error.status === 'error' && error.errors?.length) {

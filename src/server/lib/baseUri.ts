@@ -1,4 +1,4 @@
-import { getConfiguration } from './configuration';
+import { getConfiguration } from '@/server/lib/configuration';
 
 const { stage, baseUri } = getConfiguration();
 

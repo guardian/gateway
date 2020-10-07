@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { read } from '@/server/lib/idapi/auth';
 import { IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
 import { getConfiguration } from '@/server/lib/configuration';
-import { getProfileUrl } from '../baseUri';
+import { getProfileUrl } from '@/server/lib/baseUri';
 import { Routes } from '@/shared/model/Routes';
 
 const profileUrl = getProfileUrl();

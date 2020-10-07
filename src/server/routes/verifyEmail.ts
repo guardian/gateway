@@ -8,11 +8,11 @@ import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { GlobalState } from '@/shared/model/GlobalState';
-import { consentPages } from './consents';
+import { consentPages } from '@/server/routes/consents';
 import { read as getUser } from '@/server/lib/idapi/user';
 import { ConsentsErrors } from '@/shared/model/Errors';
-import { getConfiguration } from '../lib/configuration';
-import { getProfileUrl } from '../lib/baseUri';
+import { getConfiguration } from '@/server/lib/configuration';
+import { getProfileUrl } from '@/server/lib/baseUri';
 import { getProviderForEmail } from '@/shared/lib/emailProvider';
 
 const router = Router();

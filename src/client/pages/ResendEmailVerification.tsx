@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 import { SignInLayout } from '@/client/layouts/SignInLayout';
 import { LinkButton, Button } from '@guardian/src-button';
-import { PageBody } from '../components/PageBody';
-import { PageBodyText } from '../components/PageBodyText';
-import { PageBox } from '../components/PageBox';
-import { PageHeader } from '../components/PageHeader';
+import { PageBody } from '@/client/components/PageBody';
+import { PageBodyText } from '@/client/components/PageBodyText';
+import { PageBox } from '@/client/components/PageBox';
+import { PageHeader } from '@/client/components/PageHeader';
 import { form, button, linkButton } from '@/client/styles/Shared';
 import { GlobalState } from '@/shared/model/GlobalState';
-import { GlobalStateContext } from '../components/GlobalState';
+import { GlobalStateContext } from '@/client/components/GlobalState';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
 import { css } from '@emotion/core';
 import { textSans } from '@guardian/src-foundations/typography';

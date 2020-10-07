@@ -4,8 +4,8 @@ import {
   APIAddClientAccessToken,
   APIForwardSessionIdentifier,
   IDAPIError,
-} from '../APIFetch';
-import { logger } from '../logger';
+} from '@/server/lib/APIFetch';
+import { logger } from '@/server/lib/logger';
 import { ConsentsErrors, IdapiErrorMessages } from '@/shared/model/Errors';
 import User from '@/shared/model/User';
 

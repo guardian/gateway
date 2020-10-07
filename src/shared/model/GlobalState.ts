@@ -1,6 +1,6 @@
 import { FieldError } from '@/server/routes/changePassword';
-import { Consent } from './Consent';
-import { NewsLetter } from './Newsletter';
+import { Consent } from '@/shared/model/Consent';
+import { NewsLetter } from '@/shared/model/Newsletter';
 
 export interface PageData {
   newsletters?: NewsLetter[];

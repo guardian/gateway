@@ -11,7 +11,7 @@ import { ConsentsDataPage } from '@/client/pages/ConsentsData';
 import { ConsentsCommunicationPage } from '@/client/pages/ConsentsCommunication';
 import { ConsentsNewslettersPage } from '@/client/pages/ConsentsNewsletters';
 import { ConsentsConfirmationPage } from '@/client/pages/ConsentsConfirmation';
-import { ResendEmailVerificationPage } from './pages/ResendEmailVerification';
+import { ResendEmailVerificationPage } from '@/client/pages/ResendEmailVerification';
 
 export const GatewayRoutes = () => (
   <Switch>
