@@ -10,7 +10,7 @@ import { renderer } from '@/server/lib/renderer';
 import { GlobalState } from '@/shared/model/GlobalState';
 import { consentPages } from '@/server/routes/consents';
 import { read as getUser } from '@/server/lib/idapi/user';
-import { ConsentsErrors } from '@/shared/model/Errors';
+import { ConsentsErrors, VerifyEmailErrors } from '@/shared/model/Errors';
 import { getConfiguration } from '@/server/lib/configuration';
 import { getProfileUrl } from '@/server/lib/baseUri';
 import { getProviderForEmail } from '@/shared/lib/emailProvider';
@@ -101,6 +101,10 @@ router.get(
       setIDAPICookies(res, cookies);
     } catch (error) {
       logger.error(error);
+
+      if (error.message === VerifyEmailErrors.USER_ALREADY_VALIDATED) {
+        return res.redirect(303, `${Routes.CONSENTS}/${consentPages[0].page}`);
+      }
 
       return res.redirect(303, `${Routes.VERIFY_EMAIL}`);
     }

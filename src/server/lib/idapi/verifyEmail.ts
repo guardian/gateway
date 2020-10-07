@@ -20,6 +20,11 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
         throw { message: VerifyEmailErrors.TOKEN_EXPIRED, status };
       case IdapiErrorMessages.INVALID_TOKEN:
         throw { message: VerifyEmailErrors.INVALID_TOKEN, status };
+      case IdapiErrorMessages.USER_ALREADY_VALIDATED:
+        throw {
+          message: VerifyEmailErrors.USER_ALREADY_VALIDATED,
+          status,
+        };
       default:
         break;
     }

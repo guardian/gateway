@@ -4,6 +4,7 @@ export enum IdapiErrorMessages {
   INVALID_TOKEN = 'Invalid token',
   TOKEN_EXPIRED = 'Token expired',
   ACCESS_DENIED = 'Access Denied',
+  USER_ALREADY_VALIDATED = 'User Already Validated',
 }
 
 export enum ResetPasswordErrors {
@@ -25,6 +26,7 @@ export enum VerifyEmailErrors {
   GENERIC = 'There was problem verifying your email, please try again.',
   TOKEN_EXPIRED = 'The activation token is no longer valid.',
   INVALID_TOKEN = 'The token you supplied could not be parsed.',
+  USER_ALREADY_VALIDATED = 'This user account has already been validated',
 }
 
 export enum NewslettersErrors {
