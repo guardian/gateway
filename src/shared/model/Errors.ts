@@ -3,6 +3,7 @@ export enum IdapiErrorMessages {
   MISSING_FIELD = 'Required field missing',
   INVALID_TOKEN = 'Invalid token',
   TOKEN_EXPIRED = 'Token expired',
+  ACCESS_DENIED = 'Access Denied',
 }
 
 export enum ResetPasswordErrors {
@@ -33,4 +34,5 @@ export enum NewslettersErrors {
 export enum ConsentsErrors {
   GENERIC = 'There was a problem saving your choice, please try again.',
   USER = 'There was a problem retrieving your details, please try again.',
+  ACCESS_DENIED = 'Access Denied',
 }

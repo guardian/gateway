@@ -1,8 +1,5 @@
 import { Router, Request, Response } from 'express';
 import { Routes } from '@/shared/model/Routes';
-import { verifyEmail } from '@/server/lib/idapi/verifyEmail';
-import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
-import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import {
   update as patchConsents,
@@ -102,7 +99,7 @@ const getUserNewsletterSubscriptions = async (
     .filter(Boolean) as NewsLetter[];
 };
 
-const consentPages: ConsentPage[] = [
+export const consentPages: ConsentPage[] = [
   {
     page: Routes.CONSENTS_DATA.slice(1),
     read: async (ip, sc_gu_u) => {
@@ -200,33 +197,6 @@ const consentPages: ConsentPage[] = [
     },
   },
 ];
-
-router.get(
-  `${Routes.VERIFY_EMAIL}${Routes.VERIFY_EMAIL_TOKEN}`,
-  async (req: Request, res: Response) => {
-    const { token } = req.params;
-
-    try {
-      const cookies = await verifyEmail(token, req.ip);
-      setIDAPICookies(res, cookies);
-    } catch (error) {
-      const { message, status } = error;
-      logger.error(error);
-
-      const state: GlobalState = {
-        error: message,
-      };
-
-      const html = renderer(Routes.VERIFY_EMAIL, {
-        globalState: state,
-      });
-
-      return res.status(status).type('html').send(html);
-    }
-
-    return res.redirect(303, `${Routes.CONSENTS}/${consentPages[0].page}`);
-  },
-);
 
 router.get(Routes.CONSENTS, (_: Request, res: Response) => {
   res.redirect(303, `${Routes.CONSENTS}/${consentPages[0].page}`);

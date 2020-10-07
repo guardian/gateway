@@ -7,7 +7,7 @@ type GlobalProps = {
   globalState: GlobalState;
 };
 
-export const GlobalStateProvider: FunctionComponent<GlobalProps> = props => {
+export const GlobalStateProvider: FunctionComponent<GlobalProps> = (props) => {
   return (
     <GlobalStateContext.Provider value={props.globalState}>
       {props.children}

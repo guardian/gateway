@@ -6,6 +6,7 @@ export enum Routes {
   CHANGE_PASSWORD_TOKEN = '/:token',
   CHANGE_PASSWORD_COMPLETE = '/password/reset-confirmation',
   VERIFY_EMAIL = '/verify-email',
+  VERIFY_EMAIL_SENT = '/verify-email/email-sent',
   VERIFY_EMAIL_TOKEN = '/:token',
   CONSENTS = '/consents',
   CONSENTS_DATA = '/data',
@@ -19,4 +20,5 @@ export enum ApiRoutes {
   CHANGE_PASSWORD_TOKEN_VALIDATION = '/pwd-reset/user-for-token',
   CHANGE_PASSWORD = '/pwd-reset/reset-pwd-for-user',
   VERIFY_EMAIL = '/user/validate-email',
+  RESEND_VERIFY_EMAIL = '/user/send-validation-email',
 }

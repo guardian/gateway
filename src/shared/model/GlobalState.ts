@@ -11,8 +11,10 @@ export interface PageData {
 
 export interface GlobalState {
   error?: string;
+  success?: string;
   emailProvider?: string;
   email?: string;
   fieldErrors?: Array<FieldError>;
   pageData?: PageData;
+  signInPageUrl?: string;
 }

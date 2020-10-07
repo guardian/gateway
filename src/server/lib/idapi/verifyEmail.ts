@@ -3,10 +3,12 @@ import {
   APIAddClientAccessToken,
   APIPostOptions,
   IDAPIError,
+  APIForwardSessionIdentifier,
 } from '@/server/lib/APIFetch';
 
 import { IdapiErrorMessages, VerifyEmailErrors } from '@/shared/model/Errors';
 import { ApiRoutes } from '@/shared/model/Routes';
+import { logger } from '../logger';
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
   if (error.status === 'error' && error.errors?.length) {
@@ -35,6 +37,20 @@ export async function verifyEmail(token: string, ip: string) {
     );
     return result.cookies;
   } catch (error) {
+    logger.error(error);
     handleError(error);
+  }
+}
+
+export async function send(ip: string, sc_gu_u: string) {
+  const options = APIForwardSessionIdentifier(
+    APIAddClientAccessToken(APIPostOptions(), ip),
+    sc_gu_u,
+  );
+  try {
+    await idapiFetch(ApiRoutes.RESEND_VERIFY_EMAIL, options);
+  } catch (error) {
+    logger.error(error);
+    return handleError(error);
   }
 }
