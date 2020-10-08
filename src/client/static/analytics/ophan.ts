@@ -38,8 +38,6 @@ const record = (event: OphanEvent) => {
     window.guardian.ophan.record
   ) {
     window.guardian.ophan.record(event);
-  } else {
-    throw new Error("window.guardian.ophan.record doesn't exist");
   }
 };
 
