@@ -14,6 +14,7 @@ services:
       - BASE_URI=${BASE_URI}
       - DEFAULT_RETURN_URI=${DEFAULT_RETURN_URI}
       - STAGE=${STAGE}
+      - SIGN_IN_PAGE_URL=${SIGN_IN_PAGE_URL}
     ports:
       - '${PORT}:${PORT}'
     volumes:
