@@ -23,12 +23,10 @@ const LoggedOut = ({ signInPageUrl }: { signInPageUrl?: string }) => (
   <PageBox>
     <PageHeader>Link Expired</PageHeader>
     <PageBody>
+      <PageBodyText>Your email confirmation link has expired</PageBodyText>
       <PageBodyText>
-        The link has now expired, or is invalid. You need to resend the
-        verification email.
-      </PageBodyText>
-      <PageBodyText>
-        Sign in to your Guardian account to resend your verification email.
+        The link we sent you was valid for 30 minutes. Please sign in again and
+        we will resend a verification email.
       </PageBodyText>
       <div css={form}>
         <LinkButton
@@ -57,21 +55,17 @@ const LoggedIn = ({
     <PageHeader>Verify Email</PageHeader>
     <PageBody>
       <PageBodyText>
+        You need to confirm your email address to continue securely:
+      </PageBodyText>
+      <PageBodyText>
         <span css={bold}>{email}</span>
       </PageBodyText>
       <PageBodyText>
-        You need to verify your email address to continue securely. Click the
-        link below and we’ll send you an email to confirm your email address.
+        We will send you a verification link to your email to ensure that it’s
+        you. Please note that the link will expire in 30 minutes.
       </PageBodyText>
       <PageBodyText>
-        If you don&apos;t see the email in your inbox, please check your spam
-        filter.
-      </PageBodyText>
-      <PageBodyText>
-        <span css={bold}>
-          Note that the link is only valid for 30 minutes, so be sure to open it
-          soon!
-        </span>
+        If you don&apos;t see it in your inbox, please check your spam filter.
       </PageBodyText>
       {success ? (
         <PageBodyText>{success}</PageBodyText>
@@ -84,7 +78,7 @@ const LoggedIn = ({
             icon={<SvgArrowRightStraight />}
             iconSide="right"
           >
-            Send verification email
+            Send verification link
           </Button>
         </form>
       )}
