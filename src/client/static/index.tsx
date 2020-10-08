@@ -14,12 +14,13 @@ import { getCountryCode } from './countryCode';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { init as gaInit } from './analytics/ga';
+import { init as ophanInit } from './analytics/ophan';
 
 // initialise source accessibility
 import './sourceAccessibility';
 
 // initalise ophan
-import './analytics/ophan';
+ophanInit();
 
 // initialise google analytics
 gaInit();
