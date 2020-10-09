@@ -1,3 +1,5 @@
+import { hydrateApp } from '@/client/static/hydration';
+
 interface GatewayWindow extends Window {
   Cypress: unknown;
 }
@@ -18,6 +20,8 @@ import { init as ophanInit } from './analytics/ophan';
 
 // initialise source accessibility
 import './sourceAccessibility';
+
+hydrateApp();
 
 // initalise ophan
 ophanInit();

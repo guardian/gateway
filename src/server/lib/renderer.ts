@@ -34,6 +34,7 @@ export const renderer: (url: string, opts?: RendererOpts) => string = (
 
   const location = `${url}${queryString ? `?${queryString}` : ''}`;
 
+  // Any changes made here must also be made to the hydration in the static webpack bundle
   const react = ReactDOMServer.renderToString(
     React.createElement(
       StaticRouter,
@@ -56,6 +57,9 @@ export const renderer: (url: string, opts?: RendererOpts) => string = (
         <title>${pageTitle} | The Guardian</title>
         <script>window.gaUID = "${gaUID.id}"</script>
         <script src="/gateway-static/bundle.js" defer></script>
+        <script id="globalState" type="application/json">${JSON.stringify(
+          globalState,
+        )}</script>
       </head>
       <body style="margin:0">
         <div id="app">${react}</div>
