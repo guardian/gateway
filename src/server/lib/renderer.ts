@@ -7,6 +7,7 @@ import { brandBackground } from '@guardian/src-foundations/palette';
 import { QueryParams } from '@/shared/model/QueryParams';
 import qs from 'query-string';
 import { getConfiguration } from '@/server/lib/configuration';
+import { RoutingConfig } from '@/client/routes';
 
 // favicon shamefully stolen from dcr
 const favicon =
@@ -46,6 +47,11 @@ export const renderer: (url: string, opts?: RendererOpts) => string = (
     ),
   );
 
+  const routingConfig: RoutingConfig = {
+    globalState,
+    location,
+  };
+
   return `
     <!DOCTYPE html>
     <html lang="en">
@@ -57,8 +63,8 @@ export const renderer: (url: string, opts?: RendererOpts) => string = (
         <title>${pageTitle} | The Guardian</title>
         <script>window.gaUID = "${gaUID.id}"</script>
         <script src="/gateway-static/bundle.js" defer></script>
-        <script id="globalState" type="application/json">${JSON.stringify(
-          globalState,
+        <script id="routingConfig" type="application/json">${JSON.stringify(
+          routingConfig,
         )}</script>
       </head>
       <body style="margin:0">

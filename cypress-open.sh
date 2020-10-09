@@ -6,6 +6,7 @@ set -ae
 trap 'kill $(jobs -p)' INT TERM EXIT
 
 source ci.env
+yarn build
 yarn mock-server &
 yarn wait-on:mock-server
 yarn start &

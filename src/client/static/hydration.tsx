@@ -1,18 +1,18 @@
 import { Main } from '@/client/main';
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
-import { GlobalState } from '@/shared/model/GlobalState';
 import { hydrate } from 'react-dom';
+import { RoutingConfig } from '@/client/routes';
 
 export const hydrateApp = () => {
-  const globalState: GlobalState = JSON.parse(
-    document.getElementById('globalState')?.innerHTML ?? '{}',
+  const routingConfig: RoutingConfig = JSON.parse(
+    document.getElementById('routingConfig')?.innerHTML ?? '{}',
   );
+
+  const globalState = routingConfig.globalState;
+
   hydrate(
-    <StaticRouter
-      location={`${window.location.pathname}${window.location.search}`}
-      context={{}}
-    >
+    <StaticRouter location={`${routingConfig.location}`} context={{}}>
       <Main {...globalState} />
     </StaticRouter>,
     document.getElementById('app'),
