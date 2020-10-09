@@ -26,6 +26,7 @@ export const setIDAPICookies = (res: Response, cookies: IdapiCookies) => {
       httpOnly: key !== 'GU_U', // unless GU_U cookie, set to true
       secure: key !== 'GU_U', // unless GU_U cookie, set to true
       sameSite: 'strict',
+      path: '/',
     });
   });
 };
