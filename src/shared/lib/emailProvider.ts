@@ -33,10 +33,11 @@ const emailProviders: EmailProvider[] = [
   },
 ];
 
-export const getProviderById: (id?: string) => EmailProvider | undefined = id =>
-  emailProviders.find(ep => ep.id === id);
+export const getProviderById: (id?: string) => EmailProvider | undefined = (
+  id,
+) => emailProviders.find((ep) => ep.id === id);
 
 export const getProviderForEmail: (
   email: string,
-) => EmailProvider | undefined = email =>
-  emailProviders.find(ep => ep.matches.some(m => email.includes(m)));
+) => EmailProvider | undefined = (email) =>
+  emailProviders.find((ep) => ep.matches.some((m) => email.includes(m)));

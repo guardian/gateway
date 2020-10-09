@@ -3,9 +3,10 @@ import {
   APIGetOptions,
   APIAddClientAccessToken,
   APIForwardSessionIdentifier,
-} from '../APIFetch';
-import { logger } from '../logger';
-import { ConsentsErrors } from '@/shared/model/Errors';
+  IDAPIError,
+} from '@/server/lib/APIFetch';
+import { logger } from '@/server/lib/logger';
+import { ConsentsErrors, IdapiErrorMessages } from '@/shared/model/Errors';
 import User from '@/shared/model/User';
 
 interface APIResponse {
@@ -14,8 +15,20 @@ interface APIResponse {
 
 const API_ROUTE = '/user/me';
 
-const handleError = (): never => {
-  throw { message: ConsentsErrors.USER, status: 500 };
+const handleError = ({ error, status = 500 }: IDAPIError) => {
+  if (error.status === 'error' && error.errors?.length) {
+    const err = error.errors[0];
+    const { message } = err;
+
+    switch (message) {
+      case IdapiErrorMessages.ACCESS_DENIED:
+        throw { message: ConsentsErrors.ACCESS_DENIED, status };
+      default:
+        break;
+    }
+  }
+
+  throw { message: ConsentsErrors.USER, status };
 };
 
 const responseToEntity = (response: APIResponse): User => {
@@ -25,6 +38,8 @@ const responseToEntity = (response: APIResponse): User => {
   }));
   return {
     consents,
+    primaryEmailAddress: response.user.primaryEmailAddress,
+    statusFields: response.user.statusFields,
   };
 };
 
@@ -38,6 +53,6 @@ export const read = async (ip: string, sc_gu_u: string): Promise<User> => {
     return responseToEntity(response);
   } catch (e) {
     logger.error(e);
-    return handleError();
+    return handleError(e);
   }
 };

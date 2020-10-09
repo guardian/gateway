@@ -11,6 +11,7 @@ import { ConsentsDataPage } from '@/client/pages/ConsentsData';
 import { ConsentsCommunicationPage } from '@/client/pages/ConsentsCommunication';
 import { ConsentsNewslettersPage } from '@/client/pages/ConsentsNewsletters';
 import { ConsentsConfirmationPage } from '@/client/pages/ConsentsConfirmation';
+import { ResendEmailVerificationPage } from '@/client/pages/ResendEmailVerification';
 
 export const GatewayRoutes = () => (
   <Switch>
@@ -43,6 +44,9 @@ export const GatewayRoutes = () => (
     </Route>
     <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_REVIEW}`}>
       <ConsentsConfirmationPage />
+    </Route>
+    <Route exact path={Routes.VERIFY_EMAIL}>
+      <ResendEmailVerificationPage />
     </Route>
     <Route>
       <NotFound />

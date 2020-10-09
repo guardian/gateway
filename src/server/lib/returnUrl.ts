@@ -15,12 +15,12 @@ export const validateReturnUrl = (returnUrl = ''): string => {
     const url = new URL(returnUrl);
 
     // check the hostname is valid
-    if (!validHostnames.some(hostname => url.hostname.endsWith(hostname))) {
+    if (!validHostnames.some((hostname) => url.hostname.endsWith(hostname))) {
       throw 'Invalid hostname';
     }
 
     // check the pathname is valid
-    if (invalidPaths.some(path => url.pathname.startsWith(path))) {
+    if (invalidPaths.some((path) => url.pathname.startsWith(path))) {
       throw 'Invalid pathname';
     }
 

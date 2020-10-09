@@ -5,7 +5,7 @@ import { textSans } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/core';
 import { space, neutral } from '@guardian/src-foundations';
 import { RadioGroup, Radio } from '@guardian/src-radio';
-import { GlobalStateContext } from '../components/GlobalState';
+import { GlobalStateContext } from '@/client/components/GlobalState';
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { heading, text, headingMarginSpace6 } from '@/client/styles/Consents';

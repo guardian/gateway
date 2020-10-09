@@ -1,12 +1,16 @@
 import React, { useContext } from 'react';
-import { ConsentsLayout } from '../layouts/ConsentsLayout';
+import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { css } from '@emotion/core';
 import { space } from '@guardian/src-foundations';
-import { gridItem, gridItemColumnConsents, getAutoRow } from '../styles/Grid';
-import { GlobalStateContext } from '../components/GlobalState';
-import { CONSENTS_PAGES } from '../models/ConsentsPages';
+import {
+  gridItem,
+  gridItemColumnConsents,
+  getAutoRow,
+} from '@/client/styles/Grid';
+import { GlobalStateContext } from '@/client/components/GlobalState';
+import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { GlobalState } from '@/shared/model/GlobalState';
-import { NewsletterCard } from '../components/NewsletterCard';
+import { NewsletterCard } from '@/client/components/NewsletterCard';
 import { from } from '@guardian/src-foundations/mq';
 import { heading, text } from '@/client/styles/Consents';
 

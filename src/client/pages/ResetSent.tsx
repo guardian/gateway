@@ -9,6 +9,7 @@ import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
 import { linkButton } from '@/client/styles/Shared';
 import { SignInLayout } from '@/client/layouts/SignInLayout';
+import { SvgArrowRightStraight } from '@guardian/src-icons';
 
 export const ResetSentPage = () => {
   const globalState: GlobalState = useContext(GlobalStateContext);
@@ -35,7 +36,8 @@ export const ResetSentPage = () => {
             css={linkButton}
             href={emailProvider.inboxLink}
             priority="tertiary"
-            showIcon={true}
+            icon={<SvgArrowRightStraight />}
+            iconSide="right"
           >
             Go to your {emailProvider.name} inbox
           </LinkButton>

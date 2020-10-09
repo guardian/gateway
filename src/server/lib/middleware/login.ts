@@ -2,6 +2,10 @@ import { NextFunction, Request, Response } from 'express';
 import { read } from '@/server/lib/idapi/auth';
 import { IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
 import { getConfiguration } from '@/server/lib/configuration';
+import { getProfileUrl } from '@/server/lib/baseUri';
+import { Routes } from '@/shared/model/Routes';
+
+const profileUrl = getProfileUrl();
 
 export const loginMiddleware = async (
   req: Request,
@@ -16,7 +20,7 @@ export const loginMiddleware = async (
   const generateRedirectUrl = (url: string): string => {
     const divider = url.includes('?') ? '&' : '?';
     return `${url}${divider}returnUrl=${encodeURIComponent(
-      'https://' + config.baseUri + req.path,
+      profileUrl + req.path,
     )}`;
   };
 
@@ -30,6 +34,11 @@ export const loginMiddleware = async (
 
   try {
     const auth = await read(sc_gu_u, sc_gu_la, req.ip);
+
+    if (!auth.emailValidated) {
+      return res.redirect(303, Routes.VERIFY_EMAIL);
+    }
+
     if (auth.status === IDAPIAuthStatus.RECENT) {
       next();
     } else {

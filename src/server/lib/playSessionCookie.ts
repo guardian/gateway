@@ -9,7 +9,7 @@ import { logger } from '@/server/lib/logger';
 
 const { playSessionCookieSecret } = getConfiguration();
 
-const getCookieFromPlaySession: (req: Request) => any = req => {
+const getCookieFromPlaySession: (req: Request) => any = (req) => {
   if (req.cookies['PLAY_SESSION']) {
     try {
       const session: any = verifyJWT(
@@ -25,7 +25,7 @@ const getCookieFromPlaySession: (req: Request) => any = req => {
 
 export const getEmailFromPlaySessionCookie: (
   req: Request,
-) => string | undefined = req => {
+) => string | undefined = (req) => {
   const cookie = getCookieFromPlaySession(req);
   return cookie?.email;
 };

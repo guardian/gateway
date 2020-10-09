@@ -4,6 +4,7 @@ import { default as core } from './core';
 import { default as reset } from './reset';
 import { default as changePassword } from './changePassword';
 import { default as consents } from './consents';
+import { default as verifyEmail } from './verifyEmail';
 import { queryParamsMiddleware } from '@/server/lib/middleware/queryParams';
 import { noCache } from '@/server/lib/middleware/cache';
 
@@ -18,7 +19,10 @@ router.use(noCache, queryParamsMiddleware, reset);
 // change password routes
 router.use(noCache, queryParamsMiddleware, changePassword);
 
-// consents
+// consents routes
 router.use(noCache, queryParamsMiddleware, consents);
+
+// verify email routes
+router.use(noCache, queryParamsMiddleware, verifyEmail);
 
 export default router;

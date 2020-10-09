@@ -3,8 +3,8 @@ import {
   APIForwardSessionIdentifier,
   APIGetOptions,
   idapiFetch,
-} from '../APIFetch';
-import { logger } from '../logger';
+} from '@/server/lib/APIFetch';
+import { logger } from '@/server/lib/logger';
 import { IDAPIAuthRedirect, IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
 
 const AUTH_URL = '/auth/redirect';

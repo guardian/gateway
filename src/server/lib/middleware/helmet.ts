@@ -30,6 +30,7 @@ const helmetConfig = {
         `${baseUri}${Routes.RESET}`,
         `${baseUri}${Routes.CHANGE_PASSWORD}/`,
         `${baseUri}${Routes.CONSENTS}/`,
+        `${baseUri}${Routes.VERIFY_EMAIL}`,
       ],
       frameAncestors: [HELMET_OPTIONS.NONE],
       styleSrc: [HELMET_OPTIONS.UNSAFE_INLINE],
