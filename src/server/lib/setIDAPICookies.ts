@@ -25,7 +25,7 @@ export const setIDAPICookies = (res: Response, cookies: IdapiCookies) => {
       expires: sessionCookie ? undefined : new Date(expiresAt),
       httpOnly: key !== 'GU_U', // unless GU_U cookie, set to true
       secure: key !== 'GU_U', // unless GU_U cookie, set to true
-      sameSite: 'strict',
+      sameSite: 'lax',
       path: '/',
     });
   });
