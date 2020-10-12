@@ -9,6 +9,7 @@ import { css } from '@emotion/core';
 import { space } from '@guardian/src-foundations';
 import { MaxWidth } from '@/client/models/Style';
 import { getErrorLink } from '@/client/lib/ErrorLink';
+import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 
 const main = css`
   flex: 1 0 auto;
@@ -23,13 +24,14 @@ const main = css`
 
 export const SignInLayout: FunctionComponent = (props) => {
   const globalState: GlobalState = useContext(GlobalStateContext);
-  const { error } = globalState;
+  const { error, success } = globalState;
 
   return (
     <>
       <Header />
       <Titlepiece />
       {error && <GlobalError error={error} link={getErrorLink(error)} />}
+      {success && <GlobalSuccess success={success} />}
       <main css={main}>{props.children}</main>
       <Footer />
     </>

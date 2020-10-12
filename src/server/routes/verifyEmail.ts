@@ -109,7 +109,10 @@ router.get(
       return res.redirect(303, `${Routes.VERIFY_EMAIL}`);
     }
 
-    return res.redirect(303, `${Routes.CONSENTS}/${consentPages[0].page}`);
+    return res.redirect(
+      303,
+      `${Routes.CONSENTS}/${consentPages[0].page}?emailVerified=true`,
+    );
   },
 );
 

@@ -25,6 +25,7 @@ import { headingWithMq, text } from '@/client/styles/Consents';
 import { Link } from '@guardian/src-link';
 import { Consents } from '@/shared/model/Consent';
 import { getErrorLink } from '@/client/lib/ErrorLink';
+import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 
 const homepageCardContainer = css`
   display: flex;
@@ -176,7 +177,7 @@ const confirmationSpanDefinition: SpanDefinition = {
 export const ConsentsConfirmationPage = () => {
   const autoRow = getAutoRow(1, confirmationSpanDefinition);
   const globalState: GlobalState = useContext(GlobalStateContext);
-  const { error, pageData = {} } = globalState;
+  const { error, pageData = {}, success } = globalState;
 
   const { consents = [], newsletters = [] } = pageData;
 
@@ -198,6 +199,7 @@ export const ConsentsConfirmationPage = () => {
     <>
       <Header />
       {error && <GlobalError error={error} link={getErrorLink(error)} />}
+      {success && <GlobalSuccess success={success} />}
       <ConsentsHeader title="Your registration is complete" />
       <main css={[mainBackground, ieFlexFix]}>
         <ConsentsContent>

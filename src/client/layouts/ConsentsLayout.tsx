@@ -19,6 +19,7 @@ import {
   mainBackground,
 } from '@/client/layouts/shared/Consents';
 import { Routes } from '@/shared/model/Routes';
+import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 
 interface ConsentsLayoutProps {
   children?: React.ReactNode;
@@ -46,12 +47,13 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
   current,
 }) => {
   const globalState: GlobalState = useContext(GlobalStateContext);
-  const { error, pageData = {} } = globalState;
+  const { error, pageData = {}, success } = globalState;
   const { page = '', previousPage } = pageData;
   return (
     <>
       <Header />
       {error && <GlobalError error={error} link={getErrorLink(error)} />}
+      {success && <GlobalSuccess success={success} />}
       <ConsentsHeader title={title} />
       <form css={form} action={`${Routes.CONSENTS}/${page}`} method="post">
         <main css={[mainBackground, ieFlexFix]}>

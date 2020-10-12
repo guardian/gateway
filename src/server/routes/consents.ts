@@ -23,6 +23,8 @@ import {
   CONSENTS_DATA_PAGE,
 } from '@/shared/model/Consent';
 import { loginMiddleware } from '@/server/lib/middleware/login';
+import { ResponseWithLocals } from '../models/Express';
+import { VERIFY_EMAIL } from '@/shared/model/Success';
 
 const router = Router();
 
@@ -205,9 +207,16 @@ router.get(Routes.CONSENTS, (_: Request, res: Response) => {
 router.get(
   `${Routes.CONSENTS}/:page`,
   loginMiddleware,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: ResponseWithLocals) => {
     const sc_gu_u = req.cookies.SC_GU_U;
+
+    const { emailVerified } = res.locals.queryParams;
+
     const state: GlobalState = {};
+
+    if (emailVerified) {
+      state.success = VERIFY_EMAIL.SUCCESS;
+    }
 
     const { page } = req.params;
     let status = 200;
