@@ -7,7 +7,6 @@ import {
   gridItemColumnConsents,
   SpanDefinition,
 } from '@/client/styles/Grid';
-import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { from } from '@guardian/src-foundations/mq';
 import { SvgRoundel } from '@guardian/src-brand';
 import { GlobalState } from '@/shared/model/GlobalState';
@@ -20,7 +19,6 @@ import {
   ieFlexFix,
   ConsentsContent,
   ConsentsBlueBackground,
-  ConsentsProgression,
 } from '@/client/layouts/shared/Consents';
 import { Footer } from '@/client/components/Footer';
 import { headingWithMq, text } from '@/client/styles/Consents';
@@ -203,7 +201,6 @@ export const ConsentsConfirmationPage = () => {
       <ConsentsHeader title="Your registration is complete" />
       <main css={[mainBackground, ieFlexFix]}>
         <ConsentsContent>
-          <ConsentsProgression current={CONSENTS_PAGES.REVIEW} />
           <h3 css={[headingWithMq, autoRow()]}>Your selections</h3>
           <p css={[text, autoRow()]}>
             You can change these setting anytime by going to{' '}
