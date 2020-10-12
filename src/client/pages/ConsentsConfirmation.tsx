@@ -213,10 +213,16 @@ export const ConsentsConfirmationPage = () => {
             .
           </p>
           <div css={[reviewTableContainer, autoRow()]}>
-            <ReviewTableRow title="Marketing analysis">
-              <p css={text}>
-                {profiling_optout.consented ? 'Opted out' : 'Opted in'}
-              </p>
+            <ReviewTableRow title="Newsletters">
+              {subscribedNewsletters.length ? (
+                subscribedNewsletters.map((n) => (
+                  <p key={n.id} css={text}>
+                    {n.name}
+                  </p>
+                ))
+              ) : (
+                <p css={text}>N/A</p>
+              )}
             </ReviewTableRow>
             <ReviewTableRow title="Products & services">
               {productConsents.length ? (
@@ -234,16 +240,10 @@ export const ConsentsConfirmationPage = () => {
                 {market_research_optout.consented ? 'Opted out' : 'Opted in'}
               </p>
             </ReviewTableRow>
-            <ReviewTableRow title="Newsletters">
-              {subscribedNewsletters.length ? (
-                subscribedNewsletters.map((n) => (
-                  <p key={n.id} css={text}>
-                    {n.name}
-                  </p>
-                ))
-              ) : (
-                <p css={text}>N/A</p>
-              )}
+            <ReviewTableRow title="Marketing analysis">
+              <p css={text}>
+                {profiling_optout.consented ? 'Opted out' : 'Opted in'}
+              </p>
             </ReviewTableRow>
           </div>
         </ConsentsContent>

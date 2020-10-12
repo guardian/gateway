@@ -101,28 +101,29 @@ const getUserNewsletterSubscriptions = async (
 
 export const consentPages: ConsentPage[] = [
   {
-    page: Routes.CONSENTS_DATA.slice(1),
+    page: Routes.CONSENTS_NEWSLETTERS.slice(1),
     read: async (ip, sc_gu_u) => {
       try {
         return {
-          consents: await getUserConsentsForPage(
-            CONSENTS_DATA_PAGE,
+          page: Routes.CONSENTS_NEWSLETTERS.slice(1),
+          previousPage: Routes.CONSENTS_COMMUNICATION.slice(1),
+          newsletters: await getUserNewsletterSubscriptions(
+            NEWSLETTERS_PAGE,
             ip,
             sc_gu_u,
           ),
-          page: Routes.CONSENTS_DATA.slice(1),
         };
       } catch (error) {
         throw error;
       }
     },
     update: async (ip, sc_gu_u, body) => {
-      const consents = CONSENTS_DATA_PAGE.map((id) => ({
+      const newsletters: NewsletterPatch[] = NEWSLETTERS_PAGE.map((id) => ({
         id,
-        consented: getConsentValueFromRequestBody(id, body),
+        subscribed: !!body[id],
       }));
 
-      await patchConsents(ip, sc_gu_u, consents);
+      await patchNewsletters(ip, sc_gu_u, newsletters);
     },
   },
   {
@@ -152,29 +153,28 @@ export const consentPages: ConsentPage[] = [
     },
   },
   {
-    page: Routes.CONSENTS_NEWSLETTERS.slice(1),
+    page: Routes.CONSENTS_DATA.slice(1),
     read: async (ip, sc_gu_u) => {
       try {
         return {
-          page: Routes.CONSENTS_NEWSLETTERS.slice(1),
-          previousPage: Routes.CONSENTS_COMMUNICATION.slice(1),
-          newsletters: await getUserNewsletterSubscriptions(
-            NEWSLETTERS_PAGE,
+          consents: await getUserConsentsForPage(
+            CONSENTS_DATA_PAGE,
             ip,
             sc_gu_u,
           ),
+          page: Routes.CONSENTS_DATA.slice(1),
         };
       } catch (error) {
         throw error;
       }
     },
     update: async (ip, sc_gu_u, body) => {
-      const newsletters: NewsletterPatch[] = NEWSLETTERS_PAGE.map((id) => ({
+      const consents = CONSENTS_DATA_PAGE.map((id) => ({
         id,
-        subscribed: !!body[id],
+        consented: getConsentValueFromRequestBody(id, body),
       }));
 
-      await patchNewsletters(ip, sc_gu_u, newsletters);
+      await patchConsents(ip, sc_gu_u, consents);
     },
   },
   {
