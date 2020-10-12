@@ -15,8 +15,10 @@ import { from } from '@guardian/src-foundations/mq';
 import { PageProgression } from '@/client/components/PageProgression';
 import { CONSENTS_PAGES_ARR } from '@/client/models/ConsentsPages';
 
+export const CONSENTS_MAIN_COLOR = '#eaf1fd';
+
 const consentsBackground = css`
-  background-color: #eaf1fd;
+  background-color: ${CONSENTS_MAIN_COLOR};
 `;
 
 export const mainBackground = css`
