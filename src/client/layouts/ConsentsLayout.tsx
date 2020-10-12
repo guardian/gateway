@@ -5,7 +5,6 @@ import { GlobalState } from '@/shared/model/GlobalState';
 import { GlobalStateContext } from '@/client/components/GlobalState';
 import { GlobalError } from '@/client/components/GlobalError';
 import { getErrorLink } from '@/client/lib/ErrorLink';
-import { brand } from '@guardian/src-foundations/palette';
 import { css } from '@emotion/core';
 import { space } from '@guardian/src-foundations';
 import { Button, LinkButton } from '@guardian/src-button';
@@ -17,6 +16,7 @@ import {
   ConsentsBlueBackground,
   ieFlexFix,
   ConsentsProgression,
+  mainBackground,
 } from '@/client/layouts/shared/Consents';
 import { Routes } from '@/shared/model/Routes';
 
@@ -25,23 +25,6 @@ interface ConsentsLayoutProps {
   current?: string;
   title: string;
 }
-
-const mainBackground = css`
-  background-color: white;
-  position: relative;
-  z-index: 0;
-  &:before {
-    content: ' ';
-    background-color: ${brand[800]};
-    opacity: 0.3;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: -1;
-  }
-`;
 
 const controls = css`
   padding: ${space[9]}px 0 ${space[24]}px 0;

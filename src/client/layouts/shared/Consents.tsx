@@ -15,14 +15,17 @@ import { from } from '@guardian/src-foundations/mq';
 import { PageProgression } from '@/client/components/PageProgression';
 import { CONSENTS_PAGES_ARR } from '@/client/models/ConsentsPages';
 
+const consentsBackground = css`
+  background-color: #eaf1fd;
+`;
+
 export const mainBackground = css`
-  background-color: white;
   position: relative;
   z-index: 0;
   &:before {
     content: ' ';
-    background-color: ${brand[800]};
-    opacity: 0.3;
+    ${consentsBackground}
+    opacity: 0.4;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -36,10 +39,6 @@ export const mainBackground = css`
 // derived from this solution https://stackoverflow.com/a/49368815
 export const ieFlexFix = css`
   flex: 0 0 auto;
-`;
-
-const consentsBackground = css`
-  background-color: ${brand[800]};
 `;
 
 const blueBorder = css`
