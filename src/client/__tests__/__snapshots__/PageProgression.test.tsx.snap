@@ -237,7 +237,7 @@ exports[`PageProgression component when an active section is supplied marks the 
       />
     </svg>
     <div>
-      Contact
+      Communication
     </div>
   </li>
   <li
@@ -702,7 +702,7 @@ exports[`PageProgression component when no active page is set shows the first st
       />
     </svg>
     <div>
-      Contact
+      Communication
     </div>
   </li>
   <li
@@ -1167,7 +1167,7 @@ exports[`PageProgression component when on the last section marks the previous s
       />
     </svg>
     <div>
-      Contact
+      Communication
     </div>
   </li>
   <li
