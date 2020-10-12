@@ -107,6 +107,16 @@ const progressionMargin = css`
   margin-bottom: ${space[12]}px;
 `;
 
+export const controls = css`
+  padding: ${space[9]}px 0 ${space[9]}px 0;
+  ${from.tablet} {
+    padding: ${space[9]}px 0 ${space[12]}px 0;
+  }
+  ${from.desktop} {
+    padding: ${space[9]}px 0 ${space[24]}px 0;
+  }
+`;
+
 export const ConsentsHeader: FunctionComponent<{ title: string }> = ({
   title,
 }) => (

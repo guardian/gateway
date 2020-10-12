@@ -1,14 +1,13 @@
 import React, { FunctionComponent, useContext } from 'react';
-import { headline } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/core';
 import { space, palette } from '@guardian/src-foundations';
 import {
   getAutoRow,
+  gridItem,
   gridItemColumnConsents,
   SpanDefinition,
 } from '@/client/styles/Grid';
 import { from } from '@guardian/src-foundations/mq';
-import { SvgRoundel } from '@guardian/src-brand';
 import { GlobalState } from '@/shared/model/GlobalState';
 import { GlobalStateContext } from '@/client/components/GlobalState';
 import { Header } from '@/client/components/Header';
@@ -19,6 +18,7 @@ import {
   ieFlexFix,
   ConsentsContent,
   ConsentsBlueBackground,
+  controls,
 } from '@/client/layouts/shared/Consents';
 import { Footer } from '@/client/components/Footer';
 import { headingWithMq, text } from '@/client/styles/Consents';
@@ -26,73 +26,8 @@ import { Link } from '@guardian/src-link';
 import { Consents } from '@/shared/model/Consent';
 import { getErrorLink } from '@/client/lib/ErrorLink';
 import { GlobalSuccess } from '@/client/components/GlobalSuccess';
-
-const homepageCardContainer = css`
-  display: flex;
-  flex-flow: row wrap;
-`;
-
-const homepageCard = css`
-  display: flex;
-  flex-direction: row;
-  margin: ${space[2]}px 0px;
-  background-color: ${palette.background.ctaPrimary};
-  flex: 1 1 auto;
-  text-decoration: none;
-
-  ${from.tablet} {
-    flex: 0 0 auto;
-    flex-direction: column;
-    width: 33.33%;
-    height: 240px;
-  }
-`;
-
-const homepageCardRoundel = css`
-  display: flex;
-  & svg {
-    width: 42px;
-    height: 42px;
-    fill: white;
-  }
-`;
-
-const homepageCardLine = css`
-  position: relative;
-  height: 80%;
-  top: 10%;
-  border-top: 1px solid #a7b4ca;
-  border-right: 1px solid #a7b4ca;
-
-  ${from.tablet} {
-    top: 0;
-    height: auto;
-    left: 5%;
-    width: 90%;
-  }
-`;
-
-const homepageCardHeaderContainer = css`
-  padding: ${space[3]}px;
-
-  ${from.tablet} {
-    display: flex;
-    justify-content: flex-end;
-    align-items: start;
-    flex: 1 1 auto;
-  }
-`;
-
-const homepageCardTextContainer = css`
-  padding: ${space[3]}px;
-  flex: 2 1 auto;
-`;
-
-const homepageCardText = css`
-  ${headline.xxxsmall({ fontWeight: 'bold' })};
-  margin: 0;
-  color: ${palette.text.ctaPrimary};
-`;
+import { LinkButton } from '@guardian/src-button';
+import { SvgArrowRightStraight } from '@guardian/src-icons';
 
 const reviewTableContainer = css`
   display: flex;
@@ -146,14 +81,6 @@ const ReviewTableRow: FunctionComponent<{ title: string }> = ({
     <div css={reviewTableCell}>{children}</div>
   </div>
 );
-
-const returnBox = css`
-  padding: ${space[6]}px 0 ${space[12]}px;
-
-  ${from.desktop} {
-    padding: ${space[12]}px 0;
-  }
-`;
 
 const newslettersBox = css`
   padding-bottom: ${space[24]}px;
@@ -245,23 +172,15 @@ export const ConsentsConfirmationPage = () => {
           </div>
         </ConsentsContent>
         <ConsentsBlueBackground>
-          <div css={[returnBox, autoRow(gridItemColumnConsents)]}>
-            <h3 css={headingWithMq}>Get back to where you left off</h3>
-            <div css={homepageCardContainer}>
-              <Link css={homepageCard} href="https://theguardian.com">
-                <div css={homepageCardHeaderContainer}>
-                  <div css={homepageCardRoundel}>
-                    <SvgRoundel />
-                  </div>
-                </div>
-                <span css={homepageCardLine}></span>
-                <div css={homepageCardTextContainer}>
-                  <h4 css={homepageCardText}>
-                    Return to The Guardian homepage
-                  </h4>
-                </div>
-              </Link>
-            </div>
+          <div css={[gridItem(gridItemColumnConsents), controls]}>
+            <LinkButton
+              iconSide="right"
+              nudgeIcon={true}
+              icon={<SvgArrowRightStraight />}
+              href="https://theguardian.com"
+            >
+              Return to The Guardian
+            </LinkButton>
           </div>
         </ConsentsBlueBackground>
         <ConsentsContent cssOverrides={newslettersBox}>

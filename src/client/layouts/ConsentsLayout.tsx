@@ -17,6 +17,7 @@ import {
   ieFlexFix,
   ConsentsProgression,
   mainBackground,
+  controls,
 } from '@/client/layouts/shared/Consents';
 import { Routes } from '@/shared/model/Routes';
 import { GlobalSuccess } from '@/client/components/GlobalSuccess';
@@ -26,10 +27,6 @@ interface ConsentsLayoutProps {
   current?: string;
   title: string;
 }
-
-const controls = css`
-  padding: ${space[9]}px 0 ${space[24]}px 0;
-`;
 
 const form = css`
   display: flex;
