@@ -68,7 +68,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
               icon={<SvgArrowRightStraight />}
               type="submit"
             >
-              Save and Continue
+              Save and continue
             </Button>
             {previousPage && (
               <LinkButton
