@@ -69,7 +69,7 @@ export const ConsentsDataPage = () => {
       </p>
       <fieldset css={[fieldset, autoRow()]}>
         <legend css={legend}>
-          I am happy for The Guardian to use my personal data for market
+          I am happy for The Guardian to use my personal data for marketing
           analysis purposes.
         </legend>
         <RadioGroup orientation="horizontal" name={Consents.PROFILING}>
