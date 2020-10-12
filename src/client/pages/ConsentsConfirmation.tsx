@@ -234,13 +234,11 @@ export const ConsentsConfirmationPage = () => {
             </ReviewTableRow>
             <ReviewTableRow title="Marketing research">
               <p css={text}>
-                {market_research_optout.consented ? 'Opted out' : 'Opted in'}
+                {market_research_optout.consented ? 'No' : 'Yes'}
               </p>
             </ReviewTableRow>
             <ReviewTableRow title="Marketing analysis">
-              <p css={text}>
-                {profiling_optout.consented ? 'Opted out' : 'Opted in'}
-              </p>
+              <p css={text}>{profiling_optout.consented ? 'No' : 'Yes'}</p>
             </ReviewTableRow>
           </div>
         </ConsentsContent>
