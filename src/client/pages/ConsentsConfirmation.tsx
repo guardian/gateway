@@ -251,7 +251,7 @@ export const ConsentsConfirmationPage = () => {
           <div css={[returnBox, autoRow(gridItemColumnConsents)]}>
             <h3 css={headingWithMq}>Get back to where you left off</h3>
             <div css={homepageCardContainer}>
-              <a css={homepageCard} href="https://theguardian.com">
+              <Link css={homepageCard} href="https://theguardian.com">
                 <div css={homepageCardHeaderContainer}>
                   <div css={homepageCardRoundel}>
                     <SvgRoundel />
@@ -263,7 +263,7 @@ export const ConsentsConfirmationPage = () => {
                     Return to The Guardian homepage
                   </h4>
                 </div>
-              </a>
+              </Link>
             </div>
           </div>
         </ConsentsBlueBackground>

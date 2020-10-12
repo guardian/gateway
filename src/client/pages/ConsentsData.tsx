@@ -11,6 +11,7 @@ import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { heading, text, headingMarginSpace6 } from '@/client/styles/Consents';
 import { GlobalState } from '@/shared/model/GlobalState';
 import { Consents } from '@/shared/model/Consent';
+import { Link } from '@guardian/src-link';
 
 const fieldset = css`
   border: 0;
@@ -46,10 +47,14 @@ export const ConsentsDataPage = () => {
         team who are dedicated to keeping any data we collect safe and secure.
         You can find out more about how The Guardian aims to safeguard users
         data by going to the{' '}
-        <a href={Locations.PRIVACY} target="_blank" rel="noopener noreferrer">
-          Privacy section
-        </a>{' '}
-        of the website.
+        <Link
+          href={Locations.PRIVACY}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Privacy
+        </Link>{' '}
+        section of the website.
       </p>
       <h3 css={[heading, headingMarginSpace6, autoRow()]}>
         Using your data for marketing analysis
