@@ -14,6 +14,8 @@ import { ConsentsErrors, VerifyEmailErrors } from '@/shared/model/Errors';
 import { getConfiguration } from '@/server/lib/configuration';
 import { getProfileUrl } from '@/server/lib/baseUri';
 import { getProviderForEmail } from '@/shared/lib/emailProvider';
+import { trackMetric } from '@/server/lib/AWS';
+import { Metrics } from '@/server/models/Metrics';
 
 const router = Router();
 
@@ -71,7 +73,8 @@ router.post(Routes.VERIFY_EMAIL, async (req: Request, res: Response) => {
 
     state.email = email;
 
-    sendVerificationEmail(req.ip, sc_gu_u);
+    await sendVerificationEmail(req.ip, sc_gu_u);
+    trackMetric(Metrics.SEND_VALIDATION_EMAIL_SUCCESS);
 
     state.success = 'Email Sent. Please check your inbox and follow the link.';
 
@@ -80,6 +83,7 @@ router.post(Routes.VERIFY_EMAIL, async (req: Request, res: Response) => {
       state.emailProvider = emailProvider.id;
     }
   } catch (error) {
+    trackMetric(Metrics.SEND_VALIDATION_EMAIL_FAILURE);
     status = error.status;
     state.error = error.message;
   }
@@ -98,6 +102,7 @@ router.get(
 
     try {
       const cookies = await verifyEmail(token, req.ip);
+      trackMetric(Metrics.EMAIL_VALIDATED_SUCCESS);
       setIDAPICookies(res, cookies);
     } catch (error) {
       logger.error(error);
@@ -105,6 +110,8 @@ router.get(
       if (error.message === VerifyEmailErrors.USER_ALREADY_VALIDATED) {
         return res.redirect(303, `${Routes.CONSENTS}/${consentPages[0].page}`);
       }
+
+      trackMetric(Metrics.EMAIL_VALIDATED_FAILURE);
 
       return res.redirect(303, `${Routes.VERIFY_EMAIL}`);
     }

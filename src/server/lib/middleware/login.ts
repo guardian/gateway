@@ -4,6 +4,8 @@ import { IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
 import { getConfiguration } from '@/server/lib/configuration';
 import { getProfileUrl } from '@/server/lib/baseUri';
 import { Routes } from '@/shared/model/Routes';
+import { trackMetric } from '@/server/lib/AWS';
+import { Metrics } from '@/server/models/Metrics';
 
 const profileUrl = getProfileUrl();
 
@@ -36,12 +38,15 @@ export const loginMiddleware = async (
     const auth = await read(sc_gu_u, sc_gu_la, req.ip);
 
     if (!auth.emailValidated) {
+      trackMetric(Metrics.LOGIN_MIDDLEWARE_UNVERIFIED);
       return res.redirect(303, Routes.VERIFY_EMAIL);
     }
 
     if (auth.status === IDAPIAuthStatus.RECENT) {
+      trackMetric(Metrics.LOGIN_MIDDLEWARE_SUCCESS);
       next();
     } else {
+      trackMetric(Metrics.LOGIN_MIDDLEWARE_NOT_RECENT);
       if (auth.redirect) {
         const redirect = generateRedirectUrl(auth.redirect.url);
         res.redirect(redirect);
@@ -52,6 +57,7 @@ export const loginMiddleware = async (
       }
     }
   } catch (e) {
+    trackMetric(Metrics.LOGIN_MIDDLEWARE_FAILURE);
     res.redirect(generateRedirectUrl(FATAL_ERROR_REDIRECT_URL));
   }
 };
