@@ -202,8 +202,14 @@ export const consentPages: ConsentPage[] = [
   },
 ];
 
-router.get(Routes.CONSENTS, (_: Request, res: Response) => {
-  res.redirect(303, `${Routes.CONSENTS}/${consentPages[0].page}`);
+router.get(Routes.CONSENTS, loginMiddleware, (_: Request, res: Response) => {
+  let url = `${Routes.CONSENTS}/${consentPages[0].page}`;
+  if (res.locals?.queryParams?.returnUrl) {
+    url = `${url}?returnUrl=${encodeURIComponent(
+      res.locals.queryParams.returnUrl,
+    )}`;
+  }
+  res.redirect(303, url);
 });
 
 router.get(
