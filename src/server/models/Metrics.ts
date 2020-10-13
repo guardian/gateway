@@ -13,10 +13,14 @@ export enum Metrics {
   EMAIL_VALIDATED_FAILURE = 'EmailValidated::Failure',
 }
 
-export const consentsPageMetric = (page: string, getOrPost: 'Get' | 'Post', isSuccess: boolean) => {
+export const consentsPageMetric = (
+  page: string,
+  getOrPost: 'Get' | 'Post',
+  isSuccess: boolean,
+) => {
   if (isSuccess) {
-    return `${getOrPost}ConsentsPage-${page}::Success`
+    return `${getOrPost}ConsentsPage-${page}::Success`;
   } else {
-    return `${getOrPost}ConsentsPage-${page}::Failure`
+    return `${getOrPost}ConsentsPage-${page}::Failure`;
   }
 };

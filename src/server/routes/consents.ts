@@ -23,8 +23,8 @@ import {
   CONSENTS_DATA_PAGE,
 } from '@/shared/model/Consent';
 import { loginMiddleware } from '@/server/lib/middleware/login';
-import {trackMetric} from "@/server/lib/AWS";
-import {consentsPageMetric} from "@/server/models/Metrics";
+import { trackMetric } from '@/server/lib/AWS';
+import { consentsPageMetric } from '@/server/models/Metrics';
 
 const router = Router();
 

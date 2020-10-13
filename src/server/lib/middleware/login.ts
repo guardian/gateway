@@ -4,8 +4,8 @@ import { IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
 import { getConfiguration } from '@/server/lib/configuration';
 import { getProfileUrl } from '@/server/lib/baseUri';
 import { Routes } from '@/shared/model/Routes';
-import {trackMetric} from "@/server/lib/AWS";
-import {Metrics} from "@/server/models/Metrics";
+import { trackMetric } from '@/server/lib/AWS';
+import { Metrics } from '@/server/models/Metrics';
 
 const profileUrl = getProfileUrl();
 

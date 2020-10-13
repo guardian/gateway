@@ -14,8 +14,8 @@ import { ConsentsErrors, VerifyEmailErrors } from '@/shared/model/Errors';
 import { getConfiguration } from '@/server/lib/configuration';
 import { getProfileUrl } from '@/server/lib/baseUri';
 import { getProviderForEmail } from '@/shared/lib/emailProvider';
-import {trackMetric} from "@/server/lib/AWS";
-import {Metrics} from "@/server/models/Metrics";
+import { trackMetric } from '@/server/lib/AWS';
+import { Metrics } from '@/server/models/Metrics';
 
 const router = Router();
 
