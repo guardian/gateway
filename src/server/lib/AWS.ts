@@ -34,7 +34,7 @@ export const defaultDimensions = {
 };
 
 export const trackMetric = (
-  metricName: Metrics,
+  metricName: Metrics | string,
   dimensions?: MetricDimensions,
 ) => {
   // merge defaultDimensions with dimensions from parameter in case some were changed,
