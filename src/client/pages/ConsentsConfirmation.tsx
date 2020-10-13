@@ -83,7 +83,19 @@ const ReviewTableRow: FunctionComponent<{ title: string }> = ({
 );
 
 const newslettersBox = css`
+  flex: 1 0 auto;
+  align-content: flex-start;
   padding-bottom: ${space[24]}px;
+`;
+
+const mainFlex = css`
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+`;
+
+const continueBoxFlex = css`
+  flex: 0 0 auto;
 `;
 
 const confirmationSpanDefinition: SpanDefinition = {
@@ -128,7 +140,7 @@ export const ConsentsConfirmationPage = () => {
       {error && <GlobalError error={error} link={getErrorLink(error)} />}
       {success && <GlobalSuccess success={success} />}
       <ConsentsHeader title="Your registration is complete" />
-      <main css={[mainBackground, ieFlexFix]}>
+      <main css={[mainBackground, mainFlex]}>
         <ConsentsContent>
           <h3 css={[headingWithMq, autoRow()]}>Your selections</h3>
           <p css={[text, autoRow()]}>
@@ -171,7 +183,7 @@ export const ConsentsConfirmationPage = () => {
             </ReviewTableRow>
           </div>
         </ConsentsContent>
-        <ConsentsBlueBackground>
+        <ConsentsBlueBackground cssOverrides={continueBoxFlex}>
           <div css={[gridItem(gridItemColumnConsents), controls]}>
             <LinkButton
               iconSide="right"

@@ -137,8 +137,10 @@ export const ConsentsContent: FunctionComponent<{
   <div css={[content, cssOverrides]}>{children}</div>
 );
 
-export const ConsentsBlueBackground: FunctionComponent = ({ children }) => (
-  <div css={[consentsBackground, flex]}>
+export const ConsentsBlueBackground: FunctionComponent<{
+  cssOverrides?: SerializedStyles;
+}> = ({ children, cssOverrides }) => (
+  <div css={[consentsBackground, flex, cssOverrides]}>
     <div css={[gridRow, blueBorder, height100]}>{children}</div>
   </div>
 );
