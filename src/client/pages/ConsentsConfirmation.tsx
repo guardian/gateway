@@ -117,7 +117,11 @@ export const ConsentsConfirmationPage = () => {
   const globalState: GlobalState = useContext(GlobalStateContext);
   const { error, pageData = {}, success } = globalState;
 
-  const { consents = [], newsletters = [] } = pageData;
+  const {
+    consents = [],
+    newsletters = [],
+    returnUrl = 'https://www.theguardian.com',
+  } = pageData;
 
   const profiling_optout = consents.find(
     (consent) => consent.id === Consents.PROFILING,
@@ -188,9 +192,9 @@ export const ConsentsConfirmationPage = () => {
               iconSide="right"
               nudgeIcon={true}
               icon={<SvgArrowRightStraight />}
-              href="https://theguardian.com"
+              href={returnUrl}
             >
-              Return to The Guardian
+              Return to the The Guardian
             </LinkButton>
           </div>
         </ConsentsBlueBackground>
