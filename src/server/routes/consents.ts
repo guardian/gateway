@@ -40,6 +40,11 @@ interface ConsentPage {
   ) => Promise<void>;
 }
 
+const addReturnUrlToPath = (path: string, returnUrl: string): string => {
+  const divider = path.includes('?') ? '&' : '?';
+  return `${path}${divider}returnUrl=${encodeURIComponent(returnUrl)}`;
+};
+
 const getConsentValueFromRequestBody = (
   key: string,
   body: { [key: string]: string },
@@ -205,9 +210,7 @@ export const consentPages: ConsentPage[] = [
 router.get(Routes.CONSENTS, loginMiddleware, (_: Request, res: Response) => {
   let url = `${Routes.CONSENTS}/${consentPages[0].page}`;
   if (res.locals?.queryParams?.returnUrl) {
-    url = `${url}?returnUrl=${encodeURIComponent(
-      res.locals.queryParams.returnUrl,
-    )}`;
+    url = addReturnUrlToPath(url, res.locals.queryParams.returnUrl);
   }
   res.redirect(303, url);
 });
@@ -278,9 +281,7 @@ router.post(`${Routes.CONSENTS}/:page`, loginMiddleware, async (req, res) => {
 
     let url = `${Routes.CONSENTS}/${consentPages[pageIndex + 1].page}`;
     if (res.locals?.queryParams?.returnUrl) {
-      url = `${url}?returnUrl=${encodeURIComponent(
-        res.locals.queryParams.returnUrl,
-      )}`;
+      url = addReturnUrlToPath(url, res.locals.queryParams.returnUrl);
     }
     return res.redirect(303, url);
   } catch (e) {
