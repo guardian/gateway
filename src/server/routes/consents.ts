@@ -232,6 +232,7 @@ router.get(
       const { read } = consentPages[pageIndex];
 
       state.pageData = await read(req.ip, sc_gu_u);
+      state.pageData.returnUrl = res.locals?.queryParams?.returnUrl;
     } catch (e) {
       status = e.status;
       state.error = e.message;
@@ -248,7 +249,7 @@ router.get(
   },
 );
 
-router.post(`${Routes.CONSENTS}/:page`, async (req, res) => {
+router.post(`${Routes.CONSENTS}/:page`, loginMiddleware, async (req, res) => {
   const sc_gu_u = req.cookies.SC_GU_U;
   const state: GlobalState = {};
 
@@ -269,10 +270,13 @@ router.post(`${Routes.CONSENTS}/:page`, async (req, res) => {
 
     trackMetric(consentsPageMetric(page, 'Post', true));
 
-    return res.redirect(
-      303,
-      `${Routes.CONSENTS}/${consentPages[pageIndex + 1].page}`,
-    );
+    let url = `${Routes.CONSENTS}/${consentPages[pageIndex + 1].page}`;
+    if (res.locals?.queryParams?.returnUrl) {
+      url = `${url}?returnUrl=${encodeURIComponent(
+        res.locals.queryParams.returnUrl,
+      )}`;
+    }
+    return res.redirect(303, url);
   } catch (e) {
     status = e.status;
     state.error = e.message;
