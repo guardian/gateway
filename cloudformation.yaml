@@ -172,6 +172,16 @@ Resources:
             touch /var/log/identity-gateway.log
             chown identity-gateway:identity-gateway /var/log/identity-gateway.log
 
+            # Try multiple times to get parameter store values. The SSM command can fail when called immediately on instance startup.
+            while true; do
+                if \
+                  IDAPI_CLIENT_ACCESS_TOKEN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/idapi-client-access-token' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
+                  PLAY_SESSION_COOKIE_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/frontendPlaySecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+
+                  then break
+                fi
+            done
+
             # systemd setup
             cat > /etc/systemd/system/identity-gateway.service <<EOL
             [Service]
@@ -184,11 +194,11 @@ Resources:
             Group=identity-gateway
             Environment=NODE_ENV=production
             Environment=PORT=9233
-            Environment=IDAPI_CLIENT_ACCESS_TOKEN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/idapi-client-access-token' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+            Environment=IDAPI_CLIENT_ACCESS_TOKEN=$IDAPI_CLIENT_ACCESS_TOKEN
             Environment=IDAPI_BASE_URL=${IdapiBaseUrl}
             Environment=SIGN_IN_PAGE_URL=${SignInPageUrl}
             Environment=BASE_URI=${BaseUri}
-            Environment=PLAY_SESSION_COOKIE_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/frontendPlaySecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+            Environment=PLAY_SESSION_COOKIE_SECRET=$PLAY_SESSION_COOKIE_SECRET
             Environment=DEFAULT_RETURN_URI=${DefaultReturnUri}
             Environment=STAGE=${Stage}
 
