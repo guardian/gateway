@@ -7,38 +7,59 @@ import {
   textSans,
   body,
 } from '@guardian/src-foundations/typography';
-import { NewsLetter } from '@/shared/model/Newsletter';
 import { CONSENTS_MAIN_COLOR } from '@/client/layouts/shared/Consents';
+import { NewsLetter, NEWSLETTER_IMAGES } from '@/shared/model/Newsletter';
 
 interface NewsletterCardProps {
   newsletter: NewsLetter;
   cssOverides?: SerializedStyles;
 }
 
-const img = css`
-  // PLACEHOLDER IMAGE
-  display: block;
-  padding: 55% calc(100% - 6px) 0 0;
-  border: 3px solid black;
-  background: linear-gradient(
-      to top right,
-      transparent 49.5%,
-      black 49.5%,
-      black 50.5%,
-      transparent 50.5%,
-      transparent 100%
-    ),
-    linear-gradient(
-      to top left,
-      transparent 49.5%,
-      black 49.5%,
-      black 50.5%,
-      transparent 50.5%,
-      transparent 100%
-    );
-  height: 0;
-  width: 0;
-`;
+const image = (id?: string) => {
+  const base = css`
+    display: block;
+    height: 0;
+    width: 0;
+  `;
+
+  if (id) {
+    const imagePath = NEWSLETTER_IMAGES[id];
+
+    if (imagePath) {
+      return css`
+        ${base}
+        padding: 55% 100% 0 0;
+        background-image: url('${imagePath}');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+      `;
+    }
+  }
+
+  // placeholder image
+  return css`
+    ${base}
+    padding: 55% calc(100% - 6px) 0 0;
+    border: 3px solid black;
+    background: linear-gradient(
+        to top right,
+        transparent 49.5%,
+        black 49.5%,
+        black 50.5%,
+        transparent 50.5%,
+        transparent 100%
+      ),
+      linear-gradient(
+        to top left,
+        transparent 49.5%,
+        black 49.5%,
+        black 50.5%,
+        transparent 50.5%,
+        transparent 100%
+      );
+  `;
+};
 
 const h1 = css`
   color: ${brand[400]};
@@ -113,7 +134,7 @@ export const NewsletterCard: FunctionComponent<NewsletterCardProps> = (
   ) : null;
   return (
     <article css={[article, props.cssOverides]}>
-      <img css={img} />
+      <img css={image(props.newsletter.id)} />
       <div css={borderDiv}>
         <h1 css={h1}>{name}</h1>
         {subtitle}
