@@ -15,7 +15,6 @@ import { GlobalError } from '@/client/components/GlobalError';
 import {
   ConsentsHeader,
   mainBackground,
-  ieFlexFix,
   ConsentsContent,
   ConsentsBlueBackground,
   controls,
