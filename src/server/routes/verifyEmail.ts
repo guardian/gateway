@@ -22,6 +22,11 @@ const router = Router();
 const { signInPageUrl } = getConfiguration();
 const profileUrl = getProfileUrl();
 
+const addReturnUrlToPath = (path: string, returnUrl: string): string => {
+  const divider = path.includes('?') ? '&' : '?';
+  return `${path}${divider}returnUrl=${encodeURIComponent(returnUrl)}`;
+};
+
 router.get(Routes.VERIFY_EMAIL, async (req: Request, res: Response) => {
   const state: GlobalState = {
     signInPageUrl: `${signInPageUrl}?returnUrl=${encodeURIComponent(
@@ -108,7 +113,13 @@ router.get(
       logger.error(error);
 
       if (error.message === VerifyEmailErrors.USER_ALREADY_VALIDATED) {
-        return res.redirect(303, `${Routes.CONSENTS}/${consentPages[0].page}`);
+        return res.redirect(
+          303,
+          addReturnUrlToPath(
+            `${Routes.CONSENTS}/${consentPages[0].page}`,
+            res.locals.queryParams.returnUrl,
+          ),
+        );
       }
 
       trackMetric(Metrics.EMAIL_VALIDATED_FAILURE);
@@ -118,7 +129,10 @@ router.get(
 
     return res.redirect(
       303,
-      `${Routes.CONSENTS}/${consentPages[0].page}?emailVerified=true`,
+      addReturnUrlToPath(
+        `${Routes.CONSENTS}/${consentPages[0].page}?emailVerified=true`,
+        res.locals.queryParams.returnUrl,
+      ),
     );
   },
 );
