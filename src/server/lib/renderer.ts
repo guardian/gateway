@@ -7,6 +7,7 @@ import { brandBackground } from '@guardian/src-foundations/palette';
 import { QueryParams } from '@/shared/model/QueryParams';
 import qs from 'query-string';
 import { getConfiguration } from '@/server/lib/configuration';
+import { RoutingConfig } from '@/client/routes';
 
 // favicon shamefully stolen from dcr
 const favicon =
@@ -34,6 +35,7 @@ export const renderer: (url: string, opts?: RendererOpts) => string = (
 
   const location = `${url}${queryString ? `?${queryString}` : ''}`;
 
+  // Any changes made here must also be made to the hydration in the static webpack bundle
   const react = ReactDOMServer.renderToString(
     React.createElement(
       StaticRouter,
@@ -44,6 +46,11 @@ export const renderer: (url: string, opts?: RendererOpts) => string = (
       React.createElement(Main, globalState),
     ),
   );
+
+  const routingConfig: RoutingConfig = {
+    globalState,
+    location,
+  };
 
   return `
     <!DOCTYPE html>
@@ -56,6 +63,9 @@ export const renderer: (url: string, opts?: RendererOpts) => string = (
         <title>${pageTitle} | The Guardian</title>
         <script>window.gaUID = "${gaUID.id}"</script>
         <script src="/gateway-static/bundle.js" defer></script>
+        <script id="routingConfig" type="application/json">${JSON.stringify(
+          routingConfig,
+        )}</script>
       </head>
       <body style="margin:0">
         <div id="app">${react}</div>

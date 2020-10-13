@@ -23,8 +23,10 @@ import {
   CONSENTS_DATA_PAGE,
 } from '@/shared/model/Consent';
 import { loginMiddleware } from '@/server/lib/middleware/login';
-import { ResponseWithLocals } from '../models/Express';
+import { ResponseWithLocals } from '@/server/models/Express';
 import { VERIFY_EMAIL } from '@/shared/model/Success';
+import { trackMetric } from '@/server/lib/AWS';
+import { consentsPageMetric } from '@/server/models/Metrics';
 
 const router = Router();
 
@@ -237,6 +239,8 @@ router.get(
 
     const html = renderer(`${Routes.CONSENTS}/${page}`, { globalState: state });
 
+    trackMetric(consentsPageMetric(page, 'Get', status === 200));
+
     res
       .type('html')
       .status(status ?? 500)
@@ -263,6 +267,8 @@ router.post(`${Routes.CONSENTS}/:page`, async (req, res) => {
       await update(req.ip, sc_gu_u, req.body);
     }
 
+    trackMetric(consentsPageMetric(page, 'Post', true));
+
     return res.redirect(
       303,
       `${Routes.CONSENTS}/${consentPages[pageIndex + 1].page}`,
@@ -271,6 +277,8 @@ router.post(`${Routes.CONSENTS}/:page`, async (req, res) => {
     status = e.status;
     state.error = e.message;
   }
+
+  trackMetric(consentsPageMetric(page, 'Post', false));
 
   const html = renderer(`${Routes.CONSENTS}/${page}`, { globalState: state });
   res

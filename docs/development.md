@@ -93,13 +93,18 @@ The route should now be accessible.
 
 ### Global State
 
-Sometimes data is needed by the client to render a specific component, e.g. an error. However due to SSR without client side hydration it's not possible to simply pass some JSON to the client and expect it to utilise the data.
+Sometimes data is needed by the client to render a specific component, e.g. an error. Using SSR with additional client side hydration we
 
-Instead it's possible to pass a state (properties in the [`GlobalState`](../src/shared/model/GlobalState.ts) interface) to the renderer method. This is passed to the [`Main` app component](../src/client/main.tsx) in React as a prop. The `Main` component utilises a [`GlobalStateProvider`](../src/client/components/GlobalState.tsx) which wraps the app with a [Context Provider](https://reactjs.org/docs/context.html) making it possible to access data further down a component tree without having to manually pass props down at each level.
+- pass a state (properties in the [`GlobalState`](../src/shared/model/GlobalState.ts) interface) to the renderer method.
+This is passed to the [`Main` app component](../src/client/main.tsx) in React as a prop. 
+The `Main` component utilises a [`GlobalStateProvider`](../src/client/components/GlobalState.tsx) which wraps the app with a [Context Provider](https://reactjs.org/docs/context.html)
+making it possible to access data further down a component tree without having to manually pass props down at each level. 
+- Pass the same data as JSON on the document, and use this for react hydration on the browser. Hydration is executed from the static bundle's entrypoint.
+
 
 It's then possible to access the state through the [`useContext`](https://reactjs.org/docs/hooks-reference.html#usecontext) hook in a descendent component.
 
-On the server side, it's possible to populate the state by creating a `GlobalState` object, adding values to it, and passing it to the renderer (example below).
+It's possible to populate the state by creating a `GlobalState` object, adding values to it, and passing it to the renderer (example below).
 
 Here's an example of adding some test data to the global state.
 
@@ -272,7 +277,8 @@ Environment variables appear in a lot of places, so it's likely you'll need to u
 
 ## Client Side Scripts
 
-Although the app itself is server side rendered, there may need to be some scripts that fire on the client side, for example for analytics, or the consents management platform.
+The app itself is server side rendered for browsers not running JavaScript.  We also hydrate the components with react, necessary for interactive components.
+Also, there may need to be some scripts that fire on the client side, for example for analytics, or the consents management platform.
 
 To facilitate this, a client bundle is created at build time to the `build/static` folder. This corresponds to the script imported in the [`src/client/static/index.tsx`](../src/client/static/index.tsx) file, with a script tag pointing to the bundle delivered along with the rendered html.
 
