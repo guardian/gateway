@@ -1,3 +1,8 @@
+import BOOKMARKS_IMAGE from '@/client/assets/4137.jpg';
+import GREENLIGHT_IMAGE from '@/client/assets/4147.jpg';
+import TODAYUK_IMAGE from '@/client/assets/4151.jpg';
+import THELONGREAD_IMAGE from '@/client/assets/4165.jpg';
+
 export interface NewsLetter {
   id: string;
   description: string;
@@ -14,13 +19,20 @@ export interface NewsletterPatch {
 export enum Newsletters {
   BOOKMARKS = '4137',
   GREENLIGHT = '4147',
-  LABNOTES = '4153',
+  TODAYUK = '4151',
   THELONGREAD = '4165',
 }
 
 export const NEWSLETTERS_PAGE: string[] = [
-  Newsletters.BOOKMARKS,
-  Newsletters.GREENLIGHT,
-  Newsletters.LABNOTES,
+  Newsletters.TODAYUK,
   Newsletters.THELONGREAD,
+  Newsletters.GREENLIGHT,
+  Newsletters.BOOKMARKS,
 ];
+
+export const NEWSLETTER_IMAGES = {
+  [Newsletters.BOOKMARKS.toString()]: BOOKMARKS_IMAGE,
+  [Newsletters.GREENLIGHT.toString()]: GREENLIGHT_IMAGE,
+  [Newsletters.THELONGREAD.toString()]: THELONGREAD_IMAGE,
+  [Newsletters.TODAYUK.toString()]: TODAYUK_IMAGE,
+};
