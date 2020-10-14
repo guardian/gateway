@@ -58,7 +58,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
       <ConsentsHeader title={title} />
       <form
         css={form}
-        action={`${Routes.CONSENTS}/${page}`}
+        action={`${Routes.CONSENTS}/${page}${returnUrlQuery}`}
         method="post"
         onSubmit={(e) => {
           onboardingFormSubmitOphanTracking(page, pageData, e);
