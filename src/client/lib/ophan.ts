@@ -1,6 +1,6 @@
 import { OphanABEvent } from '@guardian/types/ophan';
 
-interface OphanInteraction {
+export interface OphanInteraction {
   component: string;
   value?: string;
   atomId?: string;
@@ -21,3 +21,6 @@ export const record = (event: OphanEvent) => {
     window.guardian.ophan.record(event);
   }
 };
+
+export const sendOphanInteractionEvent = (interaction: OphanInteraction) =>
+  record({ interaction });
