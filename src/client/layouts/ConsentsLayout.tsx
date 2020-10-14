@@ -75,7 +75,9 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
         css={form}
         action={`${Routes.CONSENTS}/${page}`}
         method="post"
-        onSubmit={(e) => onboardingFormSubmitOphanTracking(page, e)}
+        onSubmit={(e) => {
+          onboardingFormSubmitOphanTracking(page, pageData, e);
+        }}
       >
         <main css={[mainBackground, ieFlexFix]}>
           <ConsentsContent>

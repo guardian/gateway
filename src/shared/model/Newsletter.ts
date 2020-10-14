@@ -5,6 +5,7 @@ import THELONGREAD_IMAGE from '@/client/assets/4165.jpg';
 
 export interface NewsLetter {
   id: string;
+  nameId: string;
   description: string;
   frequency?: string;
   name: string;

@@ -206,7 +206,7 @@ router.get(Routes.CONSENTS, (_: Request, res: Response) => {
 
 router.get(
   `${Routes.CONSENTS}/:page`,
-  loginMiddleware,
+  // loginMiddleware,
   async (req: Request, res: Response) => {
     const sc_gu_u = req.cookies.SC_GU_U;
     const state: GlobalState = {};
