@@ -16,16 +16,12 @@ import { getProfileUrl } from '@/server/lib/baseUri';
 import { getProviderForEmail } from '@/shared/lib/emailProvider';
 import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';
+import { addReturnUrlToPath } from '@/server/lib/queryParams';
 
 const router = Router();
 
 const { signInPageUrl } = getConfiguration();
 const profileUrl = getProfileUrl();
-
-const addReturnUrlToPath = (path: string, returnUrl: string): string => {
-  const divider = path.includes('?') ? '&' : '?';
-  return `${path}${divider}returnUrl=${encodeURIComponent(returnUrl)}`;
-};
 
 router.get(Routes.VERIFY_EMAIL, async (req: Request, res: Response) => {
   const state: GlobalState = {

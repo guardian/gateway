@@ -27,6 +27,7 @@ import { ResponseWithLocals } from '@/server/models/Express';
 import { VERIFY_EMAIL } from '@/shared/model/Success';
 import { trackMetric } from '@/server/lib/AWS';
 import { consentsPageMetric } from '@/server/models/Metrics';
+import { addReturnUrlToPath } from '@/server/lib/queryParams';
 
 const router = Router();
 
@@ -39,11 +40,6 @@ interface ConsentPage {
     body: { [key: string]: string },
   ) => Promise<void>;
 }
-
-const addReturnUrlToPath = (path: string, returnUrl: string): string => {
-  const divider = path.includes('?') ? '&' : '?';
-  return `${path}${divider}returnUrl=${encodeURIComponent(returnUrl)}`;
-};
 
 const getConsentValueFromRequestBody = (
   key: string,
