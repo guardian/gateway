@@ -5,7 +5,7 @@ import {
   ValidationStyling,
   validationSymbol,
 } from '@/client/styles/PasswordValidationStyles';
-import { isBrowser, isNode } from '@/shared/lib/isNode';
+import { isBrowser } from '@/shared/lib/isNode';
 
 const sixCharactersRegex = /^.{6,}$/;
 const lessThan72CharactersRegex = /^.{0,71}$/;
@@ -142,9 +142,7 @@ export const PasswordValidationComponent = (props: PasswordValidationProps) => {
   return (
     <div css={passwordValidatorsCss}>
       <div>
-        {!isNode ? (
-          <div css={validationSymbol(lengthValidationStyling)} />
-        ) : null}
+        <div css={validationSymbol(lengthValidationStyling)} />
         <div css={validationInfoCss(lengthValidationStyling)}>
           {lengthValidationText}
         </div>
