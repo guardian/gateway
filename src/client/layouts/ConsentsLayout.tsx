@@ -19,6 +19,7 @@ import {
   ConsentsProgression,
 } from '@/client/layouts/shared/Consents';
 import { Routes } from '@/shared/model/Routes';
+import { onboardingFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 
 interface ConsentsLayoutProps {
   children?: React.ReactNode;
@@ -70,7 +71,12 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
       <Header />
       {error && <GlobalError error={error} link={getErrorLink(error)} />}
       <ConsentsHeader title={title} />
-      <form css={form} action={`${Routes.CONSENTS}/${page}`} method="post">
+      <form
+        css={form}
+        action={`${Routes.CONSENTS}/${page}`}
+        method="post"
+        onSubmit={(e) => onboardingFormSubmitOphanTracking(page, e)}
+      >
         <main css={[mainBackground, ieFlexFix]}>
           <ConsentsContent>
             <ConsentsProgression current={current} />
