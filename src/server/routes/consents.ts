@@ -23,6 +23,8 @@ import {
   CONSENTS_DATA_PAGE,
 } from '@/shared/model/Consent';
 import { loginMiddleware } from '@/server/lib/middleware/login';
+import { ResponseWithLocals } from '@/server/models/Express';
+import { VERIFY_EMAIL } from '@/shared/model/Success';
 import { trackMetric } from '@/server/lib/AWS';
 import { consentsPageMetric } from '@/server/models/Metrics';
 
@@ -103,63 +105,11 @@ const getUserNewsletterSubscriptions = async (
 
 export const consentPages: ConsentPage[] = [
   {
-    page: Routes.CONSENTS_DATA.slice(1),
-    read: async (ip, sc_gu_u) => {
-      try {
-        return {
-          consents: await getUserConsentsForPage(
-            CONSENTS_DATA_PAGE,
-            ip,
-            sc_gu_u,
-          ),
-          page: Routes.CONSENTS_DATA.slice(1),
-        };
-      } catch (error) {
-        throw error;
-      }
-    },
-    update: async (ip, sc_gu_u, body) => {
-      const consents = CONSENTS_DATA_PAGE.map((id) => ({
-        id,
-        consented: getConsentValueFromRequestBody(id, body),
-      }));
-
-      await patchConsents(ip, sc_gu_u, consents);
-    },
-  },
-  {
-    page: Routes.CONSENTS_COMMUNICATION.slice(1),
-    read: async (ip, sc_gu_u) => {
-      try {
-        return {
-          consents: await getUserConsentsForPage(
-            CONSENTS_COMMUNICATION_PAGE,
-            ip,
-            sc_gu_u,
-          ),
-          page: Routes.CONSENTS_COMMUNICATION.slice(1),
-          previousPage: Routes.CONSENTS_DATA.slice(1),
-        };
-      } catch (error) {
-        throw error;
-      }
-    },
-    update: async (ip, sc_gu_u, body) => {
-      const consents = CONSENTS_COMMUNICATION_PAGE.map((id) => ({
-        id,
-        consented: getConsentValueFromRequestBody(id, body),
-      }));
-
-      await patchConsents(ip, sc_gu_u, consents);
-    },
-  },
-  {
     page: Routes.CONSENTS_NEWSLETTERS.slice(1),
     read: async (ip, sc_gu_u) => {
       try {
         return {
           page: Routes.CONSENTS_NEWSLETTERS.slice(1),
-          previousPage: Routes.CONSENTS_COMMUNICATION.slice(1),
           newsletters: await getUserNewsletterSubscriptions(
             NEWSLETTERS_PAGE,
             ip,
@@ -177,6 +127,58 @@ export const consentPages: ConsentPage[] = [
       }));
 
       await patchNewsletters(ip, sc_gu_u, newsletters);
+    },
+  },
+  {
+    page: Routes.CONSENTS_COMMUNICATION.slice(1),
+    read: async (ip, sc_gu_u) => {
+      try {
+        return {
+          consents: await getUserConsentsForPage(
+            CONSENTS_COMMUNICATION_PAGE,
+            ip,
+            sc_gu_u,
+          ),
+          page: Routes.CONSENTS_COMMUNICATION.slice(1),
+          previousPage: Routes.CONSENTS_NEWSLETTERS.slice(1),
+        };
+      } catch (error) {
+        throw error;
+      }
+    },
+    update: async (ip, sc_gu_u, body) => {
+      const consents = CONSENTS_COMMUNICATION_PAGE.map((id) => ({
+        id,
+        consented: getConsentValueFromRequestBody(id, body),
+      }));
+
+      await patchConsents(ip, sc_gu_u, consents);
+    },
+  },
+  {
+    page: Routes.CONSENTS_DATA.slice(1),
+    read: async (ip, sc_gu_u) => {
+      try {
+        return {
+          consents: await getUserConsentsForPage(
+            CONSENTS_DATA_PAGE,
+            ip,
+            sc_gu_u,
+          ),
+          page: Routes.CONSENTS_DATA.slice(1),
+          previousPage: Routes.CONSENTS_COMMUNICATION.slice(1),
+        };
+      } catch (error) {
+        throw error;
+      }
+    },
+    update: async (ip, sc_gu_u, body) => {
+      const consents = CONSENTS_DATA_PAGE.map((id) => ({
+        id,
+        consented: getConsentValueFromRequestBody(id, body),
+      }));
+
+      await patchConsents(ip, sc_gu_u, consents);
     },
   },
   {
@@ -207,9 +209,16 @@ router.get(Routes.CONSENTS, (_: Request, res: Response) => {
 router.get(
   `${Routes.CONSENTS}/:page`,
   loginMiddleware,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: ResponseWithLocals) => {
     const sc_gu_u = req.cookies.SC_GU_U;
+
+    const { emailVerified } = res.locals.queryParams;
+
     const state: GlobalState = {};
+
+    if (emailVerified) {
+      state.success = VERIFY_EMAIL.SUCCESS;
+    }
 
     const { page } = req.params;
     let status = 200;

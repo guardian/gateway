@@ -15,14 +15,19 @@ import { from } from '@guardian/src-foundations/mq';
 import { PageProgression } from '@/client/components/PageProgression';
 import { CONSENTS_PAGES_ARR } from '@/client/models/ConsentsPages';
 
+export const CONSENTS_MAIN_COLOR = '#eaf1fd';
+
+const consentsBackground = css`
+  background-color: ${CONSENTS_MAIN_COLOR};
+`;
+
 export const mainBackground = css`
-  background-color: white;
   position: relative;
   z-index: 0;
   &:before {
     content: ' ';
-    background-color: ${brand[800]};
-    opacity: 0.3;
+    ${consentsBackground}
+    opacity: 0.4;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -36,10 +41,6 @@ export const mainBackground = css`
 // derived from this solution https://stackoverflow.com/a/49368815
 export const ieFlexFix = css`
   flex: 0 0 auto;
-`;
-
-const consentsBackground = css`
-  background-color: ${brand[800]};
 `;
 
 const blueBorder = css`
@@ -106,6 +107,16 @@ const progressionMargin = css`
   margin-bottom: ${space[12]}px;
 `;
 
+export const controls = css`
+  padding: ${space[9]}px 0 ${space[9]}px 0;
+  ${from.tablet} {
+    padding: ${space[9]}px 0 ${space[12]}px 0;
+  }
+  ${from.desktop} {
+    padding: ${space[9]}px 0 ${space[24]}px 0;
+  }
+`;
+
 export const ConsentsHeader: FunctionComponent<{ title: string }> = ({
   title,
 }) => (
@@ -126,8 +137,10 @@ export const ConsentsContent: FunctionComponent<{
   <div css={[content, cssOverrides]}>{children}</div>
 );
 
-export const ConsentsBlueBackground: FunctionComponent = ({ children }) => (
-  <div css={[consentsBackground, flex]}>
+export const ConsentsBlueBackground: FunctionComponent<{
+  cssOverrides?: SerializedStyles;
+}> = ({ children, cssOverrides }) => (
+  <div css={[consentsBackground, flex, cssOverrides]}>
     <div css={[gridRow, blueBorder, height100]}>{children}</div>
   </div>
 );

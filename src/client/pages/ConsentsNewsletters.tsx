@@ -40,6 +40,10 @@ const getNewsletterCardCss = (index: number) => {
   `;
 };
 
+const paragraphSpacing = css`
+  margin-bottom: ${space[6]}px;
+`;
+
 export const ConsentsNewslettersPage = () => {
   const globalState = useContext<GlobalState>(GlobalStateContext);
   const newsletters = globalState?.pageData?.newsletters ?? [];
@@ -47,7 +51,7 @@ export const ConsentsNewslettersPage = () => {
   return (
     <ConsentsLayout title="Newsletters" current={CONSENTS_PAGES.NEWSLETTERS}>
       <h3 css={[heading, autoRow()]}>Free newsletters from The Guardian</h3>
-      <p css={[text, autoRow()]}>
+      <p css={[text, paragraphSpacing, autoRow()]}>
         Our newsletters help you get closer to our quality, independent
         journalism.
       </p>

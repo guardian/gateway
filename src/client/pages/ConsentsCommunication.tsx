@@ -48,10 +48,7 @@ export const ConsentsCommunicationPage = () => {
   );
 
   return (
-    <ConsentsLayout
-      title="Guardian communication"
-      current={CONSENTS_PAGES.CONTACT}
-    >
+    <ConsentsLayout title="Stay in touch" current={CONSENTS_PAGES.CONTACT}>
       <h3 css={[heading, autoRow()]}>Guardian products, services & events</h3>
       <p css={[text, autoRow()]}>
         Stay informed and up to date with all that The Guardian has to offer.
