@@ -143,7 +143,7 @@ export const NewsletterCard: FunctionComponent<NewsletterCardProps> = (
             value={props.newsletter.id}
             cssOverrides={checkBoxBackgroundColorBugFix}
             label="Sign Up"
-            checked={props.newsletter.subscribed}
+            defaultChecked={props.newsletter.subscribed}
           />
         </CheckboxGroup>
       </div>
