@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { TextInput } from '@guardian/src-text-input';
 import { Button } from '@guardian/src-button';
@@ -12,12 +12,45 @@ import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
 import { form, textInput, button } from '@/client/styles/Shared';
 import { SignInLayout } from '@/client/layouts/SignInLayout';
+import { PasswordValidationComponent } from '@/client/components/PasswordValidation';
+import { css } from '@emotion/core';
+import { palette } from '@guardian/src-foundations';
+import { passwordValidation } from '@/shared/lib/PasswordValidation';
 
 export const ChangePasswordPage = () => {
   const { search } = useLocation();
   const globalState: GlobalState = useContext(GlobalStateContext);
   const { email = '', fieldErrors = [] } = globalState;
   const { token } = useParams<{ token: string }>();
+
+  const [password, setPassword] = useState('');
+  const [passwordRepeated, setPasswordRepeated] = useState('');
+
+  const serverErrorMessage: string | undefined = fieldErrors.find(
+    (fieldError) => fieldError.field === 'password',
+  )?.message;
+
+  const [validationErrorMessage, setValidationErrorMessage] = useState(
+    serverErrorMessage || '',
+  );
+  const hasSubmissionValidationError = validationErrorMessage !== '';
+
+  const passwordRepeatedErrorStyle = hasSubmissionValidationError
+    ? css`
+        border: 4px solid ${palette.error['400']};
+        color: ${palette.error['400']};
+      `
+    : undefined;
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const validateResult = passwordValidation(password, passwordRepeated);
+    if (validateResult.failedMessage) {
+      setValidationErrorMessage(validateResult.failedMessage);
+      e.preventDefault();
+    } else {
+      setValidationErrorMessage('');
+    }
+  };
 
   return (
     <SignInLayout>
@@ -31,29 +64,30 @@ export const ChangePasswordPage = () => {
             css={form}
             method="post"
             action={`${Routes.CHANGE_PASSWORD}/${token}${search}`}
+            onSubmit={onSubmit}
           >
             <TextInput
               css={textInput}
               label="New Password"
-              supporting="Between 6 and 72 characters"
               name="password"
               type="password"
-              error={
-                fieldErrors.find(
-                  (fieldError) => fieldError.field === 'password',
-                )?.message
-              }
+              error={validationErrorMessage}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
             />
             <TextInput
               css={textInput}
               label="Repeat Password"
               name="password_confirm"
               type="password"
-              error={
-                fieldErrors.find(
-                  (fieldError) => fieldError.field === 'password_confirm',
-                )?.message
-              }
+              cssOverrides={passwordRepeatedErrorStyle}
+              onChange={(e) => setPasswordRepeated(e.target.value)}
+            />
+            <PasswordValidationComponent
+              password={password}
+              passwordRepeated={passwordRepeated}
+              hasFailedToSubmit={hasSubmissionValidationError}
             />
             <Button
               css={button}

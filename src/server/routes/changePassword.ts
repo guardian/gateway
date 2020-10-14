@@ -7,13 +7,13 @@ import {
   validate as validateToken,
   change as changePassword,
 } from '@/server/lib/idapi/changePassword';
-import { ChangePasswordErrors } from '@/shared/model/Errors';
 import { ResponseWithLocals } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';
 import { removeNoCache } from '@/server/lib/middleware/cache';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
+import { passwordValidation } from '@/shared/lib/PasswordValidation';
 
 const router = Router();
 
@@ -26,39 +26,17 @@ const validatePasswordChangeFields = (
   password: string,
   passwordConfirm: string,
 ): Array<FieldError> => {
-  const errors: Array<FieldError> = [];
-  if (!password) {
-    errors.push({
-      field: 'password',
-      message: ChangePasswordErrors.PASSWORD_BLANK,
-    });
+  const validationResult = passwordValidation(password, passwordConfirm);
+  if (validationResult.failedMessage) {
+    return [
+      {
+        field: 'password',
+        message: validationResult.failedMessage,
+      },
+    ];
   }
 
-  if (!passwordConfirm) {
-    errors.push({
-      field: 'password_confirm',
-      message: ChangePasswordErrors.REPEAT_PASSWORD_BLANK,
-    });
-  }
-
-  if (password && (password.length < 6 || password.length > 72)) {
-    errors.push({
-      field: 'password',
-      message: ChangePasswordErrors.PASSWORD_LENGTH,
-    });
-  }
-
-  if (
-    passwordConfirm &&
-    (passwordConfirm.length < 6 || passwordConfirm.length > 72)
-  ) {
-    errors.push({
-      field: 'password_confirm',
-      message: ChangePasswordErrors.PASSWORD_LENGTH,
-    });
-  }
-
-  return errors;
+  return [];
 };
 
 router.get(
@@ -114,10 +92,6 @@ router.post(
           pageTitle: PageTitle.CHANGE_PASSWORD,
         });
         return res.status(422).type('html').send(html);
-      }
-
-      if (password !== passwordConfirm) {
-        throw { message: ChangePasswordErrors.PASSWORD_NO_MATCH, status: 422 };
       }
 
       const cookies = await changePassword(password, token, req.ip);

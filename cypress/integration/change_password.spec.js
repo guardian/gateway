@@ -11,6 +11,62 @@ describe('Password change flow', () => {
     cy.idapiMockPurge();
   });
 
+  context('the user is typing password while the constraints are being updated as they type', () => {
+    const successColour = 'rgb(34, 135, 77)';
+    const failureColour = 'rgb(18, 18, 18)';
+    const errorColour = 'rgb(199, 0, 0)';
+    const atLeast6 = 'At least 6 characters';
+    const mixtureOfUpperLower = 'A mixture of lower and upper case letters';
+    const symbolOrNumber = 'A symbol or a number';
+    const matchingRepeated = 'A matching repeated password';
+
+    it('shows which constraints have been met as the user types', () => {
+      cy.idapiMock(200);
+      page.goto(fakeToken);
+
+      cy.contains(atLeast6).should('have.css', 'color', failureColour);
+      cy.contains(mixtureOfUpperLower).should('have.css', 'color', failureColour);
+      cy.contains(symbolOrNumber).should('have.css', 'color', failureColour);
+      cy.contains(matchingRepeated).should('have.css', 'color', failureColour);
+
+      page.inputPasswordText('aaaaaa', '');
+      cy.contains(atLeast6).should('have.css', 'color', successColour);
+      cy.contains(mixtureOfUpperLower).should('have.css', 'color', failureColour);
+      cy.contains(symbolOrNumber).should('have.css', 'color', failureColour);
+      cy.contains(matchingRepeated).should('have.css', 'color', failureColour);
+
+      page.inputPasswordText('A', '');
+      cy.contains(atLeast6).should('have.css', 'color', successColour);
+      cy.contains(mixtureOfUpperLower).should('have.css', 'color', successColour);
+      cy.contains(symbolOrNumber).should('have.css', 'color', failureColour);
+      cy.contains(matchingRepeated).should('have.css', 'color', failureColour);
+
+      page.inputPasswordText('1', '');
+      cy.contains(atLeast6).should('have.css', 'color', successColour);
+      cy.contains(mixtureOfUpperLower).should('have.css', 'color', successColour);
+      cy.contains(symbolOrNumber).should('have.css', 'color', successColour);
+      cy.contains(matchingRepeated).should('have.css', 'color', failureColour);
+
+      page.inputPasswordText('', 'aaaaaaA1');
+      cy.contains(atLeast6).should('have.css', 'color', successColour);
+      cy.contains(mixtureOfUpperLower).should('have.css', 'color', successColour);
+      cy.contains(symbolOrNumber).should('have.css', 'color', successColour);
+      cy.contains(matchingRepeated).should('have.css', 'color', successColour);
+    });
+
+    it('displays the errors in red when the user submits the form but there are still constraint errors', () => {
+      cy.idapiMock(200);
+      page.goto(fakeToken);
+
+      page.submitPasswordChange('aaaaaa', 'aaaaaa');
+
+      cy.contains(atLeast6).should('have.css', 'color', successColour);
+      cy.contains(mixtureOfUpperLower).should('have.css', 'color', errorColour);
+      cy.contains(symbolOrNumber).should('have.css', 'color', errorColour);
+      cy.contains(matchingRepeated).should('have.css', 'color', successColour);
+    });
+  });
+
   context('An expired/invalid token is used', () => {
     it('shows a resend password page', () => {
       cy.idapiMock(500, {
@@ -30,7 +86,7 @@ describe('Password change flow', () => {
     it('shows a password mismatch error message', () => {
       cy.idapiMock(200);
       page.goto(fakeToken);
-      page.submitPasswordChange('password', 'mismatch');
+      page.submitPasswordChange('Abc123', 'Abc123Mismatch');
       cy.contains(ChangePasswordPage.CONTENT.ERRORS.PASSWORD_MISMATCH);
     });
   });
@@ -71,7 +127,7 @@ describe('Password change flow', () => {
       cy.idapiMock(200);
       cy.idapiMock(200, fakeSuccessResponse);
       page.goto(fakeToken);
-      page.submitPasswordChange('password123', 'password123');
+      page.submitPasswordChange('Abc123', 'Abc123');
       cy.contains(ChangePasswordPage.CONTENT.PASSWORD_CHANGE_SUCCESS_TITLE);
       cy.contains(ChangePasswordPage.CONTENT.CONTINUE_BUTTON_TEXT).should(
         'have.attr',
@@ -116,7 +172,7 @@ describe('Password change flow', () => {
         cy.idapiMock(200);
         cy.idapiMock(200, fakeSuccessResponse);
         page.goto(fakeToken, returnUrl);
-        page.submitPasswordChange('password123', 'password123');
+        page.submitPasswordChange('Abc123', 'Abc123');
         cy.contains(ChangePasswordPage.CONTENT.PASSWORD_CHANGE_SUCCESS_TITLE);
         cy.contains(ChangePasswordPage.CONTENT.CONTINUE_BUTTON_TEXT).should(
           'have.attr',
@@ -156,7 +212,7 @@ describe('Password change flow', () => {
         cy.idapiMock(200);
         cy.idapiMock(200, fakeSuccessResponse);
         page.goto(fakeToken, returnUrl);
-        page.submitPasswordChange('password123', 'password123');
+        page.submitPasswordChange('Abc123', 'Abc123');
         cy.contains(ChangePasswordPage.CONTENT.PASSWORD_CHANGE_SUCCESS_TITLE);
         cy.contains(ChangePasswordPage.CONTENT.CONTINUE_BUTTON_TEXT).should(
           'have.attr',
@@ -171,21 +227,48 @@ describe('Password change flow', () => {
     it('shows an error showing the password length must be within certain limits', () => {
       cy.idapiMock(200);
       page.goto(fakeToken);
-      page.submitPasswordChange('p', 'p');
+      page.submitPasswordChange('Abc3', 'Abc3');
       cy.contains(ChangePasswordPage.CONTENT.ERRORS.PASSWORD_INVALID_LENGTH);
+    });
+  });
+
+  context('password requires upper and lowercase', () => {
+    it('shows an error informing the user that the password constraint is not met', () => {
+      cy.idapiMock(200);
+      page.goto(fakeToken);
+      page.submitPasswordChange('abc123', 'abc123');
+      cy.contains(ChangePasswordPage.CONTENT.ERRORS.PASSWORD_MISSING_UPPER_LOWERCASE);
+    });
+  });
+
+  context('password requires a symbol or number', () => {
+    it('shows an error informing the user that the password constraint is not met', () => {
+      cy.idapiMock(200);
+      page.goto(fakeToken);
+      page.submitPasswordChange('AbcAbc', 'AbcAbc');
+      cy.contains(ChangePasswordPage.CONTENT.ERRORS.PASSWORD_MISSING_NUMBER);
     });
   });
 
   context('password too long', () => {
     it('shows an error showing the password length must be within certain limits', () => {
-      const excessivelyLongPassword = Array.from(Array(73), () => 'a').join('');
+      const excessivelyLongPassword = `A1${'a'.repeat(71)}`;
       cy.idapiMock(200);
       page.goto(fakeToken);
       page.submitPasswordChange(
         excessivelyLongPassword,
         excessivelyLongPassword,
       );
-      cy.contains(ChangePasswordPage.CONTENT.ERRORS.PASSWORD_INVALID_LENGTH);
+      cy.contains(ChangePasswordPage.CONTENT.ERRORS.PASSWORD_TOO_LONG);
+    });
+  });
+
+  context('password contains a mixture of errors', () => {
+    it('shows an error informing the user that multiple password constraints are not met', () => {
+      cy.idapiMock(200);
+      page.goto(fakeToken);
+      page.submitPasswordChange('abc', 'abc');
+      cy.contains(ChangePasswordPage.CONTENT.ERRORS.PASSWORD_MULTIPLE_ERRORS);
     });
   });
 
@@ -202,8 +285,9 @@ describe('Password change flow', () => {
       cy.idapiMock(200);
       cy.idapiMock(500);
       page.goto(fakeToken);
-      page.submitPasswordChange('password123', 'password123');
+      page.submitPasswordChange('Abc123', 'Abc123');
       cy.contains(ChangePasswordPage.CONTENT.ERRORS.GENERIC);
     });
   });
+
 });
