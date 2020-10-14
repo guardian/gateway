@@ -45,7 +45,10 @@ const communicationCardHeadingContainer = (image?: string) => css`
   flex-direction: column;
   justify-content: flex-end;
   padding: ${space[2]}px ${space[3]}px ${space[2]}px ${space[3]}px;
-  height: calc(${space[24]}px + ${space[6]}px);
+
+  ${from.tablet} {
+    height: calc(${space[24]}px + ${space[6]}px);
+  }
 `;
 
 const communicationCardHeadingText = css`
@@ -68,7 +71,6 @@ const communicationCardBodyContainer = css`
 const communicationCardBodyText = css`
   color: ${palette.text.primary};
   margin: 0;
-  width: 70%;
   ${textSans.small({ lineHeight: 'tight' })};
 `;
 

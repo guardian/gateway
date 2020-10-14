@@ -19,233 +19,11 @@ exports[`PageProgression component when an active section is supplied marks the 
   }
 >
   <li
-    className="complete"
-    css={
-      Object {
-        "map": undefined,
-        "name": "uityhh",
-        "next": undefined,
-        "styles": "
-  
-	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
-	font-size: 0.9375rem;
-	line-height: 1.5;
-	font-weight: 400;
-	;
-
-  position: relative;
-  width: 25%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  &.active {
-    
-	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
-	font-size: 0.9375rem;
-	line-height: 1.5;
-	font-weight: 700;
-	;
-
-  }
-  &::after,
-  &.complete::after {
-    content: ' ';
-    background-color: #999999;
-    height: 2px;
-    position: absolute;
-    // Border position from top is distance of a semicircle minus half the border thickness
-    top: 13px;
-    left: 28px;
-    right: 0;
-  }
-  &.complete::after {
-    height: 4px;
-    background-color: #052962;
-  }
-  &:last-child::after {
-    display: none;
-  }
-  &::before {
-    border: 2px solid #999999;
-    border-radius: 50%;
-    
-  content: ' ';
-  box-sizing: content-box;
-  border-radius: 50%;
-  height: 24px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 24px;
-
-  }
-  &.active::before,
-  &.complete::before {
-    content: ' ';
-    background-color: #052962;
-    border: 2px solid #052962;
-    
-  content: ' ';
-  box-sizing: content-box;
-  border-radius: 50%;
-  height: 24px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 24px;
-
-  }
-  & svg {
-    display: none;
-  }
-  &.complete svg {
-    position: absolute;
-    display: block;
-    stroke: white;
-    fill: white;
-    height: 24px;
-    width: 24px;
-    margin: 2px;
-    top: 0;
-    left: 0;
-    z-index: 1;
-  }
-",
-        "toString": [Function],
-      }
-    }
-  >
-    <svg
-      viewBox="0 0 30 30"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        clipRule="evenodd"
-        d="M6 14.775l-1 1 5 7h.475l14.3-14.8-1-.975-13.3 12.05L6 14.775z"
-        fillRule="evenodd"
-      />
-    </svg>
-    <div>
-      Your data
-    </div>
-  </li>
-  <li
-    className="complete"
-    css={
-      Object {
-        "map": undefined,
-        "name": "uityhh",
-        "next": undefined,
-        "styles": "
-  
-	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
-	font-size: 0.9375rem;
-	line-height: 1.5;
-	font-weight: 400;
-	;
-
-  position: relative;
-  width: 25%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  &.active {
-    
-	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
-	font-size: 0.9375rem;
-	line-height: 1.5;
-	font-weight: 700;
-	;
-
-  }
-  &::after,
-  &.complete::after {
-    content: ' ';
-    background-color: #999999;
-    height: 2px;
-    position: absolute;
-    // Border position from top is distance of a semicircle minus half the border thickness
-    top: 13px;
-    left: 28px;
-    right: 0;
-  }
-  &.complete::after {
-    height: 4px;
-    background-color: #052962;
-  }
-  &:last-child::after {
-    display: none;
-  }
-  &::before {
-    border: 2px solid #999999;
-    border-radius: 50%;
-    
-  content: ' ';
-  box-sizing: content-box;
-  border-radius: 50%;
-  height: 24px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 24px;
-
-  }
-  &.active::before,
-  &.complete::before {
-    content: ' ';
-    background-color: #052962;
-    border: 2px solid #052962;
-    
-  content: ' ';
-  box-sizing: content-box;
-  border-radius: 50%;
-  height: 24px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 24px;
-
-  }
-  & svg {
-    display: none;
-  }
-  &.complete svg {
-    position: absolute;
-    display: block;
-    stroke: white;
-    fill: white;
-    height: 24px;
-    width: 24px;
-    margin: 2px;
-    top: 0;
-    left: 0;
-    z-index: 1;
-  }
-",
-        "toString": [Function],
-      }
-    }
-  >
-    <svg
-      viewBox="0 0 30 30"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        clipRule="evenodd"
-        d="M6 14.775l-1 1 5 7h.475l14.3-14.8-1-.975-13.3 12.05L6 14.775z"
-        fillRule="evenodd"
-      />
-    </svg>
-    <div>
-      Contact
-    </div>
-  </li>
-  <li
     className="active"
     css={
       Object {
         "map": undefined,
-        "name": "uityhh",
+        "name": "1g4ulkr",
         "next": undefined,
         "styles": "
   
@@ -256,7 +34,7 @@ exports[`PageProgression component when an active section is supplied marks the 
 	;
 
   position: relative;
-  width: 25%;
+  width: 33.333333333333336%;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -356,7 +134,7 @@ exports[`PageProgression component when an active section is supplied marks the 
     css={
       Object {
         "map": undefined,
-        "name": "uityhh",
+        "name": "1g4ulkr",
         "next": undefined,
         "styles": "
   
@@ -367,7 +145,7 @@ exports[`PageProgression component when an active section is supplied marks the 
 	;
 
   position: relative;
-  width: 25%;
+  width: 33.333333333333336%;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -459,7 +237,118 @@ exports[`PageProgression component when an active section is supplied marks the 
       />
     </svg>
     <div>
-      Review
+      Communication
+    </div>
+  </li>
+  <li
+    className=""
+    css={
+      Object {
+        "map": undefined,
+        "name": "1g4ulkr",
+        "next": undefined,
+        "styles": "
+  
+	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	font-weight: 400;
+	;
+
+  position: relative;
+  width: 33.333333333333336%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  &.active {
+    
+	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	font-weight: 700;
+	;
+
+  }
+  &::after,
+  &.complete::after {
+    content: ' ';
+    background-color: #999999;
+    height: 2px;
+    position: absolute;
+    // Border position from top is distance of a semicircle minus half the border thickness
+    top: 13px;
+    left: 28px;
+    right: 0;
+  }
+  &.complete::after {
+    height: 4px;
+    background-color: #052962;
+  }
+  &:last-child::after {
+    display: none;
+  }
+  &::before {
+    border: 2px solid #999999;
+    border-radius: 50%;
+    
+  content: ' ';
+  box-sizing: content-box;
+  border-radius: 50%;
+  height: 24px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+
+  }
+  &.active::before,
+  &.complete::before {
+    content: ' ';
+    background-color: #052962;
+    border: 2px solid #052962;
+    
+  content: ' ';
+  box-sizing: content-box;
+  border-radius: 50%;
+  height: 24px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+
+  }
+  & svg {
+    display: none;
+  }
+  &.complete svg {
+    position: absolute;
+    display: block;
+    stroke: white;
+    fill: white;
+    height: 24px;
+    width: 24px;
+    margin: 2px;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+",
+        "toString": [Function],
+      }
+    }
+  >
+    <svg
+      viewBox="0 0 30 30"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        clipRule="evenodd"
+        d="M6 14.775l-1 1 5 7h.475l14.3-14.8-1-.975-13.3 12.05L6 14.775z"
+        fillRule="evenodd"
+      />
+    </svg>
+    <div>
+      Your data
     </div>
   </li>
 </ul>
@@ -488,7 +377,7 @@ exports[`PageProgression component when no active page is set shows the first st
     css={
       Object {
         "map": undefined,
-        "name": "uityhh",
+        "name": "1g4ulkr",
         "next": undefined,
         "styles": "
   
@@ -499,229 +388,7 @@ exports[`PageProgression component when no active page is set shows the first st
 	;
 
   position: relative;
-  width: 25%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  &.active {
-    
-	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
-	font-size: 0.9375rem;
-	line-height: 1.5;
-	font-weight: 700;
-	;
-
-  }
-  &::after,
-  &.complete::after {
-    content: ' ';
-    background-color: #999999;
-    height: 2px;
-    position: absolute;
-    // Border position from top is distance of a semicircle minus half the border thickness
-    top: 13px;
-    left: 28px;
-    right: 0;
-  }
-  &.complete::after {
-    height: 4px;
-    background-color: #052962;
-  }
-  &:last-child::after {
-    display: none;
-  }
-  &::before {
-    border: 2px solid #999999;
-    border-radius: 50%;
-    
-  content: ' ';
-  box-sizing: content-box;
-  border-radius: 50%;
-  height: 24px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 24px;
-
-  }
-  &.active::before,
-  &.complete::before {
-    content: ' ';
-    background-color: #052962;
-    border: 2px solid #052962;
-    
-  content: ' ';
-  box-sizing: content-box;
-  border-radius: 50%;
-  height: 24px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 24px;
-
-  }
-  & svg {
-    display: none;
-  }
-  &.complete svg {
-    position: absolute;
-    display: block;
-    stroke: white;
-    fill: white;
-    height: 24px;
-    width: 24px;
-    margin: 2px;
-    top: 0;
-    left: 0;
-    z-index: 1;
-  }
-",
-        "toString": [Function],
-      }
-    }
-  >
-    <svg
-      viewBox="0 0 30 30"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        clipRule="evenodd"
-        d="M6 14.775l-1 1 5 7h.475l14.3-14.8-1-.975-13.3 12.05L6 14.775z"
-        fillRule="evenodd"
-      />
-    </svg>
-    <div>
-      Your data
-    </div>
-  </li>
-  <li
-    className=""
-    css={
-      Object {
-        "map": undefined,
-        "name": "uityhh",
-        "next": undefined,
-        "styles": "
-  
-	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
-	font-size: 0.9375rem;
-	line-height: 1.5;
-	font-weight: 400;
-	;
-
-  position: relative;
-  width: 25%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  &.active {
-    
-	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
-	font-size: 0.9375rem;
-	line-height: 1.5;
-	font-weight: 700;
-	;
-
-  }
-  &::after,
-  &.complete::after {
-    content: ' ';
-    background-color: #999999;
-    height: 2px;
-    position: absolute;
-    // Border position from top is distance of a semicircle minus half the border thickness
-    top: 13px;
-    left: 28px;
-    right: 0;
-  }
-  &.complete::after {
-    height: 4px;
-    background-color: #052962;
-  }
-  &:last-child::after {
-    display: none;
-  }
-  &::before {
-    border: 2px solid #999999;
-    border-radius: 50%;
-    
-  content: ' ';
-  box-sizing: content-box;
-  border-radius: 50%;
-  height: 24px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 24px;
-
-  }
-  &.active::before,
-  &.complete::before {
-    content: ' ';
-    background-color: #052962;
-    border: 2px solid #052962;
-    
-  content: ' ';
-  box-sizing: content-box;
-  border-radius: 50%;
-  height: 24px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 24px;
-
-  }
-  & svg {
-    display: none;
-  }
-  &.complete svg {
-    position: absolute;
-    display: block;
-    stroke: white;
-    fill: white;
-    height: 24px;
-    width: 24px;
-    margin: 2px;
-    top: 0;
-    left: 0;
-    z-index: 1;
-  }
-",
-        "toString": [Function],
-      }
-    }
-  >
-    <svg
-      viewBox="0 0 30 30"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        clipRule="evenodd"
-        d="M6 14.775l-1 1 5 7h.475l14.3-14.8-1-.975-13.3 12.05L6 14.775z"
-        fillRule="evenodd"
-      />
-    </svg>
-    <div>
-      Contact
-    </div>
-  </li>
-  <li
-    className=""
-    css={
-      Object {
-        "map": undefined,
-        "name": "uityhh",
-        "next": undefined,
-        "styles": "
-  
-	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
-	font-size: 0.9375rem;
-	line-height: 1.5;
-	font-weight: 400;
-	;
-
-  position: relative;
-  width: 25%;
+  width: 33.333333333333336%;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -821,7 +488,7 @@ exports[`PageProgression component when no active page is set shows the first st
     css={
       Object {
         "map": undefined,
-        "name": "uityhh",
+        "name": "1g4ulkr",
         "next": undefined,
         "styles": "
   
@@ -832,7 +499,7 @@ exports[`PageProgression component when no active page is set shows the first st
 	;
 
   position: relative;
-  width: 25%;
+  width: 33.333333333333336%;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -924,7 +591,118 @@ exports[`PageProgression component when no active page is set shows the first st
       />
     </svg>
     <div>
-      Review
+      Communication
+    </div>
+  </li>
+  <li
+    className=""
+    css={
+      Object {
+        "map": undefined,
+        "name": "1g4ulkr",
+        "next": undefined,
+        "styles": "
+  
+	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	font-weight: 400;
+	;
+
+  position: relative;
+  width: 33.333333333333336%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  &.active {
+    
+	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	font-weight: 700;
+	;
+
+  }
+  &::after,
+  &.complete::after {
+    content: ' ';
+    background-color: #999999;
+    height: 2px;
+    position: absolute;
+    // Border position from top is distance of a semicircle minus half the border thickness
+    top: 13px;
+    left: 28px;
+    right: 0;
+  }
+  &.complete::after {
+    height: 4px;
+    background-color: #052962;
+  }
+  &:last-child::after {
+    display: none;
+  }
+  &::before {
+    border: 2px solid #999999;
+    border-radius: 50%;
+    
+  content: ' ';
+  box-sizing: content-box;
+  border-radius: 50%;
+  height: 24px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+
+  }
+  &.active::before,
+  &.complete::before {
+    content: ' ';
+    background-color: #052962;
+    border: 2px solid #052962;
+    
+  content: ' ';
+  box-sizing: content-box;
+  border-radius: 50%;
+  height: 24px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+
+  }
+  & svg {
+    display: none;
+  }
+  &.complete svg {
+    position: absolute;
+    display: block;
+    stroke: white;
+    fill: white;
+    height: 24px;
+    width: 24px;
+    margin: 2px;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+",
+        "toString": [Function],
+      }
+    }
+  >
+    <svg
+      viewBox="0 0 30 30"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        clipRule="evenodd"
+        d="M6 14.775l-1 1 5 7h.475l14.3-14.8-1-.975-13.3 12.05L6 14.775z"
+        fillRule="evenodd"
+      />
+    </svg>
+    <div>
+      Your data
     </div>
   </li>
 </ul>
@@ -949,11 +727,11 @@ exports[`PageProgression component when on the last section marks the previous s
   }
 >
   <li
-    className="complete"
+    className=""
     css={
       Object {
         "map": undefined,
-        "name": "uityhh",
+        "name": "1g4ulkr",
         "next": undefined,
         "styles": "
   
@@ -964,229 +742,7 @@ exports[`PageProgression component when on the last section marks the previous s
 	;
 
   position: relative;
-  width: 25%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  &.active {
-    
-	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
-	font-size: 0.9375rem;
-	line-height: 1.5;
-	font-weight: 700;
-	;
-
-  }
-  &::after,
-  &.complete::after {
-    content: ' ';
-    background-color: #999999;
-    height: 2px;
-    position: absolute;
-    // Border position from top is distance of a semicircle minus half the border thickness
-    top: 13px;
-    left: 28px;
-    right: 0;
-  }
-  &.complete::after {
-    height: 4px;
-    background-color: #052962;
-  }
-  &:last-child::after {
-    display: none;
-  }
-  &::before {
-    border: 2px solid #999999;
-    border-radius: 50%;
-    
-  content: ' ';
-  box-sizing: content-box;
-  border-radius: 50%;
-  height: 24px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 24px;
-
-  }
-  &.active::before,
-  &.complete::before {
-    content: ' ';
-    background-color: #052962;
-    border: 2px solid #052962;
-    
-  content: ' ';
-  box-sizing: content-box;
-  border-radius: 50%;
-  height: 24px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 24px;
-
-  }
-  & svg {
-    display: none;
-  }
-  &.complete svg {
-    position: absolute;
-    display: block;
-    stroke: white;
-    fill: white;
-    height: 24px;
-    width: 24px;
-    margin: 2px;
-    top: 0;
-    left: 0;
-    z-index: 1;
-  }
-",
-        "toString": [Function],
-      }
-    }
-  >
-    <svg
-      viewBox="0 0 30 30"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        clipRule="evenodd"
-        d="M6 14.775l-1 1 5 7h.475l14.3-14.8-1-.975-13.3 12.05L6 14.775z"
-        fillRule="evenodd"
-      />
-    </svg>
-    <div>
-      Your data
-    </div>
-  </li>
-  <li
-    className="complete"
-    css={
-      Object {
-        "map": undefined,
-        "name": "uityhh",
-        "next": undefined,
-        "styles": "
-  
-	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
-	font-size: 0.9375rem;
-	line-height: 1.5;
-	font-weight: 400;
-	;
-
-  position: relative;
-  width: 25%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  &.active {
-    
-	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
-	font-size: 0.9375rem;
-	line-height: 1.5;
-	font-weight: 700;
-	;
-
-  }
-  &::after,
-  &.complete::after {
-    content: ' ';
-    background-color: #999999;
-    height: 2px;
-    position: absolute;
-    // Border position from top is distance of a semicircle minus half the border thickness
-    top: 13px;
-    left: 28px;
-    right: 0;
-  }
-  &.complete::after {
-    height: 4px;
-    background-color: #052962;
-  }
-  &:last-child::after {
-    display: none;
-  }
-  &::before {
-    border: 2px solid #999999;
-    border-radius: 50%;
-    
-  content: ' ';
-  box-sizing: content-box;
-  border-radius: 50%;
-  height: 24px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 24px;
-
-  }
-  &.active::before,
-  &.complete::before {
-    content: ' ';
-    background-color: #052962;
-    border: 2px solid #052962;
-    
-  content: ' ';
-  box-sizing: content-box;
-  border-radius: 50%;
-  height: 24px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 24px;
-
-  }
-  & svg {
-    display: none;
-  }
-  &.complete svg {
-    position: absolute;
-    display: block;
-    stroke: white;
-    fill: white;
-    height: 24px;
-    width: 24px;
-    margin: 2px;
-    top: 0;
-    left: 0;
-    z-index: 1;
-  }
-",
-        "toString": [Function],
-      }
-    }
-  >
-    <svg
-      viewBox="0 0 30 30"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        clipRule="evenodd"
-        d="M6 14.775l-1 1 5 7h.475l14.3-14.8-1-.975-13.3 12.05L6 14.775z"
-        fillRule="evenodd"
-      />
-    </svg>
-    <div>
-      Contact
-    </div>
-  </li>
-  <li
-    className="complete"
-    css={
-      Object {
-        "map": undefined,
-        "name": "uityhh",
-        "next": undefined,
-        "styles": "
-  
-	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
-	font-size: 0.9375rem;
-	line-height: 1.5;
-	font-weight: 400;
-	;
-
-  position: relative;
-  width: 25%;
+  width: 33.333333333333336%;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -1282,11 +838,11 @@ exports[`PageProgression component when on the last section marks the previous s
     </div>
   </li>
   <li
-    className="active"
+    className=""
     css={
       Object {
         "map": undefined,
-        "name": "uityhh",
+        "name": "1g4ulkr",
         "next": undefined,
         "styles": "
   
@@ -1297,7 +853,7 @@ exports[`PageProgression component when on the last section marks the previous s
 	;
 
   position: relative;
-  width: 25%;
+  width: 33.333333333333336%;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -1389,7 +945,118 @@ exports[`PageProgression component when on the last section marks the previous s
       />
     </svg>
     <div>
-      Review
+      Communication
+    </div>
+  </li>
+  <li
+    className=""
+    css={
+      Object {
+        "map": undefined,
+        "name": "1g4ulkr",
+        "next": undefined,
+        "styles": "
+  
+	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	font-weight: 400;
+	;
+
+  position: relative;
+  width: 33.333333333333336%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  &.active {
+    
+	font-family: GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	font-weight: 700;
+	;
+
+  }
+  &::after,
+  &.complete::after {
+    content: ' ';
+    background-color: #999999;
+    height: 2px;
+    position: absolute;
+    // Border position from top is distance of a semicircle minus half the border thickness
+    top: 13px;
+    left: 28px;
+    right: 0;
+  }
+  &.complete::after {
+    height: 4px;
+    background-color: #052962;
+  }
+  &:last-child::after {
+    display: none;
+  }
+  &::before {
+    border: 2px solid #999999;
+    border-radius: 50%;
+    
+  content: ' ';
+  box-sizing: content-box;
+  border-radius: 50%;
+  height: 24px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+
+  }
+  &.active::before,
+  &.complete::before {
+    content: ' ';
+    background-color: #052962;
+    border: 2px solid #052962;
+    
+  content: ' ';
+  box-sizing: content-box;
+  border-radius: 50%;
+  height: 24px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+
+  }
+  & svg {
+    display: none;
+  }
+  &.complete svg {
+    position: absolute;
+    display: block;
+    stroke: white;
+    fill: white;
+    height: 24px;
+    width: 24px;
+    margin: 2px;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+",
+        "toString": [Function],
+      }
+    }
+  >
+    <svg
+      viewBox="0 0 30 30"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        clipRule="evenodd"
+        d="M6 14.775l-1 1 5 7h.475l14.3-14.8-1-.975-13.3 12.05L6 14.775z"
+        fillRule="evenodd"
+      />
+    </svg>
+    <div>
+      Your data
     </div>
   </li>
 </ul>

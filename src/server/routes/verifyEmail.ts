@@ -16,6 +16,7 @@ import { getProfileUrl } from '@/server/lib/baseUri';
 import { getProviderForEmail } from '@/shared/lib/emailProvider';
 import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';
+import { addReturnUrlToPath } from '@/server/lib/queryParams';
 
 const router = Router();
 
@@ -108,7 +109,13 @@ router.get(
       logger.error(error);
 
       if (error.message === VerifyEmailErrors.USER_ALREADY_VALIDATED) {
-        return res.redirect(303, `${Routes.CONSENTS}/${consentPages[0].page}`);
+        return res.redirect(
+          303,
+          addReturnUrlToPath(
+            `${Routes.CONSENTS}/${consentPages[0].page}`,
+            res.locals.queryParams.returnUrl,
+          ),
+        );
       }
 
       trackMetric(Metrics.EMAIL_VALIDATED_FAILURE);
@@ -116,7 +123,13 @@ router.get(
       return res.redirect(303, `${Routes.VERIFY_EMAIL}`);
     }
 
-    return res.redirect(303, `${Routes.CONSENTS}/${consentPages[0].page}`);
+    return res.redirect(
+      303,
+      addReturnUrlToPath(
+        `${Routes.CONSENTS}/${consentPages[0].page}?emailVerified=true`,
+        res.locals.queryParams.returnUrl,
+      ),
+    );
   },
 );
 

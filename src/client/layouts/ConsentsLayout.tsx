@@ -5,7 +5,6 @@ import { GlobalState } from '@/shared/model/GlobalState';
 import { GlobalStateContext } from '@/client/components/GlobalState';
 import { GlobalError } from '@/client/components/GlobalError';
 import { getErrorLink } from '@/client/lib/ErrorLink';
-import { brand } from '@guardian/src-foundations/palette';
 import { css } from '@emotion/core';
 import { space } from '@guardian/src-foundations';
 import { Button, LinkButton } from '@guardian/src-button';
@@ -17,36 +16,18 @@ import {
   ConsentsBlueBackground,
   ieFlexFix,
   ConsentsProgression,
+  mainBackground,
+  controls,
 } from '@/client/layouts/shared/Consents';
 import { Routes } from '@/shared/model/Routes';
 import { onboardingFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
+import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 
 interface ConsentsLayoutProps {
   children?: React.ReactNode;
   current?: string;
   title: string;
 }
-
-const mainBackground = css`
-  background-color: white;
-  position: relative;
-  z-index: 0;
-  &:before {
-    content: ' ';
-    background-color: ${brand[800]};
-    opacity: 0.3;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: -1;
-  }
-`;
-
-const controls = css`
-  padding: ${space[9]}px 0 ${space[24]}px 0;
-`;
 
 const form = css`
   display: flex;
@@ -64,12 +45,16 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
   current,
 }) => {
   const globalState: GlobalState = useContext(GlobalStateContext);
-  const { error, pageData = {} } = globalState;
-  const { page = '', previousPage } = pageData;
+  const { error, pageData = {}, success } = globalState;
+  const { page = '', previousPage, returnUrl } = pageData;
+  const returnUrlQuery = returnUrl
+    ? `?returnUrl=${encodeURIComponent(returnUrl)}`
+    : '';
   return (
     <>
       <Header />
       {error && <GlobalError error={error} link={getErrorLink(error)} />}
+      {success && <GlobalSuccess success={success} />}
       <ConsentsHeader title={title} />
       <form
         css={form}
@@ -93,12 +78,12 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
               icon={<SvgArrowRightStraight />}
               type="submit"
             >
-              Save and Continue
+              Save and continue
             </Button>
             {previousPage && (
               <LinkButton
                 css={linkButton}
-                href={`${Routes.CONSENTS}/${previousPage}`}
+                href={`${Routes.CONSENTS}/${previousPage}${returnUrlQuery}`}
                 priority="subdued"
               >
                 Go Back

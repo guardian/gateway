@@ -7,6 +7,7 @@ import {
   textSans,
   body,
 } from '@guardian/src-foundations/typography';
+import { CONSENTS_MAIN_COLOR } from '@/client/layouts/shared/Consents';
 import { NewsLetter, NEWSLETTER_IMAGES } from '@/shared/model/Newsletter';
 
 interface NewsletterCardProps {
@@ -92,7 +93,7 @@ const borderDiv = css`
 const article = css`
   display: flex;
   flex-direction: column;
-  background-color: ${brand[800]};
+  background-color: ${CONSENTS_MAIN_COLOR};
 `;
 
 const subtitleDiv = css`
