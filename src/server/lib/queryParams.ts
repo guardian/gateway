@@ -29,3 +29,8 @@ export const parseExpressQueryParams = ({
     emailVerified: validateEmailVerified(emailVerified),
   };
 };
+
+export const addReturnUrlToPath = (path: string, returnUrl: string): string => {
+  const divider = path.includes('?') ? '&' : '?';
+  return `${path}${divider}returnUrl=${encodeURIComponent(returnUrl)}`;
+};

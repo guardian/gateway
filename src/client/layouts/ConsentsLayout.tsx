@@ -45,14 +45,21 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
 }) => {
   const globalState: GlobalState = useContext(GlobalStateContext);
   const { error, pageData = {}, success } = globalState;
-  const { page = '', previousPage } = pageData;
+  const { page = '', previousPage, returnUrl } = pageData;
+  const returnUrlQuery = returnUrl
+    ? `?returnUrl=${encodeURIComponent(returnUrl)}`
+    : '';
   return (
     <>
       <Header />
       {error && <GlobalError error={error} link={getErrorLink(error)} />}
       {success && <GlobalSuccess success={success} />}
       <ConsentsHeader title={title} />
-      <form css={form} action={`${Routes.CONSENTS}/${page}`} method="post">
+      <form
+        css={form}
+        action={`${Routes.CONSENTS}/${page}${returnUrlQuery}`}
+        method="post"
+      >
         <main css={[mainBackground, ieFlexFix]}>
           <ConsentsContent>
             <ConsentsProgression current={current} />
@@ -72,7 +79,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
             {previousPage && (
               <LinkButton
                 css={linkButton}
-                href={`${Routes.CONSENTS}/${previousPage}`}
+                href={`${Routes.CONSENTS}/${previousPage}${returnUrlQuery}`}
                 priority="subdued"
               >
                 Go Back

@@ -7,6 +7,7 @@ export interface PageData {
   consents?: Consent[];
   page?: string;
   previousPage?: string;
+  returnUrl?: string;
 }
 
 export interface GlobalState {

@@ -27,6 +27,7 @@ import { ResponseWithLocals } from '@/server/models/Express';
 import { VERIFY_EMAIL } from '@/shared/model/Success';
 import { trackMetric } from '@/server/lib/AWS';
 import { consentsPageMetric } from '@/server/models/Metrics';
+import { addReturnUrlToPath } from '@/server/lib/queryParams';
 
 const router = Router();
 
@@ -202,8 +203,12 @@ export const consentPages: ConsentPage[] = [
   },
 ];
 
-router.get(Routes.CONSENTS, (_: Request, res: Response) => {
-  res.redirect(303, `${Routes.CONSENTS}/${consentPages[0].page}`);
+router.get(Routes.CONSENTS, loginMiddleware, (_: Request, res: Response) => {
+  let url = `${Routes.CONSENTS}/${consentPages[0].page}`;
+  if (res.locals?.queryParams?.returnUrl) {
+    url = addReturnUrlToPath(url, res.locals.queryParams.returnUrl);
+  }
+  res.redirect(303, url);
 });
 
 router.get(
@@ -232,6 +237,7 @@ router.get(
       const { read } = consentPages[pageIndex];
 
       state.pageData = await read(req.ip, sc_gu_u);
+      state.pageData.returnUrl = res.locals?.queryParams?.returnUrl;
     } catch (e) {
       status = e.status;
       state.error = e.message;
@@ -248,7 +254,7 @@ router.get(
   },
 );
 
-router.post(`${Routes.CONSENTS}/:page`, async (req, res) => {
+router.post(`${Routes.CONSENTS}/:page`, loginMiddleware, async (req, res) => {
   const sc_gu_u = req.cookies.SC_GU_U;
   const state: GlobalState = {};
 
@@ -269,10 +275,11 @@ router.post(`${Routes.CONSENTS}/:page`, async (req, res) => {
 
     trackMetric(consentsPageMetric(page, 'Post', true));
 
-    return res.redirect(
-      303,
-      `${Routes.CONSENTS}/${consentPages[pageIndex + 1].page}`,
-    );
+    let url = `${Routes.CONSENTS}/${consentPages[pageIndex + 1].page}`;
+    if (res.locals?.queryParams?.returnUrl) {
+      url = addReturnUrlToPath(url, res.locals.queryParams.returnUrl);
+    }
+    return res.redirect(303, url);
   } catch (e) {
     status = e.status;
     state.error = e.message;
