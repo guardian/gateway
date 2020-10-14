@@ -1,6 +1,5 @@
 import {
   parseExpressQueryParams,
-  appendQueryParameter,
   addReturnUrlToPath,
 } from '@/server/lib/queryParams';
 import { getConfiguration } from '@/server/lib/configuration';
@@ -86,37 +85,6 @@ describe('addReturnUrlToPath', () => {
       const output = addReturnUrlToPath(input, 'a:// test');
       const expected =
         '/test/path?otherParam=b%3A%2F%2Ftest+b&returnUrl=a%3A%2F%2F%20test';
-      expect(output).toEqual(expected);
-    });
-  });
-});
-
-describe('appendQueryParameter', () => {
-  describe('when there are no existing query parameters', () => {
-    it('adds the encoded parameter as a new query string', () => {
-      const input = 'https://profile.guardian.com/testurl';
-      const output = appendQueryParameter(input, 'testParam', 'a:// test');
-      const expected =
-        'https://profile.guardian.com/testurl?testParam=a%3A%2F%2F+test';
-      expect(output).toEqual(expected);
-    });
-  });
-  describe('when there is a trailing slash', () => {
-    it('adds the encoded parameter whilst retaining the trailing slash', () => {
-      const input = 'https://profile.guardian.com/testurl/';
-      const output = appendQueryParameter(input, 'testParam', 'a:// test');
-      const expected =
-        'https://profile.guardian.com/testurl/?testParam=a%3A%2F%2F+test';
-      expect(output).toEqual(expected);
-    });
-  });
-  describe('when there are existing query parameters', () => {
-    it('appends the encoded parameter to the exisiting query string', () => {
-      const input =
-        'https://profile.guardian.com/testurl?otherParam=b%3A%2F%2Ftest+b';
-      const output = appendQueryParameter(input, 'testParam', 'a:// test');
-      const expected =
-        'https://profile.guardian.com/testurl?otherParam=b%3A%2F%2Ftest+b&testParam=a%3A%2F%2F+test';
       expect(output).toEqual(expected);
     });
   });

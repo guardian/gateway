@@ -30,16 +30,6 @@ export const parseExpressQueryParams = ({
   };
 };
 
-export const appendQueryParameter = (
-  url: string,
-  key: string,
-  value: string,
-): string => {
-  const parsedURL = new URL(url);
-  parsedURL.searchParams.set(key, value);
-  return parsedURL.href;
-};
-
 export const addReturnUrlToPath = (path: string, returnUrl: string): string => {
   const divider = path.includes('?') ? '&' : '?';
   return `${path}${divider}returnUrl=${encodeURIComponent(returnUrl)}`;
