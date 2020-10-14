@@ -79,7 +79,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
             {previousPage && (
               <LinkButton
                 css={linkButton}
-                href={`${Routes.CONSENTS}/${previousPage}`}
+                href={`${Routes.CONSENTS}/${previousPage}${returnUrlQuery}`}
                 priority="subdued"
               >
                 Go Back
