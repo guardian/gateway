@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, { useContext, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { TextInput } from '@guardian/src-text-input';
 import { Button } from '@guardian/src-button';
@@ -12,8 +12,11 @@ import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
 import { form, textInput, button } from '@/client/styles/Shared';
 import { SignInLayout } from '@/client/layouts/SignInLayout';
-import {passwordValidation, PasswordValidationComponent} from "@/client/components/PasswordValidation";
-import {css} from "@emotion/core";
+import {
+  passwordValidation,
+  PasswordValidationComponent,
+} from '@/client/components/PasswordValidation';
+import { css } from '@emotion/core';
 
 export const ChangePasswordPage = () => {
   const { search } = useLocation();
@@ -21,18 +24,24 @@ export const ChangePasswordPage = () => {
   const { email = '', fieldErrors = [] } = globalState;
   const { token } = useParams<{ token: string }>();
 
-  const [password, setPassword] = useState("");
-  const [passwordRepeated, setPasswordRepeated] = useState("");
+  const [password, setPassword] = useState('');
+  const [passwordRepeated, setPasswordRepeated] = useState('');
 
-  const serverErrorMessage: string | undefined = fieldErrors.find((fieldError) => fieldError.field === 'password')?.message;
+  const serverErrorMessage: string | undefined = fieldErrors.find(
+    (fieldError) => fieldError.field === 'password',
+  )?.message;
 
-  const [validationErrorMessage, setValidationErrorMessage] = useState(serverErrorMessage || "");
-  const hasSubmissionValidationError = validationErrorMessage !== "";
+  const [validationErrorMessage, setValidationErrorMessage] = useState(
+    serverErrorMessage || '',
+  );
+  const hasSubmissionValidationError = validationErrorMessage !== '';
 
-  const passwordRepeatedErrorStyle = hasSubmissionValidationError ? css`
-    border: 4px solid rgb(199, 0, 0);
-    color: rgb(199, 0, 0);
-  ` : undefined;
+  const passwordRepeatedErrorStyle = hasSubmissionValidationError
+    ? css`
+        border: 4px solid rgb(199, 0, 0);
+        color: rgb(199, 0, 0);
+      `
+    : undefined;
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     const validateResult = passwordValidation(password, passwordRepeated);
@@ -40,7 +49,7 @@ export const ChangePasswordPage = () => {
       setValidationErrorMessage(validateResult.failedMessage);
       e.preventDefault();
     } else {
-      setValidationErrorMessage("");
+      setValidationErrorMessage('');
     }
   };
 
@@ -65,7 +74,7 @@ export const ChangePasswordPage = () => {
               type="password"
               error={validationErrorMessage}
               onChange={(e) => {
-                setPassword(e.target.value)
+                setPassword(e.target.value);
               }}
             />
             <TextInput
@@ -76,7 +85,11 @@ export const ChangePasswordPage = () => {
               cssOverrides={passwordRepeatedErrorStyle}
               onChange={(e) => setPasswordRepeated(e.target.value)}
             />
-            <PasswordValidationComponent password={password} passwordRepeated={passwordRepeated} hasFailedToSubmit={hasSubmissionValidationError}/>
+            <PasswordValidationComponent
+              password={password}
+              passwordRepeated={passwordRepeated}
+              hasFailedToSubmit={hasSubmissionValidationError}
+            />
             <Button
               css={button}
               type="submit"

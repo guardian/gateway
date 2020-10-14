@@ -13,7 +13,7 @@ import { Metrics } from '@/server/models/Metrics';
 import { removeNoCache } from '@/server/lib/middleware/cache';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
-import {passwordValidation} from "@/client/components/PasswordValidation";
+import { passwordValidation } from '@/client/components/PasswordValidation';
 
 const router = Router();
 
@@ -26,13 +26,14 @@ const validatePasswordChangeFields = (
   password: string,
   passwordConfirm: string,
 ): Array<FieldError> => {
-
   const validationResult = passwordValidation(password, passwordConfirm);
   if (validationResult.failedMessage) {
-    return [{
-      field: 'password',
-      message: validationResult.failedMessage,
-    }];
+    return [
+      {
+        field: 'password',
+        message: validationResult.failedMessage,
+      },
+    ];
   }
 
   return [];
