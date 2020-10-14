@@ -11,6 +11,22 @@ const watchOptions = {
   ignored: /node_modules/
 };
 
+const svgLoader = (path) => {
+  return {
+    test: /\.svg$/i,
+    use: [
+      {
+        loader: 'file-loader',
+        options: {
+          name: '[hash].[ext]',
+          outputPath: path,
+          publicPath: '/gateway-static/'
+        }
+      },
+    ]
+  }
+};
+
 const imageLoader = (path) => {
   return {
     test: /\.(jpe?g|png|gif)$/i,
@@ -84,7 +100,8 @@ const server = {
           }
         ]
       },
-      imageLoader("static/")
+      imageLoader("static/"),
+      svgLoader("static/")
     ]
   },
   node: {
@@ -123,7 +140,8 @@ const client = {
           }
         ]
       },
-      imageLoader("./")
+      imageLoader("./"),
+      svgLoader("./")
     ]
   },
   output: {
