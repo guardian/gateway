@@ -1,11 +1,11 @@
 const gaTracker = 'GatewayPropertyTracker';
 
 const loadGA = () => {
-  (function(i, s, o, g, r, a, m) {
+  (function (i, s, o, g, r, a, m) {
     i['GoogleAnalyticsObject'] = r;
     (i[r] =
       i[r] ||
-      function() {
+      function () {
         // eslint-disable-next-line prefer-rest-params
         (i[r].q = i[r].q || []).push(arguments);
       }),
@@ -23,7 +23,7 @@ const loadGA = () => {
   );
 };
 
-const buildGoogleAnalyticsEvent = event => ({
+const buildGoogleAnalyticsEvent = (event) => ({
   eventCategory: 'identity',
   eventAction: event.name,
   eventLabel: event.type,
@@ -39,12 +39,12 @@ export const init = () => {
   window.ga(gaTracker + '.send', 'pageview');
 };
 
-export const customMetric = event => {
+export const customMetric = (event) => {
   window.ga(gaTracker + '.send', 'event', buildGoogleAnalyticsEvent(event));
 };
 
-export const fetchTracker = callback => {
-  window.ga(function() {
+export const fetchTracker = (callback) => {
+  window.ga(function () {
     const tracker = window.ga.getByName(gaTracker);
     return callback(tracker);
   });
