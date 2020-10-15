@@ -9,6 +9,8 @@ import qs from 'query-string';
 import { getConfiguration } from '@/server/lib/configuration';
 import { RoutingConfig } from '@/client/routes';
 
+import assets from '@/webpack-assets.json'
+
 // favicon shamefully stolen from dcr
 const favicon =
   process.env.NODE_ENV === 'production'
@@ -62,9 +64,9 @@ export const renderer: (url: string, opts?: RendererOpts) => string = (
         <link rel="icon" href="https://static.guim.co.uk/images/${favicon}">
         <title>${pageTitle} | The Guardian</title>
         <script>window.gaUID = "${gaUID.id}"</script>
-        <script src="/gateway-static/bundle.js" defer></script>
-        <script src="/gateway-static/vendors.bundle.js" defer></script>
-        <script src="/gateway-static/main.bundle.js" defer></script>
+        <script src="/${assets.runtime.js}" defer></script>
+        <script src="/${assets.vendors.js}" defer></script>
+        <script src="/${assets.main.js}" defer></script>
         <script id="routingConfig" type="application/json">${JSON.stringify(
           routingConfig,
         )}</script>

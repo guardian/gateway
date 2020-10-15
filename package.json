@@ -45,6 +45,7 @@
     "@types/react-test-renderer": "^16.9.3",
     "@typescript-eslint/eslint-plugin": "^4.1.0",
     "@typescript-eslint/parser": "^4.1.0",
+    "assets-webpack-plugin": "^5.1.2",
     "babel-jest": "^26.3.0",
     "babel-loader": "^8.1.0",
     "copy-node-modules": "^1.1.1",

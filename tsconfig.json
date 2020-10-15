@@ -8,6 +8,7 @@
     "outDir": "build",
     "strict": true,
     "target": "ES2019",
+    "resolveJsonModule": true,
     "types": [
       "@emotion/core",
       "jest"

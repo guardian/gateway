@@ -1,6 +1,7 @@
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
 const babelConfig = require("./babel.config");
+const AssetsPlugin = require('assets-webpack-plugin')
 
 const mode =
   process.env.ENVIRONMENT === "production" ? "production" : "development";
@@ -170,11 +171,12 @@ const client = {
     }
   },
   output: {
-    filename: "bundle.js",
-    chunkFilename: '[name].bundle.js',
+    filename: "[hash].bundle.js",
+    chunkFilename: '[name].[hash].bundle.js',
     path: path.resolve(__dirname, "build/static/"),
     publicPath: 'gateway-static/'
   },
+  plugins: [new AssetsPlugin({ path: path.resolve(__dirname, "src") })],
   resolve: {
     extensions,
     alias: {
