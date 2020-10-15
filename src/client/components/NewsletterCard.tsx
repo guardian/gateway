@@ -64,7 +64,7 @@ const image = (id?: string) => {
 const h1 = css`
   color: ${brand[400]};
   ${titlepiece.small()};
-  margin: 0 0 ${space[1]}px 0;
+  margin: ${space[2]}px 0 ${space[1]}px 0;
   //Override
   font-size: 24px;
 `;
