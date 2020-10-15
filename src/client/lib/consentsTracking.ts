@@ -6,7 +6,7 @@ const trackInputElementInteraction = (
   inputElem: HTMLInputElement,
   component: string,
   consentName: string,
-) => {
+): void => {
   if (inputElem.type === 'checkbox') {
     sendOphanInteractionEvent({
       component: `identity-onboarding-${component}`,
@@ -26,12 +26,12 @@ const trackInputElementInteraction = (
 const consentsFormSubmitOphanTracking = (
   inputElems: NodeListOf<HTMLInputElement>,
   pageData: PageData,
-) => {
+): void => {
   const consents = pageData.consents;
 
   if (consents) {
     inputElems.forEach((elem) => {
-      const consent = consents.find((c) => c.id === elem.name);
+      const consent = consents.find(({ id }) => id === elem.name);
 
       if (consent) {
         trackInputElementInteraction(elem, 'consent', consent.name);
@@ -44,12 +44,12 @@ const consentsFormSubmitOphanTracking = (
 const newslettersFormSubmitOphanTracking = (
   inputElems: NodeListOf<HTMLInputElement>,
   pageData: PageData,
-) => {
+): void => {
   const newsletters = pageData.newsletters;
 
   if (newsletters) {
     inputElems.forEach((elem) => {
-      const newsletter = newsletters.find((c) => c.id === elem.name);
+      const newsletter = newsletters.find(({ id }) => id === elem.name);
 
       if (newsletter) {
         trackInputElementInteraction(elem, 'newsletter', newsletter.nameId);
@@ -62,18 +62,18 @@ const newslettersFormSubmitOphanTracking = (
 export const onboardingFormSubmitOphanTracking = (
   page: string,
   pageData: PageData,
-  event: React.FormEvent<HTMLFormElement>,
-) => {
-  const form = event.target as HTMLFormElement;
-  const inputElems = form.querySelectorAll('input');
+  target: HTMLFormElement,
+): void => {
+  const inputElems = target.querySelectorAll('input');
 
-  switch (page) {
-    case Routes.CONSENTS_COMMUNICATION.slice(1):
-    case Routes.CONSENTS_DATA.slice(1):
+  // we add a starting slash to the page, to match the route enums
+  switch (`/${page}`) {
+    case Routes.CONSENTS_COMMUNICATION:
+    case Routes.CONSENTS_DATA:
       return consentsFormSubmitOphanTracking(inputElems, pageData);
-    case Routes.CONSENTS_NEWSLETTERS.slice(1):
+    case Routes.CONSENTS_NEWSLETTERS:
       return newslettersFormSubmitOphanTracking(inputElems, pageData);
     default:
-      break;
+      return;
   }
 };

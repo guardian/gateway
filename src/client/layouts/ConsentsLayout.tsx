@@ -60,8 +60,13 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
         css={form}
         action={`${Routes.CONSENTS}/${page}${returnUrlQuery}`}
         method="post"
-        onSubmit={(e) => {
-          onboardingFormSubmitOphanTracking(page, pageData, e);
+        onSubmit={({ target: form }) => {
+          onboardingFormSubmitOphanTracking(
+            page,
+            pageData,
+            // have to explicitly type as HTMLFormElement as typescript can't infer type of the event.target
+            form as HTMLFormElement,
+          );
         }}
       >
         <main css={[mainBackground, ieFlexFix]}>
