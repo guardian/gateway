@@ -91,7 +91,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
                 href={`${Routes.CONSENTS}/${previousPage}${returnUrlQuery}`}
                 priority="subdued"
               >
-                Go Back
+                Go back
               </LinkButton>
             )}
           </div>
