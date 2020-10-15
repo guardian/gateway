@@ -18,7 +18,7 @@ const mixtureOfCaseText = 'A mixture of lower and upper case letters';
 const matchingText = 'A matching repeated password';
 
 const multipleErrorsText =
-  "This password isn't valid. Please make sure it matches the required criteria";
+  "This password isn't valid. Please make sure it matches the required criteria.";
 const singleErrorPrefix = "This password isn't valid. Please include";
 
 type PasswordMatch = {
