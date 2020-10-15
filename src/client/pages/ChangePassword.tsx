@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { FunctionComponent, useContext, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { TextInput } from '@guardian/src-text-input';
 import { Button } from '@guardian/src-button';
@@ -17,6 +17,7 @@ import {
   PasswordValidationComponent,
 } from '@/client/components/PasswordValidation';
 import { css } from '@emotion/core';
+import { eyeSymbol } from '@/client/styles/PasswordValidationStyles';
 
 export const ChangePasswordPage = () => {
   const { search } = useLocation();
@@ -26,6 +27,8 @@ export const ChangePasswordPage = () => {
 
   const [password, setPassword] = useState('');
   const [passwordRepeated, setPasswordRepeated] = useState('');
+  const [isEyeOpen, setEyeOpen] = useState(true);
+  const textOrPassword = isEyeOpen ? 'password' : 'text';
 
   const serverErrorMessage: string | undefined = fieldErrors.find(
     (fieldError) => fieldError.field === 'password',
@@ -67,24 +70,28 @@ export const ChangePasswordPage = () => {
             action={`${Routes.CHANGE_PASSWORD}/${token}${search}`}
             onSubmit={onSubmit}
           >
-            <TextInput
-              css={textInput}
-              label="New Password"
-              name="password"
-              type="password"
-              error={validationErrorMessage}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-            />
-            <TextInput
-              css={textInput}
-              label="Repeat Password"
-              name="password_confirm"
-              type="password"
-              cssOverrides={passwordRepeatedErrorStyle}
-              onChange={(e) => setPasswordRepeated(e.target.value)}
-            />
+            <InputWithEye isOpen={isEyeOpen} setEyeOpen={setEyeOpen}>
+              <TextInput
+                css={textInput}
+                label="New Password"
+                name="password"
+                type={textOrPassword}
+                error={validationErrorMessage}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
+            </InputWithEye>
+            <InputWithEye isOpen={isEyeOpen} setEyeOpen={setEyeOpen}>
+              <TextInput
+                css={textInput}
+                label="Repeat Password"
+                name="password_confirm"
+                type={textOrPassword}
+                cssOverrides={passwordRepeatedErrorStyle}
+                onChange={(e) => setPasswordRepeated(e.target.value)}
+              />
+            </InputWithEye>
             <PasswordValidationComponent
               password={password}
               passwordRepeated={passwordRepeated}
@@ -102,5 +109,24 @@ export const ChangePasswordPage = () => {
         </PageBody>
       </PageBox>
     </SignInLayout>
+  );
+};
+
+const InputWithEye: FunctionComponent<{
+  setEyeOpen: (open: boolean) => void;
+  isOpen: boolean;
+}> = (props) => {
+  return (
+    <div
+      css={css`
+        position: relative;
+      `}
+    >
+      <div
+        css={eyeSymbol(props.isOpen)}
+        onClick={() => props.setEyeOpen(!props.isOpen)}
+      />
+      {props.children}
+    </div>
   );
 };

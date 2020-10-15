@@ -56,18 +56,15 @@ export const validationSymbol = (styling: ValidationStyling) => {
   `;
 };
 
-export const eyeSymbol = css`
-  width: 30px;
-  height: 30px;
-  position: absolute;
-  right: 5px;
-  top: 7px;
-`;
+export const eyeSymbol = (isOpen: boolean) => {
+  const symbol = isOpen ? eyeOpen : eyeCrossed;
 
-export const openEyeSymbol = css`
-  background-image: url('${eyeOpen}');
-`;
-
-export const crossedEyeSymbol = css`
-  background-image: url('${eyeCrossed}');
-`;
+  return css`
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    right: 5px;
+    top: 33px;
+    background-image: url('${symbol}');
+  `;
+};
