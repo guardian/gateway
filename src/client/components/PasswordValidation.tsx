@@ -5,7 +5,6 @@ import {
   ValidationStyling,
   validationSymbol,
 } from '@/client/styles/PasswordValidationStyles';
-import { isBrowser } from '@/shared/lib/isNode';
 
 const sixCharactersRegex = /^.{6,}$/;
 const lessThan72CharactersRegex = /^.{0,71}$/;
@@ -76,17 +75,15 @@ export const passwordValidation = (
   password: string,
   passwordRepeated: string,
 ): ValidationResult => {
-  let errorCount = 0;
   let failedMessage: string | undefined;
-  let informationMessage: string | undefined;
   const passwordMatches = matchPassword(password, passwordRepeated);
 
-  Object.values(passwordMatches).forEach((matcher) => {
-    if (!matcher.matchesPassword) {
-      errorCount += 1;
-      informationMessage = matcher.description;
-    }
-  });
+  const errorCount = Object.values(passwordMatches).filter(
+    (passwordMatch) => !passwordMatch.matchesPassword,
+  ).length;
+  const informationMessage = Object.values(passwordMatches).find(
+    (passwordMatch) => !passwordMatch.matchesPassword,
+  )?.description;
 
   if (errorCount === 1) {
     failedMessage = `${singleErrorPrefix} ${informationMessage?.toLowerCase()}.`;
@@ -112,32 +109,31 @@ export type PasswordValidationProps = {
 
 export const PasswordValidationComponent = (props: PasswordValidationProps) => {
   let lengthValidationText = atLeastSixText;
-  const failureStyling: ValidationStyling =
-    props.hasFailedToSubmit && isBrowser ? 'error' : 'failure';
+  const failureStyling: ValidationStyling = props.hasFailedToSubmit
+    ? 'error'
+    : 'failure';
 
   let lengthValidationStyling: ValidationStyling = failureStyling;
   let upperAndLowercaseValidationStyling: ValidationStyling = failureStyling;
   let symbolValidationStyling: ValidationStyling = failureStyling;
   let matchingStyling: ValidationStyling = failureStyling;
 
-  if (isBrowser) {
-    const {
-      sixOrMore,
-      lessThan72,
-      upperAndLowercase,
-      symbolOrNumber,
-      matching,
-    } = passwordValidation(props.password, props.passwordRepeated);
+  const {
+    sixOrMore,
+    lessThan72,
+    upperAndLowercase,
+    symbolOrNumber,
+    matching,
+  } = passwordValidation(props.password, props.passwordRepeated);
 
-    if (sixOrMore) lengthValidationStyling = 'success';
-    if (!lessThan72) {
-      lengthValidationStyling = failureStyling;
-      lengthValidationText = upTo72CharactersText;
-    }
-    if (upperAndLowercase) upperAndLowercaseValidationStyling = 'success';
-    if (symbolOrNumber) symbolValidationStyling = 'success';
-    if (matching) matchingStyling = 'success';
+  if (sixOrMore) lengthValidationStyling = 'success';
+  if (!lessThan72) {
+    lengthValidationStyling = failureStyling;
+    lengthValidationText = upTo72CharactersText;
   }
+  if (upperAndLowercase) upperAndLowercaseValidationStyling = 'success';
+  if (symbolOrNumber) symbolValidationStyling = 'success';
+  if (matching) matchingStyling = 'success';
 
   return (
     <div css={passwordValidatorsCss}>
