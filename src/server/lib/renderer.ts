@@ -9,7 +9,7 @@ import qs from 'query-string';
 import { getConfiguration } from '@/server/lib/configuration';
 import { RoutingConfig } from '@/client/routes';
 
-import assets from '@/webpack-assets.json'
+import assets from '@/webpack-assets.json';
 
 // favicon shamefully stolen from dcr
 const favicon =
