@@ -113,7 +113,7 @@ const checkBoxBackgroundColorBugFix = css`
 
 const clockSVG = (
   <svg
-    css={{ fill: palette.neutral[60] }}
+    css={{ fill: brand[400] }}
     width="15px"
     height="15px"
     viewBox="0 0 11 11"
