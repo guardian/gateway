@@ -124,6 +124,7 @@ const InputWithEye: FunctionComponent<{
     >
       <div
         css={eyeSymbol(props.isOpen)}
+        className="guardian-password-eye"
         onClick={() => props.setEyeOpen(!props.isOpen)}
       />
       {props.children}

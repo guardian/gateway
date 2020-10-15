@@ -290,4 +290,25 @@ describe('Password change flow', () => {
     });
   });
 
+  context('Show and hide the password and repeated password by clicking the eye', () => {
+    it('should show password as hidden. Clicking the eye shows it. Clicking the eye again, hides it.', () => {
+      cy.idapiMock(200);
+      page.goto(fakeToken);
+      page.inputPasswordText('passwordAttempt', 'passwordAttempt2');
+
+      cy.get('input[name="password"]').should('have.attr', 'type' , 'password');
+      cy.get('input[name="password_confirm"]').should('have.attr', 'type', 'password');
+
+      cy.get('.guardian-password-eye').eq(0).click();
+
+      cy.get('input[name="password"]').should('have.attr', 'type' , 'text');
+      cy.get('input[name="password_confirm"]').should('have.attr', 'type', 'text');
+
+      cy.get('.guardian-password-eye').eq(1).click();
+
+      cy.get('input[name="password"]').should('have.attr', 'type' , 'password');
+      cy.get('input[name="password_confirm"]').should('have.attr', 'type', 'password');
+    });
+  });
+
 });
