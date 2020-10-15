@@ -1,4 +1,10 @@
-import React, { FunctionComponent, useContext, useState } from 'react';
+import React, {
+  Dispatch,
+  FunctionComponent,
+  SetStateAction,
+  useContext,
+  useState,
+} from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { TextInput } from '@guardian/src-text-input';
 import { Button } from '@guardian/src-button';
@@ -113,7 +119,7 @@ export const ChangePasswordPage = () => {
 };
 
 const InputWithEye: FunctionComponent<{
-  setEyeOpen: (open: boolean) => void;
+  setEyeOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
 }> = (props) => {
   return (
@@ -125,7 +131,7 @@ const InputWithEye: FunctionComponent<{
       <div
         css={eyeSymbol(props.isOpen)}
         className="guardian-password-eye"
-        onClick={() => props.setEyeOpen(!props.isOpen)}
+        onClick={() => props.setEyeOpen((prevState) => !prevState)}
       />
       {props.children}
     </div>
