@@ -108,12 +108,45 @@ const client = {
     rules: [
       {
         exclude: /node_modules/,
-        test: /\.(j|t)s(x?)/,
+        test: /\.(m?)(j|t)s(x?)/,
         use: [
           {
             loader: "babel-loader",
             options: {
-              presets: ["@babel/env", ...babelConfig.presets],
+              presets: [
+                [
+                  "@babel/env",
+                  {
+                    useBuiltIns: "usage",
+                    corejs: 3,
+                  }
+                ], ...babelConfig.presets],
+              plugins: [...babelConfig.plugins]
+            }
+          }
+        ]
+      },
+      {
+        include: /node_modules/,
+        exclude: [
+          /node_modules[\\\/]core-js/,
+          /node_modules[\\\/]@babel/,
+          /node_modules[\\\/]webpack[\\\/]buildin/,
+        ],
+        test: /\.(m?)(j|t)s(x?)/,
+        use: [
+          {
+            loader: "babel-loader",
+            options: {
+              presets: [
+                [
+                  "@babel/env",
+                  {
+                    useBuiltIns: "usage",
+                    corejs: 3,
+                    modules: "amd"
+                  }
+                ], ...babelConfig.presets],
               plugins: [...babelConfig.plugins]
             }
           }
