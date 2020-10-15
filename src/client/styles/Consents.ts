@@ -23,5 +23,6 @@ export const headingWithMq = css`
 
 export const text = css`
   margin: 0;
+  color: ${palette.neutral[20]};
   ${textSans.medium()}
 `;
