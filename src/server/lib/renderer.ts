@@ -63,6 +63,8 @@ export const renderer: (url: string, opts?: RendererOpts) => string = (
         <title>${pageTitle} | The Guardian</title>
         <script>window.gaUID = "${gaUID.id}"</script>
         <script src="/gateway-static/bundle.js" defer></script>
+        <script src="/gateway-static/vendors.bundle.js" defer></script>
+        <script src="/gateway-static/main.bundle.js" defer></script>
         <script id="routingConfig" type="application/json">${JSON.stringify(
           routingConfig,
         )}</script>

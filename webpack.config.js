@@ -155,6 +155,20 @@ const client = {
       imageLoader("./")
     ]
   },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all'
+        }
+      }
+    },
+    runtimeChunk: {
+      name: 'runtime'
+    }
+  },
   output: {
     filename: "bundle.js",
     chunkFilename: '[name].bundle.js',
