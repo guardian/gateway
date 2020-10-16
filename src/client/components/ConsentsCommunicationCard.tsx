@@ -71,7 +71,7 @@ const communicationCardBodyContainer = css`
 const communicationCardBodyText = css`
   color: ${palette.text.primary};
   margin: 0;
-  ${textSans.small({ lineHeight: 'tight' })};
+  ${textSans.small()};
 `;
 
 const communicationCardCheckboxContainer = css`
