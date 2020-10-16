@@ -4,7 +4,6 @@ import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { textSans } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/core';
 import { space, neutral } from '@guardian/src-foundations';
-import { RadioGroup, Radio } from '@guardian/src-radio';
 import { GlobalStateContext } from '@/client/components/GlobalState';
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
@@ -12,6 +11,7 @@ import { heading, text, headingMarginSpace6 } from '@/client/styles/Consents';
 import { GlobalState } from '@/shared/model/GlobalState';
 import { Consents } from '@/shared/model/Consent';
 import { Link } from '@guardian/src-link';
+import { Checkbox, CheckboxGroup } from '@guardian/src-checkbox';
 
 const fieldset = css`
   border: 0;
@@ -20,10 +20,8 @@ const fieldset = css`
   ${textSans.medium()}
 `;
 
-const legend = css`
+const checkboxLabel = css`
   color: ${neutral[46]};
-  margin: 0 0 ${space[1]}px 0;
-  padding: 0;
 `;
 
 export const ConsentsDataPage = () => {
@@ -36,7 +34,9 @@ export const ConsentsDataPage = () => {
 
   const profiling_optout = consents.find(
     (consent) => consent.id === Consents.PROFILING,
-  ) || { consented: true };
+  );
+
+  const label = <span css={checkboxLabel}>{profiling_optout.description}</span>;
 
   return (
     <ConsentsLayout title="Your data" current={CONSENTS_PAGES.YOUR_DATA}>
@@ -68,22 +68,13 @@ export const ConsentsDataPage = () => {
         marketing communication more relevant to you.
       </p>
       <fieldset css={[fieldset, autoRow()]}>
-        <legend css={legend}>
-          I am happy for The Guardian to use my personal data for marketing
-          analysis purposes.
-        </legend>
-        <RadioGroup orientation="horizontal" name={Consents.PROFILING}>
-          <Radio
-            value="false"
-            label="Yes"
-            defaultChecked={!profiling_optout.consented}
-          />
-          <Radio
-            value="true"
-            label="No"
+        <CheckboxGroup name={profiling_optout.id}>
+          <Checkbox
+            value="consent-option"
+            label={label}
             defaultChecked={profiling_optout.consented}
           />
-        </RadioGroup>
+        </CheckboxGroup>
       </fieldset>
     </ConsentsLayout>
   );

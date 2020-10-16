@@ -3,7 +3,6 @@ import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { textSans } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/core';
 import { space, neutral } from '@guardian/src-foundations';
-import { RadioGroup, Radio } from '@guardian/src-radio';
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { CommunicationCard } from '@/client/components/ConsentsCommunicationCard';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
@@ -11,6 +10,7 @@ import { heading, text } from '@/client/styles/Consents';
 import { GlobalState } from '@/shared/model/GlobalState';
 import { GlobalStateContext } from '@/client/components/GlobalState';
 import { Consents } from '@/shared/model/Consent';
+import { Checkbox, CheckboxGroup } from '@guardian/src-checkbox';
 
 const fieldset = css`
   border: 0;
@@ -19,10 +19,8 @@ const fieldset = css`
   ${textSans.medium()}
 `;
 
-const legend = css`
+const checkboxLabel = css`
   color: ${neutral[46]};
-  margin: 0 0 ${space[1]}px 0;
-  padding: 0;
 `;
 
 const communicationCardContainer = css`
@@ -45,6 +43,10 @@ export const ConsentsCommunicationPage = () => {
 
   const consentsWithoutOptout = consents.filter(
     (consent) => !consent.id.includes('_optout'),
+  );
+
+  const label = (
+    <span css={checkboxLabel}>{market_research_optout.description}</span>
   );
 
   return (
@@ -74,22 +76,13 @@ export const ConsentsCommunicationPage = () => {
         contact you by phone.
       </p>
       <fieldset css={[fieldset, autoRow()]}>
-        <legend css={legend}>
-          I am happy for The Guardian to use my personal data for market
-          research purposes
-        </legend>
-        <RadioGroup orientation="horizontal" name={Consents.MARKET_RESEARCH}>
-          <Radio
-            value="false"
-            label="Yes"
-            defaultChecked={!market_research_optout.consented}
-          />
-          <Radio
-            value="true"
-            label="No"
+        <CheckboxGroup name={market_research_optout.id}>
+          <Checkbox
+            value="consent-option"
+            label={label}
             defaultChecked={market_research_optout.consented}
           />
-        </RadioGroup>
+        </CheckboxGroup>
       </fieldset>
     </ConsentsLayout>
   );
