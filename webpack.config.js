@@ -171,8 +171,8 @@ const client = {
     }
   },
   output: {
-    filename: "[hash].bundle.js",
-    chunkFilename: '[name].[hash].bundle.js',
+    filename: "[contenthash].bundle.js",
+    chunkFilename: '[name].[contenthash].bundle.js',
     path: path.resolve(__dirname, "build/static/"),
     publicPath: 'gateway-static/'
   },
