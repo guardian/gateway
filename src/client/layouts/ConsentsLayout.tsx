@@ -20,6 +20,7 @@ import {
   controls,
 } from '@/client/layouts/shared/Consents';
 import { Routes } from '@/shared/model/Routes';
+import { onboardingFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 
 interface ConsentsLayoutProps {
@@ -59,6 +60,14 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
         css={form}
         action={`${Routes.CONSENTS}/${page}${returnUrlQuery}`}
         method="post"
+        onSubmit={({ target: form }) => {
+          onboardingFormSubmitOphanTracking(
+            page,
+            pageData,
+            // have to explicitly type as HTMLFormElement as typescript can't infer type of the event.target
+            form as HTMLFormElement,
+          );
+        }}
       >
         <main css={[mainBackground, ieFlexFix]}>
           <ConsentsContent>

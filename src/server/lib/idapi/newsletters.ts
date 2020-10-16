@@ -26,12 +26,13 @@ const handleError = () => {
 };
 
 const responseToEntity = (newsletter: NewsletterAPIResponse): NewsLetter => {
-  const { name, description, frequency, exactTargetListId } = newsletter;
+  const { name, description, frequency, exactTargetListId, id } = newsletter;
   return {
     id: exactTargetListId.toString(),
     description,
     name,
     frequency,
+    nameId: id,
   };
 };
 

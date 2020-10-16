@@ -1,11 +1,5 @@
 import { hydrateApp } from '@/client/static/hydration';
 
-interface GatewayWindow extends Window {
-  Cypress: unknown;
-}
-
-declare let window: GatewayWindow;
-
 // method to check if the cmp should show
 import { cmp } from '@guardian/consent-management-platform';
 
