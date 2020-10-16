@@ -302,8 +302,14 @@ describe('Password change flow', () => {
       cy.get('.guardian-password-eye').eq(0).click();
 
       cy.get('input[name="password"]').should('have.attr', 'type' , 'text');
+      cy.get('input[name="password_confirm"]').should('have.attr', 'type', 'password');
+
+      cy.get('.guardian-password-eye').eq(1).click();
+
+      cy.get('input[name="password"]').should('have.attr', 'type' , 'text');
       cy.get('input[name="password_confirm"]').should('have.attr', 'type', 'text');
 
+      cy.get('.guardian-password-eye').eq(0).click();
       cy.get('.guardian-password-eye').eq(1).click();
 
       cy.get('input[name="password"]').should('have.attr', 'type' , 'password');
