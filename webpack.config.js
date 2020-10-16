@@ -1,6 +1,7 @@
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
 const babelConfig = require("./babel.config");
+const AssetsPlugin = require('assets-webpack-plugin')
 
 const mode =
   process.env.ENVIRONMENT === "production" ? "production" : "development";
@@ -108,12 +109,45 @@ const client = {
     rules: [
       {
         exclude: /node_modules/,
-        test: /\.(j|t)s(x?)/,
+        test: /\.(m?)(j|t)s(x?)/,
         use: [
           {
             loader: "babel-loader",
             options: {
-              presets: ["@babel/env", ...babelConfig.presets],
+              presets: [
+                [
+                  "@babel/env",
+                  {
+                    useBuiltIns: "usage",
+                    corejs: 3,
+                  }
+                ], ...babelConfig.presets],
+              plugins: [...babelConfig.plugins]
+            }
+          }
+        ]
+      },
+      {
+        include: /node_modules/,
+        exclude: [
+          /node_modules[\\\/]core-js/,
+          /node_modules[\\\/]@babel/,
+          /node_modules[\\\/]webpack[\\\/]buildin/,
+        ],
+        test: /\.(m?)(j|t)s(x?)/,
+        use: [
+          {
+            loader: "babel-loader",
+            options: {
+              presets: [
+                [
+                  "@babel/env",
+                  {
+                    useBuiltIns: "usage",
+                    corejs: 3,
+                    modules: "amd"
+                  }
+                ], ...babelConfig.presets],
               plugins: [...babelConfig.plugins]
             }
           }
@@ -122,12 +156,27 @@ const client = {
       imageLoader("./")
     ]
   },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all'
+        }
+      }
+    },
+    runtimeChunk: {
+      name: 'runtime'
+    }
+  },
   output: {
-    filename: "bundle.js",
-    chunkFilename: '[name].bundle.js',
+    filename: "[contenthash].bundle.js",
+    chunkFilename: '[name].[contenthash].bundle.js',
     path: path.resolve(__dirname, "build/static/"),
     publicPath: 'gateway-static/'
   },
+  plugins: [new AssetsPlugin({ path: path.resolve(__dirname, "build") })],
   resolve: {
     extensions,
     alias: {
