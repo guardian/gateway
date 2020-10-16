@@ -24,6 +24,7 @@ import {
 } from '@/client/components/PasswordValidation';
 import { css } from '@emotion/core';
 import { eyeSymbol } from '@/client/styles/PasswordValidationStyles';
+import Bowser from 'bowser';
 
 export const ChangePasswordPage = () => {
   const { search } = useLocation();
@@ -118,6 +119,24 @@ export const ChangePasswordPage = () => {
   );
 };
 
+const showEyeForBrowser = () => {
+  // This is required because calling window? throws an exception in node
+  if (typeof window === 'undefined') return false;
+
+  const userAgent = window?.navigator?.userAgent;
+  if (!userAgent) return false;
+
+  const browser = Bowser.getParser(userAgent);
+  const browserName = browser.getBrowserName(false);
+
+  // These browsers already have an input box overlay where the eye is positioned
+  return !(
+    browserName === 'Microsoft Edge' ||
+    browserName === 'Internet Explorer' ||
+    browserName === 'Safari'
+  );
+};
+
 const InputWithEye: FunctionComponent<{
   setEyeOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
@@ -128,11 +147,13 @@ const InputWithEye: FunctionComponent<{
         position: relative;
       `}
     >
-      <div
-        css={eyeSymbol(props.isOpen)}
-        className="guardian-password-eye"
-        onClick={() => props.setEyeOpen((prevState) => !prevState)}
-      />
+      {showEyeForBrowser() && (
+        <div
+          css={eyeSymbol(props.isOpen)}
+          className="guardian-password-eye"
+          onClick={() => props.setEyeOpen((prevState) => !prevState)}
+        />
+      )}
       {props.children}
     </div>
   );
