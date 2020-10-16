@@ -50,6 +50,3 @@ cypress/videos
 
 # Cypress screenshots
 cypress/screenshots
-
-# webpack assets
-src/webpack-assets.json

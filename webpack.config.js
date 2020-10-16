@@ -176,7 +176,7 @@ const client = {
     path: path.resolve(__dirname, "build/static/"),
     publicPath: 'gateway-static/'
   },
-  plugins: [new AssetsPlugin({ path: path.resolve(__dirname, "src") })],
+  plugins: [new AssetsPlugin({ path: path.resolve(__dirname, "build") })],
   resolve: {
     extensions,
     alias: {
