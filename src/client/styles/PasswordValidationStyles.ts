@@ -64,7 +64,7 @@ export const eyeSymbol = (isOpen: boolean) => {
     height: 30px;
     position: absolute;
     right: 5px;
-    top: 33px;
+    bottom: 19px;
     background-image: url('${symbol}');
   `;
 };

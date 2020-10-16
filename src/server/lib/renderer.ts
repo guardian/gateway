@@ -8,6 +8,8 @@ import { QueryParams } from '@/shared/model/QueryParams';
 import qs from 'query-string';
 import { getConfiguration } from '@/server/lib/configuration';
 import { RoutingConfig } from '@/client/routes';
+import Bowser from 'bowser';
+import { Request } from 'express';
 
 // favicon shamefully stolen from dcr
 const favicon =
@@ -23,11 +25,19 @@ interface RendererOpts {
 
 const { gaUID } = getConfiguration();
 
-export const renderer: (url: string, opts?: RendererOpts) => string = (
-  url,
-  opts = {},
-) => {
+export const renderer: (
+  url: string,
+  request: Request,
+  opts?: RendererOpts,
+) => string = (url, request, opts = {}) => {
   const { globalState = {}, queryParams = {}, pageTitle = 'Gateway' } = opts;
+
+  try {
+    const userAgent = request.header('user-agent') ?? '';
+    globalState.browserName = Bowser.getParser(userAgent).getBrowserName(false);
+  } catch {
+    globalState.browserName = '';
+  }
 
   const context = {};
 

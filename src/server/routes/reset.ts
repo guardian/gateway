@@ -22,7 +22,7 @@ router.get(Routes.RESET, (req: Request, res: ResponseWithLocals) => {
     state.email = emailFromPlaySession;
   }
 
-  const html = renderer(Routes.RESET, {
+  const html = renderer(Routes.RESET, req, {
     globalState: state,
     queryParams: res.locals.queryParams,
     pageTitle: PageTitle.RESET,
@@ -47,7 +47,7 @@ router.post(Routes.RESET, async (req: Request, res: ResponseWithLocals) => {
 
     state.error = message;
 
-    const html = renderer(Routes.RESET, {
+    const html = renderer(Routes.RESET, req, {
       globalState: state,
       queryParams: res.locals.queryParams,
       pageTitle: PageTitle.RESET,
@@ -62,7 +62,7 @@ router.post(Routes.RESET, async (req: Request, res: ResponseWithLocals) => {
     state.emailProvider = emailProvider.id;
   }
 
-  const html = renderer(Routes.RESET_SENT, {
+  const html = renderer(Routes.RESET_SENT, req, {
     globalState: state,
     queryParams: res.locals.queryParams,
     pageTitle: PageTitle.RESET_SENT,
@@ -73,8 +73,8 @@ router.post(Routes.RESET, async (req: Request, res: ResponseWithLocals) => {
 router.get(
   Routes.RESET_SENT,
   removeNoCache,
-  (_: Request, res: ResponseWithLocals) => {
-    const html = renderer(Routes.RESET_SENT, {
+  (req: Request, res: ResponseWithLocals) => {
+    const html = renderer(Routes.RESET_SENT, req, {
       pageTitle: PageTitle.RESET_SENT,
     });
     res.type('html').send(html);

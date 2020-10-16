@@ -17,4 +17,5 @@ export interface GlobalState {
   fieldErrors?: Array<FieldError>;
   pageData?: PageData;
   signInPageUrl?: string;
+  browserName?: string;
 }

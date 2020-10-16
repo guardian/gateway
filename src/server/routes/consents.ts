@@ -228,7 +228,9 @@ router.get(
       state.error = e.message;
     }
 
-    const html = renderer(`${Routes.CONSENTS}/${page}`, { globalState: state });
+    const html = renderer(`${Routes.CONSENTS}/${page}`, req, {
+      globalState: state,
+    });
 
     trackMetric(consentsPageMetric(page, 'Get', status === 200));
 
@@ -271,7 +273,9 @@ router.post(`${Routes.CONSENTS}/:page`, async (req, res) => {
 
   trackMetric(consentsPageMetric(page, 'Post', false));
 
-  const html = renderer(`${Routes.CONSENTS}/${page}`, { globalState: state });
+  const html = renderer(`${Routes.CONSENTS}/${page}`, req, {
+    globalState: state,
+  });
   res
     .type('html')
     .status(status ?? 500)

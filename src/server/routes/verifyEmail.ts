@@ -48,7 +48,7 @@ router.get(Routes.VERIFY_EMAIL, async (req: Request, res: Response) => {
     }
   }
 
-  const html = renderer(Routes.VERIFY_EMAIL, {
+  const html = renderer(Routes.VERIFY_EMAIL, req, {
     globalState: state,
   });
 
@@ -88,7 +88,7 @@ router.post(Routes.VERIFY_EMAIL, async (req: Request, res: Response) => {
     state.error = error.message;
   }
 
-  const html = renderer(Routes.VERIFY_EMAIL, {
+  const html = renderer(Routes.VERIFY_EMAIL, req, {
     globalState: state,
   });
 

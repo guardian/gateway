@@ -7,8 +7,8 @@ export const applyRoutes = (server: Express): void => {
   server.use(routes);
 
   // 404 default route
-  server.use((_: Request, res: Response) => {
-    const html = renderer('/404');
+  server.use((req: Request, res: Response) => {
+    const html = renderer('/404', req);
     res.type('html');
     res.status(404).send(html);
   });

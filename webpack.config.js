@@ -66,6 +66,8 @@ const imageLoader = (path) => {
   };
 };
 
+const maxServerBundleSize = 10 * (1024 * 1024);
+
 const server = {
   entry: "./src/server/index.ts",
   externals: [
@@ -119,8 +121,14 @@ const server = {
     }
   },
   target: "node",
-  watchOptions
+  watchOptions,
+  performance: {
+    maxEntrypointSize: maxServerBundleSize,
+    maxAssetSize: maxServerBundleSize,
+  }
 };
+
+const maxClientBundleSize = 0.380 * (1024 * 1024);
 
 const client = {
   entry: "./src/client/static/index.tsx",
@@ -157,7 +165,11 @@ const client = {
     }
   },
   target: "web",
-  watchOptions
+  watchOptions,
+  performance: {
+    maxEntrypointSize: maxClientBundleSize,
+    maxAssetSize: maxClientBundleSize,
+  }
 };
 
 module.exports = [client, server];

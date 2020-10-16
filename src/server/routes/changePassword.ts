@@ -52,7 +52,7 @@ router.get(
     } catch (error) {
       logger.error(error);
       return res.type('html').send(
-        renderer(Routes.RESET_RESEND, {
+        renderer(Routes.RESET_RESEND, req, {
           globalState: state,
           queryParams: res.locals.queryParams,
           pageTitle: PageTitle.RESET_RESEND,
@@ -60,7 +60,7 @@ router.get(
       );
     }
 
-    const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
+    const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, req, {
       globalState: state,
       queryParams: res.locals.queryParams,
       pageTitle: PageTitle.CHANGE_PASSWORD,
@@ -86,7 +86,7 @@ router.post(
 
       if (fieldErrors.length) {
         state.fieldErrors = fieldErrors;
-        const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
+        const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, req, {
           globalState: state,
           queryParams: res.locals.queryParams,
           pageTitle: PageTitle.CHANGE_PASSWORD,
@@ -104,7 +104,7 @@ router.post(
       trackMetric(Metrics.CHANGE_PASSWORD_FAILURE);
 
       state.error = message;
-      const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
+      const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, req, {
         globalState: state,
         queryParams: res.locals.queryParams,
         pageTitle: PageTitle.CHANGE_PASSWORD,
@@ -114,7 +114,7 @@ router.post(
 
     trackMetric(Metrics.CHANGE_PASSWORD_SUCCESS);
 
-    const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
+    const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, req, {
       globalState: state,
       queryParams: res.locals.queryParams,
       pageTitle: PageTitle.CHANGE_PASSWORD_COMPLETE,
@@ -126,8 +126,8 @@ router.post(
 
 router.get(
   Routes.CHANGE_PASSWORD_COMPLETE,
-  (_: Request, res: ResponseWithLocals) => {
-    const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
+  (req: Request, res: ResponseWithLocals) => {
+    const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, req, {
       queryParams: res.locals.queryParams,
       pageTitle: PageTitle.CHANGE_PASSWORD_COMPLETE,
     });
@@ -138,8 +138,8 @@ router.get(
 router.get(
   Routes.RESET_RESEND,
   removeNoCache,
-  (_: Request, res: ResponseWithLocals) => {
-    const html = renderer(Routes.RESET_RESEND);
+  (req: Request, res: ResponseWithLocals) => {
+    const html = renderer(Routes.RESET_RESEND, req);
     res.type('html').send(html);
   },
 );
