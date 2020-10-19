@@ -1,6 +1,6 @@
 export enum CONSENTS_PAGES {
   YOUR_DATA = 'Your data',
-  CONTACT = 'Communication',
+  CONTACT = 'Stay in touch',
   NEWSLETTERS = 'Newsletters',
   REVIEW = 'Review',
 }
