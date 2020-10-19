@@ -64,7 +64,7 @@ const image = (id?: string) => {
 const h1 = css`
   color: ${brand[400]};
   ${titlepiece.small()};
-  margin: 0 0 ${space[1]}px 0;
+  margin: ${space[2]}px 0 ${space[1]}px 0;
   //Override
   font-size: 24px;
 `;
@@ -113,7 +113,7 @@ const checkBoxBackgroundColorBugFix = css`
 
 const clockSVG = (
   <svg
-    css={{ fill: palette.neutral[60] }}
+    css={{ fill: brand[400] }}
     width="15px"
     height="15px"
     viewBox="0 0 11 11"

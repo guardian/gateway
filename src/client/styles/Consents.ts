@@ -6,7 +6,7 @@ import { from } from '@guardian/src-foundations/mq';
 export const heading = css`
   color: ${palette.text.ctaSecondary};
   margin: 0 0 ${space[3]}px;
-  ${headline.xxxsmall({ fontWeight: 'bold' })};
+  ${headline.xxsmall({ fontWeight: 'bold' })};
 `;
 
 export const headingMarginSpace6 = css`
@@ -23,5 +23,6 @@ export const headingWithMq = css`
 
 export const text = css`
   margin: 0;
+  color: ${palette.neutral[20]};
   ${textSans.medium()}
 `;

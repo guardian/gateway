@@ -64,9 +64,10 @@ const content = css`
 
 const h1 = css`
   color: ${brand[400]};
-  margin: ${space[4]}px 0 ${space[12]}px 0;
+  margin: ${space[4]}px 0 52px 0;
   ${titlepiece.small({ fontWeight: 'bold' })};
-  ${gridItem(gridItemColumnConsents)}
+  ${gridItem(gridItemColumnConsents)};
+  line-height: 1;
 `;
 
 const h2 = css`

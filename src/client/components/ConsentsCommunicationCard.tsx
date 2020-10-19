@@ -44,7 +44,7 @@ const communicationCardHeadingContainer = (image?: string) => css`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: ${space[2]}px ${space[3]}px ${space[2]}px ${space[3]}px;
+  padding: ${space[6]}px ${space[3]}px ${space[2]}px ${space[3]}px;
 
   ${from.tablet} {
     height: calc(${space[24]}px + ${space[6]}px);
@@ -71,7 +71,7 @@ const communicationCardBodyContainer = css`
 const communicationCardBodyText = css`
   color: ${palette.text.primary};
   margin: 0;
-  ${textSans.small({ lineHeight: 'tight' })};
+  ${textSans.small()};
 `;
 
 const communicationCardCheckboxContainer = css`
