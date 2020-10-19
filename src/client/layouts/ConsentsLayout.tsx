@@ -77,14 +77,16 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
         </main>
         <ConsentsBlueBackground>
           <div css={[gridItem(gridItemColumnConsents), controls]}>
-            <Button
-              iconSide="right"
-              nudgeIcon={true}
-              icon={<SvgArrowRightStraight />}
-              type="submit"
-            >
-              Save and continue
-            </Button>
+            {!error && (
+              <Button
+                iconSide="right"
+                nudgeIcon={true}
+                icon={<SvgArrowRightStraight />}
+                type="submit"
+              >
+                Save and continue
+              </Button>
+            )}
             {previousPage && (
               <LinkButton
                 css={linkButton}
