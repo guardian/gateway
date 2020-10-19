@@ -12,7 +12,7 @@ export const Lines: FunctionComponent<LinesProps> = (props) => {
   const { n, margin } = props;
   const thickness = 1;
   const distance = 6;
-  const height = n * distance;
+  const height = (n - 1) * distance + thickness;
   const color = props.color ? props.color : 'black';
 
   return (
