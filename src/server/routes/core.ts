@@ -12,7 +12,7 @@ router.use(
   '/gateway-static',
   express.static(path.resolve(__dirname, 'static'), {
     cacheControl: true,
-    maxAge: ms('30d'),
+    maxAge: ms('1y'),
   }),
 );
 
