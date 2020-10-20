@@ -1,3 +1,4 @@
+import { GeoLocation } from '@/server/models/Express';
 import { FieldError } from '@/server/routes/changePassword';
 import { Consent } from '@/shared/model/Consent';
 import { NewsLetter } from '@/shared/model/Newsletter';
@@ -18,4 +19,5 @@ export interface GlobalState {
   fieldErrors?: Array<FieldError>;
   pageData?: PageData;
   signInPageUrl?: string;
+  geolocation?: GeoLocation;
 }

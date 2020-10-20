@@ -28,6 +28,7 @@ import { VERIFY_EMAIL } from '@/shared/model/Success';
 import { trackMetric } from '@/server/lib/AWS';
 import { consentsPageMetric } from '@/server/models/Metrics';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
+import { geolocationMiddleware } from '../lib/middleware/geolocation';
 
 const router = Router();
 
@@ -214,6 +215,7 @@ router.get(Routes.CONSENTS, loginMiddleware, (_: Request, res: Response) => {
 router.get(
   `${Routes.CONSENTS}/:page`,
   loginMiddleware,
+  geolocationMiddleware,
   async (req: Request, res: ResponseWithLocals) => {
     const sc_gu_u = req.cookies.SC_GU_U;
 
@@ -243,7 +245,10 @@ router.get(
       state.error = e.message;
     }
 
-    const html = renderer(`${Routes.CONSENTS}/${page}`, { globalState: state });
+    const html = renderer(`${Routes.CONSENTS}/${page}`, {
+      globalState: state,
+      locals: res.locals,
+    });
 
     trackMetric(consentsPageMetric(page, 'Get', status === 200));
 
