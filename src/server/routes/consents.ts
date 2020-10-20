@@ -29,7 +29,6 @@ import { trackMetric } from '@/server/lib/AWS';
 import { consentsPageMetric } from '@/server/models/Metrics';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
-import { PageTitle } from '@/shared/model/PageTitle';
 
 const router = Router();
 
