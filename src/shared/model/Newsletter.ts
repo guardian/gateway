@@ -1,6 +1,8 @@
 import BOOKMARKS_IMAGE from '@/client/assets/4137.jpg';
 import GREENLIGHT_IMAGE from '@/client/assets/4147.jpg';
 import TODAYUK_IMAGE from '@/client/assets/4151.jpg';
+import TODAYUS_IMAGE from '@/client/assets/4152.jpg';
+import TODAYAU_IMAGE from '@/client/assets/4150.jpg';
 import THELONGREAD_IMAGE from '@/client/assets/4165.jpg';
 
 export interface NewsLetter {
@@ -22,18 +24,15 @@ export enum Newsletters {
   GREENLIGHT = '4147',
   TODAYUK = '4151',
   THELONGREAD = '4165',
+  TODAYUS = '4152',
+  TODAYAU = '4150',
 }
-
-export const NEWSLETTERS_PAGE: string[] = [
-  Newsletters.TODAYUK,
-  Newsletters.THELONGREAD,
-  Newsletters.GREENLIGHT,
-  Newsletters.BOOKMARKS,
-];
 
 export const NEWSLETTER_IMAGES = {
   [Newsletters.BOOKMARKS.toString()]: BOOKMARKS_IMAGE,
   [Newsletters.GREENLIGHT.toString()]: GREENLIGHT_IMAGE,
   [Newsletters.THELONGREAD.toString()]: THELONGREAD_IMAGE,
   [Newsletters.TODAYUK.toString()]: TODAYUK_IMAGE,
+  [Newsletters.TODAYUS.toString()]: TODAYUS_IMAGE,
+  [Newsletters.TODAYAU.toString()]: TODAYAU_IMAGE,
 };

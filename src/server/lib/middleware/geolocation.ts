@@ -1,5 +1,6 @@
 import { NextFunction, Request } from 'express';
-import { GeoLocation, ResponseWithLocals } from '@/server/models/Express';
+import { ResponseWithLocals } from '@/server/models/Express';
+import { GeoLocation } from '@/shared/model/Geolocation';
 
 export const geolocationMiddleware = (
   req: Request,

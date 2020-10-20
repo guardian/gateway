@@ -12,11 +12,7 @@ import {
 import { read as getNewsletters } from '@/server/lib/idapi/newsletters';
 import { read as getUser } from '@/server/lib/idapi/user';
 import { GlobalState, PageData } from '@/shared/model/GlobalState';
-import {
-  NewsLetter,
-  NewsletterPatch,
-  NEWSLETTERS_PAGE,
-} from '@/shared/model/Newsletter';
+import { NewsLetter, NewsletterPatch } from '@/shared/model/Newsletter';
 import {
   Consent,
   CONSENTS_COMMUNICATION_PAGE,
@@ -29,16 +25,19 @@ import { trackMetric } from '@/server/lib/AWS';
 import { consentsPageMetric } from '@/server/models/Metrics';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { geolocationMiddleware } from '../lib/middleware/geolocation';
+import { GeoLocation } from '@/shared/model/Geolocation';
+import { NewsletterMap } from '@/shared/lib/newsletter';
 
 const router = Router();
 
 interface ConsentPage {
   page: string;
-  read: (ip: string, sc_gu_u: string) => Promise<PageData>;
+  read: (ip: string, sc_gu_u: string, geo?: GeoLocation) => Promise<PageData>;
   update?: (
     ip: string,
     sc_gu_u: string,
     body: { [key: string]: string },
+    geo?: GeoLocation,
   ) => Promise<void>;
 }
 
@@ -108,12 +107,12 @@ const getUserNewsletterSubscriptions = async (
 export const consentPages: ConsentPage[] = [
   {
     page: Routes.CONSENTS_NEWSLETTERS.slice(1),
-    read: async (ip, sc_gu_u) => {
+    read: async (ip, sc_gu_u, geo) => {
       try {
         return {
           page: Routes.CONSENTS_NEWSLETTERS.slice(1),
           newsletters: await getUserNewsletterSubscriptions(
-            NEWSLETTERS_PAGE,
+            NewsletterMap.get(geo) as string[],
             ip,
             sc_gu_u,
           ),
@@ -122,8 +121,9 @@ export const consentPages: ConsentPage[] = [
         throw error;
       }
     },
-    update: async (ip, sc_gu_u, body) => {
-      const newsletters: NewsletterPatch[] = NEWSLETTERS_PAGE.map((id) => ({
+    update: async (ip, sc_gu_u, body, geo) => {
+      const newslettersPage = NewsletterMap.get(geo) as string[];
+      const newsletters: NewsletterPatch[] = newslettersPage.map((id) => ({
         id,
         subscribed: !!body[id],
       }));
@@ -185,7 +185,7 @@ export const consentPages: ConsentPage[] = [
   },
   {
     page: Routes.CONSENTS_REVIEW.slice(1),
-    read: async (ip, sc_gu_u) => {
+    read: async (ip, sc_gu_u, geo) => {
       const ALL_CONSENT = [
         ...CONSENTS_DATA_PAGE,
         ...CONSENTS_COMMUNICATION_PAGE,
@@ -195,7 +195,7 @@ export const consentPages: ConsentPage[] = [
         page: Routes.CONSENTS_REVIEW.slice(1),
         consents: await getUserConsentsForPage(ALL_CONSENT, ip, sc_gu_u),
         newsletters: await getUserNewsletterSubscriptions(
-          NEWSLETTERS_PAGE,
+          NewsletterMap.get(geo) as string[],
           ip,
           sc_gu_u,
         ),
@@ -238,7 +238,7 @@ router.get(
     try {
       const { read } = consentPages[pageIndex];
 
-      state.pageData = await read(req.ip, sc_gu_u);
+      state.pageData = await read(req.ip, sc_gu_u, res.locals.geolocation);
       state.pageData.returnUrl = res.locals?.queryParams?.returnUrl;
     } catch (e) {
       status = e.status;
@@ -259,44 +259,49 @@ router.get(
   },
 );
 
-router.post(`${Routes.CONSENTS}/:page`, loginMiddleware, async (req, res) => {
-  const sc_gu_u = req.cookies.SC_GU_U;
-  const state: GlobalState = {};
+router.post(
+  `${Routes.CONSENTS}/:page`,
+  loginMiddleware,
+  geolocationMiddleware,
+  async (req: Request, res: ResponseWithLocals) => {
+    const sc_gu_u = req.cookies.SC_GU_U;
+    const state: GlobalState = {};
 
-  const { page } = req.params;
-  let status = 200;
+    const { page } = req.params;
+    let status = 200;
 
-  const pageIndex = consentPages.findIndex((elem) => elem.page === page);
-  if (pageIndex === -1) {
-    return res.redirect(404, `${Routes.CONSENTS}/${page}`);
-  }
-
-  try {
-    const { update } = consentPages[pageIndex];
-
-    if (update) {
-      await update(req.ip, sc_gu_u, req.body);
+    const pageIndex = consentPages.findIndex((elem) => elem.page === page);
+    if (pageIndex === -1) {
+      return res.redirect(404, `${Routes.CONSENTS}/${page}`);
     }
 
-    trackMetric(consentsPageMetric(page, 'Post', true));
+    try {
+      const { update } = consentPages[pageIndex];
 
-    let url = `${Routes.CONSENTS}/${consentPages[pageIndex + 1].page}`;
-    if (res.locals?.queryParams?.returnUrl) {
-      url = addReturnUrlToPath(url, res.locals.queryParams.returnUrl);
+      if (update) {
+        await update(req.ip, sc_gu_u, req.body, res.locals.geolocation);
+      }
+
+      trackMetric(consentsPageMetric(page, 'Post', true));
+
+      let url = `${Routes.CONSENTS}/${consentPages[pageIndex + 1].page}`;
+      if (res.locals?.queryParams?.returnUrl) {
+        url = addReturnUrlToPath(url, res.locals.queryParams.returnUrl);
+      }
+      return res.redirect(303, url);
+    } catch (e) {
+      status = e.status;
+      state.error = e.message;
     }
-    return res.redirect(303, url);
-  } catch (e) {
-    status = e.status;
-    state.error = e.message;
-  }
 
-  trackMetric(consentsPageMetric(page, 'Post', false));
+    trackMetric(consentsPageMetric(page, 'Post', false));
 
-  const html = renderer(`${Routes.CONSENTS}/${page}`, { globalState: state });
-  res
-    .type('html')
-    .status(status ?? 500)
-    .send(html);
-});
+    const html = renderer(`${Routes.CONSENTS}/${page}`, { globalState: state });
+    res
+      .type('html')
+      .status(status ?? 500)
+      .send(html);
+  },
+);
 
 export default router;

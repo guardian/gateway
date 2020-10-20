@@ -1,7 +1,6 @@
 import { Response } from 'express';
 import { QueryParams } from '@/shared/model/QueryParams';
-
-export type GeoLocation = 'GB' | 'US' | 'AU' | 'ROW';
+import { GeoLocation } from '@/shared/model/Geolocation';
 
 export interface Locals {
   queryParams: QueryParams;
