@@ -28,11 +28,14 @@ import { VERIFY_EMAIL } from '@/shared/model/Success';
 import { trackMetric } from '@/server/lib/AWS';
 import { consentsPageMetric } from '@/server/models/Metrics';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
+import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
+import { PageTitle } from '@/shared/model/PageTitle';
 
 const router = Router();
 
 interface ConsentPage {
   page: string;
+  pageTitle: string;
   read: (ip: string, sc_gu_u: string) => Promise<PageData>;
   update?: (
     ip: string,
@@ -107,6 +110,7 @@ const getUserNewsletterSubscriptions = async (
 export const consentPages: ConsentPage[] = [
   {
     page: Routes.CONSENTS_NEWSLETTERS.slice(1),
+    pageTitle: CONSENTS_PAGES.NEWSLETTERS,
     read: async (ip, sc_gu_u) => {
       try {
         return {
@@ -132,6 +136,7 @@ export const consentPages: ConsentPage[] = [
   },
   {
     page: Routes.CONSENTS_COMMUNICATION.slice(1),
+    pageTitle: CONSENTS_PAGES.CONTACT,
     read: async (ip, sc_gu_u) => {
       try {
         return {
@@ -158,6 +163,7 @@ export const consentPages: ConsentPage[] = [
   },
   {
     page: Routes.CONSENTS_DATA.slice(1),
+    pageTitle: CONSENTS_PAGES.YOUR_DATA,
     read: async (ip, sc_gu_u) => {
       try {
         return {
@@ -184,6 +190,7 @@ export const consentPages: ConsentPage[] = [
   },
   {
     page: Routes.CONSENTS_REVIEW.slice(1),
+    pageTitle: CONSENTS_PAGES.REVIEW,
     read: async (ip, sc_gu_u) => {
       const ALL_CONSENT = [
         ...CONSENTS_DATA_PAGE,
@@ -233,8 +240,11 @@ router.get(
       return res.redirect(404, `${Routes.CONSENTS}/${page}`);
     }
 
+    let pageTitle;
+
     try {
-      const { read } = consentPages[pageIndex];
+      const { read, pageTitle: _pageTitle } = consentPages[pageIndex];
+      pageTitle = _pageTitle;
 
       state.pageData = await read(req.ip, sc_gu_u);
       state.pageData.returnUrl = res.locals?.queryParams?.returnUrl;
@@ -243,7 +253,10 @@ router.get(
       state.error = e.message;
     }
 
-    const html = renderer(`${Routes.CONSENTS}/${page}`, { globalState: state });
+    const html = renderer(`${Routes.CONSENTS}/${page}`, {
+      globalState: state,
+      pageTitle,
+    });
 
     trackMetric(consentsPageMetric(page, 'Get', status === 200));
 
@@ -266,8 +279,11 @@ router.post(`${Routes.CONSENTS}/:page`, loginMiddleware, async (req, res) => {
     return res.redirect(404, `${Routes.CONSENTS}/${page}`);
   }
 
+  let pageTitle;
+
   try {
-    const { update } = consentPages[pageIndex];
+    const { update, pageTitle: _pageTitle } = consentPages[pageIndex];
+    pageTitle = _pageTitle;
 
     if (update) {
       await update(req.ip, sc_gu_u, req.body);
@@ -287,7 +303,10 @@ router.post(`${Routes.CONSENTS}/:page`, loginMiddleware, async (req, res) => {
 
   trackMetric(consentsPageMetric(page, 'Post', false));
 
-  const html = renderer(`${Routes.CONSENTS}/${page}`, { globalState: state });
+  const html = renderer(`${Routes.CONSENTS}/${page}`, {
+    globalState: state,
+    pageTitle,
+  });
   res
     .type('html')
     .status(status ?? 500)
