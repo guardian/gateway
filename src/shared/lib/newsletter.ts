@@ -7,8 +7,8 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
   [
     undefined,
     [
-      Newsletters.TODAYUK,
-      Newsletters.THELONGREAD,
+      Newsletters.TODAY_UK,
+      Newsletters.THE_LONG_READ,
       Newsletters.GREENLIGHT,
       Newsletters.BOOKMARKS,
     ] as Newsletters[],
@@ -16,8 +16,8 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
   [
     'ROW' as GeoLocation,
     [
-      Newsletters.TODAYUK,
-      Newsletters.THELONGREAD,
+      Newsletters.TODAY_UK,
+      Newsletters.THE_LONG_READ,
       Newsletters.GREENLIGHT,
       Newsletters.BOOKMARKS,
     ] as Newsletters[],
@@ -25,8 +25,8 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
   [
     'GB' as GeoLocation,
     [
-      Newsletters.TODAYUK,
-      Newsletters.THELONGREAD,
+      Newsletters.TODAY_UK,
+      Newsletters.THE_LONG_READ,
       Newsletters.GREENLIGHT,
       Newsletters.BOOKMARKS,
     ] as Newsletters[],
@@ -34,8 +34,8 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
   [
     'AU' as GeoLocation,
     [
-      Newsletters.TODAYAU,
-      Newsletters.THELONGREAD,
+      Newsletters.TODAY_AU,
+      Newsletters.THE_LONG_READ,
       Newsletters.GREENLIGHT,
       Newsletters.BOOKMARKS,
     ] as Newsletters[],
@@ -43,10 +43,10 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
   [
     'US' as GeoLocation,
     [
-      Newsletters.TODAYUS,
-      Newsletters.THELONGREAD,
+      Newsletters.TODAY_US,
+      Newsletters.US_MORNING_BRIEFING,
+      Newsletters.MINUTE_US,
       Newsletters.GREENLIGHT,
-      Newsletters.BOOKMARKS,
     ] as Newsletters[],
   ],
 ]);
