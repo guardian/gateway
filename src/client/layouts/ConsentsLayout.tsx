@@ -6,7 +6,7 @@ import { GlobalStateContext } from '@/client/components/GlobalState';
 import { GlobalError } from '@/client/components/GlobalError';
 import { getErrorLink } from '@/client/lib/ErrorLink';
 import { css } from '@emotion/core';
-import { space } from '@guardian/src-foundations';
+import { brand, space } from '@guardian/src-foundations';
 import { Button, LinkButton } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
 import { gridItem, gridItemColumnConsents } from '@/client/styles/Grid';
@@ -22,6 +22,7 @@ import {
 import { Routes } from '@/shared/model/Routes';
 import { onboardingFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { GlobalSuccess } from '@/client/components/GlobalSuccess';
+import { maxWidth } from '../styles/Shared';
 
 interface ConsentsLayoutProps {
   children?: React.ReactNode;
@@ -39,6 +40,16 @@ const linkButton = css`
   margin-left: ${space[5]}px;
 `;
 
+const header = css`
+  ${maxWidth}
+  margin: 0 auto;
+  padding-right: 0;
+`;
+
+const headerContainer = css`
+  background-color: ${brand[400]};
+`;
+
 export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
   children,
   title,
@@ -52,9 +63,11 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
     : '';
   return (
     <>
-      <Header />
-      {error && <GlobalError error={error} link={getErrorLink(error)} />}
-      {success && <GlobalSuccess success={success} />}
+      <div css={headerContainer}>
+        <Header cssOverrides={header} />
+        {error && <GlobalError error={error} link={getErrorLink(error)} />}
+        {success && <GlobalSuccess success={success} />}
+      </div>
       <ConsentsHeader title={title} />
       <form
         css={form}

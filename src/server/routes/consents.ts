@@ -27,12 +27,14 @@ import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { geolocationMiddleware } from '../lib/middleware/geolocation';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { NewsletterMap } from '@/shared/lib/newsletter';
+import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 
 const router = Router();
 
 interface ConsentPage {
   page: string;
   read: (ip: string, sc_gu_u: string, geo?: GeoLocation) => Promise<PageData>;
+  pageTitle: string;
   update?: (
     ip: string,
     sc_gu_u: string,
@@ -107,6 +109,7 @@ const getUserNewsletterSubscriptions = async (
 export const consentPages: ConsentPage[] = [
   {
     page: Routes.CONSENTS_NEWSLETTERS.slice(1),
+    pageTitle: CONSENTS_PAGES.NEWSLETTERS,
     read: async (ip, sc_gu_u, geo) => {
       try {
         return {
@@ -123,16 +126,51 @@ export const consentPages: ConsentPage[] = [
     },
     update: async (ip, sc_gu_u, body, geo) => {
       const newslettersPage = NewsletterMap.get(geo) as string[];
-      const newsletters: NewsletterPatch[] = newslettersPage.map((id) => ({
-        id,
-        subscribed: !!body[id],
-      }));
 
-      await patchNewsletters(ip, sc_gu_u, newsletters);
+      const userNewsletterSubscriptions = await getUserNewsletterSubscriptions(
+        newslettersPage,
+        ip,
+        sc_gu_u,
+      );
+
+      const newslettersSubscriptionFromPage: NewsletterPatch[] = newslettersPage.map(
+        (id) => ({
+          id,
+          subscribed: !!body[id],
+        }),
+      );
+
+      const newsletterSubscriptionsToUpdate = newslettersSubscriptionFromPage.filter(
+        ({ id, subscribed }) => {
+          // find current user subscription status for a newsletter
+          const subscription = userNewsletterSubscriptions.find(
+            ({ id: userNewsletterId }) => userNewsletterId === id,
+          );
+
+          // check if a subscription exists
+          if (subscription) {
+            // if previously subscribed AND now wants to unsubscribe
+            // OR if previously not subscribed AND wants to subscribe
+            // then include in newsletterSubscriptionsToUpdate
+            if (
+              (subscription.subscribed && !subscribed) ||
+              (!subscription.subscribed && subscribed)
+            ) {
+              return true;
+            }
+          }
+
+          // otherwise don't include in the update
+          return false;
+        },
+      );
+
+      await patchNewsletters(ip, sc_gu_u, newsletterSubscriptionsToUpdate);
     },
   },
   {
     page: Routes.CONSENTS_COMMUNICATION.slice(1),
+    pageTitle: CONSENTS_PAGES.CONTACT,
     read: async (ip, sc_gu_u) => {
       try {
         return {
@@ -159,6 +197,7 @@ export const consentPages: ConsentPage[] = [
   },
   {
     page: Routes.CONSENTS_DATA.slice(1),
+    pageTitle: CONSENTS_PAGES.YOUR_DATA,
     read: async (ip, sc_gu_u) => {
       try {
         return {
@@ -185,6 +224,7 @@ export const consentPages: ConsentPage[] = [
   },
   {
     page: Routes.CONSENTS_REVIEW.slice(1),
+    pageTitle: CONSENTS_PAGES.REVIEW,
     read: async (ip, sc_gu_u, geo) => {
       const ALL_CONSENT = [
         ...CONSENTS_DATA_PAGE,
@@ -235,8 +275,11 @@ router.get(
       return res.redirect(404, `${Routes.CONSENTS}/${page}`);
     }
 
+    let pageTitle;
+
     try {
-      const { read } = consentPages[pageIndex];
+      const { read, pageTitle: _pageTitle } = consentPages[pageIndex];
+      pageTitle = _pageTitle;
 
       state.pageData = await read(req.ip, sc_gu_u, res.locals.geolocation);
       state.pageData.returnUrl = res.locals?.queryParams?.returnUrl;
@@ -248,6 +291,7 @@ router.get(
     const html = renderer(`${Routes.CONSENTS}/${page}`, {
       globalState: state,
       locals: res.locals,
+      pageTitle,
     });
 
     trackMetric(consentsPageMetric(page, 'Get', status === 200));
@@ -275,8 +319,11 @@ router.post(
       return res.redirect(404, `${Routes.CONSENTS}/${page}`);
     }
 
+    let pageTitle;
+
     try {
-      const { update } = consentPages[pageIndex];
+      const { update, pageTitle: _pageTitle } = consentPages[pageIndex];
+      pageTitle = _pageTitle;
 
       if (update) {
         await update(req.ip, sc_gu_u, req.body, res.locals.geolocation);
@@ -296,7 +343,10 @@ router.post(
 
     trackMetric(consentsPageMetric(page, 'Post', false));
 
-    const html = renderer(`${Routes.CONSENTS}/${page}`, { globalState: state });
+    const html = renderer(`${Routes.CONSENTS}/${page}`, {
+      globalState: state,
+      pageTitle,
+    });
     res
       .type('html')
       .status(status ?? 500)

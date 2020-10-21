@@ -17,6 +17,7 @@ import { getProviderForEmail } from '@/shared/lib/emailProvider';
 import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
+import { PageTitle } from '@/shared/model/PageTitle';
 
 const router = Router();
 
@@ -51,6 +52,7 @@ router.get(Routes.VERIFY_EMAIL, async (req: Request, res: Response) => {
 
   const html = renderer(Routes.VERIFY_EMAIL, {
     globalState: state,
+    pageTitle: PageTitle.VERIFY_EMAIL,
   });
 
   return res.status(status).type('html').send(html);
@@ -91,6 +93,7 @@ router.post(Routes.VERIFY_EMAIL, async (req: Request, res: Response) => {
 
   const html = renderer(Routes.VERIFY_EMAIL, {
     globalState: state,
+    pageTitle: PageTitle.VERIFY_EMAIL,
   });
 
   return res.status(status).type('html').send(html);

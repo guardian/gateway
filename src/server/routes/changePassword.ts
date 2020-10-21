@@ -165,7 +165,9 @@ router.get(
   Routes.RESET_RESEND,
   removeNoCache,
   (_: Request, res: ResponseWithLocals) => {
-    const html = renderer(Routes.RESET_RESEND);
+    const html = renderer(Routes.RESET_RESEND, {
+      pageTitle: PageTitle.RESET_RESEND,
+    });
     res.type('html').send(html);
   },
 );
