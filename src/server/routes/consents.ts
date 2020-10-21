@@ -308,7 +308,7 @@ router.post(`${Routes.CONSENTS}/:page`, loginMiddleware, async (req, res) => {
 
     trackMetric(consentsPageMetric(page, 'Post', true));
 
-    let url = `${Routes.CONSENTS}/${consentPages[pageIndex].page}`;
+    let url = `${Routes.CONSENTS}/${consentPages[pageIndex + 1].page}`;
     if (res.locals?.queryParams?.returnUrl) {
       url = addReturnUrlToPath(url, res.locals.queryParams.returnUrl);
     }
