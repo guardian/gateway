@@ -55,8 +55,7 @@ const communicationCardHeadingText = css`
   color: ${palette.text.ctaPrimary};
   margin: 0;
   ${titlepiece.small()};
-  font-size: 27px;
-  line-height: 29px;
+  font-size: 22px;
 `;
 
 const communicationCardBodyContainer = css`
