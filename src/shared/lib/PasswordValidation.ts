@@ -9,6 +9,7 @@ export enum PasswordValidationText {
   SYMBOL_OR_NUMBER = 'A symbol or a number',
   MIXTURE_OF_CASES = 'A mixture of lower and upper case letters',
   MATCHING_REPEATED = 'Passwords match',
+  NOT_MATCHING_REPEATED = "Passwords don't match",
   DO_NOT_MATCH_ERROR = "The passwords don't match. Please review your password",
 }
 
@@ -55,6 +56,7 @@ export type ValidationResult = {
   upperAndLowercase: boolean;
   symbolOrNumber: boolean;
   failedMessage?: string;
+  containsError: boolean;
 };
 
 export const passwordValidation = (password: string): ValidationResult => {
@@ -81,5 +83,6 @@ export const passwordValidation = (password: string): ValidationResult => {
     upperAndLowercase: passwordMatches.upperAndLowercase.matchesPassword,
     symbolOrNumber: passwordMatches.symbolOrNumber.matchesPassword,
     failedMessage,
+    containsError: errorCount > 0,
   };
 };

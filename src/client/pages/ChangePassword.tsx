@@ -30,9 +30,6 @@ export const ChangePasswordPage = () => {
   const [password, setPassword] = useState('');
   const [passwordRepeated, setPasswordRepeated] = useState('');
   const [showRedValidationErrors, setRedValidationErrors] = useState(false);
-  const [showMatchingPasswordOutput, setShowMatchPasswordOutput] = useState(
-    false,
-  );
 
   const serverErrorMessage: string | undefined = fieldErrors.find(
     (fieldError) => fieldError.field === 'password',
@@ -52,16 +49,14 @@ export const ChangePasswordPage = () => {
     repeatedPasswordServerErrorMessage || '',
   );
 
-  if (!showRedValidationErrors && validationErrorMessage !== '') {
-    setRedValidationErrors(true);
-  }
+  const validationResult = passwordValidation(password);
 
   if (
-    !showMatchingPasswordOutput &&
-    password !== '' &&
-    password === passwordRepeated
+    !showRedValidationErrors &&
+    validationErrorMessage !== '' &&
+    password.length > 0
   ) {
-    setShowMatchPasswordOutput(true);
+    setRedValidationErrors(true);
   }
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -105,7 +100,11 @@ export const ChangePasswordPage = () => {
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
-              onBlur={() => setRedValidationErrors(true)}
+              onBlur={() =>
+                setRedValidationErrors((previous) => {
+                  return previous || password.length > 0;
+                })
+              }
             />
             <PasswordValidationComponent
               password={password}
@@ -118,12 +117,11 @@ export const ChangePasswordPage = () => {
               type="password"
               error={matchingErrorMessage}
               onChange={(e) => setPasswordRepeated(e.target.value)}
-              onBlur={() => setShowMatchPasswordOutput(true)}
             />
             <PasswordMatchingValidationComponent
               password={password}
               passwordRepeated={passwordRepeated}
-              display={showMatchingPasswordOutput}
+              canDisplay={!validationResult.containsError}
             />
             <Button
               css={button}

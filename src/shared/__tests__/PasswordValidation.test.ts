@@ -1,9 +1,22 @@
 import { passwordValidation } from '@/shared/lib/PasswordValidation';
 
 describe('password validation', () => {
+  it('should pass with a valid password', () => {
+    const result = passwordValidation('Abc123');
+    expect(result).toStrictEqual({
+      containsError: false,
+      failedMessage: undefined,
+      sixOrMore: true,
+      lessThan72: true,
+      upperAndLowercase: true,
+      symbolOrNumber: true,
+    });
+  });
+
   it('should fail six or more constraint', () => {
     const result = passwordValidation('Abc12');
     expect(result).toStrictEqual({
+      containsError: true,
       sixOrMore: false,
       lessThan72: true,
       upperAndLowercase: true,
@@ -17,6 +30,7 @@ describe('password validation', () => {
     const longPassword = `A1${'a'.repeat(71)}`;
     const result = passwordValidation(longPassword);
     expect(result).toStrictEqual({
+      containsError: true,
       sixOrMore: true,
       lessThan72: false,
       upperAndLowercase: true,
@@ -30,6 +44,7 @@ describe('password validation', () => {
     const result = passwordValidation('abc123');
 
     expect(result).toStrictEqual({
+      containsError: true,
       sixOrMore: true,
       lessThan72: true,
       upperAndLowercase: false,
@@ -43,6 +58,7 @@ describe('password validation', () => {
     const result = passwordValidation('Abcaaa');
 
     expect(result).toStrictEqual({
+      containsError: true,
       sixOrMore: true,
       lessThan72: true,
       upperAndLowercase: true,
@@ -56,6 +72,7 @@ describe('password validation', () => {
     const result = passwordValidation('abc12');
 
     expect(result).toStrictEqual({
+      containsError: true,
       sixOrMore: false,
       lessThan72: true,
       upperAndLowercase: false,

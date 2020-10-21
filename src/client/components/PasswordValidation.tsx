@@ -102,25 +102,36 @@ export const PasswordValidationComponent = (props: {
 export const PasswordMatchingValidationComponent = ({
   password,
   passwordRepeated,
-  display,
+  canDisplay,
 }: {
   password: string;
   passwordRepeated: string;
-  display: boolean;
+  canDisplay: boolean;
 }) => {
-  const matchingStyling: ValidationStyling =
-    password === passwordRepeated ? 'success' : 'error';
+  const matches = password === passwordRepeated;
+
+  const matchingStyling: ValidationStyling = matches ? 'success' : 'error';
+
+  let isVisible = false;
+  if (
+    canDisplay &&
+    (!password.startsWith(passwordRepeated) || password === passwordRepeated)
+  ) {
+    isVisible = true;
+  }
 
   const style = css`
     margin-bottom: ${space[3]}px;
-    visibility: ${display ? 'visible' : 'hidden'};
+    visibility: ${isVisible ? 'visible' : 'hidden'};
   `;
 
   return (
     <div css={style}>
       <ValidationSymbol validationStyling={matchingStyling} />
       <div css={validationInfoCss(matchingStyling)}>
-        {PasswordValidationText.MATCHING_REPEATED}
+        {matches
+          ? PasswordValidationText.MATCHING_REPEATED
+          : PasswordValidationText.NOT_MATCHING_REPEATED}
       </div>
     </div>
   );
