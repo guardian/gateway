@@ -144,7 +144,7 @@ export const consentPages: ConsentPage[] = [
 
           // check if a subscription exists
           if (subscription) {
-            // if previously subscribed AND now wants to unsubscrive
+            // if previously subscribed AND now wants to unsubscribe
             // OR if previously not subscribed AND wants to subscribe
             // then include in newsletterSubscriptionsToUpdate
             if (
