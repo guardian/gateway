@@ -1,7 +1,11 @@
-import * as React from 'react';
-import { css } from '@emotion/core';
+import React, { FunctionComponent } from 'react';
+import { css, SerializedStyles } from '@emotion/core';
 import { brand, space } from '@guardian/src-foundations';
 import { GuardianRoundel } from '@/client/components/GuardianRoundel';
+
+interface ComponentProps {
+  cssOverrides?: SerializedStyles;
+}
 
 const header = css`
   display: flex;
@@ -11,8 +15,8 @@ const header = css`
   flex: 0 0 auto;
 `;
 
-export const Header = () => (
-  <header css={header}>
+export const Header: FunctionComponent<ComponentProps> = ({ cssOverrides }) => (
+  <header css={[header, cssOverrides]}>
     <GuardianRoundel />
   </header>
 );
