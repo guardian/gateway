@@ -52,7 +52,15 @@ const newslettersFormSubmitOphanTracking = (
       const newsletter = newsletters.find(({ id }) => id === elem.name);
 
       if (newsletter) {
-        trackInputElementInteraction(elem, 'newsletter', newsletter.nameId);
+        // if previously subscribed AND now wants to unsubscribe
+        // OR if previously not subscribed AND wants to subscribe
+        // then do the trackInputElementInteraction
+        if (
+          (newsletter.subscribed && !elem.checked) ||
+          (!newsletter.subscribed && elem.checked)
+        ) {
+          trackInputElementInteraction(elem, 'newsletter', newsletter.nameId);
+        }
       }
     });
   }

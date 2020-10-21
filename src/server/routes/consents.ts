@@ -125,12 +125,45 @@ export const consentPages: ConsentPage[] = [
       }
     },
     update: async (ip, sc_gu_u, body) => {
-      const newsletters: NewsletterPatch[] = NEWSLETTERS_PAGE.map((id) => ({
-        id,
-        subscribed: !!body[id],
-      }));
+      const userNewsletterSubscriptions = await getUserNewsletterSubscriptions(
+        NEWSLETTERS_PAGE,
+        ip,
+        sc_gu_u,
+      );
 
-      await patchNewsletters(ip, sc_gu_u, newsletters);
+      const newslettersSubscriptionFromPage: NewsletterPatch[] = NEWSLETTERS_PAGE.map(
+        (id) => ({
+          id,
+          subscribed: !!body[id],
+        }),
+      );
+
+      const newsletterSubscriptionsToUpdate = newslettersSubscriptionFromPage.filter(
+        ({ id, subscribed }) => {
+          // find current user subscription status for a newsletter
+          const subscription = userNewsletterSubscriptions.find(
+            ({ id: userNewsletterId }) => userNewsletterId === id,
+          );
+
+          // check if a subscription exists
+          if (subscription) {
+            // if previously subscribed AND now wants to unsubscribe
+            // OR if previously not subscribed AND wants to subscribe
+            // then include in newsletterSubscriptionsToUpdate
+            if (
+              (subscription.subscribed && !subscribed) ||
+              (!subscription.subscribed && subscribed)
+            ) {
+              return true;
+            }
+          }
+
+          // otherwise don't include in the update
+          return false;
+        },
+      );
+
+      await patchNewsletters(ip, sc_gu_u, newsletterSubscriptionsToUpdate);
     },
   },
   {
