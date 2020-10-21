@@ -30,7 +30,7 @@ const checkboxLabel = css`
 const communicationCardContainer = css`
   display: flex;
   flex-flow: row wrap;
-  margin: ${space[6]}px 0;
+  margin: ${space[6]}px 0 ${space[2]}px;
 `;
 
 export const ConsentsCommunicationPage = () => {

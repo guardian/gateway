@@ -18,7 +18,7 @@ const communicationCard = css`
   flex-direction: column;
   width: 100%;
   border: 1px solid white;
-  margin: ${space[2]}px 0px;
+  margin: 0px 0px ${space[4]}px 0px;
 
   ${from.tablet} {
     width: 50%;
