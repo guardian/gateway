@@ -4,10 +4,6 @@ import { textSans } from '@guardian/src-foundations/typography';
 
 export type ValidationStyling = 'success' | 'failure' | 'error';
 
-export const passwordValidatorsCss = css`
-  margin-bottom: 10px;
-`;
-
 export const validationInfoCss = (styling: ValidationStyling) => {
   let color = palette.neutral['7'];
 

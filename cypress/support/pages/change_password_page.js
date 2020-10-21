@@ -3,7 +3,7 @@ class ChangePasswordPage {
   static CONTENT = {
     ERRORS: {
       GENERIC: 'There was a problem changing your password, please try again.',
-      PASSWORD_MISMATCH: 'This password isn\'t valid. Please include a matching repeated password',
+      PASSWORD_MISMATCH: 'The passwords don\'t match. Please review your password',
       PASSWORD_INVALID_LENGTH: 'This password isn\'t valid. Please include at least 6 characters.',
       PASSWORD_MISSING_NUMBER: 'This password isn\'t valid. Please include a symbol or a number.',
       PASSWORD_MULTIPLE_ERRORS: 'This password isn\'t valid. Please make sure it matches the required criteria.',

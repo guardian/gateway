@@ -12,10 +12,14 @@ import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
 import { form, textInput, button } from '@/client/styles/Shared';
 import { SignInLayout } from '@/client/layouts/SignInLayout';
-import { PasswordValidationComponent } from '@/client/components/PasswordValidation';
-import { css } from '@emotion/core';
-import { palette } from '@guardian/src-foundations';
-import { passwordValidation } from '@/shared/lib/PasswordValidation';
+import {
+  PasswordMatchingValidationComponent,
+  PasswordValidationComponent,
+} from '@/client/components/PasswordValidation';
+import {
+  passwordValidation,
+  PasswordValidationText,
+} from '@/shared/lib/PasswordValidation';
 
 export const ChangePasswordPage = () => {
   const { search } = useLocation();
@@ -25,6 +29,10 @@ export const ChangePasswordPage = () => {
 
   const [password, setPassword] = useState('');
   const [passwordRepeated, setPasswordRepeated] = useState('');
+  const [showRedValidationErrors, setRedValidationErrors] = useState(false);
+  const [showMatchingPasswordOutput, setShowMatchPasswordOutput] = useState(
+    false,
+  );
 
   const serverErrorMessage: string | undefined = fieldErrors.find(
     (fieldError) => fieldError.field === 'password',
@@ -33,22 +41,44 @@ export const ChangePasswordPage = () => {
   const [validationErrorMessage, setValidationErrorMessage] = useState(
     serverErrorMessage || '',
   );
-  const hasSubmissionValidationError = validationErrorMessage !== '';
 
-  const passwordRepeatedErrorStyle = hasSubmissionValidationError
-    ? css`
-        border: 4px solid ${palette.error['400']};
-        color: ${palette.error['400']};
-      `
-    : undefined;
+  const repeatedPasswordServerErrorMessage:
+    | string
+    | undefined = fieldErrors.find(
+    (fieldError) => fieldError.field === 'password_confirm',
+  )?.message;
+
+  const [matchingErrorMessage, setMatchingErrorMessage] = useState(
+    repeatedPasswordServerErrorMessage || '',
+  );
+
+  if (!showRedValidationErrors && validationErrorMessage !== '') {
+    setRedValidationErrors(true);
+  }
+
+  if (
+    !showMatchingPasswordOutput &&
+    password !== '' &&
+    password === passwordRepeated
+  ) {
+    setShowMatchPasswordOutput(true);
+  }
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    const validateResult = passwordValidation(password, passwordRepeated);
-    if (validateResult.failedMessage) {
-      setValidationErrorMessage(validateResult.failedMessage);
+    setValidationErrorMessage('');
+    setMatchingErrorMessage('');
+
+    const passwordsMatch = password === passwordRepeated;
+    const validateResult = passwordValidation(password);
+    if (validateResult.failedMessage || !passwordsMatch) {
+      if (validateResult.failedMessage) {
+        setValidationErrorMessage(validateResult.failedMessage);
+      }
+      if (!passwordsMatch) {
+        setMatchingErrorMessage(PasswordValidationText.DO_NOT_MATCH_ERROR);
+      }
+
       e.preventDefault();
-    } else {
-      setValidationErrorMessage('');
     }
   };
 
@@ -75,19 +105,25 @@ export const ChangePasswordPage = () => {
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
+              onBlur={() => setRedValidationErrors(true)}
+            />
+            <PasswordValidationComponent
+              password={password}
+              showRedValidationErrors={showRedValidationErrors}
             />
             <TextInput
               css={textInput}
               label="Repeat Password"
               name="password_confirm"
               type="password"
-              cssOverrides={passwordRepeatedErrorStyle}
+              error={matchingErrorMessage}
               onChange={(e) => setPasswordRepeated(e.target.value)}
+              onBlur={() => setShowMatchPasswordOutput(true)}
             />
-            <PasswordValidationComponent
+            <PasswordMatchingValidationComponent
               password={password}
               passwordRepeated={passwordRepeated}
-              hasFailedToSubmit={hasSubmissionValidationError}
+              display={showMatchingPasswordOutput}
             />
             <Button
               css={button}

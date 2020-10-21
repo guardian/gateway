@@ -18,7 +18,7 @@ describe('Password change flow', () => {
     const atLeast6 = 'At least 6 characters';
     const mixtureOfUpperLower = 'A mixture of lower and upper case letters';
     const symbolOrNumber = 'A symbol or a number';
-    const matchingRepeated = 'A matching repeated password';
+    const matchingRepeated = 'Passwords match';
 
     it('shows which constraints have been met as the user types', () => {
       cy.idapiMock(200);
@@ -27,25 +27,21 @@ describe('Password change flow', () => {
       cy.contains(atLeast6).should('have.css', 'color', failureColour);
       cy.contains(mixtureOfUpperLower).should('have.css', 'color', failureColour);
       cy.contains(symbolOrNumber).should('have.css', 'color', failureColour);
-      cy.contains(matchingRepeated).should('have.css', 'color', failureColour);
 
       page.inputPasswordText('aaaaaa', '');
       cy.contains(atLeast6).should('have.css', 'color', successColour);
       cy.contains(mixtureOfUpperLower).should('have.css', 'color', failureColour);
       cy.contains(symbolOrNumber).should('have.css', 'color', failureColour);
-      cy.contains(matchingRepeated).should('have.css', 'color', failureColour);
 
       page.inputPasswordText('A', '');
       cy.contains(atLeast6).should('have.css', 'color', successColour);
       cy.contains(mixtureOfUpperLower).should('have.css', 'color', successColour);
       cy.contains(symbolOrNumber).should('have.css', 'color', failureColour);
-      cy.contains(matchingRepeated).should('have.css', 'color', failureColour);
 
       page.inputPasswordText('1', '');
       cy.contains(atLeast6).should('have.css', 'color', successColour);
       cy.contains(mixtureOfUpperLower).should('have.css', 'color', successColour);
       cy.contains(symbolOrNumber).should('have.css', 'color', successColour);
-      cy.contains(matchingRepeated).should('have.css', 'color', failureColour);
 
       page.inputPasswordText('', 'aaaaaaA1');
       cy.contains(atLeast6).should('have.css', 'color', successColour);

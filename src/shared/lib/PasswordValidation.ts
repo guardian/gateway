@@ -8,7 +8,8 @@ export enum PasswordValidationText {
   UP_TO_72 = 'Up to 72 characters',
   SYMBOL_OR_NUMBER = 'A symbol or a number',
   MIXTURE_OF_CASES = 'A mixture of lower and upper case letters',
-  MATCHING_REPEATED = 'A matching repeated password',
+  MATCHING_REPEATED = 'Passwords match',
+  DO_NOT_MATCH_ERROR = "The passwords don't match. Please review your password",
 }
 
 const multipleErrorsText =
@@ -25,13 +26,9 @@ type PasswordMatches = {
   lessThan72: PasswordMatch;
   upperAndLowercase: PasswordMatch;
   symbolOrNumber: PasswordMatch;
-  matching: PasswordMatch;
 };
 
-const matchPassword = (
-  password: string,
-  passwordRepeated: string,
-): PasswordMatches => {
+const matchPassword = (password: string): PasswordMatches => {
   return {
     sixOrMore: {
       matchesPassword: !!password.match(sixCharactersRegex),
@@ -49,10 +46,6 @@ const matchPassword = (
       matchesPassword: !!password.match(symbolOrNumberRegex),
       description: PasswordValidationText.SYMBOL_OR_NUMBER,
     },
-    matching: {
-      matchesPassword: password !== '' && password === passwordRepeated,
-      description: PasswordValidationText.MATCHING_REPEATED,
-    },
   };
 };
 
@@ -61,16 +54,13 @@ export type ValidationResult = {
   lessThan72: boolean;
   upperAndLowercase: boolean;
   symbolOrNumber: boolean;
-  matching: boolean;
   failedMessage?: string;
 };
 
-export const passwordValidation = (
-  password: string,
-  passwordRepeated: string,
-): ValidationResult => {
+export const passwordValidation = (password: string): ValidationResult => {
   let failedMessage: string | undefined;
-  const passwordMatches = matchPassword(password, passwordRepeated);
+
+  const passwordMatches = matchPassword(password);
 
   const errorCount = Object.values(passwordMatches).filter(
     (passwordMatch) => !passwordMatch.matchesPassword,
@@ -90,7 +80,6 @@ export const passwordValidation = (
     lessThan72: passwordMatches.lessThan72.matchesPassword,
     upperAndLowercase: passwordMatches.upperAndLowercase.matchesPassword,
     symbolOrNumber: passwordMatches.symbolOrNumber.matchesPassword,
-    matching: passwordMatches.matching.matchesPassword,
     failedMessage,
   };
 };

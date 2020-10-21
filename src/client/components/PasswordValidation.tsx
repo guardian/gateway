@@ -1,23 +1,16 @@
 import React from 'react';
 import {
-  passwordValidatorsCss,
   validationInfoCss,
   ValidationStyling,
 } from '@/client/styles/PasswordValidationStyles';
 import { css } from '@emotion/core';
 import { SvgCheckmark } from '@guardian/src-icons';
-import { palette } from '@guardian/src-foundations';
+import { palette, space } from '@guardian/src-foundations';
 import { SvgCross } from '@guardian/src-icons';
 import {
   passwordValidation,
   PasswordValidationText,
 } from '@/shared/lib/PasswordValidation';
-
-export type PasswordValidationProps = {
-  password: string;
-  passwordRepeated: string;
-  hasFailedToSubmit: boolean;
-};
 
 const ValidationSymbol = ({
   validationStyling,
@@ -48,24 +41,25 @@ const ValidationSymbol = ({
   return <div css={style}>{symbol}</div>;
 };
 
-export const PasswordValidationComponent = (props: PasswordValidationProps) => {
+export const PasswordValidationComponent = (props: {
+  password: string;
+  showRedValidationErrors: boolean;
+}) => {
   let lengthValidationText = PasswordValidationText.AT_LEAST_6;
-  const failureStyling: ValidationStyling = props.hasFailedToSubmit
+  const failureStyling: ValidationStyling = props.showRedValidationErrors
     ? 'error'
     : 'failure';
 
   let lengthValidationStyling: ValidationStyling = failureStyling;
   let upperAndLowercaseValidationStyling: ValidationStyling = failureStyling;
   let symbolValidationStyling: ValidationStyling = failureStyling;
-  let matchingStyling: ValidationStyling = failureStyling;
 
   const {
     sixOrMore,
     lessThan72,
     upperAndLowercase,
     symbolOrNumber,
-    matching,
-  } = passwordValidation(props.password, props.passwordRepeated);
+  } = passwordValidation(props.password);
 
   if (sixOrMore) lengthValidationStyling = 'success';
   if (!lessThan72) {
@@ -74,10 +68,13 @@ export const PasswordValidationComponent = (props: PasswordValidationProps) => {
   }
   if (upperAndLowercase) upperAndLowercaseValidationStyling = 'success';
   if (symbolOrNumber) symbolValidationStyling = 'success';
-  if (matching) matchingStyling = 'success';
 
   return (
-    <div css={passwordValidatorsCss}>
+    <div
+      css={css`
+        margin-bottom: ${space[9]}px;
+      `}
+    >
       <div>
         <ValidationSymbol validationStyling={lengthValidationStyling} />
         <div css={validationInfoCss(lengthValidationStyling)}>
@@ -98,11 +95,32 @@ export const PasswordValidationComponent = (props: PasswordValidationProps) => {
           {PasswordValidationText.SYMBOL_OR_NUMBER}
         </div>
       </div>
-      <div>
-        <ValidationSymbol validationStyling={matchingStyling} />
-        <div css={validationInfoCss(matchingStyling)}>
-          {PasswordValidationText.MATCHING_REPEATED}
-        </div>
+    </div>
+  );
+};
+
+export const PasswordMatchingValidationComponent = ({
+  password,
+  passwordRepeated,
+  display,
+}: {
+  password: string;
+  passwordRepeated: string;
+  display: boolean;
+}) => {
+  const matchingStyling: ValidationStyling =
+    password === passwordRepeated ? 'success' : 'error';
+
+  const style = css`
+    margin-bottom: ${space[3]}px;
+    visibility: ${display ? 'visible' : 'hidden'};
+  `;
+
+  return (
+    <div css={style}>
+      <ValidationSymbol validationStyling={matchingStyling} />
+      <div css={validationInfoCss(matchingStyling)}>
+        {PasswordValidationText.MATCHING_REPEATED}
       </div>
     </div>
   );

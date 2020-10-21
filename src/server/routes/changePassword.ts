@@ -13,7 +13,10 @@ import { Metrics } from '@/server/models/Metrics';
 import { removeNoCache } from '@/server/lib/middleware/cache';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
-import { passwordValidation } from '@/shared/lib/PasswordValidation';
+import {
+  passwordValidation,
+  PasswordValidationText,
+} from '@/shared/lib/PasswordValidation';
 
 const router = Router();
 
@@ -26,17 +29,24 @@ const validatePasswordChangeFields = (
   password: string,
   passwordConfirm: string,
 ): Array<FieldError> => {
-  const validationResult = passwordValidation(password, passwordConfirm);
+  const validationResult = passwordValidation(password);
+  const errors: Array<FieldError> = [];
+
   if (validationResult.failedMessage) {
-    return [
-      {
-        field: 'password',
-        message: validationResult.failedMessage,
-      },
-    ];
+    errors.push({
+      field: 'password',
+      message: validationResult.failedMessage,
+    });
   }
 
-  return [];
+  if (password !== passwordConfirm) {
+    errors.push({
+      field: 'password_confirm',
+      message: PasswordValidationText.DO_NOT_MATCH_ERROR,
+    });
+  }
+
+  return errors;
 };
 
 router.get(
