@@ -122,12 +122,45 @@ export const consentPages: ConsentPage[] = [
       }
     },
     update: async (ip, sc_gu_u, body) => {
-      const newsletters: NewsletterPatch[] = NEWSLETTERS_PAGE.map((id) => ({
-        id,
-        subscribed: !!body[id],
-      }));
+      const userNewsletterSubscriptions = await getUserNewsletterSubscriptions(
+        NEWSLETTERS_PAGE,
+        ip,
+        sc_gu_u,
+      );
 
-      await patchNewsletters(ip, sc_gu_u, newsletters);
+      const newslettersSubscriptionFromPage: NewsletterPatch[] = NEWSLETTERS_PAGE.map(
+        (id) => ({
+          id,
+          subscribed: !!body[id],
+        }),
+      );
+
+      const newsletterSubscriptionsToUpdate = newslettersSubscriptionFromPage.filter(
+        ({ id, subscribed }) => {
+          // find current user subscription status for a newsletter
+          const subscription = userNewsletterSubscriptions.find(
+            ({ id: userNewsletterId }) => userNewsletterId === id,
+          );
+
+          // check if a subscription exists
+          if (subscription) {
+            // if previously subscribed AND now wants to unsubscrive
+            // OR if previously not subscribed AND wants to subscribe
+            // then include in newsletterSubscriptionsToUpdate
+            if (
+              (subscription.subscribed && !subscribed) ||
+              (!subscription.subscribed && subscribed)
+            ) {
+              return true;
+            }
+          }
+
+          // otherwise don't include in the update
+          return false;
+        },
+      );
+
+      await patchNewsletters(ip, sc_gu_u, newsletterSubscriptionsToUpdate);
     },
   },
   {
@@ -275,7 +308,7 @@ router.post(`${Routes.CONSENTS}/:page`, loginMiddleware, async (req, res) => {
 
     trackMetric(consentsPageMetric(page, 'Post', true));
 
-    let url = `${Routes.CONSENTS}/${consentPages[pageIndex + 1].page}`;
+    let url = `${Routes.CONSENTS}/${consentPages[pageIndex].page}`;
     if (res.locals?.queryParams?.returnUrl) {
       url = addReturnUrlToPath(url, res.locals.queryParams.returnUrl);
     }
