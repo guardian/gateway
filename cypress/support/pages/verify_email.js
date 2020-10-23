@@ -5,10 +5,14 @@ class VerifyEmail {
 
   static CONTENT = {
     EMAIL_VERIFIED: 'Your email has been verified',
+    LINK_EXPIRED: 'Link Expired',
+    TOKEN_EXPIRED: 'Your email confirmation link has expired',
   };
 
-  goto(token) {
-    cy.visit(`${VerifyEmail.URL}${token ? `/${token}` : ''}`);
+  goto(token, { failOnStatusCode = true } = {}) {
+    cy.visit(`${VerifyEmail.URL}${token ? `/${token}` : ''}`, {
+      failOnStatusCode,
+    });
   }
 }
 
