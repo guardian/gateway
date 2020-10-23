@@ -152,7 +152,7 @@ export const ConsentsConfirmationPage = () => {
     <>
       <div css={headerContainer}>
         <Header cssOverrides={header} />
-        {error && <GlobalError error={error} link={getErrorLink(error)} />}
+        {error && <GlobalError error={error} link={getErrorLink(error)} left />}
         {success && <GlobalSuccess success={success} />}
       </div>
       <ConsentsHeader title="Your registration is complete" />
