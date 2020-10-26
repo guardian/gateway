@@ -6,6 +6,7 @@ import {
   gridItem,
   gridItemColumnConsents,
   getAutoRow,
+  consentsParagraphSpanDef,
 } from '@/client/styles/Grid';
 import { GlobalStateContext } from '@/client/components/GlobalState';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
@@ -51,7 +52,7 @@ export const ConsentsNewslettersPage = () => {
   return (
     <ConsentsLayout title="Newsletters" current={CONSENTS_PAGES.NEWSLETTERS}>
       <h3 css={[heading, autoRow()]}>Free newsletters from The Guardian</h3>
-      <p css={[text, paragraphSpacing, autoRow()]}>
+      <p css={[text, paragraphSpacing, autoRow(consentsParagraphSpanDef)]}>
         Our newsletters help you get closer to our quality, independent
         journalism.
       </p>

@@ -65,7 +65,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
     <>
       <div css={headerContainer}>
         <Header cssOverrides={header} />
-        {error && <GlobalError error={error} link={getErrorLink(error)} />}
+        {error && <GlobalError error={error} link={getErrorLink(error)} left />}
         {success && <GlobalSuccess success={success} />}
       </div>
       <ConsentsHeader title={title} />
