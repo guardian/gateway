@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /// <reference types="cypress" />
+
 const {
   authRedirectSignInRecentlyEmailValidated,
 } = require('../support/idapi/auth');
@@ -17,7 +19,7 @@ const {
 } = require('../support/idapi/verify_email');
 const VerifyEmail = require('../support/pages/verify_email');
 
-describe('Consents flow', () => {
+describe('Verify email flow', () => {
   const verifyEmailFlow = new VerifyEmail();
 
   beforeEach(() => {
@@ -47,6 +49,9 @@ describe('Consents flow', () => {
 
       // check if verified email text exists
       cy.contains(VerifyEmail.CONTENT.EMAIL_VERIFIED);
+
+      // check if we're on the consents flow
+      cy.url().should('include', '/consents');
     });
 
     it('verification token is expired, logged out, shows page to sign in to resend validation email', () => {
