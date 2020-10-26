@@ -18,7 +18,7 @@ const communicationCard = css`
   flex-direction: column;
   width: 100%;
   border: 1px solid white;
-  margin: ${space[2]}px 0px;
+  margin: 0px 0px ${space[4]}px 0px;
 
   ${from.tablet} {
     width: 50%;
@@ -55,8 +55,7 @@ const communicationCardHeadingText = css`
   color: ${palette.text.ctaPrimary};
   margin: 0;
   ${titlepiece.small()};
-  font-size: 27px;
-  line-height: 29px;
+  font-size: 22px;
 `;
 
 const communicationCardBodyContainer = css`
