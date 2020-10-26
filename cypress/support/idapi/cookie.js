@@ -23,6 +23,13 @@ const authCookieResponse = {
   },
 };
 
+const setAuthCookies = () => {
+  cy.setCookie('GU_U', 'FAKE_GU_U');
+  cy.setCookie('SC_GU_U', 'FAKE_SC_GU_U');
+  cy.setCookie('SC_GU_LA', 'FAKE_SC_GU_LA');
+};
+
 module.exports = {
   authCookieResponse,
+  setAuthCookies,
 };

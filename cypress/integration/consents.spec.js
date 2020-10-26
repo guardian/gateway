@@ -2,11 +2,15 @@
 const {
   authRedirectSignInRecentlyEmailValidated,
 } = require('../support/idapi/auth');
-const { authCookieResponse } = require('../support/idapi/cookie');
+const {
+  authCookieResponse,
+  setAuthCookies,
+} = require('../support/idapi/cookie');
 const {
   allNewsletters,
   userNewsletters,
 } = require('../support/idapi/newsletter');
+const { verifiedUserWithNoConsent } = require('../support/idapi/user');
 const {
   validationTokenExpired,
   validationTokenInvalid,
@@ -27,9 +31,7 @@ describe('Consents flow', () => {
 
       // set these cookies manually
       // TODO: can cypress set the automatically?
-      cy.setCookie('GU_U', 'FAKE_GU_U');
-      cy.setCookie('SC_GU_U', 'FAKE_SC_GU_U');
-      cy.setCookie('SC_GU_LA', 'FAKE_SC_GU_LA');
+      setAuthCookies();
 
       // set successful auth using login middleware
       cy.idapiMock(200, authRedirectSignInRecentlyEmailValidated);
@@ -59,7 +61,7 @@ describe('Consents flow', () => {
     });
 
     it('verification token is invalid, logged out, shows page to sign in to resend validation email', () => {
-      // mock token expired
+      // mock token invalid
       cy.idapiMock(403, validationTokenInvalid);
 
       // go to verify email endpont
@@ -67,6 +69,42 @@ describe('Consents flow', () => {
 
       cy.contains(VerifyEmail.CONTENT.LINK_EXPIRED);
       cy.contains(VerifyEmail.CONTENT.TOKEN_EXPIRED);
+    });
+
+    it('verification token is expired, logged in, shows page to to resend validation email', () => {
+      // set logged in cookies
+      setAuthCookies();
+
+      // mock token expired
+      cy.idapiMock(403, validationTokenExpired);
+
+      // mock user response
+      cy.idapiMock(200, verifiedUserWithNoConsent);
+
+      // go to verify email endpont
+      verifyEmailFlow.goto('expiredtoken', { failOnStatusCode: false });
+
+      cy.contains(VerifyEmail.CONTENT.VERIFY_EMAIL);
+      cy.contains(VerifyEmail.CONTENT.CONFIRM_EMAIL);
+      cy.contains(verifiedUserWithNoConsent.user.primaryEmailAddress);
+    });
+
+    it('verification token is invalid, logged in, shows page to to resend validation email', () => {
+      // set logged in cookies
+      setAuthCookies();
+
+      // mock token invalid
+      cy.idapiMock(403, validationTokenInvalid);
+
+      // mock user response
+      cy.idapiMock(200, verifiedUserWithNoConsent);
+
+      // go to verify email endpont
+      verifyEmailFlow.goto('expiredtoken', { failOnStatusCode: false });
+
+      cy.contains(VerifyEmail.CONTENT.VERIFY_EMAIL);
+      cy.contains(VerifyEmail.CONTENT.CONFIRM_EMAIL);
+      cy.contains(verifiedUserWithNoConsent.user.primaryEmailAddress);
     });
   });
 });
