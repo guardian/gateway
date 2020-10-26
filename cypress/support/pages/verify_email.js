@@ -12,6 +12,7 @@ class VerifyEmail {
       'You need to confirm your email address to continue securely:',
     SEND_LINK: 'Send verification link',
     EMAIL_SENT: 'Email Sent. Please check your inbox and follow the link.',
+    SIGN_IN: 'Sign in',
   };
 
   goto(token, { failOnStatusCode = true } = {}) {

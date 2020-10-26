@@ -58,6 +58,14 @@ describe('Consents flow', () => {
 
       cy.contains(VerifyEmail.CONTENT.LINK_EXPIRED);
       cy.contains(VerifyEmail.CONTENT.TOKEN_EXPIRED);
+
+      // check sign in link
+      cy.contains('a', VerifyEmail.CONTENT.SIGN_IN)
+        .should('have.attr', 'href')
+        .and(
+          'include',
+          'https://profile.code.dev-theguardian.com/signin?returnUrl=https%3A%2F%2Flocalhost%3A8861%2Fverify-email',
+        );
     });
 
     it('verification token is invalid, logged out, shows page to sign in to resend validation email', () => {
@@ -69,6 +77,14 @@ describe('Consents flow', () => {
 
       cy.contains(VerifyEmail.CONTENT.LINK_EXPIRED);
       cy.contains(VerifyEmail.CONTENT.TOKEN_EXPIRED);
+
+      // check sign in link
+      cy.contains('a', VerifyEmail.CONTENT.SIGN_IN)
+        .should('have.attr', 'href')
+        .and(
+          'include',
+          'https://profile.code.dev-theguardian.com/signin?returnUrl=https%3A%2F%2Flocalhost%3A8861%2Fverify-email',
+        );
     });
 
     it('verification token is expired, logged in, shows page to to resend validation email', () => {
