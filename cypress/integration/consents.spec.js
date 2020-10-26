@@ -36,10 +36,10 @@ describe('Consents flow', () => {
       // set successful auth using login middleware
       cy.idapiMock(200, authRedirectSignInRecentlyEmailValidated);
 
-      // all newsletters mock response
+      // all newsletters mock response for first page of consents flow
       cy.idapiMock(200, allNewsletters);
 
-      // user newsletters mock response
+      // user newsletters mock response for first page of consents flow
       cy.idapiMock(200, userNewsletters());
 
       // go to verify email endpoint
@@ -81,15 +81,27 @@ describe('Consents flow', () => {
       // mock user response
       cy.idapiMock(200, verifiedUserWithNoConsent);
 
+      // mock user response again for sending validation email
+      cy.idapiMock(200, verifiedUserWithNoConsent);
+
+      // mock validation email sent
+      cy.idapiMock(200);
+
       // go to verify email endpont
       verifyEmailFlow.goto('expiredtoken', { failOnStatusCode: false });
 
       cy.contains(VerifyEmail.CONTENT.VERIFY_EMAIL);
       cy.contains(VerifyEmail.CONTENT.CONFIRM_EMAIL);
       cy.contains(verifiedUserWithNoConsent.user.primaryEmailAddress);
+
+      // click on send link button
+      cy.contains(VerifyEmail.CONTENT.SEND_LINK).click();
+
+      // expect email sent page
+      cy.contains(VerifyEmail.CONTENT.EMAIL_SENT);
     });
 
-    it('verification token is invalid, logged in, shows page to to resend validation email', () => {
+    it('verification token is invalid, logged in, shows page to to resend validation email, and send email', () => {
       // set logged in cookies
       setAuthCookies();
 
@@ -99,12 +111,24 @@ describe('Consents flow', () => {
       // mock user response
       cy.idapiMock(200, verifiedUserWithNoConsent);
 
+      // mock user response again for sending validation email
+      cy.idapiMock(200, verifiedUserWithNoConsent);
+
+      // mock validation email sent
+      cy.idapiMock(200);
+
       // go to verify email endpont
       verifyEmailFlow.goto('expiredtoken', { failOnStatusCode: false });
 
       cy.contains(VerifyEmail.CONTENT.VERIFY_EMAIL);
       cy.contains(VerifyEmail.CONTENT.CONFIRM_EMAIL);
       cy.contains(verifiedUserWithNoConsent.user.primaryEmailAddress);
+
+      // click on send link button
+      cy.contains(VerifyEmail.CONTENT.SEND_LINK).click();
+
+      // expect email sent page
+      cy.contains(VerifyEmail.CONTENT.EMAIL_SENT);
     });
   });
 });
