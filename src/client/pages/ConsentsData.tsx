@@ -5,7 +5,11 @@ import { textSans } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/core';
 import { space, neutral } from '@guardian/src-foundations';
 import { GlobalStateContext } from '@/client/components/GlobalState';
-import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
+import {
+  getAutoRow,
+  gridItemColumnConsents,
+  consentsParagraphSpanDef,
+} from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { heading, text, headingMarginSpace6 } from '@/client/styles/Consents';
 import { GlobalState } from '@/shared/model/GlobalState';
@@ -45,7 +49,7 @@ export const ConsentsDataPage = () => {
       {profiling_optout && (
         <>
           <h3 css={[heading, autoRow()]}>Our commitment to you</h3>
-          <p css={[text, autoRow()]}>
+          <p css={[text, autoRow(consentsParagraphSpanDef)]}>
             We think carefully about our use of personal data and use it
             responsibly. We never share it without your permission and we have a
             team who are dedicated to keeping any data we collect safe and
@@ -63,7 +67,7 @@ export const ConsentsDataPage = () => {
           <h3 css={[heading, headingMarginSpace6, autoRow()]}>
             Using your data for marketing analysis
           </h3>
-          <p css={[text, autoRow()]}>
+          <p css={[text, autoRow(consentsParagraphSpanDef)]}>
             From time to time we may use your personal data for marketing
             analysis. That includes looking at what products or services you
             have bought from us and what pages you have been viewing on

@@ -4,11 +4,12 @@ import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { Main } from '@/client/main';
 import { brandBackground } from '@guardian/src-foundations/palette';
-import { QueryParams } from '@/shared/model/QueryParams';
 import qs from 'query-string';
 import { getConfiguration } from '@/server/lib/configuration';
 import { RoutingConfig } from '@/client/routes';
 import { getAssets } from '@/server/lib/assets';
+import { Locals } from '@/server/models/Express';
+import { parseExpressQueryParams } from '@/server/lib/queryParams';
 
 const assets = getAssets();
 
@@ -20,19 +21,32 @@ const favicon =
 
 interface RendererOpts {
   globalState?: GlobalState;
-  queryParams?: QueryParams;
   pageTitle?: string;
+  locals?: Locals;
 }
 
 const { gaUID } = getConfiguration();
+
+const defaultLocals: Locals = {
+  queryParams: parseExpressQueryParams({}),
+  geolocation: 'ROW',
+};
 
 export const renderer: (url: string, opts?: RendererOpts) => string = (
   url,
   opts = {},
 ) => {
-  const { globalState = {}, queryParams = {}, pageTitle = 'Gateway' } = opts;
+  const {
+    globalState = {},
+    locals = defaultLocals,
+    pageTitle = 'Gateway',
+  } = opts;
 
   const context = {};
+
+  const { queryParams, geolocation } = locals;
+
+  globalState.geolocation = geolocation;
 
   const queryString = qs.stringify(queryParams);
 
