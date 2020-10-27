@@ -108,6 +108,33 @@ const getUserNewsletterSubscriptions = async (
 
 export const consentPages: ConsentPage[] = [
   {
+    page: Routes.CONSENTS_COMMUNICATION.slice(1),
+    pageTitle: CONSENTS_PAGES.CONTACT,
+    read: async (ip, sc_gu_u) => {
+      try {
+        return {
+          consents: await getUserConsentsForPage(
+            CONSENTS_COMMUNICATION_PAGE,
+            ip,
+            sc_gu_u,
+          ),
+          page: Routes.CONSENTS_COMMUNICATION.slice(1),
+          previousPage: Routes.CONSENTS_NEWSLETTERS.slice(1),
+        };
+      } catch (error) {
+        throw error;
+      }
+    },
+    update: async (ip, sc_gu_u, body) => {
+      const consents = CONSENTS_COMMUNICATION_PAGE.map((id) => ({
+        id,
+        consented: getConsentValueFromRequestBody(id, body),
+      }));
+
+      await patchConsents(ip, sc_gu_u, consents);
+    },
+  },
+  {
     page: Routes.CONSENTS_NEWSLETTERS.slice(1),
     pageTitle: CONSENTS_PAGES.NEWSLETTERS,
     read: async (ip, sc_gu_u, geo) => {
@@ -166,33 +193,6 @@ export const consentPages: ConsentPage[] = [
       );
 
       await patchNewsletters(ip, sc_gu_u, newsletterSubscriptionsToUpdate);
-    },
-  },
-  {
-    page: Routes.CONSENTS_COMMUNICATION.slice(1),
-    pageTitle: CONSENTS_PAGES.CONTACT,
-    read: async (ip, sc_gu_u) => {
-      try {
-        return {
-          consents: await getUserConsentsForPage(
-            CONSENTS_COMMUNICATION_PAGE,
-            ip,
-            sc_gu_u,
-          ),
-          page: Routes.CONSENTS_COMMUNICATION.slice(1),
-          previousPage: Routes.CONSENTS_NEWSLETTERS.slice(1),
-        };
-      } catch (error) {
-        throw error;
-      }
-    },
-    update: async (ip, sc_gu_u, body) => {
-      const consents = CONSENTS_COMMUNICATION_PAGE.map((id) => ({
-        id,
-        consented: getConsentValueFromRequestBody(id, body),
-      }));
-
-      await patchConsents(ip, sc_gu_u, consents);
     },
   },
   {
