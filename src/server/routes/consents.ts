@@ -119,7 +119,6 @@ export const consentPages: ConsentPage[] = [
             sc_gu_u,
           ),
           page: Routes.CONSENTS_COMMUNICATION.slice(1),
-          previousPage: Routes.CONSENTS_NEWSLETTERS.slice(1),
         };
       } catch (error) {
         throw error;
@@ -146,6 +145,7 @@ export const consentPages: ConsentPage[] = [
             ip,
             sc_gu_u,
           ),
+          previousPage: Routes.CONSENTS_COMMUNICATION.slice(1),
         };
       } catch (error) {
         throw error;
@@ -207,7 +207,7 @@ export const consentPages: ConsentPage[] = [
             sc_gu_u,
           ),
           page: Routes.CONSENTS_DATA.slice(1),
-          previousPage: Routes.CONSENTS_COMMUNICATION.slice(1),
+          previousPage: Routes.CONSENTS_NEWSLETTERS.slice(1),
         };
       } catch (error) {
         throw error;
