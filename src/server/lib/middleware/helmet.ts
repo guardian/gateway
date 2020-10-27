@@ -16,7 +16,7 @@ enum CSP_VALID_URI {
   OPHAN = 'ophan.theguardian.com',
   VENDORLIST_CMP = 'vendorlist.consensu.org',
   GUARDIAN_CONSENTS_LOGS = 'consent-logs.',
-  CMP = `consent.theguardian.com gdpr-tcfv2.sp-prod.net ccpa.sp-prod.net ccpa-service.sp-prod.net ccpa-notice.sp-prod.net cdn.privacy-mgmt.com 'unsafe-eval'`,
+  CMP = `sourcepoint.theguardian.com consent.theguardian.com gdpr-tcfv2.sp-prod.net ccpa.sp-prod.net ccpa-service.sp-prod.net ccpa-notice.sp-prod.net cdn.privacy-mgmt.com 'unsafe-eval'`,
 }
 
 const { baseUri, gaUID, apiDomain } = getConfiguration();
