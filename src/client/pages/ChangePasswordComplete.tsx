@@ -7,6 +7,7 @@ import { PageBodyText } from '@/client/components/PageBodyText';
 import { PageBody } from '@/client/components/PageBody';
 import { linkButton } from '@/client/styles/Shared';
 import { SignInLayout } from '@/client/layouts/SignInLayout';
+import { SvgArrowRightStraight } from '@guardian/src-icons';
 
 export const ChangePasswordCompletePage = () => {
   const { returnUrl } = useQuery();
@@ -23,7 +24,13 @@ export const ChangePasswordCompletePage = () => {
             the button below to jump back to the Guardian.
           </PageBodyText>
         </PageBody>
-        <LinkButton css={linkButton} showIcon href={returnUrl}>
+        <LinkButton
+          css={linkButton}
+          iconSide="right"
+          nudgeIcon={true}
+          icon={<SvgArrowRightStraight />}
+          href={returnUrl}
+        >
           Continue to The Guardian
         </LinkButton>
       </PageBox>
