@@ -24,8 +24,8 @@ interface ConsentAPIResponse {
   description: string;
 }
 
-const responseToEntity = (newsletter: ConsentAPIResponse): Consent => {
-  const { name, description, id } = newsletter;
+const responseToEntity = (consent: ConsentAPIResponse): Consent => {
+  const { name, description, id } = consent;
   return {
     id,
     description,

@@ -4,14 +4,11 @@
 const {
   authRedirectSignInRecentlyEmailValidated,
 } = require('../support/idapi/auth');
+const { allConsents } = require('../support/idapi/consent');
 const {
   authCookieResponse,
   setAuthCookies,
 } = require('../support/idapi/cookie');
-const {
-  allNewsletters,
-  userNewsletters,
-} = require('../support/idapi/newsletter');
 const { verifiedUserWithNoConsent } = require('../support/idapi/user');
 const {
   validationTokenExpired,
@@ -39,10 +36,10 @@ describe('Verify email flow', () => {
       cy.idapiMock(200, authRedirectSignInRecentlyEmailValidated);
 
       // all newsletters mock response for first page of consents flow
-      cy.idapiMock(200, allNewsletters);
+      cy.idapiMock(200, allConsents);
 
       // user newsletters mock response for first page of consents flow
-      cy.idapiMock(200, userNewsletters());
+      cy.idapiMock(200, verifiedUserWithNoConsent);
 
       // go to verify email endpoint
       verifyEmailFlow.goto('avalidtoken');
