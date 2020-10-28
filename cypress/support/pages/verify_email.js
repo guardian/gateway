@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
 
+const qs = require('query-string');
+
 class VerifyEmail {
   static URL = '/verify-email';
 
@@ -15,10 +17,17 @@ class VerifyEmail {
     SIGN_IN: 'Sign in',
   };
 
-  goto(token, { failOnStatusCode = true } = {}) {
-    cy.visit(`${VerifyEmail.URL}${token ? `/${token}` : ''}`, {
-      failOnStatusCode,
-    });
+  goto(token, { failOnStatusCode = true, query = {} } = {}) {
+    const querystring = qs.stringify(query);
+
+    cy.visit(
+      `${VerifyEmail.URL}${token ? `/${token}` : ''}${
+        querystring ? `?${querystring}` : ''
+      }`,
+      {
+        failOnStatusCode,
+      },
+    );
   }
 }
 
