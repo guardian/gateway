@@ -83,6 +83,11 @@ describe('Onboarding flow', () => {
       // check opt outs are not checked
       getOptoutCheckboxes().should('not.be.checked');
 
+      // does not contain go back link
+      cy.get('a')
+        .contains(Onboarding.CONTENT.GO_BACK_BUTTON)
+        .should('not.exist');
+
       // mock auth for post
       // set successful auth using login middleware (/consents)
       cy.idapiMock(200, authRedirectSignInRecentlyEmailValidated);
@@ -98,11 +103,6 @@ describe('Onboarding flow', () => {
 
       // mock load user newsletters
       cy.idapiMock(200, userNewsletters());
-
-      // does not contain go back link
-      cy.get('a')
-        .contains(Onboarding.CONTENT.GO_BACK_BUTTON)
-        .should('not.exist');
 
       // contains save and continue button
       cy.get('button')
@@ -120,7 +120,14 @@ describe('Onboarding flow', () => {
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
       // contain go back link
-      cy.get('a').contains(Onboarding.CONTENT.GO_BACK_BUTTON).should('exist');
+      cy.get('a')
+        .contains(Onboarding.CONTENT.GO_BACK_BUTTON)
+        .should('exist')
+        .should('have.attr', 'href')
+        .and(
+          'include',
+          `${Onboarding.URL}${Onboarding.CONTENT.COMMUNICATION_PAGE}`,
+        );
 
       // get all checkboxes
       getCheckboxes()
@@ -129,9 +136,115 @@ describe('Onboarding flow', () => {
         // select parent (to avoid cypress element not visible error)
         .parent()
         // click, multiple is true as we target multiple elements
-        .click({ multiple: true })
-        // check if checked ;)
+        .click({ multiple: true });
+
+      // get all checkboxes
+      getCheckboxes()
+        // check not checked
         .should('be.checked');
+
+      // mock auth for post
+      // set successful auth using login middleware (/consents)
+      cy.idapiMock(200, authRedirectSignInRecentlyEmailValidated);
+
+      // mock load all newsletters
+      cy.idapiMock(200, allNewsletters);
+
+      // mock load user newsletters
+      cy.idapiMock(200, userNewsletters());
+
+      // mock patch success
+      cy.idapiMock(200);
+
+      // mock load your data page
+      cy.idapiMock(200, authRedirectSignInRecentlyEmailValidated);
+
+      // all consents mock response for your data page of consents flow
+      cy.idapiMock(200, allConsents);
+
+      // user consents mock response for your data page of consents flow
+      cy.idapiMock(200, verifiedUserWithNoConsent);
+
+      // contains save and continue button
+      cy.get('button')
+        .contains(Onboarding.CONTENT.SAVE_CONTINUE_BUTTON)
+        // click to go to next page
+        .click();
+
+      // check if we're on the consents flow, your data page
+      cy.url().should(
+        'include',
+        `${Onboarding.URL}${Onboarding.CONTENT.DATA_PAGE}`,
+      );
+
+      // check return url exists
+      cy.url().should('include', `returnUrl=${returnUrl}`);
+
+      // contain go back link
+      cy.get('a')
+        .contains(Onboarding.CONTENT.GO_BACK_BUTTON)
+        .should('exist')
+        .should('have.attr', 'href')
+        .and(
+          'include',
+          `${Onboarding.URL}${Onboarding.CONTENT.NEWSLETTER_PAGE}`,
+        );
+
+      // get all checkboxes
+      getCheckboxes()
+        // check not checked
+        .should('not.be.checked');
+
+      // no opt ins on this page
+      getOptinCheckboxes().should('not.exist');
+
+      // check opt outs are not checked
+      getOptoutCheckboxes().should('not.be.checked');
+
+      // mock auth for post
+      // set successful auth using login middleware (/consents)
+      cy.idapiMock(200, authRedirectSignInRecentlyEmailValidated);
+
+      // mock patch success
+      cy.idapiMock(200);
+
+      // mock load review page
+      cy.idapiMock(200, authRedirectSignInRecentlyEmailValidated);
+
+      // all consents mock response for review  of consents flow
+      cy.idapiMock(200, allConsents);
+
+      // user consents mock response for review of consents flow
+      cy.idapiMock(200, verifiedUserWithNoConsent);
+
+      // mock load all newsletters
+      cy.idapiMock(200, allNewsletters);
+
+      // mock load user newsletters
+      cy.idapiMock(200, userNewsletters());
+
+      // contains save and continue button
+      cy.get('button')
+        .contains(Onboarding.CONTENT.SAVE_CONTINUE_BUTTON)
+        // click to go to next page
+        .click();
+
+      // check if we're on the consents flow, review page
+      cy.url().should(
+        'include',
+        `${Onboarding.URL}${Onboarding.CONTENT.REVIEW_PAGE}`,
+      );
+
+      // check return url exists
+      cy.url().should('include', `returnUrl=${returnUrl}`);
+
+      // does not contain go back link
+      cy.get('a')
+        .contains(Onboarding.CONTENT.GO_BACK_BUTTON)
+        .should('not.exist');
+
+      // does not contain save and continue button
+      cy.contains(Onboarding.CONTENT.SAVE_CONTINUE_BUTTON).should('not.exist');
     });
     // it(
     //   'goes through full flow, opt out all consents/newsletters, preserve returnUrl',

@@ -10,6 +10,8 @@ class Onboarding {
     GO_BACK_BUTTON: 'Go back',
     COMMUNICATION_PAGE: '/communication',
     NEWSLETTER_PAGE: '/newsletters',
+    DATA_PAGE: '/data',
+    REVIEW_PAGE: '/review',
   };
 
   goto({ failOnStatusCode = true, query = {}, path } = {}) {
