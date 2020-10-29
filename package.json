@@ -82,7 +82,7 @@
     "@guardian/src-link": "^2.5.0",
     "@guardian/src-radio": "^2.5.0",
     "@guardian/src-text-input": "^2.5.0",
-    "aws-sdk": "^2.779.0",
+    "aws-sdk": "^2.781.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
     "emotion-theming": "^10.0.27",
