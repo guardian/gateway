@@ -72,8 +72,8 @@ const h1 = css`
 
 const h2 = css`
   color: ${brand[100]};
-  margin: ${space[4]}px 0 ${space[3]}px 0;
-  ${textSans.large()}
+  margin: ${space[2]}px 0 ${space[2]}px 0;
+  ${textSans.medium()}
   ${gridItem({
     ...gridItemColumnConsents,
     ...{ WIDE: { start: 1, span: COLUMNS.WIDE } },

@@ -4,24 +4,36 @@ import { space, error, neutral } from '@guardian/src-foundations';
 import { textSans } from '@guardian/src-foundations/typography';
 import { SvgAlert } from '@guardian/src-icons';
 import { ErrorLink } from '@/client/lib/ErrorLink';
+import {
+  gridItem,
+  gridItemColumnConsents,
+  gridRow,
+  COLUMNS,
+} from '@/client/styles/Grid';
 
 interface GlobalErrorProps {
   error: string;
   link: ErrorLink;
+  left?: boolean;
 }
 
-const errorDiv = css`
-  padding: ${space[2]}px ${space[3]}px;
+const errorDiv = (addSidePadding: boolean) => css`
+  padding: ${space[2]}px ${addSidePadding ? space[3] : 0}px;
   background-color: ${error[400]};
+  width: 100%;
   text-align: center;
 `;
 
-const errorP = css`
+const errorP = (left = false) => css`
+  display: flex;
+  justify-content: ${left ? 'left' : 'center'};
+  text-align: left;
   color: ${neutral[100]};
   margin: 0;
   ${textSans.medium()}
 
   svg {
+    flex: 0 0 auto;
     width: 30px;
     height: 30px;
     fill: currentColor;
@@ -34,20 +46,33 @@ const errorLink = css`
   color: ${neutral[100]};
 `;
 
-const svg = css`
-  height: 30px;
-  width: 30px;
-`;
-
-export const GlobalError = ({ error, link }: GlobalErrorProps) => (
-  <div css={errorDiv}>
-    <p css={errorP}>
-      <SvgAlert css={svg} />
-      {error}
-      &nbsp;
-      <a css={errorLink} href={link.link}>
-        {link.linkText}
-      </a>
-    </p>
-  </div>
-);
+export const GlobalError = ({ error, link, left }: GlobalErrorProps) => {
+  const row = left
+    ? css`
+        ${gridRow}
+        margin: 0 auto;
+      `
+    : null;
+  const item = left
+    ? gridItem({
+        ...gridItemColumnConsents,
+        ...{ WIDE: { start: 1, span: COLUMNS.WIDE } },
+      })
+    : null;
+  return (
+    <div css={errorDiv(!left)}>
+      <div css={row}>
+        <p css={[errorP(left), item]}>
+          <SvgAlert />
+          <div>
+            {error}
+            &nbsp;
+            <a css={errorLink} href={link.link}>
+              {link.linkText}
+            </a>
+          </div>
+        </p>
+      </div>
+    </div>
+  );
+};

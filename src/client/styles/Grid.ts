@@ -147,6 +147,12 @@ export const gridItemColumnConsents: SpanDefinition = {
   WIDE: { start: 3, span: 12 },
 };
 
+export const consentsParagraphSpanDef: SpanDefinition = {
+  TABLET: { start: 2, span: 10 },
+  DESKTOP: { start: 2, span: 9 },
+  WIDE: { start: 3, span: 9 },
+};
+
 export const getAutoRow = (offset = 0, spanDefinition?: SpanDefinition) => {
   let row = offset;
   return (customSpanDefinition = spanDefinition) => css`

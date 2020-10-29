@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useContext } from 'react';
 import { css } from '@emotion/core';
-import { space, palette } from '@guardian/src-foundations';
+import { space, palette, brand } from '@guardian/src-foundations';
 import {
   getAutoRow,
   gridItem,
@@ -27,6 +27,7 @@ import { getErrorLink } from '@/client/lib/ErrorLink';
 import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 import { LinkButton } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
+import { maxWidth } from '../styles/Shared';
 
 const reviewTableContainer = css`
   display: flex;
@@ -97,6 +98,16 @@ const continueBoxFlex = css`
   flex: 0 0 auto;
 `;
 
+const header = css`
+  ${maxWidth}
+  margin: 0 auto;
+  padding-right: 0;
+`;
+
+const headerContainer = css`
+  background-color: ${brand[400]};
+`;
+
 const confirmationSpanDefinition: SpanDefinition = {
   TABLET: {
     start: 2,
@@ -139,9 +150,11 @@ export const ConsentsConfirmationPage = () => {
 
   return (
     <>
-      <Header />
-      {error && <GlobalError error={error} link={getErrorLink(error)} />}
-      {success && <GlobalSuccess success={success} />}
+      <div css={headerContainer}>
+        <Header cssOverrides={header} />
+        {error && <GlobalError error={error} link={getErrorLink(error)} left />}
+        {success && <GlobalSuccess success={success} />}
+      </div>
       <ConsentsHeader title="Your registration is complete" />
       <main css={[mainBackground, mainFlex]}>
         <ConsentsContent>

@@ -76,7 +76,7 @@ router.get(
       return res.type('html').send(
         renderer(Routes.RESET_RESEND, {
           globalState: state,
-          queryParams: res.locals.queryParams,
+          locals: res.locals,
           pageTitle: PageTitle.RESET_RESEND,
         }),
       );
@@ -84,7 +84,7 @@ router.get(
 
     const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
       globalState: state,
-      queryParams: res.locals.queryParams,
+      locals: res.locals,
       pageTitle: PageTitle.CHANGE_PASSWORD,
     });
     return res.type('html').send(html);
@@ -110,7 +110,7 @@ router.post(
         state.fieldErrors = fieldErrors;
         const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
           globalState: state,
-          queryParams: res.locals.queryParams,
+          locals: res.locals,
           pageTitle: PageTitle.CHANGE_PASSWORD,
         });
         return res.status(422).type('html').send(html);
@@ -132,7 +132,7 @@ router.post(
       state.error = message;
       const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
         globalState: state,
-        queryParams: res.locals.queryParams,
+        locals: res.locals,
         pageTitle: PageTitle.CHANGE_PASSWORD,
       });
       return res.status(status).type('html').send(html);
@@ -142,7 +142,7 @@ router.post(
 
     const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
       globalState: state,
-      queryParams: res.locals.queryParams,
+      locals: res.locals,
       pageTitle: PageTitle.CHANGE_PASSWORD_COMPLETE,
     });
 
@@ -154,7 +154,7 @@ router.get(
   Routes.CHANGE_PASSWORD_COMPLETE,
   (_: Request, res: ResponseWithLocals) => {
     const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
-      queryParams: res.locals.queryParams,
+      locals: res.locals,
       pageTitle: PageTitle.CHANGE_PASSWORD_COMPLETE,
     });
     return res.type('html').send(html);

@@ -3,7 +3,11 @@ import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { textSans } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/core';
 import { space, neutral } from '@guardian/src-foundations';
-import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
+import {
+  getAutoRow,
+  gridItemColumnConsents,
+  consentsParagraphSpanDef,
+} from '@/client/styles/Grid';
 import { CommunicationCard } from '@/client/components/ConsentsCommunicationCard';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { heading, text } from '@/client/styles/Consents';
@@ -26,7 +30,7 @@ const checkboxLabel = css`
 const communicationCardContainer = css`
   display: flex;
   flex-flow: row wrap;
-  margin: ${space[6]}px 0;
+  margin: ${space[6]}px 0 ${space[2]}px;
 `;
 
 export const ConsentsCommunicationPage = () => {
@@ -56,7 +60,7 @@ export const ConsentsCommunicationPage = () => {
           <h3 css={[heading, autoRow()]}>
             Guardian products, services & events
           </h3>
-          <p css={[text, autoRow()]}>
+          <p css={[text, autoRow(consentsParagraphSpanDef)]}>
             Stay informed and up to date with all that The Guardian has to
             offer. From time to time we can send you information about our
             latest products, services and events.
@@ -75,7 +79,7 @@ export const ConsentsCommunicationPage = () => {
           <h3 css={[heading, autoRow()]}>
             Using your data for market research
           </h3>
-          <p css={[text, autoRow()]}>
+          <p css={[text, autoRow(consentsParagraphSpanDef)]}>
             From time to time we may contact you for market research purposes
             inviting you to complete a survey, or take part in a group
             discussion. Normally, this invitation would be sent via email, but

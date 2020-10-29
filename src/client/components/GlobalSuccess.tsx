@@ -3,23 +3,34 @@ import { css } from '@emotion/core';
 import { space, success, neutral } from '@guardian/src-foundations';
 import { textSans } from '@guardian/src-foundations/typography';
 import { SvgTickRound } from '@guardian/src-icons';
+import {
+  COLUMNS,
+  gridItem,
+  gridItemColumnConsents,
+  gridRow,
+} from '../styles/Grid';
 
 interface GlobalSuccessProps {
   success: string;
 }
 
 const successDiv = css`
-  padding: ${space[2]}px ${space[3]}px;
+  padding: ${space[2]}px 0;
   background-color: ${success[400]};
+  width: 100%;
   text-align: center;
 `;
 
 const successP = css`
+  display: flex;
+  justify-content: left;
+  text-align: left;
   color: ${neutral[100]};
   margin: 0;
   ${textSans.medium()}
 
   svg {
+    flex: 0 0 auto;
     width: 30px;
     height: 30px;
     fill: currentColor;
@@ -28,16 +39,23 @@ const successP = css`
   }
 `;
 
-const svg = css`
-  height: 30px;
-  width: 30px;
-`;
-
-export const GlobalSuccess = ({ success }: GlobalSuccessProps) => (
-  <div css={successDiv}>
-    <p css={successP}>
-      <SvgTickRound css={svg} />
-      {success}
-    </p>
-  </div>
-);
+export const GlobalSuccess = ({ success }: GlobalSuccessProps) => {
+  const row = css`
+    ${gridRow}
+    margin: 0 auto;
+  `;
+  const item = gridItem({
+    ...gridItemColumnConsents,
+    ...{ WIDE: { start: 1, span: COLUMNS.WIDE } },
+  });
+  return (
+    <div css={successDiv}>
+      <div css={row}>
+        <p css={[successP, item]}>
+          <SvgTickRound />
+          <div>{success}</div>
+        </p>
+      </div>
+    </div>
+  );
+};
