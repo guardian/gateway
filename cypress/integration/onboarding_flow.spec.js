@@ -4,8 +4,11 @@
 const {
   authRedirectSignInRecentlyEmailValidated,
 } = require('../support/idapi/auth');
-const { allConsents } = require('../support/idapi/consent');
-const { verifiedUserWithNoConsent } = require('../support/idapi/user');
+const { allConsents, defaultUserConsent } = require('../support/idapi/consent');
+const {
+  verifiedUserWithNoConsent,
+  createUser,
+} = require('../support/idapi/user');
 const { setAuthCookies } = require('../support/idapi/cookie');
 const Onboarding = require('../support/pages/onboarding_pages');
 const {
@@ -28,6 +31,24 @@ describe('Onboarding flow', () => {
 
   context('Full flow', () => {
     it('goes through full flow, opt in all consents/newsletters, preserve returnUrl', () => {
+      const newslettersToSubscribe = [
+        { listId: 4151 },
+        { listId: 4147 },
+        { listId: 4165 },
+        { listId: 4137 },
+      ];
+
+      const consent = defaultUserConsent.map(({ id }) => {
+        let consented = true;
+        if (id.includes('_optout')) {
+          consented = false;
+        }
+        return {
+          id,
+          consented,
+        };
+      });
+
       // set these cookies manually
       // TODO: can cypress set the automatically?
       setAuthCookies();
@@ -215,13 +236,13 @@ describe('Onboarding flow', () => {
       cy.idapiMock(200, allConsents);
 
       // user consents mock response for review of consents flow
-      cy.idapiMock(200, verifiedUserWithNoConsent);
+      cy.idapiMock(200, createUser(consent));
 
       // mock load all newsletters
       cy.idapiMock(200, allNewsletters);
 
       // mock load user newsletters
-      cy.idapiMock(200, userNewsletters());
+      cy.idapiMock(200, userNewsletters(newslettersToSubscribe));
 
       // contains save and continue button
       cy.get('button')
