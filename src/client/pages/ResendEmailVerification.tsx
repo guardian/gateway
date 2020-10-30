@@ -14,7 +14,7 @@ import { textSans } from '@guardian/src-foundations/typography';
 import { Routes } from '@/shared/model/Routes';
 import { getProviderById } from '@/shared/lib/emailProvider';
 import { EmailProvider } from '@/shared/model/EmailProvider';
-import {CsrfFormField} from "@/client/components/CsrfFormField";
+import { CsrfFormField } from '@/client/components/CsrfFormField';
 
 const bold = css`
   ${textSans.medium({ lineHeight: 'regular', fontWeight: 'bold' })}
@@ -72,7 +72,7 @@ const LoggedIn = ({
         <PageBodyText>{success}</PageBodyText>
       ) : (
         <form css={form} method="post" action={Routes.VERIFY_EMAIL}>
-          <CsrfFormField/>
+          <CsrfFormField />
           <input type="hidden" name="email" value={email} />
           <Button
             css={button}

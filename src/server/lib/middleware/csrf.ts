@@ -1,20 +1,18 @@
-import csrf from "csurf";
-import {Express, NextFunction, Request} from "express";
-import {ResponseWithLocals} from "@/server/models/Express";
-import {getConfiguration} from "@/server/lib/configuration";
+import csrf from 'csurf';
+import { Express, NextFunction, Request } from 'express';
+import { ResponseWithLocals } from '@/server/models/Express';
+import { getConfiguration } from '@/server/lib/configuration';
 
 const isHttps = getConfiguration().isHttps;
 
-const csrfMiddleware =
-  csrf({
-      cookie: {
-        key: "_csrf",
-        sameSite: true,
-        secure: isHttps,
-        httpOnly: true
-      }
-    }
-  );
+const csrfMiddleware = csrf({
+  cookie: {
+    key: '_csrf',
+    sameSite: true,
+    secure: isHttps,
+    httpOnly: true,
+  },
+});
 
 const csrfLocalsMiddleware = (
   req: Request,

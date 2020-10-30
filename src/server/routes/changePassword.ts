@@ -167,7 +167,7 @@ router.get(
   (_: Request, res: ResponseWithLocals) => {
     const html = renderer(Routes.RESET_RESEND, {
       pageTitle: PageTitle.RESET_RESEND,
-      locals: res.locals
+      locals: res.locals,
     });
     res.type('html').send(html);
   },

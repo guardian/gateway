@@ -8,7 +8,7 @@ import { PageBox } from '@/client/components/PageBox';
 import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
 import { form, textInput, button } from '@/client/styles/Shared';
-import {CsrfFormField} from "@/client/components/CsrfFormField";
+import { CsrfFormField } from '@/client/components/CsrfFormField';
 
 interface PasswordResetDialogProps {
   email?: string;
@@ -30,7 +30,7 @@ export const PasswordResetDialog = ({
     <PageBody>
       <PageBodyText>{bodyText}</PageBodyText>
       <form css={form} method="post" action={`${Routes.RESET}${queryString}`}>
-        <CsrfFormField/>
+        <CsrfFormField />
         <TextInput
           css={textInput}
           label="Email address"

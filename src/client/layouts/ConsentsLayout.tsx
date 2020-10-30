@@ -23,7 +23,7 @@ import { Routes } from '@/shared/model/Routes';
 import { onboardingFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 import { maxWidth } from '../styles/Shared';
-import {CsrfFormField} from "@/client/components/CsrfFormField";
+import { CsrfFormField } from '@/client/components/CsrfFormField';
 
 interface ConsentsLayoutProps {
   children?: React.ReactNode;
@@ -83,7 +83,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
           );
         }}
       >
-        <CsrfFormField/>
+        <CsrfFormField />
         <main css={[mainBackground, ieFlexFix]}>
           <ConsentsContent>
             <ConsentsProgression current={current} />

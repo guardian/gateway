@@ -346,7 +346,7 @@ router.post(
     const html = renderer(`${Routes.CONSENTS}/${page}`, {
       globalState: state,
       pageTitle,
-      locals: res.locals
+      locals: res.locals,
     });
     res
       .type('html')
