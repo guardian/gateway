@@ -203,6 +203,7 @@ Resources:
             Environment=PLAY_SESSION_COOKIE_SECRET=$PLAY_SESSION_COOKIE_SECRET
             Environment=DEFAULT_RETURN_URI=${DefaultReturnUri}
             Environment=STAGE=${Stage}
+            Environment=IS_HTTPS=true
 
             [Install]
             WantedBy=multi-user.target

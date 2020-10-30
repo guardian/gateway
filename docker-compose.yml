@@ -15,6 +15,7 @@ services:
       - DEFAULT_RETURN_URI=${DEFAULT_RETURN_URI}
       - STAGE=${STAGE}
       - SIGN_IN_PAGE_URL=${SIGN_IN_PAGE_URL}
+      - IS_HTTPS=${IS_HTTPS}
     ports:
       - '${PORT}:${PORT}'
     volumes:

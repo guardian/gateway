@@ -26,6 +26,7 @@ describe('getConfiguration', () => {
     process.env.DEFAULT_RETURN_URI = 'default-return-uri';
     process.env.SIGN_IN_PAGE_URL = 'sign-in-page-url';
     process.env.STAGE = 'DEV';
+    process.env.IS_HTTPS = 'true';
 
     const output = getConfiguration();
     const expected = {
@@ -43,6 +44,7 @@ describe('getConfiguration', () => {
       },
       domain: GU_DOMAIN.DEV,
       apiDomain: GU_API_DOMAIN.DEV,
+      isHttps: true,
     };
     expect(output).toEqual(expected);
   });
