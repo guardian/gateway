@@ -11,6 +11,7 @@ const csrfMiddleware = csrf({
     sameSite: true,
     secure: isHttps,
     httpOnly: true,
+    signed: true,
   },
 });
 
