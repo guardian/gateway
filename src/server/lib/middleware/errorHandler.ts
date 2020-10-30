@@ -7,9 +7,11 @@ export const routeErrorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
-  if (err.code !== 'EBADCSRFTOKEN') return next(err);
+  if (err.code === 'EBADCSRFTOKEN') {
+    // handle CSRF token errors here
+    res.status(403);
+    res.send('csrf token error');
+  }
 
-  // handle CSRF token errors here
-  res.status(403);
-  res.send('csrf token error');
+  return next(err);
 };
