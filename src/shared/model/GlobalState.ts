@@ -20,4 +20,5 @@ export interface GlobalState {
   pageData?: PageData;
   signInPageUrl?: string;
   geolocation?: GeoLocation;
+  csrfToken?: string;
 }

@@ -18,13 +18,14 @@ import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { PageTitle } from '@/shared/model/PageTitle';
+import {ResponseWithLocals} from "@/server/models/Express";
 
 const router = Router();
 
 const { signInPageUrl } = getConfiguration();
 const profileUrl = getProfileUrl();
 
-router.get(Routes.VERIFY_EMAIL, async (req: Request, res: Response) => {
+router.get(Routes.VERIFY_EMAIL, async (req: Request, res: ResponseWithLocals) => {
   const state: GlobalState = {
     signInPageUrl: `${signInPageUrl}?returnUrl=${encodeURIComponent(
       `${profileUrl}${Routes.VERIFY_EMAIL}`,
@@ -53,12 +54,13 @@ router.get(Routes.VERIFY_EMAIL, async (req: Request, res: Response) => {
   const html = renderer(Routes.VERIFY_EMAIL, {
     globalState: state,
     pageTitle: PageTitle.VERIFY_EMAIL,
+    locals: res.locals
   });
 
   return res.status(status).type('html').send(html);
 });
 
-router.post(Routes.VERIFY_EMAIL, async (req: Request, res: Response) => {
+router.post(Routes.VERIFY_EMAIL, async (req: Request, res: ResponseWithLocals) => {
   const state: GlobalState = {};
 
   let status = 200;
@@ -94,6 +96,7 @@ router.post(Routes.VERIFY_EMAIL, async (req: Request, res: Response) => {
   const html = renderer(Routes.VERIFY_EMAIL, {
     globalState: state,
     pageTitle: PageTitle.VERIFY_EMAIL,
+    locals: res.locals
   });
 
   return res.status(status).type('html').send(html);

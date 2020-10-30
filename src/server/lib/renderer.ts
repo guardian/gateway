@@ -44,9 +44,10 @@ export const renderer: (url: string, opts?: RendererOpts) => string = (
 
   const context = {};
 
-  const { queryParams, geolocation } = locals;
+  const { queryParams, geolocation, csrfToken } = locals;
 
   globalState.geolocation = geolocation;
+  globalState.csrfToken = csrfToken;
 
   const queryString = qs.stringify(queryParams);
 
