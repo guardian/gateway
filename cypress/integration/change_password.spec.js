@@ -35,6 +35,16 @@ describe('Password change flow', () => {
     });
   });
 
+  context('CSRF token error on submission', () => {
+    it('should fail on submission due to CSRF token failure if CSRF token cookie is not sent', () => {
+      cy.idapiMock(200);
+      page.goto(fakeToken);
+      cy.clearCookie('_csrf');
+      page.submitPasswordChange('password', 'password');
+      cy.contains('csrf token error');
+    });
+  });
+
   context('Enter and Confirm passwords left blank', () => {
     it('uses the standard HTML5 empty field validation', () => {
       cy.idapiMock(200);
