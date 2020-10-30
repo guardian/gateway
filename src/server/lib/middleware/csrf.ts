@@ -1,21 +1,21 @@
 import csrf from 'csurf';
-import { Express, NextFunction, Request } from 'express';
+import { NextFunction, Request } from 'express';
 import { ResponseWithLocals } from '@/server/models/Express';
 import { getConfiguration } from '@/server/lib/configuration';
 
 const isHttps = getConfiguration().isHttps;
 
-const csrfMiddleware = csrf({
+export const csurfMiddleware = csrf({
   cookie: {
     key: '_csrf',
     sameSite: true,
     secure: isHttps,
     httpOnly: true,
-    signed: true,
+    signed: false, //TODO create a cookie secret for cookie-parser and set to true
   },
 });
 
-const csrfLocalsMiddleware = (
+export const csrfLocalsMiddleware = (
   req: Request,
   res: ResponseWithLocals,
   next: NextFunction,
@@ -24,7 +24,4 @@ const csrfLocalsMiddleware = (
   next();
 };
 
-export const addCsrfMiddleware = (server: Express) => {
-  server.use(csrfMiddleware);
-  server.use(csrfLocalsMiddleware);
-};
+export const csrfMiddleware = [csurfMiddleware, csrfLocalsMiddleware];
