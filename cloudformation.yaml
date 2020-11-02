@@ -68,7 +68,7 @@ Mappings:
     PROD:
       BaseUri: profile.theguardian.com
       DefaultReturnUri: https://theguardian.com
-      MaxInstances: 6
+      MaxInstances: 12
       MinInstances: 3
       LatencyAlarmThreshold: 0.5
       LatencyAlarmPeriod: 60
