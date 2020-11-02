@@ -181,6 +181,7 @@ describe('Password change flow', () => {
     it('shows an error showing the password length must be within certain limits', () => {
       cy.idapiMock(200);
       page.goto(fakeToken);
+      cy.idapiMock(200);
       page.submitPasswordChange('p', 'p');
       cy.contains(ChangePasswordPage.CONTENT.ERRORS.PASSWORD_INVALID_LENGTH);
     });
@@ -191,6 +192,7 @@ describe('Password change flow', () => {
       const excessivelyLongPassword = Array.from(Array(73), () => 'a').join('');
       cy.idapiMock(200);
       page.goto(fakeToken);
+      cy.idapiMock(200);
       page.submitPasswordChange(
         excessivelyLongPassword,
         excessivelyLongPassword,
