@@ -27,6 +27,7 @@ describe('getConfiguration', () => {
     process.env.SIGN_IN_PAGE_URL = 'sign-in-page-url';
     process.env.STAGE = 'DEV';
     process.env.IS_HTTPS = 'true';
+    process.env.APP_SECRET = 'app-secret';
 
     const output = getConfiguration();
     const expected = {
@@ -45,6 +46,7 @@ describe('getConfiguration', () => {
       domain: GU_DOMAIN.DEV,
       apiDomain: GU_API_DOMAIN.DEV,
       isHttps: true,
+      appSecret: 'app-secret',
     };
     expect(output).toEqual(expected);
   });

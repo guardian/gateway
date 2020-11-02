@@ -11,7 +11,7 @@ export const csurfMiddleware = csrf({
     sameSite: true,
     secure: isHttps,
     httpOnly: true,
-    signed: false, //TODO create a cookie secret for cookie-parser and set to true
+    signed: true,
   },
 });
 

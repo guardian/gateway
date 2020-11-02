@@ -16,6 +16,7 @@ services:
       - STAGE=${STAGE}
       - SIGN_IN_PAGE_URL=${SIGN_IN_PAGE_URL}
       - IS_HTTPS=${IS_HTTPS}
+      - APP_SECRET=${APP_SECRET}
     ports:
       - '${PORT}:${PORT}'
     volumes:

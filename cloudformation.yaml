@@ -177,6 +177,7 @@ Resources:
                 if \
                   IDAPI_CLIENT_ACCESS_TOKEN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/idapi-client-access-token' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   PLAY_SESSION_COOKIE_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/frontendPlaySecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+                  APP_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/appSecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
 
                   then break
                 fi
@@ -204,6 +205,7 @@ Resources:
             Environment=DEFAULT_RETURN_URI=${DefaultReturnUri}
             Environment=STAGE=${Stage}
             Environment=IS_HTTPS=true
+            APP_SECRET=${APP_SECRET}
 
             [Install]
             WantedBy=multi-user.target
