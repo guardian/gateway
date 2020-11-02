@@ -68,9 +68,7 @@ router.get(
     const state: GlobalState = {};
 
     try {
-      const email = await validateToken(token, req.ip);
-
-      state.email = email;
+      state.email = await validateToken(token, req.ip);
     } catch (error) {
       logger.error(error);
       return res.type('html').send(
@@ -107,6 +105,7 @@ router.post(
       );
 
       if (fieldErrors.length) {
+        state.email = await validateToken(token, req.ip);
         state.fieldErrors = fieldErrors;
         const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
           globalState: state,
