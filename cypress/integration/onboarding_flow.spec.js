@@ -266,6 +266,36 @@ describe('Onboarding flow', () => {
 
       // does not contain save and continue button
       cy.contains(Onboarding.CONTENT.SAVE_CONTINUE_BUTTON).should('not.exist');
+
+      // contains opted in consents
+      Object.values(Onboarding.CONSENT).forEach((consent) =>
+        cy.contains(consent),
+      );
+
+      // contains opted in newsletters
+      Object.values(Onboarding.NEWSLETTERS).forEach((newsletter) =>
+        cy.contains(newsletter),
+      );
+
+      // marketing research opted in
+      cy.contains(Onboarding.CONSENT_OPTOUT.RESEARCH)
+        .parent()
+        .siblings()
+        .children()
+        .contains('Yes');
+
+      // marketing analysis opted in
+      cy.contains(Onboarding.CONSENT_OPTOUT.ANALYSIS)
+        .parent()
+        .siblings()
+        .children()
+        .contains('Yes');
+
+      // return to guardian button
+      cy.contains(Onboarding.CONTENT.RETURN_GUARDIAN)
+        .should('exist')
+        .should('have.attr', 'href')
+        .and('include', decodeURIComponent(returnUrl));
     });
     // it(
     //   'goes through full flow, opt out all consents/newsletters, preserve returnUrl',
