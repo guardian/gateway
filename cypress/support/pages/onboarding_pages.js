@@ -8,7 +8,7 @@ class Onboarding {
   static CONTENT = {
     SAVE_CONTINUE_BUTTON: 'Save and continue',
     GO_BACK_BUTTON: 'Go back',
-    RETURN_GUARDIAN: 'Return to the The Guardian',
+    RETURN_GUARDIAN: 'Return to The Guardian',
     COMMUNICATION_PAGE: '/communication',
     NEWSLETTER_PAGE: '/newsletters',
     DATA_PAGE: '/data',
