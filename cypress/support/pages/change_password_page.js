@@ -5,6 +5,7 @@ class ChangePasswordPage {
       GENERIC: 'There was a problem changing your password, please try again.',
       PASSWORD_MISMATCH: 'The passwords do not match, please try again',
       PASSWORD_INVALID_LENGTH: 'Password must be between 8 and 72 characters',
+      CSRF: 'Sorry, something went wrong. If you made any changes these might have not been saved. Please refresh this page and try again.',
     },
     PASSWORD_CHANGE_SUCCESS_TITLE: 'Thank you! Your password has been changed.',
     CONTINUE_BUTTON_TEXT: 'Continue to The Guardian',

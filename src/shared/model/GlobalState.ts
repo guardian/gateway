@@ -20,5 +20,10 @@ export interface GlobalState {
   pageData?: PageData;
   signInPageUrl?: string;
   geolocation?: GeoLocation;
-  csrfToken?: string;
+  csrf?: CsrfState;
 }
+
+export type CsrfState = {
+  token?: string;
+  pageUrl?: string;
+};

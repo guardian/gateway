@@ -4,4 +4,5 @@ export interface QueryParams extends StringifiableRecord {
   returnUrl: string;
   clientId?: string;
   emailVerified?: boolean;
+  csrfError?: boolean;
 }

@@ -41,7 +41,7 @@ describe('Password change flow', () => {
       page.goto(fakeToken);
       cy.clearCookie('_csrf');
       page.submitPasswordChange('password', 'password');
-      cy.contains('csrf token error');
+      cy.contains(ChangePasswordPage.CONTENT.ERRORS.CSRF);
     });
   });
 

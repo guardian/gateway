@@ -38,3 +38,7 @@ export enum ConsentsErrors {
   USER = 'There was a problem retrieving your details, please try again.',
   ACCESS_DENIED = 'Access Denied',
 }
+
+export enum CsrfErrors {
+  CSRF_ERROR = 'Sorry, something went wrong. If you made any changes these might have not been saved. Please refresh this page and try again.',
+}
