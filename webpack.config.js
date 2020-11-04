@@ -99,6 +99,7 @@ const server = {
       "react": "preact/compat",
       "react-dom/test-utils": "preact/test-utils",
       "react-dom": "preact/compat",
+      "react-dom/server": "preact/compat",
     }
   },
   target: "node",
@@ -187,6 +188,7 @@ const client = {
       "react": "preact/compat",
       "react-dom/test-utils": "preact/test-utils",
       "react-dom": "preact/compat",
+      "react-dom/server": "preact/compat",
     }
   },
   target: "web",
