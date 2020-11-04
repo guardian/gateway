@@ -95,7 +95,10 @@ const server = {
   resolve: {
     extensions,
     alias: {
-      "@": path.join(__dirname, "src")
+      "@": path.join(__dirname, "src"),
+      "react": "preact/compat",
+      "react-dom/test-utils": "preact/test-utils",
+      "react-dom": "preact/compat",
     }
   },
   target: "node",
@@ -180,7 +183,10 @@ const client = {
   resolve: {
     extensions,
     alias: {
-      "@": path.join(__dirname, "src")
+      "@": path.join(__dirname, "src"),
+      "react": "preact/compat",
+      "react-dom/test-utils": "preact/test-utils",
+      "react-dom": "preact/compat",
     }
   },
   target: "web",
