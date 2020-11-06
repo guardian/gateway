@@ -9,6 +9,7 @@ const csrfErrorStyle = css`
   margin-bottom: ${space[4]}px;
   ${textSans.medium({ lineHeight: 'regular' })}
   color: ${error[400]};
+  text-align: center;
 `;
 
 export const CsrfFormField = () => {
