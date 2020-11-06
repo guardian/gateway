@@ -205,7 +205,7 @@ Resources:
             Environment=DEFAULT_RETURN_URI=${DefaultReturnUri}
             Environment=STAGE=${Stage}
             Environment=IS_HTTPS=true
-            APP_SECRET=${APP_SECRET}
+            Environment=APP_SECRET=$APP_SECRET
 
             [Install]
             WantedBy=multi-user.target
