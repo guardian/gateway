@@ -7,7 +7,7 @@ import { applyRoutes } from './routes';
 import { csrfMiddleware } from '@/server/lib/middleware/csrf';
 import { getConfiguration } from '@/server/lib/configuration';
 
-const appSecret = getConfiguration().appSecret;
+const { appSecret } = getConfiguration();
 
 export const applyMiddleware = (server: Express): void => {
   // apply helmet before anything else

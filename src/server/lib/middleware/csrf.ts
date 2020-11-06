@@ -3,7 +3,7 @@ import { NextFunction, Request } from 'express';
 import { ResponseWithLocals } from '@/server/models/Express';
 import { getConfiguration } from '@/server/lib/configuration';
 
-const isHttps = getConfiguration().isHttps;
+const { isHttps } = getConfiguration();
 
 const updateCsrfPageUrlMiddleware = (
   req: Request,

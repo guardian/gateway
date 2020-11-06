@@ -83,9 +83,9 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
           );
         }}
       >
-        <CsrfFormField />
         <main css={[mainBackground, ieFlexFix]}>
           <ConsentsContent>
+            <CsrfFormField />
             <ConsentsProgression current={current} />
             {children}
           </ConsentsContent>
