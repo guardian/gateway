@@ -41,7 +41,7 @@ const validatePasswordChangeFields = (
     });
   }
 
-  if (password && (password.length < 6 || password.length > 72)) {
+  if (password && (password.length < 8 || password.length > 72)) {
     errors.push({
       field: 'password',
       message: ChangePasswordErrors.PASSWORD_LENGTH,
@@ -50,7 +50,7 @@ const validatePasswordChangeFields = (
 
   if (
     passwordConfirm &&
-    (passwordConfirm.length < 6 || passwordConfirm.length > 72)
+    (passwordConfirm.length < 8 || passwordConfirm.length > 72)
   ) {
     errors.push({
       field: 'password_confirm',
