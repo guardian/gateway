@@ -87,7 +87,7 @@
     "cookie-parser": "^1.4.5",
     "emotion-theming": "^10.0.27",
     "express": "^4.17.1",
-    "helmet": "^4.1.1",
+    "helmet": "^4.2.0",
     "jsonwebtoken": "^8.5.1",
     "ms": "^2.1.2",
     "node-fetch": "^2.6.1",
