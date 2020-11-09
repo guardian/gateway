@@ -71,6 +71,15 @@ export const getConfiguration = (): Configuration => {
 
   const [domain, apiDomain] = guardianDomainFromStage(stage);
 
+  const isHttps: boolean = JSON.parse(
+    getOrThrow(process.env.IS_HTTPS, 'IS_HTTPS config missing.'),
+  );
+
+  const appSecret: string = getOrThrow(
+    process.env.APP_SECRET,
+    'APP_SECRET config missing.',
+  );
+
   return {
     port: +port,
     idapiBaseUrl,
@@ -86,5 +95,7 @@ export const getConfiguration = (): Configuration => {
     },
     domain,
     apiDomain,
+    isHttps,
+    appSecret,
   };
 };

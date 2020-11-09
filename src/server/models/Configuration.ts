@@ -13,6 +13,8 @@ export interface Configuration {
   };
   domain: string;
   apiDomain: string;
+  isHttps: boolean;
+  appSecret: string;
 }
 
 export enum GA_UID {

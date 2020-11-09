@@ -9,7 +9,7 @@ export const queryParamsMiddleware = (
 ) => {
   const { query } = req;
 
-  const parsedQueryParams = parseExpressQueryParams(query);
+  const parsedQueryParams = parseExpressQueryParams(req.method, query);
 
   res.locals.queryParams = parsedQueryParams;
 

@@ -12,6 +12,7 @@ import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
 import { form, textInput, button } from '@/client/styles/Shared';
 import { SignInLayout } from '@/client/layouts/SignInLayout';
+import { CsrfFormField } from '@/client/components/CsrfFormField';
 
 export const ChangePasswordPage = () => {
   const { search } = useLocation();
@@ -32,6 +33,8 @@ export const ChangePasswordPage = () => {
             method="post"
             action={`${Routes.CHANGE_PASSWORD}/${token}${search}`}
           >
+            <CsrfFormField />
+
             <TextInput
               css={textInput}
               label="New Password"

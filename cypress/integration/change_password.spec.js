@@ -35,6 +35,16 @@ describe('Password change flow', () => {
     });
   });
 
+  context('CSRF token error on submission', () => {
+    it('should fail on submission due to CSRF token failure if CSRF token cookie is not sent', () => {
+      cy.idapiMock(200);
+      page.goto(fakeToken);
+      cy.clearCookie('_csrf');
+      page.submitPasswordChange('password', 'password');
+      cy.contains(ChangePasswordPage.CONTENT.ERRORS.CSRF);
+    });
+  });
+
   context('Enter and Confirm passwords left blank', () => {
     it('uses the standard HTML5 empty field validation', () => {
       cy.idapiMock(200);
@@ -171,6 +181,7 @@ describe('Password change flow', () => {
     it('shows an error showing the password length must be within certain limits', () => {
       cy.idapiMock(200);
       page.goto(fakeToken);
+      cy.idapiMock(200);
       page.submitPasswordChange('p', 'p');
       cy.contains(ChangePasswordPage.CONTENT.ERRORS.PASSWORD_INVALID_LENGTH);
     });
@@ -181,6 +192,7 @@ describe('Password change flow', () => {
       const excessivelyLongPassword = Array.from(Array(73), () => 'a').join('');
       cy.idapiMock(200);
       page.goto(fakeToken);
+      cy.idapiMock(200);
       page.submitPasswordChange(
         excessivelyLongPassword,
         excessivelyLongPassword,

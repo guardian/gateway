@@ -10,6 +10,8 @@ import { RoutingConfig } from '@/client/routes';
 import { getAssets } from '@/server/lib/assets';
 import { Locals } from '@/server/models/Express';
 import { parseExpressQueryParams } from '@/server/lib/queryParams';
+import { FieldError } from '@/server/routes/changePassword';
+import { CsrfErrors } from '@/shared/model/Errors';
 
 const assets = getAssets();
 
@@ -28,8 +30,18 @@ interface RendererOpts {
 const { gaUID } = getConfiguration();
 
 const defaultLocals: Locals = {
-  queryParams: parseExpressQueryParams({}),
+  queryParams: parseExpressQueryParams('GET', {}),
   geolocation: 'ROW',
+  csrf: {},
+};
+
+const appendCsrfFieldError = (globalState: GlobalState) => {
+  const fieldErrors: Array<FieldError> = globalState.fieldErrors ?? [];
+  fieldErrors.push({
+    field: 'csrf',
+    message: CsrfErrors.CSRF_ERROR,
+  });
+  globalState.fieldErrors = fieldErrors;
 };
 
 export const renderer: (url: string, opts?: RendererOpts) => string = (
@@ -44,9 +56,11 @@ export const renderer: (url: string, opts?: RendererOpts) => string = (
 
   const context = {};
 
-  const { queryParams, geolocation } = locals;
+  const { queryParams, geolocation, csrf } = locals;
 
   globalState.geolocation = geolocation;
+  globalState.csrf = csrf;
+  if (queryParams.csrfError) appendCsrfFieldError(globalState);
 
   const queryString = qs.stringify(queryParams);
 
