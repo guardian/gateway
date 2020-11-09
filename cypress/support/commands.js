@@ -20,6 +20,27 @@ Cypress.Commands.add('idapiMock', (status, body) => {
   cy.request(getMockOptions(status, body));
 });
 
+Cypress.Commands.add('idapiPermaMock', (status, body, path) => {
+  const getMockOptions = (status, body = {}) => {
+    const payload = {
+      body,
+      path,
+      status,
+    };
+    return {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-status': status,
+      },
+      method: 'POST',
+      body: JSON.stringify(payload),
+      url: MOCKING_ENDPOINT + '/permanent',
+    };
+  };
+
+  cy.request(getMockOptions(status, body));
+});
+
 Cypress.Commands.add('idapiMockPurge', () => {
   cy.request(MOCKING_ENDPOINT + '/purge');
 });

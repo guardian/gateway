@@ -53,11 +53,12 @@ describe('Onboarding flow', () => {
       // TODO: can cypress set the automatically?
       setAuthCookies();
 
-      // set successful auth using login middleware (/consents)
-      cy.idapiMock(200, authRedirectSignInRecentlyEmailValidated);
-
-      // set successful auth using login middleware (/consents/communication)
-      cy.idapiMock(200, authRedirectSignInRecentlyEmailValidated);
+      // All auth requests to pass
+      cy.idapiPermaMock(
+        200,
+        authRedirectSignInRecentlyEmailValidated,
+        '/auth/redirect',
+      );
 
       // all newsletters mock response for first page of consents flow
       cy.idapiMock(200, allConsents);
@@ -109,15 +110,10 @@ describe('Onboarding flow', () => {
         .contains(Onboarding.CONTENT.GO_BACK_BUTTON)
         .should('not.exist');
 
-      // mock auth for post
-      // set successful auth using login middleware (/consents)
-      cy.idapiMock(200, authRedirectSignInRecentlyEmailValidated);
-
       // mock patch success
       cy.idapiMock(200);
 
       // mock load newsletters page
-      cy.idapiMock(200, authRedirectSignInRecentlyEmailValidated);
 
       // mock load all newsletters
       cy.idapiMock(200, allNewsletters);
@@ -164,10 +160,6 @@ describe('Onboarding flow', () => {
         // check not checked
         .should('be.checked');
 
-      // mock auth for post
-      // set successful auth using login middleware (/consents)
-      cy.idapiMock(200, authRedirectSignInRecentlyEmailValidated);
-
       // mock load all newsletters
       cy.idapiMock(200, allNewsletters);
 
@@ -178,8 +170,6 @@ describe('Onboarding flow', () => {
       cy.idapiMock(200);
 
       // mock load your data page
-      cy.idapiMock(200, authRedirectSignInRecentlyEmailValidated);
-
       // all consents mock response for your data page of consents flow
       cy.idapiMock(200, allConsents);
 
@@ -222,16 +212,10 @@ describe('Onboarding flow', () => {
       // check opt outs are not checked
       getOptoutCheckboxes().should('not.be.checked');
 
-      // mock auth for post
-      // set successful auth using login middleware (/consents)
-      cy.idapiMock(200, authRedirectSignInRecentlyEmailValidated);
-
       // mock patch success
       cy.idapiMock(200);
 
       // mock load review page
-      cy.idapiMock(200, authRedirectSignInRecentlyEmailValidated);
-
       // all consents mock response for review  of consents flow
       cy.idapiMock(200, allConsents);
 

@@ -12,6 +12,7 @@ const DEFAULT_RESPONSE = {
 const app = express();
 
 const responses = [];
+const permanent = [];
 
 app.use(bodyParser.json());
 
@@ -23,6 +24,7 @@ app.get('/healthcheck', (_, res) => {
 app.get('/mock/purge', (_, res) => {
   console.log('purging all mocks');
   responses.length = 0;
+  permanent.length = 0;
   res.sendStatus(204);
 });
 
@@ -34,8 +36,19 @@ app.post('/mock', (req, res) => {
   res.sendStatus(204);
 });
 
-app.use('*', (req, res) => {
+app.post('/mock/permanent', (req, res) => {
+  const { path, body: payload, status = 200 } = req.body;
+  permanent.push({ path, payload, status });
+  res.sendStatus(204);
+});
+
+app.all('*', (req, res) => {
   console.log(`Mocking: ${req.originalUrl}`);
+  const permanent_redirect = permanent.find((p) => p.path === req.path);
+  if (permanent_redirect) {
+    res.status(permanent_redirect.status).json(permanent_redirect.payload);
+    return;
+  }
   if (responses.length === 0) {
     res.status(DEFAULT_RESPONSE.status).json(DEFAULT_RESPONSE.body);
   } else {
