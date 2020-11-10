@@ -7,7 +7,6 @@ import {
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
-import { GlobalState } from '@/shared/model/GlobalState';
 import { consentPages } from '@/server/routes/consents';
 import { read as getUser } from '@/server/lib/idapi/user';
 import { ConsentsErrors, VerifyEmailErrors } from '@/shared/model/Errors';
@@ -28,11 +27,9 @@ const profileUrl = getProfileUrl();
 router.get(
   Routes.VERIFY_EMAIL,
   async (req: Request, res: ResponseWithLocals) => {
-    const state: GlobalState = {
-      signInPageUrl: `${signInPageUrl}?returnUrl=${encodeURIComponent(
-        `${profileUrl}${Routes.VERIFY_EMAIL}`,
-      )}`,
-    };
+    res.locals.signInPageUrl = `${signInPageUrl}?returnUrl=${encodeURIComponent(
+      `${profileUrl}${Routes.VERIFY_EMAIL}`,
+    )}`;
 
     let status = 200;
 
@@ -44,17 +41,16 @@ router.get(
       }
 
       const { primaryEmailAddress } = await getUser(req.ip, sc_gu_u);
-      state.email = primaryEmailAddress;
+      res.locals.email = primaryEmailAddress;
     } catch (error) {
       status = error.status;
 
       if (status === 500) {
-        state.error = error.message;
+        res.locals.error = error.message;
       }
     }
 
     const html = renderer(Routes.VERIFY_EMAIL, {
-      globalState: state,
       pageTitle: PageTitle.VERIFY_EMAIL,
       locals: res.locals,
     });
@@ -66,8 +62,6 @@ router.get(
 router.post(
   Routes.VERIFY_EMAIL,
   async (req: Request, res: ResponseWithLocals) => {
-    const state: GlobalState = {};
-
     let status = 200;
 
     try {
@@ -81,26 +75,25 @@ router.post(
         email = (await getUser(req.ip, sc_gu_u)).primaryEmailAddress,
       } = req.body;
 
-      state.email = email;
+      res.locals.email = email;
 
       await sendVerificationEmail(req.ip, sc_gu_u);
       trackMetric(Metrics.SEND_VALIDATION_EMAIL_SUCCESS);
 
-      state.success =
+      res.locals.success =
         'Email Sent. Please check your inbox and follow the link.';
 
       const emailProvider = getProviderForEmail(email);
       if (emailProvider) {
-        state.emailProvider = emailProvider.id;
+        res.locals.emailProvider = emailProvider.id;
       }
     } catch (error) {
       trackMetric(Metrics.SEND_VALIDATION_EMAIL_FAILURE);
       status = error.status;
-      state.error = error.message;
+      res.locals.error = error.message;
     }
 
     const html = renderer(Routes.VERIFY_EMAIL, {
-      globalState: state,
       pageTitle: PageTitle.VERIFY_EMAIL,
       locals: res.locals,
     });

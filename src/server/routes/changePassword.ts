@@ -2,7 +2,6 @@ import { Request, Router } from 'express';
 import { Routes } from '@/shared/model/Routes';
 import { renderer } from '@/server/lib/renderer';
 import { logger } from '@/server/lib/logger';
-import { GlobalState } from '@/shared/model/GlobalState';
 import {
   validate as validateToken,
   change as changePassword,
@@ -65,15 +64,13 @@ router.get(
   `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
   async (req: Request, res: ResponseWithLocals) => {
     const { token } = req.params;
-    const state: GlobalState = {};
 
     try {
-      state.email = await validateToken(token, req.ip);
+      res.locals.email = await validateToken(token, req.ip);
     } catch (error) {
       logger.error(error);
       return res.type('html').send(
         renderer(Routes.RESET_RESEND, {
-          globalState: state,
           locals: res.locals,
           pageTitle: PageTitle.RESET_RESEND,
         }),
@@ -81,7 +78,6 @@ router.get(
     }
 
     const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
-      globalState: state,
       locals: res.locals,
       pageTitle: PageTitle.CHANGE_PASSWORD,
     });
@@ -92,8 +88,6 @@ router.get(
 router.post(
   `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
   async (req: Request, res: ResponseWithLocals) => {
-    const state: GlobalState = {};
-
     const { token } = req.params;
 
     const { password, password_confirm: passwordConfirm } = req.body;
@@ -105,10 +99,9 @@ router.post(
       );
 
       if (fieldErrors.length) {
-        state.email = await validateToken(token, req.ip);
-        state.fieldErrors = fieldErrors;
+        res.locals.email = await validateToken(token, req.ip);
+        res.locals.fieldErrors = fieldErrors;
         const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
-          globalState: state,
           locals: res.locals,
           pageTitle: PageTitle.CHANGE_PASSWORD,
         });
@@ -128,9 +121,8 @@ router.post(
 
       trackMetric(Metrics.CHANGE_PASSWORD_FAILURE);
 
-      state.error = message;
+      res.locals.error = message;
       const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
-        globalState: state,
         locals: res.locals,
         pageTitle: PageTitle.CHANGE_PASSWORD,
       });
@@ -140,7 +132,6 @@ router.post(
     trackMetric(Metrics.CHANGE_PASSWORD_SUCCESS);
 
     const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
-      globalState: state,
       locals: res.locals,
       pageTitle: PageTitle.CHANGE_PASSWORD_COMPLETE,
     });

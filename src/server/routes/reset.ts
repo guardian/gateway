@@ -3,7 +3,6 @@ import { create as resetPassword } from '@/server/lib/idapi/resetPassword';
 import { getProviderForEmail } from '@/shared/lib/emailProvider';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
-import { GlobalState } from '@/shared/model/GlobalState';
 import { Routes } from '@/shared/model/Routes';
 import { getEmailFromPlaySessionCookie } from '@/server/lib/playSessionCookie';
 import { ResponseWithLocals } from '@/server/models/Express';
@@ -15,15 +14,12 @@ import { PageTitle } from '@/shared/model/PageTitle';
 const router = Router();
 
 router.get(Routes.RESET, (req: Request, res: ResponseWithLocals) => {
-  const state: GlobalState = {};
-
   const emailFromPlaySession = getEmailFromPlaySessionCookie(req);
   if (emailFromPlaySession) {
-    state.email = emailFromPlaySession;
+    res.locals.email = emailFromPlaySession;
   }
 
   const html = renderer(Routes.RESET, {
-    globalState: state,
     locals: res.locals,
     pageTitle: PageTitle.RESET,
   });
@@ -32,8 +28,6 @@ router.get(Routes.RESET, (req: Request, res: ResponseWithLocals) => {
 
 router.post(Routes.RESET, async (req: Request, res: ResponseWithLocals) => {
   const { email = '' } = req.body;
-
-  const state: GlobalState = {};
 
   const { returnUrl } = res.locals.queryParams;
 
@@ -45,10 +39,9 @@ router.post(Routes.RESET, async (req: Request, res: ResponseWithLocals) => {
 
     trackMetric(Metrics.SEND_PASSWORD_RESET_FAILURE);
 
-    state.error = message;
+    res.locals.error = message;
 
     const html = renderer(Routes.RESET, {
-      globalState: state,
       locals: res.locals,
       pageTitle: PageTitle.RESET,
     });
@@ -59,11 +52,10 @@ router.post(Routes.RESET, async (req: Request, res: ResponseWithLocals) => {
 
   const emailProvider = getProviderForEmail(email);
   if (emailProvider) {
-    state.emailProvider = emailProvider.id;
+    res.locals.emailProvider = emailProvider.id;
   }
 
   const html = renderer(Routes.RESET_SENT, {
-    globalState: state,
     locals: res.locals,
     pageTitle: PageTitle.RESET_SENT,
   });

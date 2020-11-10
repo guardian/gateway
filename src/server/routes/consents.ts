@@ -11,7 +11,7 @@ import {
 } from '@/server/lib/idapi/newsletters';
 import { read as getNewsletters } from '@/server/lib/idapi/newsletters';
 import { read as getUser } from '@/server/lib/idapi/user';
-import { GlobalState, PageData } from '@/shared/model/GlobalState';
+import { PageData } from '@/shared/model/GlobalState';
 import { NewsLetter, NewsletterPatch } from '@/shared/model/Newsletter';
 import {
   Consent,
@@ -261,10 +261,8 @@ router.get(
 
     const { emailVerified } = res.locals.queryParams;
 
-    const state: GlobalState = {};
-
     if (emailVerified) {
-      state.success = VERIFY_EMAIL.SUCCESS;
+      res.locals.success = VERIFY_EMAIL.SUCCESS;
     }
 
     const { page } = req.params;
@@ -281,15 +279,14 @@ router.get(
       const { read, pageTitle: _pageTitle } = consentPages[pageIndex];
       pageTitle = _pageTitle;
 
-      state.pageData = await read(req.ip, sc_gu_u, res.locals.geolocation);
-      state.pageData.returnUrl = res.locals?.queryParams?.returnUrl;
+      res.locals.pageData = await read(req.ip, sc_gu_u, res.locals.geolocation);
+      res.locals.pageData.returnUrl = res.locals?.queryParams?.returnUrl;
     } catch (e) {
       status = e.status;
-      state.error = e.message;
+      res.locals.error = e.message;
     }
 
     const html = renderer(`${Routes.CONSENTS}/${page}`, {
-      globalState: state,
       locals: res.locals,
       pageTitle,
     });
@@ -309,7 +306,6 @@ router.post(
   geolocationMiddleware,
   async (req: Request, res: ResponseWithLocals) => {
     const sc_gu_u = req.cookies.SC_GU_U;
-    const state: GlobalState = {};
 
     const { page } = req.params;
     let status = 200;
@@ -338,13 +334,12 @@ router.post(
       return res.redirect(303, url);
     } catch (e) {
       status = e.status;
-      state.error = e.message;
+      res.locals.error = e.message;
     }
 
     trackMetric(consentsPageMetric(page, 'Post', false));
 
     const html = renderer(`${Routes.CONSENTS}/${page}`, {
-      globalState: state,
       pageTitle,
       locals: res.locals,
     });

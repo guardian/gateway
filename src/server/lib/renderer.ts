@@ -22,7 +22,6 @@ const favicon =
     : 'favicon-32x32-dev-yellow.ico';
 
 interface RendererOpts {
-  globalState?: GlobalState;
   pageTitle?: string;
   locals?: Locals;
 }
@@ -48,18 +47,35 @@ export const renderer: (url: string, opts?: RendererOpts) => string = (
   url,
   opts = {},
 ) => {
-  const {
-    globalState = {},
-    locals = defaultLocals,
-    pageTitle = 'Gateway',
-  } = opts;
+  const { locals = defaultLocals, pageTitle = 'Gateway' } = opts;
 
   const context = {};
 
-  const { queryParams, geolocation, csrf } = locals;
+  const globalState: GlobalState = {};
+
+  const {
+    queryParams,
+    geolocation,
+    csrf,
+    error,
+    success,
+    emailProvider,
+    email,
+    fieldErrors,
+    pageData,
+    signInPageUrl,
+  } = locals;
 
   globalState.geolocation = geolocation;
   globalState.csrf = csrf;
+  globalState.error = error;
+  globalState.success = success;
+  globalState.emailProvider = emailProvider;
+  globalState.email = email;
+  globalState.fieldErrors = fieldErrors;
+  globalState.pageData = pageData;
+  globalState.signInPageUrl = signInPageUrl;
+
   if (queryParams.csrfError) appendCsrfFieldError(globalState);
 
   const queryString = qs.stringify(queryParams);
