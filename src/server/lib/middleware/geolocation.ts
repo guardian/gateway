@@ -26,7 +26,7 @@ export const geolocationMiddleware = (
       break;
   }
 
-  res.locals.geolocation = geolocation;
+  res.locals.pageData.geolocation = geolocation;
 
   next();
 };

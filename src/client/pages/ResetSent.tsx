@@ -13,7 +13,7 @@ import { SvgArrowRightStraight } from '@guardian/src-icons';
 
 export const ResetSentPage = () => {
   const globalState: GlobalState = useContext(GlobalStateContext);
-  const { emailProvider: emailProviderId } = globalState;
+  const { pageData: { emailProvider: emailProviderId } = {} } = globalState;
   const emailProvider = getProviderById(emailProviderId);
 
   return (

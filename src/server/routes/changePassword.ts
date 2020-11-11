@@ -66,7 +66,7 @@ router.get(
     const { token } = req.params;
 
     try {
-      res.locals.email = await validateToken(token, req.ip);
+      res.locals.pageData.email = await validateToken(token, req.ip);
     } catch (error) {
       logger.error(error);
       return res.type('html').send(
@@ -99,8 +99,8 @@ router.post(
       );
 
       if (fieldErrors.length) {
-        res.locals.email = await validateToken(token, req.ip);
-        res.locals.fieldErrors = fieldErrors;
+        res.locals.pageData.email = await validateToken(token, req.ip);
+        res.locals.pageData.fieldErrors = fieldErrors;
         const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
           locals: res.locals,
           pageTitle: PageTitle.CHANGE_PASSWORD,

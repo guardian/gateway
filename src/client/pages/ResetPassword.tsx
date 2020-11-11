@@ -8,7 +8,7 @@ import { SignInLayout } from '@/client/layouts/SignInLayout';
 export const ResetPasswordPage = () => {
   const { search } = useLocation();
   const globalState: GlobalState = useContext(GlobalStateContext);
-  const { email = '' } = globalState;
+  const { pageData: { email = '' } = {} } = globalState;
 
   return (
     <SignInLayout>

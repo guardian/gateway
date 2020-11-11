@@ -279,7 +279,11 @@ router.get(
       const { read, pageTitle: _pageTitle } = consentPages[pageIndex];
       pageTitle = _pageTitle;
 
-      res.locals.pageData = await read(req.ip, sc_gu_u, res.locals.geolocation);
+      res.locals.pageData = await read(
+        req.ip,
+        sc_gu_u,
+        res.locals.pageData.geolocation,
+      );
       res.locals.pageData.returnUrl = res.locals?.queryParams?.returnUrl;
     } catch (e) {
       status = e.status;
@@ -322,7 +326,12 @@ router.post(
       pageTitle = _pageTitle;
 
       if (update) {
-        await update(req.ip, sc_gu_u, req.body, res.locals.geolocation);
+        await update(
+          req.ip,
+          sc_gu_u,
+          req.body,
+          res.locals.pageData.geolocation,
+        );
       }
 
       trackMetric(consentsPageMetric(page, 'Post', true));

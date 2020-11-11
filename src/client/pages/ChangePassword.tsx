@@ -17,7 +17,7 @@ import { CsrfFormField } from '@/client/components/CsrfFormField';
 export const ChangePasswordPage = () => {
   const { search } = useLocation();
   const globalState: GlobalState = useContext(GlobalStateContext);
-  const { email = '', fieldErrors = [] } = globalState;
+  const { pageData: { email = '', fieldErrors = [] } = {} } = globalState;
   const { token } = useParams<{ token: string }>();
 
   return (

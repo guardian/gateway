@@ -101,10 +101,8 @@ const LoggedIn = ({
 
 export const ResendEmailVerificationPage = () => {
   const {
-    email,
-    signInPageUrl,
     globalMessage: { success } = {},
-    emailProvider: emailProviderId,
+    pageData: { email, signInPageUrl, emailProvider: emailProviderId } = {},
   } = useContext<GlobalState>(GlobalStateContext);
 
   const emailProvider = getProviderById(emailProviderId);

@@ -6,7 +6,7 @@ import { SignInLayout } from '@/client/layouts/SignInLayout';
 
 export const ResendPasswordPage = () => {
   const globalState: GlobalState = useContext(GlobalStateContext);
-  const { email = '' } = globalState;
+  const { pageData: { email = '' } = {} } = globalState;
 
   return (
     <SignInLayout>

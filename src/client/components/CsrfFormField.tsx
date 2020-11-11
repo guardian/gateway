@@ -14,7 +14,10 @@ const csrfErrorStyle = css`
 
 export const CsrfFormField = () => {
   const globalState: GlobalState = useContext(GlobalStateContext);
-  const csrfError = globalState.fieldErrors?.find(
+
+  const { pageData: { fieldErrors } = {} } = globalState;
+
+  const csrfError = fieldErrors?.find(
     (fieldError) => fieldError.field === 'csrf',
   )?.message;
 

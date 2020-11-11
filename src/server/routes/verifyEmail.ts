@@ -27,7 +27,7 @@ const profileUrl = getProfileUrl();
 router.get(
   Routes.VERIFY_EMAIL,
   async (req: Request, res: ResponseWithLocals) => {
-    res.locals.signInPageUrl = `${signInPageUrl}?returnUrl=${encodeURIComponent(
+    res.locals.pageData.signInPageUrl = `${signInPageUrl}?returnUrl=${encodeURIComponent(
       `${profileUrl}${Routes.VERIFY_EMAIL}`,
     )}`;
 
@@ -41,7 +41,7 @@ router.get(
       }
 
       const { primaryEmailAddress } = await getUser(req.ip, sc_gu_u);
-      res.locals.email = primaryEmailAddress;
+      res.locals.pageData.email = primaryEmailAddress;
     } catch (error) {
       status = error.status;
 
@@ -75,7 +75,7 @@ router.post(
         email = (await getUser(req.ip, sc_gu_u)).primaryEmailAddress,
       } = req.body;
 
-      res.locals.email = email;
+      res.locals.pageData.email = email;
 
       await sendVerificationEmail(req.ip, sc_gu_u);
       trackMetric(Metrics.SEND_VALIDATION_EMAIL_SUCCESS);
@@ -85,7 +85,7 @@ router.post(
 
       const emailProvider = getProviderForEmail(email);
       if (emailProvider) {
-        res.locals.emailProvider = emailProvider.id;
+        res.locals.pageData.emailProvider = emailProvider.id;
       }
     } catch (error) {
       trackMetric(Metrics.SEND_VALIDATION_EMAIL_FAILURE);

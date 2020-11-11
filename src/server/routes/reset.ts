@@ -16,7 +16,7 @@ const router = Router();
 router.get(Routes.RESET, (req: Request, res: ResponseWithLocals) => {
   const emailFromPlaySession = getEmailFromPlaySessionCookie(req);
   if (emailFromPlaySession) {
-    res.locals.email = emailFromPlaySession;
+    res.locals.pageData.email = emailFromPlaySession;
   }
 
   const html = renderer(Routes.RESET, {
@@ -52,7 +52,7 @@ router.post(Routes.RESET, async (req: Request, res: ResponseWithLocals) => {
 
   const emailProvider = getProviderForEmail(email);
   if (emailProvider) {
-    res.locals.emailProvider = emailProvider.id;
+    res.locals.pageData.emailProvider = emailProvider.id;
   }
 
   const html = renderer(Routes.RESET_SENT, {

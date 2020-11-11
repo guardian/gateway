@@ -9,21 +9,24 @@ export interface GlobalMessage {
 }
 
 export interface PageData {
+  // general page data
+  returnUrl?: string;
+  email?: string;
+  emailProvider?: string;
+  signInPageUrl?: string;
+  geolocation?: GeoLocation;
+  fieldErrors?: Array<FieldError>;
+
+  // onboarding specific
   newsletters?: NewsLetter[];
   consents?: Consent[];
   page?: string;
   previousPage?: string;
-  returnUrl?: string;
 }
 
 export interface GlobalState {
   globalMessage?: GlobalMessage;
-  emailProvider?: string;
-  email?: string;
-  fieldErrors?: Array<FieldError>;
   pageData?: PageData;
-  signInPageUrl?: string;
-  geolocation?: GeoLocation;
   csrf?: CsrfState;
 }
 

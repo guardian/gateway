@@ -8,7 +8,7 @@ import qs from 'query-string';
 import { getConfiguration } from '@/server/lib/configuration';
 import { RoutingConfig } from '@/client/routes';
 import { getAssets } from '@/server/lib/assets';
-import { Locals } from '@/server/models/Express';
+import { defaultLocals, Locals } from '@/server/models/Express';
 import { FieldError } from '@/server/routes/changePassword';
 import { CsrfErrors } from '@/shared/model/Errors';
 
@@ -29,36 +29,33 @@ const { gaUID } = getConfiguration();
 
 // function to map from req.locals, to the GlobalState used by the client
 const globalStateFromLocals = ({
-  geolocation,
   csrf,
   globalMessage,
-  emailProvider,
-  email,
-  fieldErrors,
   pageData,
-  signInPageUrl,
   queryParams,
-}: Locals): GlobalState => {
+} = defaultLocals): GlobalState => {
   const globalState: GlobalState = {
-    geolocation,
     csrf,
     globalMessage,
-    emailProvider,
-    email,
-    fieldErrors,
     pageData,
-    signInPageUrl,
   };
 
   // checking if csrf error exists in query params, and attaching it to the
   // forms field errors
   if (queryParams.csrfError) {
-    const fieldErrors: Array<FieldError> = globalState.fieldErrors ?? [];
+    // global state page data will already exist at this point
+    // this is just a check to get typescript to compile
+    if (!globalState.pageData) {
+      globalState.pageData = {};
+    }
+
+    const fieldErrors: Array<FieldError> =
+      globalState.pageData.fieldErrors ?? [];
     fieldErrors.push({
       field: 'csrf',
       message: CsrfErrors.CSRF_ERROR,
     });
-    globalState.fieldErrors = fieldErrors;
+    globalState.pageData.fieldErrors = fieldErrors;
   }
 
   return globalState;
