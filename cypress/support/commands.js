@@ -41,6 +41,12 @@ Cypress.Commands.add('idapiPermaMock', (status, body, path) => {
   cy.request(getMockOptions(status, body));
 });
 
+Cypress.Commands.add('idapiGetLastPayload', () => {
+  return cy
+    .request(MOCKING_ENDPOINT + '/payload')
+    .then((response) => response.body);
+});
+
 Cypress.Commands.add('idapiMockPurge', () => {
   cy.request(MOCKING_ENDPOINT + '/purge');
 });
