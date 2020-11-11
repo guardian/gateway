@@ -24,7 +24,7 @@ const main = css`
 
 export const SignInLayout: FunctionComponent = (props) => {
   const globalState: GlobalState = useContext(GlobalStateContext);
-  const { error, success } = globalState;
+  const { globalMessage: { error, success } = {} } = globalState;
 
   return (
     <>

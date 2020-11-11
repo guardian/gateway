@@ -126,7 +126,7 @@ const confirmationSpanDefinition: SpanDefinition = {
 export const ConsentsConfirmationPage = () => {
   const autoRow = getAutoRow(1, confirmationSpanDefinition);
   const globalState: GlobalState = useContext(GlobalStateContext);
-  const { error, pageData = {}, success } = globalState;
+  const { pageData = {}, globalMessage: { error, success } = {} } = globalState;
 
   const {
     consents = [],

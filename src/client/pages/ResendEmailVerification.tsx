@@ -103,7 +103,7 @@ export const ResendEmailVerificationPage = () => {
   const {
     email,
     signInPageUrl,
-    success,
+    globalMessage: { success } = {},
     emailProvider: emailProviderId,
   } = useContext<GlobalState>(GlobalStateContext);
 

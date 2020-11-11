@@ -57,7 +57,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
   current,
 }) => {
   const globalState: GlobalState = useContext(GlobalStateContext);
-  const { error, pageData = {}, success } = globalState;
+  const { pageData = {}, globalMessage: { error, success } = {} } = globalState;
   const { page = '', previousPage, returnUrl } = pageData;
   const returnUrlQuery = returnUrl
     ? `?returnUrl=${encodeURIComponent(returnUrl)}`

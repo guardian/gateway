@@ -3,6 +3,11 @@ import { Consent } from '@/shared/model/Consent';
 import { NewsLetter } from '@/shared/model/Newsletter';
 import { GeoLocation } from '@/shared/model/Geolocation';
 
+export interface GlobalMessage {
+  error?: string;
+  success?: string;
+}
+
 export interface PageData {
   newsletters?: NewsLetter[];
   consents?: Consent[];
@@ -12,8 +17,7 @@ export interface PageData {
 }
 
 export interface GlobalState {
-  error?: string;
-  success?: string;
+  globalMessage?: GlobalMessage;
   emailProvider?: string;
   email?: string;
   fieldErrors?: Array<FieldError>;
