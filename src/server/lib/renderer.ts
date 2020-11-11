@@ -21,7 +21,7 @@ const favicon =
     : 'favicon-32x32-dev-yellow.ico';
 
 interface RendererOpts {
-  pageTitle?: string;
+  pageTitle: string;
   locals: Locals;
 }
 
@@ -63,10 +63,8 @@ const globalStateFromLocals = ({
 
 export const renderer: (url: string, opts: RendererOpts) => string = (
   url,
-  opts,
+  { locals, pageTitle },
 ) => {
-  const { locals, pageTitle = 'Gateway' } = opts;
-
   const context = {};
 
   const globalState = globalStateFromLocals(locals);

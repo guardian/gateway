@@ -273,7 +273,7 @@ router.get(
       return res.redirect(404, `${Routes.CONSENTS}/${page}`);
     }
 
-    let pageTitle;
+    let pageTitle = 'Onboarding';
 
     try {
       const { read, pageTitle: _pageTitle } = consentPages[pageIndex];
@@ -319,7 +319,7 @@ router.post(
       return res.redirect(404, `${Routes.CONSENTS}/${page}`);
     }
 
-    let pageTitle;
+    let pageTitle = 'Onboarding';
 
     try {
       const { update, pageTitle: _pageTitle } = consentPages[pageIndex];
