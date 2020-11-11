@@ -121,7 +121,7 @@ router.post(
 
       trackMetric(Metrics.CHANGE_PASSWORD_FAILURE);
 
-      res.locals.error = message;
+      res.locals.globalMessage.error = message;
       const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
         locals: res.locals,
         pageTitle: PageTitle.CHANGE_PASSWORD,

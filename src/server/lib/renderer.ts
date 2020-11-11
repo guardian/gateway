@@ -31,8 +31,7 @@ const { gaUID } = getConfiguration();
 const globalStateFromLocals = ({
   geolocation,
   csrf,
-  error,
-  success,
+  globalMessage: { error, success },
   emailProvider,
   email,
   fieldErrors,

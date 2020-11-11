@@ -39,7 +39,7 @@ router.post(Routes.RESET, async (req: Request, res: ResponseWithLocals) => {
 
     trackMetric(Metrics.SEND_PASSWORD_RESET_FAILURE);
 
-    res.locals.error = message;
+    res.locals.globalMessage.error = message;
 
     const html = renderer(Routes.RESET, {
       locals: res.locals,

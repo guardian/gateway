@@ -262,7 +262,7 @@ router.get(
     const { emailVerified } = res.locals.queryParams;
 
     if (emailVerified) {
-      res.locals.success = VERIFY_EMAIL.SUCCESS;
+      res.locals.globalMessage.success = VERIFY_EMAIL.SUCCESS;
     }
 
     const { page } = req.params;
@@ -283,7 +283,7 @@ router.get(
       res.locals.pageData.returnUrl = res.locals?.queryParams?.returnUrl;
     } catch (e) {
       status = e.status;
-      res.locals.error = e.message;
+      res.locals.globalMessage.error = e.message;
     }
 
     const html = renderer(`${Routes.CONSENTS}/${page}`, {
@@ -334,7 +334,7 @@ router.post(
       return res.redirect(303, url);
     } catch (e) {
       status = e.status;
-      res.locals.error = e.message;
+      res.locals.globalMessage.error = e.message;
     }
 
     trackMetric(consentsPageMetric(page, 'Post', false));

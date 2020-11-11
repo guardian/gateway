@@ -6,8 +6,10 @@ import { FieldError } from '@/server/routes/changePassword';
 import { parseExpressQueryParams } from '@/server/lib/queryParams';
 
 export interface Locals {
-  error?: string;
-  success?: string;
+  globalMessage: {
+    error?: string;
+    success?: string;
+  };
   emailProvider?: string;
   email?: string;
   fieldErrors?: Array<FieldError>;
@@ -26,4 +28,5 @@ export const defaultLocals: Locals = {
   queryParams: parseExpressQueryParams('GET', {}),
   geolocation: 'ROW',
   csrf: {},
+  globalMessage: {},
 };

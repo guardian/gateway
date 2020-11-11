@@ -46,7 +46,7 @@ router.get(
       status = error.status;
 
       if (status === 500) {
-        res.locals.error = error.message;
+        res.locals.globalMessage.error = error.message;
       }
     }
 
@@ -80,7 +80,7 @@ router.post(
       await sendVerificationEmail(req.ip, sc_gu_u);
       trackMetric(Metrics.SEND_VALIDATION_EMAIL_SUCCESS);
 
-      res.locals.success =
+      res.locals.globalMessage.success =
         'Email Sent. Please check your inbox and follow the link.';
 
       const emailProvider = getProviderForEmail(email);
@@ -90,7 +90,7 @@ router.post(
     } catch (error) {
       trackMetric(Metrics.SEND_VALIDATION_EMAIL_FAILURE);
       status = error.status;
-      res.locals.error = error.message;
+      res.locals.globalMessage.error = error.message;
     }
 
     const html = renderer(Routes.VERIFY_EMAIL, {
