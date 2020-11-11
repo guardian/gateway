@@ -19,7 +19,7 @@ describe('parseExpressQueryParams', () => {
           'https://www.theguardian.com/games/2020/mar/16/animal-crossing-new-horizons-review-nintendo-switch',
       };
 
-      const output = parseExpressQueryParams(input);
+      const output = parseExpressQueryParams('GET', input);
 
       expect(output).toEqual(input);
     });
@@ -31,7 +31,7 @@ describe('parseExpressQueryParams', () => {
         returnUrl: defaultReturnUri,
       };
 
-      const output = parseExpressQueryParams(input);
+      const output = parseExpressQueryParams('GET', input);
 
       expect(output).toEqual(expected);
     });
@@ -43,7 +43,7 @@ describe('parseExpressQueryParams', () => {
         clientId: 'jobs',
       };
 
-      const output = parseExpressQueryParams(input);
+      const output = parseExpressQueryParams('GET', input);
 
       expect(output).toEqual({ ...input, returnUrl: defaultReturnUri });
     });
@@ -53,9 +53,29 @@ describe('parseExpressQueryParams', () => {
         clientId: 'invalidClientId',
       };
 
-      const output = parseExpressQueryParams(input);
+      const output = parseExpressQueryParams('GET', input);
 
       expect(output).toEqual({ returnUrl: defaultReturnUri });
+    });
+  });
+
+  describe('csrfError', () => {
+    test('it should set csrfError param if set for GETs', () => {
+      const input = {
+        csrfError: 'true',
+      };
+      const output = parseExpressQueryParams('GET', input);
+      expect(output.csrfError).toEqual(true);
+    });
+    test('it should not set csrfError param if not set for GETs', () => {
+      const input = {};
+      const output = parseExpressQueryParams('GET', input);
+      expect(output.csrfError).toEqual(undefined);
+    });
+    test('it should not set csrfError param if set for POSTs', () => {
+      const input = {};
+      const output = parseExpressQueryParams('POST', input);
+      expect(output.csrfError).toEqual(undefined);
     });
   });
 });

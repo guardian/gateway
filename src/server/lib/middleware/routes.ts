@@ -2,6 +2,7 @@ import { Express, Request, Response } from 'express';
 import { default as routes } from '@/server/routes';
 import { renderer } from '@/server/lib/renderer';
 import { PageTitle } from '@/shared/model/PageTitle';
+import { routeErrorHandler } from '@/server/lib/middleware/errorHandler';
 
 export const applyRoutes = (server: Express): void => {
   // all routes from routes folder
@@ -15,4 +16,6 @@ export const applyRoutes = (server: Express): void => {
     res.type('html');
     res.status(404).send(html);
   });
+
+  server.use(routeErrorHandler);
 };

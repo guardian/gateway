@@ -76,6 +76,7 @@ router.get(
   (_: Request, res: ResponseWithLocals) => {
     const html = renderer(Routes.RESET_SENT, {
       pageTitle: PageTitle.RESET_SENT,
+      locals: res.locals,
     });
     res.type('html').send(html);
   },

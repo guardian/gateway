@@ -14,19 +14,37 @@ const validateEmailVerified = (emailVerified?: string): boolean | undefined => {
   return false;
 };
 
-export const parseExpressQueryParams = ({
-  returnUrl,
-  clientId,
-  emailVerified,
-}: {
-  returnUrl?: string;
-  clientId?: string;
-  emailVerified?: string;
-}): QueryParams => {
+const validateCsrfError = (
+  method: string,
+  csrfError?: string,
+): boolean | undefined => {
+  // The csrfError parameter causes the CSRF error message to be rendered
+  // Only render CSRF error message for GET pages
+  // On POST CSRF error, we redirect to the GET URL of the form with the CSRF error parameter
+  if (method === 'GET' && csrfError === 'true') {
+    return true;
+  }
+};
+
+export const parseExpressQueryParams = (
+  method: string,
+  {
+    returnUrl,
+    clientId,
+    emailVerified,
+    csrfError,
+  }: {
+    returnUrl?: string;
+    clientId?: string;
+    emailVerified?: string;
+    csrfError?: string;
+  },
+): QueryParams => {
   return {
     returnUrl: validateReturnUrl(returnUrl),
     clientId: validateClientId(clientId),
     emailVerified: validateEmailVerified(emailVerified),
+    csrfError: validateCsrfError(method, csrfError),
   };
 };
 
