@@ -9,7 +9,6 @@ import { getConfiguration } from '@/server/lib/configuration';
 import { RoutingConfig } from '@/client/routes';
 import { getAssets } from '@/server/lib/assets';
 import { Locals } from '@/server/models/Express';
-import { parseExpressQueryParams } from '@/server/lib/queryParams';
 import { FieldError } from '@/server/routes/changePassword';
 import { CsrfErrors } from '@/shared/model/Errors';
 
@@ -23,38 +22,25 @@ const favicon =
 
 interface RendererOpts {
   pageTitle?: string;
-  locals?: Locals;
+  locals: Locals;
 }
 
 const { gaUID } = getConfiguration();
 
-const defaultLocals: Locals = {
-  queryParams: parseExpressQueryParams('GET', {}),
-  geolocation: 'ROW',
-  csrf: {},
-};
-
-const appendCsrfFieldError = (globalState: GlobalState) => {
-  const fieldErrors: Array<FieldError> = globalState.fieldErrors ?? [];
-  fieldErrors.push({
-    field: 'csrf',
-    message: CsrfErrors.CSRF_ERROR,
-  });
-  globalState.fieldErrors = fieldErrors;
-};
-
-export const renderer: (url: string, opts?: RendererOpts) => string = (
-  url,
-  opts = {},
-) => {
-  const { locals = defaultLocals, pageTitle = 'Gateway' } = opts;
-
-  const context = {};
-
-  const globalState: GlobalState = {};
-
-  const {
-    queryParams,
+// function to map from req.locals, to the GlobalState used by the client
+const globalStateFromLocals = ({
+  geolocation,
+  csrf,
+  error,
+  success,
+  emailProvider,
+  email,
+  fieldErrors,
+  pageData,
+  signInPageUrl,
+  queryParams,
+}: Locals): GlobalState => {
+  const globalState: GlobalState = {
     geolocation,
     csrf,
     error,
@@ -64,21 +50,33 @@ export const renderer: (url: string, opts?: RendererOpts) => string = (
     fieldErrors,
     pageData,
     signInPageUrl,
-  } = locals;
+  };
 
-  globalState.geolocation = geolocation;
-  globalState.csrf = csrf;
-  globalState.error = error;
-  globalState.success = success;
-  globalState.emailProvider = emailProvider;
-  globalState.email = email;
-  globalState.fieldErrors = fieldErrors;
-  globalState.pageData = pageData;
-  globalState.signInPageUrl = signInPageUrl;
+  // checking if csrf error exists in query params, and attaching it to the
+  // forms field errors
+  if (queryParams.csrfError) {
+    const fieldErrors: Array<FieldError> = globalState.fieldErrors ?? [];
+    fieldErrors.push({
+      field: 'csrf',
+      message: CsrfErrors.CSRF_ERROR,
+    });
+    globalState.fieldErrors = fieldErrors;
+  }
 
-  if (queryParams.csrfError) appendCsrfFieldError(globalState);
+  return globalState;
+};
 
-  const queryString = qs.stringify(queryParams);
+export const renderer: (url: string, opts: RendererOpts) => string = (
+  url,
+  opts,
+) => {
+  const { locals, pageTitle = 'Gateway' } = opts;
+
+  const context = {};
+
+  const globalState = globalStateFromLocals(locals);
+
+  const queryString = qs.stringify(locals.queryParams);
 
   const location = `${url}${queryString ? `?${queryString}` : ''}`;
 
