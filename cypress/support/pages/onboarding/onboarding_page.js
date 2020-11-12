@@ -10,6 +10,15 @@ class Onboarding {
     GO_BACK_BUTTON: 'Go back',
   };
 
+  getBackButton() {
+    return cy.contains(Onboarding.CONTENT.GO_BACK_BUTTON);
+  }
+
+  getSaveAndContinueButton() {
+    return cy.contains(Onboarding.CONTENT.SAVE_CONTINUE_BUTTON);
+  }
+
+  // static flow kick off function?
   goto({ failOnStatusCode = true, query = {}, path } = {}) {
     const querystring = qs.stringify(query);
 

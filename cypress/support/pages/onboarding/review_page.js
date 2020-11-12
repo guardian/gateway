@@ -1,4 +1,6 @@
-class ReviewPage {
+const OnboardingPage = require('./onboarding_page');
+
+class ReviewPage extends OnboardingPage {
   static URL = '/consents/review';
   static CONTENT = {
     NEWSLETTERS: {
@@ -20,6 +22,10 @@ class ReviewPage {
     },
     BUTTON_RETURN_GUARDIAN: 'Return to The Guardian',
   };
+
+  getReturnButton() {
+    return cy.contains(ReviewPage.CONTENT.BUTTON_RETURN_GUARDIAN);
+  }
 }
 
 module.exports = ReviewPage;

@@ -26,6 +26,7 @@ describe('Onboarding flow', () => {
   const communicationsPage = new CommunicationsPage();
   const newslettersPage = new NewslettersPage();
   const yourDataPage = new YourDataPage();
+  const reviewPage = new ReviewPage();
 
   beforeEach(() => {
     cy.idapiMockPurge();
@@ -80,30 +81,20 @@ describe('Onboarding flow', () => {
         },
       });
 
-      // check if we're on the consents flow, communication page
       cy.url().should('include', CommunicationsPage.URL);
-
-      // check return url exists
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
       communicationsPage.getCheckboxes().should('not.be.checked');
-
-      // get all opt in checkboxes
       communicationsPage
         .getOptinCheckboxes()
         // select parent (to avoid cypress element not visible error)
         .parent()
         .click({ multiple: true });
 
-      // does not contain go back link
-      cy.get('a')
-        .contains(Onboarding.CONTENT.GO_BACK_BUTTON)
-        .should('not.exist');
+      communicationsPage.getBackButton().should('not.exist');
 
       // mock patch success
       cy.idapiMock(200);
-
-      // mock load newsletters page
 
       // mock load all newsletters
       cy.idapiMock(200, allNewsletters);
@@ -112,10 +103,7 @@ describe('Onboarding flow', () => {
       cy.idapiMock(200, userNewsletters());
 
       // contains save and continue button
-      cy.get('button')
-        .contains(Onboarding.CONTENT.SAVE_CONTINUE_BUTTON)
-        // click to go to next page
-        .click();
+      communicationsPage.getSaveAndContinueButton().click();
 
       cy.idapiLastPayloadIs([
         { id: 'market_research_optout', consented: false },
@@ -126,17 +114,11 @@ describe('Onboarding flow', () => {
         { id: 'offers', consented: true },
       ]);
 
-      // click, multiple is true as we target multiple elements
-      // check if we're on the consents flow, newsletters page
       cy.url().should('include', NewslettersPage.URL);
-
-      // check return url exists
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
-      // contain go back link
-      cy.get('a')
-        .contains(Onboarding.CONTENT.GO_BACK_BUTTON)
-        .should('exist')
+      newslettersPage
+        .getBackButton()
         .should('have.attr', 'href')
         .and('include', CommunicationsPage.URL);
 
@@ -156,18 +138,13 @@ describe('Onboarding flow', () => {
       // mock patch success
       cy.idapiMock(200);
 
-      // mock load your data page
       // all consents mock response for your data page of consents flow
       cy.idapiMock(200, allConsents);
 
       // user consents mock response for your data page of consents flow
       cy.idapiMock(200, verifiedUserWithNoConsent);
 
-      // contains save and continue button
-      cy.get('button')
-        .contains(Onboarding.CONTENT.SAVE_CONTINUE_BUTTON)
-        // click to go to next page
-        .click();
+      newslettersPage.getSaveAndContinueButton().click();
 
       cy.idapiLastPayloadIs([
         { id: '4151', subscribed: true },
@@ -176,16 +153,12 @@ describe('Onboarding flow', () => {
         { id: '4137', subscribed: true },
       ]);
 
-      // check if we're on the consents flow, your data page
       cy.url().should('include', YourDataPage.URL);
-
-      // check return url exists
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
       // contain go back link
-      cy.get('a')
-        .contains(Onboarding.CONTENT.GO_BACK_BUTTON)
-        .should('exist')
+      yourDataPage
+        .getBackButton()
         .should('have.attr', 'href')
         .and('include', NewslettersPage.URL);
 
@@ -207,25 +180,13 @@ describe('Onboarding flow', () => {
       // mock load user newsletters
       cy.idapiMock(200, userNewsletters(newslettersToSubscribe));
 
-      // contains save and continue button
-      cy.get('button')
-        .contains(Onboarding.CONTENT.SAVE_CONTINUE_BUTTON)
-        // click to go to next page
-        .click();
+      yourDataPage.getSaveAndContinueButton().click();
 
-      // check if we're on the consents flow, review page
       cy.url().should('include', ReviewPage.URL);
-
-      // check return url exists
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
-      // does not contain go back link
-      cy.get('a')
-        .contains(Onboarding.CONTENT.GO_BACK_BUTTON)
-        .should('not.exist');
-
-      // does not contain save and continue button
-      cy.contains(Onboarding.CONTENT.SAVE_CONTINUE_BUTTON).should('not.exist');
+      reviewPage.getBackButton().should('not.exist');
+      reviewPage.getSaveAndContinueButton().should('not.exist');
 
       // contains opted in consents
       Object.values(ReviewPage.CONTENT.CONSENT).forEach((consent) =>

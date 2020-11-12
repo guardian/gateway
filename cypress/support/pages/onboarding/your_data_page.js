@@ -1,4 +1,6 @@
-class YourDataPage {
+const OnboardingPage = require('./onboarding_page');
+
+class YourDataPage extends OnboardingPage {
   static URL = '/consents/data';
 
   getCheckboxes() {
