@@ -56,15 +56,13 @@ describe('Onboarding flow', () => {
       // TODO: can cypress set the automatically?
       setAuthCookies();
 
-      // All auth requests to pass
       cy.idapiPermaMock(
         200,
         authRedirectSignInRecentlyEmailValidated,
         '/auth/redirect',
       );
-
-      // all newsletters mock response for first page of consents flow
-      cy.idapiMock(200, allConsents);
+      cy.idapiPermaMock(200, allConsents, '/consents');
+      cy.idapiPermaMock(200, allNewsletters, '/newsletters');
 
       // user newsletters mock response for first page of consents flow
       cy.idapiMock(200, verifiedUserWithNoConsent);
@@ -96,13 +94,9 @@ describe('Onboarding flow', () => {
       // mock patch success
       cy.idapiMock(200);
 
-      // mock load all newsletters
-      cy.idapiMock(200, allNewsletters);
-
       // mock load user newsletters
       cy.idapiMock(200, userNewsletters());
 
-      // contains save and continue button
       communicationsPage.getSaveAndContinueButton().click();
 
       cy.idapiLastPayloadIs([
@@ -129,17 +123,11 @@ describe('Onboarding flow', () => {
         .parent()
         .click({ multiple: true });
 
-      // mock load all newsletters
-      cy.idapiMock(200, allNewsletters);
-
       // mock load user newsletters
       cy.idapiMock(200, userNewsletters());
 
       // mock patch success
       cy.idapiMock(200);
-
-      // all consents mock response for your data page of consents flow
-      cy.idapiMock(200, allConsents);
 
       // user consents mock response for your data page of consents flow
       cy.idapiMock(200, verifiedUserWithNoConsent);
@@ -156,7 +144,6 @@ describe('Onboarding flow', () => {
       cy.url().should('include', YourDataPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
-      // contain go back link
       yourDataPage
         .getBackButton()
         .should('have.attr', 'href')
@@ -168,14 +155,9 @@ describe('Onboarding flow', () => {
       cy.idapiMock(200);
 
       // mock load review page
-      // all consents mock response for review  of consents flow
-      cy.idapiMock(200, allConsents);
 
       // user consents mock response for review of consents flow
       cy.idapiMock(200, createUser(consent));
-
-      // mock load all newsletters
-      cy.idapiMock(200, allNewsletters);
 
       // mock load user newsletters
       cy.idapiMock(200, userNewsletters(newslettersToSubscribe));
