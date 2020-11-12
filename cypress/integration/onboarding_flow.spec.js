@@ -23,10 +23,6 @@ const {
 
 describe('Onboarding flow', () => {
   const onboardingFlow = new Onboarding();
-  const communicationsPage = new CommunicationsPage();
-  const newslettersPage = new NewslettersPage();
-  const yourDataPage = new YourDataPage();
-  const reviewPage = new ReviewPage();
 
   beforeEach(() => {
     cy.idapiMockPurge();
@@ -82,14 +78,13 @@ describe('Onboarding flow', () => {
       cy.url().should('include', CommunicationsPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
-      communicationsPage.getCheckboxes().should('not.be.checked');
-      communicationsPage
-        .getOptinCheckboxes()
+      CommunicationsPage.getCheckboxes().should('not.be.checked');
+      CommunicationsPage.getOptinCheckboxes()
         // select parent (to avoid cypress element not visible error)
         .parent()
         .click({ multiple: true });
 
-      communicationsPage.getBackButton().should('not.exist');
+      CommunicationsPage.getBackButton().should('not.exist');
 
       // mock patch success
       cy.idapiMock(200);
@@ -97,7 +92,7 @@ describe('Onboarding flow', () => {
       // mock load user newsletters
       cy.idapiMock(200, userNewsletters());
 
-      communicationsPage.getSaveAndContinueButton().click();
+      CommunicationsPage.getSaveAndContinueButton().click();
 
       cy.idapiLastPayloadIs([
         { id: 'market_research_optout', consented: false },
@@ -111,13 +106,11 @@ describe('Onboarding flow', () => {
       cy.url().should('include', NewslettersPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
-      newslettersPage
-        .getBackButton()
+      NewslettersPage.getBackButton()
         .should('have.attr', 'href')
         .and('include', CommunicationsPage.URL);
 
-      newslettersPage
-        .getCheckboxes()
+      NewslettersPage.getCheckboxes()
         .should('not.be.checked')
         // select parent (to avoid cypress element not visible error)
         .parent()
@@ -132,7 +125,7 @@ describe('Onboarding flow', () => {
       // user consents mock response for your data page of consents flow
       cy.idapiMock(200, verifiedUserWithNoConsent);
 
-      newslettersPage.getSaveAndContinueButton().click();
+      NewslettersPage.getSaveAndContinueButton().click();
 
       cy.idapiLastPayloadIs([
         { id: '4151', subscribed: true },
@@ -144,12 +137,11 @@ describe('Onboarding flow', () => {
       cy.url().should('include', YourDataPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
-      yourDataPage
-        .getBackButton()
+      YourDataPage.getBackButton()
         .should('have.attr', 'href')
         .and('include', NewslettersPage.URL);
 
-      yourDataPage.getCheckboxes().should('not.be.checked');
+      YourDataPage.getCheckboxes().should('not.be.checked');
 
       // mock patch success
       cy.idapiMock(200);
@@ -162,13 +154,13 @@ describe('Onboarding flow', () => {
       // mock load user newsletters
       cy.idapiMock(200, userNewsletters(newslettersToSubscribe));
 
-      yourDataPage.getSaveAndContinueButton().click();
+      YourDataPage.getSaveAndContinueButton().click();
 
       cy.url().should('include', ReviewPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
-      reviewPage.getBackButton().should('not.exist');
-      reviewPage.getSaveAndContinueButton().should('not.exist');
+      ReviewPage.getBackButton().should('not.exist');
+      ReviewPage.getSaveAndContinueButton().should('not.exist');
 
       // contains opted in consents
       Object.values(ReviewPage.CONTENT.CONSENT).forEach((consent) =>
@@ -195,8 +187,7 @@ describe('Onboarding flow', () => {
         .contains('Yes');
 
       // return to guardian button
-      cy.contains(ReviewPage.CONTENT.BUTTON_RETURN_GUARDIAN)
-        .should('exist')
+      ReviewPage.getReturnButton()
         .should('have.attr', 'href')
         .and('include', decodeURIComponent(returnUrl));
     });

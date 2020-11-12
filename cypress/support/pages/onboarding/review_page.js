@@ -23,7 +23,7 @@ class ReviewPage extends OnboardingPage {
     BUTTON_RETURN_GUARDIAN: 'Return to The Guardian',
   };
 
-  getReturnButton() {
+  static getReturnButton() {
     return cy.contains(ReviewPage.CONTENT.BUTTON_RETURN_GUARDIAN);
   }
 }

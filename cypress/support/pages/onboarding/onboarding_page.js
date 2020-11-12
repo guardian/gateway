@@ -10,12 +10,20 @@ class Onboarding {
     GO_BACK_BUTTON: 'Go back',
   };
 
-  getBackButton() {
+  static getBackButton() {
     return cy.contains(Onboarding.CONTENT.GO_BACK_BUTTON);
   }
 
-  getSaveAndContinueButton() {
+  static getSaveAndContinueButton() {
     return cy.contains(Onboarding.CONTENT.SAVE_CONTINUE_BUTTON);
+  }
+
+  static getCheckboxes() {
+    return cy.get('[type="checkbox"]');
+  }
+
+  static getOptinCheckboxes() {
+    return this.getCheckboxes().not('[name*="_optout"]');
   }
 
   // static flow kick off function?
