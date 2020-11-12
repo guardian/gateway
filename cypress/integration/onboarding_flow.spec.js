@@ -119,17 +119,14 @@ describe('Onboarding flow', () => {
         // click to go to next page
         .click();
 
-      // @TODO: Helper function to just do the assertion
-      cy.idapiGetLastPayload().then((payload) => {
-        expect(payload).to.deep.equal([
-          { id: 'market_research_optout', consented: false },
-          { id: 'supporter', consented: true },
-          { id: 'jobs', consented: true },
-          { id: 'holidays', consented: true },
-          { id: 'events', consented: true },
-          { id: 'offers', consented: true },
-        ]);
-      });
+      cy.idapiLastPayloadIs([
+        { id: 'market_research_optout', consented: false },
+        { id: 'supporter', consented: true },
+        { id: 'jobs', consented: true },
+        { id: 'holidays', consented: true },
+        { id: 'events', consented: true },
+        { id: 'offers', consented: true },
+      ]);
 
       // click, multiple is true as we target multiple elements
       // check if we're on the consents flow, newsletters page
@@ -180,14 +177,12 @@ describe('Onboarding flow', () => {
         // click to go to next page
         .click();
 
-      cy.idapiGetLastPayload().then((payload) => {
-        expect(payload).to.deep.equal([
-          { id: '4151', subscribed: true },
-          { id: '4165', subscribed: true },
-          { id: '4147', subscribed: true },
-          { id: '4137', subscribed: true },
-        ]);
-      });
+      cy.idapiLastPayloadIs([
+        { id: '4151', subscribed: true },
+        { id: '4165', subscribed: true },
+        { id: '4147', subscribed: true },
+        { id: '4137', subscribed: true },
+      ]);
 
       // check if we're on the consents flow, your data page
       cy.url().should(
