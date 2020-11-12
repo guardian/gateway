@@ -10,7 +10,7 @@ const {
   createUser,
 } = require('../support/idapi/user');
 const { setAuthCookies } = require('../support/idapi/cookie');
-const Onboarding = require('../support/pages/onboarding_pages');
+const Onboarding = require('../support/pages/onboarding/onboarding_page');
 const CommunicationsPage = require('../support/pages/onboarding/communications_page.js');
 const NewslettersPage = require('../support/pages/onboarding/newsletters_page');
 const YourDataPage = require('../support/pages/onboarding/your_data_page');
