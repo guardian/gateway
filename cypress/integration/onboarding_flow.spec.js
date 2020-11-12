@@ -11,6 +11,9 @@ const {
 } = require('../support/idapi/user');
 const { setAuthCookies } = require('../support/idapi/cookie');
 const Onboarding = require('../support/pages/onboarding_pages');
+const CommunicationsPage = require('../support/pages/onboarding/communications_page.js');
+const NewslettersPage = require('../support/pages/onboarding/newsletters_page');
+
 const {
   allNewsletters,
   userNewsletters,
@@ -18,6 +21,8 @@ const {
 
 describe('Onboarding flow', () => {
   const onboardingFlow = new Onboarding();
+  const communicationsPage = new CommunicationsPage();
+  const newslettersPage = new NewslettersPage();
 
   beforeEach(() => {
     cy.idapiMockPurge();
@@ -79,31 +84,18 @@ describe('Onboarding flow', () => {
       });
 
       // check if we're on the consents flow, communication page
-      cy.url().should(
-        'include',
-        `${Onboarding.URL}${Onboarding.CONTENT.COMMUNICATION_PAGE}`,
-      );
+      cy.url().should('include', CommunicationsPage.URL);
 
       // check return url exists
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
-      // get all checkboxes
-      getCheckboxes()
-        // check not checked
-        .should('not.be.checked');
+      communicationsPage.getCheckboxes().should('not.be.checked');
 
       // get all opt in checkboxes
       getOptinCheckboxes()
         // select parent (to avoid cypress element not visible error)
         .parent()
-        // click, multiple is true as we target multiple elements
         .click({ multiple: true });
-
-      // check opt ins are checked
-      getOptinCheckboxes().should('be.checked');
-
-      // check opt outs are not checked
-      getOptoutCheckboxes().should('not.be.checked');
 
       // does not contain go back link
       cy.get('a')
@@ -127,11 +119,21 @@ describe('Onboarding flow', () => {
         // click to go to next page
         .click();
 
+      // @TODO: Helper function to just do the assertion
+      cy.idapiGetLastPayload().then((payload) => {
+        expect(payload).to.deep.equal([
+          { id: 'market_research_optout', consented: false },
+          { id: 'supporter', consented: true },
+          { id: 'jobs', consented: true },
+          { id: 'holidays', consented: true },
+          { id: 'events', consented: true },
+          { id: 'offers', consented: true },
+        ]);
+      });
+
+      // click, multiple is true as we target multiple elements
       // check if we're on the consents flow, newsletters page
-      cy.url().should(
-        'include',
-        `${Onboarding.URL}${Onboarding.CONTENT.NEWSLETTER_PAGE}`,
-      );
+      cy.url().should('include', NewslettersPage.URL);
 
       // check return url exists
       cy.url().should('include', `returnUrl=${returnUrl}`);
@@ -147,18 +149,14 @@ describe('Onboarding flow', () => {
         );
 
       // get all checkboxes
-      getCheckboxes()
+      newslettersPage
+        .getCheckboxes()
         // check not checked
         .should('not.be.checked')
         // select parent (to avoid cypress element not visible error)
         .parent()
         // click, multiple is true as we target multiple elements
         .click({ multiple: true });
-
-      // get all checkboxes
-      getCheckboxes()
-        // check not checked
-        .should('be.checked');
 
       // mock load all newsletters
       cy.idapiMock(200, allNewsletters);
@@ -181,6 +179,15 @@ describe('Onboarding flow', () => {
         .contains(Onboarding.CONTENT.SAVE_CONTINUE_BUTTON)
         // click to go to next page
         .click();
+
+      cy.idapiGetLastPayload().then((payload) => {
+        expect(payload).to.deep.equal([
+          { id: '4151', subscribed: true },
+          { id: '4165', subscribed: true },
+          { id: '4147', subscribed: true },
+          { id: '4137', subscribed: true },
+        ]);
+      });
 
       // check if we're on the consents flow, your data page
       cy.url().should(
