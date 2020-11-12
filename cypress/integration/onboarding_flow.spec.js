@@ -10,7 +10,6 @@ const {
   createUser,
 } = require('../support/idapi/user');
 const { setAuthCookies } = require('../support/idapi/cookie');
-const Onboarding = require('../support/pages/onboarding/onboarding_page');
 const CommunicationsPage = require('../support/pages/onboarding/communications_page.js');
 const NewslettersPage = require('../support/pages/onboarding/newsletters_page');
 const YourDataPage = require('../support/pages/onboarding/your_data_page');
@@ -22,13 +21,22 @@ const {
 } = require('../support/idapi/newsletter');
 
 describe('Onboarding flow', () => {
-  const onboardingFlow = new Onboarding();
-
   beforeEach(() => {
     cy.idapiMockPurge();
   });
 
   context('Full flow', () => {
+    beforeEach(() => {
+      setAuthCookies();
+      cy.idapiPermaMock(
+        200,
+        authRedirectSignInRecentlyEmailValidated,
+        '/auth/redirect',
+      );
+      cy.idapiPermaMock(200, allConsents, '/consents');
+      cy.idapiPermaMock(200, allNewsletters, '/newsletters');
+    });
+
     it('goes through full flow, opt in all consents/newsletters, preserve returnUrl', () => {
       const newslettersToSubscribe = [
         { listId: 4151 },
@@ -48,28 +56,14 @@ describe('Onboarding flow', () => {
         };
       });
 
-      // set these cookies manually
-      // TODO: can cypress set the automatically?
-      setAuthCookies();
-
-      cy.idapiPermaMock(
-        200,
-        authRedirectSignInRecentlyEmailValidated,
-        '/auth/redirect',
-      );
-      cy.idapiPermaMock(200, allConsents, '/consents');
-      cy.idapiPermaMock(200, allNewsletters, '/newsletters');
-
       // user newsletters mock response for first page of consents flow
       cy.idapiMock(200, verifiedUserWithNoConsent);
 
-      // setup returnurl
       const returnUrl = encodeURIComponent(
         `https://www.theguardian.com/science/grrlscientist/2012/aug/07/3`,
       );
 
-      // go to onboarding flow
-      onboardingFlow.goto({
+      CommunicationsPage.gotoFlowStart({
         query: {
           returnUrl,
         },
@@ -145,8 +139,6 @@ describe('Onboarding flow', () => {
 
       // mock patch success
       cy.idapiMock(200);
-
-      // mock load review page
 
       // user consents mock response for review of consents flow
       cy.idapiMock(200, createUser(consent));

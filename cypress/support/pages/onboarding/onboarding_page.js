@@ -19,15 +19,16 @@ class Onboarding {
   }
 
   static getCheckboxes() {
+    // @TODO: This is generic selector based approach, make a page specific user based approach, e.g. use contains
     return cy.get('[type="checkbox"]');
   }
 
   static getOptinCheckboxes() {
+    // @TODO: This is generic selector based approach, make a page specific user based approach, e.g. use contains
     return this.getCheckboxes().not('[name*="_optout"]');
   }
 
-  // static flow kick off function?
-  goto({ failOnStatusCode = true, query = {}, path } = {}) {
+  static gotoFlowStart({ failOnStatusCode = true, query = {}, path } = {}) {
     const querystring = qs.stringify(query);
 
     cy.visit(
