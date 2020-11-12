@@ -11,6 +11,8 @@ import { getAssets } from '@/server/lib/assets';
 import { defaultLocals, Locals } from '@/server/models/Express';
 import { FieldError } from '@/server/routes/changePassword';
 import { CsrfErrors } from '@/shared/model/Errors';
+import { ABProvider } from '@guardian/ab-react';
+import { tests } from '@/client/static/hydration';
 
 const assets = getAssets();
 
@@ -75,14 +77,25 @@ export const renderer: (url: string, opts: RendererOpts) => string = (
 
   // Any changes made here must also be made to the hydration in the static webpack bundle
   const react = ReactDOMServer.renderToString(
-    React.createElement(
-      StaticRouter,
-      {
-        location,
-        context,
+    // TODO: THIS IS JUST FOR TESTING
+    // eslint-disable-next-line react/no-children-prop
+    React.createElement(ABProvider, {
+      arrayOfTestObjects: tests,
+      abTestSwitches: {
+        ...{ abAbTestTest: true },
       },
-      React.createElement(Main, globalState),
-    ),
+      pageIsSensitive: false,
+      mvtMaxValue: 1000000,
+      mvtId: 1,
+      children: React.createElement(
+        StaticRouter,
+        {
+          location,
+          context,
+        },
+        React.createElement(Main, globalState),
+      ),
+    }),
   );
 
   const routingConfig: RoutingConfig = {
