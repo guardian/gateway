@@ -13,6 +13,8 @@ const { setAuthCookies } = require('../support/idapi/cookie');
 const Onboarding = require('../support/pages/onboarding_pages');
 const CommunicationsPage = require('../support/pages/onboarding/communications_page.js');
 const NewslettersPage = require('../support/pages/onboarding/newsletters_page');
+const YourDataPage = require('../support/pages/onboarding/your_data_page');
+const ReviewPage = require('../support/pages/onboarding/review_page');
 
 const {
   allNewsletters,
@@ -23,6 +25,7 @@ describe('Onboarding flow', () => {
   const onboardingFlow = new Onboarding();
   const communicationsPage = new CommunicationsPage();
   const newslettersPage = new NewslettersPage();
+  const yourDataPage = new YourDataPage();
 
   beforeEach(() => {
     cy.idapiMockPurge();
@@ -145,14 +148,11 @@ describe('Onboarding flow', () => {
           `${Onboarding.URL}${Onboarding.CONTENT.COMMUNICATION_PAGE}`,
         );
 
-      // get all checkboxes
       newslettersPage
         .getCheckboxes()
-        // check not checked
         .should('not.be.checked')
         // select parent (to avoid cypress element not visible error)
         .parent()
-        // click, multiple is true as we target multiple elements
         .click({ multiple: true });
 
       // mock load all newsletters
@@ -185,10 +185,7 @@ describe('Onboarding flow', () => {
       ]);
 
       // check if we're on the consents flow, your data page
-      cy.url().should(
-        'include',
-        `${Onboarding.URL}${Onboarding.CONTENT.DATA_PAGE}`,
-      );
+      cy.url().should('include', YourDataPage.URL);
 
       // check return url exists
       cy.url().should('include', `returnUrl=${returnUrl}`);
@@ -203,16 +200,7 @@ describe('Onboarding flow', () => {
           `${Onboarding.URL}${Onboarding.CONTENT.NEWSLETTER_PAGE}`,
         );
 
-      // get all checkboxes
-      getCheckboxes()
-        // check not checked
-        .should('not.be.checked');
-
-      // no opt ins on this page
-      getOptinCheckboxes().should('not.exist');
-
-      // check opt outs are not checked
-      getOptoutCheckboxes().should('not.be.checked');
+      yourDataPage.getCheckboxes().should('not.be.checked');
 
       // mock patch success
       cy.idapiMock(200);
@@ -237,10 +225,7 @@ describe('Onboarding flow', () => {
         .click();
 
       // check if we're on the consents flow, review page
-      cy.url().should(
-        'include',
-        `${Onboarding.URL}${Onboarding.CONTENT.REVIEW_PAGE}`,
-      );
+      cy.url().should('include', ReviewPage.URL);
 
       // check return url exists
       cy.url().should('include', `returnUrl=${returnUrl}`);
@@ -254,24 +239,24 @@ describe('Onboarding flow', () => {
       cy.contains(Onboarding.CONTENT.SAVE_CONTINUE_BUTTON).should('not.exist');
 
       // contains opted in consents
-      Object.values(Onboarding.CONSENT).forEach((consent) =>
+      Object.values(ReviewPage.CONTENT.CONSENT).forEach((consent) =>
         cy.contains(consent),
       );
 
       // contains opted in newsletters
-      Object.values(Onboarding.NEWSLETTERS).forEach((newsletter) =>
+      Object.values(ReviewPage.CONTENT.NEWSLETTERS).forEach((newsletter) =>
         cy.contains(newsletter),
       );
 
       // marketing research opted in
-      cy.contains(Onboarding.CONSENT_OPTOUT.RESEARCH)
+      cy.contains(ReviewPage.CONTENT.CONSENT_OPTOUT.RESEARCH)
         .parent()
         .siblings()
         .children()
         .contains('Yes');
 
       // marketing analysis opted in
-      cy.contains(Onboarding.CONSENT_OPTOUT.ANALYSIS)
+      cy.contains(ReviewPage.CONTENT.CONSENT_OPTOUT.ANALYSIS)
         .parent()
         .siblings()
         .children()
