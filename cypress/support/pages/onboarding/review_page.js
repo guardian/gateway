@@ -26,6 +26,22 @@ class ReviewPage extends OnboardingPage {
   static getReturnButton() {
     return cy.contains(ReviewPage.CONTENT.BUTTON_RETURN_GUARDIAN);
   }
+
+  static getMarketingResearchChoice() {
+    return cy
+      .contains(ReviewPage.CONTENT.CONSENT_OPTOUT.RESEARCH)
+      .parent()
+      .siblings()
+      .children();
+  }
+
+  static getMarketingAnalysisChoice() {
+    return cy
+      .contains(ReviewPage.CONTENT.CONSENT_OPTOUT.ANALYSIS)
+      .parent()
+      .siblings()
+      .children();
+  }
 }
 
 module.exports = ReviewPage;

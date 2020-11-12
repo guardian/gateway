@@ -172,21 +172,9 @@ describe('Onboarding flow', () => {
         cy.contains(newsletter),
       );
 
-      // marketing research opted in
-      cy.contains(ReviewPage.CONTENT.CONSENT_OPTOUT.RESEARCH)
-        .parent()
-        .siblings()
-        .children()
-        .contains('Yes');
+      ReviewPage.getMarketingResearchChoice().contains('Yes');
+      ReviewPage.getMarketingAnalysisChoice().contains('Yes');
 
-      // marketing analysis opted in
-      cy.contains(ReviewPage.CONTENT.CONSENT_OPTOUT.ANALYSIS)
-        .parent()
-        .siblings()
-        .children()
-        .contains('Yes');
-
-      // return to guardian button
       ReviewPage.getReturnButton()
         .should('have.attr', 'href')
         .and('include', decodeURIComponent(returnUrl));
