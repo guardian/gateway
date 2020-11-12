@@ -14,7 +14,7 @@ const DEFAULT_RESPONSE = {
 const app = express();
 
 const responses = [];
-const permanent = [];
+const permanent = new Map();
 
 let payload = {};
 
@@ -45,7 +45,7 @@ app.post('/mock', (req, res) => {
 // Always mock supplied endpoint
 app.post('/mock/permanent', (req, res) => {
   const { path, body: payload, status = 200 } = req.body;
-  permanent.push({ path, payload, status });
+  permanent.set(path, { payload, status });
   res.sendStatus(204);
 });
 
@@ -60,10 +60,10 @@ app.all('*', (req, res) => {
   if (method === 'POST' || method === 'PATCH') {
     payload = req.body;
   }
-  console.log(`Mocking: ${req.originalUrl}`);
-  const permanent_redirect = permanent.find((p) => p.path === req.path);
-  if (permanent_redirect) {
-    res.status(permanent_redirect.status).json(permanent_redirect.payload);
+  if (permanent.has(req.path)) {
+    const { status, payload } = permanent.get(req.path);
+    res.status(status).json(payload);
+    console.log(`Mocking: ${req.originalUrl}: ${status} ${inspect(payload)}`);
     return;
   }
   if (responses.length === 0) {

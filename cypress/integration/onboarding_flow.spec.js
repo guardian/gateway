@@ -35,6 +35,8 @@ describe('Onboarding flow', () => {
       );
       cy.idapiPermaMock(200, allConsents, '/consents');
       cy.idapiPermaMock(200, allNewsletters, '/newsletters');
+      cy.idapiPermaMock(200, verifiedUserWithNoConsent, '/user/me');
+      cy.idapiPermaMock(200, userNewsletters(), '/users/me/newsletters');
     });
 
     it('goes through full flow, opt in all consents/newsletters, preserve returnUrl', () => {
@@ -55,9 +57,6 @@ describe('Onboarding flow', () => {
           consented,
         };
       });
-
-      // user newsletters mock response for first page of consents flow
-      cy.idapiMock(200, verifiedUserWithNoConsent);
 
       const returnUrl = encodeURIComponent(
         `https://www.theguardian.com/science/grrlscientist/2012/aug/07/3`,
@@ -80,11 +79,8 @@ describe('Onboarding flow', () => {
 
       CommunicationsPage.getBackButton().should('not.exist');
 
-      // mock patch success
+      // mock form save success
       cy.idapiMock(200);
-
-      // mock load user newsletters
-      cy.idapiMock(200, userNewsletters());
 
       CommunicationsPage.getSaveAndContinueButton().click();
 
@@ -110,14 +106,8 @@ describe('Onboarding flow', () => {
         .parent()
         .click({ multiple: true });
 
-      // mock load user newsletters
-      cy.idapiMock(200, userNewsletters());
-
-      // mock patch success
+      // mock form save success
       cy.idapiMock(200);
-
-      // user consents mock response for your data page of consents flow
-      cy.idapiMock(200, verifiedUserWithNoConsent);
 
       NewslettersPage.getSaveAndContinueButton().click();
 
@@ -137,14 +127,18 @@ describe('Onboarding flow', () => {
 
       YourDataPage.getCheckboxes().should('not.be.checked');
 
-      // mock patch success
+      // mock form save success
       cy.idapiMock(200);
 
       // user consents mock response for review of consents flow
-      cy.idapiMock(200, createUser(consent));
+      cy.idapiPermaMock(200, createUser(consent), '/user/me');
 
       // mock load user newsletters
-      cy.idapiMock(200, userNewsletters(newslettersToSubscribe));
+      cy.idapiPermaMock(
+        200,
+        userNewsletters(newslettersToSubscribe),
+        '/users/me/newsletters',
+      );
 
       YourDataPage.getSaveAndContinueButton().click();
 
@@ -194,7 +188,7 @@ describe('Onboarding flow', () => {
     // it('correct newsletters shown for aus, none checked by default');
     // it('correct newsletters shown for row/default, none checked by default');
     // it(
-    //  'navigate back to newsletters page after saving will preserve newsletters'
+    //  'navigate back to newsletters page after saving will preserve newsletters' // @TODO: Not usefully testable with mockserver
     // );
     // it(
     //  'navigate back to newsletters page after will let you change and save selections'
@@ -205,7 +199,7 @@ describe('Onboarding flow', () => {
   context('Contact options page', () => {
     // it('shows correct contact options, none checked by default');
     // it(
-    //  'navigate back to contact options page after saving will preserve consents'
+    //  'navigate back to contact options page after saving will preserve consents' // @TODO: Not usefully testable with mockserver
     // );
     // it(
     //  'navigate back to contact options page after saving will let you change and save selections'
