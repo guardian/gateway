@@ -31,12 +31,6 @@ describe('Onboarding flow', () => {
     cy.idapiMockPurge();
   });
 
-  const getCheckboxes = () => cy.get('[type="checkbox"]');
-
-  const getOptoutCheckboxes = () => getCheckboxes().get('[name*="_optout"]');
-
-  const getOptinCheckboxes = () => getCheckboxes().not('[name*="_optout"]');
-
   context('Full flow', () => {
     it('goes through full flow, opt in all consents/newsletters, preserve returnUrl', () => {
       const newslettersToSubscribe = [
@@ -95,7 +89,8 @@ describe('Onboarding flow', () => {
       communicationsPage.getCheckboxes().should('not.be.checked');
 
       // get all opt in checkboxes
-      getOptinCheckboxes()
+      communicationsPage
+        .getOptinCheckboxes()
         // select parent (to avoid cypress element not visible error)
         .parent()
         .click({ multiple: true });
@@ -143,10 +138,7 @@ describe('Onboarding flow', () => {
         .contains(Onboarding.CONTENT.GO_BACK_BUTTON)
         .should('exist')
         .should('have.attr', 'href')
-        .and(
-          'include',
-          `${Onboarding.URL}${Onboarding.CONTENT.COMMUNICATION_PAGE}`,
-        );
+        .and('include', CommunicationsPage.URL);
 
       newslettersPage
         .getCheckboxes()
@@ -195,10 +187,7 @@ describe('Onboarding flow', () => {
         .contains(Onboarding.CONTENT.GO_BACK_BUTTON)
         .should('exist')
         .should('have.attr', 'href')
-        .and(
-          'include',
-          `${Onboarding.URL}${Onboarding.CONTENT.NEWSLETTER_PAGE}`,
-        );
+        .and('include', NewslettersPage.URL);
 
       yourDataPage.getCheckboxes().should('not.be.checked');
 
@@ -263,7 +252,7 @@ describe('Onboarding flow', () => {
         .contains('Yes');
 
       // return to guardian button
-      cy.contains(Onboarding.CONTENT.RETURN_GUARDIAN)
+      cy.contains(ReviewPage.CONTENT.BUTTON_RETURN_GUARDIAN)
         .should('exist')
         .should('have.attr', 'href')
         .and('include', decodeURIComponent(returnUrl));

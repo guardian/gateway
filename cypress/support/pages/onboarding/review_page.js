@@ -18,6 +18,7 @@ class ReviewPage {
       RESEARCH: 'Marketing research',
       ANALYSIS: 'Marketing analysis',
     },
+    BUTTON_RETURN_GUARDIAN: 'Return to The Guardian',
   };
 }
 
