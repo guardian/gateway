@@ -1,14 +1,27 @@
 import { Response } from 'express';
 import { QueryParams } from '@/shared/model/QueryParams';
-import { GeoLocation } from '@/shared/model/Geolocation';
-import { CsrfState } from '@/shared/model/GlobalState';
+import { CsrfState, PageData } from '@/shared/model/ClientState';
+import { parseExpressQueryParams } from '@/server/lib/queryParams';
 
-export interface Locals {
+export interface ServerState {
+  globalMessage: {
+    error?: string;
+    success?: string;
+  };
+  pageData: PageData;
   queryParams: QueryParams;
-  geolocation?: GeoLocation;
   csrf: CsrfState;
 }
 
-export interface ResponseWithLocals extends Response {
-  locals: Locals;
+export interface ResponseWithServerStateLocals extends Response {
+  locals: ServerState;
 }
+
+export const defaultServerState: ServerState = {
+  queryParams: parseExpressQueryParams('GET', {}),
+  csrf: {},
+  globalMessage: {},
+  pageData: {
+    geolocation: 'ROW',
+  },
+};

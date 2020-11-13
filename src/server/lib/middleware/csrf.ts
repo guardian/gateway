@@ -1,13 +1,13 @@
 import csrf from 'csurf';
 import { NextFunction, Request } from 'express';
-import { ResponseWithLocals } from '@/server/models/Express';
+import { ResponseWithServerStateLocals } from '@/server/models/Express';
 import { getConfiguration } from '@/server/lib/configuration';
 
 const { isHttps } = getConfiguration();
 
 const updateCsrfPageUrlMiddleware = (
   req: Request,
-  res: ResponseWithLocals,
+  res: ResponseWithServerStateLocals,
   next: NextFunction,
 ) => {
   const protectedMethods = ['POST', 'PATCH', 'PUT', 'DELETE'];
@@ -35,7 +35,7 @@ const csurfMiddleware = csrf({
 
 const updateCsrfTokenMiddleware = (
   req: Request,
-  res: ResponseWithLocals,
+  res: ResponseWithServerStateLocals,
   next: NextFunction,
 ) => {
   res.locals.csrf.token = req.csrfToken();

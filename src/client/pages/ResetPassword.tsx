@@ -1,14 +1,14 @@
 import React, { useContext } from 'react';
-import { GlobalState } from '@/shared/model/GlobalState';
-import { GlobalStateContext } from '@/client/components/GlobalState';
+import { ClientState } from '@/shared/model/ClientState';
+import { ClientStateContext } from '@/client/components/ClientState';
 import { PasswordResetDialog } from '@/client/components/PasswordResetDialog';
 import { useLocation } from 'react-router-dom';
 import { SignInLayout } from '@/client/layouts/SignInLayout';
 
 export const ResetPasswordPage = () => {
   const { search } = useLocation();
-  const globalState: GlobalState = useContext(GlobalStateContext);
-  const { email = '' } = globalState;
+  const clientState: ClientState = useContext(ClientStateContext);
+  const { pageData: { email = '' } = {} } = clientState;
 
   return (
     <SignInLayout>

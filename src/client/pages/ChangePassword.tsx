@@ -3,8 +3,8 @@ import { useParams, useLocation } from 'react-router-dom';
 import { TextInput } from '@guardian/src-text-input';
 import { Button } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
-import { GlobalState } from '@/shared/model/GlobalState';
-import { GlobalStateContext } from '@/client/components/GlobalState';
+import { ClientState } from '@/shared/model/ClientState';
+import { ClientStateContext } from '@/client/components/ClientState';
 import { Routes } from '@/shared/model/Routes';
 import { PageBox } from '@/client/components/PageBox';
 import { PageHeader } from '@/client/components/PageHeader';
@@ -16,8 +16,8 @@ import { CsrfFormField } from '@/client/components/CsrfFormField';
 
 export const ChangePasswordPage = () => {
   const { search } = useLocation();
-  const globalState: GlobalState = useContext(GlobalStateContext);
-  const { email = '', fieldErrors = [] } = globalState;
+  const clientState: ClientState = useContext(ClientStateContext);
+  const { pageData: { email = '', fieldErrors = [] } = {} } = clientState;
   const { token } = useParams<{ token: string }>();
 
   return (

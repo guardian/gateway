@@ -8,9 +8,9 @@ import {
   getAutoRow,
   consentsParagraphSpanDef,
 } from '@/client/styles/Grid';
-import { GlobalStateContext } from '@/client/components/GlobalState';
+import { ClientStateContext } from '@/client/components/ClientState';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
-import { GlobalState } from '@/shared/model/GlobalState';
+import { ClientState } from '@/shared/model/ClientState';
 import { NewsletterCard } from '@/client/components/NewsletterCard';
 import { from } from '@guardian/src-foundations/mq';
 import { heading, text } from '@/client/styles/Consents';
@@ -46,8 +46,8 @@ const paragraphSpacing = css`
 `;
 
 export const ConsentsNewslettersPage = () => {
-  const globalState = useContext<GlobalState>(GlobalStateContext);
-  const newsletters = globalState?.pageData?.newsletters ?? [];
+  const clientState = useContext<ClientState>(ClientStateContext);
+  const newsletters = clientState?.pageData?.newsletters ?? [];
   const autoRow = getAutoRow(1, gridItemColumnConsents);
   return (
     <ConsentsLayout title="Newsletters" current={CONSENTS_PAGES.NEWSLETTERS}>

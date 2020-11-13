@@ -1,8 +1,8 @@
 import React, { useContext, FunctionComponent } from 'react';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
-import { GlobalState } from '@/shared/model/GlobalState';
-import { GlobalStateContext } from '@/client/components/GlobalState';
+import { ClientState } from '@/shared/model/ClientState';
+import { ClientStateContext } from '@/client/components/ClientState';
 import { GlobalError } from '@/client/components/GlobalError';
 import { getErrorLink } from '@/client/lib/ErrorLink';
 import { css } from '@emotion/core';
@@ -56,8 +56,8 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
   title,
   current,
 }) => {
-  const globalState: GlobalState = useContext(GlobalStateContext);
-  const { error, pageData = {}, success } = globalState;
+  const clientState: ClientState = useContext(ClientStateContext);
+  const { pageData = {}, globalMessage: { error, success } = {} } = clientState;
   const { page = '', previousPage, returnUrl } = pageData;
   const returnUrlQuery = returnUrl
     ? `?returnUrl=${encodeURIComponent(returnUrl)}`
