@@ -1,10 +1,10 @@
 import { NextFunction, Request } from 'express';
-import { ResponseWithLocals } from '@/server/models/Express';
+import { ResponseWithServerStateLocals } from '@/server/models/Express';
 import { GeoLocation } from '@/shared/model/Geolocation';
 
 export const geolocationMiddleware = (
   req: Request,
-  res: ResponseWithLocals,
+  res: ResponseWithServerStateLocals,
   next: NextFunction,
 ) => {
   const header = req.headers['x-gu-geolocation'];

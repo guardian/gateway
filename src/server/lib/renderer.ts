@@ -8,7 +8,7 @@ import qs from 'query-string';
 import { getConfiguration } from '@/server/lib/configuration';
 import { RoutingConfig } from '@/client/routes';
 import { getAssets } from '@/server/lib/assets';
-import { defaultLocals, Locals } from '@/server/models/Express';
+import { defaultServerState, ServerState } from '@/server/models/Express';
 import { FieldError } from '@/server/routes/changePassword';
 import { CsrfErrors } from '@/shared/model/Errors';
 
@@ -22,7 +22,7 @@ const favicon =
 
 interface RendererOpts {
   pageTitle: string;
-  locals: Locals;
+  serverState: ServerState;
 }
 
 const { gaUID } = getConfiguration();
@@ -33,7 +33,7 @@ const globalStateFromLocals = ({
   globalMessage,
   pageData,
   queryParams,
-} = defaultLocals): GlobalState => {
+} = defaultServerState): GlobalState => {
   const globalState: GlobalState = {
     csrf,
     globalMessage,
@@ -63,7 +63,7 @@ const globalStateFromLocals = ({
 
 export const renderer: (url: string, opts: RendererOpts) => string = (
   url,
-  { locals, pageTitle },
+  { serverState: locals, pageTitle },
 ) => {
   const context = {};
 
