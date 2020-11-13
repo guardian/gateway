@@ -1,6 +1,6 @@
-import { GlobalState } from '@/shared/model/GlobalState';
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
+import { GlobalState } from '@/shared/model/GlobalState';
 import { StaticRouter } from 'react-router-dom';
 import { Main } from '@/client/main';
 import { brandBackground } from '@guardian/src-foundations/palette';
@@ -78,24 +78,19 @@ export const renderer: (url: string, opts: RendererOpts) => string = (
   // Any changes made here must also be made to the hydration in the static webpack bundle
   const react = ReactDOMServer.renderToString(
     // TODO: THIS IS JUST FOR TESTING
-    // eslint-disable-next-line react/no-children-prop
-    React.createElement(ABProvider, {
-      arrayOfTestObjects: tests,
-      abTestSwitches: {
+    <ABProvider
+      arrayOfTestObjects={tests}
+      abTestSwitches={{
         ...{ abAbTestTest: true },
-      },
-      pageIsSensitive: false,
-      mvtMaxValue: 1000000,
-      mvtId: 1,
-      children: React.createElement(
-        StaticRouter,
-        {
-          location,
-          context,
-        },
-        React.createElement(Main, globalState),
-      ),
-    }),
+      }}
+      pageIsSensitive={false}
+      mvtMaxValue={1000000}
+      mvtId={1}
+    >
+      <StaticRouter location={location} context={context}>
+        <Main {...globalState}></Main>
+      </StaticRouter>
+    </ABProvider>,
   );
 
   const routingConfig: RoutingConfig = {
