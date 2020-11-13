@@ -11,7 +11,7 @@ import {
 } from '@/server/lib/idapi/newsletters';
 import { read as getNewsletters } from '@/server/lib/idapi/newsletters';
 import { read as getUser } from '@/server/lib/idapi/user';
-import { PageData } from '@/shared/model/GlobalState';
+import { PageData } from '@/shared/model/ClientState';
 import { NewsLetter, NewsletterPatch } from '@/shared/model/Newsletter';
 import {
   Consent,

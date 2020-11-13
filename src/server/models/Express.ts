@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { QueryParams } from '@/shared/model/QueryParams';
-import { CsrfState, PageData } from '@/shared/model/GlobalState';
+import { CsrfState, PageData } from '@/shared/model/ClientState';
 import { parseExpressQueryParams } from '@/server/lib/queryParams';
 
 export interface ServerState {

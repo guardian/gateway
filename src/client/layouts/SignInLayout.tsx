@@ -2,8 +2,8 @@ import React, { useContext, FunctionComponent } from 'react';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { Titlepiece } from '@/client/components/Titlepiece';
-import { GlobalState } from '@/shared/model/GlobalState';
-import { GlobalStateContext } from '@/client/components/GlobalState';
+import { ClientState } from '@/shared/model/ClientState';
+import { ClientStateContext } from '@/client/components/ClientState';
 import { GlobalError } from '@/client/components/GlobalError';
 import { css } from '@emotion/core';
 import { space } from '@guardian/src-foundations';
@@ -23,8 +23,8 @@ const main = css`
 `;
 
 export const SignInLayout: FunctionComponent = (props) => {
-  const globalState: GlobalState = useContext(GlobalStateContext);
-  const { globalMessage: { error, success } = {} } = globalState;
+  const clientState: ClientState = useContext(ClientStateContext);
+  const { globalMessage: { error, success } = {} } = clientState;
 
   return (
     <>
