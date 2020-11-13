@@ -63,13 +63,13 @@ const clientStateFromServerStateLocals = ({
 
 export const renderer: (url: string, opts: RendererOpts) => string = (
   url,
-  { serverState: locals, pageTitle },
+  { serverState, pageTitle },
 ) => {
   const context = {};
 
-  const clientState = clientStateFromServerStateLocals(locals);
+  const clientState = clientStateFromServerStateLocals(serverState);
 
-  const queryString = qs.stringify(locals.queryParams);
+  const queryString = qs.stringify(serverState.queryParams);
 
   const location = `${url}${queryString ? `?${queryString}` : ''}`;
 
