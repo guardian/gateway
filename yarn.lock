@@ -2736,10 +2736,10 @@ assert-plus@1.0.0, assert-plus@^1.0.0:
   resolved "https://registry.yarnpkg.com/assert-plus/-/assert-plus-1.0.0.tgz#f12e0f3c5d77b0b1cdd9146942e4e96c1e4dd525"
   integrity sha1-8S4PPF13sLHN2RRpQuTpbB5N1SU=
 
-assets-webpack-plugin@^6.0.3:
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/assets-webpack-plugin/-/assets-webpack-plugin-6.0.3.tgz#2a4962853aea07a9fade760ad63ff97bac63afe2"
-  integrity sha512-WiCV3odaOXehoM1pSaOuqWkGDEL2cF8SZ+iwwAUNm4X6G0lTuJHT2n1Lg3kemJLP/PBJGAzAIogQhLyOBOHWAQ==
+assets-webpack-plugin@^6.0.4:
+  version "6.0.4"
+  resolved "https://registry.yarnpkg.com/assets-webpack-plugin/-/assets-webpack-plugin-6.0.4.tgz#c39d4ea06f7235914ffee87a0cebe89bed18b77c"
+  integrity sha512-YQdfmcCwD+SvDTCHqwn7PO8ijqdVqLx+076oMEAHZ1L9Qzz4JI4LWYuwQd9guEoCXhWZBufAjBfjJ2pHxvCXpw==
   dependencies:
     camelcase "^6.0.0"
     escape-string-regexp "^4.0.0"
