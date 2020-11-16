@@ -363,6 +363,7 @@ Resources:
           Protocol: email
   HighLatencyAlarm:
     Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
     Properties:
       AlarmName: !Sub '${App}-${Stage} high load balancer latency'
       AlarmDescription: !Sub
@@ -376,7 +377,7 @@ Resources:
       ComparisonOperator: GreaterThanOrEqualToThreshold
       Dimensions:
         - Name: LoadBalancer
-          Value: !Ref 'LoadBalancer'
+          Value: !GetAtt 'LoadBalancer.LoadBalancerFullName'
       Threshold:
         !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmThreshold]
       Period: !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmPeriod]
