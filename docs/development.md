@@ -109,7 +109,7 @@ It's then possible to access the state through the [`useContext`](https://reactj
 
 Here's an example of adding some test data to the client state.
 
-Firstly define it in the [`ServerState`](../src/server/models/Express.ts) interface. It can be optional or required property. It's also helpful to set a sensible default value in `defaultServerState` if it needs to be defined.
+Firstly define it in the [`ServerState`](../src/server/models/Express.ts) interface. It can be optional or required property. It's also helpful to set a sensible default value in `getDefaultServerState` method if it needs to be defined.
 
 ```ts
 ...
@@ -119,11 +119,11 @@ export interface ServerState {
   test: string;
 }
 
-export const defaultServerState: ServerState = {
+export const getDefaultServerState = (): ServerState => ({
   // other data in the default state
   ...
   test: 'value'
-};
+});
 ```
 
 On the server, add it to the `res.locals` somewhere in an express handler, and passing it to the renderer, use the `ResponseWithServerStateLocals` interface for the response object as it extends Express' `Response` type with the typed locals:
