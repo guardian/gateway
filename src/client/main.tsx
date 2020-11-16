@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 import { useAB } from '@guardian/ab-react';
 import { css, Global } from '@emotion/core';
 import { fontFaces } from '@/client/lib/fonts';
-import { GlobalStateProvider } from '@/client/components/GlobalState';
-import { GlobalState } from '@/shared/model/GlobalState';
+import { ClientStateProvider } from '@/client/components/ClientState';
+import { ClientState } from '@/shared/model/ClientState';
 import { GatewayRoutes } from './routes';
 import { tests } from './static/hydration';
 
-export const Main = (props: GlobalState) => {
+export const Main = (props: ClientState) => {
   // TODO: THIS IS JUST FOR TESTING
   const ABTestAPI = useAB();
   useEffect(() => {
@@ -48,9 +48,9 @@ export const Main = (props: GlobalState) => {
           }
         `}
       />
-      <GlobalStateProvider globalState={props}>
+      <ClientStateProvider clientState={props}>
         <GatewayRoutes />
-      </GlobalStateProvider>
+      </ClientStateProvider>
     </>
   );
 };

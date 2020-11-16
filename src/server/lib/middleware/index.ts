@@ -6,7 +6,7 @@ import { loggerMiddleware } from '@/server/lib/middleware/logger';
 import { applyRoutes } from '@/server/lib/middleware/routes';
 import { csrfMiddleware } from '@/server/lib/middleware/csrf';
 import { getConfiguration } from '@/server/lib/configuration';
-import { localsMiddleware } from '@/server/lib/middleware/locals';
+import { serverStateLocalsMiddleware } from '@/server/lib/middleware/serverStateLocals';
 
 const { appSecret } = getConfiguration();
 
@@ -19,7 +19,7 @@ export const applyMiddleware = (server: Express): void => {
   server.use(compression());
 
   // set up default state in res.locals
-  server.use(localsMiddleware);
+  server.use(serverStateLocalsMiddleware);
 
   // logging middleware
   server.use(loggerMiddleware);

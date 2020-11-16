@@ -24,7 +24,7 @@ export interface PageData {
   previousPage?: string;
 }
 
-export interface GlobalState {
+export interface ClientState {
   globalMessage?: GlobalMessage;
   pageData?: PageData;
   csrf?: CsrfState;

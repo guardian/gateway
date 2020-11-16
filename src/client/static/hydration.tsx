@@ -45,7 +45,7 @@ export const hydrateApp = () => {
     document.getElementById('routingConfig')?.innerHTML ?? '{}',
   );
 
-  const globalState = routingConfig.globalState;
+  const clientState = routingConfig.clientState;
 
   hydrate(
     // TODO: THIS IS JUST FOR TESTING
@@ -60,7 +60,7 @@ export const hydrateApp = () => {
       ophanRecord={record}
     >
       <StaticRouter location={`${routingConfig.location}`} context={{}}>
-        <Main {...globalState} />
+        <Main {...clientState} />
       </StaticRouter>
     </ABProvider>,
     document.getElementById('app'),

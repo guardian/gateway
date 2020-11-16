@@ -1,6 +1,6 @@
+import { ClientState } from '@/shared/model/ClientState';
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
-import { GlobalState } from '@/shared/model/GlobalState';
 import { StaticRouter } from 'react-router-dom';
 import { Main } from '@/client/main';
 import { brandBackground } from '@guardian/src-foundations/palette';
@@ -8,7 +8,7 @@ import qs from 'query-string';
 import { getConfiguration } from '@/server/lib/configuration';
 import { RoutingConfig } from '@/client/routes';
 import { getAssets } from '@/server/lib/assets';
-import { defaultLocals, Locals } from '@/server/models/Express';
+import { defaultServerState, ServerState } from '@/server/models/Express';
 import { FieldError } from '@/server/routes/changePassword';
 import { CsrfErrors } from '@/shared/model/Errors';
 import { ABProvider } from '@guardian/ab-react';
@@ -24,19 +24,19 @@ const favicon =
 
 interface RendererOpts {
   pageTitle: string;
-  locals: Locals;
+  serverState: ServerState;
 }
 
 const { gaUID } = getConfiguration();
 
-// function to map from req.locals, to the GlobalState used by the client
-const globalStateFromLocals = ({
+// function to map from req.locals, to the ClientState used by the client
+const clientStateFromServerStateLocals = ({
   csrf,
   globalMessage,
   pageData,
   queryParams,
-} = defaultLocals): GlobalState => {
-  const globalState: GlobalState = {
+} = defaultServerState): ClientState => {
+  const clientState: ClientState = {
     csrf,
     globalMessage,
     pageData,
@@ -47,31 +47,31 @@ const globalStateFromLocals = ({
   if (queryParams.csrfError) {
     // global state page data will already exist at this point
     // this is just a check to get typescript to compile
-    if (!globalState.pageData) {
-      globalState.pageData = {};
+    if (!clientState.pageData) {
+      clientState.pageData = {};
     }
 
     const fieldErrors: Array<FieldError> =
-      globalState.pageData.fieldErrors ?? [];
+      clientState.pageData.fieldErrors ?? [];
     fieldErrors.push({
       field: 'csrf',
       message: CsrfErrors.CSRF_ERROR,
     });
-    globalState.pageData.fieldErrors = fieldErrors;
+    clientState.pageData.fieldErrors = fieldErrors;
   }
 
-  return globalState;
+  return clientState;
 };
 
 export const renderer: (url: string, opts: RendererOpts) => string = (
   url,
-  { locals, pageTitle },
+  { serverState, pageTitle },
 ) => {
   const context = {};
 
-  const globalState = globalStateFromLocals(locals);
+  const clientState = clientStateFromServerStateLocals(serverState);
 
-  const queryString = qs.stringify(locals.queryParams);
+  const queryString = qs.stringify(serverState.queryParams);
 
   const location = `${url}${queryString ? `?${queryString}` : ''}`;
 
@@ -88,13 +88,13 @@ export const renderer: (url: string, opts: RendererOpts) => string = (
       mvtId={1}
     >
       <StaticRouter location={location} context={context}>
-        <Main {...globalState}></Main>
+        <Main {...clientState}></Main>
       </StaticRouter>
     </ABProvider>,
   );
 
   const routingConfig: RoutingConfig = {
-    globalState,
+    clientState,
     location,
   };
 

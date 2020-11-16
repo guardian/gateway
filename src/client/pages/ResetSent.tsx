@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { getProviderById } from '@/shared/lib/emailProvider';
 import { LinkButton } from '@guardian/src-button';
-import { GlobalState } from '@/shared/model/GlobalState';
-import { GlobalStateContext } from '@/client/components/GlobalState';
+import { ClientState } from '@/shared/model/ClientState';
+import { ClientStateContext } from '@/client/components/ClientState';
 import { PageHeader } from '@/client/components/PageHeader';
 import { PageBox } from '@/client/components/PageBox';
 import { PageBody } from '@/client/components/PageBody';
@@ -12,8 +12,8 @@ import { SignInLayout } from '@/client/layouts/SignInLayout';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
 
 export const ResetSentPage = () => {
-  const globalState: GlobalState = useContext(GlobalStateContext);
-  const { pageData: { emailProvider: emailProviderId } = {} } = globalState;
+  const clientState: ClientState = useContext(ClientStateContext);
+  const { pageData: { emailProvider: emailProviderId } = {} } = clientState;
   const emailProvider = getProviderById(emailProviderId);
 
   return (

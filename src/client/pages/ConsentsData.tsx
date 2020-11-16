@@ -4,7 +4,7 @@ import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { textSans } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/core';
 import { space, neutral } from '@guardian/src-foundations';
-import { GlobalStateContext } from '@/client/components/GlobalState';
+import { ClientStateContext } from '@/client/components/ClientState';
 import {
   getAutoRow,
   gridItemColumnConsents,
@@ -12,7 +12,7 @@ import {
 } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { heading, text, headingMarginSpace6 } from '@/client/styles/Consents';
-import { GlobalState } from '@/shared/model/GlobalState';
+import { ClientState } from '@/shared/model/ClientState';
 import { Consents } from '@/shared/model/Consent';
 import { Link } from '@guardian/src-link';
 import { Checkbox, CheckboxGroup } from '@guardian/src-checkbox';
@@ -31,9 +31,9 @@ const checkboxLabel = css`
 export const ConsentsDataPage = () => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
 
-  const globalState = useContext<GlobalState>(GlobalStateContext);
+  const clientState = useContext<ClientState>(ClientStateContext);
 
-  const { pageData = {} } = globalState;
+  const { pageData = {} } = clientState;
   const { consents = [] } = pageData;
 
   const profiling_optout = consents.find(
