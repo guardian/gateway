@@ -28,6 +28,7 @@ export interface ClientState {
   globalMessage?: GlobalMessage;
   pageData?: PageData;
   csrf?: CsrfState;
+  mvtId?: number;
 }
 
 export type CsrfState = {

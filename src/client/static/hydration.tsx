@@ -14,8 +14,9 @@ export const hydrateApp = () => {
 
   const clientState = routingConfig.clientState;
 
+  const { mvtId = 0 } = clientState;
+
   hydrate(
-    // TODO: THIS IS JUST FOR TESTING
     <ABProvider
       arrayOfTestObjects={tests}
       abTestSwitches={{
@@ -23,7 +24,7 @@ export const hydrateApp = () => {
       }}
       pageIsSensitive={false}
       mvtMaxValue={1000000}
-      mvtId={1}
+      mvtId={mvtId}
       ophanRecord={record}
     >
       <StaticRouter location={`${routingConfig.location}`} context={{}}>

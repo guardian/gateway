@@ -11,6 +11,7 @@ export interface ServerState {
   pageData: PageData;
   queryParams: QueryParams;
   csrf: CsrfState;
+  mvtId: number;
 }
 
 export interface ResponseWithServerStateLocals extends Response {
@@ -24,4 +25,5 @@ export const defaultServerState: ServerState = {
   pageData: {
     geolocation: 'ROW',
   },
+  mvtId: 0,
 };

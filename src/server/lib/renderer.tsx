@@ -35,11 +35,13 @@ const clientStateFromServerStateLocals = ({
   globalMessage,
   pageData,
   queryParams,
+  mvtId,
 } = defaultServerState): ClientState => {
   const clientState: ClientState = {
     csrf,
     globalMessage,
     pageData,
+    mvtId,
   };
 
   // checking if csrf error exists in query params, and attaching it to the
@@ -75,9 +77,10 @@ export const renderer: (url: string, opts: RendererOpts) => string = (
 
   const location = `${url}${queryString ? `?${queryString}` : ''}`;
 
+  const { mvtId = 0 } = clientState;
+
   // Any changes made here must also be made to the hydration in the static webpack bundle
   const react = ReactDOMServer.renderToString(
-    // TODO: THIS IS JUST FOR TESTING
     <ABProvider
       arrayOfTestObjects={tests}
       abTestSwitches={{
@@ -85,7 +88,7 @@ export const renderer: (url: string, opts: RendererOpts) => string = (
       }}
       pageIsSensitive={false}
       mvtMaxValue={1000000}
-      mvtId={1}
+      mvtId={mvtId}
     >
       <StaticRouter location={location} context={context}>
         <Main {...clientState}></Main>
