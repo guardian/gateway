@@ -6,8 +6,8 @@ import { PageBodyText } from '@/client/components/PageBodyText';
 import { PageBox } from '@/client/components/PageBox';
 import { PageHeader } from '@/client/components/PageHeader';
 import { form, button, linkButton } from '@/client/styles/Shared';
-import { GlobalState } from '@/shared/model/GlobalState';
-import { GlobalStateContext } from '@/client/components/GlobalState';
+import { ClientState } from '@/shared/model/ClientState';
+import { ClientStateContext } from '@/client/components/ClientState';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
 import { css } from '@emotion/core';
 import { textSans } from '@guardian/src-foundations/typography';
@@ -101,11 +101,9 @@ const LoggedIn = ({
 
 export const ResendEmailVerificationPage = () => {
   const {
-    email,
-    signInPageUrl,
-    success,
-    emailProvider: emailProviderId,
-  } = useContext<GlobalState>(GlobalStateContext);
+    globalMessage: { success } = {},
+    pageData: { email, signInPageUrl, emailProvider: emailProviderId } = {},
+  } = useContext<ClientState>(ClientStateContext);
 
   const emailProvider = getProviderById(emailProviderId);
 

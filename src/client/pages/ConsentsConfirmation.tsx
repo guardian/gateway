@@ -8,8 +8,8 @@ import {
   SpanDefinition,
 } from '@/client/styles/Grid';
 import { from } from '@guardian/src-foundations/mq';
-import { GlobalState } from '@/shared/model/GlobalState';
-import { GlobalStateContext } from '@/client/components/GlobalState';
+import { ClientState } from '@/shared/model/ClientState';
+import { ClientStateContext } from '@/client/components/ClientState';
 import { Header } from '@/client/components/Header';
 import { GlobalError } from '@/client/components/GlobalError';
 import {
@@ -125,8 +125,8 @@ const confirmationSpanDefinition: SpanDefinition = {
 
 export const ConsentsConfirmationPage = () => {
   const autoRow = getAutoRow(1, confirmationSpanDefinition);
-  const globalState: GlobalState = useContext(GlobalStateContext);
-  const { error, pageData = {}, success } = globalState;
+  const clientState: ClientState = useContext(ClientStateContext);
+  const { pageData = {}, globalMessage: { error, success } = {} } = clientState;
 
   const {
     consents = [],
