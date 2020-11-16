@@ -12,7 +12,7 @@ import { defaultServerState, ServerState } from '@/server/models/Express';
 import { FieldError } from '@/server/routes/changePassword';
 import { CsrfErrors } from '@/shared/model/Errors';
 import { ABProvider } from '@guardian/ab-react';
-import { tests } from '@/client/static/hydration';
+import { tests } from '@/shared/model/experiments';
 
 const assets = getAssets();
 

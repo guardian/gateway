@@ -5,7 +5,7 @@ import { fontFaces } from '@/client/lib/fonts';
 import { ClientStateProvider } from '@/client/components/ClientState';
 import { ClientState } from '@/shared/model/ClientState';
 import { GatewayRoutes } from './routes';
-import { tests } from './static/hydration';
+import { tests } from '@/shared/model/experiments';
 
 export const Main = (props: ClientState) => {
   // TODO: THIS IS JUST FOR TESTING
