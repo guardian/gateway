@@ -363,6 +363,7 @@ Resources:
           Protocol: email
   HighLatencyAlarm:
     Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
     Properties:
       AlarmName: !Sub '${App}-${Stage} high load balancer latency'
       AlarmDescription: !Sub
@@ -370,19 +371,22 @@ Resources:
         - Period: !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmPeriod]
           Threshold:
             !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmThreshold]
-      Namespace: AWS/ELB
-      MetricName: Latency
+      Namespace: AWS/ApplicationELB
+      MetricName: TargetResponseTime
       Statistic: Average
       ComparisonOperator: GreaterThanOrEqualToThreshold
       Dimensions:
         - Name: LoadBalancer
-          Value: !Ref 'LoadBalancer'
+          Value: !GetAtt 'LoadBalancer.LoadBalancerFullName'
       Threshold:
         !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmThreshold]
       Period: !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmPeriod]
-      EvaluationPeriods: '1'
+      EvaluationPeriods: 1
       AlarmActions:
         - !Ref 'ScaleUpPolicy'
+        - !Ref 'TopicSendEmail'
+      InsufficientDataActions:
+        - !Ref 'TopicSendEmail'
       OKActions:
         - !Ref 'ScaleDownPolicy'
   ScaleUpPolicy:
@@ -437,6 +441,8 @@ Resources:
       AlarmActions:
         - !Ref 'TopicSendEmail'
       OKActions:
+        - !Ref 'TopicSendEmail'
+      InsufficientDataActions:
         - !Ref 'TopicSendEmail'
       ComparisonOperator: GreaterThanOrEqualToThreshold
       Threshold: 3

@@ -18,7 +18,7 @@ export interface ResponseWithServerStateLocals extends Response {
   locals: ServerState;
 }
 
-export const defaultServerState: ServerState = {
+export const getDefaultServerState = (): ServerState => ({
   queryParams: parseExpressQueryParams('GET', {}),
   csrf: {},
   globalMessage: {},
@@ -26,4 +26,4 @@ export const defaultServerState: ServerState = {
     geolocation: 'ROW',
   },
   mvtId: 0,
-};
+});

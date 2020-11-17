@@ -8,7 +8,7 @@ import qs from 'query-string';
 import { getConfiguration } from '@/server/lib/configuration';
 import { RoutingConfig } from '@/client/routes';
 import { getAssets } from '@/server/lib/assets';
-import { defaultServerState, ServerState } from '@/server/models/Express';
+import { getDefaultServerState, ServerState } from '@/server/models/Express';
 import { FieldError } from '@/server/routes/changePassword';
 import { CsrfErrors } from '@/shared/model/Errors';
 import { ABProvider } from '@guardian/ab-react';
@@ -30,13 +30,15 @@ interface RendererOpts {
 const { gaUID } = getConfiguration();
 
 // function to map from req.locals, to the ClientState used by the client
-const clientStateFromServerStateLocals = ({
-  csrf,
-  globalMessage,
-  pageData,
-  queryParams,
-  mvtId,
-} = defaultServerState): ClientState => {
+const clientStateFromServerStateLocals = (
+  {
+    csrf,
+    globalMessage,
+    pageData,
+    queryParams,
+    mvtId,
+  } = getDefaultServerState(),
+): ClientState => {
   const clientState: ClientState = {
     csrf,
     globalMessage,

@@ -1,6 +1,6 @@
 import {
   ResponseWithServerStateLocals,
-  defaultServerState,
+  getDefaultServerState,
 } from '@/server/models/Express';
 import { Request, NextFunction } from 'express';
 
@@ -9,6 +9,6 @@ export const serverStateLocalsMiddleware = (
   res: ResponseWithServerStateLocals,
   next: NextFunction,
 ) => {
-  res.locals = defaultServerState;
+  res.locals = getDefaultServerState();
   next();
 };
