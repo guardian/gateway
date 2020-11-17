@@ -29,6 +29,7 @@ export interface ClientState {
   pageData?: PageData;
   csrf?: CsrfState;
   mvtId?: number;
+  abTests?: Record<string, string>;
 }
 
 export type CsrfState = {

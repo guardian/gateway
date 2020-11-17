@@ -12,6 +12,7 @@ export interface ServerState {
   queryParams: QueryParams;
   csrf: CsrfState;
   mvtId: number;
+  abTests: Record<string, string>;
 }
 
 export interface ResponseWithServerStateLocals extends Response {
@@ -26,4 +27,5 @@ export const getDefaultServerState = (): ServerState => ({
     geolocation: 'ROW',
   },
   mvtId: 0,
+  abTests: {},
 });

@@ -1,3 +1,3 @@
 export const switches = {
-  abTestTest: true,
+  abAbTestTest: true,
 };
