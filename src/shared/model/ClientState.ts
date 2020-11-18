@@ -2,6 +2,7 @@ import { FieldError } from '@/server/routes/changePassword';
 import { Consent } from '@/shared/model/Consent';
 import { NewsLetter } from '@/shared/model/Newsletter';
 import { GeoLocation } from '@/shared/model/Geolocation';
+import { Participations } from '@guardian/ab-core';
 
 export interface GlobalMessage {
   error?: string;
@@ -29,7 +30,8 @@ export interface ClientState {
   pageData?: PageData;
   csrf?: CsrfState;
   mvtId?: number;
-  abTests?: Record<string, string>;
+  abTests?: Participations;
+  forcedTestVariants?: Participations;
 }
 
 export type CsrfState = {

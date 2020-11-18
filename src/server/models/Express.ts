@@ -2,6 +2,7 @@ import { Response } from 'express';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { CsrfState, PageData } from '@/shared/model/ClientState';
 import { parseExpressQueryParams } from '@/server/lib/queryParams';
+import { Participations } from '@guardian/ab-core';
 
 export interface ServerState {
   globalMessage: {
@@ -12,7 +13,8 @@ export interface ServerState {
   queryParams: QueryParams;
   csrf: CsrfState;
   mvtId: number;
-  abTests: Record<string, string>;
+  abTests: Participations;
+  forcedTestVariants: Participations;
 }
 
 export interface ResponseWithServerStateLocals extends Response {
@@ -28,4 +30,5 @@ export const getDefaultServerState = (): ServerState => ({
   },
   mvtId: 0,
   abTests: {},
+  forcedTestVariants: {},
 });

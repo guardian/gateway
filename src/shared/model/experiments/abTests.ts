@@ -1,4 +1,4 @@
-import { AB, ABTest } from '@guardian/ab-core';
+import { AB, ABTest, Participations } from '@guardian/ab-core';
 import { switches } from './abSwitches';
 import { abTestTest } from './tests/ab-test-test';
 
@@ -18,7 +18,10 @@ export const getDefaultABTestConfiguration = (): ABTestConfiguration => ({
   pageIsSensitive: false,
 });
 
-export const abTestsForMvtId = (mvtId: number) => {
+export const abTestsForMvtId = (
+  mvtId: number,
+  forcedTestVariants?: Participations,
+) => {
   const {
     abTestSwitches,
     arrayOfTestObjects,
@@ -32,5 +35,6 @@ export const abTestsForMvtId = (mvtId: number) => {
     pageIsSensitive,
     mvtMaxValue,
     mvtId,
+    forcedTestVariants,
   });
 };
