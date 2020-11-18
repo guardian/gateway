@@ -71,13 +71,9 @@ describe('Onboarding flow', () => {
       cy.url().should('include', CommunicationsPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
-      CommunicationsPage.getCheckboxes().should('not.be.checked');
-      CommunicationsPage.getOptinCheckboxes()
-        // select parent (to avoid cypress element not visible error)
-        .parent()
-        .click({ multiple: true });
-
       CommunicationsPage.getBackButton().should('not.exist');
+      CommunicationsPage.getCheckboxes().should('not.be.checked');
+      CommunicationsPage.getMarketingOptoutClickableSection().click();
 
       // mock form save success
       cy.idapiMock(200);
@@ -85,12 +81,12 @@ describe('Onboarding flow', () => {
       CommunicationsPage.getSaveAndContinueButton().click();
 
       cy.idapiLastPayloadIs([
-        { id: 'market_research_optout', consented: false },
-        { id: 'supporter', consented: true },
-        { id: 'jobs', consented: true },
-        { id: 'holidays', consented: true },
-        { id: 'events', consented: true },
-        { id: 'offers', consented: true },
+        { id: 'market_research_optout', consented: true },
+        { id: 'supporter', consented: false },
+        { id: 'jobs', consented: false },
+        { id: 'holidays', consented: false },
+        { id: 'events', consented: false },
+        { id: 'offers', consented: false },
       ]);
 
       cy.url().should('include', NewslettersPage.URL);
@@ -165,12 +161,128 @@ describe('Onboarding flow', () => {
         .should('have.attr', 'href')
         .and('include', decodeURIComponent(returnUrl));
     });
-    // it(
-    //   'goes through full flow, opt out all consents/newsletters, preserve returnUrl',
-    // );
-    // it(
-    //   'goes through full flow, opt in some consents/newsletters, default returnUrl',
-    // );
+
+    it('goes through full flow, opt out all consents/newsletters, preserve returnUrl', () => {
+      const returnUrl = encodeURIComponent(
+        `https://www.theguardian.com/science/grrlscientist/2012/aug/07/3`,
+      );
+
+      CommunicationsPage.gotoFlowStart({
+        query: {
+          returnUrl,
+        },
+      });
+
+      cy.url().should('include', CommunicationsPage.URL);
+      cy.url().should('include', `returnUrl=${returnUrl}`);
+
+      CommunicationsPage.getBackButton().should('not.exist');
+
+      CommunicationsPage.getCheckboxes().should('not.be.checked');
+      CommunicationsPage.getOptoutCheckboxes()
+        // select parent (to avoid cypress element not visible error)
+        .parent()
+        .click({ multiple: true });
+
+      // mock form save success
+      cy.idapiMock(200);
+
+      CommunicationsPage.getSaveAndContinueButton().click();
+
+      cy.idapiLastPayloadIs([
+        { id: 'market_research_optout', consented: false },
+        { id: 'supporter', consented: true },
+        { id: 'jobs', consented: true },
+        { id: 'holidays', consented: true },
+        { id: 'events', consented: true },
+        { id: 'offers', consented: true },
+      ]);
+
+      cy.url().should('include', NewslettersPage.URL);
+      cy.url().should('include', `returnUrl=${returnUrl}`);
+
+      NewslettersPage.getBackButton()
+        .should('have.attr', 'href')
+        .and('include', CommunicationsPage.URL);
+
+      // mock form save success
+      cy.idapiMock(200);
+
+      NewslettersPage.getSaveAndContinueButton().click();
+      cy.idapiLastPayloadIs([]);
+
+      cy.url().should('include', YourDataPage.URL);
+      cy.url().should('include', `returnUrl=${returnUrl}`);
+
+      YourDataPage.getBackButton()
+        .should('have.attr', 'href')
+        .and('include', NewslettersPage.URL);
+
+      YourDataPage.getMarketingOptoutClickableSection().click();
+
+      // mock form save success
+      cy.idapiMock(200);
+
+      YourDataPage.getSaveAndContinueButton().click();
+      cy.idapiLastPayloadIs([{ id: 'profiling_optout', consented: true }]);
+
+      cy.url().should('include', ReviewPage.URL);
+      cy.url().should('include', `returnUrl=${returnUrl}`);
+
+      ReviewPage.getBackButton().should('not.exist');
+      ReviewPage.getSaveAndContinueButton().should('not.exist');
+
+      ReviewPage.getNewslettersSection().contains('N/A');
+      ReviewPage.getConsentsSection().contains('N/A');
+
+      ReviewPage.getMarketingResearchChoice().contains('Yes');
+      ReviewPage.getMarketingAnalysisChoice().contains('Yes');
+
+      ReviewPage.getReturnButton()
+        .should('have.attr', 'href')
+        .and('include', decodeURIComponent(returnUrl));
+    });
+
+    it('uses a default returnUrl if none provided', () => {
+      // @TODO: Reliable way of loading this from envs?
+      const returnUrl = encodeURIComponent(
+        'https://m.code.dev-theguardian.com',
+      );
+
+      CommunicationsPage.gotoFlowStart();
+
+      cy.url().should('include', CommunicationsPage.URL);
+      cy.url().should('include', `returnUrl=${returnUrl}`);
+
+      // mock form save success
+      cy.idapiMock(200);
+
+      CommunicationsPage.getSaveAndContinueButton().click();
+
+      cy.url().should('include', NewslettersPage.URL);
+      cy.url().should('include', `returnUrl=${returnUrl}`);
+
+      // mock form save success
+      cy.idapiMock(200);
+
+      NewslettersPage.getSaveAndContinueButton().click();
+
+      cy.url().should('include', YourDataPage.URL);
+      cy.url().should('include', `returnUrl=${returnUrl}`);
+
+      YourDataPage.getMarketingOptoutClickableSection().click();
+
+      // mock form save success
+      cy.idapiMock(200);
+
+      YourDataPage.getSaveAndContinueButton().click();
+      cy.url().should('include', ReviewPage.URL);
+      cy.url().should('include', `returnUrl=${returnUrl}`);
+
+      ReviewPage.getReturnButton()
+        .should('have.attr', 'href')
+        .and('include', decodeURIComponent(returnUrl));
+    });
   });
 
   context('Login middleware', () => {

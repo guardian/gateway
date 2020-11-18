@@ -20,11 +20,27 @@ class ReviewPage extends OnboardingPage {
       RESEARCH: 'Marketing research',
       ANALYSIS: 'Marketing analysis',
     },
+    NEWSLETTER_SECTION_TITLE: 'Newsletters',
+    CONSENTS_SECTION_TITLE: 'Products & services:',
     BUTTON_RETURN_GUARDIAN: 'Return to The Guardian',
   };
 
   static getReturnButton() {
     return cy.contains(ReviewPage.CONTENT.BUTTON_RETURN_GUARDIAN);
+  }
+
+  static getConsentsSection() {
+    return cy
+      .contains(ReviewPage.CONTENT.CONSENTS_SECTION_TITLE)
+      .parent()
+      .siblings();
+  }
+
+  static getNewslettersSection() {
+    return cy
+      .contains(ReviewPage.CONTENT.NEWSLETTER_SECTION_TITLE)
+      .parent()
+      .siblings();
   }
 
   static getMarketingResearchChoice() {

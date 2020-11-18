@@ -23,7 +23,7 @@ class Onboarding {
     return cy.get('[type="checkbox"]');
   }
 
-  static getOptinCheckboxes() {
+  static getOptoutCheckboxes() {
     // @TODO: This is generic selector based approach, make a page specific user based approach, e.g. use contains
     return this.getCheckboxes().not('[name*="_optout"]');
   }
