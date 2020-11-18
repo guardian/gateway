@@ -11,7 +11,7 @@ import {
 } from '@/server/lib/idapi/newsletters';
 import { read as getNewsletters } from '@/server/lib/idapi/newsletters';
 import { read as getUser } from '@/server/lib/idapi/user';
-import { GlobalState, PageData } from '@/shared/model/GlobalState';
+import { PageData } from '@/shared/model/ClientState';
 import { NewsLetter, NewsletterPatch } from '@/shared/model/Newsletter';
 import {
   Consent,
@@ -19,7 +19,7 @@ import {
   CONSENTS_DATA_PAGE,
 } from '@/shared/model/Consent';
 import { loginMiddleware } from '@/server/lib/middleware/login';
-import { ResponseWithLocals } from '@/server/models/Express';
+import { ResponseWithServerStateLocals } from '@/server/models/Express';
 import { VERIFY_EMAIL } from '@/shared/model/Success';
 import { trackMetric } from '@/server/lib/AWS';
 import { consentsPageMetric } from '@/server/models/Metrics';
@@ -256,15 +256,13 @@ router.get(
   `${Routes.CONSENTS}/:page`,
   loginMiddleware,
   geolocationMiddleware,
-  async (req: Request, res: ResponseWithLocals) => {
+  async (req: Request, res: ResponseWithServerStateLocals) => {
     const sc_gu_u = req.cookies.SC_GU_U;
 
     const { emailVerified } = res.locals.queryParams;
 
-    const state: GlobalState = {};
-
     if (emailVerified) {
-      state.success = VERIFY_EMAIL.SUCCESS;
+      res.locals.globalMessage.success = VERIFY_EMAIL.SUCCESS;
     }
 
     const { page } = req.params;
@@ -275,22 +273,25 @@ router.get(
       return res.redirect(404, `${Routes.CONSENTS}/${page}`);
     }
 
-    let pageTitle;
+    let pageTitle = 'Onboarding';
 
     try {
       const { read, pageTitle: _pageTitle } = consentPages[pageIndex];
       pageTitle = _pageTitle;
 
-      state.pageData = await read(req.ip, sc_gu_u, res.locals.geolocation);
-      state.pageData.returnUrl = res.locals?.queryParams?.returnUrl;
+      res.locals.pageData = await read(
+        req.ip,
+        sc_gu_u,
+        res.locals.pageData.geolocation,
+      );
+      res.locals.pageData.returnUrl = res.locals?.queryParams?.returnUrl;
     } catch (e) {
       status = e.status;
-      state.error = e.message;
+      res.locals.globalMessage.error = e.message;
     }
 
     const html = renderer(`${Routes.CONSENTS}/${page}`, {
-      globalState: state,
-      locals: res.locals,
+      serverState: res.locals,
       pageTitle,
     });
 
@@ -307,9 +308,8 @@ router.post(
   `${Routes.CONSENTS}/:page`,
   loginMiddleware,
   geolocationMiddleware,
-  async (req: Request, res: ResponseWithLocals) => {
+  async (req: Request, res: ResponseWithServerStateLocals) => {
     const sc_gu_u = req.cookies.SC_GU_U;
-    const state: GlobalState = {};
 
     const { page } = req.params;
     let status = 200;
@@ -319,14 +319,19 @@ router.post(
       return res.redirect(404, `${Routes.CONSENTS}/${page}`);
     }
 
-    let pageTitle;
+    let pageTitle = 'Onboarding';
 
     try {
       const { update, pageTitle: _pageTitle } = consentPages[pageIndex];
       pageTitle = _pageTitle;
 
       if (update) {
-        await update(req.ip, sc_gu_u, req.body, res.locals.geolocation);
+        await update(
+          req.ip,
+          sc_gu_u,
+          req.body,
+          res.locals.pageData.geolocation,
+        );
       }
 
       trackMetric(consentsPageMetric(page, 'Post', true));
@@ -338,15 +343,14 @@ router.post(
       return res.redirect(303, url);
     } catch (e) {
       status = e.status;
-      state.error = e.message;
+      res.locals.globalMessage.error = e.message;
     }
 
     trackMetric(consentsPageMetric(page, 'Post', false));
 
     const html = renderer(`${Routes.CONSENTS}/${page}`, {
-      globalState: state,
       pageTitle,
-      locals: res.locals,
+      serverState: res.locals,
     });
     res
       .type('html')

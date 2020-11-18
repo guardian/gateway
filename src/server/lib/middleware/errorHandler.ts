@@ -1,5 +1,5 @@
 import { NextFunction, Request } from 'express';
-import { ResponseWithLocals } from '@/server/models/Express';
+import { ResponseWithServerStateLocals } from '@/server/models/Express';
 
 const appendQueryParameter = (url: string, parameters: string) => {
   if (url.split('?').pop()?.includes(parameters)) {
@@ -16,7 +16,7 @@ export const routeErrorHandler = (
   // eslint-disable-next-line
   err: any, // ErrorRequestHandler uses type any
   req: Request,
-  res: ResponseWithLocals,
+  res: ResponseWithServerStateLocals,
   next: NextFunction,
 ) => {
   if (err.code === 'EBADCSRFTOKEN') {

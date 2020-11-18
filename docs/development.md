@@ -6,7 +6,7 @@ A list of small guides for common tasks which should help make working on Gatewa
 
 All core functionality of Gateway should work without JavaScript enabled. This allows sign in and registration to target most devices/browsers. To this end we render HTML markup on the server using React's `renderToString` method.
 
-The [`renderer`](../src/server/lib/renderer.ts) method abstracts the rendering away from express. Requires a `url` parameter which determines which route that react and react router should render. The second parameter is an optional options object that can be passed in, which is used to manage the global state, pass in query params, and set the HTML page title. More about the Global State in the sections below.
+The [`renderer`](../src/server/lib/renderer.ts) method abstracts the rendering away from express. Requires a `url` parameter which determines which route that react and react router should render. The second parameter is an optional options object that can be passed in, which is used to manage the client state, pass in query params, and set the HTML page title. More about the Client State in the sections below.
 
 ```ts
 // example of rendering a route
@@ -14,6 +14,7 @@ The [`renderer`](../src/server/lib/renderer.ts) method abstracts the rendering a
 // hardcoded for the example
 const html: string = renderer('/reset/email-sent', {
   pageTitle: 'Check your inbox',
+  serverState: res.locals,
 });
 
 // do stuff with the html markup
@@ -91,66 +92,97 @@ The route should now be accessible.
 
 ## State Management
 
-### Global State
+### Server State Locals and Client State
 
 Sometimes data is needed by the client to render a specific component, e.g. an error. Using SSR with additional client side hydration we
 
-- pass a state (properties in the [`GlobalState`](../src/shared/model/GlobalState.ts) interface) to the renderer method.
-This is passed to the [`Main` app component](../src/client/main.tsx) in React as a prop. 
-The `Main` component utilises a [`GlobalStateProvider`](../src/client/components/GlobalState.tsx) which wraps the app with a [Context Provider](https://reactjs.org/docs/context.html)
+- build a state on the server using Express' [`res.locals`](https://expressjs.com/en/api.html#res.locals) property using the [`ServerState`](../src/server/models/Express.ts) interface.
+- pass this into the [`renderer`](../src/server/lib/renderer.ts) method, the renderer will then build the `ClientState` to be passed to the client using `clientStateFromServerStateLocals`
+  - The [`ClientState`](../src/shared/model/ClientState.ts) interface is used to type what is sent to the client.
+- This is passed to the [`Main` app component](../src/client/main.tsx) in React as a prop. 
+- The `Main` component utilises a [`ClientStateProvider`](../src/client/components/ClientState.tsx) which wraps the app with a [Context Provider](https://reactjs.org/docs/context.html)
 making it possible to access data further down a component tree without having to manually pass props down at each level. 
 - Pass the same data as JSON on the document, and use this for react hydration on the browser. Hydration is executed from the static bundle's entrypoint.
 
 
 It's then possible to access the state through the [`useContext`](https://reactjs.org/docs/hooks-reference.html#usecontext) hook in a descendent component.
 
-It's possible to populate the state by creating a `GlobalState` object, adding values to it, and passing it to the renderer (example below).
+Here's an example of adding some test data to the client state.
 
-Here's an example of adding some test data to the global state.
-
-Firstly define it in the [`GlobalState`](../src/shared/model/GlobalState.ts) interface. It should be optional property.
+Firstly define it in the [`ServerState`](../src/server/models/Express.ts) interface. It can be optional or required property. It's also helpful to set a sensible default value in `getDefaultServerState` method if it needs to be defined.
 
 ```ts
 ...
-export interface GlobalState {
+export interface ServerState {
+  // other data in the state
+  ...
+  test: string;
+}
+
+export const getDefaultServerState = (): ServerState => ({
+  // other data in the default state
+  ...
+  test: 'value'
+});
+```
+
+On the server, add it to the `res.locals` somewhere in an express handler, and passing it to the renderer, use the `ResponseWithServerStateLocals` interface for the response object as it extends Express' `Response` type with the typed locals:
+
+```ts
+router.get(Routes.A_ROUTE, (_: Request, res: ResponseWithServerStateLocals) => {
+  ...
+  // add stuff to the test property
+  res.locals.test = 'This is some test string!';
+  // or from an variable
+  res.locals.test = testString;
+  ...
+  // render and respond with the html and state
+  const html = renderer('/path', {
+    serverState: res.locals,
+  });
+  return res.type('html').send(html);
+});
+```
+
+Next make it avaialble in the [`ClientState`](../src/shared/model/ClientState.ts) interface, if you want it accessible on the client. It should be optional property, as the client can never be sure that the property will exist.
+
+```ts
+...
+export interface ClientState {
   // other data in the state
   ...
   test?: string;
 }
 ```
 
-On the server, add it to the state somewhere in an express handler, and passing it to the renderer:
+In the `renderer` method, if you want the value accessible on the client, add it to `clientStateFromServerStateLocals` method:
 
 ```ts
-...
-// define the state object
-const state: GlobalState = {};
-...
-// add stuff to the test property
-state.test = 'This is some test string!';
-// or from an variable
-state.test = testString;
-...
-// render and respond with the html and state
-const html = renderer('/path', {
-  globalState: state,
-});
-return res.type('html').send(html);
-...
+const clientStateFromServerStateLocals = ({
+  ...
+  test, // destructuring test from locals
+} = defaultLocals): ClientState => {
+  const client: ClientState = {
+    ...
+    test, // add it to the client state
+  };
+  ...
+  return client;
+};
 ```
 
 It's then possible to access it somewhere in the React app using the [`useContext`](https://reactjs.org/docs/hooks-reference.html#usecontext) hook:
 
 ```tsx
 import React, { useContext } from 'react';
-import { GlobalStateContext } from '@/client/components/GlobalState';
+import { ClientStateContext } from '@/client/components/ClientState';
 
 // export some react component
 export const TestComponent = () => {
-  // get the global state from the context
-  const globalState: GlobalState = useContext(GlobalStateContext);
+  // get the client state from the context
+  const clientState: ClientState = useContext(ClientStateContext);
   // extract the data we need from the state
-  const { test } = globalState;
+  const { test } = clientState;
 
   // use the test state
   return <h1>{test}</h1>;

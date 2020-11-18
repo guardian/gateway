@@ -12,10 +12,10 @@ import { ConsentsCommunicationPage } from '@/client/pages/ConsentsCommunication'
 import { ConsentsNewslettersPage } from '@/client/pages/ConsentsNewsletters';
 import { ConsentsConfirmationPage } from '@/client/pages/ConsentsConfirmation';
 import { ResendEmailVerificationPage } from '@/client/pages/ResendEmailVerification';
-import { GlobalState } from '@/shared/model/GlobalState';
+import { ClientState } from '@/shared/model/ClientState';
 
 export type RoutingConfig = {
-  globalState: GlobalState;
+  clientState: ClientState;
   location: string;
 };
 

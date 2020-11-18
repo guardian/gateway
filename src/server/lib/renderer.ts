@@ -1,4 +1,4 @@
-import { GlobalState } from '@/shared/model/GlobalState';
+import { ClientState } from '@/shared/model/ClientState';
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
@@ -8,8 +8,7 @@ import qs from 'query-string';
 import { getConfiguration } from '@/server/lib/configuration';
 import { RoutingConfig } from '@/client/routes';
 import { getAssets } from '@/server/lib/assets';
-import { Locals } from '@/server/models/Express';
-import { parseExpressQueryParams } from '@/server/lib/queryParams';
+import { getDefaultServerState, ServerState } from '@/server/models/Express';
 import { FieldError } from '@/server/routes/changePassword';
 import { CsrfErrors } from '@/shared/model/Errors';
 
@@ -22,47 +21,52 @@ const favicon =
     : 'favicon-32x32-dev-yellow.ico';
 
 interface RendererOpts {
-  globalState?: GlobalState;
-  pageTitle?: string;
-  locals?: Locals;
+  pageTitle: string;
+  serverState: ServerState;
 }
 
 const { gaUID } = getConfiguration();
 
-const defaultLocals: Locals = {
-  queryParams: parseExpressQueryParams('GET', {}),
-  geolocation: 'ROW',
-  csrf: {},
+// function to map from req.locals, to the ClientState used by the client
+const clientStateFromServerStateLocals = (
+  { csrf, globalMessage, pageData, queryParams } = getDefaultServerState(),
+): ClientState => {
+  const clientState: ClientState = {
+    csrf,
+    globalMessage,
+    pageData,
+  };
+
+  // checking if csrf error exists in query params, and attaching it to the
+  // forms field errors
+  if (queryParams.csrfError) {
+    // global state page data will already exist at this point
+    // this is just a check to get typescript to compile
+    if (!clientState.pageData) {
+      clientState.pageData = {};
+    }
+
+    const fieldErrors: Array<FieldError> =
+      clientState.pageData.fieldErrors ?? [];
+    fieldErrors.push({
+      field: 'csrf',
+      message: CsrfErrors.CSRF_ERROR,
+    });
+    clientState.pageData.fieldErrors = fieldErrors;
+  }
+
+  return clientState;
 };
 
-const appendCsrfFieldError = (globalState: GlobalState) => {
-  const fieldErrors: Array<FieldError> = globalState.fieldErrors ?? [];
-  fieldErrors.push({
-    field: 'csrf',
-    message: CsrfErrors.CSRF_ERROR,
-  });
-  globalState.fieldErrors = fieldErrors;
-};
-
-export const renderer: (url: string, opts?: RendererOpts) => string = (
+export const renderer: (url: string, opts: RendererOpts) => string = (
   url,
-  opts = {},
+  { serverState, pageTitle },
 ) => {
-  const {
-    globalState = {},
-    locals = defaultLocals,
-    pageTitle = 'Gateway',
-  } = opts;
-
   const context = {};
 
-  const { queryParams, geolocation, csrf } = locals;
+  const clientState = clientStateFromServerStateLocals(serverState);
 
-  globalState.geolocation = geolocation;
-  globalState.csrf = csrf;
-  if (queryParams.csrfError) appendCsrfFieldError(globalState);
-
-  const queryString = qs.stringify(queryParams);
+  const queryString = qs.stringify(serverState.queryParams);
 
   const location = `${url}${queryString ? `?${queryString}` : ''}`;
 
@@ -74,12 +78,12 @@ export const renderer: (url: string, opts?: RendererOpts) => string = (
         location,
         context,
       },
-      React.createElement(Main, globalState),
+      React.createElement(Main, clientState),
     ),
   );
 
   const routingConfig: RoutingConfig = {
-    globalState,
+    clientState,
     location,
   };
 
