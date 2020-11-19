@@ -140,7 +140,7 @@ describe('Verify email flow', () => {
         .should('have.attr', 'href')
         .and(
           'include',
-          'https://profile.code.dev-theguardian.com/signin?returnUrl=https%3A%2F%2Flocalhost%3A8861%2Fverify-email',
+          'https://profile.code.dev-theguardian.com/signin?returnUrl=http%3A%2F%2Flocalhost%3A8861%2Fverify-email',
         );
     });
 
@@ -159,7 +159,7 @@ describe('Verify email flow', () => {
         .should('have.attr', 'href')
         .and(
           'include',
-          'https://profile.code.dev-theguardian.com/signin?returnUrl=https%3A%2F%2Flocalhost%3A8861%2Fverify-email',
+          'https://profile.code.dev-theguardian.com/signin?returnUrl=http%3A%2F%2Flocalhost%3A8861%2Fverify-email',
         );
     });
 
