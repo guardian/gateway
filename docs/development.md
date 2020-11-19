@@ -373,3 +373,7 @@ Essentially you need to add directives for all the content you're loading on the
 CSP Violations show up in the browser console, so it's easy to tell if theres a violation of the policy. Here's an example screenshot.
 
 _ADD CSP VIOLATION SCREENSHOT_
+
+## AB Testing
+
+See the [AB Testing](ab-testing.md) documentation!
