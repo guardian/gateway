@@ -1288,10 +1288,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@guardian/consent-management-platform@^6.7.2":
-  version "6.7.2"
-  resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-6.7.2.tgz#4a6e2c7757bb014dc2adf4853db5e668f2798530"
-  integrity sha512-tAl+oohzjkRFqLkd5NcZKAp6v5hH0cKdwzX2LwLhQVgwVmtyPVdfr9UZZaIFK4xcHOOqXLQ+Jcy3oBAgOfs47w==
+"@guardian/consent-management-platform@^6.7.4":
+  version "6.7.4"
+  resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-6.7.4.tgz#ae75775c40f8234a2e2774c126a688e9a98f5df4"
+  integrity sha512-f/XieB0dOyGYZDhP/UmyrHiyuehETt2L1GKqacsySFdcD/++fKe7LLcXbza4NE54MHyS0wbvd+Qh4avjG4IPLg==
 
 "@guardian/src-brand@^2.5.0":
   version "2.5.0"
