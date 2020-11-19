@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { useAB } from '@guardian/ab-react';
 import { tests } from '@/shared/model/experiments/abTests';
-import { abTestTest } from '@/shared/model/experiments/tests/ab-test-test';
+import { exampleTest } from '@/shared/model/experiments/tests/example-test';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from './ClientState';
 
@@ -28,7 +28,7 @@ export const ABTestDemo = () => {
 
   // B) Example for checking if a user is in a particular test
   // then get the variant, and run the test method
-  const runnableTest = ABTestAPI.runnableTest(abTestTest);
+  const runnableTest = ABTestAPI.runnableTest(exampleTest);
   console.log(
     'B) API - Check for Test - Outcome:',
     runnableTest?.variantToRun.test({}),
@@ -36,8 +36,8 @@ export const ABTestDemo = () => {
 
   // C) Example for checking if a user is in a specific test and variant
   const isUserInVariant = ABTestAPI.isUserInVariant(
-    abTestTest.id,
-    abTestTest.variants[0].id,
+    exampleTest.id,
+    exampleTest.variants[0].id,
   );
   console.log(
     'C) API - Check for test and variant boolean - Outcome:',
@@ -66,9 +66,9 @@ export const ABTestDemo = () => {
   // format is { [key: string]: { variant: string }}
   const { abTesting: { participations = {} } = {} } = clientState;
   // check if user in a test
-  if (participations[abTestTest.id]?.variant === abTestTest.variants[0].id) {
+  if (participations[exampleTest.id]?.variant === exampleTest.variants[0].id) {
     console.log(
-      `2) I'm in the "${abTestTest.id}" test and "${abTestTest.variants[0].id}" variant.`,
+      `2) I'm in the "${exampleTest.id}" test and "${exampleTest.variants[0].id}" variant.`,
     );
   }
 
@@ -77,16 +77,16 @@ export const ABTestDemo = () => {
   if (isUserInVariant) {
     return (
       <h1>
-        AB TEST DEMO - In the &quot;{abTestTest.id}&quot; test and the &quot;
-        {abTestTest.variants[0].id}&quot; variant.
+        AB TEST DEMO - In the &quot;{exampleTest.id}&quot; test and the &quot;
+        {exampleTest.variants[0].id}&quot; variant.
       </h1>
     );
   } else {
     return (
       <h1>
-        AB TEST DEMO - NOT in the &quot;{abTestTest.id}&quot; test and the
+        AB TEST DEMO - NOT in the &quot;{exampleTest.id}&quot; test and the
         &quot;
-        {abTestTest.variants[0].id}&quot; variant.
+        {exampleTest.variants[0].id}&quot; variant.
       </h1>
     );
   }

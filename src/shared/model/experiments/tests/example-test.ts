@@ -1,7 +1,7 @@
 import { ABTest } from '@guardian/ab-core';
 
-export const abTestTest: ABTest = {
-  id: 'AbTestTest', // This ID must match the Server Side AB Test
+export const exampleTest: ABTest = {
+  id: 'ExampleTest', // This ID must match the Server Side AB Test
   start: '2020-05-20',
   expiry: '2020-12-01', // Remember that the server side test expiry can be different
   author: 'anemailaddress@theguardian.com',

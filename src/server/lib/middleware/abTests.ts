@@ -1,6 +1,6 @@
 import { ResponseWithServerStateLocals } from '@/server/models/Express';
-import { abTestsForMvtId, tests } from '@/shared/model/experiments/abTests';
-import { abTestTest } from '@/shared/model/experiments/tests/ab-test-test';
+import { abTestApiForMvtId, tests } from '@/shared/model/experiments/abTests';
+import { exampleTest } from '@/shared/model/experiments/tests/example-test';
 import { Participations } from '@guardian/ab-core';
 import { Request, NextFunction } from 'express';
 import qs from 'query-string';
@@ -24,7 +24,7 @@ export const abTestMiddleware = (
   res.locals.abTesting.forcedTestVariants = forcedTestVariants;
 
   // set up ab tests for given mvtId
-  const abTestAPI = abTestsForMvtId(
+  const abTestAPI = abTestApiForMvtId(
     res.locals.abTesting.mvtId,
     forcedTestVariants,
   );
@@ -38,7 +38,7 @@ export const abTestMiddleware = (
   // assign the variants to run
   // example:
   // {
-  //   abTestTest: 'variant'
+  //   ExampleTest: 'variant'
   // }
   runnableTests.forEach((test) => {
     res.locals.abTesting.participations[test.id] = {
@@ -76,7 +76,7 @@ export const abTestDemoMiddleware = (
 
   // B) Example for checking if a user is in a particular test
   // then get the variant, and run the test method
-  const runnableTest = ABTestAPI.runnableTest(abTestTest);
+  const runnableTest = ABTestAPI.runnableTest(exampleTest);
   console.log(
     'B) API - Check for Test - Outcome:',
     runnableTest?.variantToRun.test({}),
@@ -84,8 +84,8 @@ export const abTestDemoMiddleware = (
 
   // C) Example for checking if a user is in a specific test and variant
   const isUserInVariant = ABTestAPI.isUserInVariant(
-    abTestTest.id,
-    abTestTest.variants[0].id,
+    exampleTest.id,
+    exampleTest.variants[0].id,
   );
   console.log(
     'C) API - Check for test and variant boolean - Outcome:',

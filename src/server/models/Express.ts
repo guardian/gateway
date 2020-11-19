@@ -3,7 +3,7 @@ import { QueryParams } from '@/shared/model/QueryParams';
 import { CsrfState, PageData } from '@/shared/model/ClientState';
 import { parseExpressQueryParams } from '@/server/lib/queryParams';
 import { Participations, ABTestAPI } from '@guardian/ab-core';
-import { abTestsForMvtId } from '@/shared/model/experiments/abTests';
+import { abTestApiForMvtId } from '@/shared/model/experiments/abTests';
 
 interface ABTesting {
   mvtId: number;
@@ -39,5 +39,5 @@ export const getDefaultServerState = (): ServerState => ({
     participations: {},
     forcedTestVariants: {},
   },
-  abTestAPI: abTestsForMvtId(0),
+  abTestAPI: abTestApiForMvtId(0),
 });

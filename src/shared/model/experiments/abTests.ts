@@ -1,6 +1,6 @@
 import { AB, ABTest, Participations } from '@guardian/ab-core';
 import { switches } from './abSwitches';
-import { abTestTest } from './tests/ab-test-test';
+import { exampleTest } from './tests/example-test';
 
 interface ABTestConfiguration {
   abTestSwitches: Record<string, boolean>;
@@ -9,7 +9,8 @@ interface ABTestConfiguration {
   mvtMaxValue: 1000000;
 }
 
-export const tests: ABTest[] = [abTestTest];
+// Add AB tests to run in this array
+export const tests: ABTest[] = [exampleTest];
 
 export const getDefaultABTestConfiguration = (): ABTestConfiguration => ({
   abTestSwitches: switches,
@@ -18,7 +19,7 @@ export const getDefaultABTestConfiguration = (): ABTestConfiguration => ({
   pageIsSensitive: false,
 });
 
-export const abTestsForMvtId = (
+export const abTestApiForMvtId = (
   mvtId: number,
   forcedTestVariants?: Participations,
 ) => {
