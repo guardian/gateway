@@ -6,7 +6,7 @@ import { ClientState } from '@/shared/model/ClientState';
 import { GatewayRoutes } from './routes';
 import { tests } from '@/shared/model/experiments/abTests';
 import { useAB } from '@guardian/ab-react';
-// UNCOMMENT THE BELOW LINE FOR THE AB TEST DEMO
+// Uncomment below line for AB Test Demo
 // import { ABTestDemo } from './components/ABTestDemo';
 
 export const Main = (props: ClientState) => {
@@ -49,7 +49,7 @@ export const Main = (props: ClientState) => {
         `}
       />
       <ClientStateProvider clientState={props}>
-        {/* UNCOMMENT THE BELOW LINE FOR THE AB TEST DEMO */}
+        {/* Uncomment below line for AB Test Demo */}
         {/* <ABTestDemo />; */}
         <GatewayRoutes />
       </ClientStateProvider>

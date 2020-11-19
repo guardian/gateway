@@ -1,5 +1,8 @@
 import { NextFunction, Request } from 'express';
 import { ResponseWithServerStateLocals } from '@/server/models/Express';
+import { getConfiguration } from '../configuration';
+
+const { stage } = getConfiguration();
 
 export const mvtIdMiddleware = (
   req: Request,
@@ -13,7 +16,7 @@ export const mvtIdMiddleware = (
     mvtId = Number(req.cookies['GU_mvt_id']) || 0;
   }
 
-  if (req.cookies['GU_mvt_id_local']) {
+  if (req.cookies['GU_mvt_id_local'] && stage === 'DEV') {
     mvtId = Number(req.cookies['GU_mvt_id_local']) || 0;
   }
 

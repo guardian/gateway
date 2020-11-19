@@ -56,6 +56,8 @@ export const ABTestDemo = () => {
   // In the ClientState, we pass the testId and variant of any tests
   // the user is in, you can check this too.
   // This isn't recommended as the ClientState isn't guaranteed to be available
+  // It also only has the test id and variant
+  // so may be more complex to run a test using this
 
   // Example:
   // Load the client state

@@ -8,7 +8,11 @@ import { csrfMiddleware } from '@/server/lib/middleware/csrf';
 import { getConfiguration } from '@/server/lib/configuration';
 import { serverStateLocalsMiddleware } from '@/server/lib/middleware/serverStateLocals';
 import { mvtIdMiddleware } from '@/server/lib/middleware/mvtId';
-import { abTestMiddleware } from '@/server/lib/middleware/abTests';
+import {
+  // Uncomment below line for AB Test Demo
+  // abTestDemoMiddleware,
+  abTestMiddleware,
+} from '@/server/lib/middleware/abTests';
 
 const { appSecret } = getConfiguration();
 
@@ -31,6 +35,10 @@ export const applyMiddleware = (server: Express): void => {
 
   // ab testing middleware
   server.use([mvtIdMiddleware, abTestMiddleware]);
+
+  // ab test demo middleware
+  // Uncomment below line for AB Test Demo
+  // server.use(abTestDemoMiddleware);
 
   // add routes
   applyRoutes(server);
