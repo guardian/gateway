@@ -4,6 +4,12 @@ import { NewsLetter } from '@/shared/model/Newsletter';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { Participations } from '@guardian/ab-core';
 
+interface ABTesting {
+  mvtId?: number;
+  participations?: Participations;
+  forcedTestVariants?: Participations;
+}
+
 export interface GlobalMessage {
   error?: string;
   success?: string;
@@ -29,9 +35,7 @@ export interface ClientState {
   globalMessage?: GlobalMessage;
   pageData?: PageData;
   csrf?: CsrfState;
-  mvtId?: number;
-  abTests?: Participations;
-  forcedTestVariants?: Participations;
+  abTesting?: ABTesting;
 }
 
 export type CsrfState = {

@@ -21,13 +21,19 @@ export const abTestMiddleware = (
       };
     }
   });
-  res.locals.forcedTestVariants = forcedTestVariants;
+  res.locals.abTesting.forcedTestVariants = forcedTestVariants;
 
   // set up ab tests for given mvtId
-  const ABTestAPI = abTestsForMvtId(res.locals.mvtId, forcedTestVariants);
+  const abTestAPI = abTestsForMvtId(
+    res.locals.abTesting.mvtId,
+    forcedTestVariants,
+  );
+
+  // set the abTestAPI for this request chain
+  res.locals.abTestAPI = abTestAPI;
 
   // get a list of tests to run
-  const runnableTests = ABTestAPI.allRunnableTests(tests);
+  const runnableTests = abTestAPI.allRunnableTests(tests);
 
   // assign the variants to run
   // example:
@@ -35,7 +41,7 @@ export const abTestMiddleware = (
   //   abTestTest: 'variant'
   // }
   runnableTests.forEach((test) => {
-    res.locals.abTests[test.id] = {
+    res.locals.abTesting.participations[test.id] = {
       variant: test.variantToRun.id,
     };
   });
@@ -49,10 +55,7 @@ export const abTestDemoMiddleware = (
   next: NextFunction,
 ) => {
   // get the AB Test API
-  const ABTestAPI = abTestsForMvtId(
-    res.locals.mvtId,
-    res.locals.forcedTestVariants,
-  );
+  const ABTestAPI = res.locals.abTestAPI;
 
   // WAYS TO RUN AB TESTS
   // 1) Using the API (recommended)

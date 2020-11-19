@@ -10,7 +10,7 @@ export const mvtIdMiddleware = (
   next: NextFunction,
 ) => {
   // defaults to 0 already
-  let mvtId = res.locals.mvtId;
+  let mvtId = res.locals.abTesting.mvtId;
 
   if (req.cookies['GU_mvt_id']) {
     mvtId = Number(req.cookies['GU_mvt_id']) || 0;
@@ -20,7 +20,7 @@ export const mvtIdMiddleware = (
     mvtId = Number(req.cookies['GU_mvt_id_local']) || 0;
   }
 
-  res.locals.mvtId = mvtId;
+  res.locals.abTesting.mvtId = mvtId;
 
   next();
 };

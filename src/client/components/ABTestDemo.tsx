@@ -64,9 +64,9 @@ export const ABTestDemo = () => {
   const clientState: ClientState = useContext(ClientStateContext);
   // Get the AB Tests from clientState, these are the AB Tests the user is in with
   // format is { [key: string]: { variant: string }}
-  const { abTests = {} } = clientState;
+  const { abTesting: { participations = {} } = {} } = clientState;
   // check if user in a test
-  if (abTests[abTestTest.id]?.variant === abTestTest.variants[0].id) {
+  if (participations[abTestTest.id]?.variant === abTestTest.variants[0].id) {
     console.log(
       `2) I'm in the "${abTestTest.id}" test and "${abTestTest.variants[0].id}" variant.`,
     );

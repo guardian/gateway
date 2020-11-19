@@ -37,18 +37,14 @@ const clientStateFromServerStateLocals = (
     globalMessage,
     pageData,
     queryParams,
-    mvtId,
-    abTests,
-    forcedTestVariants,
+    abTesting,
   } = getDefaultServerState(),
 ): ClientState => {
   const clientState: ClientState = {
     csrf,
     globalMessage,
     pageData,
-    mvtId,
-    abTests,
-    forcedTestVariants,
+    abTesting,
   };
 
   // checking if csrf error exists in query params, and attaching it to the
@@ -84,7 +80,9 @@ export const renderer: (url: string, opts: RendererOpts) => string = (
 
   const location = `${url}${queryString ? `?${queryString}` : ''}`;
 
-  const { mvtId = 0, forcedTestVariants = {} } = clientState;
+  const {
+    abTesting: { mvtId = 0, forcedTestVariants = {} } = {},
+  } = clientState;
 
   // Any changes made here must also be made to the hydration in the static webpack bundle
   const react = ReactDOMServer.renderToString(
