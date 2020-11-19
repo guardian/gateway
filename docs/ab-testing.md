@@ -35,3 +35,40 @@ The [AB Testing Library](https://github.com/guardian/ab-testing) has more inform
 
 ## Running a test
 
+### Client side
+
+See the [`ABTestDemo`](../src/client/components/ABTestDemo.tsx) component for possible ways to run tests on the client. You can view this demo by uncommenting the relevant lines in the [`Main`](../src/client/main.tsx) component.
+
+### Per request
+
+Running per request is a bit more complicated, as an example, see the [`abTestDemoMiddleware`](../src/server/lib/middleware/abTests.ts) on a possible way of running an AB test on that particular users request. This can me demoed by uncommenting the relevant lines in the [middleware index](../src/server/lib/middleware/index.ts) file.
+
+## Forcing/Viewing a test
+
+There are 2 ways of forcing yourself into a test:
+
+1. **Recommended:** Use `GU_mvt_id` (or `GU_mvt_id_local`) cookie
+2. Use URL parameters
+
+### Cookie (Recommended)
+
+This method requires manually setting the `GU_mvt_id` cookie, or the `GU_mvt_id_local` cookie (if you're on the `DEV` stage).
+
+Use [this simple calculator](https://ab-tests.netlify.app/) to work out what value you need for a particular test. Simply add the AB Test Config information (audience + offset), and the variants in that test. Then modify the MVT ID value until `Is user in test?` is `Yes` and the variant you want is highlighted. Then copy this MVT ID value as the cookie value for the `GU_mvt_id` or `GU_mvt_id_local` cookie.
+
+The library has [useful documentation](https://github.com/guardian/ab-testing#mvtid-calculator) about the calculator.
+
+At first glance this may seem more difficult that using the URL parameters, but the main advantages to this method are:
+
+- Less chance of overrlapping tests
+  - URL params set the `forcedTestVariants` parameter in the framework, which may mean that it may overlap with any other tests in that bucket.
+- You'll always be in that AB Test throughout the lifetime of the cookie
+  - URL parameters are only valid for that single request, which means that tests that rely on multiple requests/routes would be required to add the parameters on every request manually
+- More granular control for audience/offset testing
+  - As the values are individual buckets, you can fine tune the audience and the offset as required.
+
+### URL Params
+
+You can also force yourself into a test and variant using URL parameters, either in the query parameters (after the `?`) or as a search parameter (after the `#`). This requires knowing the ab test id and the variant name. Also to note, you have to prefix the test id with `ab-`. For example, to force yourself into the `ExampleTest` and the `variant` variant. You could add the parameter onto the URL like this `https://profile.theguardian.com/reset#ab-ExampleTest=variant`.
+
+The advantages to this are that it's simple to do and test, however the parameters may not persist between requests, so might not be able to test a full flow relying on the AB test.
