@@ -1305,11 +1305,6 @@
   dependencies:
     "@guardian/old-cmp" "npm:@guardian/consent-management-platform@^3.4.10"
 
-"@guardian/libs@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@guardian/libs/-/libs-1.4.1.tgz#86244a043e2e965d670b0207367d15a3df3bb4fb"
-  integrity sha512-b0jLRZzGQ6J1t+wJ3txFSetmk5Hk1YXxgWuoVpObt+lUn3doxgsf3MHxa9HBOg/ZbrImyedWadzTYiLmbVz6Dw==
-
 "@guardian/old-cmp@npm:@guardian/consent-management-platform@^3.4.10":
   version "3.4.10"
   resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-3.4.10.tgz#604e71d27c6bfa4664c83c55578a8aa73ff09d82"
