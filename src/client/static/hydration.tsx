@@ -9,11 +9,11 @@ export const hydrateApp = () => {
     document.getElementById('routingConfig')?.innerHTML ?? '{}',
   );
 
-  const globalState = routingConfig.globalState;
+  const clientState = routingConfig.clientState;
 
   hydrate(
     <StaticRouter location={`${routingConfig.location}`} context={{}}>
-      <Main {...globalState} />
+      <Main {...clientState} />
     </StaticRouter>,
     document.getElementById('app'),
   );

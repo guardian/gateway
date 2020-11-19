@@ -1,4 +1,4 @@
-import { PageData } from '@/shared/model/GlobalState';
+import { PageData } from '@/shared/model/ClientState';
 import { Routes } from '@/shared/model/Routes';
 import { sendOphanInteractionEvent } from './ophan';
 

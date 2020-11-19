@@ -11,8 +11,8 @@ import {
 import { CommunicationCard } from '@/client/components/ConsentsCommunicationCard';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { heading, text } from '@/client/styles/Consents';
-import { GlobalState } from '@/shared/model/GlobalState';
-import { GlobalStateContext } from '@/client/components/GlobalState';
+import { ClientState } from '@/shared/model/ClientState';
+import { ClientStateContext } from '@/client/components/ClientState';
 import { Consents } from '@/shared/model/Consent';
 import { Checkbox, CheckboxGroup } from '@guardian/src-checkbox';
 
@@ -36,9 +36,9 @@ const communicationCardContainer = css`
 export const ConsentsCommunicationPage = () => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
 
-  const globalState = useContext<GlobalState>(GlobalStateContext);
+  const clientState = useContext<ClientState>(ClientStateContext);
 
-  const { pageData = {} } = globalState;
+  const { pageData = {} } = clientState;
   const { consents = [] } = pageData;
 
   const market_research_optout = consents.find(

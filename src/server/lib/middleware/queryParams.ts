@@ -1,15 +1,15 @@
 import { NextFunction, Request } from 'express';
 import { parseExpressQueryParams } from '@/server/lib/queryParams';
-import { ResponseWithLocals } from '@/server/models/Express';
+import { ResponseWithServerStateLocals } from '@/server/models/Express';
 
 export const queryParamsMiddleware = (
   req: Request,
-  res: ResponseWithLocals,
+  res: ResponseWithServerStateLocals,
   next: NextFunction,
 ) => {
   const { query } = req;
 
-  const parsedQueryParams = parseExpressQueryParams(query);
+  const parsedQueryParams = parseExpressQueryParams(req.method, query);
 
   res.locals.queryParams = parsedQueryParams;
 

@@ -7,7 +7,6 @@ import {
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
-import { GlobalState } from '@/shared/model/GlobalState';
 import { consentPages } from '@/server/routes/consents';
 import { read as getUser } from '@/server/lib/idapi/user';
 import { ConsentsErrors, VerifyEmailErrors } from '@/shared/model/Errors';
@@ -18,86 +17,90 @@ import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { PageTitle } from '@/shared/model/PageTitle';
+import { ResponseWithServerStateLocals } from '@/server/models/Express';
 
 const router = Router();
 
 const { signInPageUrl } = getConfiguration();
 const profileUrl = getProfileUrl();
 
-router.get(Routes.VERIFY_EMAIL, async (req: Request, res: Response) => {
-  const state: GlobalState = {
-    signInPageUrl: `${signInPageUrl}?returnUrl=${encodeURIComponent(
+router.get(
+  Routes.VERIFY_EMAIL,
+  async (req: Request, res: ResponseWithServerStateLocals) => {
+    res.locals.pageData.signInPageUrl = `${signInPageUrl}?returnUrl=${encodeURIComponent(
       `${profileUrl}${Routes.VERIFY_EMAIL}`,
-    )}`,
-  };
+    )}`;
 
-  let status = 200;
+    let status = 200;
 
-  try {
-    const sc_gu_u = req.cookies.SC_GU_U;
+    try {
+      const sc_gu_u = req.cookies.SC_GU_U;
 
-    if (!sc_gu_u) {
-      throw { status: 403, message: ConsentsErrors.ACCESS_DENIED };
+      if (!sc_gu_u) {
+        throw { status: 403, message: ConsentsErrors.ACCESS_DENIED };
+      }
+
+      const { primaryEmailAddress } = await getUser(req.ip, sc_gu_u);
+      res.locals.pageData.email = primaryEmailAddress;
+    } catch (error) {
+      status = error.status;
+
+      if (status === 500) {
+        res.locals.globalMessage.error = error.message;
+      }
     }
 
-    const { primaryEmailAddress } = await getUser(req.ip, sc_gu_u);
-    state.email = primaryEmailAddress;
-  } catch (error) {
-    status = error.status;
+    const html = renderer(Routes.VERIFY_EMAIL, {
+      pageTitle: PageTitle.VERIFY_EMAIL,
+      serverState: res.locals,
+    });
 
-    if (status === 500) {
-      state.error = error.message;
+    return res.status(status).type('html').send(html);
+  },
+);
+
+router.post(
+  Routes.VERIFY_EMAIL,
+  async (req: Request, res: ResponseWithServerStateLocals) => {
+    let status = 200;
+
+    try {
+      const sc_gu_u = req.cookies.SC_GU_U;
+
+      if (!sc_gu_u) {
+        throw { status: 403, message: ConsentsErrors.ACCESS_DENIED };
+      }
+
+      const {
+        email = (await getUser(req.ip, sc_gu_u)).primaryEmailAddress,
+      } = req.body;
+
+      res.locals.pageData.email = email;
+
+      await sendVerificationEmail(req.ip, sc_gu_u);
+      trackMetric(Metrics.SEND_VALIDATION_EMAIL_SUCCESS);
+
+      res.locals.globalMessage.success =
+        'Email Sent. Please check your inbox and follow the link.';
+
+      const emailProvider = getProviderForEmail(email);
+      if (emailProvider) {
+        res.locals.pageData.emailProvider = emailProvider.id;
+      }
+    } catch (error) {
+      trackMetric(Metrics.SEND_VALIDATION_EMAIL_FAILURE);
+      status = error.status;
+      res.locals.globalMessage.error = error.message;
     }
-  }
 
-  const html = renderer(Routes.VERIFY_EMAIL, {
-    globalState: state,
-    pageTitle: PageTitle.VERIFY_EMAIL,
-  });
+    const html = renderer(Routes.VERIFY_EMAIL, {
+      pageTitle: PageTitle.VERIFY_EMAIL,
+      serverState: res.locals,
+    });
 
-  return res.status(status).type('html').send(html);
-});
-
-router.post(Routes.VERIFY_EMAIL, async (req: Request, res: Response) => {
-  const state: GlobalState = {};
-
-  let status = 200;
-
-  try {
-    const sc_gu_u = req.cookies.SC_GU_U;
-
-    if (!sc_gu_u) {
-      throw { status: 403, message: ConsentsErrors.ACCESS_DENIED };
-    }
-
-    const {
-      email = (await getUser(req.ip, sc_gu_u)).primaryEmailAddress,
-    } = req.body;
-
-    state.email = email;
-
-    await sendVerificationEmail(req.ip, sc_gu_u);
-    trackMetric(Metrics.SEND_VALIDATION_EMAIL_SUCCESS);
-
-    state.success = 'Email Sent. Please check your inbox and follow the link.';
-
-    const emailProvider = getProviderForEmail(email);
-    if (emailProvider) {
-      state.emailProvider = emailProvider.id;
-    }
-  } catch (error) {
-    trackMetric(Metrics.SEND_VALIDATION_EMAIL_FAILURE);
-    status = error.status;
-    state.error = error.message;
-  }
-
-  const html = renderer(Routes.VERIFY_EMAIL, {
-    globalState: state,
-    pageTitle: PageTitle.VERIFY_EMAIL,
-  });
-
-  return res.status(status).type('html').send(html);
-});
+    return res.status(status).type('html').send(html);
+  },
+);
 
 router.get(
   `${Routes.VERIFY_EMAIL}${Routes.VERIFY_EMAIL_TOKEN}`,

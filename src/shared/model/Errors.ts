@@ -19,7 +19,7 @@ export enum ChangePasswordErrors {
   PASSWORD_BLANK = 'Password field must not be blank',
   REPEAT_PASSWORD_BLANK = 'Repeat Password field must not be blank',
   PASSWORD_NO_MATCH = 'The passwords do not match, please try again',
-  PASSWORD_LENGTH = 'Password must be between 6 and 72 characters',
+  PASSWORD_LENGTH = 'Password must be between 8 and 72 characters',
 }
 
 export enum VerifyEmailErrors {
@@ -37,4 +37,8 @@ export enum ConsentsErrors {
   GENERIC = 'There was a problem saving your choice, please try again.',
   USER = 'There was a problem retrieving your details, please try again.',
   ACCESS_DENIED = 'Access Denied',
+}
+
+export enum CsrfErrors {
+  CSRF_ERROR = 'Sorry, something went wrong. If you made any changes these might have not been saved. Please try again.',
 }

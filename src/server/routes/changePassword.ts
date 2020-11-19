@@ -2,13 +2,12 @@ import { Request, Router } from 'express';
 import { Routes } from '@/shared/model/Routes';
 import { renderer } from '@/server/lib/renderer';
 import { logger } from '@/server/lib/logger';
-import { GlobalState } from '@/shared/model/GlobalState';
 import {
   validate as validateToken,
   change as changePassword,
 } from '@/server/lib/idapi/changePassword';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
-import { ResponseWithLocals } from '@/server/models/Express';
+import { ResponseWithServerStateLocals } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';
 import { removeNoCache } from '@/server/lib/middleware/cache';
@@ -41,7 +40,7 @@ const validatePasswordChangeFields = (
     });
   }
 
-  if (password && (password.length < 6 || password.length > 72)) {
+  if (password && (password.length < 8 || password.length > 72)) {
     errors.push({
       field: 'password',
       message: ChangePasswordErrors.PASSWORD_LENGTH,
@@ -50,7 +49,7 @@ const validatePasswordChangeFields = (
 
   if (
     passwordConfirm &&
-    (passwordConfirm.length < 6 || passwordConfirm.length > 72)
+    (passwordConfirm.length < 8 || passwordConfirm.length > 72)
   ) {
     errors.push({
       field: 'password_confirm',
@@ -63,28 +62,23 @@ const validatePasswordChangeFields = (
 
 router.get(
   `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
-  async (req: Request, res: ResponseWithLocals) => {
+  async (req: Request, res: ResponseWithServerStateLocals) => {
     const { token } = req.params;
-    const state: GlobalState = {};
 
     try {
-      const email = await validateToken(token, req.ip);
-
-      state.email = email;
+      res.locals.pageData.email = await validateToken(token, req.ip);
     } catch (error) {
       logger.error(error);
       return res.type('html').send(
         renderer(Routes.RESET_RESEND, {
-          globalState: state,
-          locals: res.locals,
+          serverState: res.locals,
           pageTitle: PageTitle.RESET_RESEND,
         }),
       );
     }
 
     const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
-      globalState: state,
-      locals: res.locals,
+      serverState: res.locals,
       pageTitle: PageTitle.CHANGE_PASSWORD,
     });
     return res.type('html').send(html);
@@ -93,9 +87,7 @@ router.get(
 
 router.post(
   `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
-  async (req: Request, res: ResponseWithLocals) => {
-    const state: GlobalState = {};
-
+  async (req: Request, res: ResponseWithServerStateLocals) => {
     const { token } = req.params;
 
     const { password, password_confirm: passwordConfirm } = req.body;
@@ -107,10 +99,10 @@ router.post(
       );
 
       if (fieldErrors.length) {
-        state.fieldErrors = fieldErrors;
+        res.locals.pageData.email = await validateToken(token, req.ip);
+        res.locals.pageData.fieldErrors = fieldErrors;
         const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
-          globalState: state,
-          locals: res.locals,
+          serverState: res.locals,
           pageTitle: PageTitle.CHANGE_PASSWORD,
         });
         return res.status(422).type('html').send(html);
@@ -129,10 +121,9 @@ router.post(
 
       trackMetric(Metrics.CHANGE_PASSWORD_FAILURE);
 
-      state.error = message;
+      res.locals.globalMessage.error = message;
       const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
-        globalState: state,
-        locals: res.locals,
+        serverState: res.locals,
         pageTitle: PageTitle.CHANGE_PASSWORD,
       });
       return res.status(status).type('html').send(html);
@@ -141,8 +132,7 @@ router.post(
     trackMetric(Metrics.CHANGE_PASSWORD_SUCCESS);
 
     const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
-      globalState: state,
-      locals: res.locals,
+      serverState: res.locals,
       pageTitle: PageTitle.CHANGE_PASSWORD_COMPLETE,
     });
 
@@ -152,9 +142,9 @@ router.post(
 
 router.get(
   Routes.CHANGE_PASSWORD_COMPLETE,
-  (_: Request, res: ResponseWithLocals) => {
+  (_: Request, res: ResponseWithServerStateLocals) => {
     const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
-      locals: res.locals,
+      serverState: res.locals,
       pageTitle: PageTitle.CHANGE_PASSWORD_COMPLETE,
     });
     return res.type('html').send(html);
@@ -164,9 +154,10 @@ router.get(
 router.get(
   Routes.RESET_RESEND,
   removeNoCache,
-  (_: Request, res: ResponseWithLocals) => {
+  (_: Request, res: ResponseWithServerStateLocals) => {
     const html = renderer(Routes.RESET_RESEND, {
       pageTitle: PageTitle.RESET_RESEND,
+      serverState: res.locals,
     });
     res.type('html').send(html);
   },

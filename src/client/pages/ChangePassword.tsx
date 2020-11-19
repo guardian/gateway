@@ -3,8 +3,8 @@ import { useParams, useLocation } from 'react-router-dom';
 import { TextInput } from '@guardian/src-text-input';
 import { Button } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
-import { GlobalState } from '@/shared/model/GlobalState';
-import { GlobalStateContext } from '@/client/components/GlobalState';
+import { ClientState } from '@/shared/model/ClientState';
+import { ClientStateContext } from '@/client/components/ClientState';
 import { Routes } from '@/shared/model/Routes';
 import { PageBox } from '@/client/components/PageBox';
 import { PageHeader } from '@/client/components/PageHeader';
@@ -12,11 +12,12 @@ import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
 import { form, textInput, button } from '@/client/styles/Shared';
 import { SignInLayout } from '@/client/layouts/SignInLayout';
+import { CsrfFormField } from '@/client/components/CsrfFormField';
 
 export const ChangePasswordPage = () => {
   const { search } = useLocation();
-  const globalState: GlobalState = useContext(GlobalStateContext);
-  const { email = '', fieldErrors = [] } = globalState;
+  const clientState: ClientState = useContext(ClientStateContext);
+  const { pageData: { email = '', fieldErrors = [] } = {} } = clientState;
   const { token } = useParams<{ token: string }>();
 
   return (
@@ -32,10 +33,12 @@ export const ChangePasswordPage = () => {
             method="post"
             action={`${Routes.CHANGE_PASSWORD}/${token}${search}`}
           >
+            <CsrfFormField />
+
             <TextInput
               css={textInput}
               label="New Password"
-              supporting="Between 6 and 72 characters"
+              supporting="Between 8 and 72 characters"
               name="password"
               type="password"
               error={

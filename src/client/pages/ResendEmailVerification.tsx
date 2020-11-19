@@ -6,14 +6,15 @@ import { PageBodyText } from '@/client/components/PageBodyText';
 import { PageBox } from '@/client/components/PageBox';
 import { PageHeader } from '@/client/components/PageHeader';
 import { form, button, linkButton } from '@/client/styles/Shared';
-import { GlobalState } from '@/shared/model/GlobalState';
-import { GlobalStateContext } from '@/client/components/GlobalState';
+import { ClientState } from '@/shared/model/ClientState';
+import { ClientStateContext } from '@/client/components/ClientState';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
 import { css } from '@emotion/core';
 import { textSans } from '@guardian/src-foundations/typography';
 import { Routes } from '@/shared/model/Routes';
 import { getProviderById } from '@/shared/lib/emailProvider';
 import { EmailProvider } from '@/shared/model/EmailProvider';
+import { CsrfFormField } from '@/client/components/CsrfFormField';
 
 const bold = css`
   ${textSans.medium({ lineHeight: 'regular', fontWeight: 'bold' })}
@@ -71,6 +72,7 @@ const LoggedIn = ({
         <PageBodyText>{success}</PageBodyText>
       ) : (
         <form css={form} method="post" action={Routes.VERIFY_EMAIL}>
+          <CsrfFormField />
           <input type="hidden" name="email" value={email} />
           <Button
             css={button}
@@ -99,11 +101,9 @@ const LoggedIn = ({
 
 export const ResendEmailVerificationPage = () => {
   const {
-    email,
-    signInPageUrl,
-    success,
-    emailProvider: emailProviderId,
-  } = useContext<GlobalState>(GlobalStateContext);
+    globalMessage: { success } = {},
+    pageData: { email, signInPageUrl, emailProvider: emailProviderId } = {},
+  } = useContext<ClientState>(ClientStateContext);
 
   const emailProvider = getProviderById(emailProviderId);
 
