@@ -126,7 +126,51 @@ const defaultUserConsent = [
   },
 ];
 
+const optedOutUserConsent = [
+  {
+    id: 'sms',
+    consented: false,
+  },
+  {
+    id: 'post_optout',
+    consented: false,
+  },
+  {
+    id: 'phone_optout',
+    consented: false,
+  },
+  {
+    id: 'profiling_optout',
+    consented: true,
+  },
+  {
+    id: 'market_research_optout',
+    consented: true,
+  },
+  {
+    id: 'supporter',
+    consented: false,
+  },
+  {
+    id: 'jobs',
+    consented: false,
+  },
+  {
+    id: 'holidays',
+    consented: false,
+  },
+  {
+    id: 'events',
+    consented: false,
+  },
+  {
+    id: 'offers',
+    consented: false,
+  },
+];
+
 module.exports = {
   allConsents,
+  optedOutUserConsent,
   defaultUserConsent,
 };

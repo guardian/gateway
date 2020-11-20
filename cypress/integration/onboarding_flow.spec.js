@@ -4,7 +4,11 @@
 const {
   authRedirectSignInRecentlyEmailValidated,
 } = require('../support/idapi/auth');
-const { allConsents, defaultUserConsent } = require('../support/idapi/consent');
+const {
+  allConsents,
+  defaultUserConsent,
+  optedOutUserConsent,
+} = require('../support/idapi/consent');
 const {
   verifiedUserWithNoConsent,
   createUser,
@@ -223,6 +227,8 @@ describe('Onboarding flow', () => {
       // mock form save success
       cy.idapiMock(200);
 
+      cy.idapiPermaMock(200, createUser(optedOutUserConsent), '/user/me');
+
       YourDataPage.getSaveAndContinueButton().click();
       cy.idapiLastPayloadIs([{ id: 'profiling_optout', consented: true }]);
 
@@ -235,8 +241,8 @@ describe('Onboarding flow', () => {
       ReviewPage.getNewslettersSection().contains('N/A');
       ReviewPage.getConsentsSection().contains('N/A');
 
-      ReviewPage.getMarketingResearchChoice().contains('Yes');
-      ReviewPage.getMarketingAnalysisChoice().contains('Yes');
+      ReviewPage.getMarketingResearchChoice().contains('No');
+      ReviewPage.getMarketingAnalysisChoice().contains('No');
 
       ReviewPage.getReturnButton()
         .should('have.attr', 'href')
