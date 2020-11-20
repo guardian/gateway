@@ -76,7 +76,7 @@
     "@emotion/core": "^10.0.35",
     "@guardian/ab-core": "^2.0.0",
     "@guardian/ab-react": "^2.0.1",
-    "@guardian/consent-management-platform": "^4.3.0",
+    "@guardian/consent-management-platform": "^6.7.4",
     "@guardian/src-brand": "^2.5.0",
     "@guardian/src-button": "^2.5.0",
     "@guardian/src-checkbox": "^2.5.0",

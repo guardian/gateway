@@ -27,8 +27,8 @@ gaInit();
 if (!window.Cypress) {
   // load cmp if it should show
   (async () => {
-    const isInUsa = (await getCountryCode()) === 'US';
+    const country = await getCountryCode();
 
-    cmp.init({ isInUsa });
+    cmp.init({ country });
   })();
 }
