@@ -64,17 +64,14 @@ export const Main = (props: ClientState) => {
 
 ### Per request
 
-Running per request is a bit more complicated, as an example, see the [`abTestDemoMiddleware`](../src/server/lib/middleware/abTests.ts) on a possible way of running an AB test on that particular users request.
+Running per request is a bit more complicated, as an example, see the [`abTestDemoMiddleware`](../src/server/lib/middleware/abTestDemo.ts) on a possible way of running an AB test on that particular users request.
 
 This can me demoed by adding this middleware to in the [middleware index](../src/server/lib/middleware/index.ts) file, below the ab testing middleware.
 
 ```ts
 // other imports
 ...
-import {
-  abTestDemoMiddleware,
-  abTestMiddleware,
-} from '@/server/lib/middleware/abTests';
+import { abTestDemoMiddleware } from '@/server/lib/middleware/abTestDemo';
 ...
 
 export const applyMiddleware = (server: Express): void => {
@@ -84,6 +81,7 @@ export const applyMiddleware = (server: Express): void => {
 
   // ab test demo middleware
   server.use(abTestDemoMiddleware);
+  ...
 }
 ```
 
