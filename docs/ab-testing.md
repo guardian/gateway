@@ -37,11 +37,57 @@ The [AB Testing Library](https://github.com/guardian/ab-testing) has more inform
 
 ### Client side
 
-See the [`ABTestDemo`](../src/client/components/ABTestDemo.tsx) component for possible ways to run tests on the client. You can view this demo by uncommenting the relevant lines in the [`Main`](../src/client/main.tsx) component.
+See the [`ABTestDemo`](../src/client/components/ABTestDemo.tsx) component for possible ways to run tests on the client.
+
+You can view this demo by adding this component to the [`Main`](../src/client/main.tsx) component.
+
+```tsx
+// other imports
+...
+import { ABTestDemo } from './components/ABTestDemo';
+...
+
+export const Main = (props: ClientState) => {
+  ...
+  return (
+    <>
+      ...
+      <ClientStateProvider clientState={props}>
+        {/* This will show the demo above the rest of the app*/}
+        <ABTestDemo />
+        <GatewayRoutes />
+      </ClientStateProvider>
+    </>
+  );
+}
+```
 
 ### Per request
 
-Running per request is a bit more complicated, as an example, see the [`abTestDemoMiddleware`](../src/server/lib/middleware/abTests.ts) on a possible way of running an AB test on that particular users request. This can me demoed by uncommenting the relevant lines in the [middleware index](../src/server/lib/middleware/index.ts) file.
+Running per request is a bit more complicated, as an example, see the [`abTestDemoMiddleware`](../src/server/lib/middleware/abTests.ts) on a possible way of running an AB test on that particular users request.
+
+This can me demoed by adding this middleware to in the [middleware index](../src/server/lib/middleware/index.ts) file, below the ab testing middleware.
+
+```ts
+// other imports
+...
+import {
+  abTestDemoMiddleware,
+  abTestMiddleware,
+} from '@/server/lib/middleware/abTests';
+...
+
+export const applyMiddleware = (server: Express): void => {
+  ...
+  // ab testing middleware
+  server.use([mvtIdMiddleware, abTestMiddleware]);
+
+  // ab test demo middleware
+  server.use(abTestDemoMiddleware);
+}
+```
+
+In both demos be sure not to commit the demo changes to production.
 
 ## Forcing/Viewing a test
 

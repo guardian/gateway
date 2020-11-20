@@ -6,8 +6,6 @@ import { ClientState } from '@/shared/model/ClientState';
 import { GatewayRoutes } from './routes';
 import { tests } from '@/shared/model/experiments/abTests';
 import { useAB } from '@guardian/ab-react';
-// Uncomment below line for AB Test Demo
-// import { ABTestDemo } from './components/ABTestDemo';
 
 export const Main = (props: ClientState) => {
   // initalise the AB Test Framework:
@@ -49,8 +47,6 @@ export const Main = (props: ClientState) => {
         `}
       />
       <ClientStateProvider clientState={props}>
-        {/* Uncomment below line for AB Test Demo */}
-        {/* <ABTestDemo />; */}
         <GatewayRoutes />
       </ClientStateProvider>
     </>
