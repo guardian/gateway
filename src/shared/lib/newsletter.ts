@@ -44,9 +44,9 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
     'US' as GeoLocation,
     [
       Newsletters.TODAY_US,
-      Newsletters.US_MORNING_BRIEFING,
-      Newsletters.MINUTE_US,
+      Newsletters.THE_LONG_READ,
       Newsletters.GREENLIGHT,
+      Newsletters.BOOKMARKS,
     ] as Newsletters[],
   ],
 ]);
