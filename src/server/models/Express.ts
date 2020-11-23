@@ -2,6 +2,14 @@ import { Response } from 'express';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { CsrfState, PageData } from '@/shared/model/ClientState';
 import { parseExpressQueryParams } from '@/server/lib/queryParams';
+import { Participations, ABTestAPI } from '@guardian/ab-core';
+import { abTestApiForMvtId } from '@/shared/model/experiments/abTests';
+
+interface ABTesting {
+  mvtId: number;
+  participations: Participations;
+  forcedTestVariants: Participations;
+}
 
 export interface ServerState {
   globalMessage: {
@@ -11,6 +19,8 @@ export interface ServerState {
   pageData: PageData;
   queryParams: QueryParams;
   csrf: CsrfState;
+  abTesting: ABTesting;
+  abTestAPI: ABTestAPI;
 }
 
 export interface ResponseWithServerStateLocals extends Response {
@@ -24,4 +34,10 @@ export const getDefaultServerState = (): ServerState => ({
   pageData: {
     geolocation: 'ROW',
   },
+  abTesting: {
+    mvtId: 0,
+    participations: {},
+    forcedTestVariants: {},
+  },
+  abTestAPI: abTestApiForMvtId(0),
 });

@@ -11,6 +11,9 @@ import { getAssets } from '@/server/lib/assets';
 import { getDefaultServerState, ServerState } from '@/server/models/Express';
 import { FieldError } from '@/server/routes/changePassword';
 import { CsrfErrors } from '@/shared/model/Errors';
+import { ABProvider } from '@guardian/ab-react';
+import { tests } from '@/shared/model/experiments/abTests';
+import { switches } from '@/shared/model/experiments/abSwitches';
 
 const assets = getAssets();
 
@@ -29,12 +32,19 @@ const { gaUID } = getConfiguration();
 
 // function to map from req.locals, to the ClientState used by the client
 const clientStateFromServerStateLocals = (
-  { csrf, globalMessage, pageData, queryParams } = getDefaultServerState(),
+  {
+    csrf,
+    globalMessage,
+    pageData,
+    queryParams,
+    abTesting,
+  } = getDefaultServerState(),
 ): ClientState => {
   const clientState: ClientState = {
     csrf,
     globalMessage,
     pageData,
+    abTesting,
   };
 
   // checking if csrf error exists in query params, and attaching it to the
@@ -70,16 +80,24 @@ export const renderer: (url: string, opts: RendererOpts) => string = (
 
   const location = `${url}${queryString ? `?${queryString}` : ''}`;
 
+  const {
+    abTesting: { mvtId = 0, forcedTestVariants = {} } = {},
+  } = clientState;
+
   // Any changes made here must also be made to the hydration in the static webpack bundle
   const react = ReactDOMServer.renderToString(
-    React.createElement(
-      StaticRouter,
-      {
-        location,
-        context,
-      },
-      React.createElement(Main, clientState),
-    ),
+    <ABProvider
+      arrayOfTestObjects={tests}
+      abTestSwitches={switches}
+      pageIsSensitive={false}
+      mvtMaxValue={1000000}
+      mvtId={mvtId}
+      forcedTestVariants={forcedTestVariants}
+    >
+      <StaticRouter location={location} context={context}>
+        <Main {...clientState}></Main>
+      </StaticRouter>
+    </ABProvider>,
   );
 
   const routingConfig: RoutingConfig = {
