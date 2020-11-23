@@ -12,7 +12,9 @@ const { defaultReturnUri } = getConfiguration();
 
 export const validateReturnUrl = (returnUrl = ''): string => {
   try {
-    const url = new URL(returnUrl);
+    // we decode the returnUrl as we cant know for sure if it's been encoded or not
+    // so decode just to be safe
+    const url = new URL(decodeURIComponent(returnUrl));
 
     // check the hostname is valid
     if (!validHostnames.some((hostname) => url.hostname.endsWith(hostname))) {

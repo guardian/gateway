@@ -1,3 +1,5 @@
+// Very simple mocking server for mimicking IDAPI
+
 /* eslint-env node */
 const bodyParser = require('body-parser');
 const express = require('express');
@@ -12,20 +14,26 @@ const DEFAULT_RESPONSE = {
 const app = express();
 
 const responses = [];
+const permanent = new Map();
+
+let payload = {};
 
 app.use(bodyParser.json());
-
+app.use(express.urlencoded({ extended: true }));
 app.get('/healthcheck', (_, res) => {
   console.log('healthcheck OK');
   res.sendStatus(204);
 });
 
+// Reset all mocks, including permanent
 app.get('/mock/purge', (_, res) => {
   console.log('purging all mocks');
   responses.length = 0;
+  permanent.length = 0;
   res.sendStatus(204);
 });
 
+// Push mock onto mock stack
 app.post('/mock', (req, res) => {
   responses.unshift({
     status: req.get('X-status'),
@@ -34,8 +42,30 @@ app.post('/mock', (req, res) => {
   res.sendStatus(204);
 });
 
-app.use('*', (req, res) => {
-  console.log(`Mocking: ${req.originalUrl}`);
+// Always mock supplied endpoint
+app.post('/mock/permanent', (req, res) => {
+  const { path, body: payload, status = 200 } = req.body;
+  permanent.set(path, { payload, status });
+  res.sendStatus(204);
+});
+
+// Return last POST or PATCH'd request payload
+app.get('/mock/payload', (_, res) => {
+  res.json(payload);
+});
+
+// For any request, if permanent, return permanent mock, otherwise pop from mock stack.
+app.all('*', (req, res) => {
+  const { method } = req;
+  if (method === 'POST' || method === 'PATCH') {
+    payload = req.body;
+  }
+  if (permanent.has(req.path)) {
+    const { status, payload } = permanent.get(req.path);
+    res.status(status).json(payload);
+    console.log(`Mocking: ${req.originalUrl}: ${status} ${inspect(payload)}`);
+    return;
+  }
   if (responses.length === 0) {
     res.status(DEFAULT_RESPONSE.status).json(DEFAULT_RESPONSE.body);
   } else {
