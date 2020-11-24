@@ -23,6 +23,8 @@ const {
   allNewsletters,
   userNewsletters,
 } = require('../support/idapi/newsletter');
+const Onboarding = require('../support/pages/onboarding/onboarding_page');
+const VerifyEmail = require('../support/pages/verify_email');
 
 describe('Onboarding flow', () => {
   beforeEach(() => {
@@ -292,12 +294,126 @@ describe('Onboarding flow', () => {
   });
 
   context('Login middleware', () => {
-    // it('no sc_gu_u cookie, redirect to login page');
-    // it('no sc_gu_la cookie, redirect to login page');
-    // it('email not validated, go to verify email page');
-    // it('recently validated, go to consents flow');
-    // it('not recently validated, go to login page');
-    // it('generic idapi error');
+    it('no sc_gu_u cookie, redirect to login page', () => {
+      cy.setCookie('GU_U', 'FAKE_GU_U');
+      cy.setCookie('SC_GU_LA', 'FAKE_SC_GU_LA');
+
+      cy.request({
+        url: Onboarding.URL,
+        followRedirect: false,
+      }).then((res) => {
+        expect(res.status).to.eq(302);
+        expect(res.redirectedToUrl).to.include(
+          'https://profile.code.dev-theguardian.com/signin',
+        );
+      });
+    });
+
+    it('no sc_gu_la cookie, redirect to login page', () => {
+      cy.setCookie('GU_U', 'FAKE_GU_U');
+      cy.setCookie('SC_GU_U', 'FAKE_SC_GU_U');
+
+      cy.request({
+        url: Onboarding.URL,
+        followRedirect: false,
+      }).then((res) => {
+        expect(res.status).to.eq(302);
+        expect(res.redirectedToUrl).to.include(
+          'https://profile.code.dev-theguardian.com/signin',
+        );
+      });
+    });
+
+    it('email not validated, go to verify email page', () => {
+      setAuthCookies();
+      const emailNotValidatedResponse = {
+        signInStatus: 'signedInRecently',
+        emailValidated: false,
+        redirect: null,
+      };
+      cy.idapiPermaMock(200, emailNotValidatedResponse, '/auth/redirect');
+
+      cy.request({
+        url: Onboarding.URL,
+        followRedirect: false,
+      }).then((res) => {
+        expect(res.status).to.eq(303);
+        expect(res.redirectedToUrl).to.include(VerifyEmail.URL);
+      });
+    });
+
+    it('recently logged in, go to consents flow', () => {
+      setAuthCookies();
+      cy.idapiPermaMock(
+        200,
+        authRedirectSignInRecentlyEmailValidated,
+        '/auth/redirect',
+      );
+      cy.request({
+        url: Onboarding.URL,
+        followRedirect: false,
+      }).then((res) => {
+        expect(res.status).to.eq(303);
+        expect(res.redirectedToUrl).to.include(CommunicationsPage.URL);
+      });
+    });
+
+    it('not recently logged in, follows supplied redirect', () => {
+      setAuthCookies();
+      const emailNotValidatedResponse = {
+        signInStatus: 'signedInNotRecently',
+        emailValidated: true,
+        redirect: {
+          url: 'https://fakeloginfortest.code.dev-theguardian.co.uk',
+        },
+      };
+      cy.idapiPermaMock(200, emailNotValidatedResponse, '/auth/redirect');
+
+      cy.request({
+        url: Onboarding.URL,
+        followRedirect: false,
+      }).then((res) => {
+        expect(res.status).to.eq(302);
+        expect(res.redirectedToUrl).to.include(
+          'https://fakeloginfortest.code.dev-theguardian.co.uk',
+        );
+      });
+    });
+
+    it('if missing redirect information, it redirects to the default ', () => {
+      setAuthCookies();
+      const emailNotValidatedResponse = {
+        signInStatus: 'signedInNotRecently',
+        emailValidated: true,
+        redirect: undefined,
+      };
+
+      cy.idapiPermaMock(200, emailNotValidatedResponse, '/auth/redirect');
+
+      cy.request({
+        url: Onboarding.URL,
+        followRedirect: false,
+      }).then((res) => {
+        expect(res.status).to.eq(302);
+        expect(res.redirectedToUrl).to.include(
+          'https://profile.code.dev-theguardian.com/signin',
+        );
+      });
+    });
+
+    it('on idapi error it redirects to the sign in page with the error flag set', () => {
+      setAuthCookies();
+      cy.idapiPermaMock(502, 'gateway error', '/auth/redirect');
+      cy.request({
+        url: Onboarding.URL,
+        followRedirect: false,
+      }).then((res) => {
+        expect(res.status).to.eq(302);
+        expect(res.redirectedToUrl).to.include(
+          'https://profile.code.dev-theguardian.com/signin/signin?error=signin-error-bad-request',
+        );
+      });
+    });
   });
 
   context('Newsletters page', () => {
