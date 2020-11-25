@@ -10,6 +10,15 @@ class CommunicationsPage extends OnboardingPage {
   static getMarketingOptoutClickableSection() {
     return cy.contains(CommunicationsPage.CONTENT.OPT_OUT_MESSAGE).parent();
   }
+
+  static getConsentCheckboxByTitle(title) {
+    return cy
+      .contains(title)
+      .parent()
+      .siblings()
+      .contains('Sign Up')
+      .find('input');
+  }
 }
 
 module.exports = CommunicationsPage;

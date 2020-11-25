@@ -8,10 +8,15 @@ const {
   allConsents,
   defaultUserConsent,
   optedOutUserConsent,
+  getUserConsents,
+  CONSENTS_ENDPOINT,
+  CONSENT_ERRORS,
 } = require('../support/idapi/consent');
 const {
   verifiedUserWithNoConsent,
   createUser,
+  USER_ERRORS,
+  USER_ENDPOINT,
 } = require('../support/idapi/user');
 const { setAuthCookies } = require('../support/idapi/cookie');
 const CommunicationsPage = require('../support/pages/onboarding/communications_page.js');
@@ -39,9 +44,9 @@ describe('Onboarding flow', () => {
         authRedirectSignInRecentlyEmailValidated,
         '/auth/redirect',
       );
-      cy.idapiPermaMock(200, allConsents, '/consents');
+      cy.idapiPermaMock(200, allConsents, CONSENTS_ENDPOINT);
       cy.idapiPermaMock(200, allNewsletters, '/newsletters');
-      cy.idapiPermaMock(200, verifiedUserWithNoConsent, '/user/me');
+      cy.idapiPermaMock(200, verifiedUserWithNoConsent, USER_ENDPOINT);
       cy.idapiPermaMock(200, userNewsletters(), '/users/me/newsletters');
     });
 
@@ -133,7 +138,7 @@ describe('Onboarding flow', () => {
       cy.idapiMock(200);
 
       // user consents mock response for review of consents flow
-      cy.idapiPermaMock(200, createUser(consent), '/user/me');
+      cy.idapiPermaMock(200, createUser(consent), USER_ENDPOINT);
 
       // mock load user newsletters
       cy.idapiPermaMock(
@@ -229,7 +234,7 @@ describe('Onboarding flow', () => {
       // mock form save success
       cy.idapiMock(200);
 
-      cy.idapiPermaMock(200, createUser(optedOutUserConsent), '/user/me');
+      cy.idapiPermaMock(200, createUser(optedOutUserConsent), USER_ENDPOINT);
 
       YourDataPage.getSaveAndContinueButton().click();
       cy.idapiLastPayloadIs([{ id: 'profiling_optout', consented: true }]);
@@ -416,6 +421,52 @@ describe('Onboarding flow', () => {
     });
   });
 
+  context('Contact options page', () => {
+    beforeEach(() => {
+      setAuthCookies();
+      cy.idapiPermaMock(
+        200,
+        authRedirectSignInRecentlyEmailValidated,
+        '/auth/redirect',
+      );
+      cy.idapiPermaMock(200, allConsents, CONSENTS_ENDPOINT);
+    });
+
+    it('shows correct contact options, none checked by default', () => {
+      cy.idapiPermaMock(200, verifiedUserWithNoConsent, USER_ENDPOINT);
+      CommunicationsPage.goto();
+      CommunicationsPage.getBackButton().should('not.exist');
+      CommunicationsPage.getCheckboxes().should('not.be.checked');
+    });
+
+    it('shows any previously selected consents', () => {
+      const consented = getUserConsents(['jobs', 'offers']);
+      cy.idapiPermaMock(200, createUser(consented), USER_ENDPOINT);
+      CommunicationsPage.goto();
+      CommunicationsPage.getBackButton().should('not.exist');
+      CommunicationsPage.getConsentCheckboxByTitle('Jobs').should('be.checked');
+      CommunicationsPage.getConsentCheckboxByTitle('Offers').should(
+        'be.checked',
+      );
+    });
+
+    it('produces specific error message on user end point failure', () => {
+      cy.idapiPermaMock(500, {}, USER_ENDPOINT);
+      CommunicationsPage.goto();
+      CommunicationsPage.getErrorBanner().contains(USER_ERRORS.GENERIC);
+      CommunicationsPage.getBackButton().should('not.exist');
+      CommunicationsPage.getSaveAndContinueButton().should('not.exist');
+    });
+
+    it('produces a specific error on consents endpoint failure', () => {
+      cy.idapiPermaMock(500, {}, CONSENTS_ENDPOINT);
+      CommunicationsPage.goto();
+      CommunicationsPage.getErrorBanner().contains(CONSENT_ERRORS.GENERIC);
+      CommunicationsPage.getBackButton().should('not.exist');
+      CommunicationsPage.getSaveAndContinueButton().should('not.exist');
+    });
+  });
+
   context('Newsletters page', () => {
     // it('correct newsletters shown for uk, none checked by default');
     // it('correct newsletters shown for us, none checked by default');
@@ -426,17 +477,6 @@ describe('Onboarding flow', () => {
     // );
     // it(
     //  'navigate back to newsletters page after will let you change and save selections'
-    // );
-    // it('generic idapi error');
-  });
-
-  context('Contact options page', () => {
-    // it('shows correct contact options, none checked by default');
-    // it(
-    //  'navigate back to contact options page after saving will preserve consents' // @TODO: Not usefully testable with mockserver
-    // );
-    // it(
-    //  'navigate back to contact options page after saving will let you change and save selections'
     // );
     // it('generic idapi error');
   });

@@ -1,5 +1,11 @@
 const { defaultUserConsent } = require('./consent');
 
+const USER_ENDPOINT = '/user/me';
+
+const USER_ERRORS = {
+  GENERIC: 'There was a problem retrieving your details, please try again.',
+};
+
 const createUser = (consents = defaultUserConsent) => ({
   status: 'ok',
   user: {
@@ -18,4 +24,6 @@ const verifiedUserWithNoConsent = createUser();
 module.exports = {
   verifiedUserWithNoConsent,
   createUser,
+  USER_ERRORS,
+  USER_ENDPOINT,
 };

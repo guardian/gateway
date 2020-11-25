@@ -8,6 +8,7 @@ class Onboarding {
   static CONTENT = {
     SAVE_CONTINUE_BUTTON: 'Save and continue',
     GO_BACK_BUTTON: 'Go back',
+    REPORT_ERROR_LINK: 'Report this error',
   };
 
   static getBackButton() {
@@ -26,6 +27,14 @@ class Onboarding {
   static getOptoutCheckboxes() {
     // @TODO: This is generic selector based approach, make a page specific user based approach, e.g. use contains
     return this.getCheckboxes().not('[name*="_optout"]');
+  }
+
+  static getErrorBanner() {
+    return cy.contains(Onboarding.CONTENT.REPORT_ERROR_LINK).parent();
+  }
+
+  static goto() {
+    cy.visit(this.URL, { failOnStatusCode: false });
   }
 
   static gotoFlowStart({ failOnStatusCode = true, query = {}, path } = {}) {
