@@ -134,12 +134,12 @@ export const NewsletterCard: FunctionComponent<NewsletterCardProps> = (
   ) : null;
   return (
     <article css={[article, props.cssOverides]}>
-      <img css={image(props.newsletter.id)} alt={props.newsletter.name} />
+      <div css={image(props.newsletter.id)} />
       <div css={borderDiv}>
         <h1 css={h1}>{name}</h1>
         {subtitle}
         <p css={p}>{description}</p>
-        <CheckboxGroup name={props.newsletter.id}>
+        <CheckboxGroup name={props.newsletter.id} label={name} hideLabel={true}>
           <Checkbox
             value={props.newsletter.id}
             cssOverrides={checkBoxBackgroundColorBugFix}
