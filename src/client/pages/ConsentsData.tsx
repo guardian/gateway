@@ -48,7 +48,7 @@ export const ConsentsDataPage = () => {
     <ConsentsLayout title="Your data" current={CONSENTS_PAGES.YOUR_DATA}>
       {profiling_optout && (
         <>
-          <h3 css={[heading, autoRow()]}>Our commitment to you</h3>
+          <h2 css={[heading, autoRow()]}>Our commitment to you</h2>
           <p css={[text, autoRow(consentsParagraphSpanDef)]}>
             We think carefully about our use of personal data and use it
             responsibly. We never share it without your permission and we have a
@@ -64,9 +64,9 @@ export const ConsentsDataPage = () => {
             </Link>{' '}
             section of the website.
           </p>
-          <h3 css={[heading, headingMarginSpace6, autoRow()]}>
+          <h2 css={[heading, headingMarginSpace6, autoRow()]}>
             Using your data for marketing analysis
-          </h3>
+          </h2>
           <p css={[text, autoRow(consentsParagraphSpanDef)]}>
             From time to time we may use your personal data for marketing
             analysis. That includes looking at what products or services you
