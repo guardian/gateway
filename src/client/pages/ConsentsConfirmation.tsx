@@ -158,7 +158,7 @@ export const ConsentsConfirmationPage = () => {
       <ConsentsHeader title="Your registration is complete" />
       <main css={[mainBackground, mainFlex]}>
         <ConsentsContent>
-          <h3 css={[headingWithMq, autoRow()]}>Your selections</h3>
+          <h2 css={[headingWithMq, autoRow()]}>Your selections</h2>
           <p css={[text, autoRow()]}>
             You can change these setting anytime by going to{' '}
             <Link href="https://manage.theguardian.com/email-prefs">
@@ -212,7 +212,7 @@ export const ConsentsConfirmationPage = () => {
           </div>
         </ConsentsBlueBackground>
         <ConsentsContent cssOverrides={newslettersBox}>
-          <h3 css={[headingWithMq, autoRow()]}>Sign up to more newsletters</h3>
+          <h2 css={[headingWithMq, autoRow()]}>Sign up to more newsletters</h2>
           <p css={[text, autoRow()]}>
             We have over 40 different emails that focus on a range of diverse
             topics - from politics and the latest tech to documentaries, sport
