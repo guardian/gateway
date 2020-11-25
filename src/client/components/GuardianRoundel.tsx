@@ -12,7 +12,7 @@ export const GuardianRoundel = () => {
         width: 42px;
       `}
     >
-      <a href="https://www.theguardian.com" data-link-name="nav2 : logo">
+      <a href="https://www.theguardian.com" title="The Guardian Homepage">
         <svg viewBox="0 0 56 56">
           <path
             d="M28 0a28 28 0 1 0 28 28A28 28 0 0 0 28 0"
