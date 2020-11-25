@@ -134,7 +134,7 @@ export const NewsletterCard: FunctionComponent<NewsletterCardProps> = (
   ) : null;
   return (
     <article css={[article, props.cssOverides]}>
-      <img css={image(props.newsletter.id)} />
+      <img css={image(props.newsletter.id)} alt={props.newsletter.name} />
       <div css={borderDiv}>
         <h1 css={h1}>{name}</h1>
         {subtitle}

@@ -4,7 +4,8 @@
     "plugin:prettier/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
-    "prettier/react"
+    "prettier/react",
+    "plugin:jsx-a11y/recommended"
   ],
   "parserOptions": {
     "ecmaFeatures": {
