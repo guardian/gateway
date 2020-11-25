@@ -57,9 +57,9 @@ export const ConsentsCommunicationPage = () => {
     <ConsentsLayout title="Stay in touch" current={CONSENTS_PAGES.CONTACT}>
       {market_research_optout && (
         <>
-          <h3 css={[heading, autoRow()]}>
+          <h2 css={[heading, autoRow()]}>
             Guardian products, services & events
-          </h3>
+          </h2>
           <p css={[text, autoRow(consentsParagraphSpanDef)]}>
             Stay informed and up to date with all that The Guardian has to
             offer. From time to time we can send you information about our
@@ -76,9 +76,9 @@ export const ConsentsCommunicationPage = () => {
               />
             ))}
           </div>
-          <h3 css={[heading, autoRow()]}>
+          <h2 css={[heading, autoRow()]}>
             Using your data for market research
-          </h3>
+          </h2>
           <p css={[text, autoRow(consentsParagraphSpanDef)]}>
             From time to time we may contact you for market research purposes
             inviting you to complete a survey, or take part in a group

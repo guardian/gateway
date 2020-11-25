@@ -103,7 +103,7 @@ export const CommunicationCard: FunctionComponent<CommunicationCardProps> = ({
         <p css={communicationCardBodyText}>{body}</p>
       </div>
       <div css={communicationCardCheckboxContainer}>
-        <CheckboxGroup name={value}>
+        <CheckboxGroup name={value} label={title} hideLabel={true}>
           <Checkbox
             cssOverrides={communicationCardCheckbox}
             value={value}
