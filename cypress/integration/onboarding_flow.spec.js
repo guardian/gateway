@@ -29,6 +29,7 @@ const {
   userNewsletters,
   NEWSLETTER_ENDPOINT,
   NEWSLETTER_SUBSCRIPTION_ENDPOINT,
+  NEWSLETTER_ERRORS,
 } = require('../support/idapi/newsletter');
 const Onboarding = require('../support/pages/onboarding/onboarding_page');
 const VerifyEmail = require('../support/pages/verify_email');
@@ -460,7 +461,7 @@ describe('Onboarding flow', () => {
       );
     });
 
-    it('produces specific error message on user end point failure', () => {
+    it('display a relevant error message on user end point failure', () => {
       cy.idapiPermaMock(500, {}, USER_ENDPOINT);
       CommunicationsPage.goto();
       CommunicationsPage.getErrorBanner().contains(USER_ERRORS.GENERIC);
@@ -468,7 +469,7 @@ describe('Onboarding flow', () => {
       CommunicationsPage.getSaveAndContinueButton().should('not.exist');
     });
 
-    it('produces a specific error on consents endpoint failure', () => {
+    it('displays a relevant error on consents endpoint failure', () => {
       cy.idapiPermaMock(500, {}, CONSENTS_ENDPOINT);
       CommunicationsPage.goto();
       CommunicationsPage.getErrorBanner().contains(CONSENT_ERRORS.GENERIC);
@@ -605,7 +606,22 @@ describe('Onboarding flow', () => {
         NEWSLETTERS.BOOKMARKS,
       ).should('not.be.checked');
     });
-    // it('generic idapi error');
+
+    it('displays a relevant error on newsletters endpoint failure', () => {
+      cy.idapiPermaMock(500, {}, NEWSLETTER_ENDPOINT);
+      NewslettersPage.goto();
+      NewslettersPage.getErrorBanner().contains(NEWSLETTER_ERRORS.GENERIC);
+      NewslettersPage.getBackButton().should('not.exist');
+      NewslettersPage.getSaveAndContinueButton().should('not.exist');
+    });
+
+    it('displays a relevant error on newsletters subscription endpoint failure', () => {
+      cy.idapiPermaMock(500, {}, NEWSLETTER_SUBSCRIPTION_ENDPOINT);
+      NewslettersPage.goto();
+      NewslettersPage.getErrorBanner().contains(NEWSLETTER_ERRORS.GENERIC);
+      NewslettersPage.getBackButton().should('not.exist');
+      NewslettersPage.getSaveAndContinueButton().should('not.exist');
+    });
   });
 
   context('Your data page', () => {
