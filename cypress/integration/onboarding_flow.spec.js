@@ -664,10 +664,46 @@ describe('Onboarding flow', () => {
     });
   });
 
-  context('Review page', () => {
-    // it('correct options shown based on user consent/newsletter selections');
-    // it('default return url link');
-    // it('query parameter based return url link');
-    // it('generic idapi error');
+  context.only('Review page', () => {
+    beforeEach(() => {
+      setAuthCookies();
+      cy.idapiPermaMock(
+        200,
+        authRedirectSignInRecentlyEmailValidated,
+        '/auth/redirect',
+      );
+      cy.idapiPermaMock(200, allConsents, CONSENTS_ENDPOINT);
+      cy.idapiPermaMock(200, verifiedUserWithNoConsent, USER_ENDPOINT);
+      cy.idapiPermaMock(200, allNewsletters, NEWSLETTER_ENDPOINT);
+      cy.idapiPermaMock(
+        200,
+        userNewsletters(),
+        NEWSLETTER_SUBSCRIPTION_ENDPOINT,
+      );
+    });
+
+    it('displays a relevant error if on consents endpoint failure', () => {
+      cy.idapiPermaMock(500, {}, CONSENTS_ENDPOINT);
+      ReviewPage.goto();
+      ReviewPage.getErrorBanner().contains(CONSENT_ERRORS.GENERIC);
+    });
+
+    it('display a relevant error message on user end point failure', () => {
+      cy.idapiPermaMock(500, {}, USER_ENDPOINT);
+      ReviewPage.goto();
+      ReviewPage.getErrorBanner().contains(USER_ERRORS.GENERIC);
+    });
+
+    it('displays a relevant error on newsletters endpoint failure', () => {
+      cy.idapiPermaMock(500, {}, NEWSLETTER_ENDPOINT);
+      ReviewPage.goto();
+      ReviewPage.getErrorBanner().contains(NEWSLETTER_ERRORS.GENERIC);
+    });
+
+    it('displays a relevant error on newsletters subscription endpoint failure', () => {
+      cy.idapiPermaMock(500, {}, NEWSLETTER_SUBSCRIPTION_ENDPOINT);
+      ReviewPage.goto();
+      ReviewPage.getErrorBanner().contains(NEWSLETTER_ERRORS.GENERIC);
+    });
   });
 });
