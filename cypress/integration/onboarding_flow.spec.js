@@ -583,12 +583,28 @@ describe('Onboarding flow', () => {
       CommunicationsPage.getSaveAndContinueButton().should('exist');
     });
 
-    // it(
-    //  'navigate back to newsletters page after saving will preserve newsletters' // @TODO: Not usefully testable with mockserver
-    // );
-    // it(
-    //  'navigate back to newsletters page after will let you change and save selections'
-    // );
+    it('show already selected newsletters', () => {
+      const newslettersToSubscribe = [{ listId: 4147 }, { listId: 4165 }];
+      cy.idapiPermaMock(
+        200,
+        userNewsletters(newslettersToSubscribe),
+        NEWSLETTER_SUBSCRIPTION_ENDPOINT,
+      );
+      NewslettersPage.goto();
+
+      NewslettersPage.getNewsletterCheckboxByTitle(NEWSLETTERS.TODAY_UK).should(
+        'not.be.checked',
+      );
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.LONG_READ,
+      ).should('be.checked');
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.GREEN_LIGHT,
+      ).should('be.checked');
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.BOOKMARKS,
+      ).should('not.be.checked');
+    });
     // it('generic idapi error');
   });
 
