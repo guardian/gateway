@@ -37,17 +37,12 @@ class Onboarding {
     cy.visit(this.URL, { failOnStatusCode: false });
   }
 
-  static gotoFlowStart({ failOnStatusCode = true, query = {}, path } = {}) {
+  static gotoFlowStart({ failOnStatusCode = true, query = {} } = {}) {
     const querystring = qs.stringify(query);
 
-    cy.visit(
-      `${Onboarding.URL}${path ? path : ''}${
-        querystring ? `?${querystring}` : ''
-      }`,
-      {
-        failOnStatusCode,
-      },
-    );
+    cy.visit(`${Onboarding.URL}${querystring ? `?${querystring}` : ''}`, {
+      failOnStatusCode,
+    });
   }
 }
 

@@ -27,9 +27,15 @@ const ReviewPage = require('../support/pages/onboarding/review_page');
 const {
   allNewsletters,
   userNewsletters,
+  NEWSLETTER_ENDPOINT,
+  NEWSLETTER_SUBSCRIPTION_ENDPOINT,
 } = require('../support/idapi/newsletter');
 const Onboarding = require('../support/pages/onboarding/onboarding_page');
 const VerifyEmail = require('../support/pages/verify_email');
+const {
+  getGeoLocationHeaders,
+  GEOLOCATION_CODES,
+} = require('../support/geolocation');
 
 describe('Onboarding flow', () => {
   beforeEach(() => {
@@ -45,9 +51,13 @@ describe('Onboarding flow', () => {
         '/auth/redirect',
       );
       cy.idapiPermaMock(200, allConsents, CONSENTS_ENDPOINT);
-      cy.idapiPermaMock(200, allNewsletters, '/newsletters');
+      cy.idapiPermaMock(200, allNewsletters, NEWSLETTER_ENDPOINT);
       cy.idapiPermaMock(200, verifiedUserWithNoConsent, USER_ENDPOINT);
-      cy.idapiPermaMock(200, userNewsletters(), '/users/me/newsletters');
+      cy.idapiPermaMock(
+        200,
+        userNewsletters(),
+        NEWSLETTER_SUBSCRIPTION_ENDPOINT,
+      );
     });
 
     it('goes through full flow, opt in all consents/newsletters, preserve returnUrl', () => {
@@ -144,7 +154,7 @@ describe('Onboarding flow', () => {
       cy.idapiPermaMock(
         200,
         userNewsletters(newslettersToSubscribe),
-        '/users/me/newsletters',
+        NEWSLETTER_SUBSCRIPTION_ENDPOINT,
       );
 
       YourDataPage.getSaveAndContinueButton().click();
@@ -468,10 +478,111 @@ describe('Onboarding flow', () => {
   });
 
   context('Newsletters page', () => {
-    // it('correct newsletters shown for uk, none checked by default');
-    // it('correct newsletters shown for us, none checked by default');
-    // it('correct newsletters shown for aus, none checked by default');
-    // it('correct newsletters shown for row/default, none checked by default');
+    const { NEWSLETTERS } = NewslettersPage.CONTENT;
+
+    beforeEach(() => {
+      setAuthCookies();
+      cy.idapiPermaMock(
+        200,
+        authRedirectSignInRecentlyEmailValidated,
+        '/auth/redirect',
+      );
+      cy.idapiPermaMock(200, allNewsletters, NEWSLETTER_ENDPOINT);
+      cy.idapiPermaMock(
+        200,
+        userNewsletters(),
+        NEWSLETTER_SUBSCRIPTION_ENDPOINT,
+      );
+    });
+
+    it('correct newsletters shown for uk, none checked by default', () => {
+      const headers = getGeoLocationHeaders(GEOLOCATION_CODES.GB);
+
+      cy.visit(NewslettersPage.URL, { headers });
+
+      NewslettersPage.getNewsletterCheckboxByTitle(NEWSLETTERS.TODAY_UK).should(
+        'not.be.checked',
+      );
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.LONG_READ,
+      ).should('not.be.checked');
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.GREEN_LIGHT,
+      ).should('not.be.checked');
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.BOOKMARKS,
+      ).should('not.be.checked');
+
+      CommunicationsPage.getBackButton().should('exist');
+      CommunicationsPage.getSaveAndContinueButton().should('exist');
+    });
+
+    it('correct newsletters shown for United States of America, none checked by default', () => {
+      const headers = getGeoLocationHeaders(GEOLOCATION_CODES.AMERICA);
+
+      cy.visit(NewslettersPage.URL, { headers });
+
+      NewslettersPage.getNewsletterCheckboxByTitle(NEWSLETTERS.TODAY_US).should(
+        'not.be.checked',
+      );
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.LONG_READ,
+      ).should('not.be.checked');
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.GREEN_LIGHT,
+      ).should('not.be.checked');
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.BOOKMARKS,
+      ).should('not.be.checked');
+
+      CommunicationsPage.getBackButton().should('exist');
+      CommunicationsPage.getSaveAndContinueButton().should('exist');
+    });
+
+    it('correct newsletters shown for Australia, none checked by default', () => {
+      const headers = getGeoLocationHeaders(GEOLOCATION_CODES.AUSTRALIA);
+
+      cy.visit(NewslettersPage.URL, { headers });
+
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.TODAY_AUS,
+      ).should('not.be.checked');
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.LONG_READ,
+      ).should('not.be.checked');
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.GREEN_LIGHT,
+      ).should('not.be.checked');
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.BOOKMARKS,
+      ).should('not.be.checked');
+
+      CommunicationsPage.getBackButton().should('exist');
+      CommunicationsPage.getSaveAndContinueButton().should('exist');
+    });
+
+    it('correct newsletters shown for rest of the world, none checked by default', () => {
+      const headers = getGeoLocationHeaders(GEOLOCATION_CODES.OTHERS);
+
+      cy.visit(NewslettersPage.URL, { headers });
+
+      NewslettersPage.getNewsletterCheckboxByTitle(NEWSLETTERS.TODAY_UK).should(
+        'not.be.checked',
+      );
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.LONG_READ,
+      ).should('not.be.checked');
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.GREEN_LIGHT,
+      ).should('not.be.checked');
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.BOOKMARKS,
+      ).should('not.be.checked');
+
+      CommunicationsPage.getBackButton().should('exist');
+      CommunicationsPage.getSaveAndContinueButton().should('exist');
+    });
+
     // it(
     //  'navigate back to newsletters page after saving will preserve newsletters' // @TODO: Not usefully testable with mockserver
     // );

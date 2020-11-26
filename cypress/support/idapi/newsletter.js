@@ -1,4 +1,6 @@
 /// <reference types="cypress" />
+const NEWSLETTER_ENDPOINT = '/newsletters';
+const NEWSLETTER_SUBSCRIPTION_ENDPOINT = '/users/me/newsletters';
 
 const allNewsletters = [
   {
@@ -89,4 +91,6 @@ const userNewsletters = (subscriptions = []) => {
 module.exports = {
   allNewsletters,
   userNewsletters,
+  NEWSLETTER_ENDPOINT,
+  NEWSLETTER_SUBSCRIPTION_ENDPOINT,
 };
