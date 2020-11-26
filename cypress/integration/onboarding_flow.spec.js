@@ -625,8 +625,43 @@ describe('Onboarding flow', () => {
   });
 
   context('Your data page', () => {
-    // it('correct consent shown');
-    // it('generic idapi error');
+    beforeEach(() => {
+      setAuthCookies();
+      cy.idapiPermaMock(
+        200,
+        authRedirectSignInRecentlyEmailValidated,
+        '/auth/redirect',
+      );
+      cy.idapiPermaMock(200, allConsents, CONSENTS_ENDPOINT);
+      cy.idapiPermaMock(200, verifiedUserWithNoConsent, USER_ENDPOINT);
+    });
+
+    it('displays the marketing opt out, unchecked by default', () => {
+      YourDataPage.goto();
+      YourDataPage.getMarketingOptoutCheckbox().should('not.be.checked');
+    });
+
+    it('displays the marketing opt out, checked if the user has previously opted out', () => {
+      cy.idapiPermaMock(200, createUser(optedOutUserConsent), USER_ENDPOINT);
+      YourDataPage.goto();
+      YourDataPage.getMarketingOptoutCheckbox().should('be.checked');
+    });
+
+    it('display a relevant error message on user end point failure', () => {
+      cy.idapiPermaMock(500, {}, USER_ENDPOINT);
+      YourDataPage.goto();
+      YourDataPage.getErrorBanner().contains(USER_ERRORS.GENERIC);
+      YourDataPage.getBackButton().should('not.exist');
+      YourDataPage.getSaveAndContinueButton().should('not.exist');
+    });
+
+    it('displays a relevant error on consents endpoint failure', () => {
+      cy.idapiPermaMock(500, {}, CONSENTS_ENDPOINT);
+      YourDataPage.goto();
+      YourDataPage.getErrorBanner().contains(CONSENT_ERRORS.GENERIC);
+      YourDataPage.getBackButton().should('not.exist');
+      YourDataPage.getSaveAndContinueButton().should('not.exist');
+    });
   });
 
   context('Review page', () => {

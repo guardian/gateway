@@ -10,6 +10,10 @@ class YourDataPage extends OnboardingPage {
   static getMarketingOptoutClickableSection() {
     return cy.contains(this.CONTENT.OPT_OUT_MESSAGE).parent();
   }
+
+  static getMarketingOptoutCheckbox() {
+    return cy.contains(this.CONTENT.OPT_OUT_MESSAGE).parent().find('input');
+  }
 }
 
 module.exports = YourDataPage;
