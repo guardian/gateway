@@ -664,7 +664,7 @@ describe('Onboarding flow', () => {
     });
   });
 
-  context.only('Review page', () => {
+  context('Review page', () => {
     beforeEach(() => {
       setAuthCookies();
       cy.idapiPermaMock(
