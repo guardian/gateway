@@ -20,7 +20,7 @@ Cypress.Commands.add('idapiMockNext', (status, body) => {
   cy.request(getMockOptions(status, body));
 });
 
-Cypress.Commands.add('idapiPermaMock', (status, body, path) => {
+Cypress.Commands.add('idapiMockAll', (status, body, path) => {
   const getMockOptions = (status, body = {}) => {
     const payload = {
       body,
