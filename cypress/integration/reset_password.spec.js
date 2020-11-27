@@ -39,14 +39,14 @@ describe('Password reset flow', () => {
   context('Email field is left blank', () => {
     it('displays the standard HTML validation', () => {
       page.clickResetPassword();
-      page.getInvalidEmailAddressField().should('have.length', 1);
+      page.invalidEmailAddressField().should('have.length', 1);
     });
   });
 
   context('Email is invalid', () => {
     it('displays the standard HTML validation', () => {
       page.submitEmailAddress('bademail£');
-      page.getInvalidEmailAddressField().should('have.length', 1);
+      page.invalidEmailAddressField().should('have.length', 1);
     });
   });
 
