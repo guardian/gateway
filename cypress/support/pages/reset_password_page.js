@@ -15,16 +15,16 @@ class ResetPasswordPage {
     cy.visit(ResetPasswordPage.URL);
   }
 
-  getEmailAddressField() {
+  emailAddressField() {
     return cy.get('input[name="email"]');
   }
 
-  getInvalidEmailAddressField() {
+  invalidEmailAddressField() {
     return cy.get('input[name="email"]:invalid');
   }
 
   submitEmailAddress(email) {
-    this.getEmailAddressField().type(email);
+    this.emailAddressField().type(email);
     this.clickResetPassword();
   }
 

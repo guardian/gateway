@@ -11,25 +11,25 @@ class Onboarding {
     REPORT_ERROR_LINK: 'Report this error',
   };
 
-  static getBackButton() {
+  static backButton() {
     return cy.contains(Onboarding.CONTENT.GO_BACK_BUTTON);
   }
 
-  static getSaveAndContinueButton() {
+  static saveAndContinueButton() {
     return cy.contains(Onboarding.CONTENT.SAVE_CONTINUE_BUTTON);
   }
 
-  static getCheckboxes() {
+  static allCheckboxes() {
     // @TODO: This is generic selector based approach, make a page specific user based approach, e.g. use contains
     return cy.get('[type="checkbox"]');
   }
 
-  static getOptoutCheckboxes() {
+  static allOptoutCheckboxes() {
     // @TODO: This is generic selector based approach, make a page specific user based approach, e.g. use contains
-    return this.getCheckboxes().not('[name*="_optout"]');
+    return this.allCheckboxes().not('[name*="_optout"]');
   }
 
-  static getErrorBanner() {
+  static errorBanner() {
     return cy.contains(Onboarding.CONTENT.REPORT_ERROR_LINK).parent();
   }
 

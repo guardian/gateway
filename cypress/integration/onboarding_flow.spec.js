@@ -89,14 +89,14 @@ describe('Onboarding flow', () => {
       cy.url().should('include', CommunicationsPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
-      CommunicationsPage.getBackButton().should('not.exist');
-      CommunicationsPage.getCheckboxes().should('not.be.checked');
-      CommunicationsPage.getMarketingOptoutClickableSection().click();
+      CommunicationsPage.backButton().should('not.exist');
+      CommunicationsPage.allCheckboxes().should('not.be.checked');
+      CommunicationsPage.marketingOptoutClickableSection().click();
 
       // mock form save success
       cy.idapiMockNext(200);
 
-      CommunicationsPage.getSaveAndContinueButton().click();
+      CommunicationsPage.saveAndContinueButton().click();
 
       cy.idapiLastPayloadIs([
         { id: 'market_research_optout', consented: true },
@@ -110,11 +110,11 @@ describe('Onboarding flow', () => {
       cy.url().should('include', NewslettersPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
-      NewslettersPage.getBackButton()
+      NewslettersPage.backButton()
         .should('have.attr', 'href')
         .and('include', CommunicationsPage.URL);
 
-      NewslettersPage.getCheckboxes()
+      NewslettersPage.allCheckboxes()
         .should('not.be.checked')
         // select parent (to avoid cypress element not visible error)
         .parent()
@@ -123,7 +123,7 @@ describe('Onboarding flow', () => {
       // mock form save success
       cy.idapiMockNext(200);
 
-      NewslettersPage.getSaveAndContinueButton().click();
+      NewslettersPage.saveAndContinueButton().click();
 
       cy.idapiLastPayloadIs([
         { id: '4151', subscribed: true },
@@ -135,11 +135,11 @@ describe('Onboarding flow', () => {
       cy.url().should('include', YourDataPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
-      YourDataPage.getBackButton()
+      YourDataPage.backButton()
         .should('have.attr', 'href')
         .and('include', NewslettersPage.URL);
 
-      YourDataPage.getCheckboxes().should('not.be.checked');
+      YourDataPage.allCheckboxes().should('not.be.checked');
 
       // mock form save success
       cy.idapiMockNext(200);
@@ -154,13 +154,13 @@ describe('Onboarding flow', () => {
         NEWSLETTER_SUBSCRIPTION_ENDPOINT,
       );
 
-      YourDataPage.getSaveAndContinueButton().click();
+      YourDataPage.saveAndContinueButton().click();
 
       cy.url().should('include', ReviewPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
-      ReviewPage.getBackButton().should('not.exist');
-      ReviewPage.getSaveAndContinueButton().should('not.exist');
+      ReviewPage.backButton().should('not.exist');
+      ReviewPage.saveAndContinueButton().should('not.exist');
 
       // contains opted in consents
       Object.values(ReviewPage.CONTENT.CONSENT).forEach((consent) =>
@@ -172,10 +172,10 @@ describe('Onboarding flow', () => {
         cy.contains(newsletter),
       );
 
-      ReviewPage.getMarketingResearchChoice().contains('Yes');
-      ReviewPage.getMarketingAnalysisChoice().contains('Yes');
+      ReviewPage.marketingResearchChoice().contains('Yes');
+      ReviewPage.marketingAnalysisChoice().contains('Yes');
 
-      ReviewPage.getReturnButton()
+      ReviewPage.returnButton()
         .should('have.attr', 'href')
         .and('include', decodeURIComponent(returnUrl));
     });
@@ -194,10 +194,10 @@ describe('Onboarding flow', () => {
       cy.url().should('include', CommunicationsPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
-      CommunicationsPage.getBackButton().should('not.exist');
+      CommunicationsPage.backButton().should('not.exist');
 
-      CommunicationsPage.getCheckboxes().should('not.be.checked');
-      CommunicationsPage.getOptoutCheckboxes()
+      CommunicationsPage.allCheckboxes().should('not.be.checked');
+      CommunicationsPage.allOptoutCheckboxes()
         // select parent (to avoid cypress element not visible error)
         .parent()
         .click({ multiple: true });
@@ -205,7 +205,7 @@ describe('Onboarding flow', () => {
       // mock form save success
       cy.idapiMockNext(200);
 
-      CommunicationsPage.getSaveAndContinueButton().click();
+      CommunicationsPage.saveAndContinueButton().click();
 
       cy.idapiLastPayloadIs([
         { id: 'market_research_optout', consented: false },
@@ -219,46 +219,46 @@ describe('Onboarding flow', () => {
       cy.url().should('include', NewslettersPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
-      NewslettersPage.getBackButton()
+      NewslettersPage.backButton()
         .should('have.attr', 'href')
         .and('include', CommunicationsPage.URL);
 
       // mock form save success
       cy.idapiMockNext(200);
 
-      NewslettersPage.getSaveAndContinueButton().click();
+      NewslettersPage.saveAndContinueButton().click();
       cy.idapiLastPayloadIs([]);
 
       cy.url().should('include', YourDataPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
-      YourDataPage.getBackButton()
+      YourDataPage.backButton()
         .should('have.attr', 'href')
         .and('include', NewslettersPage.URL);
 
-      YourDataPage.getMarketingOptoutClickableSection().click();
+      YourDataPage.marketingOptoutClickableSection().click();
 
       // mock form save success
       cy.idapiMockNext(200);
 
       cy.idapiMockAll(200, createUser(optedOutUserConsent), USER_ENDPOINT);
 
-      YourDataPage.getSaveAndContinueButton().click();
+      YourDataPage.saveAndContinueButton().click();
       cy.idapiLastPayloadIs([{ id: 'profiling_optout', consented: true }]);
 
       cy.url().should('include', ReviewPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
-      ReviewPage.getBackButton().should('not.exist');
-      ReviewPage.getSaveAndContinueButton().should('not.exist');
+      ReviewPage.backButton().should('not.exist');
+      ReviewPage.saveAndContinueButton().should('not.exist');
 
-      ReviewPage.getNewslettersSection().contains('N/A');
-      ReviewPage.getConsentsSection().contains('N/A');
+      ReviewPage.newslettersSection().contains('N/A');
+      ReviewPage.consentsSection().contains('N/A');
 
-      ReviewPage.getMarketingResearchChoice().contains('No');
-      ReviewPage.getMarketingAnalysisChoice().contains('No');
+      ReviewPage.marketingResearchChoice().contains('No');
+      ReviewPage.marketingAnalysisChoice().contains('No');
 
-      ReviewPage.getReturnButton()
+      ReviewPage.returnButton()
         .should('have.attr', 'href')
         .and('include', decodeURIComponent(returnUrl));
     });
@@ -277,7 +277,7 @@ describe('Onboarding flow', () => {
       // mock form save success
       cy.idapiMockNext(200);
 
-      CommunicationsPage.getSaveAndContinueButton().click();
+      CommunicationsPage.saveAndContinueButton().click();
 
       cy.url().should('include', NewslettersPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
@@ -285,21 +285,21 @@ describe('Onboarding flow', () => {
       // mock form save success
       cy.idapiMockNext(200);
 
-      NewslettersPage.getSaveAndContinueButton().click();
+      NewslettersPage.saveAndContinueButton().click();
 
       cy.url().should('include', YourDataPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
-      YourDataPage.getMarketingOptoutClickableSection().click();
+      YourDataPage.marketingOptoutClickableSection().click();
 
       // mock form save success
       cy.idapiMockNext(200);
 
-      YourDataPage.getSaveAndContinueButton().click();
+      YourDataPage.saveAndContinueButton().click();
       cy.url().should('include', ReviewPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
-      ReviewPage.getReturnButton()
+      ReviewPage.returnButton()
         .should('have.attr', 'href')
         .and('include', decodeURIComponent(returnUrl));
     });
@@ -442,17 +442,17 @@ describe('Onboarding flow', () => {
     it('shows correct contact options, none checked by default', () => {
       cy.idapiMockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
       CommunicationsPage.goto();
-      CommunicationsPage.getBackButton().should('not.exist');
-      CommunicationsPage.getCheckboxes().should('not.be.checked');
+      CommunicationsPage.backButton().should('not.exist');
+      CommunicationsPage.allCheckboxes().should('not.be.checked');
     });
 
     it('shows any previously selected consents', () => {
       const consented = getUserConsents(['jobs', 'offers']);
       cy.idapiMockAll(200, createUser(consented), USER_ENDPOINT);
       CommunicationsPage.goto();
-      CommunicationsPage.getBackButton().should('not.exist');
-      CommunicationsPage.getConsentCheckboxByTitle('Jobs').should('be.checked');
-      CommunicationsPage.getConsentCheckboxByTitle('Offers').should(
+      CommunicationsPage.backButton().should('not.exist');
+      CommunicationsPage.consentCheckboxWithTitle('Jobs').should('be.checked');
+      CommunicationsPage.consentCheckboxWithTitle('Offers').should(
         'be.checked',
       );
     });
@@ -460,17 +460,17 @@ describe('Onboarding flow', () => {
     it('display a relevant error message on user end point failure', () => {
       cy.idapiMockAll(500, {}, USER_ENDPOINT);
       CommunicationsPage.goto();
-      CommunicationsPage.getErrorBanner().contains(USER_ERRORS.GENERIC);
-      CommunicationsPage.getBackButton().should('not.exist');
-      CommunicationsPage.getSaveAndContinueButton().should('not.exist');
+      CommunicationsPage.errorBanner().contains(USER_ERRORS.GENERIC);
+      CommunicationsPage.backButton().should('not.exist');
+      CommunicationsPage.saveAndContinueButton().should('not.exist');
     });
 
     it('displays a relevant error on consents endpoint failure', () => {
       cy.idapiMockAll(500, {}, CONSENTS_ENDPOINT);
       CommunicationsPage.goto();
-      CommunicationsPage.getErrorBanner().contains(CONSENT_ERRORS.GENERIC);
-      CommunicationsPage.getBackButton().should('not.exist');
-      CommunicationsPage.getSaveAndContinueButton().should('not.exist');
+      CommunicationsPage.errorBanner().contains(CONSENT_ERRORS.GENERIC);
+      CommunicationsPage.backButton().should('not.exist');
+      CommunicationsPage.saveAndContinueButton().should('not.exist');
     });
   });
 
@@ -493,21 +493,21 @@ describe('Onboarding flow', () => {
 
       cy.visit(NewslettersPage.URL, { headers });
 
-      NewslettersPage.getNewsletterCheckboxByTitle(NEWSLETTERS.TODAY_UK).should(
+      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.TODAY_UK).should(
         'not.be.checked',
       );
-      NewslettersPage.getNewsletterCheckboxByTitle(
-        NEWSLETTERS.LONG_READ,
-      ).should('not.be.checked');
-      NewslettersPage.getNewsletterCheckboxByTitle(
+      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.LONG_READ).should(
+        'not.be.checked',
+      );
+      NewslettersPage.newsletterCheckboxWithTitle(
         NEWSLETTERS.GREEN_LIGHT,
       ).should('not.be.checked');
-      NewslettersPage.getNewsletterCheckboxByTitle(
-        NEWSLETTERS.BOOKMARKS,
-      ).should('not.be.checked');
+      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.BOOKMARKS).should(
+        'not.be.checked',
+      );
 
-      CommunicationsPage.getBackButton().should('exist');
-      CommunicationsPage.getSaveAndContinueButton().should('exist');
+      CommunicationsPage.backButton().should('exist');
+      CommunicationsPage.saveAndContinueButton().should('exist');
     });
 
     it('correct newsletters shown for United States of America, none checked by default', () => {
@@ -515,21 +515,21 @@ describe('Onboarding flow', () => {
 
       cy.visit(NewslettersPage.URL, { headers });
 
-      NewslettersPage.getNewsletterCheckboxByTitle(NEWSLETTERS.TODAY_US).should(
+      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.TODAY_US).should(
         'not.be.checked',
       );
-      NewslettersPage.getNewsletterCheckboxByTitle(
-        NEWSLETTERS.LONG_READ,
-      ).should('not.be.checked');
-      NewslettersPage.getNewsletterCheckboxByTitle(
+      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.LONG_READ).should(
+        'not.be.checked',
+      );
+      NewslettersPage.newsletterCheckboxWithTitle(
         NEWSLETTERS.GREEN_LIGHT,
       ).should('not.be.checked');
-      NewslettersPage.getNewsletterCheckboxByTitle(
-        NEWSLETTERS.BOOKMARKS,
-      ).should('not.be.checked');
+      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.BOOKMARKS).should(
+        'not.be.checked',
+      );
 
-      CommunicationsPage.getBackButton().should('exist');
-      CommunicationsPage.getSaveAndContinueButton().should('exist');
+      CommunicationsPage.backButton().should('exist');
+      CommunicationsPage.saveAndContinueButton().should('exist');
     });
 
     it('correct newsletters shown for Australia, none checked by default', () => {
@@ -537,21 +537,21 @@ describe('Onboarding flow', () => {
 
       cy.visit(NewslettersPage.URL, { headers });
 
-      NewslettersPage.getNewsletterCheckboxByTitle(
-        NEWSLETTERS.TODAY_AUS,
-      ).should('not.be.checked');
-      NewslettersPage.getNewsletterCheckboxByTitle(
-        NEWSLETTERS.LONG_READ,
-      ).should('not.be.checked');
-      NewslettersPage.getNewsletterCheckboxByTitle(
+      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.TODAY_AUS).should(
+        'not.be.checked',
+      );
+      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.LONG_READ).should(
+        'not.be.checked',
+      );
+      NewslettersPage.newsletterCheckboxWithTitle(
         NEWSLETTERS.GREEN_LIGHT,
       ).should('not.be.checked');
-      NewslettersPage.getNewsletterCheckboxByTitle(
-        NEWSLETTERS.BOOKMARKS,
-      ).should('not.be.checked');
+      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.BOOKMARKS).should(
+        'not.be.checked',
+      );
 
-      CommunicationsPage.getBackButton().should('exist');
-      CommunicationsPage.getSaveAndContinueButton().should('exist');
+      CommunicationsPage.backButton().should('exist');
+      CommunicationsPage.saveAndContinueButton().should('exist');
     });
 
     it('correct newsletters shown for rest of the world, none checked by default', () => {
@@ -559,21 +559,21 @@ describe('Onboarding flow', () => {
 
       cy.visit(NewslettersPage.URL, { headers });
 
-      NewslettersPage.getNewsletterCheckboxByTitle(NEWSLETTERS.TODAY_UK).should(
+      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.TODAY_UK).should(
         'not.be.checked',
       );
-      NewslettersPage.getNewsletterCheckboxByTitle(
-        NEWSLETTERS.LONG_READ,
-      ).should('not.be.checked');
-      NewslettersPage.getNewsletterCheckboxByTitle(
+      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.LONG_READ).should(
+        'not.be.checked',
+      );
+      NewslettersPage.newsletterCheckboxWithTitle(
         NEWSLETTERS.GREEN_LIGHT,
       ).should('not.be.checked');
-      NewslettersPage.getNewsletterCheckboxByTitle(
-        NEWSLETTERS.BOOKMARKS,
-      ).should('not.be.checked');
+      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.BOOKMARKS).should(
+        'not.be.checked',
+      );
 
-      CommunicationsPage.getBackButton().should('exist');
-      CommunicationsPage.getSaveAndContinueButton().should('exist');
+      CommunicationsPage.backButton().should('exist');
+      CommunicationsPage.saveAndContinueButton().should('exist');
     });
 
     it('show already selected newsletters', () => {
@@ -585,34 +585,34 @@ describe('Onboarding flow', () => {
       );
       NewslettersPage.goto();
 
-      NewslettersPage.getNewsletterCheckboxByTitle(NEWSLETTERS.TODAY_UK).should(
+      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.TODAY_UK).should(
         'not.be.checked',
       );
-      NewslettersPage.getNewsletterCheckboxByTitle(
-        NEWSLETTERS.LONG_READ,
-      ).should('be.checked');
-      NewslettersPage.getNewsletterCheckboxByTitle(
+      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.LONG_READ).should(
+        'be.checked',
+      );
+      NewslettersPage.newsletterCheckboxWithTitle(
         NEWSLETTERS.GREEN_LIGHT,
       ).should('be.checked');
-      NewslettersPage.getNewsletterCheckboxByTitle(
-        NEWSLETTERS.BOOKMARKS,
-      ).should('not.be.checked');
+      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.BOOKMARKS).should(
+        'not.be.checked',
+      );
     });
 
     it('displays a relevant error on newsletters endpoint failure', () => {
       cy.idapiMockAll(500, {}, NEWSLETTER_ENDPOINT);
       NewslettersPage.goto();
-      NewslettersPage.getErrorBanner().contains(NEWSLETTER_ERRORS.GENERIC);
-      NewslettersPage.getBackButton().should('not.exist');
-      NewslettersPage.getSaveAndContinueButton().should('not.exist');
+      NewslettersPage.errorBanner().contains(NEWSLETTER_ERRORS.GENERIC);
+      NewslettersPage.backButton().should('not.exist');
+      NewslettersPage.saveAndContinueButton().should('not.exist');
     });
 
     it('displays a relevant error on newsletters subscription endpoint failure', () => {
       cy.idapiMockAll(500, {}, NEWSLETTER_SUBSCRIPTION_ENDPOINT);
       NewslettersPage.goto();
-      NewslettersPage.getErrorBanner().contains(NEWSLETTER_ERRORS.GENERIC);
-      NewslettersPage.getBackButton().should('not.exist');
-      NewslettersPage.getSaveAndContinueButton().should('not.exist');
+      NewslettersPage.errorBanner().contains(NEWSLETTER_ERRORS.GENERIC);
+      NewslettersPage.backButton().should('not.exist');
+      NewslettersPage.saveAndContinueButton().should('not.exist');
     });
   });
 
@@ -630,29 +630,29 @@ describe('Onboarding flow', () => {
 
     it('displays the marketing opt out, unchecked by default', () => {
       YourDataPage.goto();
-      YourDataPage.getMarketingOptoutCheckbox().should('not.be.checked');
+      YourDataPage.marketingOptoutCheckbox().should('not.be.checked');
     });
 
     it('displays the marketing opt out, checked if the user has previously opted out', () => {
       cy.idapiMockAll(200, createUser(optedOutUserConsent), USER_ENDPOINT);
       YourDataPage.goto();
-      YourDataPage.getMarketingOptoutCheckbox().should('be.checked');
+      YourDataPage.marketingOptoutCheckbox().should('be.checked');
     });
 
     it('display a relevant error message on user end point failure', () => {
       cy.idapiMockAll(500, {}, USER_ENDPOINT);
       YourDataPage.goto();
-      YourDataPage.getErrorBanner().contains(USER_ERRORS.GENERIC);
-      YourDataPage.getBackButton().should('not.exist');
-      YourDataPage.getSaveAndContinueButton().should('not.exist');
+      YourDataPage.errorBanner().contains(USER_ERRORS.GENERIC);
+      YourDataPage.backButton().should('not.exist');
+      YourDataPage.saveAndContinueButton().should('not.exist');
     });
 
     it('displays a relevant error on consents endpoint failure', () => {
       cy.idapiMockAll(500, {}, CONSENTS_ENDPOINT);
       YourDataPage.goto();
-      YourDataPage.getErrorBanner().contains(CONSENT_ERRORS.GENERIC);
-      YourDataPage.getBackButton().should('not.exist');
-      YourDataPage.getSaveAndContinueButton().should('not.exist');
+      YourDataPage.errorBanner().contains(CONSENT_ERRORS.GENERIC);
+      YourDataPage.backButton().should('not.exist');
+      YourDataPage.saveAndContinueButton().should('not.exist');
     });
   });
 
@@ -673,25 +673,25 @@ describe('Onboarding flow', () => {
     it('displays a relevant error if on consents endpoint failure', () => {
       cy.idapiMockAll(500, {}, CONSENTS_ENDPOINT);
       ReviewPage.goto();
-      ReviewPage.getErrorBanner().contains(CONSENT_ERRORS.GENERIC);
+      ReviewPage.errorBanner().contains(CONSENT_ERRORS.GENERIC);
     });
 
     it('display a relevant error message on user end point failure', () => {
       cy.idapiMockAll(500, {}, USER_ENDPOINT);
       ReviewPage.goto();
-      ReviewPage.getErrorBanner().contains(USER_ERRORS.GENERIC);
+      ReviewPage.errorBanner().contains(USER_ERRORS.GENERIC);
     });
 
     it('displays a relevant error on newsletters endpoint failure', () => {
       cy.idapiMockAll(500, {}, NEWSLETTER_ENDPOINT);
       ReviewPage.goto();
-      ReviewPage.getErrorBanner().contains(NEWSLETTER_ERRORS.GENERIC);
+      ReviewPage.errorBanner().contains(NEWSLETTER_ERRORS.GENERIC);
     });
 
     it('displays a relevant error on newsletters subscription endpoint failure', () => {
       cy.idapiMockAll(500, {}, NEWSLETTER_SUBSCRIPTION_ENDPOINT);
       ReviewPage.goto();
-      ReviewPage.getErrorBanner().contains(NEWSLETTER_ERRORS.GENERIC);
+      ReviewPage.errorBanner().contains(NEWSLETTER_ERRORS.GENERIC);
     });
   });
 });

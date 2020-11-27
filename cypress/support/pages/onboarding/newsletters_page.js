@@ -11,7 +11,7 @@ class NewslettersPage extends OnboardingPage {
       BOOKMARKS: 'Bookmarks',
     },
   };
-  static getNewsletterCheckboxByTitle(title) {
+  static newsletterCheckboxWithTitle(title) {
     return cy.contains(title).parent().contains('Sign Up').find('input');
   }
   static URL = '/consents/newsletters';

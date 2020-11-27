@@ -50,8 +50,8 @@ describe('Password change flow', () => {
       cy.idapiMockNext(200);
       page.goto(fakeToken);
       page.clickPasswordChange();
-      page.getInvalidPasswordChangeField().should('have.length', 1);
-      page.getInvalidPasswordChangeConfirmField().should('have.length', 1);
+      page.invalidPasswordChangeField().should('have.length', 1);
+      page.invalidPasswordChangeConfirmField().should('have.length', 1);
     });
   });
 

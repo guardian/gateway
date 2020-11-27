@@ -7,11 +7,11 @@ class YourDataPage extends OnboardingPage {
       'I do NOT want The Guardian to use my personal data for marketing analysis.',
   };
 
-  static getMarketingOptoutClickableSection() {
+  static marketingOptoutClickableSection() {
     return cy.contains(this.CONTENT.OPT_OUT_MESSAGE).parent();
   }
 
-  static getMarketingOptoutCheckbox() {
+  static marketingOptoutCheckbox() {
     return cy.contains(this.CONTENT.OPT_OUT_MESSAGE).parent().find('input');
   }
 }

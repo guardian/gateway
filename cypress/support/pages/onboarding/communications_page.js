@@ -7,11 +7,11 @@ class CommunicationsPage extends OnboardingPage {
       'I do NOT wish to be contacted by The Guardian for market research purposes.',
   };
 
-  static getMarketingOptoutClickableSection() {
+  static marketingOptoutClickableSection() {
     return cy.contains(CommunicationsPage.CONTENT.OPT_OUT_MESSAGE).parent();
   }
 
-  static getConsentCheckboxByTitle(title) {
+  static consentCheckboxWithTitle(title) {
     return cy
       .contains(title)
       .parent()

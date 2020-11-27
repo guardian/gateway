@@ -25,25 +25,25 @@ class ReviewPage extends OnboardingPage {
     BUTTON_RETURN_GUARDIAN: 'Return to The Guardian',
   };
 
-  static getReturnButton() {
+  static returnButton() {
     return cy.contains(ReviewPage.CONTENT.BUTTON_RETURN_GUARDIAN);
   }
 
-  static getConsentsSection() {
+  static consentsSection() {
     return cy
       .contains(ReviewPage.CONTENT.CONSENTS_SECTION_TITLE)
       .parent()
       .siblings();
   }
 
-  static getNewslettersSection() {
+  static newslettersSection() {
     return cy
       .contains(ReviewPage.CONTENT.NEWSLETTER_SECTION_TITLE)
       .parent()
       .siblings();
   }
 
-  static getMarketingResearchChoice() {
+  static marketingResearchChoice() {
     return cy
       .contains(ReviewPage.CONTENT.CONSENT_OPTOUT.RESEARCH)
       .parent()
@@ -51,7 +51,7 @@ class ReviewPage extends OnboardingPage {
       .children();
   }
 
-  static getMarketingAnalysisChoice() {
+  static marketingAnalysisChoice() {
     return cy
       .contains(ReviewPage.CONTENT.CONSENT_OPTOUT.ANALYSIS)
       .parent()
