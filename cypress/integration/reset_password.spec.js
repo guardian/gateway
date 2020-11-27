@@ -1,6 +1,6 @@
 /// <reference types='cypress' />
 
-const { terminalLog } = require('../support/cypress-axe');
+const { terminalLog, insertAndCheckAxe } = require('../support/cypress-axe');
 const PageResetPassword = require('../support/pages/reset_password_page');
 const PageResetSent = require('../support/pages/reset_sent_page');
 
@@ -17,9 +17,15 @@ describe('Password reset flow', () => {
     cy.injectAxe();
   });
 
-  context('A11y on load', () => {
+  context('A11y checks', () => {
     it('Has no detectable a11y violations on load', () => {
       cy.checkA11y(null, null, terminalLog);
+    });
+
+    it('Has no detectable a11y violations on error page', () => {
+      cy.idapiMock(500);
+      page.submitEmailAddress('example@example.com');
+      insertAndCheckAxe();
     });
   });
 

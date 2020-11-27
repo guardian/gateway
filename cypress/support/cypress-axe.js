@@ -18,6 +18,13 @@ const terminalLog = (violations) => {
   cy.task('table', violationData);
 };
 
+// for use on page reloads after axction taken
+const insertAndCheckAxe = () => {
+  cy.injectAxe();
+  cy.checkA11y(null, null, terminalLog);
+};
+
 module.exports = {
   terminalLog,
+  insertAndCheckAxe,
 };
