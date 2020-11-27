@@ -98,7 +98,7 @@ describe('Onboarding flow', () => {
       CommunicationsPage.getMarketingOptoutClickableSection().click();
 
       // mock form save success
-      cy.idapiMock(200);
+      cy.idapiMockNext(200);
 
       CommunicationsPage.getSaveAndContinueButton().click();
 
@@ -125,7 +125,7 @@ describe('Onboarding flow', () => {
         .click({ multiple: true });
 
       // mock form save success
-      cy.idapiMock(200);
+      cy.idapiMockNext(200);
 
       NewslettersPage.getSaveAndContinueButton().click();
 
@@ -146,7 +146,7 @@ describe('Onboarding flow', () => {
       YourDataPage.getCheckboxes().should('not.be.checked');
 
       // mock form save success
-      cy.idapiMock(200);
+      cy.idapiMockNext(200);
 
       // user consents mock response for review of consents flow
       cy.idapiPermaMock(200, createUser(consent), USER_ENDPOINT);
@@ -207,7 +207,7 @@ describe('Onboarding flow', () => {
         .click({ multiple: true });
 
       // mock form save success
-      cy.idapiMock(200);
+      cy.idapiMockNext(200);
 
       CommunicationsPage.getSaveAndContinueButton().click();
 
@@ -228,7 +228,7 @@ describe('Onboarding flow', () => {
         .and('include', CommunicationsPage.URL);
 
       // mock form save success
-      cy.idapiMock(200);
+      cy.idapiMockNext(200);
 
       NewslettersPage.getSaveAndContinueButton().click();
       cy.idapiLastPayloadIs([]);
@@ -243,7 +243,7 @@ describe('Onboarding flow', () => {
       YourDataPage.getMarketingOptoutClickableSection().click();
 
       // mock form save success
-      cy.idapiMock(200);
+      cy.idapiMockNext(200);
 
       cy.idapiPermaMock(200, createUser(optedOutUserConsent), USER_ENDPOINT);
 
@@ -279,7 +279,7 @@ describe('Onboarding flow', () => {
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
       // mock form save success
-      cy.idapiMock(200);
+      cy.idapiMockNext(200);
 
       CommunicationsPage.getSaveAndContinueButton().click();
 
@@ -287,7 +287,7 @@ describe('Onboarding flow', () => {
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
       // mock form save success
-      cy.idapiMock(200);
+      cy.idapiMockNext(200);
 
       NewslettersPage.getSaveAndContinueButton().click();
 
@@ -297,7 +297,7 @@ describe('Onboarding flow', () => {
       YourDataPage.getMarketingOptoutClickableSection().click();
 
       // mock form save success
-      cy.idapiMock(200);
+      cy.idapiMockNext(200);
 
       YourDataPage.getSaveAndContinueButton().click();
       cy.url().should('include', ReviewPage.URL);

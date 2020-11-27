@@ -6,7 +6,7 @@
 
 const MOCKING_ENDPOINT = 'localhost:9000/mock';
 
-Cypress.Commands.add('idapiMock', (status, body) => {
+Cypress.Commands.add('idapiMockNext', (status, body) => {
   const getMockOptions = (status, body = {}) => ({
     headers: {
       'Content-Type': 'application/json',
