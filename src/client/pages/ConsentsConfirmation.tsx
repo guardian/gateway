@@ -10,7 +10,7 @@ import {
 import { from } from '@guardian/src-foundations/mq';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
-import { Header } from '@/client/components/Header';
+import { NavBar } from '@/client/components/NavBar';
 import { GlobalError } from '@/client/components/GlobalError';
 import {
   ConsentsHeader,
@@ -151,7 +151,7 @@ export const ConsentsConfirmationPage = () => {
   return (
     <>
       <div css={headerContainer}>
-        <Header cssOverrides={header} />
+        <NavBar cssOverrides={header} />
         {error && <GlobalError error={error} link={getErrorLink(error)} left />}
         {success && <GlobalSuccess success={success} />}
       </div>

@@ -2653,7 +2653,7 @@ aws4@^1.8.0:
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.11.0.tgz#d61f46d83b2519250e2784daf5b09479a8b41c59"
   integrity sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==
 
-axe-core@^4.0.2:
+axe-core@^4.0.2, axe-core@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.1.1.tgz#70a7855888e287f7add66002211a423937063eaf"
   integrity sha512-5Kgy8Cz6LPC9DJcNb3yjAXTu3XihQgEdnIg50c//zOC/MyLP0Clg+Y8Sh9ZjjnvBrDZU4DgXS9C3T9r4/scGZQ==
@@ -3795,6 +3795,11 @@ cwebp-bin@^5.0.0:
     bin-build "^3.0.0"
     bin-wrapper "^4.0.1"
     logalot "^2.1.0"
+
+cypress-axe@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/cypress-axe/-/cypress-axe-0.12.0.tgz#2549a55f0a5c8006de240a85a19c8ecf2ce3abf9"
+  integrity sha512-NF/bMxU6KaxhSqfJysBtX3Buw92aBgct1kR+eqCTwoU1bmqMjAzxxRZY5UaWTxmxQeVRb7Bv4yXNNzu0JDkK/g==
 
 cypress@^5.5.0:
   version "5.6.0"

@@ -69,7 +69,7 @@ export const GlobalError = ({ error, link, left }: GlobalErrorProps) => {
       })
     : null;
   return (
-    <div css={errorDiv(!left)}>
+    <div css={errorDiv(!left)} role="complementary">
       <div css={row}>
         <p css={[errorP(left), item]}>
           <SvgAlert />

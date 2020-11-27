@@ -1,7 +1,7 @@
 import React, { useContext, FunctionComponent } from 'react';
-import { Header } from '@/client/components/Header';
+import { NavBar } from '@/client/components/NavBar';
 import { Footer } from '@/client/components/Footer';
-import { Titlepiece } from '@/client/components/Titlepiece';
+import { SignInHeader } from '@/client/components/SignInHeader';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { GlobalError } from '@/client/components/GlobalError';
@@ -28,8 +28,8 @@ export const SignInLayout: FunctionComponent = (props) => {
 
   return (
     <>
-      <Header />
-      <Titlepiece />
+      <NavBar />
+      <SignInHeader />
       {error && <GlobalError error={error} link={getErrorLink(error)} />}
       {success && <GlobalSuccess success={success} />}
       <main css={main}>{props.children}</main>

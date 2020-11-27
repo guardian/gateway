@@ -5,7 +5,7 @@ import { headline } from '@guardian/src-foundations/typography';
 import { from } from '@guardian/src-foundations/mq';
 import { MaxWidth } from '@/client/models/Style';
 
-const section = css`
+const header = css`
   width: 100%;
   padding-top: ${space[9]}px;
   background-color: ${brand[300]};
@@ -56,10 +56,10 @@ const h1 = css`
   }
 `;
 
-export const Titlepiece = () => (
-  <section css={section}>
+export const SignInHeader = () => (
+  <header css={header}>
     <div css={div}>
       <h1 css={h1}>Sign in</h1>
     </div>
-  </section>
+  </header>
 );
