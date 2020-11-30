@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-const { insertAndCheckAxe } = require('../support/cypress-axe');
+const { injectAndCheckAxe } = require('../support/cypress-axe');
 const ChangePasswordPage = require('../support/pages/change_password_page');
 const ResendPasswordResetPage = require('../support/pages/resend_password_page');
 
@@ -44,21 +44,21 @@ describe('Password change flow', () => {
         ],
       });
       page.goto(fakeToken);
-      insertAndCheckAxe();
+      injectAndCheckAxe();
     });
 
     it('Has no detectable a11y violations on change password page', () => {
       cy.idapiMock(200);
       cy.idapiMock(200, fakeSuccessResponse);
       page.goto(fakeToken);
-      insertAndCheckAxe();
+      injectAndCheckAxe();
     });
 
     it('Has no detectable a11y violations on change password page with error', () => {
       cy.idapiMock(200);
       page.goto(fakeToken);
       page.submitPasswordChange('password', 'mismatch');
-      insertAndCheckAxe();
+      injectAndCheckAxe();
     });
 
     it('Has no detectable a11y violations on change password complete page', () => {
@@ -66,7 +66,7 @@ describe('Password change flow', () => {
       cy.idapiMock(200, fakeSuccessResponse);
       page.goto(fakeToken);
       page.submitPasswordChange('password123', 'password123');
-      insertAndCheckAxe();
+      injectAndCheckAxe();
     });
   });
 

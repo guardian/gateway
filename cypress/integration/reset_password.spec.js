@@ -1,6 +1,6 @@
 /// <reference types='cypress' />
 
-const { insertAndCheckAxe } = require('../support/cypress-axe');
+const { injectAndCheckAxe } = require('../support/cypress-axe');
 const PageResetPassword = require('../support/pages/reset_password_page');
 const PageResetSent = require('../support/pages/reset_sent_page');
 
@@ -18,20 +18,20 @@ describe('Password reset flow', () => {
 
   context('A11y checks', () => {
     it('Has no detectable a11y violations on reset password page', () => {
-      insertAndCheckAxe();
+      injectAndCheckAxe();
     });
 
     it('Has no detectable a11y violations on reset password page with error', () => {
       cy.idapiMock(500);
       page.submitEmailAddress('example@example.com');
-      insertAndCheckAxe();
+      injectAndCheckAxe();
     });
 
     it('Has no detectable a11y violations on email sent page', function () {
       const { email } = this.users.validEmail;
       cy.idapiMock(200);
       page.submitEmailAddress(email);
-      insertAndCheckAxe();
+      injectAndCheckAxe();
     });
   });
 

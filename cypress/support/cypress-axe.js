@@ -19,12 +19,12 @@ const terminalLog = (violations) => {
 };
 
 // for use on page reloads after axction taken
-const insertAndCheckAxe = () => {
+const injectAndCheckAxe = () => {
   cy.injectAxe();
   cy.checkA11y(null, null, terminalLog);
 };
 
 module.exports = {
   terminalLog,
-  insertAndCheckAxe,
+  injectAndCheckAxe,
 };
