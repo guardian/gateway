@@ -265,7 +265,9 @@ describe('Onboarding flow', () => {
     });
 
     it('uses a default returnUrl if none provided', () => {
-      const returnUrl = getEnvironmentVariable('DEFAULT_RETURN_URI');
+      const returnUrl = encodeURIComponent(
+        getEnvironmentVariable('DEFAULT_RETURN_URI'),
+      );
 
       CommunicationsPage.gotoFlowStart();
 
