@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-const qs = require('query-string');
+import * as qs from 'query-string';
 
 class Onboarding {
   static URL = '/consents';
@@ -46,4 +46,4 @@ class Onboarding {
   }
 }
 
-module.exports = Onboarding;
+export default Onboarding;

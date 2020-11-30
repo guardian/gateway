@@ -1,4 +1,4 @@
-const OnboardingPage = require('./onboarding_page');
+import OnboardingPage from './onboarding_page';
 
 class NewslettersPage extends OnboardingPage {
   static CONTENT = {
@@ -17,4 +17,4 @@ class NewslettersPage extends OnboardingPage {
   static URL = '/consents/newsletters';
 }
 
-module.exports = NewslettersPage;
+export default NewslettersPage;

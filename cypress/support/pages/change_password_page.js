@@ -39,4 +39,4 @@ class ChangePasswordPage {
   }
 }
 
-module.exports = ChangePasswordPage;
+export default ChangePasswordPage;

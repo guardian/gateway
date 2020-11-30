@@ -33,4 +33,4 @@ class ResetPasswordPage {
   }
 }
 
-module.exports = ResetPasswordPage;
+export default ResetPasswordPage;

@@ -7,4 +7,4 @@ class ResetSentPage {
   };
 }
 
-module.exports = ResetSentPage;
+export default ResetSentPage;

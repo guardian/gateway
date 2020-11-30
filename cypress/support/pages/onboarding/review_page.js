@@ -1,4 +1,4 @@
-const OnboardingPage = require('./onboarding_page');
+import OnboardingPage from './onboarding_page';
 
 class ReviewPage extends OnboardingPage {
   static URL = '/consents/review';
@@ -60,4 +60,4 @@ class ReviewPage extends OnboardingPage {
   }
 }
 
-module.exports = ReviewPage;
+export default ReviewPage;

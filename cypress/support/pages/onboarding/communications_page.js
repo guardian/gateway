@@ -1,4 +1,4 @@
-const OnboardingPage = require('./onboarding_page');
+import OnboardingPage from './onboarding_page';
 
 class CommunicationsPage extends OnboardingPage {
   static URL = '/consents/communication';
@@ -21,4 +21,4 @@ class CommunicationsPage extends OnboardingPage {
   }
 }
 
-module.exports = CommunicationsPage;
+export default CommunicationsPage;
