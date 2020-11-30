@@ -2,7 +2,10 @@
 /// <reference types="cypress" />
 import { getEnvironmentVariable } from '../support/util';
 
-import { authRedirectSignInRecentlyEmailValidated } from '../support/idapi/auth';
+import {
+  authRedirectSignInRecentlyEmailValidated,
+  AUTH_REDIRECT_ENDPOINT,
+} from '../support/idapi/auth';
 import {
   allConsents,
   defaultUserConsent,
@@ -48,7 +51,7 @@ describe('Onboarding flow', () => {
       cy.idapiMockAll(
         200,
         authRedirectSignInRecentlyEmailValidated,
-        '/auth/redirect',
+        AUTH_REDIRECT_ENDPOINT,
       );
       cy.idapiMockAll(200, allConsents, CONSENTS_ENDPOINT);
       cy.idapiMockAll(200, allNewsletters, NEWSLETTER_ENDPOINT);
@@ -339,7 +342,7 @@ describe('Onboarding flow', () => {
         emailValidated: false,
         redirect: null,
       };
-      cy.idapiMockAll(200, emailNotValidatedResponse, '/auth/redirect');
+      cy.idapiMockAll(200, emailNotValidatedResponse, AUTH_REDIRECT_ENDPOINT);
 
       cy.request({
         url: Onboarding.URL,
@@ -355,7 +358,7 @@ describe('Onboarding flow', () => {
       cy.idapiMockAll(
         200,
         authRedirectSignInRecentlyEmailValidated,
-        '/auth/redirect',
+        AUTH_REDIRECT_ENDPOINT,
       );
       cy.request({
         url: Onboarding.URL,
@@ -375,7 +378,7 @@ describe('Onboarding flow', () => {
           url: 'https://fakeloginfortest.code.dev-theguardian.co.uk',
         },
       };
-      cy.idapiMockAll(200, emailNotValidatedResponse, '/auth/redirect');
+      cy.idapiMockAll(200, emailNotValidatedResponse, AUTH_REDIRECT_ENDPOINT);
 
       cy.request({
         url: Onboarding.URL,
@@ -397,7 +400,7 @@ describe('Onboarding flow', () => {
         redirect: undefined,
       };
 
-      cy.idapiMockAll(200, emailNotValidatedResponse, '/auth/redirect');
+      cy.idapiMockAll(200, emailNotValidatedResponse, AUTH_REDIRECT_ENDPOINT);
 
       cy.request({
         url: Onboarding.URL,
@@ -411,7 +414,7 @@ describe('Onboarding flow', () => {
     it('on idapi error it redirects to the sign in page with the error flag set', () => {
       const signInUrl = getEnvironmentVariable('SIGN_IN_PAGE_URL');
       setAuthCookies();
-      cy.idapiMockAll(502, 'gateway error', '/auth/redirect');
+      cy.idapiMockAll(502, 'gateway error', AUTH_REDIRECT_ENDPOINT);
       cy.request({
         url: Onboarding.URL,
         followRedirect: false,
@@ -430,7 +433,7 @@ describe('Onboarding flow', () => {
       cy.idapiMockAll(
         200,
         authRedirectSignInRecentlyEmailValidated,
-        '/auth/redirect',
+        AUTH_REDIRECT_ENDPOINT,
       );
       cy.idapiMockAll(200, allConsents, CONSENTS_ENDPOINT);
     });
@@ -478,7 +481,7 @@ describe('Onboarding flow', () => {
       cy.idapiMockAll(
         200,
         authRedirectSignInRecentlyEmailValidated,
-        '/auth/redirect',
+        AUTH_REDIRECT_ENDPOINT,
       );
       cy.idapiMockAll(200, allNewsletters, NEWSLETTER_ENDPOINT);
       cy.idapiMockAll(200, userNewsletters(), NEWSLETTER_SUBSCRIPTION_ENDPOINT);
@@ -618,7 +621,7 @@ describe('Onboarding flow', () => {
       cy.idapiMockAll(
         200,
         authRedirectSignInRecentlyEmailValidated,
-        '/auth/redirect',
+        AUTH_REDIRECT_ENDPOINT,
       );
       cy.idapiMockAll(200, allConsents, CONSENTS_ENDPOINT);
       cy.idapiMockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
@@ -658,7 +661,7 @@ describe('Onboarding flow', () => {
       cy.idapiMockAll(
         200,
         authRedirectSignInRecentlyEmailValidated,
-        '/auth/redirect',
+        AUTH_REDIRECT_ENDPOINT,
       );
       cy.idapiMockAll(200, allConsents, CONSENTS_ENDPOINT);
       cy.idapiMockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
