@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /// <reference types="cypress" />
+import { getEnvironmentVariable } from '../support/util';
 
 const {
   authRedirectSignInRecentlyEmailValidated,
@@ -126,6 +127,7 @@ describe('Verify email flow', () => {
     });
 
     it('verification token is expired, logged out, shows page to sign in to resend validation email', () => {
+      const signInUrl = getEnvironmentVariable('SIGN_IN_PAGE_URL');
       // mock token expired
       cy.idapiMockNext(403, validationTokenExpired);
 
@@ -140,11 +142,12 @@ describe('Verify email flow', () => {
         .should('have.attr', 'href')
         .and(
           'include',
-          'https://profile.code.dev-theguardian.com/signin?returnUrl=http%3A%2F%2Flocalhost%3A8861%2Fverify-email',
+          `${signInUrl}?returnUrl=http%3A%2F%2Flocalhost%3A8861%2Fverify-email`,
         );
     });
 
     it('verification token is invalid, logged out, shows page to sign in to resend validation email', () => {
+      const signInUrl = getEnvironmentVariable('SIGN_IN_PAGE_URL');
       // mock token invalid
       cy.idapiMockNext(403, validationTokenInvalid);
 
@@ -159,7 +162,7 @@ describe('Verify email flow', () => {
         .should('have.attr', 'href')
         .and(
           'include',
-          'https://profile.code.dev-theguardian.com/signin?returnUrl=http%3A%2F%2Flocalhost%3A8861%2Fverify-email',
+          `${signInUrl}?returnUrl=http%3A%2F%2Flocalhost%3A8861%2Fverify-email`,
         );
     });
 
