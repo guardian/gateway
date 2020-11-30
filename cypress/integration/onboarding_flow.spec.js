@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /// <reference types="cypress" />
+import { getEnvironmentVariable } from '../support/util';
 
 const {
   authRedirectSignInRecentlyEmailValidated,
@@ -264,10 +265,7 @@ describe('Onboarding flow', () => {
     });
 
     it('uses a default returnUrl if none provided', () => {
-      // @TODO: Reliable way of loading this from envs?
-      const returnUrl = encodeURIComponent(
-        'https://m.code.dev-theguardian.com',
-      );
+      const returnUrl = getEnvironmentVariable('DEFAULT_RETURN_URI');
 
       CommunicationsPage.gotoFlowStart();
 
@@ -307,6 +305,7 @@ describe('Onboarding flow', () => {
 
   context('Login middleware', () => {
     it('no sc_gu_u cookie, redirect to login page', () => {
+      const signInUrl = getEnvironmentVariable('SIGN_IN_PAGE_URL');
       cy.setCookie('GU_U', 'FAKE_GU_U');
       cy.setCookie('SC_GU_LA', 'FAKE_SC_GU_LA');
 
@@ -315,13 +314,12 @@ describe('Onboarding flow', () => {
         followRedirect: false,
       }).then((res) => {
         expect(res.status).to.eq(302);
-        expect(res.redirectedToUrl).to.include(
-          'https://profile.code.dev-theguardian.com/signin',
-        );
+        expect(res.redirectedToUrl).to.include(signInUrl);
       });
     });
 
     it('no sc_gu_la cookie, redirect to login page', () => {
+      const signInUrl = getEnvironmentVariable('SIGN_IN_PAGE_URL');
       cy.setCookie('GU_U', 'FAKE_GU_U');
       cy.setCookie('SC_GU_U', 'FAKE_SC_GU_U');
 
@@ -330,9 +328,7 @@ describe('Onboarding flow', () => {
         followRedirect: false,
       }).then((res) => {
         expect(res.status).to.eq(302);
-        expect(res.redirectedToUrl).to.include(
-          'https://profile.code.dev-theguardian.com/signin',
-        );
+        expect(res.redirectedToUrl).to.include(signInUrl);
       });
     });
 
@@ -393,6 +389,7 @@ describe('Onboarding flow', () => {
     });
 
     it('if missing redirect information, it redirects to the default ', () => {
+      const signInUrl = getEnvironmentVariable('SIGN_IN_PAGE_URL');
       setAuthCookies();
       const emailNotValidatedResponse = {
         signInStatus: 'signedInNotRecently',
@@ -407,13 +404,12 @@ describe('Onboarding flow', () => {
         followRedirect: false,
       }).then((res) => {
         expect(res.status).to.eq(302);
-        expect(res.redirectedToUrl).to.include(
-          'https://profile.code.dev-theguardian.com/signin',
-        );
+        expect(res.redirectedToUrl).to.include(signInUrl);
       });
     });
 
     it('on idapi error it redirects to the sign in page with the error flag set', () => {
+      const signInUrl = getEnvironmentVariable('SIGN_IN_PAGE_URL');
       setAuthCookies();
       cy.idapiMockAll(502, 'gateway error', '/auth/redirect');
       cy.request({
@@ -422,7 +418,7 @@ describe('Onboarding flow', () => {
       }).then((res) => {
         expect(res.status).to.eq(302);
         expect(res.redirectedToUrl).to.include(
-          'https://profile.code.dev-theguardian.com/signin/signin?error=signin-error-bad-request',
+          `${signInUrl}?error=signin-error-bad-request`,
         );
       });
     });
