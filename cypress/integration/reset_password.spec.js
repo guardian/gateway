@@ -1,6 +1,6 @@
 /// <reference types='cypress' />
 
-const { terminalLog, insertAndCheckAxe } = require('../support/cypress-axe');
+const { insertAndCheckAxe } = require('../support/cypress-axe');
 const PageResetPassword = require('../support/pages/reset_password_page');
 const PageResetSent = require('../support/pages/reset_sent_page');
 
@@ -14,17 +14,23 @@ describe('Password reset flow', () => {
 
   beforeEach(function () {
     page.goto();
-    cy.injectAxe();
   });
 
   context('A11y checks', () => {
-    it('Has no detectable a11y violations on load', () => {
-      cy.checkA11y(null, null, terminalLog);
+    it('Has no detectable a11y violations on reset password page', () => {
+      insertAndCheckAxe();
     });
 
-    it('Has no detectable a11y violations on error page', () => {
+    it('Has no detectable a11y violations on reset password page with error', () => {
       cy.idapiMock(500);
       page.submitEmailAddress('example@example.com');
+      insertAndCheckAxe();
+    });
+
+    it('Has no detectable a11y violations on email sent page', function () {
+      const { email } = this.users.validEmail;
+      cy.idapiMock(200);
+      page.submitEmailAddress(email);
       insertAndCheckAxe();
     });
   });

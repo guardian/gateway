@@ -1,5 +1,6 @@
 /// <reference types="cypress" />
 
+const { insertAndCheckAxe } = require('../support/cypress-axe');
 const ChangePasswordPage = require('../support/pages/change_password_page');
 const ResendPasswordResetPage = require('../support/pages/resend_password_page');
 
@@ -7,8 +8,66 @@ describe('Password change flow', () => {
   const page = new ChangePasswordPage();
   const fakeToken = 'abcde';
 
-  before(() => {
+  const fakeSuccessResponse = {
+    cookies: {
+      values: [
+        {
+          key: 'GU_U',
+          value: 'FAKE_VALUE_0',
+        },
+        {
+          key: 'SC_GU_LA',
+          value: 'FAKE_VALUE_1',
+          sessionCookie: true,
+        },
+        {
+          key: 'SC_GU_U',
+          value: 'FAKE_VALUE_2',
+        },
+      ],
+      expiresAt: 1,
+    },
+  };
+
+  beforeEach(() => {
     cy.idapiMockPurge();
+  });
+
+  context('A11y checks', () => {
+    it('Has no detectable a11y violations on resend password page', () => {
+      cy.idapiMock(500, {
+        status: 'error',
+        errors: [
+          {
+            message: 'Invalid token',
+          },
+        ],
+      });
+      page.goto(fakeToken);
+      insertAndCheckAxe();
+    });
+
+    it('Has no detectable a11y violations on change password page', () => {
+      cy.idapiMock(200);
+      cy.idapiMock(200, fakeSuccessResponse);
+      page.goto(fakeToken);
+      insertAndCheckAxe();
+    });
+
+    it('Has no detectable a11y violations on change password page with error', () => {
+      cy.idapiMock(200);
+      page.goto(fakeToken);
+      page.submitPasswordChange('password', 'mismatch');
+      insertAndCheckAxe();
+    });
+
+    it('Has no detectable a11y violations on change password complete page', () => {
+      cy.idapiMock(200);
+      cy.idapiMock(200, fakeSuccessResponse);
+      page.goto(fakeToken);
+      page.submitPasswordChange('password123', 'password123');
+      insertAndCheckAxe();
+    });
   });
 
   context('An expired/invalid token is used', () => {
@@ -57,27 +116,6 @@ describe('Password change flow', () => {
 
   context('Valid password entered', () => {
     it('shows password change success screen, with a default redirect button.', () => {
-      const fakeSuccessResponse = {
-        cookies: {
-          values: [
-            {
-              key: 'GU_U',
-              value: 'FAKE_VALUE_0',
-            },
-            {
-              key: 'SC_GU_LA',
-              value: 'FAKE_VALUE_1',
-              sessionCookie: true,
-            },
-            {
-              key: 'SC_GU_U',
-              value: 'FAKE_VALUE_2',
-            },
-          ],
-          expiresAt: 1,
-        },
-      };
-
       cy.idapiMock(200);
       cy.idapiMock(200, fakeSuccessResponse);
       page.goto(fakeToken);
@@ -102,27 +140,6 @@ describe('Password change flow', () => {
     () => {
       it('shows password change success screen, with a redirect button linking to the return url.', () => {
         const returnUrl = 'https://news.theguardian.com';
-        const fakeSuccessResponse = {
-          cookies: {
-            values: [
-              {
-                key: 'GU_U',
-                value: 'FAKE_VALUE_0',
-              },
-              {
-                key: 'SC_GU_LA',
-                value: 'FAKE_VALUE_1',
-                sessionCookie: true,
-              },
-              {
-                key: 'SC_GU_U',
-                value: 'FAKE_VALUE_2',
-              },
-            ],
-            expiresAt: 1,
-          },
-        };
-
         cy.idapiMock(200);
         cy.idapiMock(200, fakeSuccessResponse);
         page.goto(fakeToken, returnUrl);
@@ -142,27 +159,6 @@ describe('Password change flow', () => {
     () => {
       it('shows password change success screen, with a default redirect button.', () => {
         const returnUrl = 'https://news.badsite.com';
-        const fakeSuccessResponse = {
-          cookies: {
-            values: [
-              {
-                key: 'GU_U',
-                value: 'FAKE_VALUE_0',
-              },
-              {
-                key: 'SC_GU_LA',
-                value: 'FAKE_VALUE_1',
-                sessionCookie: true,
-              },
-              {
-                key: 'SC_GU_U',
-                value: 'FAKE_VALUE_2',
-              },
-            ],
-            expiresAt: 1,
-          },
-        };
-
         cy.idapiMock(200);
         cy.idapiMock(200, fakeSuccessResponse);
         page.goto(fakeToken, returnUrl);
