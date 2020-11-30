@@ -1,13 +1,13 @@
 /// <reference types="cypress" />
-const NEWSLETTER_ENDPOINT = '/newsletters';
-const NEWSLETTER_SUBSCRIPTION_ENDPOINT = '/users/me/newsletters';
+export const NEWSLETTER_ENDPOINT = '/newsletters';
+export const NEWSLETTER_SUBSCRIPTION_ENDPOINT = '/users/me/newsletters';
 
-const NEWSLETTER_ERRORS = {
+export const NEWSLETTER_ERRORS = {
   GENERIC:
     'There was a problem displaying newsletter options, please try again.',
 };
 
-const allNewsletters = [
+export const allNewsletters = [
   {
     id: 'today-uk',
     name: 'Guardian Today: UK',
@@ -82,7 +82,7 @@ const allNewsletters = [
   },
 ];
 
-const userNewsletters = (subscriptions = []) => {
+export const userNewsletters = (subscriptions = []) => {
   return {
     result: {
       htmlPreference: 'HTML',
@@ -91,12 +91,4 @@ const userNewsletters = (subscriptions = []) => {
     },
     status: 'ok',
   };
-};
-
-module.exports = {
-  allNewsletters,
-  userNewsletters,
-  NEWSLETTER_ENDPOINT,
-  NEWSLETTER_SUBSCRIPTION_ENDPOINT,
-  NEWSLETTER_ERRORS,
 };

@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-const validationTokenExpired = {
+export const validationTokenExpired = {
   error: {
     status: 'error',
     errors: [
@@ -14,7 +14,7 @@ const validationTokenExpired = {
   level: 'error',
 };
 
-const validationTokenInvalid = {
+export const validationTokenInvalid = {
   error: {
     status: 'error',
     errors: [
@@ -26,9 +26,4 @@ const validationTokenInvalid = {
   },
   status: 403,
   level: 'error',
-};
-
-module.exports = {
-  validationTokenExpired,
-  validationTokenInvalid,
 };

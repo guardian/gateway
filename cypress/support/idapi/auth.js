@@ -1,11 +1,7 @@
 /// <reference types="cypress" />
-
-const authRedirectSignInRecentlyEmailValidated = {
+// @TODO: URL HERE
+export const authRedirectSignInRecentlyEmailValidated = {
   signInStatus: 'signedInRecently',
   emailValidated: true,
   redirect: null,
-};
-
-module.exports = {
-  authRedirectSignInRecentlyEmailValidated,
 };
