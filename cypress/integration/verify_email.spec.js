@@ -2,20 +2,15 @@
 /// <reference types="cypress" />
 import { getEnvironmentVariable } from '../support/util';
 
-const {
-  authRedirectSignInRecentlyEmailValidated,
-} = require('../support/idapi/auth');
-const { allConsents } = require('../support/idapi/consent');
-const {
-  authCookieResponse,
-  setAuthCookies,
-} = require('../support/idapi/cookie');
-const { verifiedUserWithNoConsent } = require('../support/idapi/user');
-const {
+import { authRedirectSignInRecentlyEmailValidated } from '../support/idapi/auth';
+import { allConsents } from '../support/idapi/consent';
+import { authCookieResponse, setAuthCookies } from '../support/idapi/cookie';
+import { verifiedUserWithNoConsent } from '../support/idapi/user';
+import {
   validationTokenExpired,
   validationTokenInvalid,
-} = require('../support/idapi/verify_email');
-const VerifyEmail = require('../support/pages/verify_email');
+} from '../support/idapi/verify_email';
+import VerifyEmail from '../support/pages/verify_email';
 
 describe('Verify email flow', () => {
   const verifyEmailFlow = new VerifyEmail();

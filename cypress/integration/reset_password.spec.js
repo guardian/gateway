@@ -1,7 +1,7 @@
 /// <reference types='cypress' />
 
-const PageResetPassword = require('../support/pages/reset_password_page');
-const PageResetSent = require('../support/pages/reset_sent_page');
+import PageResetPassword from '../support/pages/reset_password_page';
+import PageResetSent from '../support/pages/reset_sent_page';
 
 describe('Password reset flow', () => {
   const page = new PageResetPassword();

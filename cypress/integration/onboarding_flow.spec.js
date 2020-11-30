@@ -2,28 +2,26 @@
 /// <reference types="cypress" />
 import { getEnvironmentVariable } from '../support/util';
 
-const {
-  authRedirectSignInRecentlyEmailValidated,
-} = require('../support/idapi/auth');
-const {
+import { authRedirectSignInRecentlyEmailValidated } from '../support/idapi/auth';
+import {
   allConsents,
   defaultUserConsent,
   optedOutUserConsent,
   getUserConsents,
   CONSENTS_ENDPOINT,
   CONSENT_ERRORS,
-} = require('../support/idapi/consent');
-const {
+} from '../support/idapi/consent';
+import {
   verifiedUserWithNoConsent,
   createUser,
   USER_ERRORS,
   USER_ENDPOINT,
-} = require('../support/idapi/user');
-const { setAuthCookies } = require('../support/idapi/cookie');
-const CommunicationsPage = require('../support/pages/onboarding/communications_page.js');
-const NewslettersPage = require('../support/pages/onboarding/newsletters_page');
-const YourDataPage = require('../support/pages/onboarding/your_data_page');
-const ReviewPage = require('../support/pages/onboarding/review_page');
+} from '../support/idapi/user';
+import { setAuthCookies } from '../support/idapi/cookie';
+import CommunicationsPage from '../support/pages/onboarding/communications_page.js';
+import NewslettersPage from '../support/pages/onboarding/newsletters_page';
+import YourDataPage from '../support/pages/onboarding/your_data_page';
+import ReviewPage from '../support/pages/onboarding/review_page';
 
 const {
   allNewsletters,
