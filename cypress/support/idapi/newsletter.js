@@ -1,4 +1,11 @@
 /// <reference types="cypress" />
+const NEWSLETTER_ENDPOINT = '/newsletters';
+const NEWSLETTER_SUBSCRIPTION_ENDPOINT = '/users/me/newsletters';
+
+const NEWSLETTER_ERRORS = {
+  GENERIC:
+    'There was a problem displaying newsletter options, please try again.',
+};
 
 const allNewsletters = [
   {
@@ -89,4 +96,7 @@ const userNewsletters = (subscriptions = []) => {
 module.exports = {
   allNewsletters,
   userNewsletters,
+  NEWSLETTER_ENDPOINT,
+  NEWSLETTER_SUBSCRIPTION_ENDPOINT,
+  NEWSLETTER_ERRORS,
 };

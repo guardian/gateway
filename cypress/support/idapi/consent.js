@@ -1,4 +1,9 @@
 /// <reference types="cypress" />
+const CONSENT_ERRORS = {
+  GENERIC: 'There was a problem saving your choice, please try again.',
+};
+
+const CONSENTS_ENDPOINT = '/consents';
 
 const allConsents = [
   {
@@ -83,94 +88,33 @@ const allConsents = [
   },
 ];
 
-const defaultUserConsent = [
-  {
-    id: 'sms',
-    consented: false,
-  },
-  {
-    id: 'post_optout',
-    consented: false,
-  },
-  {
-    id: 'phone_optout',
-    consented: false,
-  },
-  {
-    id: 'profiling_optout',
-    consented: false,
-  },
-  {
-    id: 'market_research_optout',
-    consented: false,
-  },
-  {
-    id: 'supporter',
-    consented: false,
-  },
-  {
-    id: 'jobs',
-    consented: false,
-  },
-  {
-    id: 'holidays',
-    consented: false,
-  },
-  {
-    id: 'events',
-    consented: false,
-  },
-  {
-    id: 'offers',
-    consented: false,
-  },
-];
+const defaultUserConsent = allConsents.map(({ id }) => ({
+  id,
+  consented: false,
+}));
 
-const optedOutUserConsent = [
-  {
-    id: 'sms',
-    consented: false,
-  },
-  {
-    id: 'post_optout',
-    consented: false,
-  },
-  {
-    id: 'phone_optout',
-    consented: false,
-  },
-  {
-    id: 'profiling_optout',
-    consented: true,
-  },
-  {
-    id: 'market_research_optout',
-    consented: true,
-  },
-  {
-    id: 'supporter',
-    consented: false,
-  },
-  {
-    id: 'jobs',
-    consented: false,
-  },
-  {
-    id: 'holidays',
-    consented: false,
-  },
-  {
-    id: 'events',
-    consented: false,
-  },
-  {
-    id: 'offers',
-    consented: false,
-  },
-];
+const getUserConsents = (consented = []) => {
+  if (!consented.length) {
+    return defaultUserConsent;
+  }
+  return allConsents.map(({ id }) => {
+    return {
+      id,
+      consented: consented.includes(id),
+    };
+  });
+};
+
+const optedOutUserConsent = getUserConsents([
+  'profiling_optout',
+  'market_research_optout',
+]);
 
 module.exports = {
   allConsents,
   optedOutUserConsent,
   defaultUserConsent,
+  getUserConsents,
+  CONSENT_ERRORS,
+  CONSENTS_ENDPOINT,
 };

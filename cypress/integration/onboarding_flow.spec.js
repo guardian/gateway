@@ -8,10 +8,15 @@ const {
   allConsents,
   defaultUserConsent,
   optedOutUserConsent,
+  getUserConsents,
+  CONSENTS_ENDPOINT,
+  CONSENT_ERRORS,
 } = require('../support/idapi/consent');
 const {
   verifiedUserWithNoConsent,
   createUser,
+  USER_ERRORS,
+  USER_ENDPOINT,
 } = require('../support/idapi/user');
 const { setAuthCookies } = require('../support/idapi/cookie');
 const CommunicationsPage = require('../support/pages/onboarding/communications_page.js');
@@ -22,7 +27,16 @@ const ReviewPage = require('../support/pages/onboarding/review_page');
 const {
   allNewsletters,
   userNewsletters,
+  NEWSLETTER_ENDPOINT,
+  NEWSLETTER_SUBSCRIPTION_ENDPOINT,
+  NEWSLETTER_ERRORS,
 } = require('../support/idapi/newsletter');
+const Onboarding = require('../support/pages/onboarding/onboarding_page');
+const VerifyEmail = require('../support/pages/verify_email');
+const {
+  getGeoLocationHeaders,
+  GEOLOCATION_CODES,
+} = require('../support/geolocation');
 
 describe('Onboarding flow', () => {
   beforeEach(() => {
@@ -37,10 +51,14 @@ describe('Onboarding flow', () => {
         authRedirectSignInRecentlyEmailValidated,
         '/auth/redirect',
       );
-      cy.idapiPermaMock(200, allConsents, '/consents');
-      cy.idapiPermaMock(200, allNewsletters, '/newsletters');
-      cy.idapiPermaMock(200, verifiedUserWithNoConsent, '/user/me');
-      cy.idapiPermaMock(200, userNewsletters(), '/users/me/newsletters');
+      cy.idapiPermaMock(200, allConsents, CONSENTS_ENDPOINT);
+      cy.idapiPermaMock(200, allNewsletters, NEWSLETTER_ENDPOINT);
+      cy.idapiPermaMock(200, verifiedUserWithNoConsent, USER_ENDPOINT);
+      cy.idapiPermaMock(
+        200,
+        userNewsletters(),
+        NEWSLETTER_SUBSCRIPTION_ENDPOINT,
+      );
     });
 
     it('goes through full flow, opt in all consents/newsletters, preserve returnUrl', () => {
@@ -131,13 +149,13 @@ describe('Onboarding flow', () => {
       cy.idapiMock(200);
 
       // user consents mock response for review of consents flow
-      cy.idapiPermaMock(200, createUser(consent), '/user/me');
+      cy.idapiPermaMock(200, createUser(consent), USER_ENDPOINT);
 
       // mock load user newsletters
       cy.idapiPermaMock(
         200,
         userNewsletters(newslettersToSubscribe),
-        '/users/me/newsletters',
+        NEWSLETTER_SUBSCRIPTION_ENDPOINT,
       );
 
       YourDataPage.getSaveAndContinueButton().click();
@@ -227,7 +245,7 @@ describe('Onboarding flow', () => {
       // mock form save success
       cy.idapiMock(200);
 
-      cy.idapiPermaMock(200, createUser(optedOutUserConsent), '/user/me');
+      cy.idapiPermaMock(200, createUser(optedOutUserConsent), USER_ENDPOINT);
 
       YourDataPage.getSaveAndContinueButton().click();
       cy.idapiLastPayloadIs([{ id: 'profiling_optout', consented: true }]);
@@ -292,48 +310,400 @@ describe('Onboarding flow', () => {
   });
 
   context('Login middleware', () => {
-    // it('no sc_gu_u cookie, redirect to login page');
-    // it('no sc_gu_la cookie, redirect to login page');
-    // it('email not validated, go to verify email page');
-    // it('recently validated, go to consents flow');
-    // it('not recently validated, go to login page');
-    // it('generic idapi error');
-  });
+    it('no sc_gu_u cookie, redirect to login page', () => {
+      cy.setCookie('GU_U', 'FAKE_GU_U');
+      cy.setCookie('SC_GU_LA', 'FAKE_SC_GU_LA');
 
-  context('Newsletters page', () => {
-    // it('correct newsletters shown for uk, none checked by default');
-    // it('correct newsletters shown for us, none checked by default');
-    // it('correct newsletters shown for aus, none checked by default');
-    // it('correct newsletters shown for row/default, none checked by default');
-    // it(
-    //  'navigate back to newsletters page after saving will preserve newsletters' // @TODO: Not usefully testable with mockserver
-    // );
-    // it(
-    //  'navigate back to newsletters page after will let you change and save selections'
-    // );
-    // it('generic idapi error');
+      cy.request({
+        url: Onboarding.URL,
+        followRedirect: false,
+      }).then((res) => {
+        expect(res.status).to.eq(302);
+        expect(res.redirectedToUrl).to.include(
+          'https://profile.code.dev-theguardian.com/signin',
+        );
+      });
+    });
+
+    it('no sc_gu_la cookie, redirect to login page', () => {
+      cy.setCookie('GU_U', 'FAKE_GU_U');
+      cy.setCookie('SC_GU_U', 'FAKE_SC_GU_U');
+
+      cy.request({
+        url: Onboarding.URL,
+        followRedirect: false,
+      }).then((res) => {
+        expect(res.status).to.eq(302);
+        expect(res.redirectedToUrl).to.include(
+          'https://profile.code.dev-theguardian.com/signin',
+        );
+      });
+    });
+
+    it('email not validated, go to verify email page', () => {
+      setAuthCookies();
+      const emailNotValidatedResponse = {
+        signInStatus: 'signedInRecently',
+        emailValidated: false,
+        redirect: null,
+      };
+      cy.idapiPermaMock(200, emailNotValidatedResponse, '/auth/redirect');
+
+      cy.request({
+        url: Onboarding.URL,
+        followRedirect: false,
+      }).then((res) => {
+        expect(res.status).to.eq(303);
+        expect(res.redirectedToUrl).to.include(VerifyEmail.URL);
+      });
+    });
+
+    it('recently logged in, go to consents flow', () => {
+      setAuthCookies();
+      cy.idapiPermaMock(
+        200,
+        authRedirectSignInRecentlyEmailValidated,
+        '/auth/redirect',
+      );
+      cy.request({
+        url: Onboarding.URL,
+        followRedirect: false,
+      }).then((res) => {
+        expect(res.status).to.eq(303);
+        expect(res.redirectedToUrl).to.include(CommunicationsPage.URL);
+      });
+    });
+
+    it('not recently logged in, follows supplied redirect', () => {
+      setAuthCookies();
+      const emailNotValidatedResponse = {
+        signInStatus: 'signedInNotRecently',
+        emailValidated: true,
+        redirect: {
+          url: 'https://fakeloginfortest.code.dev-theguardian.co.uk',
+        },
+      };
+      cy.idapiPermaMock(200, emailNotValidatedResponse, '/auth/redirect');
+
+      cy.request({
+        url: Onboarding.URL,
+        followRedirect: false,
+      }).then((res) => {
+        expect(res.status).to.eq(302);
+        expect(res.redirectedToUrl).to.include(
+          'https://fakeloginfortest.code.dev-theguardian.co.uk',
+        );
+      });
+    });
+
+    it('if missing redirect information, it redirects to the default ', () => {
+      setAuthCookies();
+      const emailNotValidatedResponse = {
+        signInStatus: 'signedInNotRecently',
+        emailValidated: true,
+        redirect: undefined,
+      };
+
+      cy.idapiPermaMock(200, emailNotValidatedResponse, '/auth/redirect');
+
+      cy.request({
+        url: Onboarding.URL,
+        followRedirect: false,
+      }).then((res) => {
+        expect(res.status).to.eq(302);
+        expect(res.redirectedToUrl).to.include(
+          'https://profile.code.dev-theguardian.com/signin',
+        );
+      });
+    });
+
+    it('on idapi error it redirects to the sign in page with the error flag set', () => {
+      setAuthCookies();
+      cy.idapiPermaMock(502, 'gateway error', '/auth/redirect');
+      cy.request({
+        url: Onboarding.URL,
+        followRedirect: false,
+      }).then((res) => {
+        expect(res.status).to.eq(302);
+        expect(res.redirectedToUrl).to.include(
+          'https://profile.code.dev-theguardian.com/signin/signin?error=signin-error-bad-request',
+        );
+      });
+    });
   });
 
   context('Contact options page', () => {
-    // it('shows correct contact options, none checked by default');
-    // it(
-    //  'navigate back to contact options page after saving will preserve consents' // @TODO: Not usefully testable with mockserver
-    // );
-    // it(
-    //  'navigate back to contact options page after saving will let you change and save selections'
-    // );
-    // it('generic idapi error');
+    beforeEach(() => {
+      setAuthCookies();
+      cy.idapiPermaMock(
+        200,
+        authRedirectSignInRecentlyEmailValidated,
+        '/auth/redirect',
+      );
+      cy.idapiPermaMock(200, allConsents, CONSENTS_ENDPOINT);
+    });
+
+    it('shows correct contact options, none checked by default', () => {
+      cy.idapiPermaMock(200, verifiedUserWithNoConsent, USER_ENDPOINT);
+      CommunicationsPage.goto();
+      CommunicationsPage.getBackButton().should('not.exist');
+      CommunicationsPage.getCheckboxes().should('not.be.checked');
+    });
+
+    it('shows any previously selected consents', () => {
+      const consented = getUserConsents(['jobs', 'offers']);
+      cy.idapiPermaMock(200, createUser(consented), USER_ENDPOINT);
+      CommunicationsPage.goto();
+      CommunicationsPage.getBackButton().should('not.exist');
+      CommunicationsPage.getConsentCheckboxByTitle('Jobs').should('be.checked');
+      CommunicationsPage.getConsentCheckboxByTitle('Offers').should(
+        'be.checked',
+      );
+    });
+
+    it('display a relevant error message on user end point failure', () => {
+      cy.idapiPermaMock(500, {}, USER_ENDPOINT);
+      CommunicationsPage.goto();
+      CommunicationsPage.getErrorBanner().contains(USER_ERRORS.GENERIC);
+      CommunicationsPage.getBackButton().should('not.exist');
+      CommunicationsPage.getSaveAndContinueButton().should('not.exist');
+    });
+
+    it('displays a relevant error on consents endpoint failure', () => {
+      cy.idapiPermaMock(500, {}, CONSENTS_ENDPOINT);
+      CommunicationsPage.goto();
+      CommunicationsPage.getErrorBanner().contains(CONSENT_ERRORS.GENERIC);
+      CommunicationsPage.getBackButton().should('not.exist');
+      CommunicationsPage.getSaveAndContinueButton().should('not.exist');
+    });
+  });
+
+  context('Newsletters page', () => {
+    const { NEWSLETTERS } = NewslettersPage.CONTENT;
+
+    beforeEach(() => {
+      setAuthCookies();
+      cy.idapiPermaMock(
+        200,
+        authRedirectSignInRecentlyEmailValidated,
+        '/auth/redirect',
+      );
+      cy.idapiPermaMock(200, allNewsletters, NEWSLETTER_ENDPOINT);
+      cy.idapiPermaMock(
+        200,
+        userNewsletters(),
+        NEWSLETTER_SUBSCRIPTION_ENDPOINT,
+      );
+    });
+
+    it('correct newsletters shown for uk, none checked by default', () => {
+      const headers = getGeoLocationHeaders(GEOLOCATION_CODES.GB);
+
+      cy.visit(NewslettersPage.URL, { headers });
+
+      NewslettersPage.getNewsletterCheckboxByTitle(NEWSLETTERS.TODAY_UK).should(
+        'not.be.checked',
+      );
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.LONG_READ,
+      ).should('not.be.checked');
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.GREEN_LIGHT,
+      ).should('not.be.checked');
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.BOOKMARKS,
+      ).should('not.be.checked');
+
+      CommunicationsPage.getBackButton().should('exist');
+      CommunicationsPage.getSaveAndContinueButton().should('exist');
+    });
+
+    it('correct newsletters shown for United States of America, none checked by default', () => {
+      const headers = getGeoLocationHeaders(GEOLOCATION_CODES.AMERICA);
+
+      cy.visit(NewslettersPage.URL, { headers });
+
+      NewslettersPage.getNewsletterCheckboxByTitle(NEWSLETTERS.TODAY_US).should(
+        'not.be.checked',
+      );
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.LONG_READ,
+      ).should('not.be.checked');
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.GREEN_LIGHT,
+      ).should('not.be.checked');
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.BOOKMARKS,
+      ).should('not.be.checked');
+
+      CommunicationsPage.getBackButton().should('exist');
+      CommunicationsPage.getSaveAndContinueButton().should('exist');
+    });
+
+    it('correct newsletters shown for Australia, none checked by default', () => {
+      const headers = getGeoLocationHeaders(GEOLOCATION_CODES.AUSTRALIA);
+
+      cy.visit(NewslettersPage.URL, { headers });
+
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.TODAY_AUS,
+      ).should('not.be.checked');
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.LONG_READ,
+      ).should('not.be.checked');
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.GREEN_LIGHT,
+      ).should('not.be.checked');
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.BOOKMARKS,
+      ).should('not.be.checked');
+
+      CommunicationsPage.getBackButton().should('exist');
+      CommunicationsPage.getSaveAndContinueButton().should('exist');
+    });
+
+    it('correct newsletters shown for rest of the world, none checked by default', () => {
+      const headers = getGeoLocationHeaders(GEOLOCATION_CODES.OTHERS);
+
+      cy.visit(NewslettersPage.URL, { headers });
+
+      NewslettersPage.getNewsletterCheckboxByTitle(NEWSLETTERS.TODAY_UK).should(
+        'not.be.checked',
+      );
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.LONG_READ,
+      ).should('not.be.checked');
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.GREEN_LIGHT,
+      ).should('not.be.checked');
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.BOOKMARKS,
+      ).should('not.be.checked');
+
+      CommunicationsPage.getBackButton().should('exist');
+      CommunicationsPage.getSaveAndContinueButton().should('exist');
+    });
+
+    it('show already selected newsletters', () => {
+      const newslettersToSubscribe = [{ listId: 4147 }, { listId: 4165 }];
+      cy.idapiPermaMock(
+        200,
+        userNewsletters(newslettersToSubscribe),
+        NEWSLETTER_SUBSCRIPTION_ENDPOINT,
+      );
+      NewslettersPage.goto();
+
+      NewslettersPage.getNewsletterCheckboxByTitle(NEWSLETTERS.TODAY_UK).should(
+        'not.be.checked',
+      );
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.LONG_READ,
+      ).should('be.checked');
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.GREEN_LIGHT,
+      ).should('be.checked');
+      NewslettersPage.getNewsletterCheckboxByTitle(
+        NEWSLETTERS.BOOKMARKS,
+      ).should('not.be.checked');
+    });
+
+    it('displays a relevant error on newsletters endpoint failure', () => {
+      cy.idapiPermaMock(500, {}, NEWSLETTER_ENDPOINT);
+      NewslettersPage.goto();
+      NewslettersPage.getErrorBanner().contains(NEWSLETTER_ERRORS.GENERIC);
+      NewslettersPage.getBackButton().should('not.exist');
+      NewslettersPage.getSaveAndContinueButton().should('not.exist');
+    });
+
+    it('displays a relevant error on newsletters subscription endpoint failure', () => {
+      cy.idapiPermaMock(500, {}, NEWSLETTER_SUBSCRIPTION_ENDPOINT);
+      NewslettersPage.goto();
+      NewslettersPage.getErrorBanner().contains(NEWSLETTER_ERRORS.GENERIC);
+      NewslettersPage.getBackButton().should('not.exist');
+      NewslettersPage.getSaveAndContinueButton().should('not.exist');
+    });
   });
 
   context('Your data page', () => {
-    // it('correct consent shown');
-    // it('generic idapi error');
+    beforeEach(() => {
+      setAuthCookies();
+      cy.idapiPermaMock(
+        200,
+        authRedirectSignInRecentlyEmailValidated,
+        '/auth/redirect',
+      );
+      cy.idapiPermaMock(200, allConsents, CONSENTS_ENDPOINT);
+      cy.idapiPermaMock(200, verifiedUserWithNoConsent, USER_ENDPOINT);
+    });
+
+    it('displays the marketing opt out, unchecked by default', () => {
+      YourDataPage.goto();
+      YourDataPage.getMarketingOptoutCheckbox().should('not.be.checked');
+    });
+
+    it('displays the marketing opt out, checked if the user has previously opted out', () => {
+      cy.idapiPermaMock(200, createUser(optedOutUserConsent), USER_ENDPOINT);
+      YourDataPage.goto();
+      YourDataPage.getMarketingOptoutCheckbox().should('be.checked');
+    });
+
+    it('display a relevant error message on user end point failure', () => {
+      cy.idapiPermaMock(500, {}, USER_ENDPOINT);
+      YourDataPage.goto();
+      YourDataPage.getErrorBanner().contains(USER_ERRORS.GENERIC);
+      YourDataPage.getBackButton().should('not.exist');
+      YourDataPage.getSaveAndContinueButton().should('not.exist');
+    });
+
+    it('displays a relevant error on consents endpoint failure', () => {
+      cy.idapiPermaMock(500, {}, CONSENTS_ENDPOINT);
+      YourDataPage.goto();
+      YourDataPage.getErrorBanner().contains(CONSENT_ERRORS.GENERIC);
+      YourDataPage.getBackButton().should('not.exist');
+      YourDataPage.getSaveAndContinueButton().should('not.exist');
+    });
   });
 
   context('Review page', () => {
-    // it('correct options shown based on user consent/newsletter selections');
-    // it('default return url link');
-    // it('query parameter based return url link');
-    // it('generic idapi error');
+    beforeEach(() => {
+      setAuthCookies();
+      cy.idapiPermaMock(
+        200,
+        authRedirectSignInRecentlyEmailValidated,
+        '/auth/redirect',
+      );
+      cy.idapiPermaMock(200, allConsents, CONSENTS_ENDPOINT);
+      cy.idapiPermaMock(200, verifiedUserWithNoConsent, USER_ENDPOINT);
+      cy.idapiPermaMock(200, allNewsletters, NEWSLETTER_ENDPOINT);
+      cy.idapiPermaMock(
+        200,
+        userNewsletters(),
+        NEWSLETTER_SUBSCRIPTION_ENDPOINT,
+      );
+    });
+
+    it('displays a relevant error if on consents endpoint failure', () => {
+      cy.idapiPermaMock(500, {}, CONSENTS_ENDPOINT);
+      ReviewPage.goto();
+      ReviewPage.getErrorBanner().contains(CONSENT_ERRORS.GENERIC);
+    });
+
+    it('display a relevant error message on user end point failure', () => {
+      cy.idapiPermaMock(500, {}, USER_ENDPOINT);
+      ReviewPage.goto();
+      ReviewPage.getErrorBanner().contains(USER_ERRORS.GENERIC);
+    });
+
+    it('displays a relevant error on newsletters endpoint failure', () => {
+      cy.idapiPermaMock(500, {}, NEWSLETTER_ENDPOINT);
+      ReviewPage.goto();
+      ReviewPage.getErrorBanner().contains(NEWSLETTER_ERRORS.GENERIC);
+    });
+
+    it('displays a relevant error on newsletters subscription endpoint failure', () => {
+      cy.idapiPermaMock(500, {}, NEWSLETTER_SUBSCRIPTION_ENDPOINT);
+      ReviewPage.goto();
+      ReviewPage.getErrorBanner().contains(NEWSLETTER_ERRORS.GENERIC);
+    });
   });
 });
