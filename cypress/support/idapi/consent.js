@@ -1,11 +1,11 @@
 /// <reference types="cypress" />
-const CONSENT_ERRORS = {
+export const CONSENT_ERRORS = {
   GENERIC: 'There was a problem saving your choice, please try again.',
 };
 
-const CONSENTS_ENDPOINT = '/consents';
+export const CONSENTS_ENDPOINT = '/consents';
 
-const allConsents = [
+export const allConsents = [
   {
     id: 'sms',
     isOptOut: false,
@@ -88,12 +88,12 @@ const allConsents = [
   },
 ];
 
-const defaultUserConsent = allConsents.map(({ id }) => ({
+export const defaultUserConsent = allConsents.map(({ id }) => ({
   id,
   consented: false,
 }));
 
-const getUserConsents = (consented = []) => {
+export const getUserConsents = (consented = []) => {
   if (!consented.length) {
     return defaultUserConsent;
   }
@@ -105,16 +105,7 @@ const getUserConsents = (consented = []) => {
   });
 };
 
-const optedOutUserConsent = getUserConsents([
+export const optedOutUserConsent = getUserConsents([
   'profiling_optout',
   'market_research_optout',
 ]);
-
-module.exports = {
-  allConsents,
-  optedOutUserConsent,
-  defaultUserConsent,
-  getUserConsents,
-  CONSENT_ERRORS,
-  CONSENTS_ENDPOINT,
-};

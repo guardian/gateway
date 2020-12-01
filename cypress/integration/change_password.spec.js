@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
-const ChangePasswordPage = require('../support/pages/change_password_page');
-const ResendPasswordResetPage = require('../support/pages/resend_password_page');
+import ChangePasswordPage from '../support/pages/change_password_page';
+import ResendPasswordResetPage from '../support/pages/resend_password_page';
 
 describe('Password change flow', () => {
   const page = new ChangePasswordPage();
@@ -13,7 +13,7 @@ describe('Password change flow', () => {
 
   context('An expired/invalid token is used', () => {
     it('shows a resend password page', () => {
-      cy.idapiMock(500, {
+      cy.idapiMockNext(500, {
         status: 'error',
         errors: [
           {
@@ -28,7 +28,7 @@ describe('Password change flow', () => {
 
   context('Passwords do not match', () => {
     it('shows a password mismatch error message', () => {
-      cy.idapiMock(200);
+      cy.idapiMockNext(200);
       page.goto(fakeToken);
       page.submitPasswordChange('password', 'mismatch');
       cy.contains(ChangePasswordPage.CONTENT.ERRORS.PASSWORD_MISMATCH);
@@ -37,7 +37,7 @@ describe('Password change flow', () => {
 
   context('CSRF token error on submission', () => {
     it('should fail on submission due to CSRF token failure if CSRF token cookie is not sent', () => {
-      cy.idapiMock(200);
+      cy.idapiMockNext(200);
       page.goto(fakeToken);
       cy.clearCookie('_csrf');
       page.submitPasswordChange('password', 'password');
@@ -47,11 +47,11 @@ describe('Password change flow', () => {
 
   context('Enter and Confirm passwords left blank', () => {
     it('uses the standard HTML5 empty field validation', () => {
-      cy.idapiMock(200);
+      cy.idapiMockNext(200);
       page.goto(fakeToken);
       page.clickPasswordChange();
-      page.getInvalidPasswordChangeField().should('have.length', 1);
-      page.getInvalidPasswordChangeConfirmField().should('have.length', 1);
+      page.invalidPasswordChangeField().should('have.length', 1);
+      page.invalidPasswordChangeConfirmField().should('have.length', 1);
     });
   });
 
@@ -78,8 +78,8 @@ describe('Password change flow', () => {
         },
       };
 
-      cy.idapiMock(200);
-      cy.idapiMock(200, fakeSuccessResponse);
+      cy.idapiMockNext(200);
+      cy.idapiMockNext(200, fakeSuccessResponse);
       page.goto(fakeToken);
       page.submitPasswordChange('password123', 'password123');
       cy.contains(ChangePasswordPage.CONTENT.PASSWORD_CHANGE_SUCCESS_TITLE);
@@ -123,8 +123,8 @@ describe('Password change flow', () => {
           },
         };
 
-        cy.idapiMock(200);
-        cy.idapiMock(200, fakeSuccessResponse);
+        cy.idapiMockNext(200);
+        cy.idapiMockNext(200, fakeSuccessResponse);
         page.goto(fakeToken, returnUrl);
         page.submitPasswordChange('password123', 'password123');
         cy.contains(ChangePasswordPage.CONTENT.PASSWORD_CHANGE_SUCCESS_TITLE);
@@ -163,8 +163,8 @@ describe('Password change flow', () => {
           },
         };
 
-        cy.idapiMock(200);
-        cy.idapiMock(200, fakeSuccessResponse);
+        cy.idapiMockNext(200);
+        cy.idapiMockNext(200, fakeSuccessResponse);
         page.goto(fakeToken, returnUrl);
         page.submitPasswordChange('password123', 'password123');
         cy.contains(ChangePasswordPage.CONTENT.PASSWORD_CHANGE_SUCCESS_TITLE);
@@ -179,9 +179,9 @@ describe('Password change flow', () => {
 
   context('password too short', () => {
     it('shows an error showing the password length must be within certain limits', () => {
-      cy.idapiMock(200);
+      cy.idapiMockNext(200);
       page.goto(fakeToken);
-      cy.idapiMock(200);
+      cy.idapiMockNext(200);
       page.submitPasswordChange('p', 'p');
       cy.contains(ChangePasswordPage.CONTENT.ERRORS.PASSWORD_INVALID_LENGTH);
     });
@@ -190,9 +190,9 @@ describe('Password change flow', () => {
   context('password too long', () => {
     it('shows an error showing the password length must be within certain limits', () => {
       const excessivelyLongPassword = Array.from(Array(73), () => 'a').join('');
-      cy.idapiMock(200);
+      cy.idapiMockNext(200);
       page.goto(fakeToken);
-      cy.idapiMock(200);
+      cy.idapiMockNext(200);
       page.submitPasswordChange(
         excessivelyLongPassword,
         excessivelyLongPassword,
@@ -203,7 +203,7 @@ describe('Password change flow', () => {
 
   context('General IDAPI failure on token read', () => {
     it('displays the password resend page', () => {
-      cy.idapiMock(500);
+      cy.idapiMockNext(500);
       page.goto(fakeToken);
       cy.contains(ResendPasswordResetPage.CONTENT.PAGE_TITLE);
     });
@@ -211,8 +211,8 @@ describe('Password change flow', () => {
 
   context('General IDAPI failure on password change', () => {
     it('displays a generic error message', () => {
-      cy.idapiMock(200);
-      cy.idapiMock(500);
+      cy.idapiMockNext(200);
+      cy.idapiMockNext(500);
       page.goto(fakeToken);
       page.submitPasswordChange('password123', 'password123');
       cy.contains(ChangePasswordPage.CONTENT.ERRORS.GENERIC);

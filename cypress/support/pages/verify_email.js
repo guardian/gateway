@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-const qs = require('query-string');
+import * as qs from 'query-string';
 
 class VerifyEmail {
   static URL = '/verify-email';
@@ -31,4 +31,4 @@ class VerifyEmail {
   }
 }
 
-module.exports = VerifyEmail;
+export default VerifyEmail;

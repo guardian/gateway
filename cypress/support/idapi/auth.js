@@ -1,11 +1,9 @@
 /// <reference types="cypress" />
 
-const authRedirectSignInRecentlyEmailValidated = {
+export const AUTH_REDIRECT_ENDPOINT = '/auth/redirect';
+
+export const authRedirectSignInRecentlyEmailValidated = {
   signInStatus: 'signedInRecently',
   emailValidated: true,
   redirect: null,
-};
-
-module.exports = {
-  authRedirectSignInRecentlyEmailValidated,
 };

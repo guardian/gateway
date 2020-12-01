@@ -1,4 +1,4 @@
-const OnboardingPage = require('./onboarding_page');
+import OnboardingPage from './onboarding_page';
 
 class NewslettersPage extends OnboardingPage {
   static CONTENT = {
@@ -11,10 +11,10 @@ class NewslettersPage extends OnboardingPage {
       BOOKMARKS: 'Bookmarks',
     },
   };
-  static getNewsletterCheckboxByTitle(title) {
+  static newsletterCheckboxWithTitle(title) {
     return cy.contains(title).parent().contains('Sign Up').find('input');
   }
   static URL = '/consents/newsletters';
 }
 
-module.exports = NewslettersPage;
+export default NewslettersPage;
