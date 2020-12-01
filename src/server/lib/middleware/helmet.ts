@@ -2,6 +2,8 @@ import { default as helmet } from 'helmet';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { Routes } from '@/shared/model/Routes';
 
+const { baseUri, gaUID, apiDomain, idapiBaseUrl } = getConfiguration();
+
 enum HELMET_OPTIONS {
   SELF = "'self'",
   NONE = "'none'",
@@ -19,7 +21,7 @@ enum CSP_VALID_URI {
   CMP = `sourcepoint.theguardian.com gdpr-tcfv2.sp-prod.net ccpa.sp-prod.net ccpa-service.sp-prod.net ccpa-notice.sp-prod.net cdn.privacy-mgmt.com 'unsafe-eval'`,
 }
 
-const { baseUri, gaUID, apiDomain } = getConfiguration();
+const idapiOrigin = idapiBaseUrl.replace(/https?:\/\/|\/identity-api/g, '');
 
 const helmetConfig = {
   contentSecurityPolicy: {
@@ -53,6 +55,7 @@ const helmetConfig = {
         `${CSP_VALID_URI.GUARDIAN_CONSENTS_LOGS}${apiDomain}`,
         CSP_VALID_URI.CMP,
         CSP_VALID_URI.GUARDIAN_API,
+        idapiOrigin,
       ],
       frameSrc: [CSP_VALID_URI.CMP],
     },

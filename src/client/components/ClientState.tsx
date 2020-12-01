@@ -1,7 +1,9 @@
 import React, { createContext, FunctionComponent } from 'react';
 import { ClientState } from '@/shared/model/ClientState';
 
-export const ClientStateContext = createContext({});
+export const ClientStateContext = createContext({
+  clientHosts: { idapiBaseUrl: '' },
+});
 
 type ClientStateProps = {
   clientState: ClientState;

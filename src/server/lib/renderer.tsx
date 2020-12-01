@@ -38,6 +38,7 @@ const clientStateFromRequestStateLocals = (
     pageData,
     queryParams,
     abTesting,
+    clientHosts,
   } = getDefaultRequestState(),
 ): ClientState => {
   const clientState: ClientState = {
@@ -45,6 +46,7 @@ const clientStateFromRequestStateLocals = (
     globalMessage,
     pageData,
     abTesting,
+    clientHosts,
   };
 
   // checking if csrf error exists in query params, and attaching it to the
