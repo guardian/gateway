@@ -3,7 +3,7 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import { helmetMiddleware } from '@/server/lib/middleware/helmet';
 import { loggerMiddleware } from '@/server/lib/middleware/logger';
-import { applyRoutes } from '@/server/lib/middleware/routes';
+import { applyRoutes } from '@/server/lib/routes';
 import { csrfMiddleware } from '@/server/lib/middleware/csrf';
 import { getConfiguration } from '@/server/lib/configuration';
 import { serverStateLocalsMiddleware } from '@/server/lib/middleware/serverStateLocals';
