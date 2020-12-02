@@ -1,6 +1,6 @@
 import { NextFunction, Request } from 'express';
 import { ResponseWithServerStateLocals } from '@/server/models/Express';
-import { getConfiguration } from '../configuration';
+import { getConfiguration } from '../getConfiguration';
 
 const { stage } = getConfiguration();
 

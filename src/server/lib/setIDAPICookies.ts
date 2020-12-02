@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { getConfiguration } from '@/server/lib/configuration';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 
 interface IdapiCookie {
   key: string;

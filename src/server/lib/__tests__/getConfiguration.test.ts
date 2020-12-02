@@ -1,4 +1,4 @@
-import { getConfiguration } from '@/server/lib/configuration';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 import {
   GA_UID,
   GA_UID_HASH,

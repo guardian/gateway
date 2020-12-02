@@ -1,6 +1,6 @@
 import { default as express, Express } from 'express';
 import { logger } from '@/server/lib/logger';
-import { getConfiguration } from '@/server/lib/configuration';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 import { applyMiddleware } from '@/server/lib/middleware';
 
 const { port } = getConfiguration();

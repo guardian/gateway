@@ -1,5 +1,5 @@
 import { default as helmet } from 'helmet';
-import { getConfiguration } from '@/server/lib/configuration';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 import { Routes } from '@/shared/model/Routes';
 
 enum HELMET_OPTIONS {

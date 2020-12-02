@@ -1,7 +1,7 @@
 import csrf from 'csurf';
 import { NextFunction, Request } from 'express';
 import { ResponseWithServerStateLocals } from '@/server/models/Express';
-import { getConfiguration } from '@/server/lib/configuration';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 
 const { isHttps } = getConfiguration();
 

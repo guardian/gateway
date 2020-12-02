@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { read } from '@/server/lib/idapi/auth';
 import { IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
-import { getConfiguration } from '@/server/lib/configuration';
-import { getProfileUrl } from '@/server/lib/baseUri';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { getProfileUrl } from '@/server/lib/getProfileUrl';
 import { Routes } from '@/shared/model/Routes';
 import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';

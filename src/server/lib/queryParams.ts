@@ -1,6 +1,6 @@
 import { QueryParams } from '@/shared/model/QueryParams';
-import { validateReturnUrl } from '@/server/lib/returnUrl';
-import { validateClientId } from '@/server/lib/clientId';
+import { validateReturnUrl } from '@/server/lib/validateReturnUrl';
+import { validateClientId } from '@/server/lib/validateClientId';
 
 const validateEmailVerified = (emailVerified?: string): boolean | undefined => {
   if (!emailVerified) {
