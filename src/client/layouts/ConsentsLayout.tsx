@@ -85,35 +85,37 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
       >
         <CsrfFormField />
 
-        <main css={[mainBackground, ieFlexFix]}>
-          <ConsentsContent>
-            <ConsentsProgression current={current} />
-            {children}
-          </ConsentsContent>
-        </main>
-        <ConsentsBlueBackground>
-          <div css={[gridItem(gridItemColumnConsents), controls]}>
-            {!error && (
-              <Button
-                iconSide="right"
-                nudgeIcon={true}
-                icon={<SvgArrowRightStraight />}
-                type="submit"
-              >
-                Save and continue
-              </Button>
-            )}
-            {previousPage && (
-              <LinkButton
-                css={linkButton}
-                href={`${Routes.CONSENTS}/${previousPage}${returnUrlQuery}`}
-                priority="subdued"
-              >
-                Go back
-              </LinkButton>
-            )}
+        <main>
+          <div css={[mainBackground, ieFlexFix]}>
+            <ConsentsContent>
+              <ConsentsProgression current={current} />
+              {children}
+            </ConsentsContent>
           </div>
-        </ConsentsBlueBackground>
+          <ConsentsBlueBackground>
+            <div css={[gridItem(gridItemColumnConsents), controls]}>
+              {!error && (
+                <Button
+                  iconSide="right"
+                  nudgeIcon={true}
+                  icon={<SvgArrowRightStraight />}
+                  type="submit"
+                >
+                  Save and continue
+                </Button>
+              )}
+              {previousPage && (
+                <LinkButton
+                  css={linkButton}
+                  href={`${Routes.CONSENTS}/${previousPage}${returnUrlQuery}`}
+                  priority="subdued"
+                >
+                  Go back
+                </LinkButton>
+              )}
+            </div>
+          </ConsentsBlueBackground>
+        </main>
       </form>
       <Footer />
     </>

@@ -25,6 +25,7 @@ import CommunicationsPage from '../support/pages/onboarding/communications_page.
 import NewslettersPage from '../support/pages/onboarding/newsletters_page';
 import YourDataPage from '../support/pages/onboarding/your_data_page';
 import ReviewPage from '../support/pages/onboarding/review_page';
+import { injectAndCheckAxe } from '../support/cypress-axe';
 
 const {
   allNewsletters,
@@ -438,6 +439,25 @@ describe('Onboarding flow', () => {
       cy.idapiMockAll(200, allConsents, CONSENTS_ENDPOINT);
     });
 
+    it('has no detectable a11y violations', () => {
+      cy.idapiMockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
+      CommunicationsPage.goto();
+      injectAndCheckAxe();
+    });
+
+    it('had no detectable a11y voilations if previously selected consents', () => {
+      const consented = getUserConsents(['jobs', 'offers']);
+      cy.idapiMockAll(200, createUser(consented), USER_ENDPOINT);
+      CommunicationsPage.goto();
+      injectAndCheckAxe();
+    });
+
+    it('has no detectable a11y violations on with an error', () => {
+      cy.idapiMockAll(500, {}, USER_ENDPOINT);
+      CommunicationsPage.goto();
+      injectAndCheckAxe();
+    });
+
     it('shows correct contact options, none checked by default', () => {
       cy.idapiMockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
       CommunicationsPage.goto();
@@ -485,6 +505,30 @@ describe('Onboarding flow', () => {
       );
       cy.idapiMockAll(200, allNewsletters, NEWSLETTER_ENDPOINT);
       cy.idapiMockAll(200, userNewsletters(), NEWSLETTER_SUBSCRIPTION_ENDPOINT);
+    });
+
+    it('has no detectable a11y violations', () => {
+      const headers = getGeoLocationHeaders(GEOLOCATION_CODES.GB);
+
+      cy.visit(NewslettersPage.URL, { headers });
+      injectAndCheckAxe();
+    });
+
+    it('had no detectable a11y voilations if previously selected newsletter', () => {
+      const newslettersToSubscribe = [{ listId: 4147 }, { listId: 4165 }];
+      cy.idapiMockAll(
+        200,
+        userNewsletters(newslettersToSubscribe),
+        NEWSLETTER_SUBSCRIPTION_ENDPOINT,
+      );
+      NewslettersPage.goto();
+      injectAndCheckAxe();
+    });
+
+    it('has no detectable a11y violations on with an error', () => {
+      cy.idapiMockAll(500, {}, NEWSLETTER_ENDPOINT);
+      NewslettersPage.goto();
+      injectAndCheckAxe();
     });
 
     it('correct newsletters shown for uk, none checked by default', () => {
@@ -627,6 +671,23 @@ describe('Onboarding flow', () => {
       cy.idapiMockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
     });
 
+    it('has no detectable a11y violations', () => {
+      YourDataPage.goto();
+      injectAndCheckAxe();
+    });
+
+    it('had no detectable a11y voilations if previously selected consent', () => {
+      cy.idapiMockAll(200, createUser(optedOutUserConsent), USER_ENDPOINT);
+      YourDataPage.goto();
+      injectAndCheckAxe();
+    });
+
+    it('has no detectable a11y violations on with an error', () => {
+      cy.idapiMockAll(500, {}, CONSENTS_ENDPOINT);
+      YourDataPage.goto();
+      injectAndCheckAxe();
+    });
+
     it('displays the marketing opt out, unchecked by default', () => {
       YourDataPage.goto();
       YourDataPage.marketingOptoutCheckbox().should('not.be.checked');
@@ -667,6 +728,17 @@ describe('Onboarding flow', () => {
       cy.idapiMockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
       cy.idapiMockAll(200, allNewsletters, NEWSLETTER_ENDPOINT);
       cy.idapiMockAll(200, userNewsletters(), NEWSLETTER_SUBSCRIPTION_ENDPOINT);
+    });
+
+    it('has no detectable a11y violations', () => {
+      ReviewPage.goto();
+      injectAndCheckAxe();
+    });
+
+    it('has no detectable a11y violations on with an error', () => {
+      cy.idapiMockAll(500, {}, CONSENTS_ENDPOINT);
+      ReviewPage.goto();
+      injectAndCheckAxe();
     });
 
     it('displays a relevant error if on consents endpoint failure', () => {
