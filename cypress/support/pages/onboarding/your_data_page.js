@@ -1,4 +1,4 @@
-const OnboardingPage = require('./onboarding_page');
+import OnboardingPage from './onboarding_page';
 
 class YourDataPage extends OnboardingPage {
   static URL = '/consents/data';
@@ -7,9 +7,13 @@ class YourDataPage extends OnboardingPage {
       'I do NOT want The Guardian to use my personal data for marketing analysis.',
   };
 
-  static getMarketingOptoutClickableSection() {
+  static marketingOptoutClickableSection() {
     return cy.contains(this.CONTENT.OPT_OUT_MESSAGE).parent();
+  }
+
+  static marketingOptoutCheckbox() {
+    return cy.contains(this.CONTENT.OPT_OUT_MESSAGE).parent().find('input');
   }
 }
 
-module.exports = YourDataPage;
+export default YourDataPage;

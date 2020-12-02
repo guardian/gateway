@@ -29,7 +29,7 @@ app.get('/healthcheck', (_, res) => {
 app.get('/mock/purge', (_, res) => {
   console.log('purging all mocks');
   responses.length = 0;
-  permanent.length = 0;
+  permanent.clear();
   res.sendStatus(204);
 });
 

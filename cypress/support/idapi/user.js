@@ -1,6 +1,12 @@
-const { defaultUserConsent } = require('./consent');
+import { defaultUserConsent } from './consent';
 
-const createUser = (consents = defaultUserConsent) => ({
+export const USER_ENDPOINT = '/user/me';
+
+export const USER_ERRORS = {
+  GENERIC: 'There was a problem retrieving your details, please try again.',
+};
+
+export const createUser = (consents = defaultUserConsent) => ({
   status: 'ok',
   user: {
     primaryEmailAddress: 'a.reader@example.com',
@@ -13,9 +19,4 @@ const createUser = (consents = defaultUserConsent) => ({
   },
 });
 
-const verifiedUserWithNoConsent = createUser();
-
-module.exports = {
-  verifiedUserWithNoConsent,
-  createUser,
-};
+export const verifiedUserWithNoConsent = createUser();

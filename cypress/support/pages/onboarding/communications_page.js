@@ -1,4 +1,4 @@
-const OnboardingPage = require('./onboarding_page');
+import OnboardingPage from './onboarding_page';
 
 class CommunicationsPage extends OnboardingPage {
   static URL = '/consents/communication';
@@ -7,9 +7,18 @@ class CommunicationsPage extends OnboardingPage {
       'I do NOT wish to be contacted by The Guardian for market research purposes.',
   };
 
-  static getMarketingOptoutClickableSection() {
+  static marketingOptoutClickableSection() {
     return cy.contains(CommunicationsPage.CONTENT.OPT_OUT_MESSAGE).parent();
+  }
+
+  static consentCheckboxWithTitle(title) {
+    return cy
+      .contains(title)
+      .parent()
+      .siblings()
+      .contains('Sign Up')
+      .find('input');
   }
 }
 
-module.exports = CommunicationsPage;
+export default CommunicationsPage;
