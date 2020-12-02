@@ -1,4 +1,4 @@
-const terminalLog = (violations) => {
+export const terminalLog = (violations) => {
   cy.task(
     'log',
     `${violations.length} accessibility violation${
@@ -19,12 +19,7 @@ const terminalLog = (violations) => {
 };
 
 // for use on page reloads after axction taken
-const injectAndCheckAxe = () => {
+export const injectAndCheckAxe = () => {
   cy.injectAxe();
   cy.checkA11y(null, null, terminalLog);
-};
-
-module.exports = {
-  terminalLog,
-  injectAndCheckAxe,
 };
