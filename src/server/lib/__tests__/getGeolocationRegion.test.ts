@@ -7,7 +7,7 @@ const getFakeRequest = (region: string | undefined) => ({
   },
 });
 
-describe('failing test', () => {
+describe('getGeolocationRegion', () => {
   [
     { input: 'GB', output: 'GB' },
     { input: 'US', output: 'US' },
