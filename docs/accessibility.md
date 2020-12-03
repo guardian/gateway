@@ -53,11 +53,11 @@ it('Has no detectable a11y violations on change password page', () => {
 
 When running cypress visually using `./cypress-open.sh` and running a test, a failed a11y test would appear like so:
 
-ADD SCREENSHOT HERE
+![vcxsrv_6AJITLSUJD](https://user-images.githubusercontent.com/13315440/101000467-dbbcae00-3555-11eb-9ebb-28341f4c544b.png)
 
 While running in CI a violation would look like:
 
-ADD SCREENSHOT HERE
+![WindowsTerminal_05gOduN2MS](https://user-images.githubusercontent.com/13315440/101000507-e8d99d00-3555-11eb-8f8b-bb8c30e70c2d.png)
 
 ## Manual testing
 
