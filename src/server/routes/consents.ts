@@ -24,7 +24,6 @@ import { VERIFY_EMAIL } from '@/shared/model/Success';
 import { trackMetric } from '@/server/lib/AWS';
 import { consentsPageMetric } from '@/server/models/Metrics';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
-import { geolocationMiddleware } from '../lib/middleware/geolocation';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { NewsletterMap } from '@/shared/lib/newsletter';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
@@ -255,7 +254,6 @@ router.get(Routes.CONSENTS, loginMiddleware, (_: Request, res: Response) => {
 router.get(
   `${Routes.CONSENTS}/:page`,
   loginMiddleware,
-  geolocationMiddleware,
   async (req: Request, res: ResponseWithServerStateLocals) => {
     const sc_gu_u = req.cookies.SC_GU_U;
 
@@ -307,7 +305,6 @@ router.get(
 router.post(
   `${Routes.CONSENTS}/:page`,
   loginMiddleware,
-  geolocationMiddleware,
   async (req: Request, res: ResponseWithServerStateLocals) => {
     const sc_gu_u = req.cookies.SC_GU_U;
 
