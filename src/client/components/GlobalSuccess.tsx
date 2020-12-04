@@ -49,7 +49,7 @@ export const GlobalSuccess = ({ success }: GlobalSuccessProps) => {
     ...{ WIDE: { start: 1, span: COLUMNS.WIDE } },
   });
   return (
-    <div css={successDiv}>
+    <div css={successDiv} role="complementary">
       <div css={row}>
         <p css={[successP, item]}>
           <SvgTickRound />

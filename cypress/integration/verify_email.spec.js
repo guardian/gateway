@@ -2,6 +2,7 @@
 /// <reference types="cypress" />
 import { getEnvironmentVariable } from '../support/util';
 
+import { injectAndCheckAxe } from '../support/cypress-axe';
 import { authRedirectSignInRecentlyEmailValidated } from '../support/idapi/auth';
 import { allConsents } from '../support/idapi/consent';
 import { authCookieResponse, setAuthCookies } from '../support/idapi/cookie';
@@ -17,6 +18,46 @@ describe('Verify email flow', () => {
 
   beforeEach(() => {
     cy.idapiMockPurge();
+  });
+
+  context('A11y checks', () => {
+    it('has no detectable a11y violations on logged out resend validation email page', () => {
+      // mock token expired
+      cy.idapiMockNext(403, validationTokenExpired);
+
+      // go to verify email endpont
+      verifyEmailFlow.goto('expiredtoken', { failOnStatusCode: false });
+
+      injectAndCheckAxe();
+    });
+
+    it('has no detectable a11y violations on logged in resend validation email page', () => {
+      // set logged in cookies
+      setAuthCookies();
+
+      // mock token expired
+      cy.idapiMockNext(403, validationTokenExpired);
+
+      // mock user response
+      cy.idapiMockNext(200, verifiedUserWithNoConsent);
+
+      // mock user response again for sending validation email
+      cy.idapiMockNext(200, verifiedUserWithNoConsent);
+
+      // mock validation email sent
+      cy.idapiMockNext(200);
+
+      // go to verify email endpont
+      verifyEmailFlow.goto('expiredtoken', { failOnStatusCode: false });
+
+      // check a11y before clicking send email
+      injectAndCheckAxe();
+
+      // click on send link button
+      cy.contains(VerifyEmail.CONTENT.SEND_LINK).click();
+      // check a11y after clicking send email
+      injectAndCheckAxe();
+    });
   });
 
   context('Verify email', () => {

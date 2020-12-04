@@ -51,7 +51,7 @@ export const ConsentsNewslettersPage = () => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
   return (
     <ConsentsLayout title="Newsletters" current={CONSENTS_PAGES.NEWSLETTERS}>
-      <h3 css={[heading, autoRow()]}>Free newsletters from The Guardian</h3>
+      <h2 css={[heading, autoRow()]}>Free newsletters from The Guardian</h2>
       <p css={[text, paragraphSpacing, autoRow(consentsParagraphSpanDef)]}>
         Our newsletters help you get closer to our quality, independent
         journalism.

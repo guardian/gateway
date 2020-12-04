@@ -109,6 +109,8 @@ $ yarn
 Then to start the development server:
 
 ```sh
+$ ./start-dev.sh
+# or
 $ (set -a && source .env && yarn watch:server & yarn watch & wait)
 ```
 
@@ -140,18 +142,18 @@ $ yarn test
 
 Integration tests are provided by [Cypress](https://cypress.io). They are all defined in the `cypress` folder.
 
-First make sure that the server is accessible by running the development server.
+First make sure that the development environment isn't running, since the following scripts will set them up automatically.
 
 You can then open the test runner using:
 
 ```sh
-yarn cypress open
+$ ./cypress-open.sh 
 ```
 
 To run the tests headless and automatically (how they are run on CI) use:
 
 ```sh
-yarn cypress run
+$ ./ci.sh
 ```
 
 ## Accessing Gateway on CODE or PROD

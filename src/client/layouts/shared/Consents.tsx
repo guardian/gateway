@@ -121,7 +121,7 @@ export const controls = css`
 export const ConsentsHeader: FunctionComponent<{ title: string }> = ({
   title,
 }) => (
-  <div css={consentsBackground}>
+  <header css={consentsBackground}>
     <div css={[gridRow, blueBorder]}>
       <h2 css={h2}>Your registration</h2>
     </div>
@@ -129,7 +129,7 @@ export const ConsentsHeader: FunctionComponent<{ title: string }> = ({
     <div css={[gridRow, blueBorder]}>
       <h1 css={h1}>{title}</h1>
     </div>
-  </div>
+  </header>
 );
 
 export const ConsentsContent: FunctionComponent<{

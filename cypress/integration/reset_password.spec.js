@@ -1,5 +1,6 @@
 /// <reference types='cypress' />
 
+import { injectAndCheckAxe } from '../support/cypress-axe';
 import PageResetPassword from '../support/pages/reset_password_page';
 import PageResetSent from '../support/pages/reset_sent_page';
 
@@ -13,6 +14,25 @@ describe('Password reset flow', () => {
 
   beforeEach(function () {
     page.goto();
+  });
+
+  context('A11y checks', () => {
+    it('Has no detectable a11y violations on reset password page', () => {
+      injectAndCheckAxe();
+    });
+
+    it('Has no detectable a11y violations on reset password page with error', () => {
+      cy.idapiMockNext(500);
+      page.submitEmailAddress('example@example.com');
+      injectAndCheckAxe();
+    });
+
+    it('Has no detectable a11y violations on email sent page', function () {
+      const { email } = this.users.validEmail;
+      cy.idapiMockNext(200);
+      page.submitEmailAddress(email);
+      injectAndCheckAxe();
+    });
   });
 
   context('Valid email already exits', () => {

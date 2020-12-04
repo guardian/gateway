@@ -10,7 +10,7 @@ import {
 import { from } from '@guardian/src-foundations/mq';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
-import { Header } from '@/client/components/Header';
+import { NavBar } from '@/client/components/NavBar';
 import { GlobalError } from '@/client/components/GlobalError';
 import {
   ConsentsHeader,
@@ -151,14 +151,14 @@ export const ConsentsConfirmationPage = () => {
   return (
     <>
       <div css={headerContainer}>
-        <Header cssOverrides={header} />
+        <NavBar cssOverrides={header} />
         {error && <GlobalError error={error} link={getErrorLink(error)} left />}
         {success && <GlobalSuccess success={success} />}
       </div>
       <ConsentsHeader title="Your registration is complete" />
       <main css={[mainBackground, mainFlex]}>
         <ConsentsContent>
-          <h3 css={[headingWithMq, autoRow()]}>Your selections</h3>
+          <h2 css={[headingWithMq, autoRow()]}>Your selections</h2>
           <p css={[text, autoRow()]}>
             You can change these setting anytime by going to{' '}
             <Link href="https://manage.theguardian.com/email-prefs">
@@ -212,7 +212,7 @@ export const ConsentsConfirmationPage = () => {
           </div>
         </ConsentsBlueBackground>
         <ConsentsContent cssOverrides={newslettersBox}>
-          <h3 css={[headingWithMq, autoRow()]}>Sign up to more newsletters</h3>
+          <h2 css={[headingWithMq, autoRow()]}>Sign up to more newsletters</h2>
           <p css={[text, autoRow()]}>
             We have over 40 different emails that focus on a range of diverse
             topics - from politics and the latest tech to documentaries, sport

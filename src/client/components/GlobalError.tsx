@@ -10,12 +10,17 @@ import {
   gridRow,
   COLUMNS,
 } from '@/client/styles/Grid';
+import { Link } from '@guardian/src-link';
 
 interface GlobalErrorProps {
   error: string;
   link: ErrorLink;
   left?: boolean;
 }
+
+const textColour = css`
+  color: ${neutral[100]};
+`;
 
 const errorDiv = (addSidePadding: boolean) => css`
   padding: ${space[2]}px ${addSidePadding ? space[3] : 0}px;
@@ -28,8 +33,8 @@ const errorP = (left = false) => css`
   display: flex;
   justify-content: ${left ? 'left' : 'center'};
   text-align: left;
-  color: ${neutral[100]};
   margin: 0;
+  ${textColour}
   ${textSans.medium()}
 
   svg {
@@ -43,7 +48,11 @@ const errorP = (left = false) => css`
 `;
 
 const errorLink = css`
-  color: ${neutral[100]};
+  ${textColour}
+
+  :hover {
+    ${textColour}
+  }
 `;
 
 export const GlobalError = ({ error, link, left }: GlobalErrorProps) => {
@@ -60,16 +69,16 @@ export const GlobalError = ({ error, link, left }: GlobalErrorProps) => {
       })
     : null;
   return (
-    <div css={errorDiv(!left)}>
+    <div css={errorDiv(!left)} role="complementary">
       <div css={row}>
         <p css={[errorP(left), item]}>
           <SvgAlert />
           <div>
             {error}
             &nbsp;
-            <a css={errorLink} href={link.link}>
+            <Link href={link.link} css={errorLink}>
               {link.linkText}
-            </a>
+            </Link>
           </div>
         </p>
       </div>

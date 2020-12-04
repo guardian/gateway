@@ -370,9 +370,7 @@ We use [helmet](https://helmetjs.github.io/docs/csp/) to add the `Content-Securi
 
 Essentially you need to add directives for all the content you're loading on the page. The helmet docs and the [MDN CSP](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) docs are super handy for more info.
 
-CSP Violations show up in the browser console, so it's easy to tell if theres a violation of the policy. Here's an example screenshot.
-
-_ADD CSP VIOLATION SCREENSHOT_
+CSP Violations show up in the browser console, so it's easy to tell if theres a violation of the policy.
 
 ## AB Testing
 
