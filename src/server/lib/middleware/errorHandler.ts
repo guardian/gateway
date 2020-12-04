@@ -1,5 +1,6 @@
 import { NextFunction, Request } from 'express';
 import { ResponseWithServerStateLocals } from '@/server/models/Express';
+import { getCsrfPageUrl } from '../getCsrfPageUrl';
 
 const appendQueryParameter = (url: string, parameters: string) => {
   if (url.split('?').pop()?.includes(parameters)) {
@@ -25,10 +26,7 @@ export const routeErrorHandler = (
     // we use res.locals.csrf.pageUrl since the URL might not be GET-able if the request was a POST
     res.redirect(
       303,
-      appendQueryParameter(
-        res.locals.csrf.pageUrl ?? req.url,
-        'csrfError=true',
-      ),
+      appendQueryParameter(getCsrfPageUrl(req), 'csrfError=true'),
     );
   }
 

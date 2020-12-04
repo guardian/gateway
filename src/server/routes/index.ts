@@ -5,7 +5,6 @@ import { default as reset } from './reset';
 import { default as changePassword } from './changePassword';
 import { default as consents } from './consents';
 import { default as verifyEmail } from './verifyEmail';
-import { queryParamsMiddleware } from '@/server/lib/middleware/queryParams';
 import { noCache } from '@/server/lib/middleware/cache';
 
 const router = Router();
@@ -14,15 +13,15 @@ const router = Router();
 router.use(core);
 
 // request reset password routes
-router.use(noCache, queryParamsMiddleware, reset);
+router.use(noCache, reset);
 
 // change password routes
-router.use(noCache, queryParamsMiddleware, changePassword);
+router.use(noCache, changePassword);
 
 // consents routes
-router.use(noCache, queryParamsMiddleware, consents);
+router.use(noCache, consents);
 
 // verify email routes
-router.use(noCache, queryParamsMiddleware, verifyEmail);
+router.use(noCache, verifyEmail);
 
 export default router;
