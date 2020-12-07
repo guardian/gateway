@@ -92,57 +92,44 @@ The route should now be accessible.
 
 ## State Management
 
-### Server State Locals and Client State
+### Request State Locals and Client State
 
 Sometimes data is needed by the client to render a specific component, e.g. an error. Using SSR with additional client side hydration we
 
-- build a state on the server using Express' [`res.locals`](https://expressjs.com/en/api.html#res.locals) property using the [`ServerState`](../src/server/models/Express.ts) interface.
+- build a state on the server using Express' [`res.locals`](https://expressjs.com/en/api.html#res.locals) property using the [`RequestState`](../src/server/models/Express.ts) interface.
 - pass this into the [`renderer`](../src/server/lib/renderer.ts) method, the renderer will then build the `ClientState` to be passed to the client using `clientStateFromServerStateLocals`
   - The [`ClientState`](../src/shared/model/ClientState.ts) interface is used to type what is sent to the client.
-- This is passed to the [`Main` app component](../src/client/main.tsx) in React as a prop. 
+- This is passed to the [`Main` app component](../src/client/main.tsx) in React as a prop.
 - The `Main` component utilises a [`ClientStateProvider`](../src/client/components/ClientState.tsx) which wraps the app with a [Context Provider](https://reactjs.org/docs/context.html)
-making it possible to access data further down a component tree without having to manually pass props down at each level. 
+  making it possible to access data further down a component tree without having to manually pass props down at each level.
 - Pass the same data as JSON on the document, and use this for react hydration on the browser. Hydration is executed from the static bundle's entrypoint.
-
 
 It's then possible to access the state through the [`useContext`](https://reactjs.org/docs/hooks-reference.html#usecontext) hook in a descendent component.
 
 Here's an example of adding some test data to the client state.
 
-Firstly define it in the [`ServerState`](../src/server/models/Express.ts) interface. It can be optional or required property. It's also helpful to set a sensible default value in `getDefaultServerState` method if it needs to be defined.
+Firstly define it in the [`RequestState`](../src/server/models/Express.ts) interface. It can be optional or required property. It's also helpful to set a sensible default value in `getDefaultRequestState` method if it needs to be defined.
 
 ```ts
 ...
-export interface ServerState {
+export interface RequestState {
   // other data in the state
   ...
   test: string;
 }
 
-export const getDefaultServerState = (): ServerState => ({
+export const getDefaultRequestState = (): RequestState => ({
   // other data in the default state
   ...
   test: 'value'
 });
 ```
 
-On the server, add it to the `res.locals` somewhere in an express handler, and passing it to the renderer, use the `ResponseWithServerStateLocals` interface for the response object as it extends Express' `Response` type with the typed locals:
+This is added to `res.locals` **ONLY** in `requestStateMiddleware`.
+ 
+Make sure the state addition does not in anyway remember state between requests, for example **DO NOT USE** the singleton pattern/export raw object literals. 
 
-```ts
-router.get(Routes.A_ROUTE, (_: Request, res: ResponseWithServerStateLocals) => {
-  ...
-  // add stuff to the test property
-  res.locals.test = 'This is some test string!';
-  // or from an variable
-  res.locals.test = testString;
-  ...
-  // render and respond with the html and state
-  const html = renderer('/path', {
-    serverState: res.locals,
-  });
-  return res.type('html').send(html);
-});
-```
+Object mutation will be disabled via linting in the near future.
 
 Next make it avaialble in the [`ClientState`](../src/shared/model/ClientState.ts) interface, if you want it accessible on the client. It should be optional property, as the client can never be sure that the property will exist.
 
