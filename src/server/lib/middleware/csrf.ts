@@ -1,7 +1,8 @@
 import csrf from 'csurf';
 import { NextFunction, Request } from 'express';
 import { ResponseWithServerStateLocals } from '@/server/models/Express';
-import { getConfiguration } from '@/server/lib/configuration';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { getCsrfPageUrl } from '@/server/lib/getCsrfPageUrl';
 
 const { isHttps } = getConfiguration();
 
@@ -10,16 +11,8 @@ const updateCsrfPageUrlMiddleware = (
   res: ResponseWithServerStateLocals,
   next: NextFunction,
 ) => {
-  const protectedMethods = ['POST', 'PATCH', 'PUT', 'DELETE'];
   res.locals.csrf = {};
-
-  // We redirect to pageUrl on CSRF error. It is the URL of the GET for the original form
-  if (!protectedMethods.includes(req.method)) {
-    res.locals.csrf.pageUrl = req.url;
-  } else {
-    res.locals.csrf.pageUrl = req.body._csrfPageUrl ?? req.url;
-  }
-
+  res.locals.csrf.pageUrl = getCsrfPageUrl(req);
   next();
 };
 

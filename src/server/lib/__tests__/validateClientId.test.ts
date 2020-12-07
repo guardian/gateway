@@ -1,6 +1,6 @@
-import { validateClientId } from '@/server/lib/clientId';
+import { validateClientId } from '@/server/lib/validateClientId';
 
-describe('clientId', () => {
+describe('validateClientId', () => {
   test('should return valid clientId', () => {
     const input = 'jobs';
 

@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request } from 'express';
 import { verify as verifyJWT } from 'jsonwebtoken';
-import { getConfiguration } from '@/server/lib/configuration';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/logger';
 
 const { playSessionCookieSecret } = getConfiguration();

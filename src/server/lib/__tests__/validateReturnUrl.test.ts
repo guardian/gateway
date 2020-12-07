@@ -1,12 +1,12 @@
-import { getConfiguration } from '@/server/lib/configuration';
-import { validateReturnUrl } from '@/server/lib/returnUrl';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { validateReturnUrl } from '@/server/lib/validateReturnUrl';
 
 // mock configuration to return a default uri
-jest.mock('@/server/lib/configuration', () => ({
+jest.mock('@/server/lib/getConfiguration', () => ({
   getConfiguration: () => ({ defaultReturnUri: 'default-uri' }),
 }));
 
-describe('returnUrl', () => {
+describe('validateReturnUrl', () => {
   const { defaultReturnUri } = getConfiguration();
 
   test('it should successfully validate returnUrl', () => {
@@ -19,10 +19,7 @@ describe('returnUrl', () => {
   });
 
   test('it should return default returnUrl if returnUrl parameter is blank', () => {
-    // test with undefined parameter
     expect(validateReturnUrl()).toEqual(defaultReturnUri);
-
-    // test with blank string parameter
     expect(validateReturnUrl('')).toEqual(defaultReturnUri);
   });
 

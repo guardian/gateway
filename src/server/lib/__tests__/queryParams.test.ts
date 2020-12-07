@@ -2,10 +2,10 @@ import {
   parseExpressQueryParams,
   addReturnUrlToPath,
 } from '@/server/lib/queryParams';
-import { getConfiguration } from '@/server/lib/configuration';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 
 // mock configuration to return a default uri
-jest.mock('@/server/lib/configuration', () => ({
+jest.mock('@/server/lib/getConfiguration', () => ({
   getConfiguration: () => ({ defaultReturnUri: 'default-uri' }),
 }));
 

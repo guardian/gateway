@@ -1,6 +1,6 @@
 import * as AWS from 'aws-sdk';
 import { Metrics } from '@/server/models/Metrics';
-import { getConfiguration } from '@/server/lib/configuration';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/logger';
 import { AWSError } from 'aws-sdk';
 
