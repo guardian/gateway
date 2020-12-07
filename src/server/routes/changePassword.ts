@@ -7,7 +7,7 @@ import {
   change as changePassword,
 } from '@/server/lib/idapi/changePassword';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
-import { ResponseWithServerStateLocals } from '@/server/models/Express';
+import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';
 import { removeNoCache } from '@/server/lib/middleware/cache';
@@ -62,7 +62,7 @@ const validatePasswordChangeFields = (
 
 router.get(
   `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
-  async (req: Request, res: ResponseWithServerStateLocals) => {
+  async (req: Request, res: ResponseWithRequestState) => {
     const { token } = req.params;
 
     try {
@@ -87,7 +87,7 @@ router.get(
 
 router.post(
   `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
-  async (req: Request, res: ResponseWithServerStateLocals) => {
+  async (req: Request, res: ResponseWithRequestState) => {
     const { token } = req.params;
 
     const { password, password_confirm: passwordConfirm } = req.body;
@@ -142,7 +142,7 @@ router.post(
 
 router.get(
   Routes.CHANGE_PASSWORD_COMPLETE,
-  (_: Request, res: ResponseWithServerStateLocals) => {
+  (_: Request, res: ResponseWithRequestState) => {
     const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
       serverState: res.locals,
       pageTitle: PageTitle.CHANGE_PASSWORD_COMPLETE,
@@ -154,7 +154,7 @@ router.get(
 router.get(
   Routes.RESET_RESEND,
   removeNoCache,
-  (_: Request, res: ResponseWithServerStateLocals) => {
+  (_: Request, res: ResponseWithRequestState) => {
     const html = renderer(Routes.RESET_RESEND, {
       pageTitle: PageTitle.RESET_RESEND,
       serverState: res.locals,

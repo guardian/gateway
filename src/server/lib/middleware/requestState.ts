@@ -2,7 +2,7 @@
 // This should be the only place res.locals is mutated.
 // Requires: csurf middlware
 import { getGeolocationRegion } from '@/server/lib/getGeolocationRegion';
-import { getDefaultServerState } from '@/server/models/Express';
+import { getDefaultRequestState } from '@/server/models/Express';
 import { parseExpressQueryParams } from '@/server/lib/queryParams';
 import { NextFunction, Request, Response } from 'express';
 import { getConfiguration } from '../getConfiguration';
@@ -14,7 +14,7 @@ export const requestStateMiddleware = (
   res: Response,
   next: NextFunction,
 ) => {
-  const state = getDefaultServerState();
+  const state = getDefaultRequestState();
   state.queryParams = parseExpressQueryParams(req.method, req.query);
   state.pageData.geolocation = getGeolocationRegion(req);
   state.csrf.token = req.csrfToken();

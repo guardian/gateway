@@ -1,11 +1,11 @@
 import { PageTitle } from '@/shared/model/PageTitle';
 import { Request } from 'express';
 import { renderer } from '@/server/lib/renderer';
-import { ResponseWithServerStateLocals } from '@/server/models/Express';
+import { ResponseWithRequestState } from '@/server/models/Express';
 
 export const fourZeroFourMiddleware = (
   _: Request,
-  res: ResponseWithServerStateLocals,
+  res: ResponseWithRequestState,
 ) => {
   const html = renderer('/404', {
     pageTitle: PageTitle.NOT_FOUND,

@@ -11,7 +11,7 @@ export interface ABTesting {
   forcedTestVariants: Participations;
 }
 
-export interface ServerState {
+export interface RequestState {
   globalMessage: {
     error?: string;
     success?: string;
@@ -23,11 +23,11 @@ export interface ServerState {
   abTestAPI: ABTestAPI;
 }
 
-export interface ResponseWithServerStateLocals extends Response {
-  locals: ServerState;
+export interface ResponseWithRequestState extends Response {
+  locals: RequestState;
 }
 
-export const getDefaultServerState = (): ServerState => ({
+export const getDefaultRequestState = (): RequestState => ({
   queryParams: parseExpressQueryParams('GET', {}),
   csrf: {},
   globalMessage: {},

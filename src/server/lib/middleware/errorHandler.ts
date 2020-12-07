@@ -1,5 +1,5 @@
 import { NextFunction, Request } from 'express';
-import { ResponseWithServerStateLocals } from '@/server/models/Express';
+import { ResponseWithRequestState } from '@/server/models/Express';
 import { getCsrfPageUrl } from '../getCsrfPageUrl';
 
 const appendQueryParameter = (url: string, parameters: string) => {
@@ -17,7 +17,7 @@ export const routeErrorHandler = (
   // eslint-disable-next-line
   err: any, // ErrorRequestHandler uses type any
   req: Request,
-  res: ResponseWithServerStateLocals,
+  res: ResponseWithRequestState,
   next: NextFunction,
 ) => {
   if (err.code === 'EBADCSRFTOKEN') {

@@ -8,7 +8,7 @@ import qs from 'query-string';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { RoutingConfig } from '@/client/routes';
 import { getAssets } from '@/server/lib/getAssets';
-import { getDefaultServerState, ServerState } from '@/server/models/Express';
+import { getDefaultRequestState, RequestState } from '@/server/models/Express';
 import { FieldError } from '@/server/routes/changePassword';
 import { CsrfErrors } from '@/shared/model/Errors';
 import { ABProvider } from '@guardian/ab-react';
@@ -25,7 +25,7 @@ const favicon =
 
 interface RendererOpts {
   pageTitle: string;
-  serverState: ServerState;
+  serverState: RequestState;
 }
 
 const { gaUID } = getConfiguration();
@@ -38,7 +38,7 @@ const clientStateFromServerStateLocals = (
     pageData,
     queryParams,
     abTesting,
-  } = getDefaultServerState(),
+  } = getDefaultRequestState(),
 ): ClientState => {
   const clientState: ClientState = {
     csrf,

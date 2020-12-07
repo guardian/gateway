@@ -17,7 +17,7 @@ import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { PageTitle } from '@/shared/model/PageTitle';
-import { ResponseWithServerStateLocals } from '@/server/models/Express';
+import { ResponseWithRequestState } from '@/server/models/Express';
 
 const router = Router();
 
@@ -26,7 +26,7 @@ const profileUrl = getProfileUrl();
 
 router.get(
   Routes.VERIFY_EMAIL,
-  async (req: Request, res: ResponseWithServerStateLocals) => {
+  async (req: Request, res: ResponseWithRequestState) => {
     res.locals.pageData.signInPageUrl = `${signInPageUrl}?returnUrl=${encodeURIComponent(
       `${profileUrl}${Routes.VERIFY_EMAIL}`,
     )}`;
@@ -61,7 +61,7 @@ router.get(
 
 router.post(
   Routes.VERIFY_EMAIL,
-  async (req: Request, res: ResponseWithServerStateLocals) => {
+  async (req: Request, res: ResponseWithRequestState) => {
     let status = 200;
 
     try {
