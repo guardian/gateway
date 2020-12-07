@@ -64,23 +64,20 @@ export const Main = (props: ClientState) => {
 
 ### Per request
 
-Running per request is a bit more complicated, as an example, see the [`abTestDemoMiddleware`](../src/server/lib/middleware/abTestDemo.ts) on a possible way of running an AB test on that particular users request.
+Running per request is a bit more complicated, as an example, see the middleware code example, on a possible way of running an AB test on that particular users request.
 
-This can me demoed by adding this middleware to in the [middleware index](../src/server/lib/middleware/index.ts) file, below the ab testing middleware.
+This can me demoed by adding this middleware to in the [middleware index](../src/server/lib/middleware/index.ts) file, after the `requestStateMiddleware` has been declared.
+
+It is important to load it after `requestStateMiddleware` other wise the AB tests will not have the state available to them to work.
+
+Assuming the middleware is called `exampleABMiddleware`, then:
 
 ```ts
-// other imports
-...
-import { abTestDemoMiddleware } from '@/server/lib/middleware/abTestDemo';
-...
-
 export const applyMiddleware = (server: Express): void => {
   ...
-  // ab testing middleware
-  server.use([mvtIdMiddleware, abTestMiddleware]);
-
-  // ab test demo middleware
-  server.use(abTestDemoMiddleware);
+  server.use(requestStateMiddleware);
+  server.use(exampleABMiddleware);
+  server.use(routes);
   ...
 }
 ```
@@ -118,6 +115,8 @@ You can also force yourself into a test and variant using URL parameters, either
 The advantages to this are that it's simple to do and test, however the parameters may not persist between requests, so might not be able to test a full flow relying on the AB test.
 
 ### Example Code
+
+#### Middleware
 
 ```TypeScript
 import { ResponseWithServerStateLocals } from '@/server/models/Express';
