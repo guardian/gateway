@@ -3,12 +3,11 @@
 // Requires: csurf middlware
 import { getGeolocationRegion } from '@/server/lib/getGeolocationRegion';
 import { getDefaultServerState } from '@/server/models/Express';
-import { getMvtId } from '@/server/lib/getMvtId';
-import { getABForcedVariants } from '@/server/lib/getABForcedVariants';
 import { parseExpressQueryParams } from '@/server/lib/queryParams';
 import { NextFunction, Request, Response } from 'express';
 import { getConfiguration } from '../getConfiguration';
-import { abTestApiForMvtId, tests } from '@/shared/model/experiments/abTests';
+import { tests } from '@/shared/model/experiments/abTests';
+import { getABTesting } from '../getABTesting';
 
 export const requestStateMiddleware = (
   req: Request,
@@ -19,27 +18,10 @@ export const requestStateMiddleware = (
   state.queryParams = parseExpressQueryParams(req.method, req.query);
   state.pageData.geolocation = getGeolocationRegion(req);
   state.csrf.token = req.csrfToken();
-  state.abTesting.mvtId = getMvtId(req, getConfiguration());
-  state.abTesting.forcedTestVariants = getABForcedVariants(req);
-  // set up ab tests for given mvtId
-  const abTestAPI = abTestApiForMvtId(
-    state.abTesting.mvtId,
-    state.abTesting.forcedTestVariants,
-  );
-  // set the abTestAPI for this request chain
+
+  const [abTesting, abTestAPI] = getABTesting(req, getConfiguration(), tests);
+  state.abTesting = abTesting;
   state.abTestAPI = abTestAPI;
-  // get a list of tests to run
-  const runnableTests = abTestAPI.allRunnableTests(tests);
-  // assign the variants to run
-  // example:
-  // {
-  //   ExampleTest: 'variant'
-  // }
-  runnableTests.forEach((test) => {
-    state.abTesting.participations[test.id] = {
-      variant: test.variantToRun.id,
-    };
-  });
 
   res.locals = state;
   next();

@@ -5,7 +5,7 @@ import { parseExpressQueryParams } from '@/server/lib/queryParams';
 import { Participations, ABTestAPI } from '@guardian/ab-core';
 import { abTestApiForMvtId } from '@/shared/model/experiments/abTests';
 
-interface ABTesting {
+export interface ABTesting {
   mvtId: number;
   participations: Participations;
   forcedTestVariants: Participations;
