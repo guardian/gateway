@@ -88,7 +88,7 @@
     "@guardian/src-link": "^2.7.0",
     "@guardian/src-radio": "^2.7.0",
     "@guardian/src-text-input": "^2.7.0",
-    "aws-sdk": "^2.783.0",
+    "aws-sdk": "^2.804.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
     "csurf": "^1.11.0",
