@@ -7,7 +7,7 @@ import {
   change as changePassword,
 } from '@/server/lib/idapi/changePassword';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
-import { ResponseWithServerStateLocals } from '@/server/models/Express';
+import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';
 import { removeNoCache } from '@/server/lib/middleware/cache';
@@ -62,7 +62,7 @@ const validatePasswordChangeFields = (
 
 router.get(
   `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
-  async (req: Request, res: ResponseWithServerStateLocals) => {
+  async (req: Request, res: ResponseWithRequestState) => {
     const { token } = req.params;
 
     try {
@@ -71,14 +71,14 @@ router.get(
       logger.error(error);
       return res.type('html').send(
         renderer(Routes.RESET_RESEND, {
-          serverState: res.locals,
+          requestState: res.locals,
           pageTitle: PageTitle.RESET_RESEND,
         }),
       );
     }
 
     const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
-      serverState: res.locals,
+      requestState: res.locals,
       pageTitle: PageTitle.CHANGE_PASSWORD,
     });
     return res.type('html').send(html);
@@ -87,7 +87,7 @@ router.get(
 
 router.post(
   `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
-  async (req: Request, res: ResponseWithServerStateLocals) => {
+  async (req: Request, res: ResponseWithRequestState) => {
     const { token } = req.params;
 
     const { password, password_confirm: passwordConfirm } = req.body;
@@ -102,7 +102,7 @@ router.post(
         res.locals.pageData.email = await validateToken(token, req.ip);
         res.locals.pageData.fieldErrors = fieldErrors;
         const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
-          serverState: res.locals,
+          requestState: res.locals,
           pageTitle: PageTitle.CHANGE_PASSWORD,
         });
         return res.status(422).type('html').send(html);
@@ -123,7 +123,7 @@ router.post(
 
       res.locals.globalMessage.error = message;
       const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
-        serverState: res.locals,
+        requestState: res.locals,
         pageTitle: PageTitle.CHANGE_PASSWORD,
       });
       return res.status(status).type('html').send(html);
@@ -132,7 +132,7 @@ router.post(
     trackMetric(Metrics.CHANGE_PASSWORD_SUCCESS);
 
     const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
-      serverState: res.locals,
+      requestState: res.locals,
       pageTitle: PageTitle.CHANGE_PASSWORD_COMPLETE,
     });
 
@@ -142,9 +142,9 @@ router.post(
 
 router.get(
   Routes.CHANGE_PASSWORD_COMPLETE,
-  (_: Request, res: ResponseWithServerStateLocals) => {
+  (_: Request, res: ResponseWithRequestState) => {
     const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
-      serverState: res.locals,
+      requestState: res.locals,
       pageTitle: PageTitle.CHANGE_PASSWORD_COMPLETE,
     });
     return res.type('html').send(html);
@@ -154,10 +154,10 @@ router.get(
 router.get(
   Routes.RESET_RESEND,
   removeNoCache,
-  (_: Request, res: ResponseWithServerStateLocals) => {
+  (_: Request, res: ResponseWithRequestState) => {
     const html = renderer(Routes.RESET_RESEND, {
       pageTitle: PageTitle.RESET_RESEND,
-      serverState: res.locals,
+      requestState: res.locals,
     });
     res.type('html').send(html);
   },

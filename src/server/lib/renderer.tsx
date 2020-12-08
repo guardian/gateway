@@ -8,7 +8,7 @@ import qs from 'query-string';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { RoutingConfig } from '@/client/routes';
 import { getAssets } from '@/server/lib/getAssets';
-import { getDefaultServerState, ServerState } from '@/server/models/Express';
+import { getDefaultRequestState, RequestState } from '@/server/models/Express';
 import { FieldError } from '@/server/routes/changePassword';
 import { CsrfErrors } from '@/shared/model/Errors';
 import { ABProvider } from '@guardian/ab-react';
@@ -25,20 +25,20 @@ const favicon =
 
 interface RendererOpts {
   pageTitle: string;
-  serverState: ServerState;
+  requestState: RequestState;
 }
 
 const { gaUID } = getConfiguration();
 
 // function to map from req.locals, to the ClientState used by the client
-const clientStateFromServerStateLocals = (
+const clientStateFromRequestStateLocals = (
   {
     csrf,
     globalMessage,
     pageData,
     queryParams,
     abTesting,
-  } = getDefaultServerState(),
+  } = getDefaultRequestState(),
 ): ClientState => {
   const clientState: ClientState = {
     csrf,
@@ -70,13 +70,13 @@ const clientStateFromServerStateLocals = (
 
 export const renderer: (url: string, opts: RendererOpts) => string = (
   url,
-  { serverState, pageTitle },
+  { requestState, pageTitle },
 ) => {
   const context = {};
 
-  const clientState = clientStateFromServerStateLocals(serverState);
+  const clientState = clientStateFromRequestStateLocals(requestState);
 
-  const queryString = qs.stringify(serverState.queryParams);
+  const queryString = qs.stringify(requestState.queryParams);
 
   const location = `${url}${queryString ? `?${queryString}` : ''}`;
 

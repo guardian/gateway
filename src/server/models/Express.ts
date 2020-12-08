@@ -5,13 +5,13 @@ import { parseExpressQueryParams } from '@/server/lib/queryParams';
 import { Participations, ABTestAPI } from '@guardian/ab-core';
 import { abTestApiForMvtId } from '@/shared/model/experiments/abTests';
 
-interface ABTesting {
+export interface ABTesting {
   mvtId: number;
   participations: Participations;
   forcedTestVariants: Participations;
 }
 
-export interface ServerState {
+export interface RequestState {
   globalMessage: {
     error?: string;
     success?: string;
@@ -23,11 +23,11 @@ export interface ServerState {
   abTestAPI: ABTestAPI;
 }
 
-export interface ResponseWithServerStateLocals extends Response {
-  locals: ServerState;
+export interface ResponseWithRequestState extends Response {
+  locals: RequestState;
 }
 
-export const getDefaultServerState = (): ServerState => ({
+export const getDefaultRequestState = (): RequestState => ({
   queryParams: parseExpressQueryParams('GET', {}),
   csrf: {},
   globalMessage: {},

@@ -19,12 +19,11 @@ import {
   CONSENTS_DATA_PAGE,
 } from '@/shared/model/Consent';
 import { loginMiddleware } from '@/server/lib/middleware/login';
-import { ResponseWithServerStateLocals } from '@/server/models/Express';
+import { ResponseWithRequestState } from '@/server/models/Express';
 import { VERIFY_EMAIL } from '@/shared/model/Success';
 import { trackMetric } from '@/server/lib/AWS';
 import { consentsPageMetric } from '@/server/models/Metrics';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
-import { geolocationMiddleware } from '../lib/middleware/geolocation';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { NewsletterMap } from '@/shared/lib/newsletter';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
@@ -255,8 +254,7 @@ router.get(Routes.CONSENTS, loginMiddleware, (_: Request, res: Response) => {
 router.get(
   `${Routes.CONSENTS}/:page`,
   loginMiddleware,
-  geolocationMiddleware,
-  async (req: Request, res: ResponseWithServerStateLocals) => {
+  async (req: Request, res: ResponseWithRequestState) => {
     const sc_gu_u = req.cookies.SC_GU_U;
 
     const { emailVerified } = res.locals.queryParams;
@@ -291,7 +289,7 @@ router.get(
     }
 
     const html = renderer(`${Routes.CONSENTS}/${page}`, {
-      serverState: res.locals,
+      requestState: res.locals,
       pageTitle,
     });
 
@@ -307,8 +305,7 @@ router.get(
 router.post(
   `${Routes.CONSENTS}/:page`,
   loginMiddleware,
-  geolocationMiddleware,
-  async (req: Request, res: ResponseWithServerStateLocals) => {
+  async (req: Request, res: ResponseWithRequestState) => {
     const sc_gu_u = req.cookies.SC_GU_U;
 
     const { page } = req.params;
@@ -350,7 +347,7 @@ router.post(
 
     const html = renderer(`${Routes.CONSENTS}/${page}`, {
       pageTitle,
-      serverState: res.locals,
+      requestState: res.locals,
     });
     res
       .type('html')
