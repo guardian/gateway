@@ -289,7 +289,7 @@ router.get(
     }
 
     const html = renderer(`${Routes.CONSENTS}/${page}`, {
-      serverState: res.locals,
+      requestState: res.locals,
       pageTitle,
     });
 
@@ -347,7 +347,7 @@ router.post(
 
     const html = renderer(`${Routes.CONSENTS}/${page}`, {
       pageTitle,
-      serverState: res.locals,
+      requestState: res.locals,
     });
     res
       .type('html')

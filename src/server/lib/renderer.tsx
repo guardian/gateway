@@ -25,13 +25,13 @@ const favicon =
 
 interface RendererOpts {
   pageTitle: string;
-  serverState: RequestState;
+  requestState: RequestState;
 }
 
 const { gaUID } = getConfiguration();
 
 // function to map from req.locals, to the ClientState used by the client
-const clientStateFromServerStateLocals = (
+const clientStateFromRequestStateLocals = (
   {
     csrf,
     globalMessage,
@@ -70,13 +70,13 @@ const clientStateFromServerStateLocals = (
 
 export const renderer: (url: string, opts: RendererOpts) => string = (
   url,
-  { serverState, pageTitle },
+  { requestState, pageTitle },
 ) => {
   const context = {};
 
-  const clientState = clientStateFromServerStateLocals(serverState);
+  const clientState = clientStateFromRequestStateLocals(requestState);
 
-  const queryString = qs.stringify(serverState.queryParams);
+  const queryString = qs.stringify(requestState.queryParams);
 
   const location = `${url}${queryString ? `?${queryString}` : ''}`;
 

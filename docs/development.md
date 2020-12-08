@@ -14,7 +14,7 @@ The [`renderer`](../src/server/lib/renderer.ts) method abstracts the rendering a
 // hardcoded for the example
 const html: string = renderer('/reset/email-sent', {
   pageTitle: 'Check your inbox',
-  serverState: res.locals,
+  requestState: res.locals,
 });
 
 // do stuff with the html markup
@@ -97,7 +97,7 @@ The route should now be accessible.
 Sometimes data is needed by the client to render a specific component, e.g. an error. Using SSR with additional client side hydration we
 
 - build a state on the server using Express' [`res.locals`](https://expressjs.com/en/api.html#res.locals) property using the [`RequestState`](../src/server/models/Express.ts) interface.
-- pass this into the [`renderer`](../src/server/lib/renderer.ts) method, the renderer will then build the `ClientState` to be passed to the client using `clientStateFromServerStateLocals`
+- pass this into the [`renderer`](../src/server/lib/renderer.ts) method, the renderer will then build the `ClientState` to be passed to the client using `clientStateFromRequestStateLocals`
   - The [`ClientState`](../src/shared/model/ClientState.ts) interface is used to type what is sent to the client.
 - This is passed to the [`Main` app component](../src/client/main.tsx) in React as a prop.
 - The `Main` component utilises a [`ClientStateProvider`](../src/client/components/ClientState.tsx) which wraps the app with a [Context Provider](https://reactjs.org/docs/context.html)
@@ -142,10 +142,10 @@ export interface ClientState {
 }
 ```
 
-In the `renderer` method, if you want the value accessible on the client, add it to `clientStateFromServerStateLocals` method:
+In the `renderer` method, if you want the value accessible on the client, add it to `clientStateFromRequestStateLocals` method:
 
 ```ts
-const clientStateFromServerStateLocals = ({
+const clientStateFromRequestStateLocals = ({
   ...
   test, // destructuring test from locals
 } = defaultLocals): ClientState => {

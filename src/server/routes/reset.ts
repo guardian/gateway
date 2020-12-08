@@ -20,7 +20,7 @@ router.get(Routes.RESET, (req: Request, res: ResponseWithRequestState) => {
   }
 
   const html = renderer(Routes.RESET, {
-    serverState: res.locals,
+    requestState: res.locals,
     pageTitle: PageTitle.RESET,
   });
   res.type('html').send(html);
@@ -44,7 +44,7 @@ router.post(
       res.locals.globalMessage.error = message;
 
       const html = renderer(Routes.RESET, {
-        serverState: res.locals,
+        requestState: res.locals,
         pageTitle: PageTitle.RESET,
       });
       return res.status(status).type('html').send(html);
@@ -58,7 +58,7 @@ router.post(
     }
 
     const html = renderer(Routes.RESET_SENT, {
-      serverState: res.locals,
+      requestState: res.locals,
       pageTitle: PageTitle.RESET_SENT,
     });
     return res.type('html').send(html);
@@ -71,7 +71,7 @@ router.get(
   (_: Request, res: ResponseWithRequestState) => {
     const html = renderer(Routes.RESET_SENT, {
       pageTitle: PageTitle.RESET_SENT,
-      serverState: res.locals,
+      requestState: res.locals,
     });
     res.type('html').send(html);
   },

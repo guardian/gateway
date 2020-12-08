@@ -19,7 +19,7 @@ More framework/API specific documentation is available there.
 There are 2 ways to use AB Tests on Gateway.
 
 1. **Client Side**: Runs on the client/browser, e.g. for showing different components or taking different actions depending on the test in question. Works with SSR too. This is the easiest way to setup and run tests.
-2. **Per Request**: The AB test information and API are also available on the ServerState (res.locals) to be untilised within routes/middleware. This is more complex to setup and run, but for example it gives the option of directing users to different routes/flows based on the test in question.
+2. **Per Request**: The AB test information and API are also available on the RequestState (res.locals) to be untilised within routes/middleware. This is more complex to setup and run, but for example it gives the option of directing users to different routes/flows based on the test in question.
 
 ## Setup a test
 
@@ -119,14 +119,14 @@ The advantages to this are that it's simple to do and test, however the paramete
 #### Middleware
 
 ```TypeScript
-import { ResponseWithServerStateLocals } from '@/server/models/Express';
+import { ResponseWithRequestStateLocals } from '@/server/models/Express';
 import { tests } from '@/shared/model/experiments/abTests';
 import { exampleTest } from '@/shared/model/experiments/tests/example-test';
 import { Request, NextFunction } from 'express';
 
 export const abTestDemoMiddleware = (
   _: Request,
-  res: ResponseWithServerStateLocals,
+  res: ResponseWithRequestStateLocals,
   next: NextFunction,
 ) => {
   // get the AB Test API
@@ -175,10 +175,10 @@ export const abTestDemoMiddleware = (
     console.log('C) User not in a variant');
   }
 
-  // 2) Using the ServerState res.locals (not recommended)
-  // In the ServerState res.locals, we pass the testId and variant of any tests
+  // 2) Using the RequestState res.locals (not recommended)
+  // In the RequestState res.locals, we pass the testId and variant of any tests
   // the user is in, you can check this too.
-  // This isn't recommended as the ServerState res.locals only has the test id and variant
+  // This isn't recommended as the RequestState res.locals only has the test id and variant
   // so may be more complex to run a test using this
 
   next();

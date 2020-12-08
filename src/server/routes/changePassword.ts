@@ -71,14 +71,14 @@ router.get(
       logger.error(error);
       return res.type('html').send(
         renderer(Routes.RESET_RESEND, {
-          serverState: res.locals,
+          requestState: res.locals,
           pageTitle: PageTitle.RESET_RESEND,
         }),
       );
     }
 
     const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
-      serverState: res.locals,
+      requestState: res.locals,
       pageTitle: PageTitle.CHANGE_PASSWORD,
     });
     return res.type('html').send(html);
@@ -102,7 +102,7 @@ router.post(
         res.locals.pageData.email = await validateToken(token, req.ip);
         res.locals.pageData.fieldErrors = fieldErrors;
         const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
-          serverState: res.locals,
+          requestState: res.locals,
           pageTitle: PageTitle.CHANGE_PASSWORD,
         });
         return res.status(422).type('html').send(html);
@@ -123,7 +123,7 @@ router.post(
 
       res.locals.globalMessage.error = message;
       const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
-        serverState: res.locals,
+        requestState: res.locals,
         pageTitle: PageTitle.CHANGE_PASSWORD,
       });
       return res.status(status).type('html').send(html);
@@ -132,7 +132,7 @@ router.post(
     trackMetric(Metrics.CHANGE_PASSWORD_SUCCESS);
 
     const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
-      serverState: res.locals,
+      requestState: res.locals,
       pageTitle: PageTitle.CHANGE_PASSWORD_COMPLETE,
     });
 
@@ -144,7 +144,7 @@ router.get(
   Routes.CHANGE_PASSWORD_COMPLETE,
   (_: Request, res: ResponseWithRequestState) => {
     const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
-      serverState: res.locals,
+      requestState: res.locals,
       pageTitle: PageTitle.CHANGE_PASSWORD_COMPLETE,
     });
     return res.type('html').send(html);
@@ -157,7 +157,7 @@ router.get(
   (_: Request, res: ResponseWithRequestState) => {
     const html = renderer(Routes.RESET_RESEND, {
       pageTitle: PageTitle.RESET_RESEND,
-      serverState: res.locals,
+      requestState: res.locals,
     });
     res.type('html').send(html);
   },

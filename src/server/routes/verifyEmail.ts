@@ -52,7 +52,7 @@ router.get(
 
     const html = renderer(Routes.VERIFY_EMAIL, {
       pageTitle: PageTitle.VERIFY_EMAIL,
-      serverState: res.locals,
+      requestState: res.locals,
     });
 
     return res.status(status).type('html').send(html);
@@ -95,7 +95,7 @@ router.post(
 
     const html = renderer(Routes.VERIFY_EMAIL, {
       pageTitle: PageTitle.VERIFY_EMAIL,
-      serverState: res.locals,
+      requestState: res.locals,
     });
 
     return res.status(status).type('html').send(html);

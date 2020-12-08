@@ -9,7 +9,7 @@ export const fourZeroFourMiddleware = (
 ) => {
   const html = renderer('/404', {
     pageTitle: PageTitle.NOT_FOUND,
-    serverState: res.locals,
+    requestState: res.locals,
   });
   res.type('html');
   res.status(404).send(html);
