@@ -21,6 +21,12 @@ const consentsBackground = css`
   background-color: ${CONSENTS_MAIN_COLOR};
 `;
 
+export const main = css`
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+`;
+
 export const mainBackground = css`
   position: relative;
   z-index: 0;

@@ -18,6 +18,7 @@ import {
   ConsentsContent,
   ConsentsBlueBackground,
   controls,
+  main,
 } from '@/client/layouts/shared/Consents';
 import { Footer } from '@/client/components/Footer';
 import { headingWithMq, text } from '@/client/styles/Consents';
@@ -88,12 +89,6 @@ const newslettersBox = css`
   padding-bottom: ${space[24]}px;
 `;
 
-const mainFlex = css`
-  display: flex;
-  flex-direction: column;
-  flex: 1 0 auto;
-`;
-
 const continueBoxFlex = css`
   flex: 0 0 auto;
 `;
@@ -156,7 +151,7 @@ export const ConsentsConfirmationPage = () => {
         {success && <GlobalSuccess success={success} />}
       </div>
       <ConsentsHeader title="Your registration is complete" />
-      <main css={[mainBackground, mainFlex]}>
+      <main css={[mainBackground, main]}>
         <ConsentsContent>
           <h2 css={[headingWithMq, autoRow()]}>Your selections</h2>
           <p css={[text, autoRow()]}>
