@@ -19,6 +19,7 @@ services:
       - APP_SECRET=${APP_SECRET}
     ports:
       - '${PORT}:${PORT}'
+      - '9229:9229' # debugging port
     volumes:
       - .:/app/
       - ~/.aws/credentials:/root/.aws/credentials:ro
