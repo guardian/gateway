@@ -765,4 +765,20 @@ describe('Onboarding flow', () => {
       ReviewPage.errorBanner().contains(NEWSLETTER_ERRORS.GENERIC);
     });
   });
+
+  context('Not found', () => {
+    beforeEach(() => {
+      setAuthCookies();
+      cy.idapiMockAll(
+        200,
+        authRedirectSignInRecentlyEmailValidated,
+        AUTH_REDIRECT_ENDPOINT,
+      );
+    });
+
+    it('shows 404 page if onboarding page is not found', () => {
+      cy.visit('/consents/unknown', { failOnStatusCode: false });
+      cy.contains('the page does not exist');
+    });
+  });
 });

@@ -18,6 +18,7 @@ import {
   ConsentsProgression,
   mainBackground,
   controls,
+  main,
 } from '@/client/layouts/shared/Consents';
 import { Routes } from '@/shared/model/Routes';
 import { onboardingFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
@@ -85,7 +86,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
       >
         <CsrfFormField />
 
-        <main>
+        <main css={main}>
           <div css={[mainBackground, ieFlexFix]}>
             <ConsentsContent>
               <ConsentsProgression current={current} />

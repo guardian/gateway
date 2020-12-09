@@ -27,6 +27,7 @@ import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { NewsletterMap } from '@/shared/lib/newsletter';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
+import { fourZeroFourRender } from '@/server/lib/middleware/404';
 
 const router = Router();
 
@@ -268,7 +269,8 @@ router.get(
 
     const pageIndex = consentPages.findIndex((elem) => elem.page === page);
     if (pageIndex === -1) {
-      return res.redirect(404, `${Routes.CONSENTS}/${page}`);
+      const html = fourZeroFourRender(res);
+      return res.type('html').status(404).send(html);
     }
 
     let pageTitle = 'Onboarding';
@@ -313,7 +315,8 @@ router.post(
 
     const pageIndex = consentPages.findIndex((elem) => elem.page === page);
     if (pageIndex === -1) {
-      return res.redirect(404, `${Routes.CONSENTS}/${page}`);
+      const html = fourZeroFourRender(res);
+      return res.type('html').status(404).send(html);
     }
 
     let pageTitle = 'Onboarding';
