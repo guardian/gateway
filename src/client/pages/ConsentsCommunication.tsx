@@ -15,6 +15,7 @@ import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { Consents } from '@/shared/model/Consent';
 import { Checkbox, CheckboxGroup } from '@guardian/src-checkbox';
+import { useAB } from '@guardian/ab-react';
 
 const fieldset = css`
   border: 0;
@@ -38,6 +39,9 @@ export const ConsentsCommunicationPage = () => {
 
   const clientState = useContext<ClientState>(ClientStateContext);
 
+  const ABTestAPI = useAB();
+  const isUserInTest = ABTestAPI.isUserInVariant('oneConsentTest', 'variant');
+
   const { pageData = {} } = clientState;
   const { consents = [] } = pageData;
 
@@ -47,6 +51,11 @@ export const ConsentsCommunicationPage = () => {
 
   const consentsWithoutOptout = consents.filter(
     (consent) => !consent.id.includes('_optout'),
+  );
+
+  // AB TEST: oneConsentTest. When test done, replace instances of this with consentsWithoutOptout
+  const consentsABTestOneConsentTest = consentsWithoutOptout.filter(
+    (consent) => !isUserInTest || consent.id === Consents.SUPPORTER,
   );
 
   const label = (
@@ -66,7 +75,7 @@ export const ConsentsCommunicationPage = () => {
             latest products, services and events.
           </p>
           <div css={[communicationCardContainer, autoRow()]}>
-            {consentsWithoutOptout.map((consent) => (
+            {consentsABTestOneConsentTest.map((consent) => (
               <CommunicationCard
                 key={consent.id}
                 title={consent.name}
