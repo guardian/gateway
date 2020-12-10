@@ -29,6 +29,7 @@ export class ThrottledBreachedPasswordCheck {
     );
 
     return new Promise((resolveLocalPromiseInProgress) => {
+      // set the promise in progress field so it can be resolved if the function gets called again
       this.resolvePromiseInProgress = resolveLocalPromiseInProgress;
 
       // breachedPasswordCheck prevents reset password form submission, so we timeout with a valid result
@@ -40,7 +41,7 @@ export class ThrottledBreachedPasswordCheck {
         this.timeout,
       );
 
-      new Promise<void>((r) => setTimeout(() => r(), timeToWait)).then(() => {
+      this.wait(timeToWait).then(() => {
         if (resolveLocalPromiseInProgress !== this.resolvePromiseInProgress) {
           // if the local promise in progress has changed, return early to avoid an unnecessary fetch
           return resolveLocalPromiseInProgress(
@@ -69,5 +70,9 @@ export class ThrottledBreachedPasswordCheck {
           );
       });
     });
+  }
+
+  private wait(timeToWait: number) {
+    return new Promise<void>((r) => setTimeout(() => r(), timeToWait));
   }
 }
