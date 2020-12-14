@@ -60,7 +60,7 @@ const abTestOneConsentCSS = {
     }
 
     & > div:nth-of-type(2) {
-      padding: 12px ${space[3]}px 6px ${space[3]}px;
+      padding: ${space[3]}px ${space[3]}px 6px ${space[3]}px;
     }
 
     & p {
@@ -72,11 +72,11 @@ const abTestOneConsentCSS = {
   `,
   consentsCardContainer: css`
     ${from.desktop} {
-      margin: 20px 0 32px;
-      grid-column: 2 / span 9 !important;
+      margin: ${space[5]}px 0 32px;
+      grid-column: 2 / span 9;
     }
     ${from.wide} {
-      grid-column: 3 / span 9 !important;
+      grid-column: 3 / span 9;
     }
   `,
   text: css`
@@ -86,7 +86,7 @@ const abTestOneConsentCSS = {
     max-width: 640px;
   `,
   fieldset: css`
-    margin: 14px 0 4px 0;
+    margin: 14px 0 ${space[1]}px 0;
   `,
 };
 
