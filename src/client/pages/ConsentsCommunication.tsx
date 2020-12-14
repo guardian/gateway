@@ -36,7 +36,7 @@ const communicationCardContainer = css`
 `;
 
 // @TODO: Need proper imported styles (no arbitrary pixel values)
-// @TODO: Could be import
+// @TODO: Could be import or duplicate page
 const abTestOneConsentCSS = {
   consentsCard: css`
     ${from.tablet} {
@@ -90,6 +90,12 @@ const abTestOneConsentCSS = {
   `,
 };
 
+const abTestOneConsentText = {
+  title: 'Thank you for registering',
+  paragraph:
+    'Would you like to join our mailing list to stay informed and up to date with all that The Guardian has to offer?',
+};
+
 export const ConsentsCommunicationPage = () => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
 
@@ -116,7 +122,8 @@ export const ConsentsCommunicationPage = () => {
     (consent) => !consent.id.includes('_optout'),
   );
 
-  // AB TEST: oneConsentTest. When test done, replace instances of this with consentsWithoutOptout
+  // @todo: AB TEST: oneConsentTest.
+  // When Finished: Replace instances of this with consentsWithoutOptout
   const consentsABTestOneConsentTest = consentsWithoutOptout.filter(
     (consent) => !isUserInTest || consent.id === Consents.SUPPORTER,
   );
@@ -130,7 +137,9 @@ export const ConsentsCommunicationPage = () => {
       {market_research_optout && (
         <>
           <h2 css={[heading, autoRow()]}>
-            Guardian products, services & events
+            {isUserInTest
+              ? abTestOneConsentText.title
+              : 'Guardian products, services & events'}
           </h2>
           <p
             css={[
@@ -139,9 +148,9 @@ export const ConsentsCommunicationPage = () => {
               consentsABTestOneConsentCSS()?.text,
             ]}
           >
-            Stay informed and up to date with all that The Guardian has to
-            offer. From time to time we can send you information about our
-            latest products, services and events.
+            {isUserInTest
+              ? abTestOneConsentText.paragraph
+              : 'Stay informed and up to date with all that The Guardian has to offer. From time to time we can send you information about our latest products, services and events.'}
           </p>
           <div
             css={[
