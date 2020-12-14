@@ -3,7 +3,7 @@ import { ABTest } from '@guardian/ab-core';
 export const oneConsentTest: ABTest = {
   id: 'oneConsentTest', // This ID must match the Server Side AB Test
   start: '2020-12-14',
-  expiry: '2020-01-11', // Remember that the server side test expiry can be different
+  expiry: '2021-01-11', // Remember that the server side test expiry can be different
   author: 'patrick.orrell@theguardian.com',
   description:
     'Testing the effect of having just one consent on the communications page',
