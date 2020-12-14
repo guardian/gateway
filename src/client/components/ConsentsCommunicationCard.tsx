@@ -1,9 +1,11 @@
 import React, { FunctionComponent } from 'react';
 import { titlepiece, textSans } from '@guardian/src-foundations/typography';
-import { css } from '@emotion/core';
+import { css, SerializedStyles } from '@emotion/core';
 import { space, palette } from '@guardian/src-foundations';
 import { CheckboxGroup, Checkbox } from '@guardian/src-checkbox';
 import { from } from '@guardian/src-foundations/mq';
+
+// @TODO: Special ABTest CSS File or object file
 
 interface CommunicationCardProps {
   title: string;
@@ -11,6 +13,7 @@ interface CommunicationCardProps {
   value: string;
   checked: boolean;
   image?: string;
+  cssOverrides?: SerializedStyles;
 }
 
 const communicationCard = css`
@@ -93,9 +96,10 @@ export const CommunicationCard: FunctionComponent<CommunicationCardProps> = ({
   value,
   image,
   checked,
+  cssOverrides,
 }) => {
   return (
-    <div css={communicationCard}>
+    <div css={[communicationCard, cssOverrides]}>
       <div css={communicationCardHeadingContainer(image)}>
         <h3 css={communicationCardHeadingText}>{title}</h3>
       </div>
