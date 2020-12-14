@@ -47,7 +47,7 @@ const abTestOneConsentCSS = {
       width: 100%;
     }
 
-    & div:first-of-type {
+    & > div:first-of-type {
       ${from.tablet} {
         height: auto;
       }
@@ -59,8 +59,15 @@ const abTestOneConsentCSS = {
       letter-spacing: 0.3px;
     }
 
-    & div:nth-of-type(2) {
+    & > div:nth-of-type(2) {
       padding: 12px ${space[3]}px 6px ${space[3]}px;
+    }
+
+    & p {
+      margin: 0;
+      color: ${palette.neutral[20]};
+      ${textSans.medium()}
+      max-width: 640px;
     }
   `,
   consentsCardContainer: css`
