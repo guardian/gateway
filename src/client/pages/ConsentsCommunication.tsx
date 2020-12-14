@@ -35,8 +35,6 @@ const communicationCardContainer = css`
   margin: ${space[6]}px 0 ${space[2]}px;
 `;
 
-// @TODO: Need proper imported styles (no arbitrary pixel values)
-// @TODO: Could be import or duplicate page
 const abTestOneConsentCSS = {
   consentsCard: css`
     ${from.tablet} {
@@ -122,7 +120,7 @@ export const ConsentsCommunicationPage = () => {
     (consent) => !consent.id.includes('_optout'),
   );
 
-  // @todo: AB TEST: oneConsentTest.
+  // @TODO: AB TEST: oneConsentTest.
   // When Finished: Replace instances of this with consentsWithoutOptout
   const consentsABTestOneConsentTest = consentsWithoutOptout.filter(
     (consent) => !isUserInTest || consent.id === Consents.SUPPORTER,
