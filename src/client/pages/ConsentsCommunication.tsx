@@ -100,7 +100,7 @@ export const ConsentsCommunicationPage = () => {
   const clientState = useContext<ClientState>(ClientStateContext);
 
   const ABTestAPI = useAB();
-  const isUserInTest = ABTestAPI.isUserInVariant('oneConsentTest', 'variant');
+  const isUserInTest = ABTestAPI.isUserInVariant('OneConsentTest', 'variant');
   const consentsABTestOneConsentCSS = () => {
     if (isUserInTest) {
       return abTestOneConsentCSS;
@@ -120,7 +120,7 @@ export const ConsentsCommunicationPage = () => {
     (consent) => !consent.id.includes('_optout'),
   );
 
-  // @TODO: AB TEST: oneConsentTest.
+  // @TODO: AB TEST: OneConsentTest.
   // When Finished: Replace instances of this with consentsWithoutOptout
   const consentsABTestOneConsentTest = consentsWithoutOptout.filter(
     (consent) => !isUserInTest || consent.id === Consents.SUPPORTER,
