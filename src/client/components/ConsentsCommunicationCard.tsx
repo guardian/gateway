@@ -5,8 +5,6 @@ import { space, palette } from '@guardian/src-foundations';
 import { CheckboxGroup, Checkbox } from '@guardian/src-checkbox';
 import { from } from '@guardian/src-foundations/mq';
 
-// @TODO: Special ABTest CSS File or object file
-
 interface CommunicationCardProps {
   title: string;
   body: string;

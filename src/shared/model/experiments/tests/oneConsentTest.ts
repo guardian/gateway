@@ -1,7 +1,7 @@
 import { ABTest } from '@guardian/ab-core';
 
 export const oneConsentTest: ABTest = {
-  id: 'oneConsentTest', // This ID must match the Server Side AB Test
+  id: 'OneConsentTest', // This ID must match the Server Side AB Test
   start: '2020-12-14',
   expiry: '2021-01-11', // Remember that the server side test expiry can be different
   author: 'patrick.orrell@theguardian.com',
@@ -17,14 +17,14 @@ export const oneConsentTest: ABTest = {
   variants: [
     {
       id: 'control',
-      test: (): string => {
-        return 'control';
+      test: (): void => {
+        return;
       },
     },
     {
       id: 'variant',
-      test: (): string => {
-        return 'variant';
+      test: (): void => {
+        return;
       },
     },
   ],
