@@ -10,10 +10,10 @@ import { logger } from '@/server/lib/logger';
 const { playSessionCookieSecret } = getConfiguration();
 
 const getCookieFromPlaySession: (req: Request) => any = (req) => {
-  if (req.cookies['PLAY_SESSION']) {
+  if (req.cookies['PLAY_SESSION_2']) {
     try {
       const session: any = verifyJWT(
-        req.cookies['PLAY_SESSION'],
+        req.cookies['PLAY_SESSION_2'],
         playSessionCookieSecret,
       );
       return session.data;
