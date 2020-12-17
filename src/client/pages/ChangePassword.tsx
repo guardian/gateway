@@ -283,7 +283,6 @@ export const ChangePasswordPage = () => {
             <TextInput
               css={textInput}
               label="New Password"
-              supporting="Between 8 and 72 characters"
               name="password"
               type="password"
               error={
