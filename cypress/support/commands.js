@@ -41,6 +41,27 @@ Cypress.Commands.add('idapiMockAll', (status, body, path) => {
   cy.request(getMockOptions(status, body));
 });
 
+Cypress.Commands.add('idapiMockPattern', (status, body, pattern) => {
+  const getMockOptions = (status, body = {}) => {
+    const payload = {
+      body,
+      pattern,
+      status,
+    };
+    return {
+      headers: {
+        'Content-Type': 'application/json',
+        'x-status': status,
+      },
+      method: 'POST',
+      body: JSON.stringify(payload),
+      url: MOCKING_ENDPOINT + '/permanent-pattern',
+    };
+  };
+
+  cy.request(getMockOptions(status, body));
+});
+
 Cypress.Commands.add('idapiLastPayloadIs', (expected) => {
   return cy.request(MOCKING_ENDPOINT + '/payload').then((response) => {
     expect(response.body).to.deep.equal(expected);

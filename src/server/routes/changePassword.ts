@@ -13,6 +13,10 @@ import { Metrics } from '@/server/models/Metrics';
 import { removeNoCache } from '@/server/lib/middleware/cache';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
+import {
+  PasswordValidationResult,
+  validatePasswordLength,
+} from '@/shared/lib/PasswordValidation';
 
 const router = Router();
 
@@ -26,10 +30,19 @@ const validatePasswordChangeFields = (
   passwordConfirm: string,
 ): Array<FieldError> => {
   const errors: Array<FieldError> = [];
+
   if (!password) {
     errors.push({
       field: 'password',
       message: ChangePasswordErrors.PASSWORD_BLANK,
+    });
+  } else if (
+    password &&
+    validatePasswordLength(password) !== PasswordValidationResult.VALID_PASSWORD
+  ) {
+    errors.push({
+      field: 'password',
+      message: ChangePasswordErrors.PASSWORD_LENGTH,
     });
   }
 
@@ -38,18 +51,9 @@ const validatePasswordChangeFields = (
       field: 'password_confirm',
       message: ChangePasswordErrors.REPEAT_PASSWORD_BLANK,
     });
-  }
-
-  if (password && (password.length < 8 || password.length > 72)) {
-    errors.push({
-      field: 'password',
-      message: ChangePasswordErrors.PASSWORD_LENGTH,
-    });
-  }
-
-  if (
-    passwordConfirm &&
-    (passwordConfirm.length < 8 || passwordConfirm.length > 72)
+  } else if (
+    validatePasswordLength(passwordConfirm) !==
+    PasswordValidationResult.VALID_PASSWORD
   ) {
     errors.push({
       field: 'password_confirm',

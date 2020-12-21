@@ -15,11 +15,15 @@ const app = express();
 
 const responses = [];
 const permanent = new Map();
+let permanentPatterns = [];
+
+const findPattern = (path) => permanentPatterns.find(({pattern}) => new RegExp(pattern).test(path));
 
 let payload = {};
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({strict: false}));
 app.use(express.urlencoded({ extended: true }));
+
 app.get('/healthcheck', (_, res) => {
   console.log('healthcheck OK');
   res.sendStatus(204);
@@ -30,6 +34,7 @@ app.get('/mock/purge', (_, res) => {
   console.log('purging all mocks');
   responses.length = 0;
   permanent.clear();
+  permanentPatterns = [];
   res.sendStatus(204);
 });
 
@@ -39,6 +44,12 @@ app.post('/mock', (req, res) => {
     status: req.get('X-status'),
     payload: req.body,
   });
+  res.sendStatus(204);
+});
+
+// Mock an endpoint with a pattern
+app.post('/mock/permanent-pattern', (req, res) => {
+  permanentPatterns.push(req.body);
   res.sendStatus(204);
 });
 
@@ -56,16 +67,32 @@ app.get('/mock/payload', (_, res) => {
 
 // For any request, if permanent, return permanent mock, otherwise pop from mock stack.
 app.all('*', (req, res) => {
+
+  const origin = req.header("Origin");
+  if (origin) {
+    res.set("Access-Control-Allow-Origin", origin);
+  }
+
   const { method } = req;
   if (method === 'POST' || method === 'PATCH') {
     payload = req.body;
   }
+
   if (permanent.has(req.path)) {
     const { status, payload } = permanent.get(req.path);
     res.status(status).json(payload);
     console.log(`Mocking: ${req.originalUrl}: ${status} ${inspect(payload)}`);
     return;
   }
+
+  const patternResponse = findPattern(req.path);
+  if (patternResponse) {
+    const { status, body, pattern } = patternResponse;
+    res.status(status).json(body);
+    console.log(`Mocking for pattern ${pattern}: ${req.originalUrl}: ${status} ${body}`);
+    return;
+  }
+
   if (responses.length === 0) {
     res.status(DEFAULT_RESPONSE.status).json(DEFAULT_RESPONSE.body);
   } else {

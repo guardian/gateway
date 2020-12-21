@@ -31,11 +31,16 @@ export interface PageData {
   previousPage?: string;
 }
 
+export interface ClientHosts {
+  idapiBaseUrl: string;
+}
+
 export interface ClientState {
   globalMessage?: GlobalMessage;
   pageData?: PageData;
   csrf?: CsrfState;
   abTesting?: ABTesting;
+  clientHosts: ClientHosts;
 }
 
 export type CsrfState = {

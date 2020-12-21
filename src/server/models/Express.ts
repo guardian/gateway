@@ -1,9 +1,12 @@
 import { Response } from 'express';
 import { QueryParams } from '@/shared/model/QueryParams';
-import { CsrfState, PageData } from '@/shared/model/ClientState';
+import { ClientHosts, CsrfState, PageData } from '@/shared/model/ClientState';
 import { parseExpressQueryParams } from '@/server/lib/queryParams';
 import { Participations, ABTestAPI } from '@guardian/ab-core';
 import { abTestApiForMvtId } from '@/shared/model/experiments/abTests';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+
+const { idapiBaseUrl } = getConfiguration();
 
 export interface ABTesting {
   mvtId: number;
@@ -21,6 +24,7 @@ export interface RequestState {
   csrf: CsrfState;
   abTesting: ABTesting;
   abTestAPI: ABTestAPI;
+  clientHosts: ClientHosts;
 }
 
 export interface ResponseWithRequestState extends Response {
@@ -40,4 +44,7 @@ export const getDefaultRequestState = (): RequestState => ({
     forcedTestVariants: {},
   },
   abTestAPI: abTestApiForMvtId(0),
+  clientHosts: {
+    idapiBaseUrl,
+  },
 });

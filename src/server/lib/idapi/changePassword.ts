@@ -20,6 +20,8 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
     switch (message) {
       case IdapiErrorMessages.INVALID_TOKEN:
         throw { message: ChangePasswordErrors.INVALID_TOKEN, status };
+      case IdapiErrorMessages.BREACHED_PASSWORD:
+        throw { message: ChangePasswordErrors.COMMON_PASSWORD, status };
       default:
         break;
     }
@@ -55,6 +57,7 @@ export async function change(password: string, token: string, ip: string) {
   const options = APIPostOptions({
     password,
     token,
+    validateBreached: true,
   });
 
   try {
