@@ -103,7 +103,7 @@ const server = {
 };
 
 const client = {
-  entry: "./src/client/static/index.tsx",
+  entry: ['whatwg-fetch', "./src/client/static/index.tsx"],
   mode: "production",
   module: {
     rules: [
