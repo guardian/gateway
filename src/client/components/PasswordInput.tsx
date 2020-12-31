@@ -81,6 +81,7 @@ export const PasswordInput = (props: TextInputProps) => {
   );
 
   const isEyeDisplayedOnBrowser = isDisplayEyeOnBrowser(browserName);
+  const spaceForEye = isEyeDisplayedOnBrowser ? 28 : 0;
 
   // remove the border and shorten the width of the text input box so the text does not overlap the password eye
   // we render our own border which includes the input field and eye symbol
@@ -89,7 +90,7 @@ export const PasswordInput = (props: TextInputProps) => {
     :active {
       border: none;
     }
-    width: calc(100% - 28px);
+    width: calc(100% - ${spaceForEye}px);
   `;
 
   const borderStyle = props.success
