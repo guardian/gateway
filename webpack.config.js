@@ -183,7 +183,7 @@ const client = {
       "@": path.join(__dirname, "src")
     }
   },
-  target: "web",
+  target: ["web", "es5"],
   watchOptions
 };
 
