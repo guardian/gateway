@@ -25,7 +25,6 @@ export interface RequestState {
   abTesting: ABTesting;
   abTestAPI: ABTestAPI;
   clientHosts: ClientHosts;
-  browserName?: string;
 }
 
 export interface ResponseWithRequestState extends Response {

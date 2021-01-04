@@ -69,7 +69,7 @@ router.get(
   `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
   async (req: Request, res: ResponseWithRequestState) => {
     const { token } = req.params;
-    res.locals.browserName = getBrowserNameFromUserAgent(
+    res.locals.pageData.browserName = getBrowserNameFromUserAgent(
       req.header('User-Agent'),
     );
 
@@ -99,7 +99,7 @@ router.post(
     const { token } = req.params;
 
     const { password, password_confirm: passwordConfirm } = req.body;
-    res.locals.browserName = getBrowserNameFromUserAgent(
+    res.locals.pageData.browserName = getBrowserNameFromUserAgent(
       req.header('User-Agent'),
     );
 

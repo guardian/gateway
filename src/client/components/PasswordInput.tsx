@@ -20,11 +20,14 @@ interface TextInputProps extends InputHTMLAttributes<HTMLInputElement>, Props {
 
 export const isDisplayEyeOnBrowser = (browserName: string | undefined) => {
   // These browsers already have an input box overlay where the eye is positioned
-  return !(
-    browserName === 'Microsoft Edge' ||
-    browserName === 'Internet Explorer' ||
-    browserName === 'Safari'
-  );
+  switch (browserName) {
+    case 'Microsoft Edge':
+    case 'Internet Explorer':
+    case 'Safari':
+      return false;
+    default:
+      return true;
+  }
 };
 
 const EyeSymbol = ({
