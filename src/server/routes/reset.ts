@@ -14,13 +14,21 @@ import { PageTitle } from '@/shared/model/PageTitle';
 const router = Router();
 
 router.get(Routes.RESET, (req: Request, res: ResponseWithRequestState) => {
+  let state = res.locals;
   const emailFromPlaySession = getEmailFromPlaySessionCookie(req);
+
   if (emailFromPlaySession) {
-    res.locals.pageData.email = emailFromPlaySession;
+    state = {
+      ...state,
+      pageData: {
+        ...state.pageData,
+        email: emailFromPlaySession,
+      },
+    };
   }
 
   const html = renderer(Routes.RESET, {
-    requestState: res.locals,
+    requestState: state,
     pageTitle: PageTitle.RESET,
   });
   res.type('html').send(html);
@@ -29,6 +37,7 @@ router.get(Routes.RESET, (req: Request, res: ResponseWithRequestState) => {
 router.post(
   Routes.RESET,
   async (req: Request, res: ResponseWithRequestState) => {
+    let state = res.locals;
     const { email = '' } = req.body;
 
     const { returnUrl } = res.locals.queryParams;
@@ -41,10 +50,16 @@ router.post(
 
       trackMetric(Metrics.SEND_PASSWORD_RESET_FAILURE);
 
-      res.locals.globalMessage.error = message;
+      state = {
+        ...state,
+        globalMessage: {
+          ...state.globalMessage,
+          error: message,
+        },
+      };
 
       const html = renderer(Routes.RESET, {
-        requestState: res.locals,
+        requestState: state,
         pageTitle: PageTitle.RESET,
       });
       return res.status(status).type('html').send(html);
@@ -54,11 +69,17 @@ router.post(
 
     const emailProvider = getProviderForEmail(email);
     if (emailProvider) {
-      res.locals.pageData.emailProvider = emailProvider.id;
+      state = {
+        ...state,
+        pageData: {
+          ...state.pageData,
+          emailProvider: emailProvider.id,
+        },
+      };
     }
 
     const html = renderer(Routes.RESET_SENT, {
-      requestState: res.locals,
+      requestState: state,
       pageTitle: PageTitle.RESET_SENT,
     });
     return res.type('html').send(html);
