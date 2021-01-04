@@ -9,20 +9,34 @@ import { getConfiguration } from '../getConfiguration';
 import { tests } from '@/shared/model/experiments/abTests';
 import { getABTesting } from '../getABTesting';
 
+const getRequestState = (req: Request) => {
+  // @TODO: default state is almost redundant at this stage
+  const defaultState = getDefaultRequestState();
+  const [abTesting, abTestAPI] = getABTesting(req, getConfiguration(), tests);
+  return {
+    ...defaultState,
+    queryParams: parseExpressQueryParams(req.method, req.query),
+    pageData: {
+      geolocation: getGeolocationRegion(req),
+    },
+    csrf: {
+      token: req.csrfToken(),
+    },
+    abTesting: abTesting,
+    abTestAPI: abTestAPI,
+  };
+};
+
 export const requestStateMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  const state = getDefaultRequestState();
-  state.queryParams = parseExpressQueryParams(req.method, req.query);
-  state.pageData.geolocation = getGeolocationRegion(req);
-  state.csrf.token = req.csrfToken();
+  const state = getRequestState(req);
 
-  const [abTesting, abTestAPI] = getABTesting(req, getConfiguration(), tests);
-  state.abTesting = abTesting;
-  state.abTestAPI = abTestAPI;
-
+  /* This is the only place mutation of res.locals should occur */
+  /* eslint-disable-next-line functional/immutable-data */
   res.locals = state;
+
   next();
 };

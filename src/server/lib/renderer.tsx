@@ -8,7 +8,7 @@ import qs from 'query-string';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { RoutingConfig } from '@/client/routes';
 import { getAssets } from '@/server/lib/getAssets';
-import { getDefaultRequestState, RequestState } from '@/server/models/Express';
+import { RequestState } from '@/server/models/Express';
 import { FieldError } from '@/server/routes/changePassword';
 import { CsrfErrors } from '@/shared/model/Errors';
 import { ABProvider } from '@guardian/ab-react';
@@ -30,17 +30,14 @@ interface RendererOpts {
 
 const { gaUID } = getConfiguration();
 
-// function to map from req.locals, to the ClientState used by the client
-const clientStateFromRequestStateLocals = (
-  {
-    csrf,
-    globalMessage,
-    pageData,
-    queryParams,
-    abTesting,
-    clientHosts,
-  } = getDefaultRequestState(),
-): ClientState => {
+const clientStateFromRequestStateLocals = ({
+  csrf,
+  globalMessage,
+  pageData,
+  queryParams,
+  abTesting,
+  clientHosts,
+}: RequestState): ClientState => {
   const clientState: ClientState = {
     csrf,
     globalMessage,
@@ -54,20 +51,22 @@ const clientStateFromRequestStateLocals = (
   if (queryParams.csrfError) {
     // global state page data will already exist at this point
     // this is just a check to get typescript to compile
-    if (!clientState.pageData) {
-      clientState.pageData = {};
-    }
-
     const fieldErrors: Array<FieldError> =
-      clientState.pageData.fieldErrors ?? [];
+      clientState.pageData?.fieldErrors ?? [];
     fieldErrors.push({
       field: 'csrf',
       message: CsrfErrors.CSRF_ERROR,
     });
-    clientState.pageData.fieldErrors = fieldErrors;
+    return {
+      ...clientState,
+      pageData: {
+        ...clientState.pageData,
+        fieldErrors,
+      },
+    };
+  } else {
+    return clientState;
   }
-
-  return clientState;
 };
 
 export const renderer: (url: string, opts: RendererOpts) => string = (

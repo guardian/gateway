@@ -7,7 +7,10 @@ import {
   change as changePassword,
 } from '@/server/lib/idapi/changePassword';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import {
+  RequestState,
+  ResponseWithRequestState,
+} from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';
 import { removeNoCache } from '@/server/lib/middleware/cache';
@@ -68,9 +71,15 @@ router.get(
   `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
   async (req: Request, res: ResponseWithRequestState) => {
     const { token } = req.params;
-
+    let state: RequestState;
     try {
-      res.locals.pageData.email = await validateToken(token, req.ip);
+      state = {
+        ...res.locals,
+        pageData: {
+          ...res.locals.pageData,
+          email: await validateToken(token, req.ip),
+        },
+      };
     } catch (error) {
       logger.error(error);
       return res.type('html').send(
@@ -82,7 +91,7 @@ router.get(
     }
 
     const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
-      requestState: res.locals,
+      requestState: state,
       pageTitle: PageTitle.CHANGE_PASSWORD,
     });
     return res.type('html').send(html);
@@ -96,6 +105,8 @@ router.post(
 
     const { password, password_confirm: passwordConfirm } = req.body;
 
+    let state: RequestState;
+
     try {
       const fieldErrors = validatePasswordChangeFields(
         password,
@@ -103,10 +114,16 @@ router.post(
       );
 
       if (fieldErrors.length) {
-        res.locals.pageData.email = await validateToken(token, req.ip);
-        res.locals.pageData.fieldErrors = fieldErrors;
+        state = {
+          ...res.locals,
+          pageData: {
+            ...res.locals.pageData,
+            email: await validateToken(token, req.ip),
+            fieldErrors,
+          },
+        };
         const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
-          requestState: res.locals,
+          requestState: state,
           pageTitle: PageTitle.CHANGE_PASSWORD,
         });
         return res.status(422).type('html').send(html);
@@ -125,9 +142,16 @@ router.post(
 
       trackMetric(Metrics.CHANGE_PASSWORD_FAILURE);
 
-      res.locals.globalMessage.error = message;
+      const state = {
+        ...res.locals,
+        globalMessage: {
+          ...res.locals.globalMessage,
+          error: message,
+        },
+      };
+
       const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
-        requestState: res.locals,
+        requestState: state,
         pageTitle: PageTitle.CHANGE_PASSWORD,
       });
       return res.status(status).type('html').send(html);
