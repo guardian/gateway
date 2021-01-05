@@ -28,6 +28,7 @@ import { GeoLocation } from '@/shared/model/Geolocation';
 import { NewsletterMap } from '@/shared/lib/newsletter';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { fourZeroFourRender } from '@/server/lib/middleware/404';
+import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 
 const router = Router();
 
@@ -263,7 +264,7 @@ router.get(Routes.CONSENTS, loginMiddleware, (_: Request, res: Response) => {
 router.get(
   `${Routes.CONSENTS}/:page`,
   loginMiddleware,
-  async (req: Request, res: ResponseWithRequestState) => {
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
     const sc_gu_u = req.cookies.SC_GU_U;
 
@@ -323,13 +324,13 @@ router.get(
       .type('html')
       .status(status ?? 500)
       .send(html);
-  },
+  }),
 );
 
 router.post(
   `${Routes.CONSENTS}/:page`,
   loginMiddleware,
-  async (req: Request, res: ResponseWithRequestState) => {
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
     const sc_gu_u = req.cookies.SC_GU_U;
@@ -381,7 +382,7 @@ router.post(
       .type('html')
       .status(status ?? 500)
       .send(html);
-  },
+  }),
 );
 
 export default router;

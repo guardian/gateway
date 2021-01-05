@@ -18,6 +18,7 @@ import { Metrics } from '@/server/models/Metrics';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { ResponseWithRequestState } from '@/server/models/Express';
+import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 
 const router = Router();
 
@@ -26,7 +27,7 @@ const profileUrl = getProfileUrl();
 
 router.get(
   Routes.VERIFY_EMAIL,
-  async (req: Request, res: ResponseWithRequestState) => {
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
     state = {
@@ -76,12 +77,12 @@ router.get(
     });
 
     return res.status(status).type('html').send(html);
-  },
+  }),
 );
 
 router.post(
   Routes.VERIFY_EMAIL,
-  async (req: Request, res: ResponseWithRequestState) => {
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
     let status = 200;
 
@@ -143,12 +144,12 @@ router.post(
     });
 
     return res.status(status).type('html').send(html);
-  },
+  }),
 );
 
 router.get(
   `${Routes.VERIFY_EMAIL}${Routes.VERIFY_EMAIL_TOKEN}`,
-  async (req: Request, res: Response) => {
+  handleAsyncErrors(async (req: Request, res: Response) => {
     const { token } = req.params;
 
     try {
@@ -180,7 +181,7 @@ router.get(
         res.locals.queryParams.returnUrl,
       ),
     );
-  },
+  }),
 );
 
 export default router;
