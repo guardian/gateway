@@ -7,7 +7,7 @@ export const oneConsentTest: ABTest = {
   author: 'patrick.orrell@theguardian.com',
   description:
     'Testing the effect of having just one consent on the communications page',
-  audience: 0.5, // 0.01% (1 is 100%)
+  audience: 1, // 0.01% (1 is 100%)
   audienceOffset: 0, // 50% (1 is 100%). Prevent overlapping with other tests.
   successMeasure: 'Various',
   audienceCriteria: 'Half the audience using the consents flow',
