@@ -2,28 +2,32 @@
 // This should be the only place res.locals is mutated.
 // Requires: csurf middlware
 import { getGeolocationRegion } from '@/server/lib/getGeolocationRegion';
-import { getDefaultRequestState } from '@/server/models/Express';
 import { parseExpressQueryParams } from '@/server/lib/queryParams';
 import { NextFunction, Request, Response } from 'express';
 import { getConfiguration } from '../getConfiguration';
 import { tests } from '@/shared/model/experiments/abTests';
 import { getABTesting } from '../getABTesting';
+import { RequestState } from '@/server/models/Express';
 
-const getRequestState = (req: Request) => {
-  // @TODO: default state is almost redundant at this stage
-  const defaultState = getDefaultRequestState();
-  const [abTesting, abTestAPI] = getABTesting(req, getConfiguration(), tests);
+const getRequestState = (req: Request): RequestState => {
+  const config = getConfiguration();
+  const { idapiBaseUrl } = config;
+
+  const [abTesting, abTestAPI] = getABTesting(req, config, tests);
   return {
-    ...defaultState,
     queryParams: parseExpressQueryParams(req.method, req.query),
     pageData: {
       geolocation: getGeolocationRegion(req),
     },
+    globalMessage: {},
     csrf: {
       token: req.csrfToken(),
     },
     abTesting: abTesting,
     abTestAPI: abTestAPI,
+    clientHosts: {
+      idapiBaseUrl,
+    },
   };
 };
 
