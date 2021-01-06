@@ -103,7 +103,7 @@ const server = {
 };
 
 const client = {
-  entry: "./src/client/static/index.tsx",
+  entry: ['whatwg-fetch', "./src/client/static/index.tsx"],
   mode: "production",
   module: {
     rules: [
@@ -183,7 +183,7 @@ const client = {
       "@": path.join(__dirname, "src")
     }
   },
-  target: "web",
+  target: ["web", "es5"],
   watchOptions
 };
 

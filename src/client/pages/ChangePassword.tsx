@@ -8,7 +8,6 @@ import React, {
   useState,
 } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import { TextInput } from '@guardian/src-text-input';
 import { Button } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
 import { ClientState } from '@/shared/model/ClientState';
@@ -38,6 +37,7 @@ import { ValidationStyling } from '@/client/styles/PasswordValidationStyles';
 import { ThrottledBreachedPasswordCheck } from '@/client/lib/ThrottledBreachedPasswordCheck';
 import sha1 from 'js-sha1';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
+import { PasswordInput } from '@/client/components/PasswordInput';
 
 const throttledPasswordCheck = new ThrottledBreachedPasswordCheck();
 
@@ -280,11 +280,10 @@ export const ChangePasswordPage = () => {
           >
             <CsrfFormField />
 
-            <TextInput
+            <PasswordInput
               css={textInput}
               label="New Password"
               name="password"
-              type="password"
               error={
                 longRedErrorMessage ??
                 fieldErrors.find(
@@ -311,11 +310,10 @@ export const ChangePasswordPage = () => {
               {isCommonPassword ? <WeakPasswordComponent /> : null}
             </div>
 
-            <TextInput
+            <PasswordInput
               css={textInput}
               label="Repeat Password"
               name="password_confirm"
-              type="password"
               success={passwordConfirmSuccessMessage}
               error={
                 passwordConfirmationErrorMessage ??
