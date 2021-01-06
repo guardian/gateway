@@ -17,6 +17,7 @@ import {
   PasswordValidationResult,
   validatePasswordLength,
 } from '@/shared/lib/PasswordValidation';
+import { getBrowserNameFromUserAgent } from '@/server/lib/getBrowserName';
 
 const router = Router();
 
@@ -69,6 +70,10 @@ router.get(
   async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
     const { token } = req.params;
+    res.locals.pageData.browserName = getBrowserNameFromUserAgent(
+      req.header('User-Agent'),
+    );
+
     try {
       state = {
         ...state,
@@ -103,6 +108,9 @@ router.post(
     const { token } = req.params;
 
     const { password, password_confirm: passwordConfirm } = req.body;
+    res.locals.pageData.browserName = getBrowserNameFromUserAgent(
+      req.header('User-Agent'),
+    );
 
     try {
       const fieldErrors = validatePasswordChangeFields(

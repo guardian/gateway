@@ -76,6 +76,31 @@ describe('Password change flow', () => {
     });
   });
 
+  context('show / hide password eye button', () => {
+    it('shows the password eye when the input box is selected and hides it when it is not selected', () => {
+      stubBreachedCountEndpoint(0);
+      cy.idapiMockNext(200);
+      page.goto(fakeToken);
+      cy.get('.password-input-eye-symbol').should('not.exist');
+      cy.get('input[name="password"]').click();
+      cy.get('.password-input-eye-symbol').should('exist');
+      cy.contains('Reset Password').click();
+      cy.get('.password-input-eye-symbol').should('not.exist');
+    });
+
+    it('clicking on the password eye shows the password and clicking it again hides it', () => {
+      stubBreachedCountEndpoint(0);
+      cy.idapiMockNext(200);
+      page.goto(fakeToken);
+      cy.get('input[name="password"]').should('have.attr', 'type' , 'password');
+      cy.get('input[name="password"]').type('some_password');
+      cy.get('.password-input-eye-button').eq(0).click();
+      cy.get('input[name="password"]').should('have.attr', 'type' , 'text');
+      cy.get('.password-input-eye-button').eq(0).click();
+      cy.get('input[name="password"]').should('have.attr', 'type' , 'password');
+    });
+  });
+
   context('An expired/invalid token is used', () => {
     it('shows a resend password page', () => {
       cy.idapiMockNext(500, {

@@ -23,6 +23,7 @@ export interface PageData {
   signInPageUrl?: string;
   geolocation?: GeoLocation;
   fieldErrors?: Array<FieldError>;
+  browserName?: string;
 
   // onboarding specific
   newsletters?: NewsLetter[];
