@@ -70,9 +70,14 @@ router.get(
   async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
     const { token } = req.params;
-    res.locals.pageData.browserName = getBrowserNameFromUserAgent(
-      req.header('User-Agent'),
-    );
+
+    state = {
+      ...state,
+      pageData: {
+        ...state.pageData,
+        browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
+      },
+    };
 
     try {
       state = {
@@ -86,7 +91,7 @@ router.get(
       logger.error(error);
       return res.type('html').send(
         renderer(Routes.RESET_RESEND, {
-          requestState: res.locals,
+          requestState: state,
           pageTitle: PageTitle.RESET_RESEND,
         }),
       );
@@ -108,9 +113,13 @@ router.post(
     const { token } = req.params;
 
     const { password, password_confirm: passwordConfirm } = req.body;
-    res.locals.pageData.browserName = getBrowserNameFromUserAgent(
-      req.header('User-Agent'),
-    );
+
+    state = {
+      ...state,
+      pageData: {
+        browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
+      },
+    };
 
     try {
       const fieldErrors = validatePasswordChangeFields(
