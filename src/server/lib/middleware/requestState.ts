@@ -9,10 +9,10 @@ import { tests } from '@/shared/model/experiments/abTests';
 import { getABTesting } from '../getABTesting';
 import { RequestState } from '@/server/models/Express';
 
-const getRequestState = (req: Request): RequestState => {
-  const config = getConfiguration();
-  const { idapiBaseUrl } = config;
+const config = getConfiguration();
+const { idapiBaseUrl } = config;
 
+const getRequestState = (req: Request): RequestState => {
   const [abTesting, abTestAPI] = getABTesting(req, config, tests);
   return {
     queryParams: parseExpressQueryParams(req.method, req.query),
