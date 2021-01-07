@@ -1,3 +1,6 @@
+/* eslint-disable functional/immutable-data */
+/* Linting rule disable as unit test needs to mutate env */
+
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import {
   GA_UID,

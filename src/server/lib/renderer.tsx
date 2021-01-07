@@ -30,7 +30,6 @@ interface RendererOpts {
 
 const { gaUID } = getConfiguration();
 
-// function to map from req.locals, to the ClientState used by the client
 const clientStateFromRequestStateLocals = ({
   csrf,
   globalMessage,
@@ -52,20 +51,22 @@ const clientStateFromRequestStateLocals = ({
   if (queryParams.csrfError) {
     // global state page data will already exist at this point
     // this is just a check to get typescript to compile
-    if (!clientState.pageData) {
-      clientState.pageData = {};
-    }
-
     const fieldErrors: Array<FieldError> =
-      clientState.pageData.fieldErrors ?? [];
+      clientState.pageData?.fieldErrors ?? [];
     fieldErrors.push({
       field: 'csrf',
       message: CsrfErrors.CSRF_ERROR,
     });
-    clientState.pageData.fieldErrors = fieldErrors;
+    return {
+      ...clientState,
+      pageData: {
+        ...clientState.pageData,
+        fieldErrors,
+      },
+    };
+  } else {
+    return clientState;
   }
-
-  return clientState;
 };
 
 export const renderer: (url: string, opts: RendererOpts) => string = (

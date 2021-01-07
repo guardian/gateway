@@ -41,6 +41,8 @@ import { PasswordInput } from '@/client/components/PasswordInput';
 
 const throttledPasswordCheck = new ThrottledBreachedPasswordCheck();
 
+/* eslint-disable functional/immutable-data */
+// explicit use of mutable ref
 // useRefState is used to provide access to up-to-date component state inside promises
 function useRefState<T>(
   initial: T,
@@ -52,6 +54,7 @@ function useRefState<T>(
   }, [state]);
   return [state, setState, stateRef];
 }
+/* eslint-enable functional/immutable-data */
 
 const validatePassword = (
   idapiBaseUrl: string,

@@ -8,14 +8,16 @@ const TEST_PREFIX = 'ab-';
 // need to be in { [key: string]: { variant: string } }; type (Participations)
 export const getABForcedVariants = (req: Request): Participations => {
   const query = qs.parseUrl(req.url).query;
-  const forcedTestVariants: Participations = {};
-  Object.entries(query).forEach(([key, value]) => {
-    if (key.startsWith(TEST_PREFIX)) {
+  const forcedTestVariants = Object.entries(query)
+    .filter(([key]) => key.startsWith(TEST_PREFIX))
+    .map(([key, value]) => {
       const v = Array.isArray(value) ? value[value.length - 1] : value;
-      forcedTestVariants[key.replace(TEST_PREFIX, '')] = {
-        variant: v as string,
-      };
-    }
-  });
-  return forcedTestVariants;
+      return [
+        key.replace(TEST_PREFIX, ''),
+        {
+          variant: v as string,
+        },
+      ];
+    });
+  return Object.fromEntries(forcedTestVariants);
 };
