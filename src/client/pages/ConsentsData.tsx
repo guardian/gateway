@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import Locations from '@/client/lib/locations';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { textSans } from '@guardian/src-foundations/typography';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import { space, neutral } from '@guardian/src-foundations';
 import { ClientStateContext } from '@/client/components/ClientState';
 import {

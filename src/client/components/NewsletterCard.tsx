@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { SerializedStyles, css } from '@emotion/core';
+import { SerializedStyles, css } from '@emotion/react';
 import { CheckboxGroup, Checkbox } from '@guardian/src-checkbox';
 import { brand, space, palette } from '@guardian/src-foundations';
 import {

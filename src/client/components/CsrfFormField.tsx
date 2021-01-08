@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import { error, space } from '@guardian/src-foundations';
 import { textSans } from '@guardian/src-foundations/typography';
 

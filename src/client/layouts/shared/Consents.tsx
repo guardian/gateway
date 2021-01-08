@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { brand } from '@guardian/src-foundations/palette';
 import { titlepiece, textSans } from '@guardian/src-foundations/typography';
-import { css, SerializedStyles } from '@emotion/core';
+import { css, SerializedStyles } from '@emotion/react';
 import { space } from '@guardian/src-foundations';
 import { Lines } from '@/client/components/Lines';
 import {

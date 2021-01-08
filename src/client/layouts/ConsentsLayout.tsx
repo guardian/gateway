@@ -5,7 +5,7 @@ import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { GlobalError } from '@/client/components/GlobalError';
 import { getErrorLink } from '@/client/lib/ErrorLink';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import { brand, space } from '@guardian/src-foundations';
 import { Button, LinkButton } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-icons';

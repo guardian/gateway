@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { textSans } from '@guardian/src-foundations/typography';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import { space, neutral, palette } from '@guardian/src-foundations';
 import {
   getAutoRow,

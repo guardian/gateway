@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { titlepiece, textSans } from '@guardian/src-foundations/typography';
-import { css, SerializedStyles } from '@emotion/core';
+import { css, SerializedStyles } from '@emotion/react';
 import { space, palette } from '@guardian/src-foundations';
 import { CheckboxGroup, Checkbox } from '@guardian/src-checkbox';
 import { from } from '@guardian/src-foundations/mq';

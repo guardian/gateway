@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import { space } from '@guardian/src-foundations';
 import {
   gridItem,

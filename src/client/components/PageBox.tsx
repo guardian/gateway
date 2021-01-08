@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 
 export const pageBox = css`
   flex: 1 1 auto;

@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import { neutral } from '@guardian/src-foundations';
 import { headline } from '@guardian/src-foundations/typography';
 import { from } from '@guardian/src-foundations/mq';

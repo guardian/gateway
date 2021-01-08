@@ -1,7 +1,7 @@
 import { TextInput } from '@guardian/src-text-input';
 import React, { InputHTMLAttributes, useContext, useState } from 'react';
 import { Props } from '@guardian/src-helpers';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import { Width } from '@guardian/src-text-input/index';
 import { SvgEye, SvgEyeStrike } from '@guardian/src-icons';
 import { textInputDefault } from '@guardian/src-foundations/themes';

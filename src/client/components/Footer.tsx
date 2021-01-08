@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import { brand, palette, space } from '@guardian/src-foundations';
 import locations from '@/client/lib/locations';
 import { textSans } from '@guardian/src-foundations/typography';

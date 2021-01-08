@@ -1,5 +1,5 @@
 import React from 'react';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import { SvgRoundelBrandInverse } from '@guardian/src-brand';
 import { Link } from '@guardian/src-link';
 
