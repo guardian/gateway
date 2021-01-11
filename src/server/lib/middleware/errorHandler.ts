@@ -1,6 +1,10 @@
 import { NextFunction, Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { getCsrfPageUrl } from '../getCsrfPageUrl';
+import { renderer } from '@/server/lib/renderer';
+import { Routes } from '@/shared/model/Routes';
+import { PageTitle } from '@/shared/model/PageTitle';
+import { logger } from '@/server/lib/logger';
 
 const appendQueryParameter = (url: string, parameters: string) => {
   if (url.split('?').pop()?.includes(parameters)) {
@@ -28,7 +32,14 @@ export const routeErrorHandler = (
       303,
       appendQueryParameter(getCsrfPageUrl(req), 'csrfError=true'),
     );
+    return next(err);
   }
 
-  return next(err);
+  logger.error('unexpected error', err);
+
+  const html = renderer(`${Routes.UNEXPECTED_ERROR}`, {
+    requestState: res.locals,
+    pageTitle: PageTitle.UNEXPECTED_ERROR,
+  });
+  return res.status(500).type('html').send(html);
 };
