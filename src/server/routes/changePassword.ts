@@ -17,6 +17,7 @@ import {
   PasswordValidationResult,
   validatePasswordLength,
 } from '@/shared/lib/PasswordValidation';
+import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { getBrowserNameFromUserAgent } from '@/server/lib/getBrowserName';
 
 const router = Router();
@@ -67,7 +68,7 @@ const validatePasswordChangeFields = (
 
 router.get(
   `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
-  async (req: Request, res: ResponseWithRequestState) => {
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
     const { token } = req.params;
 
@@ -102,12 +103,12 @@ router.get(
       pageTitle: PageTitle.CHANGE_PASSWORD,
     });
     return res.type('html').send(html);
-  },
+  }),
 );
 
 router.post(
   `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
-  async (req: Request, res: ResponseWithRequestState) => {
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
     const { token } = req.params;
@@ -179,7 +180,7 @@ router.post(
     });
 
     return res.type('html').send(html);
-  },
+  }),
 );
 
 router.get(

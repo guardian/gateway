@@ -10,6 +10,7 @@ import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';
 import { removeNoCache } from '@/server/lib/middleware/cache';
 import { PageTitle } from '@/shared/model/PageTitle';
+import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 
 const router = Router();
 
@@ -36,8 +37,9 @@ router.get(Routes.RESET, (req: Request, res: ResponseWithRequestState) => {
 
 router.post(
   Routes.RESET,
-  async (req: Request, res: ResponseWithRequestState) => {
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
+
     const { email = '' } = req.body;
 
     const { returnUrl } = res.locals.queryParams;
@@ -83,7 +85,7 @@ router.post(
       pageTitle: PageTitle.RESET_SENT,
     });
     return res.type('html').send(html);
-  },
+  }),
 );
 
 router.get(

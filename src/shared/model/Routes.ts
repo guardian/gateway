@@ -13,6 +13,7 @@ export enum Routes {
   CONSENTS_COMMUNICATION = '/communication',
   CONSENTS_NEWSLETTERS = '/newsletters',
   CONSENTS_REVIEW = '/review',
+  UNEXPECTED_ERROR = '/error',
 }
 
 export enum ApiRoutes {
