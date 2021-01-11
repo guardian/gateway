@@ -1299,10 +1299,10 @@
   dependencies:
     "@guardian/src-foundations" "^2.7.1"
 
-"@guardian/src-icons@^2.7.1":
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/@guardian/src-icons/-/src-icons-2.7.1.tgz#600ba5a16fd3857657360632caac1b2f38740829"
-  integrity sha512-gQ7XrH3R++kZOXSK4e5ajRrUxNMgzQH7LiQ4HSYH51mJceh3YWtsc4934O5sCpJjJjhFiWGYubbg4BG14smUPg==
+"@guardian/src-icons@^2.7.1", "@guardian/src-icons@^2.8.2":
+  version "2.8.2"
+  resolved "https://registry.yarnpkg.com/@guardian/src-icons/-/src-icons-2.8.2.tgz#73156da434d45a987f992fe2d9b33dc34e79ad4d"
+  integrity sha512-Bu56mmOczbuHbL6HadhZ6HevsuUgWwiKo6FXmYWaWVI/3EfTNNi7nX8WZgB1mE9jsbhQrPBchfUp7j+tsRD4BA==
 
 "@guardian/src-label@^2.7.1":
   version "2.7.1"
