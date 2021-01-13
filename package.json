@@ -88,7 +88,7 @@
     "@guardian/src-button": "^2.7.1",
     "@guardian/src-checkbox": "^2.7.1",
     "@guardian/src-foundations": "^2.7.1",
-    "@guardian/src-icons": "^2.7.1",
+    "@guardian/src-icons": "^3.0.0",
     "@guardian/src-link": "^2.7.1",
     "@guardian/src-radio": "^2.7.1",
     "@guardian/src-text-input": "^2.7.1",
