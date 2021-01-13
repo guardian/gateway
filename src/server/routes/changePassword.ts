@@ -17,6 +17,7 @@ import {
   PasswordValidationResult,
   validatePasswordLength,
 } from '@/shared/lib/PasswordValidation';
+import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { getBrowserNameFromUserAgent } from '@/server/lib/getBrowserName';
 
 const router = Router();
@@ -67,41 +68,59 @@ const validatePasswordChangeFields = (
 
 router.get(
   `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
-  async (req: Request, res: ResponseWithRequestState) => {
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    let state = res.locals;
     const { token } = req.params;
-    res.locals.pageData.browserName = getBrowserNameFromUserAgent(
-      req.header('User-Agent'),
-    );
+
+    state = {
+      ...state,
+      pageData: {
+        ...state.pageData,
+        browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
+      },
+    };
 
     try {
-      res.locals.pageData.email = await validateToken(token, req.ip);
+      state = {
+        ...state,
+        pageData: {
+          ...state.pageData,
+          email: await validateToken(token, req.ip),
+        },
+      };
     } catch (error) {
       logger.error(error);
       return res.type('html').send(
         renderer(Routes.RESET_RESEND, {
-          requestState: res.locals,
+          requestState: state,
           pageTitle: PageTitle.RESET_RESEND,
         }),
       );
     }
 
     const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
-      requestState: res.locals,
+      requestState: state,
       pageTitle: PageTitle.CHANGE_PASSWORD,
     });
     return res.type('html').send(html);
-  },
+  }),
 );
 
 router.post(
   `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
-  async (req: Request, res: ResponseWithRequestState) => {
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    let state = res.locals;
+
     const { token } = req.params;
 
     const { password, password_confirm: passwordConfirm } = req.body;
-    res.locals.pageData.browserName = getBrowserNameFromUserAgent(
-      req.header('User-Agent'),
-    );
+
+    state = {
+      ...state,
+      pageData: {
+        browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
+      },
+    };
 
     try {
       const fieldErrors = validatePasswordChangeFields(
@@ -110,10 +129,16 @@ router.post(
       );
 
       if (fieldErrors.length) {
-        res.locals.pageData.email = await validateToken(token, req.ip);
-        res.locals.pageData.fieldErrors = fieldErrors;
+        state = {
+          ...state,
+          pageData: {
+            ...state.pageData,
+            email: await validateToken(token, req.ip),
+            fieldErrors,
+          },
+        };
         const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
-          requestState: res.locals,
+          requestState: state,
           pageTitle: PageTitle.CHANGE_PASSWORD,
         });
         return res.status(422).type('html').send(html);
@@ -132,9 +157,16 @@ router.post(
 
       trackMetric(Metrics.CHANGE_PASSWORD_FAILURE);
 
-      res.locals.globalMessage.error = message;
+      state = {
+        ...state,
+        globalMessage: {
+          ...state.globalMessage,
+          error: message,
+        },
+      };
+
       const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
-        requestState: res.locals,
+        requestState: state,
         pageTitle: PageTitle.CHANGE_PASSWORD,
       });
       return res.status(status).type('html').send(html);
@@ -143,12 +175,12 @@ router.post(
     trackMetric(Metrics.CHANGE_PASSWORD_SUCCESS);
 
     const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
-      requestState: res.locals,
+      requestState: state,
       pageTitle: PageTitle.CHANGE_PASSWORD_COMPLETE,
     });
 
     return res.type('html').send(html);
-  },
+  }),
 );
 
 router.get(

@@ -13,6 +13,7 @@ import { ConsentsNewslettersPage } from '@/client/pages/ConsentsNewsletters';
 import { ConsentsConfirmationPage } from '@/client/pages/ConsentsConfirmation';
 import { ResendEmailVerificationPage } from '@/client/pages/ResendEmailVerification';
 import { ClientState } from '@/shared/model/ClientState';
+import { UnexpectedError } from '@/client/pages/UnexpectedError';
 
 export type RoutingConfig = {
   clientState: ClientState;
@@ -53,6 +54,9 @@ export const GatewayRoutes = () => (
     </Route>
     <Route exact path={Routes.VERIFY_EMAIL}>
       <ResendEmailVerificationPage />
+    </Route>
+    <Route exact path={Routes.UNEXPECTED_ERROR}>
+      <UnexpectedError />
     </Route>
     <Route>
       <NotFound />

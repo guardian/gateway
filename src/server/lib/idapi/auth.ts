@@ -39,13 +39,16 @@ export const read = async (
     APIForwardSessionIdentifier(APIGetOptions(), sc_gu_u),
     ip,
   );
-  options.headers = {
+  const headers = {
     ...options.headers,
     cookie: `SC_GU_LA=${sc_gu_la}`,
   };
   try {
     return responseToEntity(
-      (await idapiFetch(AUTH_URL, options)) as APIResponse,
+      (await idapiFetch(AUTH_URL, {
+        ...options,
+        headers: { ...headers },
+      })) as APIResponse,
     );
   } catch (e) {
     logger.error(e);

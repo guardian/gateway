@@ -1,3 +1,4 @@
+/* eslint-disable functional/immutable-data */
 import { PasswordValidationResult } from '@/shared/lib/PasswordValidation';
 
 export class ThrottledBreachedPasswordCheck {

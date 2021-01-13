@@ -56,7 +56,7 @@ const router = Router();
 router.get(
   // on what path/url/route, e.g. /reset
   Routes.GET_ROUTE,
-  (_: Request, res: ResponseWithLocals) => {
+  (_: Request, res: ResponseWithRequestState) => {
     // some optional actions/logic here
     ...
 
@@ -89,6 +89,29 @@ router.use(noCache, queryParamsMiddleware, reset);
 ```
 
 The route should now be accessible.
+
+### Async routes error handling
+
+When writing async routes, wrap the handler in the helper function `handleAsyncErrors`
+
+E.g. 
+
+```ts
+import { handleAsyncErrors } from '@/server/lib/expressWrappers';
+
+router.get(
+  '/route',
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    ...
+  }),
+);
+```
+
+`handleAsyncErrors` calls `next()` when the router async handler function fails. This invokes the default error handler, logging the error and returning an error page.
+
+#### Why?
+
+In Express 4, async handlers which fail to call next() (or specific functions on the response) leave the TCP connection open (indicating a leak) and don't return any data.
 
 ## State Management
 

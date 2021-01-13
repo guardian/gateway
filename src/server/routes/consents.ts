@@ -28,6 +28,7 @@ import { GeoLocation } from '@/shared/model/Geolocation';
 import { NewsletterMap } from '@/shared/lib/newsletter';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { fourZeroFourRender } from '@/server/lib/middleware/404';
+import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 
 const router = Router();
 
@@ -73,13 +74,17 @@ const getUserConsentsForPage = async (
     .map((id) => allConsents.find((consent) => consent.id === id))
     .map((consent) => {
       if (consent) {
+        let updated = consent;
         const userConsent = userConsents.find((uc) => uc.id === consent.id);
 
         if (userConsent) {
-          consent.consented = userConsent.consented;
+          updated = {
+            ...updated,
+            consented: userConsent.consented,
+          };
         }
 
-        return consent;
+        return updated;
       }
     })
     .filter(Boolean) as Consent[];
@@ -97,10 +102,14 @@ const getUserNewsletterSubscriptions = async (
     .map((id) => allNewsletters.find((newsletter) => newsletter.id === id))
     .map((newsletter) => {
       if (newsletter) {
+        let updated = newsletter;
         if (userNewsletterSubscriptions.includes(newsletter.id)) {
-          newsletter.subscribed = true;
+          updated = {
+            ...updated,
+            subscribed: true,
+          };
         }
-        return newsletter;
+        return updated;
       }
     })
     .filter(Boolean) as NewsLetter[];
@@ -255,13 +264,20 @@ router.get(Routes.CONSENTS, loginMiddleware, (_: Request, res: Response) => {
 router.get(
   `${Routes.CONSENTS}/:page`,
   loginMiddleware,
-  async (req: Request, res: ResponseWithRequestState) => {
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    let state = res.locals;
     const sc_gu_u = req.cookies.SC_GU_U;
 
-    const { emailVerified } = res.locals.queryParams;
+    const { emailVerified } = state.queryParams;
 
     if (emailVerified) {
-      res.locals.globalMessage.success = VERIFY_EMAIL.SUCCESS;
+      state = {
+        ...state,
+        globalMessage: {
+          ...state.globalMessage,
+          success: VERIFY_EMAIL.SUCCESS,
+        },
+      };
     }
 
     const { page } = req.params;
@@ -279,19 +295,26 @@ router.get(
       const { read, pageTitle: _pageTitle } = consentPages[pageIndex];
       pageTitle = _pageTitle;
 
-      res.locals.pageData = await read(
-        req.ip,
-        sc_gu_u,
-        res.locals.pageData.geolocation,
-      );
-      res.locals.pageData.returnUrl = res.locals?.queryParams?.returnUrl;
+      state = {
+        ...state,
+        pageData: {
+          ...(await read(req.ip, sc_gu_u, state.pageData.geolocation)),
+          returnUrl: state?.queryParams?.returnUrl,
+        },
+      };
     } catch (e) {
       status = e.status;
-      res.locals.globalMessage.error = e.message;
+      state = {
+        ...state,
+        globalMessage: {
+          ...state.globalMessage,
+          error: e.message,
+        },
+      };
     }
 
     const html = renderer(`${Routes.CONSENTS}/${page}`, {
-      requestState: res.locals,
+      requestState: state,
       pageTitle,
     });
 
@@ -301,13 +324,15 @@ router.get(
       .type('html')
       .status(status ?? 500)
       .send(html);
-  },
+  }),
 );
 
 router.post(
   `${Routes.CONSENTS}/:page`,
   loginMiddleware,
-  async (req: Request, res: ResponseWithRequestState) => {
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    let state = res.locals;
+
     const sc_gu_u = req.cookies.SC_GU_U;
 
     const { page } = req.params;
@@ -326,37 +351,38 @@ router.post(
       pageTitle = _pageTitle;
 
       if (update) {
-        await update(
-          req.ip,
-          sc_gu_u,
-          req.body,
-          res.locals.pageData.geolocation,
-        );
+        await update(req.ip, sc_gu_u, req.body, state.pageData.geolocation);
       }
 
       trackMetric(consentsPageMetric(page, 'Post', true));
 
       let url = `${Routes.CONSENTS}/${consentPages[pageIndex + 1].page}`;
-      if (res.locals?.queryParams?.returnUrl) {
-        url = addReturnUrlToPath(url, res.locals.queryParams.returnUrl);
+      if (state?.queryParams?.returnUrl) {
+        url = addReturnUrlToPath(url, state.queryParams.returnUrl);
       }
       return res.redirect(303, url);
     } catch (e) {
       status = e.status;
-      res.locals.globalMessage.error = e.message;
+      state = {
+        ...state,
+        globalMessage: {
+          ...state.globalMessage,
+          error: e.message,
+        },
+      };
     }
 
     trackMetric(consentsPageMetric(page, 'Post', false));
 
     const html = renderer(`${Routes.CONSENTS}/${page}`, {
       pageTitle,
-      requestState: res.locals,
+      requestState: state,
     });
     res
       .type('html')
       .status(status ?? 500)
       .send(html);
-  },
+  }),
 );
 
 export default router;

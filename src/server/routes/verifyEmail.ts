@@ -18,6 +18,7 @@ import { Metrics } from '@/server/models/Metrics';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { ResponseWithRequestState } from '@/server/models/Express';
+import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 
 const router = Router();
 
@@ -26,10 +27,18 @@ const profileUrl = getProfileUrl();
 
 router.get(
   Routes.VERIFY_EMAIL,
-  async (req: Request, res: ResponseWithRequestState) => {
-    res.locals.pageData.signInPageUrl = `${signInPageUrl}?returnUrl=${encodeURIComponent(
-      `${profileUrl}${Routes.VERIFY_EMAIL}`,
-    )}`;
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    let state = res.locals;
+
+    state = {
+      ...state,
+      pageData: {
+        ...state.pageData,
+        signInPageUrl: `${signInPageUrl}?returnUrl=${encodeURIComponent(
+          `${profileUrl}${Routes.VERIFY_EMAIL}`,
+        )}`,
+      },
+    };
 
     let status = 200;
 
@@ -41,27 +50,40 @@ router.get(
       }
 
       const { primaryEmailAddress } = await getUser(req.ip, sc_gu_u);
-      res.locals.pageData.email = primaryEmailAddress;
+      state = {
+        ...state,
+        pageData: {
+          ...state.pageData,
+          email: primaryEmailAddress,
+        },
+      };
     } catch (error) {
       status = error.status;
 
       if (status === 500) {
-        res.locals.globalMessage.error = error.message;
+        state = {
+          ...state,
+          globalMessage: {
+            ...state.globalMessage,
+            error: error.message,
+          },
+        };
       }
     }
 
     const html = renderer(Routes.VERIFY_EMAIL, {
       pageTitle: PageTitle.VERIFY_EMAIL,
-      requestState: res.locals,
+      requestState: state,
     });
 
     return res.status(status).type('html').send(html);
-  },
+  }),
 );
 
 router.post(
   Routes.VERIFY_EMAIL,
-  async (req: Request, res: ResponseWithRequestState) => {
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    let state = res.locals;
     let status = 200;
 
     try {
@@ -75,36 +97,59 @@ router.post(
         email = (await getUser(req.ip, sc_gu_u)).primaryEmailAddress,
       } = req.body;
 
-      res.locals.pageData.email = email;
+      state = {
+        ...state,
+        pageData: {
+          ...state.pageData,
+          email,
+        },
+      };
 
       await sendVerificationEmail(req.ip, sc_gu_u);
       trackMetric(Metrics.SEND_VALIDATION_EMAIL_SUCCESS);
 
-      res.locals.globalMessage.success =
-        'Email Sent. Please check your inbox and follow the link.';
+      state = {
+        ...state,
+        globalMessage: {
+          ...state.globalMessage,
+          success: 'Email Sent. Please check your inbox and follow the link.',
+        },
+      };
 
       const emailProvider = getProviderForEmail(email);
       if (emailProvider) {
-        res.locals.pageData.emailProvider = emailProvider.id;
+        state = {
+          ...state,
+          pageData: {
+            ...state.pageData,
+            emailProvider: emailProvider.id,
+          },
+        };
       }
     } catch (error) {
       trackMetric(Metrics.SEND_VALIDATION_EMAIL_FAILURE);
       status = error.status;
-      res.locals.globalMessage.error = error.message;
+      state = {
+        ...state,
+        globalMessage: {
+          ...state.globalMessage,
+          error: error.message,
+        },
+      };
     }
 
     const html = renderer(Routes.VERIFY_EMAIL, {
       pageTitle: PageTitle.VERIFY_EMAIL,
-      requestState: res.locals,
+      requestState: state,
     });
 
     return res.status(status).type('html').send(html);
-  },
+  }),
 );
 
 router.get(
   `${Routes.VERIFY_EMAIL}${Routes.VERIFY_EMAIL_TOKEN}`,
-  async (req: Request, res: Response) => {
+  handleAsyncErrors(async (req: Request, res: Response) => {
     const { token } = req.params;
 
     try {
@@ -136,7 +181,7 @@ router.get(
         res.locals.queryParams.returnUrl,
       ),
     );
-  },
+  }),
 );
 
 export default router;
