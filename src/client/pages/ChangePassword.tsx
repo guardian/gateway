@@ -93,6 +93,7 @@ const updateComponentStateAfterValidation = (
   setLastLengthError: Dispatch<SetStateAction<LengthValidationResult>>,
   setValidationResult: Dispatch<SetStateAction<PasswordValidationResult>>,
   isPasswordConfirmSelectedCurrently: MutableRefObject<boolean>,
+  passwordConfirmCurrently: MutableRefObject<string>,
 ) => {
   // return early if the password changed before validation completed
   if (password !== passwordCurrently.current) return;
@@ -110,7 +111,8 @@ const updateComponentStateAfterValidation = (
 
   // set red if user has selected the confirm password check box and there are validation issues
   if (
-    isPasswordConfirmSelectedCurrently.current &&
+    (isPasswordConfirmSelectedCurrently.current ||
+      passwordConfirmCurrently.current.length > 0) &&
     validationResult !== PasswordValidationResult.VALID_PASSWORD
   ) {
     setRedError(validationResult);
@@ -132,7 +134,11 @@ const updateComponentStateAfterValidation = (
 const usePasswordValidationHooks = (idapiBaseUrl: string) => {
   // useRefState makes the up-to-date password accessible in the breachPasswordCheck promise handler
   const [password, setPassword, passwordCurrently] = useRefState('');
-  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [
+    passwordConfirm,
+    setPasswordConfirm,
+    passwordConfirmCurrently,
+  ] = useRefState('');
 
   // if breached password promise completes with errors, and the password confirmation box is selected we show a red error message
   const [
@@ -183,6 +189,7 @@ const usePasswordValidationHooks = (idapiBaseUrl: string) => {
         setLastLengthError,
         setValidationResult,
         isPasswordConfirmSelectedCurrently,
+        passwordConfirmCurrently,
       );
     });
   }, [password]);
