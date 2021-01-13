@@ -56,7 +56,7 @@ const router = Router();
 router.get(
   // on what path/url/route, e.g. /reset
   Routes.GET_ROUTE,
-  (_: Request, res: ResponseWithLocals) => {
+  (_: Request, res: ResponseWithRequestState) => {
     // some optional actions/logic here
     ...
 
