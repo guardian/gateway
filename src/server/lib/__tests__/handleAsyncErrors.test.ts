@@ -1,5 +1,5 @@
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import Mock = jest.Mock;
 
@@ -12,7 +12,7 @@ describe('handleAsyncErrors', () => {
     );
 
     const request: Request = <Request>{};
-    const response: Response = <Response>{};
+    const response: ResponseWithRequestState = <ResponseWithRequestState>{};
     const next: NextFunction = jest.fn();
 
     expect(await wrappedHandler(request, response, next)).toBe(response);
@@ -27,7 +27,7 @@ describe('handleAsyncErrors', () => {
     });
 
     const request: Request = <Request>{};
-    const response: Response = <Response>{};
+    const response: ResponseWithRequestState = <ResponseWithRequestState>{};
     const next: NextFunction = jest.fn();
 
     expect(await wrappedHandler(request, response, next)).toBe(undefined);
