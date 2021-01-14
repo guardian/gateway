@@ -6,11 +6,12 @@ export interface OphanInteraction {
   atomId?: string;
 }
 
-export interface OphanEvent {
+export interface OphanBase {
   experiences?: string;
   abTestRegister?: { [testId: string]: OphanABEvent };
-  interaction?: OphanInteraction;
 }
+
+export type OphanEvent = OphanBase | OphanInteraction;
 
 export const record = (event: OphanEvent) => {
   if (
@@ -22,5 +23,8 @@ export const record = (event: OphanEvent) => {
   }
 };
 
-export const sendOphanInteractionEvent = (interaction: OphanInteraction) =>
-  record({ interaction });
+export const sendOphanInteractionEvent = ({
+  component,
+  atomId,
+  value,
+}: OphanInteraction) => record({ component, atomId, value });
