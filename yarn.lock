@@ -1256,10 +1256,10 @@
   resolved "https://registry.yarnpkg.com/@guardian/ab-react/-/ab-react-2.0.1.tgz#f018898de584c8e70a48e69ec9e499e08f512cc5"
   integrity sha512-iOKbIxoLwRMv2eHddxL5l9mNBy/B9QaOOJgA3VUdo/jH5cUVzbF6W8yYDGcZJTolIVhSu5GPR8fitsOoup6Vww==
 
-"@guardian/consent-management-platform@^6.10.1":
-  version "6.10.1"
-  resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-6.10.1.tgz#accec9a47ce5b3f41fa8dd775200d65515e55dde"
-  integrity sha512-4RscEXKXKrT+w05/y8k9SSjTbplOj7PvpCtZOX4rzgD/0M3yId+7Wo92f+QJa8caL6h1+VkSKaNyu6kPNcxCWg==
+"@guardian/consent-management-platform@^6.11.0":
+  version "6.11.0"
+  resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-6.11.0.tgz#f153cab46a8c2c6999e0aa3462235761772cd8df"
+  integrity sha512-glNqZOvqLFfu4z4RfI0Sxr1DlSwWXwVLs3RELvw7xtMKWWxZfnnCP6MUWeR8O9rgWvi/U7mNfzVwRJ2pGbkVYw==
 
 "@guardian/libs@^1.6.3":
   version "1.6.3"
