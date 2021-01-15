@@ -1304,6 +1304,11 @@
   resolved "https://registry.yarnpkg.com/@guardian/src-icons/-/src-icons-2.7.1.tgz#600ba5a16fd3857657360632caac1b2f38740829"
   integrity sha512-gQ7XrH3R++kZOXSK4e5ajRrUxNMgzQH7LiQ4HSYH51mJceh3YWtsc4934O5sCpJjJjhFiWGYubbg4BG14smUPg==
 
+"@guardian/src-icons@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@guardian/src-icons/-/src-icons-3.0.1.tgz#ee6e5b0a37ad3d2bcdaa3a0d544c9bc0468f594c"
+  integrity sha512-sEDc/TDmHL6tX11RITq6eOZMKXxNa2x05aA0wYjmAh4cnfsFN7wFtihOzg9khBwPi/ZPj1uNLbJXwCqsJq9blw==
+
 "@guardian/src-label@^2.7.1":
   version "2.7.1"
   resolved "https://registry.yarnpkg.com/@guardian/src-label/-/src-label-2.7.1.tgz#3f0a640a0970452015f51aff0c6395035f396240"
