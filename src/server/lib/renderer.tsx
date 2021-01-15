@@ -14,6 +14,7 @@ import { CsrfErrors } from '@/shared/model/Errors';
 import { ABProvider } from '@guardian/ab-react';
 import { tests } from '@/shared/model/experiments/abTests';
 import { switches } from '@/shared/model/experiments/abSwitches';
+import { resets } from '@guardian/src-foundations/utils';
 
 const assets = getAssets();
 
@@ -122,6 +123,7 @@ export const renderer: (url: string, opts: RendererOpts) => string = (
         <script id="routingConfig" type="application/json">${JSON.stringify(
           routingConfig,
         )}</script>
+        <style>${resets.defaults}</style>
       </head>
       <body style="margin:0">
         <div id="app">${react}</div>
