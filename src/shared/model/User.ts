@@ -11,6 +11,5 @@ export interface UserConsent {
 
 export interface UserStatusFields {
   userEmailValidated: boolean;
-  allowThirdPartyProfiling: boolean;
   hasRepermissioned: boolean;
 }
