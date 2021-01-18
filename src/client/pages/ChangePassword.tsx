@@ -25,7 +25,7 @@ import {
   WeakPasswordComponent,
 } from '@/client/components/PasswordValidation';
 import { space } from '@guardian/src-foundations';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import {
   ErrorValidationResult,
   LengthValidationResult,

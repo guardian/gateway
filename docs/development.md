@@ -149,8 +149,8 @@ export const getDefaultRequestState = (): RequestState => ({
 ```
 
 This is added to `res.locals` **ONLY** in `requestStateMiddleware`.
- 
-Make sure the state addition does not in anyway remember state between requests, for example **DO NOT USE** the singleton pattern/export raw object literals. 
+
+Make sure the state addition does not in anyway remember state between requests, for example **DO NOT USE** the singleton pattern/export raw object literals.
 
 Object mutation will be disabled via linting in the near future.
 
@@ -249,7 +249,7 @@ Example of styling and adding it to a `p` tag using Emotion and Source:
 
 ```tsx
 import * as React from 'react';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import { textSans } from '@guardian/src-foundations/typography';
 import { palette } from '@guardian/src-foundations';
 
@@ -319,7 +319,7 @@ Environment variables appear in a lot of places, so it's likely you'll need to u
 
 ## Client Side Scripts
 
-The app itself is server side rendered for browsers not running JavaScript.  We also hydrate the components with react, necessary for interactive components.
+The app itself is server side rendered for browsers not running JavaScript. We also hydrate the components with react, necessary for interactive components.
 Also, there may need to be some scripts that fire on the client side, for example for analytics, or the consents management platform.
 
 To facilitate this, a client bundle is created at build time to the `build/static` folder. This corresponds to the script imported in the [`src/client/static/index.tsx`](../src/client/static/index.tsx) file, with a script tag pointing to the bundle delivered along with the rendered html.

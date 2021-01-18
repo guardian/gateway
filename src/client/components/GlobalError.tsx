@@ -1,8 +1,8 @@
 import React from 'react';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import { space, error, neutral } from '@guardian/src-foundations';
 import { textSans } from '@guardian/src-foundations/typography';
-import { SvgAlert } from '@guardian/src-icons';
+import { SvgAlertTriangle } from '@guardian/src-icons';
 import { ErrorLink } from '@/client/lib/ErrorLink';
 import {
   gridItem,
@@ -72,7 +72,7 @@ export const GlobalError = ({ error, link, left }: GlobalErrorProps) => {
     <div css={errorDiv(!left)} role="complementary">
       <div css={row}>
         <p css={[errorP(left), item]}>
-          <SvgAlert />
+          <SvgAlertTriangle />
           <div>
             {error}
             &nbsp;

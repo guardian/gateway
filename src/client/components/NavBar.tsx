@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { css, SerializedStyles } from '@emotion/core';
+import { css, SerializedStyles } from '@emotion/react';
 import { brand, space } from '@guardian/src-foundations';
 import { GuardianRoundel } from '@/client/components/GuardianRoundel';
 

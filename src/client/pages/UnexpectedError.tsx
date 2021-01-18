@@ -1,5 +1,5 @@
 import React from 'react';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import locations from '@/client/lib/locations';
 import { Link } from '@guardian/src-link';
 import { PageBox } from '@/client/components/PageBox';

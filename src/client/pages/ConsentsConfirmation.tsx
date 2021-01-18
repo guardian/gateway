@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useContext } from 'react';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import { space, palette, brand } from '@guardian/src-foundations';
 import {
   getAutoRow,

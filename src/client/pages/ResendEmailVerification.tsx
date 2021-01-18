@@ -9,7 +9,7 @@ import { form, button, linkButton } from '@/client/styles/Shared';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import { textSans } from '@guardian/src-foundations/typography';
 import { Routes } from '@/shared/model/Routes';
 import { getProviderById } from '@/shared/lib/emailProvider';

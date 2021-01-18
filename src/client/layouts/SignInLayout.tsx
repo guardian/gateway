@@ -5,7 +5,7 @@ import { SignInHeader } from '@/client/components/SignInHeader';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { GlobalError } from '@/client/components/GlobalError';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import { space } from '@guardian/src-foundations';
 import { MaxWidth } from '@/client/models/Style';
 import { getErrorLink } from '@/client/lib/ErrorLink';
