@@ -3,7 +3,7 @@ import {
   validationInfoCss,
   ValidationStyling,
 } from '@/client/styles/PasswordValidationStyles';
-import { css } from '@emotion/core';
+import { css } from '@emotion/react';
 import { SvgCheckmark } from '@guardian/src-icons';
 import { palette } from '@guardian/src-foundations';
 import { SvgCross } from '@guardian/src-icons';

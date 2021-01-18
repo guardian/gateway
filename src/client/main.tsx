@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { css, Global } from '@emotion/core';
+import { css, Global } from '@emotion/react';
 import { fontFaces } from '@/client/lib/fonts';
 import { ClientStateProvider } from '@/client/components/ClientState';
 import { ClientState } from '@/shared/model/ClientState';

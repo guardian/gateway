@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { SerializedStyles } from '@emotion/core';
+import { SerializedStyles } from '@emotion/react';
 
 interface LinesProps {
   n: number;
