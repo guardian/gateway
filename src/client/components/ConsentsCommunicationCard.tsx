@@ -56,7 +56,8 @@ const communicationCardHeadingText = css`
   color: ${palette.text.ctaPrimary};
   margin: 0;
   ${titlepiece.small()};
-  font-size: 22px;
+  font-size: 20px;
+  letter-spacing: 0.3px;
 `;
 
 const communicationCardBodyContainer = css`
@@ -69,9 +70,9 @@ const communicationCardBodyContainer = css`
 `;
 
 const communicationCardBodyText = css`
-  color: ${palette.text.primary};
+  color: ${palette.neutral[20]};
   margin: 0;
-  ${textSans.small()};
+  ${textSans.medium()}
 `;
 
 const communicationCardCheckboxContainer = css`

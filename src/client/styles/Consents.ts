@@ -25,4 +25,5 @@ export const text = css`
   margin: 0;
   color: ${palette.neutral[20]};
   ${textSans.medium()}
+  max-width: 640px;
 `;
