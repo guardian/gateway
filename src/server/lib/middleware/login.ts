@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { read } from '@/server/lib/idapi/auth';
-import { IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
+import { IDAPIAuthRedirect, IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { getProfileUrl } from '@/server/lib/getProfileUrl';
 import { Routes } from '@/shared/model/Routes';
@@ -26,6 +26,15 @@ export const loginMiddleware = async (
     )}`;
   };
 
+  const redirectAuth = (auth: IDAPIAuthRedirect) => {
+    if (auth.redirect) {
+      const redirect = generateRedirectUrl(auth.redirect.url);
+      return res.redirect(redirect);
+    }
+
+    return res.redirect(generateRedirectUrl(LOGIN_REDIRECT_URL));
+  };
+
   const sc_gu_u = req.cookies.SC_GU_U;
   const sc_gu_la = req.cookies.SC_GU_LA;
 
@@ -37,6 +46,11 @@ export const loginMiddleware = async (
   try {
     const auth = await read(sc_gu_u, sc_gu_la, req.ip);
 
+    if (auth.status === IDAPIAuthStatus.SIGNED_OUT) {
+      trackMetric(Metrics.LOGIN_MIDDLEWARE_NOT_SIGNED_IN);
+      return redirectAuth(auth);
+    }
+
     if (!auth.emailValidated) {
       trackMetric(Metrics.LOGIN_MIDDLEWARE_UNVERIFIED);
       return res.redirect(303, Routes.VERIFY_EMAIL);
@@ -47,14 +61,7 @@ export const loginMiddleware = async (
       next();
     } else {
       trackMetric(Metrics.LOGIN_MIDDLEWARE_NOT_RECENT);
-      if (auth.redirect) {
-        const redirect = generateRedirectUrl(auth.redirect.url);
-        res.redirect(redirect);
-        return;
-      } else {
-        res.redirect(generateRedirectUrl(LOGIN_REDIRECT_URL));
-        return;
-      }
+      return redirectAuth(auth);
     }
   } catch (e) {
     trackMetric(Metrics.LOGIN_MIDDLEWARE_FAILURE);
