@@ -20,14 +20,6 @@ const communicationCard = css`
   width: 100%;
   border: 1px solid white;
   margin: 0px 0px ${space[4]}px 0px;
-
-  ${from.tablet} {
-    width: 50%;
-  }
-
-  ${from.desktop} {
-    width: 33.33%;
-  }
 `;
 
 const communicationCardHeadingImage = (image: string) => css`
@@ -45,10 +37,9 @@ const communicationCardHeadingContainer = (image?: string) => css`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: ${space[6]}px ${space[3]}px ${space[2]}px ${space[3]}px;
-
+  padding: 14px ${space[3]}px 14px ${space[3]}px;
   ${from.tablet} {
-    height: calc(${space[24]}px + ${space[6]}px);
+    height: auto;
   }
 `;
 

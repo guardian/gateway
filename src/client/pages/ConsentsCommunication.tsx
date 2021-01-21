@@ -33,6 +33,13 @@ const communicationCardContainer = css`
   display: flex;
   flex-flow: row wrap;
   margin: ${space[6]}px 0 ${space[2]}px;
+  ${from.desktop} {
+    margin: ${space[5]}px 0 32px;
+    grid-column: 2 / span 9;
+  }
+  ${from.wide} {
+    grid-column: 3 / span 9;
+  }
 `;
 
 const abTestOneConsentCSS = {
@@ -88,12 +95,6 @@ const abTestOneConsentCSS = {
   `,
 };
 
-const abTestOneConsentText = {
-  title: 'Thank you for registering',
-  paragraph:
-    'Would you like to join our mailing list to stay informed and up to date with all that The Guardian has to offer?',
-};
-
 export const ConsentsCommunicationPage = () => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
 
@@ -134,11 +135,7 @@ export const ConsentsCommunicationPage = () => {
     <ConsentsLayout title="Stay in touch" current={CONSENTS_PAGES.CONTACT}>
       {market_research_optout && (
         <>
-          <h2 css={[heading, autoRow()]}>
-            {isUserInTest
-              ? abTestOneConsentText.title
-              : 'Guardian products, services & events'}
-          </h2>
+          <h2 css={[heading, autoRow()]}>Thank you for registering</h2>
           <p
             css={[
               text,
@@ -146,14 +143,13 @@ export const ConsentsCommunicationPage = () => {
               consentsABTestOneConsentCSS()?.text,
             ]}
           >
-            {isUserInTest
-              ? abTestOneConsentText.paragraph
-              : 'Stay informed and up to date with all that The Guardian has to offer. From time to time we can send you information about our latest products, services and events.'}
+            Would you like to join our mailing list to stay informed and up to
+            date with all that The Guardian has to offer?
           </p>
           <div
             css={[
-              communicationCardContainer,
               autoRow(),
+              communicationCardContainer,
               consentsABTestOneConsentCSS()?.consentsCardContainer,
             ]}
           >
