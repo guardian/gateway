@@ -66,13 +66,14 @@ const communicationCardBodyContainer = css`
   justify-content: flex-start;
   flex: 1 1 auto;
   background-color: #eaeef5;
-  padding: ${space[2]}px ${space[3]}px;
+  padding: ${space[3]}px ${space[3]}px 6px ${space[3]}px;
 `;
 
 const communicationCardBodyText = css`
   color: ${palette.neutral[20]};
   margin: 0;
   ${textSans.medium()}
+  max-width: 640px;
 `;
 
 const communicationCardCheckboxContainer = css`

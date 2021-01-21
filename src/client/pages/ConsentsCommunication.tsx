@@ -21,7 +21,7 @@ import { from } from '@guardian/src-foundations/mq';
 const fieldset = css`
   border: 0;
   padding: 0;
-  margin: ${space[6]}px 0 0 0;
+  margin: 14px 0 ${space[1]}px 0;
   ${textSans.medium()}
 `;
 
