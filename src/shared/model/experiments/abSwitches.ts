@@ -1,1 +1,3 @@
-export const switches = {};
+export const switches = {
+  abEnhancedConsentTest: true,
+};
