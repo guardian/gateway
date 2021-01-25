@@ -7,6 +7,7 @@ export enum Metrics {
   LOGIN_MIDDLEWARE_FAILURE = 'LoginMiddleware::Failure',
   LOGIN_MIDDLEWARE_UNVERIFIED = 'LoginMiddlewareUnverified',
   LOGIN_MIDDLEWARE_NOT_RECENT = 'LoginMiddlewareNotRecent',
+  LOGIN_MIDDLEWARE_NOT_SIGNED_IN = 'LoginMiddlewareNotSignedIn',
   SEND_VALIDATION_EMAIL_SUCCESS = 'SendValidationEmail::Success',
   SEND_VALIDATION_EMAIL_FAILURE = 'SendValidationEmail::Failure',
   EMAIL_VALIDATED_SUCCESS = 'EmailValidated::Success',
