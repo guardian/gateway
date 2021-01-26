@@ -1,5 +1,9 @@
 import React, { FunctionComponent } from 'react';
-import { titlepiece, textSans } from '@guardian/src-foundations/typography';
+import {
+  titlepiece,
+  textSans,
+  body,
+} from '@guardian/src-foundations/typography';
 import { css, SerializedStyles } from '@emotion/react';
 import { space, palette } from '@guardian/src-foundations';
 import { CheckboxGroup, Checkbox } from '@guardian/src-checkbox';
@@ -67,7 +71,7 @@ const communicationCardBodyContainer = css`
 `;
 
 const communicationCardBodyText = css`
-  font-size: 17px;
+  ${body.medium()}
   margin: 0;
   max-width: 640px;
 `;
@@ -77,6 +81,49 @@ const communicationCardCheckboxContainer = css`
   flex-direction: column;
   justify-content: flex-end;
   padding: ${space[2]}px ${space[3]}px;
+`;
+
+const envelope = css`
+  --h: 130px;
+  --w: 206px;
+  --offset: 37px;
+
+  height: var(--h);
+  width: var(--w);
+  background-color: purple;
+  position: relative;
+  box-sizing: content-box;
+  transform-style: preserve-3d;
+  margin: 0 auto;
+  margin-top: calc(var(--h) / 2 - var(--offset) + 41px);
+  margin-bottom: calc(var(--offset) + 35px);
+
+  &:before {
+    content: ' ';
+    display: block;
+    top: calc(-1 * var(--h) + var(--offset));
+    position: absolute;
+    border-left: calc(var(--w) / 2) solid transparent;
+    border-right: calc(var(--w) / 2) solid transparent;
+    border-top: calc(var(--h) / 2) solid transparent;
+    border-bottom: calc(var(--h) / 2) solid white;
+    width: var(--w);
+    height: var(--h);
+    transform: translateZ(-1px);
+  }
+
+  &:after {
+    content: ' ';
+    display: block;
+    top: var(--offset);
+    position: absolute;
+    border-left: calc(var(--w) / 2) solid white;
+    border-right: calc(var(--w) / 2) solid white;
+    border-top: calc(var(--h) / 2) solid transparent;
+    border-bottom: calc(var(--h) / 2) solid white;
+    width: var(--w);
+    height: var(--h);
+  }
 `;
 
 // @TODO: If this variant wins, this and possible the entire style of the card component can be set using the 'brand'
@@ -106,6 +153,7 @@ export const CommunicationCardABVariant: FunctionComponent<CommunicationCardProp
   return (
     <div css={[communicationCard, cssOverrides]}>
       <div css={communicationCardHeadingContainer(image)}>
+        <div css={envelope}>placeholder</div>
         <h3 css={communicationCardHeadingText}>
           Sign up to receive an email with our latest offers.
         </h3>
