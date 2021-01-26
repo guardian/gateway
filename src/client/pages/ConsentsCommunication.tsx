@@ -16,6 +16,8 @@ import { ClientStateContext } from '@/client/components/ClientState';
 import { Consents } from '@/shared/model/Consent';
 import { Checkbox, CheckboxGroup } from '@guardian/src-checkbox';
 import { from } from '@guardian/src-foundations/mq';
+import { useAB } from '@guardian/ab-react';
+import { CommunicationCardABVariant } from '../components/ConsentsCommunicationCardABVariant';
 
 const fieldset = css`
   border: 0;
@@ -61,6 +63,17 @@ export const ConsentsCommunicationPage = () => {
     <span css={checkboxLabel}>{market_research_optout?.description}</span>
   );
 
+  // @AB_TEST: Enhanced Consents
+  // const abEnhancedConsentCSS = {};
+  const ABTestAPI = useAB();
+  const isUserInTest = ABTestAPI.isUserInVariant(
+    'EnhancedConsentTest',
+    'variant',
+  );
+  const ABTestCommunicationCard = isUserInTest
+    ? CommunicationCardABVariant
+    : CommunicationCard;
+
   return (
     <ConsentsLayout title="Stay in touch" current={CONSENTS_PAGES.CONTACT}>
       {market_research_optout && (
@@ -72,7 +85,7 @@ export const ConsentsCommunicationPage = () => {
           </p>
           <div css={[autoRow(), communicationCardContainer]}>
             {consentsWithoutOptout.map((consent) => (
-              <CommunicationCard
+              <ABTestCommunicationCard
                 key={consent.id}
                 title={consent.name}
                 body={consent.description}
