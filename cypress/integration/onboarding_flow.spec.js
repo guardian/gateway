@@ -104,10 +104,6 @@ describe('Onboarding flow', () => {
       cy.idapiLastPayloadIs([
         { id: 'market_research_optout', consented: true },
         { id: 'supporter', consented: false },
-        { id: 'jobs', consented: false },
-        { id: 'holidays', consented: false },
-        { id: 'events', consented: false },
-        { id: 'offers', consented: false },
       ]);
 
       cy.url().should('include', NewslettersPage.URL);
@@ -213,10 +209,6 @@ describe('Onboarding flow', () => {
       cy.idapiLastPayloadIs([
         { id: 'market_research_optout', consented: false },
         { id: 'supporter', consented: true },
-        { id: 'jobs', consented: true },
-        { id: 'holidays', consented: true },
-        { id: 'events', consented: true },
-        { id: 'offers', consented: true },
       ]);
 
       cy.url().should('include', NewslettersPage.URL);
@@ -466,14 +458,13 @@ describe('Onboarding flow', () => {
     });
 
     it('shows any previously selected consents', () => {
-      const consented = getUserConsents(['jobs', 'offers']);
+      const consented = getUserConsents(['supporter']);
       cy.idapiMockAll(200, createUser(consented), USER_ENDPOINT);
       CommunicationsPage.goto();
       CommunicationsPage.backButton().should('not.exist');
-      CommunicationsPage.consentCheckboxWithTitle('Jobs').should('be.checked');
-      CommunicationsPage.consentCheckboxWithTitle('Offers').should(
-        'be.checked',
-      );
+      CommunicationsPage.consentCheckboxWithTitle(
+        'Subscriptions, membership and contributions',
+      ).should('be.checked');
     });
 
     it('display a relevant error message on user end point failure', () => {
