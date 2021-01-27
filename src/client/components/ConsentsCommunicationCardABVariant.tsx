@@ -23,7 +23,6 @@ const communicationCard = css`
   color: ${palette.text.ctaPrimary};
   flex-direction: column;
   width: 100%;
-  border: 1px solid white;
   margin: 0px 0px ${space[4]}px 0px;
   background-color: ${palette.background.ctaPrimary};
 `;

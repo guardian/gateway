@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import { brand, neutral } from '@guardian/src-foundations/palette';
 import { textSans } from '@guardian/src-foundations/typography';
 import { SvgCheckmark } from '@guardian/src-icons';
+import { SerializedStyles } from '@emotion/react';
 
 const BORDER_SIZE = 2;
 const CIRCLE_DIAMETER = 24;
@@ -86,11 +87,13 @@ const li = (numPages: number) => css`
 interface PageProgressionProps {
   pages: string[];
   current?: string;
+  cssOverrides?: SerializedStyles;
 }
 
 export const PageProgression: FunctionComponent<PageProgressionProps> = ({
   pages,
   current,
+  cssOverrides,
 }) => {
   const active = current ? pages.indexOf(current) : 0;
   const getClassName = (i: number) => {
@@ -104,7 +107,7 @@ export const PageProgression: FunctionComponent<PageProgressionProps> = ({
     }
   };
   return (
-    <ul css={ul}>
+    <ul css={[ul, cssOverrides]}>
       {pages.map((page, i) => (
         <li className={getClassName(i)} key={i} css={li(pages.length)}>
           <SvgCheckmark />
