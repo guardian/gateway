@@ -18,7 +18,9 @@ A detailed setup guide can be found in [docs/setup](docs/setup.md).
 
 ### Quick Start
 
-Populate a `.env` file by using the examples from `.env.example`. The `.env` file should **never** be committed.
+Populate a `.env` file by using the examples from `.env.example`, or follow the isntructions in [docs/setup](docs/setup.md) to download one from S3. 
+
+The `.env` file should **never** be committed.
 
 #### Docker
 
