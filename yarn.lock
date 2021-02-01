@@ -1285,10 +1285,10 @@
     "@guardian/src-label" "^3.0.1"
     "@guardian/src-user-feedback" "^3.0.1"
 
-"@guardian/src-foundations@^3.0.1":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@guardian/src-foundations/-/src-foundations-3.0.1.tgz#1e07a73b8426d96a23221974b0be2d292833153c"
-  integrity sha512-Pu8N4JZYvIaI8cRfW9775j0Q5q2bqstoPg43RQxFTUxkB6jkK3caNwt7WT7eDvlqa4H8uKemTH+rxC0Y4ZWTtw==
+"@guardian/src-foundations@^3.0.1", "@guardian/src-foundations@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-foundations/-/src-foundations-3.1.0.tgz#8b4c7311463a5bed473526f00527a70f40bb32fd"
+  integrity sha512-31V0NYPr+pmu1KOQDgXnvhpoAWc9kzlGgDGyMv8jRi/ihtKJltsVEnto7Cy9zn34kDiFcIuObxE0XpxrucKVAQ==
 
 "@guardian/src-helpers@^3.0.1":
   version "3.0.1"
