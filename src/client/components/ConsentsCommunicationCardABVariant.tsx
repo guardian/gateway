@@ -5,9 +5,10 @@ import {
   body,
 } from '@guardian/src-foundations/typography';
 import { css, SerializedStyles } from '@emotion/react';
-import { space, palette } from '@guardian/src-foundations';
+import { space, palette, neutral } from '@guardian/src-foundations';
 import { CheckboxGroup, Checkbox } from '@guardian/src-checkbox';
 import { from } from '@guardian/src-foundations/mq';
+import { EnvelopeImage } from '@/client/components/EnvelopeImage';
 
 interface CommunicationCardProps {
   title: string;
@@ -24,6 +25,7 @@ const communicationCard = css`
   flex-direction: column;
   width: 100%;
   margin: 0px 0px ${space[4]}px 0px;
+  padding-bottom: ${space[9]}px;
   background-color: ${palette.background.ctaPrimary};
 `;
 
@@ -42,7 +44,7 @@ const communicationCardHeadingContainer = (image?: string) => css`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 14px ${space[3]}px 14px ${space[3]}px;
+  padding: 14px ${space[3]}px ${space[9]}px ${space[3]}px;
   ${from.tablet} {
     height: auto;
   }
@@ -66,13 +68,15 @@ const communicationCardBodyContainer = css`
   flex-direction: column;
   justify-content: flex-start;
   flex: 1 1 auto;
-  padding: ${space[3]}px ${space[3]}px 6px ${space[3]}px;
+  padding: 0 ${space[3]}px 6px ${space[3]}px;
 `;
 
 const communicationCardBodyText = css`
   ${body.medium()}
   margin: 0;
   max-width: 640px;
+  border-top: 0.25px solid ${neutral[97]};
+  padding-top: ${space[2]}px;
 `;
 
 const communicationCardCheckboxContainer = css`
@@ -83,46 +87,7 @@ const communicationCardCheckboxContainer = css`
 `;
 
 const envelope = css`
-  --h: 130px;
-  --w: 206px;
-  --offset: 37px;
-
-  height: var(--h);
-  width: var(--w);
-  background-color: purple;
-  position: relative;
-  box-sizing: content-box;
-  transform-style: preserve-3d;
-  margin: 0 auto;
-  margin-top: calc(var(--h) / 2 - var(--offset) + 41px);
-  margin-bottom: calc(var(--offset) + 35px);
-
-  &:before {
-    content: ' ';
-    display: block;
-    top: calc(-1 * var(--h) + var(--offset));
-    position: absolute;
-    border-left: calc(var(--w) / 2) solid transparent;
-    border-right: calc(var(--w) / 2) solid transparent;
-    border-top: calc(var(--h) / 2) solid transparent;
-    border-bottom: calc(var(--h) / 2) solid white;
-    width: var(--w);
-    height: var(--h);
-    transform: translateZ(-1px);
-  }
-
-  &:after {
-    content: ' ';
-    display: block;
-    top: var(--offset);
-    position: absolute;
-    border-left: calc(var(--w) / 2) solid white;
-    border-right: calc(var(--w) / 2) solid white;
-    border-top: calc(var(--h) / 2) solid transparent;
-    border-bottom: calc(var(--h) / 2) solid white;
-    width: var(--w);
-    height: var(--h);
-  }
+  margin: ${space[9]}px auto ${space[6]}px auto;
 `;
 
 // @TODO: If this variant wins, this and possible the entire style of the card component can be set using the 'brand'
@@ -141,6 +106,7 @@ const checkbox = css`
   }
 `;
 
+// @TODO: If this variant wins then the concept of the consent card maybe obsolete.
 export const CommunicationCardABVariant: FunctionComponent<CommunicationCardProps> = ({
   title,
   body,
@@ -152,7 +118,7 @@ export const CommunicationCardABVariant: FunctionComponent<CommunicationCardProp
   return (
     <div css={[communicationCard, cssOverrides]}>
       <div css={communicationCardHeadingContainer(image)}>
-        <div css={envelope}>placeholder</div>
+        <EnvelopeImage cssOverrides={envelope} />
         <h3 css={communicationCardHeadingText}>
           Sign up to receive an email with our latest offers.
         </h3>

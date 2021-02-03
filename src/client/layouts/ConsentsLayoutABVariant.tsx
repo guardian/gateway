@@ -19,7 +19,6 @@ import {
   ConsentsBlueBackground,
   ieFlexFix,
   mainBackground,
-  controls,
   main,
   CONSENTS_MAIN_COLOR,
 } from '@/client/layouts/shared/Consents';
@@ -29,7 +28,7 @@ import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 import { maxWidth } from '../styles/Shared';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { from } from '@guardian/src-foundations/mq';
-import { titlepiece } from '@guardian/src-foundations/typography';
+import { headline } from '@guardian/src-foundations/typography';
 import { CONSENTS_PAGES_ARR } from '../models/ConsentsPages';
 import { PageProgression } from '../components/PageProgression';
 
@@ -80,8 +79,8 @@ const blueBorder = css`
 
 const h1 = css`
   color: ${brand[400]};
-  margin: ${space[4]}px 0 ${space[5]}px 0;
-  ${titlepiece.small({ fontWeight: 'bold' })};
+  margin: ${space[12]}px 0 ${space[5]}px 0;
+  ${headline.small({ fontWeight: 'bold' })};
   ${gridItem(gridItemColumnConsents)};
   line-height: 1;
 `;
@@ -90,6 +89,26 @@ const pageProgression = css`
   margin-top: ${space[5]}px;
   margin-bottom: 0;
   ${gridItem(gridItemColumnConsents)};
+  li {
+    color: ${brand[400]};
+    &::after {
+      background-color: ${brand[400]};
+    }
+    &::before {
+      border: 2px solid ${brand[400]};
+      background-color: white;
+    }
+  }
+`;
+
+export const controls = css`
+  padding: ${space[5]}px 0 ${space[24]}px 0;
+  ${from.tablet} {
+    padding: ${space[9]}px 0 ${space[12]}px 0;
+  }
+  ${from.desktop} {
+    padding: ${space[9]}px 0 ${space[24]}px 0;
+  }
 `;
 
 export const ConsentsLayoutABVariant: FunctionComponent<ConsentsLayoutProps> = ({
