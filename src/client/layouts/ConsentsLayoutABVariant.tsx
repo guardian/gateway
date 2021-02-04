@@ -59,6 +59,7 @@ const headerContainer = css`
 `;
 
 const content = css`
+  background: none;
   padding-left: 0;
   padding-right: 0;
   padding-top: 0;
@@ -83,6 +84,9 @@ const h1 = css`
   ${headline.small({ fontWeight: 'bold' })};
   ${gridItem(gridItemColumnConsents)};
   line-height: 1;
+  ${from.tablet} {
+    ${headline.large({ fontWeight: 'bold' })};
+  }
 `;
 
 const pageProgression = css`

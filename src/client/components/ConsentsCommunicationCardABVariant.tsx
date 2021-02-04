@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from 'react';
 import {
   titlepiece,
-  textSans,
   body,
+  headline,
 } from '@guardian/src-foundations/typography';
 import { css, SerializedStyles } from '@emotion/react';
 import { space, palette, neutral } from '@guardian/src-foundations';
@@ -49,8 +49,8 @@ const communicationCardHeadingContainer = (image?: string) => css`
     height: auto;
   }
   & p {
-    ${textSans.medium()}
-    font-size: 15px;
+    ${body.medium()};
+    font-size: 18px;
     margin-top: 12px;
     margin-bottom: 0;
   }
@@ -61,6 +61,9 @@ const communicationCardHeadingText = css`
   ${titlepiece.small()};
   font-size: 24px;
   letter-spacing: 0.3px;
+  ${from.tablet} {
+    ${headline.small({ fontWeight: 'bold' })};
+  }
 `;
 
 const communicationCardBodyContainer = css`

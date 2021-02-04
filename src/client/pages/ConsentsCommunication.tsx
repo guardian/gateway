@@ -2,11 +2,12 @@ import React, { FunctionComponent, useContext } from 'react';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { textSans } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/react';
-import { space, neutral } from '@guardian/src-foundations';
+import { space, neutral, palette } from '@guardian/src-foundations';
 import {
   getAutoRow,
   gridItemColumnConsents,
   consentsParagraphSpanDef,
+  MAX_WIDTH,
 } from '@/client/styles/Grid';
 import { CommunicationCard } from '@/client/components/ConsentsCommunicationCard';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
@@ -65,6 +66,10 @@ export const ConsentsCommunicationPage = () => {
     <span css={checkboxLabel}>{market_research_optout?.description}</span>
   );
 
+  const offsets = {
+    TABLET: `-81px`,
+  };
+
   // @AB_TEST: Enhanced Consents: START
   const ABTestAPI = useAB();
   const isUserInTest = ABTestAPI.isUserInVariant(
@@ -76,9 +81,26 @@ export const ConsentsCommunicationPage = () => {
     if (isUserInTest) {
       return {
         communicationCardContainer: css`
+          ${from.tablet} {
+            position: relative;
+            &:before {
+              content: '';
+              position: absolute;
+              background-color: ${palette.background.ctaPrimary};
+              width: ${MAX_WIDTH.TABLET}px;
+              height: 100%;
+              left: ${offsets.TABLET};
+              top: 0;
+              z-index: -1;
+            }
+          }
           margin-top: 0;
           margin-left: 0;
           margin-right: 0;
+          margin-bottom: ${space[9]}px;
+        `,
+        communicationsCard: css`
+          grid-column: 2 / span 9;
         `,
         pagePadding: css`
           padding-left: ${space[3]}px;
