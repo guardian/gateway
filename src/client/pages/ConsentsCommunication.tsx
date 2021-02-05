@@ -21,6 +21,7 @@ import { useAB } from '@guardian/ab-react';
 // @AB_TEST: Enhanced Consents
 import { CommunicationCardABVariant } from '../components/ConsentsCommunicationCardABVariant';
 import { ConsentsLayoutABVariant } from '../layouts/ConsentsLayoutABVariant';
+import { EnvelopeImage } from '../components/EnvelopeImage';
 
 const fieldset = css`
   border: 0;
@@ -45,6 +46,18 @@ const communicationCardContainer = css`
     grid-column: 3 / span 9;
   }
 `;
+
+const communicationCardSpanDef = {
+  ...gridItemColumnConsents,
+  DESKTOP: {
+    start: 2,
+    span: 9,
+  },
+  WIDE: {
+    start: 3,
+    span: 9,
+  },
+};
 
 export const ConsentsCommunicationPage = () => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
@@ -116,6 +129,29 @@ export const ConsentsCommunicationPage = () => {
           padding-left: ${space[3]}px;
           padding-right: ${space[3]}px;
         `,
+        envelope: css`
+          display: block;
+          margin: ${space[9]}px auto ${space[6]}px auto;
+          width: 150px;
+          ${from.tablet} {
+            position: absolute;
+            bottom: -39px;
+            margin: 0;
+            width: 220px;
+          }
+        `,
+        envelopeContainer: css`
+          display: block;
+          background-color: ${palette.background.ctaPrimary};
+          grid-column: 1 / span 4;
+          ${from.tablet} {
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 36px;
+            grid-column: 9 / span 4;
+            grid-row: 1;
+          }
+        `,
         aBSpanDef: {
           ...consentsParagraphSpanDef,
           TABLET: {
@@ -144,6 +180,11 @@ export const ConsentsCommunicationPage = () => {
   const ABTestOmit: FunctionComponent = ({ children }) => {
     return <>{isUserInTest || children}</>;
   };
+
+  const envelopeContainer = css`
+    display: none;
+  `;
+
   // @AB_TEST: Enhanced Consents: END
 
   return (
@@ -160,10 +201,17 @@ export const ConsentsCommunicationPage = () => {
               date with all that The Guardian has to offer?
             </p>
           </ABTestOmit>
+          <div css={[envelopeContainer, abTestCSS()?.envelopeContainer]}>
+            <EnvelopeImage cssOverrides={abTestCSS()?.envelope} />
+          </div>
           <div
             css={[
               communicationCardContainer,
-              autoRow(abTestCSS()?.aBSpanDef),
+              autoRow(
+                abTestCSS()?.aBSpanDef
+                  ? abTestCSS()?.aBSpanDef
+                  : communicationCardSpanDef,
+              ),
               abTestCSS()?.communicationCardContainer,
             ]}
           >

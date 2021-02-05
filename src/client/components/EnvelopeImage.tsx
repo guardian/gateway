@@ -2,14 +2,14 @@ import { SerializedStyles } from '@emotion/react';
 import React from 'react';
 
 interface Props {
+  width?: string;
   cssOverrides?: SerializedStyles;
 }
 
 export const EnvelopeImage = (props: Props) => (
   <svg
     css={props.cssOverrides}
-    width="159"
-    height="149"
+    width={props.width}
     viewBox="0 0 159 149"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"

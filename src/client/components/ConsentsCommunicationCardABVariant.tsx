@@ -8,7 +8,6 @@ import { css, SerializedStyles } from '@emotion/react';
 import { space, palette, neutral } from '@guardian/src-foundations';
 import { CheckboxGroup, Checkbox } from '@guardian/src-checkbox';
 import { from } from '@guardian/src-foundations/mq';
-import { EnvelopeImage } from '@/client/components/EnvelopeImage';
 
 interface CommunicationCardProps {
   title: string;
@@ -25,8 +24,11 @@ const communicationCard = css`
   flex-direction: column;
   width: 100%;
   margin: 0px 0px ${space[4]}px 0px;
-  padding-bottom: ${space[9]}px;
   background-color: ${palette.background.ctaPrimary};
+  ${from.tablet} {
+    margin: 0;
+    padding: ${space[6]}px 0;
+  }
 `;
 
 const communicationCardHeadingImage = (image: string) => css`
@@ -96,10 +98,6 @@ const communicationCardCheckboxContainer = css`
   padding: ${space[2]}px ${space[3]}px;
 `;
 
-const envelope = css`
-  margin: ${space[9]}px auto ${space[6]}px auto;
-`;
-
 // @TODO: If this variant wins, this and possible the entire style of the card component can be set using the 'brand'
 // theme in Source.
 const checkbox = css`
@@ -128,7 +126,6 @@ export const CommunicationCardABVariant: FunctionComponent<CommunicationCardProp
   return (
     <div css={[communicationCard, cssOverrides]}>
       <div css={communicationCardHeadingContainer(image)}>
-        <EnvelopeImage cssOverrides={envelope} />
         <h3 css={communicationCardHeadingText}>
           Sign up to receive an email with our latest offers.
         </h3>
