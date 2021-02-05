@@ -67,7 +67,7 @@ export const ConsentsCommunicationPage = () => {
   );
 
   const offsets = {
-    TABLET: `-81px`,
+    TABLET: `-21px`,
     DESKTOP: `-101px`,
     WIDE: `-181px`,
   };
@@ -83,7 +83,6 @@ export const ConsentsCommunicationPage = () => {
     if (isUserInTest) {
       return {
         communicationCardContainer: css`
-          ${from.tablet} {
           position: relative;
           &:before {
             ${from.tablet} {
@@ -117,6 +116,17 @@ export const ConsentsCommunicationPage = () => {
           padding-left: ${space[3]}px;
           padding-right: ${space[3]}px;
         `,
+        aBSpanDef: {
+          ...consentsParagraphSpanDef,
+          TABLET: {
+            start: 1,
+            span: 8,
+          },
+          DESKTOP: {
+            start: 2,
+            span: 7,
+          },
+        },
       };
     } else {
       return;
@@ -152,8 +162,8 @@ export const ConsentsCommunicationPage = () => {
           </ABTestOmit>
           <div
             css={[
-              autoRow(),
               communicationCardContainer,
+              autoRow(abTestCSS()?.aBSpanDef),
               abTestCSS()?.communicationCardContainer,
             ]}
           >
@@ -167,13 +177,19 @@ export const ConsentsCommunicationPage = () => {
               />
             ))}
           </div>
-          <h2 css={[heading, autoRow(), abTestCSS()?.pagePadding]}>
+          <h2
+            css={[
+              heading,
+              autoRow(abTestCSS()?.aBSpanDef),
+              abTestCSS()?.pagePadding,
+            ]}
+          >
             Using your data for market research
           </h2>
           <p
             css={[
               text,
-              autoRow(consentsParagraphSpanDef),
+              autoRow(abTestCSS()?.aBSpanDef),
               abTestCSS()?.pagePadding,
             ]}
           >
@@ -182,7 +198,13 @@ export const ConsentsCommunicationPage = () => {
             discussion. Normally, this invitation would be sent via email, but
             we may also contact you by phone.
           </p>
-          <fieldset css={[fieldset, autoRow(), abTestCSS()?.pagePadding]}>
+          <fieldset
+            css={[
+              fieldset,
+              autoRow(abTestCSS()?.aBSpanDef),
+              abTestCSS()?.pagePadding,
+            ]}
+          >
             <CheckboxGroup name={market_research_optout.id}>
               <Checkbox
                 value="consent-option"

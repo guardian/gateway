@@ -37,6 +37,18 @@ interface ConsentsLayoutProps {
   title: string;
 }
 
+const aBSpanDef = {
+  ...gridItemColumnConsents,
+  TABLET: {
+    start: 1,
+    span: 8,
+  },
+  DESKTOP: {
+    start: 2,
+    span: 7,
+  },
+};
+
 const form = css`
   display: flex;
   flex: 1 0 auto;
@@ -97,7 +109,7 @@ const h1 = css`
   color: ${brand[400]};
   margin: ${space[12]}px 0 ${space[5]}px 0;
   ${headline.small({ fontWeight: 'bold' })};
-  ${gridItem(gridItemColumnConsents)};
+  ${gridItem(aBSpanDef)};
   line-height: 1;
   ${from.tablet} {
     ${headline.large({ fontWeight: 'bold' })};
@@ -110,7 +122,7 @@ const h1 = css`
 const pageProgression = css`
   margin-top: ${space[5]}px;
   margin-bottom: 0;
-  ${gridItem(gridItemColumnConsents)};
+  ${gridItem(aBSpanDef)};
   li {
     color: ${brand[400]};
     &::after {
@@ -180,7 +192,7 @@ export const ConsentsLayoutABVariant: FunctionComponent<ConsentsLayoutProps> = (
             <ConsentsContent cssOverrides={content}>{children}</ConsentsContent>
           </div>
           <ConsentsBlueBackground>
-            <div css={[gridItem(gridItemColumnConsents), controls]}>
+            <div css={[gridItem(aBSpanDef), controls]}>
               {!error && (
                 <Button
                   iconSide="right"
