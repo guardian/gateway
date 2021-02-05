@@ -139,6 +139,12 @@ export const ConsentsCommunicationPage = () => {
             margin: 0;
             width: 220px;
           }
+          ${from.desktop} {
+            width: 280px;
+          }
+          ${from.wide} {
+            width: 360px;
+          }
         `,
         envelopeContainer: css`
           display: block;
@@ -150,6 +156,12 @@ export const ConsentsCommunicationPage = () => {
             margin-bottom: 36px;
             grid-column: 9 / span 4;
             grid-row: 1;
+          }
+          ${from.desktop} {
+            margin-bottom: 32px;
+          }
+          ${from.wide} {
+            grid-column: 12 / span 5;
           }
         `,
         aBSpanDef: {

@@ -47,6 +47,10 @@ const aBSpanDef = {
     start: 2,
     span: 7,
   },
+  WIDE: {
+    start: 3,
+    span: 7,
+  },
 };
 
 const form = css`
