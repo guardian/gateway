@@ -18,7 +18,6 @@ import {
   ConsentsContent,
   ConsentsBlueBackground,
   ieFlexFix,
-  mainBackground,
   main,
   CONSENTS_MAIN_COLOR,
 } from '@/client/layouts/shared/Consents';
@@ -54,6 +53,22 @@ const header = css`
   padding-right: 0;
 `;
 
+const mainBackground = css`
+  position: relative;
+  z-index: 0;
+  &:before {
+    content: ' ';
+    background-color: ${brand[400]};
+    opacity: 0.8;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+  }
+`;
+
 const headerContainer = css`
   background-color: ${brand[400]};
 `;
@@ -86,6 +101,9 @@ const h1 = css`
   line-height: 1;
   ${from.tablet} {
     ${headline.large({ fontWeight: 'bold' })};
+  }
+  ${from.desktop} {
+    ${headline.xlarge({ fontWeight: 'bold' })};
   }
 `;
 

@@ -68,6 +68,8 @@ export const ConsentsCommunicationPage = () => {
 
   const offsets = {
     TABLET: `-81px`,
+    DESKTOP: `-101px`,
+    WIDE: `-181px`,
   };
 
   // @AB_TEST: Enhanced Consents: START
@@ -82,8 +84,9 @@ export const ConsentsCommunicationPage = () => {
       return {
         communicationCardContainer: css`
           ${from.tablet} {
-            position: relative;
-            &:before {
+          position: relative;
+          &:before {
+            ${from.tablet} {
               content: '';
               position: absolute;
               background-color: ${palette.background.ctaPrimary};
@@ -93,8 +96,16 @@ export const ConsentsCommunicationPage = () => {
               top: 0;
               z-index: -1;
             }
+            ${from.desktop} {
+              width: ${MAX_WIDTH.DESKTOP}px;
+              left: ${offsets.DESKTOP};
+            }
+            ${from.wide} {
+              width: ${MAX_WIDTH.WIDE}px;
+              left: ${offsets.WIDE};
+            }
           }
-          margin-top: 0;
+          margin-top: 0 !important;
           margin-left: 0;
           margin-right: 0;
           margin-bottom: ${space[9]}px;

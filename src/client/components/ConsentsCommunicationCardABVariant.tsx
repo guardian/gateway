@@ -64,6 +64,9 @@ const communicationCardHeadingText = css`
   ${from.tablet} {
     ${headline.small({ fontWeight: 'bold' })};
   }
+  ${from.desktop} {
+    ${headline.medium({ fontWeight: 'bold' })};
+  }
 `;
 
 const communicationCardBodyContainer = css`
@@ -75,11 +78,15 @@ const communicationCardBodyContainer = css`
 `;
 
 const communicationCardBodyText = css`
-  ${body.medium()}
+  ${body.small()}
+  font-size: 16px;
   margin: 0;
   max-width: 640px;
   border-top: 0.25px solid ${neutral[97]};
   padding-top: ${space[2]}px;
+  ${from.desktop} {
+    ${body.medium()};
+  }
 `;
 
 const communicationCardCheckboxContainer = css`
