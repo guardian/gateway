@@ -124,10 +124,18 @@ export const ConsentsCommunicationPage = () => {
         `,
         communicationsCard: css`
           grid-column: 2 / span 9;
+          ${from.wide} {
+            grid-column: 3 / span 7;
+          }
         `,
         pagePadding: css`
           padding-left: ${space[3]}px;
           padding-right: ${space[3]}px;
+          position: relative;
+          ${from.tablet} {
+            padding-left: 0;
+            padding-right: 0;
+          }
         `,
         envelope: css`
           display: block;
@@ -161,7 +169,7 @@ export const ConsentsCommunicationPage = () => {
             margin-bottom: 32px;
           }
           ${from.wide} {
-            grid-column: 12 / span 5;
+            grid-column: 11 / span 5;
           }
         `,
         aBSpanDef: {
@@ -172,6 +180,10 @@ export const ConsentsCommunicationPage = () => {
           },
           DESKTOP: {
             start: 2,
+            span: 7,
+          },
+          WIDE: {
+            start: 3,
             span: 7,
           },
         },

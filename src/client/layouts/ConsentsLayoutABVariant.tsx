@@ -27,7 +27,7 @@ import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 import { maxWidth } from '../styles/Shared';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { from } from '@guardian/src-foundations/mq';
-import { headline } from '@guardian/src-foundations/typography';
+import { titlepiece } from '@guardian/src-foundations/typography';
 import { CONSENTS_PAGES_ARR } from '../models/ConsentsPages';
 import { PageProgression } from '../components/PageProgression';
 
@@ -112,14 +112,17 @@ const blueBorder = css`
 const h1 = css`
   color: ${brand[400]};
   margin: ${space[12]}px 0 ${space[5]}px 0;
-  ${headline.small({ fontWeight: 'bold' })};
+  ${titlepiece.small({ fontWeight: 'bold' })};
+  font-size: 38px;
   ${gridItem(aBSpanDef)};
   line-height: 1;
   ${from.tablet} {
-    ${headline.large({ fontWeight: 'bold' })};
+    ${titlepiece.medium({ fontWeight: 'bold' })};
+    font-size: 42px;
   }
   ${from.desktop} {
-    ${headline.xlarge({ fontWeight: 'bold' })};
+    ${titlepiece.large({ fontWeight: 'bold' })};
+    font-size: 50px;
   }
 `;
 

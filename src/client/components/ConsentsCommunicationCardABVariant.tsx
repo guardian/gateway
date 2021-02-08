@@ -59,6 +59,10 @@ const communicationCardHeadingContainer = (image?: string) => css`
     margin-top: 12px;
     margin-bottom: 0;
   }
+  ${from.tablet} {
+    padding-left: 0;
+    padding-right: 0;
+  }
 `;
 
 const communicationCardHeadingText = css`
@@ -80,6 +84,10 @@ const communicationCardBodyContainer = css`
   justify-content: flex-start;
   flex: 1 1 auto;
   padding: 0 ${space[3]}px 6px ${space[3]}px;
+  ${from.tablet} {
+    padding-left: 0;
+    padding-right: 0;
+  }
 `;
 
 const communicationCardBodyText = css`
@@ -99,6 +107,10 @@ const communicationCardCheckboxContainer = css`
   flex-direction: column;
   justify-content: flex-end;
   padding: ${space[2]}px ${space[3]}px;
+  ${from.tablet} {
+    padding-left: 0;
+    padding-right: 0;
+  }
 `;
 
 // @TODO: If this variant wins, this and possible the entire style of the card component can be set using the 'brand'
