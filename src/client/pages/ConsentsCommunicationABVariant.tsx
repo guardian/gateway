@@ -64,16 +64,17 @@ const envelope = css`
   ${from.tablet} {
     max-width: none;
     position: absolute;
-    bottom: -30px;
+    bottom: -24px;
     margin: 0;
     width: 220px;
   }
   ${from.desktop} {
+    bottom: -30px;
     width: 280px;
   }
   ${from.wide} {
     width: 360px;
-    bottom: -55px;
+    bottom: -39px;
   }
 `;
 
