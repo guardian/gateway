@@ -3,19 +3,22 @@
 exports[`PageProgression component when an active section is supplied marks the previous sections as done and the current one as active 1`] = `
 <ul
   css={
-    Object {
-      "map": undefined,
-      "name": "48yusx",
-      "next": undefined,
-      "styles": "
+    Array [
+      Object {
+        "map": undefined,
+        "name": "48yusx",
+        "next": undefined,
+        "styles": "
   display: flex;
   list-style: none;
   height: 54px;
   padding: 0;
   margin: 0;
 ",
-      "toString": [Function],
-    }
+        "toString": [Function],
+      },
+      undefined,
+    ]
   }
 >
   <li
@@ -357,19 +360,22 @@ exports[`PageProgression component when an active section is supplied marks the 
 exports[`PageProgression component when no active page is set shows the first step as the active step 1`] = `
 <ul
   css={
-    Object {
-      "map": undefined,
-      "name": "48yusx",
-      "next": undefined,
-      "styles": "
+    Array [
+      Object {
+        "map": undefined,
+        "name": "48yusx",
+        "next": undefined,
+        "styles": "
   display: flex;
   list-style: none;
   height: 54px;
   padding: 0;
   margin: 0;
 ",
-      "toString": [Function],
-    }
+        "toString": [Function],
+      },
+      undefined,
+    ]
   }
 >
   <li
@@ -711,19 +717,22 @@ exports[`PageProgression component when no active page is set shows the first st
 exports[`PageProgression component when on the last section marks the previous sections as done and the last one as active 1`] = `
 <ul
   css={
-    Object {
-      "map": undefined,
-      "name": "48yusx",
-      "next": undefined,
-      "styles": "
+    Array [
+      Object {
+        "map": undefined,
+        "name": "48yusx",
+        "next": undefined,
+        "styles": "
   display: flex;
   list-style: none;
   height: 54px;
   padding: 0;
   margin: 0;
 ",
-      "toString": [Function],
-    }
+        "toString": [Function],
+      },
+      undefined,
+    ]
   }
 >
   <li
