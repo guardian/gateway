@@ -33,6 +33,9 @@ const checkboxLabel = css`
 const communicationCardContainer = css`
   display: flex;
   flex-flow: row wrap;
+  ${from.tablet} {
+    margin-bottom: 0;
+  }
   ${from.desktop} {
     margin: ${space[5]}px 0 32px;
     grid-column: 2 / span 9;
@@ -59,7 +62,7 @@ const envelope = css`
   width: 150px;
   ${from.tablet} {
     position: absolute;
-    bottom: -39px;
+    bottom: -30px;
     margin: 0;
     width: 220px;
   }
@@ -90,7 +93,7 @@ const aBSpanDef = {
   ...consentsParagraphSpanDef,
   TABLET: {
     start: 1,
-    span: 8,
+    span: 7,
   },
   DESKTOP: {
     start: 2,
@@ -99,6 +102,22 @@ const aBSpanDef = {
   WIDE: {
     start: 3,
     span: 7,
+  },
+};
+
+const controlSpanDef = {
+  ...aBSpanDef,
+  TABLET: {
+    start: 1,
+    span: 12,
+  },
+  DESKTOP: {
+    start: 2,
+    span: 9,
+  },
+  WIDE: {
+    start: 3,
+    span: 9,
   },
 };
 
@@ -179,7 +198,7 @@ export const ConsentsCommunicationPageABVariant = () => {
               <fieldset
                 css={[
                   fieldset,
-                  autoRow(aBSpanDef),
+                  autoRow(controlSpanDef),
                   pagePadding,
                   css`
                     margin-top: 30px;

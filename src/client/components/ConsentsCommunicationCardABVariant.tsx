@@ -1,11 +1,7 @@
 import React, { FunctionComponent } from 'react';
-import {
-  titlepiece,
-  body,
-  headline,
-} from '@guardian/src-foundations/typography';
+import { body, headline } from '@guardian/src-foundations/typography';
 import { css, SerializedStyles } from '@emotion/react';
-import { space, palette, neutral } from '@guardian/src-foundations';
+import { space, palette } from '@guardian/src-foundations';
 import { CheckboxGroup, Checkbox } from '@guardian/src-checkbox';
 import { from } from '@guardian/src-foundations/mq';
 
@@ -54,7 +50,7 @@ const communicationCardHeadingContainer = (image?: string) => css`
   & p {
     ${body.medium()};
     font-size: 18px;
-    margin-top: 12px;
+    margin-top: 6px;
     margin-bottom: 0;
   }
 `;
@@ -84,7 +80,7 @@ const communicationCardBodyText = css`
   font-size: 16px;
   margin: 0;
   max-width: 640px;
-  border-top: 0.25px solid ${neutral[97]};
+  border-top: 1px solid rgb(246 246 246 / 0.4);
   padding-top: ${space[2]}px;
   ${from.desktop} {
     ${body.medium()};
