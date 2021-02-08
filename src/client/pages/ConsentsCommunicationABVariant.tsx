@@ -6,7 +6,6 @@ import {
   getAutoRow,
   gridItemColumnConsents,
   consentsParagraphSpanDef,
-  MAX_WIDTH,
 } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { heading, text } from '@/client/styles/Consents';
@@ -18,12 +17,7 @@ import { from } from '@guardian/src-foundations/mq';
 import { CommunicationCardABVariant } from '../components/ConsentsCommunicationCardABVariant';
 import { ConsentsLayoutABVariant } from '../layouts/ConsentsLayoutABVariant';
 import { EnvelopeImage } from '../components/EnvelopeImage';
-
-const offsets = {
-  TABLET: `-21px`,
-  DESKTOP: `-101px`,
-  WIDE: `-181px`,
-};
+import { ConsentsContent } from '../layouts/shared/Consents';
 
 const fieldset = css`
   border: 0;
@@ -46,31 +40,7 @@ const communicationCardContainer = css`
   ${from.wide} {
     grid-column: 3 / span 9;
   }
-  position: relative;
-  &:before {
-    ${from.tablet} {
-      content: '';
-      position: absolute;
-      background-color: ${palette.background.ctaPrimary};
-      width: ${MAX_WIDTH.TABLET}px;
-      height: 100%;
-      left: ${offsets.TABLET};
-      top: 0;
-      z-index: -1;
-    }
-    ${from.desktop} {
-      width: ${MAX_WIDTH.DESKTOP}px;
-      left: ${offsets.DESKTOP};
-    }
-    ${from.wide} {
-      width: ${MAX_WIDTH.WIDE}px;
-      left: ${offsets.WIDE};
-    }
-  }
-  margin-top: 0 !important;
-  margin-left: 0;
-  margin-right: 0;
-  margin-bottom: ${space[9]}px;
+  margin: 0 !important;
 `;
 
 const pagePadding = css`
@@ -108,12 +78,8 @@ const envelopeContainer = css`
   ${from.tablet} {
     overflow: hidden;
     position: relative;
-    margin-bottom: 36px;
     grid-column: 9 / span 4;
     grid-row: 1;
-  }
-  ${from.desktop} {
-    margin-bottom: 32px;
   }
   ${from.wide} {
     grid-column: 11 / span 5;
@@ -135,6 +101,26 @@ const aBSpanDef = {
     span: 7,
   },
 };
+
+const consentsContent = css`
+  background: none;
+  padding-top: 0;
+  padding-bottom: 0;
+  background-color: ${palette.background.ctaPrimary};
+`;
+
+const marketingContent = css`
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: ${space[9]}px;
+`;
+
+const marketingContainer = css`
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  background-color: white;
+`;
 
 export const ConsentsCommunicationPageABVariant = () => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
@@ -163,38 +149,44 @@ export const ConsentsCommunicationPageABVariant = () => {
     >
       {market_research_optout && (
         <>
-          <div css={[envelopeContainer, envelopeContainer]}>
-            <EnvelopeImage cssOverrides={envelope} />
+          <ConsentsContent cssOverrides={consentsContent}>
+            <div css={[envelopeContainer, envelopeContainer]}>
+              <EnvelopeImage cssOverrides={envelope} />
+            </div>
+            <div css={[communicationCardContainer, autoRow(aBSpanDef)]}>
+              {consentsWithoutOptout.map((consent) => (
+                <CommunicationCardABVariant
+                  key={consent.id}
+                  title={consent.name}
+                  body={consent.description}
+                  value={consent.id}
+                  checked={!!consent.consented}
+                />
+              ))}
+            </div>
+          </ConsentsContent>
+          <div css={marketingContainer}>
+            <ConsentsContent cssOverrides={marketingContent}>
+              <h2 css={[heading, autoRow(aBSpanDef), pagePadding]}>
+                Using your data for market research
+              </h2>
+              <p css={[text, autoRow(aBSpanDef), pagePadding]}>
+                From time to time we may contact you for market research
+                purposes inviting you to complete a survey, or take part in a
+                group discussion. Normally, this invitation would be sent via
+                email, but we may also contact you by phone.
+              </p>
+              <fieldset css={[fieldset, autoRow(aBSpanDef), pagePadding]}>
+                <CheckboxGroup name={market_research_optout.id}>
+                  <Checkbox
+                    value="consent-option"
+                    label={label}
+                    defaultChecked={market_research_optout.consented}
+                  />
+                </CheckboxGroup>
+              </fieldset>
+            </ConsentsContent>
           </div>
-          <div css={[communicationCardContainer, autoRow(aBSpanDef)]}>
-            {consentsWithoutOptout.map((consent) => (
-              <CommunicationCardABVariant
-                key={consent.id}
-                title={consent.name}
-                body={consent.description}
-                value={consent.id}
-                checked={!!consent.consented}
-              />
-            ))}
-          </div>
-          <h2 css={[heading, autoRow(aBSpanDef), pagePadding]}>
-            Using your data for market research
-          </h2>
-          <p css={[text, autoRow(aBSpanDef), pagePadding]}>
-            From time to time we may contact you for market research purposes
-            inviting you to complete a survey, or take part in a group
-            discussion. Normally, this invitation would be sent via email, but
-            we may also contact you by phone.
-          </p>
-          <fieldset css={[fieldset, autoRow(aBSpanDef), pagePadding]}>
-            <CheckboxGroup name={market_research_optout.id}>
-              <Checkbox
-                value="consent-option"
-                label={label}
-                defaultChecked={market_research_optout.consented}
-              />
-            </CheckboxGroup>
-          </fieldset>
         </>
       )}
     </ConsentsLayoutABVariant>

@@ -15,7 +15,6 @@ import {
   gridRow,
 } from '@/client/styles/Grid';
 import {
-  ConsentsContent,
   ConsentsBlueBackground,
   ieFlexFix,
   main,
@@ -87,13 +86,6 @@ const mainBackground = css`
 
 const headerContainer = css`
   background-color: ${brand[400]};
-`;
-
-const content = css`
-  background: none;
-  padding-left: 0;
-  padding-right: 0;
-  padding-top: 0;
 `;
 
 const consentsBackground = css`
@@ -195,9 +187,7 @@ export const ConsentsLayoutABVariant: FunctionComponent<ConsentsLayoutProps> = (
         <CsrfFormField />
 
         <main css={main}>
-          <div css={[mainBackground, ieFlexFix]}>
-            <ConsentsContent cssOverrides={content}>{children}</ConsentsContent>
-          </div>
+          <div css={[mainBackground, ieFlexFix]}>{children}</div>
           <ConsentsBlueBackground>
             <div css={[gridItem(aBSpanDef), controls]}>
               {!error && (
