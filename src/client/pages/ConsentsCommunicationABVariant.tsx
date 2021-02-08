@@ -59,8 +59,10 @@ const pagePadding = css`
 const envelope = css`
   display: block;
   margin: 40px auto ${space[6]}px auto;
-  width: 150px;
+  width: 100%;
+  max-width: 234px;
   ${from.tablet} {
+    max-width: none;
     position: absolute;
     bottom: -30px;
     margin: 0;
@@ -71,13 +73,14 @@ const envelope = css`
   }
   ${from.wide} {
     width: 360px;
+    bottom: -55px;
   }
 `;
 
 const envelopeContainer = css`
   display: block;
   background-color: ${palette.background.ctaPrimary};
-  grid-column: 1 / span 4;
+  grid-column: 2 / span 2;
   ${from.tablet} {
     overflow: hidden;
     position: relative;
@@ -97,7 +100,7 @@ const aBSpanDef = {
   },
   DESKTOP: {
     start: 2,
-    span: 7,
+    span: 6,
   },
   WIDE: {
     start: 3,

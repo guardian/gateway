@@ -24,9 +24,6 @@ const communicationCard = css`
     margin: 0;
     padding: ${space[6]}px 0;
   }
-  ${from.desktop} {
-    padding: ${space[6]}px 0 71px;
-  }
 `;
 
 const communicationCardHeadingImage = (image: string) => css`
