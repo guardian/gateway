@@ -40,7 +40,7 @@ const communicationCardContainer = css`
   ${from.wide} {
     grid-column: 3 / span 9;
   }
-  margin: 0 !important;
+  margin-bottom: 32px;
 `;
 
 const pagePadding = css`
@@ -55,7 +55,7 @@ const pagePadding = css`
 
 const envelope = css`
   display: block;
-  margin: ${space[9]}px auto ${space[6]}px auto;
+  margin: 40px auto ${space[6]}px auto;
   width: 150px;
   ${from.tablet} {
     position: absolute;
@@ -176,7 +176,16 @@ export const ConsentsCommunicationPageABVariant = () => {
                 group discussion. Normally, this invitation would be sent via
                 email, but we may also contact you by phone.
               </p>
-              <fieldset css={[fieldset, autoRow(aBSpanDef), pagePadding]}>
+              <fieldset
+                css={[
+                  fieldset,
+                  autoRow(aBSpanDef),
+                  pagePadding,
+                  css`
+                    margin-top: 30px;
+                  `,
+                ]}
+              >
                 <CheckboxGroup name={market_research_optout.id}>
                   <Checkbox
                     value="consent-option"

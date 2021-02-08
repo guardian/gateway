@@ -23,7 +23,6 @@ const communicationCard = css`
   color: ${palette.text.ctaPrimary};
   flex-direction: column;
   width: 100%;
-  margin: 0px 0px ${space[4]}px 0px;
   background-color: ${palette.background.ctaPrimary};
   ${from.tablet} {
     margin: 0;
@@ -49,7 +48,6 @@ const communicationCardHeadingContainer = (image?: string) => css`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 14px ${space[3]}px ${space[9]}px ${space[3]}px;
   ${from.tablet} {
     height: auto;
   }
@@ -59,16 +57,11 @@ const communicationCardHeadingContainer = (image?: string) => css`
     margin-top: 12px;
     margin-bottom: 0;
   }
-  ${from.tablet} {
-    padding-left: 0;
-    padding-right: 0;
-  }
 `;
 
 const communicationCardHeadingText = css`
   margin: 0;
-  ${titlepiece.small()};
-  font-size: 24px;
+  ${headline.medium({ fontWeight: 'bold' })};
   letter-spacing: 0.3px;
   ${from.tablet} {
     ${headline.small({ fontWeight: 'bold' })};
@@ -83,11 +76,7 @@ const communicationCardBodyContainer = css`
   flex-direction: column;
   justify-content: flex-start;
   flex: 1 1 auto;
-  padding: 0 ${space[3]}px 6px ${space[3]}px;
-  ${from.tablet} {
-    padding-left: 0;
-    padding-right: 0;
-  }
+  margin-top: ${space[9]}px;
 `;
 
 const communicationCardBodyText = css`
@@ -106,11 +95,7 @@ const communicationCardCheckboxContainer = css`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: ${space[2]}px ${space[3]}px;
-  ${from.tablet} {
-    padding-left: 0;
-    padding-right: 0;
-  }
+  margin-top: ${space[4]}px;
 `;
 
 // @TODO: If this variant wins, this and possible the entire style of the card component can be set using the 'brand'
@@ -142,7 +127,7 @@ export const CommunicationCardABVariant: FunctionComponent<CommunicationCardProp
     <div css={[communicationCard, cssOverrides]}>
       <div css={communicationCardHeadingContainer(image)}>
         <h3 css={communicationCardHeadingText}>
-          Sign up to receive an email with our latest offers.
+          Sign up to our email guide with our latest offers
         </h3>
         <p>{title}</p>
       </div>
