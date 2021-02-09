@@ -2,8 +2,8 @@ import { ABTest } from '@guardian/ab-core';
 
 export const enhancedConsentTest: ABTest = {
   id: 'EnhancedConsentTest', // This ID must match the Server Side AB Test
-  start: '2021-02-01',
-  expiry: '2021-03-01', // Remember that the server side test expiry can be different
+  start: '2021-02-09',
+  expiry: '2021-03-28', // Remember that the server side test expiry can be different
   author: 'patrick.orrell@theguardian.com',
   description:
     'Testing the effect of having an enhanced consent design and a simplified header on user consents',
