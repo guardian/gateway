@@ -6,6 +6,7 @@ import {
   getAutoRow,
   gridItemColumnConsents,
   consentsParagraphSpanDef,
+  manualRow,
 } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { heading, text } from '@/client/styles/Consents';
@@ -35,13 +36,11 @@ const communicationCardContainer = css`
   flex-flow: row wrap;
   ${from.tablet} {
     margin-bottom: 0;
+    -ms-grid-row: 1;
+    grid-row: 1;
   }
   ${from.desktop} {
     margin: ${space[5]}px 0 32px;
-    grid-column: 2 / span 9;
-  }
-  ${from.wide} {
-    grid-column: 3 / span 9;
   }
   margin-bottom: 32px;
 `;
@@ -67,29 +66,27 @@ const envelope = css`
     bottom: -24px;
     margin: 0;
     width: 220px;
+    height: 207px;
   }
   ${from.desktop} {
     bottom: -30px;
     width: 280px;
+    height: 262px;
   }
   ${from.wide} {
     width: 360px;
-    bottom: -39px;
+    height: 340px;
+    bottom: -40px;
   }
 `;
 
 const envelopeContainer = css`
   display: block;
   background-color: ${palette.background.ctaPrimary};
-  grid-column: 2 / span 2;
   ${from.tablet} {
     overflow: hidden;
     position: relative;
-    grid-column: 9 / span 4;
     grid-row: 1;
-  }
-  ${from.wide} {
-    grid-column: 11 / span 5;
   }
 `;
 
@@ -125,6 +122,25 @@ const controlSpanDef = {
   },
 };
 
+const envelopeSpanDef = {
+  MOBILE: {
+    start: 2,
+    span: 2,
+  },
+  TABLET: {
+    start: 9,
+    span: 4,
+  },
+  DESKTOP: {
+    start: 9,
+    span: 4,
+  },
+  WIDE: {
+    start: 11,
+    span: 5,
+  },
+};
+
 const consentsContent = css`
   background: none;
   padding-top: 0;
@@ -146,7 +162,7 @@ const marketingContainer = css`
 `;
 
 export const ConsentsCommunicationPageABVariant = () => {
-  const autoRow = getAutoRow(1, gridItemColumnConsents);
+  const autoRow = getAutoRow(0, gridItemColumnConsents);
 
   const clientState = useContext<ClientState>(ClientStateContext);
 
@@ -173,10 +189,10 @@ export const ConsentsCommunicationPageABVariant = () => {
       {market_research_optout && (
         <>
           <ConsentsContent cssOverrides={consentsContent}>
-            <div css={[envelopeContainer, envelopeContainer]}>
+            <div css={[envelopeContainer, manualRow(1, envelopeSpanDef)]}>
               <EnvelopeImage cssOverrides={envelope} />
             </div>
-            <div css={[communicationCardContainer, autoRow(aBSpanDef)]}>
+            <div css={[communicationCardContainer, manualRow(2, aBSpanDef)]}>
               {consentsWithoutOptout.map((consent) => (
                 <CommunicationCardABVariant
                   key={consent.id}
