@@ -87,7 +87,7 @@ const li = (numPages: number) => css`
 interface PageProgressionProps {
   pages: string[];
   current?: string;
-  cssOverrides?: SerializedStyles;
+  cssOverrides?: SerializedStyles | SerializedStyles[];
 }
 
 export const PageProgression: FunctionComponent<PageProgressionProps> = ({

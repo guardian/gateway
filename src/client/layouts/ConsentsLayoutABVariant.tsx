@@ -10,6 +10,7 @@ import { brand, space } from '@guardian/src-foundations';
 import { Button, LinkButton } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
 import {
+  getAutoRow,
   gridItem,
   gridItemColumnConsents,
   gridRow,
@@ -106,7 +107,6 @@ const h1 = css`
   margin: ${space[12]}px 0 ${space[5]}px 0;
   ${titlepiece.small({ fontWeight: 'bold' })};
   font-size: 38px;
-  ${gridItem(aBSpanDef)};
   line-height: 1;
   ${from.tablet} {
     ${titlepiece.medium({ fontWeight: 'bold' })};
@@ -121,7 +121,6 @@ const h1 = css`
 const pageProgression = css`
   margin-top: ${space[5]}px;
   margin-bottom: 0;
-  ${gridItem(aBSpanDef)};
   li {
     color: ${brand[400]};
     &::after {
@@ -148,6 +147,7 @@ export const ConsentsLayoutABVariant: FunctionComponent<ConsentsLayoutProps> = (
   children,
   current,
 }) => {
+  const autoRow = getAutoRow(1, aBSpanDef);
   const clientState: ClientState = useContext(ClientStateContext);
   const { pageData = {}, globalMessage: { error, success } = {} } = clientState;
   const { page = '', previousPage, returnUrl } = pageData;
@@ -161,14 +161,23 @@ export const ConsentsLayoutABVariant: FunctionComponent<ConsentsLayoutProps> = (
         {error && <GlobalError error={error} link={getErrorLink(error)} left />}
         {success && <GlobalSuccess success={success} />}
       </div>
-      <header css={consentsBackground}>
-        <div css={[gridRow, blueBorder]}>
+      <header
+        css={[
+          consentsBackground,
+          css`
+            flex: 0 0 auto;
+          `,
+        ]}
+      >
+        <div css={[blueBorder, gridRow]}>
           <PageProgression
-            cssOverrides={pageProgression}
+            cssOverrides={[pageProgression, autoRow(aBSpanDef)]}
             pages={CONSENTS_PAGES_ARR}
             current={current}
           />
-          <h1 css={h1}>Welcome, thank you for registering</h1>
+          <h1 css={[h1, autoRow(aBSpanDef)]}>
+            Welcome, thank you for registering
+          </h1>
         </div>
       </header>
       <form
