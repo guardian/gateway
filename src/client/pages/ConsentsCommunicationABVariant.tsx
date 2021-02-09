@@ -57,7 +57,7 @@ const pagePadding = css`
 
 const envelope = css`
   display: block;
-  margin: 40px auto ${space[6]}px auto;
+  margin: 0 auto;
   width: 100%;
   max-width: 234px;
   ${from.tablet} {
@@ -83,7 +83,9 @@ const envelope = css`
 const envelopeContainer = css`
   display: block;
   background-color: ${palette.background.ctaPrimary};
+  padding: 40px 0 ${space[6]}px 0;
   ${from.tablet} {
+    padding: 0;
     overflow: hidden;
     position: relative;
     grid-row: 1;
