@@ -77,7 +77,7 @@ const communicationCardBodyText = css`
   font-size: 16px;
   margin: 0;
   max-width: 640px;
-  border-top: 1px solid rgb(246 246 246 / 0.4);
+  border-top: 1px solid rgba(246, 246, 246, 0.4);
   padding-top: ${space[2]}px;
   ${from.desktop} {
     ${body.medium()};

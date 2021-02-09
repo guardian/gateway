@@ -66,7 +66,9 @@ const linkButton = css`
 const header = css`
   ${maxWidth}
   margin: 0 auto;
-  padding-right: 0;
+  ${from.tablet} {
+    padding-right: 0;
+  }
 `;
 
 const mainBackground = css`
