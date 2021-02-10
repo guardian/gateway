@@ -185,8 +185,8 @@ export const ConsentsCommunicationPageABVariant = () => {
 
   return (
     <ConsentsLayoutABVariant
-      title="Stay in touch"
       current={CONSENTS_PAGES.CONTACT}
+      title="Welcome, thank you for registering"
     >
       {market_research_optout && (
         <>

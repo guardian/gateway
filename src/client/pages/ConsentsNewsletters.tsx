@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { css } from '@emotion/react';
 import { space } from '@guardian/src-foundations';
 import {
@@ -14,6 +13,7 @@ import { ClientState } from '@/shared/model/ClientState';
 import { NewsletterCard } from '@/client/components/NewsletterCard';
 import { from } from '@guardian/src-foundations/mq';
 import { heading, text } from '@/client/styles/Consents';
+import { ABVariantLayout } from '../layouts/shared/ABVariantConsents';
 
 const getNewsletterCardCss = (index: number) => {
   const ITEMS_PER_ROW = 2;
@@ -50,7 +50,7 @@ export const ConsentsNewslettersPage = () => {
   const newsletters = clientState?.pageData?.newsletters ?? [];
   const autoRow = getAutoRow(1, gridItemColumnConsents);
   return (
-    <ConsentsLayout title="Newsletters" current={CONSENTS_PAGES.NEWSLETTERS}>
+    <ABVariantLayout title="Newsletters" current={CONSENTS_PAGES.NEWSLETTERS}>
       <h2 css={[heading, autoRow()]}>Free newsletters from The Guardian</h2>
       <p css={[text, paragraphSpacing, autoRow(consentsParagraphSpanDef)]}>
         Our newsletters help you get closer to our quality, independent
@@ -63,6 +63,6 @@ export const ConsentsNewslettersPage = () => {
           cssOverides={getNewsletterCardCss(i)}
         />
       ))}
-    </ConsentsLayout>
+    </ABVariantLayout>
   );
 };

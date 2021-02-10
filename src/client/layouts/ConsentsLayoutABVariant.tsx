@@ -35,6 +35,7 @@ interface ConsentsLayoutProps {
   children?: React.ReactNode;
   current?: string;
   title: string;
+  bgColor?: string;
 }
 
 const aBSpanDef = {
@@ -148,6 +149,8 @@ export const controls = css`
 export const ConsentsLayoutABVariant: FunctionComponent<ConsentsLayoutProps> = ({
   children,
   current,
+  title,
+  bgColor,
 }) => {
   const autoRow = getAutoRow(1, aBSpanDef);
   const clientState: ClientState = useContext(ClientStateContext);
@@ -156,6 +159,14 @@ export const ConsentsLayoutABVariant: FunctionComponent<ConsentsLayoutProps> = (
   const returnUrlQuery = returnUrl
     ? `?returnUrl=${encodeURIComponent(returnUrl)}`
     : '';
+  const optionalBgColor =
+    bgColor &&
+    css`
+      &:before {
+        background-color: ${bgColor};
+        opacity: 0.4;
+      }
+    `;
   return (
     <>
       <div css={headerContainer}>
@@ -177,9 +188,7 @@ export const ConsentsLayoutABVariant: FunctionComponent<ConsentsLayoutProps> = (
             pages={CONSENTS_PAGES_ARR}
             current={current}
           />
-          <h1 css={[h1, autoRow(aBSpanDef)]}>
-            Welcome, thank you for registering
-          </h1>
+          <h1 css={[h1, autoRow(aBSpanDef)]}>{title}</h1>
         </div>
       </header>
       <form
@@ -198,7 +207,9 @@ export const ConsentsLayoutABVariant: FunctionComponent<ConsentsLayoutProps> = (
         <CsrfFormField />
 
         <main css={main}>
-          <div css={[mainBackground, ieFlexFix]}>{children}</div>
+          <div css={[mainBackground, ieFlexFix, optionalBgColor]}>
+            {children}
+          </div>
           <ConsentsBlueBackground>
             <div css={[gridItem(aBSpanDef), controls]}>
               {!error && (
