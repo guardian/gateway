@@ -13,13 +13,13 @@ import { ClientStateContext } from '@/client/components/ClientState';
 import { NavBar } from '@/client/components/NavBar';
 import { GlobalError } from '@/client/components/GlobalError';
 import {
-  ConsentsHeader,
   mainBackground,
   ConsentsContent,
   ConsentsBlueBackground,
   controls,
   main,
 } from '@/client/layouts/shared/Consents';
+import { ABVariantHeader } from '@/client/layouts/shared/ABVariantConsents';
 import { Footer } from '@/client/components/Footer';
 import { headingWithMq, text } from '@/client/styles/Consents';
 import { Link } from '@guardian/src-link';
@@ -150,7 +150,7 @@ export const ConsentsConfirmationPage = () => {
         {error && <GlobalError error={error} link={getErrorLink(error)} left />}
         {success && <GlobalSuccess success={success} />}
       </div>
-      <ConsentsHeader title="Your registration is complete" />
+      <ABVariantHeader title="Your registration is complete" />
       <main css={[mainBackground, main]}>
         <ConsentsContent>
           <h2 css={[headingWithMq, autoRow()]}>Your selections</h2>
