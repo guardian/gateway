@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import Locations from '@/client/lib/locations';
-import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { textSans } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/react';
 import { space, neutral } from '@guardian/src-foundations';
@@ -16,6 +15,7 @@ import { ClientState } from '@/shared/model/ClientState';
 import { Consents } from '@/shared/model/Consent';
 import { Link } from '@guardian/src-link';
 import { Checkbox, CheckboxGroup } from '@guardian/src-checkbox';
+import { ABVariantLayout } from '../layouts/shared/ABVariantConsents';
 
 const fieldset = css`
   border: 0;
@@ -45,7 +45,7 @@ export const ConsentsDataPage = () => {
   );
 
   return (
-    <ConsentsLayout title="Your data" current={CONSENTS_PAGES.YOUR_DATA}>
+    <ABVariantLayout title="Your data" current={CONSENTS_PAGES.YOUR_DATA}>
       {profiling_optout && (
         <>
           <h2 css={[heading, autoRow()]}>Our commitment to you</h2>
@@ -87,6 +87,6 @@ export const ConsentsDataPage = () => {
           </fieldset>
         </>
       )}
-    </ConsentsLayout>
+    </ABVariantLayout>
   );
 };

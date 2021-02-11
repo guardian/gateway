@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { titlepiece, textSans } from '@guardian/src-foundations/typography';
+import { body, headline } from '@guardian/src-foundations/typography';
 import { css, SerializedStyles } from '@emotion/react';
 import { space, palette } from '@guardian/src-foundations';
 import { CheckboxGroup, Checkbox } from '@guardian/src-checkbox';
@@ -16,10 +16,14 @@ interface CommunicationCardProps {
 
 const communicationCard = css`
   display: flex;
+  color: ${palette.text.ctaPrimary};
   flex-direction: column;
   width: 100%;
-  border: 1px solid white;
-  margin: 0px 0px ${space[4]}px 0px;
+  background-color: ${palette.background.ctaPrimary};
+  ${from.tablet} {
+    margin: 0;
+    padding: ${space[6]}px 0;
+  }
 `;
 
 const communicationCardHeadingImage = (image: string) => css`
@@ -37,18 +41,27 @@ const communicationCardHeadingContainer = (image?: string) => css`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 14px ${space[3]}px 14px ${space[3]}px;
   ${from.tablet} {
     height: auto;
+  }
+  & p {
+    ${body.medium()};
+    font-size: 18px;
+    margin-top: 6px;
+    margin-bottom: 0;
   }
 `;
 
 const communicationCardHeadingText = css`
-  color: ${palette.text.ctaPrimary};
   margin: 0;
-  ${titlepiece.small()};
-  font-size: 20px;
+  ${headline.medium({ fontWeight: 'bold' })};
   letter-spacing: 0.3px;
+  ${from.tablet} {
+    ${headline.small({ fontWeight: 'bold' })};
+  }
+  ${from.desktop} {
+    ${headline.medium({ fontWeight: 'bold' })};
+  }
 `;
 
 const communicationCardBodyContainer = css`
@@ -56,32 +69,46 @@ const communicationCardBodyContainer = css`
   flex-direction: column;
   justify-content: flex-start;
   flex: 1 1 auto;
-  background-color: #eaeef5;
-  padding: ${space[3]}px ${space[3]}px 6px ${space[3]}px;
+  margin-top: ${space[9]}px;
 `;
 
 const communicationCardBodyText = css`
-  color: ${palette.neutral[20]};
+  ${body.small()}
+  font-size: 16px;
   margin: 0;
-  ${textSans.medium()}
   max-width: 640px;
+  border-top: 1px solid rgba(246, 246, 246, 0.4);
+  padding-top: ${space[2]}px;
+  ${from.desktop} {
+    ${body.medium()};
+  }
 `;
 
 const communicationCardCheckboxContainer = css`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  background-color: #eaeef5;
-  padding: ${space[2]}px ${space[3]}px;
+  margin-top: ${space[4]}px;
 `;
 
-// TODO: hacked background colour, should be fixed in future source checkbox implementation
-const communicationCardCheckbox = css`
-  background: ${palette.neutral[100]};
-  z-index: 0 !important;
+// @TODO: If this variant wins, this and possible the entire style of the card component can be set using the 'brand'
+// theme in Source.
+const checkbox = css`
+  color: inherit;
+  & label div {
+    color: inherit !important;
+  }
+  & input {
+    border-color: ${palette.text.ctaPrimary} !important;
+  }
+  & label span:before,
+  & label span:after {
+    background-color: ${palette.text.ctaPrimary};
+  }
 `;
 
-export const CommunicationCard: FunctionComponent<CommunicationCardProps> = ({
+// @TODO: If this variant wins then the concept of the consent card maybe obsolete.
+export const CommunicationCardABVariant: FunctionComponent<CommunicationCardProps> = ({
   title,
   body,
   value,
@@ -92,19 +119,22 @@ export const CommunicationCard: FunctionComponent<CommunicationCardProps> = ({
   return (
     <div css={[communicationCard, cssOverrides]}>
       <div css={communicationCardHeadingContainer(image)}>
-        <h3 css={communicationCardHeadingText}>{title}</h3>
+        <h3 css={communicationCardHeadingText}>
+          Sign up to our email guide with our latest offers
+        </h3>
+        <p>{title}</p>
       </div>
       <div css={communicationCardBodyContainer}>
         <p css={communicationCardBodyText}>{body}</p>
       </div>
       <div css={communicationCardCheckboxContainer}>
-        <CheckboxGroup name={value} label={title} hideLabel={true}>
-          <Checkbox
-            cssOverrides={communicationCardCheckbox}
-            value={value}
-            label="Sign Up"
-            defaultChecked={checked}
-          />
+        <CheckboxGroup
+          cssOverrides={checkbox}
+          name={value}
+          label={title}
+          hideLabel={true}
+        >
+          <Checkbox value={value} label="Sign Up" defaultChecked={checked} />
         </CheckboxGroup>
       </div>
     </div>

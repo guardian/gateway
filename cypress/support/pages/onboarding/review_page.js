@@ -11,10 +11,6 @@ class ReviewPage extends OnboardingPage {
     },
     CONSENT: {
       SUBSCRIPTIONS: 'Subscriptions, membership and contributions',
-      JOBS: 'Jobs',
-      HOLIDAYS: 'Holidays & Vacations',
-      EVENTS: 'Events & Masterclasses',
-      OFFERS: 'Offers',
     },
     CONSENT_OPTOUT: {
       RESEARCH: 'Marketing research',
