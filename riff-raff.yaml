@@ -9,7 +9,7 @@ deployments:
     parameters:
       cloudFormationStackName: gateway
       amiTags:
-        Recipe: gateway
+        Recipe: arm-gateway
         AmigoStage: PROD
       templatePath: cloudformation.yaml
       amiEncrypted: true
@@ -29,6 +29,6 @@ deployments:
       cloudFormationStackName: gateway
       amiParametersToTags:
         AMI:
-          Recipe: gateway
+          Recipe: arm-gateway
           AmigoStage: PROD
       amiEncrypted: true

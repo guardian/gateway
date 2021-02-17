@@ -148,7 +148,7 @@ Resources:
       AssociatePublicIpAddress: false
       ImageId: !Ref AMI
       IamInstanceProfile: !Ref InstanceProfile
-      InstanceType: t3.small
+      InstanceType: t4g.small
       SecurityGroups:
         - !Ref 'InstanceSecurityGroup'
         - !Ref 'SshAccessSecurityGroup'
