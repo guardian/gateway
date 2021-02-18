@@ -1478,10 +1478,10 @@
     "@guardian/src-helpers" "^3.2.0"
     "@guardian/src-icons" "^3.2.0"
 
-"@guardian/types@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@guardian/types/-/types-3.0.0.tgz#bb2cc21f2436fca98143fb18bc58346e43ee9336"
-  integrity sha512-hTrk7EEsqSI/q7fyz2PuKMwKXuXRcwY7Ws+h72bvvimmpayfTwFQgEJfsjABxTSxdTw6bGA8T3F5GV4DJs9zog==
+"@guardian/types@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@guardian/types/-/types-4.0.0.tgz#758840b4012ddea86745054165a555beeef71438"
+  integrity sha512-e1vm+oGQ/tSQySJNEdCerqHrnregmGS6l0GW5JrS7I8bP93vGoIg6d+R3B3WLSTbCzBuFnfCc+MRrkqWQSunDA==
 
 "@hapi/hoek@^9.0.0":
   version "9.0.4"
@@ -2946,10 +2946,10 @@ atob@^2.1.2:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
-aws-sdk@^2.845.0:
-  version "2.845.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.845.0.tgz#d1f932577dc1a1dcb34a35f81af97b221b741a42"
-  integrity sha512-lIOsMK6X6tyIXUB8rzYimklpFHMu96+cbWlDQkbRc5hymzSjPVY7L2LGP+PyCRjQHEnJUOk2EWswUIozhZy59A==
+aws-sdk@^2.846.0:
+  version "2.846.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.846.0.tgz#38a2f7f00a6bd28428a0d3b68f06e1c950eded93"
+  integrity sha512-r/VUmo7Ri4yxVonFARzb9reZgcURbddfKur5HlAG55Xd4ku3u7akMe/rZYFuhQbUTef6p6J19oUg/W+fnEY2Tw==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -10402,10 +10402,10 @@ snyk-try-require@1.3.1, snyk-try-require@^1.1.1, snyk-try-require@^1.3.1:
     lru-cache "^4.0.0"
     then-fs "^2.0.0"
 
-snyk@^1.455.0:
-  version "1.455.0"
-  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.455.0.tgz#a4ac3d82d8946b0137cbbb96513721fe50dc97ee"
-  integrity sha512-SDdmPxgQ1yB2wZ5KJ0YAq3a4i7HJFJhoVfCvzs458Jr5vvBN6W8PAwLQnniqQIPtyX/H70QW6PkkYu4rO8CkpA==
+snyk@^1.456.0:
+  version "1.456.0"
+  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.456.0.tgz#f2ddbf8f01d1a7bd536294ee4a39058dfd140751"
+  integrity sha512-ZcZP86DNEfny34eW626lB9FikIUmiynQuJkydf4C7Kzx1szrmQhSGaXkRohBGXBhapzildNauhVX7327aTGk8Q==
   dependencies:
     "@open-policy-agent/opa-wasm" "^1.2.0"
     "@snyk/cli-interface" "2.11.0"
@@ -11736,10 +11736,10 @@ whatwg-encoding@^1.0.5:
   dependencies:
     iconv-lite "0.4.24"
 
-whatwg-fetch@^3.5.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.5.0.tgz#605a2cd0a7146e5db141e29d1c62ab84c0c4c868"
-  integrity sha512-jXkLtsR42xhXg7akoDKvKWE40eJeI+2KZqcp2h3NsOrRnDvtWX36KcKl30dy+hxECivdk2BVUHVNrPtoMBUx6A==
+whatwg-fetch@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.6.0.tgz#3d3cd5396d986936991f79674ff811a67dc5dcc0"
+  integrity sha512-ZgtzIak+vJhRBRdz/64QikloqIyeOufspzwd7ch/TSNdK4e/kC5PqL7W4uwj0l/SyagqRkRJii5JEsufbniLgw==
 
 whatwg-mimetype@^2.3.0:
   version "2.3.0"
