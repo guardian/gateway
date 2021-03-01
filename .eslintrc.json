@@ -4,7 +4,7 @@
     "plugin:prettier/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
-    "prettier/react",
+    "prettier",
     "plugin:jsx-a11y/recommended",
     "plugin:functional/no-mutations"
   ],
