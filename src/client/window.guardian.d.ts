@@ -1,3 +1,5 @@
+/// <reference types="@emotion/react/types/css-prop" />
+
 declare global {
   /*
    * Here, declare things that go in the global namespace, or augment
