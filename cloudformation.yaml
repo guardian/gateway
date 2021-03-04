@@ -118,6 +118,15 @@ Resources:
               - Effect: Allow
                 Action: cloudwatch:PutMetricData
                 Resource: '*'
+        - PolicyName: DescribeASG
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - autoscaling:DescribeAutoScalingGroups
+                  - autoscaling:DescribeAutoScalingInstances
+                Resource: '*'
   AutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
