@@ -322,14 +322,48 @@ router.get(
 
     const html = renderer(`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`, {
       requestState: state,
-      pageTitle: 'Test page',
+      pageTitle: '@TODO: REPLACE',
     });
 
     res.type('html').status(status).send(html);
   },
 );
 
+router.post(
+  `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`,
+  loginMiddleware,
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    let state = res.locals;
+
+    const sc_gu_u = req.cookies.SC_GU_U;
+
+    let status = 200;
+
+    const url = `@TODO: REDIRECT URL`;
+    try {
+      const { update } = consentPages[1]; // Can reuse newsletter updater function.
+      if (update) {
+        await update(req.ip, sc_gu_u, req.body, state.pageData.geolocation);
+      } else {
+        throw 'Follow On Consent Update Failure';
+      }
+      return res.redirect(303, url);
+    } catch (e) {
+      [status, state] = getErrorResponse(e, state);
+    }
+
+    const html = renderer(`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`, {
+      pageTitle: '@TODO: REPLACE',
+      requestState: state,
+    });
+    res
+      .type('html')
+      .status(status ?? 500)
+      .send(html);
+  }),
+);
 //  ABTEST: followupConsent : END
+
 router.get(
   `${Routes.CONSENTS}/:page`,
   loginMiddleware,
