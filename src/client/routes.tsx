@@ -14,6 +14,7 @@ import { ConsentsConfirmationPage } from '@/client/pages/ConsentsConfirmation';
 import { ResendEmailVerificationPage } from '@/client/pages/ResendEmailVerification';
 import { ClientState } from '@/shared/model/ClientState';
 import { UnexpectedError } from '@/client/pages/UnexpectedError';
+import { ConsentsFollowUp } from './pages/ConsentsFollowUp';
 
 export type RoutingConfig = {
   clientState: ClientState;
@@ -51,6 +52,9 @@ export const GatewayRoutes = () => (
     </Route>
     <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_REVIEW}`}>
       <ConsentsConfirmationPage />
+    </Route>
+    <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`}>
+      <ConsentsFollowUp />
     </Route>
     <Route exact path={Routes.VERIFY_EMAIL}>
       <ResendEmailVerificationPage />
