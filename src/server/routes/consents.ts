@@ -19,7 +19,10 @@ import {
   CONSENTS_DATA_PAGE,
 } from '@/shared/model/Consent';
 import { loginMiddleware } from '@/server/lib/middleware/login';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import {
+  RequestState,
+  ResponseWithRequestState,
+} from '@/server/models/Express';
 import { VERIFY_EMAIL } from '@/shared/model/Success';
 import { trackMetric } from '@/server/lib/AWS';
 import { consentsPageMetric } from '@/server/models/Metrics';
@@ -29,6 +32,7 @@ import { NewsletterMap } from '@/shared/lib/newsletter';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { fourZeroFourRender } from '@/server/lib/middleware/404';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
+import { IDAPIError } from '../lib/APIFetch';
 
 const router = Router();
 
@@ -261,6 +265,71 @@ router.get(Routes.CONSENTS, loginMiddleware, (_: Request, res: Response) => {
   res.redirect(303, url);
 });
 
+//  ABTEST: followupConsent : Start
+
+function getErrorResponse(
+  e: Error | IDAPIError,
+  state: RequestState,
+): [number, RequestState] {
+  let status;
+  let message;
+  if ('status' in e) {
+    status = e.status;
+    message = e.error;
+  } else {
+    status = 500;
+    message = e.message;
+  }
+  return [
+    status,
+    {
+      ...state,
+      globalMessage: {
+        ...state.globalMessage,
+        error: message,
+      },
+    },
+  ];
+}
+
+router.get(
+  `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`,
+  async (req: Request, res: ResponseWithRequestState) => {
+    const { ip, cookies } = req;
+    const sc_gu_u = cookies.SC_GU_U;
+    let state = res.locals;
+    let status = 200;
+    const geocode = state.pageData.geolocation;
+
+    try {
+      const newsletters = (
+        await getUserNewsletterSubscriptions(
+          NewsletterMap.get(geocode) as string[],
+          ip,
+          sc_gu_u,
+        )
+      ).slice(0, 1); // Assume 'Today' newsletter is the leading newsletter in NewsletterMap;
+      state = {
+        ...state,
+        pageData: {
+          ...state.pageData,
+          newsletters,
+        },
+      };
+    } catch (error) {
+      [status, state] = getErrorResponse(error, state);
+    }
+
+    const html = renderer(`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`, {
+      requestState: state,
+      pageTitle: 'Test page',
+    });
+
+    res.type('html').status(status).send(html);
+  },
+);
+
+//  ABTEST: followupConsent : END
 router.get(
   `${Routes.CONSENTS}/:page`,
   loginMiddleware,
