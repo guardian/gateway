@@ -9,10 +9,18 @@ define log
 		@node scripts/log $(1)
 endef
 
+# prod
+build: clear clean-build install
+	$(call log, "building production bundles")
+	@yarn build
+
+riffraff:
+	@yarn riffraff
+
 # dev
 
 dev: clear clean-build install
-	$(call log, "starting frontend DEV server")
+	$(call log, "starting development server")
 	@(set -a && source .env && yarn watch:server & yarn watch & wait)
 
 # QA
