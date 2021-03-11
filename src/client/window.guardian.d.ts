@@ -14,6 +14,7 @@ declare global {
       };
     };
     Cypress: unknown;
+    ga: unknown;
   }
 }
 

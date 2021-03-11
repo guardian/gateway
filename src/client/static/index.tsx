@@ -1,7 +1,11 @@
 import { hydrateApp } from '@/client/static/hydration';
 
 // method to check if the cmp should show
-import { cmp } from '@guardian/consent-management-platform';
+import {
+  cmp,
+  getConsentFor,
+  onConsentChange,
+} from '@guardian/consent-management-platform';
 
 // country code helper
 import { getCountryCode } from './countryCode';
@@ -15,13 +19,23 @@ import { init as ophanInit } from './analytics/ophan';
 // initialise source accessibility
 import './sourceAccessibility';
 
+const initGoogleAnalyticsWhenConsented = () => {
+  onConsentChange((consentState) => {
+    if (
+      getConsentFor('google-analytics', consentState) &&
+      window.ga === undefined
+    ) {
+      gaInit();
+    }
+  });
+};
+
 hydrateApp();
 
 // initalise ophan
 ophanInit();
 
-// initialise google analytics
-gaInit();
+initGoogleAnalyticsWhenConsented();
 
 // don't load this if running in cypress
 if (!window.Cypress) {
