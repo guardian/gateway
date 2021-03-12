@@ -53,6 +53,7 @@
     "babel-jest": "^26.6.3",
     "babel-loader": "^8.2.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
+    "chalk-rainbow": "^1.0.0",
     "copy-node-modules": "^1.1.1",
     "core-js": "^3.9.1",
     "cypress": "^6.6.0",

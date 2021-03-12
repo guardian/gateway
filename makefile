@@ -9,6 +9,10 @@ define log
 		@node scripts/log $(1)
 endef
 
+define banner
+		@node scripts/banner $(1)
+endef
+
 # prod
 build: clear clean-build install
 	$(call log, "building production bundles")
@@ -20,6 +24,7 @@ riffraff:
 # dev
 
 dev: clear clean-build install
+	$(call banner, "gateway is starting")
 	$(call log, "starting development server")
 	@(set -a && source .env && yarn watch:server & yarn watch & wait)
 
