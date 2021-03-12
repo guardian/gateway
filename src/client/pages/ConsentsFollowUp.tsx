@@ -1,6 +1,8 @@
 import { ClientState } from '@/shared/model/ClientState';
 import { Routes } from '@/shared/model/Routes';
 import { css } from '@emotion/react';
+import { Button } from '@guardian/src-button';
+import { Checkbox, CheckboxGroup } from '@guardian/src-checkbox';
 import { brand } from '@guardian/src-foundations';
 import { from } from '@guardian/src-foundations/mq';
 import { titlepiece } from '@guardian/src-foundations/typography';
@@ -81,6 +83,28 @@ export const ConsentsFollowUp = () => {
         action={`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`}
         method="post"
       >
+        <div>
+          <Container cssOverrides={gridRow}>
+            {newsletters.map((newsletter, i) => (
+              <div key={i} css={autoRow()}>
+                <h2>{newsletter.name}</h2>
+                <p>{newsletter.description}</p>
+                <CheckboxGroup
+                  name={newsletter.id}
+                  label={newsletter.name}
+                  hideLabel={true}
+                >
+                  <Checkbox
+                    value={newsletter.id}
+                    label="Sign Up"
+                    /* defaultChecked={props.newsletter.subscribed} */
+                  />
+                </CheckboxGroup>
+                <Button type="submit">Continue to The Guardian</Button>
+              </div>
+            ))}
+          </Container>
+        </div>
         <CsrfFormField />
       </form>
       <Footer />
