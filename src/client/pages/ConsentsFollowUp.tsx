@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { brand } from '@guardian/src-foundations';
 import { from } from '@guardian/src-foundations/mq';
 import { titlepiece } from '@guardian/src-foundations/typography';
-import { Column, Columns, Container } from '@guardian/src-layout';
+import { Container } from '@guardian/src-layout';
 import React, { useContext } from 'react';
 import { ClientStateContext } from '../components/ClientState';
 import { CsrfFormField } from '../components/CsrfFormField';
@@ -13,6 +13,7 @@ import { GlobalError } from '../components/GlobalError';
 import { GlobalSuccess } from '../components/GlobalSuccess';
 import { NavBar } from '../components/NavBar';
 import { getErrorLink } from '../lib/ErrorLink';
+import { getAutoRow, gridItemColumnConsents, gridRow } from '../styles/Grid';
 import { maxWidth } from '../styles/Shared';
 
 const GUARDIAN_BRAND = brand[400];
@@ -43,10 +44,27 @@ const titleContainer = css`
   background-color: ${GUARDIAN_BRAND};
 `;
 
+const spanDef = {
+  ...gridItemColumnConsents,
+  TABLET: {
+    start: 1,
+    span: 12,
+  },
+  DESKTOP: {
+    start: 2,
+    span: 8,
+  },
+  WIDE: {
+    start: 3,
+    span: 8,
+  },
+};
+
 export const ConsentsFollowUp = () => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { globalMessage: { error, success } = {} } = clientState;
   const newsletters = clientState?.pageData?.newsletters ?? [];
+  const autoRow = getAutoRow(1, spanDef);
   return (
     <>
       <div css={headerContainer}>
@@ -55,12 +73,8 @@ export const ConsentsFollowUp = () => {
         {success && <GlobalSuccess success={success} />}
       </div>
       <div css={titleContainer}>
-        <Container>
-          <Columns>
-            <Column width={[1, 0.5]}>
-              <h1 css={h1}>Get the headlines in your inbox</h1>
-            </Column>
-          </Columns>
+        <Container cssOverrides={gridRow}>
+          <h1 css={[h1, autoRow()]}>Get the headlines in your inbox</h1>
         </Container>
       </div>
       <form
