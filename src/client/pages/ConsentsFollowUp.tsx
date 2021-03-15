@@ -59,12 +59,20 @@ const titleContainer = css`
 `;
 
 const img = css`
-  background-color: firebrick;
+  background-color: firebrick; /* TODO: REMOVE */
   width: 218px;
   height: 435px; /* TODO: auto this when asset secured (Also in MQ section) */
   margin-bottom: -165px;
   display: block;
   justify-self: center;
+  ${from.tablet} {
+    width: 255px;
+    height: 512px;
+  }
+  ${from.desktop} {
+    margin-top: 80px;
+    margin-bottom: -221px;
+  }
 `;
 
 const newsletterCard = css`
@@ -78,6 +86,11 @@ const newsletterCard = css`
     ${body.medium()}
     border-top: 1px solid ${BORDER_GREY};
     margin-bottom: 2px;
+  }
+  ${from.desktop} {
+    border-top: 0;
+    -ms-grid-row: 1;
+    grid-row: 1;
   }
 `;
 
@@ -96,14 +109,8 @@ const newsletterContainer = css`
 const containerGeneral = css`
   padding-left: 0;
   padding-right: 0;
+  overflow: hidden;
 `;
-
-const imageSpanDef = {
-  MOBILE: {
-    start: 1,
-    span: 4,
-  },
-};
 
 const spanDef = {
   ...gridItemColumnConsents,
@@ -118,6 +125,41 @@ const spanDef = {
   WIDE: {
     start: 3,
     span: 8,
+  },
+};
+
+const newsletterSpanDef = {
+  ...gridItemColumnConsents,
+  TABLET: {
+    start: 1,
+    span: 12,
+  },
+  DESKTOP: {
+    start: 2,
+    span: 5,
+  },
+  WIDE: {
+    start: 3,
+    span: 5,
+  },
+};
+
+const imageSpanDef = {
+  MOBILE: {
+    start: 1,
+    span: 4,
+  },
+  TABLET: {
+    start: 1,
+    span: 12,
+  },
+  DESKTOP: {
+    start: 8,
+    span: 4,
+  },
+  WIDE: {
+    start: 11,
+    span: 5,
   },
 };
 
@@ -149,7 +191,10 @@ export const ConsentsFollowUp = () => {
               alt="Phone with newsletter displayed"
             />
             {newsletters.map((newsletter, i) => (
-              <div key={i} css={[newsletterCard, manualRow(2, spanDef)]}>
+              <div
+                key={i}
+                css={[newsletterCard, manualRow(2, newsletterSpanDef)]}
+              >
                 <h2>{newsletter.name}</h2>
                 <p>{newsletter.description}</p>
                 <CheckboxGroup
