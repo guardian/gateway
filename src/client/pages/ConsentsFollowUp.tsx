@@ -19,18 +19,23 @@ import { GlobalError } from '../components/GlobalError';
 import { GlobalSuccess } from '../components/GlobalSuccess';
 import { NavBar } from '../components/NavBar';
 import { getErrorLink } from '../lib/ErrorLink';
-import { getAutoRow, gridItemColumnConsents, gridRow } from '../styles/Grid';
+import {
+  getAutoRow,
+  gridItemColumnConsents,
+  gridRow,
+  manualRow,
+} from '../styles/Grid';
 import { maxWidth } from '../styles/Shared';
 
 const GUARDIAN_BRAND = brand[400];
 const ELECTION_BEIGE = '#DDDBD1';
 const BORDER_GREY = '#DCDCDC';
 const MARGIN_OFFSET_PX = 40;
+const NEWSLETTER_CONTAINER_BGCOLOR = 'white';
 
 const header = css`
   ${maxWidth}
   margin: 0 auto;
-  padding-right: 0;
 `;
 
 const headerContainer = css`
@@ -55,14 +60,17 @@ const titleContainer = css`
 
 const img = css`
   background-color: firebrick;
-  width: 230px;
-  height: 440px;
+  width: 218px;
+  height: 435px;
+  margin-bottom: -165px;
   display: block;
+  justify-self: center;
 `;
 
 const newsletterCard = css`
   padding: 0 ${space[3]}px 30px ${space[3]}px;
   border-top: 1px solid ${BORDER_GREY};
+  background-color: ${NEWSLETTER_CONTAINER_BGCOLOR};
   & h2 {
     ${headline.xsmall({ fontWeight: 'bold' })}
   }
@@ -78,7 +86,7 @@ const checkboxGroup = css`
 `;
 
 const newsletterContainer = css`
-  background-color: white;
+  background-color: ${NEWSLETTER_CONTAINER_BGCOLOR};
   border: 1px solid ${BORDER_GREY};
   margin: 0 12px; /* @TODO: Bring this in from the span def? */
   margin-top: -${MARGIN_OFFSET_PX}px;
@@ -89,6 +97,13 @@ const containerGeneral = css`
   padding-left: 0;
   padding-right: 0;
 `;
+
+const imageSpanDef = {
+  MOBILE: {
+    start: 1,
+    span: 4,
+  },
+};
 
 const spanDef = {
   ...gridItemColumnConsents,
@@ -129,9 +144,12 @@ export const ConsentsFollowUp = () => {
       >
         <div css={newsletterContainer}>
           <Container cssOverrides={[gridRow, containerGeneral]}>
-            <img css={img} alt="Phone with newsletter displayed" />
+            <img
+              css={[img, manualRow(1, imageSpanDef)]}
+              alt="Phone with newsletter displayed"
+            />
             {newsletters.map((newsletter, i) => (
-              <div key={i} css={[newsletterCard, autoRow()]}>
+              <div key={i} css={[newsletterCard, manualRow(2, spanDef)]}>
                 <h2>{newsletter.name}</h2>
                 <p>{newsletter.description}</p>
                 <CheckboxGroup
