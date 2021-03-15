@@ -70,6 +70,9 @@ install: check-env
 reinstall: clear clean-deps install
 	$(call log, "dependencies have been reinstalled ♻️")
 
+upgrade: clear
+	@yarn upgrade-interactive --latest
+
 clear: # private
 	@clear
 
