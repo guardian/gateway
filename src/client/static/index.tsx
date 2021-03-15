@@ -35,8 +35,6 @@ hydrateApp();
 // initalise ophan
 ophanInit();
 
-initGoogleAnalyticsWhenConsented();
-
 // don't load this if running in cypress
 if (!window.Cypress) {
   // load cmp if it should show
@@ -46,3 +44,5 @@ if (!window.Cypress) {
     cmp.init({ country });
   })();
 }
+
+initGoogleAnalyticsWhenConsented();
