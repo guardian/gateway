@@ -30,7 +30,7 @@
     "@babel/preset-env": "^7.13.9",
     "@babel/preset-react": "^7.12.13",
     "@babel/preset-typescript": "^7.13.0",
-    "@babel/runtime": "^7.13.9",
+    "@babel/runtime": "^7.13.10",
     "@emotion/babel-preset-css-prop": "^11.2.0",
     "@guardian/types": "^4.0.0",
     "@types/compression": "^1.7.0",
