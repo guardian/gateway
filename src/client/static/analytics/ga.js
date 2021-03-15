@@ -40,10 +40,14 @@ export const init = () => {
 };
 
 export const customMetric = (event) => {
+  if (window.ga === undefined) return;
+
   window.ga(gaTracker + '.send', 'event', buildGoogleAnalyticsEvent(event));
 };
 
 export const fetchTracker = (callback) => {
+  if (window.ga === undefined) return;
+
   window.ga(function () {
     const tracker = window.ga.getByName(gaTracker);
     return callback(tracker);
@@ -51,5 +55,7 @@ export const fetchTracker = (callback) => {
 };
 
 export const pageView = (path = location.pathname) => {
+  if (window.ga === undefined) return;
+
   window.ga(gaTracker + '.send', 'pageview', path);
 };
