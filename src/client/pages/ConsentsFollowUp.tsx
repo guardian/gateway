@@ -3,9 +3,13 @@ import { Routes } from '@/shared/model/Routes';
 import { css } from '@emotion/react';
 import { Button } from '@guardian/src-button';
 import { Checkbox, CheckboxGroup } from '@guardian/src-checkbox';
-import { brand } from '@guardian/src-foundations';
+import { brand, space } from '@guardian/src-foundations';
 import { from } from '@guardian/src-foundations/mq';
-import { titlepiece } from '@guardian/src-foundations/typography';
+import {
+  body,
+  headline,
+  titlepiece,
+} from '@guardian/src-foundations/typography';
 import { Container } from '@guardian/src-layout';
 import React, { useContext } from 'react';
 import { ClientStateContext } from '../components/ClientState';
@@ -20,6 +24,8 @@ import { maxWidth } from '../styles/Shared';
 
 const GUARDIAN_BRAND = brand[400];
 const ELECTION_BEIGE = '#DDDBD1';
+const BORDER_GREY = '#DCDCDC';
+const MARGIN_OFFSET_PX = 40;
 
 const header = css`
   ${maxWidth}
@@ -37,6 +43,7 @@ const h1 = css`
   ${titlepiece.small()};
   font-size: 34px;
   margin-top: 60px;
+  margin-bottom: ${MARGIN_OFFSET_PX + 28}px;
   ${from.tablet} {
     ${titlepiece.large()};
   }
@@ -44,6 +51,43 @@ const h1 = css`
 
 const titleContainer = css`
   background-color: ${GUARDIAN_BRAND};
+`;
+
+const img = css`
+  background-color: firebrick;
+  width: 230px;
+  height: 440px;
+  display: block;
+`;
+
+const newsletterCard = css`
+  padding: 0 ${space[3]}px 30px ${space[3]}px;
+  border-top: 1px solid ${BORDER_GREY};
+  & h2 {
+    ${headline.xsmall({ fontWeight: 'bold' })}
+  }
+  & p {
+    ${body.medium()}
+    border-top: 1px solid ${BORDER_GREY};
+    margin-bottom: 2px;
+  }
+`;
+
+const checkboxGroup = css`
+  margin-bottom: ${space[6]}px;
+`;
+
+const newsletterContainer = css`
+  background-color: white;
+  border: 1px solid ${BORDER_GREY};
+  margin: 0 12px; /* @TODO: Bring this in from the span def? */
+  margin-top: -${MARGIN_OFFSET_PX}px;
+  margin-bottom: 70px;
+`;
+
+const containerGeneral = css`
+  padding-left: 0;
+  padding-right: 0;
 `;
 
 const spanDef = {
@@ -83,16 +127,18 @@ export const ConsentsFollowUp = () => {
         action={`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`}
         method="post"
       >
-        <div>
-          <Container cssOverrides={gridRow}>
+        <div css={newsletterContainer}>
+          <Container cssOverrides={[gridRow, containerGeneral]}>
+            <img css={img} alt="Phone with newsletter displayed" />
             {newsletters.map((newsletter, i) => (
-              <div key={i} css={autoRow()}>
+              <div key={i} css={[newsletterCard, autoRow()]}>
                 <h2>{newsletter.name}</h2>
                 <p>{newsletter.description}</p>
                 <CheckboxGroup
                   name={newsletter.id}
                   label={newsletter.name}
                   hideLabel={true}
+                  cssOverrides={checkboxGroup}
                 >
                   <Checkbox
                     value={newsletter.id}
