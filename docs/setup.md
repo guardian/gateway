@@ -83,7 +83,7 @@ You can easily run any commands on the container using:
 ```sh
 $ docker-compose run gateway <COMMAND>
 # example
-$ docker-compose run gateway yarn test
+$ docker-compose run gateway make test
 # or multiple commands
 $ docker-compose run gateway sh -c "yarn && yarn build && yarn test"
 ```
@@ -103,15 +103,13 @@ Firstly make sure your running the version of Node given by `.nvmrc`, if you hav
 Next install dependencies:
 
 ```sh
-$ yarn
+$ make install
 ```
 
 Then to start the development server:
 
 ```sh
-$ ./start-dev.sh
-# or
-$ (set -a && source .env && yarn watch:server & yarn watch & wait)
+$ make dev
 ```
 
 This adds the environment variables from the `.env` file and starts the development server.
@@ -127,7 +125,7 @@ We run unit tests using [`jest`](https://jestjs.io/). Our unit tests are defined
 To run all the unit tests:
 
 ```sh
-$ docker-compose run gateway yarn test
+$ docker-compose run gateway make test
 ```
 
 #### Running tests without Docker
@@ -135,7 +133,7 @@ $ docker-compose run gateway yarn test
 To run all the unit tests:
 
 ```sh
-$ yarn test
+$ make test
 ```
 
 ### Integration Tests
@@ -147,12 +145,16 @@ First make sure that the development environment isn't running, since the follow
 You can then open the test runner using:
 
 ```sh
+$ make cypress
+# or
 $ ./cypress-open.sh 
 ```
 
 To run the tests headless and automatically (how they are run on CI) use:
 
 ```sh
+$ make ci
+# or
 $ ./ci.sh
 ```
 

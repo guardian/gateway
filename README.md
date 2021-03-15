@@ -47,9 +47,7 @@ $ yarn
 Start development server:
 
 ```sh
-$ ./start-dev.sh
-# or
-$ (set -a && source .env && yarn watch:server & yarn watch & wait)
+$ make dev
 ```
 
 ## Development Guides
