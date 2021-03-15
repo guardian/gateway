@@ -1549,10 +1549,10 @@
     "@guardian/src-helpers" "^3.3.0"
     "@guardian/src-icons" "^3.3.0"
 
-"@guardian/types@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@guardian/types/-/types-4.0.0.tgz#758840b4012ddea86745054165a555beeef71438"
-  integrity sha512-e1vm+oGQ/tSQySJNEdCerqHrnregmGS6l0GW5JrS7I8bP93vGoIg6d+R3B3WLSTbCzBuFnfCc+MRrkqWQSunDA==
+"@guardian/types@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@guardian/types/-/types-5.1.0.tgz#d83e4fe911c0d4d460551855d47d07df0f0af8f2"
+  integrity sha512-8JQFfHqskOyc1ruSwWiJD8W4XuCsGorMpwEMRsBM3/zHykAiizsJu7827UbeFCWJ5FUquO/blXzm7oK8ZO99CQ==
 
 "@hapi/hoek@^9.0.0":
   version "9.0.4"
