@@ -266,7 +266,7 @@ router.get(Routes.CONSENTS, loginMiddleware, (_: Request, res: Response) => {
 });
 
 //  ABTEST: followupConsent : Start
-
+// TODO: Test Auth
 function getErrorResponse(
   e: Error | IDAPIError,
   state: RequestState,
@@ -322,7 +322,7 @@ router.get(
 
     const html = renderer(`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`, {
       requestState: state,
-      pageTitle: '@TODO: REPLACE',
+      pageTitle: 'TODO: REPLACE',
     });
 
     res.type('html').status(status).send(html);
@@ -339,7 +339,7 @@ router.post(
 
     let status = 200;
 
-    const url = `@TODO: REDIRECT URL`;
+    const url = `TODO: REDIRECT URL`;
     try {
       const { update } = consentPages[1]; // Can reuse newsletter updater function.
       if (update) {
@@ -353,7 +353,7 @@ router.post(
     }
 
     const html = renderer(`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`, {
-      pageTitle: '@TODO: REPLACE',
+      pageTitle: 'TODO: REPLACE',
       requestState: state,
     });
     res

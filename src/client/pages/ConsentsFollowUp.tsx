@@ -61,7 +61,7 @@ const titleContainer = css`
 const img = css`
   background-color: firebrick;
   width: 218px;
-  height: 435px;
+  height: 435px; /* TODO: auto this when asset secured (Also in MQ section) */
   margin-bottom: -165px;
   display: block;
   justify-self: center;
@@ -88,7 +88,7 @@ const checkboxGroup = css`
 const newsletterContainer = css`
   background-color: ${NEWSLETTER_CONTAINER_BGCOLOR};
   border: 1px solid ${BORDER_GREY};
-  margin: 0 12px; /* @TODO: Bring this in from the span def? */
+  margin: 0 12px; /* TODO: Bring this in from the span def? */
   margin-top: -${MARGIN_OFFSET_PX}px;
   margin-bottom: 70px;
 `;
@@ -161,7 +161,7 @@ export const ConsentsFollowUp = () => {
                   <Checkbox
                     value={newsletter.id}
                     label="Sign Up"
-                    /* defaultChecked={props.newsletter.subscribed} */
+                    /* TODO: What is the status on this? defaultChecked={props.newsletter.subscribed} */
                   />
                 </CheckboxGroup>
                 <Button type="submit">Continue to The Guardian</Button>
