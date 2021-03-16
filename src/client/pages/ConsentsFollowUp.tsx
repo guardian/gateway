@@ -32,7 +32,6 @@ import NEWSLETTER_PHONE_IMAGE from '@/client/assets/newsletter_phone.png';
 const GUARDIAN_BRAND = brand[400];
 const ELECTION_BEIGE = '#DDDBD1';
 const BORDER_GREY = '#DCDCDC';
-const MARGIN_OFFSET_PX = 40;
 const NEWSLETTER_CONTAINER_BGCOLOR = 'white';
 
 const header = css`
@@ -50,9 +49,13 @@ const h1 = css`
   ${titlepiece.small()};
   font-size: 34px;
   margin-top: 60px;
-  margin-bottom: ${MARGIN_OFFSET_PX + 28}px;
+  margin-bottom: 75px;
   ${from.tablet} {
+    font-size: 47px;
+  }
+  ${from.desktop} {
     ${titlepiece.large()};
+    margin-bottom: 132px;
   }
 `;
 
@@ -66,9 +69,10 @@ const img = css`
   display: block;
   justify-self: center;
   margin-top: 48px;
+  align-self: end;
   ${from.desktop} {
     width: 255px;
-    margin-top: 80px;
+    margin-top: 0;
     margin-bottom: -50px;
   }
 `;
@@ -93,6 +97,18 @@ const newsletterCard = css`
     border-top: 0;
     -ms-grid-row: 1;
     grid-row: 1;
+    padding-left: 0;
+    padding-right: 0;
+
+    & h2 {
+      ${headline.medium({ fontWeight: 'bold' })}
+      margin-top: ${space[1]}px;
+      margin-bottom: ${space[9]}px;
+    }
+
+    & p {
+      font-size: 20px;
+    }
   }
 `;
 
@@ -104,7 +120,7 @@ const newsletterContainer = css`
   background-color: ${NEWSLETTER_CONTAINER_BGCOLOR};
   border: 1px solid ${BORDER_GREY};
   margin: 0 ${space[3]}px; /* TODO: Bring this in from the span def? */
-  margin-top: -${MARGIN_OFFSET_PX}px;
+  margin-top: -40px;
   margin-bottom: 70px;
   ${from.tablet} {
     margin-left: auto;
@@ -112,6 +128,7 @@ const newsletterContainer = css`
     max-width: ${MAX_WIDTH.TABLET}px;
   }
   ${from.desktop} {
+    margin-top: -70px;
     max-width: ${MAX_WIDTH.DESKTOP}px;
   }
   ${from.wide} {
@@ -149,11 +166,11 @@ const newsletterSpanDef = {
   },
   DESKTOP: {
     start: 2,
-    span: 5,
+    span: 6,
   },
   WIDE: {
     start: 3,
-    span: 5,
+    span: 7,
   },
 };
 
