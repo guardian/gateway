@@ -266,7 +266,7 @@ router.get(Routes.CONSENTS, loginMiddleware, (_: Request, res: Response) => {
 });
 
 //  ABTEST: followupConsent : Start
-// TODO: Test Auth
+// TODO: Test Auth, Test Error especially IDAPI failure.
 function getErrorResponse(
   e: Error | IDAPIError,
   state: RequestState,

@@ -24,8 +24,10 @@ import {
   gridItemColumnConsents,
   gridRow,
   manualRow,
+  MAX_WIDTH,
 } from '../styles/Grid';
 import { maxWidth } from '../styles/Shared';
+import NEWSLETTER_PHONE_IMAGE from '@/client/assets/newsletter_phone.png';
 
 const GUARDIAN_BRAND = brand[400];
 const ELECTION_BEIGE = '#DDDBD1';
@@ -59,20 +61,20 @@ const titleContainer = css`
 `;
 
 const img = css`
-  background-color: firebrick; /* TODO: REMOVE */
   width: 218px;
-  height: 435px; /* TODO: auto this when asset secured (Also in MQ section) */
-  margin-bottom: -165px;
+  height: auto;
   display: block;
   justify-self: center;
-  ${from.tablet} {
-    width: 255px;
-    height: 512px;
-  }
+  margin-top: 48px;
   ${from.desktop} {
+    width: 255px;
     margin-top: 80px;
-    margin-bottom: -221px;
+    margin-bottom: -50px;
   }
+`;
+
+const form = css`
+  flex: 1 0;
 `;
 
 const newsletterCard = css`
@@ -101,9 +103,20 @@ const checkboxGroup = css`
 const newsletterContainer = css`
   background-color: ${NEWSLETTER_CONTAINER_BGCOLOR};
   border: 1px solid ${BORDER_GREY};
-  margin: 0 12px; /* TODO: Bring this in from the span def? */
+  margin: 0 ${space[3]}px; /* TODO: Bring this in from the span def? */
   margin-top: -${MARGIN_OFFSET_PX}px;
   margin-bottom: 70px;
+  ${from.tablet} {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: ${MAX_WIDTH.TABLET}px;
+  }
+  ${from.desktop} {
+    max-width: ${MAX_WIDTH.DESKTOP}px;
+  }
+  ${from.wide} {
+    max-width: ${MAX_WIDTH.WIDE}px;
+  }
 `;
 
 const containerGeneral = css`
@@ -154,12 +167,12 @@ const imageSpanDef = {
     span: 12,
   },
   DESKTOP: {
-    start: 8,
-    span: 4,
+    start: 9,
+    span: 3,
   },
   WIDE: {
-    start: 11,
-    span: 5,
+    start: 12,
+    span: 3,
   },
 };
 
@@ -183,11 +196,13 @@ export const ConsentsFollowUp = () => {
       <form
         action={`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`}
         method="post"
+        css={form}
       >
         <div css={newsletterContainer}>
           <Container cssOverrides={[gridRow, containerGeneral]}>
             <img
               css={[img, manualRow(1, imageSpanDef)]}
+              src={NEWSLETTER_PHONE_IMAGE}
               alt="Phone with newsletter displayed"
             />
             {newsletters.map((newsletter, i) => (
