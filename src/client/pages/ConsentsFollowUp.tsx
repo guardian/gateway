@@ -17,7 +17,7 @@ import { CsrfFormField } from '../components/CsrfFormField';
 import { Footer } from '../components/Footer';
 import { GlobalError } from '../components/GlobalError';
 import { GlobalSuccess } from '../components/GlobalSuccess';
-import { NavBar } from '../components/NavBar';
+import { SvgGuardianLogo } from '@guardian/src-brand';
 import { getErrorLink } from '../lib/ErrorLink';
 import {
   getAutoRow,
@@ -26,7 +26,6 @@ import {
   manualRow,
   MAX_WIDTH,
 } from '../styles/Grid';
-import { maxWidth } from '../styles/Shared';
 import NEWSLETTER_PHONE_IMAGE from '@/client/assets/newsletter_phone.png';
 
 const GUARDIAN_BRAND = brand[400];
@@ -34,9 +33,91 @@ const ELECTION_BEIGE = '#DDDBD1';
 const BORDER_GREY = '#DCDCDC';
 const NEWSLETTER_CONTAINER_BGCOLOR = 'white';
 
-const header = css`
-  ${maxWidth}
+const spanDef = {
+  ...gridItemColumnConsents,
+  TABLET: {
+    start: 1,
+    span: 12,
+  },
+  DESKTOP: {
+    start: 2,
+    span: 8,
+  },
+  WIDE: {
+    start: 3,
+    span: 8,
+  },
+};
+
+const newsletterSpanDef = {
+  ...gridItemColumnConsents,
+  TABLET: {
+    start: 1,
+    span: 12,
+  },
+  DESKTOP: {
+    start: 2,
+    span: 6,
+  },
+  WIDE: {
+    start: 3,
+    span: 7,
+  },
+};
+
+const imageSpanDef = {
+  MOBILE: {
+    start: 1,
+    span: 4,
+  },
+  TABLET: {
+    start: 1,
+    span: 12,
+  },
+  DESKTOP: {
+    start: 9,
+    span: 3,
+  },
+  WIDE: {
+    start: 12,
+    span: 3,
+  },
+};
+
+const newsletterBackgroundSpanDef = {
+  ...gridItemColumnConsents,
+  TABLET: {
+    start: 1,
+    span: 12,
+  },
+  DESKTOP: {
+    start: 1,
+    span: 12,
+  },
+  WIDE: {
+    start: 2,
+    span: 14,
+  },
+};
+
+const nav = css`
+  background-color: ${brand[400]};
+  height: 70px;
   margin: 0 auto;
+  padding-top: ${space[2]}px;
+  padding-bottom: ${space[2]}px;
+  & svg {
+    justify-self: right;
+    height: 100%;
+    fill: white;
+    ${manualRow(1, newsletterBackgroundSpanDef)}
+  }
+
+  ${from.desktop} {
+    height: 116px;
+    padding-top: ${space[3]}px;
+    padding-bottom: ${space[3]}px;
+  }
 `;
 
 const headerContainer = css`
@@ -145,73 +226,6 @@ const newsletterBackground = css`
   }
 `;
 
-const spanDef = {
-  ...gridItemColumnConsents,
-  TABLET: {
-    start: 1,
-    span: 12,
-  },
-  DESKTOP: {
-    start: 2,
-    span: 8,
-  },
-  WIDE: {
-    start: 3,
-    span: 8,
-  },
-};
-
-const newsletterSpanDef = {
-  ...gridItemColumnConsents,
-  TABLET: {
-    start: 1,
-    span: 12,
-  },
-  DESKTOP: {
-    start: 2,
-    span: 6,
-  },
-  WIDE: {
-    start: 3,
-    span: 7,
-  },
-};
-
-const imageSpanDef = {
-  MOBILE: {
-    start: 1,
-    span: 4,
-  },
-  TABLET: {
-    start: 1,
-    span: 12,
-  },
-  DESKTOP: {
-    start: 9,
-    span: 3,
-  },
-  WIDE: {
-    start: 12,
-    span: 3,
-  },
-};
-
-const newsletterBackgroundSpanDef = {
-  ...gridItemColumnConsents,
-  TABLET: {
-    start: 1,
-    span: 12,
-  },
-  DESKTOP: {
-    start: 1,
-    span: 12,
-  },
-  WIDE: {
-    start: 2,
-    span: 14,
-  },
-};
-
 export const ConsentsFollowUp = () => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { globalMessage: { error, success } = {} } = clientState;
@@ -219,8 +233,10 @@ export const ConsentsFollowUp = () => {
   const autoRow = getAutoRow(1, spanDef);
   return (
     <>
-      <div css={headerContainer}>
-        <NavBar cssOverrides={header} />
+      <div css={[headerContainer]}>
+        <nav css={[gridRow, nav]}>
+          <SvgGuardianLogo />
+        </nav>
         {error && <GlobalError error={error} link={getErrorLink(error)} left />}
         {success && <GlobalSuccess success={success} />}
       </div>
