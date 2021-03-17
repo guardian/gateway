@@ -1,3 +1,4 @@
+// ABTEST: followupConsent: This page is only used as part of the followupConsent abtest.
 import { ClientState } from '@/shared/model/ClientState';
 import { Routes } from '@/shared/model/Routes';
 import { css } from '@emotion/react';
@@ -228,9 +229,13 @@ const newsletterBackground = css`
 
 export const ConsentsFollowUp = () => {
   const clientState: ClientState = useContext(ClientStateContext);
-  const { globalMessage: { error, success } = {} } = clientState;
+  const { globalMessage: { error, success } = {}, pageData = {} } = clientState;
+  const { returnUrl } = pageData;
   const newsletters = clientState?.pageData?.newsletters ?? [];
   const autoRow = getAutoRow(1, spanDef);
+  const returnUrlQuery = returnUrl
+    ? `?returnUrl=${encodeURIComponent(returnUrl)}`
+    : '';
   return (
     <>
       <div css={[headerContainer]}>
@@ -246,7 +251,7 @@ export const ConsentsFollowUp = () => {
         </Container>
       </div>
       <form
-        action={`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`}
+        action={`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}${returnUrlQuery}`}
         method="post"
         css={form}
       >
@@ -275,11 +280,7 @@ export const ConsentsFollowUp = () => {
                 hideLabel={true}
                 cssOverrides={checkboxGroup}
               >
-                <Checkbox
-                  value={newsletter.id}
-                  label="Sign Up"
-                  /* TODO: What is the status on this? defaultChecked={props.newsletter.subscribed} */
-                />
+                <Checkbox value={newsletter.id} label="Yes, sign me up" />
               </CheckboxGroup>
               <Button type="submit">Continue to The Guardian</Button>
             </div>

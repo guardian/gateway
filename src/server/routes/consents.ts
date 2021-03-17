@@ -33,6 +33,7 @@ import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { fourZeroFourRender } from '@/server/lib/middleware/404';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { IDAPIError } from '../lib/APIFetch';
+import { getConfiguration } from '../lib/getConfiguration';
 
 const router = Router();
 
@@ -266,19 +267,21 @@ router.get(Routes.CONSENTS, loginMiddleware, (_: Request, res: Response) => {
 });
 
 //  ABTEST: followupConsent : Start
-// TODO: Test Auth, Test Error especially IDAPI failure.
+// The following routes and functions are only used as part of the followupConsents AB test
+
 function getErrorResponse(
   e: Error | IDAPIError,
   state: RequestState,
 ): [number, RequestState] {
   let status;
   let message;
-  if ('status' in e) {
+  // TODO: Object check needed
+  if ('status' in e && 'error' in e) {
     status = e.status;
     message = e.error;
   } else {
     status = 500;
-    message = e.message;
+    message = 'TODO: General Error';
   }
   return [
     status,
@@ -294,13 +297,13 @@ function getErrorResponse(
 
 router.get(
   `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`,
+  loginMiddleware,
   async (req: Request, res: ResponseWithRequestState) => {
     const { ip, cookies } = req;
     const sc_gu_u = cookies.SC_GU_U;
     let state = res.locals;
     let status = 200;
     const geocode = state.pageData.geolocation;
-
     try {
       const newsletters = (
         await getUserNewsletterSubscriptions(
@@ -309,11 +312,13 @@ router.get(
           sc_gu_u,
         )
       ).slice(0, 1); // Assume 'Today' newsletter is the leading newsletter in NewsletterMap;
+      // TODO: Redirect if user already subscribed
       state = {
         ...state,
         pageData: {
           ...state.pageData,
           newsletters,
+          returnUrl: state?.queryParams?.returnUrl,
         },
       };
     } catch (error) {
@@ -322,7 +327,7 @@ router.get(
 
     const html = renderer(`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`, {
       requestState: state,
-      pageTitle: 'TODO: REPLACE',
+      pageTitle: 'Get the headlines in your inbox', // TODO: Check, also note changes on marketing variant
     });
 
     res.type('html').status(status).send(html);
@@ -334,12 +339,14 @@ router.post(
   loginMiddleware,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
-
+    const config = getConfiguration();
     const sc_gu_u = req.cookies.SC_GU_U;
 
     let status = 200;
-
-    const url = `TODO: REDIRECT URL`;
+    let url = config.defaultReturnUri;
+    if (state?.queryParams?.returnUrl) {
+      url = state.queryParams.returnUrl;
+    }
     try {
       const { update } = consentPages[1]; // Can reuse newsletter updater function.
       if (update) {
@@ -353,7 +360,7 @@ router.post(
     }
 
     const html = renderer(`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`, {
-      pageTitle: 'TODO: REPLACE',
+      pageTitle: 'Get the headlines in your inbox', // TODO: Check, also note changes on marketing variant
       requestState: state,
     });
     res
@@ -362,6 +369,7 @@ router.post(
       .send(html);
   }),
 );
+
 //  ABTEST: followupConsent : END
 
 router.get(
