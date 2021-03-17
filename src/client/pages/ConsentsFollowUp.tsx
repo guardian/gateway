@@ -84,7 +84,7 @@ const form = css`
 const newsletterCard = css`
   padding: 0 ${space[3]}px 30px ${space[3]}px;
   border-top: 1px solid ${BORDER_GREY};
-  background-color: ${NEWSLETTER_CONTAINER_BGCOLOR};
+
   & h2 {
     ${headline.xsmall({ fontWeight: 'bold' })}
   }
@@ -95,7 +95,7 @@ const newsletterCard = css`
   }
   ${from.desktop} {
     border-top: 0;
-    -ms-grid-row: 1;
+    -ms-grid-row: 1; // TODO: Grid function
     grid-row: 1;
     padding-left: 0;
     padding-right: 0;
@@ -117,11 +117,9 @@ const checkboxGroup = css`
 `;
 
 const newsletterContainer = css`
-  background-color: ${NEWSLETTER_CONTAINER_BGCOLOR};
-  border: 1px solid ${BORDER_GREY};
-  margin: 0 ${space[3]}px; /* TODO: Bring this in from the span def? */
   margin-top: -40px;
   margin-bottom: 70px;
+  overflow: hidden;
   ${from.tablet} {
     margin-left: auto;
     margin-right: auto;
@@ -136,10 +134,15 @@ const newsletterContainer = css`
   }
 `;
 
-const containerGeneral = css`
-  padding-left: 0;
-  padding-right: 0;
-  overflow: hidden;
+const newsletterBackground = css`
+  background-color: ${NEWSLETTER_CONTAINER_BGCOLOR};
+  border: 1px solid ${BORDER_GREY};
+  -ms-grid-row: 1;
+  grid-row: 1 / span 2;
+  ${from.desktop} {
+    -ms-grid-row: 1;
+    grid-row: 1;
+  }
 `;
 
 const spanDef = {
@@ -193,6 +196,22 @@ const imageSpanDef = {
   },
 };
 
+const newsletterBackgroundSpanDef = {
+  ...gridItemColumnConsents,
+  TABLET: {
+    start: 1,
+    span: 12,
+  },
+  DESKTOP: {
+    start: 1,
+    span: 12,
+  },
+  WIDE: {
+    start: 2,
+    span: 14,
+  },
+};
+
 export const ConsentsFollowUp = () => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { globalMessage: { error, success } = {} } = clientState;
@@ -215,36 +234,40 @@ export const ConsentsFollowUp = () => {
         method="post"
         css={form}
       >
-        <div css={newsletterContainer}>
-          <Container cssOverrides={[gridRow, containerGeneral]}>
-            <img
-              css={[img, manualRow(1, imageSpanDef)]}
-              src={NEWSLETTER_PHONE_IMAGE}
-              alt="Phone with newsletter displayed"
-            />
-            {newsletters.map((newsletter, i) => (
-              <div
-                key={i}
-                css={[newsletterCard, manualRow(2, newsletterSpanDef)]}
+        <div css={[gridRow, newsletterContainer]}>
+          <div
+            css={[
+              manualRow(2, newsletterBackgroundSpanDef),
+              newsletterBackground,
+            ]}
+          />
+          <img
+            css={[img, manualRow(1, imageSpanDef)]}
+            src={NEWSLETTER_PHONE_IMAGE}
+            alt="Phone with newsletter displayed"
+          />
+          {newsletters.map((newsletter, i) => (
+            <div
+              key={i}
+              css={[newsletterCard, manualRow(2, newsletterSpanDef)]}
+            >
+              <h2>{newsletter.name}</h2>
+              <p>{newsletter.description}</p>
+              <CheckboxGroup
+                name={newsletter.id}
+                label={newsletter.name}
+                hideLabel={true}
+                cssOverrides={checkboxGroup}
               >
-                <h2>{newsletter.name}</h2>
-                <p>{newsletter.description}</p>
-                <CheckboxGroup
-                  name={newsletter.id}
-                  label={newsletter.name}
-                  hideLabel={true}
-                  cssOverrides={checkboxGroup}
-                >
-                  <Checkbox
-                    value={newsletter.id}
-                    label="Sign Up"
-                    /* TODO: What is the status on this? defaultChecked={props.newsletter.subscribed} */
-                  />
-                </CheckboxGroup>
-                <Button type="submit">Continue to The Guardian</Button>
-              </div>
-            ))}
-          </Container>
+                <Checkbox
+                  value={newsletter.id}
+                  label="Sign Up"
+                  /* TODO: What is the status on this? defaultChecked={props.newsletter.subscribed} */
+                />
+              </CheckboxGroup>
+              <Button type="submit">Continue to The Guardian</Button>
+            </div>
+          ))}
         </div>
         <CsrfFormField />
       </form>
