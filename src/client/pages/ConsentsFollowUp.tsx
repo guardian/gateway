@@ -251,7 +251,7 @@ export const ConsentsFollowUp = () => {
         </Container>
       </div>
       <form
-        action={`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_DONE}${returnUrlQuery}`}
+        action={`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}${returnUrlQuery}`}
         method="post"
         css={form}
       >
