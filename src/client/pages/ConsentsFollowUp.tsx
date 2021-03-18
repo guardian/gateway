@@ -177,7 +177,7 @@ const newsletterCard = css`
   }
   ${from.desktop} {
     border-top: 0;
-    -ms-grid-row: 1; // TODO: Grid function
+    -ms-grid-row: 1;
     grid-row: 1;
     padding-left: 0;
     padding-right: 0;
@@ -251,7 +251,7 @@ export const ConsentsFollowUp = () => {
         </Container>
       </div>
       <form
-        action={`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}${returnUrlQuery}`}
+        action={`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_DONE}${returnUrlQuery}`}
         method="post"
         css={form}
       >

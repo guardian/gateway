@@ -354,14 +354,13 @@ router.post(
   loginMiddleware,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
-    const config = getConfiguration();
     const sc_gu_u = req.cookies.SC_GU_U;
 
     let status = 200;
-    let url = config.defaultReturnUri;
-    if (state?.queryParams?.returnUrl) {
-      url = state.queryParams.returnUrl;
-    }
+    const url = addReturnUrlToPath(
+      `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_DONE}`,
+      state?.queryParams?.returnUrl,
+    );
     try {
       const { update } = consentPages[1]; // Can reuse newsletter updater function.
       if (update) {
@@ -385,6 +384,14 @@ router.post(
   }),
 );
 
+router.get(
+  `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}-done`,
+  loginMiddleware,
+  async (_: Request, res: ResponseWithRequestState) => {
+    const state = res.locals;
+    res.redirect(303, getRedirectUrl(getConfiguration(), state)); // TODO: May not need the default
+  },
+);
 //  ABTEST: followupConsent : END
 
 router.get(
