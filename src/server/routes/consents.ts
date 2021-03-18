@@ -34,6 +34,7 @@ import { fourZeroFourRender } from '@/server/lib/middleware/404';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { IDAPIError } from '../lib/APIFetch';
 import { getConfiguration } from '../lib/getConfiguration';
+import { Configuration } from '../models/Configuration';
 
 const router = Router();
 
@@ -295,6 +296,18 @@ function getErrorResponse(
   ];
 }
 
+function isSubscribed(newsletters: NewsLetter[]): boolean {
+  if (newsletters.length < 1) {
+    return false;
+  }
+  const newsletter = newsletters[0];
+  return newsletter?.subscribed ?? false;
+}
+
+function getRedirectUrl(config: Configuration, state: RequestState): string {
+  return state?.queryParams?.returnUrl ?? config.defaultReturnUri;
+}
+
 router.get(
   `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`,
   loginMiddleware,
@@ -312,7 +325,9 @@ router.get(
           sc_gu_u,
         )
       ).slice(0, 1); // Assume 'Today' newsletter is the leading newsletter in NewsletterMap;
-      // TODO: Redirect if user already subscribed
+      if (isSubscribed(newsletters)) {
+        res.redirect(303, getRedirectUrl(getConfiguration(), state));
+      }
       state = {
         ...state,
         pageData: {
@@ -327,7 +342,7 @@ router.get(
 
     const html = renderer(`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`, {
       requestState: state,
-      pageTitle: 'Get the headlines in your inbox', // TODO: Check, also note changes on marketing variant
+      pageTitle: 'Get the headlines in your inbox', // TODO: Changes on marketing variant
     });
 
     res.type('html').status(status).send(html);
@@ -360,7 +375,7 @@ router.post(
     }
 
     const html = renderer(`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`, {
-      pageTitle: 'Get the headlines in your inbox', // TODO: Check, also note changes on marketing variant
+      pageTitle: 'Get the headlines in your inbox', // TODO: Changes on marketing variant
       requestState: state,
     });
     res
