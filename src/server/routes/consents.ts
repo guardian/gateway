@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { Routes } from '@/shared/model/Routes';
-import { renderer } from '@/server/lib/renderer';
+import { redirectRenderer, renderer } from '@/server/lib/renderer';
 import {
   update as patchConsents,
   read as readConsents,
@@ -357,10 +357,7 @@ router.post(
     const sc_gu_u = req.cookies.SC_GU_U;
 
     let status = 200;
-    const url = addReturnUrlToPath(
-      `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_DONE}`,
-      state?.queryParams?.returnUrl,
-    );
+    const url = getRedirectUrl(getConfiguration(), state);
     try {
       const { update } = consentPages[1]; // Can reuse newsletter updater function.
       if (update) {
@@ -368,7 +365,9 @@ router.post(
       } else {
         throw 'Follow On Consent Update Failure';
       }
-      return res.redirect(303, url);
+      const html = redirectRenderer(url);
+      res.type('html').send(html);
+      return;
     } catch (e) {
       [status, state] = getErrorResponse(e, state);
     }
@@ -384,14 +383,6 @@ router.post(
   }),
 );
 
-router.get(
-  `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}-done`,
-  loginMiddleware,
-  async (_: Request, res: ResponseWithRequestState) => {
-    const state = res.locals;
-    res.redirect(303, getRedirectUrl(getConfiguration(), state)); // TODO: May not need the default
-  },
-);
 //  ABTEST: followupConsent : END
 
 router.get(

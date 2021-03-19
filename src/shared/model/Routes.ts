@@ -14,7 +14,6 @@ export enum Routes {
   CONSENTS_NEWSLETTERS = '/newsletters',
   CONSENTS_REVIEW = '/review',
   CONSENTS_FOLLOW_UP = '/follow-up',
-  CONSENTS_FOLLOW_UP_DONE = '/follow-up-done',
   UNEXPECTED_ERROR = '/error',
 }
 
