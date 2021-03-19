@@ -296,43 +296,67 @@ function getErrorResponse(
   ];
 }
 
-function isSubscribed(newsletters: NewsLetter[]): boolean {
-  if (newsletters.length < 1) {
+enum IDAPIEntity {
+  NEWSLETTERS = 'newsletters',
+  CONSENTS = 'consents',
+}
+type IDAPIEntityRecord = [IDAPIEntity, NewsLetter[] | Consent[]];
+type IDAPIEntityGetter = (
+  ip: string,
+  sc_gu_u: string,
+  geocode?: GeoLocation,
+) => Promise<IDAPIEntityRecord>;
+
+function isSubscribed(entities: NewsLetter[] | Consent[]): boolean {
+  if (entities.length < 1) {
     return false;
   }
-  const newsletter = newsletters[0];
-  return newsletter?.subscribed ?? false;
+  const entity = entities[0];
+  if ('subscribed' in entity) {
+    return entity?.subscribed ?? false;
+  }
+  if ('consented' in entity) {
+    return entity?.consented ?? false;
+  }
+  return false;
 }
 
 function getRedirectUrl(config: Configuration, state: RequestState): string {
   return state?.queryParams?.returnUrl ?? config.defaultReturnUri;
 }
 
-router.get(
-  `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`,
-  loginMiddleware,
-  async (req: Request, res: ResponseWithRequestState) => {
+async function getNewsletterEntity(
+  ip: string,
+  sc_gu_u: string,
+  geocode?: GeoLocation,
+): Promise<[IDAPIEntity, NewsLetter[]]> {
+  const newsletters = (
+    await getUserNewsletterSubscriptions(
+      NewsletterMap.get(geocode) as string[],
+      ip,
+      sc_gu_u,
+    )
+  ).slice(0, 1); // Assume 'Today' newsletter is the leading newsletter in NewsletterMap;
+  return [IDAPIEntity.NEWSLETTERS, newsletters];
+}
+
+function getABTestGETHandler(entityGetter: IDAPIEntityGetter) {
+  return async (req: Request, res: ResponseWithRequestState) => {
     const { ip, cookies } = req;
     const sc_gu_u = cookies.SC_GU_U;
     let state = res.locals;
     let status = 200;
     const geocode = state.pageData.geolocation;
     try {
-      const newsletters = (
-        await getUserNewsletterSubscriptions(
-          NewsletterMap.get(geocode) as string[],
-          ip,
-          sc_gu_u,
-        )
-      ).slice(0, 1); // Assume 'Today' newsletter is the leading newsletter in NewsletterMap;
-      if (isSubscribed(newsletters)) {
+      const [entitiesName, entities] = await entityGetter(ip, sc_gu_u, geocode);
+      if (isSubscribed(entities)) {
         res.redirect(303, getRedirectUrl(getConfiguration(), state));
       }
       state = {
         ...state,
         pageData: {
           ...state.pageData,
-          newsletters,
+          [entitiesName]: entities,
           returnUrl: state?.queryParams?.returnUrl,
         },
       };
@@ -346,7 +370,13 @@ router.get(
     });
 
     res.type('html').status(status).send(html);
-  },
+  };
+}
+
+router.get(
+  `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`,
+  loginMiddleware,
+  getABTestGETHandler(getNewsletterEntity),
 );
 
 router.post(
