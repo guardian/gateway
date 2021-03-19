@@ -28,6 +28,8 @@ import {
   MAX_WIDTH,
 } from '../styles/Grid';
 import NEWSLETTER_PHONE_IMAGE from '@/client/assets/newsletter_phone.png';
+import { NewsLetter } from '@/shared/model/Newsletter';
+import { Consent } from '@/shared/model/Consent';
 
 const GUARDIAN_BRAND = brand[400];
 const ELECTION_BEIGE = '#DDDBD1';
@@ -227,11 +229,23 @@ const newsletterBackground = css`
   }
 `;
 
+function getEntities(clientState: ClientState) {
+  const newsletters = clientState?.pageData?.newsletters;
+  if (newsletters) {
+    return newsletters;
+  }
+  const consents = clientState?.pageData?.consents;
+  if (consents) {
+    return consents;
+  }
+  return [];
+}
+
 export const ConsentsFollowUp = () => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { globalMessage: { error, success } = {}, pageData = {} } = clientState;
   const { returnUrl } = pageData;
-  const newsletters = clientState?.pageData?.newsletters ?? [];
+  const entities = getEntities(clientState);
   const autoRow = getAutoRow(1, spanDef);
   const returnUrlQuery = returnUrl
     ? `?returnUrl=${encodeURIComponent(returnUrl)}`
@@ -267,20 +281,20 @@ export const ConsentsFollowUp = () => {
             src={NEWSLETTER_PHONE_IMAGE}
             alt="Phone with newsletter displayed"
           />
-          {newsletters.map((newsletter, i) => (
+          {entities.map((entity: NewsLetter | Consent, i: number) => (
             <div
               key={i}
               css={[newsletterCard, manualRow(2, newsletterSpanDef)]}
             >
-              <h2>{newsletter.name}</h2>
-              <p>{newsletter.description}</p>
+              <h2>{entity.name}</h2>
+              <p>{entity.description}</p>
               <CheckboxGroup
-                name={newsletter.id}
-                label={newsletter.name}
+                name={entity.id}
+                label={entity.name}
                 hideLabel={true}
                 cssOverrides={checkboxGroup}
               >
-                <Checkbox value={newsletter.id} label="Yes, sign me up" />
+                <Checkbox value={entity.id} label="Yes, sign me up" />
               </CheckboxGroup>
               <Button type="submit">Continue to The Guardian</Button>
             </div>

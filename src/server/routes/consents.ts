@@ -15,6 +15,7 @@ import { PageData } from '@/shared/model/ClientState';
 import { NewsLetter, NewsletterPatch } from '@/shared/model/Newsletter';
 import {
   Consent,
+  Consents,
   CONSENTS_COMMUNICATION_PAGE,
   CONSENTS_DATA_PAGE,
 } from '@/shared/model/Consent';
@@ -340,6 +341,18 @@ async function getNewsletterEntity(
   return [IDAPIEntity.NEWSLETTERS, newsletters];
 }
 
+async function getConsentEntity(
+  ip: string,
+  sc_gu_u: string,
+): Promise<[IDAPIEntity, Consent[]]> {
+  const consents = await getUserConsentsForPage(
+    [Consents.SUPPORTER],
+    ip,
+    sc_gu_u,
+  );
+  return [IDAPIEntity.CONSENTS, consents];
+}
+
 function getABTestGETHandler(entityGetter: IDAPIEntityGetter) {
   return async (req: Request, res: ResponseWithRequestState) => {
     const { ip, cookies } = req;
@@ -377,6 +390,12 @@ router.get(
   `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`,
   loginMiddleware,
   getABTestGETHandler(getNewsletterEntity),
+);
+
+router.get(
+  `${Routes.CONSENTS}/follow-up-consents`, // TODO: CHANGE, TEST ROUTE
+  loginMiddleware,
+  getABTestGETHandler(getConsentEntity),
 );
 
 router.post(
