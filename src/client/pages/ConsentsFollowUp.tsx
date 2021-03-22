@@ -241,6 +241,18 @@ function getEntities(clientState: ClientState) {
   return [];
 }
 
+function getPostAction(clientState: ClientState): string {
+  const newsletters = clientState?.pageData?.newsletters;
+  if (newsletters) {
+    return `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_NEWSLETTERS}`;
+  }
+  const consents = clientState?.pageData?.consents;
+  if (consents) {
+    return `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_CONSENTS}`;
+  }
+  return '';
+}
+
 export const ConsentsFollowUp = () => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { globalMessage: { error, success } = {}, pageData = {} } = clientState;
@@ -265,7 +277,7 @@ export const ConsentsFollowUp = () => {
         </Container>
       </div>
       <form
-        action={`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}${returnUrlQuery}`}
+        action={`${getPostAction(clientState)}${returnUrlQuery}`}
         method="post"
         css={form}
       >

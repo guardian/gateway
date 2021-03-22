@@ -307,6 +307,12 @@ type IDAPIEntityGetter = (
   sc_gu_u: string,
   geocode?: GeoLocation,
 ) => Promise<IDAPIEntityRecord>;
+type IDAPIEntitySetter = (
+  ip: string,
+  sc_gu_u: string,
+  body: { [key: string]: string },
+  geocode?: GeoLocation,
+) => Promise<void>;
 
 function isSubscribed(entities: NewsLetter[] | Consent[]): boolean {
   if (entities.length < 1) {
@@ -353,6 +359,34 @@ async function getConsentEntity(
   return [IDAPIEntity.CONSENTS, consents];
 }
 
+async function setNewsletterEntity(
+  ip: string,
+  sc_gu_u: string,
+  body: { [key: string]: string },
+  geocode?: GeoLocation,
+) {
+  const { update } = consentPages[1]; // Can reuse newsletter updater function.
+  if (update) {
+    await update(ip, sc_gu_u, body, geocode);
+  } else {
+    throw 'Follow On Consent Update Failure: Newsletters';
+  }
+}
+
+async function setConsentEntity(
+  ip: string,
+  sc_gu_u: string,
+  body: { [key: string]: string },
+) {
+  const consents = [
+    {
+      id: Consents.SUPPORTER,
+      consented: getConsentValueFromRequestBody(Consents.SUPPORTER, body),
+    },
+  ];
+  await patchConsents(ip, sc_gu_u, consents);
+}
+
 function getABTestGETHandler(entityGetter: IDAPIEntityGetter) {
   return async (req: Request, res: ResponseWithRequestState) => {
     const { ip, cookies } = req;
@@ -360,6 +394,7 @@ function getABTestGETHandler(entityGetter: IDAPIEntityGetter) {
     let state = res.locals;
     let status = 200;
     const geocode = state.pageData.geolocation;
+    const route = req.route.path;
     try {
       const [entitiesName, entities] = await entityGetter(ip, sc_gu_u, geocode);
       if (isSubscribed(entities)) {
@@ -377,7 +412,7 @@ function getABTestGETHandler(entityGetter: IDAPIEntityGetter) {
       [status, state] = getErrorResponse(error, state);
     }
 
-    const html = renderer(`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`, {
+    const html = renderer(route, {
       requestState: state,
       pageTitle: 'Get the headlines in your inbox', // TODO: Changes on marketing variant
     });
@@ -386,34 +421,16 @@ function getABTestGETHandler(entityGetter: IDAPIEntityGetter) {
   };
 }
 
-router.get(
-  `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`,
-  loginMiddleware,
-  getABTestGETHandler(getNewsletterEntity),
-);
-
-router.get(
-  `${Routes.CONSENTS}/follow-up-consents`, // TODO: CHANGE, TEST ROUTE
-  loginMiddleware,
-  getABTestGETHandler(getConsentEntity),
-);
-
-router.post(
-  `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`,
-  loginMiddleware,
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+function getABTestPOSTHandler(entitySetter: IDAPIEntitySetter) {
+  return async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
     const sc_gu_u = req.cookies.SC_GU_U;
-
     let status = 200;
     const url = getRedirectUrl(getConfiguration(), state);
+    const route = req.route.path;
+
     try {
-      const { update } = consentPages[1]; // Can reuse newsletter updater function.
-      if (update) {
-        await update(req.ip, sc_gu_u, req.body, state.pageData.geolocation);
-      } else {
-        throw 'Follow On Consent Update Failure';
-      }
+      await entitySetter(req.ip, sc_gu_u, req.body, state.pageData.geolocation);
       const html = redirectRenderer(url);
       res.type('html').send(html);
       return;
@@ -421,7 +438,7 @@ router.post(
       [status, state] = getErrorResponse(e, state);
     }
 
-    const html = renderer(`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`, {
+    const html = renderer(route, {
       pageTitle: 'Get the headlines in your inbox', // TODO: Changes on marketing variant
       requestState: state,
     });
@@ -429,7 +446,31 @@ router.post(
       .type('html')
       .status(status ?? 500)
       .send(html);
-  }),
+  };
+}
+
+router.get(
+  `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_NEWSLETTERS}`,
+  loginMiddleware,
+  handleAsyncErrors(getABTestGETHandler(getNewsletterEntity)),
+);
+
+router.get(
+  `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_CONSENTS}`,
+  loginMiddleware,
+  handleAsyncErrors(getABTestGETHandler(getConsentEntity)),
+);
+
+router.post(
+  `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_NEWSLETTERS}`,
+  loginMiddleware,
+  handleAsyncErrors(getABTestPOSTHandler(setNewsletterEntity)),
+);
+
+router.post(
+  `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_CONSENTS}`,
+  loginMiddleware,
+  handleAsyncErrors(getABTestPOSTHandler(setConsentEntity)),
 );
 
 //  ABTEST: followupConsent : END

@@ -53,9 +53,20 @@ export const GatewayRoutes = () => (
     <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_REVIEW}`}>
       <ConsentsConfirmationPage />
     </Route>
-    <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP}`}>
+    {/*  ABTEST: followupConsent : START */}
+    <Route
+      exact
+      path={`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_NEWSLETTERS}`}
+    >
       <ConsentsFollowUp />
     </Route>
+    <Route
+      exact
+      path={`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_CONSENTS}`}
+    >
+      <ConsentsFollowUp />
+    </Route>
+    {/*  ABTEST: followupConsent : END */}
     <Route exact path={Routes.VERIFY_EMAIL}>
       <ResendEmailVerificationPage />
     </Route>
