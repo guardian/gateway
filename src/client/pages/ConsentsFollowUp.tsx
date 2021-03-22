@@ -30,6 +30,7 @@ import {
 import NEWSLETTER_PHONE_IMAGE from '@/client/assets/newsletter_phone.png';
 import { NewsLetter } from '@/shared/model/Newsletter';
 import { Consent } from '@/shared/model/Consent';
+import { EnvelopeImage } from '../components/EnvelopeImage';
 
 const GUARDIAN_BRAND = brand[400];
 const ELECTION_BEIGE = '#DDDBD1';
@@ -161,6 +162,12 @@ const img = css`
   }
 `;
 
+const envelope = css`
+  ${img}
+  margin-bottom: -30px;
+  overflow: hidden;
+`;
+
 const form = css`
   flex: 1 0;
 `;
@@ -168,6 +175,8 @@ const form = css`
 const newsletterCard = css`
   padding: 0 ${space[3]}px 30px ${space[3]}px;
   border-top: 1px solid ${BORDER_GREY};
+  margin: 0 1px 1px;
+  background-color: white;
 
   & h2 {
     ${headline.xsmall({ fontWeight: 'bold' })}
@@ -229,7 +238,11 @@ const newsletterBackground = css`
   }
 `;
 
-function getVariantValue<A, B, C>(A: A, B: B, none: C) {
+function getVariantValue<A, B, C>(
+  A: A,
+  B: B,
+  none: C,
+): (clientState: ClientState) => A | B | C {
   return (clientState: ClientState) => {
     const newsletters = clientState?.pageData?.newsletters;
     if (newsletters) {
@@ -255,16 +268,29 @@ function getEntities(clientState: ClientState) {
   return [];
 }
 
-const getPostAction = getVariantValue<string, string, string>(
+const getPostAction = getVariantValue(
   `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_NEWSLETTERS}`,
   `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_CONSENTS}`,
   '',
 );
 
-const getTitle = getVariantValue<string, string, string>(
+const getTitle = getVariantValue(
   'Get the headlines in your inbox',
   'Get our latest offers in an email',
   '',
+);
+
+const getImage = getVariantValue(
+  <img
+    css={[img, manualRow(1, imageSpanDef)]}
+    src={NEWSLETTER_PHONE_IMAGE}
+    alt="Phone with newsletter displayed"
+  />,
+  <EnvelopeImage
+    cssOverrides={[img, envelope, manualRow(1, imageSpanDef)]}
+    invertColors
+  />,
+  <></>,
 );
 
 export const ConsentsFollowUp = () => {
@@ -302,11 +328,7 @@ export const ConsentsFollowUp = () => {
               newsletterBackground,
             ]}
           />
-          <img
-            css={[img, manualRow(1, imageSpanDef)]}
-            src={NEWSLETTER_PHONE_IMAGE}
-            alt="Phone with newsletter displayed"
-          />
+          {getImage(clientState)}
           {entities.map((entity: NewsLetter | Consent, i: number) => (
             <div
               key={i}
