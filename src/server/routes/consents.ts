@@ -387,7 +387,10 @@ async function setConsentEntity(
   await patchConsents(ip, sc_gu_u, consents);
 }
 
-function getABTestGETHandler(entityGetter: IDAPIEntityGetter) {
+function getABTestGETHandler(
+  entityGetter: IDAPIEntityGetter,
+  pageTitle: string,
+) {
   return async (req: Request, res: ResponseWithRequestState) => {
     const { ip, cookies } = req;
     const sc_gu_u = cookies.SC_GU_U;
@@ -414,14 +417,17 @@ function getABTestGETHandler(entityGetter: IDAPIEntityGetter) {
 
     const html = renderer(route, {
       requestState: state,
-      pageTitle: 'Get the headlines in your inbox', // TODO: Changes on marketing variant
+      pageTitle,
     });
 
     res.type('html').status(status).send(html);
   };
 }
 
-function getABTestPOSTHandler(entitySetter: IDAPIEntitySetter) {
+function getABTestPOSTHandler(
+  entitySetter: IDAPIEntitySetter,
+  pageTitle: string,
+) {
   return async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
     const sc_gu_u = req.cookies.SC_GU_U;
@@ -439,7 +445,7 @@ function getABTestPOSTHandler(entitySetter: IDAPIEntitySetter) {
     }
 
     const html = renderer(route, {
-      pageTitle: 'Get the headlines in your inbox', // TODO: Changes on marketing variant
+      pageTitle,
       requestState: state,
     });
     res
@@ -452,25 +458,36 @@ function getABTestPOSTHandler(entitySetter: IDAPIEntitySetter) {
 router.get(
   `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_NEWSLETTERS}`,
   loginMiddleware,
-  handleAsyncErrors(getABTestGETHandler(getNewsletterEntity)),
+  handleAsyncErrors(
+    getABTestGETHandler(getNewsletterEntity, 'Get the headlines in your inbox'),
+  ),
 );
 
 router.get(
   `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_CONSENTS}`,
   loginMiddleware,
-  handleAsyncErrors(getABTestGETHandler(getConsentEntity)),
+  handleAsyncErrors(
+    getABTestGETHandler(getConsentEntity, 'Get our latest offers in an email'),
+  ),
 );
 
 router.post(
   `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_NEWSLETTERS}`,
   loginMiddleware,
-  handleAsyncErrors(getABTestPOSTHandler(setNewsletterEntity)),
+  handleAsyncErrors(
+    getABTestPOSTHandler(
+      setNewsletterEntity,
+      'Get the headlines in your inbox',
+    ),
+  ),
 );
 
 router.post(
   `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_CONSENTS}`,
   loginMiddleware,
-  handleAsyncErrors(getABTestPOSTHandler(setConsentEntity)),
+  handleAsyncErrors(
+    getABTestPOSTHandler(setConsentEntity, 'Get our latest offers in an email'),
+  ),
 );
 
 //  ABTEST: followupConsent : END

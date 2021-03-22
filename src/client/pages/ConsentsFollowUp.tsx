@@ -229,6 +229,20 @@ const newsletterBackground = css`
   }
 `;
 
+function getVariantValue<A, B, C>(A: A, B: B, none: C) {
+  return (clientState: ClientState) => {
+    const newsletters = clientState?.pageData?.newsletters;
+    if (newsletters) {
+      return A;
+    }
+    const consents = clientState?.pageData?.consents;
+    if (consents) {
+      return B;
+    }
+    return none;
+  };
+}
+
 function getEntities(clientState: ClientState) {
   const newsletters = clientState?.pageData?.newsletters;
   if (newsletters) {
@@ -241,17 +255,17 @@ function getEntities(clientState: ClientState) {
   return [];
 }
 
-function getPostAction(clientState: ClientState): string {
-  const newsletters = clientState?.pageData?.newsletters;
-  if (newsletters) {
-    return `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_NEWSLETTERS}`;
-  }
-  const consents = clientState?.pageData?.consents;
-  if (consents) {
-    return `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_CONSENTS}`;
-  }
-  return '';
-}
+const getPostAction = getVariantValue<string, string, string>(
+  `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_NEWSLETTERS}`,
+  `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_CONSENTS}`,
+  '',
+);
+
+const getTitle = getVariantValue<string, string, string>(
+  'Get the headlines in your inbox',
+  'Get our latest offers in an email',
+  '',
+);
 
 export const ConsentsFollowUp = () => {
   const clientState: ClientState = useContext(ClientStateContext);
@@ -273,7 +287,7 @@ export const ConsentsFollowUp = () => {
       </div>
       <div css={titleContainer}>
         <Container cssOverrides={gridRow}>
-          <h1 css={[h1, autoRow()]}>Get the headlines in your inbox</h1>
+          <h1 css={[h1, autoRow()]}>{getTitle(clientState)}</h1>
         </Container>
       </div>
       <form
