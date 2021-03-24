@@ -20,9 +20,11 @@ interface Assets {
   vendors: string;
 }
 
-export const getAssets = (): Assets => {
+export const getAssets = (isLegacy = false): Assets => {
   try {
-    const assetsFilePath = `${path.resolve(__dirname)}/webpack-assets.json`;
+    const assetsFilePath = `${path.resolve(__dirname)}/${
+      isLegacy ? 'legacy.' : ''
+    }webpack-assets.json`;
     if (!fs.existsSync(assetsFilePath)) {
       throw new Error('Assets file does not exist');
     }

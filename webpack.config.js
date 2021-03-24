@@ -1,15 +1,18 @@
-const path = require("path");
-const nodeExternals = require("webpack-node-externals");
-const babelConfig = require("./babel.config");
-const AssetsPlugin = require('assets-webpack-plugin')
+/* eslint-disable functional/immutable-data */
+/* eslint-disable @typescript-eslint/no-var-requires */
+const path = require('path');
+const babelConfig = require('./babel.config');
+const AssetsPlugin = require('assets-webpack-plugin');
+const { merge } = require('webpack-merge');
+const nodeExternals = require('webpack-node-externals');
 
 const mode =
-  process.env.ENVIRONMENT === "production" ? "production" : "development";
+  process.env.ENVIRONMENT === 'production' ? 'production' : 'development';
 
-const extensions = [".ts", ".tsx", ".js"];
+const extensions = ['.ts', '.tsx', '.js'];
 
 const watchOptions = {
-  ignored: /node_modules/
+  ignored: /node_modules/,
 };
 
 const imageLoader = (path) => {
@@ -21,40 +24,51 @@ const imageLoader = (path) => {
         options: {
           name: '[hash].[ext]',
           outputPath: path,
-          publicPath: '/gateway-static/'
-        }
+          publicPath: '/gateway-static/',
+        },
       },
       {
         loader: 'image-webpack-loader',
         options: {
           mozjpeg: {
             progressive: true,
-            quality: 65
+            quality: 65,
           },
           optipng: {
             enabled: true,
           },
           pngquant: {
-            quality: [0.65, 0.90],
-            speed: 4
+            quality: [0.65, 0.9],
+            speed: 4,
           },
           gifsicle: {
             interlaced: false,
-          }
-        }
-      }
-    ]
+          },
+        },
+      },
+    ],
   };
 };
 
-const server = {
-  entry: "./src/server/index.ts",
+const common = ({ platform }) => ({
+  name: platform,
+  resolve: {
+    extensions,
+    alias: {
+      '@': path.join(__dirname, 'src'),
+    },
+  },
+  watchOptions
+});
+
+const server = () => ({
+  entry: './src/server/index.ts',
+  mode,
   externals: [
     nodeExternals({
-      allowlist: [/^@guardian/]
-    })
+      allowlist: [/^@guardian/],
+    }),
   ],
-  mode,
   module: {
     rules: [
       {
@@ -62,129 +76,139 @@ const server = {
         test: /\.ts(x?)$/,
         use: [
           {
-            loader: "babel-loader",
+            loader: 'babel-loader',
             options: {
               presets: [
                 [
-                  "@babel/env",
+                  '@babel/env',
                   {
                     targets: {
-                      node: "current"
+                      node: 'current',
                     },
-                    ignoreBrowserslistConfig: true
-                  }
+                    ignoreBrowserslistConfig: true,
+                  },
                 ],
-                ...babelConfig.presets
+                ...babelConfig.presets,
               ],
-              plugins: [...babelConfig.plugins]
-            }
-          }
-        ]
+              plugins: [...babelConfig.plugins],
+            },
+          },
+        ],
       },
-      imageLoader("static/")
-    ]
+      imageLoader('static/'),
+    ],
   },
   node: {
     __dirname: false,
-    __filename: false
+    __filename: false,
   },
   output: {
-    filename: "server.js",
-    path: path.resolve(__dirname, "build")
-  },
-  resolve: {
-    extensions,
-    alias: {
-      "@": path.join(__dirname, "src")
-    }
-  },
-  target: "node",
-  watchOptions
-};
-
-const client = {
-  entry: ['whatwg-fetch', "./src/client/static/index.tsx"],
-  mode: "production",
-  module: {
-    rules: [
-      {
-        exclude: /node_modules/,
-        test: /\.(m?)(j|t)s(x?)/,
-        use: [
-          {
-            loader: "babel-loader",
-            options: {
-              presets: [
-                [
-                  "@babel/env",
-                  {
-                    useBuiltIns: "usage",
-                    corejs: 3,
-                  }
-                ], ...babelConfig.presets],
-              plugins: [...babelConfig.plugins]
-            }
-          }
-        ]
-      },
-      {
-        include: /node_modules/,
-        exclude: [
-          /node_modules[\\\/]core-js/,
-          /node_modules[\\\/]@babel/,
-          /node_modules[\\\/]webpack[\\\/]buildin/,
-        ],
-        test: /\.(m?)(j|t)s(x?)/,
-        use: [
-          {
-            loader: "babel-loader",
-            options: {
-              presets: [
-                [
-                  "@babel/env",
-                  {
-                    useBuiltIns: "usage",
-                    corejs: 3,
-                    modules: "amd"
-                  }
-                ], ...babelConfig.presets],
-              plugins: [...babelConfig.plugins]
-            }
-          }
-        ]
-      },
-      imageLoader("./")
-    ]
+    filename: 'server.js',
+    chunkFilename: '[name].js',
+    path: path.resolve(__dirname, 'build'),
+    libraryTarget: 'commonjs2'
   },
   optimization: {
-    splitChunks: {
-      cacheGroups: {
-        commons: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all'
-        }
-      }
-    },
-    runtimeChunk: {
-      name: 'runtime'
-    }
+    minimize: false,
+    runtimeChunk: false
   },
-  output: {
-    filename: "[contenthash].bundle.js",
-    chunkFilename: '[name].[contenthash].bundle.js',
-    path: path.resolve(__dirname, "build/static/"),
-    publicPath: 'gateway-static/'
-  },
-  plugins: [new AssetsPlugin({ path: path.resolve(__dirname, "build") })],
-  resolve: {
-    extensions,
-    alias: {
-      "@": path.join(__dirname, "src")
-    }
-  },
-  target: ["web", "es5"],
-  watchOptions
-};
+  target: 'node'
+});
 
-module.exports = [client, server];
+const browser = ({ isLegacy }) => {
+
+  const entry = ['./src/client/static/index.tsx']
+  if (isLegacy) {
+    entry.push('whatwg-fetch')
+  }
+
+  const filename = `[name]${isLegacy ? '.legacy' : ''}.[chunkhash].js`;
+
+  return {
+    entry,
+    mode: 'production',
+    module: {
+      rules: [
+        {
+          exclude: {
+            and: [/node_modules/],
+            not: [/@guardian/]
+          },
+          test: /\.(m?)(j|t)s(x?)/,
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                presets: [
+                  isLegacy ? [
+                    '@babel/env',
+                    {
+                      bugfixes: true,
+                      useBuiltIns: 'usage',
+                      corejs: '3.9',
+                      targets: {
+                        ie: '11'
+                      }
+                    },
+                  ] : [
+                      '@babel/env',
+                      {
+                        bugfixes: true,
+                        targets: {
+                          esmodules: true
+                        }
+                    }
+                  ]
+                  ,
+                  ...babelConfig.presets,
+                ],
+                plugins: [...babelConfig.plugins],
+              },
+            },
+          ],
+        },
+        imageLoader('./')
+      ]
+    },
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          commons: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all',
+          },
+        },
+      },
+      runtimeChunk: {
+        name: 'runtime',
+      },
+    },
+    output: {
+      filename,
+      chunkFilename: filename,
+      path: path.resolve(__dirname, 'build/static/'),
+      publicPath: 'gateway-static/',
+    },
+    plugins: [new AssetsPlugin({
+      path: path.resolve(__dirname, 'build'),
+      filename: `${isLegacy ? 'legacy.' : ''}webpack-assets.json`
+    })],
+    target: ['web'],
+  }
+}
+
+module.exports = [
+  merge(
+    common({ platform: 'server' }),
+    server()
+  ),
+  merge(
+    common({ platform: 'browser.legacy' }),
+    browser({ isLegacy: true })
+  ),
+  merge(
+    common({ platform: 'browser' }),
+    browser({ isLegacy: false })
+  )
+]
