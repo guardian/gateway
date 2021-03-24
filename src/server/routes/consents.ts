@@ -277,13 +277,12 @@ function getErrorResponse(
 ): [number, RequestState] {
   let status;
   let message;
-  // TODO: Object check needed
   if ('status' in e && 'error' in e) {
     status = e.status;
     message = e.error;
   } else {
     status = 500;
-    message = 'TODO: General Error';
+    message = 'An error has occured, please try again.';
   }
   return [
     status,
@@ -467,7 +466,10 @@ router.get(
   `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_CONSENTS}`,
   loginMiddleware,
   handleAsyncErrors(
-    getABTestGETHandler(getConsentEntity, 'Get our latest offers in an email'),
+    getABTestGETHandler(
+      getConsentEntity,
+      'Get the latest offers sent to your inbox',
+    ),
   ),
 );
 
@@ -486,7 +488,10 @@ router.post(
   `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_CONSENTS}`,
   loginMiddleware,
   handleAsyncErrors(
-    getABTestPOSTHandler(setConsentEntity, 'Get our latest offers in an email'),
+    getABTestPOSTHandler(
+      setConsentEntity,
+      'Get the latest offers sent to your inbox',
+    ),
   ),
 );
 

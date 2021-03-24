@@ -314,7 +314,7 @@ const getPostAction = getVariantValue(
 
 const getTitle = getVariantValue(
   'Get the headlines in your inbox',
-  'Get our latest offers in an email',
+  'Get the latest offers sent to your inbox',
   '',
 );
 
