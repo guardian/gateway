@@ -69,6 +69,22 @@ const newsletterSpanDef = {
   },
 };
 
+const navSpanDef = {
+  ...gridItemColumnConsents,
+  TABLET: {
+    start: 10,
+    span: 3,
+  },
+  DESKTOP: {
+    start: 9,
+    span: 4,
+  },
+  WIDE: {
+    start: 12,
+    span: 4,
+  },
+};
+
 const imageSpanDef = {
   MOBILE: {
     start: 1,
@@ -123,13 +139,16 @@ const nav = css`
   padding-top: ${space[2]}px;
   padding-bottom: ${space[2]}px;
   & svg {
-    justify-self: right;
-    height: 100%;
+    justify-self: end;
+    height: 54px;
     fill: white;
-    ${manualRow(1, newsletterBackgroundSpanDef)}
+    ${manualRow(1, navSpanDef)}
   }
 
   ${from.desktop} {
+    & svg {
+      height: 100px;
+    }
     height: 116px;
     padding-top: ${space[3]}px;
     padding-bottom: ${space[3]}px;
@@ -167,9 +186,11 @@ const img = css`
   justify-self: center;
   margin-top: 48px;
   align-self: end;
+  -ms-grid-column-align: center;
   ${from.desktop} {
     width: 255px;
-    margin-top: 0;
+    height: 314px;
+    -ms-grid-row-align: end;
     margin-bottom: -50px;
   }
 `;
