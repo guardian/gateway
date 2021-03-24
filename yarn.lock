@@ -3192,10 +3192,10 @@ atob@^2.1.2:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
-aws-sdk@^2.869.0:
-  version "2.869.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.869.0.tgz#f0fc6945979b7f675103424e1fe81688b90e67cf"
-  integrity sha512-Sj9H+OH1sizBJt6WyTFBvCthZ1hRNUi4qRFO922agf+cOfmq1r+PYLOcG/0qgLMe2aelRwfT2qE2AZ97mADiOw==
+aws-sdk@^2.870.0:
+  version "2.870.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.870.0.tgz#fc5c0ff65d4564a58cc183059727c77ebbce46a9"
+  integrity sha512-pbNO+RuEx45aaEZind0Tl9NADxncLJf0mRAwof0szyYMB+FZm165yz7FCxFLumU4R9qw8vOG5YFACBaNoQkJdg==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -5219,10 +5219,10 @@ eslint-plugin-prettier@^3.3.1:
   dependencies:
     prettier-linter-helpers "^1.0.0"
 
-eslint-plugin-react@^7.23.0:
-  version "7.23.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.23.0.tgz#082512fc3538c7a688b24ea2f407cba1e9a7f463"
-  integrity sha512-5rfsRiHKIAdhxv3NxrzE+dBC7BFsNhuErL+Fy940oD1cau55JVTnuL25sqXqD7XY0OkYCRsKEqxZVwezE5ol5w==
+eslint-plugin-react@^7.23.1:
+  version "7.23.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.23.1.tgz#f1a2e844c0d1967c822388204a8bc4dee8415b11"
+  integrity sha512-MvFGhZjI8Z4HusajmSw0ougGrq3Gs4vT/0WgwksZgf5RrLrRa2oYAw56okU4tZJl8+j7IYNuTM+2RnFEuTSdRQ==
   dependencies:
     array-includes "^3.1.3"
     array.prototype.flatmap "^1.2.4"
@@ -10827,10 +10827,10 @@ snyk-policy@1.19.0:
     snyk-resolve "^1.1.0"
     snyk-try-require "^2.0.0"
 
-snyk-python-plugin@1.19.5:
-  version "1.19.5"
-  resolved "https://registry.yarnpkg.com/snyk-python-plugin/-/snyk-python-plugin-1.19.5.tgz#1b04756039b98994ce15fe89a1853000ba002c33"
-  integrity sha512-wgfhloo6PZ8V+6eIUU7pLcVfHx4yo5LQPPQX6rLfTSZ6p9uRYazIvw/NoUmIjb8Qrn9GdD3zUJY9/83TyTgKLw==
+snyk-python-plugin@1.19.7:
+  version "1.19.7"
+  resolved "https://registry.yarnpkg.com/snyk-python-plugin/-/snyk-python-plugin-1.19.7.tgz#d7e536694a481fd48e7d0cc8e7753c3f15a9c8be"
+  integrity sha512-twAGoIgJVSLVzMkuT/n5l9ZDvhMbWH7De6flWiHQB/grthfl3vJDzLCxiTa+6H/IEEYNSv6F/nSrfNh9UbW5/A==
   dependencies:
     "@snyk/cli-interface" "^2.0.3"
     snyk-poetry-lockfile-parser "^1.1.6"
@@ -10902,10 +10902,10 @@ snyk-try-require@^2.0.0:
     lodash.clonedeep "^4.3.0"
     lru-cache "^5.1.1"
 
-snyk@^1.508.0:
-  version "1.508.0"
-  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.508.0.tgz#8a62e9f585ad919c9fdc375a85dfccba752f6b6d"
-  integrity sha512-DFK5DCTw0Y4ygTffHME03ObudiFW3bGXWM6gngtQXLMkNYGcqzhMZTJC9CFBfLBHNalh8QUBriDhj9FxilAPVA==
+snyk@^1.509.0:
+  version "1.509.0"
+  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.509.0.tgz#7af0ef470cc429ffe9b2b44860d291e0542bfcab"
+  integrity sha512-3vdfa79Phr16O6Laun5zkNOxhQ7VIPeqb+aWwREkY3xOldLiZmOgQxfwKkllc/kImDmxB1CdDmRRwSJvPGMJ3Q==
   dependencies:
     "@open-policy-agent/opa-wasm" "^1.2.0"
     "@snyk/cli-interface" "2.11.0"
@@ -10959,7 +10959,7 @@ snyk@^1.508.0:
     snyk-nuget-plugin "1.21.0"
     snyk-php-plugin "1.9.2"
     snyk-policy "1.19.0"
-    snyk-python-plugin "1.19.5"
+    snyk-python-plugin "1.19.7"
     snyk-resolve "1.1.0"
     snyk-resolve-deps "4.7.2"
     snyk-sbt-plugin "2.11.0"
