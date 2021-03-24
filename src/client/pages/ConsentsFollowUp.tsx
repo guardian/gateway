@@ -88,6 +88,18 @@ const imageSpanDef = {
   },
 };
 
+const envelopeSpanDef = {
+  ...imageSpanDef,
+  DESKTOP: {
+    start: 9,
+    span: 2,
+  },
+  WIDE: {
+    start: 12,
+    span: 2,
+  },
+};
+
 const newsletterBackgroundSpanDef = {
   ...gridItemColumnConsents,
   TABLET: {
@@ -166,6 +178,11 @@ const envelope = css`
   ${img}
   margin-bottom: -30px;
   overflow: hidden;
+  ${from.desktop} {
+    width: 218px;
+    margin-bottom: 0;
+    align-self: center;
+  }
 `;
 
 const form = css`
@@ -195,7 +212,7 @@ const newsletterCard = css`
 
     & h2 {
       ${headline.medium({ fontWeight: 'bold' })}
-      margin-top: ${space[1]}px;
+      margin-top: ${space[3]}px;
       margin-bottom: ${space[9]}px;
     }
 
@@ -287,7 +304,7 @@ const getImage = getVariantValue(
     alt="Phone with newsletter displayed"
   />,
   <EnvelopeImage
-    cssOverrides={[img, envelope, manualRow(1, imageSpanDef)]}
+    cssOverrides={[img, envelope, manualRow(1, envelopeSpanDef)]}
     invertColors
   />,
   <></>,
