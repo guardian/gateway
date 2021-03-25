@@ -36,6 +36,7 @@ import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { IDAPIError } from '../lib/APIFetch';
 import { getConfiguration } from '../lib/getConfiguration';
 import { Configuration } from '../models/Configuration';
+import { PageTitle } from '@/shared/model/PageTitle';
 
 const router = Router();
 
@@ -458,7 +459,7 @@ router.get(
   `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_NEWSLETTERS}`,
   loginMiddleware,
   handleAsyncErrors(
-    getABTestGETHandler(getNewsletterEntity, 'Get the headlines in your inbox'),
+    getABTestGETHandler(getNewsletterEntity, PageTitle.NEWSLETTER_VARIANT),
   ),
 );
 
@@ -466,10 +467,7 @@ router.get(
   `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_CONSENTS}`,
   loginMiddleware,
   handleAsyncErrors(
-    getABTestGETHandler(
-      getConsentEntity,
-      'Get the latest offers sent to your inbox',
-    ),
+    getABTestGETHandler(getConsentEntity, PageTitle.CONSENT_VARIANT),
   ),
 );
 
@@ -477,10 +475,7 @@ router.post(
   `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_NEWSLETTERS}`,
   loginMiddleware,
   handleAsyncErrors(
-    getABTestPOSTHandler(
-      setNewsletterEntity,
-      'Get the headlines in your inbox',
-    ),
+    getABTestPOSTHandler(setNewsletterEntity, PageTitle.NEWSLETTER_VARIANT),
   ),
 );
 
@@ -488,10 +483,7 @@ router.post(
   `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_CONSENTS}`,
   loginMiddleware,
   handleAsyncErrors(
-    getABTestPOSTHandler(
-      setConsentEntity,
-      'Get the latest offers sent to your inbox',
-    ),
+    getABTestPOSTHandler(setConsentEntity, PageTitle.CONSENT_VARIANT),
   ),
 );
 

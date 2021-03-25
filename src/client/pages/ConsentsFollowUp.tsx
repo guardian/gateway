@@ -31,6 +31,7 @@ import NEWSLETTER_PHONE_IMAGE from '@/client/assets/newsletter_phone.png';
 import { NewsLetter } from '@/shared/model/Newsletter';
 import { Consent } from '@/shared/model/Consent';
 import { EnvelopeImage } from '../components/EnvelopeImage';
+import { PageTitle } from '@/shared/model/PageTitle';
 
 const GUARDIAN_BRAND = brand[400];
 const ELECTION_BEIGE = '#DDDBD1';
@@ -45,11 +46,11 @@ const spanDef = {
   },
   DESKTOP: {
     start: 2,
-    span: 8,
+    span: 9,
   },
   WIDE: {
     start: 3,
-    span: 8,
+    span: 9,
   },
 };
 
@@ -167,7 +168,7 @@ const h1 = css`
   margin-top: 60px;
   margin-bottom: 75px;
   ${from.tablet} {
-    font-size: 47px;
+    font-size: 39px;
   }
   ${from.desktop} {
     ${titlepiece.large()};
@@ -313,8 +314,8 @@ const getPostAction = getVariantValue(
 );
 
 const getTitle = getVariantValue(
-  'Get the headlines in your inbox',
-  'Get the latest offers sent to your inbox',
+  PageTitle.NEWSLETTER_VARIANT,
+  PageTitle.CONSENT_VARIANT,
   '',
 );
 
