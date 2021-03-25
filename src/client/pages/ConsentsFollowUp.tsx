@@ -223,7 +223,7 @@ const newsletterCard = css`
   & p {
     ${body.medium()}
     border-top: 1px solid ${BORDER_GREY};
-    margin-bottom: 2px;
+    margin-bottom: ${space[3]}px;
   }
   ${from.desktop} {
     border-top: 0;
