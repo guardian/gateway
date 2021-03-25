@@ -395,7 +395,7 @@ function getABTestGETHandler(
     const { ip, cookies } = req;
     const sc_gu_u = cookies.SC_GU_U;
     let state = res.locals;
-    let status = 200;
+    let status;
     const geocode = state.pageData.geolocation;
     const route = req.route.path;
     try {
@@ -411,6 +411,7 @@ function getABTestGETHandler(
           returnUrl: state?.queryParams?.returnUrl,
         },
       };
+      status = 200;
     } catch (error) {
       [status, state] = getErrorResponse(error, state);
     }
@@ -420,7 +421,10 @@ function getABTestGETHandler(
       pageTitle,
     });
 
-    res.type('html').status(status).send(html);
+    res
+      .type('html')
+      .status(status ?? 500)
+      .send(html);
   };
 }
 
@@ -431,7 +435,7 @@ function getABTestPOSTHandler(
   return async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
     const sc_gu_u = req.cookies.SC_GU_U;
-    let status = 200;
+    let status;
     const url = getRedirectUrl(getConfiguration(), state);
     const route = req.route.path;
 
