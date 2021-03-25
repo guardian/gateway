@@ -278,18 +278,18 @@ const newsletterBackground = css`
 `;
 
 function getVariantValue<A, B, C>(
-  A: A,
-  B: B,
+  a: A,
+  b: B,
   none: C,
 ): (clientState: ClientState) => A | B | C {
   return (clientState: ClientState) => {
     const newsletters = clientState?.pageData?.newsletters;
     if (newsletters) {
-      return A;
+      return a;
     }
     const consents = clientState?.pageData?.consents;
     if (consents) {
-      return B;
+      return b;
     }
     return none;
   };
