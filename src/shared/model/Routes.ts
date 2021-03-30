@@ -13,6 +13,10 @@ export enum Routes {
   CONSENTS_COMMUNICATION = '/communication',
   CONSENTS_NEWSLETTERS = '/newsletters',
   CONSENTS_REVIEW = '/review',
+  // ABTEST: followupConsent : START
+  CONSENTS_FOLLOW_UP_NEWSLETTERS = '/follow-up',
+  CONSENTS_FOLLOW_UP_CONSENTS = '/follow-on',
+  // ABTEST: followupConsent : END
   UNEXPECTED_ERROR = '/error',
 }
 

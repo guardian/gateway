@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { Routes } from '@/shared/model/Routes';
-import { renderer } from '@/server/lib/renderer';
+import { redirectRenderer, renderer } from '@/server/lib/renderer';
 import {
   update as patchConsents,
   read as readConsents,
@@ -15,11 +15,15 @@ import { PageData } from '@/shared/model/ClientState';
 import { NewsLetter, NewsletterPatch } from '@/shared/model/Newsletter';
 import {
   Consent,
+  Consents,
   CONSENTS_COMMUNICATION_PAGE,
   CONSENTS_DATA_PAGE,
 } from '@/shared/model/Consent';
 import { loginMiddleware } from '@/server/lib/middleware/login';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import {
+  RequestState,
+  ResponseWithRequestState,
+} from '@/server/models/Express';
 import { VERIFY_EMAIL } from '@/shared/model/Success';
 import { trackMetric } from '@/server/lib/AWS';
 import { consentsPageMetric } from '@/server/models/Metrics';
@@ -29,6 +33,10 @@ import { NewsletterMap } from '@/shared/lib/newsletter';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { fourZeroFourRender } from '@/server/lib/middleware/404';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
+import { IDAPIError } from '../lib/APIFetch';
+import { getConfiguration } from '../lib/getConfiguration';
+import { Configuration } from '../models/Configuration';
+import { PageTitle } from '@/shared/model/PageTitle';
 
 const router = Router();
 
@@ -260,6 +268,230 @@ router.get(Routes.CONSENTS, loginMiddleware, (_: Request, res: Response) => {
   }
   res.redirect(303, url);
 });
+
+//  ABTEST: followupConsent : Start
+// The following routes and functions are only used as part of the followupConsents AB test
+
+function getErrorResponse(
+  e: Error | IDAPIError,
+  state: RequestState,
+): [number, RequestState] {
+  let status;
+  let message;
+  if ('status' in e && 'error' in e) {
+    status = e.status;
+    message = e.error;
+  } else {
+    status = 500;
+    message = 'An error has occured, please try again.';
+  }
+  return [
+    status,
+    {
+      ...state,
+      globalMessage: {
+        ...state.globalMessage,
+        error: message,
+      },
+    },
+  ];
+}
+
+enum IDAPIEntity {
+  NEWSLETTERS = 'newsletters',
+  CONSENTS = 'consents',
+}
+type IDAPIEntityRecord = [IDAPIEntity, NewsLetter[] | Consent[]];
+type IDAPIEntityGetter = (
+  ip: string,
+  sc_gu_u: string,
+  geocode?: GeoLocation,
+) => Promise<IDAPIEntityRecord>;
+type IDAPIEntitySetter = (
+  ip: string,
+  sc_gu_u: string,
+  body: { [key: string]: string },
+  geocode?: GeoLocation,
+) => Promise<void>;
+
+function isSubscribed(entities: NewsLetter[] | Consent[]): boolean {
+  if (entities.length < 1) {
+    return false;
+  }
+  const entity = entities[0];
+  if ('subscribed' in entity) {
+    return entity?.subscribed ?? false;
+  }
+  if ('consented' in entity) {
+    return entity?.consented ?? false;
+  }
+  return false;
+}
+
+function getRedirectUrl(config: Configuration, state: RequestState): string {
+  return state?.queryParams?.returnUrl ?? config.defaultReturnUri;
+}
+
+async function getNewsletterEntity(
+  ip: string,
+  sc_gu_u: string,
+  geocode?: GeoLocation,
+): Promise<[IDAPIEntity, NewsLetter[]]> {
+  const newsletters = (
+    await getUserNewsletterSubscriptions(
+      NewsletterMap.get(geocode) as string[],
+      ip,
+      sc_gu_u,
+    )
+  ).slice(0, 1); // Assume 'Today' newsletter is the leading newsletter in NewsletterMap;
+  return [IDAPIEntity.NEWSLETTERS, newsletters];
+}
+
+async function getConsentEntity(
+  ip: string,
+  sc_gu_u: string,
+): Promise<[IDAPIEntity, Consent[]]> {
+  const consents = await getUserConsentsForPage(
+    [Consents.SUPPORTER],
+    ip,
+    sc_gu_u,
+  );
+  return [IDAPIEntity.CONSENTS, consents];
+}
+
+async function setNewsletterEntity(
+  ip: string,
+  sc_gu_u: string,
+  body: { [key: string]: string },
+  geocode?: GeoLocation,
+) {
+  const { update } = consentPages[1]; // Can reuse newsletter updater function.
+  if (update) {
+    await update(ip, sc_gu_u, body, geocode);
+  } else {
+    throw 'Follow On Consent Update Failure: Newsletters';
+  }
+}
+
+async function setConsentEntity(
+  ip: string,
+  sc_gu_u: string,
+  body: { [key: string]: string },
+) {
+  const consents = [
+    {
+      id: Consents.SUPPORTER,
+      consented: getConsentValueFromRequestBody(Consents.SUPPORTER, body),
+    },
+  ];
+  await patchConsents(ip, sc_gu_u, consents);
+}
+
+function getABTestGETHandler(
+  entityGetter: IDAPIEntityGetter,
+  pageTitle: string,
+) {
+  return async (req: Request, res: ResponseWithRequestState) => {
+    const { ip, cookies } = req;
+    const sc_gu_u = cookies.SC_GU_U;
+    let state = res.locals;
+    let status;
+    const geocode = state.pageData.geolocation;
+    const route = req.route.path;
+    try {
+      const [entitiesName, entities] = await entityGetter(ip, sc_gu_u, geocode);
+      if (isSubscribed(entities)) {
+        res.redirect(303, getRedirectUrl(getConfiguration(), state));
+      }
+      state = {
+        ...state,
+        pageData: {
+          ...state.pageData,
+          [entitiesName]: entities,
+          returnUrl: state?.queryParams?.returnUrl,
+        },
+      };
+      status = 200;
+    } catch (error) {
+      [status, state] = getErrorResponse(error, state);
+    }
+
+    const html = renderer(route, {
+      requestState: state,
+      pageTitle,
+    });
+
+    res
+      .type('html')
+      .status(status ?? 500)
+      .send(html);
+  };
+}
+
+function getABTestPOSTHandler(
+  entitySetter: IDAPIEntitySetter,
+  pageTitle: string,
+) {
+  return async (req: Request, res: ResponseWithRequestState) => {
+    let state = res.locals;
+    const sc_gu_u = req.cookies.SC_GU_U;
+    let status;
+    const url = getRedirectUrl(getConfiguration(), state);
+    const route = req.route.path;
+
+    try {
+      await entitySetter(req.ip, sc_gu_u, req.body, state.pageData.geolocation);
+      const html = redirectRenderer(url);
+      res.type('html').send(html);
+      return;
+    } catch (e) {
+      [status, state] = getErrorResponse(e, state);
+    }
+
+    const html = renderer(route, {
+      pageTitle,
+      requestState: state,
+    });
+    res
+      .type('html')
+      .status(status ?? 500)
+      .send(html);
+  };
+}
+
+router.get(
+  `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_NEWSLETTERS}`,
+  loginMiddleware,
+  handleAsyncErrors(
+    getABTestGETHandler(getNewsletterEntity, PageTitle.NEWSLETTER_VARIANT),
+  ),
+);
+
+router.get(
+  `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_CONSENTS}`,
+  loginMiddleware,
+  handleAsyncErrors(
+    getABTestGETHandler(getConsentEntity, PageTitle.CONSENT_VARIANT),
+  ),
+);
+
+router.post(
+  `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_NEWSLETTERS}`,
+  loginMiddleware,
+  handleAsyncErrors(
+    getABTestPOSTHandler(setNewsletterEntity, PageTitle.NEWSLETTER_VARIANT),
+  ),
+);
+
+router.post(
+  `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_CONSENTS}`,
+  loginMiddleware,
+  handleAsyncErrors(
+    getABTestPOSTHandler(setConsentEntity, PageTitle.CONSENT_VARIANT),
+  ),
+);
+
+//  ABTEST: followupConsent : END
 
 router.get(
   `${Routes.CONSENTS}/:page`,
