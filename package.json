@@ -58,7 +58,7 @@
     "core-js": "^3.9.1",
     "cypress": "^6.8.0",
     "cypress-axe": "^0.12.2",
-    "eslint": "^7.22.0",
+    "eslint": "^7.23.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-functional": "^3.2.1",
     "eslint-plugin-jsx-a11y": "^6.4.1",
