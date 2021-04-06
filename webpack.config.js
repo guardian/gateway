@@ -118,9 +118,40 @@ const server = () => ({
 const browser = ({ isLegacy }) => {
 
   const entry = ['./src/client/static/index.tsx']
+  const target = ['web']
   if (isLegacy) {
-    entry.push('whatwg-fetch')
+    entry.unshift('whatwg-fetch')
+    target.push('es5')
   }
+  
+  const legacyBabelConfig = [
+    '@babel/env',
+    {
+      bugfixes: true,
+      useBuiltIns: 'usage',
+      corejs: '3.9'
+    },
+  ]
+  
+  const legacyBabelConfigNodeModules = [
+    '@babel/env',
+    {
+      bugfixes: true,
+      useBuiltIns: 'usage',
+      corejs: '3.9',
+      modules: 'amd'
+    },
+  ]
+  
+  const modernBabelConfig = [
+    '@babel/env',
+    {
+      bugfixes: true,
+      targets: {
+        esmodules: true
+      }
+  }
+]
 
   const filename = `[name]${isLegacy ? '.legacy' : ''}.[chunkhash].js`;
 
@@ -130,35 +161,36 @@ const browser = ({ isLegacy }) => {
     module: {
       rules: [
         {
-          exclude: {
-            and: [/node_modules/],
-            not: [/@guardian/]
-          },
+          exclude: /node_modules/,
           test: /\.(m?)(j|t)s(x?)/,
           use: [
             {
               loader: 'babel-loader',
               options: {
                 presets: [
-                  isLegacy ? [
-                    '@babel/env',
-                    {
-                      bugfixes: true,
-                      useBuiltIns: 'usage',
-                      corejs: '3.9',
-                      targets: {
-                        ie: '11'
-                      }
-                    },
-                  ] : [
-                      '@babel/env',
-                      {
-                        bugfixes: true,
-                        targets: {
-                          esmodules: true
-                        }
-                    }
-                  ]
+                  isLegacy ? legacyBabelConfig : modernBabelConfig
+                  ,
+                  ...babelConfig.presets,
+                ],
+                plugins: [...babelConfig.plugins],
+              },
+            },
+          ],
+        },
+        {
+          include: /node_modules/,
+          exclude: [
+            /node_modules[\\\/]core-js/,
+            /node_modules[\\\/]@babel/,
+            /node_modules[\\\/]webpack[\\\/]buildin/,
+          ],
+          test: /\.(m?)(j|t)s(x?)/,
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                presets: [
+                  isLegacy ? legacyBabelConfigNodeModules : modernBabelConfig
                   ,
                   ...babelConfig.presets,
                 ],
@@ -194,7 +226,7 @@ const browser = ({ isLegacy }) => {
       path: path.resolve(__dirname, 'build'),
       filename: `${isLegacy ? 'legacy.' : ''}webpack-assets.json`
     })],
-    target: ['web'],
+    target,
   }
 }
 
