@@ -24,7 +24,10 @@ class ChangePasswordPage {
   }
 
   clickPasswordChange() {
-    cy.contains('Save Password').click();
+    // there seems to be a race condition on the change password page
+    // adding a small wait fixes the issue
+    cy.wait(100);
+    cy.get('button[type="submit"]').click();
   }
 
   invalidPasswordChangeField() {
