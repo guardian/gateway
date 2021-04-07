@@ -227,6 +227,10 @@ const browser = ({ isLegacy }) => {
       filename: `${isLegacy ? 'legacy.' : ''}webpack-assets.json`
     })],
     target,
+    performance: {
+      maxEntrypointSize: isLegacy ? 768000 : 512000,
+      maxAssetSize: isLegacy ? 512000 : 384000
+    }
   }
 }
 

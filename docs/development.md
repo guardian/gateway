@@ -324,53 +324,9 @@ Also, there may need to be some scripts that fire on the client side, for exampl
 
 To facilitate this, a client bundle is created at build time to the `build/static` folder. This corresponds to the script imported in the [`src/client/static/index.tsx`](../src/client/static/index.tsx) file, with a script tag pointing to the bundle delivered along with the rendered html.
 
-To keep the initial bundle size as small as possible it is beneficial to dynamically import certain scripts depending on conditionals. For example:
+We provide two bundles to the client; a `modern` bundle for browsers who support `<script type="module">`, and a `legacy` bundle for browsers who do not. The modern bundle means we can provide a smaller javascript payload to the browser as we don't have to provide polyfills/shims for features like `fetch`, `Promise`, `async await`, etc. The legacy bundle targets ES5 and IE11, and thus is of larger size to provide compatibility with modern features.
 
-```ts
-...
-// shouldShow returns a boolean to check if we should import the module
-if (shouldShow()) {
-  // if evaluated to true, import the larger bundle
-  // this happens asynchronously, since the import method uses promises
-  // in this case since we just need to load the bundle, we don't
-  // need to worry about handling the promise
-  import('./cmp');
-}
-...
-
-// it's possible to provide a callback to the import method to run some code
-// after it's imported
-import('./cmp', (cmp) => {
-  // cmp contains exported methods
-
-  // do stuff here e.g.
-  cmp.doStuff()
-})
-
-// or use the then catch promise methods
-import('./cmp')
-  .then((cmp) => {
-    // cmp contains exported methods
-
-    // do stuff here e.g.
-    cmp.doStuff()
-  })
-  .catch((error) => {
-    // error importing module
-    console.error(error)
-  })
-
-// or even async await syntax
-try {
-  const cmp = await import('./cmp');
-  // cmp contains exported methods
-  // do stuff here e.g.
-  cmp.doStuff()
-} catch (error) {
-  // error importing module
-  console.error(error)
-}
-```
+When developing be sure to pay attention to the outputted bundle sizes. For `modern` browsers, an asset cannot be over `384kb`, and the total entrypoint cannot be over `512kb`. For legacy it's `512kb` for an asset, and `768kb` for the total entrypoint. While we don't throw an error if these limits are exceeded, a warning does appear in the console.
 
 ## CSP (Content Secure Policy)
 
