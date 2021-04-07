@@ -25,6 +25,7 @@ build: clear clean-build install
 dev: clear clean-build install
 	$(call banner, "gateway is starting")
 	$(call log, "starting development server")
+	@webpack
 	@(set -a && source .env && yarn watch:server & yarn watch & wait)
 
 # QA
