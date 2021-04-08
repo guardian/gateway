@@ -114,6 +114,12 @@ $ make dev
 
 This adds the environment variables from the `.env` file and starts the development server.
 
+On the first run/ after removing the `build` folder, you may see errors in your console, this is because the `build` folder and project haven't finished compiling yet, just wait for a while for webpack to finish the bundling process.
+
+Once you see `{"level":"info","message":"server running on port 8861"}` in the console, the application is running.
+
+If your build folder is getting quite large, use `make clean-build` to remove the build folder. Then on the next `make dev` command, it will rebuild the application.
+
 ## Testing
 
 ### Unit Tests
