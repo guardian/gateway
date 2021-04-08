@@ -1,3 +1,5 @@
+.PHONY: build dev type-check lint fix test ci cypress clean-build clean-deps install reinstall upgrade clear check-env
+
 # these means you can run the binaries in node_modules
 # like with npm scripts
 export PATH := node_modules/.bin:$(PATH)
@@ -18,12 +20,9 @@ build: clear clean-build install
 	$(call log, "building production bundles")
 	@yarn build
 
-riffraff:
-	@yarn riffraff
-
 # dev
 
-dev: clear clean-build install
+dev: clear install
 	$(call banner, "gateway is starting")
 	$(call log, "starting development server")
 	@(set -a && source .env && yarn watch:server & yarn watch & wait)

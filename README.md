@@ -50,6 +50,8 @@ Start development server:
 $ make dev
 ```
 
+On the first run, you may see errors in your console, this is because the `build` folder and project haven't finished compiling yet, just wait for a while for webpack to finish the bundling process.
+
 ## Development Guides
 
 Need help? Check the [development guide](docs/development.md) first!

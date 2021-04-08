@@ -17,6 +17,7 @@ import { switches } from '@/shared/model/experiments/abSwitches';
 import { resets } from '@guardian/src-foundations/utils';
 
 const assets = getAssets();
+const legacyAssets = getAssets(true);
 
 // favicon shamefully stolen from dcr
 const favicon =
@@ -130,9 +131,14 @@ export const renderer: (url: string, opts: RendererOpts) => string = (
         <link rel="icon" href="https://static.guim.co.uk/images/${favicon}">
         <title>${pageTitle} | The Guardian</title>
         <script>window.gaUID = "${gaUID.id}"</script>
-        <script src="/${assets.runtime}" defer></script>
-        <script src="/${assets.vendors}" defer></script>
-        <script src="/${assets.main}" defer></script>
+        <script type="module" src="/${assets.runtime}" defer></script>
+        <script type="module" src="/${assets.vendors}" defer></script>
+        <script type="module" src="/${assets.main}" defer></script>
+        
+        <script nomodule src="/${legacyAssets.runtime}" defer></script>
+        <script nomodule src="/${legacyAssets.vendors}" defer></script>
+        <script nomodule src="/${legacyAssets.main}" defer></script>
+        
         <script id="routingConfig" type="application/json">${JSON.stringify(
           routingConfig,
         )}</script>
