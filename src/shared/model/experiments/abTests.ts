@@ -1,6 +1,7 @@
 import { AB, ABTest, Participations } from '@guardian/ab-core';
 import { switches } from './abSwitches';
 import { enhancedConsentTest } from './tests/enhancedConsentTest';
+import { singleNewsletterTest } from './tests/singleNewsletterTest';
 
 interface ABTestConfiguration {
   abTestSwitches: Record<string, boolean>;
@@ -10,7 +11,7 @@ interface ABTestConfiguration {
 }
 
 // Add AB tests to run in this array
-export const tests: ABTest[] = [enhancedConsentTest];
+export const tests: ABTest[] = [enhancedConsentTest, singleNewsletterTest];
 
 export const getDefaultABTestConfiguration = (): ABTestConfiguration => ({
   abTestSwitches: switches,
