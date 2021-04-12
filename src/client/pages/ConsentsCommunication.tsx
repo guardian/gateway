@@ -79,6 +79,14 @@ export const ConsentsCommunicationPageABControl = () => {
   const { pageData = {} } = clientState;
   const { consents = [] } = pageData;
 
+  // @AB_TEST: Single Newsletter Test - Remove Market Research: START
+  const ABTestAPI = useAB();
+  const isUserInTest = ABTestAPI.isUserInVariant(
+    'SingleNewsletterTest',
+    'variant',
+  );
+  // @AB_TEST: Single Newsletter Test - Remove Market Research: END
+
   const market_research_optout = consents.find(
     (consent) => consent.id === Consents.MARKET_RESEARCH,
   );
@@ -116,24 +124,29 @@ export const ConsentsCommunicationPageABControl = () => {
               />
             ))}
           </div>
-          <h2 css={[heading, autoRow()]}>
-            Using your data for market research
-          </h2>
-          <p css={[text, autoRow()]}>
-            From time to time we may contact you for market research purposes
-            inviting you to complete a survey, or take part in a group
-            discussion. Normally, this invitation would be sent via email, but
-            we may also contact you by phone.
-          </p>
-          <fieldset css={[fieldset, autoRow()]}>
-            <CheckboxGroup name={market_research_optout.id}>
-              <Checkbox
-                value="consent-option"
-                label={label}
-                defaultChecked={market_research_optout.consented}
-              />
-            </CheckboxGroup>
-          </fieldset>
+          {/* only show market research in control */}
+          {!isUserInTest && (
+            <>
+              <h2 css={[heading, autoRow()]}>
+                Using your data for market research
+              </h2>
+              <p css={[text, autoRow()]}>
+                From time to time we may contact you for market research
+                purposes inviting you to complete a survey, or take part in a
+                group discussion. Normally, this invitation would be sent via
+                email, but we may also contact you by phone.
+              </p>
+              <fieldset css={[fieldset, autoRow()]}>
+                <CheckboxGroup name={market_research_optout.id}>
+                  <Checkbox
+                    value="consent-option"
+                    label={label}
+                    defaultChecked={market_research_optout.consented}
+                  />
+                </CheckboxGroup>
+              </fieldset>
+            </>
+          )}
         </>
       )}
     </ConsentsLayout>
