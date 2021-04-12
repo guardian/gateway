@@ -52,7 +52,7 @@ const getNewsletterCardCssAB = () => {
 
   return css`
     ${gridItem(gridDef)}
-    -ms-grid-row: 0;
+    -ms-grid-row: 4;
 
     margin-bottom: ${space[5]}px;
     ${from.tablet} {
