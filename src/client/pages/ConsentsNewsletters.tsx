@@ -13,7 +13,9 @@ import { ClientState } from '@/shared/model/ClientState';
 import { NewsletterCard } from '@/client/components/NewsletterCard';
 import { from } from '@guardian/src-foundations/mq';
 import { heading, text } from '@/client/styles/Consents';
-import { ABVariantLayout } from '../layouts/shared/ABVariantConsents';
+import { ABVariantLayout } from '@/client/layouts/shared/ABVariantConsents';
+import { useAB } from '@guardian/ab-react';
+import { ABNewsletterCard } from '@/client/components/NewsletterCardAB';
 
 const getNewsletterCardCss = (index: number) => {
   const ITEMS_PER_ROW = 2;
@@ -41,6 +43,27 @@ const getNewsletterCardCss = (index: number) => {
   `;
 };
 
+const getNewsletterCardCssAB = () => {
+  const gridDef = {
+    TABLET: { start: 2, span: 10 },
+    DESKTOP: { start: 2, span: 10 },
+    WIDE: { start: 3, span: 12 },
+  };
+
+  return css`
+    ${gridItem(gridDef)}
+    -ms-grid-row: 0;
+
+    margin-bottom: ${space[5]}px;
+    ${from.tablet} {
+      margin-bottom: ${space[6]}px;
+    }
+    ${from.desktop} {
+      margin-bottom: ${space[9]}px;
+    }
+  `;
+};
+
 const paragraphSpacing = css`
   margin-bottom: ${space[6]}px;
 `;
@@ -49,6 +72,15 @@ export const ConsentsNewslettersPage = () => {
   const clientState = useContext<ClientState>(ClientStateContext);
   const newsletters = clientState?.pageData?.newsletters ?? [];
   const autoRow = getAutoRow(1, gridItemColumnConsents);
+
+  // @AB_TEST: Single Newsletter Test: START
+  const ABTestAPI = useAB();
+  const isUserInTest = ABTestAPI.isUserInVariant(
+    'SingleNewsletterTest',
+    'variant',
+  );
+  // @AB_TEST: Single Newsletter Test: END
+
   return (
     <ABVariantLayout title="Newsletters" current={CONSENTS_PAGES.NEWSLETTERS}>
       <h2 css={[heading, autoRow()]}>Free newsletters from The Guardian</h2>
@@ -56,13 +88,21 @@ export const ConsentsNewslettersPage = () => {
         Our newsletters help you get closer to our quality, independent
         journalism.
       </p>
-      {newsletters.map((newsletter, i) => (
-        <NewsletterCard
-          newsletter={newsletter}
-          key={newsletter.id}
-          cssOverides={getNewsletterCardCss(i)}
+      {isUserInTest ? (
+        <ABNewsletterCard
+          newsletter={newsletters[0]}
+          key={newsletters[0].id}
+          cssOverrides={getNewsletterCardCssAB()}
         />
-      ))}
+      ) : (
+        newsletters.map((newsletter, i) => (
+          <NewsletterCard
+            newsletter={newsletter}
+            key={newsletter.id}
+            cssOverrides={getNewsletterCardCss(i)}
+          />
+        ))
+      )}
     </ABVariantLayout>
   );
 };

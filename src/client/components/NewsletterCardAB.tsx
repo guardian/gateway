@@ -9,6 +9,7 @@ import {
 } from '@guardian/src-foundations/typography';
 import { CONSENTS_MAIN_COLOR } from '@/client/layouts/shared/Consents';
 import { NewsLetter, NEWSLETTER_IMAGES } from '@/shared/model/Newsletter';
+import { from } from '@guardian/src-foundations/mq';
 
 interface NewsletterCardProps {
   newsletter: NewsLetter;
@@ -20,6 +21,12 @@ const image = (id?: string) => {
     display: block;
     height: 0;
     width: 0;
+
+    ${from.desktop} {
+      height: 100%;
+      width: 100%;
+      flex: 1 1 auto;
+    }
   `;
 
   if (id) {
@@ -28,37 +35,20 @@ const image = (id?: string) => {
     if (imagePath) {
       return css`
         ${base}
-        padding: 55% 100% 0 0;
         background-image: url('${imagePath}');
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
+        padding: 55% 100% 0 0;
+
+        ${from.desktop} {
+          padding: 0;
+        }
       `;
     }
   }
 
-  // placeholder image
-  return css`
-    ${base}
-    padding: 55% calc(100% - 6px) 0 0;
-    border: 3px solid black;
-    background: linear-gradient(
-        to top right,
-        transparent 49.5%,
-        black 49.5%,
-        black 50.5%,
-        transparent 50.5%,
-        transparent 100%
-      ),
-      linear-gradient(
-        to top left,
-        transparent 49.5%,
-        black 49.5%,
-        black 50.5%,
-        transparent 50.5%,
-        transparent 100%
-      );
-  `;
+  return base;
 };
 
 const h1 = css`
@@ -88,12 +78,24 @@ const borderDiv = css`
   flex-direction: column;
   border-left: 2px solid ${brand[500]};
   padding: ${space[3]}px ${space[3]}px ${space[3]}px ${space[3]}px;
+
+  ${from.desktop} {
+    flex: 1 1 auto;
+    width: 100%;
+    border-left: 0;
+  }
 `;
 
 const article = css`
   display: flex;
   flex-direction: column;
   background-color: ${CONSENTS_MAIN_COLOR};
+  border: 0;
+
+  ${from.desktop} {
+    flex-direction: row-reverse;
+    border-top: 2px solid ${brand[500]};
+  }
 `;
 
 const subtitleDiv = css`
@@ -122,7 +124,8 @@ const clockSVG = (
   </svg>
 );
 
-export const NewsletterCard: FunctionComponent<NewsletterCardProps> = (
+// @AB_TEST: Single Newsletter Test Card
+export const ABNewsletterCard: FunctionComponent<NewsletterCardProps> = (
   props,
 ) => {
   const { description, frequency, name } = props.newsletter;
