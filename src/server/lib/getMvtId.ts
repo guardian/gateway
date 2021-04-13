@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { Configuration } from '../models/Configuration';
+import { Configuration } from '@/server/models/Configuration';
 
 export const getMvtId = (
   request: Request,

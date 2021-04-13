@@ -1,3 +1,4 @@
+import { SerializedStyles } from '@emotion/react';
 import { css } from '@emotion/react';
 import { space } from '@guardian/src-foundations';
 import { from } from '@guardian/src-foundations/mq';
@@ -34,6 +35,10 @@ export interface SpanDefinition {
   DESKTOP?: SpanDefinitionStartSpan;
   WIDE?: SpanDefinitionStartSpan;
 }
+
+export type AutoRow = (
+  customSpanDefinition?: SpanDefinition | undefined,
+) => SerializedStyles;
 
 const defaultSpanDefinition: Required<SpanDefinition> = {
   MOBILE: {
@@ -153,7 +158,10 @@ export const consentsParagraphSpanDef: SpanDefinition = {
   WIDE: { start: 3, span: 9 },
 };
 
-export const getAutoRow = (offset = 0, spanDefinition?: SpanDefinition) => {
+export const getAutoRow = (
+  offset = 0,
+  spanDefinition?: SpanDefinition,
+): AutoRow => {
   let row = offset;
   return (customSpanDefinition = spanDefinition) => css`
     ${gridItem(customSpanDefinition)}

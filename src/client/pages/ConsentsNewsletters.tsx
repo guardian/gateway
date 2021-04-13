@@ -13,9 +13,13 @@ import { ClientState } from '@/shared/model/ClientState';
 import { NewsletterCard } from '@/client/components/NewsletterCard';
 import { from } from '@guardian/src-foundations/mq';
 import { heading, text } from '@/client/styles/Consents';
-import { ABVariantLayout } from '@/client/layouts/shared/ABVariantConsents';
 import { useAB } from '@guardian/ab-react';
 import { ABNewsletterCard } from '@/client/components/NewsletterCardAB';
+import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
+import {
+  CONSENTS_MAIN_COLOR,
+  ConsentsContent,
+} from '@/client/layouts/shared/Consents';
 
 const getNewsletterCardCss = (index: number) => {
   const ITEMS_PER_ROW = 2;
@@ -82,27 +86,33 @@ export const ConsentsNewslettersPage = () => {
   // @AB_TEST: Single Newsletter Test: END
 
   return (
-    <ABVariantLayout title="Newsletters" current={CONSENTS_PAGES.NEWSLETTERS}>
-      <h2 css={[heading, autoRow()]}>Free newsletters from The Guardian</h2>
-      <p css={[text, paragraphSpacing, autoRow(consentsParagraphSpanDef)]}>
-        Our newsletters help you get closer to our quality, independent
-        journalism.
-      </p>
-      {isUserInTest ? (
-        <ABNewsletterCard
-          newsletter={newsletters[0]}
-          key={newsletters[0].id}
-          cssOverrides={getNewsletterCardCssAB()}
-        />
-      ) : (
-        newsletters.map((newsletter, i) => (
-          <NewsletterCard
-            newsletter={newsletter}
-            key={newsletter.id}
-            cssOverrides={getNewsletterCardCss(i)}
+    <ConsentsLayout
+      title="Newsletters"
+      current={CONSENTS_PAGES.NEWSLETTERS}
+      bgColor={CONSENTS_MAIN_COLOR}
+    >
+      <ConsentsContent>
+        <h2 css={[heading, autoRow()]}>Free newsletters from The Guardian</h2>
+        <p css={[text, paragraphSpacing, autoRow(consentsParagraphSpanDef)]}>
+          Our newsletters help you get closer to our quality, independent
+          journalism.
+        </p>
+        {isUserInTest ? (
+          <ABNewsletterCard
+            newsletter={newsletters[0]}
+            key={newsletters[0].id}
+            cssOverrides={getNewsletterCardCssAB()}
           />
-        ))
-      )}
-    </ABVariantLayout>
+        ) : (
+          newsletters.map((newsletter, i) => (
+            <NewsletterCard
+              newsletter={newsletter}
+              key={newsletter.id}
+              cssOverrides={getNewsletterCardCss(i)}
+            />
+          ))
+        )}
+      </ConsentsContent>
+    </ConsentsLayout>
   );
 };

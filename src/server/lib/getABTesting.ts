@@ -1,5 +1,5 @@
 import { ABTesting } from '@/server/models/Express';
-import { Configuration } from '../models/Configuration';
+import { Configuration } from '@/server/models/Configuration';
 import { getMvtId } from './getMvtId';
 import { Request } from 'express';
 import { getABForcedVariants } from './getABForcedVariants';

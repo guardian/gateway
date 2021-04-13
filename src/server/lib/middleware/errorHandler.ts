@@ -1,6 +1,6 @@
 import { NextFunction, Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
-import { getCsrfPageUrl } from '../getCsrfPageUrl';
+import { getCsrfPageUrl } from '@/server/lib/getCsrfPageUrl';
 import { renderer } from '@/server/lib/renderer';
 import { Routes } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';

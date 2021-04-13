@@ -8,7 +8,7 @@ import {
   gridItem,
   gridItemColumnConsents,
   gridRow,
-} from '../styles/Grid';
+} from '@/client/styles/Grid';
 
 interface GlobalSuccessProps {
   success: string;
