@@ -71,3 +71,9 @@ Cypress.Commands.add('idapiLastPayloadIs', (expected) => {
 Cypress.Commands.add('idapiMockPurge', () => {
   cy.request(MOCKING_ENDPOINT + '/purge');
 });
+
+Cypress.Commands.add('setMvtId', (str) => {
+  cy.setCookie('GU_mvt_id', str, {
+    log: true,
+  });
+});

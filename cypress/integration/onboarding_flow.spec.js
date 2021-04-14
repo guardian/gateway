@@ -41,6 +41,8 @@ const {
   GEOLOCATION_CODES,
 } = require('../support/geolocation');
 
+const { NEWSLETTERS } = NewslettersPage.CONTENT;
+
 describe('Onboarding flow', () => {
   beforeEach(() => {
     cy.idapiMockPurge();
@@ -485,8 +487,6 @@ describe('Onboarding flow', () => {
   });
 
   context('Newsletters page', () => {
-    const { NEWSLETTERS } = NewslettersPage.CONTENT;
-
     beforeEach(() => {
       setAuthCookies();
       cy.idapiMockAll(
@@ -770,6 +770,101 @@ describe('Onboarding flow', () => {
     it('shows 404 page if onboarding page is not found', () => {
       cy.visit('/consents/unknown', { failOnStatusCode: false });
       cy.contains('the page does not exist');
+    });
+  });
+
+  context('AB Test - Single Newsletter test', () => {
+    context('Contact Options Page', () => {
+      beforeEach(() => {
+        setAuthCookies();
+        cy.idapiMockAll(
+          200,
+          authRedirectSignInRecentlyEmailValidated,
+          AUTH_REDIRECT_ENDPOINT,
+        );
+        cy.idapiMockAll(200, allConsents, CONSENTS_ENDPOINT);
+      });
+
+      it('does not show market research checkbox in variant', () => {
+        cy.idapiMockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
+        cy.setMvtId('1');
+        CommunicationsPage.goto();
+        injectAndCheckAxe();
+        cy.get('[name="market_research_optout"]').should('not.exist');
+      });
+
+      it('shows market research checkbox in control', () => {
+        cy.idapiMockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
+        cy.setMvtId('2');
+        CommunicationsPage.goto();
+        injectAndCheckAxe();
+        cy.get('[name="market_research_optout"]')
+          .should('exist')
+          .should('not.be.checked');
+      });
+    });
+
+    context('Newsletter Page', () => {
+      beforeEach(() => {
+        setAuthCookies();
+        cy.idapiMockAll(
+          200,
+          authRedirectSignInRecentlyEmailValidated,
+          AUTH_REDIRECT_ENDPOINT,
+        );
+        cy.idapiMockAll(200, allNewsletters, NEWSLETTER_ENDPOINT);
+        cy.idapiMockAll(
+          200,
+          userNewsletters(),
+          NEWSLETTER_SUBSCRIPTION_ENDPOINT,
+        );
+      });
+
+      it('shows single newsletter in variant', () => {
+        const headers = getGeoLocationHeaders(GEOLOCATION_CODES.GB);
+
+        cy.setMvtId('1');
+
+        cy.visit(NewslettersPage.URL, { headers });
+
+        injectAndCheckAxe();
+
+        NewslettersPage.newsletterCheckboxWithTitle(
+          NEWSLETTERS.TODAY_UK,
+        ).should('not.be.checked');
+        cy.get(NEWSLETTERS.LONG_READ).should('not.exist');
+        cy.get(NEWSLETTERS.GREEN_LIGHT).should('not.exist');
+        cy.get(NEWSLETTERS.BOOKMARKS).should('not.exist');
+
+        CommunicationsPage.backButton().should('exist');
+        CommunicationsPage.saveAndContinueButton().should('exist');
+      });
+
+      it('shows four newsletters in control', () => {
+        const headers = getGeoLocationHeaders(GEOLOCATION_CODES.GB);
+
+        cy.setMvtId('2');
+
+        cy.visit(NewslettersPage.URL, { headers });
+
+        injectAndCheckAxe();
+
+        NewslettersPage.newsletterCheckboxWithTitle(
+          NEWSLETTERS.TODAY_UK,
+        ).should('not.be.checked');
+        NewslettersPage.newsletterCheckboxWithTitle(
+          NEWSLETTERS.LONG_READ,
+        ).should('not.be.checked');
+        NewslettersPage.newsletterCheckboxWithTitle(
+          NEWSLETTERS.GREEN_LIGHT,
+        ).should('not.be.checked');
+        NewslettersPage.newsletterCheckboxWithTitle(
+          NEWSLETTERS.BOOKMARKS,
+        ).should('not.be.checked');
+
+        CommunicationsPage.backButton().should('exist');
+        CommunicationsPage.saveAndContinueButton().should('exist');
+      });
     });
   });
 });
