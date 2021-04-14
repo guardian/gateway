@@ -832,9 +832,9 @@ describe('Onboarding flow', () => {
         NewslettersPage.newsletterCheckboxWithTitle(
           NEWSLETTERS.TODAY_UK,
         ).should('not.be.checked');
-        cy.get(NEWSLETTERS.LONG_READ).should('not.exist');
-        cy.get(NEWSLETTERS.GREEN_LIGHT).should('not.exist');
-        cy.get(NEWSLETTERS.BOOKMARKS).should('not.exist');
+        cy.contains(NEWSLETTERS.LONG_READ).should('not.exist');
+        cy.contains(NEWSLETTERS.GREEN_LIGHT).should('not.exist');
+        cy.contains(NEWSLETTERS.BOOKMARKS).should('not.exist');
 
         CommunicationsPage.backButton().should('exist');
         CommunicationsPage.saveAndContinueButton().should('exist');
@@ -864,6 +864,41 @@ describe('Onboarding flow', () => {
 
         CommunicationsPage.backButton().should('exist');
         CommunicationsPage.saveAndContinueButton().should('exist');
+      });
+    });
+
+    context('Review Page', () => {
+      beforeEach(() => {
+        setAuthCookies();
+        cy.idapiMockAll(
+          200,
+          authRedirectSignInRecentlyEmailValidated,
+          AUTH_REDIRECT_ENDPOINT,
+        );
+        cy.idapiMockAll(200, allConsents, CONSENTS_ENDPOINT);
+        cy.idapiMockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
+        cy.idapiMockAll(200, allNewsletters, NEWSLETTER_ENDPOINT);
+        cy.idapiMockAll(
+          200,
+          userNewsletters(),
+          NEWSLETTER_SUBSCRIPTION_ENDPOINT,
+        );
+      });
+
+      it('hides market research from review page in variant', () => {
+        cy.setMvtId('1');
+        ReviewPage.goto();
+        injectAndCheckAxe();
+        cy.contains(ReviewPage.CONTENT.CONSENT_OPTOUT.RESEARCH).should(
+          'not.exist',
+        );
+      });
+
+      it('shows market research from review page in control', () => {
+        cy.setMvtId('2');
+        ReviewPage.goto();
+        injectAndCheckAxe();
+        cy.contains(ReviewPage.CONTENT.CONSENT_OPTOUT.RESEARCH).should('exist');
       });
     });
   });

@@ -26,6 +26,7 @@ import { Link } from '@guardian/src-link';
 import { Consents } from '@/shared/model/Consent';
 import { LinkButton } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
+import { useAB } from '@guardian/ab-react';
 
 const reviewTableContainer = css`
   display: flex;
@@ -123,6 +124,14 @@ export const ConsentsConfirmationPage = () => {
     returnUrl = 'https://www.theguardian.com',
   } = pageData;
 
+  // @AB_TEST: Single Newsletter Test - Remove Market Research: START
+  const ABTestAPI = useAB();
+  const isUserInTest = ABTestAPI.isUserInVariant(
+    'SingleNewsletterTest',
+    'variant',
+  );
+  // @AB_TEST: Single Newsletter Test - Remove Market Research: END
+
   const profiling_optout = consents.find(
     (consent) => consent.id === Consents.PROFILING,
   ) || { consented: true };
@@ -174,11 +183,13 @@ export const ConsentsConfirmationPage = () => {
                 <p css={text}>N/A</p>
               )}
             </ReviewTableRow>
-            <ReviewTableRow title="Marketing research">
-              <p css={text}>
-                {market_research_optout.consented ? 'No' : 'Yes'}
-              </p>
-            </ReviewTableRow>
+            {!isUserInTest && (
+              <ReviewTableRow title="Marketing research">
+                <p css={text}>
+                  {market_research_optout.consented ? 'No' : 'Yes'}
+                </p>
+              </ReviewTableRow>
+            )}
             <ReviewTableRow title="Marketing analysis">
               <p css={text}>{profiling_optout.consented ? 'No' : 'Yes'}</p>
             </ReviewTableRow>
