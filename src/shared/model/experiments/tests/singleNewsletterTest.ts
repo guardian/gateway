@@ -7,8 +7,8 @@ export const singleNewsletterTest: ABTest = {
   author: 'mahesh.makani@theguardian.com',
   description:
     'We believe that if we show a single newsletter, vs 4, it will increase opt in to at least one newsletter. . We think it will increase by at least 7.5%',
-  audience: 1, // 0.01% (1 is 100%)
-  audienceOffset: 0, // 50% (1 is 100%). Prevent overlapping with other tests.
+  audience: 1, //(1 is 100%)
+  audienceOffset: 0, // (1 is 100%). Prevent overlapping with other tests.
   successMeasure: 'Various',
   audienceCriteria:
     'Half the audience using the consents flow to see single newsletter',
