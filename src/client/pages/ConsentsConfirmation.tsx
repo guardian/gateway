@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useContext } from 'react';
 import { css } from '@emotion/react';
-import { space, palette, brand } from '@guardian/src-foundations';
+import { space, palette } from '@guardian/src-foundations';
 import {
   getAutoRow,
   gridItem,
@@ -10,25 +10,23 @@ import {
 import { from } from '@guardian/src-foundations/mq';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
-import { NavBar } from '@/client/components/NavBar';
-import { GlobalError } from '@/client/components/GlobalError';
 import {
   mainBackground,
   ConsentsContent,
   ConsentsBlueBackground,
   controls,
   main,
+  ConsentsNavBar,
+  CONSENTS_MAIN_COLOR,
+  ConsentsHeader,
 } from '@/client/layouts/shared/Consents';
-import { ABVariantHeader } from '@/client/layouts/shared/ABVariantConsents';
 import { Footer } from '@/client/components/Footer';
 import { headingWithMq, text } from '@/client/styles/Consents';
 import { Link } from '@guardian/src-link';
 import { Consents } from '@/shared/model/Consent';
-import { getErrorLink } from '@/client/lib/ErrorLink';
-import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 import { LinkButton } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
-import { maxWidth } from '../styles/Shared';
+import { useAB } from '@guardian/ab-react';
 
 const reviewTableContainer = css`
   display: flex;
@@ -93,16 +91,6 @@ const continueBoxFlex = css`
   flex: 0 0 auto;
 `;
 
-const header = css`
-  ${maxWidth}
-  margin: 0 auto;
-  padding-right: 0;
-`;
-
-const headerContainer = css`
-  background-color: ${brand[400]};
-`;
-
 const confirmationSpanDefinition: SpanDefinition = {
   TABLET: {
     start: 2,
@@ -118,6 +106,13 @@ const confirmationSpanDefinition: SpanDefinition = {
   },
 };
 
+const bgColour = css`
+  &:before {
+    background-color: ${CONSENTS_MAIN_COLOR};
+    opacity: 0.4;
+  }
+`;
+
 export const ConsentsConfirmationPage = () => {
   const autoRow = getAutoRow(1, confirmationSpanDefinition);
   const clientState: ClientState = useContext(ClientStateContext);
@@ -128,6 +123,14 @@ export const ConsentsConfirmationPage = () => {
     newsletters = [],
     returnUrl = 'https://www.theguardian.com',
   } = pageData;
+
+  // @AB_TEST: Single Newsletter Test - Remove Market Research: START
+  const ABTestAPI = useAB();
+  const isUserInTest = ABTestAPI.isUserInVariant(
+    'SingleNewsletterTest',
+    'variant',
+  );
+  // @AB_TEST: Single Newsletter Test - Remove Market Research: END
 
   const profiling_optout = consents.find(
     (consent) => consent.id === Consents.PROFILING,
@@ -145,13 +148,9 @@ export const ConsentsConfirmationPage = () => {
 
   return (
     <>
-      <div css={headerContainer}>
-        <NavBar cssOverrides={header} />
-        {error && <GlobalError error={error} link={getErrorLink(error)} left />}
-        {success && <GlobalSuccess success={success} />}
-      </div>
-      <ABVariantHeader title="Your registration is complete" />
-      <main css={[mainBackground, main]}>
+      <ConsentsNavBar error={error} success={success} />
+      <ConsentsHeader autoRow={autoRow} title="Your registration is complete" />
+      <main css={[mainBackground, main, bgColour]}>
         <ConsentsContent>
           <h2 css={[headingWithMq, autoRow()]}>Your selections</h2>
           <p css={[text, autoRow()]}>
@@ -184,11 +183,13 @@ export const ConsentsConfirmationPage = () => {
                 <p css={text}>N/A</p>
               )}
             </ReviewTableRow>
-            <ReviewTableRow title="Marketing research">
-              <p css={text}>
-                {market_research_optout.consented ? 'No' : 'Yes'}
-              </p>
-            </ReviewTableRow>
+            {!isUserInTest && (
+              <ReviewTableRow title="Marketing research">
+                <p css={text}>
+                  {market_research_optout.consented ? 'No' : 'Yes'}
+                </p>
+              </ReviewTableRow>
+            )}
             <ReviewTableRow title="Marketing analysis">
               <p css={text}>{profiling_optout.consented ? 'No' : 'Yes'}</p>
             </ReviewTableRow>

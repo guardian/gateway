@@ -1,23 +1,21 @@
 import React, { FunctionComponent } from 'react';
 import { brand } from '@guardian/src-foundations/palette';
-import { titlepiece, textSans } from '@guardian/src-foundations/typography';
 import { css, SerializedStyles } from '@emotion/react';
 import { space } from '@guardian/src-foundations';
-import { Lines } from '@/client/components/Lines';
-import {
-  gridRow,
-  gridItem,
-  MAX_WIDTH,
-  gridItemColumnConsents,
-  COLUMNS,
-} from '@/client/styles/Grid';
+import { AutoRow, gridItemColumnConsents, gridRow } from '@/client/styles/Grid';
 import { from } from '@guardian/src-foundations/mq';
+import { maxWidth } from '@/client/styles/Shared';
+import { GlobalError } from '@/client/components/GlobalError';
+import { GlobalSuccess } from '@/client/components/GlobalSuccess';
+import { NavBar } from '@/client/components/NavBar';
+import { getErrorLink } from '@/client/lib/ErrorLink';
+import { titlepiece } from '@guardian/src-foundations/typography';
 import { PageProgression } from '@/client/components/PageProgression';
 import { CONSENTS_PAGES_ARR } from '@/client/models/ConsentsPages';
 
 export const CONSENTS_MAIN_COLOR = '#eaf1fd';
 
-const consentsBackground = css`
+export const consentsBackground = css`
   background-color: ${CONSENTS_MAIN_COLOR};
 `;
 
@@ -32,8 +30,8 @@ export const mainBackground = css`
   z-index: 0;
   &:before {
     content: ' ';
-    ${consentsBackground}
-    opacity: 0.4;
+    background-color: ${brand[400]};
+    opacity: 0.8;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -47,6 +45,18 @@ export const mainBackground = css`
 // derived from this solution https://stackoverflow.com/a/49368815
 export const ieFlexFix = css`
   flex: 0 0 auto;
+`;
+
+export const header = css`
+  ${maxWidth}
+  margin: 0 auto;
+  ${from.tablet} {
+    padding-right: 0;
+  }
+`;
+
+export const headerContainer = css`
+  background-color: ${brand[400]};
 `;
 
 const blueBorder = css`
@@ -68,40 +78,6 @@ const content = css`
   ${blueBorder}
 `;
 
-const h1 = css`
-  color: ${brand[400]};
-  margin: ${space[4]}px 0 52px 0;
-  ${titlepiece.small({ fontWeight: 'bold' })};
-  ${gridItem(gridItemColumnConsents)};
-  line-height: 1;
-`;
-
-const h2 = css`
-  color: ${brand[100]};
-  margin: ${space[2]}px 0 ${space[2]}px 0;
-  ${textSans.medium()}
-  ${gridItem({
-    ...gridItemColumnConsents,
-    ...{ WIDE: { start: 1, span: COLUMNS.WIDE } },
-  })}
-`;
-
-const lines = css`
-  ${blueBorder}
-
-  ${from.tablet} {
-    max-width: ${MAX_WIDTH.TABLET}px;
-  }
-
-  ${from.desktop} {
-    max-width: ${MAX_WIDTH.DESKTOP}px;
-  }
-
-  ${from.wide} {
-    max-width: ${MAX_WIDTH.WIDE}px;
-  }
-`;
-
 const flex = css`
   flex: 1 1 auto;
 `;
@@ -110,12 +86,8 @@ const height100 = css`
   height: 100%;
 `;
 
-const progressionMargin = css`
-  margin-bottom: ${space[12]}px;
-`;
-
 export const controls = css`
-  padding: ${space[9]}px 0 ${space[9]}px 0;
+  padding: ${space[5]}px 0 ${space[24]}px 0;
   ${from.tablet} {
     padding: ${space[9]}px 0 ${space[12]}px 0;
   }
@@ -123,20 +95,6 @@ export const controls = css`
     padding: ${space[9]}px 0 ${space[24]}px 0;
   }
 `;
-
-export const ConsentsHeader: FunctionComponent<{ title: string }> = ({
-  title,
-}) => (
-  <header css={consentsBackground}>
-    <div css={[gridRow, blueBorder]}>
-      <h2 css={h2}>Your registration</h2>
-    </div>
-    <Lines n={3} color={brand[400]} cssOverrides={lines} />
-    <div css={[gridRow, blueBorder]}>
-      <h1 css={h1}>{title}</h1>
-    </div>
-  </header>
-);
 
 export const ConsentsContent: FunctionComponent<{
   cssOverrides?: SerializedStyles;
@@ -152,10 +110,63 @@ export const ConsentsBlueBackground: FunctionComponent<{
   </div>
 );
 
-export const ConsentsProgression: FunctionComponent<{
-  current?: string;
-}> = ({ current }) => (
-  <div css={[gridItem(gridItemColumnConsents), progressionMargin]}>
-    <PageProgression pages={CONSENTS_PAGES_ARR} current={current} />
+export const ConsentsNavBar: FunctionComponent<{
+  error?: string;
+  success?: string;
+}> = ({ error, success }) => (
+  <div css={headerContainer}>
+    <NavBar cssOverrides={header} />
+    {error && <GlobalError error={error} link={getErrorLink(error)} left />}
+    {success && <GlobalSuccess success={success} />}
   </div>
+);
+
+const h1 = css`
+  color: ${brand[400]};
+  margin: ${space[12]}px 0 ${space[5]}px 0;
+  ${titlepiece.small({ fontWeight: 'bold' })};
+  font-size: 38px;
+  line-height: 1;
+  ${from.tablet} {
+    ${titlepiece.medium({ fontWeight: 'bold' })};
+    font-size: 42px;
+  }
+  ${from.desktop} {
+    ${titlepiece.large({ fontWeight: 'bold' })};
+    font-size: 50px;
+  }
+`;
+
+const pageProgression = css`
+  margin-top: ${space[5]}px;
+  margin-bottom: 0;
+  li {
+    color: ${brand[400]};
+    &::after {
+      background-color: ${brand[400]};
+    }
+    &::before {
+      border: 2px solid ${brand[400]};
+      background-color: white;
+    }
+  }
+`;
+
+export const ConsentsHeader: FunctionComponent<{
+  autoRow: AutoRow;
+  title: string;
+  current?: string;
+}> = ({ autoRow, title, current }) => (
+  <header css={[consentsBackground, ieFlexFix]}>
+    <div css={[blueBorder, gridRow]}>
+      {current && (
+        <PageProgression
+          cssOverrides={[pageProgression, autoRow(gridItemColumnConsents)]}
+          pages={CONSENTS_PAGES_ARR}
+          current={current}
+        />
+      )}
+      <h1 css={[h1, autoRow(gridItemColumnConsents)]}>{title}</h1>
+    </div>
+  </header>
 );

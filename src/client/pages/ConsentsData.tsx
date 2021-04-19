@@ -15,7 +15,11 @@ import { ClientState } from '@/shared/model/ClientState';
 import { Consents } from '@/shared/model/Consent';
 import { Link } from '@guardian/src-link';
 import { Checkbox, CheckboxGroup } from '@guardian/src-checkbox';
-import { ABVariantLayout } from '../layouts/shared/ABVariantConsents';
+import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
+import {
+  ConsentsContent,
+  CONSENTS_MAIN_COLOR,
+} from '@/client/layouts/shared/Consents';
 
 const fieldset = css`
   border: 0;
@@ -45,9 +49,13 @@ export const ConsentsDataPage = () => {
   );
 
   return (
-    <ABVariantLayout title="Your data" current={CONSENTS_PAGES.YOUR_DATA}>
+    <ConsentsLayout
+      title="Your data"
+      current={CONSENTS_PAGES.YOUR_DATA}
+      bgColor={CONSENTS_MAIN_COLOR}
+    >
       {profiling_optout && (
-        <>
+        <ConsentsContent>
           <h2 css={[heading, autoRow()]}>Our commitment to you</h2>
           <p css={[text, autoRow(consentsParagraphSpanDef)]}>
             We think carefully about our use of personal data and use it
@@ -85,8 +93,8 @@ export const ConsentsDataPage = () => {
               />
             </CheckboxGroup>
           </fieldset>
-        </>
+        </ConsentsContent>
       )}
-    </ABVariantLayout>
+    </ConsentsLayout>
   );
 };

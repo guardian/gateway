@@ -4,9 +4,9 @@
 import { getGeolocationRegion } from '@/server/lib/getGeolocationRegion';
 import { parseExpressQueryParams } from '@/server/lib/queryParams';
 import { NextFunction, Request, Response } from 'express';
-import { getConfiguration } from '../getConfiguration';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 import { tests } from '@/shared/model/experiments/abTests';
-import { getABTesting } from '../getABTesting';
+import { getABTesting } from '@/server/lib/getABTesting';
 import { RequestState } from '@/server/models/Express';
 
 const config = getConfiguration();

@@ -33,9 +33,9 @@ import { NewsletterMap } from '@/shared/lib/newsletter';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { fourZeroFourRender } from '@/server/lib/middleware/404';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { IDAPIError } from '../lib/APIFetch';
-import { getConfiguration } from '../lib/getConfiguration';
-import { Configuration } from '../models/Configuration';
+import { IDAPIError } from '@/server/lib/APIFetch';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { Configuration } from '@/server/models/Configuration';
 import { PageTitle } from '@/shared/model/PageTitle';
 
 const router = Router();

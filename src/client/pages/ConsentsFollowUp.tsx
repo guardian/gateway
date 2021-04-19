@@ -13,24 +13,24 @@ import {
 } from '@guardian/src-foundations/typography';
 import { Container } from '@guardian/src-layout';
 import React, { useContext } from 'react';
-import { ClientStateContext } from '../components/ClientState';
-import { CsrfFormField } from '../components/CsrfFormField';
-import { Footer } from '../components/Footer';
-import { GlobalError } from '../components/GlobalError';
-import { GlobalSuccess } from '../components/GlobalSuccess';
+import { ClientStateContext } from '@/client/components/ClientState';
+import { CsrfFormField } from '@/client/components/CsrfFormField';
+import { Footer } from '@/client/components/Footer';
+import { GlobalError } from '@/client/components/GlobalError';
+import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 import { SvgGuardianLogo } from '@guardian/src-brand';
-import { getErrorLink } from '../lib/ErrorLink';
+import { getErrorLink } from '@/client/lib/ErrorLink';
 import {
   getAutoRow,
   gridItemColumnConsents,
   gridRow,
   manualRow,
   MAX_WIDTH,
-} from '../styles/Grid';
+} from '@/client/styles/Grid';
 import NEWSLETTER_PHONE_IMAGE from '@/client/assets/newsletter_phone.png';
 import { NewsLetter } from '@/shared/model/Newsletter';
 import { Consent } from '@/shared/model/Consent';
-import { EnvelopeImage } from '../components/EnvelopeImage';
+import { EnvelopeImage } from '@/client/components/EnvelopeImage';
 import { PageTitle } from '@/shared/model/PageTitle';
 
 const GUARDIAN_BRAND = brand[400];

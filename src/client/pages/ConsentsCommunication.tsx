@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { textSans } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/react';
 import { space, neutral } from '@guardian/src-foundations';
@@ -17,7 +16,11 @@ import { Consents } from '@/shared/model/Consent';
 import { Checkbox, CheckboxGroup } from '@guardian/src-checkbox';
 import { from } from '@guardian/src-foundations/mq';
 import { useAB } from '@guardian/ab-react';
-import { ConsentsCommunicationPageABVariant } from './ConsentsCommunicationABVariant';
+import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
+import {
+  ConsentsContent,
+  CONSENTS_MAIN_COLOR,
+} from '@/client/layouts/shared/Consents';
 
 const fieldset = css`
   border: 0;
@@ -56,28 +59,20 @@ const communicationCardSpanDef = {
 };
 
 export const ConsentsCommunicationPage = () => {
-  // @AB_TEST: Enhanced Consents: START
-  const ABTestAPI = useAB();
-  const isUserInTest = ABTestAPI.isUserInVariant(
-    'EnhancedConsentTest',
-    'variant',
-  );
-  // @AB_TEST: Enhanced Consents: END
-
-  return isUserInTest ? (
-    <ConsentsCommunicationPageABVariant />
-  ) : (
-    <ConsentsCommunicationPageABControl />
-  );
-};
-
-export const ConsentsCommunicationPageABControl = () => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
 
   const clientState = useContext<ClientState>(ClientStateContext);
 
   const { pageData = {} } = clientState;
   const { consents = [] } = pageData;
+
+  // @AB_TEST: Single Newsletter Test - Remove Market Research: START
+  const ABTestAPI = useAB();
+  const isUserInTest = ABTestAPI.isUserInVariant(
+    'SingleNewsletterTest',
+    'variant',
+  );
+  // @AB_TEST: Single Newsletter Test - Remove Market Research: END
 
   const market_research_optout = consents.find(
     (consent) => consent.id === Consents.MARKET_RESEARCH,
@@ -92,50 +87,54 @@ export const ConsentsCommunicationPageABControl = () => {
   );
 
   return (
-    <ConsentsLayout title="Stay in touch" current={CONSENTS_PAGES.CONTACT}>
-      {market_research_optout && (
-        <>
-          <h2 css={[heading, autoRow()]}>Thank you for registering</h2>
-          <p css={[text, autoRow(consentsParagraphSpanDef)]}>
-            Would you like to join our mailing list to stay informed and up to
-            date with all that The Guardian has to offer?
-          </p>
-          <div
-            css={[
-              communicationCardContainer,
-              autoRow(communicationCardSpanDef),
-            ]}
-          >
-            {consentsWithoutOptout.map((consent) => (
-              <CommunicationCard
-                key={consent.id}
-                title={consent.name}
-                body={consent.description}
-                value={consent.id}
-                checked={!!consent.consented}
-              />
-            ))}
-          </div>
-          <h2 css={[heading, autoRow()]}>
-            Using your data for market research
-          </h2>
-          <p css={[text, autoRow()]}>
-            From time to time we may contact you for market research purposes
-            inviting you to complete a survey, or take part in a group
-            discussion. Normally, this invitation would be sent via email, but
-            we may also contact you by phone.
-          </p>
-          <fieldset css={[fieldset, autoRow()]}>
-            <CheckboxGroup name={market_research_optout.id}>
-              <Checkbox
-                value="consent-option"
-                label={label}
-                defaultChecked={market_research_optout.consented}
-              />
-            </CheckboxGroup>
-          </fieldset>
-        </>
-      )}
+    <ConsentsLayout
+      title="Welcome to The Guardian"
+      current={CONSENTS_PAGES.CONTACT}
+      bgColor={CONSENTS_MAIN_COLOR}
+    >
+      <ConsentsContent>
+        <h2 css={[heading, autoRow()]}>Thank you for registering</h2>
+        <p css={[text, autoRow(consentsParagraphSpanDef)]}>
+          Would you like to join our mailing list to stay informed and up to
+          date with all that The Guardian has to offer?
+        </p>
+        <div
+          css={[communicationCardContainer, autoRow(communicationCardSpanDef)]}
+        >
+          {consentsWithoutOptout.map((consent) => (
+            <CommunicationCard
+              key={consent.id}
+              title={consent.name}
+              body={consent.description}
+              value={consent.id}
+              checked={!!consent.consented}
+            />
+          ))}
+        </div>
+        {/* only show market research in control */}
+        {market_research_optout && !isUserInTest && (
+          <>
+            <h2 css={[heading, autoRow()]}>
+              Using your data for market research
+            </h2>
+            <p css={[text, autoRow()]}>
+              From time to time we may contact you for market research purposes
+              inviting you to complete a survey, or take part in a group
+              discussion. Normally, this invitation would be sent via email, but
+              we may also contact you by phone.
+            </p>
+            <fieldset css={[fieldset, autoRow()]}>
+              <CheckboxGroup name={market_research_optout.id}>
+                <Checkbox
+                  value="consent-option"
+                  label={label}
+                  defaultChecked={market_research_optout.consented}
+                />
+              </CheckboxGroup>
+            </fieldset>
+          </>
+        )}
+      </ConsentsContent>
     </ConsentsLayout>
   );
 };
