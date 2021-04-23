@@ -95,7 +95,7 @@
     "@guardian/src-link": "^3.5.0",
     "@guardian/src-radio": "^3.5.0",
     "@guardian/src-text-input": "^3.5.0",
-    "aws-sdk": "^2.889.0",
+    "aws-sdk": "^2.891.0",
     "bowser": "^2.11.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
