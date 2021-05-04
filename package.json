@@ -62,7 +62,7 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "chalk-rainbow": "^1.0.0",
     "copy-node-modules": "^1.1.1",
-    "core-js": "^3.10.2",
+    "core-js": "^3.11.2",
     "cypress": "^7.1.0",
     "cypress-axe": "^0.12.2",
     "eslint": "^7.24.0",
