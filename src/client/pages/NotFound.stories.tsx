@@ -10,4 +10,8 @@ export default {
 } as Meta;
 
 export const Default = () => <NotFound />;
-Default.storyName = 'NotFound';
+Default.parameters = {
+  viewport: {
+    defaultViewport: 'mobileMedium',
+  },
+};
