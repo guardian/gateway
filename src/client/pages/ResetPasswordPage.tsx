@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
-import { PasswordResetDialog } from '@/client/components/PasswordResetDialog';
+import { ResetPassword } from '@/client/components/ResetPassword';
 import { useLocation } from 'react-router-dom';
 import { SignInLayout } from '@/client/layouts/SignInLayout';
 
@@ -12,7 +12,7 @@ export const ResetPasswordPage = () => {
 
   return (
     <SignInLayout>
-      <PasswordResetDialog
+      <ResetPassword
         email={email}
         headerText="Forgotten password"
         bodyText="Forgotten or need to set your password? We will email you a link to change or set it."

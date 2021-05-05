@@ -2,15 +2,15 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { PasswordResetDialog } from './PasswordResetDialog';
+import { ResetPassword } from './ResetPassword';
 
 export default {
-  title: 'Components/PasswordResetDialog',
-  component: PasswordResetDialog,
+  title: 'Components/ResetPassword',
+  component: ResetPassword,
 } as Meta;
 
 export const Default = () => (
-  <PasswordResetDialog
+  <ResetPassword
     headerText="Forgotten password"
     bodyText="Forgotten or need to set your password? We will email you a link to change or set it."
     buttonText="Reset Password"
@@ -21,7 +21,7 @@ Default.story = {
 };
 
 export const Email = () => (
-  <PasswordResetDialog
+  <ResetPassword
     email="cleo@theguardian.com"
     headerText="Forgotten password"
     bodyText="Forgotten or need to set your password? We will email you a link to change or set it."

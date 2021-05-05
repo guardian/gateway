@@ -11,7 +11,7 @@ import { form, textInput, button } from '@/client/styles/Shared';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { SignInLayout } from '@/client/layouts/SignInLayout';
 
-interface PasswordResetDialogProps {
+interface ResetPasswordProps {
   email?: string;
   headerText: string;
   bodyText: string;
@@ -19,13 +19,13 @@ interface PasswordResetDialogProps {
   queryString?: string;
 }
 
-export const PasswordResetDialog = ({
+export const ResetPassword = ({
   email = '',
   headerText,
   bodyText,
   buttonText,
   queryString = '',
-}: PasswordResetDialogProps) => (
+}: ResetPasswordProps) => (
   <SignInLayout>
     <PageBox>
       <PageHeader>{headerText}</PageHeader>
