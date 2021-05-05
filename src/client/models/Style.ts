@@ -1,6 +1,6 @@
 // sourced from https://theguardian.design/2a1e5182b/p/41be19-grids
 
-export enum MaxWidth {
+export enum Breakpoints {
   WIDE = 1300,
   DESKTOP = 980,
   TABLET = 740,

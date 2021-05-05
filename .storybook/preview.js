@@ -1,14 +1,14 @@
 import { breakpoints } from '@guardian/src-foundations/mq';
-import { MaxWidth } from '@/client/models/Style';
+import { Breakpoints } from '@/client/models/Style';
 
 const viewports = {};
-for (let breakpoint in MaxWidth) {
+for (let breakpoint in Breakpoints) {
   if (isNaN(Number(breakpoint))) {
-    // MaxWidth is an enum, not an object, so it also loops the values which we want to avoid here
+    // Breakpoints is an enum, not an object, so it also loops the values which we want to avoid here
     viewports[breakpoint] = {
-      name: `${breakpoint} (${MaxWidth[breakpoint]})`,
+      name: `${breakpoint} (${Breakpoints[breakpoint]})`,
       styles: {
-        width: `${MaxWidth[breakpoint]}px`,
+        width: `${Breakpoints[breakpoint]}px`,
         height: '100vh',
       },
     };
