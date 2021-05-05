@@ -1,28 +1,30 @@
 import { breakpoints } from '@guardian/src-foundations/mq';
+import { MaxWidth } from '@/client/models/Style';
 
-
-const guardianViewports = {}
-
-for ( const name in breakpoints) {
-  guardianViewports[name] = {
-		name,
-		styles: {
-			width: `${breakpoints[name]}px`,
-			height: '800px',
-		},
-	}
+const viewports = {};
+for (let breakpoint in MaxWidth) {
+  if (isNaN(Number(breakpoint))) {
+    // MaxWidth is an enum, not an object, so it also loops the values which we want to avoid here
+    viewports[breakpoint] = {
+      name: `${breakpoint} (${MaxWidth[breakpoint]})`,
+      styles: {
+        width: `${MaxWidth[breakpoint]}px`,
+        height: '100vh',
+      },
+    };
+  }
 }
 
 export const parameters = {
-  actions: { argTypesRegex: "^on[A-Z].*" },
+  actions: { argTypesRegex: '^on[A-Z].*' },
   controls: {
     matchers: {
       color: /(background|color)$/i,
       date: /Date$/,
     },
   },
-	viewport: {
-		viewports: guardianViewports,
-		defaultViewport: 'mobileMedium',
-	},
-}
+  viewport: {
+    viewports,
+    defaultViewport: 'MOBILE',
+  },
+};

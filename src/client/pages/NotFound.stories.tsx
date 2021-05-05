@@ -10,8 +10,3 @@ export default {
 } as Meta;
 
 export const Default = () => <NotFound />;
-Default.parameters = {
-  viewport: {
-    defaultViewport: 'mobileMedium',
-  },
-};
