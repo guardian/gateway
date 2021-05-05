@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { brand, palette, space } from '@guardian/src-foundations';
 import locations from '@/client/lib/locations';
 import { textSans } from '@guardian/src-foundations/typography';
-import { MaxWidth } from '@/client/models/Style';
+import { Breakpoints } from '@/client/models/Style';
 import { from } from '@guardian/src-foundations/mq';
 
 const footer = css`
@@ -14,7 +14,7 @@ const footer = css`
 
 const container = css`
   width: 100%;
-  max-width: ${MaxWidth.DESKTOP}px;
+  max-width: ${Breakpoints.DESKTOP}px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;

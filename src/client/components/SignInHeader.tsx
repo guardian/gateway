@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { brand, space, neutral } from '@guardian/src-foundations';
 import { headline } from '@guardian/src-foundations/typography';
 import { from } from '@guardian/src-foundations/mq';
-import { MaxWidth } from '@/client/models/Style';
+import { Breakpoints } from '@/client/models/Style';
 
 const header = css`
   width: 100%;
@@ -27,7 +27,7 @@ const header = css`
 `;
 
 const div = css`
-  max-width: ${MaxWidth.TABLET}px;
+  max-width: ${Breakpoints.TABLET}px;
   width: 100%;
   padding: 0 ${space[3]}px;
   margin-right: 0;
