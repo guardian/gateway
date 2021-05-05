@@ -1,5 +1,7 @@
 import { breakpoints } from '@guardian/src-foundations/mq';
 import { Breakpoints } from '@/client/models/Style';
+import { ABProvider } from '@guardian/ab-react';
+import { StaticRouter } from 'react-router-dom';
 
 const viewports = {};
 for (let breakpoint in Breakpoints) {
@@ -28,3 +30,21 @@ export const parameters = {
     defaultViewport: 'MOBILE',
   },
 };
+
+//Add global mocks for ABProvider and StaticRouter
+export const decorators = [
+  (Story) => (
+    <ABProvider
+      arrayOfTestObjects={[]}
+      abTestSwitches={{}}
+      pageIsSensitive={false}
+      mvtMaxValue={1000000}
+      mvtId={0}
+      forcedTestVariants={{}}
+    >
+      <StaticRouter location={''} context={{}}>
+        <Story />
+      </StaticRouter>
+    </ABProvider>
+  ),
+];
