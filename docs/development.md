@@ -94,7 +94,7 @@ The route should now be accessible.
 
 When writing async routes, wrap the handler in the helper function `handleAsyncErrors`
 
-E.g. 
+E.g.
 
 ```ts
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';

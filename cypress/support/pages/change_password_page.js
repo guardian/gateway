@@ -3,10 +3,13 @@ class ChangePasswordPage {
   static CONTENT = {
     ERRORS: {
       GENERIC: 'There was a problem changing your password, please try again.',
-      PASSWORD_BREACHED: 'This is a common password. Please use a password that is hard to guess.',
+      PASSWORD_BREACHED:
+        'This is a common password. Please use a password that is hard to guess.',
       PASSWORD_MISMATCH: 'Passwords don’t match',
-      PASSWORD_TOO_SHORT: 'Please make sure your password is at least 8 characters long.',
-      PASSWORD_TOO_LONG: 'Please make sure your password is not longer than 72 characters.',
+      PASSWORD_TOO_SHORT:
+        'Please make sure your password is at least 8 characters long.',
+      PASSWORD_TOO_LONG:
+        'Please make sure your password is not longer than 72 characters.',
       CSRF:
         'Sorry, something went wrong. If you made any changes these might have not been saved. Please try again.',
     },
@@ -47,7 +50,6 @@ class ChangePasswordPage {
     this.typePasswordChange(password0, password1);
     this.clickPasswordChange();
   }
-
 }
 
 export default ChangePasswordPage;
