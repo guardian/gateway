@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
-import { ResetPassword } from '@/client/components/ResetPassword';
+import { ResetPassword } from '@/client/pages/ResetPassword';
 
 export const ResendPasswordPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
