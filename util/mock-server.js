@@ -17,11 +17,12 @@ const responses = [];
 const permanent = new Map();
 let permanentPatterns = [];
 
-const findPattern = (path) => permanentPatterns.find(({pattern}) => new RegExp(pattern).test(path));
+const findPattern = (path) =>
+  permanentPatterns.find(({ pattern }) => new RegExp(pattern).test(path));
 
 let payload = {};
 
-app.use(bodyParser.json({strict: false}));
+app.use(bodyParser.json({ strict: false }));
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/healthcheck', (_, res) => {
@@ -67,10 +68,9 @@ app.get('/mock/payload', (_, res) => {
 
 // For any request, if permanent, return permanent mock, otherwise pop from mock stack.
 app.all('*', (req, res) => {
-
-  const origin = req.header("Origin");
+  const origin = req.header('Origin');
   if (origin) {
-    res.set("Access-Control-Allow-Origin", origin);
+    res.set('Access-Control-Allow-Origin', origin);
   }
 
   const { method } = req;
@@ -89,7 +89,9 @@ app.all('*', (req, res) => {
   if (patternResponse) {
     const { status, body, pattern } = patternResponse;
     res.status(status).json(body);
-    console.log(`Mocking for pattern ${pattern}: ${req.originalUrl}: ${status} ${body}`);
+    console.log(
+      `Mocking for pattern ${pattern}: ${req.originalUrl}: ${status} ${body}`,
+    );
     return;
   }
 

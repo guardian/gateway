@@ -5,7 +5,7 @@ import ChangePasswordPage from '../support/pages/change_password_page';
 import ResendPasswordResetPage from '../support/pages/resend_password_page';
 
 const stubBreachedCountEndpoint = (response) => {
-  cy.idapiMockPattern(200, response, "^/password-hash/.*/breached-count$");
+  cy.idapiMockPattern(200, response, '^/password-hash/.*/breached-count$');
 };
 
 describe('Password change flow', () => {
@@ -92,12 +92,12 @@ describe('Password change flow', () => {
       stubBreachedCountEndpoint(0);
       cy.idapiMockNext(200);
       page.goto(fakeToken);
-      cy.get('input[name="password"]').should('have.attr', 'type' , 'password');
+      cy.get('input[name="password"]').should('have.attr', 'type', 'password');
       cy.get('input[name="password"]').type('some_password');
       cy.get('.password-input-eye-button').eq(0).click();
-      cy.get('input[name="password"]').should('have.attr', 'type' , 'text');
+      cy.get('input[name="password"]').should('have.attr', 'type', 'text');
       cy.get('.password-input-eye-button').eq(0).click();
-      cy.get('input[name="password"]').should('have.attr', 'type' , 'password');
+      cy.get('input[name="password"]').should('have.attr', 'type', 'password');
     });
   });
 
@@ -248,10 +248,7 @@ describe('Password change flow', () => {
       cy.idapiMockNext(200);
       page.goto(fakeToken);
       cy.idapiMockNext(200);
-      page.typePasswordChange(
-        excessivelyLongPassword,
-        excessivelyLongPassword,
-      );
+      page.typePasswordChange(excessivelyLongPassword, excessivelyLongPassword);
       // Error is shown before clicking submit
       cy.contains(ChangePasswordPage.CONTENT.ERRORS.PASSWORD_TOO_LONG);
       page.clickPasswordChange();
@@ -278,5 +275,4 @@ describe('Password change flow', () => {
       cy.contains(ChangePasswordPage.CONTENT.ERRORS.GENERIC);
     });
   });
-
 });
