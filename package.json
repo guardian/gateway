@@ -22,7 +22,9 @@
     "wait-on:server": "wait-on http://localhost:$PORT/healthcheck",
     "wait-on:mock-server": "wait-on http://localhost:9000/healthcheck",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "prettier:fix": "prettier . --write",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@babel/core": "^7.14.0",
@@ -86,7 +88,8 @@
     "webpack-cli": "^4.6.0",
     "webpack-merge": "^5.7.3",
     "webpack-node-externals": "^3.0.0",
-    "whatwg-fetch": "^3.6.2"
+    "whatwg-fetch": "^3.6.2",
+    "husky": "^6.0.0"
   },
   "dependencies": {
     "@emotion/react": "^11.1.5",
