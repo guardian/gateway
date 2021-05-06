@@ -10,7 +10,7 @@ import { ResendPasswordPage } from '@/client/pages/ResendPassword';
 import { ConsentsDataPage } from '@/client/pages/ConsentsData';
 import { ConsentsCommunicationPage } from '@/client/pages/ConsentsCommunication';
 import { ConsentsNewslettersPage } from '@/client/pages/ConsentsNewsletters';
-import { ConsentsConfirmationPage } from '@/client/pages/ConsentsConfirmation';
+import { ConsentsConfirmationPage } from '@/client/pages/ConsentsConfirmationPage';
 import { ResendEmailVerificationPage } from '@/client/pages/ResendEmailVerification';
 import { ClientState } from '@/shared/model/ClientState';
 import { UnexpectedError } from '@/client/pages/UnexpectedError';
