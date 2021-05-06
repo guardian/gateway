@@ -23,6 +23,7 @@
     "wait-on:mock-server": "wait-on http://localhost:9000/healthcheck",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
+    "prettier:check": "prettier . --check",
     "prettier:fix": "prettier . --write",
     "prepare": "husky install"
   },
