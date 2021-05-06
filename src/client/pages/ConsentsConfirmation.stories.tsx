@@ -1,8 +1,6 @@
 /* eslint-disable functional/immutable-data */
 import React from 'react';
 import { Meta } from '@storybook/react';
-import { ClientStateProvider } from '@/client/components/ClientState';
-import { Consents } from '@/shared/model/Consent';
 
 import { ConsentsConfirmation } from './ConsentsConfirmation';
 
