@@ -153,7 +153,7 @@ You can then open the test runner using:
 ```sh
 $ make cypress
 # or
-$ ./cypress-open.sh 
+$ ./cypress-open.sh
 ```
 
 To run the tests headless and automatically (how they are run on CI) use:

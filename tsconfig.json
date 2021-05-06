@@ -8,17 +8,12 @@
     "outDir": "build",
     "strict": true,
     "target": "ES2019",
-    "types": [
-      "@emotion/react",
-      "jest"
-    ],
+    "types": ["@emotion/react", "jest"],
     "baseUrl": "src",
     "paths": {
       "@/*": ["*"]
     },
-    "lib": ["ES2019", "DOM"],
+    "lib": ["ES2019", "DOM"]
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

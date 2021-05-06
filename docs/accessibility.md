@@ -1,6 +1,7 @@
 # Accessibility
 
 ## Overview
+
 We want to ensure our site https://profile.theguardian.com is accessible to everyone including users with visual, motor, hearing and cognitive
 impairments that may be permanent, temporary or situational.
 
@@ -68,27 +69,27 @@ https://developers.google.com/web/fundamentals/accessibility/how-to-review (the 
 Steps for completing a manual review can be summarised as follows:
 
 - Run a Lighthouse test (https://github.com/GoogleChrome/lighthouse) on every page
-    - You can use Lighthouse directly in Chrome developer tools Lighthouse checks for various issues such as whether a page is likely to work with a screen reader and if there is sufficient contrast between colours for those that are partially sighted.
+  - You can use Lighthouse directly in Chrome developer tools Lighthouse checks for various issues such as whether a page is likely to work with a screen reader and if there is sufficient contrast between colours for those that are partially sighted.
 - Make sure you can tab through the page:
-    - there should be a clear focus ring around the selected elements as you tab
-    - the tab order of the focused elements should match the page structure
-    - you should be able to reach all interactive elements (including dynamic elements and pop-ups)
-    - there should be no off-screen/hidden content that can be accidentally focused. Check display at various widths, for
+  - there should be a clear focus ring around the selected elements as you tab
+  - the tab order of the focused elements should match the page structure
+  - you should be able to reach all interactive elements (including dynamic elements and pop-ups)
+  - there should be no off-screen/hidden content that can be accidentally focused. Check display at various widths, for
     example: menus that are hidden for mobile view
 - Navigate the page using a screen reader:
-    - common screen readers include NVDA (Windows) and VoiceOver (Mac). Working with a screen reader may take
+  - common screen readers include NVDA (Windows) and VoiceOver (Mac). Working with a screen reader may take
     a little getting used to, but it's worth taking the time to familiarise yourself with at least one of these
-    - do images have alt text? If not, many screen readers will read the name of the image file by default
-    - are buttons and interactive elements compatible with screen readers?
-    - are screen readers notified of popup content? (eg, by directing the focus of the screen reader to the element)
+  - do images have alt text? If not, many screen readers will read the name of the image file by default
+  - are buttons and interactive elements compatible with screen readers?
+  - are screen readers notified of popup content? (eg, by directing the focus of the screen reader to the element)
 - Check the page structure:
-    - are header tags applied to logically structure the content of the page? (and not just to add style and size to the 
+  - are header tags applied to logically structure the content of the page? (and not just to add style and size to the
     visual layout)
-    - are landmark elements used? eg banner, navigation, search, main 
+  - are landmark elements used? eg banner, navigation, search, main
     (https://www.w3.org/TR/wai-aria-practices/examples/landmarks/HTML5.html)
 - Check the colour and contrast of elements:
-    - low contrast elements can be difficult or impossible to distinguish for partially sighted users.
-    - you can use a browser extension to check this, popular tools include axe - Web Accessibility Testing by deque and
+  - low contrast elements can be difficult or impossible to distinguish for partially sighted users.
+  - you can use a browser extension to check this, popular tools include axe - Web Accessibility Testing by deque and
     Lighthouse by Google, both available in Chrome
 
 ## The Future
