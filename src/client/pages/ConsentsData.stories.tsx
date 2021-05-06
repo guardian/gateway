@@ -9,29 +9,27 @@ export default {
   component: ConsentsData,
 } as Meta;
 
-export const Default = () => <ConsentsData />;
-Default.story = {
-  name: 'with defaults',
+export const NoDescription = () => <ConsentsData />;
+NoDescription.story = {
+  name: 'with no description',
 };
 
-export const NoDescription = () => <ConsentsData consented={true} />;
-NoDescription.story = {
+export const ConsentedTrue = () => (
+  <ConsentsData
+    description="I do NOT wish to be contacted by The Guardian for market research purposes."
+    consented={true}
+  />
+);
+ConsentedTrue.story = {
   name: 'with consented true',
 };
 
-export const Description = () => (
-  <ConsentsData consented={true} description="Some description" />
-);
-Description.story = {
-  name: 'with description',
-};
-
-export const LongDescription = () => (
+export const ConsentedFalse = () => (
   <ConsentsData
+    description="I do NOT wish to be contacted by The Guardian for market research purposes."
     consented={false}
-    description="I'm baby disrupt 3 wolf moon stumptown DIY slow-carb organic. 90's messenger bag cray, portland meggings ennui next level salvia man bun humblebrag tote bag. Green juice yr edison bulb, hell of cloud bread raclette keffiyeh kinfolk. Woke williamsburg cred fanny pack selfies."
   />
 );
-LongDescription.story = {
-  name: 'with long description',
+ConsentedFalse.story = {
+  name: 'with consented false',
 };

@@ -46,44 +46,47 @@ export const ConsentsData = ({ consented, description }: ConsentsDataProps) => {
       current={CONSENTS_PAGES.YOUR_DATA}
       bgColor={CONSENTS_MAIN_COLOR}
     >
-      <ConsentsContent>
-        <h2 css={[heading, autoRow()]}>Our commitment to you</h2>
-        <p css={[text, autoRow(consentsParagraphSpanDef)]}>
-          We think carefully about our use of personal data and use it
-          responsibly. We never share it without your permission and we have a
-          team who are dedicated to keeping any data we collect safe and secure.
-          You can find out more about how The Guardian aims to safeguard users
-          data by going to the{' '}
-          <Link
-            href={Locations.PRIVACY}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Privacy
-          </Link>{' '}
-          section of the website.
-        </p>
-        <h2 css={[heading, headingMarginSpace6, autoRow()]}>
-          Using your data for marketing analysis
-        </h2>
-        <p css={[text, autoRow(consentsParagraphSpanDef)]}>
-          From time to time we may use your personal data for marketing
-          analysis. That includes looking at what products or services you have
-          bought from us and what pages you have been viewing on theguardian.com
-          and other Guardian websites (e.g. Guardian Jobs or Guardian Holidays).
-          We do this to understand your interests and preferences so that we can
-          make our marketing communication more relevant to you.
-        </p>
-        <fieldset css={[fieldset, autoRow()]}>
-          <CheckboxGroup name={Consents.PROFILING}>
-            <Checkbox
-              value="consent-option"
-              label={label}
-              defaultChecked={consented}
-            />
-          </CheckboxGroup>
-        </fieldset>
-      </ConsentsContent>
+      {description && (
+        <ConsentsContent>
+          <h2 css={[heading, autoRow()]}>Our commitment to you</h2>
+          <p css={[text, autoRow(consentsParagraphSpanDef)]}>
+            We think carefully about our use of personal data and use it
+            responsibly. We never share it without your permission and we have a
+            team who are dedicated to keeping any data we collect safe and
+            secure. You can find out more about how The Guardian aims to
+            safeguard users data by going to the{' '}
+            <Link
+              href={Locations.PRIVACY}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Privacy
+            </Link>{' '}
+            section of the website.
+          </p>
+          <h2 css={[heading, headingMarginSpace6, autoRow()]}>
+            Using your data for marketing analysis
+          </h2>
+          <p css={[text, autoRow(consentsParagraphSpanDef)]}>
+            From time to time we may use your personal data for marketing
+            analysis. That includes looking at what products or services you
+            have bought from us and what pages you have been viewing on
+            theguardian.com and other Guardian websites (e.g. Guardian Jobs or
+            Guardian Holidays). We do this to understand your interests and
+            preferences so that we can make our marketing communication more
+            relevant to you.
+          </p>
+          <fieldset css={[fieldset, autoRow()]}>
+            <CheckboxGroup name={Consents.PROFILING}>
+              <Checkbox
+                value="consent-option"
+                label={label}
+                defaultChecked={consented}
+              />
+            </CheckboxGroup>
+          </fieldset>
+        </ConsentsContent>
+      )}
     </ConsentsLayout>
   );
 };
