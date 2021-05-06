@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useContext } from 'react';
+import React, { FunctionComponent } from 'react';
 import { css } from '@emotion/react';
 import { space, palette } from '@guardian/src-foundations';
 import {
@@ -8,8 +8,6 @@ import {
   SpanDefinition,
 } from '@/client/styles/Grid';
 import { from } from '@guardian/src-foundations/mq';
-import { ClientState } from '@/shared/model/ClientState';
-import { ClientStateContext } from '@/client/components/ClientState';
 import {
   mainBackground,
   ConsentsContent,
@@ -23,11 +21,21 @@ import {
 import { Footer } from '@/client/components/Footer';
 import { headingWithMq, text } from '@/client/styles/Consents';
 import { Link } from '@guardian/src-link';
-import { Consents } from '@/shared/model/Consent';
 import { LinkButton } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
-import { useAB } from '@guardian/ab-react';
+import { Consent } from '@/shared/model/Consent';
+import { NewsLetter } from '@/shared/model/Newsletter';
 
+type ConsentsConfirmationProps = {
+  error?: string;
+  success?: string;
+  returnUrl: string;
+  isUserInTest: boolean;
+  optedOutOfProfiling: boolean;
+  optedOutOfMarketResearch: boolean;
+  productConsents: Consent[];
+  subscribedNewsletters: NewsLetter[];
+};
 const reviewTableContainer = css`
   display: flex;
   flex-flow: column;
@@ -113,39 +121,17 @@ const bgColour = css`
   }
 `;
 
-export const ConsentsConfirmationPage = () => {
+export const ConsentsConfirmation = ({
+  error,
+  success,
+  returnUrl,
+  isUserInTest,
+  optedOutOfProfiling,
+  optedOutOfMarketResearch,
+  productConsents,
+  subscribedNewsletters,
+}: ConsentsConfirmationProps) => {
   const autoRow = getAutoRow(1, confirmationSpanDefinition);
-  const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData = {}, globalMessage: { error, success } = {} } = clientState;
-
-  const {
-    consents = [],
-    newsletters = [],
-    returnUrl = 'https://www.theguardian.com',
-  } = pageData;
-
-  // @AB_TEST: Single Newsletter Test - Remove Market Research: START
-  const ABTestAPI = useAB();
-  const isUserInTest = ABTestAPI.isUserInVariant(
-    'SingleNewsletterTest',
-    'variant',
-  );
-  // @AB_TEST: Single Newsletter Test - Remove Market Research: END
-
-  const profiling_optout = consents.find(
-    (consent) => consent.id === Consents.PROFILING,
-  ) || { consented: true };
-
-  const market_research_optout = consents.find(
-    (consent) => consent.id === Consents.MARKET_RESEARCH,
-  ) || { consented: true };
-
-  const productConsents = consents.filter(
-    (c) => !c.id.includes('_optout') && c.consented,
-  );
-
-  const subscribedNewsletters = newsletters.filter((n) => n.subscribed);
-
   return (
     <>
       <ConsentsNavBar error={error} success={success} />
@@ -185,13 +171,11 @@ export const ConsentsConfirmationPage = () => {
             </ReviewTableRow>
             {!isUserInTest && (
               <ReviewTableRow title="Marketing research">
-                <p css={text}>
-                  {market_research_optout.consented ? 'No' : 'Yes'}
-                </p>
+                <p css={text}>{optedOutOfMarketResearch ? 'No' : 'Yes'}</p>
               </ReviewTableRow>
             )}
             <ReviewTableRow title="Marketing analysis">
-              <p css={text}>{profiling_optout.consented ? 'No' : 'Yes'}</p>
+              <p css={text}>{optedOutOfProfiling ? 'No' : 'Yes'}</p>
             </ReviewTableRow>
           </div>
         </ConsentsContent>
