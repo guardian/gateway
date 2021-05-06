@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { ResetPasswordPage } from '@/client/pages/ResetPassword';
+import { ResetPasswordPage } from '@/client/pages/ResetPasswordPage';
 import { ResetSentPage } from '@/client/pages/ResetSent';
 import { Routes } from '@/shared/model/Routes';
 import { NotFound } from '@/client/pages/NotFound';
