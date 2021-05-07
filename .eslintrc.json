@@ -31,6 +31,14 @@
     "no-param-reassign": "error",
     "prefer-const": "error"
   },
+  "overrides": [
+    {
+      "files": ["*.stories.tsx"],
+      "rules": {
+        "functional/immutable-data": 0
+      }
+    }
+  ],
   "settings": {
     "react": {
       "version": "detect"
