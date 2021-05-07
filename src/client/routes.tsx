@@ -7,7 +7,7 @@ import { NotFound } from '@/client/pages/NotFound';
 import { ChangePasswordPage } from '@/client/pages/ChangePassword';
 import { ChangePasswordCompletePage } from '@/client/pages/ChangePasswordComplete';
 import { ResendPasswordPage } from '@/client/pages/ResendPassword';
-import { ConsentsDataPage } from '@/client/pages/ConsentsData';
+import { ConsentsDataPage } from '@/client/pages/ConsentsDataPage';
 import { ConsentsCommunicationPage } from '@/client/pages/ConsentsCommunication';
 import { ConsentsNewslettersPage } from '@/client/pages/ConsentsNewsletters';
 import { ConsentsConfirmationPage } from '@/client/pages/ConsentsConfirmationPage';

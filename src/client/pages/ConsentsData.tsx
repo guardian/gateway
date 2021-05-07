@@ -1,9 +1,8 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Locations from '@/client/lib/locations';
 import { textSans } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/react';
 import { space, neutral } from '@guardian/src-foundations';
-import { ClientStateContext } from '@/client/components/ClientState';
 import {
   getAutoRow,
   gridItemColumnConsents,
@@ -11,8 +10,6 @@ import {
 } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { heading, text, headingMarginSpace6 } from '@/client/styles/Consents';
-import { ClientState } from '@/shared/model/ClientState';
-import { Consents } from '@/shared/model/Consent';
 import { Link } from '@guardian/src-link';
 import { Checkbox, CheckboxGroup } from '@guardian/src-checkbox';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
@@ -20,6 +17,12 @@ import {
   ConsentsContent,
   CONSENTS_MAIN_COLOR,
 } from '@/client/layouts/shared/Consents';
+import { Consents } from '@/shared/model/Consent';
+
+type ConsentsDataProps = {
+  consented?: boolean;
+  description?: string;
+};
 
 const fieldset = css`
   border: 0;
@@ -32,21 +35,10 @@ const checkboxLabel = css`
   color: ${neutral[46]};
 `;
 
-export const ConsentsDataPage = () => {
+export const ConsentsData = ({ consented, description }: ConsentsDataProps) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
 
-  const clientState = useContext<ClientState>(ClientStateContext);
-
-  const { pageData = {} } = clientState;
-  const { consents = [] } = pageData;
-
-  const profiling_optout = consents.find(
-    (consent) => consent.id === Consents.PROFILING,
-  );
-
-  const label = (
-    <span css={checkboxLabel}>{profiling_optout?.description}</span>
-  );
+  const label = <span css={checkboxLabel}>{description}</span>;
 
   return (
     <ConsentsLayout
@@ -54,7 +46,7 @@ export const ConsentsDataPage = () => {
       current={CONSENTS_PAGES.YOUR_DATA}
       bgColor={CONSENTS_MAIN_COLOR}
     >
-      {profiling_optout && (
+      {description && (
         <ConsentsContent>
           <h2 css={[heading, autoRow()]}>Our commitment to you</h2>
           <p css={[text, autoRow(consentsParagraphSpanDef)]}>
@@ -85,11 +77,11 @@ export const ConsentsDataPage = () => {
             relevant to you.
           </p>
           <fieldset css={[fieldset, autoRow()]}>
-            <CheckboxGroup name={profiling_optout.id}>
+            <CheckboxGroup name={Consents.PROFILING}>
               <Checkbox
                 value="consent-option"
                 label={label}
-                defaultChecked={profiling_optout.consented}
+                defaultChecked={consented}
               />
             </CheckboxGroup>
           </fieldset>
