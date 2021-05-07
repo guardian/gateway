@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { SignInLayout } from '@/client/layouts/SignInLayout';
 import { LinkButton, Button } from '@guardian/src-button';
 import { PageBody } from '@/client/components/PageBody';
@@ -6,16 +6,19 @@ import { PageBodyText } from '@/client/components/PageBodyText';
 import { PageBox } from '@/client/components/PageBox';
 import { PageHeader } from '@/client/components/PageHeader';
 import { form, button, linkButton } from '@/client/styles/Shared';
-import { ClientState } from '@/shared/model/ClientState';
-import { ClientStateContext } from '@/client/components/ClientState';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
 import { css } from '@emotion/react';
 import { textSans } from '@guardian/src-foundations/typography';
 import { Routes } from '@/shared/model/Routes';
-import { getProviderById } from '@/shared/lib/emailProvider';
-import { EmailProvider } from '@/shared/model/EmailProvider';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 
+type ResendEmailVerificationProps = {
+  email?: string;
+  signInPageUrl?: string;
+  successText?: string;
+  inboxLink?: string;
+  inboxName?: string;
+};
 const bold = css`
   ${textSans.medium({ lineHeight: 'regular', fontWeight: 'bold' })}
 `;
@@ -45,12 +48,14 @@ const LoggedOut = ({ signInPageUrl }: { signInPageUrl?: string }) => (
 
 const LoggedIn = ({
   email,
-  success,
-  emailProvider,
+  successText,
+  inboxLink,
+  inboxName,
 }: {
   email: string;
-  success?: string;
-  emailProvider?: EmailProvider;
+  successText?: string;
+  inboxLink?: string;
+  inboxName?: string;
 }) => (
   <PageBox>
     <PageHeader>Verify Email</PageHeader>
@@ -68,8 +73,8 @@ const LoggedIn = ({
       <PageBodyText>
         If you don&apos;t see it in your inbox, please check your spam filter.
       </PageBodyText>
-      {success ? (
-        <PageBodyText>{success}</PageBodyText>
+      {successText ? (
+        <PageBodyText>{successText}</PageBodyText>
       ) : (
         <form css={form} method="post" action={Routes.VERIFY_EMAIL}>
           <CsrfFormField />
@@ -84,36 +89,36 @@ const LoggedIn = ({
           </Button>
         </form>
       )}
-      {emailProvider && (
+      {inboxLink && inboxName && (
         <LinkButton
           css={linkButton}
-          href={emailProvider.inboxLink}
+          href={inboxLink}
           icon={<SvgArrowRightStraight />}
           iconSide="right"
           priority="tertiary"
         >
-          Go to your {emailProvider.name} inbox
+          Go to your {inboxName} inbox
         </LinkButton>
       )}
     </PageBody>
   </PageBox>
 );
 
-export const ResendEmailVerificationPage = () => {
-  const {
-    globalMessage: { success } = {},
-    pageData: { email, signInPageUrl, emailProvider: emailProviderId } = {},
-  } = useContext<ClientState>(ClientStateContext);
-
-  const emailProvider = getProviderById(emailProviderId);
-
+export const ResendEmailVerification = ({
+  email,
+  signInPageUrl,
+  successText,
+  inboxLink,
+  inboxName,
+}: ResendEmailVerificationProps) => {
   return (
     <SignInLayout>
       {email ? (
         <LoggedIn
           email={email}
-          success={success}
-          emailProvider={emailProvider}
+          successText={successText}
+          inboxLink={inboxLink}
+          inboxName={inboxName}
         />
       ) : (
         <LoggedOut signInPageUrl={signInPageUrl} />

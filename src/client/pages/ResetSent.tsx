@@ -1,8 +1,5 @@
-import React, { useContext } from 'react';
-import { getProviderById } from '@/shared/lib/emailProvider';
+import React from 'react';
 import { LinkButton } from '@guardian/src-button';
-import { ClientState } from '@/shared/model/ClientState';
-import { ClientStateContext } from '@/client/components/ClientState';
 import { PageHeader } from '@/client/components/PageHeader';
 import { PageBox } from '@/client/components/PageBox';
 import { PageBody } from '@/client/components/PageBody';
@@ -11,11 +8,12 @@ import { linkButton } from '@/client/styles/Shared';
 import { SignInLayout } from '@/client/layouts/SignInLayout';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
 
-export const ResetSentPage = () => {
-  const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData: { emailProvider: emailProviderId } = {} } = clientState;
-  const emailProvider = getProviderById(emailProviderId);
+type ResetSentProps = {
+  inboxLink?: string;
+  inboxName?: string;
+};
 
+export const ResetSent = ({ inboxLink, inboxName }: ResetSentProps) => {
   return (
     <SignInLayout>
       <PageBox>
@@ -31,15 +29,15 @@ export const ResetSentPage = () => {
             it soon! Thank you.
           </PageBodyText>
         </PageBody>
-        {emailProvider && (
+        {inboxLink && inboxName && (
           <LinkButton
             css={linkButton}
-            href={emailProvider.inboxLink}
+            href={inboxLink}
             priority="tertiary"
             icon={<SvgArrowRightStraight />}
             iconSide="right"
           >
-            Go to your {emailProvider.name} inbox
+            Go to your {inboxName} inbox
           </LinkButton>
         )}
       </PageBox>
