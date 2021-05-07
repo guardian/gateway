@@ -6,7 +6,7 @@ import { Routes } from '@/shared/model/Routes';
 import { NotFound } from '@/client/pages/NotFound';
 import { ChangePasswordPage } from '@/client/pages/ChangePassword';
 import { ChangePasswordCompletePage } from '@/client/pages/ChangePasswordCompletePage';
-import { ResendPasswordPage } from '@/client/pages/ResendPassword';
+import { ResendPasswordPage } from '@/client/pages/ResendPasswordPage';
 import { ConsentsDataPage } from '@/client/pages/ConsentsData';
 import { ConsentsCommunicationPage } from '@/client/pages/ConsentsCommunication';
 import { ConsentsNewslettersPage } from '@/client/pages/ConsentsNewsletters';
