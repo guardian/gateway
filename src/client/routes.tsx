@@ -5,7 +5,7 @@ import { ResetSentPage } from '@/client/pages/ResetSent';
 import { Routes } from '@/shared/model/Routes';
 import { NotFound } from '@/client/pages/NotFound';
 import { ChangePasswordPage } from '@/client/pages/ChangePassword';
-import { ChangePasswordCompletePage } from '@/client/pages/ChangePasswordComplete';
+import { ChangePasswordCompletePage } from '@/client/pages/ChangePasswordCompletePage';
 import { ResendPasswordPage } from '@/client/pages/ResendPassword';
 import { ConsentsDataPage } from '@/client/pages/ConsentsData';
 import { ConsentsCommunicationPage } from '@/client/pages/ConsentsCommunication';

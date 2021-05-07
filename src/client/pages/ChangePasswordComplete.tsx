@@ -1,6 +1,5 @@
 import React from 'react';
 import { LinkButton } from '@guardian/src-button';
-import { useQuery } from '@/client/lib/useQuery';
 import { PageBox } from '@/client/components/PageBox';
 import { PageHeader } from '@/client/components/PageHeader';
 import { PageBodyText } from '@/client/components/PageBodyText';
@@ -9,8 +8,13 @@ import { linkButton } from '@/client/styles/Shared';
 import { SignInLayout } from '@/client/layouts/SignInLayout';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
 
-export const ChangePasswordCompletePage = () => {
-  const { returnUrl } = useQuery();
+type ChangePasswordCompleteProps = {
+  returnUrl: string;
+};
+
+export const ChangePasswordComplete = ({
+  returnUrl,
+}: ChangePasswordCompleteProps) => {
   return (
     <SignInLayout>
       <PageBox>
