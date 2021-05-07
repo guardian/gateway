@@ -177,14 +177,25 @@ export const consentPages: ConsentPage[] = [
         sc_gu_u,
       );
 
-      const newslettersSubscriptionFromPage: NewsletterPatch[] = newslettersPage.map(
-        (id) => ({
-          id,
-          subscribed: !!body[id],
-        }),
-      );
+      // get a list of newsletters that have been updated in the body and compare to newsletters on the page
+      const newslettersSubscriptionFromBody = newslettersPage
+        .map((id) => {
+          // if the id of a newsletter is included in the body, then mark this newsletter as to potentially update (subscribe/unsubscribe)
+          if (id in body) {
+            return {
+              id,
+              subscribed: !!body[id],
+            };
+          }
 
-      const newsletterSubscriptionsToUpdate = newslettersSubscriptionFromPage.filter(
+          // otherwise return null, and filter these out
+          return null;
+        })
+        .filter((v) => v !== null) as NewsletterPatch[];
+
+      // get a list of newsletters to update that have changed from the users current subscription
+      // if they have changed then set them to subsribe/unsubscribe
+      const newsletterSubscriptionsToUpdate = newslettersSubscriptionFromBody.filter(
         ({ id, subscribed }) => {
           // find current user subscription status for a newsletter
           const subscription = userNewsletterSubscriptions.find(

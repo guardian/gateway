@@ -143,6 +143,9 @@ export const ABNewsletterCard: FunctionComponent<NewsletterCardProps> = (
         {subtitle}
         <p css={p}>{description}</p>
         <CheckboxGroup name={props.newsletter.id} label={name} hideLabel={true}>
+          {/* if the Checkbox is unchecked, this hidden empty value will be sent in form submit POST,
+          to signal possible unsubscribe event */}
+          <input type="hidden" name={props.newsletter.id} value="" />
           <Checkbox
             value={props.newsletter.id}
             cssOverrides={checkBoxBackgroundColorBugFix}
