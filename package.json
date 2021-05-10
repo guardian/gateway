@@ -66,7 +66,7 @@
     "chalk-rainbow": "^1.0.0",
     "chromatic": "^5.8.0",
     "copy-node-modules": "^1.1.1",
-    "core-js": "^3.11.2",
+    "core-js": "^3.12.1",
     "cypress": "^7.2.0",
     "cypress-axe": "^0.12.2",
     "eslint": "^7.25.0",
