@@ -332,7 +332,7 @@ const getImage = getVariantValue(
   <></>,
 );
 
-export const ConsentsFollowUp = () => {
+export const ConsentsFollowUpPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { globalMessage: { error, success } = {}, pageData = {} } = clientState;
   const { returnUrl } = pageData;
