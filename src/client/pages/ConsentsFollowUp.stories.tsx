@@ -20,7 +20,7 @@ export const NewsLetters = () => (
   <ConsentsFollowUp
     newsletters={[
       {
-        id: '0',
+        id: '4165',
         nameId: 'n0',
         description: 'Newsletter description',
         name: 'Newsletter Name',
@@ -37,13 +37,13 @@ export const MultipleNewsLetters = () => (
   <ConsentsFollowUp
     newsletters={[
       {
-        id: '0',
+        id: '4147',
         nameId: 'n0',
         description: 'Newsletter description',
         name: 'Newsletter Name',
       },
       {
-        id: '1',
+        id: '4151',
         nameId: 'n1',
         description: 'Another newsletter description',
         name: 'Another Newsletter Name',
@@ -97,7 +97,7 @@ export const Both = () => (
   <ConsentsFollowUp
     newsletters={[
       {
-        id: '0',
+        id: '4165',
         nameId: 'n0',
         description: 'Newsletter description',
         name: 'Newsletter Name',
