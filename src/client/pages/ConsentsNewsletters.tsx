@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { css } from '@emotion/react';
 import { space } from '@guardian/src-foundations';
 import {
@@ -7,19 +7,22 @@ import {
   getAutoRow,
   consentsParagraphSpanDef,
 } from '@/client/styles/Grid';
-import { ClientStateContext } from '@/client/components/ClientState';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
-import { ClientState } from '@/shared/model/ClientState';
 import { NewsletterCard } from '@/client/components/NewsletterCard';
 import { from } from '@guardian/src-foundations/mq';
 import { heading, text } from '@/client/styles/Consents';
-import { useAB } from '@guardian/ab-react';
 import { ABNewsletterCard } from '@/client/components/NewsletterCardAB';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import {
   CONSENTS_MAIN_COLOR,
   ConsentsContent,
 } from '@/client/layouts/shared/Consents';
+import { NewsLetter } from '@/shared/model/Newsletter';
+
+type ConsentsNewslettersProps = {
+  newsletters: NewsLetter[];
+  isUserInTest: boolean;
+};
 
 const getNewsletterCardCss = (index: number) => {
   const ITEMS_PER_ROW = 2;
@@ -72,18 +75,11 @@ const paragraphSpacing = css`
   margin-bottom: ${space[6]}px;
 `;
 
-export const ConsentsNewslettersPage = () => {
-  const clientState = useContext<ClientState>(ClientStateContext);
-  const newsletters = clientState?.pageData?.newsletters ?? [];
+export const ConsentsNewsletters = ({
+  newsletters,
+  isUserInTest,
+}: ConsentsNewslettersProps) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
-
-  // @AB_TEST: Single Newsletter Test: START
-  const ABTestAPI = useAB();
-  const isUserInTest = ABTestAPI.isUserInVariant(
-    'SingleNewsletterTest',
-    'variant',
-  );
-  // @AB_TEST: Single Newsletter Test: END
 
   return (
     <ConsentsLayout
@@ -97,7 +93,7 @@ export const ConsentsNewslettersPage = () => {
           Our newsletters help you get closer to our quality, independent
           journalism.
         </p>
-        {isUserInTest ? (
+        {isUserInTest && newsletters[0] ? (
           <ABNewsletterCard
             newsletter={newsletters[0]}
             key={newsletters[0].id}

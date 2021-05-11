@@ -12,13 +12,14 @@ const link = css`
   display: inline-block;
 `;
 
-export const UnexpectedError = () => (
+export const NotFoundPage = () => (
   <SignInLayout>
     <PageBox>
-      <PageHeader>Sorry – an unexpected error occurred</PageHeader>
+      <PageHeader>Sorry – the page does not exist</PageHeader>
       <PageBody>
         <PageBodyText>
-          An error occurred, please try again or{' '}
+          You may have followed an outdated link, or have mistyped a URL. If you
+          believe this to be an error, please{' '}
           <Link css={link} href={locations.REPORT_ISSUE}>
             report it
           </Link>

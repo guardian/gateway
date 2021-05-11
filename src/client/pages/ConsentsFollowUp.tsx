@@ -1,6 +1,4 @@
 // ABTEST: followupConsent: This page is only used as part of the followupConsent abtest.
-import { ClientState } from '@/shared/model/ClientState';
-import { Routes } from '@/shared/model/Routes';
 import { css } from '@emotion/react';
 import { Button } from '@guardian/src-button';
 import { Checkbox, CheckboxGroup } from '@guardian/src-checkbox';
@@ -12,8 +10,7 @@ import {
   titlepiece,
 } from '@guardian/src-foundations/typography';
 import { Container } from '@guardian/src-layout';
-import React, { useContext } from 'react';
-import { ClientStateContext } from '@/client/components/ClientState';
+import React from 'react';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { Footer } from '@/client/components/Footer';
 import { GlobalError } from '@/client/components/GlobalError';
@@ -29,9 +26,18 @@ import {
 } from '@/client/styles/Grid';
 import NEWSLETTER_PHONE_IMAGE from '@/client/assets/newsletter_phone.png';
 import { NewsLetter } from '@/shared/model/Newsletter';
-import { Consent } from '@/shared/model/Consent';
-import { EnvelopeImage } from '@/client/components/EnvelopeImage';
 import { PageTitle } from '@/shared/model/PageTitle';
+import { Consent } from '@/shared/model/Consent';
+import { Routes } from '@/shared/model/Routes';
+import { EnvelopeImage } from '@/client/components/EnvelopeImage';
+
+type ConsentsFollowUpProps = {
+  returnUrl?: string;
+  newsletters: NewsLetter[];
+  consents: Consent[];
+  error?: string | undefined;
+  success?: string | undefined;
+};
 
 const GUARDIAN_BRAND = brand[400];
 const ELECTION_BEIGE = '#DDDBD1';
@@ -277,70 +283,41 @@ const newsletterBackground = css`
   }
 `;
 
-function getVariantValue<A, B, C>(
-  a: A,
-  b: B,
-  none: C,
-): (clientState: ClientState) => A | B | C {
-  return (clientState: ClientState) => {
-    const newsletters = clientState?.pageData?.newsletters;
-    if (newsletters) {
-      return a;
-    }
-    const consents = clientState?.pageData?.consents;
-    if (consents) {
-      return b;
-    }
-    return none;
-  };
-}
+const decideTitle = (
+  newsletters: NewsLetter[],
+  consents: Consent[],
+): string => {
+  if (newsletters.length) return PageTitle.NEWSLETTER_VARIANT;
+  if (consents.length) return PageTitle.CONSENT_VARIANT;
+  return '';
+};
 
-function getEntities(clientState: ClientState) {
-  const newsletters = clientState?.pageData?.newsletters;
-  if (newsletters) {
-    return newsletters;
-  }
-  const consents = clientState?.pageData?.consents;
-  if (consents) {
-    return consents;
-  }
-  return [];
-}
-
-const getPostAction = getVariantValue(
-  `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_NEWSLETTERS}`,
-  `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_CONSENTS}`,
-  '',
-);
-
-const getTitle = getVariantValue(
-  PageTitle.NEWSLETTER_VARIANT,
-  PageTitle.CONSENT_VARIANT,
-  '',
-);
-
-const getImage = getVariantValue(
-  <img
-    css={[img, manualRow(1, imageSpanDef)]}
-    src={NEWSLETTER_PHONE_IMAGE}
-    alt="Phone with newsletter displayed"
-  />,
-  <EnvelopeImage
-    cssOverrides={[img, envelope, manualRow(1, envelopeSpanDef)]}
-    invertColors
-  />,
-  <></>,
-);
-
-export const ConsentsFollowUp = () => {
-  const clientState: ClientState = useContext(ClientStateContext);
-  const { globalMessage: { error, success } = {}, pageData = {} } = clientState;
-  const { returnUrl } = pageData;
-  const entities = getEntities(clientState);
-  const autoRow = getAutoRow(1, spanDef);
+const decideSubmitUrl = (
+  newsletters: NewsLetter[],
+  consents: Consent[],
+  returnUrl?: string,
+): string => {
   const returnUrlQuery = returnUrl
     ? `?returnUrl=${encodeURIComponent(returnUrl)}`
     : '';
+  if (newsletters.length)
+    return `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_NEWSLETTERS}${returnUrlQuery}`;
+  if (consents.length)
+    return `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_CONSENTS}${returnUrlQuery}`;
+  return '';
+};
+
+export const ConsentsFollowUp = ({
+  returnUrl,
+  newsletters,
+  consents,
+  error,
+  success,
+}: ConsentsFollowUpProps) => {
+  const autoRow = getAutoRow(1, spanDef);
+  const title = decideTitle(newsletters, consents);
+  const submitUrl = decideSubmitUrl(newsletters, consents, returnUrl);
+
   return (
     <>
       <div css={[headerContainer]}>
@@ -352,14 +329,10 @@ export const ConsentsFollowUp = () => {
       </div>
       <div css={titleContainer}>
         <Container cssOverrides={gridRow}>
-          <h1 css={[h1, autoRow()]}>{getTitle(clientState)}</h1>
+          <h1 css={[h1, autoRow()]}>{title}</h1>
         </Container>
       </div>
-      <form
-        action={`${getPostAction(clientState)}${returnUrlQuery}`}
-        method="post"
-        css={form}
-      >
+      <form action={submitUrl} method="post" css={form}>
         <div css={[gridRow, newsletterContainer]}>
           <div
             css={[
@@ -367,25 +340,43 @@ export const ConsentsFollowUp = () => {
               newsletterBackground,
             ]}
           />
-          {getImage(clientState)}
-          {entities.map((entity: NewsLetter | Consent, i: number) => (
-            <div
-              key={i}
-              css={[newsletterCard, manualRow(2, newsletterSpanDef)]}
-            >
-              <h2>{entity.name}</h2>
-              <p>{entity.description}</p>
-              <CheckboxGroup
-                name={entity.id}
-                label={entity.name}
-                hideLabel={true}
-                cssOverrides={checkboxGroup}
+          {newsletters?.length ? (
+            <img
+              css={[img, manualRow(1, imageSpanDef)]}
+              src={NEWSLETTER_PHONE_IMAGE}
+              alt="Phone with newsletter displayed"
+            />
+          ) : (
+            <></>
+          )}
+          {consents?.length ? (
+            <EnvelopeImage
+              cssOverrides={[img, envelope, manualRow(1, envelopeSpanDef)]}
+              invertColors
+            />
+          ) : (
+            <></>
+          )}
+          {[...newsletters, ...consents].map(
+            (entity: NewsLetter | Consent, i: number) => (
+              <div
+                key={i}
+                css={[newsletterCard, manualRow(2, newsletterSpanDef)]}
               >
-                <Checkbox value={entity.id} label="Yes, sign me up" />
-              </CheckboxGroup>
-              <Button type="submit">Continue to The Guardian</Button>
-            </div>
-          ))}
+                <h2>{entity.name}</h2>
+                <p>{entity.description}</p>
+                <CheckboxGroup
+                  name={entity.id}
+                  label={entity.name}
+                  hideLabel={true}
+                  cssOverrides={checkboxGroup}
+                >
+                  <Checkbox value={entity.id} label="Yes, sign me up" />
+                </CheckboxGroup>
+                <Button type="submit">Continue to The Guardian</Button>
+              </div>
+            ),
+          )}
         </div>
         <CsrfFormField />
       </form>
