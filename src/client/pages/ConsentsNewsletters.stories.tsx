@@ -27,7 +27,7 @@ export const SingleNewsletter = () => (
   <ConsentsNewsletters
     newsletters={[
       {
-        id: '0',
+        id: '4151',
         nameId: 'n0',
         description: 'Newsletter description',
         name: 'Newsletter Name',
@@ -44,7 +44,7 @@ export const SingleNewsletterInTest = () => (
   <ConsentsNewsletters
     newsletters={[
       {
-        id: '0',
+        id: '4152',
         nameId: 'n0',
         description: 'Newsletter description',
         name: 'Newsletter Name',
@@ -61,13 +61,13 @@ export const MultipleNewsletter = () => (
   <ConsentsNewsletters
     newsletters={[
       {
-        id: '0',
+        id: '4147',
         nameId: 'n0',
         description: 'Newsletter description',
         name: 'Newsletter Name',
       },
       {
-        id: '1',
+        id: '4166',
         nameId: 'n1',
         description: 'Another newsletter description',
         name: 'Another Newsletter Name',
@@ -84,13 +84,13 @@ export const MultipleNewslettersInTest = () => (
   <ConsentsNewsletters
     newsletters={[
       {
-        id: '0',
+        id: '4152',
         nameId: 'n0',
         description: 'Newsletter description',
         name: 'Newsletter Name',
       },
       {
-        id: '1',
+        id: '4165',
         nameId: 'n1',
         description: 'Another newsletter description',
         name: 'Another Newsletter Name',
