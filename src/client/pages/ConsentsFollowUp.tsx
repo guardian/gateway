@@ -28,15 +28,16 @@ import NEWSLETTER_PHONE_IMAGE from '@/client/assets/newsletter_phone.png';
 import { NewsLetter } from '@/shared/model/Newsletter';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { Consent } from '@/shared/model/Consent';
+import { EntityType } from '@/shared/model/Entity';
 import { Routes } from '@/shared/model/Routes';
 import { EnvelopeImage } from '@/client/components/EnvelopeImage';
 
 type ConsentsFollowUpProps = {
   returnUrl?: string;
-  newsletters: NewsLetter[];
-  consents: Consent[];
-  error?: string | undefined;
-  success?: string | undefined;
+  entity: NewsLetter | Consent;
+  entityType: EntityType;
+  error?: string;
+  success?: string;
 };
 
 const GUARDIAN_BRAND = brand[400];
@@ -283,40 +284,37 @@ const newsletterBackground = css`
   }
 `;
 
-const decideTitle = (
-  newsletters: NewsLetter[],
-  consents: Consent[],
-): string => {
-  if (newsletters.length) return PageTitle.NEWSLETTER_VARIANT;
-  if (consents.length) return PageTitle.CONSENT_VARIANT;
-  return '';
+const decideTitle = (type: EntityType): string => {
+  switch (type) {
+    case 'newsletter':
+      return PageTitle.NEWSLETTER_VARIANT;
+    case 'consent':
+      return PageTitle.CONSENT_VARIANT;
+  }
 };
 
-const decideSubmitUrl = (
-  newsletters: NewsLetter[],
-  consents: Consent[],
-  returnUrl?: string,
-): string => {
+const decideSubmitUrl = (type: EntityType, returnUrl?: string): string => {
   const returnUrlQuery = returnUrl
     ? `?returnUrl=${encodeURIComponent(returnUrl)}`
     : '';
-  if (newsletters.length)
-    return `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_NEWSLETTERS}${returnUrlQuery}`;
-  if (consents.length)
-    return `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_CONSENTS}${returnUrlQuery}`;
-  return '';
+  switch (type) {
+    case 'newsletter':
+      return `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_NEWSLETTERS}${returnUrlQuery}`;
+    case 'consent':
+      return `${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_CONSENTS}${returnUrlQuery}`;
+  }
 };
 
 export const ConsentsFollowUp = ({
   returnUrl,
-  newsletters,
-  consents,
+  entity,
+  entityType,
   error,
   success,
 }: ConsentsFollowUpProps) => {
   const autoRow = getAutoRow(1, spanDef);
-  const title = decideTitle(newsletters, consents);
-  const submitUrl = decideSubmitUrl(newsletters, consents, returnUrl);
+  const title = decideTitle(entityType);
+  const submitUrl = decideSubmitUrl(entityType, returnUrl);
 
   return (
     <>
@@ -340,7 +338,7 @@ export const ConsentsFollowUp = ({
               newsletterBackground,
             ]}
           />
-          {newsletters?.length ? (
+          {entityType === 'newsletter' ? (
             <img
               css={[img, manualRow(1, imageSpanDef)]}
               src={NEWSLETTER_PHONE_IMAGE}
@@ -349,7 +347,7 @@ export const ConsentsFollowUp = ({
           ) : (
             <></>
           )}
-          {consents?.length ? (
+          {entityType === 'consent' ? (
             <EnvelopeImage
               cssOverrides={[img, envelope, manualRow(1, envelopeSpanDef)]}
               invertColors
@@ -357,26 +355,19 @@ export const ConsentsFollowUp = ({
           ) : (
             <></>
           )}
-          {[...newsletters, ...consents].map(
-            (entity: NewsLetter | Consent, i: number) => (
-              <div
-                key={i}
-                css={[newsletterCard, manualRow(2, newsletterSpanDef)]}
-              >
-                <h2>{entity.name}</h2>
-                <p>{entity.description}</p>
-                <CheckboxGroup
-                  name={entity.id}
-                  label={entity.name}
-                  hideLabel={true}
-                  cssOverrides={checkboxGroup}
-                >
-                  <Checkbox value={entity.id} label="Yes, sign me up" />
-                </CheckboxGroup>
-                <Button type="submit">Continue to The Guardian</Button>
-              </div>
-            ),
-          )}
+          <div css={[newsletterCard, manualRow(2, newsletterSpanDef)]}>
+            <h2>{entity.name}</h2>
+            <p>{entity.description}</p>
+            <CheckboxGroup
+              name={entity.id}
+              label={entity.name}
+              hideLabel={true}
+              cssOverrides={checkboxGroup}
+            >
+              <Checkbox value={entity.id} label="Yes, sign me up" />
+            </CheckboxGroup>
+            <Button type="submit">Continue to The Guardian</Button>
+          </div>
         </div>
         <CsrfFormField />
       </form>
