@@ -9,109 +9,31 @@ export default {
   component: ConsentsFollowUp,
 } as Meta;
 
-export const Defaults = () => (
-  <ConsentsFollowUp newsletters={[]} consents={[]} />
-);
-Defaults.story = {
-  name: 'with no entities',
-};
-
-export const NewsLetters = () => (
+export const NewsLetter = () => (
   <ConsentsFollowUp
-    newsletters={[
-      {
-        id: '0',
-        nameId: 'n0',
-        description: 'Newsletter description',
-        name: 'Newsletter Name',
-      },
-    ]}
-    consents={[]}
+    entityType="newsletter"
+    entity={{
+      id: '0',
+      nameId: 'n0',
+      description: 'Newsletter description',
+      name: 'Newsletter Name',
+    }}
   />
 );
-NewsLetters.story = {
-  name: 'with a single newsletter',
+NewsLetter.story = {
+  name: 'with newsletter',
 };
 
-export const MultipleNewsLetters = () => (
+export const Consent = () => (
   <ConsentsFollowUp
-    newsletters={[
-      {
-        id: '0',
-        nameId: 'n0',
-        description: 'Newsletter description',
-        name: 'Newsletter Name',
-      },
-      {
-        id: '1',
-        nameId: 'n1',
-        description: 'Another newsletter description',
-        name: 'Another Newsletter Name',
-      },
-    ]}
-    consents={[]}
+    entityType="consent"
+    entity={{
+      id: '0',
+      description: 'Description for this consent',
+      name: 'Consent name',
+    }}
   />
 );
-MultipleNewsLetters.story = {
-  name: 'with multiple newsletters',
-};
-
-export const MultipleConsents = () => (
-  <ConsentsFollowUp
-    newsletters={[]}
-    consents={[
-      {
-        id: '0',
-        description: 'Description for this consent',
-        name: 'Consent name',
-      },
-      {
-        id: '1',
-        description: 'Description for another consent',
-        name: 'Another consent name',
-      },
-    ]}
-  />
-);
-MultipleConsents.story = {
-  name: 'with multiple consents',
-};
-
-export const Consents = () => (
-  <ConsentsFollowUp
-    newsletters={[]}
-    consents={[
-      {
-        id: '0',
-        description: 'Description for this consent',
-        name: 'Consent name',
-      },
-    ]}
-  />
-);
-Consents.story = {
-  name: 'with a single consent',
-};
-
-export const Both = () => (
-  <ConsentsFollowUp
-    newsletters={[
-      {
-        id: '0',
-        nameId: 'n0',
-        description: 'Newsletter description',
-        name: 'Newsletter Name',
-      },
-    ]}
-    consents={[
-      {
-        id: '0',
-        description: 'Description for this consent',
-        name: 'Consent name',
-      },
-    ]}
-  />
-);
-Both.story = {
-  name: 'with both consents and newsletters having an item',
+Consent.story = {
+  name: 'with consent',
 };
