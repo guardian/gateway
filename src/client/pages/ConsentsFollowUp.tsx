@@ -36,8 +36,8 @@ type ConsentsFollowUpProps = {
   returnUrl?: string;
   entity: NewsLetter | Consent;
   entityType: EntityType;
-  error?: string | undefined;
-  success?: string | undefined;
+  error?: string;
+  success?: string;
 };
 
 const GUARDIAN_BRAND = brand[400];
