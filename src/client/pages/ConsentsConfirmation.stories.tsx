@@ -50,6 +50,20 @@ ProfilingMarketing.story = {
   name: 'with consent given to profilling and marketing',
 };
 
+export const InTest = () => (
+  <ConsentsConfirmation
+    returnUrl=""
+    isUserInTest={true}
+    optedOutOfMarketResearch={false}
+    optedOutOfProfiling={false}
+    productConsents={[]}
+    subscribedNewsletters={[]}
+  />
+);
+InTest.story = {
+  name: 'with consent given to profilling and marketing, inside test',
+};
+
 export const Newsletters = () => (
   <ConsentsConfirmation
     returnUrl=""

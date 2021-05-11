@@ -2,17 +2,12 @@ import React, {
   Dispatch,
   MutableRefObject,
   SetStateAction,
-  useContext,
   useEffect,
   useRef,
   useState,
 } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
 import { Button } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
-import { ClientState } from '@/shared/model/ClientState';
-import { ClientStateContext } from '@/client/components/ClientState';
-import { Routes } from '@/shared/model/Routes';
 import { PageBox } from '@/client/components/PageBox';
 import { PageHeader } from '@/client/components/PageHeader';
 import { PageBody } from '@/client/components/PageBody';
@@ -38,6 +33,14 @@ import { ThrottledBreachedPasswordCheck } from '@/client/lib/ThrottledBreachedPa
 import sha1 from 'js-sha1';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
 import { PasswordInput } from '@/client/components/PasswordInput';
+import { FieldError } from '@/server/routes/changePassword';
+
+type ChangePasswordProps = {
+  submitUrl: string;
+  email: string;
+  fieldErrors: FieldError[];
+  idapiBaseUrl: string;
+};
 
 const throttledPasswordCheck = new ThrottledBreachedPasswordCheck();
 
@@ -241,11 +244,12 @@ const usePasswordValidationHooks = (idapiBaseUrl: string) => {
   };
 };
 
-export const ChangePasswordPage = () => {
-  const { search } = useLocation();
-  const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData: { email = '', fieldErrors = [] } = {} } = clientState;
-  const { token } = useParams<{ token: string }>();
+export const ChangePassword = ({
+  submitUrl,
+  email,
+  fieldErrors,
+  idapiBaseUrl,
+}: ChangePasswordProps) => {
   const {
     password,
     passwordConfirm,
@@ -261,7 +265,7 @@ export const ChangePasswordPage = () => {
     setIsPasswordConfirmSelected,
     validationResult,
     setShowPasswordNotMatchingEvenIfSubstring,
-  } = usePasswordValidationHooks(clientState.clientHosts.idapiBaseUrl);
+  } = usePasswordValidationHooks(idapiBaseUrl);
 
   return (
     <SignInLayout>
@@ -274,7 +278,7 @@ export const ChangePasswordPage = () => {
           <form
             css={form}
             method="post"
-            action={`${Routes.CHANGE_PASSWORD}/${token}${search}`}
+            action={submitUrl}
             onSubmit={(e) => {
               // prevent the form from submitting if there are validation errors
               if (

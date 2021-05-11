@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { textSans } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/react';
 import { space, neutral } from '@guardian/src-foundations';
@@ -10,17 +10,20 @@ import {
 import { CommunicationCard } from '@/client/components/ConsentsCommunicationCard';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { heading, text } from '@/client/styles/Consents';
-import { ClientState } from '@/shared/model/ClientState';
-import { ClientStateContext } from '@/client/components/ClientState';
-import { Consents } from '@/shared/model/Consent';
+import { Consent } from '@/shared/model/Consent';
 import { Checkbox, CheckboxGroup } from '@guardian/src-checkbox';
 import { from } from '@guardian/src-foundations/mq';
-import { useAB } from '@guardian/ab-react';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import {
   ConsentsContent,
   CONSENTS_MAIN_COLOR,
 } from '@/client/layouts/shared/Consents';
+
+type ConsentsCommunicationProps = {
+  marketResearchOptout?: Consent;
+  consentsWithoutOptout: Consent[];
+  isUserInTest: boolean;
+};
 
 const fieldset = css`
   border: 0;
@@ -58,32 +61,15 @@ const communicationCardSpanDef = {
   },
 };
 
-export const ConsentsCommunicationPage = () => {
+export const ConsentsCommunication = ({
+  marketResearchOptout,
+  consentsWithoutOptout,
+  isUserInTest,
+}: ConsentsCommunicationProps) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
 
-  const clientState = useContext<ClientState>(ClientStateContext);
-
-  const { pageData = {} } = clientState;
-  const { consents = [] } = pageData;
-
-  // @AB_TEST: Single Newsletter Test - Remove Market Research: START
-  const ABTestAPI = useAB();
-  const isUserInTest = ABTestAPI.isUserInVariant(
-    'SingleNewsletterTest',
-    'variant',
-  );
-  // @AB_TEST: Single Newsletter Test - Remove Market Research: END
-
-  const market_research_optout = consents.find(
-    (consent) => consent.id === Consents.MARKET_RESEARCH,
-  );
-
-  const consentsWithoutOptout = consents.filter(
-    (consent) => !consent.id.includes('_optout'),
-  );
-
   const label = (
-    <span css={checkboxLabel}>{market_research_optout?.description}</span>
+    <span css={checkboxLabel}>{marketResearchOptout?.description}</span>
   );
 
   return (
@@ -112,7 +98,7 @@ export const ConsentsCommunicationPage = () => {
           ))}
         </div>
         {/* only show market research in control */}
-        {market_research_optout && !isUserInTest && (
+        {marketResearchOptout && !isUserInTest && (
           <>
             <h2 css={[heading, autoRow()]}>
               Using your data for market research
@@ -124,11 +110,11 @@ export const ConsentsCommunicationPage = () => {
               we may also contact you by phone.
             </p>
             <fieldset css={[fieldset, autoRow()]}>
-              <CheckboxGroup name={market_research_optout.id}>
+              <CheckboxGroup name={marketResearchOptout.id}>
                 <Checkbox
                   value="consent-option"
                   label={label}
-                  defaultChecked={market_research_optout.consented}
+                  defaultChecked={marketResearchOptout.consented}
                 />
               </CheckboxGroup>
             </fieldset>
