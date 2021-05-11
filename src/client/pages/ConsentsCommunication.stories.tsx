@@ -92,7 +92,7 @@ export const MultipleConsentsAndMarketing = () => (
   />
 );
 MultipleConsentsAndMarketing.story = {
-  name: 'with multiple consents',
+  name: 'with multiple consents and marketing',
 };
 
 export const InTest = () => (
