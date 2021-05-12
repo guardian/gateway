@@ -773,7 +773,7 @@ describe('Onboarding flow', () => {
     });
   });
 
-  context('AB Test - Single Newsletter test', () => {
+  context.skip('AB Test - Single Newsletter test', () => {
     context('Contact Options Page', () => {
       beforeEach(() => {
         setAuthCookies();
