@@ -16,7 +16,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-const main = css`
+const sectionStyles = css`
   flex: 1 0 auto;
   padding: ${space[6]}px ${space[3]}px;
   max-width: ${Breakpoints.TABLET}px;
@@ -34,10 +34,13 @@ export const Layout = ({ subTitle, children }: Props) => {
   return (
     <>
       <Header />
-      <SubHeader title={subTitle} />
-      {error && <GlobalError error={error} link={getErrorLink(error)} />}
-      {success && <GlobalSuccess success={success} />}
-      <main css={main}>{children}</main>
+      <main>
+        <SubHeader title={subTitle} />
+        {error && <GlobalError error={error} link={getErrorLink(error)} />}
+        {success && <GlobalSuccess success={success} />}
+        <section css={sectionStyles}>{children}</section>
+      </main>
+
       <Footer />
     </>
   );

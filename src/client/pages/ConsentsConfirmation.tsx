@@ -13,7 +13,6 @@ import {
   ConsentsContent,
   ConsentsBlueBackground,
   controls,
-  main,
   ConsentsHeader,
   CONSENTS_MAIN_COLOR,
   ConsentsSubHeader,
@@ -121,6 +120,12 @@ const bgColour = css`
   }
 `;
 
+export const sectionStyles = css`
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+`;
+
 export const ConsentsConfirmation = ({
   error,
   success,
@@ -135,77 +140,81 @@ export const ConsentsConfirmation = ({
   return (
     <>
       <ConsentsHeader error={error} success={success} />
-      <ConsentsSubHeader
-        autoRow={autoRow}
-        title="Your registration is complete"
-      />
-      <main css={[mainBackground, main, bgColour]}>
-        <ConsentsContent>
-          <h2 css={[headingWithMq, autoRow()]}>Your selections</h2>
-          <p css={[text, autoRow()]}>
-            You can change these setting anytime by going to{' '}
-            <Link href="https://manage.theguardian.com/email-prefs">
-              My Preferences
-            </Link>
-            .
-          </p>
-          <div css={[reviewTableContainer, autoRow()]}>
-            <ReviewTableRow title="Newsletters">
-              {subscribedNewsletters.length ? (
-                subscribedNewsletters.map((n) => (
-                  <p key={n.id} css={text}>
-                    {n.name}
-                  </p>
-                ))
-              ) : (
-                <p css={text}>N/A</p>
-              )}
-            </ReviewTableRow>
-            <ReviewTableRow title="Products & services">
-              {productConsents.length ? (
-                productConsents.map((c) => (
-                  <p key={c.id} css={text}>
-                    {c.name}
-                  </p>
-                ))
-              ) : (
-                <p css={text}>N/A</p>
-              )}
-            </ReviewTableRow>
-            {!isUserInTest && (
-              <ReviewTableRow title="Marketing research">
-                <p css={text}>{optedOutOfMarketResearch ? 'No' : 'Yes'}</p>
+      <main>
+        <ConsentsSubHeader
+          autoRow={autoRow}
+          title="Your registration is complete"
+        />
+        <section css={[mainBackground, sectionStyles, bgColour]}>
+          <ConsentsContent>
+            <h2 css={[headingWithMq, autoRow()]}>Your selections</h2>
+            <p css={[text, autoRow()]}>
+              You can change these setting anytime by going to{' '}
+              <Link href="https://manage.theguardian.com/email-prefs">
+                My Preferences
+              </Link>
+              .
+            </p>
+            <div css={[reviewTableContainer, autoRow()]}>
+              <ReviewTableRow title="Newsletters">
+                {subscribedNewsletters.length ? (
+                  subscribedNewsletters.map((n) => (
+                    <p key={n.id} css={text}>
+                      {n.name}
+                    </p>
+                  ))
+                ) : (
+                  <p css={text}>N/A</p>
+                )}
               </ReviewTableRow>
-            )}
-            <ReviewTableRow title="Marketing analysis">
-              <p css={text}>{optedOutOfProfiling ? 'No' : 'Yes'}</p>
-            </ReviewTableRow>
-          </div>
-        </ConsentsContent>
-        <ConsentsBlueBackground cssOverrides={continueBoxFlex}>
-          <div css={[gridItem(gridItemColumnConsents), controls]}>
-            <LinkButton
-              iconSide="right"
-              nudgeIcon={true}
-              icon={<SvgArrowRightStraight />}
-              href={returnUrl}
-            >
-              Return to The Guardian
-            </LinkButton>
-          </div>
-        </ConsentsBlueBackground>
-        <ConsentsContent cssOverrides={newslettersBox}>
-          <h2 css={[headingWithMq, autoRow()]}>Sign up to more newsletters</h2>
-          <p css={[text, autoRow()]}>
-            We have over 40 different emails that focus on a range of diverse
-            topics - from politics and the latest tech to documentaries, sport
-            and scientific breakthroughs. Sign up to more in{' '}
-            <Link href="https://manage.theguardian.com/email-prefs">
-              Guardian newsletters
-            </Link>
-            .
-          </p>
-        </ConsentsContent>
+              <ReviewTableRow title="Products & services">
+                {productConsents.length ? (
+                  productConsents.map((c) => (
+                    <p key={c.id} css={text}>
+                      {c.name}
+                    </p>
+                  ))
+                ) : (
+                  <p css={text}>N/A</p>
+                )}
+              </ReviewTableRow>
+              {!isUserInTest && (
+                <ReviewTableRow title="Marketing research">
+                  <p css={text}>{optedOutOfMarketResearch ? 'No' : 'Yes'}</p>
+                </ReviewTableRow>
+              )}
+              <ReviewTableRow title="Marketing analysis">
+                <p css={text}>{optedOutOfProfiling ? 'No' : 'Yes'}</p>
+              </ReviewTableRow>
+            </div>
+          </ConsentsContent>
+          <ConsentsBlueBackground cssOverrides={continueBoxFlex}>
+            <div css={[gridItem(gridItemColumnConsents), controls]}>
+              <LinkButton
+                iconSide="right"
+                nudgeIcon={true}
+                icon={<SvgArrowRightStraight />}
+                href={returnUrl}
+              >
+                Return to The Guardian
+              </LinkButton>
+            </div>
+          </ConsentsBlueBackground>
+          <ConsentsContent cssOverrides={newslettersBox}>
+            <h2 css={[headingWithMq, autoRow()]}>
+              Sign up to more newsletters
+            </h2>
+            <p css={[text, autoRow()]}>
+              We have over 40 different emails that focus on a range of diverse
+              topics - from politics and the latest tech to documentaries, sport
+              and scientific breakthroughs. Sign up to more in{' '}
+              <Link href="https://manage.theguardian.com/email-prefs">
+                Guardian newsletters
+              </Link>
+              .
+            </p>
+          </ConsentsContent>
+        </section>
       </main>
       <Footer />
     </>

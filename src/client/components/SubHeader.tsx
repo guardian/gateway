@@ -9,7 +9,7 @@ type Props = {
   title: string;
 };
 
-const header = css`
+const sectionStyles = css`
   width: 100%;
   padding-top: ${space[9]}px;
   background-color: ${brand[300]};
@@ -30,7 +30,7 @@ const header = css`
   }
 `;
 
-const div = css`
+const titleWrapperStyles = css`
   max-width: ${Breakpoints.TABLET}px;
   width: 100%;
   padding: 0 ${space[3]}px;
@@ -45,7 +45,7 @@ const div = css`
   }
 `;
 
-const h1 = css`
+const h1Styles = css`
   width: 100%;
   margin: 0;
   padding: ${space[1]}px ${space[2]}px;
@@ -61,9 +61,9 @@ const h1 = css`
 `;
 
 export const SubHeader = ({ title }: Props) => (
-  <header css={header}>
-    <div css={div}>
-      <h1 css={h1}>{title}</h1>
+  <header css={sectionStyles}>
+    <div css={titleWrapperStyles}>
+      <h1 css={h1Styles}>{title}</h1>
     </div>
   </header>
 );
