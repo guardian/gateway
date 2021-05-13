@@ -14,9 +14,9 @@ import {
   ConsentsBlueBackground,
   controls,
   main,
-  ConsentsNavBar,
-  CONSENTS_MAIN_COLOR,
   ConsentsHeader,
+  CONSENTS_MAIN_COLOR,
+  ConsentsSubHeader,
 } from '@/client/layouts/shared/Consents';
 import { Footer } from '@/client/components/Footer';
 import { headingWithMq, text } from '@/client/styles/Consents';
@@ -134,8 +134,11 @@ export const ConsentsConfirmation = ({
   const autoRow = getAutoRow(1, confirmationSpanDefinition);
   return (
     <>
-      <ConsentsNavBar error={error} success={success} />
-      <ConsentsHeader autoRow={autoRow} title="Your registration is complete" />
+      <ConsentsHeader error={error} success={success} />
+      <ConsentsSubHeader
+        autoRow={autoRow}
+        title="Your registration is complete"
+      />
       <main css={[mainBackground, main, bgColour]}>
         <ConsentsContent>
           <h2 css={[headingWithMq, autoRow()]}>Your selections</h2>

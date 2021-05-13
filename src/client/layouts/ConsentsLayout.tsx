@@ -16,8 +16,8 @@ import {
   ieFlexFix,
   main,
   mainBackground,
-  ConsentsNavBar,
   ConsentsHeader,
+  ConsentsSubHeader,
   controls,
 } from '@/client/layouts/shared/Consents';
 import { Routes } from '@/shared/model/Routes';
@@ -64,8 +64,8 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
     `;
   return (
     <>
-      <ConsentsNavBar error={error} success={success} />
-      <ConsentsHeader autoRow={autoRow} title={title} current={current} />
+      <ConsentsHeader error={error} success={success} />
+      <ConsentsSubHeader autoRow={autoRow} title={title} current={current} />
       <form
         css={form}
         action={`${Routes.CONSENTS}/${page}${returnUrlQuery}`}

@@ -110,7 +110,7 @@ export const ConsentsBlueBackground: FunctionComponent<{
   </div>
 );
 
-export const ConsentsNavBar: FunctionComponent<{
+export const ConsentsHeader: FunctionComponent<{
   error?: string;
   success?: string;
 }> = ({ error, success }) => (
@@ -152,7 +152,7 @@ const pageProgression = css`
   }
 `;
 
-export const ConsentsHeader: FunctionComponent<{
+export const ConsentsSubHeader: FunctionComponent<{
   autoRow: AutoRow;
   title: string;
   current?: string;
