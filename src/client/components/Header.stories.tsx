@@ -10,7 +10,7 @@ export default {
 } as Meta;
 
 export const Default = () => <Header />;
-Default.storyName = 'Default navbar';
+Default.storyName = 'Default header';
 
 export const UsingOverrides = () => (
   <Header
