@@ -3,12 +3,8 @@
 import fetch, { RequestInit, Response } from 'node-fetch';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 
-const {
-  idapiBaseUrl,
-  idapiClientAccessToken,
-  stage,
-  baseUri,
-} = getConfiguration();
+const { idapiBaseUrl, idapiClientAccessToken, stage, baseUri } =
+  getConfiguration();
 
 const getOrigin = (stage: string): string => {
   switch (stage) {
@@ -46,30 +42,29 @@ const handleResponseSuccess = async (response: Response) => {
   }
 };
 
-const getAPIOptionsForMethod = (method: string) => (
-  payload?: any,
-): RequestInit => ({
-  method,
-  headers: {
-    'Content-Type': 'application/json',
-    Origin: getOrigin(stage),
-  },
-  body: payload ? JSON.stringify(payload) : undefined,
-});
+const getAPIOptionsForMethod =
+  (method: string) =>
+  (payload?: any): RequestInit => ({
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      Origin: getOrigin(stage),
+    },
+    body: payload ? JSON.stringify(payload) : undefined,
+  });
 
-export const APIFetch = (baseUrl: string) => async (
-  url: string,
-  options?: RequestInit,
-): Promise<any> => {
-  const response = await fetch(baseUrl + url, options);
-  if (!response.ok) {
-    return await handleResponseFailure(response);
-  } else if (response.status === 204) {
-    return null;
-  } else {
-    return await handleResponseSuccess(response);
-  }
-};
+export const APIFetch =
+  (baseUrl: string) =>
+  async (url: string, options?: RequestInit): Promise<any> => {
+    const response = await fetch(baseUrl + url, options);
+    if (!response.ok) {
+      return await handleResponseFailure(response);
+    } else if (response.status === 204) {
+      return null;
+    } else {
+      return await handleResponseSuccess(response);
+    }
+  };
 
 export const APIGetOptions = getAPIOptionsForMethod('GET');
 export const APIPatchOptions = getAPIOptionsForMethod('PATCH');

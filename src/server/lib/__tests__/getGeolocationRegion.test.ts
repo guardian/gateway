@@ -18,7 +18,7 @@ describe('getGeolocationRegion', () => {
   ].forEach(({ input, output }) => {
     test(`given ${input} it returns ${output}`, () => {
       expect(
-        getGeolocationRegion((getFakeRequest(input) as unknown) as Request),
+        getGeolocationRegion(getFakeRequest(input) as unknown as Request),
       ).toBe(output);
     });
   });

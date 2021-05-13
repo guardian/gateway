@@ -93,9 +93,8 @@ router.post(
         throw { status: 403, message: ConsentsErrors.ACCESS_DENIED };
       }
 
-      const {
-        email = (await getUser(req.ip, sc_gu_u)).primaryEmailAddress,
-      } = req.body;
+      const { email = (await getUser(req.ip, sc_gu_u)).primaryEmailAddress } =
+        req.body;
 
       state = {
         ...state,

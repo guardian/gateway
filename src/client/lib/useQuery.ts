@@ -6,5 +6,5 @@ import { useLocation } from 'react-router-dom';
 import { QueryParams } from '@/shared/model/QueryParams';
 
 export function useQuery(): QueryParams {
-  return (parse(useLocation().search) as unknown) as QueryParams;
+  return parse(useLocation().search) as unknown as QueryParams;
 }
