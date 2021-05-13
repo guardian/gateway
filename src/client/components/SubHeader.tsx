@@ -5,6 +5,10 @@ import { headline } from '@guardian/src-foundations/typography';
 import { from } from '@guardian/src-foundations/mq';
 import { Breakpoints } from '@/client/models/Style';
 
+type Props = {
+  title: string;
+};
+
 const header = css`
   width: 100%;
   padding-top: ${space[9]}px;
@@ -56,10 +60,10 @@ const h1 = css`
   }
 `;
 
-export const SubHeader = () => (
+export const SubHeader = ({ title }: Props) => (
   <header css={header}>
     <div css={div}>
-      <h1 css={h1}>Sign in</h1>
+      <h1 css={h1}>{title}</h1>
     </div>
   </header>
 );

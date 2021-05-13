@@ -29,7 +29,7 @@ export const SignInLayout: FunctionComponent = (props) => {
   return (
     <>
       <NavBar />
-      <SubHeader />
+      <SubHeader title="Sign in" />
       {error && <GlobalError error={error} link={getErrorLink(error)} />}
       {success && <GlobalSuccess success={success} />}
       <main css={main}>{props.children}</main>
