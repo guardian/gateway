@@ -7,7 +7,7 @@ import { from } from '@guardian/src-foundations/mq';
 import { maxWidth } from '@/client/styles/Shared';
 import { GlobalError } from '@/client/components/GlobalError';
 import { GlobalSuccess } from '@/client/components/GlobalSuccess';
-import { NavBar } from '@/client/components/NavBar';
+import { Header } from '@/client/components/Header';
 import { getErrorLink } from '@/client/lib/ErrorLink';
 import { titlepiece } from '@guardian/src-foundations/typography';
 import { PageProgression } from '@/client/components/PageProgression';
@@ -115,7 +115,7 @@ export const ConsentsNavBar: FunctionComponent<{
   success?: string;
 }> = ({ error, success }) => (
   <div css={headerContainer}>
-    <NavBar cssOverrides={header} />
+    <Header cssOverrides={header} />
     {error && <GlobalError error={error} link={getErrorLink(error)} left />}
     {success && <GlobalSuccess success={success} />}
   </div>

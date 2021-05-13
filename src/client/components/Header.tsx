@@ -7,7 +7,7 @@ interface ComponentProps {
   cssOverrides?: SerializedStyles;
 }
 
-const nav = css`
+const header = css`
   display: flex;
   justify-content: flex-end;
   padding: ${space[1]}px ${space[3]}px;
@@ -15,8 +15,8 @@ const nav = css`
   flex: 0 0 auto;
 `;
 
-export const NavBar: FunctionComponent<ComponentProps> = ({ cssOverrides }) => (
-  <nav css={[nav, cssOverrides]}>
+export const Header: FunctionComponent<ComponentProps> = ({ cssOverrides }) => (
+  <header css={[header, cssOverrides]}>
     <GuardianRoundel />
-  </nav>
+  </header>
 );

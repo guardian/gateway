@@ -1,5 +1,5 @@
 import React, { useContext, FunctionComponent } from 'react';
-import { NavBar } from '@/client/components/NavBar';
+import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { SubHeader } from '@/client/components/SubHeader';
 import { ClientState } from '@/shared/model/ClientState';
@@ -28,7 +28,7 @@ export const SignInLayout: FunctionComponent = (props) => {
 
   return (
     <>
-      <NavBar />
+      <Header />
       <SubHeader title="Sign in" />
       {error && <GlobalError error={error} link={getErrorLink(error)} />}
       {success && <GlobalSuccess success={success} />}
