@@ -78,9 +78,8 @@ const EyeSymbol = ({
 export const PasswordInput = (props: TextInputProps) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [eyeVisible, setEyeVisible] = useState(false);
-  const { pageData: { browserName } = {} }: ClientState = useContext(
-    ClientStateContext,
-  );
+  const { pageData: { browserName } = {} }: ClientState =
+    useContext(ClientStateContext);
 
   const isEyeDisplayedOnBrowser = isDisplayEyeOnBrowser(browserName);
   const spaceForEye = isEyeDisplayedOnBrowser ? 28 : 0;

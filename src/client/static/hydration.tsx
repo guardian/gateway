@@ -15,9 +15,8 @@ export const hydrateApp = () => {
 
   const clientState = routingConfig.clientState;
 
-  const {
-    abTesting: { mvtId = 0, forcedTestVariants = {} } = {},
-  } = clientState;
+  const { abTesting: { mvtId = 0, forcedTestVariants = {} } = {} } =
+    clientState;
 
   hydrate(
     <ABProvider

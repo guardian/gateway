@@ -177,15 +177,14 @@ export const consentPages: ConsentPage[] = [
         sc_gu_u,
       );
 
-      const newslettersSubscriptionFromPage: NewsletterPatch[] = newslettersPage.map(
-        (id) => ({
+      const newslettersSubscriptionFromPage: NewsletterPatch[] =
+        newslettersPage.map((id) => ({
           id,
           subscribed: !!body[id],
-        }),
-      );
+        }));
 
-      const newsletterSubscriptionsToUpdate = newslettersSubscriptionFromPage.filter(
-        ({ id, subscribed }) => {
+      const newsletterSubscriptionsToUpdate =
+        newslettersSubscriptionFromPage.filter(({ id, subscribed }) => {
           // find current user subscription status for a newsletter
           const subscription = userNewsletterSubscriptions.find(
             ({ id: userNewsletterId }) => userNewsletterId === id,
@@ -206,8 +205,7 @@ export const consentPages: ConsentPage[] = [
 
           // otherwise don't include in the update
           return false;
-        },
-      );
+        });
 
       await patchNewsletters(ip, sc_gu_u, newsletterSubscriptionsToUpdate);
     },

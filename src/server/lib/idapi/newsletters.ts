@@ -39,10 +39,9 @@ const responseToEntity = (newsletter: NewsletterAPIResponse): NewsLetter => {
 export const read = async (): Promise<NewsLetter[]> => {
   const options = APIGetOptions();
   try {
-    return ((await idapiFetch(
-      '/newsletters',
-      options,
-    )) as NewsletterAPIResponse[]).map(responseToEntity);
+    return (
+      (await idapiFetch('/newsletters', options)) as NewsletterAPIResponse[]
+    ).map(responseToEntity);
   } catch (e) {
     logger.error(e);
     return handleError();
@@ -79,9 +78,9 @@ export const readUserNewsletters = async (ip: string, sc_gu_u: string) => {
   );
 
   try {
-    return (
-      await idapiFetch(API_ROUTE, options)
-    ).result.subscriptions.map((s: Subscription) => s.listId.toString());
+    return (await idapiFetch(API_ROUTE, options)).result.subscriptions.map(
+      (s: Subscription) => s.listId.toString(),
+    );
   } catch (e) {
     logger.error(e);
     return handleError();

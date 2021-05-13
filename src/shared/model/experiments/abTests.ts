@@ -23,12 +23,8 @@ export const abTestApiForMvtId = (
   mvtId: number,
   forcedTestVariants?: Participations,
 ) => {
-  const {
-    abTestSwitches,
-    arrayOfTestObjects,
-    mvtMaxValue,
-    pageIsSensitive,
-  } = getDefaultABTestConfiguration();
+  const { abTestSwitches, arrayOfTestObjects, mvtMaxValue, pageIsSensitive } =
+    getDefaultABTestConfiguration();
 
   return new AB({
     abTestSwitches,

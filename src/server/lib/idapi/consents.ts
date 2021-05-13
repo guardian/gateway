@@ -36,10 +36,9 @@ const responseToEntity = (consent: ConsentAPIResponse): Consent => {
 export const read = async (): Promise<Consent[]> => {
   const options = APIGetOptions();
   try {
-    return ((await idapiFetch(
-      '/consents',
-      options,
-    )) as ConsentAPIResponse[]).map(responseToEntity);
+    return (
+      (await idapiFetch('/consents', options)) as ConsentAPIResponse[]
+    ).map(responseToEntity);
   } catch (e) {
     logger.error(e);
     return handleError();
