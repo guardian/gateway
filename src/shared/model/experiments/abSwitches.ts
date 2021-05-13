@@ -1,3 +1,3 @@
 export const switches = {
-  abSingleNewsletterTest: true,
+  abSingleNewsletterTest: false,
 };
