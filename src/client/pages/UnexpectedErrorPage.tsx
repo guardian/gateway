@@ -13,7 +13,7 @@ const link = css`
 `;
 
 export const UnexpectedErrorPage = () => (
-  <Layout>
+  <Layout subTitle="Sign in">
     <PageBox>
       <PageHeader>Sorry – an unexpected error occurred</PageHeader>
       <PageBody>

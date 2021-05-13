@@ -257,7 +257,7 @@ export const ChangePassword = ({
   } = usePasswordValidationHooks(idapiBaseUrl);
 
   return (
-    <Layout>
+    <Layout subTitle="Sign in">
       <PageBox>
         <PageHeader>Reset Password</PageHeader>
         <PageBody>

@@ -26,7 +26,7 @@ export const ResetPassword = ({
   buttonText,
   queryString = '',
 }: ResetPasswordProps) => (
-  <Layout>
+  <Layout subTitle="Sign in">
     <PageBox>
       <PageHeader>{headerText}</PageHeader>
       <PageBody>

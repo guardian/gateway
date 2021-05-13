@@ -13,7 +13,7 @@ const link = css`
 `;
 
 export const NotFoundPage = () => (
-  <Layout>
+  <Layout subTitle="Sign in">
     <PageBox>
       <PageHeader>Sorry – the page does not exist</PageHeader>
       <PageBody>

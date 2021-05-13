@@ -112,7 +112,7 @@ export const ResendEmailVerification = ({
   inboxName,
 }: ResendEmailVerificationProps) => {
   return (
-    <Layout>
+    <Layout subTitle="Sign in">
       {email ? (
         <LoggedIn
           email={email}

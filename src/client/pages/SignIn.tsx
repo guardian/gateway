@@ -6,7 +6,7 @@ import { PageBodyText } from '@/client/components/PageBodyText';
 import { Layout } from '@/client/layouts/Layout';
 
 export const SignIn = () => (
-  <Layout>
+  <Layout subTitle="Sign in">
     <PageBox>
       <PageHeader>Sign in</PageHeader>
       <PageBody>

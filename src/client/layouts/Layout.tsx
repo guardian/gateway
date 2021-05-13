@@ -11,6 +11,11 @@ import { Breakpoints } from '@/client/models/Style';
 import { getErrorLink } from '@/client/lib/ErrorLink';
 import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 
+type Props = {
+  subTitle: string;
+  children: React.ReactNode;
+};
+
 const main = css`
   flex: 1 0 auto;
   padding: ${space[6]}px ${space[3]}px;
@@ -22,17 +27,17 @@ const main = css`
   align-items: left;
 `;
 
-export const Layout: FunctionComponent = (props) => {
+export const Layout = ({ subTitle, children }: Props) => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { globalMessage: { error, success } = {} } = clientState;
 
   return (
     <>
       <Header />
-      <SubHeader title="Sign in" />
+      <SubHeader title={subTitle} />
       {error && <GlobalError error={error} link={getErrorLink(error)} />}
       {success && <GlobalSuccess success={success} />}
-      <main css={main}>{props.children}</main>
+      <main css={main}>{children}</main>
       <Footer />
     </>
   );

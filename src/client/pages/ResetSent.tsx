@@ -15,7 +15,7 @@ type ResetSentProps = {
 
 export const ResetSent = ({ inboxLink, inboxName }: ResetSentProps) => {
   return (
-    <Layout>
+    <Layout subTitle="Sign in">
       <PageBox>
         <PageHeader>Please check your inbox</PageHeader>
         <PageBody>

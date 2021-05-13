@@ -16,7 +16,7 @@ export const ChangePasswordComplete = ({
   returnUrl,
 }: ChangePasswordCompleteProps) => {
   return (
-    <Layout>
+    <Layout subTitle="Sign in">
       <PageBox>
         <PageHeader>Password Changed</PageHeader>
         <PageBody>

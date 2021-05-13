@@ -6,7 +6,7 @@ import { PageBodyText } from '@/client/components/PageBodyText';
 import { Layout } from '@/client/layouts/Layout';
 
 export const Registration = () => (
-  <Layout>
+  <Layout subTitle="Register">
     <PageBox>
       <PageHeader>Register</PageHeader>
       <PageBody>
