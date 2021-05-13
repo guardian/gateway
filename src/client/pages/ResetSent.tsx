@@ -5,7 +5,7 @@ import { PageBox } from '@/client/components/PageBox';
 import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
 import { linkButton } from '@/client/styles/Shared';
-import { SignInLayout } from '@/client/layouts/SignInLayout';
+import { Layout } from '@/client/layouts/Layout';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
 
 type ResetSentProps = {
@@ -15,7 +15,7 @@ type ResetSentProps = {
 
 export const ResetSent = ({ inboxLink, inboxName }: ResetSentProps) => {
   return (
-    <SignInLayout>
+    <Layout>
       <PageBox>
         <PageHeader>Please check your inbox</PageHeader>
         <PageBody>
@@ -41,6 +41,6 @@ export const ResetSent = ({ inboxLink, inboxName }: ResetSentProps) => {
           </LinkButton>
         )}
       </PageBox>
-    </SignInLayout>
+    </Layout>
   );
 };

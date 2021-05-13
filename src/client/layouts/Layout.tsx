@@ -22,7 +22,7 @@ const main = css`
   align-items: left;
 `;
 
-export const SignInLayout: FunctionComponent = (props) => {
+export const Layout: FunctionComponent = (props) => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { globalMessage: { error, success } = {} } = clientState;
 

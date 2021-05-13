@@ -6,14 +6,14 @@ import { PageBox } from '@/client/components/PageBox';
 import { PageHeader } from '@/client/components/PageHeader';
 import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
-import { SignInLayout } from '@/client/layouts/SignInLayout';
+import { Layout } from '@/client/layouts/Layout';
 
 const link = css`
   display: inline-block;
 `;
 
 export const UnexpectedErrorPage = () => (
-  <SignInLayout>
+  <Layout>
     <PageBox>
       <PageHeader>Sorry – an unexpected error occurred</PageHeader>
       <PageBody>
@@ -26,5 +26,5 @@ export const UnexpectedErrorPage = () => (
         </PageBodyText>
       </PageBody>
     </PageBox>
-  </SignInLayout>
+  </Layout>
 );

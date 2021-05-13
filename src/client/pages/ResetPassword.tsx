@@ -9,7 +9,7 @@ import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
 import { form, textInput, button } from '@/client/styles/Shared';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
-import { SignInLayout } from '@/client/layouts/SignInLayout';
+import { Layout } from '@/client/layouts/Layout';
 
 interface ResetPasswordProps {
   email?: string;
@@ -26,7 +26,7 @@ export const ResetPassword = ({
   buttonText,
   queryString = '',
 }: ResetPasswordProps) => (
-  <SignInLayout>
+  <Layout>
     <PageBox>
       <PageHeader>{headerText}</PageHeader>
       <PageBody>
@@ -51,5 +51,5 @@ export const ResetPassword = ({
         </form>
       </PageBody>
     </PageBox>
-  </SignInLayout>
+  </Layout>
 );

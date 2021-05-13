@@ -5,7 +5,7 @@ import { PageHeader } from '@/client/components/PageHeader';
 import { PageBodyText } from '@/client/components/PageBodyText';
 import { PageBody } from '@/client/components/PageBody';
 import { linkButton } from '@/client/styles/Shared';
-import { SignInLayout } from '@/client/layouts/SignInLayout';
+import { Layout } from '@/client/layouts/Layout';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
 
 type ChangePasswordCompleteProps = {
@@ -16,7 +16,7 @@ export const ChangePasswordComplete = ({
   returnUrl,
 }: ChangePasswordCompleteProps) => {
   return (
-    <SignInLayout>
+    <Layout>
       <PageBox>
         <PageHeader>Password Changed</PageHeader>
         <PageBody>
@@ -38,6 +38,6 @@ export const ChangePasswordComplete = ({
           Continue to The Guardian
         </LinkButton>
       </PageBox>
-    </SignInLayout>
+    </Layout>
   );
 };

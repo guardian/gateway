@@ -1,5 +1,5 @@
 import React from 'react';
-import { SignInLayout } from '@/client/layouts/SignInLayout';
+import { Layout } from '@/client/layouts/Layout';
 import { LinkButton, Button } from '@guardian/src-button';
 import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
@@ -112,7 +112,7 @@ export const ResendEmailVerification = ({
   inboxName,
 }: ResendEmailVerificationProps) => {
   return (
-    <SignInLayout>
+    <Layout>
       {email ? (
         <LoggedIn
           email={email}
@@ -123,6 +123,6 @@ export const ResendEmailVerification = ({
       ) : (
         <LoggedOut signInPageUrl={signInPageUrl} />
       )}
-    </SignInLayout>
+    </Layout>
   );
 };
