@@ -56,7 +56,7 @@ const h1 = css`
   }
 `;
 
-export const SignInHeader = () => (
+export const SubHeader = () => (
   <header css={header}>
     <div css={div}>
       <h1 css={h1}>Sign in</h1>
