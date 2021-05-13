@@ -1,4 +1,4 @@
-import React, { useContext, FunctionComponent } from 'react';
+import React, { useContext } from 'react';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { SubHeader } from '@/client/components/SubHeader';
