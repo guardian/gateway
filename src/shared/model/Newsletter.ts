@@ -42,3 +42,5 @@ export const NEWSLETTER_IMAGES = {
   [Newsletters.US_MORNING_BRIEFING.toString()]: US_MORNING_BRIEFING_IMAGE,
   [Newsletters.MINUTE_US.toString()]: MINUTE_US_IMAGE,
 };
+
+export const ALL_NEWSLETTER_IDS = Object.values(Newsletters);

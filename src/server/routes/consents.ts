@@ -12,7 +12,7 @@ import {
 import { read as getNewsletters } from '@/server/lib/idapi/newsletters';
 import { read as getUser } from '@/server/lib/idapi/user';
 import { PageData } from '@/shared/model/ClientState';
-import { NewsLetter, NewsletterPatch } from '@/shared/model/Newsletter';
+import { NewsLetter } from '@/shared/model/Newsletter';
 import {
   Consent,
   Consents,
@@ -29,7 +29,10 @@ import { trackMetric } from '@/server/lib/AWS';
 import { consentsPageMetric } from '@/server/models/Metrics';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { GeoLocation } from '@/shared/model/Geolocation';
-import { NewsletterMap } from '@/shared/lib/newsletter';
+import {
+  NewsletterMap,
+  newslettersSubscriptionsFromFormBody,
+} from '@/shared/lib/newsletter';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { fourZeroFourRender } from '@/server/lib/middleware/404';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
@@ -177,48 +180,32 @@ export const consentPages: ConsentPage[] = [
         sc_gu_u,
       );
 
-      // get a list of newsletters that have been updated in the body and compare to newsletters on the page
-      const newslettersSubscriptionFromBody = newslettersPage
-        .map((id) => {
-          // if the id of a newsletter is included in the body, then mark this newsletter as to potentially update (subscribe/unsubscribe)
-          if (id in body) {
-            return {
-              id,
-              subscribed: !!body[id],
-            };
-          }
-
-          // otherwise return null, and filter these out
-          return null;
-        })
-        .filter((v) => v !== null) as NewsletterPatch[];
-
       // get a list of newsletters to update that have changed from the users current subscription
       // if they have changed then set them to subsribe/unsubscribe
-      const newsletterSubscriptionsToUpdate = newslettersSubscriptionFromBody.filter(
-        ({ id, subscribed }) => {
-          // find current user subscription status for a newsletter
-          const subscription = userNewsletterSubscriptions.find(
-            ({ id: userNewsletterId }) => userNewsletterId === id,
-          );
+      const newsletterSubscriptionsToUpdate = newslettersSubscriptionsFromFormBody(
+        body,
+      ).filter(({ id, subscribed }) => {
+        // find current user subscription status for a newsletter
+        const subscription = userNewsletterSubscriptions.find(
+          ({ id: userNewsletterId }) => userNewsletterId === id,
+        );
 
-          // check if a subscription exists
-          if (subscription) {
-            // if previously subscribed AND now wants to unsubscribe
-            // OR if previously not subscribed AND wants to subscribe
-            // then include in newsletterSubscriptionsToUpdate
-            if (
-              (subscription.subscribed && !subscribed) ||
-              (!subscription.subscribed && subscribed)
-            ) {
-              return true;
-            }
+        // check if a subscription exists
+        if (subscription) {
+          // if previously subscribed AND now wants to unsubscribe
+          // OR if previously not subscribed AND wants to subscribe
+          // then include in newsletterSubscriptionsToUpdate
+          if (
+            (subscription.subscribed && !subscribed) ||
+            (!subscription.subscribed && subscribed)
+          ) {
+            return true;
           }
+        }
 
-          // otherwise don't include in the update
-          return false;
-        },
-      );
+        // otherwise don't include in the update
+        return false;
+      });
 
       await patchNewsletters(ip, sc_gu_u, newsletterSubscriptionsToUpdate);
     },
