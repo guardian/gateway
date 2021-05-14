@@ -47,17 +47,22 @@ const Text = ({ children }: { children: React.ReactNode }) => (
 const TermsLink = ({
   children,
   fontWeight = 'regular',
+  size,
 }: {
   children: React.ReactNode;
   fontWeight?: FontWeight;
+  size?: 'small' | 'medium';
 }) => (
   <Link
     cssOverrides={css`
-      ${textSans.medium({ fontWeight })}
+      ${size === 'medium'
+        ? textSans.medium({ fontWeight })
+        : textSans.small({ fontWeight })}
       color: ${neutral[0]};
       :hover {
         color: ${neutral[0]};
       }
+      font-size: ${size && `${size}px`};
     `}
   >
     {children}
@@ -68,7 +73,9 @@ export const Terms = () => (
   <Container>
     <Title>
       By proceeding you agree to our{' '}
-      <TermsLink fontWeight="bold">Terms and Conditions</TermsLink>
+      <TermsLink fontWeight="bold" size="medium">
+        Terms and Conditions
+      </TermsLink>
     </Title>
     <Text>
       You also confirm that you are 13 years or older, or that you have the
