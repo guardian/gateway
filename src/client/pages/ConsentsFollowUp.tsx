@@ -364,6 +364,8 @@ export const ConsentsFollowUp = ({
               hideLabel={true}
               cssOverrides={checkboxGroup}
             >
+              {/* if the Checkbox is unchecked, this hidden empty value will be sent in form submit POST,
+          to signal possible unsubscribe event */}
               <input type="hidden" name={entity.id} value="" />
               <Checkbox value={entity.id} label="Yes, sign me up" />
             </CheckboxGroup>

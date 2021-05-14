@@ -12,7 +12,7 @@ import {
 import { read as getNewsletters } from '@/server/lib/idapi/newsletters';
 import { read as getUser } from '@/server/lib/idapi/user';
 import { PageData } from '@/shared/model/ClientState';
-import { NewsLetter } from '@/shared/model/Newsletter';
+import { ALL_NEWSLETTER_IDS, NewsLetter } from '@/shared/model/Newsletter';
 import {
   Consent,
   Consents,
@@ -171,11 +171,9 @@ export const consentPages: ConsentPage[] = [
         throw error;
       }
     },
-    update: async (ip, sc_gu_u, body, geo) => {
-      const newslettersPage = NewsletterMap.get(geo) as string[];
-
+    update: async (ip, sc_gu_u, body) => {
       const userNewsletterSubscriptions = await getUserNewsletterSubscriptions(
-        newslettersPage,
+        ALL_NEWSLETTER_IDS,
         ip,
         sc_gu_u,
       );
