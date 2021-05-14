@@ -10,8 +10,7 @@ class ChangePasswordPage {
         'Please make sure your password is at least 8 characters long.',
       PASSWORD_TOO_LONG:
         'Please make sure your password is not longer than 72 characters.',
-      CSRF:
-        'Sorry, something went wrong. If you made any changes these might have not been saved. Please try again.',
+      CSRF: 'Sorry, something went wrong. If you made any changes these might have not been saved. Please try again.',
     },
     PASSWORD_CHANGE_SUCCESS_TITLE: 'Thank you! Your password has been changed.',
     CONTINUE_BUTTON_TEXT: 'Continue to The Guardian',

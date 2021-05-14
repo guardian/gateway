@@ -96,9 +96,8 @@ export const renderer: (url: string, opts: RendererOpts) => string = (
 
   const location = `${url}${queryString ? `?${queryString}` : ''}`;
 
-  const {
-    abTesting: { mvtId = 0, forcedTestVariants = {} } = {},
-  } = clientState;
+  const { abTesting: { mvtId = 0, forcedTestVariants = {} } = {} } =
+    clientState;
 
   // Any changes made here must also be made to the hydration in the static webpack bundle
   const react = ReactDOMServer.renderToString(

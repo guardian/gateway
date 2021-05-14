@@ -2,17 +2,12 @@ import React, {
   Dispatch,
   MutableRefObject,
   SetStateAction,
-  useContext,
   useEffect,
   useRef,
   useState,
 } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
 import { Button } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
-import { ClientState } from '@/shared/model/ClientState';
-import { ClientStateContext } from '@/client/components/ClientState';
-import { Routes } from '@/shared/model/Routes';
 import { PageBox } from '@/client/components/PageBox';
 import { PageHeader } from '@/client/components/PageHeader';
 import { PageBody } from '@/client/components/PageBody';
@@ -38,6 +33,14 @@ import { ThrottledBreachedPasswordCheck } from '@/client/lib/ThrottledBreachedPa
 import sha1 from 'js-sha1';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
 import { PasswordInput } from '@/client/components/PasswordInput';
+import { FieldError } from '@/server/routes/changePassword';
+
+type ChangePasswordProps = {
+  submitUrl: string;
+  email: string;
+  fieldErrors: FieldError[];
+  idapiBaseUrl: string;
+};
 
 const throttledPasswordCheck = new ThrottledBreachedPasswordCheck();
 
@@ -134,38 +137,27 @@ const updateComponentStateAfterValidation = (
 const usePasswordValidationHooks = (idapiBaseUrl: string) => {
   // useRefState makes the up-to-date password accessible in the breachPasswordCheck promise handler
   const [password, setPassword, passwordCurrently] = useRefState('');
-  const [
-    passwordConfirm,
-    setPasswordConfirm,
-    passwordConfirmCurrently,
-  ] = useRefState('');
+  const [passwordConfirm, setPasswordConfirm, passwordConfirmCurrently] =
+    useRefState('');
 
   // if breached password promise completes with errors, and the password confirmation box is selected we show a red error message
-  const [
-    ,
-    setIsPasswordConfirmSelected,
-    isPasswordConfirmSelectedCurrently,
-  ] = useRefState(false);
+  const [, setIsPasswordConfirmSelected, isPasswordConfirmSelectedCurrently] =
+    useRefState(false);
 
   // the latest validation result
-  const [
-    validationResult,
-    setValidationResult,
-  ] = useState<PasswordValidationResult>(PasswordValidationResult.AT_LEAST_8);
+  const [validationResult, setValidationResult] =
+    useState<PasswordValidationResult>(PasswordValidationResult.AT_LEAST_8);
 
   // redError is used for the first password input box
   // errors go red color if the user has selected the confirm password input while the password criteria is not satisfied - or if the user submits the form and there are errors present
   // A user has to solve the problem indicated by the red error to make it go away
   // The red error is not necessarily the latest validation result - e.g. common password does not get solved by going beneath 8 characters
-  const [redError, setRedError, redErrorCurrently] = useRefState<
-    ErrorValidationResult | undefined
-  >(undefined);
+  const [redError, setRedError, redErrorCurrently] =
+    useRefState<ErrorValidationResult | undefined>(undefined);
 
   // store last length tick/cross error since we want to show it in green after it has been corrected (it can show either password too long, or too short)
-  const [
-    lastLengthError,
-    setLastLengthError,
-  ] = useState<LengthValidationResult>(PasswordValidationResult.AT_LEAST_8);
+  const [lastLengthError, setLastLengthError] =
+    useState<LengthValidationResult>(PasswordValidationResult.AT_LEAST_8);
 
   // Usually we only show password not matching if the confirmed password is not a substring.
   // However, if the user clicks submit we want to show the error message if the password does not equal the confirmed password
@@ -241,11 +233,12 @@ const usePasswordValidationHooks = (idapiBaseUrl: string) => {
   };
 };
 
-export const ChangePasswordPage = () => {
-  const { search } = useLocation();
-  const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData: { email = '', fieldErrors = [] } = {} } = clientState;
-  const { token } = useParams<{ token: string }>();
+export const ChangePassword = ({
+  submitUrl,
+  email,
+  fieldErrors,
+  idapiBaseUrl,
+}: ChangePasswordProps) => {
   const {
     password,
     passwordConfirm,
@@ -261,7 +254,7 @@ export const ChangePasswordPage = () => {
     setIsPasswordConfirmSelected,
     validationResult,
     setShowPasswordNotMatchingEvenIfSubstring,
-  } = usePasswordValidationHooks(clientState.clientHosts.idapiBaseUrl);
+  } = usePasswordValidationHooks(idapiBaseUrl);
 
   return (
     <SignInLayout>
@@ -274,7 +267,7 @@ export const ChangePasswordPage = () => {
           <form
             css={form}
             method="post"
-            action={`${Routes.CHANGE_PASSWORD}/${token}${search}`}
+            action={submitUrl}
             onSubmit={(e) => {
               // prevent the form from submitting if there are validation errors
               if (

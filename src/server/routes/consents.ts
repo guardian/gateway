@@ -182,30 +182,31 @@ export const consentPages: ConsentPage[] = [
 
       // get a list of newsletters to update that have changed from the users current subscription
       // if they have changed then set them to subsribe/unsubscribe
-      const newsletterSubscriptionsToUpdate = newslettersSubscriptionsFromFormBody(
-        body,
-      ).filter(({ id, subscribed }) => {
-        // find current user subscription status for a newsletter
-        const subscription = userNewsletterSubscriptions.find(
-          ({ id: userNewsletterId }) => userNewsletterId === id,
+      const newsletterSubscriptionsToUpdate =
+        newslettersSubscriptionsFromFormBody(body).filter(
+          ({ id, subscribed }) => {
+            // find current user subscription status for a newsletter
+            const subscription = userNewsletterSubscriptions.find(
+              ({ id: userNewsletterId }) => userNewsletterId === id,
+            );
+
+            // check if a subscription exists
+            if (subscription) {
+              // if previously subscribed AND now wants to unsubscribe
+              // OR if previously not subscribed AND wants to subscribe
+              // then include in newsletterSubscriptionsToUpdate
+              if (
+                (subscription.subscribed && !subscribed) ||
+                (!subscription.subscribed && subscribed)
+              ) {
+                return true;
+              }
+            }
+
+            // otherwise don't include in the update
+            return false;
+          },
         );
-
-        // check if a subscription exists
-        if (subscription) {
-          // if previously subscribed AND now wants to unsubscribe
-          // OR if previously not subscribed AND wants to subscribe
-          // then include in newsletterSubscriptionsToUpdate
-          if (
-            (subscription.subscribed && !subscribed) ||
-            (!subscription.subscribed && subscribed)
-          ) {
-            return true;
-          }
-        }
-
-        // otherwise don't include in the update
-        return false;
-      });
 
       await patchNewsletters(ip, sc_gu_u, newsletterSubscriptionsToUpdate);
     },
