@@ -51,7 +51,6 @@ interface ConsentPage {
     ip: string,
     sc_gu_u: string,
     body: { [key: string]: string },
-    geo?: GeoLocation,
   ) => Promise<void>;
 }
 
@@ -179,32 +178,31 @@ export const consentPages: ConsentPage[] = [
       );
 
       // get a list of newsletters to update that have changed from the users current subscription
-      // if they have changed then set them to subsribe/unsubscribe
+      // if they have changed then set them to subscribe/unsubscribe
       const newsletterSubscriptionsToUpdate =
-        newslettersSubscriptionsFromFormBody(body).filter(
-          ({ id, subscribed }) => {
-            // find current user subscription status for a newsletter
-            const subscription = userNewsletterSubscriptions.find(
-              ({ id: userNewsletterId }) => userNewsletterId === id,
-            );
+        newslettersSubscriptionsFromFormBody(body).filter((newSubscription) => {
+          // find current user subscription status for a newsletter
+          const currentSubscription = userNewsletterSubscriptions.find(
+            ({ id: userNewsletterId }) =>
+              userNewsletterId === newSubscription.id,
+          );
 
-            // check if a subscription exists
-            if (subscription) {
-              // if previously subscribed AND now wants to unsubscribe
-              // OR if previously not subscribed AND wants to subscribe
+          // check if a subscription exists
+          if (currentSubscription) {
+            if (
+              // previously subscribed AND now wants to unsubscribe
+              (currentSubscription.subscribed && !newSubscription.subscribed) ||
+              // OR previously not subscribed AND wants to subscribe
+              (!currentSubscription.subscribed && newSubscription.subscribed)
+            ) {
               // then include in newsletterSubscriptionsToUpdate
-              if (
-                (subscription.subscribed && !subscribed) ||
-                (!subscription.subscribed && subscribed)
-              ) {
-                return true;
-              }
+              return true;
             }
+          }
 
-            // otherwise don't include in the update
-            return false;
-          },
-        );
+          // otherwise don't include in the update
+          return false;
+        });
 
       await patchNewsletters(ip, sc_gu_u, newsletterSubscriptionsToUpdate);
     },
@@ -308,7 +306,6 @@ type IDAPIEntitySetter = (
   ip: string,
   sc_gu_u: string,
   body: { [key: string]: string },
-  geocode?: GeoLocation,
 ) => Promise<void>;
 
 function isSubscribed(entities: NewsLetter[] | Consent[]): boolean {
@@ -360,11 +357,10 @@ async function setNewsletterEntity(
   ip: string,
   sc_gu_u: string,
   body: { [key: string]: string },
-  geocode?: GeoLocation,
 ) {
   const { update } = consentPages[1]; // Can reuse newsletter updater function.
   if (update) {
-    await update(ip, sc_gu_u, body, geocode);
+    await update(ip, sc_gu_u, body);
   } else {
     throw 'Follow On Consent Update Failure: Newsletters';
   }
@@ -437,7 +433,7 @@ function getABTestPOSTHandler(
     const route = req.route.path;
 
     try {
-      await entitySetter(req.ip, sc_gu_u, req.body, state.pageData.geolocation);
+      await entitySetter(req.ip, sc_gu_u, req.body);
       const html = redirectRenderer(url);
       res.type('html').send(html);
       return;
@@ -580,7 +576,7 @@ router.post(
       pageTitle = _pageTitle;
 
       if (update) {
-        await update(req.ip, sc_gu_u, req.body, state.pageData.geolocation);
+        await update(req.ip, sc_gu_u, req.body);
       }
 
       trackMetric(consentsPageMetric(page, 'Post', true));

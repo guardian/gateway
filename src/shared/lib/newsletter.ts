@@ -60,7 +60,7 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
 export const newslettersSubscriptionsFromFormBody = (body: {
   [key: string]: unknown;
 }): NewsletterPatch[] =>
-  ALL_NEWSLETTER_IDS.map((id) => {
+  ALL_NEWSLETTER_IDS.flatMap((id) => {
     // if the id of a newsletter is included in the body
     // then mark this newsletter as to potentially update (subscribe / unsubscribe)
     // otherwise return undefined
@@ -70,5 +70,8 @@ export const newslettersSubscriptionsFromFormBody = (body: {
         subscribed: !!body[id],
       };
     }
-    // filter out the undefined values from the array to return the correct type
-  }).filter(Boolean) as NewsletterPatch[];
+
+    // return empty array if newsletter not in body
+    // flatMap will remove this empty array
+    return [];
+  });
