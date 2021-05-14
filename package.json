@@ -76,6 +76,7 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "^7.23.2",
     "file-loader": "^6.2.0",
+    "husky": "^6.0.0",
     "image-webpack-loader": "^7.0.1",
     "jest": "^26.6.3",
     "nodemon": "^2.0.7",
@@ -89,8 +90,7 @@
     "webpack-cli": "^4.7.0",
     "webpack-merge": "^5.7.3",
     "webpack-node-externals": "^3.0.0",
-    "whatwg-fetch": "^3.6.2",
-    "husky": "^6.0.0"
+    "whatwg-fetch": "^3.6.2"
   },
   "dependencies": {
     "@emotion/react": "^11.4.0",
@@ -98,6 +98,7 @@
     "@guardian/ab-react": "^2.0.1",
     "@guardian/consent-management-platform": "^6.11.3",
     "@guardian/libs": "^1.8.1",
+    "@guardian/src-accordion": "^3.5.0",
     "@guardian/src-brand": "^3.5.0",
     "@guardian/src-button": "^3.5.0",
     "@guardian/src-checkbox": "^3.5.0",
