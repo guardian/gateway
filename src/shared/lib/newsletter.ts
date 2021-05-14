@@ -58,7 +58,7 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
 // get a list of newsletters that have been updated in the body and compare
 // to list of all newsletter ids
 export const newslettersSubscriptionsFromFormBody = (body: {
-  [key: string]: string;
+  [key: string]: unknown;
 }): NewsletterPatch[] =>
   ALL_NEWSLETTER_IDS.map((id) => {
     // if the id of a newsletter is included in the body

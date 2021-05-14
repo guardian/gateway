@@ -8,7 +8,8 @@ import {
   body,
 } from '@guardian/src-foundations/typography';
 import { CONSENTS_MAIN_COLOR } from '@/client/layouts/shared/Consents';
-import { NewsLetter, NEWSLETTER_IMAGES } from '@/shared/model/Newsletter';
+import { NewsLetter } from '@/shared/model/Newsletter';
+import { NEWSLETTER_IMAGES } from '@/client/models/Newsletter';
 
 interface NewsletterCardProps {
   newsletter: NewsLetter;
