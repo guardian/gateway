@@ -36,6 +36,12 @@ const form = css`
   flex-direction: column;
 `;
 
+const mainStyles = css`
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+`;
+
 const linkButton = css`
   margin-left: ${space[5]}px;
 `;
@@ -70,7 +76,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
   return (
     <>
       <ConsentsHeader error={error} success={success} />
-      <main>
+      <main css={mainStyles}>
         <ConsentsSubHeader autoRow={autoRow} title={title} current={current} />
         <form
           css={form}
