@@ -6,14 +6,14 @@ import { PageBox } from '@/client/components/PageBox';
 import { PageHeader } from '@/client/components/PageHeader';
 import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
-import { SignInLayout } from '@/client/layouts/SignInLayout';
+import { Layout } from '@/client/layouts/Layout';
 
 const link = css`
   display: inline-block;
 `;
 
 export const NotFoundPage = () => (
-  <SignInLayout>
+  <Layout subTitle="Sign in">
     <PageBox>
       <PageHeader>Sorry – the page does not exist</PageHeader>
       <PageBody>
@@ -27,5 +27,5 @@ export const NotFoundPage = () => (
         </PageBodyText>
       </PageBody>
     </PageBox>
-  </SignInLayout>
+  </Layout>
 );
