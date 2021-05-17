@@ -1,7 +1,7 @@
-import React, { useContext, FunctionComponent } from 'react';
-import { NavBar } from '@/client/components/NavBar';
+import React, { useContext } from 'react';
+import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
-import { SignInHeader } from '@/client/components/SignInHeader';
+import { SubHeader } from '@/client/components/SubHeader';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { GlobalError } from '@/client/components/GlobalError';
@@ -11,28 +11,39 @@ import { Breakpoints } from '@/client/models/Style';
 import { getErrorLink } from '@/client/lib/ErrorLink';
 import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 
-const main = css`
-  flex: 1 0 auto;
-  padding: ${space[6]}px ${space[3]}px;
-  max-width: ${Breakpoints.TABLET}px;
-  width: 100%;
-  margin: 0 auto;
+type Props = {
+  subTitle: string;
+  children: React.ReactNode;
+};
+
+const mainStyles = css`
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
   align-items: left;
 `;
 
-export const SignInLayout: FunctionComponent = (props) => {
+const sectionStyles = css`
+  padding: ${space[6]}px ${space[3]}px;
+  max-width: ${Breakpoints.TABLET}px;
+  width: 100%;
+  margin: 0 auto;
+`;
+
+export const Layout = ({ subTitle, children }: Props) => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { globalMessage: { error, success } = {} } = clientState;
 
   return (
     <>
-      <NavBar />
-      <SignInHeader />
-      {error && <GlobalError error={error} link={getErrorLink(error)} />}
-      {success && <GlobalSuccess success={success} />}
-      <main css={main}>{props.children}</main>
+      <Header />
+      <main css={mainStyles}>
+        <SubHeader title={subTitle} />
+        {error && <GlobalError error={error} link={getErrorLink(error)} />}
+        {success && <GlobalSuccess success={success} />}
+        <section css={sectionStyles}>{children}</section>
+      </main>
+
       <Footer />
     </>
   );

@@ -13,7 +13,7 @@ import { PageHeader } from '@/client/components/PageHeader';
 import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
 import { button, form, textInput } from '@/client/styles/Shared';
-import { SignInLayout } from '@/client/layouts/SignInLayout';
+import { Layout } from '@/client/layouts/Layout';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import {
   LengthValidationComponent,
@@ -257,7 +257,7 @@ export const ChangePassword = ({
   } = usePasswordValidationHooks(idapiBaseUrl);
 
   return (
-    <SignInLayout>
+    <Layout subTitle="Sign in">
       <PageBox>
         <PageHeader>Reset Password</PageHeader>
         <PageBody>
@@ -353,6 +353,6 @@ export const ChangePassword = ({
           </form>
         </PageBody>
       </PageBox>
-    </SignInLayout>
+    </Layout>
   );
 };
