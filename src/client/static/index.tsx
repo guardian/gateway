@@ -37,12 +37,11 @@ ophanInit();
 if (!window.Cypress) {
   // load cmp if it should show
   (async () => {
-    // if failed to get country code, set to undefined
-    // as cmp.init "country" property is type "string | undefined"
-    // while "getLocale" returns type "string | null"
-    const country = (await getLocale()) || undefined;
+    const country = await getLocale();
 
-    cmp.init({ country });
+    if (country) {
+      cmp.init({ country });
+    }
   })();
 }
 
