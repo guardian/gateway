@@ -38,7 +38,7 @@
     "@babel/runtime": "^7.14.0",
     "@emotion/babel-preset-css-prop": "^11.2.0",
     "@guardian/node-riffraff-artifact": "^0.2.0",
-    "@guardian/types": "^6.0.0",
+    "@guardian/types": "^6.1.0",
     "@storybook/addon-actions": "^6.2.9",
     "@storybook/addon-essentials": "^6.2.9",
     "@storybook/addon-links": "^6.2.9",
