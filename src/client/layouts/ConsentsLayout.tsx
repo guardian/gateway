@@ -14,10 +14,9 @@ import {
 import {
   ConsentsBlueBackground,
   ieFlexFix,
-  main,
   mainBackground,
-  ConsentsNavBar,
   ConsentsHeader,
+  ConsentsSubHeader,
   controls,
 } from '@/client/layouts/shared/Consents';
 import { Routes } from '@/shared/model/Routes';
@@ -37,8 +36,20 @@ const form = css`
   flex-direction: column;
 `;
 
+const mainStyles = css`
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+`;
+
 const linkButton = css`
   margin-left: ${space[5]}px;
+`;
+
+const sectionStyles = css`
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
 `;
 
 export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
@@ -64,52 +75,54 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
     `;
   return (
     <>
-      <ConsentsNavBar error={error} success={success} />
-      <ConsentsHeader autoRow={autoRow} title={title} current={current} />
-      <form
-        css={form}
-        action={`${Routes.CONSENTS}/${page}${returnUrlQuery}`}
-        method="post"
-        onSubmit={({ target: form }) => {
-          onboardingFormSubmitOphanTracking(
-            page,
-            pageData,
-            // have to explicitly type as HTMLFormElement as typescript can't infer type of the event.target
-            form as HTMLFormElement,
-          );
-        }}
-      >
-        <CsrfFormField />
+      <ConsentsHeader error={error} success={success} />
+      <main css={mainStyles}>
+        <ConsentsSubHeader autoRow={autoRow} title={title} current={current} />
+        <form
+          css={form}
+          action={`${Routes.CONSENTS}/${page}${returnUrlQuery}`}
+          method="post"
+          onSubmit={({ target: form }) => {
+            onboardingFormSubmitOphanTracking(
+              page,
+              pageData,
+              // have to explicitly type as HTMLFormElement as typescript can't infer type of the event.target
+              form as HTMLFormElement,
+            );
+          }}
+        >
+          <CsrfFormField />
 
-        <main css={main}>
-          <div css={[mainBackground, ieFlexFix, optionalBgColor]}>
-            {children}
-          </div>
-          <ConsentsBlueBackground>
-            <div css={[gridItem(gridItemColumnConsents), controls]}>
-              {!error && (
-                <Button
-                  iconSide="right"
-                  nudgeIcon={true}
-                  icon={<SvgArrowRightStraight />}
-                  type="submit"
-                >
-                  Save and continue
-                </Button>
-              )}
-              {previousPage && (
-                <LinkButton
-                  css={linkButton}
-                  href={`${Routes.CONSENTS}/${previousPage}${returnUrlQuery}`}
-                  priority="subdued"
-                >
-                  Go back
-                </LinkButton>
-              )}
+          <section css={sectionStyles}>
+            <div css={[mainBackground, ieFlexFix, optionalBgColor]}>
+              {children}
             </div>
-          </ConsentsBlueBackground>
-        </main>
-      </form>
+            <ConsentsBlueBackground>
+              <div css={[gridItem(gridItemColumnConsents), controls]}>
+                {!error && (
+                  <Button
+                    iconSide="right"
+                    nudgeIcon={true}
+                    icon={<SvgArrowRightStraight />}
+                    type="submit"
+                  >
+                    Save and continue
+                  </Button>
+                )}
+                {previousPage && (
+                  <LinkButton
+                    css={linkButton}
+                    href={`${Routes.CONSENTS}/${previousPage}${returnUrlQuery}`}
+                    priority="subdued"
+                  >
+                    Go back
+                  </LinkButton>
+                )}
+              </div>
+            </ConsentsBlueBackground>
+          </section>
+        </form>
+      </main>
       <Footer />
     </>
   );

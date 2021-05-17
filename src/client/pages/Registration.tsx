@@ -1,15 +1,15 @@
 import React from 'react';
 import { TextInput } from '@guardian/src-text-input';
 import { Button } from '@guardian/src-button';
+import { Layout } from '@/client/layouts/Layout';
 import { PageBox } from '@/client/components/PageBox';
 import { PageBody } from '@/client/components/PageBody';
-import { SignInLayout } from '@/client/layouts/SignInLayout';
-import { button, form, textInput } from '@/client/styles/Shared';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
-import { Divider } from '../components/Divider';
+import { Divider } from '@/client/components/Divider';
+import { button, form, textInput } from '@/client/styles/Shared';
 
 export const Registration = () => (
-  <SignInLayout>
+  <Layout subTitle="Register">
     <PageBox>
       <PageBody>
         <form css={form} method="post">
@@ -24,5 +24,5 @@ export const Registration = () => (
       <p>TODO: Social sign in buttons</p>
       <p>TODO: Terms</p>
     </PageBox>
-  </SignInLayout>
+  </Layout>
 );

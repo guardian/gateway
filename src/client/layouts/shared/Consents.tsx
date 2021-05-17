@@ -7,7 +7,7 @@ import { from } from '@guardian/src-foundations/mq';
 import { maxWidth } from '@/client/styles/Shared';
 import { GlobalError } from '@/client/components/GlobalError';
 import { GlobalSuccess } from '@/client/components/GlobalSuccess';
-import { NavBar } from '@/client/components/NavBar';
+import { Header } from '@/client/components/Header';
 import { getErrorLink } from '@/client/lib/ErrorLink';
 import { titlepiece } from '@guardian/src-foundations/typography';
 import { PageProgression } from '@/client/components/PageProgression';
@@ -17,12 +17,6 @@ export const CONSENTS_MAIN_COLOR = '#eaf1fd';
 
 export const consentsBackground = css`
   background-color: ${CONSENTS_MAIN_COLOR};
-`;
-
-export const main = css`
-  display: flex;
-  flex-direction: column;
-  flex: 1 0 auto;
 `;
 
 export const mainBackground = css`
@@ -110,12 +104,12 @@ export const ConsentsBlueBackground: FunctionComponent<{
   </div>
 );
 
-export const ConsentsNavBar: FunctionComponent<{
+export const ConsentsHeader: FunctionComponent<{
   error?: string;
   success?: string;
 }> = ({ error, success }) => (
   <div css={headerContainer}>
-    <NavBar cssOverrides={header} />
+    <Header cssOverrides={header} />
     {error && <GlobalError error={error} link={getErrorLink(error)} left />}
     {success && <GlobalSuccess success={success} />}
   </div>
@@ -152,7 +146,7 @@ const pageProgression = css`
   }
 `;
 
-export const ConsentsHeader: FunctionComponent<{
+export const ConsentsSubHeader: FunctionComponent<{
   autoRow: AutoRow;
   title: string;
   current?: string;

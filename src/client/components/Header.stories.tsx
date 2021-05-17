@@ -2,18 +2,18 @@ import React from 'react';
 import { css } from '@emotion/react';
 import { Meta } from '@storybook/react';
 
-import { NavBar } from './NavBar';
+import { Header } from './Header';
 
 export default {
-  title: 'Components/NavBar',
-  component: NavBar,
+  title: 'Components/Header',
+  component: Header,
 } as Meta;
 
-export const Default = () => <NavBar />;
-Default.storyName = 'Default navbar';
+export const Default = () => <Header />;
+Default.storyName = 'Default header';
 
 export const UsingOverrides = () => (
-  <NavBar
+  <Header
     cssOverrides={css`
       background-color: hotpink;
     `}
