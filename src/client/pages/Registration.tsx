@@ -1,6 +1,7 @@
 import React from 'react';
 import { TextInput } from '@guardian/src-text-input';
 import { Button } from '@guardian/src-button';
+import { Routes } from '@/shared/model/Routes';
 import { Layout } from '@/client/layouts/Layout';
 import { PageBox } from '@/client/components/PageBox';
 import { PageBody } from '@/client/components/PageBody';
@@ -12,7 +13,7 @@ export const Registration = () => (
   <Layout subTitle="Register">
     <PageBox>
       <PageBody>
-        <form css={form} method="post">
+        <form css={form} method="post" action={`${Routes.REGISTRATION}`}>
           <CsrfFormField />
           <TextInput css={textInput} label="Email" name="email" type="email" />
           <Button css={button} type="submit">
