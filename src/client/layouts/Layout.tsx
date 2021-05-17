@@ -16,15 +16,18 @@ type Props = {
   children: React.ReactNode;
 };
 
+const mainStyles = css`
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  align-items: left;
+`;
+
 const sectionStyles = css`
-  flex: 1 0 auto;
   padding: ${space[6]}px ${space[3]}px;
   max-width: ${Breakpoints.TABLET}px;
   width: 100%;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: left;
 `;
 
 export const Layout = ({ subTitle, children }: Props) => {
@@ -34,7 +37,7 @@ export const Layout = ({ subTitle, children }: Props) => {
   return (
     <>
       <Header />
-      <main>
+      <main css={mainStyles}>
         <SubHeader title={subTitle} />
         {error && <GlobalError error={error} link={getErrorLink(error)} />}
         {success && <GlobalSuccess success={success} />}
