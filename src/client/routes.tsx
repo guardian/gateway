@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { RegistrationPage } from '@/client/pages/RegistrationPage';
 import { ResetPasswordPage } from '@/client/pages/ResetPasswordPage';
 import { ResetSentPage } from '@/client/pages/ResetSentPage';
 import { NotFoundPage } from '@/client/pages/NotFoundPage';
@@ -23,6 +24,9 @@ export type RoutingConfig = {
 
 export const GatewayRoutes = () => (
   <Switch>
+    <Route exact path={Routes.REGISTRATION}>
+      <RegistrationPage />
+    </Route>
     <Route exact path={Routes.RESET}>
       <ResetPasswordPage />
     </Route>

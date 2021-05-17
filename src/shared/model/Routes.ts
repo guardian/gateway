@@ -1,4 +1,5 @@
 export enum Routes {
+  REGISTRATION = '/register',
   RESET = '/reset',
   RESET_SENT = '/reset/email-sent',
   RESET_RESEND = '/reset/resend',
