@@ -6,9 +6,7 @@ import {
   getConsentFor,
   onConsentChange,
 } from '@guardian/consent-management-platform';
-
-// country code helper
-import { getCountryCode } from './countryCode';
+import { getLocale } from '@guardian/libs';
 
 // loading a js file without types, so ignore ts
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -39,9 +37,11 @@ ophanInit();
 if (!window.Cypress) {
   // load cmp if it should show
   (async () => {
-    const country = await getCountryCode();
+    const country = await getLocale();
 
-    cmp.init({ country });
+    if (country) {
+      cmp.init({ country });
+    }
   })();
 }
 
