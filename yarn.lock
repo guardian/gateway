@@ -2158,6 +2158,13 @@
     yaml "^1.7.2"
     yargs "^15.1.0"
 
+"@guardian/src-accordion@^3.5.0":
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-accordion/-/src-accordion-3.5.0.tgz#318a169a50c072164e2a6da467ede9454c882427"
+  integrity sha512-GiSdHP46537XHp8xIXuEGBZtBTxzpFssAZJA7mBnIpu5W6Fz+Qb5JgM+btU1YIOEJZYJiyWhElOVXCX0NMNPrA==
+  dependencies:
+    "@guardian/src-helpers" "^3.5.0"
+
 "@guardian/src-brand@^3.5.0":
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/@guardian/src-brand/-/src-brand-3.5.0.tgz#3ddf2ff7dbcc15a077b36e9aee907b5f8dd5c1e8"
