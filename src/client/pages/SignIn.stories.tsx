@@ -6,6 +6,7 @@ import { SignIn } from './SignIn';
 export default {
   title: 'Pages/SignIn',
   component: SignIn,
+  parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => <SignIn />;

@@ -7,6 +7,7 @@ import { ResetSent } from './ResetSent';
 export default {
   title: 'Pages/ResetSent',
   component: ResetSent,
+  parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const NoInboxDetails = () => <ResetSent />;

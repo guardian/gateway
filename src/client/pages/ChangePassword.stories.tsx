@@ -6,6 +6,7 @@ import { ChangePassword } from './ChangePassword';
 export default {
   title: 'Pages/ChangePassword',
   component: ChangePassword,
+  parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => (
