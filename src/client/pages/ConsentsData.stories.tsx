@@ -7,6 +7,7 @@ import { ConsentsData } from './ConsentsData';
 export default {
   title: 'Pages/ConsentsData',
   component: ConsentsData,
+  parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const NoDescription = () => <ConsentsData />;

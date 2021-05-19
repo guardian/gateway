@@ -7,6 +7,7 @@ import { UnexpectedErrorPage } from './UnexpectedErrorPage';
 export default {
   title: 'Pages/UnexpectedErrorPage',
   component: UnexpectedErrorPage,
+  parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => <UnexpectedErrorPage />;

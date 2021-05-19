@@ -6,6 +6,7 @@ import { Registration } from './Registration';
 export default {
   title: 'Pages/Registration',
   component: Registration,
+  parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => <Registration />;
