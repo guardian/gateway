@@ -7,6 +7,7 @@ import { ConsentsNewsletters } from './ConsentsNewsletters';
 export default {
   title: 'Pages/ConsentsNewsletters',
   component: ConsentsNewsletters,
+  parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const NoNewsletters = () => (

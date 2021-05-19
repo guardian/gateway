@@ -7,6 +7,7 @@ import { ConsentsFollowUp } from './ConsentsFollowUp';
 export default {
   title: 'Pages/ConsentsFollowUp',
   component: ConsentsFollowUp,
+  parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const NewsLetter = () => (

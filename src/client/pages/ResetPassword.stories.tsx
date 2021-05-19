@@ -6,6 +6,7 @@ import { ResetPassword } from './ResetPassword';
 export default {
   title: 'Pages/ResetPassword',
   component: ResetPassword,
+  parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => (
