@@ -8,6 +8,7 @@ import { PageBox } from '@/client/components/PageBox';
 import { PageBody } from '@/client/components/PageBody';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { Divider } from '@/client/components/Divider';
+import { Terms } from '@/client/components/Terms';
 import { button, form, textInput } from '@/client/styles/Shared';
 
 export const Registration = () => (
@@ -24,7 +25,7 @@ export const Registration = () => (
       </PageBody>
       <Divider size="full" spaceAbove="tight" displayText="or register with" />
       <p>TODO: Social sign in buttons</p>
-      <p>TODO: Terms</p>
+      <Terms />
     </PageBox>
   </Layout>
 );
