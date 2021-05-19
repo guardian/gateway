@@ -6,6 +6,7 @@ import { ConsentsConfirmation } from './ConsentsConfirmation';
 export default {
   title: 'Pages/ConsentsConfirmation',
   component: ConsentsConfirmation,
+  parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const NoConsent = () => (

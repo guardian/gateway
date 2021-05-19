@@ -6,6 +6,7 @@ import { ConsentsCommunication } from './ConsentsCommunication';
 export default {
   title: 'Pages/ConsentsCommunication',
   component: ConsentsCommunication,
+  parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const NoConsent = () => (

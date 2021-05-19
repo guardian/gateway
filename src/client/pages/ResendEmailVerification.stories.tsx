@@ -7,6 +7,7 @@ import { ResendEmailVerification } from './ResendEmailVerification';
 export default {
   title: 'Pages/ResendEmailVerification',
   component: ResendEmailVerification,
+  parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const LoggedIn = () => (
