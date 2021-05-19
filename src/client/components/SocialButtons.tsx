@@ -10,11 +10,14 @@ const containerStyles = css`
   display: flex;
   flex-direction: row;
   justify-content: center;
+  width: 100%;
   margin: ${space[9]}px 0;
 `;
 
-const borderColorStyles = css`
+const buttonOverrides = css`
   border-color: ${sport[500]};
+  justify-content: flex-end;
+  min-width: 145px;
 `;
 
 const Gap = () => (
@@ -29,7 +32,7 @@ export const SocialButtons = () => (
   <div css={containerStyles}>
     <Button
       priority="tertiary"
-      cssOverrides={borderColorStyles}
+      cssOverrides={buttonOverrides}
       icon={<SvgFacebook />}
     >
       Facebook
@@ -37,7 +40,7 @@ export const SocialButtons = () => (
     <Gap />
     <Button
       priority="tertiary"
-      cssOverrides={borderColorStyles}
+      cssOverrides={buttonOverrides}
       icon={<SvgGoogle />}
     >
       Google
@@ -45,7 +48,7 @@ export const SocialButtons = () => (
     <Gap />
     <Button
       priority="tertiary"
-      cssOverrides={borderColorStyles}
+      cssOverrides={buttonOverrides}
       icon={<SvgApple />}
     >
       Apple
