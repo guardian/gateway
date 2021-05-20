@@ -9,16 +9,6 @@ const renderComponent = (
   return {
     __html: mjml2html(`
       <mjml>
-        <mj-head>
-        <mj-style>
-            .display-none {
-                display: none !important;
-            }
-        </mj-style>
-        <mj-attributes>
-          <mj-all font-family="Helvetica, Arial, sans-serif" />
-        </mj-attributes>
-      </mj-head>
         <mj-body>
             <mj-container>
                 ${renderToStaticMarkup(component)}
