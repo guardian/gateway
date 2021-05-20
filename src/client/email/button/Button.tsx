@@ -1,5 +1,5 @@
 import React from 'react';
 
-export const Button = () => (
-  <mj-button background-color="#F45E43">Test Button</mj-button>
+export const Button = ({ children }: { children: React.ReactNode }) => (
+  <mj-button background-color="#F45E43">{children}</mj-button>
 );
