@@ -9,8 +9,29 @@ export default {
   component: Header,
 } as Meta;
 
-export const Default = () => <Header />;
-Default.storyName = 'Default header';
+export const Desktop = () => <Header />;
+Desktop.storyName = 'At desktop';
+Desktop.parameters = {
+  viewport: {
+    defaultViewport: 'DESKTOP',
+  },
+};
+
+export const Mobile = () => <Header />;
+Mobile.storyName = 'At mobile';
+Mobile.parameters = {
+  viewport: {
+    defaultViewport: 'MOBILE',
+  },
+};
+
+export const Tablet = () => <Header />;
+Tablet.storyName = 'At tablet';
+Tablet.parameters = {
+  viewport: {
+    defaultViewport: 'TABLET',
+  },
+};
 
 export const UsingOverrides = () => (
   <Header
