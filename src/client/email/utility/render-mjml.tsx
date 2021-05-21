@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { JSXElementConstructor, ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import mjml2html from 'mjml-browser';
+import mjml2html from 'mjml';
 
 const render = (
   component: ReactElement<any, string | JSXElementConstructor<any>>,

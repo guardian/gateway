@@ -9,6 +9,7 @@ module.exports = {
     config.resolve.alias = {
       ...config.resolve.alias,
       '@': path.join(__dirname, '../src'),
+      mjml: 'mjml-browser',
     };
 
     // Return the altered config

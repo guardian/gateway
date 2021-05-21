@@ -1,5 +1,9 @@
 import React from 'react';
 
+import { MjmlButton } from 'mjml-react';
+
 export const Button = ({ children }: { children: React.ReactNode }) => (
-  <mj-button background-color="#F45E43">{children}</mj-button>
+  <MjmlButton background-color="#052962" color="#FFFFFF" border-radius="24px">
+    {children}
+  </MjmlButton>
 );
