@@ -9,6 +9,7 @@ import { PageBody } from '@/client/components/PageBody';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { Divider } from '@/client/components/Divider';
 import { Terms } from '@/client/components/Terms';
+import { SocialButtons } from '@/client/components/SocialButtons';
 import { button, form, textInput } from '@/client/styles/Shared';
 
 export const Registration = () => (
@@ -22,10 +23,15 @@ export const Registration = () => (
             Register
           </Button>
         </form>
+        <Divider
+          size="full"
+          spaceAbove="loose"
+          displayText="or continue with"
+        />
+        <SocialButtons />
+        <Divider size="full" spaceAbove="tight" />
+        <Terms />
       </PageBody>
-      <Divider size="full" spaceAbove="tight" displayText="or register with" />
-      <p>TODO: Social sign in buttons</p>
-      <Terms />
     </PageBox>
   </Layout>
 );

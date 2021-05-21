@@ -3,21 +3,6 @@ import { css } from '@emotion/react';
 import { space } from '@guardian/src-foundations';
 import { Link } from '@guardian/src-link';
 import { textSans } from '@guardian/src-foundations/typography';
-import { Divider } from './Divider';
-
-const Container = ({ children }: { children: React.ReactNode }) => (
-  <div
-    css={css`
-      width: 100%;
-      padding-left: ${space[3]}px;
-      padding-right: ${space[3]}px;
-      padding-top: ${space[4]}px;
-      padding-bottom: ${space[24]}px;
-    `}
-  >
-    {children}
-  </div>
-);
 
 const Text = ({ children }: { children: React.ReactNode }) => (
   <p
@@ -42,8 +27,7 @@ const TermsLink = ({ children }: { children: React.ReactNode }) => (
 );
 
 export const Terms = () => (
-  <Container>
-    <Divider size="full" />
+  <>
     <Text>
       By proceeding you agree to our <TermsLink>Terms and Conditions</TermsLink>
     </Text>
@@ -56,5 +40,5 @@ export const Terms = () => (
       <TermsLink>Google&apos;s Privacy Policy</TermsLink> and{' '}
       <TermsLink>Terms of Service</TermsLink> apply.
     </Text>
-  </Container>
+  </>
 );
