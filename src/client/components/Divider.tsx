@@ -59,6 +59,7 @@ export const Divider = ({
             ${textSans.small()};
             color: ${text.supporting};
             margin-bottom: -10px;
+            width: 100%;
 
             :before,
             :after {
