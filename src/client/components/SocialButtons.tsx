@@ -1,6 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { space, sport } from '@guardian/src-foundations';
+import { space, brand } from '@guardian/src-foundations';
 import { Button } from '@guardian/src-button';
 import { SvgGoogle } from '../icons/SvgGoogle';
 import { SvgApple } from '../icons/SvgApple';
@@ -15,7 +15,7 @@ const containerStyles = css`
 `;
 
 const buttonOverrides = css`
-  border-color: ${sport[500]};
+  border-color: ${brand[400]};
   justify-content: flex-end;
   min-width: 145px;
 `;
