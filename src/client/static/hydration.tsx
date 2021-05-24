@@ -4,7 +4,7 @@ import { ABProvider } from '@guardian/ab-react';
 import { StaticRouter } from 'react-router-dom';
 import { hydrate } from 'react-dom';
 import { RoutingConfig } from '@/client/routes';
-import { Main } from '@/client/main';
+import { App } from '@/client/app';
 import { tests } from '@/shared/model/experiments/abTests';
 import { switches } from '@/shared/model/experiments/abSwitches';
 
@@ -29,7 +29,7 @@ export const hydrateApp = () => {
       forcedTestVariants={forcedTestVariants}
     >
       <StaticRouter location={`${routingConfig.location}`} context={{}}>
-        <Main {...clientState} />
+        <App {...clientState} />
       </StaticRouter>
     </ABProvider>,
     document.getElementById('app'),

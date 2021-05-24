@@ -13,7 +13,9 @@ import { PageHeader } from '@/client/components/PageHeader';
 import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
 import { button, form, textInput } from '@/client/styles/Shared';
-import { Layout } from '@/client/layouts/Layout';
+import { Main } from '@/client/layouts/Main';
+import { Header } from '@/client/components/Header';
+import { Footer } from '@/client/components/Footer';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import {
   LengthValidationComponent,
@@ -257,102 +259,106 @@ export const ChangePassword = ({
   } = usePasswordValidationHooks(idapiBaseUrl);
 
   return (
-    <Layout subTitle="Sign in">
-      <PageBox>
-        <PageHeader>Reset Password</PageHeader>
-        <PageBody>
-          <PageBodyText>
-            Please enter your new password for {email}
-          </PageBodyText>
-          <form
-            css={form}
-            method="post"
-            action={submitUrl}
-            onSubmit={(e) => {
-              // prevent the form from submitting if there are validation errors
-              if (
-                validationResult !== PasswordValidationResult.VALID_PASSWORD
-              ) {
-                setRedError(validationResult);
-                e.preventDefault();
-              } else if (password !== passwordConfirm) {
-                setShowPasswordNotMatchingEvenIfSubstring(true);
-                e.preventDefault();
-              }
-            }}
-          >
-            <CsrfFormField />
-
-            <PasswordInput
-              css={textInput}
-              label="New Password"
-              name="password"
-              error={
-                longRedErrorMessage ??
-                fieldErrors.find(
-                  (fieldError) => fieldError.field === 'password',
-                )?.message
-              }
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-            />
-
-            <div
-              css={css`
-                margin-bottom: ${space[9]}px;
-              `}
-            >
-              {/* we don't render length validation success output if the password is breached */}
-              {!isCommonPassword ? (
-                <LengthValidationComponent
-                  validationStyling={lengthValidationStyle}
-                  lengthResult={lastLengthError}
-                />
-              ) : null}
-              {isCommonPassword ? <WeakPasswordComponent /> : null}
-            </div>
-
-            <PasswordInput
-              css={textInput}
-              label="Repeat Password"
-              name="password_confirm"
-              success={passwordConfirmSuccessMessage}
-              error={
-                passwordConfirmationErrorMessage ??
-                fieldErrors.find(
-                  (fieldError) => fieldError.field === 'password_confirm',
-                )?.message
-              }
-              onFocus={() => {
-                setIsPasswordConfirmSelected(true);
-                // if there are validation issues in the first password input and the user selects the confirm password box,
-                // display a red error message
+    <>
+      <Header />
+      <Main subTitle="Sign in">
+        <PageBox>
+          <PageHeader>Reset Password</PageHeader>
+          <PageBody>
+            <PageBodyText>
+              Please enter your new password for {email}
+            </PageBodyText>
+            <form
+              css={form}
+              method="post"
+              action={submitUrl}
+              onSubmit={(e) => {
+                // prevent the form from submitting if there are validation errors
                 if (
-                  longRedErrorMessage === undefined &&
                   validationResult !== PasswordValidationResult.VALID_PASSWORD
                 ) {
                   setRedError(validationResult);
+                  e.preventDefault();
+                } else if (password !== passwordConfirm) {
+                  setShowPasswordNotMatchingEvenIfSubstring(true);
+                  e.preventDefault();
                 }
               }}
-              onBlur={() => {
-                setIsPasswordConfirmSelected(false);
-              }}
-              onChange={(e) => {
-                setPasswordConfirm(e.target.value);
-              }}
-            />
-            <Button
-              css={button}
-              type="submit"
-              icon={<SvgArrowRightStraight />}
-              iconSide="right"
             >
-              Save Password
-            </Button>
-          </form>
-        </PageBody>
-      </PageBox>
-    </Layout>
+              <CsrfFormField />
+
+              <PasswordInput
+                css={textInput}
+                label="New Password"
+                name="password"
+                error={
+                  longRedErrorMessage ??
+                  fieldErrors.find(
+                    (fieldError) => fieldError.field === 'password',
+                  )?.message
+                }
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
+
+              <div
+                css={css`
+                  margin-bottom: ${space[9]}px;
+                `}
+              >
+                {/* we don't render length validation success output if the password is breached */}
+                {!isCommonPassword ? (
+                  <LengthValidationComponent
+                    validationStyling={lengthValidationStyle}
+                    lengthResult={lastLengthError}
+                  />
+                ) : null}
+                {isCommonPassword ? <WeakPasswordComponent /> : null}
+              </div>
+
+              <PasswordInput
+                css={textInput}
+                label="Repeat Password"
+                name="password_confirm"
+                success={passwordConfirmSuccessMessage}
+                error={
+                  passwordConfirmationErrorMessage ??
+                  fieldErrors.find(
+                    (fieldError) => fieldError.field === 'password_confirm',
+                  )?.message
+                }
+                onFocus={() => {
+                  setIsPasswordConfirmSelected(true);
+                  // if there are validation issues in the first password input and the user selects the confirm password box,
+                  // display a red error message
+                  if (
+                    longRedErrorMessage === undefined &&
+                    validationResult !== PasswordValidationResult.VALID_PASSWORD
+                  ) {
+                    setRedError(validationResult);
+                  }
+                }}
+                onBlur={() => {
+                  setIsPasswordConfirmSelected(false);
+                }}
+                onChange={(e) => {
+                  setPasswordConfirm(e.target.value);
+                }}
+              />
+              <Button
+                css={button}
+                type="submit"
+                icon={<SvgArrowRightStraight />}
+                iconSide="right"
+              >
+                Save Password
+              </Button>
+            </form>
+          </PageBody>
+        </PageBox>
+      </Main>
+      <Footer />
+    </>
   );
 };

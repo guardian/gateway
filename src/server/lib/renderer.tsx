@@ -2,7 +2,7 @@ import { ClientState } from '@/shared/model/ClientState';
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
-import { Main } from '@/client/main';
+import { App } from '@/client/app';
 import { brandBackground } from '@guardian/src-foundations/palette';
 import qs from 'query-string';
 import { getConfiguration } from '@/server/lib/getConfiguration';
@@ -110,7 +110,7 @@ export const renderer: (url: string, opts: RendererOpts) => string = (
       forcedTestVariants={forcedTestVariants}
     >
       <StaticRouter location={location} context={context}>
-        <Main {...clientState}></Main>
+        <App {...clientState}></App>
       </StaticRouter>
     </ABProvider>,
   );
