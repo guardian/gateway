@@ -2198,10 +2198,10 @@
   dependencies:
     "@guardian/src-foundations" "^3.5.0"
 
-"@guardian/src-icons@^3.5.0":
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/@guardian/src-icons/-/src-icons-3.5.0.tgz#2bbfc83439adfc195fd38d67497f17e87b543095"
-  integrity sha512-EFAadkgRrNP1SY1b6k8E68VMfqbYNAVILe9w4V+4sbM+wdigRwJ0x54Md/dPHF4ORNvMKt72YutybSDeuhYh1A==
+"@guardian/src-icons@^3.5.0", "@guardian/src-icons@^3.6.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-icons/-/src-icons-3.6.0.tgz#f093cd554f928e189e4d6ac069c6c7b5e65558ff"
+  integrity sha512-2j8TrRFyFbFBYGBdfL6ExCh0Bqgga0coi7H40tb3flV4UazyQqAGYuUb2r8Z38MJfTpotcPLxkA0uU6LY7VP7w==
 
 "@guardian/src-label@^3.5.0":
   version "3.5.0"
