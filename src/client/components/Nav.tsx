@@ -10,6 +10,7 @@ import {
 import { headline } from '@guardian/src-foundations/typography';
 import { Container } from '@guardian/src-layout';
 import { from } from '@guardian/src-foundations/mq';
+import { Link } from '@guardian/src-link';
 
 type Props = {
   tabs: TabType[];
@@ -117,6 +118,7 @@ const tabStyles = css`
   /* a tag overrides */
   text-decoration: none;
   :hover {
+    color: ${text.ctaPrimary};
     text-decoration: none;
   }
 
@@ -131,7 +133,7 @@ const tabStyles = css`
 
 const Tab = ({ displayText, linkTo, isActive, isFirst }: TabType) => {
   return (
-    <a
+    <Link
       href={linkTo}
       css={[
         tabStyles,
@@ -142,7 +144,7 @@ const Tab = ({ displayText, linkTo, isActive, isFirst }: TabType) => {
       ]}
     >
       {displayText}
-    </a>
+    </Link>
   );
 };
 
