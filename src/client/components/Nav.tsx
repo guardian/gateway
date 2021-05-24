@@ -58,7 +58,6 @@ const activeBarStyles = css`
   :after {
     border-top: 4px solid ${brandAltBackground.primary};
     left: 0;
-    left: -20px;
     right: 0;
     top: -5px;
     content: '';
