@@ -1,5 +1,7 @@
 import React from 'react';
-import { Layout } from '@/client/layouts/Layout';
+import { Main } from '@/client/layouts/Main';
+import { Header } from '@/client/components/Header';
+import { Footer } from '@/client/components/Footer';
 import { LinkButton, Button } from '@guardian/src-button';
 import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
@@ -112,17 +114,21 @@ export const ResendEmailVerification = ({
   inboxName,
 }: ResendEmailVerificationProps) => {
   return (
-    <Layout subTitle="Sign in">
-      {email ? (
-        <LoggedIn
-          email={email}
-          successText={successText}
-          inboxLink={inboxLink}
-          inboxName={inboxName}
-        />
-      ) : (
-        <LoggedOut signInPageUrl={signInPageUrl} />
-      )}
-    </Layout>
+    <>
+      <Header />
+      <Main subTitle="Sign in">
+        {email ? (
+          <LoggedIn
+            email={email}
+            successText={successText}
+            inboxLink={inboxLink}
+            inboxName={inboxName}
+          />
+        ) : (
+          <LoggedOut signInPageUrl={signInPageUrl} />
+        )}
+      </Main>
+      <Footer />
+    </>
   );
 };

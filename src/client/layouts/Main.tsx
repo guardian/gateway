@@ -1,6 +1,4 @@
 import React, { useContext } from 'react';
-import { Header } from '@/client/components/Header';
-import { Footer } from '@/client/components/Footer';
 import { SubHeader } from '@/client/components/SubHeader';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
@@ -30,21 +28,16 @@ const sectionStyles = css`
   margin: 0 auto;
 `;
 
-export const Layout = ({ subTitle, children }: Props) => {
+export const Main = ({ subTitle, children }: Props) => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { globalMessage: { error, success } = {} } = clientState;
 
   return (
-    <>
-      <Header />
-      <main css={mainStyles}>
-        <SubHeader title={subTitle} />
-        {error && <GlobalError error={error} link={getErrorLink(error)} />}
-        {success && <GlobalSuccess success={success} />}
-        <section css={sectionStyles}>{children}</section>
-      </main>
-
-      <Footer />
-    </>
+    <main css={mainStyles}>
+      <SubHeader title={subTitle} />
+      {error && <GlobalError error={error} link={getErrorLink(error)} />}
+      {success && <GlobalSuccess success={success} />}
+      <section css={sectionStyles}>{children}</section>
+    </main>
   );
 };
