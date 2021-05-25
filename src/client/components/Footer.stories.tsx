@@ -1,5 +1,4 @@
 import React from 'react';
-import { css } from '@emotion/react';
 import { Meta } from '@storybook/react';
 
 import { Footer } from './Footer';
