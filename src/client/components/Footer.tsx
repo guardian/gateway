@@ -23,6 +23,7 @@ const footer = css`
 `;
 
 const paddingOverrides = css`
+  /* TODO: Refactor these once https://github.com/guardian/source/pull/820 is merged and published; */
   padding-left: 0 !important;
   padding-right: 0 !important;
 `;
@@ -77,6 +78,7 @@ const leftBorderStyles = css`
 
 const copyrightStyles = css`
   ${textSans.xxsmall()};
+  /* TODO: Refactor these once https://github.com/guardian/source/pull/820 is merged and published; */
   padding-left: ${space[3]}px !important;
   ${from.tablet} {
     padding-left: 20px !important;
