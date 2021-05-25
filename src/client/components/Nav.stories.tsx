@@ -51,6 +51,9 @@ export const SignIn = () => (
   </>
 );
 SignIn.storyName = 'with signin active';
+SignIn.parameters = {
+  chromatic: { viewports: [480] },
+};
 
 export const Wide = () => (
   <>
@@ -76,6 +79,7 @@ Wide.parameters = {
   viewport: {
     defaultViewport: 'WIDE',
   },
+  chromatic: { viewports: [1300] },
 };
 
 export const NoBreakpoint = () => (
@@ -102,4 +106,5 @@ NoBreakpoint.parameters = {
   viewport: {
     defaultViewport: 'does_not_exist',
   },
+  chromatic: { disable: true },
 };
