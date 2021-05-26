@@ -15,7 +15,7 @@ const GuardianLogo = () => {
     <Link
       href="https://www.theguardian.com"
       title="The Guardian Homepage"
-      subdued
+      subdued={true}
       cssOverrides={css`
         svg {
           fill: currentColor;

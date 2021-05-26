@@ -57,6 +57,7 @@ export const ConsentsData = ({ consented, description }: ConsentsDataProps) => {
             safeguard users data by going to the{' '}
             <Link
               href={Locations.PRIVACY}
+              subdued={true}
               target="_blank"
               rel="noopener noreferrer"
             >
