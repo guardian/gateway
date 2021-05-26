@@ -116,6 +116,11 @@ export const Footer = () => (
               Contact us
             </Link>
           </li>
+          <li>
+            <Link cssOverrides={linkStyles} href={locations.COOKIE_POLICY}>
+              Cookie policy
+            </Link>
+          </li>
         </ul>
         <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
           <li>
@@ -162,6 +167,13 @@ export const Footer = () => (
           <li>
             <Link cssOverrides={linkStyles} href={locations.TERMS}>
               Terms and Conditions
+            </Link>
+          </li>
+        </ul>
+        <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
+          <li>
+            <Link cssOverrides={linkStyles} href={locations.COOKIE_POLICY}>
+              Cookie policy
             </Link>
           </li>
         </ul>
