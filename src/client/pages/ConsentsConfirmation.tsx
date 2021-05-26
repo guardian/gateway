@@ -150,7 +150,10 @@ export const ConsentsConfirmation = ({
             <h2 css={[headingWithMq, autoRow()]}>Your selections</h2>
             <p css={[text, autoRow()]}>
               You can change these setting anytime by going to{' '}
-              <Link href="https://manage.theguardian.com/email-prefs">
+              <Link
+                href="https://manage.theguardian.com/email-prefs"
+                subdued={true}
+              >
                 My Preferences
               </Link>
               .
@@ -208,7 +211,10 @@ export const ConsentsConfirmation = ({
               We have over 40 different emails that focus on a range of diverse
               topics - from politics and the latest tech to documentaries, sport
               and scientific breakthroughs. Sign up to more in{' '}
-              <Link href="https://manage.theguardian.com/email-prefs">
+              <Link
+                href="https://manage.theguardian.com/email-prefs"
+                subdued={true}
+              >
                 Guardian newsletters
               </Link>
               .

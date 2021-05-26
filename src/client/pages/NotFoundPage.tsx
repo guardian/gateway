@@ -24,7 +24,7 @@ export const NotFoundPage = () => (
           <PageBodyText>
             You may have followed an outdated link, or have mistyped a URL. If
             you believe this to be an error, please{' '}
-            <Link css={link} href={locations.REPORT_ISSUE}>
+            <Link css={link} href={locations.REPORT_ISSUE} subdued={true}>
               report it
             </Link>
             .
