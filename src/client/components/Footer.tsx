@@ -125,7 +125,7 @@ export const Footer = () => (
         <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
           <li>
             <Link cssOverrides={linkStyles} href={locations.HELP}>
-              Frequently asked questions
+              Help
             </Link>
           </li>
           <li>
@@ -159,7 +159,7 @@ export const Footer = () => (
         <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
           <li>
             <Link cssOverrides={linkStyles} href={locations.HELP}>
-              FAQs
+              Help
             </Link>
           </li>
         </ul>
