@@ -18,6 +18,7 @@ const Text = ({ children }: { children: React.ReactNode }) => (
 
 const TermsLink = ({ children }: { children: React.ReactNode }) => (
   <Link
+    subdued={true}
     cssOverrides={css`
       ${textSans.small()}
     `}
