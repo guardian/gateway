@@ -4,7 +4,6 @@ import { css, SerializedStyles } from '@emotion/react';
 import { space } from '@guardian/src-foundations';
 import { AutoRow, gridItemColumnConsents, gridRow } from '@/client/styles/Grid';
 import { from } from '@guardian/src-foundations/mq';
-import { maxWidth } from '@/client/styles/Shared';
 import { GlobalError } from '@/client/components/GlobalError';
 import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 import { Header } from '@/client/components/Header';
@@ -39,14 +38,6 @@ export const mainBackground = css`
 // derived from this solution https://stackoverflow.com/a/49368815
 export const ieFlexFix = css`
   flex: 0 0 auto;
-`;
-
-export const header = css`
-  ${maxWidth}
-  margin: 0 auto;
-  ${from.tablet} {
-    padding-right: 0;
-  }
 `;
 
 export const headerContainer = css`
@@ -109,7 +100,7 @@ export const ConsentsHeader: FunctionComponent<{
   success?: string;
 }> = ({ error, success }) => (
   <div css={headerContainer}>
-    <Header cssOverrides={header} />
+    <Header />
     {error && <GlobalError error={error} link={getErrorLink(error)} left />}
     {success && <GlobalSuccess success={success} />}
   </div>
