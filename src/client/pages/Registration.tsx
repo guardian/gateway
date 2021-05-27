@@ -5,6 +5,7 @@ import { Routes } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { Main } from '@/client/layouts/Main';
 import { Header } from '@/client/components/Header';
+import { Nav } from '@/client/components/Nav';
 import { Footer } from '@/client/components/Footer';
 import { PageBox } from '@/client/components/PageBox';
 import { PageBody } from '@/client/components/PageBody';
@@ -17,7 +18,21 @@ import { button, form, textInput } from '@/client/styles/Shared';
 export const Registration = () => (
   <>
     <Header />
-    <Main subTitle={PageTitle.REGISTRATION}>
+    <Nav
+      tabs={[
+        {
+          displayText: PageTitle.SIGN_IN,
+          linkTo: '',
+          isActive: false,
+        },
+        {
+          displayText: PageTitle.REGISTRATION,
+          linkTo: '',
+          isActive: true,
+        },
+      ]}
+    />
+    <Main>
       <PageBox>
         <PageBody>
           <form css={form} method="post" action={`${Routes.REGISTRATION}`}>
