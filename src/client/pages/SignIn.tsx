@@ -5,7 +5,7 @@ import { PageBody } from '@/client/components/PageBody';
 import { Main } from '@/client/layouts/Main';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
-
+import { Nav } from '@/client/components/Nav';
 import { TextInput } from '@guardian/src-text-input';
 import { Button } from '@guardian/src-button';
 import { Routes } from '@/shared/model/Routes';
@@ -32,7 +32,21 @@ const Links = ({ children }: { children: React.ReactNode }) => (
 export const SignIn = () => (
   <>
     <Header />
-    <Main subTitle={PageTitle.SIGN_IN}>
+    <Nav
+      tabs={[
+        {
+          displayText: PageTitle.SIGN_IN,
+          linkTo: '',
+          isActive: true,
+        },
+        {
+          displayText: PageTitle.REGISTRATION,
+          linkTo: '',
+          isActive: false,
+        },
+      ]}
+    />
+    <Main>
       <PageBox>
         <PageBody>
           <form css={form} method="post" action={`${Routes.SIGN_IN}`}>
