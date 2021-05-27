@@ -76,7 +76,7 @@ export const GlobalError = ({ error, link, left }: GlobalErrorProps) => {
           <div>
             {error}
             &nbsp;
-            <Link href={link.link} css={errorLink}>
+            <Link href={link.link} css={errorLink} subdued={true}>
               {link.linkText}
             </Link>
           </div>

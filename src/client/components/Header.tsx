@@ -15,7 +15,7 @@ const GuardianLogo = () => {
     <Link
       href="https://www.theguardian.com"
       title="The Guardian Homepage"
-      subdued
+      subdued={true}
       cssOverrides={css`
         svg {
           fill: currentColor;
@@ -57,7 +57,7 @@ const header = css`
 `;
 
 export const Header: FunctionComponent<ComponentProps> = ({ cssOverrides }) => (
-  <header css={[header, cssOverrides]}>
+  <header id="top" css={[header, cssOverrides]}>
     <GuardianLogo />
   </header>
 );
