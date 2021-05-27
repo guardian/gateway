@@ -10,7 +10,7 @@ import { getErrorLink } from '@/client/lib/ErrorLink';
 import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 
 type Props = {
-  subTitle: string;
+  subTitle?: string;
   children: React.ReactNode;
 };
 
@@ -34,7 +34,7 @@ export const Main = ({ subTitle, children }: Props) => {
 
   return (
     <main css={mainStyles}>
-      <SubHeader title={subTitle} />
+      {subTitle && <SubHeader title={subTitle} />}
       {error && <GlobalError error={error} link={getErrorLink(error)} />}
       {success && <GlobalSuccess success={success} />}
       <section css={sectionStyles}>{children}</section>
