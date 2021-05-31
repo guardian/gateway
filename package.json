@@ -82,7 +82,7 @@
     "nodemon": "^2.0.7",
     "prettier": "^2.3.0",
     "react-test-renderer": "^17.0.2",
-    "snyk": "^1.609.0",
+    "snyk": "^1.618.0",
     "ts-jest": "^27.0.0",
     "typescript": "^4.2.4",
     "wait-on": "^5.3.0",
