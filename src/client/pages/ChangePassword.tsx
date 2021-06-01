@@ -12,7 +12,7 @@ import { PageBox } from '@/client/components/PageBox';
 import { PageHeader } from '@/client/components/PageHeader';
 import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
-import { button, form, textInput } from '@/client/styles/Shared';
+import { button, form } from '@/client/styles/Shared';
 import { Main } from '@/client/layouts/Main';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
@@ -288,7 +288,6 @@ export const ChangePassword = ({
               <CsrfFormField />
 
               <PasswordInput
-                css={textInput}
                 label="New Password"
                 name="password"
                 error={
@@ -318,7 +317,6 @@ export const ChangePassword = ({
               </div>
 
               <PasswordInput
-                css={textInput}
                 label="Repeat Password"
                 name="password_confirm"
                 success={passwordConfirmSuccessMessage}

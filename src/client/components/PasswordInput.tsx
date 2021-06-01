@@ -6,6 +6,7 @@ import { SvgEye, SvgEyeStrike } from '@guardian/src-icons';
 import { textInputDefault } from '@guardian/src-foundations/themes';
 import { space } from '@guardian/src-foundations';
 import { height } from '@guardian/src-foundations/size';
+import { textInput } from '@/client/styles/Shared';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 
@@ -139,6 +140,7 @@ export const PasswordInput = (props: TextInputProps) => {
       ) : null}
       <TextInput
         {...props}
+        css={textInput}
         type={passwordVisible ? 'text' : 'password'}
         cssOverrides={textInputStyle}
       />
