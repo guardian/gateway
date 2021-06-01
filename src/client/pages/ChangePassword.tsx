@@ -17,10 +17,8 @@ import { Main } from '@/client/layouts/Main';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
-import {
-  PasswordLengthMessage,
-  PasswordWeakMessage,
-} from '@/client/components/PasswordWeakMessage';
+import { PasswordWeakMessage } from '@/client/components/PasswordWeakMessage';
+import { PasswordLengthMessage } from '@/client/components/PasswordLengthMessage';
 import { space } from '@guardian/src-foundations';
 import { css } from '@emotion/react';
 import {
