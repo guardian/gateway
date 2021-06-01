@@ -91,7 +91,7 @@ export const PasswordInput = (props: TextInputProps) => {
     :active {
       border: none;
     }
-    width: calc(100% - ${spaceForEye}px);
+    padding-right: ${spaceForEye}px;
   `;
 
   const borderStyle = props.success
