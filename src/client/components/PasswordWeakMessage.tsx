@@ -50,7 +50,7 @@ const ValidationSymbol = ({
   return <div css={style}>{symbol}</div>;
 };
 
-export const LengthValidationComponent = ({
+export const PasswordLengthMessage = ({
   validationStyling,
   lengthResult,
 }: {

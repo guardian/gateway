@@ -18,7 +18,7 @@ import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import {
-  LengthValidationComponent,
+  PasswordLengthMessage,
   PasswordWeakMessage,
 } from '@/client/components/PasswordWeakMessage';
 import { space } from '@guardian/src-foundations';
@@ -308,7 +308,7 @@ export const ChangePassword = ({
               >
                 {/* we don't render length validation success output if the password is breached */}
                 {!isCommonPassword ? (
-                  <LengthValidationComponent
+                  <PasswordLengthMessage
                     validationStyling={lengthValidationStyle}
                     lengthResult={lastLengthError}
                   />
