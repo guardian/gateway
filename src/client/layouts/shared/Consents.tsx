@@ -4,10 +4,6 @@ import { css, SerializedStyles } from '@emotion/react';
 import { space } from '@guardian/src-foundations';
 import { gridRow } from '@/client/styles/Grid';
 import { from } from '@guardian/src-foundations/mq';
-import { GlobalError } from '@/client/components/GlobalError';
-import { GlobalSuccess } from '@/client/components/GlobalSuccess';
-import { Header } from '@/client/components/Header';
-import { getErrorLink } from '@/client/lib/ErrorLink';
 
 export const CONSENTS_MAIN_COLOR = '#eaf1fd';
 
@@ -89,16 +85,5 @@ export const ConsentsBlueBackground: FunctionComponent<{
 }> = ({ children, cssOverrides }) => (
   <div css={[consentsBackground, flex, cssOverrides]}>
     <div css={[gridRow, blueBorder, height100]}>{children}</div>
-  </div>
-);
-
-export const ConsentsHeader: FunctionComponent<{
-  error?: string;
-  success?: string;
-}> = ({ error, success }) => (
-  <div css={headerContainer}>
-    <Header />
-    {error && <GlobalError error={error} link={getErrorLink(error)} left />}
-    {success && <GlobalSuccess success={success} />}
   </div>
 );

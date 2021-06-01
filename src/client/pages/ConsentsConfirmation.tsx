@@ -13,10 +13,10 @@ import {
   ConsentsContent,
   ConsentsBlueBackground,
   controls,
-  ConsentsHeader,
   CONSENTS_MAIN_COLOR,
 } from '@/client/layouts/shared/Consents';
 import { ConsentsSubHeader } from '@/client/components/ConsentsSubHeader';
+import { ConsentsHeader } from '@/client/components/ConsentsHeader';
 import { Footer } from '@/client/components/Footer';
 import { headingWithMq, text } from '@/client/styles/Consents';
 import { Link } from '@guardian/src-link';
