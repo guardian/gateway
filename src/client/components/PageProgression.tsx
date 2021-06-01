@@ -43,7 +43,7 @@ const li = (numPages: number) => css`
     background-color: ${neutral[60]};
     height: ${BORDER_SIZE}px;
     position: absolute;
-    // Border position from top is distance of a semicircle minus half the border thickness
+    /* Border position from top is distance of a semicircle minus half the border thickness */
     top: ${CIRCLE_DIAMETER / 2 + BORDER_SIZE - BORDER_SIZE / 2}px;
     left: ${CIRCLE_DIAMETER + 2 * BORDER_SIZE}px;
     right: 0;
