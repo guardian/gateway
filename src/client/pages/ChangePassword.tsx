@@ -12,15 +12,13 @@ import { PageBox } from '@/client/components/PageBox';
 import { PageHeader } from '@/client/components/PageHeader';
 import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
-import { button, form, textInput } from '@/client/styles/Shared';
+import { button, form } from '@/client/styles/Shared';
 import { Main } from '@/client/layouts/Main';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
-import {
-  LengthValidationComponent,
-  WeakPasswordComponent,
-} from '@/client/components/PasswordValidation';
+import { PasswordWeakMessage } from '@/client/components/PasswordWeakMessage';
+import { PasswordLengthMessage } from '@/client/components/PasswordLengthMessage';
 import { space } from '@guardian/src-foundations';
 import { css } from '@emotion/react';
 import {
@@ -288,7 +286,6 @@ export const ChangePassword = ({
               <CsrfFormField />
 
               <PasswordInput
-                css={textInput}
                 label="New Password"
                 name="password"
                 error={
@@ -309,16 +306,15 @@ export const ChangePassword = ({
               >
                 {/* we don't render length validation success output if the password is breached */}
                 {!isCommonPassword ? (
-                  <LengthValidationComponent
+                  <PasswordLengthMessage
                     validationStyling={lengthValidationStyle}
                     lengthResult={lastLengthError}
                   />
                 ) : null}
-                {isCommonPassword ? <WeakPasswordComponent /> : null}
+                {isCommonPassword ? <PasswordWeakMessage /> : null}
               </div>
 
               <PasswordInput
-                css={textInput}
                 label="Repeat Password"
                 name="password_confirm"
                 success={passwordConfirmSuccessMessage}
