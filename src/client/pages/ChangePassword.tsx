@@ -19,8 +19,8 @@ import { Footer } from '@/client/components/Footer';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import {
   LengthValidationComponent,
-  WeakPasswordComponent,
-} from '@/client/components/PasswordValidation';
+  PasswordWeakMessage,
+} from '@/client/components/PasswordWeakMessage';
 import { space } from '@guardian/src-foundations';
 import { css } from '@emotion/react';
 import {
@@ -313,7 +313,7 @@ export const ChangePassword = ({
                     lengthResult={lastLengthError}
                   />
                 ) : null}
-                {isCommonPassword ? <WeakPasswordComponent /> : null}
+                {isCommonPassword ? <PasswordWeakMessage /> : null}
               </div>
 
               <PasswordInput

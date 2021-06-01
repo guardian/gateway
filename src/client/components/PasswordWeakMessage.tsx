@@ -67,7 +67,7 @@ export const LengthValidationComponent = ({
   );
 };
 
-export const WeakPasswordComponent = () => {
+export const PasswordWeakMessage = () => {
   const smallStyle = css`
     ${textSans.small()}
     color: ${palette.neutral['7']};
