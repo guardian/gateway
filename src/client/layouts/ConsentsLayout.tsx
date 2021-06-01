@@ -16,9 +16,9 @@ import {
   ieFlexFix,
   mainBackground,
   ConsentsHeader,
-  ConsentsSubHeader,
   controls,
 } from '@/client/layouts/shared/Consents';
+import { ConsentsSubHeader } from '@/client/components/ConsentsSubHeader';
 import { Routes } from '@/shared/model/Routes';
 import { onboardingFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
