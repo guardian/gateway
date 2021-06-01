@@ -3,7 +3,7 @@ import { Footer } from '@/client/components/Footer';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { css } from '@emotion/react';
-import { space } from '@guardian/src-foundations';
+import { brand, space } from '@guardian/src-foundations';
 import { Button, LinkButton } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
 import {
@@ -11,13 +11,9 @@ import {
   gridItem,
   gridItemColumnConsents,
 } from '@/client/styles/Grid';
-import {
-  ConsentsBlueBackground,
-  ieFlexFix,
-  mainBackground,
-  controls,
-} from '@/client/layouts/shared/Consents';
+import { controls } from '@/client/layouts/shared/Consents';
 import { ConsentsSubHeader } from '@/client/components/ConsentsSubHeader';
+import { ConsentsBlueBackground } from '@/client/components/ConsentsBlueBackground';
 import { ConsentsHeader } from '@/client/components/ConsentsHeader';
 import { Routes } from '@/shared/model/Routes';
 import { onboardingFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
@@ -30,10 +26,32 @@ interface ConsentsLayoutProps {
   bgColor?: string;
 }
 
+const mainBackground = css`
+  position: relative;
+  z-index: 0;
+  &:before {
+    content: ' ';
+    background-color: ${brand[400]};
+    opacity: 0.8;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+  }
+`;
+
 const form = css`
   display: flex;
   flex: 1 0 auto;
   flex-direction: column;
+`;
+
+// fixes overlapping text issue in IE
+// derived from this solution https://stackoverflow.com/a/49368815
+const ieFlexFix = css`
+  flex: 0 0 auto;
 `;
 
 const mainStyles = css`

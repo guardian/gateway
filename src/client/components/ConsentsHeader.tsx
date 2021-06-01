@@ -11,7 +11,7 @@ type Props = {
   success?: string;
 };
 
-export const headerContainer = css`
+const headerContainer = css`
   background-color: ${brand[400]};
 `;
 

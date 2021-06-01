@@ -7,21 +7,21 @@ import { from } from '@guardian/src-foundations/mq';
 import { titlepiece } from '@guardian/src-foundations/typography';
 import { PageProgression } from '@/client/components/PageProgression';
 import { CONSENTS_PAGES_ARR } from '@/client/models/ConsentsPages';
+import { CONSENTS_MAIN_COLOR } from '@/client/layouts/shared/Consents';
 
 type Props = {
   autoRow: AutoRow;
   title: string;
   current?: string;
 };
-export const CONSENTS_MAIN_COLOR = '#eaf1fd';
 
-export const consentsBackground = css`
+const consentsBackground = css`
   background-color: ${CONSENTS_MAIN_COLOR};
 `;
 
 // fixes overlapping text issue in IE
 // derived from this solution https://stackoverflow.com/a/49368815
-export const ieFlexFix = css`
+const ieFlexFix = css`
   flex: 0 0 auto;
 `;
 

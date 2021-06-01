@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { css } from '@emotion/react';
-import { space, palette } from '@guardian/src-foundations';
+import { space, palette, brand } from '@guardian/src-foundations';
 import {
   getAutoRow,
   gridItem,
@@ -9,13 +9,12 @@ import {
 } from '@/client/styles/Grid';
 import { from } from '@guardian/src-foundations/mq';
 import {
-  mainBackground,
   ConsentsContent,
-  ConsentsBlueBackground,
   controls,
   CONSENTS_MAIN_COLOR,
 } from '@/client/layouts/shared/Consents';
 import { ConsentsSubHeader } from '@/client/components/ConsentsSubHeader';
+import { ConsentsBlueBackground } from '@/client/components/ConsentsBlueBackground';
 import { ConsentsHeader } from '@/client/components/ConsentsHeader';
 import { Footer } from '@/client/components/Footer';
 import { headingWithMq, text } from '@/client/styles/Consents';
@@ -42,6 +41,22 @@ const reviewTableContainer = css`
   border: 1px solid ${palette.border.secondary};
 `;
 
+const mainBackground = css`
+  position: relative;
+  z-index: 0;
+  &:before {
+    content: ' ';
+    background-color: ${brand[400]};
+    opacity: 0.8;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+  }
+`;
+
 const reviewTableRow = css`
   display: flex;
   flex-direction: column;
@@ -66,7 +81,7 @@ const reviewTableCell = css`
   }
 `;
 
-export const reviewTableTextBold = css`
+const reviewTableTextBold = css`
   ${text}
   font-weight: bold;
   padding-bottom: ${space[2]}px;
@@ -120,7 +135,7 @@ const bgColour = css`
   }
 `;
 
-export const sectionStyles = css`
+const sectionStyles = css`
   display: flex;
   flex-direction: column;
   flex: 1 0 auto;
