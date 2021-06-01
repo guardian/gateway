@@ -66,7 +66,7 @@ const h1 = css`
   color: ${brand[400]};
   ${titlepiece.small()};
   margin: ${space[2]}px 0 ${space[1]}px 0;
-  //Override
+  /* Override */
   font-size: 24px;
 `;
 

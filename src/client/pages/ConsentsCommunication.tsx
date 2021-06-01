@@ -7,7 +7,7 @@ import {
   gridItemColumnConsents,
   consentsParagraphSpanDef,
 } from '@/client/styles/Grid';
-import { CommunicationCard } from '@/client/components/ConsentsCommunicationCard';
+import { CommunicationCard } from '@/client/components/CommunicationCard';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { heading, text } from '@/client/styles/Consents';
 import { Consent } from '@/shared/model/Consent';

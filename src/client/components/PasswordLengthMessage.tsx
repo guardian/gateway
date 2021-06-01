@@ -11,8 +11,6 @@ import {
   LengthValidationResult,
   PasswordValidationShortMessage,
 } from '@/shared/lib/PasswordValidation';
-import { textSans } from '@guardian/src-foundations/typography';
-import { ChangePasswordErrors } from '@/shared/model/Errors';
 
 const symbolStyling = {
   [ValidationStyling.SUCCESS]: {
@@ -50,7 +48,7 @@ const ValidationSymbol = ({
   return <div css={style}>{symbol}</div>;
 };
 
-export const LengthValidationComponent = ({
+export const PasswordLengthMessage = ({
   validationStyling,
   lengthResult,
 }: {
@@ -63,24 +61,6 @@ export const LengthValidationComponent = ({
       <div css={validationInfoCss(validationStyling)}>
         {PasswordValidationShortMessage[lengthResult]}
       </div>
-    </div>
-  );
-};
-
-export const WeakPasswordComponent = () => {
-  const smallStyle = css`
-    ${textSans.small()}
-    color: ${palette.neutral['7']};
-  `;
-
-  const redStyle = css`
-    color: ${palette.error['400']};
-  `;
-
-  return (
-    <div css={smallStyle}>
-      <span css={[smallStyle, redStyle]}>Weak password:</span>{' '}
-      {ChangePasswordErrors.COMMON_PASSWORD_SHORT}
     </div>
   );
 };
