@@ -86,7 +86,7 @@ export const SignIn = () => {
                   email me a link to sign in
                 </Link>
               </Links>
-              <Button css={button} type="submit">
+              <Button css={button} type="submit" data-cy="sign-in-button">
                 Sign in
               </Button>
             </form>
