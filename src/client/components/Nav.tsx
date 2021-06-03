@@ -44,6 +44,7 @@ const paddingLeftOverrides = css`
 const tabRowStyles = css`
   display: flex;
   flex-direction: row;
+  margin: 0;
 `;
 
 const forceActiveBar = css`
