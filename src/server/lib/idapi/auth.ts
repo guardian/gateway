@@ -7,8 +7,6 @@ import {
 import { logger } from '@/server/lib/logger';
 import { IDAPIAuthRedirect, IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
 
-const AUTH_URL = '/auth/redirect';
-
 interface APIResponse {
   emailValidated: true;
   signInStatus: IDAPIAuthStatus;
@@ -45,7 +43,7 @@ export const read = async (
   };
   try {
     return responseToEntity(
-      (await idapiFetch(AUTH_URL, {
+      (await idapiFetch('/auth/redirect', {
         ...options,
         headers: { ...headers },
       })) as APIResponse,
