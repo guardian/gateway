@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { css } from '@emotion/react';
+import { ClientState } from '@/shared/model/ClientState';
+import { ClientStateContext } from '@/client/components/ClientState';
 import { PageBox } from '@/client/components/PageBox';
 import { PageBody } from '@/client/components/PageBody';
 import { Main } from '@/client/layouts/Main';
@@ -29,64 +31,77 @@ const Links = ({ children }: { children: React.ReactNode }) => (
   </p>
 );
 
-export const SignIn = () => (
-  <>
-    <Header />
-    <Nav
-      tabs={[
-        {
-          displayText: PageTitle.SIGN_IN,
-          linkTo: '',
-          isActive: true,
-        },
-        {
-          displayText: PageTitle.REGISTRATION,
-          linkTo: '',
-          isActive: false,
-        },
-      ]}
-    />
-    <Main>
-      <PageBox>
-        <PageBody>
-          <form css={form} method="post" action={`${Routes.SIGN_IN}`}>
-            <CsrfFormField />
-            <TextInput
-              css={textInput}
-              label="Email"
-              name="email"
-              type="email"
+export const SignIn = () => {
+  const clientState: ClientState = useContext(ClientStateContext);
+  const { pageData = {} } = clientState;
+  const { returnUrl } = pageData;
+  const returnUrlQuery = returnUrl
+    ? `?returnUrl=${encodeURIComponent(returnUrl)}`
+    : '';
+
+  return (
+    <>
+      <Header />
+      <Nav
+        tabs={[
+          {
+            displayText: PageTitle.SIGN_IN,
+            linkTo: '',
+            isActive: true,
+          },
+          {
+            displayText: PageTitle.REGISTRATION,
+            linkTo: '',
+            isActive: false,
+          },
+        ]}
+      />
+      <Main>
+        <PageBox>
+          <PageBody>
+            <form
+              css={form}
+              method="post"
+              action={`${Routes.SIGN_IN}${returnUrlQuery}`}
+            >
+              <CsrfFormField />
+              <TextInput
+                css={textInput}
+                label="Email"
+                name="email"
+                type="email"
+              />
+              <TextInput
+                css={textInput}
+                label="Password"
+                name="password"
+                type="password"
+              />
+              <Links>
+                <Link subdued={true} href="/reset">
+                  Reset password
+                </Link>{' '}
+                or{' '}
+                <Link subdued={true} href="/">
+                  email me a link to sign in
+                </Link>
+              </Links>
+              <Button css={button} type="submit">
+                Sign in
+              </Button>
+            </form>
+            <Divider
+              size="full"
+              spaceAbove="loose"
+              displayText="or continue with"
             />
-            <TextInput
-              css={textInput}
-              label="Password"
-              name="password"
-              type="password"
-            />
-            <Links>
-              <Link subdued={true} href="/reset">
-                Reset password
-              </Link>{' '}
-              or{' '}
-              <Link subdued={true} href="/">
-                email me a link to sign in
-              </Link>
-            </Links>
-            <Button css={button} type="submit">
-              Sign in
-            </Button>
-          </form>
-          <Divider
-            size="full"
-            spaceAbove="loose"
-            displayText="or continue with"
-          />
-          <SocialButtons />
-          <Divider size="full" spaceAbove="tight" />
-          <Terms />
-        </PageBody>
-      </PageBox>
-    </Main>
-    <Footer />
-  </>
-);
+            <SocialButtons />
+            <Divider size="full" spaceAbove="tight" />
+            <Terms />
+          </PageBody>
+        </PageBox>
+      </Main>
+      <Footer />
+    </>
+  );
+};

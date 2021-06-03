@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import { default as core } from './core';
 import { default as reset } from './reset';
+import { default as signIn } from './signIn';
 import { default as changePassword } from './changePassword';
 import { default as consents } from './consents';
 import { default as verifyEmail } from './verifyEmail';
@@ -14,6 +15,9 @@ router.use(core);
 
 // request reset password routes
 router.use(noCache, reset);
+
+// request sign in routes
+router.use(noCache, signIn);
 
 // change password routes
 router.use(noCache, changePassword);

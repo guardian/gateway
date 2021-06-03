@@ -24,6 +24,7 @@ export enum Routes {
 
 export enum ApiRoutes {
   RESET_REQUEST_EMAIL = '/pwd-reset/send-password-reset-email',
+  SIGN_IN = '/signin',
   CHANGE_PASSWORD_TOKEN_VALIDATION = '/pwd-reset/user-for-token',
   CHANGE_PASSWORD = '/pwd-reset/reset-pwd-for-user',
   VERIFY_EMAIL = '/user/validate-email',

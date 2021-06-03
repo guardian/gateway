@@ -2,9 +2,12 @@ import {
   APIAddClientAccessToken,
   APIForwardSessionIdentifier,
   APIGetOptions,
+  APIPostOptions,
+  IDAPIError,
   idapiFetch,
 } from '@/server/lib/APIFetch';
 import { logger } from '@/server/lib/logger';
+import { IdapiErrorMessages, SignInErrors } from '@/shared/model/Errors';
 import { IDAPIAuthRedirect, IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
 
 interface APIResponse {
@@ -15,8 +18,20 @@ interface APIResponse {
   };
 }
 
-const handleError = (): never => {
-  throw 'Error retrieving authentication information.';
+const handleError = ({ error, status = 500 }: IDAPIError) => {
+  if (error.status === 'error' && error.errors?.length) {
+    const err = error.errors[0];
+    const { message } = err;
+
+    switch (message) {
+      case IdapiErrorMessages.INVALID_EMAIL_PASSWORD:
+        throw { message: SignInErrors.AUTHENTICATION_FAILED, status };
+      default:
+        break;
+    }
+  }
+
+  throw { message: SignInErrors.GENERIC, status: status };
 };
 
 const responseToEntity = (response: APIResponse) => {
@@ -50,6 +65,27 @@ export const read = async (
     );
   } catch (e) {
     logger.error(e);
-    return handleError();
+    return handleError(e);
+  }
+};
+
+export const authenticate = async (
+  email: string,
+  password: string,
+  ip: string,
+) => {
+  const options = APIPostOptions({
+    email,
+    password,
+  });
+
+  try {
+    const response = await idapiFetch(
+      '/auth?format=cookies',
+      APIAddClientAccessToken(options, ip),
+    );
+    return response.cookies;
+  } catch (e) {
+    handleError(e);
   }
 };

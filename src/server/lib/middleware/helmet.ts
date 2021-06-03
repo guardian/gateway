@@ -30,6 +30,7 @@ const helmetConfig = {
       defaultSrc: [HELMET_OPTIONS.NONE],
       formAction: [
         `${baseUri}${Routes.RESET}`,
+        `${baseUri}${Routes.SIGN_IN}`,
         `${baseUri}${Routes.CHANGE_PASSWORD}/`,
         `${baseUri}${Routes.CONSENTS}/`,
         `${baseUri}${Routes.VERIFY_EMAIL}`,
