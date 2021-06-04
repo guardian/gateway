@@ -11,5 +11,4 @@ export interface UserConsent {
 
 export interface UserStatusFields {
   userEmailValidated: boolean;
-  hasRepermissioned: boolean;
 }
