@@ -80,7 +80,7 @@
     "image-webpack-loader": "^7.0.1",
     "jest": "^27.0.1",
     "nodemon": "^2.0.7",
-    "prettier": "^2.3.0",
+    "prettier": "^2.3.1",
     "react-test-renderer": "^17.0.2",
     "snyk": "^1.609.0",
     "ts-jest": "^27.0.0",
