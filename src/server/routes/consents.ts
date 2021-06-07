@@ -433,11 +433,7 @@ function getABTestPOSTHandler(
 
     try {
       await entitySetter(req.ip, sc_gu_u, req.body);
-      const html = renderer(url, {
-        pageTitle: PageTitle.RESET_SENT,
-        requestState: state,
-      });
-      res.type('html').send(html);
+      res.redirect(303, url);
       return;
     } catch (e) {
       [status, state] = getErrorResponse(e, state);
