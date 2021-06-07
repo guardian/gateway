@@ -129,7 +129,7 @@ const browser = ({ isLegacy }) => {
     {
       bugfixes: true,
       useBuiltIns: 'usage',
-      corejs: '3.9'
+      corejs: '3.14'
     },
   ]
   
@@ -138,7 +138,7 @@ const browser = ({ isLegacy }) => {
     {
       bugfixes: true,
       useBuiltIns: 'usage',
-      corejs: '3.9',
+      corejs: '3.14',
       modules: 'amd'
     },
   ]
