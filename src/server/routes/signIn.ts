@@ -21,6 +21,17 @@ router.get(Routes.SIGN_IN, (req: Request, res: ResponseWithRequestState) => {
   res.type('html').send(html);
 });
 
+router.get(
+  Routes.SIGN_IN_CURRENT,
+  (req: Request, res: ResponseWithRequestState) => {
+    const html = renderer(Routes.SIGN_IN_CURRENT, {
+      requestState: res.locals,
+      pageTitle: PageTitle.SIGN_IN,
+    });
+    res.type('html').send(html);
+  },
+);
+
 router.post(
   Routes.SIGN_IN,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
