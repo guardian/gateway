@@ -8,5 +8,7 @@ export default {
   component: SocialButtons,
 } as Meta;
 
-export const Default = () => <SocialButtons />;
+export const Default = () => (
+  <SocialButtons returnUrl="https://www.theguardian.com/uk/" />
+);
 Default.storyName = 'with defaults';

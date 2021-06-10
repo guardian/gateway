@@ -1,10 +1,14 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import { space, brand } from '@guardian/src-foundations';
-import { Button } from '@guardian/src-button';
+import { LinkButton } from '@guardian/src-button';
 import { SvgGoogle } from '../icons/SvgGoogle';
 import { SvgApple } from '../icons/SvgApple';
 import { SvgFacebook } from '../icons/SvgFacebook';
+
+type Props = {
+  returnUrl: string;
+};
 
 const containerStyles = css`
   display: flex;
@@ -28,30 +32,33 @@ const Gap = () => (
   ></span>
 );
 
-export const SocialButtons = () => (
+export const SocialButtons = ({ returnUrl }: Props) => (
   <div css={containerStyles}>
-    <Button
+    <LinkButton
       priority="tertiary"
       cssOverrides={buttonOverrides}
       icon={<SvgFacebook />}
+      href={`https://oauth.theguardian.com/facebook/signin?returnUrl=${returnUrl}`}
     >
       Facebook
-    </Button>
+    </LinkButton>
     <Gap />
-    <Button
+    <LinkButton
       priority="tertiary"
       cssOverrides={buttonOverrides}
       icon={<SvgGoogle />}
+      href={`https://oauth.theguardian.com/google/signin?returnUrl=${returnUrl}`}
     >
       Google
-    </Button>
+    </LinkButton>
     <Gap />
-    <Button
+    <LinkButton
       priority="tertiary"
       cssOverrides={buttonOverrides}
       icon={<SvgApple />}
+      href={`https://oauth.theguardian.com/apple/signin?returnUrl=${returnUrl}`}
     >
       Apple
-    </Button>
+    </LinkButton>
   </div>
 );
