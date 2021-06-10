@@ -22,12 +22,12 @@ export const Registration = () => (
       tabs={[
         {
           displayText: PageTitle.SIGN_IN,
-          linkTo: '',
+          linkTo: '/signin',
           isActive: false,
         },
         {
           displayText: PageTitle.REGISTRATION,
-          linkTo: '',
+          linkTo: '/register',
           isActive: true,
         },
       ]}
