@@ -1,6 +1,5 @@
 import { default as helmet } from 'helmet';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { Routes } from '@/shared/model/Routes';
 
 const { baseUri, gaUID, apiDomain, idapiBaseUrl } = getConfiguration();
 
@@ -28,13 +27,6 @@ const helmetConfig = {
     directives: {
       baseUri: [HELMET_OPTIONS.NONE],
       defaultSrc: [HELMET_OPTIONS.NONE],
-      formAction: [
-        `${baseUri}${Routes.RESET}`,
-        `${baseUri}${Routes.SIGN_IN}`,
-        `${baseUri}${Routes.CHANGE_PASSWORD}/`,
-        `${baseUri}${Routes.CONSENTS}/`,
-        `${baseUri}${Routes.VERIFY_EMAIL}`,
-      ],
       frameAncestors: [HELMET_OPTIONS.NONE],
       styleSrc: [HELMET_OPTIONS.UNSAFE_INLINE],
       scriptSrc: [

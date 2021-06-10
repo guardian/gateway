@@ -11,11 +11,11 @@ import { Footer } from '@/client/components/Footer';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
 
 type ChangePasswordCompleteProps = {
-  returnUrl: string;
+  returnUrl?: string;
 };
 
 export const ChangePasswordComplete = ({
-  returnUrl,
+  returnUrl = 'https://www.theguardian.com/uk',
 }: ChangePasswordCompleteProps) => {
   return (
     <>
