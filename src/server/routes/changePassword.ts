@@ -118,6 +118,7 @@ router.post(
     state = {
       ...state,
       pageData: {
+        ...state.pageData,
         browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
       },
     };

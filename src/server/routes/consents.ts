@@ -401,7 +401,6 @@ function getABTestGETHandler(
         pageData: {
           ...state.pageData,
           [entitiesName]: entities,
-          returnUrl: state?.queryParams?.returnUrl,
         },
       };
       status = 200;
@@ -523,8 +522,8 @@ router.get(
       state = {
         ...state,
         pageData: {
+          ...state.pageData,
           ...(await read(req.ip, sc_gu_u, state.pageData.geolocation)),
-          returnUrl: state?.queryParams?.returnUrl,
         },
       };
     } catch (e) {
