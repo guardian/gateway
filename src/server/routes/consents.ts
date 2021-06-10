@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { Routes } from '@/shared/model/Routes';
-import { redirectRenderer, renderer } from '@/server/lib/renderer';
+import { renderer } from '@/server/lib/renderer';
 import {
   update as patchConsents,
   read as readConsents,
@@ -433,8 +433,7 @@ function getABTestPOSTHandler(
 
     try {
       await entitySetter(req.ip, sc_gu_u, req.body);
-      const html = redirectRenderer(url);
-      res.type('html').send(html);
+      res.redirect(303, url);
       return;
     } catch (e) {
       [status, state] = getErrorResponse(e, state);
