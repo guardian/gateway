@@ -12,7 +12,6 @@ export const createUser = (consents = defaultUserConsent) => ({
     primaryEmailAddress: 'a.reader@example.com',
     statusFields: {
       userEmailValidated: true,
-      hasRepermissioned: true,
     },
     consents,
   },
