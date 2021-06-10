@@ -16,12 +16,19 @@ const Text = ({ children }: { children: React.ReactNode }) => (
   </p>
 );
 
-const TermsLink = ({ children }: { children: React.ReactNode }) => (
+const TermsLink = ({
+  children,
+  href,
+}: {
+  children: React.ReactNode;
+  href: string;
+}) => (
   <Link
     subdued={true}
     cssOverrides={css`
       ${textSans.small()}
     `}
+    href={href}
   >
     {children}
   </Link>
@@ -30,7 +37,10 @@ const TermsLink = ({ children }: { children: React.ReactNode }) => (
 export const Terms = () => (
   <>
     <Text>
-      By proceeding you agree to our <TermsLink>Terms and Conditions</TermsLink>
+      By proceeding you agree to our{' '}
+      <TermsLink href="https://www.theguardian.com/help/terms-of-service">
+        Terms and Conditions
+      </TermsLink>
     </Text>
     <Text>
       You also confirm that you are 13 years or older, or that you have the
@@ -38,8 +48,14 @@ export const Terms = () => (
     </Text>
     <Text>
       This site is protected by reCAPTCHA and{' '}
-      <TermsLink>Google&apos;s Privacy Policy</TermsLink> and{' '}
-      <TermsLink>Terms of Service</TermsLink> apply.
+      <TermsLink href="https://policies.google.com/privacy">
+        Google&apos;s Privacy Policy
+      </TermsLink>{' '}
+      and{' '}
+      <TermsLink href="https://policies.google.com/terms">
+        Terms of Service
+      </TermsLink>{' '}
+      apply.
     </Text>
   </>
 );
