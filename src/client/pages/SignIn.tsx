@@ -51,7 +51,7 @@ export const SignIn = () => {
           },
           {
             displayText: PageTitle.REGISTRATION,
-            linkTo: '/register',
+            linkTo: Routes.REGISTRATION,
             isActive: false,
           },
         ]}
