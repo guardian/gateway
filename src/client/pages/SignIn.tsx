@@ -46,7 +46,7 @@ export const SignIn = () => {
         tabs={[
           {
             displayText: PageTitle.SIGN_IN,
-            linkTo: '/signin',
+            linkTo: Routes.SIGN_IN,
             isActive: true,
           },
           {
