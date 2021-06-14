@@ -44,6 +44,7 @@ const paddingLeftOverrides = css`
 const tabRowStyles = css`
   display: flex;
   flex-direction: row;
+  margin: 0;
 `;
 
 const forceActiveBar = css`
@@ -153,7 +154,7 @@ export const Nav = ({ tabs }: Props) => (
       border={true}
       cssOverrides={[borderOverrides, paddingLeftOverrides]}
     >
-      <div css={tabRowStyles}>
+      <h1 css={tabRowStyles}>
         {tabs.map((tab, index) => (
           <Tab
             key={index}
@@ -163,7 +164,7 @@ export const Nav = ({ tabs }: Props) => (
             isFirst={index === 0}
           />
         ))}
-      </div>
+      </h1>
     </Container>
   </nav>
 );

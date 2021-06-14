@@ -16,6 +16,7 @@ import { UnexpectedErrorPage } from '@/client/pages/UnexpectedErrorPage';
 import { ConsentsFollowUpPage } from '@/client/pages/ConsentsFollowUpPage';
 import { ClientState } from '@/shared/model/ClientState';
 import { Routes } from '@/shared/model/Routes';
+import { SignInPage } from './pages/SignInPage';
 
 export type RoutingConfig = {
   clientState: ClientState;
@@ -24,6 +25,12 @@ export type RoutingConfig = {
 
 export const GatewayRoutes = () => (
   <Switch>
+    <Route exact path={Routes.SIGN_IN_CURRENT}>
+      <SignInPage />
+    </Route>
+    <Route exact path={Routes.SIGN_IN}>
+      <SignInPage />
+    </Route>
     <Route exact path={Routes.REGISTRATION}>
       <RegistrationPage />
     </Route>
