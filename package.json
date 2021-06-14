@@ -67,7 +67,7 @@
     "chromatic": "^5.9.0",
     "copy-node-modules": "^1.1.1",
     "core-js": "^3.14.0",
-    "cypress": "^7.4.0",
+    "cypress": "^7.5.0",
     "cypress-axe": "^0.12.2",
     "eslint": "^7.28.0",
     "eslint-config-prettier": "^8.3.0",
