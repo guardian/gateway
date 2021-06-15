@@ -14,6 +14,9 @@ Parameters:
   SignInPageUrl:
     Description: Sign in page URL used as a fallback if auth redirect retrieval fails.
     Type: AWS::SSM::Parameter::Value<String>
+  OktaDomain:
+    Description: The okta domain
+    Type: AWS::SSM::Parameter::Value<String>
   CertificateArn:
     Description: ARN of certificate for loadbalancer use.
     Type: String
@@ -215,6 +218,7 @@ Resources:
             Environment=STAGE=${Stage}
             Environment=IS_HTTPS=true
             Environment=APP_SECRET=$APP_SECRET
+            Environment=OKTA_DOMAIN=${OktaDomain}
 
             [Install]
             WantedBy=multi-user.target

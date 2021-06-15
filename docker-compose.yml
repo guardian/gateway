@@ -17,6 +17,7 @@ services:
       - SIGN_IN_PAGE_URL=${SIGN_IN_PAGE_URL}
       - IS_HTTPS=${IS_HTTPS}
       - APP_SECRET=${APP_SECRET}
+      - OKTA_DOMAIN=${OKTA_DOMAIN}
     ports:
       - '${PORT}:${PORT}'
       - '9229:9229' # debugging port

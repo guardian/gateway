@@ -31,6 +31,7 @@ describe('getConfiguration', () => {
     process.env.STAGE = 'DEV';
     process.env.IS_HTTPS = 'true';
     process.env.APP_SECRET = 'app-secret';
+    process.env.OKTA_DOMAIN = 'https://adomain.okta.com';
 
     const output = getConfiguration();
     const expected = {
@@ -50,6 +51,7 @@ describe('getConfiguration', () => {
       apiDomain: GU_API_DOMAIN.DEV,
       isHttps: true,
       appSecret: 'app-secret',
+      oktaDomain: 'https://adomain.okta.com',
     };
     expect(output).toEqual(expected);
   });

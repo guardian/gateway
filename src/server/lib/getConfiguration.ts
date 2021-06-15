@@ -80,6 +80,11 @@ export const getConfiguration = (): Configuration => {
     'APP_SECRET config missing.',
   );
 
+  const oktaDomain: string = getOrThrow(
+    process.env.OKTA_DOMAIN,
+    'OKTA_DOMAIN is missing',
+  );
+
   return {
     port: +port,
     idapiBaseUrl,
@@ -97,5 +102,6 @@ export const getConfiguration = (): Configuration => {
     apiDomain,
     isHttps,
     appSecret,
+    oktaDomain,
   };
 };

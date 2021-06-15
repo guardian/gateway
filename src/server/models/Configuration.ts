@@ -15,6 +15,7 @@ export interface Configuration {
   apiDomain: string;
   isHttps: boolean;
   appSecret: string;
+  oktaDomain: string;
 }
 
 export enum GA_UID {
