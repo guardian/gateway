@@ -10607,6 +10607,11 @@ gzip-size@5.1.1:
     duplexer "^0.1.1"
     pify "^4.0.1"
 
+hal-types@^1.7.4:
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/hal-types/-/hal-types-1.7.4.tgz#3abd41cf738e7412c9fa255790e9eedb97e53cf7"
+  integrity sha512-MXIm5IbUZJ+gr6hhXvf0FH59eNDgSW4UbDip4Pv/9sa6gHlVQUbO+tYl0CsD26jN5lw3TgIbcFoi4frcS4jPdg==
+
 har-schema@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/har-schema/-/har-schema-2.0.0.tgz#a94c2224ebcac04782a0d9035521f24735b7ec92"
