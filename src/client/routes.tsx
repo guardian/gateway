@@ -16,7 +16,7 @@ import { UnexpectedErrorPage } from '@/client/pages/UnexpectedErrorPage';
 import { ConsentsFollowUpPage } from '@/client/pages/ConsentsFollowUpPage';
 import { ClientState } from '@/shared/model/ClientState';
 import { Routes } from '@/shared/model/Routes';
-import { SignInPage } from './pages/SignInPage';
+import { SignInPage } from '@/client/pages/SignInPage';
 
 export type RoutingConfig = {
   clientState: ClientState;

@@ -2,9 +2,9 @@ import React from 'react';
 import { css } from '@emotion/react';
 import { space, brand } from '@guardian/src-foundations';
 import { LinkButton } from '@guardian/src-button';
-import { SvgGoogle } from '../icons/SvgGoogle';
-import { SvgApple } from '../icons/SvgApple';
-import { SvgFacebook } from '../icons/SvgFacebook';
+import { SvgGoogle } from '@/client/icons/SvgGoogle';
+import { SvgApple } from '@/client/icons/SvgApple';
+import { SvgFacebook } from '@/client/icons/SvgFacebook';
 
 type Props = {
   returnUrl: string;

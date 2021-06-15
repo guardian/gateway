@@ -4,7 +4,7 @@ import {
   APIPostOptions,
   IDAPIError,
   APIForwardSessionIdentifier,
-} from '@/server/lib/APIFetch';
+} from '@/server/lib/IDAPIFetch';
 
 import { IdapiErrorMessages, VerifyEmailErrors } from '@/shared/model/Errors';
 import { ApiRoutes } from '@/shared/model/Routes';
