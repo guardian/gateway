@@ -1,6 +1,7 @@
 import {
   idapiFetch,
   APIGetOptions,
+  APIPostOptions,
   APIAddClientAccessToken,
   APIForwardSessionIdentifier,
   IDAPIError,
@@ -12,8 +13,6 @@ import User from '@/shared/model/User';
 interface APIResponse {
   user: User;
 }
-
-const API_ROUTE = '/user/me';
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
   if (error.status === 'error' && error.errors?.length) {
@@ -49,10 +48,23 @@ export const read = async (ip: string, sc_gu_u: string): Promise<User> => {
     sc_gu_u,
   );
   try {
-    const response = (await idapiFetch(API_ROUTE, options)) as APIResponse;
+    const response = (await idapiFetch('/user/me', options)) as APIResponse;
     return responseToEntity(response);
   } catch (e) {
     logger.error(e);
     return handleError(e);
+  }
+};
+
+export const create = async (email: string, password: string, ip: string) => {
+  const options = APIPostOptions({
+    primaryEmailAddress: email,
+    password,
+  });
+
+  try {
+    return await idapiFetch('/user', APIAddClientAccessToken(options, ip));
+  } catch (e) {
+    handleError(e);
   }
 };

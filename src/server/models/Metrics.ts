@@ -3,6 +3,8 @@ export enum Metrics {
   SEND_PASSWORD_RESET_FAILURE = 'SendPasswordReset::Failure',
   SIGN_IN_SUCCESS = 'SignIn::Success',
   SIGN_IN_FAILURE = 'SignIn::Failure',
+  REGISTER_SUCCESS = 'Register::Success',
+  REGISTER_FAILURE = 'Register::Failure',
   CHANGE_PASSWORD_SUCCESS = 'UpdatePassword::Success',
   CHANGE_PASSWORD_FAILURE = 'UpdatePassword::Failure',
   LOGIN_MIDDLEWARE_SUCCESS = 'LoginMiddleware::Success',
