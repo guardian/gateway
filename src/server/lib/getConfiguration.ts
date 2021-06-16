@@ -85,6 +85,11 @@ export const getConfiguration = (): Configuration => {
     'OKTA_DOMAIN is missing',
   );
 
+  const oktaClientId: string = getOrThrow(
+    process.env.OKTA_CLIENT_ID,
+    'OKTA_CLIENT_ID is missing',
+  );
+
   return {
     port: +port,
     idapiBaseUrl,
@@ -103,5 +108,6 @@ export const getConfiguration = (): Configuration => {
     isHttps,
     appSecret,
     oktaDomain,
+    oktaClientId,
   };
 };

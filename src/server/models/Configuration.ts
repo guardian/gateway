@@ -16,6 +16,7 @@ export interface Configuration {
   isHttps: boolean;
   appSecret: string;
   oktaDomain: string;
+  oktaClientId: string;
 }
 
 export enum GA_UID {
