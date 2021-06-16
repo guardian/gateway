@@ -33,6 +33,7 @@ describe('getConfiguration', () => {
     process.env.APP_SECRET = 'app-secret';
     process.env.OKTA_DOMAIN = 'https://adomain.okta.com';
     process.env.OKTA_CLIENT_ID = 'abc123';
+    process.env.OKTA_CLIENT_SECRET = 'xyz789';
 
     const output = getConfiguration();
     const expected = {
@@ -54,6 +55,7 @@ describe('getConfiguration', () => {
       appSecret: 'app-secret',
       oktaDomain: 'https://adomain.okta.com',
       oktaClientId: 'abc123',
+      oktaClientSecret: 'xyz789',
     };
     expect(output).toEqual(expected);
   });

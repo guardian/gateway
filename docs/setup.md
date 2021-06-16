@@ -20,7 +20,7 @@ Make sure you have one or the other or both:
 
 Populate a `.env` file by using the examples from [`.env.example`](../.env.example). The `.env` file should **never** be committed.
 
-Depending on which stage (`DEV` or `CODE`) you want to connect to [Identity API (IDAPI)](https://github.com/guardian/identity) and Okta, the `IDAPI_CLIENT_ACCESS_TOKEN`, `IDAPI_BASE_URL`, `OKTA_DOMAIN`, `OKTA_CLIENT_ID` variables will be different. If using the S3 config, it will point to the `CODE` instance of IDAPI.
+Depending on which stage (`DEV` or `CODE`) you want to connect to [Identity API (IDAPI)](https://github.com/guardian/identity), the `IDAPI_CLIENT_ACCESS_TOKEN` and `IDAPI_BASE_URL` variables will be different. If using the S3 config, it will point to the `CODE` instance of IDAPI.
 
 `PLAY_SESSION_COOKIE_SECRET` should be the `play.crypto.secret` used by [Identity Frontend](https://github.com/guardian/identity-frontend), as found in the `DEV` private configuration. This is used to decode the scala play session cookie, and will only be in use while migration from play is ongoing, and will be removed when migration is complete, or is no longer required.
 

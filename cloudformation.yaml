@@ -20,6 +20,9 @@ Parameters:
   OktaClientId:
     Description: The okta client id for this application
     Type: AWS::SSM::Parameter::Value<String>
+  OktaClientSecret:
+    Description: The okta client secret for this application
+    Type: AWS::SSM::Parameter::Value<String>
   CertificateArn:
     Description: ARN of certificate for loadbalancer use.
     Type: String
@@ -223,6 +226,7 @@ Resources:
             Environment=APP_SECRET=$APP_SECRET
             Environment=OKTA_DOMAIN=${OktaDomain}
             Environment=OKTA_CLIENT_ID=${OktaClientId}
+            Environment=OKTA_CLIENT_SECRET=${OktaClientSecret}
 
             [Install]
             WantedBy=multi-user.target

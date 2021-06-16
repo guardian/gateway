@@ -19,6 +19,7 @@ services:
       - APP_SECRET=${APP_SECRET}
       - OKTA_DOMAIN=${OKTA_DOMAIN}
       - OKTA_CLIENT_ID=${OKTA_CLIENT_ID}
+      - OKTA_CLIENT_SECRET=${OKTA_CLIENT_SECRET}
     ports:
       - '${PORT}:${PORT}'
       - '9229:9229' # debugging port

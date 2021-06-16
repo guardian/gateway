@@ -17,6 +17,7 @@ export interface Configuration {
   appSecret: string;
   oktaDomain: string;
   oktaClientId: string;
+  oktaClientSecret: string;
 }
 
 export enum GA_UID {
