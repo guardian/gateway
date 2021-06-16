@@ -12,7 +12,6 @@ import { read as getUser } from '@/server/lib/idapi/user';
 import { ConsentsErrors, VerifyEmailErrors } from '@/shared/model/Errors';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { getProfileUrl } from '@/server/lib/getProfileUrl';
-import { getProviderForEmail } from '@/shared/lib/emailProvider';
 import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
@@ -114,17 +113,6 @@ router.post(
           success: 'Email Sent. Please check your inbox and follow the link.',
         },
       };
-
-      const emailProvider = getProviderForEmail(email);
-      if (emailProvider) {
-        state = {
-          ...state,
-          pageData: {
-            ...state.pageData,
-            emailProvider: emailProvider.id,
-          },
-        };
-      }
     } catch (error) {
       trackMetric(Metrics.SEND_VALIDATION_EMAIL_FAILURE);
       status = error.status;
