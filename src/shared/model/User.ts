@@ -1,5 +1,6 @@
 export default interface User {
-  consents: UserConsent[];
+  id: string;
+  consents?: UserConsent[];
   primaryEmailAddress: string;
   statusFields: UserStatusFields;
 }
