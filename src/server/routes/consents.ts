@@ -78,7 +78,7 @@ const getUserConsentsForPage = async (
   sc_gu_u: string,
 ): Promise<Consent[]> => {
   const allConsents = await readConsents();
-  const userConsents = (await getUser(ip, sc_gu_u)).consents || [];
+  const userConsents = (await getUser(ip, sc_gu_u)).consents;
 
   return pageConsents
     .map((id) => allConsents.find((consent) => consent.id === id))

@@ -13,7 +13,7 @@ interface APIResponse {
   user: User;
 }
 
-const API_ROUTE = '/user';
+const API_ROUTE = '/user/me';
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
   if (error.status === 'error' && error.errors?.length) {
@@ -32,14 +32,11 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
 };
 
 const responseToEntity = (response: APIResponse): User => {
-  const consents = response.user.consents
-    ? response.user.consents.map(({ id, consented }) => ({
-        id,
-        consented,
-      }))
-    : [];
+  const consents = response.user.consents.map(({ id, consented }) => ({
+    id,
+    consented,
+  }));
   return {
-    id: response.user.id,
     consents,
     primaryEmailAddress: response.user.primaryEmailAddress,
     statusFields: response.user.statusFields,
@@ -52,25 +49,7 @@ export const read = async (ip: string, sc_gu_u: string): Promise<User> => {
     sc_gu_u,
   );
   try {
-    const response = (await idapiFetch(
-      `${API_ROUTE}/me`,
-      options,
-    )) as APIResponse;
-    return responseToEntity(response);
-  } catch (e) {
-    logger.error(e);
-    return handleError(e);
-  }
-};
-
-export const readByEmail = async (ip: string, email: string): Promise<User> => {
-  const options = APIAddClientAccessToken(APIGetOptions(), ip);
-
-  try {
-    const response = (await idapiFetch(
-      `${API_ROUTE}?emailAddress=${email}`,
-      options,
-    )) as APIResponse;
+    const response = (await idapiFetch(API_ROUTE, options)) as APIResponse;
     return responseToEntity(response);
   } catch (e) {
     logger.error(e);
