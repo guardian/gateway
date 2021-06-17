@@ -1,21 +1,13 @@
 import React from 'react';
-import { LinkButton } from '@guardian/src-button';
 import { PageHeader } from '@/client/components/PageHeader';
 import { PageBox } from '@/client/components/PageBox';
 import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
-import { linkButton } from '@/client/styles/Shared';
 import { Main } from '@/client/layouts/Main';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
-import { SvgArrowRightStraight } from '@guardian/src-icons';
 
-type ResetSentProps = {
-  inboxLink?: string;
-  inboxName?: string;
-};
-
-export const ResetSent = ({ inboxLink, inboxName }: ResetSentProps) => {
+export const ResetSent = () => {
   return (
     <>
       <Header />
@@ -33,17 +25,6 @@ export const ResetSent = ({ inboxLink, inboxName }: ResetSentProps) => {
               open it soon! Thank you.
             </PageBodyText>
           </PageBody>
-          {inboxLink && inboxName && (
-            <LinkButton
-              css={linkButton}
-              href={inboxLink}
-              priority="tertiary"
-              icon={<SvgArrowRightStraight />}
-              iconSide="right"
-            >
-              Go to your {inboxName} inbox
-            </LinkButton>
-          )}
         </PageBox>
       </Main>
       <Footer />

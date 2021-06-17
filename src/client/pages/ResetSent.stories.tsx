@@ -12,12 +12,5 @@ export default {
 
 export const NoInboxDetails = () => <ResetSent />;
 NoInboxDetails.story = {
-  name: 'with no inbox props',
-};
-
-export const WithInbox = () => (
-  <ResetSent inboxLink="https://theguardian.com/uk" inboxName="Guardian" />
-);
-WithInbox.story = {
-  name: 'with inbox details provided',
+  name: 'with defaults',
 };
