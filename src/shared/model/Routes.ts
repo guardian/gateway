@@ -20,6 +20,7 @@ export enum Routes {
   CONSENTS_FOLLOW_UP_NEWSLETTERS = '/follow-up',
   CONSENTS_FOLLOW_UP_CONSENTS = '/follow-on',
   // ABTEST: followupConsent : END
+  OAUTH_CALLBACK = '/oauth/callback',
   UNEXPECTED_ERROR = '/error',
 }
 

@@ -2,6 +2,7 @@ import fetch, { RequestInit, Response } from 'node-fetch';
 import { HalLink } from 'hal-types';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { OktaError } from './error';
+import { httpsAgent } from '@/server/lib/devHttpsAgent';
 
 // https://developer.okta.com/docs/reference/api/authn/#transaction-state
 enum AuthenticationTransactionState {
@@ -125,6 +126,7 @@ export const authenticate = async (email: string, password: string) => {
       'Content-Type': 'application/json',
     },
     body,
+    agent: httpsAgent,
   };
 
   try {

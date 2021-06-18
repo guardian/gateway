@@ -2,12 +2,21 @@ import { default as express, Express } from 'express';
 import { logger } from '@/server/lib/logger';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { applyMiddleware } from '@/server/lib/middleware';
+import OktaOIDC from '@/server/lib/okta/oidc';
 
 const { port } = getConfiguration();
 
-const server: Express = express();
+// the app is wrapped as an async immediately invoked function expression
+// so we can bootstrap any asynchronous configuration, for example for the
+// Okta OIDC Issuer and Client
+(async () => {
+  // instantiate the okta oidc issuer/client
+  await OktaOIDC.instantiate();
 
-applyMiddleware(server);
+  const server: Express = express();
 
-server.listen(port);
-logger.info(`server running on port ${port}`);
+  applyMiddleware(server);
+
+  server.listen(port);
+  logger.info(`server running on port ${port}`);
+})();
