@@ -48,12 +48,15 @@ router.post(
 
       trackMetric(Metrics.REGISTER_FAILURE);
 
-      // TODO: Do we want to preserve the user input here? Having to retype email and password can be tiresome
       state = {
         ...state,
         globalMessage: {
           ...state.globalMessage,
           error: message,
+        },
+        pageData: {
+          ...state.pageData,
+          email,
         },
       };
 

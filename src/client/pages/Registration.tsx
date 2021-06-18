@@ -1,6 +1,4 @@
-import React, { useContext } from 'react';
-import { ClientState } from '@/shared/model/ClientState';
-import { ClientStateContext } from '@/client/components/ClientState';
+import React from 'react';
 import { TextInput } from '@guardian/src-text-input';
 import { Button } from '@guardian/src-button';
 import { Routes } from '@/shared/model/Routes';
@@ -17,13 +15,16 @@ import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
 import { button, form, textInput } from '@/client/styles/Shared';
 
-export const Registration = () => {
-  const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData = {} } = clientState;
-  const { returnUrl } = pageData;
+type Props = {
+  returnUrl?: string;
+  email?: string;
+};
+
+export const Registration = ({ returnUrl = '', email = '' }: Props) => {
   const returnUrlQuery = returnUrl
     ? `?returnUrl=${encodeURIComponent(returnUrl)}`
     : '';
+
   return (
     <>
       <Header />
@@ -55,6 +56,7 @@ export const Registration = () => {
                 label="Email"
                 name="email"
                 type="email"
+                defaultValue={email}
               />
               <TextInput
                 css={textInput}
@@ -71,7 +73,7 @@ export const Registration = () => {
               spaceAbove="loose"
               displayText="or continue with"
             />
-            <SocialButtons returnUrl="todo" />
+            <SocialButtons returnUrl={returnUrl} />
             <Divider size="full" spaceAbove="tight" />
             <Terms />
           </PageBody>

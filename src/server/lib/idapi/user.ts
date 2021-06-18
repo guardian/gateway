@@ -7,7 +7,11 @@ import {
   IDAPIError,
 } from '@/server/lib/APIFetch';
 import { logger } from '@/server/lib/logger';
-import { ConsentsErrors, IdapiErrorMessages } from '@/shared/model/Errors';
+import {
+  ConsentsErrors,
+  IdapiErrorMessages,
+  RegistrationErrors,
+} from '@/shared/model/Errors';
 import User from '@/shared/model/User';
 
 interface APIResponse {
@@ -20,6 +24,8 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
     const { message } = err;
 
     switch (message) {
+      case IdapiErrorMessages.EMAIL_IN_USE:
+        throw { message: RegistrationErrors.GENERIC, status };
       case IdapiErrorMessages.ACCESS_DENIED:
         throw { message: ConsentsErrors.ACCESS_DENIED, status };
       default:
