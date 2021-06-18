@@ -3,6 +3,7 @@ export enum PageTitle {
   UNEXPECTED_ERROR = 'Unexpected Error',
   REGISTRATION = 'Register',
   RESET = 'Reset Password',
+  MAGIC_LINK = 'Sign in',
   RESET_SENT = 'Check Your Inbox',
   RESET_RESEND = 'Resend Reset Password',
   SIGN_IN = 'Sign in',

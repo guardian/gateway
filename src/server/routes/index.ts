@@ -7,6 +7,7 @@ import { default as register } from './register';
 import { default as changePassword } from './changePassword';
 import { default as consents } from './consents';
 import { default as verifyEmail } from './verifyEmail';
+import { default as magicLink } from './magicLink';
 import { noCache } from '@/server/lib/middleware/cache';
 
 const router = Router();
@@ -31,5 +32,8 @@ router.use(noCache, consents);
 
 // verify email routes
 router.use(noCache, verifyEmail);
+
+// magic link routes
+router.use(noCache, magicLink);
 
 export default router;

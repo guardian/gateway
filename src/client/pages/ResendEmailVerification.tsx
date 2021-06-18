@@ -7,7 +7,7 @@ import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
 import { PageBox } from '@/client/components/PageBox';
 import { PageHeader } from '@/client/components/PageHeader';
-import { form, button, linkButton } from '@/client/styles/Shared';
+import { form, button } from '@/client/styles/Shared';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
 import { css } from '@emotion/react';
 import { textSans } from '@guardian/src-foundations/typography';
@@ -18,8 +18,6 @@ type ResendEmailVerificationProps = {
   email?: string;
   signInPageUrl?: string;
   successText?: string;
-  inboxLink?: string;
-  inboxName?: string;
 };
 const bold = css`
   ${textSans.medium({ lineHeight: 'regular', fontWeight: 'bold' })}
@@ -51,13 +49,9 @@ const LoggedOut = ({ signInPageUrl }: { signInPageUrl?: string }) => (
 const LoggedIn = ({
   email,
   successText,
-  inboxLink,
-  inboxName,
 }: {
   email: string;
   successText?: string;
-  inboxLink?: string;
-  inboxName?: string;
 }) => (
   <PageBox>
     <PageHeader>Verify Email</PageHeader>
@@ -91,17 +85,6 @@ const LoggedIn = ({
           </Button>
         </form>
       )}
-      {inboxLink && inboxName && (
-        <LinkButton
-          css={linkButton}
-          href={inboxLink}
-          icon={<SvgArrowRightStraight />}
-          iconSide="right"
-          priority="tertiary"
-        >
-          Go to your {inboxName} inbox
-        </LinkButton>
-      )}
     </PageBody>
   </PageBox>
 );
@@ -110,20 +93,13 @@ export const ResendEmailVerification = ({
   email,
   signInPageUrl,
   successText,
-  inboxLink,
-  inboxName,
 }: ResendEmailVerificationProps) => {
   return (
     <>
       <Header />
       <Main subTitle="Sign in">
         {email ? (
-          <LoggedIn
-            email={email}
-            successText={successText}
-            inboxLink={inboxLink}
-            inboxName={inboxName}
-          />
+          <LoggedIn email={email} successText={successText} />
         ) : (
           <LoggedOut signInPageUrl={signInPageUrl} />
         )}

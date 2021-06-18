@@ -17,6 +17,8 @@ import { ConsentsFollowUpPage } from '@/client/pages/ConsentsFollowUpPage';
 import { ClientState } from '@/shared/model/ClientState';
 import { Routes } from '@/shared/model/Routes';
 import { SignInPage } from './pages/SignInPage';
+import { MagicLinkPage } from './pages/MagicLinkPage';
+import { MagicLinkSentPage } from './pages/MagicLinkSentPage';
 
 export type RoutingConfig = {
   clientState: ClientState;
@@ -80,6 +82,12 @@ export const GatewayRoutes = () => (
     {/*  ABTEST: followupConsent : END */}
     <Route exact path={Routes.VERIFY_EMAIL}>
       <ResendEmailVerificationPage />
+    </Route>
+    <Route exact path={Routes.MAGIC_LINK}>
+      <MagicLinkPage />
+    </Route>
+    <Route exact path={Routes.MAGIC_LINK_SENT}>
+      <MagicLinkSentPage />
     </Route>
     <Route exact path={Routes.UNEXPECTED_ERROR}>
       <UnexpectedErrorPage />

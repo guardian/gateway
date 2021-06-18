@@ -21,6 +21,8 @@ export enum Routes {
   CONSENTS_FOLLOW_UP_CONSENTS = '/follow-on',
   // ABTEST: followupConsent : END
   UNEXPECTED_ERROR = '/error',
+  MAGIC_LINK = '/magic-link',
+  MAGIC_LINK_SENT = '/magic-link/email-sent',
 }
 
 export enum ApiRoutes {

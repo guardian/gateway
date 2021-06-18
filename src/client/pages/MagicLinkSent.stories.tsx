@@ -2,15 +2,15 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { ResetSent } from './ResetSent';
+import { MagicLinkSent } from './MagicLinkSent';
 
 export default {
-  title: 'Pages/ResetSent',
-  component: ResetSent,
+  title: 'Pages/MagicLinkSent',
+  component: MagicLinkSent,
   parameters: { layout: 'fullscreen' },
 } as Meta;
 
-export const NoInboxDetails = () => <ResetSent />;
+export const NoInboxDetails = () => <MagicLinkSent />;
 NoInboxDetails.story = {
   name: 'with defaults',
 };

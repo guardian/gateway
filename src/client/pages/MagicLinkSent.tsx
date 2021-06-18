@@ -7,7 +7,7 @@ import { Main } from '@/client/layouts/Main';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 
-export const ResetSent = () => {
+export const MagicLinkSent = () => {
   return (
     <>
       <Header />
@@ -17,8 +17,7 @@ export const ResetSent = () => {
           <PageBody>
             <PageBodyText>
               We’ve sent you an email – please open it up and click on the
-              button. This is so we can verify it’s you and help you create a
-              password to complete your Guardian account.
+              button.
             </PageBodyText>
             <PageBodyText>
               Note that the link is only valid for 30 minutes, so be sure to
