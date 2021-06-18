@@ -2,7 +2,7 @@ import { default as express, Express } from 'express';
 import { logger } from '@/server/lib/logger';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { applyMiddleware } from '@/server/lib/middleware';
-import OktaOIDC from '@/server/lib/okta/oidc';
+import { OktaOIDC } from '@/server/lib/okta/oidc';
 
 const { port } = getConfiguration();
 

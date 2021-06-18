@@ -1,5 +1,4 @@
 import { Request, Router } from 'express';
-import { authenticate } from '@/server/lib/idapi/auth';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { Routes } from '@/shared/model/Routes';
@@ -8,8 +7,14 @@ import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
-import { getConfiguration } from '@/server/lib/getConfiguration';
+import { authenticate } from '@/server/lib/okta/authentication';
+import { FetchOktaError } from '@/server/lib/okta/error';
+import {
+  generateAuthorizationState,
+  OktaOIDC,
+  setAuthorizationStateCookie,
+} from '@/server/lib/okta/oidc';
+import { SignInErrors } from '@/shared/model/Errors';
 
 const router = Router();
 
@@ -18,7 +23,7 @@ router.get(Routes.SIGN_IN, (req: Request, res: ResponseWithRequestState) => {
     requestState: res.locals,
     pageTitle: PageTitle.SIGN_IN,
   });
-  res.type('html').send(html);
+  return res.type('html').send(html);
 });
 
 router.get(
@@ -28,50 +33,65 @@ router.get(
       requestState: res.locals,
       pageTitle: PageTitle.SIGN_IN,
     });
-    res.type('html').send(html);
+    return res.type('html').send(html);
   },
 );
 
 router.post(
   Routes.SIGN_IN,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    let state = res.locals;
-
-    const { email = '' } = req.body;
-    const { password = '' } = req.body;
-
-    const { returnUrl } = state.pageData;
-
-    const { defaultReturnUri } = getConfiguration();
+    const { email = '', password = '' } = req.body;
 
     try {
-      const cookies = await authenticate(email, password, req.ip);
+      const response = await authenticate(email, password);
 
-      setIDAPICookies(res, cookies);
+      const authState = generateAuthorizationState(
+        res.locals.queryParams.returnUrl,
+      );
+
+      setAuthorizationStateCookie(authState, res);
+
+      const authorizeUrl = OktaOIDC.Client.authorizationUrl({
+        prompt: 'none',
+        sessionToken: response.sessionToken,
+        state: authState.nonce,
+      });
+
+      trackMetric(Metrics.AUTHENTICATION_SUCCESS);
+
+      return res.redirect(authorizeUrl);
     } catch (error) {
-      const { message, status } = error;
+      trackMetric(Metrics.AUTHENTICATION_FAILURE);
       logger.error(error);
 
-      trackMetric(Metrics.SIGN_IN_FAILURE);
+      if (error.oktaError) {
+        const { status, oktaError } = error as FetchOktaError;
 
-      state = {
-        ...state,
-        globalMessage: {
-          ...state.globalMessage,
-          error: message,
-        },
-      };
+        const html = renderer(Routes.SIGN_IN, {
+          requestState: {
+            ...res.locals,
+            globalMessage: {
+              ...res.locals.globalMessage,
+              error: oktaError.errorSummary,
+            },
+          },
+          pageTitle: PageTitle.SIGN_IN,
+        });
+        return res.status(status).type('html').send(html);
+      }
 
       const html = renderer(Routes.SIGN_IN, {
-        requestState: state,
+        requestState: {
+          ...res.locals,
+          globalMessage: {
+            ...res.locals.globalMessage,
+            error: SignInErrors.GENERIC,
+          },
+        },
         pageTitle: PageTitle.SIGN_IN,
       });
-      return res.status(status).type('html').send(html);
+      return res.status(500).type('html').send(html);
     }
-
-    trackMetric(Metrics.SIGN_IN_SUCCESS);
-
-    return res.redirect(303, returnUrl || defaultReturnUri);
   }),
 );
 
