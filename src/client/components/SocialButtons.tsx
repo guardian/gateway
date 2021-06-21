@@ -2,9 +2,9 @@ import React from 'react';
 import { css } from '@emotion/react';
 import { space, brand } from '@guardian/src-foundations';
 import { LinkButton } from '@guardian/src-button';
-import { SvgGoogle } from '../icons/SvgGoogle';
-import { SvgApple } from '../icons/SvgApple';
-import { SvgFacebook } from '../icons/SvgFacebook';
+import { SvgGoogleBrand } from '@guardian/src-icons';
+import { SvgAppleBrand } from '@guardian/src-icons';
+import { SvgFacebookBrand } from '@guardian/src-icons';
 
 type Props = {
   returnUrl: string;
@@ -37,7 +37,7 @@ export const SocialButtons = ({ returnUrl }: Props) => (
     <LinkButton
       priority="tertiary"
       cssOverrides={buttonOverrides}
-      icon={<SvgFacebook />}
+      icon={<SvgFacebookBrand />}
       href={`https://oauth.theguardian.com/facebook/signin?returnUrl=${returnUrl}`}
     >
       Facebook
@@ -46,7 +46,7 @@ export const SocialButtons = ({ returnUrl }: Props) => (
     <LinkButton
       priority="tertiary"
       cssOverrides={buttonOverrides}
-      icon={<SvgGoogle />}
+      icon={<SvgGoogleBrand />}
       href={`https://oauth.theguardian.com/google/signin?returnUrl=${returnUrl}`}
     >
       Google
@@ -55,7 +55,7 @@ export const SocialButtons = ({ returnUrl }: Props) => (
     <LinkButton
       priority="tertiary"
       cssOverrides={buttonOverrides}
-      icon={<SvgApple />}
+      icon={<SvgAppleBrand />}
       href={`https://oauth.theguardian.com/apple/signin?returnUrl=${returnUrl}`}
     >
       Apple
