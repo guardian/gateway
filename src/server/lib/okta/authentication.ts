@@ -107,6 +107,10 @@ const handleResponseSuccess = async (
   }
 };
 
+// okta authentication endpoint
+// gateway (profile) is set up as a public application as it is
+// accessible by anyone
+// https://developer.okta.com/docs/reference/api/authn/#request-example-for-primary-authentication-with-public-application
 export const authenticate = async (email: string, password: string) => {
   const request: AuthenticationRequestParameters = {
     username: email,
