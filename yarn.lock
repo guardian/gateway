@@ -2756,10 +2756,10 @@
   resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-6.11.4.tgz#b34c312cf6694278afcaa8541e09cd5e2f8b1ad3"
   integrity sha512-1H06cb3rnrrk/lzecNS+P5/mXXytEazSSmBtEwuUiMdiRE6RDkOVLyvzNyfHy9z2/xndrfaonR2clWmzkEWgbQ==
 
-"@guardian/libs@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@guardian/libs/-/libs-2.1.0.tgz#01c326eee01bb6effadc8dc5ae869c11a2b39ee2"
-  integrity sha512-Au/kcRCmZHPKY6lOcBhW4kQH0nXpQUlMJVfQscxT1QXqS+vmiewI9/RTSWZuPvyvK/yXqF0kyTSuM4fnvue+qA==
+"@guardian/libs@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@guardian/libs/-/libs-2.2.1.tgz#b31904d2207e6f2eaae09e81996bdc4ceafdf3f1"
+  integrity sha512-6VfqenJ9DWAchLj91gn9//R6vh8Poe8GrH/EL67XGtxig0fWpGhcwb5LlY2xw4uUktYPnlVljKf+ntmSbQO3bg==
 
 "@guardian/node-riffraff-artifact@^0.2.1":
   version "0.2.1"
