@@ -24,6 +24,15 @@ const buttonOverrides = css`
   min-width: 145px;
 `;
 
+// TODO: If the issue below is fixed and a new version of Source published with that fix in it, then
+// you should remove this iconOverrides css
+// https://github.com/guardian/source/issues/835
+const iconOverrides = css`
+  svg {
+    margin-top: 3px;
+  }
+`;
+
 const Gap = () => (
   <span
     css={css`
@@ -45,7 +54,7 @@ export const SocialButtons = ({ returnUrl }: Props) => (
     <Gap />
     <LinkButton
       priority="tertiary"
-      cssOverrides={buttonOverrides}
+      cssOverrides={[buttonOverrides, iconOverrides]}
       icon={<SvgGoogleBrand />}
       href={`https://oauth.theguardian.com/google/signin?returnUrl=${returnUrl}`}
     >
@@ -54,7 +63,7 @@ export const SocialButtons = ({ returnUrl }: Props) => (
     <Gap />
     <LinkButton
       priority="tertiary"
-      cssOverrides={buttonOverrides}
+      cssOverrides={[buttonOverrides, iconOverrides]}
       icon={<SvgAppleBrand />}
       href={`https://oauth.theguardian.com/apple/signin?returnUrl=${returnUrl}`}
     >
