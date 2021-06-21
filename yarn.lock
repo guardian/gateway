@@ -2803,10 +2803,10 @@
     "@guardian/src-label" "^3.6.0"
     "@guardian/src-user-feedback" "^3.6.0"
 
-"@guardian/src-foundations@^3.6.0":
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/@guardian/src-foundations/-/src-foundations-3.6.0.tgz#7bf7d4a7c28f9f4812494fdb22b8019c1c466ef5"
-  integrity sha512-KjcBwR334dhWWB6l1/j6kUcUncDgyIEE0M+ifwHPoVB/n/OVcB0LJl/a7qTCUPBYpxeZ3wukaTcMVr2zz+VL1Q==
+"@guardian/src-foundations@^3.6.0", "@guardian/src-foundations@^3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-foundations/-/src-foundations-3.7.0.tgz#f5f3a3c6d20c72d257447d1a8d97d1ffb613da0d"
+  integrity sha512-YLbr1D8VCoSg2nngMlMuq25zTcgngw01VZaqiyY4j9tC8IxFDliLbIf7mvQigKq9qn8RAlfM7HkMGzxSxVHtDg==
 
 "@guardian/src-helpers@^3.6.0":
   version "3.6.0"
