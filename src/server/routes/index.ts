@@ -7,6 +7,7 @@ import { default as changePassword } from './changePassword';
 import { default as consents } from './consents';
 import { default as verifyEmail } from './verifyEmail';
 import { default as oauth } from './oauth';
+import { default as magicLink } from './magicLink';
 import { noCache } from '@/server/lib/middleware/cache';
 
 const router = Router();
@@ -31,5 +32,8 @@ router.use(noCache, verifyEmail);
 
 // oauth routes
 router.use(noCache, oauth);
+
+// magic link routes
+router.use(noCache, magicLink);
 
 export default router;

@@ -6,6 +6,8 @@ export enum Metrics {
   AUTHORIZATION_SUCCESS = 'Authorization::Success',
   AUTHORIZATION_FAILURE = 'Authorization::Failure',
   AUTHORIZATION_ERROR = 'Authorization::Error',
+  SEND_MAGIC_LINK_SUCCESS = 'SendMagicLink::Success',
+  SEND_MAGIC_LINK_FAILURE = 'SendMagicLink::Failure',
   CHANGE_PASSWORD_SUCCESS = 'UpdatePassword::Success',
   CHANGE_PASSWORD_FAILURE = 'UpdatePassword::Failure',
   LOGIN_MIDDLEWARE_SUCCESS = 'LoginMiddleware::Success',

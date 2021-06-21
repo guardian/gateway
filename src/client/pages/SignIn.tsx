@@ -82,7 +82,7 @@ export const SignIn = () => {
                   Reset password
                 </Link>{' '}
                 or{' '}
-                <Link subdued={true} href="/">
+                <Link subdued={true} href="/magic-link">
                   email me a link to sign in
                 </Link>
               </Links>

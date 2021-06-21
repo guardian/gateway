@@ -22,6 +22,8 @@ export enum Routes {
   // ABTEST: followupConsent : END
   OAUTH_AUTH_CODE_CALLBACK = '/oauth/authorization-code/callback',
   UNEXPECTED_ERROR = '/error',
+  MAGIC_LINK = '/magic-link',
+  MAGIC_LINK_SENT = '/magic-link/email-sent',
 }
 
 export enum ApiRoutes {
