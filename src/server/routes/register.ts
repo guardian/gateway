@@ -34,7 +34,6 @@ router.post(
 
     const { returnUrl } = state.queryParams;
 
-
     try {
       await create(email, password, req.ip);
       // TODO: Can we remove this second call to get cookies for the user once we move over to Okta?
