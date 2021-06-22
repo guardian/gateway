@@ -37,7 +37,7 @@ export const Registration = ({ returnUrl = '', email = '' }: Props) => {
           },
           {
             displayText: PageTitle.REGISTRATION,
-            linkTo: '/register',
+            linkTo: Routes.REGISTRATION',
             isActive: true,
           },
         ]}
