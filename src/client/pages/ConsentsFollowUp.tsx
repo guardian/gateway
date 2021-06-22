@@ -9,7 +9,7 @@ import {
   headline,
   titlepiece,
 } from '@guardian/src-foundations/typography';
-import { Container } from '@guardian/src-layout';
+import { Container } from '@/client/components/Container';
 import React from 'react';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { Footer } from '@/client/components/Footer';
@@ -163,11 +163,6 @@ const nav = css`
   }
 `;
 
-const headerContainer = css`
-  background-color: ${GUARDIAN_BRAND};
-  border-bottom: 1px solid ${ELECTION_BEIGE};
-`;
-
 const h1 = css`
   color: white;
   ${titlepiece.small()};
@@ -181,10 +176,6 @@ const h1 = css`
     ${titlepiece.large()};
     margin-bottom: 132px;
   }
-`;
-
-const titleContainer = css`
-  background-color: ${GUARDIAN_BRAND};
 `;
 
 const img = css`
@@ -318,18 +309,20 @@ export const ConsentsFollowUp = ({
 
   return (
     <>
-      <div css={[headerContainer]}>
+      <>
         <nav css={[gridRow, nav]}>
           <SvgGuardianLogo />
         </nav>
         {error && <GlobalError error={error} link={getErrorLink(error)} left />}
         {success && <GlobalSuccess success={success} />}
-      </div>
-      <div css={titleContainer}>
-        <Container cssOverrides={gridRow}>
-          <h1 css={[h1, autoRow()]}>{title}</h1>
-        </Container>
-      </div>
+      </>
+      <Container
+        backgroundColor={GUARDIAN_BRAND}
+        topBorder={true}
+        borderColor={ELECTION_BEIGE}
+      >
+        <h1 css={[h1, autoRow()]}>{title}</h1>
+      </Container>
       <form action={submitUrl} method="post" css={form}>
         <div css={[gridRow, newsletterContainer]}>
           <div
