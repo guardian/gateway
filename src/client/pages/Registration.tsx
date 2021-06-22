@@ -32,7 +32,7 @@ export const Registration = ({ returnUrl = '', email = '' }: Props) => {
         tabs={[
           {
             displayText: PageTitle.SIGN_IN,
-            linkTo: '/signin',
+            linkTo: Routes.SIGN_IN,
             isActive: false,
           },
           {
