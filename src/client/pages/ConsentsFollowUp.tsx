@@ -12,10 +12,10 @@ import {
 import { Container } from '@/client/components/Container';
 import React from 'react';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
+import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { GlobalError } from '@/client/components/GlobalError';
 import { GlobalSuccess } from '@/client/components/GlobalSuccess';
-import { SvgGuardianLogo } from '@guardian/src-brand';
 import { getErrorLink } from '@/client/lib/ErrorLink';
 import {
   getAutoRow,
@@ -77,22 +77,6 @@ const newsletterSpanDef = {
   },
 };
 
-const navSpanDef = {
-  ...gridItemColumnConsents,
-  TABLET: {
-    start: 10,
-    span: 3,
-  },
-  DESKTOP: {
-    start: 9,
-    span: 4,
-  },
-  WIDE: {
-    start: 12,
-    span: 4,
-  },
-};
-
 const imageSpanDef = {
   MOBILE: {
     start: 1,
@@ -140,29 +124,6 @@ const newsletterBackgroundSpanDef = {
   },
 };
 
-const nav = css`
-  background-color: ${brand[400]};
-  height: 70px;
-  margin: 0 auto;
-  padding-top: ${space[2]}px;
-  padding-bottom: ${space[2]}px;
-  & svg {
-    justify-self: end;
-    height: 54px;
-    fill: white;
-    ${manualRow(1, navSpanDef)}
-  }
-
-  ${from.desktop} {
-    & svg {
-      height: 100px;
-    }
-    height: 116px;
-    padding-top: ${space[3]}px;
-    padding-bottom: ${space[3]}px;
-  }
-`;
-
 const h1 = css`
   color: white;
   ${titlepiece.small()};
@@ -175,6 +136,10 @@ const h1 = css`
   ${from.desktop} {
     ${titlepiece.large()};
     margin-bottom: 132px;
+  }
+  padding-left: ${space[3]}px;
+  ${from.desktop} {
+    padding-left: 0;
   }
 `;
 
@@ -248,15 +213,20 @@ const checkboxGroup = css`
 
 const newsletterContainer = css`
   margin-top: -40px;
+  ${from.desktop} {
+    margin-top: -70px;
+  }
   margin-bottom: 70px;
   overflow: hidden;
+`;
+
+const centerStyles = css`
   ${from.tablet} {
     margin-left: auto;
     margin-right: auto;
     max-width: ${MAX_WIDTH.TABLET}px;
   }
   ${from.desktop} {
-    margin-top: -70px;
     max-width: ${MAX_WIDTH.DESKTOP}px;
   }
   ${from.wide} {
@@ -309,22 +279,27 @@ export const ConsentsFollowUp = ({
 
   return (
     <>
-      <>
-        <nav css={[gridRow, nav]}>
-          <SvgGuardianLogo />
-        </nav>
-        {error && <GlobalError error={error} link={getErrorLink(error)} left />}
-        {success && <GlobalSuccess success={success} />}
-      </>
-      <Container
-        backgroundColor={GUARDIAN_BRAND}
-        topBorder={true}
-        borderColor={ELECTION_BEIGE}
-      >
-        <h1 css={[h1, autoRow()]}>{title}</h1>
+      <Header />
+      {error && <GlobalError error={error} link={getErrorLink(error)} left />}
+      {success && <GlobalSuccess success={success} />}
+      <hr
+        css={[
+          css`
+            height: 1px;
+            margin-top: 0;
+            margin-bottom: 0;
+            width: 100%;
+            background-color: ${ELECTION_BEIGE};
+          `,
+        ]}
+      />
+      <Container backgroundColor={GUARDIAN_BRAND} sidePadding={false}>
+        <div css={[gridRow, centerStyles]}>
+          <h1 css={[h1, autoRow()]}>{title}</h1>
+        </div>
       </Container>
       <form action={submitUrl} method="post" css={form}>
-        <div css={[gridRow, newsletterContainer]}>
+        <div css={[gridRow, newsletterContainer, centerStyles]}>
           <div
             css={[
               manualRow(2, newsletterBackgroundSpanDef),
