@@ -68,7 +68,7 @@ router.post(
 
     trackMetric(Metrics.REGISTER_SUCCESS);
 
-    return res.redirect(303, returnUrl || defaultReturnUri);
+    return res.redirect(303, returnUrl);
   }),
 );
 
