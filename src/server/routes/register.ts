@@ -33,7 +33,7 @@ router.post(
     const { email = '' } = req.body;
     const { password = '' } = req.body;
 
-    const { returnUrl } = state.pageData;
+    const { returnUrl } = state.queryParams;
 
     const { defaultReturnUri } = getConfiguration();
 
