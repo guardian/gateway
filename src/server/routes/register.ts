@@ -35,7 +35,6 @@ router.post(
 
     const { returnUrl } = state.queryParams;
 
-    const { defaultReturnUri } = getConfiguration();
 
     try {
       await create(email, password, req.ip);
