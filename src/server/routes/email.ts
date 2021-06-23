@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { Example, ExamplePlainText } from '@/email/example/Example';
 import { render } from 'mjml-react';
-import { sendEmail } from '../lib/AWS';
+import { sendEmail } from '../lib/sendEmail';
 
 const router = Router();
 
