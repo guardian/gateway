@@ -14,10 +14,12 @@ const { idapiBaseUrl } = config;
 
 const getRequestState = (req: Request): RequestState => {
   const [abTesting, abTestAPI] = getABTesting(req, config, tests);
+  const queryParams = parseExpressQueryParams(req.method, req.query);
   return {
-    queryParams: parseExpressQueryParams(req.method, req.query),
+    queryParams,
     pageData: {
       geolocation: getGeolocationRegion(req),
+      returnUrl: queryParams.returnUrl,
     },
     globalMessage: {},
     csrf: {

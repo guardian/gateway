@@ -19,7 +19,6 @@ export interface PageData {
   // general page data
   returnUrl?: string;
   email?: string;
-  emailProvider?: string;
   signInPageUrl?: string;
   geolocation?: GeoLocation;
   fieldErrors?: Array<FieldError>;

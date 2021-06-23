@@ -1,4 +1,7 @@
 export enum Routes {
+  REGISTRATION = '/register',
+  SIGN_IN = '/signin',
+  SIGN_IN_CURRENT = '/signin/current',
   RESET = '/reset',
   RESET_SENT = '/reset/email-sent',
   RESET_RESEND = '/reset/resend',
@@ -18,10 +21,13 @@ export enum Routes {
   CONSENTS_FOLLOW_UP_CONSENTS = '/follow-on',
   // ABTEST: followupConsent : END
   UNEXPECTED_ERROR = '/error',
+  MAGIC_LINK = '/magic-link',
+  MAGIC_LINK_SENT = '/magic-link/email-sent',
 }
 
 export enum ApiRoutes {
   RESET_REQUEST_EMAIL = '/pwd-reset/send-password-reset-email',
+  SIGN_IN = '/signin',
   CHANGE_PASSWORD_TOKEN_VALIDATION = '/pwd-reset/user-for-token',
   CHANGE_PASSWORD = '/pwd-reset/reset-pwd-for-user',
   VERIFY_EMAIL = '/user/validate-email',

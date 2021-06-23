@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { Routes } from '@/shared/model/Routes';
-import { redirectRenderer, renderer } from '@/server/lib/renderer';
+import { renderer } from '@/server/lib/renderer';
 import {
   update as patchConsents,
   read as readConsents,
@@ -25,7 +25,7 @@ import {
   ResponseWithRequestState,
 } from '@/server/models/Express';
 import { VERIFY_EMAIL } from '@/shared/model/Success';
-import { trackMetric } from '@/server/lib/AWS';
+import { trackMetric } from '@/server/lib/trackMetric';
 import { consentsPageMetric } from '@/server/models/Metrics';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { GeoLocation } from '@/shared/model/Geolocation';
@@ -401,7 +401,6 @@ function getABTestGETHandler(
         pageData: {
           ...state.pageData,
           [entitiesName]: entities,
-          returnUrl: state?.queryParams?.returnUrl,
         },
       };
       status = 200;
@@ -434,8 +433,7 @@ function getABTestPOSTHandler(
 
     try {
       await entitySetter(req.ip, sc_gu_u, req.body);
-      const html = redirectRenderer(url);
-      res.type('html').send(html);
+      res.redirect(303, url);
       return;
     } catch (e) {
       [status, state] = getErrorResponse(e, state);
@@ -523,8 +521,8 @@ router.get(
       state = {
         ...state,
         pageData: {
+          ...state.pageData,
           ...(await read(req.ip, sc_gu_u, state.pageData.geolocation)),
-          returnUrl: state?.queryParams?.returnUrl,
         },
       };
     } catch (e) {

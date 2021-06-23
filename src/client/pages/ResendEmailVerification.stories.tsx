@@ -14,8 +14,6 @@ export const LoggedIn = () => (
   <ResendEmailVerification
     email="example@domain.com"
     successText="Here is some example success text"
-    inboxLink="https://theguardian.com/uk"
-    inboxName="Example"
   />
 );
 LoggedIn.story = {

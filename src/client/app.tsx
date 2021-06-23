@@ -7,7 +7,7 @@ import { GatewayRoutes } from './routes';
 import { tests } from '@/shared/model/experiments/abTests';
 import { useAB } from '@guardian/ab-react';
 
-export const Main = (props: ClientState) => {
+export const App = (props: ClientState) => {
   // initalise the AB Test Framework:
   // load the AB Hook
   const ABTestAPI = useAB();

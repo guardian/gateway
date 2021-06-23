@@ -2,7 +2,7 @@ import { ClientState } from '@/shared/model/ClientState';
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
-import { Main } from '@/client/main';
+import { App } from '@/client/app';
 import { brandBackground } from '@guardian/src-foundations/palette';
 import qs from 'query-string';
 import { getConfiguration } from '@/server/lib/getConfiguration';
@@ -71,19 +71,6 @@ const clientStateFromRequestStateLocals = ({
   }
 };
 
-/* Needed if the inconsistant CSP standard for form-action redirects is a problem, most noticably with Chrome */
-export const redirectRenderer = (url: string): string => {
-  return `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta http-equiv="Refresh" content="0; URL=${url}">
-      </head>
-      <body onload="window.location='${url}'/>
-    </html>
-  `;
-};
-
 export const renderer: (url: string, opts: RendererOpts) => string = (
   url,
   { requestState, pageTitle },
@@ -110,7 +97,7 @@ export const renderer: (url: string, opts: RendererOpts) => string = (
       forcedTestVariants={forcedTestVariants}
     >
       <StaticRouter location={location} context={context}>
-        <Main {...clientState}></Main>
+        <App {...clientState}></App>
       </StaticRouter>
     </ABProvider>,
   );

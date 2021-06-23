@@ -1,12 +1,11 @@
 import { Request, Router } from 'express';
 import { create as resetPassword } from '@/server/lib/idapi/resetPassword';
-import { getProviderForEmail } from '@/shared/lib/emailProvider';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { Routes } from '@/shared/model/Routes';
 import { getEmailFromPlaySessionCookie } from '@/server/lib/playSessionCookie';
 import { ResponseWithRequestState } from '@/server/models/Express';
-import { trackMetric } from '@/server/lib/AWS';
+import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
 import { removeNoCache } from '@/server/lib/middleware/cache';
 import { PageTitle } from '@/shared/model/PageTitle';
@@ -68,17 +67,6 @@ router.post(
     }
 
     trackMetric(Metrics.SEND_PASSWORD_RESET_SUCCESS);
-
-    const emailProvider = getProviderForEmail(email);
-    if (emailProvider) {
-      state = {
-        ...state,
-        pageData: {
-          ...state.pageData,
-          emailProvider: emailProvider.id,
-        },
-      };
-    }
 
     const html = renderer(Routes.RESET_SENT, {
       requestState: state,

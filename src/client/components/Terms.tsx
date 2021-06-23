@@ -3,21 +3,6 @@ import { css } from '@emotion/react';
 import { space } from '@guardian/src-foundations';
 import { Link } from '@guardian/src-link';
 import { textSans } from '@guardian/src-foundations/typography';
-import { Divider } from './Divider';
-
-const Container = ({ children }: { children: React.ReactNode }) => (
-  <div
-    css={css`
-      width: 100%;
-      padding-left: ${space[3]}px;
-      padding-right: ${space[3]}px;
-      padding-top: ${space[4]}px;
-      padding-bottom: ${space[24]}px;
-    `}
-  >
-    {children}
-  </div>
-);
 
 const Text = ({ children }: { children: React.ReactNode }) => (
   <p
@@ -31,21 +16,31 @@ const Text = ({ children }: { children: React.ReactNode }) => (
   </p>
 );
 
-const TermsLink = ({ children }: { children: React.ReactNode }) => (
+const TermsLink = ({
+  children,
+  href,
+}: {
+  children: React.ReactNode;
+  href: string;
+}) => (
   <Link
+    subdued={true}
     cssOverrides={css`
       ${textSans.small()}
     `}
+    href={href}
   >
     {children}
   </Link>
 );
 
 export const Terms = () => (
-  <Container>
-    <Divider size="full" />
+  <>
     <Text>
-      By proceeding you agree to our <TermsLink>Terms and Conditions</TermsLink>
+      By proceeding you agree to our{' '}
+      <TermsLink href="https://www.theguardian.com/help/terms-of-service">
+        Terms and Conditions
+      </TermsLink>
     </Text>
     <Text>
       You also confirm that you are 13 years or older, or that you have the
@@ -53,8 +48,14 @@ export const Terms = () => (
     </Text>
     <Text>
       This site is protected by reCAPTCHA and{' '}
-      <TermsLink>Google&apos;s Privacy Policy</TermsLink> and{' '}
-      <TermsLink>Terms of Service</TermsLink> apply.
+      <TermsLink href="https://policies.google.com/privacy">
+        Google&apos;s Privacy Policy
+      </TermsLink>{' '}
+      and{' '}
+      <TermsLink href="https://policies.google.com/terms">
+        Terms of Service
+      </TermsLink>{' '}
+      apply.
     </Text>
-  </Container>
+  </>
 );

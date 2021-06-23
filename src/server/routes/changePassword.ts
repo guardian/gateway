@@ -8,7 +8,7 @@ import {
 } from '@/server/lib/idapi/changePassword';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
 import { ResponseWithRequestState } from '@/server/models/Express';
-import { trackMetric } from '@/server/lib/AWS';
+import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
 import { removeNoCache } from '@/server/lib/middleware/cache';
 import { PageTitle } from '@/shared/model/PageTitle';
@@ -118,6 +118,7 @@ router.post(
     state = {
       ...state,
       pageData: {
+        ...state.pageData,
         browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
       },
     };

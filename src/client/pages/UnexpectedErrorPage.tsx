@@ -6,25 +6,31 @@ import { PageBox } from '@/client/components/PageBox';
 import { PageHeader } from '@/client/components/PageHeader';
 import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
-import { Layout } from '@/client/layouts/Layout';
+import { Main } from '@/client/layouts/Main';
+import { Header } from '@/client/components/Header';
+import { Footer } from '@/client/components/Footer';
 
 const link = css`
   display: inline-block;
 `;
 
 export const UnexpectedErrorPage = () => (
-  <Layout subTitle="Sign in">
-    <PageBox>
-      <PageHeader>Sorry – an unexpected error occurred</PageHeader>
-      <PageBody>
-        <PageBodyText>
-          An error occurred, please try again or{' '}
-          <Link css={link} href={locations.REPORT_ISSUE}>
-            report it
-          </Link>
-          .
-        </PageBodyText>
-      </PageBody>
-    </PageBox>
-  </Layout>
+  <>
+    <Header />
+    <Main subTitle="Sign in">
+      <PageBox>
+        <PageHeader>Sorry – an unexpected error occurred</PageHeader>
+        <PageBody>
+          <PageBodyText>
+            An error occurred, please try again or{' '}
+            <Link css={link} href={locations.REPORT_ISSUE} subdued={true}>
+              report it
+            </Link>
+            .
+          </PageBodyText>
+        </PageBody>
+      </PageBox>
+    </Main>
+    <Footer />
+  </>
 );

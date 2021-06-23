@@ -1,4 +1,5 @@
 {
   "baseUrl": "http://localhost:8861",
-  "video": false
+  "video": false,
+  "chromeWebSecurity": false
 }

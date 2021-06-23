@@ -9,7 +9,9 @@ import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
 import { form, textInput, button } from '@/client/styles/Shared';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
-import { Layout } from '@/client/layouts/Layout';
+import { Main } from '@/client/layouts/Main';
+import { Header } from '@/client/components/Header';
+import { Footer } from '@/client/components/Footer';
 
 interface ResetPasswordProps {
   email?: string;
@@ -26,30 +28,38 @@ export const ResetPassword = ({
   buttonText,
   queryString = '',
 }: ResetPasswordProps) => (
-  <Layout subTitle="Sign in">
-    <PageBox>
-      <PageHeader>{headerText}</PageHeader>
-      <PageBody>
-        <PageBodyText>{bodyText}</PageBodyText>
-        <form css={form} method="post" action={`${Routes.RESET}${queryString}`}>
-          <CsrfFormField />
-          <TextInput
-            css={textInput}
-            label="Email address"
-            name="email"
-            type="email"
-            defaultValue={email}
-          />
-          <Button
-            css={button}
-            type="submit"
-            icon={<SvgArrowRightStraight />}
-            iconSide="right"
+  <>
+    <Header />
+    <Main subTitle="Sign in">
+      <PageBox>
+        <PageHeader>{headerText}</PageHeader>
+        <PageBody>
+          <PageBodyText>{bodyText}</PageBodyText>
+          <form
+            css={form}
+            method="post"
+            action={`${Routes.RESET}${queryString}`}
           >
-            {buttonText}
-          </Button>
-        </form>
-      </PageBody>
-    </PageBox>
-  </Layout>
+            <CsrfFormField />
+            <TextInput
+              css={textInput}
+              label="Email address"
+              name="email"
+              type="email"
+              defaultValue={email}
+            />
+            <Button
+              css={button}
+              type="submit"
+              icon={<SvgArrowRightStraight />}
+              iconSide="right"
+            >
+              {buttonText}
+            </Button>
+          </form>
+        </PageBody>
+      </PageBox>
+    </Main>
+    <Footer />
+  </>
 );

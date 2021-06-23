@@ -4,6 +4,7 @@ export enum IdapiErrorMessages {
   INVALID_TOKEN = 'Invalid token',
   TOKEN_EXPIRED = 'Token expired',
   ACCESS_DENIED = 'Access Denied',
+  INVALID_EMAIL_PASSWORD = 'Invalid email or password',
   USER_ALREADY_VALIDATED = 'User Already Validated',
   BREACHED_PASSWORD = 'Breached password',
 }
@@ -12,6 +13,11 @@ export enum ResetPasswordErrors {
   GENERIC = 'There was a problem resetting your password, please try again.',
   NO_ACCOUNT = 'There is no account for that email address, please check for typos or create an account.',
   NO_EMAIL = 'Email field must not be blank.',
+}
+
+export enum SignInErrors {
+  GENERIC = 'There was a problem signing in, please try again.',
+  AUTHENTICATION_FAILED = 'This email and password combination is not valid.',
 }
 
 export enum ChangePasswordErrors {
