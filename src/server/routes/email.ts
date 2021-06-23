@@ -21,14 +21,14 @@ router.get('/pre-render-email', (_, res: Response) => {
 });
 
 router.get('/send-example-email?:to', async (req: Request, res: Response) => {
-  const { to, from } = req.query;
+  const { to } = req.query;
 
-  if (typeof to !== 'string' || typeof from !== 'string') {
+  if (typeof to !== 'string') {
     return res.sendStatus(422);
   }
 
   try {
-    await sendEmail(html, ExamplePlainText, 'Sign In | The Guardian', to, from);
+    await sendEmail(html, ExamplePlainText, 'Sign In | The Guardian', to);
   } catch (error) {
     if (error.statusCode) {
       return res.sendStatus(error.statusCode);

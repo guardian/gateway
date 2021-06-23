@@ -8,7 +8,6 @@ export const sendEmail = (
   plainText: string,
   subject: string,
   toAddress: string,
-  fromAddress: string,
 ) => {
   const params: AWS.SESV2.SendEmailRequest = {
     Content: {
@@ -29,7 +28,7 @@ export const sendEmail = (
     Destination: {
       ToAddresses: [toAddress],
     },
-    FromEmailAddress: fromAddress,
+    FromEmailAddress: 'registration-reply@theguardian.com',
   };
 
   return SESV2.sendEmail(params).promise();
