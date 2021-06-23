@@ -1,6 +1,6 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-yarn prettier:check
+yarn prettier
 yarn lint
 yarn tsc
