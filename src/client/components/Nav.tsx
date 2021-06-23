@@ -8,7 +8,7 @@ import {
   brandLine,
 } from '@guardian/src-foundations';
 import { headline } from '@guardian/src-foundations/typography';
-import { Container } from '@guardian/src-layout';
+import { Container } from '@/client/components/Container';
 import { from } from '@guardian/src-foundations/mq';
 import { Link } from '@guardian/src-link';
 
@@ -25,20 +25,6 @@ type TabType = {
 
 const backgroundStyles = css`
   background-color: ${brandBackground.primary};
-`;
-
-// TODO: Remove these once https://github.com/guardian/source/pull/820 is merged and published
-//       after which we can use `topBorder` and `borderColor` instead.
-const borderOverrides = css`
-  border-top-width: 1px !important;
-  border-top-color: ${brandLine.primary} !important;
-  border-left-color: ${brandLine.primary} !important;
-  border-right-color: ${brandLine.primary} !important;
-  border-top-style: solid !important;
-`;
-
-const paddingLeftOverrides = css`
-  padding-left: 0 !important;
 `;
 
 const tabRowStyles = css`
@@ -150,10 +136,7 @@ const Tab = ({ displayText, linkTo, isActive, isFirst }: TabType) => {
 
 export const Nav = ({ tabs }: Props) => (
   <nav css={backgroundStyles}>
-    <Container
-      border={true}
-      cssOverrides={[borderOverrides, paddingLeftOverrides]}
-    >
+    <Container sideBorders={true} topBorder={true} sidePadding={false}>
       <h1 css={tabRowStyles}>
         {tabs.map((tab, index) => (
           <Tab
