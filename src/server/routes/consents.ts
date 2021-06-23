@@ -25,7 +25,7 @@ import {
   ResponseWithRequestState,
 } from '@/server/models/Express';
 import { VERIFY_EMAIL } from '@/shared/model/Success';
-import { trackMetric } from '@/server/lib/AWS';
+import { trackMetric } from '@/server/lib/trackMetric';
 import { consentsPageMetric } from '@/server/models/Metrics';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { GeoLocation } from '@/shared/model/Geolocation';
