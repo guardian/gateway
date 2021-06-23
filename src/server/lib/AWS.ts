@@ -26,7 +26,7 @@ const standardAwsConfig = {
 
 const CloudWatch = new AWS.CloudWatch(standardAwsConfig);
 
-export const defaultDimensions = {
+const defaultDimensions = {
   Stage,
   // ApiMode is the service name, using both ApiMode and Stage will keep
   // gateway in line with other identity metrics
