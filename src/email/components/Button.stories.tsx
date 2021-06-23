@@ -10,6 +10,6 @@ export default {
 } as Meta;
 
 export const Default = () => {
-  return renderMJMLComponent(<Button>Test Email Button</Button>);
+  return renderMJMLComponent(<Button href="">Test Email Button</Button>);
 };
 Default.storyName = 'Default email button';
