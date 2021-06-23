@@ -3,7 +3,6 @@ import React from 'react';
 import {
   Mjml,
   MjmlBody,
-  MjmlButton,
   MjmlColumn,
   MjmlDivider,
   MjmlHead,
@@ -12,6 +11,8 @@ import {
   MjmlStyle,
   MjmlText,
 } from 'mjml-react';
+
+import { Button } from '@/email/components/Button';
 
 export const Example = () => (
   <Mjml>
@@ -88,18 +89,9 @@ export const Example = () => (
 
       <MjmlSection background-color="#FFFFFF" padding="0">
         <MjmlColumn>
-          <MjmlButton
-            background-color="#052962"
-            color="#FFFFFF"
-            border-radius="24px"
-            href="https://profile.theguardian.com"
-            align="left"
-            padding="10px"
-            fontFamily="GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif"
-            fontWeight={700}
-          >
+          <Button href="https://profile.theguardian.com">
             Sign in to The Guardian
-          </MjmlButton>
+          </Button>
         </MjmlColumn>
       </MjmlSection>
 
