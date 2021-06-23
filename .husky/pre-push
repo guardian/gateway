@@ -3,4 +3,4 @@
 
 yarn prettier:check
 yarn lint
-yarn type-check
+yarn tsc
