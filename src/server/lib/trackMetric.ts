@@ -1,32 +1,19 @@
 import * as AWS from 'aws-sdk';
 import { Metrics } from '@/server/models/Metrics';
-import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/logger';
 import { AWSError } from 'aws-sdk';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { awsConfig } from '@/server/lib/awsConfig';
 
+const { stage: Stage } = getConfiguration();
 // metric dimensions is a k-v pair
 interface MetricDimensions {
   [name: string]: string;
 }
 
-const { stage: Stage } = getConfiguration();
+const CloudWatch = new AWS.CloudWatch(awsConfig);
 
-const AWS_REGION = 'eu-west-1';
-const PROFILE = 'identity';
-
-const CREDENTIAL_PROVIDER = new AWS.CredentialProviderChain([
-  () => new AWS.SharedIniFileCredentials({ profile: PROFILE }),
-  ...AWS.CredentialProviderChain.defaultProviders,
-]);
-
-const standardAwsConfig = {
-  region: AWS_REGION,
-  credentialProvider: CREDENTIAL_PROVIDER,
-};
-
-const CloudWatch = new AWS.CloudWatch(standardAwsConfig);
-
-export const defaultDimensions = {
+const defaultDimensions = {
   Stage,
   // ApiMode is the service name, using both ApiMode and Stage will keep
   // gateway in line with other identity metrics
