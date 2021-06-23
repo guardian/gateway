@@ -23,6 +23,8 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
     const err = error.errors[0];
     const { message } = err;
 
+    logger.error(message);
+
     switch (message) {
       case IdapiErrorMessages.INVALID_EMAIL_PASSWORD:
         throw { message: SignInErrors.AUTHENTICATION_FAILED, status };
@@ -82,6 +84,25 @@ export const authenticate = async (
   try {
     const response = await idapiFetch(
       '/auth?format=cookies',
+      APIAddClientAccessToken(options, ip),
+    );
+    return response.cookies;
+  } catch (e) {
+    handleError(e);
+  }
+};
+
+export const exchangeAccessTokenForCookies = async (
+  token: string,
+  ip: string,
+) => {
+  const options = APIPostOptions({
+    token,
+  });
+
+  try {
+    const response = await idapiFetch(
+      '/auth/oauth-token?format=cookies',
       APIAddClientAccessToken(options, ip),
     );
     return response.cookies;

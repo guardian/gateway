@@ -11,6 +11,8 @@ import { logger } from '@/server/lib/logger';
 import { trackMetric } from '@/server/lib/AWS';
 import { Metrics } from '@/server/models/Metrics';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
+import { exchangeAccessTokenForCookies } from '@/server/lib/idapi/auth';
+import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 
 const router = Router();
 
@@ -60,9 +62,18 @@ router.get(
         },
       );
 
-      // TODO: Add call to get and set IDAPI cookies here
-      // we're temporarily console logging the tokens for now
-      console.log(tokenSet);
+      // call the IDAPI /auth/oauth-token endpoint
+      // to exchange the access token for identity cookies
+      // the idapi introspects the access token and if valid
+      // will generate and sign cookies for the user the
+      // token belonged to
+      const cookies = await exchangeAccessTokenForCookies(
+        tokenSet.access_token || '',
+        req.ip,
+      );
+
+      // adds set cookie headers
+      setIDAPICookies(res, cookies);
 
       trackMetric(Metrics.AUTHORIZATION_SUCCESS);
 

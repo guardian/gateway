@@ -2,6 +2,7 @@
 
 import fetch, { RequestInit, Response } from 'node-fetch';
 import { getConfiguration } from '@/server/lib/getConfiguration';
+import { httpsAgent } from '@/server/lib/devHttpsAgent';
 
 const { idapiBaseUrl, idapiClientAccessToken, stage, baseUri } =
   getConfiguration();
@@ -51,6 +52,7 @@ const getAPIOptionsForMethod =
       Origin: getOrigin(stage),
     },
     body: payload ? JSON.stringify(payload) : undefined,
+    agent: httpsAgent,
   });
 
 export const APIFetch =
