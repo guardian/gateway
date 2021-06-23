@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { Example, ExamplePlainText } from '@/email/example/Example';
+import { Example, ExamplePlainText } from '@/email/templates/Example';
 import { render } from 'mjml-react';
 import { sendEmail } from '@/email';
 
