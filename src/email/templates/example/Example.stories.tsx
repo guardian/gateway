@@ -2,7 +2,7 @@ import React from 'react';
 import { Meta } from '@storybook/react';
 
 import { Example } from './Example';
-import { renderMJML } from '../../utility/render-mjml';
+import { renderMJML } from '../../testUtils';
 
 export default {
   title: 'Email/Example',

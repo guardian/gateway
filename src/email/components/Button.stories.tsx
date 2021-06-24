@@ -2,7 +2,7 @@ import React from 'react';
 import { Meta } from '@storybook/react';
 
 import { Button } from './Button';
-import { renderMJMLComponent } from '../utility/render-mjml';
+import { renderMJMLComponent } from '../testUtils';
 
 export default {
   title: 'Email/Button',
