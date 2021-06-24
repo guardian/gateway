@@ -11,11 +11,7 @@ router.get('/send-example-email?:to', async (req: Request, res: Response) => {
   }
 
   try {
-    await sendExampleEmail({
-      to: 'person@example.com',
-      subject: 'Subject',
-      name: 'Jane',
-    });
+    await sendExampleEmail({ to });
   } catch (error) {
     if (error.statusCode) {
       return res.sendStatus(error.statusCode);
