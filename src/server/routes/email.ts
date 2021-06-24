@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { Example, ExamplePlainText } from '@/email/templates/Example';
 import { render } from 'mjml-react';
-import { sendEmail } from '@/email';
+import { send } from '@/email';
 
 const router = Router();
 
@@ -9,7 +9,7 @@ router.get('/inline-render-email', (_, res: Response) => {
   const email = Example({ name: 'Jane' });
   const { html } = render(email);
 
-  return res.type('html').sendEmail(html);
+  return res.type('html').send(html);
 });
 
 // pre render the email at app start
@@ -17,7 +17,7 @@ const email = Example({ name: 'Jane' });
 const { html } = render(email);
 
 router.get('/pre-render-email', (_, res: Response) => {
-  return res.type('html').sendEmail(html);
+  return res.type('html').send(html);
 });
 
 router.get('/send-example-email?:to', async (req: Request, res: Response) => {
@@ -28,7 +28,7 @@ router.get('/send-example-email?:to', async (req: Request, res: Response) => {
   }
 
   try {
-    await sendEmail(
+    await send(
       html,
       ExamplePlainText({ name: 'Jane' }),
       'Sign In | The Guardian',

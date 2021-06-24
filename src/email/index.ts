@@ -1,3 +1,3 @@
-import { sendEmail } from './lib/sendEmail';
+import { send } from './lib/send';
 
-export { sendEmail };
+export { send };

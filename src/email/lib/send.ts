@@ -3,7 +3,7 @@ import { awsConfig } from '@/server/lib/awsConfig';
 
 const SESV2 = new AWS.SESV2(awsConfig);
 
-export const sendEmail = (
+export const send = (
   html: string,
   plainText: string,
   subject: string,
