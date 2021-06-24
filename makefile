@@ -1,4 +1,4 @@
-.PHONY: build dev type-check lint fix test ci cypress clean-build clean-deps install reinstall upgrade clear check-env
+.PHONY: build dev tsc lint fix test ci cypress clean-build clean-deps install reinstall upgrade clear check-env
 
 # these means you can run the binaries in node_modules
 # like with npm scripts
@@ -28,9 +28,9 @@ dev: clear install
 	@(set -a && source .env && yarn watch:server & yarn watch & wait)
 
 # QA
-type-check: clear install
+tsc: clear install
 	$(call log, "checking for type errors")
-	@yarn type-check
+	@yarn tsc
 
 lint: clear install
 	$(call log, "checking for lint errors")
