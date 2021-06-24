@@ -19,9 +19,5 @@ export const sendExampleEmail = ({
   const plainText = ExampleText({ name });
   const { html } = render(email);
 
-  try {
-    send({ html, plainText, subject, to });
-  } catch (error) {
-    // TODO: Handle errors
-  }
+  return send({ html, plainText, subject, to });
 };
