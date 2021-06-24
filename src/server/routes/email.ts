@@ -6,18 +6,18 @@ import { sendEmail } from '@/email';
 const router = Router();
 
 router.get('/inline-render-email', (_, res: Response) => {
-  const email = Example;
-  const { html } = render(email());
+  const email = Example({ name: 'Jane' });
+  const { html } = render(email);
 
-  return res.type('html').send(html);
+  return res.type('html').sendEmail(html);
 });
 
 // pre render the email at app start
-const email = Example;
-const { html } = render(email());
+const email = Example({ name: 'Jane' });
+const { html } = render(email);
 
 router.get('/pre-render-email', (_, res: Response) => {
-  return res.type('html').send(html);
+  return res.type('html').sendEmail(html);
 });
 
 router.get('/send-example-email?:to', async (req: Request, res: Response) => {
@@ -28,7 +28,12 @@ router.get('/send-example-email?:to', async (req: Request, res: Response) => {
   }
 
   try {
-    await sendEmail(html, ExamplePlainText, 'Sign In | The Guardian', to);
+    await sendEmail(
+      html,
+      ExamplePlainText({ name: 'Jane' }),
+      'Sign In | The Guardian',
+      to,
+    );
   } catch (error) {
     if (error.statusCode) {
       return res.sendStatus(error.statusCode);

@@ -14,7 +14,11 @@ import {
 
 import { Button } from '@/email/components/Button';
 
-export const Example = () => (
+type Props = {
+  name: string;
+};
+
+export const Example = ({ name }: Props) => (
   <Mjml>
     <MjmlHead>
       <MjmlStyle>
@@ -80,7 +84,7 @@ export const Example = () => (
             line-height="17px"
             fontFamily="GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif"
           >
-            <p>Hello,</p>
+            <p>Hello ${name},</p>
             <p>You’ve requested a link to sign in to your account.</p>
             <p>Please click the button below to sign in.</p>
           </MjmlText>
@@ -155,8 +159,8 @@ export const Example = () => (
   </Mjml>
 );
 
-export const ExamplePlainText = `
-Hello,
+export const ExamplePlainText = ({ name }: Props) => `
+Hello ${name},
 You’ve requested a link to sign in to your account.
 Please use the link below to sign in.
 
