@@ -1,3 +1,3 @@
-import { send } from './lib/send';
+import { sendExampleEmail } from './templates/example/sendExampleEmail';
 
-export { send };
+export { sendExampleEmail };

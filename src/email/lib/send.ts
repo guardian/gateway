@@ -3,12 +3,14 @@ import { awsConfig } from '@/server/lib/awsConfig';
 
 const SESV2 = new AWS.SESV2(awsConfig);
 
-export const send = (
-  html: string,
-  plainText: string,
-  subject: string,
-  toAddress: string,
-) => {
+type Props = {
+  html: string;
+  plainText: string;
+  subject: string;
+  to: string;
+};
+
+export const send = ({ html, plainText, subject, to }: Props) => {
   const params: AWS.SESV2.SendEmailRequest = {
     Content: {
       Simple: {
@@ -26,7 +28,7 @@ export const send = (
       },
     },
     Destination: {
-      ToAddresses: [toAddress],
+      ToAddresses: [to],
     },
     FromEmailAddress: 'registration-reply@theguardian.com',
   };

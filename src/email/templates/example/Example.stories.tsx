@@ -2,7 +2,7 @@ import React from 'react';
 import { Meta } from '@storybook/react';
 
 import { Example } from './Example';
-import { renderMJML } from '../utility/render-mjml';
+import { renderMJML } from '../../utility/render-mjml';
 
 export default {
   title: 'Email/Example',
@@ -11,6 +11,11 @@ export default {
 } as Meta;
 
 export const Default = () => {
+  return renderMJML(<Example />);
+};
+Default.storyName = 'with defaults';
+
+export const Default = () => {
   return renderMJML(<Example name="Jane" />);
 };
-Default.storyName = 'Default email Example';
+Default.storyName = 'with name';
