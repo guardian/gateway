@@ -11,6 +11,6 @@ export default {
 } as Meta;
 
 export const Default = () => {
-  return renderMJML(<Example />);
+  return renderMJML(<Example name="Jane" />);
 };
 Default.storyName = 'Default email Example';
