@@ -11,7 +11,11 @@ To send an email
 ```
 import { sendExampleEmail } from '@/email';
 
-await sendExampleEmail({ to: 'person@example.com' });
+try {
+  await sendExampleEmail({ to: 'person@example.com' });
+} catch(error) {
+  // Handle error
+}
 ```
 
 ### Creating a new template
