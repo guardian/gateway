@@ -17,6 +17,9 @@ Parameters:
   OktaDomain:
     Description: The okta domain
     Type: AWS::SSM::Parameter::Value<String>
+  OktaCustomOAuthServer:
+    Description: The ID of the custom Okta OAuth Authorization server to use
+    Type: AWS::SSM::Parameter::Value<String>
   OktaClientId:
     Description: The okta client id for this application
     Type: AWS::SSM::Parameter::Value<String>
@@ -225,6 +228,7 @@ Resources:
             Environment=IS_HTTPS=true
             Environment=APP_SECRET=$APP_SECRET
             Environment=OKTA_DOMAIN=${OktaDomain}
+            Environment=OKTA_CUSTOM_OAUTH_SERVER=${OktaCustomOAuthServer}
             Environment=OKTA_CLIENT_ID=${OktaClientId}
             Environment=OKTA_CLIENT_SECRET=${OktaClientSecret}
 

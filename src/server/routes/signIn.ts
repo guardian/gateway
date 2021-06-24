@@ -73,7 +73,9 @@ router.post(
         // we send the generated nonce as the state parameter
         state: authState.nonce,
         // any scopes, by default the 'openid' scope is required
-        scope: 'openid',
+        // the idapi_token_cookie_exchange scope is checked on IDAPI to return
+        // idapi cookies on authentication
+        scope: 'openid idapi_token_cookie_exchange',
       });
 
       trackMetric(Metrics.AUTHENTICATION_SUCCESS);

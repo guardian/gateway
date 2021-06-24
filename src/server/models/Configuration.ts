@@ -16,6 +16,7 @@ export interface Configuration {
   isHttps: boolean;
   appSecret: string;
   oktaDomain: string;
+  oktaCustomOAuthServer: string;
   oktaClientId: string;
   oktaClientSecret: string;
 }

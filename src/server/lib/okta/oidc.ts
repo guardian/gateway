@@ -24,7 +24,8 @@ interface AuthorizationState {
   returnUrl: string;
 }
 
-const { oktaDomain, oktaClientId, oktaClientSecret } = getConfiguration();
+const { oktaDomain, oktaClientId, oktaClientSecret, oktaCustomOAuthServer } =
+  getConfiguration();
 
 // An agent to use with http calls to disable ssl verification in DEV only
 // for *.thegulocal.com domains
@@ -90,7 +91,9 @@ class OktaOIDCHandler {
    */
   async instantiate() {
     try {
-      const issuer = await Issuer.discover(oktaDomain);
+      const issuer = await Issuer.discover(
+        `${oktaDomain}/oauth2/${oktaCustomOAuthServer}/`,
+      );
       const client = new issuer.Client({
         client_id: oktaClientId,
         client_secret: oktaClientSecret,
@@ -100,7 +103,7 @@ class OktaOIDCHandler {
       this.issuer = issuer;
       this.client = client;
 
-      logger.info('Okta OpenID Connect handler initialised.');
+      logger.info('Okta OpenID Connect handler initialised');
     } catch (error) {
       logger.info('Okta OpenID Connect handler failed to initialise.');
       throw error;

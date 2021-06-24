@@ -85,6 +85,11 @@ export const getConfiguration = (): Configuration => {
     'OKTA_DOMAIN is missing',
   );
 
+  const oktaCustomOAuthServer: string = getOrThrow(
+    process.env.OKTA_CUSTOM_OAUTH_SERVER,
+    'OKTA_CUSTOM_OAUTH_SERVER is missing',
+  );
+
   const oktaClientId: string = getOrThrow(
     process.env.OKTA_CLIENT_ID,
     'OKTA_CLIENT_ID is missing',
@@ -113,6 +118,7 @@ export const getConfiguration = (): Configuration => {
     isHttps,
     appSecret,
     oktaDomain,
+    oktaCustomOAuthServer,
     oktaClientId,
     oktaClientSecret,
   };
