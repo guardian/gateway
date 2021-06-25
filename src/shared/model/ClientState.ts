@@ -1,4 +1,3 @@
-import { FieldError } from '@/server/routes/changePassword';
 import { Consent } from '@/shared/model/Consent';
 import { NewsLetter } from '@/shared/model/Newsletter';
 import { GeoLocation } from '@/shared/model/Geolocation';
@@ -8,6 +7,11 @@ interface ABTesting {
   mvtId?: number;
   participations?: Participations;
   forcedTestVariants?: Participations;
+}
+
+export interface FieldError {
+  field: string;
+  message: string;
 }
 
 export interface GlobalMessage {
