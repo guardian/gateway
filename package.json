@@ -113,6 +113,7 @@
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
     "csurf": "^1.11.0",
+    "deepmerge": "^4.2.2",
     "express": "^4.17.1",
     "hal-types": "^1.7.4",
     "helmet": "^4.6.0",

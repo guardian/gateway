@@ -1,4 +1,5 @@
 import { Request, Router } from 'express';
+import deepmerge from 'deepmerge';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { Routes } from '@/shared/model/Routes';
@@ -92,14 +93,11 @@ router.post(
 
         // re-render the sign in page on error
         const html = renderer(Routes.SIGN_IN, {
-          requestState: {
-            ...res.locals,
+          requestState: deepmerge(res.locals, {
             globalMessage: {
-              ...res.locals.globalMessage,
-              // the error message provided by okta
               error: oktaError.errorSummary,
             },
-          },
+          }),
           pageTitle: PageTitle.SIGN_IN,
         });
         return res.status(status).type('html').send(html);
@@ -107,13 +105,11 @@ router.post(
 
       // or any generic error
       const html = renderer(Routes.SIGN_IN, {
-        requestState: {
-          ...res.locals,
+        requestState: deepmerge(res.locals, {
           globalMessage: {
-            ...res.locals.globalMessage,
             error: SignInErrors.GENERIC,
           },
-        },
+        }),
         pageTitle: PageTitle.SIGN_IN,
       });
       return res.status(500).type('html').send(html);

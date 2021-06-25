@@ -10,6 +10,7 @@ import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
+import deepmerge from 'deepmerge';
 
 const router = Router();
 
@@ -45,17 +46,14 @@ router.post(
 
       trackMetric(Metrics.REGISTER_FAILURE);
 
-      state = {
-        ...state,
+      state = deepmerge(state, {
         globalMessage: {
-          ...state.globalMessage,
           error: message,
         },
         pageData: {
-          ...state.pageData,
           email,
         },
-      };
+      });
 
       const html = renderer(Routes.REGISTRATION, {
         requestState: state,
