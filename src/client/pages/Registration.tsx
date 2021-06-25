@@ -15,49 +15,71 @@ import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
 import { button, form, textInput } from '@/client/styles/Shared';
 
-export const Registration = () => (
-  <>
-    <Header />
-    <Nav
-      tabs={[
-        {
-          displayText: PageTitle.SIGN_IN,
-          linkTo: '/signin',
-          isActive: false,
-        },
-        {
-          displayText: PageTitle.REGISTRATION,
-          linkTo: '/register',
-          isActive: true,
-        },
-      ]}
-    />
-    <Main>
-      <PageBox>
-        <PageBody>
-          <form css={form} method="post" action={`${Routes.REGISTRATION}`}>
-            <CsrfFormField />
-            <TextInput
-              css={textInput}
-              label="Email"
-              name="email"
-              type="email"
+type Props = {
+  returnUrl?: string;
+  email?: string;
+};
+
+export const Registration = ({ returnUrl = '', email = '' }: Props) => {
+  const returnUrlQuery = returnUrl
+    ? `?returnUrl=${encodeURIComponent(returnUrl)}`
+    : '';
+
+  return (
+    <>
+      <Header />
+      <Nav
+        tabs={[
+          {
+            displayText: PageTitle.SIGN_IN,
+            linkTo: Routes.SIGN_IN,
+            isActive: false,
+          },
+          {
+            displayText: PageTitle.REGISTRATION,
+            linkTo: Routes.REGISTRATION,
+            isActive: true,
+          },
+        ]}
+      />
+      <Main>
+        <PageBox>
+          <PageBody>
+            <form
+              css={form}
+              method="post"
+              action={`${Routes.REGISTRATION}${returnUrlQuery}`}
+            >
+              <CsrfFormField />
+              <TextInput
+                css={textInput}
+                label="Email"
+                name="email"
+                type="email"
+                defaultValue={email}
+              />
+              <TextInput
+                css={textInput}
+                label="Password"
+                name="password"
+                type="password"
+              />
+              <Button css={button} type="submit">
+                Register
+              </Button>
+            </form>
+            <Divider
+              size="full"
+              spaceAbove="loose"
+              displayText="or continue with"
             />
-            <Button css={button} type="submit">
-              Register
-            </Button>
-          </form>
-          <Divider
-            size="full"
-            spaceAbove="loose"
-            displayText="or continue with"
-          />
-          <SocialButtons returnUrl="todo" />
-          <Divider size="full" spaceAbove="tight" />
-          <Terms />
-        </PageBody>
-      </PageBox>
-    </Main>
-    <Footer />
-  </>
-);
+            <SocialButtons returnUrl={returnUrl} />
+            <Divider size="full" spaceAbove="tight" />
+            <Terms />
+          </PageBody>
+        </PageBox>
+      </Main>
+      <Footer />
+    </>
+  );
+};

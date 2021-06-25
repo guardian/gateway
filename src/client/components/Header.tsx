@@ -5,7 +5,7 @@ import { brand, space } from '@guardian/src-foundations';
 import { SvgGuardianLogo } from '@guardian/src-brand';
 import { Link } from '@guardian/src-link';
 import { from } from '@guardian/src-foundations/mq';
-import { Container } from '@guardian/src-layout';
+import { Container } from '@/client/components/Container';
 
 const GuardianLogo = () => {
   return (
@@ -33,7 +33,7 @@ const headerStyles = css`
   background-color: ${brand[400]};
 `;
 
-const containerStyles = css`
+const wrapperStyles = css`
   display: flex;
   justify-content: flex-end;
 `;
@@ -56,8 +56,10 @@ const svgOverrides = css`
 
 export const Header = () => (
   <header id="top" css={headerStyles}>
-    <Container cssOverrides={[containerStyles, svgOverrides]}>
-      <GuardianLogo />
+    <Container>
+      <div css={[wrapperStyles, svgOverrides]}>
+        <GuardianLogo />
+      </div>
     </Container>
   </header>
 );

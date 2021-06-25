@@ -2775,98 +2775,98 @@
     yaml "^1.7.2"
     yargs "^15.1.0"
 
-"@guardian/src-accordion@^3.6.0":
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/@guardian/src-accordion/-/src-accordion-3.6.0.tgz#975b4c15edb49ea99494c6da2e1769e692c5a0dd"
-  integrity sha512-4E4HGNPuBsUtnU61VImuBTBe2BnWEJJ/dM8+ZfP5avXDoKYOqxdJbZssfPC4Rr8v7XG5tgNN/HIGsUtZc+Jt8Q==
+"@guardian/src-accordion@^3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-accordion/-/src-accordion-3.7.0.tgz#0446194d97b41f87c8a0a6a082c0910b6ff20bdd"
+  integrity sha512-Hs6bFVKtahbUmtYI3u2DN1OAuRgup55Rv0rizurm93Tx3mIWBdtgroqg7l5Ynp54ZvdyRKxAIqQjd650x8xC1A==
   dependencies:
-    "@guardian/src-helpers" "^3.6.0"
+    "@guardian/src-helpers" "^3.7.0"
 
-"@guardian/src-brand@^3.6.0":
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/@guardian/src-brand/-/src-brand-3.6.0.tgz#941e63ed3ba510dd26b807a9e275350bd378e9df"
-  integrity sha512-nnnqHWg8NodPde1vv8nlQS0enHuEcqZVKX4cXkRl0ci6XmoBP8FJMN4AxsWJN/Z5k4ZE1o/3ba1YoxdelWTwEg==
+"@guardian/src-brand@^3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-brand/-/src-brand-3.7.0.tgz#18c9973dbee8dd38dfe3e69ade8175bd6500d291"
+  integrity sha512-KT+h4xBIsUv9ap9mhz2bOnbQaLI+HRk2sugngcC7TMOPyiskPBv+1eQKknrWYeU9nR231dYzvJ6PIiUsBUOZnA==
 
-"@guardian/src-button@^3.6.0":
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/@guardian/src-button/-/src-button-3.6.0.tgz#b620c4512f6069e97ca61380a9cf20a30108b3e2"
-  integrity sha512-7YOAp8MHwm4UGRylAKlctM34bVoyICk2OP83nYchf9U4+b+ih3W2fdTwikQdlMhdA49XV/8zl2XSe+4WFcCuLw==
+"@guardian/src-button@^3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-button/-/src-button-3.7.0.tgz#f2e038d6e045767a78c4a40313c8a8c1a96c10f4"
+  integrity sha512-1EGwjSgRHksXLyIa1roI6UhL7MAJ//nn03M6/nV+wEUUhpcwCXoYiiixWkTEuqvsOHVmMdlkrgBpXa24UWouIQ==
   dependencies:
-    "@guardian/src-helpers" "^3.6.0"
+    "@guardian/src-helpers" "^3.7.0"
 
-"@guardian/src-checkbox@^3.6.0":
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/@guardian/src-checkbox/-/src-checkbox-3.6.0.tgz#76e3997f3be8343b54f746f1550ca407c0a39203"
-  integrity sha512-z+bh+2LFEHYBWFnW8wccvZ8NvbOQU/vxB9Fjm8MXwQUTMXUDbu8A0Lnd0sEb4CvH3E5t0q+Q4kavx1+QhpETOg==
+"@guardian/src-checkbox@^3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-checkbox/-/src-checkbox-3.7.0.tgz#35d2cdf76461eb7d11db37214439884ad6cfa5d9"
+  integrity sha512-Y1bV4f9mmfnGHoGwiho/qdF/2JVOvRP9O2Qbs76EJ/TBtn5O88PZwL61b6vJJ35pHj3NkMHx4Na25TSpC++0vA==
   dependencies:
-    "@guardian/src-helpers" "^3.6.0"
-    "@guardian/src-label" "^3.6.0"
-    "@guardian/src-user-feedback" "^3.6.0"
+    "@guardian/src-helpers" "^3.7.0"
+    "@guardian/src-label" "^3.7.0"
+    "@guardian/src-user-feedback" "^3.7.0"
 
-"@guardian/src-foundations@^3.6.0":
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/@guardian/src-foundations/-/src-foundations-3.6.0.tgz#7bf7d4a7c28f9f4812494fdb22b8019c1c466ef5"
-  integrity sha512-KjcBwR334dhWWB6l1/j6kUcUncDgyIEE0M+ifwHPoVB/n/OVcB0LJl/a7qTCUPBYpxeZ3wukaTcMVr2zz+VL1Q==
+"@guardian/src-foundations@^3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-foundations/-/src-foundations-3.7.0.tgz#f5f3a3c6d20c72d257447d1a8d97d1ffb613da0d"
+  integrity sha512-YLbr1D8VCoSg2nngMlMuq25zTcgngw01VZaqiyY4j9tC8IxFDliLbIf7mvQigKq9qn8RAlfM7HkMGzxSxVHtDg==
 
-"@guardian/src-helpers@^3.6.0":
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/@guardian/src-helpers/-/src-helpers-3.6.0.tgz#85c5c4bd73ccf9d6a768f228f664671ecadc3982"
-  integrity sha512-Y3mrvH1qaXoMkM2/U/7dfDO5ZUiyfSi9iRrioVMabS4CnrRVELVJkt0aTk5FAG2A966z6mYkHzbTOTWaESLCmw==
+"@guardian/src-helpers@^3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-helpers/-/src-helpers-3.7.0.tgz#58f7a8fe19370cf6a74a5a5cd4581a77d56c4018"
+  integrity sha512-JvFd1EAjf/IHBsyDIAvObcrqChu6OERaE+TlploALBeVvGaZWonyPFNu83f/O9De3/rCq6xuS23NWhjDEuaMxA==
   dependencies:
-    "@guardian/src-foundations" "^3.6.0"
+    "@guardian/src-foundations" "^3.7.0"
     mini-svg-data-uri "^1.2.3"
 
-"@guardian/src-icons@^3.6.0":
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/@guardian/src-icons/-/src-icons-3.6.0.tgz#f093cd554f928e189e4d6ac069c6c7b5e65558ff"
-  integrity sha512-2j8TrRFyFbFBYGBdfL6ExCh0Bqgga0coi7H40tb3flV4UazyQqAGYuUb2r8Z38MJfTpotcPLxkA0uU6LY7VP7w==
+"@guardian/src-icons@^3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-icons/-/src-icons-3.7.0.tgz#580688167d00d9eed601044867d67dcd48b210c6"
+  integrity sha512-5tm8YlQpVGpuBN5hJ2Fi9xWkgCAvfX1IrzpLtLg4pLa6UmP1CIvwjlQocDBWRx2BItifU5UKtEpqiEvJdusK1g==
 
-"@guardian/src-label@^3.6.0":
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/@guardian/src-label/-/src-label-3.6.0.tgz#0d65a7a07875d0b705392ee76157c54d24104cfc"
-  integrity sha512-NyxLj8/xcZOvMj0qJ1EpNpVrcfdO44TR9NLvNnud1gcksEWur4EcWUeGgcrbJdOdK0LS7fbDUbYj5GnBWhN0aw==
+"@guardian/src-label@^3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-label/-/src-label-3.7.0.tgz#83dfb902058d004d0f44bfb7ad49a5ab0786973e"
+  integrity sha512-GOEZiMPjKE4vLPK8ggcfKjQzdWB0IoA8L74GHq4TmVsolT669HF/UR262gMhTKKD5aqulSrDnEEFTGR1p2BSVw==
   dependencies:
-    "@guardian/src-helpers" "^3.6.0"
+    "@guardian/src-helpers" "^3.7.0"
 
-"@guardian/src-layout@^3.6.0":
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/@guardian/src-layout/-/src-layout-3.6.0.tgz#e60e521a273a8c407faedb31954e2f44a761354f"
-  integrity sha512-uAQq1X7s4+ulXZJnE4MJaHxRvvniPhLiQ0q8s+dgv+qy7sr4FAIq8cGFXCFcHUFIv+5PPaeVktG78NSgNLufmw==
+"@guardian/src-layout@3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-layout/-/src-layout-3.7.0.tgz#b4ebac8d1d1ed5e03cfd6c064dcfc75f4e342ce6"
+  integrity sha512-nO6FaqANRgVY9cEW2wVRCC4Zth3Tw/kjr6zzMI/gWQULcv6ps5yQcpYj1E85StWHXAPnQODO6aja14ZdEXPRFA==
   dependencies:
-    "@guardian/src-helpers" "^3.6.0"
+    "@guardian/src-helpers" "^3.7.0"
 
-"@guardian/src-link@^3.6.0":
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/@guardian/src-link/-/src-link-3.6.0.tgz#c3295b0e986efefcace176cafeaacc898c335c70"
-  integrity sha512-4fZVLFs9AM0Bn5OOQEsHn9MiNB7wwWlT1Deze7DQkB1qP+R0kpPEs5AVsDMmubNbthrNZz9mxOYQF5IcLujxVA==
+"@guardian/src-link@^3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-link/-/src-link-3.7.0.tgz#8cb3e79644050a5cbc95dbd09807ec67e2bfe1cb"
+  integrity sha512-8wGjCVSR0wR8OwNuSA6X04hIOANl6asjyWtmKa845hl5MCYP55LORjMGvYGTZc72e6KCwpTKED+yvKZ14MDaRQ==
   dependencies:
-    "@guardian/src-helpers" "^3.6.0"
+    "@guardian/src-helpers" "^3.7.0"
 
-"@guardian/src-radio@^3.6.0":
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/@guardian/src-radio/-/src-radio-3.6.0.tgz#0c1aa23e43471d5c34f3e5d294886b0fb043b79b"
-  integrity sha512-r2pJHBTt7EpvPSmDgEtWI+lHL6mLnrtW6uIpaytjYF1iR6vh7rIJfdOoUObWd4Ny6Zi/ngdGgDZVqk0svt0QOA==
+"@guardian/src-radio@^3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-radio/-/src-radio-3.7.0.tgz#bafc6943d13d52bc24f05779925c5db4b18808d4"
+  integrity sha512-AFB0uLQ8LrZw0ivALZOtexBIEvW0GcWSNPfwnUF69TsEidgr5OX6cn+8DH0KwXD8ApY0oW77aXwrw7nn7ClI9w==
   dependencies:
-    "@guardian/src-helpers" "^3.6.0"
-    "@guardian/src-label" "^3.6.0"
-    "@guardian/src-user-feedback" "^3.6.0"
+    "@guardian/src-helpers" "^3.7.0"
+    "@guardian/src-label" "^3.7.0"
+    "@guardian/src-user-feedback" "^3.7.0"
 
-"@guardian/src-text-input@^3.6.0":
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/@guardian/src-text-input/-/src-text-input-3.6.0.tgz#73e0e0b10b8a35abf79b9da970517ca8587c76a3"
-  integrity sha512-ej9mUte7LhKpVcytMtylgz0bosybzm7Wmm31yK3h+y/Le81ZC7T63qs56CkR9cgy32jP8z0XbdwDg3YTu/mOWA==
+"@guardian/src-text-input@^3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-text-input/-/src-text-input-3.7.0.tgz#f73cf92f07faa5c25ccf14ae7581f633f4342f2c"
+  integrity sha512-7MO2Kmhc/naqjA9NVHgQIwO7MRtb9nGoiRAfi4AokQf8DOZCekMXPBVnmrdfPOikytp+p0V6CjUVqC49kY7wdQ==
   dependencies:
-    "@guardian/src-helpers" "^3.6.0"
-    "@guardian/src-label" "^3.6.0"
-    "@guardian/src-user-feedback" "^3.6.0"
+    "@guardian/src-helpers" "^3.7.0"
+    "@guardian/src-label" "^3.7.0"
+    "@guardian/src-user-feedback" "^3.7.0"
 
-"@guardian/src-user-feedback@^3.6.0":
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/@guardian/src-user-feedback/-/src-user-feedback-3.6.0.tgz#574cfd66528d2a509b5473a506fe0924773f604f"
-  integrity sha512-tCg/XJynB+xygJhuxoz6nDHmAXEqxesiKcYXFYVwKCDObdaCpO17TX623AFrpxra9jEdazqzrojy0Xpr7y2BMg==
+"@guardian/src-user-feedback@^3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-user-feedback/-/src-user-feedback-3.7.0.tgz#80f832cef2f69e870570869a4e069ce7e4d3a204"
+  integrity sha512-jJazzCeei3RI2ydZUzcTJCsPktPNpscmcZTZ8v/+H2EGcfBv1pcqyKunJh5O1VINPDoo+W42bRJ62hRrNEs5FA==
   dependencies:
-    "@guardian/src-helpers" "^3.6.0"
-    "@guardian/src-icons" "^3.6.0"
+    "@guardian/src-helpers" "^3.7.0"
+    "@guardian/src-icons" "^3.7.0"
 
 "@guardian/types@^6.1.0":
   version "6.1.0"
@@ -6091,10 +6091,10 @@ aws-sdk@2.893.0:
     uuid "3.3.2"
     xml2js "0.4.19"
 
-aws-sdk@2.927.0:
-  version "2.927.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.927.0.tgz#8545b30094eb52d16dc6b24b1c7f19bea565b261"
-  integrity sha512-S1dbpq26bQNYBQPHAsZBt0/L/e0FAWFdjjQoU3zdaVIXa08eA9d/oRI3kEs568ErJgBjwWU1CUUlr1byBxKjUQ==
+aws-sdk@2.933.0:
+  version "2.933.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.933.0.tgz#42f2cab2ebb63291ce6e764510e8bfa997847256"
+  integrity sha512-WJBQSE3zdX5YbzTa5+k45hzUAL5EPyiZJAnzCV6TIkPEYPMY215q8iloBATqbntbvAyWC4j2Rto6+RYmki1MOQ==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"

@@ -2,7 +2,7 @@ import { Router, Request } from 'express';
 import { Routes } from '@/shared/model/Routes';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
-import { trackMetric } from '@/server/lib/AWS';
+import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { ResponseWithRequestState } from '@/server/models/Express';

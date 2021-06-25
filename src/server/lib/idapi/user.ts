@@ -1,19 +1,22 @@
 import {
   idapiFetch,
   APIGetOptions,
+  APIPostOptions,
   APIAddClientAccessToken,
   APIForwardSessionIdentifier,
   IDAPIError,
 } from '@/server/lib/IDAPIFetch';
 import { logger } from '@/server/lib/logger';
-import { ConsentsErrors, IdapiErrorMessages } from '@/shared/model/Errors';
+import {
+  ConsentsErrors,
+  IdapiErrorMessages,
+  RegistrationErrors,
+} from '@/shared/model/Errors';
 import User from '@/shared/model/User';
 
 interface APIResponse {
   user: User;
 }
-
-const API_ROUTE = '/user/me';
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
   if (error.status === 'error' && error.errors?.length) {
@@ -21,6 +24,8 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
     const { message } = err;
 
     switch (message) {
+      case IdapiErrorMessages.EMAIL_IN_USE:
+        throw { message: RegistrationErrors.GENERIC, status };
       case IdapiErrorMessages.ACCESS_DENIED:
         throw { message: ConsentsErrors.ACCESS_DENIED, status };
       default:
@@ -49,10 +54,23 @@ export const read = async (ip: string, sc_gu_u: string): Promise<User> => {
     sc_gu_u,
   );
   try {
-    const response = (await idapiFetch(API_ROUTE, options)) as APIResponse;
+    const response = (await idapiFetch('/user/me', options)) as APIResponse;
     return responseToEntity(response);
   } catch (e) {
     logger.error(e);
     return handleError(e);
+  }
+};
+
+export const create = async (email: string, password: string, ip: string) => {
+  const options = APIPostOptions({
+    primaryEmailAddress: email,
+    password,
+  });
+
+  try {
+    return await idapiFetch('/user', APIAddClientAccessToken(options, ip));
+  } catch (e) {
+    handleError(e);
   }
 };

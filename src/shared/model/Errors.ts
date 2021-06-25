@@ -7,6 +7,7 @@ export enum IdapiErrorMessages {
   INVALID_EMAIL_PASSWORD = 'Invalid email or password',
   USER_ALREADY_VALIDATED = 'User Already Validated',
   BREACHED_PASSWORD = 'Breached password',
+  EMAIL_IN_USE = 'Email in use',
 }
 
 export enum ResetPasswordErrors {
@@ -18,6 +19,10 @@ export enum ResetPasswordErrors {
 export enum SignInErrors {
   GENERIC = 'There was a problem signing in, please try again.',
   AUTHENTICATION_FAILED = 'This email and password combination is not valid.',
+}
+
+export enum RegistrationErrors {
+  GENERIC = 'There was a problem registering, please try again.',
 }
 
 export enum ChangePasswordErrors {

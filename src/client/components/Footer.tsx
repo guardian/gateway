@@ -6,7 +6,6 @@ import {
   brandAlt,
   brandBackground,
 } from '@guardian/src-foundations/palette';
-import { Container } from '@guardian/src-layout';
 import { space } from '@guardian/src-foundations';
 import { textSans } from '@guardian/src-foundations/typography';
 import { from, until } from '@guardian/src-foundations/mq';
@@ -14,6 +13,7 @@ import { Link } from '@guardian/src-link';
 import { Hide } from '@guardian/src-layout';
 import locations from '@/client/lib/locations';
 import { BackToTop } from '@/client/components/BackToTop';
+import { Container } from '@/client/components/Container';
 
 const footer = css`
   background-color: ${brandBackground.primary};
@@ -22,20 +22,9 @@ const footer = css`
   ${textSans.medium()};
 `;
 
-const paddingOverrides = css`
-  /* TODO: Refactor these once https://github.com/guardian/source/pull/820 is merged and published; */
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-`;
-
-const containerStyles = css`
+const ulWrapperStyles = css`
   display: flex;
   position: relative;
-  ${from.tablet} {
-    border-left: 1px solid ${brand[600]};
-    border-right: 1px solid ${brand[600]};
-  }
-  border-bottom: 1px solid ${brand[600]};
 `;
 
 const linkStyles = css`
@@ -62,10 +51,7 @@ const columnStyles = css`
   padding-top: ${space[3]}px;
   padding-right: 0;
   padding-bottom: 0;
-  padding-left: ${space[3]}px;
-  ${from.tablet} {
-    padding-left: 20px;
-  }
+  padding-left: 0;
   margin-top: 0;
   margin-right: ${space[3]}px;
   margin-bottom: ${space[6]}px;
@@ -74,21 +60,19 @@ const columnStyles = css`
 
 const leftBorderStyles = css`
   border-left: 1px solid ${brand[600]};
+  padding-left: ${space[3]}px;
+  ${from.tablet} {
+    padding-left: 20px;
+  }
 `;
 
 const copyrightStyles = css`
   ${textSans.xxsmall()};
-  /* TODO: Refactor these once https://github.com/guardian/source/pull/820 is merged and published; */
-  padding-left: ${space[3]}px !important;
-  ${from.tablet} {
-    padding-left: 20px !important;
-  }
-  padding-right: ${space[3]}px !important;
+
   padding-top: ${space[3]}px !important;
   padding-bottom: ${space[3]}px !important;
-
   ${until.tablet} {
-    margin-top: ${space[2]}px !important;
+    padding-top: ${space[6]}px !important;
   }
 `;
 
@@ -104,87 +88,93 @@ export const Footer = () => (
   <footer css={footer}>
     {/* What you see below tablet */}
     <Hide above="tablet">
-      <Container cssOverrides={[paddingOverrides, containerStyles]}>
-        <ul css={[ulStyles, columnStyles]}>
-          <li>
-            <Link cssOverrides={linkStyles} href={locations.PRIVACY}>
-              Privacy policy
-            </Link>
-          </li>
-          <li>
-            <Link cssOverrides={linkStyles} href={locations.CONTACT_US}>
-              Contact us
-            </Link>
-          </li>
-          <li>
-            <Link cssOverrides={linkStyles} href={locations.COOKIE_POLICY}>
-              Cookie policy
-            </Link>
-          </li>
-        </ul>
-        <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
-          <li>
-            <Link cssOverrides={linkStyles} href={locations.HELP}>
-              Help
-            </Link>
-          </li>
-          <li>
-            <Link cssOverrides={linkStyles} href={locations.TERMS}>
-              Terms and Conditions
-            </Link>
-          </li>
-        </ul>
-        <div css={backToTopStyles}>
-          <BackToTop />
+      <Container sideBorders={true}>
+        <div css={ulWrapperStyles}>
+          <ul css={[ulStyles, columnStyles]}>
+            <li>
+              <Link cssOverrides={linkStyles} href={locations.PRIVACY}>
+                Privacy policy
+              </Link>
+            </li>
+            <li>
+              <Link cssOverrides={linkStyles} href={locations.CONTACT_US}>
+                Contact us
+              </Link>
+            </li>
+            <li>
+              <Link cssOverrides={linkStyles} href={locations.COOKIE_POLICY}>
+                Cookie policy
+              </Link>
+            </li>
+          </ul>
+          <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
+            <li>
+              <Link cssOverrides={linkStyles} href={locations.HELP}>
+                Help
+              </Link>
+            </li>
+            <li>
+              <Link cssOverrides={linkStyles} href={locations.TERMS}>
+                Terms and Conditions
+              </Link>
+            </li>
+          </ul>
+          <div css={backToTopStyles}>
+            <BackToTop />
+          </div>
         </div>
       </Container>
     </Hide>
     {/* What you see above tablet */}
     <Hide below="tablet">
-      <Container cssOverrides={[paddingOverrides, containerStyles]}>
-        <ul css={[ulStyles, columnStyles]}>
-          <li>
-            <Link cssOverrides={linkStyles} href={locations.PRIVACY}>
-              Privacy policy
-            </Link>
-          </li>
-        </ul>
-        <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
-          <li>
-            <Link cssOverrides={linkStyles} href={locations.CONTACT_US}>
-              Contact us
-            </Link>
-          </li>
-        </ul>
-        <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
-          <li>
-            <Link cssOverrides={linkStyles} href={locations.HELP}>
-              Help
-            </Link>
-          </li>
-        </ul>
-        <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
-          <li>
-            <Link cssOverrides={linkStyles} href={locations.TERMS}>
-              Terms and Conditions
-            </Link>
-          </li>
-        </ul>
-        <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
-          <li>
-            <Link cssOverrides={linkStyles} href={locations.COOKIE_POLICY}>
-              Cookie policy
-            </Link>
-          </li>
-        </ul>
-        <div css={backToTopStyles}>
-          <BackToTop />
+      <Container sideBorders={true}>
+        <div css={ulWrapperStyles}>
+          <ul css={[ulStyles, columnStyles]}>
+            <li>
+              <Link cssOverrides={linkStyles} href={locations.PRIVACY}>
+                Privacy policy
+              </Link>
+            </li>
+          </ul>
+          <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
+            <li>
+              <Link cssOverrides={linkStyles} href={locations.CONTACT_US}>
+                Contact us
+              </Link>
+            </li>
+          </ul>
+          <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
+            <li>
+              <Link cssOverrides={linkStyles} href={locations.HELP}>
+                Help
+              </Link>
+            </li>
+          </ul>
+          <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
+            <li>
+              <Link cssOverrides={linkStyles} href={locations.TERMS}>
+                Terms and Conditions
+              </Link>
+            </li>
+          </ul>
+          <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
+            <li>
+              <Link cssOverrides={linkStyles} href={locations.COOKIE_POLICY}>
+                Cookie policy
+              </Link>
+            </li>
+          </ul>
+          <div css={backToTopStyles}>
+            <BackToTop />
+          </div>
         </div>
       </Container>
     </Hide>
-    <Container cssOverrides={copyrightStyles}>
-      © {new Date().getFullYear()} Guardian News & Media Limited or its
-      affiliated companies. All rights reserved.
+    <Container topBorder={true} sideBorders={false}>
+      <div css={[copyrightStyles]}>
+        © {new Date().getFullYear()} Guardian News & Media Limited or its
+        affiliated companies. All rights reserved.
+      </div>
     </Container>
   </footer>
 );

@@ -9,4 +9,4 @@ jobs:
       - name: Install modules
         run: yarn
       - name: Run type checking
-        run: yarn type-check
+        run: yarn tsc
