@@ -9,7 +9,6 @@ import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { authenticate } from '@/server/lib/okta/authentication';
-import { FetchOktaError } from '@/server/lib/okta/error';
 import {
   generateAuthorizationState,
   OktaOIDC,
@@ -87,27 +86,16 @@ router.post(
       trackMetric(Metrics.AUTHENTICATION_FAILURE);
       logger.error(error);
 
-      // errors for okta are formatted with the oktaError property
-      if (error.oktaError) {
-        const { status, oktaError } = error as FetchOktaError;
-
-        // re-render the sign in page on error
-        const html = renderer(Routes.SIGN_IN, {
-          requestState: deepmerge(res.locals, {
-            globalMessage: {
-              error: oktaError.errorSummary,
-            },
-          }),
-          pageTitle: PageTitle.SIGN_IN,
-        });
-        return res.status(status).type('html').send(html);
-      }
-
-      // or any generic error
       const html = renderer(Routes.SIGN_IN, {
         requestState: deepmerge(res.locals, {
-          globalMessage: {
-            error: SignInErrors.GENERIC,
+          pageData: {
+            email,
+            fieldErrors: [
+              {
+                field: 'summary',
+                message: error.message || SignInErrors.GENERIC,
+              },
+            ],
           },
         }),
         pageTitle: PageTitle.SIGN_IN,

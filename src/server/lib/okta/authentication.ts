@@ -3,6 +3,7 @@ import { HalLink } from 'hal-types';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { OktaError } from './error';
 import { httpsAgent } from '@/server/lib/devHttpsAgent';
+import { OktaAuthenticateErrors, SignInErrors } from '@/shared/model/Errors';
 
 // https://developer.okta.com/docs/reference/api/authn/#transaction-state
 enum AuthenticationTransactionState {
@@ -87,11 +88,27 @@ const API_ROUTE = '/api/v1/authn';
 const handleResponseFailure = async (response: Response) => {
   try {
     const parsed = (await response.json()) as OktaError;
-    throw {
-      status: response.status,
-      statusText: response.statusText,
-      oktaError: parsed,
-    };
+    switch (parsed.errorCode) {
+      // errors from https://developer.okta.com/docs/reference/api/authn/#response-parameters
+      case 'E0000004':
+        throw {
+          status: response.status,
+          statusText: response.statusText,
+          message: OktaAuthenticateErrors.AUTHENTICATION_FAILED,
+        };
+      case 'E0000047':
+        throw {
+          status: response.status,
+          statusText: response.statusText,
+          message: SignInErrors.GENERIC,
+        };
+      default:
+        throw {
+          status: response.status,
+          statusText: response.statusText,
+          message: SignInErrors.GENERIC,
+        };
+    }
   } catch (error) {
     throw error;
   }
