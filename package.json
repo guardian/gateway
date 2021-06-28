@@ -98,7 +98,7 @@
     "@emotion/react": "^11.4.0",
     "@guardian/ab-core": "^2.0.0",
     "@guardian/ab-react": "^2.0.1",
-    "@guardian/consent-management-platform": "^6.11.4",
+    "@guardian/consent-management-platform": "^6.12.0",
     "@guardian/libs": "^2.1.0",
     "@guardian/src-accordion": "^3.7.0",
     "@guardian/src-brand": "^3.7.0",

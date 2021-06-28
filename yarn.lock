@@ -2751,10 +2751,17 @@
   resolved "https://registry.yarnpkg.com/@guardian/ab-react/-/ab-react-2.0.1.tgz#f018898de584c8e70a48e69ec9e499e08f512cc5"
   integrity sha512-iOKbIxoLwRMv2eHddxL5l9mNBy/B9QaOOJgA3VUdo/jH5cUVzbF6W8yYDGcZJTolIVhSu5GPR8fitsOoup6Vww==
 
-"@guardian/consent-management-platform@^6.11.4":
-  version "6.11.4"
-  resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-6.11.4.tgz#b34c312cf6694278afcaa8541e09cd5e2f8b1ad3"
-  integrity sha512-1H06cb3rnrrk/lzecNS+P5/mXXytEazSSmBtEwuUiMdiRE6RDkOVLyvzNyfHy9z2/xndrfaonR2clWmzkEWgbQ==
+"@guardian/consent-management-platform@^6.12.0":
+  version "6.12.0"
+  resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-6.12.0.tgz#7043f73bb2a6e27dc0d1efd2cb4fc6040733c81c"
+  integrity sha512-CbYqgoKo45cKJviJcGic9AvbeBOW3GPvYXJHqZWlpRTGdwVqTHZgangP66U4Mfs5K6Ux8P7vHvoohhwZdk9QQA==
+  dependencies:
+    "@guardian/libs" "^1"
+
+"@guardian/libs@^1":
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/@guardian/libs/-/libs-1.8.1.tgz#22bccd66be7c5bf70cd5bbb1bf7700d94610ccb7"
+  integrity sha512-Q/JPLhNeYa5XhDPJhw/1+fbZmszopvovWW8I7dGEuFPGWeNUmXAbW8J3kzuonDu7l9/tuFZg8jljbKHZlrFx0A==
 
 "@guardian/libs@^2.1.0":
   version "2.1.0"
