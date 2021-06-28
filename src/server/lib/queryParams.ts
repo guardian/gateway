@@ -33,11 +33,15 @@ export const parseExpressQueryParams = (
     clientId,
     emailVerified,
     csrfError,
+    error,
+    error_description,
   }: {
     returnUrl?: string;
     clientId?: string;
     emailVerified?: string;
     csrfError?: string;
+    error?: string;
+    error_description?: string;
   },
 ): QueryParams => {
   return {
@@ -45,6 +49,8 @@ export const parseExpressQueryParams = (
     clientId: validateClientId(clientId),
     emailVerified: validateEmailVerified(emailVerified),
     csrfError: validateCsrfError(method, csrfError),
+    error,
+    error_description,
   };
 };
 

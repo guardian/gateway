@@ -19,8 +19,18 @@ import { SignInErrors } from '@/shared/model/Errors';
 const router = Router();
 
 router.get(Routes.SIGN_IN, (req: Request, res: ResponseWithRequestState) => {
+  let state = res.locals;
+
+  if (state.queryParams.error_description) {
+    state = deepmerge(state, {
+      globalMessage: {
+        error: `${state.queryParams.error_description}`,
+      },
+    });
+  }
+
   const html = renderer(Routes.SIGN_IN, {
-    requestState: res.locals,
+    requestState: state,
     pageTitle: PageTitle.SIGN_IN,
   });
   return res.type('html').send(html);
@@ -29,11 +39,7 @@ router.get(Routes.SIGN_IN, (req: Request, res: ResponseWithRequestState) => {
 router.get(
   Routes.SIGN_IN_CURRENT,
   (req: Request, res: ResponseWithRequestState) => {
-    const html = renderer(Routes.SIGN_IN_CURRENT, {
-      requestState: res.locals,
-      pageTitle: PageTitle.SIGN_IN,
-    });
-    return res.type('html').send(html);
+    return res.redirect(Routes.SIGN_IN);
   },
 );
 
@@ -100,7 +106,10 @@ router.post(
         }),
         pageTitle: PageTitle.SIGN_IN,
       });
-      return res.status(500).type('html').send(html);
+      return res
+        .status(error.status || 500)
+        .type('html')
+        .send(html);
     }
   }),
 );

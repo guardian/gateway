@@ -13,6 +13,8 @@ import { Metrics } from '@/server/models/Metrics';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { exchangeAccessTokenForCookies } from '@/server/lib/idapi/auth';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
+import { stringify } from 'querystring';
+import { SignInErrors } from '@/shared/model/Errors';
 
 const router = Router();
 
@@ -26,6 +28,8 @@ router.get(
       // for auth code flow they will be "code" and "state"
       // "code" is the authorization code to exchange for access token
       // "state" will be the "nonce" value set in the oidc_auth_state cookie
+      // if there were any errors, then an "error", and "error_description" params
+      // will be returned instead
       const callbackParams = OktaOIDC.Client.callbackParams(req);
 
       // get the oidc_auth_state cookie which contains the "nonce"
@@ -82,8 +86,22 @@ router.get(
     } catch (error) {
       logger.error(error);
       trackMetric(Metrics.AUTHORIZATION_ERROR);
+      let errQuery;
+      // if there's been an error from the authorization_code flow
+      // then propagate it as a query parameter (error + error_description)
+      if (error.error && error.error_description) {
+        errQuery = stringify({
+          error: error.error,
+          error_description: `${error.error_description} Please try again.`,
+        });
+      } else {
+        // otherwise it's a generic error
+        errQuery = stringify({
+          error_description: SignInErrors.GENERIC,
+        });
+      }
       // huh, there's been an error here, redirect to sign in
-      return res.redirect(signInPageUrl);
+      return res.redirect(`${signInPageUrl}${errQuery ? `?${errQuery}` : ''}`);
     }
   }),
 );
