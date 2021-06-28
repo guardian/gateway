@@ -125,7 +125,7 @@
     "ms": "^2.1.3",
     "node-fetch": "^2.6.1",
     "ophan-tracker-js": "^1.3.25",
-    "query-string": "^7.0.0",
+    "query-string": "^7.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.2.0",
