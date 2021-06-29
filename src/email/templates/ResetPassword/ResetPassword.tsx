@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { MjmlColumn, MjmlSection } from 'mjml-react';
-
 import { Page } from '@/email/components/Page';
 import { Button } from '@/email/components/Button';
 import { Header } from '@/email/components/Header';
