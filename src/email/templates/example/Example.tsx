@@ -4,7 +4,6 @@ import {
   Mjml,
   MjmlBody,
   MjmlColumn,
-  MjmlDivider,
   MjmlHead,
   MjmlImage,
   MjmlSection,
@@ -13,6 +12,7 @@ import {
 } from 'mjml-react';
 
 import { Button } from '@/email/components/Button';
+import { SubHeader } from '@/email/components/SubHeader';
 
 type Props = {
   name?: string;
@@ -50,31 +50,7 @@ export const Example = ({ name = '' }: Props) => (
         </MjmlColumn>
       </MjmlSection>
 
-      <MjmlSection background-color="#FFFFFF" padding-bottom="0">
-        <MjmlColumn>
-          <MjmlDivider
-            border-width="1px"
-            border-color="#DCDCDC"
-            padding="0 10px"
-          />
-        </MjmlColumn>
-      </MjmlSection>
-
-      <MjmlSection background-color="#FFFFFF" padding="0">
-        <MjmlColumn>
-          <MjmlText
-            padding="0 10px"
-            font-size="20px"
-            line-height="20px"
-            fontWeight={700}
-            fontFamily="GH Guardian Headline, Guardian Egyptian Web, Georgia, serif"
-          >
-            <span>
-              <strong>Sign In</strong>
-            </span>
-          </MjmlText>
-        </MjmlColumn>
-      </MjmlSection>
+      <SubHeader>Sign in</SubHeader>
 
       <MjmlSection background-color="#FFFFFF" padding="0">
         <MjmlColumn>
