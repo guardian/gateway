@@ -13,6 +13,7 @@ import {
 import { Button } from '@/email/components/Button';
 import { Header } from '@/email/components/Header';
 import { SubHeader } from '@/email/components/SubHeader';
+import { Text } from '@/email/components/Text';
 
 type Props = {
   name?: string;
@@ -44,20 +45,11 @@ export const Example = ({ name = '' }: Props) => (
 
       <SubHeader>Sign in</SubHeader>
 
-      <MjmlSection background-color="#FFFFFF" padding="0">
-        <MjmlColumn>
-          <MjmlText
-            padding="0 10px"
-            font-size="17px"
-            line-height="17px"
-            fontFamily="GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif"
-          >
-            <p>Hello{name && ` ${name}`},</p>
-            <p>You’ve requested a link to sign in to your account.</p>
-            <p>Please click the button below to sign in.</p>
-          </MjmlText>
-        </MjmlColumn>
-      </MjmlSection>
+      <Text>
+        <p>Hello{name && ` ${name}`},</p>
+        <p>You’ve requested a link to sign in to your account.</p>
+        <p>Please click the button below to sign in.</p>
+      </Text>
 
       <MjmlSection background-color="#FFFFFF" padding="0">
         <MjmlColumn>
@@ -67,21 +59,12 @@ export const Example = ({ name = '' }: Props) => (
         </MjmlColumn>
       </MjmlSection>
 
-      <MjmlSection background-color="#FFFFFF" padding="0">
-        <MjmlColumn>
-          <MjmlText
-            padding="0 10px"
-            font-size="17px"
-            line-height="17px"
-            fontFamily="GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif"
-          >
-            <p>
-              If you prefer you can{' '}
-              <a href="https://profile.theguardian.com">create a password</a>.
-            </p>
-          </MjmlText>
-        </MjmlColumn>
-      </MjmlSection>
+      <Text>
+        <p>
+          If you prefer you can{' '}
+          <a href="https://profile.theguardian.com">create a password</a>.
+        </p>
+      </Text>
 
       <MjmlSection background-color="#EDEDED" padding="0">
         <MjmlColumn>

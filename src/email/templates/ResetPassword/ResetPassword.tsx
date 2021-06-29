@@ -13,6 +13,7 @@ import {
 import { Button } from '@/email/components/Button';
 import { Header } from '@/email/components/Header';
 import { SubHeader } from '@/email/components/SubHeader';
+import { Text } from '@/email/components/Text';
 
 type Props = {
   token: string;
@@ -45,24 +46,11 @@ export const ResetPassword = ({ token }: Props) => {
         <Header />
 
         <SubHeader>Reset password</SubHeader>
-
-        <MjmlSection background-color="#FFFFFF" padding="0">
-          <MjmlColumn>
-            <MjmlText
-              padding="0 10px"
-              font-size="17px"
-              line-height="17px"
-              fontFamily="GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif"
-            >
-              <p>Hello,</p>
-              <p>
-                You’ve requested us to send you a link to reset your password.
-              </p>
-              <p>Please click the button below to reset your password.</p>
-            </MjmlText>
-          </MjmlColumn>
-        </MjmlSection>
-
+        <Text>
+          <p>Hello,</p>
+          <p>You’ve requested us to send you a link to reset your password.</p>
+          <p>Please click the button below to reset your password.</p>
+        </Text>
         <MjmlSection background-color="#FFFFFF" padding="0">
           <MjmlColumn>
             <Button href="https://profile.theguardian.com">
