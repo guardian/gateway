@@ -84,7 +84,7 @@ export const Example = ({ name = '' }: Props) => (
             line-height="17px"
             fontFamily="GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif"
           >
-            <p>Hello ${name},</p>
+            <p>Hello{name && ` ${name}`},</p>
             <p>You’ve requested a link to sign in to your account.</p>
             <p>Please click the button below to sign in.</p>
           </MjmlText>
