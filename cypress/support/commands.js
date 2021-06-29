@@ -6,7 +6,7 @@
 
 const MOCKING_ENDPOINT = 'localhost:9000/mock';
 
-Cypress.Commands.add('idapiMockNext', (status, body) => {
+Cypress.Commands.add('mockNext', (status, body) => {
   const getMockOptions = (status, body = {}) => ({
     headers: {
       'Content-Type': 'application/json',
@@ -20,7 +20,7 @@ Cypress.Commands.add('idapiMockNext', (status, body) => {
   cy.request(getMockOptions(status, body));
 });
 
-Cypress.Commands.add('idapiMockAll', (status, body, path) => {
+Cypress.Commands.add('mockAll', (status, body, path) => {
   const getMockOptions = (status, body = {}) => {
     const payload = {
       body,
@@ -41,7 +41,7 @@ Cypress.Commands.add('idapiMockAll', (status, body, path) => {
   cy.request(getMockOptions(status, body));
 });
 
-Cypress.Commands.add('idapiMockPattern', (status, body, pattern) => {
+Cypress.Commands.add('mockPattern', (status, body, pattern) => {
   const getMockOptions = (status, body = {}) => {
     const payload = {
       body,
@@ -62,13 +62,13 @@ Cypress.Commands.add('idapiMockPattern', (status, body, pattern) => {
   cy.request(getMockOptions(status, body));
 });
 
-Cypress.Commands.add('idapiLastPayloadIs', (expected) => {
+Cypress.Commands.add('lastPayloadIs', (expected) => {
   return cy.request(MOCKING_ENDPOINT + '/payload').then((response) => {
     expect(response.body).to.deep.equal(expected);
   });
 });
 
-Cypress.Commands.add('idapiMockPurge', () => {
+Cypress.Commands.add('mockPurge', () => {
   cy.request(MOCKING_ENDPOINT + '/purge');
 });
 

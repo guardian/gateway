@@ -43,8 +43,8 @@ import { injectAndCheckAxe } from '../support/cypress-axe';
 
 // go to a page and test the accessibility on a given page
 it('Has no detectable a11y violations on change password page', () => {
-  cy.idapiMockNext(200);
-  cy.idapiMockNext(200, fakeSuccessResponse);
+  cy.mockNext(200);
+  cy.mockNext(200, fakeSuccessResponse);
   page.goto(fakeToken);
   // this is the test
   injectAndCheckAxe();

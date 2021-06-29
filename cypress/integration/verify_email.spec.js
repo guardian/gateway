@@ -17,13 +17,13 @@ describe('Verify email flow', () => {
   const verifyEmailFlow = new VerifyEmail();
 
   beforeEach(() => {
-    cy.idapiMockPurge();
+    cy.mockPurge();
   });
 
   context('A11y checks', () => {
     it('has no detectable a11y violations on logged out resend validation email page', () => {
       // mock token expired
-      cy.idapiMockNext(403, validationTokenExpired);
+      cy.mockNext(403, validationTokenExpired);
 
       // go to verify email endpont
       verifyEmailFlow.goto('expiredtoken', { failOnStatusCode: false });
@@ -36,16 +36,16 @@ describe('Verify email flow', () => {
       setAuthCookies();
 
       // mock token expired
-      cy.idapiMockNext(403, validationTokenExpired);
+      cy.mockNext(403, validationTokenExpired);
 
       // mock user response
-      cy.idapiMockNext(200, verifiedUserWithNoConsent);
+      cy.mockNext(200, verifiedUserWithNoConsent);
 
       // mock user response again for sending validation email
-      cy.idapiMockNext(200, verifiedUserWithNoConsent);
+      cy.mockNext(200, verifiedUserWithNoConsent);
 
       // mock validation email sent
-      cy.idapiMockNext(200);
+      cy.mockNext(200);
 
       // go to verify email endpont
       verifyEmailFlow.goto('expiredtoken', { failOnStatusCode: false });
@@ -63,20 +63,20 @@ describe('Verify email flow', () => {
   context('Verify email', () => {
     it('successfuly verifies the email using a token and sets auth cookies', () => {
       // mock validation success response (200 with auth cookies)
-      cy.idapiMockNext(200, authCookieResponse);
+      cy.mockNext(200, authCookieResponse);
 
       // set these cookies manually
       // TODO: can cypress set the automatically?
       setAuthCookies();
 
       // set successful auth using login middleware
-      cy.idapiMockNext(200, authRedirectSignInRecentlyEmailValidated);
+      cy.mockNext(200, authRedirectSignInRecentlyEmailValidated);
 
       // all newsletters mock response for first page of consents flow
-      cy.idapiMockNext(200, allConsents);
+      cy.mockNext(200, allConsents);
 
       // user newsletters mock response for first page of consents flow
-      cy.idapiMockNext(200, verifiedUserWithNoConsent);
+      cy.mockNext(200, verifiedUserWithNoConsent);
 
       // go to verify email endpoint
       verifyEmailFlow.goto('avalidtoken');
@@ -90,20 +90,20 @@ describe('Verify email flow', () => {
 
     it('successfuly verifies the email using a token and sets auth cookies, and preserves encoded return url', () => {
       // mock validation success response (200 with auth cookies)
-      cy.idapiMockNext(200, authCookieResponse);
+      cy.mockNext(200, authCookieResponse);
 
       // set these cookies manually
       // TODO: can cypress set the automatically?
       setAuthCookies();
 
       // set successful auth using login middleware
-      cy.idapiMockNext(200, authRedirectSignInRecentlyEmailValidated);
+      cy.mockNext(200, authRedirectSignInRecentlyEmailValidated);
 
       // all newsletters mock response for first page of consents flow
-      cy.idapiMockNext(200, allConsents);
+      cy.mockNext(200, allConsents);
 
       // user newsletters mock response for first page of consents flow
-      cy.idapiMockNext(200, verifiedUserWithNoConsent);
+      cy.mockNext(200, verifiedUserWithNoConsent);
 
       const returnUrl = encodeURIComponent(
         `https://www.theguardian.com/science/grrlscientist/2012/aug/07/3`,
@@ -128,20 +128,20 @@ describe('Verify email flow', () => {
 
     it('successfuly verifies the email using a token and sets auth cookies, and perserves and encodes return url', () => {
       // mock validation success response (200 with auth cookies)
-      cy.idapiMockNext(200, authCookieResponse);
+      cy.mockNext(200, authCookieResponse);
 
       // set these cookies manually
       // TODO: can cypress set the automatically?
       setAuthCookies();
 
       // set successful auth using login middleware
-      cy.idapiMockNext(200, authRedirectSignInRecentlyEmailValidated);
+      cy.mockNext(200, authRedirectSignInRecentlyEmailValidated);
 
       // all newsletters mock response for first page of consents flow
-      cy.idapiMockNext(200, allConsents);
+      cy.mockNext(200, allConsents);
 
       // user newsletters mock response for first page of consents flow
-      cy.idapiMockNext(200, verifiedUserWithNoConsent);
+      cy.mockNext(200, verifiedUserWithNoConsent);
 
       const returnUrl = `https://www.theguardian.com/science/grrlscientist/2012/aug/07/3`;
 
@@ -165,7 +165,7 @@ describe('Verify email flow', () => {
     it('verification token is expired, logged out, shows page to sign in to resend validation email', () => {
       const signInUrl = getEnvironmentVariable('SIGN_IN_PAGE_URL');
       // mock token expired
-      cy.idapiMockNext(403, validationTokenExpired);
+      cy.mockNext(403, validationTokenExpired);
 
       // go to verify email endpont
       verifyEmailFlow.goto('expiredtoken', { failOnStatusCode: false });
@@ -185,7 +185,7 @@ describe('Verify email flow', () => {
     it('verification token is invalid, logged out, shows page to sign in to resend validation email', () => {
       const signInUrl = getEnvironmentVariable('SIGN_IN_PAGE_URL');
       // mock token invalid
-      cy.idapiMockNext(403, validationTokenInvalid);
+      cy.mockNext(403, validationTokenInvalid);
 
       // go to verify email endpont
       verifyEmailFlow.goto('aninvalidtoken', { failOnStatusCode: false });
@@ -207,16 +207,16 @@ describe('Verify email flow', () => {
       setAuthCookies();
 
       // mock token expired
-      cy.idapiMockNext(403, validationTokenExpired);
+      cy.mockNext(403, validationTokenExpired);
 
       // mock user response
-      cy.idapiMockNext(200, verifiedUserWithNoConsent);
+      cy.mockNext(200, verifiedUserWithNoConsent);
 
       // mock user response again for sending validation email
-      cy.idapiMockNext(200, verifiedUserWithNoConsent);
+      cy.mockNext(200, verifiedUserWithNoConsent);
 
       // mock validation email sent
-      cy.idapiMockNext(200);
+      cy.mockNext(200);
 
       // go to verify email endpont
       verifyEmailFlow.goto('expiredtoken', { failOnStatusCode: false });
@@ -237,16 +237,16 @@ describe('Verify email flow', () => {
       setAuthCookies();
 
       // mock token invalid
-      cy.idapiMockNext(403, validationTokenInvalid);
+      cy.mockNext(403, validationTokenInvalid);
 
       // mock user response
-      cy.idapiMockNext(200, verifiedUserWithNoConsent);
+      cy.mockNext(200, verifiedUserWithNoConsent);
 
       // mock user response again for sending validation email
-      cy.idapiMockNext(200, verifiedUserWithNoConsent);
+      cy.mockNext(200, verifiedUserWithNoConsent);
 
       // mock validation email sent
-      cy.idapiMockNext(200);
+      cy.mockNext(200);
 
       // go to verify email endpont
       verifyEmailFlow.goto('expiredtoken', { failOnStatusCode: false });
