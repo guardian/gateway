@@ -22,7 +22,7 @@ try {
 
 To create a new email template
 
-- Create a copy of the `example` folder under `/templates`
+- Create a copy of an existing folder under `/templates`
 - Choose a name and edit/rename the new files
 - `yarn storybook`
 - Edit the tsx file to produce the desired result
