@@ -14,7 +14,6 @@ type Props = {
 };
 
 export const ResetPassword = ({ token }: Props) => {
-  console.log('token:', token);
   return (
     <Page>
       <Header />
@@ -24,7 +23,9 @@ export const ResetPassword = ({ token }: Props) => {
         <p>You’ve requested us to send you a link to reset your password.</p>
         <p>Please click the button below to reset your password.</p>
       </Text>
-      <Button href="https://profile.theguardian.com">Reset password</Button>
+      <Button href={`https://profile.theguardian.com?TODO:${token}`}>
+        Reset password
+      </Button>
       <Footer />
     </Page>
   );
