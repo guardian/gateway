@@ -12,14 +12,14 @@ export const SubHeader = ({ children }: Props) => (
         <MjmlDivider
           border-width="1px"
           border-color="#DCDCDC"
-          padding="0 10px"
+          padding="0 48px"
         />
       </MjmlColumn>
     </MjmlSection>
     <MjmlSection background-color={brandBackground} padding="0">
       <MjmlColumn>
         <MjmlText
-          padding="0 10px"
+          padding="4px 48px"
           font-size="20px"
           line-height="20px"
           fontWeight={700}
