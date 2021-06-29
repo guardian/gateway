@@ -15,7 +15,7 @@ export const Default = () => {
 };
 Default.storyName = 'with defaults';
 
-export const Default = () => {
+export const Name = () => {
   return renderMJML(<Example name="Jane" />);
 };
-Default.storyName = 'with name';
+Name.storyName = 'with name';
