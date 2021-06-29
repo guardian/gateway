@@ -11,6 +11,6 @@ export default {
 } as Meta;
 
 export const Default = () => {
-  return renderMJML(<ResetPassword token="abc" />);
+  return renderMJML(<ResetPassword />);
 };
 Default.storyName = 'with defaults';

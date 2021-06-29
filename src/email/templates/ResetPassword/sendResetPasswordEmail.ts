@@ -10,14 +10,18 @@ type Props = {
   subject?: string;
 };
 
+const plainText = ResetPasswordText();
+const { html } = render(ResetPassword());
+
 export const sendResetPasswordEmail = ({
   token,
   to,
   subject = 'Reset your theguardian.com password',
 }: Props) => {
-  const email = ResetPassword({ token });
-  const plainText = ResetPasswordText({ token });
-  const { html } = render(email);
-
-  return send({ html, plainText, subject, to });
+  return send({
+    html: html.replace('TOKEN_PLACEHOLDER', token),
+    plainText: plainText.replace('TOKEN_PLACEHOLDER', token),
+    subject,
+    to,
+  });
 };

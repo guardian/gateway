@@ -1,13 +1,9 @@
-type Props = {
-  token: string;
-};
-
-export const ResetPasswordText = ({ token }: Props) => `
+export const ResetPasswordText = () => `
 Hello,
 You’ve requested us to send you a link to reset your password.
 Please click the link below to reset your password.
 
-https://profile.theguardian.com?TODO:token=${token}
+https://profile.theguardian.com/c/TOKEN_PLACEHOLDER
 
 The Guardian
 
