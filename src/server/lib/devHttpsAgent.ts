@@ -1,4 +1,5 @@
 import { Agent } from 'https';
+import { Agent as httpAgent } from 'http';
 import { getConfiguration } from './getConfiguration';
 
 const { stage } = getConfiguration();
@@ -12,3 +13,13 @@ const { stage } = getConfiguration();
 export const httpsAgent = new Agent({
   rejectUnauthorized: stage !== 'DEV',
 });
+
+// for use with node-fetch, use http agent for insecure requests
+// while the above dev httpsAgent for "secure" requests
+// in dev only
+export const getAgent = (parsedUrl: URL) => {
+  if (parsedUrl.protocol === 'http:') {
+    return new httpAgent();
+  }
+  return httpsAgent;
+};
