@@ -5,7 +5,7 @@ import { Example } from './Example';
 import { renderMJML } from '../../testUtils';
 
 export default {
-  title: 'Email/Example',
+  title: 'Email/Templates/Example',
   component: Example,
   parameters: { layout: 'fullscreen' },
 } as Meta;

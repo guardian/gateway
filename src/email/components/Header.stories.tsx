@@ -5,7 +5,7 @@ import { Header } from './Header';
 import { renderMJMLComponent } from '../testUtils';
 
 export default {
-  title: 'Email/Header',
+  title: 'Email/Components/Header',
   component: Header,
 } as Meta;
 

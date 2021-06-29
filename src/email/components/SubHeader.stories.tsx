@@ -5,7 +5,7 @@ import { SubHeader } from './SubHeader';
 import { renderMJMLComponent } from '../testUtils';
 
 export default {
-  title: 'Email/SubHeader',
+  title: 'Email/Components/SubHeader',
   component: SubHeader,
 } as Meta;
 
