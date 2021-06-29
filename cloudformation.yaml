@@ -20,12 +20,6 @@ Parameters:
   OktaCustomOAuthServer:
     Description: The ID of the custom Okta OAuth Authorization server to use
     Type: AWS::SSM::Parameter::Value<String>
-  OktaClientId:
-    Description: The okta client id for this application
-    Type: AWS::SSM::Parameter::Value<String>
-  OktaClientSecret:
-    Description: The okta client secret for this application
-    Type: AWS::SSM::Parameter::Value<String>
   CertificateArn:
     Description: ARN of certificate for loadbalancer use.
     Type: String
@@ -199,6 +193,8 @@ Resources:
                   IDAPI_CLIENT_ACCESS_TOKEN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/idapi-client-access-token' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   PLAY_SESSION_COOKIE_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/frontendPlaySecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   APP_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/appSecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+                  OKTA_CLIENT_ID=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaClientId' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+                  OKTA_CLIENT_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaClientSecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
 
                   then break
                 fi
@@ -229,8 +225,8 @@ Resources:
             Environment=APP_SECRET=$APP_SECRET
             Environment=OKTA_DOMAIN=${OktaDomain}
             Environment=OKTA_CUSTOM_OAUTH_SERVER=${OktaCustomOAuthServer}
-            Environment=OKTA_CLIENT_ID=${OktaClientId}
-            Environment=OKTA_CLIENT_SECRET=${OktaClientSecret}
+            Environment=OKTA_CLIENT_ID=$OKTA_CLIENT_ID
+            Environment=OKTA_CLIENT_SECRET=$OKTA_CLIENT_SECRET
 
             [Install]
             WantedBy=multi-user.target
