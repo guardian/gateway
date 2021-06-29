@@ -25,13 +25,9 @@ export const Example = ({ name = '' }: Props) => (
       <p>Please click the button below to sign in.</p>
     </Text>
 
-    <MjmlSection background-color="#FFFFFF" padding="0">
-      <MjmlColumn>
-        <Button href="https://profile.theguardian.com">
-          Sign in to The Guardian
-        </Button>
-      </MjmlColumn>
-    </MjmlSection>
+    <Button href="https://profile.theguardian.com">
+      Sign in to The Guardian
+    </Button>
 
     <Text>
       <p>

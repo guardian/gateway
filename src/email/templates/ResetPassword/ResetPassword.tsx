@@ -25,11 +25,8 @@ export const ResetPassword = ({ token }: Props) => {
         <p>You’ve requested us to send you a link to reset your password.</p>
         <p>Please click the button below to reset your password.</p>
       </Text>
-      <MjmlSection background-color="#FFFFFF" padding="0">
-        <MjmlColumn>
-          <Button href="https://profile.theguardian.com">Reset password</Button>
-        </MjmlColumn>
-      </MjmlSection>
+
+      <Button href="https://profile.theguardian.com">Reset password</Button>
 
       <Footer />
     </Page>
