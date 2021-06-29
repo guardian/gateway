@@ -11,7 +11,7 @@ import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { authenticate } from '@/server/lib/okta/authentication';
 import {
   generateAuthorizationState,
-  OktaOIDC,
+  OIDCProfileClient,
   setAuthorizationStateCookie,
 } from '@/server/lib/okta/oidc';
 import { SignInErrors } from '@/shared/model/Errors';
@@ -71,7 +71,7 @@ router.post(
       setAuthorizationStateCookie(authState, res);
 
       // generate the /authorize endpoint url which we'll redirect the user too
-      const authorizeUrl = OktaOIDC.Client.authorizationUrl({
+      const authorizeUrl = OIDCProfileClient.authorizationUrl({
         // Don't prompt for authentication or consent
         prompt: 'none',
         // The sessionToken from authentication to exchange for session cookie
