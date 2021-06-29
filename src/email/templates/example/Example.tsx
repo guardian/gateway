@@ -5,13 +5,13 @@ import {
   MjmlBody,
   MjmlColumn,
   MjmlHead,
-  MjmlImage,
   MjmlSection,
   MjmlStyle,
   MjmlText,
 } from 'mjml-react';
 
 import { Button } from '@/email/components/Button';
+import { Header } from '@/email/components/Header';
 import { SubHeader } from '@/email/components/SubHeader';
 
 type Props = {
@@ -40,15 +40,7 @@ export const Example = ({ name = '' }: Props) => (
       </MjmlStyle>
     </MjmlHead>
     <MjmlBody>
-      <MjmlSection background-color="#EDEDED" padding="0">
-        <MjmlColumn>
-          <MjmlImage
-            width="200px"
-            align="right"
-            src="https://s3-eu-west-1.amazonaws.com/identity-public-email-assets/logo.gh.gif"
-          />
-        </MjmlColumn>
-      </MjmlSection>
+      <Header />
 
       <SubHeader>Sign in</SubHeader>
 
