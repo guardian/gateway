@@ -16,7 +16,7 @@ describe('Sign in flow', () => {
 
     it('Has no detectable a11y violations on sign in page with error', () => {
       cy.visit(
-        '/signin?error=error&error_description=oh no somethings gone wrong',
+        '/signin',
       );
       cy.get('input[name="email"]').type('Invalid email');
       cy.get('input[name="password"]').type('Invalid password');
