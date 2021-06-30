@@ -4,7 +4,7 @@ import {
   APIGetOptions,
   APIPostOptions,
   IDAPIError,
-} from '@/server/lib/APIFetch';
+} from '@/server/lib/IDAPIFetch';
 import { ApiRoutes } from '@/shared/model/Routes';
 import { stringify } from 'querystring';
 import {
