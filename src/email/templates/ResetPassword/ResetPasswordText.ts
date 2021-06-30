@@ -1,9 +1,11 @@
+import { Routes } from '@/shared/model/Routes';
+
 export const ResetPasswordText = () => `
 Hello,
 You’ve requested us to send you a link to reset your password.
 Please click the link below to reset your password.
 
-https://profile.theguardian.com/c/TOKEN_PLACEHOLDER
+https://profile.theguardian.com${Routes.CHANGE_PASSWORD}/TOKEN_PLACEHOLDER
 
 The Guardian
 
