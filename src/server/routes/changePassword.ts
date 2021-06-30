@@ -20,13 +20,9 @@ import {
 } from '@/shared/lib/PasswordValidation';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { getBrowserNameFromUserAgent } from '@/server/lib/getBrowserName';
+import { FieldError } from '@/shared/model/ClientState';
 
 const router = Router();
-
-export interface FieldError {
-  field: string;
-  message: string;
-}
 
 const validatePasswordChangeFields = (
   password: string,
