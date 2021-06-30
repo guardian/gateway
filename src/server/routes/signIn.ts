@@ -9,7 +9,7 @@ import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
-import { getConfiguration } from '../lib/getConfiguration';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 
 const router = Router();
 

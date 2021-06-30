@@ -8,7 +8,7 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { requestStateMiddleware } from '@/server/lib/middleware/requestState';
 import { default as routes } from '@/server/routes';
 import { routeErrorHandler } from '@/server/lib/middleware/errorHandler';
-import { fourZeroFourMiddleware } from './404';
+import { fourZeroFourMiddleware } from '@/server/lib/middleware/404';
 
 const { appSecret } = getConfiguration();
 
