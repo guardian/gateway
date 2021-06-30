@@ -3,7 +3,7 @@ import {
   APIAddClientAccessToken,
   APIPostOptions,
   IDAPIError,
-} from '@/server/lib/APIFetch';
+} from '@/server/lib/IDAPIFetch';
 import { ResetPasswordErrors, IdapiErrorMessages } from '@/shared/model/Errors';
 import { ApiRoutes } from '@/shared/model/Routes';
 

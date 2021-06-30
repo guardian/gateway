@@ -5,7 +5,7 @@ import {
   APIPostOptions,
   IDAPIError,
   idapiFetch,
-} from '@/server/lib/APIFetch';
+} from '@/server/lib/IDAPIFetch';
 import { logger } from '@/server/lib/logger';
 import { IdapiErrorMessages, SignInErrors } from '@/shared/model/Errors';
 import { IDAPIAuthRedirect, IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
