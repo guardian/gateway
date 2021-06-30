@@ -120,7 +120,7 @@
     "helmet": "^4.6.0",
     "js-sha1": "^0.6.0",
     "jsonwebtoken": "^8.5.1",
-    "mjml": "^4.9.3",
+    "mjml": "^4.10.1",
     "mjml-browser": "^4.9.3",
     "mjml-react": "^1.2.2",
     "ms": "^2.1.3",
