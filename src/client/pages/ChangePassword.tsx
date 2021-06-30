@@ -33,7 +33,7 @@ import { ThrottledBreachedPasswordCheck } from '@/client/lib/ThrottledBreachedPa
 import sha1 from 'js-sha1';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
 import { PasswordInput } from '@/client/components/PasswordInput';
-import { FieldError } from '@/server/routes/changePassword';
+import { FieldError } from '@/shared/model/ClientState';
 
 type ChangePasswordProps = {
   submitUrl: string;

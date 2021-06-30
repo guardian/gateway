@@ -1,4 +1,4 @@
-import { ClientState } from '@/shared/model/ClientState';
+import { ClientState, FieldError } from '@/shared/model/ClientState';
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
@@ -9,7 +9,6 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { RoutingConfig } from '@/client/routes';
 import { getAssets } from '@/server/lib/getAssets';
 import { RequestState } from '@/server/models/Express';
-import { FieldError } from '@/server/routes/changePassword';
 import { CsrfErrors } from '@/shared/model/Errors';
 import { ABProvider } from '@guardian/ab-react';
 import { tests } from '@/shared/model/experiments/abTests';
