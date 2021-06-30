@@ -1,4 +1,5 @@
 import { Request, Router } from 'express';
+import deepmerge from 'deepmerge';
 import { create as resetPassword } from '@/server/lib/idapi/resetPassword';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
@@ -18,13 +19,11 @@ router.get(Routes.RESET, (req: Request, res: ResponseWithRequestState) => {
   const emailFromPlaySession = getEmailFromPlaySessionCookie(req);
 
   if (emailFromPlaySession) {
-    state = {
-      ...state,
+    state = deepmerge(state, {
       pageData: {
-        ...state.pageData,
         email: emailFromPlaySession,
       },
-    };
+    });
   }
 
   const html = renderer(Routes.RESET, {
@@ -51,13 +50,11 @@ router.post(
 
       trackMetric(Metrics.SEND_PASSWORD_RESET_FAILURE);
 
-      state = {
-        ...state,
+      state = deepmerge(state, {
         globalMessage: {
-          ...state.globalMessage,
           error: message,
         },
-      };
+      });
 
       const html = renderer(Routes.RESET, {
         requestState: state,
