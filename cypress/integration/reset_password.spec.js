@@ -8,7 +8,7 @@ describe('Password reset flow', () => {
   const page = new PageResetPassword();
 
   before(() => {
-    cy.idapiMockPurge();
+    cy.mockPurge();
     cy.fixture('users').as('users');
   });
 
@@ -22,14 +22,14 @@ describe('Password reset flow', () => {
     });
 
     it('Has no detectable a11y violations on reset password page with error', () => {
-      cy.idapiMockNext(500);
+      cy.mockNext(500);
       page.submitEmailAddress('example@example.com');
       injectAndCheckAxe();
     });
 
     it('Has no detectable a11y violations on email sent page', function () {
       const { email } = this.users.validEmail;
-      cy.idapiMockNext(200);
+      cy.mockNext(200);
       page.submitEmailAddress(email);
       injectAndCheckAxe();
     });
@@ -38,7 +38,7 @@ describe('Password reset flow', () => {
   context('Valid email already exits', () => {
     it('successfully submits the request', function () {
       const { email } = this.users.validEmail;
-      cy.idapiMockNext(200);
+      cy.mockNext(200);
       page.submitEmailAddress(email);
       cy.contains(PageResetSent.CONTENT.CONFIRMATION);
     });
@@ -47,7 +47,7 @@ describe('Password reset flow', () => {
   context(`Email doesn't exist`, () => {
     it('shows a message saying the email address does not exist', function () {
       const { email } = this.users.emailNotRegistered;
-      cy.idapiMockNext(404, {
+      cy.mockNext(404, {
         status: 'error',
         errors: [{ message: 'Not found' }],
       });
@@ -73,7 +73,7 @@ describe('Password reset flow', () => {
   context('General IDAPI failure', () => {
     it('displays a generic error message', function () {
       const { email } = this.users.validEmail;
-      cy.idapiMockNext(500);
+      cy.mockNext(500);
       page.submitEmailAddress(email);
       cy.contains(PageResetPassword.CONTENT.ERRORS.GENERIC);
     });

@@ -4,7 +4,7 @@ import {
   APIPatchOptions,
   APIAddClientAccessToken,
   APIForwardSessionIdentifier,
-} from '@/server/lib/APIFetch';
+} from '@/server/lib/IDAPIFetch';
 import { NewslettersErrors } from '@/shared/model/Errors';
 import { NewsLetter, NewsletterPatch } from '@/shared/model/Newsletter';
 import { logger } from '@/server/lib/logger';

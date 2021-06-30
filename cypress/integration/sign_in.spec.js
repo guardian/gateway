@@ -4,7 +4,7 @@ import { injectAndCheckAxe } from '../support/cypress-axe';
 
 describe('Sign in flow', () => {
   beforeEach(() => {
-    cy.idapiMockPurge();
+    cy.mockPurge();
     cy.fixture('users').as('users');
   });
 
@@ -18,7 +18,7 @@ describe('Sign in flow', () => {
       cy.visit('/signin');
       cy.get('input[name="email"]').type('Invalid email');
       cy.get('input[name="password"]').type('Invalid password');
-      cy.idapiMockNext(500);
+      cy.mockNext(500);
       cy.get('[data-cy=sign-in-button]').click();
       injectAndCheckAxe();
     });
@@ -29,7 +29,7 @@ describe('Sign in flow', () => {
       cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
-      cy.idapiMockNext(403, {
+      cy.mockNext(403, {
         status: 'error',
         errors: [
           {
@@ -45,7 +45,7 @@ describe('Sign in flow', () => {
       cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
-      cy.idapiMockNext(403, {
+      cy.mockNext(403, {
         status: 'error',
         errors: [
           {
@@ -61,7 +61,7 @@ describe('Sign in flow', () => {
       cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
-      cy.idapiMockNext(200, {
+      cy.mockNext(200, {
         cookies: {
           values: [{ key: 'key', value: 'value' }],
           expiresAt: 'tomorrow',
@@ -75,7 +75,7 @@ describe('Sign in flow', () => {
       cy.visit('/signin');
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
-      cy.idapiMockNext(200, {
+      cy.mockNext(200, {
         cookies: {
           values: [{ key: 'key', value: 'value' }],
           expiresAt: 'tomorrow',
@@ -88,7 +88,7 @@ describe('Sign in flow', () => {
 
   context('General IDAPI failure', () => {
     it('displays a generic error message', function () {
-      cy.idapiMockNext(500);
+      cy.mockNext(500);
       cy.visit('/signin?returnUrl=https%3A%2F%2Flocalhost%3A8861%2Fsignin');
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');

@@ -1,4 +1,5 @@
 import { Request, Router } from 'express';
+import deepmerge from 'deepmerge';
 import { Routes } from '@/shared/model/Routes';
 import { renderer } from '@/server/lib/renderer';
 import { logger } from '@/server/lib/logger';
@@ -72,22 +73,18 @@ router.get(
     let state = res.locals;
     const { token } = req.params;
 
-    state = {
-      ...state,
+    state = deepmerge(state, {
       pageData: {
-        ...state.pageData,
         browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
       },
-    };
+    });
 
     try {
-      state = {
-        ...state,
+      state = deepmerge(state, {
         pageData: {
-          ...state.pageData,
           email: await validateToken(token, req.ip),
         },
-      };
+      });
     } catch (error) {
       logger.error(error);
       return res.type('html').send(
@@ -115,13 +112,11 @@ router.post(
 
     const { password, password_confirm: passwordConfirm } = req.body;
 
-    state = {
-      ...state,
+    state = deepmerge(state, {
       pageData: {
-        ...state.pageData,
         browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
       },
-    };
+    });
 
     try {
       const fieldErrors = validatePasswordChangeFields(
@@ -130,14 +125,12 @@ router.post(
       );
 
       if (fieldErrors.length) {
-        state = {
-          ...state,
+        state = deepmerge(state, {
           pageData: {
-            ...state.pageData,
             email: await validateToken(token, req.ip),
             fieldErrors,
           },
-        };
+        });
         const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
           requestState: state,
           pageTitle: PageTitle.CHANGE_PASSWORD,
@@ -158,13 +151,11 @@ router.post(
 
       trackMetric(Metrics.CHANGE_PASSWORD_FAILURE);
 
-      state = {
-        ...state,
+      state = deepmerge(state, {
         globalMessage: {
-          ...state.globalMessage,
           error: message,
         },
-      };
+      });
 
       const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
         requestState: state,

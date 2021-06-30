@@ -1,4 +1,5 @@
 import { Router, Request, Response } from 'express';
+import deepmerge from 'deepmerge';
 import { Routes } from '@/shared/model/Routes';
 import { renderer } from '@/server/lib/renderer';
 import {
@@ -36,7 +37,7 @@ import {
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { fourZeroFourRender } from '@/server/lib/middleware/404';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { IDAPIError } from '@/server/lib/APIFetch';
+import { IDAPIError } from '@/server/lib/IDAPIFetch';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { Configuration } from '@/server/models/Configuration';
 import { PageTitle } from '@/shared/model/PageTitle';
@@ -282,13 +283,11 @@ function getErrorResponse(
   }
   return [
     status,
-    {
-      ...state,
+    deepmerge(state, {
       globalMessage: {
-        ...state.globalMessage,
         error: message,
       },
-    },
+    }),
   ];
 }
 
@@ -396,13 +395,11 @@ function getABTestGETHandler(
       if (isSubscribed(entities)) {
         res.redirect(303, getRedirectUrl(getConfiguration(), state));
       }
-      state = {
-        ...state,
+      state = deepmerge(state, {
         pageData: {
-          ...state.pageData,
           [entitiesName]: entities,
         },
-      };
+      });
       status = 200;
     } catch (error) {
       [status, state] = getErrorResponse(error, state);
@@ -494,13 +491,11 @@ router.get(
     const { emailVerified } = state.queryParams;
 
     if (emailVerified) {
-      state = {
-        ...state,
+      state = deepmerge(state, {
         globalMessage: {
-          ...state.globalMessage,
           success: VERIFY_EMAIL.SUCCESS,
         },
-      };
+      });
     }
 
     const { page } = req.params;
@@ -518,22 +513,18 @@ router.get(
       const { read, pageTitle: _pageTitle } = consentPages[pageIndex];
       pageTitle = _pageTitle;
 
-      state = {
-        ...state,
+      state = deepmerge(state, {
         pageData: {
-          ...state.pageData,
           ...(await read(req.ip, sc_gu_u, state.pageData.geolocation)),
         },
-      };
+      } as RequestState);
     } catch (e) {
       status = e.status;
-      state = {
-        ...state,
+      state = deepmerge(state, {
         globalMessage: {
-          ...state.globalMessage,
           error: e.message,
         },
-      };
+      });
     }
 
     const html = renderer(`${Routes.CONSENTS}/${page}`, {
@@ -586,13 +577,11 @@ router.post(
       return res.redirect(303, url);
     } catch (e) {
       status = e.status;
-      state = {
-        ...state,
+      state = deepmerge(state, {
         globalMessage: {
-          ...state.globalMessage,
           error: e.message,
         },
-      };
+      });
     }
 
     trackMetric(consentsPageMetric(page, 'Post', false));

@@ -1,4 +1,5 @@
 import { Request, Router } from 'express';
+import deepmerge from 'deepmerge';
 import { authenticate } from '@/server/lib/idapi/auth';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
@@ -9,7 +10,7 @@ import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
-import { getConfiguration } from '../lib/getConfiguration';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 
 const router = Router();
 
@@ -35,7 +36,7 @@ router.get(
 router.post(
   Routes.SIGN_IN,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    let state = res.locals;
+    const state = res.locals;
 
     const { email = '' } = req.body;
     const { password = '' } = req.body;
@@ -54,18 +55,16 @@ router.post(
 
       trackMetric(Metrics.SIGN_IN_FAILURE);
 
-      state = {
-        ...state,
-        globalMessage: {
-          ...state.globalMessage,
-          error: message,
-        },
-      };
-
+      // re-render the sign in page on error
       const html = renderer(Routes.SIGN_IN, {
-        requestState: state,
+        requestState: deepmerge(res.locals, {
+          globalMessage: {
+            error: message,
+          },
+        }),
         pageTitle: PageTitle.SIGN_IN,
       });
+
       return res.status(status).type('html').send(html);
     }
 
