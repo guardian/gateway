@@ -1,5 +1,5 @@
 import React from 'react';
-import { css, SerializedStyles } from '@emotion/react';
+import { css } from '@emotion/react';
 import { error, space } from '@guardian/src-foundations';
 import { textSans } from '@guardian/src-foundations/typography';
 import { SvgAlertTriangle } from '@guardian/src-icons';
@@ -8,7 +8,6 @@ import { size } from '@guardian/src-foundations/size';
 interface ErrorSummaryProps {
   error: string;
   context?: string;
-  cssOverrides?: SerializedStyles | SerializedStyles[];
 }
 
 const wrapperStyles = css`
@@ -42,12 +41,8 @@ const contextStyles = css`
   ${textSans.medium()}
 `;
 
-export const ErrorSummary = ({
-  error,
-  context,
-  cssOverrides,
-}: ErrorSummaryProps) => (
-  <div css={[wrapperStyles, cssOverrides]}>
+export const ErrorSummary = ({ error, context }: ErrorSummaryProps) => (
+  <div css={wrapperStyles}>
     <div css={iconStyles}>
       <SvgAlertTriangle />
     </div>
