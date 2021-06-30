@@ -46,6 +46,12 @@ export const trackMetric = (
   })
     .promise()
     .catch((error: AWSError) => {
-      logger.error(error.message);
+      if (error.code === 'ExpiredToken' && Stage === 'DEV') {
+        logger.warn(
+          'AWS Credentials Expired. Have you added `Identity` Janus credentials?',
+        );
+      } else {
+        logger.error(error.message);
+      }
     });
 };
