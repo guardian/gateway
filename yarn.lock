@@ -14232,10 +14232,10 @@ mjml-body@4.9.3:
     lodash "^4.17.15"
     mjml-core "4.9.3"
 
-mjml-browser@^4.9.3:
-  version "4.9.3"
-  resolved "https://registry.yarnpkg.com/mjml-browser/-/mjml-browser-4.9.3.tgz#302effac33ae367cca76dd3e67cc8bc7ea80e312"
-  integrity sha512-FUF/F+oF63rZDQtwvD+CJsBScA3uvsDZkIJhdL6UaTZF1O4W6vJy5/myxYprr11qG/TnvCDZpPRMHR/Hu6b5Gg==
+mjml-browser@^4.10.1:
+  version "4.10.1"
+  resolved "https://registry.yarnpkg.com/mjml-browser/-/mjml-browser-4.10.1.tgz#9bdf3282a1160185835d0a0f60beda15ccc7f4c2"
+  integrity sha512-b59tvZZQHq+GiUQ1SpjnCPn5ndvC9Hb4eiLP0uPyj+oSMwBZrHDzaH1Tm0Gdz1dlLNpnd3sRGj6J+FvCKuUahg==
 
 mjml-button@4.9.3:
   version "4.9.3"
