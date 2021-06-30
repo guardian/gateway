@@ -18,17 +18,11 @@ import { button, form, textInput } from '@/client/styles/Shared';
 import { Link } from '@guardian/src-link';
 import { textSans } from '@guardian/src-foundations/typography';
 import { ErrorSummary } from '@/client/components/ErrorSummary';
-import { space } from '@guardian/src-foundations';
-
 interface SignInProps {
   email?: string;
   queryString?: string;
   errorSummary?: string;
 }
-
-const errorMargin = css`
-  margin-bottom: ${space[3]}px;
-`;
 
 const Links = ({ children }: { children: React.ReactNode }) => (
   <p
@@ -67,9 +61,7 @@ export const SignIn = ({ queryString, errorSummary, email }: SignInProps) => (
             action={`${Routes.SIGN_IN}${queryString}`}
           >
             <CsrfFormField />
-            {errorSummary && (
-              <ErrorSummary error={errorSummary} cssOverrides={errorMargin} />
-            )}
+            {errorSummary && <ErrorSummary error={errorSummary} />}
             <TextInput
               css={textInput}
               label="Email"
