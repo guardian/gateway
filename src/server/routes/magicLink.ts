@@ -1,4 +1,5 @@
 import { Router, Request } from 'express';
+import deepmerge from 'deepmerge';
 import { Routes } from '@/shared/model/Routes';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
@@ -7,7 +8,7 @@ import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { removeNoCache } from '../lib/middleware/cache';
+import { removeNoCache } from '@/server/lib/middleware/cache';
 
 const router = Router();
 
@@ -36,13 +37,11 @@ router.post(
 
       trackMetric(Metrics.SEND_MAGIC_LINK_FAILURE);
 
-      state = {
-        ...state,
+      state = deepmerge(state, {
         globalMessage: {
-          ...state.globalMessage,
           error: message,
         },
-      };
+      });
 
       const html = renderer(Routes.MAGIC_LINK, {
         requestState: state,

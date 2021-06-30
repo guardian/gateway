@@ -1,4 +1,5 @@
 import { Router, Request, Response } from 'express';
+import deepmerge from 'deepmerge';
 import { Routes } from '@/shared/model/Routes';
 import {
   send as sendVerificationEmail,
@@ -18,6 +19,7 @@ import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
+import { EMAIL_SENT } from '@/shared/model/Success';
 
 const router = Router();
 
@@ -29,15 +31,13 @@ router.get(
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
-    state = {
-      ...state,
+    state = deepmerge(state, {
       pageData: {
-        ...state.pageData,
         signInPageUrl: `${signInPageUrl}?returnUrl=${encodeURIComponent(
           `${profileUrl}${Routes.VERIFY_EMAIL}`,
         )}`,
       },
-    };
+    });
 
     let status = 200;
 
@@ -49,24 +49,20 @@ router.get(
       }
 
       const { primaryEmailAddress } = await getUser(req.ip, sc_gu_u);
-      state = {
-        ...state,
+      state = deepmerge(state, {
         pageData: {
-          ...state.pageData,
           email: primaryEmailAddress,
         },
-      };
+      });
     } catch (error) {
       status = error.status;
 
       if (status === 500) {
-        state = {
-          ...state,
+        state = deepmerge(state, {
           globalMessage: {
-            ...state.globalMessage,
             error: error.message,
           },
-        };
+        });
       }
     }
 
@@ -95,34 +91,28 @@ router.post(
       const { email = (await getUser(req.ip, sc_gu_u)).primaryEmailAddress } =
         req.body;
 
-      state = {
-        ...state,
+      state = deepmerge(state, {
         pageData: {
-          ...state.pageData,
           email,
         },
-      };
+      });
 
       await sendVerificationEmail(req.ip, sc_gu_u);
       trackMetric(Metrics.SEND_VALIDATION_EMAIL_SUCCESS);
 
-      state = {
-        ...state,
+      state = deepmerge(state, {
         globalMessage: {
-          ...state.globalMessage,
-          success: 'Email Sent. Please check your inbox and follow the link.',
+          success: EMAIL_SENT.SUCCESS,
         },
-      };
+      });
     } catch (error) {
       trackMetric(Metrics.SEND_VALIDATION_EMAIL_FAILURE);
       status = error.status;
-      state = {
-        ...state,
+      state = deepmerge(state, {
         globalMessage: {
-          ...state.globalMessage,
           error: error.message,
         },
-      };
+      });
     }
 
     const html = renderer(Routes.VERIFY_EMAIL, {

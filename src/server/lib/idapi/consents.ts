@@ -4,7 +4,7 @@ import {
   APIAddClientAccessToken,
   APIForwardSessionIdentifier,
   APIGetOptions,
-} from '@/server/lib/APIFetch';
+} from '@/server/lib/IDAPIFetch';
 import { logger } from '@/server/lib/logger';
 import { ConsentsErrors } from '@/shared/model/Errors';
 import { Consent } from '@/shared/model/Consent';
