@@ -3,6 +3,10 @@ import { NewsLetter } from '@/shared/model/Newsletter';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { Participations } from '@guardian/ab-core';
 
+export interface FieldError {
+  field: string;
+  message: string;
+}
 interface ABTesting {
   mvtId?: number;
   participations?: Participations;
