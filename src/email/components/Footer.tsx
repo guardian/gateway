@@ -1,16 +1,23 @@
 import React from 'react';
 
 import { MjmlSection, MjmlColumn, MjmlText } from 'mjml-react';
+import { background, text } from '@guardian/src-foundations/palette';
 
 export const Footer = () => (
-  <MjmlSection background-color="#EDEDED" padding="0">
+  <MjmlSection background-color={background.secondary} padding="0">
     <MjmlColumn>
       <MjmlText
-        color="#999999"
-        font-size="10px"
-        padding="0 10px"
+        color={text.primary}
+        font-size="15px"
+        lineHeight="20.25px"
+        padding="0px 48px 48px 48px"
         fontFamily="GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif"
       >
+        <p>
+          If you received this email by mistake, simply delete it. You
+          won&apos;t be subscribed if you don&apos;t click the confirmation
+          button above.
+        </p>
         <p>
           If you have any queries about this email please contact our customer
           services team at{' '}
@@ -18,17 +25,22 @@ export const Footer = () => (
           .
         </p>
         <p>
-          <strong>Your Data</strong> <br /> To find out what personal data we
-          collect and how we use it, please visit our{' '}
+          <strong>Your Data</strong>{' '}
+        </p>
+        <p>
+          To find out what personal data we collect and how we use it, please
+          visit our{' '}
           <a href="https://www.theguardian.com/help/privacy-policy">
             privacy policy
           </a>
           .
         </p>
         <p>
-          <strong>Terms & Conditions</strong> <br /> By registering with
-          theguardian.com you agreed to abide by our terms of service, as
-          described at{' '}
+          <strong>Terms & Conditions</strong>
+        </p>
+        <p>
+          By registering with theguardian.com you agreed to abide by our terms
+          of service, as described at{' '}
           <a href="https://www.theguardian.com/help/terms-of-service">
             https://www.theguardian.com/help/terms-of-service
           </a>

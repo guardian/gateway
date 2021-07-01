@@ -9,9 +9,9 @@ export const Text = ({ children }: Props) => (
   <MjmlSection background-color={brandBackground} padding="0">
     <MjmlColumn>
       <MjmlText
-        padding="0 10px"
+        padding="0 48px"
         font-size="17px"
-        line-height="17px"
+        line-height="22.95px"
         fontFamily="GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif"
         color={text.primary}
       >
