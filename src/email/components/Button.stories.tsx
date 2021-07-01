@@ -5,7 +5,7 @@ import { Button } from './Button';
 import { renderMJMLComponent } from '../testUtils';
 
 export default {
-  title: 'Email/Button',
+  title: 'Email/Components/Button',
   component: Button,
 } as Meta;
 

@@ -1,21 +1,16 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { Example } from './Example';
+import { ResetPassword } from './ResetPassword';
 import { renderMJML } from '../../testUtils';
 
 export default {
-  title: 'Email/Example',
-  component: Example,
+  title: 'Email/Templates/ResetPassword',
+  component: ResetPassword,
   parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => {
-  return renderMJML(<Example />);
+  return renderMJML(<ResetPassword />);
 };
 Default.storyName = 'with defaults';
-
-export const Default = () => {
-  return renderMJML(<Example name="Jane" />);
-};
-Default.storyName = 'with name';
