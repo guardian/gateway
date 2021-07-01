@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { Routes } from '@/shared/model/Routes';
 import { Page } from '@/email/components/Page';
 import { Button } from '@/email/components/Button';
 import { Header } from '@/email/components/Header';
@@ -17,7 +18,9 @@ export const ResetPassword = () => {
         <p>You’ve requested us to send you a link to reset your password.</p>
         <p>Please click the button below to reset your password.</p>
       </Text>
-      <Button href={`https://profile.theguardian.com/c/TOKEN_PLACEHOLDER`}>
+      <Button
+        href={`https://profile.theguardian.com${Routes.CHANGE_PASSWORD}/TOKEN_PLACEHOLDER`}
+      >
         Reset password
       </Button>
       <Footer />
