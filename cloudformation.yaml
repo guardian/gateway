@@ -15,7 +15,7 @@ Parameters:
     Description: Sign in page URL used as a fallback if auth redirect retrieval fails.
     Type: AWS::SSM::Parameter::Value<String>
   OktaDomain:
-    Description: The okta domain
+    Description: The Okta domain
     Type: AWS::SSM::Parameter::Value<String>
   OktaCustomOAuthServer:
     Description: The ID of the custom Okta OAuth Authorization server to use
