@@ -1,7 +1,8 @@
 import React from 'react';
-
 import { MjmlSection, MjmlColumn, MjmlText } from 'mjml-react';
+
 import { background, text } from '@guardian/src-foundations/palette';
+import { Link } from '@/email/components/Link';
 
 export const Footer = () => (
   <MjmlSection background-color={background.secondary} padding="0">
@@ -21,7 +22,9 @@ export const Footer = () => (
         <p>
           If you have any queries about this email please contact our customer
           services team at{' '}
-          <a href="mailto:userhelp@theguardian.com">userhelp@theguardian.com</a>
+          <Link href="mailto:userhelp@theguardian.com">
+            userhelp@theguardian.com
+          </Link>
           .
         </p>
         <p>
@@ -30,9 +33,9 @@ export const Footer = () => (
         <p>
           To find out what personal data we collect and how we use it, please
           visit our{' '}
-          <a href="https://www.theguardian.com/help/privacy-policy">
+          <Link href="https://www.theguardian.com/help/privacy-policy">
             privacy policy
-          </a>
+          </Link>
           .
         </p>
         <p>
@@ -41,9 +44,9 @@ export const Footer = () => (
         <p>
           By registering with theguardian.com you agreed to abide by our terms
           of service, as described at{' '}
-          <a href="https://www.theguardian.com/help/terms-of-service">
+          <Link href="https://www.theguardian.com/help/terms-of-service">
             https://www.theguardian.com/help/terms-of-service
-          </a>
+          </Link>
           .
         </p>
         <p>
