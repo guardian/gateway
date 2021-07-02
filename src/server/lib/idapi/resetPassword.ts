@@ -7,8 +7,6 @@ import {
 import { ResetPasswordErrors, IdapiErrorMessages } from '@/shared/model/Errors';
 import { ApiRoutes } from '@/shared/model/Routes';
 
-const PATH = ApiRoutes.RESET_REQUEST_EMAIL;
-
 const handleError = ({ error, status = 500 }: IDAPIError) => {
   if (error.status === 'error' && error.errors?.length) {
     const err = error.errors[0];
@@ -33,7 +31,8 @@ export async function create(email: string, ip: string, returnUrl: string) {
     returnUrl,
   });
 
-  return idapiFetch(PATH, APIAddClientAccessToken(options, ip)).catch(
-    handleError,
-  );
+  return idapiFetch(
+    ApiRoutes.RESET_REQUEST_EMAIL,
+    APIAddClientAccessToken(options, ip),
+  ).catch(handleError);
 }
