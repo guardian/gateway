@@ -1,12 +1,12 @@
 import React from 'react';
 
 import { MjmlSection, MjmlColumn, MjmlText } from 'mjml-react';
-import { brandBackground, text } from '@guardian/src-foundations/palette';
+import { background, text } from '@guardian/src-foundations/palette';
 
 type Props = { children: React.ReactNode };
 
 export const Text = ({ children }: Props) => (
-  <MjmlSection background-color={brandBackground} padding="0">
+  <MjmlSection background-color={background.primary} padding="0">
     <MjmlColumn>
       <MjmlText
         padding="0 48px"

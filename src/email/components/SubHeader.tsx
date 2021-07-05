@@ -7,7 +7,7 @@ type Props = { children: React.ReactNode };
 
 export const SubHeader = ({ children }: Props) => (
   <>
-    <MjmlSection background-color={brandBackground} padding-bottom="0">
+    <MjmlSection background-color={brandBackground.primary} padding-bottom="0">
       <MjmlColumn>
         <MjmlDivider
           border-width="1px"
@@ -16,7 +16,7 @@ export const SubHeader = ({ children }: Props) => (
         />
       </MjmlColumn>
     </MjmlSection>
-    <MjmlSection background-color={brandBackground} padding="0">
+    <MjmlSection background-color={brandBackground.primary} padding="0">
       <MjmlColumn>
         <MjmlText
           padding="4px 48px"
