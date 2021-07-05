@@ -1,6 +1,7 @@
 import { Request, Router } from 'express';
 import deepmerge from 'deepmerge';
 import { getToken } from '@/server/lib/idapi/resetPassword';
+import { getType } from '@/server/lib/idapi/user';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { Routes } from '@/shared/model/Routes';
@@ -42,9 +43,26 @@ router.post(
     const { email = '' } = req.body;
 
     try {
-      const token = await getToken(email, req.ip);
+      const userType = await getType(email, req.ip);
 
-      sendResetPasswordEmail({ token, to: email });
+      switch (userType) {
+        case 'new': {
+          console.log('TODO: Send no account email');
+          // sendNoAccountExistsEmail({ to: email});
+          break;
+        }
+        case 'guest':
+        case 'existing': {
+          const token = await getToken(email, req.ip);
+          sendResetPasswordEmail({ token, to: email });
+          break;
+        }
+        default: {
+          // This shouldn't happen but these external response types are not typed and
+          // could change so we handle this here by triggering a generic error
+          throw new Error();
+        }
+      }
     } catch (error) {
       const { message, status } = error;
       logger.error(error);

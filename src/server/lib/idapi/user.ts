@@ -74,3 +74,17 @@ export const create = async (email: string, password: string, ip: string) => {
     handleError(e);
   }
 };
+
+export const getType = async (email: string, ip: string) => {
+  const options = APIGetOptions();
+
+  try {
+    const response = await idapiFetch(
+      `/user/type/${email}`,
+      APIAddClientAccessToken(options, ip),
+    );
+    return response?.userType;
+  } catch (e) {
+    handleError(e);
+  }
+};
