@@ -52,7 +52,7 @@ router.post(
           break;
         }
         case 'guest':
-        case 'existing': {
+        case 'current': {
           const token = await getToken(email, req.ip);
           sendResetPasswordEmail({ token, to: email });
           break;
