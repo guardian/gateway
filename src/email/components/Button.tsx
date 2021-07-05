@@ -1,12 +1,16 @@
 import React from 'react';
 
 import { MjmlSection, MjmlButton, MjmlColumn } from 'mjml-react';
-import { brandBackground, brandText } from '@guardian/src-foundations/palette';
+import {
+  background,
+  brandBackground,
+  brandText,
+} from '@guardian/src-foundations/palette';
 
 type Props = { children: React.ReactNode; href: string };
 
 export const Button = ({ children, href }: Props) => (
-  <MjmlSection background-color="#FFFFFF" padding="0 50px">
+  <MjmlSection background-color={background.primary} padding="0 50px">
     <MjmlColumn>
       <MjmlButton
         background-color={brandBackground.primary}

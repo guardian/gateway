@@ -1,7 +1,7 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import {
-  brandBackground,
+  background,
   brandText,
   brandAlt,
 } from '@guardian/src-foundations/palette';
@@ -13,7 +13,7 @@ const iconContainer = css`
   position: relative;
   float: right;
   border-radius: 100%;
-  background-color: ${brandBackground.ctaPrimary};
+  background-color: ${background.primary};
   cursor: pointer;
   height: 42px;
   min-width: 42px;
