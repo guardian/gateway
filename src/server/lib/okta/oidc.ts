@@ -1,5 +1,5 @@
 /* eslint-disable functional/immutable-data */
-import { Issuer, custom, IssuerMetadata } from 'openid-client';
+import { Issuer, custom, IssuerMetadata, Client } from 'openid-client';
 import { randomBytes } from 'crypto';
 import { Request } from 'express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
@@ -24,6 +24,29 @@ interface AuthorizationState {
   returnUrl: string;
 }
 
+/**
+ * Subset of properties of the 'openid-client' Client class.
+ * This is so we can support a minimal set of mechanisms for
+ * things we actually need to use.
+ *
+ * @interface OpenIdClient
+ */
+interface OpenIdClient {
+  authorizationUrl: Client['authorizationUrl'];
+  callbackParams: Client['callbackParams'];
+  oauthCallback: Client['oauthCallback'];
+  redirectUris: OpenIdClientRedirectUris;
+}
+
+/**
+ * Object of redirect URIs used by OAuth apps (clients)
+ *
+ * @interface OpenIdClientRedirectUris
+ */
+interface OpenIdClientRedirectUris {
+  WEB: string;
+}
+
 const { oktaDomain, oktaClientId, oktaClientSecret, oktaCustomOAuthServer } =
   getConfiguration();
 
@@ -35,137 +58,70 @@ custom.setHttpOptionsDefaults({
   },
 });
 
-// https://developer.okta.com/docs/reference/api/oidc/#well-known-openid-configuration
-// this is the metadata returned from the /.well-known/openid-configuration
-// used by openid-client to create the "Issuer" and "Client"
+/**
+ * https://developer.okta.com/docs/reference/api/oidc/#well-known-openid-configuration
+ * this is part of the the metadata returned from the /.well-known/openid-configuration
+ * used by openid-client to create the "Issuer" and "Client"
+ * we only expose the endpoints here
+ */
 const OIDC_METADATA: IssuerMetadata = {
   issuer: `${oktaDomain}/oauth2/${oktaCustomOAuthServer}`,
   authorization_endpoint: `${oktaDomain}/oauth2/${oktaCustomOAuthServer}/v1/authorize`,
   token_endpoint: `${oktaDomain}/oauth2/${oktaCustomOAuthServer}/v1/token`,
   jwks_uri: `${oktaDomain}/oauth2/${oktaCustomOAuthServer}/v1/keys`,
   userinfo_endpoint: `${oktaDomain}/oauth2/${oktaCustomOAuthServer}/v1/userinfo`,
-  registration_endpoint: '${oktaDomain}/oauth2/v1/clients',
+  registration_endpoint: `${oktaDomain}/oauth2/v1/clients`,
   introspection_endpoint: `${oktaDomain}/oauth2/${oktaCustomOAuthServer}/v1/introspect`,
   revocation_endpoint: `${oktaDomain}/oauth2/${oktaCustomOAuthServer}/v1/revoke`,
   end_session_endpoint: `${oktaDomain}/oauth2/${oktaCustomOAuthServer}/v1/logout`,
-  claim_types_supported: ['normal'],
-  claims_parameter_supported: false,
-  grant_types_supported: [
-    'authorization_code',
-    'implicit',
-    'refresh_token',
-    'password',
-  ],
-  request_parameter_supported: true,
-  request_uri_parameter_supported: true,
-  require_request_uri_registration: false,
-  response_modes_supported: [
-    'query',
-    'fragment',
-    'form_post',
-    'okta_post_message',
-  ],
-  token_endpoint_auth_methods_supported: [
-    'client_secret_basic',
-    'client_secret_post',
-    'client_secret_jwt',
-    'private_key_jwt',
-    'none',
-  ],
-  response_types_supported: [
-    'code',
-    'id_token',
-    'code id_token',
-    'code token',
-    'id_token token',
-    'code id_token token',
-  ],
-  subject_types_supported: ['public'],
-  id_token_signing_alg_values_supported: ['RS256'],
-  scopes_supported: [
-    'openid',
-    'profile',
-    'email',
-    'address',
-    'phone',
-    'offline_access',
-  ],
-  claims_supported: [
-    'iss',
-    'ver',
-    'sub',
-    'aud',
-    'iat',
-    'exp',
-    'jti',
-    'auth_time',
-    'amr',
-    'idp',
-    'nonce',
-    'name',
-    'nickname',
-    'preferred_username',
-    'given_name',
-    'middle_name',
-    'family_name',
-    'email',
-    'email_verified',
-    'profile',
-    'zoneinfo',
-    'locale',
-    'address',
-    'phone_number',
-    'picture',
-    'website',
-    'gender',
-    'birthdate',
-    'updated_at',
-    'at_hash',
-    'c_hash',
-  ],
-  code_challenge_methods_supported: ['S256'],
-  introspection_endpoint_auth_methods_supported: [
-    'client_secret_basic',
-    'client_secret_post',
-    'client_secret_jwt',
-    'private_key_jwt',
-    'none',
-  ],
-  revocation_endpoint_auth_methods_supported: [
-    'client_secret_basic',
-    'client_secret_post',
-    'client_secret_jwt',
-    'private_key_jwt',
-    'none',
-  ],
-  request_object_signing_alg_values_supported: [
-    'HS256',
-    'HS384',
-    'HS512',
-    'RS256',
-    'RS384',
-    'RS512',
-    'ES256',
-    'ES384',
-    'ES512',
-  ],
 };
 
-// Encapsulates a discovered or instantiated OpenID Connect Issuer (Issuer),
-// Identity Provider(IdP), Authorization Server(AS) and its metadata.
+/**
+ * Encapsulates a discovered or instantiated OpenID Connect Issuer (Issuer),
+ * Identity Provider(IdP), Authorization Server(AS) and its metadata.
+ */
 const OIDCIssuer = new Issuer(OIDC_METADATA);
 
-// Encapsulates a dynamically registered, discovered or instantiated
-// OpenID Connect Client(Client), Relying Party(RP), and its metadata,
-// its instances hold the methods for getting an authorization URL,
-// consuming callbacks, triggering token endpoint grants, revoking and
-// introspecting tokens.
-// this is set to the "profile" client id and secret
-export const OIDCProfileClient = new OIDCIssuer.Client({
+/**
+ * Redirect uris used by the "profile" OAuth app in Okta
+ * Currently only has the WEB redirect for profile
+ * Native apps will likely have different redirect URIs
+ */
+const OIDCProfileClientRedirectUris: OpenIdClientRedirectUris = {
+  WEB: `${getProfileUrl()}${Routes.OAUTH_AUTH_CODE_CALLBACK}`,
+};
+
+/**
+ * Encapsulates a dynamically registered, discovered or instantiated
+ * OpenID Connect Client(Client), Relying Party(RP), and its metadata,
+ * its instances hold the methods for getting an authorization URL,
+ * consuming callbacks, triggering token endpoint grants, revoking and
+ * introspecting tokens.
+ *
+ * This variable is set to the "profile" OAuth app in Okta, with it's
+ * client id and secret
+ */
+const OIDCProfileClient = new OIDCIssuer.Client({
   client_id: oktaClientId,
   client_secret: oktaClientSecret,
-  redirect_uris: [`${getProfileUrl()}${Routes.OAUTH_AUTH_CODE_CALLBACK}`],
+  redirect_uris: Object.values(OIDCProfileClientRedirectUris),
 });
+
+/**
+ * A subset of the 'openid-client' lib `Client` class
+ * features/mechanisms to expose.
+ * The client/app is the "profile" OAuth app in Okta
+ * @property `authorizationUrl` - Generate the `/authorize` url for the Authorization Code Flow (w or w/o PKCE)
+ * @property `callbackParams` - Get OpenID Connect query parameters returned to the callback (redirect_uri)
+ * @property `oauthCallback` - Method used in the callback (redirect_uri) endpoint to get OAuth tokens
+ * @property `redirect_uris` - Array of redirect URIs in the OAuth app, from `OIDCProfileClientRedirectUris`
+ */
+export const ProfileOpenIdClient: OpenIdClient = {
+  authorizationUrl: OIDCProfileClient.authorizationUrl,
+  callbackParams: OIDCProfileClient.callbackParams,
+  oauthCallback: OIDCProfileClient.oauthCallback,
+  redirectUris: OIDCProfileClientRedirectUris,
+};
 
 /**
  * Generate a cryptographically secure random string to be used

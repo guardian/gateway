@@ -4,7 +4,7 @@ import { Routes } from '@/shared/model/Routes';
 import {
   deleteAuthorizationStateCookie,
   getAuthorizationStateCookie,
-  OIDCProfileClient,
+  ProfileOpenIdClient,
 } from '@/server/lib/okta/oidc';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/logger';
@@ -30,7 +30,7 @@ router.get(
       // "state" will be the "nonce" value set in the oidc_auth_state cookie
       // if there were any errors, then an "error", and "error_description" params
       // will be returned instead
-      const callbackParams = OIDCProfileClient.callbackParams(req);
+      const callbackParams = ProfileOpenIdClient.callbackParams(req);
 
       // get the oidc_auth_state cookie which contains the "nonce"
       // and "returnUrl" so we can get the user back to the page they
@@ -52,9 +52,9 @@ router.get(
       // exchange the auth code for access token + id token
       // and check the "state" we got back from the callback
       // to the "nonce" that was set in the AuthorizationState
-      const tokenSet = await OIDCProfileClient.oauthCallback(
+      const tokenSet = await ProfileOpenIdClient.oauthCallback(
         // the redirectUri is the callback location (this route)
-        OIDCProfileClient.metadata.redirect_uris?.[0],
+        ProfileOpenIdClient.redirectUris.WEB,
         // the params sent to the callback
         callbackParams,
         // checks to make sure that everything is valid
