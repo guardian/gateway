@@ -1,7 +1,6 @@
 import fetch, { RequestInit, Response } from 'node-fetch';
 import { HalLink } from 'hal-types';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { OktaError } from './error';
 import { getAgent } from '@/server/lib/devHttpsAgent';
 import { OktaAuthenticateErrors, SignInErrors } from '@/shared/model/Errors';
 
@@ -79,6 +78,21 @@ interface AuthenticationRequestParameters {
   password?: string;
   token?: string;
   username?: string;
+}
+
+// https://developer.okta.com/docs/reference/error-codes/
+export interface OktaError {
+  errorCode: string;
+  errorSummary: string;
+  errorLink: string;
+  errorId: string;
+  errorCauses: [string?];
+}
+
+export interface FetchOktaError {
+  status: number;
+  statusText: string;
+  oktaError: OktaError;
 }
 
 const { oktaDomain } = getConfiguration();
