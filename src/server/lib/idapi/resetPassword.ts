@@ -36,3 +36,19 @@ export async function create(email: string, ip: string, returnUrl: string) {
     APIAddClientAccessToken(options, ip),
   ).catch(handleError);
 }
+
+export async function getToken(email: string, ip: string) {
+  const options = APIPostOptions({
+    'email-address': email,
+  });
+
+  try {
+    const response = await idapiFetch(
+      '/pwd-reset/create-password-reset-token',
+      APIAddClientAccessToken(options, ip),
+    );
+    return response?.token;
+  } catch (error) {
+    handleError(error);
+  }
+}

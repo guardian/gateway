@@ -1,6 +1,6 @@
 import { Request, Router } from 'express';
 import deepmerge from 'deepmerge';
-import { create as resetPassword } from '@/server/lib/idapi/resetPassword';
+import { getToken } from '@/server/lib/idapi/resetPassword';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { Routes } from '@/shared/model/Routes';
@@ -11,6 +11,7 @@ import { Metrics } from '@/server/models/Metrics';
 import { removeNoCache } from '@/server/lib/middleware/cache';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
+import { sendResetPasswordEmail } from '@/email';
 
 const router = Router();
 
@@ -40,10 +41,10 @@ router.post(
 
     const { email = '' } = req.body;
 
-    const { returnUrl } = res.locals.queryParams;
-
     try {
-      await resetPassword(email, req.ip, returnUrl);
+      const token = await getToken(email, req.ip);
+
+      sendResetPasswordEmail({ token, to: email });
     } catch (error) {
       const { message, status } = error;
       logger.error(error);
