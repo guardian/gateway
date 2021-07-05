@@ -83,8 +83,6 @@ interface AuthenticationRequestParameters {
 
 const { oktaDomain } = getConfiguration();
 
-const API_ROUTE = '/api/v1/authn';
-
 const handleResponseFailure = async (response: Response) => {
   try {
     const parsed = (await response.json()) as OktaError;
@@ -150,14 +148,10 @@ export const authenticate = async (email: string, password: string) => {
     agent: getAgent,
   };
 
-  try {
-    const response = await fetch(`${oktaDomain}${API_ROUTE}`, requestOptions);
-    if (!response.ok) {
-      return await handleResponseFailure(response);
-    } else {
-      return await handleResponseSuccess(response);
-    }
-  } catch (error) {
-    throw error;
+  const response = await fetch(`${oktaDomain}/api/v1/authn`, requestOptions);
+  if (!response.ok) {
+    return await handleResponseFailure(response);
+  } else {
+    return await handleResponseSuccess(response);
   }
 };
