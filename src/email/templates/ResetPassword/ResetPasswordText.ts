@@ -1,11 +1,14 @@
 import { Routes } from '@/shared/model/Routes';
+import { getProfileUrl } from '@/server/lib/getProfileUrl';
+
+const profileUrl = getProfileUrl();
 
 export const ResetPasswordText = () => `
 Hello,
 You’ve requested us to send you a link to reset your password.
 Please click the link below to reset your password.
 
-https://profile.theguardian.com${Routes.CHANGE_PASSWORD}/TOKEN_PLACEHOLDER
+${profileUrl}${Routes.CHANGE_PASSWORD}/TOKEN_PLACEHOLDER
 
 The Guardian
 
