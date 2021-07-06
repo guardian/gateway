@@ -1,18 +1,11 @@
-type Props = {
-  name?: string;
-};
+import { Routes } from '@/shared/model/Routes';
 
-export const ExampleText = ({ name = '' }: Props) => `
-Hello ${name},
-You’ve requested a link to sign in to your account.
-Please use the link below to sign in.
+export const ResetPasswordText = () => `
+Hello,
+You’ve requested us to send you a link to reset your password.
+Please click the link below to reset your password.
 
-https://profile.theguardian.com
-
-
-If you prefer you can create a password using the following link.
-
-https://profile.theguardian.com
+https://profile.theguardian.com${Routes.CHANGE_PASSWORD}/TOKEN_PLACEHOLDER
 
 The Guardian
 
