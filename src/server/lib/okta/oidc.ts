@@ -134,6 +134,18 @@ const generateNonce = (bytes = 16): string =>
   randomBytes(bytes).toString('hex');
 
 /**
+ * Type guard to check that the parsed cookie is actually
+ * of type Authorization state
+ *
+ * @param {unknown} obj
+ * @return {boolean}
+ */
+const isAuthorizationState = (obj: unknown): obj is AuthorizationState => {
+  const objAsAuthState = obj as AuthorizationState;
+  return !!(objAsAuthState.nonce && objAsAuthState.returnUrl);
+};
+
+/**
  * Generate the `AuthorizationState` object to be stored as a
  * cookie on the client, and the `nonce` used by the Authorization
  * Code flow.
@@ -204,7 +216,15 @@ export const getAuthorizationStateCookie = (
   }
 
   try {
-    return JSON.parse(Buffer.from(stateCookie, 'base64').toString('utf-8'));
+    const parsed = JSON.parse(
+      Buffer.from(stateCookie, 'base64').toString('utf-8'),
+    );
+
+    if (isAuthorizationState(parsed)) {
+      return parsed;
+    }
+
+    return null;
   } catch (error) {
     logger.warn(error);
     return null;

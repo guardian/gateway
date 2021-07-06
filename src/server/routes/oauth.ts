@@ -20,6 +20,19 @@ const router = Router();
 
 const { signInPageUrl, defaultReturnUri } = getConfiguration();
 
+/**
+ * Helper method to redirect back to the sign in page with
+ * a generic error message if we don't want to expose the error
+ * back to the client. Be sure to log the error though!
+ */
+const redirectForGenericError = (res: ResponseWithRequestState) => {
+  return res.redirect(
+    `${signInPageUrl}?${stringify({
+      error_description: SignInErrors.GENERIC,
+    })}`,
+  );
+};
+
 router.get(
   Routes.OAUTH_AUTH_CODE_CALLBACK,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
@@ -41,8 +54,9 @@ router.get(
       if (!authState) {
         // no state! is this an attack?
         // redirect to sign in and cancel flow
+        logger.error('Missing auth state cookie on OAuth Callback!');
         trackMetric(Metrics.AUTHORIZATION_FAILURE);
-        return res.redirect(signInPageUrl);
+        return redirectForGenericError(res);
       }
 
       // we have the Authorization State now, so the cookie is
@@ -66,13 +80,21 @@ router.get(
         },
       );
 
+      if (!tokenSet.access_token) {
+        logger.error(
+          'Missing access_token from /token endpoint in OAuth Callback',
+        );
+        trackMetric(Metrics.AUTHORIZATION_FAILURE);
+        return redirectForGenericError(res);
+      }
+
       // call the IDAPI /auth/oauth-token endpoint
       // to exchange the access token for identity cookies
       // the idapi introspects the access token and if valid
       // will generate and sign cookies for the user the
       // token belonged to
       const cookies = await exchangeAccessTokenForCookies(
-        tokenSet.access_token || '',
+        tokenSet.access_token,
         req.ip,
       );
 
@@ -86,22 +108,19 @@ router.get(
     } catch (error) {
       logger.error(error);
       trackMetric(Metrics.AUTHORIZATION_ERROR);
-      let errQuery;
       // if there's been an error from the authorization_code flow
       // then propagate it as a query parameter (error + error_description)
       if (error.error && error.error_description) {
-        errQuery = stringify({
-          error: error.error,
-          error_description: `${error.error_description} Please try again.`,
-        });
+        return res.redirect(
+          `${signInPageUrl}?${stringify({
+            error: error.error,
+            error_description: `${error.error_description} Please try again.`,
+          })}`,
+        );
       } else {
         // otherwise it's a generic error
-        errQuery = stringify({
-          error_description: SignInErrors.GENERIC,
-        });
+        return redirectForGenericError(res);
       }
-      // huh, there's been an error here, redirect to sign in
-      return res.redirect(`${signInPageUrl}${errQuery ? `?${errQuery}` : ''}`);
     }
   }),
 );
