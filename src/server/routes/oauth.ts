@@ -5,6 +5,7 @@ import {
   deleteAuthorizationStateCookie,
   getAuthorizationStateCookie,
   ProfileOpenIdClient,
+  ProfileOpenIdClientRedirectUris,
 } from '@/server/lib/okta/oidc';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/logger';
@@ -68,7 +69,7 @@ router.get(
       // to the "nonce" that was set in the AuthorizationState
       const tokenSet = await ProfileOpenIdClient.oauthCallback(
         // the redirectUri is the callback location (this route)
-        ProfileOpenIdClient.redirectUris.WEB,
+        ProfileOpenIdClientRedirectUris.WEB,
         // the params sent to the callback
         callbackParams,
         // checks to make sure that everything is valid

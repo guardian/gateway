@@ -29,14 +29,17 @@ interface AuthorizationState {
  * This is so we can support a minimal set of mechanisms for
  * things we actually need to use.
  *
+ * @property `authorizationUrl` - Generate the `/authorize` url for the Authorization Code Flow (w or w/o PKCE)
+ * @property `callbackParams` - Get OpenID Connect query parameters returned to the callback (redirect_uri)
+ * @property `oauthCallback` - Method used in the callback (redirect_uri) endpoint to get OAuth tokens
+ *
  * @interface OpenIdClient
  */
-interface OpenIdClient {
-  authorizationUrl: Client['authorizationUrl'];
-  callbackParams: Client['callbackParams'];
-  oauthCallback: Client['oauthCallback'];
-  redirectUris: OpenIdClientRedirectUris;
-}
+
+type OpenIdClient = Pick<
+  Client,
+  'authorizationUrl' | 'callbackParams' | 'oauthCallback'
+>;
 
 /**
  * Object of redirect URIs used by OAuth apps (clients)
@@ -87,25 +90,9 @@ const OIDCIssuer = new Issuer(OIDC_METADATA);
  * Currently only has the WEB redirect for profile
  * Native apps will likely have different redirect URIs
  */
-const OIDCProfileClientRedirectUris: OpenIdClientRedirectUris = {
+export const ProfileOpenIdClientRedirectUris: OpenIdClientRedirectUris = {
   WEB: `${getProfileUrl()}${Routes.OAUTH_AUTH_CODE_CALLBACK}`,
 };
-
-/**
- * Encapsulates a dynamically registered, discovered or instantiated
- * OpenID Connect Client(Client), Relying Party(RP), and its metadata,
- * its instances hold the methods for getting an authorization URL,
- * consuming callbacks, triggering token endpoint grants, revoking and
- * introspecting tokens.
- *
- * This variable is set to the "profile" OAuth app in Okta, with it's
- * client id and secret
- */
-const OIDCProfileClient = new OIDCIssuer.Client({
-  client_id: oktaClientId,
-  client_secret: oktaClientSecret,
-  redirect_uris: Object.values(OIDCProfileClientRedirectUris),
-});
 
 /**
  * A subset of the 'openid-client' lib `Client` class
@@ -114,14 +101,12 @@ const OIDCProfileClient = new OIDCIssuer.Client({
  * @property `authorizationUrl` - Generate the `/authorize` url for the Authorization Code Flow (w or w/o PKCE)
  * @property `callbackParams` - Get OpenID Connect query parameters returned to the callback (redirect_uri)
  * @property `oauthCallback` - Method used in the callback (redirect_uri) endpoint to get OAuth tokens
- * @property `redirect_uris` - Array of redirect URIs in the OAuth app, from `OIDCProfileClientRedirectUris`
  */
-export const ProfileOpenIdClient: OpenIdClient = {
-  authorizationUrl: OIDCProfileClient.authorizationUrl,
-  callbackParams: OIDCProfileClient.callbackParams,
-  oauthCallback: OIDCProfileClient.oauthCallback,
-  redirectUris: OIDCProfileClientRedirectUris,
-};
+export const ProfileOpenIdClient = new OIDCIssuer.Client({
+  client_id: oktaClientId,
+  client_secret: oktaClientSecret,
+  redirect_uris: Object.values(ProfileOpenIdClientRedirectUris),
+}) as OpenIdClient;
 
 /**
  * Generate a cryptographically secure random string to be used
