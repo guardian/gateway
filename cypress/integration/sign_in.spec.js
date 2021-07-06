@@ -26,7 +26,69 @@ describe('Sign in flow', () => {
     });
   });
 
-  context('Signing in', () => {
+  context('Signing in - Identity API', () => {
+    it('shows an error message when sign in fails', function () {
+      cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.get('input[name="email"]').type('example@example.com');
+      cy.get('input[name="password"]').type('password');
+      cy.mockNext(403, {
+        status: 'error',
+        errors: [
+          {
+            message: 'Invalid email or password',
+          },
+        ],
+      });
+      cy.get('[data-cy=sign-in-button]').click();
+      cy.contains('This email and password combination is not valid');
+    });
+
+    it('shows a generic error message when the api error response is not known', function () {
+      cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.get('input[name="email"]').type('example@example.com');
+      cy.get('input[name="password"]').type('password');
+      cy.mockNext(403, {
+        status: 'error',
+        errors: [
+          {
+            message: 'Bloopity flub',
+          },
+        ],
+      });
+      cy.get('[data-cy=sign-in-button]').click();
+      cy.contains('There was a problem signing in, please try again');
+    });
+
+    it('loads the redirectUrl upon successful authentication', function () {
+      cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.get('input[name="email"]').type('example@example.com');
+      cy.get('input[name="password"]').type('password');
+      cy.mockNext(200, {
+        cookies: {
+          values: [{ key: 'key', value: 'value' }],
+          expiresAt: 'tomorrow',
+        },
+      });
+      cy.get('[data-cy=sign-in-button]').click();
+      cy.contains('About us');
+    });
+
+    it('redirects to the default url if no redirectUrl given', function () {
+      cy.visit('/signin');
+      cy.get('input[name="email"]').type('example@example.com');
+      cy.get('input[name="password"]').type('password');
+      cy.mockNext(200, {
+        cookies: {
+          values: [{ key: 'key', value: 'value' }],
+          expiresAt: 'tomorrow',
+        },
+      });
+      cy.get('[data-cy=sign-in-button]').click();
+      cy.contains('UK edition');
+    });
+  });
+
+  context.skip('Signing in - Okta (Skipped while feature disabled)', () => {
     it('renders global error if there is the error_description parameter in url', function () {
       const error = 'There has been an error';
       cy.visit(`/signin?error_description=${encodeURIComponent(error)}`);

@@ -8,7 +8,8 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { authenticate } from '@/server/lib/okta/authentication';
+import { authenticate as authenticateWithOkta } from '@/server/lib/okta/authentication';
+import { authenticate as authenticateWithIDAPI } from '@/server/lib/idapi/auth';
 import {
   generateAuthorizationState,
   ProfileOpenIdClient,
@@ -16,6 +17,7 @@ import {
 } from '@/server/lib/okta/oidc';
 import { SignInErrors } from '@/shared/model/Errors';
 import { featureSwitches } from '@/shared/lib/featureSwitches';
+import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 
 const router = Router();
 
@@ -56,7 +58,7 @@ const oktaAuthenticationController = async (
     // if authentication fails, it will fall through to the catch
     // the response contains a on etime use sessionToken that we can exchange
     // for a session cookie
-    const response = await authenticate(email, password);
+    const response = await authenticateWithOkta(email, password);
 
     // we're authenticated! we know need to generate an okta session
     // so we'll call the OIDC /authorize endpoint which sets a session cookie
@@ -118,7 +120,62 @@ const idapiAuthenticationController = async (
   req: Request,
   res: ResponseWithRequestState,
 ) => {
-  return res.redirect(Routes.SIGN_IN);
+  // get the request state
+  let state = res.locals;
+
+  // get the email and password from the request body
+  const { email = '', password = '' } = req.body;
+
+  // get the return url
+  const { returnUrl } = state.queryParams;
+
+  try {
+    // authenticate with Identity API, which returns cookie object
+    const cookies = await authenticateWithIDAPI(email, password, req.ip);
+
+    // set cookie headers on response
+    setIDAPICookies(res, cookies);
+
+    // track success
+    trackMetric(Metrics.AUTHENTICATION_SUCCESS);
+
+    // redirect to returnUrl
+    return res.redirect(303, returnUrl);
+  } catch (error) {
+    logger.error(error);
+
+    // track failure
+    trackMetric(Metrics.AUTHENTICATION_FAILURE);
+
+    // if error has a message, attach it to state
+    if (error.message) {
+      const { message } = error;
+
+      state = deepmerge(state, {
+        globalMessage: {
+          error: message,
+        },
+      });
+    } else {
+      // otherwise show a generic error
+      state = deepmerge(state, {
+        globalMessage: {
+          error: SignInErrors.GENERIC,
+        },
+      });
+    }
+
+    // re-render the sign in page on error
+    const html = renderer(Routes.SIGN_IN, {
+      requestState: state,
+      pageTitle: PageTitle.SIGN_IN,
+    });
+
+    return res
+      .status(error.status || 500)
+      .type('html')
+      .send(html);
+  }
 };
 
 // main sign in form POST submit route
