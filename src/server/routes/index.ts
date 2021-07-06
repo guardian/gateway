@@ -10,6 +10,7 @@ import { default as verifyEmail } from './verifyEmail';
 import { default as oauth } from './oauth';
 import { default as magicLink } from './magicLink';
 import { noCache } from '@/server/lib/middleware/cache';
+import { featureSwitches } from '@/shared/lib/featureSwitches';
 
 const router = Router();
 
@@ -34,8 +35,11 @@ router.use(noCache, consents);
 // verify email routes
 router.use(noCache, verifyEmail);
 
-// oauth routes
-router.use(noCache, oauth);
+// only use oauth routes if okta switch is enabled
+if (featureSwitches.oktaAuthentication) {
+  // oauth routes
+  router.use(noCache, oauth);
+}
 
 // magic link routes
 router.use(noCache, magicLink);

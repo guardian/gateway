@@ -7,9 +7,9 @@
  * @interface FeatureSwitches
  */
 interface FeatureSwitches {
-  demoSwitch: boolean;
+  oktaAuthentication: boolean;
 }
 
 export const featureSwitches: FeatureSwitches = {
-  demoSwitch: false,
+  oktaAuthentication: false,
 };
