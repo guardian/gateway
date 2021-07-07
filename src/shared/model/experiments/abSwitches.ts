@@ -1,3 +1,3 @@
-export const switches = {
+export const abSwitches = {
   abSingleNewsletterTest: false,
 };
