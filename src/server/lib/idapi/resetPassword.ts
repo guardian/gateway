@@ -6,10 +6,12 @@ import {
 } from '@/server/lib/IDAPIFetch';
 import { ResetPasswordErrors, IdapiErrorMessages } from '@/shared/model/Errors';
 import { ApiRoutes } from '@/shared/model/Routes';
+import { logger } from '@/server/lib/logger';
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
   if (error.status === 'error' && error.errors?.length) {
     const err = error.errors[0];
+    logger.error(err);
     const { message } = err;
 
     switch (message) {
