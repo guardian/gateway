@@ -152,9 +152,8 @@ const usePasswordValidationHooks = (idapiBaseUrl: string) => {
   // errors go red color if the user has selected the confirm password input while the password criteria is not satisfied - or if the user submits the form and there are errors present
   // A user has to solve the problem indicated by the red error to make it go away
   // The red error is not necessarily the latest validation result - e.g. common password does not get solved by going beneath 8 characters
-  const [redError, setRedError, redErrorCurrently] = useRefState<
-    ErrorValidationResult | undefined
-  >(undefined);
+  const [redError, setRedError, redErrorCurrently] =
+    useRefState<ErrorValidationResult | undefined>(undefined);
 
   // store last length tick/cross error since we want to show it in green after it has been corrected (it can show either password too long, or too short)
   const [lastLengthError, setLastLengthError] =
