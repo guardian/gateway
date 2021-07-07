@@ -6,7 +6,7 @@ import { hydrate } from 'react-dom';
 import { RoutingConfig } from '@/client/routes';
 import { App } from '@/client/app';
 import { tests } from '@/shared/model/experiments/abTests';
-import { switches } from '@/shared/model/experiments/abSwitches';
+import { abSwitches } from '@/shared/model/experiments/abSwitches';
 
 export const hydrateApp = () => {
   const routingConfig: RoutingConfig = JSON.parse(
@@ -21,7 +21,7 @@ export const hydrateApp = () => {
   hydrate(
     <ABProvider
       arrayOfTestObjects={tests}
-      abTestSwitches={switches}
+      abTestSwitches={abSwitches}
       pageIsSensitive={false}
       mvtMaxValue={1000000}
       mvtId={mvtId}

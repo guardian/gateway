@@ -29,7 +29,7 @@ To create a new test, create a new file, and the test definition using the [info
 
 In the [abTests.ts](../src/shared/model/experiments/abTests.ts) file, import and add the new test to the `tests` array. This will make it available to the ab testing library and api.
 
-Finally you have to add a switch for the test in the [abSwitches.ts](../src/shared/model/experiments/abSwitches.ts) file, in the `switches` object. The `key` should be `ab` + the `id` from the test definition. For example, if the `id` in the test definition is `ExampleTest`, then the switch key should be `abExampleTest`. The `value` should be a `boolean`, with `true` if the test is enabled, and `false` if the test is disabled.
+Finally you have to add a switch for the test in the [abSwitches.ts](../src/shared/model/experiments/abSwitches.ts) file, in the `abSwitches` object. The `key` should be `ab` + the `id` from the test definition. For example, if the `id` in the test definition is `ExampleTest`, then the switch key should be `abExampleTest`. The `value` should be a `boolean`, with `true` if the test is enabled, and `false` if the test is disabled.
 
 The [AB Testing Library](https://github.com/guardian/ab-testing) has more information available to setup tests with.
 
