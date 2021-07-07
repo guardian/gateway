@@ -1,5 +1,5 @@
 import { AB, ABTest, Participations } from '@guardian/ab-core';
-import { switches } from './abSwitches';
+import { abSwitches } from './abSwitches';
 import { singleNewsletterTest } from './tests/singleNewsletterTest';
 
 interface ABTestConfiguration {
@@ -13,7 +13,7 @@ interface ABTestConfiguration {
 export const tests: ABTest[] = [singleNewsletterTest];
 
 export const getDefaultABTestConfiguration = (): ABTestConfiguration => ({
-  abTestSwitches: switches,
+  abTestSwitches: abSwitches,
   arrayOfTestObjects: tests,
   mvtMaxValue: 1000000,
   pageIsSensitive: false,
