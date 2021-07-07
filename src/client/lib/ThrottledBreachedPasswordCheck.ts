@@ -51,18 +51,21 @@ export class ThrottledBreachedPasswordCheck {
         }
         this.timeLastCalled = Date.now();
 
-        return window
-          .fetch(`${idapiBaseUrl}/password-hash/${passwordHash}/breached-count`)
-          .then((r) => r.json())
-          .then((breachedCount) => {
-            if (breachedCount === 0) {
+        // https://haveibeenpwned.com/API/v3#PwnedPasswords
+        const firstFive = passwordHash.substr(0, 5);
+        const remainingHash = passwordHash.substr(5, passwordHash.length);
+        return fetch(`https://api.pwnedpasswords.com/range/${firstFive}`)
+          .then((r) => r.text())
+          .then((results) => {
+            if (results.includes(remainingHash.toUpperCase())) {
+              return resolveLocalPromiseInProgress(
+                PasswordValidationResult.COMMON_PASSWORD,
+              );
+            } else {
               return resolveLocalPromiseInProgress(
                 PasswordValidationResult.VALID_PASSWORD,
               );
             }
-            return resolveLocalPromiseInProgress(
-              PasswordValidationResult.COMMON_PASSWORD,
-            );
           })
           .catch(() =>
             resolveLocalPromiseInProgress(
