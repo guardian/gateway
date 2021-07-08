@@ -24,6 +24,8 @@ describe('Password reset flow', () => {
             cy.visit(`/reset-password/${token}`);
             cy.get('input[name=password]').type('0298a96c-1028!@#');
             cy.get('input[name=password_confirm]').type('0298a96c-1028!@#');
+            // We want the validation promise to have returned so we wait here
+            cy.wait(350);
             cy.get('[data-cy="change-password-button"]').click();
             cy.contains('Password Changed');
           },
