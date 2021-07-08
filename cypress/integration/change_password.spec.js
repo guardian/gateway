@@ -4,10 +4,6 @@ import { injectAndCheckAxe } from '../support/cypress-axe';
 import ChangePasswordPage from '../support/pages/change_password_page';
 import ResendPasswordResetPage from '../support/pages/resend_password_page';
 
-const stubBreachedCountEndpoint = (response) => {
-  cy.mockPattern(200, response, '^/password-hash/.*/breached-count$');
-};
-
 describe('Password change flow', () => {
   const page = new ChangePasswordPage();
   const fakeToken = 'abcde';
@@ -59,26 +55,26 @@ describe('Password change flow', () => {
     });
 
     it('Has no detectable a11y violations on change password page with error', () => {
-      stubBreachedCountEndpoint(0);
       cy.mockNext(200);
       page.goto(fakeToken);
-      page.submitPasswordChange('password', 'mismatch');
+      page.submitPasswordChange('thisisalongandunbreachedpassword', 'mismatch');
       injectAndCheckAxe();
     });
 
     it('Has no detectable a11y violations on change password complete page', () => {
-      stubBreachedCountEndpoint(0);
       cy.mockNext(200);
       cy.mockNext(200, fakeSuccessResponse);
       page.goto(fakeToken);
-      page.submitPasswordChange('password123', 'password123');
+      page.submitPasswordChange(
+        'thisisalongandunbreachedpassword',
+        'thisisalongandunbreachedpassword',
+      );
       injectAndCheckAxe();
     });
   });
 
   context('show / hide password eye button', () => {
     it('shows the password eye when the input box is selected and hides it when it is not selected', () => {
-      stubBreachedCountEndpoint(0);
       cy.mockNext(200);
       page.goto(fakeToken);
       cy.get('.password-input-eye-symbol').should('not.exist');
@@ -89,7 +85,6 @@ describe('Password change flow', () => {
     });
 
     it('clicking on the password eye shows the password and clicking it again hides it', () => {
-      stubBreachedCountEndpoint(0);
       cy.mockNext(200);
       page.goto(fakeToken);
       cy.get('input[name="password"]').should('have.attr', 'type', 'password');
@@ -118,31 +113,31 @@ describe('Password change flow', () => {
 
   context('Passwords do not match', () => {
     it('shows a password mismatch error message', () => {
-      stubBreachedCountEndpoint(0);
       cy.mockNext(200);
       page.goto(fakeToken);
-      page.submitPasswordChange('password', 'mismatch');
+      page.submitPasswordChange('thisisalongandunbreachedpassword', 'mismatch');
       cy.contains(ChangePasswordPage.CONTENT.ERRORS.PASSWORD_MISMATCH);
     });
   });
 
   context('Password exists in breach dataset', () => {
     it('displays a breached error', () => {
-      stubBreachedCountEndpoint(1);
       cy.mockNext(200);
       page.goto(fakeToken);
-      page.submitPasswordChange('password123', 'password123');
+      page.submitPasswordChange('password', 'password');
       cy.contains(ChangePasswordPage.CONTENT.ERRORS.PASSWORD_BREACHED);
     });
   });
 
   context('CSRF token error on submission', () => {
     it('should fail on submission due to CSRF token failure if CSRF token cookie is not sent', () => {
-      stubBreachedCountEndpoint(0);
       cy.mockNext(200);
       page.goto(fakeToken);
       cy.clearCookie('_csrf');
-      page.submitPasswordChange('password', 'password');
+      page.submitPasswordChange(
+        'thisisalongandunbreachedpassword',
+        'thisisalongandunbreachedpassword',
+      );
       cy.contains(ChangePasswordPage.CONTENT.ERRORS.CSRF);
     });
   });
@@ -159,12 +154,14 @@ describe('Password change flow', () => {
 
   context('Valid password entered', () => {
     it('shows password change success screen, with a default redirect button.', () => {
-      stubBreachedCountEndpoint(0);
       cy.mockNext(200);
       cy.mockNext(200, fakeSuccessResponse);
       page.goto(fakeToken);
 
-      page.typePasswordChange('password123', 'password123');
+      page.typePasswordChange(
+        'thisisalongandunbreachedpassword',
+        'thisisalongandunbreachedpassword',
+      );
       cy.contains(ChangePasswordPage.CONTENT.PASSWORDS_MATCH);
       page.clickPasswordChange();
 
@@ -189,11 +186,13 @@ describe('Password change flow', () => {
       it('shows password change success screen, with a redirect button linking to the return url.', () => {
         const returnUrl = 'https://news.theguardian.com';
 
-        stubBreachedCountEndpoint(0);
         cy.mockNext(200);
         cy.mockNext(200, fakeSuccessResponse);
         page.goto(fakeToken, returnUrl);
-        page.submitPasswordChange('password123', 'password123');
+        page.submitPasswordChange(
+          'thisisalongandunbreachedpassword',
+          'thisisalongandunbreachedpassword',
+        );
         cy.contains(ChangePasswordPage.CONTENT.PASSWORD_CHANGE_SUCCESS_TITLE);
         cy.contains(ChangePasswordPage.CONTENT.CONTINUE_BUTTON_TEXT).should(
           'have.attr',
@@ -210,11 +209,13 @@ describe('Password change flow', () => {
       it('shows password change success screen, with a default redirect button.', () => {
         const returnUrl = 'https://news.badsite.com';
 
-        stubBreachedCountEndpoint(0);
         cy.mockNext(200);
         cy.mockNext(200, fakeSuccessResponse);
         page.goto(fakeToken, returnUrl);
-        page.submitPasswordChange('password123', 'password123');
+        page.submitPasswordChange(
+          'thisisalongandunbreachedpassword',
+          'thisisalongandunbreachedpassword',
+        );
         cy.contains(ChangePasswordPage.CONTENT.PASSWORD_CHANGE_SUCCESS_TITLE);
         cy.contains(ChangePasswordPage.CONTENT.CONTINUE_BUTTON_TEXT).should(
           'have.attr',
@@ -230,7 +231,6 @@ describe('Password change flow', () => {
       cy.mockNext(200);
       page.goto(fakeToken);
       cy.mockNext(200);
-      stubBreachedCountEndpoint(0);
       page.typePasswordChange('p', 'p');
 
       // Error is shown before clicking submit
@@ -244,7 +244,6 @@ describe('Password change flow', () => {
   context('password too long', () => {
     it('shows an error showing the password length must be within certain limits', () => {
       const excessivelyLongPassword = Array.from(Array(73), () => 'a').join('');
-      stubBreachedCountEndpoint(0);
       cy.mockNext(200);
       page.goto(fakeToken);
       cy.mockNext(200);
@@ -267,11 +266,13 @@ describe('Password change flow', () => {
 
   context('General IDAPI failure on password change', () => {
     it('displays a generic error message', () => {
-      stubBreachedCountEndpoint(0);
       cy.mockNext(200);
       cy.mockNext(500);
       page.goto(fakeToken);
-      page.submitPasswordChange('password123', 'password123');
+      page.submitPasswordChange(
+        'thisisalongandunbreachedpassword',
+        'thisisalongandunbreachedpassword',
+      );
       cy.contains(ChangePasswordPage.CONTENT.ERRORS.GENERIC);
     });
   });
