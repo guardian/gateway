@@ -1,3 +1,21 @@
+import { MailSlurp } from 'mailslurp-client';
+
+const apiKey = 'INSERT_API_KEY_HERE';
+
+const mailslurp = new MailSlurp({ apiKey });
+
+Cypress.Commands.add('createInbox', () => {
+  return mailslurp.createInbox();
+});
+
+Cypress.Commands.add('waitForLatestEmail', (inboxId) => {
+  return mailslurp.waitForLatestEmail(inboxId);
+});
+
+Cypress.Commands.add('emptyInbox', (inboxId) => {
+  return mailslurp.emptyInbox(inboxId);
+});
+
 // ***********************************************
 // For more comprehensive examples of custom
 // commands please read more here:
