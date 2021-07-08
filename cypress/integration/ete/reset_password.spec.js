@@ -25,7 +25,7 @@ describe('Password reset flow', () => {
             cy.get('input[name=password]').type('0298a96c-1028!@#');
             cy.get('input[name=password_confirm]').type('0298a96c-1028!@#');
             cy.get('[data-cy="change-password-button"]').click();
-            cy.contains('Password changed');
+            cy.contains('Password Changed');
           },
         );
       });
