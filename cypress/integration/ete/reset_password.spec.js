@@ -8,7 +8,7 @@ describe('Password reset flow', () => {
       inbox: '0298a96c-1028-4e3d-b943-a2b478c84dbd',
     };
 
-    it('shows a confirmation page when the reset password button is pressed', () => {
+    it("changes the reader's password", () => {
       cy.emptyInbox(existing.inbox).then(() => {
         cy.visit('/signin');
         cy.contains('Reset password').click();
