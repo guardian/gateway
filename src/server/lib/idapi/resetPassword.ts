@@ -46,7 +46,7 @@ export async function getToken(email: string, ip: string) {
 
   try {
     const response = await idapiFetch(
-      '/pwd-reset/create-password-reset-token',
+      '/pwd-reset/token',
       APIAddClientAccessToken(options, ip),
     );
     return response?.token;
