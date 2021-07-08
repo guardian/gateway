@@ -29,11 +29,11 @@ import {
   validatePasswordLength,
 } from '@/shared/lib/PasswordValidation';
 import { ValidationStyling } from '@/client/styles/PasswordValidationStyles';
-import { ThrottledBreachedPasswordCheck } from '@/client/lib/ThrottledBreachedPasswordCheck';
 import sha1 from 'js-sha1';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
 import { PasswordInput } from '@/client/components/PasswordInput';
 import { FieldError } from '@/shared/model/ClientState';
+import AwesomeDebouncePromise from 'awesome-debounce-promise';
 
 type ChangePasswordProps = {
   submitUrl: string;
@@ -41,8 +41,6 @@ type ChangePasswordProps = {
   fieldErrors: FieldError[];
   idapiBaseUrl: string;
 };
-
-const throttledPasswordCheck = new ThrottledBreachedPasswordCheck();
 
 /* eslint-disable functional/immutable-data */
 // explicit use of mutable ref
@@ -59,7 +57,29 @@ function useRefState<T>(
 }
 /* eslint-enable functional/immutable-data */
 
-const validatePassword = (
+const checkIfBreached = AwesomeDebouncePromise(
+  (password: string): Promise<PasswordValidationResult> => {
+    const hashedPassword = sha1(password);
+    const firstFive = hashedPassword.substr(0, 5);
+    const remainingHash = hashedPassword.substr(5, hashedPassword.length);
+    return fetch(`https://api.pwnedpasswords.com/range/${firstFive}`)
+      .then((r) =>
+        r.text().then((results) => {
+          if (results.includes(remainingHash.toUpperCase())) {
+            return PasswordValidationResult.COMMON_PASSWORD;
+          } else {
+            return PasswordValidationResult.VALID_PASSWORD;
+          }
+        }),
+      )
+      .catch(() => {
+        return PasswordValidationResult.VALID_PASSWORD;
+      });
+  },
+  300,
+);
+
+const validatePassword = async (
   idapiBaseUrl: string,
   password: string,
 ): Promise<PasswordValidationResult> => {
@@ -68,10 +88,7 @@ const validatePassword = (
     return Promise.resolve(lengthResult);
   }
 
-  return throttledPasswordCheck.breachedPasswordCheck(
-    idapiBaseUrl,
-    sha1(password),
-  );
+  return checkIfBreached(password);
 };
 
 const deriveLengthValidationStyle = (
