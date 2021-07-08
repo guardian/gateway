@@ -42,8 +42,9 @@ export const Footer = () => (
           <strong>Terms & Conditions</strong>
         </p>
         <p>
-          By registering with theguardian.com you agreed to abide by our terms
-          of service, as described at{' '}
+          By registering with{' '}
+          <Link href="https://www.theguardian.com/">theguardian.com</Link> you
+          agreed to abide by our terms of service, as described at{' '}
           <Link href="https://www.theguardian.com/help/terms-of-service">
             https://www.theguardian.com/help/terms-of-service
           </Link>
