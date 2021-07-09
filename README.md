@@ -22,21 +22,7 @@ Populate a `.env` file by using the examples from `.env.example`, or follow the 
 
 The `.env` file should **never** be committed.
 
-#### Docker
-
-Start development server:
-
-```sh
-$ docker-compose up -d
-```
-
-Logs:
-
-```sh
-$ docker-compose logs -f
-```
-
-#### Without Docker
+#### Local
 
 Install dependencies:
 
@@ -52,6 +38,20 @@ $ make dev
 
 On the first run, you may see errors in your console, this is because the `build` folder and project haven't finished compiling yet, just wait for a while for webpack to finish the bundling process.
 
+#### Docker
+
+Start development server:
+
+```sh
+$ docker-compose up -d
+```
+
+Logs:
+
+```sh
+$ docker-compose logs -f
+```
+
 ## Development Guides
 
 Need help? Check the [development guide](docs/development.md) first!
@@ -60,13 +60,13 @@ Other documentation in the [docs](docs) folder.
 
 ## Contributing
 
-1. Branch off of `main`, name your branch related to the feature you're
-   implementing, prefix with your initials (e.g. `mm/feature-name`)
+1. Branch off of `main`, name your branch related to the feature you're implementing, prefix with your initials (e.g. `mm/feature-name`)
 2. Do your thing
-3. Ensure unit tests pass locally with `yarn test`, and integration tests with `yarn cypress run`
+3. Ensure CI passes by running `make ci` or `./ci.sh`
+   - This runs linting, type-check, unit tests, build check, and cypress tests
 4. Make sure your branch is up to date with `main`
-   - by merging or (preferably, if possible) rebasing onto `main`
-   - this makes sure any conflicts are resolved prior to code review
+   - By merging or (preferably, if possible) rebasing onto `main`
+   - This makes sure any conflicts are resolved prior to code review
 5. Open a pull request
 6. Code will be reviewed and require a 👍 from a team member before it
    will be merged
