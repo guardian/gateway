@@ -50,4 +50,8 @@ gateway
     └── shared          - Shared code
         └── lib         - services/helper code shared between server and client
         └── models      - ts interfaces/enums shared between server and client
+    └── email           - Transactional email service and email templates
+        └── components  - Reusable email components using mjml-react
+        └── lib         - Business logic/services
+
 ```
