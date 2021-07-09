@@ -6,6 +6,7 @@ import { NoAccountText } from './NoAccountText';
 
 type Props = {
   to: string;
+  token: string;
   subject?: string;
 };
 
@@ -14,11 +15,12 @@ const { html } = render(NoAccount());
 
 export const sendNoAccountEmail = ({
   to,
+  token,
   subject = 'Your attempt to sign up to theguardian.com',
 }: Props) => {
   return send({
-    html,
-    plainText,
+    html: html.replace('TOKEN_PLACEHOLDER', token),
+    plainText: plainText.replace('TOKEN_PLACEHOLDER', token),
     subject,
     to,
   });

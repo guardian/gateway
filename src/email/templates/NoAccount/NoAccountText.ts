@@ -9,7 +9,7 @@ It's quick an easy to create an account and we won't ask you for personal detail
 
 Please click below to register.
 
-https://profile.theguardian.com${Routes.REGISTRATION}
+https://profile.theguardian.com${Routes.REGISTRATION}/TOKEN_PLACEHOLDER
 
 The Guardian
 

@@ -24,7 +24,9 @@ export const NoAccount = () => {
         </p>
         <p>Please click below to register.</p>
       </Text>
-      <Button href={`https://profile.theguardian.com${Routes.REGISTRATION}`}>
+      <Button
+        href={`https://profile.theguardian.com${Routes.REGISTRATION}/TOKEN_PLACEHOLDER`}
+      >
         Register with The Guardian
       </Button>
       <Footer />
