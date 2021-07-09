@@ -23,6 +23,7 @@ export enum Routes {
   UNEXPECTED_ERROR = '/error',
   MAGIC_LINK = '/magic-link',
   MAGIC_LINK_SENT = '/magic-link/email-sent',
+  WELCOME = '/welcome',
 }
 
 export enum ApiRoutes {
