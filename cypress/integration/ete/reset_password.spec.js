@@ -15,7 +15,7 @@ describe('Password reset flow', () => {
         cy.contains('Forgotten password');
         cy.get('input[name=email]').type(existing.email);
         cy.get('[data-cy="reset-password-button"]').click();
-        cy.contains('Please check your inbox', { timeout: 5000 });
+        cy.contains('Please check your inbox');
         cy.waitForLatestEmail(existing.inbox, { timeout: 10000 }).then(
           (email) => {
             // extract the reset token (so we can reset this reader's password)
