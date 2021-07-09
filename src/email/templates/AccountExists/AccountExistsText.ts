@@ -11,7 +11,7 @@ https://profile.theguardian.com${Routes.SIGN_IN}
 
 If you forgot your password, you can click below to reset it.
 
-https://profile.theguardian.com${Routes.RESET}
+https://profile.theguardian.com${Routes.RESET}/TOKEN_PLACEHOLDER
 
 The Guardian
 

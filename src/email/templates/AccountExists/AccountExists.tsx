@@ -24,7 +24,9 @@ export const AccountExists = () => {
         </p>
         <p>If you forgot your password, you can click below to reset it.</p>
       </Text>
-      <Button href={`https://profile.theguardian.com${Routes.CHANGE_PASSWORD}`}>
+      <Button
+        href={`https://profile.theguardian.com${Routes.CHANGE_PASSWORD}/TOKEN_PLACEHOLDER`}
+      >
         Reset password
       </Button>
       <Footer />
