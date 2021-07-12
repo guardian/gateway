@@ -18,6 +18,7 @@ enum CSP_VALID_URI {
   VENDORLIST_CMP = 'vendorlist.consensu.org',
   GUARDIAN_CONSENTS_LOGS = 'consent-logs.',
   CMP = `sourcepoint.theguardian.com gdpr-tcfv2.sp-prod.net ccpa.sp-prod.net ccpa-service.sp-prod.net ccpa-notice.sp-prod.net cdn.privacy-mgmt.com`,
+  HAVEIBEENPWNED = 'https://api.pwnedpasswords.com',
 }
 
 const idapiOrigin = idapiBaseUrl.replace(/https?:\/\/|\/identity-api/g, '');
@@ -48,6 +49,7 @@ const helmetConfig = {
         `${CSP_VALID_URI.GUARDIAN_CONSENTS_LOGS}${apiDomain}`,
         CSP_VALID_URI.CMP,
         CSP_VALID_URI.GUARDIAN_API,
+        CSP_VALID_URI.HAVEIBEENPWNED,
         idapiOrigin,
       ],
       frameSrc: [CSP_VALID_URI.CMP],
