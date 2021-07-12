@@ -81,7 +81,7 @@
     "husky": "^7.0.1",
     "image-webpack-loader": "^7.0.1",
     "jest": "^27.0.6",
-    "nodemon": "^2.0.10",
+    "nodemon": "^2.0.12",
     "prettier": "^2.3.2",
     "react-test-renderer": "^17.0.2",
     "snyk": "^1.657.0",
