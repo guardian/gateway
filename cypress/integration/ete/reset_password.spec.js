@@ -16,20 +16,18 @@ describe('Password reset flow', () => {
         cy.get('input[name=email]').type(existing.email);
         cy.get('[data-cy="reset-password-button"]').click();
         cy.contains('Please check your inbox');
-        cy.waitForLatestEmail(existing.inbox, { timeout: 10000 }).then(
-          (email) => {
-            // extract the reset token (so we can reset this reader's password)
-            const match = email.body.match(/reset-password\/([^"]*)/);
-            const token = match[1];
-            cy.visit(`/reset-password/${token}`);
-            cy.get('input[name=password]').type('0298a96c-1028!@#');
-            cy.get('input[name=password_confirm]').type('0298a96c-1028!@#');
-            // We want the validation promise to have returned so we wait here
-            cy.wait(350);
-            cy.get('[data-cy="change-password-button"]').click();
-            cy.contains('Password Changed');
-          },
-        );
+        cy.waitForLatestEmail(existing.inbox).then((email) => {
+          // extract the reset token (so we can reset this reader's password)
+          const match = email.body.match(/reset-password\/([^"]*)/);
+          const token = match[1];
+          cy.visit(`/reset-password/${token}`);
+          cy.get('input[name=password]').type('0298a96c-1028!@#');
+          cy.get('input[name=password_confirm]').type('0298a96c-1028!@#');
+          // We want the validation promise to have returned so we wait here
+          cy.wait(350);
+          cy.get('[data-cy="change-password-button"]').click();
+          cy.contains('Password Changed');
+        });
       });
     });
   });
