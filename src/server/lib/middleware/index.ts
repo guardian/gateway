@@ -1,4 +1,4 @@
-import { Express, urlencoded } from 'express';
+import { Express, RequestHandler, urlencoded } from 'express';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import { helmetMiddleware } from '@/server/lib/middleware/helmet';
@@ -14,8 +14,8 @@ const { appSecret } = getConfiguration();
 
 export const applyMiddleware = (server: Express): void => {
   // apply helmet before anything else
-  server.use(helmetMiddleware);
-  server.use(urlencoded({ extended: true }));
+  server.use(helmetMiddleware as RequestHandler);
+  server.use(urlencoded({ extended: true }) as RequestHandler);
   server.use(cookieParser(appSecret));
   server.use(compression());
   server.use(loggerMiddleware);
