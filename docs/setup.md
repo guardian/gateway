@@ -28,24 +28,32 @@ Depending on which stage (`DEV` or `CODE`) you want to connect to [Identity API 
 
 You can setup gateway to use a domain name locally (`https://profile.thegulocal.com`) and alongside identity-frontend by following the instructions from [`identity-platform/nginx`](https://github.com/guardian/identity-platform/tree/master/nginx).
 
+Using nginx is recommended as it secured with HTTPS and has a domain name allowing cookies to be set correctly, especially as many of the flows in gateway rely on Secure, SameSite=strict cookies.
+
 Nginx will attempt to resolve from gateway first, followed by dotcom/identity second, and finally identity-frontend on the `profile.thegulocal.com` subdomain.
 
 When using nginx, be sure to set `BASE_URI` environment variable in `.env` to `profile.thegulocal.com` which will set the correct cookie domain and CSP (Content Secure Policy) headers.
 
 ### S3 Config
 
-You can get a preset `.env` file from the S3 private config. Be sure to have the `identity` Janus credentials. IDAPI will be pointed to `CODE`.
-
-Without nginx (localhost:8861):
-
-```sh
-$ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway/env-localhost .env
-```
+You can get a preset `.env` file from the S3 private config. Be sure to have the `identity` Janus credentials.
 
 With nginx (profile.thegulocal.com):
 
 ```sh
-$ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway/env-thegulocal .env
+# IDAPI/Okta pointing to DEV environment
+$ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway/env-thegulocal-idapi-okta-dev .env
+
+# IDAPI/Okta pointing to
+```
+
+Without nginx (localhost:8861):
+
+```sh
+# IDAPI/Okta pointing to DEV environment
+$ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway/env-localhost-idapi-okta-dev .env
+
+#
 ```
 
 ## Running
