@@ -30,7 +30,7 @@ Due to SSR, routing is a bit complicated than simply using client-side routing. 
 
 To make it easier to keep track of routes/paths, we define then in a `Routes` enum in the [shared/model/Routes.ts](../src/shared/model/Routes.ts) file. The enum is then consumed by both Express and React Router so we can share the paths between them.
 
-Firstly, for rendering routes on the client, we use React Router's [`StaticRouter`](https://reacttraining.com/react-router/web/api/StaticRouter) in our [server renderer](../src/server/lib/renderer.ts) file, this sets up router which location does not change once rendered (no client-side routing). We add client side routes in the client [routes.tsx](../src/client/routes.tsx) file, which react router looks at to determine what to render for that particular path.
+Firstly, for rendering routes on the client, we use React Router's [`StaticRouter`](https://reacttraining.com/react-router/web/api/StaticRouter) in our [server renderer](../src/server/lib/renderer.tsx) file, this sets up router which location does not change once rendered (no client-side routing). We add client side routes in the client [routes.tsx](../src/client/routes.tsx) file, which react router looks at to determine what to render for that particular path.
 
 Here's an example of a route, with a component it will render inside that route:
 
