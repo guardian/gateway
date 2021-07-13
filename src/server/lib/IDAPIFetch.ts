@@ -54,9 +54,9 @@ const getAPIOptionsForMethod =
   });
 
 export const APIFetch =
-  (baseUrl: string) =>
-  async (url: string, options?: RequestInit): Promise<any> => {
-    const response = await fetch(baseUrl + url, options);
+  (idapiBaseUrl: string) =>
+  async (path: string, options?: RequestInit): Promise<any> => {
+    const response = await fetch(idapiBaseUrl + path, options);
     if (!response.ok) {
       return await handleResponseFailure(response);
     } else if (response.status === 204) {
