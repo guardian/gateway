@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { getProfileUrl } from '@/server/lib/getProfileUrl';
-import { joinUrl } from '@guardian/libs';
 import { Routes } from '@/shared/model/Routes';
 import { Page } from '@/email/components/Page';
 import { Button } from '@/email/components/Button';
@@ -28,9 +27,7 @@ export const AccountExists = () => {
         </p>
         <p>If you forgot your password, you can click below to reset it.</p>
       </Text>
-      <Button
-        href={joinUrl(profileUrl, Routes.CHANGE_PASSWORD, 'TOKEN_PLACEHOLDER')}
-      >
+      <Button href={`${profileUrl}${Routes.CHANGE_PASSWORD}/TOKEN_PLACEHOLDER`}>
         Reset password
       </Button>
       <Footer />

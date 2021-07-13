@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { getProfileUrl } from '@/server/lib/getProfileUrl';
-import { joinUrl } from '@guardian/libs';
 import { Routes } from '@/shared/model/Routes';
 import { Page } from '@/email/components/Page';
 import { Button } from '@/email/components/Button';
@@ -28,7 +27,7 @@ export const NoAccount = () => {
         </p>
         <p>Please click below to register.</p>
       </Text>
-      <Button href={joinUrl(profileUrl, Routes.REGISTRATION)}>
+      <Button href={`${profileUrl}${Routes.REGISTRATION}`}>
         Register with The Guardian
       </Button>
       <Footer />
