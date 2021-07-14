@@ -64,3 +64,7 @@ export enum ConsentsErrors {
 export enum CsrfErrors {
   CSRF_ERROR = 'Sorry, something went wrong. If you made any changes these might have not been saved. Please try again.',
 }
+
+export enum OktaAuthenticateErrors {
+  AUTHENTICATION_FAILED = 'Email and password don’t match',
+}

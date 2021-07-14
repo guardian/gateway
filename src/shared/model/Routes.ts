@@ -1,7 +1,6 @@
 export enum Routes {
   REGISTRATION = '/register',
   SIGN_IN = '/signin',
-  SIGN_IN_CURRENT = '/signin/current',
   RESET = '/reset',
   RESET_SENT = '/reset/email-sent',
   RESET_RESEND = '/reset/resend',
@@ -20,6 +19,7 @@ export enum Routes {
   CONSENTS_FOLLOW_UP_NEWSLETTERS = '/follow-up',
   CONSENTS_FOLLOW_UP_CONSENTS = '/follow-on',
   // ABTEST: followupConsent : END
+  OAUTH_AUTH_CODE_CALLBACK = '/oauth/authorization-code/callback',
   UNEXPECTED_ERROR = '/error',
   MAGIC_LINK = '/magic-link',
   MAGIC_LINK_SENT = '/magic-link/email-sent',

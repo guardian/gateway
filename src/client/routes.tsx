@@ -16,9 +16,9 @@ import { UnexpectedErrorPage } from '@/client/pages/UnexpectedErrorPage';
 import { ConsentsFollowUpPage } from '@/client/pages/ConsentsFollowUpPage';
 import { ClientState } from '@/shared/model/ClientState';
 import { Routes } from '@/shared/model/Routes';
-import { SignInPage } from './pages/SignInPage';
-import { MagicLinkPage } from './pages/MagicLinkPage';
-import { MagicLinkSentPage } from './pages/MagicLinkSentPage';
+import { SignInPage } from '@/client/pages/SignInPage';
+import { MagicLinkPage } from '@/client/pages/MagicLinkPage';
+import { MagicLinkSentPage } from '@/client/pages/MagicLinkSentPage';
 
 export type RoutingConfig = {
   clientState: ClientState;
@@ -27,9 +27,6 @@ export type RoutingConfig = {
 
 export const GatewayRoutes = () => (
   <Switch>
-    <Route exact path={Routes.SIGN_IN_CURRENT}>
-      <SignInPage />
-    </Route>
     <Route exact path={Routes.SIGN_IN}>
       <SignInPage />
     </Route>

@@ -80,6 +80,26 @@ export const getConfiguration = (): Configuration => {
     'APP_SECRET config missing.',
   );
 
+  const oktaDomain: string = getOrThrow(
+    process.env.OKTA_DOMAIN,
+    'OKTA_DOMAIN is missing',
+  );
+
+  const oktaCustomOAuthServer: string = getOrThrow(
+    process.env.OKTA_CUSTOM_OAUTH_SERVER,
+    'OKTA_CUSTOM_OAUTH_SERVER is missing',
+  );
+
+  const oktaClientId: string = getOrThrow(
+    process.env.OKTA_CLIENT_ID,
+    'OKTA_CLIENT_ID is missing',
+  );
+
+  const oktaClientSecret: string = getOrThrow(
+    process.env.OKTA_CLIENT_SECRET,
+    'OKTA_CLIENT_SECRET is missing',
+  );
+
   return {
     port: +port,
     idapiBaseUrl,
@@ -97,5 +117,9 @@ export const getConfiguration = (): Configuration => {
     apiDomain,
     isHttps,
     appSecret,
+    oktaDomain,
+    oktaCustomOAuthServer,
+    oktaClientId,
+    oktaClientSecret,
   };
 };

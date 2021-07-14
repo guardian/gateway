@@ -31,6 +31,10 @@ describe('getConfiguration', () => {
     process.env.STAGE = 'DEV';
     process.env.IS_HTTPS = 'true';
     process.env.APP_SECRET = 'app-secret';
+    process.env.OKTA_DOMAIN = 'https://adomain.okta.com';
+    process.env.OKTA_CUSTOM_OAUTH_SERVER = 'customauthserverid';
+    process.env.OKTA_CLIENT_ID = 'abc123';
+    process.env.OKTA_CLIENT_SECRET = 'xyz789';
 
     const output = getConfiguration();
     const expected = {
@@ -50,6 +54,10 @@ describe('getConfiguration', () => {
       apiDomain: GU_API_DOMAIN.DEV,
       isHttps: true,
       appSecret: 'app-secret',
+      oktaDomain: 'https://adomain.okta.com',
+      oktaCustomOAuthServer: 'customauthserverid',
+      oktaClientId: 'abc123',
+      oktaClientSecret: 'xyz789',
     };
     expect(output).toEqual(expected);
   });
