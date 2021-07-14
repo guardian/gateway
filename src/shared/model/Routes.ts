@@ -1,7 +1,6 @@
 export enum Routes {
   REGISTRATION = '/register',
   SIGN_IN = '/signin',
-  SIGN_IN_CURRENT = '/signin/current',
   RESET = '/reset',
   RESET_SENT = '/reset/email-sent',
   RESET_RESEND = '/reset/resend',

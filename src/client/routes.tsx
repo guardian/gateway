@@ -27,9 +27,6 @@ export type RoutingConfig = {
 
 export const GatewayRoutes = () => (
   <Switch>
-    <Route exact path={Routes.SIGN_IN_CURRENT}>
-      <SignInPage />
-    </Route>
     <Route exact path={Routes.SIGN_IN}>
       <SignInPage />
     </Route>

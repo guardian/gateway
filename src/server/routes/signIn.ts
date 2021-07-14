@@ -39,13 +39,6 @@ router.get(Routes.SIGN_IN, (req: Request, res: ResponseWithRequestState) => {
   return res.type('html').send(html);
 });
 
-router.get(
-  Routes.SIGN_IN_CURRENT,
-  (req: Request, res: ResponseWithRequestState) => {
-    return res.redirect(Routes.SIGN_IN);
-  },
-);
-
 const oktaAuthenticationController = async (
   req: Request,
   res: ResponseWithRequestState,
