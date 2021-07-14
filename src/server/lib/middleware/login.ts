@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { joinUrl } from '@guardian/libs';
 import { read } from '@/server/lib/idapi/auth';
 import { IDAPIAuthRedirect, IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
 import { getConfiguration } from '@/server/lib/getConfiguration';
@@ -22,7 +23,7 @@ export const loginMiddleware = async (
   const generateRedirectUrl = (url: string): string => {
     const divider = url.includes('?') ? '&' : '?';
     return `${url}${divider}returnUrl=${encodeURIComponent(
-      profileUrl + req.path,
+      joinUrl(profileUrl, req.path),
     )}`;
   };
 
