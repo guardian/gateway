@@ -1,11 +1,10 @@
 /* eslint-disable functional/immutable-data */
-import { Issuer, custom, IssuerMetadata, Client } from 'openid-client';
+import { Issuer, IssuerMetadata, Client } from 'openid-client';
 import { randomBytes } from 'crypto';
 import { Request } from 'express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { getProfileUrl } from '@/server/lib/getProfileUrl';
 import { Routes } from '@/shared/model/Routes';
-import { httpsAgent } from '@/server/lib/devHttpsAgent';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { logger } from '@/server/lib/logger';
 
@@ -52,14 +51,6 @@ interface OpenIdClientRedirectUris {
 
 const { oktaDomain, oktaClientId, oktaClientSecret, oktaCustomOAuthServer } =
   getConfiguration();
-
-// An agent to use with http calls to disable ssl verification in DEV only
-// for *.thegulocal.com domains
-custom.setHttpOptionsDefaults({
-  agent: {
-    https: httpsAgent,
-  },
-});
 
 /**
  * https://developer.okta.com/docs/reference/api/oidc/#well-known-openid-configuration

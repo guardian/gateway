@@ -2,7 +2,6 @@
 
 import fetch, { RequestInit, Response } from 'node-fetch';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { getAgent } from '@/server/lib/devHttpsAgent';
 import { joinUrl } from '@guardian/libs';
 
 const { idapiBaseUrl, idapiClientAccessToken, stage, baseUri } =
@@ -53,7 +52,6 @@ const getAPIOptionsForMethod =
       Origin: getOrigin(stage),
     },
     body: payload ? JSON.stringify(payload) : undefined,
-    agent: getAgent,
   });
 
 export const APIFetch =

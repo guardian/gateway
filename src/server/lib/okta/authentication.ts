@@ -1,7 +1,6 @@
 import fetch, { RequestInit, Response } from 'node-fetch';
 import { HalLink } from 'hal-types';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { getAgent } from '@/server/lib/devHttpsAgent';
 import { OktaAuthenticateErrors, SignInErrors } from '@/shared/model/Errors';
 
 // https://developer.okta.com/docs/reference/api/authn/#transaction-state
@@ -159,7 +158,6 @@ export const authenticate = async (email: string, password: string) => {
       'Content-Type': 'application/json',
     },
     body,
-    agent: getAgent,
   };
 
   const response = await fetch(`${oktaDomain}/api/v1/authn`, requestOptions);
