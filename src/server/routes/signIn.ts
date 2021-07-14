@@ -86,7 +86,7 @@ const oktaAuthenticationController = async (
     return res.redirect(authorizeUrl);
   } catch (error) {
     trackMetric(Metrics.AUTHENTICATION_FAILURE);
-    logger.error(error);
+    logger.error('Okta authentication error:', error);
 
     const html = renderer(Routes.SIGN_IN, {
       requestState: deepmerge(res.locals, {

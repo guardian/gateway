@@ -97,31 +97,27 @@ export interface FetchOktaError {
 const { oktaDomain } = getConfiguration();
 
 const handleResponseFailure = async (response: Response) => {
-  try {
-    const parsed = (await response.json()) as OktaError;
-    switch (parsed.errorCode) {
-      // errors from https://developer.okta.com/docs/reference/api/authn/#response-parameters
-      case 'E0000004':
-        throw {
-          status: response.status,
-          statusText: response.statusText,
-          message: OktaAuthenticateErrors.AUTHENTICATION_FAILED,
-        };
-      case 'E0000047':
-        throw {
-          status: response.status,
-          statusText: response.statusText,
-          message: SignInErrors.GENERIC,
-        };
-      default:
-        throw {
-          status: response.status,
-          statusText: response.statusText,
-          message: SignInErrors.GENERIC,
-        };
-    }
-  } catch (error) {
-    throw error;
+  const parsed = (await response.json()) as OktaError;
+  switch (parsed.errorCode) {
+    // errors from https://developer.okta.com/docs/reference/api/authn/#response-parameters
+    case 'E0000004':
+      throw {
+        status: response.status,
+        statusText: response.statusText,
+        message: OktaAuthenticateErrors.AUTHENTICATION_FAILED,
+      };
+    case 'E0000047':
+      throw {
+        status: response.status,
+        statusText: response.statusText,
+        message: SignInErrors.GENERIC,
+      };
+    default:
+      throw {
+        status: response.status,
+        statusText: response.statusText,
+        message: SignInErrors.GENERIC,
+      };
   }
 };
 
