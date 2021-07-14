@@ -33,16 +33,14 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
 };
 
 export async function verifyEmail(token: string, ip: string) {
+  const url = `${ApiRoutes.VERIFY_EMAIL}/${token}`;
   const options = APIPostOptions();
 
   try {
-    const result = await idapiFetch(
-      `${ApiRoutes.VERIFY_EMAIL}/${token}`,
-      APIAddClientAccessToken(options, ip),
-    );
+    const result = await idapiFetch(url, APIAddClientAccessToken(options, ip));
     return result.cookies;
   } catch (error) {
-    logger.error(error);
+    logger.error(`IDAPI Error verifyEmail ${url}`, error);
     handleError(error);
   }
 }
@@ -55,7 +53,10 @@ export async function send(ip: string, sc_gu_u: string) {
   try {
     await idapiFetch(ApiRoutes.RESEND_VERIFY_EMAIL, options);
   } catch (error) {
-    logger.error(error);
+    logger.error(
+      `IDAPI Error verifyEmail send ${ApiRoutes.RESEND_VERIFY_EMAIL}`,
+      error,
+    );
     return handleError(error);
   }
 }

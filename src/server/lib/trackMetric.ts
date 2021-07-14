@@ -51,7 +51,7 @@ export const trackMetric = (
           'AWS Credentials Expired. Have you added `Identity` Janus credentials?',
         );
       } else {
-        logger.error(error.message);
+        logger.error('Track Metric Error', error);
       }
     });
 };
