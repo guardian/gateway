@@ -191,7 +191,7 @@ You can use [Storybook](https://storybook.js.org/)to build UI components and pag
 Simply run the following command to start Storybook locally
 
 ```sh
-$ yarn story
+$ yarn storybook
 ```
 
 There's more documentation on setting up a story in the [development documentation](development.md).
