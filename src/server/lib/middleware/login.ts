@@ -7,6 +7,7 @@ import { getProfileUrl } from '@/server/lib/getProfileUrl';
 import { Routes } from '@/shared/model/Routes';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
+import { logger } from '../logger';
 
 const profileUrl = getProfileUrl();
 
@@ -65,6 +66,7 @@ export const loginMiddleware = async (
       return redirectAuth(auth);
     }
   } catch (e) {
+    logger.error('loginMiddlewareFailure', e);
     trackMetric(Metrics.LOGIN_MIDDLEWARE_FAILURE);
     res.redirect(generateRedirectUrl(FATAL_ERROR_REDIRECT_URL));
   }

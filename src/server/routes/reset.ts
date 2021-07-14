@@ -45,8 +45,8 @@ router.post(
     try {
       await resetPassword(email, req.ip, returnUrl);
     } catch (error) {
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
       const { message, status } = error;
-      logger.error(error);
 
       trackMetric(Metrics.SEND_PASSWORD_RESET_FAILURE);
 

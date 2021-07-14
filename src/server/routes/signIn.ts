@@ -50,8 +50,8 @@ router.post(
 
       setIDAPICookies(res, cookies);
     } catch (error) {
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
       const { message, status } = error;
-      logger.error(error);
 
       trackMetric(Metrics.SIGN_IN_FAILURE);
 

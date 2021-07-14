@@ -11,6 +11,7 @@ import {
   IdapiErrorMessages,
   ChangePasswordErrors,
 } from '@/shared/model/Errors';
+import { logger } from '../logger';
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
   if (error.status === 'error' && error.errors?.length) {
@@ -42,13 +43,13 @@ export async function validate(
 
   const qs = stringify(params);
 
+  const url = `${ApiRoutes.CHANGE_PASSWORD_TOKEN_VALIDATION}?${qs}`;
+
   try {
-    const result = await idapiFetch(
-      `${ApiRoutes.CHANGE_PASSWORD_TOKEN_VALIDATION}?${qs}`,
-      APIAddClientAccessToken(options, ip),
-    );
+    const result = await idapiFetch(url, APIAddClientAccessToken(options, ip));
     return result.user?.primaryEmailAddress;
   } catch (error) {
+    logger.error(`IDAPI Error changePassword validate ${url}`, error);
     handleError(error);
   }
 }
@@ -67,6 +68,10 @@ export async function change(password: string, token: string, ip: string) {
     );
     return result.cookies;
   } catch (error) {
+    logger.error(
+      `IDAPI Error changePassword change ${ApiRoutes.CHANGE_PASSWORD}`,
+      error,
+    );
     handleError(error);
   }
 }

@@ -55,6 +55,7 @@ router.get(
         },
       });
     } catch (error) {
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
       status = error.status;
 
       if (status === 500) {
@@ -106,6 +107,7 @@ router.post(
         },
       });
     } catch (error) {
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
       trackMetric(Metrics.SEND_VALIDATION_EMAIL_FAILURE);
       status = error.status;
       state = deepmerge(state, {
@@ -134,7 +136,7 @@ router.get(
       trackMetric(Metrics.EMAIL_VALIDATED_SUCCESS);
       setIDAPICookies(res, cookies);
     } catch (error) {
-      logger.error(error);
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
       if (error.message === VerifyEmailErrors.USER_ALREADY_VALIDATED) {
         return res.redirect(
