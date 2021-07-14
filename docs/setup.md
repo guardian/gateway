@@ -198,7 +198,7 @@ There's more documentation on setting up a story in the [development documentati
 
 When a git branch is updated on GitHub, a "Chromatic Deploy" action is run which publishes the Storybook to a URL.
 
-It also runs visual regression tests, and the "UI Tests" must pass/be accepted before the PR can be merged. This is used to prevent unintended UI changes from making their way into production.
+It also runs [visual regression tests](https://www.chromatic.com/), and the "UI Tests"§ must pass/be accepted before the PR can be merged. This is used to prevent unintended UI changes from making their way into production.
 
 ## IDE Setup
 
