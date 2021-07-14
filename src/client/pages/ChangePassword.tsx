@@ -30,7 +30,6 @@ import {
 } from '@/shared/lib/PasswordValidation';
 import { ValidationStyling } from '@/client/styles/PasswordValidationStyles';
 import sha1 from 'js-sha1';
-import { ChangePasswordErrors } from '@/shared/model/Errors';
 import { PasswordInput } from '@/client/components/PasswordInput';
 import { FieldError } from '@/shared/model/ClientState';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
@@ -112,8 +111,6 @@ const updateComponentStateAfterValidation = (
   redErrorCurrently: MutableRefObject<ErrorValidationResult | undefined>,
   setLastLengthError: Dispatch<SetStateAction<LengthValidationResult>>,
   setValidationResult: Dispatch<SetStateAction<PasswordValidationResult>>,
-  isPasswordConfirmSelectedCurrently: MutableRefObject<boolean>,
-  passwordConfirmCurrently: MutableRefObject<string>,
 ) => {
   // return early if the password changed before validation completed
   if (password !== passwordCurrently.current) return;
@@ -127,15 +124,6 @@ const updateComponentStateAfterValidation = (
     ) {
       setRedError(undefined);
     }
-  }
-
-  // set red if user has selected the confirm password check box and there are validation issues
-  if (
-    (isPasswordConfirmSelectedCurrently.current ||
-      passwordConfirmCurrently.current.length > 0) &&
-    validationResult !== PasswordValidationResult.VALID_PASSWORD
-  ) {
-    setRedError(validationResult);
   }
 
   // set the last length error - when the user solves 'at least 8' or 'max 72' we show the length requirement in green
@@ -154,12 +142,6 @@ const updateComponentStateAfterValidation = (
 const usePasswordValidationHooks = (idapiBaseUrl: string) => {
   // useRefState makes the up-to-date password accessible in the breachPasswordCheck promise handler
   const [password, setPassword, passwordCurrently] = useRefState('');
-  const [passwordConfirm, setPasswordConfirm, passwordConfirmCurrently] =
-    useRefState('');
-
-  // if breached password promise completes with errors, and the password confirmation box is selected we show a red error message
-  const [, setIsPasswordConfirmSelected, isPasswordConfirmSelectedCurrently] =
-    useRefState(false);
 
   // the latest validation result
   const [validationResult, setValidationResult] =
@@ -177,17 +159,6 @@ const usePasswordValidationHooks = (idapiBaseUrl: string) => {
   const [lastLengthError, setLastLengthError] =
     useState<LengthValidationResult>(PasswordValidationResult.AT_LEAST_8);
 
-  // Usually we only show password not matching if the confirmed password is not a substring.
-  // However, if the user clicks submit we want to show the error message if the password does not equal the confirmed password
-  const [
-    showPasswordNotMatchingEvenIfSubstring,
-    setShowPasswordNotMatchingEvenIfSubstring,
-  ] = useState(false);
-  // if user solves the matching error we can go back to the 'pre-submit' rule
-  if (password === passwordConfirm && showPasswordNotMatchingEvenIfSubstring) {
-    setShowPasswordNotMatchingEvenIfSubstring(false);
-  }
-
   useEffect(() => {
     validatePassword(idapiBaseUrl, password).then((validationResult) => {
       updateComponentStateAfterValidation(
@@ -198,8 +169,6 @@ const usePasswordValidationHooks = (idapiBaseUrl: string) => {
         redErrorCurrently,
         setLastLengthError,
         setValidationResult,
-        isPasswordConfirmSelectedCurrently,
-        passwordConfirmCurrently,
       );
     });
   }, [password]);
@@ -219,35 +188,14 @@ const usePasswordValidationHooks = (idapiBaseUrl: string) => {
       ? PasswordValidationLongMessage[redError]
       : undefined;
 
-  // only show password confirm error if other validation checks pass
-  const passwordConfirmationErrorMessage =
-    validationResult === PasswordValidationResult.VALID_PASSWORD &&
-    (!password.startsWith(passwordConfirm) ||
-      (showPasswordNotMatchingEvenIfSubstring && password !== passwordConfirm))
-      ? ChangePasswordErrors.PASSWORDS_NOT_MATCH
-      : undefined;
-
-  const passwordConfirmSuccessMessage =
-    validationResult === PasswordValidationResult.VALID_PASSWORD &&
-    password === passwordConfirm
-      ? ChangePasswordErrors.PASSWORDS_MATCH
-      : undefined;
-
   return {
-    password,
-    passwordConfirm,
     setPassword,
-    setPasswordConfirm,
     isCommonPassword,
     lastLengthError,
     lengthValidationStyle,
-    passwordConfirmSuccessMessage,
-    passwordConfirmationErrorMessage,
     longRedErrorMessage,
     setRedError,
-    setIsPasswordConfirmSelected,
     validationResult,
-    setShowPasswordNotMatchingEvenIfSubstring,
   };
 };
 
@@ -258,20 +206,13 @@ export const ChangePassword = ({
   idapiBaseUrl,
 }: ChangePasswordProps) => {
   const {
-    password,
-    passwordConfirm,
     setPassword,
-    setPasswordConfirm,
     isCommonPassword,
     lastLengthError,
     lengthValidationStyle,
-    passwordConfirmSuccessMessage,
-    passwordConfirmationErrorMessage,
     longRedErrorMessage,
     setRedError,
-    setIsPasswordConfirmSelected,
     validationResult,
-    setShowPasswordNotMatchingEvenIfSubstring,
   } = usePasswordValidationHooks(idapiBaseUrl);
 
   return (
@@ -279,7 +220,7 @@ export const ChangePassword = ({
       <Header />
       <Main subTitle="Sign in">
         <PageBox>
-          <PageHeader>Reset Password</PageHeader>
+          <PageHeader>Set Password</PageHeader>
           <PageBody>
             <PageBodyText>
               Please enter your new password for {email}
@@ -294,9 +235,6 @@ export const ChangePassword = ({
                   validationResult !== PasswordValidationResult.VALID_PASSWORD
                 ) {
                   setRedError(validationResult);
-                  e.preventDefault();
-                } else if (password !== passwordConfirm) {
-                  setShowPasswordNotMatchingEvenIfSubstring(true);
                   e.preventDefault();
                 }
               }}
@@ -332,34 +270,6 @@ export const ChangePassword = ({
                 {isCommonPassword ? <PasswordWeakMessage /> : null}
               </div>
 
-              <PasswordInput
-                label="Repeat Password"
-                name="password_confirm"
-                success={passwordConfirmSuccessMessage}
-                error={
-                  passwordConfirmationErrorMessage ??
-                  fieldErrors.find(
-                    (fieldError) => fieldError.field === 'password_confirm',
-                  )?.message
-                }
-                onFocus={() => {
-                  setIsPasswordConfirmSelected(true);
-                  // if there are validation issues in the first password input and the user selects the confirm password box,
-                  // display a red error message
-                  if (
-                    longRedErrorMessage === undefined &&
-                    validationResult !== PasswordValidationResult.VALID_PASSWORD
-                  ) {
-                    setRedError(validationResult);
-                  }
-                }}
-                onBlur={() => {
-                  setIsPasswordConfirmSelected(false);
-                }}
-                onChange={(e) => {
-                  setPasswordConfirm(e.target.value);
-                }}
-              />
               <Button
                 css={button}
                 type="submit"
