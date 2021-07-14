@@ -3,6 +3,7 @@
 import fetch, { RequestInit, Response } from 'node-fetch';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { getAgent } from '@/server/lib/devHttpsAgent';
+import { joinUrl } from '@guardian/libs';
 
 const { idapiBaseUrl, idapiClientAccessToken, stage, baseUri } =
   getConfiguration();
@@ -56,9 +57,9 @@ const getAPIOptionsForMethod =
   });
 
 export const APIFetch =
-  (baseUrl: string) =>
-  async (url: string, options?: RequestInit): Promise<any> => {
-    const response = await fetch(baseUrl + url, options);
+  (idapiBaseUrl: string) =>
+  async (path: string, options?: RequestInit): Promise<any> => {
+    const response = await fetch(joinUrl(idapiBaseUrl, path), options);
     if (!response.ok) {
       return await handleResponseFailure(response);
     } else if (response.status === 204) {
