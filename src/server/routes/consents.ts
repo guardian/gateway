@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import deepmerge from 'deepmerge';
+import { joinUrl } from '@guardian/libs';
 import { Routes } from '@/shared/model/Routes';
 import { renderer } from '@/server/lib/renderer';
 import {
@@ -570,7 +571,7 @@ router.post(
 
       trackMetric(consentsPageMetric(page, 'Post', true));
 
-      let url = `${Routes.CONSENTS}/${consentPages[pageIndex + 1].page}`;
+      let url = joinUrl(Routes.CONSENTS, consentPages[pageIndex + 1].page);
       if (state?.queryParams?.returnUrl) {
         url = addReturnUrlToPath(url, state.queryParams.returnUrl);
       }

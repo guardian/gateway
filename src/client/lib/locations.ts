@@ -1,12 +1,8 @@
-const DOMAIN = 'www.theguardian.com';
-
-const url = (path: string): string => `https://${DOMAIN}${path}`;
-
 export default {
-  HELP: url('/help/identity-faq'),
-  TERMS: url('/help/terms-of-service'),
-  CONTACT_US: url('/help/contact-us'),
-  PRIVACY: url('/info/privacy'),
-  REPORT_ISSUE: url('/info/tech-feedback'),
-  COOKIE_POLICY: url('/info/cookies'),
+  HELP: 'https://www.theguardian.com/help/identity-faq',
+  TERMS: 'https://www.theguardian.com/help/terms-of-service',
+  CONTACT_US: 'https://www.theguardian.com/help/contact-us',
+  PRIVACY: 'https://www.theguardian.com/info/privacy',
+  REPORT_ISSUE: 'https://www.theguardian.com/info/tech-feedback',
+  COOKIE_POLICY: 'https://www.theguardian.com/info/cookies',
 };
