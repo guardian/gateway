@@ -52,8 +52,7 @@ describe('Password change flow', () => {
     it('Has no detectable a11y violations on change password page with error', () => {
       cy.mockNext(200);
       cy.visit(`/reset-password/fake_token`);
-      cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
-      cy.get('input[name="password_confirm"]').type('mismatch');
+      cy.get('input[name="password"]').type('short');
       // there seems to be a race condition on the change password page
       // adding a small wait fixes the issue
       cy.wait(300);
@@ -66,9 +65,6 @@ describe('Password change flow', () => {
       cy.mockNext(200, fakeSuccessResponse);
       cy.visit(`/reset-password/fake_token`);
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
-      cy.get('input[name="password_confirm"]').type(
-        'thisisalongandunbreachedpassword',
-      );
       // there seems to be a race condition on the change password page
       // adding a small wait fixes the issue
       cy.wait(300);
@@ -84,7 +80,7 @@ describe('Password change flow', () => {
       cy.get('.password-input-eye-symbol').should('not.exist');
       cy.get('input[name="password"]').click();
       cy.get('.password-input-eye-symbol').should('exist');
-      cy.contains('Reset Password').click();
+      cy.contains('Set Password').click();
       cy.get('.password-input-eye-symbol').should('not.exist');
     });
 
@@ -115,33 +111,16 @@ describe('Password change flow', () => {
     });
   });
 
-  context('Passwords do not match', () => {
-    it('shows a password mismatch error message', () => {
-      cy.mockNext(200);
-      cy.visit(`/reset-password/fake_token`);
-      cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
-      cy.get('input[name="password_confirm"]').type('mismatch');
-      // there seems to be a race condition on the change password page
-      // adding a small wait fixes the issue
-      cy.wait(300);
-      cy.get('button[type="submit"]').click();
-      cy.contains('Passwords don’t match');
-    });
-  });
-
   context('Password exists in breach dataset', () => {
     it('displays a breached error', () => {
       cy.mockNext(200);
       cy.visit(`/reset-password/fake_token`);
       cy.get('input[name="password"]').type('password');
-      cy.get('input[name="password_confirm"]').type('password');
       // there seems to be a race condition on the change password page
       // adding a small wait fixes the issue
       cy.wait(300);
       cy.get('button[type="submit"]').click();
-      cy.contains(
-        'This is a common password. Please use a password that is hard to guess.',
-      );
+      cy.contains('common password');
     });
   });
 
@@ -151,16 +130,11 @@ describe('Password change flow', () => {
       cy.visit(`/reset-password/fake_token`);
       cy.clearCookie('_csrf');
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
-      cy.get('input[name="password_confirm"]').type(
-        'thisisalongandunbreachedpassword',
-      );
       // there seems to be a race condition on the change password page
       // adding a small wait fixes the issue
       cy.wait(300);
       cy.get('button[type="submit"]').click();
-      cy.contains(
-        'Sorry, something went wrong. If you made any changes these might have not been saved. Please try again.',
-      );
+      cy.contains('Please try again.');
     });
   });
 
@@ -173,7 +147,6 @@ describe('Password change flow', () => {
       cy.wait(300);
       cy.get('button[type="submit"]').click();
       cy.get('input[name="password"]:invalid').should('have.length', 1);
-      cy.get('input[name="password_confirm"]:invalid').should('have.length', 1);
     });
   });
 
@@ -184,15 +157,10 @@ describe('Password change flow', () => {
       cy.visit(`/reset-password/fake_token`);
 
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
-      cy.get('input[name="password_confirm"]').type(
-        'thisisalongandunbreachedpassword',
-      );
-      cy.contains('Passwords match');
       // there seems to be a race condition on the change password page
       // adding a small wait fixes the issue
-      cy.wait(300);
+      cy.wait(600);
       cy.get('button[type="submit"]').click();
-
       cy.contains('Thank you! Your password has been changed.');
       cy.contains('Continue to The Guardian').should(
         'have.attr',
@@ -220,12 +188,9 @@ describe('Password change flow', () => {
         cy.get('input[name="password"]').type(
           'thisisalongandunbreachedpassword',
         );
-        cy.get('input[name="password_confirm"]').type(
-          'thisisalongandunbreachedpassword',
-        );
         // there seems to be a race condition on the change password page
         // adding a small wait fixes the issue
-        cy.wait(300);
+        cy.wait(600);
         cy.get('button[type="submit"]').click();
         cy.contains('Thank you! Your password has been changed.');
         cy.contains('Continue to The Guardian').should(
@@ -249,9 +214,6 @@ describe('Password change flow', () => {
         cy.get('input[name="password"]').type(
           'thisisalongandunbreachedpassword',
         );
-        cy.get('input[name="password_confirm"]').type(
-          'thisisalongandunbreachedpassword',
-        );
         // there seems to be a race condition on the change password page
         // adding a small wait fixes the issue
         cy.wait(800);
@@ -272,12 +234,9 @@ describe('Password change flow', () => {
       cy.visit(`/reset-password/fake_token`);
       cy.mockNext(200);
       cy.get('input[name="password"]').type('p');
-      cy.get('input[name="password_confirm"]').type('p');
-
+      cy.get('button[type="submit"]').focus();
       // Error is shown before clicking submit
-      cy.contains(
-        'Please make sure your password is at least 8 characters long.',
-      );
+      cy.contains('At least 8');
       // there seems to be a race condition on the change password page
       // adding a small wait fixes the issue
       cy.wait(300);
@@ -296,11 +255,9 @@ describe('Password change flow', () => {
       cy.visit(`/reset-password/fake_token`);
       cy.mockNext(200);
       cy.get('input[name="password"]').type(excessivelyLongPassword);
-      cy.get('input[name="password_confirm"]').type(excessivelyLongPassword);
+      cy.get('button[type="submit"]').focus();
       // Error is shown before clicking submit
-      cy.contains(
-        'Please make sure your password is not longer than 72 characters.',
-      );
+      cy.contains('Maximum of 72');
       // there seems to be a race condition on the change password page
       // adding a small wait fixes the issue
       cy.wait(300);
@@ -326,9 +283,6 @@ describe('Password change flow', () => {
       cy.mockNext(500);
       cy.visit(`/reset-password/fake_token`);
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
-      cy.get('input[name="password_confirm"]').type(
-        'thisisalongandunbreachedpassword',
-      );
       // there seems to be a race condition on the change password page
       // adding a small wait fixes the issue
       cy.wait(300);
