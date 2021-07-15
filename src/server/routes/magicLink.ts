@@ -32,8 +32,8 @@ router.post(
         `TODO: Implement the logic to send the magic link to ${email} here`,
       );
     } catch (error) {
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
       const { message, status } = error;
-      logger.error(error);
 
       trackMetric(Metrics.SEND_MAGIC_LINK_FAILURE);
 

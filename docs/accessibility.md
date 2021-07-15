@@ -29,7 +29,7 @@ CI builds will fail unless all linting error are dealt with.
 
 [Cypress](https://www.cypress.io/) is the E2E and integration testing tool that we use in this project.
 
-Combinding the two together results in [cypress-axe](https://github.com/component-driven/cypress-axe) which allows automated testing of accessibility tests using Axe directly as a test in Cypress.
+Combining the two together results in [cypress-axe](https://github.com/component-driven/cypress-axe) which allows automated testing of accessibility tests using Axe directly as a test in Cypress.
 
 This makes it easy to check for accessibility as part of the automated CI tests, some of which may not have been picked up by the linter.
 

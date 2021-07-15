@@ -82,7 +82,8 @@ router.get(
         },
       });
     } catch (error) {
-      logger.error(error);
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+
       return res.type('html').send(
         renderer(Routes.RESET_RESEND, {
           requestState: state,
@@ -143,7 +144,7 @@ router.post(
       setIDAPICookies(res, cookies);
     } catch (error) {
       const { message, status } = error;
-      logger.error(error);
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
       trackMetric(Metrics.CHANGE_PASSWORD_FAILURE);
 
