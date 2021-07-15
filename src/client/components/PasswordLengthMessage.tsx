@@ -7,10 +7,15 @@ import { css } from '@emotion/react';
 import { SvgCheckmark } from '@guardian/src-icons';
 import { palette } from '@guardian/src-foundations';
 import { SvgCross } from '@guardian/src-icons';
-import {
-  LengthValidationResult,
-  PasswordValidationShortMessage,
-} from '@/shared/lib/PasswordValidation';
+import { PasswordValidationResult } from '@/shared/lib/PasswordValidationResult';
+import { ChangePasswordErrors } from '@/shared/model/Errors';
+
+const PasswordValidationShortMessage = {
+  [PasswordValidationResult.AT_LEAST_8]: ChangePasswordErrors.AT_LEAST_8_SHORT,
+  [PasswordValidationResult.MAXIMUM_72]: ChangePasswordErrors.MAXIMUM_72_SHORT,
+  [PasswordValidationResult.COMMON_PASSWORD]:
+    ChangePasswordErrors.COMMON_PASSWORD_SHORT,
+};
 
 const symbolStyling = {
   [ValidationStyling.SUCCESS]: {
@@ -53,7 +58,9 @@ export const PasswordLengthMessage = ({
   lengthResult,
 }: {
   validationStyling: ValidationStyling;
-  lengthResult: LengthValidationResult;
+  lengthResult:
+    | PasswordValidationResult.AT_LEAST_8
+    | PasswordValidationResult.MAXIMUM_72;
 }) => {
   return (
     <div>

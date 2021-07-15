@@ -21,17 +21,13 @@ import { PasswordWeakMessage } from '@/client/components/PasswordWeakMessage';
 import { PasswordLengthMessage } from '@/client/components/PasswordLengthMessage';
 import { space } from '@guardian/src-foundations';
 import { css } from '@emotion/react';
-import {
-  ErrorValidationResult,
-  LengthValidationResult,
-  PasswordValidationLongMessage,
-  PasswordValidationResult,
-  validatePasswordLength,
-} from '@/shared/lib/PasswordValidation';
+import { PasswordValidationResult } from '@/shared/lib/PasswordValidationResult';
+
 import { ValidationStyling } from '@/client/styles/PasswordValidationStyles';
 import sha1 from 'js-sha1';
 import { PasswordInput } from '@/client/components/PasswordInput';
 import { FieldError } from '@/shared/model/ClientState';
+import { ChangePasswordErrors } from '@/shared/model/Errors';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
 
 type ChangePasswordProps = {
@@ -39,6 +35,18 @@ type ChangePasswordProps = {
   email: string;
   fieldErrors: FieldError[];
   idapiBaseUrl: string;
+};
+
+type ErrorValidationResult =
+  | PasswordValidationResult.AT_LEAST_8
+  | PasswordValidationResult.MAXIMUM_72
+  | PasswordValidationResult.COMMON_PASSWORD;
+
+const PasswordValidationLongMessage = {
+  [PasswordValidationResult.AT_LEAST_8]: ChangePasswordErrors.AT_LEAST_8,
+  [PasswordValidationResult.MAXIMUM_72]: ChangePasswordErrors.MAXIMUM_72,
+  [PasswordValidationResult.COMMON_PASSWORD]:
+    ChangePasswordErrors.COMMON_PASSWORD,
 };
 
 /* eslint-disable functional/immutable-data */
@@ -56,8 +64,8 @@ function useRefState<T>(
 }
 /* eslint-enable functional/immutable-data */
 
-const checkIfBreached = AwesomeDebouncePromise(
-  (password: string): Promise<PasswordValidationResult> => {
+const isBreached = AwesomeDebouncePromise(
+  (password: string): Promise<boolean> => {
     const hashedPassword = sha1(password);
     const firstFive = hashedPassword.substr(0, 5);
     const remainingHash = hashedPassword.substr(5, hashedPassword.length);
@@ -65,14 +73,14 @@ const checkIfBreached = AwesomeDebouncePromise(
       .then((r) =>
         r.text().then((results) => {
           if (results.includes(remainingHash.toUpperCase())) {
-            return PasswordValidationResult.COMMON_PASSWORD;
+            return true;
           } else {
-            return PasswordValidationResult.VALID_PASSWORD;
+            return false;
           }
         }),
       )
       .catch(() => {
-        return PasswordValidationResult.VALID_PASSWORD;
+        return false;
       });
   },
   300,
@@ -82,12 +90,19 @@ const validatePassword = async (
   idapiBaseUrl: string,
   password: string,
 ): Promise<PasswordValidationResult> => {
-  const lengthResult = validatePasswordLength(password);
-  if (lengthResult !== PasswordValidationResult.VALID_PASSWORD) {
-    return Promise.resolve(lengthResult);
+  if (password.length < 8) {
+    return PasswordValidationResult.AT_LEAST_8;
   }
 
-  return checkIfBreached(password);
+  if (password.length > 72) {
+    return PasswordValidationResult.MAXIMUM_72;
+  }
+
+  if (await isBreached(password)) {
+    return PasswordValidationResult.COMMON_PASSWORD;
+  }
+
+  return PasswordValidationResult.VALID_PASSWORD;
 };
 
 const deriveLengthValidationStyle = (
@@ -109,7 +124,11 @@ const updateComponentStateAfterValidation = (
   passwordCurrently: MutableRefObject<string>,
   setRedError: Dispatch<SetStateAction<ErrorValidationResult | undefined>>,
   redErrorCurrently: MutableRefObject<ErrorValidationResult | undefined>,
-  setLastLengthError: Dispatch<SetStateAction<LengthValidationResult>>,
+  setLastLengthError: Dispatch<
+    SetStateAction<
+      PasswordValidationResult.AT_LEAST_8 | PasswordValidationResult.MAXIMUM_72
+    >
+  >,
   setValidationResult: Dispatch<SetStateAction<PasswordValidationResult>>,
 ) => {
   // return early if the password changed before validation completed
@@ -156,8 +175,9 @@ const usePasswordValidationHooks = (idapiBaseUrl: string) => {
   >(undefined);
 
   // store last length tick/cross error since we want to show it in green after it has been corrected (it can show either password too long, or too short)
-  const [lastLengthError, setLastLengthError] =
-    useState<LengthValidationResult>(PasswordValidationResult.AT_LEAST_8);
+  const [lastLengthError, setLastLengthError] = useState<
+    PasswordValidationResult.AT_LEAST_8 | PasswordValidationResult.MAXIMUM_72
+  >(PasswordValidationResult.AT_LEAST_8);
 
   useEffect(() => {
     validatePassword(idapiBaseUrl, password).then((validationResult) => {
