@@ -28,31 +28,42 @@ Depending on which stage (`DEV` or `CODE`) you want to connect to [Identity API 
 
 You can setup gateway to use a domain name locally (`https://profile.thegulocal.com`) and alongside identity-frontend by following the instructions from [`identity-platform/nginx`](https://github.com/guardian/identity-platform/tree/master/nginx).
 
+Using nginx is recommended as it secured with HTTPS and has a domain name allowing cookies to be set correctly, especially as many of the flows in gateway rely on Secure, SameSite=strict cookies.
+
 Nginx will attempt to resolve from gateway first, followed by dotcom/identity second, and finally identity-frontend on the `profile.thegulocal.com` subdomain.
 
 When using nginx, be sure to set `BASE_URI` environment variable in `.env` to `profile.thegulocal.com` which will set the correct cookie domain and CSP (Content Secure Policy) headers.
 
 ### S3 Config
 
-You can get a preset `.env` file from the S3 private config. Be sure to have the `identity` Janus credentials. IDAPI will be pointed to `CODE`.
+You can get a preset `.env` file from the S3 private config. Be sure to have the `identity` Janus credentials.
+
+With dev-nginx (profile.thegulocal.com):
+
+```sh
+# IDAPI/Okta pointing to DEV environment (Recommended for development)
+$ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway/env-thegulocal-idapi-okta-dev .env
+
+# IDAPI/Okta pointing to CODE environment (Recommended for development against CODE)
+# Some cookies may not work due to domain differences
+$ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway/env-thegulocal-idapi-okta-code .env
+```
 
 Without nginx (localhost:8861):
 
 ```sh
-$ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway/env-localhost .env
-```
+# IDAPI/Okta pointing to DEV environment
+$ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway/env-localhost-idapi-okta-dev .env
 
-With nginx (profile.thegulocal.com):
-
-```sh
-$ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway/env-thegulocal .env
+# IDAPI/Okta pointing to CODE environment
+$ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway/env-localhost-idapi-okta-code .env
 ```
 
 ## Running
 
-By default gateway will run on port `8861`, this can be changed in the `.env` file. You can then access gateway on `http://localhost:8861`.
+If using nginx, nginx will look for gateway on port `8861`, so be sure to use that port. You can access gateway on `https://profile.thegulocal.com`, nginx prioritises gateway first.
 
-If using nginx, nginx will look for gateway on port `8861`, so be sure to use that port. You can access gateway on `https://profile.thegulocal.com`, nginx prioritises gateway first,
+If not using nginx, you can then access gateway on `http://localhost:8861`.
 
 ### With Docker
 
@@ -172,6 +183,22 @@ To access gateway routes on `CODE` (and `PROD`) alongside the current profile/id
 When you access the `profile.` subdomain, a `GU_GATEWAY` cookie is automatically added with either `true` or `false` value randomly. Make sure the cookie is set to `true` through your browsers developer tools, or alternatively add a `gateway` query parameter to force this to true automatically, examples: `https://profile.theguardian.com/reset?returnUrl=https%3A%2F%2Fwww.theguardian.com&skipConfirmation=false&gateway` or `https://profile.theguardian.com/reset?gateway`.
 
 Once this cookie value is `true`, you'll automatically be directed to the `gateway` routes that have been migrated so far.
+
+## Storybook
+
+You can use [Storybook](https://storybook.js.org/)to build UI components and pages in isolation without having to launch the Gateway server or set up routes.
+
+Simply run the following command to start Storybook locally
+
+```sh
+$ yarn storybook
+```
+
+There's more documentation on setting up a story in the [development documentation](development.md).
+
+When a git branch is updated on GitHub, a "Chromatic Deploy" action is run which publishes the Storybook to a URL.
+
+It also runs [visual regression tests](https://www.chromatic.com/), and the "UI Tests"§ must pass/be accepted before the PR can be merged. This is used to prevent unintended UI changes from making their way into production.
 
 ## IDE Setup
 

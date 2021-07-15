@@ -30,7 +30,7 @@ Due to SSR, routing is a bit complicated than simply using client-side routing. 
 
 To make it easier to keep track of routes/paths, we define then in a `Routes` enum in the [shared/model/Routes.ts](../src/shared/model/Routes.ts) file. The enum is then consumed by both Express and React Router so we can share the paths between them.
 
-Firstly, for rendering routes on the client, we use React Router's [`StaticRouter`](https://reacttraining.com/react-router/web/api/StaticRouter) in our [server renderer](../src/server/lib/renderer.ts) file, this sets up router which location does not change once rendered (no client-side routing). We add client side routes in the client [routes.tsx](../src/client/routes.tsx) file, which react router looks at to determine what to render for that particular path.
+Firstly, for rendering routes on the client, we use React Router's [`StaticRouter`](https://reacttraining.com/react-router/web/api/StaticRouter) in our [server renderer](../src/server/lib/renderer.tsx) file, this sets up router which location does not change once rendered (no client-side routing). We add client side routes in the client [routes.tsx](../src/client/routes.tsx) file, which react router looks at to determine what to render for that particular path.
 
 Here's an example of a route, with a component it will render inside that route:
 
@@ -112,6 +112,75 @@ router.get(
 #### Why?
 
 In Express 4, async handlers which fail to call next() (or specific functions on the response) leave the TCP connection open (indicating a leak) and don't return any data.
+
+## Developing Components/Pages using Storybook
+
+[Storybook](https://storybook.js.org/) is a tool for building UI components and pages in isolation. This means you don't have to run the server, and set up any route or state to develop components/pages/emails in Gateway.
+
+You can run Storybook by
+
+```sh
+$ yarn storybook
+```
+
+Which will compile the project and start storybook. Any changes you make will be automatically reloaded in Storybook too.
+
+To make a new story, simply make a new `*.stories.tsx` file in the same folder as your component. For example:
+
+```tsx
+// ErrorSummary.stories.tsx
+
+import React from 'react';
+import { Meta } from '@storybook/react';
+
+// import the react component
+import { ErrorSummary } from './ErrorSummary';
+
+// export metadata about the component
+export default {
+  title: 'Components/ErrorSummary',
+  component: ErrorSummary,
+} as Meta;
+
+// export a story
+export const Default = () => <ErrorSummary error="There has been an error" />;
+Default.storyName = 'default';
+
+// export another story
+export const WithContext = () => (
+  <ErrorSummary
+    error="There has been an error"
+    context="Here's some more information about this error"
+  />
+);
+WithContext.storyName = 'withContext';
+```
+
+Each story has to export a default metadata object with information on the title and component which is visible in storybook:
+
+```tsx
+export default {
+  title: 'Components/ErrorSummary',
+  component: ErrorSummary,
+} as Meta;
+
+/**
+ * Title Format:
+ * Component        -> 'Components/ComponentName'
+ * Page             -> 'Pages/PageName
+ * Email Component  -> 'Email/Components/',
+ * Email Template   -> 'Email/Templates/TemplateName'
+ **/
+```
+
+You also have to return at least one "story" from the file too, which is a function that returns the react component/page, as well as a "storyName" for that story:
+
+```tsx
+export const Default = () => <ErrorSummary error="There has been an error" />;
+Default.storyName = 'default';
+```
+
+You can export multiple stories from each file, for example to show how the component/page changes depending on different props/state.
 
 ## State Management
 
@@ -239,6 +308,8 @@ Then simply include the [`queryParamsMiddleware`](../src/server/lib/middleware/q
 router.use(noCache, queryParamsMiddleware, reset);
 ```
 
+You can access this server side on the `ResponseWithRequestState` object as `res.locals.queryParams`.
+
 ## Styling
 
 Styling is done in JS (or TSX in our case) using the [Emotion](https://emotion.sh) CSS-in-JS library, which allows for the definitions of styles at the component level, which means once rendered, the html sent to the client only contains the CSS required for that page.
@@ -341,3 +412,7 @@ CSP Violations show up in the browser console, so it's easy to tell if theres a 
 ## AB Testing
 
 See the [AB Testing](ab-testing.md) documentation!
+
+## Emails
+
+See the [Email README](../src/email/README.md)!
