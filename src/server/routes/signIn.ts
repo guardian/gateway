@@ -135,7 +135,7 @@ const idapiAuthenticationController = async (
     // redirect to returnUrl
     return res.redirect(303, returnUrl);
   } catch (error) {
-    logger.error(error);
+    logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
     // track failure
     trackMetric(Metrics.AUTHENTICATION_FAILURE);

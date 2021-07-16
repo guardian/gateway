@@ -101,7 +101,7 @@ The library has [useful documentation](https://github.com/guardian/ab-testing#mv
 
 At first glance this may seem more difficult that using the URL parameters, but the main advantages to this method are:
 
-- Less chance of overrlapping tests
+- Less chance of overlapping tests
   - URL params set the `forcedTestVariants` parameter in the framework, which may mean that it may overlap with any other tests in that bucket.
 - You'll always be in that AB Test throughout the lifetime of the cookie
   - URL parameters are only valid for that single request, which means that tests that rely on multiple requests/routes would be required to add the parameters on every request manually

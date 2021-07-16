@@ -107,7 +107,7 @@ router.get(
       // return to url from state or default url
       return res.redirect(authState.returnUrl || defaultReturnUri);
     } catch (error) {
-      logger.error(error);
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
       trackMetric(Metrics.AUTHORIZATION_ERROR);
       // if there's been an error from the authorization_code flow
       // then propagate it as a query parameter (error + error_description)

@@ -50,6 +50,7 @@ export const read = async (
   sc_gu_la: string,
   ip: string,
 ): Promise<IDAPIAuthRedirect> => {
+  const url = '/auth/redirect';
   const options = APIAddClientAccessToken(
     APIForwardSessionIdentifier(APIGetOptions(), sc_gu_u),
     ip,
@@ -60,13 +61,13 @@ export const read = async (
   };
   try {
     return responseToEntity(
-      (await idapiFetch('/auth/redirect', {
+      (await idapiFetch(url, {
         ...options,
         headers: { ...headers },
       })) as APIResponse,
     );
   } catch (e) {
-    logger.error(e);
+    logger.error(`IDAPI Error auth read ${url}`, e);
     return handleError(e);
   }
 };
@@ -76,6 +77,7 @@ export const authenticate = async (
   password: string,
   ip: string,
 ) => {
+  const url = '/auth?format=cookies';
   const options = APIPostOptions({
     email,
     password,
@@ -83,11 +85,12 @@ export const authenticate = async (
 
   try {
     const response = await idapiFetch(
-      '/auth?format=cookies',
+      url,
       APIAddClientAccessToken(options, ip),
     );
     return response.cookies;
   } catch (e) {
+    logger.error(`IDAPI Error auth authenticate ${url}`, e);
     handleError(e);
   }
 };

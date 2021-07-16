@@ -15,12 +15,12 @@ export const logger: Logger = {
     if (error && error.stack && typeof error.message === 'string') {
       return logger.log(
         LogLevel.ERROR,
-        `${message} ${error.message} ${error.stack}`,
+        `${message} | ${error.message} | ${error.stack}`,
       );
     }
 
     if (error) {
-      return logger.log(LogLevel.ERROR, `${message} ${error}`);
+      return logger.log(LogLevel.ERROR, `${message} | ${error}`);
     }
 
     return logger.log(LogLevel.ERROR, message);

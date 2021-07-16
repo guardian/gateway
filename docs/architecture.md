@@ -12,7 +12,7 @@ The split over two projects is a cause of confusion and has happened as part of 
 
 Furthermore, it is the case that new features cannot be developed on it due to the poor state of the applications, notably any modifications to the sign up flow.
 
-Many other client side applications at The Guardian now are React app based, which allows for easier code resuse and knowledge sharing.
+Many other client side applications at The Guardian now are React app based, which allows for easier code reuse and knowledge sharing.
 
 ## Technology
 
@@ -24,8 +24,7 @@ Gateway is primarily a [TypeScript](https://www.typescriptlang.org/), [React](ht
 
 This has the added benefit that since we're only serving HTML, we can target a wider range of browsers compared to doing client side hydration, pretty much any browser thats supports [TLS 1.2](https://caniuse.com/#feat=tls1-2) will get functional support. As far as styling/css go, we target the recommended browsers from [guardian/dotcom-rendering](https://github.com/guardian/dotcom-rendering/blob/master/docs/principles/browser-support.md#recommended-browsers).
 
-However there will be some JavaScript code that needs to run client side, such as for analytics, consent etc.
-To this end we generate and serve a small static bundle.js (from src/client/static) that can import any js required, with dynamic imports also supported to reduce the bundle size.
+However there will be some JavaScript code that needs to run client side, such as for analytics, consent etc. And hydration can be used to enhance functionality for the user.
 
 Development principles can be found in [development.md](development.md).
 
@@ -50,4 +49,8 @@ gateway
     └── shared          - Shared code
         └── lib         - services/helper code shared between server and client
         └── models      - ts interfaces/enums shared between server and client
+    └── email           - Transactional email service and email templates
+        └── components  - Reusable email components using mjml-react
+        └── lib         - Business logic/services related to emails
+        └── templates   - Email templates in mjml-react and plain text forms
 ```

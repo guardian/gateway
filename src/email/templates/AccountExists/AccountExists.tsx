@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { getProfileUrl } from '@/server/lib/getProfileUrl';
 import { Routes } from '@/shared/model/Routes';
 import { Page } from '@/email/components/Page';
 import { Button } from '@/email/components/Button';
@@ -8,6 +9,8 @@ import { SubHeader } from '@/email/components/SubHeader';
 import { Text } from '@/email/components/Text';
 import { Link } from '@/email/components/Link';
 import { Footer } from '@/email/components/Footer';
+
+const profileUrl = getProfileUrl();
 
 export const AccountExists = () => {
   return (
@@ -24,9 +27,7 @@ export const AccountExists = () => {
         </p>
         <p>If you forgot your password, you can click below to reset it.</p>
       </Text>
-      <Button
-        href={`https://profile.theguardian.com${Routes.CHANGE_PASSWORD}/TOKEN_PLACEHOLDER`}
-      >
+      <Button href={`${profileUrl}${Routes.CHANGE_PASSWORD}/TOKEN_PLACEHOLDER`}>
         Reset password
       </Button>
       <Footer />
