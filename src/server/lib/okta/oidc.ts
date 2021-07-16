@@ -7,6 +7,7 @@ import { getProfileUrl } from '@/server/lib/getProfileUrl';
 import { Routes } from '@/shared/model/Routes';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { logger } from '@/server/lib/logger';
+import { joinUrl } from '@guardian/libs';
 
 /**
  * An object to hold the state the user was in while performing the
@@ -58,16 +59,17 @@ const { oktaDomain, oktaClientId, oktaClientSecret, oktaCustomOAuthServer } =
  * used by openid-client to create the "Issuer" and "Client"
  * we only expose the endpoints here
  */
+const issuer = joinUrl(oktaDomain, '/oauth2/', oktaCustomOAuthServer);
 const OIDC_METADATA: IssuerMetadata = {
-  issuer: `${oktaDomain}/oauth2/${oktaCustomOAuthServer}`,
-  authorization_endpoint: `${oktaDomain}/oauth2/${oktaCustomOAuthServer}/v1/authorize`,
-  token_endpoint: `${oktaDomain}/oauth2/${oktaCustomOAuthServer}/v1/token`,
-  jwks_uri: `${oktaDomain}/oauth2/${oktaCustomOAuthServer}/v1/keys`,
-  userinfo_endpoint: `${oktaDomain}/oauth2/${oktaCustomOAuthServer}/v1/userinfo`,
-  registration_endpoint: `${oktaDomain}/oauth2/v1/clients`,
-  introspection_endpoint: `${oktaDomain}/oauth2/${oktaCustomOAuthServer}/v1/introspect`,
-  revocation_endpoint: `${oktaDomain}/oauth2/${oktaCustomOAuthServer}/v1/revoke`,
-  end_session_endpoint: `${oktaDomain}/oauth2/${oktaCustomOAuthServer}/v1/logout`,
+  issuer,
+  authorization_endpoint: joinUrl(issuer, '/v1/authorize'),
+  token_endpoint: joinUrl(issuer, '/v1/token'),
+  jwks_uri: joinUrl(issuer, '/v1/keys'),
+  userinfo_endpoint: joinUrl(issuer, '/v1/userinfo'),
+  registration_endpoint: joinUrl(issuer, '/oauth2/v1/clients'),
+  introspection_endpoint: joinUrl(issuer, '/v1/introspect'),
+  revocation_endpoint: joinUrl(issuer, '/v1/revoke'),
+  end_session_endpoint: joinUrl(issuer, '/v1/logout'),
 };
 
 /**

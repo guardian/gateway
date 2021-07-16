@@ -2,6 +2,7 @@ import fetch, { RequestInit, Response } from 'node-fetch';
 import { HalLink } from 'hal-types';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { OktaAuthenticateErrors, SignInErrors } from '@/shared/model/Errors';
+import { joinUrl } from '@guardian/libs';
 
 // https://developer.okta.com/docs/reference/api/authn/#transaction-state
 enum AuthenticationTransactionState {
@@ -156,7 +157,10 @@ export const authenticate = async (email: string, password: string) => {
     body,
   };
 
-  const response = await fetch(`${oktaDomain}/api/v1/authn`, requestOptions);
+  const response = await fetch(
+    joinUrl(oktaDomain, '/api/v1/authn'),
+    requestOptions,
+  );
   if (!response.ok) {
     return await handleResponseFailure(response);
   } else {
