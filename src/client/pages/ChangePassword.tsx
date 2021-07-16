@@ -203,13 +203,13 @@ const ValidationMessage = ({
   isWeak,
   isTooShort,
   isTooLong,
-  isValid,
+  isChecking,
 }: {
   error?: string;
   isWeak: boolean;
   isTooShort: boolean;
   isTooLong: boolean;
-  isValid: boolean;
+  isChecking: boolean;
 }) => {
   if (isTooShort) {
     return <TooShort error={error} />;
@@ -217,10 +217,10 @@ const ValidationMessage = ({
     return <TooLong error={error} />;
   } else if (isWeak) {
     return <Weak />;
-  } else if (isValid) {
-    return <Valid />;
-  } else {
+  } else if (isChecking) {
     return <Checking />;
+  } else {
+    return <Valid />;
   }
 };
 
@@ -258,7 +258,7 @@ export const ChangePassword = ({
   const [isWeak, setIsWeak] = useState<boolean>(false);
   const [isTooShort, setIsTooShort] = useState<boolean>(true);
   const [isTooLong, setIsTooLong] = useState<boolean>(false);
-  const [isValid, setIsValid] = useState<boolean>(false);
+  const [isChecking, setIsChecking] = useState<boolean>(false);
 
   useEffect(() => {
     // Typing anything clears the big red error, falling back to the dynamic validation message
@@ -268,21 +268,21 @@ export const ChangePassword = ({
 
     if (password.length >= 8 && password.length <= 72) {
       // Only make api calls to check if breached when length rules are not broken
-      isBreached(password).then((breached) => {
-        if (breached) {
-          setIsWeak(true);
-          // Password is breached so not valid ❌
-          setIsValid(false);
-        } else {
-          setIsWeak(false);
-          // Password is not breached and is an acceptable length so it is valid ✔
-          setIsValid(true);
-        }
-      });
+      setIsChecking(true);
+      isBreached(password)
+        .then((breached) => {
+          if (breached) {
+            // Password is breached ❌
+            setIsWeak(true);
+          } else {
+            // Password is valid ✔
+            setIsWeak(false);
+          }
+        })
+        .finally(() => setIsChecking(false));
     } else {
+      // Password is not an acceptable length ❌
       setIsWeak(false);
-      // Password is not an acceptable length so not valid ❌
-      setIsValid(false);
     }
   }, [password]);
 
@@ -334,7 +334,7 @@ export const ChangePassword = ({
                   isWeak={isWeak}
                   isTooShort={isTooShort}
                   isTooLong={isTooLong}
-                  isValid={isValid}
+                  isChecking={isChecking}
                 />
               </div>
 
