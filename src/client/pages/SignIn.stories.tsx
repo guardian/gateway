@@ -14,21 +14,21 @@ Default.story = {
   name: 'with defaults',
 };
 
-export const withEmail = () => <SignIn email="test@example.com" />;
-withEmail.story = {
+export const WithEmail = () => <SignIn email="test@example.com" />;
+WithEmail.story = {
   name: 'with email',
 };
 
-export const withSummaryError = () => (
+export const WithSummaryError = () => (
   <SignIn errorSummary="This is an error" />
 );
-withSummaryError.story = {
+WithSummaryError.story = {
   name: 'with summary error',
 };
 
-export const withSummaryErrorAndEmail = () => (
+export const WithSummaryErrorAndEmail = () => (
   <SignIn errorSummary="This is an error" email="test@example.com" />
 );
-withSummaryErrorAndEmail.story = {
+WithSummaryErrorAndEmail.story = {
   name: 'with summary error and email',
 };
