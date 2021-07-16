@@ -301,13 +301,14 @@ export const ChangePassword = ({
               method="post"
               action={submitUrl}
               onSubmit={(e) => {
-                if (isTooLong || isTooShort) {
-                  setError(ChangePasswordErrors.AT_LEAST_8_SHORT);
+                if (isTooShort) {
+                  setError(ChangePasswordErrors.AT_LEAST_8);
+                  e.preventDefault();
+                } else if (isTooLong) {
+                  setError(ChangePasswordErrors.MAXIMUM_72);
+                  e.preventDefault();
                 } else if (isWeak) {
                   setError(ChangePasswordErrors.COMMON_PASSWORD_SHORT);
-                }
-                // prevent the form from submitting if there are validation errors
-                if (!isValid) {
                   e.preventDefault();
                 }
               }}
