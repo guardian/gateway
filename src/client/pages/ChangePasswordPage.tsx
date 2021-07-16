@@ -16,7 +16,6 @@ export const ChangePasswordPage = () => {
       submitUrl={`${Routes.CHANGE_PASSWORD}/${token}${search}`}
       email={email}
       fieldErrors={fieldErrors}
-      idapiBaseUrl={clientState.clientHosts.idapiBaseUrl}
     />
   );
 };
