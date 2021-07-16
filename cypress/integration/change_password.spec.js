@@ -55,7 +55,7 @@ describe('Password change flow', () => {
       cy.get('input[name="password"]').type('short');
       // there seems to be a race condition on the change password page
       // adding a small wait fixes the issue
-      cy.wait(300);
+      cy.wait(800);
       cy.get('button[type="submit"]').click();
       injectAndCheckAxe();
     });
@@ -67,7 +67,7 @@ describe('Password change flow', () => {
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
       // there seems to be a race condition on the change password page
       // adding a small wait fixes the issue
-      cy.wait(300);
+      cy.wait(800);
       cy.get('button[type="submit"]').click();
       injectAndCheckAxe();
     });
@@ -118,7 +118,7 @@ describe('Password change flow', () => {
       cy.get('input[name="password"]').type('password');
       // there seems to be a race condition on the change password page
       // adding a small wait fixes the issue
-      cy.wait(300);
+      cy.wait(800);
       cy.get('button[type="submit"]').click();
       cy.contains('common password');
     });
@@ -132,7 +132,7 @@ describe('Password change flow', () => {
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
       // there seems to be a race condition on the change password page
       // adding a small wait fixes the issue
-      cy.wait(300);
+      cy.wait(800);
       cy.get('button[type="submit"]').click();
       cy.contains('Please try again.');
     });
@@ -144,7 +144,7 @@ describe('Password change flow', () => {
       cy.visit(`/reset-password/fake_token`);
       // there seems to be a race condition on the change password page
       // adding a small wait fixes the issue
-      cy.wait(300);
+      cy.wait(800);
       cy.get('button[type="submit"]').click();
       cy.get('input[name="password"]:invalid').should('have.length', 1);
     });
@@ -159,7 +159,7 @@ describe('Password change flow', () => {
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
       // there seems to be a race condition on the change password page
       // adding a small wait fixes the issue
-      cy.wait(600);
+      cy.wait(800);
       cy.get('button[type="submit"]').click();
       cy.contains('Thank you! Your password has been changed.');
       cy.contains('Continue to The Guardian').should(
@@ -190,7 +190,7 @@ describe('Password change flow', () => {
         );
         // there seems to be a race condition on the change password page
         // adding a small wait fixes the issue
-        cy.wait(600);
+        cy.wait(800);
         cy.get('button[type="submit"]').click();
         cy.contains('Thank you! Your password has been changed.');
         cy.contains('Continue to The Guardian').should(
@@ -239,7 +239,7 @@ describe('Password change flow', () => {
       cy.contains('At least 8');
       // there seems to be a race condition on the change password page
       // adding a small wait fixes the issue
-      cy.wait(300);
+      cy.wait(800);
       cy.get('button[type="submit"]').click();
       // Error still exists after clicking submit
       cy.contains(
@@ -260,7 +260,7 @@ describe('Password change flow', () => {
       cy.contains('Maximum of 72');
       // there seems to be a race condition on the change password page
       // adding a small wait fixes the issue
-      cy.wait(300);
+      cy.wait(800);
       cy.get('button[type="submit"]').click();
       // Error still exists after clicking submit
       cy.contains(
@@ -285,7 +285,7 @@ describe('Password change flow', () => {
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
       // there seems to be a race condition on the change password page
       // adding a small wait fixes the issue
-      cy.wait(300);
+      cy.wait(800);
       cy.get('button[type="submit"]').click();
       cy.contains(
         'There was a problem changing your password, please try again.',
