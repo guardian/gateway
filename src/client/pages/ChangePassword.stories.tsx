@@ -42,19 +42,3 @@ export const FieldErrorPW = () => (
 FieldErrorPW.story = {
   name: 'with error on password',
 };
-
-export const FieldErrorConfirm = () => (
-  <ChangePassword
-    submitUrl=""
-    email="example@theguardian.com"
-    fieldErrors={[
-      {
-        field: 'password_confirm',
-        message: 'Not right',
-      },
-    ]}
-  />
-);
-FieldErrorConfirm.story = {
-  name: 'with error on confirmation',
-};
