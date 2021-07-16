@@ -262,7 +262,7 @@ export const ChangePassword = ({
 
   useEffect(() => {
     // Typing anything clears the big red error, falling back to the dynamic validation message
-    setError(undefined);
+    if (password.length > 0) setError(undefined);
     setIsTooShort(password.length < 8);
     setIsTooLong(password.length > 72);
 
