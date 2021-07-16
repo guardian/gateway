@@ -211,14 +211,14 @@ const ValidationMessage = ({
   isTooLong: boolean;
   isValid: boolean;
 }) => {
-  if (isValid) {
-    return <Valid />;
-  } else if (isTooShort) {
+  if (isTooShort) {
     return <TooShort error={error} />;
   } else if (isTooLong) {
     return <TooLong error={error} />;
   } else if (isWeak) {
     return <Weak />;
+  } else if (isValid) {
+    return <Valid />;
   } else {
     return <Checking />;
   }
