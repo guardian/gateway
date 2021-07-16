@@ -8,7 +8,7 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { authenticate as authenticateWithOkta } from '@/server/lib/okta/authentication';
+import { authenticate as authenticateWithOkta } from '@/server/lib/okta/authenticate';
 import { authenticate as authenticateWithIDAPI } from '@/server/lib/idapi/auth';
 import {
   generateAuthorizationState,
