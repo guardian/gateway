@@ -141,7 +141,7 @@ describe('Password change flow', () => {
     });
   });
 
-  context('Enter and Confirm passwords left blank', () => {
+  context('Password field is left blank', () => {
     it('uses the standard HTML5 empty field validation', () => {
       cy.mockNext(200);
       cy.visit(`/reset-password/fake_token`);
