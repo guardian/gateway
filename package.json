@@ -111,7 +111,7 @@
     "@guardian/src-radio": "^3.7.0",
     "@guardian/src-text-input": "^3.7.0",
     "awesome-debounce-promise": "^2.1.0",
-    "aws-sdk": "2.946.0",
+    "aws-sdk": "2.948.0",
     "bowser": "^2.11.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
