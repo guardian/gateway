@@ -24,10 +24,7 @@ import { FieldError } from '@/shared/model/ClientState';
 
 const router = Router();
 
-const validatePasswordChangeFields = (
-  password: string,
-  passwordConfirm: string,
-): Array<FieldError> => {
+const validatePasswordChangeFields = (password: string): Array<FieldError> => {
   const errors: Array<FieldError> = [];
 
   if (!password) {
@@ -41,21 +38,6 @@ const validatePasswordChangeFields = (
   ) {
     errors.push({
       field: 'password',
-      message: ChangePasswordErrors.PASSWORD_LENGTH,
-    });
-  }
-
-  if (!passwordConfirm) {
-    errors.push({
-      field: 'password_confirm',
-      message: ChangePasswordErrors.REPEAT_PASSWORD_BLANK,
-    });
-  } else if (
-    validatePasswordLength(passwordConfirm) !==
-    PasswordValidationResult.VALID_PASSWORD
-  ) {
-    errors.push({
-      field: 'password_confirm',
       message: ChangePasswordErrors.PASSWORD_LENGTH,
     });
   }
@@ -106,8 +88,7 @@ router.post(
     let state = res.locals;
 
     const { token } = req.params;
-
-    const { password, password_confirm: passwordConfirm } = req.body;
+    const { password } = req.body;
 
     state = deepmerge(state, {
       pageData: {
@@ -116,10 +97,7 @@ router.post(
     });
 
     try {
-      const fieldErrors = validatePasswordChangeFields(
-        password,
-        passwordConfirm,
-      );
+      const fieldErrors = validatePasswordChangeFields(password);
 
       if (fieldErrors.length) {
         state = deepmerge(state, {
@@ -133,10 +111,6 @@ router.post(
           pageTitle: PageTitle.CHANGE_PASSWORD,
         });
         return res.status(422).type('html').send(html);
-      }
-
-      if (password !== passwordConfirm) {
-        throw { message: ChangePasswordErrors.PASSWORD_NO_MATCH, status: 422 };
       }
 
       const cookies = await changePassword(password, token, req.ip);
