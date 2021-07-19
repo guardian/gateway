@@ -42,6 +42,7 @@ import { IDAPIError } from '@/server/lib/IDAPIFetch';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { Configuration } from '@/server/models/Configuration';
 import { PageTitle } from '@/shared/model/PageTitle';
+import { logger } from '../lib/logger';
 
 const router = Router();
 
@@ -131,20 +132,14 @@ export const consentPages: ConsentPage[] = [
   {
     page: Routes.CONSENTS_COMMUNICATION.slice(1),
     pageTitle: CONSENTS_PAGES.CONTACT,
-    read: async (ip, sc_gu_u) => {
-      try {
-        return {
-          consents: await getUserConsentsForPage(
-            CONSENTS_COMMUNICATION_PAGE,
-            ip,
-            sc_gu_u,
-          ),
-          page: Routes.CONSENTS_COMMUNICATION.slice(1),
-        };
-      } catch (error) {
-        throw error;
-      }
-    },
+    read: async (ip, sc_gu_u) => ({
+      consents: await getUserConsentsForPage(
+        CONSENTS_COMMUNICATION_PAGE,
+        ip,
+        sc_gu_u,
+      ),
+      page: Routes.CONSENTS_COMMUNICATION.slice(1),
+    }),
     update: async (ip, sc_gu_u, body) => {
       const consents = CONSENTS_COMMUNICATION_PAGE.map((id) => ({
         id,
@@ -157,21 +152,15 @@ export const consentPages: ConsentPage[] = [
   {
     page: Routes.CONSENTS_NEWSLETTERS.slice(1),
     pageTitle: CONSENTS_PAGES.NEWSLETTERS,
-    read: async (ip, sc_gu_u, geo) => {
-      try {
-        return {
-          page: Routes.CONSENTS_NEWSLETTERS.slice(1),
-          newsletters: await getUserNewsletterSubscriptions(
-            NewsletterMap.get(geo) as string[],
-            ip,
-            sc_gu_u,
-          ),
-          previousPage: Routes.CONSENTS_COMMUNICATION.slice(1),
-        };
-      } catch (error) {
-        throw error;
-      }
-    },
+    read: async (ip, sc_gu_u, geo) => ({
+      page: Routes.CONSENTS_NEWSLETTERS.slice(1),
+      newsletters: await getUserNewsletterSubscriptions(
+        NewsletterMap.get(geo) as string[],
+        ip,
+        sc_gu_u,
+      ),
+      previousPage: Routes.CONSENTS_COMMUNICATION.slice(1),
+    }),
     update: async (ip, sc_gu_u, body) => {
       const userNewsletterSubscriptions = await getUserNewsletterSubscriptions(
         ALL_NEWSLETTER_IDS,
@@ -212,21 +201,11 @@ export const consentPages: ConsentPage[] = [
   {
     page: Routes.CONSENTS_DATA.slice(1),
     pageTitle: CONSENTS_PAGES.YOUR_DATA,
-    read: async (ip, sc_gu_u) => {
-      try {
-        return {
-          consents: await getUserConsentsForPage(
-            CONSENTS_DATA_PAGE,
-            ip,
-            sc_gu_u,
-          ),
-          page: Routes.CONSENTS_DATA.slice(1),
-          previousPage: Routes.CONSENTS_NEWSLETTERS.slice(1),
-        };
-      } catch (error) {
-        throw error;
-      }
-    },
+    read: async (ip, sc_gu_u) => ({
+      consents: await getUserConsentsForPage(CONSENTS_DATA_PAGE, ip, sc_gu_u),
+      page: Routes.CONSENTS_DATA.slice(1),
+      previousPage: Routes.CONSENTS_NEWSLETTERS.slice(1),
+    }),
     update: async (ip, sc_gu_u, body) => {
       const consents = CONSENTS_DATA_PAGE.map((id) => ({
         id,
@@ -403,6 +382,7 @@ function getABTestGETHandler(
       });
       status = 200;
     } catch (error) {
+      logger.error(`consents getABTestGETHandler error`, error);
       [status, state] = getErrorResponse(error, state);
     }
 
@@ -434,6 +414,7 @@ function getABTestPOSTHandler(
       res.redirect(303, url);
       return;
     } catch (e) {
+      logger.error(`consents getABTestPOSTHandler error`, e);
       [status, state] = getErrorResponse(e, state);
     }
 
@@ -520,6 +501,7 @@ router.get(
         },
       } as RequestState);
     } catch (e) {
+      logger.error(`${req.method} ${req.originalUrl}  Error`, e);
       status = e.status;
       state = deepmerge(state, {
         globalMessage: {
@@ -577,6 +559,7 @@ router.post(
       }
       return res.redirect(303, url);
     } catch (e) {
+      logger.error(`${req.method} ${req.originalUrl}  Error`, e);
       status = e.status;
       state = deepmerge(state, {
         globalMessage: {

@@ -10,8 +10,6 @@ import { ConsentsErrors } from '@/shared/model/Errors';
 import { Consent } from '@/shared/model/Consent';
 import { UserConsent } from '@/shared/model/User';
 
-const API_ROUTE = '/users/me/consents';
-
 const handleError = (): never => {
   throw { message: ConsentsErrors.GENERIC, status: 500 };
 };
@@ -34,13 +32,14 @@ const responseToEntity = (consent: ConsentAPIResponse): Consent => {
 };
 
 export const read = async (): Promise<Consent[]> => {
+  const url = '/consents';
   const options = APIGetOptions();
   try {
-    return (
-      (await idapiFetch('/consents', options)) as ConsentAPIResponse[]
-    ).map(responseToEntity);
+    return ((await idapiFetch(url, options)) as ConsentAPIResponse[]).map(
+      responseToEntity,
+    );
   } catch (e) {
-    logger.error(e);
+    logger.error(`IDAPI Error consents read ${url}`, e);
     return handleError();
   }
 };
@@ -50,15 +49,16 @@ export const update = async (
   sc_gu_u: string,
   payload: UserConsent[],
 ) => {
+  const url = '/users/me/consents';
   const options = APIForwardSessionIdentifier(
     APIAddClientAccessToken(APIPatchOptions(payload), ip),
     sc_gu_u,
   );
   try {
-    await idapiFetch(API_ROUTE, options);
+    await idapiFetch(url, options);
     return;
   } catch (e) {
-    logger.error(e);
+    logger.error(`IDAPI Error consents update ${url}`, e);
     return handleError();
   }
 };

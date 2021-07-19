@@ -46,7 +46,7 @@ export const getAssets = (isLegacy = false): Assets => {
       runtime,
     };
   } catch (e) {
-    logger.error(e);
+    logger.error('Error retrieving assets', e);
     throw new Error('Invalid assets file');
   }
 };
