@@ -120,8 +120,12 @@ describe('Password change flow', () => {
       cy.visit(`/reset-password/fake_token`);
       cy.get('input[name="password"]').type('password');
       cy.wait('@breachCheck');
+      cy.contains('use a password that is hard to guess');
       cy.get('button[type="submit"]').click();
-      cy.contains('common password');
+      cy.contains('is a common password');
+      cy.get('input[name="password"]').type('iamaveryuniqueandlongstring');
+      cy.wait('@breachCheck');
+      cy.contains('Success');
     });
   });
 
@@ -252,6 +256,13 @@ describe('Password change flow', () => {
       cy.contains(
         'Please make sure your password is at least 8 characters long.',
       );
+      cy.intercept({
+        method: 'GET',
+        url: 'https://api.pwnedpasswords.com/range/*',
+      }).as('breachCheck');
+      cy.get('input[name="password"]').type('iamaveryuniqueandlongstring');
+      cy.wait('@breachCheck');
+      cy.contains('Success');
     });
   });
 
@@ -275,6 +286,11 @@ describe('Password change flow', () => {
       cy.contains(
         'Please make sure your password is not longer than 72 characters.',
       );
+      cy.get('input[name="password"]').type(
+        '{selectall}{backspace}iamaveryuniqueandlongstring',
+      );
+      cy.wait('@breachCheck');
+      cy.contains('Success');
     });
   });
 
