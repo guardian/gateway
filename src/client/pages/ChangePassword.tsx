@@ -308,7 +308,7 @@ export const ChangePassword = ({
                   setError(ChangePasswordErrors.MAXIMUM_72);
                   e.preventDefault();
                 } else if (isWeak) {
-                  setError(ChangePasswordErrors.COMMON_PASSWORD_SHORT);
+                  setError(ChangePasswordErrors.COMMON_PASSWORD);
                   e.preventDefault();
                 }
               }}
