@@ -52,7 +52,7 @@
     "@types/mjml": "^4.7.0",
     "@types/mjml-react": "^2.0.0",
     "@types/ms": "^0.7.31",
-    "@types/node": "^16.3.2",
+    "@types/node": "^16.3.3",
     "@types/node-fetch": "^2.5.11",
     "@types/react": "^17.0.14",
     "@types/react-dom": "^17.0.9",
