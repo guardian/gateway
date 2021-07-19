@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
-import { SvgCheckmark } from '@guardian/src-icons';
+import { SvgTickRound } from '@guardian/src-icons';
 import { SvgCross } from '@guardian/src-icons';
 import { palette } from '@guardian/src-foundations';
 import { textSans } from '@guardian/src-foundations/typography';
@@ -48,7 +48,7 @@ const ValidationSymbol = ({ result }: { result: Validation }) => {
 
   const successStyles = css`
     svg {
-      color: ${palette.success['400']};
+      fill: ${palette.success['400']};
     }
   `;
 
@@ -68,7 +68,7 @@ const ValidationSymbol = ({ result }: { result: Validation }) => {
     case Validation.SUCCESS: {
       return (
         <div css={[baseStyles, successStyles]}>
-          <SvgCheckmark />
+          <SvgTickRound />
         </div>
       );
     }
