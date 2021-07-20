@@ -7,7 +7,7 @@ import { Main } from '@/client/layouts/Main';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 
-export const MagicLinkSent = () => {
+export const EmailSent = () => {
   return (
     <>
       <Header />
