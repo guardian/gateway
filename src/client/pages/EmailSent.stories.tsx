@@ -19,3 +19,10 @@ export const WithEmail = () => <EmailSent email="example@theguardian.com" />;
 WithEmail.story = {
   name: 'with email',
 };
+
+export const WithSource = () => (
+  <EmailSent email="example@theguardian.com" source="reset" />
+);
+WithSource.story = {
+  name: 'with source',
+};
