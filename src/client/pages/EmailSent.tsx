@@ -13,16 +13,14 @@ export const EmailSent = () => {
       <Header />
       <Main subTitle="Sign in">
         <PageBox>
-          <PageHeader>Please check your inbox</PageHeader>
+          <PageHeader>Check your email inbox</PageHeader>
           <PageBody>
+            <PageBodyText>We’ve sent you an email to EMAIL.</PageBodyText>
             <PageBodyText>
-              We’ve sent you an email – please open it up and click on the
-              button.
+              Please follow the instructions in this email. If you can&apos;t
+              find it, it may be in your spam folder.
             </PageBodyText>
-            <PageBodyText>
-              Note that the link is only valid for 30 minutes, so be sure to
-              open it soon! Thank you.
-            </PageBodyText>
+            <PageBodyText>The link is only valid for 30 minutes.</PageBodyText>
           </PageBody>
         </PageBox>
       </Main>
