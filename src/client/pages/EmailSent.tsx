@@ -7,7 +7,11 @@ import { Main } from '@/client/layouts/Main';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 
-export const EmailSent = () => {
+type Props = {
+  email?: string;
+};
+
+export const EmailSent = ({ email }: Props) => {
   return (
     <>
       <Header />
@@ -15,7 +19,11 @@ export const EmailSent = () => {
         <PageBox>
           <PageHeader>Check your email inbox</PageHeader>
           <PageBody>
-            <PageBodyText>We’ve sent you an email to EMAIL.</PageBodyText>
+            {email ? (
+              <PageBodyText>We’ve sent an email to {email}.</PageBodyText>
+            ) : (
+              <PageBodyText>We’ve sent you an email.</PageBodyText>
+            )}
             <PageBodyText>
               Please follow the instructions in this email. If you can&apos;t
               find it, it may be in your spam folder.

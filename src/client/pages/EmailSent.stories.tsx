@@ -10,7 +10,12 @@ export default {
   parameters: { layout: 'fullscreen' },
 } as Meta;
 
-export const NoInboxDetails = () => <EmailSent />;
-NoInboxDetails.story = {
+export const Defaults = () => <EmailSent />;
+Defaults.story = {
   name: 'with defaults',
+};
+
+export const WithEmail = () => <EmailSent email="example@theguardian.com" />;
+WithEmail.story = {
+  name: 'with email',
 };
