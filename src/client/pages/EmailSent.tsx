@@ -9,7 +9,7 @@ import { PageBodyText } from '@/client/components/PageBodyText';
 import { Main } from '@/client/layouts/Main';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
-import { ApiRoutes } from '@/shared/model/Routes';
+import { Routes } from '@/shared/model/Routes';
 import { SourceType } from '@/shared/model/Source';
 import { button } from '@/client/styles/Shared';
 import { CsrfFormField } from '../components/CsrfFormField';
@@ -22,9 +22,9 @@ type Props = {
 const decideRoute = (source: SourceType) => {
   switch (source) {
     case 'reset':
-      return ApiRoutes.RESEND_RESET_EMAIL;
+      return Routes.RESET;
     case 'magic-link':
-      return ApiRoutes.RESEND_MAGIC_LINK_EMAIL;
+      return Routes.MAGIC_LINK;
   }
 };
 

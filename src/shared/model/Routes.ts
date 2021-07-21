@@ -33,6 +33,4 @@ export enum ApiRoutes {
   CHANGE_PASSWORD = '/pwd-reset/reset-pwd-for-user',
   VERIFY_EMAIL = '/user/validate-email',
   RESEND_VERIFY_EMAIL = '/user/send-validation-email',
-  RESEND_RESET_EMAIL = '/reset/resend',
-  RESEND_MAGIC_LINK_EMAIL = '/magic-link/resend',
 }
