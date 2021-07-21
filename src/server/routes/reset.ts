@@ -65,11 +65,7 @@ router.post(
 
     trackMetric(Metrics.SEND_PASSWORD_RESET_SUCCESS);
 
-    const html = renderer(Routes.RESET_SENT, {
-      requestState: state,
-      pageTitle: PageTitle.RESET_SENT,
-    });
-    return res.type('html').send(html);
+    return res.redirect(303, Routes.RESET_SENT);
   }),
 );
 
