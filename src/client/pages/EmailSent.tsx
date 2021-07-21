@@ -36,35 +36,45 @@ export const EmailSent = ({ email, source }: Props) => {
         <PageBox>
           <PageHeader>Check your email inbox</PageHeader>
           <PageBody>
-            <PageBodyText>We’ve sent an email to {email}.</PageBodyText>
+            {email ? (
+              <PageBodyText>We’ve sent an email to {email}.</PageBodyText>
+            ) : (
+              <PageBodyText>We’ve sent you an email.</PageBodyText>
+            )}
             <PageBodyText>
               Please follow the instructions in this email. If you can&apos;t
               find it, it may be in your spam folder.
             </PageBodyText>
             <PageBodyText>The link is only valid for 30 minutes.</PageBodyText>
-            <form method="post" action={decideRoute(source)}>
-              <CsrfFormField />
-              <TextInput
-                label=""
-                name="email"
-                type="email"
-                value={email}
-                hidden={true}
-              />
-              <br />
-              <br />
-              <Button css={button} type="submit" data-cy="resend-email-button">
-                Resend email
-              </Button>
-              <br />
-              <br />
-              <PageBodyText>
-                Wrong email address?{' '}
-                <Link subdued={true} href={`/${source}`}>
-                  Change email address
-                </Link>
-              </PageBodyText>
-            </form>
+            {email && (
+              <form method="post" action={decideRoute(source)}>
+                <CsrfFormField />
+                <TextInput
+                  label=""
+                  name="email"
+                  type="email"
+                  value={email}
+                  hidden={true}
+                />
+                <br />
+                <br />
+                <Button
+                  css={button}
+                  type="submit"
+                  data-cy="resend-email-button"
+                >
+                  Resend email
+                </Button>
+                <br />
+                <br />
+                <PageBodyText>
+                  Wrong email address?{' '}
+                  <Link subdued={true} href={`/${source}`}>
+                    Change email address
+                  </Link>
+                </PageBodyText>
+              </form>
+            )}
           </PageBody>
         </PageBox>
       </Main>
