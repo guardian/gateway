@@ -44,6 +44,11 @@ router.post(
 
     try {
       await resetPassword(email, req.ip, returnUrl);
+
+      // We set this cookie so that the subsequent email sent page knows which email address was used
+      res.cookie('GU_email', email, {
+        expires: undefined,
+      });
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
       const { message, status } = error;
@@ -72,10 +77,23 @@ router.post(
 router.get(
   Routes.RESET_SENT,
   removeNoCache,
-  (_: Request, res: ResponseWithRequestState) => {
+  (req: Request, res: ResponseWithRequestState) => {
+    let state = res.locals;
+
+    // Read the users email from the GU_email cookie that was set when they posted the previous page
+    // const emailCookie = req.signedCookies['GU_email'];
+    // email = JSON.parse(Buffer.from(emailCookie, 'base64').toString('utf-8'));
+    const email = req.cookies['GU_email'];
+
+    state = deepmerge(state, {
+      pageData: {
+        email,
+      },
+    });
+
     const html = renderer(Routes.RESET_SENT, {
       pageTitle: PageTitle.RESET_SENT,
-      requestState: res.locals,
+      requestState: state,
     });
     res.type('html').send(html);
   },

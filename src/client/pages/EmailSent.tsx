@@ -1,7 +1,5 @@
 import React from 'react';
-import { css } from '@emotion/react';
 import { Link } from '@guardian/src-link';
-import { textSans } from '@guardian/src-foundations/typography';
 import { TextInput } from '@guardian/src-text-input';
 import { Button } from '@guardian/src-button';
 import { PageHeader } from '@/client/components/PageHeader';
@@ -12,15 +10,14 @@ import { Main } from '@/client/layouts/Main';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { ApiRoutes } from '@/shared/model/Routes';
+import { SourceType } from '@/shared/model/Source';
 import { button } from '@/client/styles/Shared';
 import { CsrfFormField } from '../components/CsrfFormField';
 
 type Props = {
   email?: string;
-  source?: SourceType;
+  source: SourceType;
 };
-
-type SourceType = 'reset' | 'magic-link';
 
 const decideRoute = (source: SourceType) => {
   switch (source) {
@@ -39,49 +36,35 @@ export const EmailSent = ({ email, source }: Props) => {
         <PageBox>
           <PageHeader>Check your email inbox</PageHeader>
           <PageBody>
-            {email ? (
-              <PageBodyText>We’ve sent an email to {email}.</PageBodyText>
-            ) : (
-              <PageBodyText>We’ve sent you an email.</PageBodyText>
-            )}
+            <PageBodyText>We’ve sent an email to {email}.</PageBodyText>
             <PageBodyText>
               Please follow the instructions in this email. If you can&apos;t
               find it, it may be in your spam folder.
             </PageBodyText>
             <PageBodyText>The link is only valid for 30 minutes.</PageBodyText>
-            {source && (
-              <form method="post" action={decideRoute(source)}>
-                <CsrfFormField />
-                <TextInput
-                  label=""
-                  name="email"
-                  type="email"
-                  value={email}
-                  hidden={true}
-                />
-                <br />
-                <br />
-                <Button
-                  css={button}
-                  type="submit"
-                  data-cy="resend-email-button"
-                >
-                  Resend email
-                </Button>
-                {source && (
-                  <p
-                    css={css`
-                      ${textSans.medium()}
-                    `}
-                  >
-                    Wrong email address?{' '}
-                    <Link subdued={true} href={`/${source}`}>
-                      Change email address
-                    </Link>
-                  </p>
-                )}
-              </form>
-            )}
+            <form method="post" action={decideRoute(source)}>
+              <CsrfFormField />
+              <TextInput
+                label=""
+                name="email"
+                type="email"
+                value={email}
+                hidden={true}
+              />
+              <br />
+              <br />
+              <Button css={button} type="submit" data-cy="resend-email-button">
+                Resend email
+              </Button>
+              <br />
+              <br />
+              <PageBodyText>
+                Wrong email address?{' '}
+                <Link subdued={true} href={`/${source}`}>
+                  Change email address
+                </Link>
+              </PageBodyText>
+            </form>
           </PageBody>
         </PageBox>
       </Main>
