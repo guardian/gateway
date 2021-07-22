@@ -38,7 +38,7 @@ export const EmailSent = ({ email, source }: Props) => {
   return (
     <>
       <Header />
-      <Main subTitle="Sign in">
+      <Main subTitle="Sign in" successOverride="Email sent">
         <PageBox>
           <PageHeader>Check your email inbox</PageHeader>
           <PageBody>
