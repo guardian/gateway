@@ -12,7 +12,7 @@ import { Footer } from '@/client/components/Footer';
 import { Routes } from '@/shared/model/Routes';
 import { SourceType } from '@/shared/model/Source';
 import { button } from '@/client/styles/Shared';
-import { CsrfFormField } from '../components/CsrfFormField';
+import { CsrfFormField } from '@/client/components/CsrfFormField';
 
 type Props = {
   email?: string;
