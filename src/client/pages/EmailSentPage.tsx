@@ -6,7 +6,7 @@ import { EmailSent } from '@/client/pages/EmailSent';
 export const EmailSentPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { pageData = {} } = clientState;
-  const { email } = pageData;
+  const { email, previousPage } = pageData;
 
-  return <EmailSent email={email} source="reset" />;
+  return <EmailSent email={email} previousPage={previousPage} />;
 };

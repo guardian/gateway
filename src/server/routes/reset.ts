@@ -88,6 +88,7 @@ router.get(
     state = deepmerge(state, {
       pageData: {
         email,
+        previousPage: Routes.RESET,
       },
     });
 

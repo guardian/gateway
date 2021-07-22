@@ -9,26 +9,15 @@ import { PageBodyText } from '@/client/components/PageBodyText';
 import { Main } from '@/client/layouts/Main';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
-import { Routes } from '@/shared/model/Routes';
-import { SourceType } from '@/shared/model/Source';
 import { button } from '@/client/styles/Shared';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 
 type Props = {
   email?: string;
-  source: SourceType;
+  previousPage?: string;
 };
 
-const decideRoute = (source: SourceType) => {
-  switch (source) {
-    case 'reset':
-      return Routes.RESET;
-    case 'magic-link':
-      return Routes.MAGIC_LINK;
-  }
-};
-
-export const EmailSent = ({ email, source }: Props) => {
+export const EmailSent = ({ email, previousPage }: Props) => {
   const [hasJS, setHasJS] = useState<boolean>(false);
 
   useEffect(() => {
@@ -52,8 +41,8 @@ export const EmailSent = ({ email, source }: Props) => {
               find it, it may be in your spam folder.
             </PageBodyText>
             <PageBodyText>The link is only valid for 30 minutes.</PageBodyText>
-            {email && hasJS && (
-              <form method="post" action={decideRoute(source)}>
+            {email && previousPage && hasJS && (
+              <form method="post" action={previousPage}>
                 <CsrfFormField />
                 <TextInput
                   label=""
@@ -75,12 +64,14 @@ export const EmailSent = ({ email, source }: Props) => {
                 <br />
               </form>
             )}
-            <PageBodyText>
-              Wrong email address?{' '}
-              <Link subdued={true} href={`/${source}`}>
-                Change email address
-              </Link>
-            </PageBodyText>
+            {previousPage && (
+              <PageBodyText>
+                Wrong email address?{' '}
+                <Link subdued={true} href={previousPage}>
+                  Change email address
+                </Link>
+              </PageBodyText>
+            )}
           </PageBody>
         </PageBox>
       </Main>

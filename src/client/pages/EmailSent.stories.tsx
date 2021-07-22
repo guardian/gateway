@@ -10,13 +10,13 @@ export default {
   parameters: { layout: 'fullscreen' },
 } as Meta;
 
-export const Defaults = () => <EmailSent source="reset" />;
+export const Defaults = () => <EmailSent previousPage="/reset" />;
 Defaults.story = {
   name: 'with defaults',
 };
 
 export const WithEmail = () => (
-  <EmailSent source="reset" email="example@theguardian.com" />
+  <EmailSent previousPage="/reset" email="example@theguardian.com" />
 );
 WithEmail.story = {
   name: 'with email',
