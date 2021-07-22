@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from '@guardian/src-link';
 import { TextInput } from '@guardian/src-text-input';
 import { Button } from '@guardian/src-button';
@@ -29,6 +29,12 @@ const decideRoute = (source: SourceType) => {
 };
 
 export const EmailSent = ({ email, source }: Props) => {
+  const [hasJS, setHasJS] = useState<boolean>(false);
+
+  useEffect(() => {
+    setHasJS(true);
+  }, []);
+
   return (
     <>
       <Header />
@@ -46,7 +52,7 @@ export const EmailSent = ({ email, source }: Props) => {
               find it, it may be in your spam folder.
             </PageBodyText>
             <PageBodyText>The link is only valid for 30 minutes.</PageBodyText>
-            {email && (
+            {email && hasJS && (
               <form method="post" action={decideRoute(source)}>
                 <CsrfFormField />
                 <TextInput
@@ -67,14 +73,14 @@ export const EmailSent = ({ email, source }: Props) => {
                 </Button>
                 <br />
                 <br />
-                <PageBodyText>
-                  Wrong email address?{' '}
-                  <Link subdued={true} href={`/${source}`}>
-                    Change email address
-                  </Link>
-                </PageBodyText>
               </form>
             )}
+            <PageBodyText>
+              Wrong email address?{' '}
+              <Link subdued={true} href={`/${source}`}>
+                Change email address
+              </Link>
+            </PageBodyText>
           </PageBody>
         </PageBox>
       </Main>
