@@ -49,28 +49,31 @@ const responseToEntity = (response: APIResponse): User => {
 };
 
 export const read = async (ip: string, sc_gu_u: string): Promise<User> => {
+  const url = '/user/me';
   const options = APIForwardSessionIdentifier(
     APIAddClientAccessToken(APIGetOptions(), ip),
     sc_gu_u,
   );
   try {
-    const response = (await idapiFetch('/user/me', options)) as APIResponse;
+    const response = (await idapiFetch(url, options)) as APIResponse;
     return responseToEntity(response);
   } catch (e) {
-    logger.error(e);
+    logger.error(`IDAPI Error user read ${url}`, e);
     return handleError(e);
   }
 };
 
 export const create = async (email: string, password: string, ip: string) => {
+  const url = '/user';
   const options = APIPostOptions({
     primaryEmailAddress: email,
     password,
   });
 
   try {
-    return await idapiFetch('/user', APIAddClientAccessToken(options, ip));
+    return await idapiFetch(url, APIAddClientAccessToken(options, ip));
   } catch (e) {
+    logger.error(`IDAPI Error user create ${url}`, e);
     handleError(e);
   }
 };

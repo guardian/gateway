@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { joinUrl } from '@guardian/libs';
 import { read } from '@/server/lib/idapi/auth';
 import { IDAPIAuthRedirect, IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
 import { getConfiguration } from '@/server/lib/getConfiguration';
@@ -6,6 +7,7 @@ import { getProfileUrl } from '@/server/lib/getProfileUrl';
 import { Routes } from '@/shared/model/Routes';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
+import { logger } from '../logger';
 
 const profileUrl = getProfileUrl();
 
@@ -22,7 +24,7 @@ export const loginMiddleware = async (
   const generateRedirectUrl = (url: string): string => {
     const divider = url.includes('?') ? '&' : '?';
     return `${url}${divider}returnUrl=${encodeURIComponent(
-      profileUrl + req.path,
+      joinUrl(profileUrl, req.path),
     )}`;
   };
 
@@ -64,6 +66,7 @@ export const loginMiddleware = async (
       return redirectAuth(auth);
     }
   } catch (e) {
+    logger.error('loginMiddlewareFailure', e);
     trackMetric(Metrics.LOGIN_MIDDLEWARE_FAILURE);
     res.redirect(generateRedirectUrl(FATAL_ERROR_REDIRECT_URL));
   }
