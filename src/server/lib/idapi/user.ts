@@ -19,7 +19,6 @@ interface APIResponse {
 }
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
-  logger.error(error);
   if (error.status === 'error' && error.errors?.length) {
     const err = error.errors[0];
     const { message } = err;
@@ -58,6 +57,7 @@ export const read = async (ip: string, sc_gu_u: string): Promise<User> => {
     const response = (await idapiFetch('/user/me', options)) as APIResponse;
     return responseToEntity(response);
   } catch (e) {
+    logger.error(e);
     return handleError(e);
   }
 };
