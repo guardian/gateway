@@ -8,9 +8,6 @@ import { Header } from '@/email/components/Header';
 import { SubHeader } from '@/email/components/SubHeader';
 import { Text } from '@/email/components/Text';
 import { Footer } from '@/email/components/Footer';
-import { getProfileUrl } from '@/server/lib/getProfileUrl';
-
-const profileUrl = getProfileUrl();
 
 const profileUrl = getProfileUrl();
 
