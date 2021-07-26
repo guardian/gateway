@@ -445,7 +445,7 @@ Resources:
     Condition: IsProd
     Properties:
       ActionsEnabled: 'true'
-      AlarmName: !Sub '${App}-${Stage} high 5xx errors'
+      AlarmName: !Sub '${App}-${Stage} sustained 5xx errors'
       AlarmDescription: 'Sustained server errors detected'
       AlarmActions:
         - !Ref 'TopicSendEmail'
