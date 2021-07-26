@@ -51,6 +51,7 @@ router.post(
       res.cookie(
         'GU_email',
         Buffer.from(JSON.stringify(email)).toString('base64'),
+        // We check if we're running locally here to make testing easier
         {
           httpOnly: !baseUri.includes('localhost'),
           secure: !baseUri.includes('localhost'),
