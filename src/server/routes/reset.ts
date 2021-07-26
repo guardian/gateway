@@ -12,7 +12,7 @@ import { Metrics } from '@/server/models/Metrics';
 import { removeNoCache } from '@/server/lib/middleware/cache';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { sendResetPasswordEmail } from '@/email';
+import { sendResetPasswordEmail, sendNoAccountEmail } from '@/email';
 
 const router = Router();
 
@@ -47,8 +47,7 @@ router.post(
 
       switch (userType) {
         case 'new': {
-          console.log('TODO: Send no account email');
-          // sendNoAccountExistsEmail({ to: email});
+          sendNoAccountEmail({ to: email });
           break;
         }
         case 'guest':
