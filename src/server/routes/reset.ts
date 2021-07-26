@@ -48,9 +48,6 @@ router.post(
       await resetPassword(email, req.ip, returnUrl);
 
       // We set this cookie so that the subsequent email sent page knows which email address was used
-      res.cookie('GU_email', email, {
-        expires: undefined,
-      });
       res.cookie(
         'GU_email',
         Buffer.from(JSON.stringify(email)).toString('base64'),
