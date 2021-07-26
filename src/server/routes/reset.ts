@@ -11,8 +11,10 @@ import { Metrics } from '@/server/models/Metrics';
 import { removeNoCache } from '@/server/lib/middleware/cache';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 
 const router = Router();
+const { baseUri } = getConfiguration();
 
 router.get(Routes.RESET, (req: Request, res: ResponseWithRequestState) => {
   let state = res.locals;
@@ -49,6 +51,16 @@ router.post(
       res.cookie('GU_email', email, {
         expires: undefined,
       });
+      res.cookie(
+        'GU_email',
+        Buffer.from(JSON.stringify(email)).toString('base64'),
+        {
+          httpOnly: !baseUri.includes('localhost'),
+          secure: !baseUri.includes('localhost'),
+          signed: !baseUri.includes('localhost'),
+          sameSite: 'strict',
+        },
+      );
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
       const { message, status } = error;
@@ -81,9 +93,12 @@ router.get(
     let state = res.locals;
 
     // Read the users email from the GU_email cookie that was set when they posted the previous page
-    // const emailCookie = req.signedCookies['GU_email'];
-    // email = JSON.parse(Buffer.from(emailCookie, 'base64').toString('utf-8'));
-    const email = req.cookies['GU_email'];
+    const emailCookie = baseUri.includes('localhost')
+      ? req.cookies['GU_email']
+      : req.signedCookies['GU_email'];
+    const email = JSON.parse(
+      Buffer.from(emailCookie, 'base64').toString('utf-8'),
+    );
 
     state = deepmerge(state, {
       pageData: {
