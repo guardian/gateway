@@ -11,5 +11,5 @@ interface FeatureSwitches {
 }
 
 export const featureSwitches: FeatureSwitches = {
-  oktaAuthentication: false,
+  oktaAuthentication: true,
 };

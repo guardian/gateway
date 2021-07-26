@@ -1,6 +1,6 @@
 import { Logger, LogLevel } from '@/server/models/Logger';
 import { createLogger, transports } from 'winston';
-
+const util = require('util');
 const winstonLogger = createLogger({
   transports: [new transports.Console()],
 });
@@ -20,7 +20,7 @@ export const logger: Logger = {
     }
 
     if (error) {
-      return logger.log(LogLevel.ERROR, `${message} | ${error}`);
+      return logger.log(LogLevel.ERROR, util.format(message, error));
     }
 
     return logger.log(LogLevel.ERROR, message);

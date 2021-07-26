@@ -95,6 +95,21 @@ export const getConfiguration = (): Configuration => {
     'OKTA_CLIENT_ID is missing',
   );
 
+  const oktaGoogleIdp: string = getOrThrow(
+    process.env.OKTA_GOOGLE_IDP,
+    'OKTA_GOOGLE_IDP is missing',
+  );
+
+  const oktaFacebookIdp: string = getOrThrow(
+    process.env.OKTA_FACEBOOK_IDP,
+    'OKTA_FACEBOOK_IDP is missing',
+  );
+
+  const oktaAppleIdp: string = getOrThrow(
+    process.env.OKTA_APPLE_IDP,
+    'OKTA_APPLE_IDP is missing',
+  );
+
   const oktaClientSecret: string = getOrThrow(
     process.env.OKTA_CLIENT_SECRET,
     'OKTA_CLIENT_SECRET is missing',
@@ -121,5 +136,8 @@ export const getConfiguration = (): Configuration => {
     oktaCustomOAuthServer,
     oktaClientId,
     oktaClientSecret,
+    oktaGoogleIdp,
+    oktaFacebookIdp,
+    oktaAppleIdp,
   };
 };

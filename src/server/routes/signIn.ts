@@ -18,8 +18,10 @@ import {
 import { SignInErrors } from '@/shared/model/Errors';
 import { featureSwitches } from '@/shared/lib/featureSwitches';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
+import {getConfiguration} from "@/server/lib/getConfiguration";
 
 const router = Router();
+const { oktaGoogleIdp, oktaFacebookIdp, oktaAppleIdp } = getConfiguration();
 
 router.get(Routes.SIGN_IN, (req: Request, res: ResponseWithRequestState) => {
   let state = res.locals;
@@ -38,6 +40,51 @@ router.get(Routes.SIGN_IN, (req: Request, res: ResponseWithRequestState) => {
   });
   return res.type('html').send(html);
 });
+
+router.get(Routes.SIGNIN_GOOGLE, handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+  const authState = generateAuthorizationState(
+    res.locals.queryParams.returnUrl,
+  );
+  setAuthorizationStateCookie(authState, res);
+
+  const authorizeUrl = ProfileOpenIdClient.authorizationUrl({
+    idp: oktaGoogleIdp,
+    state: authState.nonce,
+    scope: 'openid idapi_token_cookie_exchange',
+  });
+
+  return res.redirect(authorizeUrl);
+}));
+
+router.get(Routes.SIGNIN_FACEBOOK, handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+  const authState = generateAuthorizationState(
+    res.locals.queryParams.returnUrl,
+  );
+  setAuthorizationStateCookie(authState, res);
+
+  const authorizeUrl = ProfileOpenIdClient.authorizationUrl({
+    idp: oktaFacebookIdp,
+    state: authState.nonce,
+    scope: 'openid idapi_token_cookie_exchange',
+  });
+
+  return res.redirect(authorizeUrl);
+}));
+
+router.get(Routes.SIGNIN_APPLE, handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+  const authState = generateAuthorizationState(
+    res.locals.queryParams.returnUrl,
+  );
+  setAuthorizationStateCookie(authState, res);
+
+  const authorizeUrl = ProfileOpenIdClient.authorizationUrl({
+    idp: oktaAppleIdp,
+    state: authState.nonce,
+    scope: 'openid idapi_token_cookie_exchange',
+  });
+
+  return res.redirect(authorizeUrl);
+}));
 
 const oktaAuthenticationController = async (
   req: Request,

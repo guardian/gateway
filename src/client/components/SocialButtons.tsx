@@ -71,3 +71,35 @@ export const SocialButtons = ({ returnUrl }: Props) => (
     </LinkButton>
   </div>
 );
+
+export const OktaSocialButtons = ({ returnUrl }: Props) => (
+  <div css={containerStyles}>
+    <LinkButton
+      priority="tertiary"
+      cssOverrides={buttonOverrides}
+      icon={<SvgFacebookBrand />}
+      href={`https://profile.thegulocal.com/signin/facebook?returnUrl=${returnUrl}`}
+    >
+      Facebook
+    </LinkButton>
+    <Gap />
+    <LinkButton
+      priority="tertiary"
+      cssOverrides={[buttonOverrides, iconOverrides]}
+      icon={<SvgGoogleBrand />}
+      href={`https://profile.thegulocal.com/signin/google?returnUrl=${returnUrl}`}
+    >
+      Google
+    </LinkButton>
+    <Gap />
+    <LinkButton
+      priority="tertiary"
+      cssOverrides={[buttonOverrides, iconOverrides]}
+      icon={<SvgAppleBrand />}
+      href={`https://profile.thegulocal.com/signin/apple?returnUrl=${returnUrl}`}
+    >
+      Apple
+    </LinkButton>
+  </div>
+);
+

@@ -20,6 +20,9 @@ export enum Routes {
   CONSENTS_FOLLOW_UP_CONSENTS = '/follow-on',
   // ABTEST: followupConsent : END
   OAUTH_AUTH_CODE_CALLBACK = '/oauth/authorization-code/callback',
+  SIGNIN_GOOGLE = '/signin/google',
+  SIGNIN_FACEBOOK = '/signin/facebook',
+  SIGNIN_APPLE = '/signin/apple',
   UNEXPECTED_ERROR = '/error',
   MAGIC_LINK = '/magic-link',
   MAGIC_LINK_SENT = '/magic-link/email-sent',

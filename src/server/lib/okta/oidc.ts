@@ -149,7 +149,7 @@ const AuthorizationStateCookieName = 'GU_oidc_auth_state';
  * as `${AuthorizationStateCookieName}`.
  *
  * This is stored on the client as a Secure,
- * Signed, HTTPOnly, SameSite=strict, session cookie.
+ * Signed, HTTPOnly, SameSite=lax, session cookie.
  * As it's only signed and not encrypted, no secret information
  * should be stored in the cookie. By signing the cookie
  * we can make sure that it hasn't been tampered by a malicious actor.
@@ -168,7 +168,7 @@ export const setAuthorizationStateCookie = (
         httpOnly: true,
         secure: true,
         signed: true,
-        sameSite: 'strict',
+        sameSite: 'lax',
       },
     );
   } catch (error) {

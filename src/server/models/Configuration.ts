@@ -19,6 +19,9 @@ export interface Configuration {
   oktaCustomOAuthServer: string;
   oktaClientId: string;
   oktaClientSecret: string;
+  oktaGoogleIdp: string;
+  oktaFacebookIdp: string;
+  oktaAppleIdp: string;
 }
 
 export enum GA_UID {
