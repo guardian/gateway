@@ -1,6 +1,6 @@
 import { MailSlurp } from 'mailslurp-client';
 
-const apiKey = Cypress.env('CYPRESS_MAILSLURP_KEY');
+const apiKey = Cypress.env('MAILSLURP_KEY');
 
 const mailslurp = new MailSlurp({ apiKey });
 
