@@ -167,7 +167,7 @@ const Valid = () => {
   return (
     <div>
       <ValidationSymbol result={Validation.SUCCESS} />
-      <div css={validationStyles(Validation.SUCCESS)}>Success</div>
+      <div css={validationStyles(Validation.SUCCESS)}>Valid password</div>
     </div>
   );
 };
