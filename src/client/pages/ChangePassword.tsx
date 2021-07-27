@@ -324,19 +324,21 @@ export const ChangePassword = ({
                 }}
               />
 
-              <div
-                css={css`
-                  margin-bottom: ${space[9]}px;
-                `}
-              >
-                <ValidationMessage
-                  error={error}
-                  isWeak={isWeak}
-                  isTooShort={isTooShort}
-                  isTooLong={isTooLong}
-                  isChecking={isChecking}
-                />
-              </div>
+              {!error && (
+                <div
+                  css={css`
+                    margin-bottom: ${space[9]}px;
+                  `}
+                >
+                  <ValidationMessage
+                    error={error}
+                    isWeak={isWeak}
+                    isTooShort={isTooShort}
+                    isTooLong={isTooLong}
+                    isChecking={isChecking}
+                  />
+                </div>
+              )}
 
               <Button
                 css={button}
