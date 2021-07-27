@@ -322,6 +322,7 @@ export const ChangePassword = ({
                 onChange={(e) => {
                   setPassword(e.target.value);
                 }}
+                supporting="Must be between 8 and 72 characters"
               />
 
               {!error && (
