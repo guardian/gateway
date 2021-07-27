@@ -125,7 +125,7 @@ describe('Password change flow', () => {
       cy.contains('is a common password');
       cy.get('input[name="password"]').type('iamaveryuniqueandlongstring');
       cy.wait('@breachCheck');
-      cy.contains('Success');
+      cy.contains('Valid password');
     });
   });
 
@@ -198,9 +198,7 @@ describe('Password change flow', () => {
         cy.get('input[name="password"]').type(
           'thisisalongandunbreachedpassword',
         );
-        // there seems to be a race condition on the change password page
-        // adding a small wait fixes the issue
-        cy.wait(800);
+        cy.wait('@breachCheck');
         cy.get('button[type="submit"]').click();
         cy.contains('Thank you! Your password has been changed.');
         cy.contains('Continue to The Guardian').should(
@@ -228,9 +226,7 @@ describe('Password change flow', () => {
         cy.get('input[name="password"]').type(
           'thisisalongandunbreachedpassword',
         );
-        // there seems to be a race condition on the change password page
-        // adding a small wait fixes the issue
-        cy.wait(800);
+        cy.wait('@breachCheck');
         cy.get('button[type="submit"]').click();
         cy.contains('Thank you! Your password has been changed.');
         cy.contains('Continue to The Guardian').should(
@@ -262,7 +258,7 @@ describe('Password change flow', () => {
       }).as('breachCheck');
       cy.get('input[name="password"]').type('iamaveryuniqueandlongstring');
       cy.wait('@breachCheck');
-      cy.contains('Success');
+      cy.contains('Valid password');
     });
   });
 
@@ -290,7 +286,7 @@ describe('Password change flow', () => {
         '{selectall}{backspace}iamaveryuniqueandlongstring',
       );
       cy.wait('@breachCheck');
-      cy.contains('Success');
+      cy.contains('Valid password');
     });
   });
 
