@@ -5,6 +5,9 @@ import {
   GU_API_DOMAIN,
   GU_DOMAIN,
 } from '@/server/models/Configuration';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const getOrThrow = (value: string | undefined, errorMessage: string) => {
   if (!value) {
