@@ -19,7 +19,6 @@ jobs:
           IDAPI_BASE_URL: http://localhost:9000
           PLAY_SESSION_COOKIE_SECRET: faketoken
           DEFAULT_RETURN_URI: https://m.code.dev-theguardian.com
-          CYPRESS_SIGN_IN_PAGE_URL: https://profile.code.dev-theguardian.com/signin
           IS_HTTPS: false
           APP_SECRET: devsecret
         with:
