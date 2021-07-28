@@ -7,8 +7,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-      - name: Install modules
-        run: yarn
       - name: Cypress run
         uses: cypress-io/github-action@v2
         env:
@@ -25,7 +23,7 @@ jobs:
           IS_HTTPS: false
           APP_SECRET: devsecret
         with:
-          start: yarn build && yarn start && yarn mock-server
+          start: yarn && yarn build && yarn start && yarn mock-server
           wait-on: 'http://localhost:8861/healthcheck, http://localhost:9000/healthcheck'
           wait-on-timeout: 180
           quiet: true
