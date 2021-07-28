@@ -158,6 +158,9 @@ const browser = ({ isLegacy }) => {
   return {
     entry,
     mode: 'production',
+    node: {
+      fs: "empty"
+    },
     module: {
       rules: [
         {
