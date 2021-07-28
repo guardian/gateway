@@ -10,6 +10,10 @@ describe('Password reset flow', () => {
 
     it("changes the reader's password", () => {
       cy.emptyInbox(existing.inbox).then(() => {
+        cy.intercept({
+          method: 'GET',
+          url: 'https://api.pwnedpasswords.com/range/*',
+        }).as('breachCheck');
         cy.visit('/signin');
         cy.contains('Reset password').click();
         cy.contains('Forgotten password');
@@ -22,8 +26,7 @@ describe('Password reset flow', () => {
           const token = match[1];
           cy.visit(`/reset-password/${token}`);
           cy.get('input[name=password]').type('0298a96c-1028!@#');
-          // We want the validation promise to have returned so we wait here
-          cy.wait(350);
+          cy.wait('@breachCheck');
           cy.get('[data-cy="change-password-button"]').click();
           cy.contains('Password Changed');
         });
