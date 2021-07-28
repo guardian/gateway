@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 import { joinUrl } from '@guardian/libs';
 import { read } from '@/server/lib/idapi/auth';
 import { IDAPIAuthRedirect, IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
-import { getConfiguration } from '@/server/lib/getConfiguration';
 import { getProfileUrl } from '@/server/lib/getProfileUrl';
 import { Routes } from '@/shared/model/Routes';
 import { trackMetric } from '@/server/lib/trackMetric';
@@ -16,8 +15,8 @@ export const loginMiddleware = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const config = getConfiguration();
-  const LOGIN_REDIRECT_URL = config.signInPageUrl;
+  const LOGIN_REDIRECT_URL =
+    process.env.SIGN_IN_PAGE_URL || 'https://profile.theguardian.com/signin';
 
   const FATAL_ERROR_REDIRECT_URL = `${LOGIN_REDIRECT_URL}?error=signin-error-bad-request`;
 

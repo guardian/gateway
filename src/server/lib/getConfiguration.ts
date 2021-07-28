@@ -56,11 +56,6 @@ export const getConfiguration = (): Configuration => {
     'Play Session Cookie Secret missing.',
   );
 
-  const signInPageUrl = getOrThrow(
-    process.env.SIGN_IN_PAGE_URL,
-    'Sign in page URL page missing',
-  );
-
   const baseUri = getOrThrow(process.env.BASE_URI, 'Base URI missing.');
 
   const defaultReturnUri = getOrThrow(
@@ -88,7 +83,6 @@ export const getConfiguration = (): Configuration => {
     idapiBaseUrl,
     idapiClientAccessToken,
     playSessionCookieSecret,
-    signInPageUrl,
     baseUri,
     defaultReturnUri,
     stage,
