@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /// <reference types="cypress" />
-import { getEnvironmentVariable } from '../support/util';
+import { getEnvironmentVariable } from '../../support/util';
 
 import {
   authRedirectSignInRecentlyEmailValidated,
   AUTH_REDIRECT_ENDPOINT,
-} from '../support/idapi/auth';
+} from '../../support/idapi/auth';
 import {
   allConsents,
   defaultUserConsent,
@@ -13,19 +13,19 @@ import {
   getUserConsents,
   CONSENTS_ENDPOINT,
   CONSENT_ERRORS,
-} from '../support/idapi/consent';
+} from '../../support/idapi/consent';
 import {
   verifiedUserWithNoConsent,
   createUser,
   USER_ERRORS,
   USER_ENDPOINT,
-} from '../support/idapi/user';
-import { setAuthCookies } from '../support/idapi/cookie';
-import CommunicationsPage from '../support/pages/onboarding/communications_page.js';
-import NewslettersPage from '../support/pages/onboarding/newsletters_page';
-import YourDataPage from '../support/pages/onboarding/your_data_page';
-import ReviewPage from '../support/pages/onboarding/review_page';
-import { injectAndCheckAxe } from '../support/cypress-axe';
+} from '../../support/idapi/user';
+import { setAuthCookies } from '../../support/idapi/cookie';
+import CommunicationsPage from '../../support/pages/onboarding/communications_page.js';
+import NewslettersPage from '../../support/pages/onboarding/newsletters_page';
+import YourDataPage from '../../support/pages/onboarding/your_data_page';
+import ReviewPage from '../../support/pages/onboarding/review_page';
+import { injectAndCheckAxe } from '../../support/cypress-axe';
 
 const {
   allNewsletters,
@@ -33,13 +33,13 @@ const {
   NEWSLETTER_ENDPOINT,
   NEWSLETTER_SUBSCRIPTION_ENDPOINT,
   NEWSLETTER_ERRORS,
-} = require('../support/idapi/newsletter');
-const Onboarding = require('../support/pages/onboarding/onboarding_page');
-const VerifyEmail = require('../support/pages/verify_email');
+} = require('../../support/idapi/newsletter');
+const Onboarding = require('../../support/pages/onboarding/onboarding_page');
+const VerifyEmail = require('../../support/pages/verify_email');
 const {
   getGeoLocationHeaders,
   GEOLOCATION_CODES,
-} = require('../support/geolocation');
+} = require('../../support/geolocation');
 
 const { NEWSLETTERS } = NewslettersPage.CONTENT;
 

@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { injectAndCheckAxe } from '../support/cypress-axe';
+import { injectAndCheckAxe } from '../../support/cypress-axe';
 
 describe('Password change flow', () => {
   const fakeSuccessResponse = {
