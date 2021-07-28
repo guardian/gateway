@@ -23,7 +23,8 @@ jobs:
           IS_HTTPS: false
           APP_SECRET: devsecret
         with:
-          start: yarn && yarn build && yarn start && yarn mock-server
+          build: yarn build
+          start: yarn start, yarn mock-server
           wait-on: 'http://localhost:8861/healthcheck, http://localhost:9000/healthcheck'
           wait-on-timeout: 180
           quiet: true
