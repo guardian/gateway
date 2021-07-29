@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /// <reference types="cypress" />
-import { getEnvironmentVariable } from '../../support/util';
-
 import {
   authRedirectSignInRecentlyEmailValidated,
   AUTH_REDIRECT_ENDPOINT,
@@ -261,9 +259,7 @@ describe('Onboarding flow', () => {
     });
 
     it('uses a default returnUrl if none provided', () => {
-      const returnUrl = encodeURIComponent(
-        getEnvironmentVariable('DEFAULT_RETURN_URI'),
-      );
+      const returnUrl = encodeURIComponent(Cypress.env('DEFAULT_RETURN_URI'));
 
       CommunicationsPage.gotoFlowStart();
 
