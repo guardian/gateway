@@ -25,7 +25,6 @@ import { PasswordInput } from '@/client/components/PasswordInput';
 import { FieldError } from '@/shared/model/ClientState';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
-import { FontWeight } from '@guardian/src-foundations/dist/types/typography/types';
 
 type ChangePasswordProps = {
   submitUrl: string;
