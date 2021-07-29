@@ -85,7 +85,7 @@ const ValidationSymbol = ({ result }: { result: Validation }) => {
     case Validation.ERROR: {
       return (
         <div css={[baseStyles, errorStyles]}>
-          <SvgCross />
+          <SvgAlertTriangle />
         </div>
       );
     }
