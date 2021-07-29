@@ -19,7 +19,7 @@
     "tsc": "tsc --noEmit --skipLibCheck",
     "watch:server": "nodemon --inspect ./build/server.js",
     "watch": "webpack --watch",
-    "wait-on:server": "wait-on http://localhost:$PORT/healthcheck",
+    "wait-on:server": "wait-on http://localhost:8861/healthcheck",
     "wait-on:mock-server": "wait-on http://localhost:9000/healthcheck",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
