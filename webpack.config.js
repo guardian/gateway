@@ -59,7 +59,8 @@ const common = ({ platform }) => ({
       '@': path.join(__dirname, 'src'),
     },
   },
-  watchOptions
+  watchOptions,
+  plugins: [new Dotenv()],
 });
 
 const server = () => ({
@@ -227,8 +228,7 @@ const browser = ({ isLegacy }) => {
       new AssetsPlugin({
         path: path.resolve(__dirname, 'build'),
         filename: `${isLegacy ? 'legacy.' : ''}webpack-assets.json`
-      }),
-      new Dotenv()
+      })
     ],
     target,
     performance: {
