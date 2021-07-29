@@ -27,6 +27,7 @@ describe('getConfiguration', () => {
     process.env.PLAY_SESSION_COOKIE_SECRET = 'play-secret';
     process.env.BASE_URI = 'base-uri';
     process.env.DEFAULT_RETURN_URI = 'default-return-uri';
+    process.env.SIGN_IN_PAGE_URL = 'sign-in-page-url';
     process.env.STAGE = 'DEV';
     process.env.IS_HTTPS = 'true';
     process.env.APP_SECRET = 'app-secret';
@@ -38,6 +39,7 @@ describe('getConfiguration', () => {
       idapiBaseUrl: 'http://localhost:1234',
       playSessionCookieSecret: 'play-secret',
       baseUri: 'base-uri',
+      signInPageUrl: 'sign-in-page-url',
       defaultReturnUri: 'default-return-uri',
       stage: 'DEV',
       gaUID: {

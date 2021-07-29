@@ -6,6 +6,7 @@ import { getProfileUrl } from '@/server/lib/getProfileUrl';
 import { Routes } from '@/shared/model/Routes';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '../logger';
 
 const profileUrl = getProfileUrl();
@@ -15,8 +16,8 @@ export const loginMiddleware = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const LOGIN_REDIRECT_URL =
-    process.env.SIGN_IN_PAGE_URL || 'https://profile.theguardian.com/signin';
+  const config = getConfiguration();
+  const LOGIN_REDIRECT_URL = config.signInPageUrl;
 
   const FATAL_ERROR_REDIRECT_URL = `${LOGIN_REDIRECT_URL}?error=signin-error-bad-request`;
 

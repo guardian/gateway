@@ -11,6 +11,7 @@ import { renderer } from '@/server/lib/renderer';
 import { consentPages } from '@/server/routes/consents';
 import { read as getUser } from '@/server/lib/idapi/user';
 import { ConsentsErrors, VerifyEmailErrors } from '@/shared/model/Errors';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 import { getProfileUrl } from '@/server/lib/getProfileUrl';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
@@ -22,6 +23,7 @@ import { EMAIL_SENT } from '@/shared/model/Success';
 
 const router = Router();
 
+const { signInPageUrl } = getConfiguration();
 const profileUrl = getProfileUrl();
 
 router.get(
@@ -31,9 +33,7 @@ router.get(
 
     state = deepmerge(state, {
       pageData: {
-        signInPageUrl: `${
-          process.env.SIGN_IN_PAGE_URL
-        }?returnUrl=${encodeURIComponent(
+        signInPageUrl: `${signInPageUrl}?returnUrl=${encodeURIComponent(
           `${profileUrl}${Routes.VERIFY_EMAIL}`,
         )}`,
       },
