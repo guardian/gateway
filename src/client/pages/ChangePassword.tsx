@@ -53,12 +53,18 @@ const ValidationSymbol = ({ result }: { result: Validation }) => {
   const successStyles = css`
     svg {
       fill: ${palette.success['400']};
+      height: 30px;
+      width: 30px;
+      margin-bottom: -6px;
     }
   `;
 
   const errorStyles = css`
     svg {
-      color: ${palette.error['400']};
+      fill: ${palette.error['400']};
+      height: 30px;
+      width: 30px;
+      margin-bottom: -6px;
     }
   `;
 
@@ -162,7 +168,8 @@ const Checking = () => {
       <div
         css={css`
           ${textSans.small()}
-          margin-bottom: 4px;
+          margin-top: 8px;
+          margin-bottom: 3px;
           margin-left: 3px;
           display: inline-block;
           color: ${palette.neutral['7']};
