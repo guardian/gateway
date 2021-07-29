@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@guardian/src-button';
-import { SvgArrowRightStraight } from '@guardian/src-icons';
-import { SvgTickRound } from '@guardian/src-icons';
-import { SvgCross } from '@guardian/src-icons';
+import {
+  SvgCross,
+  SvgAlertTriangle,
+  SvgTickRound,
+  SvgArrowRightStraight,
+} from '@guardian/src-icons';
 import { palette } from '@guardian/src-foundations';
 import { textSans } from '@guardian/src-foundations/typography';
 import { PageBox } from '@/client/components/PageBox';
@@ -98,26 +101,6 @@ const baseMessageStyles = css`
   display: inline-block;
 `;
 
-const validationStyles = (result: Validation) => {
-  let color = palette.neutral['7'];
-  let fontWeight: FontWeight = 'regular';
-
-  if (result === Validation.SUCCESS) {
-    color = palette.success['400'];
-    fontWeight = 'bold';
-  } else if (result === Validation.ERROR) {
-    color = palette.error['400'];
-  }
-
-  return css`
-    ${textSans.small({ fontWeight })}
-    margin-bottom: 4px;
-    margin-left: 3px;
-    display: inline-block;
-    color: ${color};
-  `;
-};
-
 const TooLong = ({ error }: { error?: string }) => {
   return (
     <div>
@@ -170,7 +153,17 @@ const Valid = () => {
   return (
     <div>
       <ValidationSymbol result={Validation.SUCCESS} />
-      <div css={validationStyles(Validation.SUCCESS)}>Valid password</div>
+      <div
+        css={css`
+          ${textSans.small({ fontWeight: 'bold' })}
+          margin-bottom: 4px;
+          margin-left: 3px;
+          display: inline-block;
+          color: ${palette.success['400']};
+        `}
+      >
+        Valid password
+      </div>
     </div>
   );
 };
@@ -178,7 +171,17 @@ const Valid = () => {
 const Checking = () => {
   return (
     <div>
-      <div css={validationStyles(Validation.FAILURE)}>Checking...</div>
+      <div
+        css={css`
+          ${textSans.small()}
+          margin-bottom: 4px;
+          margin-left: 3px;
+          display: inline-block;
+          color: ${palette.neutral['7']};
+        `}
+      >
+        Checking...
+      </div>
     </div>
   );
 };
