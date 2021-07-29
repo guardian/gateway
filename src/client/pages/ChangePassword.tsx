@@ -101,22 +101,16 @@ const baseMessageStyles = css`
   display: inline-block;
 `;
 
-const TooLong = ({ error }: { error?: string }) => {
+const TooLong = () => {
   return (
     <div>
-      <ValidationSymbol
-        result={error ? Validation.ERROR : Validation.FAILURE}
-      />
+      <ValidationSymbol result={Validation.FAILURE} />
       <div
         css={[
           baseMessageStyles,
-          error
-            ? css`
-                color: ${palette.error['400']};
-              `
-            : css`
-                color: ${palette.neutral['7']};
-              `,
+          css`
+            color: ${palette.neutral['7']};
+          `,
         ]}
       >
         {ChangePasswordErrors.MAXIMUM_72_SHORT}
@@ -125,22 +119,16 @@ const TooLong = ({ error }: { error?: string }) => {
   );
 };
 
-const TooShort = ({ error }: { error?: string }) => {
+const TooShort = () => {
   return (
     <div>
-      <ValidationSymbol
-        result={error ? Validation.ERROR : Validation.FAILURE}
-      />
+      <ValidationSymbol result={Validation.FAILURE} />
       <div
         css={[
           baseMessageStyles,
-          error
-            ? css`
-                color: ${palette.error['400']};
-              `
-            : css`
-                color: ${palette.neutral['7']};
-              `,
+          css`
+            color: ${palette.neutral['7']};
+          `,
         ]}
       >
         {ChangePasswordErrors.AT_LEAST_8_SHORT}
@@ -199,6 +187,7 @@ const Weak = () => {
 
   return (
     <div css={smallFont}>
+      <ValidationSymbol result={Validation.ERROR} />
       <span css={redText}>Weak password:</span>{' '}
       {ChangePasswordErrors.COMMON_PASSWORD_SHORT}
     </div>
@@ -206,22 +195,20 @@ const Weak = () => {
 };
 
 const ValidationMessage = ({
-  error,
   isWeak,
   isTooShort,
   isTooLong,
   isChecking,
 }: {
-  error?: string;
   isWeak: boolean;
   isTooShort: boolean;
   isTooLong: boolean;
   isChecking: boolean;
 }) => {
   if (isTooShort) {
-    return <TooShort error={error} />;
+    return <TooShort />;
   } else if (isTooLong) {
-    return <TooLong error={error} />;
+    return <TooLong />;
   } else if (isWeak) {
     return <Weak />;
   } else if (isChecking) {
@@ -339,7 +326,6 @@ export const ChangePassword = ({
                   `}
                 >
                   <ValidationMessage
-                    error={error}
                     isWeak={isWeak}
                     isTooShort={isTooShort}
                     isTooLong={isTooLong}
