@@ -60,7 +60,10 @@ const common = ({ platform }) => ({
     },
   },
   watchOptions,
-  plugins: [new Dotenv()],
+  plugins: [new Dotenv({
+    // Required to ensure Dotenv doesn't override any existing env vars that have been set by the system
+    systemvars: true
+  })],
 });
 
 const server = () => ({
