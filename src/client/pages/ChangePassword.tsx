@@ -44,32 +44,30 @@ const ValidationSymbol = ({ result }: { result: Validation }) => {
     position: relative;
     top: 3px;
     svg {
-      width: 16px;
-      height: 16px;
+      height: 30px;
+      width: 30px;
+      margin-bottom: -6px;
     }
   `;
 
   const successStyles = css`
     svg {
       fill: ${palette.success['400']};
-      height: 30px;
-      width: 30px;
-      margin-bottom: -6px;
     }
   `;
 
   const errorStyles = css`
     svg {
       fill: ${palette.error['400']};
-      height: 30px;
-      width: 30px;
-      margin-bottom: -6px;
     }
   `;
 
   const failureStyles = css`
     svg {
       color: ${palette.neutral['7']};
+      height: 18px;
+      width: 18px;
+      margin-bottom: -1px;
     }
   `;
 
@@ -100,8 +98,8 @@ const ValidationSymbol = ({ result }: { result: Validation }) => {
 };
 
 const baseMessageStyles = css`
-  ${textSans.small()}
-  margin-bottom: 4px;
+  ${textSans.small()};
+  margin-top: 6px;
   margin-left: 3px;
   display: inline-block;
 `;
@@ -115,6 +113,7 @@ const TooLong = () => {
           baseMessageStyles,
           css`
             color: ${palette.neutral['7']};
+            margin-bottom: 1px;
           `,
         ]}
       >
@@ -133,6 +132,7 @@ const TooShort = () => {
           baseMessageStyles,
           css`
             color: ${palette.neutral['7']};
+            margin-bottom: 1px;
           `,
         ]}
       >
@@ -147,13 +147,16 @@ const Valid = () => {
     <div>
       <ValidationSymbol result={Validation.SUCCESS} />
       <div
-        css={css`
-          ${textSans.small({ fontWeight: 'bold' })}
-          margin-bottom: 4px;
-          margin-left: 3px;
-          display: inline-block;
-          color: ${palette.success['400']};
-        `}
+        css={[
+          baseMessageStyles,
+          css`
+            ${textSans.small({ fontWeight: 'bold' })}
+            margin-bottom: 0px;
+            margin-left: 3px;
+            display: inline-block;
+            color: ${palette.success['400']};
+          `,
+        ]}
       >
         Valid password
       </div>
@@ -165,14 +168,16 @@ const Checking = () => {
   return (
     <div>
       <div
-        css={css`
-          ${textSans.small()}
-          margin-top: 8px;
-          margin-bottom: 3px;
-          margin-left: 3px;
-          display: inline-block;
-          color: ${palette.neutral['7']};
-        `}
+        css={[
+          baseMessageStyles,
+          css`
+            ${textSans.small()}
+            margin-bottom: 1px;
+            margin-left: 3px;
+            display: inline-block;
+            color: ${palette.neutral['7']};
+          `,
+        ]}
       >
         Checking...
       </div>
