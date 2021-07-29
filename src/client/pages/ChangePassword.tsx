@@ -22,6 +22,7 @@ import { PasswordInput } from '@/client/components/PasswordInput';
 import { FieldError } from '@/shared/model/ClientState';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
+import { FontWeight } from '@guardian/src-foundations/dist/types/typography/types';
 
 type ChangePasswordProps = {
   submitUrl: string;
@@ -99,15 +100,17 @@ const baseMessageStyles = css`
 
 const validationStyles = (result: Validation) => {
   let color = palette.neutral['7'];
+  let fontWeight: FontWeight = 'regular';
 
   if (result === Validation.SUCCESS) {
     color = palette.success['400'];
+    fontWeight = 'bold';
   } else if (result === Validation.ERROR) {
     color = palette.error['400'];
   }
 
   return css`
-    ${textSans.small()}
+    ${textSans.small({ fontWeight })}
     margin-bottom: 4px;
     margin-left: 3px;
     display: inline-block;
@@ -188,6 +191,7 @@ const Weak = () => {
 
   const redText = css`
     color: ${palette.error['400']};
+    font-weight: bold;
   `;
 
   return (
