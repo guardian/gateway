@@ -44,9 +44,8 @@ const ValidationSymbol = ({ result }: { result: Validation }) => {
     position: relative;
     top: 3px;
     svg {
-      height: 30px;
-      width: 30px;
-      margin-bottom: -6px;
+      height: 18px;
+      width: 18px;
     }
   `;
 
@@ -59,6 +58,11 @@ const ValidationSymbol = ({ result }: { result: Validation }) => {
   const errorStyles = css`
     svg {
       fill: ${palette.error['400']};
+      height: 24px;
+      width: 24px;
+      margin-bottom: -4px;
+      margin-top: -4px;
+      margin-left: -4px;
     }
   `;
 
@@ -66,10 +70,8 @@ const ValidationSymbol = ({ result }: { result: Validation }) => {
     svg {
       background: ${palette.neutral[46]};
       fill: ${palette.neutral[100]};
-      height: 18px;
-      width: 18px;
-      margin-bottom: -1px;
-      border: 1px solid ${palette.neutral[46]};
+      height: 17px;
+      width: 17px;
       border-radius: 50%;
     }
   `;
@@ -102,62 +104,43 @@ const ValidationSymbol = ({ result }: { result: Validation }) => {
 
 const baseMessageStyles = css`
   ${textSans.small()};
-  margin-top: 6px;
   margin-left: 3px;
   display: inline-block;
+  color: ${palette.neutral[46]};
+`;
+
+const messageWrapperStyles = css`
+  margin-bottom: ${space[3]}px;
 `;
 
 const TooLong = () => {
   return (
-    <div>
+    <div css={messageWrapperStyles}>
       <ValidationSymbol result={Validation.FAILURE} />
-      <div
-        css={[
-          baseMessageStyles,
-          css`
-            color: ${palette.neutral[46]};
-            margin-bottom: 1px;
-          `,
-        ]}
-      >
-        {ChangePasswordErrors.MAXIMUM_72_SHORT}
-      </div>
+      <div css={baseMessageStyles}>{ChangePasswordErrors.MAXIMUM_72_SHORT}</div>
     </div>
   );
 };
 
 const TooShort = () => {
   return (
-    <div>
+    <div css={messageWrapperStyles}>
       <ValidationSymbol result={Validation.FAILURE} />
-      <div
-        css={[
-          baseMessageStyles,
-          css`
-            color: ${palette.neutral[46]};
-            margin-bottom: 1px;
-          `,
-        ]}
-      >
-        {ChangePasswordErrors.AT_LEAST_8_SHORT}
-      </div>
+      <div css={baseMessageStyles}>{ChangePasswordErrors.AT_LEAST_8_SHORT}</div>
     </div>
   );
 };
 
 const Valid = () => {
   return (
-    <div>
+    <div css={messageWrapperStyles}>
       <ValidationSymbol result={Validation.SUCCESS} />
       <div
         css={[
           baseMessageStyles,
           css`
-            ${textSans.small({ fontWeight: 'bold' })}
-            margin-bottom: 0px;
-            margin-left: 3px;
-            display: inline-block;
-            color: ${palette.success['400']};
+            font-weight: bold;
+            color: ${palette.success[400]};
           `,
         ]}
       >
@@ -169,38 +152,20 @@ const Valid = () => {
 
 const Checking = () => {
   return (
-    <div>
-      <div
-        css={[
-          baseMessageStyles,
-          css`
-            ${textSans.small()}
-            margin-bottom: 1px;
-            margin-left: 3px;
-            display: inline-block;
-            color: ${palette.neutral[46]};
-          `,
-        ]}
-      >
-        Checking...
-      </div>
+    <div css={messageWrapperStyles}>
+      <div css={baseMessageStyles}>Checking...</div>
     </div>
   );
 };
 
 const Weak = () => {
-  const smallFont = css`
-    ${textSans.small()}
-    color: ${palette.neutral[46]};
-  `;
-
   const redText = css`
-    color: ${palette.error['400']};
+    color: ${palette.error[400]};
     font-weight: bold;
   `;
 
   return (
-    <div css={smallFont}>
+    <div css={[messageWrapperStyles, baseMessageStyles]}>
       <ValidationSymbol result={Validation.ERROR} />
       <span css={redText}>Weak password:</span>{' '}
       {ChangePasswordErrors.COMMON_PASSWORD_SHORT}
@@ -334,18 +299,12 @@ export const ChangePassword = ({
               />
 
               {!error && (
-                <div
-                  css={css`
-                    margin-bottom: ${space[9]}px;
-                  `}
-                >
-                  <ValidationMessage
-                    isWeak={isWeak}
-                    isTooShort={isTooShort}
-                    isTooLong={isTooLong}
-                    isChecking={isChecking}
-                  />
-                </div>
+                <ValidationMessage
+                  isWeak={isWeak}
+                  isTooShort={isTooShort}
+                  isTooLong={isTooLong}
+                  isChecking={isChecking}
+                />
               )}
 
               <Button
