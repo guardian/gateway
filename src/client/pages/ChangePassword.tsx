@@ -3,7 +3,7 @@ import { Button } from '@guardian/src-button';
 import {
   SvgCross,
   SvgAlertTriangle,
-  SvgTickRound,
+  SvgCheckmark,
   SvgArrowRightStraight,
 } from '@guardian/src-icons';
 import { success, error, neutral } from '@guardian/src-foundations/palette';
@@ -51,7 +51,11 @@ const ValidationSymbol = ({ result }: { result: Validation }) => {
 
   const successStyles = css`
     svg {
-      fill: ${success[400]};
+      background: ${success[400]};
+      fill: ${neutral[100]};
+      height: 17px;
+      width: 17px;
+      border-radius: 50%;
     }
   `;
 
@@ -80,7 +84,7 @@ const ValidationSymbol = ({ result }: { result: Validation }) => {
     case Validation.SUCCESS: {
       return (
         <div css={[baseStyles, successStyles]}>
-          <SvgTickRound />
+          <SvgCheckmark />
         </div>
       );
     }
