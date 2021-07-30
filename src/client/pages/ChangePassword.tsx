@@ -64,10 +64,13 @@ const ValidationSymbol = ({ result }: { result: Validation }) => {
 
   const failureStyles = css`
     svg {
-      color: ${palette.neutral['7']};
+      background: ${palette.neutral[46]};
+      fill: ${palette.neutral[100]};
       height: 18px;
       width: 18px;
       margin-bottom: -1px;
+      border: 1px solid ${palette.neutral[46]};
+      border-radius: 50%;
     }
   `;
 
