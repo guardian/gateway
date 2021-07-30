@@ -115,7 +115,7 @@ const TooLong = () => {
         css={[
           baseMessageStyles,
           css`
-            color: ${palette.neutral['7']};
+            color: ${palette.neutral[46]};
             margin-bottom: 1px;
           `,
         ]}
@@ -134,7 +134,7 @@ const TooShort = () => {
         css={[
           baseMessageStyles,
           css`
-            color: ${palette.neutral['7']};
+            color: ${palette.neutral[46]};
             margin-bottom: 1px;
           `,
         ]}
@@ -178,7 +178,7 @@ const Checking = () => {
             margin-bottom: 1px;
             margin-left: 3px;
             display: inline-block;
-            color: ${palette.neutral['7']};
+            color: ${palette.neutral[46]};
           `,
         ]}
       >
@@ -191,7 +191,7 @@ const Checking = () => {
 const Weak = () => {
   const smallFont = css`
     ${textSans.small()}
-    color: ${palette.neutral['7']};
+    color: ${palette.neutral[46]};
   `;
 
   const redText = css`
