@@ -6,7 +6,7 @@ import {
   SvgTickRound,
   SvgArrowRightStraight,
 } from '@guardian/src-icons';
-import { palette } from '@guardian/src-foundations';
+import { success, error, neutral } from '@guardian/src-foundations/palette';
 import { textSans } from '@guardian/src-foundations/typography';
 import { PageBox } from '@/client/components/PageBox';
 import { PageHeader } from '@/client/components/PageHeader';
@@ -51,13 +51,13 @@ const ValidationSymbol = ({ result }: { result: Validation }) => {
 
   const successStyles = css`
     svg {
-      fill: ${palette.success['400']};
+      fill: ${success[400]};
     }
   `;
 
   const errorStyles = css`
     svg {
-      fill: ${palette.error['400']};
+      fill: ${error['400']};
       height: 24px;
       width: 24px;
       margin-bottom: -4px;
@@ -68,8 +68,8 @@ const ValidationSymbol = ({ result }: { result: Validation }) => {
 
   const failureStyles = css`
     svg {
-      background: ${palette.neutral[46]};
-      fill: ${palette.neutral[100]};
+      background: ${neutral[46]};
+      fill: ${neutral[100]};
       height: 17px;
       width: 17px;
       border-radius: 50%;
@@ -106,7 +106,7 @@ const baseMessageStyles = css`
   ${textSans.small()};
   margin-left: 3px;
   display: inline-block;
-  color: ${palette.neutral[46]};
+  color: ${neutral[46]};
 `;
 
 const messageWrapperStyles = css`
@@ -140,7 +140,7 @@ const Valid = () => {
           baseMessageStyles,
           css`
             font-weight: bold;
-            color: ${palette.success[400]};
+            color: ${success[400]};
           `,
         ]}
       >
@@ -160,7 +160,7 @@ const Checking = () => {
 
 const Weak = () => {
   const redText = css`
-    color: ${palette.error[400]};
+    color: ${error[400]};
     font-weight: bold;
   `;
 
