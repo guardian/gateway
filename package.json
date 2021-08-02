@@ -99,7 +99,7 @@
     "@emotion/react": "^11.4.0",
     "@guardian/ab-core": "^2.0.0",
     "@guardian/ab-react": "^2.0.1",
-    "@guardian/consent-management-platform": "^6.12.0",
+    "@guardian/consent-management-platform": "^6.12.2",
     "@guardian/libs": "^3.0.0",
     "@guardian/src-accordion": "^3.8.0",
     "@guardian/src-brand": "^3.8.0",
