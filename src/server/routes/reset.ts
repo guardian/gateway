@@ -8,7 +8,6 @@ import { getEmailFromPlaySessionCookie } from '@/server/lib/playSessionCookie';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
-import { removeNoCache } from '@/server/lib/middleware/cache';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { getConfiguration } from '@/server/lib/getConfiguration';
