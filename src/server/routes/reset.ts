@@ -95,9 +95,17 @@ router.get(
       ? req.cookies['GU_email']
       : req.signedCookies['GU_email'];
 
-    const email = emailCookie
-      ? JSON.parse(Buffer.from(emailCookie, 'base64').toString('utf-8'))
-      : null;
+    let email;
+    try {
+      email = JSON.parse(Buffer.from(emailCookie, 'base64').toString('utf-8'));
+    } catch (error) {
+      email = null;
+      logger.error(
+        `Error parsing cookie with length ${
+          emailCookie ? emailCookie.length : 'undefined'
+        }`,
+      );
+    }
 
     state = deepmerge(state, {
       pageData: {
