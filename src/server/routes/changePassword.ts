@@ -14,17 +14,13 @@ import { Metrics } from '@/server/models/Metrics';
 import { removeNoCache } from '@/server/lib/middleware/cache';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
-import {
-  PasswordValidationResult,
-  validatePasswordLength,
-} from '@/shared/lib/PasswordValidation';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { getBrowserNameFromUserAgent } from '@/server/lib/getBrowserName';
 import { FieldError } from '@/shared/model/ClientState';
 
 const router = Router();
 
-const validatePasswordChangeFields = (password: string): Array<FieldError> => {
+const validatePasswordField = (password: string): Array<FieldError> => {
   const errors: Array<FieldError> = [];
 
   if (!password) {
@@ -32,10 +28,7 @@ const validatePasswordChangeFields = (password: string): Array<FieldError> => {
       field: 'password',
       message: ChangePasswordErrors.PASSWORD_BLANK,
     });
-  } else if (
-    password &&
-    validatePasswordLength(password) !== PasswordValidationResult.VALID_PASSWORD
-  ) {
+  } else if (password.length < 8 || password.length > 72) {
     errors.push({
       field: 'password',
       message: ChangePasswordErrors.PASSWORD_LENGTH,
@@ -97,7 +90,7 @@ router.post(
     });
 
     try {
-      const fieldErrors = validatePasswordChangeFields(password);
+      const fieldErrors = validatePasswordField(password);
 
       if (fieldErrors.length) {
         state = deepmerge(state, {

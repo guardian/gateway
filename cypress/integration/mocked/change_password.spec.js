@@ -125,7 +125,7 @@ describe('Password change flow', () => {
       cy.contains('is a common password');
       cy.get('input[name="password"]').type('iamaveryuniqueandlongstring');
       cy.wait('@breachCheck');
-      cy.contains('At least 8 characters'); // This means success 🤷‍♂
+      cy.contains('Valid password');
     });
   });
 
@@ -258,7 +258,7 @@ describe('Password change flow', () => {
       }).as('breachCheck');
       cy.get('input[name="password"]').type('iamaveryuniqueandlongstring');
       cy.wait('@breachCheck');
-      cy.contains('At least 8 characters'); // This means success 🤷‍♂
+      cy.contains('Valid password');
     });
   });
 
@@ -286,7 +286,7 @@ describe('Password change flow', () => {
         '{selectall}{backspace}iamaveryuniqueandlongstring',
       );
       cy.wait('@breachCheck');
-      cy.contains('At least 8 characters'); // This means success 🤷‍♂
+      cy.contains('Valid password');
     });
   });
 

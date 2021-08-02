@@ -10,7 +10,7 @@ export default {
 } as Meta;
 
 export const Default = () => (
-  <ChangePassword submitUrl="" email="" fieldErrors={[]} idapiBaseUrl="" />
+  <ChangePassword submitUrl="" email="" fieldErrors={[]} />
 );
 Default.story = {
   name: 'with defaults',
@@ -21,7 +21,6 @@ export const Email = () => (
     submitUrl=""
     email="example@theguardian.com"
     fieldErrors={[]}
-    idapiBaseUrl="https"
   />
 );
 Email.story = {
@@ -38,26 +37,8 @@ export const FieldErrorPW = () => (
         message: 'Not right',
       },
     ]}
-    idapiBaseUrl=""
   />
 );
 FieldErrorPW.story = {
   name: 'with error on password',
-};
-
-export const FieldErrorConfirm = () => (
-  <ChangePassword
-    submitUrl=""
-    email="example@theguardian.com"
-    fieldErrors={[
-      {
-        field: 'password_confirm',
-        message: 'Not right',
-      },
-    ]}
-    idapiBaseUrl=""
-  />
-);
-FieldErrorConfirm.story = {
-  name: 'with error on confirmation',
 };
