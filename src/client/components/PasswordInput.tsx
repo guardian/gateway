@@ -77,7 +77,7 @@ const EyeSymbol = ({
       onClick={onClick}
       onKeyDown={onClick}
       title="show or hide password text"
-      className={'password-input-eye-button'}
+      data-cy="password-input-eye-button"
     >
       <EyeIcon isOpen={isOpen} />
     </button>
