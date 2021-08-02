@@ -1,17 +1,15 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /// <reference types="cypress" />
-import { getEnvironmentVariable } from '../support/util';
-
-import { injectAndCheckAxe } from '../support/cypress-axe';
-import { authRedirectSignInRecentlyEmailValidated } from '../support/idapi/auth';
-import { allConsents } from '../support/idapi/consent';
-import { authCookieResponse, setAuthCookies } from '../support/idapi/cookie';
-import { verifiedUserWithNoConsent } from '../support/idapi/user';
+import { injectAndCheckAxe } from '../../support/cypress-axe';
+import { authRedirectSignInRecentlyEmailValidated } from '../../support/idapi/auth';
+import { allConsents } from '../../support/idapi/consent';
+import { authCookieResponse, setAuthCookies } from '../../support/idapi/cookie';
+import { verifiedUserWithNoConsent } from '../../support/idapi/user';
 import {
   validationTokenExpired,
   validationTokenInvalid,
-} from '../support/idapi/verify_email';
-import VerifyEmail from '../support/pages/verify_email';
+} from '../../support/idapi/verify_email';
+import VerifyEmail from '../../support/pages/verify_email';
 
 describe('Verify email flow', () => {
   const verifyEmailFlow = new VerifyEmail();
@@ -163,7 +161,7 @@ describe('Verify email flow', () => {
     });
 
     it('verification token is expired, logged out, shows page to sign in to resend validation email', () => {
-      const signInUrl = getEnvironmentVariable('SIGN_IN_PAGE_URL');
+      const signInUrl = Cypress.env('SIGN_IN_PAGE_URL');
       // mock token expired
       cy.mockNext(403, validationTokenExpired);
 
@@ -183,7 +181,7 @@ describe('Verify email flow', () => {
     });
 
     it('verification token is invalid, logged out, shows page to sign in to resend validation email', () => {
-      const signInUrl = getEnvironmentVariable('SIGN_IN_PAGE_URL');
+      const signInUrl = Cypress.env('SIGN_IN_PAGE_URL');
       // mock token invalid
       cy.mockNext(403, validationTokenInvalid);
 

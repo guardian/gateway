@@ -13,8 +13,10 @@ import { removeNoCache } from '@/server/lib/middleware/cache';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { sendResetPasswordEmail, sendNoAccountEmail } from '@/email';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 
 const router = Router();
+const { baseUri } = getConfiguration();
 
 router.get(Routes.RESET, (req: Request, res: ResponseWithRequestState) => {
   let state = res.locals;
@@ -62,6 +64,19 @@ router.post(
           throw new Error();
         }
       }
+
+      // We set this cookie so that the subsequent email sent page knows which email address was used
+      res.cookie(
+        'GU_email',
+        Buffer.from(JSON.stringify(email)).toString('base64'),
+        // We check if we're running locally here to make testing easier
+        {
+          httpOnly: !baseUri.includes('localhost'),
+          secure: !baseUri.includes('localhost'),
+          signed: !baseUri.includes('localhost'),
+          sameSite: 'strict',
+        },
+      );
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
       const { message, status } = error;
@@ -83,21 +98,34 @@ router.post(
 
     trackMetric(Metrics.SEND_PASSWORD_RESET_SUCCESS);
 
-    const html = renderer(Routes.RESET_SENT, {
-      requestState: state,
-      pageTitle: PageTitle.RESET_SENT,
-    });
-    return res.type('html').send(html);
+    return res.redirect(303, Routes.RESET_SENT);
   }),
 );
 
 router.get(
   Routes.RESET_SENT,
   removeNoCache,
-  (_: Request, res: ResponseWithRequestState) => {
+  (req: Request, res: ResponseWithRequestState) => {
+    let state = res.locals;
+
+    // Read the users email from the GU_email cookie that was set when they posted the previous page
+    const emailCookie = baseUri.includes('localhost')
+      ? req.cookies['GU_email']
+      : req.signedCookies['GU_email'];
+    const email = JSON.parse(
+      Buffer.from(emailCookie, 'base64').toString('utf-8'),
+    );
+
+    state = deepmerge(state, {
+      pageData: {
+        email,
+        previousPage: Routes.RESET,
+      },
+    });
+
     const html = renderer(Routes.RESET_SENT, {
       pageTitle: PageTitle.RESET_SENT,
-      requestState: res.locals,
+      requestState: state,
     });
     res.type('html').send(html);
   },

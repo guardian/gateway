@@ -49,9 +49,9 @@ ci: clear
 	$(call log, "running CI")
 	@(./ci.sh)
 
-cypress: clear
-	$(call log, "opening cypress")
-	@(./cypress-open.sh)
+cypress-mocked: clear
+	$(call log, "opening cypress using mocks")
+	@(./cypress-mocked.sh)
 
 cypress-ete: clear
 	$(call log, "opening cypress")
