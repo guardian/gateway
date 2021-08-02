@@ -59,21 +59,43 @@ const EyeSymbol = ({
   isOpen: boolean;
   onClick: () => void;
 }) => {
-  const style = css`
+  const buttonStyles = css`
     width: 30px;
     height: 30px;
     position: absolute;
     right: 5px;
     bottom: 19px;
+    border: none;
+    background-color: transparent;
+  `;
+
+  const iconStyles = css`
+    position: absolute;
+    top: 0;
+    left: 0;
+    svg {
+      width: 30px;
+      height: 30px;
+    }
   `;
 
   const EyeIcon = ({ isOpen }: { isOpen: boolean }) => {
-    return isOpen ? <SvgEye /> : <SvgEyeStrike />;
+    if (isOpen)
+      return (
+        <div css={iconStyles}>
+          <SvgEye />
+        </div>
+      );
+    return (
+      <div css={iconStyles}>
+        <SvgEyeStrike />
+      </div>
+    );
   };
 
   return (
     <button
-      css={style}
+      css={buttonStyles}
       onClick={onClick}
       onKeyDown={onClick}
       title="show or hide password text"
