@@ -32,85 +32,31 @@ type ChangePasswordProps = {
   fieldErrors: FieldError[];
 };
 
-enum Validation {
-  SUCCESS,
-  FAILURE,
-  ERROR,
-}
-
-const ValidationSymbol = ({ result }: { result: Validation }) => {
-  const baseStyles = css`
-    display: inline-block;
-    position: relative;
-    top: 3px;
-    svg {
-      height: 18px;
-      width: 18px;
-    }
-  `;
-
-  const successStyles = css`
-    svg {
-      background: ${success[400]};
-      fill: ${neutral[100]};
-      height: 17px;
-      width: 17px;
-      border-radius: 50%;
-    }
-  `;
-
-  const errorStyles = css`
-    svg {
-      fill: ${error['400']};
-      height: 24px;
-      width: 24px;
-      margin-bottom: -4px;
-      margin-top: -4px;
-      margin-left: -4px;
-    }
-  `;
-
-  const failureStyles = css`
-    svg {
-      background: ${neutral[46]};
-      fill: ${neutral[100]};
-      height: 17px;
-      width: 17px;
-      border-radius: 50%;
-    }
-  `;
-
-  switch (result) {
-    case Validation.SUCCESS: {
-      return (
-        <div css={[baseStyles, successStyles]}>
-          <SvgCheckmark />
-        </div>
-      );
-    }
-    case Validation.ERROR: {
-      return (
-        <div css={[baseStyles, errorStyles]}>
-          <SvgAlertTriangle />
-        </div>
-      );
-    }
-    case Validation.FAILURE:
-    default: {
-      return (
-        <div css={[baseStyles, failureStyles]}>
-          <SvgCross />
-        </div>
-      );
-    }
+const baseIconStyles = css`
+  display: inline-block;
+  position: relative;
+  top: 3px;
+  svg {
+    height: 18px;
+    width: 18px;
   }
-};
+`;
 
 const baseMessageStyles = css`
   ${textSans.small()};
   margin-left: 3px;
   display: inline-block;
   color: ${neutral[46]};
+`;
+
+const failureIconStyles = css`
+  svg {
+    background: ${neutral[46]};
+    fill: ${neutral[100]};
+    height: 17px;
+    width: 17px;
+    border-radius: 50%;
+  }
 `;
 
 const messageWrapperStyles = css`
@@ -120,7 +66,9 @@ const messageWrapperStyles = css`
 const TooLong = () => {
   return (
     <div css={messageWrapperStyles}>
-      <ValidationSymbol result={Validation.FAILURE} />
+      <div css={[baseIconStyles, failureIconStyles]}>
+        <SvgCross />
+      </div>
       <div css={baseMessageStyles}>{ChangePasswordErrors.MAXIMUM_72_SHORT}</div>
     </div>
   );
@@ -129,16 +77,30 @@ const TooLong = () => {
 const TooShort = () => {
   return (
     <div css={messageWrapperStyles}>
-      <ValidationSymbol result={Validation.FAILURE} />
+      <div css={[baseIconStyles, failureIconStyles]}>
+        <SvgCross />
+      </div>
       <div css={baseMessageStyles}>{ChangePasswordErrors.AT_LEAST_8_SHORT}</div>
     </div>
   );
 };
 
 const Valid = () => {
+  const successIconStyles = css`
+    svg {
+      background: ${success[400]};
+      fill: ${neutral[100]};
+      height: 17px;
+      width: 17px;
+      border-radius: 50%;
+    }
+  `;
+
   return (
     <div css={messageWrapperStyles}>
-      <ValidationSymbol result={Validation.SUCCESS} />
+      <div css={[baseIconStyles, successIconStyles]}>
+        <SvgCheckmark />
+      </div>
       <div
         css={[
           baseMessageStyles,
@@ -163,6 +125,17 @@ const Checking = () => {
 };
 
 const Weak = () => {
+  const errorIconStyles = css`
+    svg {
+      fill: ${error['400']};
+      height: 24px;
+      width: 24px;
+      margin-bottom: -4px;
+      margin-top: -4px;
+      margin-left: -4px;
+    }
+  `;
+
   const redText = css`
     color: ${error[400]};
     font-weight: bold;
@@ -170,7 +143,9 @@ const Weak = () => {
 
   return (
     <div css={[messageWrapperStyles, baseMessageStyles]}>
-      <ValidationSymbol result={Validation.ERROR} />
+      <div css={[baseIconStyles, errorIconStyles]}>
+        <SvgAlertTriangle />
+      </div>
       <span css={redText}>Weak password:</span>{' '}
       {ChangePasswordErrors.COMMON_PASSWORD_SHORT}
     </div>
