@@ -27,11 +27,9 @@ export const isDisplayEyeOnBrowser = (browserName: string | undefined) => {
 };
 
 const EyeSymbol = ({
-  visible,
   isOpen,
   onClick,
 }: {
-  visible: boolean;
   isOpen: boolean;
   onClick: () => void;
 }) => {
@@ -54,11 +52,9 @@ const EyeSymbol = ({
   // the first click being handled by the onClick handler
   return (
     <>
-      {visible ? (
-        <div className={'password-input-eye-symbol'} css={style}>
-          {symbol}
-        </div>
-      ) : null}
+      <div className={'password-input-eye-symbol'} css={style}>
+        {symbol}
+      </div>
       <div
         role="button"
         css={style}
@@ -74,7 +70,6 @@ const EyeSymbol = ({
 
 export const PasswordInput = ({ error, onChange }: Props) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [eyeVisible, setEyeVisible] = useState(false);
   const { pageData: { browserName } = {} }: ClientState =
     useContext(ClientStateContext);
 
@@ -114,21 +109,10 @@ export const PasswordInput = ({ error, onChange }: Props) => {
           outline: none;
         }
       `}
-      tabIndex={
-        -1 /* Tab index -1 is necessary to get focus events for the child elements (the input and password eye) */
-      }
-      onFocus={() => {
-        // show / hide the eye depending on whether the input field (including the eye itself) is selected
-        setEyeVisible(true);
-      }}
-      onBlur={() => {
-        setEyeVisible(false);
-      }}
     >
       {isEyeDisplayedOnBrowser ? (
         <EyeSymbol
           isOpen={!passwordVisible}
-          visible={eyeVisible}
           onClick={() => setPasswordVisible((prev) => !prev)}
         />
       ) : null}
