@@ -99,6 +99,7 @@ const EyeSymbol = ({
       onClick={onClick}
       title="show or hide password text"
       data-cy="password-input-eye-button"
+      aria-label="Show password"
     >
       <EyeIcon isOpen={isOpen} />
     </button>
