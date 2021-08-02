@@ -81,7 +81,7 @@ app.all('*', (req, res) => {
   if (permanent.has(req.path)) {
     const { status, payload } = permanent.get(req.path);
     res.status(status).json(payload);
-    console.log(`Mocking: ${req.originalUrl}: ${status} ${inspect(payload)}`);
+    // console.log(`Mocking: ${req.originalUrl}: ${status} ${inspect(payload)}`);
     return;
   }
 
@@ -89,9 +89,9 @@ app.all('*', (req, res) => {
   if (patternResponse) {
     const { status, body, pattern } = patternResponse;
     res.status(status).json(body);
-    console.log(
-      `Mocking for pattern ${pattern}: ${req.originalUrl}: ${status} ${body}`,
-    );
+    // console.log(
+    //   `Mocking for pattern ${pattern}: ${req.originalUrl}: ${status} ${body}`,
+    // );
     return;
   }
 
@@ -99,7 +99,7 @@ app.all('*', (req, res) => {
     res.status(DEFAULT_RESPONSE.status).json(DEFAULT_RESPONSE.body);
   } else {
     const { status, payload } = responses.pop();
-    console.log(`Mocking: ${req.originalUrl}: ${status} ${inspect(payload)}`);
+    // console.log(`Mocking: ${req.originalUrl}: ${status} ${inspect(payload)}`);
     res.status(status).json(payload);
   }
 });

@@ -5,6 +5,7 @@ const babelConfig = require('./babel.config');
 const AssetsPlugin = require('assets-webpack-plugin');
 const { merge } = require('webpack-merge');
 const nodeExternals = require('webpack-node-externals');
+const Dotenv = require('dotenv-webpack');
 
 const mode =
   process.env.ENVIRONMENT === 'production' ? 'production' : 'development';
@@ -58,7 +59,11 @@ const common = ({ platform }) => ({
       '@': path.join(__dirname, 'src'),
     },
   },
-  watchOptions
+  watchOptions,
+  plugins: [new Dotenv({
+    // Required to ensure Dotenv doesn't override any existing env vars that have been set by the system
+    systemvars: true
+  })],
 });
 
 const server = () => ({
@@ -222,10 +227,12 @@ const browser = ({ isLegacy }) => {
       path: path.resolve(__dirname, 'build/static/'),
       publicPath: 'gateway-static/',
     },
-    plugins: [new AssetsPlugin({
-      path: path.resolve(__dirname, 'build'),
-      filename: `${isLegacy ? 'legacy.' : ''}webpack-assets.json`
-    })],
+    plugins: [
+      new AssetsPlugin({
+        path: path.resolve(__dirname, 'build'),
+        filename: `${isLegacy ? 'legacy.' : ''}webpack-assets.json`
+      })
+    ],
     target,
     performance: {
       maxEntrypointSize: isLegacy ? 768000 : 512000,
