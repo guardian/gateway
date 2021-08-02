@@ -41,26 +41,25 @@ const EyeSymbol = ({
     bottom: 19px;
   `;
 
+  const EyeIcon = ({ isOpen }: { isOpen: boolean }) => {
+    return isOpen ? <SvgEye /> : <SvgEyeStrike />;
+  };
+
   // we have to separate the click div from the symbol div, otherwise the user has to click the icon twice:
   // once to get focus, the other to trigger the onClick event
   //
   // This has something to do with onFocus and onBlur events combined with re-renders on state changes preventing
   // the first click being handled by the onClick handler
   return (
-    <>
-      <div className={'password-input-eye-symbol'} css={style}>
-        {isOpen ? <SvgEye /> : <SvgEyeStrike />}
-      </div>
-      <div
-        role="button"
-        css={style}
-        onClick={onClick}
-        onKeyDown={onClick}
-        tabIndex={0}
-        title="show or hide password text"
-        className={'password-input-eye-button'}
-      />
-    </>
+    <button
+      css={style}
+      onClick={onClick}
+      onKeyDown={onClick}
+      title="show or hide password text"
+      className={'password-input-eye-button'}
+    >
+      <EyeIcon isOpen={isOpen} />
+    </button>
   );
 };
 
@@ -103,12 +102,6 @@ export const PasswordInput = ({ error, onChange }: Props) => {
         position: relative;
       `}
     >
-      {isEyeDisplayedOnBrowser ? (
-        <EyeSymbol
-          isOpen={!passwordVisible}
-          onClick={() => setPasswordVisible((prev) => !prev)}
-        />
-      ) : null}
       <TextInput
         error={error}
         onChange={onChange}
@@ -119,6 +112,12 @@ export const PasswordInput = ({ error, onChange }: Props) => {
         type={passwordVisible ? 'text' : 'password'}
         cssOverrides={textInputStyle}
       />
+      {isEyeDisplayedOnBrowser ? (
+        <EyeSymbol
+          isOpen={!passwordVisible}
+          onClick={() => setPasswordVisible((prev) => !prev)}
+        />
+      ) : null}
 
       {/* This div is used to show a border around the text input and password eye.
        Text input is slightly narrower so text does not overlap the show / close eye */}
