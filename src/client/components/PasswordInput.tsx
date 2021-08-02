@@ -1,6 +1,5 @@
-import { TextInput, Width } from '@guardian/src-text-input';
-import React, { InputHTMLAttributes, useContext, useState } from 'react';
-import { Props } from '@guardian/src-helpers';
+import { TextInput } from '@guardian/src-text-input';
+import React, { useContext, useState } from 'react';
 import { css } from '@emotion/react';
 import { SvgEye, SvgEyeStrike } from '@guardian/src-icons';
 import { textInputDefault } from '@guardian/src-foundations/themes';
@@ -10,13 +9,10 @@ import { textInput } from '@/client/styles/Shared';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 
-interface TextInputProps extends InputHTMLAttributes<HTMLInputElement>, Props {
-  label: string;
-  supporting?: string;
-  width?: Width;
+type Props = {
   error?: string;
-  success?: string;
-}
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
 
 export const isDisplayEyeOnBrowser = (browserName: string | undefined) => {
   // These browsers already have an input box overlay where the eye is positioned
@@ -76,7 +72,7 @@ const EyeSymbol = ({
   );
 };
 
-export const PasswordInput = (props: TextInputProps) => {
+export const PasswordInput = ({ error, onChange }: Props) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [eyeVisible, setEyeVisible] = useState(false);
   const { pageData: { browserName } = {} }: ClientState =
@@ -95,9 +91,7 @@ export const PasswordInput = (props: TextInputProps) => {
     padding-right: ${spaceForEye}px;
   `;
 
-  const borderStyle = props.success
-    ? `4px solid ${textInputDefault.textInput.textSuccess}`
-    : props.error
+  const borderStyle = error
     ? `4px solid ${textInputDefault.textInput.textError}`
     : `2px solid ${textInputDefault.textInput.border}`;
 
@@ -139,7 +133,11 @@ export const PasswordInput = (props: TextInputProps) => {
         />
       ) : null}
       <TextInput
-        {...props}
+        error={error}
+        onChange={onChange}
+        label="New Password"
+        name="password"
+        supporting="Must be between 8 and 72 characters"
         css={textInput}
         type={passwordVisible ? 'text' : 'password'}
         cssOverrides={textInputStyle}
