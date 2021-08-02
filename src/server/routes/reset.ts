@@ -94,9 +94,10 @@ router.get(
     const emailCookie = baseUri.includes('localhost')
       ? req.cookies['GU_email']
       : req.signedCookies['GU_email'];
-    const email = JSON.parse(
-      Buffer.from(emailCookie, 'base64').toString('utf-8'),
-    );
+
+    const email = emailCookie
+      ? JSON.parse(Buffer.from(emailCookie, 'base64').toString('utf-8'))
+      : null;
 
     state = deepmerge(state, {
       pageData: {
