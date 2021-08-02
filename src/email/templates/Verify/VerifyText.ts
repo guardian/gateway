@@ -1,11 +1,11 @@
-import { Routes } from '@/shared/model/Routes';
-
 export const VerifyText = () => `
+Thank you for $registerAction
+
 Welcome to the Guardian,
 
-Please click below to verify your emails address and complete your registration.
+Please click below to complete your registration.
 
-https://profile.theguardian.com${Routes.WELCOME}
+$verificationLink
 
 The Guardian
 
