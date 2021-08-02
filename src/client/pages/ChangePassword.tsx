@@ -192,10 +192,10 @@ const ValidationMessage = ({
     return <TooShort />;
   } else if (isTooLong) {
     return <TooLong />;
-  } else if (isWeak) {
-    return <Weak />;
   } else if (isChecking) {
     return <Checking />;
+  } else if (isWeak) {
+    return <Weak />;
   } else {
     return <Valid />;
   }
