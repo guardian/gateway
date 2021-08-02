@@ -40,7 +40,7 @@ export enum ChangePasswordErrors {
 
   AT_LEAST_8_SHORT = 'At least 8 characters',
   MAXIMUM_72_SHORT = 'Maximum of 72 characters',
-  COMMON_PASSWORD_SHORT = 'this is a common password. Please use a password that is hard to guess.',
+  COMMON_PASSWORD_SHORT = 'please use a password that is hard to guess.',
 }
 
 export enum VerifyEmailErrors {
