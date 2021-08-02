@@ -46,7 +46,7 @@ const validatePasswordChangeFields = (password: string): Array<FieldError> => {
 };
 
 router.get(
-  `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
+  `${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
     const { token } = req.params;
@@ -83,7 +83,7 @@ router.get(
 );
 
 router.post(
-  `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
+  `${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
