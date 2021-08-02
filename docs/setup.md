@@ -162,12 +162,12 @@ First make sure that the development environment isn't running, since the follow
 You can then open the test runner using:
 
 ```sh
-$ make cypress
+$ make cypress-mocked
 # or
-$ ./cypress-open.sh
+$ ./cypress-mocked.sh
 ```
 
-To run the tests headless and automatically (how they are run on CI) use:
+To run the jest tests headless and automatically (how they are run on CI) use:
 
 ```sh
 $ make ci
