@@ -33,16 +33,12 @@ const EyeSymbol = ({
   isOpen: boolean;
   onClick: () => void;
 }) => {
-  const symbol = isOpen ? <SvgEye /> : <SvgEyeStrike />;
   const style = css`
     width: 30px;
     height: 30px;
     position: absolute;
     right: 5px;
     bottom: 19px;
-    :focus {
-      outline: none;
-    }
   `;
 
   // we have to separate the click div from the symbol div, otherwise the user has to click the icon twice:
@@ -53,7 +49,7 @@ const EyeSymbol = ({
   return (
     <>
       <div className={'password-input-eye-symbol'} css={style}>
-        {symbol}
+        {isOpen ? <SvgEye /> : <SvgEyeStrike />}
       </div>
       <div
         role="button"
@@ -105,9 +101,6 @@ export const PasswordInput = ({ error, onChange }: Props) => {
     <div
       css={css`
         position: relative;
-        :focus {
-          outline: none;
-        }
       `}
     >
       {isEyeDisplayedOnBrowser ? (
