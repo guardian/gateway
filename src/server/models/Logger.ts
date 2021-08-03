@@ -1,8 +1,10 @@
 export interface Logger {
-  log(logLevel: LogLevel, message: string): void;
-  info(message: string): void;
-  warn(message: string): void;
-  // errors can be anything
+  // eslint-disable-next-line
+  log(logLevel: LogLevel, message: string, error?: any): void;
+  // eslint-disable-next-line
+  info(message: string, error?: any): void;
+  // eslint-disable-next-line
+  warn(message: string, error?: any): void;
   // eslint-disable-next-line
   error(message: string, error?: any): void;
 }
