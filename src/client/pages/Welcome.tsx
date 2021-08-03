@@ -15,13 +15,13 @@ type Props = {
   fieldErrors: FieldError[];
 };
 
-export const ChangePassword = ({ submitUrl, email, fieldErrors }: Props) => {
+export const Welcome = ({ submitUrl, email, fieldErrors }: Props) => {
   return (
     <>
       <Header />
-      <Main subTitle="Sign in">
+      <Main subTitle="Welcome">
         <PageBox>
-          <PageHeader>Set Password</PageHeader>
+          <PageHeader>Welcome</PageHeader>
           <PageBody>
             <PageBodyText>
               Please enter your new password for {email}
