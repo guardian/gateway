@@ -52,6 +52,30 @@ const noBorder = css`
   }
 `;
 
+const EyeIcon = ({ isOpen }: { isOpen: boolean }) => {
+  const iconStyles = css`
+    position: absolute;
+    top: 0;
+    left: 0;
+    svg {
+      width: 30px;
+      height: 30px;
+    }
+  `;
+
+  if (isOpen)
+    return (
+      <div css={iconStyles}>
+        <SvgEye />
+      </div>
+    );
+  return (
+    <div css={iconStyles}>
+      <SvgEyeStrike />
+    </div>
+  );
+};
+
 const EyeSymbol = ({
   isOpen,
   onClick,
@@ -68,30 +92,6 @@ const EyeSymbol = ({
     border: none;
     background-color: transparent;
   `;
-
-  const iconStyles = css`
-    position: absolute;
-    top: 0;
-    left: 0;
-    svg {
-      width: 30px;
-      height: 30px;
-    }
-  `;
-
-  const EyeIcon = ({ isOpen }: { isOpen: boolean }) => {
-    if (isOpen)
-      return (
-        <div css={iconStyles}>
-          <SvgEye />
-        </div>
-      );
-    return (
-      <div css={iconStyles}>
-        <SvgEyeStrike />
-      </div>
-    );
-  };
 
   return (
     <button
