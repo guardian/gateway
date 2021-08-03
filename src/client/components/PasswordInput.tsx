@@ -91,6 +91,7 @@ const EyeSymbol = ({
     bottom: 19px;
     border: none;
     background-color: transparent;
+    cursor: pointer;
   `;
 
   return (
