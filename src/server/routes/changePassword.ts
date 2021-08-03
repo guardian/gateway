@@ -11,7 +11,6 @@ import { ChangePasswordErrors } from '@/shared/model/Errors';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
-import { removeNoCache } from '@/server/lib/middleware/cache';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
@@ -150,16 +149,12 @@ router.get(
   },
 );
 
-router.get(
-  Routes.RESET_RESEND,
-  removeNoCache,
-  (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer(Routes.RESET_RESEND, {
-      pageTitle: PageTitle.RESET_RESEND,
-      requestState: res.locals,
-    });
-    res.type('html').send(html);
-  },
-);
+router.get(Routes.RESET_RESEND, (_: Request, res: ResponseWithRequestState) => {
+  const html = renderer(Routes.RESET_RESEND, {
+    pageTitle: PageTitle.RESET_RESEND,
+    requestState: res.locals,
+  });
+  res.type('html').send(html);
+});
 
 export default router;

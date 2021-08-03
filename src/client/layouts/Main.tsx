@@ -19,7 +19,6 @@ const mainStyles = css`
   display: flex;
   flex-grow: 1;
   flex-direction: column;
-  align-items: left;
 `;
 
 const sectionStyles = css`
