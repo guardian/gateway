@@ -9,7 +9,6 @@ import { getEmailFromPlaySessionCookie } from '@/server/lib/playSessionCookie';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
-import { removeNoCache } from '@/server/lib/middleware/cache';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { sendResetPasswordEmail, sendNoAccountEmail } from '@/email';
@@ -102,33 +101,38 @@ router.post(
   }),
 );
 
-router.get(
-  Routes.RESET_SENT,
-  removeNoCache,
-  (req: Request, res: ResponseWithRequestState) => {
-    let state = res.locals;
+router.get(Routes.RESET_SENT, (req: Request, res: ResponseWithRequestState) => {
+  let state = res.locals;
 
-    // Read the users email from the GU_email cookie that was set when they posted the previous page
-    const emailCookie = baseUri.includes('localhost')
-      ? req.cookies['GU_email']
-      : req.signedCookies['GU_email'];
-    const email = JSON.parse(
-      Buffer.from(emailCookie, 'base64').toString('utf-8'),
+  // Read the users email from the GU_email cookie that was set when they posted the previous page
+  const emailCookie = baseUri.includes('localhost')
+    ? req.cookies['GU_email']
+    : req.signedCookies['GU_email'];
+
+  let email;
+  try {
+    email = JSON.parse(Buffer.from(emailCookie, 'base64').toString('utf-8'));
+  } catch (error) {
+    email = null;
+    logger.error(
+      `Error parsing cookie with length ${
+        emailCookie ? emailCookie.length : 'undefined'
+      }`,
     );
+  }
 
-    state = deepmerge(state, {
-      pageData: {
-        email,
-        previousPage: Routes.RESET,
-      },
-    });
+  state = deepmerge(state, {
+    pageData: {
+      email,
+      previousPage: Routes.RESET,
+    },
+  });
 
-    const html = renderer(Routes.RESET_SENT, {
-      pageTitle: PageTitle.RESET_SENT,
-      requestState: state,
-    });
-    res.type('html').send(html);
-  },
-);
+  const html = renderer(Routes.RESET_SENT, {
+    pageTitle: PageTitle.RESET_SENT,
+    requestState: state,
+  });
+  res.type('html').send(html);
+});
 
 export default router;
