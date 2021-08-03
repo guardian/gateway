@@ -247,13 +247,10 @@ export const PasswordForm = ({ submitUrl, fieldErrors }: Props) => {
       <CsrfFormField />
 
       <PasswordInput
-        label="New Password"
-        name="password"
         error={error}
         onChange={(e) => {
           setPassword(e.target.value);
         }}
-        supporting="Must be between 8 and 72 characters"
       />
 
       {!error && (
