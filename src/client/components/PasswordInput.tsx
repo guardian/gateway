@@ -66,12 +66,12 @@ const EyeIcon = ({ isOpen }: { isOpen: boolean }) => {
   if (isOpen)
     return (
       <div css={iconStyles}>
-        <SvgEye />
+        <SvgEyeStrike />
       </div>
     );
   return (
     <div css={iconStyles}>
-      <SvgEyeStrike />
+      <SvgEye />
     </div>
   );
 };
