@@ -1,34 +1,47 @@
 import { Logger, LogLevel } from '@/server/models/Logger';
 import { createLogger, transports } from 'winston';
+import { format } from 'util';
 
 const winstonLogger = createLogger({
   transports: [new transports.Console()],
 });
 
 export const logger: Logger = {
-  log(level: LogLevel, message: string) {
-    winstonLogger.log(level, message);
-  },
-  // errors can be anything
   // eslint-disable-next-line
-  error(message: string, error?: any) {
-    if (error && error.stack && typeof error.message === 'string') {
-      return logger.log(
-        LogLevel.ERROR,
-        `${message} | ${error.message} | ${error.stack}`,
+  log(level: LogLevel, message: string, error?: any) {
+    if (
+      error &&
+      typeof error === 'object' &&
+      error.stack &&
+      typeof error.message === 'string'
+    ) {
+      return winstonLogger.log(
+        level,
+        `${format(message)} - ${format(error.message)} - ${format(
+          error.stack,
+        )}`,
       );
     }
 
     if (error) {
-      return logger.log(LogLevel.ERROR, `${message} | ${error}`);
+      return winstonLogger.log(level, `${format(message)} - ${format(error)}`);
     }
 
-    return logger.log(LogLevel.ERROR, message);
+    return winstonLogger.log(level, `${format(message)}`);
   },
-  warn(message: string) {
-    logger.log(LogLevel.INFO, message);
+
+  // eslint-disable-next-line
+  error(message: string, error?: any) {
+    return logger.log(LogLevel.ERROR, message, error);
   },
-  info(message: string) {
-    logger.log(LogLevel.INFO, message);
+
+  // eslint-disable-next-line
+  warn(message: string, error?: any) {
+    return logger.log(LogLevel.WARN, message, error);
+  },
+
+  // eslint-disable-next-line
+  info(message: string, error?: any) {
+    logger.log(LogLevel.INFO, message, error);
   },
 };
