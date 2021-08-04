@@ -19,10 +19,10 @@ describe('Password reset flow', () => {
         cy.contains('Forgotten password');
         cy.get('input[name=email]').type(existing.email);
         cy.get('[data-cy="reset-password-button"]').click();
-        cy.contains('Please check your inbox');
+        cy.contains('Check your email inbox');
         cy.waitForLatestEmail(existing.inbox).then((email) => {
           // extract the reset token (so we can reset this reader's password)
-          const match = email.body.match(/reset-password\/([^"]*)/);
+          const match = email.body.match(/theguardian.com\/c\/([^"]*)/);
           const token = match[1];
           cy.visit(`/reset-password/${token}`);
           cy.get('input[name=password]').type('0298a96c-1028!@#');
