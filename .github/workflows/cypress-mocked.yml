@@ -13,7 +13,7 @@ jobs:
           PORT: 8861
           NODE_ENV: development
           ENVIRONMENT: production
-          STAGE: production
+          STAGE: DEV
           BASE_URI: localhost:8861
           IDAPI_CLIENT_ACCESS_TOKEN: fakekey
           IDAPI_BASE_URL: http://localhost:9000
