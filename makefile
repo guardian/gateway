@@ -53,6 +53,10 @@ cypress-mocked: clear
 	$(call log, "opening cypress using mocks")
 	@(./cypress-mocked.sh)
 
+cypress-ete: clear
+	$(call log, "opening cypress")
+	@(./cypress-ete.sh)
+
 # helpers
 
 clean-build:
