@@ -3,17 +3,17 @@ import { useLocation, useParams } from 'react-router-dom';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { Routes } from '@/shared/model/Routes';
-import { ChangePassword } from '@/client/pages/ChangePassword';
+import { Welcome } from '@/client/pages/Welcome';
 
-export const ChangePasswordPage = () => {
+export const WelcomePage = () => {
   const { search } = useLocation();
   const clientState: ClientState = useContext(ClientStateContext);
   const { pageData: { email = '', fieldErrors = [] } = {} } = clientState;
   const { token } = useParams<{ token: string }>();
 
   return (
-    <ChangePassword
-      submitUrl={`${Routes.CHANGE_PASSWORD}/${token}${search}`}
+    <Welcome
+      submitUrl={`${Routes.WELCOME}/${token}${search}`}
       email={email}
       fieldErrors={fieldErrors}
     />

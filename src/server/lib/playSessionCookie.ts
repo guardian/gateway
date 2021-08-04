@@ -18,7 +18,7 @@ const getCookieFromPlaySession: (req: Request) => any = (req) => {
       );
       return session.data;
     } catch (error) {
-      logger.warn(error);
+      logger.warn('getCookieFromPlaySession failed', error);
     }
   }
 };

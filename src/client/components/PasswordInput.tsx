@@ -1,6 +1,5 @@
-import { TextInput, Width } from '@guardian/src-text-input';
-import React, { InputHTMLAttributes, useContext, useState } from 'react';
-import { Props } from '@guardian/src-helpers';
+import { TextInput } from '@guardian/src-text-input';
+import React, { useContext, useState } from 'react';
 import { css } from '@emotion/react';
 import { SvgEye, SvgEyeStrike } from '@guardian/src-icons';
 import { textInputDefault } from '@guardian/src-foundations/themes';
@@ -10,13 +9,10 @@ import { textInput } from '@/client/styles/Shared';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 
-interface TextInputProps extends InputHTMLAttributes<HTMLInputElement>, Props {
-  label: string;
-  supporting?: string;
-  width?: Width;
+type Props = {
   error?: string;
-  success?: string;
-}
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
 
 export const isDisplayEyeOnBrowser = (browserName: string | undefined) => {
   // These browsers already have an input box overlay where the eye is positioned
@@ -30,124 +26,125 @@ export const isDisplayEyeOnBrowser = (browserName: string | undefined) => {
   }
 };
 
+const textInputBorderStyle = (error?: string) => css`
+  border: ${error
+    ? `4px solid ${textInputDefault.textInput.textError}`
+    : `2px solid ${textInputDefault.textInput.border}`};
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  height: ${height.inputMedium}px;
+  margin-bottom: ${space[3]}px;
+  padding: 0 ${space[2]}px;
+  pointer-events: none;
+`;
+
+// remove the border and shorten the width of the text input box so the text does not overlap the password eye
+const paddingRight = (isEyeDisplayedOnBrowser: boolean) => css`
+  padding-right: ${isEyeDisplayedOnBrowser ? 28 : 0}px;
+`;
+
+// we render our own border which includes the input field and eye symbol
+const noBorder = css`
+  border: none;
+  :active {
+    border: none;
+  }
+`;
+
+const EyeIcon = ({ isOpen }: { isOpen: boolean }) => {
+  const iconStyles = css`
+    position: absolute;
+    top: 0;
+    left: 0;
+    svg {
+      width: 30px;
+      height: 30px;
+    }
+  `;
+
+  if (isOpen)
+    return (
+      <div css={iconStyles}>
+        <SvgEyeStrike />
+      </div>
+    );
+  return (
+    <div css={iconStyles}>
+      <SvgEye />
+    </div>
+  );
+};
+
 const EyeSymbol = ({
-  visible,
   isOpen,
   onClick,
 }: {
-  visible: boolean;
   isOpen: boolean;
-  onClick: () => void;
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }) => {
-  const symbol = isOpen ? <SvgEye /> : <SvgEyeStrike />;
-  const style = css`
+  const buttonStyles = css`
     width: 30px;
     height: 30px;
     position: absolute;
     right: 5px;
     bottom: 19px;
-    :focus {
-      outline: none;
-    }
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
   `;
 
-  // we have to separate the click div from the symbol div, otherwise the user has to click the icon twice:
-  // once to get focus, the other to trigger the onClick event
-  //
-  // This has something to do with onFocus and onBlur events combined with re-renders on state changes preventing
-  // the first click being handled by the onClick handler
   return (
-    <>
-      {visible ? (
-        <div className={'password-input-eye-symbol'} css={style}>
-          {symbol}
-        </div>
-      ) : null}
-      <div
-        role="button"
-        css={style}
-        onClick={onClick}
-        onKeyDown={onClick}
-        tabIndex={0}
-        title="show or hide password text"
-        className={'password-input-eye-button'}
-      />
-    </>
+    <button
+      css={buttonStyles}
+      onClick={onClick}
+      title="show or hide password text"
+      data-cy="password-input-eye-button"
+      aria-label="Show password"
+    >
+      <EyeIcon isOpen={isOpen} />
+    </button>
   );
 };
 
-export const PasswordInput = (props: TextInputProps) => {
+export const PasswordInput = ({ error, onChange }: Props) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [eyeVisible, setEyeVisible] = useState(false);
   const { pageData: { browserName } = {} }: ClientState =
     useContext(ClientStateContext);
 
   const isEyeDisplayedOnBrowser = isDisplayEyeOnBrowser(browserName);
-  const spaceForEye = isEyeDisplayedOnBrowser ? 28 : 0;
-
-  // remove the border and shorten the width of the text input box so the text does not overlap the password eye
-  // we render our own border which includes the input field and eye symbol
-  const textInputStyle = css`
-    border: none;
-    :active {
-      border: none;
-    }
-    padding-right: ${spaceForEye}px;
-  `;
-
-  const borderStyle = props.success
-    ? `4px solid ${textInputDefault.textInput.textSuccess}`
-    : props.error
-    ? `4px solid ${textInputDefault.textInput.textError}`
-    : `2px solid ${textInputDefault.textInput.border}`;
-
-  const textInputBorderStyle = css`
-    border: ${borderStyle};
-    position: absolute;
-    bottom: 0px;
-    width: 100%;
-    height: ${height.inputMedium}px;
-    margin-bottom: ${space[3]}px;
-    padding: 0 ${space[2]}px;
-    pointer-events: none;
-  `;
 
   return (
     <div
       css={css`
         position: relative;
-        :focus {
-          outline: none;
-        }
       `}
-      tabIndex={
-        -1 /* Tab index -1 is necessary to get focus events for the child elements (the input and password eye) */
-      }
-      onFocus={() => {
-        // show / hide the eye depending on whether the input field (including the eye itself) is selected
-        setEyeVisible(true);
-      }}
-      onBlur={() => {
-        setEyeVisible(false);
-      }}
     >
+      <TextInput
+        error={error}
+        onChange={onChange}
+        label="New Password"
+        name="password"
+        supporting="Must be between 8 and 72 characters"
+        css={textInput}
+        type={passwordVisible ? 'text' : 'password'}
+        cssOverrides={[noBorder, paddingRight(isEyeDisplayedOnBrowser)]}
+      />
       {isEyeDisplayedOnBrowser ? (
         <EyeSymbol
           isOpen={!passwordVisible}
-          visible={eyeVisible}
-          onClick={() => setPasswordVisible((prev) => !prev)}
+          onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+            // Toggle viewability of password
+            setPasswordVisible((previousState) => !previousState);
+            // Prevent the form being submitted
+            event.preventDefault();
+          }}
         />
       ) : null}
-      <TextInput
-        {...props}
-        css={textInput}
-        type={passwordVisible ? 'text' : 'password'}
-        cssOverrides={textInputStyle}
-      />
 
       {/* This div is used to show a border around the text input and password eye.
        Text input is slightly narrower so text does not overlap the show / close eye */}
-      <div css={textInputBorderStyle} />
+      <div css={textInputBorderStyle(error)} />
     </div>
   );
 };

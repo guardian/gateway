@@ -1,34 +1,28 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { ChangePassword } from './ChangePassword';
+import { Welcome } from './Welcome';
 
 export default {
-  title: 'Pages/ChangePassword',
-  component: ChangePassword,
+  title: 'Pages/Welcome',
+  component: Welcome,
   parameters: { layout: 'fullscreen' },
 } as Meta;
 
-export const Default = () => (
-  <ChangePassword submitUrl="" email="" fieldErrors={[]} />
-);
+export const Default = () => <Welcome submitUrl="" email="" fieldErrors={[]} />;
 Default.story = {
   name: 'with defaults',
 };
 
 export const Email = () => (
-  <ChangePassword
-    submitUrl=""
-    email="example@theguardian.com"
-    fieldErrors={[]}
-  />
+  <Welcome submitUrl="" email="example@theguardian.com" fieldErrors={[]} />
 );
 Email.story = {
   name: 'with email',
 };
 
 export const FieldErrorPW = () => (
-  <ChangePassword
+  <Welcome
     submitUrl=""
     email="example@theguardian.com"
     fieldErrors={[

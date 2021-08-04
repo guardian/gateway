@@ -37,7 +37,6 @@ export const App = (props: ClientState) => {
           }
           #app {
             min-height: 100%;
-            height: 100%;
             display: flex;
             flex-direction: column;
           }

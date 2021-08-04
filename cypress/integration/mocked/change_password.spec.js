@@ -73,24 +73,14 @@ describe('Password change flow', () => {
   });
 
   context('show / hide password eye button', () => {
-    it('shows the password eye when the input box is selected and hides it when it is not selected', () => {
-      cy.mockNext(200);
-      cy.visit(`/reset-password/fake_token`);
-      cy.get('.password-input-eye-symbol').should('not.exist');
-      cy.get('input[name="password"]').click();
-      cy.get('.password-input-eye-symbol').should('exist');
-      cy.contains('Set Password').click();
-      cy.get('.password-input-eye-symbol').should('not.exist');
-    });
-
     it('clicking on the password eye shows the password and clicking it again hides it', () => {
       cy.mockNext(200);
       cy.visit(`/reset-password/fake_token`);
       cy.get('input[name="password"]').should('have.attr', 'type', 'password');
       cy.get('input[name="password"]').type('some_password');
-      cy.get('.password-input-eye-button').eq(0).click();
+      cy.get('[data-cy=password-input-eye-button]').click();
       cy.get('input[name="password"]').should('have.attr', 'type', 'text');
-      cy.get('.password-input-eye-button').eq(0).click();
+      cy.get('[data-cy=password-input-eye-button]').click();
       cy.get('input[name="password"]').should('have.attr', 'type', 'password');
     });
   });
@@ -125,7 +115,7 @@ describe('Password change flow', () => {
       cy.contains('is a common password');
       cy.get('input[name="password"]').type('iamaveryuniqueandlongstring');
       cy.wait('@breachCheck');
-      cy.contains('At least 8 characters'); // This means success 🤷‍♂
+      cy.contains('Valid password');
     });
   });
 
@@ -258,7 +248,7 @@ describe('Password change flow', () => {
       }).as('breachCheck');
       cy.get('input[name="password"]').type('iamaveryuniqueandlongstring');
       cy.wait('@breachCheck');
-      cy.contains('At least 8 characters'); // This means success 🤷‍♂
+      cy.contains('Valid password');
     });
   });
 
@@ -286,7 +276,7 @@ describe('Password change flow', () => {
         '{selectall}{backspace}iamaveryuniqueandlongstring',
       );
       cy.wait('@breachCheck');
-      cy.contains('At least 8 characters'); // This means success 🤷‍♂
+      cy.contains('Valid password');
     });
   });
 

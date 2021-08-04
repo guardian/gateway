@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { RegistrationPage } from '@/client/pages/RegistrationPage';
 import { ResetPasswordPage } from '@/client/pages/ResetPasswordPage';
-import { ResetSentPage } from '@/client/pages/ResetSentPage';
+import { EmailSentPage } from '@/client/pages/EmailSentPage';
 import { NotFoundPage } from '@/client/pages/NotFoundPage';
 import { ChangePasswordPage } from '@/client/pages/ChangePasswordPage';
 import { ChangePasswordCompletePage } from '@/client/pages/ChangePasswordCompletePage';
@@ -18,7 +18,6 @@ import { ClientState } from '@/shared/model/ClientState';
 import { Routes } from '@/shared/model/Routes';
 import { SignInPage } from './pages/SignInPage';
 import { MagicLinkPage } from './pages/MagicLinkPage';
-import { MagicLinkSentPage } from './pages/MagicLinkSentPage';
 
 export type RoutingConfig = {
   clientState: ClientState;
@@ -40,7 +39,7 @@ export const GatewayRoutes = () => (
       <ResetPasswordPage />
     </Route>
     <Route exact path={Routes.RESET_SENT}>
-      <ResetSentPage />
+      <EmailSentPage />
     </Route>
     <Route exact path={`${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`}>
       <ChangePasswordPage />
@@ -84,7 +83,7 @@ export const GatewayRoutes = () => (
       <MagicLinkPage />
     </Route>
     <Route exact path={Routes.MAGIC_LINK_SENT}>
-      <MagicLinkSentPage />
+      <EmailSentPage />
     </Route>
     <Route exact path={Routes.UNEXPECTED_ERROR}>
       <UnexpectedErrorPage />

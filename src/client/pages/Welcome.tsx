@@ -1,28 +1,32 @@
 import React from 'react';
-import { PageHeader } from '@/client/components/PageHeader';
+import { PasswordForm } from '@/client/components/PasswordForm';
 import { PageBox } from '@/client/components/PageBox';
+import { PageHeader } from '@/client/components/PageHeader';
 import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
 import { Main } from '@/client/layouts/Main';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
+import { FieldError } from '@/shared/model/ClientState';
 
-export const MagicLinkSent = () => {
+type Props = {
+  submitUrl: string;
+  email: string;
+  fieldErrors: FieldError[];
+};
+
+export const Welcome = ({ submitUrl, email, fieldErrors }: Props) => {
   return (
     <>
       <Header />
-      <Main subTitle="Sign in">
+      <Main subTitle="Welcome">
         <PageBox>
-          <PageHeader>Please check your inbox</PageHeader>
+          <PageHeader>Welcome</PageHeader>
           <PageBody>
             <PageBodyText>
-              We’ve sent you an email – please open it up and click on the
-              button.
+              Please enter your new password for {email}
             </PageBodyText>
-            <PageBodyText>
-              Note that the link is only valid for 30 minutes, so be sure to
-              open it soon! Thank you.
-            </PageBodyText>
+            <PasswordForm submitUrl={submitUrl} fieldErrors={fieldErrors} />
           </PageBody>
         </PageBox>
       </Main>

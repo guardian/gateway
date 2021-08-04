@@ -8,5 +8,10 @@ export default {
   component: PasswordInput,
 } as Meta;
 
-export const Default = () => <PasswordInput label="Enter password" />;
+export const Default = () => <PasswordInput onChange={() => null} />;
 Default.storyName = 'default';
+
+export const WithError = () => (
+  <PasswordInput onChange={() => null} error="Error" />
+);
+WithError.storyName = 'with error';
