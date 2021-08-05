@@ -17,6 +17,7 @@ const uncachedRoutes = Router();
 router.use(core);
 
 // all routes should be uncached except for the core (static) routes
+// to avoid caching sensitive page state
 uncachedRoutes.use(noCache);
 
 // request reset password routes

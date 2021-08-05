@@ -7,7 +7,7 @@ const winstonLogger = createLogger({
 });
 
 const loggingOptions: InspectOptions = {
-  depth: 10,
+  depth: 20,
   breakLength: 2000,
   maxStringLength: 2000,
   compact: true,
