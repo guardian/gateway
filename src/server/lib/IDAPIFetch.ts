@@ -27,6 +27,7 @@ const handleResponseFailure = async (
 ): Promise<IDAPIError> => {
   let err;
   const raw = await response.text();
+  console.log('raw', raw);
   try {
     err = JSON.parse(raw);
   } catch (_) {
@@ -58,6 +59,7 @@ export const APIFetch =
   (idapiBaseUrl: string) =>
   async (path: string, options?: RequestInit): Promise<any> => {
     const response = await fetch(joinUrl(idapiBaseUrl, path), options);
+    console.log('response', response);
     if (!response.ok) {
       return await handleResponseFailure(response);
     } else if (response.status === 204) {
