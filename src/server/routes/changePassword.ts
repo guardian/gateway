@@ -59,7 +59,7 @@ router.get(
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
       return res.type('html').send(
-        renderer(Routes.RESET_RESEND, {
+        renderer(`${Routes.RESET}${Routes.RESEND}`, {
           requestState: state,
           pageTitle: PageTitle.RESET_RESEND,
         }),
@@ -149,12 +149,15 @@ router.get(
   },
 );
 
-router.get(Routes.RESET_RESEND, (_: Request, res: ResponseWithRequestState) => {
-  const html = renderer(Routes.RESET_RESEND, {
-    pageTitle: PageTitle.RESET_RESEND,
-    requestState: res.locals,
-  });
-  res.type('html').send(html);
-});
+router.get(
+  `${Routes.RESET}${Routes.RESEND}`,
+  (_: Request, res: ResponseWithRequestState) => {
+    const html = renderer(`${Routes.RESET}${Routes.RESEND}`, {
+      pageTitle: PageTitle.RESET_RESEND,
+      requestState: res.locals,
+    });
+    res.type('html').send(html);
+  },
+);
 
 export default router;

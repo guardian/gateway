@@ -47,7 +47,7 @@ export const GatewayRoutes = () => (
     <Route path={Routes.CHANGE_PASSWORD_COMPLETE}>
       <ChangePasswordCompletePage />
     </Route>
-    <Route exact path={Routes.RESET_RESEND}>
+    <Route exact path={`${Routes.RESET}${Routes.RESEND}`}>
       <ResendPasswordPage />
     </Route>
     <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_DATA}`}>

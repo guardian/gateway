@@ -4,7 +4,7 @@ export enum Routes {
   SIGN_IN_CURRENT = '/signin/current',
   RESET = '/reset',
   RESET_SENT = '/reset/email-sent',
-  RESET_RESEND = '/reset/resend',
+  RESEND = '/resend',
   CHANGE_PASSWORD = '/reset-password',
   CHANGE_PASSWORD_COMPLETE = '/password/reset-confirmation',
   VERIFY_EMAIL = '/verify-email',
