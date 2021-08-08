@@ -62,7 +62,7 @@ const common = ({ platform }) => ({
   })],
   cache: {
     type: 'filesystem',
-    managedPaths: [],
+    managedPaths: [], // ensures that we cache all of the node_modules packages too.
   },
 });
 
@@ -208,8 +208,6 @@ const browser = ({ isLegacy }) => {
       ]
     },
     optimization: {
-      usedExports: true,
-      moduleIds: 'deterministic',
       splitChunks: {
         cacheGroups: {
           commons: {
@@ -231,7 +229,7 @@ const browser = ({ isLegacy }) => {
     },
     plugins: [
       ...isLegacy ? [] : [new ForkTsCheckerWebpackPlugin({
-        async: false,
+        async: true,
         typescript: {
           mode: 'write-references' // for better babel-loader perf.
         }
