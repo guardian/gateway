@@ -7,6 +7,15 @@ const { merge } = require('webpack-merge');
 const nodeExternals = require('webpack-node-externals');
 const Dotenv = require('dotenv-webpack');
 
+const mode =
+  process.env.ENVIRONMENT === 'production' ? 'production' : 'development';
+
+const extensions = ['.ts', '.tsx', '.js'];
+
+const watchOptions = {
+  ignored: /node_modules/,
+};
+
 const imageLoader = (path) => {
   return {
     test: /\.(jpe?g|png|gif)$/i,
@@ -44,16 +53,13 @@ const imageLoader = (path) => {
 
 const common = ({ platform }) => ({
   name: platform,
-  mode: 'production',
   resolve: {
-    extensions: ['.ts', '.tsx', '.js'],
+    extensions,
     alias: {
       '@': path.join(__dirname, 'src'),
     },
   },
-  watchOptions: {
-    ignored: /node_modules/,
-  },
+  watchOptions,
   plugins: [new Dotenv({
     // Required to ensure Dotenv doesn't override any existing env vars that have been set by the system
     systemvars: true
@@ -62,6 +68,7 @@ const common = ({ platform }) => ({
 
 const server = () => ({
   entry: './src/server/index.ts',
+  mode,
   externals: [
     nodeExternals({
       allowlist: [/^@guardian/],
@@ -114,6 +121,7 @@ const server = () => ({
 });
 
 const browser = ({ isLegacy }) => {
+
   const entry = ['./src/client/static/index.tsx']
   const target = ['web']
   if (isLegacy) {
@@ -154,6 +162,7 @@ const browser = ({ isLegacy }) => {
 
   return {
     entry,
+    mode: 'production',
     module: {
       rules: [
         {
