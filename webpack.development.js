@@ -44,6 +44,7 @@ const imageLoader = (path) => {
 
 /**
  * Adds caching to the production webpack config for faster dev builds.
+ * ForkTsCheckerWebpackPlugin provides type checking on top of webpack watch.
  */
 const common = {
   mode: 'development',
