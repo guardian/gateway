@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
-    "build": "webpack --mode production --config webpack.production.js && node scripts/copyNodeModules.js",
+    "build": "webpack --mode production && node scripts/copyNodeModules.js",
     "cypress": "cypress",
     "cypress:ci": "cypress run",
     "e2e:server": "yarn mock-server & yarn start",

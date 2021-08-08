@@ -39,7 +39,6 @@ const imageLoader = (path) => {
         },
       },
     ],
-    type: 'javascript/auto'
   };
 };
 
