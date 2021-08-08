@@ -96,6 +96,8 @@ const server = () => ({
                 ...babelConfig.presets,
               ],
               plugins: [...babelConfig.plugins],
+              cacheCompression: false,
+              cacheDirectory: true,
             },
           },
         ],
@@ -117,7 +119,10 @@ const server = () => ({
     minimize: false,
     runtimeChunk: false
   },
-  target: 'node'
+  target: 'node',
+  cache: {
+    type: 'filesystem',
+  },
 });
 
 const browser = ({ isLegacy }) => {
@@ -162,7 +167,7 @@ const browser = ({ isLegacy }) => {
 
   return {
     entry,
-    mode: 'production',
+    mode,
     module: {
       rules: [
         {
@@ -178,6 +183,8 @@ const browser = ({ isLegacy }) => {
                   ...babelConfig.presets,
                 ],
                 plugins: [...babelConfig.plugins],
+                cacheCompression: false,
+                cacheDirectory: true,
               },
             },
           ],
@@ -200,6 +207,8 @@ const browser = ({ isLegacy }) => {
                   ...babelConfig.presets,
                 ],
                 plugins: [...babelConfig.plugins],
+                cacheCompression: false,
+                cacheDirectory: true,
               },
             },
           ],
@@ -237,7 +246,10 @@ const browser = ({ isLegacy }) => {
     performance: {
       maxEntrypointSize: isLegacy ? 768000 : 512000,
       maxAssetSize: isLegacy ? 512000 : 384000
-    }
+    },
+    cache: {
+      type: 'filesystem',
+    },
   }
 }
 
