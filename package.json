@@ -27,7 +27,7 @@
     "prettier": "prettier . --check",
     "prettier:fix": "prettier . --write",
     "prepare": "husky install",
-    "postinstall": "rm -rf ./node_modules/.cache"
+    "clear:cache": "rm -rf ./node_modules/.cache"
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
