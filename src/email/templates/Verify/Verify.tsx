@@ -11,7 +11,7 @@ export const Verify = () => {
   return (
     <Page>
       <Header />
-      <SubHeader>Thank you for $registerAction</SubHeader>
+      <SubHeader>Thank you for registering</SubHeader>
       <Text>
         <p>Welcome to the Guardian,</p>
         <p>Please click below to complete your registration.</p>
