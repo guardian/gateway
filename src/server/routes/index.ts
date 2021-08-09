@@ -12,30 +12,37 @@ import { default as welcome } from './welcome';
 import { noCache } from '@/server/lib/middleware/cache';
 
 const router = Router();
+const uncachedRoutes = Router();
 
 // core routes for the app, e.g. healthcheck, static routes
 router.use(core);
 
+// all routes should be uncached except for the core (static) routes
+// to avoid caching sensitive page state
+uncachedRoutes.use(noCache);
+
 // request reset password routes
-router.use(noCache, reset);
+uncachedRoutes.use(reset);
 
 // request sign in routes
-router.use(noCache, signIn);
+uncachedRoutes.use(signIn);
 
 // request registration routes
-router.use(noCache, register);
+uncachedRoutes.use(register);
 
 // change password routes
-router.use(noCache, changePassword);
+uncachedRoutes.use(changePassword);
 
 // consents routes
-router.use(noCache, consents);
+uncachedRoutes.use(consents);
 
 // verify email routes
-router.use(noCache, verifyEmail);
+uncachedRoutes.use(verifyEmail);
 
 // magic link routes
-router.use(noCache, magicLink);
+uncachedRoutes.use(magicLink);
+
+router.use(uncachedRoutes);
 
 // welcome routes
 router.use(noCache, welcome);
