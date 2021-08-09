@@ -36,7 +36,7 @@ const serverConfig = {
   }
 }
 
-const browserConfig = (isLegacy) => ({
+const browserConfig = {
   module: {
     rules: [
       {
@@ -62,7 +62,7 @@ const browserConfig = (isLegacy) => ({
     })],
     new ForkTsCheckerNotifierWebpackPlugin({ excludeWarnings: true, skipFirstNotification: true }),
   ]
-});
+};
 
 const baseServerConfig = baseConfig[0];
 const baseBrowserLegacyConfig = baseConfig[1];
@@ -89,11 +89,11 @@ module.exports = [
   merge(
     baseBrowserLegacyConfig,
     common,
-    browserConfig(true),
+    browserConfig,
   ),
   merge(
     baseBrowserConfig,
     common,
-    browserConfig(false),
+    browserConfig,
   )
 ]
