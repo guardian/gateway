@@ -26,7 +26,8 @@
     "build-storybook": "build-storybook",
     "prettier": "prettier . --check",
     "prettier:fix": "prettier . --write",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postinstall": "rm -rf ./node_modules/.cache"
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
