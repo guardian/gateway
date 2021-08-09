@@ -25,7 +25,7 @@ build: clear clean-build install
 dev: clear install
 	$(call banner, "gateway is starting")
 	$(call log, "starting development server")
-	@(set -a && source .env && yarn watch:server & yarn watch & wait)
+	@yarn dev
 
 # QA
 tsc: clear install
