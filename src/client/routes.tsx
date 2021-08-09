@@ -18,6 +18,7 @@ import { ClientState } from '@/shared/model/ClientState';
 import { Routes } from '@/shared/model/Routes';
 import { SignInPage } from './pages/SignInPage';
 import { MagicLinkPage } from './pages/MagicLinkPage';
+import { WelcomePage } from './pages/WelcomePage';
 
 export type RoutingConfig = {
   clientState: ClientState;
@@ -61,6 +62,9 @@ export const GatewayRoutes = () => (
     </Route>
     <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_REVIEW}`}>
       <ConsentsConfirmationPage />
+    </Route>
+    <Route exact path={`${Routes.WELCOME}${Routes.TOKEN_PARAM}`}>
+      <WelcomePage />
     </Route>
     {/*  ABTEST: followupConsent : START */}
     <Route

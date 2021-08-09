@@ -14,4 +14,6 @@ export enum PageTitle {
   NEWSLETTER_VARIANT = 'Get the headlines sent to your inbox',
   CONSENT_VARIANT = 'Get the latest offers sent to your inbox',
   //  ABTEST: followupConsent : END
+  WELCOME = 'Welcome',
+  WELCOME_RESEND = 'Resend Welcome Email',
 }

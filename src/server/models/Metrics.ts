@@ -18,6 +18,8 @@ export enum Metrics {
   SEND_VALIDATION_EMAIL_FAILURE = 'SendValidationEmail::Failure',
   EMAIL_VALIDATED_SUCCESS = 'EmailValidated::Success',
   EMAIL_VALIDATED_FAILURE = 'EmailValidated::Failure',
+  ACCOUNT_VERIFICATION_SUCCESS = 'AccountVerification::Success',
+  ACCOUNT_VERIFICATION_FAILURE = 'AccountVerification::Failure',
 }
 
 export const consentsPageMetric = (

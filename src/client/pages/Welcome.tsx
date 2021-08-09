@@ -21,7 +21,7 @@ export const Welcome = ({ submitUrl, email, fieldErrors }: Props) => {
       <Header />
       <Main subTitle="Welcome">
         <PageBox>
-          <PageHeader>Welcome</PageHeader>
+          <PageHeader>Welcome to the Guardian</PageHeader>
           <PageBody>
             <PageBodyText>
               Please enter your new password for {email}
