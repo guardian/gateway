@@ -1,4 +1,3 @@
-import { breakpoints } from '@guardian/src-foundations/mq';
 import { Breakpoints } from '@/client/models/Style';
 
 const viewports = {};
