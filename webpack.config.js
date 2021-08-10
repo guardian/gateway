@@ -82,26 +82,10 @@ const server = () => ({
       {
         exclude: /node_modules/,
         test: /\.ts(x?)$/,
-        use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              presets: [
-                [
-                  '@babel/env',
-                  {
-                    targets: {
-                      node: 'current',
-                    },
-                    ignoreBrowserslistConfig: true,
-                  },
-                ],
-                ...babelConfig.presets,
-              ],
-              plugins: [...babelConfig.plugins],
-            },
-          },
-        ],
+        loader: 'esbuild-loader',
+        options: {
+          loader: 'tsx',
+        }
       },
       imageLoader('static/'),
     ],
@@ -123,146 +107,7 @@ const server = () => ({
   target: 'node'
 });
 
-const browser = ({ isLegacy }) => {
-
-  const entry = ['./src/client/static/index.tsx']
-  const target = ['web']
-  if (isLegacy) {
-    entry.unshift('whatwg-fetch')
-    target.push('es5')
-  }
-  
-  const legacyBabelConfig = [
-    '@babel/env',
-    {
-      bugfixes: true,
-      useBuiltIns: 'usage',
-      corejs: '3.14'
-    },
-  ]
-  
-  const legacyBabelConfigNodeModules = [
-    '@babel/env',
-    {
-      bugfixes: true,
-      useBuiltIns: 'usage',
-      corejs: '3.14',
-      modules: 'amd'
-    },
-  ]
-  
-  const modernBabelConfig = [
-    '@babel/env',
-    {
-      bugfixes: true,
-      targets: {
-        esmodules: true
-      }
-  }
-]
-
-  const filename = `[name]${isLegacy ? '.legacy' : ''}.[chunkhash].js`;
-
-  return {
-    entry,
-    mode: 'production',
-    module: {
-      rules: [
-        {
-          exclude: /node_modules/,
-          test: /\.(m?)(j|t)s(x?)/,
-          use: [
-            {
-              loader: 'babel-loader',
-              options: {
-                presets: [
-                  isLegacy ? legacyBabelConfig : modernBabelConfig
-                  ,
-                  ...babelConfig.presets,
-                ],
-                plugins: [...babelConfig.plugins],
-            
-                  cacheCompression: false,
-                  cacheDirectory: true,
-                
-              },
-            },
-          ],
-        },
-        {
-          include: /node_modules/,
-          exclude: [
-            /node_modules[\\\/]core-js/,
-            /node_modules[\\\/]@babel/,
-            /node_modules[\\\/]webpack[\\\/]buildin/,
-          ],
-          test: /\.(m?)(j|t)s(x?)/,
-          use: [
-            {
-              loader: 'babel-loader',
-              options: {
-                presets: [
-                  isLegacy ? legacyBabelConfigNodeModules : modernBabelConfig
-                  ,
-                  ...babelConfig.presets,
-                ],
-                plugins: [...babelConfig.plugins],
-
-                  cacheCompression: false,
-                  cacheDirectory: true,
-
-              },
-            },
-          ],
-        },
-        imageLoader('./')
-      ]
-    },
-    optimization: {
-      splitChunks: {
-        cacheGroups: {
-          commons: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all',
-          },
-        },
-      },
-      runtimeChunk: {
-        name: 'runtime',
-      },
-    },
-    output: {
-      filename,
-      chunkFilename: filename,
-      path: path.resolve(__dirname, 'build/static/'),
-      publicPath: 'gateway-static/',
-    },
-    plugins: [
-      new AssetsPlugin({
-        path: path.resolve(__dirname, 'build'),
-        filename: `${isLegacy ? 'legacy.' : ''}webpack-assets.json`
-      })
-    ],
-    target,
-    performance: {
-      maxEntrypointSize: isLegacy ? 768000 : 512000,
-      maxAssetSize: isLegacy ? 512000 : 384000
-    }
-  }
-}
-
-module.exports = 
-  merge(
-    common({ platform: 'server' }),
-    server()
-  );
-  // merge(
-  //   common({ platform: 'browser.legacy' }),
-  //   browser({ isLegacy: true })
-  // ),
-  // merge(
-  //   common({ platform: 'browser' }),
-  //   browser({ isLegacy: false })
-  // )
-
+module.exports = merge(
+  common({ platform: 'server' }),
+  server()
+);
