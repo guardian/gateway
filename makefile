@@ -25,7 +25,7 @@ build: clear clean-build install
 dev: clean-build clear install
 	$(call banner, "gateway is starting")
 	$(call log, "starting development server")
-	@yarn dev
+	@(set -a && source .env && yarn watch:server & yarn watch & wait)
 
 dev-tile-v: clean-build clear install
 	$(call banner, "gateway is starting")
