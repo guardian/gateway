@@ -10,6 +10,7 @@ async function createS() {
   const server: Express = express();
 
   const vite = await createServer({
+    root: process.cwd(),
     server: {
       middlewareMode: 'ssr',
       watch: {
@@ -26,9 +27,9 @@ async function createS() {
       jsxInject: `import { jsx } from '@emotion/react'`,
     },
   });
-
-  applyMiddleware(server);
   server.use(vite.middlewares);
+  applyMiddleware(server);
+  
 
   server.set('vite', vite);
   server.listen(port);

@@ -14,8 +14,10 @@ import { CsrfErrors } from '@/shared/model/Errors';
 import { ABProvider } from '@guardian/ab-react';
 import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
-
-
+import { RoutingConfig } from '@/client/routes';
+import { resets } from '@guardian/src-foundations/utils';
+import { ViteDevServer } from 'vite';
+import { getConfiguration } from './getConfiguration';
 // const assets = getAssets();
 // const legacyAssets = getAssets(true);
 
@@ -29,6 +31,9 @@ interface RendererOpts {
   pageTitle: string;
   requestState: RequestState;
 }
+
+const { gaUID } = getConfiguration();
+
 const clientStateFromRequestStateLocals = ({
   csrf,
   globalMessage,
@@ -68,38 +73,43 @@ const clientStateFromRequestStateLocals = ({
   }
 };
 
-export const render: (url: string, opts: RendererOpts) => string = (
-  url,
-  { requestState, pageTitle },
-) => {
-  const context = {};
-
+export const renderer: (
+  vite: ViteDevServer,
+  url: string,
+  opts: RendererOpts,
+) => Promise<string> = async (vite, url, { requestState, pageTitle }) => {
   const clientState = clientStateFromRequestStateLocals(requestState);
-
   const queryString = qs.stringify(requestState.queryParams);
-
   const location = `${url}${queryString ? `?${queryString}` : ''}`;
+  const routingConfig: RoutingConfig = {
+    clientState,
+    location,
+  };
 
-  const { abTesting: { mvtId = 0, forcedTestVariants = {} } = {} } =
-    clientState;
 
-  // Any changes made here must also be made to the hydration in the static webpack bundle
-  const react = ReactDOMServer.renderToString(
-    <ABProvider
-      arrayOfTestObjects={tests}
-      abTestSwitches={abSwitches}
-      pageIsSensitive={false}
-      mvtMaxValue={1000000}
-      mvtId={mvtId}
-      forcedTestVariants={forcedTestVariants}
-    >
-      <StaticRouter location={location} context={context}>
-        <App {...clientState}></App>
-      </StaticRouter>
-    </ABProvider>,
-  );
+  const tpl = `
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset='utf-8' />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="${brandBackground.primary}" />
+        <link rel="icon" href="https://static.guim.co.uk/images/${favicon}">
+        <title>${pageTitle} | The Guardian</title>
+        <script>window.gaUID = "${gaUID && gaUID.id}"</script>
 
-  return react;
+        <script id="routingConfig" type="application/json">${JSON.stringify(
+          routingConfig,
+        )}</script>
+        <style>${resets.defaults}</style>
+      </head>
+      <body style="margin:0">
+        <div id="app"><!--ssr--></div>
+      </body>
+    </html>
+  `;
+  const parsed = await vite.transformIndexHtml(url, tpl);
+  const { render } = await vite.ssrLoadModule('/src/server/lib/renderer.tsx');
+  const app = render(url, { requestState, pageTitle });
+  return parsed.replace('<!--ssr-->', app);
 };
-
-export const renderer = render;

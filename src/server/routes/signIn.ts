@@ -3,6 +3,7 @@ import deepmerge from 'deepmerge';
 import { authenticate } from '@/server/lib/idapi/auth';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
+import { renderer as renderHelper } from '@/server/lib/renderHelper';
 import { Routes } from '@/shared/model/Routes';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
@@ -13,27 +14,28 @@ import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { ViteDevServer } from 'vite';
 
+
 const router = Router();
 
 router.get(
   Routes.SIGN_IN,
   async (req: Request, res: ResponseWithRequestState) => {
     const vite = req.app.get('vite') as ViteDevServer;
-
-    const { render } = await vite.ssrLoadModule('/src/server/lib/renderer.tsx');
-
-    const html = render(Routes.SIGN_IN, {
+    
+    const opts = {
       requestState: res.locals,
       pageTitle: PageTitle.SIGN_IN,
-    });
+    };
+    const html = await renderHelper(vite, Routes.SIGN_IN, opts);
+
     res.type('html').send(html);
   },
 );
 
 router.get(
   Routes.SIGN_IN_CURRENT,
-  (req: Request, res: ResponseWithRequestState) => {
-    const html = renderer(Routes.SIGN_IN_CURRENT, {
+  async (req: Request, res: ResponseWithRequestState) => {
+    const html = await renderer(Routes.SIGN_IN_CURRENT, {
       requestState: res.locals,
       pageTitle: PageTitle.SIGN_IN,
     });

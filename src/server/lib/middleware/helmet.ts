@@ -51,6 +51,7 @@ const helmetConfig = {
         CSP_VALID_URI.GUARDIAN_API,
         CSP_VALID_URI.HAVEIBEENPWNED,
         idapiOrigin,
+        'ws://localhost:24678/',
       ],
       frameSrc: [CSP_VALID_URI.CMP],
     },
