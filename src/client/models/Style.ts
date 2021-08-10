@@ -7,4 +7,7 @@ export enum Breakpoints {
   // mobile breakpoints differ
   MOBILE = 660,
   MOBILE_LANDSCAPE = 480,
+  // for storybook use
+  MOBILE_375 = 375,
+  MOBILE_320 = 320,
 }
