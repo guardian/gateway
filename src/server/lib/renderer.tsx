@@ -4,25 +4,12 @@ import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 // import { StaticRouterContext } from 'react-router';
 import { App } from '@/client/app';
-import { brandBackground } from '@guardian/src-foundations/palette';
 import qs from 'query-string';
-// import { getConfiguration } from '@/server/lib/getConfiguration';
-// import { RoutingConfig } from '@/client/routes';
-// import { getAssets } from '@/server/lib/getAssets';
 import { RequestState } from '@/server/models/Express';
 import { CsrfErrors } from '@/shared/model/Errors';
 import { ABProvider } from '@guardian/ab-react';
 import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
-
-// const assets = getAssets();
-// const legacyAssets = getAssets(true);
-
-// favicon shamefully stolen from dcr
-const favicon =
-  process.env.NODE_ENV === 'production'
-    ? 'favicon-32x32.ico'
-    : 'favicon-32x32-dev-yellow.ico';
 
 interface RendererOpts {
   pageTitle: string;

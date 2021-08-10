@@ -1,16 +1,13 @@
 import { ClientState, FieldError } from '@/shared/model/ClientState';
-// import { StaticRouterContext } from 'react-router';
 import { brandBackground } from '@guardian/src-foundations/palette';
 import qs from 'query-string';
-// import { getConfiguration } from '@/server/lib/getConfiguration';
-// import { RoutingConfig } from '@/client/routes';
-// import { getAssets } from '@/server/lib/getAssets';
 import { RequestState } from '@/server/models/Express';
 import { CsrfErrors } from '@/shared/model/Errors';
 import { RoutingConfig } from '@/client/routes';
 import { resets } from '@guardian/src-foundations/utils';
 import { ViteDevServer } from 'vite';
 import { getConfiguration } from './getConfiguration';
+
 // const assets = getAssets();
 // const legacyAssets = getAssets(true);
 
