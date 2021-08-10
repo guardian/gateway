@@ -52,6 +52,7 @@ const helmetConfig = {
         CSP_VALID_URI.HAVEIBEENPWNED,
         idapiOrigin,
         'ws://localhost:24678/',
+        'http://localhost:8861/__vite_ping',
       ],
       frameSrc: [CSP_VALID_URI.CMP],
     },
