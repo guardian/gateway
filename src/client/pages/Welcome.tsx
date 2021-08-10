@@ -24,6 +24,7 @@ export const Welcome = ({ submitUrl, email, fieldErrors }: Props) => {
           submitUrl={submitUrl}
           fieldErrors={fieldErrors}
           submitButtonText="Create password"
+          gridAutoRow={autoRow}
         />
       </ConsentsContent>
     </ConsentsLayout>
