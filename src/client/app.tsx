@@ -51,3 +51,5 @@ export const App = (props: ClientState) => {
     </>
   );
 };
+
+export default App;

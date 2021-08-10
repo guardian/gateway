@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="${brandBackground.primary}" />
+    <link rel="icon" href="https://static.guim.co.uk/images/${favicon}">
+    <title>${pageTitle} | The Guardian</title>
+    <script id="routingConfig" type="application/json">
+    {"clientState":{"csrf":{"token":"fgKDNuZB-RkFhvDQgSDxOclbwi_7ggHy0ZW8"},"globalMessage":{},"pageData":{"geolocation":"ROW","returnUrl":"https://m.code.dev-theguardian.com"},"abTesting":{"mvtId":0,"forcedTestVariants":{},"participations":{}},"clientHosts":{"idapiBaseUrl":"https://idapi.code.dev-theguardian.com"}},"location":"/signin"}
+    </script>
+    <style>
+      *, *:before, *:after {
+            box-sizing: border-box;
+        }
+        html {
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-font-smoothing: antialiased;
+        }
+        html, body {
+            text-rendering: optimizeLegibility;
+            font-feature-settings: 'kern';
+            font-kerning: normal; /* Safari 7+, Firefox 24+, Chrome 33(?)+, Opera 21 */
+            font-variant-ligatures: common-ligatures;
+        }
+        body {
+            background-color: #FFFFFF;
+            color: #121212;
+        }
+        em {
+            font-style: italic;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="./src/client/index.tsx"></script>
+  </body>
+</html>
