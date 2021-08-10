@@ -11,16 +11,24 @@ import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { getConfiguration } from '@/server/lib/getConfiguration';
+import { ViteDevServer } from 'vite';
 
 const router = Router();
 
-router.get(Routes.SIGN_IN, (req: Request, res: ResponseWithRequestState) => {
-  const html = renderer(Routes.SIGN_IN, {
-    requestState: res.locals,
-    pageTitle: PageTitle.SIGN_IN,
-  });
-  res.type('html').send(html);
-});
+router.get(
+  Routes.SIGN_IN,
+  async (req: Request, res: ResponseWithRequestState) => {
+    const vite = req.app.get('vite') as ViteDevServer;
+
+    const { render } = await vite.ssrLoadModule('/src/server/lib/renderer.tsx');
+
+    const html = render(Routes.SIGN_IN, {
+      requestState: res.locals,
+      pageTitle: PageTitle.SIGN_IN,
+    });
+    res.type('html').send(html);
+  },
+);
 
 router.get(
   Routes.SIGN_IN_CURRENT,

@@ -64,6 +64,9 @@ const common = ({ platform }) => ({
     // Required to ensure Dotenv doesn't override any existing env vars that have been set by the system
     systemvars: true
   })],
+  cache: {
+    type: 'filesystem'
+  }
 });
 
 const server = () => ({
@@ -96,6 +99,8 @@ const server = () => ({
                 ...babelConfig.presets,
               ],
               plugins: [...babelConfig.plugins],
+                cacheCompression: false,
+                cacheDirectory: true,
             },
           },
         ],
@@ -178,6 +183,10 @@ const browser = ({ isLegacy }) => {
                   ...babelConfig.presets,
                 ],
                 plugins: [...babelConfig.plugins],
+            
+                  cacheCompression: false,
+                  cacheDirectory: true,
+                
               },
             },
           ],
@@ -200,6 +209,10 @@ const browser = ({ isLegacy }) => {
                   ...babelConfig.presets,
                 ],
                 plugins: [...babelConfig.plugins],
+
+                  cacheCompression: false,
+                  cacheDirectory: true,
+
               },
             },
           ],

@@ -2,21 +2,22 @@ import { ClientState, FieldError } from '@/shared/model/ClientState';
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
+// import { StaticRouterContext } from 'react-router';
 import { App } from '@/client/app';
-import { brandBackground } from '@guardian/src-foundations/palette';
+// import { brandBackground } from '@guardian/src-foundations/palette';
 import qs from 'query-string';
-import { getConfiguration } from '@/server/lib/getConfiguration';
-import { RoutingConfig } from '@/client/routes';
-import { getAssets } from '@/server/lib/getAssets';
+// import { getConfiguration } from '@/server/lib/getConfiguration';
+// import { RoutingConfig } from '@/client/routes';
+// import { getAssets } from '@/server/lib/getAssets';
 import { RequestState } from '@/server/models/Express';
 import { CsrfErrors } from '@/shared/model/Errors';
 import { ABProvider } from '@guardian/ab-react';
 import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
-import { resets } from '@guardian/src-foundations/utils';
+// import { resets } from '@guardian/src-foundations/utils';
 
-const assets = getAssets();
-const legacyAssets = getAssets(true);
+// const assets = getAssets();
+// const legacyAssets = getAssets(true);
 
 // favicon shamefully stolen from dcr
 const favicon =
@@ -29,7 +30,7 @@ interface RendererOpts {
   requestState: RequestState;
 }
 
-const { gaUID } = getConfiguration();
+// const { gaUID } = getConfiguration();
 
 const clientStateFromRequestStateLocals = ({
   csrf,
@@ -70,6 +71,7 @@ const clientStateFromRequestStateLocals = ({
   }
 };
 
+
 export const renderer: (url: string, opts: RendererOpts) => string = (
   url,
   { requestState, pageTitle },
@@ -101,37 +103,41 @@ export const renderer: (url: string, opts: RendererOpts) => string = (
     </ABProvider>,
   );
 
-  const routingConfig: RoutingConfig = {
-    clientState,
-    location,
-  };
+  return react;
 
-  return `
-    <!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <meta charset='utf-8' />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="theme-color" content="${brandBackground.primary}" />
-        <link rel="icon" href="https://static.guim.co.uk/images/${favicon}">
-        <title>${pageTitle} | The Guardian</title>
-        <script>window.gaUID = "${gaUID.id}"</script>
-        <script type="module" src="/${assets.runtime}" defer></script>
-        <script type="module" src="/${assets.vendors}" defer></script>
-        <script type="module" src="/${assets.main}" defer></script>
+  // const routingConfig: RoutingConfig = {
+  //   clientState,
+  //   location,
+  // };
+
+  // return `
+  //   <!DOCTYPE html>
+  //   <html lang="en">
+  //     <head>
+  //       <meta charset='utf-8' />
+  //       <meta name="viewport" content="width=device-width, initial-scale=1">
+  //       <meta name="theme-color" content="${brandBackground.primary}" />
+  //       <link rel="icon" href="https://static.guim.co.uk/images/${favicon}">
+  //       <title>${pageTitle} | The Guardian</title>
+  //       <script>window.gaUID = "${gaUID.id}"</script>
+  //       <script type="module" src="/${assets.runtime}" defer></script>
+  //       <script type="module" src="/${assets.vendors}" defer></script>
+  //       <script type="module" src="/${assets.main}" defer></script>
         
-        <script nomodule src="/${legacyAssets.runtime}" defer></script>
-        <script nomodule src="/${legacyAssets.vendors}" defer></script>
-        <script nomodule src="/${legacyAssets.main}" defer></script>
+  //       <script nomodule src="/${legacyAssets.runtime}" defer></script>
+  //       <script nomodule src="/${legacyAssets.vendors}" defer></script>
+  //       <script nomodule src="/${legacyAssets.main}" defer></script>
         
-        <script id="routingConfig" type="application/json">${JSON.stringify(
-          routingConfig,
-        )}</script>
-        <style>${resets.defaults}</style>
-      </head>
-      <body style="margin:0">
-        <div id="app">${react}</div>
-      </body>
-    </html>
-  `;
+  //       <script id="routingConfig" type="application/json">${JSON.stringify(
+  //         routingConfig,
+  //       )}</script>
+  //       <style>${resets.defaults}</style>
+  //     </head>
+  //     <body style="margin:0">
+  //       <div id="app">${react}</div>
+  //     </body>
+  //   </html>
+  // `;
 };
+
+export const render = renderer;
