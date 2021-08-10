@@ -2,8 +2,7 @@ import { Request, Router } from 'express';
 import deepmerge from 'deepmerge';
 import { authenticate } from '@/server/lib/idapi/auth';
 import { logger } from '@/server/lib/logger';
-import { renderer } from '@/server/lib/renderer';
-import { renderer as renderHelper } from '@/server/lib/renderHelper';
+import { renderer } from '@/server/lib/renderHelper';
 import { Routes } from '@/shared/model/Routes';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
@@ -19,12 +18,11 @@ const router = Router();
 router.get(
   Routes.SIGN_IN,
   async (req: Request, res: ResponseWithRequestState) => {
-    const vite = req.app.get('vite') as ViteDevServer;
-    const opts = {
+    const vite: ViteDevServer = req.app.get('vite');
+    const html = await renderer(vite, Routes.SIGN_IN, {
       requestState: res.locals,
       pageTitle: PageTitle.SIGN_IN,
-    };
-    const html = await renderHelper(vite, Routes.SIGN_IN, opts);
+    });
 
     res.type('html').send(html);
   },
@@ -33,7 +31,8 @@ router.get(
 router.get(
   Routes.SIGN_IN_CURRENT,
   async (req: Request, res: ResponseWithRequestState) => {
-    const html = await renderer(Routes.SIGN_IN_CURRENT, {
+    const vite: ViteDevServer = req.app.get('vite');
+    const html = await renderer(vite, Routes.SIGN_IN_CURRENT, {
       requestState: res.locals,
       pageTitle: PageTitle.SIGN_IN,
     });
@@ -62,9 +61,9 @@ router.post(
       const { message, status } = error;
 
       trackMetric(Metrics.SIGN_IN_FAILURE);
-
+      const vite: ViteDevServer = req.app.get('vite');
       // re-render the sign in page on error
-      const html = renderer(Routes.SIGN_IN, {
+      const html = await renderer(vite, Routes.SIGN_IN, {
         requestState: deepmerge(res.locals, {
           globalMessage: {
             error: message,

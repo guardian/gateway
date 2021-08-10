@@ -2,7 +2,7 @@ import { Request, Router } from 'express';
 import { authenticate } from '@/server/lib/idapi/auth';
 import { create } from '@/server/lib/idapi/user';
 import { logger } from '@/server/lib/logger';
-import { renderer } from '@/server/lib/renderer';
+import { renderer } from '@/server/lib/renderHelper';
 import { Routes } from '@/shared/model/Routes';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
@@ -11,13 +11,15 @@ import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import deepmerge from 'deepmerge';
+import { ViteDevServer } from 'vite';
 
 const router = Router();
 
 router.get(
   Routes.REGISTRATION,
-  (req: Request, res: ResponseWithRequestState) => {
-    const html = renderer(Routes.REGISTRATION, {
+  async (req: Request, res: ResponseWithRequestState) => {
+    const vite: ViteDevServer = req.app.get('vite');
+    const html = await renderer(vite, Routes.REGISTRATION, {
       requestState: res.locals,
       pageTitle: PageTitle.REGISTRATION,
     });
@@ -29,7 +31,7 @@ router.post(
   Routes.REGISTRATION,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
-
+    const vite: ViteDevServer = req.app.get('vite');
     const { email = '' } = req.body;
     const { password = '' } = req.body;
 
@@ -55,7 +57,7 @@ router.post(
         },
       });
 
-      const html = renderer(Routes.REGISTRATION, {
+      const html = await renderer(vite, Routes.REGISTRATION, {
         requestState: state,
         pageTitle: PageTitle.REGISTRATION,
       });

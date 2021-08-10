@@ -7,7 +7,7 @@ import {
 } from '@/server/lib/idapi/verifyEmail';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { logger } from '@/server/lib/logger';
-import { renderer } from '@/server/lib/renderer';
+import { renderer } from '@/server/lib/renderHelper';
 import { consentPages } from '@/server/routes/consents';
 import { read as getUser } from '@/server/lib/idapi/user';
 import { ConsentsErrors, VerifyEmailErrors } from '@/shared/model/Errors';
@@ -20,6 +20,7 @@ import { PageTitle } from '@/shared/model/PageTitle';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { EMAIL_SENT } from '@/shared/model/Success';
+import { ViteDevServer } from 'vite';
 
 const router = Router();
 
@@ -30,7 +31,7 @@ router.get(
   Routes.VERIFY_EMAIL,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
-
+    const vite: ViteDevServer = req.app.get('vite');
     state = deepmerge(state, {
       pageData: {
         signInPageUrl: `${signInPageUrl}?returnUrl=${encodeURIComponent(
@@ -67,7 +68,7 @@ router.get(
       }
     }
 
-    const html = renderer(Routes.VERIFY_EMAIL, {
+    const html = await renderer(vite, Routes.VERIFY_EMAIL, {
       pageTitle: PageTitle.VERIFY_EMAIL,
       requestState: state,
     });
@@ -81,6 +82,7 @@ router.post(
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
     let status = 200;
+    const vite: ViteDevServer = req.app.get('vite');
 
     try {
       const sc_gu_u = req.cookies.SC_GU_U;
@@ -117,7 +119,7 @@ router.post(
       });
     }
 
-    const html = renderer(Routes.VERIFY_EMAIL, {
+    const html = await renderer(vite, Routes.VERIFY_EMAIL, {
       pageTitle: PageTitle.VERIFY_EMAIL,
       requestState: state,
     });

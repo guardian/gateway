@@ -1,7 +1,7 @@
 import { Request, Router } from 'express';
 import deepmerge from 'deepmerge';
 import { Routes } from '@/shared/model/Routes';
-import { renderer } from '@/server/lib/renderer';
+import { renderer } from '@/server/lib/renderHelper';
 import { logger } from '@/server/lib/logger';
 import {
   validate as validateToken,
@@ -16,6 +16,7 @@ import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { getBrowserNameFromUserAgent } from '@/server/lib/getBrowserName';
 import { FieldError } from '@/shared/model/ClientState';
+import { ViteDevServer } from 'vite';
 
 const router = Router();
 
@@ -42,7 +43,7 @@ router.get(
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
     const { token } = req.params;
-
+    const vite: ViteDevServer = req.app.get('vite');
     state = deepmerge(state, {
       pageData: {
         browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
@@ -59,14 +60,14 @@ router.get(
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
       return res.type('html').send(
-        renderer(Routes.RESET_RESEND, {
+        renderer(vite, Routes.RESET_RESEND, {
           requestState: state,
           pageTitle: PageTitle.RESET_RESEND,
         }),
       );
     }
 
-    const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
+    const html = await renderer(vite, `${Routes.CHANGE_PASSWORD}/${token}`, {
       requestState: state,
       pageTitle: PageTitle.CHANGE_PASSWORD,
     });
@@ -77,8 +78,8 @@ router.get(
 router.post(
   `${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    const vite: ViteDevServer = req.app.get('vite');
     let state = res.locals;
-
     const { token } = req.params;
     const { password } = req.body;
 
@@ -98,10 +99,14 @@ router.post(
             fieldErrors,
           },
         });
-        const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
-          requestState: state,
-          pageTitle: PageTitle.CHANGE_PASSWORD,
-        });
+        const html = await renderer(
+          vite,
+          `${Routes.CHANGE_PASSWORD}/${token}`,
+          {
+            requestState: state,
+            pageTitle: PageTitle.CHANGE_PASSWORD,
+          },
+        );
         return res.status(422).type('html').send(html);
       }
 
@@ -120,7 +125,7 @@ router.post(
         },
       });
 
-      const html = renderer(`${Routes.CHANGE_PASSWORD}/${token}`, {
+      const html = await renderer(vite, `${Routes.CHANGE_PASSWORD}/${token}`, {
         requestState: state,
         pageTitle: PageTitle.CHANGE_PASSWORD,
       });
@@ -129,7 +134,7 @@ router.post(
 
     trackMetric(Metrics.CHANGE_PASSWORD_SUCCESS);
 
-    const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
+    const html = await renderer(vite, Routes.CHANGE_PASSWORD_COMPLETE, {
       requestState: state,
       pageTitle: PageTitle.CHANGE_PASSWORD_COMPLETE,
     });
@@ -140,8 +145,9 @@ router.post(
 
 router.get(
   Routes.CHANGE_PASSWORD_COMPLETE,
-  (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
+  async (_: Request, res: ResponseWithRequestState) => {
+    const vite: ViteDevServer = res.app.get('vite');
+    const html = await renderer(vite, Routes.CHANGE_PASSWORD_COMPLETE, {
       requestState: res.locals,
       pageTitle: PageTitle.CHANGE_PASSWORD_COMPLETE,
     });
@@ -149,12 +155,16 @@ router.get(
   },
 );
 
-router.get(Routes.RESET_RESEND, (_: Request, res: ResponseWithRequestState) => {
-  const html = renderer(Routes.RESET_RESEND, {
-    pageTitle: PageTitle.RESET_RESEND,
-    requestState: res.locals,
-  });
-  res.type('html').send(html);
-});
+router.get(
+  Routes.RESET_RESEND,
+  async (_: Request, res: ResponseWithRequestState) => {
+    const vite: ViteDevServer = res.app.get('vite');
+    const html = await renderer(vite, Routes.RESET_RESEND, {
+      pageTitle: PageTitle.RESET_RESEND,
+      requestState: res.locals,
+    });
+    res.type('html').send(html);
+  },
+);
 
 export default router;

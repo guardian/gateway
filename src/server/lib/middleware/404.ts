@@ -1,10 +1,10 @@
 import { PageTitle } from '@/shared/model/PageTitle';
 import { Request } from 'express';
-import { renderer } from '@/server/lib/renderer';
+import { renderer } from '@/server/lib/renderHelper';
 import { ResponseWithRequestState } from '@/server/models/Express';
 
 export const fourZeroFourRender = (res: ResponseWithRequestState) =>
-  renderer('/404', {
+  renderer(res.app.get('vite'), '/404', {
     pageTitle: PageTitle.NOT_FOUND,
     requestState: res.locals,
   });

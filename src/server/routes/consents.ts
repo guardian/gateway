@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import deepmerge from 'deepmerge';
 import { joinUrl } from '@guardian/libs';
 import { Routes } from '@/shared/model/Routes';
-import { renderer } from '@/server/lib/renderer';
+import { renderer } from '@/server/lib/renderHelper';
 import {
   update as patchConsents,
   read as readConsents,
@@ -43,6 +43,7 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { Configuration } from '@/server/models/Configuration';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { logger } from '../lib/logger';
+import { ViteDevServer } from 'vite';
 
 const router = Router();
 
@@ -370,6 +371,7 @@ function getABTestGETHandler(
     let status;
     const geocode = state.pageData.geolocation;
     const route = req.route.path;
+    const vite: ViteDevServer = req.app.get('vite');
     try {
       const [entitiesName, entities] = await entityGetter(ip, sc_gu_u, geocode);
       if (isSubscribed(entities)) {
@@ -386,7 +388,7 @@ function getABTestGETHandler(
       [status, state] = getErrorResponse(error, state);
     }
 
-    const html = renderer(route, {
+    const html = await renderer(vite, route, {
       requestState: state,
       pageTitle,
     });
@@ -404,6 +406,7 @@ function getABTestPOSTHandler(
 ) {
   return async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
+    const vite: ViteDevServer = req.app.get('vite');
     const sc_gu_u = req.cookies.SC_GU_U;
     let status;
     const url = getRedirectUrl(getConfiguration(), state);
@@ -418,7 +421,7 @@ function getABTestPOSTHandler(
       [status, state] = getErrorResponse(e, state);
     }
 
-    const html = renderer(route, {
+    const html = await renderer(vite, route, {
       pageTitle,
       requestState: state,
     });
@@ -469,7 +472,7 @@ router.get(
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
     const sc_gu_u = req.cookies.SC_GU_U;
-
+    const vite: ViteDevServer = req.app.get('vite');
     const { emailVerified } = state.queryParams;
 
     if (emailVerified) {
@@ -510,7 +513,7 @@ router.get(
       });
     }
 
-    const html = renderer(`${Routes.CONSENTS}/${page}`, {
+    const html = await renderer(vite, `${Routes.CONSENTS}/${page}`, {
       requestState: state,
       pageTitle,
     });
@@ -529,7 +532,7 @@ router.post(
   loginMiddleware,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
-
+    const vite: ViteDevServer = req.app.get('vite');
     const sc_gu_u = req.cookies.SC_GU_U;
 
     const { page } = req.params;
@@ -570,7 +573,7 @@ router.post(
 
     trackMetric(consentsPageMetric(page, 'Post', false));
 
-    const html = renderer(`${Routes.CONSENTS}/${page}`, {
+    const html = await renderer(vite, `${Routes.CONSENTS}/${page}`, {
       pageTitle,
       requestState: state,
     });

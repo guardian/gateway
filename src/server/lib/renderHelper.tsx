@@ -13,6 +13,8 @@ import fs from 'fs';
 // const assets = getAssets();
 // const legacyAssets = getAssets(true);
 const isProd = process.env.NODE_ENV === 'production';
+const resolve = (p: string) => path.resolve(__dirname, p);
+const indexProd = fs.readFileSync(resolve('./static/index.html'), 'utf-8');
 
 // favicon shamefully stolen from dcr
 const favicon =
@@ -65,7 +67,6 @@ const clientStateFromRequestStateLocals = ({
     return clientState;
   }
 };
-
 export const renderer: (
   vite: ViteDevServer,
   url: string,
@@ -110,11 +111,6 @@ export const renderer: (
     const app = render(url, { requestState, pageTitle });
     return template.replace('<!--ssr-->', app);
   }
-  const resolve = (p: string) => path.resolve(__dirname, p);
-
-  const indexProd = isProd
-    ? fs.readFileSync(resolve('./static/index.html'), 'utf-8')
-    : '';
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const render = require('/build/server/renderer.js').render;
@@ -126,5 +122,7 @@ export const renderer: (
     .replace('{{gaID}}', '')
     .replace('{{routingConfig}}', JSON.stringify(routingConfig))
     .replace('{{resets}}', resets.defaults)
+    .replace('{{brandBg}}', brandBackground.primary)
+    .replace('{{favicon}}', favicon)
     .replace('<!--ssr-->', app);
 };

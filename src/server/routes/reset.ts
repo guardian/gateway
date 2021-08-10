@@ -2,7 +2,7 @@ import { Request, Router } from 'express';
 import deepmerge from 'deepmerge';
 import { create as resetPassword } from '@/server/lib/idapi/resetPassword';
 import { logger } from '@/server/lib/logger';
-import { renderer } from '@/server/lib/renderer';
+import { renderer } from '@/server/lib/renderHelper';
 import { Routes } from '@/shared/model/Routes';
 import { getEmailFromPlaySessionCookie } from '@/server/lib/playSessionCookie';
 import { ResponseWithRequestState } from '@/server/models/Express';
@@ -11,34 +11,39 @@ import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { getConfiguration } from '@/server/lib/getConfiguration';
+import { ViteDevServer } from 'vite';
 
 const router = Router();
 const { baseUri } = getConfiguration();
 
-router.get(Routes.RESET, (req: Request, res: ResponseWithRequestState) => {
-  let state = res.locals;
-  const emailFromPlaySession = getEmailFromPlaySessionCookie(req);
+router.get(
+  Routes.RESET,
+  async (req: Request, res: ResponseWithRequestState) => {
+    let state = res.locals;
+    const vite: ViteDevServer = req.app.get('vite');
+    const emailFromPlaySession = getEmailFromPlaySessionCookie(req);
 
-  if (emailFromPlaySession) {
-    state = deepmerge(state, {
-      pageData: {
-        email: emailFromPlaySession,
-      },
+    if (emailFromPlaySession) {
+      state = deepmerge(state, {
+        pageData: {
+          email: emailFromPlaySession,
+        },
+      });
+    }
+
+    const html = await renderer(vite, Routes.RESET, {
+      requestState: state,
+      pageTitle: PageTitle.RESET,
     });
-  }
-
-  const html = renderer(Routes.RESET, {
-    requestState: state,
-    pageTitle: PageTitle.RESET,
-  });
-  res.type('html').send(html);
-});
+    res.type('html').send(html);
+  },
+);
 
 router.post(
   Routes.RESET,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
-
+    const vite: ViteDevServer = req.app.get('vite');
     const { email = '' } = req.body;
 
     const { returnUrl } = res.locals.queryParams;
@@ -70,7 +75,7 @@ router.post(
         },
       });
 
-      const html = renderer(Routes.RESET, {
+      const html = await renderer(vite, Routes.RESET, {
         requestState: state,
         pageTitle: PageTitle.RESET,
       });
@@ -83,38 +88,41 @@ router.post(
   }),
 );
 
-router.get(Routes.RESET_SENT, (req: Request, res: ResponseWithRequestState) => {
-  let state = res.locals;
+router.get(
+  Routes.RESET_SENT,
+  async (req: Request, res: ResponseWithRequestState) => {
+    let state = res.locals;
+    const vite: ViteDevServer = req.app.get('vite');
+    // Read the users email from the GU_email cookie that was set when they posted the previous page
+    const emailCookie = baseUri.includes('localhost')
+      ? req.cookies['GU_email']
+      : req.signedCookies['GU_email'];
 
-  // Read the users email from the GU_email cookie that was set when they posted the previous page
-  const emailCookie = baseUri.includes('localhost')
-    ? req.cookies['GU_email']
-    : req.signedCookies['GU_email'];
+    let email;
+    try {
+      email = JSON.parse(Buffer.from(emailCookie, 'base64').toString('utf-8'));
+    } catch (error) {
+      email = null;
+      logger.error(
+        `Error parsing cookie with length ${
+          emailCookie ? emailCookie.length : 'undefined'
+        }`,
+      );
+    }
 
-  let email;
-  try {
-    email = JSON.parse(Buffer.from(emailCookie, 'base64').toString('utf-8'));
-  } catch (error) {
-    email = null;
-    logger.error(
-      `Error parsing cookie with length ${
-        emailCookie ? emailCookie.length : 'undefined'
-      }`,
-    );
-  }
+    state = deepmerge(state, {
+      pageData: {
+        email,
+        previousPage: Routes.RESET,
+      },
+    });
 
-  state = deepmerge(state, {
-    pageData: {
-      email,
-      previousPage: Routes.RESET,
-    },
-  });
-
-  const html = renderer(Routes.RESET_SENT, {
-    pageTitle: PageTitle.RESET_SENT,
-    requestState: state,
-  });
-  res.type('html').send(html);
-});
+    const html = await renderer(vite, Routes.RESET_SENT, {
+      pageTitle: PageTitle.RESET_SENT,
+      requestState: state,
+    });
+    res.type('html').send(html);
+  },
+);
 
 export default router;

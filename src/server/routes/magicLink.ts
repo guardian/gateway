@@ -2,28 +2,33 @@ import { Router, Request } from 'express';
 import deepmerge from 'deepmerge';
 import { Routes } from '@/shared/model/Routes';
 import { logger } from '@/server/lib/logger';
-import { renderer } from '@/server/lib/renderer';
+import { renderer } from '@/server/lib/renderHelper';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
+import { ViteDevServer } from 'vite';
 
 const router = Router();
 
-router.get(Routes.MAGIC_LINK, (req: Request, res: ResponseWithRequestState) => {
-  const html = renderer(Routes.MAGIC_LINK, {
-    requestState: res.locals,
-    pageTitle: PageTitle.MAGIC_LINK,
-  });
-  res.type('html').send(html);
-});
+router.get(
+  Routes.MAGIC_LINK,
+  async (req: Request, res: ResponseWithRequestState) => {
+    const vite: ViteDevServer = req.app.get('vite');
+    const html = await renderer(vite, Routes.MAGIC_LINK, {
+      requestState: res.locals,
+      pageTitle: PageTitle.MAGIC_LINK,
+    });
+    res.type('html').send(html);
+  },
+);
 
 router.post(
   Routes.MAGIC_LINK,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
-
+    const vite: ViteDevServer = req.app.get('vite');
     const { email = '' } = req.body;
 
     try {
@@ -42,7 +47,7 @@ router.post(
         },
       });
 
-      const html = renderer(Routes.MAGIC_LINK, {
+      const html = await renderer(vite, Routes.MAGIC_LINK, {
         requestState: state,
         pageTitle: PageTitle.MAGIC_LINK,
       });
@@ -57,8 +62,9 @@ router.post(
 
 router.get(
   Routes.MAGIC_LINK_SENT,
-  (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer(Routes.MAGIC_LINK_SENT, {
+  async (_: Request, res: ResponseWithRequestState) => {
+    const vite: ViteDevServer = res.app.get('vite');
+    const html = await renderer(vite, Routes.MAGIC_LINK_SENT, {
       pageTitle: PageTitle.MAGIC_LINK,
       requestState: res.locals,
     });

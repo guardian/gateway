@@ -1,10 +1,11 @@
 import { NextFunction, Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { getCsrfPageUrl } from '@/server/lib/getCsrfPageUrl';
-import { renderer } from '@/server/lib/renderer';
+import { renderer } from '@/server/lib/renderHelper';
 import { Routes } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { logger } from '@/server/lib/logger';
+import { ViteDevServer } from 'vite';
 
 const appendQueryParameter = (url: string, parameters: string) => {
   if (url.split('?').pop()?.includes(parameters)) {
@@ -17,7 +18,7 @@ const appendQueryParameter = (url: string, parameters: string) => {
   }
 };
 
-export const routeErrorHandler = (
+export const routeErrorHandler = async (
   // eslint-disable-next-line
   err: any, // ErrorRequestHandler uses type any
   req: Request,
@@ -36,8 +37,8 @@ export const routeErrorHandler = (
   }
 
   logger.error('unexpected error', err);
-
-  const html = renderer(`${Routes.UNEXPECTED_ERROR}`, {
+  const vite: ViteDevServer = req.app.get('vite');
+  const html = await renderer(vite, `${Routes.UNEXPECTED_ERROR}`, {
     requestState: res.locals,
     pageTitle: PageTitle.UNEXPECTED_ERROR,
   });
