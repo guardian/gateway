@@ -1,17 +1,23 @@
 <!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <meta charset='utf-8' />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="theme-color" content="${brandBackground.primary}" />
-        <link rel="icon" href="https://static.guim.co.uk/images/${favicon}">
-        <title>{{pageTitle}} | The Guardian</title>
-        <script>window.gaUID = "{{gaID}}"</script>
-        <script id="routingConfig" type="application/json">{{routingConfig}}</script>
-        <style>{{resets}}</style>
-      </head>
-      <body style="margin:0">
-        <div id="app"><!--ssr--></div>
-        <script type="module" src="/src/client/index.tsx"></script>
-      </body>
-    </html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="${brandBackground.primary}" />
+    <link rel="icon" href="https://static.guim.co.uk/images/${favicon}" />
+    <title>{{pageTitle}} | The Guardian</title>
+    <script>
+      window.gaUID = '{{gaID}}';
+    </script>
+    <script id="routingConfig" type="application/json">
+      {{routingConfig}}
+    </script>
+    <style>
+      {{resets}}
+    </style>
+  </head>
+  <body style="margin: 0">
+    <div id="app"><!--ssr--></div>
+    <script type="module" src="/src/client/index.tsx"></script>
+  </body>
+</html>
