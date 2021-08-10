@@ -11,9 +11,8 @@ export const Verify = () => {
   return (
     <Page>
       <Header />
-      <SubHeader>Thank you for registering</SubHeader>
+      <SubHeader>Welcome to the Guardian</SubHeader>
       <Text>
-        <p>Welcome to the Guardian,</p>
         <p>Please click below to complete your registration.</p>
       </Text>
       <Button href="$verificationLink">Complete registration</Button>
