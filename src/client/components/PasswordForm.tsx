@@ -22,6 +22,7 @@ import AwesomeDebouncePromise from 'awesome-debounce-promise';
 type Props = {
   submitUrl: string;
   fieldErrors: FieldError[];
+  submitButtonText: string;
 };
 
 const baseIconStyles = css`
@@ -190,7 +191,11 @@ const isBreached = AwesomeDebouncePromise(
   300,
 );
 
-export const PasswordForm = ({ submitUrl, fieldErrors }: Props) => {
+export const PasswordForm = ({
+  submitUrl,
+  fieldErrors,
+  submitButtonText,
+}: Props) => {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | undefined>(
     fieldErrors.find((fieldError) => fieldError.field === 'password')?.message,
@@ -268,7 +273,7 @@ export const PasswordForm = ({ submitUrl, fieldErrors }: Props) => {
         icon={<SvgArrowRightStraight />}
         iconSide="right"
       >
-        Save Password
+        {submitButtonText}
       </Button>
     </form>
   );

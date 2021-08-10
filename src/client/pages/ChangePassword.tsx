@@ -26,7 +26,11 @@ export const ChangePassword = ({ submitUrl, email, fieldErrors }: Props) => {
             <PageBodyText>
               Please enter your new password for {email}
             </PageBodyText>
-            <PasswordForm submitUrl={submitUrl} fieldErrors={fieldErrors} />
+            <PasswordForm
+              submitUrl={submitUrl}
+              fieldErrors={fieldErrors}
+              submitButtonText="Save password"
+            />
           </PageBody>
         </PageBox>
       </Main>

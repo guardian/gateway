@@ -8,5 +8,11 @@ export default {
   component: PasswordForm,
 } as Meta;
 
-export const Default = () => <PasswordForm submitUrl="" fieldErrors={[]} />;
+export const Default = () => (
+  <PasswordForm
+    submitUrl=""
+    fieldErrors={[]}
+    submitButtonText="Save password"
+  />
+);
 Default.storyName = 'default';
