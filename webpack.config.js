@@ -99,8 +99,6 @@ const server = () => ({
                 ...babelConfig.presets,
               ],
               plugins: [...babelConfig.plugins],
-                cacheCompression: false,
-                cacheDirectory: true,
             },
           },
         ],
@@ -254,17 +252,17 @@ const browser = ({ isLegacy }) => {
   }
 }
 
-module.exports = [
+module.exports = 
   merge(
     common({ platform: 'server' }),
     server()
-  ),
-  merge(
-    common({ platform: 'browser.legacy' }),
-    browser({ isLegacy: true })
-  ),
-  merge(
-    common({ platform: 'browser' }),
-    browser({ isLegacy: false })
-  )
-]
+  );
+  // merge(
+  //   common({ platform: 'browser.legacy' }),
+  //   browser({ isLegacy: true })
+  // ),
+  // merge(
+  //   common({ platform: 'browser' }),
+  //   browser({ isLegacy: false })
+  // )
+

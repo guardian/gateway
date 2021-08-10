@@ -16,6 +16,14 @@ router.use(
   }),
 );
 
+router.use(
+  '/assets',
+  express.static(path.resolve(__dirname, 'static/assets'), {
+    cacheControl: true,
+    maxAge: ms('1y'),
+  }),
+);
+
 router.get('/healthcheck', (_, res: Response) => {
   res.status(200).send('200 OK');
 });

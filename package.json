@@ -26,7 +26,9 @@
     "prettier": "prettier . --check",
     "prettier:fix": "prettier . --write",
     "prepare": "husky install",
-    "clear:cache": "rm -rf ./node_modules/.cache"
+    "clear:cache": "rm -rf ./node_modules/.cache",
+    "vite:build:client": "vite build --outDir build/static",
+    "vite:build:server": "vite build --outDir build/server --ssr src/server/lib/renderer.tsx"
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",

@@ -20,7 +20,6 @@ router.get(
   Routes.SIGN_IN,
   async (req: Request, res: ResponseWithRequestState) => {
     const vite = req.app.get('vite') as ViteDevServer;
-
     const opts = {
       requestState: res.locals,
       pageTitle: PageTitle.SIGN_IN,

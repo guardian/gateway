@@ -7,9 +7,12 @@ import { RoutingConfig } from '@/client/routes';
 import { resets } from '@guardian/src-foundations/utils';
 import { ViteDevServer } from 'vite';
 import { getConfiguration } from './getConfiguration';
+import path from 'path';
+import fs from 'fs';
 
 // const assets = getAssets();
 // const legacyAssets = getAssets(true);
+const isProd = process.env.NODE_ENV === 'production';
 
 // favicon shamefully stolen from dcr
 const favicon =
@@ -97,8 +100,31 @@ export const renderer: (
       </body>
     </html>
   `;
-  const parsed = await vite.transformIndexHtml(url, tpl);
-  const { render } = await vite.ssrLoadModule('/src/server/lib/renderer.tsx');
+
+  if (!isProd) {
+    const { render: viteRender } = await vite.ssrLoadModule(
+      '/src/server/lib/renderer.tsx',
+    );
+    const template = await vite.transformIndexHtml(url, tpl);
+    const render = viteRender;
+    const app = render(url, { requestState, pageTitle });
+    return template.replace('<!--ssr-->', app);
+  }
+  const resolve = (p: string) => path.resolve(__dirname, p);
+
+  const indexProd = isProd
+    ? fs.readFileSync(resolve('./static/index.html'), 'utf-8')
+    : '';
+
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const render = require('/build/server/renderer.js').render;
   const app = render(url, { requestState, pageTitle });
-  return parsed.replace('<!--ssr-->', app);
+  const template = indexProd;
+
+  return template
+    .replace('{{pageTitle}}', pageTitle)
+    .replace('{{gaID}}', '')
+    .replace('{{routingConfig}}', JSON.stringify(routingConfig))
+    .replace('{{resets}}', resets.defaults)
+    .replace('<!--ssr-->', app);
 };

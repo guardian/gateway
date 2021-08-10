@@ -41,7 +41,7 @@ export const Container = ({
   sidePadding = true,
   topBorder,
   sideBorders,
-  borderColor = brandLine.primary,
+  borderColor = '#TODO: fixme',
   backgroundColor,
 }: Props) => {
   return (

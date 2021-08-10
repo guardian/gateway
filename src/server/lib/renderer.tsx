@@ -2,7 +2,6 @@ import { ClientState, FieldError } from '@/shared/model/ClientState';
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
-// import { StaticRouterContext } from 'react-router';
 import { App } from '@/client/app';
 import qs from 'query-string';
 import { RequestState } from '@/server/models/Express';
