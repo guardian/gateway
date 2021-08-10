@@ -55,7 +55,7 @@ const clientStateFromRequestStateLocals = ({
 
 export const render: (url: string, opts: RendererOpts) => string = (
   url,
-  { requestState, pageTitle },
+  { requestState },
 ) => {
   const context = {};
 

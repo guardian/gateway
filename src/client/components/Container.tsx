@@ -1,7 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import { Container as SourceContainer } from '@guardian/src-layout';
-import { brandLine } from '@guardian/src-foundations/palette';
 import { from } from '@guardian/src-foundations/mq';
 import { space } from '@guardian/src-foundations';
 
