@@ -27,7 +27,7 @@ async function createS() {
       jsxInject: `import { jsx } from '@emotion/react'`,
     },
   });
-  server.use(vite.middlewares);
+  server.use(vite.middlewares as never);
   applyMiddleware(server);
 
   server.set('vite', vite);
