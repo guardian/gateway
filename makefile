@@ -27,6 +27,16 @@ dev: clean-build clear install
 	$(call log, "starting development server")
 	@yarn dev
 
+dev-tile-v: clean-build clear install
+	$(call banner, "gateway is starting")
+	$(call log, "starting development server")
+	@(set -a && stmux -M -e ERROR -m beep -- [ [ "yarn watch" : "yarn watch:server" ] ])
+
+dev-tile-h: clean-build clear install
+	$(call banner, "gateway is starting")
+	$(call log, "starting development server")
+	@(stmux -M -e ERROR -m beep -- [ [ "yarn watch" .. "yarn watch:server" ] ])
+
 # QA
 tsc: clear install
 	$(call log, "checking for type errors")
