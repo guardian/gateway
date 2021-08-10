@@ -55,7 +55,7 @@ const clientStateFromRequestStateLocals = ({
 
 export const render: (url: string, opts: RendererOpts) => string = (
   url,
-  { requestState, pageTitle },
+  { requestState },
 ) => {
   const context = {};
 
@@ -68,7 +68,6 @@ export const render: (url: string, opts: RendererOpts) => string = (
   const { abTesting: { mvtId = 0, forcedTestVariants = {} } = {} } =
     clientState;
 
- 
   // Any changes made here must also be made to the hydration in the static webpack bundle
   const react = ReactDOMServer.renderToString(
     <ABProvider
