@@ -9,27 +9,27 @@ import { App } from '@/client/app';
 import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
 
-  const routingConfig: RoutingConfig = JSON.parse(
-    document.getElementById('routingConfig')?.innerHTML ?? '{}',
-  );
+const routingConfig: RoutingConfig = JSON.parse(
+  document.getElementById('routingConfig')?.innerHTML ?? '{}',
+);
 
-  const clientState = routingConfig.clientState;
+const clientState = routingConfig.clientState;
 
 const { abTesting: { mvtId = 0, forcedTestVariants = {} } = {} } = clientState;
 
-  ReactDOM.render(
-    <ABProvider
-      arrayOfTestObjects={tests}
-      abTestSwitches={abSwitches}
-      pageIsSensitive={false}
-      mvtMaxValue={1000000}
-      mvtId={mvtId}
-      ophanRecord={record}
-      forcedTestVariants={forcedTestVariants}
-    >
-      <Router>
+ReactDOM.render(
+  <ABProvider
+    arrayOfTestObjects={tests}
+    abTestSwitches={abSwitches}
+    pageIsSensitive={false}
+    mvtMaxValue={1000000}
+    mvtId={mvtId}
+    ophanRecord={record}
+    forcedTestVariants={forcedTestVariants}
+  >
+    <Router>
       <App {...clientState} />
-      </Router>
-    </ABProvider>,
-    document.getElementById('app'),
-  );
+    </Router>
+  </ABProvider>,
+  document.getElementById('app'),
+);

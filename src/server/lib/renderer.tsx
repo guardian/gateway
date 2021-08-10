@@ -15,7 +15,6 @@ import { ABProvider } from '@guardian/ab-react';
 import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
 
-
 // const assets = getAssets();
 // const legacyAssets = getAssets(true);
 

@@ -29,7 +29,6 @@ async function createS() {
   });
   server.use(vite.middlewares);
   applyMiddleware(server);
-  
 
   server.set('vite', vite);
   server.listen(port);

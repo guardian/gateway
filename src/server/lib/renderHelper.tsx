@@ -86,7 +86,6 @@ export const renderer: (
     location,
   };
 
-
   const tpl = `
     <!DOCTYPE html>
     <html lang="en">
