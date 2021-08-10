@@ -126,8 +126,8 @@ $ make dev
 If you fancy running both dev commands in a tiled view you can run:
 
 ```sh
-$ make dev:tile:v # vertical tiling
-$ make dev:tile:h # horizontal tiling
+$ make dev-tile-v # vertical tiling
+$ make dev-tile-h # horizontal tiling
 ```
 
 This adds the environment variables from the `.env` file and starts the development server.
