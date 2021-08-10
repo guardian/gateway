@@ -17,7 +17,7 @@
     "test": "yarn tsc && yarn test:unit",
     "test:unit": "jest --ci",
     "tsc": "tsc --noEmit --skipLibCheck",
-    "watch:server": "nodemon --inspect ./build/server.js",
+    "watch:server": "mkdir -p ./build && touch ./build/server.js && nodemon --inspect ./build/server.js",
     "watch": "webpack --watch --config webpack.development.js",
     "wait-on:server": "wait-on http://localhost:8861/healthcheck",
     "wait-on:mock-server": "wait-on http://localhost:9000/healthcheck",
