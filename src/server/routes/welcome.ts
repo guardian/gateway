@@ -18,8 +18,12 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { consentPages } from '@/server/routes/consents';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { resendAccountVerificationEmail } from '@/server/lib/idapi/user';
 
 const router = Router();
+
+const { baseUri } = getConfiguration();
 
 const validatePasswordField = (password: string): Array<FieldError> => {
   const errors: Array<FieldError> = [];
@@ -138,6 +142,35 @@ router.get(
     });
     res.type('html').send(html);
   },
+);
+
+router.post(
+  `${Routes.WELCOME}${Routes.RESEND}`,
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    const { email } = req.body;
+    const { returnUrl } = res.locals.queryParams;
+
+    try {
+      await resendAccountVerificationEmail(email, req.ip, returnUrl);
+
+      // We set this cookie so that the subsequent email sent page knows which email address was used
+      res.cookie(
+        'GU_email',
+        Buffer.from(JSON.stringify(email)).toString('base64'),
+        // We check if we're running locally here to make testing easier
+        {
+          httpOnly: !baseUri.includes('localhost'),
+          secure: !baseUri.includes('localhost'),
+          signed: !baseUri.includes('localhost'),
+          sameSite: 'strict',
+        },
+      );
+
+      return res.redirect(303, Routes.RESET_SENT);
+    } catch (error) {
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+    }
+  }),
 );
 
 export default router;

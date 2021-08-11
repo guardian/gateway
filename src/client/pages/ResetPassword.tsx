@@ -40,7 +40,11 @@ export const ResetPassword = ({
           <form
             css={form}
             method="post"
-            action={formActionOverride || `${Routes.RESET}${queryString}`}
+            action={
+              formActionOverride
+                ? `${formActionOverride}${queryString}`
+                : `${Routes.RESET}${queryString}`
+            }
           >
             <CsrfFormField />
             <TextInput

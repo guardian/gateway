@@ -23,6 +23,7 @@ export enum Routes {
   MAGIC_LINK = '/magic-link',
   MAGIC_LINK_SENT = '/magic-link/email-sent',
   WELCOME = '/welcome',
+  WELCOME_SENT = '/welcome/email-sent',
 }
 
 export enum ApiRoutes {

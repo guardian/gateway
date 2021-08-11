@@ -11,6 +11,7 @@ import {
   ConsentsErrors,
   IdapiErrorMessages,
   RegistrationErrors,
+  ResetPasswordErrors,
 } from '@/shared/model/Errors';
 import User from '@/shared/model/User';
 
@@ -28,6 +29,10 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
         throw { message: RegistrationErrors.GENERIC, status };
       case IdapiErrorMessages.ACCESS_DENIED:
         throw { message: ConsentsErrors.ACCESS_DENIED, status };
+      case IdapiErrorMessages.NOT_FOUND:
+        throw { message: ResetPasswordErrors.NO_ACCOUNT, status };
+      case IdapiErrorMessages.MISSING_FIELD:
+        throw { message: ResetPasswordErrors.NO_EMAIL, status };
       default:
         break;
     }
@@ -75,5 +80,23 @@ export const create = async (email: string, password: string, ip: string) => {
   } catch (e) {
     logger.error(`IDAPI Error user create ${url}`, e);
     handleError(e);
+  }
+};
+
+export const resendAccountVerificationEmail = async (
+  email: string,
+  ip: string,
+  returnUrl: string,
+) => {
+  const url = '/user/send-account-verification-email';
+  const options = APIPostOptions({
+    'email-address': email,
+    returnUrl,
+  });
+  try {
+    await idapiFetch(url, options);
+  } catch (e) {
+    logger.error(`IDAPI Error resend account verification email ${url}`, e);
+    return handleError(e);
   }
 };

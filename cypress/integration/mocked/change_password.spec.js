@@ -96,7 +96,7 @@ describe('Password change flow', () => {
         ],
       });
       cy.visit(`/reset-password/fake_token`);
-      cy.contains('link expired');
+      cy.contains('Link expired');
     });
   });
 

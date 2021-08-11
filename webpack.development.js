@@ -10,6 +10,7 @@ const { mergeWithRules } = require('webpack-merge');
  * ForkTsCheckerWebpackPlugin provides type checking on top of webpack watch.
  */
 const common = {
+  devtool: false,
   mode: 'development',
   cache: {
     type: 'filesystem',
