@@ -66,15 +66,29 @@ const circle = `
 `;
 
 const li = (numPages: number) => css`
-  ${textSans.small()}
+  ${textSans.xxsmall()}
+  ${from.mobileMedium} {
+    ${textSans.xsmall()}
+  }
+  ${from.phablet} {
+    ${textSans.small()}
+  }
   position: relative;
   width: ${100 / numPages}%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-flex-start;
+  padding-top: ${space[6] + space[2]}px;
   &.active {
-    ${textSans.small({ fontWeight: 'bold' })}
+    ${textSans.xxsmall({ fontWeight: 'bold' })}
+    ${from.mobileMedium} {
+      ${textSans.xsmall({ fontWeight: 'bold' })}
+    }
+    ${from.phablet} {
+      ${textSans.small({ fontWeight: 'bold' })}
+    }
   }
+
   &::after,
   &.complete::after {
     content: ' ';
