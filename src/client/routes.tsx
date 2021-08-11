@@ -16,9 +16,10 @@ import { UnexpectedErrorPage } from '@/client/pages/UnexpectedErrorPage';
 import { ConsentsFollowUpPage } from '@/client/pages/ConsentsFollowUpPage';
 import { ClientState } from '@/shared/model/ClientState';
 import { Routes } from '@/shared/model/Routes';
-import { SignInPage } from './pages/SignInPage';
-import { MagicLinkPage } from './pages/MagicLinkPage';
-import { WelcomePage } from './pages/WelcomePage';
+import { SignInPage } from '@/client/pages/SignInPage';
+import { MagicLinkPage } from '@/client/pages/MagicLinkPage';
+import { WelcomePage } from '@/client/pages/WelcomePage';
+import { WelcomeResendPage } from '@/client/pages/WelcomeResend';
 
 export type RoutingConfig = {
   clientState: ClientState;
@@ -65,6 +66,9 @@ export const GatewayRoutes = () => (
     </Route>
     <Route exact path={`${Routes.WELCOME}${Routes.TOKEN_PARAM}`}>
       <WelcomePage />
+    </Route>
+    <Route exact path={`${Routes.WELCOME}${Routes.RESEND}`}>
+      <WelcomeResendPage />
     </Route>
     {/*  ABTEST: followupConsent : START */}
     <Route

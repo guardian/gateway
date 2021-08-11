@@ -49,7 +49,7 @@ router.get(
       state = deepmerge(state, {
         pageData: {
           browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
-          email: 'fake@email.com' || (await validateToken(token, req.ip)),
+          email: await validateToken(token, req.ip),
         },
       });
 
@@ -61,7 +61,7 @@ router.get(
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
-      return res.redirect(`${Routes.RESET}${Routes.RESEND}`);
+      return res.redirect(`${Routes.WELCOME}${Routes.RESEND}`);
     }
   }),
 );
@@ -127,6 +127,17 @@ router.post(
       return res.status(status).type('html').send(html);
     }
   }),
+);
+
+router.get(
+  `${Routes.WELCOME}${Routes.RESEND}`,
+  (_: Request, res: ResponseWithRequestState) => {
+    const html = renderer(`${Routes.WELCOME}${Routes.RESEND}`, {
+      pageTitle: PageTitle.WELCOME_RESEND,
+      requestState: res.locals,
+    });
+    res.type('html').send(html);
+  },
 );
 
 export default router;
