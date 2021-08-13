@@ -4,7 +4,7 @@ export enum PageTitle {
   REGISTRATION = 'Register',
   RESET = 'Reset Password',
   MAGIC_LINK = 'Sign in',
-  RESET_SENT = 'Check Your Inbox',
+  EMAIL_SENT = 'Check Your Inbox',
   RESET_RESEND = 'Resend Reset Password',
   SIGN_IN = 'Sign in',
   CHANGE_PASSWORD = 'Change Password',

@@ -64,11 +64,14 @@ export const GatewayRoutes = () => (
     <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_REVIEW}`}>
       <ConsentsConfirmationPage />
     </Route>
-    <Route exact path={`${Routes.WELCOME}${Routes.TOKEN_PARAM}`}>
-      <WelcomePage />
-    </Route>
     <Route exact path={`${Routes.WELCOME}${Routes.RESEND}`}>
       <WelcomeResendPage />
+    </Route>
+    <Route exact path={`${Routes.WELCOME_SENT}`}>
+      <EmailSentPage />
+    </Route>
+    <Route exact path={`${Routes.WELCOME}${Routes.TOKEN_PARAM}`}>
+      <WelcomePage />
     </Route>
     {/*  ABTEST: followupConsent : START */}
     <Route

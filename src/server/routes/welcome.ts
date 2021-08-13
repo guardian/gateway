@@ -43,6 +43,98 @@ const validatePasswordField = (password: string): Array<FieldError> => {
   return errors;
 };
 
+// resend account verification page
+router.get(
+  `${Routes.WELCOME}${Routes.RESEND}`,
+  (_: Request, res: ResponseWithRequestState) => {
+    const html = renderer(`${Routes.WELCOME}${Routes.RESEND}`, {
+      pageTitle: PageTitle.WELCOME_RESEND,
+      requestState: res.locals,
+    });
+    res.type('html').send(html);
+  },
+);
+
+// POST form handler to resend account verification email
+router.post(
+  `${Routes.WELCOME}${Routes.RESEND}`,
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    const { email } = req.body;
+    const { returnUrl } = res.locals.queryParams;
+
+    try {
+      await resendAccountVerificationEmail(email, req.ip, returnUrl);
+
+      // We set this cookie so that the subsequent email sent page knows which email address was used
+      res.cookie(
+        'GU_email',
+        Buffer.from(JSON.stringify(email)).toString('base64'),
+        // We check if we're running locally here to make testing easier
+        {
+          httpOnly: !baseUri.includes('localhost'),
+          secure: !baseUri.includes('localhost'),
+          signed: !baseUri.includes('localhost'),
+          sameSite: 'strict',
+        },
+      );
+
+      return res.redirect(303, Routes.WELCOME_SENT);
+    } catch (error) {
+      const { message, status } = error;
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+
+      const html = renderer(`${Routes.WELCOME}${Routes.RESEND}`, {
+        pageTitle: PageTitle.WELCOME_RESEND,
+        requestState: deepmerge(res.locals, {
+          globalMessage: {
+            error: message,
+          },
+        }),
+      });
+      return res.status(status).type('html').send(html);
+    }
+  }),
+);
+
+// email sent page
+router.get(
+  Routes.WELCOME_SENT,
+  (req: Request, res: ResponseWithRequestState) => {
+    let state = res.locals;
+
+    // Read the users email from the GU_email cookie that was set when they posted the previous page
+    const emailCookie = baseUri.includes('localhost')
+      ? req.cookies['GU_email']
+      : req.signedCookies['GU_email'];
+
+    let email;
+    try {
+      email = JSON.parse(Buffer.from(emailCookie, 'base64').toString('utf-8'));
+    } catch (error) {
+      email = null;
+      logger.error(
+        `Error parsing cookie with length ${
+          emailCookie ? emailCookie.length : 'undefined'
+        }`,
+      );
+    }
+
+    state = deepmerge(state, {
+      pageData: {
+        email,
+        previousPage: `${Routes.WELCOME}${Routes.RESEND}`,
+      },
+    });
+
+    const html = renderer(Routes.WELCOME_SENT, {
+      pageTitle: PageTitle.EMAIL_SENT,
+      requestState: state,
+    });
+    res.type('html').send(html);
+  },
+);
+
+// welcome page, check token and display set password page
 router.get(
   `${Routes.WELCOME}${Routes.TOKEN_PARAM}`,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
@@ -70,6 +162,7 @@ router.get(
   }),
 );
 
+// POST form handler to set password on welcome page
 router.post(
   `${Routes.WELCOME}${Routes.TOKEN_PARAM}`,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
@@ -129,46 +222,6 @@ router.post(
         pageTitle: PageTitle.WELCOME,
       });
       return res.status(status).type('html').send(html);
-    }
-  }),
-);
-
-router.get(
-  `${Routes.WELCOME}${Routes.RESEND}`,
-  (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer(`${Routes.WELCOME}${Routes.RESEND}`, {
-      pageTitle: PageTitle.WELCOME_RESEND,
-      requestState: res.locals,
-    });
-    res.type('html').send(html);
-  },
-);
-
-router.post(
-  `${Routes.WELCOME}${Routes.RESEND}`,
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { email } = req.body;
-    const { returnUrl } = res.locals.queryParams;
-
-    try {
-      await resendAccountVerificationEmail(email, req.ip, returnUrl);
-
-      // We set this cookie so that the subsequent email sent page knows which email address was used
-      res.cookie(
-        'GU_email',
-        Buffer.from(JSON.stringify(email)).toString('base64'),
-        // We check if we're running locally here to make testing easier
-        {
-          httpOnly: !baseUri.includes('localhost'),
-          secure: !baseUri.includes('localhost'),
-          signed: !baseUri.includes('localhost'),
-          sameSite: 'strict',
-        },
-      );
-
-      return res.redirect(303, Routes.RESET_SENT);
-    } catch (error) {
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
     }
   }),
 );

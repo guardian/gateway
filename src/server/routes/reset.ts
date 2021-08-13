@@ -111,7 +111,7 @@ router.get(Routes.RESET_SENT, (req: Request, res: ResponseWithRequestState) => {
   });
 
   const html = renderer(Routes.RESET_SENT, {
-    pageTitle: PageTitle.RESET_SENT,
+    pageTitle: PageTitle.EMAIL_SENT,
     requestState: state,
   });
   res.type('html').send(html);
