@@ -284,7 +284,7 @@ describe('Password change flow', () => {
     it('displays the password resend page', () => {
       cy.mockNext(500);
       cy.visit(`/reset-password/fake_token`);
-      cy.contains('link expired');
+      cy.contains('Link expired');
     });
   });
 
