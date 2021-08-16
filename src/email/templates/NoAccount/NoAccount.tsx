@@ -30,7 +30,7 @@ export const NoAccount = () => {
       <Button href={`${profileUrl}${Routes.REGISTRATION}`}>
         Register with The Guardian
       </Button>
-      <Footer />
+      <Footer mistakeText="registered" />
     </Page>
   );
 };

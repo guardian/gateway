@@ -16,7 +16,7 @@ export const Verify = () => {
         <p>Please click below to complete your registration.</p>
       </Text>
       <Button href="$verificationLink">Complete registration</Button>
-      <Footer />
+      <Footer mistakeText="registered" />
     </Page>
   );
 };

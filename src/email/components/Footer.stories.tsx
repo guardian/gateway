@@ -13,3 +13,8 @@ export const Default = () => {
   return renderMJMLComponent(<Footer />);
 };
 Default.storyName = 'Default footer';
+
+export const MistakeText = () => {
+  return renderMJMLComponent(<Footer mistakeText="registered" />);
+};
+MistakeText.storyName = 'Mistake text footer';
