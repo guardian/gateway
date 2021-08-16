@@ -43,7 +43,7 @@
     "@storybook/addon-actions": "^6.3.6",
     "@storybook/addon-essentials": "^6.3.6",
     "@storybook/addon-links": "^6.3.6",
-    "@storybook/react": "^6.3.6",
+    "@storybook/react": "^6.3.7",
     "@types/compression": "^1.7.1",
     "@types/cookie-parser": "^1.4.2",
     "@types/csurf": "^1.11.2",
