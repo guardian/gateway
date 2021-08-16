@@ -5,7 +5,7 @@ import {
   send as sendVerificationEmail,
   verifyEmail,
 } from '@/server/lib/idapi/verifyEmail';
-import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
+import { setIDAPICookies } from '@/server/lib/cookies';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { consentPages } from '@/server/routes/consents';

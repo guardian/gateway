@@ -8,16 +8,14 @@ import { renderer } from '@/server/lib/renderer';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { consentPages } from '@/server/routes/consents';
-import { getConfiguration } from '@/server/lib/getConfiguration';
 import { resendAccountVerificationEmail } from '@/server/lib/idapi/user';
 import {
   checkResetPasswordTokenController,
   setPasswordTokenController,
 } from '@/server/controllers/changePassword';
+import { readGUEmailCookie, setGUEmailCookie } from '@/server/lib/cookies';
 
 const router = Router();
-
-const { baseUri } = getConfiguration();
 
 // resend account verification page
 router.get(
@@ -41,18 +39,7 @@ router.post(
     try {
       await resendAccountVerificationEmail(email, req.ip, returnUrl);
 
-      // We set this cookie so that the subsequent email sent page knows which email address was used
-      res.cookie(
-        'GU_email',
-        Buffer.from(JSON.stringify(email)).toString('base64'),
-        // We check if we're running locally here to make testing easier
-        {
-          httpOnly: !baseUri.includes('localhost'),
-          secure: !baseUri.includes('localhost'),
-          signed: !baseUri.includes('localhost'),
-          sameSite: 'strict',
-        },
-      );
+      setGUEmailCookie(res, email);
 
       return res.redirect(303, Routes.WELCOME_SENT);
     } catch (error) {
@@ -78,22 +65,7 @@ router.get(
   (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
-    // Read the users email from the GU_email cookie that was set when they posted the previous page
-    const emailCookie = baseUri.includes('localhost')
-      ? req.cookies['GU_email']
-      : req.signedCookies['GU_email'];
-
-    let email;
-    try {
-      email = JSON.parse(Buffer.from(emailCookie, 'base64').toString('utf-8'));
-    } catch (error) {
-      email = null;
-      logger.error(
-        `Error parsing cookie with length ${
-          emailCookie ? emailCookie.length : 'undefined'
-        }`,
-      );
-    }
+    const email = readGUEmailCookie(req);
 
     state = deepmerge(state, {
       pageData: {

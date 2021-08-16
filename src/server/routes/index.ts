@@ -42,9 +42,9 @@ uncachedRoutes.use(verifyEmail);
 // magic link routes
 uncachedRoutes.use(magicLink);
 
-router.use(uncachedRoutes);
-
 // welcome routes
-router.use(noCache, welcome);
+uncachedRoutes.use(noCache, welcome);
+
+router.use(uncachedRoutes);
 
 export default router;
