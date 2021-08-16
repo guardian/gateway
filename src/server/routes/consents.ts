@@ -42,7 +42,7 @@ import { IDAPIError } from '@/server/lib/IDAPIFetch';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { Configuration } from '@/server/models/Configuration';
 import { PageTitle } from '@/shared/model/PageTitle';
-import { logger } from '../lib/logger';
+import { logger } from '@/server/lib/logger';
 
 const router = Router();
 

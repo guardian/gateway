@@ -7,7 +7,7 @@ import { Routes } from '@/shared/model/Routes';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { logger } from '../logger';
+import { logger } from '@/server/lib/logger';
 
 const profileUrl = getProfileUrl();
 

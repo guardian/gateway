@@ -11,7 +11,7 @@ import {
   IdapiErrorMessages,
   ChangePasswordErrors,
 } from '@/shared/model/Errors';
-import { logger } from '../logger';
+import { logger } from '@/server/lib/logger';
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
   if (error.status === 'error' && error.errors?.length) {
