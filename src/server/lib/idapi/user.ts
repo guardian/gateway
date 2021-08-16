@@ -14,6 +14,7 @@ import {
   ResetPasswordErrors,
 } from '@/shared/model/Errors';
 import User from '@/shared/model/User';
+import { addReturnUrlToPath } from '@/server/lib/queryParams';
 
 interface APIResponse {
   user: User;
@@ -91,10 +92,12 @@ export const resendAccountVerificationEmail = async (
   const url = '/user/send-account-verification-email';
   const options = APIPostOptions({
     'email-address': email,
-    returnUrl,
   });
   try {
-    await idapiFetch(url, options);
+    await idapiFetch(
+      addReturnUrlToPath(url, returnUrl),
+      APIAddClientAccessToken(options, ip),
+    );
   } catch (e) {
     logger.error(`IDAPI Error resend account verification email ${url}`, e);
     return handleError(e);
