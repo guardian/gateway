@@ -30,7 +30,15 @@ export const NoAccount = () => {
       <Button href={`${profileUrl}${Routes.REGISTRATION}`}>
         Register with The Guardian
       </Button>
-      <Footer mistakeText="registered" />
+      <Footer
+        mistakeParagraphComponent={
+          <p>
+            If you received this email by mistake, simply delete it. You
+            won&apos;t be registered if you don&apos;t click the confirmation
+            button above.
+          </p>
+        }
+      />
     </Page>
   );
 };

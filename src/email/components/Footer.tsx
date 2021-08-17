@@ -4,9 +4,9 @@ import { MjmlSection, MjmlColumn, MjmlText } from 'mjml-react';
 import { background, text } from '@guardian/src-foundations/palette';
 import { Link } from '@/email/components/Link';
 
-type Props = { mistakeText?: string };
+type Props = { mistakeParagraphComponent?: React.ReactNode };
 
-export const Footer = ({ mistakeText }: Props) => (
+export const Footer = ({ mistakeParagraphComponent }: Props) => (
   <MjmlSection background-color={background.secondary} padding="0">
     <MjmlColumn>
       <MjmlText
@@ -16,13 +16,7 @@ export const Footer = ({ mistakeText }: Props) => (
         padding="0px 48px 48px 48px"
         fontFamily="GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif"
       >
-        {mistakeText && (
-          <p>
-            If you received this email by mistake, simply delete it. You
-            won&apos;t be {mistakeText} if you don&apos;t click the confirmation
-            button above.
-          </p>
-        )}
+        {mistakeParagraphComponent}
         <p>
           If you have any queries about this email please contact our customer
           services team at{' '}

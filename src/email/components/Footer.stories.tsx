@@ -14,7 +14,17 @@ export const Default = () => {
 };
 Default.storyName = 'Default footer';
 
-export const MistakeText = () => {
-  return renderMJMLComponent(<Footer mistakeText="registered" />);
+export const MistakeParagraph = () => {
+  return renderMJMLComponent(
+    <Footer
+      mistakeParagraphComponent={
+        <p>
+          If you received this email by mistake, simply delete it. You
+          won&apos;t be registered if you don&apos;t click the confirmation
+          button above.
+        </p>
+      }
+    />,
+  );
 };
-MistakeText.storyName = 'Mistake text footer';
+MistakeParagraph.storyName = 'Mistake paragraph in footer';

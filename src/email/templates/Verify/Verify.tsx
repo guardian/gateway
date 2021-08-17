@@ -16,7 +16,15 @@ export const Verify = () => {
         <p>Please click below to complete your registration.</p>
       </Text>
       <Button href="$verificationLink">Complete registration</Button>
-      <Footer mistakeText="registered" />
+      <Footer
+        mistakeParagraphComponent={
+          <p>
+            If you received this email by mistake, simply delete it. You
+            won&apos;t be registered if you don&apos;t click the confirmation
+            button above.
+          </p>
+        }
+      />
     </Page>
   );
 };
