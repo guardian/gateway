@@ -9,17 +9,15 @@ import { visuallyHidden } from '@guardian/src-foundations/accessibility';
 
 const svgSize = css`
   svg {
-    width: 135px;
-    height: 98px;
-    ${from.mobileMedium} {
-      width: 175px;
-      height: 78px;
-    }
+    width: 149px;
+    height: 50px;
     ${from.tablet} {
-      width: 224px;
+      width: 200px;
+      height: 67px;
     }
     ${from.desktop} {
-      width: 295px;
+      width: 234px;
+      height: 78px;
     }
   }
 `;

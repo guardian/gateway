@@ -18,6 +18,7 @@ const floatRight = css`
 `;
 
 const bottomMarginStyles = css`
+  margin-bottom: ${space[1]}px;
   ${from.tablet} {
     margin-bottom: ${space[2]}px;
   }
@@ -27,6 +28,7 @@ const bottomMarginStyles = css`
 `;
 
 const topMarginStyles = css`
+  margin-top: ${space[2]}px;
   ${from.tablet} {
     margin-top: ${space[2]}px;
   }
