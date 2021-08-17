@@ -1,64 +1,60 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import { brand, space } from '@guardian/src-foundations';
-
-import { SvgGuardianLogo } from '@guardian/src-brand';
-import { Link } from '@guardian/src-link';
 import { from } from '@guardian/src-foundations/mq';
 import { Container } from '@/client/components/Container';
+import { Logo } from '@/client/components/Logo';
 
-const GuardianLogo = () => {
-  return (
-    <Link
-      href="https://www.theguardian.com"
-      title="The Guardian Homepage"
-      subdued={true}
-      cssOverrides={css`
-        svg {
-          fill: currentColor;
-        }
-        color: white;
-        :hover {
-          color: white;
-        }
-      `}
-    >
-      <SvgGuardianLogo />
-    </Link>
-  );
+type Props = {
+  isAnniversary?: boolean;
 };
 
-const headerStyles = css`
-  padding: ${space[1]}px ${space[3]}px;
+const floatRight = css`
+  /** 
+    If you're here wanting to add more items to the Header then consider
+    removing this and using flex for positioning instead
+  */
+  float: right;
+`;
+
+const bottomMarginStyles = css`
+  ${from.desktop} {
+    margin-bottom: ${space[4]}px;
+  }
+`;
+
+const topMarginStyles = css`
+  ${from.desktop} {
+    margin-top: ${space[3]}px;
+  }
+`;
+
+const rightMarginStyles = css`
+  margin-right: ${space[3]}px;
+  ${from.mobileLandscape} {
+    margin-right: ${space[5]}px;
+  }
+  ${from.wide} {
+    margin-right: ${space[24]}px;
+  }
+`;
+
+const backgroundColor = css`
   background-color: ${brand[400]};
 `;
 
-const wrapperStyles = css`
-  display: flex;
-  justify-content: flex-end;
-`;
-
-const svgOverrides = css`
-  svg {
-    height: 70px;
-  }
-  ${from.tablet} {
-    svg {
-      height: 92px;
-    }
-  }
-  ${from.desktop} {
-    svg {
-      height: 117px;
-    }
-  }
-`;
-
-export const Header = () => (
-  <header id="top" css={headerStyles}>
-    <Container>
-      <div css={[wrapperStyles, svgOverrides]}>
-        <GuardianLogo />
+export const Header = ({ isAnniversary }: Props) => (
+  <header id="top" css={backgroundColor}>
+    <Container sidePadding={false}>
+      <div
+        css={[
+          floatRight,
+          topMarginStyles,
+          rightMarginStyles,
+          bottomMarginStyles,
+        ]}
+      >
+        <Logo isAnniversary={isAnniversary} />
       </div>
     </Container>
   </header>
