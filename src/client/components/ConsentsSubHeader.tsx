@@ -77,7 +77,7 @@ const li = (numPages: number) => css`
   width: ${100 / numPages}%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-flex-start;
+  justify-content: flex-start;
   padding-top: ${space[6] + space[2]}px;
   &.active {
     ${textSans.xxsmall({ fontWeight: 'bold' })}
