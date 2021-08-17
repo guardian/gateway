@@ -13,15 +13,15 @@ type Props = { logoType?: LogoType };
 
 const svgSize = css`
   svg {
-    width: 149px;
-    height: 50px;
+    width: 195px;
+    height: 65px;
     ${from.tablet} {
-      width: 200px;
-      height: 67px;
+      width: 224px;
+      height: 75px;
     }
     ${from.desktop} {
-      width: 234px;
-      height: 78px;
+      width: 295px;
+      height: 98px;
     }
   }
 `;
