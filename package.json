@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "build": "webpack --mode production && node scripts/copyNodeModules.js",
+    "build:server": "node esbuild.server.js",
     "cypress": "cypress",
     "cypress:ci": "cypress run",
     "e2e:server": "yarn mock-server & yarn start",
