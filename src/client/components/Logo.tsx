@@ -7,11 +7,13 @@ import { Link } from '@guardian/src-link';
 import { from } from '@guardian/src-foundations/mq';
 import { visuallyHidden } from '@guardian/src-foundations/accessibility';
 
-const svgWidth = css`
+const svgSize = css`
   svg {
     width: 135px;
+    height: 98px;
     ${from.mobileMedium} {
       width: 175px;
+      height: 78px;
     }
     ${from.tablet} {
       width: 224px;
@@ -22,20 +24,15 @@ const svgWidth = css`
   }
 `;
 
+const svgColour = css`
+  svg {
+    fill: ${brandText.primary};
+  }
+`;
+
 const GuardianLogo = () => {
   return (
-    <div
-      css={[
-        svgWidth,
-        // Override the height and colour of the Source version of the logo
-        css`
-          svg {
-            height: 98px;
-            fill: ${brandText.primary};
-          }
-        `,
-      ]}
-    >
+    <div css={[svgSize, svgColour]}>
       <SvgGuardianLogo />
     </div>
   );
@@ -43,7 +40,7 @@ const GuardianLogo = () => {
 
 const GuardianAnniversaryLogo = () => {
   return (
-    <div css={svgWidth}>
+    <div css={svgSize}>
       <svg
         width="301"
         height="113"

@@ -18,12 +18,18 @@ const floatRight = css`
 `;
 
 const bottomMarginStyles = css`
+  ${from.tablet} {
+    margin-bottom: ${space[2]}px;
+  }
   ${from.desktop} {
     margin-bottom: ${space[4]}px;
   }
 `;
 
 const topMarginStyles = css`
+  ${from.tablet} {
+    margin-top: ${space[2]}px;
+  }
   ${from.desktop} {
     margin-top: ${space[3]}px;
   }
