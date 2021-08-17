@@ -17,5 +17,8 @@ export default {
 export const Default = () => <Logo />;
 Default.storyName = 'default';
 
-export const Anniversary = () => <Logo isAnniversary={true} />;
-Anniversary.storyName = 'with isAnniversary true';
+export const Anniversary = () => <Logo logoType="anniversary" />;
+Anniversary.storyName = 'with logoType set to anniversary';
+
+export const BestWebsite = () => <Logo logoType="bestWebsite" />;
+BestWebsite.storyName = 'with logoType set to bestWebsite';

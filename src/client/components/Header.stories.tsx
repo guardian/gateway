@@ -9,13 +9,7 @@ export default {
   parameters: { layout: 'fullscreen' },
 } as Meta;
 
-export const Desktop = () => (
-  <>
-    <Header />
-    <br />
-    <Header isAnniversary={true} />
-  </>
-);
+export const Desktop = () => <Header />;
 Desktop.storyName = 'At desktop';
 Desktop.parameters = {
   viewport: {
@@ -23,13 +17,7 @@ Desktop.parameters = {
   },
 };
 
-export const Tablet = () => (
-  <>
-    <Header />
-    <br />
-    <Header isAnniversary={true} />
-  </>
-);
+export const Tablet = () => <Header />;
 Tablet.storyName = 'At tablet';
 Tablet.parameters = {
   viewport: {
@@ -37,13 +25,7 @@ Tablet.parameters = {
   },
 };
 
-export const Mobile = () => (
-  <>
-    <Header />
-    <br />
-    <Header isAnniversary={true} />
-  </>
-);
+export const Mobile = () => <Header />;
 Mobile.storyName = 'At mobile';
 Mobile.parameters = {
   viewport: {

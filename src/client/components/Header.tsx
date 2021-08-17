@@ -5,10 +5,6 @@ import { from } from '@guardian/src-foundations/mq';
 import { Container } from '@/client/components/Container';
 import { Logo } from '@/client/components/Logo';
 
-type Props = {
-  isAnniversary?: boolean;
-};
-
 const floatRight = css`
   /** 
     If you're here wanting to add more items to the Header then consider
@@ -51,7 +47,7 @@ const backgroundColor = css`
   background-color: ${brand[400]};
 `;
 
-export const Header = ({ isAnniversary }: Props) => (
+export const Header = () => (
   <header id="top" css={backgroundColor}>
     <Container sidePadding={false}>
       <div
@@ -62,7 +58,7 @@ export const Header = ({ isAnniversary }: Props) => (
           bottomMarginStyles,
         ]}
       >
-        <Logo isAnniversary={isAnniversary} />
+        <Logo logoType="standard" />
       </div>
     </Container>
   </header>
