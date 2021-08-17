@@ -2,7 +2,10 @@ import React from 'react';
 import { PasswordForm } from '@/client/components/PasswordForm';
 import { FieldError } from '@/shared/model/ClientState';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
-import { ConsentsContent } from '@/client/layouts/shared/Consents';
+import {
+  ConsentsContent,
+  CONSENTS_MAIN_COLOR,
+} from '@/client/layouts/shared/Consents';
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { text } from '@/client/styles/Consents';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
@@ -19,6 +22,7 @@ export const Welcome = ({ submitUrl, email, fieldErrors }: Props) => {
     <ConsentsLayout
       title="Welcome to the Guardian"
       current={CONSENTS_PAGES.PASSWORD}
+      bgColor={CONSENTS_MAIN_COLOR}
       hideContinueButton
     >
       <ConsentsContent>
