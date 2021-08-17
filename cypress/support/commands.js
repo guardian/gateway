@@ -77,10 +77,3 @@ Cypress.Commands.add('setMvtId', (str) => {
     log: true,
   });
 });
-
-Cypress.Commands.add('interceptPasswordBreachCheck', () => {
-  cy.intercept({
-    method: 'GET',
-    url: 'https://api.pwnedpasswords.com/range/*',
-  }).as('breachCheck');
-});

@@ -60,7 +60,10 @@ describe('Password change flow', () => {
     it('Has no detectable a11y violations on change password complete page', () => {
       cy.mockNext(200);
       cy.mockNext(200, fakeSuccessResponse);
-      cy.interceptPasswordBreachCheck();
+      cy.intercept({
+        method: 'GET',
+        url: 'https://api.pwnedpasswords.com/range/*',
+      }).as('breachCheck');
       cy.visit(`/reset-password/fake_token`);
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
       cy.wait('@breachCheck');
@@ -100,7 +103,10 @@ describe('Password change flow', () => {
   context('Password exists in breach dataset', () => {
     it('displays a breached error', () => {
       cy.mockNext(200);
-      cy.interceptPasswordBreachCheck();
+      cy.intercept({
+        method: 'GET',
+        url: 'https://api.pwnedpasswords.com/range/*',
+      }).as('breachCheck');
       cy.visit(`/reset-password/fake_token`);
       cy.get('input[name="password"]').type('password');
       cy.wait('@breachCheck');
@@ -116,7 +122,10 @@ describe('Password change flow', () => {
   context('CSRF token error on submission', () => {
     it('should fail on submission due to CSRF token failure if CSRF token cookie is not sent', () => {
       cy.mockNext(200);
-      cy.interceptPasswordBreachCheck();
+      cy.intercept({
+        method: 'GET',
+        url: 'https://api.pwnedpasswords.com/range/*',
+      }).as('breachCheck');
       cy.visit(`/reset-password/fake_token`);
       cy.clearCookie('_csrf');
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
@@ -139,7 +148,10 @@ describe('Password change flow', () => {
     it('shows password change success screen, with a default redirect button.', () => {
       cy.mockNext(200);
       cy.mockNext(200, fakeSuccessResponse);
-      cy.interceptPasswordBreachCheck();
+      cy.intercept({
+        method: 'GET',
+        url: 'https://api.pwnedpasswords.com/range/*',
+      }).as('breachCheck');
       cy.visit(`/reset-password/fake_token`);
 
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
@@ -166,7 +178,10 @@ describe('Password change flow', () => {
       it('shows password change success screen, with a redirect button linking to the return url.', () => {
         cy.mockNext(200);
         cy.mockNext(200, fakeSuccessResponse);
-        cy.interceptPasswordBreachCheck();
+        cy.intercept({
+          method: 'GET',
+          url: 'https://api.pwnedpasswords.com/range/*',
+        }).as('breachCheck');
         cy.visit(
           `/reset-password/fake_token?returnUrl=https://news.theguardian.com`,
         );
@@ -191,7 +206,10 @@ describe('Password change flow', () => {
       it('shows password change success screen, with a default redirect button.', () => {
         cy.mockNext(200);
         cy.mockNext(200, fakeSuccessResponse);
-        cy.interceptPasswordBreachCheck();
+        cy.intercept({
+          method: 'GET',
+          url: 'https://api.pwnedpasswords.com/range/*',
+        }).as('breachCheck');
         cy.visit(
           `/reset-password/fake_token?returnUrl=https://news.badsite.com`,
         );
@@ -224,7 +242,10 @@ describe('Password change flow', () => {
       cy.contains(
         'Please make sure your password is at least 8 characters long.',
       );
-      cy.interceptPasswordBreachCheck();
+      cy.intercept({
+        method: 'GET',
+        url: 'https://api.pwnedpasswords.com/range/*',
+      }).as('breachCheck');
       cy.get('input[name="password"]').type('iamaveryuniqueandlongstring');
       cy.wait('@breachCheck');
       cy.contains('Valid password');
@@ -271,7 +292,10 @@ describe('Password change flow', () => {
     it('displays a generic error message', () => {
       cy.mockNext(200);
       cy.mockNext(500);
-      cy.interceptPasswordBreachCheck();
+      cy.intercept({
+        method: 'GET',
+        url: 'https://api.pwnedpasswords.com/range/*',
+      }).as('breachCheck');
       cy.visit(`/reset-password/fake_token`);
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
       cy.wait('@breachCheck');

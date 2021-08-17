@@ -97,7 +97,10 @@ describe('Welcome and set password page', () => {
   context('An valid token is used and set password page is displayed', () => {
     it('redirects to onboarding flow if a valid password is set', () => {
       cy.mockNext(200, checkTokenSuccessResponse);
-      cy.interceptPasswordBreachCheck();
+      cy.intercept({
+        method: 'GET',
+        url: 'https://api.pwnedpasswords.com/range/*',
+      }).as('breachCheck');
       cy.mockNext(200, fakeCookieSuccessResponse);
       cy.mockAll(
         200,
@@ -122,7 +125,10 @@ describe('Welcome and set password page', () => {
       const query = qs.stringify({ returnUrl });
 
       cy.mockNext(200, checkTokenSuccessResponse);
-      cy.interceptPasswordBreachCheck();
+      cy.intercept({
+        method: 'GET',
+        url: 'https://api.pwnedpasswords.com/range/*',
+      }).as('breachCheck');
       cy.mockNext(200, fakeCookieSuccessResponse);
       cy.mockAll(
         200,
@@ -153,7 +159,7 @@ describe('Welcome and set password page', () => {
         ],
       });
       cy.visit(`/welcome/fake_token`);
-      cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
+      cy.get('input[name="password"]').type('password');
       cy.get('button[type="submit"]').click();
       cy.contains('This is a common password.');
     });
