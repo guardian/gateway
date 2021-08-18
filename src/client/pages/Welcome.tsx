@@ -23,7 +23,7 @@ export const Welcome = ({ submitUrl, email, fieldErrors }: Props) => {
       title="Welcome to the Guardian"
       current={CONSENTS_PAGES.PASSWORD}
       bgColor={CONSENTS_MAIN_COLOR}
-      hideContinueButton
+      showContinueButton={false}
     >
       <ConsentsContent>
         <p css={[text, autoRow()]}>
