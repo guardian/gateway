@@ -7,6 +7,7 @@ enum HELMET_OPTIONS {
   SELF = "'self'",
   NONE = "'none'",
   UNSAFE_INLINE = "'unsafe-inline'",
+  UNSAFE_EVAL = "'unsafe-eval'",
 }
 
 enum CSP_VALID_URI {
@@ -35,6 +36,9 @@ const helmetConfig = {
         gaUID.hash, // google analytics id
         CSP_VALID_URI.GOOGLE_ANALYTICS,
         CSP_VALID_URI.CMP,
+        ...(process.env.NODE_ENV === 'production'
+          ? []
+          : [HELMET_OPTIONS.UNSAFE_EVAL]),
       ],
       imgSrc: [
         `${baseUri}`,
