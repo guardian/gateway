@@ -4,11 +4,7 @@ const path = require('path');
 const babelConfig = require('./babel.config');
 const AssetsPlugin = require('assets-webpack-plugin');
 const { merge } = require('webpack-merge');
-const nodeExternals = require('webpack-node-externals');
 const Dotenv = require('dotenv-webpack');
-
-const mode =
-  process.env.ENVIRONMENT === 'production' ? 'production' : 'development';
 
 const extensions = ['.ts', '.tsx', '.js'];
 
