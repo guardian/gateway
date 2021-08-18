@@ -18,7 +18,7 @@ require('esbuild').build({
   bundle: true,
   minify: true,
   platform: 'node',
-  external: ['fsevents', 'rollup', 'esbuild', 'react-refresh'],
+  external: ['fsevents', 'esbuild'],
   outfile: 'build/server.js',
   target: 'node10.4',
   loader: { '.png': 'dataurl', '.jpg': 'dataurl', '.js': 'jsx' },
