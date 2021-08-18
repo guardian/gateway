@@ -26,7 +26,7 @@ export const getAssets = (isLegacy = false): Assets => {
       isLegacy ? 'legacy.' : ''
     }webpack-assets.json`;
     if (!fs.existsSync(assetsFilePath)) {
-      throw new Error('Assets file does not exist. Have you run yarn build?');
+      throw new Error('Assets file does not exist. Have you built the client?');
     }
 
     const assetsFile = fs.readFileSync(assetsFilePath, 'utf-8');
