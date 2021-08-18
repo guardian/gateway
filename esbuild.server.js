@@ -15,8 +15,9 @@ const watchMode = process.env['WATCH'];
 require('esbuild').build({
   entryPoints: ['./src/server/index.ts'],
   bundle: true,
+  minify: true,
   platform: 'node',
-  external: ['fsevents', 'rollup', 'esbuild', 'vite', 'react-refresh'],
+  external: ['fsevents', 'rollup', 'esbuild', 'react-refresh'],
   outfile: 'build/server.js',
   target: 'node10.4',
   loader: { '.png': 'dataurl', '.jpg': 'dataurl', '.js': 'jsx' },
