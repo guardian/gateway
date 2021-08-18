@@ -16,3 +16,17 @@ export const Default = () => (
   />
 );
 Default.storyName = 'default';
+
+export const FieldError = () => (
+  <PasswordForm
+    submitUrl=""
+    fieldErrors={[
+      {
+        field: 'password',
+        message: 'This is a field error',
+      },
+    ]}
+    submitButtonText="Save password"
+  />
+);
+FieldError.storyName = 'With field error';
