@@ -1,9 +1,10 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
 
+// Pulls in .env and populates the define object.
+// This is used to populate environment variables at built time.
 dotenv.config();
-
 const define = {};
-
 for (const k in process.env) {
   // eslint-disable-next-line functional/immutable-data
   define[`process.env.${k}`] = JSON.stringify(process.env[k]);
