@@ -17,25 +17,6 @@ const common = {
   },
 };
 
-const serverConfig = {
-  module: {
-    rules: [
-      {
-        test: /\.ts(x?)$/,
-        use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              cacheCompression: false,
-              cacheDirectory: true,
-            },
-          },
-        ],
-      },
-    ]
-  }
-}
-
 const browserConfig = (isLegacy = false) => ({
   module: {
     rules: [
@@ -64,9 +45,8 @@ const browserConfig = (isLegacy = false) => ({
   ]
 });
 
-const baseServerConfig = baseConfig[0];
-const baseBrowserLegacyConfig = baseConfig[1];
-const baseBrowserConfig = baseConfig[2];
+const baseBrowserLegacyConfig = baseConfig[0];
+const baseBrowserConfig = baseConfig[1];
 
 const merge = mergeWithRules({
   module: {
@@ -81,11 +61,6 @@ const merge = mergeWithRules({
 }); 
 
 module.exports = [
-  merge(
-    baseServerConfig,
-    common,
-    serverConfig,
-  ),
   merge(
     baseBrowserLegacyConfig,
     common,

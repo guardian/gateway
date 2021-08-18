@@ -66,60 +66,6 @@ const common = ({ platform }) => ({
   })],
 });
 
-const server = () => ({
-  entry: './src/server/index.ts',
-  mode,
-  externals: [
-    nodeExternals({
-      allowlist: [/^@guardian/],
-    }),
-  ],
-  module: {
-    rules: [
-      {
-        exclude: /node_modules/,
-        test: /\.ts(x?)$/,
-        use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              presets: [
-                [
-                  '@babel/env',
-                  {
-                    targets: {
-                      node: 'current',
-                    },
-                    ignoreBrowserslistConfig: true,
-                  },
-                ],
-                ...babelConfig.presets,
-              ],
-              plugins: [...babelConfig.plugins],
-            },
-          },
-        ],
-      },
-      imageLoader('static/'),
-    ],
-  },
-  node: {
-    __dirname: false,
-    __filename: false,
-  },
-  output: {
-    filename: 'server.js',
-    chunkFilename: '[name].js',
-    path: path.resolve(__dirname, 'build'),
-    libraryTarget: 'commonjs2'
-  },
-  optimization: {
-    minimize: false,
-    runtimeChunk: false
-  },
-  target: 'node'
-});
-
 const browser = ({ isLegacy }) => {
 
   const entry = ['./src/client/static/index.tsx']
@@ -242,10 +188,6 @@ const browser = ({ isLegacy }) => {
 }
 
 module.exports = [
-  merge(
-    common({ platform: 'server' }),
-    server()
-  ),
   merge(
     common({ platform: 'browser.legacy' }),
     browser({ isLegacy: true })

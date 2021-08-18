@@ -9,7 +9,7 @@ for (const k in process.env) {
   define[`process.env.${k}`] = JSON.stringify(process.env[k]);
 }
 
-const watchMode = process.env["WATCH_SERVER"];
+const watchMode = process.env['WATCH'];
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('esbuild').build({
