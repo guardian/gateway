@@ -276,6 +276,7 @@ export const PasswordForm = ({
         type="submit"
         icon={<SvgArrowRightStraight />}
         iconSide="right"
+        data-cy="change-password-button"
       >
         {submitButtonText}
       </Button>

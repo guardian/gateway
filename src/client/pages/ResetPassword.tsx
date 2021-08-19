@@ -59,6 +59,7 @@ export const ResetPassword = ({
               type="submit"
               icon={<SvgArrowRightStraight />}
               iconSide="right"
+              data-cy="reset-password-button"
             >
               {buttonText}
             </Button>
