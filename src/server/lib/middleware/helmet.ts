@@ -1,7 +1,7 @@
 import { default as helmet } from 'helmet';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 
-const { baseUri, gaUID, apiDomain, idapiBaseUrl } = getConfiguration();
+const { baseUri, gaUID, apiDomain, idapiBaseUrl, stage } = getConfiguration();
 
 enum HELMET_OPTIONS {
   SELF = "'self'",
@@ -36,9 +36,7 @@ const helmetConfig = {
         gaUID.hash, // google analytics id
         CSP_VALID_URI.GOOGLE_ANALYTICS,
         CSP_VALID_URI.CMP,
-        ...(process.env.NODE_ENV === 'production'
-          ? []
-          : [HELMET_OPTIONS.UNSAFE_EVAL]),
+        ...(stage === 'DEV' ? [HELMET_OPTIONS.UNSAFE_EVAL] : []),
       ],
       imgSrc: [
         `${baseUri}`,
