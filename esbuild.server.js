@@ -20,7 +20,7 @@ require('esbuild').build({
   platform: 'node',
   external: ['fsevents', 'esbuild'],
   outfile: 'build/server.js',
-  target: 'node14',
+  target: 'node14.16.1',
   loader: { '.png': 'dataurl', '.jpg': 'dataurl', '.js': 'jsx' },
   jsxFactory: 'jsx',
   inject: ['./react-shim.js'],
