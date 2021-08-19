@@ -14,14 +14,9 @@ const backgroundStyles = css`
 `;
 
 const paddingTop = css`
-  ${from.mobileMedium} {
-    padding-top: ${space[12]}px;
-  }
+  padding-top: ${space[9]}px;
   ${from.tablet} {
-    padding-top: ${space[24]}px;
-  }
-  ${from.desktop} {
-    padding-top: calc(${space[24]}px + ${space[6]}px);
+    padding-top: ${space[12]}px;
   }
 `;
 
@@ -36,7 +31,7 @@ const h1Styles = css`
   ${headline.xsmall({ fontWeight: 'bold', lineHeight: 'tight' })}
   ${from.tablet} {
     margin: 0;
-    ${headline.large({ fontWeight: 'bold', lineHeight: 'regular' })}
+    ${headline.small({ fontWeight: 'bold', lineHeight: 'regular' })}
   }
 `;
 
