@@ -12,7 +12,7 @@ import {
 } from '@/server/lib/idapi/changePassword';
 import { FieldError } from '@/shared/model/ClientState';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
-import { setIDAPICookies } from '@/server/lib/cookies';
+import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
 

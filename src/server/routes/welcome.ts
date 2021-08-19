@@ -13,7 +13,7 @@ import {
   checkResetPasswordTokenController,
   setPasswordTokenController,
 } from '@/server/controllers/changePassword';
-import { readGUEmailCookie, setGUEmailCookie } from '@/server/lib/cookies';
+import { readEmailCookie, setGUEmailCookie } from '@/server/lib/emailCookie';
 
 const router = Router();
 
@@ -65,7 +65,7 @@ router.get(
   (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
-    const email = readGUEmailCookie(req);
+    const email = readEmailCookie(req);
 
     state = deepmerge(state, {
       pageData: {

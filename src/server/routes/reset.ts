@@ -4,24 +4,23 @@ import { create as resetPassword } from '@/server/lib/idapi/resetPassword';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { Routes } from '@/shared/model/Routes';
-import { getEmailFromPlaySessionCookie } from '@/server/lib/playSessionCookie';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { readGUEmailCookie, setGUEmailCookie } from '@/server/lib/cookies';
+import { readEmailCookie, setGUEmailCookie } from '@/server/lib/emailCookie';
 
 const router = Router();
 
 router.get(Routes.RESET, (req: Request, res: ResponseWithRequestState) => {
   let state = res.locals;
-  const emailFromPlaySession = getEmailFromPlaySessionCookie(req);
+  const email = readEmailCookie(req);
 
-  if (emailFromPlaySession) {
+  if (email) {
     state = deepmerge(state, {
       pageData: {
-        email: emailFromPlaySession,
+        email,
       },
     });
   }
@@ -74,7 +73,7 @@ router.post(
 router.get(Routes.RESET_SENT, (req: Request, res: ResponseWithRequestState) => {
   let state = res.locals;
 
-  const email = readGUEmailCookie(req);
+  const email = readEmailCookie(req);
 
   state = deepmerge(state, {
     pageData: {
