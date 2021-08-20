@@ -12,7 +12,6 @@ describe('Password reset flow', () => {
 
   beforeEach(() => {
     cy.mockPurge();
-    cy.fixture('users').as('users');
     page.goto();
   });
 
@@ -28,33 +27,38 @@ describe('Password reset flow', () => {
     });
 
     it('Has no detectable a11y violations on email sent page', function () {
-      const { email } = this.users.validEmail;
       cy.mockNext(200);
-      page.submitEmailAddress(email);
+      page.submitEmailAddress('mrtest@theguardian.com');
       injectAndCheckAxe();
     });
   });
 
   context('Valid email already exits', () => {
     it('successfully submits the request', function () {
-      const { email } = this.users.validEmail;
-      cy.mockAll(200, { userType: 'current' }, `/user/type/${email}`);
+      cy.mockAll(
+        200,
+        { userType: 'current' },
+        `/user/type/mrtest@theguardian.com`,
+      );
       cy.mockAll(200, { token: 'fake_token' }, `/pwd-reset/token`);
-      page.submitEmailAddress(email);
+      page.submitEmailAddress('mrtest@theguardian.com');
       cy.contains('Check your email');
     });
   });
 
   context(`Email doesn't exist`, () => {
     it('does not communicate that an email does not have an account', function () {
-      const { email } = this.users.emailNotRegistered;
-      cy.mockAll(200, { userType: 'new' }, `/user/type/${email}`);
+      cy.mockAll(
+        200,
+        { userType: 'new' },
+        `/user/type/mxunregistered@theguardian.com`,
+      );
       cy.mockAll(200, { token: 'fake_token' }, `/pwd-reset/token`);
       cy.mockNext(404, {
         status: 'error',
         errors: [{ message: 'Not found' }],
       });
-      page.submitEmailAddress(email);
+      page.submitEmailAddress('mxunregistered@theguardian.com');
       cy.contains('Check your email');
     });
   });
@@ -75,9 +79,8 @@ describe('Password reset flow', () => {
 
   context('General IDAPI failure', () => {
     it('displays a generic error message', function () {
-      const { email } = this.users.validEmail;
       cy.mockAll(500);
-      page.submitEmailAddress(email);
+      page.submitEmailAddress('mrtest@theguardian.com');
       cy.contains('There was a problem');
     });
   });
