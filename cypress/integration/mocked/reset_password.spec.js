@@ -7,11 +7,12 @@ describe('Password reset flow', () => {
   const page = new PageResetPassword();
 
   before(() => {
-    cy.mockPurge();
     cy.fixture('users').as('users');
   });
 
-  beforeEach(function () {
+  beforeEach(() => {
+    cy.mockPurge();
+    cy.fixture('users').as('users');
     page.goto();
   });
 
@@ -37,21 +38,24 @@ describe('Password reset flow', () => {
   context('Valid email already exits', () => {
     it('successfully submits the request', function () {
       const { email } = this.users.validEmail;
-      cy.mockNext(200);
+      cy.mockAll(200, { userType: 'current' }, `/user/type/${email}`);
+      cy.mockAll(200, { token: 'fake_token' }, `/pwd-reset/token`);
       page.submitEmailAddress(email);
       cy.contains('Check your email');
     });
   });
 
   context(`Email doesn't exist`, () => {
-    it('shows a message saying the email address does not exist', function () {
+    it('does not communicate that an email does not have an account', function () {
       const { email } = this.users.emailNotRegistered;
+      cy.mockAll(200, { userType: 'new' }, `/user/type/${email}`);
+      cy.mockAll(200, { token: 'fake_token' }, `/pwd-reset/token`);
       cy.mockNext(404, {
         status: 'error',
         errors: [{ message: 'Not found' }],
       });
       page.submitEmailAddress(email);
-      cy.contains(PageResetPassword.CONTENT.ERRORS.NO_ACCOUNT);
+      cy.contains('Check your email');
     });
   });
 
@@ -72,9 +76,9 @@ describe('Password reset flow', () => {
   context('General IDAPI failure', () => {
     it('displays a generic error message', function () {
       const { email } = this.users.validEmail;
-      cy.mockNext(500);
+      cy.mockAll(500);
       page.submitEmailAddress(email);
-      cy.contains(PageResetPassword.CONTENT.ERRORS.GENERIC);
+      cy.contains('There was a problem');
     });
   });
 });
