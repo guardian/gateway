@@ -11,23 +11,24 @@ import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { setIDAPICookies } from '@/server/lib/cookies';
 import deepmerge from 'deepmerge';
-
+import {readEmailCookie} from '@/server/lib/emailCookie'
 const router = Router();
 
-router.get(
-  Routes.REGISTRATION,
-  (req: Request, res: ResponseWithRequestState) => {
-    const html = renderer(Routes.REGISTRATION, {
-      requestState: res.locals,
-      pageTitle: PageTitle.REGISTRATION,
-    });
-    res.type('html').send(html);
-  },
-);
+// router.get(
+//   Routes.REGISTRATION,
+//   (req: Request, res: ResponseWithRequestState) => {
+//     const html = renderer(Routes.REGISTRATION, {
+//       requestState: res.locals,
+//       pageTitle: PageTitle.REGISTRATION,
+//     });
+//     res.type('html').send(html);
+//   },
+// );
 
 router.get(
   Routes.REGISTRATION_EMAIL_SENT,
   (req: Request, res: ResponseWithRequestState) => {
+    console.log(readEmailCookie(req));
     const html = renderer(Routes.REGISTRATION_EMAIL_SENT, {
       requestState: res.locals,
       pageTitle: PageTitle.REGISTRATION_EMAIL_SENT,
@@ -36,47 +37,48 @@ router.get(
   },
 );
 
-router.post(
-  Routes.REGISTRATION,
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    let state = res.locals;
+// router.post(
+//   Routes.REGISTRATION,
+//   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+//     let state = res.locals;
 
-    const { email = '' } = req.body;
-    const { password = '' } = req.body;
+//     const { email = '' } = req.body;
+//     const { password = '' } = req.body;
 
-    const { returnUrl } = state.queryParams;
+//     const { returnUrl } = state.queryParams;
 
-    try {
-      await create(email, password, req.ip);
-      // TODO: Can we remove this second call to get cookies for the user once we move over to Okta?
-      const cookies = await authenticate(email, password, req.ip);
-      setIDAPICookies(res, cookies);
-    } catch (error) {
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      const { message, status } = error;
+//     try {
+//       await create(email, password, req.ip);
+//       // TODO: Can we remove this second call to get cookies for the user once we move over to Okta?
+//       const cookies = await authenticate(email, password, req.ip);
+//       setIDAPICookies(res, cookies);
+//     } catch (error) {
+//       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+//       const { message, status } = error;
 
-      trackMetric(Metrics.REGISTER_FAILURE);
+//       trackMetric(Metrics.REGISTER_FAILURE);
 
-      state = deepmerge(state, {
-        globalMessage: {
-          error: message,
-        },
-        pageData: {
-          email,
-        },
-      });
+//       state = deepmerge(state, {
+//         globalMessage: {
+//           error: message,
+//         },
+//         pageData: {
+//           email,
+//         },
+//       });
 
-      const html = renderer(Routes.REGISTRATION, {
-        requestState: state,
-        pageTitle: PageTitle.REGISTRATION,
-      });
-      return res.status(status).type('html').send(html);
-    }
+//       const html = renderer(Routes.REGISTRATION, {
+//         requestState: state,
+//         pageTitle: PageTitle.REGISTRATION,
+//       });
+//       return res.status(status).type('html').send(html);
+//     }
 
-    trackMetric(Metrics.REGISTER_SUCCESS);
+//     trackMetric(Metrics.REGISTER_SUCCESS);
 
-    return res.redirect(303, returnUrl);
-  }),
-);
+//     return res.redirect(303, returnUrl);
+//   }),
+// );
 
 export default router;
+
