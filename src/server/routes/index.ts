@@ -25,7 +25,7 @@ uncachedRoutes.use(noCache);
 uncachedRoutes.use(reset);
 
 // request sign in routes
-// uncachedRoutes.use(signIn);
+uncachedRoutes.use(signIn);
 
 // request registration routes
 uncachedRoutes.use(register);
