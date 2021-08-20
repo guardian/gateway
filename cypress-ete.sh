@@ -5,8 +5,8 @@ set -ae
 
 trap 'kill $(jobs -p)' INT TERM EXIT
 
-source ci.env
-CI_ENV=$(cat ci.env | tr '\n' ',')
+source .env
+CI_ENV=$(cat .env | tr '\n' ',')
 CI_ENV=${CI_ENV%?}
 yarn build
 yarn start &

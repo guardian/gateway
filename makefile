@@ -22,10 +22,20 @@ build: clear clean-build install
 
 # dev
 
-dev: clear install
+dev: clean-build clear install
 	$(call banner, "gateway is starting")
 	$(call log, "starting development server")
-	@(set -a && source .env && yarn watch:server & yarn watch & wait)
+	@(yarn watch:server & yarn watch & wait)
+
+dev-tile-v: clean-build clear install
+	$(call banner, "gateway is starting")
+	$(call log, "starting development server")
+	@(stmux -M -e ERROR -m beep -- [ [ "yarn watch" : "yarn watch:server" ] ])
+
+dev-tile-h: clean-build clear install
+	$(call banner, "gateway is starting")
+	$(call log, "starting development server")
+	@(stmux -M -e ERROR -m beep -- [ [ "yarn watch" .. "yarn watch:server" ] ])
 
 # QA
 tsc: clear install
@@ -60,6 +70,7 @@ cypress-ete: clear
 # helpers
 
 clean-build:
+	$(call log, "trashing build")
 	@rm -rf build
 
 clean-deps:
