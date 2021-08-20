@@ -8,21 +8,23 @@ describe('Password reset flow', () => {
 
   beforeEach(() => {
     cy.mockPurge();
-    page.goto();
   });
 
   context('A11y checks', () => {
     it('Has no detectable a11y violations on reset password page', () => {
+      cy.visit('/reset');
       injectAndCheckAxe();
     });
 
     it('Has no detectable a11y violations on reset password page with error', () => {
+      cy.visit('/reset');
       cy.mockNext(500);
       page.submitEmailAddress('example@example.com');
       injectAndCheckAxe();
     });
 
     it('Has no detectable a11y violations on email sent page', function () {
+      cy.visit('/reset');
       cy.mockNext(200);
       page.submitEmailAddress('mrtest@theguardian.com');
       injectAndCheckAxe();
@@ -31,6 +33,7 @@ describe('Password reset flow', () => {
 
   context('Valid email already exits', () => {
     it('successfully submits the request', function () {
+      cy.visit('/reset');
       cy.mockAll(
         200,
         { userType: 'current' },
@@ -44,6 +47,7 @@ describe('Password reset flow', () => {
 
   context(`Email doesn't exist`, () => {
     it('does not communicate that an email does not have an account', function () {
+      cy.visit('/reset');
       cy.mockAll(
         200,
         { userType: 'new' },
@@ -61,6 +65,7 @@ describe('Password reset flow', () => {
 
   context('Email field is left blank', () => {
     it('displays the standard HTML validation', () => {
+      cy.visit('/reset');
       page.clickResetPassword();
       page.invalidEmailAddressField().should('have.length', 1);
     });
@@ -68,6 +73,7 @@ describe('Password reset flow', () => {
 
   context('Email is invalid', () => {
     it('displays the standard HTML validation', () => {
+      cy.visit('/reset');
       page.submitEmailAddress('bademail£');
       page.invalidEmailAddressField().should('have.length', 1);
     });
@@ -75,6 +81,7 @@ describe('Password reset flow', () => {
 
   context('General IDAPI failure', () => {
     it('displays a generic error message', function () {
+      cy.visit('/reset');
       cy.mockAll(500);
       page.submitEmailAddress('mrtest@theguardian.com');
       cy.contains('There was a problem');
