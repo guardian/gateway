@@ -267,6 +267,7 @@ export const PasswordForm = ({ submitUrl, fieldErrors }: Props) => {
         type="submit"
         icon={<SvgArrowRightStraight />}
         iconSide="right"
+        data-cy="change-password-button"
       >
         Save Password
       </Button>
