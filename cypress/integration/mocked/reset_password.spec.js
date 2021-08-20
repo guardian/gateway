@@ -1,11 +1,8 @@
 /// <reference types='cypress' />
 
 import { injectAndCheckAxe } from '../../support/cypress-axe';
-import PageResetPassword from '../../support/pages/reset_password_page';
 
 describe('Password reset flow', () => {
-  const page = new PageResetPassword();
-
   beforeEach(() => {
     cy.mockPurge();
   });
@@ -19,14 +16,16 @@ describe('Password reset flow', () => {
     it('Has no detectable a11y violations on reset password page with error', () => {
       cy.visit('/reset');
       cy.mockNext(500);
-      page.submitEmailAddress('example@example.com');
+      cy.get('input[name="email"]').type('example@example.com');
+      cy.contains('Reset Password').click();
       injectAndCheckAxe();
     });
 
     it('Has no detectable a11y violations on email sent page', function () {
       cy.visit('/reset');
       cy.mockNext(200);
-      page.submitEmailAddress('mrtest@theguardian.com');
+      cy.get('input[name="email"]').type('mrtest@theguardian.com');
+      cy.contains('Reset Password').click();
       injectAndCheckAxe();
     });
   });
@@ -40,7 +39,8 @@ describe('Password reset flow', () => {
         `/user/type/mrtest@theguardian.com`,
       );
       cy.mockAll(200, { token: 'fake_token' }, `/pwd-reset/token`);
-      page.submitEmailAddress('mrtest@theguardian.com');
+      cy.get('input[name="email"]').type('mrtest@theguardian.com');
+      cy.contains('Reset Password').click();
       cy.contains('Check your email');
     });
   });
@@ -58,7 +58,8 @@ describe('Password reset flow', () => {
         status: 'error',
         errors: [{ message: 'Not found' }],
       });
-      page.submitEmailAddress('mxunregistered@theguardian.com');
+      cy.get('input[name="email"]').type('mxunregistered@theguardian.com');
+      cy.contains('Reset Password').click();
       cy.contains('Check your email');
     });
   });
@@ -66,16 +67,17 @@ describe('Password reset flow', () => {
   context('Email field is left blank', () => {
     it('displays the standard HTML validation', () => {
       cy.visit('/reset');
-      page.clickResetPassword();
-      page.invalidEmailAddressField().should('have.length', 1);
+      cy.contains('Reset Password').click();
+      cy.get('input[name="email"]:invalid').should('have.length', 1);
     });
   });
 
   context('Email is invalid', () => {
     it('displays the standard HTML validation', () => {
       cy.visit('/reset');
-      page.submitEmailAddress('bademail£');
-      page.invalidEmailAddressField().should('have.length', 1);
+      cy.get('input[name="email"]').type('bademail£');
+      cy.contains('Reset Password').click();
+      cy.get('input[name="email"]:invalid').should('have.length', 1);
     });
   });
 
@@ -83,7 +85,8 @@ describe('Password reset flow', () => {
     it('displays a generic error message', function () {
       cy.visit('/reset');
       cy.mockAll(500);
-      page.submitEmailAddress('mrtest@theguardian.com');
+      cy.get('input[name="email"]').type('mrtest@theguardian.com');
+      cy.contains('Reset Password').click();
       cy.contains('There was a problem');
     });
   });
