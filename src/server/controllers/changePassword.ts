@@ -12,7 +12,7 @@ import {
 } from '@/server/lib/idapi/changePassword';
 import { FieldError } from '@/shared/model/ClientState';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
-import { setIDAPICookies } from '@/server/lib/cookies';
+import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
 
@@ -107,6 +107,13 @@ export const setPasswordTokenController = (
 
       setIDAPICookies(res, cookies);
 
+      // we need to track both of these cloudwatch metrics as two
+      // separate metrics at this point as the changePassword endpoint
+      // does two things
+      // a) account verification
+      // b) change password
+      // since these could happen at different points in time, it's best
+      // to keep them as two seperate metrics
       trackMetric(Metrics.ACCOUNT_VERIFICATION_SUCCESS);
       trackMetric(Metrics.CHANGE_PASSWORD_SUCCESS);
 
@@ -115,6 +122,7 @@ export const setPasswordTokenController = (
       const { message, status } = error;
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
+      // see the comment above around the success metrics
       trackMetric(Metrics.ACCOUNT_VERIFICATION_FAILURE);
       trackMetric(Metrics.CHANGE_PASSWORD_FAILURE);
 

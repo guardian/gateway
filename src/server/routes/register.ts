@@ -9,7 +9,7 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { setIDAPICookies } from '@/server/lib/cookies';
+import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import deepmerge from 'deepmerge';
 import {readEmailCookie} from '@/server/lib/emailCookie'
 const router = Router();

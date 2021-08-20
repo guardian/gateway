@@ -12,7 +12,7 @@ import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 
 type Props = {
   submitUrl: string;
-  email: string;
+  email?: string;
   fieldErrors: FieldError[];
 };
 
