@@ -8,7 +8,7 @@ import { Welcome } from '@/client/pages/Welcome';
 export const WelcomePage = () => {
   const { search } = useLocation();
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData: { email = '', fieldErrors = [] } = {} } = clientState;
+  const { pageData: { email, fieldErrors = [] } = {} } = clientState;
   const { token } = useParams<{ token: string }>();
 
   return (

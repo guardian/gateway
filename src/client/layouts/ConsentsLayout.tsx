@@ -24,6 +24,7 @@ interface ConsentsLayoutProps {
   current?: string;
   title: string;
   bgColor?: string;
+  showContinueButton?: boolean;
 }
 
 const mainBackground = css`
@@ -75,6 +76,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
   current,
   title,
   bgColor,
+  showContinueButton = true,
 }) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
   const clientState: ClientState = useContext(ClientStateContext);
@@ -117,7 +119,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
             </div>
             <ConsentsBlueBackground>
               <div css={[gridItem(gridItemColumnConsents), controls]}>
-                {!error && (
+                {!error && showContinueButton && (
                   <Button
                     iconSide="right"
                     nudgeIcon={true}

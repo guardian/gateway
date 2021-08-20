@@ -6,6 +6,7 @@ import {
 } from '@/server/lib/IDAPIFetch';
 import { ResetPasswordErrors, IdapiErrorMessages } from '@/shared/model/Errors';
 import { ApiRoutes } from '@/shared/model/Routes';
+import { addReturnUrlToPath } from '@/server/lib/queryParams';
 
 const PATH = ApiRoutes.RESET_REQUEST_EMAIL;
 
@@ -33,7 +34,8 @@ export async function create(email: string, ip: string, returnUrl: string) {
     returnUrl,
   });
 
-  return idapiFetch(PATH, APIAddClientAccessToken(options, ip)).catch(
-    handleError,
-  );
+  return idapiFetch(
+    addReturnUrlToPath(PATH, returnUrl),
+    APIAddClientAccessToken(options, ip),
+  ).catch(handleError);
 }

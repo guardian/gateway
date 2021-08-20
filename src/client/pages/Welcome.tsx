@@ -1,36 +1,41 @@
 import React from 'react';
 import { PasswordForm } from '@/client/components/PasswordForm';
-import { PageBox } from '@/client/components/PageBox';
-import { PageHeader } from '@/client/components/PageHeader';
-import { PageBody } from '@/client/components/PageBody';
-import { PageBodyText } from '@/client/components/PageBodyText';
-import { Main } from '@/client/layouts/Main';
-import { Header } from '@/client/components/Header';
-import { Footer } from '@/client/components/Footer';
 import { FieldError } from '@/shared/model/ClientState';
+import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
+import {
+  ConsentsContent,
+  CONSENTS_MAIN_COLOR,
+} from '@/client/layouts/shared/Consents';
+import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
+import { text } from '@/client/styles/Consents';
+import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 
 type Props = {
   submitUrl: string;
-  email: string;
+  email?: string;
   fieldErrors: FieldError[];
 };
 
 export const Welcome = ({ submitUrl, email, fieldErrors }: Props) => {
+  const autoRow = getAutoRow(1, gridItemColumnConsents);
   return (
-    <>
-      <Header />
-      <Main subTitle="Welcome">
-        <PageBox>
-          <PageHeader>Welcome</PageHeader>
-          <PageBody>
-            <PageBodyText>
-              Please enter your new password for {email}
-            </PageBodyText>
-            <PasswordForm submitUrl={submitUrl} fieldErrors={fieldErrors} />
-          </PageBody>
-        </PageBox>
-      </Main>
-      <Footer />
-    </>
+    <ConsentsLayout
+      title="Welcome to the Guardian"
+      current={CONSENTS_PAGES.PASSWORD}
+      bgColor={CONSENTS_MAIN_COLOR}
+      showContinueButton={false}
+    >
+      <ConsentsContent>
+        <p css={[text, autoRow()]}>
+          Please create a password for {email || 'your new account'}
+        </p>
+        <PasswordForm
+          submitUrl={submitUrl}
+          fieldErrors={fieldErrors}
+          submitButtonText="Create password"
+          gridAutoRow={autoRow}
+        />
+      </ConsentsContent>
+    </ConsentsLayout>
   );
 };

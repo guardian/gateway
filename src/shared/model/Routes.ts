@@ -4,13 +4,12 @@ export enum Routes {
   SIGN_IN_CURRENT = '/signin/current',
   RESET = '/reset',
   RESET_SENT = '/reset/email-sent',
-  RESET_RESEND = '/reset/resend',
+  RESEND = '/resend',
   CHANGE_PASSWORD = '/reset-password',
-  CHANGE_PASSWORD_TOKEN = '/:token',
   CHANGE_PASSWORD_COMPLETE = '/password/reset-confirmation',
   VERIFY_EMAIL = '/verify-email',
   VERIFY_EMAIL_SENT = '/verify-email/email-sent',
-  VERIFY_EMAIL_TOKEN = '/:token',
+  TOKEN_PARAM = '/:token',
   CONSENTS = '/consents',
   CONSENTS_DATA = '/data',
   CONSENTS_COMMUNICATION = '/communication',
@@ -24,6 +23,7 @@ export enum Routes {
   MAGIC_LINK = '/magic-link',
   MAGIC_LINK_SENT = '/magic-link/email-sent',
   WELCOME = '/welcome',
+  WELCOME_SENT = '/welcome/email-sent',
 }
 
 export enum ApiRoutes {

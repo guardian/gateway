@@ -127,7 +127,7 @@ router.post(
 );
 
 router.get(
-  `${Routes.VERIFY_EMAIL}${Routes.VERIFY_EMAIL_TOKEN}`,
+  `${Routes.VERIFY_EMAIL}${Routes.TOKEN_PARAM}`,
   handleAsyncErrors(async (req: Request, res: Response) => {
     const { token } = req.params;
 

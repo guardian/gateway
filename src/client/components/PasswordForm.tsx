@@ -18,10 +18,14 @@ import { PasswordInput } from '@/client/components/PasswordInput';
 import { FieldError } from '@/shared/model/ClientState';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
+import { AutoRow, passwordFormSpanDef } from '@/client/styles/Grid';
 
 type Props = {
   submitUrl: string;
   fieldErrors: FieldError[];
+  submitButtonText: string;
+  // for grid layout on consents page
+  gridAutoRow?: AutoRow;
 };
 
 const baseIconStyles = css`
@@ -190,7 +194,12 @@ const isBreached = AwesomeDebouncePromise(
   300,
 );
 
-export const PasswordForm = ({ submitUrl, fieldErrors }: Props) => {
+export const PasswordForm = ({
+  submitUrl,
+  fieldErrors,
+  submitButtonText,
+  gridAutoRow,
+}: Props) => {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | undefined>(
     fieldErrors.find((fieldError) => fieldError.field === 'password')?.message,
@@ -228,7 +237,7 @@ export const PasswordForm = ({ submitUrl, fieldErrors }: Props) => {
 
   return (
     <form
-      css={form}
+      css={[form, gridAutoRow && gridAutoRow(passwordFormSpanDef)]}
       method="post"
       action={submitUrl}
       onSubmit={(e) => {
@@ -269,7 +278,7 @@ export const PasswordForm = ({ submitUrl, fieldErrors }: Props) => {
         iconSide="right"
         data-cy="change-password-button"
       >
-        Save Password
+        {submitButtonText}
       </Button>
     </form>
   );
