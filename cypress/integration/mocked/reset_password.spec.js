@@ -6,10 +6,6 @@ import PageResetPassword from '../../support/pages/reset_password_page';
 describe('Password reset flow', () => {
   const page = new PageResetPassword();
 
-  before(() => {
-    cy.fixture('users').as('users');
-  });
-
   beforeEach(() => {
     cy.mockPurge();
     page.goto();
