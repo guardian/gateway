@@ -2,6 +2,7 @@ export enum PageTitle {
   NOT_FOUND = 'Not Found',
   UNEXPECTED_ERROR = 'Unexpected Error',
   REGISTRATION = 'Register',
+  REGISTRATION_EMAIL_SENT = 'Check Your Inbox',
   RESET = 'Reset Password',
   MAGIC_LINK = 'Sign in',
   EMAIL_SENT = 'Check Your Inbox',

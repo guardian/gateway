@@ -25,6 +25,17 @@ router.get(
   },
 );
 
+router.get(
+  Routes.REGISTRATION_EMAIL_SENT,
+  (req: Request, res: ResponseWithRequestState) => {
+    const html = renderer(Routes.REGISTRATION_EMAIL_SENT, {
+      requestState: res.locals,
+      pageTitle: PageTitle.REGISTRATION_EMAIL_SENT,
+    });
+    res.type('html').send(html);
+  },
+);
+
 router.post(
   Routes.REGISTRATION,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {

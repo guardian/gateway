@@ -37,6 +37,9 @@ export const GatewayRoutes = () => (
     <Route exact path={Routes.REGISTRATION}>
       <RegistrationPage />
     </Route>
+    <Route exact path={Routes.REGISTRATION_EMAIL_SENT}>
+      <EmailSentPage />
+    </Route>
     <Route exact path={Routes.RESET}>
       <ResetPasswordPage />
     </Route>
