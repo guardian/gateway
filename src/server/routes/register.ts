@@ -32,7 +32,7 @@ router.get(
     state = deepmerge(state, {
       pageData: {
         email: readEmailCookie(req),
-        previousPage: '/signin'
+        previousPage: '/signin',
       },
     });
     const html = renderer(Routes.REGISTRATION_EMAIL_SENT, {
@@ -87,4 +87,3 @@ router.post(
 );
 
 export default router;
-
