@@ -8,6 +8,7 @@ import { default as changePassword } from './changePassword';
 import { default as consents } from './consents';
 import { default as verifyEmail } from './verifyEmail';
 import { default as magicLink } from './magicLink';
+import { default as welcome } from './welcome';
 import { noCache } from '@/server/lib/middleware/cache';
 
 const router = Router();
@@ -40,6 +41,9 @@ uncachedRoutes.use(verifyEmail);
 
 // magic link routes
 uncachedRoutes.use(magicLink);
+
+// welcome routes
+uncachedRoutes.use(noCache, welcome);
 
 router.use(uncachedRoutes);
 

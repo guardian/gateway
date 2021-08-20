@@ -24,7 +24,11 @@ export const ResetPassword = () => {
       <Button href={`${profileUrl}${Routes.CHANGE_PASSWORD}/TOKEN_PLACEHOLDER`}>
         Reset password
       </Button>
-      <Footer />
+      <Footer
+        mistakeParagraphComponent={
+          <p>If you received this email by mistake, simply delete it.</p>
+        }
+      />
     </Page>
   );
 };

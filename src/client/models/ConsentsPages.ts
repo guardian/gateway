@@ -1,4 +1,5 @@
 export enum CONSENTS_PAGES {
+  PASSWORD = 'Create password',
   YOUR_DATA = 'Your data',
   CONTACT = 'Stay in touch',
   NEWSLETTERS = 'Newsletters',
@@ -6,6 +7,7 @@ export enum CONSENTS_PAGES {
 }
 
 export const CONSENTS_PAGES_ARR = [
+  CONSENTS_PAGES.PASSWORD,
   CONSENTS_PAGES.CONTACT,
   CONSENTS_PAGES.NEWSLETTERS,
   CONSENTS_PAGES.YOUR_DATA,

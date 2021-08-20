@@ -11,8 +11,10 @@ import {
   ConsentsErrors,
   IdapiErrorMessages,
   RegistrationErrors,
+  ResetPasswordErrors,
 } from '@/shared/model/Errors';
 import User from '@/shared/model/User';
+import { addReturnUrlToPath } from '@/server/lib/queryParams';
 
 interface APIResponse {
   user: User;
@@ -28,6 +30,10 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
         throw { message: RegistrationErrors.GENERIC, status };
       case IdapiErrorMessages.ACCESS_DENIED:
         throw { message: ConsentsErrors.ACCESS_DENIED, status };
+      case IdapiErrorMessages.NOT_FOUND:
+        throw { message: ResetPasswordErrors.NO_ACCOUNT, status };
+      case IdapiErrorMessages.MISSING_FIELD:
+        throw { message: ResetPasswordErrors.NO_EMAIL, status };
       default:
         break;
     }
@@ -88,6 +94,27 @@ export const getType = async (email: string, ip: string) => {
     );
     return response?.userType;
   } catch (e) {
+    logger.error(`IDAPI Error getting user type`, e);
     handleError(e);
+  }
+};
+
+export const resendAccountVerificationEmail = async (
+  email: string,
+  ip: string,
+  returnUrl: string,
+) => {
+  const url = '/user/send-account-verification-email';
+  const options = APIPostOptions({
+    'email-address': email,
+  });
+  try {
+    await idapiFetch(
+      addReturnUrlToPath(url, returnUrl),
+      APIAddClientAccessToken(options, ip),
+    );
+  } catch (e) {
+    logger.error(`IDAPI Error resend account verification email ${url}`, e);
+    return handleError(e);
   }
 };

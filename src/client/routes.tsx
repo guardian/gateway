@@ -16,8 +16,10 @@ import { UnexpectedErrorPage } from '@/client/pages/UnexpectedErrorPage';
 import { ConsentsFollowUpPage } from '@/client/pages/ConsentsFollowUpPage';
 import { ClientState } from '@/shared/model/ClientState';
 import { Routes } from '@/shared/model/Routes';
-import { SignInPage } from './pages/SignInPage';
-import { MagicLinkPage } from './pages/MagicLinkPage';
+import { SignInPage } from '@/client/pages/SignInPage';
+import { MagicLinkPage } from '@/client/pages/MagicLinkPage';
+import { WelcomePage } from '@/client/pages/WelcomePage';
+import { WelcomeResendPage } from '@/client/pages/WelcomeResend';
 
 export type RoutingConfig = {
   clientState: ClientState;
@@ -41,16 +43,13 @@ export const GatewayRoutes = () => (
     <Route exact path={Routes.RESET_SENT}>
       <EmailSentPage />
     </Route>
-    <Route
-      exact
-      path={`${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`}
-    >
+    <Route exact path={`${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`}>
       <ChangePasswordPage />
     </Route>
     <Route path={Routes.CHANGE_PASSWORD_COMPLETE}>
       <ChangePasswordCompletePage />
     </Route>
-    <Route exact path={Routes.RESET_RESEND}>
+    <Route exact path={`${Routes.RESET}${Routes.RESEND}`}>
       <ResendPasswordPage />
     </Route>
     <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_DATA}`}>
@@ -64,6 +63,15 @@ export const GatewayRoutes = () => (
     </Route>
     <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_REVIEW}`}>
       <ConsentsConfirmationPage />
+    </Route>
+    <Route exact path={`${Routes.WELCOME}${Routes.RESEND}`}>
+      <WelcomeResendPage />
+    </Route>
+    <Route exact path={`${Routes.WELCOME_SENT}`}>
+      <EmailSentPage />
+    </Route>
+    <Route exact path={`${Routes.WELCOME}${Routes.TOKEN_PARAM}`}>
+      <WelcomePage />
     </Route>
     {/*  ABTEST: followupConsent : START */}
     <Route

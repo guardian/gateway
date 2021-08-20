@@ -158,6 +158,12 @@ export const consentsParagraphSpanDef: SpanDefinition = {
   WIDE: { start: 3, span: 9 },
 };
 
+export const passwordFormSpanDef: SpanDefinition = {
+  TABLET: { start: 2, span: 6 },
+  DESKTOP: { start: 2, span: 5 },
+  WIDE: { start: 3, span: 5 },
+};
+
 export const getAutoRow = (
   offset = 0,
   spanDefinition?: SpanDefinition,

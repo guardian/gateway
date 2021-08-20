@@ -31,6 +31,15 @@ export const Default = () => (
 );
 Default.storyName = 'With defaults';
 
+export const Password = () => (
+  <ConsentsSubHeader
+    autoRow={autoRow}
+    title="My Title"
+    current={CONSENTS_PAGES.PASSWORD}
+  />
+);
+Password.storyName = 'With Password as current';
+
 export const Contact = () => (
   <ConsentsSubHeader
     autoRow={autoRow}
