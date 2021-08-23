@@ -15,9 +15,14 @@ import { CsrfFormField } from '@/client/components/CsrfFormField';
 type Props = {
   email?: string;
   previousPage?: string;
+  subTitle?: string;
 };
 
-export const EmailSent = ({ email, previousPage }: Props) => {
+export const EmailSent = ({
+  email,
+  previousPage,
+  subTitle = 'Sign in',
+}: Props) => {
   const [hasJS, setHasJS] = useState<boolean>(false);
 
   useEffect(() => {
@@ -27,7 +32,7 @@ export const EmailSent = ({ email, previousPage }: Props) => {
   return (
     <>
       <Header />
-      <Main subTitle="Sign in" successOverride="Email sent">
+      <Main subTitle={subTitle} successOverride="Email sent">
         <PageBox>
           <PageHeader>Check your email inbox</PageHeader>
           <PageBody>

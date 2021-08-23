@@ -33,6 +33,8 @@ router.get(
       requestState: deepmerge(state, {
         pageData: {
           email: readEmailCookie(req),
+          subTitle: 'Register',
+          previousPage: '/signin/register',
         },
       }),
       pageTitle: PageTitle.REGISTRATION_EMAIL_SENT,
