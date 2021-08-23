@@ -28,14 +28,13 @@ router.get(
 router.get(
   Routes.REGISTRATION_EMAIL_SENT,
   (req: Request, res: ResponseWithRequestState) => {
-    let state = res.locals;
-    state = deepmerge(state, {
-      pageData: {
-        email: readEmailCookie(req),
-      },
-    });
+    const state = res.locals;
     const html = renderer(Routes.REGISTRATION_EMAIL_SENT, {
-      requestState: state,
+      requestState: deepmerge(state, {
+        pageData: {
+          email: readEmailCookie(req),
+        },
+      }),
       pageTitle: PageTitle.REGISTRATION_EMAIL_SENT,
     });
     res.type('html').send(html);
