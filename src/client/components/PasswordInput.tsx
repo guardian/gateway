@@ -10,7 +10,9 @@ import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 
 type Props = {
+  label: string;
   error?: string;
+  supporting?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -107,7 +109,12 @@ const EyeSymbol = ({
   );
 };
 
-export const PasswordInput = ({ error, onChange }: Props) => {
+export const PasswordInput = ({
+  label,
+  error,
+  supporting,
+  onChange,
+}: Props) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const { pageData: { browserName } = {} }: ClientState =
     useContext(ClientStateContext);
@@ -123,9 +130,9 @@ export const PasswordInput = ({ error, onChange }: Props) => {
       <TextInput
         error={error}
         onChange={onChange}
-        label="New Password"
+        label={label}
         name="password"
-        supporting="Must be between 8 and 72 characters"
+        supporting={supporting}
         css={textInput}
         type={passwordVisible ? 'text' : 'password'}
         cssOverrides={[noBorder, paddingRight(isEyeDisplayedOnBrowser)]}
