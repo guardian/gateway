@@ -13,7 +13,7 @@ type Props = {
   label: string;
   error?: string;
   supporting?: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const isDisplayEyeOnBrowser = (browserName: string | undefined) => {
