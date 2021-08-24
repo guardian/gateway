@@ -17,17 +17,25 @@ type Props = {
   previousPage?: string;
 };
 
-export const EmailSent = ({ email, previousPage }: Props) => {
+export const EmailSent = ({ email, previousPage = '/' }: Props) => {
   const [hasJS, setHasJS] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     setHasJS(true);
   }, []);
 
+  const onResendClick = () => {
+    setLoading(true);
+  };
+
   return (
     <>
       <Header />
-      <Main subTitle="Sign in" successOverride="Email sent">
+      <Main
+        subTitle="Sign in"
+        successOverride={loading ? undefined : 'Email sent'}
+      >
         <PageBox>
           <PageHeader>Check your email inbox</PageHeader>
           <PageBody>
@@ -56,9 +64,10 @@ export const EmailSent = ({ email, previousPage }: Props) => {
                 <Button
                   css={button}
                   type="submit"
+                  onClick={onResendClick}
                   data-cy="resend-email-button"
                 >
-                  Resend email
+                  {loading ? 'Resending...' : 'Resend email'}
                 </Button>
                 <br />
                 <br />
