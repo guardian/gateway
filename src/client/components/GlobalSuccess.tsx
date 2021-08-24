@@ -14,21 +14,23 @@ interface GlobalSuccessProps {
   success: string;
 }
 
-const successDiv = css`
+const containerStyles = css`
   padding: ${space[2]}px 0;
   background-color: ${success[400]};
   width: 100%;
   text-align: center;
 `;
 
-const successP = css`
+const textStyles = css`
   display: flex;
   justify-content: left;
   text-align: left;
   color: ${neutral[100]};
   margin: 0;
   ${textSans.medium()}
+`;
 
+const svgStyles = css`
   svg {
     flex: 0 0 auto;
     width: 30px;
@@ -39,19 +41,21 @@ const successP = css`
   }
 `;
 
+const gridStyles = gridItem({
+  ...gridItemColumnConsents,
+  ...{ WIDE: { start: 1, span: COLUMNS.WIDE } },
+});
+
+const rowStyles = css`
+  ${gridRow}
+  margin: 0 auto;
+`;
+
 export const GlobalSuccess = ({ success }: GlobalSuccessProps) => {
-  const row = css`
-    ${gridRow}
-    margin: 0 auto;
-  `;
-  const item = gridItem({
-    ...gridItemColumnConsents,
-    ...{ WIDE: { start: 1, span: COLUMNS.WIDE } },
-  });
   return (
-    <div css={successDiv} role="complementary">
-      <div css={row}>
-        <p css={[successP, item]}>
+    <div css={containerStyles} role="complementary">
+      <div css={rowStyles}>
+        <p css={[textStyles, svgStyles, gridStyles]}>
           <SvgTickRound />
           <div>{success}</div>
         </p>
