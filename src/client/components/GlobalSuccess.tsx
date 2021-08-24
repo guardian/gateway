@@ -55,10 +55,10 @@ export const GlobalSuccess = ({ success }: GlobalSuccessProps) => {
   return (
     <div css={containerStyles} role="complementary">
       <div css={rowStyles}>
-        <p css={[textStyles, svgStyles, gridStyles]}>
+        <div css={[textStyles, svgStyles, gridStyles]}>
           <SvgTickRound />
           <div>{success}</div>
-        </p>
+        </div>
       </div>
     </div>
   );
