@@ -1,6 +1,9 @@
 import { Request, Router } from 'express';
 import { authenticate } from '@/server/lib/idapi/auth';
-import { create, resendAccountVerificationEmail } from '@/server/lib/idapi/user';
+import {
+  create,
+  resendAccountVerificationEmail,
+} from '@/server/lib/idapi/user';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { Routes } from '@/shared/model/Routes';
