@@ -22,7 +22,6 @@ export interface PageData {
   // general page data
   returnUrl?: string;
   email?: string;
-  subTitle?: string;
   signInPageUrl?: string;
   geolocation?: GeoLocation;
   fieldErrors?: Array<FieldError>;

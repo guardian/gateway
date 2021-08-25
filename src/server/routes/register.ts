@@ -1,6 +1,6 @@
 import { Request, Router } from 'express';
 import { authenticate } from '@/server/lib/idapi/auth';
-import { create } from '@/server/lib/idapi/user';
+import { create, resendAccountVerificationEmail } from '@/server/lib/idapi/user';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { Routes } from '@/shared/model/Routes';
@@ -11,7 +11,7 @@ import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import deepmerge from 'deepmerge';
-import { readEmailCookie } from '@/server/lib/emailCookie';
+import { readEmailCookie, setGUEmailCookie } from '@/server/lib/emailCookie';
 const router = Router();
 
 router.get(
@@ -33,14 +33,42 @@ router.get(
       requestState: deepmerge(state, {
         pageData: {
           email: readEmailCookie(req),
-          subTitle: 'Register',
-          previousPage: '/signin/register',
         },
       }),
       pageTitle: PageTitle.REGISTRATION_EMAIL_SENT,
     });
     res.type('html').send(html);
   },
+);
+
+// POST form handler to resend account verification email
+router.post(
+  `${Routes.REGISTRATION_EMAIL_SENT}${Routes.RESEND}`,
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    const { email } = req.body;
+    const { returnUrl } = res.locals.queryParams;
+
+    try {
+      await resendAccountVerificationEmail(email, req.ip, returnUrl);
+
+      setGUEmailCookie(res, email);
+
+      return res.redirect(303, Routes.REGISTRATION_EMAIL_SENT);
+    } catch (error) {
+      const { message, status } = error;
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+
+      const html = renderer(`${Routes.REGISTRATION_EMAIL_SENT}`, {
+        pageTitle: PageTitle.REGISTRATION_EMAIL_SENT,
+        requestState: deepmerge(res.locals, {
+          globalMessage: {
+            error: message,
+          },
+        }),
+      });
+      return res.status(status).type('html').send(html);
+    }
+  }),
 );
 
 router.post(

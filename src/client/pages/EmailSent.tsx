@@ -16,12 +16,14 @@ type Props = {
   email?: string;
   previousPage?: string;
   subTitle?: string;
+  resendEmailAction?: string;
 };
 
 export const EmailSent = ({
   email,
   previousPage,
   subTitle = 'Sign in',
+  resendEmailAction,
 }: Props) => {
   const [hasJS, setHasJS] = useState<boolean>(false);
 
@@ -46,8 +48,8 @@ export const EmailSent = ({
               find it, it may be in your spam folder.
             </PageBodyText>
             <PageBodyText>The link is only valid for 30 minutes.</PageBodyText>
-            {email && previousPage && hasJS && (
-              <form method="post" action={previousPage}>
+            {email && resendEmailAction && hasJS && (
+              <form method="post" action={resendEmailAction}>
                 <CsrfFormField />
                 <TextInput
                   label=""
