@@ -98,6 +98,7 @@ const EyeSymbol = ({
 
   return (
     <button
+      type="button"
       css={buttonStyles}
       onClick={onClick}
       title="show or hide password text"
@@ -140,11 +141,9 @@ export const PasswordInput = ({
       {isEyeDisplayedOnBrowser ? (
         <EyeSymbol
           isOpen={!passwordVisible}
-          onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+          onClick={() => {
             // Toggle viewability of password
             setPasswordVisible((previousState) => !previousState);
-            // Prevent the form being submitted
-            event.preventDefault();
           }}
         />
       ) : null}
