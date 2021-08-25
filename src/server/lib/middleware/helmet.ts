@@ -7,7 +7,7 @@ enum HELMET_OPTIONS {
   SELF = "'self'",
   NONE = "'none'",
   UNSAFE_INLINE = "'unsafe-inline'",
-  UNSAFE_EVAL = "'unsafe-eval'",
+  UNSAFE_EVAL = "'unsafe-eval'", // !!! ONLY USE FOR DEV !!!
 }
 
 enum CSP_VALID_URI {
