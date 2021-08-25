@@ -1,12 +1,13 @@
 import { default as helmet } from 'helmet';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 
-const { baseUri, gaUID, apiDomain, idapiBaseUrl } = getConfiguration();
+const { baseUri, gaUID, apiDomain, idapiBaseUrl, stage } = getConfiguration();
 
 enum HELMET_OPTIONS {
   SELF = "'self'",
   NONE = "'none'",
   UNSAFE_INLINE = "'unsafe-inline'",
+  UNSAFE_EVAL = "'unsafe-eval'",
 }
 
 enum CSP_VALID_URI {
@@ -23,6 +24,14 @@ enum CSP_VALID_URI {
 
 const idapiOrigin = idapiBaseUrl.replace(/https?:\/\/|\/identity-api/g, '');
 
+const scriptSrc = [
+  `${baseUri}`,
+  gaUID.hash, // google analytics id
+  CSP_VALID_URI.GOOGLE_ANALYTICS,
+  CSP_VALID_URI.CMP,
+];
+if (stage === 'DEV') scriptSrc.push(HELMET_OPTIONS.UNSAFE_EVAL);
+
 const helmetConfig = {
   contentSecurityPolicy: {
     directives: {
@@ -30,12 +39,7 @@ const helmetConfig = {
       defaultSrc: [HELMET_OPTIONS.NONE],
       frameAncestors: [HELMET_OPTIONS.NONE],
       styleSrc: [HELMET_OPTIONS.UNSAFE_INLINE],
-      scriptSrc: [
-        `${baseUri}`,
-        gaUID.hash, // google analytics id
-        CSP_VALID_URI.GOOGLE_ANALYTICS,
-        CSP_VALID_URI.CMP,
-      ],
+      scriptSrc,
       imgSrc: [
         `${baseUri}`,
         CSP_VALID_URI.GUARDIAN_STATIC,
