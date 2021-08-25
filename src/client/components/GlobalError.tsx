@@ -71,7 +71,7 @@ export const GlobalError = ({ error, link, left }: GlobalErrorProps) => {
   return (
     <div css={errorDiv(!left)} role="complementary">
       <div css={row}>
-        <p css={[errorP(left), item]}>
+        <div css={[errorP(left), item]}>
           <SvgAlertTriangle />
           <div>
             {error}
@@ -80,7 +80,7 @@ export const GlobalError = ({ error, link, left }: GlobalErrorProps) => {
               {link.linkText}
             </Link>
           </div>
-        </p>
+        </div>
       </div>
     </div>
   );

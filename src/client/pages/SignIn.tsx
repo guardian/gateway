@@ -7,6 +7,7 @@ import { PageBody } from '@/client/components/PageBody';
 import { Main } from '@/client/layouts/Main';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
+import { PasswordInput } from '@/client/components/PasswordInput';
 import { Nav } from '@/client/components/Nav';
 import { TextInput } from '@guardian/src-text-input';
 import { Button } from '@guardian/src-button';
@@ -71,12 +72,7 @@ export const SignIn = () => {
                 name="email"
                 type="email"
               />
-              <TextInput
-                css={textInput}
-                label="Password"
-                name="password"
-                type="password"
-              />
+              <PasswordInput label="Password" />
               <Links>
                 <Link subdued={true} href="/reset">
                   Reset password
