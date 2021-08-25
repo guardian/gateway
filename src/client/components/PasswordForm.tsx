@@ -257,6 +257,8 @@ export const PasswordForm = ({
 
       <PasswordInput
         error={error}
+        label="New Password"
+        supporting="Must be between 8 and 72 characters"
         onChange={(e) => {
           setPassword(e.target.value);
         }}
