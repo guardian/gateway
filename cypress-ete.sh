@@ -6,9 +6,17 @@ set -ae
 trap 'kill $(jobs -p)' INT TERM EXIT
 
 source .env
-CI_ENV=$(cat .env | tr '\n' ',')
-CI_ENV=${CI_ENV%?}
-yarn build
-yarn start &
-yarn wait-on:server
-yarn cypress open --env $CI_ENV
+
+if [[ -z "${CYPRESS_MAILSLURP_KEY}" ]]; then
+  echo "You don't have the CYPRESS_MAILSLURP_KEY environment variable set!"
+  echo
+  echo "This key is required to run these ete Cypress tests. You can find your api key here: https://app.mailslurp.com/settings/" 
+  echo
+else
+  CI_ENV=$(cat .env | tr '\n' ',')
+  CI_ENV=${CI_ENV%?}
+  yarn build
+  yarn start &
+  yarn wait-on:server
+  yarn cypress open --env $CI_ENV
+fi
