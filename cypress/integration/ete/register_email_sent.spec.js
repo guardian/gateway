@@ -3,9 +3,6 @@
 import { injectAndCheckAxe } from '../../support/cypress-axe';
 
 describe('Registration email sent page', () => {
-  const testUserEncryptedEmailCookie =
-    'InRlc3QrMTM0MTFAZ3VhcmRpYW4uY29tIg%3D%3D';
-
   context('A11y checks', () => {
     it('has no detectable a11y violations on the registration email sent page', () => {
       // set encrypted email
@@ -17,6 +14,11 @@ describe('Registration email sent page', () => {
     });
   });
 
+  const testUserEmail = 'test+13411@guardian.com';
+  const testUserEncryptedEmailCookie = Buffer.from(
+    JSON.stringify(testUserEmail),
+  ).toString('base64');
+
   it('should load the page with a success banner given a valid encrypted email cookie', () => {
     // set encrypted email
     cy.setCookie('GU_email', testUserEncryptedEmailCookie, {
@@ -24,7 +26,7 @@ describe('Registration email sent page', () => {
     });
     cy.visit(`/register/email-sent`);
     cy.contains('Email sent');
-    cy.contains('test+13411@guardian.com');
+    cy.contains(testUserEmail);
     cy.contains('Resend email');
     cy.contains('Change email address');
   });
@@ -74,6 +76,4 @@ describe('Registration email sent page', () => {
     cy.contains('Change email address');
     cy.contains('Email sent');
   });
-
-  // mock errors for when resend email CTA fails.
 });
