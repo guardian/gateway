@@ -47,7 +47,8 @@ const ulStyles = css`
 const columnStyles = css`
   display: flex;
   flex-direction: column;
-  flex-basis: 100%;
+  flex-basis: 0;
+  flex-grow: 1;
   padding-top: ${space[3]}px;
   padding-right: 0;
   padding-bottom: 0;
