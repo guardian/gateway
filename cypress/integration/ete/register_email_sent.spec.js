@@ -29,7 +29,7 @@ describe('Registration email sent page', () => {
     cy.contains('Change email address');
   });
 
-  // This test depends on this Mailslurp account already being registered
+  // This test depends on this Mailslurp account already being sent to the /guest endpoint.
   const resendTestEmail = {
     email: '7b4f97c5-79cd-4a3c-9212-cfb6db959dfc@mailslurp.com',
     inbox: '7b4f97c5-79cd-4a3c-9212-cfb6db959dfc',
@@ -58,9 +58,22 @@ describe('Registration email sent page', () => {
     });
   });
 
-  it('should navigate back to the correct page when change email is clicked', () => {});
+  it('should navigate back to the correct page when change email is clicked', () => {
+    // set encrypted email
+    cy.setCookie('GU_email', testUserEncryptedEmailCookie, {
+      log: true,
+    });
+    cy.visit(`/register/email-sent`);
+    cy.contains('Change email address').click();
+    cy.contains('Sign in');
+    cy.title().should('eq', 'Sign in | The Guardian');
+  });
 
-  it('should render properly if the encrypted email cookie is not set', () => {});
+  it('should render properly if the encrypted email cookie is not set', () => {
+    cy.visit(`/register/email-sent`);
+    cy.contains('Change email address');
+    cy.contains('Email sent');
+  });
 
   // mock errors for when resend email CTA fails.
 });
