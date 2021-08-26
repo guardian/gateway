@@ -95,9 +95,3 @@ Cypress.Commands.add('setMvtId', (str) => {
     log: true,
   });
 });
-
-Cypress.Commands.add('setEncryptedEmailCookie', (str) => {
-  cy.setCookie('GU_email', str, {
-    log: true,
-  });
-});
