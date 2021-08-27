@@ -14,7 +14,8 @@ import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import deepmerge from 'deepmerge';
-import { readEmailCookie, setGUEmailCookie } from '@/server/lib/emailCookie';
+import { setGUEmailCookie } from '@/server/lib/emailCookie';
+import { getEmailFromPlaySessionCookie } from '../lib/playSessionCookie';
 const router = Router();
 
 router.get(
@@ -35,7 +36,7 @@ router.get(
     const html = renderer(Routes.REGISTRATION_EMAIL_SENT, {
       requestState: deepmerge(state, {
         pageData: {
-          email: readEmailCookie(req),
+          email: getEmailFromPlaySessionCookie(req),
         },
       }),
       pageTitle: PageTitle.REGISTRATION_EMAIL_SENT,

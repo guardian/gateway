@@ -6,7 +6,7 @@ describe('Registration email sent page', () => {
   context('A11y checks', () => {
     it('has no detectable a11y violations on the registration email sent page', () => {
       // set encrypted email
-      cy.setCookie('GU_email', testUserEncryptedEmailCookie, {
+      cy.setCookie('PLAY_SESSION_2', testUserEncryptedEmailCookie, {
         log: true,
       });
       cy.visit(`/register/email-sent`);
@@ -21,7 +21,7 @@ describe('Registration email sent page', () => {
 
   it('should load the page with a success banner given a valid encrypted email cookie', () => {
     // set encrypted email
-    cy.setCookie('GU_email', testUserEncryptedEmailCookie, {
+    cy.setCookie('PLAY_SESSION_2', testUserEncryptedEmailCookie, {
       log: true,
     });
     cy.visit(`/register/email-sent`);
@@ -43,7 +43,7 @@ describe('Registration email sent page', () => {
 
   it('should resend the email when the resend button is clicked', () => {
     cy.emptyInbox(resendTestEmail.inbox).then(() => {
-      cy.setCookie('GU_email', testMailSlurpEncryptedEmailCookie, {
+      cy.setCookie('PLAY_SESSION_2', testMailSlurpEncryptedEmailCookie, {
         log: true,
       });
       cy.visit(`/register/email-sent`);
@@ -62,7 +62,7 @@ describe('Registration email sent page', () => {
 
   it('should navigate back to the correct page when change email is clicked', () => {
     // set encrypted email
-    cy.setCookie('GU_email', testUserEncryptedEmailCookie, {
+    cy.setCookie('PLAY_SESSION_2', testUserEncryptedEmailCookie, {
       log: true,
     });
     cy.visit(`/register/email-sent`);
