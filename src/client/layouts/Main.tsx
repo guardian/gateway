@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { SubHeader } from '@/client/components/SubHeader';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
@@ -31,15 +31,6 @@ const sectionStyles = css`
 export const Main = ({ subTitle, successOverride, children }: Props) => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { globalMessage: { error, success } = {} } = clientState;
-  const [showSuccess, setShowSuccess] = useState<boolean>(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowSuccess(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   const successMessage = success || successOverride;
 
@@ -47,9 +38,7 @@ export const Main = ({ subTitle, successOverride, children }: Props) => {
     <main css={mainStyles}>
       {subTitle && <SubHeader title={subTitle} />}
       {error && <GlobalError error={error} link={getErrorLink(error)} />}
-      {showSuccess && successMessage && (
-        <GlobalSuccess success={successMessage} />
-      )}
+      {successMessage && <GlobalSuccess success={successMessage} />}
       <section css={sectionStyles}>{children}</section>
     </main>
   );
