@@ -32,3 +32,11 @@ Tablet.parameters = {
     defaultViewport: 'TABLET',
   },
 };
+
+export const Mobile320 = () => <Footer />;
+Mobile320.storyName = 'At mobile 320';
+Mobile320.parameters = {
+  viewport: {
+    defaultViewport: 'MOBILE_320',
+  },
+};
