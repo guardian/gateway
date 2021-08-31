@@ -9,11 +9,6 @@ const existing = {
 describe('Sign in flow', () => {
   it('links to the correct places', () => {
     cy.visit('/signin');
-    cy.contains('Terms and Conditions').should(
-      'have.attr',
-      'href',
-      'https://www.theguardian.com/help/terms-of-service',
-    );
     cy.contains('Terms of Service').should(
       'have.attr',
       'href',
@@ -24,6 +19,8 @@ describe('Sign in flow', () => {
       'href',
       'https://policies.google.com/privacy',
     );
+    cy.contains('Terms and Conditions').click();
+    cy.contains('Terms and conditions of use');
   });
 
   it('shows a message when credentials are invalid', () => {
