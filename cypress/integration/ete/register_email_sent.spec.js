@@ -8,9 +8,9 @@ describe('Registration email sent page', () => {
     inbox: '7b4f97c5-79cd-4a3c-9212-cfb6db959dfc',
   };
 
-  const encryptedEmail = Buffer.from(JSON.stringify(email.value)).toString(
-    'base64',
-  );
+  // PLAY_SESSION_2 encrypted email as returned from identity-framework in dev.
+  const encryptedEmail =
+    'eyJhbGciOiJIUzI1NiJ9.eyJkYXRhIjp7ImVtYWlsIjoiN2I0Zjk3YzUtNzljZC00YTNjLTkyMTItY2ZiNmRiOTU5ZGZjQG1haWxzbHVycC5jb20ifSwiZXhwIjoxNjMwNDI2NDEzLCJuYmYiOjE2MzA0MjQ2MTMsImlhdCI6MTYzMDQyNDYxM30.6Qb79W-oOn64rv9abWBOVqkQzKD-4lclLbysCtSgGTc';
 
   context('A11y checks', () => {
     it('has no detectable a11y violations on the registration email sent page', () => {
