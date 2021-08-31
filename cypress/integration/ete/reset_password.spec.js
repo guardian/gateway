@@ -4,8 +4,8 @@ describe('Password reset flow', () => {
   context('Account exists', () => {
     // This test depends on this Mailslurp account already being registered
     const existing = {
-      email: '0298a96c-1028-4e3d-b943-a2b478c84dbd@mailslurp.com',
-      inbox: '0298a96c-1028-4e3d-b943-a2b478c84dbd',
+      email: 'a1ae9048-2823-45a0-a0e1-89e8f7a22420@mailslurp.com',
+      inbox: 'a1ae9048-2823-45a0-a0e1-89e8f7a22420',
     };
 
     it("changes the reader's password", () => {
