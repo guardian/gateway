@@ -5,6 +5,7 @@ import { LinkButton } from '@guardian/src-button';
 import { SvgGoogleBrand } from '@guardian/src-icons';
 import { SvgAppleBrand } from '@guardian/src-icons';
 import { SvgFacebookBrand } from '@guardian/src-icons';
+import { from } from '@guardian/src-foundations/mq';
 
 type Props = {
   returnUrl: string;
@@ -12,16 +13,22 @@ type Props = {
 
 const containerStyles = css`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  ${from.mobileLandscape} {
+    flex-direction: row;
+  }
   justify-content: center;
+  margin-top: ${space[12]}px;
+  margin-bottom: ${space[12]}px;
   width: 100%;
-  margin: ${space[9]}px 0;
 `;
 
 const buttonOverrides = css`
   border-color: ${brand[400]};
   justify-content: flex-end;
-  min-width: 145px;
+  ${from.mobileLandscape} {
+    min-width: 145px;
+  }
 `;
 
 // TODO: If the issue below is fixed and a new version of Source published with that fix in it, then
@@ -36,7 +43,12 @@ const iconOverrides = css`
 const Gap = () => (
   <span
     css={css`
-      width: ${space[2]}px;
+      width: 0;
+      height: ${space[3]}px;
+      ${from.mobileLandscape} {
+        width: ${space[2]}px;
+        height: 0;
+      }
     `}
   ></span>
 );
