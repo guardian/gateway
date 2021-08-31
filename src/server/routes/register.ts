@@ -45,7 +45,6 @@ router.get(
   },
 );
 
-// POST form handler to resend account verification email
 router.post(
   `${Routes.REGISTRATION_EMAIL_SENT}${Routes.RESEND}`,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
