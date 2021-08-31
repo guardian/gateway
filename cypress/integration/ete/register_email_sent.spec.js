@@ -8,10 +8,10 @@ describe('Registration email sent page', () => {
     inbox: '7b4f97c5-79cd-4a3c-9212-cfb6db959dfc',
   };
 
-  const encryptedEmail = Buffer.from(
-    JSON.stringify(email.value),
-  ).toString('base64');
-  
+  const encryptedEmail = Buffer.from(JSON.stringify(email.value)).toString(
+    'base64',
+  );
+
   context('A11y checks', () => {
     it('has no detectable a11y violations on the registration email sent page', () => {
       cy.setCookie('PLAY_SESSION_2', encryptedEmail, {
