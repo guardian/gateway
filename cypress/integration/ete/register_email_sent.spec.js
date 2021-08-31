@@ -35,14 +35,14 @@ describe('Registration email sent page', () => {
 
   // Depends on a Guest account already created using this email.
   it('should resend the email when the resend button is clicked', () => {
-    cy.emptyInbox(resendTestEmail.inbox).then(() => {
+    cy.emptyInbox(email.inbox).then(() => {
       cy.setCookie('PLAY_SESSION_2', encryptedEmail, {
         log: true,
       });
       cy.visit(`/register/email-sent`);
       cy.contains(email.value);
       cy.contains('Resend email').click();
-      cy.waitForLatestEmail(resendTestEmail.inbox).then((email) => {
+      cy.waitForLatestEmail(email.inbox).then((email) => {
         expect(email.body).to.contain('Complete registration');
         // Extract the welcome token, so we can redirect to the welcome flow.
         const match = email.body.match(/theguardian.com\/welcome\/([^"]*)/);
