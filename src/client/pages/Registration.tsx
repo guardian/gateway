@@ -64,7 +64,7 @@ export const Registration = ({ returnUrl = '', email = '' }: Props) => {
                 name="password"
                 type="password"
               />
-              <Button css={button} type="submit">
+              <Button css={button} type="submit" data-cy="register-button">
                 Register
               </Button>
             </form>
