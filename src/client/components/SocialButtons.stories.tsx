@@ -16,6 +16,7 @@ Desktop.parameters = {
   viewport: {
     defaultViewport: 'DESKTOP',
   },
+  chromatic: { viewports: [1300] },
 };
 
 export const Mobile = () => (
@@ -26,4 +27,5 @@ Mobile.parameters = {
   viewport: {
     defaultViewport: 'MOBILE_320',
   },
+  chromatic: { viewports: [320] },
 };
