@@ -10,6 +10,7 @@ import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { readEmailCookie, setGUEmailCookie } from '@/server/lib/emailCookie';
+import { RequestError } from '@/shared/lib/error';
 
 const router = Router();
 
@@ -47,7 +48,7 @@ router.post(
       setGUEmailCookie(res, email);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      const { message, status } = error;
+      const { message, status } = error as RequestError;
 
       trackMetric(Metrics.SEND_PASSWORD_RESET_FAILURE);
 
