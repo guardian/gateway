@@ -60,6 +60,7 @@ export const SocialButtons = ({ returnUrl }: Props) => (
       cssOverrides={buttonOverrides}
       icon={<SvgFacebookBrand />}
       href={`https://oauth.theguardian.com/facebook/signin?returnUrl=${returnUrl}`}
+      data-cy="facebook-sign-in-button"
     >
       Facebook
     </LinkButton>
@@ -69,6 +70,7 @@ export const SocialButtons = ({ returnUrl }: Props) => (
       cssOverrides={[buttonOverrides, iconOverrides]}
       icon={<SvgGoogleBrand />}
       href={`https://oauth.theguardian.com/google/signin?returnUrl=${returnUrl}`}
+      data-cy="google-sign-in-button"
     >
       Google
     </LinkButton>
@@ -78,6 +80,7 @@ export const SocialButtons = ({ returnUrl }: Props) => (
       cssOverrides={[buttonOverrides, iconOverrides]}
       icon={<SvgAppleBrand />}
       href={`https://oauth.theguardian.com/apple/signin?returnUrl=${returnUrl}`}
+      data-cy="apple-sign-in-button"
     >
       Apple
     </LinkButton>
