@@ -3,16 +3,17 @@ import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { EmailSent } from '@/client/pages/EmailSent';
 
-export const EmailSentPage = () => {
+export const RegistrationEmailSentPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { pageData = {} } = clientState;
-  const { email, previousPage } = pageData;
+  const { email } = pageData;
 
   return (
     <EmailSent
       email={email}
-      previousPage={previousPage}
-      resendEmailAction={previousPage}
+      subTitle={'Register'}
+      previousPage={'/signin'}
+      resendEmailAction={'/register/email-sent/resend'}
     />
   );
 };

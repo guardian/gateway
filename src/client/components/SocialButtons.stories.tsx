@@ -8,7 +8,24 @@ export default {
   component: SocialButtons,
 } as Meta;
 
-export const Default = () => (
+export const Desktop = () => (
   <SocialButtons returnUrl="https://www.theguardian.com/uk/" />
 );
-Default.storyName = 'with defaults';
+Desktop.storyName = 'At desktop';
+Desktop.parameters = {
+  viewport: {
+    defaultViewport: 'DESKTOP',
+  },
+  chromatic: { viewports: [1300] },
+};
+
+export const Mobile = () => (
+  <SocialButtons returnUrl="https://www.theguardian.com/uk/" />
+);
+Mobile.storyName = 'At mobile 320';
+Mobile.parameters = {
+  viewport: {
+    defaultViewport: 'MOBILE_320',
+  },
+  chromatic: { viewports: [320] },
+};
