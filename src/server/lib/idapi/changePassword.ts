@@ -50,7 +50,7 @@ export async function validate(
     return result.user?.primaryEmailAddress;
   } catch (error) {
     logger.error(`IDAPI Error changePassword validate ${url}`, error);
-    handleError(error as IDAPIError);
+    handleError(error);
   }
 }
 
@@ -72,6 +72,6 @@ export async function change(password: string, token: string, ip: string) {
       `IDAPI Error changePassword change ${ApiRoutes.CHANGE_PASSWORD}`,
       error,
     );
-    handleError(error as IDAPIError);
+    handleError(error);
   }
 }

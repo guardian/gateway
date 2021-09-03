@@ -43,7 +43,6 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { Configuration } from '@/server/models/Configuration';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { logger } from '@/server/lib/logger';
-import { RequestError } from '@/shared/lib/error';
 
 const router = Router();
 
@@ -384,7 +383,7 @@ function getABTestGETHandler(
       status = 200;
     } catch (error) {
       logger.error(`consents getABTestGETHandler error`, error);
-      [status, state] = getErrorResponse(error as IDAPIError, state);
+      [status, state] = getErrorResponse(error, state);
     }
 
     const html = renderer(route, {
@@ -414,9 +413,9 @@ function getABTestPOSTHandler(
       await entitySetter(req.ip, sc_gu_u, req.body);
       res.redirect(303, url);
       return;
-    } catch (error) {
-      logger.error(`consents getABTestPOSTHandler error`, error);
-      [status, state] = getErrorResponse(error as IDAPIError, state);
+    } catch (e) {
+      logger.error(`consents getABTestPOSTHandler error`, e);
+      [status, state] = getErrorResponse(e, state);
     }
 
     const html = renderer(route, {
@@ -501,13 +500,12 @@ router.get(
           ...(await read(req.ip, sc_gu_u, state.pageData.geolocation)),
         },
       } as RequestState);
-    } catch (error) {
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      const { status: errorStatus, message } = error as RequestError;
-      status = errorStatus;
+    } catch (e) {
+      logger.error(`${req.method} ${req.originalUrl}  Error`, e);
+      status = e.status;
       state = deepmerge(state, {
         globalMessage: {
-          error: message,
+          error: e.message,
         },
       });
     }
@@ -560,13 +558,12 @@ router.post(
         url = addReturnUrlToPath(url, state.queryParams.returnUrl);
       }
       return res.redirect(303, url);
-    } catch (error) {
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      const { status: errorStatus, message } = error as RequestError;
-      status = errorStatus;
+    } catch (e) {
+      logger.error(`${req.method} ${req.originalUrl}  Error`, e);
+      status = e.status;
       state = deepmerge(state, {
         globalMessage: {
-          error: message,
+          error: e.message,
         },
       });
     }

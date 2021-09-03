@@ -20,7 +20,6 @@ import { PageTitle } from '@/shared/model/PageTitle';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { EMAIL_SENT } from '@/shared/model/Success';
-import { RequestError } from '@/shared/lib/error';
 
 const router = Router();
 
@@ -57,13 +56,12 @@ router.get(
       });
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      const { status: errorStatus, message } = error as RequestError;
-      status = errorStatus;
+      status = error.status;
 
       if (status === 500) {
         state = deepmerge(state, {
           globalMessage: {
-            error: message,
+            error: error.message,
           },
         });
       }
@@ -111,11 +109,10 @@ router.post(
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
       trackMetric(Metrics.SEND_VALIDATION_EMAIL_FAILURE);
-      const { status: errorStatus, message } = error as RequestError;
-      status = errorStatus;
+      status = error.status;
       state = deepmerge(state, {
         globalMessage: {
-          error: message,
+          error: error.message,
         },
       });
     }
@@ -140,8 +137,8 @@ router.get(
       setIDAPICookies(res, cookies);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      const { message } = error as RequestError;
-      if (message === VerifyEmailErrors.USER_ALREADY_VALIDATED) {
+
+      if (error.message === VerifyEmailErrors.USER_ALREADY_VALIDATED) {
         return res.redirect(
           303,
           addReturnUrlToPath(
