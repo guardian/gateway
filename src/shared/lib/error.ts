@@ -1,8 +1,8 @@
 /**
  * Interface for RequestError.
- * TODO
+ * Type for errors caught in Express controllers.
  *
- * @interface RequestError
+ * @type RequestError
  */
 export type RequestError = {
   message: string;

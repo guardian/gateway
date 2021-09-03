@@ -16,6 +16,7 @@ import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import deepmerge from 'deepmerge';
 import { setGUEmailCookie } from '@/server/lib/emailCookie';
 import { getEmailFromPlaySessionCookie } from '../lib/playSessionCookie';
+import { RequestError } from '@/shared/lib/error';
 const router = Router();
 
 router.get(
@@ -58,7 +59,7 @@ router.post(
 
       return res.redirect(303, Routes.REGISTRATION_EMAIL_SENT);
     } catch (error) {
-      const { message, status } = error;
+      const { message, status } = error as RequestError;
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
       const html = renderer(`${Routes.REGISTRATION_EMAIL_SENT}`, {
@@ -91,7 +92,7 @@ router.post(
       setIDAPICookies(res, cookies);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      const { message, status } = error;
+      const { message, status } = error as RequestError;
 
       trackMetric(Metrics.REGISTER_FAILURE);
 

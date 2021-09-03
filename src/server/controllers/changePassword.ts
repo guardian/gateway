@@ -15,6 +15,7 @@ import { ChangePasswordErrors } from '@/shared/model/Errors';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
+import { RequestError } from '@/shared/lib/error';
 
 const validatePasswordField = (password: string): Array<FieldError> => {
   const errors: Array<FieldError> = [];
@@ -119,7 +120,7 @@ export const setPasswordTokenController = (
 
       return successCallback(res);
     } catch (error) {
-      const { message, status } = error;
+      const { message, status } = error as RequestError;
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
       // see the comment above around the success metrics
