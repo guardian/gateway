@@ -1,4 +1,4 @@
-import { OphanABEvent } from '@guardian/types/dist/ophan';
+import { OphanABEvent } from '@guardian/libs';
 
 export interface OphanInteraction {
   component: string;
