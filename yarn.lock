@@ -2994,10 +2994,10 @@
     "@guardian/src-foundations" "^3.8.0"
     mini-svg-data-uri "^1.3.3"
 
-"@guardian/src-icons@^3.8.0":
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/@guardian/src-icons/-/src-icons-3.8.0.tgz#11f1bbfbbbbe04f63afeb614cfb1513ee97d1477"
-  integrity sha512-46Q/5YuLE+Z9wJSCD3wn9Nhlzvu7cyyzmNzcQI7iWUgYY5GCxm3pgI+xkqwAyKi49JBqZu1mgxp/eBFh5KLkdw==
+"@guardian/src-icons@^3.8.0", "@guardian/src-icons@^3.9.0":
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-icons/-/src-icons-3.9.0.tgz#2c1c8c3fc91ba7916371d1608bcd09b925ba17bd"
+  integrity sha512-RlyU41mwRkXUdQSt7+JzXYaDXdqEady5/NiweFtunPeIXYGEoSe/5i6KPZdaIJ5vTnoRmglNYJhdMVbvzxfV2Q==
 
 "@guardian/src-label@^3.8.0":
   version "3.8.0"
