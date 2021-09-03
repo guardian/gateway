@@ -7,14 +7,19 @@ import { verify as verifyJWT } from 'jsonwebtoken';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/logger';
 
-const { playSessionCookieSecret } = getConfiguration();
+const { playSessionCookieSecret, stage } = getConfiguration();
 
 const getCookieFromPlaySession: (req: Request) => any = (req) => {
   if (req.cookies['PLAY_SESSION_2']) {
     try {
+      const jwtOptions = {
+        ignoreExpiration: stage === 'DEV',
+      };
+
       const session: any = verifyJWT(
         req.cookies['PLAY_SESSION_2'],
         playSessionCookieSecret,
+        jwtOptions,
       );
       return session.data;
     } catch (error) {
