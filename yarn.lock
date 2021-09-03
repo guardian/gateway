@@ -2934,10 +2934,10 @@
   resolved "https://registry.yarnpkg.com/@guardian/libs/-/libs-1.8.1.tgz#22bccd66be7c5bf70cd5bbb1bf7700d94610ccb7"
   integrity sha512-Q/JPLhNeYa5XhDPJhw/1+fbZmszopvovWW8I7dGEuFPGWeNUmXAbW8J3kzuonDu7l9/tuFZg8jljbKHZlrFx0A==
 
-"@guardian/libs@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@guardian/libs/-/libs-3.1.0.tgz#44b0291741a0fce588167f4ec8c17fa9a7d41261"
-  integrity sha512-GJk34o9lUmP6FcBKd0FSV2RwvAKKJzcAV5mVdhgq/JmBNj8Ns5eiJlq8LG2ewIJJSzRaWT4h8Fg6n9KI8K0xDQ==
+"@guardian/libs@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@guardian/libs/-/libs-3.2.0.tgz#6017421bb48118902bfdfe05a6d0eef836bf780a"
+  integrity sha512-/5c28BvfI+MKHAYYZ3jnvEbQc4TRiTE6T4e05kmwagNPlAgjy0r6z937tP307LhwYoctw37NUIjzVdCoBovY9w==
 
 "@guardian/node-riffraff-artifact@^0.2.2":
   version "0.2.2"
