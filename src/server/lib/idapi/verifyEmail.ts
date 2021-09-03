@@ -41,7 +41,7 @@ export async function verifyEmail(token: string, ip: string) {
     return result.cookies;
   } catch (error) {
     logger.error(`IDAPI Error verifyEmail ${url}`, error);
-    handleError(error);
+    handleError(error as IDAPIError);
   }
 }
 
@@ -57,6 +57,6 @@ export async function send(ip: string, sc_gu_u: string) {
       `IDAPI Error verifyEmail send ${ApiRoutes.RESEND_VERIFY_EMAIL}`,
       error,
     );
-    return handleError(error);
+    return handleError(error as IDAPIError);
   }
 }

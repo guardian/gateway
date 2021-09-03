@@ -38,8 +38,8 @@ export const read = async (): Promise<Consent[]> => {
     return ((await idapiFetch(url, options)) as ConsentAPIResponse[]).map(
       responseToEntity,
     );
-  } catch (e) {
-    logger.error(`IDAPI Error consents read ${url}`, e);
+  } catch (error) {
+    logger.error(`IDAPI Error consents read ${url}`, error);
     return handleError();
   }
 };
@@ -57,8 +57,8 @@ export const update = async (
   try {
     await idapiFetch(url, options);
     return;
-  } catch (e) {
-    logger.error(`IDAPI Error consents update ${url}`, e);
+  } catch (error) {
+    logger.error(`IDAPI Error consents update ${url}`, error);
     return handleError();
   }
 };
