@@ -20,6 +20,7 @@ import { SignInPage } from '@/client/pages/SignInPage';
 import { MagicLinkPage } from '@/client/pages/MagicLinkPage';
 import { WelcomePage } from '@/client/pages/WelcomePage';
 import { WelcomeResendPage } from '@/client/pages/WelcomeResend';
+import { RegistrationEmailSentPage } from './pages/RegistrationEmailSentPage';
 
 export type RoutingConfig = {
   clientState: ClientState;
@@ -36,6 +37,9 @@ export const GatewayRoutes = () => (
     </Route>
     <Route exact path={Routes.REGISTRATION}>
       <RegistrationPage />
+    </Route>
+    <Route exact path={Routes.REGISTRATION_EMAIL_SENT}>
+      <RegistrationEmailSentPage />
     </Route>
     <Route exact path={Routes.RESET}>
       <ResetPasswordPage />

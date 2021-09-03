@@ -15,9 +15,16 @@ import { CsrfFormField } from '@/client/components/CsrfFormField';
 type Props = {
   email?: string;
   previousPage?: string;
+  subTitle?: string;
+  resendEmailAction?: string;
 };
 
-export const EmailSent = ({ email, previousPage = '/' }: Props) => {
+export const EmailSent = ({
+  email,
+  previousPage = '/',
+  subTitle = 'Sign in',
+  resendEmailAction,
+}: Props) => {
   const [hasJS, setHasJS] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -33,7 +40,7 @@ export const EmailSent = ({ email, previousPage = '/' }: Props) => {
     <>
       <Header />
       <Main
-        subTitle="Sign in"
+        subTitle={subTitle}
         successOverride={loading ? undefined : 'Email sent'}
       >
         <PageBox>
@@ -49,8 +56,8 @@ export const EmailSent = ({ email, previousPage = '/' }: Props) => {
               find it, it may be in your spam folder.
             </PageBodyText>
             <PageBodyText>The link is only valid for 30 minutes.</PageBodyText>
-            {email && previousPage && hasJS && (
-              <form method="post" action={previousPage}>
+            {email && resendEmailAction && hasJS && (
+              <form method="post" action={resendEmailAction}>
                 <CsrfFormField />
                 <TextInput
                   label=""
