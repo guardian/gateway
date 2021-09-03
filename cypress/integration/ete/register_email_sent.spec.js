@@ -43,10 +43,12 @@ describe('Registration email sent page', () => {
       cy.visit(`/register/email-sent`);
       cy.contains(email.value);
       cy.contains('Resend email').click();
-      cy.waitForLatestEmail(email.inbox).then((email) => {
-        expect(email.body).to.contain('Complete registration');
+      cy.waitForLatestEmail(email.inbox).then((emailResponse) => {
+        expect(emailResponse.body).to.have.string('Complete registration');
         // Extract the welcome token, so we can redirect to the welcome flow.
-        const match = email.body.match(/theguardian.com\/welcome\/([^"]*)/);
+        const match = emailResponse.body.match(
+          /theguardian.com\/welcome\/([^"]*)/,
+        );
         const token = match[1];
         cy.visit(`/welcome/${token}`);
         cy.contains(email.value);
