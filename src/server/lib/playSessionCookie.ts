@@ -12,8 +12,9 @@ const { playSessionCookieSecret, stage } = getConfiguration();
 const getCookieFromPlaySession: (req: Request) => any = (req) => {
   if (req.cookies['PLAY_SESSION_2']) {
     try {
+      // Ignored expired jwt in DEV/CODE for tests which rely on a hardcoded value.
       const jwtOptions = {
-        ignoreExpiration: stage === 'DEV',
+        ignoreExpiration: stage === 'DEV' || stage === 'CODE',
       };
 
       const session: any = verifyJWT(
