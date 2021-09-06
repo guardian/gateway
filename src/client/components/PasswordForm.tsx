@@ -24,6 +24,7 @@ type Props = {
   submitUrl: string;
   fieldErrors: FieldError[];
   submitButtonText: string;
+  labelText: string;
   // for grid layout on consents page
   gridAutoRow?: AutoRow;
 };
@@ -198,6 +199,7 @@ export const PasswordForm = ({
   submitUrl,
   fieldErrors,
   submitButtonText,
+  labelText,
   gridAutoRow,
 }: Props) => {
   const [password, setPassword] = useState<string>('');
@@ -257,7 +259,7 @@ export const PasswordForm = ({
 
       <PasswordInput
         error={error}
-        label="New Password"
+        label={labelText}
         supporting="Must be between 8 and 72 characters"
         onChange={(e) => {
           setPassword(e.target.value);

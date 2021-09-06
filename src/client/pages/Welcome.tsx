@@ -33,6 +33,7 @@ export const Welcome = ({ submitUrl, email, fieldErrors }: Props) => {
           submitUrl={submitUrl}
           fieldErrors={fieldErrors}
           submitButtonText="Create password"
+          labelText="Password"
           gridAutoRow={autoRow}
         />
       </ConsentsContent>
