@@ -82,7 +82,7 @@
     "eslint-plugin-react": "^7.24.0",
     "file-loader": "^6.2.0",
     "fork-ts-checker-notifier-webpack-plugin": "^4.0.0",
-    "fork-ts-checker-webpack-plugin": "^6.3.2",
+    "fork-ts-checker-webpack-plugin": "^6.3.3",
     "husky": "^7.0.1",
     "image-webpack-loader": "^7.0.1",
     "jest": "^27.0.6",
