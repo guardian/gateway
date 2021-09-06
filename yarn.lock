@@ -3167,11 +3167,6 @@
     "@guardian/src-helpers" "^3.9.0"
     "@guardian/src-icons" "^3.9.0"
 
-"@guardian/types@^8.1.0":
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/@guardian/types/-/types-8.1.0.tgz#520e16d93c1a8f2bf36c8f4faff5bea81fb9346d"
-  integrity sha512-6qpQxHW+DwvJqc4aPrWIN0GoErTN8R+WlQ4Cq/NJKiIWROvgOytC4P/2hiLNxoEpla93cT56293Fd1cYRUhnPA==
-
 "@hapi/hoek@^9.0.0":
   version "9.0.4"
   resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-9.0.4.tgz#e80ad4e8e8d2adc6c77d985f698447e8628b6010"
