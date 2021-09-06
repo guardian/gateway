@@ -85,7 +85,7 @@
     "fork-ts-checker-webpack-plugin": "^6.3.2",
     "husky": "^7.0.1",
     "image-webpack-loader": "^7.0.1",
-    "jest": "^27.0.6",
+    "jest": "^27.1.0",
     "nodemon": "^2.0.12",
     "prettier": "^2.3.2",
     "react-test-renderer": "^17.0.2",
