@@ -49,7 +49,7 @@ describe('Registration email sent page', () => {
         const match = response.body.match(/theguardian.com\/welcome\/([^"]*)/);
         const token = match[1];
         cy.visit(`/welcome/${token}`);
-        cy.contains(email.value);
+        cy.contains('Create password');
       });
     });
   });
