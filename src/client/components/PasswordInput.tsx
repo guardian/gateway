@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react';
 import { css } from '@emotion/react';
 import { SvgEye, SvgEyeStrike } from '@guardian/src-icons';
 import { textInputDefault } from '@guardian/src-foundations/themes';
-import { space } from '@guardian/src-foundations';
+import { neutral, space } from '@guardian/src-foundations';
 import { height } from '@guardian/src-foundations/size';
 import { textInput } from '@/client/styles/Shared';
 import { ClientState } from '@/shared/model/ClientState';
@@ -62,6 +62,7 @@ const EyeIcon = ({ isOpen }: { isOpen: boolean }) => {
     svg {
       width: 30px;
       height: 30px;
+      fill: ${neutral[60]};
     }
   `;
 
