@@ -3046,10 +3046,10 @@
     "@guardian/src-helpers" "^3.9.0"
     "@guardian/src-icons" "^3.9.0"
 
-"@guardian/types@^8.0.0":
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@guardian/types/-/types-8.0.0.tgz#5fa80b3a56e4ef997514e3a1e3e5b3da6e0a6d9b"
-  integrity sha512-axy50QarWbinGJ1jz0I2Npk4U/OTSGu39PRZuFYNlFNbZrIP2CoG+DI5Ruq7ydrLxhBqXGiS2EjAGMAA3BdlCQ==
+"@guardian/types@^8.1.0":
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/@guardian/types/-/types-8.1.0.tgz#520e16d93c1a8f2bf36c8f4faff5bea81fb9346d"
+  integrity sha512-6qpQxHW+DwvJqc4aPrWIN0GoErTN8R+WlQ4Cq/NJKiIWROvgOytC4P/2hiLNxoEpla93cT56293Fd1cYRUhnPA==
 
 "@hapi/hoek@^9.0.0":
   version "9.0.4"
