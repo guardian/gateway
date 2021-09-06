@@ -66,17 +66,26 @@ const EyeIcon = ({ isOpen }: { isOpen: boolean }) => {
     }
   `;
 
-  if (isOpen)
+  // isOpen corresponds to when the password is visible
+  // so we want to show show the SvgEyeStrike to make it
+  // clear to the user that clicking this icon will make
+  // the password hidden
+  if (isOpen) {
     return (
       <div css={iconStyles}>
         <SvgEyeStrike />
       </div>
     );
-  return (
-    <div css={iconStyles}>
-      <SvgEye />
-    </div>
-  );
+  } else {
+    // otherwise we show the SvgEye when the password is
+    // hidden to make it clear to the user that clicking
+    // this icon will make the password visible
+    return (
+      <div css={iconStyles}>
+        <SvgEye />
+      </div>
+    );
+  }
 };
 
 const EyeSymbol = ({
@@ -141,9 +150,9 @@ export const PasswordInput = ({
       />
       {isEyeDisplayedOnBrowser ? (
         <EyeSymbol
-          isOpen={!passwordVisible}
+          isOpen={passwordVisible}
           onClick={() => {
-            // Toggle viewability of password
+            // Toggle visibility of password
             setPasswordVisible((previousState) => !previousState);
           }}
         />
