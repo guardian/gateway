@@ -13,6 +13,7 @@ export const Default = () => (
     submitUrl=""
     fieldErrors={[]}
     submitButtonText="Save password"
+    labelText="New Password"
   />
 );
 Default.storyName = 'default';
@@ -27,6 +28,7 @@ export const FieldError = () => (
       },
     ]}
     submitButtonText="Save password"
+    labelText="New Password"
   />
 );
 FieldError.storyName = 'With field error';

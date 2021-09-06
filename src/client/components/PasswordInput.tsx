@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react';
 import { css } from '@emotion/react';
 import { SvgEye, SvgEyeStrike } from '@guardian/src-icons';
 import { textInputDefault } from '@guardian/src-foundations/themes';
-import { space } from '@guardian/src-foundations';
+import { neutral, space } from '@guardian/src-foundations';
 import { height } from '@guardian/src-foundations/size';
 import { textInput } from '@/client/styles/Shared';
 import { ClientState } from '@/shared/model/ClientState';
@@ -62,20 +62,30 @@ const EyeIcon = ({ isOpen }: { isOpen: boolean }) => {
     svg {
       width: 30px;
       height: 30px;
+      fill: ${neutral[60]};
     }
   `;
 
-  if (isOpen)
+  // isOpen corresponds to when the password is visible
+  // so we want to show show the SvgEyeStrike to make it
+  // clear to the user that clicking this icon will make
+  // the password hidden
+  if (isOpen) {
     return (
       <div css={iconStyles}>
         <SvgEyeStrike />
       </div>
     );
-  return (
-    <div css={iconStyles}>
-      <SvgEye />
-    </div>
-  );
+  } else {
+    // otherwise we show the SvgEye when the password is
+    // hidden to make it clear to the user that clicking
+    // this icon will make the password visible
+    return (
+      <div css={iconStyles}>
+        <SvgEye />
+      </div>
+    );
+  }
 };
 
 const EyeSymbol = ({
@@ -140,9 +150,9 @@ export const PasswordInput = ({
       />
       {isEyeDisplayedOnBrowser ? (
         <EyeSymbol
-          isOpen={!passwordVisible}
+          isOpen={passwordVisible}
           onClick={() => {
-            // Toggle viewability of password
+            // Toggle visibility of password
             setPasswordVisible((previousState) => !previousState);
           }}
         />

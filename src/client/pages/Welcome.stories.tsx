@@ -9,22 +9,14 @@ export default {
   parameters: { layout: 'fullscreen' },
 } as Meta;
 
-export const Default = () => <Welcome submitUrl="" email="" fieldErrors={[]} />;
+export const Default = () => <Welcome submitUrl="" fieldErrors={[]} />;
 Default.story = {
   name: 'with defaults',
-};
-
-export const Email = () => (
-  <Welcome submitUrl="" email="example@theguardian.com" fieldErrors={[]} />
-);
-Email.story = {
-  name: 'with email',
 };
 
 export const FieldErrorPW = () => (
   <Welcome
     submitUrl=""
-    email="example@theguardian.com"
     fieldErrors={[
       {
         field: 'password',
