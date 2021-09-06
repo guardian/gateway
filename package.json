@@ -132,7 +132,7 @@
     "mjml-browser": "^4.10.2",
     "mjml-react": "^2.0.0",
     "ms": "^2.1.3",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.0.0",
     "ophan-tracker-js": "^1.3.27",
     "query-string": "^7.0.1",
     "react": "^17.0.2",
