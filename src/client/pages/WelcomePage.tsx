@@ -11,10 +11,14 @@ export const WelcomePage = () => {
   const { pageData: { fieldErrors = [] } = {} } = clientState;
   const { token } = useParams<{ token: string }>();
 
+  const params = new URLSearchParams(search);
+  const viewId = params.get('viewId') || undefined;
+
   return (
     <Welcome
       submitUrl={`${Routes.WELCOME}/${token}${search}`}
       fieldErrors={fieldErrors}
+      viewId={viewId}
     />
   );
 };

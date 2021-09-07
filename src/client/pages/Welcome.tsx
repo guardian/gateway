@@ -9,26 +9,23 @@ import {
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { sendOphanReferrerEvent } from '../lib/ophan';
-import { useLocation } from 'react-router-dom';
+
 type Props = {
   submitUrl: string;
   fieldErrors: FieldError[];
+  viewId?: string;
 };
 
-export const Welcome = ({ submitUrl, fieldErrors }: Props) => {
+export const Welcome = ({ submitUrl, fieldErrors, viewId }: Props) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
-  const { search } = useLocation();
 
   useEffect(() => {
-    const params = new URLSearchParams(search);
-    const viewId = params.get('viewId');
-
     if (viewId) {
       sendOphanReferrerEvent({
         viewId,
       });
     }
-  }, []);
+  }, [viewId]);
 
   return (
     <ConsentsLayout
