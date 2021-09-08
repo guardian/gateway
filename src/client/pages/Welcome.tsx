@@ -8,7 +8,7 @@ import {
 } from '@/client/layouts/shared/Consents';
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
-import { sendOphanReferrerEvent } from '../lib/ophan';
+import { sendOphanReferrerEvent } from '@/client/lib/ophan';
 
 type Props = {
   submitUrl: string;
