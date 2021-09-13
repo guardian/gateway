@@ -128,7 +128,7 @@
     "jsonwebtoken": "^8.5.1",
     "mailslurp-client": "^13.3.0",
     "mjml": "^4.10.2",
-    "mjml-browser": "^4.10.2",
+    "mjml-browser": "^4.10.3",
     "mjml-react": "^2.0.0",
     "ms": "^2.1.3",
     "node-fetch": "^2.6.1",
