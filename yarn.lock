@@ -3043,10 +3043,10 @@
   resolved "https://registry.yarnpkg.com/@guardian/ab-react/-/ab-react-2.0.1.tgz#f018898de584c8e70a48e69ec9e499e08f512cc5"
   integrity sha512-iOKbIxoLwRMv2eHddxL5l9mNBy/B9QaOOJgA3VUdo/jH5cUVzbF6W8yYDGcZJTolIVhSu5GPR8fitsOoup6Vww==
 
-"@guardian/consent-management-platform@^6.12.2":
-  version "6.12.2"
-  resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-6.12.2.tgz#bffd0d3d9e33a3a38881d1975571d1b80f14f724"
-  integrity sha512-2AM+kzXu1qOfvcsZJvLJOSMGxbAdJcHZA0vtVXkSljeXHcf8/Y53YLfzfEjWGXxeMmxVCCPrPzYtUaPfKQlxRg==
+"@guardian/consent-management-platform@^8.0.0":
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-8.0.0.tgz#91b26f941025043194e921d6f6f2914c5bbadaaa"
+  integrity sha512-eZDLKdibB/3htdOBO9Oz7ccffJg4MrIqwqBu1s15fWy18sIDpXdEgGeZRYx6yaOaqNgB2rbC4EsVJOM+LNldbA==
   dependencies:
     "@guardian/libs" "^1"
 
