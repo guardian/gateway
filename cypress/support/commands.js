@@ -1,20 +1,4 @@
-import { MailSlurp } from 'mailslurp-client';
-
-const apiKey = Cypress.env('MAILSLURP_KEY');
-
-const mailslurp = new MailSlurp({ apiKey });
-
-Cypress.Commands.add('createInbox', () => {
-  return mailslurp.createInbox();
-});
-
-Cypress.Commands.add('waitForLatestEmail', (inboxId) => {
-  return mailslurp.waitForLatestEmail(inboxId);
-});
-
-Cypress.Commands.add('emptyInbox', (inboxId) => {
-  return mailslurp.emptyInbox(inboxId);
-});
+require('cypress-mailosaur');
 
 // ***********************************************
 // For more comprehensive examples of custom

@@ -7,10 +7,10 @@ trap 'kill $(jobs -p)' INT TERM EXIT
 
 source .env
 
-if [[ -z "${CYPRESS_MAILSLURP_KEY}" ]]; then
-  echo "You don't have the CYPRESS_MAILSLURP_KEY environment variable set!"
+if [[ -z "${CYPRESS_MAILOSAUR_API_KEY}" ]]; then
+  echo "You don't have the CYPRESS_MAILOSAUR_API_KEY environment variable set!"
   echo
-  echo "This key is required to run these ete Cypress tests. You can find your api key here: https://app.mailslurp.com/settings/" 
+  echo "This key is required to run these ete Cypress tests. You can find your api key here: https://mailosaur.com/app/servers/<your server id>/api" 
   echo
 else
   CI_ENV=$(cat .env | tr '\n' ',')
