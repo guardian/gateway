@@ -88,7 +88,7 @@ export const ConsentsNewsletters = ({
       bgColor={CONSENTS_MAIN_COLOR}
     >
       <ConsentsContent>
-        <h2 css={[heading, autoRow()]}>Free newsletters from The Guardian</h2>
+        <h2 css={[heading, autoRow()]}>Free newsletters from the Guardian</h2>
         <p css={[text, paragraphSpacing, autoRow(consentsParagraphSpanDef)]}>
           Our newsletters help you get closer to our quality, independent
           journalism.
