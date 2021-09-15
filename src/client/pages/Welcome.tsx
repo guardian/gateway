@@ -13,19 +13,26 @@ import { sendOphanReferrerEvent } from '@/client/lib/ophan';
 type Props = {
   submitUrl: string;
   fieldErrors: FieldError[];
-  viewId?: string;
+  refViewId?: string;
+  refUrl?: string;
 };
 
-export const Welcome = ({ submitUrl, fieldErrors, viewId }: Props) => {
+export const Welcome = ({
+  submitUrl,
+  fieldErrors,
+  refViewId,
+  refUrl,
+}: Props) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
 
   useEffect(() => {
-    if (viewId) {
+    if (refViewId && refUrl) {
       sendOphanReferrerEvent({
-        viewId,
+        refViewId,
+        ref: refUrl,
       });
     }
-  }, [viewId]);
+  }, [refViewId, refUrl]);
 
   return (
     <ConsentsLayout

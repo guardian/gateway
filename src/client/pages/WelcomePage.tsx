@@ -12,13 +12,15 @@ export const WelcomePage = () => {
   const { token } = useParams<{ token: string }>();
 
   const params = new URLSearchParams(search);
-  const viewId = params.get('viewId') || undefined;
+  const refViewId = params.get('refViewId') || undefined;
+  const ref = params.get('ref') || undefined;
 
   return (
     <Welcome
       submitUrl={`${Routes.WELCOME}/${token}${search}`}
       fieldErrors={fieldErrors}
-      viewId={viewId}
+      refViewId={refViewId}
+      refUrl={ref}
     />
   );
 };
