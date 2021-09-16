@@ -1,5 +1,5 @@
 import { QueryParams } from '@/shared/model/QueryParams';
-import { validateReturnUrl } from '@/server/lib/validateReturnUrl';
+import { validateReturnUrl, validateRefUrl } from '@/server/lib/validateUrl';
 import { validateClientId } from '@/server/lib/validateClientId';
 
 const validateEmailVerified = (emailVerified?: string): boolean | undefined => {
@@ -33,11 +33,15 @@ export const parseExpressQueryParams = (
     clientId,
     emailVerified,
     csrfError,
+    refViewId,
+    ref,
   }: {
     returnUrl?: string;
     clientId?: string;
     emailVerified?: string;
     csrfError?: string;
+    refViewId?: string;
+    ref?: string;
   },
 ): QueryParams => {
   return {
@@ -45,6 +49,8 @@ export const parseExpressQueryParams = (
     clientId: validateClientId(clientId),
     emailVerified: validateEmailVerified(emailVerified),
     csrfError: validateCsrfError(method, csrfError),
+    refViewId,
+    ref: ref && validateRefUrl(ref),
   };
 };
 
