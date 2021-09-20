@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { PasswordForm } from '@/client/components/PasswordForm';
 import { FieldError } from '@/shared/model/ClientState';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
@@ -8,31 +8,14 @@ import {
 } from '@/client/layouts/shared/Consents';
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
-import { sendOphanReferrerEvent } from '@/client/lib/ophan';
 
 type Props = {
   submitUrl: string;
   fieldErrors: FieldError[];
-  refViewId?: string;
-  refUrl?: string;
 };
 
-export const Welcome = ({
-  submitUrl,
-  fieldErrors,
-  refViewId,
-  refUrl,
-}: Props) => {
+export const Welcome = ({ submitUrl, fieldErrors }: Props) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
-
-  useEffect(() => {
-    if (refViewId && refUrl) {
-      sendOphanReferrerEvent({
-        refViewId,
-        ref: refUrl,
-      });
-    }
-  }, [refViewId, refUrl]);
 
   return (
     <ConsentsLayout
