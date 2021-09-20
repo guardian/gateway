@@ -9,7 +9,6 @@ import { PageBodyText } from '@/client/components/PageBodyText';
 import { Main } from '@/client/layouts/Main';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
-import { button } from '@/client/styles/Shared';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 
 type Props = {
@@ -22,7 +21,6 @@ type Props = {
 export const EmailSent = ({
   email,
   previousPage = '/',
-  subTitle = 'Sign in',
   resendEmailAction,
 }: Props) => {
   const [hasJS, setHasJS] = useState<boolean>(false);
@@ -39,15 +37,14 @@ export const EmailSent = ({
   return (
     <>
       <Header />
-      <Main
-        subTitle={subTitle}
-        successOverride={loading ? undefined : 'Email sent'}
-      >
+      <Main successOverride={loading ? undefined : 'Email sent'}>
         <PageBox>
           <PageHeader>Check your email inbox</PageHeader>
           <PageBody>
             {email ? (
-              <PageBodyText>We’ve sent an email to {email}.</PageBodyText>
+              <PageBodyText>
+                We’ve sent an email to <b>{email}</b>.
+              </PageBodyText>
             ) : (
               <PageBodyText>We’ve sent you an email.</PageBodyText>
             )}
@@ -55,7 +52,9 @@ export const EmailSent = ({
               Please follow the instructions in this email. If you can&apos;t
               find it, it may be in your spam folder.
             </PageBodyText>
-            <PageBodyText>The link is only valid for 30 minutes.</PageBodyText>
+            <PageBodyText>
+              <b>The link is only valid for 30 minutes.</b>
+            </PageBodyText>
             {email && resendEmailAction && hasJS && (
               <form method="post" action={resendEmailAction}>
                 <CsrfFormField />
@@ -66,18 +65,13 @@ export const EmailSent = ({
                   value={email}
                   hidden={true}
                 />
-                <br />
-                <br />
                 <Button
-                  css={button}
                   type="submit"
                   onClick={onResendClick}
                   data-cy="resend-email-button"
                 >
                   {loading ? 'Resending...' : 'Resend email'}
                 </Button>
-                <br />
-                <br />
               </form>
             )}
             {previousPage && (

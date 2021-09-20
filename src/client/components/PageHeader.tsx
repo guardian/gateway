@@ -1,11 +1,9 @@
 import React, { FunctionComponent } from 'react';
 import { css } from '@emotion/react';
-import { neutral } from '@guardian/src-foundations';
 import { headline } from '@guardian/src-foundations/typography';
 import { from } from '@guardian/src-foundations/mq';
 
 const header = css`
-  border-top: 1px solid ${neutral[86]};
   width: 100%;
 `;
 

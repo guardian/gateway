@@ -22,6 +22,7 @@ import { Link } from '@guardian/src-link';
 import { textSans } from '@guardian/src-foundations/typography';
 import { Breakpoints } from '../models/Style';
 import { brandLine } from '@guardian/src-foundations';
+import { Container } from '../components/Container';
 
 const Links = ({ children }: { children: React.ReactNode }) => (
   <p
@@ -40,6 +41,11 @@ const centreTabRow = css`
   width: 100%;
   margin: 0 auto;
   border-left: 1px solid ${brandLine.primary};
+`;
+
+const containerStyles = css`
+  display: flex;
+  flex-grow: 1;
 `;
 
 export const SignIn = () => {
@@ -68,46 +74,48 @@ export const SignIn = () => {
         ]}
         tabRowStylesOverride={centreTabRow}
       />
-      <Main>
-        <PageBox>
-          <PageBody>
-            <form
-              css={form}
-              method="post"
-              action={`${Routes.SIGN_IN}${returnUrlQuery}`}
-            >
-              <CsrfFormField />
-              <TextInput
-                css={textInput}
-                label="Email"
-                name="email"
-                type="email"
+      <Container sideBorders cssOverrides={containerStyles}>
+        <Main>
+          <PageBox>
+            <PageBody>
+              <form
+                css={form}
+                method="post"
+                action={`${Routes.SIGN_IN}${returnUrlQuery}`}
+              >
+                <CsrfFormField />
+                <TextInput
+                  css={textInput}
+                  label="Email"
+                  name="email"
+                  type="email"
+                />
+                <PasswordInput label="Password" />
+                <Links>
+                  <Link subdued={true} href="/reset">
+                    Reset password
+                  </Link>{' '}
+                  or{' '}
+                  <Link subdued={true} href="/magic-link">
+                    email me a link to sign in
+                  </Link>
+                </Links>
+                <Button css={button} type="submit" data-cy="sign-in-button">
+                  Sign in
+                </Button>
+              </form>
+              <Divider
+                size="full"
+                spaceAbove="loose"
+                displayText="or continue with"
               />
-              <PasswordInput label="Password" />
-              <Links>
-                <Link subdued={true} href="/reset">
-                  Reset password
-                </Link>{' '}
-                or{' '}
-                <Link subdued={true} href="/magic-link">
-                  email me a link to sign in
-                </Link>
-              </Links>
-              <Button css={button} type="submit" data-cy="sign-in-button">
-                Sign in
-              </Button>
-            </form>
-            <Divider
-              size="full"
-              spaceAbove="loose"
-              displayText="or continue with"
-            />
-            <SocialButtons returnUrl="todo" />
-            <Divider size="full" spaceAbove="tight" />
-            <Terms />
-          </PageBody>
-        </PageBox>
-      </Main>
+              <SocialButtons returnUrl="todo" />
+              <Divider size="full" spaceAbove="tight" />
+              <Terms />
+            </PageBody>
+          </PageBox>
+        </Main>
+      </Container>
       <Footer />
     </>
   );
