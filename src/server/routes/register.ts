@@ -9,7 +9,7 @@ import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import deepmerge from 'deepmerge';
-import { setGUEmailCookie } from '@/server/lib/emailCookie';
+import { readGUEmailCookie, setGUEmailCookie } from '@/server/lib/emailCookie';
 import { getEmailFromPlaySessionCookie } from '../lib/playSessionCookie';
 import { RequestError } from '@/shared/lib/error';
 import { guest } from '../lib/idapi/guest';
@@ -33,7 +33,7 @@ router.get(
     const html = renderer(Routes.REGISTRATION_EMAIL_SENT, {
       requestState: deepmerge(state, {
         pageData: {
-          email: getEmailFromPlaySessionCookie(req),
+          email: getEmailFromPlaySessionCookie(req) || readGUEmailCookie(req),
         },
       }),
       pageTitle: PageTitle.REGISTRATION_EMAIL_SENT,
@@ -106,7 +106,7 @@ router.post(
 
     trackMetric(Metrics.REGISTER_SUCCESS);
 
-    return res.redirect(303, Routes.WELCOME_SENT);
+    return res.redirect(303, Routes.REGISTRATION_EMAIL_SENT);
   }),
 );
 

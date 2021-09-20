@@ -22,7 +22,6 @@ import { Link } from '@guardian/src-link';
 import { textSans } from '@guardian/src-foundations/typography';
 import { Breakpoints } from '../models/Style';
 import { brandLine } from '@guardian/src-foundations';
-import { Container } from '../components/Container';
 
 const Links = ({ children }: { children: React.ReactNode }) => (
   <p

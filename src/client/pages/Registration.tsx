@@ -14,7 +14,6 @@ import { Divider } from '@/client/components/Divider';
 import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
 import { button, form, textInput } from '@/client/styles/Shared';
-import { Container } from '../components/Container';
 import { css } from '@emotion/react';
 import { Breakpoints } from '../models/Style';
 import { brandLine, space } from '@guardian/src-foundations';
