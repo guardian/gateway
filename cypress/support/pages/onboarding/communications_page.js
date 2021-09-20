@@ -4,7 +4,7 @@ class CommunicationsPage extends OnboardingPage {
   static URL = '/consents/communication';
   static CONTENT = {
     OPT_OUT_MESSAGE:
-      'I do NOT wish to be contacted by The Guardian for market research purposes.',
+      'I do NOT wish to be contacted by the Guardian for market research purposes.',
   };
 
   static marketingOptoutClickableSection() {

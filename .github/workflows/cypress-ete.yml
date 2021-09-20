@@ -24,7 +24,8 @@ jobs:
           CYPRESS_SIGN_IN_PAGE_URL: https://profile.code.dev-theguardian.com/signin
           IS_HTTPS: false
           APP_SECRET: ${{ secrets.APP_SECRET }}
-          CYPRESS_MAILSLURP_KEY: ${{ secrets.CYPRESS_MAILSLURP_KEY }}
+          CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.CYPRESS_MAILOSAUR_API_KEY }}
+          CYPRESS_MAILOSAUR_SERVER_ID: ${{ secrets.CYPRESS_MAILOSAUR_SERVER_ID }}
         with:
           build: yarn build
           start: yarn start

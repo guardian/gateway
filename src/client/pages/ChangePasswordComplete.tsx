@@ -39,7 +39,7 @@ export const ChangePasswordComplete = ({
             icon={<SvgArrowRightStraight />}
             href={returnUrl}
           >
-            Continue to The Guardian
+            Continue to the Guardian
           </LinkButton>
         </PageBox>
       </Main>

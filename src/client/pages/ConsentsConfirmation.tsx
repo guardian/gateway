@@ -214,7 +214,7 @@ export const ConsentsConfirmation = ({
                 icon={<SvgArrowRightStraight />}
                 href={returnUrl}
               >
-                Return to The Guardian
+                Return to the Guardian
               </LinkButton>
             </div>
           </ConsentsBlueBackground>

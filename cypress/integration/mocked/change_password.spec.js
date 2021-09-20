@@ -158,7 +158,7 @@ describe('Password change flow', () => {
       cy.wait('@breachCheck');
       cy.get('button[type="submit"]').click();
       cy.contains('Thank you! Your password has been changed.');
-      cy.contains('Continue to The Guardian').should(
+      cy.contains('Continue to the Guardian').should(
         'have.attr',
         'href',
         `${Cypress.env('DEFAULT_RETURN_URI')}/`,
@@ -191,7 +191,7 @@ describe('Password change flow', () => {
         cy.wait('@breachCheck');
         cy.get('button[type="submit"]').click();
         cy.contains('Thank you! Your password has been changed.');
-        cy.contains('Continue to The Guardian').should(
+        cy.contains('Continue to the Guardian').should(
           'have.attr',
           'href',
           'https://news.theguardian.com/',
@@ -219,7 +219,7 @@ describe('Password change flow', () => {
         cy.wait('@breachCheck');
         cy.get('button[type="submit"]').click();
         cy.contains('Thank you! Your password has been changed.');
-        cy.contains('Continue to The Guardian').should(
+        cy.contains('Continue to the Guardian').should(
           'have.attr',
           'href',
           `${Cypress.env('DEFAULT_RETURN_URI')}/`,

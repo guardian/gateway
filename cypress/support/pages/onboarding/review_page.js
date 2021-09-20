@@ -18,7 +18,7 @@ class ReviewPage extends OnboardingPage {
     },
     NEWSLETTER_SECTION_TITLE: 'Newsletters',
     CONSENTS_SECTION_TITLE: 'Products & services:',
-    BUTTON_RETURN_GUARDIAN: 'Return to The Guardian',
+    BUTTON_RETURN_GUARDIAN: 'Return to the Guardian',
   };
 
   static returnButton() {

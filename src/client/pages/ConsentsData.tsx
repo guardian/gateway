@@ -53,7 +53,7 @@ export const ConsentsData = ({ consented, description }: ConsentsDataProps) => {
             We think carefully about our use of personal data and use it
             responsibly. We never share it without your permission and we have a
             team who are dedicated to keeping any data we collect safe and
-            secure. You can find out more about how The Guardian aims to
+            secure. You can find out more about how the Guardian aims to
             safeguard users data by going to the{' '}
             <Link
               href={Locations.PRIVACY}
