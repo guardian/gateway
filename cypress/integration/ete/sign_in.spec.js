@@ -1,11 +1,11 @@
 /// <reference types='cypress' />
-// This test depends on this Mailslurp account already being registered
+// This test depends on this Mailosaur account already being registered
 const existing = {
-  email: '21497957-085c-4c84-93eb-e025d1dd0145@mailslurp.com',
+  serverId: Cypress.env('MAILOSAUR_SERVER_ID'),
+  serverDomain: Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
+  email: 'signIn@' + Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
   password: 'existing_password',
-  inbox: '21497957-085c-4c84-93eb-e025d1dd0145',
 };
-
 describe('Sign in flow', () => {
   it('links to the correct places', () => {
     cy.visit('/signin');
@@ -67,7 +67,7 @@ describe('Sign in flow', () => {
     cy.get('input[name=password]').type(existing.password);
     cy.get('[data-cy="sign-in-button"]').click();
     cy.contains(
-      'The individual responsible for one of the most significant leaks in US political history is Edward Snowden',
+      'individual responsible for one of the most significant leaks in US political history is Edward Snowden',
     );
   });
 
