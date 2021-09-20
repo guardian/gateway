@@ -11,16 +11,10 @@ export const WelcomePage = () => {
   const { pageData: { fieldErrors = [] } = {} } = clientState;
   const { token } = useParams<{ token: string }>();
 
-  const params = new URLSearchParams(search);
-  const refViewId = params.get('refViewId') || undefined;
-  const ref = params.get('ref') || undefined;
-
   return (
     <Welcome
       submitUrl={`${Routes.WELCOME}/${token}${search}`}
       fieldErrors={fieldErrors}
-      refViewId={refViewId}
-      refUrl={ref}
     />
   );
 };

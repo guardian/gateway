@@ -6,17 +6,12 @@ export interface OphanInteraction {
   atomId?: string;
 }
 
-interface OphanReferrer {
-  ref?: string;
-  refViewId?: string;
-}
-
 export interface OphanBase {
   experiences?: string;
   abTestRegister?: { [testId: string]: OphanABEvent };
 }
 
-export type OphanEvent = OphanBase | OphanInteraction | OphanReferrer;
+export type OphanEvent = OphanBase | OphanInteraction;
 
 export const record = (event: OphanEvent) => {
   if (
@@ -33,6 +28,3 @@ export const sendOphanInteractionEvent = ({
   atomId,
   value,
 }: OphanInteraction) => record({ component, atomId, value });
-
-export const sendOphanReferrerEvent = ({ refViewId, ref }: OphanReferrer) =>
-  record({ refViewId, ref });
