@@ -1,9 +1,5 @@
 import { Request, Router } from 'express';
-import { authenticate } from '@/server/lib/idapi/auth';
-import {
-  create,
-  resendAccountVerificationEmail,
-} from '@/server/lib/idapi/user';
+import { resendAccountVerificationEmail } from '@/server/lib/idapi/user';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { Routes } from '@/shared/model/Routes';
@@ -12,11 +8,11 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import deepmerge from 'deepmerge';
 import { setGUEmailCookie } from '@/server/lib/emailCookie';
 import { getEmailFromPlaySessionCookie } from '../lib/playSessionCookie';
 import { RequestError } from '@/shared/lib/error';
+import { guest } from '../lib/idapi/guest';
 const router = Router();
 
 router.get(
@@ -81,15 +77,11 @@ router.post(
     let state = res.locals;
 
     const { email = '' } = req.body;
-    const { password = '' } = req.body;
-
-    const { returnUrl } = state.queryParams;
+    const { returnUrl, ref, refViewId } = state.queryParams;
 
     try {
-      await create(email, password, req.ip);
-      // TODO: Can we remove this second call to get cookies for the user once we move over to Okta?
-      const cookies = await authenticate(email, password, req.ip);
-      setIDAPICookies(res, cookies);
+      await guest(email, req.ip, returnUrl, ref, refViewId);
+      setGUEmailCookie(res, email);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
       const { message, status } = error as RequestError;
@@ -114,7 +106,7 @@ router.post(
 
     trackMetric(Metrics.REGISTER_SUCCESS);
 
-    return res.redirect(303, returnUrl);
+    return res.redirect(303, Routes.WELCOME_SENT);
   }),
 );
 
