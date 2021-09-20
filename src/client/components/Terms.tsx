@@ -34,12 +34,8 @@ const TermsLink = ({
   </Link>
 );
 
-const termsStyles = css`
-  margin-bottom: ${space[4]}px;
-`;
-
 export const Terms = () => (
-  <div css={termsStyles}>
+  <>
     <Text>
       By proceeding, you agree to our{' '}
       <TermsLink href="https://www.theguardian.com/help/terms-of-service">
@@ -65,5 +61,5 @@ export const Terms = () => (
       </TermsLink>{' '}
       apply.
     </Text>
-  </div>
+  </>
 );

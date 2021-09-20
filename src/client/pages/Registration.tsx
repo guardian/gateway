@@ -17,7 +17,7 @@ import { button, form, textInput } from '@/client/styles/Shared';
 import { Container } from '../components/Container';
 import { css } from '@emotion/react';
 import { Breakpoints } from '../models/Style';
-import { brandLine } from '@guardian/src-foundations';
+import { brandLine, space } from '@guardian/src-foundations';
 
 type Props = {
   returnUrl?: string;
@@ -30,6 +30,15 @@ const centreTabRow = css`
   width: 100%;
   margin: 0 auto;
   border-left: 1px solid ${brandLine.primary};
+`;
+
+const containerStyles = css`
+  display: flex;
+  flex-grow: 1;
+`;
+
+const termsSpacing = css`
+  margin-bottom: ${space[4]}px;
 `;
 
 export const Registration = ({ returnUrl = '', email = '' }: Props) => {
@@ -55,7 +64,7 @@ export const Registration = ({ returnUrl = '', email = '' }: Props) => {
         ]}
         tabRowStylesOverride={centreTabRow}
       />
-      <Container sideBorders>
+      <Container sideBorders cssOverrides={containerStyles}>
         <Main>
           <PageBox>
             <PageBody>
@@ -72,7 +81,9 @@ export const Registration = ({ returnUrl = '', email = '' }: Props) => {
                   type="email"
                   defaultValue={email}
                 />
-                <Terms />
+                <div css={termsSpacing}>
+                  <Terms />
+                </div>
                 <Button css={button} type="submit" data-cy="register-button">
                   Register
                 </Button>
@@ -83,7 +94,6 @@ export const Registration = ({ returnUrl = '', email = '' }: Props) => {
                 displayText="or continue with"
               />
               <SocialButtons returnUrl={returnUrl} />
-              <Divider size="full" spaceAbove="tight" />
             </PageBody>
           </PageBox>
         </Main>
