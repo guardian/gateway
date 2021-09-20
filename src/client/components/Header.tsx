@@ -58,7 +58,7 @@ export const Header = () => (
           bottomMarginStyles,
         ]}
       >
-        <Logo logoType="standard" />
+        <Logo logoType="bestWebsite" />
       </div>
     </Container>
   </header>
