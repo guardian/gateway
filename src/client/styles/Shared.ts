@@ -13,10 +13,7 @@ export const linkButton = css`
 
 export const button = css`
   width: 100%;
-
-  ${from.mobileMedium} {
-    width: max-content;
-  }
+  justify-content: center;
 `;
 
 export const textInput = css`

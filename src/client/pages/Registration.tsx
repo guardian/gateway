@@ -14,6 +14,7 @@ import { Divider } from '@/client/components/Divider';
 import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
 import { button, form, textInput } from '@/client/styles/Shared';
+import { Stack } from '@guardian/src-layout';
 
 type Props = {
   returnUrl?: string;
@@ -50,23 +51,20 @@ export const Registration = ({ returnUrl = '', email = '' }: Props) => {
               method="post"
               action={`${Routes.REGISTRATION}${returnUrlQuery}`}
             >
-              <CsrfFormField />
-              <TextInput
-                css={textInput}
-                label="Email"
-                name="email"
-                type="email"
-                defaultValue={email}
-              />
-              <TextInput
-                css={textInput}
-                label="Password"
-                name="password"
-                type="password"
-              />
-              <Button css={button} type="submit" data-cy="register-button">
-                Register
-              </Button>
+              <Stack space={1}>
+                <CsrfFormField />
+                <TextInput
+                  css={textInput}
+                  label="Email"
+                  name="email"
+                  type="email"
+                  defaultValue={email}
+                />
+                <Terms />
+                <Button css={button} type="submit" data-cy="register-button">
+                  Register
+                </Button>
+              </Stack>
             </form>
             <Divider
               size="full"
@@ -75,7 +73,6 @@ export const Registration = ({ returnUrl = '', email = '' }: Props) => {
             />
             <SocialButtons returnUrl={returnUrl} />
             <Divider size="full" spaceAbove="tight" />
-            <Terms />
           </PageBody>
         </PageBox>
       </Main>
