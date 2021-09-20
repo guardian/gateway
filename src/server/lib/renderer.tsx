@@ -106,6 +106,10 @@ export const renderer: (url: string, opts: RendererOpts) => string = (
     location,
   };
 
+  const {
+    googleRecaptcha: { siteKey: GOOGLE_RECAPTCHA_SITE_KEY },
+  } = getConfiguration();
+
   return `
     <!DOCTYPE html>
     <html lang="en">
@@ -116,6 +120,7 @@ export const renderer: (url: string, opts: RendererOpts) => string = (
         <link rel="icon" href="https://static.guim.co.uk/images/${favicon}">
         <title>${pageTitle} | The Guardian</title>
         <script>window.gaUID = "${gaUID.id}"</script>
+        <script src="https://www.google.com/recaptcha/api.js?render=${GOOGLE_RECAPTCHA_SITE_KEY}"></script>
         <script type="module" src="/${assets.runtime}" defer></script>
         <script type="module" src="/${assets.vendors}" defer></script>
         <script type="module" src="/${assets.main}" defer></script>
