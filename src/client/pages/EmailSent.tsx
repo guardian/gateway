@@ -10,6 +10,8 @@ import { Main } from '@/client/layouts/Main';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
+import { space } from '@guardian/src-foundations';
+import { css } from '@emotion/react';
 
 type Props = {
   email?: string;
@@ -17,6 +19,11 @@ type Props = {
   subTitle?: string;
   resendEmailAction?: string;
 };
+
+const button = css`
+  margin-top: ${space[3]}px;
+  margin-bottom: ${space[4]}px;
+`;
 
 export const EmailSent = ({
   email,
@@ -66,6 +73,7 @@ export const EmailSent = ({
                   hidden={true}
                 />
                 <Button
+                  css={button}
                   type="submit"
                   onClick={onResendClick}
                   data-cy="resend-email-button"
