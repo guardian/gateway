@@ -5,11 +5,11 @@ describe('Password reset flow', () => {
     // This test depends on this Mailosaur account already being registered
     const existing = {
       serverId: Cypress.env('MAILOSAUR_SERVER_ID'),
-      serverDomain: Cypress.env('MAILOSAUR_SERVER_ID') + 'mailosaur.net',
+      serverDomain: Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
       email:
         'passwordResetFlow@' +
         Cypress.env('MAILOSAUR_SERVER_ID') +
-        'mailosaur.net',
+        '.mailosaur.net',
     };
 
     it("changes the reader's password", () => {
