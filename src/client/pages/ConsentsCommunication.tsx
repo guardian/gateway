@@ -74,7 +74,7 @@ export const ConsentsCommunication = ({
 
   return (
     <ConsentsLayout
-      title="Welcome to The Guardian"
+      title="Welcome to the Guardian"
       current={CONSENTS_PAGES.CONTACT}
       bgColor={CONSENTS_MAIN_COLOR}
     >
@@ -82,7 +82,7 @@ export const ConsentsCommunication = ({
         <h2 css={[heading, autoRow()]}>Thank you for registering</h2>
         <p css={[text, autoRow(consentsParagraphSpanDef)]}>
           Would you like to join our mailing list to stay informed and up to
-          date with all that The Guardian has to offer?
+          date with all that the Guardian has to offer?
         </p>
         <div
           css={[communicationCardContainer, autoRow(communicationCardSpanDef)]}
