@@ -7,7 +7,8 @@ export interface OphanInteraction {
 }
 
 interface OphanReferrer {
-  viewId?: string;
+  ref?: string;
+  refViewId?: string;
 }
 
 export interface OphanBase {
@@ -33,5 +34,5 @@ export const sendOphanInteractionEvent = ({
   value,
 }: OphanInteraction) => record({ component, atomId, value });
 
-export const sendOphanReferrerEvent = ({ viewId }: OphanReferrer) =>
-  record({ viewId });
+export const sendOphanReferrerEvent = ({ refViewId, ref }: OphanReferrer) =>
+  record({ refViewId, ref });
