@@ -8,6 +8,7 @@ export enum IdapiErrorMessages {
   USER_ALREADY_VALIDATED = 'User Already Validated',
   BREACHED_PASSWORD = 'Breached password',
   EMAIL_IN_USE = 'Email in use',
+  INVALID_EMAIL_ADDRESS = 'Invalid emailAddress:',
 }
 
 export enum ResetPasswordErrors {
@@ -23,6 +24,7 @@ export enum SignInErrors {
 
 export enum RegistrationErrors {
   GENERIC = 'There was a problem registering, please try again.',
+  EMAIL_BLANK = 'Email field must not be blank.',
 }
 
 export enum ChangePasswordErrors {
@@ -34,13 +36,13 @@ export enum ChangePasswordErrors {
 
   AT_LEAST_8 = 'Please make sure your password is at least 8 characters long.',
   MAXIMUM_72 = 'Please make sure your password is not longer than 72 characters.',
-  COMMON_PASSWORD = 'This is a common password. Please use a password that is hard to guess.',
+  COMMON_PASSWORD = 'Please use a password that is hard to guess.',
   PASSWORDS_NOT_MATCH = 'Passwords don’t match',
   PASSWORDS_MATCH = 'Passwords match',
 
   AT_LEAST_8_SHORT = 'At least 8 characters',
   MAXIMUM_72_SHORT = 'Maximum of 72 characters',
-  COMMON_PASSWORD_SHORT = 'please use a password that is hard to guess.',
+  COMMON_PASSWORD_SHORT = 'Please use a password that is hard to guess.',
 }
 
 export enum VerifyEmailErrors {
@@ -62,4 +64,8 @@ export enum ConsentsErrors {
 
 export enum CsrfErrors {
   CSRF_ERROR = 'Sorry, something went wrong. If you made any changes these might have not been saved. Please try again.',
+}
+
+export enum CaptchaErrors {
+  GENERIC = 'There was a problem with the captcha process. You may find disabling your browser plugins, ensuring JavaScript is enabled or updating your browser will resolve this issue.',
 }

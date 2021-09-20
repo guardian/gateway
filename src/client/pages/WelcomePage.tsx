@@ -8,19 +8,14 @@ import { Welcome } from '@/client/pages/Welcome';
 export const WelcomePage = () => {
   const { search } = useLocation();
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData: { fieldErrors = [] } = {} } = clientState;
+  const { pageData: { email, fieldErrors = [] } = {} } = clientState;
   const { token } = useParams<{ token: string }>();
-
-  const params = new URLSearchParams(search);
-  const refViewId = params.get('refViewId') || undefined;
-  const ref = params.get('ref') || undefined;
 
   return (
     <Welcome
       submitUrl={`${Routes.WELCOME}/${token}${search}`}
+      email={email}
       fieldErrors={fieldErrors}
-      refViewId={refViewId}
-      refUrl={ref}
     />
   );
 };

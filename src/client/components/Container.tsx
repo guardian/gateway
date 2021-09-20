@@ -1,5 +1,5 @@
 import React from 'react';
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import { Container as SourceContainer } from '@guardian/src-layout';
 import { brandLine } from '@guardian/src-foundations/palette';
 import { from } from '@guardian/src-foundations/mq';
@@ -12,6 +12,7 @@ type Props = {
   sideBorders?: boolean; // Show left and right borders
   borderColor?: string; // Set the colour for borders
   backgroundColor?: string; // Sets the background colour of the section (root) element
+  cssOverrides?: SerializedStyles;
 };
 
 const sidePaddingStyles = css`
@@ -43,6 +44,7 @@ export const Container = ({
   sideBorders,
   borderColor = brandLine.primary,
   backgroundColor,
+  cssOverrides,
 }: Props) => {
   return (
     <SourceContainer
@@ -53,6 +55,7 @@ export const Container = ({
       cssOverrides={[
         sidePadding ? sidePaddingStyles : noPaddingStyles,
         sideBorders ? sideBorderColors(borderColor) : css``,
+        cssOverrides ? cssOverrides : css``,
       ]}
     >
       {children}

@@ -7,20 +7,31 @@ const existing = {
   password: 'existing_password',
 };
 describe('Sign in flow', () => {
-  it('links to the correct places', () => {
+  const returnUrl =
+    'https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance';
+  it('links to the Google terms of service page', () => {
     cy.visit('/signin');
-    cy.contains('Terms of Service').should(
-      'have.attr',
-      'href',
-      'https://policies.google.com/terms',
-    );
-    cy.contains("Google's Privacy Policy").should(
-      'have.attr',
-      'href',
-      'https://policies.google.com/privacy',
-    );
-    cy.contains('Terms and Conditions').click();
-    cy.contains('Terms and conditions of use');
+    cy.contains('terms of service').click();
+    cy.url().should('eq', 'https://policies.google.com/terms');
+  });
+  it('links to the Google privacy policy page', () => {
+    cy.visit('/signin');
+    cy.contains('This site is protected by reCAPTCHA and the Google')
+      .contains('privacy policy')
+      .click();
+    cy.url().should('eq', 'https://policies.google.com/privacy');
+  });
+  it('links to the Guardian terms and conditions page', () => {
+    cy.visit('/signin');
+    cy.contains('terms & conditions').click();
+    cy.url().should('eq', 'https://www.theguardian.com/help/terms-of-service');
+  });
+  it('links to the Guardian privacy policy page', () => {
+    cy.visit('/signin');
+    cy.contains('For information about how we use your data')
+      .contains('privacy policy')
+      .click();
+    cy.url().should('eq', 'https://www.theguardian.com/help/privacy-policy');
   });
 
   it('shows a message when credentials are invalid', () => {
@@ -36,7 +47,7 @@ describe('Sign in flow', () => {
     cy.get('input[name=email]').type(existing.email);
     cy.get('input[name=password]').type(existing.password);
     cy.get('[data-cy="sign-in-button"]').click();
-    cy.contains('News');
+    cy.url().should('include', 'https://m.code.dev-theguardian.com/');
   });
 
   it('navigates to reset password', () => {
@@ -58,45 +69,35 @@ describe('Sign in flow', () => {
   });
 
   it('respects the returnUrl query param', () => {
-    cy.visit(
-      `/signin?returnUrl=${encodeURIComponent(
-        `https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance`,
-      )}`,
-    );
+    cy.visit(`/signin?returnUrl=${encodeURIComponent(returnUrl)}`);
     cy.get('input[name=email]').type(existing.email);
     cy.get('input[name=password]').type(existing.password);
     cy.get('[data-cy="sign-in-button"]').click();
-    cy.contains(
-      'individual responsible for one of the most significant leaks in US political history is Edward Snowden',
-    );
+    cy.url().should('eq', returnUrl);
   });
 
   // This functionality is still todo. Remove `skip` from this test once the returnUrl parameter is passed through
   it.skip('redirects correctly for social sign in', () => {
-    cy.visit(
-      `/signin?returnUrl=${encodeURIComponent(
-        `https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance`,
-      )}`,
-    );
+    cy.visit(`/signin?returnUrl=${encodeURIComponent(returnUrl)}`);
     cy.get('[data-cy="google-sign-in-button"]').should(
       'have.attr',
       'href',
       `https://oauth.theguardian.com/google/signin?returnUrl=${encodeURIComponent(
-        `https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance`,
+        returnUrl,
       )}`,
     );
     cy.get('[data-cy="facebook-sign-in-button"]').should(
       'have.attr',
       'href',
       `https://oauth.theguardian.com/facebook/signin?returnUrl=${encodeURIComponent(
-        `https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance`,
+        returnUrl,
       )}`,
     );
     cy.get('[data-cy="apple-sign-in-button"]').should(
       'have.attr',
       'href',
       `https://oauth.theguardian.com/apple/signin?returnUrl=${encodeURIComponent(
-        `https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance`,
+        returnUrl,
       )}`,
     );
   });

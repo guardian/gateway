@@ -14,13 +14,21 @@ Default.story = {
   name: 'with defaults',
 };
 
+export const Email = () => (
+  <Welcome submitUrl="" email="example@theguardian.com" fieldErrors={[]} />
+);
+Email.story = {
+  name: 'with email',
+};
+
 export const FieldErrorPW = () => (
   <Welcome
     submitUrl=""
+    email="example@theguardian.com"
     fieldErrors={[
       {
         field: 'password',
-        message: 'Not right',
+        message: 'Password must be between 8 and 72 characters.',
       },
     ]}
   />

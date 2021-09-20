@@ -5,9 +5,11 @@ import { border, text } from '@guardian/src-foundations/palette';
 import { space } from '@guardian/src-foundations';
 import { textSans } from '@guardian/src-foundations/typography';
 
+type Sizes = 'full' | 'partial' | 'fit';
+type Spaces = 'tight' | 'loose';
 type Props = {
-  size?: 'full' | 'partial';
-  spaceAbove?: 'tight' | 'loose';
+  size?: Sizes;
+  spaceAbove?: Spaces;
   displayText?: string;
 };
 
@@ -21,7 +23,7 @@ const partialStyles = css`
 `;
 
 const decideSpace = (
-  spaceAbove: 'tight' | 'loose',
+  spaceAbove: Spaces,
   displayText?: string,
 ): SerializedStyles => {
   switch (spaceAbove) {
@@ -36,11 +38,46 @@ const decideSpace = (
     case 'loose':
       return displayText
         ? css`
-            margin-top: 37px;
+            margin-top: ${space[6]}px;
           `
         : css`
             margin-top: ${space[12]}px;
           `;
+  }
+};
+
+const decideSize = (size: Sizes) => {
+  switch (size) {
+    case 'fit':
+      return css`
+        :before {
+          margin-left: 0;
+        }
+
+        :after {
+          margin-right: 0;
+        }
+      `;
+    case 'full':
+      return css`
+        :before {
+          margin-left: -10px;
+        }
+
+        :after {
+          margin-right: -10px;
+        }
+      `;
+    case 'partial':
+      return css`
+        :before {
+          margin-left: 30%;
+        }
+
+        :after {
+          margin-right: 30%;
+        }
+      `;
   }
 };
 
@@ -58,7 +95,6 @@ export const Divider = ({
             flex-direction: row;
             ${textSans.small()};
             color: ${text.supporting};
-            margin-bottom: -10px;
             width: 100%;
 
             :before,
@@ -69,14 +105,13 @@ export const Divider = ({
               margin: auto;
             }
             :before {
-              margin-left: ${size === 'partial' ? '30%' : '-10px'};
               margin-right: 10px;
             }
             :after {
-              margin-right: ${size === 'partial' ? '30%' : '-10px'};
               margin-left: 10px;
             }
           `,
+          decideSize(size),
           decideSpace(spaceAbove, displayText),
         ]}
       >

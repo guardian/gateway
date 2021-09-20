@@ -49,6 +49,7 @@ const errorP = (left = false) => css`
 
 const errorLink = css`
   ${textColour}
+  text-decoration: underline;
 
   :hover {
     ${textColour}

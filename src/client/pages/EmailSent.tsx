@@ -9,24 +9,44 @@ import { PageBodyText } from '@/client/components/PageBodyText';
 import { Main } from '@/client/layouts/Main';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
-import { button } from '@/client/styles/Shared';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
+import { space } from '@guardian/src-foundations';
+import { css } from '@emotion/react';
 
 type Props = {
   email?: string;
   previousPage?: string;
   subTitle?: string;
   resendEmailAction?: string;
+  refViewId?: string;
+  refValue?: string;
+  returnUrl?: string;
 };
+
+const button = css`
+  margin-top: ${space[3]}px;
+  margin-bottom: ${space[4]}px;
+`;
 
 export const EmailSent = ({
   email,
   previousPage = '/',
-  subTitle = 'Sign in',
   resendEmailAction,
+  refViewId = '',
+  refValue = '',
+  returnUrl = '',
 }: Props) => {
   const [hasJS, setHasJS] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const returnUrlQuery = `returnUrl=${encodeURIComponent(returnUrl)}`;
+  const refUrlQuery = `ref=${encodeURIComponent(refValue)}`;
+  const refViewIdUrlQuery = `refViewId=${encodeURIComponent(refViewId)}`;
+  const registrationUrlQueryParams = [
+    returnUrl ? returnUrlQuery : '',
+    refValue ? refUrlQuery : '',
+    refViewId ? refViewIdUrlQuery : '',
+  ];
 
   useEffect(() => {
     setHasJS(true);
@@ -39,15 +59,14 @@ export const EmailSent = ({
   return (
     <>
       <Header />
-      <Main
-        subTitle={subTitle}
-        successOverride={loading ? undefined : 'Email sent'}
-      >
+      <Main successOverride={loading ? undefined : 'Email sent'}>
         <PageBox>
           <PageHeader>Check your email inbox</PageHeader>
           <PageBody>
             {email ? (
-              <PageBodyText>We’ve sent an email to {email}.</PageBodyText>
+              <PageBodyText>
+                We’ve sent an email to <b>{email}</b>.
+              </PageBodyText>
             ) : (
               <PageBodyText>We’ve sent you an email.</PageBodyText>
             )}
@@ -55,9 +74,14 @@ export const EmailSent = ({
               Please follow the instructions in this email. If you can&apos;t
               find it, it may be in your spam folder.
             </PageBodyText>
-            <PageBodyText>The link is only valid for 30 minutes.</PageBodyText>
+            <PageBodyText>
+              <b>The link is only valid for 30 minutes.</b>
+            </PageBodyText>
             {email && resendEmailAction && hasJS && (
-              <form method="post" action={resendEmailAction}>
+              <form
+                method="post"
+                action={resendEmailAction + '?' + registrationUrlQueryParams}
+              >
                 <CsrfFormField />
                 <TextInput
                   label=""
@@ -66,8 +90,6 @@ export const EmailSent = ({
                   value={email}
                   hidden={true}
                 />
-                <br />
-                <br />
                 <Button
                   css={button}
                   type="submit"
@@ -76,8 +98,6 @@ export const EmailSent = ({
                 >
                   {loading ? 'Resending...' : 'Resend email'}
                 </Button>
-                <br />
-                <br />
               </form>
             )}
             {previousPage && (

@@ -13,14 +13,11 @@ export const linkButton = css`
 
 export const button = css`
   width: 100%;
-
-  ${from.mobileMedium} {
-    width: max-content;
-  }
+  justify-content: center;
 `;
 
 export const textInput = css`
-  margin-bottom: ${space[3]}px;
+  margin-bottom: ${space[4]}px;
 `;
 
 export const form = css`

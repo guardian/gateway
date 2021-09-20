@@ -2,6 +2,7 @@
 
 export enum Breakpoints {
   WIDE = 1300,
+  LEFT_COL = 1140,
   DESKTOP = 980,
   TABLET = 740,
   // mobile breakpoints differ

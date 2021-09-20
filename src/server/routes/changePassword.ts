@@ -25,6 +25,8 @@ router.post(
   setPasswordTokenController(
     Routes.CHANGE_PASSWORD,
     PageTitle.CHANGE_PASSWORD,
+    Routes.RESET,
+    PageTitle.RESET_RESEND,
     (res) => {
       const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
         requestState: res.locals,

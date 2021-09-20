@@ -1,10 +1,11 @@
+import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 import { Breakpoints } from '@/client/models/Style';
 
-const viewports = {};
+const customViewports = {};
 for (let breakpoint in Breakpoints) {
   if (isNaN(Number(breakpoint))) {
     // Breakpoints is an enum, not an object, so it also loops the values which we want to avoid here
-    viewports[breakpoint] = {
+    customViewports[breakpoint] = {
       name: `${breakpoint} (${Breakpoints[breakpoint]})`,
       styles: {
         width: `${Breakpoints[breakpoint]}px`,
@@ -23,7 +24,10 @@ export const parameters = {
     },
   },
   viewport: {
-    viewports,
+    viewports: {
+      ...customViewports,
+      ...INITIAL_VIEWPORTS,
+    },
     defaultViewport: 'MOBILE',
   },
 };

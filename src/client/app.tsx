@@ -43,6 +43,9 @@ export const App = (props: ClientState) => {
           * {
             box-sizing: border-box;
           }
+          .grecaptcha-badge {
+            visibility: hidden;
+          }
         `}
       />
       <ClientStateProvider clientState={props}>
