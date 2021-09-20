@@ -80,7 +80,26 @@ export const create = async (email: string, password: string, ip: string) => {
     return await idapiFetch(url, APIAddClientAccessToken(options, ip));
   } catch (error) {
     logger.error(`IDAPI Error user create ${url}`, error);
-    handleError(error as IDAPIError);
+    return handleError(error as IDAPIError);
+  }
+};
+export const createGuest = async (
+  email: string,
+  ip: string,
+  returnUrl?: string,
+) => {
+  const url = '/guest?accountVerificationEmail';
+  const options = APIPostOptions({
+    primaryEmailAddress: email,
+  });
+
+  const path = returnUrl ? addReturnUrlToPath(url, returnUrl) : url;
+
+  try {
+    return await idapiFetch(path, APIAddClientAccessToken(options, ip));
+  } catch (error) {
+    logger.error(`IDAPI Error guest create ${url}`, error);
+    return handleError(error as IDAPIError);
   }
 };
 
