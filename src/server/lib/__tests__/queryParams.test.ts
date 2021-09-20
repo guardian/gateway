@@ -1,6 +1,8 @@
 import {
   parseExpressQueryParams,
   addReturnUrlToPath,
+  addRefToPath,
+  addRefViewIdToPath,
 } from '@/server/lib/queryParams';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 
@@ -105,6 +107,66 @@ describe('addReturnUrlToPath', () => {
       const output = addReturnUrlToPath(input, 'a:// test');
       const expected =
         '/test/path?otherParam=b%3A%2F%2Ftest+b&returnUrl=a%3A%2F%2F%20test';
+      expect(output).toEqual(expected);
+    });
+  });
+});
+
+describe('addRefViewIdToPath', () => {
+  describe('when there are no existing parameters', () => {
+    it('adds an encoded query parameter', () => {
+      const input = '/test/path';
+      const output = addRefViewIdToPath(input, 'a:// test');
+      const expected = '/test/path?refViewId=a%3A%2F%2F%20test';
+      expect(output).toEqual(expected);
+    });
+  });
+
+  describe('when there is a trailing slash', () => {
+    it('adds an encoded query parameter after the trailing slash', () => {
+      const input = '/test/path/';
+      const output = addRefViewIdToPath(input, 'a:// test');
+      const expected = '/test/path/?refViewId=a%3A%2F%2F%20test';
+      expect(output).toEqual(expected);
+    });
+  });
+
+  describe('when there are existing parameters', () => {
+    it('appends an encoded query parameter', () => {
+      const input = '/test/path?otherParam=b%3A%2F%2Ftest+b';
+      const output = addRefViewIdToPath(input, 'a:// test');
+      const expected =
+        '/test/path?otherParam=b%3A%2F%2Ftest+b&refViewId=a%3A%2F%2F%20test';
+      expect(output).toEqual(expected);
+    });
+  });
+});
+
+describe('addRefToPath', () => {
+  describe('when there are no existing parameters', () => {
+    it('adds an encoded query parameter', () => {
+      const input = '/test/path';
+      const output = addRefToPath(input, 'a:// test');
+      const expected = '/test/path?ref=a%3A%2F%2F%20test';
+      expect(output).toEqual(expected);
+    });
+  });
+
+  describe('when there is a trailing slash', () => {
+    it('adds an encoded query parameter after the trailing slash', () => {
+      const input = '/test/path/';
+      const output = addRefToPath(input, 'a:// test');
+      const expected = '/test/path/?ref=a%3A%2F%2F%20test';
+      expect(output).toEqual(expected);
+    });
+  });
+
+  describe('when there are existing parameters', () => {
+    it('appends an encoded query parameter', () => {
+      const input = '/test/path?otherParam=b%3A%2F%2Ftest+b';
+      const output = addRefToPath(input, 'a:// test');
+      const expected =
+        '/test/path?otherParam=b%3A%2F%2Ftest+b&ref=a%3A%2F%2F%20test';
       expect(output).toEqual(expected);
     });
   });
