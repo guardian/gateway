@@ -14,12 +14,23 @@ import { Divider } from '@/client/components/Divider';
 import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
 import { button, form, textInput } from '@/client/styles/Shared';
-import { Stack } from '@guardian/src-layout';
+import { Container } from '../components/Container';
+import { css } from '@emotion/react';
+import { Breakpoints } from '../models/Style';
+import { brandLine } from '@guardian/src-foundations';
 
 type Props = {
   returnUrl?: string;
   email?: string;
 };
+
+// Used to centre the nav tabs in line with the page content.
+const centreTabRow = css`
+  max-width: ${Breakpoints.TABLET}px;
+  width: 100%;
+  margin: 0 auto;
+  border-left: 1px solid ${brandLine.primary};
+`;
 
 export const Registration = ({ returnUrl = '', email = '' }: Props) => {
   const returnUrlQuery = returnUrl
@@ -42,16 +53,17 @@ export const Registration = ({ returnUrl = '', email = '' }: Props) => {
             isActive: true,
           },
         ]}
+        tabRowStylesOverride={centreTabRow}
       />
-      <Main>
-        <PageBox>
-          <PageBody>
-            <form
-              css={form}
-              method="post"
-              action={`${Routes.REGISTRATION}${returnUrlQuery}`}
-            >
-              <Stack space={1}>
+      <Container sideBorders>
+        <Main>
+          <PageBox>
+            <PageBody>
+              <form
+                css={form}
+                method="post"
+                action={`${Routes.REGISTRATION}${returnUrlQuery}`}
+              >
                 <CsrfFormField />
                 <TextInput
                   css={textInput}
@@ -64,18 +76,18 @@ export const Registration = ({ returnUrl = '', email = '' }: Props) => {
                 <Button css={button} type="submit" data-cy="register-button">
                   Register
                 </Button>
-              </Stack>
-            </form>
-            <Divider
-              size="full"
-              spaceAbove="loose"
-              displayText="or continue with"
-            />
-            <SocialButtons returnUrl={returnUrl} />
-            <Divider size="full" spaceAbove="tight" />
-          </PageBody>
-        </PageBox>
-      </Main>
+              </form>
+              <Divider
+                size="full"
+                spaceAbove="loose"
+                displayText="or continue with"
+              />
+              <SocialButtons returnUrl={returnUrl} />
+              <Divider size="full" spaceAbove="tight" />
+            </PageBody>
+          </PageBox>
+        </Main>
+      </Container>
       <Footer />
     </>
   );
