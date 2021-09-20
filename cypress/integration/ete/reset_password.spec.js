@@ -5,12 +5,11 @@ describe('Password reset flow', () => {
     // This test depends on this Mailosaur account already being registered
     const existing = {
       serverId: Cypress.env('MAILOSAUR_SERVER_ID'),
-      get serverDomain() {
-        return `${this.serverId}.mailosaur.net`;
-      },
-      get email() {
-        return `passwordResetFlow@${this.serverDomain}`;
-      },
+      serverDomain: Cypress.env('MAILOSAUR_SERVER_ID') + 'mailosaur.net',
+      email:
+        'passwordResetFlow@' +
+        Cypress.env('MAILOSAUR_SERVER_ID') +
+        'mailosaur.net',
     };
 
     it("changes the reader's password", () => {
@@ -19,6 +18,7 @@ describe('Password reset flow', () => {
         url: 'https://api.pwnedpasswords.com/range/*',
       }).as('breachCheck');
       cy.visit('/signin');
+      const timeRequestWasMade = new Date();
       cy.contains('Reset password').click();
       cy.contains('Forgotten password');
       cy.get('input[name=email]').type(existing.email);
@@ -30,7 +30,7 @@ describe('Password reset flow', () => {
           sentTo: existing.email,
         },
         {
-          receivedAfter: new Date(),
+          receivedAfter: timeRequestWasMade,
         },
       ).then((email) => {
         // extract the reset token (so we can reset this reader's password)

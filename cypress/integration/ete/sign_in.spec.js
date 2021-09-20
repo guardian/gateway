@@ -2,12 +2,8 @@
 // This test depends on this Mailosaur account already being registered
 const existing = {
   serverId: Cypress.env('MAILOSAUR_SERVER_ID'),
-  get serverDomain() {
-    return `${this.serverId}.mailosaur.net`;
-  },
-  get email() {
-    return `signIn@${this.serverDomain}`;
-  },
+  serverDomain: Cypress.env('MAILOSAUR_SERVER_ID') + 'mailosaur.net',
+  email: 'signIn@' + Cypress.env('MAILOSAUR_SERVER_ID') + 'mailosaur.net',
   password: 'existing_password',
 };
 describe('Sign in flow', () => {

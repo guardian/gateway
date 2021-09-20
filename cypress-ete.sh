@@ -12,6 +12,11 @@ if [[ -z "${CYPRESS_MAILOSAUR_API_KEY}" ]]; then
   echo
   echo "This key is required to run these ete Cypress tests. You can find your api key here: https://mailosaur.com/app/servers/<your server id>/api" 
   echo
+elif [[ -z "${CYPRESS_MAILOSAUR_SERVER_ID}" ]]; then
+  echo "You don't have the CYPRESS_MAILOSAUR_SERVER_ID environment variable set!"
+  echo
+  echo "This ID is required to run these ete Cypress tests. You can find the ID here: https://mailosaur.com/app/servers" 
+  echo
 else
   CI_ENV=$(cat .env | tr '\n' ',')
   CI_ENV=${CI_ENV%?}
