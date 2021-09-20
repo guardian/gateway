@@ -43,9 +43,7 @@ const svgStyles = css`
 
 const gridStyles = gridItem({
   ...gridItemColumnConsents,
-  TABLET: { start: 0, span: COLUMNS.TABLET },
-  DESKTOP: { start: 2, span: COLUMNS.DESKTOP },
-  WIDE: { start: 4, span: COLUMNS.TABLET },
+  ...{ WIDE: { start: 1, span: COLUMNS.WIDE } },
 });
 
 const rowStyles = css`

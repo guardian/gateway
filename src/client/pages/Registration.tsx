@@ -32,11 +32,6 @@ const centreTabRow = css`
   border-left: 1px solid ${brandLine.primary};
 `;
 
-const containerStyles = css`
-  display: flex;
-  flex-grow: 1;
-`;
-
 const termsSpacing = css`
   margin-bottom: ${space[4]}px;
 `;
@@ -64,40 +59,39 @@ export const Registration = ({ returnUrl = '', email = '' }: Props) => {
         ]}
         tabRowStylesOverride={centreTabRow}
       />
-      <Container sideBorders cssOverrides={containerStyles}>
-        <Main>
-          <PageBox>
-            <PageBody>
-              <form
-                css={form}
-                method="post"
-                action={`${Routes.REGISTRATION}${returnUrlQuery}`}
-              >
-                <CsrfFormField />
-                <TextInput
-                  css={textInput}
-                  label="Email"
-                  name="email"
-                  type="email"
-                  defaultValue={email}
-                />
-                <div css={termsSpacing}>
-                  <Terms />
-                </div>
-                <Button css={button} type="submit" data-cy="register-button">
-                  Register
-                </Button>
-              </form>
-              <Divider
-                size="full"
-                spaceAbove="loose"
-                displayText="or continue with"
+
+      <Main>
+        <PageBox>
+          <PageBody>
+            <form
+              css={form}
+              method="post"
+              action={`${Routes.REGISTRATION}${returnUrlQuery}`}
+            >
+              <CsrfFormField />
+              <TextInput
+                css={textInput}
+                label="Email"
+                name="email"
+                type="email"
+                defaultValue={email}
               />
-              <SocialButtons returnUrl={returnUrl} />
-            </PageBody>
-          </PageBox>
-        </Main>
-      </Container>
+              <div css={termsSpacing}>
+                <Terms />
+              </div>
+              <Button css={button} type="submit" data-cy="register-button">
+                Register
+              </Button>
+            </form>
+            <Divider
+              size="full"
+              spaceAbove="loose"
+              displayText="or continue with"
+            />
+            <SocialButtons returnUrl={returnUrl} />
+          </PageBody>
+        </PageBox>
+      </Main>
       <Footer />
     </>
   );

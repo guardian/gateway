@@ -43,11 +43,6 @@ const centreTabRow = css`
   border-left: 1px solid ${brandLine.primary};
 `;
 
-const containerStyles = css`
-  display: flex;
-  flex-grow: 1;
-`;
-
 export const SignIn = () => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { pageData = {} } = clientState;
@@ -74,48 +69,46 @@ export const SignIn = () => {
         ]}
         tabRowStylesOverride={centreTabRow}
       />
-      <Container sideBorders cssOverrides={containerStyles}>
-        <Main>
-          <PageBox>
-            <PageBody>
-              <form
-                css={form}
-                method="post"
-                action={`${Routes.SIGN_IN}${returnUrlQuery}`}
-              >
-                <CsrfFormField />
-                <TextInput
-                  css={textInput}
-                  label="Email"
-                  name="email"
-                  type="email"
-                />
-                <PasswordInput label="Password" />
-                <Links>
-                  <Link subdued={true} href="/reset">
-                    Reset password
-                  </Link>{' '}
-                  or{' '}
-                  <Link subdued={true} href="/magic-link">
-                    email me a link to sign in
-                  </Link>
-                </Links>
-                <Button css={button} type="submit" data-cy="sign-in-button">
-                  Sign in
-                </Button>
-              </form>
-              <Divider
-                size="full"
-                spaceAbove="loose"
-                displayText="or continue with"
+      <Main>
+        <PageBox>
+          <PageBody>
+            <form
+              css={form}
+              method="post"
+              action={`${Routes.SIGN_IN}${returnUrlQuery}`}
+            >
+              <CsrfFormField />
+              <TextInput
+                css={textInput}
+                label="Email"
+                name="email"
+                type="email"
               />
-              <SocialButtons returnUrl="todo" />
-              <Divider size="full" spaceAbove="tight" />
-              <Terms />
-            </PageBody>
-          </PageBox>
-        </Main>
-      </Container>
+              <PasswordInput label="Password" />
+              <Links>
+                <Link subdued={true} href="/reset">
+                  Reset password
+                </Link>{' '}
+                or{' '}
+                <Link subdued={true} href="/magic-link">
+                  email me a link to sign in
+                </Link>
+              </Links>
+              <Button css={button} type="submit" data-cy="sign-in-button">
+                Sign in
+              </Button>
+            </form>
+            <Divider
+              size="full"
+              spaceAbove="loose"
+              displayText="or continue with"
+            />
+            <SocialButtons returnUrl="todo" />
+            <Divider size="full" spaceAbove="tight" />
+            <Terms />
+          </PageBody>
+        </PageBox>
+      </Main>
       <Footer />
     </>
   );
