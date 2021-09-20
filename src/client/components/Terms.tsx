@@ -39,25 +39,25 @@ export const Terms = () => (
     <Text>
       By proceeding, you agree to our{' '}
       <TermsLink href="https://www.theguardian.com/help/terms-of-service">
-        terms and conditions
+        terms &amp; conditions
       </TermsLink>
       .
     </Text>
     <Text>
       For information about how we use your data, see our{' '}
       <TermsLink href="https://www.theguardian.com/help/privacy-policy">
-        privacy policy.
+        privacy policy
       </TermsLink>
       .
     </Text>
     <Text>
-      This site is protected by reCAPTCHA and{' '}
+      This site is protected by reCAPTCHA and the Google{' '}
       <TermsLink href="https://policies.google.com/privacy">
-        Google&apos;s Privacy Policy
+        privacy policy
       </TermsLink>{' '}
       and{' '}
       <TermsLink href="https://policies.google.com/terms">
-        Terms of Service
+        terms of service
       </TermsLink>{' '}
       apply.
     </Text>
