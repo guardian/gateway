@@ -28,7 +28,7 @@ export const FieldErrorPW = () => (
     fieldErrors={[
       {
         field: 'password',
-        message: 'Not right',
+        message: 'Password must be between 8 and 72 characters.',
       },
     ]}
   />
