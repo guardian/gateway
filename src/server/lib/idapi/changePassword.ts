@@ -22,7 +22,11 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
       case IdapiErrorMessages.INVALID_TOKEN:
         throw { message: ChangePasswordErrors.INVALID_TOKEN, status };
       case IdapiErrorMessages.BREACHED_PASSWORD:
-        throw { message: ChangePasswordErrors.COMMON_PASSWORD, status };
+        throw {
+          message: ChangePasswordErrors.COMMON_PASSWORD,
+          status,
+          field: 'password',
+        };
       default:
         break;
     }
