@@ -87,7 +87,9 @@ router.post(
     const { googleRecaptcha } = getConfiguration();
 
     const { email = '', 'g-recaptcha-response': captchaResponse } = req.body;
-    console.log(captchaResponse);
+
+    console.log('USECAPTCHARESPONSE', captchaResponse);
+
     const { returnUrl, ref, refViewId } = state.queryParams;
     try {
       await guest(email, req.ip, returnUrl, ref, refViewId);

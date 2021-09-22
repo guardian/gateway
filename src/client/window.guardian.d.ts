@@ -17,13 +17,16 @@ declare global {
     ga: unknown;
     grecaptcha: {
       ready: ({}) => void;
+      reset: () => void;
       execute: () => void;
       render: (
         element: string,
         options: {
           sitekey: string;
-          size: string;
+          size?: string;
           callback: (token: string) => void;
+          'error-callback': (token: string) => void;
+          'expired-callback': (token: string) => void;
         },
       ) => void;
     };

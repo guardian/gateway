@@ -37,57 +37,108 @@ const termsSpacing = css`
   margin-bottom: ${space[4]}px;
 `;
 
+const useRecaptchaScript = (url: string) => {
+  const [loaded, setLoaded] = React.useState(false);
+
+  React.useEffect(() => {
+    const existingScript =
+      typeof document !== undefined &&
+      document.getElementById('g-captcha-script');
+
+    if (existingScript || recaptchaReady()) {
+      setLoaded(true);
+      return;
+    }
+
+    const script = document.createElement('script');
+
+    script.setAttribute('src', url);
+
+    script.setAttribute('id', 'g-captcha-script');
+    script.setAttribute('async', '');
+    script.setAttribute('defer', '');
+
+    document.body.appendChild(script);
+
+    const initialiseRecaptcha = () => {
+      window.grecaptcha.ready(() => {
+        if (recaptchaReady()) {
+          setLoaded(true);
+        }
+      });
+    };
+    script.addEventListener('load', initialiseRecaptcha);
+
+    return () => {
+      script.removeEventListener('load', initialiseRecaptcha);
+      // TODO: Decide whether to remove from body on effect cleanup.
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  return {
+    loaded,
+  };
+};
+
+const useRecaptcha = (siteKey: string) => {
+  const [token, setToken] = React.useState('');
+  const [error, setError] = React.useState('');
+  const [expired, setExpired] = React.useState('');
+
+  const [captchaElement, setCaptchaElement] = React.useState(null);
+
+  const { loaded } = useRecaptchaScript(
+    'https://www.google.com/recaptcha/api.js?render=explicit',
+  );
+
+  React.useEffect(() => {
+    if (loaded) {
+      const element = window.grecaptcha.render('recaptcha_registration', {
+        sitekey: siteKey,
+        size: 'invisible',
+        callback: setToken,
+        'error-callback': setError,
+        'expired-callback': setExpired,
+      });
+      setCaptchaElement(element);
+    }
+  }, [loaded]);
+
+  return {
+    token,
+    error,
+    expired,
+    captchaElement,
+  };
+};
+
 export const Registration = ({
   returnUrl = '',
   email = '',
   recaptchaSiteKey = '',
 }: Props) => {
+  const registerFormRef = React.createRef<HTMLFormElement>();
+
+  const { token, captchaElement } = useRecaptcha(recaptchaSiteKey);
+
   const returnUrlQuery = returnUrl
     ? `?returnUrl=${encodeURIComponent(returnUrl)}`
     : '';
 
   React.useEffect(() => {
-    const script = document.createElement('script');
-
-    script.setAttribute(
-      'src',
-      'https://www.google.com/recaptcha/api.js?render=explicit',
-    );
-
-    script.setAttribute('async', '');
-    script.setAttribute('defer', '');
-
-    script.addEventListener('load', () => {
-      window.grecaptcha.ready(() => {
-        if (recaptchaReady()) {
-          window.grecaptcha.render('recaptcha_registration', {
-            sitekey: recaptchaSiteKey,
-            size: 'invisible',
-            callback: resolve,
-          });
-        }
-      });
-    });
-    document.body.appendChild(script);
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
-  const resolve = (token: string) => {
-    console.log('TOKEN', token);
-
     const registerFormElement = registerFormRef.current;
     if (token && registerFormElement) {
+      console.log('Token rcv: ', token);
       registerFormElement.submit();
     }
-  };
+  }, [token]);
 
-  const registerFormRef = React.createRef<HTMLFormElement>();
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (recaptchaReady()) {
-      window.grecaptcha.execute();
+    if (captchaElement !== null) {
+      window.grecaptcha.reset(captchaElement);
+      window.grecaptcha.execute(captchaElement);
     }
   };
 
