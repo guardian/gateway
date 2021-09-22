@@ -32,6 +32,7 @@ export interface PageData {
   consents?: Consent[];
   page?: string;
   previousPage?: string;
+  recaptchaSiteKey?: string;
 }
 
 export interface ClientHosts {

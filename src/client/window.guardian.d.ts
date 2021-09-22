@@ -15,7 +15,18 @@ declare global {
     };
     Cypress: unknown;
     ga: unknown;
-    grecaptcha: unknown;
+    grecaptcha: {
+      ready: ({}) => void;
+      execute: () => void;
+      render: (
+        element: string,
+        options: {
+          sitekey: string;
+          size: string;
+          callback: (token: string) => void;
+        },
+      ) => void;
+    };
   }
 }
 

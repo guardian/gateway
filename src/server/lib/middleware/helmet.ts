@@ -12,6 +12,8 @@ enum HELMET_OPTIONS {
 
 enum CSP_VALID_URI {
   GOOGLE_ANALYTICS = 'www.google-analytics.com',
+  GSTATIC_RECAPTCHA = 'www.gstatic.com',
+  GOOGLE_RECAPTCHA = 'www.google.com',
   GUARDIAN_STATIC = 'static.guim.co.uk',
   GUARDIAN_ASSETS = 'assets.guim.co.uk',
   GUARDIAN_API = 'api.nextgen.guardianapps.co.uk',
@@ -29,6 +31,8 @@ const scriptSrc = [
   gaUID.hash, // google analytics id
   CSP_VALID_URI.GOOGLE_ANALYTICS,
   CSP_VALID_URI.CMP,
+  CSP_VALID_URI.GOOGLE_RECAPTCHA,
+  CSP_VALID_URI.GSTATIC_RECAPTCHA,
 ];
 if (stage === 'DEV') scriptSrc.push(HELMET_OPTIONS.UNSAFE_EVAL);
 
@@ -45,10 +49,13 @@ const helmetConfig = {
         CSP_VALID_URI.GUARDIAN_STATIC,
         CSP_VALID_URI.OPHAN,
         CSP_VALID_URI.GOOGLE_ANALYTICS,
+        CSP_VALID_URI.GOOGLE_RECAPTCHA,
       ],
       fontSrc: [CSP_VALID_URI.GUARDIAN_ASSETS],
       connectSrc: [
         CSP_VALID_URI.GOOGLE_ANALYTICS,
+        CSP_VALID_URI.GOOGLE_RECAPTCHA,
+        CSP_VALID_URI.GSTATIC_RECAPTCHA,
         CSP_VALID_URI.VENDORLIST_CMP,
         `${CSP_VALID_URI.GUARDIAN_CONSENTS_LOGS}${apiDomain}`,
         CSP_VALID_URI.CMP,
@@ -56,7 +63,7 @@ const helmetConfig = {
         CSP_VALID_URI.HAVEIBEENPWNED,
         idapiOrigin,
       ],
-      frameSrc: [CSP_VALID_URI.CMP],
+      frameSrc: [CSP_VALID_URI.CMP, CSP_VALID_URI.GOOGLE_RECAPTCHA],
     },
   },
 };

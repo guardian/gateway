@@ -17,10 +17,12 @@ import { button, form, textInput } from '@/client/styles/Shared';
 import { css } from '@emotion/react';
 import { Breakpoints } from '../models/Style';
 import { brandLine, space } from '@guardian/src-foundations';
+import { recaptchaReady } from '../static/recaptcha/recaptcha';
 
 type Props = {
   returnUrl?: string;
   email?: string;
+  recaptchaSiteKey?: string;
 };
 
 // Used to centre the nav tabs in line with the page content.
@@ -35,10 +37,59 @@ const termsSpacing = css`
   margin-bottom: ${space[4]}px;
 `;
 
-export const Registration = ({ returnUrl = '', email = '' }: Props) => {
+export const Registration = ({
+  returnUrl = '',
+  email = '',
+  recaptchaSiteKey = '',
+}: Props) => {
   const returnUrlQuery = returnUrl
     ? `?returnUrl=${encodeURIComponent(returnUrl)}`
     : '';
+
+  React.useEffect(() => {
+    const script = document.createElement('script');
+
+    script.setAttribute(
+      'src',
+      'https://www.google.com/recaptcha/api.js?render=explicit',
+    );
+
+    script.setAttribute('async', '');
+    script.setAttribute('defer', '');
+
+    script.addEventListener('load', () => {
+      window.grecaptcha.ready(() => {
+        if (recaptchaReady()) {
+          window.grecaptcha.render('recaptcha_registration', {
+            sitekey: recaptchaSiteKey,
+            size: 'invisible',
+            callback: resolve,
+          });
+        }
+      });
+    });
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  const resolve = (token: string) => {
+    console.log('TOKEN', token);
+
+    const registerFormElement = registerFormRef.current;
+    if (token && registerFormElement) {
+      registerFormElement.submit();
+    }
+  };
+
+  const registerFormRef = React.createRef<HTMLFormElement>();
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (recaptchaReady()) {
+      window.grecaptcha.execute();
+    }
+  };
 
   return (
     <>
@@ -66,8 +117,11 @@ export const Registration = ({ returnUrl = '', email = '' }: Props) => {
               css={form}
               method="post"
               action={`${Routes.REGISTRATION}${returnUrlQuery}`}
+              ref={registerFormRef}
+              onSubmit={handleSubmit}
             >
               <CsrfFormField />
+              <div className="g-recaptcha" id="recaptcha_registration"></div>
               <TextInput
                 css={textInput}
                 label="Email"

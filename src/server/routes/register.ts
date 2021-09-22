@@ -13,13 +13,21 @@ import { readGUEmailCookie, setGUEmailCookie } from '@/server/lib/emailCookie';
 import { getEmailFromPlaySessionCookie } from '../lib/playSessionCookie';
 import { RequestError } from '@/shared/lib/error';
 import { guest } from '../lib/idapi/guest';
+import { getConfiguration } from '../lib/getConfiguration';
 const router = Router();
 
 router.get(
   Routes.REGISTRATION,
   (req: Request, res: ResponseWithRequestState) => {
+    // set google recaptcha site key
+    const { googleRecaptcha } = getConfiguration();
+
     const html = renderer(Routes.REGISTRATION, {
-      requestState: res.locals,
+      requestState: deepmerge(res.locals, {
+        pageData: {
+          recaptchaSiteKey: googleRecaptcha.siteKey,
+        },
+      }),
       pageTitle: PageTitle.REGISTRATION,
     });
     res.type('html').send(html);
@@ -75,10 +83,12 @@ router.post(
   Routes.REGISTRATION,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
+    // set google recaptcha site key
+    const { googleRecaptcha } = getConfiguration();
 
-    const { email = '' } = req.body;
+    const { email = '', 'g-recaptcha-response': captchaResponse } = req.body;
+    console.log(captchaResponse);
     const { returnUrl, ref, refViewId } = state.queryParams;
-
     try {
       await guest(email, req.ip, returnUrl, ref, refViewId);
       setGUEmailCookie(res, email);
@@ -94,6 +104,7 @@ router.post(
         },
         pageData: {
           email,
+          recaptchaSiteKey: googleRecaptcha.siteKey,
         },
       });
 
