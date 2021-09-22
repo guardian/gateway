@@ -17,8 +17,8 @@ declare global {
     ga: unknown;
     grecaptcha: {
       ready: ({}) => void;
-      reset: () => void;
-      execute: () => void;
+      reset: (element: any) => void;
+      execute: (element: any) => void;
       render: (
         element: string,
         options: {

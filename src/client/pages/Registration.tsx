@@ -101,7 +101,7 @@ const useRecaptcha = (siteKey: string) => {
         'error-callback': setError,
         'expired-callback': setExpired,
       });
-      setCaptchaElement(element);
+      setCaptchaElement(element as any);
     }
   }, [loaded]);
 
