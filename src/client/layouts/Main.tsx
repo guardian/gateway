@@ -8,7 +8,6 @@ import { space } from '@guardian/src-foundations';
 import { Breakpoints } from '@/client/models/Style';
 import { getErrorLink } from '@/client/lib/ErrorLink';
 import { GlobalSuccess } from '@/client/components/GlobalSuccess';
-import { Container } from '../components/Container';
 
 type Props = {
   subTitle?: string;
@@ -29,11 +28,6 @@ const sectionStyles = css`
   margin: 0 auto;
 `;
 
-const containerStyles = css`
-  display: flex;
-  flex-grow: 1;
-`;
-
 export const Main = ({ subTitle, successOverride, children }: Props) => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { globalMessage: { error, success } = {} } = clientState;
@@ -45,9 +39,7 @@ export const Main = ({ subTitle, successOverride, children }: Props) => {
       {subTitle && <SubHeader title={subTitle} />}
       {error && <GlobalError error={error} link={getErrorLink(error)} />}
       {successMessage && <GlobalSuccess success={successMessage} />}
-      <Container sideBorders cssOverrides={containerStyles}>
-        <section css={sectionStyles}>{children}</section>
-      </Container>
+      <section css={sectionStyles}>{children}</section>
     </main>
   );
 };

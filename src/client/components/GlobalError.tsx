@@ -65,7 +65,7 @@ export const GlobalError = ({ error, link, left }: GlobalErrorProps) => {
   const item = left
     ? gridItem({
         ...gridItemColumnConsents,
-        ...{ WIDE: { start: 1, span: COLUMNS.WIDE } },
+        ...{ WIDE: { start: 0, span: COLUMNS.TABLET } },
       })
     : null;
   return (
