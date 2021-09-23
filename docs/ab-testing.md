@@ -4,7 +4,7 @@ Information about how to setup and run AB Testing in a multitude of ways in this
 
 ## Framework
 
-The base framework used is [The Guardian's AB Testing Library](https://github.com/guardian/ab-testing).
+The base framework used is [the Guardian's AB Testing Library](https://github.com/guardian/ab-testing).
 
 More framework/API specific documentation is available there.
 

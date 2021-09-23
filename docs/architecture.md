@@ -2,7 +2,7 @@
 
 ## Overview
 
-Gateway is the new frontend to login and registration at The Guardian through [profile.theguardian.com](https://profile.theguardian.com).
+Gateway is the new frontend to login and registration at the Guardian through [profile.theguardian.com](https://profile.theguardian.com).
 
 ## Motivation
 
@@ -12,11 +12,11 @@ The split over two projects is a cause of confusion and has happened as part of 
 
 Furthermore, it is the case that new features cannot be developed on it due to the poor state of the applications, notably any modifications to the sign up flow.
 
-Many other client side applications at The Guardian now are React app based, which allows for easier code reuse and knowledge sharing.
+Many other client side applications at the Guardian now are React app based, which allows for easier code reuse and knowledge sharing.
 
 ## Technology
 
-Gateway is primarily a [TypeScript](https://www.typescriptlang.org/), [React](https://reactjs.org/), and [Express.js](https://expressjs.com/) application, utilising [The Guardian Source Design System](https://theguardian.design/) components, and [Emotion](https://emotion.sh) CSS-in-JS library for UI/design. We use [Jest](https://jestjs.io/) for unit testing, and [Cypress](https://www.cypress.io/) for integration tests (and hopefully E2E tests in the future).
+Gateway is primarily a [TypeScript](https://www.typescriptlang.org/), [React](https://reactjs.org/), and [Express.js](https://expressjs.com/) application, utilising [the Guardian Source Design System](https://theguardian.design/) components, and [Emotion](https://emotion.sh) CSS-in-JS library for UI/design. We use [Jest](https://jestjs.io/) for unit testing, and [Cypress](https://www.cypress.io/) for integration tests (and hopefully E2E tests in the future).
 
 ## Browser Support
 

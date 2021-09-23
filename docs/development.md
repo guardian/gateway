@@ -314,7 +314,7 @@ You can access this server side on the `ResponseWithRequestState` object as `res
 
 Styling is done in JS (or TSX in our case) using the [Emotion](https://emotion.sh) CSS-in-JS library, which allows for the definitions of styles at the component level, which means once rendered, the html sent to the client only contains the CSS required for that page.
 
-It's also used as [The Guardian Source Design System](https://theguardian.design/) components are built using Emotion too, allowing the use for those components in our project.
+It's also used as [t Source Design System](https://theguardian.design/) components are built using Emotion too, allowing the use for those components in our project.
 
 Example of styling and adding it to a `p` tag using Emotion and Source:
 
