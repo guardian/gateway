@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { css, SerializedStyles } from '@emotion/react';
+import { css } from '@emotion/react';
 import {
   brandBackground,
   space,
@@ -14,7 +14,6 @@ import { Link } from '@guardian/src-link';
 
 type Props = {
   tabs: TabType[];
-  tabRowStylesOverride?: SerializedStyles;
 };
 
 type TabType = {
@@ -135,10 +134,10 @@ const Tab = ({ displayText, linkTo, isActive, isFirst }: TabType) => {
   );
 };
 
-export const Nav = ({ tabs, tabRowStylesOverride }: Props) => (
+export const Nav = ({ tabs }: Props) => (
   <nav css={backgroundStyles}>
     <Container sideBorders={true} topBorder={true} sidePadding={false}>
-      <h1 css={[tabRowStyles, tabRowStylesOverride]}>
+      <h1 css={[tabRowStyles]}>
         {tabs.map((tab, index) => (
           <Tab
             key={index}

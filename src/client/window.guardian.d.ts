@@ -17,10 +17,10 @@ declare global {
     ga: unknown;
     grecaptcha: {
       ready: ({}) => void;
-      reset: (element: any) => void;
-      execute: (element: any) => void;
+      reset: (element: number) => void;
+      execute: (element: number) => void;
       render: (
-        element: string,
+        element: string | HTMLDivElement,
         options: {
           sitekey: string;
           size?: string;

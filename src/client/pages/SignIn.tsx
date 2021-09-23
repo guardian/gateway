@@ -20,8 +20,6 @@ import { SocialButtons } from '@/client/components/SocialButtons';
 import { button, form, textInput } from '@/client/styles/Shared';
 import { Link } from '@guardian/src-link';
 import { textSans } from '@guardian/src-foundations/typography';
-import { Breakpoints } from '../models/Style';
-import { brandLine } from '@guardian/src-foundations';
 
 const Links = ({ children }: { children: React.ReactNode }) => (
   <p
@@ -33,14 +31,6 @@ const Links = ({ children }: { children: React.ReactNode }) => (
     {children}
   </p>
 );
-
-// Used to centre the nav tabs in line with the page content.
-const centreTabRow = css`
-  max-width: ${Breakpoints.TABLET}px;
-  width: 100%;
-  margin: 0 auto;
-  border-left: 1px solid ${brandLine.primary};
-`;
 
 export const SignIn = () => {
   const clientState: ClientState = useContext(ClientStateContext);
@@ -66,7 +56,6 @@ export const SignIn = () => {
             isActive: false,
           },
         ]}
-        tabRowStylesOverride={centreTabRow}
       />
       <Main>
         <PageBox>
