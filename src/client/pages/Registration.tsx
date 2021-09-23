@@ -81,12 +81,12 @@ const useRecaptchaScript = (url: string) => {
   };
 };
 
-const useRecaptcha = (siteKey: string) => {
+const useRecaptcha = (siteKey: string, renderElement: string) => {
   const [token, setToken] = React.useState('');
   const [error, setError] = React.useState('');
   const [expired, setExpired] = React.useState('');
 
-  const [captchaElement, setCaptchaElement] = React.useState(null);
+  const [widgetId, setWidgetId] = React.useState(0);
 
   const { loaded } = useRecaptchaScript(
     'https://www.google.com/recaptcha/api.js?render=explicit',
@@ -94,14 +94,14 @@ const useRecaptcha = (siteKey: string) => {
 
   React.useEffect(() => {
     if (loaded) {
-      const element = window.grecaptcha.render('recaptcha_registration', {
+      const widgetId = window.grecaptcha.render(renderElement, {
         sitekey: siteKey,
         size: 'invisible',
         callback: setToken,
         'error-callback': setError,
         'expired-callback': setExpired,
       });
-      setCaptchaElement(element as any);
+      setWidgetId(widgetId);
     }
   }, [loaded]);
 
@@ -109,7 +109,7 @@ const useRecaptcha = (siteKey: string) => {
     token,
     error,
     expired,
-    captchaElement,
+    captchaElement: widgetId,
   };
 };
 
@@ -120,7 +120,10 @@ export const Registration = ({
 }: Props) => {
   const registerFormRef = React.createRef<HTMLFormElement>();
 
-  const { token, captchaElement } = useRecaptcha(recaptchaSiteKey);
+  const { token, captchaElement } = useRecaptcha(
+    recaptchaSiteKey,
+    'recaptcha_registration',
+  );
 
   const returnUrlQuery = returnUrl
     ? `?returnUrl=${encodeURIComponent(returnUrl)}`
@@ -128,9 +131,9 @@ export const Registration = ({
 
   React.useEffect(() => {
     const registerFormElement = registerFormRef.current;
-    if (token && registerFormElement) {
+    if (token) {
       console.log('Token rcv: ', token);
-      registerFormElement.submit();
+      // registerFormElement.submit();
     }
   }, [token]);
 

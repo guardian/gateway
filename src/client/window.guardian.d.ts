@@ -28,7 +28,7 @@ declare global {
           'error-callback': (token: string) => void;
           'expired-callback': (token: string) => void;
         },
-      ) => void;
+      ) => number;
     };
   }
 }
