@@ -82,7 +82,10 @@ describe('Sign in flow', () => {
         },
       });
       cy.get('[data-cy=sign-in-button]').click();
-      cy.contains('UK edition');
+      // check for nav pillars
+      cy.contains('News');
+      cy.contains('Opinion');
+      cy.contains('Sport');
     });
   });
 
