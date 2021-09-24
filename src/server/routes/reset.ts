@@ -42,10 +42,6 @@ router.post(
 
     const { returnUrl } = res.locals.queryParams;
 
-    logger.info(
-      `Debugging IP addresses: req.ip = ${req.ip}, req.ips = ${req.ips}`,
-    );
-
     try {
       await resetPassword(email, req.ip, returnUrl);
 
