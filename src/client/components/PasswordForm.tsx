@@ -8,7 +8,7 @@ import {
 } from '@guardian/src-icons';
 import { success, error, neutral } from '@guardian/src-foundations/palette';
 import { textSans } from '@guardian/src-foundations/typography';
-import { button, form } from '@/client/styles/Shared';
+import { button } from '@/client/styles/Shared';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { space } from '@guardian/src-foundations';
 import { css } from '@emotion/react';
@@ -57,7 +57,11 @@ const failureIconStyles = css`
 `;
 
 const messageWrapperStyles = css`
-  margin-bottom: ${space[3]}px;
+  margin-bottom: ${space[6]}px;
+`;
+
+const form = css`
+  padding-top: ${space[3]}px;
 `;
 
 const TooLong = () => {
@@ -260,7 +264,6 @@ export const PasswordForm = ({
       <PasswordInput
         error={error}
         label={labelText}
-        supporting="Must be between 8 and 72 characters"
         onChange={(e) => {
           setPassword(e.target.value);
         }}

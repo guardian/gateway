@@ -73,6 +73,8 @@ export const checkResetPasswordTokenController = (
 export const setPasswordTokenController = (
   setPasswordPath: string,
   setPasswordPageTitle: string,
+  resendEmailPagePath: string,
+  resendEmailPageTitle: string,
   successCallback: (res: ResponseWithRequestState) => void,
 ) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
@@ -120,21 +122,54 @@ export const setPasswordTokenController = (
 
       return successCallback(res);
     } catch (error) {
-      const { message, status } = error as RequestError;
+      const { message, status, field } = error as RequestError;
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
       // see the comment above around the success metrics
       trackMetric(Metrics.ACCOUNT_VERIFICATION_FAILURE);
       trackMetric(Metrics.CHANGE_PASSWORD_FAILURE);
 
-      const html = renderer(`${setPasswordPath}/${token}`, {
-        requestState: deepmerge(state, {
-          globalMessage: {
-            error: message,
-          },
-        }),
-        pageTitle: setPasswordPageTitle,
-      });
-      return res.status(status).type('html').send(html);
+      // we unfortunatley need this inner try catch block to catch
+      // errors from the `validateToken` method were it to fail
+      try {
+        if (field) {
+          state = deepmerge(state, {
+            pageData: {
+              email: await validateToken(token, req.ip),
+              fieldErrors: [
+                {
+                  field,
+                  message,
+                },
+              ],
+            },
+          });
+        } else {
+          state = deepmerge(state, {
+            pageData: {
+              email: await validateToken(token, req.ip),
+            },
+            globalMessage: {
+              error: message,
+            },
+          });
+        }
+
+        const html = renderer(`${setPasswordPath}/${token}`, {
+          requestState: state,
+          pageTitle: setPasswordPageTitle,
+        });
+        return res.status(status).type('html').send(html);
+      } catch (error) {
+        logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+        // if theres an error with the token validation, we have to take them back
+        // to the resend page
+        return res.type('html').send(
+          renderer(`${resendEmailPagePath}${Routes.RESEND}`, {
+            requestState: state,
+            pageTitle: resendEmailPageTitle,
+          }),
+        );
+      }
     }
   });

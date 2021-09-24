@@ -112,7 +112,7 @@ describe('Password change flow', () => {
       cy.wait('@breachCheck');
       cy.contains('use a password that is hard to guess');
       cy.get('button[type="submit"]').click();
-      cy.contains('is a common password');
+      cy.contains('Please use a password that is hard to guess.');
       cy.get('input[name="password"]').type('iamaveryuniqueandlongstring');
       cy.wait('@breachCheck');
       cy.contains('Valid password');
@@ -292,6 +292,7 @@ describe('Password change flow', () => {
     it('displays a generic error message', () => {
       cy.mockNext(200);
       cy.mockNext(500);
+      cy.mockNext(200);
       cy.intercept({
         method: 'GET',
         url: 'https://api.pwnedpasswords.com/range/*',

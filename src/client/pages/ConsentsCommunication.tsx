@@ -74,7 +74,7 @@ export const ConsentsCommunication = ({
 
   return (
     <ConsentsLayout
-      title="Welcome to the Guardian"
+      title="Stay in touch"
       current={CONSENTS_PAGES.CONTACT}
       bgColor={CONSENTS_MAIN_COLOR}
     >

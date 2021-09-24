@@ -158,10 +158,11 @@ describe('Welcome and set password page', () => {
           },
         ],
       });
+      cy.mockNext(200, checkTokenSuccessResponse);
       cy.visit(`/welcome/fake_token`);
       cy.get('input[name="password"]').type('password');
       cy.get('button[type="submit"]').click();
-      cy.contains('This is a common password.');
+      cy.contains('Please use a password that is hard to guess.');
     });
   });
 
