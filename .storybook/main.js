@@ -1,4 +1,5 @@
 const path = require('path');
+const babelConfig = require('../babel.config');
 
 module.exports = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -12,7 +13,39 @@ module.exports = {
       mjml: 'mjml-browser',
     };
 
+    // We need to transpile the Guardian and strip-ansi modules so that our vendors bundle will run in IE11.
+    const transpileGuardianModules = {
+      include: [/node_modules[\\\/]@guardian/, /node_modules[\\\/]strip-ansi/],
+      test: /\.(m?)(j|t)s(x?)/,
+      use: [
+        {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              [
+                '@babel/env',
+                {
+                  bugfixes: true,
+                  useBuiltIns: 'usage',
+                  corejs: '3.14',
+                  modules: 'amd',
+                },
+              ],
+              ...babelConfig.presets,
+            ],
+            plugins: [...babelConfig.plugins],
+          },
+        },
+      ],
+    };
+
     // Return the altered config
-    return config;
+    return {
+      ...config,
+      module: {
+        ...config.module,
+        rules: [...config.module.rules, transpileGuardianModules],
+      },
+    };
   },
 };
