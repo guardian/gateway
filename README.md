@@ -4,7 +4,7 @@
 
 The (new) profile (dot) theguardian (dot) com
 
-Gateway is the new frontend to login and registration at The Guardian at [profile.theguardian.com](https://profile.theguardian.com).
+Gateway is the new frontend to login and registration at the Guardian at [profile.theguardian.com](https://profile.theguardian.com).
 
 Need help? Contact the Identity team on [Digital/Identity](https://chat.google.com/room/AAAAFdv9gK8).
 
