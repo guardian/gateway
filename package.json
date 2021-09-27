@@ -39,7 +39,7 @@
     "@babel/preset-typescript": "^7.15.0",
     "@babel/runtime": "^7.15.4",
     "@emotion/babel-preset-css-prop": "^11.2.0",
-    "@guardian/node-riffraff-artifact": "^0.2.2",
+    "@guardian/node-riffraff-artifact": "^0.3.0",
     "@storybook/addon-actions": "^6.3.8",
     "@storybook/addon-essentials": "^6.3.8",
     "@storybook/addon-links": "^6.3.8",
