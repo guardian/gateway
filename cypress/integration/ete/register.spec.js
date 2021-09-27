@@ -1,14 +1,12 @@
 /// <reference types='cypress' />
 
-import { randomUUID } from 'crypto';
-
-// This test depends on this Mailosaur account already being registered
-const existing = {
+const unregisteredAccount = {
   serverId: Cypress.env('MAILOSAUR_SERVER_ID'),
   serverDomain: Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
   email:
     'registrationTest+' +
-    randomUUID() +
+    window.crypto.randomUUID() +
+    '@' +
     Cypress.env('MAILOSAUR_SERVER_ID') +
     '.mailosaur.net',
   password: 'test_password',
@@ -38,5 +36,15 @@ describe('Registration flow', () => {
       .contains('privacy policy')
       .click();
     cy.url().should('eq', 'https://www.theguardian.com/help/privacy-policy');
+  });
+  it.only('successfully registers using an email with no existing account', () => {
+    cy.visit('/register');
+    cy.get('input[name=email').type(unregisteredAccount.email);
+    cy.get('[data-cy="register-button"]').click();
+
+    cy.contains('Email sent');
+    cy.contains(unregisteredAccount.email);
+    cy.contains('Resend email');
+    cy.contains('Change email address');
   });
 });
