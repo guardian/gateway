@@ -1,10 +1,17 @@
 /// <reference types='cypress' />
+
+import { randomUUID } from 'crypto';
+
 // This test depends on this Mailosaur account already being registered
 const existing = {
   serverId: Cypress.env('MAILOSAUR_SERVER_ID'),
   serverDomain: Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
-  email: 'signIn@' + Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
-  password: 'existing_password',
+  email:
+    'registrationTest+' +
+    randomUUID() +
+    Cypress.env('MAILOSAUR_SERVER_ID') +
+    '.mailosaur.net',
+  password: 'test_password',
 };
 
 describe('Registration flow', () => {
