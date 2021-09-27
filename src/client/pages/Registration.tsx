@@ -47,7 +47,6 @@ export const Registration = ({
   React.useEffect(() => {
     const registerFormElement = registerFormRef.current;
     if (token) {
-      console.log('Token rcv: ', token);
       registerFormElement?.submit();
     }
   }, [token]);

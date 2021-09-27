@@ -14,18 +14,24 @@ import { getEmailFromPlaySessionCookie } from '../lib/playSessionCookie';
 import { RequestError } from '@/shared/lib/error';
 import { guest } from '../lib/idapi/guest';
 import { getConfiguration } from '../lib/getConfiguration';
+import { RecaptchaV2 } from 'express-recaptcha';
+import { CaptchaErrors } from '@/shared/model/Errors';
+
+// set google recaptcha site key
+const {
+  googleRecaptcha: { secretKey, siteKey },
+} = getConfiguration();
+
+const recaptcha = new RecaptchaV2(siteKey, secretKey);
 const router = Router();
 
 router.get(
   Routes.REGISTRATION,
   (req: Request, res: ResponseWithRequestState) => {
-    // set google recaptcha site key
-    const { googleRecaptcha } = getConfiguration();
-
     const html = renderer(Routes.REGISTRATION, {
       requestState: deepmerge(res.locals, {
         pageData: {
-          recaptchaSiteKey: googleRecaptcha.siteKey,
+          recaptchaSiteKey: siteKey,
         },
       }),
       pageTitle: PageTitle.REGISTRATION,
@@ -81,17 +87,24 @@ router.post(
 
 router.post(
   Routes.REGISTRATION,
+  recaptcha.middleware.verify,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
-    // set google recaptcha site key
-    const { googleRecaptcha } = getConfiguration();
-
-    const { email = '', 'g-recaptcha-response': captchaResponse } = req.body;
-
-    console.log('USECAPTCHARESPONSE', captchaResponse);
+    const { email = '' } = req.body;
 
     const { returnUrl, ref, refViewId } = state.queryParams;
     try {
+      if (req.recaptcha?.error) {
+        logger.error(
+          'Problem verifying recaptcha, error response: ',
+          req.recaptcha.error,
+        );
+        throw {
+          message: CaptchaErrors.GENERIC,
+          status: 500,
+        };
+      }
+
       await guest(email, req.ip, returnUrl, ref, refViewId);
       setGUEmailCookie(res, email);
     } catch (error) {
@@ -106,7 +119,7 @@ router.post(
         },
         pageData: {
           email,
-          recaptchaSiteKey: googleRecaptcha.siteKey,
+          recaptchaSiteKey: siteKey,
         },
       });
 
