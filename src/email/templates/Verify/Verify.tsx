@@ -19,9 +19,9 @@ export const Verify = () => {
       <Footer
         mistakeParagraphComponent={
           <p>
-            If you received this email by mistake, simply delete it. You
-            won&apos;t be registered if you don&apos;t click the confirmation
-            button above.
+            If you received this email by mistake, please delete it. You
+            won&apos;t be registered if you don&apos;t click the &ldquo;Complete
+            registration&rdquo; button above.
           </p>
         }
       />

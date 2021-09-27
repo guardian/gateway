@@ -14,7 +14,7 @@ const { html } = render(Verify());
 
 export const sendVerifyEmail = ({
   to,
-  subject = 'Welcome to the Guardian',
+  subject = 'Please complete your registration',
 }: Props) => {
   return send({
     html,
