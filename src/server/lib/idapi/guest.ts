@@ -44,7 +44,7 @@ export const guest = async (
   refViewId?: string,
   ref?: string,
 ) => {
-  const url = '/guest?accountVerificationEmail';
+  const url = '/guest?accountVerificationEmail=true';
   const options = APIPostOptions({
     primaryEmailAddress: email,
   });

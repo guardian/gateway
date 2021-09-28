@@ -9,7 +9,14 @@ const unregisteredAccount = {
     '@' +
     Cypress.env('MAILOSAUR_SERVER_ID') +
     '.mailosaur.net',
-  password: 'test_password',
+};
+
+// This test depends on this Mailosaur account already being registered
+const existing = {
+  serverId: Cypress.env('MAILOSAUR_SERVER_ID'),
+  serverDomain: Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
+  email: 'signIn@' + Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
+  password: 'existing_password',
 };
 
 describe('Registration flow', () => {
@@ -37,8 +44,9 @@ describe('Registration flow', () => {
       .click();
     cy.url().should('eq', 'https://www.theguardian.com/help/privacy-policy');
   });
-  it.only('successfully registers using an email with no existing account', () => {
+  it('successfully registers using an email with no existing account', () => {
     cy.visit('/register');
+    const timeRequestWasMade = new Date();
     cy.get('input[name=email').type(unregisteredAccount.email);
     cy.get('[data-cy="register-button"]').click();
 
@@ -46,5 +54,37 @@ describe('Registration flow', () => {
     cy.contains(unregisteredAccount.email);
     cy.contains('Resend email');
     cy.contains('Change email address');
+
+    cy.mailosaurGetMessage(
+      unregisteredAccount.serverId,
+      {
+        sentTo: unregisteredAccount.email,
+      },
+      {
+        receivedAfter: timeRequestWasMade,
+      },
+    ).then((email) => {
+      const body = email.html.body;
+      expect(body).to.have.string('Complete registration');
+      // Extract the welcome token, so we can redirect to the welcome flow.
+      const match = body.match(/theguardian.com\/welcome\/([^"]*)/);
+      const token = match[1];
+      cy.visit(`/welcome/${token}`);
+      cy.contains('Create password');
+      cy.mailosaurDeleteMessage(email.id);
+    });
+  });
+
+  it('returns an error when email is in use and report error link redirects to support', () => {
+    cy.visit('/register');
+    cy.get('input[name=email').type(existing.email);
+    cy.get('[data-cy="register-button"]').click();
+
+    cy.contains('There was a problem registering, please try again');
+    cy.contains('Report this error').click();
+    cy.url().should(
+      'eq',
+      'https://manage.theguardian.com/help-centre/contact-us',
+    );
   });
 });
