@@ -48,10 +48,26 @@ describe('Registration flow', () => {
     cy.url().should('eq', 'https://www.theguardian.com/help/privacy-policy');
   });
 
+  it.only('does not proceed when no email provided', () => {
+    cy.visit('/register');
+    cy.get('[data-cy="register-button"]').click();
+    // check that form isn't submitted
+    cy.url().should('not.contain', 'returnUrl');
+  });
+
+  it('does not proceed when invalid email provided', () => {
+    cy.visit('/register');
+    const invalidEmail = 'invalid.email.com';
+    cy.get('input[name=email]').type(invalidEmail);
+    cy.get('[data-cy="register-button"]').click();
+    // check that form isn't submitted
+    cy.url().should('not.contain', 'returnUrl');
+  });
+
   it('successfully registers using an email with no existing account', () => {
     cy.visit('/register');
     const timeRequestWasMade = new Date();
-    cy.get('input[name=email').type(unregisteredAccount.email);
+    cy.get('input[name=email]').type(unregisteredAccount.email);
     cy.get('[data-cy="register-button"]').click();
 
     cy.contains('Email sent');
@@ -92,7 +108,7 @@ describe('Registration flow', () => {
     );
   });
 
-  it.only('errors on the client side when the user is offline and attempts to register and allows submission when back online', () => {
+  it('errors on the client side when the user is offline and attempts to register and allows submission when back online', () => {
     cy.visit('/register');
 
     cy.network({ offline: true });
