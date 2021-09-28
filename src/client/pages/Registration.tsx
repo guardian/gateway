@@ -59,8 +59,6 @@ export const Registration = ({
     .filter((param) => param !== '')
     .join('&');
 
-  console.log(registrationUrlQueryParams);
-
   const captchaElement = recaptchaElementRef.current ?? 'register-recaptcha';
   const { token, widgetId, error, expired } = useRecaptcha(
     recaptchaSiteKey,

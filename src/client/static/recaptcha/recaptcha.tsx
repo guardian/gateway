@@ -1,3 +1,4 @@
+import { logger } from '@/server/lib/logger';
 import React from 'react';
 
 export const recaptchaReady = () =>
@@ -56,8 +57,17 @@ export const useRecaptcha = (
   const [token, setToken] = React.useState('');
   const [error, setError] = React.useState(false);
   const [expired, setExpired] = React.useState(false);
-
   const [widgetId, setWidgetId] = React.useState(0);
+
+  if (siteKey === '') {
+    logger.error('Recaptcha site key not provided');
+    return {
+      token,
+      error,
+      expired,
+      widgetId,
+    };
+  }
 
   const { loaded } = useRecaptchaScript(
     'https://www.google.com/recaptcha/api.js?render=explicit',
