@@ -9,7 +9,7 @@ const header = css`
   margin-bottom: ${space[2]}px;
 `;
 
-const h2 = css`
+const h1 = css`
   margin: 0;
   ${headline.small({ fontWeight: 'bold', lineHeight: 'tight' })}
 
@@ -20,6 +20,6 @@ const h2 = css`
 
 export const PageHeader: FunctionComponent = ({ children }) => (
   <div css={header}>
-    <h2 css={h2}>{children}</h2>
+    <h1 css={h1}>{children}</h1>
   </div>
 );
