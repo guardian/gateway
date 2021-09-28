@@ -68,7 +68,7 @@ describe('Registration flow', () => {
     const encodedReturnUrl =
       'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
     const decodedReturnUrl =
-      'returnUrl=https://m.code.dev-theguardian.com/travel/2019/dec/18/food-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
+      'https://m.code.dev-theguardian.com/travel/2019/dec/18/food-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
     const encodedRef = 'https%3A%2F%2Fm.theguardian.com';
     const decodedRef = 'https://m.theguardian.com/';
     const refViewId = 'testRefViewId';
@@ -100,9 +100,9 @@ describe('Registration flow', () => {
     ).then((email) => {
       const body = email.html.body;
       expect(body).to.have.string('Complete registration');
-      expect(body).to.have.string(decodedReturnUrl);
-      expect(body).to.have.string(decodedRef);
-      expect(body).to.have.string(refViewId);
+      expect(body).to.have.string('returnUrl=' + decodedReturnUrl);
+      expect(body).to.have.string('ref=' + decodedRef);
+      expect(body).to.have.string('refViewId=' + refViewId);
       // Extract the welcome token, so we can redirect to the welcome flow.
       const match = body.match(/theguardian.com\/welcome\/([^"]*)/);
       const token = match[1];
