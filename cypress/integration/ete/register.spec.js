@@ -48,7 +48,7 @@ describe('Registration flow', () => {
     cy.url().should('eq', 'https://www.theguardian.com/help/privacy-policy');
   });
 
-  it.only('does not proceed when no email provided', () => {
+  it('does not proceed when no email provided', () => {
     cy.visit('/register');
     cy.get('[data-cy="register-button"]').click();
     // check that form isn't submitted
@@ -108,7 +108,7 @@ describe('Registration flow', () => {
     );
   });
 
-  it('errors on the client side when the user is offline and attempts to register and allows submission when back online', () => {
+  it.only('errors on the client side when the user is offline and attempts to register and allows submission when back online', () => {
     cy.visit('/register');
 
     cy.network({ offline: true });
@@ -120,11 +120,11 @@ describe('Registration flow', () => {
     );
 
     cy.network({ offline: false });
+    cy.get('[data-cy="register-button"]').click();
     cy.contains(
       'There was a problem with the captcha process. You may find disabling your browser plugins, ensuring JavaScript is enabled or updating your browser will resolve this issue.',
     ).should('not.exist');
 
-    cy.get('[data-cy="register-button"]').click();
     cy.contains('There was a problem registering, please try again');
   });
 });
