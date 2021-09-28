@@ -20,7 +20,7 @@ declare global {
       reset: (element: number) => void;
       execute: (element: number) => void;
       render: (
-        element: string | HTMLDivElement,
+        element: HTMLDivElement | string,
         options: {
           sitekey: string;
           size?: string;

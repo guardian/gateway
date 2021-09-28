@@ -17,6 +17,7 @@ import { button, form, textInput } from '@/client/styles/Shared';
 import { css } from '@emotion/react';
 import { space } from '@guardian/src-foundations';
 import { RecaptchaElement, useRecaptcha } from '../static/recaptcha/recaptcha';
+import { CaptchaErrors } from '@/shared/model/Errors';
 
 type Props = {
   returnUrl?: string;
@@ -39,14 +40,17 @@ export const Registration = ({
     ? `?returnUrl=${encodeURIComponent(returnUrl)}`
     : '';
 
-  const { token, widgetId } = useRecaptcha(
+  const captchaElement = recaptchaElementRef.current ?? 'register-recaptcha';
+  const { token, widgetId, error, expired } = useRecaptcha(
     recaptchaSiteKey,
-    recaptchaElementRef.current,
+    captchaElement,
   );
+
+  const recaptchaCheckSuccessful = !error && !expired;
 
   React.useEffect(() => {
     const registerFormElement = registerFormRef.current;
-    if (token) {
+    if (token && recaptchaCheckSuccessful) {
       registerFormElement?.submit();
     }
   }, [token]);
@@ -75,7 +79,11 @@ export const Registration = ({
         ]}
       />
 
-      <Main>
+      <Main
+        errorOverride={
+          recaptchaCheckSuccessful ? undefined : CaptchaErrors.GENERIC
+        }
+      >
         <PageBox>
           <PageBody>
             <form
@@ -86,7 +94,10 @@ export const Registration = ({
               onSubmit={handleSubmit}
             >
               <CsrfFormField />
-              <RecaptchaElement ref={recaptchaElementRef} />
+              <RecaptchaElement
+                ref={recaptchaElementRef}
+                id="register-recaptcha"
+              />
               <TextInput
                 css={textInput}
                 label="Email"

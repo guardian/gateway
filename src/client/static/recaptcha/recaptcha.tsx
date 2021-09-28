@@ -9,11 +9,11 @@ const useRecaptchaScript = (url: string) => {
   const [loaded, setLoaded] = React.useState(false);
 
   React.useEffect(() => {
-    const existingScript =
+    const scriptExists =
       typeof document !== undefined &&
       document.getElementById('g-captcha-script');
 
-    if (existingScript || recaptchaReady()) {
+    if (scriptExists || recaptchaReady()) {
       setLoaded(true);
       return;
     }
@@ -39,7 +39,6 @@ const useRecaptchaScript = (url: string) => {
 
     return () => {
       script.removeEventListener('load', initialiseRecaptcha);
-      // TODO: Decide whether to remove from body on effect cleanup.
       document.body.removeChild(script);
     };
   }, []);
@@ -51,12 +50,12 @@ const useRecaptchaScript = (url: string) => {
 
 export const useRecaptcha = (
   siteKey: string,
-  renderElement: HTMLDivElement | string | null | undefined,
+  renderElement: HTMLDivElement | string,
   size = 'invisible',
 ) => {
   const [token, setToken] = React.useState('');
-  const [error, setError] = React.useState('');
-  const [expired, setExpired] = React.useState('');
+  const [error, setError] = React.useState(false);
+  const [expired, setExpired] = React.useState(false);
 
   const [widgetId, setWidgetId] = React.useState(0);
 
@@ -69,9 +68,13 @@ export const useRecaptcha = (
       const widgetId = window.grecaptcha.render(renderElement, {
         sitekey: siteKey,
         size: size,
-        callback: setToken,
-        'error-callback': setError,
-        'expired-callback': setExpired,
+        callback: (token) => {
+          setToken(token);
+          setError(false);
+          setExpired(false);
+        },
+        'error-callback': (val) => setError(val === undefined),
+        'expired-callback': (val) => setExpired(val === undefined),
       });
       setWidgetId(widgetId);
     }
