@@ -25,6 +25,7 @@ describe('Registration flow', () => {
     cy.contains('terms of service').click();
     cy.url().should('eq', 'https://policies.google.com/terms');
   });
+
   it('links to the Google privacy policy page', () => {
     cy.visit('/signin');
     cy.contains('This site is protected by reCAPTCHA and the Google')
@@ -32,11 +33,13 @@ describe('Registration flow', () => {
       .click();
     cy.url().should('eq', 'https://policies.google.com/privacy');
   });
+
   it('links to the Guardian terms and conditions page', () => {
     cy.visit('/signin');
     cy.contains('terms & conditions').click();
     cy.url().should('eq', 'https://www.theguardian.com/help/terms-of-service');
   });
+
   it('links to the Guardian privacy policy page', () => {
     cy.visit('/signin');
     cy.contains('For information about how we use your data')
@@ -44,6 +47,7 @@ describe('Registration flow', () => {
       .click();
     cy.url().should('eq', 'https://www.theguardian.com/help/privacy-policy');
   });
+
   it('successfully registers using an email with no existing account', () => {
     cy.visit('/register');
     const timeRequestWasMade = new Date();
@@ -86,5 +90,25 @@ describe('Registration flow', () => {
       'eq',
       'https://manage.theguardian.com/help-centre/contact-us',
     );
+  });
+
+  it.only('errors on the client side when the user is offline and attempts to register and allows submission when back online', () => {
+    cy.visit('/register');
+
+    cy.network({ offline: true });
+
+    cy.get('input[name=email').type(existing.email);
+    cy.get('[data-cy="register-button"]').click();
+    cy.contains(
+      'There was a problem with the captcha process. You may find disabling your browser plugins, ensuring JavaScript is enabled or updating your browser will resolve this issue.',
+    );
+
+    cy.network({ offline: false });
+    cy.contains(
+      'There was a problem with the captcha process. You may find disabling your browser plugins, ensuring JavaScript is enabled or updating your browser will resolve this issue.',
+    ).should('not.exist');
+
+    cy.get('[data-cy="register-button"]').click();
+    cy.contains('There was a problem registering, please try again');
   });
 });

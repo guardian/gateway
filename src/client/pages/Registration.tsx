@@ -50,10 +50,11 @@ export const Registration = ({
 
   React.useEffect(() => {
     const registerFormElement = registerFormRef.current;
-    if (token && recaptchaCheckSuccessful) {
+    console.log(token);
+    if (token) {
       registerFormElement?.submit();
     }
-  }, [token]);
+  }, [token, error, expired]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
