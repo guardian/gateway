@@ -33,6 +33,8 @@ export interface PageData {
   page?: string;
   previousPage?: string;
   recaptchaSiteKey?: string;
+  ref?: string;
+  refViewId?: string;
 }
 
 export interface ClientHosts {

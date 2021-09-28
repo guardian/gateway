@@ -56,10 +56,12 @@ export const guest = async (
   }
 
   if (refViewId) {
+    console.log(refViewId);
     path = addRefViewIdToPath(path, refViewId);
   }
 
   if (ref) {
+    console.log(ref);
     path = addRefToPath(path, ref);
   }
 

@@ -105,7 +105,7 @@ router.post(
         };
       }
 
-      await guest(email, req.ip, returnUrl, ref, refViewId);
+      await guest(email, req.ip, returnUrl, refViewId, ref);
       setGUEmailCookie(res, email);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);

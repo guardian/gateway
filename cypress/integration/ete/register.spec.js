@@ -64,8 +64,22 @@ describe('Registration flow', () => {
     cy.url().should('not.contain', 'returnUrl');
   });
 
-  it('successfully registers using an email with no existing account', () => {
-    cy.visit('/register');
+  it.only('successfully registers using an email with no existing account', () => {
+    const encodedReturnUrl =
+      'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
+    const decodedReturnUrl =
+      'returnUrl=https://m.code.dev-theguardian.com/travel/2019/dec/18/food-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
+    const encodedRef = 'https%3A%2F%2Fm.theguardian.com';
+    const decodedRef = 'https://m.theguardian.com/';
+    const refViewId = 'testRefViewId';
+    cy.visit(
+      '/register?returnUrl=' +
+        encodedReturnUrl +
+        '&ref=' +
+        encodedRef +
+        '&refViewId=' +
+        refViewId,
+    );
     const timeRequestWasMade = new Date();
     cy.get('input[name=email]').type(unregisteredAccount.email);
     cy.get('[data-cy="register-button"]').click();
@@ -86,6 +100,9 @@ describe('Registration flow', () => {
     ).then((email) => {
       const body = email.html.body;
       expect(body).to.have.string('Complete registration');
+      expect(body).to.have.string(decodedReturnUrl);
+      expect(body).to.have.string(decodedRef);
+      expect(body).to.have.string(refViewId);
       // Extract the welcome token, so we can redirect to the welcome flow.
       const match = body.match(/theguardian.com\/welcome\/([^"]*)/);
       const token = match[1];
@@ -108,7 +125,7 @@ describe('Registration flow', () => {
     );
   });
 
-  it.only('errors on the client side when the user is offline and attempts to register and allows submission when back online', () => {
+  it('errors when the user tries to register offline and allows registration when back online', () => {
     cy.visit('/register');
 
     cy.network({ offline: true });

@@ -23,6 +23,8 @@ type Props = {
   returnUrl?: string;
   email?: string;
   recaptchaSiteKey?: string;
+  refVal?: string;
+  refViewId?: string;
 };
 
 const termsSpacing = css`
@@ -31,14 +33,33 @@ const termsSpacing = css`
 
 export const Registration = ({
   returnUrl = '',
+  refVal = '',
+  refViewId = '',
   email = '',
   recaptchaSiteKey = '',
 }: Props) => {
   const registerFormRef = React.createRef<HTMLFormElement>();
   const recaptchaElementRef = React.useRef<HTMLDivElement>(null);
+
   const returnUrlQuery = returnUrl
-    ? `?returnUrl=${encodeURIComponent(returnUrl)}`
+    ? `returnUrl=${encodeURIComponent(returnUrl)}`
     : '';
+
+  const refUrlQuery = refVal ? `ref=${encodeURIComponent(refVal)}` : '';
+
+  const refViewIdUrlQuery = refViewId
+    ? `refViewId=${encodeURIComponent(refViewId)}`
+    : '';
+
+  const registrationUrlQueryParams = [
+    returnUrlQuery,
+    refUrlQuery,
+    refViewIdUrlQuery,
+  ]
+    .filter((param) => param !== '')
+    .join('&');
+
+  console.log(registrationUrlQueryParams);
 
   const captchaElement = recaptchaElementRef.current ?? 'register-recaptcha';
   const { token, widgetId, error, expired } = useRecaptcha(
@@ -90,7 +111,7 @@ export const Registration = ({
             <form
               css={form}
               method="post"
-              action={`${Routes.REGISTRATION}${returnUrlQuery}`}
+              action={`${Routes.REGISTRATION}?${registrationUrlQueryParams}`}
               ref={registerFormRef}
               onSubmit={handleSubmit}
             >
