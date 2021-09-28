@@ -1,4 +1,3 @@
-import { logger } from '@/server/lib/logger';
 import React from 'react';
 
 export const recaptchaReady = () =>
@@ -60,7 +59,6 @@ export const useRecaptcha = (
   const [widgetId, setWidgetId] = React.useState(0);
 
   if (siteKey === '') {
-    logger.error('Recaptcha site key not provided');
     return {
       token,
       error,
