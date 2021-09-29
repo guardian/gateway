@@ -16,7 +16,7 @@ import { SocialButtons } from '@/client/components/SocialButtons';
 import { button, form, textInput } from '@/client/styles/Shared';
 import { css } from '@emotion/react';
 import { space } from '@guardian/src-foundations';
-import { RecaptchaElement, useRecaptcha } from '../static/recaptcha/recaptcha';
+import useRecaptcha, { RecaptchaElement } from '../lib/hooks/useRecaptcha';
 import { CaptchaErrors } from '@/shared/model/Errors';
 
 type Props = {
@@ -60,7 +60,7 @@ export const Registration = ({
     .join('&');
 
   const captchaElement = recaptchaElementRef.current ?? 'register-recaptcha';
-  const { token, widgetId, error, expired } = useRecaptcha(
+  const { token, error, expired, executeCaptcha } = useRecaptcha(
     recaptchaSiteKey,
     captchaElement,
   );
@@ -69,16 +69,14 @@ export const Registration = ({
 
   React.useEffect(() => {
     const registerFormElement = registerFormRef.current;
-    console.log(token);
     if (token) {
       registerFormElement?.submit();
     }
-  }, [token, error, expired]);
+  }, [token]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    window.grecaptcha.reset(widgetId);
-    window.grecaptcha.execute(widgetId);
+    executeCaptcha();
   };
 
   return (

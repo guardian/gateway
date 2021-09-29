@@ -1,11 +1,21 @@
 import React from 'react';
 
+export type RenderOptions = {
+  sitekey: string;
+  size?: string;
+  callback: (token: string) => void;
+  'error-callback': (token: string) => void;
+  'expired-callback': (token: string) => void;
+};
+
 export const recaptchaReady = () =>
   typeof window !== 'undefined' &&
   typeof window.grecaptcha !== 'undefined' &&
   typeof window.grecaptcha.render === 'function';
 
-const useRecaptchaScript = (url: string) => {
+const useRecaptchaScript = (
+  url = 'https://www.google.com/recaptcha/api.js?render=explicit',
+) => {
   const [loaded, setLoaded] = React.useState(false);
 
   React.useEffect(() => {
@@ -17,7 +27,6 @@ const useRecaptchaScript = (url: string) => {
       setLoaded(true);
       return;
     }
-
     const script = document.createElement('script');
 
     script.setAttribute('src', url);
@@ -42,15 +51,27 @@ const useRecaptchaScript = (url: string) => {
       document.body.removeChild(script);
     };
   }, []);
-
   return {
     loaded,
   };
 };
 
-export const useRecaptcha = (
+export type CaptchaSize = 'invisible' | 'compact' | 'normal';
+type UseRecaptcha = (
   siteKey: string,
   renderElement: HTMLDivElement | string,
+  size?: CaptchaSize,
+) => {
+  executeCaptcha: () => void;
+  token: string;
+  error: boolean;
+  expired: boolean;
+  widgetId: number;
+};
+
+const useRecaptcha: UseRecaptcha = (
+  siteKey,
+  renderElement,
   size = 'invisible',
 ) => {
   const [token, setToken] = React.useState('');
@@ -64,12 +85,11 @@ export const useRecaptcha = (
       error,
       expired,
       widgetId,
+      executeCaptcha: () => null,
     };
   }
 
-  const { loaded } = useRecaptchaScript(
-    'https://www.google.com/recaptcha/api.js?render=explicit',
-  );
+  const { loaded } = useRecaptchaScript();
 
   React.useEffect(() => {
     if (loaded && renderElement) {
@@ -88,13 +108,23 @@ export const useRecaptcha = (
     }
   }, [loaded]);
 
+  const executeCaptcha = React.useCallback(() => {
+    if (recaptchaReady()) {
+      window.grecaptcha.reset(widgetId);
+      window.grecaptcha.execute(widgetId);
+    }
+  }, [widgetId]);
+
   return {
     token,
     error,
     expired,
     widgetId,
+    executeCaptcha,
   };
 };
+
+export default useRecaptcha;
 
 export const RecaptchaElement = React.forwardRef<
   HTMLDivElement,
