@@ -4,8 +4,8 @@ export type RenderOptions = {
   sitekey: string;
   size?: string;
   callback: (token: string) => void;
-  'error-callback': (token: string) => void;
-  'expired-callback': (token: string) => void;
+  'error-callback': (value: undefined) => void;
+  'expired-callback': (value: undefined) => void;
 };
 
 export const recaptchaReady = () =>
@@ -98,9 +98,11 @@ const useRecaptcha: UseRecaptcha = (
         size: size,
         callback: (token) => {
           setToken(token);
+          // Reset exception state when token successfully received.
           setError(false);
           setExpired(false);
         },
+        // Exception callbacks below are called with undefined when an error has occured.
         'error-callback': (val) => setError(val === undefined),
         'expired-callback': (val) => setExpired(val === undefined),
       });
