@@ -27,7 +27,7 @@ test('should load google recaptcha and return an empty token', () => {
   expect(token).toBe('');
 });
 
-test('should execute a successful captcha check and receive a valid token back', async () => {
+test.only('should execute a successful captcha check and receive a valid token back', async () => {
   // Mock the Google Recaptcha object
   const windowSpy = jest.spyOn(global.window, 'grecaptcha', 'get');
   const mockedGrecaptchaRender = jest.fn().mockReturnValue(0);
@@ -63,6 +63,11 @@ test('should execute a successful captcha check and receive a valid token back',
 
   expect(mockedGrecaptchaReset.mock.calls.length).toBe(1);
   expect(mockedGrecaptchaExecute.mock.calls.length).toBe(1);
+
+  expect(mockedGrecaptchaRender).toHaveBeenCalledWith(
+    'captcha-element',
+    expect.anything(),
+  );
 
   // Check that expected token is returned.
   expect(result.current.token).toEqual('valid-token');
@@ -121,7 +126,7 @@ test('should execute a captcha check that is unsuccessful and receive an error b
   windowSpy.mockRestore();
 });
 
-test.only('should try again successfully after an unsuccessful query and return a token', async () => {
+test('should try again successfully after an unsuccessful query and return a token', async () => {
   // Mock the Google Recaptcha object and methods.
   const windowSpy = jest.spyOn(global.window, 'grecaptcha', 'get');
 
