@@ -16,6 +16,8 @@ beforeEach(() => {
   });
 });
 
+// test('should attach recaptcha script when grecaptcha not attached to window', () => {});
+
 test('should load google recaptcha and return an empty token', () => {
   const {
     result: { current },
@@ -27,7 +29,7 @@ test('should load google recaptcha and return an empty token', () => {
   expect(token).toBe('');
 });
 
-test.only('should execute a successful captcha check and receive a valid token back', async () => {
+test('should execute a successful captcha check and receive a valid token back', async () => {
   // Mock the Google Recaptcha object
   const windowSpy = jest.spyOn(global.window, 'grecaptcha', 'get');
   const mockedGrecaptchaRender = jest.fn().mockReturnValue(0);
@@ -61,8 +63,9 @@ test.only('should execute a successful captcha check and receive a valid token b
     result.current.executeCaptcha();
   });
 
-  expect(mockedGrecaptchaReset.mock.calls.length).toBe(1);
-  expect(mockedGrecaptchaExecute.mock.calls.length).toBe(1);
+  expect(mockedGrecaptchaReset).toHaveBeenCalled();
+  expect(mockedGrecaptchaExecute).toHaveBeenCalled();
+  expect(mockedGrecaptchaReady).not.toHaveBeenCalled();
 
   expect(mockedGrecaptchaRender).toHaveBeenCalledWith(
     'captcha-element',
@@ -114,8 +117,9 @@ test('should execute a captcha check that is unsuccessful and receive an error b
     result.current.executeCaptcha();
   });
 
-  expect(mockedGrecaptchaReset.mock.calls.length).toBe(1);
-  expect(mockedGrecaptchaExecute.mock.calls.length).toBe(1);
+  expect(mockedGrecaptchaReset).toHaveBeenCalled();
+  expect(mockedGrecaptchaExecute).toHaveBeenCalled();
+  expect(mockedGrecaptchaReady).not.toHaveBeenCalled();
 
   // Check that expected token is returned.
   expect(result.current.token).toEqual('');
@@ -162,8 +166,9 @@ test('should try again successfully after an unsuccessful query and return a tok
     result.current.executeCaptcha();
   });
 
-  expect(mockedGrecaptchaReset.mock.calls.length).toBe(1);
-  expect(mockedGrecaptchaExecuteError.mock.calls.length).toBe(1);
+  expect(mockedGrecaptchaReset).toHaveBeenCalled();
+  expect(mockedGrecaptchaExecuteError).toHaveBeenCalled();
+  expect(mockedGrecaptchaReady).not.toHaveBeenCalled();
 
   // Check that expected token is returned.
   expect(result.current.token).toEqual('');
@@ -191,8 +196,9 @@ test('should try again successfully after an unsuccessful query and return a tok
     result.current.executeCaptcha();
   });
 
-  expect(mockedGrecaptchaReset.mock.calls.length).toBe(2);
-  expect(mockedGrecaptchaExecuteSuccess.mock.calls.length).toBe(1);
+  expect(mockedGrecaptchaReset).toHaveBeenCalledTimes(2);
+  expect(mockedGrecaptchaExecuteSuccess).toHaveBeenCalled();
+  expect(mockedGrecaptchaReady).not.toHaveBeenCalled();
 
   // Check that expected token is returned.
   expect(result.current.token).toEqual('valid-token');
