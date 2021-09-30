@@ -130,7 +130,7 @@ export const Registration = ({
               </Button>
             </form>
             <Divider
-              size="full"
+              size="fit"
               spaceAbove="loose"
               displayText="or continue with"
             />

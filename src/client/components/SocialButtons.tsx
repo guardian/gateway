@@ -17,7 +17,7 @@ const containerStyles = css`
   ${from.mobileLandscape} {
     flex-direction: row;
   }
-  justify-content: center;
+  justify-content: space-between;
   margin-top: ${space[6]}px;
   margin-bottom: ${space[6]}px;
   width: 100%;
