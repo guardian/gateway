@@ -64,7 +64,7 @@ describe('Registration flow', () => {
     cy.url().should('not.contain', 'returnUrl');
   });
 
-  it.only('successfully registers using an email with no existing account', () => {
+  it('successfully registers using an email with no existing account', () => {
     const encodedReturnUrl =
       'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
     const decodedReturnUrl =
