@@ -13,7 +13,7 @@ import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { Divider } from '@/client/components/Divider';
 import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
-import { button, form, textInput } from '@/client/styles/Shared';
+import { button, textInput } from '@/client/styles/Shared';
 import { css } from '@emotion/react';
 import { space } from '@guardian/src-foundations';
 import useRecaptcha, { RecaptchaElement } from '../lib/hooks/useRecaptcha';

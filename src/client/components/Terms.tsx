@@ -1,6 +1,5 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { space } from '@guardian/src-foundations';
 import { Link } from '@guardian/src-link';
 import { textSans } from '@guardian/src-foundations/typography';
 
