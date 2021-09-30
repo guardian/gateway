@@ -36,7 +36,7 @@ const decideSpace = (
     case 'loose':
       return displayText
         ? css`
-            margin-top: 37px;
+            margin-top: ${space[6]}px;
           `
         : css`
             margin-top: ${space[12]}px;
@@ -58,7 +58,6 @@ export const Divider = ({
             flex-direction: row;
             ${textSans.small()};
             color: ${text.supporting};
-            margin-bottom: -10px;
             width: 100%;
 
             :before,

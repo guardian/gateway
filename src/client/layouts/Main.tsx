@@ -23,7 +23,7 @@ const mainStyles = css`
 `;
 
 const sectionStyles = css`
-  padding: ${space[6]}px ${space[3]}px;
+  padding: 0 ${space[3]}px;
   max-width: ${Breakpoints.TABLET}px;
   width: 100%;
   margin: 0 auto;

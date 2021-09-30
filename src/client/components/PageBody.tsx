@@ -4,7 +4,8 @@ import { space } from '@guardian/src-foundations';
 import { Breakpoints } from '@/client/models/Style';
 
 const pageBody = css`
-  padding: ${space[3]}px 0;
+  padding-top: ${space[4]}px;
+  padding-bottom: 60px;
   max-width: ${Breakpoints.MOBILE_LANDSCAPE}px;
   width: 100%;
 `;

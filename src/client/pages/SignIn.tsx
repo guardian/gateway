@@ -60,11 +60,7 @@ export const SignIn = () => {
       <Main>
         <PageBox>
           <PageBody>
-            <form
-              css={form}
-              method="post"
-              action={`${Routes.SIGN_IN}${returnUrlQuery}`}
-            >
+            <form method="post" action={`${Routes.SIGN_IN}${returnUrlQuery}`}>
               <CsrfFormField />
               <TextInput
                 css={textInput}

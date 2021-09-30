@@ -18,8 +18,8 @@ const containerStyles = css`
     flex-direction: row;
   }
   justify-content: center;
-  margin-top: ${space[12]}px;
-  margin-bottom: ${space[12]}px;
+  margin-top: ${space[6]}px;
+  margin-bottom: ${space[6]}px;
   width: 100%;
 `;
 
@@ -46,7 +46,7 @@ const Gap = () => (
       width: 0;
       height: ${space[3]}px;
       ${from.mobileLandscape} {
-        width: ${space[2]}px;
+        width: ${space[3]}px;
         height: 0;
       }
     `}

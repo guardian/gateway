@@ -9,7 +9,7 @@ const Text = ({ children }: { children: React.ReactNode }) => (
     css={css`
       ${textSans.small()}
       margin-top: 0;
-      margin-bottom: ${space[2]}px;
+      margin-bottom: 6px;
     `}
   >
     {children}

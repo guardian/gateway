@@ -28,7 +28,7 @@ type Props = {
 };
 
 const termsSpacing = css`
-  margin-bottom: ${space[4]}px;
+  margin-bottom: ${space[6]}px;
 `;
 
 export const Registration = ({
@@ -105,7 +105,6 @@ export const Registration = ({
         <PageBox>
           <PageBody>
             <form
-              css={form}
               method="post"
               action={`${Routes.REGISTRATION}?${registrationUrlQueryParams}`}
               ref={registerFormRef}
