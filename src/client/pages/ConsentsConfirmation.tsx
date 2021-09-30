@@ -122,6 +122,10 @@ const confirmationSpanDefinition: SpanDefinition = {
     start: 2,
     span: 8,
   },
+  LEFT_COL: {
+    start: 2,
+    span: 8,
+  },
   WIDE: {
     start: 3,
     span: 10,
