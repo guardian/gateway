@@ -10,10 +10,10 @@ import { Footer } from '@/client/components/Footer';
 import { PageBox } from '@/client/components/PageBox';
 import { PageBody } from '@/client/components/PageBody';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
-import { Divider } from '@/client/components/Divider';
 import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
 import { button, form, textInput } from '@/client/styles/Shared';
+import { Divider } from '@guardian/source-react-components-development-kitchen/';
 
 type Props = {
   returnUrl?: string;

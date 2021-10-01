@@ -14,12 +14,12 @@ import { Button } from '@guardian/src-button';
 import { Routes } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
-import { Divider } from '@/client/components/Divider';
 import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
 import { button, form, textInput } from '@/client/styles/Shared';
 import { Link } from '@guardian/src-link';
 import { textSans } from '@guardian/src-foundations/typography';
+import { Divider } from '@guardian/source-react-components-development-kitchen';
 
 const Links = ({ children }: { children: React.ReactNode }) => (
   <p
