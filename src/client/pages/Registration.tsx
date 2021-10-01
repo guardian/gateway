@@ -41,21 +41,17 @@ export const Registration = ({
   const registerFormRef = React.createRef<HTMLFormElement>();
   const recaptchaElementRef = React.useRef<HTMLDivElement>(null);
 
-  const returnUrlQuery = returnUrl
-    ? `returnUrl=${encodeURIComponent(returnUrl)}`
-    : '';
-
-  const refUrlQuery = refVal ? `ref=${encodeURIComponent(refVal)}` : '';
-
-  const refViewIdUrlQuery = refViewId
-    ? `refViewId=${encodeURIComponent(refViewId)}`
-    : '';
+  const returnUrlQuery = `returnUrl=${encodeURIComponent(returnUrl)}`;
+  const refUrlQuery = `ref=${encodeURIComponent(refVal)}`;
+  const refViewIdUrlQuery = `refViewId=${encodeURIComponent(refViewId)}`;
 
   const registrationUrlQueryParams = [
-    returnUrlQuery,
-    refUrlQuery,
-    refViewIdUrlQuery,
-  ]
+    returnUrl ? returnUrlQuery : '',
+    refVal ? refUrlQuery : '',
+    refViewId ? refViewIdUrlQuery : '',
+  ];
+
+  const registrationUrlQueryParamString = registrationUrlQueryParams
     .filter((param) => param !== '')
     .join('&');
 
@@ -67,6 +63,7 @@ export const Registration = ({
 
   const recaptchaCheckSuccessful = !error && !expired;
 
+  // Form is only submitted when a valid recaptcha token is returned.
   React.useEffect(() => {
     const registerFormElement = registerFormRef.current;
     if (token) {
@@ -106,7 +103,7 @@ export const Registration = ({
           <PageBody>
             <form
               method="post"
-              action={`${Routes.REGISTRATION}?${registrationUrlQueryParams}`}
+              action={`${Routes.REGISTRATION}?${registrationUrlQueryParamString}`}
               ref={registerFormRef}
               onSubmit={handleSubmit}
             >

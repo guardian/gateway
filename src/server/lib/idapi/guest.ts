@@ -1,9 +1,4 @@
-import {
-  ConsentsErrors,
-  IdapiErrorMessages,
-  RegistrationErrors,
-  ResetPasswordErrors,
-} from '@/shared/model/Errors';
+import { IdapiErrorMessages, RegistrationErrors } from '@/shared/model/Errors';
 import {
   APIAddClientAccessToken,
   APIPostOptions,
@@ -23,18 +18,14 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
     const { message } = err;
 
     switch (message) {
-      case IdapiErrorMessages.EMAIL_IN_USE:
-        throw { message: RegistrationErrors.GENERIC, status };
-      case IdapiErrorMessages.ACCESS_DENIED:
-        throw { message: ConsentsErrors.ACCESS_DENIED, status };
-      case IdapiErrorMessages.MISSING_FIELD:
-        throw { message: ResetPasswordErrors.NO_EMAIL, status };
+      case IdapiErrorMessages.INVALID_EMAIL_ADDRESS:
+        throw { message: RegistrationErrors.EMAIL_BLANK, status };
       default:
         break;
     }
   }
 
-  throw { message: ConsentsErrors.USER, status };
+  throw { message: RegistrationErrors.GENERIC, status };
 };
 
 export const guest = async (
@@ -56,19 +47,17 @@ export const guest = async (
   }
 
   if (refViewId) {
-    console.log(refViewId);
     path = addRefViewIdToPath(path, refViewId);
   }
 
   if (ref) {
-    console.log(ref);
     path = addRefToPath(path, ref);
   }
 
   try {
     return await idapiFetch(path, APIAddClientAccessToken(options, ip));
   } catch (error) {
-    logger.error(`IDAPI Error guest create ${url}`, error);
+    logger.error(`IDAPI Error: guest account creation ${url}`, error);
     return handleError(error as IDAPIError);
   }
 };

@@ -1,6 +1,10 @@
 /// <reference types='cypress' />
 
 import { injectAndCheckAxe } from '../../support/cypress-axe';
+import {
+  emailAddressInUse,
+  invalidEmailAddress,
+} from '../../support/idapi/guest';
 
 describe('Registration flow', () => {
   beforeEach(() => {
@@ -9,83 +13,76 @@ describe('Registration flow', () => {
   });
 
   context('A11y checks', () => {
-    it('Has no detectable a11y violations on sign in page', () => {
+    it('Has no detectable a11y violations on registration page', () => {
       cy.visit('/register');
       injectAndCheckAxe();
     });
 
-    it('Has no detectable a11y violations on sign in page with error', () => {
+    it('Has no detectable a11y violations on registration page with error', () => {
       cy.visit('/register');
       cy.get('input[name="email"]').type('Invalid email');
-      cy.get('input[name="password"]').type('Invalid password');
       cy.mockNext(500);
       cy.get('[data-cy=register-button]').click();
       injectAndCheckAxe();
     });
   });
 
-  // context('Signing in', () => {
-  //   it('shows an error message when sign in fails', function () {
-  //     cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
-  //     cy.get('input[name="email"]').type('example@example.com');
-  //     cy.get('input[name="password"]').type('password');
-  //     cy.mockNext(403, {
-  //       status: 'error',
-  //       errors: [
-  //         {
-  //           message: 'Invalid email or password',
-  //         },
-  //       ],
-  //     });
-  //     cy.get('[data-cy=sign-in-button]').click();
-  //     cy.contains('This email and password combination is not valid');
-  //   });
+  context('Registering', () => {
+    it('shows a generic error message when registration fails', () => {
+      cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.get('input[name="email"]').type('example@example.com');
+      cy.mockNext(403, {
+        status: 'error',
+        errors: [
+          {
+            message: '',
+          },
+        ],
+      });
+      cy.get('[data-cy=register-button]').click();
+      cy.contains('There was a problem registering, please try again.');
+    });
 
-  //   it('shows a generic error message when the api error response is not known', function () {
-  //     cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
-  //     cy.get('input[name="email"]').type('example@example.com');
-  //     cy.get('input[name="password"]').type('password');
-  //     cy.mockNext(403, {
-  //       status: 'error',
-  //       errors: [
-  //         {
-  //           message: 'Bloopity flub',
-  //         },
-  //       ],
-  //     });
-  //     cy.get('[data-cy=sign-in-button]').click();
-  //     cy.contains('There was a problem signing in, please try again');
-  //   });
+    it('shows a generic error message when the email is in use', () => {
+      cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.get('input[name="email"]').type('example@example.com');
+      cy.mockNext(400, emailAddressInUse);
+      cy.get('[data-cy=register-button]').click();
+      cy.contains('There was a problem registering, please try again.');
+    });
 
-  //   it('loads the returnUrl upon successful authentication', function () {
-  //     const returnUrl = 'https://www.theguardian.com/about';
-  //     cy.visit(`/signin?returnUrl=${encodeURIComponent(returnUrl)}`);
-  //     cy.get('input[name="email"]').type('example@example.com');
-  //     cy.get('input[name="password"]').type('password');
-  //     cy.mockNext(200, {
-  //       cookies: {
-  //         values: [{ key: 'key', value: 'value' }],
-  //         expiresAt: 'tomorrow',
-  //       },
-  //     });
-  //     cy.get('[data-cy=sign-in-button]').click();
-  //     cy.url().should('eq', returnUrl);
-  //   });
+    it('shows a email field error message when no email is sent', () => {
+      cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.get('input[name="email"]').type('placeholder@example.com');
+      cy.mockNext(400, invalidEmailAddress);
+      cy.get('[data-cy=register-button]').click();
+      cy.contains('Email field must not be blank.');
+    });
 
-  //   it('redirects to the default url if no returnUrl given', function () {
-  //     cy.visit('/signin');
-  //     cy.get('input[name="email"]').type('example@example.com');
-  //     cy.get('input[name="password"]').type('password');
-  //     cy.mockNext(200, {
-  //       cookies: {
-  //         values: [{ key: 'key', value: 'value' }],
-  //         expiresAt: 'tomorrow',
-  //       },
-  //     });
-  //     cy.get('[data-cy=sign-in-button]').click();
-  //     cy.url().should('include', 'https://m.code.dev-theguardian.com/');
-  //   });
-  // });
+    it.only('shows recaptcha error message when token fail', () => {
+      cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.get('input[name="email"]').type('placeholder@example.com');
+      cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
+        statusCode: 500,
+      });
+      cy.get('[data-cy=register-button]').click();
+      cy.contains(
+        'here was a problem with the captcha process. You may find disabling your browser plugins, ensuring JavaScript is enabled or updating your browser will resolve this issue.',
+      );
+    });
+
+    it('redirects to email sent page upon successful guest registration', () => {
+      cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.get('input[name="email"]').type('example@example.com');
+      cy.mockNext(200, {
+        status: 'success',
+        errors: [],
+      });
+      cy.get('[data-cy=register-button]').click();
+      cy.contains('Email sent');
+      cy.contains('example@example.com');
+    });
+  });
 
   context('General IDAPI failure', () => {
     it('displays a generic error message', function () {
@@ -95,7 +92,7 @@ describe('Registration flow', () => {
       cy.get('input[name=email]').type('example@example.com');
       cy.get('[data-cy="register-button"]').click();
 
-      cy.contains('There was a problem signing in, please try again');
+      cy.contains('There was a problem registering, please try again.');
     });
   });
 });
