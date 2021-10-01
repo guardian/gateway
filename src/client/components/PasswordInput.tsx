@@ -36,7 +36,7 @@ const textInputBorderStyle = (error?: string) => css`
   bottom: 0px;
   width: 100%;
   height: ${height.inputMedium}px;
-  margin-bottom: ${space[3]}px;
+  margin-bottom: ${space[4]}px;
   padding: 0 ${space[2]}px;
   pointer-events: none;
 `;
@@ -100,7 +100,7 @@ const EyeSymbol = ({
     height: 30px;
     position: absolute;
     right: 5px;
-    bottom: 19px;
+    bottom: 23px;
     border: none;
     background-color: transparent;
     cursor: pointer;
