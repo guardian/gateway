@@ -6,6 +6,7 @@ import {
   gridItemColumnConsents,
   getAutoRow,
   consentsParagraphSpanDef,
+  SpanDefinition,
 } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { NewsletterCard } from '@/client/components/NewsletterCard';
@@ -30,9 +31,10 @@ const getNewsletterCardCss = (index: number) => {
   const row = Math.trunc(index / ITEMS_PER_ROW) + OFFSET;
   const column = index % ITEMS_PER_ROW;
 
-  const gridDef = {
+  const gridDef: SpanDefinition = {
     TABLET: { start: 2 + column * 5, span: 5 },
     DESKTOP: { start: 2 + column * 5, span: 5 },
+    LEFT_COL: { start: 2 + column * 6, span: 6 },
     WIDE: { start: 3 + column * 6, span: 6 },
   };
 
@@ -51,9 +53,10 @@ const getNewsletterCardCss = (index: number) => {
 };
 
 const getNewsletterCardCssAB = () => {
-  const gridDef = {
+  const gridDef: SpanDefinition = {
     TABLET: { start: 2, span: 10 },
     DESKTOP: { start: 2, span: 10 },
+    LEFT_COL: { start: 2, span: 12 },
     WIDE: { start: 3, span: 12 },
   };
 
