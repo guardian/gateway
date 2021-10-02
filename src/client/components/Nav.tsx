@@ -137,7 +137,7 @@ const Tab = ({ displayText, linkTo, isActive, isFirst }: TabType) => {
 export const Nav = ({ tabs }: Props) => (
   <nav css={backgroundStyles}>
     <Container sideBorders={true} topBorder={true} sidePadding={false}>
-      <h1 css={[tabRowStyles]}>
+      <h1 css={tabRowStyles}>
         {tabs.map((tab, index) => (
           <Tab
             key={index}
