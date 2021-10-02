@@ -23,7 +23,7 @@ type Props = {
   returnUrl?: string;
   email?: string;
   recaptchaSiteKey?: string;
-  refVal?: string;
+  refValue?: string;
   refViewId?: string;
 };
 
@@ -33,7 +33,7 @@ const termsSpacing = css`
 
 export const Registration = ({
   returnUrl = '',
-  refVal = '',
+  refValue = '',
   refViewId = '',
   email = '',
   recaptchaSiteKey = '',
@@ -42,12 +42,11 @@ export const Registration = ({
   const recaptchaElementRef = React.useRef<HTMLDivElement>(null);
 
   const returnUrlQuery = `returnUrl=${encodeURIComponent(returnUrl)}`;
-  const refUrlQuery = `ref=${encodeURIComponent(refVal)}`;
+  const refUrlQuery = `ref=${encodeURIComponent(refValue)}`;
   const refViewIdUrlQuery = `refViewId=${encodeURIComponent(refViewId)}`;
-
   const registrationUrlQueryParams = [
     returnUrl ? returnUrlQuery : '',
-    refVal ? refUrlQuery : '',
+    refValue ? refUrlQuery : '',
     refViewId ? refViewIdUrlQuery : '',
   ];
 

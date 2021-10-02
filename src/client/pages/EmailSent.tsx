@@ -39,23 +39,14 @@ export const EmailSent = ({
   const [hasJS, setHasJS] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const returnUrlQuery = returnUrl
-    ? `returnUrl=${encodeURIComponent(returnUrl)}`
-    : '';
-
-  const refUrlQuery = refValue ? `ref=${encodeURIComponent(refValue)}` : '';
-
-  const refViewIdUrlQuery = refViewId
-    ? `refViewId=${encodeURIComponent(refViewId)}`
-    : '';
-
+  const returnUrlQuery = `returnUrl=${encodeURIComponent(returnUrl)}`;
+  const refUrlQuery = `ref=${encodeURIComponent(refValue)}`;
+  const refViewIdUrlQuery = `refViewId=${encodeURIComponent(refViewId)}`;
   const registrationUrlQueryParams = [
-    returnUrlQuery,
-    refUrlQuery,
-    refViewIdUrlQuery,
-  ]
-    .filter((param) => param !== '')
-    .join('&');
+    returnUrl ? returnUrlQuery : '',
+    refValue ? refUrlQuery : '',
+    refViewId ? refViewIdUrlQuery : '',
+  ];
 
   useEffect(() => {
     setHasJS(true);
