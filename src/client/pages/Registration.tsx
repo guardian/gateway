@@ -10,14 +10,15 @@ import { Footer } from '@/client/components/Footer';
 import { PageBox } from '@/client/components/PageBox';
 import { PageBody } from '@/client/components/PageBody';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
-import { Divider } from '@/client/components/Divider';
 import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
-import { button, textInput } from '@/client/styles/Shared';
 import { css } from '@emotion/react';
 import { space } from '@guardian/src-foundations';
 import useRecaptcha, { RecaptchaElement } from '../lib/hooks/useRecaptcha';
 import { CaptchaErrors } from '@/shared/model/Errors';
+import { from } from '@guardian/src-foundations/mq';
+import { button, textInput } from '@/client/styles/Shared';
+import { Divider } from '@guardian/source-react-components-development-kitchen';
 
 type Props = {
   returnUrl?: string;
@@ -28,7 +29,17 @@ type Props = {
 };
 
 const termsSpacing = css`
-  margin-bottom: ${space[6]}px;
+  margin-bottom: ${space[5]}px;
+  ${from.mobileMedium} {
+    margin-bottom: ${space[6]}px;
+  }
+`;
+
+const formSpacing = css`
+  margin-bottom: ${space[4]}px;
+  ${from.mobileMedium} {
+    margin-bottom: ${space[6]}px;
+  }
 `;
 
 export const Registration = ({
@@ -101,6 +112,7 @@ export const Registration = ({
         <PageBox>
           <PageBody>
             <form
+              css={formSpacing}
               method="post"
               action={`${Routes.REGISTRATION}?${registrationUrlQueryParamString}`}
               ref={registerFormRef}
@@ -126,7 +138,7 @@ export const Registration = ({
               </Button>
             </form>
             <Divider
-              size="fit"
+              size="full"
               spaceAbove="loose"
               displayText="or continue with"
             />

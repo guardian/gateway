@@ -22,11 +22,9 @@ export const MagicLink = ({ email }: Props) => {
   return (
     <>
       <Header />
-
       <Main subTitle="Sign in">
         <PageBox>
           <PageHeader>Link to sign in</PageHeader>
-
           <PageBody>
             <form css={form} method="post" action={`${Routes.MAGIC_LINK}`}>
               <CsrfFormField />

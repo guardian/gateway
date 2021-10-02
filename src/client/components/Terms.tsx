@@ -2,13 +2,21 @@ import React from 'react';
 import { css } from '@emotion/react';
 import { Link } from '@guardian/src-link';
 import { textSans } from '@guardian/src-foundations/typography';
+import { from } from '@guardian/src-foundations/mq';
+import { space } from '@guardian/src-foundations';
 
 const Text = ({ children }: { children: React.ReactNode }) => (
   <p
     css={css`
       ${textSans.small()}
       margin-top: 0;
-      margin-bottom: 6px;
+      margin-bottom: 0;
+      ${from.mobileMedium} {
+        margin-bottom: 6px;
+      }
+      ${from.tablet} {
+        margin-bottom: ${space[2]}px;
+      }
     `}
   >
     {children}

@@ -17,7 +17,10 @@ export const button = css`
 `;
 
 export const textInput = css`
-  margin-bottom: ${space[4]}px;
+  margin-bottom: ${space[3]}px;
+  ${from.mobileMedium} {
+    margin-bottom: ${space[4]}px;
+  }
 `;
 
 export const form = css`

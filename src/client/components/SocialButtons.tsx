@@ -18,8 +18,12 @@ const containerStyles = css`
     flex-direction: row;
   }
   justify-content: space-between;
-  margin-top: ${space[6]}px;
-  margin-bottom: ${space[6]}px;
+  margin-top: ${space[5]}px;
+  margin-bottom: ${space[5]}px;
+  ${from.mobileLandscape} {
+    margin-top: ${space[6]}px;
+    margin-bottom: ${space[6]}px;
+  }
   width: 100%;
 `;
 
