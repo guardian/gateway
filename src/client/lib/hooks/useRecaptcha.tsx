@@ -69,6 +69,16 @@ type UseRecaptcha = (
   widgetId: number;
 };
 
+/**
+ * Helper hook for Google Recaptcha v2.
+ *
+ * Provides a simple way to set up and call the recaptcha service when a form validation token is required.
+ *
+ * @param siteKey Public recaptcha site key
+ * @param renderElement Element to bind to.
+ * @param size How the captcha test should display on the page.
+ * @returns Recaptcha check state.
+ */
 const useRecaptcha: UseRecaptcha = (
   siteKey,
   renderElement,
@@ -79,6 +89,7 @@ const useRecaptcha: UseRecaptcha = (
   const [expired, setExpired] = React.useState(false);
   const [widgetId, setWidgetId] = React.useState(0);
 
+  // We can't initialise recaptcha if no site key is provided.
   if (siteKey === '') {
     return {
       token,
@@ -102,7 +113,7 @@ const useRecaptcha: UseRecaptcha = (
           setError(false);
           setExpired(false);
         },
-        // Exception callbacks below are called with undefined when an error has occured.
+        // Exception callbacks below are called with undefined when a recaptcha error has occured.
         'error-callback': (val) => setError(val === undefined),
         'expired-callback': (val) => setExpired(val === undefined),
       });

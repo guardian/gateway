@@ -16,8 +16,6 @@ beforeEach(() => {
   });
 });
 
-// test('should attach recaptcha script when grecaptcha not attached to window', () => {});
-
 test('should load google recaptcha and return an empty token', () => {
   const {
     result: { current },
