@@ -2,9 +2,7 @@ import React, { useContext } from 'react';
 import { css } from '@emotion/react';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
-import { PageBox } from '@/client/components/PageBox';
-import { PageBody } from '@/client/components/PageBody';
-import { Main } from '@/client/layouts/Main';
+import { MainGrid } from '@/client/layouts/MainGrid';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { PasswordInput } from '@/client/components/PasswordInput';
@@ -20,6 +18,7 @@ import { Divider } from '@/client/components/Divider';
 import { button, form, textInput } from '@/client/styles/Shared';
 import { Link } from '@guardian/src-link';
 import { textSans } from '@guardian/src-foundations/typography';
+import { gridItemSignIn } from '@/client/styles/Grid';
 
 const Links = ({ children }: { children: React.ReactNode }) => (
   <p
@@ -57,45 +56,32 @@ export const SignIn = () => {
           },
         ]}
       />
-      <Main>
-        <PageBox>
-          <PageBody>
-            <form
-              css={form}
-              method="post"
-              action={`${Routes.SIGN_IN}${returnUrlQuery}`}
-            >
-              <CsrfFormField />
-              <TextInput
-                css={textInput}
-                label="Email"
-                name="email"
-                type="email"
-              />
-              <PasswordInput label="Password" />
-              <Links>
-                <Link subdued={true} href="/reset">
-                  Reset password
-                </Link>{' '}
-                or{' '}
-                <Link subdued={true} href="/magic-link">
-                  email me a link to sign in
-                </Link>
-              </Links>
-              <Button css={button} type="submit" data-cy="sign-in-button">
-                Sign in
-              </Button>
-            </form>
-            <Terms />
-            <Divider
-              size="fit"
-              spaceAbove="loose"
-              displayText="or continue with"
-            />
-            <SocialButtons returnUrl="todo" />
-          </PageBody>
-        </PageBox>
-      </Main>
+      <MainGrid gridSpanDefinition={gridItemSignIn}>
+        <form
+          css={form}
+          method="post"
+          action={`${Routes.SIGN_IN}${returnUrlQuery}`}
+        >
+          <CsrfFormField />
+          <TextInput css={textInput} label="Email" name="email" type="email" />
+          <PasswordInput label="Password" />
+          <Links>
+            <Link subdued={true} href="/reset">
+              Reset password
+            </Link>{' '}
+            or{' '}
+            <Link subdued={true} href="/magic-link">
+              email me a link to sign in
+            </Link>
+          </Links>
+          <Button css={button} type="submit" data-cy="sign-in-button">
+            Sign in
+          </Button>
+        </form>
+        <Terms />
+        <Divider size="fit" spaceAbove="loose" displayText="or continue with" />
+        <SocialButtons returnUrl="todo" />
+      </MainGrid>
       <Footer />
     </>
   );
