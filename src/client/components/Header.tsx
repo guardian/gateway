@@ -2,64 +2,61 @@ import React from 'react';
 import { css } from '@emotion/react';
 import { brand, space } from '@guardian/src-foundations';
 import { from } from '@guardian/src-foundations/mq';
-import { Container } from '@/client/components/Container';
 import { Logo } from '@guardian/source-react-components-development-kitchen';
-
-const floatRight = css`
-  /** 
-    If you're here wanting to add more items to the Header then consider
-    removing this and using flex for positioning instead
-  */
-  float: right;
-`;
+import { gridRow, manualRow, SpanDefinition } from '@/client/styles/Grid';
 
 const bottomMarginStyles = css`
-  margin-bottom: ${space[1]}px;
-  ${from.tablet} {
-    margin-bottom: ${space[2]}px;
-  }
-  ${from.desktop} {
-    margin-bottom: ${space[4]}px;
-  }
+  margin-bottom: ${space[4]}px;
 `;
 
 const topMarginStyles = css`
-  margin-top: ${space[2]}px;
+  margin-top: ${space[5]}px;
+  ${from.mobileMedium} {
+    margin-top: 14px;
+  }
   ${from.tablet} {
     margin-top: ${space[2]}px;
   }
-  ${from.desktop} {
-    margin-top: ${space[3]}px;
-  }
 `;
 
-const rightMarginStyles = css`
-  margin-right: ${space[3]}px;
-  ${from.mobileLandscape} {
-    margin-right: ${space[5]}px;
-  }
-  ${from.wide} {
-    margin-right: ${space[24]}px;
-  }
+const sideMarginStyles = css`
+  margin-left: auto;
+  margin-right: auto;
 `;
 
 const backgroundColor = css`
   background-color: ${brand[400]};
 `;
 
+const headerGridRightToLeft = css`
+  direction: rtl;
+`;
+
+const headerSpanDefinition: SpanDefinition = {
+  TABLET: {
+    start: 9,
+    span: 4,
+  },
+  DESKTOP: {
+    start: 9,
+    span: 4,
+  },
+  LEFT_COL: {
+    start: 11,
+    span: 4,
+  },
+  WIDE: {
+    start: 12,
+    span: 4,
+  },
+};
+
 export const Header = () => (
   <header id="top" css={backgroundColor}>
-    <Container sidePadding={false}>
-      <div
-        css={[
-          floatRight,
-          topMarginStyles,
-          rightMarginStyles,
-          bottomMarginStyles,
-        ]}
-      >
-        <Logo logoType="standard" />
+    <div css={[gridRow, topMarginStyles, bottomMarginStyles, sideMarginStyles]}>
+      <div css={[manualRow(1, headerSpanDefinition), headerGridRightToLeft]}>
+        <Logo logoType="bestWebsite" />
       </div>
-    </Container>
+    </div>
   </header>
 );
