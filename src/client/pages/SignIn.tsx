@@ -16,10 +16,10 @@ import { PageTitle } from '@/shared/model/PageTitle';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
+import { Divider } from '@/client/components/Divider';
 import { button, form, textInput } from '@/client/styles/Shared';
 import { Link } from '@guardian/src-link';
 import { textSans } from '@guardian/src-foundations/typography';
-import { Divider } from '@guardian/source-react-components-development-kitchen';
 
 const Links = ({ children }: { children: React.ReactNode }) => (
   <p
@@ -86,14 +86,13 @@ export const SignIn = () => {
                 Sign in
               </Button>
             </form>
+            <Terms />
             <Divider
-              size="full"
+              size="fit"
               spaceAbove="loose"
               displayText="or continue with"
             />
             <SocialButtons returnUrl="todo" />
-            <Divider size="full" spaceAbove="tight" />
-            <Terms />
           </PageBody>
         </PageBox>
       </Main>
