@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { brand, space } from '@guardian/src-foundations';
 import { from } from '@guardian/src-foundations/mq';
 import { Container } from '@/client/components/Container';
-import { Logo } from '@/client/components/Logo';
+import { Logo } from '@guardian/source-react-components-development-kitchen';
 
 const floatRight = css`
   /** 
