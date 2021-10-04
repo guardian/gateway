@@ -255,6 +255,13 @@ export const gridItemSignIn: SpanDefinition = {
   WIDE: { start: 4, span: 6 },
 };
 
+export const gridItemRegistration: SpanDefinition = {
+  TABLET: { start: 1, span: 8 },
+  DESKTOP: { start: 2, span: 6 },
+  LEFT_COL: { start: 3, span: 6 },
+  WIDE: { start: 4, span: 6 },
+};
+
 export const getAutoRow = (
   offset = 0,
   spanDefinition?: SpanDefinition,

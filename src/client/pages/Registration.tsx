@@ -3,17 +3,19 @@ import { TextInput } from '@guardian/src-text-input';
 import { Button } from '@guardian/src-button';
 import { Routes } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
-import { Main } from '@/client/layouts/Main';
 import { Header } from '@/client/components/Header';
 import { Nav } from '@/client/components/Nav';
 import { Footer } from '@/client/components/Footer';
-import { PageBox } from '@/client/components/PageBox';
-import { PageBody } from '@/client/components/PageBody';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
-import { button, form, textInput } from '@/client/styles/Shared';
-import { Divider } from '@guardian/source-react-components-development-kitchen/';
+import { topMargin } from '@/client/styles/Shared';
+import { border, space } from '@guardian/src-foundations';
+import { css } from '@emotion/react';
+import { from } from '@guardian/src-foundations/mq';
+import { MainGrid } from '../layouts/MainGrid';
+import { gridItemRegistration } from '../styles/Grid';
+import { Divider } from '@guardian/source-react-components-development-kitchen';
 
 type Props = {
   returnUrl?: string;
@@ -21,6 +23,31 @@ type Props = {
   refValue?: string;
   refViewId?: string;
 };
+
+const registerButton = css`
+  width: 100%;
+  justify-content: center;
+  margin-top: ${space[5]}px;
+  ${from.mobileMedium} {
+    margin-top: 16px;
+  }
+`;
+
+const divider = css`
+  /* Undoes the negative margin */
+  margin-bottom: 0;
+  margin-top: ${space[4]}px;
+  ${from.mobileMedium} {
+    margin-top: ${space[6]}px;
+  }
+  :before,
+  :after {
+    content: '';
+    flex: 1 1;
+    border-bottom: 1px solid ${border.secondary};
+    margin: 8px;
+  }
+`;
 
 export const Registration = ({
   returnUrl = '',
@@ -57,37 +84,32 @@ export const Registration = ({
           },
         ]}
       />
-      <Main>
-        <PageBox>
-          <PageBody>
-            <form
-              css={form}
-              method="post"
-              action={`${Routes.REGISTRATION}?${registrationUrlQueryParamString}`}
-            >
-              <CsrfFormField />
-              <TextInput
-                css={textInput}
-                label="Email"
-                name="email"
-                type="email"
-                defaultValue={email}
-              />
-              <Button css={button} type="submit" data-cy="register-button">
-                Register
-              </Button>
-            </form>
-            <Divider
-              size="full"
-              spaceAbove="loose"
-              displayText="or continue with"
+      <MainGrid gridSpanDefinition={gridItemRegistration}>
+        <form
+          method="post"
+          action={`${Routes.REGISTRATION}?${registrationUrlQueryParamString}`}
+        >
+          <CsrfFormField />
+          <div css={topMargin}>
+            <TextInput
+              label="Email"
+              name="email"
+              type="email"
+              defaultValue={email}
             />
-            <SocialButtons returnUrl={returnUrl} />
-            <Divider size="full" spaceAbove="tight" />
-            <Terms />
-          </PageBody>
-        </PageBox>
-      </Main>
+          </div>
+          <Terms />
+          <Button css={registerButton} type="submit" data-cy="register-button">
+            Register
+          </Button>
+        </form>
+        <Divider
+          spaceAbove="loose"
+          displayText="or continue with"
+          cssOverrides={divider}
+        />
+        <SocialButtons returnUrl={returnUrl} />
+      </MainGrid>
       <Footer />
     </>
   );

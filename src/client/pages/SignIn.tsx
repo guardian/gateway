@@ -14,13 +14,13 @@ import { PageTitle } from '@/shared/model/PageTitle';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
-import { Divider } from '@/client/components/Divider';
 import { Link } from '@guardian/src-link';
 import { textSans } from '@guardian/src-foundations/typography';
 import { gridItemSignIn } from '@/client/styles/Grid';
 import { border, space } from '@guardian/src-foundations';
 import { from } from '@guardian/src-foundations/mq';
 import { topMargin } from '@/client/styles/Shared';
+import { Divider } from '@guardian/source-react-components-development-kitchen';
 
 const passwordInput = css`
   margin-top: ${space[2]}px;
@@ -44,6 +44,12 @@ const signInButton = css`
 `;
 
 const divider = css`
+  /* Undoes the negative margin */
+  margin-bottom: 0;
+  margin-top: ${space[4]}px;
+  ${from.mobileMedium} {
+    margin-top: ${space[6]}px;
+  }
   :before,
   :after {
     content: '';
@@ -111,7 +117,6 @@ export const SignIn = () => {
           </Button>
         </form>
         <Divider
-          size="fit"
           spaceAbove="loose"
           displayText="or continue with"
           cssOverrides={divider}
