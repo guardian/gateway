@@ -1,15 +1,22 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { space } from '@guardian/src-foundations';
 import { Link } from '@guardian/src-link';
 import { textSans } from '@guardian/src-foundations/typography';
+import { from } from '@guardian/src-foundations/mq';
+import { space } from '@guardian/src-foundations';
 
 const Text = ({ children }: { children: React.ReactNode }) => (
   <p
     css={css`
-      ${textSans.small()}
+      ${textSans.xxsmall()}
       margin-top: 0;
-      margin-bottom: ${space[4]}px;
+      margin-bottom: 0px;
+      ${from.mobileMedium} {
+        margin-bottom: 6px;
+      }
+      ${from.tablet} {
+        margin-bottom: ${space[2]}px;
+      }
     `}
   >
     {children}
@@ -26,7 +33,7 @@ const TermsLink = ({
   <Link
     subdued={true}
     cssOverrides={css`
-      ${textSans.small()}
+      ${textSans.xxsmall()}
     `}
     href={href}
   >
@@ -34,28 +41,39 @@ const TermsLink = ({
   </Link>
 );
 
+const terms = css`
+  margin-bottom: 20px;
+  ${from.mobileMedium} {
+    margin-bottom: 18px; /* 18px + 6px margin-bottom from paragraph style = 24px bottom margin */
+  }
+`;
+
 export const Terms = () => (
-  <>
+  <div css={terms}>
     <Text>
-      By proceeding you agree to our{' '}
+      By proceeding, you agree to our{' '}
       <TermsLink href="https://www.theguardian.com/help/terms-of-service">
-        Terms and Conditions
+        terms &amp; conditions
       </TermsLink>
+      .
     </Text>
     <Text>
-      You also confirm that you are 13 years or older, or that you have the
-      consent of your parent or a person holding parental responsibility
+      For information about how we use your data, see our{' '}
+      <TermsLink href="https://www.theguardian.com/help/privacy-policy">
+        privacy policy
+      </TermsLink>
+      .
     </Text>
     <Text>
-      This site is protected by reCAPTCHA and{' '}
+      This site is protected by reCAPTCHA and the Google{' '}
       <TermsLink href="https://policies.google.com/privacy">
-        Google&apos;s Privacy Policy
+        privacy policy
       </TermsLink>{' '}
       and{' '}
       <TermsLink href="https://policies.google.com/terms">
-        Terms of Service
+        terms of service
       </TermsLink>{' '}
       apply.
     </Text>
-  </>
+  </div>
 );
