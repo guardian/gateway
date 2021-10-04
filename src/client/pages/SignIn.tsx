@@ -15,7 +15,6 @@ import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
 import { Divider } from '@/client/components/Divider';
-import { button } from '@/client/styles/Shared';
 import { Link } from '@guardian/src-link';
 import { textSans } from '@guardian/src-foundations/typography';
 import { gridItemSignIn } from '@/client/styles/Grid';
@@ -32,6 +31,15 @@ const passwordInput = css`
 
 const resetPassword = css`
   ${textSans.small()}
+`;
+
+export const signInButton = css`
+  width: 100%;
+  justify-content: center;
+  margin-top: ${space[5]}px;
+  ${from.mobileMedium} {
+    margin-top: ${space[6]}px;
+  }
 `;
 
 const Links = ({ children }: { children: React.ReactNode }) => (
@@ -81,11 +89,11 @@ export const SignIn = () => {
               Reset password
             </Link>
           </Links>
-          <Button css={button} type="submit" data-cy="sign-in-button">
+          <Terms />
+          <Button css={signInButton} type="submit" data-cy="sign-in-button">
             Sign in
           </Button>
         </form>
-        <Terms />
         <Divider size="fit" spaceAbove="loose" displayText="or continue with" />
         <SocialButtons returnUrl="todo" />
       </MainGrid>
