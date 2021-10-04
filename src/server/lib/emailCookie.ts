@@ -21,7 +21,7 @@ export const setGUEmailCookie = (res: Response, email: string) => {
 };
 
 // Read the users email from the GU_email cookie that was set when they posted the previous page
-const readGUEmailCookie = (req: Request): string | undefined => {
+export const readGUEmailCookie = (req: Request): string | undefined => {
   const emailCookie = baseUri.includes('localhost')
     ? req.cookies['GU_email']
     : req.signedCookies['GU_email'];
