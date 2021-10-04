@@ -23,14 +23,18 @@ const containerStyles = css`
     margin-top: ${space[6]}px;
   }
   margin-bottom: 60px;
+  ${from.desktop} {
+    margin-bottom: ${space[24]}px;
+  }
   width: 100%;
 `;
 
 const buttonOverrides = css`
   border-color: ${brand[400]};
-  justify-content: flex-end;
+  justify-content: center;
   ${from.mobileLandscape} {
     min-width: 145px;
+    flex-grow: 1;
   }
 `;
 
