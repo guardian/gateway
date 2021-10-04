@@ -15,7 +15,7 @@ import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
 import { Divider } from '@/client/components/Divider';
-import { button, form } from '@/client/styles/Shared';
+import { button } from '@/client/styles/Shared';
 import { Link } from '@guardian/src-link';
 import { textSans } from '@guardian/src-foundations/typography';
 import { gridItemSignIn } from '@/client/styles/Grid';
@@ -30,15 +30,18 @@ const passwordInput = css`
   }
 `;
 
+const resetPassword = css`
+  ${textSans.small()}
+`;
+
 const Links = ({ children }: { children: React.ReactNode }) => (
-  <p
+  <div
     css={css`
-      ${textSans.medium()}
-      margin-top: 0;
+      margin-top: 8px;
     `}
   >
     {children}
-  </p>
+  </div>
 );
 
 export const SignIn = () => {
@@ -67,23 +70,15 @@ export const SignIn = () => {
         ]}
       />
       <MainGrid gridSpanDefinition={gridItemSignIn}>
-        <form
-          css={form}
-          method="post"
-          action={`${Routes.SIGN_IN}${returnUrlQuery}`}
-        >
+        <form method="post" action={`${Routes.SIGN_IN}${returnUrlQuery}`}>
           <CsrfFormField />
           <TextInput label="Email" name="email" type="email" />
           <div css={passwordInput}>
             <PasswordInput label="Password" />
           </div>
           <Links>
-            <Link subdued={true} href="/reset">
+            <Link subdued={true} href="/reset" cssOverrides={resetPassword}>
               Reset password
-            </Link>{' '}
-            or{' '}
-            <Link subdued={true} href="/magic-link">
-              email me a link to sign in
             </Link>
           </Links>
           <Button css={button} type="submit" data-cy="sign-in-button">

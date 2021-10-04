@@ -42,9 +42,9 @@ const TermsLink = ({
 );
 
 const terms = css`
-  margin-bottom: 20px;
+  margin-top: 12px;
   ${from.mobileMedium} {
-    margin-bottom: 18px; /* 18px + 6px margin-bottom from paragraph style = 24px bottom margin */
+    margin-top: 16px;
   }
 `;
 
