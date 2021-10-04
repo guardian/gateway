@@ -29,19 +29,18 @@ export enum ChangePasswordErrors {
   GENERIC = 'There was a problem changing your password, please try again.',
   INVALID_TOKEN = 'The token that was supplied has expired, please try again.',
   PASSWORD_BLANK = 'Password field must not be blank',
-  REPEAT_PASSWORD_BLANK = 'Repeat Password field must not be blank',
   PASSWORD_NO_MATCH = 'The passwords do not match, please try again',
   PASSWORD_LENGTH = 'Password must be between 8 and 72 characters',
 
   AT_LEAST_8 = 'Please make sure your password is at least 8 characters long.',
   MAXIMUM_72 = 'Please make sure your password is not longer than 72 characters.',
-  COMMON_PASSWORD = 'This is a common password. Please use a password that is hard to guess.',
+  COMMON_PASSWORD = 'Please use a password that is hard to guess.',
   PASSWORDS_NOT_MATCH = 'Passwords don’t match',
   PASSWORDS_MATCH = 'Passwords match',
 
   AT_LEAST_8_SHORT = 'At least 8 characters',
   MAXIMUM_72_SHORT = 'Maximum of 72 characters',
-  COMMON_PASSWORD_SHORT = 'this is a common password. Please use a password that is hard to guess.',
+  COMMON_PASSWORD_SHORT = 'Please use a password that is hard to guess.',
 }
 
 export enum VerifyEmailErrors {

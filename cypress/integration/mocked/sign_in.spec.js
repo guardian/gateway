@@ -1,6 +1,6 @@
 /// <reference types='cypress' />
 
-import { injectAndCheckAxe } from '../support/cypress-axe';
+import { injectAndCheckAxe } from '../../support/cypress-axe';
 
 describe('Sign in flow', () => {
   beforeEach(() => {
@@ -59,8 +59,9 @@ describe('Sign in flow', () => {
       cy.contains('There was a problem signing in, please try again');
     });
 
-    it('loads the redirectUrl upon successful authentication', function () {
-      cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+    it('loads the returnUrl upon successful authentication', function () {
+      const returnUrl = 'https://www.theguardian.com/about';
+      cy.visit(`/signin?returnUrl=${encodeURIComponent(returnUrl)}`);
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
       cy.mockNext(200, {
@@ -70,10 +71,10 @@ describe('Sign in flow', () => {
         },
       });
       cy.get('[data-cy=sign-in-button]').click();
-      cy.contains('About us');
+      cy.url().should('eq', returnUrl);
     });
 
-    it('redirects to the default url if no redirectUrl given', function () {
+    it('redirects to the default url if no returnUrl given', function () {
       cy.visit('/signin');
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
@@ -84,7 +85,7 @@ describe('Sign in flow', () => {
         },
       });
       cy.get('[data-cy=sign-in-button]').click();
-      cy.contains('UK edition');
+      cy.url().should('include', 'https://m.code.dev-theguardian.com/');
     });
   });
 

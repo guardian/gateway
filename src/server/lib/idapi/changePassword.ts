@@ -11,7 +11,7 @@ import {
   IdapiErrorMessages,
   ChangePasswordErrors,
 } from '@/shared/model/Errors';
-import { logger } from '../logger';
+import { logger } from '@/server/lib/logger';
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
   if (error.status === 'error' && error.errors?.length) {
@@ -22,7 +22,11 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
       case IdapiErrorMessages.INVALID_TOKEN:
         throw { message: ChangePasswordErrors.INVALID_TOKEN, status };
       case IdapiErrorMessages.BREACHED_PASSWORD:
-        throw { message: ChangePasswordErrors.COMMON_PASSWORD, status };
+        throw {
+          message: ChangePasswordErrors.COMMON_PASSWORD,
+          status,
+          field: 'password',
+        };
       default:
         break;
     }
@@ -50,7 +54,7 @@ export async function validate(
     return result.user?.primaryEmailAddress;
   } catch (error) {
     logger.error(`IDAPI Error changePassword validate ${url}`, error);
-    handleError(error);
+    handleError(error as IDAPIError);
   }
 }
 
@@ -72,6 +76,6 @@ export async function change(password: string, token: string, ip: string) {
       `IDAPI Error changePassword change ${ApiRoutes.CHANGE_PASSWORD}`,
       error,
     );
-    handleError(error);
+    handleError(error as IDAPIError);
   }
 }

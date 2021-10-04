@@ -9,31 +9,37 @@ import { default as consents } from './consents';
 import { default as verifyEmail } from './verifyEmail';
 import { default as oauth } from './oauth';
 import { default as magicLink } from './magicLink';
+import { default as welcome } from './welcome';
 import { noCache } from '@/server/lib/middleware/cache';
 import { featureSwitches } from '@/shared/lib/featureSwitches';
 
 const router = Router();
+const uncachedRoutes = Router();
 
 // core routes for the app, e.g. healthcheck, static routes
 router.use(core);
 
+// all routes should be uncached except for the core (static) routes
+// to avoid caching sensitive page state
+uncachedRoutes.use(noCache);
+
 // request reset password routes
-router.use(noCache, reset);
+uncachedRoutes.use(reset);
 
 // request sign in routes
-router.use(noCache, signIn);
+uncachedRoutes.use(signIn);
 
 // request registration routes
-router.use(noCache, register);
+uncachedRoutes.use(register);
 
 // change password routes
-router.use(noCache, changePassword);
+uncachedRoutes.use(changePassword);
 
 // consents routes
-router.use(noCache, consents);
+uncachedRoutes.use(consents);
 
 // verify email routes
-router.use(noCache, verifyEmail);
+uncachedRoutes.use(verifyEmail);
 
 // only use oauth routes if okta switch is enabled
 if (featureSwitches.oktaAuthentication) {
@@ -42,6 +48,11 @@ if (featureSwitches.oktaAuthentication) {
 }
 
 // magic link routes
-router.use(noCache, magicLink);
+uncachedRoutes.use(magicLink);
+
+// welcome routes
+uncachedRoutes.use(noCache, welcome);
+
+router.use(uncachedRoutes);
 
 export default router;

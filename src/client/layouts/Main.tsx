@@ -11,6 +11,7 @@ import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 
 type Props = {
   subTitle?: string;
+  successOverride?: string;
   children: React.ReactNode;
 };
 
@@ -18,7 +19,6 @@ const mainStyles = css`
   display: flex;
   flex-grow: 1;
   flex-direction: column;
-  align-items: left;
 `;
 
 const sectionStyles = css`
@@ -28,15 +28,17 @@ const sectionStyles = css`
   margin: 0 auto;
 `;
 
-export const Main = ({ subTitle, children }: Props) => {
+export const Main = ({ subTitle, successOverride, children }: Props) => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { globalMessage: { error, success } = {} } = clientState;
+
+  const successMessage = success || successOverride;
 
   return (
     <main css={mainStyles}>
       {subTitle && <SubHeader title={subTitle} />}
       {error && <GlobalError error={error} link={getErrorLink(error)} />}
-      {success && <GlobalSuccess success={success} />}
+      {successMessage && <GlobalSuccess success={successMessage} />}
       <section css={sectionStyles}>{children}</section>
     </main>
   );

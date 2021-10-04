@@ -1,3 +1,5 @@
+require('cypress-mailosaur');
+
 // ***********************************************
 // For more comprehensive examples of custom
 // commands please read more here:

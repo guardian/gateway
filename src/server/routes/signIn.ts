@@ -18,6 +18,7 @@ import {
 import { SignInErrors } from '@/shared/model/Errors';
 import { featureSwitches } from '@/shared/lib/featureSwitches';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
+import { RequestError } from '@/shared/lib/error';
 
 const router = Router();
 
@@ -88,6 +89,8 @@ const oktaAuthenticationController = async (
     trackMetric(Metrics.AUTHENTICATION_FAILURE);
     logger.error('Okta authentication error:', error);
 
+    const { message, status } = error as RequestError;
+
     const html = renderer(Routes.SIGN_IN, {
       requestState: deepmerge(res.locals, {
         pageData: {
@@ -95,7 +98,7 @@ const oktaAuthenticationController = async (
           fieldErrors: [
             {
               field: 'summary',
-              message: error.message || SignInErrors.GENERIC,
+              message: message || SignInErrors.GENERIC,
             },
           ],
         },
@@ -103,7 +106,7 @@ const oktaAuthenticationController = async (
       pageTitle: PageTitle.SIGN_IN,
     });
     return res
-      .status(error.status || 500)
+      .status(status || 500)
       .type('html')
       .send(html);
   }
@@ -128,7 +131,6 @@ const idapiAuthenticationController = async (
 
     // set cookie headers on response
     setIDAPICookies(res, cookies);
-
     // track success
     trackMetric(Metrics.AUTHENTICATION_SUCCESS);
 
@@ -136,14 +138,13 @@ const idapiAuthenticationController = async (
     return res.redirect(303, returnUrl);
   } catch (error) {
     logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+    const { message, status } = error as RequestError;
 
     // track failure
     trackMetric(Metrics.AUTHENTICATION_FAILURE);
 
     // if error has a message, attach it to state
-    if (error.message) {
-      const { message } = error;
-
+    if (message) {
       state = deepmerge(state, {
         globalMessage: {
           error: message,
@@ -165,7 +166,7 @@ const idapiAuthenticationController = async (
     });
 
     return res
-      .status(error.status || 500)
+      .status(status || 500)
       .type('html')
       .send(html);
   }

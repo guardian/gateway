@@ -17,9 +17,21 @@ import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { stringify } from 'querystring';
 import { SignInErrors } from '@/shared/model/Errors';
 
+interface OAuthError {
+  error: string;
+  error_description: string;
+}
+
 const router = Router();
 
 const { signInPageUrl, defaultReturnUri } = getConfiguration();
+
+const isOAuthError = (
+  maybeOAuthError: unknown,
+): maybeOAuthError is OAuthError => {
+  const { error, error_description } = maybeOAuthError as OAuthError;
+  return error !== undefined && error_description !== undefined;
+};
 
 /**
  * Helper method to redirect back to the sign in page with
@@ -111,7 +123,7 @@ router.get(
       trackMetric(Metrics.AUTHORIZATION_ERROR);
       // if there's been an error from the authorization_code flow
       // then propagate it as a query parameter (error + error_description)
-      if (error.error && error.error_description) {
+      if (isOAuthError(error)) {
         return res.redirect(
           `${signInPageUrl}?${stringify({
             error: error.error,

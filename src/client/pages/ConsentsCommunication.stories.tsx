@@ -23,7 +23,7 @@ export const MarketResearch = () => (
       id: '0',
       name: 'mr-name',
       description:
-        'I do NOT wish to be contacted by The Guardian for market research purposes.',
+        'I do NOT wish to be contacted by the Guardian for market research purposes.',
     }}
     consentsWithoutOptout={[]}
   />
@@ -76,7 +76,7 @@ export const MultipleConsentsAndMarketing = () => (
       id: '0',
       name: 'mr-name',
       description:
-        'I do NOT wish to be contacted by The Guardian for market research purposes.',
+        'I do NOT wish to be contacted by the Guardian for market research purposes.',
     }}
     consentsWithoutOptout={[
       {
@@ -103,7 +103,7 @@ export const InTest = () => (
       id: '0',
       name: 'mr-name',
       description:
-        'I do NOT wish to be contacted by The Guardian for market research purposes.',
+        'I do NOT wish to be contacted by the Guardian for market research purposes.',
     }}
     consentsWithoutOptout={[
       {

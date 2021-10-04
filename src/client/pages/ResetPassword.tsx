@@ -19,6 +19,7 @@ interface ResetPasswordProps {
   bodyText: string;
   buttonText: string;
   queryString?: string;
+  formActionOverride?: string;
 }
 
 export const ResetPassword = ({
@@ -27,6 +28,7 @@ export const ResetPassword = ({
   bodyText,
   buttonText,
   queryString = '',
+  formActionOverride,
 }: ResetPasswordProps) => (
   <>
     <Header />
@@ -38,7 +40,11 @@ export const ResetPassword = ({
           <form
             css={form}
             method="post"
-            action={`${Routes.RESET}${queryString}`}
+            action={
+              formActionOverride
+                ? `${formActionOverride}${queryString}`
+                : `${Routes.RESET}${queryString}`
+            }
           >
             <CsrfFormField />
             <TextInput
@@ -53,6 +59,7 @@ export const ResetPassword = ({
               type="submit"
               icon={<SvgArrowRightStraight />}
               iconSide="right"
+              data-cy="reset-password-button"
             >
               {buttonText}
             </Button>

@@ -33,3 +33,21 @@ export const validateReturnUrl = (returnUrl = ''): string => {
     return defaultReturnUri;
   }
 };
+
+export const validateRefUrl = (ref = ''): string | undefined => {
+  try {
+    // we decode the returnUrl as we cant know for sure if it's been encoded or not
+    // so decode just to be safe
+    const url = new URL(decodeURIComponent(ref));
+
+    // check the hostname is valid
+    if (!validHostnames.some((hostname) => url.hostname.endsWith(hostname))) {
+      throw 'Invalid hostname';
+    }
+
+    return `https://${url.hostname}${url.pathname}`;
+  } catch (error) {
+    // error parsing url so return the default
+    return;
+  }
+};

@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { RegistrationPage } from '@/client/pages/RegistrationPage';
 import { ResetPasswordPage } from '@/client/pages/ResetPasswordPage';
-import { ResetSentPage } from '@/client/pages/ResetSentPage';
+import { EmailSentPage } from '@/client/pages/EmailSentPage';
 import { NotFoundPage } from '@/client/pages/NotFoundPage';
 import { ChangePasswordPage } from '@/client/pages/ChangePasswordPage';
 import { ChangePasswordCompletePage } from '@/client/pages/ChangePasswordCompletePage';
@@ -18,7 +18,9 @@ import { ClientState } from '@/shared/model/ClientState';
 import { Routes } from '@/shared/model/Routes';
 import { SignInPage } from '@/client/pages/SignInPage';
 import { MagicLinkPage } from '@/client/pages/MagicLinkPage';
-import { MagicLinkSentPage } from '@/client/pages/MagicLinkSentPage';
+import { WelcomePage } from '@/client/pages/WelcomePage';
+import { WelcomeResendPage } from '@/client/pages/WelcomeResend';
+import { RegistrationEmailSentPage } from './pages/RegistrationEmailSentPage';
 
 export type RoutingConfig = {
   clientState: ClientState;
@@ -33,22 +35,22 @@ export const GatewayRoutes = () => (
     <Route exact path={Routes.REGISTRATION}>
       <RegistrationPage />
     </Route>
+    <Route exact path={Routes.REGISTRATION_EMAIL_SENT}>
+      <RegistrationEmailSentPage />
+    </Route>
     <Route exact path={Routes.RESET}>
       <ResetPasswordPage />
     </Route>
     <Route exact path={Routes.RESET_SENT}>
-      <ResetSentPage />
+      <EmailSentPage />
     </Route>
-    <Route
-      exact
-      path={`${Routes.CHANGE_PASSWORD}${Routes.CHANGE_PASSWORD_TOKEN}`}
-    >
+    <Route exact path={`${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`}>
       <ChangePasswordPage />
     </Route>
     <Route path={Routes.CHANGE_PASSWORD_COMPLETE}>
       <ChangePasswordCompletePage />
     </Route>
-    <Route exact path={Routes.RESET_RESEND}>
+    <Route exact path={`${Routes.RESET}${Routes.RESEND}`}>
       <ResendPasswordPage />
     </Route>
     <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_DATA}`}>
@@ -62,6 +64,15 @@ export const GatewayRoutes = () => (
     </Route>
     <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_REVIEW}`}>
       <ConsentsConfirmationPage />
+    </Route>
+    <Route exact path={`${Routes.WELCOME}${Routes.RESEND}`}>
+      <WelcomeResendPage />
+    </Route>
+    <Route exact path={`${Routes.WELCOME_SENT}`}>
+      <EmailSentPage />
+    </Route>
+    <Route exact path={`${Routes.WELCOME}${Routes.TOKEN_PARAM}`}>
+      <WelcomePage />
     </Route>
     {/*  ABTEST: followupConsent : START */}
     <Route
@@ -84,7 +95,7 @@ export const GatewayRoutes = () => (
       <MagicLinkPage />
     </Route>
     <Route exact path={Routes.MAGIC_LINK_SENT}>
-      <MagicLinkSentPage />
+      <EmailSentPage />
     </Route>
     <Route exact path={Routes.UNEXPECTED_ERROR}>
       <UnexpectedErrorPage />

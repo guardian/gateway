@@ -8,4 +8,11 @@ export interface QueryParams extends StringifiableRecord {
   // errors as part of the OIDC flow
   error?: string;
   error_description?: string;
+  // this is the url of the referring page
+  // https://github.com/guardian/ophan/blob/70b658e785c490c411670bbd3c7fde62ae0224fc/the-slab/app/extractors/ReferrerExtractor.scala#L171
+  ref?: string;
+  // this refViewId refers to the referral page view id
+  // that the user was on to use for tracking referrals
+  // https://github.com/guardian/ophan/blob/70b658e785c490c411670bbd3c7fde62ae0224fc/the-slab/app/extractors/ReferrerExtractor.scala#L129
+  refViewId?: string;
 }

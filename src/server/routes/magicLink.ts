@@ -8,7 +8,7 @@ import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { removeNoCache } from '@/server/lib/middleware/cache';
+import { RequestError } from '@/shared/lib/error';
 
 const router = Router();
 
@@ -33,7 +33,7 @@ router.post(
       );
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      const { message, status } = error;
+      const { message, status } = error as RequestError;
 
       trackMetric(Metrics.SEND_MAGIC_LINK_FAILURE);
 
@@ -58,7 +58,6 @@ router.post(
 
 router.get(
   Routes.MAGIC_LINK_SENT,
-  removeNoCache,
   (_: Request, res: ResponseWithRequestState) => {
     const html = renderer(Routes.MAGIC_LINK_SENT, {
       pageTitle: PageTitle.MAGIC_LINK,

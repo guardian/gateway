@@ -1,0 +1,36 @@
+name: cypress-mocked
+on: push
+jobs:
+  cypress-mocked:
+    name: Cypress (mocked)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        env:
+          PORT: 8861
+          NODE_ENV: development
+          ENVIRONMENT: production
+          STAGE: DEV
+          BASE_URI: localhost:8861
+          IDAPI_CLIENT_ACCESS_TOKEN: fakekey
+          IDAPI_BASE_URL: http://localhost:9000
+          PLAY_SESSION_COOKIE_SECRET: faketoken
+          DEFAULT_RETURN_URI: https://m.code.dev-theguardian.com
+          CYPRESS_DEFAULT_RETURN_URI: https://m.code.dev-theguardian.com
+          SIGN_IN_PAGE_URL: https://profile.code.dev-theguardian.com/signin
+          CYPRESS_SIGN_IN_PAGE_URL: https://profile.code.dev-theguardian.com/signin
+          IS_HTTPS: false
+          APP_SECRET: devsecret
+          CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.CYPRESS_MAILOSAUR_API_KEY }}
+          CYPRESS_MAILOSAUR_SERVER_ID: ${{ secrets.CYPRESS_MAILOSAUR_SERVER_ID }}
+        with:
+          build: yarn build
+          start: yarn start, yarn mock-server
+          wait-on: 'http://localhost:8861/healthcheck, http://localhost:9000/healthcheck'
+          wait-on-timeout: 180
+          quiet: true
+          browser: chrome
+          spec: cypress/integration/mocked/*.js

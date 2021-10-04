@@ -1,5 +1,5 @@
 import { QueryParams } from '@/shared/model/QueryParams';
-import { validateReturnUrl } from '@/server/lib/validateReturnUrl';
+import { validateReturnUrl, validateRefUrl } from '@/server/lib/validateUrl';
 import { validateClientId } from '@/server/lib/validateClientId';
 
 const validateEmailVerified = (emailVerified?: string): boolean | undefined => {
@@ -35,6 +35,8 @@ export const parseExpressQueryParams = (
     csrfError,
     error,
     error_description,
+    refViewId,
+    ref,
   }: {
     returnUrl?: string;
     clientId?: string;
@@ -42,17 +44,19 @@ export const parseExpressQueryParams = (
     csrfError?: string;
     error?: string;
     error_description?: string;
+    refViewId?: string;
+    ref?: string;
   },
-): QueryParams => {
-  return {
-    returnUrl: validateReturnUrl(returnUrl),
-    clientId: validateClientId(clientId),
-    emailVerified: validateEmailVerified(emailVerified),
-    csrfError: validateCsrfError(method, csrfError),
-    error,
-    error_description,
-  };
-};
+): QueryParams => ({
+  returnUrl: validateReturnUrl(returnUrl),
+  clientId: validateClientId(clientId),
+  emailVerified: validateEmailVerified(emailVerified),
+  csrfError: validateCsrfError(method, csrfError),
+  error,
+  error_description,
+  refViewId,
+  ref: ref && validateRefUrl(ref),
+});
 
 export const addReturnUrlToPath = (path: string, returnUrl: string): string => {
   const divider = path.includes('?') ? '&' : '?';

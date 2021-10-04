@@ -43,8 +43,8 @@ export const read = async (): Promise<NewsLetter[]> => {
     return ((await idapiFetch(url, options)) as NewsletterAPIResponse[]).map(
       responseToEntity,
     );
-  } catch (e) {
-    logger.error(`IDAPI Error newsletters read ${url}`, e);
+  } catch (error) {
+    logger.error(`IDAPI Error newsletters read ${url}`, error);
     return handleError();
   }
 };
@@ -62,8 +62,8 @@ export const update = async (
   try {
     await idapiFetch(API_ROUTE, options);
     return;
-  } catch (e) {
-    logger.error(`IDAPI Error newsletters update ${API_ROUTE}`, e);
+  } catch (error) {
+    logger.error(`IDAPI Error newsletters update ${API_ROUTE}`, error);
     return handleError();
   }
 };
@@ -82,8 +82,8 @@ export const readUserNewsletters = async (ip: string, sc_gu_u: string) => {
     return (await idapiFetch(API_ROUTE, options)).result.subscriptions.map(
       (s: Subscription) => s.listId.toString(),
     );
-  } catch (e) {
-    logger.error(`IDAPI Error readUserNewsletters ${API_ROUTE}`, e);
+  } catch (error) {
+    logger.error(`IDAPI Error readUserNewsletters ${API_ROUTE}`, error);
     return handleError();
   }
 };

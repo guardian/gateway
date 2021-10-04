@@ -12,7 +12,7 @@ export const Checked = () => (
   <CommunicationCard
     key="abc"
     title="Example consent"
-    body="I do NOT wish to be contacted by The Guardian for market research purposes."
+    body="I do NOT wish to be contacted by the Guardian for market research purposes."
     value="abc"
     checked={true}
   />
@@ -23,7 +23,7 @@ export const UnChecked = () => (
   <CommunicationCard
     key="abc"
     title="Example consent"
-    body="I do NOT wish to be contacted by The Guardian for market research purposes."
+    body="I do NOT wish to be contacted by the Guardian for market research purposes."
     value="abc"
     checked={false}
   />

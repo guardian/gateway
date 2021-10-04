@@ -11,8 +11,10 @@ import {
   ConsentsErrors,
   IdapiErrorMessages,
   RegistrationErrors,
+  ResetPasswordErrors,
 } from '@/shared/model/Errors';
 import User from '@/shared/model/User';
+import { addReturnUrlToPath } from '@/server/lib/queryParams';
 
 interface APIResponse {
   user: User;
@@ -28,6 +30,10 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
         throw { message: RegistrationErrors.GENERIC, status };
       case IdapiErrorMessages.ACCESS_DENIED:
         throw { message: ConsentsErrors.ACCESS_DENIED, status };
+      case IdapiErrorMessages.NOT_FOUND:
+        throw { message: ResetPasswordErrors.NO_ACCOUNT, status };
+      case IdapiErrorMessages.MISSING_FIELD:
+        throw { message: ResetPasswordErrors.NO_EMAIL, status };
       default:
         break;
     }
@@ -57,9 +63,9 @@ export const read = async (ip: string, sc_gu_u: string): Promise<User> => {
   try {
     const response = (await idapiFetch(url, options)) as APIResponse;
     return responseToEntity(response);
-  } catch (e) {
-    logger.error(`IDAPI Error user read ${url}`, e);
-    return handleError(e);
+  } catch (error) {
+    logger.error(`IDAPI Error user read ${url}`, error);
+    return handleError(error as IDAPIError);
   }
 };
 
@@ -72,8 +78,28 @@ export const create = async (email: string, password: string, ip: string) => {
 
   try {
     return await idapiFetch(url, APIAddClientAccessToken(options, ip));
-  } catch (e) {
-    logger.error(`IDAPI Error user create ${url}`, e);
-    handleError(e);
+  } catch (error) {
+    logger.error(`IDAPI Error user create ${url}`, error);
+    handleError(error as IDAPIError);
+  }
+};
+
+export const resendAccountVerificationEmail = async (
+  email: string,
+  ip: string,
+  returnUrl: string,
+) => {
+  const url = '/user/send-account-verification-email';
+  const options = APIPostOptions({
+    'email-address': email,
+  });
+  try {
+    await idapiFetch(
+      addReturnUrlToPath(url, returnUrl),
+      APIAddClientAccessToken(options, ip),
+    );
+  } catch (error) {
+    logger.error(`IDAPI Error resend account verification email ${url}`, error);
+    return handleError(error as IDAPIError);
   }
 };

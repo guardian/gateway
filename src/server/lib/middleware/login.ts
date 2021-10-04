@@ -2,12 +2,12 @@ import { NextFunction, Request, Response } from 'express';
 import { joinUrl } from '@guardian/libs';
 import { read } from '@/server/lib/idapi/auth';
 import { IDAPIAuthRedirect, IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
-import { getConfiguration } from '@/server/lib/getConfiguration';
 import { getProfileUrl } from '@/server/lib/getProfileUrl';
 import { Routes } from '@/shared/model/Routes';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
-import { logger } from '../logger';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { logger } from '@/server/lib/logger';
 
 const profileUrl = getProfileUrl();
 

@@ -66,9 +66,9 @@ export const read = async (
         headers: { ...headers },
       })) as APIResponse,
     );
-  } catch (e) {
-    logger.error(`IDAPI Error auth read ${url}`, e);
-    return handleError(e);
+  } catch (error) {
+    logger.error(`IDAPI Error auth read ${url}`, error);
+    return handleError(error as IDAPIError);
   }
 };
 
@@ -89,9 +89,9 @@ export const authenticate = async (
       APIAddClientAccessToken(options, ip),
     );
     return response.cookies;
-  } catch (e) {
-    logger.error(`IDAPI Error auth authenticate ${url}`, e);
-    handleError(e);
+  } catch (error) {
+    logger.error(`IDAPI Error auth authenticate ${url}`, error);
+    handleError(error as IDAPIError);
   }
 };
 
@@ -109,7 +109,7 @@ export const exchangeAccessTokenForCookies = async (
       APIAddClientAccessToken(options, ip),
     );
     return response.cookies;
-  } catch (e) {
-    handleError(e);
+  } catch (error) {
+    handleError(error as IDAPIError);
   }
 };

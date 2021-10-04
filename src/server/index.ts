@@ -10,4 +10,5 @@ const server: Express = express();
 applyMiddleware(server);
 
 server.listen(port);
+server.set('trust proxy', true);
 logger.info(`server running on port ${port}`);

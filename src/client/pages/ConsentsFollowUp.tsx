@@ -337,7 +337,7 @@ export const ConsentsFollowUp = ({
               <input type="hidden" name={entity.id} value="" />
               <Checkbox value={entity.id} label="Yes, sign me up" />
             </CheckboxGroup>
-            <Button type="submit">Continue to The Guardian</Button>
+            <Button type="submit">Continue to the Guardian</Button>
           </div>
         </div>
         <CsrfFormField />

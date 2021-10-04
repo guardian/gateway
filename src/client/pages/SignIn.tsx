@@ -5,19 +5,22 @@ import { PageBody } from '@/client/components/PageBody';
 import { Main } from '@/client/layouts/Main';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
+import { PasswordInput } from '@/client/components/PasswordInput';
 import { Nav } from '@/client/components/Nav';
 import { TextInput } from '@guardian/src-text-input';
 import { Button } from '@guardian/src-button';
 import { Routes } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
-import { Divider } from '@/client/components/Divider';
 import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
 import { button, form, textInput } from '@/client/styles/Shared';
 import { Link } from '@guardian/src-link';
 import { textSans } from '@guardian/src-foundations/typography';
-import { ErrorSummary } from '@/client/components/ErrorSummary';
+import {
+  Divider,
+  ErrorSummary,
+} from '@guardian/source-react-components-development-kitchen';
 interface SignInProps {
   email?: string;
   queryString?: string;
@@ -67,14 +70,9 @@ export const SignIn = ({ queryString, errorSummary, email }: SignInProps) => (
               label="Email"
               name="email"
               type="email"
-              defaultValue={email}
+              value={email}
             />
-            <TextInput
-              css={textInput}
-              label="Password"
-              name="password"
-              type="password"
-            />
+            <PasswordInput label="Password" />
             <Links>
               <Link subdued={true} href="/reset">
                 Reset password

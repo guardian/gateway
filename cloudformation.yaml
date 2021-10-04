@@ -452,6 +452,53 @@ Resources:
     DependsOn:
       - TargetGroup
       - LoadBalancer
+  Alarm5XXSustained:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      ActionsEnabled: 'true'
+      AlarmName: !Sub '${App}-${Stage} sustained 5xx errors'
+      AlarmDescription: 'Sustained server errors detected'
+      AlarmActions:
+        - !Ref 'TopicSendEmail'
+      OKActions:
+        - !Ref 'TopicSendEmail'
+      InsufficientDataActions:
+        - !Ref 'TopicSendEmail'
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Threshold: 3
+      EvaluationPeriods: 5
+      TreatMissingData: notBreaching
+      Metrics:
+        - Id: total5XXCount
+          Expression: backend5XXCount + elb5XXCount
+          Label: 'Count of Backend AND ELB 5XX'
+        - Id: backend5XXCount
+          MetricStat:
+            Metric:
+              Namespace: AWS/ApplicationELB
+              MetricName: HTTPCode_Target_5XX_Count
+              Dimensions:
+                - Name: LoadBalancer
+                  Value: !GetAtt LoadBalancer.LoadBalancerFullName
+                - Name: TargetGroup
+                  Value: !GetAtt TargetGroup.TargetGroupFullName
+            Period: 60
+            Stat: Sum
+            Unit: Count
+          ReturnData: false
+        - Id: elb5XXCount
+          MetricStat:
+            Metric:
+              Namespace: AWS/ApplicationELB
+              MetricName: HTTPCode_ELB_5XX_Count
+              Dimensions:
+                - Name: LoadBalancer
+                  Value: !GetAtt LoadBalancer.LoadBalancerFullName
+            Period: 60
+            Stat: Sum
+            Unit: Count
+          ReturnData: false
   Alarm5XXHigh:
     Type: AWS::CloudWatch::Alarm
     Condition: IsProd
@@ -466,8 +513,8 @@ Resources:
       InsufficientDataActions:
         - !Ref 'TopicSendEmail'
       ComparisonOperator: GreaterThanOrEqualToThreshold
-      Threshold: 3
-      EvaluationPeriods: 2
+      Threshold: 30
+      EvaluationPeriods: 1
       TreatMissingData: notBreaching
       Metrics:
         - Id: total5XXCount

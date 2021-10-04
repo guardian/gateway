@@ -172,7 +172,7 @@ export const setAuthorizationStateCookie = (
       },
     );
   } catch (error) {
-    logger.warn(error);
+    logger.error(`setAuthorizationStateCookie Error`, error);
   }
 };
 
@@ -204,7 +204,7 @@ export const getAuthorizationStateCookie = (
 
     return null;
   } catch (error) {
-    logger.warn(error);
+    logger.error(`getAuthorizationStateCookie Error`, error);
     return null;
   }
 };

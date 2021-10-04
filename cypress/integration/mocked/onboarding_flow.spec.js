@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /// <reference types="cypress" />
-import { getEnvironmentVariable } from '../support/util';
-
 import {
   authRedirectSignInRecentlyEmailValidated,
   AUTH_REDIRECT_ENDPOINT,
-} from '../support/idapi/auth';
+} from '../../support/idapi/auth';
 import {
   allConsents,
   defaultUserConsent,
@@ -13,19 +11,19 @@ import {
   getUserConsents,
   CONSENTS_ENDPOINT,
   CONSENT_ERRORS,
-} from '../support/idapi/consent';
+} from '../../support/idapi/consent';
 import {
   verifiedUserWithNoConsent,
   createUser,
   USER_ERRORS,
   USER_ENDPOINT,
-} from '../support/idapi/user';
-import { setAuthCookies } from '../support/idapi/cookie';
-import CommunicationsPage from '../support/pages/onboarding/communications_page.js';
-import NewslettersPage from '../support/pages/onboarding/newsletters_page';
-import YourDataPage from '../support/pages/onboarding/your_data_page';
-import ReviewPage from '../support/pages/onboarding/review_page';
-import { injectAndCheckAxe } from '../support/cypress-axe';
+} from '../../support/idapi/user';
+import { setAuthCookies } from '../../support/idapi/cookie';
+import CommunicationsPage from '../../support/pages/onboarding/communications_page.js';
+import NewslettersPage from '../../support/pages/onboarding/newsletters_page';
+import YourDataPage from '../../support/pages/onboarding/your_data_page';
+import ReviewPage from '../../support/pages/onboarding/review_page';
+import { injectAndCheckAxe } from '../../support/cypress-axe';
 
 const {
   allNewsletters,
@@ -33,13 +31,13 @@ const {
   NEWSLETTER_ENDPOINT,
   NEWSLETTER_SUBSCRIPTION_ENDPOINT,
   NEWSLETTER_ERRORS,
-} = require('../support/idapi/newsletter');
-const Onboarding = require('../support/pages/onboarding/onboarding_page');
-const VerifyEmail = require('../support/pages/verify_email');
+} = require('../../support/idapi/newsletter');
+const Onboarding = require('../../support/pages/onboarding/onboarding_page');
+const VerifyEmail = require('../../support/pages/verify_email');
 const {
   getGeoLocationHeaders,
   GEOLOCATION_CODES,
-} = require('../support/geolocation');
+} = require('../../support/geolocation');
 
 const { NEWSLETTERS } = NewslettersPage.CONTENT;
 
@@ -261,9 +259,7 @@ describe('Onboarding flow', () => {
     });
 
     it('uses a default returnUrl if none provided', () => {
-      const returnUrl = encodeURIComponent(
-        getEnvironmentVariable('DEFAULT_RETURN_URI'),
-      );
+      const returnUrl = encodeURIComponent(Cypress.env('DEFAULT_RETURN_URI'));
 
       CommunicationsPage.gotoFlowStart();
 
@@ -303,7 +299,7 @@ describe('Onboarding flow', () => {
 
   context('Login middleware', () => {
     it('no sc_gu_u cookie, redirect to login page', () => {
-      const signInUrl = getEnvironmentVariable('SIGN_IN_PAGE_URL');
+      const signInUrl = Cypress.env('SIGN_IN_PAGE_URL');
       cy.setCookie('GU_U', 'FAKE_GU_U');
       cy.setCookie('SC_GU_LA', 'FAKE_SC_GU_LA');
 
@@ -317,7 +313,7 @@ describe('Onboarding flow', () => {
     });
 
     it('no sc_gu_la cookie, redirect to login page', () => {
-      const signInUrl = getEnvironmentVariable('SIGN_IN_PAGE_URL');
+      const signInUrl = Cypress.env('SIGN_IN_PAGE_URL');
       cy.setCookie('GU_U', 'FAKE_GU_U');
       cy.setCookie('SC_GU_U', 'FAKE_SC_GU_U');
 
@@ -387,7 +383,7 @@ describe('Onboarding flow', () => {
     });
 
     it('if missing redirect information, it redirects to the default ', () => {
-      const signInUrl = getEnvironmentVariable('SIGN_IN_PAGE_URL');
+      const signInUrl = Cypress.env('SIGN_IN_PAGE_URL');
       setAuthCookies();
       const emailNotValidatedResponse = {
         signInStatus: 'signedInNotRecently',
@@ -407,7 +403,7 @@ describe('Onboarding flow', () => {
     });
 
     it('on idapi error it redirects to the sign in page with the error flag set', () => {
-      const signInUrl = getEnvironmentVariable('SIGN_IN_PAGE_URL');
+      const signInUrl = Cypress.env('SIGN_IN_PAGE_URL');
       setAuthCookies();
       cy.mockAll(502, 'gateway error', AUTH_REDIRECT_ENDPOINT);
       cy.request({

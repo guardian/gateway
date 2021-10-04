@@ -12,7 +12,7 @@ export const allConsents = [
     isChannel: true,
     name: 'SMS',
     description:
-      "I would like to receive updates about The Guardian products and services I've selected above by SMS (text messages).",
+      "I would like to receive updates about the Guardian products and services I've selected above by SMS (text messages).",
   },
   {
     id: 'holidays',
@@ -28,7 +28,7 @@ export const allConsents = [
     isChannel: false,
     name: 'Market Research Optout',
     description:
-      'I do NOT wish to be contacted by The Guardian for market research purposes.',
+      'I do NOT wish to be contacted by the Guardian for market research purposes.',
   },
   {
     id: 'offers',
@@ -36,7 +36,7 @@ export const allConsents = [
     isChannel: false,
     name: 'Offers',
     description:
-      'Offers and competitions from The Guardian and other carefully selected and trusted partners that we think you might like. Don’t worry, we won’t share your personal information with them. Available in the UK, Aus and US.',
+      'Offers and competitions from the Guardian and other carefully selected and trusted partners that we think you might like. Don’t worry, we won’t share your personal information with them. Available in the UK, Aus and US.',
   },
   {
     id: 'post_optout',
@@ -44,7 +44,7 @@ export const allConsents = [
     isChannel: false,
     name: 'Post Optout',
     description:
-      'I do NOT wish to receive communications from The Guardian by post.',
+      'I do NOT wish to receive communications from the Guardian by post.',
   },
   {
     id: 'profiling_optout',
@@ -52,7 +52,7 @@ export const allConsents = [
     isChannel: false,
     name: 'Profiling Optout',
     description:
-      'I do NOT want The Guardian to use my personal data for marketing analysis.',
+      'I do NOT want the Guardian to use my personal data for marketing analysis.',
   },
   {
     id: 'phone_optout',
@@ -60,7 +60,7 @@ export const allConsents = [
     isChannel: true,
     name: 'Telephone Optout',
     description:
-      'I do NOT wish to receive communications from The Guardian by telephone.',
+      'I do NOT wish to receive communications from the Guardian by telephone.',
   },
   {
     id: 'supporter',
@@ -68,7 +68,7 @@ export const allConsents = [
     isChannel: false,
     name: 'Subscriptions, membership and contributions',
     description:
-      'News and offers from The Guardian, The Observer and Guardian Weekly, on the ways to read and support our journalism. Already a member, subscriber or contributor? Opt in here to receive your regular emails and updates.',
+      'News and offers from the Guardian, The Observer and Guardian Weekly, on the ways to read and support our journalism. Already a member, subscriber or contributor? Opt in here to receive your regular emails and updates.',
   },
   {
     id: 'jobs',

@@ -4,24 +4,24 @@ import { create as resetPassword } from '@/server/lib/idapi/resetPassword';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { Routes } from '@/shared/model/Routes';
-import { getEmailFromPlaySessionCookie } from '@/server/lib/playSessionCookie';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
-import { removeNoCache } from '@/server/lib/middleware/cache';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
+import { readEmailCookie, setGUEmailCookie } from '@/server/lib/emailCookie';
+import { RequestError } from '@/shared/lib/error';
 
 const router = Router();
 
 router.get(Routes.RESET, (req: Request, res: ResponseWithRequestState) => {
   let state = res.locals;
-  const emailFromPlaySession = getEmailFromPlaySessionCookie(req);
+  const email = readEmailCookie(req);
 
-  if (emailFromPlaySession) {
+  if (email) {
     state = deepmerge(state, {
       pageData: {
-        email: emailFromPlaySession,
+        email,
       },
     });
   }
@@ -44,9 +44,11 @@ router.post(
 
     try {
       await resetPassword(email, req.ip, returnUrl);
+
+      setGUEmailCookie(res, email);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      const { message, status } = error;
+      const { message, status } = error as RequestError;
 
       trackMetric(Metrics.SEND_PASSWORD_RESET_FAILURE);
 
@@ -65,24 +67,27 @@ router.post(
 
     trackMetric(Metrics.SEND_PASSWORD_RESET_SUCCESS);
 
-    const html = renderer(Routes.RESET_SENT, {
-      requestState: state,
-      pageTitle: PageTitle.RESET_SENT,
-    });
-    return res.type('html').send(html);
+    return res.redirect(303, Routes.RESET_SENT);
   }),
 );
 
-router.get(
-  Routes.RESET_SENT,
-  removeNoCache,
-  (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer(Routes.RESET_SENT, {
-      pageTitle: PageTitle.RESET_SENT,
-      requestState: res.locals,
-    });
-    res.type('html').send(html);
-  },
-);
+router.get(Routes.RESET_SENT, (req: Request, res: ResponseWithRequestState) => {
+  let state = res.locals;
+
+  const email = readEmailCookie(req);
+
+  state = deepmerge(state, {
+    pageData: {
+      email,
+      previousPage: Routes.RESET,
+    },
+  });
+
+  const html = renderer(Routes.RESET_SENT, {
+    pageTitle: PageTitle.EMAIL_SENT,
+    requestState: state,
+  });
+  res.type('html').send(html);
+});
 
 export default router;

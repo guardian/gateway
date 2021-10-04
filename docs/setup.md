@@ -123,6 +123,13 @@ Then to start the development server:
 $ make dev
 ```
 
+If you fancy running both dev commands in a tiled view you can run:
+
+```sh
+$ make dev-tile-v # vertical tiling
+$ make dev-tile-h # horizontal tiling
+```
+
 This adds the environment variables from the `.env` file and starts the development server.
 
 On the first run/ after removing the `build` folder, you may see errors in your console, this is because the `build` folder and project haven't finished compiling yet, just wait for a while for webpack to finish the bundling process.
@@ -162,12 +169,12 @@ First make sure that the development environment isn't running, since the follow
 You can then open the test runner using:
 
 ```sh
-$ make cypress
+$ make cypress-mocked
 # or
-$ ./cypress-open.sh
+$ ./cypress-mocked.sh
 ```
 
-To run the tests headless and automatically (how they are run on CI) use:
+To run the jest tests headless and automatically (how they are run on CI) use:
 
 ```sh
 $ make ci
