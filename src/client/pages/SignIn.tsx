@@ -15,10 +15,20 @@ import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
 import { Divider } from '@/client/components/Divider';
-import { button, form, textInput } from '@/client/styles/Shared';
+import { button, form } from '@/client/styles/Shared';
 import { Link } from '@guardian/src-link';
 import { textSans } from '@guardian/src-foundations/typography';
 import { gridItemSignIn } from '@/client/styles/Grid';
+import { space } from '@guardian/src-foundations';
+import { from } from '@guardian/src-foundations/mq';
+
+const passwordInput = css`
+  margin-top: ${space[2]}px;
+
+  ${from.mobileMedium} {
+    margin-top: ${space[3]}px;
+  }
+`;
 
 const Links = ({ children }: { children: React.ReactNode }) => (
   <p
@@ -63,8 +73,10 @@ export const SignIn = () => {
           action={`${Routes.SIGN_IN}${returnUrlQuery}`}
         >
           <CsrfFormField />
-          <TextInput css={textInput} label="Email" name="email" type="email" />
-          <PasswordInput label="Password" />
+          <TextInput label="Email" name="email" type="email" />
+          <div css={passwordInput}>
+            <PasswordInput label="Password" />
+          </div>
           <Links>
             <Link subdued={true} href="/reset">
               Reset password
