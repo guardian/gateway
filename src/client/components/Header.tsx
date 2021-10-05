@@ -5,26 +5,20 @@ import { from } from '@guardian/src-foundations/mq';
 import { Logo } from '@guardian/source-react-components-development-kitchen';
 import { gridRow, manualRow, SpanDefinition } from '@/client/styles/Grid';
 
-const bottomMarginStyles = css`
-  margin-bottom: ${space[6]}px;
-  ${from.tablet} {
-    margin-bottom: 18px;
-  }
-`;
-
-const topMarginStyles = css`
+const marginStyles = css`
   margin-top: ${space[5]}px;
+  margin-bottom: 21px;
+  margin-left: auto;
+  margin-right: auto;
   ${from.mobileMedium} {
     margin-top: 14px;
   }
   ${from.tablet} {
     margin-top: ${space[2]}px;
   }
-`;
-
-const sideMarginStyles = css`
-  margin-left: auto;
-  margin-right: auto;
+  ${from.desktop} {
+    margin-bottom: 15px;
+  }
 `;
 
 const backgroundColor = css`
@@ -56,7 +50,7 @@ const headerSpanDefinition: SpanDefinition = {
 
 export const Header = () => (
   <header id="top" css={backgroundColor}>
-    <div css={[gridRow, topMarginStyles, bottomMarginStyles, sideMarginStyles]}>
+    <div css={[gridRow, marginStyles]}>
       <div css={[manualRow(1, headerSpanDefinition), headerGridRightToLeft]}>
         <Logo logoType="bestWebsite" />
       </div>
