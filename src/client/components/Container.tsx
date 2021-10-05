@@ -3,7 +3,6 @@ import { css } from '@emotion/react';
 import { Container as SourceContainer } from '@guardian/src-layout';
 import { brandLine } from '@guardian/src-foundations/palette';
 import { from } from '@guardian/src-foundations/mq';
-import { space } from '@guardian/src-foundations';
 
 type Props = {
   children: React.ReactNode; // Children are inserted inside the nested div of the section
@@ -16,9 +15,9 @@ type Props = {
 
 const sidePaddingStyles = css`
   > div {
-    padding-left: ${space[3]}px;
-    padding-right: ${space[3]}px;
-    ${from.tablet} {
+    padding-left: 10px;
+    padding-right: 10px;
+    ${from.mobileLandscape} {
       padding-left: 20px;
       padding-right: 20px;
     }
