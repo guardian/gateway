@@ -45,7 +45,7 @@ export const signInButton = css`
 const Links = ({ children }: { children: React.ReactNode }) => (
   <div
     css={css`
-      margin-top: 8px;
+      margin-top: ${space[2]}px;
     `}
   >
     {children}
