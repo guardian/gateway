@@ -6,7 +6,10 @@ import { Logo } from '@guardian/source-react-components-development-kitchen';
 import { gridRow, manualRow, SpanDefinition } from '@/client/styles/Grid';
 
 const bottomMarginStyles = css`
-  margin-bottom: ${space[4]}px;
+  margin-bottom: ${space[6]}px;
+  ${from.tablet} {
+    margin-bottom: 18px;
+  }
 `;
 
 const topMarginStyles = css`
