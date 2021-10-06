@@ -106,7 +106,7 @@
     "@guardian/ab-react": "^2.0.1",
     "@guardian/consent-management-platform": "^8.0.0",
     "@guardian/libs": "^3.3.0",
-    "@guardian/source-react-components-development-kitchen": "^0.0.4",
+    "@guardian/source-react-components-development-kitchen": "^0.0.7",
     "@guardian/src-accordion": "^3.9.0",
     "@guardian/src-brand": "^3.9.0",
     "@guardian/src-button": "^3.9.0",
