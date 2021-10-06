@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { getProfileUrl } from '@/server/lib/getProfileUrl';
 import { Routes } from '@/shared/model/Routes';
 import { Page } from '@/email/components/Page';
 import { Button } from '@/email/components/Button';
@@ -10,9 +9,11 @@ import { Text } from '@/email/components/Text';
 import { Link } from '@/email/components/Link';
 import { Footer } from '@/email/components/Footer';
 
-const profileUrl = getProfileUrl();
+interface Props {
+  profileUrl: string;
+}
 
-export const AccountExists = () => {
+export const AccountExists = ({ profileUrl }: Props) => {
   return (
     <Page>
       <Header />
