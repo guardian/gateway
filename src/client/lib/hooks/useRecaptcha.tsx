@@ -1,3 +1,4 @@
+import { loadScript } from '@guardian/libs';
 import React from 'react';
 
 export type RenderOptions = {
@@ -13,46 +14,47 @@ export const recaptchaReady = () =>
   typeof window.grecaptcha !== 'undefined' &&
   typeof window.grecaptcha.render === 'function';
 
-const useRecaptchaScript = (
-  url = 'https://www.google.com/recaptcha/api.js?render=explicit',
-) => {
+const useRecaptchaScript = (src: string) => {
   const [loaded, setLoaded] = React.useState(false);
+  const [error, setError] = React.useState(false);
 
+  // Only allow the recaptcha script to be added to the page and initialised once.
   React.useEffect(() => {
     const scriptExists =
       typeof document !== undefined &&
-      document.getElementById('g-captcha-script');
+      document.getElementById('g-captcha-script') !== null;
 
-    if (scriptExists || recaptchaReady()) {
+    // If the script has been loaded and the recaptcha window object exists, we have no need to continue.
+    if (scriptExists && recaptchaReady()) {
       setLoaded(true);
       return;
     }
-    const script = document.createElement('script');
 
-    script.setAttribute('src', url);
-
-    script.setAttribute('id', 'g-captcha-script');
-    script.setAttribute('async', '');
-    script.setAttribute('defer', '');
-
-    document.body.appendChild(script);
+    // loadScript will prevent scripts from the same src from being loaded twice.
+    const recaptchaScriptLoadPromise = loadScript(src, {
+      async: true,
+      defer: true,
+      id: 'g-captcha-script',
+    });
 
     const initialiseRecaptcha = () => {
+      // This is the first time the Google Recaptcha script has been added to the page.
+      // When the recaptcha script is first loaded, the `.ready` method lets us instantiate it.
       window.grecaptcha.ready(() => {
         if (recaptchaReady()) {
           setLoaded(true);
         }
       });
     };
-    script.addEventListener('load', initialiseRecaptcha);
 
-    return () => {
-      script.removeEventListener('load', initialiseRecaptcha);
-      document.body.removeChild(script);
-    };
+    recaptchaScriptLoadPromise
+      .then(initialiseRecaptcha)
+      .catch(() => setError(true));
   }, []);
+
   return {
     loaded,
+    error,
   };
 };
 
@@ -63,6 +65,8 @@ type UseRecaptcha = (
   renderElement: HTMLDivElement | string,
   // How the captcha check should display on the page.
   size?: 'invisible' | 'compact' | 'normal',
+  // The Google recaptcha script URI.
+  src?: string,
 ) => UseRecaptchaReturnValue;
 
 type UseRecaptchaReturnValue = {
@@ -91,42 +95,50 @@ type UseRecaptchaReturnValue = {
  * @see https://developers.google.com/recaptcha/docs/invisible
  *
  * @param siteKey Public recaptcha site key.
- * @param renderElement Element on the page to load recaptcha into.
- * @param size How the recaptcha check should display on the page.
- *    @default 'invisible'
+ * @param renderElement Element on the page to bind recaptcha to.
+ * @param size optional - How the recaptcha check should display on the page.
+ * @param src optional - The Google recaptcha script URI.
  * @returns Recaptcha check state.
  */
 const useRecaptcha: UseRecaptcha = (
   siteKey,
   renderElement,
   size = 'invisible',
+  src = 'https://www.google.com/recaptcha/api.js?render=explicit',
 ) => {
   const [token, setToken] = React.useState('');
   const [error, setError] = React.useState(false);
   const [expired, setExpired] = React.useState(false);
   const [widgetId, setWidgetId] = React.useState(0);
 
-  // We can't initialise recaptcha if no site key is provided.
-  if (siteKey === '') {
+  // We can't initialise recaptcha if no site key or render element is provided.
+  if (siteKey === '' || renderElement === '') {
     return {
       token,
-      error,
+      error: true,
       expired,
       widgetId,
       executeCaptcha: () => null,
     };
   }
 
-  const { loaded } = useRecaptchaScript();
+  const { loaded, error: scriptLoadError } = useRecaptchaScript(src);
+
+  // Check if an error occurs whilst loading the recaptcha script.
+  React.useEffect(() => {
+    if (scriptLoadError) {
+      setError(true);
+    }
+  }, [scriptLoadError]);
 
   React.useEffect(() => {
-    if (loaded && renderElement) {
+    if (loaded) {
       const widgetId = window.grecaptcha.render(renderElement, {
         sitekey: siteKey,
         size: size,
         callback: (token) => {
           setToken(token);
-          // Reset exception state when token successfully received.
+          // Reset error and expiration state when new token successfully received.
           setError(false);
           setExpired(false);
         },
