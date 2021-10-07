@@ -11,6 +11,8 @@ export default {
 } as Meta;
 
 export const Default = () => {
-  return renderMJML(<AccountExists />);
+  return renderMJML(
+    <AccountExists profileUrl="https://profile.theguardian.com" />,
+  );
 };
 Default.storyName = 'with defaults';
