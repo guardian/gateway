@@ -20,6 +20,7 @@ import { textSans } from '@guardian/src-foundations/typography';
 import { gridItemSignIn } from '@/client/styles/Grid';
 import { space } from '@guardian/src-foundations';
 import { from } from '@guardian/src-foundations/mq';
+import { topMargin } from '@/client/styles/Shared';
 
 const passwordInput = css`
   margin-top: ${space[2]}px;
@@ -80,7 +81,9 @@ export const SignIn = () => {
       <MainGrid gridSpanDefinition={gridItemSignIn}>
         <form method="post" action={`${Routes.SIGN_IN}${returnUrlQuery}`}>
           <CsrfFormField />
-          <TextInput label="Email" name="email" type="email" />
+          <div css={topMargin}>
+            <TextInput label="Email" name="email" type="email" />
+          </div>
           <div css={passwordInput}>
             <PasswordInput label="Password" />
           </div>

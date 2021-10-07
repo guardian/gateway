@@ -27,6 +27,16 @@ export const form = css`
   padding: ${space[2]}px 0px;
 `;
 
+export const topMargin = css`
+  margin-top: ${space[2]}px;
+  ${from.mobileMedium} {
+    margin-top: ${space[4]}px;
+  }
+  ${from.tablet} {
+    margin-top: ${space[6]}px;
+  }
+`;
+
 export const maxWidth = css`
   ${from.tablet} {
     max-width: ${MAX_WIDTH.TABLET}px;
