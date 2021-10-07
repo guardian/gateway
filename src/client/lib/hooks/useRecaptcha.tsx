@@ -143,8 +143,8 @@ const useRecaptcha: UseRecaptcha = (
           setExpired(false);
         },
         // Exception callbacks below are called with undefined when a recaptcha error has occured.
-        'error-callback': (val) => setError(val === undefined),
-        'expired-callback': (val) => setExpired(val === undefined),
+        'error-callback': () => setError(true),
+        'expired-callback': () => setError(true),
       });
       setWidgetId(widgetId);
     }
