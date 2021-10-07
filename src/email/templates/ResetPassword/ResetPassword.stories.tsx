@@ -11,6 +11,8 @@ export default {
 } as Meta;
 
 export const Default = () => {
-  return renderMJML(<ResetPassword />);
+  return renderMJML(
+    <ResetPassword profileUrl="https://profile.theguardian.com" />,
+  );
 };
 Default.storyName = 'with defaults';

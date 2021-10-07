@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { getProfileUrl } from '@/server/lib/getProfileUrl';
 import { Routes } from '@/shared/model/Routes';
 import { Page } from '@/email/components/Page';
 import { Button } from '@/email/components/Button';
@@ -9,9 +8,11 @@ import { SubHeader } from '@/email/components/SubHeader';
 import { Text } from '@/email/components/Text';
 import { Footer } from '@/email/components/Footer';
 
-const profileUrl = getProfileUrl();
+interface Props {
+  profileUrl: string;
+}
 
-export const ResetPassword = () => {
+export const ResetPassword = ({ profileUrl }: Props) => {
   return (
     <Page>
       <Header />
