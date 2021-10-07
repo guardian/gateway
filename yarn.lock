@@ -1625,8 +1625,8 @@
   resolved "https://registry.yarnpkg.com/@guardian/source-react-components-development-kitchen/-/source-react-components-development-kitchen-0.0.7.tgz#05e997476d602937d185005364ccd9b83b5341c7"
   integrity sha512-K0ttH2btFDJsR/Pv+EuQq8gPP0riqJck9d48PQ53sU9omFdTsfzwQRxeL3z7p3UNnJnxZrn2Tsc7BqMvcW0soA==
   dependencies:
-    "@guardian/src-button" "^3.9.0"
-    "@guardian/src-helpers" "^3.9.0"
+    "@guardian/src-button" "^3.9.1"
+    "@guardian/src-helpers" "^3.9.1"
 
 "@guardian/src-accordion@^3.9.1":
   version "3.9.1"
