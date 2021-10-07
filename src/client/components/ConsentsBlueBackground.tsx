@@ -28,6 +28,10 @@ const height100 = css`
 `;
 
 const flex = css`
+  /* Allow this element to act as flex container,
+   so that children can flex */
+  display: flex;
+  /* Allow this element to grow to the parent flex container */
   flex: 1 1 auto;
 `;
 
