@@ -16,12 +16,15 @@ import { from } from '@guardian/src-foundations/mq';
 import { MainGrid } from '../layouts/MainGrid';
 import { gridItemSignInAndRegistration } from '../styles/Grid';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
+import { CaptchaErrors } from '@/shared/model/Errors';
+import useRecaptcha from '../lib/hooks/useRecaptcha';
 
 type Props = {
   returnUrl?: string;
   email?: string;
   refValue?: string;
   refViewId?: string;
+  recaptchaSiteKey?: string;
 };
 
 const registerButton = css`
@@ -54,6 +57,7 @@ export const Registration = ({
   refValue = '',
   refViewId = '',
   email = '',
+  recaptchaSiteKey = '',
 }: Props) => {
   const returnUrlQuery = `returnUrl=${encodeURIComponent(returnUrl)}`;
   const refUrlQuery = `ref=${encodeURIComponent(refValue)}`;
@@ -66,6 +70,30 @@ export const Registration = ({
   const registrationUrlQueryParamString = registrationUrlQueryParams
     .filter((param) => param !== '')
     .join('&');
+
+  const registerFormRef = React.createRef<HTMLFormElement>();
+  const recaptchaElementRef = React.useRef<HTMLDivElement>(null);
+  const captchaElement = recaptchaElementRef.current ?? 'register-recaptcha';
+
+  const { token, error, expired, executeCaptcha } = useRecaptcha(
+    recaptchaSiteKey,
+    captchaElement,
+  );
+
+  const recaptchaCheckSuccessful = !error && !expired;
+
+  // Form is only submitted when a valid recaptcha token is returned.
+  React.useEffect(() => {
+    const registerFormElement = registerFormRef.current;
+    if (token) {
+      registerFormElement?.submit();
+    }
+  }, [token]);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    executeCaptcha();
+  };
 
   return (
     <>
@@ -84,10 +112,17 @@ export const Registration = ({
           },
         ]}
       />
-      <MainGrid gridSpanDefinition={gridItemSignInAndRegistration}>
+      <MainGrid
+        gridSpanDefinition={gridItemSignInAndRegistration}
+        errorOverride={
+          recaptchaCheckSuccessful ? undefined : CaptchaErrors.GENERIC
+        }
+      >
         <form
           method="post"
           action={`${Routes.REGISTRATION}?${registrationUrlQueryParamString}`}
+          ref={registerFormRef}
+          onSubmit={handleSubmit}
         >
           <CsrfFormField />
           <div css={topMargin}>

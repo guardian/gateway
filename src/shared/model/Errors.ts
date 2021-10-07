@@ -65,3 +65,7 @@ export enum ConsentsErrors {
 export enum CsrfErrors {
   CSRF_ERROR = 'Sorry, something went wrong. If you made any changes these might have not been saved. Please try again.',
 }
+
+export enum CaptchaErrors {
+  GENERIC = 'There was a problem with the captcha process. You may find disabling your browser plugins, ensuring JavaScript is enabled or updating your browser will resolve this issue.',
+}
