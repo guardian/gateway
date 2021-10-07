@@ -7795,11 +7795,6 @@ expect@^27.2.4:
     jest-message-util "^27.2.4"
     jest-regex-util "^27.0.6"
 
-express-recaptcha@^5.0.2:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/express-recaptcha/-/express-recaptcha-5.0.2.tgz#17de212c165489462ab85e1e07c4ea81661d5e5f"
-  integrity sha512-111xDDJo1HPVwcU+hG1X3vOzRFWx/Yp9pyQ7qOVjkSfRXh2qeU9tLo1I0HBa1oLrB8rQlyxLUI9XXP5iUePnnw==
-
 express@^4.17.1:
   version "4.17.1"
   resolved "https://registry.yarnpkg.com/express/-/express-4.17.1.tgz#4491fc38605cf51f8629d39c2b5d026f98a4c134"
