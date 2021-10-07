@@ -97,7 +97,7 @@ test('should expect an empty token on successful initial load of useRecaptcha', 
   windowSpy.mockRestore();
 });
 
-test('should receive a valid token back when the recaptcha check is successful', async () => {
+test('should receive a valid token back when the reCAPTCHA check is successful', async () => {
   // Mock the Google Recaptcha object
   const windowSpy = jest.spyOn(global.window, 'grecaptcha', 'get');
   const mockedGrecaptchaRender = jest.fn().mockReturnValue(0);
@@ -134,7 +134,8 @@ test('should receive a valid token back when the recaptcha check is successful',
 
   // Request a token from recaptcha.
   act(() => {
-    result.current.executeCaptcha();
+    const captchaExecutionResult = result.current.executeCaptcha();
+    expect(captchaExecutionResult).toBe(true);
   });
 
   // Check that the recaptcha render method was called.
@@ -156,7 +157,20 @@ test('should receive a valid token back when the recaptcha check is successful',
   windowSpy.mockRestore();
 });
 
-test('should receive an error back when the recaptcha check is unsuccessful', async () => {
+test('should not be able to execute a call to reCAPTCHA if the script has not loaded yet', async () => {
+  // Begin test.
+  const { result } = renderHook(() =>
+    useRecaptcha('public-recaptcha-token', 'render-element'),
+  );
+
+  // Request a token from recaptcha.
+  act(() => {
+    const recaptchaExecutionResult = result.current.executeCaptcha();
+    expect(recaptchaExecutionResult).toBe(false);
+  });
+});
+
+test('should receive an error back when the reCAPTCHA check is unsuccessful', async () => {
   // Mock the Google Recaptcha object and methods.
   const windowSpy = jest.spyOn(global.window, 'grecaptcha', 'get');
 
@@ -216,7 +230,7 @@ test('should receive an error back when the recaptcha check is unsuccessful', as
   windowSpy.mockRestore();
 });
 
-test('should not load and intialise the google recaptcha script again if the hook is used twice', async () => {
+test('should not load and intialise the Google reCAPTCHA script again if the hook is used twice', async () => {
   // Begin test.
   // Mock the Google Recaptcha object
   const windowSpy = jest.spyOn(global.window, 'grecaptcha', 'get');
@@ -283,7 +297,7 @@ test('should not load and intialise the google recaptcha script again if the hoo
   windowSpy.mockRestore();
 });
 
-test('should expect an error state when the google recaptcha script fails to load', async () => {
+test('should expect an error state when the Google reCAPTCHA script fails to load', async () => {
   // Mock the Google Recaptcha object
   const windowSpy = jest.spyOn(global.window, 'grecaptcha', 'get');
   const mockedGrecaptchaRender = jest.fn().mockReturnValue(0);
@@ -330,7 +344,7 @@ test('should expect an error state when no renderElement is provided', async () 
   expect(result.current.error).toBe(true);
 });
 
-test('should try again successfully after an unsuccessful recaptcha check and receive a valid token on the second attempt', async () => {
+test('should try again successfully after an unsuccessful reCAPTCHA check and receive a valid token on the second attempt', async () => {
   // Mock the Google Recaptcha object and methods.
   const windowSpy = jest.spyOn(global.window, 'grecaptcha', 'get');
 

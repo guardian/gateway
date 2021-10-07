@@ -18,13 +18,13 @@ const useRecaptchaScript = (src: string) => {
   const [loaded, setLoaded] = React.useState(false);
   const [error, setError] = React.useState(false);
 
-  // Only allow the recaptcha script to be added to the page and initialised once.
+  // Only allow the reCAPTCHA script to be added to the page and initialised once.
   React.useEffect(() => {
     const scriptExists =
       typeof document !== undefined &&
       document.getElementById('g-captcha-script') !== null;
 
-    // If the script has been loaded and the recaptcha window object exists, we have no need to continue.
+    // If the script has been loaded and the reCAPTCHA window object exists, we have no need to continue.
     if (scriptExists && recaptchaReady()) {
       setLoaded(true);
       return;
@@ -38,7 +38,7 @@ const useRecaptchaScript = (src: string) => {
     });
 
     const initialiseRecaptcha = () => {
-      // This is the first time the Google Recaptcha script has been added to the page.
+      // This is the first time the Google reCAPTCHA script has been added to the page.
       // When the recaptcha script is first loaded, the `.ready` method lets us instantiate it.
       window.grecaptcha.ready(() => {
         if (recaptchaReady()) {
@@ -61,44 +61,45 @@ const useRecaptchaScript = (src: string) => {
 type UseRecaptcha = (
   // Public recaptcha site key.
   siteKey: string,
-  // Element on the page to load recaptcha into.
+  // Element on the page to load reCAPTCHA into.
   renderElement: HTMLDivElement | string,
-  // How the captcha check should display on the page.
+  // How the reCAPTCHA check should display on the page.
   size?: 'invisible' | 'compact' | 'normal',
-  // The Google recaptcha script URI.
+  // The Google reCAPTCHA script URI.
   src?: string,
 ) => UseRecaptchaReturnValue;
 
 type UseRecaptchaReturnValue = {
-  // Token returned from Google recaptcha upon a successful request.
+  // Token returned from Google reCAPTCHA upon a successful request.
   // Initial value: ''
   token: string;
-  // Error state of the recaptcha request. Set to true upon error callback.
+  // Error state of the reCAPTCHA request. Set to true upon error callback.
   // Initial value `false`.
   error: boolean;
-  // Token expired state of the recaptcha request. Set to true upon expired token callback.
+  // Token expired state of the reCAPTCHA request. Set to true upon expired token callback.
   // Initial value `false`.
   expired: boolean;
-  // A shorthand way to refer to the `renderElement` assigned by the recaptcha library.
+  // A shorthand way to refer to the `renderElement` assigned by the reCAPTCHA library.
   // Initial value: 0
   widgetId: number;
-  // Ask Google recaptcha for a token and update the token and error state.
+  // Ask Google reCAPTCHA for a token and update the token and error state.
   // If successful, `token` is set and `error` + `expired` are reset to false.
+  // Returns a bool to indicate whether `grecaptcha.execute` was called successfully.
   executeCaptcha: () => void;
 };
 
 /**
  * Helper hook for Google Recaptcha v2.
  *
- * Provides a simple way to set up and call the recaptcha service when a form validation token is required.
+ * Provides a simple way to set up and call the reCAPTCHA service when a form validation token is required.
  *
  * @see https://developers.google.com/recaptcha/docs/invisible
  *
- * @param siteKey Public recaptcha site key.
- * @param renderElement Element on the page to bind recaptcha to.
- * @param size optional - How the recaptcha check should display on the page.
+ * @param siteKey Public reCAPTCHA site key.
+ * @param renderElement Element on the page to bind reCAPTCHA to.
+ * @param size optional - How the reCAPTCHA check should display on the page.
  * @param src optional - The Google recaptcha script URI.
- * @returns Recaptcha check state.
+ * @returns reCAPTCHA check state.
  */
 const useRecaptcha: UseRecaptcha = (
   siteKey,
@@ -144,17 +145,20 @@ const useRecaptcha: UseRecaptcha = (
         },
         // Exception callbacks below are called with undefined when a recaptcha error has occured.
         'error-callback': () => setError(true),
-        'expired-callback': () => setError(true),
+        'expired-callback': () => setExpired(true),
       });
       setWidgetId(widgetId);
     }
   }, [loaded]);
 
   const executeCaptcha = React.useCallback(() => {
-    if (recaptchaReady()) {
-      window.grecaptcha.reset(widgetId);
-      window.grecaptcha.execute(widgetId);
+    if (!recaptchaReady()) {
+      return false;
     }
+    window.grecaptcha.reset(widgetId);
+    window.grecaptcha.execute(widgetId);
+
+    return true;
   }, [widgetId]);
 
   return {
