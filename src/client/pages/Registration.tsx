@@ -14,6 +14,7 @@ import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
 import { button, form, textInput } from '@/client/styles/Shared';
 import { Divider } from '@guardian/source-react-components-development-kitchen/';
+import { css } from '@emotion/react';
 
 type Props = {
   returnUrl?: string;
@@ -81,9 +82,28 @@ export const Registration = ({
               size="full"
               spaceAbove="loose"
               displayText="or continue with"
+              cssOverrides={css`
+                :before {
+                  margin-left: 0;
+                }
+                :after {
+                  margin-right: 0;
+                }
+              `}
             />
             <SocialButtons returnUrl={returnUrl} />
-            <Divider size="full" spaceAbove="tight" />
+            <Divider
+              size="full"
+              spaceAbove="tight"
+              cssOverrides={css`
+                :before {
+                  margin-left: 0;
+                }
+                :after {
+                  margin-right: 0;
+                }
+              `}
+            />
             <Terms />
           </PageBody>
         </PageBox>
