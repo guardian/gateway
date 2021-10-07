@@ -1,5 +1,7 @@
 /// <reference types="@emotion/react/types/css-prop" />
 
+import { RenderOptions } from '@/client/lib/hooks/useRecaptcha';
+
 declare global {
   /*
    * Here, declare things that go in the global namespace, or augment
@@ -15,6 +17,15 @@ declare global {
     };
     Cypress: unknown;
     ga: unknown;
+    grecaptcha: {
+      ready: (readyCallback: () => void) => void;
+      reset: (element: number) => void;
+      execute: (element: number) => void;
+      render: (
+        element: HTMLDivElement | string,
+        options: RenderOptions,
+      ) => number;
+    };
   }
 }
 
