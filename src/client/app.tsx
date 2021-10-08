@@ -43,6 +43,11 @@ export const App = (props: ClientState) => {
           * {
             box-sizing: border-box;
           }
+          // Badge is hidden for Gateway, because we're using
+          // the legal text to do this job
+          .grecaptcha-badge {
+            visibility: hidden;
+          }
         `}
       />
       <ClientStateProvider clientState={props}>
