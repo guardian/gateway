@@ -43,7 +43,7 @@
     "@storybook/addon-actions": "^6.3.9",
     "@storybook/addon-essentials": "^6.3.9",
     "@storybook/addon-links": "^6.3.9",
-    "@storybook/react": "^6.3.9",
+    "@storybook/react": "^6.3.10",
     "@testing-library/react": "^12.1.2",
     "@testing-library/react-hooks": "^7.0.2",
     "@types/compression": "^1.7.2",
