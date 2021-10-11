@@ -3,6 +3,13 @@
 import { injectAndCheckAxe } from '../../support/cypress-axe';
 
 describe('Password change flow', () => {
+  const fakeValidationRespone = (expiryTimestamp) => ({
+    user: {
+      primaryEmailAddress: 'name@example.com',
+    },
+    expiryTimestamp,
+  });
+
   const fakeSuccessResponse = {
     cookies: {
       values: [
@@ -98,6 +105,12 @@ describe('Password change flow', () => {
       cy.visit(`/reset-password/fake_token`);
       cy.contains('Link expired');
     });
+
+    it('shows the session time out page if the token expires while on the set password page', () => {
+      cy.mockNext(200, fakeValidationRespone(Date.now() + 1000));
+      cy.visit(`/reset-password/fake_token`);
+      cy.contains('Session timed out');
+    });
   });
 
   context('Password exists in breach dataset', () => {
@@ -141,6 +154,14 @@ describe('Password change flow', () => {
       cy.visit(`/reset-password/fake_token`);
       cy.get('button[type="submit"]').click();
       cy.get('input[name="password"]:invalid').should('have.length', 1);
+    });
+  });
+
+  context('Email shown on page', () => {
+    it('shows the users email address on the page', () => {
+      cy.mockNext(200, fakeValidationRespone());
+      cy.visit(`/reset-password/fake_token`);
+      cy.contains(fakeValidationRespone().user.primaryEmailAddress);
     });
   });
 

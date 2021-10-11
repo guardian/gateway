@@ -20,7 +20,9 @@ import { SignInPage } from '@/client/pages/SignInPage';
 import { MagicLinkPage } from '@/client/pages/MagicLinkPage';
 import { WelcomePage } from '@/client/pages/WelcomePage';
 import { WelcomeResendPage } from '@/client/pages/WelcomeResend';
-import { RegistrationEmailSentPage } from './pages/RegistrationEmailSentPage';
+import { RegistrationEmailSentPage } from '@/client/pages/RegistrationEmailSentPage';
+import { ResetPasswordSessionExpiredPage } from '@/client/pages/ResetPasswordSessionExpiredPage';
+import { WelcomeSessionExpiredPage } from '@/client/pages/WelcomeSessionExpiredPage';
 
 export type RoutingConfig = {
   clientState: ClientState;
@@ -56,6 +58,9 @@ export const GatewayRoutes = () => (
     <Route exact path={`${Routes.RESET}${Routes.RESEND}`}>
       <ResendPasswordPage />
     </Route>
+    <Route exact path={`${Routes.RESET}${Routes.EXPIRED}`}>
+      <ResetPasswordSessionExpiredPage />
+    </Route>
     <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_DATA}`}>
       <ConsentsDataPage />
     </Route>
@@ -70,6 +75,9 @@ export const GatewayRoutes = () => (
     </Route>
     <Route exact path={`${Routes.WELCOME}${Routes.RESEND}`}>
       <WelcomeResendPage />
+    </Route>
+    <Route exact path={`${Routes.WELCOME}${Routes.EXPIRED}`}>
+      <WelcomeSessionExpiredPage />
     </Route>
     <Route exact path={`${Routes.WELCOME_SENT}`}>
       <EmailSentPage />

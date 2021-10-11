@@ -46,10 +46,16 @@ export const checkResetPasswordTokenController = (
     const { token } = req.params;
 
     try {
+      const { email, tokenExpiryTimestamp } = await validateToken(
+        token,
+        req.ip,
+      );
+
       state = deepmerge(state, {
         pageData: {
           browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
-          email: await validateToken(token, req.ip),
+          email,
+          tokenExpiryTimestamp,
         },
       });
 
@@ -93,9 +99,15 @@ export const setPasswordTokenController = (
       const fieldErrors = validatePasswordField(password);
 
       if (fieldErrors.length) {
+        const { email, tokenExpiryTimestamp } = await validateToken(
+          token,
+          req.ip,
+        );
+
         state = deepmerge(state, {
           pageData: {
-            email: await validateToken(token, req.ip),
+            email,
+            tokenExpiryTimestamp,
             fieldErrors,
           },
         });
@@ -132,10 +144,16 @@ export const setPasswordTokenController = (
       // we unfortunatley need this inner try catch block to catch
       // errors from the `validateToken` method were it to fail
       try {
+        const { email, tokenExpiryTimestamp } = await validateToken(
+          token,
+          req.ip,
+        );
+
         if (field) {
           state = deepmerge(state, {
             pageData: {
-              email: await validateToken(token, req.ip),
+              email,
+              tokenExpiryTimestamp,
               fieldErrors: [
                 {
                   field,
@@ -147,7 +165,8 @@ export const setPasswordTokenController = (
         } else {
           state = deepmerge(state, {
             pageData: {
-              email: await validateToken(token, req.ip),
+              email,
+              tokenExpiryTimestamp,
             },
             globalMessage: {
               error: message,

@@ -32,6 +32,9 @@ export interface PageData {
   consents?: Consent[];
   page?: string;
   previousPage?: string;
+
+  // reset password token specific
+  tokenExpiryTimestamp?: number;
 }
 
 export interface ClientHosts {

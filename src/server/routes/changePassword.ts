@@ -60,4 +60,15 @@ router.get(
   },
 );
 
+router.get(
+  `${Routes.RESET}${Routes.EXPIRED}`,
+  (_: Request, res: ResponseWithRequestState) => {
+    const html = renderer(`${Routes.RESET}${Routes.EXPIRED}`, {
+      pageTitle: PageTitle.RESET_RESEND,
+      requestState: res.locals,
+    });
+    res.type('html').send(html);
+  },
+);
+
 export default router;
