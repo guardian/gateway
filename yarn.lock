@@ -1620,13 +1620,13 @@
     yaml "^1.7.2"
     yargs "^15.4.1"
 
-"@guardian/source-react-components-development-kitchen@^0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@guardian/source-react-components-development-kitchen/-/source-react-components-development-kitchen-0.0.7.tgz#05e997476d602937d185005364ccd9b83b5341c7"
-  integrity sha512-K0ttH2btFDJsR/Pv+EuQq8gPP0riqJck9d48PQ53sU9omFdTsfzwQRxeL3z7p3UNnJnxZrn2Tsc7BqMvcW0soA==
+"@guardian/source-react-components-development-kitchen@^0.0.11":
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/@guardian/source-react-components-development-kitchen/-/source-react-components-development-kitchen-0.0.11.tgz#5af3fccb3593cc0eb04241f215817d6b51561932"
+  integrity sha512-2+ue0ssO2rqqoC2LPEOrumRTbMPifJxi8+y3tnkqQJXTmY+n5O/dxYMq7I8ji4BY6ujshJaf/asca6f3UEgX+Q==
   dependencies:
-    "@guardian/src-button" "^3.9.0"
-    "@guardian/src-helpers" "^3.9.0"
+    "@guardian/src-button" "^3.9.1"
+    "@guardian/src-helpers" "^3.9.1"
 
 "@guardian/src-accordion@^3.9.1":
   version "3.9.1"
@@ -1640,13 +1640,6 @@
   version "3.9.1"
   resolved "https://registry.yarnpkg.com/@guardian/src-brand/-/src-brand-3.9.1.tgz#f7b635800ba2c8802e50fb29f6989b4a3c86450a"
   integrity sha512-l2F2M/QaNqAe1SVXxTxse/diinlXLDv1kjkEr8M9XWJ84oExUHKxPGoeX7pl3/LQOyPznn/HTxpG9gWZJwolbA==
-
-"@guardian/src-button@^3.9.0":
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/@guardian/src-button/-/src-button-3.9.0.tgz#566a6d1b559c7bf6fed60fc7b6cb5a53b270246e"
-  integrity sha512-8li8HJjAT0Yo07bDnSIulnLcDfo9U+zrEin60opMWt4viokDSndxDTH43n0h9590XxxKBpe94rSSHCaWhEecQg==
-  dependencies:
-    "@guardian/src-helpers" "^3.9.0"
 
 "@guardian/src-button@^3.9.1":
   version "3.9.1"
@@ -1664,23 +1657,10 @@
     "@guardian/src-label" "^3.9.1"
     "@guardian/src-user-feedback" "^3.9.1"
 
-"@guardian/src-foundations@^3.9.0":
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/@guardian/src-foundations/-/src-foundations-3.9.0.tgz#573cc294ff607698941f90e544826f598fd66fad"
-  integrity sha512-jc0tA10MFeJ/mXKFSQngF9CAQIpZVvUD3GI/qWlMyRUttjEBsYlEbvFddqsTz2GdFZxrzyERSfIVunNQ8jTQgA==
-
 "@guardian/src-foundations@^3.9.1":
   version "3.9.1"
   resolved "https://registry.yarnpkg.com/@guardian/src-foundations/-/src-foundations-3.9.1.tgz#3d378825b1e60c3193433289bae76044d36797a6"
   integrity sha512-rSeyPK0MWFloE+36TUg/Ffp7zLohF1GlAKHg4L02wZG49kHnCPeL6uULwTnV4Mfc5H9XKvDb9OBis2pbBeTHEA==
-
-"@guardian/src-helpers@^3.9.0":
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/@guardian/src-helpers/-/src-helpers-3.9.0.tgz#257b8d158aac28177fcfc0a1a5379c41733ab273"
-  integrity sha512-JjP31frx+E1cN8cajE8wC6eLxEFW0w8H5vOiPgXlYmSV0sWAtH4bqo/ohQBl+ra6RPYrReAbNDmMjJJ57m3lMQ==
-  dependencies:
-    "@guardian/src-foundations" "^3.9.0"
-    mini-svg-data-uri "^1.3.3"
 
 "@guardian/src-helpers@^3.9.1":
   version "3.9.1"
