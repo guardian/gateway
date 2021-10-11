@@ -16,6 +16,11 @@ type Props = {
 };
 
 const mainStyle = css`
+  display: flex;
+  flex: 1 1 auto;
+`;
+
+const gridStyle = css`
   margin: 0 auto;
 `;
 
@@ -31,13 +36,15 @@ export const MainGrid = ({
   const successMessage = success || successOverride;
 
   return (
-    <main css={[gridRow, mainStyle]}>
-      {subTitle && <SubHeader title={subTitle} />}
-      {successMessage && <GlobalSuccess success={successMessage} />}
-      <section css={gridItem(gridSpanDefinition)}>
-        {error && <ErrorSummary error={error} cssOverrides={topMargin} />}
-        {children}
-      </section>
+    <main css={mainStyle}>
+      <div css={[gridRow, gridStyle]}>
+        {subTitle && <SubHeader title={subTitle} />}
+        {successMessage && <GlobalSuccess success={successMessage} />}
+        <section css={gridItem(gridSpanDefinition)}>
+          {error && <ErrorSummary error={error} cssOverrides={topMargin} />}
+          {children}
+        </section>
+      </div>
     </main>
   );
 };
