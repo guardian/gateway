@@ -14,9 +14,6 @@ const Text = ({ children }: { children: React.ReactNode }) => (
       ${from.mobileMedium} {
         margin-bottom: 6px;
       }
-      ${from.tablet} {
-        margin-bottom: ${space[2]}px;
-      }
     `}
   >
     {children}
