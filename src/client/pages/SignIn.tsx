@@ -57,6 +57,9 @@ const Links = ({ children }: { children: React.ReactNode }) => (
   <div
     css={css`
       margin-top: ${space[2]}px;
+      ${from.tablet} {
+        margin-top: 6px;
+      }
     `}
   >
     {children}
