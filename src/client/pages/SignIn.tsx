@@ -18,7 +18,7 @@ import { Divider } from '@/client/components/Divider';
 import { Link } from '@guardian/src-link';
 import { textSans } from '@guardian/src-foundations/typography';
 import { gridItemSignIn } from '@/client/styles/Grid';
-import { space } from '@guardian/src-foundations';
+import { border, space } from '@guardian/src-foundations';
 import { from } from '@guardian/src-foundations/mq';
 import { topMargin } from '@/client/styles/Shared';
 
@@ -34,12 +34,22 @@ const resetPassword = css`
   ${textSans.small()}
 `;
 
-export const signInButton = css`
+const signInButton = css`
   width: 100%;
   justify-content: center;
   margin-top: ${space[5]}px;
   ${from.mobileMedium} {
     margin-top: ${space[6]}px;
+  }
+`;
+
+const divider = css`
+  :before,
+  :after {
+    content: '';
+    flex: 1 1;
+    border-bottom: 1px solid ${border.secondary};
+    margin: 8px;
   }
 `;
 
@@ -97,7 +107,12 @@ export const SignIn = () => {
             Sign in
           </Button>
         </form>
-        <Divider size="fit" spaceAbove="loose" displayText="or continue with" />
+        <Divider
+          size="fit"
+          spaceAbove="loose"
+          displayText="or continue with"
+          cssOverrides={divider}
+        />
         <SocialButtons returnUrl="todo" />
       </MainGrid>
       <Footer />
