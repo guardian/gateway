@@ -18,16 +18,23 @@ const containerStyles = css`
     flex-direction: row;
   }
   justify-content: center;
-  margin-top: ${space[12]}px;
-  margin-bottom: ${space[12]}px;
+  margin-top: ${space[5]}px;
+  ${from.mobileMedium} {
+    margin-top: ${space[6]}px;
+  }
+  margin-bottom: 60px;
+  ${from.desktop} {
+    margin-bottom: ${space[24]}px;
+  }
   width: 100%;
 `;
 
 const buttonOverrides = css`
   border-color: ${brand[400]};
-  justify-content: flex-end;
+  justify-content: center;
   ${from.mobileLandscape} {
     min-width: 145px;
+    flex-grow: 1;
   }
 `;
 
@@ -46,7 +53,7 @@ const Gap = () => (
       width: 0;
       height: ${space[3]}px;
       ${from.mobileLandscape} {
-        width: ${space[2]}px;
+        width: ${space[3]}px;
         height: 0;
       }
     `}
