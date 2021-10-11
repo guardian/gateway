@@ -32,6 +32,8 @@ export interface PageData {
   consents?: Consent[];
   page?: string;
   previousPage?: string;
+  ref?: string;
+  refViewId?: string;
 }
 
 export interface ClientHosts {

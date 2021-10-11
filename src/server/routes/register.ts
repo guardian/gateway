@@ -1,9 +1,5 @@
 import { Request, Router } from 'express';
-import { authenticate } from '@/server/lib/idapi/auth';
-import {
-  create,
-  resendAccountVerificationEmail,
-} from '@/server/lib/idapi/user';
+import { resendAccountVerificationEmail } from '@/server/lib/idapi/user';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { Routes } from '@/shared/model/Routes';
@@ -12,11 +8,13 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import deepmerge from 'deepmerge';
-import { setGUEmailCookie } from '@/server/lib/emailCookie';
+import { readGUEmailCookie, setGUEmailCookie } from '@/server/lib/emailCookie';
 import { getEmailFromPlaySessionCookie } from '../lib/playSessionCookie';
 import { RequestError } from '@/shared/lib/error';
+import { guest } from '../lib/idapi/guest';
+import { getConfiguration } from '../lib/getConfiguration';
+
 const router = Router();
 
 router.get(
@@ -37,7 +35,7 @@ router.get(
     const html = renderer(Routes.REGISTRATION_EMAIL_SENT, {
       requestState: deepmerge(state, {
         pageData: {
-          email: getEmailFromPlaySessionCookie(req),
+          email: getEmailFromPlaySessionCookie(req) || readGUEmailCookie(req),
         },
       }),
       pageTitle: PageTitle.REGISTRATION_EMAIL_SENT,
@@ -81,15 +79,17 @@ router.post(
     let state = res.locals;
 
     const { email = '' } = req.body;
-    const { password = '' } = req.body;
+    const { returnUrl, ref, refViewId } = state.queryParams;
+    const { stage } = getConfiguration();
 
-    const { returnUrl } = state.queryParams;
+    // Disable this endpoint on PROD until recaptcha integration is added.
+    if (stage === 'PROD') {
+      return res.status(403);
+    }
 
     try {
-      await create(email, password, req.ip);
-      // TODO: Can we remove this second call to get cookies for the user once we move over to Okta?
-      const cookies = await authenticate(email, password, req.ip);
-      setIDAPICookies(res, cookies);
+      await guest(email, req.ip, returnUrl, refViewId, ref);
+      setGUEmailCookie(res, email);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
       const { message, status } = error as RequestError;
@@ -114,7 +114,7 @@ router.post(
 
     trackMetric(Metrics.REGISTER_SUCCESS);
 
-    return res.redirect(303, returnUrl);
+    return res.redirect(303, Routes.REGISTRATION_EMAIL_SENT);
   }),
 );
 

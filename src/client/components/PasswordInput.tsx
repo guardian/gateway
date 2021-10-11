@@ -5,7 +5,6 @@ import { SvgEye, SvgEyeStrike } from '@guardian/src-icons';
 import { textInputDefault } from '@guardian/src-foundations/themes';
 import { neutral, space } from '@guardian/src-foundations';
 import { height } from '@guardian/src-foundations/size';
-import { textInput } from '@/client/styles/Shared';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 
@@ -36,7 +35,6 @@ const textInputBorderStyle = (error?: string) => css`
   bottom: 0px;
   width: 100%;
   height: ${height.inputMedium}px;
-  margin-bottom: ${space[3]}px;
   padding: 0 ${space[2]}px;
   pointer-events: none;
 `;
@@ -100,7 +98,7 @@ const EyeSymbol = ({
     height: 30px;
     position: absolute;
     right: 5px;
-    bottom: 19px;
+    bottom: 7px;
     border: none;
     background-color: transparent;
     cursor: pointer;
@@ -144,7 +142,6 @@ export const PasswordInput = ({
         label={label}
         name="password"
         supporting={supporting}
-        css={textInput}
         type={passwordVisible ? 'text' : 'password'}
         cssOverrides={[noBorder, paddingRight(isEyeDisplayedOnBrowser)]}
       />

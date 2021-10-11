@@ -64,6 +64,10 @@ const form = css`
   padding-top: ${space[3]}px;
 `;
 
+const passwordInput = css`
+  margin-bottom: ${space[3]}px;
+`;
+
 const TooLong = () => {
   return (
     <div css={messageWrapperStyles}>
@@ -260,15 +264,15 @@ export const PasswordForm = ({
       }}
     >
       <CsrfFormField />
-
-      <PasswordInput
-        error={error}
-        label={labelText}
-        onChange={(e) => {
-          setPassword(e.target.value);
-        }}
-      />
-
+      <div css={passwordInput}>
+        <PasswordInput
+          error={error}
+          label={labelText}
+          onChange={(e) => {
+            setPassword(e.target.value);
+          }}
+        />
+      </div>
       {!error && (
         <ValidationMessage
           isWeak={isWeak}

@@ -80,7 +80,7 @@ export const create = async (email: string, password: string, ip: string) => {
     return await idapiFetch(url, APIAddClientAccessToken(options, ip));
   } catch (error) {
     logger.error(`IDAPI Error user create ${url}`, error);
-    handleError(error as IDAPIError);
+    return handleError(error as IDAPIError);
   }
 };
 
