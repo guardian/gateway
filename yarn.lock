@@ -1504,10 +1504,10 @@
     "@guardian/src-label" "^3.9.0"
     "@guardian/src-user-feedback" "^3.9.0"
 
-"@guardian/src-foundations@^3.9.0":
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/@guardian/src-foundations/-/src-foundations-3.9.0.tgz#573cc294ff607698941f90e544826f598fd66fad"
-  integrity sha512-jc0tA10MFeJ/mXKFSQngF9CAQIpZVvUD3GI/qWlMyRUttjEBsYlEbvFddqsTz2GdFZxrzyERSfIVunNQ8jTQgA==
+"@guardian/src-foundations@^3.9.0", "@guardian/src-foundations@^3.9.1":
+  version "3.9.1"
+  resolved "https://registry.yarnpkg.com/@guardian/src-foundations/-/src-foundations-3.9.1.tgz#3d378825b1e60c3193433289bae76044d36797a6"
+  integrity sha512-rSeyPK0MWFloE+36TUg/Ffp7zLohF1GlAKHg4L02wZG49kHnCPeL6uULwTnV4Mfc5H9XKvDb9OBis2pbBeTHEA==
 
 "@guardian/src-helpers@^3.9.0":
   version "3.9.0"
