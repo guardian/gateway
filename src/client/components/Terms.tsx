@@ -46,6 +46,9 @@ const terms = css`
   ${from.mobileMedium} {
     margin-top: ${space[4]}px;
   }
+  ${from.tablet} {
+    margin-top: ${space[3]}px;
+  }
 `;
 
 export const Terms = () => (
