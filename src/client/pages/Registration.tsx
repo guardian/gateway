@@ -18,12 +18,27 @@ import { Divider } from '@guardian/source-react-components-development-kitchen/'
 type Props = {
   returnUrl?: string;
   email?: string;
+  refValue?: string;
+  refViewId?: string;
 };
 
-export const Registration = ({ returnUrl = '', email = '' }: Props) => {
-  const returnUrlQuery = returnUrl
-    ? `?returnUrl=${encodeURIComponent(returnUrl)}`
-    : '';
+export const Registration = ({
+  returnUrl = '',
+  refValue = '',
+  refViewId = '',
+  email = '',
+}: Props) => {
+  const returnUrlQuery = `returnUrl=${encodeURIComponent(returnUrl)}`;
+  const refUrlQuery = `ref=${encodeURIComponent(refValue)}`;
+  const refViewIdUrlQuery = `refViewId=${encodeURIComponent(refViewId)}`;
+  const registrationUrlQueryParams = [
+    returnUrl ? returnUrlQuery : '',
+    refValue ? refUrlQuery : '',
+    refViewId ? refViewIdUrlQuery : '',
+  ];
+  const registrationUrlQueryParamString = registrationUrlQueryParams
+    .filter((param) => param !== '')
+    .join('&');
 
   return (
     <>
@@ -48,7 +63,7 @@ export const Registration = ({ returnUrl = '', email = '' }: Props) => {
             <form
               css={form}
               method="post"
-              action={`${Routes.REGISTRATION}${returnUrlQuery}`}
+              action={`${Routes.REGISTRATION}?${registrationUrlQueryParamString}`}
             >
               <CsrfFormField />
               <TextInput
@@ -57,12 +72,6 @@ export const Registration = ({ returnUrl = '', email = '' }: Props) => {
                 name="email"
                 type="email"
                 defaultValue={email}
-              />
-              <TextInput
-                css={textInput}
-                label="Password"
-                name="password"
-                type="password"
               />
               <Button css={button} type="submit" data-cy="register-button">
                 Register
