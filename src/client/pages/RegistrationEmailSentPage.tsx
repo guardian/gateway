@@ -6,14 +6,17 @@ import { EmailSent } from '@/client/pages/EmailSent';
 export const RegistrationEmailSentPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { pageData = {} } = clientState;
-  const { email } = pageData;
+  const { email, ref: refValue, refViewId, returnUrl } = pageData;
 
   return (
     <EmailSent
       email={email}
-      subTitle={'Register'}
+      subTitle={"We've sent you an email"}
       previousPage={'/signin'}
       resendEmailAction={'/register/email-sent/resend'}
+      refValue={refValue}
+      refViewId={refViewId}
+      returnUrl={returnUrl}
     />
   );
 };
