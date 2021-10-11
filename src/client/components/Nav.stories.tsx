@@ -3,6 +3,8 @@ import { Meta } from '@storybook/react';
 
 import { Header } from './Header';
 import { Nav } from './Nav';
+import { getAutoRow, gridRow } from '../styles/Grid';
+import { css } from '@emotion/react';
 
 export default {
   title: 'Components/Nav',
@@ -108,3 +110,43 @@ NoBreakpoint.parameters = {
   },
   chromatic: { disable: true },
 };
+
+export const WithGrid = () => {
+  const autoRow = getAutoRow();
+
+  return (
+    <>
+      <Header />
+      <Nav
+        tabs={[
+          {
+            displayText: 'Sign in',
+            linkTo: '',
+            isActive: true,
+          },
+          {
+            displayText: 'Register',
+            linkTo: '',
+            isActive: false,
+          },
+        ]}
+      />
+      <div
+        css={[
+          gridRow,
+          css`
+            margin: 0 auto;
+          `,
+        ]}
+      >
+        <div css={[autoRow(), { backgroundColor: 'lightseagreen' }]}>
+          This is an item in a grid
+        </div>
+        <div css={[autoRow(), { backgroundColor: 'lightsteelblue' }]}>
+          This is another item in a grid, in another row
+        </div>
+      </div>
+    </>
+  );
+};
+WithGrid.storyName = 'with grid';
