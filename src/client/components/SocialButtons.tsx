@@ -64,22 +64,22 @@ export const SocialButtons = ({ returnUrl }: Props) => (
   <div css={containerStyles}>
     <LinkButton
       priority="tertiary"
-      cssOverrides={buttonOverrides}
-      icon={<SvgFacebookBrand />}
-      href={`https://oauth.theguardian.com/facebook/signin?returnUrl=${returnUrl}`}
-      data-cy="facebook-sign-in-button"
-    >
-      Facebook
-    </LinkButton>
-    <Gap />
-    <LinkButton
-      priority="tertiary"
       cssOverrides={[buttonOverrides, iconOverrides]}
       icon={<SvgGoogleBrand />}
       href={`https://oauth.theguardian.com/google/signin?returnUrl=${returnUrl}`}
       data-cy="google-sign-in-button"
     >
       Google
+    </LinkButton>
+    <Gap />
+    <LinkButton
+      priority="tertiary"
+      cssOverrides={buttonOverrides}
+      icon={<SvgFacebookBrand />}
+      href={`https://oauth.theguardian.com/facebook/signin?returnUrl=${returnUrl}`}
+      data-cy="facebook-sign-in-button"
+    >
+      Facebook
     </LinkButton>
     <Gap />
     <LinkButton
