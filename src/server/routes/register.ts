@@ -94,12 +94,6 @@ router.post(
 
     const { email = '' } = req.body;
     const { returnUrl, ref, refViewId } = state.queryParams;
-    const { stage } = getConfiguration();
-
-    // Disable this endpoint on PROD until recaptcha integration is added.
-    if (stage === 'PROD') {
-      return res.status(403);
-    }
 
     try {
       if (req.recaptcha?.error) {
