@@ -39,7 +39,7 @@ const signInButton = css`
   justify-content: center;
   margin-top: ${space[5]}px;
   ${from.mobileMedium} {
-    margin-top: ${space[6]}px;
+    margin-top: 16px;
   }
 `;
 
