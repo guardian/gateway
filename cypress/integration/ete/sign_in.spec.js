@@ -12,17 +12,15 @@ describe('Sign in flow', () => {
 
   it('links to the correct places', () => {
     cy.visit('/signin');
-    cy.contains('Terms of Service').should(
+    cy.contains('terms of service').should(
       'have.attr',
       'href',
       'https://policies.google.com/terms',
     );
-    cy.contains("Google's Privacy Policy").should(
-      'have.attr',
-      'href',
-      'https://policies.google.com/privacy',
-    );
-    cy.contains('Terms and Conditions').click();
+    cy.contains('Google privacy policy')
+      .children()
+      .should('have.attr', 'href', 'https://policies.google.com/privacy');
+    cy.contains('terms & conditions').click();
     cy.contains('Terms and conditions of use');
   });
 
@@ -46,12 +44,6 @@ describe('Sign in flow', () => {
     cy.visit('/signin');
     cy.contains('Reset password').click();
     cy.contains('Forgotten password');
-  });
-
-  it('navigates to magic link', () => {
-    cy.visit('/signin');
-    cy.contains('email me a link').click();
-    cy.contains('Link to sign in');
   });
 
   it('navigates to registration', () => {

@@ -2,9 +2,7 @@ import React, { useContext } from 'react';
 import { css } from '@emotion/react';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
-import { PageBox } from '@/client/components/PageBox';
-import { PageBody } from '@/client/components/PageBody';
-import { Main } from '@/client/layouts/Main';
+import { MainGrid } from '@/client/layouts/MainGrid';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { PasswordInput } from '@/client/components/PasswordInput';
@@ -16,20 +14,43 @@ import { PageTitle } from '@/shared/model/PageTitle';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
-import { button, form, textInput } from '@/client/styles/Shared';
+import { Divider } from '@/client/components/Divider';
 import { Link } from '@guardian/src-link';
 import { textSans } from '@guardian/src-foundations/typography';
-import { Divider } from '@guardian/source-react-components-development-kitchen';
+import { gridItemSignIn } from '@/client/styles/Grid';
+import { space } from '@guardian/src-foundations';
+import { from } from '@guardian/src-foundations/mq';
+import { topMargin } from '@/client/styles/Shared';
+
+const passwordInput = css`
+  margin-top: ${space[2]}px;
+
+  ${from.mobileMedium} {
+    margin-top: ${space[3]}px;
+  }
+`;
+
+const resetPassword = css`
+  ${textSans.small()}
+`;
+
+export const signInButton = css`
+  width: 100%;
+  justify-content: center;
+  margin-top: ${space[5]}px;
+  ${from.mobileMedium} {
+    margin-top: ${space[6]}px;
+  }
+`;
 
 const Links = ({ children }: { children: React.ReactNode }) => (
-  <p
+  <div
     css={css`
-      ${textSans.medium()}
-      margin-top: 0;
+      margin-top: ${space[2]}px;
     `}
   >
     {children}
-  </p>
+  </div>
 );
 
 export const SignIn = () => {
@@ -57,46 +78,28 @@ export const SignIn = () => {
           },
         ]}
       />
-      <Main>
-        <PageBox>
-          <PageBody>
-            <form
-              css={form}
-              method="post"
-              action={`${Routes.SIGN_IN}${returnUrlQuery}`}
-            >
-              <CsrfFormField />
-              <TextInput
-                css={textInput}
-                label="Email"
-                name="email"
-                type="email"
-              />
-              <PasswordInput label="Password" />
-              <Links>
-                <Link subdued={true} href="/reset">
-                  Reset password
-                </Link>{' '}
-                or{' '}
-                <Link subdued={true} href="/magic-link">
-                  email me a link to sign in
-                </Link>
-              </Links>
-              <Button css={button} type="submit" data-cy="sign-in-button">
-                Sign in
-              </Button>
-            </form>
-            <Divider
-              size="full"
-              spaceAbove="loose"
-              displayText="or continue with"
-            />
-            <SocialButtons returnUrl="todo" />
-            <Divider size="full" spaceAbove="tight" />
-            <Terms />
-          </PageBody>
-        </PageBox>
-      </Main>
+      <MainGrid gridSpanDefinition={gridItemSignIn}>
+        <form method="post" action={`${Routes.SIGN_IN}${returnUrlQuery}`}>
+          <CsrfFormField />
+          <div css={topMargin}>
+            <TextInput label="Email" name="email" type="email" />
+          </div>
+          <div css={passwordInput}>
+            <PasswordInput label="Password" />
+          </div>
+          <Links>
+            <Link subdued={true} href="/reset" cssOverrides={resetPassword}>
+              Reset password
+            </Link>
+          </Links>
+          <Terms />
+          <Button css={signInButton} type="submit" data-cy="sign-in-button">
+            Sign in
+          </Button>
+        </form>
+        <Divider size="fit" spaceAbove="loose" displayText="or continue with" />
+        <SocialButtons returnUrl="todo" />
+      </MainGrid>
       <Footer />
     </>
   );
