@@ -79,3 +79,24 @@ Cypress.Commands.add('setMvtId', (str) => {
     log: true,
   });
 });
+
+// Adds a command that allows you to emulate going offline.
+// Usage: `cy.network({ offline: true });`
+Cypress.Commands.addAll({
+  network: (options = {}) => {
+    Cypress.automation('remote:debugger:protocol', {
+      command: 'Network.enable',
+    });
+
+    Cypress.automation('remote:debugger:protocol', {
+      command: 'Network.emulateNetworkConditions',
+      params: {
+        offline: options.offline,
+        latency: 0,
+        downloadThroughput: 0,
+        uploadThroughput: 0,
+        connectionType: 'none',
+      },
+    });
+  },
+});
