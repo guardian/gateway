@@ -1468,10 +1468,10 @@
     yaml "^1.7.2"
     yargs "^15.4.1"
 
-"@guardian/source-react-components-development-kitchen@^0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@guardian/source-react-components-development-kitchen/-/source-react-components-development-kitchen-0.0.7.tgz#05e997476d602937d185005364ccd9b83b5341c7"
-  integrity sha512-K0ttH2btFDJsR/Pv+EuQq8gPP0riqJck9d48PQ53sU9omFdTsfzwQRxeL3z7p3UNnJnxZrn2Tsc7BqMvcW0soA==
+"@guardian/source-react-components-development-kitchen@^0.0.10":
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/@guardian/source-react-components-development-kitchen/-/source-react-components-development-kitchen-0.0.10.tgz#a16a393e62dd9f2416254d2757286e74589fc965"
+  integrity sha512-h3WeZQBpMoouHGh871LjRng7kRjtkK7bDt/5JC7NRojAtPFz7ReVLbw934Tc2Jbp/HdZWv9vW+LW9hvnjT0PWQ==
   dependencies:
     "@guardian/src-button" "^3.9.0"
     "@guardian/src-helpers" "^3.9.0"
