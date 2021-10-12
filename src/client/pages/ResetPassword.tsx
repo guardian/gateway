@@ -36,7 +36,12 @@ export const ResetPassword = ({
       <PageBox>
         <PageHeader>{headerText}</PageHeader>
         <PageBody>
-          <PageBodyText>{bodyText}</PageBodyText>
+          {bodyText
+            .split('\n')
+            .map(
+              (text, index) =>
+                text && <PageBodyText key={index}>{text}</PageBodyText>,
+            )}
           <form
             css={form}
             method="post"

@@ -14,7 +14,7 @@ export const WelcomeSessionExpiredPage = () => {
     <ResetPassword
       email={email}
       headerText="Session timed out"
-      bodyText="The link we send you was valid for 30 mins and has now expired. Please enter your email address below and we will send you another link to create a password"
+      bodyText={`The link we sent you was valid for 30 minutes and has now expired.\nPlease enter your email address below and we will send you another link.`}
       buttonText="Send me a link"
       formActionOverride={`${Routes.WELCOME}${Routes.RESEND}`}
       queryString={search}
