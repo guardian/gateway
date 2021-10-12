@@ -103,7 +103,7 @@ router.post(
         );
         throw {
           message: CaptchaErrors.GENERIC,
-          status: 500,
+          status: 400,
         };
       }
       await guest(email, req.ip, returnUrl, refViewId, ref);

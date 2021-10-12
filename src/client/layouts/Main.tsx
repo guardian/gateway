@@ -38,8 +38,8 @@ export const Main = ({
   const clientState: ClientState = useContext(ClientStateContext);
   const { globalMessage: { error, success } = {} } = clientState;
 
-  const successMessage = success || successOverride;
-  const errorMessage = error || errorOverride;
+  const successMessage = successOverride || success;
+  const errorMessage = errorOverride || error;
 
   return (
     <main css={mainStyles}>

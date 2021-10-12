@@ -93,8 +93,8 @@ Cypress.Commands.addAll({
       params: {
         offline: options.offline,
         latency: 0,
-        downloadThroughput: 0,
-        uploadThroughput: 0,
+        downloadThroughput: -1,
+        uploadThroughput: -1,
         connectionType: 'none',
       },
     });
