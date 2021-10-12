@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { from } from '@guardian/src-foundations/mq';
-import { space } from '@guardian/src-foundations';
+import { border, space } from '@guardian/src-foundations';
 import { MAX_WIDTH } from './Grid';
 
 export const linkButton = css`
@@ -48,5 +48,23 @@ export const maxWidth = css`
 
   ${from.wide} {
     max-width: ${MAX_WIDTH.WIDE}px;
+  }
+`;
+
+export const fitDividerToContainer = css`
+  :before,
+  :after {
+    margin-left: 0;
+    margin-right: 0;
+  }
+`;
+
+export const centreLinesOnDivider = css`
+  :before,
+  :after {
+    content: '';
+    flex: 1 1;
+    border-bottom: 1px solid ${border.secondary};
+    margin: 8px;
   }
 `;

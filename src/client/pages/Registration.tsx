@@ -12,9 +12,14 @@ import { PageBody } from '@/client/components/PageBody';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
-import { button, form, textInput } from '@/client/styles/Shared';
+import {
+  button,
+  centreLinesOnDivider,
+  fitDividerToContainer,
+  form,
+  textInput,
+} from '@/client/styles/Shared';
 import { Divider } from '@guardian/source-react-components-development-kitchen/';
-import { css } from '@emotion/react';
 
 type Props = {
   returnUrl?: string;
@@ -82,27 +87,13 @@ export const Registration = ({
               size="full"
               spaceAbove="loose"
               displayText="or continue with"
-              cssOverrides={css`
-                :before {
-                  margin-left: 0;
-                }
-                :after {
-                  margin-right: 0;
-                }
-              `}
+              cssOverrides={[centreLinesOnDivider, fitDividerToContainer]}
             />
             <SocialButtons returnUrl={returnUrl} />
             <Divider
               size="full"
               spaceAbove="tight"
-              cssOverrides={css`
-                :before {
-                  margin-left: 0;
-                }
-                :after {
-                  margin-right: 0;
-                }
-              `}
+              cssOverrides={[centreLinesOnDivider, fitDividerToContainer]}
             />
             <Terms />
           </PageBody>
