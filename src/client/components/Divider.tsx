@@ -12,6 +12,7 @@ type Props = {
   size?: Sizes;
   spaceAbove?: Spaces;
   displayText?: string;
+  cssOverrides?: SerializedStyles;
 };
 
 const fullStypes = css`
@@ -89,6 +90,7 @@ export const Divider = ({
   size = 'partial',
   spaceAbove = 'loose',
   displayText,
+  cssOverrides,
 }: Props) => {
   if (displayText) {
     return (
@@ -117,6 +119,7 @@ export const Divider = ({
           `,
           decideSize(size),
           decideSpace(spaceAbove, displayText),
+          cssOverrides,
         ]}
       >
         {displayText}

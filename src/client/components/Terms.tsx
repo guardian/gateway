@@ -14,9 +14,6 @@ const Text = ({ children }: { children: React.ReactNode }) => (
       ${from.mobileMedium} {
         margin-bottom: 6px;
       }
-      ${from.tablet} {
-        margin-bottom: ${space[2]}px;
-      }
     `}
   >
     {children}
@@ -45,6 +42,9 @@ const terms = css`
   margin-top: ${space[3]}px;
   ${from.mobileMedium} {
     margin-top: ${space[4]}px;
+  }
+  ${from.tablet} {
+    margin-top: ${space[3]}px;
   }
 `;
 
