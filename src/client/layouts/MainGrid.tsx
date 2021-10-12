@@ -7,6 +7,7 @@ import { SubHeader } from '@/client/components/SubHeader';
 import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 import { ErrorSummary } from '@guardian/source-react-components-development-kitchen';
 import { topMargin } from '@/client/styles/Shared';
+import { from } from '@guardian/src-foundations/mq';
 
 type Props = {
   subTitle?: string;
@@ -22,6 +23,10 @@ const mainStyle = css`
 
 const gridStyle = css`
   margin: 0 auto;
+  ${from.tablet} {
+    border-left: 1px solid #dcdcdc;
+    border-right: 1px solid #dcdcdc;
+  }
 `;
 
 export const MainGrid = ({
