@@ -17,7 +17,7 @@ import { MainGrid } from '../layouts/MainGrid';
 import { gridItemSignInAndRegistration } from '../styles/Grid';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { CaptchaErrors } from '@/shared/model/Errors';
-import useRecaptcha from '../lib/hooks/useRecaptcha';
+import useRecaptcha, { RecaptchaElement } from '../lib/hooks/useRecaptcha';
 
 type Props = {
   returnUrl?: string;
@@ -124,6 +124,7 @@ export const Registration = ({
           ref={registerFormRef}
           onSubmit={handleSubmit}
         >
+          <RecaptchaElement id="register-recaptcha" />
           <CsrfFormField />
           <div css={topMargin}>
             <TextInput

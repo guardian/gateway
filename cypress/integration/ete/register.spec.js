@@ -19,9 +19,6 @@ const existing = {
 };
 
 describe('Registration flow', () => {
-  /**
-   * TODO: Once the new Terms component is merged, remove the skip on these tests.
-   */
   context('Terms and Conditions links', () => {
     it('links to the Google terms of service page', () => {
       cy.visit('/signin');
@@ -119,7 +116,7 @@ describe('Registration flow', () => {
     });
   });
 
-  it.only('returns an error when email is in use and report error link redirects to support', () => {
+  it('returns an error when email is in use and report error link redirects to support', () => {
     cy.visit('/register');
     cy.get('input[name=email').type(existing.email);
     cy.get('[data-cy="register-button"]').click();
