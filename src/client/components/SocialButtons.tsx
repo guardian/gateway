@@ -14,7 +14,7 @@ type Props = {
 const containerStyles = css`
   display: flex;
   flex-direction: column;
-  ${from.mobileLandscape} {
+  ${from.tablet} {
     flex-direction: row;
   }
   justify-content: center;
@@ -32,7 +32,7 @@ const containerStyles = css`
 const buttonOverrides = css`
   border-color: ${brand[400]};
   justify-content: center;
-  ${from.mobileLandscape} {
+  ${from.tablet} {
     min-width: 145px;
     flex-grow: 1;
   }
@@ -52,7 +52,7 @@ const Gap = () => (
     css={css`
       width: 0;
       height: ${space[3]}px;
-      ${from.mobileLandscape} {
+      ${from.tablet} {
         width: ${space[3]}px;
         height: 0;
       }
@@ -64,22 +64,22 @@ export const SocialButtons = ({ returnUrl }: Props) => (
   <div css={containerStyles}>
     <LinkButton
       priority="tertiary"
-      cssOverrides={buttonOverrides}
-      icon={<SvgFacebookBrand />}
-      href={`https://oauth.theguardian.com/facebook/signin?returnUrl=${returnUrl}`}
-      data-cy="facebook-sign-in-button"
-    >
-      Facebook
-    </LinkButton>
-    <Gap />
-    <LinkButton
-      priority="tertiary"
       cssOverrides={[buttonOverrides, iconOverrides]}
       icon={<SvgGoogleBrand />}
       href={`https://oauth.theguardian.com/google/signin?returnUrl=${returnUrl}`}
       data-cy="google-sign-in-button"
     >
       Google
+    </LinkButton>
+    <Gap />
+    <LinkButton
+      priority="tertiary"
+      cssOverrides={buttonOverrides}
+      icon={<SvgFacebookBrand />}
+      href={`https://oauth.theguardian.com/facebook/signin?returnUrl=${returnUrl}`}
+      data-cy="facebook-sign-in-button"
+    >
+      Facebook
     </LinkButton>
     <Gap />
     <LinkButton

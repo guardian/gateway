@@ -51,7 +51,7 @@ export async function validate(
 
   try {
     const result = await idapiFetch(url, APIAddClientAccessToken(options, ip));
-    console.log(result);
+
     return {
       email: result.user?.primaryEmailAddress,
       tokenExpiryTimestamp: result.expiryTimestamp,

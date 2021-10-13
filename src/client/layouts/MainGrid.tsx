@@ -7,6 +7,7 @@ import { SubHeader } from '@/client/components/SubHeader';
 import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 import { ErrorSummary } from '@guardian/source-react-components-development-kitchen';
 import { topMargin } from '@/client/styles/Shared';
+import { from } from '@guardian/src-foundations/mq';
 
 type Props = {
   subTitle?: string;
@@ -16,7 +17,16 @@ type Props = {
 };
 
 const mainStyle = css`
+  display: flex;
+  flex: 1 1 auto;
+`;
+
+const gridStyle = css`
   margin: 0 auto;
+  ${from.tablet} {
+    border-left: 1px solid #dcdcdc;
+    border-right: 1px solid #dcdcdc;
+  }
 `;
 
 export const MainGrid = ({
@@ -31,13 +41,15 @@ export const MainGrid = ({
   const successMessage = success || successOverride;
 
   return (
-    <main css={[gridRow, mainStyle]}>
-      {subTitle && <SubHeader title={subTitle} />}
-      {successMessage && <GlobalSuccess success={successMessage} />}
-      <section css={gridItem(gridSpanDefinition)}>
-        {error && <ErrorSummary error={error} cssOverrides={topMargin} />}
-        {children}
-      </section>
+    <main css={mainStyle}>
+      <div css={[gridRow, gridStyle]}>
+        {subTitle && <SubHeader title={subTitle} />}
+        {successMessage && <GlobalSuccess success={successMessage} />}
+        <section css={gridItem(gridSpanDefinition)}>
+          {error && <ErrorSummary error={error} cssOverrides={topMargin} />}
+          {children}
+        </section>
+      </div>
     </main>
   );
 };
