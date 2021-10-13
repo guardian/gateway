@@ -25,12 +25,10 @@ export const ChangePasswordPage = () => {
   }
 
   return (
-    <>
-      <ChangePassword
-        submitUrl={`${Routes.CHANGE_PASSWORD}/${token}${search}`}
-        email={email}
-        fieldErrors={fieldErrors}
-      />
-    </>
+    <ChangePassword
+      submitUrl={`${Routes.CHANGE_PASSWORD}/${token}${search}`}
+      email={email}
+      fieldErrors={fieldErrors}
+    />
   );
 };
