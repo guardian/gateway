@@ -248,7 +248,7 @@ export const passwordFormSpanDef: SpanDefinition = {
   WIDE: { start: 3, span: 6 },
 };
 
-export const gridItemSignIn: SpanDefinition = {
+export const gridItemSignInAndRegistration: SpanDefinition = {
   TABLET: { start: 1, span: 8 },
   DESKTOP: { start: 2, span: 6 },
   LEFT_COL: { start: 3, span: 6 },
