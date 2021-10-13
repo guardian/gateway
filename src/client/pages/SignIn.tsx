@@ -16,7 +16,7 @@ import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
 import { Link } from '@guardian/src-link';
 import { textSans } from '@guardian/src-foundations/typography';
-import { gridItemSignIn } from '@/client/styles/Grid';
+import { gridItemSignInAndRegistration } from '@/client/styles/Grid';
 import { border, space } from '@guardian/src-foundations';
 import { from } from '@guardian/src-foundations/mq';
 import { topMargin } from '@/client/styles/Shared';
@@ -97,7 +97,7 @@ export const SignIn = () => {
           },
         ]}
       />
-      <MainGrid gridSpanDefinition={gridItemSignIn}>
+      <MainGrid gridSpanDefinition={gridItemSignInAndRegistration}>
         <form method="post" action={`${Routes.SIGN_IN}${returnUrlQuery}`}>
           <CsrfFormField />
           <div css={topMargin}>

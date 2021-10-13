@@ -14,7 +14,7 @@ import { border, space } from '@guardian/src-foundations';
 import { css } from '@emotion/react';
 import { from } from '@guardian/src-foundations/mq';
 import { MainGrid } from '../layouts/MainGrid';
-import { gridItemRegistration } from '../styles/Grid';
+import { gridItemSignInAndRegistration } from '../styles/Grid';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 
 type Props = {
@@ -84,7 +84,7 @@ export const Registration = ({
           },
         ]}
       />
-      <MainGrid gridSpanDefinition={gridItemRegistration}>
+      <MainGrid gridSpanDefinition={gridItemSignInAndRegistration}>
         <form
           method="post"
           action={`${Routes.REGISTRATION}?${registrationUrlQueryParamString}`}
