@@ -15,27 +15,25 @@ type Props = {
   fieldErrors: FieldError[];
 };
 
-export const ChangePassword = ({ submitUrl, email, fieldErrors }: Props) => {
-  return (
-    <>
-      <Header />
-      <Main subTitle="Sign in">
-        <PageBox>
-          <PageHeader>Set Password</PageHeader>
-          <PageBody>
-            <PageBodyText>
-              Please enter your new password for {email}
-            </PageBodyText>
-            <PasswordForm
-              submitUrl={submitUrl}
-              fieldErrors={fieldErrors}
-              labelText="New Password"
-              submitButtonText="Save password"
-            />
-          </PageBody>
-        </PageBox>
-      </Main>
-      <Footer />
-    </>
-  );
-};
+export const ChangePassword = ({ submitUrl, email, fieldErrors }: Props) => (
+  <>
+    <Header />
+    <Main subTitle="Sign in">
+      <PageBox>
+        <PageHeader>Set Password</PageHeader>
+        <PageBody>
+          <PageBodyText>
+            Please enter your new password for {email}
+          </PageBodyText>
+          <PasswordForm
+            submitUrl={submitUrl}
+            fieldErrors={fieldErrors}
+            labelText="New Password"
+            submitButtonText="Save password"
+          />
+        </PageBody>
+      </PageBox>
+    </Main>
+    <Footer />
+  </>
+);

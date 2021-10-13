@@ -30,6 +30,18 @@ router.get(
   },
 );
 
+// resend account verification page, session expired
+router.get(
+  `${Routes.WELCOME}${Routes.EXPIRED}`,
+  (_: Request, res: ResponseWithRequestState) => {
+    const html = renderer(`${Routes.WELCOME}${Routes.EXPIRED}`, {
+      pageTitle: PageTitle.WELCOME_RESEND,
+      requestState: res.locals,
+    });
+    res.type('html').send(html);
+  },
+);
+
 // POST form handler to resend account verification email
 router.post(
   `${Routes.WELCOME}${Routes.RESEND}`,

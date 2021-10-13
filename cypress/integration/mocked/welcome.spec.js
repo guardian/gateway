@@ -13,11 +13,12 @@ import * as qs from 'query-string';
 import CommunicationsPage from '../../support/pages/onboarding/communications_page.js';
 
 describe('Welcome and set password page', () => {
-  const checkTokenSuccessResponse = {
+  const checkTokenSuccessResponse = (expiryTimestamp) => ({
     user: {
       primaryEmailAddress: 'test@example.com',
     },
-  };
+    expiryTimestamp,
+  });
 
   const fakeCookieSuccessResponse = {
     cookies: {
@@ -46,13 +47,13 @@ describe('Welcome and set password page', () => {
 
   context('A11y checks', () => {
     it('has no detectable a11y violations on the set password page', () => {
-      cy.mockNext(200, checkTokenSuccessResponse);
+      cy.mockNext(200, checkTokenSuccessResponse());
       cy.visit(`/welcome/fake_token`);
       injectAndCheckAxe();
     });
 
     it('has no detectable a11y violations on set password page with global error', () => {
-      cy.mockNext(200, checkTokenSuccessResponse);
+      cy.mockNext(200, checkTokenSuccessResponse());
       cy.visit(`/welcome/fake_token`);
       cy.mockNext(500);
       cy.get('input[name="password"]').type('short');
@@ -70,7 +71,7 @@ describe('Welcome and set password page', () => {
 
       cy.mockNext(500);
       cy.get('input[name="email"]').type(
-        checkTokenSuccessResponse.user.primaryEmailAddress,
+        checkTokenSuccessResponse().user.primaryEmailAddress,
       );
       cy.get('button[type="submit"]').click();
       injectAndCheckAxe();
@@ -81,7 +82,7 @@ describe('Welcome and set password page', () => {
 
       cy.mockNext(200);
       cy.get('input[name="email"]').type(
-        checkTokenSuccessResponse.user.primaryEmailAddress,
+        checkTokenSuccessResponse().user.primaryEmailAddress,
       );
       cy.get('button[type="submit"]').click();
       injectAndCheckAxe();
@@ -96,7 +97,7 @@ describe('Welcome and set password page', () => {
   // successful token, set password page is displayed, redirect to consents flow if valid password
   context('An valid token is used and set password page is displayed', () => {
     it('redirects to onboarding flow if a valid password is set', () => {
-      cy.mockNext(200, checkTokenSuccessResponse);
+      cy.mockNext(200, checkTokenSuccessResponse());
       cy.intercept({
         method: 'GET',
         url: 'https://api.pwnedpasswords.com/range/*',
@@ -124,7 +125,7 @@ describe('Welcome and set password page', () => {
       );
       const query = qs.stringify({ returnUrl });
 
-      cy.mockNext(200, checkTokenSuccessResponse);
+      cy.mockNext(200, checkTokenSuccessResponse());
       cy.intercept({
         method: 'GET',
         url: 'https://api.pwnedpasswords.com/range/*',
@@ -149,7 +150,7 @@ describe('Welcome and set password page', () => {
     });
 
     it('shows an error if the password is invalid', () => {
-      cy.mockNext(200, checkTokenSuccessResponse);
+      cy.mockNext(200, checkTokenSuccessResponse());
       cy.mockNext(400, {
         status: 'error',
         errors: [
@@ -158,7 +159,7 @@ describe('Welcome and set password page', () => {
           },
         ],
       });
-      cy.mockNext(200, checkTokenSuccessResponse);
+      cy.mockNext(200, checkTokenSuccessResponse());
       cy.visit(`/welcome/fake_token`);
       cy.get('input[name="password"]').type('password');
       cy.get('button[type="submit"]').click();
@@ -181,12 +182,18 @@ describe('Welcome and set password page', () => {
       cy.visit(`/welcome/fake_token`);
       cy.contains('Link expired');
       cy.get('input[name="email"]').type(
-        checkTokenSuccessResponse.user.primaryEmailAddress,
+        checkTokenSuccessResponse().user.primaryEmailAddress,
       );
       cy.get('button[type="submit"]').click();
       cy.contains('Check your email inbox');
-      cy.contains(checkTokenSuccessResponse.user.primaryEmailAddress);
+      cy.contains(checkTokenSuccessResponse().user.primaryEmailAddress);
       cy.contains('Resend email');
+    });
+
+    it.only('shows the session time out page if the token expires while on the set password page', () => {
+      cy.mockNext(200, checkTokenSuccessResponse(Date.now() + 1000));
+      cy.visit(`/welcome/fake_token`);
+      cy.contains('Session timed out');
     });
   });
 
@@ -196,7 +203,7 @@ describe('Welcome and set password page', () => {
 
       cy.mockNext(200);
       cy.get('input[name="email"]').type(
-        checkTokenSuccessResponse.user.primaryEmailAddress,
+        checkTokenSuccessResponse().user.primaryEmailAddress,
       );
       cy.get('button[type="submit"]').click();
 
@@ -210,7 +217,7 @@ describe('Welcome and set password page', () => {
 
       cy.mockNext(200);
       cy.get('input[name="email"]').type(
-        checkTokenSuccessResponse.user.primaryEmailAddress,
+        checkTokenSuccessResponse().user.primaryEmailAddress,
       );
       cy.get('button[type="submit"]').click();
 

@@ -38,7 +38,7 @@ const handleResponseFailure = async (
 ): Promise<IDAPIError> => {
   let err;
   const raw = await response.text();
-  console.log('raw', raw);
+
   try {
     err = JSON.parse(raw);
   } catch (_) {

@@ -32,6 +32,11 @@ export interface PageData {
   consents?: Consent[];
   page?: string;
   previousPage?: string;
+
+  // reset password token specific
+  tokenExpiryTimestamp?: number;
+
+  // tracking
   ref?: string;
   refViewId?: string;
 }
