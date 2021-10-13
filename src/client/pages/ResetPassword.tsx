@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { TextInput } from '@guardian/src-text-input';
 import { Button } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
@@ -6,7 +6,6 @@ import { Routes } from '@/shared/model/Routes';
 import { PageHeader } from '@/client/components/PageHeader';
 import { PageBox } from '@/client/components/PageBox';
 import { PageBody } from '@/client/components/PageBody';
-import { PageBodyText } from '@/client/components/PageBodyText';
 import { form, textInput, button } from '@/client/styles/Shared';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { Main } from '@/client/layouts/Main';
@@ -16,7 +15,6 @@ import { Footer } from '@/client/components/Footer';
 interface ResetPasswordProps {
   email?: string;
   headerText: string;
-  bodyText: string;
   buttonText: string;
   queryString?: string;
   formActionOverride?: string;
@@ -25,23 +23,18 @@ interface ResetPasswordProps {
 export const ResetPassword = ({
   email = '',
   headerText,
-  bodyText,
   buttonText,
   queryString = '',
   formActionOverride,
-}: ResetPasswordProps) => (
+  children,
+}: PropsWithChildren<ResetPasswordProps>) => (
   <>
     <Header />
     <Main subTitle="Sign in">
       <PageBox>
         <PageHeader>{headerText}</PageHeader>
         <PageBody>
-          {bodyText
-            .split('\n')
-            .map(
-              (text, index) =>
-                text && <PageBodyText key={index}>{text}</PageBodyText>,
-            )}
+          {children}
           <form
             css={form}
             method="post"

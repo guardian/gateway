@@ -4,6 +4,7 @@ import { ClientStateContext } from '@/client/components/ClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
 import { Routes } from '@/shared/model/Routes';
 import { useLocation } from 'react-router-dom';
+import { PageBodyText } from '../components/PageBodyText';
 
 export const WelcomeResendPage = () => {
   const { search } = useLocation();
@@ -14,10 +15,14 @@ export const WelcomeResendPage = () => {
     <ResetPassword
       email={email}
       headerText="Link expired"
-      bodyText="The link you are using has expired. Please enter your email address and we'll send you a new one."
       buttonText="Send me a link"
       formActionOverride={`${Routes.WELCOME}${Routes.RESEND}`}
       queryString={search}
-    />
+    >
+      <PageBodyText>
+        The link you are using has expired. Please enter your email address and
+        we will send you a new one.
+      </PageBodyText>
+    </ResetPassword>
   );
 };
