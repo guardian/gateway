@@ -17,6 +17,8 @@ services:
       - SIGN_IN_PAGE_URL=${SIGN_IN_PAGE_URL}
       - IS_HTTPS=${IS_HTTPS}
       - APP_SECRET=${APP_SECRET}
+      - GOOGLE_RECAPTCHA_SITE_KEY=${GOOGLE_RECAPTCHA_SITE_KEY}
+      - GOOGLE_RECAPTCHA_SECRET_KEY=${GOOGLE_RECAPTCHA_SECRET_KEY}
     ports:
       - '${PORT}:${PORT}'
       - '9229:9229' # debugging port
