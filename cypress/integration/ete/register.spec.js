@@ -19,10 +19,7 @@ const existing = {
 };
 
 describe('Registration flow', () => {
-  /**
-   * TODO: Once the new Terms component is merged, remove the skip on these tests.
-   */
-  context.skip('Terms and Conditions links', () => {
+  context('Terms and Conditions links', () => {
     it('links to the Google terms of service page', () => {
       cy.visit('/signin');
       cy.contains('terms of service').click();
@@ -119,10 +116,30 @@ describe('Registration flow', () => {
     });
   });
 
-  it.only('returns an error when email is in use and report error link redirects to support', () => {
+  it('returns an error when email is in use and report error link redirects to support', () => {
     cy.visit('/register');
     cy.get('input[name=email').type(existing.email);
     cy.get('[data-cy="register-button"]').click();
+
+    cy.contains('There was a problem registering, please try again');
+  });
+
+  it('errors when the user tries to register offline and allows registration when back online', () => {
+    cy.visit('/register');
+
+    cy.network({ offline: true });
+
+    cy.get('input[name=email').type(existing.email);
+    cy.get('[data-cy="register-button"]').click();
+    cy.contains(
+      'There was a problem with the captcha process. You may find disabling your browser plugins, ensuring JavaScript is enabled or updating your browser will resolve this issue.',
+    );
+
+    cy.network({ offline: false });
+    cy.get('[data-cy="register-button"]').click();
+    cy.contains(
+      'There was a problem with the captcha process. You may find disabling your browser plugins, ensuring JavaScript is enabled or updating your browser will resolve this issue.',
+    ).should('not.exist');
 
     cy.contains('There was a problem registering, please try again');
   });

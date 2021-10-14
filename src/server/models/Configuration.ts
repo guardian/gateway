@@ -11,6 +11,10 @@ export interface Configuration {
     id: string;
     hash: string;
   };
+  googleRecaptcha: {
+    siteKey: string;
+    secretKey: string;
+  };
   domain: string;
   apiDomain: string;
   isHttps: boolean;

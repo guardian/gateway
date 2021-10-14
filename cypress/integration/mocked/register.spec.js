@@ -59,6 +59,18 @@ describe('Registration flow', () => {
       cy.contains('Email field must not be blank.');
     });
 
+    it('shows recaptcha error message when reCAPTCHA token request fails', () => {
+      cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.get('input[name="email"]').type('placeholder@example.com');
+      cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
+        statusCode: 500,
+      });
+      cy.get('[data-cy=register-button]').click();
+      cy.contains(
+        'here was a problem with the captcha process. You may find disabling your browser plugins, ensuring JavaScript is enabled or updating your browser will resolve this issue.',
+      );
+    });
+
     it('redirects to email sent page upon successful guest registration', () => {
       cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
       cy.get('input[name="email"]').type('example@example.com');

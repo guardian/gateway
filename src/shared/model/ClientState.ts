@@ -39,6 +39,7 @@ export interface PageData {
   // tracking
   ref?: string;
   refViewId?: string;
+  recaptchaSiteKey?: string;
 }
 
 export interface ClientHosts {
