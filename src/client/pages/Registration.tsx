@@ -19,7 +19,7 @@ import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { CaptchaErrors } from '@/shared/model/Errors';
 import useRecaptcha, { RecaptchaElement } from '../lib/hooks/useRecaptcha';
 
-type Props = {
+export type RegistrationProps = {
   returnUrl?: string;
   email?: string;
   refValue?: string;
@@ -58,7 +58,7 @@ export const Registration = ({
   refViewId = '',
   email = '',
   recaptchaSiteKey = '',
-}: Props) => {
+}: RegistrationProps) => {
   const returnUrlQuery = `returnUrl=${encodeURIComponent(returnUrl)}`;
   const refUrlQuery = `ref=${encodeURIComponent(refValue)}`;
   const refViewIdUrlQuery = `refViewId=${encodeURIComponent(refViewId)}`;
