@@ -12,6 +12,7 @@ import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 type Props = {
   subTitle?: string;
   successOverride?: string;
+  errorOverride?: string;
   children: React.ReactNode;
 };
 
@@ -28,16 +29,24 @@ const sectionStyles = css`
   margin: 0 auto;
 `;
 
-export const Main = ({ subTitle, successOverride, children }: Props) => {
+export const Main = ({
+  subTitle,
+  successOverride,
+  errorOverride,
+  children,
+}: Props) => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { globalMessage: { error, success } = {} } = clientState;
 
-  const successMessage = success || successOverride;
+  const successMessage = successOverride || success;
+  const errorMessage = errorOverride || error;
 
   return (
     <main css={mainStyles}>
       {subTitle && <SubHeader title={subTitle} />}
-      {error && <GlobalError error={error} link={getErrorLink(error)} />}
+      {errorMessage && (
+        <GlobalError error={errorMessage} link={getErrorLink(errorMessage)} />
+      )}
       {successMessage && <GlobalSuccess success={successMessage} />}
       <section css={sectionStyles}>{children}</section>
     </main>

@@ -13,15 +13,28 @@ import { readGUEmailCookie, setGUEmailCookie } from '@/server/lib/emailCookie';
 import { getEmailFromPlaySessionCookie } from '../lib/playSessionCookie';
 import { RequestError } from '@/shared/lib/error';
 import { guest } from '../lib/idapi/guest';
+import { RecaptchaV2 } from 'express-recaptcha';
 import { getConfiguration } from '../lib/getConfiguration';
+import { CaptchaErrors } from '@/shared/model/Errors';
 
 const router = Router();
+
+// set google recaptcha site key
+const {
+  googleRecaptcha: { secretKey, siteKey },
+} = getConfiguration();
+
+const recaptcha = new RecaptchaV2(siteKey, secretKey);
 
 router.get(
   Routes.REGISTRATION,
   (req: Request, res: ResponseWithRequestState) => {
     const html = renderer(Routes.REGISTRATION, {
-      requestState: res.locals,
+      requestState: deepmerge(res.locals, {
+        pageData: {
+          recaptchaSiteKey: siteKey,
+        },
+      }),
       pageTitle: PageTitle.REGISTRATION,
     });
     res.type('html').send(html);
@@ -75,19 +88,24 @@ router.post(
 
 router.post(
   Routes.REGISTRATION,
+  recaptcha.middleware.verify,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
     const { email = '' } = req.body;
     const { returnUrl, ref, refViewId } = state.queryParams;
-    const { stage } = getConfiguration();
-
-    // Disable this endpoint on PROD until recaptcha integration is added.
-    if (stage === 'PROD') {
-      return res.status(403);
-    }
 
     try {
+      if (req.recaptcha?.error) {
+        logger.error(
+          'Problem verifying recaptcha, error response: ',
+          req.recaptcha.error,
+        );
+        throw {
+          message: CaptchaErrors.GENERIC,
+          status: 400,
+        };
+      }
       await guest(email, req.ip, returnUrl, refViewId, ref);
       setGUEmailCookie(res, email);
     } catch (error) {
@@ -102,6 +120,7 @@ router.post(
         },
         pageData: {
           email,
+          recaptchaSiteKey: siteKey,
         },
       });
 

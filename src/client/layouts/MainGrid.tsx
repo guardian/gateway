@@ -12,6 +12,7 @@ import { from } from '@guardian/src-foundations/mq';
 type Props = {
   subTitle?: string;
   successOverride?: string;
+  errorOverride?: string;
   children: React.ReactNode;
   gridSpanDefinition?: SpanDefinition;
 };
@@ -32,13 +33,15 @@ const gridStyle = css`
 export const MainGrid = ({
   subTitle,
   successOverride,
+  errorOverride,
   children,
   gridSpanDefinition,
 }: Props) => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { globalMessage: { error, success } = {} } = clientState;
 
-  const successMessage = success || successOverride;
+  const successMessage = successOverride || success;
+  const errorMessage = errorOverride || error;
 
   return (
     <main css={mainStyle}>
@@ -46,7 +49,9 @@ export const MainGrid = ({
         {subTitle && <SubHeader title={subTitle} />}
         {successMessage && <GlobalSuccess success={successMessage} />}
         <section css={gridItem(gridSpanDefinition)}>
-          {error && <ErrorSummary error={error} cssOverrides={topMargin} />}
+          {errorMessage && (
+            <ErrorSummary error={errorMessage} cssOverrides={topMargin} />
+          )}
           {children}
         </section>
       </div>
