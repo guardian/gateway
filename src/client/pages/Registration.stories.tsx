@@ -30,3 +30,10 @@ export const Email = (args: RegistrationProps) => (
 Email.story = {
   name: 'with email',
 };
+
+export const InvalidRecaptcha = (args: RegistrationProps) => (
+  <Registration {...args} recaptchaSiteKey="" />
+);
+InvalidRecaptcha.story = {
+  name: 'with invalid reCAPTCHA',
+};
