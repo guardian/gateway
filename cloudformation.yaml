@@ -187,6 +187,8 @@ Resources:
                   IDAPI_CLIENT_ACCESS_TOKEN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/idapi-client-access-token' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   PLAY_SESSION_COOKIE_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/frontendPlaySecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   APP_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/appSecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+                  GOOGLE_RECAPTCHA_SITE_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/recaptcha-site-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+                  GOOGLE_RECAPTCHA_SECRET_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/recaptcha-secret-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
 
                   then break
                 fi
@@ -215,6 +217,8 @@ Resources:
             Environment=STAGE=${Stage}
             Environment=IS_HTTPS=true
             Environment=APP_SECRET=$APP_SECRET
+            Environment=GOOGLE_RECAPTCHA_SITE_KEY=$GOOGLE_RECAPTCHA_SITE_KEY
+            Environment=GOOGLE_RECAPTCHA_SECRET_KEY=$GOOGLE_RECAPTCHA_SECRET_KEY
 
             [Install]
             WantedBy=multi-user.target
