@@ -7,25 +7,26 @@ import { AccountExistsText } from './AccountExistsText';
 
 type Props = {
   to: string;
-  token: string;
   subject?: string;
 };
 
-const plainText = AccountExistsText();
+const profileUrl = getProfileUrl();
+
+const plainText = AccountExistsText({ profileUrl });
+
 const { html } = render(
   AccountExists({
-    profileUrl: getProfileUrl(),
+    profileUrl,
   }),
 );
 
 export const sendAccountExistsEmail = ({
-  token,
   to,
-  subject = 'Your attempt to sign up to theguardian.com',
+  subject = 'Nearly there...',
 }: Props) => {
   return send({
-    html: html.replace('TOKEN_PLACEHOLDER', token),
-    plainText: plainText.replace('TOKEN_PLACEHOLDER', token),
+    html,
+    plainText,
     subject,
     to,
   });
