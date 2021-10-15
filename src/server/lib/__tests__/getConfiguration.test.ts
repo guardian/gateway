@@ -33,6 +33,8 @@ describe('getConfiguration', () => {
     process.env.APP_SECRET = 'app-secret';
     process.env.GOOGLE_RECAPTCHA_SITE_KEY = 'recaptcha-site';
     process.env.GOOGLE_RECAPTCHA_SECRET_KEY = 'recaptcha-secret';
+    process.env.ENCRYPTION_SECRET_KEY =
+      'f3d87b231ddd6f50d99e227c5bc9b7cbb649387b321008df412fd73805ac2e32';
 
     const output = getConfiguration();
     const expected = {
@@ -56,6 +58,8 @@ describe('getConfiguration', () => {
         siteKey: 'recaptcha-site',
         secretKey: 'recaptcha-secret',
       },
+      encryptionSecretKey:
+        'f3d87b231ddd6f50d99e227c5bc9b7cbb649387b321008df412fd73805ac2e32',
     };
     expect(output).toEqual(expected);
   });
