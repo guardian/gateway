@@ -41,7 +41,6 @@ export const readEncryptedStateCookie = (
       return JSON.parse(decrypted);
     }
   } catch (error) {
-    console.log(error);
     logger.error(
       `Error parsing cookie with length ${
         encryptedCookie ? encryptedCookie.length : 'undefined'
