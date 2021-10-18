@@ -1576,13 +1576,13 @@
     yaml "^1.7.2"
     yargs "^15.4.1"
 
-"@guardian/source-react-components-development-kitchen@^0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@guardian/source-react-components-development-kitchen/-/source-react-components-development-kitchen-0.0.7.tgz#05e997476d602937d185005364ccd9b83b5341c7"
-  integrity sha512-K0ttH2btFDJsR/Pv+EuQq8gPP0riqJck9d48PQ53sU9omFdTsfzwQRxeL3z7p3UNnJnxZrn2Tsc7BqMvcW0soA==
+"@guardian/source-react-components-development-kitchen@^0.0.14":
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/@guardian/source-react-components-development-kitchen/-/source-react-components-development-kitchen-0.0.14.tgz#9abcef8332f6c2d8f4ad3e3c8428861ea432a903"
+  integrity sha512-Kww/JETtsh0iLWCk99kaN4JTtM7PaIDZWplDGP7XIrB9x5kP6qayBbnKAbvlagKQJ2y3BulCUxR60B+0JrzurQ==
   dependencies:
-    "@guardian/src-button" "^3.9.0"
-    "@guardian/src-helpers" "^3.9.0"
+    "@guardian/src-button" "^3.9.1"
+    "@guardian/src-helpers" "^3.9.1"
 
 "@guardian/src-accordion@^3.10.1":
   version "3.10.1"
@@ -1597,7 +1597,7 @@
   resolved "https://registry.yarnpkg.com/@guardian/src-brand/-/src-brand-3.10.1.tgz#5ddb9b2697def5f3bc122aa85608f08ce334fcc0"
   integrity sha512-fJvNEka37Uzibhj6UGRom1S2SDOWVfvFE10v0D04RABvnceS17ctSI9DLbvRQ/DvDM0NhsTkVSArgK5N2njlTQ==
 
-"@guardian/src-button@^3.10.1", "@guardian/src-button@^3.9.0":
+"@guardian/src-button@^3.10.1", "@guardian/src-button@^3.9.1":
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/@guardian/src-button/-/src-button-3.10.1.tgz#84493c588e04b8cc3878806d348f26e1e42b9a4e"
   integrity sha512-J8RwWq5kjglZQkEKR1dVxEXDR8ih1dr6Ssan6VaXoF4qj4IOGlP31bixmN+BCj2INQNU/4tdEIv3hl59KTlDzA==
@@ -1618,7 +1618,7 @@
   resolved "https://registry.yarnpkg.com/@guardian/src-foundations/-/src-foundations-3.10.1.tgz#03badadab6c1692fc6dad506ddbffe872b7f13fc"
   integrity sha512-cnWhKlPyqoBuzC8mHxW7mUNwFIFkg/amhpxw5eTs1P1I8fqe+zT57oxEO+9bj9NIUn1/vzcU0kF1c+V8BRHNlQ==
 
-"@guardian/src-helpers@^3.9.0", "@guardian/src-helpers@^3.9.2-rc.1":
+"@guardian/src-helpers@^3.9.1", "@guardian/src-helpers@^3.9.2-rc.1":
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/@guardian/src-helpers/-/src-helpers-3.10.1.tgz#3e1953e8d70115d9da5365021693019f87200358"
   integrity sha512-BOcTA0fyZ8sT+bbOsifTgRES45RZC7WNRkngOpqyUGKtxSiKGnHWOcjDXHAN81afJR3hhRRpTW5jRd0ErHj9pw==
