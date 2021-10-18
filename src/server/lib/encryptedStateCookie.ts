@@ -13,9 +13,11 @@ export const setEncryptedStateCookie = (
   res: Response,
   state: EncryptedState,
 ) => {
+  const encrypted = encrypt(JSON.stringify(state));
+
   return res.cookie(
     'GU_GATEWAY_STATE',
-    encrypt(JSON.stringify(state)),
+    encrypted,
     // We check if we're running locally here to make testing easier
     {
       httpOnly: !baseUri.includes('localhost'),
@@ -34,7 +36,10 @@ export const readEncryptedStateCookie = (
     : req.signedCookies['GU_GATEWAY_STATE'];
 
   try {
-    return JSON.parse(decrypt(encryptedCookie));
+    if (encryptedCookie) {
+      const decrypted = decrypt(encryptedCookie);
+      return JSON.parse(decrypted);
+    }
   } catch (error) {
     console.log(error);
     logger.error(

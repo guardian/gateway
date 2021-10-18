@@ -57,6 +57,26 @@ describe('crypto', () => {
     expect(() => decrypt(encrypted)).toThrow('Invalid key length');
   });
 
+  test('it should fail decryption if the encryption secret key is not the same', () => {
+    mockedGetConfiguration
+      .mockReturnValueOnce({
+        encryptionSecretKey:
+          'f3d87b231ddd6f50d99e227c5bc9b7cbb649387b321008df412fd73805ac2e32',
+      })
+      .mockReturnValueOnce({
+        encryptionSecretKey:
+          'abc87b231ddd6f50d99e227c5bc9b7cbb649387b321008df412fd73805ac2e32',
+      });
+
+    const input = 'The quick brown fox jumps over the lazy dog.';
+
+    const encrypted = encrypt(input);
+
+    expect(() => decrypt(encrypted)).toThrow(
+      'Unsupported state or unable to authenticate data',
+    );
+  });
+
   test('it should fail decryption if the encrypted string is invalid/malformed', () => {
     expect(() => decrypt('malformed-string.123.456')).toThrow();
     expect(() => decrypt('malformed-string.123')).toThrow();

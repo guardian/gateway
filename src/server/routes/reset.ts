@@ -49,7 +49,7 @@ router.post(
       setEncryptedStateCookie(res, { email });
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      const { message, status } = error as RequestError;
+      const { message, status = 500 } = error as RequestError;
 
       trackMetric(Metrics.SEND_PASSWORD_RESET_FAILURE);
 
