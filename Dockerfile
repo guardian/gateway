@@ -1,4 +1,4 @@
-FROM node:14.15-buster AS base
+FROM node:14.17-buster AS base
 WORKDIR /app
 COPY package.json yarn.lock ./
 
@@ -7,7 +7,7 @@ RUN yarn --audit
 ADD . .
 RUN yarn run build
 
-FROM node:14.15-alpine
+FROM node:14.17-alpine
 WORKDIR /app
 COPY --from=build /app .
 ENV PORT=8861
