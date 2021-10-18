@@ -12413,10 +12413,10 @@ mjml-raw@4.10.4:
     lodash "^4.17.21"
     mjml-core "4.10.4"
 
-mjml-react@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/mjml-react/-/mjml-react-2.0.0.tgz#b96b4680341ae0f6fb97c61d5283b23cbc8f36fe"
-  integrity sha512-FuDoVVLaEaRQwM9Su0aUwV2uw3qx/SSYpk68Y3hI31dEYojOJhOpQSOJwNUJ7QrUiF8YascTR+OHAhM2K/eRXw==
+mjml-react@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/mjml-react/-/mjml-react-2.0.2.tgz#530b21851506991242d8094b0e1c0c70b719d2b8"
+  integrity sha512-17IO2vcRHGm2Qpazks1oOAqYgyIIJntH1oFotQo3AL6LFQz3ghvimKCmnooRRS6c+SvpmrARZkoyyVBAM5qaOQ==
   dependencies:
     "@babel/runtime" "^7.14.6"
     babel-runtime "~6.25.0"
