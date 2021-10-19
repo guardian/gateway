@@ -5,7 +5,7 @@ You are already registered with the Guardian.
 
 Know your password? Sign in:
 
-$signIn
+$signInLink
 
 If you forgot your password, you can use the link below to reset it.
 

@@ -19,7 +19,7 @@ export const AccountExists = () => {
           <strong>You are already registered with the Guardian.</strong>
         </p>
         <p>
-          Know your password? <Link href={'$signIn'}>Sign in</Link>
+          Know your password? <Link href={'$signInLink'}>Sign in</Link>
         </p>
         <p>If you forgot your password, you can click below to reset it.</p>
       </Text>
