@@ -9,13 +9,16 @@ import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import deepmerge from 'deepmerge';
-import { readGUEmailCookie, setGUEmailCookie } from '@/server/lib/emailCookie';
 import { getEmailFromPlaySessionCookie } from '../lib/playSessionCookie';
 import { RequestError } from '@/shared/lib/error';
 import { guest } from '../lib/idapi/guest';
 import { RecaptchaV2 } from 'express-recaptcha';
 import { getConfiguration } from '../lib/getConfiguration';
 import { CaptchaErrors } from '@/shared/model/Errors';
+import {
+  readEncryptedStateCookie,
+  setEncryptedStateCookie,
+} from '../lib/encryptedStateCookie';
 
 const router = Router();
 
@@ -48,7 +51,9 @@ router.get(
     const html = renderer(Routes.REGISTRATION_EMAIL_SENT, {
       requestState: deepmerge(state, {
         pageData: {
-          email: getEmailFromPlaySessionCookie(req) || readGUEmailCookie(req),
+          email:
+            getEmailFromPlaySessionCookie(req) ||
+            readEncryptedStateCookie(req)?.email,
         },
       }),
       pageTitle: PageTitle.REGISTRATION_EMAIL_SENT,
@@ -66,7 +71,7 @@ router.post(
     try {
       await resendAccountVerificationEmail(email, req.ip, returnUrl);
 
-      setGUEmailCookie(res, email);
+      setEncryptedStateCookie(res, { email });
 
       return res.redirect(303, Routes.REGISTRATION_EMAIL_SENT);
     } catch (error) {
@@ -107,7 +112,8 @@ router.post(
         };
       }
       await guest(email, req.ip, returnUrl, refViewId, ref);
-      setGUEmailCookie(res, email);
+
+      setEncryptedStateCookie(res, { email });
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
       const { message, status } = error as RequestError;

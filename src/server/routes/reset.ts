@@ -9,8 +9,10 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { readEmailCookie, setGUEmailCookie } from '@/server/lib/emailCookie';
+import { readEmailCookie } from '@/server/lib/emailCookie';
 import { RequestError } from '@/shared/lib/error';
+import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
+import { ResetPasswordErrors } from '@/shared/model/Errors';
 
 const router = Router();
 
@@ -45,10 +47,11 @@ router.post(
     try {
       await resetPassword(email, req.ip, returnUrl);
 
-      setGUEmailCookie(res, email);
+      setEncryptedStateCookie(res, { email });
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      const { message, status } = error as RequestError;
+      const { message = ResetPasswordErrors.GENERIC, status = 500 } =
+        error as RequestError;
 
       trackMetric(Metrics.SEND_PASSWORD_RESET_FAILURE);
 

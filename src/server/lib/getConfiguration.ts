@@ -90,6 +90,11 @@ export const getConfiguration = (): Configuration => {
     'Google Recaptcha secret key is missing',
   );
 
+  const encryptionSecretKey = getOrThrow(
+    process.env.ENCRYPTION_SECRET_KEY,
+    'ENCRYPTION_SECRET_KEY is missing',
+  );
+
   return {
     port: +port,
     idapiBaseUrl,
@@ -111,5 +116,6 @@ export const getConfiguration = (): Configuration => {
       siteKey: googleRecaptchaSiteKey,
       secretKey: googleRecaptchaSecretKey,
     },
+    encryptionSecretKey,
   };
 };

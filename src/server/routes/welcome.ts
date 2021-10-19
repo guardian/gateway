@@ -13,8 +13,9 @@ import {
   checkResetPasswordTokenController,
   setPasswordTokenController,
 } from '@/server/controllers/changePassword';
-import { readEmailCookie, setGUEmailCookie } from '@/server/lib/emailCookie';
+import { readEmailCookie } from '@/server/lib/emailCookie';
 import { RequestError } from '@/shared/lib/error';
+import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
 
 const router = Router();
 
@@ -52,7 +53,7 @@ router.post(
     try {
       await resendAccountVerificationEmail(email, req.ip, returnUrl);
 
-      setGUEmailCookie(res, email);
+      setEncryptedStateCookie(res, { email });
 
       return res.redirect(303, Routes.WELCOME_SENT);
     } catch (error) {
