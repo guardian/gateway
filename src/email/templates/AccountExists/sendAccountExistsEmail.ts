@@ -1,6 +1,5 @@
 import { render } from 'mjml-react';
 import { send } from '@/email/lib/send';
-import { getProfileUrl } from '@/server/lib/getProfileUrl';
 
 import { AccountExists } from './AccountExists';
 import { AccountExistsText } from './AccountExistsText';
@@ -10,15 +9,9 @@ type Props = {
   subject?: string;
 };
 
-const profileUrl = getProfileUrl();
+const plainText = AccountExistsText();
 
-const plainText = AccountExistsText({ profileUrl });
-
-const { html } = render(
-  AccountExists({
-    profileUrl,
-  }),
-);
+const { html } = render(AccountExists());
 
 export const sendAccountExistsEmail = ({
   to,
