@@ -12,27 +12,36 @@ import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { RequestError } from '@/shared/lib/error';
+import {
+  readEncryptedStateCookie,
+  setEncryptedStateCookie,
+} from '@/server/lib/encryptedStateCookie';
+import { decrypt } from '@/server/lib/idapi/decryptEmailToken';
 
 const router = Router();
 
-router.get(Routes.SIGN_IN, (req: Request, res: ResponseWithRequestState) => {
-  const html = renderer(Routes.SIGN_IN, {
-    requestState: res.locals,
-    pageTitle: PageTitle.SIGN_IN,
-  });
-  res.type('html').send(html);
-});
-
-router.get(
-  Routes.SIGN_IN_CURRENT,
-  (req: Request, res: ResponseWithRequestState) => {
-    const html = renderer(Routes.SIGN_IN_CURRENT, {
-      requestState: res.locals,
+const signIn = (route: string) =>
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    const state = res.locals;
+    const { encryptedEmail } = res.locals.queryParams;
+    if (encryptedEmail) {
+      const email = encryptedEmail ? await decrypt(encryptedEmail, req.ip) : {};
+      setEncryptedStateCookie(res, email);
+    }
+    const html = renderer(route, {
+      requestState: deepmerge(state, {
+        pageData: {
+          email: readEncryptedStateCookie(req)?.email,
+        },
+      }),
       pageTitle: PageTitle.SIGN_IN,
     });
     res.type('html').send(html);
-  },
-);
+  });
+
+router.get(Routes.SIGN_IN, signIn(Routes.SIGN_IN));
+
+router.get(Routes.SIGN_IN_CURRENT, signIn(Routes.SIGN_IN_CURRENT));
 
 router.post(
   Routes.SIGN_IN,

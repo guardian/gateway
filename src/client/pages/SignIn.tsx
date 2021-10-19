@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { css } from '@emotion/react';
 import { MainGrid } from '@/client/layouts/MainGrid';
 import { Header } from '@/client/components/Header';
@@ -19,6 +19,8 @@ import { border, space } from '@guardian/src-foundations';
 import { from } from '@guardian/src-foundations/mq';
 import { topMargin } from '@/client/styles/Shared';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
+import { useLocation } from 'react-router-dom';
+import qs from 'query-string';
 
 type SigninProps = {
   returnUrl?: string;
@@ -75,7 +77,21 @@ const Links = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
+const removeEncryptedEmailParam = () => {
+  const { pathname, search } = useLocation();
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { encryptedEmail, ...params } = qs.parse(search);
+    const queryString = qs.stringify(params);
+    if (typeof window !== 'undefined') {
+      window.history.replaceState(null, '', `${pathname}?${queryString}`);
+    }
+  });
+};
+
 export const SignIn = ({ returnUrl = '', email = '' }: SigninProps) => {
+  // we use the `encryptedEmail` param to auto-fill the email field, but after that we want to remove it from the url
+  removeEncryptedEmailParam();
   const returnUrlQuery = returnUrl
     ? `?returnUrl=${encodeURIComponent(returnUrl)}`
     : '';
