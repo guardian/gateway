@@ -1,11 +1,9 @@
-import { Routes } from '@/shared/model/Routes';
-
 export const ResetPasswordText = () => `
 Hello,
 You’ve asked us to send you a link to reset your password.
 This link is only valid for 30 minutes.
 
-https://profile.theguardian.com${Routes.CHANGE_PASSWORD}/TOKEN_PLACEHOLDER
+$passwordResetLink
 
 The Guardian
 
