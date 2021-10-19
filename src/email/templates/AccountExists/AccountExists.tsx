@@ -7,13 +7,8 @@ import { SubHeader } from '@/email/components/SubHeader';
 import { Text } from '@/email/components/Text';
 import { Link } from '@/email/components/Link';
 import { Footer } from '@/email/components/Footer';
-import { Routes } from '@/shared/model/Routes';
 
-export interface AccountExistsProps {
-  profileUrl: string;
-}
-
-export const AccountExists = ({ profileUrl }: AccountExistsProps) => {
+export const AccountExists = () => {
   return (
     <Page>
       <Header />
@@ -24,8 +19,7 @@ export const AccountExists = ({ profileUrl }: AccountExistsProps) => {
           <strong>You are already registered with the Guardian.</strong>
         </p>
         <p>
-          Know your password?{' '}
-          <Link href={`${profileUrl}${Routes.SIGN_IN}`}>Sign in</Link>
+          Know your password? <Link href={'$signIn'}>Sign in</Link>
         </p>
         <p>If you forgot your password, you can click below to reset it.</p>
       </Text>

@@ -1,14 +1,11 @@
-import { Routes } from '@/shared/model/Routes';
-import { AccountExistsProps } from './AccountExists';
-
-export const AccountExistsText = ({ profileUrl }: AccountExistsProps) => `
+export const AccountExistsText = () => `
 Hello again,
 
 You are already registered with the Guardian.
 
 Know your password? Sign in:
 
-${profileUrl}${Routes.SIGN_IN}
+$signIn
 
 If you forgot your password, you can use the link below to reset it.
 

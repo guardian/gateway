@@ -10,15 +10,9 @@ type Props = {
   subject?: string;
 };
 
-const profileUrl = getProfileUrl();
+const plainText = AccountExistsText();
 
-const plainText = AccountExistsText({ profileUrl });
-
-const { html } = render(
-  AccountExists({
-    profileUrl,
-  }),
-);
+const { html } = render(AccountExists());
 
 export const sendAccountExistsEmail = ({
   to,
