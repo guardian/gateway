@@ -1,6 +1,7 @@
 import { Consent } from '@/shared/model/Consent';
 import { NewsLetter } from '@/shared/model/Newsletter';
 import { GeoLocation } from '@/shared/model/Geolocation';
+import { EmailType } from '@/shared/model/EmailType';
 import { Participations } from '@guardian/ab-core';
 
 export interface FieldError {
@@ -26,6 +27,9 @@ export interface PageData {
   geolocation?: GeoLocation;
   fieldErrors?: Array<FieldError>;
   browserName?: string;
+
+  // email sent page specific
+  emailType?: EmailType;
 
   // onboarding specific
   newsletters?: NewsLetter[];

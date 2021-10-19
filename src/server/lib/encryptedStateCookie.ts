@@ -2,10 +2,7 @@ import { Request, Response } from 'express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from './logger';
 import { decrypt, encrypt } from './crypto';
-
-interface EncryptedState {
-  email?: string;
-}
+import { EncryptedState } from '@/shared/model/EncryptedState';
 
 const { baseUri } = getConfiguration();
 
