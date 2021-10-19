@@ -2,18 +2,15 @@ import { Routes } from '@/shared/model/Routes';
 
 export const ResetPasswordText = () => `
 Hello,
-You’ve requested us to send you a link to reset your password.
-Please click the link below to reset your password.
+You’ve asked us to send you a link to reset your password.
+This link is only valid for 30 minutes.
 
 https://profile.theguardian.com${Routes.CHANGE_PASSWORD}/TOKEN_PLACEHOLDER
 
 The Guardian
 
-If you have any queries about this email please contact our customer services team at userhelp@theguardian.com
+If you didn’t request to reset your password, please ignore this email. Your details won’t be changed and no one has accessed your account.
+If you have any queries about why you are receiving this email, please contact our customer service team at userhelp@theguardian.com
 
-Your Data: To find out what personal data we collect and how we use it, please visit our privacy policy at https://www.theguardian.com/help/privacy-policy
-
-Terms & Conditions: By registering with theguardian.com you agreed to abide by our terms of service, as described at https://www.theguardian.com/help/terms-of-service
-
-Guardian News and Media Limited, Kings Place, 90 York Way, London, N1 9GU, United Kingdom
+Guardian News and Media Limited, Kings Place, 90 York Way London N1 9GU, United Kingdom
 `;

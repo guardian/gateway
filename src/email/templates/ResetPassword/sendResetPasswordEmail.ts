@@ -1,6 +1,5 @@
 import { render } from 'mjml-react';
 import { send } from '@/email/lib/send';
-import { getProfileUrl } from '@/server/lib/getProfileUrl';
 
 import { ResetPassword } from './ResetPassword';
 import { ResetPasswordText } from './ResetPasswordText';
@@ -12,11 +11,7 @@ type Props = {
 };
 
 const plainText = ResetPasswordText();
-const { html } = render(
-  ResetPassword({
-    profileUrl: getProfileUrl(),
-  }),
-);
+const { html } = render(ResetPassword());
 
 export const sendResetPasswordEmail = ({
   token,
