@@ -5,8 +5,9 @@ import { ClientStateContext } from '@/client/components/ClientState';
 
 export const SignInPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData = {} } = clientState;
+  const { pageData = {}, globalMessage = {} } = clientState;
   const { returnUrl, email } = pageData;
+  const { error } = globalMessage;
 
-  return <SignIn returnUrl={returnUrl} email={email} />;
+  return <SignIn returnUrl={returnUrl} email={email} error={error} />;
 };

@@ -22,10 +22,12 @@ import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { useLocation } from 'react-router-dom';
 import qs from 'query-string';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
+import { SignInErrors } from '@/shared/model/Errors';
 
 type SigninProps = {
   returnUrl?: string;
   email?: string;
+  error?: string;
 };
 
 const passwordInput = css`
@@ -89,7 +91,11 @@ const removeEncryptedEmailParam = (pathname: string, search: string) => {
   });
 };
 
-export const SignIn = ({ returnUrl = '', email = '' }: SigninProps) => {
+export const SignIn = ({
+  returnUrl = '',
+  email = '',
+  error = '',
+}: SigninProps) => {
   const { pathname, search } = useLocation();
   // we use the `encryptedEmail` param to auto-fill the email field, but after that we want to remove it from the url
   removeEncryptedEmailParam(pathname, search);
@@ -115,6 +121,17 @@ export const SignIn = ({ returnUrl = '', email = '' }: SigninProps) => {
         ]}
       />
       <MainGrid gridSpanDefinition={gridItemSignInAndRegistration}>
+        {error == SignInErrors.ACCOUNT_ALREADY_EXISTS && (
+          <p
+            css={css`
+              ${textSans.small()}
+            `}
+          >
+            You cannot sign in with your social account because you already have
+            an account with the Guardian. Please enter your password below to
+            sign in.
+          </p>
+        )}
         <form method="post" action={`${signInPath}`}>
           <CsrfFormField />
           <div css={topMargin}>
