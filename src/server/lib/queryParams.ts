@@ -26,6 +26,11 @@ const validateCsrfError = (
   }
 };
 
+const validateErrorCode = (error?: string): string | undefined => {
+  const validErrorCodes = ['accountLinkingRequired'];
+  return validErrorCodes.find((code) => code === error);
+};
+
 export const parseExpressQueryParams = (
   method: string,
   {
@@ -36,6 +41,7 @@ export const parseExpressQueryParams = (
     refViewId,
     ref,
     encryptedEmail,
+    error,
   }: {
     returnUrl?: string;
     clientId?: string;
@@ -44,6 +50,7 @@ export const parseExpressQueryParams = (
     refViewId?: string;
     ref?: string;
     encryptedEmail?: string;
+    error?: string;
   },
 ): QueryParams => {
   return {
@@ -54,6 +61,7 @@ export const parseExpressQueryParams = (
     refViewId,
     ref: ref && validateRefUrl(ref),
     encryptedEmail: encryptedEmail,
+    error: validateErrorCode(error),
   };
 };
 

@@ -13,4 +13,5 @@ export interface QueryParams extends StringifiableRecord {
   // https://github.com/guardian/ophan/blob/70b658e785c490c411670bbd3c7fde62ae0224fc/the-slab/app/extractors/ReferrerExtractor.scala#L129
   refViewId?: string;
   encryptedEmail?: string;
+  error?: string;
 }

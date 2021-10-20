@@ -17,21 +17,29 @@ import {
   setEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
 import { decrypt } from '@/server/lib/idapi/decryptEmailToken';
+import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
 
 const router = Router();
 
 const signIn = (route: string) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
-    const { encryptedEmail } = res.locals.queryParams;
+    const { encryptedEmail, error } = res.locals.queryParams;
     if (encryptedEmail) {
       const email = encryptedEmail ? await decrypt(encryptedEmail, req.ip) : {};
       setEncryptedStateCookie(res, email);
     }
+    const errorMessage =
+      error == FederationErrors.SOCIAL_SIGNIN_BLOCKED
+        ? SignInErrors.ACCOUNT_ALREADY_EXISTS
+        : '';
     const html = renderer(route, {
       requestState: deepmerge(state, {
         pageData: {
           email: readEncryptedStateCookie(req)?.email,
+        },
+        globalMessage: {
+          error: errorMessage,
         },
       }),
       pageTitle: PageTitle.SIGN_IN,
