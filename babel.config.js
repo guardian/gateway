@@ -10,5 +10,6 @@ module.exports = {
     '@babel/plugin-proposal-optional-chaining',
     '@babel/plugin-transform-runtime',
     '@babel/plugin-proposal-nullish-coalescing-operator',
+    '@babel/plugin-proposal-object-rest-spread',
   ],
 };
