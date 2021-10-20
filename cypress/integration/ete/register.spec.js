@@ -116,7 +116,7 @@ describe('Registration flow', () => {
     });
   });
 
-  it.only('sends user an account exists email for user with existing account trying to register', () => {
+  it('sends user an account exists email for user with existing account trying to register, clicks sign in, taken to /signin', () => {
     cy.visit('/register');
     const timeRequestWasMade = new Date();
 
@@ -139,20 +139,72 @@ describe('Registration flow', () => {
     ).then((email) => {
       const body = email.html.body;
 
-      console.log(email.html.links);
+      const links = email.html.links ?? [];
 
       expect(body).to.have.string('This account already exists');
       expect(body).to.have.string('Sign in');
       expect(body).to.have.string('Reset password');
+
+      expect(links.length).to.eq(3);
+
+      const signInLink = links.find((link) => link.text === 'Sign in');
+
+      expect(signInLink).not.to.be.undefined;
+      expect(signInLink.href).to.include('/signin');
+
+      const signInUrl = new URL(signInLink.href);
+
+      cy.visit(signInUrl.pathname);
+      cy.url().should('include', '/signin');
     });
   });
 
-  it('returns an error when email is in use and report error link redirects to support', () => {
+  it('sends user an account exists email for user with existing account trying to register, clicks reset password on email', () => {
     cy.visit('/register');
-    cy.get('input[name=email').type(existing.email);
+    const timeRequestWasMade = new Date();
+
+    cy.get('input[name=email]').type(existing.email);
     cy.get('[data-cy="register-button"]').click();
 
-    cy.contains('There was a problem registering, please try again');
+    cy.contains('Email sent');
+    cy.contains(existing.email);
+    cy.contains('Resend email');
+    cy.contains('Change email address');
+
+    cy.mailosaurGetMessage(
+      unregisteredAccount.serverId,
+      {
+        sentTo: existing.email,
+      },
+      {
+        receivedAfter: timeRequestWasMade,
+      },
+    ).then((email) => {
+      const body = email.html.body;
+
+      const links = email.html.links ?? [];
+
+      expect(body).to.have.string('This account already exists');
+      expect(body).to.have.string('Sign in');
+      expect(body).to.have.string('Reset password');
+
+      expect(links.length).to.eq(3);
+
+      const passwordResetLink = links.find(
+        (link) => link.text === 'Reset password',
+      );
+
+      expect(passwordResetLink).not.to.be.undefined;
+
+      const passwordResetUrl = new URL(passwordResetLink.href);
+
+      // extract the reset token (so we can reset this reader's password)
+      const match = passwordResetUrl.pathname.match(/\/c\/([^"]*)/);
+      const token = match[1];
+
+      cy.visit(`/reset-password/${token}`);
+      cy.contains('Set Password');
+    });
   });
 
   it('errors when the user tries to register offline and allows registration when back online', () => {
@@ -172,6 +224,7 @@ describe('Registration flow', () => {
       'There was a problem with the captcha process. You may find disabling your browser plugins, ensuring JavaScript is enabled or updating your browser will resolve this issue.',
     ).should('not.exist');
 
-    cy.contains('There was a problem registering, please try again');
+    cy.contains('Email sent');
+    cy.contains(unregisteredAccount.email);
   });
 });
