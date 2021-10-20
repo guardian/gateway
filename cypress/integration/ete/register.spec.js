@@ -116,6 +116,37 @@ describe('Registration flow', () => {
     });
   });
 
+  it.only('sends user an account exists email for user with existing account trying to register', () => {
+    cy.visit('/register');
+    const timeRequestWasMade = new Date();
+
+    cy.get('input[name=email]').type(existing.email);
+    cy.get('[data-cy="register-button"]').click();
+
+    cy.contains('Email sent');
+    cy.contains(existing.email);
+    cy.contains('Resend email');
+    cy.contains('Change email address');
+
+    cy.mailosaurGetMessage(
+      unregisteredAccount.serverId,
+      {
+        sentTo: existing.email,
+      },
+      {
+        receivedAfter: timeRequestWasMade,
+      },
+    ).then((email) => {
+      const body = email.html.body;
+
+      console.log(email.html.links);
+
+      expect(body).to.have.string('This account already exists');
+      expect(body).to.have.string('Sign in');
+      expect(body).to.have.string('Reset password');
+    });
+  });
+
   it('returns an error when email is in use and report error link redirects to support', () => {
     cy.visit('/register');
     cy.get('input[name=email').type(existing.email);
@@ -129,7 +160,7 @@ describe('Registration flow', () => {
 
     cy.network({ offline: true });
 
-    cy.get('input[name=email').type(existing.email);
+    cy.get('input[name=email').type(unregisteredAccount.email);
     cy.get('[data-cy="register-button"]').click();
     cy.contains(
       'There was a problem with the captcha process. You may find disabling your browser plugins, ensuring JavaScript is enabled or updating your browser will resolve this issue.',
