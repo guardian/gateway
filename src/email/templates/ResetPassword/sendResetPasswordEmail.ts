@@ -17,8 +17,8 @@ export const sendResetPasswordEmail = ({
   subject = 'Reset your theguardian.com password',
 }: Props) => {
   return send({
-    html: html,
-    plainText: plainText,
+    html,
+    plainText,
     subject,
     to,
   });
