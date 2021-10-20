@@ -11,6 +11,10 @@ export enum IdapiErrorMessages {
   INVALID_EMAIL_ADDRESS = 'Invalid emailAddress:',
 }
 
+export enum GenericErrors {
+  DEFAULT = 'Sorry, something went wrong. Please try again.',
+}
+
 export enum ResetPasswordErrors {
   GENERIC = 'There was a problem resetting your password, please try again.',
   NO_ACCOUNT = 'There is no account for that email address, please check for typos or create an account.',
