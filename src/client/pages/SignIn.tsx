@@ -21,6 +21,7 @@ import { topMargin } from '@/client/styles/Shared';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { useLocation } from 'react-router-dom';
 import qs from 'query-string';
+import { addReturnUrlToPath } from '@/server/lib/queryParams';
 
 type SigninProps = {
   returnUrl?: string;
@@ -77,8 +78,7 @@ const Links = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
-const removeEncryptedEmailParam = () => {
-  const { pathname, search } = useLocation();
+const removeEncryptedEmailParam = (pathname: string, search: string) => {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { encryptedEmail, ...params } = qs.parse(search);
@@ -90,11 +90,12 @@ const removeEncryptedEmailParam = () => {
 };
 
 export const SignIn = ({ returnUrl = '', email = '' }: SigninProps) => {
+  const { pathname, search } = useLocation();
   // we use the `encryptedEmail` param to auto-fill the email field, but after that we want to remove it from the url
-  removeEncryptedEmailParam();
-  const returnUrlQuery = returnUrl
-    ? `?returnUrl=${encodeURIComponent(returnUrl)}`
-    : '';
+  removeEncryptedEmailParam(pathname, search);
+  const signInPath = returnUrl
+    ? addReturnUrlToPath(Routes.SIGN_IN, returnUrl)
+    : Routes.SIGN_IN;
 
   return (
     <>
@@ -114,7 +115,7 @@ export const SignIn = ({ returnUrl = '', email = '' }: SigninProps) => {
         ]}
       />
       <MainGrid gridSpanDefinition={gridItemSignInAndRegistration}>
-        <form method="post" action={`${Routes.SIGN_IN}${returnUrlQuery}`}>
+        <form method="post" action={`${signInPath}`}>
           <CsrfFormField />
           <div css={topMargin}>
             <TextInput
@@ -146,7 +147,7 @@ export const SignIn = ({ returnUrl = '', email = '' }: SigninProps) => {
           displayText="or continue with"
           cssOverrides={divider}
         />
-        <SocialButtons returnUrl="todo" />
+        <SocialButtons returnUrl={returnUrl} />
       </MainGrid>
       <Footer />
     </>
