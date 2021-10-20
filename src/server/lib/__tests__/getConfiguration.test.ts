@@ -24,6 +24,7 @@ describe('getConfiguration', () => {
     process.env.PORT = '9000';
     process.env.IDAPI_CLIENT_ACCESS_TOKEN = 'idapi_api_key';
     process.env.IDAPI_BASE_URL = 'http://localhost:1234';
+    process.env.OAUTH_BASE_URL = 'http://localhost:5678';
     process.env.PLAY_SESSION_COOKIE_SECRET = 'play-secret';
     process.env.BASE_URI = 'base-uri';
     process.env.DEFAULT_RETURN_URI = 'default-return-uri';
@@ -41,6 +42,7 @@ describe('getConfiguration', () => {
       port: 9000,
       idapiClientAccessToken: 'idapi_api_key',
       idapiBaseUrl: 'http://localhost:1234',
+      oauthBaseUrl: 'http://localhost:5678',
       playSessionCookieSecret: 'play-secret',
       baseUri: 'base-uri',
       signInPageUrl: 'sign-in-page-url',

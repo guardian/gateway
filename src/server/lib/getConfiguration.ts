@@ -43,6 +43,11 @@ export const getConfiguration = (): Configuration => {
     'IDAPI Base URL missing.',
   );
 
+  const oauthBaseUrl = getOrThrow(
+    process.env.OAUTH_BASE_URL,
+    'OAUTH Base URL missing.',
+  );
+
   const idapiClientAccessToken = getOrThrow(
     process.env.IDAPI_CLIENT_ACCESS_TOKEN,
     'IDAPI Client Access Token missing.',
@@ -98,6 +103,7 @@ export const getConfiguration = (): Configuration => {
   return {
     port: +port,
     idapiBaseUrl,
+    oauthBaseUrl,
     idapiClientAccessToken,
     playSessionCookieSecret,
     signInPageUrl,

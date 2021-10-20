@@ -2,6 +2,7 @@ export interface Configuration {
   port: number;
   idapiClientAccessToken: string;
   idapiBaseUrl: string;
+  oauthBaseUrl: string;
   playSessionCookieSecret: string;
   signInPageUrl: string;
   baseUri: string;

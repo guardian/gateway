@@ -17,6 +17,7 @@ jobs:
           BASE_URI: localhost:8861
           IDAPI_CLIENT_ACCESS_TOKEN: fakekey
           IDAPI_BASE_URL: http://localhost:9000
+          OAUTH_BASE_URL: http://localhost:5005
           PLAY_SESSION_COOKIE_SECRET: faketoken
           DEFAULT_RETURN_URI: https://m.code.dev-theguardian.com
           CYPRESS_DEFAULT_RETURN_URI: https://m.code.dev-theguardian.com

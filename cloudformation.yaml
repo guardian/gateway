@@ -11,6 +11,9 @@ Parameters:
   IdapiBaseUrl:
     Description: The base url for idapi
     Type: AWS::SSM::Parameter::Value<String>
+  OauthBaseUrl:
+    Description: The base URL for registering or signing in users with Facebook, Google or Apple.
+    Type: AWS::SSM::Parameter::Value<String>
   SignInPageUrl:
     Description: Sign in page URL used as a fallback if auth redirect retrieval fails.
     Type: AWS::SSM::Parameter::Value<String>
@@ -211,6 +214,7 @@ Resources:
             Environment=PORT=9233
             Environment=IDAPI_CLIENT_ACCESS_TOKEN=$IDAPI_CLIENT_ACCESS_TOKEN
             Environment=IDAPI_BASE_URL=${IdapiBaseUrl}
+            Environment=OAUTH_BASE_URL=${OauthBaseUrl}
             Environment=SIGN_IN_PAGE_URL=${SignInPageUrl}
             Environment=BASE_URI=${BaseUri}
             Environment=PLAY_SESSION_COOKIE_SECRET=$PLAY_SESSION_COOKIE_SECRET
