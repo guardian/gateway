@@ -156,6 +156,8 @@ describe('Registration flow', () => {
 
       cy.visit(signInUrl.pathname);
       cy.url().should('include', '/signin');
+
+      cy.mailosaurDeleteMessage(email.id);
     });
   });
 
@@ -204,6 +206,8 @@ describe('Registration flow', () => {
 
       cy.visit(`/reset-password/${token}`);
       cy.contains('Set Password');
+
+      cy.mailosaurDeleteMessage(email.id);
     });
   });
 
@@ -219,6 +223,7 @@ describe('Registration flow', () => {
     );
 
     cy.network({ offline: false });
+    const timeRequestWasMade = new Date();
     cy.get('[data-cy="register-button"]').click();
     cy.contains(
       'There was a problem with the captcha process. You may find disabling your browser plugins, ensuring JavaScript is enabled or updating your browser will resolve this issue.',
@@ -226,5 +231,17 @@ describe('Registration flow', () => {
 
     cy.contains('Email sent');
     cy.contains(unregisteredAccount.email);
+
+    cy.mailosaurGetMessage(
+      unregisteredAccount.serverId,
+      {
+        sentTo: unregisteredAccount.email,
+      },
+      {
+        receivedAfter: timeRequestWasMade,
+      },
+    ).then((email) => {
+      cy.mailosaurDeleteMessage(email.id);
+    });
   });
 });

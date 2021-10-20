@@ -22,11 +22,8 @@ const branchOrHandleError = (idapiError: IDAPIError): EmailType | never => {
       const err = error.errors[0];
       const { message } = err;
 
-      switch (message) {
-        case IdapiErrorMessages.EMAIL_IN_USE:
-          return EmailType.ACCOUNT_EXISTS;
-        default:
-          break;
+      if (message === IdapiErrorMessages.EMAIL_IN_USE) {
+        return EmailType.ACCOUNT_EXISTS;
       }
     }
   }
