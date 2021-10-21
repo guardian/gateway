@@ -1,3 +1,4 @@
+import { EmailType } from '@/shared/model/EmailType';
 import { IdapiErrorMessages, RegistrationErrors } from '@/shared/model/Errors';
 import {
   APIAddClientAccessToken,
@@ -11,6 +12,25 @@ import {
   addRefViewIdToPath,
   addReturnUrlToPath,
 } from '../queryParams';
+
+const url = '/guest?accountVerificationEmail=true';
+
+const branchOrHandleError = (idapiError: IDAPIError): EmailType | never => {
+  if (idapiError?.error) {
+    const { error } = idapiError;
+    if (error.status === 'error' && error.errors?.length) {
+      const err = error.errors[0];
+      const { message } = err;
+
+      if (message === IdapiErrorMessages.EMAIL_IN_USE) {
+        return EmailType.ACCOUNT_EXISTS;
+      }
+    }
+  }
+
+  logger.error(`IDAPI Error: guest account creation ${url}`, idapiError);
+  return handleError(idapiError);
+};
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
   if (error.status === 'error' && error.errors?.length) {
@@ -34,8 +54,7 @@ export const guest = async (
   returnUrl?: string,
   refViewId?: string,
   ref?: string,
-) => {
-  const url = '/guest?accountVerificationEmail=true';
+): Promise<EmailType> => {
   const options = APIPostOptions({
     primaryEmailAddress: email,
   });
@@ -55,9 +74,9 @@ export const guest = async (
   }
 
   try {
-    return await idapiFetch(path, APIAddClientAccessToken(options, ip));
+    await idapiFetch(path, APIAddClientAccessToken(options, ip));
+    return EmailType.GUEST_REGISTER;
   } catch (error) {
-    logger.error(`IDAPI Error: guest account creation ${url}`, error);
-    return handleError(error as IDAPIError);
+    return branchOrHandleError(error as IDAPIError);
   }
 };

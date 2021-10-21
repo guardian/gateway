@@ -1,19 +1,18 @@
 import { render } from 'mjml-react';
 import { send } from '@/email/lib/send';
 
-import { AccountExists } from './AccountExists';
-import { AccountExistsText } from './AccountExistsText';
+import { CreatePassword } from './CreatePassword';
+import { CreatePasswordText } from './CreatePasswordText';
 
 type Props = {
   to: string;
   subject?: string;
 };
 
-const plainText = AccountExistsText();
+const plainText = CreatePasswordText();
+const { html } = render(CreatePassword());
 
-const { html } = render(AccountExists());
-
-export const sendAccountExistsEmail = ({
+export const sendNoAccountEmail = ({
   to,
   subject = 'Nearly there...',
 }: Props) => {
