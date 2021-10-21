@@ -7,6 +7,7 @@ import { SvgAppleBrand } from '@guardian/src-icons';
 import { SvgFacebookBrand } from '@guardian/src-icons';
 import { from } from '@guardian/src-foundations/mq';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 
 type Props = {
   returnUrl?: string;
@@ -55,7 +56,8 @@ const iconOverrides = css`
 `;
 
 const buildUrl = (returnUrl: string | undefined, IdP: string): string => {
-  const url = `https://oauth.theguardian.com/${IdP}/signin`;
+  const { oauthBaseUrl } = getConfiguration();
+  const url = `${oauthBaseUrl}/${IdP}/signin`;
   return returnUrl ? addReturnUrlToPath(url, returnUrl) : url;
 };
 
