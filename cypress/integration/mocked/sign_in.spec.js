@@ -25,6 +25,7 @@ describe('Sign in flow', () => {
   });
 
   context('Signing in', () => {
+    const defaultReturnUrl = 'https://m.code.dev-theguardian.com';
     it('shows an error message when sign in fails', function () {
       cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
       cy.get('input[name="email"]').type('example@example.com');
@@ -83,7 +84,27 @@ describe('Sign in flow', () => {
         },
       });
       cy.get('[data-cy=sign-in-button]').click();
-      cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+      cy.url().should('include', defaultReturnUrl);
+    });
+    it('removes encryptedEmail parameter from query string', () => {
+      cy.visit(`/signin?encryptedEmail=bhvlabgflbgyil`);
+      cy.location('search').should(
+        'eq',
+        `?returnUrl=${encodeURIComponent(defaultReturnUrl)}`,
+      );
+    });
+    it('removes encryptedEmail parameter and preserves all other valid parameters', () => {
+      const returnUrl =
+        'https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance';
+      cy.visit(
+        `/signin?returnUrl=${encodeURIComponent(
+          returnUrl,
+        )}&encryptedEmail=bdfalrbagbgu&refViewId=12345`,
+      );
+      cy.location('search').should(
+        'eq',
+        `?refViewId=12345&returnUrl=${encodeURIComponent(returnUrl)}`,
+      );
     });
   });
 
