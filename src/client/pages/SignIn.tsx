@@ -19,7 +19,6 @@ import { border, space } from '@guardian/src-foundations';
 import { from } from '@guardian/src-foundations/mq';
 import { topMargin } from '@/client/styles/Shared';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
-import { useLocation } from 'react-router-dom';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { SignInErrors } from '@/shared/model/Errors';
 
@@ -27,6 +26,8 @@ type SigninProps = {
   returnUrl?: string;
   email?: string;
   error?: string;
+  pathname?: string;
+  search?: string;
 };
 
 const passwordInput = css`
@@ -91,8 +92,9 @@ export const SignIn = ({
   returnUrl = '',
   email = '',
   error = '',
+  pathname = '',
+  search = '',
 }: SigninProps) => {
-  const { pathname, search } = useLocation();
   // we use the `encryptedEmail` param to auto-fill the email field, but after that we want to remove it from the url
   removeEncryptedEmailParam(pathname, search);
   const signInPath = returnUrl
