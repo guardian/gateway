@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { css } from '@emotion/react';
 import { MainGrid } from '@/client/layouts/MainGrid';
 import { Header } from '@/client/components/Header';
@@ -20,7 +20,6 @@ import { from } from '@guardian/src-foundations/mq';
 import { topMargin } from '@/client/styles/Shared';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { useLocation } from 'react-router-dom';
-import qs from 'query-string';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { SignInErrors } from '@/shared/model/Errors';
 
@@ -80,15 +79,12 @@ const Links = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
-const removeEncryptedEmailParam = (pathname: string, search: string) => {
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { encryptedEmail, ...params } = qs.parse(search);
-    const queryString = qs.stringify(params);
-    if (typeof window !== 'undefined') {
-      window.history.replaceState(null, '', `${pathname}?${queryString}`);
-    }
-  });
+const removeEncryptedEmailParam = (path: string, search: string) => {
+  const qs = search.replace(/encryptedEmail=[^&]*[&]?/, '');
+  const queryString = qs.length > 1 ? qs : '';
+  if (typeof window !== 'undefined') {
+    window.history.replaceState(null, '', `${path}${queryString}`);
+  }
 };
 
 export const SignIn = ({

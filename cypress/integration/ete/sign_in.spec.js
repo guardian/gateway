@@ -85,4 +85,16 @@ describe('Sign in flow', () => {
       )}`,
     );
   });
+  it('should remove encryptedEmail parameter', () => {
+    cy.visit(
+      `/signin?returnUrl=${encodeURIComponent(
+        returnUrl,
+      )}&encryptedEmail=bhjlfvbdyvlbfryuvl&refId=1234`,
+    );
+    cy.location('pathname').should('eq', `/signin`);
+    cy.location('search').should(
+      'eq',
+      `?returnUrl=${encodeURIComponent(returnUrl)}&refId=1234`,
+    );
+  });
 });
