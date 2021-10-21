@@ -66,33 +66,35 @@ describe('Sign in flow', () => {
     cy.get('[data-cy="google-sign-in-button"]').should(
       'have.attr',
       'href',
-      `${oauthBaseUrl}/google/signin?returnUrl=${encodeURIComponent(
+      `https://oauth.theguardian.com/google/signin?returnUrl=${encodeURIComponent(
         returnUrl,
       )}`,
     );
     cy.get('[data-cy="facebook-sign-in-button"]').should(
       'have.attr',
       'href',
-      `${oauthBaseUrl}/facebook/signin?returnUrl=${encodeURIComponent(
+      `https://oauth.theguardian.com/facebook/signin?returnUrl=${encodeURIComponent(
         returnUrl,
       )}`,
     );
     cy.get('[data-cy="apple-sign-in-button"]').should(
       'have.attr',
       'href',
-      `${oauthBaseUrl}/apple/signin?returnUrl=${encodeURIComponent(returnUrl)}`,
+      `https://oauth.theguardian.com/apple/signin?returnUrl=${encodeURIComponent(
+        returnUrl,
+      )}`,
     );
   });
   it('should remove encryptedEmail parameter', () => {
     cy.visit(
       `/signin?returnUrl=${encodeURIComponent(
         returnUrl,
-      )}&encryptedEmail=bhjlfvbdyvlbfryuvl&refId=1234`,
+      )}&encryptedEmail=bhjlfvbdyvlbfryuvl&refViewId=1234`,
     );
     cy.location('pathname').should('eq', `/signin`);
     cy.location('search').should(
       'eq',
-      `?returnUrl=${encodeURIComponent(returnUrl)}&refId=1234`,
+      `?returnUrl=${encodeURIComponent(returnUrl)}&refViewId=1234`,
     );
   });
   it('should show additional information when accountLinkingRequired error is present', () => {
