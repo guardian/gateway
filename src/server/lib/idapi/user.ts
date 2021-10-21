@@ -103,3 +103,23 @@ export const resendAccountVerificationEmail = async (
     return handleError(error as IDAPIError);
   }
 };
+
+export const resendAccountExistsEmail = async (
+  email: string,
+  ip: string,
+  returnUrl: string,
+) => {
+  const url = '/user/send-account-exists-email';
+  const options = APIPostOptions({
+    'email-address': email,
+  });
+  try {
+    await idapiFetch(
+      addReturnUrlToPath(url, returnUrl),
+      APIAddClientAccessToken(options, ip),
+    );
+  } catch (error) {
+    logger.error(`IDAPI Error resend account exists email ${url}`, error);
+    return handleError(error as IDAPIError);
+  }
+};
