@@ -1,6 +1,5 @@
 /// <reference types='cypress' />
 // This test depends on this Mailosaur account already being registered
-import { getConfiguration } from '@/server/lib/getConfiguration';
 
 const existing = {
   serverId: Cypress.env('MAILOSAUR_SERVER_ID'),
@@ -9,7 +8,6 @@ const existing = {
   password: 'existing_password',
 };
 describe('Sign in flow', () => {
-  const { oauthBaseUrl } = getConfiguration();
   const returnUrl =
     'https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance';
 
