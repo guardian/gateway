@@ -63,7 +63,7 @@ describe('Sign in flow', () => {
     cy.url().should('eq', returnUrl);
   });
 
-  it('redirects correctly for social sign in', () => {
+  it.skip('redirects correctly for social sign in', () => {
     cy.visit(`/signin?returnUrl=${encodeURIComponent(returnUrl)}`);
     cy.get('[data-cy="google-sign-in-button"]').should(
       'have.attr',
