@@ -7,8 +7,10 @@ const existing = {
   password: 'existing_password',
 };
 describe('Sign in flow', () => {
+  // We specify the CAPI json version of the article to reduce page load time waiting for ads.
+  // This change was added because our test was timing out occasionally.
   const returnUrl =
-    'https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance';
+    'https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance.json';
 
   it('links to the correct places', () => {
     cy.visit('/signin');
