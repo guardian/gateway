@@ -106,6 +106,14 @@ describe('Sign in flow', () => {
         `?refViewId=12345&returnUrl=${encodeURIComponent(returnUrl)}`,
       );
     });
+    it('auto-fills the email field when encryptedEmail is successfully decrypted', () => {
+      cy.mockNext(200, {
+        status: 'ok',
+        email: 'test@test.com',
+      });
+      cy.visit(`/signin?encryptedEmail=bdfalrbagbgu`);
+      cy.get('input[name="email"]').should('have.value', 'test@test.com');
+    });
   });
 
   context('General IDAPI failure', () => {

@@ -12,27 +12,32 @@ import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { RequestError } from '@/shared/lib/error';
+import { decrypt } from '@/server/lib/idapi/decryptToken';
 
 const router = Router();
 
-router.get(Routes.SIGN_IN, (req: Request, res: ResponseWithRequestState) => {
-  const html = renderer(Routes.SIGN_IN, {
-    requestState: res.locals,
-    pageTitle: PageTitle.SIGN_IN,
-  });
-  res.type('html').send(html);
-});
+const preFillEmailField = (route: string) =>
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    const state = res.locals;
+    const { encryptedEmail } = state.queryParams;
+    const { email = '' } = encryptedEmail
+      ? await decrypt(encryptedEmail, req.ip)
+      : {};
 
-router.get(
-  Routes.SIGN_IN_CURRENT,
-  (req: Request, res: ResponseWithRequestState) => {
-    const html = renderer(Routes.SIGN_IN_CURRENT, {
-      requestState: res.locals,
+    const html = renderer(route, {
+      requestState: deepmerge(state, {
+        pageData: {
+          email: email,
+        },
+      }),
       pageTitle: PageTitle.SIGN_IN,
     });
     res.type('html').send(html);
-  },
-);
+  });
+
+router.get(Routes.SIGN_IN, preFillEmailField(Routes.SIGN_IN));
+
+router.get(Routes.SIGN_IN_CURRENT, preFillEmailField(Routes.SIGN_IN_CURRENT));
 
 router.post(
   Routes.SIGN_IN,
