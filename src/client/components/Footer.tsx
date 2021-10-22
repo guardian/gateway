@@ -115,7 +115,7 @@ export const Footer = () => (
             </li>
             <li>
               <Link cssOverrides={linkStyles} href={locations.TERMS}>
-                Terms and Conditions
+                Terms and conditions
               </Link>
             </li>
           </ul>
@@ -153,7 +153,7 @@ export const Footer = () => (
           <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
             <li>
               <Link cssOverrides={linkStyles} href={locations.TERMS}>
-                Terms and Conditions
+                Terms and conditions
               </Link>
             </li>
           </ul>
