@@ -1,7 +1,9 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
+import { css } from '@emotion/react';
 
 import { Footer } from './Footer';
+import { getAutoRow, gridRow } from '../styles/Grid';
 
 export default {
   title: 'Components/Footer',
@@ -39,4 +41,29 @@ Mobile320.parameters = {
   viewport: {
     defaultViewport: 'MOBILE_320',
   },
+};
+
+export const WithGrid = () => {
+  const autoRow = getAutoRow();
+
+  return (
+    <>
+      <div
+        css={[
+          gridRow,
+          css`
+            margin: 0 auto;
+          `,
+        ]}
+      >
+        <div css={[autoRow(), { backgroundColor: 'lightseagreen' }]}>
+          This is an item in a grid
+        </div>
+        <div css={[autoRow(), { backgroundColor: 'lightsteelblue' }]}>
+          This is another item in a grid, in another row
+        </div>
+      </div>
+      <Footer />
+    </>
+  );
 };
