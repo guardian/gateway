@@ -6,8 +6,8 @@ import { ClientStateContext } from '@/client/components/ClientState';
 import { SubHeader } from '@/client/components/SubHeader';
 import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 import { ErrorSummary } from '@guardian/source-react-components-development-kitchen';
-import { topMargin } from '@/client/styles/Shared';
 import { from } from '@guardian/src-foundations/mq';
+import { space } from '@guardian/src-foundations';
 
 type Props = {
   subTitle?: string;
@@ -27,6 +27,13 @@ const gridStyle = css`
   ${from.tablet} {
     border-left: 1px solid #dcdcdc;
     border-right: 1px solid #dcdcdc;
+  }
+`;
+
+const errorMessageTopMargin = css`
+  margin-top: ${space[5]}px;
+  ${from.desktop} {
+    margin-top: ${space[6]}px;
   }
 `;
 
@@ -50,7 +57,10 @@ export const MainGrid = ({
         {successMessage && <GlobalSuccess success={successMessage} />}
         <section css={gridItem(gridSpanDefinition)}>
           {errorMessage && (
-            <ErrorSummary error={errorMessage} cssOverrides={topMargin} />
+            <ErrorSummary
+              error={errorMessage}
+              cssOverrides={errorMessageTopMargin}
+            />
           )}
           {children}
         </section>

@@ -28,13 +28,7 @@ export const form = css`
 `;
 
 export const topMargin = css`
-  margin-top: ${space[2]}px;
-  ${from.mobileMedium} {
-    margin-top: ${space[4]}px;
-  }
-  ${from.tablet} {
-    margin-top: ${space[6]}px;
-  }
+  margin-top: ${space[3]}px;
 `;
 
 export const maxWidth = css`
