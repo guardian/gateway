@@ -31,6 +31,9 @@ describe('Registration flow', () => {
     it('shows a generic error message when registration fails', () => {
       cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
       cy.get('input[name="email"]').type('example@example.com');
+      cy.mockNext(200, {
+        userType: 'new',
+      });
       cy.mockNext(403, {
         status: 'error',
         errors: [
@@ -46,6 +49,9 @@ describe('Registration flow', () => {
     it('shows a email field error message when no email is sent', () => {
       cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
       cy.get('input[name="email"]').type('placeholder@example.com');
+      cy.mockNext(200, {
+        userType: 'new',
+      });
       cy.mockNext(400, invalidEmailAddress);
       cy.get('[data-cy=register-button]').click();
       cy.contains('Email field must not be blank.');
@@ -67,6 +73,9 @@ describe('Registration flow', () => {
       cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
       cy.get('input[name="email"]').type('example@example.com');
       cy.mockNext(200, {
+        userType: 'new',
+      });
+      cy.mockNext(200, {
         status: 'success',
         errors: [],
       });
@@ -75,10 +84,24 @@ describe('Registration flow', () => {
       cy.contains('example@example.com');
     });
 
-    it('redirects to email sent page when the email is in use registered user tries to register)', () => {
+    it('redirects to email sent page when existing user with password attempts to register', () => {
       cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
       cy.get('input[name="email"]').type('example@example.com');
-      cy.mockNext(400, emailAddressInUse);
+      cy.mockNext(200, {
+        userType: 'current',
+      });
+      cy.mockNext(200);
+      cy.get('[data-cy=register-button]').click();
+      cy.contains('Email sent');
+      cy.contains('example@example.com');
+    });
+
+    it('redirects to email sent page when existing user without password attempts to register', () => {
+      cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.get('input[name="email"]').type('example@example.com');
+      cy.mockNext(200, {
+        userType: 'guest',
+      });
       cy.mockNext(200);
       cy.get('[data-cy=register-button]').click();
       cy.contains('Email sent');
@@ -88,6 +111,9 @@ describe('Registration flow', () => {
 
   context('General IDAPI failure', () => {
     it('displays a generic error message', function () {
+      cy.mockNext(200, {
+        userType: 'new',
+      });
       cy.mockNext(500);
       cy.visit('/register?returnUrl=https%3A%2F%2Flocalhost%3A8861%2Fsignin');
 

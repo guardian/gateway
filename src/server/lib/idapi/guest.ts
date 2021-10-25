@@ -15,23 +15,6 @@ import {
 
 const url = '/guest?accountVerificationEmail=true';
 
-const branchOrHandleError = (idapiError: IDAPIError): EmailType | never => {
-  if (idapiError?.error) {
-    const { error } = idapiError;
-    if (error.status === 'error' && error.errors?.length) {
-      const err = error.errors[0];
-      const { message } = err;
-
-      if (message === IdapiErrorMessages.EMAIL_IN_USE) {
-        return EmailType.ACCOUNT_EXISTS;
-      }
-    }
-  }
-
-  logger.error(`IDAPI Error: guest account creation ${url}`, idapiError);
-  return handleError(idapiError);
-};
-
 const handleError = ({ error, status = 500 }: IDAPIError) => {
   if (error.status === 'error' && error.errors?.length) {
     const err = error.errors[0];
@@ -75,8 +58,9 @@ export const guest = async (
 
   try {
     await idapiFetch(path, APIAddClientAccessToken(options, ip));
-    return EmailType.GUEST_REGISTER;
+    return EmailType.ACCOUNT_VERIFICATION;
   } catch (error) {
-    return branchOrHandleError(error as IDAPIError);
+    logger.error(`IDAPI Error: guest account creation ${url}`, error);
+    return handleError(error as IDAPIError);
   }
 };
