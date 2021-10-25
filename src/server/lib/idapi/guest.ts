@@ -22,7 +22,7 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
 
     switch (message) {
       case IdapiErrorMessages.INVALID_EMAIL_ADDRESS:
-        throw { message: RegistrationErrors.EMAIL_BLANK, status };
+        throw { message: RegistrationErrors.EMAIL_INVALID, status };
       default:
         break;
     }

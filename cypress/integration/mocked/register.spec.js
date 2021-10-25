@@ -54,7 +54,7 @@ describe('Registration flow', () => {
       });
       cy.mockNext(400, invalidEmailAddress);
       cy.get('[data-cy=register-button]').click();
-      cy.contains('Email field must not be blank.');
+      cy.contains('Please enter a valid email address.');
     });
 
     it('shows recaptcha error message when reCAPTCHA token request fails', () => {
