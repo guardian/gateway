@@ -6,6 +6,7 @@ const existing = {
   email: 'signIn@' + Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
   password: 'existing_password',
 };
+const oauthBaseUrl = 'https://oauth.code.dev-theguardian.com';
 describe('Sign in flow', () => {
   // We specify the CAPI json version of the article to reduce page load time waiting for ads.
   // This change was added because our test was timing out occasionally.
@@ -62,29 +63,26 @@ describe('Sign in flow', () => {
     cy.url().should('eq', returnUrl);
   });
 
-  // This functionality is still todo. Remove `skip` from this test once the returnUrl parameter is passed through
-  it.skip('redirects correctly for social sign in', () => {
+  it('redirects correctly for social sign in', () => {
     cy.visit(`/signin?returnUrl=${encodeURIComponent(returnUrl)}`);
     cy.get('[data-cy="google-sign-in-button"]').should(
       'have.attr',
       'href',
-      `https://oauth.theguardian.com/google/signin?returnUrl=${encodeURIComponent(
+      `${oauthBaseUrl}/google/signin?returnUrl=${encodeURIComponent(
         returnUrl,
       )}`,
     );
     cy.get('[data-cy="facebook-sign-in-button"]').should(
       'have.attr',
       'href',
-      `https://oauth.theguardian.com/facebook/signin?returnUrl=${encodeURIComponent(
+      `${oauthBaseUrl}/facebook/signin?returnUrl=${encodeURIComponent(
         returnUrl,
       )}`,
     );
     cy.get('[data-cy="apple-sign-in-button"]').should(
       'have.attr',
       'href',
-      `https://oauth.theguardian.com/apple/signin?returnUrl=${encodeURIComponent(
-        returnUrl,
-      )}`,
+      `${oauthBaseUrl}/apple/signin?returnUrl=${encodeURIComponent(returnUrl)}`,
     );
   });
   it('removes encryptedEmail parameter from query string', () => {

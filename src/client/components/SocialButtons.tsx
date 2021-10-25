@@ -6,9 +6,23 @@ import { SvgGoogleBrand } from '@guardian/src-icons';
 import { SvgAppleBrand } from '@guardian/src-icons';
 import { SvgFacebookBrand } from '@guardian/src-icons';
 import { from } from '@guardian/src-foundations/mq';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { addReturnUrlToPath } from '@/server/lib/queryParams';
 
-type Props = {
-  returnUrl: string;
+type SocialButtonProps = {
+  returnUrl?: string;
+};
+
+enum IdP {
+  GOOGLE = 'google',
+  FACEBOOK = 'facebook',
+  APPLE = 'apple',
+}
+
+const buildUrl = (returnUrl: string | undefined, IdP: string): string => {
+  const { oauthBaseUrl } = getConfiguration();
+  const url = `${oauthBaseUrl}/${IdP}/signin`;
+  return returnUrl ? addReturnUrlToPath(url, returnUrl) : url;
 };
 
 const containerStyles = css`
@@ -60,14 +74,14 @@ const Gap = () => (
   ></span>
 );
 
-export const SocialButtons = ({ returnUrl }: Props) => (
+export const SocialButtons = ({ returnUrl = '' }: SocialButtonProps) => (
   <div css={containerStyles}>
     <LinkButton
       priority="tertiary"
       cssOverrides={[buttonOverrides, iconOverrides]}
       icon={<SvgGoogleBrand />}
-      href={`https://oauth.theguardian.com/google/signin?returnUrl=${returnUrl}`}
-      data-cy="google-sign-in-button"
+      href={buildUrl(returnUrl, IdP.GOOGLE)}
+      data-cy={`${IdP.GOOGLE}-sign-in-button`}
     >
       Google
     </LinkButton>
@@ -76,8 +90,8 @@ export const SocialButtons = ({ returnUrl }: Props) => (
       priority="tertiary"
       cssOverrides={buttonOverrides}
       icon={<SvgFacebookBrand />}
-      href={`https://oauth.theguardian.com/facebook/signin?returnUrl=${returnUrl}`}
-      data-cy="facebook-sign-in-button"
+      href={buildUrl(returnUrl, IdP.FACEBOOK)}
+      data-cy={`${IdP.FACEBOOK}-sign-in-button`}
     >
       Facebook
     </LinkButton>
@@ -86,8 +100,8 @@ export const SocialButtons = ({ returnUrl }: Props) => (
       priority="tertiary"
       cssOverrides={[buttonOverrides, iconOverrides]}
       icon={<SvgAppleBrand />}
-      href={`https://oauth.theguardian.com/apple/signin?returnUrl=${returnUrl}`}
-      data-cy="apple-sign-in-button"
+      href={buildUrl(returnUrl, IdP.APPLE)}
+      data-cy={`${IdP.APPLE}-sign-in-button`}
     >
       Apple
     </LinkButton>

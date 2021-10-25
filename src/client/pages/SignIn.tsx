@@ -147,7 +147,7 @@ export const SignIn = ({
           displayText="or continue with"
           cssOverrides={divider}
         />
-        <SocialButtons returnUrl="todo" />
+        <SocialButtons returnUrl={returnUrl} />
       </MainGrid>
       <Footer />
     </>
