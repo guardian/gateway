@@ -48,6 +48,7 @@ export interface PageData {
 
 export interface ClientHosts {
   idapiBaseUrl: string;
+  oauthBaseUrl: string;
 }
 
 export interface ClientState {

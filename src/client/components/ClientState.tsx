@@ -2,7 +2,7 @@ import React, { createContext, FunctionComponent } from 'react';
 import { ClientState } from '@/shared/model/ClientState';
 
 export const ClientStateContext = createContext({
-  clientHosts: { idapiBaseUrl: '' },
+  clientHosts: { idapiBaseUrl: '', oauthBaseUrl: '' },
 });
 
 type ClientStateProps = {

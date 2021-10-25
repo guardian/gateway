@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { css } from '@emotion/react';
 import { space, brand } from '@guardian/src-foundations';
 import { LinkButton } from '@guardian/src-button';
@@ -6,15 +6,19 @@ import { SvgGoogleBrand } from '@guardian/src-icons';
 import { SvgAppleBrand } from '@guardian/src-icons';
 import { SvgFacebookBrand } from '@guardian/src-icons';
 import { from } from '@guardian/src-foundations/mq';
-import { getConfiguration } from '@/server/lib/getConfiguration';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
+import { ClientState } from '@/shared/model/ClientState';
+import { ClientStateContext } from '@/client/components/ClientState';
 
 type SocialButtonProps = {
   returnUrl?: string;
 };
 
-const buildUrl = (returnUrl: string | undefined, IdP: string): string => {
-  const { oauthBaseUrl } = getConfiguration();
+const buildUrl = (
+  oauthBaseUrl: string,
+  returnUrl: string | undefined,
+  IdP: string,
+): string => {
   const url = `${oauthBaseUrl}/${IdP}/signin`;
   return returnUrl ? addReturnUrlToPath(url, returnUrl) : url;
 };
@@ -68,36 +72,41 @@ const Gap = () => (
   ></span>
 );
 
-export const SocialButtons = ({ returnUrl = '' }: SocialButtonProps) => (
-  <div css={containerStyles}>
-    <LinkButton
-      priority="tertiary"
-      cssOverrides={[buttonOverrides, iconOverrides]}
-      icon={<SvgGoogleBrand />}
-      href={buildUrl(returnUrl, 'google')}
-      data-cy="google-sign-in-button"
-    >
-      Google
-    </LinkButton>
-    <Gap />
-    <LinkButton
-      priority="tertiary"
-      cssOverrides={buttonOverrides}
-      icon={<SvgFacebookBrand />}
-      href={buildUrl(returnUrl, 'facebook')}
-      data-cy="facebook-sign-in-button"
-    >
-      Facebook
-    </LinkButton>
-    <Gap />
-    <LinkButton
-      priority="tertiary"
-      cssOverrides={[buttonOverrides, iconOverrides]}
-      icon={<SvgAppleBrand />}
-      href={buildUrl(returnUrl, 'apple')}
-      data-cy="apple-sign-in-button"
-    >
-      Apple
-    </LinkButton>
-  </div>
-);
+export const SocialButtons = ({ returnUrl = '' }: SocialButtonProps) => {
+  const clientState: ClientState = useContext(ClientStateContext);
+  const { clientHosts } = clientState;
+  const { oauthBaseUrl } = clientHosts;
+  return (
+    <div css={containerStyles}>
+      <LinkButton
+        priority="tertiary"
+        cssOverrides={[buttonOverrides, iconOverrides]}
+        icon={<SvgGoogleBrand />}
+        href={buildUrl(oauthBaseUrl, returnUrl, 'google')}
+        data-cy="google-sign-in-button"
+      >
+        Google
+      </LinkButton>
+      <Gap />
+      <LinkButton
+        priority="tertiary"
+        cssOverrides={buttonOverrides}
+        icon={<SvgFacebookBrand />}
+        href={buildUrl(oauthBaseUrl, returnUrl, 'facebook')}
+        data-cy="facebook-sign-in-button"
+      >
+        Facebook
+      </LinkButton>
+      <Gap />
+      <LinkButton
+        priority="tertiary"
+        cssOverrides={[buttonOverrides, iconOverrides]}
+        icon={<SvgAppleBrand />}
+        href={buildUrl(oauthBaseUrl, returnUrl, 'apple')}
+        data-cy="apple-sign-in-button"
+      >
+        Apple
+      </LinkButton>
+    </div>
+  );
+};
