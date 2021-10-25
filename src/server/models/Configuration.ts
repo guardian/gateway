@@ -20,6 +20,7 @@ export interface Configuration {
   isHttps: boolean;
   appSecret: string;
   encryptionSecretKey: string;
+  oauthBaseUrl: string;
 }
 
 export enum GA_UID {

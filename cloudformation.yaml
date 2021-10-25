@@ -14,6 +14,9 @@ Parameters:
   SignInPageUrl:
     Description: Sign in page URL used as a fallback if auth redirect retrieval fails.
     Type: AWS::SSM::Parameter::Value<String>
+  OauthBaseUrl:
+    Description: The base url for social sign-in with facebook, google or apple
+    Type: AWS::SSM::Parameter::Value<String>
   CertificateArn:
     Description: ARN of certificate for loadbalancer use.
     Type: String
@@ -212,6 +215,7 @@ Resources:
             Environment=IDAPI_CLIENT_ACCESS_TOKEN=$IDAPI_CLIENT_ACCESS_TOKEN
             Environment=IDAPI_BASE_URL=${IdapiBaseUrl}
             Environment=SIGN_IN_PAGE_URL=${SignInPageUrl}
+            Environment=OAUTH_BASE_URL=${OauthBaseUrl}
             Environment=BASE_URI=${BaseUri}
             Environment=PLAY_SESSION_COOKIE_SECRET=$PLAY_SESSION_COOKIE_SECRET
             Environment=DEFAULT_RETURN_URI=${DefaultReturnUri}
