@@ -6,7 +6,6 @@ import { SvgGoogleBrand } from '@guardian/src-icons';
 import { SvgAppleBrand } from '@guardian/src-icons';
 import { SvgFacebookBrand } from '@guardian/src-icons';
 import { from } from '@guardian/src-foundations/mq';
-import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 
@@ -16,11 +15,11 @@ type SocialButtonProps = {
 
 const buildUrl = (
   oauthBaseUrl: string,
-  returnUrl: string | undefined,
   IdP: string,
+  returnUrl?: string,
 ): string => {
-  const url = `${oauthBaseUrl}/${IdP}/signin`;
-  return returnUrl ? addReturnUrlToPath(url, returnUrl) : url;
+  const search = returnUrl ? `?returnUrl=${encodeURIComponent(returnUrl)}` : '';
+  return `${oauthBaseUrl}/${IdP}/signin${search}`;
 };
 
 const containerStyles = css`
@@ -82,7 +81,7 @@ export const SocialButtons = ({ returnUrl = '' }: SocialButtonProps) => {
         priority="tertiary"
         cssOverrides={[buttonOverrides, iconOverrides]}
         icon={<SvgGoogleBrand />}
-        href={buildUrl(oauthBaseUrl, returnUrl, 'google')}
+        href={buildUrl(oauthBaseUrl, 'google', returnUrl)}
         data-cy="google-sign-in-button"
       >
         Google
@@ -92,7 +91,7 @@ export const SocialButtons = ({ returnUrl = '' }: SocialButtonProps) => {
         priority="tertiary"
         cssOverrides={buttonOverrides}
         icon={<SvgFacebookBrand />}
-        href={buildUrl(oauthBaseUrl, returnUrl, 'facebook')}
+        href={buildUrl(oauthBaseUrl, 'facebook', returnUrl)}
         data-cy="facebook-sign-in-button"
       >
         Facebook
@@ -102,7 +101,7 @@ export const SocialButtons = ({ returnUrl = '' }: SocialButtonProps) => {
         priority="tertiary"
         cssOverrides={[buttonOverrides, iconOverrides]}
         icon={<SvgAppleBrand />}
-        href={buildUrl(oauthBaseUrl, returnUrl, 'apple')}
+        href={buildUrl(oauthBaseUrl, 'apple', returnUrl)}
         data-cy="apple-sign-in-button"
       >
         Apple
