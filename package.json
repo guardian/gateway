@@ -85,7 +85,7 @@
     "file-loader": "^6.2.0",
     "fork-ts-checker-notifier-webpack-plugin": "^4.0.0",
     "fork-ts-checker-webpack-plugin": "^6.3.4",
-    "husky": "^7.0.2",
+    "husky": "^7.0.4",
     "image-webpack-loader": "^8.0.1",
     "jest": "^27.3.0",
     "nodemon": "^2.0.13",
