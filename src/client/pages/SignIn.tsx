@@ -19,10 +19,12 @@ import { border, space } from '@guardian/src-foundations';
 import { from } from '@guardian/src-foundations/mq';
 import { topMargin } from '@/client/styles/Shared';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
+import { SignInErrors } from '@/shared/model/Errors';
 
 export type SignInProps = {
   returnUrl?: string;
   email?: string;
+  error?: string;
 };
 
 const passwordInput = css`
@@ -75,7 +77,11 @@ const Links = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
-export const SignIn = ({ returnUrl = '', email = '' }: SignInProps) => {
+export const SignIn = ({
+  returnUrl = '',
+  email = '',
+  error = '',
+}: SignInProps) => {
   const returnUrlQuery = returnUrl
     ? `?returnUrl=${encodeURIComponent(returnUrl)}`
     : '';
@@ -98,6 +104,17 @@ export const SignIn = ({ returnUrl = '', email = '' }: SignInProps) => {
         ]}
       />
       <MainGrid gridSpanDefinition={gridItemSignInAndRegistration}>
+        {error === SignInErrors.ACCOUNT_ALREADY_EXISTS && (
+          <p
+            css={css`
+              ${textSans.small()}
+            `}
+          >
+            You cannot sign in with your social account because you already have
+            an account with the Guardian. Please enter your password below to
+            sign in.
+          </p>
+        )}
         <form method="post" action={`${Routes.SIGN_IN}${returnUrlQuery}`}>
           <CsrfFormField />
           <div css={topMargin}>

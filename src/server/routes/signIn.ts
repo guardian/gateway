@@ -13,21 +13,29 @@ import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { RequestError } from '@/shared/lib/error';
 import { decrypt } from '@/server/lib/idapi/decryptToken';
+import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
 
 const router = Router();
 
 const preFillEmailField = (route: string) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
-    const { encryptedEmail } = state.queryParams;
+    const { encryptedEmail, error } = state.queryParams;
     const { email = '' } = encryptedEmail
       ? await decrypt(encryptedEmail, req.ip)
       : {};
+    const errorMessage =
+      error === FederationErrors.SOCIAL_SIGNIN_BLOCKED
+        ? SignInErrors.ACCOUNT_ALREADY_EXISTS
+        : '';
 
     const html = renderer(route, {
       requestState: deepmerge(state, {
         pageData: {
           email: email,
+        },
+        globalMessage: {
+          error: errorMessage,
         },
       }),
       pageTitle: PageTitle.SIGN_IN,

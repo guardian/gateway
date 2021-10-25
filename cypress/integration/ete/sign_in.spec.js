@@ -11,7 +11,7 @@ describe('Sign in flow', () => {
   // This change was added because our test was timing out occasionally.
   const returnUrl =
     'https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance.json';
-
+  const defaultReturnUrl = 'https://m.code.dev-theguardian.com';
   it('links to the correct places', () => {
     cy.visit('/signin');
     cy.contains('terms of service').should(
@@ -86,5 +86,30 @@ describe('Sign in flow', () => {
         returnUrl,
       )}`,
     );
+  });
+  it('removes encryptedEmail parameter from query string', () => {
+    cy.visit(`/signin?encryptedEmail=bhvlabgflbgyil`);
+    cy.location('search').should(
+      'eq',
+      `?returnUrl=${encodeURIComponent(defaultReturnUrl)}`,
+    );
+  });
+  it('removes encryptedEmail parameter and preserves all other valid parameters', () => {
+    cy.visit(
+      `/signin?returnUrl=${encodeURIComponent(
+        returnUrl,
+      )}&encryptedEmail=bdfalrbagbgu&refViewId=12345`,
+    );
+    cy.location('search').should(
+      'eq',
+      `?refViewId=12345&returnUrl=${encodeURIComponent(returnUrl)}`,
+    );
+  });
+  it('shows an error message and information paragraph when accountLinkingRequired error parameter is present', () => {
+    cy.visit(`/signin?error=accountLinkingRequired`);
+    cy.contains(
+      'You cannot sign in with your social account because you already have an account with the Guardian.',
+    );
+    cy.get('[class*=ErrorSummary]').contains('Account already exists');
   });
 });

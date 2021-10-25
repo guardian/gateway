@@ -86,26 +86,6 @@ describe('Sign in flow', () => {
       cy.get('[data-cy=sign-in-button]').click();
       cy.url().should('include', defaultReturnUrl);
     });
-    it('removes encryptedEmail parameter from query string', () => {
-      cy.visit(`/signin?encryptedEmail=bhvlabgflbgyil`);
-      cy.location('search').should(
-        'eq',
-        `?returnUrl=${encodeURIComponent(defaultReturnUrl)}`,
-      );
-    });
-    it('removes encryptedEmail parameter and preserves all other valid parameters', () => {
-      const returnUrl =
-        'https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance';
-      cy.visit(
-        `/signin?returnUrl=${encodeURIComponent(
-          returnUrl,
-        )}&encryptedEmail=bdfalrbagbgu&refViewId=12345`,
-      );
-      cy.location('search').should(
-        'eq',
-        `?refViewId=12345&returnUrl=${encodeURIComponent(returnUrl)}`,
-      );
-    });
     it('auto-fills the email field when encryptedEmail is successfully decrypted', () => {
       cy.mockNext(200, {
         status: 'ok',
