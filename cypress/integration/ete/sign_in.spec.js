@@ -26,7 +26,19 @@ describe('Sign in flow', () => {
     cy.contains('terms & conditions').click();
     cy.contains('Terms and conditions of use');
   });
+  it('applies form validation to email and password input fields', () => {
+    cy.visit('/signin');
 
+    cy.get('form').within(() => {
+      cy.get('input:invalid').should('have.length', 2);
+      cy.get('input[name=email]').type('not an email');
+      cy.get('input:invalid').should('have.length', 2);
+      cy.get('input[name=email]').type('emailaddress@inavalidformat.com');
+      cy.get('input:invalid').should('have.length', 1);
+      cy.get('input[name=password]').type('password');
+      cy.get('input:invalid').should('have.length', 0);
+    });
+  });
   it('shows a message when credentials are invalid', () => {
     cy.visit('/signin');
     cy.get('input[name=email]').type('invalid@doesnotexist.com');

@@ -13,12 +13,6 @@ type SocialButtonProps = {
   returnUrl?: string;
 };
 
-enum IdP {
-  GOOGLE = 'google',
-  FACEBOOK = 'facebook',
-  APPLE = 'apple',
-}
-
 const buildUrl = (returnUrl: string | undefined, IdP: string): string => {
   const { oauthBaseUrl } = getConfiguration();
   const url = `${oauthBaseUrl}/${IdP}/signin`;
@@ -80,8 +74,8 @@ export const SocialButtons = ({ returnUrl = '' }: SocialButtonProps) => (
       priority="tertiary"
       cssOverrides={[buttonOverrides, iconOverrides]}
       icon={<SvgGoogleBrand />}
-      href={buildUrl(returnUrl, IdP.GOOGLE)}
-      data-cy={`${IdP.GOOGLE}-sign-in-button`}
+      href={buildUrl(returnUrl, 'google')}
+      data-cy="google-sign-in-button"
     >
       Google
     </LinkButton>
@@ -90,8 +84,8 @@ export const SocialButtons = ({ returnUrl = '' }: SocialButtonProps) => (
       priority="tertiary"
       cssOverrides={buttonOverrides}
       icon={<SvgFacebookBrand />}
-      href={buildUrl(returnUrl, IdP.FACEBOOK)}
-      data-cy={`${IdP.FACEBOOK}-sign-in-button`}
+      href={buildUrl(returnUrl, 'facebook')}
+      data-cy="facebook-sign-in-button"
     >
       Facebook
     </LinkButton>
@@ -100,8 +94,8 @@ export const SocialButtons = ({ returnUrl = '' }: SocialButtonProps) => (
       priority="tertiary"
       cssOverrides={[buttonOverrides, iconOverrides]}
       icon={<SvgAppleBrand />}
-      href={buildUrl(returnUrl, IdP.APPLE)}
-      data-cy={`${IdP.APPLE}-sign-in-button`}
+      href={buildUrl(returnUrl, 'apple')}
+      data-cy="apple-sign-in-button"
     >
       Apple
     </LinkButton>
