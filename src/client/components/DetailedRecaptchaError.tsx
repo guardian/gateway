@@ -2,6 +2,7 @@ import React from 'react';
 import { space, error as errorColors } from '@guardian/src-foundations';
 import { textSans } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/react';
+import locations from '@/client/lib/locations';
 
 const errorContextSpacing = css`
   margin: 0;
@@ -15,7 +16,7 @@ const errorHeaderStyle = css`
 
 const DetailedRecaptchaError = () => (
   <>
-    <a css={errorHeaderStyle} href="/">
+    <a css={errorHeaderStyle} href={locations.REPORT_ISSUE}>
       Report this error
     </a>
 
