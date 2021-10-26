@@ -5,10 +5,9 @@ import { Button } from '@/email/components/Button';
 import { Header } from '@/email/components/Header';
 import { SubHeader } from '@/email/components/SubHeader';
 import { Text } from '@/email/components/Text';
-import { Link } from '@/email/components/Link';
 import { Footer } from '@/email/components/Footer';
 
-export const AccountExists = () => {
+export const AccountWithoutPasswordExists = () => {
   return (
     <Page>
       <Header />
@@ -19,12 +18,11 @@ export const AccountExists = () => {
           <strong>You are already registered with the Guardian.</strong>
         </p>
         <p>
-          Know your password? <Link href={'$signInLink'}>Sign in</Link>
+          To continue to your account please click below to create a password.
         </p>
-        <p>If you forgot your password, you can click below to reset it.</p>
         <p>This link is only valid for 30 minutes.</p>
       </Text>
-      <Button href="$passwordResetLink">Reset password</Button>
+      <Button href="$createPasswordLink">Create password</Button>
       <Footer
         mistakeParagraphComponent={
           <p>
