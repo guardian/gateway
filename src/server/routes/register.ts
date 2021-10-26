@@ -1,7 +1,10 @@
 import { Request, Router } from 'express';
 import {
-  resendAccountExistsEmail,
-  resendAccountVerificationEmail,
+  readUserType,
+  sendAccountExistsEmail,
+  sendAccountExistsWithoutPasswordEmail,
+  sendAccountVerificationEmail,
+  UserType,
 } from '@/server/lib/idapi/user';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
@@ -12,16 +15,16 @@ import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import deepmerge from 'deepmerge';
-import { getEmailFromPlaySessionCookie } from '../lib/playSessionCookie';
+import { getEmailFromPlaySessionCookie } from '@/server/lib/playSessionCookie';
 import { RequestError } from '@/shared/lib/error';
-import { guest } from '../lib/idapi/guest';
+import { guest } from '@/server/lib/idapi/guest';
 import { RecaptchaV2 } from 'express-recaptcha';
-import { getConfiguration } from '../lib/getConfiguration';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 import { CaptchaErrors, GenericErrors } from '@/shared/model/Errors';
 import {
   readEncryptedStateCookie,
   setEncryptedStateCookie,
-} from '../lib/encryptedStateCookie';
+} from '@/server/lib/encryptedStateCookie';
 import { EmailType } from '@/shared/model/EmailType';
 
 const router = Router();
@@ -87,18 +90,27 @@ router.post(
         // we default to GUEST_REGISTER as it's likely that if the value doesn't exist
         // they are a new user registration
         const emailType: EmailType =
-          encryptedState?.emailType ?? EmailType.GUEST_REGISTER;
+          encryptedState?.emailType ?? EmailType.ACCOUNT_VERIFICATION;
 
         // depending on the EmailType that was originally sent to the user
         // we determine which email to resend
         switch (emailType) {
           // they were a newly registered user, so resend the AccountVerification Email
-          case EmailType.GUEST_REGISTER:
-            await resendAccountVerificationEmail(email, req.ip, returnUrl);
+          case EmailType.ACCOUNT_VERIFICATION:
+            await sendAccountVerificationEmail(email, req.ip, returnUrl);
             break;
           // they were an already registered user, so resend the AccountExists Email
           case EmailType.ACCOUNT_EXISTS:
-            await resendAccountExistsEmail(email, req.ip, returnUrl);
+            await sendAccountExistsEmail(email, req.ip, returnUrl);
+            break;
+          // they were an already registered user without password
+          // so resend the AccountExistsWithoutPassword (CreatePassword) Email
+          case EmailType.CREATE_PASSWORD:
+            await sendAccountExistsWithoutPasswordEmail(
+              email,
+              req.ip,
+              returnUrl,
+            );
             break;
           default:
             // somethings gone wrong, throw a generic error
@@ -148,26 +160,46 @@ router.post(
         };
       }
 
-      const emailType = await guest(email, req.ip, returnUrl, refViewId, ref);
+      // use idapi user type endpoint to determine user type
+      const userType = await readUserType(email, req.ip);
 
-      // read the type of email we sent to the user based on the emailType
-      switch (emailType) {
-        // they were an already registered user, so resend the AccountExists Email
-        case EmailType.ACCOUNT_EXISTS:
-          await resendAccountExistsEmail(email, req.ip, returnUrl);
+      // check what type of user they are to determine course of action
+      switch (userType) {
+        // new user, so call guest register endpoint to create user account without password
+        // and automatically send account verification email
+        case UserType.NEW:
+          await guest(email, req.ip, returnUrl, refViewId, ref);
+          // set the encrypted state cookie in each case, so the next page is aware
+          // of the email address and type of email sent
+          // so if needed it can resend the correct email
+          setEncryptedStateCookie(res, {
+            email,
+            emailType: EmailType.ACCOUNT_VERIFICATION,
+          });
           break;
-        // by default take no action, as it's likely their email type is GUEST_REGISTER
-        // where an email would've already been send by the `guest` method above
+        // user exists with password
+        // so we want to send them the account exists email
+        case UserType.CURRENT:
+          await sendAccountExistsEmail(email, req.ip, returnUrl);
+          setEncryptedStateCookie(res, {
+            email,
+            emailType: EmailType.ACCOUNT_EXISTS,
+          });
+          break;
+        // user exists without password
+        // so we send them the email to create and set a password
+        case UserType.GUEST:
+          await sendAccountExistsWithoutPasswordEmail(email, req.ip, returnUrl);
+          setEncryptedStateCookie(res, {
+            email,
+            emailType: EmailType.CREATE_PASSWORD,
+          });
+          break;
         default:
-          // we only want to track this success metric here as it's a new registration
-          trackMetric(Metrics.REGISTER_SUCCESS);
-          break;
+          // shouldn't reach this point, so we want to catch this
+          // as an error just in case
+          throw new Error('Invalid UserType');
       }
-
-      // set the encrypted state cookie, so the next page is aware
-      // of the email address and type of email sent
-      // so if needed it can resend the correct email
-      setEncryptedStateCookie(res, { email, emailType });
 
       // redirect the user to the email sent page
       return res.redirect(303, Routes.REGISTRATION_EMAIL_SENT);

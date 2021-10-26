@@ -8,7 +8,7 @@ import { renderer } from '@/server/lib/renderer';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { consentPages } from '@/server/routes/consents';
-import { resendAccountVerificationEmail } from '@/server/lib/idapi/user';
+import { sendAccountVerificationEmail } from '@/server/lib/idapi/user';
 import {
   checkResetPasswordTokenController,
   setPasswordTokenController,
@@ -51,7 +51,7 @@ router.post(
     const { returnUrl } = res.locals.queryParams;
 
     try {
-      await resendAccountVerificationEmail(email, req.ip, returnUrl);
+      await sendAccountVerificationEmail(email, req.ip, returnUrl);
 
       setEncryptedStateCookie(res, { email });
 

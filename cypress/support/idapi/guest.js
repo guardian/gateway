@@ -2,7 +2,7 @@ export const GUEST_ENDPOINT = '/guest';
 
 export const GUEST_ERRORS = {
   GENERIC: 'There was a problem registering, please try again.',
-  EMAIL_BLANK: 'Email field must not be blank.',
+  EMAIL_INVALID: 'Please enter a valid email address.',
 };
 
 export const invalidEmailAddress = {
