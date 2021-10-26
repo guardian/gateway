@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { css } from '@emotion/react';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
@@ -21,7 +21,7 @@ import { border, space } from '@guardian/src-foundations';
 import { from } from '@guardian/src-foundations/mq';
 import { topMargin } from '@/client/styles/Shared';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
-import { TextInput } from '@guardian/src-text-input';
+import EmailInput from '../components/EmailInput';
 
 const passwordInput = css`
   margin-top: ${space[2]}px;
@@ -80,23 +80,6 @@ export const SignIn = () => {
   const returnUrlQuery = returnUrl
     ? `?returnUrl=${encodeURIComponent(returnUrl)}`
     : '';
-  const [emailFieldInvalid, setEmailFieldInvalid] = useState(false);
-
-  const emailFieldRef = React.useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (emailFieldRef && emailFieldRef.current) {
-      emailFieldRef.current.addEventListener('invalid', () => {
-        setEmailFieldInvalid(true);
-      });
-      emailFieldRef.current.addEventListener('blur', () => {
-        const isValid = emailFieldRef.current?.checkValidity();
-        if (isValid) {
-          setEmailFieldInvalid(false);
-        }
-      });
-    }
-  }, []);
 
   return (
     <>
@@ -119,15 +102,7 @@ export const SignIn = () => {
         <form method="post" action={`${Routes.SIGN_IN}${returnUrlQuery}`}>
           <CsrfFormField />
           <div css={topMargin}>
-            <TextInput
-              label="Email"
-              name="email"
-              type="email"
-              error={
-                emailFieldInvalid ? 'Please enter a valid email format.' : ''
-              }
-              ref={emailFieldRef}
-            />
+            <EmailInput />
           </div>
           <div css={passwordInput}>
             <PasswordInput label="Password" />

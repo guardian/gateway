@@ -1,5 +1,5 @@
-import React from 'react';
-import { TextInput } from '@guardian/src-text-input';
+import React, { useEffect } from 'react';
+
 import { Button } from '@guardian/src-button';
 import { Routes } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
@@ -18,6 +18,7 @@ import { gridItemSignInAndRegistration } from '../styles/Grid';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { CaptchaErrors } from '@/shared/model/Errors';
 import useRecaptcha, { RecaptchaElement } from '../lib/hooks/useRecaptcha';
+import EmailInput from '../components/EmailInput';
 
 export type RegistrationProps = {
   returnUrl?: string;
@@ -83,7 +84,7 @@ export const Registration = ({
   const recaptchaCheckSuccessful = !error && !expired;
 
   // Form is only submitted when a valid recaptcha token is returned.
-  React.useEffect(() => {
+  useEffect(() => {
     const registerFormElement = registerFormRef.current;
     if (token) {
       registerFormElement?.submit();
@@ -127,12 +128,7 @@ export const Registration = ({
           <RecaptchaElement id="register-recaptcha" />
           <CsrfFormField />
           <div css={topMargin}>
-            <TextInput
-              label="Email"
-              name="email"
-              type="email"
-              defaultValue={email}
-            />
+            <EmailInput defaultValue={email} />
           </div>
           <Terms />
           <Button css={registerButton} type="submit" data-cy="register-button">
