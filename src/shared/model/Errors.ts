@@ -71,5 +71,5 @@ export enum CsrfErrors {
 }
 
 export enum CaptchaErrors {
-  GENERIC = 'There was a problem with the captcha process. You may find disabling your browser plugins, ensuring JavaScript is enabled or updating your browser will resolve this issue.',
+  GENERIC = 'Google reCAPTCHA verification failed. Please try again.',
 }

@@ -13,6 +13,7 @@ type Props = {
   subTitle?: string;
   successOverride?: string;
   errorOverride?: string;
+  errorContext?: React.ReactNode | string;
   children: React.ReactNode;
   gridSpanDefinition?: SpanDefinition;
 };
@@ -41,6 +42,7 @@ export const MainGrid = ({
   subTitle,
   successOverride,
   errorOverride,
+  errorContext,
   children,
   gridSpanDefinition,
 }: Props) => {
@@ -59,6 +61,7 @@ export const MainGrid = ({
           {errorMessage && (
             <ErrorSummary
               error={errorMessage}
+              context={errorContext}
               cssOverrides={errorMessageTopMargin}
             />
           )}

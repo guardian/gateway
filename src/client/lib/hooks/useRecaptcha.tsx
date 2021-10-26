@@ -86,6 +86,7 @@ type UseRecaptchaReturnValue = {
   // If successful, `token` is set and `error` + `expired` are reset to false.
   // Returns a bool to indicate whether `grecaptcha.execute` was called successfully.
   executeCaptcha: () => void;
+  requestCount: number;
 };
 
 /**
@@ -111,6 +112,7 @@ const useRecaptcha: UseRecaptcha = (
   const [error, setError] = React.useState(false);
   const [expired, setExpired] = React.useState(false);
   const [widgetId, setWidgetId] = React.useState(0);
+  const [requestCount, setRequestCount] = React.useState(0);
 
   // We can't initialise recaptcha if no site key or render element is provided.
   if (siteKey === '' || renderElement === '') {
@@ -120,6 +122,7 @@ const useRecaptcha: UseRecaptcha = (
       expired,
       widgetId,
       executeCaptcha: () => null,
+      requestCount,
     };
   }
 
@@ -158,8 +161,10 @@ const useRecaptcha: UseRecaptcha = (
     window.grecaptcha.reset(widgetId);
     window.grecaptcha.execute(widgetId);
 
+    setRequestCount(requestCount + 1);
+
     return true;
-  }, [widgetId]);
+  }, [widgetId, requestCount]);
 
   return {
     token,
@@ -167,6 +172,7 @@ const useRecaptcha: UseRecaptcha = (
     expired,
     widgetId,
     executeCaptcha,
+    requestCount,
   };
 };
 
