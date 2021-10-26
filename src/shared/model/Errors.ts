@@ -28,7 +28,7 @@ export enum SignInErrors {
 
 export enum RegistrationErrors {
   GENERIC = 'There was a problem registering, please try again.',
-  EMAIL_BLANK = 'Email field must not be blank.',
+  EMAIL_INVALID = 'Please enter a valid email address.',
 }
 
 export enum ChangePasswordErrors {

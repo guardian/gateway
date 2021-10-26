@@ -3,13 +3,19 @@
 import { injectAndCheckAxe } from '../../support/cypress-axe';
 
 describe('Registration email sent page', () => {
-  const existing = {
+  const existingWithoutPassword = {
     serverId: Cypress.env('MAILOSAUR_SERVER_ID'),
     serverDomain: Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
     email:
       'registrationEmailSentPage@' +
       Cypress.env('MAILOSAUR_SERVER_ID') +
       '.mailosaur.net',
+  };
+
+  const existingWithPassword = {
+    serverId: Cypress.env('MAILOSAUR_SERVER_ID'),
+    serverDomain: Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
+    email: 'signIn@' + Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
   };
 
   const unregisteredAccount = {
@@ -44,7 +50,7 @@ describe('Registration email sent page', () => {
     });
     cy.visit(`/register/email-sent`);
     cy.contains('Email sent');
-    cy.contains(existing.email);
+    cy.contains(existingWithoutPassword.email);
     cy.contains('Resend email');
     cy.contains('Change email address');
   });
@@ -55,13 +61,13 @@ describe('Registration email sent page', () => {
       log: true,
     });
     cy.visit(`/register/email-sent`);
-    cy.contains(existing.email);
+    cy.contains(existingWithoutPassword.email);
     const timeRequestWasMade = new Date();
     cy.contains('Resend email').click();
     cy.mailosaurGetMessage(
-      existing.serverId,
+      existingWithoutPassword.serverId,
       {
-        sentTo: existing.email,
+        sentTo: existingWithoutPassword.email,
       },
       {
         receivedAfter: timeRequestWasMade,
@@ -124,22 +130,70 @@ describe('Registration email sent page', () => {
     });
   });
 
-  it('should resend "Account Exists" email when an existing user registers which is same as initial email sent', () => {
+  it('should resend "Create Password" email when an existing user without password registers which is same as initial email sent', () => {
     cy.visit('/register');
-    cy.get('input[name=email]').type(existing.email);
+    cy.get('input[name=email]').type(existingWithoutPassword.email);
     const timeRequestWasMadeInitialEmail = new Date();
     cy.get('[data-cy="register-button"]').click();
 
     cy.contains('Email sent');
-    cy.contains(existing.email);
+    cy.contains(existingWithoutPassword.email);
     cy.contains('Resend email');
     cy.contains('Change email address');
 
     // test and delete initial email
     cy.mailosaurGetMessage(
-      existing.serverId,
+      existingWithoutPassword.serverId,
       {
-        sentTo: existing.email,
+        sentTo: existingWithoutPassword.email,
+      },
+      {
+        receivedAfter: timeRequestWasMadeInitialEmail,
+      },
+    ).then((email) => {
+      const body = email.html.body;
+      expect(body).to.have.string('Welcome back');
+      expect(body).to.have.string('Create password');
+      cy.mailosaurDeleteMessage(email.id);
+    });
+
+    const timeRequestWasMade = new Date();
+    cy.contains('Resend email').click();
+    cy.contains('Email sent');
+    cy.contains(existingWithoutPassword.email);
+    // test and delete resent email
+    cy.mailosaurGetMessage(
+      existingWithoutPassword.serverId,
+      {
+        sentTo: existingWithoutPassword.email,
+      },
+      {
+        receivedAfter: timeRequestWasMade,
+      },
+    ).then((email) => {
+      const body = email.html.body;
+      expect(body).to.have.string('Welcome back');
+      expect(body).to.have.string('Create password');
+      cy.mailosaurDeleteMessage(email.id);
+    });
+  });
+
+  it('should resend "Account Exists" email when an existing user with password registers which is same as initial email sent', () => {
+    cy.visit('/register');
+    cy.get('input[name=email]').type(existingWithPassword.email);
+    const timeRequestWasMadeInitialEmail = new Date();
+    cy.get('[data-cy="register-button"]').click();
+
+    cy.contains('Email sent');
+    cy.contains(existingWithPassword.email);
+    cy.contains('Resend email');
+    cy.contains('Change email address');
+
+    // test and delete initial email
+    cy.mailosaurGetMessage(
+      existingWithPassword.serverId,
+      {
+        sentTo: existingWithPassword.email,
       },
       {
         receivedAfter: timeRequestWasMadeInitialEmail,
@@ -155,12 +209,12 @@ describe('Registration email sent page', () => {
     const timeRequestWasMade = new Date();
     cy.contains('Resend email').click();
     cy.contains('Email sent');
-    cy.contains(existing.email);
+    cy.contains(existingWithPassword.email);
     // test and delete resent email
     cy.mailosaurGetMessage(
-      existing.serverId,
+      existingWithPassword.serverId,
       {
-        sentTo: existing.email,
+        sentTo: existingWithPassword.email,
       },
       {
         receivedAfter: timeRequestWasMade,
