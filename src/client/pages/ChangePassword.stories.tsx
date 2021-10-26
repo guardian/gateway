@@ -10,14 +10,35 @@ export default {
 } as Meta;
 
 export const Default = () => (
-  <ChangePassword submitUrl="" email="" fieldErrors={[]} />
+  <ChangePassword
+    headerText="Reset password"
+    buttonText="Confirm new password"
+    submitUrl=""
+    email=""
+    fieldErrors={[]}
+  />
 );
 Default.story = {
   name: 'with defaults',
 };
 
+export const SetPassword = () => (
+  <ChangePassword
+    headerText="Create password"
+    buttonText="Save password"
+    submitUrl=""
+    email=""
+    fieldErrors={[]}
+  />
+);
+SetPassword.story = {
+  name: 'set password page',
+};
+
 export const Email = () => (
   <ChangePassword
+    headerText="Reset password"
+    buttonText="Confirm new password"
     submitUrl=""
     email="example@theguardian.com"
     fieldErrors={[]}
@@ -29,6 +50,8 @@ Email.story = {
 
 export const FieldErrorPW = () => (
   <ChangePassword
+    headerText="Reset password"
+    buttonText="Confirm new password"
     submitUrl=""
     email="example@theguardian.com"
     fieldErrors={[

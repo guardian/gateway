@@ -26,6 +26,8 @@ export const ChangePasswordPage = () => {
 
   return (
     <ChangePassword
+      headerText="Reset password"
+      buttonText="Confirm new password"
       submitUrl={`${Routes.CHANGE_PASSWORD}/${token}${search}`}
       email={email}
       fieldErrors={fieldErrors}

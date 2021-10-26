@@ -8,6 +8,7 @@ export enum Routes {
   RESEND = '/resend',
   CHANGE_PASSWORD = '/reset-password',
   CHANGE_PASSWORD_COMPLETE = '/password/reset-confirmation',
+  SET_PASSWORD = '/set-password',
   VERIFY_EMAIL = '/verify-email',
   VERIFY_EMAIL_SENT = '/verify-email/email-sent',
   TOKEN_PARAM = '/:token',
