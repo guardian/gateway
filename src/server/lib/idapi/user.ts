@@ -147,7 +147,7 @@ export const sendAccountVerificationEmail = async (
       APIAddClientAccessToken(options, ip),
     );
   } catch (error) {
-    logger.error(`IDAPI Error resend account verification email ${url}`, error);
+    logger.error(`IDAPI Error send account verification email ${url}`, error);
     return handleError(error as IDAPIError);
   }
 };
@@ -167,17 +167,17 @@ export const sendAccountExistsEmail = async (
       APIAddClientAccessToken(options, ip),
     );
   } catch (error) {
-    logger.error(`IDAPI Error resend account exists email ${url}`, error);
+    logger.error(`IDAPI Error send account exists email ${url}`, error);
     return handleError(error as IDAPIError);
   }
 };
 
-export const sendAccountExistsWithoutPasswordEmail = async (
+export const sendAccountWithoutPasswordExistsEmail = async (
   email: string,
   ip: string,
   returnUrl: string,
 ) => {
-  const url = '/user/send-account-exists-without-password-email';
+  const url = '/user/send-account-without-password-exists-email';
   const options = APIPostOptions({
     'email-address': email,
   });
@@ -188,9 +188,29 @@ export const sendAccountExistsWithoutPasswordEmail = async (
     );
   } catch (error) {
     logger.error(
-      `IDAPI Error resend account exists without password email ${url}`,
+      `IDAPI Error send account without password exists email ${url}`,
       error,
     );
+    return handleError(error as IDAPIError);
+  }
+};
+
+export const sendCreatePasswordEmail = async (
+  email: string,
+  ip: string,
+  returnUrl: string,
+) => {
+  const url = '/user/send-create-password-account-exists-email';
+  const options = APIPostOptions({
+    'email-address': email,
+  });
+  try {
+    await idapiFetch(
+      addReturnUrlToPath(url, returnUrl),
+      APIAddClientAccessToken(options, ip),
+    );
+  } catch (error) {
+    logger.error(`IDAPI Error send create password email ${url}`, error);
     return handleError(error as IDAPIError);
   }
 };
