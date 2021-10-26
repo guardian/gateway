@@ -1,17 +1,13 @@
-export const AccountExistsText = () => `
+export const AccountWithoutPasswordExistsText = () => `
 Hello again,
 
 You are already registered with the Guardian.
 
-Know your password? Sign in:
-
-$signInLink
-
-If you forgot your password, you can use the link below to reset it.
+To continue to your account please click below to create a password.
 
 This link is only valid for 30 minutes.
 
-$passwordResetLink
+$createPasswordLink
 
 If you didn’t try to register, please ignore this email. Your details won’t be changed and no one has accessed your account.
 
