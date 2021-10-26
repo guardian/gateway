@@ -1,25 +1,14 @@
 import React from 'react';
-import { space, error as errorColors } from '@guardian/src-foundations';
-import { textSans } from '@guardian/src-foundations/typography';
+import { space } from '@guardian/src-foundations';
 import { css } from '@emotion/react';
-import locations from '@/client/lib/locations';
 
 const errorContextSpacing = css`
   margin: 0;
   margin-top: ${space[2]}px;
 `;
 
-const errorHeaderStyle = css`
-  ${textSans.medium()}
-  color: ${errorColors[400]};
-`;
-
 const DetailedRecaptchaError = () => (
   <>
-    <a css={errorHeaderStyle} href={locations.REPORT_ISSUE}>
-      Report this error
-    </a>
-
     <p css={errorContextSpacing}>
       If the problem persists please try the following:
     </p>

@@ -20,6 +20,7 @@ import { CaptchaErrors } from '@/shared/model/Errors';
 import useRecaptcha, { RecaptchaElement } from '../lib/hooks/useRecaptcha';
 import EmailInput from '../components/EmailInput';
 import DetailedRecaptchaError from '../components/DetailedRecaptchaError';
+import locations from '@/client/lib/locations';
 
 export type RegistrationProps = {
   returnUrl?: string;
@@ -128,6 +129,7 @@ export const Registration = ({
         gridSpanDefinition={gridItemSignInAndRegistration}
         errorOverride={reCaptchaErrorMessage}
         errorContext={reCaptchaErrorContextMessage}
+        errorReportUrl={showErrorContext ? locations.REPORT_ISSUE : undefined}
       >
         <form
           method="post"
