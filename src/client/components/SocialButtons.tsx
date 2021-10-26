@@ -18,7 +18,9 @@ const buildUrl = (
   IdP: string,
   returnUrl?: string,
 ): string => {
-  const returnUrlParam = returnUrl ? `?returnUrl=${encodeURIComponent(returnUrl)}` : '';
+  const returnUrlParam = returnUrl
+    ? `?returnUrl=${encodeURIComponent(returnUrl)}`
+    : '';
   return `${oauthBaseUrl}/${IdP}/signin${returnUrlParam}`;
 };
 
