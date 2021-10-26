@@ -19,6 +19,7 @@ import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { CaptchaErrors } from '@/shared/model/Errors';
 import useRecaptcha, { RecaptchaElement } from '../lib/hooks/useRecaptcha';
 import EmailInput from '../components/EmailInput';
+import DetailedRecaptchaError from '../components/DetailedRecaptchaError';
 
 export type RegistrationProps = {
   returnUrl?: string;
@@ -53,28 +54,6 @@ const divider = css`
   }
 `;
 
-const errorContextSpacing = css`
-  margin: 0;
-  margin-top: ${space[2]}px;
-`;
-
-const DetailedRecaptchaError = () => (
-  <>
-    <p css={errorContextSpacing}>
-      If the problem persists please try the following:
-    </p>
-    <ul css={errorContextSpacing}>
-      <li>Disable your browser plugins</li>
-      <li>Ensure that JavaScript is enabled</li>
-      <li>Update your browser</li>
-    </ul>
-    <p css={[errorContextSpacing, { marginBottom: `${space[3]}px` }]}>
-      For further help please contact our customer service team at{' '}
-      <a href="email:userhelp@theguardian.com">userhelp@theguardian.com</a>
-    </p>
-  </>
-);
-
 export const Registration = ({
   returnUrl = '',
   refValue = '',
@@ -104,6 +83,16 @@ export const Registration = ({
   );
 
   const recaptchaCheckSuccessful = !error && !expired;
+  const showErrorContext = !recaptchaCheckSuccessful && requestCount > 1;
+
+  const reCaptchaErrorMessage = recaptchaCheckSuccessful
+    ? ''
+    : showErrorContext
+    ? CaptchaErrors.RETRY
+    : CaptchaErrors.GENERIC;
+  const reCaptchaErrorContextMessage = showErrorContext ? (
+    <DetailedRecaptchaError />
+  ) : undefined;
 
   // Form is only submitted when a valid recaptcha token is returned.
   useEffect(() => {
@@ -137,14 +126,8 @@ export const Registration = ({
       />
       <MainGrid
         gridSpanDefinition={gridItemSignInAndRegistration}
-        errorOverride={
-          recaptchaCheckSuccessful ? undefined : CaptchaErrors.GENERIC
-        }
-        errorContext={
-          recaptchaCheckSuccessful ? undefined : requestCount > 1 ? (
-            <DetailedRecaptchaError />
-          ) : undefined
-        }
+        errorOverride={reCaptchaErrorMessage}
+        errorContext={reCaptchaErrorContextMessage}
       >
         <form
           method="post"

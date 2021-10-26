@@ -72,4 +72,5 @@ export enum CsrfErrors {
 
 export enum CaptchaErrors {
   GENERIC = 'Google reCAPTCHA verification failed. Please try again.',
+  RETRY = 'Google reCAPTCHA verification failed.',
 }
