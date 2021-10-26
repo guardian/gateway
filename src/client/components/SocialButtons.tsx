@@ -18,8 +18,8 @@ const buildUrl = (
   IdP: string,
   returnUrl?: string,
 ): string => {
-  const search = returnUrl ? `?returnUrl=${encodeURIComponent(returnUrl)}` : '';
-  return `${oauthBaseUrl}/${IdP}/signin${search}`;
+  const returnUrlParam = returnUrl ? `?returnUrl=${encodeURIComponent(returnUrl)}` : '';
+  return `${oauthBaseUrl}/${IdP}/signin${returnUrlParam}`;
 };
 
 const containerStyles = css`
