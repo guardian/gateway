@@ -58,7 +58,7 @@ describe('Sign in flow', () => {
     });
 
     it('loads the returnUrl upon successful authentication', function () {
-      const returnUrl = 'https://www.theguardian.com/about';
+      const returnUrl = 'https://www.theguardian.com/about.json';
       cy.visit(`/signin?returnUrl=${encodeURIComponent(returnUrl)}`);
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
