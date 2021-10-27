@@ -8,5 +8,5 @@ export const removeEncryptedEmailParam = () => {
       const qs = search.replace(/encryptedEmail=[^&]*[&]?/, '');
       window.history.replaceState(null, '', `${pathname}${qs}`);
     }
-  });
+  }, []);
 };
