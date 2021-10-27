@@ -130,7 +130,7 @@ describe('Registration email sent page', () => {
     });
   });
 
-  it('should resend "Create Password" email when an existing user without password registers which is same as initial email sent', () => {
+  it('should resend account exists without password email when an existing user without password registers which is same as initial email sent', () => {
     cy.visit('/register');
     cy.get('input[name=email]').type(existingWithoutPassword.email);
     const timeRequestWasMadeInitialEmail = new Date();
@@ -152,7 +152,11 @@ describe('Registration email sent page', () => {
       },
     ).then((email) => {
       const body = email.html.body;
-      expect(body).to.have.string('Welcome back');
+      expect(body).to.have.string('This account already exists');
+      expect(body).to.have.string(
+        'To continue to your account please click below to create a password.',
+      );
+      expect(body).to.have.string('This link is only valid for 30 minutes.');
       expect(body).to.have.string('Create password');
       cy.mailosaurDeleteMessage(email.id);
     });
@@ -172,7 +176,11 @@ describe('Registration email sent page', () => {
       },
     ).then((email) => {
       const body = email.html.body;
-      expect(body).to.have.string('Welcome back');
+      expect(body).to.have.string('This account already exists');
+      expect(body).to.have.string(
+        'To continue to your account please click below to create a password.',
+      );
+      expect(body).to.have.string('This link is only valid for 30 minutes.');
       expect(body).to.have.string('Create password');
       cy.mailosaurDeleteMessage(email.id);
     });
