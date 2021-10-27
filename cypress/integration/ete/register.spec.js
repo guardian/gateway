@@ -198,6 +198,7 @@ describe('Registration flow', () => {
       expect(body).to.have.string('This account already exists');
       expect(body).to.have.string('Sign in');
       expect(body).to.have.string('Reset password');
+      expect(body).to.have.string('This link is only valid for 30 minutes.');
 
       expect(links.length).to.eq(3);
 
@@ -220,7 +221,7 @@ describe('Registration flow', () => {
     });
   });
 
-  it('sends user a "create password" email for user with existing account without password trying to register, clicks create password on email', () => {
+  it('sends user an account exists without password email for user with existing account without password trying to register, clicks create password on email', () => {
     cy.visit('/register');
     const timeRequestWasMade = new Date();
 
@@ -245,10 +246,11 @@ describe('Registration flow', () => {
 
       const links = email.html.links ?? [];
 
-      expect(body).to.have.string('Welcome back');
+      expect(body).to.have.string('This account already exists');
       expect(body).to.have.string(
-        'Please click below to create a password for your account.',
+        'To continue to your account please click below to create a password.',
       );
+      expect(body).to.have.string('This link is only valid for 30 minutes.');
       expect(body).to.have.string('Create password');
 
       expect(links.length).to.eq(2);
