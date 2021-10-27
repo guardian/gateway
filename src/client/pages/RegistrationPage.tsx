@@ -6,12 +6,7 @@ import { Registration } from '@/client/pages/Registration';
 export const RegistrationPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { pageData = {}, recaptchaConfig } = clientState;
-  const {
-    returnUrl,
-    email,
-    ref: refValue,
-    refViewId,
-  } = pageData;
+  const { returnUrl, email, ref: refValue, refViewId } = pageData;
 
   return (
     <Registration

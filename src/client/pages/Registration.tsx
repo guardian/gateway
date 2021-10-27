@@ -18,7 +18,7 @@ import { gridItemSignInAndRegistration } from '../styles/Grid';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { CaptchaErrors } from '@/shared/model/Errors';
 import useRecaptcha, { RecaptchaElement } from '../lib/hooks/useRecaptcha';
-import qs from 'query-string'
+import qs from 'query-string';
 
 export type RegistrationProps = {
   returnUrl?: string;
@@ -53,17 +53,33 @@ const divider = css`
   }
 `;
 
-export const buildRegistrationUrlQueryParams = (returnUrl?: string, refValue?: string, refViewId?:string ) => {
-  return qs.stringify({
-    returnUrl ,
-    refViewId,
-    ref: refValue
-  }, { skipNull: true });
-}
+export const buildRegistrationUrlQueryParams = (
+  returnUrl?: string,
+  refValue?: string,
+  refViewId?: string,
+) => {
+  return qs.stringify(
+    {
+      returnUrl,
+      refViewId,
+      ref: refValue,
+    },
+    { skipNull: true },
+  );
+};
 
-export const Registration = ({ returnUrl, email, refValue, refViewId, recaptchaSiteKey }: RegistrationProps) => {
-  
-  const registrationUrlQueryParamString = buildRegistrationUrlQueryParams(returnUrl, refValue, refViewId)
+export const Registration = ({
+  returnUrl,
+  email,
+  refValue,
+  refViewId,
+  recaptchaSiteKey,
+}: RegistrationProps) => {
+  const registrationUrlQueryParamString = buildRegistrationUrlQueryParams(
+    returnUrl,
+    refValue,
+    refViewId,
+  );
 
   const registerFormRef = React.createRef<HTMLFormElement>();
   const recaptchaElementRef = React.useRef<HTMLDivElement>(null);
