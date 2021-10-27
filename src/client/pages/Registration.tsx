@@ -18,13 +18,14 @@ import { gridItemSignInAndRegistration } from '../styles/Grid';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { CaptchaErrors } from '@/shared/model/Errors';
 import useRecaptcha, { RecaptchaElement } from '../lib/hooks/useRecaptcha';
+import qs from 'query-string'
 
 export type RegistrationProps = {
   returnUrl?: string;
   email?: string;
   refValue?: string;
   refViewId?: string;
-  recaptchaSiteKey?: string;
+  recaptchaSiteKey: string;
 };
 
 const registerButton = css`
@@ -52,24 +53,17 @@ const divider = css`
   }
 `;
 
-export const Registration = ({
-  returnUrl = '',
-  refValue = '',
-  refViewId = '',
-  email = '',
-  recaptchaSiteKey = '',
-}: RegistrationProps) => {
-  const returnUrlQuery = `returnUrl=${encodeURIComponent(returnUrl)}`;
-  const refUrlQuery = `ref=${encodeURIComponent(refValue)}`;
-  const refViewIdUrlQuery = `refViewId=${encodeURIComponent(refViewId)}`;
-  const registrationUrlQueryParams = [
-    returnUrl ? returnUrlQuery : '',
-    refValue ? refUrlQuery : '',
-    refViewId ? refViewIdUrlQuery : '',
-  ];
-  const registrationUrlQueryParamString = registrationUrlQueryParams
-    .filter((param) => param !== '')
-    .join('&');
+export const buildRegistrationUrlQueryParams = (returnUrl?: string, refValue?: string, refViewId?:string ) => {
+  return qs.stringify({
+    returnUrl ,
+    refViewId,
+    ref: refValue
+  }, { skipNull: true });
+}
+
+export const Registration = ({ returnUrl, email, refValue, refViewId, recaptchaSiteKey }: RegistrationProps) => {
+  
+  const registrationUrlQueryParamString = buildRegistrationUrlQueryParams(returnUrl, refValue, refViewId)
 
   const registerFormRef = React.createRef<HTMLFormElement>();
   const recaptchaElementRef = React.useRef<HTMLDivElement>(null);
@@ -144,7 +138,7 @@ export const Registration = ({
           displayText="or continue with"
           cssOverrides={divider}
         />
-        <SocialButtons returnUrl={returnUrl} />
+        <SocialButtons returnUrl={returnUrl || ''} />
       </MainGrid>
       <Footer />
     </>

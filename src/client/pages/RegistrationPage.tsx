@@ -5,13 +5,12 @@ import { Registration } from '@/client/pages/Registration';
 
 export const RegistrationPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData = {} } = clientState;
+  const { pageData = {}, recaptchaConfig } = clientState;
   const {
     returnUrl,
     email,
     ref: refValue,
     refViewId,
-    recaptchaSiteKey,
   } = pageData;
 
   return (
@@ -20,7 +19,7 @@ export const RegistrationPage = () => {
       returnUrl={returnUrl}
       refValue={refValue}
       refViewId={refViewId}
-      recaptchaSiteKey={recaptchaSiteKey}
+      recaptchaSiteKey={recaptchaConfig.recaptchaSiteKey}
     />
   );
 };

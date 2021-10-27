@@ -43,7 +43,10 @@ export interface PageData {
   // tracking
   ref?: string;
   refViewId?: string;
-  recaptchaSiteKey?: string;
+}
+
+export interface RecaptchaConfig {
+  recaptchaSiteKey: string;
 }
 
 export interface ClientHosts {
@@ -56,6 +59,7 @@ export interface ClientState {
   csrf?: CsrfState;
   abTesting?: ABTesting;
   clientHosts: ClientHosts;
+  recaptchaConfig: RecaptchaConfig;
 }
 
 export type CsrfState = {
