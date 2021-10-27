@@ -279,9 +279,12 @@ describe('Registration flow', () => {
 
     cy.get('input[name=email').type(unregisteredAccount.email);
     cy.get('[data-cy="register-button"]').click();
-    cy.contains(
-      'There was a problem with the captcha process. You may find disabling your browser plugins, ensuring JavaScript is enabled or updating your browser will resolve this issue.',
-    );
+    cy.contains('Google reCAPTCHA verification failed. Please try again.');
+
+    // On second click, an expanded error is shown.
+    cy.get('[data-cy="register-button"]').click();
+    cy.contains('Report this error');
+    cy.contains('If the problem persists please try the following:');
 
     cy.network({ offline: false });
     const timeRequestWasMade = new Date();
