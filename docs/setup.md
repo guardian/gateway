@@ -174,6 +174,12 @@ $ make cypress-mocked
 $ ./cypress-mocked.sh
 ```
 
+You can also open the end to end test runner using:
+
+```sh
+$ ./cypress-ete.sh
+```
+
 To run the jest tests headless and automatically (how they are run on CI) use:
 
 ```sh
