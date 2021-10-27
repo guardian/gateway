@@ -23,6 +23,9 @@ import { WelcomeResendPage } from '@/client/pages/WelcomeResend';
 import { RegistrationEmailSentPage } from '@/client/pages/RegistrationEmailSentPage';
 import { ResetPasswordSessionExpiredPage } from '@/client/pages/ResetPasswordSessionExpiredPage';
 import { WelcomeSessionExpiredPage } from '@/client/pages/WelcomeSessionExpiredPage';
+import { SetPasswordPage } from '@/client/pages/SetPasswordPage';
+import { SetPasswordResendPage } from '@/client/pages/SetPasswordResendPage';
+import { SetPasswordSessionExpiredPage } from '@/client/pages/SetPasswordSessionExpiredPage';
 
 export type RoutingConfig = {
   clientState: ClientState;
@@ -60,6 +63,21 @@ export const GatewayRoutes = () => (
     </Route>
     <Route exact path={`${Routes.RESET}${Routes.EXPIRED}`}>
       <ResetPasswordSessionExpiredPage />
+    </Route>
+    <Route exact path={`${Routes.SET_PASSWORD}${Routes.RESEND}`}>
+      <SetPasswordResendPage />
+    </Route>
+    <Route exact path={`${Routes.SET_PASSWORD}${Routes.EXPIRED}`}>
+      <SetPasswordSessionExpiredPage />
+    </Route>
+    <Route path={Routes.SET_PASSWORD_COMPLETE}>
+      <h1>To Implement</h1>
+    </Route>
+    <Route path={Routes.SET_PASSWORD_EMAIL_SENT}>
+      <EmailSentPage />
+    </Route>
+    <Route exact path={`${Routes.SET_PASSWORD}${Routes.TOKEN_PARAM}`}>
+      <SetPasswordPage />
     </Route>
     <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_DATA}`}>
       <ConsentsDataPage />

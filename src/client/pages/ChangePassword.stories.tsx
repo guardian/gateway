@@ -52,3 +52,16 @@ export const FieldErrorPW = () => (
 FieldErrorPW.story = {
   name: 'with error on password',
 };
+
+export const SetPassword = () => (
+  <ChangePassword
+    headerText="Create password"
+    buttonText="Save password"
+    submitUrl=""
+    email=""
+    fieldErrors={[]}
+  />
+);
+SetPassword.story = {
+  name: 'with defaults',
+};
