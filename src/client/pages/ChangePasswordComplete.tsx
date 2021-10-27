@@ -11,10 +11,14 @@ import { Footer } from '@/client/components/Footer';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
 
 type ChangePasswordCompleteProps = {
+  headerText: string;
+  email?: string;
   returnUrl?: string;
 };
 
 export const ChangePasswordComplete = ({
+  headerText,
+  email,
   returnUrl = 'https://www.theguardian.com/uk',
 }: ChangePasswordCompleteProps) => {
   return (
@@ -22,15 +26,17 @@ export const ChangePasswordComplete = ({
       <Header />
       <Main subTitle="Sign in">
         <PageBox>
-          <PageHeader>Password Changed</PageHeader>
+          <PageHeader>{headerText}</PageHeader>
           <PageBody>
-            <PageBodyText>
-              Thank you! Your password has been changed.
-            </PageBodyText>
-            <PageBodyText>
-              You&rsquo;ve completed updating your Guardian account. Please
-              click the button below to jump back to the Guardian.
-            </PageBodyText>
+            {email ? (
+              <PageBodyText>
+                The password for <b>{email}</b> was successfully updated.
+              </PageBodyText>
+            ) : (
+              <PageBodyText>
+                The password for your account was successfully updated.
+              </PageBodyText>
+            )}
           </PageBody>
           <LinkButton
             css={linkButton}
@@ -38,6 +44,7 @@ export const ChangePasswordComplete = ({
             nudgeIcon={true}
             icon={<SvgArrowRightStraight />}
             href={returnUrl}
+            rel="noreferrer"
           >
             Continue to the Guardian
           </LinkButton>

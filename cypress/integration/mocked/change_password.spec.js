@@ -178,7 +178,7 @@ describe('Password change flow', () => {
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
       cy.wait('@breachCheck');
       cy.get('button[type="submit"]').click();
-      cy.contains('Thank you! Your password has been changed.');
+      cy.contains('Password updated');
       cy.contains('Continue to the Guardian').should(
         'have.attr',
         'href',
@@ -190,6 +190,28 @@ describe('Password change flow', () => {
       // e.g.
       // cy.getCookie('GU_U')
       //  .should('have.property', 'value', 'FAKE_VALUE_0');
+    });
+
+    it('shows password change success screen, with default redirect button, and users email', () => {
+      cy.mockNext(200, fakeValidationRespone());
+      cy.mockNext(200, fakeSuccessResponse);
+      cy.intercept({
+        method: 'GET',
+        url: 'https://api.pwnedpasswords.com/range/*',
+      }).as('breachCheck');
+      cy.visit(`/reset-password/fake_token`);
+      cy.contains(fakeValidationRespone().user.primaryEmailAddress);
+
+      cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
+      cy.wait('@breachCheck');
+      cy.get('button[type="submit"]').click();
+      cy.contains('Password updated');
+      cy.contains('Continue to the Guardian').should(
+        'have.attr',
+        'href',
+        `${Cypress.env('DEFAULT_RETURN_URI')}/`,
+      );
+      cy.contains(fakeValidationRespone().user.primaryEmailAddress);
     });
   });
 
@@ -211,7 +233,7 @@ describe('Password change flow', () => {
         );
         cy.wait('@breachCheck');
         cy.get('button[type="submit"]').click();
-        cy.contains('Thank you! Your password has been changed.');
+        cy.contains('Password updated');
         cy.contains('Continue to the Guardian').should(
           'have.attr',
           'href',
@@ -239,7 +261,7 @@ describe('Password change flow', () => {
         );
         cy.wait('@breachCheck');
         cy.get('button[type="submit"]').click();
-        cy.contains('Thank you! Your password has been changed.');
+        cy.contains('Password updated');
         cy.contains('Continue to the Guardian').should(
           'have.attr',
           'href',

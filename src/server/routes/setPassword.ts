@@ -15,15 +15,22 @@ import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { EmailType } from '@/shared/model/EmailType';
 import { sendCreatePasswordEmail } from '@/server/lib/idapi/user';
 import { readEmailCookie } from '@/server/lib/emailCookie';
+import { addReturnUrlToPath } from '@/server/lib/queryParams';
 
 const router = Router();
 
 // set password complete page
 router.get(
   Routes.SET_PASSWORD_COMPLETE,
-  (_: Request, res: ResponseWithRequestState) => {
+  (req: Request, res: ResponseWithRequestState) => {
+    const email = readEmailCookie(req);
+
     const html = renderer(Routes.SET_PASSWORD_COMPLETE, {
-      requestState: res.locals,
+      requestState: deepmerge(res.locals, {
+        pageData: {
+          email,
+        },
+      }),
       pageTitle: PageTitle.SET_PASSWORD_COMPLETE,
     });
     return res.type('html').send(html);
@@ -132,14 +139,14 @@ router.post(
     PageTitle.SET_PASSWORD,
     Routes.SET_PASSWORD,
     PageTitle.SET_PASSWORD_RESEND,
-    (res) => {
-      const html = renderer(Routes.SET_PASSWORD_COMPLETE, {
-        requestState: res.locals,
-        pageTitle: PageTitle.SET_PASSWORD_COMPLETE,
-      });
-
-      return res.type('html').send(html);
-    },
+    (res) =>
+      res.redirect(
+        303,
+        addReturnUrlToPath(
+          Routes.SET_PASSWORD_COMPLETE,
+          res.locals.queryParams.returnUrl,
+        ),
+      ),
   ),
 );
 

@@ -1,4 +1,5 @@
 import { Request, Router } from 'express';
+import deepmerge from 'deepmerge';
 import { Routes } from '@/shared/model/Routes';
 import { renderer } from '@/server/lib/renderer';
 import { ResponseWithRequestState } from '@/server/models/Express';
@@ -7,6 +8,8 @@ import {
   checkResetPasswordTokenController,
   setPasswordTokenController,
 } from '@/server/controllers/changePassword';
+import { readEmailCookie } from '@/server/lib/emailCookie';
+import { addReturnUrlToPath } from '@/server/lib/queryParams';
 
 const router = Router();
 
@@ -27,22 +30,28 @@ router.post(
     PageTitle.CHANGE_PASSWORD,
     Routes.RESET,
     PageTitle.RESET_RESEND,
-    (res) => {
-      const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
-        requestState: res.locals,
-        pageTitle: PageTitle.CHANGE_PASSWORD_COMPLETE,
-      });
-
-      return res.type('html').send(html);
-    },
+    (res) =>
+      res.redirect(
+        303,
+        addReturnUrlToPath(
+          Routes.CHANGE_PASSWORD_COMPLETE,
+          res.locals.queryParams.returnUrl,
+        ),
+      ),
   ),
 );
 
 router.get(
   Routes.CHANGE_PASSWORD_COMPLETE,
-  (_: Request, res: ResponseWithRequestState) => {
+  (req: Request, res: ResponseWithRequestState) => {
+    const email = readEmailCookie(req);
+
     const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
-      requestState: res.locals,
+      requestState: deepmerge(res.locals, {
+        pageData: {
+          email,
+        },
+      }),
       pageTitle: PageTitle.CHANGE_PASSWORD_COMPLETE,
     });
     return res.type('html').send(html);
