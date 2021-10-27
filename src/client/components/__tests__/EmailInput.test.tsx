@@ -41,6 +41,9 @@ test('does not error with a valid email', async () => {
   fireEvent.change(emailInput, { target: { value: 'valid@email.com' } });
   fireEvent.blur(emailInput);
   expect(emailInput.value).toEqual('valid@email.com');
-  const error = queryByText('Please enter a valid email format.');
-  expect(error).not.toBeInTheDocument();
+  const invalidEmailError = queryByText('Please enter a valid email format.');
+  const noInputError = queryByText('Please enter your email.');
+
+  expect(invalidEmailError).not.toBeInTheDocument();
+  expect(noInputError).not.toBeInTheDocument();
 });
