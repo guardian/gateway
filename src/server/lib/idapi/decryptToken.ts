@@ -9,16 +9,16 @@ import { logger } from '@/server/lib/logger';
 export const decrypt = async (
   token: string,
   ip: string,
-): Promise<{ email?: string }> => {
+): Promise<string | undefined> => {
   const options = APIGetOptions();
   const path = `${ApiRoutes.DECRYPT_EMAIL_TOKEN}/${token}`;
   try {
-    const result = await idapiFetch(path, APIAddClientAccessToken(options, ip));
-    return {
-      email: result.email,
-    };
+    const { email } = await idapiFetch(
+      path,
+      APIAddClientAccessToken(options, ip),
+    );
+    return email;
   } catch (error) {
     logger.error(`IDAPI Error decryptEmail decrypt ${path}`, error);
-    return {};
   }
 };

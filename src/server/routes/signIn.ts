@@ -21,9 +21,7 @@ const preFillEmailField = (route: string) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
     const { encryptedEmail, error } = state.queryParams;
-    const { email = '' } = encryptedEmail
-      ? await decrypt(encryptedEmail, req.ip)
-      : {};
+    const email = encryptedEmail ? await decrypt(encryptedEmail, req.ip) : '';
     const errorMessage =
       error === FederationErrors.SOCIAL_SIGNIN_BLOCKED
         ? SignInErrors.ACCOUNT_ALREADY_EXISTS
