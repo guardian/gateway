@@ -215,7 +215,7 @@ describe('Registration flow', () => {
       const token = match[1];
 
       cy.visit(`/reset-password/${token}`);
-      cy.contains('Set Password');
+      cy.contains('Reset password');
 
       cy.mailosaurDeleteMessage(email.id);
     });
@@ -268,7 +268,7 @@ describe('Registration flow', () => {
       const token = match[1];
 
       cy.visit(`/reset-password/${token}`);
-      cy.contains('Set Password');
+      cy.contains('Reset password');
 
       cy.mailosaurDeleteMessage(email.id);
     });
