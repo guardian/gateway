@@ -52,7 +52,7 @@ export const MagicLink = ({ email }: Props) => {
                 `}
               >
                 If you no longer have access to this email account please{' '}
-                <Link subdued={true} href="/help/contact-us">
+                <Link subdued={true} href="/help/contact-us" rel="noreferrer">
                   contact our help department
                 </Link>
               </p>

@@ -146,24 +146,40 @@ export const Footer = () => (
         <div css={ulWrapperStyles}>
           <ul css={[ulStyles, columnStyles]}>
             <li>
-              <Link cssOverrides={linkStyles} href={locations.PRIVACY}>
+              <Link
+                cssOverrides={linkStyles}
+                href={locations.PRIVACY}
+                rel="noreferrer"
+              >
                 Privacy policy
               </Link>
             </li>
             <li>
-              <Link cssOverrides={linkStyles} href={locations.CONTACT_US}>
+              <Link
+                cssOverrides={linkStyles}
+                href={locations.CONTACT_US}
+                rel="noreferrer"
+              >
                 Contact us
               </Link>
             </li>
           </ul>
           <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
             <li>
-              <Link cssOverrides={linkStyles} href={locations.HELP}>
+              <Link
+                cssOverrides={linkStyles}
+                href={locations.HELP}
+                rel="noreferrer"
+              >
                 Help
               </Link>
             </li>
             <li>
-              <Link cssOverrides={linkStyles} href={locations.TERMS}>
+              <Link
+                cssOverrides={linkStyles}
+                href={locations.TERMS}
+                rel="noreferrer"
+              >
                 Terms &amp; conditions
               </Link>
             </li>
@@ -180,28 +196,44 @@ export const Footer = () => (
         <div css={ulWrapperStyles}>
           <ul css={[ulStyles, columnStyles]}>
             <li>
-              <Link cssOverrides={linkStyles} href={locations.PRIVACY}>
+              <Link
+                cssOverrides={linkStyles}
+                href={locations.PRIVACY}
+                rel="noreferrer"
+              >
                 Privacy policy
               </Link>
             </li>
           </ul>
           <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
             <li>
-              <Link cssOverrides={linkStyles} href={locations.CONTACT_US}>
+              <Link
+                cssOverrides={linkStyles}
+                href={locations.CONTACT_US}
+                rel="noreferrer"
+              >
                 Contact us
               </Link>
             </li>
           </ul>
           <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
             <li>
-              <Link cssOverrides={linkStyles} href={locations.HELP}>
+              <Link
+                cssOverrides={linkStyles}
+                href={locations.HELP}
+                rel="noreferrer"
+              >
                 Help
               </Link>
             </li>
           </ul>
           <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
             <li>
-              <Link cssOverrides={linkStyles} href={locations.TERMS}>
+              <Link
+                cssOverrides={linkStyles}
+                href={locations.TERMS}
+                rel="noreferrer"
+              >
                 Terms &amp; conditions
               </Link>
             </li>

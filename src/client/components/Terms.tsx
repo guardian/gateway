@@ -33,6 +33,7 @@ const TermsLink = ({
       ${textSans.xxsmall()}
     `}
     href={href}
+    rel="noreferrer"
   >
     {children}
   </Link>
