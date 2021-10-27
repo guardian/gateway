@@ -89,6 +89,7 @@ describe('Registration flow', () => {
     cy.get('[data-cy="register-button"]').click();
     // check that form isn't submitted
     cy.url().should('not.contain', 'returnUrl');
+    cy.contains('Please enter your email.');
   });
 
   it('does not proceed when invalid email provided', () => {
@@ -98,6 +99,7 @@ describe('Registration flow', () => {
     cy.get('[data-cy="register-button"]').click();
     // check that form isn't submitted
     cy.url().should('not.contain', 'returnUrl');
+    cy.contains('Please enter a valid email format.');
   });
 
   it('successfully registers using an email with no existing account', () => {
