@@ -2,7 +2,7 @@ import { Request, Router } from 'express';
 import {
   readUserType,
   sendAccountExistsEmail,
-  sendAccountExistsWithoutPasswordEmail,
+  sendAccountWithoutPasswordExistsEmail,
   sendAccountVerificationEmail,
   UserType,
 } from '@/server/lib/idapi/user';
@@ -104,9 +104,9 @@ router.post(
             await sendAccountExistsEmail(email, req.ip, returnUrl);
             break;
           // they were an already registered user without password
-          // so resend the AccountExistsWithoutPassword (CreatePassword) Email
-          case EmailType.CREATE_PASSWORD:
-            await sendAccountExistsWithoutPasswordEmail(
+          // so resend the AccountWithoutPasswordExists Email
+          case EmailType.ACCOUNT_WITHOUT_PASSWORD_EXISTS:
+            await sendAccountWithoutPasswordExistsEmail(
               email,
               req.ip,
               returnUrl,
@@ -187,12 +187,12 @@ router.post(
           });
           break;
         // user exists without password
-        // so we send them the email to create and set a password
+        // so we send them the account exists without password email to set a password
         case UserType.GUEST:
-          await sendAccountExistsWithoutPasswordEmail(email, req.ip, returnUrl);
+          await sendAccountWithoutPasswordExistsEmail(email, req.ip, returnUrl);
           setEncryptedStateCookie(res, {
             email,
-            emailType: EmailType.CREATE_PASSWORD,
+            emailType: EmailType.ACCOUNT_WITHOUT_PASSWORD_EXISTS,
           });
           break;
         default:
