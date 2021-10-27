@@ -1,6 +1,7 @@
 import { QueryParams } from '@/shared/model/QueryParams';
 import { validateReturnUrl, validateRefUrl } from '@/server/lib/validateUrl';
 import { validateClientId } from '@/server/lib/validateClientId';
+import { FederationErrors } from '@/shared/model/Errors';
 
 const validateEmailVerified = (emailVerified?: string): boolean | undefined => {
   if (!emailVerified) {
@@ -27,7 +28,7 @@ const validateCsrfError = (
 };
 
 const validateError = (error?: string): string | undefined => {
-  const validErrorCodes = ['accountLinkingRequired'];
+  const validErrorCodes = [FederationErrors.SOCIAL_SIGNIN_BLOCKED];
   return validErrorCodes.find((code) => code === error);
 };
 
