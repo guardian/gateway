@@ -63,5 +63,5 @@ export const SetPassword = () => (
   />
 );
 SetPassword.story = {
-  name: 'with defaults',
+  name: 'set password page',
 };

@@ -35,5 +35,15 @@ export const ReturnUrl = () => (
   />
 );
 ReturnUrl.story = {
-  name: 'with email',
+  name: 'with email and return url',
+};
+
+export const SetPassword = () => (
+  <ChangePasswordComplete
+    headerText="Password created"
+    email="example@theguardian.com"
+  />
+);
+SetPassword.story = {
+  name: 'set password complete page',
 };
