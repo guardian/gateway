@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 import ms from 'ms';
 
 export const authCookieResponse = {

@@ -1,5 +1,3 @@
-/// <reference types='cypress' />
-
 describe('Password reset flow', () => {
   context('Account exists', () => {
     // This test depends on this Mailosaur account already being registered
@@ -33,17 +31,21 @@ describe('Password reset flow', () => {
           receivedAfter: timeRequestWasMade,
         },
       ).then((email) => {
-        // extract the reset token (so we can reset this reader's password)
-        const match = email.html.body.match(
-          /theguardian.com\/reset-password\/([^"]*)/,
-        );
-        const token = match[1];
-        cy.visit(`/reset-password/${token}`);
-        cy.get('input[name=password]').type('0298a96c-1028!@#');
-        cy.wait('@breachCheck');
-        cy.get('[data-cy="change-password-button"]').click();
-        cy.contains('Password Changed');
-        cy.mailosaurDeleteMessage(email.id);
+        if (email) {
+          const id = email.id ?? '';
+          const body = email.html?.body ?? '';
+          // extract the reset token (so we can reset this reader's password)
+          const match = body.match(
+            /theguardian.com\/reset-password\/([^"]*)/,
+          ) ?? ['', ''];
+          const token = match[1];
+          cy.visit(`/reset-password/${token}`);
+          cy.get('input[name=password]').type('0298a96c-1028!@#');
+          cy.wait('@breachCheck');
+          cy.get('[data-cy="change-password-button"]').click();
+          cy.contains('Password Changed');
+          cy.mailosaurDeleteMessage(id);
+        }
       });
     });
   });

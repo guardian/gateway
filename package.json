@@ -18,6 +18,8 @@
     "test": "yarn tsc && yarn test:unit",
     "test:unit": "jest --ci",
     "tsc": "tsc --noEmit --skipLibCheck",
+    "tsc:cypress": "tsc --noEmit --skipLibCheck --project cypress/tsconfig.json",
+    "watch:cypress": "yarn tsc:cypress --watch",
     "watch:server": "mkdir -p ./build && touch ./build/server.js && nodemon --inspect ./build/server.js",
     "watch": "webpack --watch --config webpack.development.js",
     "wait-on:server": "wait-on http://localhost:8861/healthcheck",

@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 import * as qs from 'query-string';
 
 class VerifyEmail {
@@ -17,7 +15,7 @@ class VerifyEmail {
     SIGN_IN: 'Sign in',
   };
 
-  goto(token, { failOnStatusCode = true, query = {} } = {}) {
+  goto(token: string, { failOnStatusCode = true, query = {} } = {}) {
     const querystring = qs.stringify(query);
 
     cy.visit(

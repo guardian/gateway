@@ -4,3 +4,4 @@
 yarn prettier
 yarn lint
 yarn tsc
+yarn tsc:cypress

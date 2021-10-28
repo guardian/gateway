@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 export const validationTokenExpired = {
   error: {
     status: 'error',

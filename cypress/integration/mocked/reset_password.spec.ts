@@ -1,5 +1,3 @@
-/// <reference types='cypress' />
-
 import { injectAndCheckAxe } from '../../support/cypress-axe';
 import PageResetPassword from '../../support/pages/reset_password_page';
 

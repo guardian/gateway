@@ -2,6 +2,7 @@ import OnboardingPage from './onboarding_page';
 
 class NewslettersPage extends OnboardingPage {
   static CONTENT = {
+    ...OnboardingPage.CONTENT,
     NEWSLETTERS: {
       TODAY_UK: 'Guardian Today: UK',
       TODAY_US: 'Guardian Today: US',
@@ -11,7 +12,7 @@ class NewslettersPage extends OnboardingPage {
       BOOKMARKS: 'Bookmarks',
     },
   };
-  static newsletterCheckboxWithTitle(title) {
+  static newsletterCheckboxWithTitle(title: string) {
     return cy.contains(title).parent().contains('Sign Up').find('input');
   }
   static URL = '/consents/newsletters';

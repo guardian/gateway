@@ -1,4 +1,3 @@
-/// <reference types="cypress" />
 export const CONSENT_ERRORS = {
   GENERIC: 'There was a problem saving your choice, please try again.',
 };
@@ -93,7 +92,7 @@ export const defaultUserConsent = allConsents.map(({ id }) => ({
   consented: false,
 }));
 
-export const getUserConsents = (consented = []) => {
+export const getUserConsents = (consented: Array<string>) => {
   if (!consented.length) {
     return defaultUserConsent;
   }

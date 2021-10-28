@@ -3,6 +3,7 @@ import OnboardingPage from './onboarding_page';
 class ReviewPage extends OnboardingPage {
   static URL = '/consents/review';
   static CONTENT = {
+    ...OnboardingPage.CONTENT,
     NEWSLETTERS: {
       TODAY_UK: 'Guardian Today: UK',
       LONG_READ: 'The Long Read',

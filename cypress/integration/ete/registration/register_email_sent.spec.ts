@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-/// <reference types="cypress" />
-import { injectAndCheckAxe } from '../../support/cypress-axe';
+import * as crypto from 'crypto';
+import { injectAndCheckAxe } from '../../../support/cypress-axe';
 
 describe('Registration email sent page', () => {
   const existingWithoutPassword = {
@@ -23,7 +22,7 @@ describe('Registration email sent page', () => {
     serverDomain: Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
     email:
       'registrationTest+' +
-      window.crypto.randomUUID() +
+      crypto.randomUUID() +
       '@' +
       Cypress.env('MAILOSAUR_SERVER_ID') +
       '.mailosaur.net',
@@ -73,14 +72,15 @@ describe('Registration email sent page', () => {
         receivedAfter: timeRequestWasMade,
       },
     ).then((email) => {
-      const body = email.html.body;
+      const id = email.id ?? '';
+      const body = email.html?.body ?? '';
       expect(body).to.have.string('Complete registration');
       // Extract the welcome token, so we can redirect to the welcome flow.
-      const match = body.match(/theguardian.com\/welcome\/([^"]*)/);
+      const match = body.match(/theguardian.com\/welcome\/([^"]*)/) ?? '';
       const token = match[1];
       cy.visit(`/welcome/${token}`);
       cy.contains('Create password');
-      cy.mailosaurDeleteMessage(email.id);
+      cy.mailosaurDeleteMessage(id);
     });
   });
 
@@ -105,9 +105,10 @@ describe('Registration email sent page', () => {
         receivedAfter: timeRequestWasMadeInitialEmail,
       },
     ).then((email) => {
-      const body = email.html.body;
+      const id = email.id ?? '';
+      const body = email.html?.body;
       expect(body).to.have.string('Complete registration');
-      cy.mailosaurDeleteMessage(email.id);
+      cy.mailosaurDeleteMessage(id);
     });
 
     const timeRequestWasMade = new Date();
@@ -124,9 +125,10 @@ describe('Registration email sent page', () => {
         receivedAfter: timeRequestWasMade,
       },
     ).then((email) => {
-      const body = email.html.body;
+      const id = email.id ?? '';
+      const body = email.html?.body;
       expect(body).to.have.string('Complete registration');
-      cy.mailosaurDeleteMessage(email.id);
+      cy.mailosaurDeleteMessage(id);
     });
   });
 
@@ -151,14 +153,15 @@ describe('Registration email sent page', () => {
         receivedAfter: timeRequestWasMadeInitialEmail,
       },
     ).then((email) => {
-      const body = email.html.body;
+      const id = email.id ?? '';
+      const body = email.html?.body;
       expect(body).to.have.string('This account already exists');
       expect(body).to.have.string(
         'To continue to your account please click below to create a password.',
       );
       expect(body).to.have.string('This link is only valid for 30 minutes.');
       expect(body).to.have.string('Create password');
-      cy.mailosaurDeleteMessage(email.id);
+      cy.mailosaurDeleteMessage(id);
     });
 
     const timeRequestWasMade = new Date();
@@ -175,14 +178,15 @@ describe('Registration email sent page', () => {
         receivedAfter: timeRequestWasMade,
       },
     ).then((email) => {
-      const body = email.html.body;
+      const id = email.id ?? '';
+      const body = email.html?.body;
       expect(body).to.have.string('This account already exists');
       expect(body).to.have.string(
         'To continue to your account please click below to create a password.',
       );
       expect(body).to.have.string('This link is only valid for 30 minutes.');
       expect(body).to.have.string('Create password');
-      cy.mailosaurDeleteMessage(email.id);
+      cy.mailosaurDeleteMessage(id);
     });
   });
 
@@ -207,11 +211,12 @@ describe('Registration email sent page', () => {
         receivedAfter: timeRequestWasMadeInitialEmail,
       },
     ).then((email) => {
-      const body = email.html.body;
+      const id = email.id ?? '';
+      const body = email.html?.body ?? '';
       expect(body).to.have.string(
         'You are already registered with the Guardian.',
       );
-      cy.mailosaurDeleteMessage(email.id);
+      cy.mailosaurDeleteMessage(id);
     });
 
     const timeRequestWasMade = new Date();
@@ -228,11 +233,12 @@ describe('Registration email sent page', () => {
         receivedAfter: timeRequestWasMade,
       },
     ).then((email) => {
-      const body = email.html.body;
+      const id = email.id ?? '';
+      const body = email?.html?.body ?? '';
       expect(body).to.have.string(
         'You are already registered with the Guardian.',
       );
-      cy.mailosaurDeleteMessage(email.id);
+      cy.mailosaurDeleteMessage(id);
     });
   });
 

@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 import * as qs from 'query-string';
 
 class Onboarding {

@@ -1,9 +1,9 @@
-/// <reference types="cypress" />
-
 import { injectAndCheckAxe } from '../../support/cypress-axe';
 
 describe('Password change flow', () => {
-  const fakeValidationRespone = (expiryTimestamp) => ({
+  const fakeValidationRespone = (
+    expiryTimestamp: number | undefined = undefined,
+  ) => ({
     user: {
       primaryEmailAddress: 'name@example.com',
     },

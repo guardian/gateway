@@ -1,4 +1,3 @@
-/// <reference types='cypress' />
 // This test depends on this Mailosaur account already being registered
 const existing = {
   serverId: Cypress.env('MAILOSAUR_SERVER_ID'),

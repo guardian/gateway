@@ -10,10 +10,12 @@ import {
   USER_ENDPOINT,
 } from '../../support/idapi/user';
 import * as qs from 'query-string';
-import CommunicationsPage from '../../support/pages/onboarding/communications_page.js';
+import CommunicationsPage from '../../support/pages/onboarding/communications_page';
 
 describe('Welcome and set password page', () => {
-  const checkTokenSuccessResponse = (expiryTimestamp) => ({
+  const checkTokenSuccessResponse = (
+    expiryTimestamp: number | null = null,
+  ) => ({
     user: {
       primaryEmailAddress: 'test@example.com',
     },

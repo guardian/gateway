@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 class ResetPasswordPage {
   static URL = '/reset';
   static CONTENT = {
@@ -23,7 +21,7 @@ class ResetPasswordPage {
     return cy.get('input[name="email"]:invalid');
   }
 
-  submitEmailAddress(email) {
+  submitEmailAddress(email: string) {
     this.emailAddressField().type(email);
     this.clickResetPassword();
   }

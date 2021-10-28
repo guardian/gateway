@@ -1,4 +1,3 @@
-/// <reference types="cypress" />
 export const NEWSLETTER_ENDPOINT = '/newsletters';
 export const NEWSLETTER_SUBSCRIPTION_ENDPOINT = '/users/me/newsletters';
 
@@ -82,7 +81,9 @@ export const allNewsletters = [
   },
 ];
 
-export const userNewsletters = (subscriptions = []) => {
+export const userNewsletters = (
+  subscriptions: Array<{ listId: number }> = [],
+) => {
   return {
     result: {
       htmlPreference: 'HTML',

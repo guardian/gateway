@@ -1,4 +1,6 @@
-export const terminalLog = (violations) => {
+import axe = require('axe-core');
+
+export const terminalLog = (violations: axe.Result[]) => {
   cy.task(
     'log',
     `${violations.length} accessibility violation${
@@ -21,5 +23,5 @@ export const terminalLog = (violations) => {
 // for use on page reloads after axction taken
 export const injectAndCheckAxe = () => {
   cy.injectAxe();
-  cy.checkA11y(null, null, terminalLog);
+  cy.checkA11y(undefined, undefined, terminalLog);
 };

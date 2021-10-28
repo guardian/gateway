@@ -1,5 +1,3 @@
-/// <reference types='cypress' />
-
 import { injectAndCheckAxe } from '../../support/cypress-axe';
 import { invalidEmailAddress } from '../../support/idapi/guest';
 

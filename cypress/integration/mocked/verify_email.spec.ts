@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-/// <reference types="cypress" />
+
 import { injectAndCheckAxe } from '../../support/cypress-axe';
 import { authRedirectSignInRecentlyEmailValidated } from '../../support/idapi/auth';
 import { allConsents } from '../../support/idapi/consent';

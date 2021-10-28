@@ -16,5 +16,15 @@
 // import cypress axe for accessibility testing
 import 'cypress-axe';
 
-// Import commands.js using ES2015 syntax:
+// import mailosaur, includes types for custom cypress commands
+import 'cypress-mailosaur';
+
+// Import commands using ES2015 syntax:
+// ***********************************************
+// For more comprehensive examples of custom
+// commands please read more here:
+// https://on.cypress.io/custom-commands
+// ***********************************************
+
+export const MOCKING_ENDPOINT = 'localhost:9000/mock';
 import './commands';
