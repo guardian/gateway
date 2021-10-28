@@ -17,7 +17,6 @@ import { textSans } from '@guardian/src-foundations/typography';
 import { gridItemSignInAndRegistration } from '@/client/styles/Grid';
 import { border, space } from '@guardian/src-foundations';
 import { from } from '@guardian/src-foundations/mq';
-import { topMargin } from '@/client/styles/Shared';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { SignInErrors } from '@/shared/model/Errors';
 
@@ -117,14 +116,12 @@ export const SignIn = ({
         )}
         <form method="post" action={`${Routes.SIGN_IN}${returnUrlQuery}`}>
           <CsrfFormField />
-          <div css={topMargin}>
-            <TextInput
-              label="Email"
-              name="email"
-              type="email"
-              defaultValue={email}
-            />
-          </div>
+          <TextInput
+            label="Email"
+            name="email"
+            type="email"
+            defaultValue={email}
+          />
           <div css={passwordInput}>
             <PasswordInput label="Password" />
           </div>
