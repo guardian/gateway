@@ -21,6 +21,7 @@ jobs:
           DEFAULT_RETURN_URI: https://m.code.dev-theguardian.com
           CYPRESS_DEFAULT_RETURN_URI: https://m.code.dev-theguardian.com
           SIGN_IN_PAGE_URL: https://profile.code.dev-theguardian.com/signin
+          OAUTH_BASE_URL: https://oauth.code.dev-theguardian.com
           CYPRESS_SIGN_IN_PAGE_URL: https://profile.code.dev-theguardian.com/signin
           IS_HTTPS: false
           APP_SECRET: ${{ secrets.APP_SECRET }}

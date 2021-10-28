@@ -6,12 +6,13 @@ const existing = {
   email: 'signIn@' + Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
   password: 'existing_password',
 };
+const oauthBaseUrl = 'https://oauth.code.dev-theguardian.com';
 describe('Sign in flow', () => {
   // We specify the CAPI json version of the article to reduce page load time waiting for ads.
   // This change was added because our test was timing out occasionally.
   const returnUrl =
     'https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance.json';
-
+  const defaultReturnUrl = 'https://m.code.dev-theguardian.com';
   it('links to the correct places', () => {
     cy.visit('/signin');
     cy.contains('terms of service').should(
@@ -25,7 +26,19 @@ describe('Sign in flow', () => {
     cy.contains('terms & conditions').click();
     cy.contains('Terms and conditions of use');
   });
+  it('applies form validation to email and password input fields', () => {
+    cy.visit('/signin');
 
+    cy.get('form').within(() => {
+      cy.get('input:invalid').should('have.length', 2);
+      cy.get('input[name=email]').type('not an email');
+      cy.get('input:invalid').should('have.length', 2);
+      cy.get('input[name=email]').type('emailaddress@inavalidformat.com');
+      cy.get('input:invalid').should('have.length', 1);
+      cy.get('input[name=password]').type('password');
+      cy.get('input:invalid').should('have.length', 0);
+    });
+  });
   it('shows a message when credentials are invalid', () => {
     cy.visit('/signin');
     cy.get('input[name=email]').type('invalid@doesnotexist.com');
@@ -62,29 +75,51 @@ describe('Sign in flow', () => {
     cy.url().should('eq', returnUrl);
   });
 
-  // This functionality is still todo. Remove `skip` from this test once the returnUrl parameter is passed through
-  it.skip('redirects correctly for social sign in', () => {
+  it('redirects correctly for social sign in', () => {
     cy.visit(`/signin?returnUrl=${encodeURIComponent(returnUrl)}`);
     cy.get('[data-cy="google-sign-in-button"]').should(
       'have.attr',
       'href',
-      `https://oauth.theguardian.com/google/signin?returnUrl=${encodeURIComponent(
+      `${oauthBaseUrl}/google/signin?returnUrl=${encodeURIComponent(
         returnUrl,
       )}`,
     );
     cy.get('[data-cy="facebook-sign-in-button"]').should(
       'have.attr',
       'href',
-      `https://oauth.theguardian.com/facebook/signin?returnUrl=${encodeURIComponent(
+      `${oauthBaseUrl}/facebook/signin?returnUrl=${encodeURIComponent(
         returnUrl,
       )}`,
     );
     cy.get('[data-cy="apple-sign-in-button"]').should(
       'have.attr',
       'href',
-      `https://oauth.theguardian.com/apple/signin?returnUrl=${encodeURIComponent(
-        returnUrl,
-      )}`,
+      `${oauthBaseUrl}/apple/signin?returnUrl=${encodeURIComponent(returnUrl)}`,
     );
+  });
+  it('removes encryptedEmail parameter from query string', () => {
+    cy.visit(`/signin?encryptedEmail=bhvlabgflbgyil`);
+    cy.location('search').should(
+      'eq',
+      `?returnUrl=${encodeURIComponent(defaultReturnUrl)}`,
+    );
+  });
+  it('removes encryptedEmail parameter and preserves all other valid parameters', () => {
+    cy.visit(
+      `/signin?returnUrl=${encodeURIComponent(
+        returnUrl,
+      )}&encryptedEmail=bdfalrbagbgu&refViewId=12345`,
+    );
+    cy.location('search').should(
+      'eq',
+      `?refViewId=12345&returnUrl=${encodeURIComponent(returnUrl)}`,
+    );
+  });
+  it('shows an error message and information paragraph when accountLinkingRequired error parameter is present', () => {
+    cy.visit(`/signin?error=accountLinkingRequired`);
+    cy.contains(
+      'You cannot sign in with your social account because you already have an account with the Guardian.',
+    );
+    cy.get('[class*=ErrorSummary]').contains('Account already exists');
   });
 });
