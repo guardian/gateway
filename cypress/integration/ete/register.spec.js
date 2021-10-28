@@ -300,21 +300,32 @@ describe('Registration flow', () => {
   });
 
   it('errors when the user tries to register offline and allows registration when back online', () => {
+    const reportErrorLink = 'https://www.theguardian.com/info/tech-feedback';
+
     cy.visit('/register');
 
     cy.network({ offline: true });
 
     cy.get('input[name=email').type(unregisteredAccount.email);
     cy.get('[data-cy="register-button"]').click();
-    cy.contains(
-      'There was a problem with the captcha process. You may find disabling your browser plugins, ensuring JavaScript is enabled or updating your browser will resolve this issue.',
+    cy.contains('Google reCAPTCHA verification failed. Please try again.');
+
+    // On second click, an expanded error is shown.
+    cy.get('[data-cy="register-button"]').click();
+
+    cy.contains('Google reCAPTCHA verification failed.');
+    cy.contains('Report this error').should(
+      'have.attr',
+      'href',
+      reportErrorLink,
     );
+    cy.contains('If the problem persists please try the following:');
 
     cy.network({ offline: false });
     const timeRequestWasMade = new Date();
     cy.get('[data-cy="register-button"]').click();
     cy.contains(
-      'There was a problem with the captcha process. You may find disabling your browser plugins, ensuring JavaScript is enabled or updating your browser will resolve this issue.',
+      'Google reCAPTCHA verification failed. Please try again.',
     ).should('not.exist');
 
     cy.contains('Email sent');
