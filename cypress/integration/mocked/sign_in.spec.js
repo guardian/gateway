@@ -39,7 +39,7 @@ describe('Sign in flow', () => {
         ],
       });
       cy.get('[data-cy=sign-in-button]').click();
-      cy.contains('This email and password combination is not valid');
+      cy.contains("Email and password don't match");
     });
 
     it('shows a generic error message when the api error response is not known', function () {
