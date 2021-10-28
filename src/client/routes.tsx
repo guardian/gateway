@@ -26,6 +26,7 @@ import { WelcomeSessionExpiredPage } from '@/client/pages/WelcomeSessionExpiredP
 import { SetPasswordPage } from '@/client/pages/SetPasswordPage';
 import { SetPasswordResendPage } from '@/client/pages/SetPasswordResendPage';
 import { SetPasswordSessionExpiredPage } from '@/client/pages/SetPasswordSessionExpiredPage';
+import { SetPasswordCompletePage } from '@/client/pages/SetPasswordCompletePage';
 
 export type RoutingConfig = {
   clientState: ClientState;
@@ -71,7 +72,7 @@ export const GatewayRoutes = () => (
       <SetPasswordSessionExpiredPage />
     </Route>
     <Route path={Routes.SET_PASSWORD_COMPLETE}>
-      <h1>To Implement</h1>
+      <SetPasswordCompletePage />
     </Route>
     <Route path={Routes.SET_PASSWORD_EMAIL_SENT}>
       <EmailSentPage />
