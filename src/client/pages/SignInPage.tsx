@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { SignIn } from '@/client/pages/SignIn';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
-import { removeEncryptedEmailParam } from '@/client/lib/removeEncryptedEmailParam';
+import { useRemoveEncryptedEmailParam } from '@/client/lib/hooks/useRemoveEncryptedEmailParam';
 
 export const SignInPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
@@ -10,6 +10,6 @@ export const SignInPage = () => {
   const { returnUrl, email } = pageData;
   const { error } = globalMessage;
   // we use the encryptedEmail parameter to pre-fill the email field, but then want to remove it from the url
-  removeEncryptedEmailParam();
+  useRemoveEncryptedEmailParam();
   return <SignIn returnUrl={returnUrl} email={email} error={error} />;
 };

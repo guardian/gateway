@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-export const removeEncryptedEmailParam = () => {
+export const useRemoveEncryptedEmailParam = () => {
   const { pathname, search } = useLocation();
   useEffect(() => {
     if (typeof window !== 'undefined') {
