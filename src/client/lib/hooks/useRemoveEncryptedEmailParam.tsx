@@ -5,8 +5,9 @@ export const useRemoveEncryptedEmailParam = () => {
   const { pathname, search } = useLocation();
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const qs = search.replace(/encryptedEmail=[^&]*[&]?/, '');
-      window.history.replaceState(null, '', `${pathname}${qs}`);
+      const qs = new URLSearchParams(search);
+      qs.delete('encryptedEmail');
+      window.history.replaceState(null, '', `${pathname}?${qs.toString()}`);
     }
   }, []);
 };
