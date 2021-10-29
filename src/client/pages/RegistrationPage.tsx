@@ -8,6 +8,7 @@ export const RegistrationPage = () => {
   const { pageData = {}, recaptchaConfig, clientHosts } = clientState;
   const { returnUrl, email, ref: refValue, refViewId } = pageData;
   const { oauthBaseUrl } = clientHosts;
+  const { recaptchaSiteKey } = recaptchaConfig;
 
   return (
     <Registration
@@ -15,7 +16,7 @@ export const RegistrationPage = () => {
       returnUrl={returnUrl}
       refValue={refValue}
       refViewId={refViewId}
-      recaptchaSiteKey={recaptchaConfig.recaptchaSiteKey}
+      recaptchaSiteKey={recaptchaSiteKey}
       oauthBaseUrl={oauthBaseUrl}
     />
   );
