@@ -84,7 +84,7 @@ export const SignIn = ({
   error,
   oauthBaseUrl,
 }: SignInProps) => {
-  const returnUrlString = new URLSearchParams({
+  const returnUrlQuery: string = new URLSearchParams({
     ...(returnUrl && { returnUrl }),
   }).toString();
 
@@ -117,7 +117,7 @@ export const SignIn = ({
             sign in.
           </p>
         )}
-        <form method="post" action={`${Routes.SIGN_IN}?${returnUrlString}`}>
+        <form method="post" action={`${Routes.SIGN_IN}?${returnUrlQuery}`}>
           <CsrfFormField />
           <div css={topMargin}>
             <TextInput
