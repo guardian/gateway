@@ -1,7 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-
 import { buildRegistrationUrlQueryParamString } from '@/client/pages/Registration';
 
 describe('ibuildRegistrationUrlQueryParams', () => {

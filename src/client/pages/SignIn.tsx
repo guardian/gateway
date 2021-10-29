@@ -78,8 +78,9 @@ const Links = ({ children }: { children: React.ReactNode }) => (
 );
 
 export const SignIn = ({ returnUrl, email, error }: SignInProps) => {
-  const returnUrlString = new URL(Routes.SIGN_IN, window.location.origin);
-  if (returnUrl) returnUrlString.searchParams.append('returnUrl', returnUrl);
+  const returnUrlString = new URLSearchParams({
+    ...(returnUrl && { returnUrl }),
+  });
 
   return (
     <>
@@ -110,7 +111,10 @@ export const SignIn = ({ returnUrl, email, error }: SignInProps) => {
             sign in.
           </p>
         )}
-        <form method="post" action={returnUrlString.toString()}>
+        <form
+          method="post"
+          action={`${Routes.SIGN_IN}?${returnUrlString.toString()}`}
+        >
           <CsrfFormField />
           <div css={topMargin}>
             <TextInput
