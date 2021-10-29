@@ -238,5 +238,3 @@ Here's a list of recommended extensions and why we include them:
 - [Live Share](https://marketplace.visualstudio.com/items?itemName=ms-vsliveshare.vsliveshare)
   - Visual Studio Live Share enables you to collaboratively edit and debug with others in real time.
   - **_THE_** pairing tool.
-- [npm Intellisense](https://marketplace.visualstudio.com/items?itemName=christian-kohler.npm-intellisense)
-  - Visual Studio Code plugin that provides autocompletion npm modules in import statements.
