@@ -1,6 +1,7 @@
 import { QueryParams } from '@/shared/model/QueryParams';
 import { validateReturnUrl, validateRefUrl } from '@/server/lib/validateUrl';
 import { validateClientId } from '@/server/lib/validateClientId';
+import { FederationErrors } from '@/shared/model/Errors';
 
 const validateEmailVerified = (emailVerified?: string): boolean | undefined => {
   if (!emailVerified) {
@@ -26,6 +27,11 @@ const validateCsrfError = (
   }
 };
 
+const validateError = (error?: string): string | undefined => {
+  const validErrorCodes = [FederationErrors.SOCIAL_SIGNIN_BLOCKED];
+  return validErrorCodes.find((code) => code === error);
+};
+
 export const parseExpressQueryParams = (
   method: string,
   {
@@ -35,6 +41,8 @@ export const parseExpressQueryParams = (
     csrfError,
     refViewId,
     ref,
+    encryptedEmail,
+    error,
   }: {
     returnUrl?: string;
     clientId?: string;
@@ -42,6 +50,8 @@ export const parseExpressQueryParams = (
     csrfError?: string;
     refViewId?: string;
     ref?: string;
+    encryptedEmail?: string;
+    error?: string;
   },
 ): QueryParams => {
   return {
@@ -51,6 +61,8 @@ export const parseExpressQueryParams = (
     csrfError: validateCsrfError(method, csrfError),
     refViewId,
     ref: ref && validateRefUrl(ref),
+    encryptedEmail,
+    error: validateError(error),
   };
 };
 

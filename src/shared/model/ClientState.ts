@@ -51,6 +51,7 @@ export interface RecaptchaConfig {
 
 export interface ClientHosts {
   idapiBaseUrl: string;
+  oauthBaseUrl: string;
 }
 
 export interface ClientState {

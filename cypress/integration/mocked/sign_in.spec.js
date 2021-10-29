@@ -25,6 +25,7 @@ describe('Sign in flow', () => {
   });
 
   context('Signing in', () => {
+    const defaultReturnUrl = 'https://m.code.dev-theguardian.com';
     it('shows an error message when sign in fails', function () {
       cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
       cy.get('input[name="email"]').type('example@example.com');
@@ -83,7 +84,15 @@ describe('Sign in flow', () => {
         },
       });
       cy.get('[data-cy=sign-in-button]').click();
-      cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+      cy.url().should('include', defaultReturnUrl);
+    });
+    it('auto-fills the email field when encryptedEmail is successfully decrypted', () => {
+      cy.mockNext(200, {
+        status: 'ok',
+        email: 'test@test.com',
+      });
+      cy.visit(`/signin?encryptedEmail=bdfalrbagbgu`);
+      cy.get('input[name="email"]').should('have.value', 'test@test.com');
     });
   });
 

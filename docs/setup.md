@@ -174,6 +174,12 @@ $ make cypress-mocked
 $ ./cypress-mocked.sh
 ```
 
+You can also open the end to end test runner using:
+
+```sh
+$ ./cypress-ete.sh
+```
+
 To run the jest tests headless and automatically (how they are run on CI) use:
 
 ```sh
@@ -226,14 +232,9 @@ Here's a list of recommended extensions and why we include them:
 - [Prettier - Code Formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
   - [Prettier](https://prettier.io/) is an opinionated code formatter. It enforces a consistent style by parsing your code and re-printing it with its own rules.
   - Rules that we've overridden are found in [`.prettierrc`](.prettierrc), and ignored files in [`.prettierignore`](.prettierignore).
-- [Jest](https://marketplace.visualstudio.com/items?itemName=orta.vscode-jest)
-  - Starts Jest automatically and runs the unit tests when the project is opened. Show individual fail / passes inline. Show fails inside the problem inspector. Highlights the errors next to the expect functions.
-  - Also watches for file changes on save, and automatically runs unit tests which rely on code from that file to provide instant test feedback.
 - [Visual Studio IntelliCode](https://marketplace.visualstudio.com/items?itemName=visualstudioexptteam.vscodeintellicode)
   - The [Visual Studio IntelliCode](https://visualstudio.microsoft.com/services/intellicode/) extension provides AI-assisted development features for TypeScript/JavaScript in Visual Studio Code, with insights based on understanding your code context combined with machine learning.
   - Essentially provides better code completion from the pop-up completions list by providing context-aware completion.
 - [Live Share](https://marketplace.visualstudio.com/items?itemName=ms-vsliveshare.vsliveshare)
   - Visual Studio Live Share enables you to collaboratively edit and debug with others in real time.
   - **_THE_** pairing tool.
-- [npm Intellisense](https://marketplace.visualstudio.com/items?itemName=christian-kohler.npm-intellisense)
-  - Visual Studio Code plugin that provides autocompletion npm modules in import statements.

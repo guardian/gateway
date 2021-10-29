@@ -11,6 +11,10 @@ export enum IdapiErrorMessages {
   INVALID_EMAIL_ADDRESS = 'Invalid emailAddress:',
 }
 
+export enum FederationErrors {
+  SOCIAL_SIGNIN_BLOCKED = 'accountLinkingRequired',
+}
+
 export enum GenericErrors {
   DEFAULT = 'Sorry, something went wrong. Please try again.',
 }
@@ -24,6 +28,7 @@ export enum ResetPasswordErrors {
 export enum SignInErrors {
   GENERIC = 'There was a problem signing in, please try again.',
   AUTHENTICATION_FAILED = 'This email and password combination is not valid.',
+  ACCOUNT_ALREADY_EXISTS = 'Account already exists',
 }
 
 export enum RegistrationErrors {

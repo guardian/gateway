@@ -95,6 +95,11 @@ export const getConfiguration = (): Configuration => {
     'ENCRYPTION_SECRET_KEY is missing',
   );
 
+  const oauthBaseUrl = getOrThrow(
+    process.env.OAUTH_BASE_URL,
+    'OAuth Base URL missing.',
+  );
+
   return {
     port: +port,
     idapiBaseUrl,
@@ -117,5 +122,6 @@ export const getConfiguration = (): Configuration => {
       secretKey: googleRecaptchaSecretKey,
     },
     encryptionSecretKey,
+    oauthBaseUrl,
   };
 };
