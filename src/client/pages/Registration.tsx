@@ -57,12 +57,12 @@ export const buildRegistrationUrlQueryParamString = (
   returnUrl?: string,
   refValue?: string,
   refViewId?: string,
-): URLSearchParams => {
+): string => {
   return new URLSearchParams({
     ...(returnUrl && { returnUrl }),
     ...(refValue && { ref: refValue }),
     ...(refViewId && { refViewId }),
-  });
+  }).toString();
 };
 
 export const Registration = ({
