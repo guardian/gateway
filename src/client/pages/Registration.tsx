@@ -52,16 +52,16 @@ const divider = css`
   }
 `;
 
-export const buildRegistrationUrl = (
+export const buildRegistrationUrlQueryParamString = (
   returnUrl?: string,
   refValue?: string,
   refViewId?: string,
-): URL => {
-  const regUrl = new URL(Routes.REGISTRATION, window.location.origin);
-  if (returnUrl) regUrl.searchParams.append('returnUrl', returnUrl);
-  if (refValue) regUrl.searchParams.append('ref', refValue);
-  if (refViewId) regUrl.searchParams.append('refViewId', refViewId);
-  return regUrl;
+): URLSearchParams => {
+  return new URLSearchParams({
+    ...(returnUrl && { returnUrl }),
+    ...(refValue && { ref: refValue }),
+    ...(refViewId && { refViewId }),
+  });
 };
 
 export const Registration = ({
@@ -71,7 +71,11 @@ export const Registration = ({
   refViewId,
   recaptchaSiteKey,
 }: RegistrationProps) => {
-  const registrationUrl = buildRegistrationUrl(returnUrl, refValue, refViewId);
+  const registrationUrlQueryParamString = buildRegistrationUrlQueryParamString(
+    returnUrl,
+    refValue,
+    refViewId,
+  );
 
   const registerFormRef = React.createRef<HTMLFormElement>();
   const recaptchaElementRef = React.useRef<HTMLDivElement>(null);
@@ -122,7 +126,7 @@ export const Registration = ({
       >
         <form
           method="post"
-          action={registrationUrl.toString()}
+          action={`${Routes.REGISTRATION}?${registrationUrlQueryParamString}`}
           ref={registerFormRef}
           onSubmit={handleSubmit}
         >
