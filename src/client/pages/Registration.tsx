@@ -152,10 +152,7 @@ export const Registration = ({
           displayText="or continue with"
           cssOverrides={divider}
         />
-        <SocialButtons
-          returnUrl={returnUrl || ''}
-          oauthBaseUrl={oauthBaseUrl}
-        />
+        <SocialButtons returnUrl={returnUrl} oauthBaseUrl={oauthBaseUrl} />
       </MainGrid>
       <Footer />
     </>
