@@ -25,6 +25,7 @@ export type RegistrationProps = {
   refValue?: string;
   refViewId?: string;
   recaptchaSiteKey: string;
+  oauthBaseUrl: string;
 };
 
 const registerButton = css`
@@ -70,6 +71,7 @@ export const Registration = ({
   refValue,
   refViewId,
   recaptchaSiteKey,
+  oauthBaseUrl,
 }: RegistrationProps) => {
   const registrationUrlQueryParamString = buildRegistrationUrlQueryParamString(
     returnUrl,
@@ -150,7 +152,10 @@ export const Registration = ({
           displayText="or continue with"
           cssOverrides={divider}
         />
-        <SocialButtons returnUrl={returnUrl || ''} />
+        <SocialButtons
+          returnUrl={returnUrl || ''}
+          oauthBaseUrl={oauthBaseUrl}
+        />
       </MainGrid>
       <Footer />
     </>

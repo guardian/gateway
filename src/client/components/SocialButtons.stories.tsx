@@ -9,7 +9,10 @@ export default {
 } as Meta;
 
 export const Desktop = () => (
-  <SocialButtons returnUrl="https://www.theguardian.com/uk/" />
+  <SocialButtons
+    returnUrl="https://www.theguardian.com/uk/"
+    oauthBaseUrl="https://oauth.theguardian.com/"
+  />
 );
 Desktop.storyName = 'At desktop';
 Desktop.parameters = {
@@ -20,7 +23,10 @@ Desktop.parameters = {
 };
 
 export const Mobile = () => (
-  <SocialButtons returnUrl="https://www.theguardian.com/uk/" />
+  <SocialButtons
+    returnUrl="https://www.theguardian.com/uk/"
+    oauthBaseUrl="https://oauth.theguardian.com/"
+  />
 );
 Mobile.storyName = 'At mobile 320';
 Mobile.parameters = {

@@ -25,6 +25,7 @@ export type SignInProps = {
   returnUrl?: string;
   email?: string;
   error?: string;
+  oauthBaseUrl: string;
 };
 
 const passwordInput = css`
@@ -77,7 +78,12 @@ const Links = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
-export const SignIn = ({ returnUrl, email, error }: SignInProps) => {
+export const SignIn = ({
+  returnUrl,
+  email,
+  error,
+  oauthBaseUrl,
+}: SignInProps) => {
   const returnUrlString = new URLSearchParams({
     ...(returnUrl && { returnUrl }),
   }).toString();
@@ -143,7 +149,7 @@ export const SignIn = ({ returnUrl, email, error }: SignInProps) => {
           displayText="or continue with"
           cssOverrides={divider}
         />
-        <SocialButtons returnUrl={returnUrl} />
+        <SocialButtons returnUrl={returnUrl} oauthBaseUrl={oauthBaseUrl} />
       </MainGrid>
       <Footer />
     </>
