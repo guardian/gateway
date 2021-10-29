@@ -18,7 +18,6 @@ import { gridItemSignInAndRegistration } from '../styles/Grid';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { CaptchaErrors } from '@/shared/model/Errors';
 import useRecaptcha, { RecaptchaElement } from '../lib/hooks/useRecaptcha';
-import qs from 'query-string';
 
 export type RegistrationProps = {
   returnUrl?: string;
@@ -53,19 +52,16 @@ const divider = css`
   }
 `;
 
-export const buildRegistrationUrlQueryParams = (
+export const buildRegistrationUrl = (
   returnUrl?: string,
   refValue?: string,
   refViewId?: string,
-) => {
-  return qs.stringify(
-    {
-      returnUrl,
-      refViewId,
-      ref: refValue,
-    },
-    { skipNull: true },
-  );
+): URL => {
+  const regUrl = new URL(Routes.REGISTRATION, window.location.origin);
+  if (returnUrl) regUrl.searchParams.append('returnUrl', returnUrl);
+  if (refValue) regUrl.searchParams.append('ref', refValue);
+  if (refViewId) regUrl.searchParams.append('refViewId', refViewId);
+  return regUrl;
 };
 
 export const Registration = ({
@@ -75,11 +71,7 @@ export const Registration = ({
   refViewId,
   recaptchaSiteKey,
 }: RegistrationProps) => {
-  const registrationUrlQueryParamString = buildRegistrationUrlQueryParams(
-    returnUrl,
-    refValue,
-    refViewId,
-  );
+  const registrationUrl = buildRegistrationUrl(returnUrl, refValue, refViewId);
 
   const registerFormRef = React.createRef<HTMLFormElement>();
   const recaptchaElementRef = React.useRef<HTMLDivElement>(null);
@@ -130,7 +122,7 @@ export const Registration = ({
       >
         <form
           method="post"
-          action={`${Routes.REGISTRATION}?${registrationUrlQueryParamString}`}
+          action={registrationUrl.toString()}
           ref={registerFormRef}
           onSubmit={handleSubmit}
         >

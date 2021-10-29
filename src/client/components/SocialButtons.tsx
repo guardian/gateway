@@ -18,10 +18,9 @@ const buildUrl = (
   IdP: string,
   returnUrl?: string,
 ): string => {
-  const returnUrlParam = returnUrl
-    ? `?returnUrl=${encodeURIComponent(returnUrl)}`
-    : '';
-  return `${oauthBaseUrl}/${IdP}/signin${returnUrlParam}`;
+  const socialUrl = new URL(`${oauthBaseUrl}/${IdP}/signin`);
+  if (returnUrl) socialUrl.searchParams.append('returnUrl', returnUrl);
+  return socialUrl.toString();
 };
 
 const containerStyles = css`
@@ -73,7 +72,7 @@ const Gap = () => (
   ></span>
 );
 
-export const SocialButtons = ({ returnUrl = '' }: SocialButtonProps) => {
+export const SocialButtons = ({ returnUrl }: SocialButtonProps) => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { clientHosts } = clientState;
   const { oauthBaseUrl } = clientHosts;
