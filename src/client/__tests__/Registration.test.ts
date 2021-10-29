@@ -2,37 +2,37 @@
  * @jest-environment jsdom
  */
 
-import { buildRegistrationUrl } from '@/client/pages/Registration';
+import { buildRegistrationUrlQueryParamString } from '@/client/pages/Registration';
 
 describe('ibuildRegistrationUrlQueryParams', () => {
   it('returns a url parameter string with the optional values ', () => {
     expect(
-      buildRegistrationUrl(
+      buildRegistrationUrlQueryParamString(
         'testReturnUrl',
         'refValue',
         'refViewId',
-      ).searchParams.toString(),
+      ).toString(),
     ).toBe('returnUrl=testReturnUrl&ref=refValue&refViewId=refViewId');
     expect(
-      buildRegistrationUrl(
+      buildRegistrationUrlQueryParamString(
         'testReturnUrl',
         undefined,
         'refViewId',
-      ).searchParams.toString(),
+      ).toString(),
     ).toBe('returnUrl=testReturnUrl&refViewId=refViewId');
     expect(
-      buildRegistrationUrl(
+      buildRegistrationUrlQueryParamString(
         undefined,
         undefined,
         'refViewId',
-      ).searchParams.toString(),
+      ).toString(),
     ).toBe('refViewId=refViewId');
     expect(
-      buildRegistrationUrl(
+      buildRegistrationUrlQueryParamString(
         undefined,
         undefined,
         undefined,
-      ).searchParams.toString(),
+      ).toString(),
     ).toBe('');
   });
 });
