@@ -80,7 +80,7 @@ const Links = ({ children }: { children: React.ReactNode }) => (
 export const SignIn = ({ returnUrl, email, error }: SignInProps) => {
   const returnUrlString = new URLSearchParams({
     ...(returnUrl && { returnUrl }),
-  });
+  }).toString();
 
   return (
     <>
@@ -111,10 +111,7 @@ export const SignIn = ({ returnUrl, email, error }: SignInProps) => {
             sign in.
           </p>
         )}
-        <form
-          method="post"
-          action={`${Routes.SIGN_IN}?${returnUrlString.toString()}`}
-        >
+        <form method="post" action={`${Routes.SIGN_IN}?${returnUrlString}`}>
           <CsrfFormField />
           <div css={topMargin}>
             <TextInput
