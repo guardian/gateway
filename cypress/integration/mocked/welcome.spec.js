@@ -190,7 +190,7 @@ describe('Welcome and set password page', () => {
       cy.contains('Resend email');
     });
 
-    it.only('shows the session time out page if the token expires while on the set password page', () => {
+    it('shows the session time out page if the token expires while on the set password page', () => {
       cy.mockNext(200, checkTokenSuccessResponse(Date.now() + 1000));
       cy.visit(`/welcome/fake_token`);
       cy.contains('Session timed out');

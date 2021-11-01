@@ -76,10 +76,7 @@ router.post(
         emailType: EmailType.CREATE_PASSWORD,
       });
 
-      return res.redirect(
-        303,
-        `${Routes.SET_PASSWORD}${Routes.SET_PASSWORD_EMAIL_SENT}`,
-      );
+      return res.redirect(303, `${Routes.SET_PASSWORD_EMAIL_SENT}`);
     } catch (error) {
       const { message, status } = error as RequestError;
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
