@@ -1,10 +1,7 @@
 /// <reference types='cypress' />
 
 import { injectAndCheckAxe } from '../../support/cypress-axe';
-import {
-  emailAddressInUse,
-  invalidEmailAddress,
-} from '../../support/idapi/guest';
+import { invalidEmailAddress } from '../../support/idapi/guest';
 
 describe('Registration flow', () => {
   beforeEach(() => {
