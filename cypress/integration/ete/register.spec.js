@@ -211,11 +211,13 @@ describe('Registration flow', () => {
       const passwordResetUrl = new URL(passwordResetLink.href);
 
       // extract the reset token (so we can reset this reader's password)
-      const match = passwordResetUrl.pathname.match(/\/c\/([^"]*)/);
+      const match = passwordResetUrl.pathname.match(
+        /\/reset-password\/([^"]*)/,
+      );
       const token = match[1];
 
       cy.visit(`/reset-password/${token}`);
-      cy.contains('Set Password');
+      cy.contains('Reset password');
 
       cy.mailosaurDeleteMessage(email.id);
     });
@@ -261,14 +263,14 @@ describe('Registration flow', () => {
 
       expect(createPasswordLink).not.to.be.undefined;
 
-      const passwordResetUrl = new URL(createPasswordLink.href);
+      const createPasswordUrl = new URL(createPasswordLink.href);
 
       // extract the reset token (so we can reset this reader's password)
-      const match = passwordResetUrl.pathname.match(/\/c\/([^"]*)/);
+      const match = createPasswordUrl.pathname.match(/\/set-password\/([^"]*)/);
       const token = match[1];
 
-      cy.visit(`/reset-password/${token}`);
-      cy.contains('Set Password');
+      cy.visit(`/set-password/${token}`);
+      cy.contains('Create password');
 
       cy.mailosaurDeleteMessage(email.id);
     });
