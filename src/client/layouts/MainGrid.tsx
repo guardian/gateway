@@ -7,7 +7,7 @@ import { SubHeader } from '@/client/components/SubHeader';
 import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 import { ErrorSummary } from '@guardian/source-react-components-development-kitchen';
 import { from } from '@guardian/src-foundations/mq';
-import { topMargin } from '../styles/Shared';
+import { topMargin } from '@/client/styles/Shared';
 import { space } from '@guardian/src-foundations';
 
 type Props = {
@@ -59,7 +59,7 @@ export const MainGrid = ({
   const errorMessage = errorOverride || error;
 
   return (
-    <main css={[mainStyle]}>
+    <main css={mainStyle}>
       <div css={[gridRow, gridStyle]}>
         {subTitle && <SubHeader title={subTitle} />}
         {successMessage && <GlobalSuccess success={successMessage} />}
