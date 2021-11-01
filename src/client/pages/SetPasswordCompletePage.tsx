@@ -9,7 +9,7 @@ export const SetPasswordCompletePage = () => {
   const { returnUrl, email } = pageData;
   return (
     <ChangePasswordComplete
-      headerText="Password updated"
+      headerText="Password created"
       email={email}
       returnUrl={returnUrl}
     />
