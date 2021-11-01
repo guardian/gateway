@@ -116,7 +116,7 @@
     "@guardian/src-foundations": "^3.10.1",
     "@guardian/src-icons": "^3.10.1",
     "@guardian/src-layout": "3.10.1",
-    "@guardian/src-link": "^3.10.1",
+    "@guardian/src-link": "^3.10.2",
     "@guardian/src-radio": "^3.10.1",
     "@guardian/src-text-input": "^3.10.1",
     "awesome-debounce-promise": "^2.1.0",

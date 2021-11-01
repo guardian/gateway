@@ -1665,13 +1665,13 @@
   dependencies:
     "@guardian/src-helpers" "^3.9.2-rc.1"
 
-"@guardian/src-link@^3.10.1":
-  version "3.10.1"
-  resolved "https://registry.yarnpkg.com/@guardian/src-link/-/src-link-3.10.1.tgz#3bb1c0ca899e5693e29fdc20a7ab492986775d6c"
-  integrity sha512-4cFhsmBpyN5qGXdS74zv0ARR8hOBEVBpmWcBWsT6y1MJGF884oAyj0fR2rSlkp+qi5jHj9hcrytSO6G11EY2tQ==
+"@guardian/src-link@^3.10.2":
+  version "3.10.2"
+  resolved "https://registry.yarnpkg.com/@guardian/src-link/-/src-link-3.10.2.tgz#f03bede8d6672c2e6687412de5638b965373e8eb"
+  integrity sha512-VEIHl8re+SrGGzjPzRpLVNnr7x4gJo3rZoe5+dKWbIbIkGcUuFt44pzUU1rtRZTghkZeUjwDMNtElSzRNmDADg==
   dependencies:
     "@guardian/libs" "^3.2.1"
-    "@guardian/src-helpers" "^3.9.2-rc.1"
+    "@guardian/src-helpers" "^3.10.2-alpha.1"
 
 "@guardian/src-radio@^3.10.1":
   version "3.10.1"
