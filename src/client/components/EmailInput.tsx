@@ -38,6 +38,7 @@ export const EmailInput: React.FC<EmailInputProps> = ({
   // HTML ValidityState object returned from the input.
   const transitionState = (validityState: ValidityState) => {
     const emailInputIsInvalid =
+      validityState.customError ||
       validityState.badInput ||
       validityState.patternMismatch ||
       validityState.rangeOverflow ||
