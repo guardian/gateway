@@ -8,10 +8,8 @@ const existing = {
 };
 const oauthBaseUrl = 'https://oauth.code.dev-theguardian.com';
 describe('Sign in flow', () => {
-  // We specify the CAPI json version of the article to reduce page load time waiting for ads.
-  // This change was added because our test was timing out occasionally.
   const returnUrl =
-    'https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance.json';
+    'https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance';
   const defaultReturnUrl = 'https://m.code.dev-theguardian.com';
   it('links to the correct places', () => {
     cy.visit('/signin');
@@ -48,6 +46,12 @@ describe('Sign in flow', () => {
   });
 
   it('correctly signs in an existing user', () => {
+    // Intercept the external redirect page.
+    // We just want to check that the redirect happens, not that the page loads.
+    cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
+      req.reply(200);
+    });
+
     cy.visit('/signin');
     cy.get('input[name=email]').type(existing.email);
     cy.get('input[name=password]').type(existing.password);
@@ -68,6 +72,11 @@ describe('Sign in flow', () => {
   });
 
   it('respects the returnUrl query param', () => {
+    // Intercept the external redirect page.
+    // We just want to check that the redirect happens, not that the page loads.
+    cy.intercept('GET', returnUrl, (req) => {
+      req.reply(200);
+    });
     cy.visit(`/signin?returnUrl=${encodeURIComponent(returnUrl)}`);
     cy.get('input[name=email]').type(existing.email);
     cy.get('input[name=password]').type(existing.password);
