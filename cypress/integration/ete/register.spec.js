@@ -30,34 +30,57 @@ const existingWithoutPassword = {
 describe('Registration flow', () => {
   context('Terms and Conditions links', () => {
     it('links to the Google terms of service page', () => {
+      const googleTermsUrl = 'https://policies.google.com/terms';
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', googleTermsUrl, (req) => {
+        req.reply(200);
+      });
       cy.visit('/signin');
       cy.contains('terms of service').click();
-      cy.url().should('eq', 'https://policies.google.com/terms');
+      cy.url().should('eq', googleTermsUrl);
     });
 
     it('links to the Google privacy policy page', () => {
+      const googlePrivacyPolicyUrl = 'https://policies.google.com/privacy';
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', googlePrivacyPolicyUrl, (req) => {
+        req.reply(200);
+      });
       cy.visit('/signin');
       cy.contains('This site is protected by reCAPTCHA and the Google')
         .contains('privacy policy')
         .click();
-      cy.url().should('eq', 'https://policies.google.com/privacy');
+      cy.url().should('eq', googlePrivacyPolicyUrl);
     });
 
     it('links to the Guardian terms and conditions page', () => {
+      const googleTermsOfServiceUrl =
+        'https://www.theguardian.com/help/terms-of-service';
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', googleTermsOfServiceUrl, (req) => {
+        req.reply(200);
+      });
       cy.visit('/signin');
       cy.contains('terms & conditions').click();
-      cy.url().should(
-        'eq',
-        'https://www.theguardian.com/help/terms-of-service',
-      );
+      cy.url().should('eq', googleTermsOfServiceUrl);
     });
 
     it('links to the Guardian privacy policy page', () => {
+      const guardianPrivacyPolicyUrl =
+        'https://www.theguardian.com/help/privacy-policy';
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', guardianPrivacyPolicyUrl, (req) => {
+        req.reply(200);
+      });
       cy.visit('/signin');
       cy.contains('For information about how we use your data')
         .contains('privacy policy')
         .click();
-      cy.url().should('eq', 'https://www.theguardian.com/help/privacy-policy');
+      cy.url().should('eq', guardianPrivacyPolicyUrl);
     });
   });
 
