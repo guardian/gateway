@@ -300,8 +300,6 @@ describe('Registration flow', () => {
   });
 
   it('errors when the user tries to register offline and allows registration when back online', () => {
-    const reportErrorLink = 'https://www.theguardian.com/info/tech-feedback';
-
     cy.visit('/register');
 
     cy.network({ offline: true });
@@ -317,7 +315,7 @@ describe('Registration flow', () => {
     cy.contains('Report this error').should(
       'have.attr',
       'href',
-      reportErrorLink,
+      'https://manage.theguardian.com/help-centre/contact-us',
     );
     cy.contains('If the problem persists please try the following:');
 
