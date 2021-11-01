@@ -118,7 +118,7 @@
     "@guardian/src-layout": "3.10.1",
     "@guardian/src-link": "^3.10.1",
     "@guardian/src-radio": "^3.10.1",
-    "@guardian/src-text-input": "^3.10.1",
+    "@guardian/src-text-input": "^3.10.2",
     "awesome-debounce-promise": "^2.1.0",
     "aws-sdk": "2.1013.0",
     "bowser": "^2.11.0",
