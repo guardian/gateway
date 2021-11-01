@@ -1584,13 +1584,13 @@
     "@guardian/src-button" "^3.10.2-alpha.1"
     "@guardian/src-helpers" "^3.10.2-alpha.1"
 
-"@guardian/src-accordion@^3.10.1":
-  version "3.10.1"
-  resolved "https://registry.yarnpkg.com/@guardian/src-accordion/-/src-accordion-3.10.1.tgz#e6aec0336bf837ceac5978927eb738be0e840ed4"
-  integrity sha512-G0mAFyvpiG2lFcJZ62z/ZYs1WNFNhaCHg572iAphoYIWZvsj23dSFI36zlqkcHReHh6hY3Pge7BwQAzjzWfacw==
+"@guardian/src-accordion@^3.10.2":
+  version "3.10.2"
+  resolved "https://registry.yarnpkg.com/@guardian/src-accordion/-/src-accordion-3.10.2.tgz#dc2006fb745f9675e86a2a770ebbadd700edfc13"
+  integrity sha512-JpsotmB8AGbGStWqS+Rtj1gqEFaiEWSB9UJaoQgALoZ58MFos++icrddWPz89Ftq8gNSONmLOqyYNRlZi4ZURg==
   dependencies:
     "@guardian/libs" "^3.2.1"
-    "@guardian/src-helpers" "^3.9.2-rc.1"
+    "@guardian/src-helpers" "^3.10.2-alpha.1"
 
 "@guardian/src-brand@^3.10.1":
   version "3.10.1"
