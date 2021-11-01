@@ -27,7 +27,7 @@ export enum ResetPasswordErrors {
 
 export enum SignInErrors {
   GENERIC = 'There was a problem signing in, please try again.',
-  AUTHENTICATION_FAILED = 'This email and password combination is not valid.',
+  AUTHENTICATION_FAILED = "Email and password don't match",
   ACCOUNT_ALREADY_EXISTS = 'Account already exists',
 }
 
