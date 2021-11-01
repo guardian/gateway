@@ -1576,12 +1576,12 @@
     yaml "^1.7.2"
     yargs "^15.4.1"
 
-"@guardian/source-react-components-development-kitchen@^0.0.19":
-  version "0.0.19"
-  resolved "https://registry.yarnpkg.com/@guardian/source-react-components-development-kitchen/-/source-react-components-development-kitchen-0.0.19.tgz#ad6c520def69818f98894dceb7fc738a7db8bbff"
-  integrity sha512-YAPytktdtdJZguYOnj/8Su9PacDaZmJ3F9WjZvOw6W45okGw4SP0CtnZ5fPRd/I8g/invpRFqjsy6do5l3OktQ==
+"@guardian/source-react-components-development-kitchen@^0.0.20":
+  version "0.0.20"
+  resolved "https://registry.yarnpkg.com/@guardian/source-react-components-development-kitchen/-/source-react-components-development-kitchen-0.0.20.tgz#8b415add2343d1df58679e3635924caf8af2ce9e"
+  integrity sha512-3cWhD+or3RDsp3HWsvrQuUc+pmOIYoxk8sIiDKDRjyO1/qjIjI0OKqKfQfjaIuPn0+HxguKr3UmyWNtA4FQeSA==
   dependencies:
-    "@guardian/src-button" "^3.10.2-alpha.1"
+    "@guardian/src-button" "^3.10.2"
     "@guardian/src-helpers" "^3.10.2-alpha.1"
 
 "@guardian/src-accordion@^3.10.1":
@@ -1597,17 +1597,10 @@
   resolved "https://registry.yarnpkg.com/@guardian/src-brand/-/src-brand-3.10.1.tgz#5ddb9b2697def5f3bc122aa85608f08ce334fcc0"
   integrity sha512-fJvNEka37Uzibhj6UGRom1S2SDOWVfvFE10v0D04RABvnceS17ctSI9DLbvRQ/DvDM0NhsTkVSArgK5N2njlTQ==
 
-"@guardian/src-button@^3.10.1":
-  version "3.10.1"
-  resolved "https://registry.yarnpkg.com/@guardian/src-button/-/src-button-3.10.1.tgz#84493c588e04b8cc3878806d348f26e1e42b9a4e"
-  integrity sha512-J8RwWq5kjglZQkEKR1dVxEXDR8ih1dr6Ssan6VaXoF4qj4IOGlP31bixmN+BCj2INQNU/4tdEIv3hl59KTlDzA==
-  dependencies:
-    "@guardian/src-helpers" "^3.9.2-rc.1"
-
-"@guardian/src-button@^3.10.2-alpha.1":
-  version "3.10.2-alpha.1"
-  resolved "https://registry.yarnpkg.com/@guardian/src-button/-/src-button-3.10.2-alpha.1.tgz#21676b5c09501c02e815966a09e53bcc9f342a16"
-  integrity sha512-WTdCuo+4WdPYv1+PlI4Br+XHH6lte7w+7x7RWltrSqzgKlSOlPbf+vTOJq2zKFP9LC8C3GmCK13BVnWdtby/pw==
+"@guardian/src-button@^3.10.1", "@guardian/src-button@^3.10.2":
+  version "3.10.2"
+  resolved "https://registry.yarnpkg.com/@guardian/src-button/-/src-button-3.10.2.tgz#1db48e1298dd07269b745cb681590bf483d14f41"
+  integrity sha512-tiL1uwxuCiiEtHq3/6lwPp8wahal7fGCPSsXfqwWHQ15go5JijsZpws9J8dUYkPVbsMG45gyxetFGSygCqcczw==
   dependencies:
     "@guardian/src-helpers" "^3.10.2-alpha.1"
 
