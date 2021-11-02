@@ -16,7 +16,6 @@ export const getEmailDetails = (email: Message, tokenMatcher?: RegExp) => {
   }
   let token = null;
   if (tokenMatcher) {
-    // Extract the welcome token, so we can redirect to the welcome flow.
     const match = body.match(tokenMatcher);
     if (match === null) {
       throw new Error('Unable to find token');
