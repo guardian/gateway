@@ -1,5 +1,5 @@
-import * as crypto from 'crypto';
 import { injectAndCheckAxe } from '../../../support/cypress-axe';
+import { v4 as uuidv4 } from 'uuid';
 
 describe('Registration email sent page', () => {
   const existingWithoutPassword = {
@@ -22,7 +22,7 @@ describe('Registration email sent page', () => {
     serverDomain: Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
     email:
       'registrationTest+' +
-      crypto.randomUUID() +
+      uuidv4() +
       '@' +
       Cypress.env('MAILOSAUR_SERVER_ID') +
       '.mailosaur.net',

@@ -1,11 +1,11 @@
-import * as crypto from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
 
 const unregisteredAccount = {
   serverId: Cypress.env('MAILOSAUR_SERVER_ID'),
   serverDomain: Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
   email:
     'registrationTest+' +
-    crypto.randomUUID() +
+    uuidv4() +
     '@' +
     Cypress.env('MAILOSAUR_SERVER_ID') +
     '.mailosaur.net',
