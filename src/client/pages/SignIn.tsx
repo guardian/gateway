@@ -19,6 +19,7 @@ import { from } from '@guardian/src-foundations/mq';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { SignInErrors } from '@/shared/model/Errors';
 import { EmailInput } from '@/client/components/EmailInput';
+import { parseAsync } from '@babel/core';
 
 export type SignInProps = {
   returnUrl?: string;
@@ -83,9 +84,9 @@ export const SignIn = ({
   error,
   oauthBaseUrl,
 }: SignInProps) => {
-  const returnUrlQuery: string = new URLSearchParams({
-    ...(returnUrl && { returnUrl }),
-  }).toString();
+  const params = new URLSearchParams();
+  if (returnUrl) params.append('returnUrl', returnUrl);
+  const returnUrlQuery = params.toString();
 
   return (
     <>

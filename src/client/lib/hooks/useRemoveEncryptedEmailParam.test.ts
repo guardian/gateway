@@ -1,8 +1,8 @@
-import { removeEcryptedParam } from './useRemoveEncryptedEmailParam';
+import { removeEncryptedParam } from './useRemoveEncryptedEmailParam';
 
 describe('useRemoveEncryptedEmailParam', () => {
   it('deleted EcryptedEmail param from query string', () => {
-    expect(removeEcryptedParam('abc=def&encryptedEmail=abc&test=def')).toBe(
+    expect(removeEncryptedParam('abc=def&encryptedEmail=abc&test=def')).toBe(
       'abc=def&test=def',
     );
   });
