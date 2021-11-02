@@ -5,7 +5,7 @@ export const removeEcryptedParam = (search: string) => {
   const qs = new URLSearchParams(search);
   qs.delete('encryptedEmail');
   return qs.toString();
-}
+};
 
 export const useRemoveEncryptedEmailParam = () => {
   const { pathname, search } = useLocation();
