@@ -30,34 +30,57 @@ const existingWithoutPassword = {
 describe('Registration flow', () => {
   context('Terms and Conditions links', () => {
     it('links to the Google terms of service page', () => {
+      const googleTermsUrl = 'https://policies.google.com/terms';
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', googleTermsUrl, (req) => {
+        req.reply(200);
+      });
       cy.visit('/signin');
       cy.contains('terms of service').click();
-      cy.url().should('eq', 'https://policies.google.com/terms');
+      cy.url().should('eq', googleTermsUrl);
     });
 
     it('links to the Google privacy policy page', () => {
+      const googlePrivacyPolicyUrl = 'https://policies.google.com/privacy';
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', googlePrivacyPolicyUrl, (req) => {
+        req.reply(200);
+      });
       cy.visit('/signin');
       cy.contains('This site is protected by reCAPTCHA and the Google')
         .contains('privacy policy')
         .click();
-      cy.url().should('eq', 'https://policies.google.com/privacy');
+      cy.url().should('eq', googlePrivacyPolicyUrl);
     });
 
     it('links to the Guardian terms and conditions page', () => {
+      const googleTermsOfServiceUrl =
+        'https://www.theguardian.com/help/terms-of-service';
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', googleTermsOfServiceUrl, (req) => {
+        req.reply(200);
+      });
       cy.visit('/signin');
       cy.contains('terms & conditions').click();
-      cy.url().should(
-        'eq',
-        'https://www.theguardian.com/help/terms-of-service',
-      );
+      cy.url().should('eq', googleTermsOfServiceUrl);
     });
 
     it('links to the Guardian privacy policy page', () => {
+      const guardianPrivacyPolicyUrl =
+        'https://www.theguardian.com/help/privacy-policy';
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', guardianPrivacyPolicyUrl, (req) => {
+        req.reply(200);
+      });
       cy.visit('/signin');
       cy.contains('For information about how we use your data')
         .contains('privacy policy')
         .click();
-      cy.url().should('eq', 'https://www.theguardian.com/help/privacy-policy');
+      cy.url().should('eq', guardianPrivacyPolicyUrl);
     });
   });
 
@@ -66,6 +89,7 @@ describe('Registration flow', () => {
     cy.get('[data-cy="register-button"]').click();
     // check that form isn't submitted
     cy.url().should('not.contain', 'returnUrl');
+    cy.contains('Please enter your email.');
   });
 
   it('does not proceed when invalid email provided', () => {
@@ -75,6 +99,7 @@ describe('Registration flow', () => {
     cy.get('[data-cy="register-button"]').click();
     // check that form isn't submitted
     cy.url().should('not.contain', 'returnUrl');
+    cy.contains('Please enter a valid email format.');
   });
 
   it('successfully registers using an email with no existing account', () => {
@@ -211,7 +236,9 @@ describe('Registration flow', () => {
       const passwordResetUrl = new URL(passwordResetLink.href);
 
       // extract the reset token (so we can reset this reader's password)
-      const match = passwordResetUrl.pathname.match(/\/c\/([^"]*)/);
+      const match = passwordResetUrl.pathname.match(
+        /\/reset-password\/([^"]*)/,
+      );
       const token = match[1];
 
       cy.visit(`/reset-password/${token}`);
@@ -261,10 +288,10 @@ describe('Registration flow', () => {
 
       expect(createPasswordLink).not.to.be.undefined;
 
-      const passwordResetUrl = new URL(createPasswordLink.href);
+      const createPasswordUrl = new URL(createPasswordLink.href);
 
       // extract the reset token (so we can reset this reader's password)
-      const match = passwordResetUrl.pathname.match(/\/c\/([^"]*)/);
+      const match = createPasswordUrl.pathname.match(/\/set-password\/([^"]*)/);
       const token = match[1];
 
       cy.visit(`/reset-password/${token}`);
@@ -281,15 +308,24 @@ describe('Registration flow', () => {
 
     cy.get('input[name=email').type(unregisteredAccount.email);
     cy.get('[data-cy="register-button"]').click();
-    cy.contains(
-      'There was a problem with the captcha process. You may find disabling your browser plugins, ensuring JavaScript is enabled or updating your browser will resolve this issue.',
+    cy.contains('Google reCAPTCHA verification failed. Please try again.');
+
+    // On second click, an expanded error is shown.
+    cy.get('[data-cy="register-button"]').click();
+
+    cy.contains('Google reCAPTCHA verification failed.');
+    cy.contains('Report this error').should(
+      'have.attr',
+      'href',
+      'https://manage.theguardian.com/help-centre/contact-us',
     );
+    cy.contains('If the problem persists please try the following:');
 
     cy.network({ offline: false });
     const timeRequestWasMade = new Date();
     cy.get('[data-cy="register-button"]').click();
     cy.contains(
-      'There was a problem with the captcha process. You may find disabling your browser plugins, ensuring JavaScript is enabled or updating your browser will resolve this issue.',
+      'Google reCAPTCHA verification failed. Please try again.',
     ).should('not.exist');
 
     cy.contains('Email sent');

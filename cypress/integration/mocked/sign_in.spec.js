@@ -39,7 +39,7 @@ describe('Sign in flow', () => {
         ],
       });
       cy.get('[data-cy=sign-in-button]').click();
-      cy.contains('This email and password combination is not valid');
+      cy.contains("Email and password don't match");
     });
 
     it('shows a generic error message when the api error response is not known', function () {
@@ -60,6 +60,11 @@ describe('Sign in flow', () => {
 
     it('loads the returnUrl upon successful authentication', function () {
       const returnUrl = 'https://www.theguardian.com/about';
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', returnUrl, (req) => {
+        req.reply(200);
+      });
       cy.visit(`/signin?returnUrl=${encodeURIComponent(returnUrl)}`);
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
@@ -74,6 +79,12 @@ describe('Sign in flow', () => {
     });
 
     it('redirects to the default url if no returnUrl given', function () {
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
+        req.reply(200);
+      });
+
       cy.visit('/signin');
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');

@@ -8,7 +8,7 @@
     "outDir": "build",
     "strict": true,
     "target": "ES2019",
-    "types": ["@emotion/react", "jest"],
+    "types": ["@emotion/react", "jest", "@testing-library/jest-dom"],
     "baseUrl": "src",
     "paths": {
       "@/*": ["*"]

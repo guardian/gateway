@@ -1,5 +1,4 @@
-import React from 'react';
-import { TextInput } from '@guardian/src-text-input';
+import React, { createRef, useEffect, useRef } from 'react';
 import { Button } from '@guardian/src-button';
 import { Routes } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
@@ -9,7 +8,6 @@ import { Footer } from '@/client/components/Footer';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
-import { topMargin } from '@/client/styles/Shared';
 import { border, space } from '@guardian/src-foundations';
 import { css } from '@emotion/react';
 import { from } from '@guardian/src-foundations/mq';
@@ -17,7 +15,12 @@ import { MainGrid } from '../layouts/MainGrid';
 import { gridItemSignInAndRegistration } from '../styles/Grid';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { CaptchaErrors } from '@/shared/model/Errors';
-import useRecaptcha, { RecaptchaElement } from '../lib/hooks/useRecaptcha';
+import useRecaptcha, {
+  RecaptchaElement,
+} from '@/client/lib/hooks/useRecaptcha';
+import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
+import locations from '@/client/lib/locations';
+import { EmailInput } from '@/client/components/EmailInput';
 
 export type RegistrationProps = {
   returnUrl?: string;
@@ -79,19 +82,28 @@ export const Registration = ({
     refViewId,
   );
 
-  const registerFormRef = React.createRef<HTMLFormElement>();
-  const recaptchaElementRef = React.useRef<HTMLDivElement>(null);
+  const registerFormRef = createRef<HTMLFormElement>();
+  const recaptchaElementRef = useRef<HTMLDivElement>(null);
   const captchaElement = recaptchaElementRef.current ?? 'register-recaptcha';
 
-  const { token, error, expired, executeCaptcha } = useRecaptcha(
+  const { token, error, expired, requestCount, executeCaptcha } = useRecaptcha(
     recaptchaSiteKey,
     captchaElement,
   );
 
-  const recaptchaCheckSuccessful = !error && !expired;
+  // We want to show a more detailed reCAPTCHA error if
+  // the user has requested a check more than once.
+  const recaptchaCheckFailed = error || expired;
+  const showErrorContext = recaptchaCheckFailed && requestCount > 1;
+  const reCaptchaErrorMessage = showErrorContext
+    ? CaptchaErrors.RETRY
+    : CaptchaErrors.GENERIC;
+  const reCaptchaErrorContext = showErrorContext ? (
+    <DetailedRecaptchaError />
+  ) : undefined;
 
   // Form is only submitted when a valid recaptcha token is returned.
-  React.useEffect(() => {
+  useEffect(() => {
     const registerFormElement = registerFormRef.current;
     if (token) {
       registerFormElement?.submit();
@@ -122,9 +134,9 @@ export const Registration = ({
       />
       <MainGrid
         gridSpanDefinition={gridItemSignInAndRegistration}
-        errorOverride={
-          recaptchaCheckSuccessful ? undefined : CaptchaErrors.GENERIC
-        }
+        errorOverride={recaptchaCheckFailed ? reCaptchaErrorMessage : undefined}
+        errorContext={reCaptchaErrorContext}
+        errorReportUrl={showErrorContext ? locations.REPORT_ISSUE : undefined}
       >
         <form
           method="post"
@@ -134,14 +146,7 @@ export const Registration = ({
         >
           <RecaptchaElement id="register-recaptcha" />
           <CsrfFormField />
-          <div css={topMargin}>
-            <TextInput
-              label="Email"
-              name="email"
-              type="email"
-              defaultValue={email}
-            />
-          </div>
+          <EmailInput defaultValue={email} />
           <Terms />
           <Button css={registerButton} type="submit" data-cy="register-button">
             Register

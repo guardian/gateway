@@ -5,7 +5,6 @@ import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { PasswordInput } from '@/client/components/PasswordInput';
 import { Nav } from '@/client/components/Nav';
-import { TextInput } from '@guardian/src-text-input';
 import { Button } from '@guardian/src-button';
 import { Routes } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
@@ -17,9 +16,9 @@ import { textSans } from '@guardian/src-foundations/typography';
 import { gridItemSignInAndRegistration } from '@/client/styles/Grid';
 import { border, space } from '@guardian/src-foundations';
 import { from } from '@guardian/src-foundations/mq';
-import { topMargin } from '@/client/styles/Shared';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { SignInErrors } from '@/shared/model/Errors';
+import { EmailInput } from '@/client/components/EmailInput';
 
 export type SignInProps = {
   returnUrl?: string;
@@ -119,14 +118,7 @@ export const SignIn = ({
         )}
         <form method="post" action={`${Routes.SIGN_IN}?${returnUrlQuery}`}>
           <CsrfFormField />
-          <div css={topMargin}>
-            <TextInput
-              label="Email"
-              name="email"
-              type="email"
-              defaultValue={email}
-            />
-          </div>
+          <EmailInput defaultValue={email} />
           <div css={passwordInput}>
             <PasswordInput label="Password" />
           </div>
