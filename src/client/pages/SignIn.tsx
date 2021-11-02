@@ -19,7 +19,6 @@ import { from } from '@guardian/src-foundations/mq';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { SignInErrors } from '@/shared/model/Errors';
 import { EmailInput } from '@/client/components/EmailInput';
-import { parseAsync } from '@babel/core';
 
 export type SignInProps = {
   returnUrl?: string;
