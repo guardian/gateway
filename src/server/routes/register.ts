@@ -16,7 +16,6 @@ import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import deepmerge from 'deepmerge';
 import { getEmailFromPlaySessionCookie } from '@/server/lib/playSessionCookie';
-import { RequestError } from '@/shared/lib/error';
 import { guest } from '@/server/lib/idapi/guest';
 import { RecaptchaV2 } from 'express-recaptcha';
 import { getConfiguration } from '@/server/lib/getConfiguration';
@@ -26,6 +25,7 @@ import {
   setEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
 import { EmailType } from '@/shared/model/EmailType';
+import { ApiError } from '@/server/models/Error';
 
 const router = Router();
 
@@ -114,16 +114,18 @@ router.post(
             break;
           default:
             // somethings gone wrong, throw a generic error
-            throw { message: GenericErrors.DEFAULT, status: 500 };
+            throw new ApiError({ message: GenericErrors.DEFAULT, status: 500 });
         }
 
         setEncryptedStateCookie(res, { email, emailType });
         return res.redirect(303, Routes.REGISTRATION_EMAIL_SENT);
       } else {
-        throw { message: GenericErrors.DEFAULT, status: 500 };
+        throw new ApiError({ message: GenericErrors.DEFAULT, status: 500 });
       }
     } catch (error) {
-      const { message, status } = error as RequestError;
+      const { message, status } =
+        error instanceof ApiError ? error : new ApiError();
+
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
       const html = renderer(`${Routes.REGISTRATION_EMAIL_SENT}`, {
@@ -154,10 +156,10 @@ router.post(
           'Problem verifying recaptcha, error response: ',
           req.recaptcha.error,
         );
-        throw {
+        throw new ApiError({
           message: CaptchaErrors.GENERIC,
           status: 400,
-        };
+        });
       }
 
       // use idapi user type endpoint to determine user type
@@ -198,14 +200,16 @@ router.post(
         default:
           // shouldn't reach this point, so we want to catch this
           // as an error just in case
-          throw new Error('Invalid UserType');
+          throw new ApiError({ message: 'Invalid UserType' });
       }
 
       // redirect the user to the email sent page
       return res.redirect(303, Routes.REGISTRATION_EMAIL_SENT);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      const { message, status } = error as RequestError;
+
+      const { message, status } =
+        error instanceof ApiError ? error : new ApiError();
 
       trackMetric(Metrics.REGISTER_FAILURE);
 

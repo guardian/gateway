@@ -15,6 +15,7 @@ import {
 } from '@/shared/model/Errors';
 import User from '@/shared/model/User';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
+import { IdapiError } from '@/server/models/Error';
 
 interface APIResponse {
   user: User;
@@ -43,19 +44,22 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
 
     switch (message) {
       case IdapiErrorMessages.EMAIL_IN_USE:
-        throw { message: RegistrationErrors.GENERIC, status };
+        throw new IdapiError({ message: RegistrationErrors.GENERIC, status });
       case IdapiErrorMessages.ACCESS_DENIED:
-        throw { message: ConsentsErrors.ACCESS_DENIED, status };
+        throw new IdapiError({ message: ConsentsErrors.ACCESS_DENIED, status });
       case IdapiErrorMessages.NOT_FOUND:
-        throw { message: ResetPasswordErrors.NO_ACCOUNT, status };
+        throw new IdapiError({
+          message: ResetPasswordErrors.NO_ACCOUNT,
+          status,
+        });
       case IdapiErrorMessages.MISSING_FIELD:
-        throw { message: ResetPasswordErrors.NO_EMAIL, status };
+        throw new IdapiError({ message: ResetPasswordErrors.NO_EMAIL, status });
       default:
         break;
     }
   }
 
-  throw { message: ConsentsErrors.USER, status };
+  throw new IdapiError({ message: ConsentsErrors.USER, status });
 };
 
 const responseToEntity = (response: APIResponse): User => {

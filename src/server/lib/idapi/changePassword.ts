@@ -12,6 +12,7 @@ import {
   ChangePasswordErrors,
 } from '@/shared/model/Errors';
 import { logger } from '@/server/lib/logger';
+import { IdapiError } from '@/server/models/Error';
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
   if (error.status === 'error' && error.errors?.length) {
@@ -20,19 +21,25 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
 
     switch (message) {
       case IdapiErrorMessages.INVALID_TOKEN:
-        throw { message: ChangePasswordErrors.INVALID_TOKEN, status };
+        throw new IdapiError({
+          message: ChangePasswordErrors.INVALID_TOKEN,
+          status,
+        });
       case IdapiErrorMessages.BREACHED_PASSWORD:
-        throw {
+        throw new IdapiError({
           message: ChangePasswordErrors.COMMON_PASSWORD,
           status,
           field: 'password',
-        };
+        });
       default:
         break;
     }
   }
 
-  throw { message: ChangePasswordErrors.GENERIC, status: status };
+  throw new IdapiError({
+    message: ChangePasswordErrors.GENERIC,
+    status,
+  });
 };
 
 export async function validate(

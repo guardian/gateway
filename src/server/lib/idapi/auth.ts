@@ -7,6 +7,7 @@ import {
   idapiFetch,
 } from '@/server/lib/IDAPIFetch';
 import { logger } from '@/server/lib/logger';
+import { IdapiError } from '@/server/models/Error';
 import { IdapiErrorMessages, SignInErrors } from '@/shared/model/Errors';
 import { IDAPIAuthRedirect, IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
 
@@ -25,13 +26,16 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
 
     switch (message) {
       case IdapiErrorMessages.INVALID_EMAIL_PASSWORD:
-        throw { message: SignInErrors.AUTHENTICATION_FAILED, status };
+        throw new IdapiError({
+          message: SignInErrors.AUTHENTICATION_FAILED,
+          status,
+        });
       default:
         break;
     }
   }
 
-  throw { message: SignInErrors.GENERIC, status: status };
+  throw new IdapiError({ message: SignInErrors.GENERIC, status });
 };
 
 const responseToEntity = (response: APIResponse) => {
