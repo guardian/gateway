@@ -200,7 +200,7 @@ router.post(
         default:
           // shouldn't reach this point, so we want to catch this
           // as an error just in case
-          throw new ApiError({ message: 'Invalid UserType' });
+          throw new Error('Invalid UserType');
       }
 
       // redirect the user to the email sent page

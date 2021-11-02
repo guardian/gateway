@@ -15,8 +15,7 @@ export class ApiError extends Error {
     status?: number;
     field?: string;
   } = {}) {
-    super();
-    this.message = message;
+    super(message);
     this.name = name;
     this.status = status;
     this.field = field;
