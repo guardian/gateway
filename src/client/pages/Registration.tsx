@@ -9,7 +9,6 @@ import { Footer } from '@/client/components/Footer';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
-import { topMargin } from '@/client/styles/Shared';
 import { border, space } from '@guardian/src-foundations';
 import { css } from '@emotion/react';
 import { from } from '@guardian/src-foundations/mq';
@@ -126,14 +125,12 @@ export const Registration = ({
         >
           <RecaptchaElement id="register-recaptcha" />
           <CsrfFormField />
-          <div css={topMargin}>
-            <TextInput
-              label="Email"
-              name="email"
-              type="email"
-              defaultValue={email}
-            />
-          </div>
+          <TextInput
+            label="Email"
+            name="email"
+            type="email"
+            defaultValue={email}
+          />
           <Terms />
           <Button css={registerButton} type="submit" data-cy="register-button">
             Register

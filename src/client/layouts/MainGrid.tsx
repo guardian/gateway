@@ -6,8 +6,9 @@ import { ClientStateContext } from '@/client/components/ClientState';
 import { SubHeader } from '@/client/components/SubHeader';
 import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 import { ErrorSummary } from '@guardian/source-react-components-development-kitchen';
-import { topMargin } from '@/client/styles/Shared';
 import { from } from '@guardian/src-foundations/mq';
+import { topMargin } from '@/client/styles/Shared';
+import { space } from '@guardian/src-foundations';
 
 type Props = {
   subTitle?: string;
@@ -30,6 +31,20 @@ const gridStyle = css`
   }
 `;
 
+// This extra margin is added to keep the error
+// margin-top 24px above tablet and 20px below
+// the margin-bottom is consistently 12px.
+const errorSummaryMargin = css`
+  margin-bottom: ${space[3]}px;
+  margin-top: ${space[3]}px;
+  ${from.mobileMedium} {
+    margin-top: ${space[1]}px;
+  }
+  ${from.tablet} {
+    margin-top: 0;
+  }
+`;
+
 export const MainGrid = ({
   subTitle,
   successOverride,
@@ -48,9 +63,12 @@ export const MainGrid = ({
       <div css={[gridRow, gridStyle]}>
         {subTitle && <SubHeader title={subTitle} />}
         {successMessage && <GlobalSuccess success={successMessage} />}
-        <section css={gridItem(gridSpanDefinition)}>
+        <section css={[gridItem(gridSpanDefinition), topMargin]}>
           {errorMessage && (
-            <ErrorSummary error={errorMessage} cssOverrides={topMargin} />
+            <ErrorSummary
+              error={errorMessage}
+              cssOverrides={errorSummaryMargin}
+            />
           )}
           {children}
         </section>
