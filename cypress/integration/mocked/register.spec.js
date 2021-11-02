@@ -61,8 +61,32 @@ describe('Registration flow', () => {
         statusCode: 500,
       });
       cy.get('[data-cy=register-button]').click();
-      cy.contains(
-        'here was a problem with the captcha process. You may find disabling your browser plugins, ensuring JavaScript is enabled or updating your browser will resolve this issue.',
+      cy.contains('Google reCAPTCHA verification failed. Please try again.');
+    });
+
+    it('shows detailed recaptcha error message when reCAPTCHA token request fails two times', () => {
+      // Intercept "Report this error" link because we just check it is linked to.
+      cy.intercept(
+        'GET',
+        'https://manage.theguardian.com/help-centre/contact-us',
+        {
+          statusCode: 200,
+        },
+      );
+      cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.get('input[name="email"]').type('placeholder@example.com');
+      cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
+        statusCode: 500,
+      });
+      cy.get('[data-cy=register-button]').click();
+      cy.contains('Google reCAPTCHA verification failed. Please try again.');
+      cy.get('[data-cy=register-button]').click();
+      cy.contains('Google reCAPTCHA verification failed.');
+      cy.contains('If the problem persists please try the following:');
+      cy.contains('Report this error').click();
+      cy.url().should(
+        'eq',
+        'https://manage.theguardian.com/help-centre/contact-us',
       );
     });
 
