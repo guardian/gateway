@@ -58,11 +58,11 @@ export const buildRegistrationUrlQueryParamString = (
   refValue?: string,
   refViewId?: string,
 ): string => {
-  return new URLSearchParams({
-    ...(returnUrl && { returnUrl }),
-    ...(refValue && { ref: refValue }),
-    ...(refViewId && { refViewId }),
-  }).toString();
+  const params = new URLSearchParams();
+  if (returnUrl) params.append('returnUrl', returnUrl);
+  if (refValue) params.append('ref', refValue);
+  if (refViewId) params.append('refViewId', refViewId);
+  return params.toString();
 };
 
 export const Registration = ({
