@@ -16,6 +16,7 @@ import { EmailType } from '@/shared/model/EmailType';
 import { sendCreatePasswordEmail } from '@/server/lib/idapi/user';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
+import { ResetPasswordErrors } from '@/shared/model/Errors';
 
 const router = Router();
 
@@ -78,7 +79,9 @@ router.post(
 
       return res.redirect(303, `${Routes.SET_PASSWORD_EMAIL_SENT}`);
     } catch (error) {
-      const { message, status } = error as RequestError;
+      const { message = ResetPasswordErrors.GENERIC, status = 500 } =
+        error as RequestError;
+
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
       const html = renderer(`${Routes.SET_PASSWORD}${Routes.RESEND}`, {
