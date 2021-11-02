@@ -5,6 +5,7 @@ import { setMvtId } from './commands/setMvtId';
 import { network } from './commands/network';
 import { mockPattern } from './commands/mockPattern';
 import { lastPayloadIs } from './commands/lastPayloadIs';
+import { getEmailDetails } from './commands/getEmailDetails';
 
 Cypress.Commands.add('mockNext', mockNext);
 Cypress.Commands.add('mockPattern', mockPattern); // unused, candidate for removal
@@ -13,3 +14,4 @@ Cypress.Commands.add('mockPurge', mockPurge);
 Cypress.Commands.add('mockAll', mockAll);
 Cypress.Commands.add('setMvtId', setMvtId);
 Cypress.Commands.add('lastPayloadIs', lastPayloadIs);
+Cypress.Commands.add('getEmailDetails', getEmailDetails);

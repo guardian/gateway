@@ -31,21 +31,17 @@ describe('Password reset flow', () => {
           receivedAfter: timeRequestWasMade,
         },
       ).then((email) => {
-        if (email) {
-          const id = email.id ?? '';
-          const body = email.html?.body ?? '';
-          // extract the reset token (so we can reset this reader's password)
-          const match = body.match(
-            /theguardian.com\/reset-password\/([^"]*)/,
-          ) ?? ['', ''];
-          const token = match[1];
+        cy.getEmailDetails(
+          email,
+          /theguardian.com\/reset-password\/([^"]*)/,
+        ).then(({ token, id }) => {
           cy.visit(`/reset-password/${token}`);
           cy.get('input[name=password]').type('0298a96c-1028!@#');
           cy.wait('@breachCheck');
           cy.get('[data-cy="change-password-button"]').click();
           cy.contains('Password Changed');
           cy.mailosaurDeleteMessage(id);
-        }
+        });
       });
     });
   });
