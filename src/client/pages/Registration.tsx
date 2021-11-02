@@ -1,5 +1,4 @@
 import React, { createRef, useEffect, useRef } from 'react';
-import { TextInput } from '@guardian/src-text-input';
 import { Button } from '@guardian/src-button';
 import { Routes } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
@@ -21,6 +20,7 @@ import useRecaptcha, {
 } from '@/client/lib/hooks/useRecaptcha';
 import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
 import locations from '@/client/lib/locations';
+import { EmailInput } from '@/client/components/EmailInput';
 
 export type RegistrationProps = {
   returnUrl?: string;
@@ -138,12 +138,7 @@ export const Registration = ({
         >
           <RecaptchaElement id="register-recaptcha" />
           <CsrfFormField />
-          <TextInput
-            label="Email"
-            name="email"
-            type="email"
-            defaultValue={email}
-          />
+          <EmailInput defaultValue={email} />
           <Terms />
           <Button css={registerButton} type="submit" data-cy="register-button">
             Register
