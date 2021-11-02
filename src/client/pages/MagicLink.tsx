@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { textSans } from '@guardian/src-foundations/typography';
 import { TextInput } from '@guardian/src-text-input';
 import { Button } from '@guardian/src-button';
-import { Main } from '@/client/layouts/Main';
+import { MainOld } from '@/client/layouts/MainOld';
 import { PageHeader } from '@/client/components/PageHeader';
 import { PageBox } from '@/client/components/PageBox';
 import { PageBody } from '@/client/components/PageBody';
@@ -22,7 +22,7 @@ export const MagicLink = ({ email }: Props) => {
   return (
     <>
       <Header />
-      <Main subTitle="Sign in">
+      <MainOld subTitle="Sign in">
         <PageBox>
           <PageHeader>Link to sign in</PageHeader>
           <PageBody>
@@ -59,7 +59,7 @@ export const MagicLink = ({ email }: Props) => {
             </form>
           </PageBody>
         </PageBox>
-      </Main>
+      </MainOld>
       <Footer />
     </>
   );

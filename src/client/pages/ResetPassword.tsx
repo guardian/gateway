@@ -8,7 +8,7 @@ import { PageBox } from '@/client/components/PageBox';
 import { PageBody } from '@/client/components/PageBody';
 import { form, textInput, button } from '@/client/styles/Shared';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
-import { Main } from '@/client/layouts/Main';
+import { MainOld } from '@/client/layouts/MainOld';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 
@@ -30,7 +30,7 @@ export const ResetPassword = ({
 }: PropsWithChildren<ResetPasswordProps>) => (
   <>
     <Header />
-    <Main subTitle="Sign in">
+    <MainOld subTitle="Sign in">
       <PageBox>
         <PageHeader>{headerText}</PageHeader>
         <PageBody>
@@ -64,7 +64,7 @@ export const ResetPassword = ({
           </form>
         </PageBody>
       </PageBox>
-    </Main>
+    </MainOld>
     <Footer />
   </>
 );

@@ -5,7 +5,7 @@ import { PageBox } from '@/client/components/PageBox';
 import { PageHeader } from '@/client/components/PageHeader';
 import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
-import { Main } from '@/client/layouts/Main';
+import { MainOld } from '@/client/layouts/MainOld';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { ExternalLink } from '@/client/components/ExternalLink';
@@ -17,7 +17,7 @@ const link = css`
 export const UnexpectedErrorPage = () => (
   <>
     <Header />
-    <Main subTitle="Sign in">
+    <MainOld subTitle="Sign in">
       <PageBox>
         <PageHeader>Sorry – an unexpected error occurred</PageHeader>
         <PageBody>
@@ -34,7 +34,7 @@ export const UnexpectedErrorPage = () => (
           </PageBodyText>
         </PageBody>
       </PageBox>
-    </Main>
+    </MainOld>
     <Footer />
   </>
 );

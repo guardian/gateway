@@ -29,7 +29,7 @@ const sectionStyles = css`
   margin: 0 auto;
 `;
 
-export const Main = ({
+export const MainOld = ({
   subTitle,
   successOverride,
   errorOverride,

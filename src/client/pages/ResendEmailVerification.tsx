@@ -1,5 +1,5 @@
 import React from 'react';
-import { Main } from '@/client/layouts/Main';
+import { MainOld } from '@/client/layouts/MainOld';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { LinkButton, Button } from '@guardian/src-button';
@@ -97,13 +97,13 @@ export const ResendEmailVerification = ({
   return (
     <>
       <Header />
-      <Main subTitle="Sign in">
+      <MainOld subTitle="Sign in">
         {email ? (
           <LoggedIn email={email} successText={successText} />
         ) : (
           <LoggedOut signInPageUrl={signInPageUrl} />
         )}
-      </Main>
+      </MainOld>
       <Footer />
     </>
   );

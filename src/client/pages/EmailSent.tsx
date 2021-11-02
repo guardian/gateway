@@ -6,7 +6,7 @@ import { PageHeader } from '@/client/components/PageHeader';
 import { PageBox } from '@/client/components/PageBox';
 import { PageBody } from '@/client/components/PageBody';
 import { PageBodyText } from '@/client/components/PageBodyText';
-import { Main } from '@/client/layouts/Main';
+import { MainOld } from '@/client/layouts/MainOld';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
@@ -57,7 +57,7 @@ export const EmailSent = ({
   return (
     <>
       <Header />
-      <Main
+      <MainOld
         subTitle={subTitle}
         successOverride={loading ? undefined : 'Email sent'}
       >
@@ -113,7 +113,7 @@ export const EmailSent = ({
             )}
           </PageBody>
         </PageBox>
-      </Main>
+      </MainOld>
       <Footer />
     </>
   );

@@ -4,7 +4,7 @@ import { PageHeader } from '@/client/components/PageHeader';
 import { PageBodyText } from '@/client/components/PageBodyText';
 import { PageBody } from '@/client/components/PageBody';
 import { linkButton } from '@/client/styles/Shared';
-import { Main } from '@/client/layouts/Main';
+import { MainOld } from '@/client/layouts/MainOld';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
@@ -24,7 +24,7 @@ export const ChangePasswordComplete = ({
   return (
     <>
       <Header />
-      <Main subTitle="Sign in">
+      <MainOld subTitle="Sign in">
         <PageBox>
           <PageHeader>{headerText}</PageHeader>
           <PageBody>
@@ -48,7 +48,7 @@ export const ChangePasswordComplete = ({
             Continue to the Guardian
           </ExternalLinkButton>
         </PageBox>
-      </Main>
+      </MainOld>
       <Footer />
     </>
   );
