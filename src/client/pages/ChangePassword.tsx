@@ -10,17 +10,25 @@ import { Footer } from '@/client/components/Footer';
 import { FieldError } from '@/shared/model/ClientState';
 
 type Props = {
+  headerText: string;
+  buttonText: string;
   submitUrl: string;
   email: string;
   fieldErrors: FieldError[];
 };
 
-export const ChangePassword = ({ submitUrl, email, fieldErrors }: Props) => (
+export const ChangePassword = ({
+  headerText,
+  buttonText,
+  submitUrl,
+  email,
+  fieldErrors,
+}: Props) => (
   <>
     <Header />
     <Main subTitle="Sign in">
       <PageBox>
-        <PageHeader>Set Password</PageHeader>
+        <PageHeader>{headerText}</PageHeader>
         <PageBody>
           <PageBodyText>
             Please enter your new password for {email}
@@ -28,8 +36,8 @@ export const ChangePassword = ({ submitUrl, email, fieldErrors }: Props) => (
           <PasswordForm
             submitUrl={submitUrl}
             fieldErrors={fieldErrors}
-            labelText="New Password"
-            submitButtonText="Save password"
+            labelText="Password"
+            submitButtonText={buttonText}
           />
         </PageBody>
       </PageBox>

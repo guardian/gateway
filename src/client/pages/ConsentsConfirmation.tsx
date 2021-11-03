@@ -172,6 +172,7 @@ export const ConsentsConfirmation = ({
               <Link
                 href="https://manage.theguardian.com/email-prefs"
                 subdued={true}
+                rel="noreferrer"
               >
                 My Preferences
               </Link>
@@ -217,6 +218,7 @@ export const ConsentsConfirmation = ({
                 nudgeIcon={true}
                 icon={<SvgArrowRightStraight />}
                 href={returnUrl}
+                rel="noreferrer"
               >
                 Return to the Guardian
               </LinkButton>
@@ -233,6 +235,7 @@ export const ConsentsConfirmation = ({
               <Link
                 href="https://manage.theguardian.com/email-prefs"
                 subdued={true}
+                rel="noreferrer"
               >
                 Guardian newsletters
               </Link>

@@ -3,13 +3,14 @@ import { useLocation, useParams } from 'react-router-dom';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { Routes } from '@/shared/model/Routes';
-import { Welcome } from '@/client/pages/Welcome';
+import { ChangePassword } from '@/client/pages/ChangePassword';
 
-export const WelcomePage = () => {
+export const SetPasswordPage = () => {
   const { search } = useLocation();
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData: { email, fieldErrors = [], tokenExpiryTimestamp } = {} } =
-    clientState;
+  const {
+    pageData: { email = '', fieldErrors = [], tokenExpiryTimestamp } = {},
+  } = clientState;
   const { token } = useParams<{ token: string }>();
 
   useEffect(() => {
@@ -20,14 +21,16 @@ export const WelcomePage = () => {
     // if the token expires while the user is on the current page
     if (typeof window !== 'undefined' && tokenExpiryTimestamp) {
       setTimeout(() => {
-        window.location.replace(`${Routes.WELCOME}${Routes.EXPIRED}`);
+        window.location.replace(`${Routes.SET_PASSWORD}${Routes.EXPIRED}`);
       }, tokenExpiryTimestamp - Date.now());
     }
   }, []);
 
   return (
-    <Welcome
-      submitUrl={`${Routes.WELCOME}/${token}${search}`}
+    <ChangePassword
+      headerText="Create password"
+      buttonText="Save password"
+      submitUrl={`${Routes.SET_PASSWORD}/${token}${search}`}
       email={email}
       fieldErrors={fieldErrors}
     />

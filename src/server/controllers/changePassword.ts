@@ -15,6 +15,7 @@ import { ChangePasswordErrors } from '@/shared/model/Errors';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
+import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { ApiError } from '@/server/models/Error';
 
 const validatePasswordField = (password: string): Array<FieldError> => {
@@ -58,6 +59,10 @@ export const checkResetPasswordTokenController = (
           tokenExpiryTimestamp,
         },
       });
+
+      // set the encrypted state here, so we can read the email
+      // on the confirmation page
+      setEncryptedStateCookie(res, { email });
 
       const html = renderer(`${setPasswordPagePath}/${token}`, {
         requestState: state,
@@ -143,7 +148,7 @@ export const setPasswordTokenController = (
       trackMetric(Metrics.ACCOUNT_VERIFICATION_FAILURE);
       trackMetric(Metrics.CHANGE_PASSWORD_FAILURE);
 
-      // we unfortunatley need this inner try catch block to catch
+      // we unfortunately need this inner try catch block to catch
       // errors from the `validateToken` method were it to fail
       try {
         const { email, tokenExpiryTimestamp } = await validateToken(

@@ -23,7 +23,12 @@ export const UnexpectedErrorPage = () => (
         <PageBody>
           <PageBodyText>
             An error occurred, please try again or{' '}
-            <Link css={link} href={locations.REPORT_ISSUE} subdued={true}>
+            <Link
+              css={link}
+              href={locations.REPORT_ISSUE}
+              subdued={true}
+              rel="noreferrer"
+            >
               report it
             </Link>
             .
