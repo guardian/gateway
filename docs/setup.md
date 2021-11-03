@@ -153,7 +153,7 @@ To connect your chrome dev tools to the server side debugger you need to:
 2. Click the `Open dedicated DevTools for Node` link
 3. Make sure `localhost:9229` is in the connections pane, and add it via the `Add connection` button if not.
 
-You can now pause execution by adding a `debugger` statement in any file within the `/src/server` directory. 
+You can now pause execution by adding a `debugger` statement in any file within the `/src/server` directory, or adding a breakpoint in your IDE of choice. 
 
 ## Testing
 
