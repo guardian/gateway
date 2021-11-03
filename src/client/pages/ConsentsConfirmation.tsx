@@ -18,11 +18,13 @@ import { ConsentsBlueBackground } from '@/client/components/ConsentsBlueBackgrou
 import { ConsentsHeader } from '@/client/components/ConsentsHeader';
 import { Footer } from '@/client/components/Footer';
 import { headingWithMq, text } from '@/client/styles/Consents';
-import { Link } from '@guardian/src-link';
-import { LinkButton } from '@guardian/src-button';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
 import { Consent } from '@/shared/model/Consent';
 import { NewsLetter } from '@/shared/model/Newsletter';
+import {
+  ExternalLink,
+  ExternalLinkButton,
+} from '@/client/components/ExternalLink';
 
 type ConsentsConfirmationProps = {
   error?: string;
@@ -169,13 +171,12 @@ export const ConsentsConfirmation = ({
             <h2 css={[headingWithMq, autoRow()]}>Your selections</h2>
             <p css={[text, autoRow()]}>
               You can change these setting anytime by going to{' '}
-              <Link
+              <ExternalLink
                 href="https://manage.theguardian.com/email-prefs"
                 subdued={true}
-                rel="noreferrer"
               >
                 My Preferences
-              </Link>
+              </ExternalLink>
               .
             </p>
             <div css={[reviewTableContainer, autoRow()]}>
@@ -213,15 +214,14 @@ export const ConsentsConfirmation = ({
           </ConsentsContent>
           <ConsentsBlueBackground cssOverrides={continueBoxFlex}>
             <div css={[gridItem(gridItemColumnConsents), controls]}>
-              <LinkButton
+              <ExternalLinkButton
                 iconSide="right"
                 nudgeIcon={true}
                 icon={<SvgArrowRightStraight />}
                 href={returnUrl}
-                rel="noreferrer"
               >
                 Return to the Guardian
-              </LinkButton>
+              </ExternalLinkButton>
             </div>
           </ConsentsBlueBackground>
           <ConsentsContent cssOverrides={newslettersBox}>
@@ -232,13 +232,12 @@ export const ConsentsConfirmation = ({
               We have over 40 different emails that focus on a range of diverse
               topics - from politics and the latest tech to documentaries, sport
               and scientific breakthroughs. Sign up to more in{' '}
-              <Link
+              <ExternalLink
                 href="https://manage.theguardian.com/email-prefs"
                 subdued={true}
-                rel="noreferrer"
               >
                 Guardian newsletters
-              </Link>
+              </ExternalLink>
               .
             </p>
           </ConsentsContent>
