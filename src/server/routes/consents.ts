@@ -43,7 +43,7 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { Configuration } from '@/server/models/Configuration';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { logger } from '@/server/lib/logger';
-import { RequestError } from '@/shared/lib/error';
+import { ApiError } from '@/server/models/Error';
 
 const router = Router();
 
@@ -503,7 +503,10 @@ router.get(
       } as RequestState);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      const { status: errorStatus, message } = error as RequestError;
+
+      const { message, status: errorStatus } =
+        error instanceof ApiError ? error : new ApiError();
+
       status = errorStatus;
       state = deepmerge(state, {
         globalMessage: {
@@ -562,7 +565,10 @@ router.post(
       return res.redirect(303, url);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      const { status: errorStatus, message } = error as RequestError;
+
+      const { message, status: errorStatus } =
+        error instanceof ApiError ? error : new ApiError();
+
       status = errorStatus;
       state = deepmerge(state, {
         globalMessage: {

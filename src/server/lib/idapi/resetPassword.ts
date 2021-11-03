@@ -7,6 +7,7 @@ import {
 import { ResetPasswordErrors, IdapiErrorMessages } from '@/shared/model/Errors';
 import { ApiRoutes } from '@/shared/model/Routes';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
+import { IdapiError } from '@/server/models/Error';
 
 const PATH = ApiRoutes.RESET_REQUEST_EMAIL;
 
@@ -17,15 +18,18 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
 
     switch (message) {
       case IdapiErrorMessages.NOT_FOUND:
-        throw { message: ResetPasswordErrors.NO_ACCOUNT, status };
+        throw new IdapiError({
+          message: ResetPasswordErrors.NO_ACCOUNT,
+          status,
+        });
       case IdapiErrorMessages.MISSING_FIELD:
-        throw { message: ResetPasswordErrors.NO_EMAIL, status };
+        throw new IdapiError({ message: ResetPasswordErrors.NO_EMAIL, status });
       default:
         break;
     }
   }
 
-  throw { message: ResetPasswordErrors.GENERIC, status: status };
+  throw new IdapiError({ message: ResetPasswordErrors.GENERIC, status });
 };
 
 export async function create(email: string, ip: string, returnUrl: string) {

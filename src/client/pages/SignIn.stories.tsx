@@ -9,7 +9,9 @@ export default {
   parameters: { layout: 'fullscreen' },
 } as Meta;
 
-export const Default = () => <SignIn />;
+export const Default = () => (
+  <SignIn oauthBaseUrl="https://oauth.theguardian.com/" />
+);
 Default.story = {
   name: 'with defaults',
 };

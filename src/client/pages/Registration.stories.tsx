@@ -9,6 +9,7 @@ export default {
   parameters: { layout: 'fullscreen' },
   args: {
     recaptchaSiteKey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
+    oauthBaseUrl: 'https://oauth.theguardian.com/',
   },
 } as Meta<RegistrationProps>;
 

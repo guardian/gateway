@@ -10,7 +10,8 @@ import { getABTesting } from '@/server/lib/getABTesting';
 import { RequestState } from '@/server/models/Express';
 
 const config = getConfiguration();
-const { idapiBaseUrl, oauthBaseUrl } = config;
+
+const { idapiBaseUrl, oauthBaseUrl, googleRecaptcha } = config;
 
 const getRequestState = (req: Request): RequestState => {
   const [abTesting, abTestAPI] = getABTesting(req, config, tests);
@@ -33,6 +34,7 @@ const getRequestState = (req: Request): RequestState => {
       idapiBaseUrl,
       oauthBaseUrl,
     },
+    recaptchaConfig: { recaptchaSiteKey: googleRecaptcha.siteKey },
   };
 };
 

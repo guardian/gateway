@@ -10,9 +10,9 @@ import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { readEmailCookie } from '@/server/lib/emailCookie';
-import { RequestError } from '@/shared/lib/error';
 import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
 import { ResetPasswordErrors } from '@/shared/model/Errors';
+import { ApiError } from '@/server/models/Error';
 
 const router = Router();
 
@@ -50,8 +50,11 @@ router.post(
       setEncryptedStateCookie(res, { email });
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      const { message = ResetPasswordErrors.GENERIC, status = 500 } =
-        error as RequestError;
+
+      const { message, status } =
+        error instanceof ApiError
+          ? error
+          : new ApiError({ message: ResetPasswordErrors.GENERIC });
 
       trackMetric(Metrics.SEND_PASSWORD_RESET_FAILURE);
 

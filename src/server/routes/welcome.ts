@@ -14,8 +14,8 @@ import {
   setPasswordTokenController,
 } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
-import { RequestError } from '@/shared/lib/error';
 import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
+import { ApiError } from '@/server/models/Error';
 
 const router = Router();
 
@@ -57,7 +57,9 @@ router.post(
 
       return res.redirect(303, Routes.WELCOME_SENT);
     } catch (error) {
-      const { message, status } = error as RequestError;
+      const { message, status } =
+        error instanceof ApiError ? error : new ApiError();
+
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
       const html = renderer(`${Routes.WELCOME}${Routes.RESEND}`, {
