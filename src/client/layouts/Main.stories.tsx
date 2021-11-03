@@ -11,3 +11,8 @@ export default {
 
 export const Default = () => <MainLayout>Hello world</MainLayout>;
 Default.storyName = 'with defaults';
+
+export const WithPageTitle = () => (
+  <MainLayout pageTitle="Page title">Hello world</MainLayout>
+);
+WithPageTitle.storyName = 'with pageTitle';

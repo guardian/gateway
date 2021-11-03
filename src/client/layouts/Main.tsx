@@ -1,13 +1,15 @@
 import React, { PropsWithChildren } from 'react';
 import { css } from '@emotion/react';
 import { from } from '@guardian/src-foundations/mq';
-import { neutral } from '@guardian/src-foundations';
+import { neutral, space } from '@guardian/src-foundations';
+import { headline } from '@guardian/src-foundations/typography';
 import { gridRow, gridItem, SpanDefinition } from '@/client/styles/Grid';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface MainLayoutProps {}
+interface MainLayoutProps {
+  pageTitle?: string;
+}
 
 const mainStyles = css`
   display: flex;
@@ -42,14 +44,47 @@ const gridSpanDefinition: SpanDefinition = {
   WIDE: { start: 4, span: 6 },
 };
 
+const headerStyles = css`
+  /* padding */
+  padding-top: ${space[6]}px;
+  padding-bottom: ${space[6]}px;
+
+  ${from.desktop} {
+    padding-top: ${space[9]}px;
+  }
+
+  /* margin */
+  margin-bottom: ${space[1]}px;
+
+  /* border */
+  border-bottom: 1px solid ${neutral[86]};
+`;
+
+const pageTitleStyles = css`
+  width: 100%;
+  margin: 0;
+
+  ${headline.small({ fontWeight: 'bold' })}
+  font-size: 28px;
+  ${from.desktop} {
+    font-size: 32px;
+  }
+`;
+
 export const MainLayout = ({
   children,
+  pageTitle,
 }: PropsWithChildren<MainLayoutProps>) => {
   return (
     <>
       <Header />
       <main css={[mainStyles, gridRow]}>
         <section css={gridItem(gridSpanDefinition)}>
+          {pageTitle && (
+            <header css={headerStyles}>
+              <h1 css={[pageTitleStyles]}>{pageTitle}</h1>
+            </header>
+          )}
           <div>{children}</div>
         </section>
       </main>
