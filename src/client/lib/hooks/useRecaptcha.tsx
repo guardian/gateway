@@ -50,7 +50,7 @@ const useRecaptchaScript = (src: string) => {
     recaptchaScriptLoadPromise
       .then(initialiseRecaptcha)
       .catch(() => setError(true));
-  }, []);
+  }, [src]);
 
   return {
     loaded,
@@ -118,14 +118,7 @@ const useRecaptcha: UseRecaptcha = (
 
   // We can't initialise recaptcha if no site key or render element is provided.
   if (siteKey === '' || renderElement === '') {
-    return {
-      token,
-      error: true,
-      expired,
-      widgetId,
-      executeCaptcha: () => null,
-      requestCount,
-    };
+    throw new Error('No site key or render element passed');
   }
 
   const { loaded, error: scriptLoadError } = useRecaptchaScript(src);
@@ -154,7 +147,7 @@ const useRecaptcha: UseRecaptcha = (
       });
       setWidgetId(widgetId);
     }
-  }, [loaded]);
+  }, [loaded, renderElement, siteKey, size]);
 
   const executeCaptcha = React.useCallback(() => {
     if (!recaptchaReady()) {

@@ -14,5 +14,5 @@ export const useRemoveEncryptedEmailParam = () => {
       const qs = removeEncryptedParam(search);
       window.history.replaceState(null, '', `${pathname}?${qs}`);
     }
-  }, []);
+  }, [pathname, search]);
 };
