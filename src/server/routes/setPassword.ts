@@ -9,7 +9,6 @@ import {
 } from '@/server/controllers/changePassword';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import deepmerge from 'deepmerge';
-import { RequestError } from '@/shared/lib/error';
 import { logger } from '@/server/lib/logger';
 import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { EmailType } from '@/shared/model/EmailType';
@@ -17,6 +16,7 @@ import { sendCreatePasswordEmail } from '@/server/lib/idapi/user';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { ResetPasswordErrors } from '@/shared/model/Errors';
+import { ApiError } from '../models/Error';
 
 const router = Router();
 
@@ -79,8 +79,10 @@ router.post(
 
       return res.redirect(303, `${Routes.SET_PASSWORD_EMAIL_SENT}`);
     } catch (error) {
-      const { message = ResetPasswordErrors.GENERIC, status = 500 } =
-        error as RequestError;
+      const { message, status } =
+        error instanceof ApiError
+          ? error
+          : new ApiError({ message: ResetPasswordErrors.GENERIC });
 
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
