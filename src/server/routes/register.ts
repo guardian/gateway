@@ -40,11 +40,7 @@ router.get(
   Routes.REGISTRATION,
   (req: Request, res: ResponseWithRequestState) => {
     const html = renderer(Routes.REGISTRATION, {
-      requestState: deepmerge(res.locals, {
-        pageData: {
-          recaptchaSiteKey: siteKey,
-        },
-      }),
+      requestState: res.locals,
       pageTitle: PageTitle.REGISTRATION,
     });
     res.type('html').send(html);

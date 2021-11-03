@@ -3,6 +3,7 @@ import { ClientState } from '@/shared/model/ClientState';
 
 export const ClientStateContext = createContext({
   clientHosts: { idapiBaseUrl: '', oauthBaseUrl: '' },
+  recaptchaConfig: { recaptchaSiteKey: '' },
 });
 
 type ClientStateProps = {
