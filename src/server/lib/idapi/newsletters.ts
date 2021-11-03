@@ -8,6 +8,7 @@ import {
 import { NewslettersErrors } from '@/shared/model/Errors';
 import { NewsLetter, NewsletterPatch } from '@/shared/model/Newsletter';
 import { logger } from '@/server/lib/logger';
+import { IdapiError } from '@/server/models/Error';
 
 const API_ROUTE = '/users/me/newsletters';
 
@@ -22,7 +23,7 @@ interface NewsletterAPIResponse {
 }
 
 const handleError = () => {
-  throw { message: NewslettersErrors.GENERIC, status: 500 };
+  throw new IdapiError({ message: NewslettersErrors.GENERIC, status: 500 });
 };
 
 const responseToEntity = (newsletter: NewsletterAPIResponse): NewsLetter => {

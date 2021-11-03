@@ -9,9 +9,10 @@ import { logger } from '@/server/lib/logger';
 import { ConsentsErrors } from '@/shared/model/Errors';
 import { Consent } from '@/shared/model/Consent';
 import { UserConsent } from '@/shared/model/User';
+import { IdapiError } from '@/server/models/Error';
 
 const handleError = (): never => {
-  throw { message: ConsentsErrors.GENERIC, status: 500 };
+  throw new IdapiError({ message: ConsentsErrors.GENERIC, status: 500 });
 };
 
 interface ConsentAPIResponse {

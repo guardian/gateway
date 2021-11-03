@@ -11,9 +11,9 @@ import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { RequestError } from '@/shared/lib/error';
 import { decrypt } from '@/server/lib/idapi/decryptToken';
 import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
+import { ApiError } from '@/server/models/Error';
 
 const router = Router();
 
@@ -63,7 +63,8 @@ router.post(
       setIDAPICookies(res, cookies);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      const { message, status } = error as RequestError;
+      const { message, status } =
+        error instanceof ApiError ? error : new ApiError();
 
       trackMetric(Metrics.SIGN_IN_FAILURE);
 

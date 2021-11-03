@@ -1,3 +1,4 @@
+import { IdapiError } from '@/server/models/Error';
 import { EmailType } from '@/shared/model/EmailType';
 import { IdapiErrorMessages, RegistrationErrors } from '@/shared/model/Errors';
 import {
@@ -22,13 +23,16 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
 
     switch (message) {
       case IdapiErrorMessages.INVALID_EMAIL_ADDRESS:
-        throw { message: RegistrationErrors.EMAIL_INVALID, status };
+        throw new IdapiError({
+          message: RegistrationErrors.EMAIL_INVALID,
+          status,
+        });
       default:
         break;
     }
   }
 
-  throw { message: RegistrationErrors.GENERIC, status };
+  throw new IdapiError({ message: RegistrationErrors.GENERIC, status });
 };
 
 export const guest = async (
