@@ -10,7 +10,7 @@ import {
   gridRow,
   COLUMNS,
 } from '@/client/styles/Grid';
-import { Link } from '@guardian/src-link';
+import { ExternalLink } from '@/client/components/ExternalLink';
 
 interface GlobalErrorProps {
   error: string;
@@ -76,14 +76,9 @@ export const GlobalError = ({ error, link, left }: GlobalErrorProps) => {
           <div>
             {error}
             &nbsp;
-            <Link
-              href={link.link}
-              css={errorLink}
-              subdued={true}
-              rel="noreferrer"
-            >
+            <ExternalLink href={link.link} css={errorLink} subdued={true}>
               {link.linkText}
-            </Link>
+            </ExternalLink>
           </div>
         </div>
       </div>

@@ -9,11 +9,11 @@ import {
 import { space } from '@guardian/src-foundations';
 import { textSans } from '@guardian/src-foundations/typography';
 import { from } from '@guardian/src-foundations/mq';
-import { Link } from '@guardian/src-link';
 import { Hide } from '@guardian/src-layout';
 import locations from '@/client/lib/locations';
 import { BackToTop } from '@/client/components/BackToTop';
 import { Container } from '@/client/components/Container';
+import { ExternalLink } from '@/client/components/ExternalLink';
 
 const footer = css`
   background-color: ${brandBackground.primary};
@@ -146,42 +146,29 @@ export const Footer = () => (
         <div css={ulWrapperStyles}>
           <ul css={[ulStyles, columnStyles]}>
             <li>
-              <Link
-                cssOverrides={linkStyles}
-                href={locations.PRIVACY}
-                rel="noreferrer"
-              >
+              <ExternalLink cssOverrides={linkStyles} href={locations.PRIVACY}>
                 Privacy policy
-              </Link>
+              </ExternalLink>
             </li>
             <li>
-              <Link
+              <ExternalLink
                 cssOverrides={linkStyles}
                 href={locations.CONTACT_US}
-                rel="noreferrer"
               >
                 Contact us
-              </Link>
+              </ExternalLink>
             </li>
           </ul>
           <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
             <li>
-              <Link
-                cssOverrides={linkStyles}
-                href={locations.HELP}
-                rel="noreferrer"
-              >
+              <ExternalLink cssOverrides={linkStyles} href={locations.HELP}>
                 Help
-              </Link>
+              </ExternalLink>
             </li>
             <li>
-              <Link
-                cssOverrides={linkStyles}
-                href={locations.TERMS}
-                rel="noreferrer"
-              >
+              <ExternalLink cssOverrides={linkStyles} href={locations.TERMS}>
                 Terms &amp; conditions
-              </Link>
+              </ExternalLink>
             </li>
           </ul>
           <div css={backToTopStyles}>
@@ -196,46 +183,33 @@ export const Footer = () => (
         <div css={ulWrapperStyles}>
           <ul css={[ulStyles, columnStyles]}>
             <li>
-              <Link
-                cssOverrides={linkStyles}
-                href={locations.PRIVACY}
-                rel="noreferrer"
-              >
+              <ExternalLink cssOverrides={linkStyles} href={locations.PRIVACY}>
                 Privacy policy
-              </Link>
+              </ExternalLink>
             </li>
           </ul>
           <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
             <li>
-              <Link
+              <ExternalLink
                 cssOverrides={linkStyles}
                 href={locations.CONTACT_US}
-                rel="noreferrer"
               >
                 Contact us
-              </Link>
+              </ExternalLink>
             </li>
           </ul>
           <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
             <li>
-              <Link
-                cssOverrides={linkStyles}
-                href={locations.HELP}
-                rel="noreferrer"
-              >
+              <ExternalLink cssOverrides={linkStyles} href={locations.HELP}>
                 Help
-              </Link>
+              </ExternalLink>
             </li>
           </ul>
           <ul css={[ulStyles, columnStyles, leftBorderStyles]}>
             <li>
-              <Link
-                cssOverrides={linkStyles}
-                href={locations.TERMS}
-                rel="noreferrer"
-              >
+              <ExternalLink cssOverrides={linkStyles} href={locations.TERMS}>
                 Terms &amp; conditions
-              </Link>
+              </ExternalLink>
             </li>
           </ul>
           <div css={backToTopStyles}>

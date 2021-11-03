@@ -1,9 +1,9 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { Link } from '@guardian/src-link';
 import { textSans } from '@guardian/src-foundations/typography';
 import { from } from '@guardian/src-foundations/mq';
 import { space } from '@guardian/src-foundations';
+import { ExternalLink } from '@/client/components/ExternalLink';
 
 const Text = ({ children }: { children: React.ReactNode }) => (
   <p
@@ -27,16 +27,15 @@ const TermsLink = ({
   children: React.ReactNode;
   href: string;
 }) => (
-  <Link
+  <ExternalLink
     subdued={true}
     cssOverrides={css`
       ${textSans.xxsmall()}
     `}
     href={href}
-    rel="noreferrer"
   >
     {children}
-  </Link>
+  </ExternalLink>
 );
 
 const terms = css`

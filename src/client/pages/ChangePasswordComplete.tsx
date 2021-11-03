@@ -1,5 +1,4 @@
 import React from 'react';
-import { LinkButton } from '@guardian/src-button';
 import { PageBox } from '@/client/components/PageBox';
 import { PageHeader } from '@/client/components/PageHeader';
 import { PageBodyText } from '@/client/components/PageBodyText';
@@ -9,6 +8,7 @@ import { Main } from '@/client/layouts/Main';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { SvgArrowRightStraight } from '@guardian/src-icons';
+import { ExternalLinkButton } from '@/client/components/ExternalLink';
 
 type ChangePasswordCompleteProps = {
   headerText: string;
@@ -38,16 +38,15 @@ export const ChangePasswordComplete = ({
               </PageBodyText>
             )}
           </PageBody>
-          <LinkButton
+          <ExternalLinkButton
             css={linkButton}
             iconSide="right"
             nudgeIcon={true}
             icon={<SvgArrowRightStraight />}
             href={returnUrl}
-            rel="noreferrer"
           >
             Continue to the Guardian
-          </LinkButton>
+          </ExternalLinkButton>
         </PageBox>
       </Main>
       <Footer />
