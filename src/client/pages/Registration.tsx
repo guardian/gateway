@@ -27,7 +27,8 @@ export type RegistrationProps = {
   email?: string;
   refValue?: string;
   refViewId?: string;
-  recaptchaSiteKey?: string;
+  recaptchaSiteKey: string;
+  oauthBaseUrl: string;
 };
 
 const registerButton = css`
@@ -55,24 +56,31 @@ const divider = css`
   }
 `;
 
+export const buildRegistrationUrlQueryParamString = (
+  returnUrl?: string,
+  refValue?: string,
+  refViewId?: string,
+): string => {
+  const params = new URLSearchParams();
+  if (returnUrl) params.append('returnUrl', returnUrl);
+  if (refValue) params.append('ref', refValue);
+  if (refViewId) params.append('refViewId', refViewId);
+  return params.toString();
+};
+
 export const Registration = ({
-  returnUrl = '',
-  refValue = '',
-  refViewId = '',
-  email = '',
-  recaptchaSiteKey = '',
+  returnUrl,
+  email,
+  refValue,
+  refViewId,
+  recaptchaSiteKey,
+  oauthBaseUrl,
 }: RegistrationProps) => {
-  const returnUrlQuery = `returnUrl=${encodeURIComponent(returnUrl)}`;
-  const refUrlQuery = `ref=${encodeURIComponent(refValue)}`;
-  const refViewIdUrlQuery = `refViewId=${encodeURIComponent(refViewId)}`;
-  const registrationUrlQueryParams = [
-    returnUrl ? returnUrlQuery : '',
-    refValue ? refUrlQuery : '',
-    refViewId ? refViewIdUrlQuery : '',
-  ];
-  const registrationUrlQueryParamString = registrationUrlQueryParams
-    .filter((param) => param !== '')
-    .join('&');
+  const registrationUrlQueryParamString = buildRegistrationUrlQueryParamString(
+    returnUrl,
+    refValue,
+    refViewId,
+  );
 
   const registerFormRef = createRef<HTMLFormElement>();
   const recaptchaElementRef = useRef<HTMLDivElement>(null);
@@ -149,7 +157,7 @@ export const Registration = ({
           displayText="or continue with"
           cssOverrides={divider}
         />
-        <SocialButtons returnUrl={returnUrl} />
+        <SocialButtons returnUrl={returnUrl} oauthBaseUrl={oauthBaseUrl} />
       </MainGrid>
       <Footer />
     </>

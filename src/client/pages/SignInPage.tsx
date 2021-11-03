@@ -6,10 +6,18 @@ import { useRemoveEncryptedEmailParam } from '@/client/lib/hooks/useRemoveEncryp
 
 export const SignInPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData = {}, globalMessage = {} } = clientState;
+  const { pageData = {}, globalMessage = {}, clientHosts } = clientState;
   const { returnUrl, email } = pageData;
   const { error } = globalMessage;
+  const { oauthBaseUrl } = clientHosts;
   // we use the encryptedEmail parameter to pre-fill the email field, but then want to remove it from the url
   useRemoveEncryptedEmailParam();
-  return <SignIn returnUrl={returnUrl} email={email} error={error} />;
+  return (
+    <SignIn
+      returnUrl={returnUrl}
+      email={email}
+      error={error}
+      oauthBaseUrl={oauthBaseUrl}
+    />
+  );
 };

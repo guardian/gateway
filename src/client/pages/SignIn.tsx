@@ -24,6 +24,7 @@ export type SignInProps = {
   returnUrl?: string;
   email?: string;
   error?: string;
+  oauthBaseUrl: string;
 };
 
 const passwordInput = css`
@@ -77,13 +78,14 @@ const Links = ({ children }: { children: React.ReactNode }) => (
 );
 
 export const SignIn = ({
-  returnUrl = '',
-  email = '',
-  error = '',
+  returnUrl,
+  email,
+  error,
+  oauthBaseUrl,
 }: SignInProps) => {
-  const returnUrlQuery = returnUrl
-    ? `?returnUrl=${encodeURIComponent(returnUrl)}`
-    : '';
+  const params = new URLSearchParams();
+  if (returnUrl) params.append('returnUrl', returnUrl);
+  const returnUrlQuery = params.toString();
 
   return (
     <>
@@ -114,7 +116,7 @@ export const SignIn = ({
             sign in.
           </p>
         )}
-        <form method="post" action={`${Routes.SIGN_IN}${returnUrlQuery}`}>
+        <form method="post" action={`${Routes.SIGN_IN}?${returnUrlQuery}`}>
           <CsrfFormField />
           <EmailInput defaultValue={email} />
           <div css={passwordInput}>
@@ -139,7 +141,7 @@ export const SignIn = ({
           displayText="or continue with"
           cssOverrides={divider}
         />
-        <SocialButtons returnUrl={returnUrl} />
+        <SocialButtons returnUrl={returnUrl} oauthBaseUrl={oauthBaseUrl} />
       </MainGrid>
       <Footer />
     </>

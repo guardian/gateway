@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { css } from '@emotion/react';
 import { space, brand } from '@guardian/src-foundations';
 import { LinkButton } from '@guardian/src-button';
@@ -6,11 +6,10 @@ import { SvgGoogleBrand } from '@guardian/src-icons';
 import { SvgAppleBrand } from '@guardian/src-icons';
 import { SvgFacebookBrand } from '@guardian/src-icons';
 import { from } from '@guardian/src-foundations/mq';
-import { ClientState } from '@/shared/model/ClientState';
-import { ClientStateContext } from '@/client/components/ClientState';
 
 type SocialButtonProps = {
   returnUrl?: string;
+  oauthBaseUrl: string;
 };
 
 const buildUrl = (
@@ -18,10 +17,9 @@ const buildUrl = (
   IdP: string,
   returnUrl?: string,
 ): string => {
-  const returnUrlParam = returnUrl
-    ? `?returnUrl=${encodeURIComponent(returnUrl)}`
-    : '';
-  return `${oauthBaseUrl}/${IdP}/signin${returnUrlParam}`;
+  const socialUrl = new URL(`${oauthBaseUrl}/${IdP}/signin`);
+  if (returnUrl) socialUrl.searchParams.append('returnUrl', returnUrl);
+  return socialUrl.toString();
 };
 
 const containerStyles = css`
@@ -73,10 +71,10 @@ const Gap = () => (
   ></span>
 );
 
-export const SocialButtons = ({ returnUrl = '' }: SocialButtonProps) => {
-  const clientState: ClientState = useContext(ClientStateContext);
-  const { clientHosts } = clientState;
-  const { oauthBaseUrl } = clientHosts;
+export const SocialButtons = ({
+  returnUrl,
+  oauthBaseUrl,
+}: SocialButtonProps) => {
   return (
     <div css={containerStyles}>
       <LinkButton
