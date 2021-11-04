@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, useContext } from 'react';
 import { css } from '@emotion/react';
 import { from } from '@guardian/src-foundations/mq';
-import { neutral, space } from '@guardian/src-foundations';
+import { neutral, space, text } from '@guardian/src-foundations';
 import { headline } from '@guardian/src-foundations/typography';
 import {
   ErrorSummary,
@@ -88,10 +88,19 @@ const pageTitleStyles = css`
   ${from.desktop} {
     font-size: 32px;
   }
+
+  color: ${text.primary};
 `;
 
 const summaryStyles = css`
   margin: ${space[6]}px 0;
+`;
+
+const bodyStyles = (hasTitleOrSummary = false) => css`
+  ${!hasTitleOrSummary &&
+  css`
+    margin-top: ${space[1]}px;
+  `}
 `;
 
 export const MainLayout = ({
@@ -125,7 +134,11 @@ export const MainLayout = ({
               <h1 css={[pageTitleStyles]}>{pageTitle}</h1>
             </header>
           )}
-          <div>{children}</div>
+          <div
+            css={bodyStyles(!!(pageTitle || successMessage || errorMessage))}
+          >
+            {children}
+          </div>
         </section>
       </main>
       <Footer />
