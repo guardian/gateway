@@ -104,6 +104,19 @@ const showSocialButtons = (
         <SocialButtons returnUrl={returnUrl} oauthBaseUrl={oauthBaseUrl} />
       </>
     );
+  } else {
+    return (
+      // force a minimum bottom margin if social buttons are not present
+      <span
+        css={css`
+          display: inline-block;
+          height: 60px;
+          ${from.desktop} {
+            height: ${space[24]}px;
+          }
+        `}
+      />
+    );
   }
 };
 
