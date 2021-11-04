@@ -19,7 +19,11 @@ Default.story = {
 };
 
 export const SocialSigninBlocked = (args: SignInProps) => (
-  <SignIn {...args} error={SignInErrors.ACCOUNT_ALREADY_EXISTS} />
+  <SignIn
+    {...args}
+    error={SignInErrors.ACCOUNT_ALREADY_EXISTS}
+    email="someone@theguardian.com"
+  />
 );
 SocialSigninBlocked.story = {
   name: 'social sign-in blocked',

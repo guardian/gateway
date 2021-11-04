@@ -88,6 +88,25 @@ const getErrorContext = (error: string | undefined) => {
   }
 };
 
+const showSocialButtons = (
+  error: string | undefined,
+  returnUrl: string | undefined,
+  oauthBaseUrl: string,
+) => {
+  if (error !== SignInErrors.ACCOUNT_ALREADY_EXISTS) {
+    return (
+      <>
+        <Divider
+          spaceAbove="loose"
+          displayText="or continue with"
+          cssOverrides={divider}
+        />
+        <SocialButtons returnUrl={returnUrl} oauthBaseUrl={oauthBaseUrl} />
+      </>
+    );
+  }
+};
+
 export const SignIn = ({
   returnUrl,
   email,
@@ -140,12 +159,7 @@ export const SignIn = ({
             Sign in
           </Button>
         </form>
-        <Divider
-          spaceAbove="loose"
-          displayText="or continue with"
-          cssOverrides={divider}
-        />
-        <SocialButtons returnUrl={returnUrl} oauthBaseUrl={oauthBaseUrl} />
+        {showSocialButtons(error, returnUrl, oauthBaseUrl)}
       </MainGrid>
       <Footer />
     </>

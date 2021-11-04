@@ -130,4 +130,10 @@ describe('Sign in flow', () => {
     );
     cy.get('[class*=ErrorSummary]').contains('Account already exists');
   });
+  it('does not display social buttons when accountLinkingRequired error parameter is present', () => {
+    cy.visit(`/signin?error=accountLinkingRequired`);
+    cy.get('[data-cy="google-sign-in-button"]').should('not.exist');
+    cy.get('[data-cy="facebook-sign-in-button"]').should('not.exist');
+    cy.get('[data-cy="apple-sign-in-button"]').should('not.exist');
+  });
 });
