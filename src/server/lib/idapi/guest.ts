@@ -1,6 +1,7 @@
 import { IdapiError } from '@/server/models/Error';
 import { EmailType } from '@/shared/model/EmailType';
 import { IdapiErrorMessages, RegistrationErrors } from '@/shared/model/Errors';
+import { getConfiguration } from '../getConfiguration';
 import {
   APIAddClientAccessToken,
   APIPostOptions,
@@ -8,13 +9,11 @@ import {
   idapiFetch,
 } from '../IDAPIFetch';
 import { logger } from '../logger';
-import {
-  addRefToPath,
-  addRefViewIdToPath,
-  addReturnUrlToPath,
-} from '../queryParams';
+import { addQueryParamsToPath } from '../queryParams';
 
 const url = '/guest?accountVerificationEmail=true';
+
+const { defaultReturnUri } = getConfiguration();
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
   if (error.status === 'error' && error.errors?.length) {
@@ -46,19 +45,11 @@ export const guest = async (
     primaryEmailAddress: email,
   });
 
-  let path = url;
-
-  if (returnUrl) {
-    path = addReturnUrlToPath(path, returnUrl);
-  }
-
-  if (refViewId) {
-    path = addRefViewIdToPath(path, refViewId);
-  }
-
-  if (ref) {
-    path = addRefToPath(path, ref);
-  }
+  const path = addQueryParamsToPath(url, {
+    returnUrl: returnUrl || defaultReturnUri,
+    ref,
+    refViewId,
+  });
 
   try {
     await idapiFetch(path, APIAddClientAccessToken(options, ip));

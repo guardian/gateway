@@ -15,7 +15,7 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { getProfileUrl } from '@/server/lib/getProfileUrl';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
-import { addReturnUrlToPath } from '@/server/lib/queryParams';
+import { addQueryParamsToPath } from '@/server/lib/queryParams';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
@@ -159,9 +159,9 @@ router.get(
       if (message === VerifyEmailErrors.USER_ALREADY_VALIDATED) {
         return res.redirect(
           303,
-          addReturnUrlToPath(
+          addQueryParamsToPath(
             `${Routes.CONSENTS}/${consentPages[0].page}`,
-            res.locals.queryParams.returnUrl,
+            res.locals.queryParams,
           ),
         );
       }
@@ -173,9 +173,9 @@ router.get(
 
     return res.redirect(
       303,
-      addReturnUrlToPath(
+      addQueryParamsToPath(
         `${Routes.CONSENTS}/${consentPages[0].page}?emailVerified=true`,
-        res.locals.queryParams.returnUrl,
+        res.locals.queryParams,
       ),
     );
   }),
