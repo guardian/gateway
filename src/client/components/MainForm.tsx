@@ -9,6 +9,7 @@ interface Props {
   formAction: string;
   submitButtonText: string;
   submitButtonPriority?: 'primary' | 'tertiary';
+  submitButtonHalfWidth?: boolean;
   useRecaptcha?: boolean; // to fully implement
   hasGuardianTerms?: boolean;
 }
@@ -24,10 +25,17 @@ const inputStyles = (hasTerms = false) => css`
   `}
 `;
 
-const submitButtonStyles = (hasTerms = false) => css`
+const submitButtonStyles = ({ hasTerms = false, halfWidth = false }) => css`
   margin-top: 22px;
-  width: 100%;
   justify-content: center;
+
+  ${halfWidth
+    ? css`
+        width: 50%;
+      `
+    : css`
+        width: 100%;
+      `}
 
   ${hasTerms &&
   css`
@@ -44,6 +52,7 @@ export const MainForm = ({
   formAction,
   submitButtonText,
   submitButtonPriority = 'primary',
+  submitButtonHalfWidth,
   useRecaptcha,
   hasGuardianTerms,
 }: PropsWithChildren<Props>) => {
@@ -56,7 +65,7 @@ export const MainForm = ({
       {hasGuardianTerms && <GuardianTerms />}
       {useRecaptcha && <RecaptchaTerms />}
       <Button
-        css={submitButtonStyles(hasTerms)}
+        css={submitButtonStyles({ hasTerms, halfWidth: submitButtonHalfWidth })}
         type="submit"
         priority={submitButtonPriority}
       >
