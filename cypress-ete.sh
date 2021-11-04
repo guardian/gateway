@@ -23,5 +23,5 @@ else
   yarn build
   yarn start &
   yarn wait-on:server
-  yarn cypress open --env $CI_ENV --config '{"testFiles":["ete/*.js"]}'
+  yarn cypress open --env $CI_ENV --config '{"testFiles":["ete/**/*.ts"]}'
 fi
