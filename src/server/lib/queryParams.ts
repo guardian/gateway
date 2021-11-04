@@ -1,7 +1,12 @@
-import { QueryParams } from '@/shared/model/QueryParams';
+import {
+  QueryParams,
+  SafeQueryParams,
+  UnsafeQueryParams,
+} from '@/shared/model/QueryParams';
 import { validateReturnUrl, validateRefUrl } from '@/server/lib/validateUrl';
 import { validateClientId } from '@/server/lib/validateClientId';
 import { FederationErrors } from '@/shared/model/Errors';
+import { stringify } from 'query-string';
 
 const validateEmailVerified = (emailVerified?: string): boolean | undefined => {
   if (!emailVerified) {
@@ -79,4 +84,30 @@ export const addRefViewIdToPath = (path: string, refViewId: string) => {
 export const addRefToPath = (path: string, ref: string) => {
   const divider = path.includes('?') ? '&' : '?';
   return `${path}${divider}ref=${encodeURIComponent(ref)}`;
+};
+
+export const getSafeQueryParams = (params: QueryParams): SafeQueryParams => ({
+  returnUrl: params.returnUrl,
+  clientId: params.clientId,
+  ref: params.ref,
+  refViewId: params.refViewId,
+});
+
+export const addQueryParamsToPath = (
+  path: string,
+  params: QueryParams,
+  unsafeParams?: UnsafeQueryParams,
+): string => {
+  const divider = path.includes('?') ? '&' : '?';
+  const safeQueryString = stringify(getSafeQueryParams(params), {
+    skipNull: true,
+    skipEmptyString: true,
+  });
+  const unsafeQueryString = stringify(unsafeParams || {}, {
+    skipNull: true,
+    skipEmptyString: true,
+  });
+  return `${path}${divider}${safeQueryString}${
+    unsafeQueryString ? `&${unsafeQueryString}` : ''
+  }`;
 };
