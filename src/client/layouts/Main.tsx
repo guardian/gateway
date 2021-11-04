@@ -1,14 +1,22 @@
-import React, { PropsWithChildren } from 'react';
+import React, { PropsWithChildren, useContext } from 'react';
 import { css } from '@emotion/react';
 import { from } from '@guardian/src-foundations/mq';
 import { neutral, space } from '@guardian/src-foundations';
 import { headline } from '@guardian/src-foundations/typography';
+import {
+  ErrorSummary,
+  SuccessSummary,
+} from '@guardian/source-react-components-development-kitchen';
 import { gridRow, gridItem, SpanDefinition } from '@/client/styles/Grid';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
+import { ClientStateContext } from '@/client/components/ClientState';
+import { ClientState } from '@/shared/model/ClientState';
 
 interface MainLayoutProps {
   pageTitle?: string;
+  successOverride?: string;
+  errorOverride?: string;
 }
 
 const mainStyles = css`
@@ -44,13 +52,24 @@ const gridSpanDefinition: SpanDefinition = {
   WIDE: { start: 4, span: 6 },
 };
 
-const headerStyles = css`
+const headerStyles = (hasSummary = false) => css`
   /* padding */
   padding-top: ${space[6]}px;
   padding-bottom: ${space[6]}px;
 
+  ${hasSummary &&
+  css`
+    padding-top: 0;
+  `}
+
   ${from.desktop} {
-    padding-top: ${space[9]}px;
+    ${hasSummary
+      ? css`
+          padding-top: 0;
+        `
+      : css`
+          padding-top: ${space[9]}px;
+        `}
   }
 
   /* margin */
@@ -71,17 +90,38 @@ const pageTitleStyles = css`
   }
 `;
 
+const summaryStyles = css`
+  margin: ${space[6]}px 0;
+`;
+
 export const MainLayout = ({
   children,
   pageTitle,
+  successOverride,
+  errorOverride,
 }: PropsWithChildren<MainLayoutProps>) => {
+  const clientState: ClientState = useContext(ClientStateContext);
+  const { globalMessage: { error, success } = {} } = clientState;
+
+  const successMessage = successOverride || success;
+  const errorMessage = errorOverride || error;
+
   return (
     <>
       <Header />
       <main css={[mainStyles, gridRow]}>
         <section css={gridItem(gridSpanDefinition)}>
+          {errorMessage && (
+            <ErrorSummary cssOverrides={summaryStyles} message={errorMessage} />
+          )}
+          {successMessage && !errorMessage && (
+            <SuccessSummary
+              cssOverrides={summaryStyles}
+              message={successMessage}
+            />
+          )}
           {pageTitle && (
-            <header css={headerStyles}>
+            <header css={headerStyles(!!(errorMessage || successMessage))}>
               <h1 css={[pageTitleStyles]}>{pageTitle}</h1>
             </header>
           )}
