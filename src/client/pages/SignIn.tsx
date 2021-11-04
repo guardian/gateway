@@ -77,6 +77,17 @@ const Links = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
+const getErrorContext = (error: string | undefined) => {
+  if (error === SignInErrors.ACCOUNT_ALREADY_EXISTS) {
+    return (
+      <p>
+        We cannot sign you in with your social account credentials. Please enter
+        your account password below to sign in.
+      </p>
+    );
+  }
+};
+
 export const SignIn = ({
   returnUrl,
   email,
@@ -104,18 +115,11 @@ export const SignIn = ({
           },
         ]}
       />
-      <MainGrid gridSpanDefinition={gridItemSignInAndRegistration}>
-        {error === SignInErrors.ACCOUNT_ALREADY_EXISTS && (
-          <p
-            css={css`
-              ${textSans.small()}
-            `}
-          >
-            You cannot sign in with your social account because you already have
-            an account with the Guardian. Please enter your password below to
-            sign in.
-          </p>
-        )}
+      <MainGrid
+        gridSpanDefinition={gridItemSignInAndRegistration}
+        errorOverride={error}
+        errorContext={getErrorContext(error)}
+      >
         <form method="post" action={`${Routes.SIGN_IN}?${returnUrlQuery}`}>
           <CsrfFormField />
           <EmailInput defaultValue={email} />
