@@ -5,17 +5,7 @@ import { renderer } from '@/server/lib/renderer';
 import { Routes } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { logger } from '@/server/lib/logger';
-
-const appendQueryParameter = (url: string, parameters: string) => {
-  if (url.split('?').pop()?.includes(parameters)) {
-    return url;
-  }
-  if (url.includes('?')) {
-    return `${url}&${parameters}`;
-  } else {
-    return `${url}?${parameters}`;
-  }
-};
+import { addQueryParamsToPath } from '@/server/lib/queryParams';
 
 export const routeErrorHandler = (
   // eslint-disable-next-line
@@ -30,7 +20,9 @@ export const routeErrorHandler = (
     // we use res.locals.csrf.pageUrl since the URL might not be GET-able if the request was a POST
     res.redirect(
       303,
-      appendQueryParameter(getCsrfPageUrl(req), 'csrfError=true'),
+      addQueryParamsToPath(getCsrfPageUrl(req), res.locals.queryParams, {
+        csrfError: true,
+      }),
     );
     return next(err);
   }

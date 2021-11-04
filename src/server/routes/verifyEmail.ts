@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Router, Request } from 'express';
 import deepmerge from 'deepmerge';
 import { Routes } from '@/shared/model/Routes';
 import {
@@ -144,7 +144,7 @@ router.post(
 
 router.get(
   `${Routes.VERIFY_EMAIL}${Routes.TOKEN_PARAM}`,
-  handleAsyncErrors(async (req: Request, res: Response) => {
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { token } = req.params;
 
     try {
@@ -168,14 +168,20 @@ router.get(
 
       trackMetric(Metrics.EMAIL_VALIDATED_FAILURE);
 
-      return res.redirect(303, `${Routes.VERIFY_EMAIL}`);
+      return res.redirect(
+        303,
+        addQueryParamsToPath(Routes.VERIFY_EMAIL, res.locals.queryParams),
+      );
     }
 
     return res.redirect(
       303,
       addQueryParamsToPath(
-        `${Routes.CONSENTS}/${consentPages[0].page}?emailVerified=true`,
+        `${Routes.CONSENTS}/${consentPages[0].page}`,
         res.locals.queryParams,
+        {
+          emailVerified: true,
+        },
       ),
     );
   }),
