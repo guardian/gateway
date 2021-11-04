@@ -2,6 +2,7 @@ import { Consent } from '@/shared/model/Consent';
 import { NewsLetter } from '@/shared/model/Newsletter';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { EmailType } from '@/shared/model/EmailType';
+import { QueryParams } from '@/shared/model/QueryParams';
 import { Participations } from '@guardian/ab-core';
 
 export interface FieldError {
@@ -55,6 +56,7 @@ export interface ClientHosts {
 }
 
 export interface ClientState {
+  queryParams: QueryParams;
   globalMessage?: GlobalMessage;
   pageData?: PageData;
   csrf?: CsrfState;
