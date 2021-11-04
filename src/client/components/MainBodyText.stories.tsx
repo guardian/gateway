@@ -6,7 +6,6 @@ import { MainBodyText } from './MainBodyText';
 export default {
   title: 'Components/MainBodyText',
   component: MainBodyText,
-  parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => (
