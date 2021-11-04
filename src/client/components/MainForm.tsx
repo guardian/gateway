@@ -4,13 +4,15 @@ import { Button } from '@guardian/src-button';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { GuardianTerms, RecaptchaTerms } from '@/client/components/Terms';
 import { space } from '@guardian/src-foundations';
+import { from } from '@guardian/src-foundations/mq';
 
 interface Props {
   formAction: string;
   submitButtonText: string;
   submitButtonPriority?: 'primary' | 'tertiary';
   submitButtonHalfWidth?: boolean;
-  useRecaptcha?: boolean; // to fully implement
+  // TODO: fully implement recaptcha, it currently only displays terms
+  useRecaptcha?: boolean;
   hasGuardianTerms?: boolean;
 }
 
@@ -28,14 +30,17 @@ const inputStyles = (hasTerms = false) => css`
 const submitButtonStyles = ({ hasTerms = false, halfWidth = false }) => css`
   margin-top: 22px;
   justify-content: center;
+  width: 100%;
 
-  ${halfWidth
-    ? css`
-        width: 50%;
-      `
-    : css`
-        width: 100%;
-      `}
+  ${from.tablet} {
+    ${halfWidth
+      ? css`
+          width: 50%;
+        `
+      : css`
+          width: 100%;
+        `}
+  }
 
   ${hasTerms &&
   css`
@@ -45,6 +50,10 @@ const submitButtonStyles = ({ hasTerms = false, halfWidth = false }) => css`
 
 export const inputMarginBottomSpacingStyle = css`
   margin-bottom: ${space[3]}px;
+`;
+
+export const belowFormMarginTopSpacingStyle = css`
+  margin-top: ${space[6]}px;
 `;
 
 export const MainForm = ({

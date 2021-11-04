@@ -29,19 +29,13 @@ const mainStyles = css`
     border-right: 1px solid ${neutral[86]};
   }
 
-  /* minimum height */
-  min-height: 334px;
-  ${from.mobileMedium} {
-    min-height: 392px;
-  }
-  ${from.mobileLandscape} {
-    min-height: 482px;
-  }
+  /* padding bottom */
+  padding-bottom: 64px;
   ${from.tablet} {
-    min-height: 504px;
+    padding-bottom: 96px;
   }
   ${from.desktop} {
-    min-height: 460px;
+    padding-bottom: 120px;
   }
 `;
 

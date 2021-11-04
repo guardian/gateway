@@ -11,7 +11,6 @@ export const RegistrationEmailSentPage = () => {
   return (
     <EmailSent
       email={email}
-      subTitle={"We've sent you an email"}
       previousPage={'/signin'}
       resendEmailAction={'/register/email-sent/resend'}
       refValue={refValue}

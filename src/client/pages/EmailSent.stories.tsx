@@ -21,3 +21,14 @@ export const WithEmail = () => (
 WithEmail.story = {
   name: 'with email',
 };
+
+export const WithEmailResend = () => (
+  <EmailSent
+    previousPage="/reset"
+    email="example@theguardian.com"
+    resendEmailAction="#"
+  />
+);
+WithEmailResend.story = {
+  name: 'with email and resend',
+};
