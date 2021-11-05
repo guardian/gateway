@@ -149,11 +149,12 @@ This applies to all client side javascript applications, but you can pause execu
 A debugger session is started by default when you use the `make dev` command to run the application locally.
 
 To connect your chrome dev tools to the server side debugger you need to:
+
 1. Visit [`chrome://inspect/#devices`](chrome://inspect/#devices) in the chrome browser
 2. Click the `Open dedicated DevTools for Node` link
 3. Make sure `localhost:9229` is in the connections pane, and add it via the `Add connection` button if not.
 
-You can now pause execution by adding a `debugger` statement in any file within the `/src/server` directory, or adding a breakpoint in your IDE of choice. 
+You can now pause execution by adding a `debugger` statement in any file within the `/src/server` directory, or adding a breakpoint in your IDE of choice.
 
 ## Testing
 
