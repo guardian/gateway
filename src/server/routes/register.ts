@@ -66,7 +66,7 @@ router.get(
 );
 
 router.post(
-  `${Routes.REGISTRATION}${Routes.EMAIL_SENT}${Routes.RESEND}`,
+  `${Routes.REGISTRATION}${Routes.RESEND}`,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { returnUrl } = res.locals.queryParams;
 
