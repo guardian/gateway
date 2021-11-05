@@ -13,9 +13,18 @@ module.exports = {
       mjml: 'mjml-browser',
     };
 
-    // We need to transpile the Guardian and strip-ansi modules so that our vendors bundle will run in IE11.
-    const transpileGuardianModules = {
-      include: [/node_modules[\\\/]@guardian/, /node_modules[\\\/]strip-ansi/],
+    // transpile certain modules so we can get them to work with ie11 storybook
+    const transpileModules = {
+      include: [
+        /node_modules[\\\/]@guardian/,
+        /node_modules[\\\/]strip-ansi/,
+        // query string related transpilation start
+        /node_modules[\\\/]query-string/,
+        /node_modules[\\\/]ansi-regex/,
+        /node_modules[\\\/]split-on-first/,
+        /node_modules[\\\/]strict-uri-encode/,
+        // query string related transpilation end
+      ],
       test: /\.(m?)(j|t)s(x?)/,
       use: [
         {
@@ -44,7 +53,7 @@ module.exports = {
       ...config,
       module: {
         ...config.module,
-        rules: [...config.module.rules, transpileGuardianModules],
+        rules: [...config.module.rules, transpileModules],
       },
     };
   },
