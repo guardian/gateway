@@ -25,10 +25,9 @@ import { EmailInput } from '@/client/components/EmailInput';
 export type RegistrationProps = {
   returnUrl?: string;
   email?: string;
-  refValue?: string;
-  refViewId?: string;
   recaptchaSiteKey: string;
   oauthBaseUrl: string;
+  queryString?: string;
 };
 
 const registerButton = css`
@@ -56,32 +55,13 @@ const divider = css`
   }
 `;
 
-export const buildRegistrationUrlQueryParamString = (
-  returnUrl?: string,
-  refValue?: string,
-  refViewId?: string,
-): string => {
-  const params = new URLSearchParams();
-  if (returnUrl) params.append('returnUrl', returnUrl);
-  if (refValue) params.append('ref', refValue);
-  if (refViewId) params.append('refViewId', refViewId);
-  return params.toString();
-};
-
 export const Registration = ({
   returnUrl,
   email,
-  refValue,
-  refViewId,
   recaptchaSiteKey,
   oauthBaseUrl,
+  queryString,
 }: RegistrationProps) => {
-  const registrationUrlQueryParamString = buildRegistrationUrlQueryParamString(
-    returnUrl,
-    refValue,
-    refViewId,
-  );
-
   const registerFormRef = createRef<HTMLFormElement>();
   const recaptchaElementRef = useRef<HTMLDivElement>(null);
   const captchaElement = recaptchaElementRef.current ?? 'register-recaptcha';
@@ -140,7 +120,7 @@ export const Registration = ({
       >
         <form
           method="post"
-          action={`${Routes.REGISTRATION}?${registrationUrlQueryParamString}`}
+          action={`${Routes.REGISTRATION}?${queryString}`}
           ref={registerFormRef}
           onSubmit={handleSubmit}
         >

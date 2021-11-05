@@ -22,6 +22,7 @@ import { EmailInput } from '@/client/components/EmailInput';
 
 export type SignInProps = {
   returnUrl?: string;
+  queryString?: string;
   email?: string;
   error?: string;
   oauthBaseUrl: string;
@@ -82,68 +83,59 @@ export const SignIn = ({
   email,
   error,
   oauthBaseUrl,
-}: SignInProps) => {
-  const params = new URLSearchParams();
-  if (returnUrl) params.append('returnUrl', returnUrl);
-  const returnUrlQuery = params.toString();
-
-  return (
-    <>
-      <Header />
-      <Nav
-        tabs={[
-          {
-            displayText: PageTitle.SIGN_IN,
-            linkTo: Routes.SIGN_IN,
-            isActive: true,
-          },
-          {
-            displayText: PageTitle.REGISTRATION,
-            linkTo: Routes.REGISTRATION,
-            isActive: false,
-          },
-        ]}
+  queryString,
+}: SignInProps) => (
+  <>
+    <Header />
+    <Nav
+      tabs={[
+        {
+          displayText: PageTitle.SIGN_IN,
+          linkTo: Routes.SIGN_IN,
+          isActive: true,
+        },
+        {
+          displayText: PageTitle.REGISTRATION,
+          linkTo: Routes.REGISTRATION,
+          isActive: false,
+        },
+      ]}
+    />
+    <MainGrid gridSpanDefinition={gridItemSignInAndRegistration}>
+      {error === SignInErrors.ACCOUNT_ALREADY_EXISTS && (
+        <p
+          css={css`
+            ${textSans.small()}
+          `}
+        >
+          You cannot sign in with your social account because you already have
+          an account with the Guardian. Please enter your password below to sign
+          in.
+        </p>
+      )}
+      <form method="post" action={`${Routes.SIGN_IN}${queryString}`}>
+        <CsrfFormField />
+        <EmailInput defaultValue={email} />
+        <div css={passwordInput}>
+          <PasswordInput label="Password" />
+        </div>
+        <Links>
+          <Link subdued={true} href={Routes.RESET} cssOverrides={resetPassword}>
+            Reset password
+          </Link>
+        </Links>
+        <Terms />
+        <Button css={signInButton} type="submit" data-cy="sign-in-button">
+          Sign in
+        </Button>
+      </form>
+      <Divider
+        spaceAbove="loose"
+        displayText="or continue with"
+        cssOverrides={divider}
       />
-      <MainGrid gridSpanDefinition={gridItemSignInAndRegistration}>
-        {error === SignInErrors.ACCOUNT_ALREADY_EXISTS && (
-          <p
-            css={css`
-              ${textSans.small()}
-            `}
-          >
-            You cannot sign in with your social account because you already have
-            an account with the Guardian. Please enter your password below to
-            sign in.
-          </p>
-        )}
-        <form method="post" action={`${Routes.SIGN_IN}?${returnUrlQuery}`}>
-          <CsrfFormField />
-          <EmailInput defaultValue={email} />
-          <div css={passwordInput}>
-            <PasswordInput label="Password" />
-          </div>
-          <Links>
-            <Link
-              subdued={true}
-              href={Routes.RESET}
-              cssOverrides={resetPassword}
-            >
-              Reset password
-            </Link>
-          </Links>
-          <Terms />
-          <Button css={signInButton} type="submit" data-cy="sign-in-button">
-            Sign in
-          </Button>
-        </form>
-        <Divider
-          spaceAbove="loose"
-          displayText="or continue with"
-          cssOverrides={divider}
-        />
-        <SocialButtons returnUrl={returnUrl} oauthBaseUrl={oauthBaseUrl} />
-      </MainGrid>
-      <Footer />
-    </>
-  );
-};
+      <SocialButtons returnUrl={returnUrl} oauthBaseUrl={oauthBaseUrl} />
+    </MainGrid>
+    <Footer />
+  </>
+);

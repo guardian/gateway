@@ -40,10 +40,6 @@ export interface PageData {
 
   // reset password token specific
   tokenExpiryTimestamp?: number;
-
-  // tracking
-  ref?: string;
-  refViewId?: string;
 }
 
 export interface RecaptchaConfig {

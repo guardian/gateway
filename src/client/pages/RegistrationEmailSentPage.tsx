@@ -2,11 +2,14 @@ import React, { useContext } from 'react';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { EmailSent } from '@/client/pages/EmailSent';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 export const RegistrationEmailSentPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData = {} } = clientState;
-  const { email, ref: refValue, refViewId, returnUrl } = pageData;
+  const { pageData = {}, queryParams } = clientState;
+  const { email } = pageData;
+
+  const queryString = addQueryParamsToPath('', queryParams);
 
   return (
     <EmailSent
@@ -14,9 +17,7 @@ export const RegistrationEmailSentPage = () => {
       subTitle={"We've sent you an email"}
       previousPage={'/signin'}
       resendEmailAction={'/register/email-sent/resend'}
-      refValue={refValue}
-      refViewId={refViewId}
-      returnUrl={returnUrl}
+      queryString={queryString}
     />
   );
 };

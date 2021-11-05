@@ -17,9 +17,7 @@ type Props = {
   previousPage?: string;
   subTitle?: string;
   resendEmailAction?: string;
-  refViewId?: string;
-  refValue?: string;
-  returnUrl?: string;
+  queryString?: string;
 };
 
 export const EmailSent = ({
@@ -27,24 +25,10 @@ export const EmailSent = ({
   previousPage = '/',
   resendEmailAction,
   subTitle = 'Sign in',
-  refViewId = '',
-  refValue = '',
-  returnUrl = '',
+  queryString,
 }: Props) => {
   const [hasJS, setHasJS] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-
-  const returnUrlQuery = `returnUrl=${encodeURIComponent(returnUrl)}`;
-  const refUrlQuery = `ref=${encodeURIComponent(refValue)}`;
-  const refViewIdUrlQuery = `refViewId=${encodeURIComponent(refViewId)}`;
-  const registrationUrlQueryParams = [
-    returnUrl ? returnUrlQuery : '',
-    refValue ? refUrlQuery : '',
-    refViewId ? refViewIdUrlQuery : '',
-  ];
-  const registrationUrlQueryParamString = registrationUrlQueryParams
-    .filter((param) => param !== '')
-    .join('&');
 
   useEffect(() => {
     setHasJS(true);
@@ -75,12 +59,7 @@ export const EmailSent = ({
             </PageBodyText>
             <PageBodyText>The link is only valid for 30 minutes.</PageBodyText>
             {email && resendEmailAction && hasJS && (
-              <form
-                method="post"
-                action={
-                  resendEmailAction + '?' + registrationUrlQueryParamString
-                }
-              >
+              <form method="post" action={`${resendEmailAction}${queryString}`}>
                 <CsrfFormField />
                 <TextInput
                   label=""
