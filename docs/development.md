@@ -223,7 +223,7 @@ Make sure the state addition does not in anyway remember state between requests,
 
 Object mutation will be disabled via linting in the near future.
 
-Next make it avaialble in the [`ClientState`](../src/shared/model/ClientState.ts) interface, if you want it accessible on the client. It should be optional property, as the client can never be sure that the property will exist.
+Next make it available in the [`ClientState`](../src/shared/model/ClientState.ts) interface, if you want it accessible on the client. It should be optional property, as the client can never be sure that the property will exist.
 
 ```ts
 ...
@@ -269,20 +269,88 @@ export const TestComponent = () => {
 };
 ```
 
+In most cases you want to `useContext` outside a presentation component, and pass in the values you need as a prop to the component. This allows us to independently render this component in tests/storybook without relying on the rest of the app and state.
+
+Here's a contrived example:
+
+```tsx
+// container component
+import React, { useContext } from 'react';
+import { ClientStateContext } from '@/client/components/ClientState';
+
+// export some react component
+export const TestContainer = () => {
+  // get the client state from the context
+  const clientState: ClientState = useContext(ClientStateContext);
+  // extract the data we need from the state
+  const { test } = clientState;
+
+  // use the test state
+  return <TestComponent foo={test} />;
+};
+
+// presentation component
+import React from 'react';
+
+interface Props {
+  foo: string;
+}
+
+export const TestComponent = ({ foo }: Props) => {
+  return <h1>{foo}</h1>;
+};
+```
+
 ### Query Params
 
 In some cases, some state may need to persist from request to request, or passed through the request chain, for example the `returnUrl`. Rather than just persist the querystring as is through the flow, a middleware is used to parse the querystring for expected values and use them, this gives control over exactly what query parameters are available and usable.
 
-The [`QueryParams`](../src/shared/model/QueryParams.ts) interface is used to determine which parameters are available. To make sure the query params are parsed, make sure to add the param to the [`parseExpressQueryParams`](../src/server/lib/queryParams.ts) and the [`unit tests`](../src/server/lib/__tests__/queryParams.test.ts) too.
+The [`QueryParams`](../src/shared/model/QueryParams.ts) interface is used to determine which parameters are available. However this is created as a union of the `SafeQueryParams` and `UnsafeQueryParams` types.
+
+`SafeQueryParams` should include parameters that are fine to persist between requests, for example any query parameters that need to pass from page to page in a flow, e.g. `returnUrl`.
+
+`UnsafeQueryParams` should only include parameters that should only be available for a single request, for example to show an error on a page, or make a state available after a redirect e.g. `emailVerified`.
 
 ```ts
 // src/shared/model/QueryParams.ts
-export interface QueryParams {
+export interface SafeQueryParams extends StringifiableRecord {
   returnUrl: string;
-  clientId?: string;
-  testParam?: string;
+  ...
 }
 
+export interface UnsafeQueryParams extends StringifiableRecord {
+  emailVerified?: boolean;
+  error?: string;
+  ...
+}
+
+export interface QueryParams
+  extends SafeQueryParams,
+    UnsafeQueryParams,
+    StringifiableRecord {}
+```
+
+Be sure to also update the `getSafeQueryParams` method in [src/shared/lib/queryParams.ts](../src/shared/lib/queryParams.ts) with any new safe parameters you add, as this method is used to filter out any unsafe keys from a combined query parameters object.
+
+```ts
+// src/shared/lib/queryParams.ts
+...
+export const getSafeQueryParams = (params: QueryParams): SafeQueryParams => ({
+  returnUrl: params.returnUrl,
+  clientId: params.clientId,
+  ref: params.ref,
+  refViewId: params.refViewId,
+});
+...
+```
+
+This file also exposes an `addQueryParamsToPath` method which can be used to append query parameters to a given path/string with the correct divider (`?`|`&`). By default it filters out unsafe parameters from the `QueryParams` object and then turns it into a query string. If you want to include an unsafe parameter, you can manually opt into providing a value as the 3rd argument to the method.
+
+#### Server
+
+To make sure the query params are parsed on the server, make sure to add the param to the [`parseExpressQueryParams`](../src/server/lib/queryParams.ts) and the [`unit tests`](../src/server/lib/__tests__/queryParams.test.ts) too.
+
+```ts
 // src/server/lib/queryParams.ts#
 export const parseExpressQueryParams = ({
   returnUrl,
@@ -308,7 +376,78 @@ Then simply include the [`queryParamsMiddleware`](../src/server/lib/middleware/q
 router.use(noCache, queryParamsMiddleware, reset);
 ```
 
-You can access this server side on the `ResponseWithRequestState` object as `res.locals.queryParams`.
+You can access this server side on the `ResponseWithRequestState` object as `res.locals.queryParams`. For example you could get the `returnUrl` using:
+
+```ts
+router.get(Routes.A_URL, (req: Request, res: ResponseWithRequestState) => {
+  ...
+  const { returnUrl } = res.locals.queryParams;
+  ...
+})
+```
+
+If you want to persist the query parameters when doing a redirect, use the `addQueryParamsToPath` method to automatically append query parameters as a string to the redirect.
+
+```ts
+res.redirect(
+  303,
+  addQueryParamsToPath(
+    Routes.URL_TO_REDIRECT_TO,
+    res.locals.queryParams,
+  ),
+),
+```
+
+You can also use `addReturnUrlToPath` if all you need to add is the `returnUrl`, for example when calling certain IDAPI routes/external services.
+
+#### Client
+
+To access the query parameters on the client, you can use the [`ClientState`](../src/shared/model/ClientState.ts) to do so, as a `queryParams` object is available as a property on the `ClientState`. Again you can use the `addQueryParamsToPath` to convert the query parameters to a string, which can be appended on the client to a link/form action. Some contrived examples below:
+
+```tsx
+import React, { useContext } from 'react';
+import { ClientStateContext } from '@/client/components/ClientState';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+
+// export some react component
+export const TestContainer = () => {
+  // get the client state from the context
+  const clientState: ClientState = useContext(ClientStateContext);
+  // extract the queryParams we need from the state
+  const { queryParams } = clientState;
+  // extract the values we need from the queryParam
+  const { clientId, error } = queryParams;
+
+  // turn all the query params into a query string (only SafeQueryParams by default)
+  const queryString = addQueryParamsToPath('', queryParams);
+
+  // pass these to our presentation components
+  return (
+    <TestComponent
+      queryString={queryString}
+      clientId={clientId}
+      error={error}
+    />
+  );
+};
+```
+
+```tsx
+...
+const TestComponent = ({ queryString, clientId, error }: Props) => {
+  return (
+    <>
+      {error && <ErrorSummary message={error}>}
+      <p>The client id is {clientId}.</p>
+      <form action={`${Routes.POST_ACTION_URL}${queryString}`}>
+        ...
+      </form>
+    </>
+  )
+}
+...
+
+```
 
 ## Styling
 
