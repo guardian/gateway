@@ -47,7 +47,7 @@ export const GatewayRoutes = () => (
     <Route exact path={Routes.RESET}>
       <ResetPasswordPage />
     </Route>
-    <Route exact path={Routes.RESET_SENT}>
+    <Route exact path={`${Routes.RESET}${Routes.EMAIL_SENT}`}>
       <EmailSentPage />
     </Route>
     <Route exact path={`${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`}>
