@@ -6,6 +6,9 @@ import { Routes } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { logger } from '@/server/lib/logger';
 import { addQueryParamsToPath } from '@/server/lib/queryParams';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+
+const { defaultReturnUri } = getConfiguration();
 
 export const routeErrorHandler = (
   // eslint-disable-next-line
@@ -18,11 +21,16 @@ export const routeErrorHandler = (
     // handle CSRF token errors here
     // we attempt to redirect to res.locals.csrf.pageUrl provided by a hidden form field falling back to req.url
     // we use res.locals.csrf.pageUrl since the URL might not be GET-able if the request was a POST
+    // we also have to manually build the query params object, as it may not be defined in an unexpected csrf error
     res.redirect(
       303,
-      addQueryParamsToPath(getCsrfPageUrl(req), res.locals.queryParams, {
-        csrfError: true,
-      }),
+      addQueryParamsToPath(
+        getCsrfPageUrl(req),
+        { ...res.locals.queryParams, returnUrl: defaultReturnUri },
+        {
+          csrfError: true,
+        },
+      ),
     );
     return next(err);
   }

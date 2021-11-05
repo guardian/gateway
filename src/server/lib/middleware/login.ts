@@ -25,7 +25,7 @@ export const loginMiddleware = async (
     if (auth.redirect) {
       const redirect = addQueryParamsToPath(auth.redirect.url, {
         ...res.locals.queryParams,
-        returnUrl: encodeURIComponent(joinUrl(profileUrl, req.path)),
+        returnUrl: joinUrl(profileUrl, req.path),
       });
       return res.redirect(redirect);
     }
@@ -33,7 +33,7 @@ export const loginMiddleware = async (
     return res.redirect(
       addQueryParamsToPath(LOGIN_REDIRECT_URL, {
         ...res.locals.queryParams,
-        returnUrl: encodeURIComponent(joinUrl(profileUrl, req.path)),
+        returnUrl: joinUrl(profileUrl, req.path),
       }),
     );
   };
@@ -45,7 +45,7 @@ export const loginMiddleware = async (
     res.redirect(
       addQueryParamsToPath(LOGIN_REDIRECT_URL, {
         ...res.locals.queryParams,
-        returnUrl: encodeURIComponent(joinUrl(profileUrl, req.path)),
+        returnUrl: joinUrl(profileUrl, req.path),
       }),
     );
     return;
@@ -79,7 +79,7 @@ export const loginMiddleware = async (
         LOGIN_REDIRECT_URL,
         {
           ...res.locals.queryParams,
-          returnUrl: encodeURIComponent(joinUrl(profileUrl, req.path)),
+          returnUrl: joinUrl(profileUrl, req.path),
         },
         {
           error: 'signin-error-bad-request',
