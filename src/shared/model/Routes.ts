@@ -1,6 +1,5 @@
 export enum Routes {
   REGISTRATION = '/register',
-  REGISTRATION_EMAIL_SENT = '/register/email-sent',
   SIGN_IN = '/signin',
   SIGN_IN_CURRENT = '/signin/current',
   RESET = '/reset',
@@ -9,10 +8,7 @@ export enum Routes {
   CHANGE_PASSWORD = '/reset-password',
   CHANGE_PASSWORD_COMPLETE = '/password/reset-confirmation',
   SET_PASSWORD = '/set-password',
-  SET_PASSWORD_COMPLETE = '/set-password/complete',
-  SET_PASSWORD_EMAIL_SENT = '/set-password/email-sent',
   VERIFY_EMAIL = '/verify-email',
-  VERIFY_EMAIL_SENT = '/verify-email/email-sent',
   TOKEN_PARAM = '/:token',
   CONSENTS = '/consents',
   CONSENTS_DATA = '/data',
@@ -25,15 +21,14 @@ export enum Routes {
   // ABTEST: followupConsent : END
   UNEXPECTED_ERROR = '/error',
   MAGIC_LINK = '/magic-link',
-  MAGIC_LINK_SENT = '/magic-link/email-sent',
   WELCOME = '/welcome',
-  WELCOME_SENT = '/welcome/email-sent',
   EXPIRED = '/expired',
+  EMAIL_SENT = '/email-sent',
+  COMPLETE = '/complete',
 }
 
 export enum ApiRoutes {
   RESET_REQUEST_EMAIL = '/pwd-reset/send-password-reset-email',
-  SIGN_IN = '/signin',
   CHANGE_PASSWORD_TOKEN_VALIDATION = '/pwd-reset/user-for-token',
   CHANGE_PASSWORD = '/pwd-reset/reset-pwd-for-user',
   VERIFY_EMAIL = '/user/validate-email',

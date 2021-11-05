@@ -48,10 +48,10 @@ router.get(
 );
 
 router.get(
-  Routes.REGISTRATION_EMAIL_SENT,
+  `${Routes.REGISTRATION}${Routes.EMAIL_SENT}`,
   (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
-    const html = renderer(Routes.REGISTRATION_EMAIL_SENT, {
+    const html = renderer(`${Routes.REGISTRATION}${Routes.EMAIL_SENT}`, {
       requestState: deepmerge(state, {
         pageData: {
           email:
@@ -66,7 +66,7 @@ router.get(
 );
 
 router.post(
-  `${Routes.REGISTRATION_EMAIL_SENT}${Routes.RESEND}`,
+  `${Routes.REGISTRATION}${Routes.EMAIL_SENT}${Routes.RESEND}`,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { returnUrl } = res.locals.queryParams;
 
@@ -114,7 +114,7 @@ router.post(
         }
 
         setEncryptedStateCookie(res, { email, emailType });
-        return res.redirect(303, Routes.REGISTRATION_EMAIL_SENT);
+        return res.redirect(303, `${Routes.REGISTRATION}${Routes.EMAIL_SENT}`);
       } else {
         throw new ApiError({ message: GenericErrors.DEFAULT, status: 500 });
       }
@@ -124,7 +124,7 @@ router.post(
 
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
-      const html = renderer(`${Routes.REGISTRATION_EMAIL_SENT}`, {
+      const html = renderer(`${Routes.REGISTRATION}${Routes.EMAIL_SENT}`, {
         pageTitle: PageTitle.REGISTRATION_EMAIL_SENT,
         requestState: deepmerge(res.locals, {
           globalMessage: {
@@ -200,7 +200,7 @@ router.post(
       }
 
       // redirect the user to the email sent page
-      return res.redirect(303, Routes.REGISTRATION_EMAIL_SENT);
+      return res.redirect(303, `${Routes.REGISTRATION}${Routes.EMAIL_SENT}`);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
