@@ -7,6 +7,9 @@ import { validateReturnUrl, validateRefUrl } from '@/server/lib/validateUrl';
 import { validateClientId } from '@/server/lib/validateClientId';
 import { FederationErrors } from '@/shared/model/Errors';
 import { stringify } from 'query-string';
+import { getConfiguration } from './getConfiguration';
+
+const { defaultReturnUri } = getConfiguration();
 
 const validateEmailVerified = (emailVerified?: string): boolean | undefined => {
   if (!emailVerified) {
@@ -76,8 +79,10 @@ export const addReturnUrlToPath = (path: string, returnUrl: string): string => {
   return `${path}${divider}returnUrl=${encodeURIComponent(returnUrl)}`;
 };
 
-export const getSafeQueryParams = (params: QueryParams): SafeQueryParams => ({
-  returnUrl: params.returnUrl,
+export const getSafeQueryParams = (
+  params: Partial<QueryParams> = {},
+): SafeQueryParams => ({
+  returnUrl: params.returnUrl || defaultReturnUri,
   clientId: params.clientId,
   ref: params.ref,
   refViewId: params.refViewId,
