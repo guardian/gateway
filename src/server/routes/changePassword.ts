@@ -9,7 +9,7 @@ import {
   setPasswordTokenController,
 } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
-import { addQueryParamsToPath } from '@/server/lib/queryParams';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 const router = Router();
 

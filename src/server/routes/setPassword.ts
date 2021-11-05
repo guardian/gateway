@@ -14,7 +14,7 @@ import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { EmailType } from '@/shared/model/EmailType';
 import { sendCreatePasswordEmail } from '@/server/lib/idapi/user';
 import { readEmailCookie } from '@/server/lib/emailCookie';
-import { addQueryParamsToPath } from '@/server/lib/queryParams';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { ResetPasswordErrors } from '@/shared/model/Errors';
 import { ApiError } from '../models/Error';
 

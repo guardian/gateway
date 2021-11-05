@@ -15,7 +15,7 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { getProfileUrl } from '@/server/lib/getProfileUrl';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
-import { addQueryParamsToPath } from '@/server/lib/queryParams';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';

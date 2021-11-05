@@ -6,7 +6,7 @@ import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { PageTitle } from '@/shared/model/PageTitle';
-import { addQueryParamsToPath } from '@/server/lib/queryParams';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { consentPages } from '@/server/routes/consents';
 import { sendAccountVerificationEmail } from '@/server/lib/idapi/user';
 import {

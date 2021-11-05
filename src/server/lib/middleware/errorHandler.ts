@@ -5,7 +5,7 @@ import { renderer } from '@/server/lib/renderer';
 import { Routes } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { logger } from '@/server/lib/logger';
-import { addQueryParamsToPath } from '@/server/lib/queryParams';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 
 const { defaultReturnUri } = getConfiguration();

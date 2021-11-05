@@ -9,7 +9,7 @@ import {
   idapiFetch,
 } from '../IDAPIFetch';
 import { logger } from '../logger';
-import { addQueryParamsToPath } from '../queryParams';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 const url = '/guest?accountVerificationEmail=true';
 

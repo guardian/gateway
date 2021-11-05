@@ -29,7 +29,7 @@ import {
 import { VERIFY_EMAIL } from '@/shared/model/Success';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { consentsPageMetric } from '@/server/models/Metrics';
-import { addQueryParamsToPath } from '@/server/lib/queryParams';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import {
   NewsletterMap,
