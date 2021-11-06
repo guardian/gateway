@@ -21,7 +21,24 @@ type IDAPITestUserOptions = {
   isUserEmailValidated?: boolean;
   socialLinks?: SocialLink[];
   password?: string;
+  deleteAfterMinute?: boolean;
 };
+
+type IDAPITestUserResponse = [
+  {
+    key: 'GU_U';
+    value: string;
+  },
+  {
+    key: 'SC_GU_LA';
+    sessionCookie: boolean;
+    value: string;
+  },
+  {
+    key: 'SC_GU_U';
+    value: string;
+  },
+];
 
 export const randomMailosaurEmail = () => {
   return uuidv4() + '@' + Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net';
@@ -29,10 +46,12 @@ export const randomMailosaurEmail = () => {
 
 export const createTestUser = ({
   primaryEmailAddress,
-  socialLinks,
-  isUserEmailValidated,
   password,
+  socialLinks = [],
+  isUserEmailValidated = false,
+  deleteAfterMinute = true,
 }: IDAPITestUserOptions) => {
+  // Generate a random email address if none is provided.
   const finalEmail = primaryEmailAddress || randomMailosaurEmail();
   try {
     return cy
@@ -49,15 +68,17 @@ export const createTestUser = ({
           isUserEmailValidated,
           socialLinks,
           password,
+          deleteAfterMinute,
         } as IDAPITestUserOptions,
       })
       .then((res) => {
+        console.log(res.body.values);
         return cy.wrap({
           emailAddress: finalEmail,
-          cookies: res.body.values,
+          cookies: res.body.values as IDAPITestUserResponse,
         });
       });
   } catch (error) {
-    console.error(error);
+    throw new Error('Failed to create IDAPI test user: ' + error);
   }
 };

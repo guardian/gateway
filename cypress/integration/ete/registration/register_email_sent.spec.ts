@@ -39,7 +39,7 @@ describe('Registration email sent page', () => {
   });
 
   // Depends on a Guest account already created using this email.
-  it.only('should resend the email when the resend button is clicked given a valid PLAY_SESSION_2 encrypted email cookie', () => {
+  it('should resend the email when the resend button is clicked given a valid PLAY_SESSION_2 encrypted email cookie', () => {
     cy.setCookie('PLAY_SESSION_2', encryptedEmail, {
       log: true,
     });
