@@ -4,9 +4,34 @@ declare global {
   namespace Cypress {
     interface Chainable {
       getEmailDetails: typeof getEmailDetails;
+      checkForEmailAndGetDetails: typeof checkForEmailAndGetDetails;
     }
   }
 }
+
+export const checkForEmailAndGetDetails = (
+  sentTo: string,
+  receivedAfter?: Date,
+  tokenMatcher?: RegExp,
+  deleteAfter = true,
+) => {
+  return cy
+    .mailosaurGetMessage(
+      Cypress.env('MAILOSAUR_SERVER_ID'),
+      { sentTo },
+      {
+        receivedAfter,
+      },
+    )
+    .then((message: Message) => {
+      return getEmailDetails(message, tokenMatcher).then((details) => {
+        if (deleteAfter) {
+          cy.mailosaurDeleteMessage(details.id);
+        }
+        return cy.wrap(details);
+      });
+    });
+};
 
 export const getEmailDetails = (email: Message, tokenMatcher?: RegExp) => {
   const { id, html } = email;
