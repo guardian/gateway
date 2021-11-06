@@ -39,31 +39,25 @@ describe('Registration email sent page', () => {
   });
 
   // Depends on a Guest account already created using this email.
-  it('should resend the email when the resend button is clicked given a valid PLAY_SESSION_2 encrypted email cookie', () => {
+  it.only('should resend the email when the resend button is clicked given a valid PLAY_SESSION_2 encrypted email cookie', () => {
     cy.setCookie('PLAY_SESSION_2', encryptedEmail, {
       log: true,
     });
+
     cy.visit(`/register/email-sent`);
     cy.contains(existingWithoutPassword.email);
+
     const timeRequestWasMade = new Date();
     cy.contains('Resend email').click();
-    cy.mailosaurGetMessage(
-      existingWithoutPassword.serverId,
-      {
-        sentTo: existingWithoutPassword.email,
-      },
-      {
-        receivedAfter: timeRequestWasMade,
-      },
-    ).then((email) => {
-      cy.getEmailDetails(email, /theguardian.com\/welcome\/([^"]*)/).then(
-        ({ body, token, id }) => {
-          expect(body).to.have.string('Complete registration');
-          cy.visit(`/welcome/${token}`);
-          cy.contains('Create password');
-          cy.mailosaurDeleteMessage(id);
-        },
-      );
+
+    cy.checkForEmailAndGetDetails(
+      existingWithoutPassword.email,
+      timeRequestWasMade,
+      /welcome\/([^"]*)/,
+    ).then(({ body, token }) => {
+      expect(body).to.have.string('Complete registration');
+      cy.visit(`/welcome/${token}`);
+      cy.contains('Create password');
     });
   });
 
@@ -81,40 +75,24 @@ describe('Registration email sent page', () => {
     cy.contains('Change email address');
 
     // test and delete initial email
-    cy.mailosaurGetMessage(
-      Cypress.env('MAILOSAUR_SERVER_ID'),
-      {
-        sentTo: unregisteredEmail,
-      },
-      {
-        receivedAfter: timeRequestWasMadeInitialEmail,
-      },
-    ).then((email) => {
-      cy.getEmailDetails(email).then(({ id, body }) => {
-        expect(body).to.have.string('Complete registration');
-        cy.mailosaurDeleteMessage(id);
-      });
+    cy.checkForEmailAndGetDetails(
+      unregisteredEmail,
+      timeRequestWasMadeInitialEmail,
+    ).then(({ body }) => {
+      expect(body).to.have.string('Complete registration');
     });
 
     const timeRequestWasMade = new Date();
     cy.contains('Resend email').click();
     cy.contains('Email sent');
     cy.contains(unregisteredEmail);
+
     // test and delete resent email
-    cy.mailosaurGetMessage(
-      Cypress.env('MAILOSAUR_SERVER_ID'),
-      {
-        sentTo: unregisteredEmail,
-      },
-      {
-        receivedAfter: timeRequestWasMade,
-      },
-    ).then((email) => {
-      cy.getEmailDetails(email).then(({ id, body }) => {
+    cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(
+      ({ body }) => {
         expect(body).to.have.string('Complete registration');
-        cy.mailosaurDeleteMessage(id);
-      });
-    });
+      },
+    );
   });
 
   it('should resend account exists without password email when an existing user without password registers which is same as initial email sent', () => {
@@ -132,43 +110,26 @@ describe('Registration email sent page', () => {
       cy.contains('Change email address');
 
       // test and delete initial email
-      cy.mailosaurGetMessage(
-        Cypress.env('MAILOSAUR_SERVER_ID'),
-        {
-          sentTo: emailAddress,
-        },
-        {
-          receivedAfter: timeRequestWasMadeInitialEmail,
-        },
-      ).then((email) => {
-        cy.getEmailDetails(email).then(({ id, body }) => {
-          expect(body).to.have.string('This account already exists');
-          expect(body).to.have.string(
-            'To continue to your account please click below to create a password.',
-          );
-          expect(body).to.have.string(
-            'This link is only valid for 30 minutes.',
-          );
-          expect(body).to.have.string('Create password');
-          cy.mailosaurDeleteMessage(id);
-        });
+      cy.checkForEmailAndGetDetails(
+        emailAddress,
+        timeRequestWasMadeInitialEmail,
+      ).then(({ body }) => {
+        expect(body).to.have.string('This account already exists');
+        expect(body).to.have.string(
+          'To continue to your account please click below to create a password.',
+        );
+        expect(body).to.have.string('This link is only valid for 30 minutes.');
+        expect(body).to.have.string('Create password');
       });
 
       const timeRequestWasMade = new Date();
       cy.contains('Resend email').click();
       cy.contains('Email sent');
       cy.contains(emailAddress);
+
       // test and delete resent email
-      cy.mailosaurGetMessage(
-        Cypress.env('MAILOSAUR_SERVER_ID'),
-        {
-          sentTo: emailAddress,
-        },
-        {
-          receivedAfter: timeRequestWasMade,
-        },
-      ).then((email) => {
-        cy.getEmailDetails(email).then(({ id, body }) => {
+      cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
+        ({ body }) => {
           expect(body).to.have.string('This account already exists');
           expect(body).to.have.string(
             'To continue to your account please click below to create a password.',
@@ -177,13 +138,12 @@ describe('Registration email sent page', () => {
             'This link is only valid for 30 minutes.',
           );
           expect(body).to.have.string('Create password');
-          cy.mailosaurDeleteMessage(id);
-        });
-      });
+        },
+      );
     });
   });
 
-  it.only('should resend "Account Exists" email when an existing user with password registers which is same as initial email sent', () => {
+  it('should resend "Account Exists" email when an existing user with password registers which is same as initial email sent', () => {
     cy.createTestUser({
       isUserEmailValidated: false,
       password: 'test_password',
