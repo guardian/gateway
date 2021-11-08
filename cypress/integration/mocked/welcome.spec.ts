@@ -13,7 +13,7 @@ import * as qs from 'query-string';
 import CommunicationsPage from '../../support/pages/onboarding/communications_page';
 
 describe('Welcome and set password page', () => {
-  const email = 'test@example.com';
+  const email = 'someone@theguardian.com';
   const checkTokenSuccessResponse = (
     expiryTimestamp: number | null = null,
   ) => ({
