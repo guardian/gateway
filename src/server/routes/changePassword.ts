@@ -34,7 +34,7 @@ router.post(
       res.redirect(
         303,
         addQueryParamsToPath(
-          `${Routes.CHANGE_PASSWORD}${Routes.COMPLETE}`,
+          `${Routes.PASSWORD}${Routes.RESET_CONFIRMATION}`,
           res.locals.queryParams,
         ),
       ),
