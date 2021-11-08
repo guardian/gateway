@@ -17,7 +17,6 @@ export const SignInPage = () => {
   const { error } = globalMessage;
   const { oauthBaseUrl } = clientHosts;
   const queryString = addQueryParamsToPath('', queryParams);
-  console.log(queryString);
   // we use the encryptedEmail parameter to pre-fill the email field, but then want to remove it from the url
   useRemoveEncryptedEmailParam();
   return (
