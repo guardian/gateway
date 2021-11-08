@@ -3,11 +3,7 @@ import React, { useContext, useState } from 'react';
 import { css } from '@emotion/react';
 import { SvgEye, SvgEyeStrike } from '@guardian/src-icons';
 import { textInputDefault } from '@guardian/src-foundations/themes';
-import {
-  error as errorColors,
-  neutral,
-  space,
-} from '@guardian/src-foundations';
+import { neutral, space } from '@guardian/src-foundations';
 import { height } from '@guardian/src-foundations/size';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
@@ -33,7 +29,7 @@ export const isDisplayEyeOnBrowser = (browserName: string | undefined) => {
 
 const textInputBorderStyle = (error?: string) => css`
   border: ${error
-    ? `4px solid ${errorColors[400]}`
+    ? `4px solid ${textInputDefault.textInput.borderError}`
     : `2px solid ${textInputDefault.textInput.border}`};
   position: absolute;
   bottom: 0px;
