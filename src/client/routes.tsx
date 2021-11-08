@@ -20,6 +20,7 @@ import { SignInPage } from '@/client/pages/SignInPage';
 import { MagicLinkPage } from '@/client/pages/MagicLinkPage';
 import { WelcomePage } from '@/client/pages/WelcomePage';
 import { WelcomeResendPage } from '@/client/pages/WelcomeResend';
+import { WelcomePasswordAlreadySetPage } from '@/client/pages/WelcomePasswordAlreadySetPage';
 import { RegistrationEmailSentPage } from '@/client/pages/RegistrationEmailSentPage';
 import { ResetPasswordSessionExpiredPage } from '@/client/pages/ResetPasswordSessionExpiredPage';
 import { WelcomeSessionExpiredPage } from '@/client/pages/WelcomeSessionExpiredPage';
@@ -97,6 +98,9 @@ export const GatewayRoutes = () => (
     </Route>
     <Route exact path={`${Routes.WELCOME}${Routes.EMAIL_SENT}`}>
       <EmailSentPage />
+    </Route>
+    <Route exact path={`${Routes.WELCOME}${Routes.COMPLETE}`}>
+      <WelcomePasswordAlreadySetPage />
     </Route>
     <Route exact path={`${Routes.WELCOME}${Routes.TOKEN_PARAM}`}>
       <WelcomePage />
