@@ -9,8 +9,9 @@ import { NewslettersErrors } from '@/shared/model/Errors';
 import { NewsLetter, NewsletterPatch } from '@/shared/model/Newsletter';
 import { logger } from '@/server/lib/logger';
 import { IdapiError } from '@/server/models/Error';
+import { ApiRoutes } from '@/shared/model/Routes';
 
-const API_ROUTE = '/users/me/newsletters';
+const API_ROUTE = `${ApiRoutes.USERS}${ApiRoutes.ME}${ApiRoutes.NEWSLETTERS}`;
 
 interface NewsletterAPIResponse {
   id: string;
@@ -38,7 +39,7 @@ const responseToEntity = (newsletter: NewsletterAPIResponse): NewsLetter => {
 };
 
 export const read = async (): Promise<NewsLetter[]> => {
-  const url = '/newsletters';
+  const url = `${ApiRoutes.NEWSLETTERS}`;
   const options = APIGetOptions();
   try {
     return ((await idapiFetch(url, options)) as NewsletterAPIResponse[]).map(
