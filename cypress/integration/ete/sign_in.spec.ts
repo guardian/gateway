@@ -126,8 +126,14 @@ describe('Sign in flow', () => {
   it('shows an error message and information paragraph when accountLinkingRequired error parameter is present', () => {
     cy.visit(`/signin?error=accountLinkingRequired`);
     cy.contains(
-      'You cannot sign in with your social account because you already have an account with the Guardian.',
+      'We cannot sign you in with your social account credentials. Please enter your account password below to sign in.',
     );
     cy.get('[class*=ErrorSummary]').contains('Account already exists');
+  });
+  it('does not display social buttons when accountLinkingRequired error parameter is present', () => {
+    cy.visit(`/signin?error=accountLinkingRequired`);
+    cy.get('[data-cy="google-sign-in-button"]').should('not.exist');
+    cy.get('[data-cy="facebook-sign-in-button"]').should('not.exist');
+    cy.get('[data-cy="apple-sign-in-button"]').should('not.exist');
   });
 });
