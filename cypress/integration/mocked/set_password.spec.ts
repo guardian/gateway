@@ -3,7 +3,7 @@
 import { injectAndCheckAxe } from '../../support/cypress-axe';
 
 describe('Password set/create flow', () => {
-  const fakeValidationRespone = (expiryTimestamp) => ({
+  const fakeValidationRespone = (expiryTimestamp?: number) => ({
     user: {
       primaryEmailAddress: 'name@example.com',
     },

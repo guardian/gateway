@@ -6,7 +6,7 @@ import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { PageTitle } from '@/shared/model/PageTitle';
-import { addReturnUrlToPath } from '@/server/lib/queryParams';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { consentPages } from '@/server/routes/consents';
 import { sendAccountVerificationEmail } from '@/server/lib/idapi/user';
 import {
@@ -120,9 +120,9 @@ router.post(
     (res) => {
       return res.redirect(
         303,
-        addReturnUrlToPath(
+        addQueryParamsToPath(
           `${Routes.CONSENTS}/${consentPages[0].page}`,
-          res.locals.queryParams.returnUrl,
+          res.locals.queryParams,
         ),
       );
     },
