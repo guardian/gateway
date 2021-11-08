@@ -77,6 +77,49 @@ const Links = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
+const getErrorContext = (error: string | undefined) => {
+  if (error === SignInErrors.ACCOUNT_ALREADY_EXISTS) {
+    return (
+      <p>
+        We cannot sign you in with your social account credentials. Please enter
+        your account password below to sign in.
+      </p>
+    );
+  }
+};
+
+const showSocialButtons = (
+  error: string | undefined,
+  returnUrl: string | undefined,
+  oauthBaseUrl: string,
+) => {
+  if (error !== SignInErrors.ACCOUNT_ALREADY_EXISTS) {
+    return (
+      <>
+        <Divider
+          spaceAbove="loose"
+          displayText="or continue with"
+          cssOverrides={divider}
+        />
+        <SocialButtons returnUrl={returnUrl} oauthBaseUrl={oauthBaseUrl} />
+      </>
+    );
+  } else {
+    return (
+      // force a minimum bottom margin if social buttons are not present
+      <span
+        css={css`
+          display: inline-block;
+          height: 60px;
+          ${from.desktop} {
+            height: ${space[24]}px;
+          }
+        `}
+      />
+    );
+  }
+};
+
 export const SignIn = ({
   returnUrl,
   email,
@@ -104,18 +147,11 @@ export const SignIn = ({
           },
         ]}
       />
-      <MainGrid gridSpanDefinition={gridItemSignInAndRegistration}>
-        {error === SignInErrors.ACCOUNT_ALREADY_EXISTS && (
-          <p
-            css={css`
-              ${textSans.small()}
-            `}
-          >
-            You cannot sign in with your social account because you already have
-            an account with the Guardian. Please enter your password below to
-            sign in.
-          </p>
-        )}
+      <MainGrid
+        gridSpanDefinition={gridItemSignInAndRegistration}
+        errorOverride={error}
+        errorContext={getErrorContext(error)}
+      >
         <form method="post" action={`${Routes.SIGN_IN}?${returnUrlQuery}`}>
           <CsrfFormField />
           <EmailInput defaultValue={email} />
@@ -136,12 +172,7 @@ export const SignIn = ({
             Sign in
           </Button>
         </form>
-        <Divider
-          spaceAbove="loose"
-          displayText="or continue with"
-          cssOverrides={divider}
-        />
-        <SocialButtons returnUrl={returnUrl} oauthBaseUrl={oauthBaseUrl} />
+        {showSocialButtons(error, returnUrl, oauthBaseUrl)}
       </MainGrid>
       <Footer />
     </>
