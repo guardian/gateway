@@ -77,6 +77,7 @@ export const MainForm = ({
         css={submitButtonStyles({ hasTerms, halfWidth: submitButtonHalfWidth })}
         type="submit"
         priority={submitButtonPriority}
+        data-cy="main-form-submit-button"
       >
         {submitButtonText}
       </Button>

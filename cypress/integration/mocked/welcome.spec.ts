@@ -211,7 +211,7 @@ describe('Welcome and set password page', () => {
 
       cy.mockNext(200);
       cy.get('button[type="submit"]').click();
-      cy.contains('Email sent');
+      cy.contains('Check your email inbox');
     });
 
     it('takes user back to link expired page if "Change email address" clicked', () => {

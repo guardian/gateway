@@ -1,7 +1,10 @@
-import React, { FunctionComponent } from 'react';
-import { css } from '@emotion/react';
+import React, { PropsWithChildren } from 'react';
+import { css, SerializedStyles } from '@emotion/react';
 import { space, text } from '@guardian/src-foundations';
 import { textSans } from '@guardian/src-foundations/typography';
+interface Props {
+  cssOverrides?: SerializedStyles;
+}
 
 const mainBodyTextStyles = css`
   margin-top: 0;
@@ -11,6 +14,9 @@ const mainBodyTextStyles = css`
   color: ${text.primary};
 `;
 
-export const MainBodyText: FunctionComponent = ({ children }) => (
-  <p css={mainBodyTextStyles}>{children}</p>
+export const MainBodyText = ({
+  children,
+  cssOverrides,
+}: PropsWithChildren<Props>) => (
+  <p css={[mainBodyTextStyles, cssOverrides]}>{children}</p>
 );

@@ -3,13 +3,14 @@ import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
 import { Routes } from '@/shared/model/Routes';
-import { useLocation } from 'react-router-dom';
-import { PageBodyText } from '@/client/components/PageBodyText';
+import { MainBodyText } from '@/client/components/MainBodyText';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 export const SetPasswordResendPage = () => {
-  const { search } = useLocation();
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData: { email = '' } = {} } = clientState;
+  const { pageData: { email = '' } = {}, queryParams } = clientState;
+
+  const queryString = addQueryParamsToPath('', queryParams);
 
   return (
     <ResetPassword
@@ -17,12 +18,14 @@ export const SetPasswordResendPage = () => {
       headerText="Link expired"
       buttonText="Send me a link"
       formActionOverride={`${Routes.SET_PASSWORD}${Routes.RESEND}`}
-      queryString={search}
+      queryString={queryString}
+      inputLabel="Email address"
+      showRecentEmailSummary
     >
-      <PageBodyText>
-        The link you are using has expired. Please enter your email address and
-        we will send you a new one.
-      </PageBodyText>
+      <MainBodyText>This link has expired.</MainBodyText>
+      <MainBodyText>
+        Please enter your email address below and we will send you a new link.
+      </MainBodyText>
     </ResetPassword>
   );
 };

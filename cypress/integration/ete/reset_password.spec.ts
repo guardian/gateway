@@ -18,9 +18,9 @@ describe('Password reset flow', () => {
       cy.visit('/signin');
       const timeRequestWasMade = new Date();
       cy.contains('Reset password').click();
-      cy.contains('Forgotten password');
+      cy.contains('Forgot password');
       cy.get('input[name=email]').type(existing.email);
-      cy.get('[data-cy="reset-password-button"]').click();
+      cy.get('[data-cy="main-form-submit-button"]').click();
       cy.contains('Check your email inbox');
       cy.mailosaurGetMessage(
         existing.serverId,
@@ -65,8 +65,8 @@ describe('Password set flow', () => {
       // link expired
       const timeRequestWasMadeLinkExpired = new Date();
       cy.get('input[name=email]').type(existingWithoutPassword.email);
-      cy.get('[data-cy="reset-password-button"]').click();
-      cy.contains('Email sent');
+      cy.get('[data-cy="main-form-submit-button"]').click();
+      cy.contains('Check your email inbox');
       cy.contains(existingWithoutPassword.email);
       cy.contains('Resend email');
       cy.contains('Change email address');
@@ -95,7 +95,7 @@ describe('Password set flow', () => {
       // resend email
       const timeRequestWasMadeResend = new Date();
       cy.contains('Resend email').click();
-      cy.contains('Email sent');
+      cy.contains('Check your email inbox');
       cy.contains(existingWithoutPassword.email);
       cy.mailosaurGetMessage(
         existingWithoutPassword.serverId,

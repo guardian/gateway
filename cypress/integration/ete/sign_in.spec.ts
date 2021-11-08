@@ -61,7 +61,7 @@ describe('Sign in flow', () => {
   it('navigates to reset password', () => {
     cy.visit('/signin');
     cy.contains('Reset password').click();
-    cy.contains('Forgotten password');
+    cy.contains('Forgot password');
   });
 
   it('navigates to registration', () => {

@@ -48,7 +48,7 @@ describe('Registration email sent page', () => {
       log: true,
     });
     cy.visit(`/register/email-sent`);
-    cy.contains('Email sent');
+    cy.contains('Check your email inbox');
     cy.contains(existingWithoutPassword.email);
     cy.contains('Resend email');
     cy.contains('Change email address');
@@ -89,7 +89,7 @@ describe('Registration email sent page', () => {
     const timeRequestWasMadeInitialEmail = new Date();
     cy.get('[data-cy="register-button"]').click();
 
-    cy.contains('Email sent');
+    cy.contains('Check your email inbox');
     cy.contains(unregisteredAccount.email);
     cy.contains('Resend email');
     cy.contains('Change email address');
@@ -112,7 +112,7 @@ describe('Registration email sent page', () => {
 
     const timeRequestWasMade = new Date();
     cy.contains('Resend email').click();
-    cy.contains('Email sent');
+    cy.contains('Check your email inbox');
     cy.contains(unregisteredAccount.email);
     // test and delete resent email
     cy.mailosaurGetMessage(
@@ -137,7 +137,7 @@ describe('Registration email sent page', () => {
     const timeRequestWasMadeInitialEmail = new Date();
     cy.get('[data-cy="register-button"]').click();
 
-    cy.contains('Email sent');
+    cy.contains('Check your email inbox');
     cy.contains(existingWithoutPassword.email);
     cy.contains('Resend email');
     cy.contains('Change email address');
@@ -165,7 +165,7 @@ describe('Registration email sent page', () => {
 
     const timeRequestWasMade = new Date();
     cy.contains('Resend email').click();
-    cy.contains('Email sent');
+    cy.contains('Check your email inbox');
     cy.contains(existingWithoutPassword.email);
     // test and delete resent email
     cy.mailosaurGetMessage(
@@ -195,7 +195,7 @@ describe('Registration email sent page', () => {
     const timeRequestWasMadeInitialEmail = new Date();
     cy.get('[data-cy="register-button"]').click();
 
-    cy.contains('Email sent');
+    cy.contains('Check your email inbox');
     cy.contains(existingWithPassword.email);
     cy.contains('Resend email');
     cy.contains('Change email address');
@@ -220,7 +220,7 @@ describe('Registration email sent page', () => {
 
     const timeRequestWasMade = new Date();
     cy.contains('Resend email').click();
-    cy.contains('Email sent');
+    cy.contains('Check your email inbox');
     cy.contains(existingWithPassword.email);
     // test and delete resent email
     cy.mailosaurGetMessage(
@@ -254,6 +254,6 @@ describe('Registration email sent page', () => {
   it('should render properly if the encrypted email cookie is not set', () => {
     cy.visit(`/register/email-sent`);
     cy.contains('Change email address');
-    cy.contains('Email sent');
+    cy.contains('Check your email inbox');
   });
 });

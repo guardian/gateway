@@ -1,16 +1,14 @@
 import React, { PropsWithChildren } from 'react';
-import { TextInput } from '@guardian/src-text-input';
-import { Button } from '@guardian/src-button';
-import { SvgArrowRightStraight } from '@guardian/src-icons';
 import { Routes } from '@/shared/model/Routes';
-import { PageHeader } from '@/client/components/PageHeader';
-import { PageBox } from '@/client/components/PageBox';
-import { PageBody } from '@/client/components/PageBody';
-import { form, textInput, button } from '@/client/styles/Shared';
-import { CsrfFormField } from '@/client/components/CsrfFormField';
-import { MainOld } from '@/client/layouts/MainOld';
-import { Header } from '@/client/components/Header';
-import { Footer } from '@/client/components/Footer';
+import { MainLayout } from '@/client/layouts/Main';
+import {
+  belowFormMarginTopSpacingStyle,
+  MainForm,
+} from '@/client/components/MainForm';
+import { EmailInput } from '@/client/components/EmailInput';
+import { MainBodyText } from '@/client/components/MainBodyText';
+import { Link } from '@guardian/src-link';
+import { InfoSummary } from '@guardian/source-react-components-development-kitchen';
 
 interface ResetPasswordProps {
   email?: string;
@@ -18,6 +16,9 @@ interface ResetPasswordProps {
   buttonText: string;
   queryString?: string;
   formActionOverride?: string;
+  inputLabel?: string;
+  showNoAccessEmail?: boolean;
+  showRecentEmailSummary?: boolean;
 }
 
 export const ResetPassword = ({
@@ -26,45 +27,45 @@ export const ResetPassword = ({
   buttonText,
   queryString = '',
   formActionOverride,
+  inputLabel,
+  showNoAccessEmail,
+  showRecentEmailSummary,
   children,
 }: PropsWithChildren<ResetPasswordProps>) => (
-  <>
-    <Header />
-    <MainOld subTitle="Sign in">
-      <PageBox>
-        <PageHeader>{headerText}</PageHeader>
-        <PageBody>
-          {children}
-          <form
-            css={form}
-            method="post"
-            action={
-              formActionOverride
-                ? `${formActionOverride}${queryString}`
-                : `${Routes.RESET}${queryString}`
-            }
-          >
-            <CsrfFormField />
-            <TextInput
-              css={textInput}
-              label="Email address"
-              name="email"
-              type="email"
-              defaultValue={email}
-            />
-            <Button
-              css={button}
-              type="submit"
-              icon={<SvgArrowRightStraight />}
-              iconSide="right"
-              data-cy="reset-password-button"
-            >
-              {buttonText}
-            </Button>
-          </form>
-        </PageBody>
-      </PageBox>
-    </MainOld>
-    <Footer />
-  </>
+  <MainLayout pageTitle={headerText}>
+    {children}
+    <MainForm
+      formAction={
+        formActionOverride
+          ? `${formActionOverride}${queryString}`
+          : `${Routes.RESET}${queryString}`
+      }
+      submitButtonText={buttonText}
+    >
+      <EmailInput label={inputLabel} defaultValue={email} />
+    </MainForm>
+    {showNoAccessEmail && (
+      <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
+        If you no longer have access to this email account please{' '}
+        <Link subdued href="mailto:userhelp@theguardian.com">
+          contact our help department
+        </Link>
+      </MainBodyText>
+    )}
+    {showRecentEmailSummary && (
+      <InfoSummary
+        cssOverrides={belowFormMarginTopSpacingStyle}
+        message="Please make sure that you are opening the most recent email we sent."
+        context={
+          <>
+            If you are having trouble, please contact our customer service team
+            at{' '}
+            <Link subdued href="mailto:userhelp@theguardian.com">
+              userhelp@guardian.com
+            </Link>
+          </>
+        }
+      />
+    )}
+  </MainLayout>
 );

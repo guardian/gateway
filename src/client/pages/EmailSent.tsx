@@ -73,7 +73,7 @@ export const EmailSent = ({
             submitButtonPriority="tertiary"
             submitButtonHalfWidth
           >
-            <EmailInput value={email} hidden hideLabel />
+            <EmailInput defaultValue={email} hidden hideLabel />
           </MainForm>
           <InfoSummary
             cssOverrides={belowFormMarginTopSpacingStyle}
