@@ -1474,15 +1474,10 @@
     "@guardian/src-label" "^3.10.2"
     "@guardian/src-user-feedback" "^3.10.2"
 
-"@guardian/src-foundations@^3.10.1", "@guardian/src-foundations@^3.9.2-rc.1":
-  version "3.10.1"
-  resolved "https://registry.yarnpkg.com/@guardian/src-foundations/-/src-foundations-3.10.1.tgz#03badadab6c1692fc6dad506ddbffe872b7f13fc"
-  integrity sha512-cnWhKlPyqoBuzC8mHxW7mUNwFIFkg/amhpxw5eTs1P1I8fqe+zT57oxEO+9bj9NIUn1/vzcU0kF1c+V8BRHNlQ==
-
-"@guardian/src-foundations@^3.10.2-alpha.1":
-  version "3.10.2-alpha.1"
-  resolved "https://registry.yarnpkg.com/@guardian/src-foundations/-/src-foundations-3.10.2-alpha.1.tgz#613a35e2e3ed509afcdba0a0d1e3e74418a643bb"
-  integrity sha512-Z1uzk2WfQ5Kxti6f/v99AVPhXubV95o9sTTRQExETkFYc7DFzC57sSBZNi+8zqY4TKqN78//49johpPU3183uA==
+"@guardian/src-foundations@^3.10.2-alpha.1", "@guardian/src-foundations@^3.11.0", "@guardian/src-foundations@^3.9.2-rc.1":
+  version "3.11.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-foundations/-/src-foundations-3.11.0.tgz#238ee5dda4c68eb8f7cb7a818c6770c20b036be7"
+  integrity sha512-KgGZG023jS713iI/k8CoPc8I87udCM2Uv4P0vopRMG5EnlbFAQyLzxzNh8MdGyjnrlf/M4JC+3uU1FMyG/73rA==
 
 "@guardian/src-helpers@^3.10.2-alpha.1":
   version "3.10.2-alpha.1"
