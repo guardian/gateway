@@ -11,7 +11,7 @@ export const ChangePasswordPage = () => {
   const {
     pageData: { email = '', fieldErrors = [], tokenExpiryTimestamp } = {},
   } = clientState;
-  const { token } = useParams<{ token: string }>();
+  const { token } = useParams();
 
   useEffect(() => {
     // we only want this to run in the browser as window is not
