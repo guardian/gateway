@@ -1,11 +1,12 @@
 import { stringify } from 'query-string';
 import {
   QueryParams,
-  SafeQueryParams,
-  UnsafeQueryParams,
+  PersistableQueryParams,
 } from '@/shared/model/QueryParams';
 
-export const getSafeQueryParams = (params: QueryParams): SafeQueryParams => ({
+export const getPersistableQueryParams = (
+  params: QueryParams,
+): PersistableQueryParams => ({
   returnUrl: params.returnUrl,
   clientId: params.clientId,
   ref: params.ref,
@@ -15,18 +16,15 @@ export const getSafeQueryParams = (params: QueryParams): SafeQueryParams => ({
 export const addQueryParamsToPath = (
   path: string,
   params: QueryParams,
-  unsafeParams?: UnsafeQueryParams,
+  overrides?: Partial<QueryParams>,
 ): string => {
   const divider = path.includes('?') ? '&' : '?';
-  const safeQueryString = stringify(getSafeQueryParams(params), {
-    skipNull: true,
-    skipEmptyString: true,
-  });
-  const unsafeQueryString = stringify(unsafeParams || {}, {
-    skipNull: true,
-    skipEmptyString: true,
-  });
-  return `${path}${divider}${safeQueryString}${
-    unsafeQueryString ? `&${unsafeQueryString}` : ''
-  }`;
+  const queryString = stringify(
+    { ...getPersistableQueryParams(params), ...overrides },
+    {
+      skipNull: true,
+      skipEmptyString: true,
+    },
+  );
+  return `${path}${divider}${queryString}`;
 };

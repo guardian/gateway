@@ -1,15 +1,14 @@
 import {
   addQueryParamsToPath,
-  getSafeQueryParams,
+  getPersistableQueryParams,
 } from '@/shared/lib/queryParams';
 import {
   QueryParams,
-  SafeQueryParams,
-  UnsafeQueryParams,
+  PersistableQueryParams,
 } from '@/shared/model/QueryParams';
 
-describe('getSafeQueryParams', () => {
-  it('removes unsafe properties from the query object', () => {
+describe('getPersistableQueryParams', () => {
+  it('removes params that should not persist from the query object', () => {
     const input: QueryParams = {
       returnUrl: 'returnUrl',
       clientId: 'clientId',
@@ -21,9 +20,9 @@ describe('getSafeQueryParams', () => {
       refViewId: 'refViewId',
     };
 
-    const output = getSafeQueryParams(input);
+    const output = getPersistableQueryParams(input);
 
-    const expected: SafeQueryParams = {
+    const expected: PersistableQueryParams = {
       returnUrl: 'returnUrl',
       clientId: 'clientId',
       ref: 'ref',
@@ -35,7 +34,7 @@ describe('getSafeQueryParams', () => {
 });
 
 describe('addQueryParamsToPath', () => {
-  it('adds safe query params to path without preexisting querystring', () => {
+  it('adds persistable query params to path without preexisting querystring', () => {
     const input: QueryParams = {
       returnUrl: 'returnUrl',
       clientId: 'clientId',
@@ -54,7 +53,7 @@ describe('addQueryParamsToPath', () => {
     );
   });
 
-  it('adds safe query params to path with preexisting querystring', () => {
+  it('adds persistable query params to path with preexisting querystring', () => {
     const input: QueryParams = {
       returnUrl: 'returnUrl',
       clientId: 'clientId',
@@ -73,11 +72,11 @@ describe('addQueryParamsToPath', () => {
     );
   });
 
-  it('adds safe query params to path without preexisting querystring, with manual unsafe values', () => {
-    const inputSafe: QueryParams = {
+  it('adds persistable query params to path without preexisting querystring, with manual override values', () => {
+    const input: QueryParams = {
       returnUrl: 'returnUrl',
       clientId: 'clientId',
-      csrfError: true,
+      csrfError: false,
       emailVerified: true,
       encryptedEmail: 'encryptedEmail',
       error: 'error',
@@ -85,23 +84,23 @@ describe('addQueryParamsToPath', () => {
       refViewId: 'refViewId',
     };
 
-    const inputUnsafe: UnsafeQueryParams = {
+    const inputOverride: Partial<QueryParams> = {
       csrfError: true,
       encryptedEmail: 'an encrypted email',
     };
 
-    const output = addQueryParamsToPath('/test', inputSafe, inputUnsafe);
+    const output = addQueryParamsToPath('/test', input, inputOverride);
 
     expect(output).toEqual(
-      '/test?clientId=clientId&ref=ref&refViewId=refViewId&returnUrl=returnUrl&csrfError=true&encryptedEmail=an%20encrypted%20email',
+      '/test?clientId=clientId&csrfError=true&encryptedEmail=an%20encrypted%20email&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
     );
   });
 
-  it('adds safe query params to path with preexisting querystring, with manual unsafe values', () => {
-    const inputSafe: QueryParams = {
+  it('adds persistable query params to path with preexisting querystring, with manual override values', () => {
+    const input: QueryParams = {
       returnUrl: 'returnUrl',
       clientId: 'clientId',
-      csrfError: true,
+      csrfError: false,
       emailVerified: true,
       encryptedEmail: 'encryptedEmail',
       error: 'error',
@@ -109,19 +108,15 @@ describe('addQueryParamsToPath', () => {
       refViewId: 'refViewId',
     };
 
-    const inputUnsafe: UnsafeQueryParams = {
+    const inputOverride: Partial<QueryParams> = {
       csrfError: true,
       encryptedEmail: 'an encrypted email',
     };
 
-    const output = addQueryParamsToPath(
-      '/test?foo=bar',
-      inputSafe,
-      inputUnsafe,
-    );
+    const output = addQueryParamsToPath('/test?foo=bar', input, inputOverride);
 
     expect(output).toEqual(
-      '/test?foo=bar&clientId=clientId&ref=ref&refViewId=refViewId&returnUrl=returnUrl&csrfError=true&encryptedEmail=an%20encrypted%20email',
+      '/test?foo=bar&clientId=clientId&csrfError=true&encryptedEmail=an%20encrypted%20email&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
     );
   });
 });

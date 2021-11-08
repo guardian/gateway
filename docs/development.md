@@ -305,37 +305,34 @@ export const TestComponent = ({ foo }: Props) => {
 
 In some cases, some state may need to persist from request to request, or passed through the request chain, for example the `returnUrl`. Rather than just persist the querystring as is through the flow, a middleware is used to parse the querystring for expected values and use them, this gives control over exactly what query parameters are available and usable.
 
-The [`QueryParams`](../src/shared/model/QueryParams.ts) interface is used to determine which parameters are available. However this is created as a union of the `SafeQueryParams` and `UnsafeQueryParams` types.
+The [`QueryParams`](../src/shared/model/QueryParams.ts) interface is used to determine which parameters are available. However this is created as a union of the `PersistableQueryParams` interface and extra properties that do not need to persist between requests which are defined directly on `QueryParams`.
 
-`SafeQueryParams` should include parameters that are fine to persist between requests, for example any query parameters that need to pass from page to page in a flow, e.g. `returnUrl`.
+`PersistableQueryParams` should include parameters that are fine to persist between requests, for example any query parameters that need to pass from page to page in a flow, e.g. `returnUrl`.
 
-`UnsafeQueryParams` should only include parameters that should only be available for a single request, for example to show an error on a page, or make a state available after a redirect e.g. `emailVerified`.
+Properties defined directly on `QueryParams` should only include parameters that should only be available for a single request, for example to show an error on a page, or make a state available after a redirect e.g. `emailVerified`.
 
 ```ts
 // src/shared/model/QueryParams.ts
-export interface SafeQueryParams extends StringifiableRecord {
+export interface PersistableQueryParams extends StringifiableRecord {
   returnUrl: string;
   ...
 }
 
-export interface UnsafeQueryParams extends StringifiableRecord {
+export interface QueryParams
+  extends PersistableQueryParams,
+    StringifiableRecord {
   emailVerified?: boolean;
   error?: string;
   ...
 }
-
-export interface QueryParams
-  extends SafeQueryParams,
-    UnsafeQueryParams,
-    StringifiableRecord {}
 ```
 
-Be sure to also update the `getSafeQueryParams` method in [src/shared/lib/queryParams.ts](../src/shared/lib/queryParams.ts) with any new safe parameters you add, as this method is used to filter out any unsafe keys from a combined query parameters object.
+Be sure to also update the `getPersistableQueryParams` method in [src/shared/lib/queryParams.ts](../src/shared/lib/queryParams.ts) with any new persistable parameters you add, as this method is used to filter out any keys that should not persist from a combined query parameters object.
 
 ```ts
 // src/shared/lib/queryParams.ts
 ...
-export const getSafeQueryParams = (params: QueryParams): SafeQueryParams => ({
+export const getPersistableQueryParams = (params: QueryParams): PersistableQueryParams => ({
   returnUrl: params.returnUrl,
   clientId: params.clientId,
   ref: params.ref,
@@ -344,7 +341,7 @@ export const getSafeQueryParams = (params: QueryParams): SafeQueryParams => ({
 ...
 ```
 
-This file also exposes an `addQueryParamsToPath` method which can be used to append query parameters to a given path/string with the correct divider (`?`|`&`). By default it filters out unsafe parameters from the `QueryParams` object and then turns it into a query string. If you want to include an unsafe parameter, you can manually opt into providing a value as the 3rd argument to the method.
+This file also exposes an `addQueryParamsToPath` method which can be used to append query parameters to a given path/string with the correct divider (`?`|`&`). By default it filters out parameters that do not persist from the `QueryParams` object and then turns it into a query string. If you want to include an parameter that doesn't persist, you can manually opt into providing a value as the 3rd argument to the method.
 
 #### Server
 
@@ -418,7 +415,7 @@ export const TestContainer = () => {
   // extract the values we need from the queryParam
   const { clientId, error } = queryParams;
 
-  // turn all the query params into a query string (only SafeQueryParams by default)
+  // turn all the query params into a query string (only PersistableQueryParams by default)
   const queryString = addQueryParamsToPath('', queryParams);
 
   // pass these to our presentation components

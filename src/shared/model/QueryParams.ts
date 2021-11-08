@@ -1,12 +1,12 @@
 import { StringifiableRecord } from 'query-string';
 
 /**
- * SafeQueryParams are query parameters
+ * PersistableQueryParams are query parameters
  * that are safe to persist between requests
  * for example query parameters that should be passed
  * from page to page in a flow e.g. returnUrl
  */
-export interface SafeQueryParams extends StringifiableRecord {
+export interface PersistableQueryParams extends StringifiableRecord {
   returnUrl: string;
   clientId?: string;
   // this is the url of the referring page
@@ -19,22 +19,16 @@ export interface SafeQueryParams extends StringifiableRecord {
 }
 
 /**
- * UnsafeQueryParams are query params
- * that should only persist for a single request
- * for example to show an error for a page
+ * `QueryParams` type is made up of the `PersistableQueryParams`
+ * as well as extra parameters that should not persist between
+ * request or are only valid for a single request, for example an
+ * `error` or state flag
  */
-export interface UnsafeQueryParams extends StringifiableRecord {
+export interface QueryParams
+  extends PersistableQueryParams,
+    StringifiableRecord {
   emailVerified?: boolean;
   csrfError?: boolean;
   encryptedEmail?: string;
   error?: string;
 }
-
-/**
- * Join of both safe and unsafe query params
- * that we can use in a request
- */
-export interface QueryParams
-  extends SafeQueryParams,
-    UnsafeQueryParams,
-    StringifiableRecord {}
