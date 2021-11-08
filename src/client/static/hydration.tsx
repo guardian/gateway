@@ -1,7 +1,7 @@
 import React from 'react';
 import { record } from '@/client/lib/ophan';
 import { ABProvider } from '@guardian/ab-react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { hydrate } from 'react-dom';
 import { RoutingConfig } from '@/client/routes';
 import { App } from '@/client/app';
@@ -28,7 +28,7 @@ export const hydrateApp = () => {
       ophanRecord={record}
       forcedTestVariants={forcedTestVariants}
     >
-      <StaticRouter location={`${routingConfig.location}`} context={{}}>
+      <StaticRouter location={`${routingConfig.location}`}>
         <App {...clientState} />
       </StaticRouter>
     </ABProvider>,
