@@ -29,7 +29,7 @@ export const isDisplayEyeOnBrowser = (browserName: string | undefined) => {
 
 const textInputBorderStyle = (error?: string) => css`
   border: ${error
-    ? `4px solid ${textInputDefault.textInput.textError}`
+    ? `4px solid ${textInputDefault.textInput.borderError}`
     : `2px solid ${textInputDefault.textInput.border}`};
   position: absolute;
   bottom: 0px;

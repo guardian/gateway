@@ -232,7 +232,7 @@ describe('Registration flow', () => {
           expect(passwordResetLink).not.to.be.undefined;
 
           cy.visit(`/reset-password/${token}`);
-          cy.contains('Reset Password');
+          cy.contains('Reset password');
 
           cy.mailosaurDeleteMessage(id);
         },
@@ -281,7 +281,7 @@ describe('Registration flow', () => {
           expect(createPasswordLink).not.to.be.undefined;
 
           cy.visit(`/set-password/${token}`);
-          cy.contains('Create Password');
+          cy.contains('Create password');
 
           cy.mailosaurDeleteMessage(id);
         },
