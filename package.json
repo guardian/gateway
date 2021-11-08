@@ -119,7 +119,7 @@
     "@guardian/src-button": "^3.10.2",
     "@guardian/src-checkbox": "^3.10.2",
     "@guardian/src-foundations": "^3.10.1",
-    "@guardian/src-icons": "^3.10.2",
+    "@guardian/src-icons": "^3.11.0",
     "@guardian/src-layout": "3.10.1",
     "@guardian/src-link": "^3.10.2",
     "@guardian/src-radio": "^3.10.2",

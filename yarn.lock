@@ -1500,10 +1500,10 @@
     "@guardian/src-foundations" "^3.9.2-rc.1"
     mini-svg-data-uri "^1.3.3"
 
-"@guardian/src-icons@^3.10.2":
-  version "3.10.2"
-  resolved "https://registry.yarnpkg.com/@guardian/src-icons/-/src-icons-3.10.2.tgz#9fe3c410b2c282829a01a8cb60c89df3e6400a7d"
-  integrity sha512-qaB+nPwQVvx1XtCtIc2yXIVsZ5A2SZB5BCllTA8BouqmkK/N6nCB0q7S3P57eGXgQ4/NvAj8HjbfusyKiHqyjQ==
+"@guardian/src-icons@^3.10.2", "@guardian/src-icons@^3.11.0":
+  version "3.11.0"
+  resolved "https://registry.yarnpkg.com/@guardian/src-icons/-/src-icons-3.11.0.tgz#c137a6b7294d3a4288e17daa221cbc63806583e7"
+  integrity sha512-TAwrtxfL6U/BtGkyr1KFQkXCm/d4RPLRVr9O7w6yZNaQ782xfkfDaLa+5ur+3QRFH8Mb0XtxEKnzAWFXSDP56Q==
 
 "@guardian/src-label@^3.10.2":
   version "3.10.2"
