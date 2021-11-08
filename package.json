@@ -56,7 +56,7 @@
     "@types/jest": "^27.0.2",
     "@types/jsonwebtoken": "^8.5.5",
     "@types/mjml": "^4.7.0",
-    "@types/mjml-react": "^2.0.0",
+    "@types/mjml-react": "^2.0.1",
     "@types/ms": "^0.7.31",
     "@types/node": "^16.11.6",
     "@types/node-fetch": "^3.0.3",

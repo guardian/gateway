@@ -3017,10 +3017,10 @@
   resolved "https://registry.yarnpkg.com/@types/mjml-core/-/mjml-core-4.7.1.tgz#c2627499045b54eccfca38e2b532566fb0689189"
   integrity sha512-k5IRafi93tyZBGF+0BTrcBDvG47OueI+Q7TC4V4UjGQn0AMVvL3Y+S26QF/UHMmMJW5r1hxLyv3StX2/+FatFg==
 
-"@types/mjml-react@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@types/mjml-react/-/mjml-react-2.0.0.tgz#e433974bcab80487ad8525c72c56f5251d231298"
-  integrity sha512-doa1NrhFOWr/pwMwvLVBly6+DF/UFUJqJ2DxIwQ5wd3mf1bKek4y+1oAGoTEmSkflqwWMXyCT+TfZ4J68cB6NQ==
+"@types/mjml-react@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@types/mjml-react/-/mjml-react-2.0.1.tgz#2a88c17981bb8dbb58379a7962be9b0d997ff646"
+  integrity sha512-sKiDAH8kCPIIAOkDIU7TFAWSTKe3/3MRzIsh6B/RZiyHj9R+7lLxtclnE4iuKe3C8ttg10JYzv0PyaCmDEbb1A==
   dependencies:
     "@types/react" "*"
 
