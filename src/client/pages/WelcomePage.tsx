@@ -10,7 +10,7 @@ export const WelcomePage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { pageData: { email, fieldErrors = [], tokenExpiryTimestamp } = {} } =
     clientState;
-  const { token } = useParams();
+  const { token } = useParams<{ token: string }>();
 
   useEffect(() => {
     // we only want this to run in the browser as window is not

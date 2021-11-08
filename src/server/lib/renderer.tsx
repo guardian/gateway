@@ -1,7 +1,7 @@
 import { ClientState, FieldError } from '@/shared/model/ClientState';
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router-dom';
 import { App } from '@/client/app';
 import { brandBackground } from '@guardian/src-foundations/palette';
 import qs from 'query-string';
@@ -76,6 +76,8 @@ export const renderer: (url: string, opts: RendererOpts) => string = (
   url,
   { requestState, pageTitle },
 ) => {
+  const context = {};
+
   const clientState = clientStateFromRequestStateLocals(requestState);
 
   const queryString = qs.stringify(requestState.queryParams);
@@ -95,7 +97,7 @@ export const renderer: (url: string, opts: RendererOpts) => string = (
       mvtId={mvtId}
       forcedTestVariants={forcedTestVariants}
     >
-      <StaticRouter location={location}>
+      <StaticRouter location={location} context={context}>
         <App {...clientState}></App>
       </StaticRouter>
     </ABProvider>,
