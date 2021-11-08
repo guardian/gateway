@@ -73,27 +73,30 @@ router.post(
 
     trackMetric(Metrics.SEND_PASSWORD_RESET_SUCCESS);
 
-    return res.redirect(303, Routes.RESET_SENT);
+    return res.redirect(303, `${Routes.RESET}${Routes.EMAIL_SENT}`);
   }),
 );
 
-router.get(Routes.RESET_SENT, (req: Request, res: ResponseWithRequestState) => {
-  let state = res.locals;
+router.get(
+  `${Routes.RESET}${Routes.EMAIL_SENT}`,
+  (req: Request, res: ResponseWithRequestState) => {
+    let state = res.locals;
 
-  const email = readEmailCookie(req);
+    const email = readEmailCookie(req);
 
-  state = deepmerge(state, {
-    pageData: {
-      email,
-      previousPage: Routes.RESET,
-    },
-  });
+    state = deepmerge(state, {
+      pageData: {
+        email,
+        previousPage: Routes.RESET,
+      },
+    });
 
-  const html = renderer(Routes.RESET_SENT, {
-    pageTitle: PageTitle.EMAIL_SENT,
-    requestState: state,
-  });
-  res.type('html').send(html);
-});
+    const html = renderer(`${Routes.RESET}${Routes.EMAIL_SENT}`, {
+      pageTitle: PageTitle.EMAIL_SENT,
+      requestState: state,
+    });
+    res.type('html').send(html);
+  },
+);
 
 export default router;

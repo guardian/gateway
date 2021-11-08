@@ -53,14 +53,14 @@ router.post(
 
     trackMetric(Metrics.SEND_MAGIC_LINK_SUCCESS);
 
-    return res.redirect(303, Routes.MAGIC_LINK_SENT);
+    return res.redirect(303, `${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`);
   }),
 );
 
 router.get(
-  Routes.MAGIC_LINK_SENT,
+  `${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`,
   (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer(Routes.MAGIC_LINK_SENT, {
+    const html = renderer(`${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`, {
       pageTitle: PageTitle.MAGIC_LINK,
       requestState: res.locals,
     });

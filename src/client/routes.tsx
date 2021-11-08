@@ -35,28 +35,25 @@ export type RoutingConfig = {
 
 export const GatewayRoutes = () => (
   <Switch>
-    <Route exact path={Routes.SIGN_IN_CURRENT}>
-      <SignInPage />
-    </Route>
     <Route exact path={Routes.SIGN_IN}>
       <SignInPage />
     </Route>
     <Route exact path={Routes.REGISTRATION}>
       <RegistrationPage />
     </Route>
-    <Route exact path={Routes.REGISTRATION_EMAIL_SENT}>
+    <Route exact path={`${Routes.REGISTRATION}${Routes.EMAIL_SENT}`}>
       <RegistrationEmailSentPage />
     </Route>
     <Route exact path={Routes.RESET}>
       <ResetPasswordPage />
     </Route>
-    <Route exact path={Routes.RESET_SENT}>
+    <Route exact path={`${Routes.RESET}${Routes.EMAIL_SENT}`}>
       <EmailSentPage />
     </Route>
     <Route exact path={`${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`}>
       <ChangePasswordPage />
     </Route>
-    <Route path={Routes.CHANGE_PASSWORD_COMPLETE}>
+    <Route path={`${Routes.PASSWORD}${Routes.RESET_CONFIRMATION}`}>
       <ChangePasswordCompletePage />
     </Route>
     <Route exact path={`${Routes.RESET}${Routes.RESEND}`}>
@@ -71,10 +68,10 @@ export const GatewayRoutes = () => (
     <Route exact path={`${Routes.SET_PASSWORD}${Routes.EXPIRED}`}>
       <SetPasswordSessionExpiredPage />
     </Route>
-    <Route path={Routes.SET_PASSWORD_COMPLETE}>
+    <Route path={`${Routes.SET_PASSWORD}${Routes.COMPLETE}`}>
       <SetPasswordCompletePage />
     </Route>
-    <Route path={Routes.SET_PASSWORD_EMAIL_SENT}>
+    <Route path={`${Routes.SET_PASSWORD}${Routes.EMAIL_SENT}`}>
       <EmailSentPage />
     </Route>
     <Route exact path={`${Routes.SET_PASSWORD}${Routes.TOKEN_PARAM}`}>
@@ -98,7 +95,7 @@ export const GatewayRoutes = () => (
     <Route exact path={`${Routes.WELCOME}${Routes.EXPIRED}`}>
       <WelcomeSessionExpiredPage />
     </Route>
-    <Route exact path={`${Routes.WELCOME_SENT}`}>
+    <Route exact path={`${Routes.WELCOME}${Routes.EMAIL_SENT}`}>
       <EmailSentPage />
     </Route>
     <Route exact path={`${Routes.WELCOME}${Routes.TOKEN_PARAM}`}>
@@ -124,7 +121,7 @@ export const GatewayRoutes = () => (
     <Route exact path={Routes.MAGIC_LINK}>
       <MagicLinkPage />
     </Route>
-    <Route exact path={Routes.MAGIC_LINK_SENT}>
+    <Route exact path={`${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`}>
       <EmailSentPage />
     </Route>
     <Route exact path={Routes.UNEXPECTED_ERROR}>

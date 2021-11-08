@@ -13,8 +13,9 @@ import {
   addRefViewIdToPath,
   addReturnUrlToPath,
 } from '../queryParams';
+import { ApiRoutes } from '@/shared/model/Routes';
 
-const url = '/guest?accountVerificationEmail=true';
+const url = `${ApiRoutes.GUEST}?accountVerificationEmail=true`;
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
   if (error.status === 'error' && error.errors?.length) {

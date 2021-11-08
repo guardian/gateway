@@ -43,8 +43,6 @@ const preFillEmailField = (route: string) =>
 
 router.get(Routes.SIGN_IN, preFillEmailField(Routes.SIGN_IN));
 
-router.get(Routes.SIGN_IN_CURRENT, preFillEmailField(Routes.SIGN_IN_CURRENT));
-
 router.post(
   Routes.SIGN_IN,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
