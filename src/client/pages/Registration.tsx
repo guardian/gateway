@@ -120,7 +120,7 @@ export const Registration = ({
       >
         <form
           method="post"
-          action={`${Routes.REGISTRATION}?${queryString}`}
+          action={`${Routes.REGISTRATION}${queryString}`}
           ref={registerFormRef}
           onSubmit={handleSubmit}
         >
