@@ -10,8 +10,9 @@ import {
 } from '../IDAPIFetch';
 import { logger } from '../logger';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { ApiRoutes } from '@/shared/model/Routes';
 
-const url = '/guest?accountVerificationEmail=true';
+const url = `${ApiRoutes.GUEST}?accountVerificationEmail=true`;
 
 const { defaultReturnUri } = getConfiguration();
 

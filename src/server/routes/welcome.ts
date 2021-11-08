@@ -55,7 +55,7 @@ router.post(
 
       setEncryptedStateCookie(res, { email });
 
-      return res.redirect(303, Routes.WELCOME_SENT);
+      return res.redirect(303, `${Routes.WELCOME}${Routes.EMAIL_SENT}`);
     } catch (error) {
       const { message, status } =
         error instanceof ApiError ? error : new ApiError();
@@ -77,7 +77,7 @@ router.post(
 
 // email sent page
 router.get(
-  Routes.WELCOME_SENT,
+  `${Routes.WELCOME}${Routes.EMAIL_SENT}`,
   (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
@@ -90,7 +90,7 @@ router.get(
       },
     });
 
-    const html = renderer(Routes.WELCOME_SENT, {
+    const html = renderer(`${Routes.WELCOME}${Routes.EMAIL_SENT}`, {
       pageTitle: PageTitle.EMAIL_SENT,
       requestState: state,
     });

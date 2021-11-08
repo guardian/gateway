@@ -34,7 +34,7 @@ router.post(
       res.redirect(
         303,
         addQueryParamsToPath(
-          Routes.CHANGE_PASSWORD_COMPLETE,
+          `${Routes.CHANGE_PASSWORD}${Routes.COMPLETE}`,
           res.locals.queryParams,
         ),
       ),
@@ -42,11 +42,11 @@ router.post(
 );
 
 router.get(
-  Routes.CHANGE_PASSWORD_COMPLETE,
+  `${Routes.PASSWORD}${Routes.RESET_CONFIRMATION}`,
   (req: Request, res: ResponseWithRequestState) => {
     const email = readEmailCookie(req);
 
-    const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
+    const html = renderer(`${Routes.PASSWORD}${Routes.RESET_CONFIRMATION}`, {
       requestState: deepmerge(res.locals, {
         pageData: {
           email,

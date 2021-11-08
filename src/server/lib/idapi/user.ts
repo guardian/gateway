@@ -16,6 +16,7 @@ import {
 import User from '@/shared/model/User';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { IdapiError } from '@/server/models/Error';
+import { ApiRoutes } from '@/shared/model/Routes';
 
 interface APIResponse {
   user: User;
@@ -75,7 +76,7 @@ const responseToEntity = (response: APIResponse): User => {
 };
 
 export const read = async (ip: string, sc_gu_u: string): Promise<User> => {
-  const url = '/user/me';
+  const url = `${ApiRoutes.USER}${ApiRoutes.ME}`;
   const options = APIForwardSessionIdentifier(
     APIAddClientAccessToken(APIGetOptions(), ip),
     sc_gu_u,
@@ -90,7 +91,7 @@ export const read = async (ip: string, sc_gu_u: string): Promise<User> => {
 };
 
 export const create = async (email: string, password: string, ip: string) => {
-  const url = '/user';
+  const url = ApiRoutes.USER;
   const options = APIPostOptions({
     primaryEmailAddress: email,
     password,
@@ -108,7 +109,7 @@ export const readUserType = async (
   email: string,
   ip: string,
 ): Promise<UserType> => {
-  const url = `/user/type/${email}`;
+  const url = `${ApiRoutes.USER}${ApiRoutes.TYPE}/${email}`;
 
   const options = APIAddClientAccessToken(APIGetOptions(), ip);
 
@@ -141,7 +142,7 @@ export const sendAccountVerificationEmail = async (
   ip: string,
   returnUrl: string,
 ) => {
-  const url = '/user/send-account-verification-email';
+  const url = `${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_VERIFICATION_EMAIL}`;
   const options = APIPostOptions({
     'email-address': email,
   });
@@ -161,7 +162,7 @@ export const sendAccountExistsEmail = async (
   ip: string,
   returnUrl: string,
 ) => {
-  const url = '/user/send-account-exists-email';
+  const url = `${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_EXISTS_EMAIL}`;
   const options = APIPostOptions({
     'email-address': email,
   });
@@ -181,7 +182,7 @@ export const sendAccountWithoutPasswordExistsEmail = async (
   ip: string,
   returnUrl: string,
 ) => {
-  const url = '/user/send-account-without-password-exists-email';
+  const url = `${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_WITHOUT_PASSWORD_EXISTS_EMAIL}`;
   const options = APIPostOptions({
     'email-address': email,
   });
@@ -204,7 +205,7 @@ export const sendCreatePasswordEmail = async (
   ip: string,
   returnUrl: string,
 ) => {
-  const url = '/user/send-create-password-account-exists-email';
+  const url = `${ApiRoutes.USER}${ApiRoutes.SEND_CREATE_PASSWORD_ACCOUNT_EXISTS_EMAIL}`;
   const options = APIPostOptions({
     'email-address': email,
   });
