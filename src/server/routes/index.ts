@@ -50,8 +50,9 @@ uncachedRoutes.use(magicLink);
 // welcome routes
 uncachedRoutes.use(welcome);
 
-router.use(uncachedRoutes);
+// not found (404) route
+uncachedRoutes.use(notFound);
 
-router.use(notFound);
+router.use(uncachedRoutes);
 
 export default router;
