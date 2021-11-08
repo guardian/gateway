@@ -28,6 +28,7 @@ export interface QueryParams
   extends PersistableQueryParams,
     StringifiableRecord {
   emailVerified?: boolean;
+  emailSentPage?: boolean;
   csrfError?: boolean;
   encryptedEmail?: string;
   error?: string;

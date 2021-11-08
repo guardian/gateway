@@ -3,12 +3,12 @@ import { validateReturnUrl, validateRefUrl } from '@/server/lib/validateUrl';
 import { validateClientId } from '@/server/lib/validateClientId';
 import { FederationErrors } from '@/shared/model/Errors';
 
-const validateEmailVerified = (emailVerified?: string): boolean | undefined => {
-  if (!emailVerified) {
+const validateBoolean = (maybeBoolean?: string): boolean | undefined => {
+  if (!maybeBoolean) {
     return undefined;
   }
 
-  if (emailVerified === 'true') {
+  if (maybeBoolean === 'true') {
     return true;
   }
 
@@ -38,6 +38,7 @@ export const parseExpressQueryParams = (
     returnUrl,
     clientId,
     emailVerified,
+    emailSentPage,
     csrfError,
     refViewId,
     ref,
@@ -47,6 +48,7 @@ export const parseExpressQueryParams = (
     returnUrl?: string;
     clientId?: string;
     emailVerified?: string;
+    emailSentPage?: string;
     csrfError?: string;
     refViewId?: string;
     ref?: string;
@@ -57,7 +59,8 @@ export const parseExpressQueryParams = (
   return {
     returnUrl: validateReturnUrl(returnUrl),
     clientId: validateClientId(clientId),
-    emailVerified: validateEmailVerified(emailVerified),
+    emailVerified: validateBoolean(emailVerified),
+    emailSentPage: validateBoolean(emailSentPage),
     csrfError: validateCsrfError(method, csrfError),
     refViewId,
     ref: ref && validateRefUrl(ref),

@@ -13,6 +13,7 @@ import { readEmailCookie } from '@/server/lib/emailCookie';
 import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
 import { ResetPasswordErrors } from '@/shared/model/Errors';
 import { ApiError } from '@/server/models/Error';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 const router = Router();
 
@@ -42,7 +43,7 @@ router.post(
 
     const { email = '' } = req.body;
 
-    const { returnUrl } = res.locals.queryParams;
+    const { returnUrl, emailSentPage } = res.locals.queryParams;
 
     try {
       await resetPassword(email, req.ip, returnUrl);
@@ -73,7 +74,16 @@ router.post(
 
     trackMetric(Metrics.SEND_PASSWORD_RESET_SUCCESS);
 
-    return res.redirect(303, `${Routes.RESET}${Routes.EMAIL_SENT}`);
+    return res.redirect(
+      303,
+      addQueryParamsToPath(
+        `${Routes.RESET}${Routes.EMAIL_SENT}`,
+        res.locals.queryParams,
+        {
+          emailSentPage,
+        },
+      ),
+    );
   }),
 );
 

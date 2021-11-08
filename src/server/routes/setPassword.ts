@@ -67,7 +67,7 @@ router.post(
   `${Routes.SET_PASSWORD}${Routes.RESEND}`,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { email } = req.body;
-    const { returnUrl } = res.locals.queryParams;
+    const { returnUrl, emailSentPage } = res.locals.queryParams;
 
     try {
       await sendCreatePasswordEmail(email, req.ip, returnUrl);
@@ -77,7 +77,16 @@ router.post(
         emailType: EmailType.CREATE_PASSWORD,
       });
 
-      return res.redirect(303, `${Routes.SET_PASSWORD}${Routes.EMAIL_SENT}`);
+      return res.redirect(
+        303,
+        addQueryParamsToPath(
+          `${Routes.SET_PASSWORD}${Routes.EMAIL_SENT}`,
+          res.locals.queryParams,
+          {
+            emailSentPage,
+          },
+        ),
+      );
     } catch (error) {
       const { message, status } =
         error instanceof ApiError

@@ -15,6 +15,8 @@ type Props = {
   previousPage?: string;
   resendEmailAction?: string;
   queryString?: string;
+  showSuccess?: boolean;
+  errorMessage?: string;
 };
 
 export const EmailSent = ({
@@ -22,6 +24,8 @@ export const EmailSent = ({
   previousPage = '/',
   resendEmailAction,
   queryString,
+  showSuccess,
+  errorMessage,
 }: Props) => {
   const [hasJS, setHasJS] = useState<boolean>(false);
 
@@ -30,7 +34,11 @@ export const EmailSent = ({
   }, []);
 
   return (
-    <MainLayout pageTitle="Check your email inbox">
+    <MainLayout
+      pageTitle="Check your email inbox"
+      successOverride={showSuccess ? 'Email sent' : undefined}
+      errorOverride={errorMessage}
+    >
       {email ? (
         <MainBodyText>
           We’ve sent an email to <b>{email}</b>.

@@ -6,10 +6,14 @@ import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 export const EmailSentPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData = {}, queryParams } = clientState;
+  const { pageData = {}, queryParams, globalMessage = {} } = clientState;
   const { email, previousPage } = pageData;
+  const { emailSentPage } = queryParams;
+  const { error } = globalMessage;
 
-  const queryString = addQueryParamsToPath('', queryParams);
+  const queryString = addQueryParamsToPath('', queryParams, {
+    emailSentPage: true,
+  });
 
   return (
     <EmailSent
@@ -17,6 +21,8 @@ export const EmailSentPage = () => {
       previousPage={previousPage}
       resendEmailAction={previousPage}
       queryString={queryString}
+      showSuccess={!!emailSentPage}
+      errorMessage={error}
     />
   );
 };
