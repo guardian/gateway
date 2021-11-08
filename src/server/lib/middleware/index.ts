@@ -8,6 +8,7 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { requestStateMiddleware } from '@/server/lib/middleware/requestState';
 import { default as routes } from '@/server/routes';
 import { routeErrorHandler } from '@/server/lib/middleware/errorHandler';
+import { fourZeroFourMiddleware } from '@/server/lib/middleware/404';
 
 const { appSecret } = getConfiguration();
 
@@ -21,5 +22,6 @@ export const applyMiddleware = (server: Express): void => {
   server.use(csrfMiddleware);
   server.use(requestStateMiddleware);
   server.use(routes);
+  server.use(fourZeroFourMiddleware);
   server.use(routeErrorHandler);
 };
