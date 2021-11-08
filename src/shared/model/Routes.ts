@@ -24,6 +24,7 @@ export enum Routes {
   EXPIRED = '/expired',
   EMAIL_SENT = '/email-sent',
   COMPLETE = '/complete',
+  FOUR_ZERO_FOUR = '/404',
 }
 
 export enum ApiRoutes {

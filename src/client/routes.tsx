@@ -134,6 +134,6 @@ export const GatewayRoutes = () => (
       element={<EmailSentPage />}
     />
     <Route path={Routes.UNEXPECTED_ERROR} element={<UnexpectedErrorPage />} />
-    <Route element={<NotFoundPage />} />
+    <Route path={Routes.FOUR_ZERO_FOUR} element={<NotFoundPage />} />
   </RouterRoutes>
 );
