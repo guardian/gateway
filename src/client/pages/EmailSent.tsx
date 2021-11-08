@@ -14,44 +14,23 @@ type Props = {
   email?: string;
   previousPage?: string;
   resendEmailAction?: string;
-  refViewId?: string;
-  refValue?: string;
-  returnUrl?: string;
-  showSuccess?: boolean;
+  queryString?: string;
 };
 
 export const EmailSent = ({
   email,
   previousPage = '/',
   resendEmailAction,
-  refViewId = '',
-  refValue = '',
-  returnUrl = '',
-  showSuccess,
+  queryString,
 }: Props) => {
   const [hasJS, setHasJS] = useState<boolean>(false);
-
-  const returnUrlQuery = `returnUrl=${encodeURIComponent(returnUrl)}`;
-  const refUrlQuery = `ref=${encodeURIComponent(refValue)}`;
-  const refViewIdUrlQuery = `refViewId=${encodeURIComponent(refViewId)}`;
-  const registrationUrlQueryParams = [
-    returnUrl ? returnUrlQuery : '',
-    refValue ? refUrlQuery : '',
-    refViewId ? refViewIdUrlQuery : '',
-  ];
-  const registrationUrlQueryParamString = registrationUrlQueryParams
-    .filter((param) => param !== '')
-    .join('&');
 
   useEffect(() => {
     setHasJS(true);
   }, []);
 
   return (
-    <MainLayout
-      pageTitle="Check your email inbox"
-      successOverride={showSuccess ? 'Email sent' : undefined}
-    >
+    <MainLayout pageTitle="Check your email inbox">
       {email ? (
         <MainBodyText>
           We’ve sent an email to <b>{email}</b>.
@@ -81,9 +60,7 @@ export const EmailSent = ({
             context="If you can’t find the email in your inbox or spam folder, please click below and we will send you a new one."
           />
           <MainForm
-            formAction={
-              resendEmailAction + '?' + registrationUrlQueryParamString
-            }
+            formAction={`${resendEmailAction}${queryString}`}
             submitButtonText={'Resend email'}
             submitButtonPriority="tertiary"
             submitButtonHalfWidth

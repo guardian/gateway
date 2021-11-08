@@ -22,6 +22,7 @@ import { EmailInput } from '@/client/components/EmailInput';
 
 export type SignInProps = {
   returnUrl?: string;
+  queryString?: string;
   email?: string;
   error?: string;
   oauthBaseUrl: string;
@@ -77,73 +78,95 @@ const Links = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
-export const SignIn = ({
-  returnUrl,
-  email,
-  error,
-  oauthBaseUrl,
-}: SignInProps) => {
-  const params = new URLSearchParams();
-  if (returnUrl) params.append('returnUrl', returnUrl);
-  const returnUrlQuery = params.toString();
+const getErrorContext = (error: string | undefined) => {
+  if (error === SignInErrors.ACCOUNT_ALREADY_EXISTS) {
+    return (
+      <p>
+        We cannot sign you in with your social account credentials. Please enter
+        your account password below to sign in.
+      </p>
+    );
+  }
+};
 
-  return (
-    <>
-      <Header />
-      <Nav
-        tabs={[
-          {
-            displayText: PageTitle.SIGN_IN,
-            linkTo: Routes.SIGN_IN,
-            isActive: true,
-          },
-          {
-            displayText: PageTitle.REGISTRATION,
-            linkTo: Routes.REGISTRATION,
-            isActive: false,
-          },
-        ]}
-      />
-      <MainGrid gridSpanDefinition={gridItemSignInAndRegistration}>
-        {error === SignInErrors.ACCOUNT_ALREADY_EXISTS && (
-          <p
-            css={css`
-              ${textSans.small()}
-            `}
-          >
-            You cannot sign in with your social account because you already have
-            an account with the Guardian. Please enter your password below to
-            sign in.
-          </p>
-        )}
-        <form method="post" action={`${Routes.SIGN_IN}?${returnUrlQuery}`}>
-          <CsrfFormField />
-          <EmailInput defaultValue={email} />
-          <div css={passwordInput}>
-            <PasswordInput label="Password" />
-          </div>
-          <Links>
-            <Link
-              subdued={true}
-              href={Routes.RESET}
-              cssOverrides={resetPassword}
-            >
-              Reset password
-            </Link>
-          </Links>
-          <Terms />
-          <Button css={signInButton} type="submit" data-cy="sign-in-button">
-            Sign in
-          </Button>
-        </form>
+const showSocialButtons = (
+  error: string | undefined,
+  returnUrl: string | undefined,
+  oauthBaseUrl: string,
+) => {
+  if (error !== SignInErrors.ACCOUNT_ALREADY_EXISTS) {
+    return (
+      <>
         <Divider
           spaceAbove="loose"
           displayText="or continue with"
           cssOverrides={divider}
         />
         <SocialButtons returnUrl={returnUrl} oauthBaseUrl={oauthBaseUrl} />
-      </MainGrid>
-      <Footer />
-    </>
-  );
+      </>
+    );
+  } else {
+    return (
+      // force a minimum bottom margin if social buttons are not present
+      <span
+        css={css`
+          display: inline-block;
+          height: 60px;
+          ${from.desktop} {
+            height: ${space[24]}px;
+          }
+        `}
+      />
+    );
+  }
 };
+
+export const SignIn = ({
+  returnUrl,
+  email,
+  error,
+  oauthBaseUrl,
+  queryString,
+}: SignInProps) => (
+  <>
+    <Header />
+    <Nav
+      tabs={[
+        {
+          displayText: PageTitle.SIGN_IN,
+          linkTo: Routes.SIGN_IN,
+          isActive: true,
+        },
+        {
+          displayText: PageTitle.REGISTRATION,
+          linkTo: Routes.REGISTRATION,
+          isActive: false,
+        },
+      ]}
+    />
+    <MainGrid
+      gridSpanDefinition={gridItemSignInAndRegistration}
+      errorOverride={error}
+      errorContext={getErrorContext(error)}
+    >
+      <form method="post" action={`${Routes.SIGN_IN}${queryString}`}>
+        <CsrfFormField />
+        <EmailInput defaultValue={email} />
+        <div css={passwordInput}>
+          <PasswordInput label="Password" />
+        </div>
+        <Links>
+          <Link subdued={true} href={Routes.RESET} cssOverrides={resetPassword}>
+            Reset password
+          </Link>
+        </Links>
+        <Terms />
+        <Button css={signInButton} type="submit" data-cy="sign-in-button">
+          Sign in
+        </Button>
+      </form>
+      {showSocialButtons(error, returnUrl, oauthBaseUrl)}
+    </MainGrid>
+    <Footer />
+  </>
+);

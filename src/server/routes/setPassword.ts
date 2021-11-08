@@ -14,7 +14,7 @@ import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { EmailType } from '@/shared/model/EmailType';
 import { sendCreatePasswordEmail } from '@/server/lib/idapi/user';
 import { readEmailCookie } from '@/server/lib/emailCookie';
-import { addReturnUrlToPath } from '@/server/lib/queryParams';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { ResetPasswordErrors } from '@/shared/model/Errors';
 import { ApiError } from '../models/Error';
 
@@ -22,11 +22,11 @@ const router = Router();
 
 // set password complete page
 router.get(
-  Routes.SET_PASSWORD_COMPLETE,
+  `${Routes.SET_PASSWORD}${Routes.COMPLETE}`,
   (req: Request, res: ResponseWithRequestState) => {
     const email = readEmailCookie(req);
 
-    const html = renderer(Routes.SET_PASSWORD_COMPLETE, {
+    const html = renderer(`${Routes.SET_PASSWORD}${Routes.COMPLETE}`, {
       requestState: deepmerge(res.locals, {
         pageData: {
           email,
@@ -77,7 +77,7 @@ router.post(
         emailType: EmailType.CREATE_PASSWORD,
       });
 
-      return res.redirect(303, `${Routes.SET_PASSWORD_EMAIL_SENT}`);
+      return res.redirect(303, `${Routes.SET_PASSWORD}${Routes.EMAIL_SENT}`);
     } catch (error) {
       const { message, status } =
         error instanceof ApiError
@@ -101,7 +101,7 @@ router.post(
 
 // email sent page
 router.get(
-  Routes.SET_PASSWORD_EMAIL_SENT,
+  `${Routes.SET_PASSWORD}${Routes.EMAIL_SENT}`,
   (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
@@ -114,7 +114,7 @@ router.get(
       },
     });
 
-    const html = renderer(Routes.SET_PASSWORD_EMAIL_SENT, {
+    const html = renderer(`${Routes.SET_PASSWORD}${Routes.EMAIL_SENT}`, {
       pageTitle: PageTitle.EMAIL_SENT,
       requestState: state,
     });
@@ -144,9 +144,9 @@ router.post(
     (res) =>
       res.redirect(
         303,
-        addReturnUrlToPath(
-          Routes.SET_PASSWORD_COMPLETE,
-          res.locals.queryParams.returnUrl,
+        addQueryParamsToPath(
+          `${Routes.SET_PASSWORD}${Routes.COMPLETE}`,
+          res.locals.queryParams,
         ),
       ),
   ),

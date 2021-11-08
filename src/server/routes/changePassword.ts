@@ -9,7 +9,7 @@ import {
   setPasswordTokenController,
 } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
-import { addReturnUrlToPath } from '@/server/lib/queryParams';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 const router = Router();
 
@@ -33,20 +33,20 @@ router.post(
     (res) =>
       res.redirect(
         303,
-        addReturnUrlToPath(
-          Routes.CHANGE_PASSWORD_COMPLETE,
-          res.locals.queryParams.returnUrl,
+        addQueryParamsToPath(
+          `${Routes.PASSWORD}${Routes.RESET_CONFIRMATION}`,
+          res.locals.queryParams,
         ),
       ),
   ),
 );
 
 router.get(
-  Routes.CHANGE_PASSWORD_COMPLETE,
+  `${Routes.PASSWORD}${Routes.RESET_CONFIRMATION}`,
   (req: Request, res: ResponseWithRequestState) => {
     const email = readEmailCookie(req);
 
-    const html = renderer(Routes.CHANGE_PASSWORD_COMPLETE, {
+    const html = renderer(`${Routes.PASSWORD}${Routes.RESET_CONFIRMATION}`, {
       requestState: deepmerge(res.locals, {
         pageData: {
           email,

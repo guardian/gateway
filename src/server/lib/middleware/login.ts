@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request } from 'express';
 import { joinUrl } from '@guardian/libs';
 import { read } from '@/server/lib/idapi/auth';
 import { IDAPIAuthRedirect, IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
@@ -8,40 +8,46 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/logger';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { ResponseWithRequestState } from '@/server/models/Express';
 
 const profileUrl = getProfileUrl();
 
 export const loginMiddleware = async (
   req: Request,
-  res: Response,
+  res: ResponseWithRequestState,
   next: NextFunction,
 ) => {
   const config = getConfiguration();
   const LOGIN_REDIRECT_URL = config.signInPageUrl;
 
-  const FATAL_ERROR_REDIRECT_URL = `${LOGIN_REDIRECT_URL}?error=signin-error-bad-request`;
-
-  const generateRedirectUrl = (url: string): string => {
-    const divider = url.includes('?') ? '&' : '?';
-    return `${url}${divider}returnUrl=${encodeURIComponent(
-      joinUrl(profileUrl, req.path),
-    )}`;
-  };
-
   const redirectAuth = (auth: IDAPIAuthRedirect) => {
     if (auth.redirect) {
-      const redirect = generateRedirectUrl(auth.redirect.url);
+      const redirect = addQueryParamsToPath(auth.redirect.url, {
+        ...res.locals.queryParams,
+        returnUrl: joinUrl(profileUrl, req.path),
+      });
       return res.redirect(redirect);
     }
 
-    return res.redirect(generateRedirectUrl(LOGIN_REDIRECT_URL));
+    return res.redirect(
+      addQueryParamsToPath(LOGIN_REDIRECT_URL, {
+        ...res.locals.queryParams,
+        returnUrl: joinUrl(profileUrl, req.path),
+      }),
+    );
   };
 
   const sc_gu_u = req.cookies.SC_GU_U;
   const sc_gu_la = req.cookies.SC_GU_LA;
 
   if (!sc_gu_u || !sc_gu_la) {
-    res.redirect(generateRedirectUrl(LOGIN_REDIRECT_URL));
+    res.redirect(
+      addQueryParamsToPath(LOGIN_REDIRECT_URL, {
+        ...res.locals.queryParams,
+        returnUrl: joinUrl(profileUrl, req.path),
+      }),
+    );
     return;
   }
 
@@ -68,6 +74,17 @@ export const loginMiddleware = async (
   } catch (e) {
     logger.error('loginMiddlewareFailure', e);
     trackMetric(Metrics.LOGIN_MIDDLEWARE_FAILURE);
-    res.redirect(generateRedirectUrl(FATAL_ERROR_REDIRECT_URL));
+    res.redirect(
+      addQueryParamsToPath(
+        LOGIN_REDIRECT_URL,
+        {
+          ...res.locals.queryParams,
+          returnUrl: joinUrl(profileUrl, req.path),
+        },
+        {
+          error: 'signin-error-bad-request',
+        },
+      ),
+    );
   }
 };
