@@ -14,6 +14,7 @@ interface Props {
   // TODO: fully implement recaptcha, it currently only displays terms
   useRecaptcha?: boolean;
   hasGuardianTerms?: boolean;
+  onSubmitOverride?: React.FormEventHandler<HTMLFormElement>;
 }
 
 const formStyles = css`
@@ -64,11 +65,17 @@ export const MainForm = ({
   submitButtonHalfWidth,
   useRecaptcha,
   hasGuardianTerms,
+  onSubmitOverride,
 }: PropsWithChildren<Props>) => {
   const hasTerms = !!(useRecaptcha || hasGuardianTerms);
 
   return (
-    <form css={formStyles} method="post" action={formAction}>
+    <form
+      css={formStyles}
+      method="post"
+      action={formAction}
+      onSubmit={onSubmitOverride}
+    >
       <CsrfFormField />
       <div css={inputStyles(hasTerms)}>{children}</div>
       {hasGuardianTerms && <GuardianTerms />}
