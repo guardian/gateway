@@ -1,14 +1,9 @@
 import React from 'react';
-import { PageBox } from '@/client/components/PageBox';
-import { PageHeader } from '@/client/components/PageHeader';
-import { PageBodyText } from '@/client/components/PageBodyText';
-import { PageBody } from '@/client/components/PageBody';
-import { linkButton } from '@/client/styles/Shared';
-import { MainOld } from '@/client/layouts/MainOld';
-import { Header } from '@/client/components/Header';
-import { Footer } from '@/client/components/Footer';
-import { SvgArrowRightStraight } from '@guardian/src-icons';
 import { ExternalLinkButton } from '@/client/components/ExternalLink';
+import { MainLayout } from '@/client/layouts/Main';
+import { MainBodyText } from '@/client/components/MainBodyText';
+import { css } from '@emotion/react';
+import { from } from '@guardian/src-foundations/mq';
 
 type ChangePasswordCompleteProps = {
   headerText: string;
@@ -16,40 +11,35 @@ type ChangePasswordCompleteProps = {
   returnUrl?: string;
 };
 
+const buttonStyles = css`
+  margin-top: 22px;
+  justify-content: center;
+  width: 100%;
+
+  ${from.tablet} {
+    width: 50%;
+  }
+`;
+
 export const ChangePasswordComplete = ({
   headerText,
   email,
   returnUrl = 'https://www.theguardian.com/uk',
 }: ChangePasswordCompleteProps) => {
   return (
-    <>
-      <Header />
-      <MainOld subTitle="Sign in">
-        <PageBox>
-          <PageHeader>{headerText}</PageHeader>
-          <PageBody>
-            {email ? (
-              <PageBodyText>
-                The password for <b>{email}</b> was successfully updated.
-              </PageBodyText>
-            ) : (
-              <PageBodyText>
-                The password for your account was successfully updated.
-              </PageBodyText>
-            )}
-          </PageBody>
-          <ExternalLinkButton
-            css={linkButton}
-            iconSide="right"
-            nudgeIcon={true}
-            icon={<SvgArrowRightStraight />}
-            href={returnUrl}
-          >
-            Continue to the Guardian
-          </ExternalLinkButton>
-        </PageBox>
-      </MainOld>
-      <Footer />
-    </>
+    <MainLayout pageTitle={headerText}>
+      {email ? (
+        <MainBodyText noMargin>
+          The password for <b>{email}</b> was successfully updated.
+        </MainBodyText>
+      ) : (
+        <MainBodyText noMargin>
+          The password for your account was successfully updated.
+        </MainBodyText>
+      )}
+      <ExternalLinkButton css={buttonStyles} href={returnUrl}>
+        Continue to the Guardian
+      </ExternalLinkButton>
+    </MainLayout>
   );
 };
