@@ -13,11 +13,12 @@ import * as qs from 'query-string';
 import CommunicationsPage from '../../support/pages/onboarding/communications_page';
 
 describe('Welcome and set password page', () => {
+  const email = 'someone@theguardian.com';
   const checkTokenSuccessResponse = (
     expiryTimestamp: number | null = null,
   ) => ({
     user: {
-      primaryEmailAddress: 'test@example.com',
+      primaryEmailAddress: email,
     },
     expiryTimestamp,
   });
@@ -41,6 +42,27 @@ describe('Welcome and set password page', () => {
       ],
       expiresAt: 1,
     },
+  };
+
+  const setPasswordAndSignIn = () => {
+    cy.mockNext(200, checkTokenSuccessResponse());
+    cy.intercept({
+      method: 'GET',
+      url: 'https://api.pwnedpasswords.com/range/*',
+    }).as('breachCheck');
+    cy.mockNext(200, fakeCookieSuccessResponse);
+    cy.mockAll(
+      200,
+      authRedirectSignInRecentlyEmailValidated,
+      AUTH_REDIRECT_ENDPOINT,
+    );
+    cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
+    cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
+    setAuthCookies();
+    cy.visit(`/welcome/fake_token`);
+    cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
+    cy.wait('@breachCheck');
+    cy.get('button[type="submit"]').click();
   };
 
   beforeEach(() => {
@@ -97,27 +119,17 @@ describe('Welcome and set password page', () => {
   });
 
   // successful token, set password page is displayed, redirect to consents flow if valid password
-  context('An valid token is used and set password page is displayed', () => {
+  context('A valid token is used and set password page is displayed', () => {
     it('redirects to onboarding flow if a valid password is set', () => {
-      cy.mockNext(200, checkTokenSuccessResponse());
-      cy.intercept({
-        method: 'GET',
-        url: 'https://api.pwnedpasswords.com/range/*',
-      }).as('breachCheck');
-      cy.mockNext(200, fakeCookieSuccessResponse);
-      cy.mockAll(
-        200,
-        authRedirectSignInRecentlyEmailValidated,
-        AUTH_REDIRECT_ENDPOINT,
-      );
-      cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
-      cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
-      setAuthCookies();
+      setPasswordAndSignIn();
+      cy.contains('Thank you for registering');
+    });
 
-      cy.visit(`/welcome/fake_token`);
-      cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
-      cy.wait('@breachCheck');
-      cy.get('button[type="submit"]').click();
+    it('shows a different message if the user has set a password and then clicked the back button', () => {
+      setPasswordAndSignIn();
+      cy.go('back');
+      cy.contains(`Password already set for ${email}`);
+      cy.contains('Continue').click();
       cy.contains('Thank you for registering');
     });
 

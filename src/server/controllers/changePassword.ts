@@ -15,7 +15,10 @@ import { ChangePasswordErrors } from '@/shared/model/Errors';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
-import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
+import {
+  readEncryptedStateCookie,
+  setEncryptedStateCookie,
+} from '@/server/lib/encryptedStateCookie';
 import { ApiError } from '@/server/models/Error';
 
 const validatePasswordField = (password: string): Array<FieldError> => {
@@ -72,6 +75,23 @@ export const checkResetPasswordTokenController = (
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
+      if (setPasswordPagePath === Routes.WELCOME) {
+        const { email, passwordSetOnWelcomePage } =
+          readEncryptedStateCookie(req) ?? {};
+        if (passwordSetOnWelcomePage) {
+          state = deepmerge(state, {
+            pageData: {
+              email,
+            },
+          });
+          return res.type('html').send(
+            renderer(`${resendEmailPagePath}${Routes.COMPLETE}`, {
+              requestState: state,
+              pageTitle: resendEmailPageTitle,
+            }),
+          );
+        }
+      }
       return res.type('html').send(
         renderer(`${resendEmailPagePath}${Routes.RESEND}`, {
           requestState: state,
@@ -126,6 +146,16 @@ export const setPasswordTokenController = (
       const cookies = await changePassword(password, token, req.ip);
 
       setIDAPICookies(res, cookies);
+
+      // if the user navigates back to the welcome page after they have set a password, this
+      // ensures we show them a custom error page rather than the link expired page
+      if (setPasswordPath === Routes.WELCOME) {
+        const currentState = readEncryptedStateCookie(req);
+        setEncryptedStateCookie(res, {
+          ...currentState,
+          passwordSetOnWelcomePage: true,
+        });
+      }
 
       // we need to track both of these cloudwatch metrics as two
       // separate metrics at this point as the changePassword endpoint
