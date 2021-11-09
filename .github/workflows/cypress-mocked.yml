@@ -25,6 +25,10 @@ jobs:
           CYPRESS_SIGN_IN_PAGE_URL: https://profile.code.dev-theguardian.com/signin
           IS_HTTPS: false
           APP_SECRET: devsecret
+          OKTA_DOMAIN: http://localhost:9000
+          OKTA_CUSTOM_OAUTH_SERVER: customauthserverid
+          OKTA_CLIENT_ID: abc123
+          OKTA_CLIENT_SECRET: xyz789
           CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.CYPRESS_MAILOSAUR_API_KEY }}
           CYPRESS_MAILOSAUR_SERVER_ID: ${{ secrets.CYPRESS_MAILOSAUR_SERVER_ID }}
           # These are public test keys provided by Google for testing.
