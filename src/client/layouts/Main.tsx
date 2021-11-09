@@ -97,6 +97,27 @@ const bodyStyles = (hasTitleOrSummary = false) => css`
   `}
 `;
 
+export const buttonStyles = ({ hasTerms = false, halfWidth = false }) => css`
+  margin-top: 22px;
+  justify-content: center;
+  width: 100%;
+
+  ${from.tablet} {
+    ${halfWidth
+      ? css`
+          width: 50%;
+        `
+      : css`
+          width: 100%;
+        `}
+  }
+
+  ${hasTerms &&
+  css`
+    margin-top: 16px;
+  `}
+`;
+
 export const MainLayout = ({
   children,
   pageTitle,

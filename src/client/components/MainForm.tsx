@@ -4,7 +4,7 @@ import { Button } from '@guardian/src-button';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { GuardianTerms, RecaptchaTerms } from '@/client/components/Terms';
 import { space } from '@guardian/src-foundations';
-import { from } from '@guardian/src-foundations/mq';
+import { buttonStyles } from '@/client/layouts/Main';
 
 interface Props {
   formAction: string;
@@ -25,27 +25,6 @@ const inputStyles = (hasTerms = false) => css`
   ${hasTerms &&
   css`
     margin-bottom: ${space[2]}px;
-  `}
-`;
-
-const submitButtonStyles = ({ hasTerms = false, halfWidth = false }) => css`
-  margin-top: 22px;
-  justify-content: center;
-  width: 100%;
-
-  ${from.tablet} {
-    ${halfWidth
-      ? css`
-          width: 50%;
-        `
-      : css`
-          width: 100%;
-        `}
-  }
-
-  ${hasTerms &&
-  css`
-    margin-top: 16px;
   `}
 `;
 
@@ -81,7 +60,7 @@ export const MainForm = ({
       {hasGuardianTerms && <GuardianTerms />}
       {useRecaptcha && <RecaptchaTerms />}
       <Button
-        css={submitButtonStyles({ hasTerms, halfWidth: submitButtonHalfWidth })}
+        css={buttonStyles({ hasTerms, halfWidth: submitButtonHalfWidth })}
         type="submit"
         priority={submitButtonPriority}
         data-cy="main-form-submit-button"

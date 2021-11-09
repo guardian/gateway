@@ -11,13 +11,20 @@ export default {
 } as Meta;
 
 export const LoggedIn = () => (
-  <ResendEmailVerification
-    email="example@domain.com"
-    successText="Here is some example success text"
-  />
+  <ResendEmailVerification email="example@domain.com" />
 );
 LoggedIn.story = {
-  name: 'when logged in',
+  name: 'when logged in without success',
+};
+
+export const LoggedInSuccess = () => (
+  <ResendEmailVerification
+    email="example@domain.com"
+    successText="Email Sent. Check your inbox."
+  />
+);
+LoggedInSuccess.story = {
+  name: 'when logged in with success',
 };
 
 export const LoggedOut = () => (

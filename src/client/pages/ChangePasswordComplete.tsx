@@ -1,25 +1,13 @@
 import React from 'react';
 import { ExternalLinkButton } from '@/client/components/ExternalLink';
-import { MainLayout } from '@/client/layouts/Main';
+import { buttonStyles, MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
-import { css } from '@emotion/react';
-import { from } from '@guardian/src-foundations/mq';
 
 type ChangePasswordCompleteProps = {
   headerText: string;
   email?: string;
   returnUrl?: string;
 };
-
-const buttonStyles = css`
-  margin-top: 22px;
-  justify-content: center;
-  width: 100%;
-
-  ${from.tablet} {
-    width: 50%;
-  }
-`;
 
 export const ChangePasswordComplete = ({
   headerText,
@@ -37,7 +25,10 @@ export const ChangePasswordComplete = ({
           The password for your account was successfully updated.
         </MainBodyText>
       )}
-      <ExternalLinkButton css={buttonStyles} href={returnUrl}>
+      <ExternalLinkButton
+        css={buttonStyles({ halfWidth: true })}
+        href={returnUrl}
+      >
         Continue to the Guardian
       </ExternalLinkButton>
     </MainLayout>
