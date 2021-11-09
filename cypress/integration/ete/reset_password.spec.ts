@@ -38,7 +38,7 @@ describe('Password reset flow', () => {
           cy.visit(`/reset-password/${token}`);
           cy.get('input[name=password]').type('0298a96c-1028!@#');
           cy.wait('@breachCheck');
-          cy.get('[data-cy="change-password-button"]').click();
+          cy.get('[data-cy="main-form-submit-button"]').click();
           cy.contains('Password updated');
           cy.contains(existing.email.toLowerCase());
           cy.mailosaurDeleteMessage(id);
