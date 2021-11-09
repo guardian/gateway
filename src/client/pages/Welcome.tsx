@@ -9,14 +9,30 @@ import {
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { text } from '@/client/styles/Consents';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
+import { LinkButton } from '@guardian/src-button';
+import { Routes } from '@/shared/model/Routes';
+import { SvgArrowRightStraight } from '@guardian/src-icons';
+import { css } from '@emotion/react';
+import { space } from '@guardian/src-foundations';
 
 type Props = {
   submitUrl: string;
   email?: string;
   fieldErrors: FieldError[];
+  passwordSet?: boolean;
 };
 
-export const Welcome = ({ submitUrl, email, fieldErrors }: Props) => {
+const linkButton = css`
+  width: 150px;
+  margin-top: ${space[3]}px;
+`;
+
+export const Welcome = ({
+  submitUrl,
+  email,
+  fieldErrors,
+  passwordSet = false,
+}: Props) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
 
   return (
@@ -28,15 +44,32 @@ export const Welcome = ({ submitUrl, email, fieldErrors }: Props) => {
     >
       <ConsentsContent>
         <p css={[text, autoRow()]}>
-          Please create a password for {email || 'your new account'}
+          {passwordSet
+            ? 'Password already set for '
+            : 'Please create a password for '}{' '}
+          {email || 'your new account'}
         </p>
-        <PasswordForm
-          submitUrl={submitUrl}
-          fieldErrors={fieldErrors}
-          labelText="Password"
-          submitButtonText="Create password"
-          gridAutoRow={autoRow}
-        />
+        {passwordSet ? (
+          <div css={autoRow()}>
+            <LinkButton
+              css={linkButton}
+              href={`${Routes.CONSENTS}`}
+              priority="primary"
+              icon={<SvgArrowRightStraight />}
+              iconSide="right"
+            >
+              Continue
+            </LinkButton>
+          </div>
+        ) : (
+          <PasswordForm
+            submitUrl={submitUrl}
+            fieldErrors={fieldErrors}
+            labelText="Password"
+            submitButtonText="Create password"
+            gridAutoRow={autoRow}
+          />
+        )}
       </ConsentsContent>
     </ConsentsLayout>
   );
