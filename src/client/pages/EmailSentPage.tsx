@@ -23,6 +23,7 @@ export const EmailSentPage = () => {
       queryString={queryString}
       showSuccess={!!emailSentPage}
       errorMessage={error}
+      noAccountInfoBox
     />
   );
 };

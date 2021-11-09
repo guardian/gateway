@@ -17,6 +17,7 @@ type Props = {
   queryString?: string;
   showSuccess?: boolean;
   errorMessage?: string;
+  noAccountInfoBox?: boolean;
 };
 
 export const EmailSent = ({
@@ -26,6 +27,7 @@ export const EmailSent = ({
   queryString,
   showSuccess,
   errorMessage,
+  noAccountInfoBox,
 }: Props) => {
   const [hasJS, setHasJS] = useState<boolean>(false);
 
@@ -75,24 +77,26 @@ export const EmailSent = ({
           >
             <EmailInput defaultValue={email} hidden hideLabel />
           </MainForm>
-          <InfoSummary
-            cssOverrides={belowFormMarginTopSpacingStyle}
-            message="If you don’t receive an email within 2 minutes you may not have an account."
-            context={
-              <>
-                Don’t have an account?{' '}
-                <Link subdued href={Routes.REGISTRATION}>
-                  Register for free
-                </Link>
-                <br />
-                If you are having trouble, please contact our customer service
-                team at{' '}
-                <Link subdued href="mailto:userhelp@theguardian.com">
-                  userhelp@guardian.com
-                </Link>
-              </>
-            }
-          />
+          {noAccountInfoBox && (
+            <InfoSummary
+              cssOverrides={belowFormMarginTopSpacingStyle}
+              message="If you don’t receive an email within 2 minutes you may not have an account."
+              context={
+                <>
+                  Don’t have an account?{' '}
+                  <Link subdued href={Routes.REGISTRATION}>
+                    Register for free
+                  </Link>
+                  <br />
+                  If you are having trouble, please contact our customer service
+                  team at{' '}
+                  <Link subdued href="mailto:userhelp@theguardian.com">
+                    userhelp@guardian.com
+                  </Link>
+                </>
+              }
+            />
+          )}
         </>
       )}
     </MainLayout>

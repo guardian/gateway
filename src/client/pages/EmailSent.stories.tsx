@@ -32,3 +32,15 @@ export const WithEmailResend = () => (
 WithEmailResend.story = {
   name: 'with email and resend',
 };
+
+export const WithEmailResendNoAccount = () => (
+  <EmailSent
+    previousPage="/reset"
+    email="example@theguardian.com"
+    resendEmailAction="#"
+    noAccountInfoBox
+  />
+);
+WithEmailResend.story = {
+  name: 'with email, resend, and no account box',
+};
