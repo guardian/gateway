@@ -70,7 +70,7 @@ export const MainGrid = ({
         <section css={[gridItem(gridSpanDefinition), topMargin]}>
           {errorMessage && (
             <ErrorSummary
-              error={errorMessage}
+              message={errorMessage}
               cssOverrides={errorSummaryMargin}
               errorReportUrl={errorReportUrl}
               context={errorContext}

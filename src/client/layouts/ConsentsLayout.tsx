@@ -18,6 +18,7 @@ import { ConsentsHeader } from '@/client/components/ConsentsHeader';
 import { Routes } from '@/shared/model/Routes';
 import { onboardingFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 interface ConsentsLayoutProps {
   children?: React.ReactNode;
@@ -80,11 +81,14 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
 }) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData = {}, globalMessage: { error, success } = {} } = clientState;
-  const { page = '', previousPage, returnUrl } = pageData;
-  const returnUrlQuery = returnUrl
-    ? `?returnUrl=${encodeURIComponent(returnUrl)}`
-    : '';
+  const {
+    pageData = {},
+    globalMessage: { error, success } = {},
+    queryParams,
+  } = clientState;
+  const { page = '', previousPage } = pageData;
+  const queryString = addQueryParamsToPath('', queryParams);
+
   const optionalBgColor =
     bgColor &&
     css`
@@ -100,7 +104,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
         <ConsentsSubHeader autoRow={autoRow} title={title} current={current} />
         <form
           css={form}
-          action={`${Routes.CONSENTS}/${page}${returnUrlQuery}`}
+          action={`${Routes.CONSENTS}/${page}${queryString}`}
           method="post"
           onSubmit={({ target: form }) => {
             onboardingFormSubmitOphanTracking(
@@ -132,7 +136,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
                 {previousPage && (
                   <LinkButton
                     css={linkButton}
-                    href={`${Routes.CONSENTS}/${previousPage}${returnUrlQuery}`}
+                    href={`${Routes.CONSENTS}/${previousPage}${queryString}`}
                     priority="subdued"
                   >
                     Go back

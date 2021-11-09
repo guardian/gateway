@@ -403,7 +403,6 @@ describe('Onboarding flow', () => {
     });
 
     it('on idapi error it redirects to the sign in page with the error flag set', () => {
-      const signInUrl = Cypress.env('SIGN_IN_PAGE_URL');
       setAuthCookies();
       cy.mockAll(502, 'gateway error', AUTH_REDIRECT_ENDPOINT);
       cy.request({
@@ -412,7 +411,7 @@ describe('Onboarding flow', () => {
       }).then((res) => {
         expect(res.status).to.eq(302);
         expect(res.redirectedToUrl).to.include(
-          `${signInUrl}?error=signin-error-bad-request`,
+          `error=signin-error-bad-request`,
         );
       });
     });

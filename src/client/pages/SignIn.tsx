@@ -22,6 +22,7 @@ import { EmailInput } from '@/client/components/EmailInput';
 
 export type SignInProps = {
   returnUrl?: string;
+  queryString?: string;
   email?: string;
   error?: string;
   oauthBaseUrl: string;
@@ -125,56 +126,47 @@ export const SignIn = ({
   email,
   error,
   oauthBaseUrl,
-}: SignInProps) => {
-  const params = new URLSearchParams();
-  if (returnUrl) params.append('returnUrl', returnUrl);
-  const returnUrlQuery = params.toString();
-
-  return (
-    <>
-      <Header />
-      <Nav
-        tabs={[
-          {
-            displayText: PageTitle.SIGN_IN,
-            linkTo: Routes.SIGN_IN,
-            isActive: true,
-          },
-          {
-            displayText: PageTitle.REGISTRATION,
-            linkTo: Routes.REGISTRATION,
-            isActive: false,
-          },
-        ]}
-      />
-      <MainGrid
-        gridSpanDefinition={gridItemSignInAndRegistration}
-        errorOverride={error}
-        errorContext={getErrorContext(error)}
-      >
-        <form method="post" action={`${Routes.SIGN_IN}?${returnUrlQuery}`}>
-          <CsrfFormField />
-          <EmailInput defaultValue={email} />
-          <div css={passwordInput}>
-            <PasswordInput label="Password" />
-          </div>
-          <Links>
-            <Link
-              subdued={true}
-              href={Routes.RESET}
-              cssOverrides={resetPassword}
-            >
-              Reset password
-            </Link>
-          </Links>
-          <Terms />
-          <Button css={signInButton} type="submit" data-cy="sign-in-button">
-            Sign in
-          </Button>
-        </form>
-        {showSocialButtons(error, returnUrl, oauthBaseUrl)}
-      </MainGrid>
-      <Footer />
-    </>
-  );
-};
+  queryString,
+}: SignInProps) => (
+  <>
+    <Header />
+    <Nav
+      tabs={[
+        {
+          displayText: PageTitle.SIGN_IN,
+          linkTo: Routes.SIGN_IN,
+          isActive: true,
+        },
+        {
+          displayText: PageTitle.REGISTRATION,
+          linkTo: Routes.REGISTRATION,
+          isActive: false,
+        },
+      ]}
+    />
+    <MainGrid
+      gridSpanDefinition={gridItemSignInAndRegistration}
+      errorOverride={error}
+      errorContext={getErrorContext(error)}
+    >
+      <form method="post" action={`${Routes.SIGN_IN}${queryString}`}>
+        <CsrfFormField />
+        <EmailInput defaultValue={email} />
+        <div css={passwordInput}>
+          <PasswordInput label="Password" />
+        </div>
+        <Links>
+          <Link subdued={true} href={Routes.RESET} cssOverrides={resetPassword}>
+            Reset password
+          </Link>
+        </Links>
+        <Terms />
+        <Button css={signInButton} type="submit" data-cy="sign-in-button">
+          Sign in
+        </Button>
+      </form>
+      {showSocialButtons(error, returnUrl, oauthBaseUrl)}
+    </MainGrid>
+    <Footer />
+  </>
+);

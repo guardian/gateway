@@ -21,8 +21,6 @@ const getRequestState = (req: Request): RequestState => {
     pageData: {
       geolocation: getGeolocationRegion(req),
       returnUrl: queryParams.returnUrl,
-      ref: queryParams.ref,
-      refViewId: queryParams.refViewId,
     },
     globalMessage: {},
     csrf: {

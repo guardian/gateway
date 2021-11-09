@@ -9,7 +9,7 @@ import {
   setPasswordTokenController,
 } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
-import { addReturnUrlToPath } from '@/server/lib/queryParams';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 const router = Router();
 
@@ -33,9 +33,9 @@ router.post(
     (res) =>
       res.redirect(
         303,
-        addReturnUrlToPath(
+        addQueryParamsToPath(
           `${Routes.PASSWORD}${Routes.RESET_CONFIRMATION}`,
-          res.locals.queryParams.returnUrl,
+          res.locals.queryParams,
         ),
       ),
   ),

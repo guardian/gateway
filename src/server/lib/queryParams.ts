@@ -70,13 +70,3 @@ export const addReturnUrlToPath = (path: string, returnUrl: string): string => {
   const divider = path.includes('?') ? '&' : '?';
   return `${path}${divider}returnUrl=${encodeURIComponent(returnUrl)}`;
 };
-
-export const addRefViewIdToPath = (path: string, refViewId: string) => {
-  const divider = path.includes('?') ? '&' : '?';
-  return `${path}${divider}refViewId=${encodeURIComponent(refViewId)}`;
-};
-
-export const addRefToPath = (path: string, ref: string) => {
-  const divider = path.includes('?') ? '&' : '?';
-  return `${path}${divider}ref=${encodeURIComponent(ref)}`;
-};
