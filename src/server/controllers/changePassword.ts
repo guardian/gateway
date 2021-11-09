@@ -151,10 +151,10 @@ export const setPasswordTokenController = (
       // ensures we show them a custom error page rather than the link expired page
       if (setPasswordPath === Routes.WELCOME) {
         const currentState = readEncryptedStateCookie(req);
-        const newState = currentState
-          ? deepmerge(currentState, { passwordSetOnWelcomePage: true })
-          : {};
-        setEncryptedStateCookie(res, newState);
+        setEncryptedStateCookie(res, {
+          ...currentState,
+          passwordSetOnWelcomePage: true,
+        });
       }
 
       // we need to track both of these cloudwatch metrics as two
