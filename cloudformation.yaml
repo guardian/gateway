@@ -20,6 +20,9 @@ Parameters:
   OktaCustomOAuthServer:
     Description: The ID of the custom Okta OAuth Authorization server to use
     Type: AWS::SSM::Parameter::Value<String>
+  OauthBaseUrl:
+    Description: The base url for social sign-in with facebook, google or apple
+    Type: AWS::SSM::Parameter::Value<String>
   CertificateArn:
     Description: ARN of certificate for loadbalancer use.
     Type: String
@@ -195,6 +198,9 @@ Resources:
                   APP_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/appSecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   OKTA_CLIENT_ID=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaClientId' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   OKTA_CLIENT_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaClientSecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+                  GOOGLE_RECAPTCHA_SITE_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/recaptcha-site-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
+                  GOOGLE_RECAPTCHA_SECRET_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/recaptcha-secret-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
+                  ENCRYPTION_SECRET_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/encryption-secret-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
 
                   then break
                 fi
@@ -217,6 +223,7 @@ Resources:
             Environment=IDAPI_CLIENT_ACCESS_TOKEN=$IDAPI_CLIENT_ACCESS_TOKEN
             Environment=IDAPI_BASE_URL=${IdapiBaseUrl}
             Environment=SIGN_IN_PAGE_URL=${SignInPageUrl}
+            Environment=OAUTH_BASE_URL=${OauthBaseUrl}
             Environment=BASE_URI=${BaseUri}
             Environment=PLAY_SESSION_COOKIE_SECRET=$PLAY_SESSION_COOKIE_SECRET
             Environment=DEFAULT_RETURN_URI=${DefaultReturnUri}
@@ -227,6 +234,9 @@ Resources:
             Environment=OKTA_CUSTOM_OAUTH_SERVER=${OktaCustomOAuthServer}
             Environment=OKTA_CLIENT_ID=$OKTA_CLIENT_ID
             Environment=OKTA_CLIENT_SECRET=$OKTA_CLIENT_SECRET
+            Environment=GOOGLE_RECAPTCHA_SITE_KEY=$GOOGLE_RECAPTCHA_SITE_KEY
+            Environment=GOOGLE_RECAPTCHA_SECRET_KEY=$GOOGLE_RECAPTCHA_SECRET_KEY
+            Environment=ENCRYPTION_SECRET_KEY=$ENCRYPTION_SECRET_KEY
 
             [Install]
             WantedBy=multi-user.target

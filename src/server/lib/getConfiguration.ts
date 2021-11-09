@@ -100,6 +100,26 @@ export const getConfiguration = (): Configuration => {
     'OKTA_CLIENT_SECRET is missing',
   );
 
+  const googleRecaptchaSiteKey = getOrThrow(
+    process.env.GOOGLE_RECAPTCHA_SITE_KEY,
+    'Google Recaptcha site key is missing',
+  );
+
+  const googleRecaptchaSecretKey = getOrThrow(
+    process.env.GOOGLE_RECAPTCHA_SECRET_KEY,
+    'Google Recaptcha secret key is missing',
+  );
+
+  const encryptionSecretKey = getOrThrow(
+    process.env.ENCRYPTION_SECRET_KEY,
+    'ENCRYPTION_SECRET_KEY is missing',
+  );
+
+  const oauthBaseUrl = getOrThrow(
+    process.env.OAUTH_BASE_URL,
+    'OAuth Base URL missing.',
+  );
+
   return {
     port: +port,
     idapiBaseUrl,
@@ -121,5 +141,11 @@ export const getConfiguration = (): Configuration => {
     oktaCustomOAuthServer,
     oktaClientId,
     oktaClientSecret,
+    googleRecaptcha: {
+      siteKey: googleRecaptchaSiteKey,
+      secretKey: googleRecaptchaSecretKey,
+    },
+    encryptionSecretKey,
+    oauthBaseUrl,
   };
 };

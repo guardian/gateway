@@ -29,7 +29,7 @@ import {
 import { VERIFY_EMAIL } from '@/shared/model/Success';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { consentsPageMetric } from '@/server/models/Metrics';
-import { addReturnUrlToPath } from '@/server/lib/queryParams';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import {
   NewsletterMap,
@@ -43,7 +43,7 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { Configuration } from '@/server/models/Configuration';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { logger } from '@/server/lib/logger';
-import { RequestError } from '@/shared/lib/error';
+import { ApiError } from '@/server/models/Error';
 
 const router = Router();
 
@@ -239,10 +239,11 @@ export const consentPages: ConsentPage[] = [
 ];
 
 router.get(Routes.CONSENTS, loginMiddleware, (_: Request, res: Response) => {
-  let url = `${Routes.CONSENTS}/${consentPages[0].page}`;
-  if (res.locals?.queryParams?.returnUrl) {
-    url = addReturnUrlToPath(url, res.locals.queryParams.returnUrl);
-  }
+  const url = addQueryParamsToPath(
+    `${Routes.CONSENTS}/${consentPages[0].page}`,
+    res.locals.queryParams,
+  );
+
   res.redirect(303, url);
 });
 
@@ -503,7 +504,10 @@ router.get(
       } as RequestState);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      const { status: errorStatus, message } = error as RequestError;
+
+      const { message, status: errorStatus } =
+        error instanceof ApiError ? error : new ApiError();
+
       status = errorStatus;
       state = deepmerge(state, {
         globalMessage: {
@@ -555,14 +559,18 @@ router.post(
 
       trackMetric(consentsPageMetric(page, 'Post', true));
 
-      let url = joinUrl(Routes.CONSENTS, consentPages[pageIndex + 1].page);
-      if (state?.queryParams?.returnUrl) {
-        url = addReturnUrlToPath(url, state.queryParams.returnUrl);
-      }
+      const url = addQueryParamsToPath(
+        joinUrl(Routes.CONSENTS, consentPages[pageIndex + 1].page),
+        state.queryParams,
+      );
+
       return res.redirect(303, url);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      const { status: errorStatus, message } = error as RequestError;
+
+      const { message, status: errorStatus } =
+        error instanceof ApiError ? error : new ApiError();
+
       status = errorStatus;
       state = deepmerge(state, {
         globalMessage: {

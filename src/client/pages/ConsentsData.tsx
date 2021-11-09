@@ -10,7 +10,6 @@ import {
 } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { heading, text, headingMarginSpace6 } from '@/client/styles/Consents';
-import { Link } from '@guardian/src-link';
 import { Checkbox, CheckboxGroup } from '@guardian/src-checkbox';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import {
@@ -18,6 +17,7 @@ import {
   CONSENTS_MAIN_COLOR,
 } from '@/client/layouts/shared/Consents';
 import { Consents } from '@/shared/model/Consent';
+import { ExternalLink } from '@/client/components/ExternalLink';
 
 type ConsentsDataProps = {
   consented?: boolean;
@@ -55,14 +55,13 @@ export const ConsentsData = ({ consented, description }: ConsentsDataProps) => {
             team who are dedicated to keeping any data we collect safe and
             secure. You can find out more about how the Guardian aims to
             safeguard users data by going to the{' '}
-            <Link
+            <ExternalLink
               href={Locations.PRIVACY}
               subdued={true}
               target="_blank"
-              rel="noopener noreferrer"
             >
               Privacy
-            </Link>{' '}
+            </ExternalLink>{' '}
             section of the website.
           </p>
           <h2 css={[heading, headingMarginSpace6, autoRow()]}>

@@ -36,7 +36,7 @@ export const validateReturnUrl = (returnUrl = ''): string => {
 
 export const validateRefUrl = (ref = ''): string | undefined => {
   try {
-    // we decode the returnUrl as we cant know for sure if it's been encoded or not
+    // we decode the ref as we cant know for sure if it's been encoded or not
     // so decode just to be safe
     const url = new URL(decodeURIComponent(ref));
 

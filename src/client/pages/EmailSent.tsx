@@ -9,21 +9,23 @@ import { PageBodyText } from '@/client/components/PageBodyText';
 import { Main } from '@/client/layouts/Main';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
-import { button } from '@/client/styles/Shared';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
+import { button } from '@/client/styles/Shared';
 
 type Props = {
   email?: string;
   previousPage?: string;
   subTitle?: string;
   resendEmailAction?: string;
+  queryString?: string;
 };
 
 export const EmailSent = ({
   email,
   previousPage = '/',
-  subTitle = 'Sign in',
   resendEmailAction,
+  subTitle = 'Sign in',
+  queryString,
 }: Props) => {
   const [hasJS, setHasJS] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -57,7 +59,7 @@ export const EmailSent = ({
             </PageBodyText>
             <PageBodyText>The link is only valid for 30 minutes.</PageBodyText>
             {email && resendEmailAction && hasJS && (
-              <form method="post" action={resendEmailAction}>
+              <form method="post" action={`${resendEmailAction}${queryString}`}>
                 <CsrfFormField />
                 <TextInput
                   label=""

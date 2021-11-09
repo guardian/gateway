@@ -21,11 +21,17 @@ jobs:
           DEFAULT_RETURN_URI: https://m.code.dev-theguardian.com
           CYPRESS_DEFAULT_RETURN_URI: https://m.code.dev-theguardian.com
           SIGN_IN_PAGE_URL: https://profile.code.dev-theguardian.com/signin
+          OAUTH_BASE_URL: https://oauth.code.dev-theguardian.com
           CYPRESS_SIGN_IN_PAGE_URL: https://profile.code.dev-theguardian.com/signin
           IS_HTTPS: false
           APP_SECRET: devsecret
           CYPRESS_MAILOSAUR_API_KEY: ${{ secrets.CYPRESS_MAILOSAUR_API_KEY }}
           CYPRESS_MAILOSAUR_SERVER_ID: ${{ secrets.CYPRESS_MAILOSAUR_SERVER_ID }}
+          # These are public test keys provided by Google for testing.
+          # https://developers.google.com/recaptcha/docs/faq#id-like-to-run-automated-tests-with-recaptcha.-what-should-i-do
+          GOOGLE_RECAPTCHA_SITE_KEY: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
+          GOOGLE_RECAPTCHA_SECRET_KEY: 6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
+          ENCRYPTION_SECRET_KEY: f3d87b231ddd6f50d99e227c5bc9b7cbb649387b321008df412fd73805ac2e32
         with:
           build: yarn build
           start: yarn start, yarn mock-server
@@ -33,4 +39,4 @@ jobs:
           wait-on-timeout: 180
           quiet: true
           browser: chrome
-          spec: cypress/integration/mocked/*.js
+          spec: cypress/integration/mocked/*.ts

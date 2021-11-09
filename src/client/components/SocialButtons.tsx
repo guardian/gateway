@@ -7,27 +7,45 @@ import { SvgAppleBrand } from '@guardian/src-icons';
 import { SvgFacebookBrand } from '@guardian/src-icons';
 import { from } from '@guardian/src-foundations/mq';
 
-type Props = {
-  returnUrl: string;
+type SocialButtonProps = {
+  returnUrl?: string;
+  oauthBaseUrl: string;
+};
+
+const buildUrl = (
+  oauthBaseUrl: string,
+  IdP: string,
+  returnUrl?: string,
+): string => {
+  const socialUrl = new URL(`${oauthBaseUrl}/${IdP}/signin`);
+  if (returnUrl) socialUrl.searchParams.append('returnUrl', returnUrl);
+  return socialUrl.toString();
 };
 
 const containerStyles = css`
   display: flex;
   flex-direction: column;
-  ${from.mobileLandscape} {
+  ${from.tablet} {
     flex-direction: row;
   }
   justify-content: center;
-  margin-top: ${space[12]}px;
-  margin-bottom: ${space[12]}px;
+  margin-top: ${space[5]}px;
+  ${from.mobileMedium} {
+    margin-top: ${space[6]}px;
+  }
+  margin-bottom: 60px;
+  ${from.desktop} {
+    margin-bottom: ${space[24]}px;
+  }
   width: 100%;
 `;
 
 const buttonOverrides = css`
   border-color: ${brand[400]};
-  justify-content: flex-end;
-  ${from.mobileLandscape} {
+  justify-content: center;
+  ${from.tablet} {
     min-width: 145px;
+    flex-grow: 1;
   }
 `;
 
@@ -45,44 +63,49 @@ const Gap = () => (
     css={css`
       width: 0;
       height: ${space[3]}px;
-      ${from.mobileLandscape} {
-        width: ${space[2]}px;
+      ${from.tablet} {
+        width: ${space[3]}px;
         height: 0;
       }
     `}
   ></span>
 );
 
-export const SocialButtons = ({ returnUrl }: Props) => (
-  <div css={containerStyles}>
-    <LinkButton
-      priority="tertiary"
-      cssOverrides={buttonOverrides}
-      icon={<SvgFacebookBrand />}
-      href={`https://oauth.theguardian.com/facebook/signin?returnUrl=${returnUrl}`}
-      data-cy="facebook-sign-in-button"
-    >
-      Facebook
-    </LinkButton>
-    <Gap />
-    <LinkButton
-      priority="tertiary"
-      cssOverrides={[buttonOverrides, iconOverrides]}
-      icon={<SvgGoogleBrand />}
-      href={`https://oauth.theguardian.com/google/signin?returnUrl=${returnUrl}`}
-      data-cy="google-sign-in-button"
-    >
-      Google
-    </LinkButton>
-    <Gap />
-    <LinkButton
-      priority="tertiary"
-      cssOverrides={[buttonOverrides, iconOverrides]}
-      icon={<SvgAppleBrand />}
-      href={`https://oauth.theguardian.com/apple/signin?returnUrl=${returnUrl}`}
-      data-cy="apple-sign-in-button"
-    >
-      Apple
-    </LinkButton>
-  </div>
-);
+export const SocialButtons = ({
+  returnUrl,
+  oauthBaseUrl,
+}: SocialButtonProps) => {
+  return (
+    <div css={containerStyles}>
+      <LinkButton
+        priority="tertiary"
+        cssOverrides={[buttonOverrides, iconOverrides]}
+        icon={<SvgGoogleBrand />}
+        href={buildUrl(oauthBaseUrl, 'google', returnUrl)}
+        data-cy="google-sign-in-button"
+      >
+        Google
+      </LinkButton>
+      <Gap />
+      <LinkButton
+        priority="tertiary"
+        cssOverrides={buttonOverrides}
+        icon={<SvgFacebookBrand />}
+        href={buildUrl(oauthBaseUrl, 'facebook', returnUrl)}
+        data-cy="facebook-sign-in-button"
+      >
+        Facebook
+      </LinkButton>
+      <Gap />
+      <LinkButton
+        priority="tertiary"
+        cssOverrides={[buttonOverrides, iconOverrides]}
+        icon={<SvgAppleBrand />}
+        href={buildUrl(oauthBaseUrl, 'apple', returnUrl)}
+        data-cy="apple-sign-in-button"
+      >
+        Apple
+      </LinkButton>
+    </div>
+  );
+};

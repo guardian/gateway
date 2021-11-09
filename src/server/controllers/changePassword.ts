@@ -15,7 +15,11 @@ import { ChangePasswordErrors } from '@/shared/model/Errors';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
-import { RequestError } from '@/shared/lib/error';
+import {
+  readEncryptedStateCookie,
+  setEncryptedStateCookie,
+} from '@/server/lib/encryptedStateCookie';
+import { ApiError } from '@/server/models/Error';
 
 const validatePasswordField = (password: string): Array<FieldError> => {
   const errors: Array<FieldError> = [];
@@ -46,12 +50,22 @@ export const checkResetPasswordTokenController = (
     const { token } = req.params;
 
     try {
+      const { email, tokenExpiryTimestamp } = await validateToken(
+        token,
+        req.ip,
+      );
+
       state = deepmerge(state, {
         pageData: {
           browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
-          email: await validateToken(token, req.ip),
+          email,
+          tokenExpiryTimestamp,
         },
       });
+
+      // set the encrypted state here, so we can read the email
+      // on the confirmation page
+      setEncryptedStateCookie(res, { email });
 
       const html = renderer(`${setPasswordPagePath}/${token}`, {
         requestState: state,
@@ -61,6 +75,23 @@ export const checkResetPasswordTokenController = (
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
+      if (setPasswordPagePath === Routes.WELCOME) {
+        const { email, passwordSetOnWelcomePage } =
+          readEncryptedStateCookie(req) ?? {};
+        if (passwordSetOnWelcomePage) {
+          state = deepmerge(state, {
+            pageData: {
+              email,
+            },
+          });
+          return res.type('html').send(
+            renderer(`${resendEmailPagePath}${Routes.COMPLETE}`, {
+              requestState: state,
+              pageTitle: resendEmailPageTitle,
+            }),
+          );
+        }
+      }
       return res.type('html').send(
         renderer(`${resendEmailPagePath}${Routes.RESEND}`, {
           requestState: state,
@@ -93,9 +124,15 @@ export const setPasswordTokenController = (
       const fieldErrors = validatePasswordField(password);
 
       if (fieldErrors.length) {
+        const { email, tokenExpiryTimestamp } = await validateToken(
+          token,
+          req.ip,
+        );
+
         state = deepmerge(state, {
           pageData: {
-            email: await validateToken(token, req.ip),
+            email,
+            tokenExpiryTimestamp,
             fieldErrors,
           },
         });
@@ -110,6 +147,16 @@ export const setPasswordTokenController = (
 
       setIDAPICookies(res, cookies);
 
+      // if the user navigates back to the welcome page after they have set a password, this
+      // ensures we show them a custom error page rather than the link expired page
+      if (setPasswordPath === Routes.WELCOME) {
+        const currentState = readEncryptedStateCookie(req);
+        setEncryptedStateCookie(res, {
+          ...currentState,
+          passwordSetOnWelcomePage: true,
+        });
+      }
+
       // we need to track both of these cloudwatch metrics as two
       // separate metrics at this point as the changePassword endpoint
       // does two things
@@ -122,20 +169,28 @@ export const setPasswordTokenController = (
 
       return successCallback(res);
     } catch (error) {
-      const { message, status, field } = error as RequestError;
+      const { message, status, field } =
+        error instanceof ApiError ? error : new ApiError();
+
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
       // see the comment above around the success metrics
       trackMetric(Metrics.ACCOUNT_VERIFICATION_FAILURE);
       trackMetric(Metrics.CHANGE_PASSWORD_FAILURE);
 
-      // we unfortunatley need this inner try catch block to catch
+      // we unfortunately need this inner try catch block to catch
       // errors from the `validateToken` method were it to fail
       try {
+        const { email, tokenExpiryTimestamp } = await validateToken(
+          token,
+          req.ip,
+        );
+
         if (field) {
           state = deepmerge(state, {
             pageData: {
-              email: await validateToken(token, req.ip),
+              email,
+              tokenExpiryTimestamp,
               fieldErrors: [
                 {
                   field,
@@ -147,7 +202,8 @@ export const setPasswordTokenController = (
         } else {
           state = deepmerge(state, {
             pageData: {
-              email: await validateToken(token, req.ip),
+              email,
+              tokenExpiryTimestamp,
             },
             globalMessage: {
               error: message,

@@ -27,6 +27,11 @@ dev: clean-build clear install
 	$(call log, "starting development server")
 	@(yarn watch:server & yarn watch & wait)
 
+dev-cypress: clean-build clear install
+	$(call banner, "tsc cypress build is starting")
+	$(call log, "starting tsc watch")
+	@(yarn watch:cypress & wait)
+
 dev-tile-v: clean-build clear install
 	$(call banner, "gateway is starting")
 	$(call log, "starting development server")

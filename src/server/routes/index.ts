@@ -10,6 +10,7 @@ import { default as verifyEmail } from './verifyEmail';
 import { default as oauth } from './oauth';
 import { default as magicLink } from './magicLink';
 import { default as welcome } from './welcome';
+import { default as setPassword } from './setPassword';
 import { noCache } from '@/server/lib/middleware/cache';
 import { featureSwitches } from '@/shared/lib/featureSwitches';
 
@@ -34,6 +35,9 @@ uncachedRoutes.use(register);
 
 // change password routes
 uncachedRoutes.use(changePassword);
+
+// set password routes
+uncachedRoutes.use(setPassword);
 
 // consents routes
 uncachedRoutes.use(consents);

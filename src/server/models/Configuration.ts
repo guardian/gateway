@@ -11,6 +11,10 @@ export interface Configuration {
     id: string;
     hash: string;
   };
+  googleRecaptcha: {
+    siteKey: string;
+    secretKey: string;
+  };
   domain: string;
   apiDomain: string;
   isHttps: boolean;
@@ -19,6 +23,8 @@ export interface Configuration {
   oktaCustomOAuthServer: string;
   oktaClientId: string;
   oktaClientSecret: string;
+  encryptionSecretKey: string;
+  oauthBaseUrl: string;
 }
 
 export enum GA_UID {

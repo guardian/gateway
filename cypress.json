@@ -4,5 +4,8 @@
   "chromeWebSecurity": false,
   "defaultCommandTimeout": 12000,
   "responseTimeout": 12000,
-  "requestTimeout": 12000
+  "requestTimeout": 12000,
+  "env": {
+    "mockingEndpoint": "localhost:9000/mock"
+  }
 }

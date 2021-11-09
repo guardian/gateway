@@ -24,6 +24,7 @@ describe('getConfiguration', () => {
     process.env.PORT = '9000';
     process.env.IDAPI_CLIENT_ACCESS_TOKEN = 'idapi_api_key';
     process.env.IDAPI_BASE_URL = 'http://localhost:1234';
+    process.env.OAUTH_BASE_URL = 'http://localhost:5678';
     process.env.PLAY_SESSION_COOKIE_SECRET = 'play-secret';
     process.env.BASE_URI = 'base-uri';
     process.env.DEFAULT_RETURN_URI = 'default-return-uri';
@@ -35,6 +36,10 @@ describe('getConfiguration', () => {
     process.env.OKTA_CUSTOM_OAUTH_SERVER = 'customauthserverid';
     process.env.OKTA_CLIENT_ID = 'abc123';
     process.env.OKTA_CLIENT_SECRET = 'xyz789';
+    process.env.GOOGLE_RECAPTCHA_SITE_KEY = 'recaptcha-site';
+    process.env.GOOGLE_RECAPTCHA_SECRET_KEY = 'recaptcha-secret';
+    process.env.ENCRYPTION_SECRET_KEY =
+      'f3d87b231ddd6f50d99e227c5bc9b7cbb649387b321008df412fd73805ac2e32';
 
     const output = getConfiguration();
     const expected = {
@@ -58,6 +63,13 @@ describe('getConfiguration', () => {
       oktaCustomOAuthServer: 'customauthserverid',
       oktaClientId: 'abc123',
       oktaClientSecret: 'xyz789',
+      googleRecaptcha: {
+        siteKey: 'recaptcha-site',
+        secretKey: 'recaptcha-secret',
+      },
+      encryptionSecretKey:
+        'f3d87b231ddd6f50d99e227c5bc9b7cbb649387b321008df412fd73805ac2e32',
+      oauthBaseUrl: 'http://localhost:5678',
     };
     expect(output).toEqual(expected);
   });

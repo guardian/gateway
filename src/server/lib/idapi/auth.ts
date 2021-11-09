@@ -7,8 +7,10 @@ import {
   idapiFetch,
 } from '@/server/lib/IDAPIFetch';
 import { logger } from '@/server/lib/logger';
+import { IdapiError } from '@/server/models/Error';
 import { IdapiErrorMessages, SignInErrors } from '@/shared/model/Errors';
 import { IDAPIAuthRedirect, IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
+import { ApiRoutes } from '@/shared/model/Routes';
 
 interface APIResponse {
   emailValidated: true;
@@ -27,13 +29,16 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
 
     switch (message) {
       case IdapiErrorMessages.INVALID_EMAIL_PASSWORD:
-        throw { message: SignInErrors.AUTHENTICATION_FAILED, status };
+        throw new IdapiError({
+          message: SignInErrors.AUTHENTICATION_FAILED,
+          status,
+        });
       default:
         break;
     }
   }
 
-  throw { message: SignInErrors.GENERIC, status: status };
+  throw new IdapiError({ message: SignInErrors.GENERIC, status });
 };
 
 const responseToEntity = (response: APIResponse) => {
@@ -50,7 +55,7 @@ export const read = async (
   sc_gu_la: string,
   ip: string,
 ): Promise<IDAPIAuthRedirect> => {
-  const url = '/auth/redirect';
+  const url = `${ApiRoutes.AUTH}${ApiRoutes.REDIRECT}`;
   const options = APIAddClientAccessToken(
     APIForwardSessionIdentifier(APIGetOptions(), sc_gu_u),
     ip,
@@ -77,7 +82,7 @@ export const authenticate = async (
   password: string,
   ip: string,
 ) => {
-  const url = '/auth?format=cookies';
+  const url = `${ApiRoutes.AUTH}?format=cookies`;
   const options = APIPostOptions({
     email,
     password,

@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Router, Request } from 'express';
 import deepmerge from 'deepmerge';
 import { Routes } from '@/shared/model/Routes';
 import {
@@ -15,12 +15,12 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { getProfileUrl } from '@/server/lib/getProfileUrl';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
-import { addReturnUrlToPath } from '@/server/lib/queryParams';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { EMAIL_SENT } from '@/shared/model/Success';
-import { RequestError } from '@/shared/lib/error';
+import { ApiError } from '@/server/models/Error';
 
 const router = Router();
 
@@ -46,7 +46,10 @@ router.get(
       const sc_gu_u = req.cookies.SC_GU_U;
 
       if (!sc_gu_u) {
-        throw { status: 403, message: ConsentsErrors.ACCESS_DENIED };
+        throw new ApiError({
+          status: 403,
+          message: ConsentsErrors.ACCESS_DENIED,
+        });
       }
 
       const { primaryEmailAddress } = await getUser(req.ip, sc_gu_u);
@@ -57,7 +60,9 @@ router.get(
       });
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      const { status: errorStatus, message } = error as RequestError;
+      const { message, status: errorStatus } =
+        error instanceof ApiError ? error : new ApiError();
+
       status = errorStatus;
 
       if (status === 500) {
@@ -88,7 +93,10 @@ router.post(
       const sc_gu_u = req.cookies.SC_GU_U;
 
       if (!sc_gu_u) {
-        throw { status: 403, message: ConsentsErrors.ACCESS_DENIED };
+        throw new ApiError({
+          status: 403,
+          message: ConsentsErrors.ACCESS_DENIED,
+        });
       }
 
       const { email = (await getUser(req.ip, sc_gu_u)).primaryEmailAddress } =
@@ -110,9 +118,14 @@ router.post(
       });
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+
       trackMetric(Metrics.SEND_VALIDATION_EMAIL_FAILURE);
-      const { status: errorStatus, message } = error as RequestError;
+
+      const { message, status: errorStatus } =
+        error instanceof ApiError ? error : new ApiError();
+
       status = errorStatus;
+
       state = deepmerge(state, {
         globalMessage: {
           error: message,
@@ -131,7 +144,7 @@ router.post(
 
 router.get(
   `${Routes.VERIFY_EMAIL}${Routes.TOKEN_PARAM}`,
-  handleAsyncErrors(async (req: Request, res: Response) => {
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { token } = req.params;
 
     try {
@@ -140,27 +153,35 @@ router.get(
       setIDAPICookies(res, cookies);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      const { message } = error as RequestError;
+
+      const { message } = error instanceof ApiError ? error : new ApiError();
+
       if (message === VerifyEmailErrors.USER_ALREADY_VALIDATED) {
         return res.redirect(
           303,
-          addReturnUrlToPath(
+          addQueryParamsToPath(
             `${Routes.CONSENTS}/${consentPages[0].page}`,
-            res.locals.queryParams.returnUrl,
+            res.locals.queryParams,
           ),
         );
       }
 
       trackMetric(Metrics.EMAIL_VALIDATED_FAILURE);
 
-      return res.redirect(303, `${Routes.VERIFY_EMAIL}`);
+      return res.redirect(
+        303,
+        addQueryParamsToPath(Routes.VERIFY_EMAIL, res.locals.queryParams),
+      );
     }
 
     return res.redirect(
       303,
-      addReturnUrlToPath(
-        `${Routes.CONSENTS}/${consentPages[0].page}?emailVerified=true`,
-        res.locals.queryParams.returnUrl,
+      addQueryParamsToPath(
+        `${Routes.CONSENTS}/${consentPages[0].page}`,
+        res.locals.queryParams,
+        {
+          emailVerified: true,
+        },
       ),
     );
   }),

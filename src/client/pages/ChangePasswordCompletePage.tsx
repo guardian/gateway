@@ -6,6 +6,12 @@ import { ChangePasswordComplete } from '@/client/pages/ChangePasswordComplete';
 export const ChangePasswordCompletePage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { pageData = {} } = clientState;
-  const { returnUrl } = pageData;
-  return <ChangePasswordComplete returnUrl={returnUrl} />;
+  const { returnUrl, email } = pageData;
+  return (
+    <ChangePasswordComplete
+      headerText="Password updated"
+      email={email}
+      returnUrl={returnUrl}
+    />
+  );
 };

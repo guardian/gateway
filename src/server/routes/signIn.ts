@@ -8,6 +8,10 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
+import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
+import { decrypt } from '@/server/lib/idapi/decryptToken';
+import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
+import { ApiError } from '@/server/models/Error';
 import { authenticate as authenticateWithOkta } from '@/server/lib/okta/authenticate';
 import { authenticate as authenticateWithIDAPI } from '@/server/lib/idapi/auth';
 import {
@@ -15,30 +19,38 @@ import {
   ProfileOpenIdClient,
   setAuthorizationStateCookie,
 } from '@/server/lib/okta/oidc';
-import { SignInErrors } from '@/shared/model/Errors';
 import { featureSwitches } from '@/shared/lib/featureSwitches';
-import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
-import { RequestError } from '@/shared/lib/error';
 
 const router = Router();
 
-router.get(Routes.SIGN_IN, (req: Request, res: ResponseWithRequestState) => {
-  let state = res.locals;
+const preFillEmailField = (route: string) =>
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    const state = res.locals;
 
-  if (state.queryParams.error_description) {
-    state = deepmerge(state, {
-      globalMessage: {
-        error: `${state.queryParams.error_description}`,
-      },
+    const { encryptedEmail, error, error_description } = state.queryParams;
+
+    const email = encryptedEmail ? await decrypt(encryptedEmail, req.ip) : '';
+
+    const errorMessage =
+      error === FederationErrors.SOCIAL_SIGNIN_BLOCKED
+        ? SignInErrors.ACCOUNT_ALREADY_EXISTS
+        : error_description;
+
+    const html = renderer(route, {
+      requestState: deepmerge(state, {
+        pageData: {
+          email: email,
+        },
+        globalMessage: {
+          error: errorMessage,
+        },
+      }),
+      pageTitle: PageTitle.SIGN_IN,
     });
-  }
-
-  const html = renderer(Routes.SIGN_IN, {
-    requestState: state,
-    pageTitle: PageTitle.SIGN_IN,
+    res.type('html').send(html);
   });
-  return res.type('html').send(html);
-});
+
+router.get(Routes.SIGN_IN, preFillEmailField(Routes.SIGN_IN));
 
 const oktaAuthenticationController = async (
   req: Request,
@@ -89,18 +101,16 @@ const oktaAuthenticationController = async (
     trackMetric(Metrics.AUTHENTICATION_FAILURE);
     logger.error('Okta authentication error:', error);
 
-    const { message, status } = error as RequestError;
+    const { message, status } =
+      error instanceof ApiError ? error : new ApiError();
 
     const html = renderer(Routes.SIGN_IN, {
       requestState: deepmerge(res.locals, {
         pageData: {
           email,
-          fieldErrors: [
-            {
-              field: 'summary',
-              message: message || SignInErrors.GENERIC,
-            },
-          ],
+        },
+        globalMessage: {
+          error: message,
         },
       }),
       pageTitle: PageTitle.SIGN_IN,
@@ -117,7 +127,7 @@ const idapiAuthenticationController = async (
   res: ResponseWithRequestState,
 ) => {
   // get the request state
-  let state = res.locals;
+  const state = res.locals;
 
   // get the email and password from the request body
   const { email = '', password = '' } = req.body;
@@ -131,6 +141,7 @@ const idapiAuthenticationController = async (
 
     // set cookie headers on response
     setIDAPICookies(res, cookies);
+
     // track success
     trackMetric(Metrics.AUTHENTICATION_SUCCESS);
 
@@ -138,30 +149,23 @@ const idapiAuthenticationController = async (
     return res.redirect(303, returnUrl);
   } catch (error) {
     logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-    const { message, status } = error as RequestError;
+
+    const { message, status } =
+      error instanceof ApiError ? error : new ApiError();
 
     // track failure
     trackMetric(Metrics.AUTHENTICATION_FAILURE);
 
-    // if error has a message, attach it to state
-    if (message) {
-      state = deepmerge(state, {
+    // re-render the sign in page on error
+    const html = renderer(Routes.SIGN_IN, {
+      requestState: deepmerge(state, {
+        pageData: {
+          email,
+        },
         globalMessage: {
           error: message,
         },
-      });
-    } else {
-      // otherwise show a generic error
-      state = deepmerge(state, {
-        globalMessage: {
-          error: SignInErrors.GENERIC,
-        },
-      });
-    }
-
-    // re-render the sign in page on error
-    const html = renderer(Routes.SIGN_IN, {
-      requestState: state,
+      }),
       pageTitle: PageTitle.SIGN_IN,
     });
 

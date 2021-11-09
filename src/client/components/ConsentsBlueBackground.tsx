@@ -23,16 +23,16 @@ const blueBorder = css`
   }
 `;
 
-const height100 = css`
-  height: 100%;
-`;
-
 const flex = css`
+  /* Allow this element to act as flex container,
+   so that children can flex */
+  display: flex;
+  /* Allow this element to grow to the parent flex container */
   flex: 1 1 auto;
 `;
 
 export const ConsentsBlueBackground = ({ children, cssOverrides }: Props) => (
   <div css={[consentsBackground, flex, cssOverrides]}>
-    <div css={[gridRow, blueBorder, height100]}>{children}</div>
+    <div css={[gridRow, blueBorder]}>{children}</div>
   </div>
 );

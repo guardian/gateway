@@ -36,3 +36,15 @@ export const FieldErrorPW = () => (
 FieldErrorPW.story = {
   name: 'with error on password',
 };
+
+export const PasswordAlreadySet = () => (
+  <Welcome
+    submitUrl=""
+    email="example@theguardian.com"
+    fieldErrors={[]}
+    passwordSet={true}
+  />
+);
+PasswordAlreadySet.story = {
+  name: 'with password already set',
+};

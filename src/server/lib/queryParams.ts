@@ -37,6 +37,7 @@ export const parseExpressQueryParams = (
     error_description,
     refViewId,
     ref,
+    encryptedEmail,
   }: {
     returnUrl?: string;
     clientId?: string;
@@ -46,6 +47,7 @@ export const parseExpressQueryParams = (
     error_description?: string;
     refViewId?: string;
     ref?: string;
+    encryptedEmail?: string;
   },
 ): QueryParams => ({
   returnUrl: validateReturnUrl(returnUrl),
@@ -54,8 +56,9 @@ export const parseExpressQueryParams = (
   csrfError: validateCsrfError(method, csrfError),
   error,
   error_description,
-  refViewId,
   ref: ref && validateRefUrl(ref),
+  refViewId,
+  encryptedEmail,
 });
 
 export const addReturnUrlToPath = (path: string, returnUrl: string): string => {

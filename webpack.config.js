@@ -198,6 +198,7 @@ const browser = ({ isLegacy }) => {
                   isLegacy ? legacyBabelConfigNodeModules : modernBabelConfig
                   ,
                   ...babelConfig.presets,
+
                 ],
                 plugins: [...babelConfig.plugins],
               },

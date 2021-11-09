@@ -1,8 +1,20 @@
-import fetch, { RequestInit, Response } from 'node-fetch';
+import { RequestInit, Response } from 'node-fetch';
 import { HalLink } from 'hal-types';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { OktaAuthenticateErrors, SignInErrors } from '@/shared/model/Errors';
 import { joinUrl } from '@guardian/libs';
+import { OktaApiError } from '@/server/models/Error';
+
+// Imports the node-fetch library asynchonously using import(), supported in CJS since node v12.17.
+// This solution avoids the import() being transpiled into a require() by Webpack/Typescript.
+// Subsequent fetch requests will not re-import the module because it's cached after first load.
+// Change necessary because of switch to ESM in version 3.x and our use of CJS.
+// Solution taken from: https://github.com/node-fetch/node-fetch/issues/1279#issuecomment-915063354
+const _importDynamic = new Function('modulePath', 'return import(modulePath)');
+async function fetch(...args: (string | RequestInit | undefined)[]) {
+  const { default: fetch } = await _importDynamic('node-fetch');
+  return fetch(...args);
+}
 
 // https://developer.okta.com/docs/reference/api/authn/#transaction-state
 enum AuthenticationTransactionState {
@@ -102,23 +114,23 @@ const handleResponseFailure = async (response: Response) => {
   switch (parsed.errorCode) {
     // errors from https://developer.okta.com/docs/reference/api/authn/#response-parameters
     case 'E0000004':
-      throw {
+      throw new OktaApiError({
         status: response.status,
         statusText: response.statusText,
         message: OktaAuthenticateErrors.AUTHENTICATION_FAILED,
-      };
+      });
     case 'E0000047':
-      throw {
+      throw new OktaApiError({
         status: response.status,
         statusText: response.statusText,
         message: SignInErrors.GENERIC,
-      };
+      });
     default:
-      throw {
+      throw new OktaApiError({
         status: response.status,
         statusText: response.statusText,
         message: SignInErrors.GENERIC,
-      };
+      });
   }
 };
 

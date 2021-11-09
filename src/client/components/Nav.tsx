@@ -2,7 +2,6 @@ import * as React from 'react';
 import { css } from '@emotion/react';
 import {
   brandBackground,
-  space,
   text,
   brandAltBackground,
   brandLine,
@@ -54,51 +53,98 @@ const activeBarStyles = css`
   }
 `;
 
-const tabPaddingStyles = (isFirst?: boolean) => {
+const tabPaddingMarginStyles = (isFirst?: boolean) => {
   if (isFirst) {
     return css`
-      padding-left: 12px;
-      ${from.tablet} {
+      padding-left: 10px;
+      ${from.mobileLandscape} {
         padding-left: 20px;
+      }
+      ${from.desktop} {
+        padding-left: 10px;
+        margin-left: 90px;
+      }
+      ${from.leftCol} {
+        margin-left: 170px;
+      }
+      ${from.wide} {
+        margin-left: 250px;
       }
     `;
   }
   return css`
-    padding-left: 9px;
+    padding-left: 10px;
   `;
 };
 
-const tabDividerStyles = css`
-  :before {
-    content: '';
-    display: block;
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 1px;
-    background-color: ${brandLine.primary};
-    ${from.tablet} {
-      bottom: 13px;
+const tabDividerStyles = (isFirst?: boolean) => {
+  const dividerStyles = css`
+    :before {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background-color: ${brandLine.primary};
+      ${from.tablet} {
+        bottom: 18px;
+      }
+      ${from.desktop} {
+        bottom: 12px;
+      }
     }
+  `;
+
+  if (isFirst) {
+    return css`
+      ${from.desktop} {
+        ${dividerStyles}
+      }
+    `;
   }
-`;
+  return dividerStyles;
+};
 
 const tabStyles = css`
   /* Spacing */
-  padding-top: ${space[2]}px;
-  padding-bottom: ${space[1]}px;
-  padding-right: 20px;
-  min-width: 80px;
+  padding-top: 9px;
+
+  /* Sizing/Height */
+  height: 36px;
   ${from.tablet} {
-    min-width: 160px;
+    height: 48px;
+  }
+  ${from.desktop} {
+    height: 42px;
+  }
+
+  /* Flexbox/Width */
+  flex: 1 1 0px;
+  ${from.tablet} {
+    flex: 0 1 130px;
+  }
+  ${from.desktop} {
+    flex: 0 1 160px;
   }
 
   /* Text */
   color: ${text.ctaPrimary};
   ${headline.xxxsmall({ fontWeight: 'bold', lineHeight: 'tight' })}
+  font-size: 15.4px;
+
+  ${from.mobileMedium} {
+    font-size: 15.7px;
+  }
+  ${from.mobileLandscape} {
+    font-size: 18px;
+  }
   ${from.tablet} {
-    ${headline.xsmall({ fontWeight: 'bold', lineHeight: 'regular' })}
+    font-size: 22px;
+  }
+  ${from.wide} {
+    font-size: 24px;
   }
 
   /* a tag overrides */
@@ -123,9 +169,9 @@ const Tab = ({ displayText, linkTo, isActive, isFirst }: TabType) => {
       href={linkTo}
       css={[
         tabStyles,
-        tabPaddingStyles(isFirst),
+        tabPaddingMarginStyles(isFirst),
         activeBarStyles,
-        tabDividerStyles,
+        tabDividerStyles(isFirst),
         isActive && forceActiveBar,
       ]}
     >

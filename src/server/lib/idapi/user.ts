@@ -15,9 +15,27 @@ import {
 } from '@/shared/model/Errors';
 import User from '@/shared/model/User';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
+import { IdapiError } from '@/server/models/Error';
+import { ApiRoutes } from '@/shared/model/Routes';
 
 interface APIResponse {
   user: User;
+}
+
+/**
+ * This enum maps to the type of user as defined in,
+ * and returned by Identity API.
+ * So these terms are specific to our existing system, and may
+ * need to change when we move to Okta to better reflect that model
+ *
+ * `new` - New user that doesn't exist in Identity DB
+ * `current` - Existing user, with a password set
+ * `guest` - Existing user, with no password set
+ */
+export enum UserType {
+  NEW = 'new',
+  CURRENT = 'current',
+  GUEST = 'guest',
 }
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
@@ -27,19 +45,22 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
 
     switch (message) {
       case IdapiErrorMessages.EMAIL_IN_USE:
-        throw { message: RegistrationErrors.GENERIC, status };
+        throw new IdapiError({ message: RegistrationErrors.GENERIC, status });
       case IdapiErrorMessages.ACCESS_DENIED:
-        throw { message: ConsentsErrors.ACCESS_DENIED, status };
+        throw new IdapiError({ message: ConsentsErrors.ACCESS_DENIED, status });
       case IdapiErrorMessages.NOT_FOUND:
-        throw { message: ResetPasswordErrors.NO_ACCOUNT, status };
+        throw new IdapiError({
+          message: ResetPasswordErrors.NO_ACCOUNT,
+          status,
+        });
       case IdapiErrorMessages.MISSING_FIELD:
-        throw { message: ResetPasswordErrors.NO_EMAIL, status };
+        throw new IdapiError({ message: ResetPasswordErrors.NO_EMAIL, status });
       default:
         break;
     }
   }
 
-  throw { message: ConsentsErrors.USER, status };
+  throw new IdapiError({ message: ConsentsErrors.USER, status });
 };
 
 const responseToEntity = (response: APIResponse): User => {
@@ -55,7 +76,7 @@ const responseToEntity = (response: APIResponse): User => {
 };
 
 export const read = async (ip: string, sc_gu_u: string): Promise<User> => {
-  const url = '/user/me';
+  const url = `${ApiRoutes.USER}${ApiRoutes.ME}`;
   const options = APIForwardSessionIdentifier(
     APIAddClientAccessToken(APIGetOptions(), ip),
     sc_gu_u,
@@ -70,7 +91,7 @@ export const read = async (ip: string, sc_gu_u: string): Promise<User> => {
 };
 
 export const create = async (email: string, password: string, ip: string) => {
-  const url = '/user';
+  const url = ApiRoutes.USER;
   const options = APIPostOptions({
     primaryEmailAddress: email,
     password,
@@ -80,16 +101,48 @@ export const create = async (email: string, password: string, ip: string) => {
     return await idapiFetch(url, APIAddClientAccessToken(options, ip));
   } catch (error) {
     logger.error(`IDAPI Error user create ${url}`, error);
-    handleError(error as IDAPIError);
+    return handleError(error as IDAPIError);
   }
 };
 
-export const resendAccountVerificationEmail = async (
+export const readUserType = async (
+  email: string,
+  ip: string,
+): Promise<UserType> => {
+  const url = `${ApiRoutes.USER}${ApiRoutes.TYPE}/${email}`;
+
+  const options = APIAddClientAccessToken(APIGetOptions(), ip);
+
+  try {
+    const { userType } = await idapiFetch(url, options);
+
+    switch (userType) {
+      // new users without accounts
+      case UserType.NEW:
+        return UserType.NEW;
+      // existing users with password
+      case UserType.CURRENT:
+        return UserType.CURRENT;
+      // existing users without password
+      case UserType.GUEST:
+        return UserType.GUEST;
+      // shouldn't reach this point, so we want to catch this
+      // as an error
+      default:
+        throw new Error('Invalid UserType');
+    }
+  } catch (error) {
+    logger.error(`IDAPI Error read user type ${url}`, error);
+    return handleError(error as IDAPIError);
+  }
+};
+
+export const sendAccountVerificationEmail = async (
   email: string,
   ip: string,
   returnUrl: string,
 ) => {
-  const url = '/user/send-account-verification-email';
+  const url = `${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_VERIFICATION_EMAIL}`;
   const options = APIPostOptions({
     'email-address': email,
   });
@@ -99,7 +152,70 @@ export const resendAccountVerificationEmail = async (
       APIAddClientAccessToken(options, ip),
     );
   } catch (error) {
-    logger.error(`IDAPI Error resend account verification email ${url}`, error);
+    logger.error(`IDAPI Error send account verification email ${url}`, error);
+    return handleError(error as IDAPIError);
+  }
+};
+
+export const sendAccountExistsEmail = async (
+  email: string,
+  ip: string,
+  returnUrl: string,
+) => {
+  const url = `${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_EXISTS_EMAIL}`;
+  const options = APIPostOptions({
+    'email-address': email,
+  });
+  try {
+    await idapiFetch(
+      addReturnUrlToPath(url, returnUrl),
+      APIAddClientAccessToken(options, ip),
+    );
+  } catch (error) {
+    logger.error(`IDAPI Error send account exists email ${url}`, error);
+    return handleError(error as IDAPIError);
+  }
+};
+
+export const sendAccountWithoutPasswordExistsEmail = async (
+  email: string,
+  ip: string,
+  returnUrl: string,
+) => {
+  const url = `${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_WITHOUT_PASSWORD_EXISTS_EMAIL}`;
+  const options = APIPostOptions({
+    'email-address': email,
+  });
+  try {
+    await idapiFetch(
+      addReturnUrlToPath(url, returnUrl),
+      APIAddClientAccessToken(options, ip),
+    );
+  } catch (error) {
+    logger.error(
+      `IDAPI Error send account without password exists email ${url}`,
+      error,
+    );
+    return handleError(error as IDAPIError);
+  }
+};
+
+export const sendCreatePasswordEmail = async (
+  email: string,
+  ip: string,
+  returnUrl: string,
+) => {
+  const url = `${ApiRoutes.USER}${ApiRoutes.SEND_CREATE_PASSWORD_ACCOUNT_EXISTS_EMAIL}`;
+  const options = APIPostOptions({
+    'email-address': email,
+  });
+  try {
+    await idapiFetch(
+      addReturnUrlToPath(url, returnUrl),
+      APIAddClientAccessToken(options, ip),
+    );
+  } catch (error) {
+    logger.error(`IDAPI Error send create password email ${url}`, error);
     return handleError(error as IDAPIError);
   }
 };

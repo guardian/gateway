@@ -9,9 +9,11 @@ import { logger } from '@/server/lib/logger';
 import { ConsentsErrors } from '@/shared/model/Errors';
 import { Consent } from '@/shared/model/Consent';
 import { UserConsent } from '@/shared/model/User';
+import { IdapiError } from '@/server/models/Error';
+import { ApiRoutes } from '@/shared/model/Routes';
 
 const handleError = (): never => {
-  throw { message: ConsentsErrors.GENERIC, status: 500 };
+  throw new IdapiError({ message: ConsentsErrors.GENERIC, status: 500 });
 };
 
 interface ConsentAPIResponse {
@@ -32,7 +34,7 @@ const responseToEntity = (consent: ConsentAPIResponse): Consent => {
 };
 
 export const read = async (): Promise<Consent[]> => {
-  const url = '/consents';
+  const url = `${ApiRoutes.CONSENTS}`;
   const options = APIGetOptions();
   try {
     return ((await idapiFetch(url, options)) as ConsentAPIResponse[]).map(
@@ -49,7 +51,7 @@ export const update = async (
   sc_gu_u: string,
   payload: UserConsent[],
 ) => {
-  const url = '/users/me/consents';
+  const url = `${ApiRoutes.USERS}${ApiRoutes.ME}${ApiRoutes.CONSENTS}`;
   const options = APIForwardSessionIdentifier(
     APIAddClientAccessToken(APIPatchOptions(payload), ip),
     sc_gu_u,

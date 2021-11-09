@@ -8,7 +8,7 @@ import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { RequestError } from '@/shared/lib/error';
+import { ApiError } from '@/server/models/Error';
 
 const router = Router();
 
@@ -33,7 +33,8 @@ router.post(
       );
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      const { message, status } = error as RequestError;
+      const { message, status } =
+        error instanceof ApiError ? error : new ApiError();
 
       trackMetric(Metrics.SEND_MAGIC_LINK_FAILURE);
 
@@ -52,14 +53,14 @@ router.post(
 
     trackMetric(Metrics.SEND_MAGIC_LINK_SUCCESS);
 
-    return res.redirect(303, Routes.MAGIC_LINK_SENT);
+    return res.redirect(303, `${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`);
   }),
 );
 
 router.get(
-  Routes.MAGIC_LINK_SENT,
+  `${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`,
   (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer(Routes.MAGIC_LINK_SENT, {
+    const html = renderer(`${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`, {
       pageTitle: PageTitle.MAGIC_LINK,
       requestState: res.locals,
     });

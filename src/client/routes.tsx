@@ -20,7 +20,14 @@ import { SignInPage } from '@/client/pages/SignInPage';
 import { MagicLinkPage } from '@/client/pages/MagicLinkPage';
 import { WelcomePage } from '@/client/pages/WelcomePage';
 import { WelcomeResendPage } from '@/client/pages/WelcomeResend';
-import { RegistrationEmailSentPage } from './pages/RegistrationEmailSentPage';
+import { WelcomePasswordAlreadySetPage } from '@/client/pages/WelcomePasswordAlreadySetPage';
+import { RegistrationEmailSentPage } from '@/client/pages/RegistrationEmailSentPage';
+import { ResetPasswordSessionExpiredPage } from '@/client/pages/ResetPasswordSessionExpiredPage';
+import { WelcomeSessionExpiredPage } from '@/client/pages/WelcomeSessionExpiredPage';
+import { SetPasswordPage } from '@/client/pages/SetPasswordPage';
+import { SetPasswordResendPage } from '@/client/pages/SetPasswordResendPage';
+import { SetPasswordSessionExpiredPage } from '@/client/pages/SetPasswordSessionExpiredPage';
+import { SetPasswordCompletePage } from '@/client/pages/SetPasswordCompletePage';
 
 export type RoutingConfig = {
   clientState: ClientState;
@@ -35,23 +42,41 @@ export const GatewayRoutes = () => (
     <Route exact path={Routes.REGISTRATION}>
       <RegistrationPage />
     </Route>
-    <Route exact path={Routes.REGISTRATION_EMAIL_SENT}>
+    <Route exact path={`${Routes.REGISTRATION}${Routes.EMAIL_SENT}`}>
       <RegistrationEmailSentPage />
     </Route>
     <Route exact path={Routes.RESET}>
       <ResetPasswordPage />
     </Route>
-    <Route exact path={Routes.RESET_SENT}>
+    <Route exact path={`${Routes.RESET}${Routes.EMAIL_SENT}`}>
       <EmailSentPage />
     </Route>
     <Route exact path={`${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`}>
       <ChangePasswordPage />
     </Route>
-    <Route path={Routes.CHANGE_PASSWORD_COMPLETE}>
+    <Route path={`${Routes.PASSWORD}${Routes.RESET_CONFIRMATION}`}>
       <ChangePasswordCompletePage />
     </Route>
     <Route exact path={`${Routes.RESET}${Routes.RESEND}`}>
       <ResendPasswordPage />
+    </Route>
+    <Route exact path={`${Routes.RESET}${Routes.EXPIRED}`}>
+      <ResetPasswordSessionExpiredPage />
+    </Route>
+    <Route exact path={`${Routes.SET_PASSWORD}${Routes.RESEND}`}>
+      <SetPasswordResendPage />
+    </Route>
+    <Route exact path={`${Routes.SET_PASSWORD}${Routes.EXPIRED}`}>
+      <SetPasswordSessionExpiredPage />
+    </Route>
+    <Route path={`${Routes.SET_PASSWORD}${Routes.COMPLETE}`}>
+      <SetPasswordCompletePage />
+    </Route>
+    <Route path={`${Routes.SET_PASSWORD}${Routes.EMAIL_SENT}`}>
+      <EmailSentPage />
+    </Route>
+    <Route exact path={`${Routes.SET_PASSWORD}${Routes.TOKEN_PARAM}`}>
+      <SetPasswordPage />
     </Route>
     <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_DATA}`}>
       <ConsentsDataPage />
@@ -68,8 +93,14 @@ export const GatewayRoutes = () => (
     <Route exact path={`${Routes.WELCOME}${Routes.RESEND}`}>
       <WelcomeResendPage />
     </Route>
-    <Route exact path={`${Routes.WELCOME_SENT}`}>
+    <Route exact path={`${Routes.WELCOME}${Routes.EXPIRED}`}>
+      <WelcomeSessionExpiredPage />
+    </Route>
+    <Route exact path={`${Routes.WELCOME}${Routes.EMAIL_SENT}`}>
       <EmailSentPage />
+    </Route>
+    <Route exact path={`${Routes.WELCOME}${Routes.COMPLETE}`}>
+      <WelcomePasswordAlreadySetPage />
     </Route>
     <Route exact path={`${Routes.WELCOME}${Routes.TOKEN_PARAM}`}>
       <WelcomePage />
@@ -94,7 +125,7 @@ export const GatewayRoutes = () => (
     <Route exact path={Routes.MAGIC_LINK}>
       <MagicLinkPage />
     </Route>
-    <Route exact path={Routes.MAGIC_LINK_SENT}>
+    <Route exact path={`${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`}>
       <EmailSentPage />
     </Route>
     <Route exact path={Routes.UNEXPECTED_ERROR}>

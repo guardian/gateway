@@ -1,6 +1,5 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { Link } from '@guardian/src-link';
 import { textSans } from '@guardian/src-foundations/typography';
 import { TextInput } from '@guardian/src-text-input';
 import { Button } from '@guardian/src-button';
@@ -12,7 +11,8 @@ import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { Routes } from '@/shared/model/Routes';
 import { button, form, textInput } from '@/client/styles/Shared';
-import { CsrfFormField } from '../components/CsrfFormField';
+import { CsrfFormField } from '@/client/components/CsrfFormField';
+import { ExternalLink } from '@/client/components/ExternalLink';
 
 type Props = {
   email?: string;
@@ -52,9 +52,9 @@ export const MagicLink = ({ email }: Props) => {
                 `}
               >
                 If you no longer have access to this email account please{' '}
-                <Link subdued={true} href="/help/contact-us">
+                <ExternalLink subdued={true} href="/help/contact-us">
                   contact our help department
-                </Link>
+                </ExternalLink>
               </p>
             </form>
           </PageBody>

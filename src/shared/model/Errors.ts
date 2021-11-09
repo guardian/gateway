@@ -8,21 +8,32 @@ export enum IdapiErrorMessages {
   USER_ALREADY_VALIDATED = 'User Already Validated',
   BREACHED_PASSWORD = 'Breached password',
   EMAIL_IN_USE = 'Email in use',
+  INVALID_EMAIL_ADDRESS = 'Invalid emailAddress:',
+}
+
+export enum FederationErrors {
+  SOCIAL_SIGNIN_BLOCKED = 'accountLinkingRequired',
+}
+
+export enum GenericErrors {
+  DEFAULT = 'Sorry, something went wrong. Please try again.',
 }
 
 export enum ResetPasswordErrors {
-  GENERIC = 'There was a problem resetting your password, please try again.',
+  GENERIC = 'There was a problem setting your password, please try again.',
   NO_ACCOUNT = 'There is no account for that email address, please check for typos or create an account.',
   NO_EMAIL = 'Email field must not be blank.',
 }
 
 export enum SignInErrors {
   GENERIC = 'There was a problem signing in, please try again.',
-  AUTHENTICATION_FAILED = 'This email and password combination is not valid.',
+  AUTHENTICATION_FAILED = "Email and password don't match",
+  ACCOUNT_ALREADY_EXISTS = 'Account already exists',
 }
 
 export enum RegistrationErrors {
   GENERIC = 'There was a problem registering, please try again.',
+  EMAIL_INVALID = 'Please enter a valid email address.',
 }
 
 export enum ChangePasswordErrors {
@@ -66,4 +77,9 @@ export enum CsrfErrors {
 
 export enum OktaAuthenticateErrors {
   AUTHENTICATION_FAILED = 'Email and password don’t match',
+}
+
+export enum CaptchaErrors {
+  GENERIC = 'Google reCAPTCHA verification failed. Please try again.',
+  RETRY = 'Google reCAPTCHA verification failed.',
 }
