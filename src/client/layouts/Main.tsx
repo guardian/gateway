@@ -46,7 +46,7 @@ const gridSpanDefinition: SpanDefinition = {
   WIDE: { start: 4, span: 6 },
 };
 
-const headerStyles = (hasSummary = false) => css`
+const headerStyles = (hasSummary: boolean) => css`
   /* padding */
   padding-top: ${space[6]}px;
   padding-bottom: ${space[6]}px;
@@ -90,7 +90,7 @@ const summaryStyles = css`
   margin: ${space[6]}px 0;
 `;
 
-const bodyStyles = (hasTitleOrSummary = false) => css`
+const bodyStyles = (hasTitleOrSummary: boolean) => css`
   ${!hasTitleOrSummary &&
   css`
     margin-top: ${space[1]}px;
@@ -130,6 +130,9 @@ export const MainLayout = ({
   const successMessage = successOverride || success;
   const errorMessage = errorOverride || error;
 
+  const hasSummary = !!(errorMessage || successMessage);
+  const hasTitleOrSummary = !!(pageTitle || hasSummary);
+
   return (
     <>
       <Header />
@@ -145,15 +148,11 @@ export const MainLayout = ({
             />
           )}
           {pageTitle && (
-            <header css={headerStyles(!!(errorMessage || successMessage))}>
+            <header css={headerStyles(hasSummary)}>
               <h1 css={[pageTitleStyles]}>{pageTitle}</h1>
             </header>
           )}
-          <div
-            css={bodyStyles(!!(pageTitle || successMessage || errorMessage))}
-          >
-            {children}
-          </div>
+          <div css={bodyStyles(hasTitleOrSummary)}>{children}</div>
         </section>
       </main>
       <Footer />
