@@ -14,7 +14,7 @@ describe('Sign in flow', () => {
 
     it('Has no detectable a11y violations on sign in page with error', () => {
       cy.visit(
-        '/signin?error=error&error_description=oh no somethings gone wrong',
+        '/signin?error=error&error_description=oh%20no%20somethings%20gone%20wrong',
       );
       cy.get('input[name="email"]').type('Invalid email');
       cy.get('input[name="password"]').type('Invalid password');
@@ -39,7 +39,7 @@ describe('Sign in flow', () => {
         ],
       });
       cy.get('[data-cy=sign-in-button]').click();
-      cy.contains("Email and password don't match");
+      cy.contains('Email and password don’t match');
     });
 
     it('shows a generic error message when the api error response is not known', function () {
@@ -108,6 +108,7 @@ describe('Sign in flow', () => {
   });
 
   context.skip('Signing in - Okta (Skipped while feature disabled)', () => {
+    const defaultReturnUrl = 'https://m.code.dev-theguardian.com';
     it('renders global error if there is the error_description parameter in url', function () {
       const error = 'There has been an error';
       cy.visit(`/signin?error_description=${encodeURIComponent(error)}`);
@@ -118,7 +119,7 @@ describe('Sign in flow', () => {
       cy.visit('/signin');
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
-      cy.mockNext(403, {
+      cy.mockNext(401, {
         errorCode: 'E0000004',
         errorSummary: '',
         errorLink: '',
@@ -133,7 +134,7 @@ describe('Sign in flow', () => {
       cy.visit('/signin');
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
-      cy.mockNext(403, {
+      cy.mockNext(429, {
         errorCode: 'E0000047',
         errorSummary: '',
         errorLink: '',
@@ -192,7 +193,7 @@ describe('Sign in flow', () => {
       );
 
       cy.get('[data-cy=sign-in-button]').click();
-      cy.contains('About us');
+      cy.url().contains('https://theguardian.com/about');
     });
 
     it('redirects to the default url if no redirectUrl given', function () {
@@ -223,12 +224,12 @@ describe('Sign in flow', () => {
       cy.intercept(
         `http://localhost:9000/oauth2/customauthserverid/v1/authorize*`,
         (req) => {
-          req.redirect('https://theguardian.com/');
+          req.redirect(defaultReturnUrl);
         },
       );
 
       cy.get('[data-cy=sign-in-button]').click();
-      cy.contains('UK edition');
+      cy.url().should('include', defaultReturnUrl);
     });
   });
 

@@ -41,7 +41,7 @@ describe('Sign in flow', () => {
     cy.get('input[name=email]').type('invalid@doesnotexist.com');
     cy.get('input[name=password]').type('password');
     cy.get('[data-cy="sign-in-button"]').click();
-    cy.contains("Email and password don't match");
+    cy.contains('Email and password don’t match');
   });
 
   it('correctly signs in an existing user', () => {
