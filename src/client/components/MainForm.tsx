@@ -42,11 +42,11 @@ export const MainForm = ({
   submitButtonText,
   submitButtonPriority = 'primary',
   submitButtonHalfWidth,
-  useRecaptcha,
-  hasGuardianTerms,
+  useRecaptcha = false,
+  hasGuardianTerms = false,
   onSubmitOverride,
 }: PropsWithChildren<Props>) => {
-  const hasTerms = !!(useRecaptcha || hasGuardianTerms);
+  const hasTerms = useRecaptcha || hasGuardianTerms;
 
   return (
     <form
