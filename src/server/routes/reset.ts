@@ -43,7 +43,7 @@ router.post(
 
     const { email = '' } = req.body;
 
-    const { returnUrl, emailSentPage } = res.locals.queryParams;
+    const { returnUrl, emailSentSuccess } = res.locals.queryParams;
 
     try {
       await resetPassword(email, req.ip, returnUrl);
@@ -80,7 +80,7 @@ router.post(
         `${Routes.RESET}${Routes.EMAIL_SENT}`,
         res.locals.queryParams,
         {
-          emailSentPage,
+          emailSentSuccess,
         },
       ),
     );

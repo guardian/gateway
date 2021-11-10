@@ -9,11 +9,11 @@ export const RegistrationEmailSentPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { pageData = {}, queryParams, globalMessage = {} } = clientState;
   const { email } = pageData;
-  const { emailSentPage } = queryParams;
+  const { emailSentSuccess } = queryParams;
   const { error } = globalMessage;
 
   const queryString = addQueryParamsToPath('', queryParams, {
-    emailSentPage: true,
+    emailSentSuccess: true,
   });
 
   return (
@@ -22,7 +22,7 @@ export const RegistrationEmailSentPage = () => {
       queryString={queryString}
       previousPage={`${Routes.SIGN_IN}`}
       resendEmailAction={`${Routes.REGISTRATION}${Routes.RESEND}`}
-      showSuccess={!!emailSentPage}
+      showSuccess={emailSentSuccess}
       errorMessage={error}
       helpInfoBox
     />

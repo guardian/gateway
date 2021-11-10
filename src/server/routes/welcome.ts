@@ -48,7 +48,7 @@ router.post(
   `${Routes.WELCOME}${Routes.RESEND}`,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { email } = req.body;
-    const { returnUrl, emailSentPage } = res.locals.queryParams;
+    const { returnUrl, emailSentSuccess } = res.locals.queryParams;
 
     try {
       await sendAccountVerificationEmail(email, req.ip, returnUrl);
@@ -60,7 +60,7 @@ router.post(
         addQueryParamsToPath(
           `${Routes.WELCOME}${Routes.EMAIL_SENT}`,
           res.locals.queryParams,
-          { emailSentPage },
+          { emailSentSuccess },
         ),
       );
     } catch (error) {

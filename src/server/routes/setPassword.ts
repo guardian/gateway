@@ -67,7 +67,7 @@ router.post(
   `${Routes.SET_PASSWORD}${Routes.RESEND}`,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { email } = req.body;
-    const { returnUrl, emailSentPage } = res.locals.queryParams;
+    const { returnUrl, emailSentSuccess } = res.locals.queryParams;
 
     try {
       await sendCreatePasswordEmail(email, req.ip, returnUrl);
@@ -83,7 +83,7 @@ router.post(
           `${Routes.SET_PASSWORD}${Routes.EMAIL_SENT}`,
           res.locals.queryParams,
           {
-            emailSentPage,
+            emailSentSuccess,
           },
         ),
       );

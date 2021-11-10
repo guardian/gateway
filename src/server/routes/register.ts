@@ -69,7 +69,7 @@ router.get(
 router.post(
   `${Routes.REGISTRATION}${Routes.RESEND}`,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { returnUrl, emailSentPage } = res.locals.queryParams;
+    const { returnUrl, emailSentSuccess } = res.locals.queryParams;
 
     try {
       // read and parse the encrypted state cookie
@@ -120,7 +120,7 @@ router.post(
           addQueryParamsToPath(
             `${Routes.REGISTRATION}${Routes.EMAIL_SENT}`,
             res.locals.queryParams,
-            { emailSentPage },
+            { emailSentSuccess },
           ),
         );
       } else {

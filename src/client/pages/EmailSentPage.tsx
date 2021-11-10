@@ -13,11 +13,11 @@ export const EmailSentPage = ({ noAccountInfoBox, helpInfoBox }: Props) => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { pageData = {}, queryParams, globalMessage = {} } = clientState;
   const { email, previousPage } = pageData;
-  const { emailSentPage } = queryParams;
+  const { emailSentSuccess } = queryParams;
   const { error } = globalMessage;
 
   const queryString = addQueryParamsToPath('', queryParams, {
-    emailSentPage: true,
+    emailSentSuccess: true,
   });
 
   return (
@@ -26,7 +26,7 @@ export const EmailSentPage = ({ noAccountInfoBox, helpInfoBox }: Props) => {
       previousPage={previousPage}
       resendEmailAction={previousPage}
       queryString={queryString}
-      showSuccess={!!emailSentPage}
+      showSuccess={emailSentSuccess}
       errorMessage={error}
       noAccountInfoBox={noAccountInfoBox}
       helpInfoBox={helpInfoBox}

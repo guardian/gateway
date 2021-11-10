@@ -38,7 +38,7 @@ export const parseExpressQueryParams = (
     returnUrl,
     clientId,
     emailVerified,
-    emailSentPage,
+    emailSentSuccess,
     csrfError,
     refViewId,
     ref,
@@ -48,7 +48,7 @@ export const parseExpressQueryParams = (
     returnUrl?: string;
     clientId?: string;
     emailVerified?: string;
-    emailSentPage?: string;
+    emailSentSuccess?: string;
     csrfError?: string;
     refViewId?: string;
     ref?: string;
@@ -60,7 +60,7 @@ export const parseExpressQueryParams = (
     returnUrl: validateReturnUrl(returnUrl),
     clientId: validateClientId(clientId),
     emailVerified: validateBoolean(emailVerified),
-    emailSentPage: validateBoolean(emailSentPage),
+    emailSentSuccess: validateBoolean(emailSentSuccess),
     csrfError: validateCsrfError(method, csrfError),
     refViewId,
     ref: ref && validateRefUrl(ref),
