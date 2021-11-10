@@ -18,6 +18,7 @@ type Props = {
   showSuccess?: boolean;
   errorMessage?: string;
   noAccountInfoBox?: boolean;
+  helpInfoBox?: boolean;
 };
 
 export const EmailSent = ({
@@ -28,6 +29,7 @@ export const EmailSent = ({
   showSuccess,
   errorMessage,
   noAccountInfoBox,
+  helpInfoBox,
 }: Props) => {
   const [hasJS, setHasJS] = useState<boolean>(false);
 
@@ -95,6 +97,14 @@ export const EmailSent = ({
                   </Link>
                 </>
               }
+            />
+          )}
+          {helpInfoBox && (
+            <InfoSummary
+              cssOverrides={belowFormMarginTopSpacingStyle}
+              // to update message as a link once we can use ReactNode to compose the message
+              // https://github.com/guardian/source/pull/1163
+              message="If you are still having trouble contact our customer service team at userhelp@guardian.com"
             />
           )}
         </>

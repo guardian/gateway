@@ -24,6 +24,7 @@ export const RegistrationEmailSentPage = () => {
       resendEmailAction={`${Routes.REGISTRATION}${Routes.RESEND}`}
       showSuccess={!!emailSentPage}
       errorMessage={error}
+      helpInfoBox
     />
   );
 };

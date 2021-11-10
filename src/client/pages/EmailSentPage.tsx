@@ -4,7 +4,12 @@ import { ClientStateContext } from '@/client/components/ClientState';
 import { EmailSent } from '@/client/pages/EmailSent';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
-export const EmailSentPage = () => {
+interface Props {
+  noAccountInfoBox?: boolean;
+  helpInfoBox?: boolean;
+}
+
+export const EmailSentPage = ({ noAccountInfoBox, helpInfoBox }: Props) => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { pageData = {}, queryParams, globalMessage = {} } = clientState;
   const { email, previousPage } = pageData;
@@ -23,7 +28,8 @@ export const EmailSentPage = () => {
       queryString={queryString}
       showSuccess={!!emailSentPage}
       errorMessage={error}
-      noAccountInfoBox
+      noAccountInfoBox={noAccountInfoBox}
+      helpInfoBox={helpInfoBox}
     />
   );
 };

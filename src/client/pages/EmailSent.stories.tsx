@@ -41,6 +41,18 @@ export const WithEmailResendNoAccount = () => (
     noAccountInfoBox
   />
 );
-WithEmailResend.story = {
+WithEmailResendNoAccount.story = {
   name: 'with email, resend, and no account box',
+};
+
+export const WithEmailResendHelp = () => (
+  <EmailSent
+    previousPage="/reset"
+    email="example@theguardian.com"
+    resendEmailAction="#"
+    helpInfoBox
+  />
+);
+WithEmailResendHelp.story = {
+  name: 'with email, resend, and help box',
 };
