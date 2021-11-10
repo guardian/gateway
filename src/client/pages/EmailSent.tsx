@@ -30,85 +30,77 @@ export const EmailSent = ({
   errorMessage,
   noAccountInfoBox,
   helpInfoBox,
-}: Props) => {
-  const [hasJS, setHasJS] = useState<boolean>(false);
-
-  useEffect(() => {
-    setHasJS(true);
-  }, []);
-
-  return (
-    <MainLayout
-      pageTitle="Check your email inbox"
-      successOverride={showSuccess ? 'Email sent' : undefined}
-      errorOverride={errorMessage}
-    >
-      {email ? (
-        <MainBodyText>
-          We’ve sent an email to <b>{email}</b>.
-        </MainBodyText>
-      ) : (
-        <MainBodyText>We’ve sent you an email.</MainBodyText>
-      )}
+}: Props) => (
+  <MainLayout
+    pageTitle="Check your email inbox"
+    successOverride={showSuccess ? 'Email sent' : undefined}
+    errorOverride={errorMessage}
+  >
+    {email ? (
       <MainBodyText>
-        Please follow the instructions in this email. If you can’t find it, it
-        may be in your spam folder.
+        We’ve sent an email to <b>{email}</b>.
       </MainBodyText>
+    ) : (
+      <MainBodyText>We’ve sent you an email.</MainBodyText>
+    )}
+    <MainBodyText>
+      Please follow the instructions in this email. If you can’t find it, it may
+      be in your spam folder.
+    </MainBodyText>
+    <MainBodyText>
+      <b>This link is only valid for 30 minutes.</b>
+    </MainBodyText>
+    {previousPage && (
       <MainBodyText>
-        <b>This link is only valid for 30 minutes.</b>
+        Wrong email address?{' '}
+        <Link subdued href={previousPage}>
+          Change email address
+        </Link>
       </MainBodyText>
-      {previousPage && (
-        <MainBodyText>
-          Wrong email address?{' '}
-          <Link subdued href={previousPage}>
-            Change email address
-          </Link>
-        </MainBodyText>
-      )}
-      {email && resendEmailAction && hasJS && (
-        <>
+    )}
+    {email && resendEmailAction && (
+      <>
+        <InfoSummary
+          message="Didn’t receive an email?"
+          context="If you can’t find the email in your inbox or spam folder, please click below and we will send you a new one."
+        />
+        <MainForm
+          formAction={`${resendEmailAction}${queryString}`}
+          submitButtonText={'Resend email'}
+          submitButtonPriority="tertiary"
+          submitButtonHalfWidth
+        >
+          <EmailInput defaultValue={email} hidden hideLabel />
+        </MainForm>
+        {noAccountInfoBox && (
           <InfoSummary
-            message="Didn’t receive an email?"
-            context="If you can’t find the email in your inbox or spam folder, please click below and we will send you a new one."
+            cssOverrides={belowFormMarginTopSpacingStyle}
+            message="If you don’t receive an email within 2 minutes you may not have an account."
+            context={
+              <>
+                Don’t have an account?{' '}
+                <Link subdued href={Routes.REGISTRATION}>
+                  Register for free
+                </Link>
+                <br />
+                If you are having trouble, please contact our customer service
+                team at{' '}
+                <Link subdued href="mailto:userhelp@theguardian.com">
+                  userhelp@guardian.com
+                </Link>
+              </>
+            }
           />
-          <MainForm
-            formAction={`${resendEmailAction}${queryString}`}
-            submitButtonText={'Resend email'}
-            submitButtonPriority="tertiary"
-            submitButtonHalfWidth
-          >
-            <EmailInput defaultValue={email} hidden hideLabel />
-          </MainForm>
-          {noAccountInfoBox && (
-            <InfoSummary
-              cssOverrides={belowFormMarginTopSpacingStyle}
-              message="If you don’t receive an email within 2 minutes you may not have an account."
-              context={
-                <>
-                  Don’t have an account?{' '}
-                  <Link subdued href={Routes.REGISTRATION}>
-                    Register for free
-                  </Link>
-                  <br />
-                  If you are having trouble, please contact our customer service
-                  team at{' '}
-                  <Link subdued href="mailto:userhelp@theguardian.com">
-                    userhelp@guardian.com
-                  </Link>
-                </>
-              }
-            />
-          )}
-          {helpInfoBox && (
-            <InfoSummary
-              cssOverrides={belowFormMarginTopSpacingStyle}
-              // to update message as a link once we can use ReactNode to compose the message
-              // https://github.com/guardian/source/pull/1163
-              message="If you are still having trouble contact our customer service team at userhelp@guardian.com"
-            />
-          )}
-        </>
-      )}
-    </MainLayout>
-  );
-};
+        )}
+        {helpInfoBox && (
+          <InfoSummary
+            cssOverrides={belowFormMarginTopSpacingStyle}
+            // to update message as a link once we can use ReactNode to compose the message
+            // https://github.com/guardian/source/pull/1163
+            message="If you are still having trouble contact our customer service team at userhelp@guardian.com"
+          />
+        )}
+      </>
+    )}
+  </MainLayout>
+);
