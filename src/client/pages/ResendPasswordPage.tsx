@@ -17,7 +17,7 @@ export const ResendPasswordPage = () => {
       headerText="Link expired"
       buttonText="Send me a link"
       queryString={queryString}
-      inputLabel="Email address"
+      emailInputLabel="Email address"
       showRecentEmailSummary
     >
       <MainBodyText>This link has expired.</MainBodyText>

@@ -19,7 +19,7 @@ export const WelcomeResendPage = () => {
       buttonText="Send me a link"
       formActionOverride={`${Routes.WELCOME}${Routes.RESEND}`}
       queryString={queryString}
-      inputLabel="Email address"
+      emailInputLabel="Email address"
       showRecentEmailSummary
     >
       <MainBodyText>This link has expired.</MainBodyText>

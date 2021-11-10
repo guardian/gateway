@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from '@guardian/src-link';
 import { InfoSummary } from '@guardian/source-react-components-development-kitchen';
 import { MainLayout } from '@/client/layouts/Main';

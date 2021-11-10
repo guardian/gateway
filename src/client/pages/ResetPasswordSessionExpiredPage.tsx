@@ -17,7 +17,7 @@ export const ResetPasswordSessionExpiredPage = () => {
       headerText="Session timed out"
       buttonText="Send me a link"
       queryString={queryString}
-      inputLabel="Email address"
+      emailInputLabel="Email address"
     >
       <MainBodyText>
         The link we sent you was valid for 30 minutes and it has now expired.

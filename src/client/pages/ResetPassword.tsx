@@ -17,7 +17,7 @@ interface ResetPasswordProps {
   buttonText: string;
   queryString?: string;
   formActionOverride?: string;
-  inputLabel?: string;
+  emailInputLabel?: string;
   showNoAccessEmail?: boolean;
   showRecentEmailSummary?: boolean;
 }
@@ -28,7 +28,7 @@ export const ResetPassword = ({
   buttonText,
   queryString = '',
   formActionOverride,
-  inputLabel,
+  emailInputLabel,
   showNoAccessEmail,
   showRecentEmailSummary,
   children,
@@ -43,7 +43,7 @@ export const ResetPassword = ({
       }
       submitButtonText={buttonText}
     >
-      <EmailInput label={inputLabel} defaultValue={email} />
+      <EmailInput label={emailInputLabel} defaultValue={email} />
     </MainForm>
     {showNoAccessEmail && (
       <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>

@@ -48,7 +48,7 @@ export const LinkExpired = () => (
     email="test@theguardian.com"
     headerText="Link expired"
     buttonText="Send me a link"
-    inputLabel="Email address"
+    emailInputLabel="Email address"
     showRecentEmailSummary
   >
     <MainBodyText>This link has expired.</MainBodyText>
@@ -66,7 +66,7 @@ export const SessionExpired = () => (
     email="test@theguardian.com"
     headerText="Session timed out"
     buttonText="Send me a link"
-    inputLabel="Email address"
+    emailInputLabel="Email address"
   >
     <MainBodyText>
       The link we sent you was valid for 30 minutes and it has now expired.

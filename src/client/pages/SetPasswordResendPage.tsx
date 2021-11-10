@@ -19,7 +19,7 @@ export const SetPasswordResendPage = () => {
       buttonText="Send me a link"
       formActionOverride={`${Routes.SET_PASSWORD}${Routes.RESEND}`}
       queryString={queryString}
-      inputLabel="Email address"
+      emailInputLabel="Email address"
       showRecentEmailSummary
     >
       <MainBodyText>This link has expired.</MainBodyText>

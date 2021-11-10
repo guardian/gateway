@@ -19,7 +19,7 @@ export const SetPasswordSessionExpiredPage = () => {
       buttonText="Send me a link"
       formActionOverride={`${Routes.SET_PASSWORD}${Routes.RESEND}`}
       queryString={queryString}
-      inputLabel="Email address"
+      emailInputLabel="Email address"
     >
       <MainBodyText>
         The link we sent you was valid for 30 minutes and it has now expired.
