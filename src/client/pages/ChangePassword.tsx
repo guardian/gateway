@@ -20,7 +20,9 @@ export const ChangePassword = ({
   fieldErrors,
 }: Props) => (
   <MainLayout pageTitle={headerText}>
-    <MainBodyText>Please enter your new password for {email}</MainBodyText>
+    <MainBodyText>
+      Please enter your new password for <b>{email}</b>
+    </MainBodyText>
     <PasswordFormMainLayout
       submitUrl={submitUrl}
       submitButtonText={buttonText}

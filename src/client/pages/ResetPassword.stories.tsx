@@ -53,7 +53,7 @@ export const LinkExpired = () => (
   >
     <MainBodyText>This link has expired.</MainBodyText>
     <MainBodyText>
-      Please enter your email address below and we will send you a new link.
+      To receive a new link, please enter your email address below.
     </MainBodyText>
   </ResetPassword>
 );
@@ -72,7 +72,7 @@ export const SessionExpired = () => (
       The link we sent you was valid for 30 minutes and it has now expired.
     </MainBodyText>
     <MainBodyText>
-      Please enter your email address below and we will send you a new link.
+      To receive a new link, please enter your email address below.
     </MainBodyText>
   </ResetPassword>
 );

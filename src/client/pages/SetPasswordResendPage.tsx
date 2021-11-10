@@ -24,7 +24,7 @@ export const SetPasswordResendPage = () => {
     >
       <MainBodyText>This link has expired.</MainBodyText>
       <MainBodyText>
-        Please enter your email address below and we will send you a new link.
+        To receive a new link, please enter your email address below.
       </MainBodyText>
     </ResetPassword>
   );

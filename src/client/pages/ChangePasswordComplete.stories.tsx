@@ -11,7 +11,7 @@ export default {
 } as Meta;
 
 export const Default = () => (
-  <ChangePasswordComplete headerText="Password updated" />
+  <ChangePasswordComplete headerText="Password updated" action="updated" />
 );
 Default.story = {
   name: 'with defaults',
@@ -21,6 +21,7 @@ export const Email = () => (
   <ChangePasswordComplete
     headerText="Password updated"
     email="example@theguardian.com"
+    action="updated"
   />
 );
 Email.story = {
@@ -32,6 +33,7 @@ export const ReturnUrl = () => (
     headerText="Password updated"
     email="example@theguardian.com"
     returnUrl="https://theguardian.com"
+    action="updated"
   />
 );
 ReturnUrl.story = {
@@ -42,6 +44,7 @@ export const SetPassword = () => (
   <ChangePasswordComplete
     headerText="Password created"
     email="example@theguardian.com"
+    action="created"
   />
 );
 SetPassword.story = {
