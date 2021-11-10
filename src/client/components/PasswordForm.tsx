@@ -298,6 +298,9 @@ export const PasswordForm = ({
   );
 };
 
+// this is mostly duplicated from the form above, as the above form is still
+// being used on the welcome/onboarding page until that is redesigned
+// so we created this new component to use with the `MainLayout` for the time being
 export const PasswordFormMainLayout = ({
   submitUrl,
   fieldErrors,
