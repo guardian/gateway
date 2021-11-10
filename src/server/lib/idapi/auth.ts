@@ -110,7 +110,7 @@ export const exchangeAccessTokenForCookies = async (
 
   try {
     const response = await idapiFetch(
-      '/auth/oauth-token?format=cookies',
+      `${ApiRoutes.AUTH}${ApiRoutes.COOKIE_EXCHANGE}`,
       APIAddClientAccessToken(options, ip),
     );
     return response.cookies;

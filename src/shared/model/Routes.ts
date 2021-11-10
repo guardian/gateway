@@ -47,4 +47,9 @@ export enum ApiRoutes {
   SEND_ACCOUNT_EXISTS_EMAIL = '/send-account-exists-email',
   SEND_ACCOUNT_WITHOUT_PASSWORD_EXISTS_EMAIL = '/send-account-without-password-exists-email',
   SEND_CREATE_PASSWORD_ACCOUNT_EXISTS_EMAIL = '/send-create-password-account-exists-email',
+  COOKIE_EXCHANGE = '/oauth-token?format=cookies',
+}
+
+export enum OktaRoutes {
+  AUTHENTICATION = '/api/v1/authn',
 }

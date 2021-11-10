@@ -4,6 +4,7 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { OktaAuthenticateErrors, SignInErrors } from '@/shared/model/Errors';
 import { joinUrl } from '@guardian/libs';
 import { OktaApiError } from '@/server/models/Error';
+import { OktaRoutes } from '@/shared/model/Routes';
 
 // Imports the node-fetch library asynchonously using import(), supported in CJS since node v12.17.
 // This solution avoids the import() being transpiled into a require() by Webpack/Typescript.
@@ -170,7 +171,7 @@ export const authenticate = async (email: string, password: string) => {
   };
 
   const response = await fetch(
-    joinUrl(oktaDomain, '/api/v1/authn'),
+    joinUrl(oktaDomain, OktaRoutes.AUTHENTICATION),
     requestOptions,
   );
   if (!response.ok) {
