@@ -3,7 +3,7 @@ import { validateReturnUrl, validateRefUrl } from '@/server/lib/validateUrl';
 import { validateClientId } from '@/server/lib/validateClientId';
 import { FederationErrors } from '@/shared/model/Errors';
 
-const validateBoolean = (maybeBoolean?: string): boolean | undefined => {
+const isStringBoolean = (maybeBoolean?: string): boolean | undefined => {
   if (!maybeBoolean) {
     return undefined;
   }
@@ -59,8 +59,8 @@ export const parseExpressQueryParams = (
   return {
     returnUrl: validateReturnUrl(returnUrl),
     clientId: validateClientId(clientId),
-    emailVerified: validateBoolean(emailVerified),
-    emailSentSuccess: validateBoolean(emailSentSuccess),
+    emailVerified: isStringBoolean(emailVerified),
+    emailSentSuccess: isStringBoolean(emailSentSuccess),
     csrfError: validateCsrfError(method, csrfError),
     refViewId,
     ref: ref && validateRefUrl(ref),
