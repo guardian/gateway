@@ -1,7 +1,7 @@
 import { RequestInit, Response } from 'node-fetch';
 import { HalLink } from 'hal-types';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { OktaAuthenticateErrors, SignInErrors } from '@/shared/model/Errors';
+import { SignInErrors } from '@/shared/model/Errors';
 import { joinUrl } from '@guardian/libs';
 import { OktaApiError } from '@/server/models/Error';
 import { OktaRoutes } from '@/shared/model/Routes';
@@ -108,7 +108,7 @@ const handleResponseFailure = async (response: Response) => {
       throw new OktaApiError({
         status: response.status,
         statusText: response.statusText,
-        message: OktaAuthenticateErrors.AUTHENTICATION_FAILED,
+        message: SignInErrors.AUTHENTICATION_FAILED,
       });
     case 'E0000047':
       throw new OktaApiError({
