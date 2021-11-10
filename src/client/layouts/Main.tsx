@@ -49,7 +49,7 @@ const gridSpanDefinition: SpanDefinition = {
 const headerStyles = (hasSummary: boolean) => css`
   /* padding */
   padding-top: ${space[6]}px;
-  padding-bottom: ${space[6]}px;
+  padding-bottom: ${space[5]}px;
 
   ${hasSummary &&
   css`

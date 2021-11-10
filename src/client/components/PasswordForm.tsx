@@ -66,7 +66,7 @@ const form = css`
 `;
 
 const passwordInput = css`
-  margin-bottom: ${space[3]}px;
+  margin-bottom: ${space[2]}px;
 `;
 
 const TooLong = ({ noMargin = false }) => {
