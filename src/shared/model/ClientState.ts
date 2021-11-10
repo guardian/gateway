@@ -15,11 +15,6 @@ interface ABTesting {
   forcedTestVariants?: Participations;
 }
 
-export interface FieldError {
-  field: string;
-  message: string;
-}
-
 export interface GlobalMessage {
   error?: string;
   success?: string;
