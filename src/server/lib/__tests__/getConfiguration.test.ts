@@ -67,7 +67,7 @@ describe('getConfiguration', () => {
       okta: {
         registrationEnabled: false,
         orgUrl: 'oktaorgurl',
-        token: '123456789',
+        token: 'oktatoken',
       },
     };
     expect(output).toEqual(expected);
