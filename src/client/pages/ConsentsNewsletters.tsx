@@ -12,7 +12,6 @@ import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { NewsletterCard } from '@/client/components/NewsletterCard';
 import { from } from '@guardian/src-foundations/mq';
 import { heading, text } from '@/client/styles/Consents';
-import { ABNewsletterCard } from '@/client/components/NewsletterCardAB';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import {
   CONSENTS_MAIN_COLOR,
@@ -22,7 +21,6 @@ import { NewsLetter } from '@/shared/model/Newsletter';
 
 type ConsentsNewslettersProps = {
   newsletters: NewsLetter[];
-  isUserInTest: boolean;
 };
 
 const getNewsletterCardCss = (index: number) => {
@@ -52,35 +50,12 @@ const getNewsletterCardCss = (index: number) => {
   `;
 };
 
-const getNewsletterCardCssAB = () => {
-  const gridDef: SpanDefinition = {
-    TABLET: { start: 2, span: 10 },
-    DESKTOP: { start: 2, span: 10 },
-    LEFT_COL: { start: 2, span: 12 },
-    WIDE: { start: 3, span: 12 },
-  };
-
-  return css`
-    ${gridItem(gridDef)}
-    -ms-grid-row: 4;
-
-    margin-bottom: ${space[5]}px;
-    ${from.tablet} {
-      margin-bottom: ${space[6]}px;
-    }
-    ${from.desktop} {
-      margin-bottom: ${space[9]}px;
-    }
-  `;
-};
-
 const paragraphSpacing = css`
   margin-bottom: ${space[6]}px;
 `;
 
 export const ConsentsNewsletters = ({
   newsletters,
-  isUserInTest,
 }: ConsentsNewslettersProps) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
 
@@ -96,21 +71,13 @@ export const ConsentsNewsletters = ({
           Our newsletters help you get closer to our quality, independent
           journalism.
         </p>
-        {isUserInTest && newsletters[0] ? (
-          <ABNewsletterCard
-            newsletter={newsletters[0]}
-            key={newsletters[0].id}
-            cssOverrides={getNewsletterCardCssAB()}
+        {newsletters.map((newsletter, i) => (
+          <NewsletterCard
+            newsletter={newsletter}
+            key={newsletter.id}
+            cssOverrides={getNewsletterCardCss(i)}
           />
-        ) : (
-          newsletters.map((newsletter, i) => (
-            <NewsletterCard
-              newsletter={newsletter}
-              key={newsletter.id}
-              cssOverrides={getNewsletterCardCss(i)}
-            />
-          ))
-        )}
+        ))}
       </ConsentsContent>
     </ConsentsLayout>
   );
