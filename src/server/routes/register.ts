@@ -26,14 +26,16 @@ import {
 } from '@/server/lib/encryptedStateCookie';
 import { EmailType } from '@/shared/model/EmailType';
 import { ApiError } from '@/server/models/Error';
+import { register } from '@/server/lib/okta/registration';
 
 const router = Router();
 
-// set google recaptcha site key
 const {
   googleRecaptcha: { secretKey, siteKey },
+  okta,
 } = getConfiguration();
 
+// set google recaptcha site key
 const recaptcha = new RecaptchaV2(siteKey, secretKey);
 
 router.get(
@@ -166,7 +168,11 @@ router.post(
         // new user, so call guest register endpoint to create user account without password
         // and automatically send account verification email
         case UserType.NEW:
-          await guest(email, req.ip, returnUrl, refViewId, ref);
+          if (okta.registrationEnabled) {
+            await register(email, req.ip, returnUrl, refViewId, ref);
+          } else {
+            await guest(email, req.ip, returnUrl, refViewId, ref);
+          }
           // set the encrypted state cookie in each case, so the next page is aware
           // of the email address and type of email sent
           // so if needed it can resend the correct email

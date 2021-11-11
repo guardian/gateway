@@ -17,6 +17,9 @@ Parameters:
   OauthBaseUrl:
     Description: The base url for social sign-in with facebook, google or apple
     Type: AWS::SSM::Parameter::Value<String>
+  OktaOrgUrl:
+    Description: The org url for interacting with okta APIs
+    Type: AWS::SSM::Parameter::Value<String>
   CertificateArn:
     Description: ARN of certificate for loadbalancer use.
     Type: String
@@ -192,8 +195,8 @@ Resources:
                   APP_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/appSecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   GOOGLE_RECAPTCHA_SITE_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/recaptcha-site-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   GOOGLE_RECAPTCHA_SECRET_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/recaptcha-secret-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
-                  ENCRYPTION_SECRET_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/encryption-secret-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
-
+                  ENCRYPTION_SECRET_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/encryption-secret-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
+                  OKTA_API_TOKEN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/okta-api-token' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   then break
                 fi
 
@@ -225,6 +228,8 @@ Resources:
             Environment=GOOGLE_RECAPTCHA_SITE_KEY=$GOOGLE_RECAPTCHA_SITE_KEY
             Environment=GOOGLE_RECAPTCHA_SECRET_KEY=$GOOGLE_RECAPTCHA_SECRET_KEY
             Environment=ENCRYPTION_SECRET_KEY=$ENCRYPTION_SECRET_KEY
+            Environment=OKTA_ORG_URL=${OktaOrgUrl}
+            Environment=OKTA_API_TOKEN=$OKTA_API_TOKEN
 
             [Install]
             WantedBy=multi-user.target

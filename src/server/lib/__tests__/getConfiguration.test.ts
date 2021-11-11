@@ -36,6 +36,8 @@ describe('getConfiguration', () => {
     process.env.GOOGLE_RECAPTCHA_SECRET_KEY = 'recaptcha-secret';
     process.env.ENCRYPTION_SECRET_KEY =
       'f3d87b231ddd6f50d99e227c5bc9b7cbb649387b321008df412fd73805ac2e32';
+    process.env.OKTA_ORG_URL = 'oktaorgurl';
+    process.env.OKTA_API_TOKEN = 'oktatoken';
 
     const output = getConfiguration();
     const expected = {
@@ -62,6 +64,11 @@ describe('getConfiguration', () => {
       encryptionSecretKey:
         'f3d87b231ddd6f50d99e227c5bc9b7cbb649387b321008df412fd73805ac2e32',
       oauthBaseUrl: 'http://localhost:5678',
+      okta: {
+        registrationEnabled: false,
+        orgUrl: 'oktaorgurl',
+        token: '123456789',
+      },
     };
     expect(output).toEqual(expected);
   });
