@@ -8,7 +8,8 @@ type Props = {
   cssOverrides?: SerializedStyles;
   children: React.ReactNode;
 };
-export const CONSENTS_MAIN_COLOR = '#eaf1fd';
+
+const CONSENTS_MAIN_COLOR = '#eaf1fd';
 
 const consentsBackground = css`
   background-color: ${CONSENTS_MAIN_COLOR};

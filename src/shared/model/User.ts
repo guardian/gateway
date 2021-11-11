@@ -9,6 +9,6 @@ export interface UserConsent {
   consented: boolean;
 }
 
-export interface UserStatusFields {
+interface UserStatusFields {
   userEmailValidated: boolean;
 }

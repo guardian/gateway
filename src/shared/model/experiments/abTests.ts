@@ -11,7 +11,7 @@ interface ABTestConfiguration {
 // Add AB tests to run in this array
 export const tests: ABTest[] = [];
 
-export const getDefaultABTestConfiguration = (): ABTestConfiguration => ({
+const getDefaultABTestConfiguration = (): ABTestConfiguration => ({
   abTestSwitches: abSwitches,
   arrayOfTestObjects: tests,
   mvtMaxValue: 1000000,

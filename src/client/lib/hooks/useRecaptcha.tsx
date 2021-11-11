@@ -9,7 +9,7 @@ export type RenderOptions = {
   'expired-callback': (value: undefined) => void;
 };
 
-export const recaptchaReady = () =>
+const recaptchaReady = () =>
   typeof window !== 'undefined' &&
   typeof window.grecaptcha !== 'undefined' &&
   typeof window.grecaptcha.render === 'function';
