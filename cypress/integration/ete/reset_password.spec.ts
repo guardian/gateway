@@ -39,6 +39,7 @@ describe('Password set flow', () => {
     it('from the set passsword link expired page, successfully send and reset the create password email, and get taken to the set password page from the email', () => {
       cy.createTestUser({
         isUserEmailValidated: false,
+        isGuestUser: true,
       })?.then(({ emailAddress }) => {
         cy.visit('/set-password/expired');
 

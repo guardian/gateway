@@ -98,6 +98,7 @@ describe('Registration email sent page', () => {
   it('should resend account exists without password email when an existing user without password registers which is same as initial email sent', () => {
     cy.createTestUser({
       isUserEmailValidated: false,
+      isGuestUser: true,
     })?.then(({ emailAddress }) => {
       cy.visit('/register');
       cy.get('input[name=email]').type(emailAddress);

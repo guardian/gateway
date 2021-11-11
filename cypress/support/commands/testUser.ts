@@ -22,6 +22,7 @@ type IDAPITestUserOptions = {
   socialLinks?: SocialLink[];
   password?: string;
   deleteAfterMinute?: boolean;
+  isGuestUser?: boolean;
 };
 
 type IDAPITestUserResponse = [
@@ -50,6 +51,7 @@ export const createTestUser = ({
   socialLinks = [],
   isUserEmailValidated = false,
   deleteAfterMinute = true,
+  isGuestUser = false,
 }: IDAPITestUserOptions) => {
   // Generate a random email address if none is provided.
   const finalEmail = primaryEmailAddress || randomMailosaurEmail();
@@ -69,6 +71,7 @@ export const createTestUser = ({
           socialLinks,
           password,
           deleteAfterMinute,
+          isGuestUser,
         } as IDAPITestUserOptions,
       })
       .then((res) => {

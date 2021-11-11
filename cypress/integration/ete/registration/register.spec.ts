@@ -198,6 +198,7 @@ describe('Registration flow', () => {
   it('sends user an account exists without password email for user with existing account without password trying to register, clicks create password on email', () => {
     cy.createTestUser({
       isUserEmailValidated: false,
+      isGuestUser: true,
     })?.then(({ emailAddress }) => {
       cy.visit('/register');
       const timeRequestWasMade = new Date();
