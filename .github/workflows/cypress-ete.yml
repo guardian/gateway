@@ -21,6 +21,7 @@ jobs:
           STAGE: CODE
           BASE_URI: localhost:8861
           IDAPI_CLIENT_ACCESS_TOKEN: ${{ secrets.IDAPI_CLIENT_ACCESS_TOKEN }}
+          CYPRESS_IDAPI_CLIENT_ACCESS_TOKEN: ${{ secrets.IDAPI_CLIENT_ACCESS_TOKEN }}
           IDAPI_BASE_URL: https://idapi.code.dev-theguardian.com
           CYPRESS_IDAPI_BASE_URL: https://idapi.code.dev-theguardian.com
           PLAY_SESSION_COOKIE_SECRET: ${{ secrets.PLAY_SESSION_COOKIE_SECRET }}
