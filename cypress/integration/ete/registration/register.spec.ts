@@ -98,7 +98,7 @@ describe('Registration flow', () => {
     cy.get('input[name=email]').type(unregisteredEmail);
     cy.get('[data-cy="register-button"]').click();
 
-    cy.contains('Email sent');
+    cy.contains('Check your email inbox');
     cy.contains(unregisteredEmail);
     cy.contains('Resend email');
     cy.contains('Change email address');
@@ -127,7 +127,7 @@ describe('Registration flow', () => {
       cy.get('input[name=email]').type(emailAddress);
       cy.get('[data-cy="register-button"]').click();
 
-      cy.contains('Email sent');
+      cy.contains('Check your email inbox');
       cy.contains(emailAddress);
       cy.contains('Resend email');
       cy.contains('Change email address');
@@ -164,7 +164,7 @@ describe('Registration flow', () => {
       cy.get('input[name=email]').type(emailAddress);
       cy.get('[data-cy="register-button"]').click();
 
-      cy.contains('Email sent');
+      cy.contains('Check your email inbox');
       cy.contains(emailAddress);
       cy.contains('Resend email');
       cy.contains('Change email address');
@@ -204,7 +204,7 @@ describe('Registration flow', () => {
       cy.get('input[name=email]').type(emailAddress);
       cy.get('[data-cy="register-button"]').click();
 
-      cy.contains('Email sent');
+      cy.contains('Check your email inbox');
       cy.contains(emailAddress);
       cy.contains('Resend email');
       cy.contains('Change email address');
@@ -264,7 +264,7 @@ describe('Registration flow', () => {
       'Google reCAPTCHA verification failed. Please try again.',
     ).should('not.exist');
 
-    cy.contains('Email sent');
+    cy.contains('Check your email inbox');
     cy.contains(unregisteredEmail);
 
     cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(

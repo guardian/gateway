@@ -19,6 +19,7 @@ import { FieldError } from '@/shared/model/ClientState';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import { AutoRow, passwordFormSpanDef } from '@/client/styles/Grid';
+import { MainForm } from '@/client/components/MainForm';
 
 type Props = {
   submitUrl: string;
@@ -65,12 +66,12 @@ const form = css`
 `;
 
 const passwordInput = css`
-  margin-bottom: ${space[3]}px;
+  margin-bottom: ${space[2]}px;
 `;
 
-const TooLong = () => {
+const TooLong = ({ noMargin = false }) => {
   return (
-    <div css={messageWrapperStyles}>
+    <div css={noMargin ? undefined : messageWrapperStyles}>
       <div css={[baseIconStyles, failureIconStyles]}>
         <SvgCross />
       </div>
@@ -79,9 +80,9 @@ const TooLong = () => {
   );
 };
 
-const TooShort = () => {
+const TooShort = ({ noMargin = false }) => {
   return (
-    <div css={messageWrapperStyles}>
+    <div css={noMargin ? undefined : messageWrapperStyles}>
       <div css={[baseIconStyles, failureIconStyles]}>
         <SvgCross />
       </div>
@@ -90,7 +91,7 @@ const TooShort = () => {
   );
 };
 
-const Valid = () => {
+const Valid = ({ noMargin = false }) => {
   const successIconStyles = css`
     svg {
       background: ${success[400]};
@@ -102,7 +103,7 @@ const Valid = () => {
   `;
 
   return (
-    <div css={messageWrapperStyles}>
+    <div css={noMargin ? undefined : messageWrapperStyles}>
       <div css={[baseIconStyles, successIconStyles]}>
         <SvgCheckmark />
       </div>
@@ -121,15 +122,15 @@ const Valid = () => {
   );
 };
 
-const Checking = () => {
+const Checking = ({ noMargin = false }) => {
   return (
-    <div css={messageWrapperStyles}>
+    <div css={noMargin ? undefined : messageWrapperStyles}>
       <div css={baseMessageStyles}>Checking...</div>
     </div>
   );
 };
 
-const Weak = () => {
+const Weak = ({ noMargin = false }) => {
   const errorIconStyles = css`
     svg {
       fill: ${error['400']};
@@ -147,7 +148,7 @@ const Weak = () => {
   `;
 
   return (
-    <div css={[messageWrapperStyles, baseMessageStyles]}>
+    <div css={[noMargin ? undefined : messageWrapperStyles, baseMessageStyles]}>
       <div css={[baseIconStyles, errorIconStyles]}>
         <SvgAlertTriangle />
       </div>
@@ -162,22 +163,24 @@ const ValidationMessage = ({
   isTooShort,
   isTooLong,
   isChecking,
+  noMargin,
 }: {
   isWeak: boolean;
   isTooShort: boolean;
   isTooLong: boolean;
   isChecking: boolean;
+  noMargin?: boolean;
 }) => {
   if (isTooShort) {
-    return <TooShort />;
+    return <TooShort noMargin={noMargin} />;
   } else if (isTooLong) {
-    return <TooLong />;
+    return <TooLong noMargin={noMargin} />;
   } else if (isChecking) {
-    return <Checking />;
+    return <Checking noMargin={noMargin} />;
   } else if (isWeak) {
-    return <Weak />;
+    return <Weak noMargin={noMargin} />;
   } else {
-    return <Valid />;
+    return <Valid noMargin={noMargin} />;
   }
 };
 
@@ -292,5 +295,88 @@ export const PasswordForm = ({
         {submitButtonText}
       </Button>
     </form>
+  );
+};
+
+// this is mostly duplicated from the form above, as the above form is still
+// being used on the welcome/onboarding page until that is redesigned
+// so we created this new component to use with the `MainLayout` for the time being
+export const PasswordFormMainLayout = ({
+  submitUrl,
+  fieldErrors,
+  submitButtonText,
+  labelText,
+}: Props) => {
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string | undefined>(
+    fieldErrors.find((fieldError) => fieldError.field === 'password')?.message,
+  );
+  const [isWeak, setIsWeak] = useState<boolean>(false);
+  const [isTooShort, setIsTooShort] = useState<boolean>(true);
+  const [isTooLong, setIsTooLong] = useState<boolean>(false);
+  const [isChecking, setIsChecking] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Typing anything clears the big red error, falling back to the dynamic validation message
+    if (password.length > 0) setError(undefined);
+    setIsTooShort(password.length < 8);
+    setIsTooLong(password.length > 72);
+
+    if (password.length >= 8 && password.length <= 72) {
+      // Only make api calls to check if breached when length rules are not broken
+      setIsChecking(true);
+      isBreached(password)
+        .then((breached) => {
+          if (breached) {
+            // Password is breached ❌
+            setIsWeak(true);
+          } else {
+            // Password is valid ✔
+            setIsWeak(false);
+          }
+        })
+        .finally(() => setIsChecking(false));
+    } else {
+      // Password is not an acceptable length ❌
+      setIsWeak(false);
+    }
+  }, [password]);
+
+  return (
+    <MainForm
+      formAction={submitUrl}
+      submitButtonText={submitButtonText}
+      onSubmitOverride={(e) => {
+        if (isTooShort) {
+          setError(ChangePasswordErrors.AT_LEAST_8);
+          e.preventDefault();
+        } else if (isTooLong) {
+          setError(ChangePasswordErrors.MAXIMUM_72);
+          e.preventDefault();
+        } else if (isWeak) {
+          setError(ChangePasswordErrors.COMMON_PASSWORD);
+          e.preventDefault();
+        }
+      }}
+    >
+      <div css={error ? undefined : passwordInput}>
+        <PasswordInput
+          error={error}
+          label={labelText}
+          onChange={(e) => {
+            setPassword(e.target.value);
+          }}
+        />
+      </div>
+      {!error && (
+        <ValidationMessage
+          isWeak={isWeak}
+          isTooShort={isTooShort}
+          isTooLong={isTooLong}
+          isChecking={isChecking}
+          noMargin
+        />
+      )}
+    </MainForm>
   );
 };

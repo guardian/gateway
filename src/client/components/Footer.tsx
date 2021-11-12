@@ -142,7 +142,7 @@ export const Footer = () => (
   <footer css={footer}>
     {/* What you see below desktop */}
     <Hide above="desktop">
-      <Container sideBorders={true}>
+      <Container sideBorders>
         <div css={ulWrapperStyles}>
           <ul css={[ulStyles, columnStyles]}>
             <li>
@@ -179,7 +179,7 @@ export const Footer = () => (
     </Hide>
     {/* What you see above desktop */}
     <Hide below="desktop">
-      <Container sideBorders={true}>
+      <Container sideBorders>
         <div css={ulWrapperStyles}>
           <ul css={[ulStyles, columnStyles]}>
             <li>

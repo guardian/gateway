@@ -13,11 +13,13 @@ enum EmailInputFieldErrorMessages {
 }
 
 interface EmailInputProps extends Omit<TextInputProps, 'label'> {
+  label?: string;
   defaultValue?: string;
   initialState?: EmailInputFieldState;
 }
 
 export const EmailInput: React.FC<EmailInputProps> = ({
+  label = 'Email',
   initialState = EmailInputFieldState.VALID,
   ...rest
 }) => {
@@ -61,7 +63,7 @@ export const EmailInput: React.FC<EmailInputProps> = ({
 
   return (
     <TextInput
-      label="Email"
+      label={label}
       name="email"
       type="email"
       error={errorMessage}

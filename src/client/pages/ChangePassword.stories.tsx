@@ -14,25 +14,12 @@ export const Default = () => (
     headerText="Reset password"
     buttonText="Confirm new password"
     submitUrl=""
-    email=""
+    email="example@theguardian.com"
     fieldErrors={[]}
   />
 );
 Default.story = {
   name: 'with defaults',
-};
-
-export const Email = () => (
-  <ChangePassword
-    headerText="Reset password"
-    buttonText="Confirm new password"
-    submitUrl=""
-    email="example@theguardian.com"
-    fieldErrors={[]}
-  />
-);
-Email.story = {
-  name: 'with email',
 };
 
 export const FieldErrorPW = () => (
@@ -58,7 +45,7 @@ export const SetPassword = () => (
     headerText="Create password"
     buttonText="Save password"
     submitUrl=""
-    email=""
+    email="example@theguardian.com"
     fieldErrors={[]}
   />
 );

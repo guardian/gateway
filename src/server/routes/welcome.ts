@@ -48,14 +48,21 @@ router.post(
   `${Routes.WELCOME}${Routes.RESEND}`,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { email } = req.body;
-    const { returnUrl } = res.locals.queryParams;
+    const { returnUrl, emailSentSuccess } = res.locals.queryParams;
 
     try {
       await sendAccountVerificationEmail(email, req.ip, returnUrl);
 
       setEncryptedStateCookie(res, { email });
 
-      return res.redirect(303, `${Routes.WELCOME}${Routes.EMAIL_SENT}`);
+      return res.redirect(
+        303,
+        addQueryParamsToPath(
+          `${Routes.WELCOME}${Routes.EMAIL_SENT}`,
+          res.locals.queryParams,
+          { emailSentSuccess },
+        ),
+      );
     } catch (error) {
       const { message, status } =
         error instanceof ApiError ? error : new ApiError();

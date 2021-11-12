@@ -12,9 +12,9 @@ describe('Password reset flow', () => {
         cy.visit('/signin');
         const timeRequestWasMade = new Date();
         cy.contains('Reset password').click();
-        cy.contains('Forgotten password');
+        cy.contains('Forgot password');
         cy.get('input[name=email]').type(emailAddress);
-        cy.get('[data-cy="reset-password-button"]').click();
+        cy.get('[data-cy="main-form-submit-button"]').click();
         cy.contains('Check your email inbox');
         cy.checkForEmailAndGetDetails(
           emailAddress,
@@ -24,7 +24,7 @@ describe('Password reset flow', () => {
           cy.visit(`/reset-password/${token}`);
           cy.get('input[name=password]').type('0298a96c-1028!@#');
           cy.wait('@breachCheck');
-          cy.get('[data-cy="change-password-button"]').click();
+          cy.get('[data-cy="main-form-submit-button"]').click();
           cy.contains('Password updated');
           cy.contains(emailAddress.toLowerCase());
         });
@@ -45,8 +45,8 @@ describe('Password set flow', () => {
         // link expired
         const timeRequestWasMadeLinkExpired = new Date();
         cy.get('input[name=email]').type(emailAddress);
-        cy.get('[data-cy="reset-password-button"]').click();
-        cy.contains('Email sent');
+        cy.get('[data-cy="main-form-submit-button"]').click();
+        cy.contains('Check your email inbox');
         cy.contains(emailAddress);
         cy.contains('Resend email');
         cy.contains('Change email address');
@@ -67,7 +67,7 @@ describe('Password set flow', () => {
         // resend email
         const timeRequestWasMadeResend = new Date();
         cy.contains('Resend email').click();
-        cy.contains('Email sent');
+        cy.contains('Check your email inbox');
         cy.contains(emailAddress);
         cy.checkForEmailAndGetDetails(
           emailAddress,

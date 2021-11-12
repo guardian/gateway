@@ -12,6 +12,7 @@ export const SetPasswordCompletePage = () => {
       headerText="Password created"
       email={email}
       returnUrl={returnUrl}
+      action="created"
     />
   );
 };
