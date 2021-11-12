@@ -119,7 +119,6 @@ describe('Registration flow', () => {
 
   it('sends user an account exists email for user with existing account with password trying to register, clicks sign in, taken to /signin', () => {
     cy.createTestUser({
-      password: 'test_password',
       isUserEmailValidated: true,
     })?.then(({ emailAddress }) => {
       cy.visit('/register');
@@ -157,7 +156,6 @@ describe('Registration flow', () => {
 
   it('sends user an account exists email for user with existing account with password trying to register, clicks reset password on email', () => {
     cy.createTestUser({
-      password: 'test_password',
       isUserEmailValidated: true,
     })?.then(({ emailAddress }) => {
       cy.visit('/register');

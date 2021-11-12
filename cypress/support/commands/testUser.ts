@@ -55,6 +55,8 @@ export const createTestUser = ({
 }: IDAPITestUserOptions) => {
   // Generate a random email address if none is provided.
   const finalEmail = primaryEmailAddress || randomMailosaurEmail();
+  // Generate a random password if none is provided.
+  const finalPassword = password || uuidv4();
   try {
     return cy
       .request({
@@ -69,7 +71,7 @@ export const createTestUser = ({
           primaryEmailAddress: finalEmail,
           isUserEmailValidated,
           socialLinks,
-          password,
+          password: finalPassword,
           deleteAfterMinute,
           isGuestUser,
         } as IDAPITestUserOptions,
@@ -79,6 +81,7 @@ export const createTestUser = ({
         return cy.wrap({
           emailAddress: finalEmail,
           cookies: res.body.values as IDAPITestUserResponse,
+          finalPassword,
         });
       });
   } catch (error) {

@@ -8,7 +8,6 @@ describe('Password reset flow', () => {
 
       cy.createTestUser({
         isUserEmailValidated: true,
-        password: 'test_user',
       })?.then(({ emailAddress }) => {
         cy.visit('/signin');
         const timeRequestWasMade = new Date();

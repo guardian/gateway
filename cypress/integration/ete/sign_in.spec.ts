@@ -45,11 +45,10 @@ describe('Sign in flow', () => {
     });
     cy.createTestUser({
       isUserEmailValidated: true,
-      password: 'test_user',
-    })?.then(({ emailAddress }) => {
+    })?.then(({ emailAddress, finalPassword }) => {
       cy.visit('/signin');
       cy.get('input[name=email]').type(emailAddress);
-      cy.get('input[name=password]').type('test_user');
+      cy.get('input[name=password]').type(finalPassword);
       cy.get('[data-cy="sign-in-button"]').click();
       cy.url().should('include', 'https://m.code.dev-theguardian.com/');
     });
@@ -75,11 +74,10 @@ describe('Sign in flow', () => {
     });
     cy.createTestUser({
       isUserEmailValidated: true,
-      password: 'test_user',
-    })?.then(({ emailAddress }) => {
+    })?.then(({ emailAddress, finalPassword }) => {
       cy.visit(`/signin?returnUrl=${encodeURIComponent(returnUrl)}`);
       cy.get('input[name=email]').type(emailAddress);
-      cy.get('input[name=password]').type('test_user');
+      cy.get('input[name=password]').type(finalPassword);
       cy.get('[data-cy="sign-in-button"]').click();
       cy.url().should('eq', returnUrl);
     });
