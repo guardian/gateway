@@ -30,7 +30,6 @@ type ConsentsConfirmationProps = {
   error?: string;
   success?: string;
   returnUrl: string;
-  isUserInTest: boolean;
   optedOutOfProfiling: boolean;
   optedOutOfMarketResearch: boolean;
   productConsents: Consent[];
@@ -151,7 +150,6 @@ export const ConsentsConfirmation = ({
   error,
   success,
   returnUrl,
-  isUserInTest,
   optedOutOfProfiling,
   optedOutOfMarketResearch,
   productConsents,
@@ -202,11 +200,9 @@ export const ConsentsConfirmation = ({
                   <p css={text}>N/A</p>
                 )}
               </ReviewTableRow>
-              {!isUserInTest && (
-                <ReviewTableRow title="Marketing research">
-                  <p css={text}>{optedOutOfMarketResearch ? 'No' : 'Yes'}</p>
-                </ReviewTableRow>
-              )}
+              <ReviewTableRow title="Marketing research">
+                <p css={text}>{optedOutOfMarketResearch ? 'No' : 'Yes'}</p>
+              </ReviewTableRow>
               <ReviewTableRow title="Marketing analysis">
                 <p css={text}>{optedOutOfProfiling ? 'No' : 'Yes'}</p>
               </ReviewTableRow>

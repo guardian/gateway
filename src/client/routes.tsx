@@ -13,7 +13,6 @@ import { ConsentsNewslettersPage } from '@/client/pages/ConsentsNewslettersPage'
 import { ConsentsConfirmationPage } from '@/client/pages/ConsentsConfirmationPage';
 import { ResendEmailVerificationPage } from '@/client/pages/ResendEmailVerificationPage';
 import { UnexpectedErrorPage } from '@/client/pages/UnexpectedErrorPage';
-import { ConsentsFollowUpPage } from '@/client/pages/ConsentsFollowUpPage';
 import { ClientState } from '@/shared/model/ClientState';
 import { Routes } from '@/shared/model/Routes';
 import { SignInPage } from '@/client/pages/SignInPage';
@@ -105,20 +104,6 @@ export const GatewayRoutes = () => (
     <Route exact path={`${Routes.WELCOME}${Routes.TOKEN_PARAM}`}>
       <WelcomePage />
     </Route>
-    {/*  ABTEST: followupConsent : START */}
-    <Route
-      exact
-      path={`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_NEWSLETTERS}`}
-    >
-      <ConsentsFollowUpPage />
-    </Route>
-    <Route
-      exact
-      path={`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_CONSENTS}`}
-    >
-      <ConsentsFollowUpPage />
-    </Route>
-    {/*  ABTEST: followupConsent : END */}
     <Route exact path={Routes.VERIFY_EMAIL}>
       <ResendEmailVerificationPage />
     </Route>

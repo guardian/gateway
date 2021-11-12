@@ -10,18 +10,9 @@ export default {
   parameters: { layout: 'fullscreen' },
 } as Meta;
 
-export const NoNewsletters = () => (
-  <ConsentsNewsletters newsletters={[]} isUserInTest={false} />
-);
+export const NoNewsletters = () => <ConsentsNewsletters newsletters={[]} />;
 NoNewsletters.story = {
   name: 'with no newsletters',
-};
-
-export const NoNewslettersInTest = () => (
-  <ConsentsNewsletters newsletters={[]} isUserInTest={true} />
-);
-NoNewslettersInTest.story = {
-  name: 'with no newsletters, in test',
 };
 
 export const SingleNewsletter = () => (
@@ -34,28 +25,10 @@ export const SingleNewsletter = () => (
         name: 'Newsletter Name',
       },
     ]}
-    isUserInTest={false}
   />
 );
 SingleNewsletter.story = {
   name: 'with a single newsletter',
-};
-
-export const SingleNewsletterInTest = () => (
-  <ConsentsNewsletters
-    newsletters={[
-      {
-        id: '4152',
-        nameId: 'n0',
-        description: 'Newsletter description',
-        name: 'Newsletter Name',
-      },
-    ]}
-    isUserInTest={true}
-  />
-);
-SingleNewsletterInTest.story = {
-  name: 'with a single newsletter, in test',
 };
 
 export const MultipleNewsletter = () => (
@@ -74,32 +47,8 @@ export const MultipleNewsletter = () => (
         name: 'Another Newsletter Name',
       },
     ]}
-    isUserInTest={false}
   />
 );
 MultipleNewsletter.story = {
   name: 'with multiple newsletters',
-};
-
-export const MultipleNewslettersInTest = () => (
-  <ConsentsNewsletters
-    newsletters={[
-      {
-        id: '4152',
-        nameId: 'n0',
-        description: 'Newsletter description',
-        name: 'Newsletter Name',
-      },
-      {
-        id: '4165',
-        nameId: 'n1',
-        description: 'Another newsletter description',
-        name: 'Another Newsletter Name',
-      },
-    ]}
-    isUserInTest={true}
-  />
-);
-MultipleNewslettersInTest.story = {
-  name: 'with multiple newsletters, in test',
 };
