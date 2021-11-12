@@ -1,29 +1,13 @@
 import { injectAndCheckAxe } from '../../../support/cypress-axe';
-import { v4 as uuidv4 } from 'uuid';
+import { randomMailosaurEmail } from '../../../support/commands/testUser';
 
 describe('Registration email sent page', () => {
+  // This needs to remain static for now, because we can't generate a PLAY_SESSION_2 encrypted email.
   const existingWithoutPassword = {
     serverId: Cypress.env('MAILOSAUR_SERVER_ID'),
     serverDomain: Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
     email:
       'registrationEmailSentPage@' +
-      Cypress.env('MAILOSAUR_SERVER_ID') +
-      '.mailosaur.net',
-  };
-
-  const existingWithPassword = {
-    serverId: Cypress.env('MAILOSAUR_SERVER_ID'),
-    serverDomain: Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
-    email: 'signIn@' + Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
-  };
-
-  const unregisteredAccount = {
-    serverId: Cypress.env('MAILOSAUR_SERVER_ID'),
-    serverDomain: Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
-    email:
-      'registrationTest+' +
-      uuidv4() +
-      '@' +
       Cypress.env('MAILOSAUR_SERVER_ID') +
       '.mailosaur.net',
   };
@@ -43,7 +27,7 @@ describe('Registration email sent page', () => {
     });
   });
 
-  it('should load the page with a success banner given a valid encrypted email cookie', () => {
+  it('should load the page with a success banner given a valid PLAY_SESSION_2 encrypted email cookie', () => {
     cy.setCookie('PLAY_SESSION_2', encryptedEmail, {
       log: true,
     });
@@ -55,189 +39,147 @@ describe('Registration email sent page', () => {
   });
 
   // Depends on a Guest account already created using this email.
-  it('should resend the email when the resend button is clicked', () => {
+  it('should resend the email when the resend button is clicked given a valid PLAY_SESSION_2 encrypted email cookie', () => {
     cy.setCookie('PLAY_SESSION_2', encryptedEmail, {
       log: true,
     });
+
     cy.visit(`/register/email-sent`);
     cy.contains(existingWithoutPassword.email);
+
     const timeRequestWasMade = new Date();
     cy.contains('Resend email').click();
-    cy.mailosaurGetMessage(
-      existingWithoutPassword.serverId,
-      {
-        sentTo: existingWithoutPassword.email,
+
+    cy.checkForEmailAndGetDetails(
+      existingWithoutPassword.email,
+      timeRequestWasMade,
+      /welcome\/([^"]*)/,
+    ).then(({ body, token }) => {
+      expect(body).to.have.string('Complete registration');
+      cy.visit(`/welcome/${token}`);
+      cy.contains('Create password');
+    });
+  });
+
+  it('should resend "Complete Registration" email when a new user registers which is same as initial email sent', () => {
+    const unregisteredEmail = randomMailosaurEmail();
+
+    cy.visit('/register');
+    cy.get('input[name=email]').type(unregisteredEmail);
+    const timeRequestWasMadeInitialEmail = new Date();
+    cy.get('[data-cy="register-button"]').click();
+
+    cy.contains('Email sent');
+    cy.contains(unregisteredEmail);
+    cy.contains('Resend email');
+    cy.contains('Change email address');
+
+    // test and delete initial email
+    cy.checkForEmailAndGetDetails(
+      unregisteredEmail,
+      timeRequestWasMadeInitialEmail,
+    ).then(({ body }) => {
+      expect(body).to.have.string('Complete registration');
+    });
+
+    const timeRequestWasMade = new Date();
+    cy.contains('Resend email').click();
+    cy.contains('Email sent');
+    cy.contains(unregisteredEmail);
+
+    // test and delete resent email
+    cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(
+      ({ body }) => {
+        expect(body).to.have.string('Complete registration');
       },
-      {
-        receivedAfter: timeRequestWasMade,
-      },
-    ).then((email) => {
-      cy.getEmailDetails(email, /theguardian.com\/welcome\/([^"]*)/).then(
-        ({ body, token, id }) => {
-          expect(body).to.have.string('Complete registration');
-          cy.visit(`/welcome/${token}`);
-          cy.contains('Create password');
-          cy.mailosaurDeleteMessage(id);
+    );
+  });
+
+  it('should resend account exists without password email when an existing user without password registers which is same as initial email sent', () => {
+    cy.createTestUser({
+      isUserEmailValidated: false,
+      isGuestUser: true,
+    })?.then(({ emailAddress }) => {
+      cy.visit('/register');
+      cy.get('input[name=email]').type(emailAddress);
+      const timeRequestWasMadeInitialEmail = new Date();
+      cy.get('[data-cy="register-button"]').click();
+
+      cy.contains('Email sent');
+      cy.contains(emailAddress);
+      cy.contains('Resend email');
+      cy.contains('Change email address');
+
+      // test and delete initial email
+      cy.checkForEmailAndGetDetails(
+        emailAddress,
+        timeRequestWasMadeInitialEmail,
+      ).then(({ body }) => {
+        expect(body).to.have.string('This account already exists');
+        expect(body).to.have.string(
+          'To continue to your account please click below to create a password.',
+        );
+        expect(body).to.have.string('This link is only valid for 30 minutes.');
+        expect(body).to.have.string('Create password');
+      });
+
+      const timeRequestWasMade = new Date();
+      cy.contains('Resend email').click();
+      cy.contains('Email sent');
+      cy.contains(emailAddress);
+
+      // test and delete resent email
+      cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
+        ({ body }) => {
+          expect(body).to.have.string('This account already exists');
+          expect(body).to.have.string(
+            'To continue to your account please click below to create a password.',
+          );
+          expect(body).to.have.string(
+            'This link is only valid for 30 minutes.',
+          );
+          expect(body).to.have.string('Create password');
         },
       );
     });
   });
 
-  it('should resend "Complete Registration" email when a new user registers which is same as initial email sent', () => {
-    cy.visit('/register');
-    cy.get('input[name=email]').type(unregisteredAccount.email);
-    const timeRequestWasMadeInitialEmail = new Date();
-    cy.get('[data-cy="register-button"]').click();
-
-    cy.contains('Email sent');
-    cy.contains(unregisteredAccount.email);
-    cy.contains('Resend email');
-    cy.contains('Change email address');
-
-    // test and delete initial email
-    cy.mailosaurGetMessage(
-      unregisteredAccount.serverId,
-      {
-        sentTo: unregisteredAccount.email,
-      },
-      {
-        receivedAfter: timeRequestWasMadeInitialEmail,
-      },
-    ).then((email) => {
-      cy.getEmailDetails(email).then(({ id, body }) => {
-        expect(body).to.have.string('Complete registration');
-        cy.mailosaurDeleteMessage(id);
-      });
-    });
-
-    const timeRequestWasMade = new Date();
-    cy.contains('Resend email').click();
-    cy.contains('Email sent');
-    cy.contains(unregisteredAccount.email);
-    // test and delete resent email
-    cy.mailosaurGetMessage(
-      unregisteredAccount.serverId,
-      {
-        sentTo: unregisteredAccount.email,
-      },
-      {
-        receivedAfter: timeRequestWasMade,
-      },
-    ).then((email) => {
-      cy.getEmailDetails(email).then(({ id, body }) => {
-        expect(body).to.have.string('Complete registration');
-        cy.mailosaurDeleteMessage(id);
-      });
-    });
-  });
-
-  it('should resend account exists without password email when an existing user without password registers which is same as initial email sent', () => {
-    cy.visit('/register');
-    cy.get('input[name=email]').type(existingWithoutPassword.email);
-    const timeRequestWasMadeInitialEmail = new Date();
-    cy.get('[data-cy="register-button"]').click();
-
-    cy.contains('Email sent');
-    cy.contains(existingWithoutPassword.email);
-    cy.contains('Resend email');
-    cy.contains('Change email address');
-
-    // test and delete initial email
-    cy.mailosaurGetMessage(
-      existingWithoutPassword.serverId,
-      {
-        sentTo: existingWithoutPassword.email,
-      },
-      {
-        receivedAfter: timeRequestWasMadeInitialEmail,
-      },
-    ).then((email) => {
-      cy.getEmailDetails(email).then(({ id, body }) => {
-        expect(body).to.have.string('This account already exists');
-        expect(body).to.have.string(
-          'To continue to your account please click below to create a password.',
-        );
-        expect(body).to.have.string('This link is only valid for 30 minutes.');
-        expect(body).to.have.string('Create password');
-        cy.mailosaurDeleteMessage(id);
-      });
-    });
-
-    const timeRequestWasMade = new Date();
-    cy.contains('Resend email').click();
-    cy.contains('Email sent');
-    cy.contains(existingWithoutPassword.email);
-    // test and delete resent email
-    cy.mailosaurGetMessage(
-      existingWithoutPassword.serverId,
-      {
-        sentTo: existingWithoutPassword.email,
-      },
-      {
-        receivedAfter: timeRequestWasMade,
-      },
-    ).then((email) => {
-      cy.getEmailDetails(email).then(({ id, body }) => {
-        expect(body).to.have.string('This account already exists');
-        expect(body).to.have.string(
-          'To continue to your account please click below to create a password.',
-        );
-        expect(body).to.have.string('This link is only valid for 30 minutes.');
-        expect(body).to.have.string('Create password');
-        cy.mailosaurDeleteMessage(id);
-      });
-    });
-  });
-
   it('should resend "Account Exists" email when an existing user with password registers which is same as initial email sent', () => {
-    cy.visit('/register');
-    cy.get('input[name=email]').type(existingWithPassword.email);
-    const timeRequestWasMadeInitialEmail = new Date();
-    cy.get('[data-cy="register-button"]').click();
+    cy.createTestUser({
+      isUserEmailValidated: false,
+    })?.then(({ emailAddress }) => {
+      cy.visit('/register');
+      cy.get('input[name=email]').type(emailAddress);
+      const timeRequestWasMadeInitialEmail = new Date();
+      cy.get('[data-cy="register-button"]').click();
 
-    cy.contains('Email sent');
-    cy.contains(existingWithPassword.email);
-    cy.contains('Resend email');
-    cy.contains('Change email address');
+      cy.contains('Email sent');
+      cy.contains(emailAddress);
+      cy.contains('Resend email');
+      cy.contains('Change email address');
 
-    // test and delete initial email
-    cy.mailosaurGetMessage(
-      existingWithPassword.serverId,
-      {
-        sentTo: existingWithPassword.email,
-      },
-      {
-        receivedAfter: timeRequestWasMadeInitialEmail,
-      },
-    ).then((email) => {
-      cy.getEmailDetails(email).then(({ id, body }) => {
+      cy.checkForEmailAndGetDetails(
+        emailAddress,
+        timeRequestWasMadeInitialEmail,
+      ).then(({ body }) => {
         expect(body).to.have.string(
           'You are already registered with the Guardian.',
         );
-        cy.mailosaurDeleteMessage(id);
       });
-    });
 
-    const timeRequestWasMade = new Date();
-    cy.contains('Resend email').click();
-    cy.contains('Email sent');
-    cy.contains(existingWithPassword.email);
-    // test and delete resent email
-    cy.mailosaurGetMessage(
-      existingWithPassword.serverId,
-      {
-        sentTo: existingWithPassword.email,
-      },
-      {
-        receivedAfter: timeRequestWasMade,
-      },
-    ).then((email) => {
-      cy.getEmailDetails(email).then(({ id, body }) => {
-        expect(body).to.have.string(
-          'You are already registered with the Guardian.',
-        );
-        cy.mailosaurDeleteMessage(id);
-      });
+      const timeRequestWasMade = new Date();
+      cy.contains('Resend email').click();
+      cy.contains('Email sent');
+      cy.contains(emailAddress);
+
+      // test and delete resent email
+      cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
+        ({ body }) => {
+          expect(body).to.have.string(
+            'You are already registered with the Guardian.',
+          );
+        },
+      );
     });
   });
 
