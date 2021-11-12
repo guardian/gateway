@@ -66,7 +66,7 @@ const getAPIOptionsForMethod =
     body: payload ? JSON.stringify(payload) : undefined,
   });
 
-export const APIFetch =
+const APIFetch =
   (idapiBaseUrl: string) =>
   async (path: string, options?: RequestInit): Promise<any> => {
     const response = await fetch(joinUrl(idapiBaseUrl, path), options);

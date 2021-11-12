@@ -15,7 +15,7 @@ interface ABTesting {
   forcedTestVariants?: Participations;
 }
 
-export interface GlobalMessage {
+interface GlobalMessage {
   error?: string;
   success?: string;
 }

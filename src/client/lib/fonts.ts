@@ -12,7 +12,7 @@ import {
 const formats: string[] = ['woff2', 'woff', 'ttf'];
 
 // fonts to load on page
-export const fonts: FontFace[] = [
+const fonts: FontFace[] = [
   {
     family: FontFamily.TITLEPIECE,
     path: `${FontFamilyPath.TITLEPIECE}-${FontWeightName.BOLD}`,
@@ -87,10 +87,10 @@ export const fonts: FontFace[] = [
 
 const CDN = 'https://assets.guim.co.uk/';
 
-export const getStatic: (path: string) => string = (path) =>
+const getStatic: (path: string) => string = (path) =>
   `${CDN}static/frontend/${path}`;
 
-export const fontFace: (fontFace: FontFace) => CSSObject = ({
+const fontFace: (fontFace: FontFace) => CSSObject = ({
   family,
   path,
   weight,

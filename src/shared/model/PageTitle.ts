@@ -14,10 +14,6 @@ export enum PageTitle {
   CHANGE_PASSWORD = 'Change Password',
   CHANGE_PASSWORD_COMPLETE = 'Password Changed',
   VERIFY_EMAIL = 'Verify Email',
-  //  ABTEST: followupConsent : START
-  NEWSLETTER_VARIANT = 'Get the headlines sent to your inbox',
-  CONSENT_VARIANT = 'Get the latest offers sent to your inbox',
-  //  ABTEST: followupConsent : END
   WELCOME = 'Welcome',
   WELCOME_RESEND = 'Resend Welcome Email',
 }
