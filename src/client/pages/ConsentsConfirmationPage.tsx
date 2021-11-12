@@ -3,7 +3,6 @@ import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { ConsentsConfirmation } from '@/client/pages/ConsentsConfirmation';
 import { Consents } from '@/shared/model/Consent';
-import { useAB } from '@guardian/ab-react';
 
 export const ConsentsConfirmationPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
@@ -14,14 +13,6 @@ export const ConsentsConfirmationPage = () => {
     newsletters = [],
     returnUrl = 'https://www.theguardian.com',
   } = pageData;
-
-  // @AB_TEST: Single Newsletter Test - Remove Market Research: START
-  const ABTestAPI = useAB();
-  const isUserInTest = ABTestAPI.isUserInVariant(
-    'SingleNewsletterTest',
-    'variant',
-  );
-  // @AB_TEST: Single Newsletter Test - Remove Market Research: END
 
   const optedOutOfProfiling = !!consents.find(
     // If consent option present and consented === true, this means the user has expressed a
@@ -44,7 +35,6 @@ export const ConsentsConfirmationPage = () => {
       error={error}
       success={success}
       returnUrl={returnUrl}
-      isUserInTest={isUserInTest}
       optedOutOfProfiling={optedOutOfProfiling}
       optedOutOfMarketResearch={optedOutOfMarketResearch}
       productConsents={productConsents}
