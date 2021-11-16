@@ -28,6 +28,9 @@ export interface QueryParams
   extends PersistableQueryParams,
     StringifiableRecord {
   emailVerified?: boolean;
+  // used to show the success message on the email sent page
+  // only if the email is resent from the email sent page
+  emailSentSuccess?: boolean;
   csrfError?: boolean;
   encryptedEmail?: string;
   error?: string;

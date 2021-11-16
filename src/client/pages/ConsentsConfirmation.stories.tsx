@@ -12,7 +12,6 @@ export default {
 export const NoConsent = () => (
   <ConsentsConfirmation
     returnUrl=""
-    isUserInTest={false}
     optedOutOfMarketResearch={true}
     optedOutOfProfiling={true}
     productConsents={[]}
@@ -26,7 +25,6 @@ NoConsent.story = {
 export const Profiling = () => (
   <ConsentsConfirmation
     returnUrl=""
-    isUserInTest={false}
     optedOutOfMarketResearch={true}
     optedOutOfProfiling={false}
     productConsents={[]}
@@ -40,7 +38,6 @@ Profiling.story = {
 export const ProfilingMarketing = () => (
   <ConsentsConfirmation
     returnUrl=""
-    isUserInTest={false}
     optedOutOfMarketResearch={false}
     optedOutOfProfiling={false}
     productConsents={[]}
@@ -51,24 +48,9 @@ ProfilingMarketing.story = {
   name: 'with consent given to profilling and marketing',
 };
 
-export const InTest = () => (
-  <ConsentsConfirmation
-    returnUrl=""
-    isUserInTest={true}
-    optedOutOfMarketResearch={false}
-    optedOutOfProfiling={false}
-    productConsents={[]}
-    subscribedNewsletters={[]}
-  />
-);
-InTest.story = {
-  name: 'with consent given to profilling and marketing, inside test',
-};
-
 export const Newsletters = () => (
   <ConsentsConfirmation
     returnUrl=""
-    isUserInTest={false}
     optedOutOfMarketResearch={true}
     optedOutOfProfiling={true}
     productConsents={[]}
@@ -97,7 +79,6 @@ Newsletters.story = {
 export const Products = () => (
   <ConsentsConfirmation
     returnUrl=""
-    isUserInTest={false}
     optedOutOfMarketResearch={true}
     optedOutOfProfiling={true}
     productConsents={[

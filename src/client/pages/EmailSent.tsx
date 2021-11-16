@@ -1,99 +1,106 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from '@guardian/src-link';
-import { TextInput } from '@guardian/src-text-input';
-import { Button } from '@guardian/src-button';
-import { PageHeader } from '@/client/components/PageHeader';
-import { PageBox } from '@/client/components/PageBox';
-import { PageBody } from '@/client/components/PageBody';
-import { PageBodyText } from '@/client/components/PageBodyText';
-import { Main } from '@/client/layouts/Main';
-import { Header } from '@/client/components/Header';
-import { Footer } from '@/client/components/Footer';
-import { CsrfFormField } from '@/client/components/CsrfFormField';
-import { button } from '@/client/styles/Shared';
+import { InfoSummary } from '@guardian/source-react-components-development-kitchen';
+import { MainLayout } from '@/client/layouts/Main';
+import { MainBodyText } from '@/client/components/MainBodyText';
+import {
+  belowFormMarginTopSpacingStyle,
+  MainForm,
+} from '@/client/components/MainForm';
+import { EmailInput } from '@/client/components/EmailInput';
+import { Routes } from '@/shared/model/Routes';
 
 type Props = {
   email?: string;
   previousPage?: string;
-  subTitle?: string;
   resendEmailAction?: string;
   queryString?: string;
+  showSuccess?: boolean;
+  errorMessage?: string;
+  noAccountInfoBox?: boolean;
+  helpInfoBox?: boolean;
 };
 
 export const EmailSent = ({
   email,
   previousPage = '/',
   resendEmailAction,
-  subTitle = 'Sign in',
   queryString,
-}: Props) => {
-  const [hasJS, setHasJS] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    setHasJS(true);
-  }, []);
-
-  const onResendClick = () => {
-    setLoading(true);
-  };
-
-  return (
-    <>
-      <Header />
-      <Main
-        subTitle={subTitle}
-        successOverride={loading ? undefined : 'Email sent'}
-      >
-        <PageBox>
-          <PageHeader>Check your email inbox</PageHeader>
-          <PageBody>
-            {email ? (
-              <PageBodyText>We’ve sent an email to {email}.</PageBodyText>
-            ) : (
-              <PageBodyText>We’ve sent you an email.</PageBodyText>
-            )}
-            <PageBodyText>
-              Please follow the instructions in this email. If you can&apos;t
-              find it, it may be in your spam folder.
-            </PageBodyText>
-            <PageBodyText>The link is only valid for 30 minutes.</PageBodyText>
-            {email && resendEmailAction && hasJS && (
-              <form method="post" action={`${resendEmailAction}${queryString}`}>
-                <CsrfFormField />
-                <TextInput
-                  label=""
-                  name="email"
-                  type="email"
-                  value={email}
-                  hidden={true}
-                />
-                <br />
-                <br />
-                <Button
-                  css={button}
-                  type="submit"
-                  onClick={onResendClick}
-                  data-cy="resend-email-button"
-                >
-                  {loading ? 'Resending...' : 'Resend email'}
-                </Button>
-                <br />
-                <br />
-              </form>
-            )}
-            {previousPage && (
-              <PageBodyText>
-                Wrong email address?{' '}
-                <Link subdued={true} href={previousPage}>
-                  Change email address
+  showSuccess,
+  errorMessage,
+  noAccountInfoBox,
+  helpInfoBox,
+}: Props) => (
+  <MainLayout
+    pageTitle="Check your email inbox"
+    successOverride={showSuccess ? 'Email sent' : undefined}
+    errorOverride={errorMessage}
+  >
+    {email ? (
+      <MainBodyText>
+        We’ve sent an email to <b>{email}</b>.
+      </MainBodyText>
+    ) : (
+      <MainBodyText>We’ve sent you an email.</MainBodyText>
+    )}
+    <MainBodyText>
+      Please follow the instructions in this email. If you can’t find it, it may
+      be in your spam folder.
+    </MainBodyText>
+    <MainBodyText>
+      <b>This link is only valid for 30 minutes.</b>
+    </MainBodyText>
+    {previousPage && (
+      <MainBodyText>
+        Wrong email address?{' '}
+        <Link subdued href={previousPage}>
+          Change email address
+        </Link>
+      </MainBodyText>
+    )}
+    {email && resendEmailAction && (
+      <>
+        <InfoSummary
+          message="Didn’t receive an email?"
+          context="If you can’t find the email in your inbox or spam folder, please click below and we will send you a new one."
+        />
+        <MainForm
+          formAction={`${resendEmailAction}${queryString}`}
+          submitButtonText={'Resend email'}
+          submitButtonPriority="tertiary"
+          submitButtonHalfWidth
+        >
+          <EmailInput defaultValue={email} hidden hideLabel />
+        </MainForm>
+        {noAccountInfoBox && (
+          <InfoSummary
+            cssOverrides={belowFormMarginTopSpacingStyle}
+            message="If you don’t receive an email within 2 minutes you may not have an account."
+            context={
+              <>
+                Don’t have an account?{' '}
+                <Link subdued href={Routes.REGISTRATION}>
+                  Register for free
                 </Link>
-              </PageBodyText>
-            )}
-          </PageBody>
-        </PageBox>
-      </Main>
-      <Footer />
-    </>
-  );
-};
+                <br />
+                If you are having trouble, please contact our customer service
+                team at{' '}
+                <Link subdued href="mailto:userhelp@theguardian.com">
+                  userhelp@guardian.com
+                </Link>
+              </>
+            }
+          />
+        )}
+        {helpInfoBox && (
+          <InfoSummary
+            cssOverrides={belowFormMarginTopSpacingStyle}
+            // to update message as a link once we can use ReactNode to compose the message
+            // https://github.com/guardian/source/pull/1163
+            message="If you are still having trouble contact our customer service team at userhelp@guardian.com"
+          />
+        )}
+      </>
+    )}
+  </MainLayout>
+);

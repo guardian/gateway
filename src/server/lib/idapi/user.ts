@@ -94,21 +94,6 @@ export const read = async (ip: string, sc_gu_u: string): Promise<User> => {
   }
 };
 
-export const create = async (email: string, password: string, ip: string) => {
-  const url = ApiRoutes.USER;
-  const options = APIPostOptions({
-    primaryEmailAddress: email,
-    password,
-  });
-
-  try {
-    return await idapiFetch(url, APIAddClientAccessToken(options, ip));
-  } catch (error) {
-    logger.error(`IDAPI Error user create ${url}`, error);
-    return handleError(error as IDAPIError);
-  }
-};
-
 export const readUserType = async (
   email: string,
   ip: string,

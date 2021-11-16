@@ -1,3 +1,3 @@
 export const abSwitches = {
-  abSingleNewsletterTest: false,
+  abExampleTest: false,
 };

@@ -1,55 +1,38 @@
 import React from 'react';
-import { PageBox } from '@/client/components/PageBox';
-import { PageHeader } from '@/client/components/PageHeader';
-import { PageBodyText } from '@/client/components/PageBodyText';
-import { PageBody } from '@/client/components/PageBody';
-import { linkButton } from '@/client/styles/Shared';
-import { Main } from '@/client/layouts/Main';
-import { Header } from '@/client/components/Header';
-import { Footer } from '@/client/components/Footer';
-import { SvgArrowRightStraight } from '@guardian/src-icons';
 import { ExternalLinkButton } from '@/client/components/ExternalLink';
+import { buttonStyles, MainLayout } from '@/client/layouts/Main';
+import { MainBodyText } from '@/client/components/MainBodyText';
 
 type ChangePasswordCompleteProps = {
   headerText: string;
   email?: string;
   returnUrl?: string;
+  action: 'created' | 'updated';
 };
 
 export const ChangePasswordComplete = ({
   headerText,
   email,
   returnUrl = 'https://www.theguardian.com/uk',
+  action,
 }: ChangePasswordCompleteProps) => {
   return (
-    <>
-      <Header />
-      <Main subTitle="Sign in">
-        <PageBox>
-          <PageHeader>{headerText}</PageHeader>
-          <PageBody>
-            {email ? (
-              <PageBodyText>
-                The password for <b>{email}</b> was successfully updated.
-              </PageBodyText>
-            ) : (
-              <PageBodyText>
-                The password for your account was successfully updated.
-              </PageBodyText>
-            )}
-          </PageBody>
-          <ExternalLinkButton
-            css={linkButton}
-            iconSide="right"
-            nudgeIcon={true}
-            icon={<SvgArrowRightStraight />}
-            href={returnUrl}
-          >
-            Continue to the Guardian
-          </ExternalLinkButton>
-        </PageBox>
-      </Main>
-      <Footer />
-    </>
+    <MainLayout pageTitle={headerText}>
+      {email ? (
+        <MainBodyText noMargin>
+          The password for <b>{email}</b> was successfully {action}.
+        </MainBodyText>
+      ) : (
+        <MainBodyText noMargin>
+          The password for your account was successfully {action}.
+        </MainBodyText>
+      )}
+      <ExternalLinkButton
+        css={buttonStyles({ halfWidth: true })}
+        href={returnUrl}
+      >
+        Continue to the Guardian
+      </ExternalLinkButton>
+    </MainLayout>
   );
 };

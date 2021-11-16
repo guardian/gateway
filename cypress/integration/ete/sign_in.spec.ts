@@ -1,10 +1,3 @@
-// This test depends on this Mailosaur account already being registered
-const existing = {
-  serverId: Cypress.env('MAILOSAUR_SERVER_ID'),
-  serverDomain: Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
-  email: 'signIn@' + Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
-  password: 'existing_password',
-};
 const oauthBaseUrl = 'https://oauth.code.dev-theguardian.com';
 describe('Sign in flow', () => {
   const returnUrl =
@@ -50,18 +43,21 @@ describe('Sign in flow', () => {
     cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
       req.reply(200);
     });
-
-    cy.visit('/signin');
-    cy.get('input[name=email]').type(existing.email);
-    cy.get('input[name=password]').type(existing.password);
-    cy.get('[data-cy="sign-in-button"]').click();
-    cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+    cy.createTestUser({
+      isUserEmailValidated: true,
+    })?.then(({ emailAddress, finalPassword }) => {
+      cy.visit('/signin');
+      cy.get('input[name=email]').type(emailAddress);
+      cy.get('input[name=password]').type(finalPassword);
+      cy.get('[data-cy="sign-in-button"]').click();
+      cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+    });
   });
 
   it('navigates to reset password', () => {
     cy.visit('/signin');
     cy.contains('Reset password').click();
-    cy.contains('Forgotten password');
+    cy.contains('Forgot password');
   });
 
   it('navigates to registration', () => {
@@ -76,11 +72,15 @@ describe('Sign in flow', () => {
     cy.intercept('GET', returnUrl, (req) => {
       req.reply(200);
     });
-    cy.visit(`/signin?returnUrl=${encodeURIComponent(returnUrl)}`);
-    cy.get('input[name=email]').type(existing.email);
-    cy.get('input[name=password]').type(existing.password);
-    cy.get('[data-cy="sign-in-button"]').click();
-    cy.url().should('eq', returnUrl);
+    cy.createTestUser({
+      isUserEmailValidated: true,
+    })?.then(({ emailAddress, finalPassword }) => {
+      cy.visit(`/signin?returnUrl=${encodeURIComponent(returnUrl)}`);
+      cy.get('input[name=email]').type(emailAddress);
+      cy.get('input[name=password]').type(finalPassword);
+      cy.get('[data-cy="sign-in-button"]').click();
+      cy.url().should('eq', returnUrl);
+    });
   });
 
   it('redirects correctly for social sign in', () => {

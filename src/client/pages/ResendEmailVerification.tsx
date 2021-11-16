@@ -1,49 +1,28 @@
 import React from 'react';
-import { Main } from '@/client/layouts/Main';
-import { Header } from '@/client/components/Header';
-import { Footer } from '@/client/components/Footer';
-import { LinkButton, Button } from '@guardian/src-button';
-import { PageBody } from '@/client/components/PageBody';
-import { PageBodyText } from '@/client/components/PageBodyText';
-import { PageBox } from '@/client/components/PageBox';
-import { PageHeader } from '@/client/components/PageHeader';
-import { form, button } from '@/client/styles/Shared';
-import { SvgArrowRightStraight } from '@guardian/src-icons';
-import { css } from '@emotion/react';
-import { textSans } from '@guardian/src-foundations/typography';
+import { LinkButton } from '@guardian/src-button';
 import { Routes } from '@/shared/model/Routes';
-import { CsrfFormField } from '@/client/components/CsrfFormField';
+import { buttonStyles, MainLayout } from '@/client/layouts/Main';
+import { MainBodyText } from '@/client/components/MainBodyText';
+import { MainForm } from '@/client/components/MainForm';
+import { EmailInput } from '@/client/components/EmailInput';
 
 type ResendEmailVerificationProps = {
   email?: string;
   signInPageUrl?: string;
   successText?: string;
 };
-const bold = css`
-  ${textSans.medium({ lineHeight: 'regular', fontWeight: 'bold' })}
-`;
 
 const LoggedOut = ({ signInPageUrl }: { signInPageUrl?: string }) => (
-  <PageBox>
-    <PageHeader>Link Expired</PageHeader>
-    <PageBody>
-      <PageBodyText>Your email confirmation link has expired</PageBodyText>
-      <PageBodyText>
-        The link we sent you was valid for 30 minutes. Please sign in again and
-        we will resend a verification email.
-      </PageBodyText>
-      <div css={form}>
-        <LinkButton
-          href={signInPageUrl}
-          css={button}
-          icon={<SvgArrowRightStraight />}
-          iconSide="right"
-        >
-          Sign in
-        </LinkButton>
-      </div>
-    </PageBody>
-  </PageBox>
+  <MainLayout pageTitle="Link Expired">
+    <MainBodyText>Your email confirmation link has expired</MainBodyText>
+    <MainBodyText noMargin>
+      The link we sent you was valid for 30 minutes. Please sign in again and we
+      will resend a verification email.
+    </MainBodyText>
+    <LinkButton css={buttonStyles({ halfWidth: true })} href={signInPageUrl}>
+      Sign in
+    </LinkButton>
+  </MainLayout>
 );
 
 const LoggedIn = ({
@@ -53,40 +32,31 @@ const LoggedIn = ({
   email: string;
   successText?: string;
 }) => (
-  <PageBox>
-    <PageHeader>Verify Email</PageHeader>
-    <PageBody>
-      <PageBodyText>
-        You need to confirm your email address to continue securely:
-      </PageBodyText>
-      <PageBodyText>
-        <span css={bold}>{email}</span>
-      </PageBodyText>
-      <PageBodyText>
-        We will send you a verification link to your email to ensure that it’s
-        you. Please note that the link will expire in 30 minutes.
-      </PageBodyText>
-      <PageBodyText>
-        If you don&apos;t see it in your inbox, please check your spam filter.
-      </PageBodyText>
-      {successText ? (
-        <PageBodyText>{successText}</PageBodyText>
-      ) : (
-        <form css={form} method="post" action={Routes.VERIFY_EMAIL}>
-          <CsrfFormField />
-          <input type="hidden" name="email" value={email} />
-          <Button
-            css={button}
-            type="submit"
-            icon={<SvgArrowRightStraight />}
-            iconSide="right"
-          >
-            Send verification link
-          </Button>
-        </form>
-      )}
-    </PageBody>
-  </PageBox>
+  <MainLayout pageTitle="Verify Email">
+    <MainBodyText>
+      You need to confirm your email address to continue securely:
+    </MainBodyText>
+    <MainBodyText>
+      <b>{email}</b>
+    </MainBodyText>
+    <MainBodyText>
+      We will send you a verification link to your email to ensure that it’s
+      you. Please note that the link will expire in 30 minutes.
+    </MainBodyText>
+    <MainBodyText>
+      If you don&apos;t see it in your inbox, please check your spam filter.
+    </MainBodyText>
+    {successText ? (
+      <MainBodyText>{successText}</MainBodyText>
+    ) : (
+      <MainForm
+        formAction={Routes.VERIFY_EMAIL}
+        submitButtonText="Send verification link"
+      >
+        <EmailInput defaultValue={email} hidden hideLabel />
+      </MainForm>
+    )}
+  </MainLayout>
 );
 
 export const ResendEmailVerification = ({
@@ -94,17 +64,9 @@ export const ResendEmailVerification = ({
   signInPageUrl,
   successText,
 }: ResendEmailVerificationProps) => {
-  return (
-    <>
-      <Header />
-      <Main subTitle="Sign in">
-        {email ? (
-          <LoggedIn email={email} successText={successText} />
-        ) : (
-          <LoggedOut signInPageUrl={signInPageUrl} />
-        )}
-      </Main>
-      <Footer />
-    </>
-  );
+  if (email) {
+    return <LoggedIn email={email} successText={successText} />;
+  } else {
+    return <LoggedOut signInPageUrl={signInPageUrl} />;
+  }
 };

@@ -10,10 +10,7 @@ const Text = ({ children }: { children: React.ReactNode }) => (
     css={css`
       ${textSans.xxsmall()}
       margin-top: 0;
-      margin-bottom: 0px;
-      ${from.mobileMedium} {
-        margin-bottom: 6px;
-      }
+      margin-bottom: 6px;
     `}
   >
     {children}
@@ -48,8 +45,8 @@ const terms = css`
   }
 `;
 
-export const Terms = () => (
-  <div css={terms}>
+export const GuardianTerms = () => (
+  <>
     <Text>
       By proceeding, you agree to our{' '}
       <TermsLink href="https://www.theguardian.com/help/terms-of-service">
@@ -64,16 +61,26 @@ export const Terms = () => (
       </TermsLink>
       .
     </Text>
-    <Text>
-      This site is protected by reCAPTCHA and the Google{' '}
-      <TermsLink href="https://policies.google.com/privacy">
-        privacy policy
-      </TermsLink>{' '}
-      and{' '}
-      <TermsLink href="https://policies.google.com/terms">
-        terms of service
-      </TermsLink>{' '}
-      apply.
-    </Text>
+  </>
+);
+
+export const RecaptchaTerms = () => (
+  <Text>
+    This site is protected by reCAPTCHA and the Google{' '}
+    <TermsLink href="https://policies.google.com/privacy">
+      privacy policy
+    </TermsLink>{' '}
+    and{' '}
+    <TermsLink href="https://policies.google.com/terms">
+      terms of service
+    </TermsLink>{' '}
+    apply.
+  </Text>
+);
+
+export const Terms = () => (
+  <div css={terms}>
+    <GuardianTerms />
+    <RecaptchaTerms />
   </div>
 );

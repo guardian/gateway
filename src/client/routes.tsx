@@ -13,7 +13,6 @@ import { ConsentsNewslettersPage } from '@/client/pages/ConsentsNewslettersPage'
 import { ConsentsConfirmationPage } from '@/client/pages/ConsentsConfirmationPage';
 import { ResendEmailVerificationPage } from '@/client/pages/ResendEmailVerificationPage';
 import { UnexpectedErrorPage } from '@/client/pages/UnexpectedErrorPage';
-import { ConsentsFollowUpPage } from '@/client/pages/ConsentsFollowUpPage';
 import { ClientState } from '@/shared/model/ClientState';
 import { Routes } from '@/shared/model/Routes';
 import { SignInPage } from '@/client/pages/SignInPage';
@@ -49,7 +48,7 @@ export const GatewayRoutes = () => (
       <ResetPasswordPage />
     </Route>
     <Route exact path={`${Routes.RESET}${Routes.EMAIL_SENT}`}>
-      <EmailSentPage />
+      <EmailSentPage noAccountInfoBox />
     </Route>
     <Route exact path={`${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`}>
       <ChangePasswordPage />
@@ -73,7 +72,7 @@ export const GatewayRoutes = () => (
       <SetPasswordCompletePage />
     </Route>
     <Route path={`${Routes.SET_PASSWORD}${Routes.EMAIL_SENT}`}>
-      <EmailSentPage />
+      <EmailSentPage helpInfoBox />
     </Route>
     <Route exact path={`${Routes.SET_PASSWORD}${Routes.TOKEN_PARAM}`}>
       <SetPasswordPage />
@@ -97,7 +96,7 @@ export const GatewayRoutes = () => (
       <WelcomeSessionExpiredPage />
     </Route>
     <Route exact path={`${Routes.WELCOME}${Routes.EMAIL_SENT}`}>
-      <EmailSentPage />
+      <EmailSentPage helpInfoBox />
     </Route>
     <Route exact path={`${Routes.WELCOME}${Routes.COMPLETE}`}>
       <WelcomePasswordAlreadySetPage />
@@ -105,20 +104,6 @@ export const GatewayRoutes = () => (
     <Route exact path={`${Routes.WELCOME}${Routes.TOKEN_PARAM}`}>
       <WelcomePage />
     </Route>
-    {/*  ABTEST: followupConsent : START */}
-    <Route
-      exact
-      path={`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_NEWSLETTERS}`}
-    >
-      <ConsentsFollowUpPage />
-    </Route>
-    <Route
-      exact
-      path={`${Routes.CONSENTS}${Routes.CONSENTS_FOLLOW_UP_CONSENTS}`}
-    >
-      <ConsentsFollowUpPage />
-    </Route>
-    {/*  ABTEST: followupConsent : END */}
     <Route exact path={Routes.VERIFY_EMAIL}>
       <ResendEmailVerificationPage />
     </Route>
@@ -126,7 +111,7 @@ export const GatewayRoutes = () => (
       <MagicLinkPage />
     </Route>
     <Route exact path={`${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`}>
-      <EmailSentPage />
+      <EmailSentPage noAccountInfoBox />
     </Route>
     <Route exact path={Routes.UNEXPECTED_ERROR}>
       <UnexpectedErrorPage />

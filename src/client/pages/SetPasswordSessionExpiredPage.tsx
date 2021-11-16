@@ -1,15 +1,16 @@
 import React, { useContext } from 'react';
-import { useLocation } from 'react-router-dom';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
-import { PageBodyText } from '@/client/components/PageBodyText';
+import { MainBodyText } from '@/client/components/MainBodyText';
 import { Routes } from '@/shared/model/Routes';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 export const SetPasswordSessionExpiredPage = () => {
-  const { search } = useLocation();
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData: { email = '' } = {} } = clientState;
+  const { pageData: { email = '' } = {}, queryParams } = clientState;
+
+  const queryString = addQueryParamsToPath('', queryParams);
 
   return (
     <ResetPassword
@@ -17,14 +18,15 @@ export const SetPasswordSessionExpiredPage = () => {
       headerText="Session timed out"
       buttonText="Send me a link"
       formActionOverride={`${Routes.SET_PASSWORD}${Routes.RESEND}`}
-      queryString={search}
+      queryString={queryString}
+      emailInputLabel="Email address"
     >
-      <PageBodyText>
-        The link we sent you was valid for 30 minutes and has now expired.
-      </PageBodyText>
-      <PageBodyText>
-        Please enter your email address below and we will send you another link.
-      </PageBodyText>
+      <MainBodyText>
+        The link we sent you was valid for 30 minutes and it has now expired.
+      </MainBodyText>
+      <MainBodyText>
+        To receive a new link, please enter your email address below.
+      </MainBodyText>
     </ResetPassword>
   );
 };

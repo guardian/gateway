@@ -27,6 +27,8 @@ import {
 import { EmailType } from '@/shared/model/EmailType';
 import { ApiError } from '@/server/models/Error';
 import { register } from '@/server/lib/okta/registration';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+
 
 const router = Router();
 
@@ -70,7 +72,7 @@ router.get(
 router.post(
   `${Routes.REGISTRATION}${Routes.RESEND}`,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { returnUrl } = res.locals.queryParams;
+    const { returnUrl, emailSentSuccess } = res.locals.queryParams;
 
     try {
       // read and parse the encrypted state cookie
@@ -116,7 +118,14 @@ router.post(
         }
 
         setEncryptedStateCookie(res, { email, emailType });
-        return res.redirect(303, `${Routes.REGISTRATION}${Routes.EMAIL_SENT}`);
+        return res.redirect(
+          303,
+          addQueryParamsToPath(
+            `${Routes.REGISTRATION}${Routes.EMAIL_SENT}`,
+            res.locals.queryParams,
+            { emailSentSuccess },
+          ),
+        );
       } else {
         throw new ApiError({ message: GenericErrors.DEFAULT, status: 500 });
       }
@@ -206,7 +215,13 @@ router.post(
       }
 
       // redirect the user to the email sent page
-      return res.redirect(303, `${Routes.REGISTRATION}${Routes.EMAIL_SENT}`);
+      return res.redirect(
+        303,
+        addQueryParamsToPath(
+          `${Routes.REGISTRATION}${Routes.EMAIL_SENT}`,
+          res.locals.queryParams,
+        ),
+      );
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 

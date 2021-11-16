@@ -21,3 +21,38 @@ export const WithEmail = () => (
 WithEmail.story = {
   name: 'with email',
 };
+
+export const WithEmailResend = () => (
+  <EmailSent
+    previousPage="/reset"
+    email="example@theguardian.com"
+    resendEmailAction="#"
+  />
+);
+WithEmailResend.story = {
+  name: 'with email and resend',
+};
+
+export const WithEmailResendNoAccount = () => (
+  <EmailSent
+    previousPage="/reset"
+    email="example@theguardian.com"
+    resendEmailAction="#"
+    noAccountInfoBox
+  />
+);
+WithEmailResendNoAccount.story = {
+  name: 'with email, resend, and no account box',
+};
+
+export const WithEmailResendHelp = () => (
+  <EmailSent
+    previousPage="/reset"
+    email="example@theguardian.com"
+    resendEmailAction="#"
+    helpInfoBox
+  />
+);
+WithEmailResendHelp.story = {
+  name: 'with email, resend, and help box',
+};

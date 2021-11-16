@@ -22,7 +22,6 @@ import {
 type ConsentsCommunicationProps = {
   marketResearchOptout?: Consent;
   consentsWithoutOptout: Consent[];
-  isUserInTest: boolean;
 };
 
 const fieldset = css`
@@ -64,7 +63,6 @@ const communicationCardSpanDef = {
 export const ConsentsCommunication = ({
   marketResearchOptout,
   consentsWithoutOptout,
-  isUserInTest,
 }: ConsentsCommunicationProps) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
 
@@ -97,8 +95,7 @@ export const ConsentsCommunication = ({
             />
           ))}
         </div>
-        {/* only show market research in control */}
-        {marketResearchOptout && !isUserInTest && (
+        {marketResearchOptout && (
           <>
             <h2 css={[heading, autoRow()]}>
               Using your data for market research

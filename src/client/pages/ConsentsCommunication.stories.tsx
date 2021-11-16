@@ -10,7 +10,7 @@ export default {
 } as Meta;
 
 export const NoConsent = () => (
-  <ConsentsCommunication isUserInTest={false} consentsWithoutOptout={[]} />
+  <ConsentsCommunication consentsWithoutOptout={[]} />
 );
 NoConsent.story = {
   name: 'with no consents',
@@ -18,7 +18,6 @@ NoConsent.story = {
 
 export const MarketResearch = () => (
   <ConsentsCommunication
-    isUserInTest={false}
     marketResearchOptout={{
       id: '0',
       name: 'mr-name',
@@ -34,7 +33,6 @@ MarketResearch.story = {
 
 export const WithoutOptout = () => (
   <ConsentsCommunication
-    isUserInTest={false}
     consentsWithoutOptout={[
       {
         id: '0',
@@ -50,7 +48,6 @@ WithoutOptout.story = {
 
 export const MultipleConsents = () => (
   <ConsentsCommunication
-    isUserInTest={false}
     consentsWithoutOptout={[
       {
         id: '0',
@@ -71,7 +68,6 @@ MultipleConsents.story = {
 
 export const MultipleConsentsAndMarketing = () => (
   <ConsentsCommunication
-    isUserInTest={false}
     marketResearchOptout={{
       id: '0',
       name: 'mr-name',
@@ -94,31 +90,4 @@ export const MultipleConsentsAndMarketing = () => (
 );
 MultipleConsentsAndMarketing.story = {
   name: 'with multiple consents and marketing',
-};
-
-export const InTest = () => (
-  <ConsentsCommunication
-    isUserInTest={true}
-    marketResearchOptout={{
-      id: '0',
-      name: 'mr-name',
-      description:
-        'I do NOT wish to be contacted by the Guardian for market research purposes.',
-    }}
-    consentsWithoutOptout={[
-      {
-        id: '0',
-        name: 'My Consent Name',
-        description: 'Consent description',
-      },
-      {
-        id: '1',
-        name: 'My Other Consent Name',
-        description: 'Other consent description',
-      },
-    ]}
-  />
-);
-InTest.story = {
-  name: 'with user in test',
 };

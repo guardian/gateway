@@ -7,18 +7,24 @@ import { Routes } from '@/shared/model/Routes';
 
 export const RegistrationEmailSentPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData = {}, queryParams } = clientState;
+  const { pageData = {}, queryParams, globalMessage = {} } = clientState;
   const { email } = pageData;
+  const { emailSentSuccess } = queryParams;
+  const { error } = globalMessage;
 
-  const queryString = addQueryParamsToPath('', queryParams);
+  const queryString = addQueryParamsToPath('', queryParams, {
+    emailSentSuccess: true,
+  });
 
   return (
     <EmailSent
       email={email}
-      subTitle={"We've sent you an email"}
       queryString={queryString}
       previousPage={`${Routes.SIGN_IN}`}
       resendEmailAction={`${Routes.REGISTRATION}${Routes.RESEND}`}
+      showSuccess={emailSentSuccess}
+      errorMessage={error}
+      helpInfoBox
     />
   );
 };
