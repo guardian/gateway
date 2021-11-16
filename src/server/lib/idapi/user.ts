@@ -17,10 +17,6 @@ import User from '@/shared/model/User';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { IdapiError } from '@/server/models/Error';
 import { ApiRoutes } from '@/shared/model/Routes';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { getConfiguration } from '@/server/lib/getConfiguration';
-
-const { defaultReturnUri } = getConfiguration();
 
 interface APIResponse {
   user: User;
@@ -205,34 +201,6 @@ export const sendCreatePasswordEmail = async (
     );
   } catch (error) {
     logger.error(`IDAPI Error send create password email ${url}`, error);
-    return handleError(error as IDAPIError);
-  }
-};
-
-export const sendOktaActivationEmail = async (
-  email: string,
-  activationToken: string,
-  ip: string,
-  returnUrl?: string,
-  refViewId?: string,
-  ref?: string,
-) => {
-  const options = APIPostOptions({
-    'email-address': email,
-    'activation-token': activationToken,
-  });
-  const url = addQueryParamsToPath(
-    `${ApiRoutes.USER}${ApiRoutes.SEND_OKTA_ACTIVATION_EMAIL}`,
-    {
-      returnUrl: returnUrl || defaultReturnUri,
-      ref,
-      refViewId,
-    },
-  );
-  try {
-    await idapiFetch(url, APIAddClientAccessToken(options, ip));
-  } catch (error) {
-    logger.error(`IDAPI Error send okta activation email ${url}`, error);
     return handleError(error as IDAPIError);
   }
 };

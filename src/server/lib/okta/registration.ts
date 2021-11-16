@@ -1,16 +1,10 @@
 import { CreateUserRequestOptions } from '@okta/okta-sdk-nodejs/src/types/models/CreateUserRequest';
 import { oktaClient } from '@/server/lib/okta/client';
-import { sendOktaActivationEmail } from '@/server/lib/idapi/user';
+import { UserActivationToken } from '@okta/okta-sdk-nodejs';
 
-export const register = (
-  email: string,
-  ip: string,
-  returnUrl?: string,
-  refViewId?: string,
-  ref?: string,
-  activate = false,
-  sendEmail = false,
-): Promise<void> => {
+export const register = (email: string): Promise<UserActivationToken> => {
+  const activate = false;
+  const sendEmail = true;
   const client = oktaClient();
   const user: CreateUserRequestOptions = {
     profile: {
@@ -20,14 +14,5 @@ export const register = (
   };
   return client
     .createUser(user, { activate })
-    .then((user) => client.activateUser(user.id, { sendEmail }))
-    .then((activationToken) =>
-      sendOktaActivationEmail(
-        email,
-        activationToken.activationToken,
-        ip,
-        refViewId,
-        ref,
-      ),
-    );
+    .then((user) => client.activateUser(user.id, { sendEmail }));
 };
