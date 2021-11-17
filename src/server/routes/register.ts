@@ -26,7 +26,7 @@ import {
 } from '@/server/lib/encryptedStateCookie';
 import { EmailType } from '@/shared/model/EmailType';
 import { ApiError } from '@/server/models/Error';
-import { register } from '@/server/lib/okta/registration';
+import { registerWithOkta } from '@/server/lib/okta/registration';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 const router = Router();
@@ -177,7 +177,7 @@ router.post(
         // and automatically send account verification email
         case UserType.NEW:
           if (okta.registrationEnabled) {
-            await register(email);
+            await registerWithOkta(email);
           } else {
             await guest(email, req.ip, returnUrl, refViewId, ref);
           }
