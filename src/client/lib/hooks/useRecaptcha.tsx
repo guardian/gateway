@@ -69,7 +69,7 @@ type UseRecaptcha = (
   src?: string,
 ) => UseRecaptchaReturnValue;
 
-type UseRecaptchaReturnValue = {
+export type UseRecaptchaReturnValue = {
   // Token returned from Google reCAPTCHA upon a successful request.
   // Initial value: ''
   token: string;
@@ -172,6 +172,35 @@ const useRecaptcha: UseRecaptcha = (
 };
 
 export default useRecaptcha;
+
+export const Recaptcha: React.FC<{
+  recaptchaSiteKey: string;
+  setRecaptchaState: React.Dispatch<
+    React.SetStateAction<UseRecaptchaReturnValue | undefined>
+  >;
+}> = ({ recaptchaSiteKey, setRecaptchaState }) => {
+  const { error, executeCaptcha, expired, requestCount, token, widgetId } =
+    useRecaptcha(recaptchaSiteKey, 'recaptcha');
+  React.useEffect(() => {
+    setRecaptchaState({
+      error,
+      executeCaptcha,
+      expired,
+      requestCount,
+      token,
+      widgetId,
+    });
+  }, [
+    error,
+    executeCaptcha,
+    expired,
+    requestCount,
+    setRecaptchaState,
+    token,
+    widgetId,
+  ]);
+  return <RecaptchaElement id="recaptcha" />;
+};
 
 /**
  * Provides a standardised way to bind Recaptcha to your page.
