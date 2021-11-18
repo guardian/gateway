@@ -8,8 +8,18 @@
  */
 interface FeatureSwitches {
   demoSwitch: boolean;
+  oktaRegistrationEnabled: {
+    DEV: boolean;
+    CODE: boolean;
+    PROD: boolean;
+  };
 }
 
 export const featureSwitches: FeatureSwitches = {
   demoSwitch: false,
+  oktaRegistrationEnabled: {
+    DEV: false,
+    CODE: false,
+    PROD: false,
+  },
 };
