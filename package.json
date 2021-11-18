@@ -96,7 +96,7 @@
     "nodemon": "^2.0.14",
     "prettier": "^2.4.1",
     "react-test-renderer": "^17.0.2",
-    "snyk": "^1.754.0",
+    "snyk": "^1.763.0",
     "stmux": "^1.8.3",
     "ts-jest": "^27.0.7",
     "ts-prune": "^0.10.1",
