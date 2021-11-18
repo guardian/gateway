@@ -110,7 +110,7 @@
     "whatwg-fetch": "^3.6.2"
   },
   "dependencies": {
-    "@emotion/react": "^11.5.0",
+    "@emotion/react": "^11.6.0",
     "@guardian/ab-core": "^2.0.0",
     "@guardian/ab-react": "^2.0.1",
     "@guardian/consent-management-platform": "^9.0.0",
