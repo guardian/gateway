@@ -1451,10 +1451,10 @@
     "@guardian/libs" "^3.2.1"
     "@guardian/src-helpers" "^3.10.3-rc.1"
 
-"@guardian/src-brand@^3.11.0":
-  version "3.11.0"
-  resolved "https://registry.yarnpkg.com/@guardian/src-brand/-/src-brand-3.11.0.tgz#474adfbe3c337096f38d44dd88cad32ea0cc830e"
-  integrity sha512-Yvvu1zMHSdT91XoCIlOI/4Er1rnbdqKUMQniTnIqZrJ1T9KhRymQyQQaC7V/BGzMyr3GF68cYUmZDRYjqdzfhg==
+"@guardian/src-brand@^3.12.1":
+  version "3.12.1"
+  resolved "https://registry.yarnpkg.com/@guardian/src-brand/-/src-brand-3.12.1.tgz#505f2ccd25048fc40dc8101ccd18ed3c059a892f"
+  integrity sha512-LHbnf7zS6TzFqkBPMdNDwlarI0yRqDLqw5zhWc0WfFZsHlIQvy4uKxbcYaJ80ehugKHXQ390sDmGr6tArbj6mQ==
 
 "@guardian/src-button@^3.10.3", "@guardian/src-button@^3.11.0":
   version "3.11.0"
