@@ -70,10 +70,21 @@ router.get(
 
 router.post(
   `${Routes.REGISTRATION}${Routes.EMAIL_SENT}${Routes.RESEND}`,
+  recaptcha.middleware.verify,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { returnUrl, emailSentSuccess } = res.locals.queryParams;
 
     try {
+      if (req.recaptcha?.error) {
+        logger.error(
+          'Problem verifying recaptcha, error response: ',
+          req.recaptcha.error,
+        );
+        throw new ApiError({
+          message: CaptchaErrors.GENERIC,
+          status: 400,
+        });
+      }
       // read and parse the encrypted state cookie
       const encryptedState = readEncryptedStateCookie(req);
 

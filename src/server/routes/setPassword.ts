@@ -15,10 +15,19 @@ import { EmailType } from '@/shared/model/EmailType';
 import { sendCreatePasswordEmail } from '@/server/lib/idapi/user';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { ResetPasswordErrors } from '@/shared/model/Errors';
+import { CaptchaErrors, ResetPasswordErrors } from '@/shared/model/Errors';
 import { ApiError } from '../models/Error';
+import { RecaptchaV2 } from 'express-recaptcha';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 
 const router = Router();
+
+const {
+  googleRecaptcha: { secretKey, siteKey },
+} = getConfiguration();
+
+// set google recaptcha site key
+const recaptcha = new RecaptchaV2(siteKey, secretKey);
 
 // set password complete page
 router.get(
@@ -65,11 +74,23 @@ router.get(
 // POST handler for resending "create (set) password" email
 router.post(
   `${Routes.SET_PASSWORD}${Routes.RESEND}`,
+  recaptcha.middleware.verify,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { email } = req.body;
     const { returnUrl, emailSentSuccess } = res.locals.queryParams;
 
     try {
+      if (req.recaptcha?.error) {
+        logger.error(
+          'Problem verifying recaptcha, error response: ',
+          req.recaptcha.error,
+        );
+        throw new ApiError({
+          message: CaptchaErrors.GENERIC,
+          status: 400,
+        });
+      }
+
       await sendCreatePasswordEmail(email, req.ip, returnUrl);
 
       setEncryptedStateCookie(res, {

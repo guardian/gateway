@@ -10,6 +10,7 @@ describe('Password reset flow', () => {
   });
 
   beforeEach(function () {
+    cy.mockPurge();
     page.goto();
   });
 

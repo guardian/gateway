@@ -12,9 +12,8 @@ import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { GuardianTerms, RecaptchaTerms } from '@/client/components/Terms';
 import { space } from '@guardian/source-foundations';
 import { buttonStyles } from '@/client/layouts/Main';
-import useRecaptcha, {
+import {
   Recaptcha,
-  RecaptchaElement,
   UseRecaptchaReturnValue,
 } from '@/client/lib/hooks/useRecaptcha';
 import { CaptchaErrors } from '@/shared/model/Errors';
@@ -76,12 +75,18 @@ export const MainForm = ({
    */
   const handleSubmit = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      if (recaptchaState?.executeCaptcha) {
-        recaptchaState.executeCaptcha();
+      if (onSubmitOverride) {
+        onSubmitOverride(event);
+      }
+
+      if (recaptchaEnabled) {
+        event.preventDefault();
+        if (recaptchaState?.executeCaptcha) {
+          recaptchaState.executeCaptcha();
+        }
       }
     },
-    [recaptchaState],
+    [onSubmitOverride, recaptchaEnabled, recaptchaState],
   );
 
   /**
@@ -140,19 +145,15 @@ export const MainForm = ({
     setRecaptchaErrorMessage,
   ]);
 
-  // Only handle form onSubmit if overriden or if reCAPTCHA is enabled.
-  const finalSubmitHandler =
-    onSubmitOverride || (recaptchaEnabled && handleSubmit) || undefined;
-
   return (
     <form
       css={formStyles}
       method="post"
       action={formAction}
-      onSubmit={finalSubmitHandler}
+      onSubmit={handleSubmit}
       ref={registerFormRef}
     >
-      {recaptchaSiteKey && (
+      {recaptchaEnabled && (
         <Recaptcha
           recaptchaSiteKey={recaptchaSiteKey}
           setRecaptchaState={setRecaptchaState}
@@ -161,7 +162,7 @@ export const MainForm = ({
       <CsrfFormField />
       <div css={inputStyles(hasTerms)}>{children}</div>
       {hasGuardianTerms && <GuardianTerms />}
-      {recaptchaSiteKey && <RecaptchaTerms />}
+      {recaptchaEnabled && <RecaptchaTerms />}
       <Button
         css={buttonStyles({ hasTerms, halfWidth: submitButtonHalfWidth })}
         type="submit"

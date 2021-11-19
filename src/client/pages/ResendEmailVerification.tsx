@@ -83,7 +83,7 @@ export const ResendEmailVerification = ({
   if (email) {
     return (
       <LoggedIn
-        email={'test@email.com'}
+        email={email}
         successText={successText}
         recaptchaSiteKey={recaptchaSiteKey}
       />
