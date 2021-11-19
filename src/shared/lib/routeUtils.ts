@@ -8,12 +8,14 @@ import { Router } from 'express';
  */
 export type RoutePaths =
   | '/signin'
+  | '/signin/complete'
   | '/register'
   | '/register/email-sent'
   | '/register/resend'
   | '/reset'
   | '/reset/email-sent'
   | '/reset/complete'
+  | '/reset-password'
   | '/reset-password/:token'
   | '/password/reset-confirmation'
   | '/reset/resend'

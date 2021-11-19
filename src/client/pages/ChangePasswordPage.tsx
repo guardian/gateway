@@ -1,16 +1,17 @@
 import React, { useContext, useEffect } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
 import { ClientState } from '@/shared/model/ClientState';
+import { useParams } from 'react-router-dom';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { Routes } from '@/shared/model/Routes';
 import { ChangePassword } from '@/client/pages/ChangePassword';
 import { buildUrl } from '@/shared/lib/routeUtils';
+import { addQueryParamsToStringPath } from '@/shared/lib/queryParams';
 
 export const ChangePasswordPage = () => {
-  const { search } = useLocation();
   const clientState: ClientState = useContext(ClientStateContext);
   const {
     pageData: { email = '', fieldErrors = [], tokenExpiryTimestamp } = {},
+    queryParams,
   } = clientState;
   const { token } = useParams<{ token: string }>();
 
@@ -31,7 +32,12 @@ export const ChangePasswordPage = () => {
     <ChangePassword
       headerText="Reset password"
       buttonText="Confirm new password"
-      submitUrl={buildUrl(`${Routes.CHANGE_PASSWORD}/${token}${search}`)}
+      submitUrl={addQueryParamsToStringPath(
+        buildUrl(`${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`, {
+          token: token,
+        }),
+        queryParams,
+      )}
       email={email}
       fieldErrors={fieldErrors}
     />

@@ -39,7 +39,7 @@ interface GatewayRouteProps extends RouteProps {
 }
 
 const TypedRoute = (props: GatewayRouteProps) => {
-  return <Route {...props}></Route>;
+  return <Route {...props} path={props.path as string}></Route>;
 };
 
 export const GatewayRoutes = () => (

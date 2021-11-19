@@ -22,13 +22,15 @@ import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaErr
 import locations from '@/client/lib/locations';
 import { EmailInput } from '@/client/components/EmailInput';
 import { buildUrl } from '@/shared/lib/routeUtils';
+import { addQueryParamsToStringPath } from '@/shared/lib/queryParams';
+import { QueryParams } from '@/shared/model/QueryParams';
 
 export type RegistrationProps = {
   returnUrl?: string;
   email?: string;
   recaptchaSiteKey: string;
   oauthBaseUrl: string;
-  queryString?: string;
+  queryString: QueryParams;
 };
 
 const registerButton = css`
@@ -121,7 +123,10 @@ export const Registration = ({
       >
         <form
           method="post"
-          action={buildUrl(`${Routes.REGISTRATION}${queryString}`)}
+          action={addQueryParamsToStringPath(
+            buildUrl(`${Routes.REGISTRATION}`),
+            queryString,
+          )}
           ref={registerFormRef}
           onSubmit={handleSubmit}
         >
