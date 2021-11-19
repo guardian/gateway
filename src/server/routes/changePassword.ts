@@ -10,7 +10,7 @@ import {
 } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { typedRouter as router } from '@/shared/lib/routeUtils';
+import { typedRouter as router } from '@/server/lib/typedRoutes';
 
 router.get(
   `${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`,

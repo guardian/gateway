@@ -9,7 +9,7 @@ import {
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { Routes } from '@/shared/model/Routes';
-import { typedRouter as router } from '@/shared/lib/routeUtils';
+import { typedRouter as router } from '@/server/lib/typedRoutes';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
@@ -32,6 +32,7 @@ import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 const {
   googleRecaptcha: { secretKey, siteKey },
+  okta,
 } = getConfiguration();
 
 // set google recaptcha site key
