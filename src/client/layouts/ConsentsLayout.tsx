@@ -18,7 +18,7 @@ import { ConsentsHeader } from '@/client/components/ConsentsHeader';
 import { Routes } from '@/shared/model/Routes';
 import { onboardingFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
-import { addQueryParamsToStringPath } from '@/shared/lib/queryParams';
+import { buildQueryParamsString } from '@/shared/lib/queryParams';
 import { buildUrl } from '@/shared/lib/routeUtils';
 
 interface ConsentsLayoutProps {
@@ -88,7 +88,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
     queryParams,
   } = clientState;
   const { page = '', previousPage } = pageData;
-  const queryString = addQueryParamsToStringPath('', queryParams);
+  const queryString = buildQueryParamsString(queryParams);
 
   const optionalBgColor =
     bgColor &&
