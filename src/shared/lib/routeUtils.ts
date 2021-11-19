@@ -11,6 +11,7 @@ export type RoutePaths =
   | '/signin/complete'
   | '/register'
   | '/register/email-sent'
+  | '/register/email-sent/resend'
   | '/register/resend'
   | '/reset'
   | '/reset/email-sent'

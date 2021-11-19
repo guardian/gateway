@@ -126,6 +126,7 @@
     "@guardian/src-link": "^3.11.0",
     "@guardian/src-radio": "^3.11.0",
     "@guardian/src-text-input": "^3.11.0",
+    "@okta/okta-sdk-nodejs": "6.0.0",
     "awesome-debounce-promise": "^2.1.0",
     "aws-sdk": "2.1023.0",
     "bowser": "^2.11.0",

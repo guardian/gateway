@@ -22,7 +22,9 @@ export const RegistrationEmailSentPage = () => {
       email={email}
       queryString={queryString}
       previousPage={buildUrl(`${Routes.SIGN_IN}`)}
-      resendEmailAction={buildUrl(`${Routes.REGISTRATION}${Routes.RESEND}`)}
+      resendEmailAction={buildUrl(
+        `${Routes.REGISTRATION}${Routes.EMAIL_SENT}${Routes.RESEND}`,
+      )}
       showSuccess={emailSentSuccess}
       errorMessage={error}
       helpInfoBox
