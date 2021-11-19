@@ -1,6 +1,7 @@
 import { Request } from 'express';
 import { Routes } from '@/shared/model/Routes';
-import { buildUrl, typedRouter as router } from '@/shared/lib/routeUtils';
+import { buildUrl } from '@/shared/lib/routeUtils';
+import { typedRouter as router } from '@/server/lib/typedRoutes';
 import { renderer } from '@/server/lib/renderer';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { PageTitle } from '@/shared/model/PageTitle';

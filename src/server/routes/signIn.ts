@@ -14,7 +14,8 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { decrypt } from '@/server/lib/idapi/decryptToken';
 import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
 import { ApiError } from '@/server/models/Error';
-import { RoutePathsAll, typedRouter as router } from '@/shared/lib/routeUtils';
+import { RoutePathsAll } from '@/shared/lib/routeUtils';
+import { typedRouter as router } from '@/server/lib/typedRoutes';
 
 const preFillEmailField = (route: RoutePathsAll) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {

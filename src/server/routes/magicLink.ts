@@ -1,7 +1,8 @@
 import { Request } from 'express';
 import deepmerge from 'deepmerge';
 import { Routes } from '@/shared/model/Routes';
-import { buildUrl, typedRouter as router } from '@/shared/lib/routeUtils';
+import { buildUrl } from '@/shared/lib/routeUtils';
+import { typedRouter as router } from '@/server/lib/typedRoutes';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { trackMetric } from '@/server/lib/trackMetric';
