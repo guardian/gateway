@@ -9,6 +9,7 @@ import {
 import { EmailInput } from '@/client/components/EmailInput';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import locations from '@/client/lib/locations';
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 type Props = {
   email?: string;
@@ -19,7 +20,10 @@ export const MagicLink = ({ email }: Props) => (
     <MainBodyText>
       We can email you a one time link to sign into your account
     </MainBodyText>
-    <MainForm formAction={Routes.MAGIC_LINK} submitButtonText="Email me a link">
+    <MainForm
+      formAction={buildUrl(Routes.MAGIC_LINK)}
+      submitButtonText="Email me a link"
+    >
       <EmailInput defaultValue={email} />
     </MainForm>
     <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>

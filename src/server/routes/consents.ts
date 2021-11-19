@@ -1,8 +1,8 @@
-import { Router, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import deepmerge from 'deepmerge';
-import { joinUrl } from '@guardian/libs';
 import { Routes } from '@/shared/model/Routes';
 import { renderer } from '@/server/lib/renderer';
+import { RoutePathsAll, typedRouter as router } from '@/shared/lib/routeUtils';
 import {
   update as patchConsents,
   read as readConsents,
@@ -40,10 +40,9 @@ import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { logger } from '@/server/lib/logger';
 import { ApiError } from '@/server/models/Error';
 
-const router = Router();
-
 interface ConsentPage {
   page: string;
+  path: RoutePathsAll;
   read: (ip: string, sc_gu_u: string, geo?: GeoLocation) => Promise<PageData>;
   pageTitle: string;
   update?: (
@@ -127,6 +126,7 @@ const getUserNewsletterSubscriptions = async (
 export const consentPages: ConsentPage[] = [
   {
     page: Routes.CONSENTS_COMMUNICATION.slice(1),
+    path: `${Routes.CONSENTS}${Routes.CONSENTS_COMMUNICATION}`,
     pageTitle: CONSENTS_PAGES.CONTACT,
     read: async (ip, sc_gu_u) => ({
       consents: await getUserConsentsForPage(
@@ -147,6 +147,7 @@ export const consentPages: ConsentPage[] = [
   },
   {
     page: Routes.CONSENTS_NEWSLETTERS.slice(1),
+    path: `${Routes.CONSENTS}${Routes.CONSENTS_NEWSLETTERS}`,
     pageTitle: CONSENTS_PAGES.NEWSLETTERS,
     read: async (ip, sc_gu_u, geo) => ({
       page: Routes.CONSENTS_NEWSLETTERS.slice(1),
@@ -196,6 +197,7 @@ export const consentPages: ConsentPage[] = [
   },
   {
     page: Routes.CONSENTS_DATA.slice(1),
+    path: `${Routes.CONSENTS}${Routes.CONSENTS_DATA}`,
     pageTitle: CONSENTS_PAGES.YOUR_DATA,
     read: async (ip, sc_gu_u) => ({
       consents: await getUserConsentsForPage(CONSENTS_DATA_PAGE, ip, sc_gu_u),
@@ -213,6 +215,7 @@ export const consentPages: ConsentPage[] = [
   },
   {
     page: Routes.CONSENTS_REVIEW.slice(1),
+    path: `${Routes.CONSENTS}${Routes.CONSENTS_REVIEW}`,
     pageTitle: CONSENTS_PAGES.REVIEW,
     read: async (ip, sc_gu_u, geo) => {
       const ALL_CONSENT = [
@@ -235,7 +238,7 @@ export const consentPages: ConsentPage[] = [
 
 router.get(Routes.CONSENTS, loginMiddleware, (_: Request, res: Response) => {
   const url = addQueryParamsToPath(
-    `${Routes.CONSENTS}/${consentPages[0].page}`,
+    `${consentPages[0].path}`,
     res.locals.queryParams,
   );
 
@@ -337,7 +340,7 @@ router.post(
       trackMetric(consentsPageMetric(page, 'Post', true));
 
       const url = addQueryParamsToPath(
-        joinUrl(Routes.CONSENTS, consentPages[pageIndex + 1].page),
+        `${consentPages[pageIndex + 1].path}`,
         state.queryParams,
       );
 
@@ -369,4 +372,4 @@ router.post(
   }),
 );
 
-export default router;
+export default router.router;

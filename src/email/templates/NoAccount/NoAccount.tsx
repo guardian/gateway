@@ -7,6 +7,7 @@ import { Header } from '@/email/components/Header';
 import { SubHeader } from '@/email/components/SubHeader';
 import { Text } from '@/email/components/Text';
 import { Footer } from '@/email/components/Footer';
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 interface Props {
   profileUrl: string;
@@ -28,7 +29,7 @@ export const NoAccount = ({ profileUrl }: Props) => {
         </p>
         <p>Please click below to register.</p>
       </Text>
-      <Button href={`${profileUrl}${Routes.REGISTRATION}`}>
+      <Button href={`${profileUrl}${buildUrl(Routes.REGISTRATION)}`}>
         Register with The Guardian
       </Button>
       <Footer

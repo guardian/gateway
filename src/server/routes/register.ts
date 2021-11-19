@@ -1,4 +1,4 @@
-import { Request, Router } from 'express';
+import { Request } from 'express';
 import {
   readUserType,
   sendAccountExistsEmail,
@@ -9,6 +9,7 @@ import {
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { Routes } from '@/shared/model/Routes';
+import { typedRouter as router } from '@/shared/lib/routeUtils';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
@@ -27,8 +28,6 @@ import {
 import { EmailType } from '@/shared/model/EmailType';
 import { ApiError } from '@/server/models/Error';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-
-const router = Router();
 
 // set google recaptcha site key
 const {
@@ -242,4 +241,4 @@ router.post(
   }),
 );
 
-export default router;
+export default router.router;

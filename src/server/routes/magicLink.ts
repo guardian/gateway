@@ -1,6 +1,7 @@
-import { Router, Request } from 'express';
+import { Request } from 'express';
 import deepmerge from 'deepmerge';
 import { Routes } from '@/shared/model/Routes';
+import { buildUrl, typedRouter as router } from '@/shared/lib/routeUtils';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { trackMetric } from '@/server/lib/trackMetric';
@@ -9,8 +10,6 @@ import { PageTitle } from '@/shared/model/PageTitle';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { ApiError } from '@/server/models/Error';
-
-const router = Router();
 
 router.get(Routes.MAGIC_LINK, (req: Request, res: ResponseWithRequestState) => {
   const html = renderer(Routes.MAGIC_LINK, {
@@ -53,7 +52,10 @@ router.post(
 
     trackMetric(Metrics.SEND_MAGIC_LINK_SUCCESS);
 
-    return res.redirect(303, `${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`);
+    return res.redirect(
+      303,
+      buildUrl(`${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`),
+    );
   }),
 );
 
@@ -68,4 +70,4 @@ router.get(
   },
 );
 
-export default router;
+export default router.router;

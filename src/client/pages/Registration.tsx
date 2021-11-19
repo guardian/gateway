@@ -21,6 +21,7 @@ import useRecaptcha, {
 import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
 import locations from '@/client/lib/locations';
 import { EmailInput } from '@/client/components/EmailInput';
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 export type RegistrationProps = {
   returnUrl?: string;
@@ -120,7 +121,7 @@ export const Registration = ({
       >
         <form
           method="post"
-          action={`${Routes.REGISTRATION}${queryString}`}
+          action={buildUrl(`${Routes.REGISTRATION}${queryString}`)}
           ref={registerFormRef}
           onSubmit={handleSubmit}
         >

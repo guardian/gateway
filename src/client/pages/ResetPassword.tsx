@@ -10,6 +10,7 @@ import { MainBodyText } from '@/client/components/MainBodyText';
 import { InfoSummary } from '@guardian/source-react-components-development-kitchen';
 import locations from '@/client/lib/locations';
 import { ExternalLink } from '@/client/components/ExternalLink';
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 interface ResetPasswordProps {
   email?: string;
@@ -39,7 +40,7 @@ export const ResetPassword = ({
       formAction={
         formActionOverride
           ? `${formActionOverride}${queryString}`
-          : `${Routes.RESET}${queryString}`
+          : buildUrl(`${Routes.RESET}${queryString}`)
       }
       submitButtonText={buttonText}
     >

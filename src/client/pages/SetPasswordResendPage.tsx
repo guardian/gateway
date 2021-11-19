@@ -4,20 +4,21 @@ import { ClientStateContext } from '@/client/components/ClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
 import { Routes } from '@/shared/model/Routes';
 import { MainBodyText } from '@/client/components/MainBodyText';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { buildQueryParamsString } from '@/shared/lib/queryParams';
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 export const SetPasswordResendPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { pageData: { email = '' } = {}, queryParams } = clientState;
 
-  const queryString = addQueryParamsToPath('', queryParams);
+  const queryString = buildQueryParamsString(queryParams);
 
   return (
     <ResetPassword
       email={email}
       headerText="Link expired"
       buttonText="Send me a link"
-      formActionOverride={`${Routes.SET_PASSWORD}${Routes.RESEND}`}
+      formActionOverride={buildUrl(`${Routes.SET_PASSWORD}${Routes.RESEND}`)}
       queryString={queryString}
       emailInputLabel="Email address"
       showRecentEmailSummary

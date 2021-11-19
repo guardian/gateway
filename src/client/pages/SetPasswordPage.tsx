@@ -4,6 +4,7 @@ import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { Routes } from '@/shared/model/Routes';
 import { ChangePassword } from '@/client/pages/ChangePassword';
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 export const SetPasswordPage = () => {
   const { search } = useLocation();
@@ -21,7 +22,9 @@ export const SetPasswordPage = () => {
     // if the token expires while the user is on the current page
     if (typeof window !== 'undefined' && tokenExpiryTimestamp) {
       setTimeout(() => {
-        window.location.replace(`${Routes.SET_PASSWORD}${Routes.EXPIRED}`);
+        window.location.replace(
+          buildUrl(`${Routes.SET_PASSWORD}${Routes.EXPIRED}`),
+        );
       }, tokenExpiryTimestamp - Date.now());
     }
   }, []);
@@ -30,7 +33,7 @@ export const SetPasswordPage = () => {
     <ChangePassword
       headerText="Create password"
       buttonText="Save password"
-      submitUrl={`${Routes.SET_PASSWORD}/${token}${search}`}
+      submitUrl={buildUrl(`${Routes.SET_PASSWORD}/${token}${search}`)}
       email={email}
       fieldErrors={fieldErrors}
     />

@@ -1,5 +1,6 @@
-import { Request, Router } from 'express';
+import { Request } from 'express';
 import { Routes } from '@/shared/model/Routes';
+import { buildUrl, typedRouter as router } from '@/shared/lib/routeUtils';
 import { renderer } from '@/server/lib/renderer';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { PageTitle } from '@/shared/model/PageTitle';
@@ -17,8 +18,6 @@ import { readEmailCookie } from '@/server/lib/emailCookie';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { ResetPasswordErrors } from '@/shared/model/Errors';
 import { ApiError } from '../models/Error';
-
-const router = Router();
 
 // set password complete page
 router.get(
@@ -119,7 +118,7 @@ router.get(
     state = deepmerge(state, {
       pageData: {
         email,
-        previousPage: `${Routes.SET_PASSWORD}${Routes.RESEND}`,
+        previousPage: buildUrl(`${Routes.SET_PASSWORD}${Routes.RESEND}`),
       },
     });
 
@@ -161,4 +160,4 @@ router.post(
   ),
 );
 
-export default router;
+export default router.router;

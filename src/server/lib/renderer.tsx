@@ -14,6 +14,7 @@ import { ABProvider } from '@guardian/ab-react';
 import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
 import { resets } from '@guardian/src-foundations/utils';
+import { RoutePathsAll } from '@/shared/lib/routeUtils';
 
 const assets = getAssets();
 const legacyAssets = getAssets(true);
@@ -73,7 +74,14 @@ const clientStateFromRequestStateLocals = ({
   }
 };
 
-export const renderer: (url: string, opts: RendererOpts) => string = (
+export const renderer: (url: RoutePathsAll, opts: RendererOpts) => string = (
+  url,
+  { requestState, pageTitle },
+) => {
+  return rendererWithString(url, { requestState, pageTitle });
+};
+
+export const rendererWithString: (url: string, opts: RendererOpts) => string = (
   url,
   { requestState, pageTitle },
 ) => {

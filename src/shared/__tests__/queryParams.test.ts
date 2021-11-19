@@ -46,10 +46,10 @@ describe('addQueryParamsToPath', () => {
       refViewId: 'refViewId',
     };
 
-    const output = addQueryParamsToPath('/test', input);
+    const output = addQueryParamsToPath('/newsletters', input);
 
     expect(output).toEqual(
-      '/test?clientId=clientId&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
+      '/newsletters?clientId=clientId&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
     );
   });
 
@@ -65,10 +65,10 @@ describe('addQueryParamsToPath', () => {
       refViewId: 'refViewId',
     };
 
-    const output = addQueryParamsToPath('/test?foo=bar', input);
+    const output = addQueryParamsToPath('/newsletters?foo=bar', input);
 
     expect(output).toEqual(
-      '/test?foo=bar&clientId=clientId&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
+      '/newsletters?foo=bar&clientId=clientId&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
     );
   });
 
@@ -89,10 +89,10 @@ describe('addQueryParamsToPath', () => {
       encryptedEmail: 'an encrypted email',
     };
 
-    const output = addQueryParamsToPath('/test', input, inputOverride);
+    const output = addQueryParamsToPath('/newsletters', input, inputOverride);
 
     expect(output).toEqual(
-      '/test?clientId=clientId&csrfError=true&encryptedEmail=an%20encrypted%20email&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
+      '/newsletters?clientId=clientId&csrfError=true&encryptedEmail=an%20encrypted%20email&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
     );
   });
 
@@ -113,10 +113,14 @@ describe('addQueryParamsToPath', () => {
       encryptedEmail: 'an encrypted email',
     };
 
-    const output = addQueryParamsToPath('/test?foo=bar', input, inputOverride);
+    const output = addQueryParamsToPath(
+      '/newsletters?foo=bar',
+      input,
+      inputOverride,
+    );
 
     expect(output).toEqual(
-      '/test?foo=bar&clientId=clientId&csrfError=true&encryptedEmail=an%20encrypted%20email&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
+      '/newsletters?foo=bar&clientId=clientId&csrfError=true&encryptedEmail=an%20encrypted%20email&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
     );
   });
 });

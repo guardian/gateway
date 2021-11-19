@@ -8,8 +8,9 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/logger';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { addQueryParamsToStringPath } from '@/shared/lib/queryParams';
 import { ResponseWithRequestState } from '@/server/models/Express';
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 const profileUrl = getProfileUrl();
 
@@ -23,7 +24,7 @@ export const loginMiddleware = async (
 
   const redirectAuth = (auth: IDAPIAuthRedirect) => {
     if (auth.redirect) {
-      const redirect = addQueryParamsToPath(auth.redirect.url, {
+      const redirect = addQueryParamsToStringPath(auth.redirect.url, {
         ...res.locals.queryParams,
         returnUrl: joinUrl(profileUrl, req.path),
       });
@@ -31,7 +32,7 @@ export const loginMiddleware = async (
     }
 
     return res.redirect(
-      addQueryParamsToPath(LOGIN_REDIRECT_URL, {
+      addQueryParamsToStringPath(LOGIN_REDIRECT_URL, {
         ...res.locals.queryParams,
         returnUrl: joinUrl(profileUrl, req.path),
       }),
@@ -43,7 +44,7 @@ export const loginMiddleware = async (
 
   if (!sc_gu_u || !sc_gu_la) {
     res.redirect(
-      addQueryParamsToPath(LOGIN_REDIRECT_URL, {
+      addQueryParamsToStringPath(LOGIN_REDIRECT_URL, {
         ...res.locals.queryParams,
         returnUrl: joinUrl(profileUrl, req.path),
       }),
@@ -61,7 +62,7 @@ export const loginMiddleware = async (
 
     if (!auth.emailValidated) {
       trackMetric(Metrics.LOGIN_MIDDLEWARE_UNVERIFIED);
-      return res.redirect(303, Routes.VERIFY_EMAIL);
+      return res.redirect(303, buildUrl(Routes.VERIFY_EMAIL));
     }
 
     if (auth.status === IDAPIAuthStatus.RECENT) {
@@ -75,7 +76,7 @@ export const loginMiddleware = async (
     logger.error('loginMiddlewareFailure', e);
     trackMetric(Metrics.LOGIN_MIDDLEWARE_FAILURE);
     res.redirect(
-      addQueryParamsToPath(
+      addQueryParamsToStringPath(
         LOGIN_REDIRECT_URL,
         {
           ...res.locals.queryParams,

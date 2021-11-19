@@ -1,4 +1,4 @@
-import { Request, Router } from 'express';
+import { Request } from 'express';
 import deepmerge from 'deepmerge';
 import { Routes } from '@/shared/model/Routes';
 import { renderer } from '@/server/lib/renderer';
@@ -10,8 +10,7 @@ import {
 } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-
-const router = Router();
+import { typedRouter as router } from '@/shared/lib/routeUtils';
 
 router.get(
   `${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`,
@@ -80,4 +79,4 @@ router.get(
   },
 );
 
-export default router;
+export default router.router;

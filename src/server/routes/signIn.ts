@@ -1,4 +1,4 @@
-import { Request, Router } from 'express';
+import { Request } from 'express';
 import deepmerge from 'deepmerge';
 import { authenticate } from '@/server/lib/idapi/auth';
 import { logger } from '@/server/lib/logger';
@@ -14,10 +14,9 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { decrypt } from '@/server/lib/idapi/decryptToken';
 import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
 import { ApiError } from '@/server/models/Error';
+import { RoutePathsAll, typedRouter as router } from '@/shared/lib/routeUtils';
 
-const router = Router();
-
-const preFillEmailField = (route: string) =>
+const preFillEmailField = (route: RoutePathsAll) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
     const { encryptedEmail, error } = state.queryParams;
@@ -85,4 +84,4 @@ router.post(
   }),
 );
 
-export default router;
+export default router.router;

@@ -12,8 +12,6 @@ import { logger } from '../logger';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { ApiRoutes } from '@/shared/model/Routes';
 
-const url = `${ApiRoutes.GUEST}?accountVerificationEmail=true`;
-
 const { defaultReturnUri } = getConfiguration();
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
@@ -46,17 +44,23 @@ export const guest = async (
     primaryEmailAddress: email,
   });
 
-  const path = addQueryParamsToPath(url, {
-    returnUrl: returnUrl || defaultReturnUri,
-    ref,
-    refViewId,
-  });
+  const path = addQueryParamsToPath(
+    `${ApiRoutes.GUEST}${'?accountVerificationEmail=true'}`,
+    {
+      returnUrl: returnUrl || defaultReturnUri,
+      ref,
+      refViewId,
+    },
+  );
 
   try {
     await idapiFetch(path, APIAddClientAccessToken(options, ip));
     return EmailType.ACCOUNT_VERIFICATION;
   } catch (error) {
-    logger.error(`IDAPI Error: guest account creation ${url}`, error);
+    logger.error(
+      `IDAPI Error: guest account creation ${`${ApiRoutes.GUEST}?accountVerificationEmail=true`}`,
+      error,
+    );
     return handleError(error as IDAPIError);
   }
 };

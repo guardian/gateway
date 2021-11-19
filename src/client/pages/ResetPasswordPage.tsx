@@ -2,14 +2,14 @@ import React, { useContext } from 'react';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { buildQueryParamsString } from '@/shared/lib/queryParams';
 import { MainBodyText } from '@/client/components/MainBodyText';
 
 export const ResetPasswordPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { pageData: { email = '' } = {}, queryParams } = clientState;
 
-  const queryString = addQueryParamsToPath('', queryParams);
+  const queryString = buildQueryParamsString(queryParams);
 
   return (
     <ResetPassword

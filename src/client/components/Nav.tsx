@@ -10,6 +10,7 @@ import { headline } from '@guardian/src-foundations/typography';
 import { Container } from '@/client/components/Container';
 import { from } from '@guardian/src-foundations/mq';
 import { Link } from '@guardian/src-link';
+import { RoutePathsAll } from '@/shared/lib/routeUtils';
 
 type Props = {
   tabs: TabType[];
@@ -17,7 +18,7 @@ type Props = {
 
 type TabType = {
   displayText: string;
-  linkTo: string;
+  linkTo: RoutePathsAll;
   isActive?: boolean;
   isFirst?: boolean;
 };

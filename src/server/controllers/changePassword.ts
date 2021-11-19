@@ -4,7 +4,7 @@ import deepmerge from 'deepmerge';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { getBrowserNameFromUserAgent } from '@/server/lib/getBrowserName';
 import { logger } from '@/server/lib/logger';
-import { renderer } from '@/server/lib/renderer';
+import { renderer, rendererWithString } from '@/server/lib/renderer';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import {
   validate as validateToken,
@@ -20,6 +20,7 @@ import {
   setEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
 import { ApiError } from '@/server/models/Error';
+import { buildUrl, RoutePathsAll } from '@/shared/lib/routeUtils';
 
 const validatePasswordField = (password: string): Array<FieldError> => {
   const errors: Array<FieldError> = [];
@@ -40,9 +41,9 @@ const validatePasswordField = (password: string): Array<FieldError> => {
 };
 
 export const checkResetPasswordTokenController = (
-  setPasswordPagePath: string,
+  setPasswordPagePath: RoutePathsAll,
   setPasswordPageTitle: string,
-  resendEmailPagePath: string,
+  resendEmailPagePath: RoutePathsAll,
   resendEmailPageTitle: string,
 ) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
@@ -67,10 +68,13 @@ export const checkResetPasswordTokenController = (
       // on the confirmation page
       setEncryptedStateCookie(res, { email });
 
-      const html = renderer(`${setPasswordPagePath}/${token}`, {
-        requestState: state,
-        pageTitle: setPasswordPageTitle,
-      });
+      const html = rendererWithString(
+        buildUrl(setPasswordPagePath, { token: token }),
+        {
+          requestState: state,
+          pageTitle: setPasswordPageTitle,
+        },
+      );
       return res.type('html').send(html);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
@@ -102,9 +106,9 @@ export const checkResetPasswordTokenController = (
   });
 
 export const setPasswordTokenController = (
-  setPasswordPath: string,
+  setPasswordPath: RoutePathsAll,
   setPasswordPageTitle: string,
-  resendEmailPagePath: string,
+  resendEmailPagePath: RoutePathsAll,
   resendEmailPageTitle: string,
   successCallback: (res: ResponseWithRequestState) => void,
 ) =>
@@ -136,10 +140,13 @@ export const setPasswordTokenController = (
             fieldErrors,
           },
         });
-        const html = renderer(`${setPasswordPath}/${token}`, {
-          requestState: state,
-          pageTitle: setPasswordPageTitle,
-        });
+        const html = rendererWithString(
+          buildUrl(`${setPasswordPath}`, { token: token }),
+          {
+            requestState: state,
+            pageTitle: setPasswordPageTitle,
+          },
+        );
         return res.status(422).type('html').send(html);
       }
 
@@ -211,10 +218,13 @@ export const setPasswordTokenController = (
           });
         }
 
-        const html = renderer(`${setPasswordPath}/${token}`, {
-          requestState: state,
-          pageTitle: setPasswordPageTitle,
-        });
+        const html = rendererWithString(
+          buildUrl(setPasswordPath, { token: token }),
+          {
+            requestState: state,
+            pageTitle: setPasswordPageTitle,
+          },
+        );
         return res.status(status).type('html').send(html);
       } catch (error) {
         logger.error(`${req.method} ${req.originalUrl}  Error`, error);

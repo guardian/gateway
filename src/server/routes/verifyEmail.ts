@@ -21,6 +21,7 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { EMAIL_SENT } from '@/shared/model/Success';
 import { ApiError } from '@/server/models/Error';
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 const router = Router();
 
@@ -35,7 +36,7 @@ router.get(
     state = deepmerge(state, {
       pageData: {
         signInPageUrl: `${signInPageUrl}?returnUrl=${encodeURIComponent(
-          `${profileUrl}${Routes.VERIFY_EMAIL}`,
+          `${profileUrl}${buildUrl(Routes.VERIFY_EMAIL)}`,
         )}`,
       },
     });
@@ -160,7 +161,7 @@ router.get(
         return res.redirect(
           303,
           addQueryParamsToPath(
-            `${Routes.CONSENTS}/${consentPages[0].page}`,
+            `${consentPages[0].path}`,
             res.locals.queryParams,
           ),
         );
@@ -176,13 +177,9 @@ router.get(
 
     return res.redirect(
       303,
-      addQueryParamsToPath(
-        `${Routes.CONSENTS}/${consentPages[0].page}`,
-        res.locals.queryParams,
-        {
-          emailVerified: true,
-        },
-      ),
+      addQueryParamsToPath(`${consentPages[0].path}`, res.locals.queryParams, {
+        emailVerified: true,
+      }),
     );
   }),
 );

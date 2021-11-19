@@ -1,4 +1,4 @@
-import { Request, Router } from 'express';
+import { Request } from 'express';
 import deepmerge from 'deepmerge';
 import { create as resetPassword } from '@/server/lib/idapi/resetPassword';
 import { logger } from '@/server/lib/logger';
@@ -14,8 +14,7 @@ import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
 import { ResetPasswordErrors } from '@/shared/model/Errors';
 import { ApiError } from '@/server/models/Error';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-
-const router = Router();
+import { typedRouter as router } from '@/shared/lib/routeUtils';
 
 router.get(Routes.RESET, (req: Request, res: ResponseWithRequestState) => {
   let state = res.locals;
@@ -109,4 +108,4 @@ router.get(
   },
 );
 
-export default router;
+export default router.router;

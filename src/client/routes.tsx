@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, RouteProps, Switch } from 'react-router-dom';
 import { RegistrationPage } from '@/client/pages/RegistrationPage';
 import { ResetPasswordPage } from '@/client/pages/ResetPasswordPage';
 import { EmailSentPage } from '@/client/pages/EmailSentPage';
@@ -15,6 +15,7 @@ import { ResendEmailVerificationPage } from '@/client/pages/ResendEmailVerificat
 import { UnexpectedErrorPage } from '@/client/pages/UnexpectedErrorPage';
 import { ClientState } from '@/shared/model/ClientState';
 import { Routes } from '@/shared/model/Routes';
+import { RoutePathsAll } from '@/shared/lib/routeUtils';
 import { SignInPage } from '@/client/pages/SignInPage';
 import { MagicLinkPage } from '@/client/pages/MagicLinkPage';
 import { WelcomePage } from '@/client/pages/WelcomePage';
@@ -33,91 +34,102 @@ export type RoutingConfig = {
   location: string;
 };
 
+interface GatewayRouteProps extends RouteProps {
+  path?: RoutePathsAll;
+}
+
+const TypedRoute = (props: GatewayRouteProps) => {
+  return <Route {...props}></Route>;
+};
+
 export const GatewayRoutes = () => (
   <Switch>
-    <Route exact path={Routes.SIGN_IN}>
+    <TypedRoute exact path={Routes.SIGN_IN}>
       <SignInPage />
-    </Route>
-    <Route exact path={Routes.REGISTRATION}>
+    </TypedRoute>
+    <TypedRoute exact path={Routes.REGISTRATION}>
       <RegistrationPage />
-    </Route>
-    <Route exact path={`${Routes.REGISTRATION}${Routes.EMAIL_SENT}`}>
+    </TypedRoute>
+    <TypedRoute exact path={`${Routes.REGISTRATION}${Routes.EMAIL_SENT}`}>
       <RegistrationEmailSentPage />
-    </Route>
-    <Route exact path={Routes.RESET}>
+    </TypedRoute>
+    <TypedRoute exact path={Routes.RESET}>
       <ResetPasswordPage />
-    </Route>
-    <Route exact path={`${Routes.RESET}${Routes.EMAIL_SENT}`}>
+    </TypedRoute>
+    <TypedRoute exact path={`${Routes.RESET}${Routes.EMAIL_SENT}`}>
       <EmailSentPage noAccountInfoBox />
-    </Route>
-    <Route exact path={`${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`}>
+    </TypedRoute>
+    <TypedRoute exact path={`${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`}>
       <ChangePasswordPage />
-    </Route>
-    <Route path={`${Routes.PASSWORD}${Routes.RESET_CONFIRMATION}`}>
+    </TypedRoute>
+    <TypedRoute path={`${Routes.PASSWORD}${Routes.RESET_CONFIRMATION}`}>
       <ChangePasswordCompletePage />
-    </Route>
-    <Route exact path={`${Routes.RESET}${Routes.RESEND}`}>
+    </TypedRoute>
+    <TypedRoute exact path={`${Routes.RESET}${Routes.RESEND}`}>
       <ResendPasswordPage />
-    </Route>
-    <Route exact path={`${Routes.RESET}${Routes.EXPIRED}`}>
+    </TypedRoute>
+    <TypedRoute exact path={`${Routes.RESET}${Routes.EXPIRED}`}>
       <ResetPasswordSessionExpiredPage />
-    </Route>
-    <Route exact path={`${Routes.SET_PASSWORD}${Routes.RESEND}`}>
+    </TypedRoute>
+    <TypedRoute exact path={`${Routes.SET_PASSWORD}${Routes.RESEND}`}>
       <SetPasswordResendPage />
-    </Route>
-    <Route exact path={`${Routes.SET_PASSWORD}${Routes.EXPIRED}`}>
+    </TypedRoute>
+    <TypedRoute exact path={`${Routes.SET_PASSWORD}${Routes.EXPIRED}`}>
       <SetPasswordSessionExpiredPage />
-    </Route>
-    <Route path={`${Routes.SET_PASSWORD}${Routes.COMPLETE}`}>
+    </TypedRoute>
+    <TypedRoute path={`${Routes.SET_PASSWORD}${Routes.COMPLETE}`}>
       <SetPasswordCompletePage />
-    </Route>
-    <Route path={`${Routes.SET_PASSWORD}${Routes.EMAIL_SENT}`}>
+    </TypedRoute>
+    <TypedRoute path={`${Routes.SET_PASSWORD}${Routes.EMAIL_SENT}`}>
       <EmailSentPage helpInfoBox />
-    </Route>
-    <Route exact path={`${Routes.SET_PASSWORD}${Routes.TOKEN_PARAM}`}>
+    </TypedRoute>
+    <TypedRoute exact path={`${Routes.SET_PASSWORD}${Routes.TOKEN_PARAM}`}>
       <SetPasswordPage />
-    </Route>
-    <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_DATA}`}>
+    </TypedRoute>
+    <TypedRoute exact path={`${Routes.CONSENTS}${Routes.CONSENTS_DATA}`}>
       <ConsentsDataPage />
-    </Route>
-    <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_COMMUNICATION}`}>
+    </TypedRoute>
+    <TypedRoute
+      exact
+      path={`${Routes.CONSENTS}${Routes.CONSENTS_COMMUNICATION}`}
+    >
       <ConsentsCommunicationPage />
-    </Route>
-    <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_NEWSLETTERS}`}>
+    </TypedRoute>
+    <TypedRoute exact path={`${Routes.CONSENTS}${Routes.CONSENTS_NEWSLETTERS}`}>
       <ConsentsNewslettersPage />
-    </Route>
-    <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_REVIEW}`}>
+    </TypedRoute>
+    <TypedRoute exact path={`${Routes.CONSENTS}${Routes.CONSENTS_REVIEW}`}>
       <ConsentsConfirmationPage />
-    </Route>
-    <Route exact path={`${Routes.WELCOME}${Routes.RESEND}`}>
+    </TypedRoute>
+    <TypedRoute exact path={`${Routes.WELCOME}${Routes.RESEND}`}>
       <WelcomeResendPage />
-    </Route>
-    <Route exact path={`${Routes.WELCOME}${Routes.EXPIRED}`}>
+    </TypedRoute>
+    <TypedRoute exact path={`${Routes.WELCOME}${Routes.EXPIRED}`}>
       <WelcomeSessionExpiredPage />
-    </Route>
-    <Route exact path={`${Routes.WELCOME}${Routes.EMAIL_SENT}`}>
+    </TypedRoute>
+    <TypedRoute exact path={`${Routes.WELCOME}${Routes.EMAIL_SENT}`}>
       <EmailSentPage helpInfoBox />
-    </Route>
-    <Route exact path={`${Routes.WELCOME}${Routes.COMPLETE}`}>
+    </TypedRoute>
+    <TypedRoute exact path={`${Routes.WELCOME}${Routes.COMPLETE}`}>
       <WelcomePasswordAlreadySetPage />
-    </Route>
-    <Route exact path={`${Routes.WELCOME}${Routes.TOKEN_PARAM}`}>
+    </TypedRoute>
+    <TypedRoute exact path={`${Routes.WELCOME}${Routes.TOKEN_PARAM}`}>
       <WelcomePage />
-    </Route>
-    <Route exact path={Routes.VERIFY_EMAIL}>
+    </TypedRoute>
+    <TypedRoute exact path={Routes.VERIFY_EMAIL}>
       <ResendEmailVerificationPage />
-    </Route>
-    <Route exact path={Routes.MAGIC_LINK}>
+    </TypedRoute>
+    <TypedRoute exact path={Routes.MAGIC_LINK}>
       <MagicLinkPage />
-    </Route>
-    <Route exact path={`${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`}>
+    </TypedRoute>
+    <TypedRoute exact path={`${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`}>
       <EmailSentPage noAccountInfoBox />
-    </Route>
-    <Route exact path={Routes.UNEXPECTED_ERROR}>
+    </TypedRoute>
+    <TypedRoute exact path={Routes.UNEXPECTED_ERROR}>
       <UnexpectedErrorPage />
-    </Route>
-    <Route>
+    </TypedRoute>
+    <TypedRoute>
       <NotFoundPage />
-    </Route>
+    </TypedRoute>
   </Switch>
 );

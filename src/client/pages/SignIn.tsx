@@ -19,6 +19,7 @@ import { from } from '@guardian/src-foundations/mq';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { SignInErrors } from '@/shared/model/Errors';
 import { EmailInput } from '@/client/components/EmailInput';
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 export type SignInProps = {
   returnUrl?: string;
@@ -149,14 +150,18 @@ export const SignIn = ({
       errorOverride={error}
       errorContext={getErrorContext(error)}
     >
-      <form method="post" action={`${Routes.SIGN_IN}${queryString}`}>
+      <form method="post" action={buildUrl(`${Routes.SIGN_IN}${queryString}`)}>
         <CsrfFormField />
         <EmailInput defaultValue={email} />
         <div css={passwordInput}>
           <PasswordInput label="Password" />
         </div>
         <Links>
-          <Link subdued={true} href={Routes.RESET} cssOverrides={resetPassword}>
+          <Link
+            subdued={true}
+            href={buildUrl(Routes.RESET)}
+            cssOverrides={resetPassword}
+          >
             Reset password
           </Link>
         </Links>

@@ -16,6 +16,7 @@ import {
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
 import { ApiError } from '@/server/models/Error';
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 const router = Router();
 
@@ -93,7 +94,7 @@ router.get(
     state = deepmerge(state, {
       pageData: {
         email,
-        previousPage: `${Routes.WELCOME}${Routes.RESEND}`,
+        previousPage: buildUrl(`${Routes.WELCOME}${Routes.RESEND}`),
       },
     });
 
@@ -127,10 +128,7 @@ router.post(
     (res) => {
       return res.redirect(
         303,
-        addQueryParamsToPath(
-          `${Routes.CONSENTS}/${consentPages[0].page}`,
-          res.locals.queryParams,
-        ),
+        addQueryParamsToPath(`${consentPages[0].path}`, res.locals.queryParams),
       );
     },
   ),

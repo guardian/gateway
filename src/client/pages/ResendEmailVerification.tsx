@@ -5,6 +5,7 @@ import { buttonStyles, MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { MainForm } from '@/client/components/MainForm';
 import { EmailInput } from '@/client/components/EmailInput';
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 type ResendEmailVerificationProps = {
   email?: string;
@@ -50,7 +51,7 @@ const LoggedIn = ({
       <MainBodyText>{successText}</MainBodyText>
     ) : (
       <MainForm
-        formAction={Routes.VERIFY_EMAIL}
+        formAction={buildUrl(Routes.VERIFY_EMAIL)}
         submitButtonText="Send verification link"
       >
         <EmailInput defaultValue={email} hidden hideLabel />
