@@ -20,6 +20,11 @@ import {
   setEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
 import { ApiError } from '@/server/models/Error';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { validateOktaToken } from '@/server/lib/okta/setPassword';
+import { ActivationResponse } from '@/server/models/Okta';
+
+const { okta } = getConfiguration();
 
 const validatePasswordField = (password: string): Array<FieldError> => {
   const errors: Array<FieldError> = [];
@@ -50,22 +55,46 @@ export const checkResetPasswordTokenController = (
     const { token } = req.params;
 
     try {
-      const { email, tokenExpiryTimestamp } = await validateToken(
-        token,
-        req.ip,
-      );
-
-      state = deepmerge(state, {
-        pageData: {
-          browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
+      if (okta.registrationEnabled) {
+        // validate okta activation token and exchange it for a state token (used to set a password)
+        const response: ActivationResponse = await validateOktaToken({ token });
+        const {
+          expiresAt,
+          stateToken: oktaStateToken,
+          _embedded: {
+            user: {
+              profile: { login: email },
+            },
+          },
+        } = response;
+        const tokenExpiryTimestamp = Date.parse(expiresAt);
+        state = deepmerge(state, {
+          pageData: {
+            browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
+            email,
+            tokenExpiryTimestamp,
+          },
+        });
+        setEncryptedStateCookie(res, {
           email,
-          tokenExpiryTimestamp,
-        },
-      });
-
-      // set the encrypted state here, so we can read the email
-      // on the confirmation page
-      setEncryptedStateCookie(res, { email });
+          oktaStateToken,
+        });
+      } else {
+        // validate password token in IDAPI
+        const { email, tokenExpiryTimestamp } = await validateToken(
+          token,
+          req.ip,
+        );
+        state = deepmerge(state, {
+          pageData: {
+            browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
+            email,
+            tokenExpiryTimestamp,
+          },
+        });
+        // set encrypted state in order to display email on confirmation page
+        setEncryptedStateCookie(res, { email });
+      }
 
       const html = renderer(`${setPasswordPagePath}/${token}`, {
         requestState: state,

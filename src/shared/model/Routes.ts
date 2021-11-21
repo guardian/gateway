@@ -43,3 +43,7 @@ export enum ApiRoutes {
   SEND_ACCOUNT_WITHOUT_PASSWORD_EXISTS_EMAIL = '/send-account-without-password-exists-email',
   SEND_CREATE_PASSWORD_ACCOUNT_EXISTS_EMAIL = '/send-create-password-account-exists-email',
 }
+
+export enum Okta {
+  AUTH = '/api/v1/authn',
+}

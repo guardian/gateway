@@ -18,7 +18,7 @@ interface FeatureSwitches {
 export const featureSwitches: FeatureSwitches = {
   demoSwitch: false,
   oktaRegistrationEnabled: {
-    DEV: false,
+    DEV: true,
     CODE: false,
     PROD: false,
   },
