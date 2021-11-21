@@ -21,8 +21,10 @@ import {
 } from '@/server/lib/encryptedStateCookie';
 import { ApiError } from '@/server/models/Error';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { validateOktaToken } from '@/server/lib/okta/setPassword';
-import { ActivationResponse } from '@/server/models/Okta';
+import { validateOktaToken, setPassword } from '@/server/lib/okta/setPassword';
+import { ActivationResponse, SetPasswordResponse } from '@/server/models/Okta';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { consentPages } from '@/server/routes/consents';
 
 const { okta } = getConfiguration();
 
@@ -138,123 +140,177 @@ export const setPasswordTokenController = (
   successCallback: (res: ResponseWithRequestState) => void,
 ) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    let state = res.locals;
+    if (okta.registrationEnabled && setPasswordPath === Routes.WELCOME) {
+      await setPasswordInOkta(
+        req,
+        res,
+        resendEmailPagePath,
+        resendEmailPageTitle,
+      );
+    } else {
+      let state = res.locals;
 
-    const { token } = req.params;
-    const { password } = req.body;
+      const { token } = req.params;
+      const { password } = req.body;
 
-    state = deepmerge(state, {
-      pageData: {
-        browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
-      },
-    });
+      state = deepmerge(state, {
+        pageData: {
+          browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
+        },
+      });
 
-    try {
-      const fieldErrors = validatePasswordField(password);
-
-      if (fieldErrors.length) {
-        const { email, tokenExpiryTimestamp } = await validateToken(
-          token,
-          req.ip,
-        );
-
-        state = deepmerge(state, {
-          pageData: {
-            email,
-            tokenExpiryTimestamp,
-            fieldErrors,
-          },
-        });
-        const html = renderer(`${setPasswordPath}/${token}`, {
-          requestState: state,
-          pageTitle: setPasswordPageTitle,
-        });
-        return res.status(422).type('html').send(html);
-      }
-
-      const cookies = await changePassword(password, token, req.ip);
-
-      setIDAPICookies(res, cookies);
-
-      // if the user navigates back to the welcome page after they have set a password, this
-      // ensures we show them a custom error page rather than the link expired page
-      if (setPasswordPath === Routes.WELCOME) {
-        const currentState = readEncryptedStateCookie(req);
-        setEncryptedStateCookie(res, {
-          ...currentState,
-          passwordSetOnWelcomePage: true,
-        });
-      }
-
-      // we need to track both of these cloudwatch metrics as two
-      // separate metrics at this point as the changePassword endpoint
-      // does two things
-      // a) account verification
-      // b) change password
-      // since these could happen at different points in time, it's best
-      // to keep them as two seperate metrics
-      trackMetric(Metrics.ACCOUNT_VERIFICATION_SUCCESS);
-      trackMetric(Metrics.CHANGE_PASSWORD_SUCCESS);
-
-      return successCallback(res);
-    } catch (error) {
-      const { message, status, field } =
-        error instanceof ApiError ? error : new ApiError();
-
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-
-      // see the comment above around the success metrics
-      trackMetric(Metrics.ACCOUNT_VERIFICATION_FAILURE);
-      trackMetric(Metrics.CHANGE_PASSWORD_FAILURE);
-
-      // we unfortunately need this inner try catch block to catch
-      // errors from the `validateToken` method were it to fail
       try {
-        const { email, tokenExpiryTimestamp } = await validateToken(
-          token,
-          req.ip,
-        );
+        const fieldErrors = validatePasswordField(password);
 
-        if (field) {
+        if (fieldErrors.length) {
+          const { email, tokenExpiryTimestamp } = await validateToken(
+            token,
+            req.ip,
+          );
+
           state = deepmerge(state, {
             pageData: {
               email,
               tokenExpiryTimestamp,
-              fieldErrors: [
-                {
-                  field,
-                  message,
-                },
-              ],
+              fieldErrors,
             },
           });
-        } else {
-          state = deepmerge(state, {
-            pageData: {
-              email,
-              tokenExpiryTimestamp,
-            },
-            globalMessage: {
-              error: message,
-            },
+          const html = renderer(`${setPasswordPath}/${token}`, {
+            requestState: state,
+            pageTitle: setPasswordPageTitle,
+          });
+          return res.status(422).type('html').send(html);
+        }
+
+        const cookies = await changePassword(password, token, req.ip);
+
+        setIDAPICookies(res, cookies);
+
+        // if the user navigates back to the welcome page after they have set a password, this
+        // ensures we show them a custom error page rather than the link expired page
+        if (setPasswordPath === Routes.WELCOME) {
+          const currentState = readEncryptedStateCookie(req);
+          setEncryptedStateCookie(res, {
+            ...currentState,
+            passwordSetOnWelcomePage: true,
           });
         }
 
-        const html = renderer(`${setPasswordPath}/${token}`, {
-          requestState: state,
-          pageTitle: setPasswordPageTitle,
-        });
-        return res.status(status).type('html').send(html);
+        // we need to track both of these cloudwatch metrics as two
+        // separate metrics at this point as the changePassword endpoint
+        // does two things
+        // a) account verification
+        // b) change password
+        // since these could happen at different points in time, it's best
+        // to keep them as two seperate metrics
+        trackMetric(Metrics.ACCOUNT_VERIFICATION_SUCCESS);
+        trackMetric(Metrics.CHANGE_PASSWORD_SUCCESS);
+
+        return successCallback(res);
       } catch (error) {
+        const { message, status, field } =
+          error instanceof ApiError ? error : new ApiError();
+
         logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-        // if theres an error with the token validation, we have to take them back
-        // to the resend page
-        return res.type('html').send(
-          renderer(`${resendEmailPagePath}${Routes.RESEND}`, {
+
+        // see the comment above around the success metrics
+        trackMetric(Metrics.ACCOUNT_VERIFICATION_FAILURE);
+        trackMetric(Metrics.CHANGE_PASSWORD_FAILURE);
+
+        // we unfortunately need this inner try catch block to catch
+        // errors from the `validateToken` method were it to fail
+        try {
+          const { email, tokenExpiryTimestamp } = await validateToken(
+            token,
+            req.ip,
+          );
+
+          if (field) {
+            state = deepmerge(state, {
+              pageData: {
+                email,
+                tokenExpiryTimestamp,
+                fieldErrors: [
+                  {
+                    field,
+                    message,
+                  },
+                ],
+              },
+            });
+          } else {
+            state = deepmerge(state, {
+              pageData: {
+                email,
+                tokenExpiryTimestamp,
+              },
+              globalMessage: {
+                error: message,
+              },
+            });
+          }
+
+          const html = renderer(`${setPasswordPath}/${token}`, {
             requestState: state,
-            pageTitle: resendEmailPageTitle,
-          }),
-        );
+            pageTitle: setPasswordPageTitle,
+          });
+          return res.status(status).type('html').send(html);
+        } catch (error) {
+          logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+          // if theres an error with the token validation, we have to take them back
+          // to the resend page
+          return res.type('html').send(
+            renderer(`${resendEmailPagePath}${Routes.RESEND}`, {
+              requestState: state,
+              pageTitle: resendEmailPageTitle,
+            }),
+          );
+        }
       }
     }
   });
+
+const setPasswordInOkta = async (
+  req: Request,
+  res: ResponseWithRequestState,
+  resendEmailPagePath: string,
+  resendEmailPageTitle: string,
+) => {
+  let state = res.locals;
+  state = deepmerge(state, {
+    pageData: {
+      browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
+    },
+  });
+  let { queryParams } = state;
+  const { password } = req.body;
+  try {
+    const encryptedState = readEncryptedStateCookie(req);
+    const { oktaStateToken } = encryptedState ?? {};
+    if (oktaStateToken) {
+      const setPasswordResponse: SetPasswordResponse = await setPassword({
+        stateToken: oktaStateToken,
+        newPassword: password,
+      });
+      const { sessionToken } = setPasswordResponse;
+      queryParams = { ...queryParams, sessionToken };
+      return res.redirect(
+        303,
+        addQueryParamsToPath(
+          `${Routes.CONSENTS}/${consentPages[0].page}`,
+          queryParams,
+        ),
+      );
+    } else {
+      throw new Error('No Okta state token found');
+    }
+  } catch (error) {
+    logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+    return res.type('html').send(
+      renderer(`${resendEmailPagePath}${Routes.RESEND}`, {
+        requestState: state,
+        pageTitle: resendEmailPageTitle,
+      }),
+    );
+  }
+};

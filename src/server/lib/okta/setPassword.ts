@@ -2,7 +2,12 @@ import { fetch } from '@/server/lib/fetch';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { joinUrl } from '@guardian/libs';
 import { Okta } from '@/shared/model/Routes';
-import { ActivationRequest, ActivationResponse } from '@/server/models/Okta';
+import {
+  ActivationRequest,
+  ActivationResponse,
+  SetPasswordRequest,
+  SetPasswordResponse,
+} from '@/server/models/Okta';
 import { Response } from 'node-fetch';
 import { handleOktaErrors } from '@/server/lib/okta/errors';
 import { defaultHeaders } from '@/server/lib/okta/client';
@@ -17,6 +22,14 @@ export const validateOktaToken = (
     .then(extractActivationResponse);
 };
 
+export const setPassword = (
+  request: SetPasswordRequest,
+): Promise<SetPasswordResponse> => {
+  return setPasswordWithStateToken(request)
+    .then(handleOktaErrors)
+    .then(extractSetPasswordResponse);
+};
+
 const exchangeActivationTokenForStateToken = async (
   body: ActivationRequest,
 ): Promise<Response> => {
@@ -27,8 +40,24 @@ const exchangeActivationTokenForStateToken = async (
   });
 };
 
+const setPasswordWithStateToken = async (
+  body: SetPasswordRequest,
+): Promise<Response> => {
+  return await fetch(joinUrl(orgUrl, Okta.RESET_PASSWORD), {
+    method: 'POST',
+    body: JSON.stringify(body),
+    headers: defaultHeaders,
+  });
+};
+
 const extractActivationResponse = async (
   response: Response,
 ): Promise<ActivationResponse> => {
   return await response.json().then((json) => json as ActivationResponse);
+};
+
+const extractSetPasswordResponse = async (
+  response: Response,
+): Promise<SetPasswordResponse> => {
+  return await response.json().then((json) => json as SetPasswordResponse);
 };

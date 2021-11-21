@@ -11,6 +11,7 @@ export const getPersistableQueryParams = (
   clientId: params.clientId,
   ref: params.ref,
   refViewId: params.refViewId,
+  sessionToken: params.sessionToken,
 });
 
 export const addQueryParamsToPath = (
