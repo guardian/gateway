@@ -3,15 +3,17 @@ import { GlobalError } from '@/client/components/GlobalError';
 import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 import { Header } from '@/client/components/Header';
 import { getErrorLink } from '@/client/lib/ErrorLink';
+import { GeoLocation } from '@/shared/model/Geolocation';
 
 type Props = {
   error?: string;
   success?: string;
+  geolocation?: GeoLocation;
 };
 
-export const ConsentsHeader = ({ error, success }: Props) => (
+export const ConsentsHeader = ({ error, success, geolocation }: Props) => (
   <>
-    <Header />
+    <Header geolocation={geolocation} />
     {error && <GlobalError error={error} link={getErrorLink(error)} left />}
     {success && <GlobalSuccess success={success} />}
   </>

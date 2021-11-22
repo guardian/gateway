@@ -125,7 +125,10 @@ export const MainLayout = ({
   errorOverride,
 }: PropsWithChildren<MainLayoutProps>) => {
   const clientState: ClientState = useContext(ClientStateContext);
-  const { globalMessage: { error, success } = {} } = clientState;
+  const {
+    globalMessage: { error, success } = {},
+    pageData: { geolocation } = {},
+  } = clientState;
 
   const successMessage = successOverride || success;
   const errorMessage = errorOverride || error;
@@ -135,7 +138,7 @@ export const MainLayout = ({
 
   return (
     <>
-      <Header />
+      <Header geolocation={geolocation} />
       <main css={[mainStyles, gridRow]}>
         <section css={gridItem(gridSpanDefinition)}>
           {errorMessage && (
