@@ -1,9 +1,13 @@
 import * as React from 'react';
 import { css } from '@emotion/react';
-import { neutral, brand, space } from '@guardian/src-foundations';
-import { headline } from '@guardian/src-foundations/typography';
+import {
+  neutral,
+  brand,
+  space,
+  headline,
+  from,
+} from '@guardian/source-foundations';
 import { Container } from '@/client/components/Container';
-import { from } from '@guardian/src-foundations/mq';
 
 type Props = {
   title: string;

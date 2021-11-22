@@ -1,7 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 import { css, SerializedStyles } from '@emotion/react';
-import { space, text } from '@guardian/src-foundations';
-import { textSans } from '@guardian/src-foundations/typography';
+import { space, text, textSans } from '@guardian/source-foundations';
 interface Props {
   noMargin?: boolean;
   cssOverrides?: SerializedStyles;

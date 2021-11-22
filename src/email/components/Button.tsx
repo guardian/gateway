@@ -5,7 +5,7 @@ import {
   background,
   brandBackground,
   brandText,
-} from '@guardian/src-foundations/palette';
+} from '@guardian/source-foundations';
 
 type Props = { children: React.ReactNode; href: string };
 

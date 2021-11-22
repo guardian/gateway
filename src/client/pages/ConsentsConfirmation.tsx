@@ -1,13 +1,12 @@
 import React, { FunctionComponent } from 'react';
 import { css } from '@emotion/react';
-import { space, palette, brand } from '@guardian/src-foundations';
+import { from, space, brand, border } from '@guardian/source-foundations';
 import {
   getAutoRow,
   gridItem,
   gridItemColumnConsents,
   SpanDefinition,
 } from '@/client/styles/Grid';
-import { from } from '@guardian/src-foundations/mq';
 import {
   ConsentsContent,
   controls,
@@ -18,7 +17,7 @@ import { ConsentsBlueBackground } from '@/client/components/ConsentsBlueBackgrou
 import { ConsentsHeader } from '@/client/components/ConsentsHeader';
 import { Footer } from '@/client/components/Footer';
 import { headingWithMq, text } from '@/client/styles/Consents';
-import { SvgArrowRightStraight } from '@guardian/src-icons';
+import { SvgArrowRightStraight } from '@guardian/source-react-components';
 import { Consent } from '@/shared/model/Consent';
 import { NewsLetter } from '@/shared/model/Newsletter';
 import {
@@ -39,7 +38,7 @@ const reviewTableContainer = css`
   display: flex;
   flex-flow: column;
   margin-top: ${space[6]}px;
-  border: 1px solid ${palette.border.secondary};
+  border: 1px solid ${border.secondary};
 `;
 
 const mainBackground = css`
@@ -62,7 +61,7 @@ const reviewTableRow = css`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  border-bottom: 1px solid ${palette.border.secondary};
+  border-bottom: 1px solid ${border.secondary};
   padding: ${space[5]}px;
 
   ${from.tablet} {

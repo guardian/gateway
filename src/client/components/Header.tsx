@@ -1,7 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { brand, space } from '@guardian/src-foundations';
-import { from } from '@guardian/src-foundations/mq';
+import { brand, from, space } from '@guardian/source-foundations';
 import { Logo } from '@guardian/source-react-components-development-kitchen';
 import { gridRow, manualRow, SpanDefinition } from '@/client/styles/Grid';
 

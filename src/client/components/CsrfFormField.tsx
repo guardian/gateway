@@ -2,8 +2,7 @@ import React, { useContext } from 'react';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { css } from '@emotion/react';
-import { error, space } from '@guardian/src-foundations';
-import { textSans } from '@guardian/src-foundations/typography';
+import { error, space, textSans } from '@guardian/source-foundations';
 
 const csrfErrorStyle = css`
   margin-bottom: ${space[4]}px;

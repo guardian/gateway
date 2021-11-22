@@ -1,8 +1,7 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { Container as SourceContainer } from '@guardian/src-layout';
-import { brandLine, neutral } from '@guardian/src-foundations/palette';
-import { from } from '@guardian/src-foundations/mq';
+import { Container as SourceContainer } from '@guardian/source-react-components';
+import { brandLine, neutral, from } from '@guardian/source-foundations';
 
 type Props = {
   children: React.ReactNode; // Children are inserted inside the nested div of the section

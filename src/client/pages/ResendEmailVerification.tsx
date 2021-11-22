@@ -1,5 +1,5 @@
 import React from 'react';
-import { LinkButton } from '@guardian/src-button';
+import { LinkButton } from '@guardian/source-react-components';
 import { Routes } from '@/shared/model/Routes';
 import { buttonStyles, MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
