@@ -86,7 +86,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
     globalMessage: { error, success } = {},
     queryParams,
   } = clientState;
-  const { page = '', previousPage } = pageData;
+  const { page = '', previousPage, geolocation } = pageData;
   const queryString = addQueryParamsToPath('', queryParams);
 
   const optionalBgColor =
@@ -99,7 +99,11 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
     `;
   return (
     <>
-      <ConsentsHeader error={error} success={success} />
+      <ConsentsHeader
+        error={error}
+        success={success}
+        geolocation={geolocation}
+      />
       <main css={mainStyles}>
         <ConsentsSubHeader autoRow={autoRow} title={title} current={current} />
         <form

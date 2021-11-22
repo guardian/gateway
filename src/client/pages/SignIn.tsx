@@ -19,6 +19,7 @@ import { from } from '@guardian/src-foundations/mq';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { SignInErrors } from '@/shared/model/Errors';
 import { EmailInput } from '@/client/components/EmailInput';
+import { GeoLocation } from '@/shared/model/Geolocation';
 
 export type SignInProps = {
   returnUrl?: string;
@@ -26,6 +27,7 @@ export type SignInProps = {
   email?: string;
   error?: string;
   oauthBaseUrl: string;
+  geolocation?: GeoLocation;
 };
 
 const passwordInput = css`
@@ -127,9 +129,10 @@ export const SignIn = ({
   error,
   oauthBaseUrl,
   queryString,
+  geolocation,
 }: SignInProps) => (
   <>
-    <Header />
+    <Header geolocation={geolocation} />
     <Nav
       tabs={[
         {
