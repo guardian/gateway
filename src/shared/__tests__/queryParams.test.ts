@@ -27,6 +27,7 @@ describe('getPersistableQueryParams', () => {
       clientId: 'clientId',
       ref: 'ref',
       refViewId: 'refViewId',
+      sessionToken: undefined,
     };
 
     expect(output).toStrictEqual(expected);
