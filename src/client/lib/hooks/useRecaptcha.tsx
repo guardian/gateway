@@ -85,7 +85,7 @@ export type UseRecaptchaReturnValue = {
   // Ask Google reCAPTCHA for a token and update the token and error state.
   // If successful, `token` is set and `error` + `expired` are reset to false.
   // Returns a bool to indicate whether `grecaptcha.execute` was called successfully.
-  executeCaptcha: () => void;
+  executeCaptcha: () => boolean;
   // Keeps track of the number of times the `executeRecaptcha` has been called.
   // Initial value: 0.
   requestCount: number;

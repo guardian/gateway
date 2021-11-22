@@ -19,7 +19,7 @@ import {
 import { CaptchaErrors } from '@/shared/model/Errors';
 import { DetailedRecaptchaError } from './DetailedRecaptchaError';
 
-interface Props {
+export interface MainFormProps {
   formAction: string;
   submitButtonText: string;
   submitButtonPriority?: 'primary' | 'tertiary';
@@ -61,7 +61,7 @@ export const MainForm = ({
   setRecaptchaErrorContext,
   hasGuardianTerms = false,
   onSubmitOverride,
-}: PropsWithChildren<Props>) => {
+}: PropsWithChildren<MainFormProps>) => {
   const recaptchaEnabled = !!recaptchaSiteKey;
   const hasTerms = recaptchaEnabled || hasGuardianTerms;
 
@@ -79,11 +79,9 @@ export const MainForm = ({
         onSubmitOverride(event);
       }
 
-      if (recaptchaEnabled) {
+      if (recaptchaEnabled && !recaptchaState?.token) {
         event.preventDefault();
-        if (recaptchaState?.executeCaptcha) {
-          recaptchaState.executeCaptcha();
-        }
+        recaptchaState?.executeCaptcha();
       }
     },
     [onSubmitOverride, recaptchaEnabled, recaptchaState],
