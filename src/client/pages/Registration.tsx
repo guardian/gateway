@@ -88,7 +88,7 @@ export const Registration = ({
     if (token) {
       registerFormElement?.submit();
     }
-  }, [token]);
+  }, [registerFormRef, token]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

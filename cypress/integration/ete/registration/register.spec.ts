@@ -237,7 +237,12 @@ describe('Registration flow', () => {
 
     cy.visit('/register');
 
-    cy.network({ offline: true });
+    // Simulate going offline by failing to reCAPTCHA POST request.
+    cy.intercept({
+      method: 'POST',
+      url: 'https://www.google.com/recaptcha/api2/**',
+      times: 1,
+    });
 
     cy.get('input[name=email').type(unregisteredEmail);
     cy.get('[data-cy="register-button"]').click();
@@ -254,16 +259,15 @@ describe('Registration flow', () => {
     );
     cy.contains('If the problem persists please try the following:');
 
-    cy.network({ offline: false });
     const timeRequestWasMade = new Date();
     cy.get('[data-cy="register-button"]').click();
+
     cy.contains(
       'Google reCAPTCHA verification failed. Please try again.',
     ).should('not.exist');
 
     cy.contains('Check your email inbox');
     cy.contains(unregisteredEmail);
-
     cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(
       ({ body }) => {
         expect(body).to.have.string('Complete registration');
