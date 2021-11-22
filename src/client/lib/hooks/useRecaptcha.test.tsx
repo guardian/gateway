@@ -331,17 +331,23 @@ test('should expect an error state when the Google reCAPTCHA script fails to loa
 });
 
 test('should expect an error state when no siteToken is provided', async () => {
-  const { result } = renderHook(() => useRecaptcha('', 'element-id'));
-
-  expect(result.current.token).toBe('');
-  expect(result.current.error).toBe(true);
+  renderHook(() =>
+    expect(() =>
+      useRecaptcha('', 'element-id'),
+    ).toThrowErrorMatchingInlineSnapshot(
+      '"No site key or render element passed"',
+    ),
+  );
 });
 
 test('should expect an error state when no renderElement is provided', async () => {
-  const { result } = renderHook(() => useRecaptcha('valid-site-key', ''));
-
-  expect(result.current.token).toBe('');
-  expect(result.current.error).toBe(true);
+  renderHook(() =>
+    expect(() =>
+      useRecaptcha('valid-site-key', ''),
+    ).toThrowErrorMatchingInlineSnapshot(
+      '"No site key or render element passed"',
+    ),
+  );
 });
 
 test('should try again successfully after an unsuccessful reCAPTCHA check and receive a valid token on the second attempt', async () => {
