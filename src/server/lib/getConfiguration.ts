@@ -5,6 +5,7 @@ import {
   GU_API_DOMAIN,
   GU_DOMAIN,
 } from '@/server/models/Configuration';
+import { featureSwitches } from '@/shared/lib/featureSwitches';
 
 const getOrThrow = (value: string | undefined, errorMessage: string) => {
   if (!value) {
@@ -13,25 +14,40 @@ const getOrThrow = (value: string | undefined, errorMessage: string) => {
   return value;
 };
 
-const gaUIDFromStage = (stage: string): [string, string] => {
-  switch (stage) {
-    case 'PROD':
-      return [GA_UID.PROD, GA_UID_HASH.PROD];
-    case 'CODE':
-      return [GA_UID.CODE, GA_UID_HASH.CODE];
-    default:
-      return [GA_UID.DEV, GA_UID_HASH.DEV];
-  }
-};
+interface StageVariables {
+  gaId: string;
+  gaIdHash: string;
+  domain: string;
+  apiDomain: string;
+  oktaRegistrationEnabled: boolean;
+}
 
-const guardianDomainFromStage = (stage: string): [string, string] => {
+const getStageVariables = (stage: string): StageVariables => {
   switch (stage) {
     case 'PROD':
-      return [GU_DOMAIN.PROD, GU_API_DOMAIN.PROD];
+      return {
+        gaId: GA_UID.PROD,
+        gaIdHash: GA_UID_HASH.PROD,
+        domain: GU_DOMAIN.PROD,
+        apiDomain: GU_API_DOMAIN.PROD,
+        oktaRegistrationEnabled: featureSwitches.oktaRegistrationEnabled.PROD,
+      };
     case 'CODE':
-      return [GU_DOMAIN.CODE, GU_API_DOMAIN.CODE];
+      return {
+        gaId: GA_UID.CODE,
+        gaIdHash: GA_UID_HASH.CODE,
+        domain: GU_DOMAIN.CODE,
+        apiDomain: GU_API_DOMAIN.CODE,
+        oktaRegistrationEnabled: featureSwitches.oktaRegistrationEnabled.CODE,
+      };
     default:
-      return [GU_DOMAIN.DEV, GU_API_DOMAIN.DEV];
+      return {
+        gaId: GA_UID.DEV,
+        gaIdHash: GA_UID_HASH.DEV,
+        domain: GU_DOMAIN.DEV,
+        apiDomain: GU_API_DOMAIN.DEV,
+        oktaRegistrationEnabled: featureSwitches.oktaRegistrationEnabled.DEV,
+      };
   }
 };
 
@@ -67,9 +83,8 @@ export const getConfiguration = (): Configuration => {
 
   const stage = getOrThrow(process.env.STAGE, 'Stage variable missing.');
 
-  const [gaId, gaIdHash] = gaUIDFromStage(stage);
-
-  const [domain, apiDomain] = guardianDomainFromStage(stage);
+  const { gaId, gaIdHash, domain, apiDomain, oktaRegistrationEnabled } =
+    getStageVariables(stage);
 
   const isHttps: boolean = JSON.parse(
     getOrThrow(process.env.IS_HTTPS, 'IS_HTTPS config missing.'),
@@ -100,6 +115,12 @@ export const getConfiguration = (): Configuration => {
     'OAuth Base URL missing.',
   );
 
+  const okta = {
+    registrationEnabled: oktaRegistrationEnabled,
+    orgUrl: getOrThrow(process.env.OKTA_ORG_URL, 'OKTA org URL missing'),
+    token: getOrThrow(process.env.OKTA_API_TOKEN, 'OKTA API token missing'),
+  };
+
   return {
     port: +port,
     idapiBaseUrl,
@@ -123,5 +144,6 @@ export const getConfiguration = (): Configuration => {
     },
     encryptionSecretKey,
     oauthBaseUrl,
+    okta,
   };
 };

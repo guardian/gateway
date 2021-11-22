@@ -32,3 +32,9 @@ Mobile.parameters = {
     defaultViewport: 'MOBILE',
   },
 };
+
+export const GeoGB = () => <Header geolocation="GB" />;
+GeoGB.storyName = 'with geolocation GB';
+
+export const GeoNotGB = () => <Header geolocation="ROW" />;
+GeoNotGB.storyName = 'with geolocation not GB';

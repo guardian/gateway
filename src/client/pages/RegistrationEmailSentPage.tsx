@@ -21,7 +21,7 @@ export const RegistrationEmailSentPage = () => {
       email={email}
       queryString={queryString}
       previousPage={`${Routes.SIGN_IN}`}
-      resendEmailAction={`${Routes.REGISTRATION}${Routes.RESEND}`}
+      resendEmailAction={`${Routes.REGISTRATION}${Routes.EMAIL_SENT}${Routes.RESEND}`}
       showSuccess={emailSentSuccess}
       errorMessage={error}
       helpInfoBox

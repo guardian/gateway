@@ -21,6 +21,13 @@ export interface Configuration {
   appSecret: string;
   encryptionSecretKey: string;
   oauthBaseUrl: string;
+  okta: Okta;
+}
+
+export interface Okta {
+  registrationEnabled: boolean;
+  orgUrl: string;
+  token: string;
 }
 
 export enum GA_UID {

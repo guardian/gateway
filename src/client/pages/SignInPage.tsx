@@ -13,7 +13,7 @@ export const SignInPage = () => {
     clientHosts,
     queryParams,
   } = clientState;
-  const { returnUrl, email } = pageData;
+  const { returnUrl, email, geolocation } = pageData;
   const { error } = globalMessage;
   const { oauthBaseUrl } = clientHosts;
   const queryString = addQueryParamsToPath('', queryParams);
@@ -26,6 +26,7 @@ export const SignInPage = () => {
       error={error}
       oauthBaseUrl={oauthBaseUrl}
       queryString={queryString}
+      geolocation={geolocation}
     />
   );
 };

@@ -78,10 +78,7 @@ describe('Registration flow', () => {
   it('successfully registers using an email with no existing account', () => {
     const encodedReturnUrl =
       'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
-    const decodedReturnUrl =
-      'https://m.code.dev-theguardian.com/travel/2019/dec/18/food-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
     const encodedRef = 'https%3A%2F%2Fm.theguardian.com';
-    const decodedRef = 'https://m.theguardian.com/';
     const refViewId = 'testRefViewId';
 
     const unregisteredEmail = randomMailosaurEmail();
@@ -109,8 +106,8 @@ describe('Registration flow', () => {
       /welcome\/([^"]*)/,
     ).then(({ body, token }) => {
       expect(body).to.have.string('Complete registration');
-      expect(body).to.have.string('returnUrl=' + decodedReturnUrl);
-      expect(body).to.have.string('ref=' + decodedRef);
+      expect(body).to.have.string('returnUrl=' + encodedReturnUrl);
+      expect(body).to.have.string('ref=' + encodedRef);
       expect(body).to.have.string('refViewId=' + refViewId);
       cy.visit(`/welcome/${token}`);
       cy.contains('Create password');
@@ -240,7 +237,12 @@ describe('Registration flow', () => {
 
     cy.visit('/register');
 
-    cy.network({ offline: true });
+    // Simulate going offline by failing to reCAPTCHA POST request.
+    cy.intercept({
+      method: 'POST',
+      url: 'https://www.google.com/recaptcha/api2/**',
+      times: 1,
+    });
 
     cy.get('input[name=email').type(unregisteredEmail);
     cy.get('[data-cy="register-button"]').click();
@@ -257,16 +259,15 @@ describe('Registration flow', () => {
     );
     cy.contains('If the problem persists please try the following:');
 
-    cy.network({ offline: false });
     const timeRequestWasMade = new Date();
     cy.get('[data-cy="register-button"]').click();
+
     cy.contains(
       'Google reCAPTCHA verification failed. Please try again.',
     ).should('not.exist');
 
     cy.contains('Check your email inbox');
     cy.contains(unregisteredEmail);
-
     cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(
       ({ body }) => {
         expect(body).to.have.string('Complete registration');
