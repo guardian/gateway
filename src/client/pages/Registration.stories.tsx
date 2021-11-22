@@ -33,7 +33,7 @@ Email.story = {
 };
 
 export const InvalidRecaptcha = (args: RegistrationProps) => (
-  <Registration {...args} recaptchaSiteKey="" />
+  <Registration {...args} recaptchaSiteKey="invalid-key" />
 );
 InvalidRecaptcha.story = {
   name: 'with invalid reCAPTCHA',

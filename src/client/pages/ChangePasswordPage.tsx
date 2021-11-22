@@ -24,7 +24,7 @@ export const ChangePasswordPage = () => {
         window.location.replace(`${Routes.RESET}${Routes.EXPIRED}`);
       }, tokenExpiryTimestamp - Date.now());
     }
-  }, []);
+  }, [tokenExpiryTimestamp]);
 
   return (
     <ChangePassword

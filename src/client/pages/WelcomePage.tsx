@@ -23,7 +23,7 @@ export const WelcomePage = () => {
         window.location.replace(`${Routes.WELCOME}${Routes.EXPIRED}`);
       }, tokenExpiryTimestamp - Date.now());
     }
-  }, []);
+  }, [tokenExpiryTimestamp]);
 
   return (
     <Welcome
