@@ -25,8 +25,10 @@ export interface MainFormProps {
   submitButtonPriority?: 'primary' | 'tertiary';
   submitButtonHalfWidth?: boolean;
   recaptchaSiteKey?: string;
-  setRecaptchaErrorMessage?: (error: string) => void;
-  setRecaptchaErrorContext?: (context: ReactNode | string) => void;
+  setRecaptchaErrorMessage?: React.Dispatch<React.SetStateAction<string>>;
+  setRecaptchaErrorContext?: React.Dispatch<
+    React.SetStateAction<ReactNode | string>
+  >;
   hasGuardianTerms?: boolean;
   onSubmitOverride?: React.FormEventHandler<HTMLFormElement>;
 }

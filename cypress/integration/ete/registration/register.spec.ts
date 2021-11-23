@@ -232,7 +232,7 @@ describe('Registration flow', () => {
     });
   });
 
-  it('errors when the user tries to register offline and allows registration when back online', () => {
+  it('shows reCATPCHA errors when the user tries to register offline and allows registration when back online', () => {
     const unregisteredEmail = randomMailosaurEmail();
 
     cy.visit('/register');

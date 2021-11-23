@@ -10,11 +10,7 @@ import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { consentPages } from '@/server/routes/consents';
 import { read as getUser } from '@/server/lib/idapi/user';
-import {
-  CaptchaErrors,
-  ConsentsErrors,
-  VerifyEmailErrors,
-} from '@/shared/model/Errors';
+import { ConsentsErrors, VerifyEmailErrors } from '@/shared/model/Errors';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { getProfileUrl } from '@/server/lib/getProfileUrl';
 import { trackMetric } from '@/server/lib/trackMetric';
@@ -25,18 +21,11 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { EMAIL_SENT } from '@/shared/model/Success';
 import { ApiError } from '@/server/models/Error';
-import { RecaptchaV2 } from 'express-recaptcha';
 
 const router = Router();
 
-const {
-  signInPageUrl,
-  googleRecaptcha: { secretKey, siteKey },
-} = getConfiguration();
+const { signInPageUrl } = getConfiguration();
 const profileUrl = getProfileUrl();
-
-// set google recaptcha site key
-const recaptcha = new RecaptchaV2(siteKey, secretKey);
 
 router.get(
   Routes.VERIFY_EMAIL,
@@ -96,23 +85,11 @@ router.get(
 
 router.post(
   Routes.VERIFY_EMAIL,
-  recaptcha.middleware.verify,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
     let status = 200;
 
     try {
-      if (req.recaptcha?.error) {
-        logger.error(
-          'Problem verifying recaptcha, error response: ',
-          req.recaptcha.error,
-        );
-        throw new ApiError({
-          message: CaptchaErrors.GENERIC,
-          status: 400,
-        });
-      }
-
       const sc_gu_u = req.cookies.SC_GU_U;
 
       if (!sc_gu_u) {

@@ -33,8 +33,10 @@ type Props = {
   // for grid layout on consents page
   gridAutoRow?: AutoRow;
   recaptchaSiteKey?: string;
-  setRecaptchaErrorMessage?: (message: string) => void;
-  setRecaptchaErrorContext?: (context: ReactNode | string) => void;
+  setRecaptchaErrorMessage?: React.Dispatch<React.SetStateAction<string>>;
+  setRecaptchaErrorContext?: React.Dispatch<
+    React.SetStateAction<ReactNode | string>
+  >;
 };
 
 const baseIconStyles = css`

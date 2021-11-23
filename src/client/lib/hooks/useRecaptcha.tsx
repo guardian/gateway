@@ -173,6 +173,13 @@ const useRecaptcha: UseRecaptcha = (
 
 export default useRecaptcha;
 
+/**
+ * Wrapper function for useRecaptcha hook.
+ *
+ * Useful for conditionally rendering the reCAPTCHA check.
+ * @param param0
+ * @returns
+ */
 export const Recaptcha: React.FC<{
   recaptchaSiteKey: string;
   setRecaptchaState: React.Dispatch<

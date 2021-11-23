@@ -59,10 +59,6 @@ describe('Verify email flow', () => {
   });
 
   context('Verify email', () => {
-    before(() => {
-      cy.visit('/signin');
-    });
-
     it('successfuly verifies the email using a token and sets auth cookies', () => {
       // mock validation success response (200 with auth cookies)
       cy.mockNext(200, authCookieResponse);

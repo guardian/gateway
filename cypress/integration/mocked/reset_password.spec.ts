@@ -76,4 +76,29 @@ describe('Password reset flow', () => {
       cy.contains(PageResetPassword.CONTENT.ERRORS.GENERIC);
     });
   });
+
+  context('Recaptcha errors', () => {
+    it('shows recaptcha error message when reCAPTCHA token request fails', function () {
+      cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
+        statusCode: 500,
+      });
+      const { email } = this.users.emailNotRegistered;
+      page.submitEmailAddress(email);
+      cy.contains('Google reCAPTCHA verification failed. Please try again.');
+    });
+
+    it('shows detailed recaptcha error message when reCAPTCHA token request fails two times', function () {
+      cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
+        statusCode: 500,
+      });
+      const { email } = this.users.emailNotRegistered;
+      page.submitEmailAddress(email);
+      cy.contains('Google reCAPTCHA verification failed. Please try again.');
+      page.emailAddressField().clear();
+      page.submitEmailAddress(email);
+      cy.contains('Google reCAPTCHA verification failed.');
+      cy.contains('If the problem persists please try the following:');
+      cy.contains('userhelp@');
+    });
+  });
 });
