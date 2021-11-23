@@ -20,6 +20,7 @@ import useRecaptcha, {
 import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
 import locations from '@/client/lib/locations';
 import { EmailInput } from '@/client/components/EmailInput';
+import { GeoLocation } from '@/shared/model/Geolocation';
 
 export type RegistrationProps = {
   returnUrl?: string;
@@ -27,6 +28,7 @@ export type RegistrationProps = {
   recaptchaSiteKey: string;
   oauthBaseUrl: string;
   queryString?: string;
+  geolocation?: GeoLocation;
 };
 
 const registerButton = css`
@@ -60,6 +62,7 @@ export const Registration = ({
   recaptchaSiteKey,
   oauthBaseUrl,
   queryString,
+  geolocation,
 }: RegistrationProps) => {
   const registerFormRef = createRef<HTMLFormElement>();
   const recaptchaElementRef = useRef<HTMLDivElement>(null);
@@ -96,7 +99,7 @@ export const Registration = ({
 
   return (
     <>
-      <Header />
+      <Header geolocation={geolocation} />
       <Nav
         tabs={[
           {

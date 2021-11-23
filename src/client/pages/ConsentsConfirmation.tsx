@@ -24,6 +24,7 @@ import {
   ExternalLink,
   ExternalLinkButton,
 } from '@/client/components/ExternalLink';
+import { GeoLocation } from '@/shared/model/Geolocation';
 
 type ConsentsConfirmationProps = {
   error?: string;
@@ -33,7 +34,9 @@ type ConsentsConfirmationProps = {
   optedOutOfMarketResearch: boolean;
   productConsents: Consent[];
   subscribedNewsletters: NewsLetter[];
+  geolocation?: GeoLocation;
 };
+
 const reviewTableContainer = css`
   display: flex;
   flex-flow: column;
@@ -153,11 +156,16 @@ export const ConsentsConfirmation = ({
   optedOutOfMarketResearch,
   productConsents,
   subscribedNewsletters,
+  geolocation,
 }: ConsentsConfirmationProps) => {
   const autoRow = getAutoRow(1, confirmationSpanDefinition);
   return (
     <>
-      <ConsentsHeader error={error} success={success} />
+      <ConsentsHeader
+        error={error}
+        success={success}
+        geolocation={geolocation}
+      />
       <main>
         <ConsentsSubHeader
           autoRow={autoRow}
