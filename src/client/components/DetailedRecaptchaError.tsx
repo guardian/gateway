@@ -1,5 +1,5 @@
 import React from 'react';
-import { space } from '@guardian/src-foundations';
+import { space } from '@guardian/source-foundations';
 import { css } from '@emotion/react';
 
 const errorContextSpacing = css`

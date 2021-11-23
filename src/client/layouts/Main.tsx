@@ -1,8 +1,12 @@
 import React, { PropsWithChildren, useContext } from 'react';
 import { css } from '@emotion/react';
-import { from } from '@guardian/src-foundations/mq';
-import { neutral, space, text } from '@guardian/src-foundations';
-import { headline } from '@guardian/src-foundations/typography';
+import {
+  from,
+  headline,
+  neutral,
+  space,
+  text,
+} from '@guardian/source-foundations';
 import {
   ErrorSummary,
   SuccessSummary,

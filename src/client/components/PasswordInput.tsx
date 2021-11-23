@@ -1,10 +1,12 @@
-import { TextInput } from '@guardian/src-text-input';
+import {
+  TextInput,
+  SvgEye,
+  SvgEyeStrike,
+  textInputThemeDefault,
+} from '@guardian/source-react-components';
 import React, { useContext, useState } from 'react';
 import { css } from '@emotion/react';
-import { SvgEye, SvgEyeStrike } from '@guardian/src-icons';
-import { textInputDefault } from '@guardian/src-foundations/themes';
-import { neutral, space } from '@guardian/src-foundations';
-import { height } from '@guardian/src-foundations/size';
+import { neutral, space, height } from '@guardian/source-foundations';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 
@@ -29,8 +31,8 @@ export const isDisplayEyeOnBrowser = (browserName: string | undefined) => {
 
 const textInputBorderStyle = (error?: string) => css`
   border: ${error
-    ? `4px solid ${textInputDefault.textInput.borderError}`
-    : `2px solid ${textInputDefault.textInput.border}`};
+    ? `4px solid ${textInputThemeDefault.textInput.borderError}`
+    : `2px solid ${textInputThemeDefault.textInput.border}`};
   position: absolute;
   bottom: 0px;
   width: 100%;

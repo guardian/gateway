@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { MjmlSection, MjmlColumn, MjmlImage } from 'mjml-react';
-import { brandBackground } from '@guardian/src-foundations/palette';
+import { brandBackground } from '@guardian/source-foundations';
 
 export const Header = () => (
   <MjmlSection background-color={brandBackground.primary} padding="0">

@@ -1,5 +1,9 @@
-import { LinkButton, LinkButtonProps } from '@guardian/src-button';
-import { Link, LinkProps } from '@guardian/src-link';
+import {
+  LinkButton,
+  LinkButtonProps,
+  Link,
+  LinkProps,
+} from '@guardian/source-react-components';
 import React from 'react';
 
 export const ExternalLink = (props: LinkProps) => (

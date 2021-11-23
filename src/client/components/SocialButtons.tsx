@@ -1,11 +1,12 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { space, brand } from '@guardian/src-foundations';
-import { LinkButton } from '@guardian/src-button';
-import { SvgGoogleBrand } from '@guardian/src-icons';
-import { SvgAppleBrand } from '@guardian/src-icons';
-import { SvgFacebookBrand } from '@guardian/src-icons';
-import { from } from '@guardian/src-foundations/mq';
+import { space, brand, from } from '@guardian/source-foundations';
+import {
+  LinkButton,
+  SvgGoogleBrand,
+  SvgAppleBrand,
+  SvgFacebookBrand,
+} from '@guardian/source-react-components';
 
 type SocialButtonProps = {
   returnUrl?: string;

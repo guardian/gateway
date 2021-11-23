@@ -1,9 +1,7 @@
 import React, { FunctionComponent } from 'react';
-import { brand } from '@guardian/src-foundations/palette';
+import { from, brand, space } from '@guardian/source-foundations';
 import { css, SerializedStyles } from '@emotion/react';
-import { space } from '@guardian/src-foundations';
 import { gridRow } from '@/client/styles/Grid';
-import { from } from '@guardian/src-foundations/mq';
 
 export const CONSENTS_MAIN_COLOR = '#eaf1fd';
 

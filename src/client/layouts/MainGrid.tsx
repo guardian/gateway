@@ -6,9 +6,8 @@ import { ClientStateContext } from '@/client/components/ClientState';
 import { SubHeader } from '@/client/components/SubHeader';
 import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 import { ErrorSummary } from '@guardian/source-react-components-development-kitchen';
-import { from } from '@guardian/src-foundations/mq';
+import { from, space } from '@guardian/source-foundations';
 import { topMargin } from '@/client/styles/Shared';
-import { space } from '@guardian/src-foundations';
 
 type Props = {
   subTitle?: string;
