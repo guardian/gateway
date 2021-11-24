@@ -5,11 +5,11 @@ import {
   brandText,
   brandAlt,
   brandBackground,
-} from '@guardian/src-foundations/palette';
-import { space } from '@guardian/src-foundations';
-import { textSans } from '@guardian/src-foundations/typography';
-import { from } from '@guardian/src-foundations/mq';
-import { Hide } from '@guardian/src-layout';
+  space,
+  textSans,
+  from,
+} from '@guardian/source-foundations';
+import { Hide } from '@guardian/source-react-components';
 import locations from '@/client/lib/locations';
 import { BackToTop } from '@/client/components/BackToTop';
 import { Container } from '@/client/components/Container';

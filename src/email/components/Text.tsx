@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { MjmlSection, MjmlColumn, MjmlText } from 'mjml-react';
-import { background, text } from '@guardian/src-foundations/palette';
+import { background, text } from '@guardian/source-foundations';
 
 type Props = { children: React.ReactNode; noPaddingBottom?: boolean };
 

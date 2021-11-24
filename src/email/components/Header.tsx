@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { MjmlSection, MjmlColumn, MjmlImage } from 'mjml-react';
-import { brandBackground } from '@guardian/src-foundations/palette';
+import { brandBackground } from '@guardian/source-foundations';
 
 // header should be 72px in height, using the width 144px of the design, and 6px of top/bottom padding
 // we get to 72px height, with the image dimensions itself being 600x250 (anniversary logo)

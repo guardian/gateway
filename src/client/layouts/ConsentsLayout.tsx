@@ -3,9 +3,12 @@ import { Footer } from '@/client/components/Footer';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { css } from '@emotion/react';
-import { brand, space } from '@guardian/src-foundations';
-import { Button, LinkButton } from '@guardian/src-button';
-import { SvgArrowRightStraight } from '@guardian/src-icons';
+import { brand, space } from '@guardian/source-foundations';
+import {
+  Button,
+  LinkButton,
+  SvgArrowRightStraight,
+} from '@guardian/source-react-components';
 import {
   getAutoRow,
   gridItem,
