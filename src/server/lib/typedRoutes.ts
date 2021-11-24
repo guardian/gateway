@@ -10,7 +10,7 @@ export const typedRouter = {
   },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   post: (path: RoutePaths, ...handlers: Array<any>) => {
-    return router.get(path, ...handlers);
+    return router.post(path, ...handlers);
   },
   router: router,
 };
