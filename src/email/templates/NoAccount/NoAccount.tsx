@@ -15,30 +15,28 @@ interface Props {
 
 export const NoAccount = ({ profileUrl }: Props) => {
   return (
-    <Page>
+    <Page title="No account">
       <Header />
-      <SubHeader>You don&#39;t have an account</SubHeader>
+      <SubHeader>You don&apos;t have an account</SubHeader>
+      <Text>Hello,</Text>
       <Text>
-        <p>Hello,</p>
-        <p>
-          <strong>You are not registered with The Guardian</strong>
-        </p>
-        <p>
-          It&#39;s quick an easy to create an account and we won&#39;t ask you
-          for personal details.
-        </p>
-        <p>Please click below to register.</p>
+        <strong>You are not registered with The Guardian</strong>
       </Text>
+      <Text>
+        It&apos;s quick an easy to create an account and we won&apos;t ask you
+        for personal details.
+      </Text>
+      <Text noPaddingBottom>Please click below to register.</Text>
       <Button href={`${profileUrl}${buildUrl(Routes.REGISTRATION)}`}>
         Register with The Guardian
       </Button>
       <Footer
         mistakeParagraphComponent={
-          <p>
+          <>
             If you received this email by mistake, simply delete it. You
             won&apos;t be registered if you don&apos;t click the confirmation
             button above.
-          </p>
+          </>
         }
       />
     </Page>

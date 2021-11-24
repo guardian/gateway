@@ -9,12 +9,14 @@ import {
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { text } from '@/client/styles/Consents';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
-import { LinkButton } from '@guardian/src-button';
+import {
+  LinkButton,
+  SvgArrowRightStraight,
+} from '@guardian/source-react-components';
 import { Routes } from '@/shared/model/Routes';
-import { SvgArrowRightStraight } from '@guardian/src-icons';
 import { css } from '@emotion/react';
-import { space } from '@guardian/src-foundations';
 import { buildUrl } from '@/shared/lib/routeUtils';
+import { space } from '@guardian/source-foundations';
 
 type Props = {
   submitUrl: string;

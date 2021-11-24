@@ -1,12 +1,14 @@
 import React, { FunctionComponent } from 'react';
 import { SerializedStyles, css } from '@emotion/react';
-import { CheckboxGroup, Checkbox } from '@guardian/src-checkbox';
-import { brand, space, palette } from '@guardian/src-foundations';
+import { CheckboxGroup, Checkbox } from '@guardian/source-react-components';
 import {
+  brand,
+  space,
   titlepiece,
   textSans,
   body,
-} from '@guardian/src-foundations/typography';
+  neutral,
+} from '@guardian/source-foundations';
 import { CONSENTS_MAIN_COLOR } from '@/client/layouts/shared/Consents';
 import { NewsLetter } from '@/shared/model/Newsletter';
 import { NEWSLETTER_IMAGES } from '@/client/models/Newsletter';
@@ -108,7 +110,7 @@ const subtitleDiv = css`
 
 // @TODO: hacked background colour, should be fixed in future source checkbox implementation
 const checkBoxBackgroundColorBugFix = css`
-  background: ${palette.neutral[100]};
+  background: ${neutral[100]};
   z-index: 0 !important;
 `;
 

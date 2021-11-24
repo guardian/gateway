@@ -9,26 +9,24 @@ import { Footer } from '@/email/components/Footer';
 
 export const AccountWithoutPasswordExists = () => {
   return (
-    <Page>
+    <Page title="Account exists">
       <Header />
       <SubHeader>This account already exists</SubHeader>
+      <Text>Hello again,</Text>
       <Text>
-        <p>Hello again,</p>
-        <p>
-          <strong>You are already registered with the Guardian.</strong>
-        </p>
-        <p>
-          To continue to your account please click below to create a password.
-        </p>
-        <p>This link is only valid for 30 minutes.</p>
+        <strong>You are already registered with the Guardian.</strong>
       </Text>
+      <Text>
+        To continue to your account please click below to create a password.
+      </Text>
+      <Text noPaddingBottom>This link is only valid for 30 minutes.</Text>
       <Button href="$createPasswordLink">Create password</Button>
       <Footer
         mistakeParagraphComponent={
-          <p>
-            If you didn’t try to register, please ignore this email. Your
-            details won’t be changed and no one has accessed your account.
-          </p>
+          <>
+            If you didn&apos;t try to register, please ignore this email. Your
+            details won&apos;t be changed and no one has accessed your account.
+          </>
         }
       />
     </Page>

@@ -1,7 +1,6 @@
 import React from 'react';
-import { textSans } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/react';
-import { space, neutral } from '@guardian/src-foundations';
+import { from, space, neutral, textSans } from '@guardian/source-foundations';
 import {
   getAutoRow,
   gridItemColumnConsents,
@@ -11,8 +10,7 @@ import { CommunicationCard } from '@/client/components/CommunicationCard';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { heading, text } from '@/client/styles/Consents';
 import { Consent } from '@/shared/model/Consent';
-import { Checkbox, CheckboxGroup } from '@guardian/src-checkbox';
-import { from } from '@guardian/src-foundations/mq';
+import { Checkbox, CheckboxGroup } from '@guardian/source-react-components';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import {
   ConsentsContent,

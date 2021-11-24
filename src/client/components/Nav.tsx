@@ -5,12 +5,12 @@ import {
   text,
   brandAltBackground,
   brandLine,
-} from '@guardian/src-foundations';
-import { headline } from '@guardian/src-foundations/typography';
+  headline,
+  from,
+} from '@guardian/source-foundations';
 import { Container } from '@/client/components/Container';
-import { from } from '@guardian/src-foundations/mq';
-import { Link } from '@guardian/src-link';
 import { RoutePathsAll } from '@/shared/lib/routeUtils';
+import { Link } from '@guardian/source-react-components';
 
 type Props = {
   tabs: TabType[];

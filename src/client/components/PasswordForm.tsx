@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from '@guardian/src-button';
 import {
+  Button,
   SvgCross,
   SvgAlertTriangle,
   SvgCheckmark,
   SvgArrowRightStraight,
-} from '@guardian/src-icons';
-import { success, error, neutral } from '@guardian/src-foundations/palette';
-import { textSans } from '@guardian/src-foundations/typography';
+} from '@guardian/source-react-components';
+import {
+  success,
+  error,
+  neutral,
+  textSans,
+  space,
+} from '@guardian/source-foundations';
 import { button } from '@/client/styles/Shared';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
-import { space } from '@guardian/src-foundations';
 import { css } from '@emotion/react';
 
 import sha1 from 'js-sha1';

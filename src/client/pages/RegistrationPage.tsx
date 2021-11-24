@@ -11,7 +11,7 @@ export const RegistrationPage = () => {
     clientHosts,
     queryParams,
   } = clientState;
-  const { returnUrl, email } = pageData;
+  const { returnUrl, email, geolocation } = pageData;
   const { oauthBaseUrl } = clientHosts;
   const { recaptchaSiteKey } = recaptchaConfig;
 
@@ -22,6 +22,7 @@ export const RegistrationPage = () => {
       recaptchaSiteKey={recaptchaSiteKey}
       oauthBaseUrl={oauthBaseUrl}
       queryString={queryParams}
+      geolocation={geolocation}
     />
   );
 };

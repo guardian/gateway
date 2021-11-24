@@ -27,7 +27,7 @@ export const SetPasswordPage = () => {
         );
       }, tokenExpiryTimestamp - Date.now());
     }
-  }, []);
+  }, [tokenExpiryTimestamp]);
 
   return (
     <ChangePassword

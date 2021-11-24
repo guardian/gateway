@@ -1,8 +1,7 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { space, error, neutral } from '@guardian/src-foundations';
-import { textSans } from '@guardian/src-foundations/typography';
-import { SvgAlertTriangle } from '@guardian/src-icons';
+import { space, error, neutral, textSans } from '@guardian/source-foundations';
+import { SvgAlertTriangle } from '@guardian/source-react-components';
 import { ErrorLink } from '@/client/lib/ErrorLink';
 import {
   gridItem,

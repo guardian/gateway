@@ -1,8 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { textSans } from '@guardian/src-foundations/typography';
-import { from } from '@guardian/src-foundations/mq';
-import { space } from '@guardian/src-foundations';
+import { from, space, textSans } from '@guardian/source-foundations';
 import { ExternalLink } from '@/client/components/ExternalLink';
 
 const Text = ({ children }: { children: React.ReactNode }) => (

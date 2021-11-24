@@ -24,7 +24,7 @@ export const WelcomePage = () => {
         window.location.replace(buildUrl(`${Routes.WELCOME}${Routes.EXPIRED}`));
       }, tokenExpiryTimestamp - Date.now());
     }
-  }, []);
+  }, [tokenExpiryTimestamp]);
 
   return (
     <Welcome

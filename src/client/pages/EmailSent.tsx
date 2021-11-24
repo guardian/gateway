@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from '@guardian/src-link';
+import { Link } from '@guardian/source-react-components';
 import { InfoSummary } from '@guardian/source-react-components-development-kitchen';
 import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';

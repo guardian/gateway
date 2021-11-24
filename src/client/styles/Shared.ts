@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
-import { from } from '@guardian/src-foundations/mq';
-import { space } from '@guardian/src-foundations';
+import { from, space } from '@guardian/source-foundations';
 
 export const button = css`
   width: 100%;

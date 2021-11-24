@@ -1,8 +1,7 @@
 import React from 'react';
-import { brand } from '@guardian/src-foundations/palette';
+import { brand, from } from '@guardian/source-foundations';
 import { css, SerializedStyles } from '@emotion/react';
 import { gridRow } from '@/client/styles/Grid';
-import { from } from '@guardian/src-foundations/mq';
 
 type Props = {
   cssOverrides?: SerializedStyles;
