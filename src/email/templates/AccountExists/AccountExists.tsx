@@ -10,27 +10,25 @@ import { Footer } from '@/email/components/Footer';
 
 export const AccountExists = () => {
   return (
-    <Page>
+    <Page title="Account exists">
       <Header />
       <SubHeader>This account already exists</SubHeader>
+      <Text>Hello again,</Text>
       <Text>
-        <p>Hello again,</p>
-        <p>
-          <strong>You are already registered with the Guardian.</strong>
-        </p>
-        <p>
-          Know your password? <Link href={'$signInLink'}>Sign in</Link>
-        </p>
-        <p>If you forgot your password, you can click below to reset it.</p>
-        <p>This link is only valid for 30 minutes.</p>
+        <strong>You are already registered with the Guardian.</strong>
       </Text>
+      <Text>
+        Know your password? <Link href={'$signInLink'}>Sign in</Link>
+      </Text>
+      <Text>If you forgot your password, you can click below to reset it.</Text>
+      <Text noPaddingBottom>This link is only valid for 30 minutes.</Text>
       <Button href="$passwordResetLink">Reset password</Button>
       <Footer
         mistakeParagraphComponent={
-          <p>
-            If you didn’t try to register, please ignore this email. Your
-            details won’t be changed and no one has accessed your account.
-          </p>
+          <>
+            If you didn&apos;t try to register, please ignore this email. Your
+            details won&apos;t be changed and no one has accessed your account.
+          </>
         }
       />
     </Page>

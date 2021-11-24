@@ -10,16 +10,16 @@ import {
 type Props = { children: React.ReactNode; href: string };
 
 export const Button = ({ children, href }: Props) => (
-  <MjmlSection background-color={background.primary} padding="0 50px">
+  <MjmlSection background-color={background.primary} padding="0 12px">
     <MjmlColumn>
       <MjmlButton
-        background-color={brandBackground.primary}
+        backgroundColor={brandBackground.primary}
         color={brandText.anchorPrimary}
-        border-radius="24px"
+        borderRadius="24px"
         href={href}
         align="left"
-        padding="12px 0 48px 0"
-        fontFamily="GuardianTextSans, Guardian Text Sans Web, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif"
+        padding="22px 0 48px 0"
+        fontFamily="Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif"
         fontWeight={700}
         fontSize="17px"
       >
