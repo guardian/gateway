@@ -94,10 +94,11 @@ export type ApiRoutePathsWithQueryParams = `${ApiRoutePaths}${string}`;
  */
 export type ApiRoutePathsAll = ApiRoutePathsWithQueryParams | ApiRoutePaths;
 
+export type ValidUrl = string;
 /**
  * This is all valid routes on the site, only used for the helper function addQueryParamsToPath
  */
-export type AllRoutes = ApiRoutePathsAll | RoutePathsAll;
+export type AllRoutes = ApiRoutePathsAll | RoutePathsAll | ValidUrl;
 
 /**
  * ExtractRouteParams type generates a object type definition given a path type string
@@ -137,15 +138,11 @@ export type PathParams<P extends AllRoutes> = ExtractRouteParams<P>;
 export const buildUrl = <P extends AllRoutes>(
   path: P,
   params: PathParams<P> = <PathParams<P>>{},
-): string => {
-  let ret: string = path;
-
-  //Upcast `params` to be used in string replacement.
+): ValidUrl => {
+  // //Upcast `params` to be used in string replacement.
   const paramObj: { [i: string]: string } = params;
 
-  for (const key of Object.keys(paramObj)) {
-    ret = ret.replace(`:${key}`, paramObj[key]);
-  }
-
-  return ret;
+  return Object.keys(paramObj).reduce((fullPath, key) => {
+    return fullPath.replace(`:${key}`, paramObj[key]);
+  }, path);
 };

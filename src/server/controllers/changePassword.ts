@@ -68,7 +68,7 @@ export const checkResetPasswordTokenController = (
       // on the confirmation page
       setEncryptedStateCookie(res, { email });
 
-      const html = rendererWithString(
+      const html = renderer(
         buildUrl(`${setPasswordPagePath}${Routes.TOKEN_PARAM}`, {
           token: token,
         }),
@@ -142,7 +142,7 @@ export const setPasswordTokenController = (
             fieldErrors,
           },
         });
-        const html = rendererWithString(
+        const html = renderer(
           buildUrl(`${setPasswordPath}${Routes.TOKEN_PARAM}`, { token: token }),
           {
             requestState: state,
@@ -220,7 +220,7 @@ export const setPasswordTokenController = (
           });
         }
 
-        const html = rendererWithString(
+        const html = renderer(
           buildUrl(`${setPasswordPath}${Routes.TOKEN_PARAM}`, { token: token }),
           {
             requestState: state,
