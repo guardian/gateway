@@ -4,7 +4,7 @@ import deepmerge from 'deepmerge';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { getBrowserNameFromUserAgent } from '@/server/lib/getBrowserName';
 import { logger } from '@/server/lib/logger';
-import { renderer, rendererWithString } from '@/server/lib/renderer';
+import { renderer } from '@/server/lib/renderer';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import {
   validate as validateToken,
