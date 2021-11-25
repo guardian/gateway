@@ -80,10 +80,10 @@ const Links = ({ children }: { children: React.ReactNode }) => (
 const getErrorContext = (error: string | undefined) => {
   if (error === SignInErrors.ACCOUNT_ALREADY_EXISTS) {
     return (
-      <p>
+      <>
         We cannot sign you in with your social account credentials. Please enter
         your account password below to sign in.
-      </p>
+      </>
     );
   }
 };
