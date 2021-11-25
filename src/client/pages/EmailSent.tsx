@@ -9,6 +9,8 @@ import {
 } from '@/client/components/MainForm';
 import { EmailInput } from '@/client/components/EmailInput';
 import { Routes } from '@/shared/model/Routes';
+import { ExternalLink } from '@/client/components/ExternalLink';
+import { css } from '@emotion/react';
 
 type Props = {
   email?: string;
@@ -85,9 +87,9 @@ export const EmailSent = ({
                 <br />
                 If you are having trouble, please contact our customer service
                 team at{' '}
-                <Link subdued href="mailto:userhelp@theguardian.com">
+                <ExternalLink subdued href="mailto:userhelp@theguardian.com">
                   userhelp@guardian.com
-                </Link>
+                </ExternalLink>
               </>
             }
           />
@@ -95,9 +97,21 @@ export const EmailSent = ({
         {helpInfoBox && (
           <InfoSummary
             cssOverrides={belowFormMarginTopSpacingStyle}
-            // to update message as a link once we can use ReactNode to compose the message
-            // https://github.com/guardian/source/pull/1163
-            message="If you are still having trouble contact our customer service team at userhelp@guardian.com"
+            message={
+              <>
+                If you are still having trouble contact our customer service
+                team at{' '}
+                <ExternalLink
+                  cssOverrides={css`
+                    font-weight: 700;
+                  `}
+                  subdued
+                  href="mailto:userhelp@theguardian.com"
+                >
+                  userhelp@guardian.com
+                </ExternalLink>
+              </>
+            }
           />
         )}
       </>
