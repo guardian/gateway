@@ -5,7 +5,7 @@ import { ClientStateContext } from '@/client/components/ClientState';
 import { Routes } from '@/shared/model/Routes';
 import { ChangePassword } from '@/client/pages/ChangePassword';
 import { buildUrl } from '@/shared/lib/routeUtils';
-import { addQueryParamsToStringPath } from '@/shared/lib/queryParams';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 export const ChangePasswordPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
@@ -32,7 +32,7 @@ export const ChangePasswordPage = () => {
     <ChangePassword
       headerText="Reset password"
       buttonText="Confirm new password"
-      submitUrl={addQueryParamsToStringPath(
+      submitUrl={addQueryParamsToPath(
         buildUrl(`${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`, {
           token: token,
         }),

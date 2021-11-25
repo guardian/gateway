@@ -3,7 +3,6 @@ import { SignIn } from '@/client/pages/SignIn';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { useRemoveEncryptedEmailParam } from '@/client/lib/hooks/useRemoveEncryptedEmailParam';
-import { buildQueryParamsString } from '@/shared/lib/queryParams';
 
 export const SignInPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
@@ -16,7 +15,6 @@ export const SignInPage = () => {
   const { returnUrl, email, geolocation } = pageData;
   const { error } = globalMessage;
   const { oauthBaseUrl } = clientHosts;
-  const queryString = buildQueryParamsString(queryParams);
   // we use the encryptedEmail parameter to pre-fill the email field, but then want to remove it from the url
   useRemoveEncryptedEmailParam();
   return (
@@ -25,7 +23,7 @@ export const SignInPage = () => {
       email={email}
       error={error}
       oauthBaseUrl={oauthBaseUrl}
-      queryString={queryString}
+      queryString={queryParams}
       geolocation={geolocation}
     />
   );

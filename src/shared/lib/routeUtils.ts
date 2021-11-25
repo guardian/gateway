@@ -45,17 +45,10 @@ export type RoutePaths =
   | '/404';
 
 /**
- * RoutePathsWithQueryParams is a type for all valid routes, but with query strings appended
- * @example /magic-link?queryParam=value
- */
-
-export type RoutePathsWithQueryParams = `${RoutePaths}${string}`;
-
-/**
  * RoutePathsAll is the union of the above types
  */
 
-export type RoutePathsAll = RoutePathsWithQueryParams | RoutePaths;
+export type RoutePathsAll = RoutePaths;
 
 /**
  * These are all valid paths for the Identity API
@@ -82,23 +75,11 @@ export type ApiRoutePaths =
   | '/send-account-without-password-exists-email'
   | '/send-create-password-account-exists-email';
 
-/**
- * This is a type for all valid routes, but with query strings appended
- * @example
- * /user/me?queryParam=value
- */
-export type ApiRoutePathsWithQueryParams = `${ApiRoutePaths}${string}`;
-
-/**
- * This is a union of the above
- */
-export type ApiRoutePathsAll = ApiRoutePathsWithQueryParams | ApiRoutePaths;
-
 export type ValidUrl = string;
 /**
  * This is all valid routes on the site, only used for the helper function addQueryParamsToPath
  */
-export type AllRoutes = ApiRoutePathsAll | RoutePathsAll | ValidUrl;
+export type AllRoutes = ApiRoutePaths | RoutePaths;
 
 /**
  * ExtractRouteParams type generates a object type definition given a path type string

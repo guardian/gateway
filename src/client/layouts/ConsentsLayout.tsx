@@ -21,7 +21,7 @@ import { ConsentsHeader } from '@/client/components/ConsentsHeader';
 import { Routes } from '@/shared/model/Routes';
 import { onboardingFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
-import { buildQueryParamsString } from '@/shared/lib/queryParams';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { buildUrl } from '@/shared/lib/routeUtils';
 
 interface ConsentsLayoutProps {
@@ -91,7 +91,6 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
     queryParams,
   } = clientState;
   const { page = '', previousPage, geolocation } = pageData;
-  const queryString = buildQueryParamsString(queryParams);
 
   const optionalBgColor =
     bgColor &&
@@ -112,7 +111,10 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
         <ConsentsSubHeader autoRow={autoRow} title={title} current={current} />
         <form
           css={form}
-          action={buildUrl(`${Routes.CONSENTS}/${page}${queryString}`)}
+          action={addQueryParamsToPath(
+            buildUrl(`${Routes.CONSENTS}/:page`, { page: page }),
+            queryParams,
+          )}
           method="post"
           onSubmit={({ target: form }) => {
             onboardingFormSubmitOphanTracking(
@@ -144,8 +146,11 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
                 {previousPage && (
                   <LinkButton
                     css={linkButton}
-                    href={buildUrl(
-                      `${Routes.CONSENTS}/${previousPage}${queryString}`,
+                    href={addQueryParamsToPath(
+                      buildUrl(`${Routes.CONSENTS}/:page`, {
+                        page: previousPage,
+                      }),
+                      queryParams,
                     )}
                     priority="subdued"
                   >

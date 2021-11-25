@@ -5,7 +5,7 @@ import { renderer } from '@/server/lib/renderer';
 import { Routes } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { logger } from '@/server/lib/logger';
-import { addQueryParamsToStringPath } from '@/shared/lib/queryParams';
+import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 
 const { defaultReturnUri } = getConfiguration();
@@ -24,7 +24,7 @@ export const routeErrorHandler = (
     // we also have to manually build the query params object, as it may not be defined in an unexpected csrf error
     res.redirect(
       303,
-      addQueryParamsToStringPath(
+      addQueryParamsToUntypedPath(
         getCsrfPageUrl(req),
         { ...res.locals.queryParams, returnUrl: defaultReturnUri },
         {

@@ -18,10 +18,12 @@ import { SignInErrors } from '@/shared/model/Errors';
 import { EmailInput } from '@/client/components/EmailInput';
 import { buildUrl } from '@/shared/lib/routeUtils';
 import { GeoLocation } from '@/shared/model/Geolocation';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { QueryParams } from '@/shared/model/QueryParams';
 
 export type SignInProps = {
   returnUrl?: string;
-  queryString?: string;
+  queryString: QueryParams;
   email?: string;
   error?: string;
   oauthBaseUrl: string;
@@ -150,7 +152,10 @@ export const SignIn = ({
       errorOverride={error}
       errorContext={getErrorContext(error)}
     >
-      <form method="post" action={buildUrl(`${Routes.SIGN_IN}${queryString}`)}>
+      <form
+        method="post"
+        action={addQueryParamsToPath(buildUrl(Routes.SIGN_IN), queryString)}
+      >
         <CsrfFormField />
         <EmailInput defaultValue={email} />
         <div css={passwordInput}>

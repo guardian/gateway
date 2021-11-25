@@ -1,16 +1,18 @@
 import React, { useContext, useEffect } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { Routes } from '@/shared/model/Routes';
 import { Welcome } from '@/client/pages/Welcome';
 import { buildUrl } from '@/shared/lib/routeUtils';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 export const WelcomePage = () => {
-  const { search } = useLocation();
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData: { email, fieldErrors = [], tokenExpiryTimestamp } = {} } =
-    clientState;
+  const {
+    pageData: { email, fieldErrors = [], tokenExpiryTimestamp } = {},
+    queryParams,
+  } = clientState;
   const { token } = useParams<{ token: string }>();
 
   useEffect(() => {
@@ -28,7 +30,10 @@ export const WelcomePage = () => {
 
   return (
     <Welcome
-      submitUrl={buildUrl(`${Routes.WELCOME}/${token}${search}`)}
+      submitUrl={addQueryParamsToPath(
+        buildUrl(`${Routes.WELCOME}/:token`, { token }),
+        queryParams,
+      )}
       email={email}
       fieldErrors={fieldErrors}
     />

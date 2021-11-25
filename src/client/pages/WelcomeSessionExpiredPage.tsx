@@ -4,14 +4,11 @@ import { ClientStateContext } from '@/client/components/ClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
 import { Routes } from '@/shared/model/Routes';
 import { MainBodyText } from '../components/MainBodyText';
-import { buildQueryParamsString } from '@/shared/lib/queryParams';
 import { buildUrl } from '@/shared/lib/routeUtils';
 
 export const WelcomeSessionExpiredPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { pageData: { email = '' } = {}, queryParams } = clientState;
-
-  const queryString = buildQueryParamsString(queryParams);
 
   return (
     <ResetPassword
@@ -19,7 +16,7 @@ export const WelcomeSessionExpiredPage = () => {
       headerText="Session timed out"
       buttonText="Send me a link"
       formActionOverride={buildUrl(`${Routes.WELCOME}${Routes.RESEND}`)}
-      queryString={queryString}
+      queryString={queryParams}
       emailInputLabel="Email address"
     >
       <MainBodyText>

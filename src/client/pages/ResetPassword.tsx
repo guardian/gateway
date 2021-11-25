@@ -11,12 +11,17 @@ import { InfoSummary } from '@guardian/source-react-components-development-kitch
 import locations from '@/client/lib/locations';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import { buildUrl } from '@/shared/lib/routeUtils';
+import { QueryParams } from '@/shared/model/QueryParams';
+import {
+  addQueryParamsToPath,
+  addQueryParamsToUntypedPath,
+} from '@/shared/lib/queryParams';
 
 interface ResetPasswordProps {
   email?: string;
   headerText: string;
   buttonText: string;
-  queryString?: string;
+  queryString: QueryParams;
   formActionOverride?: string;
   emailInputLabel?: string;
   showNoAccessEmail?: boolean;
@@ -27,7 +32,7 @@ export const ResetPassword = ({
   email = '',
   headerText,
   buttonText,
-  queryString = '',
+  queryString,
   formActionOverride,
   emailInputLabel,
   showNoAccessEmail,
@@ -39,8 +44,8 @@ export const ResetPassword = ({
     <MainForm
       formAction={
         formActionOverride
-          ? `${formActionOverride}${queryString}`
-          : buildUrl(`${Routes.RESET}${queryString}`)
+          ? addQueryParamsToUntypedPath(formActionOverride, queryString)
+          : addQueryParamsToPath(buildUrl(Routes.RESET), queryString)
       }
       submitButtonText={buttonText}
     >

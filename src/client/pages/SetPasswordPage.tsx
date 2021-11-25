@@ -1,16 +1,17 @@
 import React, { useContext, useEffect } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { Routes } from '@/shared/model/Routes';
 import { ChangePassword } from '@/client/pages/ChangePassword';
 import { buildUrl } from '@/shared/lib/routeUtils';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 export const SetPasswordPage = () => {
-  const { search } = useLocation();
   const clientState: ClientState = useContext(ClientStateContext);
   const {
     pageData: { email = '', fieldErrors = [], tokenExpiryTimestamp } = {},
+    queryParams,
   } = clientState;
   const { token } = useParams<{ token: string }>();
 
@@ -33,7 +34,10 @@ export const SetPasswordPage = () => {
     <ChangePassword
       headerText="Create password"
       buttonText="Save password"
-      submitUrl={buildUrl(`${Routes.SET_PASSWORD}/${token}${search}`)}
+      submitUrl={addQueryParamsToPath(
+        buildUrl(`${Routes.SET_PASSWORD}/:token`, { token }),
+        queryParams,
+      )}
       email={email}
       fieldErrors={fieldErrors}
     />

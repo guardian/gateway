@@ -22,6 +22,11 @@ import {
 import { ApiError } from '@/server/models/Error';
 import { buildUrl, RoutePathsAll } from '@/shared/lib/routeUtils';
 
+type ValidPassworUrls =
+  | Routes.CHANGE_PASSWORD
+  | Routes.SET_PASSWORD
+  | Routes.WELCOME;
+
 const validatePasswordField = (password: string): Array<FieldError> => {
   const errors: Array<FieldError> = [];
 
@@ -41,7 +46,7 @@ const validatePasswordField = (password: string): Array<FieldError> => {
 };
 
 export const checkResetPasswordTokenController = (
-  setPasswordPagePath: RoutePathsAll,
+  setPasswordPagePath: ValidPassworUrls,
   setPasswordPageTitle: string,
   resendEmailPagePath: RoutePathsAll,
   resendEmailPageTitle: string,
@@ -108,7 +113,7 @@ export const checkResetPasswordTokenController = (
   });
 
 export const setPasswordTokenController = (
-  setPasswordPath: RoutePathsAll,
+  setPasswordPath: ValidPassworUrls,
   setPasswordPageTitle: string,
   resendEmailPagePath: RoutePathsAll,
   resendEmailPageTitle: string,

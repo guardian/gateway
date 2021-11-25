@@ -21,7 +21,7 @@ import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaErr
 import locations from '@/client/lib/locations';
 import { EmailInput } from '@/client/components/EmailInput';
 import { buildUrl } from '@/shared/lib/routeUtils';
-import { addQueryParamsToStringPath } from '@/shared/lib/queryParams';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { GeoLocation } from '@/shared/model/Geolocation';
 
@@ -125,7 +125,7 @@ export const Registration = ({
       >
         <form
           method="post"
-          action={addQueryParamsToStringPath(
+          action={addQueryParamsToPath(
             buildUrl(`${Routes.REGISTRATION}`),
             queryString,
           )}

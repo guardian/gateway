@@ -3,20 +3,17 @@ import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
 import { MainBodyText } from '@/client/components/MainBodyText';
-import { buildQueryParamsString } from '@/shared/lib/queryParams';
 
 export const ResetPasswordSessionExpiredPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
   const { pageData: { email = '' } = {}, queryParams } = clientState;
-
-  const queryString = buildQueryParamsString(queryParams);
 
   return (
     <ResetPassword
       email={email}
       headerText="Session timed out"
       buttonText="Send me a link"
-      queryString={queryString}
+      queryString={queryParams}
       emailInputLabel="Email address"
     >
       <MainBodyText>

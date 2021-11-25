@@ -3,7 +3,7 @@ import {
   QueryParams,
   PersistableQueryParams,
 } from '@/shared/model/QueryParams';
-import { AllRoutes } from './routeUtils';
+import { AllRoutes, ValidUrl } from './routeUtils';
 
 export const getPersistableQueryParams = (
   params: QueryParams,
@@ -15,18 +15,18 @@ export const getPersistableQueryParams = (
 });
 
 export const addQueryParamsToPath = (
-  path: AllRoutes,
+  path: AllRoutes | ValidUrl,
   params: QueryParams,
   overrides?: Partial<QueryParams>,
 ): string => {
-  return addQueryParamsToStringPath(path, params, overrides);
+  return addQueryParamsToUntypedPath(path, params, overrides);
 };
 
 //This takes a non-typed url string and adds query parameters
 //This should only be used when you have a path that is dynamically generated ie from another input parameter
 //You should use addQueryParamsToPath for all typed internal application urls
 
-export const addQueryParamsToStringPath = (
+export const addQueryParamsToUntypedPath = (
   path: string,
   params: QueryParams,
   overrides?: Partial<QueryParams>,
