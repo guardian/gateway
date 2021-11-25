@@ -14,23 +14,34 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { decrypt } from '@/server/lib/idapi/decryptToken';
 import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
 import { ApiError } from '@/server/models/Error';
+import { readEmailCookie } from '../lib/emailCookie';
 
 const router = Router();
 
-const preFillEmailField = (route: string) =>
+router.get(
+  Routes.SIGN_IN,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
     const { encryptedEmail, error } = state.queryParams;
-    const email = encryptedEmail ? await decrypt(encryptedEmail, req.ip) : '';
+
+    // first attempt to get email from IDAPI encryptedEmail if it exists
+    const decryptedEmail =
+      encryptedEmail && (await decrypt(encryptedEmail, req.ip));
+
+    // followed by the gateway EncryptedState
+    // and the identity-frontend playSessionCookie
+    // if it exists
+    const email = decryptedEmail || readEmailCookie(req);
+
     const errorMessage =
       error === FederationErrors.SOCIAL_SIGNIN_BLOCKED
         ? SignInErrors.ACCOUNT_ALREADY_EXISTS
         : '';
 
-    const html = renderer(route, {
+    const html = renderer(Routes.SIGN_IN, {
       requestState: deepmerge(state, {
         pageData: {
-          email: email,
+          email,
         },
         globalMessage: {
           error: errorMessage,
@@ -39,9 +50,8 @@ const preFillEmailField = (route: string) =>
       pageTitle: PageTitle.SIGN_IN,
     });
     res.type('html').send(html);
-  });
-
-router.get(Routes.SIGN_IN, preFillEmailField(Routes.SIGN_IN));
+  }),
+);
 
 router.post(
   Routes.SIGN_IN,
@@ -66,11 +76,14 @@ router.post(
 
       trackMetric(Metrics.SIGN_IN_FAILURE);
 
-      // re-render the sign in page on error
+      // re-render the sign in page on error, with pre-filled email
       const html = renderer(Routes.SIGN_IN, {
         requestState: deepmerge(res.locals, {
           globalMessage: {
             error: message,
+          },
+          pageData: {
+            email,
           },
         }),
         pageTitle: PageTitle.SIGN_IN,
