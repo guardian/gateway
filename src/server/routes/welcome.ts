@@ -16,8 +16,17 @@ import {
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
 import { ApiError } from '@/server/models/Error';
+import { RecaptchaV2 } from 'express-recaptcha';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { CaptchaErrors } from '@/shared/model/Errors';
 
 const router = Router();
+const {
+  googleRecaptcha: { secretKey, siteKey },
+} = getConfiguration();
+
+// set google recaptcha site key
+const recaptcha = new RecaptchaV2(siteKey, secretKey);
 
 // resend account verification page
 router.get(
@@ -46,11 +55,23 @@ router.get(
 // POST form handler to resend account verification email
 router.post(
   `${Routes.WELCOME}${Routes.RESEND}`,
+  recaptcha.middleware.verify,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { email } = req.body;
     const { returnUrl, emailSentSuccess } = res.locals.queryParams;
 
     try {
+      if (req.recaptcha?.error) {
+        logger.error(
+          'Problem verifying recaptcha, error response: ',
+          req.recaptcha.error,
+        );
+        throw new ApiError({
+          message: CaptchaErrors.GENERIC,
+          status: 400,
+        });
+      }
+
       await sendAccountVerificationEmail(email, req.ip, returnUrl);
 
       setEncryptedStateCookie(res, { email });

@@ -13,7 +13,7 @@ import { GuardianTerms, RecaptchaTerms } from '@/client/components/Terms';
 import { space } from '@guardian/source-foundations';
 import { buttonStyles } from '@/client/layouts/Main';
 import {
-  Recaptcha,
+  RecaptchaWrapper,
   UseRecaptchaReturnValue,
 } from '@/client/lib/hooks/useRecaptcha';
 import { CaptchaErrors } from '@/shared/model/Errors';
@@ -154,7 +154,7 @@ export const MainForm = ({
       ref={registerFormRef}
     >
       {recaptchaEnabled && (
-        <Recaptcha
+        <RecaptchaWrapper
           recaptchaSiteKey={recaptchaSiteKey}
           setRecaptchaState={setRecaptchaState}
         />

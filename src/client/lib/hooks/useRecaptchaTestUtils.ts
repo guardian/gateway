@@ -28,6 +28,10 @@ export const setupRecaptchaScriptMutationObserver = (
   });
 };
 
+/**
+ * Sets up a mock grecaptcha object on window to be used by the `useRecaptcha` hook.
+ * Adds a script to the DOM to trigger the `load` event on the recaptcha script.
+ */
 export const setupRecaptchaObject = () => {
   // Define grecpatcha on the window object so we can mock it.
   Object.defineProperty(global.window, 'grecaptcha', {

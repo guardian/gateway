@@ -9,7 +9,7 @@ import useRecaptcha from './useRecaptcha';
 import {
   setupRecaptchaScriptMutationObserver,
   setupRecaptchaObject,
-} from '@/client/lib/hooks/utils';
+} from '@/client/lib/hooks/useRecaptchaTestUtils';
 
 const validRecaptchaScriptUrl =
   'https://www.google.com/recaptcha/api.js?render=explicit';

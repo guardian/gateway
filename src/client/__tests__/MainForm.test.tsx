@@ -13,7 +13,7 @@ import { DetailedRecaptchaError } from '../components/DetailedRecaptchaError';
 import {
   setupRecaptchaScriptMutationObserver,
   setupRecaptchaObject,
-} from '@/client/lib/hooks/utils';
+} from '@/client/lib/hooks/useRecaptchaTestUtils';
 
 const setup = (extraProps?: Partial<MainFormProps>) =>
   render(<MainForm formAction="/" submitButtonText="Submit" {...extraProps} />);

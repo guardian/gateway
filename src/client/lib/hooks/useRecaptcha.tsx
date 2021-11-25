@@ -174,13 +174,14 @@ const useRecaptcha: UseRecaptcha = (
 export default useRecaptcha;
 
 /**
- * Wrapper function for useRecaptcha hook.
+ * Wrapper component for the useRecaptcha hook.
  *
- * Useful for conditionally rendering the reCAPTCHA check.
- * @param param0
- * @returns
+ * Runs the hook in a wrapper and passes the state back up to the parent component.
+ * Useful for instances where we want to conditionally include the reCAPTCHA check.
+ *
+ * @returns The reCAPTCHA form element.
  */
-export const Recaptcha: React.FC<{
+export const RecaptchaWrapper: React.FC<{
   recaptchaSiteKey: string;
   setRecaptchaState: React.Dispatch<
     React.SetStateAction<UseRecaptchaReturnValue | undefined>
