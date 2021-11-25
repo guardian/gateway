@@ -10,6 +10,7 @@ type ResendEmailVerificationProps = {
   email?: string;
   signInPageUrl?: string;
   successText?: string;
+  recaptchaSiteKey?: string;
 };
 
 const LoggedOut = ({ signInPageUrl }: { signInPageUrl?: string }) => (
@@ -77,9 +78,16 @@ export const ResendEmailVerification = ({
   email,
   signInPageUrl,
   successText,
+  recaptchaSiteKey,
 }: ResendEmailVerificationProps) => {
   if (email) {
-    return <LoggedIn email={email} successText={successText} />;
+    return (
+      <LoggedIn
+        email={email}
+        successText={successText}
+        recaptchaSiteKey={recaptchaSiteKey}
+      />
+    );
   } else {
     return <LoggedOut signInPageUrl={signInPageUrl} />;
   }
