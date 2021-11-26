@@ -4,8 +4,7 @@ import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { Routes } from '@/shared/model/Routes';
 import { ChangePassword } from '@/client/pages/ChangePassword';
-import { buildUrl } from '@/shared/lib/routeUtils';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { buildUrl, buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 
 export const SetPasswordPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
@@ -34,8 +33,9 @@ export const SetPasswordPage = () => {
     <ChangePassword
       headerText="Create password"
       buttonText="Save password"
-      submitUrl={addQueryParamsToPath(
-        buildUrl(`${Routes.SET_PASSWORD}/:token`, { token }),
+      submitUrl={buildUrlWithQueryParams(
+        `${Routes.SET_PASSWORD}/:token`,
+        { token },
         queryParams,
       )}
       email={email}

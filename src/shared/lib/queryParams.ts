@@ -15,6 +15,17 @@ export const getPersistableQueryParams = (
   refViewId: params.refViewId,
 });
 
+/**
+ *
+ * @param path a path segment of a url that is typed as part of RoutePaths
+ * @param params QueryParams - any query params to be added to the path
+ * @param overrides Any query parameter overrides
+ * @returns string
+ * This takes a non-typed url string and adds query parameters
+ * This should only be used when you have a path that is dynamically generated ie from another input parameter
+ * You should use addQueryParamsToPath for all typed internal application urls
+ */
+
 export const addQueryParamsToPath = (
   path: AllRoutes | ValidUrl,
   params: QueryParams,
@@ -23,9 +34,16 @@ export const addQueryParamsToPath = (
   return addQueryParamsToUntypedPath(path, params, overrides);
 };
 
-//This takes a non-typed url string and adds query parameters
-//This should only be used when you have a path that is dynamically generated ie from another input parameter
-//You should use addQueryParamsToPath for all typed internal application urls
+/**
+ *
+ * @param path a path segment of a url that is not typed as part of RoutePaths
+ * @param params QueryParams - any query params to be added to the path
+ * @param overrides Any query parameter overrides
+ * @returns string
+ * This takes a non-typed url string and adds query parameters
+ * This should only be used when you have a path that is dynamically generated ie from another input parameter
+ * You should use addQueryParamsToPath for all typed internal application urls
+ */
 
 export const addQueryParamsToUntypedPath = (
   path: string,
@@ -43,6 +61,16 @@ export const addQueryParamsToUntypedPath = (
   return `${path}${divider}${queryString}`;
 };
 
+/**
+ *
+ * @param path a path segment of a url
+ * @param params QueryParams - any query params to be added to the path
+ * @param overrides Any query parameter overrides
+ * @returns string
+ * addApiQueryParamsToPath is for adding query params to an API path
+ * These parameters are not filtered, so this function is slighly different to addQueryParamsToUntypedPath
+ */
+
 export const addApiQueryParamsToPath = (
   path: string,
   params: IdApiQueryParams,
@@ -58,6 +86,15 @@ export const addApiQueryParamsToPath = (
   );
   return `${path}${divider}${queryString}`;
 };
+
+/**
+ *
+ * @param params QueryParams - any query params to be added to the path
+ * @param overrides Any query parameter overrides
+ * @returns string
+ * buildQueryParamsString is for building a Gateway compatabile query string
+ * These parameters are are filtered, so only allowed parameters can be added.
+ */
 
 export const buildQueryParamsString = (
   params: QueryParams,

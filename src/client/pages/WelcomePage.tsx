@@ -4,8 +4,7 @@ import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { Routes } from '@/shared/model/Routes';
 import { Welcome } from '@/client/pages/Welcome';
-import { buildUrl } from '@/shared/lib/routeUtils';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { buildUrl, buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 
 export const WelcomePage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
@@ -30,8 +29,9 @@ export const WelcomePage = () => {
 
   return (
     <Welcome
-      submitUrl={addQueryParamsToPath(
-        buildUrl(`${Routes.WELCOME}/:token`, { token }),
+      submitUrl={buildUrlWithQueryParams(
+        `${Routes.WELCOME}/:token`,
+        { token },
         queryParams,
       )}
       email={email}

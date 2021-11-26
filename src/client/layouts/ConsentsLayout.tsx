@@ -21,8 +21,7 @@ import { ConsentsHeader } from '@/client/components/ConsentsHeader';
 import { Routes } from '@/shared/model/Routes';
 import { onboardingFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { buildUrl } from '@/shared/lib/routeUtils';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 
 interface ConsentsLayoutProps {
   children?: React.ReactNode;
@@ -111,8 +110,9 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
         <ConsentsSubHeader autoRow={autoRow} title={title} current={current} />
         <form
           css={form}
-          action={addQueryParamsToPath(
-            buildUrl(`${Routes.CONSENTS}/:page`, { page: page }),
+          action={buildUrlWithQueryParams(
+            `${Routes.CONSENTS}/:page`,
+            { page: page },
             queryParams,
           )}
           method="post"
@@ -146,10 +146,11 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
                 {previousPage && (
                   <LinkButton
                     css={linkButton}
-                    href={addQueryParamsToPath(
-                      buildUrl(`${Routes.CONSENTS}/:page`, {
+                    href={buildUrlWithQueryParams(
+                      `${Routes.CONSENTS}/:page`,
+                      {
                         page: previousPage,
-                      }),
+                      },
                       queryParams,
                     )}
                     priority="subdued"

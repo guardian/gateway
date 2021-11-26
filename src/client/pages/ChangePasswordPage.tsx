@@ -4,8 +4,7 @@ import { useParams } from 'react-router-dom';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { Routes } from '@/shared/model/Routes';
 import { ChangePassword } from '@/client/pages/ChangePassword';
-import { buildUrl } from '@/shared/lib/routeUtils';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { buildUrl, buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 
 export const ChangePasswordPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
@@ -32,10 +31,11 @@ export const ChangePasswordPage = () => {
     <ChangePassword
       headerText="Reset password"
       buttonText="Confirm new password"
-      submitUrl={addQueryParamsToPath(
-        buildUrl(`${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`, {
+      submitUrl={buildUrlWithQueryParams(
+        `${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`,
+        {
           token: token,
-        }),
+        },
         queryParams,
       )}
       email={email}
