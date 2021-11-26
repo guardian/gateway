@@ -140,13 +140,7 @@ export const buildUrl: BuildUrl = <P extends AllRoutes>(
 };
 
 /**
- * Build an url with a path and its parameters.
- * @example
- * buildUrl(
- *   '/a/:first/:last',
- *   { first: 'p', last: 'q' },
- *   { returnUrl: https://theguardian.com }
- * ) // returns '/a/p/q?returnUrl=https://theguardian.com'
+ * Build an Gateway url with a path and its parameters.
  * @param path target path.
  * @param params parameters.
  * @param queryParams QueryParams
@@ -161,16 +155,10 @@ export const buildUrlWithQueryParams = <P extends AllRoutes>(
 };
 
 /**
- * Build an url with a path and its parameters.
- * @example
- * buildUrl(
- *   '/a/:first/:last',
- *   { first: 'p', last: 'q' },
- *   { returnUrl: https://theguardian.com }
- * ) // returns '/a/p/q?returnUrl=https://theguardian.com'
+ * Build an API url with a path and its parameters.
  * @param path target path.
  * @param params parameters.
- * @param queryParams QueryParams
+ * @param queryParams IdApiQueryParams
  */
 export const buildApiUrlWithQueryParams = <P extends AllRoutes>(
   path: P,

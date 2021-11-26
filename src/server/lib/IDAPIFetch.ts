@@ -75,11 +75,11 @@ const getAPIOptionsForMethod =
 
 const APIFetch =
   (idapiBaseUrl: string) =>
-  async (params: {
-    path: ApiRoutePaths;
+  async <P extends ApiRoutePaths>(params: {
+    path: P;
     queryParams?: IdApiQueryParams;
     options?: RequestInit;
-    tokenisationParam?: ExtractRouteParams<ApiRoutePaths>;
+    tokenisationParam?: ExtractRouteParams<P>;
   }): Promise<any> => {
     const tokenisedUrl = buildUrl(params.path, params.tokenisationParam);
     const urlPath = params.queryParams

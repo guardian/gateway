@@ -16,7 +16,7 @@ export const decrypt = async (
     const { email } = await idapiFetch({
       path: `${ApiRoutes.DECRYPT_EMAIL_TOKEN}/:token`,
       options: APIAddClientAccessToken(options, ip),
-      tokenisationParam: token,
+      tokenisationParam: { token },
     });
     return email;
   } catch (error) {
