@@ -9,7 +9,6 @@ import {
   idapiFetch,
 } from '../IDAPIFetch';
 import { logger } from '../logger';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { ApiRoutes } from '@/shared/model/Routes';
 
 const { defaultReturnUri } = getConfiguration();
@@ -44,17 +43,17 @@ export const guest = async (
     primaryEmailAddress: email,
   });
 
-  const path = addQueryParamsToPath(
-    `${ApiRoutes.GUEST}${'?accountVerificationEmail=true'}`,
-    {
-      returnUrl: returnUrl || defaultReturnUri,
-      ref,
-      refViewId,
-    },
-  );
-
   try {
-    await idapiFetch(path, APIAddClientAccessToken(options, ip));
+    await idapiFetch({
+      path: ApiRoutes.GUEST,
+      options: APIAddClientAccessToken(options, ip),
+      queryParams: {
+        accountVerificationEmail: true,
+        returnUrl: returnUrl || defaultReturnUri,
+        ref,
+        refViewId,
+      },
+    });
     return EmailType.ACCOUNT_VERIFICATION;
   } catch (error) {
     logger.error(

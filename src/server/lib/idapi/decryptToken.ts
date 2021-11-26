@@ -13,10 +13,11 @@ export const decrypt = async (
   const options = APIGetOptions();
   const path = `${ApiRoutes.DECRYPT_EMAIL_TOKEN}/${token}`;
   try {
-    const { email } = await idapiFetch(
-      path,
-      APIAddClientAccessToken(options, ip),
-    );
+    const { email } = await idapiFetch({
+      path: `${ApiRoutes.DECRYPT_EMAIL_TOKEN}/:token`,
+      options: APIAddClientAccessToken(options, ip),
+      tokenisationParam: token,
+    });
     return email;
   } catch (error) {
     logger.error(`IDAPI Error decryptEmail decrypt ${path}`, error);

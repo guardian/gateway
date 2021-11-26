@@ -14,7 +14,6 @@ import {
   ResetPasswordErrors,
 } from '@/shared/model/Errors';
 import User from '@/shared/model/User';
-import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { IdapiError } from '@/server/models/Error';
 import { ApiRoutes } from '@/shared/model/Routes';
 
@@ -76,16 +75,21 @@ const responseToEntity = (response: APIResponse): User => {
 };
 
 export const read = async (ip: string, sc_gu_u: string): Promise<User> => {
-  const url = `${ApiRoutes.USER}${ApiRoutes.ME}`;
   const options = APIForwardSessionIdentifier(
     APIAddClientAccessToken(APIGetOptions(), ip),
     sc_gu_u,
   );
   try {
-    const response = (await idapiFetch(url, options)) as APIResponse;
+    const response = (await idapiFetch({
+      path: `${ApiRoutes.USER}${ApiRoutes.ME}`,
+      options,
+    })) as APIResponse;
     return responseToEntity(response);
   } catch (error) {
-    logger.error(`IDAPI Error user read ${url}`, error);
+    logger.error(
+      `IDAPI Error user read ${ApiRoutes.USER}${ApiRoutes.ME}`,
+      error,
+    );
     return handleError(error as IDAPIError);
   }
 };
@@ -94,12 +98,14 @@ export const readUserType = async (
   email: string,
   ip: string,
 ): Promise<UserType> => {
-  const url = `${ApiRoutes.USER}${ApiRoutes.TYPE}/${email}`;
-
   const options = APIAddClientAccessToken(APIGetOptions(), ip);
 
   try {
-    const { userType } = await idapiFetch(url, options);
+    const { userType } = await idapiFetch({
+      path: `${ApiRoutes.USER}${ApiRoutes.TYPE}/:email`,
+      options,
+      tokenisationParam: { email },
+    });
 
     switch (userType) {
       // new users without accounts
@@ -117,7 +123,10 @@ export const readUserType = async (
         throw new Error('Invalid UserType');
     }
   } catch (error) {
-    logger.error(`IDAPI Error read user type ${url}`, error);
+    logger.error(
+      `IDAPI Error read user type ${ApiRoutes.USER}${ApiRoutes.TYPE}/${email}`,
+      error,
+    );
     return handleError(error as IDAPIError);
   }
 };
@@ -127,17 +136,20 @@ export const sendAccountVerificationEmail = async (
   ip: string,
   returnUrl: string,
 ) => {
-  const url = `${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_VERIFICATION_EMAIL}`;
   const options = APIPostOptions({
     'email-address': email,
   });
   try {
-    await idapiFetch(
-      addReturnUrlToPath(url, returnUrl),
-      APIAddClientAccessToken(options, ip),
-    );
+    await idapiFetch({
+      path: `${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_VERIFICATION_EMAIL}`,
+      options: APIAddClientAccessToken(options, ip),
+      queryParams: { returnUrl },
+    });
   } catch (error) {
-    logger.error(`IDAPI Error send account verification email ${url}`, error);
+    logger.error(
+      `IDAPI Error send account verification email ${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_VERIFICATION_EMAIL}`,
+      error,
+    );
     return handleError(error as IDAPIError);
   }
 };
@@ -147,17 +159,20 @@ export const sendAccountExistsEmail = async (
   ip: string,
   returnUrl: string,
 ) => {
-  const url = `${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_EXISTS_EMAIL}`;
   const options = APIPostOptions({
     'email-address': email,
   });
   try {
-    await idapiFetch(
-      addReturnUrlToPath(url, returnUrl),
-      APIAddClientAccessToken(options, ip),
-    );
+    await idapiFetch({
+      path: `${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_EXISTS_EMAIL}`,
+      options: APIAddClientAccessToken(options, ip),
+      queryParams: { returnUrl },
+    });
   } catch (error) {
-    logger.error(`IDAPI Error send account exists email ${url}`, error);
+    logger.error(
+      `IDAPI Error send account exists email ${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_EXISTS_EMAIL}`,
+      error,
+    );
     return handleError(error as IDAPIError);
   }
 };
@@ -167,18 +182,18 @@ export const sendAccountWithoutPasswordExistsEmail = async (
   ip: string,
   returnUrl: string,
 ) => {
-  const url = `${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_WITHOUT_PASSWORD_EXISTS_EMAIL}`;
   const options = APIPostOptions({
     'email-address': email,
   });
   try {
-    await idapiFetch(
-      addReturnUrlToPath(url, returnUrl),
-      APIAddClientAccessToken(options, ip),
-    );
+    await idapiFetch({
+      path: `${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_WITHOUT_PASSWORD_EXISTS_EMAIL}`,
+      options: APIAddClientAccessToken(options, ip),
+      queryParams: { returnUrl },
+    });
   } catch (error) {
     logger.error(
-      `IDAPI Error send account without password exists email ${url}`,
+      `IDAPI Error send account without password exists email ${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_WITHOUT_PASSWORD_EXISTS_EMAIL}`,
       error,
     );
     return handleError(error as IDAPIError);
@@ -190,17 +205,20 @@ export const sendCreatePasswordEmail = async (
   ip: string,
   returnUrl: string,
 ) => {
-  const url = `${ApiRoutes.USER}${ApiRoutes.SEND_CREATE_PASSWORD_ACCOUNT_EXISTS_EMAIL}`;
   const options = APIPostOptions({
     'email-address': email,
   });
   try {
-    await idapiFetch(
-      addReturnUrlToPath(url, returnUrl),
-      APIAddClientAccessToken(options, ip),
-    );
+    await idapiFetch({
+      path: `${ApiRoutes.USER}${ApiRoutes.SEND_CREATE_PASSWORD_ACCOUNT_EXISTS_EMAIL}`,
+      options: APIAddClientAccessToken(options, ip),
+      queryParams: { returnUrl },
+    });
   } catch (error) {
-    logger.error(`IDAPI Error send create password email ${url}`, error);
+    logger.error(
+      `IDAPI Error send create password email ${ApiRoutes.USER}${ApiRoutes.SEND_CREATE_PASSWORD_ACCOUNT_EXISTS_EMAIL}`,
+      error,
+    );
     return handleError(error as IDAPIError);
   }
 };

@@ -3,7 +3,6 @@ import ReactDOMServer from 'react-dom/server';
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { App } from '@/client/app';
-import qs from 'query-string';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { RoutingConfig } from '@/client/routes';
 import { getAssets } from '@/server/lib/getAssets';
@@ -12,8 +11,11 @@ import { CsrfErrors } from '@/shared/model/Errors';
 import { ABProvider } from '@guardian/ab-react';
 import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
-import { RoutePathsAll } from '@/shared/lib/routeUtils';
-import { ValidUrl } from '@/shared/lib/routeUtils';
+import {
+  buildUrlWithQueryParams,
+  PathParams,
+  RoutePathsAll,
+} from '@/shared/lib/routeUtils';
 import { brandBackground, resets } from '@guardian/source-foundations';
 
 const assets = getAssets();
@@ -74,17 +76,20 @@ const clientStateFromRequestStateLocals = ({
   }
 };
 
-export const renderer: (
-  url: RoutePathsAll | ValidUrl,
+export const renderer: <P extends RoutePathsAll>(
+  url: P,
   opts: RendererOpts,
-) => string = (url, { requestState, pageTitle }) => {
+  tokenisationParams?: PathParams<P>,
+) => string = (url, { requestState, pageTitle }, tokenisationParams) => {
   const context = {};
 
   const clientState = clientStateFromRequestStateLocals(requestState);
 
-  const queryString = qs.stringify(requestState.queryParams);
-
-  const location = `${url}${queryString ? `?${queryString}` : ''}`;
+  const location = buildUrlWithQueryParams(
+    url,
+    tokenisationParams,
+    requestState.queryParams,
+  );
 
   const { abTesting: { mvtId = 0, forcedTestVariants = {} } = {} } =
     clientState;

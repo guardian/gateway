@@ -34,14 +34,16 @@ const responseToEntity = (consent: ConsentAPIResponse): Consent => {
 };
 
 export const read = async (): Promise<Consent[]> => {
-  const url = `${ApiRoutes.CONSENTS}`;
   const options = APIGetOptions();
   try {
-    return ((await idapiFetch(url, options)) as ConsentAPIResponse[]).map(
-      responseToEntity,
-    );
+    return (
+      (await idapiFetch({
+        path: ApiRoutes.CONSENTS,
+        options,
+      })) as ConsentAPIResponse[]
+    ).map(responseToEntity);
   } catch (error) {
-    logger.error(`IDAPI Error consents read ${url}`, error);
+    logger.error(`IDAPI Error consents read ${ApiRoutes.CONSENTS}`, error);
     return handleError();
   }
 };
@@ -51,16 +53,21 @@ export const update = async (
   sc_gu_u: string,
   payload: UserConsent[],
 ) => {
-  const url = `${ApiRoutes.USERS}${ApiRoutes.ME}${ApiRoutes.CONSENTS}`;
   const options = APIForwardSessionIdentifier(
     APIAddClientAccessToken(APIPatchOptions(payload), ip),
     sc_gu_u,
   );
   try {
-    await idapiFetch(url, options);
+    await idapiFetch({
+      path: `${ApiRoutes.USERS}${ApiRoutes.ME}${ApiRoutes.CONSENTS}`,
+      options,
+    });
     return;
   } catch (error) {
-    logger.error(`IDAPI Error consents update ${url}`, error);
+    logger.error(
+      `IDAPI Error consents update ${ApiRoutes.USERS}${ApiRoutes.ME}${ApiRoutes.CONSENTS}`,
+      error,
+    );
     return handleError();
   }
 };

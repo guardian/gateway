@@ -297,10 +297,14 @@ router.get(
       });
     }
 
-    const html = renderer(`${Routes.CONSENTS}/${page}`, {
-      requestState: state,
-      pageTitle,
-    });
+    const html = renderer(
+      `${Routes.CONSENTS}/:page`,
+      {
+        requestState: state,
+        pageTitle,
+      },
+      { page },
+    );
 
     trackMetric(consentsPageMetric(page, 'Get', status === 200));
 
@@ -362,10 +366,14 @@ router.post(
 
     trackMetric(consentsPageMetric(page, 'Post', false));
 
-    const html = renderer(`${Routes.CONSENTS}/${page}`, {
-      pageTitle,
-      requestState: state,
-    });
+    const html = renderer(
+      `${Routes.CONSENTS}/:page`,
+      {
+        pageTitle,
+        requestState: state,
+      },
+      { page },
+    );
     res
       .type('html')
       .status(status ?? 500)

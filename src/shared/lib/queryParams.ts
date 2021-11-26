@@ -4,6 +4,7 @@ import {
   PersistableQueryParams,
 } from '@/shared/model/QueryParams';
 import { AllRoutes, ValidUrl } from './routeUtils';
+import { IdApiQueryParams } from '../model/IdapiQueryParams';
 
 export const getPersistableQueryParams = (
   params: QueryParams,
@@ -34,6 +35,22 @@ export const addQueryParamsToUntypedPath = (
   const divider = path.includes('?') ? '&' : '?';
   const queryString = stringify(
     { ...getPersistableQueryParams(params), ...overrides },
+    {
+      skipNull: true,
+      skipEmptyString: true,
+    },
+  );
+  return `${path}${divider}${queryString}`;
+};
+
+export const addApiQueryParamsToPath = (
+  path: string,
+  params: IdApiQueryParams,
+  overrides?: Partial<QueryParams>,
+): string => {
+  const divider = path.includes('?') ? '&' : '?';
+  const queryString = stringify(
+    { ...params, ...overrides },
     {
       skipNull: true,
       skipEmptyString: true,

@@ -6,7 +6,6 @@ import {
   IDAPIError,
 } from '@/server/lib/IDAPIFetch';
 import { ApiRoutes } from '@/shared/model/Routes';
-import { stringify } from 'querystring';
 import {
   IdapiErrorMessages,
   ChangePasswordErrors,
@@ -52,19 +51,22 @@ export async function validate(
     token,
   };
 
-  const qs = stringify(params);
-
-  const url = `${ApiRoutes.CHANGE_PASSWORD_TOKEN_VALIDATION}?${qs}`;
-
   try {
-    const result = await idapiFetch(url, APIAddClientAccessToken(options, ip));
+    const result = await idapiFetch({
+      path: ApiRoutes.CHANGE_PASSWORD_TOKEN_VALIDATION,
+      options: APIAddClientAccessToken(options, ip),
+      queryParams: params,
+    });
 
     return {
       email: result.user?.primaryEmailAddress,
       tokenExpiryTimestamp: result.expiryTimestamp,
     };
   } catch (error) {
-    logger.error(`IDAPI Error changePassword validate ${url}`, error);
+    logger.error(
+      `IDAPI Error changePassword validate ${ApiRoutes.CHANGE_PASSWORD_TOKEN_VALIDATION}`,
+      error,
+    );
     return handleError(error as IDAPIError);
   }
 }
@@ -77,10 +79,10 @@ export async function change(password: string, token: string, ip: string) {
   });
 
   try {
-    const result = await idapiFetch(
-      ApiRoutes.CHANGE_PASSWORD,
-      APIAddClientAccessToken(options, ip),
-    );
+    const result = await idapiFetch({
+      path: ApiRoutes.CHANGE_PASSWORD,
+      options: APIAddClientAccessToken(options, ip),
+    });
     return result.cookies;
   } catch (error) {
     logger.error(

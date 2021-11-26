@@ -20,12 +20,13 @@ import {
   setEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
 import { ApiError } from '@/server/models/Error';
-import { buildUrl, RoutePathsAll } from '@/shared/lib/routeUtils';
 
 type ValidPassworUrls =
   | Routes.CHANGE_PASSWORD
   | Routes.SET_PASSWORD
   | Routes.WELCOME;
+
+type ValidResendEmailUrls = Routes.RESET | Routes.WELCOME | Routes.SET_PASSWORD;
 
 const validatePasswordField = (password: string): Array<FieldError> => {
   const errors: Array<FieldError> = [];
@@ -48,7 +49,7 @@ const validatePasswordField = (password: string): Array<FieldError> => {
 export const checkResetPasswordTokenController = (
   setPasswordPagePath: ValidPassworUrls,
   setPasswordPageTitle: string,
-  resendEmailPagePath: RoutePathsAll,
+  resendEmailPagePath: ValidResendEmailUrls,
   resendEmailPageTitle: string,
 ) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
@@ -74,13 +75,12 @@ export const checkResetPasswordTokenController = (
       setEncryptedStateCookie(res, { email });
 
       const html = renderer(
-        buildUrl(`${setPasswordPagePath}${Routes.TOKEN_PARAM}`, {
-          token: token,
-        }),
+        `${setPasswordPagePath}${Routes.TOKEN_PARAM}`,
         {
           requestState: state,
           pageTitle: setPasswordPageTitle,
         },
+        { token },
       );
       return res.type('html').send(html);
     } catch (error) {
@@ -115,7 +115,7 @@ export const checkResetPasswordTokenController = (
 export const setPasswordTokenController = (
   setPasswordPath: ValidPassworUrls,
   setPasswordPageTitle: string,
-  resendEmailPagePath: RoutePathsAll,
+  resendEmailPagePath: ValidResendEmailUrls,
   resendEmailPageTitle: string,
   successCallback: (res: ResponseWithRequestState) => void,
 ) =>
@@ -148,11 +148,12 @@ export const setPasswordTokenController = (
           },
         });
         const html = renderer(
-          buildUrl(`${setPasswordPath}${Routes.TOKEN_PARAM}`, { token: token }),
+          `${setPasswordPath}${Routes.TOKEN_PARAM}`,
           {
             requestState: state,
             pageTitle: setPasswordPageTitle,
           },
+          { token },
         );
         return res.status(422).type('html').send(html);
       }
@@ -226,11 +227,12 @@ export const setPasswordTokenController = (
         }
 
         const html = renderer(
-          buildUrl(`${setPasswordPath}${Routes.TOKEN_PARAM}`, { token: token }),
+          `${setPasswordPath}${Routes.TOKEN_PARAM}`,
           {
             requestState: state,
             pageTitle: setPasswordPageTitle,
           },
+          { token },
         );
         return res.status(status).type('html').send(html);
       } catch (error) {

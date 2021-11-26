@@ -53,7 +53,6 @@ export const read = async (
   sc_gu_la: string,
   ip: string,
 ): Promise<IDAPIAuthRedirect> => {
-  const url = `${ApiRoutes.AUTH}${ApiRoutes.REDIRECT}`;
   const options = APIAddClientAccessToken(
     APIForwardSessionIdentifier(APIGetOptions(), sc_gu_u),
     ip,
@@ -64,13 +63,19 @@ export const read = async (
   };
   try {
     return responseToEntity(
-      (await idapiFetch(url, {
-        ...options,
-        headers: { ...headers },
+      (await idapiFetch({
+        path: `${ApiRoutes.AUTH}${ApiRoutes.REDIRECT}`,
+        options: {
+          ...options,
+          headers: { ...headers },
+        },
       })) as APIResponse,
     );
   } catch (error) {
-    logger.error(`IDAPI Error auth read ${url}`, error);
+    logger.error(
+      `IDAPI Error auth read ${ApiRoutes.AUTH}${ApiRoutes.REDIRECT}`,
+      error,
+    );
     return handleError(error as IDAPIError);
   }
 };
@@ -80,20 +85,22 @@ export const authenticate = async (
   password: string,
   ip: string,
 ) => {
-  const url = `${ApiRoutes.AUTH}?format=cookies`;
   const options = APIPostOptions({
     email,
     password,
   });
 
   try {
-    const response = await idapiFetch(
-      url,
-      APIAddClientAccessToken(options, ip),
-    );
+    const response = await idapiFetch({
+      path: ApiRoutes.AUTH,
+      options: APIAddClientAccessToken(options, ip),
+    });
     return response.cookies;
   } catch (error) {
-    logger.error(`IDAPI Error auth authenticate ${url}`, error);
+    logger.error(
+      `IDAPI Error auth authenticate ${ApiRoutes.AUTH}?format=cookies`,
+      error,
+    );
     handleError(error as IDAPIError);
   }
 };

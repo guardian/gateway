@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+import { IdApiQueryParams } from '../model/IdapiQueryParams';
+import { QueryParams } from '../model/QueryParams';
+import { addApiQueryParamsToPath, addQueryParamsToPath } from './queryParams';
+
 /**
  * These are all the accepted url routes for this application
  * If you want to add a new route, it will need to be added below
@@ -58,24 +62,27 @@ export type ApiRoutePaths =
   | '/pwd-reset/send-password-reset-email'
   | '/pwd-reset/user-for-token'
   | '/pwd-reset/reset-pwd-for-user'
-  | '/user/validate-email'
+  | '/user/validate-email/:token'
   | '/user/send-validation-email'
-  | '/signin-token/token'
+  | '/signin-token/token/:token'
+  | '/auth/redirect'
   | '/auth'
-  | '/redirect'
   | '/consents'
-  | '/user'
-  | '/users'
-  | '/me'
-  | '/type'
+  | '/user/me/consents'
+  | '/users/me/consents'
+  | '/users/me/newsletters'
+  | '/user/me'
+  | '/user/type/:email'
   | '/guest'
   | '/newsletters'
-  | '/send-account-verification-email'
-  | '/send-account-exists-email'
-  | '/send-account-without-password-exists-email'
-  | '/send-create-password-account-exists-email';
+  | '/user/send-account-verification-email'
+  | '/user/send-account-exists-email'
+  | '/user/send-account-without-password-exists-email'
+  | '/user/send-create-password-account-exists-email';
 
 export type ValidUrl = string;
+
+export type ValidApiUrl = string;
 /**
  * This is all valid routes on the site, only used for the helper function addQueryParamsToPath
  */
@@ -106,6 +113,10 @@ export type ExtractRouteParams<T> = string extends T
 
 export type PathParams<P extends AllRoutes> = ExtractRouteParams<P>;
 
+export type BuildUrl = <P extends AllRoutes>(
+  path: P,
+  params?: ExtractRouteParams<P>,
+) => ValidUrl;
 /**
  * Build an url with a path and its parameters.
  * @example
@@ -116,7 +127,7 @@ export type PathParams<P extends AllRoutes> = ExtractRouteParams<P>;
  * @param path target path.
  * @param params parameters.
  */
-export const buildUrl = <P extends AllRoutes>(
+export const buildUrl: BuildUrl = <P extends AllRoutes>(
   path: P,
   params: PathParams<P> = <PathParams<P>>{},
 ): ValidUrl => {
@@ -126,4 +137,46 @@ export const buildUrl = <P extends AllRoutes>(
   return Object.keys(paramObj).reduce((fullPath, key) => {
     return fullPath.replace(`:${key}`, paramObj[key]);
   }, path);
+};
+
+/**
+ * Build an url with a path and its parameters.
+ * @example
+ * buildUrl(
+ *   '/a/:first/:last',
+ *   { first: 'p', last: 'q' },
+ *   { returnUrl: https://theguardian.com }
+ * ) // returns '/a/p/q?returnUrl=https://theguardian.com'
+ * @param path target path.
+ * @param params parameters.
+ * @param queryParams QueryParams
+ */
+export const buildUrlWithQueryParams = <P extends AllRoutes>(
+  path: P,
+  params: PathParams<P> = <PathParams<P>>{},
+  queryParams: QueryParams,
+): ValidApiUrl => {
+  const url = buildUrl(path, params);
+  return addQueryParamsToPath(url, queryParams);
+};
+
+/**
+ * Build an url with a path and its parameters.
+ * @example
+ * buildUrl(
+ *   '/a/:first/:last',
+ *   { first: 'p', last: 'q' },
+ *   { returnUrl: https://theguardian.com }
+ * ) // returns '/a/p/q?returnUrl=https://theguardian.com'
+ * @param path target path.
+ * @param params parameters.
+ * @param queryParams QueryParams
+ */
+export const buildApiUrlWithQueryParams = <P extends AllRoutes>(
+  path: P,
+  params: PathParams<P> = <PathParams<P>>{},
+  queryParams: IdApiQueryParams,
+): ValidApiUrl => {
+  const url = buildUrl(path, params);
+  return addApiQueryParamsToPath(url, queryParams);
 };
