@@ -1,33 +1,30 @@
-import { Request, Router } from 'express';
-import { Routes } from '@/shared/model/Routes';
-import { renderer } from '@/server/lib/renderer';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import { PageTitle } from '@/shared/model/PageTitle';
 import {
   checkResetPasswordTokenController,
   setPasswordTokenController,
 } from '@/server/controllers/changePassword';
-import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import deepmerge from 'deepmerge';
-import { logger } from '@/server/lib/logger';
-import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
-import { EmailType } from '@/shared/model/EmailType';
-import { sendCreatePasswordEmail } from '@/server/lib/idapi/user';
 import { readEmailCookie } from '@/server/lib/emailCookie';
+import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
+import { handleAsyncErrors } from '@/server/lib/expressWrappers';
+import { sendCreatePasswordEmail } from '@/server/lib/idapi/user';
+import { logger } from '@/server/lib/logger';
+import {
+  checkRecaptchaError,
+  initialiseRecaptcha,
+} from '@/server/lib/recaptcha';
+import { renderer } from '@/server/lib/renderer';
+import { ResponseWithRequestState } from '@/server/models/Express';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { CaptchaErrors, ResetPasswordErrors } from '@/shared/model/Errors';
+import { EmailType } from '@/shared/model/EmailType';
+import { ResetPasswordErrors } from '@/shared/model/Errors';
+import { PageTitle } from '@/shared/model/PageTitle';
+import { Routes } from '@/shared/model/Routes';
+import deepmerge from 'deepmerge';
+import { Request, Router } from 'express';
 import { ApiError } from '../models/Error';
-import { RecaptchaV2 } from 'express-recaptcha';
-import { getConfiguration } from '@/server/lib/getConfiguration';
 
 const router = Router();
 
-const {
-  googleRecaptcha: { secretKey, siteKey },
-} = getConfiguration();
-
-// set google recaptcha site key
-const recaptcha = new RecaptchaV2(siteKey, secretKey);
+const recaptcha = initialiseRecaptcha();
 
 // set password complete page
 router.get(
@@ -80,16 +77,7 @@ router.post(
     const { returnUrl, emailSentSuccess } = res.locals.queryParams;
 
     try {
-      if (req.recaptcha?.error) {
-        logger.error(
-          'Problem verifying recaptcha, error response: ',
-          req.recaptcha.error,
-        );
-        throw new ApiError({
-          message: CaptchaErrors.GENERIC,
-          status: 400,
-        });
-      }
+      checkRecaptchaError(req.recaptcha);
 
       await sendCreatePasswordEmail(email, req.ip, returnUrl);
 

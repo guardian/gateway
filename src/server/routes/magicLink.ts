@@ -9,18 +9,15 @@ import { PageTitle } from '@/shared/model/PageTitle';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { ApiError } from '@/server/models/Error';
-import { getConfiguration } from '@/server/lib/getConfiguration';
-import { RecaptchaV2 } from 'express-recaptcha';
-import { CaptchaErrors } from '@/shared/model/Errors';
+
+import {
+  checkRecaptchaError,
+  initialiseRecaptcha,
+} from '@/server/lib/recaptcha';
 
 const router = Router();
 
-const {
-  googleRecaptcha: { secretKey, siteKey },
-} = getConfiguration();
-
-// set google recaptcha site key
-const recaptcha = new RecaptchaV2(siteKey, secretKey);
+const recaptcha = initialiseRecaptcha();
 
 router.get(Routes.MAGIC_LINK, (req: Request, res: ResponseWithRequestState) => {
   const html = renderer(Routes.MAGIC_LINK, {
@@ -39,16 +36,7 @@ router.post(
     const { email = '' } = req.body;
 
     try {
-      if (req.recaptcha?.error) {
-        logger.error(
-          'Problem verifying recaptcha, error response: ',
-          req.recaptcha.error,
-        );
-        throw new ApiError({
-          message: CaptchaErrors.GENERIC,
-          status: 400,
-        });
-      }
+      checkRecaptchaError(req.recaptcha);
 
       console.log(
         `TODO: Implement the logic to send the magic link to ${email} here`,

@@ -11,19 +11,17 @@ import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
-import { CaptchaErrors, ResetPasswordErrors } from '@/shared/model/Errors';
+import { ResetPasswordErrors } from '@/shared/model/Errors';
 import { ApiError } from '@/server/models/Error';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { RecaptchaV2 } from 'express-recaptcha';
-import { getConfiguration } from '@/server/lib/getConfiguration';
+import {
+  checkRecaptchaError,
+  initialiseRecaptcha,
+} from '@/server/lib/recaptcha';
 
 const router = Router();
-const {
-  googleRecaptcha: { secretKey, siteKey },
-} = getConfiguration();
 
-// set google recaptcha site key
-const recaptcha = new RecaptchaV2(siteKey, secretKey);
+const recaptcha = initialiseRecaptcha();
 
 router.get(Routes.RESET, (req: Request, res: ResponseWithRequestState) => {
   let state = res.locals;
@@ -55,15 +53,8 @@ router.post(
     const { returnUrl, emailSentSuccess } = res.locals.queryParams;
 
     try {
-      if (req.recaptcha?.error) {
-        logger.error(
-          'Problem verifying recaptcha, error response: ',
-          req.recaptcha.error,
-        );
-        throw new ApiError({
-          message: CaptchaErrors.GENERIC,
-          status: 400,
-        });
+      if (req.recaptcha) {
+        checkRecaptchaError(req.recaptcha);
       }
 
       await resetPassword(email, req.ip, returnUrl);

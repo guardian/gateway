@@ -1,32 +1,26 @@
-import { Request, Router } from 'express';
-import deepmerge from 'deepmerge';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import { Routes } from '@/shared/model/Routes';
-import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { logger } from '@/server/lib/logger';
-import { renderer } from '@/server/lib/renderer';
-import { PageTitle } from '@/shared/model/PageTitle';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { consentPages } from '@/server/routes/consents';
-import { sendAccountVerificationEmail } from '@/server/lib/idapi/user';
 import {
   checkResetPasswordTokenController,
   setPasswordTokenController,
 } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
-import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
+import { handleAsyncErrors } from '@/server/lib/expressWrappers';
+import { sendAccountVerificationEmail } from '@/server/lib/idapi/user';
+import { logger } from '@/server/lib/logger';
+import { initialiseRecaptcha } from '@/server/lib/recaptcha';
+import { renderer } from '@/server/lib/renderer';
 import { ApiError } from '@/server/models/Error';
-import { RecaptchaV2 } from 'express-recaptcha';
-import { getConfiguration } from '@/server/lib/getConfiguration';
+import { ResponseWithRequestState } from '@/server/models/Express';
+import { consentPages } from '@/server/routes/consents';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { CaptchaErrors } from '@/shared/model/Errors';
+import { PageTitle } from '@/shared/model/PageTitle';
+import { Routes } from '@/shared/model/Routes';
+import deepmerge from 'deepmerge';
+import { Request, Router } from 'express';
+import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
 
 const router = Router();
-const {
-  googleRecaptcha: { secretKey, siteKey },
-} = getConfiguration();
-
-// set google recaptcha site key
-const recaptcha = new RecaptchaV2(siteKey, secretKey);
+const recaptcha = initialiseRecaptcha();
 
 // resend account verification page
 router.get(
