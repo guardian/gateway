@@ -21,7 +21,7 @@ interface MainLayoutProps {
   pageTitle?: string;
   successOverride?: string;
   errorOverride?: string;
-  errorContext?: React.ReactNode | string;
+  errorContext?: React.ReactNode;
 }
 
 const mainStyles = css`

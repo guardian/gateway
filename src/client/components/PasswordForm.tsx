@@ -34,9 +34,7 @@ type Props = {
   gridAutoRow?: AutoRow;
   recaptchaSiteKey?: string;
   setRecaptchaErrorMessage?: React.Dispatch<React.SetStateAction<string>>;
-  setRecaptchaErrorContext?: React.Dispatch<
-    React.SetStateAction<ReactNode | string>
-  >;
+  setRecaptchaErrorContext?: React.Dispatch<React.SetStateAction<ReactNode>>;
 };
 
 const baseIconStyles = css`
