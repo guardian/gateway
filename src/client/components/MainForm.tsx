@@ -67,7 +67,7 @@ export const MainForm = ({
   const recaptchaEnabled = !!recaptchaSiteKey;
   const hasTerms = recaptchaEnabled || hasGuardianTerms;
 
-  const registerFormRef = createRef<HTMLFormElement>();
+  const formRef = createRef<HTMLFormElement>();
   const [recaptchaState, setRecaptchaState] =
     useState<UseRecaptchaReturnValue>();
 
@@ -94,17 +94,12 @@ export const MainForm = ({
    */
   useEffect(() => {
     if (recaptchaEnabled) {
-      const registerFormElement = registerFormRef.current;
+      const registerFormElement = formRef.current;
       if (recaptchaState?.token) {
         registerFormElement?.submit();
       }
     }
-  }, [
-    recaptchaEnabled,
-    recaptchaState,
-    recaptchaState?.token,
-    registerFormRef,
-  ]);
+  }, [recaptchaEnabled, recaptchaState, recaptchaState?.token, formRef]);
 
   useEffect(() => {
     if (recaptchaEnabled) {
@@ -151,7 +146,7 @@ export const MainForm = ({
       method="post"
       action={formAction}
       onSubmit={handleSubmit}
-      ref={registerFormRef}
+      ref={formRef}
     >
       {recaptchaEnabled && (
         <RecaptchaWrapper
