@@ -228,7 +228,6 @@ router.post(
         },
         pageData: {
           email,
-          recaptchaSiteKey: siteKey,
         },
       });
 
