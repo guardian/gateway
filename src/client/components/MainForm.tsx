@@ -99,7 +99,8 @@ export const MainForm = ({
         registerFormElement?.submit();
       }
     }
-  }, [recaptchaEnabled, recaptchaState, recaptchaState?.token, formRef]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recaptchaEnabled, recaptchaState, recaptchaState?.token]);
 
   useEffect(() => {
     if (recaptchaEnabled) {
