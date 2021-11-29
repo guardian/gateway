@@ -3,7 +3,6 @@ import ReactDOMServer from 'react-dom/server';
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { App } from '@/client/app';
-import { brandBackground } from '@guardian/src-foundations/palette';
 import qs from 'query-string';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { RoutingConfig } from '@/client/routes';
@@ -13,7 +12,7 @@ import { CsrfErrors } from '@/shared/model/Errors';
 import { ABProvider } from '@guardian/ab-react';
 import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
-import { resets } from '@guardian/src-foundations/utils';
+import { brandBackground, resets } from '@guardian/source-foundations';
 
 const assets = getAssets();
 const legacyAssets = getAssets(true);

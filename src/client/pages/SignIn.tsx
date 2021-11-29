@@ -5,20 +5,18 @@ import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { PasswordInput } from '@/client/components/PasswordInput';
 import { Nav } from '@/client/components/Nav';
-import { Button } from '@guardian/src-button';
+import { Button, Link } from '@guardian/source-react-components';
 import { Routes } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
-import { Link } from '@guardian/src-link';
-import { textSans } from '@guardian/src-foundations/typography';
 import { gridItemSignInAndRegistration } from '@/client/styles/Grid';
-import { border, space } from '@guardian/src-foundations';
-import { from } from '@guardian/src-foundations/mq';
+import { from, textSans, border, space } from '@guardian/source-foundations';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { SignInErrors } from '@/shared/model/Errors';
 import { EmailInput } from '@/client/components/EmailInput';
+import { GeoLocation } from '@/shared/model/Geolocation';
 
 export type SignInProps = {
   returnUrl?: string;
@@ -26,6 +24,7 @@ export type SignInProps = {
   email?: string;
   error?: string;
   oauthBaseUrl: string;
+  geolocation?: GeoLocation;
 };
 
 const passwordInput = css`
@@ -81,10 +80,10 @@ const Links = ({ children }: { children: React.ReactNode }) => (
 const getErrorContext = (error: string | undefined) => {
   if (error === SignInErrors.ACCOUNT_ALREADY_EXISTS) {
     return (
-      <p>
+      <>
         We cannot sign you in with your social account credentials. Please enter
         your account password below to sign in.
-      </p>
+      </>
     );
   }
 };
@@ -127,9 +126,10 @@ export const SignIn = ({
   error,
   oauthBaseUrl,
   queryString,
+  geolocation,
 }: SignInProps) => (
   <>
-    <Header />
+    <Header geolocation={geolocation} />
     <Nav
       tabs={[
         {

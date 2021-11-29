@@ -9,20 +9,19 @@ import { Footer } from '@/email/components/Footer';
 
 export const Verify = () => {
   return (
-    <Page>
+    <Page title="Complete registration">
       <Header />
       <SubHeader>Welcome to the Guardian</SubHeader>
-      <Text>
-        <p>Please click below to complete your registration.</p>
-      </Text>
+      <Text>Please click below to complete your registration.</Text>
+      <Text noPaddingBottom>This link is only valid for 30 minutes.</Text>
       <Button href="$verificationLink">Complete registration</Button>
       <Footer
         mistakeParagraphComponent={
-          <p>
+          <>
             If you received this email by mistake, please delete it. You
-            won&apos;t be registered if you don&apos;t click the &ldquo;Complete
-            registration&rdquo; button above.
-          </p>
+            won&apos;t be registered if you don&apos;t click the &lsquo;Complete
+            registration&rsquo; button above.
+          </>
         }
       />
     </Page>

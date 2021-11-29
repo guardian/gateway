@@ -1,8 +1,12 @@
 import React, { PropsWithChildren, useContext } from 'react';
 import { css } from '@emotion/react';
-import { from } from '@guardian/src-foundations/mq';
-import { neutral, space, text } from '@guardian/src-foundations';
-import { headline } from '@guardian/src-foundations/typography';
+import {
+  from,
+  headline,
+  neutral,
+  space,
+  text,
+} from '@guardian/source-foundations';
 import {
   ErrorSummary,
   SuccessSummary,
@@ -125,7 +129,10 @@ export const MainLayout = ({
   errorOverride,
 }: PropsWithChildren<MainLayoutProps>) => {
   const clientState: ClientState = useContext(ClientStateContext);
-  const { globalMessage: { error, success } = {} } = clientState;
+  const {
+    globalMessage: { error, success } = {},
+    pageData: { geolocation } = {},
+  } = clientState;
 
   const successMessage = successOverride || success;
   const errorMessage = errorOverride || error;
@@ -135,7 +142,7 @@ export const MainLayout = ({
 
   return (
     <>
-      <Header />
+      <Header geolocation={geolocation} />
       <main css={[mainStyles, gridRow]}>
         <section css={gridItem(gridSpanDefinition)}>
           {errorMessage && (

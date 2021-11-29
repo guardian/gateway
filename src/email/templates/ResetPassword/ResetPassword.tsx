@@ -9,22 +9,22 @@ import { Footer } from '@/email/components/Footer';
 
 export const ResetPassword = () => {
   return (
-    <Page>
+    <Page title="Password reset">
       <Header />
       <SubHeader>Password reset</SubHeader>
+      <Text>Hello,</Text>
       <Text>
-        <p>Hello,</p>
-        <p>You’ve asked us to send you a link to reset your password.</p>
-        <p>This link is only valid for 30 minutes.</p>
+        You&apos;ve asked us to send you a link to reset your password.
       </Text>
+      <Text noPaddingBottom>This link is only valid for 30 minutes.</Text>
       <Button href={'$passwordResetLink'}>Reset password</Button>
       <Footer
         mistakeParagraphComponent={
-          <p>
-            If you didn’t request to reset your password, please ignore this
-            email. Your details won’t be changed and no one has accessed your
-            account.
-          </p>
+          <>
+            If you didn&apos;t request to reset your password, please ignore
+            this email. Your details won&apos;t be changed and no one has
+            accessed your account.
+          </>
         }
       />
     </Page>

@@ -3,9 +3,12 @@ import { Footer } from '@/client/components/Footer';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { css } from '@emotion/react';
-import { brand, space } from '@guardian/src-foundations';
-import { Button, LinkButton } from '@guardian/src-button';
-import { SvgArrowRightStraight } from '@guardian/src-icons';
+import { brand, space } from '@guardian/source-foundations';
+import {
+  Button,
+  LinkButton,
+  SvgArrowRightStraight,
+} from '@guardian/source-react-components';
 import {
   getAutoRow,
   gridItem,
@@ -86,7 +89,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
     globalMessage: { error, success } = {},
     queryParams,
   } = clientState;
-  const { page = '', previousPage } = pageData;
+  const { page = '', previousPage, geolocation } = pageData;
   const queryString = addQueryParamsToPath('', queryParams);
 
   const optionalBgColor =
@@ -99,7 +102,11 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
     `;
   return (
     <>
-      <ConsentsHeader error={error} success={success} />
+      <ConsentsHeader
+        error={error}
+        success={success}
+        geolocation={geolocation}
+      />
       <main css={mainStyles}>
         <ConsentsSubHeader autoRow={autoRow} title={title} current={current} />
         <form

@@ -1,14 +1,18 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import { SerializedStyles } from '@emotion/react';
-import { brand, neutral } from '@guardian/src-foundations/palette';
-import { space } from '@guardian/src-foundations';
+import {
+  brand,
+  neutral,
+  space,
+  from,
+  textSans,
+  titlepiece,
+} from '@guardian/source-foundations';
 import { AutoRow, gridItemColumnConsents, gridRow } from '@/client/styles/Grid';
-import { from } from '@guardian/src-foundations/mq';
-import { textSans, titlepiece } from '@guardian/src-foundations/typography';
 import { CONSENTS_PAGES_ARR } from '@/client/models/ConsentsPages';
 import { CONSENTS_MAIN_COLOR } from '@/client/layouts/shared/Consents';
-import { SvgCheckmark } from '@guardian/src-icons';
+import { SvgCheckmark } from '@guardian/source-react-components';
 
 type Props = {
   autoRow: AutoRow;

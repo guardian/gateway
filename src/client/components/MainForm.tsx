@@ -1,9 +1,9 @@
 import React, { PropsWithChildren } from 'react';
 import { css } from '@emotion/react';
-import { Button } from '@guardian/src-button';
+import { Button } from '@guardian/source-react-components';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { GuardianTerms, RecaptchaTerms } from '@/client/components/Terms';
-import { space } from '@guardian/src-foundations';
+import { space } from '@guardian/source-foundations';
 import { buttonStyles } from '@/client/layouts/Main';
 
 interface Props {

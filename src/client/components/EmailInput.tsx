@@ -1,4 +1,4 @@
-import { TextInput, TextInputProps } from '@guardian/src-text-input';
+import { TextInput, TextInputProps } from '@guardian/source-react-components';
 import React, { useState } from 'react';
 
 export enum EmailInputFieldState {

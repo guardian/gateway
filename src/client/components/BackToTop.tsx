@@ -4,10 +4,10 @@ import {
   background,
   brandText,
   brandAlt,
-} from '@guardian/src-foundations/palette';
-import { Link } from '@guardian/src-link';
-import { textSans } from '@guardian/src-foundations/typography';
-import { space } from '@guardian/src-foundations';
+  textSans,
+  space,
+} from '@guardian/source-foundations';
+import { Link } from '@guardian/source-react-components';
 
 const iconContainer = css`
   position: relative;

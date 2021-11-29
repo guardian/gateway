@@ -9,21 +9,19 @@ import { Footer } from '@/email/components/Footer';
 
 export const CreatePassword = () => {
   return (
-    <Page>
+    <Page title="Welcome back">
       <Header />
       <SubHeader>Welcome back</SubHeader>
-      <Text>
-        <p>Hello again,</p>
-        <p>Please click below to create a password for your account.</p>
-        <p>This link is only valid for 30 minutes.</p>
-      </Text>
+      <Text>Hello again,</Text>
+      <Text>Please click below to create a password for your account.</Text>
+      <Text noPaddingBottom>This link is only valid for 30 minutes.</Text>
       <Button href={'$createPasswordLink'}>Create password</Button>
       <Footer
         mistakeParagraphComponent={
-          <p>
-            If you didn’t try to register, please ignore this email. Your
-            details won’t be changed and no one has accessed your account.
-          </p>
+          <>
+            If you didn&apos;t try to register, please ignore this email. Your
+            details won&apos;t be changed and no one has accessed your account.
+          </>
         }
       />
     </Page>
