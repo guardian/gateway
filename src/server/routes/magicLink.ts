@@ -10,14 +10,9 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { ApiError } from '@/server/models/Error';
 
-import {
-  checkRecaptchaError,
-  initialiseRecaptcha,
-} from '@/server/lib/recaptcha';
+import handleRecaptcha from '@/server/lib/recaptcha';
 
 const router = Router();
-
-const recaptcha = initialiseRecaptcha();
 
 router.get(Routes.MAGIC_LINK, (req: Request, res: ResponseWithRequestState) => {
   const html = renderer(Routes.MAGIC_LINK, {
@@ -29,15 +24,13 @@ router.get(Routes.MAGIC_LINK, (req: Request, res: ResponseWithRequestState) => {
 
 router.post(
   Routes.MAGIC_LINK,
-  recaptcha.middleware.verify,
+  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
     const { email = '' } = req.body;
 
     try {
-      checkRecaptchaError(req.recaptcha);
-
       console.log(
         `TODO: Implement the logic to send the magic link to ${email} here`,
       );

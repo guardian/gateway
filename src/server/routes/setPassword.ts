@@ -7,10 +7,7 @@ import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { sendCreatePasswordEmail } from '@/server/lib/idapi/user';
 import { logger } from '@/server/lib/logger';
-import {
-  checkRecaptchaError,
-  initialiseRecaptcha,
-} from '@/server/lib/recaptcha';
+import handleRecaptcha from '@/server/lib/recaptcha';
 import { renderer } from '@/server/lib/renderer';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
@@ -23,8 +20,6 @@ import { Request, Router } from 'express';
 import { ApiError } from '../models/Error';
 
 const router = Router();
-
-const recaptcha = initialiseRecaptcha();
 
 // set password complete page
 router.get(
@@ -71,14 +66,12 @@ router.get(
 // POST handler for resending "create (set) password" email
 router.post(
   `${Routes.SET_PASSWORD}${Routes.RESEND}`,
-  recaptcha.middleware.verify,
+  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { email } = req.body;
     const { returnUrl, emailSentSuccess } = res.locals.queryParams;
 
     try {
-      checkRecaptchaError(req.recaptcha);
-
       await sendCreatePasswordEmail(email, req.ip, returnUrl);
 
       setEncryptedStateCookie(res, {

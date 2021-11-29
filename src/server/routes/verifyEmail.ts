@@ -21,14 +21,12 @@ import { Routes } from '@/shared/model/Routes';
 import { EMAIL_SENT } from '@/shared/model/Success';
 import deepmerge from 'deepmerge';
 import { Request, Router } from 'express';
-import { checkRecaptchaError, initialiseRecaptcha } from '../lib/recaptcha';
+import handleRecaptcha from '@/server/lib/recaptcha';
 
 const router = Router();
 
 const { signInPageUrl } = getConfiguration();
 const profileUrl = getProfileUrl();
-
-const recaptcha = initialiseRecaptcha();
 
 router.get(
   Routes.VERIFY_EMAIL,
@@ -88,14 +86,12 @@ router.get(
 
 router.post(
   Routes.VERIFY_EMAIL,
-  recaptcha.middleware.verify,
+  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
     let status = 200;
 
     try {
-      checkRecaptchaError(req.recaptcha);
-
       const sc_gu_u = req.cookies.SC_GU_U;
 
       if (!sc_gu_u) {

@@ -14,14 +14,9 @@ import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
 import { ResetPasswordErrors } from '@/shared/model/Errors';
 import { ApiError } from '@/server/models/Error';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import {
-  checkRecaptchaError,
-  initialiseRecaptcha,
-} from '@/server/lib/recaptcha';
+import handleRecaptcha from '@/server/lib/recaptcha';
 
 const router = Router();
-
-const recaptcha = initialiseRecaptcha();
 
 router.get(Routes.RESET, (req: Request, res: ResponseWithRequestState) => {
   let state = res.locals;
@@ -44,7 +39,7 @@ router.get(Routes.RESET, (req: Request, res: ResponseWithRequestState) => {
 
 router.post(
   Routes.RESET,
-  recaptcha.middleware.verify,
+  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
@@ -53,10 +48,6 @@ router.post(
     const { returnUrl, emailSentSuccess } = res.locals.queryParams;
 
     try {
-      if (req.recaptcha) {
-        checkRecaptchaError(req.recaptcha);
-      }
-
       await resetPassword(email, req.ip, returnUrl);
 
       setEncryptedStateCookie(res, { email });

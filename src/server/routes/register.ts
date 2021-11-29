@@ -1,7 +1,4 @@
-import {
-  checkRecaptchaError,
-  initialiseRecaptcha,
-} from '@/server//lib/recaptcha';
+import handleRecaptcha from '@/server//lib/recaptcha';
 import {
   readEncryptedStateCookie,
   setEncryptedStateCookie,
@@ -36,8 +33,6 @@ const router = Router();
 
 const { okta } = getConfiguration();
 
-const recaptcha = initialiseRecaptcha();
-
 router.get(
   Routes.REGISTRATION,
   (req: Request, res: ResponseWithRequestState) => {
@@ -69,13 +64,11 @@ router.get(
 
 router.post(
   `${Routes.REGISTRATION}${Routes.EMAIL_SENT}${Routes.RESEND}`,
-  recaptcha.middleware.verify,
+  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { returnUrl, emailSentSuccess } = res.locals.queryParams;
 
     try {
-      checkRecaptchaError(req.recaptcha);
-
       // read and parse the encrypted state cookie
       const encryptedState = readEncryptedStateCookie(req);
 
@@ -151,7 +144,7 @@ router.post(
 
 router.post(
   Routes.REGISTRATION,
-  recaptcha.middleware.verify,
+  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
@@ -159,8 +152,6 @@ router.post(
     const { returnUrl, ref, refViewId } = state.queryParams;
 
     try {
-      checkRecaptchaError(req.recaptcha);
-
       // use idapi user type endpoint to determine user type
       const userType = await readUserType(email, req.ip);
 

@@ -6,13 +6,12 @@ import { readEmailCookie } from '@/server/lib/emailCookie';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { sendAccountVerificationEmail } from '@/server/lib/idapi/user';
 import { logger } from '@/server/lib/logger';
-import { initialiseRecaptcha } from '@/server/lib/recaptcha';
+import handleRecaptcha from '@/server/lib/recaptcha';
 import { renderer } from '@/server/lib/renderer';
 import { ApiError } from '@/server/models/Error';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { consentPages } from '@/server/routes/consents';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { CaptchaErrors } from '@/shared/model/Errors';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { Routes } from '@/shared/model/Routes';
 import deepmerge from 'deepmerge';
@@ -20,8 +19,6 @@ import { Request, Router } from 'express';
 import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
 
 const router = Router();
-const recaptcha = initialiseRecaptcha();
-
 // resend account verification page
 router.get(
   `${Routes.WELCOME}${Routes.RESEND}`,
@@ -49,23 +46,12 @@ router.get(
 // POST form handler to resend account verification email
 router.post(
   `${Routes.WELCOME}${Routes.RESEND}`,
-  recaptcha.middleware.verify,
+  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { email } = req.body;
     const { returnUrl, emailSentSuccess } = res.locals.queryParams;
 
     try {
-      if (req.recaptcha?.error) {
-        logger.error(
-          'Problem verifying recaptcha, error response: ',
-          req.recaptcha.error,
-        );
-        throw new ApiError({
-          message: CaptchaErrors.GENERIC,
-          status: 400,
-        });
-      }
-
       await sendAccountVerificationEmail(email, req.ip, returnUrl);
 
       setEncryptedStateCookie(res, { email });

@@ -1,36 +1,48 @@
 import { CaptchaErrors } from '@/shared/model/Errors';
+import { NextFunction, Request, Response } from 'express';
 import { RecaptchaV2 } from 'express-recaptcha';
-import {
-  RecaptchaResponseV2,
-  RecaptchaResponseV3,
-} from 'express-recaptcha/dist/interfaces';
-import { ApiError } from '../models/Error';
 import { getConfiguration } from './getConfiguration';
+import createError from 'http-errors';
 import { logger } from './logger';
 
 const {
   googleRecaptcha: { secretKey, siteKey },
 } = getConfiguration();
 
+const recaptcha = new RecaptchaV2(siteKey, secretKey);
+
 /**
  * Throws a generic error if the recaptcha check has failed.
  * @param recaptchaResponse
  */
-export const checkRecaptchaError = (
-  recaptchaResponse: RecaptchaResponseV3 | RecaptchaResponseV2 | undefined,
+const checkRecaptchaError = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ) => {
-  if (recaptchaResponse?.error) {
+  const recaptchaError = createError(400, CaptchaErrors.GENERIC, {
+    code: 'EBADRECAPTCHA',
+  });
+
+  if (!req.recaptcha) {
+    return next(recaptchaError);
+  }
+
+  if (req.recaptcha.error) {
     logger.error(
       'Problem verifying recaptcha, error response: ',
-      recaptchaResponse.error,
+      req.recaptcha.error,
     );
-    throw new ApiError({
-      message: CaptchaErrors.GENERIC,
-      status: 400,
-    });
+
+    return next(recaptchaError);
   }
+
+  next();
 };
 
-export const initialiseRecaptcha = () => new RecaptchaV2(siteKey, secretKey);
+const handleRecaptcha = [recaptcha.middleware.verify, checkRecaptchaError];
 
-export const recaptchaSiteKey = siteKey;
+/**
+ * Protects a route with recaptcha.
+ */
+export default handleRecaptcha;
