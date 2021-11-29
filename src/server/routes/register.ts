@@ -213,6 +213,8 @@ router.post(
           throw new Error('Invalid UserType');
       }
 
+      trackMetric(Metrics.REGISTER_SUCCESS);
+
       // redirect the user to the email sent page
       return res.redirect(
         303,

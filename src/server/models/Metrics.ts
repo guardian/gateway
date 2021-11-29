@@ -1,6 +1,4 @@
 export enum Metrics {
-  SEND_PASSWORD_RESET_SUCCESS = 'SendPasswordReset::Success',
-  SEND_PASSWORD_RESET_FAILURE = 'SendPasswordReset::Failure',
   SEND_MAGIC_LINK_SUCCESS = 'SendMagicLink::Success',
   SEND_MAGIC_LINK_FAILURE = 'SendMagicLink::Failure',
   SIGN_IN_SUCCESS = 'SignIn::Success',
@@ -31,5 +29,21 @@ export const consentsPageMetric = (
     return `${getOrPost}ConsentsPage-${page}::Success`;
   } else {
     return `${getOrPost}ConsentsPage-${page}::Failure`;
+  }
+};
+
+export const emailSendMetric = (
+  email:
+    | 'AccountVerification'
+    | 'AccountExists'
+    | 'AccountExistsWithoutPassword'
+    | 'CreatePassword'
+    | 'ResetPassword',
+  isSuccess: boolean,
+) => {
+  if (isSuccess) {
+    return `${email}EmailSend::Success`;
+  } else {
+    return `${email}EmailSend::Failure`;
   }
 };
