@@ -78,6 +78,10 @@ Mappings:
       MinInstances: 3
       LatencyAlarmThreshold: 0.5
       LatencyAlarmPeriod: 60
+    AlarmPriorities:
+      P1: 'CRITICAL Respond Immediately'
+      P2: 'URGENT 9-5'
+      P3: 'MODERATE'
 Conditions:
   IsProd: !Equals [!Ref Stage, PROD]
 Resources:
@@ -552,3 +556,47 @@ Resources:
     DependsOn:
       - TargetGroup
       - LoadBalancer
+  SigninInactivityAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmName: !Sub
+        - '${Priority} - ${App} ${Stage} has had no new sign-ins in the last 20 minutes'
+        - Priority: !FindInMap [StageVariables, AlarmPriorities, P1]
+      AlarmDescription: No one has successfully signed ins in the last 20 minutes.
+      Namespace: Gateway
+      MetricName: 'SignIn::Success'
+      Statistic: Sum
+      ComparisonOperator: LessThanThreshold
+      Threshold: 1
+      Period: 1200
+      EvaluationPeriods: 1
+      AlarmActions:
+        - !Ref 'TopicSendEmail'
+      InsufficientDataActions:
+        - !Ref 'TopicSendEmail'
+      Dimensions:
+        - Name: Stage
+          Value: !Ref 'Stage'
+  RegisterInactivityAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmName: !Sub
+        - '${Priority} - ${App} ${Stage} has had no new registrations in the last hour'
+        - Priority: !FindInMap [StageVariables, AlarmPriorities, P1]
+      AlarmDescription: No one has successfully registered in the last hour.
+      Namespace: Gateway
+      MetricName: 'SignIn::Failure'
+      Statistic: Sum
+      ComparisonOperator: LessThanThreshold
+      Threshold: 1
+      Period: 3600
+      EvaluationPeriods: 1
+      AlarmActions:
+        - !Ref 'TopicSendEmail'
+      InsufficientDataActions:
+        - !Ref 'TopicSendEmail'
+      Dimensions:
+        - Name: Stage
+          Value: !Ref 'Stage'
