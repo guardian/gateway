@@ -4,12 +4,12 @@
 
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import type { RenderOptions } from './useRecaptcha';
-import useRecaptcha from './useRecaptcha';
+import type { RenderOptions } from '../useRecaptcha';
+import useRecaptcha from '../useRecaptcha';
 import {
   setupRecaptchaScriptMutationObserver,
   setupRecaptchaObject,
-} from '@/client/lib/hooks/useRecaptchaTestUtils';
+} from '@/client/lib/hooks/__tests__/utils/useRecaptchaTestUtils';
 
 const validRecaptchaScriptUrl =
   'https://www.google.com/recaptcha/api.js?render=explicit';

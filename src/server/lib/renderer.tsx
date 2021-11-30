@@ -13,6 +13,7 @@ import { ABProvider } from '@guardian/ab-react';
 import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
 import { brandBackground, resets } from '@guardian/source-foundations';
+import deepmerge from 'deepmerge';
 
 const assets = getAssets();
 const legacyAssets = getAssets(true);
@@ -72,13 +73,11 @@ const clientStateFromRequestStateLocals = ({
   // checking if recaptcha error exists in query params, and attaching it to the
   // forms field errors
   if (queryParams.recaptchaError) {
-    return {
-      ...clientState,
+    return deepmerge(clientState, {
       globalMessage: {
-        ...clientState.globalMessage,
         error: CaptchaErrors.GENERIC,
       },
-    };
+    });
   }
 
   return clientState;

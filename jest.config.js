@@ -6,7 +6,12 @@ module.exports = {
   moduleNameMapper: {
     '@/([^\\.]*)$': '<rootDir>/src/$1',
   },
-  testPathIgnorePatterns: ['<rootDir>/cypress/', '<rootDir>/node_modules/'],
+  testPathIgnorePatterns: [
+    '<rootDir>/cypress/',
+    '<rootDir>/node_modules/',
+    'utils',
+  ],
+
   globals: {
     'ts-jest': {
       isolatedModules: true,
