@@ -6,27 +6,34 @@ import { Link } from '@/email/components/Link';
 
 type Props = { mistakeParagraphComponent?: React.ReactNode };
 
-const FooterText = ({ children }: { children?: React.ReactNode }) => (
+const FooterText = ({
+  children,
+  noPaddingBottom = false,
+}: {
+  children?: React.ReactNode;
+  noPaddingBottom?: boolean;
+}) => (
   <MjmlText
     color={text.primary}
-    padding="0 0 10px 0"
+    padding={noPaddingBottom ? '0' : '0 0 10px 0'}
     fontSize="15px"
     fontFamily="Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif"
-    lineHeight="20.25px"
-    letterSpacing="-2%"
+    lineHeight="1.35"
+    letterSpacing="-0.02pt"
   >
     {children}
   </MjmlText>
 );
 
 export const Footer = ({ mistakeParagraphComponent }: Props) => (
-  <MjmlSection
-    background-color={background.secondary}
-    padding="16px 12px 56px 12px"
-    fullWidth
-  >
-    <MjmlColumn>
-      <FooterText>{mistakeParagraphComponent}</FooterText>
+  <MjmlSection padding="0 12px">
+    <MjmlColumn
+      padding="12px 12px 24px 12px"
+      background-color={background.secondary}
+    >
+      {mistakeParagraphComponent && (
+        <FooterText>{mistakeParagraphComponent}</FooterText>
+      )}
       <FooterText>
         If you have any queries about why you are receiving this email, please
         contact our customer service team at{' '}
@@ -35,7 +42,7 @@ export const Footer = ({ mistakeParagraphComponent }: Props) => (
         </Link>
         .
       </FooterText>
-      <FooterText>
+      <FooterText noPaddingBottom>
         Guardian News and Media Limited, Kings Place, 90 York Way, London, N1
         9GU, United Kingdom
       </FooterText>

@@ -8,14 +8,14 @@ type Props = { children: React.ReactNode; noPaddingBottom?: boolean };
 export const Text = ({ children, noPaddingBottom = false }: Props) => (
   <MjmlSection
     background-color={background.primary}
-    padding={noPaddingBottom ? '0 12px' : '0 12px 12px 12px'}
+    padding={noPaddingBottom ? '0 24px' : '0 24px 12px 24px'}
   >
     <MjmlColumn>
       <MjmlText
         padding="0"
         fontSize="17px"
-        lineHeight="23px"
-        letterSpacing="-2%"
+        lineHeight="1.35"
+        letterSpacing="-0.02pt"
         fontFamily="Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif"
         color={text.primary}
       >
