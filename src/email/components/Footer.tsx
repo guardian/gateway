@@ -19,7 +19,7 @@ const FooterText = ({
     fontSize="15px"
     fontFamily="Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif"
     lineHeight="1.35"
-    letterSpacing="-0.02pt"
+    letterSpacing="-0.02px"
   >
     {children}
   </MjmlText>

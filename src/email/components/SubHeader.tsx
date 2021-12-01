@@ -24,7 +24,7 @@ export const SubHeader = ({ children }: Props) => (
           padding="4px 0px"
           fontSize="20px"
           lineHeight="1.15"
-          letterSpacing="-0.02pt"
+          letterSpacing="-0.02px"
           fontWeight={700}
           fontFamily="Georgia, serif"
           color={text.primary}
