@@ -247,7 +247,7 @@ router.get('/consents', loginMiddleware, (_: Request, res: Response) => {
 });
 
 router.get(
-  `${'/consents'}/:page`,
+  '/consents/:page',
   loginMiddleware,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
