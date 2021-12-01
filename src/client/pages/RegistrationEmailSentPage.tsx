@@ -7,10 +7,16 @@ import { Routes } from '@/shared/model/Routes';
 
 export const RegistrationEmailSentPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData = {}, queryParams, globalMessage = {} } = clientState;
+  const {
+    pageData = {},
+    queryParams,
+    globalMessage = {},
+    recaptchaConfig,
+  } = clientState;
   const { email } = pageData;
   const { emailSentSuccess } = queryParams;
   const { error } = globalMessage;
+  const { recaptchaSiteKey } = recaptchaConfig;
 
   const queryString = addQueryParamsToPath('', queryParams, {
     emailSentSuccess: true,
@@ -25,6 +31,7 @@ export const RegistrationEmailSentPage = () => {
       showSuccess={emailSentSuccess}
       errorMessage={error}
       helpInfoBox
+      recaptchaSiteKey={recaptchaSiteKey}
     />
   );
 };

@@ -7,8 +7,12 @@ import { MainBodyText } from '@/client/components/MainBodyText';
 
 export const ResetPasswordPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData: { email = '' } = {}, queryParams } = clientState;
-
+  const {
+    pageData: { email = '' } = {},
+    queryParams,
+    recaptchaConfig,
+  } = clientState;
+  const { recaptchaSiteKey } = recaptchaConfig;
   const queryString = addQueryParamsToPath('', queryParams);
 
   return (
@@ -18,6 +22,7 @@ export const ResetPasswordPage = () => {
       buttonText="Reset password"
       queryString={queryString}
       showNoAccessEmail
+      recaptchaSiteKey={recaptchaSiteKey}
     >
       <MainBodyText>
         Forgot your password? Enter your email address and we’ll send you a link
