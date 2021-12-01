@@ -16,6 +16,7 @@ describe('Verify email flow', () => {
 
   beforeEach(() => {
     cy.mockPurge();
+    cy.visit('/signin');
   });
 
   context('A11y checks', () => {
@@ -254,6 +255,50 @@ describe('Verify email flow', () => {
       cy.contains(verifiedUserWithNoConsent.user.primaryEmailAddress);
 
       // click on send link button
+      cy.contains(VerifyEmail.CONTENT.SEND_LINK).click();
+
+      // expect email sent page
+      cy.contains(VerifyEmail.CONTENT.EMAIL_SENT);
+    });
+
+    it('verification token is invalid, logged in, shows page to to resend validation email and fails reCAPTCHA check before succeeding', () => {
+      // set logged in cookies
+      setAuthCookies();
+
+      // mock token invalid
+      cy.mockNext(403, validationTokenInvalid);
+
+      // mock user response
+      cy.mockNext(200, verifiedUserWithNoConsent);
+
+      // mock user response again for sending validation email
+      cy.mockNext(200, verifiedUserWithNoConsent);
+
+      // mock validation email sent
+      cy.mockNext(200);
+
+      // go to verify email endpont
+      verifyEmailFlow.goto('expiredtoken', { failOnStatusCode: false });
+
+      cy.contains(VerifyEmail.CONTENT.VERIFY_EMAIL);
+      cy.contains(VerifyEmail.CONTENT.CONFIRM_EMAIL);
+      cy.contains(verifiedUserWithNoConsent.user.primaryEmailAddress);
+
+      cy.intercept({
+        method: 'POST',
+        url: 'https://www.google.com/recaptcha/api2/**',
+        times: 1,
+      });
+
+      // click on send link button and expect reCAPTCHA errors for first two clicks.
+      cy.contains(VerifyEmail.CONTENT.SEND_LINK).click();
+      cy.contains('Google reCAPTCHA verification failed. Please try again.');
+
+      cy.contains(VerifyEmail.CONTENT.SEND_LINK).click();
+      cy.contains('Google reCAPTCHA verification failed.');
+      cy.contains('If the problem persists please try the following:');
+      cy.contains('userhelp@');
+
       cy.contains(VerifyEmail.CONTENT.SEND_LINK).click();
 
       // expect email sent page
