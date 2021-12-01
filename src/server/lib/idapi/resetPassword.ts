@@ -5,7 +5,6 @@ import {
   IDAPIError,
 } from '@/server/lib/IDAPIFetch';
 import { ResetPasswordErrors, IdapiErrorMessages } from '@/shared/model/Errors';
-import { ApiRoutes } from '@/shared/model/Routes';
 import { IdapiError } from '@/server/models/Error';
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
@@ -36,7 +35,7 @@ export async function create(email: string, ip: string, returnUrl: string) {
   });
 
   return idapiFetch({
-    path: ApiRoutes.RESET_REQUEST_EMAIL,
+    path: '/pwd-reset/send-password-reset-email',
     options: APIAddClientAccessToken(options, ip),
     queryParams: { returnUrl },
   }).catch(handleError);

@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import { Routes } from '@/shared/model/Routes';
+
 import { MainLayout } from '@/client/layouts/Main';
 import {
   belowFormMarginTopSpacingStyle,
@@ -42,7 +42,7 @@ export const ResetPassword = ({
       formAction={
         formActionOverride
           ? addQueryParamsToUntypedPath(formActionOverride, queryString)
-          : buildUrlWithQueryParams(Routes.RESET, {}, queryString)
+          : buildUrlWithQueryParams('/reset', {}, queryString)
       }
       submitButtonText={buttonText}
     >

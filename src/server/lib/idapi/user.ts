@@ -15,7 +15,6 @@ import {
 } from '@/shared/model/Errors';
 import User from '@/shared/model/User';
 import { IdapiError } from '@/server/models/Error';
-import { ApiRoutes } from '@/shared/model/Routes';
 
 interface APIResponse {
   user: User;
@@ -81,15 +80,12 @@ export const read = async (ip: string, sc_gu_u: string): Promise<User> => {
   );
   try {
     const response = (await idapiFetch({
-      path: `${ApiRoutes.USER}${ApiRoutes.ME}`,
+      path: '/user/me',
       options,
     })) as APIResponse;
     return responseToEntity(response);
   } catch (error) {
-    logger.error(
-      `IDAPI Error user read ${ApiRoutes.USER}${ApiRoutes.ME}`,
-      error,
-    );
+    logger.error(`IDAPI Error user read '/user/me'`, error);
     return handleError(error as IDAPIError);
   }
 };
@@ -102,7 +98,7 @@ export const readUserType = async (
 
   try {
     const { userType } = await idapiFetch({
-      path: `${ApiRoutes.USER}${ApiRoutes.TYPE}/:email`,
+      path: '/user/type/:email',
       options,
       tokenisationParam: { email },
     });
@@ -123,10 +119,7 @@ export const readUserType = async (
         throw new Error('Invalid UserType');
     }
   } catch (error) {
-    logger.error(
-      `IDAPI Error read user type ${ApiRoutes.USER}${ApiRoutes.TYPE}/${email}`,
-      error,
-    );
+    logger.error(`IDAPI Error read user type '/user/type/:email'`, error);
     return handleError(error as IDAPIError);
   }
 };
@@ -141,13 +134,13 @@ export const sendAccountVerificationEmail = async (
   });
   try {
     await idapiFetch({
-      path: `${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_VERIFICATION_EMAIL}`,
+      path: '/user/send-account-verification-email',
       options: APIAddClientAccessToken(options, ip),
       queryParams: { returnUrl },
     });
   } catch (error) {
     logger.error(
-      `IDAPI Error send account verification email ${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_VERIFICATION_EMAIL}`,
+      `IDAPI Error send account verification email '/user/send-account-verification-email'`,
       error,
     );
     return handleError(error as IDAPIError);
@@ -164,13 +157,13 @@ export const sendAccountExistsEmail = async (
   });
   try {
     await idapiFetch({
-      path: `${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_EXISTS_EMAIL}`,
+      path: '/user/send-account-exists-email',
       options: APIAddClientAccessToken(options, ip),
       queryParams: { returnUrl },
     });
   } catch (error) {
     logger.error(
-      `IDAPI Error send account exists email ${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_EXISTS_EMAIL}`,
+      `IDAPI Error send account exists email '/user/send-account-exists-email'`,
       error,
     );
     return handleError(error as IDAPIError);
@@ -187,13 +180,13 @@ export const sendAccountWithoutPasswordExistsEmail = async (
   });
   try {
     await idapiFetch({
-      path: `${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_WITHOUT_PASSWORD_EXISTS_EMAIL}`,
+      path: '/user/send-account-without-password-exists-email',
       options: APIAddClientAccessToken(options, ip),
       queryParams: { returnUrl },
     });
   } catch (error) {
     logger.error(
-      `IDAPI Error send account without password exists email ${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_WITHOUT_PASSWORD_EXISTS_EMAIL}`,
+      `IDAPI Error send account without password exists email '/user/send-account-without-password-exists-email'`,
       error,
     );
     return handleError(error as IDAPIError);
@@ -210,13 +203,13 @@ export const sendCreatePasswordEmail = async (
   });
   try {
     await idapiFetch({
-      path: `${ApiRoutes.USER}${ApiRoutes.SEND_CREATE_PASSWORD_ACCOUNT_EXISTS_EMAIL}`,
+      path: '/user/send-create-password-account-exists-email',
       options: APIAddClientAccessToken(options, ip),
       queryParams: { returnUrl },
     });
   } catch (error) {
     logger.error(
-      `IDAPI Error send create password email ${ApiRoutes.USER}${ApiRoutes.SEND_CREATE_PASSWORD_ACCOUNT_EXISTS_EMAIL}`,
+      `IDAPI Error send create password email '/user/send-create-password-account-exists-email'`,
       error,
     );
     return handleError(error as IDAPIError);

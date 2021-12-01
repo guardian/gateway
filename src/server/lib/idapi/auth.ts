@@ -10,7 +10,6 @@ import { logger } from '@/server/lib/logger';
 import { IdapiError } from '@/server/models/Error';
 import { IdapiErrorMessages, SignInErrors } from '@/shared/model/Errors';
 import { IDAPIAuthRedirect, IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
-import { ApiRoutes } from '@/shared/model/Routes';
 
 interface APIResponse {
   emailValidated: true;
@@ -64,7 +63,7 @@ export const read = async (
   try {
     return responseToEntity(
       (await idapiFetch({
-        path: `${ApiRoutes.AUTH}${ApiRoutes.REDIRECT}`,
+        path: '/auth/redirect',
         options: {
           ...options,
           headers: { ...headers },
@@ -72,10 +71,7 @@ export const read = async (
       })) as APIResponse,
     );
   } catch (error) {
-    logger.error(
-      `IDAPI Error auth read ${ApiRoutes.AUTH}${ApiRoutes.REDIRECT}`,
-      error,
-    );
+    logger.error(`IDAPI Error auth read '/auth/redirect'`, error);
     return handleError(error as IDAPIError);
   }
 };
@@ -92,15 +88,12 @@ export const authenticate = async (
 
   try {
     const response = await idapiFetch({
-      path: ApiRoutes.AUTH,
+      path: '/auth',
       options: APIAddClientAccessToken(options, ip),
     });
     return response.cookies;
   } catch (error) {
-    logger.error(
-      `IDAPI Error auth authenticate ${ApiRoutes.AUTH}?format=cookies`,
-      error,
-    );
+    logger.error(`IDAPI Error auth authenticate '/auth?format=cookies'`, error);
     handleError(error as IDAPIError);
   }
 };

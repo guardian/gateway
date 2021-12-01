@@ -18,7 +18,7 @@ import { controls } from '@/client/layouts/shared/Consents';
 import { ConsentsSubHeader } from '@/client/components/ConsentsSubHeader';
 import { ConsentsBlueBackground } from '@/client/components/ConsentsBlueBackground';
 import { ConsentsHeader } from '@/client/components/ConsentsHeader';
-import { Routes } from '@/shared/model/Routes';
+
 import { onboardingFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
@@ -111,7 +111,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
         <form
           css={form}
           action={buildUrlWithQueryParams(
-            `${Routes.CONSENTS}/:page`,
+            '/consents/:page',
             { page: page },
             queryParams,
           )}
@@ -147,7 +147,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
                   <LinkButton
                     css={linkButton}
                     href={buildUrlWithQueryParams(
-                      `${Routes.CONSENTS}/:page`,
+                      '/consents/:page',
                       {
                         page: previousPage,
                       },

@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
-import { Routes } from '@/shared/model/Routes';
+
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { buildUrl } from '@/shared/lib/routeUtils';
 
@@ -15,7 +15,7 @@ export const SetPasswordResendPage = () => {
       email={email}
       headerText="Link expired"
       buttonText="Send me a link"
-      formActionOverride={buildUrl(`${Routes.SET_PASSWORD}${Routes.RESEND}`)}
+      formActionOverride={buildUrl('/set-password/resend')}
       queryString={queryParams}
       emailInputLabel="Email address"
       showRecentEmailSummary

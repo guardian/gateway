@@ -1,6 +1,6 @@
 import React from 'react';
 import { LinkButton } from '@guardian/source-react-components';
-import { Routes } from '@/shared/model/Routes';
+
 import { buttonStyles, MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { MainForm } from '@/client/components/MainForm';
@@ -51,7 +51,7 @@ const LoggedIn = ({
       <MainBodyText>{successText}</MainBodyText>
     ) : (
       <MainForm
-        formAction={buildUrl(Routes.VERIFY_EMAIL)}
+        formAction={buildUrl('/verify-email')}
         submitButtonText="Send verification link"
       >
         <EmailInput defaultValue={email} hidden hideLabel />

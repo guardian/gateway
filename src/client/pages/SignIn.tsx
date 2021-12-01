@@ -6,7 +6,7 @@ import { Footer } from '@/client/components/Footer';
 import { PasswordInput } from '@/client/components/PasswordInput';
 import { Nav } from '@/client/components/Nav';
 import { Button, Link } from '@guardian/source-react-components';
-import { Routes } from '@/shared/model/Routes';
+
 import { PageTitle } from '@/shared/model/PageTitle';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { Terms } from '@/client/components/Terms';
@@ -136,12 +136,12 @@ export const SignIn = ({
       tabs={[
         {
           displayText: PageTitle.SIGN_IN,
-          linkTo: Routes.SIGN_IN,
+          linkTo: '/signin',
           isActive: true,
         },
         {
           displayText: PageTitle.REGISTRATION,
-          linkTo: Routes.REGISTRATION,
+          linkTo: '/register',
           isActive: false,
         },
       ]}
@@ -153,7 +153,7 @@ export const SignIn = ({
     >
       <form
         method="post"
-        action={buildUrlWithQueryParams(Routes.SIGN_IN, {}, queryString)}
+        action={buildUrlWithQueryParams('/signin', {}, queryString)}
       >
         <CsrfFormField />
         <EmailInput defaultValue={email} />
@@ -163,7 +163,7 @@ export const SignIn = ({
         <Links>
           <Link
             subdued={true}
-            href={buildUrl(Routes.RESET)}
+            href={buildUrl('/reset')}
             cssOverrides={resetPassword}
           >
             Reset password

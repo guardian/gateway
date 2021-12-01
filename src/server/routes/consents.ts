@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import deepmerge from 'deepmerge';
-import { Routes } from '@/shared/model/Routes';
+
 import { renderer } from '@/server/lib/renderer';
 import { RoutePaths } from '@/shared/lib/routeUtils';
 import { typedRouter as router } from '@/server/lib/typedRoutes';
@@ -126,8 +126,8 @@ const getUserNewsletterSubscriptions = async (
 
 export const consentPages: ConsentPage[] = [
   {
-    page: Routes.CONSENTS_COMMUNICATION.slice(1),
-    path: `${Routes.CONSENTS}${Routes.CONSENTS_COMMUNICATION}`,
+    page: 'communication',
+    path: '/consents/communication',
     pageTitle: CONSENTS_PAGES.CONTACT,
     read: async (ip, sc_gu_u) => ({
       consents: await getUserConsentsForPage(
@@ -135,7 +135,7 @@ export const consentPages: ConsentPage[] = [
         ip,
         sc_gu_u,
       ),
-      page: Routes.CONSENTS_COMMUNICATION.slice(1),
+      page: 'communication',
     }),
     update: async (ip, sc_gu_u, body) => {
       const consents = CONSENTS_COMMUNICATION_PAGE.map((id) => ({
@@ -147,17 +147,17 @@ export const consentPages: ConsentPage[] = [
     },
   },
   {
-    page: Routes.CONSENTS_NEWSLETTERS.slice(1),
-    path: `${Routes.CONSENTS}${Routes.CONSENTS_NEWSLETTERS}`,
+    page: '/newsletters'.slice(1),
+    path: '/consents/newsletters',
     pageTitle: CONSENTS_PAGES.NEWSLETTERS,
     read: async (ip, sc_gu_u, geo) => ({
-      page: Routes.CONSENTS_NEWSLETTERS.slice(1),
+      page: '/newsletters'.slice(1),
       newsletters: await getUserNewsletterSubscriptions(
         NewsletterMap.get(geo) as string[],
         ip,
         sc_gu_u,
       ),
-      previousPage: Routes.CONSENTS_COMMUNICATION.slice(1),
+      previousPage: '/communication'.slice(1),
     }),
     update: async (ip, sc_gu_u, body) => {
       const userNewsletterSubscriptions = await getUserNewsletterSubscriptions(
@@ -197,13 +197,13 @@ export const consentPages: ConsentPage[] = [
     },
   },
   {
-    page: Routes.CONSENTS_DATA.slice(1),
-    path: `${Routes.CONSENTS}${Routes.CONSENTS_DATA}`,
+    page: 'data',
+    path: '/consents/data',
     pageTitle: CONSENTS_PAGES.YOUR_DATA,
     read: async (ip, sc_gu_u) => ({
       consents: await getUserConsentsForPage(CONSENTS_DATA_PAGE, ip, sc_gu_u),
-      page: Routes.CONSENTS_DATA.slice(1),
-      previousPage: Routes.CONSENTS_NEWSLETTERS.slice(1),
+      page: 'data',
+      previousPage: 'newsletters',
     }),
     update: async (ip, sc_gu_u, body) => {
       const consents = CONSENTS_DATA_PAGE.map((id) => ({
@@ -215,8 +215,8 @@ export const consentPages: ConsentPage[] = [
     },
   },
   {
-    page: Routes.CONSENTS_REVIEW.slice(1),
-    path: `${Routes.CONSENTS}${Routes.CONSENTS_REVIEW}`,
+    page: 'review',
+    path: '/consents/review',
     pageTitle: CONSENTS_PAGES.REVIEW,
     read: async (ip, sc_gu_u, geo) => {
       const ALL_CONSENT = [
@@ -225,7 +225,7 @@ export const consentPages: ConsentPage[] = [
       ];
 
       return {
-        page: Routes.CONSENTS_REVIEW.slice(1),
+        page: 'review',
         consents: await getUserConsentsForPage(ALL_CONSENT, ip, sc_gu_u),
         newsletters: await getUserNewsletterSubscriptions(
           NewsletterMap.get(geo) as string[],
@@ -237,7 +237,7 @@ export const consentPages: ConsentPage[] = [
   },
 ];
 
-router.get(Routes.CONSENTS, loginMiddleware, (_: Request, res: Response) => {
+router.get('/consents', loginMiddleware, (_: Request, res: Response) => {
   const url = addQueryParamsToPath(
     `${consentPages[0].path}`,
     res.locals.queryParams,
@@ -247,7 +247,7 @@ router.get(Routes.CONSENTS, loginMiddleware, (_: Request, res: Response) => {
 });
 
 router.get(
-  `${Routes.CONSENTS}/:page`,
+  `${'/consents'}/:page`,
   loginMiddleware,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
@@ -298,7 +298,7 @@ router.get(
     }
 
     const html = renderer(
-      `${Routes.CONSENTS}/:page`,
+      '/consents/:page',
       {
         requestState: state,
         pageTitle,
@@ -316,7 +316,7 @@ router.get(
 );
 
 router.post(
-  `${Routes.CONSENTS}/:page`,
+  '/consents/:page',
   loginMiddleware,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
@@ -367,7 +367,7 @@ router.post(
     trackMetric(consentsPageMetric(page, 'Post', false));
 
     const html = renderer(
-      `${Routes.CONSENTS}/:page`,
+      '/consents/:page',
       {
         pageTitle,
         requestState: state,

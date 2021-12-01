@@ -2,7 +2,6 @@ import React, { useContext, useEffect } from 'react';
 import { ClientState } from '@/shared/model/ClientState';
 import { useParams } from 'react-router-dom';
 import { ClientStateContext } from '@/client/components/ClientState';
-import { Routes } from '@/shared/model/Routes';
 import { ChangePassword } from '@/client/pages/ChangePassword';
 import { buildUrl, buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 
@@ -22,7 +21,7 @@ export const ChangePasswordPage = () => {
     // if the token expires while the user is on the current page
     if (typeof window !== 'undefined' && tokenExpiryTimestamp) {
       setTimeout(() => {
-        window.location.replace(buildUrl(`${Routes.RESET}${Routes.EXPIRED}`));
+        window.location.replace(buildUrl('/reset/expired'));
       }, tokenExpiryTimestamp - Date.now());
     }
   }, [tokenExpiryTimestamp]);
@@ -32,7 +31,7 @@ export const ChangePasswordPage = () => {
       headerText="Reset password"
       buttonText="Confirm new password"
       submitUrl={buildUrlWithQueryParams(
-        `${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`,
+        '/reset-password/:token',
         {
           token: token,
         },

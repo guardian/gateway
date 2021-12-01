@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import deepmerge from 'deepmerge';
-import { Routes } from '@/shared/model/Routes';
+
 import { buildUrl } from '@/shared/lib/routeUtils';
 import { typedRouter as router } from '@/server/lib/typedRoutes';
 import { logger } from '@/server/lib/logger';
@@ -12,8 +12,8 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { ApiError } from '@/server/models/Error';
 
-router.get(Routes.MAGIC_LINK, (req: Request, res: ResponseWithRequestState) => {
-  const html = renderer(Routes.MAGIC_LINK, {
+router.get('/magic-link', (req: Request, res: ResponseWithRequestState) => {
+  const html = renderer('/magic-link', {
     requestState: res.locals,
     pageTitle: PageTitle.MAGIC_LINK,
   });
@@ -21,7 +21,7 @@ router.get(Routes.MAGIC_LINK, (req: Request, res: ResponseWithRequestState) => {
 });
 
 router.post(
-  Routes.MAGIC_LINK,
+  '/magic-link',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
@@ -44,7 +44,7 @@ router.post(
         },
       });
 
-      const html = renderer(Routes.MAGIC_LINK, {
+      const html = renderer('/magic-link', {
         requestState: state,
         pageTitle: PageTitle.MAGIC_LINK,
       });
@@ -53,17 +53,14 @@ router.post(
 
     trackMetric(Metrics.SEND_MAGIC_LINK_SUCCESS);
 
-    return res.redirect(
-      303,
-      buildUrl(`${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`),
-    );
+    return res.redirect(303, buildUrl('/magic-link/email-sent'));
   }),
 );
 
 router.get(
-  `${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`,
+  '/magic-link/email-sent',
   (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer(`${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`, {
+    const html = renderer('/magic-link/email-sent', {
       pageTitle: PageTitle.MAGIC_LINK,
       requestState: res.locals,
     });

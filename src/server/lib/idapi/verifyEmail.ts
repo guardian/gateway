@@ -7,7 +7,6 @@ import {
 } from '@/server/lib/IDAPIFetch';
 
 import { IdapiErrorMessages, VerifyEmailErrors } from '@/shared/model/Errors';
-import { ApiRoutes } from '@/shared/model/Routes';
 import { logger } from '@/server/lib/logger';
 import { IdapiError } from '@/server/models/Error';
 
@@ -44,14 +43,14 @@ export async function verifyEmail(token: string, ip: string) {
 
   try {
     const result = await idapiFetch({
-      path: `${ApiRoutes.VERIFY_EMAIL}/:token`,
+      path: '/user/validate-email/:token',
       options: APIAddClientAccessToken(options, ip),
       tokenisationParam: { token },
     });
     return result.cookies;
   } catch (error) {
     logger.error(
-      `IDAPI Error verifyEmail ${ApiRoutes.VERIFY_EMAIL}/:token`,
+      `IDAPI Error verifyEmail '/user/validate-email/:token'`,
       error,
     );
     handleError(error as IDAPIError);
@@ -64,10 +63,10 @@ export async function send(ip: string, sc_gu_u: string) {
     sc_gu_u,
   );
   try {
-    await idapiFetch({ path: ApiRoutes.RESEND_VERIFY_EMAIL, options });
+    await idapiFetch({ path: '/user/send-validation-email', options });
   } catch (error) {
     logger.error(
-      `IDAPI Error verifyEmail send ${ApiRoutes.RESEND_VERIFY_EMAIL}`,
+      `IDAPI Error verifyEmail send '/user/send-validation-email'`,
       error,
     );
     return handleError(error as IDAPIError);

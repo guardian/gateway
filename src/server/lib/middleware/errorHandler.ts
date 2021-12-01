@@ -2,7 +2,7 @@ import { NextFunction, Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { getCsrfPageUrl } from '@/server/lib/getCsrfPageUrl';
 import { renderer } from '@/server/lib/renderer';
-import { Routes } from '@/shared/model/Routes';
+
 import { PageTitle } from '@/shared/model/PageTitle';
 import { logger } from '@/server/lib/logger';
 import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
@@ -37,7 +37,7 @@ export const routeErrorHandler = (
 
   logger.error('unexpected error', err);
 
-  const html = renderer(`${Routes.UNEXPECTED_ERROR}`, {
+  const html = renderer(`${'/error'}`, {
     requestState: res.locals,
     pageTitle: PageTitle.UNEXPECTED_ERROR,
   });

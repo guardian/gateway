@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
-import { Routes } from '@/shared/model/Routes';
+
 import { Welcome } from '@/client/pages/Welcome';
 import { buildUrl, buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 
@@ -22,7 +22,7 @@ export const WelcomePage = () => {
     // if the token expires while the user is on the current page
     if (typeof window !== 'undefined' && tokenExpiryTimestamp) {
       setTimeout(() => {
-        window.location.replace(buildUrl(`${Routes.WELCOME}${Routes.EXPIRED}`));
+        window.location.replace(buildUrl('/welcome/expired'));
       }, tokenExpiryTimestamp - Date.now());
     }
   }, [tokenExpiryTimestamp]);
@@ -30,7 +30,7 @@ export const WelcomePage = () => {
   return (
     <Welcome
       submitUrl={buildUrlWithQueryParams(
-        `${Routes.WELCOME}/:token`,
+        '/welcome/:token',
         { token },
         queryParams,
       )}

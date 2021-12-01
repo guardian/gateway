@@ -8,7 +8,7 @@ import {
   MainForm,
 } from '@/client/components/MainForm';
 import { EmailInput } from '@/client/components/EmailInput';
-import { Routes } from '@/shared/model/Routes';
+
 import { buildUrl } from '@/shared/lib/routeUtils';
 
 type Props = {
@@ -80,7 +80,7 @@ export const EmailSent = ({
             context={
               <>
                 Don’t have an account?{' '}
-                <Link subdued href={buildUrl(Routes.REGISTRATION)}>
+                <Link subdued href={buildUrl('/register')}>
                   Register for free
                 </Link>
                 <br />

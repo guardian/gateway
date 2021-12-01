@@ -3,7 +3,7 @@ import deepmerge from 'deepmerge';
 import { authenticate } from '@/server/lib/idapi/auth';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
-import { Routes } from '@/shared/model/Routes';
+
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
@@ -41,10 +41,10 @@ const preFillEmailField = (route: RoutePaths) =>
     res.type('html').send(html);
   });
 
-router.get(Routes.SIGN_IN, preFillEmailField(Routes.SIGN_IN));
+router.get('/signin', preFillEmailField('/signin'));
 
 router.post(
-  Routes.SIGN_IN,
+  '/signin',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
 
@@ -67,7 +67,7 @@ router.post(
       trackMetric(Metrics.SIGN_IN_FAILURE);
 
       // re-render the sign in page on error
-      const html = renderer(Routes.SIGN_IN, {
+      const html = renderer('/signin', {
         requestState: deepmerge(res.locals, {
           globalMessage: {
             error: message,

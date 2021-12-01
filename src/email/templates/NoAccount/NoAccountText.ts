@@ -1,5 +1,4 @@
 import { buildUrl } from '@/shared/lib/routeUtils';
-import { Routes } from '@/shared/model/Routes';
 
 export const NoAccountText = () => `
 Hello,
@@ -10,7 +9,7 @@ It's quick an easy to create an account and we won't ask you for personal detail
 
 Please click below to register.
 
-https://profile.theguardian.com${buildUrl(Routes.REGISTRATION)}
+https://profile.theguardian.com${buildUrl('/register')}
 
 The Guardian
 

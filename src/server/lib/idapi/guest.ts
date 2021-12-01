@@ -9,7 +9,6 @@ import {
   idapiFetch,
 } from '../IDAPIFetch';
 import { logger } from '../logger';
-import { ApiRoutes } from '@/shared/model/Routes';
 
 const { defaultReturnUri } = getConfiguration();
 
@@ -45,7 +44,7 @@ export const guest = async (
 
   try {
     await idapiFetch({
-      path: ApiRoutes.GUEST,
+      path: '/guest',
       options: APIAddClientAccessToken(options, ip),
       queryParams: {
         accountVerificationEmail: true,
@@ -57,7 +56,7 @@ export const guest = async (
     return EmailType.ACCOUNT_VERIFICATION;
   } catch (error) {
     logger.error(
-      `IDAPI Error: guest account creation ${`${ApiRoutes.GUEST}?accountVerificationEmail=true`}`,
+      `IDAPI Error: guest account creation '/guest?accountVerificationEmail=true'}`,
       error,
     );
     return handleError(error as IDAPIError);

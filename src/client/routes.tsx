@@ -14,7 +14,6 @@ import { ConsentsConfirmationPage } from '@/client/pages/ConsentsConfirmationPag
 import { ResendEmailVerificationPage } from '@/client/pages/ResendEmailVerificationPage';
 import { UnexpectedErrorPage } from '@/client/pages/UnexpectedErrorPage';
 import { ClientState } from '@/shared/model/ClientState';
-import { Routes } from '@/shared/model/Routes';
 import { RoutePaths } from '@/shared/lib/routeUtils';
 import { SignInPage } from '@/client/pages/SignInPage';
 import { MagicLinkPage } from '@/client/pages/MagicLinkPage';
@@ -44,88 +43,85 @@ const TypedRoute = (props: GatewayRouteProps) => {
 
 export const GatewayRoutes = () => (
   <Switch>
-    <TypedRoute exact path={Routes.SIGN_IN}>
+    <TypedRoute exact path={'/signin'}>
       <SignInPage />
     </TypedRoute>
-    <TypedRoute exact path={Routes.REGISTRATION}>
+    <TypedRoute exact path={'/register'}>
       <RegistrationPage />
     </TypedRoute>
-    <TypedRoute exact path={`${Routes.REGISTRATION}${Routes.EMAIL_SENT}`}>
+    <TypedRoute exact path={'/register/email-sent'}>
       <RegistrationEmailSentPage />
     </TypedRoute>
-    <TypedRoute exact path={Routes.RESET}>
+    <TypedRoute exact path={'/reset'}>
       <ResetPasswordPage />
     </TypedRoute>
-    <TypedRoute exact path={`${Routes.RESET}${Routes.EMAIL_SENT}`}>
+    <TypedRoute exact path={'/reset/email-sent'}>
       <EmailSentPage noAccountInfoBox />
     </TypedRoute>
-    <TypedRoute exact path={`${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`}>
+    <TypedRoute exact path={'/reset-password/:token'}>
       <ChangePasswordPage />
     </TypedRoute>
-    <TypedRoute path={`${Routes.PASSWORD}${Routes.RESET_CONFIRMATION}`}>
+    <TypedRoute path={'/password/reset-confirmation'}>
       <ChangePasswordCompletePage />
     </TypedRoute>
-    <TypedRoute exact path={`${Routes.RESET}${Routes.RESEND}`}>
+    <TypedRoute exact path={'/reset/resend'}>
       <ResendPasswordPage />
     </TypedRoute>
-    <TypedRoute exact path={`${Routes.RESET}${Routes.EXPIRED}`}>
+    <TypedRoute exact path={'/reset/expired'}>
       <ResetPasswordSessionExpiredPage />
     </TypedRoute>
-    <TypedRoute exact path={`${Routes.SET_PASSWORD}${Routes.RESEND}`}>
+    <TypedRoute exact path={'/set-password/resend'}>
       <SetPasswordResendPage />
     </TypedRoute>
-    <TypedRoute exact path={`${Routes.SET_PASSWORD}${Routes.EXPIRED}`}>
+    <TypedRoute exact path={'/set-password/expired'}>
       <SetPasswordSessionExpiredPage />
     </TypedRoute>
-    <TypedRoute path={`${Routes.SET_PASSWORD}${Routes.COMPLETE}`}>
+    <TypedRoute path={'/set-password/complete'}>
       <SetPasswordCompletePage />
     </TypedRoute>
-    <TypedRoute path={`${Routes.SET_PASSWORD}${Routes.EMAIL_SENT}`}>
+    <TypedRoute path={'/set-password/email-sent'}>
       <EmailSentPage helpInfoBox />
     </TypedRoute>
-    <TypedRoute exact path={`${Routes.SET_PASSWORD}${Routes.TOKEN_PARAM}`}>
+    <TypedRoute exact path={'/set-password/:token'}>
       <SetPasswordPage />
     </TypedRoute>
-    <TypedRoute exact path={`${Routes.CONSENTS}${Routes.CONSENTS_DATA}`}>
+    <TypedRoute exact path={'/consents/data'}>
       <ConsentsDataPage />
     </TypedRoute>
-    <TypedRoute
-      exact
-      path={`${Routes.CONSENTS}${Routes.CONSENTS_COMMUNICATION}`}
-    >
+    <TypedRoute exact path={'/consents/communication'}>
       <ConsentsCommunicationPage />
     </TypedRoute>
-    <TypedRoute exact path={`${Routes.CONSENTS}${Routes.CONSENTS_NEWSLETTERS}`}>
+    <TypedRoute exact path={'/consents/newsletters'}>
       <ConsentsNewslettersPage />
     </TypedRoute>
-    <TypedRoute exact path={`${Routes.CONSENTS}${Routes.CONSENTS_REVIEW}`}>
+    <TypedRoute exact path={'/consents/review'}>
       <ConsentsConfirmationPage />
     </TypedRoute>
-    <TypedRoute exact path={`${Routes.WELCOME}${Routes.RESEND}`}>
+    <TypedRoute exact path={'/welcome/resend'}>
       <WelcomeResendPage />
     </TypedRoute>
-    <TypedRoute exact path={`${Routes.WELCOME}${Routes.EXPIRED}`}>
+    <TypedRoute exact path={'/welcome/expired'}>
       <WelcomeSessionExpiredPage />
     </TypedRoute>
-    <TypedRoute exact path={`${Routes.WELCOME}${Routes.EMAIL_SENT}`}>
+    <TypedRoute exact path={'/welcome/email-sent'}>
       <EmailSentPage helpInfoBox />
     </TypedRoute>
-    <TypedRoute exact path={`${Routes.WELCOME}${Routes.COMPLETE}`}>
+    <TypedRoute exact path={'/welcome/complete'}>
       <WelcomePasswordAlreadySetPage />
     </TypedRoute>
-    <TypedRoute exact path={`${Routes.WELCOME}${Routes.TOKEN_PARAM}`}>
+    <TypedRoute exact path={'/welcome/:token'}>
       <WelcomePage />
     </TypedRoute>
-    <TypedRoute exact path={Routes.VERIFY_EMAIL}>
+    <TypedRoute exact path={'/verify-email'}>
       <ResendEmailVerificationPage />
     </TypedRoute>
-    <TypedRoute exact path={Routes.MAGIC_LINK}>
+    <TypedRoute exact path={'/magic-link'}>
       <MagicLinkPage />
     </TypedRoute>
-    <TypedRoute exact path={`${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`}>
+    <TypedRoute exact path={'/magic-link/email-sent'}>
       <EmailSentPage noAccountInfoBox />
     </TypedRoute>
-    <TypedRoute exact path={Routes.UNEXPECTED_ERROR}>
+    <TypedRoute exact path={'/error'}>
       <UnexpectedErrorPage />
     </TypedRoute>
     <TypedRoute>

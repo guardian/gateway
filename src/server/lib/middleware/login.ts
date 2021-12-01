@@ -3,7 +3,7 @@ import { joinUrl } from '@guardian/libs';
 import { read } from '@/server/lib/idapi/auth';
 import { IDAPIAuthRedirect, IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
 import { getProfileUrl } from '@/server/lib/getProfileUrl';
-import { Routes } from '@/shared/model/Routes';
+
 import { trackMetric } from '@/server/lib/trackMetric';
 import { Metrics } from '@/server/models/Metrics';
 import { getConfiguration } from '@/server/lib/getConfiguration';
@@ -62,7 +62,7 @@ export const loginMiddleware = async (
 
     if (!auth.emailValidated) {
       trackMetric(Metrics.LOGIN_MIDDLEWARE_UNVERIFIED);
-      return res.redirect(303, buildUrl(Routes.VERIFY_EMAIL));
+      return res.redirect(303, buildUrl('/verify-email'));
     }
 
     if (auth.status === IDAPIAuthStatus.RECENT) {

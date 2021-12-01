@@ -1,6 +1,6 @@
 import { Router, Request } from 'express';
 import deepmerge from 'deepmerge';
-import { Routes } from '@/shared/model/Routes';
+
 import {
   send as sendVerificationEmail,
   verifyEmail,
@@ -29,14 +29,14 @@ const { signInPageUrl } = getConfiguration();
 const profileUrl = getProfileUrl();
 
 router.get(
-  Routes.VERIFY_EMAIL,
+  '/verify-email',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
     state = deepmerge(state, {
       pageData: {
         signInPageUrl: `${signInPageUrl}?returnUrl=${encodeURIComponent(
-          `${profileUrl}${buildUrl(Routes.VERIFY_EMAIL)}`,
+          `${profileUrl}${buildUrl('/verify-email')}`,
         )}`,
       },
     });
@@ -75,7 +75,7 @@ router.get(
       }
     }
 
-    const html = renderer(Routes.VERIFY_EMAIL, {
+    const html = renderer('/verify-email', {
       pageTitle: PageTitle.VERIFY_EMAIL,
       requestState: state,
     });
@@ -85,7 +85,7 @@ router.get(
 );
 
 router.post(
-  Routes.VERIFY_EMAIL,
+  '/verify-email',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
     let status = 200;
@@ -134,7 +134,7 @@ router.post(
       });
     }
 
-    const html = renderer(Routes.VERIFY_EMAIL, {
+    const html = renderer('/verify-email', {
       pageTitle: PageTitle.VERIFY_EMAIL,
       requestState: state,
     });
@@ -144,7 +144,7 @@ router.post(
 );
 
 router.get(
-  `${Routes.VERIFY_EMAIL}${Routes.TOKEN_PARAM}`,
+  '/verify-email/:token',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { token } = req.params;
 
@@ -171,7 +171,7 @@ router.get(
 
       return res.redirect(
         303,
-        addQueryParamsToPath(Routes.VERIFY_EMAIL, res.locals.queryParams),
+        addQueryParamsToPath('/verify-email', res.locals.queryParams),
       );
     }
 

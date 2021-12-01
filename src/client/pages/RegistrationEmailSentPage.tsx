@@ -3,7 +3,7 @@ import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { EmailSent } from '@/client/pages/EmailSent';
 import { buildQueryParamsString } from '@/shared/lib/queryParams';
-import { Routes } from '@/shared/model/Routes';
+
 import { buildUrl } from '@/shared/lib/routeUtils';
 
 export const RegistrationEmailSentPage = () => {
@@ -21,10 +21,8 @@ export const RegistrationEmailSentPage = () => {
     <EmailSent
       email={email}
       queryString={queryString}
-      previousPage={buildUrl(`${Routes.SIGN_IN}`)}
-      resendEmailAction={buildUrl(
-        `${Routes.REGISTRATION}${Routes.EMAIL_SENT}${Routes.RESEND}`,
-      )}
+      previousPage={buildUrl('/signin')}
+      resendEmailAction={buildUrl('/register/email-sent/resend')}
       showSuccess={emailSentSuccess}
       errorMessage={error}
       helpInfoBox

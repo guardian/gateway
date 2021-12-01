@@ -3,7 +3,7 @@ import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
 import { MainBodyText } from '@/client/components/MainBodyText';
-import { Routes } from '@/shared/model/Routes';
+
 import { buildUrl } from '@/shared/lib/routeUtils';
 
 export const SetPasswordSessionExpiredPage = () => {
@@ -15,7 +15,7 @@ export const SetPasswordSessionExpiredPage = () => {
       email={email}
       headerText="Session timed out"
       buttonText="Send me a link"
-      formActionOverride={buildUrl(`${Routes.SET_PASSWORD}${Routes.RESEND}`)}
+      formActionOverride={buildUrl('/set-password/resend')}
       queryString={queryParams}
       emailInputLabel="Email address"
     >

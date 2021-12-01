@@ -1,6 +1,5 @@
 import React, { createRef, useEffect, useRef } from 'react';
 import { Button } from '@guardian/source-react-components';
-import { Routes } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { Header } from '@/client/components/Header';
 import { Nav } from '@/client/components/Nav';
@@ -106,12 +105,12 @@ export const Registration = ({
         tabs={[
           {
             displayText: PageTitle.SIGN_IN,
-            linkTo: Routes.SIGN_IN,
+            linkTo: '/signin',
             isActive: false,
           },
           {
             displayText: PageTitle.REGISTRATION,
-            linkTo: Routes.REGISTRATION,
+            linkTo: '/register',
             isActive: true,
           },
         ]}
@@ -124,11 +123,7 @@ export const Registration = ({
       >
         <form
           method="post"
-          action={buildUrlWithQueryParams(
-            `${Routes.REGISTRATION}`,
-            {},
-            queryString,
-          )}
+          action={buildUrlWithQueryParams(`${'/register'}`, {}, queryString)}
           ref={registerFormRef}
           onSubmit={handleSubmit}
         >

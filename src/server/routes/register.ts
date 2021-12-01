@@ -8,7 +8,7 @@ import {
 } from '@/server/lib/idapi/user';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
-import { Routes } from '@/shared/model/Routes';
+
 import { typedRouter as router } from '@/server/lib/typedRoutes';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
@@ -38,22 +38,19 @@ const {
 // set google recaptcha site key
 const recaptcha = new RecaptchaV2(siteKey, secretKey);
 
-router.get(
-  Routes.REGISTRATION,
-  (req: Request, res: ResponseWithRequestState) => {
-    const html = renderer(Routes.REGISTRATION, {
-      requestState: res.locals,
-      pageTitle: PageTitle.REGISTRATION,
-    });
-    res.type('html').send(html);
-  },
-);
+router.get('/register', (req: Request, res: ResponseWithRequestState) => {
+  const html = renderer('/register', {
+    requestState: res.locals,
+    pageTitle: PageTitle.REGISTRATION,
+  });
+  res.type('html').send(html);
+});
 
 router.get(
-  `${Routes.REGISTRATION}${Routes.EMAIL_SENT}`,
+  '/register/email-sent',
   (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
-    const html = renderer(`${Routes.REGISTRATION}${Routes.EMAIL_SENT}`, {
+    const html = renderer('/register/email-sent', {
       requestState: deepmerge(state, {
         pageData: {
           email:
@@ -68,7 +65,7 @@ router.get(
 );
 
 router.post(
-  `${Routes.REGISTRATION}${Routes.EMAIL_SENT}${Routes.RESEND}`,
+  '/register/email-sent/resend',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { returnUrl, emailSentSuccess } = res.locals.queryParams;
 
@@ -118,11 +115,9 @@ router.post(
         setEncryptedStateCookie(res, { email, emailType });
         return res.redirect(
           303,
-          addQueryParamsToPath(
-            `${Routes.REGISTRATION}${Routes.EMAIL_SENT}`,
-            res.locals.queryParams,
-            { emailSentSuccess },
-          ),
+          addQueryParamsToPath('/register/email-sent', res.locals.queryParams, {
+            emailSentSuccess,
+          }),
         );
       } else {
         throw new ApiError({ message: GenericErrors.DEFAULT, status: 500 });
@@ -133,7 +128,7 @@ router.post(
 
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
-      const html = renderer(`${Routes.REGISTRATION}${Routes.EMAIL_SENT}`, {
+      const html = renderer('/register/email-sent', {
         pageTitle: PageTitle.REGISTRATION_EMAIL_SENT,
         requestState: deepmerge(res.locals, {
           globalMessage: {
@@ -147,7 +142,7 @@ router.post(
 );
 
 router.post(
-  Routes.REGISTRATION,
+  '/register',
   recaptcha.middleware.verify,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
@@ -215,10 +210,7 @@ router.post(
       // redirect the user to the email sent page
       return res.redirect(
         303,
-        addQueryParamsToPath(
-          `${Routes.REGISTRATION}${Routes.EMAIL_SENT}`,
-          res.locals.queryParams,
-        ),
+        addQueryParamsToPath('/register/email-sent', res.locals.queryParams),
       );
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
@@ -238,7 +230,7 @@ router.post(
         },
       });
 
-      const html = renderer(Routes.REGISTRATION, {
+      const html = renderer('/register', {
         requestState: state,
         pageTitle: PageTitle.REGISTRATION,
       });

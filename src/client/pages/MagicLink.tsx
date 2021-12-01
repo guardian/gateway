@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes } from '@/shared/model/Routes';
+
 import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import {
@@ -21,7 +21,7 @@ export const MagicLink = ({ email }: Props) => (
       We can email you a one time link to sign into your account
     </MainBodyText>
     <MainForm
-      formAction={buildUrl(Routes.MAGIC_LINK)}
+      formAction={buildUrl('/magic-link')}
       submitButtonText="Email me a link"
     >
       <EmailInput defaultValue={email} />

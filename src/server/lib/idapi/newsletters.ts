@@ -9,7 +9,6 @@ import { NewslettersErrors } from '@/shared/model/Errors';
 import { NewsLetter, NewsletterPatch } from '@/shared/model/Newsletter';
 import { logger } from '@/server/lib/logger';
 import { IdapiError } from '@/server/models/Error';
-import { ApiRoutes } from '@/shared/model/Routes';
 
 interface NewsletterAPIResponse {
   id: string;
@@ -41,15 +40,12 @@ export const read = async (): Promise<NewsLetter[]> => {
   try {
     return (
       (await idapiFetch({
-        path: ApiRoutes.NEWSLETTERS,
+        path: '/newsletters',
         options,
       })) as NewsletterAPIResponse[]
     ).map(responseToEntity);
   } catch (error) {
-    logger.error(
-      `IDAPI Error newsletters read ${ApiRoutes.NEWSLETTERS}`,
-      error,
-    );
+    logger.error(`IDAPI Error newsletters read '/newsletters'`, error);
     return handleError();
   }
 };
@@ -66,13 +62,13 @@ export const update = async (
 
   try {
     await idapiFetch({
-      path: `${ApiRoutes.USERS}${ApiRoutes.ME}${ApiRoutes.NEWSLETTERS}`,
+      path: '/users/me/newsletters',
       options,
     });
     return;
   } catch (error) {
     logger.error(
-      `IDAPI Error newsletters update ${ApiRoutes.USERS}${ApiRoutes.ME}${ApiRoutes.NEWSLETTERS}`,
+      `IDAPI Error newsletters update '/users/me/newsletters'`,
       error,
     );
     return handleError();
@@ -92,13 +88,13 @@ export const readUserNewsletters = async (ip: string, sc_gu_u: string) => {
   try {
     return (
       await idapiFetch({
-        path: `${ApiRoutes.USERS}${ApiRoutes.ME}${ApiRoutes.NEWSLETTERS}`,
+        path: '/users/me/newsletters',
         options,
       })
     ).result.subscriptions.map((s: Subscription) => s.listId.toString());
   } catch (error) {
     logger.error(
-      `IDAPI Error readUserNewsletters ${ApiRoutes.USERS}${ApiRoutes.ME}${ApiRoutes.NEWSLETTERS}`,
+      `IDAPI Error readUserNewsletters '/users/me/newsletters'`,
       error,
     );
     return handleError();

@@ -5,7 +5,6 @@ import {
   APIPostOptions,
   IDAPIError,
 } from '@/server/lib/IDAPIFetch';
-import { ApiRoutes } from '@/shared/model/Routes';
 import {
   IdapiErrorMessages,
   ChangePasswordErrors,
@@ -53,7 +52,7 @@ export async function validate(
 
   try {
     const result = await idapiFetch({
-      path: ApiRoutes.CHANGE_PASSWORD_TOKEN_VALIDATION,
+      path: '/pwd-reset/send-password-reset-email',
       options: APIAddClientAccessToken(options, ip),
       queryParams: params,
     });
@@ -64,7 +63,7 @@ export async function validate(
     };
   } catch (error) {
     logger.error(
-      `IDAPI Error changePassword validate ${ApiRoutes.CHANGE_PASSWORD_TOKEN_VALIDATION}`,
+      `IDAPI Error changePassword validate '/pwd-reset/send-password-reset-email'`,
       error,
     );
     return handleError(error as IDAPIError);
@@ -80,13 +79,13 @@ export async function change(password: string, token: string, ip: string) {
 
   try {
     const result = await idapiFetch({
-      path: ApiRoutes.CHANGE_PASSWORD,
+      path: '/pwd-reset/reset-pwd-for-user',
       options: APIAddClientAccessToken(options, ip),
     });
     return result.cookies;
   } catch (error) {
     logger.error(
-      `IDAPI Error changePassword change ${ApiRoutes.CHANGE_PASSWORD}`,
+      `IDAPI Error changePassword change '/pwd-reset/reset-pwd-for-user'`,
       error,
     );
     handleError(error as IDAPIError);

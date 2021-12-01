@@ -36,7 +36,7 @@ Here's an example of a route, with a component it will render inside that route:
 
 ```tsx
 ...
-  <Route exact path={Routes.RESET_RESEND}>
+  <Route exact path={'/reset'}>
     <ResendPasswordPage />
   </Route>
 ...
