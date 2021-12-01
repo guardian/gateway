@@ -226,26 +226,6 @@ describe('Welcome and set password page', () => {
       cy.contains('Check your email inbox');
     });
 
-    it('fails to resend email if reCAPTCHA check is unsuccessful', () => {
-      cy.visit(`/welcome/resend`);
-
-      cy.mockNext(200);
-
-      cy.get('input[name="email"]').type(
-        checkTokenSuccessResponse().user.primaryEmailAddress,
-      );
-
-      cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
-        statusCode: 500,
-      });
-      cy.get('button[type="submit"]').click();
-      cy.contains('Google reCAPTCHA verification failed. Please try again.');
-      cy.get('button[type="submit"]').click();
-      cy.contains('Google reCAPTCHA verification failed.');
-      cy.contains('If the problem persists please try the following:');
-      cy.contains('userhelp@');
-    });
-
     it('takes user back to link expired page if "Change email address" clicked', () => {
       cy.visit(`/welcome/resend`);
 

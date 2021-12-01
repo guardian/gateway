@@ -8,7 +8,6 @@ import {
   MultipleInputFields,
 } from '../components/MainForm.stories';
 import { Paragraphs } from '../components/MainBodyText.stories';
-import { DetailedRecaptchaError } from '../components/DetailedRecaptchaError';
 
 export default {
   title: 'Layout/Main',
@@ -50,15 +49,6 @@ export const WithError = () => (
   </MainLayout>
 );
 WithError.storyName = 'with Error';
-
-export const WithErrorContext = () => (
-  <MainLayout
-    errorOverride="Error message"
-    errorContext={<DetailedRecaptchaError />}
-  >
-    <Paragraphs />
-  </MainLayout>
-);
 
 export const WithSuccess = () => (
   <MainLayout successOverride="Success message">

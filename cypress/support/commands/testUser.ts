@@ -77,6 +77,7 @@ export const createTestUser = ({
         } as IDAPITestUserOptions,
       })
       .then((res) => {
+        console.log(res.body.values);
         return cy.wrap({
           emailAddress: finalEmail,
           cookies: res.body.values as IDAPITestUserResponse,

@@ -1,22 +1,21 @@
+import { Request, Router } from 'express';
+import { Routes } from '@/shared/model/Routes';
+import { renderer } from '@/server/lib/renderer';
+import { ResponseWithRequestState } from '@/server/models/Express';
+import { PageTitle } from '@/shared/model/PageTitle';
 import {
   checkResetPasswordTokenController,
   setPasswordTokenController,
 } from '@/server/controllers/changePassword';
-import { readEmailCookie } from '@/server/lib/emailCookie';
-import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { sendCreatePasswordEmail } from '@/server/lib/idapi/user';
-import { logger } from '@/server/lib/logger';
-import handleRecaptcha from '@/server/lib/recaptcha';
-import { renderer } from '@/server/lib/renderer';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { EmailType } from '@/shared/model/EmailType';
-import { ResetPasswordErrors } from '@/shared/model/Errors';
-import { PageTitle } from '@/shared/model/PageTitle';
-import { Routes } from '@/shared/model/Routes';
 import deepmerge from 'deepmerge';
-import { Request, Router } from 'express';
+import { logger } from '@/server/lib/logger';
+import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
+import { EmailType } from '@/shared/model/EmailType';
+import { sendCreatePasswordEmail } from '@/server/lib/idapi/user';
+import { readEmailCookie } from '@/server/lib/emailCookie';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { ResetPasswordErrors } from '@/shared/model/Errors';
 import { ApiError } from '../models/Error';
 
 const router = Router();
@@ -66,7 +65,6 @@ router.get(
 // POST handler for resending "create (set) password" email
 router.post(
   `${Routes.SET_PASSWORD}${Routes.RESEND}`,
-  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { email } = req.body;
     const { returnUrl, emailSentSuccess } = res.locals.queryParams;

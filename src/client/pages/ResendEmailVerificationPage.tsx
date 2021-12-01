@@ -7,17 +7,13 @@ export const ResendEmailVerificationPage = () => {
   const {
     globalMessage: { success } = {},
     pageData: { email, signInPageUrl } = {},
-    recaptchaConfig,
   } = useContext<ClientState>(ClientStateContext);
-
-  const { recaptchaSiteKey } = recaptchaConfig;
 
   return (
     <ResendEmailVerification
       email={email}
       signInPageUrl={signInPageUrl}
       successText={success}
-      recaptchaSiteKey={recaptchaSiteKey}
     />
   );
 };

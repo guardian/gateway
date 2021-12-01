@@ -21,7 +21,6 @@ interface MainLayoutProps {
   pageTitle?: string;
   successOverride?: string;
   errorOverride?: string;
-  errorContext?: React.ReactNode;
 }
 
 const mainStyles = css`
@@ -128,7 +127,6 @@ export const MainLayout = ({
   pageTitle,
   successOverride,
   errorOverride,
-  errorContext,
 }: PropsWithChildren<MainLayoutProps>) => {
   const clientState: ClientState = useContext(ClientStateContext);
   const {
@@ -148,11 +146,7 @@ export const MainLayout = ({
       <main css={[mainStyles, gridRow]}>
         <section css={gridItem(gridSpanDefinition)}>
           {errorMessage && (
-            <ErrorSummary
-              cssOverrides={summaryStyles}
-              message={errorMessage}
-              context={errorContext}
-            />
+            <ErrorSummary cssOverrides={summaryStyles} message={errorMessage} />
           )}
           {successMessage && !errorMessage && (
             <SuccessSummary

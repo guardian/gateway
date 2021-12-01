@@ -13,7 +13,6 @@ describe('getPersistableQueryParams', () => {
       returnUrl: 'returnUrl',
       clientId: 'clientId',
       csrfError: true,
-      recaptchaError: true,
       emailVerified: true,
       encryptedEmail: 'encryptedEmail',
       error: 'error',
@@ -40,7 +39,6 @@ describe('addQueryParamsToPath', () => {
       returnUrl: 'returnUrl',
       clientId: 'clientId',
       csrfError: true,
-      recaptchaError: true,
       emailVerified: true,
       encryptedEmail: 'encryptedEmail',
       error: 'error',
@@ -60,7 +58,6 @@ describe('addQueryParamsToPath', () => {
       returnUrl: 'returnUrl',
       clientId: 'clientId',
       csrfError: true,
-      recaptchaError: true,
       emailVerified: true,
       encryptedEmail: 'encryptedEmail',
       error: 'error',
@@ -80,7 +77,6 @@ describe('addQueryParamsToPath', () => {
       returnUrl: 'returnUrl',
       clientId: 'clientId',
       csrfError: false,
-      recaptchaError: false,
       emailVerified: true,
       encryptedEmail: 'encryptedEmail',
       error: 'error',
@@ -90,14 +86,13 @@ describe('addQueryParamsToPath', () => {
 
     const inputOverride: Partial<QueryParams> = {
       csrfError: true,
-      recaptchaError: true,
       encryptedEmail: 'an encrypted email',
     };
 
     const output = addQueryParamsToPath('/test', input, inputOverride);
 
     expect(output).toEqual(
-      '/test?clientId=clientId&csrfError=true&encryptedEmail=an%20encrypted%20email&recaptchaError=true&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
+      '/test?clientId=clientId&csrfError=true&encryptedEmail=an%20encrypted%20email&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
     );
   });
 
@@ -106,7 +101,6 @@ describe('addQueryParamsToPath', () => {
       returnUrl: 'returnUrl',
       clientId: 'clientId',
       csrfError: false,
-      recaptchaError: false,
       emailVerified: true,
       encryptedEmail: 'encryptedEmail',
       error: 'error',
@@ -116,14 +110,13 @@ describe('addQueryParamsToPath', () => {
 
     const inputOverride: Partial<QueryParams> = {
       csrfError: true,
-      recaptchaError: true,
       encryptedEmail: 'an encrypted email',
     };
 
     const output = addQueryParamsToPath('/test?foo=bar', input, inputOverride);
 
     expect(output).toEqual(
-      '/test?foo=bar&clientId=clientId&csrfError=true&encryptedEmail=an%20encrypted%20email&recaptchaError=true&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
+      '/test?foo=bar&clientId=clientId&csrfError=true&encryptedEmail=an%20encrypted%20email&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
     );
   });
 });
