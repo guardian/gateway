@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import {
   Button,
   SvgCross,
@@ -32,6 +32,9 @@ type Props = {
   labelText: string;
   // for grid layout on consents page
   gridAutoRow?: AutoRow;
+  recaptchaSiteKey?: string;
+  setRecaptchaErrorMessage?: React.Dispatch<React.SetStateAction<string>>;
+  setRecaptchaErrorContext?: React.Dispatch<React.SetStateAction<ReactNode>>;
 };
 
 const baseIconStyles = css`
@@ -310,6 +313,9 @@ export const PasswordFormMainLayout = ({
   fieldErrors,
   submitButtonText,
   labelText,
+  recaptchaSiteKey,
+  setRecaptchaErrorMessage,
+  setRecaptchaErrorContext,
 }: Props) => {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | undefined>(
@@ -362,6 +368,9 @@ export const PasswordFormMainLayout = ({
           e.preventDefault();
         }
       }}
+      recaptchaSiteKey={recaptchaSiteKey}
+      setRecaptchaErrorMessage={setRecaptchaErrorMessage}
+      setRecaptchaErrorContext={setRecaptchaErrorContext}
     >
       <div css={error ? undefined : passwordInput}>
         <PasswordInput

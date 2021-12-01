@@ -8,7 +8,13 @@ import { buildUrl } from '@/shared/lib/routeUtils';
 
 export const SetPasswordResendPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData: { email = '' } = {}, queryParams } = clientState;
+  const {
+    pageData: { email = '' } = {},
+    queryParams,
+    recaptchaConfig,
+  } = clientState;
+
+  const { recaptchaSiteKey } = recaptchaConfig;
 
   return (
     <ResetPassword
@@ -19,6 +25,7 @@ export const SetPasswordResendPage = () => {
       queryString={queryParams}
       emailInputLabel="Email address"
       showRecentEmailSummary
+      recaptchaSiteKey={recaptchaSiteKey}
     >
       <MainBodyText>This link has expired.</MainBodyText>
       <MainBodyText>

@@ -10,7 +10,7 @@ import {
 type Props = { children: React.ReactNode; href: string };
 
 export const Button = ({ children, href }: Props) => (
-  <MjmlSection background-color={background.primary} padding="0 12px">
+  <MjmlSection background-color={background.primary} padding="0 24px">
     <MjmlColumn>
       <MjmlButton
         backgroundColor={brandBackground.primary}
@@ -18,7 +18,7 @@ export const Button = ({ children, href }: Props) => (
         borderRadius="24px"
         href={href}
         align="left"
-        padding="22px 0 48px 0"
+        padding="22px 0 32px 0"
         fontFamily="Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif"
         fontWeight={700}
         fontSize="17px"

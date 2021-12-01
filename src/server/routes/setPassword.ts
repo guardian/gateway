@@ -1,24 +1,24 @@
-import { Request } from 'express';
-
-import { buildUrl } from '@/shared/lib/routeUtils';
 import { typedRouter as router } from '@/server/lib/typedRoutes';
-import { renderer } from '@/server/lib/renderer';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import { PageTitle } from '@/shared/model/PageTitle';
 import {
   checkResetPasswordTokenController,
   setPasswordTokenController,
 } from '@/server/controllers/changePassword';
-import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import deepmerge from 'deepmerge';
-import { logger } from '@/server/lib/logger';
-import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
-import { EmailType } from '@/shared/model/EmailType';
-import { sendCreatePasswordEmail } from '@/server/lib/idapi/user';
 import { readEmailCookie } from '@/server/lib/emailCookie';
+import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
+import { handleAsyncErrors } from '@/server/lib/expressWrappers';
+import { sendCreatePasswordEmail } from '@/server/lib/idapi/user';
+import { logger } from '@/server/lib/logger';
+import handleRecaptcha from '@/server/lib/recaptcha';
+import { renderer } from '@/server/lib/renderer';
+import { ResponseWithRequestState } from '@/server/models/Express';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { EmailType } from '@/shared/model/EmailType';
 import { ResetPasswordErrors } from '@/shared/model/Errors';
+import { PageTitle } from '@/shared/model/PageTitle';
+import deepmerge from 'deepmerge';
+import { Request } from 'express';
 import { ApiError } from '../models/Error';
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 // set password complete page
 router.get(
@@ -65,6 +65,7 @@ router.get(
 // POST handler for resending "create (set) password" email
 router.post(
   '/set-password/resend',
+  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { email } = req.body;
     const { returnUrl, emailSentSuccess } = res.locals.queryParams;

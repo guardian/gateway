@@ -14,23 +14,33 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { decrypt } from '@/server/lib/idapi/decryptToken';
 import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
 import { ApiError } from '@/server/models/Error';
-import { RoutePaths } from '@/shared/lib/routeUtils';
 import { typedRouter as router } from '@/server/lib/typedRoutes';
+import { readEmailCookie } from '../lib/emailCookie';
 
-const preFillEmailField = (route: RoutePaths) =>
+router.get(
+  '/signin',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
     const { encryptedEmail, error } = state.queryParams;
-    const email = encryptedEmail ? await decrypt(encryptedEmail, req.ip) : '';
+
+    // first attempt to get email from IDAPI encryptedEmail if it exists
+    const decryptedEmail =
+      encryptedEmail && (await decrypt(encryptedEmail, req.ip));
+
+    // followed by the gateway EncryptedState
+    // and the identity-frontend playSessionCookie
+    // if it exists
+    const email = decryptedEmail || readEmailCookie(req);
+
     const errorMessage =
       error === FederationErrors.SOCIAL_SIGNIN_BLOCKED
         ? SignInErrors.ACCOUNT_ALREADY_EXISTS
         : '';
 
-    const html = renderer(route, {
+    const html = renderer('/signin', {
       requestState: deepmerge(state, {
         pageData: {
-          email: email,
+          email,
         },
         globalMessage: {
           error: errorMessage,
@@ -39,9 +49,8 @@ const preFillEmailField = (route: RoutePaths) =>
       pageTitle: PageTitle.SIGN_IN,
     });
     res.type('html').send(html);
-  });
-
-router.get('/signin', preFillEmailField('/signin'));
+  }),
+);
 
 router.post(
   '/signin',
@@ -71,6 +80,9 @@ router.post(
         requestState: deepmerge(res.locals, {
           globalMessage: {
             error: message,
+          },
+          pageData: {
+            email,
           },
         }),
         pageTitle: PageTitle.SIGN_IN,

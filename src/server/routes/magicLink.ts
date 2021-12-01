@@ -11,6 +11,7 @@ import { PageTitle } from '@/shared/model/PageTitle';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { ApiError } from '@/server/models/Error';
+import handleRecaptcha from '@/server/lib/recaptcha';
 
 router.get('/magic-link', (req: Request, res: ResponseWithRequestState) => {
   const html = renderer('/magic-link', {
@@ -22,6 +23,7 @@ router.get('/magic-link', (req: Request, res: ResponseWithRequestState) => {
 
 router.post(
   '/magic-link',
+  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 

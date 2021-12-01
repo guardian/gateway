@@ -13,6 +13,7 @@ describe('getPersistableQueryParams', () => {
       returnUrl: 'returnUrl',
       clientId: 'clientId',
       csrfError: true,
+      recaptchaError: true,
       emailVerified: true,
       encryptedEmail: 'encryptedEmail',
       error: 'error',
@@ -39,6 +40,7 @@ describe('addQueryParamsToPath', () => {
       returnUrl: 'returnUrl',
       clientId: 'clientId',
       csrfError: true,
+      recaptchaError: true,
       emailVerified: true,
       encryptedEmail: 'encryptedEmail',
       error: 'error',
@@ -58,6 +60,7 @@ describe('addQueryParamsToPath', () => {
       returnUrl: 'returnUrl',
       clientId: 'clientId',
       csrfError: false,
+      recaptchaError: false,
       emailVerified: true,
       encryptedEmail: 'encryptedEmail',
       error: 'error',
@@ -67,13 +70,14 @@ describe('addQueryParamsToPath', () => {
 
     const inputOverride: Partial<QueryParams> = {
       csrfError: true,
+      recaptchaError: true,
       encryptedEmail: 'an encrypted email',
     };
 
     const output = addQueryParamsToPath('/newsletters', input, inputOverride);
 
     expect(output).toEqual(
-      '/newsletters?clientId=clientId&csrfError=true&encryptedEmail=an%20encrypted%20email&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
+      '/newsletters?clientId=clientId&csrfError=true&encryptedEmail=an%20encrypted%20email&recaptchaError=true&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
     );
   });
 });

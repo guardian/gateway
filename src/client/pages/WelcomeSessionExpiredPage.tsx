@@ -8,7 +8,13 @@ import { buildUrl } from '@/shared/lib/routeUtils';
 
 export const WelcomeSessionExpiredPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData: { email = '' } = {}, queryParams } = clientState;
+  const {
+    pageData: { email = '' } = {},
+    queryParams,
+    recaptchaConfig,
+  } = clientState;
+
+  const { recaptchaSiteKey } = recaptchaConfig;
 
   return (
     <ResetPassword
@@ -18,6 +24,7 @@ export const WelcomeSessionExpiredPage = () => {
       formActionOverride={buildUrl('/welcome/resend')}
       queryString={queryParams}
       emailInputLabel="Email address"
+      recaptchaSiteKey={recaptchaSiteKey}
     >
       <MainBodyText>
         The link we sent you was valid for 30 minutes and it has now expired.

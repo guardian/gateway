@@ -15,6 +15,7 @@ import { ResetPasswordErrors } from '@/shared/model/Errors';
 import { ApiError } from '@/server/models/Error';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { typedRouter as router } from '@/server/lib/typedRoutes';
+import handleRecaptcha from '@/server/lib/recaptcha';
 
 router.get('/reset', (req: Request, res: ResponseWithRequestState) => {
   let state = res.locals;
@@ -37,6 +38,7 @@ router.get('/reset', (req: Request, res: ResponseWithRequestState) => {
 
 router.post(
   '/reset',
+  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 

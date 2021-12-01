@@ -1,25 +1,24 @@
-import { Request, Router } from 'express';
-import deepmerge from 'deepmerge';
-import { ResponseWithRequestState } from '@/server/models/Express';
-
-import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { logger } from '@/server/lib/logger';
-import { renderer } from '@/server/lib/renderer';
-import { PageTitle } from '@/shared/model/PageTitle';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { consentPages } from '@/server/routes/consents';
-import { sendAccountVerificationEmail } from '@/server/lib/idapi/user';
 import {
   checkResetPasswordTokenController,
   setPasswordTokenController,
 } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
-import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
+import { handleAsyncErrors } from '@/server/lib/expressWrappers';
+import { sendAccountVerificationEmail } from '@/server/lib/idapi/user';
+import { logger } from '@/server/lib/logger';
+import handleRecaptcha from '@/server/lib/recaptcha';
+import { renderer } from '@/server/lib/renderer';
 import { ApiError } from '@/server/models/Error';
 import { buildUrl } from '@/shared/lib/routeUtils';
+import { ResponseWithRequestState } from '@/server/models/Express';
+import { consentPages } from '@/server/routes/consents';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { PageTitle } from '@/shared/model/PageTitle';
+import deepmerge from 'deepmerge';
+import { Request, Router } from 'express';
+import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
 
 const router = Router();
-
 // resend account verification page
 router.get('/welcome/resend', (_: Request, res: ResponseWithRequestState) => {
   const html = renderer('/welcome/resend', {
@@ -41,6 +40,7 @@ router.get('/welcome/expired', (_: Request, res: ResponseWithRequestState) => {
 // POST form handler to resend account verification email
 router.post(
   '/welcome/resend',
+  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { email } = req.body;
     const { returnUrl, emailSentSuccess } = res.locals.queryParams;

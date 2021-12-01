@@ -18,3 +18,10 @@ export const Email = () => <MagicLink email="example@theguardian.com" />;
 Email.story = {
   name: 'with email',
 };
+
+export const RecaptchaError = () => (
+  <MagicLink recaptchaSiteKey="invalid-key" />
+);
+RecaptchaError.story = {
+  name: 'with reCAPTCHA error',
+};
