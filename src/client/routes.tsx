@@ -18,7 +18,7 @@ import { Routes } from '@/shared/model/Routes';
 import { SignInPage } from '@/client/pages/SignInPage';
 import { MagicLinkPage } from '@/client/pages/MagicLinkPage';
 import { WelcomePage } from '@/client/pages/WelcomePage';
-import { WelcomeResendPage } from '@/client/pages/WelcomeResend';
+import { WelcomeResendPage } from '@/client/pages/WelcomeResendPage';
 import { WelcomePasswordAlreadySetPage } from '@/client/pages/WelcomePasswordAlreadySetPage';
 import { RegistrationEmailSentPage } from '@/client/pages/RegistrationEmailSentPage';
 import { ResetPasswordSessionExpiredPage } from '@/client/pages/ResetPasswordSessionExpiredPage';

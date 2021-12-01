@@ -10,6 +10,8 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { ApiError } from '@/server/models/Error';
 
+import handleRecaptcha from '@/server/lib/recaptcha';
+
 const router = Router();
 
 router.get(Routes.MAGIC_LINK, (req: Request, res: ResponseWithRequestState) => {
@@ -22,6 +24,7 @@ router.get(Routes.MAGIC_LINK, (req: Request, res: ResponseWithRequestState) => {
 
 router.post(
   Routes.MAGIC_LINK,
+  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
