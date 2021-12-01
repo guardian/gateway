@@ -11,11 +11,12 @@ import { addApiQueryParamsToPath, addQueryParamsToPath } from './queryParams';
  */
 export type RoutePaths =
   | '/signin'
-  | '/signin/complete'
   | '/register'
   | '/register/email-sent'
   | '/register/email-sent/resend'
-  | '/register/resend'
+  /**
+   *  Lines 20-27 are for legacy reasons and could be refactored
+   * */
   | '/reset'
   | '/reset/email-sent'
   | '/reset/complete'
@@ -42,9 +43,9 @@ export type RoutePaths =
   | '/welcome/email-sent'
   | '/welcome/complete'
   | '/welcome/:token'
-  | '/verify-email'
-  | '/magic-link'
-  | '/magic-link/email-sent'
+  | '/verify-email' //this can be removed once Jobs has been migrated
+  | '/magic-link' //this is not being used until MVP4
+  | '/magic-link/email-sent' //this is not being used until MVP4
   | '/error'
   | '/404';
 
