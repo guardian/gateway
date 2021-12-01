@@ -11,10 +11,16 @@ interface Props {
 
 export const EmailSentPage = ({ noAccountInfoBox, helpInfoBox }: Props) => {
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData = {}, queryParams, globalMessage = {} } = clientState;
+  const {
+    pageData = {},
+    queryParams,
+    globalMessage = {},
+    recaptchaConfig,
+  } = clientState;
   const { email, previousPage } = pageData;
   const { emailSentSuccess } = queryParams;
   const { error } = globalMessage;
+  const { recaptchaSiteKey } = recaptchaConfig;
 
   const queryString = addQueryParamsToPath('', queryParams, {
     emailSentSuccess: true,
@@ -30,6 +36,7 @@ export const EmailSentPage = ({ noAccountInfoBox, helpInfoBox }: Props) => {
       errorMessage={error}
       noAccountInfoBox={noAccountInfoBox}
       helpInfoBox={helpInfoBox}
+      recaptchaSiteKey={recaptchaSiteKey}
     />
   );
 };

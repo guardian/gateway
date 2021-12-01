@@ -8,11 +8,12 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { RoutingConfig } from '@/client/routes';
 import { getAssets } from '@/server/lib/getAssets';
 import { RequestState } from '@/server/models/Express';
-import { CsrfErrors } from '@/shared/model/Errors';
+import { CaptchaErrors, CsrfErrors } from '@/shared/model/Errors';
 import { ABProvider } from '@guardian/ab-react';
 import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
 import { brandBackground, resets } from '@guardian/source-foundations';
+import deepmerge from 'deepmerge';
 
 const assets = getAssets();
 const legacyAssets = getAssets(true);
@@ -67,9 +68,19 @@ const clientStateFromRequestStateLocals = ({
         fieldErrors,
       },
     };
-  } else {
-    return clientState;
   }
+
+  // checking if recaptcha error exists in query params, and attaching it to the
+  // forms field errors
+  if (queryParams.recaptchaError) {
+    return deepmerge(clientState, {
+      globalMessage: {
+        error: CaptchaErrors.GENERIC,
+      },
+    });
+  }
+
+  return clientState;
 };
 
 export const renderer: (url: string, opts: RendererOpts) => string = (

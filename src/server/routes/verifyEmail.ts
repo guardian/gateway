@@ -1,26 +1,27 @@
-import { Router, Request } from 'express';
-import deepmerge from 'deepmerge';
-import { Routes } from '@/shared/model/Routes';
+import { handleAsyncErrors } from '@/server/lib/expressWrappers';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { getProfileUrl } from '@/server/lib/getProfileUrl';
+import { read as getUser } from '@/server/lib/idapi/user';
 import {
   send as sendVerificationEmail,
   verifyEmail,
 } from '@/server/lib/idapi/verifyEmail';
-import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
-import { consentPages } from '@/server/routes/consents';
-import { read as getUser } from '@/server/lib/idapi/user';
-import { ConsentsErrors, VerifyEmailErrors } from '@/shared/model/Errors';
-import { getConfiguration } from '@/server/lib/getConfiguration';
-import { getProfileUrl } from '@/server/lib/getProfileUrl';
+import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { Metrics } from '@/server/models/Metrics';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { PageTitle } from '@/shared/model/PageTitle';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { EMAIL_SENT } from '@/shared/model/Success';
 import { ApiError } from '@/server/models/Error';
+import { ResponseWithRequestState } from '@/server/models/Express';
+import { Metrics } from '@/server/models/Metrics';
+import { consentPages } from '@/server/routes/consents';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { ConsentsErrors, VerifyEmailErrors } from '@/shared/model/Errors';
+import { PageTitle } from '@/shared/model/PageTitle';
+import { Routes } from '@/shared/model/Routes';
+import { EMAIL_SENT } from '@/shared/model/Success';
+import deepmerge from 'deepmerge';
+import { Request, Router } from 'express';
+import handleRecaptcha from '@/server/lib/recaptcha';
 
 const router = Router();
 
@@ -85,6 +86,7 @@ router.get(
 
 router.post(
   Routes.VERIFY_EMAIL,
+  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
     let status = 200;

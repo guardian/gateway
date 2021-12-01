@@ -8,7 +8,7 @@ import { brandBackground } from '@guardian/source-foundations';
 export const Header = () => (
   <MjmlSection
     background-color={brandBackground.primary}
-    padding="0 12px"
+    padding="0 24px"
     fullWidth
   >
     <MjmlColumn>

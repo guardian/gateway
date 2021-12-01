@@ -1,43 +1,37 @@
-import { Request, Router } from 'express';
-import {
-  readUserType,
-  sendAccountExistsEmail,
-  sendAccountWithoutPasswordExistsEmail,
-  sendAccountVerificationEmail,
-  UserType,
-} from '@/server/lib/idapi/user';
-import { logger } from '@/server/lib/logger';
-import { renderer } from '@/server/lib/renderer';
-import { Routes } from '@/shared/model/Routes';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import { trackMetric } from '@/server/lib/trackMetric';
-import { Metrics } from '@/server/models/Metrics';
-import { PageTitle } from '@/shared/model/PageTitle';
-import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import deepmerge from 'deepmerge';
-import { getEmailFromPlaySessionCookie } from '@/server/lib/playSessionCookie';
-import { guest } from '@/server/lib/idapi/guest';
-import { RecaptchaV2 } from 'express-recaptcha';
-import { getConfiguration } from '@/server/lib/getConfiguration';
-import { CaptchaErrors, GenericErrors } from '@/shared/model/Errors';
+import handleRecaptcha from '@/server//lib/recaptcha';
 import {
   readEncryptedStateCookie,
   setEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
-import { EmailType } from '@/shared/model/EmailType';
-import { ApiError } from '@/server/models/Error';
+import { handleAsyncErrors } from '@/server/lib/expressWrappers';
+import { guest } from '@/server/lib/idapi/guest';
+import {
+  readUserType,
+  sendAccountExistsEmail,
+  sendAccountVerificationEmail,
+  sendAccountWithoutPasswordExistsEmail,
+  UserType,
+} from '@/server/lib/idapi/user';
+import { logger } from '@/server/lib/logger';
 import { registerWithOkta } from '@/server/lib/okta/registration';
+import { getEmailFromPlaySessionCookie } from '@/server/lib/playSessionCookie';
+import { renderer } from '@/server/lib/renderer';
+import { trackMetric } from '@/server/lib/trackMetric';
+import { ApiError } from '@/server/models/Error';
+import { ResponseWithRequestState } from '@/server/models/Express';
+import { Metrics } from '@/server/models/Metrics';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { EmailType } from '@/shared/model/EmailType';
+import { GenericErrors } from '@/shared/model/Errors';
+import { PageTitle } from '@/shared/model/PageTitle';
+import { Routes } from '@/shared/model/Routes';
+import deepmerge from 'deepmerge';
+import { Request, Router } from 'express';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 
 const router = Router();
 
-const {
-  googleRecaptcha: { secretKey, siteKey },
-  okta,
-} = getConfiguration();
-
-// set google recaptcha site key
-const recaptcha = new RecaptchaV2(siteKey, secretKey);
+const { okta } = getConfiguration();
 
 router.get(
   Routes.REGISTRATION,
@@ -70,6 +64,7 @@ router.get(
 
 router.post(
   `${Routes.REGISTRATION}${Routes.EMAIL_SENT}${Routes.RESEND}`,
+  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { returnUrl, emailSentSuccess } = res.locals.queryParams;
 
@@ -149,7 +144,7 @@ router.post(
 
 router.post(
   Routes.REGISTRATION,
-  recaptcha.middleware.verify,
+  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
@@ -157,17 +152,6 @@ router.post(
     const { returnUrl, ref, refViewId } = state.queryParams;
 
     try {
-      if (req.recaptcha?.error) {
-        logger.error(
-          'Problem verifying recaptcha, error response: ',
-          req.recaptcha.error,
-        );
-        throw new ApiError({
-          message: CaptchaErrors.GENERIC,
-          status: 400,
-        });
-      }
-
       // use idapi user type endpoint to determine user type
       const userType = await readUserType(email, req.ip);
 
@@ -237,7 +221,6 @@ router.post(
         },
         pageData: {
           email,
-          recaptchaSiteKey: siteKey,
         },
       });
 
