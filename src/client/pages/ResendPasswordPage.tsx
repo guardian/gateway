@@ -7,9 +7,14 @@ import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 export const ResendPasswordPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData: { email = '' } = {}, queryParams } = clientState;
+  const {
+    pageData: { email = '' } = {},
+    queryParams,
+    recaptchaConfig,
+  } = clientState;
 
   const queryString = addQueryParamsToPath('', queryParams);
+  const { recaptchaSiteKey } = recaptchaConfig;
 
   return (
     <ResetPassword
@@ -19,6 +24,7 @@ export const ResendPasswordPage = () => {
       queryString={queryString}
       emailInputLabel="Email address"
       showRecentEmailSummary
+      recaptchaSiteKey={recaptchaSiteKey}
     >
       <MainBodyText>This link has expired.</MainBodyText>
       <MainBodyText>

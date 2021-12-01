@@ -32,6 +32,7 @@ export interface QueryParams
   // only if the email is resent from the email sent page
   emailSentSuccess?: boolean;
   csrfError?: boolean;
+  recaptchaError?: boolean;
   encryptedEmail?: string;
   error?: string;
 }

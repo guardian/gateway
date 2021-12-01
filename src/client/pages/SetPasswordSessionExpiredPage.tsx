@@ -8,9 +8,14 @@ import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 export const SetPasswordSessionExpiredPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData: { email = '' } = {}, queryParams } = clientState;
+  const {
+    pageData: { email = '' } = {},
+    queryParams,
+    recaptchaConfig,
+  } = clientState;
 
   const queryString = addQueryParamsToPath('', queryParams);
+  const { recaptchaSiteKey } = recaptchaConfig;
 
   return (
     <ResetPassword
@@ -20,6 +25,7 @@ export const SetPasswordSessionExpiredPage = () => {
       formActionOverride={`${Routes.SET_PASSWORD}${Routes.RESEND}`}
       queryString={queryString}
       emailInputLabel="Email address"
+      recaptchaSiteKey={recaptchaSiteKey}
     >
       <MainBodyText>
         The link we sent you was valid for 30 minutes and it has now expired.
