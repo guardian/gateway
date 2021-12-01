@@ -15,7 +15,7 @@ import { ResendEmailVerificationPage } from '@/client/pages/ResendEmailVerificat
 import { UnexpectedErrorPage } from '@/client/pages/UnexpectedErrorPage';
 import { ClientState } from '@/shared/model/ClientState';
 import { Routes } from '@/shared/model/Routes';
-import { RoutePathsAll } from '@/shared/lib/routeUtils';
+import { RoutePaths } from '@/shared/lib/routeUtils';
 import { SignInPage } from '@/client/pages/SignInPage';
 import { MagicLinkPage } from '@/client/pages/MagicLinkPage';
 import { WelcomePage } from '@/client/pages/WelcomePage';
@@ -35,7 +35,7 @@ export type RoutingConfig = {
 };
 
 interface GatewayRouteProps extends RouteProps {
-  path?: RoutePathsAll;
+  path?: RoutePaths;
 }
 
 const TypedRoute = (props: GatewayRouteProps) => {

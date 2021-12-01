@@ -3,7 +3,7 @@ import {
   QueryParams,
   PersistableQueryParams,
 } from '@/shared/model/QueryParams';
-import { AllRoutes, ValidUrl } from './routeUtils';
+import { AllRoutes } from './routeUtils';
 import { IdApiQueryParams } from '../model/IdapiQueryParams';
 
 export const getPersistableQueryParams = (
@@ -27,7 +27,7 @@ export const getPersistableQueryParams = (
  */
 
 export const addQueryParamsToPath = (
-  path: AllRoutes | ValidUrl,
+  path: AllRoutes,
   params: QueryParams,
   overrides?: Partial<QueryParams>,
 ): string => {

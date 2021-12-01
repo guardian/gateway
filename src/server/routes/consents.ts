@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import deepmerge from 'deepmerge';
 import { Routes } from '@/shared/model/Routes';
 import { renderer } from '@/server/lib/renderer';
-import { RoutePathsAll } from '@/shared/lib/routeUtils';
+import { RoutePaths } from '@/shared/lib/routeUtils';
 import { typedRouter as router } from '@/server/lib/typedRoutes';
 import {
   update as patchConsents,
@@ -43,7 +43,7 @@ import { ApiError } from '@/server/models/Error';
 
 interface ConsentPage {
   page: string;
-  path: RoutePathsAll;
+  path: RoutePaths;
   read: (ip: string, sc_gu_u: string, geo?: GeoLocation) => Promise<PageData>;
   pageTitle: string;
   update?: (

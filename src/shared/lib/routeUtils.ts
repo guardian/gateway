@@ -3,7 +3,10 @@
 
 import { IdApiQueryParams } from '../model/IdapiQueryParams';
 import { QueryParams } from '../model/QueryParams';
-import { addApiQueryParamsToPath, addQueryParamsToPath } from './queryParams';
+import {
+  addApiQueryParamsToPath,
+  addQueryParamsToUntypedPath,
+} from './queryParams';
 
 /**
  * These are all the accepted url routes for this application
@@ -50,12 +53,6 @@ export type RoutePaths =
   | '/404';
 
 /**
- * RoutePathsAll is the union of the above types
- */
-
-export type RoutePathsAll = RoutePaths;
-
-/**
  * These are all valid paths for the Identity API
  * New routes should be added below
  */
@@ -81,9 +78,6 @@ export type ApiRoutePaths =
   | '/user/send-account-without-password-exists-email'
   | '/user/send-create-password-account-exists-email';
 
-export type ValidUrl = string;
-
-export type ValidApiUrl = string;
 /**
  * This is all valid routes on the site, only used for the helper function addQueryParamsToPath
  */
@@ -117,7 +111,7 @@ export type PathParams<P extends AllRoutes> = ExtractRouteParams<P>;
 export type BuildUrl = <P extends AllRoutes>(
   path: P,
   params?: ExtractRouteParams<P>,
-) => ValidUrl;
+) => string;
 /**
  * Build an url with a path and its parameters.
  * @example
@@ -131,7 +125,7 @@ export type BuildUrl = <P extends AllRoutes>(
 export const buildUrl: BuildUrl = <P extends AllRoutes>(
   path: P,
   params: PathParams<P> = <PathParams<P>>{},
-): ValidUrl => {
+): string => {
   // //Upcast `params` to be used in string replacement.
   const paramObj: { [i: string]: string } = params;
 
@@ -150,9 +144,9 @@ export const buildUrlWithQueryParams = <P extends AllRoutes>(
   path: P,
   params: PathParams<P> = <PathParams<P>>{},
   queryParams: QueryParams,
-): ValidApiUrl => {
+): string => {
   const url = buildUrl(path, params);
-  return addQueryParamsToPath(url, queryParams);
+  return addQueryParamsToUntypedPath(url, queryParams);
 };
 
 /**
@@ -165,7 +159,7 @@ export const buildApiUrlWithQueryParams = <P extends AllRoutes>(
   path: P,
   params: PathParams<P> = <PathParams<P>>{},
   queryParams: IdApiQueryParams,
-): ValidApiUrl => {
+): string => {
   const url = buildUrl(path, params);
   return addApiQueryParamsToPath(url, queryParams);
 };

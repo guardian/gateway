@@ -14,7 +14,7 @@ import { abSwitches } from '@/shared/model/experiments/abSwitches';
 import {
   buildUrlWithQueryParams,
   PathParams,
-  RoutePathsAll,
+  RoutePaths,
 } from '@/shared/lib/routeUtils';
 import { brandBackground, resets } from '@guardian/source-foundations';
 
@@ -76,7 +76,7 @@ const clientStateFromRequestStateLocals = ({
   }
 };
 
-export const renderer: <P extends RoutePathsAll>(
+export const renderer: <P extends RoutePaths>(
   url: P,
   opts: RendererOpts,
   tokenisationParams?: PathParams<P>,

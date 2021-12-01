@@ -20,8 +20,7 @@ import useRecaptcha, {
 import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
 import locations from '@/client/lib/locations';
 import { EmailInput } from '@/client/components/EmailInput';
-import { buildUrl } from '@/shared/lib/routeUtils';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { GeoLocation } from '@/shared/model/Geolocation';
 
@@ -125,8 +124,9 @@ export const Registration = ({
       >
         <form
           method="post"
-          action={addQueryParamsToPath(
-            buildUrl(`${Routes.REGISTRATION}`),
+          action={buildUrlWithQueryParams(
+            `${Routes.REGISTRATION}`,
+            {},
             queryString,
           )}
           ref={registerFormRef}

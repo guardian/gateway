@@ -16,9 +16,8 @@ import { from, textSans, border, space } from '@guardian/source-foundations';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { SignInErrors } from '@/shared/model/Errors';
 import { EmailInput } from '@/client/components/EmailInput';
-import { buildUrl } from '@/shared/lib/routeUtils';
+import { buildUrl, buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { GeoLocation } from '@/shared/model/Geolocation';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { QueryParams } from '@/shared/model/QueryParams';
 
 export type SignInProps = {
@@ -154,7 +153,7 @@ export const SignIn = ({
     >
       <form
         method="post"
-        action={addQueryParamsToPath(buildUrl(Routes.SIGN_IN), queryString)}
+        action={buildUrlWithQueryParams(Routes.SIGN_IN, {}, queryString)}
       >
         <CsrfFormField />
         <EmailInput defaultValue={email} />

@@ -14,10 +14,10 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { decrypt } from '@/server/lib/idapi/decryptToken';
 import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
 import { ApiError } from '@/server/models/Error';
-import { RoutePathsAll } from '@/shared/lib/routeUtils';
+import { RoutePaths } from '@/shared/lib/routeUtils';
 import { typedRouter as router } from '@/server/lib/typedRoutes';
 
-const preFillEmailField = (route: RoutePathsAll) =>
+const preFillEmailField = (route: RoutePaths) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
     const { encryptedEmail, error } = state.queryParams;
