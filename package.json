@@ -134,7 +134,7 @@
     "http-errors": "^1.8.1",
     "js-sha1": "^0.6.0",
     "jsonwebtoken": "^8.5.1",
-    "mjml": "^4.10.4",
+    "mjml": "^4.11.0",
     "mjml-browser": "^4.10.4",
     "mjml-react": "^2.0.3",
     "ms": "^2.1.3",
