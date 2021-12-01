@@ -3095,10 +3095,10 @@
   resolved "https://registry.yarnpkg.com/@types/mjml-core/-/mjml-core-4.7.1.tgz#c2627499045b54eccfca38e2b532566fb0689189"
   integrity sha512-k5IRafi93tyZBGF+0BTrcBDvG47OueI+Q7TC4V4UjGQn0AMVvL3Y+S26QF/UHMmMJW5r1hxLyv3StX2/+FatFg==
 
-"@types/mjml-react@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@types/mjml-react/-/mjml-react-2.0.1.tgz#2a88c17981bb8dbb58379a7962be9b0d997ff646"
-  integrity sha512-sKiDAH8kCPIIAOkDIU7TFAWSTKe3/3MRzIsh6B/RZiyHj9R+7lLxtclnE4iuKe3C8ttg10JYzv0PyaCmDEbb1A==
+"@types/mjml-react@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@types/mjml-react/-/mjml-react-2.0.2.tgz#c67bbcea2976b8171c65741e27483276abc5135b"
+  integrity sha512-BgSMFW+lZ+ThnyETqIvy5rgB6XcGwlIsFNAriHf3ql6ynVBWwoSwzIk5r7fu7abI//7/VO9lTFbCPVuymTtccA==
   dependencies:
     "@types/react" "*"
 
@@ -3251,16 +3251,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@>=16.9.0":
-  version "17.0.33"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.33.tgz#e01ae3de7613dac1094569880bb3792732203ad5"
-  integrity sha512-pLWntxXpDPaU+RTAuSGWGSEL2FRTNyRQOjSWDke/rxRg14ncsZvx8AKWMWZqvc1UOaJIAoObdZhAWvRaHFi5rw==
-  dependencies:
-    "@types/prop-types" "*"
-    "@types/scheduler" "*"
-    csstype "^3.0.2"
-
-"@types/react@^17.0.36":
+"@types/react@*", "@types/react@>=16.9.0", "@types/react@^17.0.36":
   version "17.0.36"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.36.tgz#0d81e0e2419e6a8e9ba6af5e3a0608e70835d7d1"
   integrity sha512-CUFUp01OdfbpN/76v4koqgcpcRGT3sYOq3U3N6q0ZVGcyeP40NUdVU+EWe3hs34RNaTefiYyBzOpxBBidCc5zw==
