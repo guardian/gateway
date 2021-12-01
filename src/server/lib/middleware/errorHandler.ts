@@ -33,21 +33,6 @@ export const routeErrorHandler = (
       ),
     );
     return next(err);
-  } else if (err.code === 'EBADRECAPTCHA') {
-    res.redirect(
-      303,
-      addQueryParamsToPath(
-        req.url,
-        {
-          ...res.locals.queryParams,
-          returnUrl: defaultReturnUri,
-        },
-        {
-          recaptchaError: true,
-        },
-      ),
-    );
-    return next(err);
   }
 
   logger.error('unexpected error', err);

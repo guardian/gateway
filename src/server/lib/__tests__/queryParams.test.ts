@@ -73,43 +73,9 @@ describe('parseExpressQueryParams', () => {
       expect(output.csrfError).toEqual(undefined);
     });
     test('it should not set csrfError param if set for POSTs', () => {
-      const input = {
-        csrfError: 'true',
-      };
-      const output = parseExpressQueryParams('POST', input);
-      expect(output.csrfError).toEqual(undefined);
-    });
-    test('it should not set csrfError param if not set for POSTs', () => {
       const input = {};
       const output = parseExpressQueryParams('POST', input);
       expect(output.csrfError).toEqual(undefined);
-    });
-  });
-
-  describe('recaptchaError', () => {
-    test('it should set recaptchaError param if set for GETs', () => {
-      const input = {
-        recaptchaError: 'true',
-      };
-      const output = parseExpressQueryParams('GET', input);
-      expect(output.recaptchaError).toEqual(true);
-    });
-    test('it should not set recaptchaError param if not set for GETs', () => {
-      const input = {};
-      const output = parseExpressQueryParams('GET', input);
-      expect(output.recaptchaError).toEqual(undefined);
-    });
-    test('it should not set recaptchaError param if set for POSTs', () => {
-      const input = {
-        recaptchaError: 'true',
-      };
-      const output = parseExpressQueryParams('POST', input);
-      expect(output.recaptchaError).toEqual(undefined);
-    });
-    test('it should not set recaptchaError param if not set for POSTs', () => {
-      const input = {};
-      const output = parseExpressQueryParams('POST', input);
-      expect(output.recaptchaError).toEqual(undefined);
     });
   });
 });

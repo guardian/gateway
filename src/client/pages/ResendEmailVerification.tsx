@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React from 'react';
 import { LinkButton } from '@guardian/source-react-components';
 import { Routes } from '@/shared/model/Routes';
 import { buttonStyles, MainLayout } from '@/client/layouts/Main';
@@ -10,7 +10,6 @@ type ResendEmailVerificationProps = {
   email?: string;
   signInPageUrl?: string;
   successText?: string;
-  recaptchaSiteKey?: string;
 };
 
 const LoggedOut = ({ signInPageUrl }: { signInPageUrl?: string }) => (
@@ -29,65 +28,44 @@ const LoggedOut = ({ signInPageUrl }: { signInPageUrl?: string }) => (
 const LoggedIn = ({
   email,
   successText,
-  recaptchaSiteKey,
 }: {
   email: string;
   successText?: string;
-  recaptchaSiteKey?: string;
-}) => {
-  const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
-  const [recaptchaErrorContext, setRecaptchaErrorContext] =
-    useState<ReactNode>(null);
-  return (
-    <MainLayout
-      pageTitle="Verify Email"
-      errorOverride={recaptchaErrorMessage}
-      errorContext={recaptchaErrorContext}
-    >
-      <MainBodyText>
-        You need to confirm your email address to continue securely:
-      </MainBodyText>
-      <MainBodyText>
-        <b>{email}</b>
-      </MainBodyText>
-      <MainBodyText>
-        We will send you a verification link to your email to ensure that it’s
-        you. Please note that the link will expire in 30 minutes.
-      </MainBodyText>
-      <MainBodyText>
-        If you don&apos;t see it in your inbox, please check your spam filter.
-      </MainBodyText>
-      {successText ? (
-        <MainBodyText>{successText}</MainBodyText>
-      ) : (
-        <MainForm
-          formAction={Routes.VERIFY_EMAIL}
-          submitButtonText="Send verification link"
-          recaptchaSiteKey={recaptchaSiteKey}
-          setRecaptchaErrorMessage={setRecaptchaErrorMessage}
-          setRecaptchaErrorContext={setRecaptchaErrorContext}
-        >
-          <EmailInput defaultValue={email} hidden hideLabel />
-        </MainForm>
-      )}
-    </MainLayout>
-  );
-};
+}) => (
+  <MainLayout pageTitle="Verify Email">
+    <MainBodyText>
+      You need to confirm your email address to continue securely:
+    </MainBodyText>
+    <MainBodyText>
+      <b>{email}</b>
+    </MainBodyText>
+    <MainBodyText>
+      We will send you a verification link to your email to ensure that it’s
+      you. Please note that the link will expire in 30 minutes.
+    </MainBodyText>
+    <MainBodyText>
+      If you don&apos;t see it in your inbox, please check your spam filter.
+    </MainBodyText>
+    {successText ? (
+      <MainBodyText>{successText}</MainBodyText>
+    ) : (
+      <MainForm
+        formAction={Routes.VERIFY_EMAIL}
+        submitButtonText="Send verification link"
+      >
+        <EmailInput defaultValue={email} hidden hideLabel />
+      </MainForm>
+    )}
+  </MainLayout>
+);
 
 export const ResendEmailVerification = ({
   email,
   signInPageUrl,
   successText,
-  recaptchaSiteKey,
 }: ResendEmailVerificationProps) => {
   if (email) {
-    return (
-      <LoggedIn
-        email={email}
-        successText={successText}
-        recaptchaSiteKey={recaptchaSiteKey}
-      />
-    );
+    return <LoggedIn email={email} successText={successText} />;
   } else {
     return <LoggedOut signInPageUrl={signInPageUrl} />;
   }

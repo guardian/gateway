@@ -12,27 +12,9 @@ describe('Password reset flow', () => {
         cy.visit('/signin');
         const timeRequestWasMade = new Date();
         cy.contains('Reset password').click();
-
-        // Simulate going offline by failing the reCAPTCHA POST request.
-        cy.intercept({
-          method: 'POST',
-          url: 'https://www.google.com/recaptcha/api2/**',
-          times: 1,
-        });
-
         cy.contains('Forgot password');
         cy.get('input[name=email]').type(emailAddress);
-
-        // Check that both reCAPTCHA errors are shown.
-        cy.contains('Reset password').click();
-        cy.contains('Google reCAPTCHA verification failed. Please try again.');
-        cy.contains('Reset password').click();
-        cy.contains('Google reCAPTCHA verification failed.');
-        cy.contains('If the problem persists please try the following:');
-        cy.contains('userhelp@');
-
-        // Continue checking the password reset flow after reCAPTCHA assertions above.
-        cy.contains('Reset password').click();
+        cy.get('[data-cy="main-form-submit-button"]').click();
         cy.contains('Check your email inbox');
         cy.checkForEmailAndGetDetails(
           emailAddress,
@@ -60,28 +42,10 @@ describe('Password set flow', () => {
       })?.then(({ emailAddress }) => {
         cy.visit('/set-password/expired');
 
-        // Simulate going offline by failing the reCAPTCHA POST request.
-        cy.intercept({
-          method: 'POST',
-          url: 'https://www.google.com/recaptcha/api2/**',
-          times: 1,
-        });
-
         // link expired
         const timeRequestWasMadeLinkExpired = new Date();
         cy.get('input[name=email]').type(emailAddress);
-
-        // Check that both reCAPTCHA errors are shown.
-        cy.contains('Send me a link').click();
-        cy.contains('Google reCAPTCHA verification failed. Please try again.');
-
-        cy.contains('Send me a link').click();
-        cy.contains('Google reCAPTCHA verification failed.');
-        cy.contains('If the problem persists please try the following:');
-        cy.contains('userhelp@');
-
-        // Continue checking the password reset flow after reCAPTCHA assertions above.
-        cy.contains('Send me a link').click();
+        cy.get('[data-cy="main-form-submit-button"]').click();
         cy.contains('Check your email inbox');
         cy.contains(emailAddress);
         cy.contains('Resend email');

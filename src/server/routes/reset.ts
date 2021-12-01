@@ -14,7 +14,6 @@ import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
 import { ResetPasswordErrors } from '@/shared/model/Errors';
 import { ApiError } from '@/server/models/Error';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import handleRecaptcha from '@/server/lib/recaptcha';
 
 const router = Router();
 
@@ -39,7 +38,6 @@ router.get(Routes.RESET, (req: Request, res: ResponseWithRequestState) => {
 
 router.post(
   Routes.RESET,
-  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 

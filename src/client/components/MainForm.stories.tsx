@@ -26,11 +26,7 @@ export const MultipleInputFields = () => (
 MultipleInputFields.storyName = 'MultipleInputFields';
 
 export const FormWithRecaptcha = () => (
-  <MainForm
-    formAction=""
-    submitButtonText="Send me a link"
-    recaptchaSiteKey="test"
-  >
+  <MainForm formAction="" submitButtonText="Send me a link" useRecaptcha>
     <EmailInput />
   </MainForm>
 );
@@ -47,7 +43,7 @@ export const FormWithRecaptchaGuardianTerms = () => (
   <MainForm
     formAction=""
     submitButtonText="Send me a link"
-    recaptchaSiteKey="test"
+    useRecaptcha
     hasGuardianTerms
   >
     <EmailInput />

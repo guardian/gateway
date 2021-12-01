@@ -15,14 +15,14 @@ const isStringBoolean = (maybeBoolean?: string): boolean | undefined => {
   return false;
 };
 
-const validateGetOnlyError = (
+const validateCsrfError = (
   method: string,
-  error?: string,
+  csrfError?: string,
 ): boolean | undefined => {
-  // The error parameter causes an error message to be rendered
-  // Only render this error message for GET pages
-  // On POST with the error, we redirect to the GET URL of the form with the error parameter
-  if (method === 'GET' && error === 'true') {
+  // The csrfError parameter causes the CSRF error message to be rendered
+  // Only render CSRF error message for GET pages
+  // On POST CSRF error, we redirect to the GET URL of the form with the CSRF error parameter
+  if (method === 'GET' && csrfError === 'true') {
     return true;
   }
 };
@@ -40,7 +40,6 @@ export const parseExpressQueryParams = (
     emailVerified,
     emailSentSuccess,
     csrfError,
-    recaptchaError,
     refViewId,
     ref,
     encryptedEmail,
@@ -51,7 +50,6 @@ export const parseExpressQueryParams = (
     emailVerified?: string;
     emailSentSuccess?: string;
     csrfError?: string;
-    recaptchaError?: string;
     refViewId?: string;
     ref?: string;
     encryptedEmail?: string;
@@ -63,8 +61,7 @@ export const parseExpressQueryParams = (
     clientId: validateClientId(clientId),
     emailVerified: isStringBoolean(emailVerified),
     emailSentSuccess: isStringBoolean(emailSentSuccess),
-    csrfError: validateGetOnlyError(method, csrfError),
-    recaptchaError: validateGetOnlyError(method, recaptchaError),
+    csrfError: validateCsrfError(method, csrfError),
     refViewId,
     ref: ref && validateRefUrl(ref),
     encryptedEmail,

@@ -79,21 +79,3 @@ export const SessionExpired = () => (
 SessionExpired.story = {
   name: 'session expired/timed out copy',
 };
-
-export const RecaptchaError = () => (
-  <ResetPassword
-    email="cleo@theguardian.com"
-    headerText="Forgot password"
-    buttonText="Reset password"
-    showNoAccessEmail
-    recaptchaSiteKey="invalid-key"
-  >
-    <MainBodyText>
-      Forgot your password? Enter your email address and we’ll send you a link
-      to create a new one.
-    </MainBodyText>
-  </ResetPassword>
-);
-RecaptchaError.story = {
-  name: 'with reCAPTCHA error',
-};
