@@ -15,7 +15,7 @@ export const Text = ({ children, noPaddingBottom = false }: Props) => (
         padding="0"
         fontSize="17px"
         lineHeight="1.35"
-        letterSpacing="-0.02pt"
+        letterSpacing="-0.02px"
         fontFamily="Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif"
         color={text.primary}
       >
