@@ -52,7 +52,7 @@ export async function validate(
 
   try {
     const result = await idapiFetch({
-      path: '/pwd-reset/send-password-reset-email',
+      path: '/pwd-reset/user-for-token',
       options: APIAddClientAccessToken(options, ip),
       queryParams: params,
     });
@@ -63,7 +63,7 @@ export async function validate(
     };
   } catch (error) {
     logger.error(
-      `IDAPI Error changePassword validate '/pwd-reset/send-password-reset-email'`,
+      `IDAPI Error changePassword validate '/pwd-reset/user-for-token'`,
       error,
     );
     return handleError(error as IDAPIError);

@@ -32,7 +32,7 @@ export const SetPasswordPage = () => {
       headerText="Create password"
       buttonText="Save password"
       submitUrl={buildUrlWithQueryParams(
-        `${'/set-password'}/:token`,
+        '/set-password/:token',
         { token },
         queryParams,
       )}
