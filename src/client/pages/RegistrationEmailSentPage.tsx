@@ -30,7 +30,6 @@ export const RegistrationEmailSentPage = () => {
       resendEmailAction={`${Routes.REGISTRATION}${Routes.EMAIL_SENT}${Routes.RESEND}`}
       showSuccess={emailSentSuccess}
       errorMessage={error}
-      helpInfoBox
       recaptchaSiteKey={recaptchaSiteKey}
     />
   );

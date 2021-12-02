@@ -27,6 +27,7 @@ export const WithEmailResend = () => (
     previousPage="/reset"
     email="example@theguardian.com"
     resendEmailAction="#"
+    recaptchaSiteKey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
   />
 );
 WithEmailResend.story = {
@@ -38,23 +39,12 @@ export const WithEmailResendNoAccount = () => (
     previousPage="/reset"
     email="example@theguardian.com"
     resendEmailAction="#"
-    noAccountInfoBox
+    noAccountInfo
+    recaptchaSiteKey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
   />
 );
 WithEmailResendNoAccount.story = {
-  name: 'with email, resend, and no account box',
-};
-
-export const WithEmailResendHelp = () => (
-  <EmailSent
-    previousPage="/reset"
-    email="example@theguardian.com"
-    resendEmailAction="#"
-    helpInfoBox
-  />
-);
-WithEmailResendHelp.story = {
-  name: 'with email, resend, and help box',
+  name: 'with email, resend, and no account text',
 };
 
 export const WithRecaptchaError = () => (
@@ -62,7 +52,6 @@ export const WithRecaptchaError = () => (
     previousPage="/reset"
     email="example@theguardian.com"
     resendEmailAction="#"
-    helpInfoBox
     recaptchaSiteKey="invalid-key"
   />
 );
