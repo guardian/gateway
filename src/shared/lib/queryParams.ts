@@ -12,6 +12,7 @@ export const getPersistableQueryParams = (
   ref: params.ref,
   refViewId: params.refViewId,
   sessionToken: params.sessionToken,
+  useOkta: params.useOkta,
 });
 
 export const addQueryParamsToPath = (

@@ -149,7 +149,7 @@ router.post(
     let state = res.locals;
 
     const { email = '' } = req.body;
-    const { returnUrl, ref, refViewId } = state.queryParams;
+    const { returnUrl, ref, refViewId, useOkta } = state.queryParams;
 
     try {
       // use idapi user type endpoint to determine user type
@@ -160,7 +160,7 @@ router.post(
         // new user, so call guest register endpoint to create user account without password
         // and automatically send account verification email
         case UserType.NEW:
-          if (okta.registrationEnabled) {
+          if (okta.registrationEnabled && useOkta) {
             await registerWithOkta(email);
           } else {
             await guest(email, req.ip, returnUrl, refViewId, ref);

@@ -55,9 +55,10 @@ export const checkResetPasswordTokenController = (
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
     const { token } = req.params;
+    const { useOkta } = state.queryParams;
 
     try {
-      if (okta.registrationEnabled) {
+      if (okta.registrationEnabled && useOkta) {
         // validate okta activation token and exchange it for a state token (used to set a password)
         const response: ActivationResponse = await validateOktaToken({ token });
         const {
@@ -140,7 +141,12 @@ export const setPasswordTokenController = (
   successCallback: (res: ResponseWithRequestState) => void,
 ) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    if (okta.registrationEnabled && setPasswordPath === Routes.WELCOME) {
+    const { useOkta } = res.locals.queryParams;
+    if (
+      okta.registrationEnabled &&
+      useOkta &&
+      setPasswordPath === Routes.WELCOME
+    ) {
       await setPasswordInOkta(
         req,
         res,
