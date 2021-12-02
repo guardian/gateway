@@ -90,6 +90,7 @@ export const authenticate = async (
     const response = await idapiFetch({
       path: '/auth',
       options: APIAddClientAccessToken(options, ip),
+      queryParams: { format: 'cookies' },
     });
     return response.cookies;
   } catch (error) {

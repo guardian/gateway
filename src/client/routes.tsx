@@ -14,7 +14,6 @@ import { ConsentsConfirmationPage } from '@/client/pages/ConsentsConfirmationPag
 import { ResendEmailVerificationPage } from '@/client/pages/ResendEmailVerificationPage';
 import { UnexpectedErrorPage } from '@/client/pages/UnexpectedErrorPage';
 import { ClientState } from '@/shared/model/ClientState';
-import { RoutePaths } from '@/shared/lib/routeUtils';
 import { SignInPage } from '@/client/pages/SignInPage';
 import { MagicLinkPage } from '@/client/pages/MagicLinkPage';
 import { WelcomePage } from '@/client/pages/WelcomePage';
@@ -27,6 +26,7 @@ import { SetPasswordPage } from '@/client/pages/SetPasswordPage';
 import { SetPasswordResendPage } from '@/client/pages/SetPasswordResendPage';
 import { SetPasswordSessionExpiredPage } from '@/client/pages/SetPasswordSessionExpiredPage';
 import { SetPasswordCompletePage } from '@/client/pages/SetPasswordCompletePage';
+import { RoutePaths } from '@/shared/model/Routes';
 
 export type RoutingConfig = {
   clientState: ClientState;

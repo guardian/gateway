@@ -3,8 +3,8 @@ import {
   QueryParams,
   PersistableQueryParams,
 } from '@/shared/model/QueryParams';
-import { AllRoutes } from './routeUtils';
 import { IdApiQueryParams } from '../model/IdapiQueryParams';
+import { AllRoutes } from '../model/Routes';
 
 export const getPersistableQueryParams = (
   params: QueryParams,

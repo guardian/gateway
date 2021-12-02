@@ -28,17 +28,19 @@ When a browser makes a request to gateway, routes must render an output, this go
 
 Due to SSR, routing is a bit complicated than simply using client-side routing. We do routing through a combination of Express.js and React Router.
 
-To make it easier to keep track of routes/paths, we define then in a `Routes` enum in the [shared/model/Routes.ts](../src/shared/model/Routes.ts) file. The enum is then consumed by both Express and React Router so we can share the paths between them.
+To make it easier to keep track of routes/paths, we define then in a `Routes` types in the [shared/model/Routes.ts](../src/shared/model/Routes.ts) file. The type is then consumed by both Express and React Router so we can share the paths between them.
 
 Firstly, for rendering routes on the client, we use React Router's [`StaticRouter`](https://reacttraining.com/react-router/web/api/StaticRouter) in our [server renderer](../src/server/lib/renderer.tsx) file, this sets up router which location does not change once rendered (no client-side routing). We add client side routes in the client [routes.tsx](../src/client/routes.tsx) file, which react router looks at to determine what to render for that particular path.
+
+We also use typed routes. This enforces type safety when added new routes. In the [server renderer](../src/server/lib/renderer.tsx) We have a helper component called `<TypedRoute>`. This component requires the `path` attribute to be of type [`RoutePaths`](../src/shared/model/Routes.ts) and therefore only accepts strings that are part of the `RoutePaths` type. To add a new route you need to add another entry in the [`RoutePaths`](../src/shared/model/Routes.ts) type.
 
 Here's an example of a route, with a component it will render inside that route:
 
 ```tsx
 ...
-  <Route exact path={'/reset'}>
+  <TypedRoute exact path={'/reset'}>
     <ResendPasswordPage />
-  </Route>
+  </TypedRoute>
 ...
 ```
 
@@ -46,16 +48,18 @@ To be able to actually access the route that was defined in the client, express 
 
 Routes should be separated into files which share common functionality. For example, functionality relating to sending the reset password email, is in the [`reset.ts`](../src/server/routes/reset.ts) file. The file should export an Express router, which will be consumed by express to register the routes.
 
+We also support typed routes here too, using the [`typedRoutes` component](../src/server/lib/typedRoutes.ts)
+
 Here's an example of a `GET` route, which renders a page and returns it to the client.
 
 ```ts
 ...
-const router = Router();
+import { typedRouter as router } from '@/server/lib/typedRoutes';
 ...
 // tell express the method (GET)
 router.get(
   // on what path/url/route, e.g. /reset
-  Routes.GET_ROUTE,
+  '/reset', //note this is a typed route of type RoutePaths
   (_: Request, res: ResponseWithRequestState) => {
     // some optional actions/logic here
     ...
@@ -67,7 +71,7 @@ router.get(
   },
 );
 ...
-export default router;
+export default router.router;
 ```
 
 Most routes perform some action, and then render something and return it to the user.

@@ -1,4 +1,4 @@
-import { RoutePaths } from '@/shared/lib/routeUtils';
+import { RoutePaths } from '@/shared/model/Routes';
 import { Router } from 'express';
 
 const router = Router();

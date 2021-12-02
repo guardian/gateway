@@ -3,13 +3,10 @@
 import type { RequestInit, Response } from 'node-fetch';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { joinUrl } from '@guardian/libs';
-import {
-  ApiRoutePaths,
-  buildUrl,
-  ExtractRouteParams,
-} from '@/shared/lib/routeUtils';
+import { buildUrl, ExtractRouteParams } from '@/shared/lib/routeUtils';
 import { IdApiQueryParams } from '@/shared/model/IdapiQueryParams';
 import { addApiQueryParamsToPath } from '@/shared/lib/queryParams';
+import { ApiRoutePaths } from '@/shared/model/Routes';
 
 // Imports the node-fetch library asynchonously using import(), supported in CJS since node v12.17.
 // This solution avoids the import() being transpiled into a require() by Webpack/Typescript.
@@ -84,7 +81,7 @@ const APIFetch =
     const tokenisedUrl = buildUrl(params.path, params.tokenisationParam);
     const urlPath = params.queryParams
       ? addApiQueryParamsToPath(tokenisedUrl, params.queryParams)
-      : params.path;
+      : tokenisedUrl;
     const response = await fetch(
       joinUrl(idapiBaseUrl, urlPath),
       params.options,

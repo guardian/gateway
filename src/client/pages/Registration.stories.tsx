@@ -10,6 +10,7 @@ export default {
   args: {
     recaptchaSiteKey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
     oauthBaseUrl: 'https://oauth.theguardian.com/',
+    queryString: {},
   },
 } as Meta<RegistrationProps>;
 

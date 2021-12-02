@@ -9,7 +9,7 @@ import {
   from,
 } from '@guardian/source-foundations';
 import { Container } from '@/client/components/Container';
-import { RoutePaths } from '@/shared/lib/routeUtils';
+import { RoutePaths } from '@/shared/model/Routes';
 import { Link } from '@guardian/source-react-components';
 
 type Props = {

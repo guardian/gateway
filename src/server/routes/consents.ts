@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import deepmerge from 'deepmerge';
 
 import { renderer } from '@/server/lib/renderer';
-import { RoutePaths } from '@/shared/lib/routeUtils';
+
 import { typedRouter as router } from '@/server/lib/typedRoutes';
 import {
   update as patchConsents,
@@ -40,6 +40,7 @@ import { fourZeroFourRender } from '@/server/lib/middleware/404';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { logger } from '@/server/lib/logger';
 import { ApiError } from '@/server/models/Error';
+import { RoutePaths } from '@/shared/model/Routes';
 
 interface ConsentPage {
   page: string;

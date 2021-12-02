@@ -10,6 +10,7 @@ export default {
   parameters: { layout: 'fullscreen' },
   args: {
     oauthBaseUrl: 'https://oauth.theguardian.com/',
+    queryString: {},
   },
 } as Meta<SignInProps>;
 

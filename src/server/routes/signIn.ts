@@ -66,7 +66,6 @@ router.post(
 
     try {
       const cookies = await authenticate(email, password, req.ip);
-
       setIDAPICookies(res, cookies);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
@@ -75,7 +74,7 @@ router.post(
 
       trackMetric(Metrics.SIGN_IN_FAILURE);
 
-      // re-render the sign in page on error
+      // re-render the sign in page on error, with pre-filled email
       const html = renderer('/signin', {
         requestState: deepmerge(res.locals, {
           globalMessage: {

@@ -11,13 +11,10 @@ import { CaptchaErrors, CsrfErrors } from '@/shared/model/Errors';
 import { ABProvider } from '@guardian/ab-react';
 import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
-import {
-  buildUrlWithQueryParams,
-  PathParams,
-  RoutePaths,
-} from '@/shared/lib/routeUtils';
+import { buildUrlWithQueryParams, PathParams } from '@/shared/lib/routeUtils';
 import { brandBackground, resets } from '@guardian/source-foundations';
 import deepmerge from 'deepmerge';
+import { RoutePaths } from '@/shared/model/Routes';
 
 const assets = getAssets();
 const legacyAssets = getAssets(true);
