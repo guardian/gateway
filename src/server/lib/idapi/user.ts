@@ -15,6 +15,8 @@ import {
 } from '@/shared/model/Errors';
 import User from '@/shared/model/User';
 import { IdapiError } from '@/server/models/Error';
+import { trackMetric } from '@/server/lib/trackMetric';
+import { emailSendMetric } from '@/server/models/Metrics';
 
 interface APIResponse {
   user: User;
@@ -138,11 +140,13 @@ export const sendAccountVerificationEmail = async (
       options: APIAddClientAccessToken(options, ip),
       queryParams: { returnUrl },
     });
+    trackMetric(emailSendMetric('AccountVerification', 'Success'));
   } catch (error) {
     logger.error(
       `IDAPI Error send account verification email '/user/send-account-verification-email'`,
       error,
     );
+    trackMetric(emailSendMetric('AccountVerification', 'Failure'));
     return handleError(error as IDAPIError);
   }
 };
@@ -156,6 +160,7 @@ export const sendAccountExistsEmail = async (
     'email-address': email,
   });
   try {
+<<<<<<< HEAD
     await idapiFetch({
       path: '/user/send-account-exists-email',
       options: APIAddClientAccessToken(options, ip),
@@ -166,6 +171,16 @@ export const sendAccountExistsEmail = async (
       `IDAPI Error send account exists email '/user/send-account-exists-email'`,
       error,
     );
+=======
+    await idapiFetch(
+      addReturnUrlToPath(url, returnUrl),
+      APIAddClientAccessToken(options, ip),
+    );
+    trackMetric(emailSendMetric('AccountExists', 'Success'));
+  } catch (error) {
+    logger.error(`IDAPI Error send account exists email ${url}`, error);
+    trackMetric(emailSendMetric('AccountExists', 'Failure'));
+>>>>>>> main
     return handleError(error as IDAPIError);
   }
 };
@@ -184,11 +199,13 @@ export const sendAccountWithoutPasswordExistsEmail = async (
       options: APIAddClientAccessToken(options, ip),
       queryParams: { returnUrl },
     });
+    trackMetric(emailSendMetric('AccountExistsWithoutPassword', 'Success'));
   } catch (error) {
     logger.error(
       `IDAPI Error send account without password exists email '/user/send-account-without-password-exists-email'`,
       error,
     );
+    trackMetric(emailSendMetric('AccountExistsWithoutPassword', 'Failure'));
     return handleError(error as IDAPIError);
   }
 };
@@ -207,11 +224,13 @@ export const sendCreatePasswordEmail = async (
       options: APIAddClientAccessToken(options, ip),
       queryParams: { returnUrl },
     });
+    trackMetric(emailSendMetric('CreatePassword', 'Success'));
   } catch (error) {
     logger.error(
       `IDAPI Error send create password email '/user/send-create-password-account-exists-email'`,
       error,
     );
+    trackMetric(emailSendMetric('CreatePassword', 'Failure'));
     return handleError(error as IDAPIError);
   }
 };

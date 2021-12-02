@@ -12,7 +12,6 @@ import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { ApiError } from '@/server/models/Error';
 import { ResponseWithRequestState } from '@/server/models/Express';
-import { Metrics } from '@/server/models/Metrics';
 import { consentPages } from '@/server/routes/consents';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { ConsentsErrors, VerifyEmailErrors } from '@/shared/model/Errors';
@@ -111,7 +110,7 @@ router.post(
       });
 
       await sendVerificationEmail(req.ip, sc_gu_u);
-      trackMetric(Metrics.SEND_VALIDATION_EMAIL_SUCCESS);
+      trackMetric('SendValidationEmail::Success');
 
       state = deepmerge(state, {
         globalMessage: {
@@ -121,7 +120,7 @@ router.post(
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
-      trackMetric(Metrics.SEND_VALIDATION_EMAIL_FAILURE);
+      trackMetric('SendValidationEmail::Failure');
 
       const { message, status: errorStatus } =
         error instanceof ApiError ? error : new ApiError();
@@ -151,7 +150,7 @@ router.get(
 
     try {
       const cookies = await verifyEmail(token, req.ip);
-      trackMetric(Metrics.EMAIL_VALIDATED_SUCCESS);
+      trackMetric('EmailValidated::Success');
       setIDAPICookies(res, cookies);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
@@ -168,7 +167,7 @@ router.get(
         );
       }
 
-      trackMetric(Metrics.EMAIL_VALIDATED_FAILURE);
+      trackMetric('EmailValidated::Failure');
 
       return res.redirect(
         303,

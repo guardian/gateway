@@ -9,6 +9,8 @@ import {
   idapiFetch,
 } from '../IDAPIFetch';
 import { logger } from '../logger';
+import { trackMetric } from '../trackMetric';
+import { emailSendMetric } from '@/server/models/Metrics';
 
 const { defaultReturnUri } = getConfiguration();
 
@@ -53,12 +55,14 @@ export const guest = async (
         refViewId,
       },
     });
+    trackMetric(emailSendMetric('AccountVerification', 'Success'));
     return EmailType.ACCOUNT_VERIFICATION;
   } catch (error) {
     logger.error(
       `IDAPI Error: guest account creation '/guest?accountVerificationEmail=true'}`,
       error,
     );
+    trackMetric(emailSendMetric('AccountVerification', 'Failure'));
     return handleError(error as IDAPIError);
   }
 };

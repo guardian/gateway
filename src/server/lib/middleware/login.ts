@@ -5,7 +5,6 @@ import { IDAPIAuthRedirect, IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
 import { getProfileUrl } from '@/server/lib/getProfileUrl';
 
 import { trackMetric } from '@/server/lib/trackMetric';
-import { Metrics } from '@/server/models/Metrics';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/logger';
 import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
@@ -56,25 +55,25 @@ export const loginMiddleware = async (
     const auth = await read(sc_gu_u, sc_gu_la, req.ip);
 
     if (auth.status === IDAPIAuthStatus.SIGNED_OUT) {
-      trackMetric(Metrics.LOGIN_MIDDLEWARE_NOT_SIGNED_IN);
+      trackMetric('LoginMiddlewareNotSignedIn');
       return redirectAuth(auth);
     }
 
     if (!auth.emailValidated) {
-      trackMetric(Metrics.LOGIN_MIDDLEWARE_UNVERIFIED);
+      trackMetric('LoginMiddlewareUnverified');
       return res.redirect(303, buildUrl('/verify-email'));
     }
 
     if (auth.status === IDAPIAuthStatus.RECENT) {
-      trackMetric(Metrics.LOGIN_MIDDLEWARE_SUCCESS);
+      trackMetric('LoginMiddleware::Success');
       next();
     } else {
-      trackMetric(Metrics.LOGIN_MIDDLEWARE_NOT_RECENT);
+      trackMetric('LoginMiddlewareNotRecent');
       return redirectAuth(auth);
     }
   } catch (e) {
     logger.error('loginMiddlewareFailure', e);
-    trackMetric(Metrics.LOGIN_MIDDLEWARE_FAILURE);
+    trackMetric('LoginMiddleware::Failure');
     res.redirect(
       addQueryParamsToUntypedPath(
         LOGIN_REDIRECT_URL,

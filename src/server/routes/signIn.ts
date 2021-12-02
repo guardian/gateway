@@ -6,7 +6,6 @@ import { renderer } from '@/server/lib/renderer';
 
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
@@ -72,7 +71,7 @@ router.post(
       const { message, status } =
         error instanceof ApiError ? error : new ApiError();
 
-      trackMetric(Metrics.SIGN_IN_FAILURE);
+      trackMetric('SignIn::Failure');
 
       // re-render the sign in page on error, with pre-filled email
       const html = renderer('/signin', {
@@ -90,7 +89,7 @@ router.post(
       return res.status(status).type('html').send(html);
     }
 
-    trackMetric(Metrics.SIGN_IN_SUCCESS);
+    trackMetric('SignIn::Success');
 
     return res.redirect(303, returnUrl || defaultReturnUri);
   }),

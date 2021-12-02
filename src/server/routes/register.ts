@@ -19,10 +19,9 @@ import { getEmailFromPlaySessionCookie } from '@/server/lib/playSessionCookie';
 import { renderer } from '@/server/lib/renderer';
 
 import { typedRouter as router } from '@/server/lib/typedRoutes';
-import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { ApiError } from '@/server/models/Error';
-import { Metrics } from '@/server/models/Metrics';
+import { ResponseWithRequestState } from '@/server/models/Express';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { EmailType } from '@/shared/model/EmailType';
 import { GenericErrors } from '@/shared/model/Errors';
@@ -191,6 +190,8 @@ router.post(
           throw new Error('Invalid UserType');
       }
 
+      trackMetric('Register::Success');
+
       // redirect the user to the email sent page
       return res.redirect(
         303,
@@ -202,7 +203,7 @@ router.post(
       const { message, status } =
         error instanceof ApiError ? error : new ApiError();
 
-      trackMetric(Metrics.REGISTER_FAILURE);
+      trackMetric('Register::Failure');
 
       state = deepmerge(state, {
         globalMessage: {
