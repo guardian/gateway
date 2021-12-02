@@ -56,11 +56,11 @@ export const guest = async (
 
   try {
     await idapiFetch(path, APIAddClientAccessToken(options, ip));
-    trackMetric(emailSendMetric('AccountVerification', true));
+    trackMetric(emailSendMetric('AccountVerification', 'Success'));
     return EmailType.ACCOUNT_VERIFICATION;
   } catch (error) {
     logger.error(`IDAPI Error: guest account creation ${url}`, error);
-    trackMetric(emailSendMetric('AccountVerification', false));
+    trackMetric(emailSendMetric('AccountVerification', 'Failure'));
     return handleError(error as IDAPIError);
   }
 };

@@ -11,7 +11,6 @@ import { renderer } from '@/server/lib/renderer';
 import { Routes } from '@/shared/model/Routes';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import deepmerge from 'deepmerge';
@@ -213,7 +212,7 @@ router.post(
           throw new Error('Invalid UserType');
       }
 
-      trackMetric(Metrics.REGISTER_SUCCESS);
+      trackMetric('Register::Success');
 
       // redirect the user to the email sent page
       return res.redirect(
@@ -229,7 +228,7 @@ router.post(
       const { message, status } =
         error instanceof ApiError ? error : new ApiError();
 
-      trackMetric(Metrics.REGISTER_FAILURE);
+      trackMetric('Register::Failure');
 
       state = deepmerge(state, {
         globalMessage: {

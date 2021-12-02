@@ -57,7 +57,7 @@ router.post(
           ? error
           : new ApiError({ message: ResetPasswordErrors.GENERIC });
 
-      trackMetric(emailSendMetric('ResetPassword', false));
+      trackMetric(emailSendMetric('ResetPassword', 'Failure'));
 
       state = deepmerge(state, {
         globalMessage: {
@@ -72,7 +72,7 @@ router.post(
       return res.status(status).type('html').send(html);
     }
 
-    trackMetric(emailSendMetric('ResetPassword', true));
+    trackMetric(emailSendMetric('ResetPassword', 'Success'));
 
     return res.redirect(
       303,
