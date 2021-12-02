@@ -56,3 +56,16 @@ export const WithEmailResendHelp = () => (
 WithEmailResendHelp.story = {
   name: 'with email, resend, and help box',
 };
+
+export const WithRecaptchaError = () => (
+  <EmailSent
+    previousPage="/reset"
+    email="example@theguardian.com"
+    resendEmailAction="#"
+    helpInfoBox
+    recaptchaSiteKey="invalid-key"
+  />
+);
+WithRecaptchaError.story = {
+  name: 'with reCAPTCHA error',
+};

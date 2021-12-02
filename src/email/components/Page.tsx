@@ -9,6 +9,6 @@ export const Page = ({ children, title }: Props) => (
     <MjmlHead>
       <MjmlTitle>{`${title} | The Guardian`}</MjmlTitle>
     </MjmlHead>
-    <MjmlBody width={660}>{children}</MjmlBody>
+    <MjmlBody width={600}>{children}</MjmlBody>
   </Mjml>
 );
