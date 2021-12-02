@@ -45,6 +45,8 @@ export const randomMailosaurEmail = () => {
   return uuidv4() + '@' + Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net';
 };
 
+export const randomPassword = () => uuidv4();
+
 export const createTestUser = ({
   primaryEmailAddress,
   password,
