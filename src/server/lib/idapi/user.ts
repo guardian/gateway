@@ -160,27 +160,18 @@ export const sendAccountExistsEmail = async (
     'email-address': email,
   });
   try {
-<<<<<<< HEAD
     await idapiFetch({
       path: '/user/send-account-exists-email',
       options: APIAddClientAccessToken(options, ip),
       queryParams: { returnUrl },
     });
+    trackMetric(emailSendMetric('AccountExists', 'Success'));
   } catch (error) {
     logger.error(
       `IDAPI Error send account exists email '/user/send-account-exists-email'`,
       error,
     );
-=======
-    await idapiFetch(
-      addReturnUrlToPath(url, returnUrl),
-      APIAddClientAccessToken(options, ip),
-    );
-    trackMetric(emailSendMetric('AccountExists', 'Success'));
-  } catch (error) {
-    logger.error(`IDAPI Error send account exists email ${url}`, error);
     trackMetric(emailSendMetric('AccountExists', 'Failure'));
->>>>>>> main
     return handleError(error as IDAPIError);
   }
 };
