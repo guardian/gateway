@@ -8,6 +8,7 @@ export const registerWithOkta = (email: string): Promise<User> => {
     profile: {
       email,
       login: email,
+      isGuardianUser: true,
     },
   };
   return client.createUser(user, { activate: true });
