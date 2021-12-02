@@ -6,7 +6,7 @@ import { renderer } from '@/server/lib/renderer';
 import { Routes } from '@/shared/model/Routes';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { Metrics } from '@/server/models/Metrics';
+import { emailSendMetric } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { readEmailCookie } from '@/server/lib/emailCookie';
@@ -59,7 +59,7 @@ router.post(
           ? error
           : new ApiError({ message: ResetPasswordErrors.GENERIC });
 
-      trackMetric(Metrics.SEND_PASSWORD_RESET_FAILURE);
+      trackMetric(emailSendMetric('ResetPassword', 'Failure'));
 
       state = deepmerge(state, {
         globalMessage: {
@@ -74,7 +74,7 @@ router.post(
       return res.status(status).type('html').send(html);
     }
 
-    trackMetric(Metrics.SEND_PASSWORD_RESET_SUCCESS);
+    trackMetric(emailSendMetric('ResetPassword', 'Success'));
 
     return res.redirect(
       303,

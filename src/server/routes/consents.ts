@@ -298,7 +298,9 @@ router.get(
       pageTitle,
     });
 
-    trackMetric(consentsPageMetric(page, 'Get', status === 200));
+    trackMetric(
+      consentsPageMetric(page, 'Get', status === 200 ? 'Success' : 'Failure'),
+    );
 
     res
       .type('html')
@@ -334,7 +336,7 @@ router.post(
         await update(req.ip, sc_gu_u, req.body);
       }
 
-      trackMetric(consentsPageMetric(page, 'Post', true));
+      trackMetric(consentsPageMetric(page, 'Post', 'Success'));
 
       const url = addQueryParamsToPath(
         joinUrl(Routes.CONSENTS, consentPages[pageIndex + 1].page),
@@ -356,7 +358,7 @@ router.post(
       });
     }
 
-    trackMetric(consentsPageMetric(page, 'Post', false));
+    trackMetric(consentsPageMetric(page, 'Post', 'Failure'));
 
     const html = renderer(`${Routes.CONSENTS}/${page}`, {
       pageTitle,

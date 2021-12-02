@@ -17,6 +17,8 @@ import User from '@/shared/model/User';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { IdapiError } from '@/server/models/Error';
 import { ApiRoutes } from '@/shared/model/Routes';
+import { trackMetric } from '@/server/lib/trackMetric';
+import { emailSendMetric } from '@/server/models/Metrics';
 
 interface APIResponse {
   user: User;
@@ -136,8 +138,10 @@ export const sendAccountVerificationEmail = async (
       addReturnUrlToPath(url, returnUrl),
       APIAddClientAccessToken(options, ip),
     );
+    trackMetric(emailSendMetric('AccountVerification', 'Success'));
   } catch (error) {
     logger.error(`IDAPI Error send account verification email ${url}`, error);
+    trackMetric(emailSendMetric('AccountVerification', 'Failure'));
     return handleError(error as IDAPIError);
   }
 };
@@ -156,8 +160,10 @@ export const sendAccountExistsEmail = async (
       addReturnUrlToPath(url, returnUrl),
       APIAddClientAccessToken(options, ip),
     );
+    trackMetric(emailSendMetric('AccountExists', 'Success'));
   } catch (error) {
     logger.error(`IDAPI Error send account exists email ${url}`, error);
+    trackMetric(emailSendMetric('AccountExists', 'Failure'));
     return handleError(error as IDAPIError);
   }
 };
@@ -176,11 +182,13 @@ export const sendAccountWithoutPasswordExistsEmail = async (
       addReturnUrlToPath(url, returnUrl),
       APIAddClientAccessToken(options, ip),
     );
+    trackMetric(emailSendMetric('AccountExistsWithoutPassword', 'Success'));
   } catch (error) {
     logger.error(
       `IDAPI Error send account without password exists email ${url}`,
       error,
     );
+    trackMetric(emailSendMetric('AccountExistsWithoutPassword', 'Failure'));
     return handleError(error as IDAPIError);
   }
 };
@@ -199,8 +207,10 @@ export const sendCreatePasswordEmail = async (
       addReturnUrlToPath(url, returnUrl),
       APIAddClientAccessToken(options, ip),
     );
+    trackMetric(emailSendMetric('CreatePassword', 'Success'));
   } catch (error) {
     logger.error(`IDAPI Error send create password email ${url}`, error);
+    trackMetric(emailSendMetric('CreatePassword', 'Failure'));
     return handleError(error as IDAPIError);
   }
 };
