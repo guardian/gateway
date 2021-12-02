@@ -37,5 +37,4 @@ export interface QueryParams
   recaptchaError?: boolean;
   encryptedEmail?: string;
   error?: string;
-  useOkta?: boolean;
 }
