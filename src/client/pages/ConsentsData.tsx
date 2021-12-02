@@ -1,5 +1,5 @@
 import React from 'react';
-import Locations from '@/client/lib/locations';
+import Locations from '@/shared/lib/locations';
 import { css } from '@emotion/react';
 import { space, neutral, textSans } from '@guardian/source-foundations';
 import {
