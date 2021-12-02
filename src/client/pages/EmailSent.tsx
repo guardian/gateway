@@ -19,8 +19,7 @@ type Props = {
   queryString?: string;
   showSuccess?: boolean;
   errorMessage?: string;
-  noAccountInfoBox?: boolean;
-  helpInfoBox?: boolean;
+  noAccountInfo?: boolean;
   recaptchaSiteKey?: string;
 };
 
@@ -31,8 +30,7 @@ export const EmailSent = ({
   queryString,
   showSuccess,
   errorMessage,
-  noAccountInfoBox,
-  helpInfoBox,
+  noAccountInfo,
   recaptchaSiteKey,
 }: Props) => {
   const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
@@ -54,12 +52,9 @@ export const EmailSent = ({
       ) : (
         <MainBodyText>We’ve sent you an email.</MainBodyText>
       )}
+      <MainBodyText>Please follow the instructions in this email.</MainBodyText>
       <MainBodyText>
-        Please follow the instructions in this email. If you can’t find it, it
-        may be in your spam folder.
-      </MainBodyText>
-      <MainBodyText>
-        <b>This link is only valid for 30 minutes.</b>
+        <b>The link is only valid for 30 minutes.</b>
       </MainBodyText>
       {previousPage && (
         <MainBodyText>
@@ -67,13 +62,33 @@ export const EmailSent = ({
           <Link subdued href={previousPage}>
             Change email address
           </Link>
+          .
         </MainBodyText>
       )}
       {email && resendEmailAction && (
         <>
           <InfoSummary
             message="Didn’t receive an email?"
-            context="If you can’t find the email in your inbox or spam folder, please click below and we will send you a new one."
+            context={
+              <>
+                If you can’t find the email in your inbox or spam folder, please
+                click below and we will send you a new one.
+                {noAccountInfo && (
+                  <>
+                    <br />
+                    <b>
+                      If you don’t receive an email within 2 minutes you may not
+                      have an account.
+                    </b>
+                    <br />
+                    Don’t have an account?{' '}
+                    <Link subdued href={Routes.REGISTRATION}>
+                      Register for free
+                    </Link>
+                  </>
+                )}
+              </>
+            }
           />
           <MainForm
             formAction={`${resendEmailAction}${queryString}`}
@@ -86,46 +101,20 @@ export const EmailSent = ({
           >
             <EmailInput defaultValue={email} hidden hideLabel />
           </MainForm>
-          {noAccountInfoBox && (
-            <InfoSummary
-              cssOverrides={belowFormMarginTopSpacingStyle}
-              message="If you don’t receive an email within 2 minutes you may not have an account."
-              context={
-                <>
-                  Don’t have an account?{' '}
-                  <Link subdued href={Routes.REGISTRATION}>
-                    Register for free
-                  </Link>
-                  <br />
-                  If you are having trouble, please contact our customer service
-                  team at{' '}
-                  <ExternalLink subdued href="mailto:userhelp@theguardian.com">
-                    userhelp@guardian.com
-                  </ExternalLink>
-                </>
-              }
-            />
-          )}
-          {helpInfoBox && (
-            <InfoSummary
-              cssOverrides={belowFormMarginTopSpacingStyle}
-              message={
-                <>
-                  If you are still having trouble contact our customer service
-                  team at{' '}
-                  <ExternalLink
-                    cssOverrides={css`
-                      font-weight: 700;
-                    `}
-                    subdued
-                    href="mailto:userhelp@theguardian.com"
-                  >
-                    userhelp@guardian.com
-                  </ExternalLink>
-                </>
-              }
-            />
-          )}
+          <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
+            If you are still having trouble, contact our customer service team
+            at{' '}
+            <ExternalLink
+              cssOverrides={css`
+                font-weight: 700;
+              `}
+              subdued
+              href="mailto:userhelp@theguardian.com"
+            >
+              userhelp@guardian.com
+            </ExternalLink>
+            .
+          </MainBodyText>
         </>
       )}
     </MainLayout>
