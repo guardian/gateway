@@ -117,6 +117,33 @@ router.get(
 
 In Express 4, async handlers which fail to call next() (or specific functions on the response) leave the TCP connection open (indicating a leak) and don't return any data.
 
+#### Client side routing
+
+We also support typed routing in client side components using the `buildUrl` and `buildUrlWithQueryParams` helper functions.
+
+`buildUrl`
+If you need to use a internal gateway route in a client side file you can do the following
+
+```ts
+<form
+          method="post"
+          action={buildUrl('/register')}
+          ref={registerFormRef}
+          onSubmit={handleSubmit}
+        >
+```
+
+and with query Params
+
+```ts
+<form
+          method="post"
+          action={buildUrlWithQueryParams('/register', {}, queryString)}
+          ref={registerFormRef}
+          onSubmit={handleSubmit}
+        >
+```
+
 ## Developing Components/Pages using Storybook
 
 [Storybook](https://storybook.js.org/) is a tool for building UI components and pages in isolation. This means you don't have to run the server, and set up any route or state to develop components/pages/emails in Gateway.

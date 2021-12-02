@@ -123,7 +123,7 @@ export const Registration = ({
       >
         <form
           method="post"
-          action={buildUrlWithQueryParams(`${'/register'}`, {}, queryString)}
+          action={buildUrlWithQueryParams('/register', {}, queryString)}
           ref={registerFormRef}
           onSubmit={handleSubmit}
         >
