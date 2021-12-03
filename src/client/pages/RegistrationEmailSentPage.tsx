@@ -31,7 +31,6 @@ export const RegistrationEmailSentPage = () => {
       resendEmailAction={buildUrl('/register/email-sent/resend')}
       showSuccess={emailSentSuccess}
       errorMessage={error}
-      helpInfoBox
       recaptchaSiteKey={recaptchaSiteKey}
     />
   );

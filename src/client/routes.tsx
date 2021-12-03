@@ -56,7 +56,7 @@ export const GatewayRoutes = () => (
       <ResetPasswordPage />
     </TypedRoute>
     <TypedRoute exact path={'/reset/email-sent'}>
-      <EmailSentPage noAccountInfoBox />
+      <EmailSentPage noAccountInfo />
     </TypedRoute>
     <TypedRoute exact path={'/reset-password/:token'}>
       <ChangePasswordPage />
@@ -80,7 +80,7 @@ export const GatewayRoutes = () => (
       <SetPasswordCompletePage />
     </TypedRoute>
     <TypedRoute path={'/set-password/email-sent'}>
-      <EmailSentPage helpInfoBox />
+      <EmailSentPage />
     </TypedRoute>
     <TypedRoute exact path={'/set-password/:token'}>
       <SetPasswordPage />
@@ -104,7 +104,7 @@ export const GatewayRoutes = () => (
       <WelcomeSessionExpiredPage />
     </TypedRoute>
     <TypedRoute exact path={'/welcome/email-sent'}>
-      <EmailSentPage helpInfoBox />
+      <EmailSentPage />
     </TypedRoute>
     <TypedRoute exact path={'/welcome/complete'}>
       <WelcomePasswordAlreadySetPage />
@@ -119,7 +119,7 @@ export const GatewayRoutes = () => (
       <MagicLinkPage />
     </TypedRoute>
     <TypedRoute exact path={'/magic-link/email-sent'}>
-      <EmailSentPage noAccountInfoBox />
+      <EmailSentPage noAccountInfo />
     </TypedRoute>
     <TypedRoute exact path={'/error'}>
       <UnexpectedErrorPage />
