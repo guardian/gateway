@@ -1,20 +1,15 @@
 import { CreateUserRequestOptions } from '@okta/okta-sdk-nodejs/src/types/models/CreateUserRequest';
 import { oktaClient } from '@/server/lib/okta/client';
-import { UserActivationToken } from '@okta/okta-sdk-nodejs';
+import { User } from '@okta/okta-sdk-nodejs';
 
-export const registerWithOkta = (
-  email: string,
-): Promise<UserActivationToken> => {
-  const activate = false;
-  const sendEmail = true;
+export const registerWithOkta = (email: string): Promise<User> => {
   const client = oktaClient();
   const user: CreateUserRequestOptions = {
     profile: {
       email,
       login: email,
+      isGuardianUser: true,
     },
   };
-  return client
-    .createUser(user, { activate })
-    .then((user) => client.activateUser(user.id, { sendEmail }));
+  return client.createUser(user, { activate: true });
 };
