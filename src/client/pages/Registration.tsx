@@ -28,7 +28,7 @@ export type RegistrationProps = {
   email?: string;
   recaptchaSiteKey: string;
   oauthBaseUrl: string;
-  queryString: QueryParams;
+  queryParams: QueryParams;
   geolocation?: GeoLocation;
 };
 
@@ -62,7 +62,7 @@ export const Registration = ({
   email,
   recaptchaSiteKey,
   oauthBaseUrl,
-  queryString,
+  queryParams,
   geolocation,
 }: RegistrationProps) => {
   const registerFormRef = createRef<HTMLFormElement>();
@@ -123,7 +123,7 @@ export const Registration = ({
       >
         <form
           method="post"
-          action={buildUrlWithQueryParams('/register', {}, queryString)}
+          action={buildUrlWithQueryParams('/register', {}, queryParams)}
           ref={registerFormRef}
           onSubmit={handleSubmit}
         >

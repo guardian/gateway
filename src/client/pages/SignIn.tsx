@@ -22,7 +22,7 @@ import { QueryParams } from '@/shared/model/QueryParams';
 
 export type SignInProps = {
   returnUrl?: string;
-  queryString: QueryParams;
+  queryParams: QueryParams;
   email?: string;
   error?: string;
   oauthBaseUrl: string;
@@ -127,7 +127,7 @@ export const SignIn = ({
   email,
   error,
   oauthBaseUrl,
-  queryString,
+  queryParams,
   geolocation,
 }: SignInProps) => (
   <>
@@ -153,7 +153,7 @@ export const SignIn = ({
     >
       <form
         method="post"
-        action={buildUrlWithQueryParams('/signin', {}, queryString)}
+        action={buildUrlWithQueryParams('/signin', {}, queryParams)}
       >
         <CsrfFormField />
         <EmailInput defaultValue={email} />

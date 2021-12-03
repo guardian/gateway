@@ -21,7 +21,7 @@ export const RegistrationPage = () => {
       returnUrl={returnUrl}
       recaptchaSiteKey={recaptchaSiteKey}
       oauthBaseUrl={oauthBaseUrl}
-      queryString={queryParams}
+      queryParams={queryParams}
       geolocation={geolocation}
     />
   );

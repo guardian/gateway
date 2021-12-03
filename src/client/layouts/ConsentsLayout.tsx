@@ -112,7 +112,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
           css={form}
           action={buildUrlWithQueryParams(
             '/consents/:page',
-            { page: page },
+            { page },
             queryParams,
           )}
           method="post"

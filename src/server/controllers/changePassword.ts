@@ -19,10 +19,17 @@ import {
   setEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
 import { ApiError } from '@/server/models/Error';
+import { RoutePaths } from '@/shared/model/Routes';
 
-type ValidPassworUrls = '/reset-password' | '/set-password' | '/welcome';
+type ValidPassworUrls = Extract<
+  '/reset-password' | '/set-password' | '/welcome',
+  RoutePaths
+>;
 
-type ValidResendEmailUrls = '/reset' | '/welcome' | '/set-password';
+type ValidResendEmailUrls = Extract<
+  '/reset' | '/welcome' | '/set-password',
+  RoutePaths
+>;
 
 const validatePasswordField = (password: string): Array<FieldError> => {
   const errors: Array<FieldError> = [];

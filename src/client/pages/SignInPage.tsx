@@ -23,7 +23,7 @@ export const SignInPage = () => {
       email={email}
       error={error}
       oauthBaseUrl={oauthBaseUrl}
-      queryString={queryParams}
+      queryParams={queryParams}
       geolocation={geolocation}
     />
   );
