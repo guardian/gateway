@@ -23,8 +23,9 @@ import {
 } from '@/server/lib/encryptedStateCookie';
 import { ApiError } from '@/server/models/Error';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { ActivationResponse } from '@/server/models/Okta';
+import { ActivationResponse, SetPasswordResponse } from '@/server/models/Okta';
 import { validateOktaActivationToken } from '@/server/lib/okta/activateUser';
+import { setPasswordInOkta } from '@/server/lib/okta/setPassword';
 
 const validatePasswordField = (password: string): Array<FieldError> => {
   const errors: Array<FieldError> = [];
@@ -75,6 +76,26 @@ const validateOktaTokenAndAddToState = async (
       tokenExpiryTimestamp,
     },
   });
+};
+
+const setPasswordInOktaUsingStateToken = async (
+  token: string,
+  password: string,
+  state: RequestState,
+  req: Request,
+): Promise<string> => {
+  const encryptedState = readEncryptedStateCookie(req);
+  const { oktaStateToken } = encryptedState ?? {};
+  if (oktaStateToken) {
+    const setPasswordResponse: SetPasswordResponse = await setPasswordInOkta({
+      stateToken: oktaStateToken,
+      newPassword: password,
+    });
+    const { sessionToken } = setPasswordResponse;
+    return sessionToken;
+  } else {
+    throw new Error('No Okta state token found');
+  }
 };
 
 export const checkResetPasswordTokenController = (
@@ -152,6 +173,7 @@ export const setPasswordTokenController = (
   successCallback: (res: ResponseWithRequestState) => void,
 ) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    const { okta } = getConfiguration();
     let state = res.locals;
 
     const { token } = req.params;
@@ -186,9 +208,19 @@ export const setPasswordTokenController = (
         return res.status(422).type('html').send(html);
       }
 
-      const cookies = await changePassword(password, token, req.ip);
-
-      setIDAPICookies(res, cookies);
+      if (okta.registrationEnabled && setPasswordPath === Routes.WELCOME) {
+        const sessionToken = await setPasswordInOktaUsingStateToken(
+          token,
+          password,
+          state,
+          req,
+        );
+        // Just logging the session token for now, next commit will pass this to the /authorize endpoint
+        logger.info(`Okta Session token: ${sessionToken}`);
+      } else {
+        const cookies = await changePassword(password, token, req.ip);
+        setIDAPICookies(res, cookies);
+      }
 
       // if the user navigates back to the welcome page after they have set a password, this
       // ensures we show them a custom error page rather than the link expired page

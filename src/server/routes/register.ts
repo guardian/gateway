@@ -13,7 +13,7 @@ import {
   UserType,
 } from '@/server/lib/idapi/user';
 import { logger } from '@/server/lib/logger';
-import { registerWithOkta } from '@/server/lib/okta/registration';
+import { createUserInOkta } from '@/server/lib/okta/createUser';
 import { getEmailFromPlaySessionCookie } from '@/server/lib/playSessionCookie';
 import { renderer } from '@/server/lib/renderer';
 import { trackMetric } from '@/server/lib/trackMetric';
@@ -160,7 +160,7 @@ router.post(
         // and automatically send account verification email
         case UserType.NEW:
           if (okta.registrationEnabled) {
-            await registerWithOkta(email);
+            await createUserInOkta(email);
           } else {
             await guest(email, req.ip, returnUrl, refViewId, ref);
           }

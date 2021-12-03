@@ -46,4 +46,5 @@ export enum ApiRoutes {
 
 export enum Okta {
   AUTH = '/api/v1/authn',
+  RESET_PASSWORD = '/api/v1/authn/credentials/reset_password',
 }
