@@ -41,6 +41,9 @@ jobs:
           ENCRYPTION_SECRET_KEY: ${{ secrets.ENCRYPTION_SECRET_KEY }}
           OKTA_ORG_URL: oktaorgurl
           OKTA_API_TOKEN: oktatoken
+          OKTA_CUSTOM_OAUTH_SERVER: oktacustomoauthserver
+          OKTA_CLIENT_ID: oktaclientid
+          OKTA_CLIENT_SECRET: oktaclientsecret
         with:
           build: yarn build
           start: yarn start

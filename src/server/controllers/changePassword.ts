@@ -26,6 +26,8 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { ActivationResponse, SetPasswordResponse } from '@/server/models/Okta';
 import { validateOktaActivationToken } from '@/server/lib/okta/activateUser';
 import { setPasswordInOkta } from '@/server/lib/okta/setPassword';
+import { stringify } from 'query-string';
+import { v4 as uuidv4 } from 'uuid';
 
 const validatePasswordField = (password: string): Array<FieldError> => {
   const errors: Array<FieldError> = [];
@@ -178,7 +180,7 @@ export const setPasswordTokenController = (
   successCallback: (res: ResponseWithRequestState) => void,
 ) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { okta } = getConfiguration();
+    const { okta, baseUri } = getConfiguration();
     let state = res.locals;
 
     const { token } = req.params;
@@ -225,8 +227,22 @@ export const setPasswordTokenController = (
           state,
           req,
         );
-        // Just logging the session token for now, next commit will pass this to the /authorize endpoint
-        logger.info(`Okta Session token: ${sessionToken}`);
+        const queryParams = {
+          client_id: okta.clientId,
+          response_type: 'code',
+          scope: 'openid',
+          prompt: 'none',
+          redirect_uri: `https://${baseUri}${Routes.OAUTH_AUTH_CODE_CALLBACK}`,
+          // setting state to a random value for now, in future we can add actual client state such as the return url
+          state: uuidv4(),
+          sessionToken: sessionToken,
+        };
+        return res.redirect(
+          303,
+          `${okta.orgUrl}/oauth2/${okta.authServerId}/v1/authorize?${stringify(
+            queryParams,
+          )}`,
+        );
       } else {
         const cookies = await changePassword(password, token, req.ip);
         setIDAPICookies(res, cookies);

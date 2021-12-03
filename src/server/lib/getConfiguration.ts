@@ -119,6 +119,15 @@ export const getConfiguration = (): Configuration => {
     registrationEnabled: oktaRegistrationEnabled,
     orgUrl: getOrThrow(process.env.OKTA_ORG_URL, 'OKTA org URL missing'),
     token: getOrThrow(process.env.OKTA_API_TOKEN, 'OKTA API token missing'),
+    authServerId: getOrThrow(
+      process.env.OKTA_CUSTOM_OAUTH_SERVER,
+      'OKTA authorization server ID missing',
+    ),
+    clientId: getOrThrow(process.env.OKTA_CLIENT_ID, 'OKTA client ID missing'),
+    clientSecret: getOrThrow(
+      process.env.OKTA_CLIENT_SECRET,
+      'OKTA client secret missing',
+    ),
   };
 
   return {

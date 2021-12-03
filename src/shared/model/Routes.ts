@@ -20,6 +20,7 @@ export enum Routes {
   EXPIRED = '/expired',
   EMAIL_SENT = '/email-sent',
   COMPLETE = '/complete',
+  OAUTH_AUTH_CODE_CALLBACK = '/oauth/authorization-code/callback',
 }
 
 export enum ApiRoutes {

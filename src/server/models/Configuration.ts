@@ -28,6 +28,9 @@ export interface Okta {
   registrationEnabled: boolean;
   orgUrl: string;
   token: string;
+  authServerId: string;
+  clientId: string;
+  clientSecret: string;
 }
 
 export enum GA_UID {
