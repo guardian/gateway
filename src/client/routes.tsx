@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, RouteProps, Routes as RouterRoutes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { RegistrationPage } from '@/client/pages/RegistrationPage';
 import { ResetPasswordPage } from '@/client/pages/ResetPasswordPage';
 import { EmailSentPage } from '@/client/pages/EmailSentPage';
@@ -33,106 +33,128 @@ export type RoutingConfig = {
   location: string;
 };
 
-interface GatewayRouteProps extends RouteProps {
-  path?: RoutePaths;
-}
-
-const TypedRoute = (props: GatewayRouteProps) => {
-  return <Route {...props} path={props.path as string}></Route>;
-};
+const routes: Array<{
+  path: RoutePaths;
+  element: React.ReactElement;
+}> = [
+  {
+    path: '/signin',
+    element: <SignInPage />,
+  },
+  {
+    path: '/register',
+    element: <RegistrationPage />,
+  },
+  {
+    path: '/register/email-sent',
+    element: <RegistrationEmailSentPage />,
+  },
+  {
+    path: '/reset',
+    element: <ResetPasswordPage />,
+  },
+  {
+    path: '/reset/email-sent',
+    element: <EmailSentPage noAccountInfo />,
+  },
+  {
+    path: '/reset-password/:token',
+    element: <ChangePasswordPage />,
+  },
+  {
+    path: '/password/reset-confirmation',
+    element: <ChangePasswordCompletePage />,
+  },
+  {
+    path: '/reset/resend',
+    element: <ResendPasswordPage />,
+  },
+  {
+    path: '/reset/expired',
+    element: <ResetPasswordSessionExpiredPage />,
+  },
+  {
+    path: '/set-password/resend',
+    element: <SetPasswordResendPage />,
+  },
+  {
+    path: '/set-password/expired',
+    element: <SetPasswordSessionExpiredPage />,
+  },
+  {
+    path: '/set-password/complete',
+    element: <SetPasswordCompletePage />,
+  },
+  {
+    path: '/set-password/email-sent',
+    element: <EmailSentPage />,
+  },
+  {
+    path: '/set-password/:token',
+    element: <SetPasswordPage />,
+  },
+  {
+    path: '/consents/data',
+    element: <ConsentsDataPage />,
+  },
+  {
+    path: '/consents/communication',
+    element: <ConsentsCommunicationPage />,
+  },
+  {
+    path: '/consents/newsletters',
+    element: <ConsentsNewslettersPage />,
+  },
+  {
+    path: '/consents/review',
+    element: <ConsentsConfirmationPage />,
+  },
+  {
+    path: '/welcome/resend',
+    element: <WelcomeResendPage />,
+  },
+  {
+    path: '/welcome/expired',
+    element: <WelcomeSessionExpiredPage />,
+  },
+  {
+    path: '/welcome/email-sent',
+    element: <EmailSentPage />,
+  },
+  {
+    path: '/welcome/complete',
+    element: <WelcomePasswordAlreadySetPage />,
+  },
+  {
+    path: '/welcome/:token',
+    element: <WelcomePage />,
+  },
+  {
+    path: '/verify-email',
+    element: <ResendEmailVerificationPage />,
+  },
+  {
+    path: '/magic-link',
+    element: <MagicLinkPage />,
+  },
+  {
+    path: '/magic-link/email-sent',
+    element: <EmailSentPage noAccountInfo />,
+  },
+  {
+    path: '/error',
+    element: <UnexpectedErrorPage />,
+  },
+  {
+    path: '/404',
+    element: <NotFoundPage />,
+  },
+];
 
 export const GatewayRoutes = () => (
-  <RouterRoutes>
-    <TypedRoute path={'/signin'} element={<SignInPage />}></TypedRoute>
-    <TypedRoute path={'/register'} element={<RegistrationPage />}></TypedRoute>
-    <TypedRoute
-      path={'/register/email-sent'}
-      element={<RegistrationEmailSentPage />}
-    ></TypedRoute>
-    <TypedRoute path={'/reset'} element={<ResetPasswordPage />}></TypedRoute>
-    <TypedRoute
-      path={'/reset/email-sent'}
-      element={<EmailSentPage noAccountInfo />}
-    ></TypedRoute>
-    <TypedRoute
-      path={'/reset-password/:token'}
-      element={<ChangePasswordPage />}
-    ></TypedRoute>
-    <TypedRoute
-      path={'/password/reset-confirmation'}
-      element={<ChangePasswordCompletePage />}
-    ></TypedRoute>
-    <TypedRoute
-      path={'/reset/resend'}
-      element={<ResendPasswordPage />}
-    ></TypedRoute>
-    <TypedRoute
-      path={'/reset/expired'}
-      element={<ResetPasswordSessionExpiredPage />}
-    ></TypedRoute>
-    <TypedRoute
-      path={'/set-password/resend'}
-      element={<SetPasswordResendPage />}
-    ></TypedRoute>
-    <TypedRoute
-      path={'/set-password/expired'}
-      element={<SetPasswordSessionExpiredPage />}
-    ></TypedRoute>
-    <TypedRoute
-      path={'/set-password/complete'}
-      element={<SetPasswordCompletePage />}
-    ></TypedRoute>
-    <TypedRoute
-      path={'/set-password/email-sent'}
-      element={<EmailSentPage />}
-    ></TypedRoute>
-    <TypedRoute
-      path={'/set-password/:token'}
-      element={<SetPasswordPage />}
-    ></TypedRoute>
-    <TypedRoute
-      path={'/consents/data'}
-      element={<ConsentsDataPage />}
-    ></TypedRoute>
-    <TypedRoute
-      path={'/consents/communication'}
-      element={<ConsentsCommunicationPage />}
-    ></TypedRoute>
-    <TypedRoute
-      path={'/consents/newsletters'}
-      element={<ConsentsNewslettersPage />}
-    ></TypedRoute>
-    <TypedRoute
-      path={'/consents/review'}
-      element={<ConsentsConfirmationPage />}
-    ></TypedRoute>
-    <TypedRoute
-      path={'/welcome/resend'}
-      element={<WelcomeResendPage />}
-    ></TypedRoute>
-    <TypedRoute
-      path={'/welcome/expired'}
-      element={<WelcomeSessionExpiredPage />}
-    ></TypedRoute>
-    <TypedRoute
-      path={'/welcome/email-sent'}
-      element={<EmailSentPage />}
-    ></TypedRoute>
-    <TypedRoute
-      path={'/welcome/complete'}
-      element={<WelcomePasswordAlreadySetPage />}
-    ></TypedRoute>
-    <TypedRoute path={'/welcome/:token'} element={<WelcomePage />}></TypedRoute>
-    <TypedRoute
-      path={'/verify-email'}
-      element={<ResendEmailVerificationPage />}
-    ></TypedRoute>
-    <TypedRoute path={'/magic-link'} element={<MagicLinkPage />}></TypedRoute>
-    <TypedRoute
-      path={'/magic-link/email-sent'}
-      element={<EmailSentPage noAccountInfo />}
-    ></TypedRoute>
-    <TypedRoute path={'/error'} element={<UnexpectedErrorPage />}></TypedRoute>
-    <TypedRoute path={'/404'} element={<NotFoundPage />}></TypedRoute>
-  </RouterRoutes>
+  <Routes>
+    {routes.map(({ path, element }) => (
+      <Route key={path} path={path} element={element}></Route>
+    ))}
+  </Routes>
 );
