@@ -5,7 +5,10 @@ import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { getBrowserNameFromUserAgent } from '@/server/lib/getBrowserName';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import {
+  RequestState,
+  ResponseWithRequestState,
+} from '@/server/models/Express';
 import {
   validate as validateToken,
   change as changePassword,
@@ -19,6 +22,9 @@ import {
   setEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
 import { ApiError } from '@/server/models/Error';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { ActivationResponse } from '@/server/models/Okta';
+import { validateOktaActivationToken } from '@/server/lib/okta/activateUser';
 
 const validatePasswordField = (password: string): Array<FieldError> => {
   const errors: Array<FieldError> = [];
@@ -38,6 +44,39 @@ const validatePasswordField = (password: string): Array<FieldError> => {
   return errors;
 };
 
+const validateOktaTokenAndAddToState = async (
+  token: string,
+  req: Request,
+  res: ResponseWithRequestState,
+  state: RequestState,
+): Promise<RequestState> => {
+  // validate okta activation token and exchange it for a state token (used to set a password)
+  const response: ActivationResponse = await validateOktaActivationToken({
+    token,
+  });
+  const {
+    expiresAt,
+    stateToken: oktaStateToken,
+    _embedded: {
+      user: {
+        profile: { login: email },
+      },
+    },
+  } = response;
+  const tokenExpiryTimestamp = Date.parse(expiresAt);
+  setEncryptedStateCookie(res, {
+    email,
+    oktaStateToken,
+  });
+  return deepmerge(state, {
+    pageData: {
+      browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
+      email,
+      tokenExpiryTimestamp,
+    },
+  });
+};
+
 export const checkResetPasswordTokenController = (
   setPasswordPagePath: string,
   setPasswordPageTitle: string,
@@ -45,26 +84,31 @@ export const checkResetPasswordTokenController = (
   resendEmailPageTitle: string,
 ) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    const { okta } = getConfiguration();
     let state = res.locals;
     const { token } = req.params;
 
     try {
-      const { email, tokenExpiryTimestamp } = await validateToken(
-        token,
-        req.ip,
-      );
+      if (okta.registrationEnabled && setPasswordPagePath === Routes.WELCOME) {
+        state = await validateOktaTokenAndAddToState(token, req, res, state);
+      } else {
+        const { email, tokenExpiryTimestamp } = await validateToken(
+          token,
+          req.ip,
+        );
 
-      state = deepmerge(state, {
-        pageData: {
-          browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
-          email,
-          tokenExpiryTimestamp,
-        },
-      });
+        state = deepmerge(state, {
+          pageData: {
+            browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
+            email,
+            tokenExpiryTimestamp,
+          },
+        });
 
-      // set the encrypted state here, so we can read the email
-      // on the confirmation page
-      setEncryptedStateCookie(res, { email });
+        // set the encrypted state here, so we can read the email
+        // on the confirmation page
+        setEncryptedStateCookie(res, { email });
+      }
 
       const html = renderer(`${setPasswordPagePath}/${token}`, {
         requestState: state,
