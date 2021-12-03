@@ -32,9 +32,7 @@ export const ChangePasswordPage = () => {
       buttonText="Confirm new password"
       submitUrl={buildUrlWithQueryParams(
         '/reset-password/:token',
-        {
-          token: token,
-        },
+        { token },
         queryParams,
       )}
       email={email}

@@ -52,7 +52,7 @@ export const routeErrorHandler = (
 
   logger.error('unexpected error', err);
 
-  const html = renderer(`${'/error'}`, {
+  const html = renderer('/error', {
     requestState: res.locals,
     pageTitle: PageTitle.UNEXPECTED_ERROR,
   });
