@@ -45,6 +45,7 @@ export const parseExpressQueryParams = (
     ref,
     encryptedEmail,
     error,
+    useOkta,
   }: {
     returnUrl?: string;
     clientId?: string;
@@ -56,6 +57,7 @@ export const parseExpressQueryParams = (
     ref?: string;
     encryptedEmail?: string;
     error?: string;
+    useOkta?: string;
   },
 ): QueryParams => {
   return {
@@ -69,6 +71,7 @@ export const parseExpressQueryParams = (
     ref: ref && validateRefUrl(ref),
     encryptedEmail,
     error: validateError(error),
+    useOkta: isStringBoolean(useOkta),
   };
 };
 

@@ -28,6 +28,7 @@ describe('getPersistableQueryParams', () => {
       clientId: 'clientId',
       ref: 'ref',
       refViewId: 'refViewId',
+      useOkta: undefined,
     };
 
     expect(output).toStrictEqual(expected);

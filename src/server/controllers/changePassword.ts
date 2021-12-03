@@ -108,9 +108,14 @@ export const checkResetPasswordTokenController = (
     const { okta } = getConfiguration();
     let state = res.locals;
     const { token } = req.params;
+    const { useOkta } = state.queryParams;
 
     try {
-      if (okta.registrationEnabled && setPasswordPagePath === Routes.WELCOME) {
+      if (
+        okta.registrationEnabled &&
+        useOkta &&
+        setPasswordPagePath === Routes.WELCOME
+      ) {
         state = await validateOktaTokenAndAddToState(token, req, res, state);
       } else {
         const { email, tokenExpiryTimestamp } = await validateToken(
@@ -178,6 +183,7 @@ export const setPasswordTokenController = (
 
     const { token } = req.params;
     const { password } = req.body;
+    const { useOkta } = state.queryParams;
 
     state = deepmerge(state, {
       pageData: {
@@ -208,7 +214,11 @@ export const setPasswordTokenController = (
         return res.status(422).type('html').send(html);
       }
 
-      if (okta.registrationEnabled && setPasswordPath === Routes.WELCOME) {
+      if (
+        okta.registrationEnabled &&
+        useOkta &&
+        setPasswordPath === Routes.WELCOME
+      ) {
         const sessionToken = await setPasswordInOktaUsingStateToken(
           token,
           password,
