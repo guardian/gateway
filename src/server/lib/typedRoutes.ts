@@ -12,5 +12,5 @@ export const typedRouter = {
   post: (path: RoutePaths, ...handlers: Array<any>) => {
     return router.post(path, ...handlers);
   },
-  router: router,
+  router,
 };
