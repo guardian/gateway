@@ -9,6 +9,7 @@ import { css } from '@emotion/react';
 import { neutral, space, height } from '@guardian/source-foundations';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
+import { disableAutofillBackground } from '@/client/styles/Shared';
 
 type Props = {
   label: string;
@@ -41,11 +42,6 @@ const textInputBorderStyle = (error?: string) => css`
   pointer-events: none;
 `;
 
-// remove the border and shorten the width of the text input box so the text does not overlap the password eye
-const paddingRight = (isEyeDisplayedOnBrowser: boolean) => css`
-  padding-right: ${isEyeDisplayedOnBrowser ? 28 : 0}px;
-`;
-
 // we render our own border which includes the input field and eye symbol
 const noBorder = css`
   border: none;
@@ -56,9 +52,6 @@ const noBorder = css`
 
 const EyeIcon = ({ isOpen }: { isOpen: boolean }) => {
   const iconStyles = css`
-    position: absolute;
-    top: 0;
-    left: 0;
     svg {
       width: 30px;
       height: 30px;
@@ -96,14 +89,12 @@ const EyeSymbol = ({
   onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }) => {
   const buttonStyles = css`
-    width: 30px;
-    height: 30px;
-    position: absolute;
-    right: 5px;
-    bottom: 7px;
+    height: 40px;
+    align-self: flex-end;
     border: none;
     background-color: transparent;
     cursor: pointer;
+    padding-left: 0;
   `;
 
   return (
@@ -135,18 +126,28 @@ export const PasswordInput = ({
   return (
     <div
       css={css`
+        display: flex;
         position: relative;
       `}
     >
-      <TextInput
-        error={error}
-        onChange={onChange}
-        label={label}
-        name="password"
-        supporting={supporting}
-        type={passwordVisible ? 'text' : 'password'}
-        cssOverrides={[noBorder, paddingRight(isEyeDisplayedOnBrowser)]}
-      />
+      <div
+        css={css`
+          & {
+            width: 100%;
+          }
+        `}
+      >
+        <TextInput
+          error={error}
+          onChange={onChange}
+          label={label}
+          name="password"
+          supporting={supporting}
+          type={passwordVisible ? 'text' : 'password'}
+          cssOverrides={[noBorder, disableAutofillBackground]}
+        />
+      </div>
+
       {isEyeDisplayedOnBrowser ? (
         <EyeSymbol
           isOpen={passwordVisible}
