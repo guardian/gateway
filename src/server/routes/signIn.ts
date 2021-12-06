@@ -13,7 +13,8 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { decrypt } from '@/server/lib/idapi/decryptToken';
 import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
 import { ApiError } from '@/server/models/Error';
-import { readEmailCookie } from '../lib/emailCookie';
+import { readEmailCookie } from '@/server/lib/emailCookie';
+import handleRecaptcha from '@/server/lib/recaptcha';
 
 const router = Router();
 
@@ -54,6 +55,7 @@ router.get(
 
 router.post(
   Routes.SIGN_IN,
+  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
 

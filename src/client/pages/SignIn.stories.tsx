@@ -9,6 +9,7 @@ export default {
   component: SignIn,
   parameters: { layout: 'fullscreen' },
   args: {
+    recaptchaSiteKey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
     oauthBaseUrl: 'https://oauth.theguardian.com/',
   },
 } as Meta<SignInProps>;
@@ -27,4 +28,11 @@ export const SocialSigninBlocked = (args: SignInProps) => (
 );
 SocialSigninBlocked.story = {
   name: 'social sign-in blocked',
+};
+
+export const InvalidRecaptcha = (args: SignInProps) => (
+  <SignIn {...args} recaptchaSiteKey="invalid-key" />
+);
+InvalidRecaptcha.story = {
+  name: 'with reCAPTCHA error',
 };

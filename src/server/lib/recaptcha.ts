@@ -28,15 +28,11 @@ const checkRecaptchaError = (
     return next(recaptchaError);
   }
 
-  if (req.recaptcha.error) {
-    logger.error(
-      'Problem verifying recaptcha, error response: ',
-      req.recaptcha.error,
-    );
-
+  const { error } = req.recaptcha;
+  if (error) {
+    logger.error('Problem verifying recaptcha, error response: ', error);
     return next(recaptchaError);
   }
-
   next();
 };
 

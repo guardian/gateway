@@ -8,7 +8,7 @@ import {
 } from '@/client/components/MainForm';
 import { EmailInput } from '@/client/components/EmailInput';
 import { ExternalLink } from '@/client/components/ExternalLink';
-import locations from '@/client/lib/locations';
+import locations from '@/shared/lib/locations';
 
 type Props = {
   email?: string;

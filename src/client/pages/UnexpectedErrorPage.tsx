@@ -1,5 +1,5 @@
 import React from 'react';
-import locations from '@/client/lib/locations';
+import locations from '@/shared/lib/locations';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
