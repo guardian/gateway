@@ -18,7 +18,7 @@ import { Routes } from '@/shared/model/Routes';
 import { SignInPage } from '@/client/pages/SignInPage';
 import { MagicLinkPage } from '@/client/pages/MagicLinkPage';
 import { WelcomePage } from '@/client/pages/WelcomePage';
-import { WelcomeResendPage } from '@/client/pages/WelcomeResend';
+import { WelcomeResendPage } from '@/client/pages/WelcomeResendPage';
 import { WelcomePasswordAlreadySetPage } from '@/client/pages/WelcomePasswordAlreadySetPage';
 import { RegistrationEmailSentPage } from '@/client/pages/RegistrationEmailSentPage';
 import { ResetPasswordSessionExpiredPage } from '@/client/pages/ResetPasswordSessionExpiredPage';
@@ -48,7 +48,7 @@ export const GatewayRoutes = () => (
       <ResetPasswordPage />
     </Route>
     <Route exact path={`${Routes.RESET}${Routes.EMAIL_SENT}`}>
-      <EmailSentPage noAccountInfoBox />
+      <EmailSentPage noAccountInfo />
     </Route>
     <Route exact path={`${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`}>
       <ChangePasswordPage />
@@ -72,7 +72,7 @@ export const GatewayRoutes = () => (
       <SetPasswordCompletePage />
     </Route>
     <Route path={`${Routes.SET_PASSWORD}${Routes.EMAIL_SENT}`}>
-      <EmailSentPage helpInfoBox />
+      <EmailSentPage />
     </Route>
     <Route exact path={`${Routes.SET_PASSWORD}${Routes.TOKEN_PARAM}`}>
       <SetPasswordPage />
@@ -96,7 +96,7 @@ export const GatewayRoutes = () => (
       <WelcomeSessionExpiredPage />
     </Route>
     <Route exact path={`${Routes.WELCOME}${Routes.EMAIL_SENT}`}>
-      <EmailSentPage helpInfoBox />
+      <EmailSentPage />
     </Route>
     <Route exact path={`${Routes.WELCOME}${Routes.COMPLETE}`}>
       <WelcomePasswordAlreadySetPage />
@@ -111,7 +111,7 @@ export const GatewayRoutes = () => (
       <MagicLinkPage />
     </Route>
     <Route exact path={`${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`}>
-      <EmailSentPage noAccountInfoBox />
+      <EmailSentPage noAccountInfo />
     </Route>
     <Route exact path={Routes.UNEXPECTED_ERROR}>
       <UnexpectedErrorPage />

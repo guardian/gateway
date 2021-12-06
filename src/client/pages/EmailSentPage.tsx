@@ -5,16 +5,21 @@ import { EmailSent } from '@/client/pages/EmailSent';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 interface Props {
-  noAccountInfoBox?: boolean;
-  helpInfoBox?: boolean;
+  noAccountInfo?: boolean;
 }
 
-export const EmailSentPage = ({ noAccountInfoBox, helpInfoBox }: Props) => {
+export const EmailSentPage = ({ noAccountInfo }: Props) => {
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData = {}, queryParams, globalMessage = {} } = clientState;
+  const {
+    pageData = {},
+    queryParams,
+    globalMessage = {},
+    recaptchaConfig,
+  } = clientState;
   const { email, previousPage } = pageData;
   const { emailSentSuccess } = queryParams;
   const { error } = globalMessage;
+  const { recaptchaSiteKey } = recaptchaConfig;
 
   const queryString = addQueryParamsToPath('', queryParams, {
     emailSentSuccess: true,
@@ -28,8 +33,8 @@ export const EmailSentPage = ({ noAccountInfoBox, helpInfoBox }: Props) => {
       queryString={queryString}
       showSuccess={emailSentSuccess}
       errorMessage={error}
-      noAccountInfoBox={noAccountInfoBox}
-      helpInfoBox={helpInfoBox}
+      noAccountInfo={noAccountInfo}
+      recaptchaSiteKey={recaptchaSiteKey}
     />
   );
 };

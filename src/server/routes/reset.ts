@@ -6,7 +6,7 @@ import { renderer } from '@/server/lib/renderer';
 import { Routes } from '@/shared/model/Routes';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { Metrics } from '@/server/models/Metrics';
+import { emailSendMetric } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { readEmailCookie } from '@/server/lib/emailCookie';
@@ -14,6 +14,7 @@ import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
 import { ResetPasswordErrors } from '@/shared/model/Errors';
 import { ApiError } from '@/server/models/Error';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import handleRecaptcha from '@/server/lib/recaptcha';
 
 const router = Router();
 
@@ -38,6 +39,7 @@ router.get(Routes.RESET, (req: Request, res: ResponseWithRequestState) => {
 
 router.post(
   Routes.RESET,
+  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
@@ -57,7 +59,7 @@ router.post(
           ? error
           : new ApiError({ message: ResetPasswordErrors.GENERIC });
 
-      trackMetric(Metrics.SEND_PASSWORD_RESET_FAILURE);
+      trackMetric(emailSendMetric('ResetPassword', 'Failure'));
 
       state = deepmerge(state, {
         globalMessage: {
@@ -72,7 +74,7 @@ router.post(
       return res.status(status).type('html').send(html);
     }
 
-    trackMetric(Metrics.SEND_PASSWORD_RESET_SUCCESS);
+    trackMetric(emailSendMetric('ResetPassword', 'Success'));
 
     return res.redirect(
       303,

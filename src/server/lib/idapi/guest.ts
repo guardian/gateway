@@ -11,6 +11,8 @@ import {
 import { logger } from '../logger';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { ApiRoutes } from '@/shared/model/Routes';
+import { trackMetric } from '../trackMetric';
+import { emailSendMetric } from '@/server/models/Metrics';
 
 const url = `${ApiRoutes.GUEST}?accountVerificationEmail=true`;
 
@@ -54,9 +56,11 @@ export const guest = async (
 
   try {
     await idapiFetch(path, APIAddClientAccessToken(options, ip));
+    trackMetric(emailSendMetric('AccountVerification', 'Success'));
     return EmailType.ACCOUNT_VERIFICATION;
   } catch (error) {
     logger.error(`IDAPI Error: guest account creation ${url}`, error);
+    trackMetric(emailSendMetric('AccountVerification', 'Failure'));
     return handleError(error as IDAPIError);
   }
 };

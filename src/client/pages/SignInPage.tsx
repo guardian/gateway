@@ -12,10 +12,12 @@ export const SignInPage = () => {
     globalMessage = {},
     clientHosts,
     queryParams,
+    recaptchaConfig,
   } = clientState;
   const { returnUrl, email, geolocation } = pageData;
   const { error } = globalMessage;
   const { oauthBaseUrl } = clientHosts;
+  const { recaptchaSiteKey } = recaptchaConfig;
   const queryString = addQueryParamsToPath('', queryParams);
   // we use the encryptedEmail parameter to pre-fill the email field, but then want to remove it from the url
   useRemoveEncryptedEmailParam();
@@ -27,6 +29,7 @@ export const SignInPage = () => {
       oauthBaseUrl={oauthBaseUrl}
       queryString={queryString}
       geolocation={geolocation}
+      recaptchaSiteKey={recaptchaSiteKey}
     />
   );
 };

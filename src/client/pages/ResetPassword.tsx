@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react';
+import React, { PropsWithChildren, ReactNode, useState } from 'react';
 import { Routes } from '@/shared/model/Routes';
 import { MainLayout } from '@/client/layouts/Main';
 import {
@@ -8,7 +8,7 @@ import {
 import { EmailInput } from '@/client/components/EmailInput';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { InfoSummary } from '@guardian/source-react-components-development-kitchen';
-import locations from '@/client/lib/locations';
+import locations from '@/shared/lib/locations';
 import { ExternalLink } from '@/client/components/ExternalLink';
 
 interface ResetPasswordProps {
@@ -20,6 +20,7 @@ interface ResetPasswordProps {
   emailInputLabel?: string;
   showNoAccessEmail?: boolean;
   showRecentEmailSummary?: boolean;
+  recaptchaSiteKey?: string;
 }
 
 export const ResetPassword = ({
@@ -32,41 +33,55 @@ export const ResetPassword = ({
   showNoAccessEmail,
   showRecentEmailSummary,
   children,
-}: PropsWithChildren<ResetPasswordProps>) => (
-  <MainLayout pageTitle={headerText}>
-    {children}
-    <MainForm
-      formAction={
-        formActionOverride
-          ? `${formActionOverride}${queryString}`
-          : `${Routes.RESET}${queryString}`
-      }
-      submitButtonText={buttonText}
+  recaptchaSiteKey,
+}: PropsWithChildren<ResetPasswordProps>) => {
+  const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
+  const [recaptchaErrorContext, setRecaptchaErrorContext] =
+    useState<ReactNode>(null);
+
+  return (
+    <MainLayout
+      pageTitle={headerText}
+      errorContext={recaptchaErrorContext}
+      errorOverride={recaptchaErrorMessage}
     >
-      <EmailInput label={emailInputLabel} defaultValue={email} />
-    </MainForm>
-    {showNoAccessEmail && (
-      <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
-        If you no longer have access to this email account please{' '}
-        <ExternalLink subdued href={locations.REPORT_ISSUE}>
-          contact our help department
-        </ExternalLink>
-      </MainBodyText>
-    )}
-    {showRecentEmailSummary && (
-      <InfoSummary
-        cssOverrides={belowFormMarginTopSpacingStyle}
-        message="Please make sure that you are opening the most recent email we sent."
-        context={
-          <>
-            If you are having trouble, please contact our customer service team
-            at{' '}
-            <ExternalLink subdued href={locations.REPORT_ISSUE}>
-              userhelp@guardian.com
-            </ExternalLink>
-          </>
+      {children}
+      <MainForm
+        formAction={
+          formActionOverride
+            ? `${formActionOverride}${queryString}`
+            : `${Routes.RESET}${queryString}`
         }
-      />
-    )}
-  </MainLayout>
-);
+        submitButtonText={buttonText}
+        recaptchaSiteKey={recaptchaSiteKey}
+        setRecaptchaErrorMessage={setRecaptchaErrorMessage}
+        setRecaptchaErrorContext={setRecaptchaErrorContext}
+      >
+        <EmailInput label={emailInputLabel} defaultValue={email} />
+      </MainForm>
+      {showNoAccessEmail && (
+        <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
+          If you no longer have access to this email account please{' '}
+          <ExternalLink subdued href={locations.REPORT_ISSUE}>
+            contact our help department
+          </ExternalLink>
+        </MainBodyText>
+      )}
+      {showRecentEmailSummary && (
+        <InfoSummary
+          cssOverrides={belowFormMarginTopSpacingStyle}
+          message="Please make sure that you are opening the most recent email we sent."
+          context={
+            <>
+              If you are having trouble, please contact our customer service
+              team at{' '}
+              <ExternalLink subdued href={locations.REPORT_ISSUE}>
+                userhelp@guardian.com
+              </ExternalLink>
+            </>
+          }
+        />
+      )}
+    </MainLayout>
+  );
+};

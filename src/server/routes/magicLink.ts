@@ -4,11 +4,12 @@ import { Routes } from '@/shared/model/Routes';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { Metrics } from '@/server/models/Metrics';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { ApiError } from '@/server/models/Error';
+
+import handleRecaptcha from '@/server/lib/recaptcha';
 
 const router = Router();
 
@@ -22,6 +23,7 @@ router.get(Routes.MAGIC_LINK, (req: Request, res: ResponseWithRequestState) => {
 
 router.post(
   Routes.MAGIC_LINK,
+  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
@@ -36,7 +38,7 @@ router.post(
       const { message, status } =
         error instanceof ApiError ? error : new ApiError();
 
-      trackMetric(Metrics.SEND_MAGIC_LINK_FAILURE);
+      trackMetric('SendMagicLink::Failure');
 
       state = deepmerge(state, {
         globalMessage: {
@@ -51,7 +53,7 @@ router.post(
       return res.status(status).type('html').send(html);
     }
 
-    trackMetric(Metrics.SEND_MAGIC_LINK_SUCCESS);
+    trackMetric('SendMagicLink::Success');
 
     return res.redirect(303, `${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`);
   }),

@@ -14,7 +14,6 @@ import { FieldError } from '@/shared/model/ClientState';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { Metrics } from '@/server/models/Metrics';
 import {
   readEncryptedStateCookie,
   setEncryptedStateCookie,
@@ -164,8 +163,8 @@ export const setPasswordTokenController = (
       // b) change password
       // since these could happen at different points in time, it's best
       // to keep them as two seperate metrics
-      trackMetric(Metrics.ACCOUNT_VERIFICATION_SUCCESS);
-      trackMetric(Metrics.CHANGE_PASSWORD_SUCCESS);
+      trackMetric('AccountVerification::Success');
+      trackMetric('UpdatePassword::Success');
 
       return successCallback(res);
     } catch (error) {
@@ -175,8 +174,8 @@ export const setPasswordTokenController = (
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
       // see the comment above around the success metrics
-      trackMetric(Metrics.ACCOUNT_VERIFICATION_FAILURE);
-      trackMetric(Metrics.CHANGE_PASSWORD_FAILURE);
+      trackMetric('AccountVerification::Failure');
+      trackMetric('UpdatePassword::Failure');
 
       // we unfortunately need this inner try catch block to catch
       // errors from the `validateToken` method were it to fail

@@ -1,3 +1,5 @@
+import { randomPassword } from '../../support/commands/testUser';
+
 describe('Password reset flow', () => {
   context('Account exists', () => {
     it("changes the reader's password", () => {
@@ -12,8 +14,26 @@ describe('Password reset flow', () => {
         cy.visit('/signin');
         const timeRequestWasMade = new Date();
         cy.contains('Reset password').click();
+
+        // Simulate going offline by failing the reCAPTCHA POST request.
+        cy.intercept({
+          method: 'POST',
+          url: 'https://www.google.com/recaptcha/api2/**',
+          times: 1,
+        });
+
         cy.contains('Forgot password');
         cy.get('input[name=email]').type(emailAddress);
+
+        // Check that both reCAPTCHA errors are shown.
+        cy.get('[data-cy="main-form-submit-button"]').click();
+        cy.contains('Google reCAPTCHA verification failed. Please try again.');
+        cy.get('[data-cy="main-form-submit-button"]').click();
+        cy.contains('Google reCAPTCHA verification failed.');
+        cy.contains('If the problem persists please try the following:');
+        cy.contains('userhelp@');
+
+        // Continue checking the password reset flow after reCAPTCHA assertions above.
         cy.get('[data-cy="main-form-submit-button"]').click();
         cy.contains('Check your email inbox');
         cy.checkForEmailAndGetDetails(
@@ -22,13 +42,75 @@ describe('Password reset flow', () => {
           /reset-password\/([^"]*)/,
         ).then(({ token }) => {
           cy.visit(`/reset-password/${token}`);
-          cy.get('input[name=password]').type('0298a96c-1028!@#');
+          cy.get('input[name=password]').type(randomPassword());
           cy.wait('@breachCheck');
           cy.get('[data-cy="main-form-submit-button"]').click();
           cy.contains('Password updated');
           cy.contains(emailAddress.toLowerCase());
         });
       });
+    });
+  });
+
+  context('Account without password exists', () => {
+    it('changes the users password', () => {
+      cy.intercept({
+        method: 'GET',
+        url: 'https://api.pwnedpasswords.com/range/*',
+      }).as('breachCheck');
+
+      cy.createTestUser({
+        isUserEmailValidated: true,
+      })?.then(({ emailAddress }) => {
+        cy.visit('/signin');
+        const timeRequestWasMade = new Date();
+        cy.contains('Reset password').click();
+
+        // Simulate going offline by failing the reCAPTCHA POST request.
+        cy.intercept({
+          method: 'POST',
+          url: 'https://www.google.com/recaptcha/api2/**',
+          times: 1,
+        });
+
+        cy.contains('Forgot password');
+        cy.get('input[name=email]').type(emailAddress);
+
+        // Check that both reCAPTCHA errors are shown.
+        cy.get('[data-cy="main-form-submit-button"]').click();
+        cy.contains('Google reCAPTCHA verification failed. Please try again.');
+        cy.get('[data-cy="main-form-submit-button"]').click();
+        cy.contains('Google reCAPTCHA verification failed.');
+        cy.contains('If the problem persists please try the following:');
+        cy.contains('userhelp@');
+
+        // Continue checking the password reset flow after reCAPTCHA assertions above.
+        cy.get('[data-cy="main-form-submit-button"]').click();
+        cy.contains('Check your email inbox');
+        cy.checkForEmailAndGetDetails(
+          emailAddress,
+          timeRequestWasMade,
+          /reset-password\/([^"]*)/,
+        ).then(({ token }) => {
+          cy.visit(`/reset-password/${token}`);
+          cy.get('input[name=password]').type(randomPassword());
+          cy.wait('@breachCheck');
+          cy.get('[data-cy="main-form-submit-button"]').click();
+          cy.contains('Password updated');
+          cy.contains(emailAddress.toLowerCase());
+        });
+      });
+    });
+  });
+
+  context('No Account', () => {
+    it('shows the email sent page with link to register when attempting to reset password', () => {
+      cy.visit('/reset');
+      cy.contains('Forgot password');
+      cy.get('input[name=email]').type('invalid@doesnotexist.com');
+      cy.get('[data-cy="main-form-submit-button"]').click();
+      cy.contains('Check your email inbox');
+      cy.contains('Register for free');
     });
   });
 });
@@ -42,10 +124,28 @@ describe('Password set flow', () => {
       })?.then(({ emailAddress }) => {
         cy.visit('/set-password/expired');
 
+        // Simulate going offline by failing the reCAPTCHA POST request.
+        cy.intercept({
+          method: 'POST',
+          url: 'https://www.google.com/recaptcha/api2/**',
+          times: 1,
+        });
+
         // link expired
         const timeRequestWasMadeLinkExpired = new Date();
         cy.get('input[name=email]').type(emailAddress);
-        cy.get('[data-cy="main-form-submit-button"]').click();
+
+        // Check that both reCAPTCHA errors are shown.
+        cy.contains('Send me a link').click();
+        cy.contains('Google reCAPTCHA verification failed. Please try again.');
+
+        cy.contains('Send me a link').click();
+        cy.contains('Google reCAPTCHA verification failed.');
+        cy.contains('If the problem persists please try the following:');
+        cy.contains('userhelp@');
+
+        // Continue checking the password reset flow after reCAPTCHA assertions above.
+        cy.contains('Send me a link').click();
         cy.contains('Check your email inbox');
         cy.contains(emailAddress);
         cy.contains('Resend email');

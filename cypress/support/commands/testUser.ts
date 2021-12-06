@@ -45,6 +45,8 @@ export const randomMailosaurEmail = () => {
   return uuidv4() + '@' + Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net';
 };
 
+export const randomPassword = () => uuidv4();
+
 export const createTestUser = ({
   primaryEmailAddress,
   password,
@@ -77,7 +79,6 @@ export const createTestUser = ({
         } as IDAPITestUserOptions,
       })
       .then((res) => {
-        console.log(res.body.values);
         return cy.wrap({
           emailAddress: finalEmail,
           cookies: res.body.values as IDAPITestUserResponse,

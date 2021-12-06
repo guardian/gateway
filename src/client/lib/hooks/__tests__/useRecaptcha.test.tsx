@@ -4,51 +4,23 @@
 
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import type { RenderOptions } from './useRecaptcha';
-import useRecaptcha from './useRecaptcha';
+import type { RenderOptions } from '../useRecaptcha';
+import useRecaptcha from '../useRecaptcha';
+import {
+  setupRecaptchaScriptMutationObserver,
+  setupRecaptchaObject,
+} from '@/client/lib/hooks/__tests__/utils/useRecaptchaTestUtils';
 
 const validRecaptchaScriptUrl =
   'https://www.google.com/recaptcha/api.js?render=explicit';
 const invalidRecaptchaScriptUrl = 'bad-url';
 
-// Used to mock the `load` and `error` events for scripts so the @guardian/libs `loadScript` method functions as intended.
-// Based on the original technique used on line 10 of https://github.com/guardian/libs/blob/main/src/loadScript.test.ts
-// when we detect that a script has been added to the DOM:
-// - if the src is the recaptcha script, trigger a load event
-// - if the src is not the recaptcha script, trigger an error event
-new MutationObserver((mutations) => {
-  mutations.forEach((mutation) => {
-    mutation.addedNodes.forEach((addedNode) => {
-      if (addedNode.nodeName === 'SCRIPT') {
-        const addedScript = addedNode as HTMLScriptElement;
+setupRecaptchaScriptMutationObserver(
+  validRecaptchaScriptUrl,
+  invalidRecaptchaScriptUrl,
+);
 
-        if (addedScript.src.includes(validRecaptchaScriptUrl)) {
-          addedNode.dispatchEvent(new Event('load'));
-        }
-
-        if (addedScript.src.includes(invalidRecaptchaScriptUrl)) {
-          addedNode.dispatchEvent(new Event('error'));
-        }
-      }
-    });
-  });
-}).observe(document.body, {
-  childList: true,
-});
-
-beforeEach(() => {
-  // Define grecpatcha on the window object so we can mock it.
-  Object.defineProperty(global.window, 'grecaptcha', {
-    configurable: true,
-    get() {
-      return this.stored_x;
-    },
-  });
-
-  // Set up test so a script is on the body so we can mock the loadScript method from @guardian/libs.
-  document.body.setAttribute('innerHTML', '');
-  document.body.appendChild(document.createElement('script'));
-});
+beforeEach(setupRecaptchaObject);
 
 test('should expect an empty token on successful initial load of useRecaptcha', async () => {
   // Mock the Google Recaptcha object
@@ -159,14 +131,16 @@ test('should receive a valid token back when the reCAPTCHA check is successful',
 
 test('should not be able to execute a call to reCAPTCHA if the script has not loaded yet', async () => {
   // Begin test.
-  const { result } = renderHook(() =>
-    useRecaptcha('public-recaptcha-token', 'render-element'),
-  );
+  await act(async () => {
+    const { result, waitFor } = renderHook(() =>
+      useRecaptcha('public-recaptcha-token', 'render-element'),
+    );
 
-  // Request a token from recaptcha.
-  act(() => {
-    const recaptchaExecutionResult = result.current.executeCaptcha();
-    expect(recaptchaExecutionResult).toBe(false);
+    await waitFor(() => {
+      // Request a token from recaptcha.
+      const recaptchaExecutionResult = result.current.executeCaptcha();
+      expect(recaptchaExecutionResult).toBe(false);
+    });
   });
 });
 
