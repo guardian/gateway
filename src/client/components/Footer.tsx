@@ -10,7 +10,7 @@ import {
   from,
 } from '@guardian/source-foundations';
 import { Hide } from '@guardian/source-react-components';
-import locations from '@/client/lib/locations';
+import locations from '@/shared/lib/locations';
 import { BackToTop } from '@/client/components/BackToTop';
 import { Container } from '@/client/components/Container';
 import { ExternalLink } from '@/client/components/ExternalLink';
