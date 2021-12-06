@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createRef, useEffect, useRef } from 'react';
 import { css } from '@emotion/react';
 import { MainGrid } from '@/client/layouts/MainGrid';
 import { Header } from '@/client/components/Header';
@@ -14,9 +14,14 @@ import { SocialButtons } from '@/client/components/SocialButtons';
 import { gridItemSignInAndRegistration } from '@/client/styles/Grid';
 import { from, textSans, border, space } from '@guardian/source-foundations';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
-import { SignInErrors } from '@/shared/model/Errors';
+import { CaptchaErrors, SignInErrors } from '@/shared/model/Errors';
 import { EmailInput } from '@/client/components/EmailInput';
 import { GeoLocation } from '@/shared/model/Geolocation';
+import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
+import useRecaptcha, {
+  RecaptchaElement,
+} from '@/client/lib/hooks/useRecaptcha';
+import locations from '@/shared/lib/locations';
 
 export type SignInProps = {
   returnUrl?: string;
@@ -25,6 +30,7 @@ export type SignInProps = {
   error?: string;
   oauthBaseUrl: string;
   geolocation?: GeoLocation;
+  recaptchaSiteKey: string;
 };
 
 const passwordInput = css`
@@ -120,53 +126,110 @@ const showSocialButtons = (
   }
 };
 
+// TODO: migrate to use the MainForm component
 export const SignIn = ({
   returnUrl,
   email,
-  error,
+  error: pageLevelError,
   oauthBaseUrl,
   queryString,
   geolocation,
-}: SignInProps) => (
-  <>
-    <Header geolocation={geolocation} />
-    <Nav
-      tabs={[
-        {
-          displayText: PageTitle.SIGN_IN,
-          linkTo: Routes.SIGN_IN,
-          isActive: true,
-        },
-        {
-          displayText: PageTitle.REGISTRATION,
-          linkTo: Routes.REGISTRATION,
-          isActive: false,
-        },
-      ]}
-    />
-    <MainGrid
-      gridSpanDefinition={gridItemSignInAndRegistration}
-      errorOverride={error}
-      errorContext={getErrorContext(error)}
-    >
-      <form method="post" action={`${Routes.SIGN_IN}${queryString}`}>
-        <CsrfFormField />
-        <EmailInput defaultValue={email} />
-        <div css={passwordInput}>
-          <PasswordInput label="Password" />
-        </div>
-        <Links>
-          <Link subdued={true} href={Routes.RESET} cssOverrides={resetPassword}>
-            Reset password
-          </Link>
-        </Links>
-        <Terms />
-        <Button css={signInButton} type="submit" data-cy="sign-in-button">
-          Sign in
-        </Button>
-      </form>
-      {showSocialButtons(error, returnUrl, oauthBaseUrl)}
-    </MainGrid>
-    <Footer />
-  </>
-);
+  recaptchaSiteKey,
+}: SignInProps) => {
+  const signInFormRef = createRef<HTMLFormElement>();
+  const recaptchaElementRef = useRef<HTMLDivElement>(null);
+  const captchaElement = recaptchaElementRef.current ?? 'signin-recaptcha';
+
+  const {
+    token,
+    error: recaptchaError,
+    expired,
+    requestCount,
+    executeCaptcha,
+  } = useRecaptcha(recaptchaSiteKey, captchaElement);
+
+  // We want to show a more detailed reCAPTCHA error if
+  // the user has requested a check more than once.
+  const recaptchaCheckFailed = recaptchaError || expired;
+  const showErrorContext = recaptchaCheckFailed && requestCount > 1;
+  const reCaptchaErrorMessage = showErrorContext
+    ? CaptchaErrors.RETRY
+    : CaptchaErrors.GENERIC;
+  const reCaptchaErrorContext = showErrorContext ? (
+    <DetailedRecaptchaError />
+  ) : undefined;
+
+  // Form is only submitted when a valid recaptcha token is returned.
+  useEffect(() => {
+    const registerFormElement = signInFormRef.current;
+    if (token) {
+      registerFormElement?.submit();
+    }
+  }, [signInFormRef, token]);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    executeCaptcha();
+  };
+
+  return (
+    <>
+      <Header geolocation={geolocation} />
+      <Nav
+        tabs={[
+          {
+            displayText: PageTitle.SIGN_IN,
+            linkTo: Routes.SIGN_IN,
+            isActive: true,
+          },
+          {
+            displayText: PageTitle.REGISTRATION,
+            linkTo: Routes.REGISTRATION,
+            isActive: false,
+          },
+        ]}
+      />
+      <MainGrid
+        gridSpanDefinition={gridItemSignInAndRegistration}
+        errorOverride={
+          recaptchaCheckFailed ? reCaptchaErrorMessage : pageLevelError
+        }
+        errorContext={
+          reCaptchaErrorContext
+            ? reCaptchaErrorContext
+            : getErrorContext(pageLevelError)
+        }
+        errorReportUrl={showErrorContext ? locations.REPORT_ISSUE : undefined}
+      >
+        <form
+          method="post"
+          action={`${Routes.SIGN_IN}${queryString}`}
+          ref={signInFormRef}
+          onSubmit={handleSubmit}
+        >
+          <RecaptchaElement id="signin-recaptcha" />
+          <CsrfFormField />
+          <EmailInput defaultValue={email} />
+          <div css={passwordInput}>
+            <PasswordInput label="Password" />
+          </div>
+          <Links>
+            <Link
+              subdued={true}
+              href={Routes.RESET}
+              cssOverrides={resetPassword}
+            >
+              Reset password
+            </Link>
+          </Links>
+          <Terms />
+          <Button css={signInButton} type="submit" data-cy="sign-in-button">
+            Sign in
+          </Button>
+        </form>
+        {showSocialButtons(pageLevelError, returnUrl, oauthBaseUrl)}
+      </MainGrid>
+      <Footer />
+    </>
+  );
+};

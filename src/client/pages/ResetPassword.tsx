@@ -8,7 +8,7 @@ import {
 import { EmailInput } from '@/client/components/EmailInput';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { InfoSummary } from '@guardian/source-react-components-development-kitchen';
-import locations from '@/client/lib/locations';
+import locations from '@/shared/lib/locations';
 import { ExternalLink } from '@/client/components/ExternalLink';
 
 interface ResetPasswordProps {

@@ -136,4 +136,48 @@ describe('Sign in flow', () => {
     cy.get('[data-cy="facebook-sign-in-button"]').should('not.exist');
     cy.get('[data-cy="apple-sign-in-button"]').should('not.exist');
   });
+
+  it('shows reCAPTCHA errors when the user tries to sign in offline and allows sign in when back online', () => {
+    // Intercept the external redirect page.
+    // We just want to check that the redirect happens, not that the page loads.
+    cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
+      req.reply(200);
+    });
+    cy.createTestUser({
+      isUserEmailValidated: true,
+    })?.then(({ emailAddress, finalPassword }) => {
+      cy.visit(`/signin`);
+
+      // Simulate going offline by failing to reCAPTCHA POST request.
+      cy.intercept({
+        method: 'POST',
+        url: 'https://www.google.com/recaptcha/api2/**',
+        times: 1,
+      });
+
+      cy.get('input[name=email]').type(emailAddress);
+      cy.get('input[name=password]').type(finalPassword);
+      cy.get('[data-cy="sign-in-button"]').click();
+      cy.contains('Google reCAPTCHA verification failed. Please try again.');
+
+      // On second click, an expanded error is shown.
+      cy.get('[data-cy="sign-in-button"]').click();
+
+      cy.contains('Google reCAPTCHA verification failed.');
+      cy.contains('Report this error').should(
+        'have.attr',
+        'href',
+        'https://manage.theguardian.com/help-centre/contact-us',
+      );
+      cy.contains('If the problem persists please try the following:');
+
+      cy.get('[data-cy="sign-in-button"]').click();
+
+      cy.contains(
+        'Google reCAPTCHA verification failed. Please try again.',
+      ).should('not.exist');
+
+      cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+    });
+  });
 });
