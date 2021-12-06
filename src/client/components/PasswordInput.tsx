@@ -9,7 +9,6 @@ import { css } from '@emotion/react';
 import { neutral, height } from '@guardian/source-foundations';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
-
 import { disableAutofillBackground } from '@/client/styles/Shared';
 
 type Props = {
