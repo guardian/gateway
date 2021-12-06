@@ -152,52 +152,54 @@ router.post(
     logger.info(`Use Okta: ${useOkta}`);
 
     try {
-      // use idapi user type endpoint to determine user type
-      const userType = await readUserType(email, req.ip);
-
-      // check what type of user they are to determine course of action
-      switch (userType) {
-        // new user, so call guest register endpoint to create user account without password
-        // and automatically send account verification email
-        case UserType.NEW:
-          if (okta.registrationEnabled && useOkta) {
-            await createUserInOkta(email);
-          } else {
+      if (okta.registrationEnabled && useOkta) {
+        await createUserInOkta(email);
+      } else {
+        // use idapi user type endpoint to determine user type
+        const userType = await readUserType(email, req.ip);
+        // check what type of user they are to determine course of action
+        switch (userType) {
+          // new user, so call guest register endpoint to create user account without password
+          // and automatically send account verification email
+          case UserType.NEW:
             await guest(email, req.ip, returnUrl, refViewId, ref);
-          }
-          // set the encrypted state cookie in each case, so the next page is aware
-          // of the email address and type of email sent
-          // so if needed it can resend the correct email
-          setEncryptedStateCookie(res, {
-            email,
-            emailType: EmailType.ACCOUNT_VERIFICATION,
-          });
-          break;
-        // user exists with password
-        // so we want to send them the account exists email
-        case UserType.CURRENT:
-          await sendAccountExistsEmail(email, req.ip, returnUrl);
-          setEncryptedStateCookie(res, {
-            email,
-            emailType: EmailType.ACCOUNT_EXISTS,
-          });
-          break;
-        // user exists without password
-        // so we send them the account exists without password email to set a password
-        case UserType.GUEST:
-          await sendAccountWithoutPasswordExistsEmail(email, req.ip, returnUrl);
-          setEncryptedStateCookie(res, {
-            email,
-            emailType: EmailType.ACCOUNT_WITHOUT_PASSWORD_EXISTS,
-          });
-          break;
-        default:
-          // shouldn't reach this point, so we want to catch this
-          // as an error just in case
-          throw new Error('Invalid UserType');
+            // set the encrypted state cookie in each case, so the next page is aware
+            // of the email address and type of email sent
+            // so if needed it can resend the correct email
+            setEncryptedStateCookie(res, {
+              email,
+              emailType: EmailType.ACCOUNT_VERIFICATION,
+            });
+            break;
+          // user exists with password
+          // so we want to send them the account exists email
+          case UserType.CURRENT:
+            await sendAccountExistsEmail(email, req.ip, returnUrl);
+            setEncryptedStateCookie(res, {
+              email,
+              emailType: EmailType.ACCOUNT_EXISTS,
+            });
+            break;
+          // user exists without password
+          // so we send them the account exists without password email to set a password
+          case UserType.GUEST:
+            await sendAccountWithoutPasswordExistsEmail(
+              email,
+              req.ip,
+              returnUrl,
+            );
+            setEncryptedStateCookie(res, {
+              email,
+              emailType: EmailType.ACCOUNT_WITHOUT_PASSWORD_EXISTS,
+            });
+            break;
+          default:
+            // shouldn't reach this point, so we want to catch this
+            // as an error just in case
+            throw new Error('Invalid UserType');
+        }
+        trackMetric('Register::Success');
       }
-
-      trackMetric('Register::Success');
 
       // redirect the user to the email sent page
       return res.redirect(
