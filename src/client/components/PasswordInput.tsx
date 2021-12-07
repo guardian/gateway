@@ -11,9 +11,10 @@ import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { disableAutofillBackground } from '@/client/styles/Shared';
 
-type Props = {
+export type PasswordInputProps = {
   label: string;
   error?: string;
+  displayEye?: boolean;
   supporting?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
@@ -35,13 +36,16 @@ const paddingRight = (isEyeDisplayedOnBrowser: boolean) => css`
   padding-right: ${isEyeDisplayedOnBrowser ? 28 : 0}px;
 `;
 
-// we render our own border which includes the input field and eye symbol
-const noBorder = css`
-  border-right: none;
-  :active {
-    border-right: none;
-  }
-`;
+// we cut off the right hand side of the border when the eye symbol is displayed.
+const noBorder = (isEyeDisplayedOnBrowser: boolean) =>
+  isEyeDisplayedOnBrowser
+    ? css`
+        border-right: none;
+        :active {
+          border-right: none;
+        }
+      `
+    : css();
 
 const EyeIcon = ({ isOpen }: { isOpen: boolean }) => {
   const iconStyles = css`
@@ -114,12 +118,14 @@ export const PasswordInput = ({
   error,
   supporting,
   onChange,
-}: Props) => {
+  displayEye = true,
+}: PasswordInputProps) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const { pageData: { browserName } = {} }: ClientState =
     useContext(ClientStateContext);
 
-  const isEyeDisplayedOnBrowser = isDisplayEyeOnBrowser(browserName);
+  const isEyeDisplayedOnBrowser =
+    displayEye && isDisplayEyeOnBrowser(browserName);
 
   return (
     <div
@@ -142,7 +148,7 @@ export const PasswordInput = ({
           supporting={supporting}
           type={passwordVisible ? 'text' : 'password'}
           cssOverrides={[
-            noBorder,
+            noBorder(isEyeDisplayedOnBrowser),
             paddingRight(isEyeDisplayedOnBrowser),
             disableAutofillBackground,
           ]}
