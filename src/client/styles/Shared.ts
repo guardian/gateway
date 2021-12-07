@@ -20,9 +20,11 @@ export const topMargin = css`
 `;
 
 export const disableAutofillBackground = css`
-  :-webkit-autofill,
-  :-webkit-autofill,
   :-webkit-autofill {
+    background-color: transparent !important;
+    box-shadow: 0 0 0 50px white inset;
+  }
+  :autofill {
     background-color: transparent !important;
     box-shadow: 0 0 0 50px white inset;
   }

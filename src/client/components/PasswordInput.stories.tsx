@@ -8,21 +8,21 @@ export default {
   component: PasswordInput,
 } as Meta<PasswordInputProps>;
 
-export const Default = (props: PasswordInputProps) => (
-  <PasswordInput {...props} label="Password" />
+export const Default = (props: Partial<PasswordInputProps>) => (
+  <PasswordInput label="Password" {...props} />
 );
 Default.storyName = 'default';
 
-export const WithError = (props: PasswordInputProps) => (
-  <PasswordInput {...props} label="Password" error="Error" />
+export const WithError = (props: Partial<PasswordInputProps>) => (
+  <PasswordInput label="Password" error="Error" {...props} />
 );
 WithError.storyName = 'with error';
 
-export const WithSupporting = (props: PasswordInputProps) => (
+export const WithSupporting = (props: Partial<PasswordInputProps>) => (
   <PasswordInput
-    {...props}
     label="New password"
     supporting="Must be between 8 and 72 characters"
+    {...props}
   />
 );
 WithSupporting.storyName = 'with supporting text';
