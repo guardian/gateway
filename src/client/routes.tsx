@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, RouteProps, Switch } from 'react-router-dom';
+import { Route, RouteProps, Routes as RouterRoutes } from 'react-router-dom';
 import { RegistrationPage } from '@/client/pages/RegistrationPage';
 import { ResetPasswordPage } from '@/client/pages/ResetPasswordPage';
 import { EmailSentPage } from '@/client/pages/EmailSentPage';
@@ -42,90 +42,97 @@ const TypedRoute = (props: GatewayRouteProps) => {
 };
 
 export const GatewayRoutes = () => (
-  <Switch>
-    <TypedRoute exact path={'/signin'}>
-      <SignInPage />
-    </TypedRoute>
-    <TypedRoute exact path={'/register'}>
-      <RegistrationPage />
-    </TypedRoute>
-    <TypedRoute exact path={'/register/email-sent'}>
-      <RegistrationEmailSentPage />
-    </TypedRoute>
-    <TypedRoute exact path={'/reset'}>
-      <ResetPasswordPage />
-    </TypedRoute>
-    <TypedRoute exact path={'/reset/email-sent'}>
-      <EmailSentPage noAccountInfo />
-    </TypedRoute>
-    <TypedRoute exact path={'/reset-password/:token'}>
-      <ChangePasswordPage />
-    </TypedRoute>
-    <TypedRoute path={'/password/reset-confirmation'}>
-      <ChangePasswordCompletePage />
-    </TypedRoute>
-    <TypedRoute exact path={'/reset/resend'}>
-      <ResendPasswordPage />
-    </TypedRoute>
-    <TypedRoute exact path={'/reset/expired'}>
-      <ResetPasswordSessionExpiredPage />
-    </TypedRoute>
-    <TypedRoute exact path={'/set-password/resend'}>
-      <SetPasswordResendPage />
-    </TypedRoute>
-    <TypedRoute exact path={'/set-password/expired'}>
-      <SetPasswordSessionExpiredPage />
-    </TypedRoute>
-    <TypedRoute path={'/set-password/complete'}>
-      <SetPasswordCompletePage />
-    </TypedRoute>
-    <TypedRoute path={'/set-password/email-sent'}>
-      <EmailSentPage />
-    </TypedRoute>
-    <TypedRoute exact path={'/set-password/:token'}>
-      <SetPasswordPage />
-    </TypedRoute>
-    <TypedRoute exact path={'/consents/data'}>
-      <ConsentsDataPage />
-    </TypedRoute>
-    <TypedRoute exact path={'/consents/communication'}>
-      <ConsentsCommunicationPage />
-    </TypedRoute>
-    <TypedRoute exact path={'/consents/newsletters'}>
-      <ConsentsNewslettersPage />
-    </TypedRoute>
-    <TypedRoute exact path={'/consents/review'}>
-      <ConsentsConfirmationPage />
-    </TypedRoute>
-    <TypedRoute exact path={'/welcome/resend'}>
-      <WelcomeResendPage />
-    </TypedRoute>
-    <TypedRoute exact path={'/welcome/expired'}>
-      <WelcomeSessionExpiredPage />
-    </TypedRoute>
-    <TypedRoute exact path={'/welcome/email-sent'}>
-      <EmailSentPage />
-    </TypedRoute>
-    <TypedRoute exact path={'/welcome/complete'}>
-      <WelcomePasswordAlreadySetPage />
-    </TypedRoute>
-    <TypedRoute exact path={'/welcome/:token'}>
-      <WelcomePage />
-    </TypedRoute>
-    <TypedRoute exact path={'/verify-email'}>
-      <ResendEmailVerificationPage />
-    </TypedRoute>
-    <TypedRoute exact path={'/magic-link'}>
-      <MagicLinkPage />
-    </TypedRoute>
-    <TypedRoute exact path={'/magic-link/email-sent'}>
-      <EmailSentPage noAccountInfo />
-    </TypedRoute>
-    <TypedRoute exact path={'/error'}>
-      <UnexpectedErrorPage />
-    </TypedRoute>
-    <TypedRoute>
-      <NotFoundPage />
-    </TypedRoute>
-  </Switch>
+  <RouterRoutes>
+    <TypedRoute path={'/signin'} element={<SignInPage />}></TypedRoute>
+    <TypedRoute path={'/register'} element={<RegistrationPage />}></TypedRoute>
+    <TypedRoute
+      path={'/register/email-sent'}
+      element={<RegistrationEmailSentPage />}
+    ></TypedRoute>
+    <TypedRoute path={'/reset'} element={<ResetPasswordPage />}></TypedRoute>
+    <TypedRoute
+      path={'/reset/email-sent'}
+      element={<EmailSentPage noAccountInfo />}
+    ></TypedRoute>
+    <TypedRoute
+      path={'/reset-password/:token'}
+      element={<ChangePasswordPage />}
+    ></TypedRoute>
+    <TypedRoute
+      path={'/password/reset-confirmation'}
+      element={<ChangePasswordCompletePage />}
+    ></TypedRoute>
+    <TypedRoute
+      path={'/reset/resend'}
+      element={<ResendPasswordPage />}
+    ></TypedRoute>
+    <TypedRoute
+      path={'/reset/expired'}
+      element={<ResetPasswordSessionExpiredPage />}
+    ></TypedRoute>
+    <TypedRoute
+      path={'/set-password/resend'}
+      element={<SetPasswordResendPage />}
+    ></TypedRoute>
+    <TypedRoute
+      path={'/set-password/expired'}
+      element={<SetPasswordSessionExpiredPage />}
+    ></TypedRoute>
+    <TypedRoute
+      path={'/set-password/complete'}
+      element={<SetPasswordCompletePage />}
+    ></TypedRoute>
+    <TypedRoute
+      path={'/set-password/email-sent'}
+      element={<EmailSentPage />}
+    ></TypedRoute>
+    <TypedRoute
+      path={'/set-password/:token'}
+      element={<SetPasswordPage />}
+    ></TypedRoute>
+    <TypedRoute
+      path={'/consents/data'}
+      element={<ConsentsDataPage />}
+    ></TypedRoute>
+    <TypedRoute
+      path={'/consents/communication'}
+      element={<ConsentsCommunicationPage />}
+    ></TypedRoute>
+    <TypedRoute
+      path={'/consents/newsletters'}
+      element={<ConsentsNewslettersPage />}
+    ></TypedRoute>
+    <TypedRoute
+      path={'/consents/review'}
+      element={<ConsentsConfirmationPage />}
+    ></TypedRoute>
+    <TypedRoute
+      path={'/welcome/resend'}
+      element={<WelcomeResendPage />}
+    ></TypedRoute>
+    <TypedRoute
+      path={'/welcome/expired'}
+      element={<WelcomeSessionExpiredPage />}
+    ></TypedRoute>
+    <TypedRoute
+      path={'/welcome/email-sent'}
+      element={<EmailSentPage />}
+    ></TypedRoute>
+    <TypedRoute
+      path={'/welcome/complete'}
+      element={<WelcomePasswordAlreadySetPage />}
+    ></TypedRoute>
+    <TypedRoute path={'/welcome/:token'} element={<WelcomePage />}></TypedRoute>
+    <TypedRoute
+      path={'/verify-email'}
+      element={<ResendEmailVerificationPage />}
+    ></TypedRoute>
+    <TypedRoute path={'/magic-link'} element={<MagicLinkPage />}></TypedRoute>
+    <TypedRoute
+      path={'/magic-link/email-sent'}
+      element={<EmailSentPage noAccountInfo />}
+    ></TypedRoute>
+    <TypedRoute path={'/error'} element={<UnexpectedErrorPage />}></TypedRoute>
+    <TypedRoute path={'/404'} element={<NotFoundPage />}></TypedRoute>
+  </RouterRoutes>
 );
