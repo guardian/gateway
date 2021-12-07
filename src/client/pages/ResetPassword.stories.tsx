@@ -14,6 +14,7 @@ export const Default = () => (
   <ResetPassword
     headerText="Forgot password"
     buttonText="Reset password"
+    queryString={{ returnUrl: 'http://theguardian.com' }}
     showNoAccessEmail
   >
     <MainBodyText>
@@ -31,6 +32,7 @@ export const Email = () => (
     email="cleo@theguardian.com"
     headerText="Forgot password"
     buttonText="Reset password"
+    queryString={{ returnUrl: 'https://theguardian.com' }}
     showNoAccessEmail
   >
     <MainBodyText>
@@ -49,6 +51,7 @@ export const LinkExpired = () => (
     headerText="Link expired"
     buttonText="Send me a link"
     emailInputLabel="Email address"
+    queryString={{ returnUrl: 'https://theguardian.com' }}
     showRecentEmailSummary
   >
     <MainBodyText>This link has expired.</MainBodyText>
@@ -67,6 +70,7 @@ export const SessionExpired = () => (
     headerText="Session timed out"
     buttonText="Send me a link"
     emailInputLabel="Email address"
+    queryString={{ returnUrl: 'https://theguardian.com' }}
   >
     <MainBodyText>
       The link we sent you was valid for 30 minutes and it has now expired.
@@ -85,6 +89,7 @@ export const RecaptchaError = () => (
     email="cleo@theguardian.com"
     headerText="Forgot password"
     buttonText="Reset password"
+    queryString={{ returnUrl: 'https://theguardian.com' }}
     showNoAccessEmail
     recaptchaSiteKey="invalid-key"
   >

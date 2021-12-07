@@ -1,10 +1,11 @@
 import React, { ReactNode, useState } from 'react';
 import { LinkButton } from '@guardian/source-react-components';
-import { Routes } from '@/shared/model/Routes';
+
 import { buttonStyles, MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { MainForm } from '@/client/components/MainForm';
 import { EmailInput } from '@/client/components/EmailInput';
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 type ResendEmailVerificationProps = {
   email?: string;
@@ -61,7 +62,7 @@ const LoggedIn = ({
         <MainBodyText>{successText}</MainBodyText>
       ) : (
         <MainForm
-          formAction={Routes.VERIFY_EMAIL}
+          formAction={buildUrl('/verify-email')}
           submitButtonText="Send verification link"
           recaptchaSiteKey={recaptchaSiteKey}
           setRecaptchaErrorMessage={setRecaptchaErrorMessage}

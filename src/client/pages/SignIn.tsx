@@ -6,7 +6,7 @@ import { Footer } from '@/client/components/Footer';
 import { PasswordInput } from '@/client/components/PasswordInput';
 import { Nav } from '@/client/components/Nav';
 import { Button, Link } from '@guardian/source-react-components';
-import { Routes } from '@/shared/model/Routes';
+
 import { PageTitle } from '@/shared/model/PageTitle';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { Terms } from '@/client/components/Terms';
@@ -16,7 +16,9 @@ import { from, textSans, border, space } from '@guardian/source-foundations';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { CaptchaErrors, SignInErrors } from '@/shared/model/Errors';
 import { EmailInput } from '@/client/components/EmailInput';
+import { buildUrl, buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { GeoLocation } from '@/shared/model/Geolocation';
+import { QueryParams } from '@/shared/model/QueryParams';
 import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
 import useRecaptcha, {
   RecaptchaElement,
@@ -25,7 +27,7 @@ import locations from '@/shared/lib/locations';
 
 export type SignInProps = {
   returnUrl?: string;
-  queryString?: string;
+  queryParams: QueryParams;
   email?: string;
   error?: string;
   oauthBaseUrl: string;
@@ -132,7 +134,7 @@ export const SignIn = ({
   email,
   error: pageLevelError,
   oauthBaseUrl,
-  queryString,
+  queryParams,
   geolocation,
   recaptchaSiteKey,
 }: SignInProps) => {
@@ -179,12 +181,12 @@ export const SignIn = ({
         tabs={[
           {
             displayText: PageTitle.SIGN_IN,
-            linkTo: Routes.SIGN_IN,
+            linkTo: '/signin',
             isActive: true,
           },
           {
             displayText: PageTitle.REGISTRATION,
-            linkTo: Routes.REGISTRATION,
+            linkTo: '/register',
             isActive: false,
           },
         ]}
@@ -203,7 +205,7 @@ export const SignIn = ({
       >
         <form
           method="post"
-          action={`${Routes.SIGN_IN}${queryString}`}
+          action={buildUrlWithQueryParams('/signin', {}, queryParams)}
           ref={signInFormRef}
           onSubmit={handleSubmit}
         >
@@ -216,7 +218,7 @@ export const SignIn = ({
           <Links>
             <Link
               subdued={true}
-              href={Routes.RESET}
+              href={buildUrl('/reset')}
               cssOverrides={resetPassword}
             >
               Reset password

@@ -3,7 +3,6 @@ import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
 import { MainBodyText } from '@/client/components/MainBodyText';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 export const ResetPasswordSessionExpiredPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
@@ -13,7 +12,6 @@ export const ResetPasswordSessionExpiredPage = () => {
     recaptchaConfig,
   } = clientState;
 
-  const queryString = addQueryParamsToPath('', queryParams);
   const { recaptchaSiteKey } = recaptchaConfig;
 
   return (
@@ -21,7 +19,7 @@ export const ResetPasswordSessionExpiredPage = () => {
       email={email}
       headerText="Session timed out"
       buttonText="Send me a link"
-      queryString={queryString}
+      queryString={queryParams}
       emailInputLabel="Email address"
       recaptchaSiteKey={recaptchaSiteKey}
     >

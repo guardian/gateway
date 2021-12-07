@@ -1,9 +1,9 @@
-import { Request, Router } from 'express';
+import { Request } from 'express';
 import deepmerge from 'deepmerge';
 import { authenticate } from '@/server/lib/idapi/auth';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
-import { Routes } from '@/shared/model/Routes';
+
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { PageTitle } from '@/shared/model/PageTitle';
@@ -13,13 +13,12 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { decrypt } from '@/server/lib/idapi/decryptToken';
 import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
 import { ApiError } from '@/server/models/Error';
+import { typedRouter as router } from '@/server/lib/typedRoutes';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import handleRecaptcha from '@/server/lib/recaptcha';
 
-const router = Router();
-
 router.get(
-  Routes.SIGN_IN,
+  '/signin',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
     const { encryptedEmail, error } = state.queryParams;
@@ -38,7 +37,7 @@ router.get(
         ? SignInErrors.ACCOUNT_ALREADY_EXISTS
         : '';
 
-    const html = renderer(Routes.SIGN_IN, {
+    const html = renderer('/signin', {
       requestState: deepmerge(state, {
         pageData: {
           email,
@@ -54,7 +53,7 @@ router.get(
 );
 
 router.post(
-  Routes.SIGN_IN,
+  '/signin',
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
@@ -68,7 +67,6 @@ router.post(
 
     try {
       const cookies = await authenticate(email, password, req.ip);
-
       setIDAPICookies(res, cookies);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
@@ -78,7 +76,7 @@ router.post(
       trackMetric('SignIn::Failure');
 
       // re-render the sign in page on error, with pre-filled email
-      const html = renderer(Routes.SIGN_IN, {
+      const html = renderer('/signin', {
         requestState: deepmerge(res.locals, {
           globalMessage: {
             error: message,
@@ -99,4 +97,4 @@ router.post(
   }),
 );
 
-export default router;
+export default router.router;

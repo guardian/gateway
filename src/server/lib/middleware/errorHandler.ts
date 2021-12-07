@@ -2,10 +2,10 @@ import { NextFunction, Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { getCsrfPageUrl } from '@/server/lib/getCsrfPageUrl';
 import { renderer } from '@/server/lib/renderer';
-import { Routes } from '@/shared/model/Routes';
+
 import { PageTitle } from '@/shared/model/PageTitle';
 import { logger } from '@/server/lib/logger';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 
 const { defaultReturnUri } = getConfiguration();
@@ -24,7 +24,7 @@ export const routeErrorHandler = (
     // we also have to manually build the query params object, as it may not be defined in an unexpected csrf error
     res.redirect(
       303,
-      addQueryParamsToPath(
+      addQueryParamsToUntypedPath(
         getCsrfPageUrl(req),
         { ...res.locals.queryParams, returnUrl: defaultReturnUri },
         {
@@ -36,7 +36,7 @@ export const routeErrorHandler = (
   } else if (err.code === 'EBADRECAPTCHA') {
     res.redirect(
       303,
-      addQueryParamsToPath(
+      addQueryParamsToUntypedPath(
         req.url,
         {
           ...res.locals.queryParams,
@@ -52,7 +52,7 @@ export const routeErrorHandler = (
 
   logger.error('unexpected error', err);
 
-  const html = renderer(`${Routes.UNEXPECTED_ERROR}`, {
+  const html = renderer('/error', {
     requestState: res.locals,
     pageTitle: PageTitle.UNEXPECTED_ERROR,
   });

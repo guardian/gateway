@@ -19,12 +19,12 @@ export const Register = () => (
       tabs={[
         {
           displayText: 'Sign in',
-          linkTo: '',
+          linkTo: '/signin',
           isActive: false,
         },
         {
           displayText: 'Register',
-          linkTo: '',
+          linkTo: '/register',
           isActive: true,
         },
       ]}
@@ -40,12 +40,12 @@ export const SignIn = () => (
       tabs={[
         {
           displayText: 'Sign in',
-          linkTo: '',
+          linkTo: '/signin',
           isActive: true,
         },
         {
           displayText: 'Register',
-          linkTo: '',
+          linkTo: '/register',
           isActive: false,
         },
       ]}
@@ -64,12 +64,12 @@ export const Wide = () => (
       tabs={[
         {
           displayText: 'Sign in',
-          linkTo: '',
+          linkTo: '/signin',
           isActive: true,
         },
         {
           displayText: 'Register',
-          linkTo: '',
+          linkTo: '/register',
           isActive: false,
         },
       ]}
@@ -91,12 +91,12 @@ export const NoBreakpoint = () => (
       tabs={[
         {
           displayText: 'Sign in',
-          linkTo: '',
+          linkTo: '/signin',
           isActive: true,
         },
         {
           displayText: 'Register',
-          linkTo: '',
+          linkTo: '/register',
           isActive: false,
         },
       ]}
@@ -121,12 +121,12 @@ export const WithGrid = () => {
         tabs={[
           {
             displayText: 'Sign in',
-            linkTo: '',
+            linkTo: '/signin',
             isActive: true,
           },
           {
             displayText: 'Register',
-            linkTo: '',
+            linkTo: '/register',
             isActive: false,
           },
         ]}

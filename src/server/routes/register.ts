@@ -1,3 +1,4 @@
+import { Request } from 'express';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import {
   readEncryptedStateCookie,
@@ -16,6 +17,8 @@ import { logger } from '@/server/lib/logger';
 import { registerWithOkta } from '@/server/lib/okta/registration';
 import { getEmailFromPlaySessionCookie } from '@/server/lib/playSessionCookie';
 import { renderer } from '@/server/lib/renderer';
+
+import { typedRouter as router } from '@/server/lib/typedRoutes';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { ApiError } from '@/server/models/Error';
 import { ResponseWithRequestState } from '@/server/models/Express';
@@ -23,31 +26,24 @@ import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { EmailType } from '@/shared/model/EmailType';
 import { GenericErrors } from '@/shared/model/Errors';
 import { PageTitle } from '@/shared/model/PageTitle';
-import { Routes } from '@/shared/model/Routes';
 import deepmerge from 'deepmerge';
-import { Request, Router } from 'express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-
-const router = Router();
 
 const { okta } = getConfiguration();
 
-router.get(
-  Routes.REGISTRATION,
-  (req: Request, res: ResponseWithRequestState) => {
-    const html = renderer(Routes.REGISTRATION, {
-      requestState: res.locals,
-      pageTitle: PageTitle.REGISTRATION,
-    });
-    res.type('html').send(html);
-  },
-);
+router.get('/register', (req: Request, res: ResponseWithRequestState) => {
+  const html = renderer('/register', {
+    requestState: res.locals,
+    pageTitle: PageTitle.REGISTRATION,
+  });
+  res.type('html').send(html);
+});
 
 router.get(
-  `${Routes.REGISTRATION}${Routes.EMAIL_SENT}`,
+  '/register/email-sent',
   (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
-    const html = renderer(`${Routes.REGISTRATION}${Routes.EMAIL_SENT}`, {
+    const html = renderer('/register/email-sent', {
       requestState: deepmerge(state, {
         pageData: {
           email:
@@ -62,7 +58,7 @@ router.get(
 );
 
 router.post(
-  `${Routes.REGISTRATION}${Routes.EMAIL_SENT}${Routes.RESEND}`,
+  '/register/email-sent/resend',
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { returnUrl, emailSentSuccess } = res.locals.queryParams;
@@ -113,11 +109,9 @@ router.post(
         setEncryptedStateCookie(res, { email, emailType });
         return res.redirect(
           303,
-          addQueryParamsToPath(
-            `${Routes.REGISTRATION}${Routes.EMAIL_SENT}`,
-            res.locals.queryParams,
-            { emailSentSuccess },
-          ),
+          addQueryParamsToPath('/register/email-sent', res.locals.queryParams, {
+            emailSentSuccess,
+          }),
         );
       } else {
         throw new ApiError({ message: GenericErrors.DEFAULT, status: 500 });
@@ -128,7 +122,7 @@ router.post(
 
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
-      const html = renderer(`${Routes.REGISTRATION}${Routes.EMAIL_SENT}`, {
+      const html = renderer('/register/email-sent', {
         pageTitle: PageTitle.REGISTRATION_EMAIL_SENT,
         requestState: deepmerge(res.locals, {
           globalMessage: {
@@ -142,7 +136,7 @@ router.post(
 );
 
 router.post(
-  Routes.REGISTRATION,
+  '/register',
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
@@ -201,10 +195,7 @@ router.post(
       // redirect the user to the email sent page
       return res.redirect(
         303,
-        addQueryParamsToPath(
-          `${Routes.REGISTRATION}${Routes.EMAIL_SENT}`,
-          res.locals.queryParams,
-        ),
+        addQueryParamsToPath('/register/email-sent', res.locals.queryParams),
       );
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
@@ -223,7 +214,7 @@ router.post(
         },
       });
 
-      const html = renderer(Routes.REGISTRATION, {
+      const html = renderer('/register', {
         requestState: state,
         pageTitle: PageTitle.REGISTRATION,
       });
@@ -232,4 +223,4 @@ router.post(
   }),
 );
 
-export default router;
+export default router.router;
