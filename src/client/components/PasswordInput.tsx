@@ -1,14 +1,15 @@
 import {
-  TextInput,
   SvgEye,
   SvgEyeStrike,
+  TextInput,
   textInputThemeDefault,
 } from '@guardian/source-react-components';
 import React, { useContext, useState } from 'react';
 import { css } from '@emotion/react';
-import { neutral, space, height } from '@guardian/source-foundations';
+import { neutral, height } from '@guardian/source-foundations';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
+
 import { disableAutofillBackground } from '@/client/styles/Shared';
 
 type Props = {
@@ -30,23 +31,16 @@ export const isDisplayEyeOnBrowser = (browserName: string | undefined) => {
   }
 };
 
-const textInputBorderStyle = (error?: string) => css`
-  border: ${error
-    ? `4px solid ${textInputThemeDefault.textInput.borderError}`
-    : `2px solid ${textInputThemeDefault.textInput.border}`};
-  position: absolute;
-  bottom: 0px;
-  width: 100%;
-  height: ${height.inputMedium}px;
-  padding: 0 ${space[2]}px;
-  pointer-events: none;
+// remove the border and shorten the width of the text input box so the text does not overlap the password eye
+const paddingRight = (isEyeDisplayedOnBrowser: boolean) => css`
+  padding-right: ${isEyeDisplayedOnBrowser ? 28 : 0}px;
 `;
 
 // we render our own border which includes the input field and eye symbol
 const noBorder = css`
-  border: none;
+  border-right: none;
   :active {
-    border: none;
+    border-right: none;
   }
 `;
 
@@ -84,17 +78,21 @@ const EyeIcon = ({ isOpen }: { isOpen: boolean }) => {
 const EyeSymbol = ({
   isOpen,
   onClick,
+  error,
 }: {
   isOpen: boolean;
   onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  error?: string;
 }) => {
   const buttonStyles = css`
-    height: 40px;
-    align-self: flex-end;
-    border: none;
+    border: ${error
+      ? `4px solid ${textInputThemeDefault.textInput.borderError}`
+      : `2px solid ${textInputThemeDefault.textInput.border}`};
+    border-left: none;
     background-color: transparent;
     cursor: pointer;
-    padding-left: 0;
+    height: ${height.inputMedium}px;
+    align-self: flex-end;
   `;
 
   return (
@@ -127,15 +125,14 @@ export const PasswordInput = ({
     <div
       css={css`
         display: flex;
-        position: relative;
       `}
     >
       <div
-        css={css`
-          & {
-            width: 100%;
-          }
-        `}
+        css={[
+          css`
+            flex: 1;
+          `,
+        ]}
       >
         <TextInput
           error={error}
@@ -144,12 +141,16 @@ export const PasswordInput = ({
           name="password"
           supporting={supporting}
           type={passwordVisible ? 'text' : 'password'}
-          cssOverrides={[noBorder, disableAutofillBackground]}
+          cssOverrides={[
+            noBorder,
+            paddingRight(isEyeDisplayedOnBrowser),
+            disableAutofillBackground,
+          ]}
         />
       </div>
-
       {isEyeDisplayedOnBrowser ? (
         <EyeSymbol
+          error={error}
           isOpen={passwordVisible}
           onClick={() => {
             // Toggle visibility of password
@@ -157,10 +158,6 @@ export const PasswordInput = ({
           }}
         />
       ) : null}
-
-      {/* This div is used to show a border around the text input and password eye.
-       Text input is slightly narrower so text does not overlap the show / close eye */}
-      <div css={textInputBorderStyle(error)} />
     </div>
   );
 };
