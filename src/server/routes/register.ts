@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import handleRecaptcha from '@/server//lib/recaptcha';
+import handleRecaptcha from '@/server/lib/recaptcha';
 import {
   readEncryptedStateCookie,
   setEncryptedStateCookie,

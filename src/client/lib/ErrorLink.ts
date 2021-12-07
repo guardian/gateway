@@ -1,4 +1,4 @@
-import locations from '@/client/lib/locations';
+import locations from '@/shared/lib/locations';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
 
 interface ErrorLink {

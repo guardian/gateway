@@ -8,7 +8,7 @@ import { buildUrl, buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 export const ChangePasswordPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
   const {
-    pageData: { email = '', fieldErrors = [], tokenExpiryTimestamp } = {},
+    pageData: { email = '', fieldErrors = [], timeUntilTokenExpiry } = {},
     queryParams,
   } = clientState;
   const { token } = useParams<{ token: string }>();
@@ -19,12 +19,12 @@ export const ChangePasswordPage = () => {
     // and we also check that the expiry time exists so that
     // we redirect to the session expired page
     // if the token expires while the user is on the current page
-    if (typeof window !== 'undefined' && tokenExpiryTimestamp) {
+    if (typeof window !== 'undefined' && timeUntilTokenExpiry) {
       setTimeout(() => {
         window.location.replace(buildUrl('/reset/expired'));
-      }, tokenExpiryTimestamp - Date.now());
+      }, timeUntilTokenExpiry);
     }
-  }, [tokenExpiryTimestamp]);
+  }, [timeUntilTokenExpiry]);
 
   return (
     <ChangePassword

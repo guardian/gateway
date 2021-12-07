@@ -17,7 +17,7 @@ import useRecaptcha, {
   RecaptchaElement,
 } from '@/client/lib/hooks/useRecaptcha';
 import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
-import locations from '@/client/lib/locations';
+import locations from '@/shared/lib/locations';
 import { EmailInput } from '@/client/components/EmailInput';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
@@ -57,6 +57,7 @@ const divider = css`
   }
 `;
 
+// TODO: migrate to use the MainForm component
 export const Registration = ({
   returnUrl,
   email,

@@ -96,6 +96,7 @@ describe('Sign in flow', () => {
       cy.get('[data-cy=sign-in-button]').click();
       cy.url().should('include', defaultReturnUrl);
     });
+
     it('auto-fills the email field when encryptedEmail is successfully decrypted', () => {
       cy.mockNext(200, {
         status: 'ok',
@@ -103,6 +104,44 @@ describe('Sign in flow', () => {
       });
       cy.visit(`/signin?encryptedEmail=bdfalrbagbgu`);
       cy.get('input[name="email"]').should('have.value', 'test@test.com');
+    });
+
+    it('shows recaptcha error message when reCAPTCHA token request fails', () => {
+      cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.get('input[name="email"]').type('placeholder@example.com');
+      cy.get('input[name="password"]').type('definitelynotarealpassword');
+      cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
+        statusCode: 500,
+      });
+      cy.get('[data-cy=sign-in-button]').click();
+      cy.contains('Google reCAPTCHA verification failed. Please try again.');
+    });
+
+    it('shows detailed recaptcha error message when reCAPTCHA token request fails two times', () => {
+      // Intercept "Report this error" link because we just check it is linked to.
+      cy.intercept(
+        'GET',
+        'https://manage.theguardian.com/help-centre/contact-us',
+        {
+          statusCode: 200,
+        },
+      );
+      cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.get('input[name="email"]').type('placeholder@example.com');
+      cy.get('input[name="password"]').type('definitelynotarealpassword');
+      cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
+        statusCode: 500,
+      });
+      cy.get('[data-cy=sign-in-button]').click();
+      cy.contains('Google reCAPTCHA verification failed. Please try again.');
+      cy.get('[data-cy=sign-in-button]').click();
+      cy.contains('Google reCAPTCHA verification failed.');
+      cy.contains('If the problem persists please try the following:');
+      cy.contains('Report this error').click();
+      cy.url().should(
+        'eq',
+        'https://manage.theguardian.com/help-centre/contact-us',
+      );
     });
   });
 

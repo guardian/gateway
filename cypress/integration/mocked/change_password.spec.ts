@@ -2,12 +2,12 @@ import { injectAndCheckAxe } from '../../support/cypress-axe';
 
 describe('Password change flow', () => {
   const fakeValidationRespone = (
-    expiryTimestamp: number | undefined = undefined,
+    timeUntilExpiry: number | undefined = undefined,
   ) => ({
     user: {
       primaryEmailAddress: 'name@example.com',
     },
-    expiryTimestamp,
+    timeUntilExpiry,
   });
 
   const fakeSuccessResponse = {
@@ -107,7 +107,7 @@ describe('Password change flow', () => {
     });
 
     it('shows the session time out page if the token expires while on the set password page', () => {
-      cy.mockNext(200, fakeValidationRespone(Date.now() + 1000));
+      cy.mockNext(200, fakeValidationRespone(1000));
       cy.visit(`/reset-password/fake_token`);
       cy.contains('Session timed out');
     });

@@ -60,7 +60,7 @@ export const checkResetPasswordTokenController = (
     const { token } = req.params;
 
     try {
-      const { email, tokenExpiryTimestamp } = await validateToken(
+      const { email, timeUntilTokenExpiry } = await validateToken(
         token,
         req.ip,
       );
@@ -69,7 +69,7 @@ export const checkResetPasswordTokenController = (
         pageData: {
           browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
           email,
-          tokenExpiryTimestamp,
+          timeUntilTokenExpiry,
         },
       });
 
@@ -138,7 +138,7 @@ export const setPasswordTokenController = (
       const fieldErrors = validatePasswordField(password);
 
       if (fieldErrors.length) {
-        const { email, tokenExpiryTimestamp } = await validateToken(
+        const { email, timeUntilTokenExpiry } = await validateToken(
           token,
           req.ip,
         );
@@ -146,7 +146,7 @@ export const setPasswordTokenController = (
         state = deepmerge(state, {
           pageData: {
             email,
-            tokenExpiryTimestamp,
+            timeUntilTokenExpiry,
             fieldErrors,
           },
         });
@@ -199,7 +199,7 @@ export const setPasswordTokenController = (
       // we unfortunately need this inner try catch block to catch
       // errors from the `validateToken` method were it to fail
       try {
-        const { email, tokenExpiryTimestamp } = await validateToken(
+        const { email, timeUntilTokenExpiry } = await validateToken(
           token,
           req.ip,
         );
@@ -208,7 +208,7 @@ export const setPasswordTokenController = (
           state = deepmerge(state, {
             pageData: {
               email,
-              tokenExpiryTimestamp,
+              timeUntilTokenExpiry,
               fieldErrors: [
                 {
                   field,
@@ -221,7 +221,7 @@ export const setPasswordTokenController = (
           state = deepmerge(state, {
             pageData: {
               email,
-              tokenExpiryTimestamp,
+              timeUntilTokenExpiry,
             },
             globalMessage: {
               error: message,
