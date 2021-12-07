@@ -92,6 +92,7 @@ const EyeSymbol = ({
     cursor: pointer;
     height: ${height.inputMedium}px;
     align-self: flex-end;
+    padding-top: 4px;
   `;
 
   return (
