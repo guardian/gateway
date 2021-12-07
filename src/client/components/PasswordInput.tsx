@@ -137,6 +137,7 @@ export const PasswordInput = ({
         css={[
           css`
             flex: 1;
+            align-self: flex-end;
           `,
         ]}
       >
