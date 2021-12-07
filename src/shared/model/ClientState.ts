@@ -39,7 +39,7 @@ export interface PageData {
   previousPage?: string;
 
   // reset password token specific
-  tokenExpiryTimestamp?: number;
+  timeUntilTokenExpiry?: number;
 }
 
 export interface RecaptchaConfig {

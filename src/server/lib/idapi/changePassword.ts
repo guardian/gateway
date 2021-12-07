@@ -45,7 +45,11 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
 export async function validate(
   token: string,
   ip: string,
-): Promise<{ email?: string; tokenExpiryTimestamp?: number }> {
+): Promise<{
+  email?: string;
+  tokenExpiryTimestamp?: number;
+  timeUntilTokenExpiry?: number;
+}> {
   const options = APIGetOptions();
 
   const params = {
@@ -62,6 +66,7 @@ export async function validate(
     return {
       email: result.user?.primaryEmailAddress,
       tokenExpiryTimestamp: result.expiryTimestamp,
+      timeUntilTokenExpiry: result.timeUntilExpiry,
     };
   } catch (error) {
     logger.error(`IDAPI Error changePassword validate ${url}`, error);

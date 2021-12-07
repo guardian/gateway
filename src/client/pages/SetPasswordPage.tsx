@@ -9,7 +9,7 @@ export const SetPasswordPage = () => {
   const { search } = useLocation();
   const clientState: ClientState = useContext(ClientStateContext);
   const {
-    pageData: { email = '', fieldErrors = [], tokenExpiryTimestamp } = {},
+    pageData: { email = '', fieldErrors = [], timeUntilTokenExpiry } = {},
   } = clientState;
   const { token } = useParams<{ token: string }>();
 
@@ -19,12 +19,12 @@ export const SetPasswordPage = () => {
     // and we also check that the expiry time exists so that
     // we redirect to the session expired page
     // if the token expires while the user is on the current page
-    if (typeof window !== 'undefined' && tokenExpiryTimestamp) {
+    if (typeof window !== 'undefined' && timeUntilTokenExpiry) {
       setTimeout(() => {
         window.location.replace(`${Routes.SET_PASSWORD}${Routes.EXPIRED}`);
-      }, tokenExpiryTimestamp - Date.now());
+      }, timeUntilTokenExpiry);
     }
-  }, [tokenExpiryTimestamp]);
+  }, [timeUntilTokenExpiry]);
 
   return (
     <ChangePassword
