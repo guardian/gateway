@@ -100,7 +100,7 @@
     "react-test-renderer": "^17.0.2",
     "snyk": "^1.782.0",
     "stmux": "^1.8.3",
-    "ts-jest": "^27.0.7",
+    "ts-jest": "^27.1.1",
     "ts-prune": "^0.10.2",
     "typescript": "^4.5.2",
     "wait-on": "^6.0.0",
