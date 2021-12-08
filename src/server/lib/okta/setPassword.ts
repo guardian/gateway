@@ -5,7 +5,7 @@ import { Okta } from '@/shared/model/Routes';
 import { SetPasswordRequest, SetPasswordResponse } from '@/server/models/Okta';
 import { Response } from 'node-fetch';
 import { handleOktaErrors } from '@/server/lib/okta/errors';
-import { defaultHeaders } from '@/server/lib/okta/client';
+import { defaultHeaders } from '@/server/lib/okta/headers';
 
 export const setPasswordInOkta = (
   request: SetPasswordRequest,

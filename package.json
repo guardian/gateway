@@ -120,7 +120,6 @@
     "@guardian/source-foundations": "^4.0.0-rc.3",
     "@guardian/source-react-components": "^4.0.0-rc.2",
     "@guardian/source-react-components-development-kitchen": "^1.0.0-rc.1",
-    "@okta/okta-sdk-nodejs": "6.1.0",
     "awesome-debounce-promise": "^2.1.0",
     "aws-sdk": "2.1042.0",
     "bowser": "^2.11.0",

@@ -149,7 +149,6 @@ router.post(
 
     const { email = '' } = req.body;
     const { returnUrl, ref, refViewId, useOkta } = state.queryParams;
-    logger.info(`Use Okta: ${useOkta}`);
 
     try {
       if (okta.registrationEnabled && useOkta) {

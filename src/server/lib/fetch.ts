@@ -12,19 +12,3 @@ export const fetch = async (url: string, init: RequestInit) => {
   const { default: fetch } = await _importDynamic('node-fetch');
   return fetch(url, init);
 };
-
-export const fetchWithTimeout = async (
-  url: string,
-  init: RequestInit,
-  timeoutInMs: number,
-  errorMessage?: string,
-) => {
-  return Promise.race([
-    fetch(url, init),
-    new Promise((_, reject) =>
-      setTimeout(() => {
-        return reject(new Error(`Request Timeout ${errorMessage ?? ''}`));
-      }, timeoutInMs),
-    ),
-  ]);
-};
