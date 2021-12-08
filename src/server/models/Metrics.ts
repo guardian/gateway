@@ -20,7 +20,8 @@ type ConditionalMetrics =
   | 'EmailValidated'
   | 'AccountVerification'
   | `${EmailMetrics}EmailSend`
-  | `${'Get' | 'Post'}ConsentsPage-${string}`;
+  | `${'Get' | 'Post'}ConsentsPage-${string}`
+  | `RecaptchaMiddleware`;
 
 // Unconditional metrics that we want to track directly
 type UnconditionalMetrics =
