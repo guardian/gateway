@@ -15,12 +15,12 @@ import CommunicationsPage from '../../support/pages/onboarding/communications_pa
 describe('Welcome and set password page', () => {
   const email = 'someone@theguardian.com';
   const checkTokenSuccessResponse = (
-    expiryTimestamp: number | null = null,
+    timeUntilExpiry: number | null = null,
   ) => ({
     user: {
       primaryEmailAddress: email,
     },
-    expiryTimestamp,
+    timeUntilExpiry,
   });
 
   const fakeCookieSuccessResponse = {
@@ -205,7 +205,7 @@ describe('Welcome and set password page', () => {
     });
 
     it('shows the session time out page if the token expires while on the set password page', () => {
-      cy.mockNext(200, checkTokenSuccessResponse(Date.now() + 1000));
+      cy.mockNext(200, checkTokenSuccessResponse(1000));
       cy.visit(`/welcome/fake_token`);
       cy.contains('Session timed out');
     });

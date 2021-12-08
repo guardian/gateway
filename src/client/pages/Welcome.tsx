@@ -13,8 +13,9 @@ import {
   LinkButton,
   SvgArrowRightStraight,
 } from '@guardian/source-react-components';
-import { Routes } from '@/shared/model/Routes';
+
 import { css } from '@emotion/react';
+import { buildUrl } from '@/shared/lib/routeUtils';
 import { space } from '@guardian/source-foundations';
 
 type Props = {
@@ -55,7 +56,7 @@ export const Welcome = ({
           <div css={autoRow()}>
             <LinkButton
               css={linkButton}
-              href={`${Routes.CONSENTS}`}
+              href={buildUrl('/consents')}
               priority="primary"
               icon={<SvgArrowRightStraight />}
               iconSide="right"

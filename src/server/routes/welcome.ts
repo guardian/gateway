@@ -9,43 +9,37 @@ import { logger } from '@/server/lib/logger';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { renderer } from '@/server/lib/renderer';
 import { ApiError } from '@/server/models/Error';
+import { buildUrl } from '@/shared/lib/routeUtils';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { consentPages } from '@/server/routes/consents';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { PageTitle } from '@/shared/model/PageTitle';
-import { Routes } from '@/shared/model/Routes';
 import deepmerge from 'deepmerge';
 import { Request, Router } from 'express';
 import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
 
 const router = Router();
 // resend account verification page
-router.get(
-  `${Routes.WELCOME}${Routes.RESEND}`,
-  (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer(`${Routes.WELCOME}${Routes.RESEND}`, {
-      pageTitle: PageTitle.WELCOME_RESEND,
-      requestState: res.locals,
-    });
-    res.type('html').send(html);
-  },
-);
+router.get('/welcome/resend', (_: Request, res: ResponseWithRequestState) => {
+  const html = renderer('/welcome/resend', {
+    pageTitle: PageTitle.WELCOME_RESEND,
+    requestState: res.locals,
+  });
+  res.type('html').send(html);
+});
 
 // resend account verification page, session expired
-router.get(
-  `${Routes.WELCOME}${Routes.EXPIRED}`,
-  (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer(`${Routes.WELCOME}${Routes.EXPIRED}`, {
-      pageTitle: PageTitle.WELCOME_RESEND,
-      requestState: res.locals,
-    });
-    res.type('html').send(html);
-  },
-);
+router.get('/welcome/expired', (_: Request, res: ResponseWithRequestState) => {
+  const html = renderer('/welcome/expired', {
+    pageTitle: PageTitle.WELCOME_RESEND,
+    requestState: res.locals,
+  });
+  res.type('html').send(html);
+});
 
 // POST form handler to resend account verification email
 router.post(
-  `${Routes.WELCOME}${Routes.RESEND}`,
+  '/welcome/resend',
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { email } = req.body;
@@ -58,11 +52,9 @@ router.post(
 
       return res.redirect(
         303,
-        addQueryParamsToPath(
-          `${Routes.WELCOME}${Routes.EMAIL_SENT}`,
-          res.locals.queryParams,
-          { emailSentSuccess },
-        ),
+        addQueryParamsToPath('/welcome/email-sent', res.locals.queryParams, {
+          emailSentSuccess,
+        }),
       );
     } catch (error) {
       const { message, status } =
@@ -70,7 +62,7 @@ router.post(
 
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
-      const html = renderer(`${Routes.WELCOME}${Routes.RESEND}`, {
+      const html = renderer('/welcome/resend', {
         pageTitle: PageTitle.WELCOME_RESEND,
         requestState: deepmerge(res.locals, {
           globalMessage: {
@@ -85,7 +77,7 @@ router.post(
 
 // email sent page
 router.get(
-  `${Routes.WELCOME}${Routes.EMAIL_SENT}`,
+  '/welcome/email-sent',
   (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
@@ -94,11 +86,11 @@ router.get(
     state = deepmerge(state, {
       pageData: {
         email,
-        previousPage: `${Routes.WELCOME}${Routes.RESEND}`,
+        previousPage: buildUrl('/welcome/resend'),
       },
     });
 
-    const html = renderer(`${Routes.WELCOME}${Routes.EMAIL_SENT}`, {
+    const html = renderer('/welcome/email-sent', {
       pageTitle: PageTitle.EMAIL_SENT,
       requestState: state,
     });
@@ -108,30 +100,27 @@ router.get(
 
 // welcome page, check token and display set password page
 router.get(
-  `${Routes.WELCOME}${Routes.TOKEN_PARAM}`,
+  '/welcome/:token',
   checkResetPasswordTokenController(
-    Routes.WELCOME,
+    '/welcome',
     PageTitle.WELCOME,
-    Routes.WELCOME,
+    '/welcome',
     PageTitle.WELCOME,
   ),
 );
 
 // POST form handler to set password on welcome page
 router.post(
-  `${Routes.WELCOME}${Routes.TOKEN_PARAM}`,
+  '/welcome/:token',
   setPasswordTokenController(
-    Routes.WELCOME,
+    '/welcome',
     PageTitle.WELCOME,
-    Routes.WELCOME,
+    '/welcome',
     PageTitle.WELCOME,
     (res) => {
       return res.redirect(
         303,
-        addQueryParamsToPath(
-          `${Routes.CONSENTS}/${consentPages[0].page}`,
-          res.locals.queryParams,
-        ),
+        addQueryParamsToPath(`${consentPages[0].path}`, res.locals.queryParams),
       );
     },
   ),

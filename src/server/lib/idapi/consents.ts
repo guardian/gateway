@@ -10,7 +10,6 @@ import { ConsentsErrors } from '@/shared/model/Errors';
 import { Consent } from '@/shared/model/Consent';
 import { UserConsent } from '@/shared/model/User';
 import { IdapiError } from '@/server/models/Error';
-import { ApiRoutes } from '@/shared/model/Routes';
 
 const handleError = (): never => {
   throw new IdapiError({ message: ConsentsErrors.GENERIC, status: 500 });
@@ -34,14 +33,16 @@ const responseToEntity = (consent: ConsentAPIResponse): Consent => {
 };
 
 export const read = async (): Promise<Consent[]> => {
-  const url = `${ApiRoutes.CONSENTS}`;
   const options = APIGetOptions();
   try {
-    return ((await idapiFetch(url, options)) as ConsentAPIResponse[]).map(
-      responseToEntity,
-    );
+    return (
+      (await idapiFetch({
+        path: '/consents',
+        options,
+      })) as ConsentAPIResponse[]
+    ).map(responseToEntity);
   } catch (error) {
-    logger.error(`IDAPI Error consents read ${url}`, error);
+    logger.error(`IDAPI Error consents read '/consents'`, error);
     return handleError();
   }
 };
@@ -51,16 +52,18 @@ export const update = async (
   sc_gu_u: string,
   payload: UserConsent[],
 ) => {
-  const url = `${ApiRoutes.USERS}${ApiRoutes.ME}${ApiRoutes.CONSENTS}`;
   const options = APIForwardSessionIdentifier(
     APIAddClientAccessToken(APIPatchOptions(payload), ip),
     sc_gu_u,
   );
   try {
-    await idapiFetch(url, options);
+    await idapiFetch({
+      path: '/users/me/consents',
+      options,
+    });
     return;
   } catch (error) {
-    logger.error(`IDAPI Error consents update ${url}`, error);
+    logger.error(`IDAPI Error consents update  '/users/me/consents'`, error);
     return handleError();
   }
 };

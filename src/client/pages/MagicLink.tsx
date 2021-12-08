@@ -1,5 +1,4 @@
 import React, { ReactNode, useState } from 'react';
-import { Routes } from '@/shared/model/Routes';
 import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import {
@@ -8,6 +7,7 @@ import {
 } from '@/client/components/MainForm';
 import { EmailInput } from '@/client/components/EmailInput';
 import { ExternalLink } from '@/client/components/ExternalLink';
+import { buildUrl } from '@/shared/lib/routeUtils';
 import locations from '@/shared/lib/locations';
 
 type Props = {
@@ -29,7 +29,7 @@ export const MagicLink = ({ email, recaptchaSiteKey }: Props) => {
         We can email you a one time link to sign into your account
       </MainBodyText>
       <MainForm
-        formAction={Routes.MAGIC_LINK}
+        formAction={buildUrl('/magic-link')}
         submitButtonText="Email me a link"
         recaptchaSiteKey={recaptchaSiteKey}
         setRecaptchaErrorContext={setRecaptchaErrorContext}

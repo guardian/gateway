@@ -2,9 +2,9 @@ import React, { useContext } from 'react';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
-import { Routes } from '@/shared/model/Routes';
+
 import { MainBodyText } from '@/client/components/MainBodyText';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 export const SetPasswordResendPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
@@ -14,7 +14,6 @@ export const SetPasswordResendPage = () => {
     recaptchaConfig,
   } = clientState;
 
-  const queryString = addQueryParamsToPath('', queryParams);
   const { recaptchaSiteKey } = recaptchaConfig;
 
   return (
@@ -22,8 +21,8 @@ export const SetPasswordResendPage = () => {
       email={email}
       headerText="Link expired"
       buttonText="Send me a link"
-      formActionOverride={`${Routes.SET_PASSWORD}${Routes.RESEND}`}
-      queryString={queryString}
+      formActionOverride={buildUrl('/set-password/resend')}
+      queryString={queryParams}
       emailInputLabel="Email address"
       showRecentEmailSummary
       recaptchaSiteKey={recaptchaSiteKey}

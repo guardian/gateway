@@ -1,9 +1,9 @@
-import { Request, Router } from 'express';
+import { Request } from 'express';
 import deepmerge from 'deepmerge';
 import { create as resetPassword } from '@/server/lib/idapi/resetPassword';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
-import { Routes } from '@/shared/model/Routes';
+
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { emailSendMetric } from '@/server/models/Metrics';
@@ -14,11 +14,10 @@ import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
 import { ResetPasswordErrors } from '@/shared/model/Errors';
 import { ApiError } from '@/server/models/Error';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { typedRouter as router } from '@/server/lib/typedRoutes';
 import handleRecaptcha from '@/server/lib/recaptcha';
 
-const router = Router();
-
-router.get(Routes.RESET, (req: Request, res: ResponseWithRequestState) => {
+router.get('/reset', (req: Request, res: ResponseWithRequestState) => {
   let state = res.locals;
   const email = readEmailCookie(req);
 
@@ -30,7 +29,7 @@ router.get(Routes.RESET, (req: Request, res: ResponseWithRequestState) => {
     });
   }
 
-  const html = renderer(Routes.RESET, {
+  const html = renderer('/reset', {
     requestState: state,
     pageTitle: PageTitle.RESET,
   });
@@ -38,7 +37,7 @@ router.get(Routes.RESET, (req: Request, res: ResponseWithRequestState) => {
 });
 
 router.post(
-  Routes.RESET,
+  '/reset',
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
@@ -67,7 +66,7 @@ router.post(
         },
       });
 
-      const html = renderer(Routes.RESET, {
+      const html = renderer('/reset', {
         requestState: state,
         pageTitle: PageTitle.RESET,
       });
@@ -78,19 +77,15 @@ router.post(
 
     return res.redirect(
       303,
-      addQueryParamsToPath(
-        `${Routes.RESET}${Routes.EMAIL_SENT}`,
-        res.locals.queryParams,
-        {
-          emailSentSuccess,
-        },
-      ),
+      addQueryParamsToPath('/reset/email-sent', res.locals.queryParams, {
+        emailSentSuccess,
+      }),
     );
   }),
 );
 
 router.get(
-  `${Routes.RESET}${Routes.EMAIL_SENT}`,
+  '/reset/email-sent',
   (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
@@ -99,11 +94,11 @@ router.get(
     state = deepmerge(state, {
       pageData: {
         email,
-        previousPage: Routes.RESET,
+        previousPage: '/reset',
       },
     });
 
-    const html = renderer(`${Routes.RESET}${Routes.EMAIL_SENT}`, {
+    const html = renderer('/reset/email-sent', {
       pageTitle: PageTitle.EMAIL_SENT,
       requestState: state,
     });
@@ -111,4 +106,4 @@ router.get(
   },
 );
 
-export default router;
+export default router.router;

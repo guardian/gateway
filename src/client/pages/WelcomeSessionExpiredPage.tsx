@@ -2,9 +2,9 @@ import React, { useContext } from 'react';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
-import { Routes } from '@/shared/model/Routes';
+
 import { MainBodyText } from '../components/MainBodyText';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 export const WelcomeSessionExpiredPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
@@ -14,7 +14,6 @@ export const WelcomeSessionExpiredPage = () => {
     recaptchaConfig,
   } = clientState;
 
-  const queryString = addQueryParamsToPath('', queryParams);
   const { recaptchaSiteKey } = recaptchaConfig;
 
   return (
@@ -22,8 +21,8 @@ export const WelcomeSessionExpiredPage = () => {
       email={email}
       headerText="Session timed out"
       buttonText="Send me a link"
-      formActionOverride={`${Routes.WELCOME}${Routes.RESEND}`}
-      queryString={queryString}
+      formActionOverride={buildUrl('/welcome/resend')}
+      queryString={queryParams}
       emailInputLabel="Email address"
       recaptchaSiteKey={recaptchaSiteKey}
     >

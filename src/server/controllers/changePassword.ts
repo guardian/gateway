@@ -28,6 +28,17 @@ import { validateOktaActivationToken } from '@/server/lib/okta/activateUser';
 import { setPasswordInOkta } from '@/server/lib/okta/setPassword';
 import { stringify } from 'query-string';
 import { v4 as uuidv4 } from 'uuid';
+import { RoutePaths } from '@/shared/model/Routes';
+
+type ValidPassworUrls = Extract<
+  '/reset-password' | '/set-password' | '/welcome',
+  RoutePaths
+>;
+
+type ValidResendEmailUrls = Extract<
+  '/reset' | '/welcome' | '/set-password',
+  RoutePaths
+>;
 
 const validatePasswordField = (password: string): Array<FieldError> => {
   const errors: Array<FieldError> = [];
@@ -101,9 +112,9 @@ const setPasswordInOktaUsingStateToken = async (
 };
 
 export const checkResetPasswordTokenController = (
-  setPasswordPagePath: string,
+  setPasswordPagePath: ValidPassworUrls,
   setPasswordPageTitle: string,
-  resendEmailPagePath: string,
+  resendEmailPagePath: ValidResendEmailUrls,
   resendEmailPageTitle: string,
 ) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
@@ -138,15 +149,19 @@ export const checkResetPasswordTokenController = (
         setEncryptedStateCookie(res, { email });
       }
 
-      const html = renderer(`${setPasswordPagePath}/${token}`, {
-        requestState: state,
-        pageTitle: setPasswordPageTitle,
-      });
+      const html = renderer(
+        `${setPasswordPagePath}${'/:token'}`,
+        {
+          requestState: state,
+          pageTitle: setPasswordPageTitle,
+        },
+        { token },
+      );
       return res.type('html').send(html);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
-      if (setPasswordPagePath === Routes.WELCOME) {
+      if (setPasswordPagePath === '/welcome') {
         const { email, passwordSetOnWelcomePage } =
           readEncryptedStateCookie(req) ?? {};
         if (passwordSetOnWelcomePage) {
@@ -156,7 +171,7 @@ export const checkResetPasswordTokenController = (
             },
           });
           return res.type('html').send(
-            renderer(`${resendEmailPagePath}${Routes.COMPLETE}`, {
+            renderer(`${resendEmailPagePath}${'/complete'}`, {
               requestState: state,
               pageTitle: resendEmailPageTitle,
             }),
@@ -164,7 +179,7 @@ export const checkResetPasswordTokenController = (
         }
       }
       return res.type('html').send(
-        renderer(`${resendEmailPagePath}${Routes.RESEND}`, {
+        renderer(`${resendEmailPagePath}${'/resend'}`, {
           requestState: state,
           pageTitle: resendEmailPageTitle,
         }),
@@ -173,9 +188,9 @@ export const checkResetPasswordTokenController = (
   });
 
 export const setPasswordTokenController = (
-  setPasswordPath: string,
+  setPasswordPath: ValidPassworUrls,
   setPasswordPageTitle: string,
-  resendEmailPagePath: string,
+  resendEmailPagePath: ValidResendEmailUrls,
   resendEmailPageTitle: string,
   successCallback: (res: ResponseWithRequestState) => void,
 ) =>
@@ -197,7 +212,7 @@ export const setPasswordTokenController = (
       const fieldErrors = validatePasswordField(password);
 
       if (fieldErrors.length) {
-        const { email, tokenExpiryTimestamp } = await validateToken(
+        const { email, timeUntilTokenExpiry } = await validateToken(
           token,
           req.ip,
         );
@@ -205,14 +220,18 @@ export const setPasswordTokenController = (
         state = deepmerge(state, {
           pageData: {
             email,
-            tokenExpiryTimestamp,
+            timeUntilTokenExpiry,
             fieldErrors,
           },
         });
-        const html = renderer(`${setPasswordPath}/${token}`, {
-          requestState: state,
-          pageTitle: setPasswordPageTitle,
-        });
+        const html = renderer(
+          `${setPasswordPath}${'/:token'}`,
+          {
+            requestState: state,
+            pageTitle: setPasswordPageTitle,
+          },
+          { token },
+        );
         return res.status(422).type('html').send(html);
       }
 
@@ -250,7 +269,7 @@ export const setPasswordTokenController = (
 
       // if the user navigates back to the welcome page after they have set a password, this
       // ensures we show them a custom error page rather than the link expired page
-      if (setPasswordPath === Routes.WELCOME) {
+      if (setPasswordPath === '/welcome') {
         const currentState = readEncryptedStateCookie(req);
         setEncryptedStateCookie(res, {
           ...currentState,
@@ -282,7 +301,7 @@ export const setPasswordTokenController = (
       // we unfortunately need this inner try catch block to catch
       // errors from the `validateToken` method were it to fail
       try {
-        const { email, tokenExpiryTimestamp } = await validateToken(
+        const { email, timeUntilTokenExpiry } = await validateToken(
           token,
           req.ip,
         );
@@ -291,7 +310,7 @@ export const setPasswordTokenController = (
           state = deepmerge(state, {
             pageData: {
               email,
-              tokenExpiryTimestamp,
+              timeUntilTokenExpiry,
               fieldErrors: [
                 {
                   field,
@@ -304,7 +323,7 @@ export const setPasswordTokenController = (
           state = deepmerge(state, {
             pageData: {
               email,
-              tokenExpiryTimestamp,
+              timeUntilTokenExpiry,
             },
             globalMessage: {
               error: message,
@@ -312,17 +331,21 @@ export const setPasswordTokenController = (
           });
         }
 
-        const html = renderer(`${setPasswordPath}/${token}`, {
-          requestState: state,
-          pageTitle: setPasswordPageTitle,
-        });
+        const html = renderer(
+          `${setPasswordPath}${'/:token'}`,
+          {
+            requestState: state,
+            pageTitle: setPasswordPageTitle,
+          },
+          { token },
+        );
         return res.status(status).type('html').send(html);
       } catch (error) {
         logger.error(`${req.method} ${req.originalUrl}  Error`, error);
         // if theres an error with the token validation, we have to take them back
         // to the resend page
         return res.type('html').send(
-          renderer(`${resendEmailPagePath}${Routes.RESEND}`, {
+          renderer(`${resendEmailPagePath}${'/resend'}`, {
             requestState: state,
             pageTitle: resendEmailPageTitle,
           }),

@@ -1,3 +1,4 @@
+import { typedRouter as router } from '@/server/lib/typedRoutes';
 import {
   checkResetPasswordTokenController,
   setPasswordTokenController,
@@ -14,20 +15,18 @@ import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { EmailType } from '@/shared/model/EmailType';
 import { ResetPasswordErrors } from '@/shared/model/Errors';
 import { PageTitle } from '@/shared/model/PageTitle';
-import { Routes } from '@/shared/model/Routes';
 import deepmerge from 'deepmerge';
-import { Request, Router } from 'express';
+import { Request } from 'express';
 import { ApiError } from '../models/Error';
-
-const router = Router();
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 // set password complete page
 router.get(
-  `${Routes.SET_PASSWORD}${Routes.COMPLETE}`,
+  '/set-password/complete',
   (req: Request, res: ResponseWithRequestState) => {
     const email = readEmailCookie(req);
 
-    const html = renderer(`${Routes.SET_PASSWORD}${Routes.COMPLETE}`, {
+    const html = renderer('/set-password/complete', {
       requestState: deepmerge(res.locals, {
         pageData: {
           email,
@@ -41,9 +40,9 @@ router.get(
 
 // resend "create (set) password" email page
 router.get(
-  `${Routes.SET_PASSWORD}${Routes.RESEND}`,
+  '/set-password/resend',
   (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer(`${Routes.SET_PASSWORD}${Routes.RESEND}`, {
+    const html = renderer('/set-password/resend', {
       pageTitle: PageTitle.SET_PASSWORD_RESEND,
       requestState: res.locals,
     });
@@ -53,9 +52,9 @@ router.get(
 
 // set password page session expired
 router.get(
-  `${Routes.SET_PASSWORD}${Routes.EXPIRED}`,
+  '/set-password/expired',
   (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer(`${Routes.SET_PASSWORD}${Routes.EXPIRED}`, {
+    const html = renderer('/set-password/expired', {
       pageTitle: PageTitle.SET_PASSWORD_RESEND,
       requestState: res.locals,
     });
@@ -65,7 +64,7 @@ router.get(
 
 // POST handler for resending "create (set) password" email
 router.post(
-  `${Routes.SET_PASSWORD}${Routes.RESEND}`,
+  '/set-password/resend',
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { email } = req.body;
@@ -82,7 +81,7 @@ router.post(
       return res.redirect(
         303,
         addQueryParamsToPath(
-          `${Routes.SET_PASSWORD}${Routes.EMAIL_SENT}`,
+          '/set-password/email-sent',
           res.locals.queryParams,
           {
             emailSentSuccess,
@@ -97,7 +96,7 @@ router.post(
 
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
-      const html = renderer(`${Routes.SET_PASSWORD}${Routes.RESEND}`, {
+      const html = renderer('/set-password/resend', {
         pageTitle: PageTitle.SET_PASSWORD_RESEND,
         requestState: deepmerge(res.locals, {
           globalMessage: {
@@ -112,7 +111,7 @@ router.post(
 
 // email sent page
 router.get(
-  `${Routes.SET_PASSWORD}${Routes.EMAIL_SENT}`,
+  '/set-password/email-sent',
   (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
@@ -121,11 +120,11 @@ router.get(
     state = deepmerge(state, {
       pageData: {
         email,
-        previousPage: `${Routes.SET_PASSWORD}${Routes.RESEND}`,
+        previousPage: buildUrl('/set-password/resend'),
       },
     });
 
-    const html = renderer(`${Routes.SET_PASSWORD}${Routes.EMAIL_SENT}`, {
+    const html = renderer('/set-password/email-sent', {
       pageTitle: PageTitle.EMAIL_SENT,
       requestState: state,
     });
@@ -135,32 +134,29 @@ router.get(
 
 // set password page with token check
 router.get(
-  `${Routes.SET_PASSWORD}${Routes.TOKEN_PARAM}`,
+  '/set-password/:token',
   checkResetPasswordTokenController(
-    Routes.SET_PASSWORD,
+    '/set-password',
     PageTitle.SET_PASSWORD,
-    Routes.SET_PASSWORD,
+    '/set-password',
     PageTitle.SET_PASSWORD_RESEND,
   ),
 );
 
 // POST handler for set password page to set password
 router.post(
-  `${Routes.SET_PASSWORD}${Routes.TOKEN_PARAM}`,
+  '/set-password/:token',
   setPasswordTokenController(
-    Routes.SET_PASSWORD,
+    '/set-password',
     PageTitle.SET_PASSWORD,
-    Routes.SET_PASSWORD,
+    '/set-password',
     PageTitle.SET_PASSWORD_RESEND,
     (res) =>
       res.redirect(
         303,
-        addQueryParamsToPath(
-          `${Routes.SET_PASSWORD}${Routes.COMPLETE}`,
-          res.locals.queryParams,
-        ),
+        addQueryParamsToPath('/set-password/complete', res.locals.queryParams),
       ),
   ),
 );
 
-export default router;
+export default router.router;

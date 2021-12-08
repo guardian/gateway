@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { MainBodyText } from '@/client/components/MainBodyText';
 
 export const ResetPasswordPage = () => {
@@ -13,14 +12,13 @@ export const ResetPasswordPage = () => {
     recaptchaConfig,
   } = clientState;
   const { recaptchaSiteKey } = recaptchaConfig;
-  const queryString = addQueryParamsToPath('', queryParams);
 
   return (
     <ResetPassword
       email={email}
       headerText="Forgot password"
       buttonText="Reset password"
-      queryString={queryString}
+      queryString={queryParams}
       showNoAccessEmail
       recaptchaSiteKey={recaptchaSiteKey}
     >

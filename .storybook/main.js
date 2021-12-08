@@ -23,6 +23,7 @@ module.exports = {
         /node_modules[\\\/]ansi-regex/,
         /node_modules[\\\/]split-on-first/,
         /node_modules[\\\/]strict-uri-encode/,
+        /node_modules[\\\/]react-element-to-jsx-string[\\\/]dist[\\\/]cjs/,
         // query string related transpilation end
       ],
       test: /\.(m?)(j|t)s(x?)/,

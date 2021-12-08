@@ -3,12 +3,13 @@ import { joinUrl } from '@guardian/libs';
 import { read } from '@/server/lib/idapi/auth';
 import { IDAPIAuthRedirect, IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
 import { getProfileUrl } from '@/server/lib/getProfileUrl';
-import { Routes } from '@/shared/model/Routes';
+
 import { trackMetric } from '@/server/lib/trackMetric';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/logger';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
 import { ResponseWithRequestState } from '@/server/models/Express';
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 const profileUrl = getProfileUrl();
 
@@ -22,7 +23,7 @@ export const loginMiddleware = async (
 
   const redirectAuth = (auth: IDAPIAuthRedirect) => {
     if (auth.redirect) {
-      const redirect = addQueryParamsToPath(auth.redirect.url, {
+      const redirect = addQueryParamsToUntypedPath(auth.redirect.url, {
         ...res.locals.queryParams,
         returnUrl: joinUrl(profileUrl, req.path),
       });
@@ -30,7 +31,7 @@ export const loginMiddleware = async (
     }
 
     return res.redirect(
-      addQueryParamsToPath(LOGIN_REDIRECT_URL, {
+      addQueryParamsToUntypedPath(LOGIN_REDIRECT_URL, {
         ...res.locals.queryParams,
         returnUrl: joinUrl(profileUrl, req.path),
       }),
@@ -42,7 +43,7 @@ export const loginMiddleware = async (
 
   if (!sc_gu_u || !sc_gu_la) {
     res.redirect(
-      addQueryParamsToPath(LOGIN_REDIRECT_URL, {
+      addQueryParamsToUntypedPath(LOGIN_REDIRECT_URL, {
         ...res.locals.queryParams,
         returnUrl: joinUrl(profileUrl, req.path),
       }),
@@ -60,7 +61,7 @@ export const loginMiddleware = async (
 
     if (!auth.emailValidated) {
       trackMetric('LoginMiddlewareUnverified');
-      return res.redirect(303, Routes.VERIFY_EMAIL);
+      return res.redirect(303, buildUrl('/verify-email'));
     }
 
     if (auth.status === IDAPIAuthStatus.RECENT) {
@@ -74,7 +75,7 @@ export const loginMiddleware = async (
     logger.error('loginMiddlewareFailure', e);
     trackMetric('LoginMiddleware::Failure');
     res.redirect(
-      addQueryParamsToPath(
+      addQueryParamsToUntypedPath(
         LOGIN_REDIRECT_URL,
         {
           ...res.locals.queryParams,
