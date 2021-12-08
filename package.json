@@ -78,7 +78,7 @@
     "chromatic": "^6.1.0",
     "copy-node-modules": "^1.1.1",
     "core-js": "^3.19.2",
-    "cypress": "^9.1.0",
+    "cypress": "^9.1.1",
     "cypress-axe": "^0.13.0",
     "cypress-mailosaur": "2.5.0",
     "dotenv-webpack": "^7.0.3",
