@@ -1,3 +1,7 @@
+export interface CreateUserRequest {
+  profile: Profile;
+}
+
 export interface ActivationRequest {
   token: string;
 }
@@ -23,9 +27,13 @@ export interface SetPasswordResponse {
   };
 }
 
-interface User {
+export interface User {
   id: string;
-  profile: {
-    login: string;
-  };
+  profile: Profile;
+}
+
+interface Profile {
+  email: string;
+  login: string;
+  isGuardianUser?: boolean;
 }

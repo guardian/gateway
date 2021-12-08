@@ -1,15 +1,29 @@
-import { CreateUserRequestOptions } from '@okta/okta-sdk-nodejs/src/types/models/CreateUserRequest';
-import { oktaClient } from '@/server/lib/okta/client';
-import { User } from '@okta/okta-sdk-nodejs';
+import { fetchWithTimeout } from '@/server/lib/fetch';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { joinUrl } from '@guardian/libs';
+import { Okta } from '@/shared/model/Routes';
+import { CreateUserRequest, User } from '@/server/models/Okta';
+import { Response } from 'node-fetch';
+import { handleOktaErrors } from '@/server/lib/okta/errors';
+import { authorizationHeader, defaultHeaders } from '@/server/lib/okta/client';
 
-export const createUserInOkta = (email: string): Promise<User> => {
-  const client = oktaClient();
-  const user: CreateUserRequestOptions = {
-    profile: {
-      email,
-      login: email,
-      isGuardianUser: true,
+export const createUserInOkta = (request: CreateUserRequest): Promise<User> => {
+  return createUser(request).then(handleOktaErrors).then(extractUserResponse);
+};
+
+const createUser = async (body: CreateUserRequest): Promise<Response> => {
+  const { orgUrl } = getConfiguration().okta;
+  return await fetchWithTimeout(
+    joinUrl(orgUrl, Okta.USERS),
+    {
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers: { ...defaultHeaders, ...authorizationHeader() },
     },
-  };
-  return client.createUser(user, { activate: true });
+    10000,
+  );
+};
+
+const extractUserResponse = async (response: Response): Promise<User> => {
+  return await response.json().then((json) => json as User);
 };

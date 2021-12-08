@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { Routes } from '@/shared/model/Routes';
+import { Okta, Routes } from '@/shared/model/Routes';
 import deepmerge from 'deepmerge';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { getBrowserNameFromUserAgent } from '@/server/lib/getBrowserName';
@@ -239,9 +239,9 @@ export const setPasswordTokenController = (
         };
         return res.redirect(
           303,
-          `${okta.orgUrl}/oauth2/${okta.authServerId}/v1/authorize?${stringify(
-            queryParams,
-          )}`,
+          `${okta.orgUrl}/oauth2/${okta.authServerId}${
+            Okta.AUTHORIZE
+          }?${stringify(queryParams)}`,
         );
       } else {
         const cookies = await changePassword(password, token, req.ip);

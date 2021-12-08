@@ -153,7 +153,7 @@ router.post(
 
     try {
       if (okta.registrationEnabled && useOkta) {
-        await createUserInOkta(email);
+        await createUserInOkta({ profile: { login: email, email } });
       } else {
         // use idapi user type endpoint to determine user type
         const userType = await readUserType(email, req.ip);

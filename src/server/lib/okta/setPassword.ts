@@ -7,8 +7,6 @@ import { Response } from 'node-fetch';
 import { handleOktaErrors } from '@/server/lib/okta/errors';
 import { defaultHeaders } from '@/server/lib/okta/client';
 
-const { orgUrl } = getConfiguration().okta;
-
 export const setPasswordInOkta = (
   request: SetPasswordRequest,
 ): Promise<SetPasswordResponse> => {
@@ -20,6 +18,7 @@ export const setPasswordInOkta = (
 const setPasswordWithStateToken = async (
   body: SetPasswordRequest,
 ): Promise<Response> => {
+  const { orgUrl } = getConfiguration().okta;
   return await fetch(joinUrl(orgUrl, Okta.RESET_PASSWORD), {
     method: 'POST',
     body: JSON.stringify(body),

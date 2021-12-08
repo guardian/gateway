@@ -7,8 +7,6 @@ import { Response } from 'node-fetch';
 import { handleOktaErrors } from '@/server/lib/okta/errors';
 import { defaultHeaders } from '@/server/lib/okta/client';
 
-const { orgUrl } = getConfiguration().okta;
-
 export const validateOktaActivationToken = (
   request: ActivationRequest,
 ): Promise<ActivationResponse> => {
@@ -20,6 +18,7 @@ export const validateOktaActivationToken = (
 const exchangeActivationTokenForStateToken = async (
   body: ActivationRequest,
 ): Promise<Response> => {
+  const { orgUrl } = getConfiguration().okta;
   return await fetch(joinUrl(orgUrl, Okta.AUTH), {
     method: 'POST',
     body: JSON.stringify(body),
