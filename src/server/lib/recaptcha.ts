@@ -3,7 +3,8 @@ import { NextFunction, Request, Response } from 'express';
 import { RecaptchaV2 } from 'express-recaptcha';
 import { getConfiguration } from './getConfiguration';
 import createError from 'http-errors';
-import { logger } from './logger';
+import { logger } from '@/server/lib/logger';
+import { trackMetric } from '@/server/lib/trackMetric';
 
 const {
   googleRecaptcha: { secretKey, siteKey },
@@ -15,11 +16,7 @@ const recaptcha = new RecaptchaV2(siteKey, secretKey);
  * Throws a generic error if the recaptcha check has failed.
  * @param recaptchaResponse
  */
-const checkRecaptchaError = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+const checkRecaptchaError = (req: Request, _: Response, next: NextFunction) => {
   const recaptchaError = createError(400, CaptchaErrors.GENERIC, {
     code: 'EBADRECAPTCHA',
   });
@@ -33,6 +30,8 @@ const checkRecaptchaError = (
     logger.error('Problem verifying recaptcha, error response: ', error);
     return next(recaptchaError);
   }
+
+  trackMetric('RecaptchaMiddleware::Success');
   next();
 };
 

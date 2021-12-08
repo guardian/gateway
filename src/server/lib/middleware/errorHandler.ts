@@ -7,6 +7,7 @@ import { PageTitle } from '@/shared/model/PageTitle';
 import { logger } from '@/server/lib/logger';
 import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
 import { getConfiguration } from '@/server/lib/getConfiguration';
+import { trackMetric } from '@/server/lib/trackMetric';
 
 const { defaultReturnUri } = getConfiguration();
 
@@ -34,6 +35,7 @@ export const routeErrorHandler = (
     );
     return next(err);
   } else if (err.code === 'EBADRECAPTCHA') {
+    trackMetric('RecaptchaMiddleware::Failure');
     res.redirect(
       303,
       addQueryParamsToUntypedPath(
