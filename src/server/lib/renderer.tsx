@@ -1,7 +1,7 @@
 import { ClientState, FieldError } from '@/shared/model/ClientState';
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { App } from '@/client/app';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { RoutingConfig } from '@/client/routes';
@@ -89,8 +89,6 @@ export const renderer: <P extends RoutePaths>(
   opts: RendererOpts,
   tokenisationParams?: PathParams<P>,
 ) => string = (url, { requestState, pageTitle }, tokenisationParams) => {
-  const context = {};
-
   const clientState = clientStateFromRequestStateLocals(requestState);
 
   const location = buildUrlWithQueryParams(
@@ -112,7 +110,7 @@ export const renderer: <P extends RoutePaths>(
       mvtId={mvtId}
       forcedTestVariants={forcedTestVariants}
     >
-      <StaticRouter location={location} context={context}>
+      <StaticRouter location={location}>
         <App {...clientState}></App>
       </StaticRouter>
     </ABProvider>,

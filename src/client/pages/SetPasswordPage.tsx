@@ -12,7 +12,7 @@ export const SetPasswordPage = () => {
     pageData: { email = '', fieldErrors = [], timeUntilTokenExpiry } = {},
     queryParams,
   } = clientState;
-  const { token } = useParams<{ token: string }>();
+  const { token } = useParams();
 
   useEffect(() => {
     // we only want this to run in the browser as window is not
