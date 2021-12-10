@@ -10,8 +10,6 @@ import {
   validate as validateToken,
   change as changePassword,
 } from '@/server/lib/idapi/changePassword';
-import { FieldError } from '@/shared/model/ClientState';
-import { ChangePasswordErrors } from '@/shared/model/Errors';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { trackMetric } from '@/server/lib/trackMetric';
 import {
@@ -21,24 +19,7 @@ import {
 import { ApiError } from '@/server/models/Error';
 import { PasswordRoutePath } from '@/shared/model/Routes';
 import { PasswordPageTitle } from '@/shared/model/PageTitle';
-
-const validatePasswordField = (password: string): Array<FieldError> => {
-  const errors: Array<FieldError> = [];
-
-  if (!password) {
-    errors.push({
-      field: 'password',
-      message: ChangePasswordErrors.PASSWORD_BLANK,
-    });
-  } else if (password.length < 8 || password.length > 72) {
-    errors.push({
-      field: 'password',
-      message: ChangePasswordErrors.PASSWORD_LENGTH,
-    });
-  }
-
-  return errors;
-};
+import { validatePasswordField } from '@/server/lib/validatePasswordField';
 
 export const setPasswordTokenController = (
   path: PasswordRoutePath,

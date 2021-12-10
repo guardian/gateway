@@ -35,16 +35,12 @@ export const checkPasswordTokenController = (
         },
       });
 
-      // set the encrypted state here, so we can read the email
-      // on the confirmation page
+      // add email to encrypted state, so we can display it on the confirmation page
       setEncryptedStateCookie(res, { email });
 
       const html = renderer(
         `${path}/:token`,
-        {
-          requestState,
-          pageTitle,
-        },
+        { requestState, pageTitle },
         { token },
       );
       return res.type('html').send(html);
