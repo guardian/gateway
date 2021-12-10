@@ -38,7 +38,7 @@ export const EmailSent = ({
     useState<ReactNode>(null);
   return (
     <MainLayout
-      pageTitle="Check your email inbox"
+      pageHeader="Check your email inbox"
       successOverride={showSuccess ? 'Email sent' : undefined}
       errorOverride={
         recaptchaErrorMessage ? recaptchaErrorMessage : errorMessage

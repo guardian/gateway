@@ -44,7 +44,7 @@ export const ResetPassword = ({
 
   return (
     <MainLayout
-      pageTitle={headerText}
+      pageHeader={headerText}
       errorContext={recaptchaErrorContext}
       errorOverride={recaptchaErrorMessage}
     >

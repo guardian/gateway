@@ -14,12 +14,13 @@ import {
   ValidPasswordResendEmailRoutePaths,
   ValidPasswordRoutePaths,
 } from '@/shared/model/Routes';
+import { PageTitle } from '@/shared/model/PageTitle';
 
 export const checkPasswordTokenController = (
   setPasswordPagePath: ValidPasswordRoutePaths,
-  setPasswordPageTitle: string,
+  setPasswordPageTitle: PageTitle,
   resendEmailPagePath: ValidPasswordResendEmailRoutePaths,
-  resendEmailPageTitle: string,
+  resendEmailPageTitle: PageTitle,
 ) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;

@@ -17,7 +17,6 @@ import { logger } from '@/server/lib/logger';
 import { registerWithOkta } from '@/server/lib/okta/registration';
 import { getEmailFromPlaySessionCookie } from '@/server/lib/playSessionCookie';
 import { renderer } from '@/server/lib/renderer';
-
 import { typedRouter as router } from '@/server/lib/typedRoutes';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { ApiError } from '@/server/models/Error';
@@ -25,7 +24,6 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { EmailType } from '@/shared/model/EmailType';
 import { GenericErrors } from '@/shared/model/Errors';
-import { PageTitle } from '@/shared/model/PageTitle';
 import deepmerge from 'deepmerge';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 
@@ -34,7 +32,7 @@ const { okta } = getConfiguration();
 router.get('/register', (req: Request, res: ResponseWithRequestState) => {
   const html = renderer('/register', {
     requestState: res.locals,
-    pageTitle: PageTitle.REGISTRATION,
+    pageTitle: 'Register',
   });
   res.type('html').send(html);
 });
@@ -51,7 +49,7 @@ router.get(
             readEncryptedStateCookie(req)?.email,
         },
       }),
-      pageTitle: PageTitle.REGISTRATION_EMAIL_SENT,
+      pageTitle: 'Check Your Inbox',
     });
     res.type('html').send(html);
   },
@@ -123,7 +121,7 @@ router.post(
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
       const html = renderer('/register/email-sent', {
-        pageTitle: PageTitle.REGISTRATION_EMAIL_SENT,
+        pageTitle: 'Check Your Inbox',
         requestState: deepmerge(res.locals, {
           globalMessage: {
             error: message,
@@ -216,7 +214,7 @@ router.post(
 
       const html = renderer('/register', {
         requestState: state,
-        pageTitle: PageTitle.REGISTRATION,
+        pageTitle: 'Register',
       });
       return res.status(status).type('html').send(html);
     }

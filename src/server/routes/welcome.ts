@@ -11,7 +11,6 @@ import { buildUrl } from '@/shared/lib/routeUtils';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { consentPages } from '@/server/routes/consents';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { PageTitle } from '@/shared/model/PageTitle';
 import deepmerge from 'deepmerge';
 import { Request, Router } from 'express';
 import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
@@ -20,7 +19,7 @@ const router = Router();
 // resend account verification page
 router.get('/welcome/resend', (_: Request, res: ResponseWithRequestState) => {
   const html = renderer('/welcome/resend', {
-    pageTitle: PageTitle.WELCOME_RESEND,
+    pageTitle: 'Resend Welcome Email',
     requestState: res.locals,
   });
   res.type('html').send(html);
@@ -29,7 +28,7 @@ router.get('/welcome/resend', (_: Request, res: ResponseWithRequestState) => {
 // resend account verification page, session expired
 router.get('/welcome/expired', (_: Request, res: ResponseWithRequestState) => {
   const html = renderer('/welcome/expired', {
-    pageTitle: PageTitle.WELCOME_RESEND,
+    pageTitle: 'Resend Welcome Email',
     requestState: res.locals,
   });
   res.type('html').send(html);
@@ -61,7 +60,7 @@ router.post(
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
       const html = renderer('/welcome/resend', {
-        pageTitle: PageTitle.WELCOME_RESEND,
+        pageTitle: 'Resend Welcome Email',
         requestState: deepmerge(res.locals, {
           globalMessage: {
             error: message,
@@ -89,7 +88,7 @@ router.get(
     });
 
     const html = renderer('/welcome/email-sent', {
-      pageTitle: PageTitle.EMAIL_SENT,
+      pageTitle: 'Check Your Inbox',
       requestState: state,
     });
     res.type('html').send(html);
@@ -99,12 +98,7 @@ router.get(
 // welcome page, check token and display set password page
 router.get(
   '/welcome/:token',
-  checkPasswordTokenController(
-    '/welcome',
-    PageTitle.WELCOME,
-    '/welcome',
-    PageTitle.WELCOME,
-  ),
+  checkPasswordTokenController('/welcome', 'Welcome', '/welcome', 'Welcome'),
 );
 
 // POST form handler to set password on welcome page
@@ -112,9 +106,9 @@ router.post(
   '/welcome/:token',
   setPasswordTokenController(
     '/welcome',
-    PageTitle.WELCOME,
+    'Welcome',
     '/welcome',
-    PageTitle.WELCOME,
+    'Welcome',
     (res) => {
       return res.redirect(
         303,

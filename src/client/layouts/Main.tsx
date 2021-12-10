@@ -18,7 +18,7 @@ import { ClientStateContext } from '@/client/components/ClientState';
 import { ClientState } from '@/shared/model/ClientState';
 
 interface MainLayoutProps {
-  pageTitle?: string;
+  pageHeader?: string;
   successOverride?: string;
   errorOverride?: string;
   errorContext?: React.ReactNode;
@@ -125,7 +125,7 @@ export const buttonStyles = ({ hasTerms = false, halfWidth = false }) => css`
 
 export const MainLayout = ({
   children,
-  pageTitle,
+  pageHeader,
   successOverride,
   errorOverride,
   errorContext,
@@ -140,7 +140,7 @@ export const MainLayout = ({
   const errorMessage = errorOverride || error;
 
   const hasSummary = !!(errorMessage || successMessage);
-  const hasTitleOrSummary = !!(pageTitle || hasSummary);
+  const hasTitleOrSummary = !!(pageHeader || hasSummary);
 
   return (
     <>
@@ -160,9 +160,9 @@ export const MainLayout = ({
               message={successMessage}
             />
           )}
-          {pageTitle && (
+          {pageHeader && (
             <header css={headerStyles(hasSummary)}>
-              <h1 css={[pageTitleStyles]}>{pageTitle}</h1>
+              <h1 css={[pageTitleStyles]}>{pageHeader}</h1>
             </header>
           )}
           <div css={bodyStyles(hasTitleOrSummary)}>{children}</div>

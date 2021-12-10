@@ -6,7 +6,6 @@ import { typedRouter as router } from '@/server/lib/typedRoutes';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { PageTitle } from '@/shared/model/PageTitle';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { ApiError } from '@/server/models/Error';
@@ -15,7 +14,7 @@ import handleRecaptcha from '@/server/lib/recaptcha';
 router.get('/magic-link', (req: Request, res: ResponseWithRequestState) => {
   const html = renderer('/magic-link', {
     requestState: res.locals,
-    pageTitle: PageTitle.MAGIC_LINK,
+    pageTitle: 'Sign in',
   });
   res.type('html').send(html);
 });
@@ -47,7 +46,7 @@ router.post(
 
       const html = renderer('/magic-link', {
         requestState: state,
-        pageTitle: PageTitle.MAGIC_LINK,
+        pageTitle: 'Sign in',
       });
       return res.status(status).type('html').send(html);
     }
@@ -62,7 +61,7 @@ router.get(
   '/magic-link/email-sent',
   (_: Request, res: ResponseWithRequestState) => {
     const html = renderer('/magic-link/email-sent', {
-      pageTitle: PageTitle.MAGIC_LINK,
+      pageTitle: 'Sign in',
       requestState: res.locals,
     });
     res.type('html').send(html);

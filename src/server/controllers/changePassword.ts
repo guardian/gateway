@@ -23,6 +23,7 @@ import {
   ValidPasswordResendEmailRoutePaths,
   ValidPasswordRoutePaths,
 } from '@/shared/model/Routes';
+import { PageTitle } from '@/shared/model/PageTitle';
 
 const validatePasswordField = (password: string): Array<FieldError> => {
   const errors: Array<FieldError> = [];
@@ -44,9 +45,9 @@ const validatePasswordField = (password: string): Array<FieldError> => {
 
 export const setPasswordTokenController = (
   setPasswordPath: ValidPasswordRoutePaths,
-  setPasswordPageTitle: string,
+  setPasswordPageTitle: PageTitle,
   resendEmailPagePath: ValidPasswordResendEmailRoutePaths,
-  resendEmailPageTitle: string,
+  resendEmailPageTitle: PageTitle,
   successCallback: (res: ResponseWithRequestState) => void,
 ) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {

@@ -3,7 +3,6 @@ import deepmerge from 'deepmerge';
 
 import { renderer } from '@/server/lib/renderer';
 import { ResponseWithRequestState } from '@/server/models/Express';
-import { PageTitle } from '@/shared/model/PageTitle';
 import { checkPasswordTokenController } from '@/server/controllers/checkPasswordToken';
 import { setPasswordTokenController } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
@@ -14,9 +13,9 @@ router.get(
   '/reset-password/:token',
   checkPasswordTokenController(
     '/reset-password',
-    PageTitle.CHANGE_PASSWORD,
+    'Change Password',
     '/reset',
-    PageTitle.RESET_RESEND,
+    'Resend Reset Password',
   ),
 );
 
@@ -24,9 +23,9 @@ router.post(
   '/reset-password/:token',
   setPasswordTokenController(
     '/reset-password',
-    PageTitle.CHANGE_PASSWORD,
+    'Change Password',
     '/reset',
-    PageTitle.RESET_RESEND,
+    'Resend Reset Password',
     (res) =>
       res.redirect(
         303,
@@ -49,7 +48,7 @@ router.get(
           email,
         },
       }),
-      pageTitle: PageTitle.CHANGE_PASSWORD_COMPLETE,
+      pageTitle: 'Password Changed',
     });
     return res.type('html').send(html);
   },
@@ -57,7 +56,7 @@ router.get(
 
 router.get('/reset/resend', (_: Request, res: ResponseWithRequestState) => {
   const html = renderer('/reset/resend', {
-    pageTitle: PageTitle.RESET_RESEND,
+    pageTitle: 'Resend Reset Password',
     requestState: res.locals,
   });
   res.type('html').send(html);
@@ -65,7 +64,7 @@ router.get('/reset/resend', (_: Request, res: ResponseWithRequestState) => {
 
 router.get('/reset/expired', (_: Request, res: ResponseWithRequestState) => {
   const html = renderer('/reset/expired', {
-    pageTitle: PageTitle.RESET_RESEND,
+    pageTitle: 'Resend Reset Password',
     requestState: res.locals,
   });
   res.type('html').send(html);

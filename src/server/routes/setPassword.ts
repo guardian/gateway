@@ -12,7 +12,6 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { EmailType } from '@/shared/model/EmailType';
 import { ResetPasswordErrors } from '@/shared/model/Errors';
-import { PageTitle } from '@/shared/model/PageTitle';
 import deepmerge from 'deepmerge';
 import { Request } from 'express';
 import { ApiError } from '../models/Error';
@@ -30,7 +29,7 @@ router.get(
           email,
         },
       }),
-      pageTitle: PageTitle.SET_PASSWORD_COMPLETE,
+      pageTitle: 'Password Set',
     });
     return res.type('html').send(html);
   },
@@ -41,7 +40,7 @@ router.get(
   '/set-password/resend',
   (_: Request, res: ResponseWithRequestState) => {
     const html = renderer('/set-password/resend', {
-      pageTitle: PageTitle.SET_PASSWORD_RESEND,
+      pageTitle: 'Resend Set Password',
       requestState: res.locals,
     });
     res.type('html').send(html);
@@ -53,7 +52,7 @@ router.get(
   '/set-password/expired',
   (_: Request, res: ResponseWithRequestState) => {
     const html = renderer('/set-password/expired', {
-      pageTitle: PageTitle.SET_PASSWORD_RESEND,
+      pageTitle: 'Resend Set Password',
       requestState: res.locals,
     });
     res.type('html').send(html);
@@ -95,7 +94,7 @@ router.post(
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
       const html = renderer('/set-password/resend', {
-        pageTitle: PageTitle.SET_PASSWORD_RESEND,
+        pageTitle: 'Resend Set Password',
         requestState: deepmerge(res.locals, {
           globalMessage: {
             error: message,
@@ -123,7 +122,7 @@ router.get(
     });
 
     const html = renderer('/set-password/email-sent', {
-      pageTitle: PageTitle.EMAIL_SENT,
+      pageTitle: 'Check Your Inbox',
       requestState: state,
     });
     res.type('html').send(html);
@@ -135,9 +134,9 @@ router.get(
   '/set-password/:token',
   checkPasswordTokenController(
     '/set-password',
-    PageTitle.SET_PASSWORD,
+    'Create Password',
     '/set-password',
-    PageTitle.SET_PASSWORD_RESEND,
+    'Resend Set Password',
   ),
 );
 
@@ -146,9 +145,9 @@ router.post(
   '/set-password/:token',
   setPasswordTokenController(
     '/set-password',
-    PageTitle.SET_PASSWORD,
+    'Create Password',
     '/set-password',
-    PageTitle.SET_PASSWORD_RESEND,
+    'Resend Set Password',
     (res) =>
       res.redirect(
         303,

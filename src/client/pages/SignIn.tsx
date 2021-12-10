@@ -6,8 +6,6 @@ import { Footer } from '@/client/components/Footer';
 import { PasswordInput } from '@/client/components/PasswordInput';
 import { Nav } from '@/client/components/Nav';
 import { Button, Link } from '@guardian/source-react-components';
-
-import { PageTitle } from '@/shared/model/PageTitle';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
@@ -180,12 +178,12 @@ export const SignIn = ({
       <Nav
         tabs={[
           {
-            displayText: PageTitle.SIGN_IN,
+            displayText: 'Sign in',
             linkTo: '/signin',
             isActive: true,
           },
           {
-            displayText: PageTitle.REGISTRATION,
+            displayText: 'Register',
             linkTo: '/register',
             isActive: false,
           },
