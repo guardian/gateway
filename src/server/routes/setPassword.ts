@@ -1,8 +1,6 @@
 import { typedRouter as router } from '@/server/lib/typedRoutes';
-import {
-  checkResetPasswordTokenController,
-  setPasswordTokenController,
-} from '@/server/controllers/changePassword';
+import { checkPasswordTokenController } from '@/server/controllers/checkPasswordToken';
+import { setPasswordTokenController } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
@@ -135,7 +133,7 @@ router.get(
 // set password page with token check
 router.get(
   '/set-password/:token',
-  checkResetPasswordTokenController(
+  checkPasswordTokenController(
     '/set-password',
     PageTitle.SET_PASSWORD,
     '/set-password',

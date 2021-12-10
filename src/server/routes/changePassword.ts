@@ -4,17 +4,15 @@ import deepmerge from 'deepmerge';
 import { renderer } from '@/server/lib/renderer';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { PageTitle } from '@/shared/model/PageTitle';
-import {
-  checkResetPasswordTokenController,
-  setPasswordTokenController,
-} from '@/server/controllers/changePassword';
+import { checkPasswordTokenController } from '@/server/controllers/checkPasswordToken';
+import { setPasswordTokenController } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { typedRouter as router } from '@/server/lib/typedRoutes';
 
 router.get(
   '/reset-password/:token',
-  checkResetPasswordTokenController(
+  checkPasswordTokenController(
     '/reset-password',
     PageTitle.CHANGE_PASSWORD,
     '/reset',

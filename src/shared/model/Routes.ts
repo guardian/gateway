@@ -67,6 +67,16 @@ export type ApiRoutePaths =
   | '/user/send-account-without-password-exists-email'
   | '/user/send-create-password-account-exists-email';
 
+export type ValidPasswordRoutePaths = Extract<
+  '/reset-password' | '/set-password' | '/welcome',
+  RoutePaths
+>;
+
+export type ValidPasswordResendEmailRoutePaths = Extract<
+  '/reset' | '/welcome' | '/set-password',
+  RoutePaths
+>;
+
 /**
  * This is all valid routes on the site, only used for the helper function addQueryParamsToPath
  */

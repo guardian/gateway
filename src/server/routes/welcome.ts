@@ -1,7 +1,5 @@
-import {
-  checkResetPasswordTokenController,
-  setPasswordTokenController,
-} from '@/server/controllers/changePassword';
+import { checkPasswordTokenController } from '@/server/controllers/checkPasswordToken';
+import { setPasswordTokenController } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { sendAccountVerificationEmail } from '@/server/lib/idapi/user';
@@ -101,7 +99,7 @@ router.get(
 // welcome page, check token and display set password page
 router.get(
   '/welcome/:token',
-  checkResetPasswordTokenController(
+  checkPasswordTokenController(
     '/welcome',
     PageTitle.WELCOME,
     '/welcome',
