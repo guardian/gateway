@@ -66,7 +66,7 @@ const routes: Array<{
     element: <ChangePasswordCompletePage />,
   },
   {
-    path: '/reset/resend',
+    path: '/reset-password/resend',
     element: <ResendPasswordPage />,
   },
   {

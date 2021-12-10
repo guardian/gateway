@@ -12,9 +12,9 @@ export type RoutePaths =
   | '/reset/email-sent'
   | '/reset/complete'
   | '/reset-password'
+  | '/reset-password/resend'
   | '/reset-password/:token'
   | '/password/reset-confirmation'
-  | '/reset/resend'
   | '/reset/expired'
   // end routes to be refactored
   | '/set-password'
@@ -67,13 +67,8 @@ export type ApiRoutePaths =
   | '/user/send-account-without-password-exists-email'
   | '/user/send-create-password-account-exists-email';
 
-export type ValidPasswordRoutePaths = Extract<
+export type PasswordRoutePath = Extract<
   '/reset-password' | '/set-password' | '/welcome',
-  RoutePaths
->;
-
-export type ValidPasswordResendEmailRoutePaths = Extract<
-  '/reset' | '/welcome' | '/set-password',
   RoutePaths
 >;
 

@@ -8,11 +8,11 @@ export type PageTitle =
   | 'Reset Password'
   | 'Sign in'
   | 'Check Your Inbox'
-  | 'Resend Reset Password'
   | 'Create Password'
+  | 'Resend Create Password Email'
   | 'Password Set'
-  | 'Resend Set Password'
   | 'Change Password'
+  | 'Resend Change Password Email'
   | 'Password Changed'
   | 'Verify Email'
   | 'Welcome'
@@ -22,6 +22,11 @@ export type PageTitle =
   | 'Stay in touch'
   | 'Newsletters'
   | 'Review';
+
+export type PasswordPageTitle = Extract<
+  'Welcome' | 'Create Password' | 'Change Password',
+  PageTitle
+>;
 
 export const PageTitle = (title: PageTitle) => {
   return title;

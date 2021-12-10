@@ -19,11 +19,8 @@ import {
   setEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
 import { ApiError } from '@/server/models/Error';
-import {
-  ValidPasswordResendEmailRoutePaths,
-  ValidPasswordRoutePaths,
-} from '@/shared/model/Routes';
-import { PageTitle } from '@/shared/model/PageTitle';
+import { PasswordRoutePath } from '@/shared/model/Routes';
+import { PasswordPageTitle } from '@/shared/model/PageTitle';
 
 const validatePasswordField = (password: string): Array<FieldError> => {
   const errors: Array<FieldError> = [];
@@ -44,19 +41,17 @@ const validatePasswordField = (password: string): Array<FieldError> => {
 };
 
 export const setPasswordTokenController = (
-  setPasswordPath: ValidPasswordRoutePaths,
-  setPasswordPageTitle: PageTitle,
-  resendEmailPagePath: ValidPasswordResendEmailRoutePaths,
-  resendEmailPageTitle: PageTitle,
+  path: PasswordRoutePath,
+  pageTitle: PasswordPageTitle,
   successCallback: (res: ResponseWithRequestState) => void,
 ) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    let state = res.locals;
+    let requestState = res.locals;
 
     const { token } = req.params;
     const { password } = req.body;
 
-    state = deepmerge(state, {
+    requestState = deepmerge(requestState, {
       pageData: {
         browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
       },
@@ -71,7 +66,7 @@ export const setPasswordTokenController = (
           req.ip,
         );
 
-        state = deepmerge(state, {
+        requestState = deepmerge(requestState, {
           pageData: {
             email,
             timeUntilTokenExpiry,
@@ -79,11 +74,8 @@ export const setPasswordTokenController = (
           },
         });
         const html = renderer(
-          `${setPasswordPath}${'/:token'}`,
-          {
-            requestState: state,
-            pageTitle: setPasswordPageTitle,
-          },
+          `${path}/:token`,
+          { requestState, pageTitle },
           { token },
         );
         return res.status(422).type('html').send(html);
@@ -95,7 +87,7 @@ export const setPasswordTokenController = (
 
       // if the user navigates back to the welcome page after they have set a password, this
       // ensures we show them a custom error page rather than the link expired page
-      if (setPasswordPath === '/welcome') {
+      if (path === '/welcome') {
         const currentState = readEncryptedStateCookie(req);
         setEncryptedStateCookie(res, {
           ...currentState,
@@ -133,7 +125,7 @@ export const setPasswordTokenController = (
         );
 
         if (field) {
-          state = deepmerge(state, {
+          requestState = deepmerge(requestState, {
             pageData: {
               email,
               timeUntilTokenExpiry,
@@ -146,7 +138,7 @@ export const setPasswordTokenController = (
             },
           });
         } else {
-          state = deepmerge(state, {
+          requestState = deepmerge(requestState, {
             pageData: {
               email,
               timeUntilTokenExpiry,
@@ -158,11 +150,8 @@ export const setPasswordTokenController = (
         }
 
         const html = renderer(
-          `${setPasswordPath}${'/:token'}`,
-          {
-            requestState: state,
-            pageTitle: setPasswordPageTitle,
-          },
+          `${path}/:token`,
+          { requestState, pageTitle },
           { token },
         );
         return res.status(status).type('html').send(html);
@@ -171,9 +160,9 @@ export const setPasswordTokenController = (
         // if theres an error with the token validation, we have to take them back
         // to the resend page
         return res.type('html').send(
-          renderer(`${resendEmailPagePath}${'/resend'}`, {
-            requestState: state,
-            pageTitle: resendEmailPageTitle,
+          renderer(`${path}/resend`, {
+            requestState,
+            pageTitle: `Resend ${pageTitle} Email`,
           }),
         );
       }

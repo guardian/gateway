@@ -10,20 +10,15 @@ import {
 } from '@/server/lib/encryptedStateCookie';
 import { renderer } from '@/server/lib/renderer';
 import { logger } from '@/server/lib/logger';
-import {
-  ValidPasswordResendEmailRoutePaths,
-  ValidPasswordRoutePaths,
-} from '@/shared/model/Routes';
-import { PageTitle } from '@/shared/model/PageTitle';
+import { PasswordRoutePath } from '@/shared/model/Routes';
+import { PasswordPageTitle } from '@/shared/model/PageTitle';
 
 export const checkPasswordTokenController = (
-  setPasswordPagePath: ValidPasswordRoutePaths,
-  setPasswordPageTitle: PageTitle,
-  resendEmailPagePath: ValidPasswordResendEmailRoutePaths,
-  resendEmailPageTitle: PageTitle,
+  path: PasswordRoutePath,
+  pageTitle: PasswordPageTitle,
 ) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    let state = res.locals;
+    let requestState = res.locals;
     const { token } = req.params;
 
     try {
@@ -32,7 +27,7 @@ export const checkPasswordTokenController = (
         req.ip,
       );
 
-      state = deepmerge(state, {
+      requestState = deepmerge(requestState, {
         pageData: {
           browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
           email,
@@ -45,10 +40,10 @@ export const checkPasswordTokenController = (
       setEncryptedStateCookie(res, { email });
 
       const html = renderer(
-        `${setPasswordPagePath}${'/:token'}`,
+        `${path}/:token`,
         {
-          requestState: state,
-          pageTitle: setPasswordPageTitle,
+          requestState,
+          pageTitle,
         },
         { token },
       );
@@ -56,27 +51,27 @@ export const checkPasswordTokenController = (
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
-      if (setPasswordPagePath === '/welcome') {
+      if (path === '/welcome') {
         const { email, passwordSetOnWelcomePage } =
           readEncryptedStateCookie(req) ?? {};
         if (passwordSetOnWelcomePage) {
-          state = deepmerge(state, {
+          requestState = deepmerge(requestState, {
             pageData: {
               email,
             },
           });
           return res.type('html').send(
-            renderer(`${resendEmailPagePath}${'/complete'}`, {
-              requestState: state,
-              pageTitle: resendEmailPageTitle,
+            renderer(`${path}/complete`, {
+              requestState,
+              pageTitle,
             }),
           );
         }
       }
       return res.type('html').send(
-        renderer(`${resendEmailPagePath}${'/resend'}`, {
-          requestState: state,
-          pageTitle: resendEmailPageTitle,
+        renderer(`${path}/resend`, {
+          requestState,
+          pageTitle: `Resend ${pageTitle} Email`,
         }),
       );
     }

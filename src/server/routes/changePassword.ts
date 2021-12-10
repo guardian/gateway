@@ -11,29 +11,19 @@ import { typedRouter as router } from '@/server/lib/typedRoutes';
 
 router.get(
   '/reset-password/:token',
-  checkPasswordTokenController(
-    '/reset-password',
-    'Change Password',
-    '/reset',
-    'Resend Reset Password',
-  ),
+  checkPasswordTokenController('/reset-password', 'Change Password'),
 );
 
 router.post(
   '/reset-password/:token',
-  setPasswordTokenController(
-    '/reset-password',
-    'Change Password',
-    '/reset',
-    'Resend Reset Password',
-    (res) =>
-      res.redirect(
-        303,
-        addQueryParamsToPath(
-          '/password/reset-confirmation',
-          res.locals.queryParams,
-        ),
+  setPasswordTokenController('/reset-password', 'Change Password', (res) =>
+    res.redirect(
+      303,
+      addQueryParamsToPath(
+        '/password/reset-confirmation',
+        res.locals.queryParams,
       ),
+    ),
   ),
 );
 
@@ -54,17 +44,20 @@ router.get(
   },
 );
 
-router.get('/reset/resend', (_: Request, res: ResponseWithRequestState) => {
-  const html = renderer('/reset/resend', {
-    pageTitle: 'Resend Reset Password',
-    requestState: res.locals,
-  });
-  res.type('html').send(html);
-});
+router.get(
+  '/reset-password/resend',
+  (_: Request, res: ResponseWithRequestState) => {
+    const html = renderer('/reset-password/resend', {
+      pageTitle: 'Resend Change Password Email',
+      requestState: res.locals,
+    });
+    res.type('html').send(html);
+  },
+);
 
 router.get('/reset/expired', (_: Request, res: ResponseWithRequestState) => {
   const html = renderer('/reset/expired', {
-    pageTitle: 'Resend Reset Password',
+    pageTitle: 'Resend Change Password Email',
     requestState: res.locals,
   });
   res.type('html').send(html);

@@ -98,24 +98,18 @@ router.get(
 // welcome page, check token and display set password page
 router.get(
   '/welcome/:token',
-  checkPasswordTokenController('/welcome', 'Welcome', '/welcome', 'Welcome'),
+  checkPasswordTokenController('/welcome', 'Welcome'),
 );
 
 // POST form handler to set password on welcome page
 router.post(
   '/welcome/:token',
-  setPasswordTokenController(
-    '/welcome',
-    'Welcome',
-    '/welcome',
-    'Welcome',
-    (res) => {
-      return res.redirect(
-        303,
-        addQueryParamsToPath(`${consentPages[0].path}`, res.locals.queryParams),
-      );
-    },
-  ),
+  setPasswordTokenController('/welcome', 'Welcome', (res) => {
+    return res.redirect(
+      303,
+      addQueryParamsToPath(`${consentPages[0].path}`, res.locals.queryParams),
+    );
+  }),
 );
 
 export default router;
