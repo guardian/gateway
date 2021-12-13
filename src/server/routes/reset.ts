@@ -44,10 +44,11 @@ router.post(
 
     const { email = '' } = req.body;
 
-    const { returnUrl, emailSentSuccess } = res.locals.queryParams;
+    const { returnUrl, emailSentSuccess, ref, refViewId } =
+      res.locals.queryParams;
 
     try {
-      await resetPassword(email, req.ip, returnUrl);
+      await resetPassword(email, req.ip, returnUrl, ref, refViewId);
 
       setEncryptedStateCookie(res, { email });
     } catch (error) {

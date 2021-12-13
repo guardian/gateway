@@ -45,18 +45,8 @@ export const parseExpressQueryParams = (
     ref,
     encryptedEmail,
     error,
-  }: {
-    returnUrl?: string;
-    clientId?: string;
-    emailVerified?: string;
-    emailSentSuccess?: string;
-    csrfError?: string;
-    recaptchaError?: string;
-    refViewId?: string;
-    ref?: string;
-    encryptedEmail?: string;
-    error?: string;
-  },
+  }: Record<keyof QueryParams, string | undefined>, // parameters from req.query
+  bodyParams: Pick<QueryParams, 'ref' | 'refViewId'> = {}, // some parameters may be manually passed in req.body too
 ): QueryParams => {
   return {
     returnUrl: validateReturnUrl(returnUrl),
@@ -65,8 +55,8 @@ export const parseExpressQueryParams = (
     emailSentSuccess: isStringBoolean(emailSentSuccess),
     csrfError: validateGetOnlyError(method, csrfError),
     recaptchaError: validateGetOnlyError(method, recaptchaError),
-    refViewId,
-    ref: ref && validateRefUrl(ref),
+    refViewId: refViewId || bodyParams.refViewId,
+    ref: (ref || bodyParams.ref) && validateRefUrl(ref || bodyParams.ref),
     encryptedEmail,
     error: validateError(error),
   };

@@ -130,6 +130,8 @@ export const sendAccountVerificationEmail = async (
   email: string,
   ip: string,
   returnUrl: string,
+  ref?: string,
+  refViewId?: string,
 ) => {
   const options = APIPostOptions({
     'email-address': email,
@@ -138,7 +140,7 @@ export const sendAccountVerificationEmail = async (
     await idapiFetch({
       path: '/user/send-account-verification-email',
       options: APIAddClientAccessToken(options, ip),
-      queryParams: { returnUrl },
+      queryParams: { returnUrl, ref, refViewId },
     });
     trackMetric(emailSendMetric('AccountVerification', 'Success'));
   } catch (error) {
@@ -155,6 +157,8 @@ export const sendAccountExistsEmail = async (
   email: string,
   ip: string,
   returnUrl: string,
+  ref?: string,
+  refViewId?: string,
 ) => {
   const options = APIPostOptions({
     'email-address': email,
@@ -163,7 +167,7 @@ export const sendAccountExistsEmail = async (
     await idapiFetch({
       path: '/user/send-account-exists-email',
       options: APIAddClientAccessToken(options, ip),
-      queryParams: { returnUrl },
+      queryParams: { returnUrl, ref, refViewId },
     });
     trackMetric(emailSendMetric('AccountExists', 'Success'));
   } catch (error) {
@@ -180,6 +184,8 @@ export const sendAccountWithoutPasswordExistsEmail = async (
   email: string,
   ip: string,
   returnUrl: string,
+  ref?: string,
+  refViewId?: string,
 ) => {
   const options = APIPostOptions({
     'email-address': email,
@@ -188,7 +194,7 @@ export const sendAccountWithoutPasswordExistsEmail = async (
     await idapiFetch({
       path: '/user/send-account-without-password-exists-email',
       options: APIAddClientAccessToken(options, ip),
-      queryParams: { returnUrl },
+      queryParams: { returnUrl, ref, refViewId },
     });
     trackMetric(emailSendMetric('AccountExistsWithoutPassword', 'Success'));
   } catch (error) {
@@ -205,6 +211,8 @@ export const sendCreatePasswordEmail = async (
   email: string,
   ip: string,
   returnUrl: string,
+  ref?: string,
+  refViewId?: string,
 ) => {
   const options = APIPostOptions({
     'email-address': email,
@@ -213,7 +221,7 @@ export const sendCreatePasswordEmail = async (
     await idapiFetch({
       path: '/user/send-create-password-account-exists-email',
       options: APIAddClientAccessToken(options, ip),
-      queryParams: { returnUrl },
+      queryParams: { returnUrl, ref, refViewId },
     });
     trackMetric(emailSendMetric('CreatePassword', 'Success'));
   } catch (error) {

@@ -1,5 +1,4 @@
 import { ABTesting } from '@/server/models/Express';
-import { Configuration } from '@/server/models/Configuration';
 import { getMvtId } from './getMvtId';
 import { Request } from 'express';
 import { getABForcedVariants } from './getABForcedVariants';
@@ -8,10 +7,9 @@ import { ABTest, ABTestAPI, Runnable } from '@guardian/ab-core';
 
 export const getABTesting = (
   req: Request,
-  config: Configuration,
   tests: ABTest[],
 ): [ABTesting, ABTestAPI] => {
-  const mvtId = getMvtId(req, config);
+  const mvtId = getMvtId(req);
   const forcedTestVariants = getABForcedVariants(req);
 
   const abTestAPI = abTestApiForMvtId(mvtId, forcedTestVariants);

@@ -28,7 +28,13 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
   throw new IdapiError({ message: ResetPasswordErrors.GENERIC, status });
 };
 
-export async function create(email: string, ip: string, returnUrl: string) {
+export async function create(
+  email: string,
+  ip: string,
+  returnUrl: string,
+  ref?: string,
+  refViewId?: string,
+) {
   const options = APIPostOptions({
     'email-address': email,
     returnUrl,
@@ -37,6 +43,6 @@ export async function create(email: string, ip: string, returnUrl: string) {
   return idapiFetch({
     path: '/pwd-reset/send-password-reset-email',
     options: APIAddClientAccessToken(options, ip),
-    queryParams: { returnUrl },
+    queryParams: { returnUrl, ref, refViewId },
   }).catch(handleError);
 }
