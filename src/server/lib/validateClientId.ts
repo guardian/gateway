@@ -1,10 +1,5 @@
-const validClientId = [
-  'members',
-  'recurringContributions',
-  'jobs',
-  'comments',
-  'subscriptions',
-];
+import { ValidClientId, validClientId } from '@/shared/lib/clientId';
 
-export const validateClientId = (clientId?: string): string | undefined =>
-  validClientId.find((id) => id === clientId);
+export const validateClientId = (
+  clientId?: string,
+): ValidClientId | undefined => validClientId.find((id) => id === clientId);

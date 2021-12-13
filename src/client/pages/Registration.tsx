@@ -69,7 +69,8 @@ export const Registration = ({
   const registerFormRef = createRef<HTMLFormElement>();
   const recaptchaElementRef = useRef<HTMLDivElement>(null);
   const captchaElement = recaptchaElementRef.current ?? 'register-recaptcha';
-
+  const { clientId } = queryParams;
+  const isJobs = clientId === 'jobs';
   const { token, error, expired, requestCount, executeCaptcha } = useRecaptcha(
     recaptchaSiteKey,
     captchaElement,
@@ -107,10 +108,12 @@ export const Registration = ({
           {
             displayText: 'Sign in',
             linkTo: '/signin',
+            queryParams: queryParams,
             isActive: false,
           },
           {
             displayText: 'Register',
+            queryParams: queryParams,
             linkTo: '/register',
             isActive: true,
           },
@@ -132,7 +135,7 @@ export const Registration = ({
           <CsrfFormField />
           <RefTrackingFormFields />
           <EmailInput defaultValue={email} />
-          <Terms />
+          <Terms isJobs={isJobs} />
           <Button css={registerButton} type="submit" data-cy="register-button">
             Register
           </Button>
