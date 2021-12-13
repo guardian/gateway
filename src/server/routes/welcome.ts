@@ -1,5 +1,5 @@
 import { checkPasswordTokenController } from '@/server/controllers/checkPasswordToken';
-import { setPasswordTokenController } from '@/server/controllers/changePassword';
+import { setPasswordController } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { sendAccountVerificationEmail } from '@/server/lib/idapi/user';
@@ -104,12 +104,7 @@ router.get(
 // POST form handler to set password on welcome page
 router.post(
   '/welcome/:token',
-  setPasswordTokenController('/welcome', 'Welcome', (res) => {
-    return res.redirect(
-      303,
-      addQueryParamsToPath(`${consentPages[0].path}`, res.locals.queryParams),
-    );
-  }),
+  setPasswordController('/welcome', 'Welcome', consentPages[0].path),
 );
 
 export default router;

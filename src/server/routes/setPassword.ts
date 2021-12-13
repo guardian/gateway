@@ -1,6 +1,6 @@
 import { typedRouter as router } from '@/server/lib/typedRoutes';
 import { checkPasswordTokenController } from '@/server/controllers/checkPasswordToken';
-import { setPasswordTokenController } from '@/server/controllers/changePassword';
+import { setPasswordController } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
@@ -130,6 +130,7 @@ router.get(
 );
 
 // set password page with token check
+// The below route must be defined below the other GET /set-password/* routes otherwise the other routes will fail
 router.get(
   '/set-password/:token',
   checkPasswordTokenController('/set-password', 'Create Password'),
@@ -138,11 +139,10 @@ router.get(
 // POST handler for set password page to set password
 router.post(
   '/set-password/:token',
-  setPasswordTokenController('/set-password', 'Create Password', (res) =>
-    res.redirect(
-      303,
-      addQueryParamsToPath('/set-password/complete', res.locals.queryParams),
-    ),
+  setPasswordController(
+    '/set-password',
+    'Create Password',
+    '/set-password/complete',
   ),
 );
 

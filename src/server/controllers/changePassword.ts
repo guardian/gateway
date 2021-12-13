@@ -17,14 +17,15 @@ import {
   setEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
 import { ApiError } from '@/server/models/Error';
-import { PasswordRoutePath } from '@/shared/model/Routes';
+import { PasswordRoutePath, RoutePaths } from '@/shared/model/Routes';
 import { PasswordPageTitle } from '@/shared/model/PageTitle';
 import { validatePasswordField } from '@/server/lib/validatePasswordField';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
-export const setPasswordTokenController = (
+export const setPasswordController = (
   path: PasswordRoutePath,
   pageTitle: PasswordPageTitle,
-  successCallback: (res: ResponseWithRequestState) => void,
+  successRedirectPath: RoutePaths,
 ) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let requestState = res.locals;
@@ -86,7 +87,10 @@ export const setPasswordTokenController = (
       trackMetric('AccountVerification::Success');
       trackMetric('UpdatePassword::Success');
 
-      return successCallback(res);
+      return res.redirect(
+        303,
+        addQueryParamsToPath(successRedirectPath, requestState.queryParams),
+      );
     } catch (error) {
       const { message, status, field } =
         error instanceof ApiError ? error : new ApiError();

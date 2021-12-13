@@ -58,11 +58,7 @@ const routes: Array<{
     element: <EmailSentPage noAccountInfo />,
   },
   {
-    path: '/reset-password/:token',
-    element: <ChangePasswordPage />,
-  },
-  {
-    path: '/password/reset-confirmation',
+    path: '/reset-password/complete',
     element: <ChangePasswordCompletePage />,
   },
   {
@@ -70,8 +66,12 @@ const routes: Array<{
     element: <ResendPasswordPage />,
   },
   {
-    path: '/reset/expired',
+    path: '/reset-password/expired',
     element: <ResetPasswordSessionExpiredPage />,
+  },
+  {
+    path: '/reset-password/:token',
+    element: <ChangePasswordPage />,
   },
   {
     path: '/set-password/resend',

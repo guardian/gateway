@@ -10,13 +10,12 @@ export type RoutePaths =
   // router between these comments are for legacy reasons and could be refactored
   | '/reset'
   | '/reset/email-sent'
-  | '/reset/complete'
-  | '/reset-password'
-  | '/reset-password/resend'
-  | '/reset-password/:token'
-  | '/password/reset-confirmation'
-  | '/reset/expired'
   // end routes to be refactored
+  | '/reset-password'
+  | '/reset-password/expired'
+  | '/reset-password/:token'
+  | '/reset-password/complete'
+  | '/reset-password/resend'
   | '/set-password'
   | '/set-password/expired'
   | '/set-password/:token'

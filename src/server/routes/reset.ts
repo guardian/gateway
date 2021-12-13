@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import deepmerge from 'deepmerge';
-import { create as resetPassword } from '@/server/lib/idapi/resetPassword';
+import { sendResetPasswordEmail } from '@/server/lib/idapi/resetPassword';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 
@@ -46,7 +46,7 @@ router.post(
     const { returnUrl, emailSentSuccess } = res.locals.queryParams;
 
     try {
-      await resetPassword(email, req.ip, returnUrl);
+      await sendResetPasswordEmail(email, req.ip, returnUrl);
 
       setEncryptedStateCookie(res, { email });
     } catch (error) {
