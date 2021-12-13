@@ -14,7 +14,6 @@ class ReviewPage extends OnboardingPage {
       SUBSCRIPTIONS: 'Subscriptions, membership and contributions',
     },
     CONSENT_OPTOUT: {
-      RESEARCH: 'Marketing research',
       ANALYSIS: 'Marketing analysis',
     },
     NEWSLETTER_SECTION_TITLE: 'Newsletters',
@@ -38,14 +37,6 @@ class ReviewPage extends OnboardingPage {
       .contains(ReviewPage.CONTENT.NEWSLETTER_SECTION_TITLE)
       .parent()
       .siblings();
-  }
-
-  static marketingResearchChoice() {
-    return cy
-      .contains(ReviewPage.CONTENT.CONSENT_OPTOUT.RESEARCH)
-      .parent()
-      .siblings()
-      .children();
   }
 
   static marketingAnalysisChoice() {

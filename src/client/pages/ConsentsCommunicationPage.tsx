@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
-import { Consents } from '@/shared/model/Consent';
 import { ConsentsCommunication } from '@/client/pages/ConsentsCommunication';
 
 export const ConsentsCommunicationPage = () => {
@@ -10,18 +9,5 @@ export const ConsentsCommunicationPage = () => {
   const { pageData = {} } = clientState;
   const { consents = [] } = pageData;
 
-  const marketResearchOptout = consents.find(
-    (consent) => consent.id === Consents.MARKET_RESEARCH,
-  );
-
-  const consentsWithoutOptout = consents.filter(
-    (consent) => !consent.id.includes('_optout'),
-  );
-
-  return (
-    <ConsentsCommunication
-      marketResearchOptout={marketResearchOptout}
-      consentsWithoutOptout={consentsWithoutOptout}
-    />
-  );
+  return <ConsentsCommunication consents={consents} />;
 };

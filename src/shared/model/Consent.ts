@@ -7,7 +7,6 @@ export interface Consent {
 
 export enum Consents {
   PROFILING = 'profiling_optout',
-  MARKET_RESEARCH = 'market_research_optout',
   SUPPORTER = 'supporter',
   JOBS = 'jobs',
   HOLIDAYS = 'holidays',
@@ -17,7 +16,4 @@ export enum Consents {
 
 export const CONSENTS_DATA_PAGE: string[] = [Consents.PROFILING];
 
-export const CONSENTS_COMMUNICATION_PAGE: string[] = [
-  Consents.MARKET_RESEARCH,
-  Consents.SUPPORTER,
-];
+export const CONSENTS_COMMUNICATION_PAGE: string[] = [Consents.SUPPORTER];
