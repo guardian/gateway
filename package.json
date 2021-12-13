@@ -117,7 +117,7 @@
     "@guardian/ab-react": "^2.0.1",
     "@guardian/consent-management-platform": "^9.0.2",
     "@guardian/libs": "^3.5.1",
-    "@guardian/source-foundations": "^4.0.0-rc.3",
+    "@guardian/source-foundations": "^4.0.0-rc.5",
     "@guardian/source-react-components": "^4.0.0-rc.2",
     "@guardian/source-react-components-development-kitchen": "^1.0.0-rc.1",
     "@okta/okta-sdk-nodejs": "6.1.0",
