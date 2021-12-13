@@ -29,7 +29,7 @@ const noPaddingStyles = css`
   }
 `;
 
-const sideBorderStyles = (color = neutral[86]) => css`
+const sideBorderStyles = (color: string = neutral[86]) => css`
   > div {
     ${from.tablet} {
       border-left: 1px solid ${color};
