@@ -3,18 +3,93 @@ describe('Sign in flow', () => {
   const returnUrl =
     'https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance';
   const defaultReturnUrl = 'https://m.code.dev-theguardian.com';
-  it('links to the correct places', () => {
-    cy.visit('/signin');
-    cy.contains('terms of service').should(
-      'have.attr',
-      'href',
-      'https://policies.google.com/terms',
-    );
-    cy.contains('Google privacy policy')
-      .children()
-      .should('have.attr', 'href', 'https://policies.google.com/privacy');
-    cy.contains('terms & conditions').click();
-    cy.contains('Terms and conditions of use');
+  context('Terms and Conditions links', () => {
+    it('links to the Google terms of service page', () => {
+      const googleTermsUrl = 'https://policies.google.com/terms';
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', googleTermsUrl, (req) => {
+        req.reply(200);
+      });
+      cy.visit('/signin');
+      cy.contains('terms of service').click();
+      cy.url().should('eq', googleTermsUrl);
+    });
+
+    it('links to the Google privacy policy page', () => {
+      const googlePrivacyPolicyUrl = 'https://policies.google.com/privacy';
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', googlePrivacyPolicyUrl, (req) => {
+        req.reply(200);
+      });
+      cy.visit('/signin');
+      cy.contains('This site is protected by reCAPTCHA and the Google')
+        .contains('privacy policy')
+        .click();
+      cy.url().should('eq', googlePrivacyPolicyUrl);
+    });
+
+    it('links to the Guardian terms and conditions page', () => {
+      const guardianTermsOfServiceUrl =
+        'https://www.theguardian.com/help/terms-of-service';
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', guardianTermsOfServiceUrl, (req) => {
+        req.reply(200);
+      });
+      cy.visit('/signin');
+      cy.contains('terms & conditions').click();
+      cy.url().should('eq', guardianTermsOfServiceUrl);
+    });
+
+    it('links to the Guardian privacy policy page', () => {
+      const guardianPrivacyPolicyUrl =
+        'https://www.theguardian.com/help/privacy-policy';
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', guardianPrivacyPolicyUrl, (req) => {
+        req.reply(200);
+      });
+      cy.visit('/signin');
+      cy.contains('For information about how we use your data')
+        .contains('privacy policy')
+        .click();
+      cy.url().should('eq', guardianPrivacyPolicyUrl);
+    });
+
+    it('links to the Guardian jobs terms and conditions page when jobs clientId set', () => {
+      const guardianJobsTermsOfServiceUrl =
+        'https://jobs.theguardian.com/terms-and-conditions/';
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', guardianJobsTermsOfServiceUrl, (req) => {
+        req.reply(200);
+      });
+      cy.visit('/signin?clientId=jobs');
+      cy.contains("Guardian's Jobs terms & conditions").click();
+      cy.url().should('eq', guardianJobsTermsOfServiceUrl);
+    });
+
+    it('links to the Guardian jobs privacy policy page when jobs clientId set', () => {
+      const guardianJobsPrivacyPolicyUrl =
+        'https://jobs.theguardian.com/privacy-policy/';
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', guardianJobsPrivacyPolicyUrl, (req) => {
+        req.reply(200);
+      });
+      cy.visit('/signin?clientId=jobs');
+      cy.contains('For information about how we use your data')
+        .contains("Guardian Jobs' privacy policy")
+        .click();
+      cy.url().should('eq', guardianJobsPrivacyPolicyUrl);
+    });
+  });
+  it('persists the clientId when navigating away', () => {
+    cy.visit('/signin?clientId=jobs');
+    cy.contains('Register').click();
+    cy.url().should('contain', 'clientId=jobs');
   });
   it('applies form validation to email and password input fields', () => {
     cy.visit('/signin');

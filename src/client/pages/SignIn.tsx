@@ -14,7 +14,7 @@ import { from, textSans, border, space } from '@guardian/source-foundations';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { CaptchaErrors, SignInErrors } from '@/shared/model/Errors';
 import { EmailInput } from '@/client/components/EmailInput';
-import { buildUrl, buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
@@ -221,7 +221,7 @@ export const SignIn = ({
           <Links>
             <Link
               subdued={true}
-              href={buildUrl('/reset-password')}
+              href={buildUrlWithQueryParams('/reset-password', {}, queryParams)}
               cssOverrides={resetPassword}
             >
               Reset password

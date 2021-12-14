@@ -103,7 +103,7 @@ export const RecaptchaTerms = () => (
   </Text>
 );
 
-export const Terms = ({ isJobs = true }) => (
+export const Terms = ({ isJobs = false }) => (
   <div css={terms}>
     {isJobs ? <JobsTerms /> : <GuardianTerms />}
     <RecaptchaTerms />
