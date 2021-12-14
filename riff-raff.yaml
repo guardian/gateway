@@ -29,6 +29,6 @@ deployments:
       cloudFormationStackName: gateway
       amiParametersToTags:
         AMI:
-          Recipe: gateway
+          Recipe: gateway-code
           AmigoStage: PROD
       amiEncrypted: true
