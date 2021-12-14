@@ -34,6 +34,18 @@ Nginx will attempt to resolve from gateway first, followed by dotcom/identity se
 
 When using nginx, be sure to set `BASE_URI` environment variable in `.env` to `profile.thegulocal.com` which will set the correct cookie domain and CSP (Content Secure Policy) headers.
 
+Also since Node does not use the system root store, so it won't accept the `*.thegulocal.com` certificates automatically. Instead, you will have to set the `NODE_EXTRA_CA_CERTS` environment variable. The best place to do this would be to add the following to your shell configuration (e.g. `.bashrc` for `bash`/`.zshrc` for `zsh`).
+
+```sh
+export NODE_EXTRA_CA_CERTS="$(mkcert -CAROOT)/rootCA.pem"
+```
+
+This ensures that you don't get any certificate errors when running gateway and calling another service running on `thegulocal`, e.g.
+
+```sh
+FetchError: request to https://idapi.thegulocal.com/auth?format=cookies failed, reason: unable to verify the first certificate\n
+```
+
 ### S3 Config
 
 You can get a preset `.env` file from the S3 private config. Be sure to have the `identity` Janus credentials.
