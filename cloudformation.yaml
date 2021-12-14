@@ -280,7 +280,7 @@ Resources:
             __END__
 
             # Run
-            systemctl start logstash
+            # systemctl start logstash
             systemctl enable identity-gateway
             systemctl start identity-gateway
 
