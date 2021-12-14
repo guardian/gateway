@@ -94,17 +94,13 @@ describe('Onboarding flow', () => {
 
       CommunicationsPage.backButton().should('not.exist');
       CommunicationsPage.allCheckboxes().should('not.be.checked');
-      CommunicationsPage.marketingOptoutClickableSection().click();
 
       // mock form save success
       cy.mockNext(200);
 
       CommunicationsPage.saveAndContinueButton().click();
 
-      cy.lastPayloadIs([
-        { id: 'market_research_optout', consented: true },
-        { id: 'supporter', consented: false },
-      ]);
+      cy.lastPayloadIs([{ id: 'supporter', consented: false }]);
 
       cy.url().should('include', NewslettersPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
@@ -171,7 +167,6 @@ describe('Onboarding flow', () => {
         cy.contains(newsletter),
       );
 
-      ReviewPage.marketingResearchChoice().contains('Yes');
       ReviewPage.marketingAnalysisChoice().contains('Yes');
 
       ReviewPage.returnButton()
@@ -206,10 +201,7 @@ describe('Onboarding flow', () => {
 
       CommunicationsPage.saveAndContinueButton().click();
 
-      cy.lastPayloadIs([
-        { id: 'market_research_optout', consented: false },
-        { id: 'supporter', consented: true },
-      ]);
+      cy.lastPayloadIs([{ id: 'supporter', consented: true }]);
 
       cy.url().should('include', NewslettersPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
@@ -250,7 +242,6 @@ describe('Onboarding flow', () => {
       ReviewPage.newslettersSection().contains('N/A');
       ReviewPage.consentsSection().contains('N/A');
 
-      ReviewPage.marketingResearchChoice().contains('No');
       ReviewPage.marketingAnalysisChoice().contains('No');
 
       ReviewPage.returnButton()
