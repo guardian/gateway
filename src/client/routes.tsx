@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { RegistrationPage } from '@/client/pages/RegistrationPage';
 import { ResetPasswordPage } from '@/client/pages/ResetPasswordPage';
 import { EmailSentPage } from '@/client/pages/EmailSentPage';
@@ -14,7 +14,6 @@ import { ConsentsConfirmationPage } from '@/client/pages/ConsentsConfirmationPag
 import { ResendEmailVerificationPage } from '@/client/pages/ResendEmailVerificationPage';
 import { UnexpectedErrorPage } from '@/client/pages/UnexpectedErrorPage';
 import { ClientState } from '@/shared/model/ClientState';
-import { Routes } from '@/shared/model/Routes';
 import { SignInPage } from '@/client/pages/SignInPage';
 import { MagicLinkPage } from '@/client/pages/MagicLinkPage';
 import { WelcomePage } from '@/client/pages/WelcomePage';
@@ -27,97 +26,135 @@ import { SetPasswordPage } from '@/client/pages/SetPasswordPage';
 import { SetPasswordResendPage } from '@/client/pages/SetPasswordResendPage';
 import { SetPasswordSessionExpiredPage } from '@/client/pages/SetPasswordSessionExpiredPage';
 import { SetPasswordCompletePage } from '@/client/pages/SetPasswordCompletePage';
+import { RoutePaths } from '@/shared/model/Routes';
 
 export type RoutingConfig = {
   clientState: ClientState;
   location: string;
 };
 
+const routes: Array<{
+  path: RoutePaths;
+  element: React.ReactElement;
+}> = [
+  {
+    path: '/signin',
+    element: <SignInPage />,
+  },
+  {
+    path: '/register',
+    element: <RegistrationPage />,
+  },
+  {
+    path: '/register/email-sent',
+    element: <RegistrationEmailSentPage />,
+  },
+  {
+    path: '/reset',
+    element: <ResetPasswordPage />,
+  },
+  {
+    path: '/reset/email-sent',
+    element: <EmailSentPage noAccountInfo />,
+  },
+  {
+    path: '/reset-password/:token',
+    element: <ChangePasswordPage />,
+  },
+  {
+    path: '/password/reset-confirmation',
+    element: <ChangePasswordCompletePage />,
+  },
+  {
+    path: '/reset/resend',
+    element: <ResendPasswordPage />,
+  },
+  {
+    path: '/reset/expired',
+    element: <ResetPasswordSessionExpiredPage />,
+  },
+  {
+    path: '/set-password/resend',
+    element: <SetPasswordResendPage />,
+  },
+  {
+    path: '/set-password/expired',
+    element: <SetPasswordSessionExpiredPage />,
+  },
+  {
+    path: '/set-password/complete',
+    element: <SetPasswordCompletePage />,
+  },
+  {
+    path: '/set-password/email-sent',
+    element: <EmailSentPage />,
+  },
+  {
+    path: '/set-password/:token',
+    element: <SetPasswordPage />,
+  },
+  {
+    path: '/consents/data',
+    element: <ConsentsDataPage />,
+  },
+  {
+    path: '/consents/communication',
+    element: <ConsentsCommunicationPage />,
+  },
+  {
+    path: '/consents/newsletters',
+    element: <ConsentsNewslettersPage />,
+  },
+  {
+    path: '/consents/review',
+    element: <ConsentsConfirmationPage />,
+  },
+  {
+    path: '/welcome/resend',
+    element: <WelcomeResendPage />,
+  },
+  {
+    path: '/welcome/expired',
+    element: <WelcomeSessionExpiredPage />,
+  },
+  {
+    path: '/welcome/email-sent',
+    element: <EmailSentPage />,
+  },
+  {
+    path: '/welcome/complete',
+    element: <WelcomePasswordAlreadySetPage />,
+  },
+  {
+    path: '/welcome/:token',
+    element: <WelcomePage />,
+  },
+  {
+    path: '/verify-email',
+    element: <ResendEmailVerificationPage />,
+  },
+  {
+    path: '/magic-link',
+    element: <MagicLinkPage />,
+  },
+  {
+    path: '/magic-link/email-sent',
+    element: <EmailSentPage noAccountInfo />,
+  },
+  {
+    path: '/error',
+    element: <UnexpectedErrorPage />,
+  },
+  {
+    path: '/404',
+    element: <NotFoundPage />,
+  },
+];
+
 export const GatewayRoutes = () => (
-  <Switch>
-    <Route exact path={Routes.SIGN_IN}>
-      <SignInPage />
-    </Route>
-    <Route exact path={Routes.REGISTRATION}>
-      <RegistrationPage />
-    </Route>
-    <Route exact path={`${Routes.REGISTRATION}${Routes.EMAIL_SENT}`}>
-      <RegistrationEmailSentPage />
-    </Route>
-    <Route exact path={Routes.RESET}>
-      <ResetPasswordPage />
-    </Route>
-    <Route exact path={`${Routes.RESET}${Routes.EMAIL_SENT}`}>
-      <EmailSentPage noAccountInfo />
-    </Route>
-    <Route exact path={`${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`}>
-      <ChangePasswordPage />
-    </Route>
-    <Route path={`${Routes.PASSWORD}${Routes.RESET_CONFIRMATION}`}>
-      <ChangePasswordCompletePage />
-    </Route>
-    <Route exact path={`${Routes.RESET}${Routes.RESEND}`}>
-      <ResendPasswordPage />
-    </Route>
-    <Route exact path={`${Routes.RESET}${Routes.EXPIRED}`}>
-      <ResetPasswordSessionExpiredPage />
-    </Route>
-    <Route exact path={`${Routes.SET_PASSWORD}${Routes.RESEND}`}>
-      <SetPasswordResendPage />
-    </Route>
-    <Route exact path={`${Routes.SET_PASSWORD}${Routes.EXPIRED}`}>
-      <SetPasswordSessionExpiredPage />
-    </Route>
-    <Route path={`${Routes.SET_PASSWORD}${Routes.COMPLETE}`}>
-      <SetPasswordCompletePage />
-    </Route>
-    <Route path={`${Routes.SET_PASSWORD}${Routes.EMAIL_SENT}`}>
-      <EmailSentPage />
-    </Route>
-    <Route exact path={`${Routes.SET_PASSWORD}${Routes.TOKEN_PARAM}`}>
-      <SetPasswordPage />
-    </Route>
-    <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_DATA}`}>
-      <ConsentsDataPage />
-    </Route>
-    <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_COMMUNICATION}`}>
-      <ConsentsCommunicationPage />
-    </Route>
-    <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_NEWSLETTERS}`}>
-      <ConsentsNewslettersPage />
-    </Route>
-    <Route exact path={`${Routes.CONSENTS}${Routes.CONSENTS_REVIEW}`}>
-      <ConsentsConfirmationPage />
-    </Route>
-    <Route exact path={`${Routes.WELCOME}${Routes.RESEND}`}>
-      <WelcomeResendPage />
-    </Route>
-    <Route exact path={`${Routes.WELCOME}${Routes.EXPIRED}`}>
-      <WelcomeSessionExpiredPage />
-    </Route>
-    <Route exact path={`${Routes.WELCOME}${Routes.EMAIL_SENT}`}>
-      <EmailSentPage />
-    </Route>
-    <Route exact path={`${Routes.WELCOME}${Routes.COMPLETE}`}>
-      <WelcomePasswordAlreadySetPage />
-    </Route>
-    <Route exact path={`${Routes.WELCOME}${Routes.TOKEN_PARAM}`}>
-      <WelcomePage />
-    </Route>
-    <Route exact path={Routes.VERIFY_EMAIL}>
-      <ResendEmailVerificationPage />
-    </Route>
-    <Route exact path={Routes.MAGIC_LINK}>
-      <MagicLinkPage />
-    </Route>
-    <Route exact path={`${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`}>
-      <EmailSentPage noAccountInfo />
-    </Route>
-    <Route exact path={Routes.UNEXPECTED_ERROR}>
-      <UnexpectedErrorPage />
-    </Route>
-    <Route>
-      <NotFoundPage />
-    </Route>
-  </Switch>
+  <Routes>
+    {routes.map(({ path, element }) => (
+      <Route key={path} path={path} element={element}></Route>
+    ))}
+  </Routes>
 );

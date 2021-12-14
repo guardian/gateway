@@ -1,5 +1,6 @@
 import { TextInput, TextInputProps } from '@guardian/source-react-components';
 import React, { useState } from 'react';
+import { disableAutofillBackground } from '@/client/styles/Shared';
 
 export enum EmailInputFieldState {
   VALID = 'valid',
@@ -67,9 +68,16 @@ export const EmailInput: React.FC<EmailInputProps> = ({
       name="email"
       type="email"
       error={errorMessage}
+      cssOverrides={disableAutofillBackground}
       onBlur={(e) => {
         // Transition error state when the input box loses focus.
         transitionState(e.target.validity);
+      }}
+      onKeyDown={(e) => {
+        if (e.code === '') {
+          e.currentTarget.checkValidity();
+          transitionState(e.currentTarget.validity);
+        }
       }}
       onInvalid={(e) => {
         // Prevent default browser popup from firing.

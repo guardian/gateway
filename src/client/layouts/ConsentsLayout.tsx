@@ -18,10 +18,10 @@ import { controls } from '@/client/layouts/shared/Consents';
 import { ConsentsSubHeader } from '@/client/components/ConsentsSubHeader';
 import { ConsentsBlueBackground } from '@/client/components/ConsentsBlueBackground';
 import { ConsentsHeader } from '@/client/components/ConsentsHeader';
-import { Routes } from '@/shared/model/Routes';
+
 import { onboardingFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 
 interface ConsentsLayoutProps {
   children?: React.ReactNode;
@@ -90,7 +90,6 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
     queryParams,
   } = clientState;
   const { page = '', previousPage, geolocation } = pageData;
-  const queryString = addQueryParamsToPath('', queryParams);
 
   const optionalBgColor =
     bgColor &&
@@ -111,7 +110,11 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
         <ConsentsSubHeader autoRow={autoRow} title={title} current={current} />
         <form
           css={form}
-          action={`${Routes.CONSENTS}/${page}${queryString}`}
+          action={buildUrlWithQueryParams(
+            '/consents/:page',
+            { page },
+            queryParams,
+          )}
           method="post"
           onSubmit={({ target: form }) => {
             onboardingFormSubmitOphanTracking(
@@ -143,7 +146,13 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
                 {previousPage && (
                   <LinkButton
                     css={linkButton}
-                    href={`${Routes.CONSENTS}/${previousPage}${queryString}`}
+                    href={buildUrlWithQueryParams(
+                      '/consents/:page',
+                      {
+                        page: previousPage,
+                      },
+                      queryParams,
+                    )}
                     priority="subdued"
                   >
                     Go back

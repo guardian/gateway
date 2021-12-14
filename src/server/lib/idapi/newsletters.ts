@@ -9,9 +9,6 @@ import { NewslettersErrors } from '@/shared/model/Errors';
 import { NewsLetter, NewsletterPatch } from '@/shared/model/Newsletter';
 import { logger } from '@/server/lib/logger';
 import { IdapiError } from '@/server/models/Error';
-import { ApiRoutes } from '@/shared/model/Routes';
-
-const API_ROUTE = `${ApiRoutes.USERS}${ApiRoutes.ME}${ApiRoutes.NEWSLETTERS}`;
 
 interface NewsletterAPIResponse {
   id: string;
@@ -39,14 +36,16 @@ const responseToEntity = (newsletter: NewsletterAPIResponse): NewsLetter => {
 };
 
 export const read = async (): Promise<NewsLetter[]> => {
-  const url = `${ApiRoutes.NEWSLETTERS}`;
   const options = APIGetOptions();
   try {
-    return ((await idapiFetch(url, options)) as NewsletterAPIResponse[]).map(
-      responseToEntity,
-    );
+    return (
+      (await idapiFetch({
+        path: '/newsletters',
+        options,
+      })) as NewsletterAPIResponse[]
+    ).map(responseToEntity);
   } catch (error) {
-    logger.error(`IDAPI Error newsletters read ${url}`, error);
+    logger.error(`IDAPI Error newsletters read '/newsletters'`, error);
     return handleError();
   }
 };
@@ -62,10 +61,16 @@ export const update = async (
   );
 
   try {
-    await idapiFetch(API_ROUTE, options);
+    await idapiFetch({
+      path: '/users/me/newsletters',
+      options,
+    });
     return;
   } catch (error) {
-    logger.error(`IDAPI Error newsletters update ${API_ROUTE}`, error);
+    logger.error(
+      `IDAPI Error newsletters update '/users/me/newsletters'`,
+      error,
+    );
     return handleError();
   }
 };
@@ -81,11 +86,17 @@ export const readUserNewsletters = async (ip: string, sc_gu_u: string) => {
   );
 
   try {
-    return (await idapiFetch(API_ROUTE, options)).result.subscriptions.map(
-      (s: Subscription) => s.listId.toString(),
-    );
+    return (
+      await idapiFetch({
+        path: '/users/me/newsletters',
+        options,
+      })
+    ).result.subscriptions.map((s: Subscription) => s.listId.toString());
   } catch (error) {
-    logger.error(`IDAPI Error readUserNewsletters ${API_ROUTE}`, error);
+    logger.error(
+      `IDAPI Error readUserNewsletters '/users/me/newsletters'`,
+      error,
+    );
     return handleError();
   }
 };

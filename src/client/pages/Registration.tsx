@@ -1,6 +1,5 @@
 import React, { createRef, useEffect, useRef } from 'react';
 import { Button } from '@guardian/source-react-components';
-import { Routes } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { Header } from '@/client/components/Header';
 import { Nav } from '@/client/components/Nav';
@@ -20,6 +19,8 @@ import useRecaptcha, {
 import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
 import locations from '@/shared/lib/locations';
 import { EmailInput } from '@/client/components/EmailInput';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import { QueryParams } from '@/shared/model/QueryParams';
 import { GeoLocation } from '@/shared/model/Geolocation';
 
 export type RegistrationProps = {
@@ -27,7 +28,7 @@ export type RegistrationProps = {
   email?: string;
   recaptchaSiteKey: string;
   oauthBaseUrl: string;
-  queryString?: string;
+  queryParams: QueryParams;
   geolocation?: GeoLocation;
 };
 
@@ -62,7 +63,7 @@ export const Registration = ({
   email,
   recaptchaSiteKey,
   oauthBaseUrl,
-  queryString,
+  queryParams,
   geolocation,
 }: RegistrationProps) => {
   const registerFormRef = createRef<HTMLFormElement>();
@@ -105,12 +106,12 @@ export const Registration = ({
         tabs={[
           {
             displayText: PageTitle.SIGN_IN,
-            linkTo: Routes.SIGN_IN,
+            linkTo: '/signin',
             isActive: false,
           },
           {
             displayText: PageTitle.REGISTRATION,
-            linkTo: Routes.REGISTRATION,
+            linkTo: '/register',
             isActive: true,
           },
         ]}
@@ -123,7 +124,7 @@ export const Registration = ({
       >
         <form
           method="post"
-          action={`${Routes.REGISTRATION}${queryString}`}
+          action={buildUrlWithQueryParams('/register', {}, queryParams)}
           ref={registerFormRef}
           onSubmit={handleSubmit}
         >

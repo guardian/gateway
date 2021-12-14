@@ -3,17 +3,11 @@
 import type { RequestInit, Response } from 'node-fetch';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { joinUrl } from '@guardian/libs';
-
-// Imports the node-fetch library asynchonously using import(), supported in CJS since node v12.17.
-// This solution avoids the import() being transpiled into a require() by Webpack/Typescript.
-// Subsequent fetch requests will not re-import the module because it's cached after first load.
-// Change necessary because of switch to ESM in version 3.x and our use of CJS.
-// Solution taken from: https://github.com/node-fetch/node-fetch/issues/1279#issuecomment-915063354
-const _importDynamic = new Function('modulePath', 'return import(modulePath)');
-async function fetch(...args: (string | RequestInit | undefined)[]) {
-  const { default: fetch } = await _importDynamic('node-fetch');
-  return fetch(...args);
-}
+import { buildUrl, ExtractRouteParams } from '@/shared/lib/routeUtils';
+import { IdApiQueryParams } from '@/shared/model/IdapiQueryParams';
+import { addApiQueryParamsToPath } from '@/shared/lib/queryParams';
+import { ApiRoutePaths } from '@/shared/model/Routes';
+import { fetch } from '@/server/lib/fetch';
 
 const { idapiBaseUrl, idapiClientAccessToken, stage, baseUri } =
   getConfiguration();
@@ -68,8 +62,20 @@ const getAPIOptionsForMethod =
 
 const APIFetch =
   (idapiBaseUrl: string) =>
-  async (path: string, options?: RequestInit): Promise<any> => {
-    const response = await fetch(joinUrl(idapiBaseUrl, path), options);
+  async <P extends ApiRoutePaths>(params: {
+    path: P;
+    queryParams?: IdApiQueryParams;
+    options?: RequestInit;
+    tokenisationParam?: ExtractRouteParams<P>;
+  }): Promise<any> => {
+    const tokenisedUrl = buildUrl(params.path, params.tokenisationParam);
+    const urlPath = params.queryParams
+      ? addApiQueryParamsToPath(tokenisedUrl, params.queryParams)
+      : tokenisedUrl;
+    const response = await fetch(
+      joinUrl(idapiBaseUrl, urlPath),
+      params.options,
+    );
     if (!response.ok) {
       return await handleResponseFailure(response);
     } else if (response.status === 204) {

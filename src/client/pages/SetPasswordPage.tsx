@@ -1,17 +1,18 @@
 import React, { useContext, useEffect } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
-import { Routes } from '@/shared/model/Routes';
+
 import { ChangePassword } from '@/client/pages/ChangePassword';
+import { buildUrl, buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 
 export const SetPasswordPage = () => {
-  const { search } = useLocation();
   const clientState: ClientState = useContext(ClientStateContext);
   const {
-    pageData: { email = '', fieldErrors = [], tokenExpiryTimestamp } = {},
+    pageData: { email = '', fieldErrors = [], timeUntilTokenExpiry } = {},
+    queryParams,
   } = clientState;
-  const { token } = useParams<{ token: string }>();
+  const { token } = useParams();
 
   useEffect(() => {
     // we only want this to run in the browser as window is not
@@ -19,18 +20,22 @@ export const SetPasswordPage = () => {
     // and we also check that the expiry time exists so that
     // we redirect to the session expired page
     // if the token expires while the user is on the current page
-    if (typeof window !== 'undefined' && tokenExpiryTimestamp) {
+    if (typeof window !== 'undefined' && timeUntilTokenExpiry) {
       setTimeout(() => {
-        window.location.replace(`${Routes.SET_PASSWORD}${Routes.EXPIRED}`);
-      }, tokenExpiryTimestamp - Date.now());
+        window.location.replace(buildUrl('/set-password/expired'));
+      }, timeUntilTokenExpiry);
     }
-  }, [tokenExpiryTimestamp]);
+  }, [timeUntilTokenExpiry]);
 
   return (
     <ChangePassword
       headerText="Create password"
       buttonText="Save password"
-      submitUrl={`${Routes.SET_PASSWORD}/${token}${search}`}
+      submitUrl={buildUrlWithQueryParams(
+        '/set-password/:token',
+        { token },
+        queryParams,
+      )}
       email={email}
       fieldErrors={fieldErrors}
     />

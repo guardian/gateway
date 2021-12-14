@@ -16,8 +16,8 @@ import { consentPages } from '@/server/routes/consents';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { ConsentsErrors, VerifyEmailErrors } from '@/shared/model/Errors';
 import { PageTitle } from '@/shared/model/PageTitle';
-import { Routes } from '@/shared/model/Routes';
 import { EMAIL_SENT } from '@/shared/model/Success';
+import { buildUrl } from '@/shared/lib/routeUtils';
 import deepmerge from 'deepmerge';
 import { Request, Router } from 'express';
 import handleRecaptcha from '@/server/lib/recaptcha';
@@ -28,14 +28,14 @@ const { signInPageUrl } = getConfiguration();
 const profileUrl = getProfileUrl();
 
 router.get(
-  Routes.VERIFY_EMAIL,
+  '/verify-email',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
     state = deepmerge(state, {
       pageData: {
         signInPageUrl: `${signInPageUrl}?returnUrl=${encodeURIComponent(
-          `${profileUrl}${Routes.VERIFY_EMAIL}`,
+          `${profileUrl}${buildUrl('/verify-email')}`,
         )}`,
       },
     });
@@ -74,7 +74,7 @@ router.get(
       }
     }
 
-    const html = renderer(Routes.VERIFY_EMAIL, {
+    const html = renderer('/verify-email', {
       pageTitle: PageTitle.VERIFY_EMAIL,
       requestState: state,
     });
@@ -84,7 +84,7 @@ router.get(
 );
 
 router.post(
-  Routes.VERIFY_EMAIL,
+  '/verify-email',
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
@@ -134,7 +134,7 @@ router.post(
       });
     }
 
-    const html = renderer(Routes.VERIFY_EMAIL, {
+    const html = renderer('/verify-email', {
       pageTitle: PageTitle.VERIFY_EMAIL,
       requestState: state,
     });
@@ -144,7 +144,7 @@ router.post(
 );
 
 router.get(
-  `${Routes.VERIFY_EMAIL}${Routes.TOKEN_PARAM}`,
+  '/verify-email/:token',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { token } = req.params;
 
@@ -161,7 +161,7 @@ router.get(
         return res.redirect(
           303,
           addQueryParamsToPath(
-            `${Routes.CONSENTS}/${consentPages[0].page}`,
+            `${consentPages[0].path}`,
             res.locals.queryParams,
           ),
         );
@@ -171,19 +171,15 @@ router.get(
 
       return res.redirect(
         303,
-        addQueryParamsToPath(Routes.VERIFY_EMAIL, res.locals.queryParams),
+        addQueryParamsToPath('/verify-email', res.locals.queryParams),
       );
     }
 
     return res.redirect(
       303,
-      addQueryParamsToPath(
-        `${Routes.CONSENTS}/${consentPages[0].page}`,
-        res.locals.queryParams,
-        {
-          emailVerified: true,
-        },
-      ),
+      addQueryParamsToPath(`${consentPages[0].path}`, res.locals.queryParams, {
+        emailVerified: true,
+      }),
     );
   }),
 );

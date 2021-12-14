@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { EmailSent } from '@/client/pages/EmailSent';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { buildQueryParamsString } from '@/shared/lib/queryParams';
 
 interface Props {
   noAccountInfo?: boolean;
@@ -21,7 +21,7 @@ export const EmailSentPage = ({ noAccountInfo }: Props) => {
   const { error } = globalMessage;
   const { recaptchaSiteKey } = recaptchaConfig;
 
-  const queryString = addQueryParamsToPath('', queryParams, {
+  const queryString = buildQueryParamsString(queryParams, {
     emailSentSuccess: true,
   });
 

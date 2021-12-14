@@ -3,8 +3,8 @@ import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
 import { MainBodyText } from '@/client/components/MainBodyText';
-import { Routes } from '@/shared/model/Routes';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 export const SetPasswordSessionExpiredPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
@@ -14,7 +14,6 @@ export const SetPasswordSessionExpiredPage = () => {
     recaptchaConfig,
   } = clientState;
 
-  const queryString = addQueryParamsToPath('', queryParams);
   const { recaptchaSiteKey } = recaptchaConfig;
 
   return (
@@ -22,8 +21,8 @@ export const SetPasswordSessionExpiredPage = () => {
       email={email}
       headerText="Session timed out"
       buttonText="Send me a link"
-      formActionOverride={`${Routes.SET_PASSWORD}${Routes.RESEND}`}
-      queryString={queryString}
+      formActionOverride={buildUrl('/set-password/resend')}
+      queryString={queryParams}
       emailInputLabel="Email address"
       recaptchaSiteKey={recaptchaSiteKey}
     >

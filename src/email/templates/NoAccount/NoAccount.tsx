@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { Routes } from '@/shared/model/Routes';
 import { Page } from '@/email/components/Page';
 import { Button } from '@/email/components/Button';
 import { Header } from '@/email/components/Header';
 import { SubHeader } from '@/email/components/SubHeader';
 import { Text } from '@/email/components/Text';
 import { Footer } from '@/email/components/Footer';
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 interface Props {
   profileUrl: string;
@@ -26,7 +26,7 @@ export const NoAccount = ({ profileUrl }: Props) => {
         for personal details.
       </Text>
       <Text noPaddingBottom>Please click below to register.</Text>
-      <Button href={`${profileUrl}${Routes.REGISTRATION}`}>
+      <Button href={`${profileUrl}${buildUrl('/register')}`}>
         Register with The Guardian
       </Button>
       <Footer

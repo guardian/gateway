@@ -2,8 +2,9 @@ import React, { useContext } from 'react';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { EmailSent } from '@/client/pages/EmailSent';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { Routes } from '@/shared/model/Routes';
+import { buildQueryParamsString } from '@/shared/lib/queryParams';
+
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 export const RegistrationEmailSentPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
@@ -18,7 +19,7 @@ export const RegistrationEmailSentPage = () => {
   const { error } = globalMessage;
   const { recaptchaSiteKey } = recaptchaConfig;
 
-  const queryString = addQueryParamsToPath('', queryParams, {
+  const queryString = buildQueryParamsString(queryParams, {
     emailSentSuccess: true,
   });
 
@@ -26,8 +27,8 @@ export const RegistrationEmailSentPage = () => {
     <EmailSent
       email={email}
       queryString={queryString}
-      previousPage={`${Routes.SIGN_IN}`}
-      resendEmailAction={`${Routes.REGISTRATION}${Routes.EMAIL_SENT}${Routes.RESEND}`}
+      previousPage={buildUrl('/signin')}
+      resendEmailAction={buildUrl('/register/email-sent/resend')}
       showSuccess={emailSentSuccess}
       errorMessage={error}
       recaptchaSiteKey={recaptchaSiteKey}

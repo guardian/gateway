@@ -18,3 +18,14 @@ export const topMargin = css`
     margin-top: ${space[6]}px;
   }
 `;
+
+export const disableAutofillBackground = css`
+  :-webkit-autofill {
+    background-color: transparent !important;
+    box-shadow: 0 0 0 50px white inset;
+  }
+  :autofill {
+    background-color: transparent !important;
+    box-shadow: 0 0 0 50px white inset;
+  }
+`;

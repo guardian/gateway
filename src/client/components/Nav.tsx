@@ -9,6 +9,7 @@ import {
   from,
 } from '@guardian/source-foundations';
 import { Container } from '@/client/components/Container';
+import { RoutePaths } from '@/shared/model/Routes';
 import { Link } from '@guardian/source-react-components';
 
 type Props = {
@@ -17,7 +18,7 @@ type Props = {
 
 type TabType = {
   displayText: string;
-  linkTo: string;
+  linkTo: RoutePaths;
   isActive?: boolean;
   isFirst?: boolean;
 };

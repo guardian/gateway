@@ -1,6 +1,6 @@
-import { Request, Router } from 'express';
+import { Request } from 'express';
 import deepmerge from 'deepmerge';
-import { Routes } from '@/shared/model/Routes';
+
 import { renderer } from '@/server/lib/renderer';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { PageTitle } from '@/shared/model/PageTitle';
@@ -10,31 +10,30 @@ import {
 } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-
-const router = Router();
+import { typedRouter as router } from '@/server/lib/typedRoutes';
 
 router.get(
-  `${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`,
+  '/reset-password/:token',
   checkResetPasswordTokenController(
-    Routes.CHANGE_PASSWORD,
+    '/reset-password',
     PageTitle.CHANGE_PASSWORD,
-    Routes.RESET,
+    '/reset',
     PageTitle.RESET_RESEND,
   ),
 );
 
 router.post(
-  `${Routes.CHANGE_PASSWORD}${Routes.TOKEN_PARAM}`,
+  '/reset-password/:token',
   setPasswordTokenController(
-    Routes.CHANGE_PASSWORD,
+    '/reset-password',
     PageTitle.CHANGE_PASSWORD,
-    Routes.RESET,
+    '/reset',
     PageTitle.RESET_RESEND,
     (res) =>
       res.redirect(
         303,
         addQueryParamsToPath(
-          `${Routes.PASSWORD}${Routes.RESET_CONFIRMATION}`,
+          '/password/reset-confirmation',
           res.locals.queryParams,
         ),
       ),
@@ -42,11 +41,11 @@ router.post(
 );
 
 router.get(
-  `${Routes.PASSWORD}${Routes.RESET_CONFIRMATION}`,
+  '/password/reset-confirmation',
   (req: Request, res: ResponseWithRequestState) => {
     const email = readEmailCookie(req);
 
-    const html = renderer(`${Routes.PASSWORD}${Routes.RESET_CONFIRMATION}`, {
+    const html = renderer('/password/reset-confirmation', {
       requestState: deepmerge(res.locals, {
         pageData: {
           email,
@@ -58,26 +57,20 @@ router.get(
   },
 );
 
-router.get(
-  `${Routes.RESET}${Routes.RESEND}`,
-  (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer(`${Routes.RESET}${Routes.RESEND}`, {
-      pageTitle: PageTitle.RESET_RESEND,
-      requestState: res.locals,
-    });
-    res.type('html').send(html);
-  },
-);
+router.get('/reset/resend', (_: Request, res: ResponseWithRequestState) => {
+  const html = renderer('/reset/resend', {
+    pageTitle: PageTitle.RESET_RESEND,
+    requestState: res.locals,
+  });
+  res.type('html').send(html);
+});
 
-router.get(
-  `${Routes.RESET}${Routes.EXPIRED}`,
-  (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer(`${Routes.RESET}${Routes.EXPIRED}`, {
-      pageTitle: PageTitle.RESET_RESEND,
-      requestState: res.locals,
-    });
-    res.type('html').send(html);
-  },
-);
+router.get('/reset/expired', (_: Request, res: ResponseWithRequestState) => {
+  const html = renderer('/reset/expired', {
+    pageTitle: PageTitle.RESET_RESEND,
+    requestState: res.locals,
+  });
+  res.type('html').send(html);
+});
 
-export default router;
+export default router.router;
