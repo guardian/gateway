@@ -258,10 +258,6 @@ Resources:
                 path => "/var/log/identity-gateway.log"
                 type => "app"
                 start_position => "beginning"
-                codec => multiline {
-                  pattern => "^\s"
-                  what => "previous"
-                }
               }
             }
             output {
@@ -271,6 +267,12 @@ Resources:
               }
             }
             filter {
+                if [type] == "app" {
+                    multiline {
+                        pattern => "^\s"
+                        what => "previous"
+                      }
+                }
                 date {
                     match => [ "timestamp" , "yyyy-MM-dd HH:mm:ss,SSS" ]
                 }
