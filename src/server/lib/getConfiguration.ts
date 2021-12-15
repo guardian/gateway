@@ -9,8 +9,12 @@ import {
 } from '@/server/models/Configuration';
 import { featureSwitches } from '@/shared/lib/featureSwitches';
 
-const getOrThrow = (value: string | undefined, errorMessage: string) => {
-  if (!value) {
+const getOrThrow = (
+  value: string | undefined,
+  errorMessage: string,
+  strictCheck = true,
+) => {
+  if (typeof value === 'undefined' || (strictCheck && value === '')) {
     throw Error(errorMessage);
   }
   return value;
@@ -145,11 +149,16 @@ export const getConfiguration = (): Configuration => {
         : getOrThrow(
             process.env.LOGGING_KINESIS_STREAM,
             'LOGGING_KINESIS_STREAM missing',
+            false,
           ),
     instanceId:
       stage === 'DEV'
         ? ''
-        : getOrThrow(process.env.EC2_INSTANCE_ID, 'EC2_INSTANCE_ID missing'),
+        : getOrThrow(
+            process.env.EC2_INSTANCE_ID,
+            'EC2_INSTANCE_ID missing',
+            false,
+          ),
   };
 
   return {
