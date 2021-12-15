@@ -1,9 +1,11 @@
 import {
+  AWSConfiguration,
   Configuration,
   GA_UID,
   GA_UID_HASH,
   GU_API_DOMAIN,
   GU_DOMAIN,
+  Stage,
 } from '@/server/models/Configuration';
 import { featureSwitches } from '@/shared/lib/featureSwitches';
 
@@ -14,6 +16,21 @@ const getOrThrow = (value: string | undefined, errorMessage: string) => {
   return value;
 };
 
+const getStage = (value: string | undefined): Stage => {
+  const maybeStage = getOrThrow(value, 'Stage variable missing.');
+
+  switch (maybeStage) {
+    case 'DEV':
+      return 'DEV';
+    case 'CODE':
+      return 'CODE';
+    case 'PROD':
+      return 'PROD';
+    default:
+      throw Error('Invalid stage variable');
+  }
+};
+
 interface StageVariables {
   gaId: string;
   gaIdHash: string;
@@ -22,7 +39,7 @@ interface StageVariables {
   oktaRegistrationEnabled: boolean;
 }
 
-const getStageVariables = (stage: string): StageVariables => {
+const getStageVariables = (stage: Stage): StageVariables => {
   switch (stage) {
     case 'PROD':
       return {
@@ -81,7 +98,7 @@ export const getConfiguration = (): Configuration => {
     'Default return URI missing.',
   );
 
-  const stage = getOrThrow(process.env.STAGE, 'Stage variable missing.');
+  const stage = getStage(process.env.STAGE);
 
   const { gaId, gaIdHash, domain, apiDomain, oktaRegistrationEnabled } =
     getStageVariables(stage);
@@ -121,6 +138,20 @@ export const getConfiguration = (): Configuration => {
     token: getOrThrow(process.env.OKTA_API_TOKEN, 'OKTA API token missing'),
   };
 
+  const aws: AWSConfiguration = {
+    kinesisStreamName:
+      stage === 'DEV'
+        ? process.env.LOGGING_KINESIS_STREAM || ''
+        : getOrThrow(
+            process.env.LOGGING_KINESIS_STREAM,
+            'LOGGING_KINESIS_STREAM missing',
+          ),
+    instanceId:
+      stage === 'DEV'
+        ? ''
+        : getOrThrow(process.env.EC2_INSTANCE_ID, 'EC2_INSTANCE_ID missing'),
+  };
+
   return {
     port: +port,
     idapiBaseUrl,
@@ -145,5 +176,6 @@ export const getConfiguration = (): Configuration => {
     encryptionSecretKey,
     oauthBaseUrl,
     okta,
+    aws,
   };
 };
