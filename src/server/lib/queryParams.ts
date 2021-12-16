@@ -1,4 +1,4 @@
-import { QueryParams } from '@/shared/model/QueryParams';
+import { QueryParams, TrackingQueryParams } from '@/shared/model/QueryParams';
 import { validateReturnUrl, validateRefUrl } from '@/server/lib/validateUrl';
 import { validateClientId } from '@/server/lib/validateClientId';
 import { FederationErrors } from '@/shared/model/Errors';
@@ -46,7 +46,9 @@ export const parseExpressQueryParams = (
     encryptedEmail,
     error,
   }: Record<keyof QueryParams, string | undefined>, // parameters from req.query
-  bodyParams: Pick<QueryParams, 'ref' | 'refViewId'> = {}, // some parameters may be manually passed in req.body too
+  // some parameters may be manually passed in req.body too,
+  // generally for tracking purposes
+  bodyParams: TrackingQueryParams = {},
 ): QueryParams => {
   return {
     returnUrl: validateReturnUrl(returnUrl),
