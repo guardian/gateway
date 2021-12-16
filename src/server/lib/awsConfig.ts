@@ -8,7 +8,12 @@ const CREDENTIAL_PROVIDER = new AWS.CredentialProviderChain([
   ...AWS.CredentialProviderChain.defaultProviders,
 ]);
 
-export const awsConfig = {
+export const awsConfig: AWS.ConfigurationOptions = {
   region: AWS_REGION,
   credentialProvider: CREDENTIAL_PROVIDER,
+  maxRetries: 0,
+  httpOptions: {
+    connectTimeout: 500,
+    timeout: 250,
+  },
 };
