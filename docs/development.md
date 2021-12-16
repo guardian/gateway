@@ -389,34 +389,6 @@ This file also exposes an `addQueryParamsToPath` method which can be used to app
 
 #### Server
 
-To make sure the query params are parsed on the server, make sure to add the param to the [`parseExpressQueryParams`](../src/server/lib/queryParams.ts) and the [`unit tests`](../src/server/lib/__tests__/queryParams.test.ts) too.
-
-```ts
-// src/server/lib/queryParams.ts#
-export const parseExpressQueryParams = ({
-  returnUrl,
-  clientId,
-  testParam,
-}: {
-  returnUrl?: string;
-  clientId?: string;
-  testParam?: string;
-}): QueryParams => {
-  return {
-    returnUrl: validateReturnUrl(returnUrl),
-    clientId: validateClientId(clientId),
-    testParam: validateTestParam(testParams), // method to check if the parameter is valid, defined elsewhere
-  };
-};
-```
-
-Then simply include the [`queryParamsMiddleware`](../src/server/lib/middleware/queryParams.ts) on any routes that should parse the querystring.
-
-```ts
-// example on all reset password routes
-router.use(noCache, queryParamsMiddleware, reset);
-```
-
 You can access this server side on the `ResponseWithRequestState` object as `res.locals.queryParams`. For example you could get the `returnUrl` using:
 
 ```ts
@@ -555,21 +527,27 @@ Environment variables appear in a lot of places, so it's likely you'll need to u
    thisMethodNeedsTheKey(envKey);
    ```
 
-5. Github Actions (`.github/workflows/ci.yaml`)
+5. [Github Actions](../.github/workflows)
    - For GitHub Actions CI
    - Add development values to allow tests to pass
-   - For secret values, use a fake value
-   ```yml
-   env:
-     ENV_KEY: ENV_VALUE
-   ```
+   - For secret values depending on the use case either
+   - Use a fake value if not required in E2E testing
+     ```yml
+     env:
+       ENV_KEY: value
+     ```
+   - If required in E2E testing, store in [settings `"Secrets -> Actions"`](https://github.com/guardian/gateway/settings/secrets/actions) and use notation
+     ```yml
+     env:
+       ENV_KEY: ${{ secrets.ENV_KEY }}
+     ```
 6. S3 Config
    - If an environment variable has been changed/added/deleted, it might be useful to update the default S3 private DEV config for the project to help other developers
    - AWS `identity` account, in the `s3://identity-private-config/DEV/identity-gateway/` folder.
 
 ## Client Side Scripts
 
-The app itself is server side rendered for browsers not running JavaScript. We also hydrate the components with react, necessary for interactive components.
+The app itself is server side rendered. We also hydrate the components with react, necessary for interactive components, and for reCAPTCHA support where required.
 Also, there may need to be some scripts that fire on the client side, for example for analytics, or the consents management platform.
 
 To facilitate this, a client bundle is created at build time to the `build/static` folder. This corresponds to the script imported in the [`src/client/static/index.tsx`](../src/client/static/index.tsx) file, with a script tag pointing to the bundle delivered along with the rendered html.
