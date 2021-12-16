@@ -235,17 +235,20 @@ export const consentPages: ConsentPage[] = [
     page: 'review',
     path: '/consents/review',
     pageTitle: CONSENTS_PAGES.REVIEW,
-    read: async (ip, sc_gu_u, geo) => {
+    read: async (ip, sc_gu_u, geo, newsletterTestActive) => {
       const ALL_CONSENT = [
         ...CONSENTS_DATA_PAGE,
         ...CONSENTS_COMMUNICATION_PAGE,
       ];
+      const newsLetterMap = newsletterTestActive
+        ? TestNewsletterMap
+        : NewsletterMap;
 
       return {
         page: 'review',
         consents: await getUserConsentsForPage(ALL_CONSENT, ip, sc_gu_u),
         newsletters: await getUserNewsletterSubscriptions(
-          TestNewsletterMap.get(geo) as string[],
+          newsLetterMap.get(geo) as string[],
           ip,
           sc_gu_u,
         ),
@@ -294,15 +297,10 @@ router.get(
     try {
       const { read, pageTitle: _pageTitle } = consentPages[pageIndex];
       pageTitle = _pageTitle;
-
-      // TODO: decide which approach to use
-      const newslettersTestActive =
-        state.abTesting.participations[ONBOARDING_NEWSLETTERS_TEST_ID]
-          ?.variant === ONBOARD_NEWSLETTERS_TEST_VARIANT;
-      // const newslettersTestActive = state.abTestAPI.isUserInVariant(
-      //   ONBOARDING_NEWSLETTERS_TEST_ID,
-      //   ONBOARD_NEWSLETTERS_TEST_VARIANT,
-      // );
+      const newslettersTestActive = state.abTestAPI.isUserInVariant(
+        ONBOARDING_NEWSLETTERS_TEST_ID,
+        ONBOARD_NEWSLETTERS_TEST_VARIANT,
+      );
 
       state = deepmerge(state, {
         pageData: {
