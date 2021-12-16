@@ -1,13 +1,9 @@
 import { Request } from 'express';
-import { Configuration } from '@/server/models/Configuration';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 
-export const getMvtId = (
-  request: Request,
-  configuration: Configuration,
-): number => {
+export const getMvtId = (request: Request): number => {
   const { cookies } = request;
-  const { stage } = configuration;
-  if (cookies['GU_mvt_id_local'] && stage === 'DEV') {
+  if (cookies['GU_mvt_id_local'] && getConfiguration().stage === 'DEV') {
     return Number(cookies['GU_mvt_id_local']) || 0;
   }
 

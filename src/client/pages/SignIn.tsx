@@ -24,6 +24,7 @@ import useRecaptcha, {
   RecaptchaElement,
 } from '@/client/lib/hooks/useRecaptcha';
 import locations from '@/shared/lib/locations';
+import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
 
 export type SignInProps = {
   returnUrl?: string;
@@ -211,6 +212,7 @@ export const SignIn = ({
         >
           <RecaptchaElement id="signin-recaptcha" />
           <CsrfFormField />
+          <RefTrackingFormFields />
           <EmailInput defaultValue={email} />
           <div css={passwordInput}>
             <PasswordInput label="Password" />

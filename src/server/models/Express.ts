@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { QueryParams } from '@/shared/model/QueryParams';
 import {
   ClientHosts,
@@ -30,4 +30,8 @@ export interface RequestState {
 
 export interface ResponseWithRequestState extends Response {
   locals: RequestState;
+}
+
+export interface RequestWithTypedQuery extends Request {
+  query: Record<keyof QueryParams, string | undefined>;
 }
