@@ -24,6 +24,7 @@ interface ResetPasswordProps {
   showNoAccessEmail?: boolean;
   showRecentEmailSummary?: boolean;
   recaptchaSiteKey?: string;
+  formTrackingName?: string;
 }
 
 export const ResetPassword = ({
@@ -37,6 +38,7 @@ export const ResetPassword = ({
   showRecentEmailSummary,
   children,
   recaptchaSiteKey,
+  formTrackingName,
 }: PropsWithChildren<ResetPasswordProps>) => {
   const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
   const [recaptchaErrorContext, setRecaptchaErrorContext] =
@@ -59,6 +61,7 @@ export const ResetPassword = ({
         recaptchaSiteKey={recaptchaSiteKey}
         setRecaptchaErrorMessage={setRecaptchaErrorMessage}
         setRecaptchaErrorContext={setRecaptchaErrorContext}
+        formTrackingName={formTrackingName}
       >
         <EmailInput label={emailInputLabel} defaultValue={email} />
       </MainForm>

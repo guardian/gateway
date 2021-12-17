@@ -26,6 +26,7 @@ export const SetPasswordResendPage = () => {
       emailInputLabel="Email address"
       showRecentEmailSummary
       recaptchaSiteKey={recaptchaSiteKey}
+      formTrackingName="set-password-link-expired"
     >
       <MainBodyText>This link has expired.</MainBodyText>
       <MainBodyText>

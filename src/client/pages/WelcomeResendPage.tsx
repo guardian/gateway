@@ -26,6 +26,7 @@ export const WelcomeResendPage = () => {
       emailInputLabel="Email address"
       showRecentEmailSummary
       recaptchaSiteKey={recaptchaSiteKey}
+      formTrackingName="welcome-link-expired"
     >
       <MainBodyText>This link has expired.</MainBodyText>
       <MainBodyText>

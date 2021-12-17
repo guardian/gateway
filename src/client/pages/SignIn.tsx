@@ -23,6 +23,7 @@ import useRecaptcha, {
 } from '@/client/lib/hooks/useRecaptcha';
 import locations from '@/shared/lib/locations';
 import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
+import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 
 export type SignInProps = {
   returnUrl?: string;
@@ -137,6 +138,7 @@ export const SignIn = ({
   geolocation,
   recaptchaSiteKey,
 }: SignInProps) => {
+  const formTrackingName = 'sign-in';
   const signInFormRef = createRef<HTMLFormElement>();
   const recaptchaElementRef = useRef<HTMLDivElement>(null);
   const captchaElement = recaptchaElementRef.current ?? 'signin-recaptcha';
@@ -171,6 +173,7 @@ export const SignIn = ({
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    trackFormSubmit(formTrackingName);
     executeCaptcha();
   };
 
@@ -210,13 +213,15 @@ export const SignIn = ({
           action={buildUrlWithQueryParams('/signin', {}, queryParams)}
           ref={signInFormRef}
           onSubmit={handleSubmit}
+          onFocus={(e) => trackFormFocusBlur(formTrackingName, e, 'focus')}
+          onBlur={(e) => trackFormFocusBlur(formTrackingName, e, 'blur')}
         >
           <RecaptchaElement id="signin-recaptcha" />
           <CsrfFormField />
           <RefTrackingFormFields />
           <EmailInput defaultValue={email} />
           <div css={passwordInput}>
-            <PasswordInput label="Password" />
+            <PasswordInput label="Password" autoComplete="current-password" />
           </div>
           <Links>
             <Link

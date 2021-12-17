@@ -21,6 +21,7 @@ export const ResetPasswordPage = () => {
       queryString={queryParams}
       showNoAccessEmail
       recaptchaSiteKey={recaptchaSiteKey}
+      formTrackingName="forgot-password"
     >
       <MainBodyText>
         Forgot your password? Enter your email address and we’ll send you a link
