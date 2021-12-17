@@ -32,6 +32,8 @@ export async function sendResetPasswordEmail(
   email: string,
   ip: string,
   returnUrl: string,
+  ref?: string,
+  refViewId?: string,
 ) {
   const options = APIPostOptions({
     'email-address': email,
@@ -41,6 +43,6 @@ export async function sendResetPasswordEmail(
   return idapiFetch({
     path: '/pwd-reset/send-password-reset-email',
     options: APIAddClientAccessToken(options, ip),
-    queryParams: { returnUrl },
+    queryParams: { returnUrl, ref, refViewId },
   }).catch(handleError);
 }

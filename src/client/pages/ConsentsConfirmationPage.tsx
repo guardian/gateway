@@ -20,10 +20,6 @@ export const ConsentsConfirmationPage = () => {
     (consent) => consent.id === Consents.PROFILING && consent.consented,
   );
 
-  const optedOutOfMarketResearch = !!consents.find(
-    (consent) => consent.id === Consents.MARKET_RESEARCH && consent.consented,
-  );
-
   const productConsents = consents.filter(
     (c) => !c.id.includes('_optout') && c.consented,
   );
@@ -36,7 +32,6 @@ export const ConsentsConfirmationPage = () => {
       success={success}
       returnUrl={returnUrl}
       optedOutOfProfiling={optedOutOfProfiling}
-      optedOutOfMarketResearch={optedOutOfMarketResearch}
       productConsents={productConsents}
       subscribedNewsletters={subscribedNewsletters}
     />

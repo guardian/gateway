@@ -31,7 +31,6 @@ type ConsentsConfirmationProps = {
   success?: string;
   returnUrl: string;
   optedOutOfProfiling: boolean;
-  optedOutOfMarketResearch: boolean;
   productConsents: Consent[];
   subscribedNewsletters: NewsLetter[];
   geolocation?: GeoLocation;
@@ -153,7 +152,6 @@ export const ConsentsConfirmation = ({
   success,
   returnUrl,
   optedOutOfProfiling,
-  optedOutOfMarketResearch,
   productConsents,
   subscribedNewsletters,
   geolocation,
@@ -206,9 +204,6 @@ export const ConsentsConfirmation = ({
                 ) : (
                   <p css={text}>N/A</p>
                 )}
-              </ReviewTableRow>
-              <ReviewTableRow title="Marketing research">
-                <p css={text}>{optedOutOfMarketResearch ? 'No' : 'Yes'}</p>
               </ReviewTableRow>
               <ReviewTableRow title="Marketing analysis">
                 <p css={text}>{optedOutOfProfiling ? 'No' : 'Yes'}</p>

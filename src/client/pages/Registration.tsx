@@ -21,6 +21,7 @@ import { EmailInput } from '@/client/components/EmailInput';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { GeoLocation } from '@/shared/model/Geolocation';
+import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
 
 export type RegistrationProps = {
   returnUrl?: string;
@@ -129,6 +130,7 @@ export const Registration = ({
         >
           <RecaptchaElement id="register-recaptcha" />
           <CsrfFormField />
+          <RefTrackingFormFields />
           <EmailInput defaultValue={email} />
           <Terms />
           <Button css={registerButton} type="submit" data-cy="register-button">

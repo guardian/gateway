@@ -65,10 +65,11 @@ router.post(
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { email } = req.body;
-    const { returnUrl, emailSentSuccess } = res.locals.queryParams;
+    const { returnUrl, emailSentSuccess, ref, refViewId } =
+      res.locals.queryParams;
 
     try {
-      await sendCreatePasswordEmail(email, req.ip, returnUrl);
+      await sendCreatePasswordEmail(email, req.ip, returnUrl, ref, refViewId);
 
       setEncryptedStateCookie(res, {
         email,

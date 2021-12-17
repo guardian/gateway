@@ -17,7 +17,8 @@ import {
   UseRecaptchaReturnValue,
 } from '@/client/lib/hooks/useRecaptcha';
 import { CaptchaErrors } from '@/shared/model/Errors';
-import { DetailedRecaptchaError } from './DetailedRecaptchaError';
+import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
+import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
 
 export interface MainFormProps {
   formAction: string;
@@ -156,6 +157,7 @@ export const MainForm = ({
         />
       )}
       <CsrfFormField />
+      <RefTrackingFormFields />
       <div css={inputStyles(hasTerms)}>{children}</div>
       {hasGuardianTerms && <GuardianTerms />}
       {recaptchaEnabled && <RecaptchaTerms />}

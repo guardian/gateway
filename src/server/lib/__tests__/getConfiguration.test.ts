@@ -69,6 +69,10 @@ describe('getConfiguration', () => {
         orgUrl: 'oktaorgurl',
         token: 'oktatoken',
       },
+      aws: {
+        kinesisStreamName: '',
+        instanceId: '',
+      },
     };
     expect(output).toEqual(expected);
   });

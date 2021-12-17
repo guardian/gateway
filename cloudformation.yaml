@@ -234,53 +234,13 @@ Resources:
             Environment=ENCRYPTION_SECRET_KEY=$ENCRYPTION_SECRET_KEY
             Environment=OKTA_ORG_URL=${OktaOrgUrl}
             Environment=OKTA_API_TOKEN=$OKTA_API_TOKEN
+            Environment=LOGGING_KINESIS_STREAM=${KinesisStream}
+            Environment=EC2_INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
 
             [Install]
             WantedBy=multi-user.target
             EOL
 
-            # logstash setup
-            sed -i 's/-Xms.*/-Xms512m/g' /etc/logstash/jvm.options
-            sed -i 's/-Xmx.*/-Xmx512m/g' /etc/logstash/jvm.options
-
-            instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
-
-            cat > /etc/logstash/conf.d/logstash.conf <<__END__
-            input {
-              stdin {}
-              file {
-                add_field => {
-                  'app' => '${App}'
-                  'stage' => '${Stage}'
-                  'stack' => '${Stack}'
-                  'ec2_instance' => '$instanceid'
-                }
-                path => "/var/log/identity-gateway.log"
-                type => "app"
-                start_position => "beginning"
-              }
-            }
-            output {
-              kinesis {
-                stream_name => "${KinesisStream}"
-                region => "${AWS::Region}"
-              }
-            }
-            filter {
-                if [type] == "app" {
-                    multiline {
-                        pattern => "^\s"
-                        what => "previous"
-                      }
-                }
-                date {
-                    match => [ "timestamp" , "yyyy-MM-dd HH:mm:ss,SSS" ]
-                }
-            }
-            __END__
-
-            # Run
-            systemctl start logstash
             systemctl enable identity-gateway
             systemctl start identity-gateway
 

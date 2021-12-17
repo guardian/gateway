@@ -59,7 +59,8 @@ router.post(
   '/register/email-sent/resend',
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { returnUrl, emailSentSuccess } = res.locals.queryParams;
+    const { returnUrl, emailSentSuccess, ref, refViewId } =
+      res.locals.queryParams;
 
     try {
       // read and parse the encrypted state cookie
@@ -84,11 +85,23 @@ router.post(
         switch (emailType) {
           // they were a newly registered user, so resend the AccountVerification Email
           case EmailType.ACCOUNT_VERIFICATION:
-            await sendAccountVerificationEmail(email, req.ip, returnUrl);
+            await sendAccountVerificationEmail(
+              email,
+              req.ip,
+              returnUrl,
+              ref,
+              refViewId,
+            );
             break;
           // they were an already registered user, so resend the AccountExists Email
           case EmailType.ACCOUNT_EXISTS:
-            await sendAccountExistsEmail(email, req.ip, returnUrl);
+            await sendAccountExistsEmail(
+              email,
+              req.ip,
+              returnUrl,
+              ref,
+              refViewId,
+            );
             break;
           // they were an already registered user without password
           // so resend the AccountWithoutPasswordExists Email
@@ -97,6 +110,8 @@ router.post(
               email,
               req.ip,
               returnUrl,
+              ref,
+              refViewId,
             );
             break;
           default:
@@ -167,7 +182,13 @@ router.post(
         // user exists with password
         // so we want to send them the account exists email
         case UserType.CURRENT:
-          await sendAccountExistsEmail(email, req.ip, returnUrl);
+          await sendAccountExistsEmail(
+            email,
+            req.ip,
+            returnUrl,
+            ref,
+            refViewId,
+          );
           setEncryptedStateCookie(res, {
             email,
             emailType: EmailType.ACCOUNT_EXISTS,
@@ -176,7 +197,13 @@ router.post(
         // user exists without password
         // so we send them the account exists without password email to set a password
         case UserType.GUEST:
-          await sendAccountWithoutPasswordExistsEmail(email, req.ip, returnUrl);
+          await sendAccountWithoutPasswordExistsEmail(
+            email,
+            req.ip,
+            returnUrl,
+            ref,
+            refViewId,
+          );
           setEncryptedStateCookie(res, {
             email,
             emailType: EmailType.ACCOUNT_WITHOUT_PASSWORD_EXISTS,

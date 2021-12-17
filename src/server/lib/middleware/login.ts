@@ -18,8 +18,7 @@ export const loginMiddleware = async (
   res: ResponseWithRequestState,
   next: NextFunction,
 ) => {
-  const config = getConfiguration();
-  const LOGIN_REDIRECT_URL = config.signInPageUrl;
+  const { signInPageUrl: LOGIN_REDIRECT_URL } = getConfiguration();
 
   const redirectAuth = (auth: IDAPIAuthRedirect) => {
     if (auth.redirect) {
