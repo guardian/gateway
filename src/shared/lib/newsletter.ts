@@ -17,7 +17,7 @@ export const TestNewsletterMap = new Map<
       Newsletters.MORNING_BRIEFING_UK,
       Newsletters.THE_GUIDE,
       Newsletters.WORD_OF_MOUTH,
-      Newsletters.GREENLIGHT,
+      Newsletters.DOWN_TO_EARTH,
     ] as Newsletters[],
   ],
   [
@@ -26,7 +26,7 @@ export const TestNewsletterMap = new Map<
       Newsletters.MORNING_BRIEFING_UK,
       Newsletters.THE_GUIDE,
       Newsletters.WORD_OF_MOUTH,
-      Newsletters.GREENLIGHT,
+      Newsletters.DOWN_TO_EARTH,
     ] as Newsletters[],
   ],
   [
@@ -35,7 +35,7 @@ export const TestNewsletterMap = new Map<
       Newsletters.MORNING_BRIEFING_UK,
       Newsletters.THE_GUIDE,
       Newsletters.WORD_OF_MOUTH,
-      Newsletters.GREENLIGHT,
+      Newsletters.DOWN_TO_EARTH,
     ] as Newsletters[],
   ],
   [
@@ -44,7 +44,7 @@ export const TestNewsletterMap = new Map<
       Newsletters.MORNING_BRIEFING_AU,
       Newsletters.THE_GUIDE,
       Newsletters.WORD_OF_MOUTH,
-      Newsletters.GREENLIGHT,
+      Newsletters.DOWN_TO_EARTH,
     ] as Newsletters[],
   ],
   [
@@ -53,7 +53,7 @@ export const TestNewsletterMap = new Map<
       Newsletters.MORNING_BRIEFING_US,
       Newsletters.THE_GUIDE,
       Newsletters.WORD_OF_MOUTH,
-      Newsletters.GREENLIGHT,
+      Newsletters.DOWN_TO_EARTH,
     ] as Newsletters[],
   ],
 ]);
@@ -64,7 +64,7 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
     [
       Newsletters.TODAY_UK,
       Newsletters.THE_LONG_READ,
-      Newsletters.GREENLIGHT,
+      Newsletters.DOWN_TO_EARTH,
       Newsletters.BOOKMARKS,
     ] as Newsletters[],
   ],
@@ -73,7 +73,7 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
     [
       Newsletters.TODAY_UK,
       Newsletters.THE_LONG_READ,
-      Newsletters.GREENLIGHT,
+      Newsletters.DOWN_TO_EARTH,
       Newsletters.BOOKMARKS,
     ] as Newsletters[],
   ],
@@ -82,7 +82,7 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
     [
       Newsletters.TODAY_UK,
       Newsletters.THE_LONG_READ,
-      Newsletters.GREENLIGHT,
+      Newsletters.DOWN_TO_EARTH,
       Newsletters.BOOKMARKS,
     ] as Newsletters[],
   ],
@@ -91,7 +91,7 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
     [
       Newsletters.TODAY_AU,
       Newsletters.THE_LONG_READ,
-      Newsletters.GREENLIGHT,
+      Newsletters.DOWN_TO_EARTH,
       Newsletters.BOOKMARKS,
     ] as Newsletters[],
   ],
@@ -100,7 +100,7 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
     [
       Newsletters.TODAY_US,
       Newsletters.THE_LONG_READ,
-      Newsletters.GREENLIGHT,
+      Newsletters.DOWN_TO_EARTH,
       Newsletters.BOOKMARKS,
     ] as Newsletters[],
   ],
