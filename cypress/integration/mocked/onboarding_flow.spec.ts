@@ -123,8 +123,8 @@ describe('Onboarding flow', () => {
       cy.lastPayloadIs([
         { id: '4137', subscribed: true },
         { id: '4147', subscribed: true },
-        { id: '4151', subscribed: true },
         { id: '4165', subscribed: true },
+        { id: '4151', subscribed: true },
       ]);
 
       cy.url().should('include', YourDataPage.URL);
