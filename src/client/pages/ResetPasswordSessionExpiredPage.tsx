@@ -22,7 +22,7 @@ export const ResetPasswordSessionExpiredPage = () => {
       queryString={queryParams}
       emailInputLabel="Email address"
       recaptchaSiteKey={recaptchaSiteKey}
-      formTrackingName="reset-password-session-expired"
+      formPageTrackingName="reset-password-session-expired"
     >
       <MainBodyText>
         The link we sent you was valid for 30 minutes and it has now expired.

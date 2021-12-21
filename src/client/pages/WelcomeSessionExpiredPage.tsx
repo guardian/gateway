@@ -25,7 +25,7 @@ export const WelcomeSessionExpiredPage = () => {
       queryString={queryParams}
       emailInputLabel="Email address"
       recaptchaSiteKey={recaptchaSiteKey}
-      formTrackingName="welcome-session-expired"
+      formPageTrackingName="welcome-session-expired"
     >
       <MainBodyText>
         The link we sent you was valid for 30 minutes and it has now expired.

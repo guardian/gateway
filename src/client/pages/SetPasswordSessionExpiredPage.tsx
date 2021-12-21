@@ -3,7 +3,6 @@ import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
 import { MainBodyText } from '@/client/components/MainBodyText';
-
 import { buildUrl } from '@/shared/lib/routeUtils';
 
 export const SetPasswordSessionExpiredPage = () => {
@@ -25,7 +24,7 @@ export const SetPasswordSessionExpiredPage = () => {
       queryString={queryParams}
       emailInputLabel="Email address"
       recaptchaSiteKey={recaptchaSiteKey}
-      formTrackingName="set-password-session-expired"
+      formPageTrackingName="set-password-session-expired"
     >
       <MainBodyText>
         The link we sent you was valid for 30 minutes and it has now expired.

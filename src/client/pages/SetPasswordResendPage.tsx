@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
-
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { buildUrl } from '@/shared/lib/routeUtils';
 
@@ -26,7 +25,7 @@ export const SetPasswordResendPage = () => {
       emailInputLabel="Email address"
       showRecentEmailSummary
       recaptchaSiteKey={recaptchaSiteKey}
-      formTrackingName="set-password-link-expired"
+      formPageTrackingName="set-password-link-expired"
     >
       <MainBodyText>This link has expired.</MainBodyText>
       <MainBodyText>
