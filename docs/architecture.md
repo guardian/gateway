@@ -16,7 +16,7 @@ Many other client side applications at the Guardian now are React app based, whi
 
 ## Technology
 
-Gateway is primarily a [TypeScript](https://www.typescriptlang.org/), [React](https://reactjs.org/), and [Express.js](https://expressjs.com/) application, utilising [the Guardian Source Design System](https://theguardian.design/) components, and [Emotion](https://emotion.sh) CSS-in-JS library for UI/design. We use [Jest](https://jestjs.io/) for unit testing, and [Cypress](https://www.cypress.io/) for integration tests (and hopefully E2E tests in the future).
+Gateway is primarily a [TypeScript](https://www.typescriptlang.org/), [React](https://reactjs.org/), and [Express.js](https://expressjs.com/) application, utilising [the Guardian Source Design System](https://theguardian.design/) components, and [Emotion](https://emotion.sh) CSS-in-JS library for UI/design. We use [Jest](https://jestjs.io/) for unit testing, and [Cypress](https://www.cypress.io/) for integration tests and E2E tests.
 
 ## Browser Support
 
@@ -25,6 +25,8 @@ Gateway is primarily a [TypeScript](https://www.typescriptlang.org/), [React](ht
 This has the added benefit that since we're only serving HTML, we can target a wider range of browsers compared to doing client side hydration, pretty much any browser thats supports [TLS 1.2](https://caniuse.com/#feat=tls1-2) will get functional support. As far as styling/css go, we target the recommended browsers from [guardian/dotcom-rendering](https://github.com/guardian/dotcom-rendering/blob/master/docs/principles/browser-support.md#recommended-browsers).
 
 However there will be some JavaScript code that needs to run client side, such as for analytics, consent etc. And hydration can be used to enhance functionality for the user.
+
+The no JavaScript principle has been violated since including reCAPTCHA on many of the forms to prevent bot attacks. However we still stick to this principle regardless for the reasons above, and in case we find a different solution to using reCAPTCHA in the future.
 
 Development principles can be found in [development.md](development.md).
 

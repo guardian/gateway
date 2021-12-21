@@ -16,9 +16,7 @@ export const getABTesting = (
 
   const runnableTests = abTestAPI.allRunnableTests(tests);
 
-  // Explicit notation needed due to TS Bug: https://github.com/microsoft/TypeScript/issues/36390
-  // Should be removable as of TS 4.2
-  const participations = (runnableTests as Runnable[]).map((test: Runnable) => {
+  const participations = runnableTests.map((test: Runnable) => {
     return [
       test.id,
       {
