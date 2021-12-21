@@ -86,7 +86,7 @@ describe('Registration flow', () => {
   });
   it('persists the clientId when navigating away', () => {
     cy.visit('/register?clientId=jobs');
-    cy.contains('Sign In').click();
+    cy.contains('Sign in').click();
     cy.url().should('contain', 'clientId=jobs');
   });
   it('does not proceed when no email provided', () => {
