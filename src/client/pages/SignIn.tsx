@@ -218,7 +218,7 @@ export const SignIn = ({
           <Links>
             <Link
               subdued={true}
-              href={buildUrl('/reset')}
+              href={buildUrl('/reset-password')}
               cssOverrides={resetPassword}
             >
               Reset password

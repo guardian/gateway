@@ -58,6 +58,14 @@ const routes: Array<{
     element: <EmailSentPage noAccountInfo />,
   },
   {
+    path: '/reset-password',
+    element: <ResetPasswordPage />,
+  },
+  {
+    path: '/reset-password/email-sent',
+    element: <EmailSentPage noAccountInfo />,
+  },
+  {
     path: '/reset-password/complete',
     element: <ChangePasswordCompletePage />,
   },

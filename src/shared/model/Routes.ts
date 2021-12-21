@@ -7,11 +7,12 @@ export type RoutePaths =
   | '/register'
   | '/register/email-sent'
   | '/register/email-sent/resend'
-  // router between these comments are for legacy reasons and could be refactored
+  // these routes will be replaced by /reset-password* routes and will be removed when the Fastly VCL is updated
   | '/reset'
   | '/reset/email-sent'
-  // end routes to be refactored
+  // end routes to be removed
   | '/reset-password'
+  | '/reset-password/email-sent'
   | '/reset-password/expired'
   | '/reset-password/:token'
   | '/reset-password/complete'
