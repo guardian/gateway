@@ -11,7 +11,7 @@ The [`renderer`](../src/server/lib/renderer.ts) method abstracts the rendering a
 ```ts
 // example of rendering a route
 // the url and pageTitle are both typed so new values must be added to the model before they will be accepted
-const html: string = renderer('/reset/email-sent', {
+const html: string = renderer('/reset-password/email-sent', {
   pageTitle: 'Check your inbox',
   requestState: res.locals,
 });
@@ -44,7 +44,7 @@ const routes: Array<{
 }> = [
   ...
   {
-    path: '/reset/email-sent', // this is a path matching `RoutePaths`
+    path: '/reset-password/email-sent', // this is a path matching `RoutePaths`
     element: <EmailSentPage noAccountInfo />, // This is the element to render when the `path` matches
   },
   {
@@ -58,7 +58,7 @@ const routes: Array<{
 
 To be able to actually access the route that was defined in the client, express on the server also needs to know about the route. All the server routes should be defined in the [`routes`](../src/server/routes) folder.
 
-Routes should be separated into files which share common functionality. For example, functionality relating to sending the reset password email, is in the [`reset.ts`](../src/server/routes/reset.ts) file. The file should export an Express router, which will be consumed by express to register the routes.
+Routes should be separated into files which share common functionality. For example, functionality relating to resetting your password is in the [`resetPassword.ts`](../src/server/routes/resetPassword.ts) file. The file should export an Express router, which will be consumed by express to register the routes.
 
 We also support typed routes here too, using the [`typedRoutes`](../src/server/lib/typedRoutes.ts) object, which extends Express' `Router`.
 
@@ -70,8 +70,8 @@ import { typedRouter as router } from '@/server/lib/typedRoutes';
 ...
 // tell express the method (GET)
 router.get(
-  // on what path/url/route, e.g. /reset
-  '/reset', //note this is a typed route of type RoutePaths
+  // on what path/url/route, e.g. /reset-password
+  '/reset-password', //note this is a typed route of type RoutePaths
   (_: Request, res: ResponseWithRequestState) => {
     // some optional actions/logic here
     ...
@@ -92,7 +92,7 @@ To register it with the running express server, import the created express route
 
 ```ts
 ...
-import { default as reset } from './reset';
+import { default as resetPassword } from './resetPassword';
 ...
 ```
 
@@ -100,7 +100,7 @@ Add to router in that file which will register it with the express server, with 
 
 ```ts
 ...
-router.use(noCache, queryParamsMiddleware, reset);
+router.use(noCache, queryParamsMiddleware, resetPassword);
 ...
 ```
 

@@ -1,7 +1,6 @@
 import { Router } from 'express';
 
 import { default as core } from './core';
-import { default as reset } from './reset';
 import { default as signIn } from './signIn';
 import { default as register } from './register';
 import { default as resetPassword } from './resetPassword';
@@ -22,16 +21,13 @@ router.use(core);
 // to avoid caching sensitive page state
 uncachedRoutes.use(noCache);
 
-// request reset password routes
-uncachedRoutes.use(reset);
-
 // request sign in routes
 uncachedRoutes.use(signIn);
 
 // request registration routes
 uncachedRoutes.use(register);
 
-// change password routes
+// reset password routes
 uncachedRoutes.use(resetPassword);
 
 // set password routes
