@@ -69,7 +69,7 @@ const circle = `
   width: ${CIRCLE_DIAMETER}px;
 `;
 
-const li = (numPages: number) => css`
+const li = (numPages: number, lastPage: boolean) => css`
   ${textSans.xxsmall()}
   ${from.mobileMedium} {
     ${textSans.xsmall()}
@@ -78,7 +78,7 @@ const li = (numPages: number) => css`
     ${textSans.small()}
   }
   position: relative;
-  width: ${100 / numPages}%;
+  width: ${lastPage ? 'auto' : 100 / (numPages - 1) + '%'};
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -158,6 +158,7 @@ const pageProgression = css`
 const ul = css`
   display: flex;
   list-style: none;
+  justify-content: space-between;
   height: 54px;
   padding: 0;
   margin: 0;
@@ -185,12 +186,19 @@ const PageProgression = ({
   };
   return (
     <ul css={[ul, cssOverrides]}>
-      {pages.map((page, i) => (
-        <li className={getClassName(i)} key={i} css={li(pages.length)}>
-          <SvgCheckmark />
-          <div>{page}</div>
-        </li>
-      ))}
+      {pages.map((page, i) => {
+        const isLastPage = i === pages.length - 1;
+        return (
+          <li
+            className={getClassName(i)}
+            key={i}
+            css={li(pages.length, isLastPage)}
+          >
+            <SvgCheckmark />
+            <div>{page}</div>
+          </li>
+        );
+      })}
     </ul>
   );
 };

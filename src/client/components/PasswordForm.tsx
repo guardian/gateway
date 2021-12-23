@@ -276,6 +276,7 @@ export const PasswordForm = ({
       <CsrfFormField />
       <div css={passwordInput}>
         <PasswordInput
+          displayEye={true}
           error={error}
           label={labelText}
           onChange={(e) => {

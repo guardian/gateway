@@ -40,12 +40,15 @@ const paddingRight = (isEyeDisplayedOnBrowser: boolean) => css`
 const noBorder = (isEyeDisplayedOnBrowser: boolean) =>
   isEyeDisplayedOnBrowser
     ? css`
+        border-radius: 0;
         border-right: none;
         :active {
           border-right: none;
         }
       `
-    : css();
+    : css`
+        border-radius: 0;
+      `;
 
 const EyeIcon = ({ isOpen }: { isOpen: boolean }) => {
   const iconStyles = css`
@@ -97,6 +100,8 @@ const EyeSymbol = ({
     height: ${height.inputMedium}px;
     align-self: flex-end;
     padding-top: 4px;
+    margin-left: 0;
+    margin-right: 0;
   `;
 
   return (
