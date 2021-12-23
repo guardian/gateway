@@ -80,6 +80,7 @@ const li = (numPages: number, lastPage: boolean) => css`
   position: relative;
   width: ${lastPage ? 'min-content' : 100 / (numPages - 1) + '%'};
   display: flex;
+  flex-grow: ${lastPage ? '0' : '1'};
   flex-direction: column;
   justify-content: flex-start;
   padding-top: ${space[6] + space[2]}px;
@@ -196,9 +197,13 @@ const PageProgression = ({
           >
             <SvgCheckmark />
             <div
-              css={css`
-                width: max-content;
-              `}
+              css={
+                isLastPage
+                  ? css`
+                      width: max-content;
+                    `
+                  : css``
+              }
             >
               {page}
             </div>
