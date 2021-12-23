@@ -78,7 +78,7 @@ const li = (numPages: number, lastPage: boolean) => css`
     ${textSans.small()}
   }
   position: relative;
-  width: ${lastPage ? 'auto' : 100 / (numPages - 1) + '%'};
+  width: ${lastPage ? 'min-content' : 100 / (numPages - 1) + '%'};
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -195,7 +195,13 @@ const PageProgression = ({
             css={li(pages.length, isLastPage)}
           >
             <SvgCheckmark />
-            <div>{page}</div>
+            <div
+              css={css`
+                width: max-content;
+              `}
+            >
+              {page}
+            </div>
           </li>
         );
       })}
