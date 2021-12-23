@@ -380,6 +380,7 @@ export const PasswordFormMainLayout = ({
           onChange={(e) => {
             setPassword(e.target.value);
           }}
+          displayEye={true}
         />
       </div>
       {!error && (
