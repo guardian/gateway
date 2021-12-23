@@ -69,7 +69,7 @@ const circle = `
   width: ${CIRCLE_DIAMETER}px;
 `;
 
-const li = (numPages: number, lastPage: boolean) => css`
+const li = (numPages: number, isLastPage: boolean) => css`
   ${textSans.xxsmall()}
   ${from.mobileMedium} {
     ${textSans.xsmall()}
@@ -78,9 +78,9 @@ const li = (numPages: number, lastPage: boolean) => css`
     ${textSans.small()}
   }
   position: relative;
-  width: ${lastPage ? 'min-content' : 100 / (numPages - 1) + '%'};
+  width: ${isLastPage ? 'min-content' : 100 / (numPages - 1) + '%'};
   display: flex;
-  flex-grow: ${lastPage ? '0' : '1'};
+  flex-grow: ${isLastPage ? '0' : '1'};
   flex-direction: column;
   justify-content: flex-start;
   padding-top: ${space[6] + space[2]}px;
@@ -165,6 +165,10 @@ const ul = css`
   margin: 0;
 `;
 
+const maxContentOverride = (isLastPage: boolean) => css`
+  width: ${isLastPage ? 'max-content' : 'initial'};
+`;
+
 const PageProgression = ({
   pages,
   current,
@@ -196,17 +200,7 @@ const PageProgression = ({
             css={li(pages.length, isLastPage)}
           >
             <SvgCheckmark />
-            <div
-              css={
-                isLastPage
-                  ? css`
-                      width: max-content;
-                    `
-                  : css``
-              }
-            >
-              {page}
-            </div>
+            <div css={maxContentOverride(isLastPage)}>{page}</div>
           </li>
         );
       })}

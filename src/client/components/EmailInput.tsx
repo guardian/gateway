@@ -1,7 +1,9 @@
 import { TextInput, TextInputProps } from '@guardian/source-react-components';
 import React, { useState } from 'react';
-import { disableAutofillBackground } from '@/client/styles/Shared';
-import { css } from '@emotion/react';
+import {
+  disableAutofillBackground,
+  noBorderRadius,
+} from '@/client/styles/Shared';
 
 export enum EmailInputFieldState {
   VALID = 'valid',
@@ -19,10 +21,6 @@ interface EmailInputProps extends Omit<TextInputProps, 'label'> {
   defaultValue?: string;
   initialState?: EmailInputFieldState;
 }
-
-const noBorderRadius = css`
-  border-radius: 0;
-`;
 
 export const EmailInput: React.FC<EmailInputProps> = ({
   label = 'Email',

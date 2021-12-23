@@ -9,7 +9,10 @@ import { css } from '@emotion/react';
 import { neutral, height } from '@guardian/source-foundations';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
-import { disableAutofillBackground } from '@/client/styles/Shared';
+import {
+  disableAutofillBackground,
+  noBorderRadius,
+} from '@/client/styles/Shared';
 
 export type PasswordInputProps = {
   label: string;
@@ -40,15 +43,12 @@ const paddingRight = (isEyeDisplayedOnBrowser: boolean) => css`
 const noBorder = (isEyeDisplayedOnBrowser: boolean) =>
   isEyeDisplayedOnBrowser
     ? css`
-        border-radius: 0;
         border-right: none;
         :active {
           border-right: none;
         }
       `
-    : css`
-        border-radius: 0;
-      `;
+    : css();
 
 const EyeIcon = ({ isOpen }: { isOpen: boolean }) => {
   const iconStyles = css`
@@ -155,6 +155,7 @@ export const PasswordInput = ({
           type={passwordVisible ? 'text' : 'password'}
           cssOverrides={[
             noBorder(isEyeDisplayedOnBrowser),
+            noBorderRadius,
             paddingRight(isEyeDisplayedOnBrowser),
             disableAutofillBackground,
           ]}
