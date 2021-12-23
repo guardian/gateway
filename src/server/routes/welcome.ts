@@ -40,8 +40,8 @@ router.post(
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { email } = req.body;
-    const { returnUrl, emailSentSuccess, ref, refViewId } =
-      res.locals.queryParams;
+    const state = res.locals;
+    const { returnUrl, emailSentSuccess, ref, refViewId } = state.queryParams;
 
     try {
       await sendAccountVerificationEmail(
@@ -50,6 +50,7 @@ router.post(
         returnUrl,
         ref,
         refViewId,
+        state.ophanConfig,
       );
 
       setEncryptedStateCookie(res, { email });

@@ -1,16 +1,20 @@
 import { IdapiError } from '@/server/models/Error';
 import { EmailType } from '@/shared/model/EmailType';
 import { IdapiErrorMessages, RegistrationErrors } from '@/shared/model/Errors';
-import { getConfiguration } from '../getConfiguration';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 import {
   APIAddClientAccessToken,
   APIPostOptions,
   IDAPIError,
   idapiFetch,
-} from '../IDAPIFetch';
-import { logger } from '../logger';
-import { trackMetric } from '../trackMetric';
+} from '@/server/lib/IDAPIFetch';
+import { logger } from '@/server/lib/logger';
+import { trackMetric } from '@/server/lib/trackMetric';
 import { emailSendMetric } from '@/server/models/Metrics';
+import {
+  OphanConfig,
+  sendOphanInteractionEventServer,
+} from '@/server/lib/ophan';
 
 const { defaultReturnUri } = getConfiguration();
 
@@ -39,6 +43,7 @@ export const guest = async (
   returnUrl?: string,
   refViewId?: string,
   ref?: string,
+  ophanTrackingConfig?: OphanConfig,
 ): Promise<EmailType> => {
   const options = APIPostOptions({
     primaryEmailAddress: email,
@@ -55,6 +60,13 @@ export const guest = async (
         refViewId,
       },
     });
+    sendOphanInteractionEventServer(
+      {
+        component: 'email-send',
+        value: 'account-verification',
+      },
+      ophanTrackingConfig,
+    );
     trackMetric(emailSendMetric('AccountVerification', 'Success'));
     return EmailType.ACCOUNT_VERIFICATION;
   } catch (error) {

@@ -21,6 +21,7 @@ const getRequestState = (req: RequestWithTypedQuery): RequestState => {
     ref,
     refViewId,
   });
+
   return {
     queryParams,
     pageData: {
@@ -38,6 +39,11 @@ const getRequestState = (req: RequestWithTypedQuery): RequestState => {
       oauthBaseUrl,
     },
     recaptchaConfig: { recaptchaSiteKey: googleRecaptcha.siteKey },
+    ophanConfig: {
+      bwid: req.cookies.bwid,
+      consentUUID: req.cookies.consentUUID,
+      viewId: queryParams.refViewId,
+    },
   };
 };
 

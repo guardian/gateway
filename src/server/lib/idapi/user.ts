@@ -17,6 +17,10 @@ import User from '@/shared/model/User';
 import { IdapiError } from '@/server/models/Error';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { emailSendMetric } from '@/server/models/Metrics';
+import {
+  OphanConfig,
+  sendOphanInteractionEventServer,
+} from '@/server/lib/ophan';
 
 interface APIResponse {
   user: User;
@@ -132,6 +136,7 @@ export const sendAccountVerificationEmail = async (
   returnUrl: string,
   ref?: string,
   refViewId?: string,
+  ophanTrackingConfig?: OphanConfig,
 ) => {
   const options = APIPostOptions({
     'email-address': email,
@@ -142,6 +147,13 @@ export const sendAccountVerificationEmail = async (
       options: APIAddClientAccessToken(options, ip),
       queryParams: { returnUrl, ref, refViewId },
     });
+    sendOphanInteractionEventServer(
+      {
+        component: 'email-send',
+        value: 'account-verification',
+      },
+      ophanTrackingConfig,
+    );
     trackMetric(emailSendMetric('AccountVerification', 'Success'));
   } catch (error) {
     logger.error(
@@ -159,6 +171,7 @@ export const sendAccountExistsEmail = async (
   returnUrl: string,
   ref?: string,
   refViewId?: string,
+  ophanTrackingConfig?: OphanConfig,
 ) => {
   const options = APIPostOptions({
     'email-address': email,
@@ -169,6 +182,13 @@ export const sendAccountExistsEmail = async (
       options: APIAddClientAccessToken(options, ip),
       queryParams: { returnUrl, ref, refViewId },
     });
+    sendOphanInteractionEventServer(
+      {
+        component: 'email-send',
+        value: 'account-exists',
+      },
+      ophanTrackingConfig,
+    );
     trackMetric(emailSendMetric('AccountExists', 'Success'));
   } catch (error) {
     logger.error(
@@ -186,6 +206,7 @@ export const sendAccountWithoutPasswordExistsEmail = async (
   returnUrl: string,
   ref?: string,
   refViewId?: string,
+  ophanTrackingConfig?: OphanConfig,
 ) => {
   const options = APIPostOptions({
     'email-address': email,
@@ -196,6 +217,13 @@ export const sendAccountWithoutPasswordExistsEmail = async (
       options: APIAddClientAccessToken(options, ip),
       queryParams: { returnUrl, ref, refViewId },
     });
+    sendOphanInteractionEventServer(
+      {
+        component: 'email-send',
+        value: 'account-without-password-exists',
+      },
+      ophanTrackingConfig,
+    );
     trackMetric(emailSendMetric('AccountExistsWithoutPassword', 'Success'));
   } catch (error) {
     logger.error(
@@ -213,6 +241,7 @@ export const sendCreatePasswordEmail = async (
   returnUrl: string,
   ref?: string,
   refViewId?: string,
+  ophanTrackingConfig?: OphanConfig,
 ) => {
   const options = APIPostOptions({
     'email-address': email,
@@ -223,6 +252,13 @@ export const sendCreatePasswordEmail = async (
       options: APIAddClientAccessToken(options, ip),
       queryParams: { returnUrl, ref, refViewId },
     });
+    sendOphanInteractionEventServer(
+      {
+        component: 'email-send',
+        value: 'create-password-account-exists',
+      },
+      ophanTrackingConfig,
+    );
     trackMetric(emailSendMetric('CreatePassword', 'Success'));
   } catch (error) {
     logger.error(
