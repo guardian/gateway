@@ -25,7 +25,6 @@ export const getAssets = (isLegacy = false): Assets => {
     const assetsFilePath = `${path.resolve(__dirname)}/${
       isLegacy ? 'legacy.' : ''
     }webpack-assets.json`;
-    console.log(assetsFilePath, fs);
     if (!fs.existsSync(assetsFilePath)) {
       throw new Error('Assets file does not exist');
     }
@@ -36,7 +35,7 @@ export const getAssets = (isLegacy = false): Assets => {
     const main = parsedAssetsFile.main?.js;
     const vendors = parsedAssetsFile.vendors?.js;
     const runtime = parsedAssetsFile.runtime?.js;
-    console.log(parsedAssetsFile);
+
     if (!main || !vendors || !runtime) {
       throw new Error('Missing field from assets file');
     }

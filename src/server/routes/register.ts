@@ -157,6 +157,7 @@ router.post(
     let state = res.locals;
 
     const { email = '' } = req.body;
+
     const { returnUrl, ref, refViewId } = state.queryParams;
 
     try {

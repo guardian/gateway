@@ -5,10 +5,10 @@ import { applyMiddleware } from '@/server/lib/middleware';
 
 const { port } = getConfiguration();
 
-export const server: Express = express();
+const server: Express = express();
 
 applyMiddleware(server);
 
-server.listen(port);
+export default server.listen(port);
 server.set('trust proxy', true);
 logger.info(`server running on port ${port}`);

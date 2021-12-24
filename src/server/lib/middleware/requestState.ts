@@ -16,11 +16,11 @@ const getRequestState = (req: RequestWithTypedQuery): RequestState => {
 
   // tracking parameters might be from body too
   const { ref, refViewId } = req.body;
-
   const queryParams = parseExpressQueryParams(req.method, req.query, {
     ref,
     refViewId,
   });
+
   return {
     queryParams,
     pageData: {
