@@ -35,6 +35,7 @@ jest.mock('@/server/lib/trackMetric');
 
 // Start the application server.
 import { default as server } from '@/server/index';
+import { trackMetric } from '@/server/lib/trackMetric';
 
 describe('Registration POST endpoint', function () {
   it('redirects to email sent page when UserType == NEW', (done) => {
@@ -109,6 +110,8 @@ describe('Registration POST endpoint', function () {
         // Check that the correct type of email was sent.
         expect(sendAccountWithoutPasswordExistsEmail).toHaveBeenCalled();
 
+        expect(trackMetric).toHaveBeenCalledWith('Register::Success');
+
         // Check that the encrypted email information is correct.
         const decryptedCookie = getEmailStateFromResponse(res);
         const { email, emailType } = decryptedCookie;
@@ -116,6 +119,26 @@ describe('Registration POST endpoint', function () {
         expect(emailType).toEqual(EmailType.ACCOUNT_WITHOUT_PASSWORD_EXISTS);
         done();
       });
+  });
+});
+
+it('throws an error if an invalid UserType is provided', (done) => {
+  // Set the user type to an invalid value
+  (readUserType as jest.Mock).mockResolvedValue('invalid');
+  // Make Assertions
+  const result = request(server)
+    .post('/register')
+    .type('application/x-www-form-urlencoded')
+    .send({ ref: '', refViewId: '', email: 'test@test.com' });
+
+  result.expect(500).then((res) => {
+    // Check that the default error message is rendered.
+    expect(res.text).toContain(
+      'Sorry, something went wrong. Please try again.',
+    );
+    // Check that the email is rendered from the pageData
+    expect(res.text).toContain('test@test.com');
+    done();
   });
 });
 
