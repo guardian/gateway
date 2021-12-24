@@ -65,12 +65,54 @@ describe('Registration POST endpoint', function () {
       });
   });
 
-  it.skip('sends the account exists email and redirects to the email sent page when UserType.CURRENT', (done) => {
-    // TODO
+  it('sends the account exists email and redirects to the email sent page when UserType.CURRENT', (done) => {
+    // Set the user type to NEW
+    (readUserType as jest.Mock).mockResolvedValue(UserType.CURRENT);
+    // Make Assertions
+    const result = request(server)
+      .post('/register')
+      .type('application/x-www-form-urlencoded')
+      .send({ ref: '', refViewId: '', email: 'test@test.com' });
+
+    result
+      .expect(
+        'location',
+        '/register/email-sent?returnUrl=https%3A%2F%2Fm.code.dev-theguardian.com',
+      )
+      .expect(303)
+      .then((res) => {
+        // Check that the encrypted email information is correct.
+        const decryptedCookie = getEmailStateFromResponse(res);
+        const { email, emailType } = decryptedCookie;
+        expect(email).toEqual('test@test.com');
+        expect(emailType).toEqual(EmailType.ACCOUNT_EXISTS);
+        done();
+      });
   });
 
-  it.skip('sends the account exists without password email and redirects to the email sent page when UserType.GUEST', (done) => {
-    // TODO
+  it('sends the account exists without password email and redirects to the email sent page when UserType.GUEST', (done) => {
+    // Set the user type to NEW
+    (readUserType as jest.Mock).mockResolvedValue(UserType.GUEST);
+    // Make Assertions
+    const result = request(server)
+      .post('/register')
+      .type('application/x-www-form-urlencoded')
+      .send({ ref: '', refViewId: '', email: 'test@test.com' });
+
+    result
+      .expect(
+        'location',
+        '/register/email-sent?returnUrl=https%3A%2F%2Fm.code.dev-theguardian.com',
+      )
+      .expect(303)
+      .then((res) => {
+        // Check that the encrypted email information is correct.
+        const decryptedCookie = getEmailStateFromResponse(res);
+        const { email, emailType } = decryptedCookie;
+        expect(email).toEqual('test@test.com');
+        expect(emailType).toEqual(EmailType.ACCOUNT_WITHOUT_PASSWORD_EXISTS);
+        done();
+      });
   });
 });
 
