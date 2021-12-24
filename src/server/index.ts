@@ -5,7 +5,7 @@ import { applyMiddleware } from '@/server/lib/middleware';
 
 const { port } = getConfiguration();
 
-const server: Express = express();
+export const server: Express = express();
 
 applyMiddleware(server);
 
