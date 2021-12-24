@@ -1,3 +1,6 @@
+import { default as request } from 'supertest';
+import { decrypt } from '@/server/lib/crypto';
+
 /**
  * Format the cookie flags
  *
@@ -43,4 +46,13 @@ export const extractCookies = (
       [cookieName]: { value, flags: shapeFlags(flags) },
     };
   }, {});
+};
+
+export const getEmailStateFromResponse = (res: request.Response) => {
+  const cookies = extractCookies(res.headers);
+  const { GU_GATEWAY_STATE } = cookies;
+  const decryptedCookie = JSON.parse(
+    decrypt(decodeURIComponent(GU_GATEWAY_STATE.value)),
+  );
+  return decryptedCookie;
 };

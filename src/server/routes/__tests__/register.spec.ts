@@ -1,13 +1,23 @@
 import fs from 'fs';
 import csrf from 'csurf';
-import { readUserType, UserType } from '@/server/lib/idapi/user';
-import { extractCookies } from './utils/extractCookies';
-import { decrypt } from '@/server/lib/crypto';
+import {
+  readUserType,
+  UserType,
+  sendAccountExistsEmail,
+  sendAccountWithoutPasswordExistsEmail,
+} from '@/server/lib/idapi/user';
 import { EmailType } from '@/shared/model/EmailType';
 import { default as request } from 'supertest';
+import { getEmailStateFromResponse } from './utils/extractCookies';
 
-// Setup mocked libraries and functions.
+// We need to mock the fs read for webpack-assets.json before the server starts.
 jest.mock('fs');
+(fs.existsSync as jest.Mock).mockReturnValue(true);
+(fs.readFileSync as jest.Mock).mockReturnValue(
+  '{"main": {"js": "mocked"}, "vendors": {"js": "mocked"}, "runtime": {"js": "mocked"}}',
+);
+
+// Setup other mocked libraries and functions.
 jest.mock('csurf');
 jest.mock('aws-sdk');
 jest.mock('@/server/lib/idapi/user');
@@ -21,23 +31,10 @@ jest.mock('@/server/lib/trackMetric');
     next();
   }),
 );
-(fs.existsSync as jest.Mock).mockReturnValue(true);
-(fs.readFileSync as jest.Mock).mockReturnValue(
-  '{"main": {"js": "mocked"}, "vendors": {"js": "mocked"}, "runtime": {"js": "mocked"}}',
-);
 // End Setup
 
 // Start the application server.
 import { default as server } from '@/server/index';
-
-const getEmailStateFromResponse = (res: request.Response) => {
-  const cookies = extractCookies(res.headers);
-  const { GU_GATEWAY_STATE } = cookies;
-  const decryptedCookie = JSON.parse(
-    decrypt(decodeURIComponent(GU_GATEWAY_STATE.value)),
-  );
-  return decryptedCookie;
-};
 
 describe('Registration POST endpoint', function () {
   it('redirects to email sent page when UserType == NEW', (done) => {
@@ -81,6 +78,9 @@ describe('Registration POST endpoint', function () {
       )
       .expect(303)
       .then((res) => {
+        // Check that the correct type of email was sent.
+        expect(sendAccountExistsEmail).toHaveBeenCalled();
+
         // Check that the encrypted email information is correct.
         const decryptedCookie = getEmailStateFromResponse(res);
         const { email, emailType } = decryptedCookie;
@@ -106,6 +106,9 @@ describe('Registration POST endpoint', function () {
       )
       .expect(303)
       .then((res) => {
+        // Check that the correct type of email was sent.
+        expect(sendAccountWithoutPasswordExistsEmail).toHaveBeenCalled();
+
         // Check that the encrypted email information is correct.
         const decryptedCookie = getEmailStateFromResponse(res);
         const { email, emailType } = decryptedCookie;
