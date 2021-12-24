@@ -15,6 +15,7 @@ import { buildUrlWithQueryParams, PathParams } from '@/shared/lib/routeUtils';
 import { brandBackground, resets } from '@guardian/source-foundations';
 import deepmerge from 'deepmerge';
 import { RoutePaths } from '@/shared/model/Routes';
+import serialize from 'serialize-javascript';
 
 const assets = getAssets();
 const legacyAssets = getAssets(true);
@@ -139,8 +140,9 @@ export const renderer: <P extends RoutePaths>(
         <script nomodule src="/${legacyAssets.vendors}" defer></script>
         <script nomodule src="/${legacyAssets.main}" defer></script>
         
-        <script id="routingConfig" type="application/json">${JSON.stringify(
+        <script id="routingConfig" type="application/json">${serialize(
           routingConfig,
+          { isJSON: true },
         )}</script>
         <style>${resets.defaults}</style>
       </head>
