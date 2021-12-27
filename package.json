@@ -76,7 +76,7 @@
     "babel-loader": "^8.2.3",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "chalk-rainbow": "^1.0.0",
-    "chromatic": "^6.2.0",
+    "chromatic": "^6.3.3",
     "copy-node-modules": "^1.1.1",
     "core-js": "^3.19.3",
     "cypress": "^9.1.1",
