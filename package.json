@@ -78,7 +78,7 @@
     "chalk-rainbow": "^1.0.0",
     "chromatic": "^6.2.0",
     "copy-node-modules": "^1.1.1",
-    "core-js": "^3.19.3",
+    "core-js": "^3.20.1",
     "cypress": "^9.1.1",
     "cypress-axe": "^0.13.0",
     "cypress-mailosaur": "2.6.0",
