@@ -8,7 +8,7 @@ export const onboardingNewslettersTest: ABTest = {
   id: TEST_ID,
   // TODO: change start / expiry before release
   start: '2021-12-16',
-  expiry: '2021-12-31',
+  expiry: '2022-01-31',
   author: 'liam.duffy.freelancer@guardian.co.uk',
   description: 'Testing alternative newsletter options in onboarding flow',
   audience: 1,
