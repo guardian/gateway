@@ -222,7 +222,7 @@ $ ./ci.sh
 To access gateway routes on `CODE` (and `PROD`) alongside the current profile/identity-frontend routes, you'll add the
 `GU_GATEWAY` with the value `true` to your cookies.
 
-When you access the `profile.` subdomain, a `GU_GATEWAY` cookie is automatically added with either `true` or `false` value randomly. Make sure the cookie is set to `true` through your browsers developer tools, or alternatively add a `gateway` query parameter to force this to true automatically, examples: `https://profile.theguardian.com/reset?returnUrl=https%3A%2F%2Fwww.theguardian.com&skipConfirmation=false&gateway` or `https://profile.theguardian.com/reset?gateway`.
+When you access the `profile.` subdomain, a `GU_GATEWAY` cookie is automatically added with either `true` or `false` value randomly. Make sure the cookie is set to `true` through your browsers developer tools, or alternatively add a `gateway` query parameter to force this to true automatically, examples: `https://profile.theguardian.com/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com&skipConfirmation=false&gateway` or `https://profile.theguardian.com/signin?gateway`.
 
 Once this cookie value is `true`, you'll automatically be directed to the `gateway` routes that have been migrated so far.
 

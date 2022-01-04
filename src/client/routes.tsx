@@ -50,14 +50,6 @@ const routes: Array<{
     element: <RegistrationEmailSentPage />,
   },
   {
-    path: '/reset',
-    element: <ResetPasswordPage />,
-  },
-  {
-    path: '/reset/email-sent',
-    element: <EmailSentPage noAccountInfo />,
-  },
-  {
     path: '/reset-password',
     element: <ResetPasswordPage />,
   },
