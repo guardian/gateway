@@ -4,7 +4,7 @@ import { ClientStateContext } from '@/client/components/ClientState';
 import { EmailSent } from '@/client/pages/EmailSent';
 import { buildQueryParamsString } from '@/shared/lib/queryParams';
 
-import { buildUrl } from '@/shared/lib/routeUtils';
+import { buildUrl, buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 
 export const RegistrationEmailSentPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
@@ -27,7 +27,7 @@ export const RegistrationEmailSentPage = () => {
     <EmailSent
       email={email}
       queryString={queryString}
-      previousPage={buildUrl('/signin')}
+      previousPage={buildUrlWithQueryParams('/signin', {}, queryParams)}
       resendEmailAction={buildUrl('/register/email-sent/resend')}
       showSuccess={emailSentSuccess}
       errorMessage={error}

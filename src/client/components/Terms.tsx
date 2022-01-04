@@ -62,6 +62,33 @@ export const GuardianTerms = () => (
   </>
 );
 
+const JobsTerms = () => (
+  <>
+    <Text>
+      By proceeding, you agree to our{' '}
+      <TermsLink href="https://www.theguardian.com/help/terms-of-service">
+        terms &amp; conditions
+      </TermsLink>{' '}
+      and{' '}
+      <TermsLink href="https://jobs.theguardian.com/terms-and-conditions/">
+        Guardian&#39;s Jobs terms &amp; conditions
+      </TermsLink>
+      .
+    </Text>
+    <Text>
+      For information about how we use your data, see our{' '}
+      <TermsLink href="https://www.theguardian.com/help/privacy-policy">
+        privacy policy
+      </TermsLink>{' '}
+      and{' '}
+      <TermsLink href="https://jobs.theguardian.com/privacy-policy/">
+        Guardian Jobs&#39; privacy policy
+      </TermsLink>
+      .
+    </Text>
+  </>
+);
+
 export const RecaptchaTerms = () => (
   <Text>
     This site is protected by reCAPTCHA and the Google{' '}
@@ -76,9 +103,9 @@ export const RecaptchaTerms = () => (
   </Text>
 );
 
-export const Terms = () => (
+export const Terms = ({ isJobs = false }) => (
   <div css={terms}>
-    <GuardianTerms />
+    {isJobs ? <JobsTerms /> : <GuardianTerms />}
     <RecaptchaTerms />
   </div>
 );

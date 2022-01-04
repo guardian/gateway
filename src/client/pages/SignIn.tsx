@@ -14,7 +14,7 @@ import { from, textSans, border, space } from '@guardian/source-foundations';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { CaptchaErrors, SignInErrors } from '@/shared/model/Errors';
 import { EmailInput } from '@/client/components/EmailInput';
-import { buildUrl, buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
@@ -140,7 +140,8 @@ export const SignIn = ({
   const signInFormRef = createRef<HTMLFormElement>();
   const recaptchaElementRef = useRef<HTMLDivElement>(null);
   const captchaElement = recaptchaElementRef.current ?? 'signin-recaptcha';
-
+  const { clientId } = queryParams;
+  const isJobs = clientId === 'jobs';
   const {
     token,
     error: recaptchaError,
@@ -180,11 +181,13 @@ export const SignIn = ({
         tabs={[
           {
             displayText: 'Sign in',
+            queryParams: queryParams,
             linkTo: '/signin',
             isActive: true,
           },
           {
             displayText: 'Register',
+            queryParams: queryParams,
             linkTo: '/register',
             isActive: false,
           },
@@ -218,13 +221,13 @@ export const SignIn = ({
           <Links>
             <Link
               subdued={true}
-              href={buildUrl('/reset-password')}
+              href={buildUrlWithQueryParams('/reset-password', {}, queryParams)}
               cssOverrides={resetPassword}
             >
               Reset password
             </Link>
           </Links>
-          <Terms />
+          <Terms isJobs={isJobs} />
           <Button css={signInButton} type="submit" data-cy="sign-in-button">
             Sign in
           </Button>
