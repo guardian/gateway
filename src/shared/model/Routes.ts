@@ -7,16 +7,16 @@ export type RoutePaths =
   | '/register'
   | '/register/email-sent'
   | '/register/email-sent/resend'
-  // router between these comments are for legacy reasons and could be refactored
+  // these routes will be replaced by /reset-password* routes and will be removed when the Fastly VCL is updated
   | '/reset'
   | '/reset/email-sent'
-  | '/reset/complete'
+  // end routes to be removed
   | '/reset-password'
+  | '/reset-password/email-sent'
+  | '/reset-password/expired'
   | '/reset-password/:token'
-  | '/password/reset-confirmation'
-  | '/reset/resend'
-  | '/reset/expired'
-  // end routes to be refactored
+  | '/reset-password/complete'
+  | '/reset-password/resend'
   | '/set-password'
   | '/set-password/expired'
   | '/set-password/:token'
@@ -66,6 +66,11 @@ export type ApiRoutePaths =
   | '/user/send-account-exists-email'
   | '/user/send-account-without-password-exists-email'
   | '/user/send-create-password-account-exists-email';
+
+export type PasswordRoutePath = Extract<
+  '/reset-password' | '/set-password' | '/welcome',
+  RoutePaths
+>;
 
 /**
  * This is all valid routes on the site, only used for the helper function addQueryParamsToPath

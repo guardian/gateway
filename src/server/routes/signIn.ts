@@ -6,7 +6,6 @@ import { renderer } from '@/server/lib/renderer';
 
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { getConfiguration } from '@/server/lib/getConfiguration';
@@ -46,7 +45,7 @@ router.get(
           error: errorMessage,
         },
       }),
-      pageTitle: PageTitle.SIGN_IN,
+      pageTitle: 'Sign in',
     });
     res.type('html').send(html);
   }),
@@ -85,7 +84,7 @@ router.post(
             email,
           },
         }),
-        pageTitle: PageTitle.SIGN_IN,
+        pageTitle: 'Sign in',
       });
 
       return res.status(status).type('html').send(html);

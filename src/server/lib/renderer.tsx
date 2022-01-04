@@ -15,6 +15,7 @@ import { buildUrlWithQueryParams, PathParams } from '@/shared/lib/routeUtils';
 import { brandBackground, resets } from '@guardian/source-foundations';
 import deepmerge from 'deepmerge';
 import { RoutePaths } from '@/shared/model/Routes';
+import { PageTitle } from '@/shared/model/PageTitle';
 import serialize from 'serialize-javascript';
 
 const assets = getAssets();
@@ -27,7 +28,7 @@ const favicon =
     : 'favicon-32x32-dev-yellow.ico';
 
 interface RendererOpts {
-  pageTitle: string;
+  pageTitle: PageTitle;
   requestState: RequestState;
 }
 

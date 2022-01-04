@@ -17,7 +17,7 @@ export const ChangePasswordComplete = ({
   action,
 }: ChangePasswordCompleteProps) => {
   return (
-    <MainLayout pageTitle={headerText}>
+    <MainLayout pageHeader={headerText}>
       {email ? (
         <MainBodyText noMargin>
           The password for <b>{email}</b> was successfully {action}.

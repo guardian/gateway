@@ -10,8 +10,7 @@ The [`renderer`](../src/server/lib/renderer.ts) method abstracts the rendering a
 
 ```ts
 // example of rendering a route
-// normally an enum is used for the url and pageTitle to make it easier to manage in multiple places
-// hardcoded for the example
+// the url and pageTitle are both typed so new values must be added to the model before they will be accepted
 const html: string = renderer('/reset/email-sent', {
   pageTitle: 'Check your inbox',
   requestState: res.locals,

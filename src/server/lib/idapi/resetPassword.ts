@@ -28,7 +28,7 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
   throw new IdapiError({ message: ResetPasswordErrors.GENERIC, status });
 };
 
-export async function create(
+export async function sendResetPasswordEmail(
   email: string,
   ip: string,
   returnUrl: string,

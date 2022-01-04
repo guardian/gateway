@@ -1,8 +1,6 @@
 import { typedRouter as router } from '@/server/lib/typedRoutes';
-import {
-  checkResetPasswordTokenController,
-  setPasswordTokenController,
-} from '@/server/controllers/changePassword';
+import { checkPasswordTokenController } from '@/server/controllers/checkPasswordToken';
+import { setPasswordController } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
@@ -14,7 +12,6 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { EmailType } from '@/shared/model/EmailType';
 import { ResetPasswordErrors } from '@/shared/model/Errors';
-import { PageTitle } from '@/shared/model/PageTitle';
 import deepmerge from 'deepmerge';
 import { Request } from 'express';
 import { ApiError } from '../models/Error';
@@ -32,7 +29,7 @@ router.get(
           email,
         },
       }),
-      pageTitle: PageTitle.SET_PASSWORD_COMPLETE,
+      pageTitle: 'Password Set',
     });
     return res.type('html').send(html);
   },
@@ -43,7 +40,7 @@ router.get(
   '/set-password/resend',
   (_: Request, res: ResponseWithRequestState) => {
     const html = renderer('/set-password/resend', {
-      pageTitle: PageTitle.SET_PASSWORD_RESEND,
+      pageTitle: 'Resend Create Password Email',
       requestState: res.locals,
     });
     res.type('html').send(html);
@@ -55,7 +52,7 @@ router.get(
   '/set-password/expired',
   (_: Request, res: ResponseWithRequestState) => {
     const html = renderer('/set-password/expired', {
-      pageTitle: PageTitle.SET_PASSWORD_RESEND,
+      pageTitle: 'Resend Create Password Email',
       requestState: res.locals,
     });
     res.type('html').send(html);
@@ -98,7 +95,7 @@ router.post(
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
       const html = renderer('/set-password/resend', {
-        pageTitle: PageTitle.SET_PASSWORD_RESEND,
+        pageTitle: 'Resend Create Password Email',
         requestState: deepmerge(res.locals, {
           globalMessage: {
             error: message,
@@ -126,7 +123,7 @@ router.get(
     });
 
     const html = renderer('/set-password/email-sent', {
-      pageTitle: PageTitle.EMAIL_SENT,
+      pageTitle: 'Check Your Inbox',
       requestState: state,
     });
     res.type('html').send(html);
@@ -134,29 +131,19 @@ router.get(
 );
 
 // set password page with token check
+// The below route must be defined below the other GET /set-password/* routes otherwise the other routes will fail
 router.get(
   '/set-password/:token',
-  checkResetPasswordTokenController(
-    '/set-password',
-    PageTitle.SET_PASSWORD,
-    '/set-password',
-    PageTitle.SET_PASSWORD_RESEND,
-  ),
+  checkPasswordTokenController('/set-password', 'Create Password'),
 );
 
 // POST handler for set password page to set password
 router.post(
   '/set-password/:token',
-  setPasswordTokenController(
+  setPasswordController(
     '/set-password',
-    PageTitle.SET_PASSWORD,
-    '/set-password',
-    PageTitle.SET_PASSWORD_RESEND,
-    (res) =>
-      res.redirect(
-        303,
-        addQueryParamsToPath('/set-password/complete', res.locals.queryParams),
-      ),
+    'Create Password',
+    '/set-password/complete',
   ),
 );
 

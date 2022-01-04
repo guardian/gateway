@@ -4,7 +4,7 @@ import { default as core } from './core';
 import { default as reset } from './reset';
 import { default as signIn } from './signIn';
 import { default as register } from './register';
-import { default as changePassword } from './changePassword';
+import { default as resetPassword } from './resetPassword';
 import { default as consents } from './consents';
 import { default as verifyEmail } from './verifyEmail';
 import { default as magicLink } from './magicLink';
@@ -32,7 +32,7 @@ uncachedRoutes.use(signIn);
 uncachedRoutes.use(register);
 
 // change password routes
-uncachedRoutes.use(changePassword);
+uncachedRoutes.use(resetPassword);
 
 // set password routes
 uncachedRoutes.use(setPassword);

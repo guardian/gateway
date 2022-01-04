@@ -44,7 +44,7 @@ export const ResetPassword = ({
 
   return (
     <MainLayout
-      pageTitle={headerText}
+      pageHeader={headerText}
       errorContext={recaptchaErrorContext}
       errorOverride={recaptchaErrorMessage}
     >
@@ -53,7 +53,7 @@ export const ResetPassword = ({
         formAction={
           formActionOverride
             ? addQueryParamsToUntypedPath(formActionOverride, queryString)
-            : buildUrlWithQueryParams('/reset', {}, queryString)
+            : buildUrlWithQueryParams('/reset-password', {}, queryString)
         }
         submitButtonText={buttonText}
         recaptchaSiteKey={recaptchaSiteKey}

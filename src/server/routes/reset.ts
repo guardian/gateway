@@ -1,13 +1,12 @@
 import { Request } from 'express';
 import deepmerge from 'deepmerge';
-import { create as resetPassword } from '@/server/lib/idapi/resetPassword';
+import { sendResetPasswordEmail } from '@/server/lib/idapi/resetPassword';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { emailSendMetric } from '@/server/models/Metrics';
-import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
@@ -31,7 +30,7 @@ router.get('/reset', (req: Request, res: ResponseWithRequestState) => {
 
   const html = renderer('/reset', {
     requestState: state,
-    pageTitle: PageTitle.RESET,
+    pageTitle: 'Reset Password',
   });
   res.type('html').send(html);
 });
@@ -48,7 +47,7 @@ router.post(
       res.locals.queryParams;
 
     try {
-      await resetPassword(email, req.ip, returnUrl, ref, refViewId);
+      await sendResetPasswordEmail(email, req.ip, returnUrl, ref, refViewId);
 
       setEncryptedStateCookie(res, { email });
     } catch (error) {
@@ -69,7 +68,7 @@ router.post(
 
       const html = renderer('/reset', {
         requestState: state,
-        pageTitle: PageTitle.RESET,
+        pageTitle: 'Reset Password',
       });
       return res.status(status).type('html').send(html);
     }
@@ -100,7 +99,7 @@ router.get(
     });
 
     const html = renderer('/reset/email-sent', {
-      pageTitle: PageTitle.EMAIL_SENT,
+      pageTitle: 'Check Your Inbox',
       requestState: state,
     });
     res.type('html').send(html);

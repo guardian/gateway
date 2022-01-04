@@ -21,7 +21,7 @@ export const ChangePasswordPage = () => {
     // if the token expires while the user is on the current page
     if (typeof window !== 'undefined' && timeUntilTokenExpiry) {
       setTimeout(() => {
-        window.location.replace(buildUrl('/reset/expired'));
+        window.location.replace(buildUrl('/reset-password/expired'));
       }, timeUntilTokenExpiry);
     }
   }, [timeUntilTokenExpiry]);

@@ -19,7 +19,7 @@ export const ChangePassword = ({
   email,
   fieldErrors,
 }: Props) => (
-  <MainLayout pageTitle={headerText}>
+  <MainLayout pageHeader={headerText}>
     <MainBodyText>
       Please enter your new password for <b>{email}</b>
     </MainBodyText>

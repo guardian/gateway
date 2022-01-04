@@ -1,19 +1,33 @@
-export enum PageTitle {
-  NOT_FOUND = 'Not Found',
-  UNEXPECTED_ERROR = 'Unexpected Error',
-  REGISTRATION = 'Register',
-  REGISTRATION_EMAIL_SENT = 'Check Your Inbox',
-  RESET = 'Reset Password',
-  MAGIC_LINK = 'Sign in',
-  EMAIL_SENT = 'Check Your Inbox',
-  RESET_RESEND = 'Resend Reset Password',
-  SIGN_IN = 'Sign in',
-  SET_PASSWORD = 'Create Password',
-  SET_PASSWORD_COMPLETE = 'Password Set',
-  SET_PASSWORD_RESEND = 'Resend Set Password',
-  CHANGE_PASSWORD = 'Change Password',
-  CHANGE_PASSWORD_COMPLETE = 'Password Changed',
-  VERIFY_EMAIL = 'Verify Email',
-  WELCOME = 'Welcome',
-  WELCOME_RESEND = 'Resend Welcome Email',
-}
+/**
+ * PageTitle is used by the renderer to populate the <title> tag in the HTML page <head>
+ */
+export type PageTitle =
+  | 'Not Found'
+  | 'Unexpected Error'
+  | 'Register'
+  | 'Reset Password'
+  | 'Sign in'
+  | 'Check Your Inbox'
+  | 'Create Password'
+  | 'Resend Create Password Email'
+  | 'Password Set'
+  | 'Change Password'
+  | 'Resend Change Password Email'
+  | 'Password Changed'
+  | 'Verify Email'
+  | 'Welcome'
+  | 'Resend Welcome Email'
+  | 'Onboarding'
+  | 'Your data'
+  | 'Stay in touch'
+  | 'Newsletters'
+  | 'Review';
+
+export type PasswordPageTitle = Extract<
+  'Welcome' | 'Create Password' | 'Change Password',
+  PageTitle
+>;
+
+export const PageTitle = (title: PageTitle) => {
+  return title;
+};

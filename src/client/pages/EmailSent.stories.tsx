@@ -10,13 +10,13 @@ export default {
   parameters: { layout: 'fullscreen' },
 } as Meta;
 
-export const Defaults = () => <EmailSent previousPage="/reset" />;
+export const Defaults = () => <EmailSent previousPage="/reset-password" />;
 Defaults.story = {
   name: 'with defaults',
 };
 
 export const WithEmail = () => (
-  <EmailSent previousPage="/reset" email="example@theguardian.com" />
+  <EmailSent previousPage="/reset-password" email="example@theguardian.com" />
 );
 WithEmail.story = {
   name: 'with email',
@@ -24,7 +24,7 @@ WithEmail.story = {
 
 export const WithEmailResend = () => (
   <EmailSent
-    previousPage="/reset"
+    previousPage="/reset-password"
     email="example@theguardian.com"
     resendEmailAction="#"
     recaptchaSiteKey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
@@ -36,7 +36,7 @@ WithEmailResend.story = {
 
 export const WithEmailResendNoAccount = () => (
   <EmailSent
-    previousPage="/reset"
+    previousPage="/reset-password"
     email="example@theguardian.com"
     resendEmailAction="#"
     noAccountInfo
@@ -49,7 +49,7 @@ WithEmailResendNoAccount.story = {
 
 export const WithRecaptchaError = () => (
   <EmailSent
-    previousPage="/reset"
+    previousPage="/reset-password"
     email="example@theguardian.com"
     resendEmailAction="#"
     recaptchaSiteKey="invalid-key"

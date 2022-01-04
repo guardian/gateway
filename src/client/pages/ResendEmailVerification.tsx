@@ -15,7 +15,7 @@ type ResendEmailVerificationProps = {
 };
 
 const LoggedOut = ({ signInPageUrl }: { signInPageUrl?: string }) => (
-  <MainLayout pageTitle="Link Expired">
+  <MainLayout pageHeader="Link Expired">
     <MainBodyText>Your email confirmation link has expired</MainBodyText>
     <MainBodyText noMargin>
       The link we sent you was valid for 30 minutes. Please sign in again and we
@@ -41,7 +41,7 @@ const LoggedIn = ({
     useState<ReactNode>(null);
   return (
     <MainLayout
-      pageTitle="Verify Email"
+      pageHeader="Verify Email"
       errorOverride={recaptchaErrorMessage}
       errorContext={recaptchaErrorContext}
     >

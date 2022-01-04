@@ -1,6 +1,5 @@
 import React, { createRef, useEffect, useRef } from 'react';
 import { Button } from '@guardian/source-react-components';
-import { PageTitle } from '@/shared/model/PageTitle';
 import { Header } from '@/client/components/Header';
 import { Nav } from '@/client/components/Nav';
 import { Footer } from '@/client/components/Footer';
@@ -106,12 +105,12 @@ export const Registration = ({
       <Nav
         tabs={[
           {
-            displayText: PageTitle.SIGN_IN,
+            displayText: 'Sign in',
             linkTo: '/signin',
             isActive: false,
           },
           {
-            displayText: PageTitle.REGISTRATION,
+            displayText: 'Register',
             linkTo: '/register',
             isActive: true,
           },

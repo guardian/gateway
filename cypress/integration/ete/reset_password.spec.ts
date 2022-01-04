@@ -105,7 +105,7 @@ describe('Password reset flow', () => {
 
   context('No Account', () => {
     it('shows the email sent page with link to register when attempting to reset password', () => {
-      cy.visit('/reset');
+      cy.visit('/reset-password');
       cy.contains('Forgot password');
       cy.get('input[name=email]').type('invalid@doesnotexist.com');
       cy.get('[data-cy="main-form-submit-button"]').click();

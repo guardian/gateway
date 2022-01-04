@@ -21,7 +21,7 @@ export const MagicLink = ({ email, recaptchaSiteKey }: Props) => {
     useState<ReactNode>(null);
   return (
     <MainLayout
-      pageTitle="Link to sign in"
+      pageHeader="Link to sign in"
       errorOverride={recaptchaErrorMessage}
       errorContext={recaptchaErrorContext}
     >
