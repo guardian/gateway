@@ -28,6 +28,8 @@ export const ChangePassword = ({
       submitButtonText={buttonText}
       fieldErrors={fieldErrors}
       labelText="Password"
+      autoComplete="new-password"
+      formTrackingName="new-password"
     />
   </MainLayout>
 );

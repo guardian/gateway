@@ -32,6 +32,7 @@ export const RegistrationEmailSentPage = () => {
       showSuccess={emailSentSuccess}
       errorMessage={error}
       recaptchaSiteKey={recaptchaSiteKey}
+      formTrackingName="register-resend"
     />
   );
 };

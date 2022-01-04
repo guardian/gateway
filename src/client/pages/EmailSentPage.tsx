@@ -6,9 +6,10 @@ import { buildQueryParamsString } from '@/shared/lib/queryParams';
 
 interface Props {
   noAccountInfo?: boolean;
+  formTrackingName?: string;
 }
 
-export const EmailSentPage = ({ noAccountInfo }: Props) => {
+export const EmailSentPage = ({ noAccountInfo, formTrackingName }: Props) => {
   const clientState: ClientState = useContext(ClientStateContext);
   const {
     pageData = {},
@@ -35,6 +36,7 @@ export const EmailSentPage = ({ noAccountInfo }: Props) => {
       errorMessage={error}
       noAccountInfo={noAccountInfo}
       recaptchaSiteKey={recaptchaSiteKey}
+      formTrackingName={formTrackingName}
     />
   );
 };

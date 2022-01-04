@@ -71,6 +71,8 @@ export const Welcome = ({
             labelText="Password"
             submitButtonText="Create password"
             gridAutoRow={autoRow}
+            autoComplete="new-password"
+            formTrackingName="welcome"
           />
         )}
       </ConsentsContent>

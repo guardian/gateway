@@ -21,6 +21,7 @@ type Props = {
   errorMessage?: string;
   noAccountInfo?: boolean;
   recaptchaSiteKey?: string;
+  formTrackingName?: string;
 };
 
 export const EmailSent = ({
@@ -32,6 +33,7 @@ export const EmailSent = ({
   errorMessage,
   noAccountInfo,
   recaptchaSiteKey,
+  formTrackingName,
 }: Props) => {
   const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
   const [recaptchaErrorContext, setRecaptchaErrorContext] =
@@ -98,6 +100,7 @@ export const EmailSent = ({
             recaptchaSiteKey={recaptchaSiteKey}
             setRecaptchaErrorContext={setRecaptchaErrorContext}
             setRecaptchaErrorMessage={setRecaptchaErrorMessage}
+            formTrackingName={formTrackingName}
           >
             <EmailInput defaultValue={email} hidden hideLabel />
           </MainForm>

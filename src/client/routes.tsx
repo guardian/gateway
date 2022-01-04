@@ -55,7 +55,9 @@ const routes: Array<{
   },
   {
     path: '/reset-password/email-sent',
-    element: <EmailSentPage noAccountInfo />,
+    element: (
+      <EmailSentPage formTrackingName="forgot-password-resend" noAccountInfo />
+    ),
   },
   {
     path: '/reset-password/complete',
@@ -87,7 +89,7 @@ const routes: Array<{
   },
   {
     path: '/set-password/email-sent',
-    element: <EmailSentPage />,
+    element: <EmailSentPage formTrackingName="set-password-resend" />,
   },
   {
     path: '/set-password/:token',
@@ -119,7 +121,7 @@ const routes: Array<{
   },
   {
     path: '/welcome/email-sent',
-    element: <EmailSentPage />,
+    element: <EmailSentPage formTrackingName="welcome-resend" />,
   },
   {
     path: '/welcome/complete',

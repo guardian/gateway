@@ -19,6 +19,7 @@ import {
 import { CaptchaErrors } from '@/shared/model/Errors';
 import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
 import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
+import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 
 export interface MainFormProps {
   formAction: string;
@@ -32,6 +33,7 @@ export interface MainFormProps {
   >;
   hasGuardianTerms?: boolean;
   onSubmitOverride?: React.FormEventHandler<HTMLFormElement>;
+  formTrackingName?: string;
 }
 
 const formStyles = css`
@@ -64,6 +66,7 @@ export const MainForm = ({
   setRecaptchaErrorContext,
   hasGuardianTerms = false,
   onSubmitOverride,
+  formTrackingName,
 }: PropsWithChildren<MainFormProps>) => {
   const recaptchaEnabled = !!recaptchaSiteKey;
   const hasTerms = recaptchaEnabled || hasGuardianTerms;
@@ -73,11 +76,15 @@ export const MainForm = ({
     useState<UseRecaptchaReturnValue>();
 
   /**
-   * Executes the reCAPTCHA check.
+   * Executes the reCAPTCHA check and form submit tracking.
    * Prevents the form from submitting until the reCAPTCHA check is complete.
    */
   const handleSubmit = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
+      if (formTrackingName) {
+        trackFormSubmit(formTrackingName);
+      }
+
       if (onSubmitOverride) {
         onSubmitOverride(event);
       }
@@ -87,7 +94,7 @@ export const MainForm = ({
         recaptchaState?.executeCaptcha();
       }
     },
-    [onSubmitOverride, recaptchaEnabled, recaptchaState],
+    [onSubmitOverride, recaptchaEnabled, recaptchaState, formTrackingName],
   );
 
   /**
@@ -149,6 +156,12 @@ export const MainForm = ({
       action={formAction}
       onSubmit={handleSubmit}
       ref={formRef}
+      onFocus={(e) =>
+        formTrackingName && trackFormFocusBlur(formTrackingName, e, 'focus')
+      }
+      onBlur={(e) =>
+        formTrackingName && trackFormFocusBlur(formTrackingName, e, 'blur')
+      }
     >
       {recaptchaEnabled && (
         <RecaptchaWrapper

@@ -22,6 +22,7 @@ import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
+import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 
 export type RegistrationProps = {
   returnUrl?: string;
@@ -66,6 +67,7 @@ export const Registration = ({
   queryParams,
   geolocation,
 }: RegistrationProps) => {
+  const formTrackingName = 'register';
   const registerFormRef = createRef<HTMLFormElement>();
   const recaptchaElementRef = useRef<HTMLDivElement>(null);
   const captchaElement = recaptchaElementRef.current ?? 'register-recaptcha';
@@ -97,6 +99,7 @@ export const Registration = ({
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    trackFormSubmit(formTrackingName);
     executeCaptcha();
   };
 
@@ -130,6 +133,8 @@ export const Registration = ({
           action={buildUrlWithQueryParams('/register', {}, queryParams)}
           ref={registerFormRef}
           onSubmit={handleSubmit}
+          onFocus={(e) => trackFormFocusBlur(formTrackingName, e, 'focus')}
+          onBlur={(e) => trackFormFocusBlur(formTrackingName, e, 'blur')}
         >
           <RecaptchaElement id="register-recaptcha" />
           <CsrfFormField />
