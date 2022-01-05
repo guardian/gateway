@@ -1,10 +1,9 @@
 import { Router } from 'express';
 
 import { default as core } from './core';
-import { default as reset } from './reset';
 import { default as signIn } from './signIn';
 import { default as register } from './register';
-import { default as changePassword } from './changePassword';
+import { default as resetPassword } from './resetPassword';
 import { default as consents } from './consents';
 import { default as verifyEmail } from './verifyEmail';
 import { default as magicLink } from './magicLink';
@@ -22,17 +21,14 @@ router.use(core);
 // to avoid caching sensitive page state
 uncachedRoutes.use(noCache);
 
-// request reset password routes
-uncachedRoutes.use(reset);
-
 // request sign in routes
 uncachedRoutes.use(signIn);
 
 // request registration routes
 uncachedRoutes.use(register);
 
-// change password routes
-uncachedRoutes.use(changePassword);
+// reset password routes
+uncachedRoutes.use(resetPassword);
 
 // set password routes
 uncachedRoutes.use(setPassword);

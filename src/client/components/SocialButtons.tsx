@@ -84,6 +84,7 @@ export const SocialButtons = ({
         icon={<SvgGoogleBrand />}
         href={buildUrl(oauthBaseUrl, 'google', returnUrl)}
         data-cy="google-sign-in-button"
+        data-link-name="google-social-button"
       >
         Google
       </LinkButton>
@@ -94,6 +95,7 @@ export const SocialButtons = ({
         icon={<SvgFacebookBrand />}
         href={buildUrl(oauthBaseUrl, 'facebook', returnUrl)}
         data-cy="facebook-sign-in-button"
+        data-link-name="facebook-social-button"
       >
         Facebook
       </LinkButton>
@@ -104,6 +106,7 @@ export const SocialButtons = ({
         icon={<SvgAppleBrand />}
         href={buildUrl(oauthBaseUrl, 'apple', returnUrl)}
         data-cy="apple-sign-in-button"
+        data-link-name="apple-social-button"
       >
         Apple
       </LinkButton>

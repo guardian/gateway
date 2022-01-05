@@ -11,6 +11,8 @@ import {
 import { Container } from '@/client/components/Container';
 import { RoutePaths } from '@/shared/model/Routes';
 import { Link } from '@guardian/source-react-components';
+import { QueryParams } from '@/shared/model/QueryParams';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 
 type Props = {
   tabs: TabType[];
@@ -19,6 +21,7 @@ type Props = {
 type TabType = {
   displayText: string;
   linkTo: RoutePaths;
+  queryParams?: QueryParams;
   isActive?: boolean;
   isFirst?: boolean;
 };
@@ -164,10 +167,20 @@ const tabStyles = css`
   }
 `;
 
-const Tab = ({ displayText, linkTo, isActive, isFirst }: TabType) => {
+const Tab = ({
+  displayText,
+  linkTo,
+  isActive,
+  isFirst,
+  queryParams,
+}: TabType) => {
+  const url =
+    typeof queryParams === 'undefined'
+      ? linkTo
+      : buildUrlWithQueryParams(linkTo, {}, queryParams);
   return (
     <Link
-      href={linkTo}
+      href={url}
       css={[
         tabStyles,
         tabPaddingMarginStyles(isFirst),
@@ -192,6 +205,7 @@ export const Nav = ({ tabs }: Props) => (
             linkTo={tab.linkTo}
             isActive={tab.isActive}
             isFirst={index === 0}
+            queryParams={tab.queryParams}
           />
         ))}
       </h1>

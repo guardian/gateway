@@ -70,6 +70,7 @@ export const EmailInput: React.FC<EmailInputProps> = ({
       label={label}
       name="email"
       type="email"
+      autoComplete="email"
       error={errorMessage}
       cssOverrides={[disableAutofillBackground, noBorderRadius]}
       onBlur={(e) => {

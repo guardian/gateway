@@ -1,6 +1,5 @@
 import React, { createRef, useEffect, useRef } from 'react';
 import { Button } from '@guardian/source-react-components';
-import { PageTitle } from '@/shared/model/PageTitle';
 import { Header } from '@/client/components/Header';
 import { Nav } from '@/client/components/Nav';
 import { Footer } from '@/client/components/Footer';
@@ -23,6 +22,7 @@ import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
+import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 
 export type RegistrationProps = {
   returnUrl?: string;
@@ -67,10 +67,12 @@ export const Registration = ({
   queryParams,
   geolocation,
 }: RegistrationProps) => {
+  const formTrackingName = 'register';
   const registerFormRef = createRef<HTMLFormElement>();
   const recaptchaElementRef = useRef<HTMLDivElement>(null);
   const captchaElement = recaptchaElementRef.current ?? 'register-recaptcha';
-
+  const { clientId } = queryParams;
+  const isJobs = clientId === 'jobs';
   const { token, error, expired, requestCount, executeCaptcha } = useRecaptcha(
     recaptchaSiteKey,
     captchaElement,
@@ -97,6 +99,7 @@ export const Registration = ({
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    trackFormSubmit(formTrackingName);
     executeCaptcha();
   };
 
@@ -106,12 +109,14 @@ export const Registration = ({
       <Nav
         tabs={[
           {
-            displayText: PageTitle.SIGN_IN,
+            displayText: 'Sign in',
             linkTo: '/signin',
+            queryParams: queryParams,
             isActive: false,
           },
           {
-            displayText: PageTitle.REGISTRATION,
+            displayText: 'Register',
+            queryParams: queryParams,
             linkTo: '/register',
             isActive: true,
           },
@@ -128,12 +133,14 @@ export const Registration = ({
           action={buildUrlWithQueryParams('/register', {}, queryParams)}
           ref={registerFormRef}
           onSubmit={handleSubmit}
+          onFocus={(e) => trackFormFocusBlur(formTrackingName, e, 'focus')}
+          onBlur={(e) => trackFormFocusBlur(formTrackingName, e, 'blur')}
         >
           <RecaptchaElement id="register-recaptcha" />
           <CsrfFormField />
           <RefTrackingFormFields />
           <EmailInput defaultValue={email} />
-          <Terms />
+          <Terms isJobs={isJobs} />
           <Button css={registerButton} type="submit" data-cy="register-button">
             Register
           </Button>

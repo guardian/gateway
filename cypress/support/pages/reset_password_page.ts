@@ -1,5 +1,5 @@
 class ResetPasswordPage {
-  static URL = '/reset';
+  static URL = '/reset-password';
   static CONTENT = {
     ERRORS: {
       GENERIC: 'There was a problem setting your password, please try again.',

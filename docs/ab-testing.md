@@ -110,7 +110,7 @@ At first glance this may seem more difficult that using the URL parameters, but 
 
 ### URL Params
 
-You can also force yourself into a test and variant using URL parameters, either in the query parameters (after the `?`) or as a search parameter (after the `#`). This requires knowing the ab test id and the variant name. Also to note, you have to prefix the test id with `ab-`. For example, to force yourself into the `ExampleTest` and the `variant` variant. You could add the parameter onto the URL like this `https://profile.theguardian.com/reset#ab-ExampleTest=variant`.
+You can also force yourself into a test and variant using URL parameters, either in the query parameters (after the `?`) or as a search parameter (after the `#`). This requires knowing the ab test id and the variant name. Also to note, you have to prefix the test id with `ab-`. For example, to force yourself into the `ExampleTest` and the `variant` variant. You could add the parameter onto the URL like this `https://profile.theguardian.com/signin#ab-ExampleTest=variant`.
 
 The advantages to this are that it's simple to do and test, however the parameters may not persist between requests, so might not be able to test a full flow relying on the AB test.
 

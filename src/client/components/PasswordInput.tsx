@@ -14,12 +14,15 @@ import {
   noBorderRadius,
 } from '@/client/styles/Shared';
 
+export type PasswordAutoComplete = 'new-password' | 'current-password';
+
 export type PasswordInputProps = {
   label: string;
   error?: string;
   displayEye?: boolean;
   supporting?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  autoComplete?: PasswordAutoComplete;
 };
 
 export const isDisplayEyeOnBrowser = (browserName: string | undefined) => {
@@ -124,6 +127,7 @@ export const PasswordInput = ({
   supporting,
   onChange,
   displayEye = true,
+  autoComplete,
 }: PasswordInputProps) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const { pageData: { browserName } = {} }: ClientState =
@@ -153,6 +157,7 @@ export const PasswordInput = ({
           name="password"
           supporting={supporting}
           type={passwordVisible ? 'text' : 'password'}
+          autoComplete={autoComplete}
           cssOverrides={[
             noBorder(isEyeDisplayedOnBrowser),
             noBorderRadius,

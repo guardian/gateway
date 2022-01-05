@@ -18,12 +18,16 @@ import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { css } from '@emotion/react';
 
 import sha1 from 'js-sha1';
-import { PasswordInput } from '@/client/components/PasswordInput';
+import {
+  PasswordAutoComplete,
+  PasswordInput,
+} from '@/client/components/PasswordInput';
 import { FieldError } from '@/shared/model/ClientState';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import { AutoRow, passwordFormSpanDef } from '@/client/styles/Grid';
 import { MainForm } from '@/client/components/MainForm';
+import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 
 type Props = {
   submitUrl: string;
@@ -35,6 +39,8 @@ type Props = {
   recaptchaSiteKey?: string;
   setRecaptchaErrorMessage?: React.Dispatch<React.SetStateAction<string>>;
   setRecaptchaErrorContext?: React.Dispatch<React.SetStateAction<ReactNode>>;
+  autoComplete?: PasswordAutoComplete;
+  formTrackingName?: string;
 };
 
 const baseIconStyles = css`
@@ -219,6 +225,8 @@ export const PasswordForm = ({
   submitButtonText,
   labelText,
   gridAutoRow,
+  autoComplete,
+  formTrackingName,
 }: Props) => {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | undefined>(
@@ -261,6 +269,9 @@ export const PasswordForm = ({
       method="post"
       action={submitUrl}
       onSubmit={(e) => {
+        if (formTrackingName) {
+          trackFormSubmit(formTrackingName);
+        }
         if (isTooShort) {
           setError(ChangePasswordErrors.AT_LEAST_8);
           e.preventDefault();
@@ -272,6 +283,12 @@ export const PasswordForm = ({
           e.preventDefault();
         }
       }}
+      onFocus={(e) =>
+        formTrackingName && trackFormFocusBlur(formTrackingName, e, 'focus')
+      }
+      onBlur={(e) =>
+        formTrackingName && trackFormFocusBlur(formTrackingName, e, 'blur')
+      }
     >
       <CsrfFormField />
       <div css={passwordInput}>
@@ -282,6 +299,7 @@ export const PasswordForm = ({
           onChange={(e) => {
             setPassword(e.target.value);
           }}
+          autoComplete={autoComplete}
         />
       </div>
       {!error && (
@@ -317,6 +335,8 @@ export const PasswordFormMainLayout = ({
   recaptchaSiteKey,
   setRecaptchaErrorMessage,
   setRecaptchaErrorContext,
+  autoComplete,
+  formTrackingName,
 }: Props) => {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | undefined>(
@@ -372,6 +392,7 @@ export const PasswordFormMainLayout = ({
       recaptchaSiteKey={recaptchaSiteKey}
       setRecaptchaErrorMessage={setRecaptchaErrorMessage}
       setRecaptchaErrorContext={setRecaptchaErrorContext}
+      formTrackingName={formTrackingName}
     >
       <div css={error ? undefined : passwordInput}>
         <PasswordInput
@@ -381,6 +402,7 @@ export const PasswordFormMainLayout = ({
             setPassword(e.target.value);
           }}
           displayEye={true}
+          autoComplete={autoComplete}
         />
       </div>
       {!error && (

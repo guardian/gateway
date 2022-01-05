@@ -11,7 +11,7 @@ describe('getPersistableQueryParams', () => {
   it('removes params that should not persist from the query object', () => {
     const input: QueryParams = {
       returnUrl: 'returnUrl',
-      clientId: 'clientId',
+      clientId: 'jobs',
       csrfError: true,
       recaptchaError: true,
       emailVerified: true,
@@ -25,7 +25,7 @@ describe('getPersistableQueryParams', () => {
 
     const expected: PersistableQueryParams = {
       returnUrl: 'returnUrl',
-      clientId: 'clientId',
+      clientId: 'jobs',
       ref: 'ref',
       refViewId: 'refViewId',
     };
@@ -38,7 +38,7 @@ describe('addQueryParamsToPath', () => {
   it('adds persistable query params to path without preexisting querystring', () => {
     const input: QueryParams = {
       returnUrl: 'returnUrl',
-      clientId: 'clientId',
+      clientId: 'jobs',
       csrfError: true,
       recaptchaError: true,
       emailVerified: true,
@@ -51,14 +51,14 @@ describe('addQueryParamsToPath', () => {
     const output = addQueryParamsToPath('/newsletters', input);
 
     expect(output).toEqual(
-      '/newsletters?clientId=clientId&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
+      '/newsletters?clientId=jobs&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
     );
   });
 
   it('adds persistable query params to path without preexisting querystring, with manual override values', () => {
     const input: QueryParams = {
       returnUrl: 'returnUrl',
-      clientId: 'clientId',
+      clientId: 'jobs',
       csrfError: false,
       recaptchaError: false,
       emailVerified: true,
@@ -77,7 +77,7 @@ describe('addQueryParamsToPath', () => {
     const output = addQueryParamsToPath('/newsletters', input, inputOverride);
 
     expect(output).toEqual(
-      '/newsletters?clientId=clientId&csrfError=true&encryptedEmail=an%20encrypted%20email&recaptchaError=true&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
+      '/newsletters?clientId=jobs&csrfError=true&encryptedEmail=an%20encrypted%20email&recaptchaError=true&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
     );
   });
 });
