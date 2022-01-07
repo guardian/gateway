@@ -29,13 +29,10 @@ export interface IDAPIError {
 }
 
 const getErrorStatus = (status: number): number => {
-  switch (status) {
-    // rewrite 503 errors to 500 to stop fastly timeout issues
-    case 503:
-      return 500;
-    default:
-      return status;
+  if (status >= 500) {
+    return 400;
   }
+  return status;
 };
 
 const handleResponseFailure = async (
