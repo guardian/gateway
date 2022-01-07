@@ -28,6 +28,16 @@ export interface IDAPIError {
   status: number;
 }
 
+const getErrorStatus = (status: number): number => {
+  switch (status) {
+    // rewrite 503 errors to 500 to stop fastly timeout issues
+    case 503:
+      return 500;
+    default:
+      return status;
+  }
+};
+
 const handleResponseFailure = async (
   response: Response,
 ): Promise<IDAPIError> => {
@@ -39,7 +49,14 @@ const handleResponseFailure = async (
   } catch (_) {
     err = raw;
   }
-  throw { error: err, status: response.status };
+
+  const status = getErrorStatus(response.status);
+
+  console.log('status', status, response.status);
+  console.log(raw);
+  console.log(err);
+
+  throw { error: err, status };
 };
 
 const handleResponseSuccess = async (response: Response) => {
