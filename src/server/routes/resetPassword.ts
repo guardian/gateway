@@ -17,6 +17,7 @@ import { ResetPasswordErrors } from '@/shared/model/Errors';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { emailSendMetric } from '@/server/models/Metrics';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { sendOphanInteractionEventServer } from '../lib/ophan';
 
 router.get('/reset-password', (req: Request, res: ResponseWithRequestState) => {
   let state = res.locals;
@@ -75,6 +76,13 @@ router.post(
       return res.status(status).type('html').send(html);
     }
 
+    sendOphanInteractionEventServer(
+      {
+        component: 'email-send',
+        value: 'reset-password',
+      },
+      state.ophanConfig,
+    );
     trackMetric(emailSendMetric('ResetPassword', 'Success'));
 
     return res.redirect(

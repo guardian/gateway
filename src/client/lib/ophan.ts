@@ -1,17 +1,4 @@
-import { OphanABEvent } from '@guardian/libs';
-
-interface OphanInteraction {
-  component: string;
-  value?: string;
-  atomId?: string;
-}
-
-interface OphanBase {
-  experiences?: string;
-  abTestRegister?: { [testId: string]: OphanABEvent };
-}
-
-type OphanEvent = OphanBase | OphanInteraction;
+import { OphanEvent, OphanInteraction } from '@/shared/model/ophan';
 
 export const record = (event: OphanEvent) => {
   if (window.guardian?.ophan?.record) {
