@@ -8,6 +8,7 @@ import { IdApiQueryParams } from '@/shared/model/IdapiQueryParams';
 import { addApiQueryParamsToPath } from '@/shared/lib/queryParams';
 import { ApiRoutePaths } from '@/shared/model/Routes';
 import { fetch } from '@/server/lib/fetch';
+import timeoutSignal from 'timeout-signal';
 
 const { idapiBaseUrl, idapiClientAccessToken, stage, baseUri } =
   getConfiguration();
@@ -72,10 +73,10 @@ const APIFetch =
     const urlPath = params.queryParams
       ? addApiQueryParamsToPath(tokenisedUrl, params.queryParams)
       : tokenisedUrl;
-    const response = await fetch(
-      joinUrl(idapiBaseUrl, urlPath),
-      params.options,
-    );
+    const response = await fetch(joinUrl(idapiBaseUrl, urlPath), {
+      signal: timeoutSignal(5000),
+      ...params.options,
+    });
     if (!response.ok) {
       return await handleResponseFailure(response);
     } else if (response.status === 204) {
