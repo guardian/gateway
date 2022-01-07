@@ -29,10 +29,8 @@ export interface IDAPIError {
 }
 
 const getErrorStatus = (status: number): number => {
-  if (status >= 500) {
-    return 400;
-  }
-  return status;
+  console.log('response.status', status);
+  return 503;
 };
 
 const handleResponseFailure = async (
@@ -49,9 +47,9 @@ const handleResponseFailure = async (
 
   const status = getErrorStatus(response.status);
 
-  console.log('status', status, response.status);
-  console.log(raw);
-  console.log(err);
+  console.log('status', status);
+  console.log('raw', raw);
+  console.log('err', err);
 
   throw { error: err, status };
 };
@@ -91,6 +89,7 @@ const APIFetch =
       signal: timeoutSignal(5000),
       ...params.options,
     });
+    return await handleResponseFailure(response);
     if (!response.ok) {
       return await handleResponseFailure(response);
     } else if (response.status === 204) {
