@@ -23,6 +23,7 @@ import { QueryParams } from '@/shared/model/QueryParams';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
 import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
+import * as Sentry from '@sentry/browser';
 
 export type RegistrationProps = {
   returnUrl?: string;
@@ -81,6 +82,10 @@ export const Registration = ({
   // We want to show a more detailed reCAPTCHA error if
   // the user has requested a check more than once.
   const recaptchaCheckFailed = error || expired;
+  if (recaptchaCheckFailed) {
+    Sentry.captureMessage('Recaptcha check failed', Sentry.Severity.Info);
+  }
+
   const showErrorContext = recaptchaCheckFailed && requestCount > 1;
   const reCaptchaErrorMessage = showErrorContext
     ? CaptchaErrors.RETRY

@@ -9,7 +9,14 @@ import { tests } from '@/shared/model/experiments/abTests';
 import { getABTesting } from '@/server/lib/getABTesting';
 import { RequestState, RequestWithTypedQuery } from '@/server/models/Express';
 
-const { idapiBaseUrl, oauthBaseUrl, googleRecaptcha } = getConfiguration();
+const {
+  idapiBaseUrl,
+  oauthBaseUrl,
+  googleRecaptcha,
+  stage,
+  githubRunNumber,
+  sentryDsn,
+} = getConfiguration();
 
 const getRequestState = (req: RequestWithTypedQuery): RequestState => {
   const [abTesting, abTestAPI] = getABTesting(req, tests);
@@ -43,6 +50,11 @@ const getRequestState = (req: RequestWithTypedQuery): RequestState => {
       bwid: req.cookies.bwid,
       consentUUID: req.cookies.consentUUID,
       viewId: queryParams.refViewId,
+    },
+    sentryConfig: {
+      build: githubRunNumber,
+      stage,
+      dsn: sentryDsn,
     },
   };
 };

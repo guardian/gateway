@@ -151,6 +151,13 @@ export const getConfiguration = (): Configuration => {
     ),
   };
 
+  const sentryDsn = getOrThrow(
+    process.env.SENTRY_DSN,
+    'Sentry DSN is missing.',
+  );
+
+  const githubRunNumber = process.env.GITHUB_RUN_NUMBER || '0';
+
   const aws: AWSConfiguration = {
     kinesisStreamName:
       stage === 'DEV'
@@ -195,5 +202,7 @@ export const getConfiguration = (): Configuration => {
     oauthBaseUrl,
     okta,
     aws,
+    githubRunNumber,
+    sentryDsn,
   };
 };

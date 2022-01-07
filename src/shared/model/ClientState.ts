@@ -4,6 +4,7 @@ import { GeoLocation } from '@/shared/model/Geolocation';
 import { EmailType } from '@/shared/model/EmailType';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { Participations } from '@guardian/ab-core';
+import { Stage } from '@/server/models/Configuration';
 
 export interface FieldError {
   field: string;
@@ -37,13 +38,18 @@ export interface PageData {
   consents?: Consent[];
   page?: string;
   previousPage?: string;
-
   // reset password token specific
   timeUntilTokenExpiry?: number;
 }
 
 export interface RecaptchaConfig {
   recaptchaSiteKey: string;
+}
+
+export interface SentryConfig {
+  build?: string;
+  stage?: Stage;
+  dsn: string;
 }
 
 export interface ClientHosts {
@@ -59,6 +65,7 @@ export interface ClientState {
   abTesting?: ABTesting;
   clientHosts: ClientHosts;
   recaptchaConfig: RecaptchaConfig;
+  sentryConfig: SentryConfig;
 }
 
 export type CsrfState = {

@@ -20,6 +20,7 @@ import { CaptchaErrors } from '@/shared/model/Errors';
 import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
 import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
 import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
+import * as Sentry from '@sentry/browser';
 
 export interface MainFormProps {
   formAction: string;
@@ -115,6 +116,10 @@ export const MainForm = ({
       // Determine is something went wrong with the check.
       const recaptchaCheckFailed =
         recaptchaState?.error || recaptchaState?.expired;
+
+      if (recaptchaCheckFailed) {
+        Sentry.captureMessage('Recaptcha check failed', Sentry.Severity.Info);
+      }
 
       // Used to show a more detailed reCAPTCHA error if
       // the user has requested a check more than once.
