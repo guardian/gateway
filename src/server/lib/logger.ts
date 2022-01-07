@@ -88,20 +88,27 @@ export const logger: Logger = {
     ) {
       return winstonLogger.log(
         level,
-        `${formatLogParam(message)} - ${formatLogParam(
-          error.message,
-        )} - ${formatLogParam(error.stack)}`,
+        `${formatLogParam(new Date().toISOString())} : ${formatLogParam(
+          message,
+        )} - ${formatLogParam(error.message)} - ${formatLogParam(error.stack)}`,
       );
     }
 
     if (error) {
       return winstonLogger.log(
         level,
-        `${formatLogParam(message)} - ${formatLogParam(error)}`,
+        `${formatLogParam(new Date().toISOString())} : ${formatLogParam(
+          message,
+        )} - ${formatLogParam(error)}`,
       );
     }
 
-    return winstonLogger.log(level, `${formatLogParam(message)}`);
+    return winstonLogger.log(
+      level,
+      `${formatLogParam(new Date().toISOString())} : ${formatLogParam(
+        message,
+      )}`,
+    );
   },
 
   // eslint-disable-next-line
