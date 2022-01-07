@@ -229,7 +229,7 @@ export const gridItem = (spanDefinition?: SpanDefinition) => {
 export const gridItemColumnConsents: SpanDefinition = {
   TABLET: { start: 2, span: 10 },
   DESKTOP: { start: 2, span: 10 },
-  LEFT_COL: { start: 2, span: 10 },
+  LEFT_COL: { start: 2, span: 12 },
   WIDE: { start: 3, span: 12 },
 };
 

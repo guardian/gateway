@@ -293,6 +293,7 @@ export const PasswordForm = ({
       <CsrfFormField />
       <div css={passwordInput}>
         <PasswordInput
+          displayEye={true}
           error={error}
           label={labelText}
           onChange={(e) => {
@@ -400,6 +401,7 @@ export const PasswordFormMainLayout = ({
           onChange={(e) => {
             setPassword(e.target.value);
           }}
+          displayEye={true}
           autoComplete={autoComplete}
         />
       </div>

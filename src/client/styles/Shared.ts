@@ -29,3 +29,7 @@ export const disableAutofillBackground = css`
     box-shadow: 0 0 0 50px white inset;
   }
 `;
+
+export const noBorderRadius = css`
+  border-radius: 0;
+`;
