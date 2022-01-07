@@ -15,7 +15,7 @@
     "mock-server": "node util/mock-server.js",
     "riffraff": "node-riffraff-artifact",
     "start": "node ./build/server.js",
-    "test": "yarn tsc && yarn test:unit",
+    "test": "yarn lint && yarn tsc && yarn test:unit",
     "test:unit": "jest --ci",
     "tsc": "tsc --noEmit --skipLibCheck",
     "tsc:cypress": "tsc --noEmit --skipLibCheck --project cypress/tsconfig.json",
