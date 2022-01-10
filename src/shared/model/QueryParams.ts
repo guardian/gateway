@@ -22,6 +22,7 @@ export interface PersistableQueryParams
     StringifiableRecord {
   returnUrl: string;
   clientId?: typeof validClientId[number];
+  useOkta?: boolean;
 }
 
 /**
