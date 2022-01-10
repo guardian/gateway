@@ -148,7 +148,7 @@
     "react-router-dom": "^6.2.1",
     "serialize-javascript": "^6.0.0",
     "timeout-signal": "^1.1.0",
-    "winston": "^3.3.3",
+    "winston": "^3.3.4",
     "winston-transport": "^4.4.1"
   }
 }
