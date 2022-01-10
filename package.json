@@ -96,7 +96,7 @@
     "husky": "^7.0.4",
     "image-webpack-loader": "^8.0.1",
     "jest": "^27.4.5",
-    "jest-mock": "^27.4.2",
+    "jest-mock": "^27.4.6",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.1",
     "react-test-renderer": "^17.0.2",
