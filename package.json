@@ -67,7 +67,7 @@
     "@types/react-router-dom": "^5.3.2",
     "@types/react-test-renderer": "^17.0.1",
     "@types/serialize-javascript": "^5.0.2",
-    "@types/uuid": "^8.3.3",
+    "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.9.0",
     "@typescript-eslint/parser": "^5.9.0",
     "assets-webpack-plugin": "^7.1.1",
