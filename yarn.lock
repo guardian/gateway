@@ -2573,10 +2573,10 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@okta/okta-sdk-nodejs@6.1.0":
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/@okta/okta-sdk-nodejs/-/okta-sdk-nodejs-6.1.0.tgz#03fbaa6f7632929d6db39033152f96163f81e414"
-  integrity sha512-cG7Jah/hpfUqAYRl89m8WOE40k/T+WgFw6bnPSO/adqGpfdbBnqEZ90pGQNkixdSOV/j2EnZJxyGADxpR8b/Iw==
+"@okta/okta-sdk-nodejs@6.2.0":
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@okta/okta-sdk-nodejs/-/okta-sdk-nodejs-6.2.0.tgz#081cb86b2ac9c875778aef53ed7b3f3f24772887"
+  integrity sha512-FFgN0URYze7Qog9ni3ADs8nSHp7ALlVdT1aVo6lPGH8xOo62EuHBfV4tSvOHt9jifezY48locmL4+p+/u/aVmw==
   dependencies:
     deep-copy "^1.4.2"
     form-data "^4.0.0"
@@ -2584,7 +2584,7 @@
     js-yaml "^4.1.0"
     lodash "^4.17.20"
     njwt "^1.0.0"
-    parse-link-header "^1.0.1"
+    parse-link-header "^2.0.0"
     rasha "^1.2.5"
     safe-flat "^2.0.2"
 
@@ -13403,10 +13403,10 @@ parse-json@^5.0.0:
     json-parse-even-better-errors "^2.3.0"
     lines-and-columns "^1.1.6"
 
-parse-link-header@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/parse-link-header/-/parse-link-header-1.0.1.tgz#bedfe0d2118aeb84be75e7b025419ec8a61140a7"
-  integrity sha1-vt/g0hGK64S+deewJUGeyKYRQKc=
+parse-link-header@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/parse-link-header/-/parse-link-header-2.0.0.tgz#949353e284f8aa01f2ac857a98f692b57733f6b7"
+  integrity sha512-xjU87V0VyHZybn2RrCX5TIFGxTVZE6zqqZWMPlIKiSKuWh/X5WZdt+w1Ki1nXB+8L/KtL+nZ4iq+sfI6MrhhMw==
   dependencies:
     xtend "~4.0.1"
 
