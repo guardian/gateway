@@ -26,6 +26,11 @@ interface APIResponse {
   user: User;
 }
 
+interface APIGroupResponse {
+  status: string;
+  groupCode: string;
+}
+
 /**
  * This enum maps to the type of user as defined in,
  * and returned by Identity API.
@@ -40,6 +45,10 @@ export enum UserType {
   NEW = 'new',
   CURRENT = 'current',
   GUEST = 'guest',
+}
+
+export enum GroupCode {
+  GRS = 'GRS',
 }
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
@@ -92,6 +101,28 @@ export const read = async (ip: string, sc_gu_u: string): Promise<User> => {
     return responseToEntity(response);
   } catch (error) {
     logger.error(`IDAPI Error user read '/user/me'`, error);
+    return handleError(error as IDAPIError);
+  }
+};
+
+export const addToGroup = async (
+  groupCode: GroupCode,
+  ip: string,
+  sc_gu_u: string,
+) => {
+  const options = APIForwardSessionIdentifier(
+    APIAddClientAccessToken(APIPostOptions(), ip),
+    sc_gu_u,
+  );
+  try {
+    const response = (await idapiFetch({
+      path: '/user/me/group/:groupCode',
+      options,
+      tokenisationParam: { groupCode },
+    })) as APIGroupResponse;
+    return response;
+  } catch (error) {
+    logger.error(`IDAPI error assigning user to group: ${groupCode}`, error);
     return handleError(error as IDAPIError);
   }
 };
