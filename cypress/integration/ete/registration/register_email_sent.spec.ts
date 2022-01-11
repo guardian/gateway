@@ -61,7 +61,7 @@ describe('Registration email sent page', () => {
     });
   });
 
-  it.only('should resend "Complete Registration" email when a new user registers which is same as initial email sent', () => {
+  it('should resend "Complete Registration" email when a new user registers which is same as initial email sent', () => {
     const unregisteredEmail = randomMailosaurEmail();
 
     const clientId = 'jobs';

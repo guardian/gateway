@@ -44,6 +44,11 @@ describe('Welcome and set password page', () => {
     },
   };
 
+  const fakeGroupAddResponse = {
+    status: 'ok',
+    groupCode: 'GRS',
+  };
+
   const setPasswordAndSignIn = () => {
     cy.mockNext(200, checkTokenSuccessResponse());
     cy.intercept({
@@ -161,6 +166,39 @@ describe('Welcome and set password page', () => {
       cy.contains('Thank you for registering');
       cy.url().should('include', CommunicationsPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
+    });
+
+    it('redirects to onboarding flow and adds Jobs user to the GRS group if valid password is set and preserves returnUrl', () => {
+      const returnUrl = encodeURIComponent(
+        `https://www.theguardian.com/science/grrlscientist/2012/aug/07/3`,
+      );
+      const clientId = 'jobs';
+      const query = qs.stringify({ returnUrl, clientId });
+
+      cy.mockNext(200, checkTokenSuccessResponse());
+      cy.intercept({
+        method: 'GET',
+        url: 'https://api.pwnedpasswords.com/range/*',
+      }).as('breachCheck');
+      cy.mockNext(200, fakeCookieSuccessResponse);
+      cy.mockAll(200, fakeGroupAddResponse, '/user/me/group/GRS');
+      cy.mockAll(
+        200,
+        authRedirectSignInRecentlyEmailValidated,
+        AUTH_REDIRECT_ENDPOINT,
+      );
+      cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
+      cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
+      setAuthCookies();
+
+      cy.visit(`/welcome/fake_token?${query}`);
+      cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
+      cy.wait('@breachCheck');
+      cy.get('button[type="submit"]').click();
+      cy.contains('Thank you for registering');
+      cy.url().should('include', CommunicationsPage.URL);
+      cy.url().should('include', `returnUrl=${returnUrl}`);
+      cy.url().should('include', `clientId=${clientId}`);
     });
 
     it('shows an error if the password is invalid', () => {
