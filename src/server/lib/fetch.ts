@@ -6,7 +6,7 @@
  * Solution taken from: https://github.com/node-fetch/node-fetch/issues/1279#issuecomment-915063354
  */
 
-import { RequestInfo, RequestInit, Response } from 'node-fetch';
+import type { RequestInfo, RequestInit, Response } from 'node-fetch';
 
 const _importDynamic = new Function('modulePath', 'return import(modulePath)');
 
