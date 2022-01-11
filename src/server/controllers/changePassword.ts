@@ -81,24 +81,15 @@ export const setPasswordController = (
         });
       }
 
-      // we need to track both of these cloudwatch metrics as two
-      // separate metrics at this point as the changePassword endpoint
-      // does two things
-      // a) account verification
-      // b) change password
-      // since these could happen at different points in time, it's best
-      // to keep them as two seperate metrics
-      trackMetric('AccountVerification::Success');
-      trackMetric('UpdatePassword::Success');
-
       // When a jobs user is registering, we'd like to add them to the GRS group.
+      // We only do this for users going through the welcome flow.
       //
       // Once they belong to this group, they aren't shown a confirmation page when-
       // they first visit the jobs site.
       //
       // If the SC_GU_U cookie exists, we try to add the user to the group.
-      // If the cookie doesn't exist we log the incident.
-      if (clientId === 'jobs') {
+      // If the cookie doesn't exist for some reason, we log the incident.
+      if (clientId === 'jobs' && path === '/welcome') {
         const SC_GU_U = cookies?.values.find(({ key }) => key === 'SC_GU_U');
         if (SC_GU_U) {
           addToGroup(GroupCode.GRS, req.ip, SC_GU_U.value);
@@ -108,6 +99,16 @@ export const setPasswordController = (
           );
         }
       }
+
+      // we need to track both of these cloudwatch metrics as two
+      // separate metrics at this point as the changePassword endpoint
+      // does two things
+      // a) account verification
+      // b) change password
+      // since these could happen at different points in time, it's best
+      // to keep them as two seperate metrics
+      trackMetric('AccountVerification::Success');
+      trackMetric('UpdatePassword::Success');
 
       return res.redirect(
         303,

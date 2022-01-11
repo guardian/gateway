@@ -105,7 +105,6 @@ router.post(
               returnUrl,
               ref,
               refViewId,
-              clientId,
               state.ophanConfig,
             );
             break;
@@ -118,7 +117,6 @@ router.post(
               returnUrl,
               ref,
               refViewId,
-              clientId,
               state.ophanConfig,
             );
             break;
@@ -204,7 +202,6 @@ router.post(
             returnUrl,
             ref,
             refViewId,
-            clientId,
             state.ophanConfig,
           );
           setEncryptedStateCookie(res, {
@@ -221,7 +218,6 @@ router.post(
             returnUrl,
             ref,
             refViewId,
-            clientId,
             state.ophanConfig,
           );
           setEncryptedStateCookie(res, {
