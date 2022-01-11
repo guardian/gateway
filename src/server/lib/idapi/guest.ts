@@ -43,6 +43,7 @@ export const guest = async (
   returnUrl?: string,
   refViewId?: string,
   ref?: string,
+  clientId?: string,
   ophanTrackingConfig?: OphanConfig,
 ): Promise<EmailType> => {
   const options = APIPostOptions({
@@ -58,6 +59,7 @@ export const guest = async (
         returnUrl: returnUrl || defaultReturnUri,
         ref,
         refViewId,
+        clientId,
       },
     });
     sendOphanInteractionEventServer(

@@ -61,7 +61,8 @@ router.post(
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
 
-    const { returnUrl, emailSentSuccess, ref, refViewId } = state.queryParams;
+    const { returnUrl, emailSentSuccess, ref, refViewId, clientId } =
+      state.queryParams;
 
     try {
       // read and parse the encrypted state cookie
@@ -92,6 +93,7 @@ router.post(
               returnUrl,
               ref,
               refViewId,
+              clientId,
               state.ophanConfig,
             );
             break;
@@ -103,6 +105,7 @@ router.post(
               returnUrl,
               ref,
               refViewId,
+              clientId,
               state.ophanConfig,
             );
             break;
@@ -115,6 +118,7 @@ router.post(
               returnUrl,
               ref,
               refViewId,
+              clientId,
               state.ophanConfig,
             );
             break;
@@ -159,7 +163,7 @@ router.post(
     let state = res.locals;
 
     const { email = '' } = req.body;
-    const { returnUrl, ref, refViewId } = state.queryParams;
+    const { returnUrl, ref, refViewId, clientId } = state.queryParams;
 
     try {
       // use idapi user type endpoint to determine user type
@@ -179,6 +183,7 @@ router.post(
               returnUrl,
               refViewId,
               ref,
+              clientId,
               state.ophanConfig,
             );
           }
@@ -199,6 +204,7 @@ router.post(
             returnUrl,
             ref,
             refViewId,
+            clientId,
             state.ophanConfig,
           );
           setEncryptedStateCookie(res, {
@@ -215,6 +221,7 @@ router.post(
             returnUrl,
             ref,
             refViewId,
+            clientId,
             state.ophanConfig,
           );
           setEncryptedStateCookie(res, {

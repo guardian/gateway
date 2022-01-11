@@ -93,7 +93,7 @@ export const setPasswordController = (
 
       // When a jobs user is registering, we'd like to add them to the GRS group.
       //
-      // We'd like to do this so they aren't shown a confirmation page when-
+      // Once they belong to this group, they aren't shown a confirmation page when-
       // they first visit the jobs site.
       //
       // If the SC_GU_U cookie exists, we try to add the user to the group.

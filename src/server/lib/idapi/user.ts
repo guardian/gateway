@@ -167,6 +167,7 @@ export const sendAccountVerificationEmail = async (
   returnUrl: string,
   ref?: string,
   refViewId?: string,
+  clientId?: string,
   ophanTrackingConfig?: OphanConfig,
 ) => {
   const options = APIPostOptions({
@@ -176,7 +177,7 @@ export const sendAccountVerificationEmail = async (
     await idapiFetch({
       path: '/user/send-account-verification-email',
       options: APIAddClientAccessToken(options, ip),
-      queryParams: { returnUrl, ref, refViewId },
+      queryParams: { returnUrl, ref, refViewId, clientId },
     });
     sendOphanInteractionEventServer(
       {
@@ -202,6 +203,7 @@ export const sendAccountExistsEmail = async (
   returnUrl: string,
   ref?: string,
   refViewId?: string,
+  clientId?: string,
   ophanTrackingConfig?: OphanConfig,
 ) => {
   const options = APIPostOptions({
@@ -211,7 +213,7 @@ export const sendAccountExistsEmail = async (
     await idapiFetch({
       path: '/user/send-account-exists-email',
       options: APIAddClientAccessToken(options, ip),
-      queryParams: { returnUrl, ref, refViewId },
+      queryParams: { returnUrl, ref, refViewId, clientId },
     });
     sendOphanInteractionEventServer(
       {
@@ -237,6 +239,7 @@ export const sendAccountWithoutPasswordExistsEmail = async (
   returnUrl: string,
   ref?: string,
   refViewId?: string,
+  clientId?: string,
   ophanTrackingConfig?: OphanConfig,
 ) => {
   const options = APIPostOptions({
@@ -246,7 +249,7 @@ export const sendAccountWithoutPasswordExistsEmail = async (
     await idapiFetch({
       path: '/user/send-account-without-password-exists-email',
       options: APIAddClientAccessToken(options, ip),
-      queryParams: { returnUrl, ref, refViewId },
+      queryParams: { returnUrl, ref, refViewId, clientId },
     });
     sendOphanInteractionEventServer(
       {
