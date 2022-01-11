@@ -92,7 +92,7 @@ export const setPasswordController = (
       if (clientId === 'jobs' && path === '/welcome') {
         const SC_GU_U = cookies?.values.find(({ key }) => key === 'SC_GU_U');
         if (SC_GU_U) {
-          addToGroup(GroupCode.GRS, req.ip, SC_GU_U.value);
+          await addToGroup(GroupCode.GRS, req.ip, SC_GU_U.value);
         } else {
           logger.error(
             'Failed to add the user to the GRS group because the SC_GU_U cookie is not set.',
