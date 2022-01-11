@@ -191,18 +191,14 @@ router.post(
           // new user, so call guest register endpoint to create user account without password
           // and automatically send account verification email
           case UserType.NEW:
-            if (okta.registrationEnabled) {
-              await registerWithOkta(email);
-            } else {
-              await guest(
-                email,
-                req.ip,
-                returnUrl,
-                refViewId,
-                ref,
-                state.ophanConfig,
-              );
-            }
+            await guest(
+              email,
+              req.ip,
+              returnUrl,
+              refViewId,
+              ref,
+              state.ophanConfig,
+            );
             // set the encrypted state cookie in each case, so the next page is aware
             // of the email address and type of email sent
             // so if needed it can resend the correct email
