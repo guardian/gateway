@@ -14,6 +14,13 @@ import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import deepmerge from 'deepmerge';
 import { Request, Router } from 'express';
 import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
+import { resendRegistrationEmail } from '@/server/lib/okta/register';
+import { trackMetric } from '@/server/lib/trackMetric';
+import { OktaError } from '@/server/models/okta/Error';
+import { GenericErrors } from '@/shared/model/Errors';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+
+const { okta } = getConfiguration();
 
 const router = Router();
 // resend account verification page
@@ -39,43 +46,48 @@ router.post(
   '/welcome/resend',
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { email } = req.body;
-    const state = res.locals;
-    const { returnUrl, emailSentSuccess, ref, refViewId } = state.queryParams;
+    const { useOkta } = res.locals.queryParams;
+    if (okta.registrationEnabled && useOkta) {
+      await OktaResendEmail(req, res);
+    } else {
+      const { email } = req.body;
+      const state = res.locals;
+      const { returnUrl, emailSentSuccess, ref, refViewId } = state.queryParams;
 
-    try {
-      await sendAccountVerificationEmail(
-        email,
-        req.ip,
-        returnUrl,
-        ref,
-        refViewId,
-        state.ophanConfig,
-      );
+      try {
+        await sendAccountVerificationEmail(
+          email,
+          req.ip,
+          returnUrl,
+          ref,
+          refViewId,
+          state.ophanConfig,
+        );
 
-      setEncryptedStateCookie(res, { email });
+        setEncryptedStateCookie(res, { email });
 
-      return res.redirect(
-        303,
-        addQueryParamsToPath('/welcome/email-sent', res.locals.queryParams, {
-          emailSentSuccess,
-        }),
-      );
-    } catch (error) {
-      const { message, status } =
-        error instanceof ApiError ? error : new ApiError();
+        return res.redirect(
+          303,
+          addQueryParamsToPath('/welcome/email-sent', res.locals.queryParams, {
+            emailSentSuccess,
+          }),
+        );
+      } catch (error) {
+        const { message, status } =
+          error instanceof ApiError ? error : new ApiError();
 
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+        logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
-      const html = renderer('/welcome/resend', {
-        pageTitle: 'Resend Welcome Email',
-        requestState: deepmerge(res.locals, {
-          globalMessage: {
-            error: message,
-          },
-        }),
-      });
-      return res.status(status).type('html').send(html);
+        const html = renderer('/welcome/resend', {
+          pageTitle: 'Resend Welcome Email',
+          requestState: deepmerge(res.locals, {
+            globalMessage: {
+              error: message,
+            },
+          }),
+        });
+        return res.status(status).type('html').send(html);
+      }
     }
   }),
 );
@@ -114,5 +126,40 @@ router.post(
   '/welcome/:token',
   setPasswordController('/welcome', 'Welcome', consentPages[0].path),
 );
+
+const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
+  try {
+    const { email } = req.body;
+
+    if (typeof email !== 'undefined') {
+      await resendRegistrationEmail(email);
+      trackMetric('OktaWelcomeResendEmail::Success');
+      return res.redirect(
+        303,
+        addQueryParamsToPath('/welcome/email-sent', res.locals.queryParams, {
+          emailSentSuccess: true,
+        }),
+      );
+    } else
+      throw new OktaError(
+        'Could not resend welcome email as email was undefined',
+      );
+  } catch (error) {
+    logger.error('Okta Registration resend email failure', error);
+
+    trackMetric('OktaWelcomeResendEmail::Failure');
+
+    return res.type('html').send(
+      renderer('/welcome/email-sent', {
+        pageTitle: 'Check Your Inbox',
+        requestState: deepmerge(res.locals, {
+          globalMessage: {
+            error: GenericErrors.DEFAULT,
+          },
+        }),
+      }),
+    );
+  }
+};
 
 export default router;

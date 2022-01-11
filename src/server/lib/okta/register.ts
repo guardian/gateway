@@ -16,7 +16,8 @@ export const register = async (email: string): Promise<User> => {
   } catch (error) {
     if (error instanceof ResourceAlreadyExistsError) {
       const user: User = await fetchUser({ id: email });
-      switch (user.status) {
+      const { status } = user;
+      switch (status) {
         case Status.STAGED: {
           await activateUser({ id: user.id });
           return user;
@@ -42,10 +43,9 @@ export const register = async (email: string): Promise<User> => {
   }
 };
 
-export const resendRegistrationEmail = async (
-  email: string,
-  status: string,
-) => {
+export const resendRegistrationEmail = async (email: string) => {
+  const user: User = await fetchUser({ id: email });
+  const { status } = user;
   switch (status) {
     case Status.STAGED: {
       await activateUser({ id: email });
@@ -55,7 +55,7 @@ export const resendRegistrationEmail = async (
       await reactivateUser({ id: email });
       break;
     }
-    // TODO: implement reset password email
+    // TODO: implement reset password email & emails for other user STATUSES
     default:
       throw new OktaError(
         `Okta registration resend email failed with Okta user status: ${status}`,

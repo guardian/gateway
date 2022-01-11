@@ -23,6 +23,9 @@ services:
       - OAUTH_BASE_URL=${OAUTH_BASE_URL}
       - OKTA_ORG_URL=${OKTA_ORG_URL}
       - OKTA_API_TOKEN=${OKTA_API_TOKEN}
+      - OKTA_CUSTOM_OAUTH_SERVER=${OKTA_CUSTOM_OAUTH_SERVER}
+      - OKTA_CLIENT_ID=${OKTA_CLIENT_ID}
+      - OKTA_CLIENT_SECRET=${OKTA_CLIENT_SECRET}
     ports:
       - '${PORT}:${PORT}'
       - '9229:9229' # debugging port

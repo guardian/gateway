@@ -64,6 +64,8 @@ export type ApiRoutePaths =
   | '/user/send-create-password-account-exists-email';
 
 export type OktaApiRoutePaths =
+  | '/api/v1/authn'
+  | '/api/v1/authn/credentials/reset_password'
   | '/api/v1/users'
   | '/api/v1/users/:id'
   | '/api/v1/users/:id/lifecycle/activate'

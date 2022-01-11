@@ -23,7 +23,9 @@ type ConditionalMetrics =
   | `${'Get' | 'Post'}ConsentsPage-${string}`
   | `RecaptchaMiddleware`
   | 'OktaRegistration'
-  | 'OktaRegistrationResendEmail';
+  | 'OktaRegistrationResendEmail'
+  | 'OktaSetPasswordOnWelcomePage'
+  | 'OktaWelcomeResendEmail';
 
 // Unconditional metrics that we want to track directly
 type UnconditionalMetrics =

@@ -329,10 +329,10 @@ const OktaRegistration = async (
 const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
   try {
     const encryptedState = readEncryptedStateCookie(req);
-    const { email, status } = encryptedState ?? {};
+    const { email } = encryptedState ?? {};
 
-    if (typeof email !== 'undefined' && typeof status !== 'undefined') {
-      await resendRegistrationEmail(email, status);
+    if (typeof email !== 'undefined') {
+      await resendRegistrationEmail(email);
       trackMetric('OktaRegistrationResendEmail::Success');
       return res.redirect(
         303,
@@ -340,7 +340,10 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
           emailSentSuccess: true,
         }),
       );
-    } else throw new OktaError('Email or Okta status were undefined');
+    } else
+      throw new OktaError(
+        'Could not resend registration email as email was undefined',
+      );
   } catch (error) {
     logger.error('Okta Registration resend email failure', error);
 
