@@ -196,12 +196,12 @@ const OktaSetPassword = async (
         response_type: 'code',
         scope: 'openid',
         prompt: 'none',
-        redirect_uri: `https://${baseUri}/authorization-code/callback`,
+        redirect_uri: `https://${baseUri}/oauth/authorization-code/callback`,
         sessionToken,
       };
       return res.redirect(
         303,
-        `${okta.orgUrl}/oauth2/${okta.authServerId}/authorize?${stringify(
+        `${okta.orgUrl}/oauth2/${okta.authServerId}/v1/authorize?${stringify(
           params,
         )}`,
       );
