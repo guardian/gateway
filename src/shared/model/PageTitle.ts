@@ -21,7 +21,8 @@ export type PageTitle =
   | 'Your data'
   | 'Stay in touch'
   | 'Newsletters'
-  | 'Review';
+  | 'Review'
+  | 'Maintenance';
 
 export type PasswordPageTitle = Extract<
   'Welcome' | 'Create Password' | 'Change Password',

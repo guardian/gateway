@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { RoutePaths } from '@/shared/model/Routes';
 import { RegistrationPage } from '@/client/pages/RegistrationPage';
 import { ResetPasswordPage } from '@/client/pages/ResetPasswordPage';
 import { EmailSentPage } from '@/client/pages/EmailSentPage';
@@ -26,7 +27,7 @@ import { SetPasswordPage } from '@/client/pages/SetPasswordPage';
 import { SetPasswordResendPage } from '@/client/pages/SetPasswordResendPage';
 import { SetPasswordSessionExpiredPage } from '@/client/pages/SetPasswordSessionExpiredPage';
 import { SetPasswordCompletePage } from '@/client/pages/SetPasswordCompletePage';
-import { RoutePaths } from '@/shared/model/Routes';
+import { MaintenancePage } from '@/client/pages/MaintenancePage';
 
 export type RoutingConfig = {
   clientState: ClientState;
@@ -150,6 +151,10 @@ const routes: Array<{
   {
     path: '/404',
     element: <NotFoundPage />,
+  },
+  {
+    path: '/maintenance',
+    element: <MaintenancePage />,
   },
 ];
 
