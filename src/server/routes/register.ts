@@ -69,7 +69,8 @@ router.post(
     } else {
       const state = res.locals;
 
-      const { returnUrl, emailSentSuccess, ref, refViewId } = state.queryParams;
+      const { returnUrl, emailSentSuccess, ref, refViewId, clientId } =
+        state.queryParams;
 
       try {
         // read and parse the encrypted state cookie
@@ -101,6 +102,7 @@ router.post(
                 returnUrl,
                 ref,
                 refViewId,
+                clientId,
                 state.ophanConfig,
               );
               break;
@@ -180,7 +182,7 @@ router.post(
       let state = res.locals;
 
       const { email = '' } = req.body;
-      const { returnUrl, ref, refViewId } = state.queryParams;
+      const { returnUrl, ref, refViewId, clientId } = state.queryParams;
 
       try {
         // use idapi user type endpoint to determine user type
@@ -254,28 +256,27 @@ router.post(
           addQueryParamsToPath('/register/email-sent', res.locals.queryParams),
         );
       } catch (error) {
-          logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+        logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
-          const { message, status } =
-            error instanceof ApiError ? error : new ApiError();
+        const { message, status } =
+          error instanceof ApiError ? error : new ApiError();
 
-          trackMetric('Register::Failure');
+        trackMetric('Register::Failure');
 
-          state = deepmerge(state, {
-            globalMessage: {
+        state = deepmerge(state, {
+          globalMessage: {
             error: message,
-            },
-            pageData: {
-              email,
-            },
-          });
+          },
+          pageData: {
+            email,
+          },
+        });
 
-          const html = renderer('/register', {
-            requestState: state,
-            pageTitle: 'Register',
-          });
-          return res.status(status).type('html').send(html);
-        }
+        const html = renderer('/register', {
+          requestState: state,
+          pageTitle: 'Register',
+        });
+        return res.status(status).type('html').send(html);
       }
     }
   }),
