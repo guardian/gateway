@@ -197,6 +197,7 @@ router.post(
               returnUrl,
               refViewId,
               ref,
+              clientId,
               state.ophanConfig,
             );
             // set the encrypted state cookie in each case, so the next page is aware
@@ -253,27 +254,28 @@ router.post(
           addQueryParamsToPath('/register/email-sent', res.locals.queryParams),
         );
       } catch (error) {
-        logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+          logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
-        const { message, status } =
-          error instanceof ApiError ? error : new ApiError();
+          const { message, status } =
+            error instanceof ApiError ? error : new ApiError();
 
-        trackMetric('Register::Failure');
+          trackMetric('Register::Failure');
 
-        state = deepmerge(state, {
-          globalMessage: {
+          state = deepmerge(state, {
+            globalMessage: {
             error: message,
-          },
-          pageData: {
-            email,
-          },
-        });
+            },
+            pageData: {
+              email,
+            },
+          });
 
-        const html = renderer('/register', {
-          requestState: state,
-          pageTitle: 'Register',
-        });
-        return res.status(status).type('html').send(html);
+          const html = renderer('/register', {
+            requestState: state,
+            pageTitle: 'Register',
+          });
+          return res.status(status).type('html').send(html);
+        }
       }
     }
   }),

@@ -25,6 +25,7 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { resetPassword as resetPasswordInOkta } from '@/server/lib/okta/api/authentication';
 import { stringify } from 'query-string';
 import { OktaError } from '@/server/models/okta/Error';
+import { addToGroup, GroupCode } from '@/server/lib/idapi/user';
 
 const { baseUri, okta } = getConfiguration();
 
@@ -41,6 +42,7 @@ export const setPasswordController = (
       let requestState = res.locals;
 
       const { token } = req.params;
+      const { clientId } = req.query;
       const { password } = req.body;
 
       requestState = deepmerge(requestState, {
@@ -75,7 +77,9 @@ export const setPasswordController = (
 
         const cookies = await changePassword(password, token, req.ip);
 
-        setIDAPICookies(res, cookies);
+        if (cookies) {
+          setIDAPICookies(res, cookies);
+        }
 
         // if the user navigates back to the welcome page after they have set a password, this
         // ensures we show them a custom error page rather than the link expired page
@@ -85,6 +89,25 @@ export const setPasswordController = (
             ...currentState,
             passwordSetOnWelcomePage: true,
           });
+        }
+
+        // When a jobs user is registering, we'd like to add them to the GRS group.
+        // We only do this for users going through the welcome flow.
+        //
+        // Once they belong to this group, they aren't shown a confirmation page when-
+        // they first visit the jobs site.
+        //
+        // If the SC_GU_U cookie exists, we try to add the user to the group.
+        // If the cookie doesn't exist for some reason, we log the incident.
+        if (clientId === 'jobs' && path === '/welcome') {
+          const SC_GU_U = cookies?.values.find(({ key }) => key === 'SC_GU_U');
+          if (SC_GU_U) {
+            await addToGroup(GroupCode.GRS, req.ip, SC_GU_U.value);
+          } else {
+            logger.error(
+              'Failed to add the user to the GRS group because the SC_GU_U cookie is not set.',
+            );
+          }
         }
 
         // we need to track both of these cloudwatch metrics as two
