@@ -26,10 +26,10 @@ import { ApiError } from '@/server/models/Error';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { EmailType } from '@/shared/model/EmailType';
-import { GenericErrors } from '@/shared/model/Errors';
+import { GenericErrors, RegistrationErrors } from '@/shared/model/Errors';
 import deepmerge from 'deepmerge';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { OktaError } from '@/server/models/okta/Error';
+import { InvalidEmailFormatError, OktaError } from '@/server/models/okta/Error';
 
 const { okta } = getConfiguration();
 
@@ -302,11 +302,19 @@ const OktaRegistration = async (
   } catch (error) {
     logger.error('Okta Registration failure', error);
 
+    const errorMessage = () => {
+      if (error instanceof InvalidEmailFormatError) {
+        return RegistrationErrors.EMAIL_INVALID;
+      } else {
+        return RegistrationErrors.GENERIC;
+      }
+    };
+
     trackMetric('OktaRegistration::Failure');
 
     const requestState = deepmerge(res.locals, {
       globalMessage: {
-        error: GenericErrors.DEFAULT,
+        error: errorMessage(),
       },
       pageData: {
         email,
