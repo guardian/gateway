@@ -35,7 +35,8 @@ export type RoutePaths =
   | '/magic-link' //this is not being used until MVP4
   | '/magic-link/email-sent' //this is not being used until MVP4
   | '/error'
-  | '/404';
+  | '/404'
+  | '/maintenance';
 
 /**
  * These are all valid paths for the Identity API

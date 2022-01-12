@@ -9,6 +9,7 @@ import { default as verifyEmail } from './verifyEmail';
 import { default as magicLink } from './magicLink';
 import { default as welcome } from './welcome';
 import { default as setPassword } from './setPassword';
+import { default as maintenance } from './maintenance';
 import { noCache } from '@/server/lib/middleware/cache';
 
 const router = Router();
@@ -20,6 +21,9 @@ router.use(core);
 // all routes should be uncached except for the core (static) routes
 // to avoid caching sensitive page state
 uncachedRoutes.use(noCache);
+
+// maintenance page
+uncachedRoutes.use(maintenance);
 
 // request sign in routes
 uncachedRoutes.use(signIn);
@@ -43,7 +47,7 @@ uncachedRoutes.use(verifyEmail);
 uncachedRoutes.use(magicLink);
 
 // welcome routes
-uncachedRoutes.use(noCache, welcome);
+uncachedRoutes.use(welcome);
 
 router.use(uncachedRoutes);
 
