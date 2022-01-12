@@ -56,6 +56,7 @@ export type ApiRoutePaths =
   | '/users/me/consents'
   | '/users/me/newsletters'
   | '/user/me'
+  | '/user/me/group/:groupCode'
   | '/user/type/:email'
   | '/guest'
   | '/newsletters'

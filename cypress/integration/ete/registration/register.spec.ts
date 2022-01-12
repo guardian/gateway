@@ -112,7 +112,7 @@ describe('Registration flow', () => {
       'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
     const encodedRef = 'https%3A%2F%2Fm.theguardian.com';
     const refViewId = 'testRefViewId';
-
+    const clientId = 'jobs';
     const unregisteredEmail = randomMailosaurEmail();
 
     cy.visit(
@@ -121,7 +121,9 @@ describe('Registration flow', () => {
         '&ref=' +
         encodedRef +
         '&refViewId=' +
-        refViewId,
+        refViewId +
+        '&clientId=' +
+        clientId,
     );
     const timeRequestWasMade = new Date();
     cy.get('input[name=email]').type(unregisteredEmail);
@@ -141,6 +143,7 @@ describe('Registration flow', () => {
       expect(body).to.have.string('returnUrl=' + encodedReturnUrl);
       expect(body).to.have.string('ref=' + encodedRef);
       expect(body).to.have.string('refViewId=' + refViewId);
+      expect(body).to.have.string('clientId=' + clientId);
       cy.visit(`/welcome/${token}`);
       cy.contains('Create password');
     });

@@ -11,6 +11,7 @@ import {
 } from '@/shared/model/Errors';
 import { logger } from '@/server/lib/logger';
 import { IdapiError } from '@/server/models/Error';
+import { IdapiCookies } from '../setIDAPICookies';
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
   if (error.status === 'error' && error.errors?.length) {
@@ -75,7 +76,11 @@ export async function validate(
   }
 }
 
-export async function change(password: string, token: string, ip: string) {
+export async function change(
+  password: string,
+  token: string,
+  ip: string,
+): Promise<IdapiCookies | undefined> {
   const options = APIPostOptions({
     password,
     token,

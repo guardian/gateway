@@ -64,7 +64,8 @@ describe('Registration email sent page', () => {
   it('should resend "Complete Registration" email when a new user registers which is same as initial email sent', () => {
     const unregisteredEmail = randomMailosaurEmail();
 
-    cy.visit('/register');
+    const clientId = 'jobs';
+    cy.visit('/register?clientId=' + clientId);
     cy.get('input[name=email]').type(unregisteredEmail);
     const timeRequestWasMadeInitialEmail = new Date();
     cy.get('[data-cy="register-button"]').click();
@@ -91,6 +92,7 @@ describe('Registration email sent page', () => {
     cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(
       ({ body }) => {
         expect(body).to.have.string('Complete registration');
+        expect(body).to.have.string('clientId=' + clientId);
       },
     );
   });
