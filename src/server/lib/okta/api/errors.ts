@@ -21,27 +21,20 @@ export const handleErrorResponse = async (response: Response) => {
       case 'E0000001': {
         if (error.errorCauses) {
           const { errorCauses } = error;
-          if (
-            errorCauses.some((cause) =>
-              cause.errorSummary.includes('already exists'),
-            )
-          ) {
+          const errorCausesIncludes = (substring: string): boolean => {
+            return errorCauses.some((cause) =>
+              cause.errorSummary.includes(substring),
+            );
+          };
+          if (errorCausesIncludes('already exists')) {
             throw new ResourceAlreadyExistsError(
               errorCausesToString(errorCauses),
             );
           } else if (
-            errorCauses.some((cause) =>
-              cause.errorSummary.includes(
-                'email: Does not match required pattern',
-              ),
-            )
+            errorCausesIncludes('email: Does not match required pattern')
           ) {
             throw new InvalidEmailFormatError(errorCausesToString(errorCauses));
-          } else if (
-            errorCauses.some((cause) =>
-              cause.errorSummary.includes('The field cannot be left blank'),
-            )
-          ) {
+          } else if (errorCausesIncludes('The field cannot be left blank')) {
             throw new MissingRequiredFieldError(
               errorCausesToString(errorCauses),
             );
