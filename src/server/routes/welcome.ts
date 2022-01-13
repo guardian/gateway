@@ -1,7 +1,5 @@
-import {
-  checkResetPasswordTokenController,
-  setPasswordTokenController,
-} from '@/server/controllers/changePassword';
+import { checkPasswordTokenController } from '@/server/controllers/checkPasswordToken';
+import { setPasswordController } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { sendAccountVerificationEmail } from '@/server/lib/idapi/user';
@@ -13,7 +11,6 @@ import { buildUrl } from '@/shared/lib/routeUtils';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { consentPages } from '@/server/routes/consents';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { PageTitle } from '@/shared/model/PageTitle';
 import deepmerge from 'deepmerge';
 import { Request, Router } from 'express';
 import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
@@ -22,7 +19,7 @@ const router = Router();
 // resend account verification page
 router.get('/welcome/resend', (_: Request, res: ResponseWithRequestState) => {
   const html = renderer('/welcome/resend', {
-    pageTitle: PageTitle.WELCOME_RESEND,
+    pageTitle: 'Resend Welcome Email',
     requestState: res.locals,
   });
   res.type('html').send(html);
@@ -31,7 +28,7 @@ router.get('/welcome/resend', (_: Request, res: ResponseWithRequestState) => {
 // resend account verification page, session expired
 router.get('/welcome/expired', (_: Request, res: ResponseWithRequestState) => {
   const html = renderer('/welcome/expired', {
-    pageTitle: PageTitle.WELCOME_RESEND,
+    pageTitle: 'Resend Welcome Email',
     requestState: res.locals,
   });
   res.type('html').send(html);
@@ -43,8 +40,9 @@ router.post(
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { email } = req.body;
-    const { returnUrl, emailSentSuccess, ref, refViewId } =
-      res.locals.queryParams;
+    const state = res.locals;
+    const { returnUrl, emailSentSuccess, ref, refViewId, clientId } =
+      state.queryParams;
 
     try {
       await sendAccountVerificationEmail(
@@ -53,6 +51,8 @@ router.post(
         returnUrl,
         ref,
         refViewId,
+        clientId,
+        state.ophanConfig,
       );
 
       setEncryptedStateCookie(res, { email });
@@ -70,7 +70,7 @@ router.post(
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
       const html = renderer('/welcome/resend', {
-        pageTitle: PageTitle.WELCOME_RESEND,
+        pageTitle: 'Resend Welcome Email',
         requestState: deepmerge(res.locals, {
           globalMessage: {
             error: message,
@@ -98,7 +98,7 @@ router.get(
     });
 
     const html = renderer('/welcome/email-sent', {
-      pageTitle: PageTitle.EMAIL_SENT,
+      pageTitle: 'Check Your Inbox',
       requestState: state,
     });
     res.type('html').send(html);
@@ -108,29 +108,13 @@ router.get(
 // welcome page, check token and display set password page
 router.get(
   '/welcome/:token',
-  checkResetPasswordTokenController(
-    '/welcome',
-    PageTitle.WELCOME,
-    '/welcome',
-    PageTitle.WELCOME,
-  ),
+  checkPasswordTokenController('/welcome', 'Welcome'),
 );
 
 // POST form handler to set password on welcome page
 router.post(
   '/welcome/:token',
-  setPasswordTokenController(
-    '/welcome',
-    PageTitle.WELCOME,
-    '/welcome',
-    PageTitle.WELCOME,
-    (res) => {
-      return res.redirect(
-        303,
-        addQueryParamsToPath(`${consentPages[0].path}`, res.locals.queryParams),
-      );
-    },
-  ),
+  setPasswordController('/welcome', 'Welcome', consentPages[0].path),
 );
 
 export default router;

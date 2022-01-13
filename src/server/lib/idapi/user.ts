@@ -17,9 +17,18 @@ import User from '@/shared/model/User';
 import { IdapiError } from '@/server/models/Error';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { emailSendMetric } from '@/server/models/Metrics';
+import {
+  OphanConfig,
+  sendOphanInteractionEventServer,
+} from '@/server/lib/ophan';
 
 interface APIResponse {
   user: User;
+}
+
+interface APIGroupResponse {
+  status: string;
+  groupCode: string;
 }
 
 /**
@@ -36,6 +45,10 @@ export enum UserType {
   NEW = 'new',
   CURRENT = 'current',
   GUEST = 'guest',
+}
+
+export enum GroupCode {
+  GRS = 'GRS',
 }
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
@@ -92,6 +105,28 @@ export const read = async (ip: string, sc_gu_u: string): Promise<User> => {
   }
 };
 
+export const addToGroup = async (
+  groupCode: GroupCode,
+  ip: string,
+  sc_gu_u: string,
+) => {
+  const options = APIForwardSessionIdentifier(
+    APIAddClientAccessToken(APIPostOptions(), ip),
+    sc_gu_u,
+  );
+  try {
+    const response = (await idapiFetch({
+      path: '/user/me/group/:groupCode',
+      options,
+      tokenisationParam: { groupCode },
+    })) as APIGroupResponse;
+    return response;
+  } catch (error) {
+    logger.error(`IDAPI error assigning user to group: ${groupCode}`, error);
+    return handleError(error as IDAPIError);
+  }
+};
+
 export const readUserType = async (
   email: string,
   ip: string,
@@ -132,6 +167,8 @@ export const sendAccountVerificationEmail = async (
   returnUrl: string,
   ref?: string,
   refViewId?: string,
+  clientId?: string,
+  ophanTrackingConfig?: OphanConfig,
 ) => {
   const options = APIPostOptions({
     'email-address': email,
@@ -140,8 +177,15 @@ export const sendAccountVerificationEmail = async (
     await idapiFetch({
       path: '/user/send-account-verification-email',
       options: APIAddClientAccessToken(options, ip),
-      queryParams: { returnUrl, ref, refViewId },
+      queryParams: { returnUrl, ref, refViewId, clientId },
     });
+    sendOphanInteractionEventServer(
+      {
+        component: 'email-send',
+        value: 'account-verification',
+      },
+      ophanTrackingConfig,
+    );
     trackMetric(emailSendMetric('AccountVerification', 'Success'));
   } catch (error) {
     logger.error(
@@ -159,6 +203,7 @@ export const sendAccountExistsEmail = async (
   returnUrl: string,
   ref?: string,
   refViewId?: string,
+  ophanTrackingConfig?: OphanConfig,
 ) => {
   const options = APIPostOptions({
     'email-address': email,
@@ -169,6 +214,13 @@ export const sendAccountExistsEmail = async (
       options: APIAddClientAccessToken(options, ip),
       queryParams: { returnUrl, ref, refViewId },
     });
+    sendOphanInteractionEventServer(
+      {
+        component: 'email-send',
+        value: 'account-exists',
+      },
+      ophanTrackingConfig,
+    );
     trackMetric(emailSendMetric('AccountExists', 'Success'));
   } catch (error) {
     logger.error(
@@ -186,6 +238,7 @@ export const sendAccountWithoutPasswordExistsEmail = async (
   returnUrl: string,
   ref?: string,
   refViewId?: string,
+  ophanTrackingConfig?: OphanConfig,
 ) => {
   const options = APIPostOptions({
     'email-address': email,
@@ -196,6 +249,13 @@ export const sendAccountWithoutPasswordExistsEmail = async (
       options: APIAddClientAccessToken(options, ip),
       queryParams: { returnUrl, ref, refViewId },
     });
+    sendOphanInteractionEventServer(
+      {
+        component: 'email-send',
+        value: 'account-without-password-exists',
+      },
+      ophanTrackingConfig,
+    );
     trackMetric(emailSendMetric('AccountExistsWithoutPassword', 'Success'));
   } catch (error) {
     logger.error(
@@ -213,6 +273,7 @@ export const sendCreatePasswordEmail = async (
   returnUrl: string,
   ref?: string,
   refViewId?: string,
+  ophanTrackingConfig?: OphanConfig,
 ) => {
   const options = APIPostOptions({
     'email-address': email,
@@ -223,6 +284,13 @@ export const sendCreatePasswordEmail = async (
       options: APIAddClientAccessToken(options, ip),
       queryParams: { returnUrl, ref, refViewId },
     });
+    sendOphanInteractionEventServer(
+      {
+        component: 'email-send',
+        value: 'create-password-account-exists',
+      },
+      ophanTrackingConfig,
+    );
     trackMetric(emailSendMetric('CreatePassword', 'Success'));
   } catch (error) {
     logger.error(

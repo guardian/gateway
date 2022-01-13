@@ -1,4 +1,5 @@
 import { StringifiableRecord } from 'query-string';
+import { ValidClientId } from '../lib/clientId';
 
 export interface TrackingQueryParams {
   // this is the url of the referring page
@@ -20,7 +21,7 @@ export interface PersistableQueryParams
   extends TrackingQueryParams,
     StringifiableRecord {
   returnUrl: string;
-  clientId?: string;
+  clientId?: ValidClientId;
 }
 
 /**

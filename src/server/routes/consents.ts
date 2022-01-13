@@ -41,12 +41,13 @@ import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { logger } from '@/server/lib/logger';
 import { ApiError } from '@/server/models/Error';
 import { RoutePaths } from '@/shared/model/Routes';
+import { PageTitle } from '@/shared/model/PageTitle';
 
 interface ConsentPage {
   page: string;
   path: RoutePaths;
   read: (ip: string, sc_gu_u: string, geo?: GeoLocation) => Promise<PageData>;
-  pageTitle: string;
+  pageTitle: PageTitle;
   update?: (
     ip: string,
     sc_gu_u: string,
@@ -273,7 +274,7 @@ router.get(
       return res.type('html').status(404).send(html);
     }
 
-    let pageTitle = 'Onboarding';
+    let pageTitle = PageTitle('Onboarding');
 
     try {
       const { read, pageTitle: _pageTitle } = consentPages[pageIndex];
@@ -335,7 +336,7 @@ router.post(
       return res.type('html').status(404).send(html);
     }
 
-    let pageTitle = 'Onboarding';
+    let pageTitle = PageTitle('Onboarding');
 
     try {
       const { update, pageTitle: _pageTitle } = consentPages[pageIndex];

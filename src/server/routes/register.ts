@@ -17,7 +17,6 @@ import { logger } from '@/server/lib/logger';
 import { registerWithOkta } from '@/server/lib/okta/registration';
 import { getEmailFromPlaySessionCookie } from '@/server/lib/playSessionCookie';
 import { renderer } from '@/server/lib/renderer';
-
 import { typedRouter as router } from '@/server/lib/typedRoutes';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { ApiError } from '@/server/models/Error';
@@ -25,7 +24,6 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { EmailType } from '@/shared/model/EmailType';
 import { GenericErrors } from '@/shared/model/Errors';
-import { PageTitle } from '@/shared/model/PageTitle';
 import deepmerge from 'deepmerge';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 
@@ -34,7 +32,7 @@ const { okta } = getConfiguration();
 router.get('/register', (req: Request, res: ResponseWithRequestState) => {
   const html = renderer('/register', {
     requestState: res.locals,
-    pageTitle: PageTitle.REGISTRATION,
+    pageTitle: 'Register',
   });
   res.type('html').send(html);
 });
@@ -51,7 +49,7 @@ router.get(
             readEncryptedStateCookie(req)?.email,
         },
       }),
-      pageTitle: PageTitle.REGISTRATION_EMAIL_SENT,
+      pageTitle: 'Check Your Inbox',
     });
     res.type('html').send(html);
   },
@@ -61,8 +59,10 @@ router.post(
   '/register/email-sent/resend',
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { returnUrl, emailSentSuccess, ref, refViewId } =
-      res.locals.queryParams;
+    const state = res.locals;
+
+    const { returnUrl, emailSentSuccess, ref, refViewId, clientId } =
+      state.queryParams;
 
     try {
       // read and parse the encrypted state cookie
@@ -93,6 +93,8 @@ router.post(
               returnUrl,
               ref,
               refViewId,
+              clientId,
+              state.ophanConfig,
             );
             break;
           // they were an already registered user, so resend the AccountExists Email
@@ -103,6 +105,7 @@ router.post(
               returnUrl,
               ref,
               refViewId,
+              state.ophanConfig,
             );
             break;
           // they were an already registered user without password
@@ -114,6 +117,7 @@ router.post(
               returnUrl,
               ref,
               refViewId,
+              state.ophanConfig,
             );
             break;
           default:
@@ -138,7 +142,7 @@ router.post(
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
       const html = renderer('/register/email-sent', {
-        pageTitle: PageTitle.REGISTRATION_EMAIL_SENT,
+        pageTitle: 'Check Your Inbox',
         requestState: deepmerge(res.locals, {
           globalMessage: {
             error: message,
@@ -157,7 +161,7 @@ router.post(
     let state = res.locals;
 
     const { email = '' } = req.body;
-    const { returnUrl, ref, refViewId } = state.queryParams;
+    const { returnUrl, ref, refViewId, clientId } = state.queryParams;
 
     try {
       // use idapi user type endpoint to determine user type
@@ -171,7 +175,15 @@ router.post(
           if (okta.registrationEnabled) {
             await registerWithOkta(email);
           } else {
-            await guest(email, req.ip, returnUrl, refViewId, ref);
+            await guest(
+              email,
+              req.ip,
+              returnUrl,
+              refViewId,
+              ref,
+              clientId,
+              state.ophanConfig,
+            );
           }
           // set the encrypted state cookie in each case, so the next page is aware
           // of the email address and type of email sent
@@ -190,6 +202,7 @@ router.post(
             returnUrl,
             ref,
             refViewId,
+            state.ophanConfig,
           );
           setEncryptedStateCookie(res, {
             email,
@@ -205,6 +218,7 @@ router.post(
             returnUrl,
             ref,
             refViewId,
+            state.ophanConfig,
           );
           setEncryptedStateCookie(res, {
             email,
@@ -243,7 +257,7 @@ router.post(
 
       const html = renderer('/register', {
         requestState: state,
-        pageTitle: PageTitle.REGISTRATION,
+        pageTitle: 'Register',
       });
       return res.status(status).type('html').send(html);
     }

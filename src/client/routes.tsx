@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { RoutePaths } from '@/shared/model/Routes';
 import { RegistrationPage } from '@/client/pages/RegistrationPage';
 import { ResetPasswordPage } from '@/client/pages/ResetPasswordPage';
 import { EmailSentPage } from '@/client/pages/EmailSentPage';
@@ -26,7 +27,7 @@ import { SetPasswordPage } from '@/client/pages/SetPasswordPage';
 import { SetPasswordResendPage } from '@/client/pages/SetPasswordResendPage';
 import { SetPasswordSessionExpiredPage } from '@/client/pages/SetPasswordSessionExpiredPage';
 import { SetPasswordCompletePage } from '@/client/pages/SetPasswordCompletePage';
-import { RoutePaths } from '@/shared/model/Routes';
+import { MaintenancePage } from '@/client/pages/MaintenancePage';
 
 export type RoutingConfig = {
   clientState: ClientState;
@@ -50,28 +51,30 @@ const routes: Array<{
     element: <RegistrationEmailSentPage />,
   },
   {
-    path: '/reset',
+    path: '/reset-password',
     element: <ResetPasswordPage />,
   },
   {
-    path: '/reset/email-sent',
-    element: <EmailSentPage noAccountInfo />,
+    path: '/reset-password/email-sent',
+    element: (
+      <EmailSentPage formTrackingName="forgot-password-resend" noAccountInfo />
+    ),
+  },
+  {
+    path: '/reset-password/complete',
+    element: <ChangePasswordCompletePage />,
+  },
+  {
+    path: '/reset-password/resend',
+    element: <ResendPasswordPage />,
+  },
+  {
+    path: '/reset-password/expired',
+    element: <ResetPasswordSessionExpiredPage />,
   },
   {
     path: '/reset-password/:token',
     element: <ChangePasswordPage />,
-  },
-  {
-    path: '/password/reset-confirmation',
-    element: <ChangePasswordCompletePage />,
-  },
-  {
-    path: '/reset/resend',
-    element: <ResendPasswordPage />,
-  },
-  {
-    path: '/reset/expired',
-    element: <ResetPasswordSessionExpiredPage />,
   },
   {
     path: '/set-password/resend',
@@ -87,7 +90,7 @@ const routes: Array<{
   },
   {
     path: '/set-password/email-sent',
-    element: <EmailSentPage />,
+    element: <EmailSentPage formTrackingName="set-password-resend" />,
   },
   {
     path: '/set-password/:token',
@@ -119,7 +122,7 @@ const routes: Array<{
   },
   {
     path: '/welcome/email-sent',
-    element: <EmailSentPage />,
+    element: <EmailSentPage formTrackingName="welcome-resend" />,
   },
   {
     path: '/welcome/complete',
@@ -148,6 +151,10 @@ const routes: Array<{
   {
     path: '/404',
     element: <NotFoundPage />,
+  },
+  {
+    path: '/maintenance',
+    element: <MaintenancePage />,
   },
 ];
 

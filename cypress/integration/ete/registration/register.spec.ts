@@ -29,16 +29,16 @@ describe('Registration flow', () => {
     });
 
     it('links to the Guardian terms and conditions page', () => {
-      const googleTermsOfServiceUrl =
+      const guardianTermsOfServiceUrl =
         'https://www.theguardian.com/help/terms-of-service';
       // Intercept the external redirect page.
       // We just want to check that the redirect happens, not that the page loads.
-      cy.intercept('GET', googleTermsOfServiceUrl, (req) => {
+      cy.intercept('GET', guardianTermsOfServiceUrl, (req) => {
         req.reply(200);
       });
       cy.visit('/signin');
       cy.contains('terms & conditions').click();
-      cy.url().should('eq', googleTermsOfServiceUrl);
+      cy.url().should('eq', guardianTermsOfServiceUrl);
     });
 
     it('links to the Guardian privacy policy page', () => {
@@ -55,8 +55,40 @@ describe('Registration flow', () => {
         .click();
       cy.url().should('eq', guardianPrivacyPolicyUrl);
     });
-  });
 
+    it('links to the Guardian jobs terms and conditions page when jobs clientId set', () => {
+      const guardianJobsTermsOfServiceUrl =
+        'https://jobs.theguardian.com/terms-and-conditions/';
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', guardianJobsTermsOfServiceUrl, (req) => {
+        req.reply(200);
+      });
+      cy.visit('/signin?clientId=jobs');
+      cy.contains("Guardian's Jobs terms & conditions").click();
+      cy.url().should('eq', guardianJobsTermsOfServiceUrl);
+    });
+
+    it('links to the Guardian jobs privacy policy page when jobs clientId set', () => {
+      const guardianJobsPrivacyPolicyUrl =
+        'https://jobs.theguardian.com/privacy-policy/';
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', guardianJobsPrivacyPolicyUrl, (req) => {
+        req.reply(200);
+      });
+      cy.visit('/signin?clientId=jobs');
+      cy.contains('For information about how we use your data')
+        .contains("Guardian Jobs' privacy policy")
+        .click();
+      cy.url().should('eq', guardianJobsPrivacyPolicyUrl);
+    });
+  });
+  it('persists the clientId when navigating away', () => {
+    cy.visit('/register?clientId=jobs');
+    cy.contains('Sign in').click();
+    cy.url().should('contain', 'clientId=jobs');
+  });
   it('does not proceed when no email provided', () => {
     cy.visit('/register');
     cy.get('[data-cy="register-button"]').click();
@@ -80,7 +112,7 @@ describe('Registration flow', () => {
       'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
     const encodedRef = 'https%3A%2F%2Fm.theguardian.com';
     const refViewId = 'testRefViewId';
-
+    const clientId = 'jobs';
     const unregisteredEmail = randomMailosaurEmail();
 
     cy.visit(
@@ -89,7 +121,9 @@ describe('Registration flow', () => {
         '&ref=' +
         encodedRef +
         '&refViewId=' +
-        refViewId,
+        refViewId +
+        '&clientId=' +
+        clientId,
     );
     const timeRequestWasMade = new Date();
     cy.get('input[name=email]').type(unregisteredEmail);
@@ -109,6 +143,7 @@ describe('Registration flow', () => {
       expect(body).to.have.string('returnUrl=' + encodedReturnUrl);
       expect(body).to.have.string('ref=' + encodedRef);
       expect(body).to.have.string('refViewId=' + refViewId);
+      expect(body).to.have.string('clientId=' + clientId);
       cy.visit(`/welcome/${token}`);
       cy.contains('Create password');
     });

@@ -13,6 +13,7 @@ import { ExternalLink } from '@/client/components/ExternalLink';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
+import { usePageLoadOphanInteraction } from '../lib/hooks/usePageLoadOphanInteraction';
 
 interface ResetPasswordProps {
   email?: string;
@@ -24,6 +25,7 @@ interface ResetPasswordProps {
   showNoAccessEmail?: boolean;
   showRecentEmailSummary?: boolean;
   recaptchaSiteKey?: string;
+  formPageTrackingName?: string;
 }
 
 export const ResetPassword = ({
@@ -37,14 +39,18 @@ export const ResetPassword = ({
   showRecentEmailSummary,
   children,
   recaptchaSiteKey,
+  formPageTrackingName,
 }: PropsWithChildren<ResetPasswordProps>) => {
+  // track page/form load
+  usePageLoadOphanInteraction(formPageTrackingName);
+
   const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
   const [recaptchaErrorContext, setRecaptchaErrorContext] =
     useState<ReactNode>(null);
 
   return (
     <MainLayout
-      pageTitle={headerText}
+      pageHeader={headerText}
       errorContext={recaptchaErrorContext}
       errorOverride={recaptchaErrorMessage}
     >
@@ -53,12 +59,13 @@ export const ResetPassword = ({
         formAction={
           formActionOverride
             ? addQueryParamsToUntypedPath(formActionOverride, queryString)
-            : buildUrlWithQueryParams('/reset', {}, queryString)
+            : buildUrlWithQueryParams('/reset-password', {}, queryString)
         }
         submitButtonText={buttonText}
         recaptchaSiteKey={recaptchaSiteKey}
         setRecaptchaErrorMessage={setRecaptchaErrorMessage}
         setRecaptchaErrorContext={setRecaptchaErrorContext}
+        formTrackingName={formPageTrackingName}
       >
         <EmailInput label={emailInputLabel} defaultValue={email} />
       </MainForm>

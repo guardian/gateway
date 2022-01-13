@@ -2,8 +2,6 @@ import { NextFunction, Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { getCsrfPageUrl } from '@/server/lib/getCsrfPageUrl';
 import { renderer } from '@/server/lib/renderer';
-
-import { PageTitle } from '@/shared/model/PageTitle';
 import { logger } from '@/server/lib/logger';
 import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
 import { getConfiguration } from '@/server/lib/getConfiguration';
@@ -56,7 +54,7 @@ export const routeErrorHandler = (
 
   const html = renderer('/error', {
     requestState: res.locals,
-    pageTitle: PageTitle.UNEXPECTED_ERROR,
+    pageTitle: 'Unexpected Error',
   });
   return res.status(500).type('html').send(html);
 };

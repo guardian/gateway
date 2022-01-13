@@ -23,26 +23,26 @@ export const Default = () => (
 );
 Default.storyName = 'with defaults';
 
-export const WithPageTitle = () => (
-  <MainLayout pageTitle="Some page title">
+export const WithPageHeader = () => (
+  <MainLayout pageHeader="Some page header">
     <Paragraphs />
   </MainLayout>
 );
-WithPageTitle.storyName = 'with pageTitle';
+WithPageHeader.storyName = 'with pageTitle';
 
-export const WithErrorPageTitle = () => (
-  <MainLayout pageTitle="Some page title" errorOverride="Error message">
+export const WithErrorPageHeader = () => (
+  <MainLayout pageHeader="Some page header" errorOverride="Error message">
     <Paragraphs />
   </MainLayout>
 );
-WithErrorPageTitle.storyName = 'with Error and PageTitle';
+WithErrorPageHeader.storyName = 'with Error and PageTitle';
 
-export const WithSuccessPageTitle = () => (
-  <MainLayout pageTitle="Some page title" successOverride="Success message">
+export const WithSuccessPageHeader = () => (
+  <MainLayout pageHeader="Some page header" successOverride="Success message">
     <Paragraphs />
   </MainLayout>
 );
-WithSuccessPageTitle.storyName = 'with Success and PageTitle';
+WithSuccessPageHeader.storyName = 'with Success and PageTitle';
 
 export const WithError = () => (
   <MainLayout errorOverride="Error message">
@@ -68,7 +68,7 @@ export const WithSuccess = () => (
 WithSuccess.storyName = 'with Success';
 
 export const WithForm = () => (
-  <MainLayout pageTitle="Some page title">
+  <MainLayout pageHeader="Some page header">
     <Paragraphs />
     <BasicForm />
   </MainLayout>
@@ -76,7 +76,7 @@ export const WithForm = () => (
 WithForm.storyName = 'with Form';
 
 export const WithFormAndRecaptcha = () => (
-  <MainLayout pageTitle="Some page title">
+  <MainLayout pageHeader="Some page header">
     <Paragraphs />
     <FormWithRecaptcha />
   </MainLayout>
@@ -84,7 +84,7 @@ export const WithFormAndRecaptcha = () => (
 WithFormAndRecaptcha.storyName = 'with Form and reCAPTCHA';
 
 export const WithMultipleInputs = () => (
-  <MainLayout pageTitle="Some page title">
+  <MainLayout pageHeader="Some page header">
     <Paragraphs />
     <MultipleInputFields />
   </MainLayout>

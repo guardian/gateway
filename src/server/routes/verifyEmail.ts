@@ -15,7 +15,6 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { consentPages } from '@/server/routes/consents';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { ConsentsErrors, VerifyEmailErrors } from '@/shared/model/Errors';
-import { PageTitle } from '@/shared/model/PageTitle';
 import { EMAIL_SENT } from '@/shared/model/Success';
 import { buildUrl } from '@/shared/lib/routeUtils';
 import deepmerge from 'deepmerge';
@@ -75,7 +74,7 @@ router.get(
     }
 
     const html = renderer('/verify-email', {
-      pageTitle: PageTitle.VERIFY_EMAIL,
+      pageTitle: 'Verify Email',
       requestState: state,
     });
 
@@ -135,7 +134,7 @@ router.post(
     }
 
     const html = renderer('/verify-email', {
-      pageTitle: PageTitle.VERIFY_EMAIL,
+      pageTitle: 'Verify Email',
       requestState: state,
     });
 

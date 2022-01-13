@@ -9,7 +9,12 @@ import { css } from '@emotion/react';
 import { neutral, height } from '@guardian/source-foundations';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
-import { disableAutofillBackground } from '@/client/styles/Shared';
+import {
+  disableAutofillBackground,
+  noBorderRadius,
+} from '@/client/styles/Shared';
+
+export type PasswordAutoComplete = 'new-password' | 'current-password';
 
 export type PasswordInputProps = {
   label: string;
@@ -17,6 +22,7 @@ export type PasswordInputProps = {
   displayEye?: boolean;
   supporting?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  autoComplete?: PasswordAutoComplete;
 };
 
 export const isDisplayEyeOnBrowser = (browserName: string | undefined) => {
@@ -97,6 +103,8 @@ const EyeSymbol = ({
     height: ${height.inputMedium}px;
     align-self: flex-end;
     padding-top: 4px;
+    margin-left: 0;
+    margin-right: 0;
   `;
 
   return (
@@ -119,6 +127,7 @@ export const PasswordInput = ({
   supporting,
   onChange,
   displayEye = true,
+  autoComplete,
 }: PasswordInputProps) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const { pageData: { browserName } = {} }: ClientState =
@@ -148,8 +157,10 @@ export const PasswordInput = ({
           name="password"
           supporting={supporting}
           type={passwordVisible ? 'text' : 'password'}
+          autoComplete={autoComplete}
           cssOverrides={[
             noBorder(isEyeDisplayedOnBrowser),
+            noBorderRadius,
             paddingRight(isEyeDisplayedOnBrowser),
             disableAutofillBackground,
           ]}
