@@ -15,7 +15,7 @@ export const register = async (email: string): Promise<User> => {
     return await createUser(email);
   } catch (error) {
     if (error instanceof ResourceAlreadyExistsError) {
-      const user: User = await fetchUser({ id: email });
+      const user = await fetchUser({ id: email });
       const { status } = user;
       switch (status) {
         case Status.STAGED: {
