@@ -8,6 +8,7 @@ import {
   addApiQueryParamsToPath,
   addQueryParamsToUntypedPath,
 } from './queryParams';
+import { OktaQueryParams } from '@/shared/model/OktaQueryParams';
 
 /**
  * ExtractRouteParams type generates a object type definition given a path type string
@@ -84,7 +85,7 @@ export const buildUrlWithQueryParams = <P extends AllRoutes>(
 export const buildApiUrlWithQueryParams = <P extends AllRoutes>(
   path: P,
   params: PathParams<P> = <PathParams<P>>{},
-  queryParams: IdApiQueryParams,
+  queryParams: IdApiQueryParams | OktaQueryParams,
 ): string => {
   const url = buildUrl(path, params);
   return addApiQueryParamsToPath(url, queryParams);

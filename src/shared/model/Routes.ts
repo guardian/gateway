@@ -65,6 +65,14 @@ export type ApiRoutePaths =
   | '/user/send-account-without-password-exists-email'
   | '/user/send-create-password-account-exists-email';
 
+export type OktaApiRoutePaths =
+  | '/api/v1/authn'
+  | '/api/v1/authn/credentials/reset_password'
+  | '/api/v1/users'
+  | '/api/v1/users/:id'
+  | '/api/v1/users/:id/lifecycle/activate'
+  | '/api/v1/users/:id/lifecycle/reactivate';
+
 export type PasswordRoutePath = Extract<
   '/reset-password' | '/set-password' | '/welcome',
   RoutePaths
@@ -73,4 +81,4 @@ export type PasswordRoutePath = Extract<
 /**
  * This is all valid routes on the site, only used for the helper function addQueryParamsToPath
  */
-export type AllRoutes = ApiRoutePaths | RoutePaths;
+export type AllRoutes = ApiRoutePaths | RoutePaths | OktaApiRoutePaths;

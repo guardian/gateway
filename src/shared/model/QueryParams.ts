@@ -21,6 +21,7 @@ export interface PersistableQueryParams
   extends TrackingQueryParams,
     StringifiableRecord {
   returnUrl: string;
+  useOkta?: boolean;
   clientId?: ValidClientId;
 }
 

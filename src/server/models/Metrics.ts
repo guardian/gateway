@@ -21,7 +21,11 @@ type ConditionalMetrics =
   | 'AccountVerification'
   | `${EmailMetrics}EmailSend`
   | `${'Get' | 'Post'}ConsentsPage-${string}`
-  | `RecaptchaMiddleware`;
+  | `RecaptchaMiddleware`
+  | 'OktaRegistration'
+  | 'OktaRegistrationResendEmail'
+  | 'OktaSetPasswordOnWelcomePage'
+  | 'OktaWelcomeResendEmail';
 
 // Unconditional metrics that we want to track directly
 type UnconditionalMetrics =

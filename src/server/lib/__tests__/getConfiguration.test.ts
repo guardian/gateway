@@ -38,6 +38,9 @@ describe('getConfiguration', () => {
       'f3d87b231ddd6f50d99e227c5bc9b7cbb649387b321008df412fd73805ac2e32';
     process.env.OKTA_ORG_URL = 'oktaorgurl';
     process.env.OKTA_API_TOKEN = 'oktatoken';
+    process.env.OKTA_CUSTOM_OAUTH_SERVER = 'customoauthserverid';
+    process.env.OKTA_CLIENT_ID = 'oktaclientid';
+    process.env.OKTA_CLIENT_SECRET = 'oktaclientsecret';
 
     const output = getConfiguration();
     const expected = {
@@ -68,6 +71,9 @@ describe('getConfiguration', () => {
         registrationEnabled: false,
         orgUrl: 'oktaorgurl',
         token: 'oktatoken',
+        authServerId: 'customoauthserverid',
+        clientId: 'oktaclientid',
+        clientSecret: 'oktaclientsecret',
       },
       aws: {
         kinesisStreamName: '',

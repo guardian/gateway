@@ -200,7 +200,10 @@ Resources:
                   GOOGLE_RECAPTCHA_SITE_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/recaptcha-site-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   GOOGLE_RECAPTCHA_SECRET_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/recaptcha-secret-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   ENCRYPTION_SECRET_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/encryption-secret-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
-                  OKTA_API_TOKEN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/okta-api-token' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+                  OKTA_API_TOKEN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/okta-api-token' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
+                  OKTA_CUSTOM_OAUTH_SERVER=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaCustomOAuthServer' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
+                  OKTA_CLIENT_ID=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaClientId' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
+                  OKTA_CLIENT_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaClientSecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   then break
                 fi
 
@@ -234,6 +237,9 @@ Resources:
             Environment=ENCRYPTION_SECRET_KEY=$ENCRYPTION_SECRET_KEY
             Environment=OKTA_ORG_URL=${OktaOrgUrl}
             Environment=OKTA_API_TOKEN=$OKTA_API_TOKEN
+            Environment=OKTA_CUSTOM_OAUTH_SERVER=$OKTA_CUSTOM_OAUTH_SERVER
+            Environment=OKTA_CLIENT_ID=$OKTA_CLIENT_ID
+            Environment=OKTA_CLIENT_SECRET=$OKTA_CLIENT_SECRET
             Environment=LOGGING_KINESIS_STREAM=${KinesisStream}
             Environment=EC2_INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
 
