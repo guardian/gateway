@@ -37,7 +37,7 @@ const mockedReactivateOktaUser =
   mocked<(id: string) => Promise<void>>(reactivateUser);
 
 // mocked logger
-jest.mock('@/server/lib/logger');
+jest.mock('@/server/lib/winstonLogger');
 
 const email = 'someemail';
 const User = (status: Status) => {

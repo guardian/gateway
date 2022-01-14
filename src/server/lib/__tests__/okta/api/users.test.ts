@@ -44,7 +44,7 @@ const mockedFetch =
 const json = jest.fn() as jest.MockedFunction<any>;
 
 // mocked logger
-jest.mock('@/server/lib/logger');
+jest.mock('@/server/lib/winstonLogger');
 
 describe('okta#createUser', () => {
   beforeEach(() => {
