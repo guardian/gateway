@@ -2238,21 +2238,20 @@
   dependencies:
     "@guardian/libs" "1.6.1 - 3.3.0"
 
-"@guardian/eslint-plugin-source-foundations@^4.0.0-rc.4":
-  version "4.0.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@guardian/eslint-plugin-source-foundations/-/eslint-plugin-source-foundations-4.0.0-rc.4.tgz#1d846cb3de51b1e2e061793aeb18609fc3268980"
-  integrity sha512-ePeSKbCLcszEzW+gPpSn86REhV568+pjoRDoFNMPQeW9gRKfWoRiAemMO+A4jceinrTgDdikybjtHNTOtqUkeg==
+"@guardian/eslint-plugin-source-foundations@^4.0.0-rc.6":
+  version "4.0.0-rc.6"
+  resolved "https://registry.yarnpkg.com/@guardian/eslint-plugin-source-foundations/-/eslint-plugin-source-foundations-4.0.0-rc.6.tgz#3a6f5ce93a560b5aeb8097a0931f8c97f22fa193"
+  integrity sha512-sAsmjiEwPMXnnYJJBO61hOsxyz76VIehdNPRHxw1og3WHsduWJOrotDvxyXd05IpKLE3qZzGgu0e0tzRiXTocg==
   dependencies:
     "@typescript-eslint/eslint-plugin" "5.9.1"
     "@typescript-eslint/parser" "5.9.1"
     eslint-plugin-import "2.25.4"
 
-"@guardian/eslint-plugin-source-react-components@^4.0.0-rc.4":
-  version "4.0.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@guardian/eslint-plugin-source-react-components/-/eslint-plugin-source-react-components-4.0.0-rc.4.tgz#025b099873c5205f4580852abff11a50802e82d9"
-  integrity sha512-pMlJ11P/p8u2tg3PNHrzL+MBUX6GFQZZzht6bRkyqB1Gn1MU22C2kt/1q0T0YtRAaZs9dfbeDpoIqEJCn0lXCg==
+"@guardian/eslint-plugin-source-react-components@4.0.0-rc.6":
+  version "4.0.0-rc.6"
+  resolved "https://registry.yarnpkg.com/@guardian/eslint-plugin-source-react-components/-/eslint-plugin-source-react-components-4.0.0-rc.6.tgz#a7c1813ba3a5ac304c9a4aeb52fead8ab97c0a82"
+  integrity sha512-hqKtupcqJELhWHUE5IQJU4jVPlRWxXV5AXjfpkAwbBlD0NOkHlhEpehH+PphomqI5VT+MK+o4DOFa4dryoUqPw==
   dependencies:
-    "@guardian/eslint-plugin-source-foundations" "^4.0.0-rc.4"
     "@typescript-eslint/eslint-plugin" "5.9.1"
     "@typescript-eslint/parser" "5.9.1"
 
@@ -2280,22 +2279,22 @@
     yaml "^1.7.2"
     yargs "^15.4.1"
 
-"@guardian/source-foundations@4.0.0-rc.6":
-  version "4.0.0-rc.6"
-  resolved "https://registry.yarnpkg.com/@guardian/source-foundations/-/source-foundations-4.0.0-rc.6.tgz#b8248c9bf9fbd96b8f2bf52db74aaa52059a673c"
-  integrity sha512-8GXGTOW2O75RU3o9M/p8lLhNorDw2nxcJDrk/zGrw3nb1OCYZrsRgfk3BApU3XYPD7FkLWESy2Mzc3PaMWqvPA==
+"@guardian/source-foundations@4.0.0-rc.7":
+  version "4.0.0-rc.7"
+  resolved "https://registry.yarnpkg.com/@guardian/source-foundations/-/source-foundations-4.0.0-rc.7.tgz#7111c5a268a1bea75bcbbd2d0ca3e49f14a0708a"
+  integrity sha512-lEgumDnkWEp150sKgk5C3EtynS6TDMM1dnl/Koz6ETF3eiAYYK/8HRb5MxVAF27wYFD3NhwsedictXCeevXFTw==
   dependencies:
     mini-svg-data-uri "^1.3.3"
 
-"@guardian/source-react-components-development-kitchen@0.0.25-rc.1":
-  version "0.0.25-rc.1"
-  resolved "https://registry.yarnpkg.com/@guardian/source-react-components-development-kitchen/-/source-react-components-development-kitchen-0.0.25-rc.1.tgz#702834b74ad20013e401d53a00550316741058c0"
-  integrity sha512-ibLAPb2Y7TobxlFastBz/s2YWepQ0ify6cWXyBFdVudUPnrXCSB8Yu52efOR2InjLtUMrpNeIjxgYwOhBpVk3w==
+"@guardian/source-react-components-development-kitchen@0.0.25-rc.2":
+  version "0.0.25-rc.2"
+  resolved "https://registry.yarnpkg.com/@guardian/source-react-components-development-kitchen/-/source-react-components-development-kitchen-0.0.25-rc.2.tgz#6dc794e981e156a047244f553b8e46152d320f23"
+  integrity sha512-PWY4G4xoNVuuHB0EasXNtXlPy8PUNwNV1BdSwi1gvocDbhJvqddW9560U79IIVNeUxx0YipTrtAGrza4KK19/Q==
 
-"@guardian/source-react-components@4.0.0-rc.4":
-  version "4.0.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@guardian/source-react-components/-/source-react-components-4.0.0-rc.4.tgz#dc8243b4a94eba22f0afa7aabd2cc83426a64289"
-  integrity sha512-1vpQx7jK8QcawvEXazgh6kmpnvk0yGSvJFAgekqOuJrAQBaRX3qOo1dHqh0lX1UY785eJvqs3EevNM13kD1jeg==
+"@guardian/source-react-components@4.0.0-rc.5":
+  version "4.0.0-rc.5"
+  resolved "https://registry.yarnpkg.com/@guardian/source-react-components/-/source-react-components-4.0.0-rc.5.tgz#fc38d9c297b44e3c63fc1d0731e935b8f19004e4"
+  integrity sha512-DscDPAa4b3pOL0h8LkQ+G8OQEiFwwYe+XOj8mLjfN9BEKCcKpmMrx9Vf4p8xBvRmr3jKvkSj6jZaZMjUtNjqjQ==
 
 "@hapi/hoek@^9.0.0":
   version "9.2.1"
