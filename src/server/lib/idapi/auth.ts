@@ -6,7 +6,7 @@ import {
   IDAPIError,
   idapiFetch,
 } from '@/server/lib/IDAPIFetch';
-import { logger } from '@/server/lib/logger';
+import { logger } from '@/server/lib/winstonLogger';
 import { IdapiError } from '@/server/models/Error';
 import { IdapiErrorMessages, SignInErrors } from '@/shared/model/Errors';
 import { IDAPIAuthRedirect, IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';

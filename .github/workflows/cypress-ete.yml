@@ -45,9 +45,9 @@ jobs:
           OKTA_CLIENT_ID: oktaclientid
           OKTA_CLIENT_SECRET: oktaclientsecret
           LOGGING_KINESIS_STREAM: ''
-          EC2_INSTANCE_ID:
+          EC2_INSTANCE_ID: ''
           # This is a public URL+key sent to Sentry on the client side
-          SENTRY_DSN: 'https://fa6dbd97a7af4ea892d811250bb14b03@o14302.ingest.sentry.io/6138895'
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         with:
           build: yarn build
           start: yarn start

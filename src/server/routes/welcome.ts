@@ -3,7 +3,7 @@ import { setPasswordController } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { sendAccountVerificationEmail } from '@/server/lib/idapi/user';
-import { logger } from '@/server/lib/logger';
+import { logger } from '@/server/lib/winstonLogger';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { renderer } from '@/server/lib/renderer';
 import { ApiError } from '@/server/models/Error';

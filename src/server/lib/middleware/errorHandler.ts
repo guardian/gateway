@@ -2,7 +2,7 @@ import { NextFunction, Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { getCsrfPageUrl } from '@/server/lib/getCsrfPageUrl';
 import { renderer } from '@/server/lib/renderer';
-import { logger } from '@/server/lib/logger';
+import { logger } from '@/server/lib/winstonLogger';
 import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { trackMetric } from '@/server/lib/trackMetric';

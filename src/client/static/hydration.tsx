@@ -23,7 +23,7 @@ export const hydrateApp = () => {
   } = clientState;
 
   // Disable Sentry client side logging during local development.
-  if (stage !== 'DEV') {
+  if (dsn) {
     Sentry.init({
       dsn,
       integrations: [new Integrations.BrowserTracing()],

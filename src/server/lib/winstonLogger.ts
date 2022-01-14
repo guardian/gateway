@@ -1,10 +1,11 @@
 import { AWSError, Kinesis } from 'aws-sdk';
-import { Logger, LogLevel } from '@/server/models/Logger';
+import { LogLevel } from '@/shared/model/Logger';
 import { createLogger, transports } from 'winston';
 import Transport, { TransportStreamOptions } from 'winston-transport';
 import { formatWithOptions, InspectOptions } from 'util';
 import { awsConfig } from './awsConfig';
 import { getConfiguration } from './getConfiguration';
+import { BaseLogger } from '@/shared/lib/baseLogger';
 
 const {
   stage,
@@ -77,7 +78,7 @@ const loggingOptions: InspectOptions = {
 const formatLogParam = (message?: any) =>
   formatWithOptions(loggingOptions, message);
 
-export const logger: Logger = {
+class WinstonLogger extends BaseLogger {
   // eslint-disable-next-line
   log(level: LogLevel, message: string, error?: any) {
     if (
@@ -93,7 +94,6 @@ export const logger: Logger = {
         )} - ${formatLogParam(error.stack)}`,
       );
     }
-
     if (error) {
       return winstonLogger.log(
         level,
@@ -102,20 +102,7 @@ export const logger: Logger = {
     }
 
     return winstonLogger.log(level, `${formatLogParam(message)}`);
-  },
+  }
+}
 
-  // eslint-disable-next-line
-  error(message: string, error?: any) {
-    return logger.log(LogLevel.ERROR, message, error);
-  },
-
-  // eslint-disable-next-line
-  warn(message: string, error?: any) {
-    return logger.log(LogLevel.WARN, message, error);
-  },
-
-  // eslint-disable-next-line
-  info(message: string, error?: any) {
-    logger.log(LogLevel.INFO, message, error);
-  },
-};
+export const logger = new WinstonLogger();

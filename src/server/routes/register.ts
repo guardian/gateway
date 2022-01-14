@@ -13,7 +13,7 @@ import {
   sendAccountWithoutPasswordExistsEmail,
   UserType,
 } from '@/server/lib/idapi/user';
-import { logger } from '@/server/lib/logger';
+import { logger } from '@/server/lib/winstonLogger';
 import {
   register as registerWithOkta,
   resendRegistrationEmail,

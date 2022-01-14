@@ -9,7 +9,7 @@ import {
   IdapiErrorMessages,
   ChangePasswordErrors,
 } from '@/shared/model/Errors';
-import { logger } from '@/server/lib/logger';
+import { logger } from '@/server/lib/winstonLogger';
 import { IdapiError } from '@/server/models/Error';
 import { IdapiCookies } from '../setIDAPICookies';
 

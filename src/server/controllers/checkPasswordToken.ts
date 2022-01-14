@@ -9,7 +9,7 @@ import {
   setEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
 import { renderer } from '@/server/lib/renderer';
-import { logger } from '@/server/lib/logger';
+import { logger } from '@/server/lib/winstonLogger';
 import { PasswordRoutePath } from '@/shared/model/Routes';
 import { PasswordPageTitle } from '@/shared/model/PageTitle';
 import { getConfiguration } from '@/server/lib/getConfiguration';

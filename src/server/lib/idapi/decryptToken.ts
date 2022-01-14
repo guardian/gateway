@@ -3,7 +3,7 @@ import {
   APIGetOptions,
   idapiFetch,
 } from '@/server/lib/IDAPIFetch';
-import { logger } from '@/server/lib/logger';
+import { logger } from '@/server/lib/winstonLogger';
 
 export const decrypt = async (
   token: string,
