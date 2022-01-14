@@ -78,7 +78,7 @@ const loggingOptions: InspectOptions = {
 const formatLogParam = (message?: any) =>
   formatWithOptions(loggingOptions, message);
 
-class WinstonLogger extends BaseLogger {
+class ServerSideLogger extends BaseLogger {
   // eslint-disable-next-line
   log(level: LogLevel, message: string, error?: any) {
     if (
@@ -105,4 +105,4 @@ class WinstonLogger extends BaseLogger {
   }
 }
 
-export const logger = new WinstonLogger();
+export const logger = new ServerSideLogger();

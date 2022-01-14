@@ -5,7 +5,7 @@ import { readEmailCookie } from '@/server/lib/emailCookie';
 import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { sendCreatePasswordEmail } from '@/server/lib/idapi/user';
-import { logger } from '@/server/lib/winstonLogger';
+import { logger } from '@/server/lib/serverSideLogger';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { renderer } from '@/server/lib/renderer';
 import { ResponseWithRequestState } from '@/server/models/Express';

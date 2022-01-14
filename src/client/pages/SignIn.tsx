@@ -24,7 +24,7 @@ import useRecaptcha, {
 import locations from '@/shared/lib/locations';
 import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
 import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
-import { logger } from '@/client/lib/sentryLogger';
+import { logger } from '@/client/lib/clientSideLogger';
 
 export type SignInProps = {
   returnUrl?: string;

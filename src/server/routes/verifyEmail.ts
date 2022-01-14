@@ -6,7 +6,7 @@ import {
   send as sendVerificationEmail,
   verifyEmail,
 } from '@/server/lib/idapi/verifyEmail';
-import { logger } from '@/server/lib/winstonLogger';
+import { logger } from '@/server/lib/serverSideLogger';
 import { renderer } from '@/server/lib/renderer';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { trackMetric } from '@/server/lib/trackMetric';

@@ -6,7 +6,7 @@ import { getProfileUrl } from '@/server/lib/getProfileUrl';
 
 import { trackMetric } from '@/server/lib/trackMetric';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { logger } from '@/server/lib/winstonLogger';
+import { logger } from '@/server/lib/serverSideLogger';
 import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { buildUrl } from '@/shared/lib/routeUtils';

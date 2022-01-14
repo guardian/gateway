@@ -6,7 +6,7 @@ import {
   APIForwardSessionIdentifier,
   IDAPIError,
 } from '@/server/lib/IDAPIFetch';
-import { logger } from '@/server/lib/winstonLogger';
+import { logger } from '@/server/lib/serverSideLogger';
 import {
   ConsentsErrors,
   IdapiErrorMessages,

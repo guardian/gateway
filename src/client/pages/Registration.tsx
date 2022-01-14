@@ -23,7 +23,7 @@ import { QueryParams } from '@/shared/model/QueryParams';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
 import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
-import { logger } from '@/client/lib/sentryLogger';
+import { logger } from '@/client/lib/clientSideLogger';
 
 export type RegistrationProps = {
   returnUrl?: string;

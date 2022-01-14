@@ -20,7 +20,7 @@ import { CaptchaErrors } from '@/shared/model/Errors';
 import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
 import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
 import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
-import { logger } from '@/client/lib/sentryLogger';
+import { logger } from '@/client/lib/clientSideLogger';
 
 export interface MainFormProps {
   formAction: string;

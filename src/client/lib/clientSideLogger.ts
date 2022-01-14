@@ -15,7 +15,7 @@ const getSentryLevel = (level: LogLevel) => {
   }
 };
 
-class SentryLogger extends BaseLogger {
+class ClientSideLogger extends BaseLogger {
   // eslint-disable-next-line
   log(level: LogLevel, message: string, error?: any) {
     if (
@@ -38,4 +38,4 @@ class SentryLogger extends BaseLogger {
   }
 }
 
-export const logger = new SentryLogger();
+export const logger = new ClientSideLogger();

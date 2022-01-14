@@ -3,7 +3,7 @@ import deepmerge from 'deepmerge';
 
 import { buildUrl } from '@/shared/lib/routeUtils';
 import { typedRouter as router } from '@/server/lib/typedRoutes';
-import { logger } from '@/server/lib/winstonLogger';
+import { logger } from '@/server/lib/serverSideLogger';
 import { renderer } from '@/server/lib/renderer';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { ResponseWithRequestState } from '@/server/models/Express';

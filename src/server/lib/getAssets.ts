@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { logger } from '@/server/lib/winstonLogger';
+import { logger } from '@/server/lib/serverSideLogger';
 
 interface AssetsFile {
   runtime: {

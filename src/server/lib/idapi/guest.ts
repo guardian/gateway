@@ -8,7 +8,7 @@ import {
   IDAPIError,
   idapiFetch,
 } from '@/server/lib/IDAPIFetch';
-import { logger } from '@/server/lib/winstonLogger';
+import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { emailSendMetric } from '@/server/models/Metrics';
 import {

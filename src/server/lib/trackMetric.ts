@@ -1,6 +1,6 @@
 import * as AWS from 'aws-sdk';
 import { Metrics } from '@/server/models/Metrics';
-import { logger } from '@/server/lib/winstonLogger';
+import { logger } from '@/server/lib/serverSideLogger';
 import { AWSError } from 'aws-sdk';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { awsConfig } from '@/server/lib/awsConfig';

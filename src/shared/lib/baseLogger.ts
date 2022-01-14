@@ -1,4 +1,4 @@
-import { LogLevel, Logger } from '../model/Logger';
+import { LogLevel, Logger } from '@/shared/model/Logger';
 
 export abstract class BaseLogger implements Logger {
   // eslint-disable-next-line

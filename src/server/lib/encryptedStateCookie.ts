@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { logger } from './winstonLogger';
+import { logger } from './serverSideLogger';
 import { decrypt, encrypt } from './crypto';
 import { EncryptedState } from '@/shared/model/EncryptedState';
 

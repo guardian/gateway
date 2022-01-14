@@ -5,7 +5,7 @@
 import { Request } from 'express';
 import { verify as verifyJWT } from 'jsonwebtoken';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { logger } from '@/server/lib/winstonLogger';
+import { logger } from '@/server/lib/serverSideLogger';
 
 const { playSessionCookieSecret, stage } = getConfiguration();
 
