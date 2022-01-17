@@ -22,6 +22,7 @@ enum CSP_VALID_URI {
   GUARDIAN_CONSENTS_LOGS = 'consent-logs.',
   CMP = `sourcepoint.theguardian.com gdpr-tcfv2.sp-prod.net ccpa.sp-prod.net ccpa-service.sp-prod.net ccpa-notice.sp-prod.net cdn.privacy-mgmt.com`,
   HAVEIBEENPWNED = 'https://api.pwnedpasswords.com',
+  POLYFILLIO = 'polyfill.io'
 }
 
 const idapiOrigin = idapiBaseUrl.replace(/https?:\/\/|\/identity-api/g, '');
