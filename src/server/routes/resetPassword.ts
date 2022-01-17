@@ -11,7 +11,7 @@ import handleRecaptcha from '@/server/lib/recaptcha';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { sendResetPasswordEmail } from '@/server/lib/idapi/resetPassword';
 import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
-import { logger } from '@/server/lib/logger';
+import { logger } from '@/server/lib/serverSideLogger';
 import { ApiError } from '@/server/models/Error';
 import { ResetPasswordErrors } from '@/shared/model/Errors';
 import { trackMetric } from '@/server/lib/trackMetric';

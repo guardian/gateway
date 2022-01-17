@@ -20,6 +20,9 @@ Parameters:
   OktaOrgUrl:
     Description: The org url for interacting with okta APIs
     Type: AWS::SSM::Parameter::Value<String>
+  SentryDsn:
+    Description: Public data source name for us to send Sentry logs to
+    Type: AWS::SSM::Parameter::Value<String>
   CertificateArn:
     Description: ARN of certificate for loadbalancer use.
     Type: String
@@ -242,6 +245,7 @@ Resources:
             Environment=OKTA_CLIENT_SECRET=$OKTA_CLIENT_SECRET
             Environment=LOGGING_KINESIS_STREAM=${KinesisStream}
             Environment=EC2_INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+            Environment=SENTRY_DSN=${SentryDsn}
 
             [Install]
             WantedBy=multi-user.target

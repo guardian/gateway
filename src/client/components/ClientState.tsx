@@ -4,6 +4,7 @@ import { ClientState } from '@/shared/model/ClientState';
 export const ClientStateContext = createContext<ClientState>({
   clientHosts: { idapiBaseUrl: '', oauthBaseUrl: '' },
   recaptchaConfig: { recaptchaSiteKey: '' },
+  sentryConfig: { build: '0', stage: 'DEV', dsn: '' },
   queryParams: {
     returnUrl: 'https://theguardian.com',
   },

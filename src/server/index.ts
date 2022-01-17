@@ -1,5 +1,5 @@
 import { default as express, Express } from 'express';
-import { logger } from '@/server/lib/logger';
+import { logger } from '@/server/lib/serverSideLogger';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { applyMiddleware } from '@/server/lib/middleware';
 

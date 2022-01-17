@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import { RecaptchaV2 } from 'express-recaptcha';
 import { getConfiguration } from './getConfiguration';
 import createError from 'http-errors';
-import { logger } from '@/server/lib/logger';
+import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
 
 const {

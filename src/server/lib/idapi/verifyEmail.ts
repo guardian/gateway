@@ -7,7 +7,7 @@ import {
 } from '@/server/lib/IDAPIFetch';
 
 import { IdapiErrorMessages, VerifyEmailErrors } from '@/shared/model/Errors';
-import { logger } from '@/server/lib/logger';
+import { logger } from '@/server/lib/serverSideLogger';
 import { IdapiError } from '@/server/models/Error';
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {

@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import deepmerge from 'deepmerge';
 import { authenticate } from '@/server/lib/idapi/auth';
-import { logger } from '@/server/lib/logger';
+import { logger } from '@/server/lib/serverSideLogger';
 import { renderer } from '@/server/lib/renderer';
 
 import { ResponseWithRequestState } from '@/server/models/Express';
