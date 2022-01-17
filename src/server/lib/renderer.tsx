@@ -133,14 +133,17 @@ export const renderer: <P extends RoutePaths>(
         <link rel="icon" href="https://static.guim.co.uk/images/${favicon}">
         <title>${pageTitle} | The Guardian</title>
         <script>window.gaUID = "${gaUID.id}"</script>
+
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=Object.fromEntries" defer></script>
+
         <script type="module" src="/${assets.runtime}" defer></script>
         <script type="module" src="/${assets.vendors}" defer></script>
         <script type="module" src="/${assets.main}" defer></script>
-        
+
         <script nomodule src="/${legacyAssets.runtime}" defer></script>
         <script nomodule src="/${legacyAssets.vendors}" defer></script>
         <script nomodule src="/${legacyAssets.main}" defer></script>
-        
+
         <script id="routingConfig" type="application/json">${serialize(
           routingConfig,
           { isJSON: true },
