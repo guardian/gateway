@@ -134,7 +134,7 @@ export const renderer: <P extends RoutePaths>(
         <title>${pageTitle} | The Guardian</title>
         <script>window.gaUID = "${gaUID.id}"</script>
 
-        <script src="https://polyfill.io/v3/polyfill.min.js?features=Object.fromEntries" defer></script>
+        <script src="https://assets.guim.co.uk/polyfill.io/v3/polyfill.min.js?features=Object.fromEntries" defer></script>
 
         <script type="module" src="/${assets.runtime}" defer></script>
         <script type="module" src="/${assets.vendors}" defer></script>
