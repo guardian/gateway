@@ -7,7 +7,7 @@ interface IdapiCookie {
   sessionCookie?: boolean;
 }
 
-interface IdapiCookies {
+export interface IdapiCookies {
   values: Array<IdapiCookie>;
   expiresAt: string;
 }

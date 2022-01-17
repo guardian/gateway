@@ -7,9 +7,19 @@
  * @interface FeatureSwitches
  */
 interface FeatureSwitches {
-  oktaAuthentication: boolean;
+  demoSwitch: boolean;
+  oktaEnabled: {
+    DEV: boolean;
+    CODE: boolean;
+    PROD: boolean;
+  };
 }
 
 export const featureSwitches: FeatureSwitches = {
-  oktaAuthentication: false,
+  demoSwitch: false,
+  oktaEnabled: {
+    DEV: false,
+    CODE: true,
+    PROD: false,
+  },
 };

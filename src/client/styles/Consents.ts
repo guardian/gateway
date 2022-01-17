@@ -1,10 +1,15 @@
 import { css } from '@emotion/react';
-import { space, palette } from '@guardian/src-foundations';
-import { headline, textSans } from '@guardian/src-foundations/typography';
-import { from } from '@guardian/src-foundations/mq';
+import {
+  from,
+  space,
+  headline,
+  textSans,
+  text as textPalette,
+  neutral,
+} from '@guardian/source-foundations';
 
 export const heading = css`
-  color: ${palette.text.ctaSecondary};
+  color: ${textPalette.ctaSecondary};
   margin: 0 0 ${space[3]}px;
   ${headline.xxsmall({ fontWeight: 'bold' })};
 `;
@@ -23,7 +28,7 @@ export const headingWithMq = css`
 
 export const text = css`
   margin: 0;
-  color: ${palette.neutral[20]};
+  color: ${neutral[20]};
   ${textSans.medium()}
   max-width: 640px;
 `;

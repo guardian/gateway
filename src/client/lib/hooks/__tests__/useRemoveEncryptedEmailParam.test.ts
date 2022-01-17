@@ -1,4 +1,4 @@
-import { removeEncryptedParam } from './useRemoveEncryptedEmailParam';
+import { removeEncryptedParam } from '../useRemoveEncryptedEmailParam';
 
 describe('useRemoveEncryptedEmailParam', () => {
   it('deleted EcryptedEmail param from query string', () => {

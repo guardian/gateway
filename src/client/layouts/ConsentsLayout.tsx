@@ -3,9 +3,12 @@ import { Footer } from '@/client/components/Footer';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { css } from '@emotion/react';
-import { brand, space } from '@guardian/src-foundations';
-import { Button, LinkButton } from '@guardian/src-button';
-import { SvgArrowRightStraight } from '@guardian/src-icons';
+import { brand, space } from '@guardian/source-foundations';
+import {
+  Button,
+  LinkButton,
+  SvgArrowRightStraight,
+} from '@guardian/source-react-components';
 import {
   getAutoRow,
   gridItem,
@@ -15,10 +18,10 @@ import { controls } from '@/client/layouts/shared/Consents';
 import { ConsentsSubHeader } from '@/client/components/ConsentsSubHeader';
 import { ConsentsBlueBackground } from '@/client/components/ConsentsBlueBackground';
 import { ConsentsHeader } from '@/client/components/ConsentsHeader';
-import { Routes } from '@/shared/model/Routes';
+
 import { onboardingFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 
 interface ConsentsLayoutProps {
   children?: React.ReactNode;
@@ -86,8 +89,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
     globalMessage: { error, success } = {},
     queryParams,
   } = clientState;
-  const { page = '', previousPage } = pageData;
-  const queryString = addQueryParamsToPath('', queryParams);
+  const { page = '', previousPage, geolocation } = pageData;
 
   const optionalBgColor =
     bgColor &&
@@ -99,12 +101,20 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
     `;
   return (
     <>
-      <ConsentsHeader error={error} success={success} />
+      <ConsentsHeader
+        error={error}
+        success={success}
+        geolocation={geolocation}
+      />
       <main css={mainStyles}>
         <ConsentsSubHeader autoRow={autoRow} title={title} current={current} />
         <form
           css={form}
-          action={`${Routes.CONSENTS}/${page}${queryString}`}
+          action={buildUrlWithQueryParams(
+            '/consents/:page',
+            { page },
+            queryParams,
+          )}
           method="post"
           onSubmit={({ target: form }) => {
             onboardingFormSubmitOphanTracking(
@@ -136,7 +146,13 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
                 {previousPage && (
                   <LinkButton
                     css={linkButton}
-                    href={`${Routes.CONSENTS}/${previousPage}${queryString}`}
+                    href={buildUrlWithQueryParams(
+                      '/consents/:page',
+                      {
+                        page: previousPage,
+                      },
+                      queryParams,
+                    )}
                     priority="subdued"
                   >
                     Go back

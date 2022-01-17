@@ -1,38 +1,53 @@
-export enum Metrics {
-  SEND_PASSWORD_RESET_SUCCESS = 'SendPasswordReset::Success',
-  SEND_PASSWORD_RESET_FAILURE = 'SendPasswordReset::Failure',
-  AUTHENTICATION_SUCCESS = 'Authentication::Success',
-  AUTHENTICATION_FAILURE = 'Authentication::Failure',
-  AUTHORIZATION_SUCCESS = 'Authorization::Success',
-  AUTHORIZATION_FAILURE = 'Authorization::Failure',
-  AUTHORIZATION_ERROR = 'Authorization::Error',
-  SEND_MAGIC_LINK_SUCCESS = 'SendMagicLink::Success',
-  SEND_MAGIC_LINK_FAILURE = 'SendMagicLink::Failure',
-  REGISTER_SUCCESS = 'Register::Success',
-  REGISTER_FAILURE = 'Register::Failure',
-  CHANGE_PASSWORD_SUCCESS = 'UpdatePassword::Success',
-  CHANGE_PASSWORD_FAILURE = 'UpdatePassword::Failure',
-  LOGIN_MIDDLEWARE_SUCCESS = 'LoginMiddleware::Success',
-  LOGIN_MIDDLEWARE_FAILURE = 'LoginMiddleware::Failure',
-  LOGIN_MIDDLEWARE_UNVERIFIED = 'LoginMiddlewareUnverified',
-  LOGIN_MIDDLEWARE_NOT_RECENT = 'LoginMiddlewareNotRecent',
-  LOGIN_MIDDLEWARE_NOT_SIGNED_IN = 'LoginMiddlewareNotSignedIn',
-  SEND_VALIDATION_EMAIL_SUCCESS = 'SendValidationEmail::Success',
-  SEND_VALIDATION_EMAIL_FAILURE = 'SendValidationEmail::Failure',
-  EMAIL_VALIDATED_SUCCESS = 'EmailValidated::Success',
-  EMAIL_VALIDATED_FAILURE = 'EmailValidated::Failure',
-  ACCOUNT_VERIFICATION_SUCCESS = 'AccountVerification::Success',
-  ACCOUNT_VERIFICATION_FAILURE = 'AccountVerification::Failure',
-}
+// This file defines the metrics that we would like to track in cloudwatch
 
+// Specific emails to track
+type EmailMetrics =
+  | 'AccountVerification'
+  | 'AccountExists'
+  | 'AccountExistsWithoutPassword'
+  | 'CreatePassword'
+  | 'ResetPassword';
+
+// Any metrics with conditions to append to the end
+// i.e ::Success or ::Failure
+type ConditionalMetrics =
+  | 'SendMagicLink'
+  | 'SignIn'
+  | 'Register'
+  | 'UpdatePassword'
+  | 'LoginMiddleware'
+  | 'SendValidationEmail'
+  | 'EmailValidated'
+  | 'AccountVerification'
+  | `${EmailMetrics}EmailSend`
+  | `${'Get' | 'Post'}ConsentsPage-${string}`
+  | `RecaptchaMiddleware`
+  | 'OktaRegistration'
+  | 'OktaRegistrationResendEmail'
+  | 'OktaSetPasswordOnWelcomePage'
+  | 'OktaWelcomeResendEmail'
+  | 'OAuthAuthorization';
+
+// Unconditional metrics that we want to track directly
+type UnconditionalMetrics =
+  | 'LoginMiddlewareUnverified'
+  | 'LoginMiddlewareNotRecent'
+  | 'LoginMiddlewareNotSignedIn';
+
+// Combine all the metrics above together into a type
+export type Metrics =
+  | `${ConditionalMetrics}::${'Success' | 'Failure'}`
+  | UnconditionalMetrics;
+
+// type safe helper method for consent page tracking
 export const consentsPageMetric = (
   page: string,
   getOrPost: 'Get' | 'Post',
-  isSuccess: boolean,
-) => {
-  if (isSuccess) {
-    return `${getOrPost}ConsentsPage-${page}::Success`;
-  } else {
-    return `${getOrPost}ConsentsPage-${page}::Failure`;
-  }
-};
+  type: 'Success' | 'Failure',
+): Metrics => `${getOrPost}ConsentsPage-${page}::${type}`;
+
+// type safe helper method for email sending metrics
+export const emailSendMetric = (
+  email: EmailMetrics,
+  type: 'Success' | 'Failure',
+): Metrics => `${email}EmailSend::${type}`;

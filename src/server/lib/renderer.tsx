@@ -1,19 +1,22 @@
 import { ClientState, FieldError } from '@/shared/model/ClientState';
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { App } from '@/client/app';
-import { brandBackground } from '@guardian/src-foundations/palette';
-import qs from 'query-string';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { RoutingConfig } from '@/client/routes';
 import { getAssets } from '@/server/lib/getAssets';
 import { RequestState } from '@/server/models/Express';
-import { CsrfErrors } from '@/shared/model/Errors';
+import { CaptchaErrors, CsrfErrors } from '@/shared/model/Errors';
 import { ABProvider } from '@guardian/ab-react';
 import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
-import { resets } from '@guardian/src-foundations/utils';
+import { buildUrlWithQueryParams, PathParams } from '@/shared/lib/routeUtils';
+import { brandBackground, resets } from '@guardian/source-foundations';
+import deepmerge from 'deepmerge';
+import { RoutePaths } from '@/shared/model/Routes';
+import { PageTitle } from '@/shared/model/PageTitle';
+import serialize from 'serialize-javascript';
 
 const assets = getAssets();
 const legacyAssets = getAssets(true);
@@ -25,7 +28,7 @@ const favicon =
     : 'favicon-32x32-dev-yellow.ico';
 
 interface RendererOpts {
-  pageTitle: string;
+  pageTitle: PageTitle;
   requestState: RequestState;
 }
 
@@ -68,22 +71,33 @@ const clientStateFromRequestStateLocals = ({
         fieldErrors,
       },
     };
-  } else {
-    return clientState;
   }
+
+  // checking if recaptcha error exists in query params, and attaching it to the
+  // forms field errors
+  if (queryParams.recaptchaError) {
+    return deepmerge(clientState, {
+      globalMessage: {
+        error: CaptchaErrors.GENERIC,
+      },
+    });
+  }
+
+  return clientState;
 };
 
-export const renderer: (url: string, opts: RendererOpts) => string = (
-  url,
-  { requestState, pageTitle },
-) => {
-  const context = {};
-
+export const renderer: <P extends RoutePaths>(
+  url: P,
+  opts: RendererOpts,
+  tokenisationParams?: PathParams<P>,
+) => string = (url, { requestState, pageTitle }, tokenisationParams) => {
   const clientState = clientStateFromRequestStateLocals(requestState);
 
-  const queryString = qs.stringify(requestState.queryParams);
-
-  const location = `${url}${queryString ? `?${queryString}` : ''}`;
+  const location = buildUrlWithQueryParams(
+    url,
+    tokenisationParams,
+    requestState.queryParams,
+  );
 
   const { abTesting: { mvtId = 0, forcedTestVariants = {} } = {} } =
     clientState;
@@ -98,7 +112,7 @@ export const renderer: (url: string, opts: RendererOpts) => string = (
       mvtId={mvtId}
       forcedTestVariants={forcedTestVariants}
     >
-      <StaticRouter location={location} context={context}>
+      <StaticRouter location={location}>
         <App {...clientState}></App>
       </StaticRouter>
     </ABProvider>,
@@ -127,8 +141,9 @@ export const renderer: (url: string, opts: RendererOpts) => string = (
         <script nomodule src="/${legacyAssets.vendors}" defer></script>
         <script nomodule src="/${legacyAssets.main}" defer></script>
         
-        <script id="routingConfig" type="application/json">${JSON.stringify(
+        <script id="routingConfig" type="application/json">${serialize(
           routingConfig,
+          { isJSON: true },
         )}</script>
         <style>${resets.defaults}</style>
       </head>

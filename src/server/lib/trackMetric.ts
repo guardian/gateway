@@ -21,7 +21,7 @@ const defaultDimensions = {
 };
 
 export const trackMetric = (
-  metricName: Metrics | string,
+  metricName: Metrics,
   dimensions?: MetricDimensions,
 ) => {
   // merge defaultDimensions with dimensions from parameter in case some were changed,
@@ -46,12 +46,12 @@ export const trackMetric = (
   })
     .promise()
     .catch((error: AWSError) => {
-      if (error.code === 'ExpiredToken' && Stage === 'DEV') {
+      if (error.code.includes('ExpiredToken') && Stage === 'DEV') {
         logger.warn(
           'AWS Credentials Expired. Have you added `Identity` Janus credentials?',
         );
       } else {
-        logger.error('Track Metric Error', error);
+        logger.warn('Track Metric Error', error);
       }
     });
 };

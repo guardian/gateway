@@ -1,7 +1,6 @@
 import { SerializedStyles } from '@emotion/react';
 import { css } from '@emotion/react';
-import { space } from '@guardian/src-foundations';
-import { from } from '@guardian/src-foundations/mq';
+import { from, space } from '@guardian/source-foundations';
 
 export enum COLUMNS {
   MOBILE = 4,
@@ -230,7 +229,7 @@ export const gridItem = (spanDefinition?: SpanDefinition) => {
 export const gridItemColumnConsents: SpanDefinition = {
   TABLET: { start: 2, span: 10 },
   DESKTOP: { start: 2, span: 10 },
-  LEFT_COL: { start: 2, span: 10 },
+  LEFT_COL: { start: 2, span: 12 },
   WIDE: { start: 3, span: 12 },
 };
 

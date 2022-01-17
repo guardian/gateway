@@ -10,7 +10,6 @@ import { logger } from '@/server/lib/logger';
 import { IdapiError } from '@/server/models/Error';
 import { IdapiErrorMessages, SignInErrors } from '@/shared/model/Errors';
 import { IDAPIAuthRedirect, IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
-import { ApiRoutes } from '@/shared/model/Routes';
 
 interface APIResponse {
   emailValidated: true;
@@ -55,7 +54,6 @@ export const read = async (
   sc_gu_la: string,
   ip: string,
 ): Promise<IDAPIAuthRedirect> => {
-  const url = `${ApiRoutes.AUTH}${ApiRoutes.REDIRECT}`;
   const options = APIAddClientAccessToken(
     APIForwardSessionIdentifier(APIGetOptions(), sc_gu_u),
     ip,
@@ -66,13 +64,16 @@ export const read = async (
   };
   try {
     return responseToEntity(
-      (await idapiFetch(url, {
-        ...options,
-        headers: { ...headers },
+      (await idapiFetch({
+        path: '/auth/redirect',
+        options: {
+          ...options,
+          headers: { ...headers },
+        },
       })) as APIResponse,
     );
   } catch (error) {
-    logger.error(`IDAPI Error auth read ${url}`, error);
+    logger.error(`IDAPI Error auth read '/auth/redirect'`, error);
     return handleError(error as IDAPIError);
   }
 };
@@ -82,20 +83,20 @@ export const authenticate = async (
   password: string,
   ip: string,
 ) => {
-  const url = `${ApiRoutes.AUTH}?format=cookies`;
   const options = APIPostOptions({
     email,
     password,
   });
 
   try {
-    const response = await idapiFetch(
-      url,
-      APIAddClientAccessToken(options, ip),
-    );
+    const response = await idapiFetch({
+      path: '/auth',
+      options: APIAddClientAccessToken(options, ip),
+      queryParams: { format: 'cookies' },
+    });
     return response.cookies;
   } catch (error) {
-    logger.error(`IDAPI Error auth authenticate ${url}`, error);
+    logger.error(`IDAPI Error auth authenticate '/auth?format=cookies'`, error);
     handleError(error as IDAPIError);
   }
 };
@@ -109,10 +110,11 @@ export const exchangeAccessTokenForCookies = async (
   });
 
   try {
-    const response = await idapiFetch(
-      `${ApiRoutes.AUTH}${ApiRoutes.COOKIE_EXCHANGE}`,
-      APIAddClientAccessToken(options, ip),
-    );
+    const response = await idapiFetch({
+      path: `/auth/oauth-token`,
+      options: APIAddClientAccessToken(options, ip),
+      queryParams: { format: 'cookies' },
+    });
     return response.cookies;
   } catch (error) {
     handleError(error as IDAPIError);

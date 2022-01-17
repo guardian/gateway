@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { QueryParams } from '@/shared/model/QueryParams';
 import {
   ClientHosts,
@@ -7,6 +7,7 @@ import {
   RecaptchaConfig,
 } from '@/shared/model/ClientState';
 import { Participations, ABTestAPI } from '@guardian/ab-core';
+import { OphanConfig } from '@/server/lib/ophan';
 
 export interface ABTesting {
   mvtId: number;
@@ -26,8 +27,13 @@ export interface RequestState {
   abTestAPI: ABTestAPI;
   clientHosts: ClientHosts;
   recaptchaConfig: RecaptchaConfig;
+  ophanConfig: OphanConfig;
 }
 
 export interface ResponseWithRequestState extends Response {
   locals: RequestState;
+}
+
+export interface RequestWithTypedQuery extends Request {
+  query: Record<keyof QueryParams, string | undefined>;
 }

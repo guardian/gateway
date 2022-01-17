@@ -33,13 +33,15 @@ describe('getConfiguration', () => {
     process.env.IS_HTTPS = 'true';
     process.env.APP_SECRET = 'app-secret';
     process.env.OKTA_DOMAIN = 'https://adomain.okta.com';
-    process.env.OKTA_CUSTOM_OAUTH_SERVER = 'customauthserverid';
-    process.env.OKTA_CLIENT_ID = 'abc123';
-    process.env.OKTA_CLIENT_SECRET = 'xyz789';
     process.env.GOOGLE_RECAPTCHA_SITE_KEY = 'recaptcha-site';
     process.env.GOOGLE_RECAPTCHA_SECRET_KEY = 'recaptcha-secret';
     process.env.ENCRYPTION_SECRET_KEY =
       'f3d87b231ddd6f50d99e227c5bc9b7cbb649387b321008df412fd73805ac2e32';
+    process.env.OKTA_ORG_URL = 'oktaorgurl';
+    process.env.OKTA_API_TOKEN = 'oktatoken';
+    process.env.OKTA_CUSTOM_OAUTH_SERVER = 'customoauthserverid';
+    process.env.OKTA_CLIENT_ID = 'oktaclientid';
+    process.env.OKTA_CLIENT_SECRET = 'oktaclientsecret';
 
     const output = getConfiguration();
     const expected = {
@@ -60,9 +62,6 @@ describe('getConfiguration', () => {
       isHttps: true,
       appSecret: 'app-secret',
       oktaDomain: 'https://adomain.okta.com',
-      oktaCustomOAuthServer: 'customauthserverid',
-      oktaClientId: 'abc123',
-      oktaClientSecret: 'xyz789',
       googleRecaptcha: {
         siteKey: 'recaptcha-site',
         secretKey: 'recaptcha-secret',
@@ -70,6 +69,18 @@ describe('getConfiguration', () => {
       encryptionSecretKey:
         'f3d87b231ddd6f50d99e227c5bc9b7cbb649387b321008df412fd73805ac2e32',
       oauthBaseUrl: 'http://localhost:5678',
+      okta: {
+        enabled: false,
+        orgUrl: 'oktaorgurl',
+        token: 'oktatoken',
+        authServerId: 'customoauthserverid',
+        clientId: 'oktaclientid',
+        clientSecret: 'oktaclientsecret',
+      },
+      aws: {
+        kinesisStreamName: '',
+        instanceId: '',
+      },
     };
     expect(output).toEqual(expected);
   });

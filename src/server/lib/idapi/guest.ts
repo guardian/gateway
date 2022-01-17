@@ -1,18 +1,20 @@
 import { IdapiError } from '@/server/models/Error';
 import { EmailType } from '@/shared/model/EmailType';
 import { IdapiErrorMessages, RegistrationErrors } from '@/shared/model/Errors';
-import { getConfiguration } from '../getConfiguration';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 import {
   APIAddClientAccessToken,
   APIPostOptions,
   IDAPIError,
   idapiFetch,
-} from '../IDAPIFetch';
-import { logger } from '../logger';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { ApiRoutes } from '@/shared/model/Routes';
-
-const url = `${ApiRoutes.GUEST}?accountVerificationEmail=true`;
+} from '@/server/lib/IDAPIFetch';
+import { logger } from '@/server/lib/logger';
+import { trackMetric } from '@/server/lib/trackMetric';
+import { emailSendMetric } from '@/server/models/Metrics';
+import {
+  OphanConfig,
+  sendOphanInteractionEventServer,
+} from '@/server/lib/ophan';
 
 const { defaultReturnUri } = getConfiguration();
 
@@ -41,22 +43,40 @@ export const guest = async (
   returnUrl?: string,
   refViewId?: string,
   ref?: string,
+  clientId?: string,
+  ophanTrackingConfig?: OphanConfig,
 ): Promise<EmailType> => {
   const options = APIPostOptions({
     primaryEmailAddress: email,
   });
 
-  const path = addQueryParamsToPath(url, {
-    returnUrl: returnUrl || defaultReturnUri,
-    ref,
-    refViewId,
-  });
-
   try {
-    await idapiFetch(path, APIAddClientAccessToken(options, ip));
+    await idapiFetch({
+      path: '/guest',
+      options: APIAddClientAccessToken(options, ip),
+      queryParams: {
+        accountVerificationEmail: true,
+        returnUrl: returnUrl || defaultReturnUri,
+        ref,
+        refViewId,
+        clientId,
+      },
+    });
+    sendOphanInteractionEventServer(
+      {
+        component: 'email-send',
+        value: 'account-verification',
+      },
+      ophanTrackingConfig,
+    );
+    trackMetric(emailSendMetric('AccountVerification', 'Success'));
     return EmailType.ACCOUNT_VERIFICATION;
   } catch (error) {
-    logger.error(`IDAPI Error: guest account creation ${url}`, error);
+    logger.error(
+      `IDAPI Error: guest account creation '/guest?accountVerificationEmail=true'}`,
+      error,
+    );
+    trackMetric(emailSendMetric('AccountVerification', 'Failure'));
     return handleError(error as IDAPIError);
   }
 };

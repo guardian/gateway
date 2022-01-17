@@ -1,14 +1,5 @@
 import { css } from '@emotion/react';
-import { from } from '@guardian/src-foundations/mq';
-import { space } from '@guardian/src-foundations';
-
-export const linkButton = css`
-  width: 100%;
-
-  ${from.mobileMedium} {
-    width: max-content;
-  }
-`;
+import { from, space } from '@guardian/source-foundations';
 
 export const button = css`
   width: 100%;
@@ -16,14 +7,6 @@ export const button = css`
   ${from.mobileMedium} {
     width: max-content;
   }
-`;
-
-export const textInput = css`
-  margin-bottom: ${space[3]}px;
-`;
-
-export const form = css`
-  padding: ${space[2]}px 0px;
 `;
 
 export const topMargin = css`
@@ -34,4 +17,19 @@ export const topMargin = css`
   ${from.tablet} {
     margin-top: ${space[6]}px;
   }
+`;
+
+export const disableAutofillBackground = css`
+  :-webkit-autofill {
+    background-color: transparent !important;
+    box-shadow: 0 0 0 50px white inset;
+  }
+  :autofill {
+    background-color: transparent !important;
+    box-shadow: 0 0 0 50px white inset;
+  }
+`;
+
+export const noBorderRadius = css`
+  border-radius: 0;
 `;

@@ -1,10 +1,13 @@
 import React from 'react';
 import { css, SerializedStyles } from '@emotion/react';
 
-import { border, text } from '@guardian/src-foundations/palette';
-import { space } from '@guardian/src-foundations';
-import { textSans } from '@guardian/src-foundations/typography';
-import { from } from '@guardian/src-foundations/mq';
+import {
+  border,
+  from,
+  text,
+  space,
+  textSans,
+} from '@guardian/source-foundations';
 
 type Sizes = 'full' | 'partial' | 'fit';
 type Spaces = 'tight' | 'loose';

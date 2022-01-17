@@ -1,13 +1,12 @@
 import React, { FunctionComponent } from 'react';
 import { css } from '@emotion/react';
-import { space, palette, brand } from '@guardian/src-foundations';
+import { from, space, brand, border } from '@guardian/source-foundations';
 import {
   getAutoRow,
   gridItem,
   gridItemColumnConsents,
   SpanDefinition,
 } from '@/client/styles/Grid';
-import { from } from '@guardian/src-foundations/mq';
 import {
   ConsentsContent,
   controls,
@@ -18,28 +17,30 @@ import { ConsentsBlueBackground } from '@/client/components/ConsentsBlueBackgrou
 import { ConsentsHeader } from '@/client/components/ConsentsHeader';
 import { Footer } from '@/client/components/Footer';
 import { headingWithMq, text } from '@/client/styles/Consents';
-import { SvgArrowRightStraight } from '@guardian/src-icons';
+import { SvgArrowRightStraight } from '@guardian/source-react-components';
 import { Consent } from '@/shared/model/Consent';
 import { NewsLetter } from '@/shared/model/Newsletter';
 import {
   ExternalLink,
   ExternalLinkButton,
 } from '@/client/components/ExternalLink';
+import { GeoLocation } from '@/shared/model/Geolocation';
 
 type ConsentsConfirmationProps = {
   error?: string;
   success?: string;
   returnUrl: string;
   optedOutOfProfiling: boolean;
-  optedOutOfMarketResearch: boolean;
   productConsents: Consent[];
   subscribedNewsletters: NewsLetter[];
+  geolocation?: GeoLocation;
 };
+
 const reviewTableContainer = css`
   display: flex;
   flex-flow: column;
   margin-top: ${space[6]}px;
-  border: 1px solid ${palette.border.secondary};
+  border: 1px solid ${border.secondary};
 `;
 
 const mainBackground = css`
@@ -62,7 +63,7 @@ const reviewTableRow = css`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  border-bottom: 1px solid ${palette.border.secondary};
+  border-bottom: 1px solid ${border.secondary};
   padding: ${space[5]}px;
 
   ${from.tablet} {
@@ -151,14 +152,18 @@ export const ConsentsConfirmation = ({
   success,
   returnUrl,
   optedOutOfProfiling,
-  optedOutOfMarketResearch,
   productConsents,
   subscribedNewsletters,
+  geolocation,
 }: ConsentsConfirmationProps) => {
   const autoRow = getAutoRow(1, confirmationSpanDefinition);
   return (
     <>
-      <ConsentsHeader error={error} success={success} />
+      <ConsentsHeader
+        error={error}
+        success={success}
+        geolocation={geolocation}
+      />
       <main>
         <ConsentsSubHeader
           autoRow={autoRow}
@@ -199,9 +204,6 @@ export const ConsentsConfirmation = ({
                 ) : (
                   <p css={text}>N/A</p>
                 )}
-              </ReviewTableRow>
-              <ReviewTableRow title="Marketing research">
-                <p css={text}>{optedOutOfMarketResearch ? 'No' : 'Yes'}</p>
               </ReviewTableRow>
               <ReviewTableRow title="Marketing analysis">
                 <p css={text}>{optedOutOfProfiling ? 'No' : 'Yes'}</p>

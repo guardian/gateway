@@ -9,11 +9,14 @@ import {
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { text } from '@/client/styles/Consents';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
-import { LinkButton } from '@guardian/src-button';
-import { Routes } from '@/shared/model/Routes';
-import { SvgArrowRightStraight } from '@guardian/src-icons';
+import {
+  LinkButton,
+  SvgArrowRightStraight,
+} from '@guardian/source-react-components';
+
 import { css } from '@emotion/react';
-import { space } from '@guardian/src-foundations';
+import { buildUrl } from '@/shared/lib/routeUtils';
+import { space } from '@guardian/source-foundations';
 
 type Props = {
   submitUrl: string;
@@ -53,7 +56,7 @@ export const Welcome = ({
           <div css={autoRow()}>
             <LinkButton
               css={linkButton}
-              href={`${Routes.CONSENTS}`}
+              href={buildUrl('/consents')}
               priority="primary"
               icon={<SvgArrowRightStraight />}
               iconSide="right"
@@ -68,6 +71,8 @@ export const Welcome = ({
             labelText="Password"
             submitButtonText="Create password"
             gridAutoRow={autoRow}
+            autoComplete="new-password"
+            formTrackingName="welcome"
           />
         )}
       </ConsentsContent>

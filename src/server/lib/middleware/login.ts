@@ -3,13 +3,13 @@ import { joinUrl } from '@guardian/libs';
 import { read } from '@/server/lib/idapi/auth';
 import { IDAPIAuthRedirect, IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
 import { getProfileUrl } from '@/server/lib/getProfileUrl';
-import { Routes } from '@/shared/model/Routes';
+
 import { trackMetric } from '@/server/lib/trackMetric';
-import { Metrics } from '@/server/models/Metrics';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/logger';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
 import { ResponseWithRequestState } from '@/server/models/Express';
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 const profileUrl = getProfileUrl();
 
@@ -18,12 +18,11 @@ export const loginMiddleware = async (
   res: ResponseWithRequestState,
   next: NextFunction,
 ) => {
-  const config = getConfiguration();
-  const LOGIN_REDIRECT_URL = config.signInPageUrl;
+  const { signInPageUrl: LOGIN_REDIRECT_URL } = getConfiguration();
 
   const redirectAuth = (auth: IDAPIAuthRedirect) => {
     if (auth.redirect) {
-      const redirect = addQueryParamsToPath(auth.redirect.url, {
+      const redirect = addQueryParamsToUntypedPath(auth.redirect.url, {
         ...res.locals.queryParams,
         returnUrl: joinUrl(profileUrl, req.path),
       });
@@ -31,7 +30,7 @@ export const loginMiddleware = async (
     }
 
     return res.redirect(
-      addQueryParamsToPath(LOGIN_REDIRECT_URL, {
+      addQueryParamsToUntypedPath(LOGIN_REDIRECT_URL, {
         ...res.locals.queryParams,
         returnUrl: joinUrl(profileUrl, req.path),
       }),
@@ -43,7 +42,7 @@ export const loginMiddleware = async (
 
   if (!sc_gu_u || !sc_gu_la) {
     res.redirect(
-      addQueryParamsToPath(LOGIN_REDIRECT_URL, {
+      addQueryParamsToUntypedPath(LOGIN_REDIRECT_URL, {
         ...res.locals.queryParams,
         returnUrl: joinUrl(profileUrl, req.path),
       }),
@@ -55,27 +54,27 @@ export const loginMiddleware = async (
     const auth = await read(sc_gu_u, sc_gu_la, req.ip);
 
     if (auth.status === IDAPIAuthStatus.SIGNED_OUT) {
-      trackMetric(Metrics.LOGIN_MIDDLEWARE_NOT_SIGNED_IN);
+      trackMetric('LoginMiddlewareNotSignedIn');
       return redirectAuth(auth);
     }
 
     if (!auth.emailValidated) {
-      trackMetric(Metrics.LOGIN_MIDDLEWARE_UNVERIFIED);
-      return res.redirect(303, Routes.VERIFY_EMAIL);
+      trackMetric('LoginMiddlewareUnverified');
+      return res.redirect(303, buildUrl('/verify-email'));
     }
 
     if (auth.status === IDAPIAuthStatus.RECENT) {
-      trackMetric(Metrics.LOGIN_MIDDLEWARE_SUCCESS);
+      trackMetric('LoginMiddleware::Success');
       next();
     } else {
-      trackMetric(Metrics.LOGIN_MIDDLEWARE_NOT_RECENT);
+      trackMetric('LoginMiddlewareNotRecent');
       return redirectAuth(auth);
     }
   } catch (e) {
     logger.error('loginMiddlewareFailure', e);
-    trackMetric(Metrics.LOGIN_MIDDLEWARE_FAILURE);
+    trackMetric('LoginMiddleware::Failure');
     res.redirect(
-      addQueryParamsToPath(
+      addQueryParamsToUntypedPath(
         LOGIN_REDIRECT_URL,
         {
           ...res.locals.queryParams,

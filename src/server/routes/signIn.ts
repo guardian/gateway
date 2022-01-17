@@ -1,12 +1,10 @@
-import { Request, Router } from 'express';
+import { Request } from 'express';
 import deepmerge from 'deepmerge';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
-import { Routes } from '@/shared/model/Routes';
+
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { Metrics } from '@/server/models/Metrics';
-import { PageTitle } from '@/shared/model/PageTitle';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { decrypt } from '@/server/lib/idapi/decryptToken';
@@ -19,38 +17,48 @@ import {
   ProfileOpenIdClient,
   setAuthorizationStateCookie,
 } from '@/server/lib/okta/oidc';
-import { featureSwitches } from '@/shared/lib/featureSwitches';
+import { typedRouter as router } from '@/server/lib/typedRoutes';
+import { readEmailCookie } from '@/server/lib/emailCookie';
+import handleRecaptcha from '@/server/lib/recaptcha';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 
-const router = Router();
+const { okta } = getConfiguration();
 
-const preFillEmailField = (route: string) =>
+router.get(
+  '/signin',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
 
     const { encryptedEmail, error, error_description } = state.queryParams;
 
-    const email = encryptedEmail ? await decrypt(encryptedEmail, req.ip) : '';
+    // first attempt to get email from IDAPI encryptedEmail if it exists
+    const decryptedEmail =
+      encryptedEmail && (await decrypt(encryptedEmail, req.ip));
+
+    // followed by the gateway EncryptedState
+    // and the identity-frontend playSessionCookie
+    // if it exists
+    const email = decryptedEmail || readEmailCookie(req);
 
     const errorMessage =
       error === FederationErrors.SOCIAL_SIGNIN_BLOCKED
         ? SignInErrors.ACCOUNT_ALREADY_EXISTS
         : error_description;
 
-    const html = renderer(route, {
+    const html = renderer('/signin', {
       requestState: deepmerge(state, {
         pageData: {
-          email: email,
+          email,
         },
         globalMessage: {
           error: errorMessage,
         },
       }),
-      pageTitle: PageTitle.SIGN_IN,
+      pageTitle: 'Sign in',
     });
     res.type('html').send(html);
-  });
-
-router.get(Routes.SIGN_IN, preFillEmailField(Routes.SIGN_IN));
+  }),
+);
 
 const oktaAuthenticationController = async (
   req: Request,
@@ -93,18 +101,18 @@ const oktaAuthenticationController = async (
       scope: 'openid idapi_token_cookie_exchange',
     });
 
-    trackMetric(Metrics.AUTHENTICATION_SUCCESS);
+    trackMetric('SignIn::Success');
 
     // redirect the user to the /authorize endpoint
     return res.redirect(authorizeUrl);
   } catch (error) {
-    trackMetric(Metrics.AUTHENTICATION_FAILURE);
+    trackMetric('SignIn::Failure');
     logger.error('Okta authentication error:', error);
 
     const { message, status } =
       error instanceof ApiError ? error : new ApiError();
 
-    const html = renderer(Routes.SIGN_IN, {
+    const html = renderer('/signin', {
       requestState: deepmerge(res.locals, {
         pageData: {
           email,
@@ -113,8 +121,9 @@ const oktaAuthenticationController = async (
           error: message,
         },
       }),
-      pageTitle: PageTitle.SIGN_IN,
+      pageTitle: 'Sign in',
     });
+
     return res
       .status(status || 500)
       .type('html')
@@ -142,8 +151,7 @@ const idapiAuthenticationController = async (
     // set cookie headers on response
     setIDAPICookies(res, cookies);
 
-    // track success
-    trackMetric(Metrics.AUTHENTICATION_SUCCESS);
+    trackMetric('SignIn::Success');
 
     // redirect to returnUrl
     return res.redirect(303, returnUrl);
@@ -154,10 +162,10 @@ const idapiAuthenticationController = async (
       error instanceof ApiError ? error : new ApiError();
 
     // track failure
-    trackMetric(Metrics.AUTHENTICATION_FAILURE);
+    trackMetric('SignIn::Failure');
 
     // re-render the sign in page on error
-    const html = renderer(Routes.SIGN_IN, {
+    const html = renderer('/signin', {
       requestState: deepmerge(state, {
         pageData: {
           email,
@@ -166,7 +174,7 @@ const idapiAuthenticationController = async (
           error: message,
         },
       }),
-      pageTitle: PageTitle.SIGN_IN,
+      pageTitle: 'Sign in',
     });
 
     return res
@@ -178,9 +186,12 @@ const idapiAuthenticationController = async (
 
 // main sign in form POST submit route
 router.post(
-  Routes.SIGN_IN,
+  '/signin',
+  handleRecaptcha,
   handleAsyncErrors((req: Request, res: ResponseWithRequestState) => {
-    if (featureSwitches.oktaAuthentication) {
+    const { useOkta } = res.locals.queryParams;
+
+    if (okta.enabled && useOkta) {
       // if okta feature switch enabled, use okta authentication
       return oktaAuthenticationController(req, res);
     } else {
@@ -190,4 +201,4 @@ router.post(
   }),
 );
 
-export default router;
+export default router.router;

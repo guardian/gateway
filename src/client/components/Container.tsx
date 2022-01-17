@@ -1,8 +1,7 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { Container as SourceContainer } from '@guardian/src-layout';
-import { brandLine } from '@guardian/src-foundations/palette';
-import { from } from '@guardian/src-foundations/mq';
+import { Container as SourceContainer } from '@guardian/source-react-components';
+import { brandLine, neutral, from } from '@guardian/source-foundations';
 
 type Props = {
   children: React.ReactNode; // Children are inserted inside the nested div of the section
@@ -30,9 +29,13 @@ const noPaddingStyles = css`
   }
 `;
 
-const sideBorderColors = (color: string) => css`
-  border-left-color: ${color} !important;
-  border-right-color: ${color};
+const sideBorderStyles = (color: string = neutral[86]) => css`
+  > div {
+    ${from.tablet} {
+      border-left: 1px solid ${color};
+      border-right: 1px solid ${color};
+    }
+  }
 `;
 
 export const Container = ({
@@ -45,13 +48,12 @@ export const Container = ({
 }: Props) => {
   return (
     <SourceContainer
-      sideBorders={sideBorders}
       topBorder={topBorder}
       borderColor={borderColor}
       backgroundColor={backgroundColor}
       cssOverrides={[
         sidePadding ? sidePaddingStyles : noPaddingStyles,
-        sideBorders ? sideBorderColors(borderColor) : css``,
+        sideBorders ? sideBorderStyles(borderColor) : css``,
       ]}
     >
       {children}

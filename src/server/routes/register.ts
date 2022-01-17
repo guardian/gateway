@@ -1,57 +1,51 @@
-import { Request, Router } from 'express';
-import {
-  readUserType,
-  sendAccountExistsEmail,
-  sendAccountWithoutPasswordExistsEmail,
-  sendAccountVerificationEmail,
-  UserType,
-} from '@/server/lib/idapi/user';
-import { logger } from '@/server/lib/logger';
-import { renderer } from '@/server/lib/renderer';
-import { Routes } from '@/shared/model/Routes';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import { trackMetric } from '@/server/lib/trackMetric';
-import { Metrics } from '@/server/models/Metrics';
-import { PageTitle } from '@/shared/model/PageTitle';
-import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import deepmerge from 'deepmerge';
-import { getEmailFromPlaySessionCookie } from '@/server/lib/playSessionCookie';
-import { guest } from '@/server/lib/idapi/guest';
-import { RecaptchaV2 } from 'express-recaptcha';
-import { getConfiguration } from '@/server/lib/getConfiguration';
-import { CaptchaErrors, GenericErrors } from '@/shared/model/Errors';
+import { Request } from 'express';
+import handleRecaptcha from '@/server/lib/recaptcha';
 import {
   readEncryptedStateCookie,
   setEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
-import { EmailType } from '@/shared/model/EmailType';
+import { handleAsyncErrors } from '@/server/lib/expressWrappers';
+import { guest } from '@/server/lib/idapi/guest';
+import {
+  readUserType,
+  sendAccountExistsEmail,
+  sendAccountVerificationEmail,
+  sendAccountWithoutPasswordExistsEmail,
+  UserType,
+} from '@/server/lib/idapi/user';
+import { logger } from '@/server/lib/logger';
+import {
+  register as registerWithOkta,
+  resendRegistrationEmail,
+} from '@/server/lib/okta/register';
+import { getEmailFromPlaySessionCookie } from '@/server/lib/playSessionCookie';
+import { renderer } from '@/server/lib/renderer';
+import { typedRouter as router } from '@/server/lib/typedRoutes';
+import { trackMetric } from '@/server/lib/trackMetric';
 import { ApiError } from '@/server/models/Error';
+import { ResponseWithRequestState } from '@/server/models/Express';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { EmailType } from '@/shared/model/EmailType';
+import { GenericErrors, RegistrationErrors } from '@/shared/model/Errors';
+import deepmerge from 'deepmerge';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { InvalidEmailFormatError, OktaError } from '@/server/models/okta/Error';
 
-const router = Router();
+const { okta } = getConfiguration();
 
-// set google recaptcha site key
-const {
-  googleRecaptcha: { secretKey, siteKey },
-} = getConfiguration();
-
-const recaptcha = new RecaptchaV2(siteKey, secretKey);
-
-router.get(
-  Routes.REGISTRATION,
-  (req: Request, res: ResponseWithRequestState) => {
-    const html = renderer(Routes.REGISTRATION, {
-      requestState: res.locals,
-      pageTitle: PageTitle.REGISTRATION,
-    });
-    res.type('html').send(html);
-  },
-);
+router.get('/register', (req: Request, res: ResponseWithRequestState) => {
+  const html = renderer('/register', {
+    requestState: res.locals,
+    pageTitle: 'Register',
+  });
+  res.type('html').send(html);
+});
 
 router.get(
-  `${Routes.REGISTRATION}${Routes.EMAIL_SENT}`,
+  '/register/email-sent',
   (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
-    const html = renderer(`${Routes.REGISTRATION}${Routes.EMAIL_SENT}`, {
+    const html = renderer('/register/email-sent', {
       requestState: deepmerge(state, {
         pageData: {
           email:
@@ -59,173 +53,320 @@ router.get(
             readEncryptedStateCookie(req)?.email,
         },
       }),
-      pageTitle: PageTitle.REGISTRATION_EMAIL_SENT,
+      pageTitle: 'Check Your Inbox',
     });
     res.type('html').send(html);
   },
 );
 
 router.post(
-  `${Routes.REGISTRATION}${Routes.RESEND}`,
+  '/register/email-sent/resend',
+  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { returnUrl } = res.locals.queryParams;
+    const { useOkta } = res.locals.queryParams;
+    if (okta.enabled && useOkta) {
+      await OktaResendEmail(req, res);
+    } else {
+      const state = res.locals;
 
-    try {
-      // read and parse the encrypted state cookie
-      const encryptedState = readEncryptedStateCookie(req);
+      const { returnUrl, emailSentSuccess, ref, refViewId, clientId } =
+        state.queryParams;
 
-      // read the email from the PlaySessionCookie or the EncryptedState
-      // we attempt to read from the PlaySessionCookie first as it's likely
-      // the registration came from identity-frontend until the register page
-      // is at 100% of all users on gateway
-      const email = getEmailFromPlaySessionCookie(req) || encryptedState?.email;
+      try {
+        // read and parse the encrypted state cookie
+        const encryptedState = readEncryptedStateCookie(req);
 
-      // check the email exists
-      if (typeof email !== 'undefined') {
-        // read the type of email we sent to the user based on the EncryptedState set
-        // we default to GUEST_REGISTER as it's likely that if the value doesn't exist
-        // they are a new user registration
-        const emailType: EmailType =
-          encryptedState?.emailType ?? EmailType.ACCOUNT_VERIFICATION;
+        // read the email from the PlaySessionCookie or the EncryptedState
+        // we attempt to read from the PlaySessionCookie first as it's likely
+        // the registration came from identity-frontend until the register page
+        // is at 100% of all users on gateway
+        const email =
+          getEmailFromPlaySessionCookie(req) || encryptedState?.email;
 
-        // depending on the EmailType that was originally sent to the user
-        // we determine which email to resend
-        switch (emailType) {
-          // they were a newly registered user, so resend the AccountVerification Email
-          case EmailType.ACCOUNT_VERIFICATION:
-            await sendAccountVerificationEmail(email, req.ip, returnUrl);
-            break;
-          // they were an already registered user, so resend the AccountExists Email
-          case EmailType.ACCOUNT_EXISTS:
-            await sendAccountExistsEmail(email, req.ip, returnUrl);
-            break;
-          // they were an already registered user without password
-          // so resend the AccountWithoutPasswordExists Email
-          case EmailType.ACCOUNT_WITHOUT_PASSWORD_EXISTS:
-            await sendAccountWithoutPasswordExistsEmail(
-              email,
-              req.ip,
-              returnUrl,
-            );
-            break;
-          default:
-            // somethings gone wrong, throw a generic error
-            throw new ApiError({ message: GenericErrors.DEFAULT, status: 500 });
+        // check the email exists
+        if (typeof email !== 'undefined') {
+          // read the type of email we sent to the user based on the EncryptedState set
+          // we default to GUEST_REGISTER as it's likely that if the value doesn't exist
+          // they are a new user registration
+          const emailType: EmailType =
+            encryptedState?.emailType ?? EmailType.ACCOUNT_VERIFICATION;
+
+          // depending on the EmailType that was originally sent to the user
+          // we determine which email to resend
+          switch (emailType) {
+            // they were a newly registered user, so resend the AccountVerification Email
+            case EmailType.ACCOUNT_VERIFICATION:
+              await sendAccountVerificationEmail(
+                email,
+                req.ip,
+                returnUrl,
+                ref,
+                refViewId,
+                clientId,
+                state.ophanConfig,
+              );
+              break;
+            // they were an already registered user, so resend the AccountExists Email
+            case EmailType.ACCOUNT_EXISTS:
+              await sendAccountExistsEmail(
+                email,
+                req.ip,
+                returnUrl,
+                ref,
+                refViewId,
+                state.ophanConfig,
+              );
+              break;
+            // they were an already registered user without password
+            // so resend the AccountWithoutPasswordExists Email
+            case EmailType.ACCOUNT_WITHOUT_PASSWORD_EXISTS:
+              await sendAccountWithoutPasswordExistsEmail(
+                email,
+                req.ip,
+                returnUrl,
+                ref,
+                refViewId,
+                state.ophanConfig,
+              );
+              break;
+            default:
+              // somethings gone wrong, throw a generic error
+              throw new ApiError({
+                message: GenericErrors.DEFAULT,
+                status: 500,
+              });
+          }
+
+          setEncryptedStateCookie(res, { email, emailType });
+          return res.redirect(
+            303,
+            addQueryParamsToPath(
+              '/register/email-sent',
+              res.locals.queryParams,
+              {
+                emailSentSuccess,
+              },
+            ),
+          );
+        } else {
+          throw new ApiError({ message: GenericErrors.DEFAULT, status: 500 });
         }
+      } catch (error) {
+        const { message, status } =
+          error instanceof ApiError ? error : new ApiError();
 
-        setEncryptedStateCookie(res, { email, emailType });
-        return res.redirect(303, `${Routes.REGISTRATION}${Routes.EMAIL_SENT}`);
-      } else {
-        throw new ApiError({ message: GenericErrors.DEFAULT, status: 500 });
+        logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+
+        const html = renderer('/register/email-sent', {
+          pageTitle: 'Check Your Inbox',
+          requestState: deepmerge(res.locals, {
+            globalMessage: {
+              error: message,
+            },
+          }),
+        });
+        return res.status(status).type('html').send(html);
       }
-    } catch (error) {
-      const { message, status } =
-        error instanceof ApiError ? error : new ApiError();
-
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-
-      const html = renderer(`${Routes.REGISTRATION}${Routes.EMAIL_SENT}`, {
-        pageTitle: PageTitle.REGISTRATION_EMAIL_SENT,
-        requestState: deepmerge(res.locals, {
-          globalMessage: {
-            error: message,
-          },
-        }),
-      });
-      return res.status(status).type('html').send(html);
     }
   }),
 );
 
 router.post(
-  Routes.REGISTRATION,
-  recaptcha.middleware.verify,
+  '/register',
+  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    let state = res.locals;
+    const { useOkta } = res.locals.queryParams;
+    if (okta.enabled && useOkta) {
+      await OktaRegistration(req, res);
+    } else {
+      let state = res.locals;
 
-    const { email = '' } = req.body;
-    const { returnUrl, ref, refViewId } = state.queryParams;
+      const { email = '' } = req.body;
+      const { returnUrl, ref, refViewId, clientId } = state.queryParams;
 
-    try {
-      if (req.recaptcha?.error) {
-        logger.error(
-          'Problem verifying recaptcha, error response: ',
-          req.recaptcha.error,
+      try {
+        // use idapi user type endpoint to determine user type
+        const userType = await readUserType(email, req.ip);
+
+        // check what type of user they are to determine course of action
+        switch (userType) {
+          // new user, so call guest register endpoint to create user account without password
+          // and automatically send account verification email
+          case UserType.NEW:
+            await guest(
+              email,
+              req.ip,
+              returnUrl,
+              refViewId,
+              ref,
+              clientId,
+              state.ophanConfig,
+            );
+            // set the encrypted state cookie in each case, so the next page is aware
+            // of the email address and type of email sent
+            // so if needed it can resend the correct email
+            setEncryptedStateCookie(res, {
+              email,
+              emailType: EmailType.ACCOUNT_VERIFICATION,
+            });
+            break;
+          // user exists with password
+          // so we want to send them the account exists email
+          case UserType.CURRENT:
+            await sendAccountExistsEmail(
+              email,
+              req.ip,
+              returnUrl,
+              ref,
+              refViewId,
+              state.ophanConfig,
+            );
+            setEncryptedStateCookie(res, {
+              email,
+              emailType: EmailType.ACCOUNT_EXISTS,
+            });
+            break;
+          // user exists without password
+          // so we send them the account exists without password email to set a password
+          case UserType.GUEST:
+            await sendAccountWithoutPasswordExistsEmail(
+              email,
+              req.ip,
+              returnUrl,
+              ref,
+              refViewId,
+              state.ophanConfig,
+            );
+            setEncryptedStateCookie(res, {
+              email,
+              emailType: EmailType.ACCOUNT_WITHOUT_PASSWORD_EXISTS,
+            });
+            break;
+          default:
+            // shouldn't reach this point, so we want to catch this
+            // as an error just in case
+            throw new Error('Invalid UserType');
+        }
+
+        trackMetric('Register::Success');
+
+        // redirect the user to the email sent page
+        return res.redirect(
+          303,
+          addQueryParamsToPath('/register/email-sent', res.locals.queryParams),
         );
-        throw new ApiError({
-          message: CaptchaErrors.GENERIC,
-          status: 400,
+      } catch (error) {
+        logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+
+        const { message, status } =
+          error instanceof ApiError ? error : new ApiError();
+
+        trackMetric('Register::Failure');
+
+        state = deepmerge(state, {
+          globalMessage: {
+            error: message,
+          },
+          pageData: {
+            email,
+          },
         });
+
+        const html = renderer('/register', {
+          requestState: state,
+          pageTitle: 'Register',
+        });
+        return res.status(status).type('html').send(html);
       }
-
-      // use idapi user type endpoint to determine user type
-      const userType = await readUserType(email, req.ip);
-
-      // check what type of user they are to determine course of action
-      switch (userType) {
-        // new user, so call guest register endpoint to create user account without password
-        // and automatically send account verification email
-        case UserType.NEW:
-          await guest(email, req.ip, returnUrl, refViewId, ref);
-          // set the encrypted state cookie in each case, so the next page is aware
-          // of the email address and type of email sent
-          // so if needed it can resend the correct email
-          setEncryptedStateCookie(res, {
-            email,
-            emailType: EmailType.ACCOUNT_VERIFICATION,
-          });
-          break;
-        // user exists with password
-        // so we want to send them the account exists email
-        case UserType.CURRENT:
-          await sendAccountExistsEmail(email, req.ip, returnUrl);
-          setEncryptedStateCookie(res, {
-            email,
-            emailType: EmailType.ACCOUNT_EXISTS,
-          });
-          break;
-        // user exists without password
-        // so we send them the account exists without password email to set a password
-        case UserType.GUEST:
-          await sendAccountWithoutPasswordExistsEmail(email, req.ip, returnUrl);
-          setEncryptedStateCookie(res, {
-            email,
-            emailType: EmailType.ACCOUNT_WITHOUT_PASSWORD_EXISTS,
-          });
-          break;
-        default:
-          // shouldn't reach this point, so we want to catch this
-          // as an error just in case
-          throw new Error('Invalid UserType');
-      }
-
-      // redirect the user to the email sent page
-      return res.redirect(303, `${Routes.REGISTRATION}${Routes.EMAIL_SENT}`);
-    } catch (error) {
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-
-      const { message, status } =
-        error instanceof ApiError ? error : new ApiError();
-
-      trackMetric(Metrics.REGISTER_FAILURE);
-
-      state = deepmerge(state, {
-        globalMessage: {
-          error: message,
-        },
-        pageData: {
-          email,
-          recaptchaSiteKey: siteKey,
-        },
-      });
-
-      const html = renderer(Routes.REGISTRATION, {
-        requestState: state,
-        pageTitle: PageTitle.REGISTRATION,
-      });
-      return res.status(status).type('html').send(html);
     }
   }),
 );
 
-export default router;
+const OktaRegistration = async (
+  req: Request,
+  res: ResponseWithRequestState,
+) => {
+  const { email = '' } = req.body;
+
+  try {
+    const user = await registerWithOkta(email);
+
+    setEncryptedStateCookie(res, {
+      email: user.profile.email,
+      status: user.status,
+    });
+
+    trackMetric('OktaRegistration::Success');
+
+    return res.redirect(
+      303,
+      addQueryParamsToPath('/register/email-sent', res.locals.queryParams),
+    );
+  } catch (error) {
+    logger.error('Okta Registration failure', error);
+
+    const errorMessage = () => {
+      if (error instanceof InvalidEmailFormatError) {
+        return RegistrationErrors.EMAIL_INVALID;
+      } else {
+        return RegistrationErrors.GENERIC;
+      }
+    };
+
+    trackMetric('OktaRegistration::Failure');
+
+    const requestState = deepmerge(res.locals, {
+      globalMessage: {
+        error: errorMessage(),
+      },
+      pageData: {
+        email,
+      },
+    });
+
+    return res.type('html').send(
+      renderer('/register', {
+        requestState,
+        pageTitle: 'Register',
+      }),
+    );
+  }
+};
+
+const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
+  try {
+    const encryptedState = readEncryptedStateCookie(req);
+    const { email } = encryptedState ?? {};
+
+    if (typeof email !== 'undefined') {
+      await resendRegistrationEmail(email);
+      trackMetric('OktaRegistrationResendEmail::Success');
+      return res.redirect(
+        303,
+        addQueryParamsToPath('/register/email-sent', res.locals.queryParams, {
+          emailSentSuccess: true,
+        }),
+      );
+    } else
+      throw new OktaError(
+        'Could not resend registration email as email was undefined',
+      );
+  } catch (error) {
+    logger.error('Okta Registration resend email failure', error);
+
+    trackMetric('OktaRegistrationResendEmail::Failure');
+
+    return res.type('html').send(
+      renderer('/register/email-sent', {
+        pageTitle: 'Check Your Inbox',
+        requestState: deepmerge(res.locals, {
+          globalMessage: {
+            error: GenericErrors.DEFAULT,
+          },
+        }),
+      }),
+    );
+  }
+};
+
+export default router.router;

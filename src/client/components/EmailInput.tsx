@@ -1,5 +1,9 @@
-import { TextInput, TextInputProps } from '@guardian/src-text-input';
+import { TextInput, TextInputProps } from '@guardian/source-react-components';
 import React, { useState } from 'react';
+import {
+  disableAutofillBackground,
+  noBorderRadius,
+} from '@/client/styles/Shared';
 
 export enum EmailInputFieldState {
   VALID = 'valid',
@@ -13,11 +17,13 @@ enum EmailInputFieldErrorMessages {
 }
 
 interface EmailInputProps extends Omit<TextInputProps, 'label'> {
+  label?: string;
   defaultValue?: string;
   initialState?: EmailInputFieldState;
 }
 
 export const EmailInput: React.FC<EmailInputProps> = ({
+  label = 'Email',
   initialState = EmailInputFieldState.VALID,
   ...rest
 }) => {
@@ -61,13 +67,21 @@ export const EmailInput: React.FC<EmailInputProps> = ({
 
   return (
     <TextInput
-      label="Email"
+      label={label}
       name="email"
       type="email"
+      autoComplete="email"
       error={errorMessage}
+      cssOverrides={[disableAutofillBackground, noBorderRadius]}
       onBlur={(e) => {
         // Transition error state when the input box loses focus.
         transitionState(e.target.validity);
+      }}
+      onKeyDown={(e) => {
+        if (e.code === '') {
+          e.currentTarget.checkValidity();
+          transitionState(e.currentTarget.validity);
+        }
       }}
       onInvalid={(e) => {
         // Prevent default browser popup from firing.

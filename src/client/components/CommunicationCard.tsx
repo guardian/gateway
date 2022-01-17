@@ -1,9 +1,15 @@
 import React, { FunctionComponent } from 'react';
-import { titlepiece, textSans } from '@guardian/src-foundations/typography';
+import {
+  background,
+  text,
+  neutral,
+  titlepiece,
+  textSans,
+  space,
+  from,
+} from '@guardian/source-foundations';
 import { css, SerializedStyles } from '@emotion/react';
-import { space, palette } from '@guardian/src-foundations';
-import { CheckboxGroup, Checkbox } from '@guardian/src-checkbox';
-import { from } from '@guardian/src-foundations/mq';
+import { CheckboxGroup, Checkbox } from '@guardian/source-react-components';
 
 interface CommunicationCardProps {
   title: string;
@@ -30,7 +36,7 @@ const communicationCardHeadingImage = (image: string) => css`
 `;
 
 const communicationCardHeadingContainer = (image?: string) => css`
-  background-color: ${palette.background.ctaPrimary};
+  background-color: ${background.ctaPrimary};
 
   ${image && communicationCardHeadingImage(image)}
 
@@ -44,7 +50,7 @@ const communicationCardHeadingContainer = (image?: string) => css`
 `;
 
 const communicationCardHeadingText = css`
-  color: ${palette.text.ctaPrimary};
+  color: ${text.ctaPrimary};
   margin: 0;
   ${titlepiece.small()};
   font-size: 20px;
@@ -61,7 +67,7 @@ const communicationCardBodyContainer = css`
 `;
 
 const communicationCardBodyText = css`
-  color: ${palette.neutral[20]};
+  color: ${neutral[20]};
   margin: 0;
   ${textSans.medium()}
   max-width: 640px;
@@ -77,7 +83,7 @@ const communicationCardCheckboxContainer = css`
 
 // TODO: hacked background colour, should be fixed in future source checkbox implementation
 const communicationCardCheckbox = css`
-  background: ${palette.neutral[100]};
+  background: ${neutral[100]};
   z-index: 0 !important;
 `;
 

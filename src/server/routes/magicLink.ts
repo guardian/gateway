@@ -1,27 +1,27 @@
-import { Router, Request } from 'express';
+import { Request } from 'express';
 import deepmerge from 'deepmerge';
-import { Routes } from '@/shared/model/Routes';
+
+import { buildUrl } from '@/shared/lib/routeUtils';
+import { typedRouter as router } from '@/server/lib/typedRoutes';
 import { logger } from '@/server/lib/logger';
 import { renderer } from '@/server/lib/renderer';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { Metrics } from '@/server/models/Metrics';
-import { PageTitle } from '@/shared/model/PageTitle';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { ApiError } from '@/server/models/Error';
+import handleRecaptcha from '@/server/lib/recaptcha';
 
-const router = Router();
-
-router.get(Routes.MAGIC_LINK, (req: Request, res: ResponseWithRequestState) => {
-  const html = renderer(Routes.MAGIC_LINK, {
+router.get('/magic-link', (req: Request, res: ResponseWithRequestState) => {
+  const html = renderer('/magic-link', {
     requestState: res.locals,
-    pageTitle: PageTitle.MAGIC_LINK,
+    pageTitle: 'Sign in',
   });
   res.type('html').send(html);
 });
 
 router.post(
-  Routes.MAGIC_LINK,
+  '/magic-link',
+  handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
@@ -36,7 +36,7 @@ router.post(
       const { message, status } =
         error instanceof ApiError ? error : new ApiError();
 
-      trackMetric(Metrics.SEND_MAGIC_LINK_FAILURE);
+      trackMetric('SendMagicLink::Failure');
 
       state = deepmerge(state, {
         globalMessage: {
@@ -44,28 +44,28 @@ router.post(
         },
       });
 
-      const html = renderer(Routes.MAGIC_LINK, {
+      const html = renderer('/magic-link', {
         requestState: state,
-        pageTitle: PageTitle.MAGIC_LINK,
+        pageTitle: 'Sign in',
       });
       return res.status(status).type('html').send(html);
     }
 
-    trackMetric(Metrics.SEND_MAGIC_LINK_SUCCESS);
+    trackMetric('SendMagicLink::Success');
 
-    return res.redirect(303, `${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`);
+    return res.redirect(303, buildUrl('/magic-link/email-sent'));
   }),
 );
 
 router.get(
-  `${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`,
+  '/magic-link/email-sent',
   (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer(`${Routes.MAGIC_LINK}${Routes.EMAIL_SENT}`, {
-      pageTitle: PageTitle.MAGIC_LINK,
+    const html = renderer('/magic-link/email-sent', {
+      pageTitle: 'Sign in',
       requestState: res.locals,
     });
     res.type('html').send(html);
   },
 );
 
-export default router;
+export default router.router;

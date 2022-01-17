@@ -15,12 +15,12 @@ import CommunicationsPage from '../../support/pages/onboarding/communications_pa
 describe('Welcome and set password page', () => {
   const email = 'someone@theguardian.com';
   const checkTokenSuccessResponse = (
-    expiryTimestamp: number | null = null,
+    timeUntilExpiry: number | null = null,
   ) => ({
     user: {
       primaryEmailAddress: email,
     },
-    expiryTimestamp,
+    timeUntilExpiry,
   });
 
   const fakeCookieSuccessResponse = {
@@ -42,6 +42,11 @@ describe('Welcome and set password page', () => {
       ],
       expiresAt: 1,
     },
+  };
+
+  const fakeGroupAddResponse = {
+    status: 'ok',
+    groupCode: 'GRS',
   };
 
   const setPasswordAndSignIn = () => {
@@ -163,6 +168,39 @@ describe('Welcome and set password page', () => {
       cy.url().should('include', `returnUrl=${returnUrl}`);
     });
 
+    it('redirects to onboarding flow and adds Jobs user to the GRS group if valid password is set and preserves returnUrl', () => {
+      const returnUrl = encodeURIComponent(
+        `https://www.theguardian.com/science/grrlscientist/2012/aug/07/3`,
+      );
+      const clientId = 'jobs';
+      const query = qs.stringify({ returnUrl, clientId });
+
+      cy.mockNext(200, checkTokenSuccessResponse());
+      cy.intercept({
+        method: 'GET',
+        url: 'https://api.pwnedpasswords.com/range/*',
+      }).as('breachCheck');
+      cy.mockNext(200, fakeCookieSuccessResponse);
+      cy.mockAll(200, fakeGroupAddResponse, '/user/me/group/GRS');
+      cy.mockAll(
+        200,
+        authRedirectSignInRecentlyEmailValidated,
+        AUTH_REDIRECT_ENDPOINT,
+      );
+      cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
+      cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
+      setAuthCookies();
+
+      cy.visit(`/welcome/fake_token?${query}`);
+      cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
+      cy.wait('@breachCheck');
+      cy.get('button[type="submit"]').click();
+      cy.contains('Thank you for registering');
+      cy.url().should('include', CommunicationsPage.URL);
+      cy.url().should('include', `returnUrl=${returnUrl}`);
+      cy.url().should('include', `clientId=${clientId}`);
+    });
+
     it('shows an error if the password is invalid', () => {
       cy.mockNext(200, checkTokenSuccessResponse());
       cy.mockNext(400, {
@@ -205,7 +243,7 @@ describe('Welcome and set password page', () => {
     });
 
     it('shows the session time out page if the token expires while on the set password page', () => {
-      cy.mockNext(200, checkTokenSuccessResponse(Date.now() + 1000));
+      cy.mockNext(200, checkTokenSuccessResponse(1000));
       cy.visit(`/welcome/fake_token`);
       cy.contains('Session timed out');
     });
@@ -223,7 +261,27 @@ describe('Welcome and set password page', () => {
 
       cy.mockNext(200);
       cy.get('button[type="submit"]').click();
-      cy.contains('Email sent');
+      cy.contains('Check your email inbox');
+    });
+
+    it('fails to resend email if reCAPTCHA check is unsuccessful', () => {
+      cy.visit(`/welcome/resend`);
+
+      cy.mockNext(200);
+
+      cy.get('input[name="email"]').type(
+        checkTokenSuccessResponse().user.primaryEmailAddress,
+      );
+
+      cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
+        statusCode: 500,
+      });
+      cy.get('button[type="submit"]').click();
+      cy.contains('Google reCAPTCHA verification failed. Please try again.');
+      cy.get('button[type="submit"]').click();
+      cy.contains('Google reCAPTCHA verification failed.');
+      cy.contains('If the problem persists please try the following:');
+      cy.contains('userhelp@');
     });
 
     it('takes user back to link expired page if "Change email address" clicked', () => {

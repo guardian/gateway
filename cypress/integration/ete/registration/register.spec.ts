@@ -1,31 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
-
-const unregisteredAccount = {
-  serverId: Cypress.env('MAILOSAUR_SERVER_ID'),
-  serverDomain: Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
-  email:
-    'registrationTest+' +
-    uuidv4() +
-    '@' +
-    Cypress.env('MAILOSAUR_SERVER_ID') +
-    '.mailosaur.net',
-};
-
-// This test depends on this Mailosaur account already being registered
-const existingWithPassword = {
-  serverId: Cypress.env('MAILOSAUR_SERVER_ID'),
-  serverDomain: Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
-  email: 'signIn@' + Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
-};
-
-const existingWithoutPassword = {
-  serverId: Cypress.env('MAILOSAUR_SERVER_ID'),
-  serverDomain: Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net',
-  email:
-    'registrationEmailSentPage@' +
-    Cypress.env('MAILOSAUR_SERVER_ID') +
-    '.mailosaur.net',
-};
+import { randomMailosaurEmail } from '../../../support/commands/testUser';
 
 describe('Registration flow', () => {
   context('Terms and Conditions links', () => {
@@ -56,16 +29,16 @@ describe('Registration flow', () => {
     });
 
     it('links to the Guardian terms and conditions page', () => {
-      const googleTermsOfServiceUrl =
+      const guardianTermsOfServiceUrl =
         'https://www.theguardian.com/help/terms-of-service';
       // Intercept the external redirect page.
       // We just want to check that the redirect happens, not that the page loads.
-      cy.intercept('GET', googleTermsOfServiceUrl, (req) => {
+      cy.intercept('GET', guardianTermsOfServiceUrl, (req) => {
         req.reply(200);
       });
       cy.visit('/signin');
       cy.contains('terms & conditions').click();
-      cy.url().should('eq', googleTermsOfServiceUrl);
+      cy.url().should('eq', guardianTermsOfServiceUrl);
     });
 
     it('links to the Guardian privacy policy page', () => {
@@ -82,8 +55,40 @@ describe('Registration flow', () => {
         .click();
       cy.url().should('eq', guardianPrivacyPolicyUrl);
     });
-  });
 
+    it('links to the Guardian jobs terms and conditions page when jobs clientId set', () => {
+      const guardianJobsTermsOfServiceUrl =
+        'https://jobs.theguardian.com/terms-and-conditions/';
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', guardianJobsTermsOfServiceUrl, (req) => {
+        req.reply(200);
+      });
+      cy.visit('/signin?clientId=jobs');
+      cy.contains("Guardian's Jobs terms & conditions").click();
+      cy.url().should('eq', guardianJobsTermsOfServiceUrl);
+    });
+
+    it('links to the Guardian jobs privacy policy page when jobs clientId set', () => {
+      const guardianJobsPrivacyPolicyUrl =
+        'https://jobs.theguardian.com/privacy-policy/';
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', guardianJobsPrivacyPolicyUrl, (req) => {
+        req.reply(200);
+      });
+      cy.visit('/signin?clientId=jobs');
+      cy.contains('For information about how we use your data')
+        .contains("Guardian Jobs' privacy policy")
+        .click();
+      cy.url().should('eq', guardianJobsPrivacyPolicyUrl);
+    });
+  });
+  it('persists the clientId when navigating away', () => {
+    cy.visit('/register?clientId=jobs');
+    cy.contains('Sign in').click();
+    cy.url().should('contain', 'clientId=jobs');
+  });
   it('does not proceed when no email provided', () => {
     cy.visit('/register');
     cy.get('[data-cy="register-button"]').click();
@@ -105,196 +110,176 @@ describe('Registration flow', () => {
   it('successfully registers using an email with no existing account', () => {
     const encodedReturnUrl =
       'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
-    const decodedReturnUrl =
-      'https://m.code.dev-theguardian.com/travel/2019/dec/18/food-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
     const encodedRef = 'https%3A%2F%2Fm.theguardian.com';
-    const decodedRef = 'https://m.theguardian.com/';
     const refViewId = 'testRefViewId';
+    const clientId = 'jobs';
+    const unregisteredEmail = randomMailosaurEmail();
+
     cy.visit(
       '/register?returnUrl=' +
         encodedReturnUrl +
         '&ref=' +
         encodedRef +
         '&refViewId=' +
-        refViewId,
+        refViewId +
+        '&clientId=' +
+        clientId,
     );
     const timeRequestWasMade = new Date();
-    cy.get('input[name=email]').type(unregisteredAccount.email);
+    cy.get('input[name=email]').type(unregisteredEmail);
     cy.get('[data-cy="register-button"]').click();
 
-    cy.contains('Email sent');
-    cy.contains(unregisteredAccount.email);
+    cy.contains('Check your email inbox');
+    cy.contains(unregisteredEmail);
     cy.contains('Resend email');
     cy.contains('Change email address');
 
-    cy.mailosaurGetMessage(
-      unregisteredAccount.serverId,
-      {
-        sentTo: unregisteredAccount.email,
-      },
-      {
-        receivedAfter: timeRequestWasMade,
-      },
-    ).then((email) => {
-      cy.getEmailDetails(email, /theguardian.com\/welcome\/([^"]*)/).then(
-        ({ id, body, token }) => {
-          expect(body).to.have.string('Complete registration');
-          expect(body).to.have.string('returnUrl=' + decodedReturnUrl);
-          expect(body).to.have.string('ref=' + decodedRef);
-          expect(body).to.have.string('refViewId=' + refViewId);
-          cy.visit(`/welcome/${token}`);
-          cy.contains('Create password');
-          cy.mailosaurDeleteMessage(id);
-        },
-      );
+    cy.checkForEmailAndGetDetails(
+      unregisteredEmail,
+      timeRequestWasMade,
+      /welcome\/([^"]*)/,
+    ).then(({ body, token }) => {
+      expect(body).to.have.string('Complete registration');
+      expect(body).to.have.string('returnUrl=' + encodedReturnUrl);
+      expect(body).to.have.string('ref=' + encodedRef);
+      expect(body).to.have.string('refViewId=' + refViewId);
+      expect(body).to.have.string('clientId=' + clientId);
+      cy.visit(`/welcome/${token}`);
+      cy.contains('Create password');
     });
   });
 
   it('sends user an account exists email for user with existing account with password trying to register, clicks sign in, taken to /signin', () => {
-    cy.visit('/register');
-    const timeRequestWasMade = new Date();
+    cy.createTestUser({
+      isUserEmailValidated: true,
+    })?.then(({ emailAddress }) => {
+      cy.visit('/register');
+      const timeRequestWasMade = new Date();
 
-    cy.get('input[name=email]').type(existingWithPassword.email);
-    cy.get('[data-cy="register-button"]').click();
+      cy.get('input[name=email]').type(emailAddress);
+      cy.get('[data-cy="register-button"]').click();
 
-    cy.contains('Email sent');
-    cy.contains(existingWithPassword.email);
-    cy.contains('Resend email');
-    cy.contains('Change email address');
+      cy.contains('Check your email inbox');
+      cy.contains(emailAddress);
+      cy.contains('Resend email');
+      cy.contains('Change email address');
 
-    cy.mailosaurGetMessage(
-      unregisteredAccount.serverId,
-      {
-        sentTo: existingWithPassword.email,
-      },
-      {
-        receivedAfter: timeRequestWasMade,
-      },
-    ).then((email) => {
-      cy.getEmailDetails(email).then(({ links, body, id }) => {
-        expect(body).to.have.string('This account already exists');
-        expect(body).to.have.string('Sign in');
-        expect(body).to.have.string('Reset password');
+      cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
+        ({ links, body }) => {
+          expect(body).to.have.string('This account already exists');
+          expect(body).to.have.string('Sign in');
+          expect(body).to.have.string('Reset password');
 
-        expect(links.length).to.eq(3);
+          expect(links.length).to.eq(3);
 
-        const signInLink = links.find((link) => link.text === 'Sign in');
+          const signInLink = links.find((link) => link.text === 'Sign in');
 
-        expect(signInLink).not.to.be.undefined;
-        expect(signInLink?.href ?? '').to.include('/signin');
+          expect(signInLink).not.to.be.undefined;
+          expect(signInLink?.href ?? '').to.include('/signin');
 
-        const signInUrl = new URL(signInLink?.href ?? '');
+          const signInUrl = new URL(signInLink?.href ?? '');
 
-        cy.visit(signInUrl.pathname);
-        cy.url().should('include', '/signin');
-
-        cy.mailosaurDeleteMessage(id);
-      });
+          cy.visit(signInUrl.pathname);
+          cy.url().should('include', '/signin');
+        },
+      );
     });
   });
 
   it('sends user an account exists email for user with existing account with password trying to register, clicks reset password on email', () => {
-    cy.visit('/register');
-    const timeRequestWasMade = new Date();
+    cy.createTestUser({
+      isUserEmailValidated: true,
+    })?.then(({ emailAddress }) => {
+      cy.visit('/register');
+      const timeRequestWasMade = new Date();
 
-    cy.get('input[name=email]').type(existingWithPassword.email);
-    cy.get('[data-cy="register-button"]').click();
+      cy.get('input[name=email]').type(emailAddress);
+      cy.get('[data-cy="register-button"]').click();
 
-    cy.contains('Email sent');
-    cy.contains(existingWithPassword.email);
-    cy.contains('Resend email');
-    cy.contains('Change email address');
+      cy.contains('Check your email inbox');
+      cy.contains(emailAddress);
+      cy.contains('Resend email');
+      cy.contains('Change email address');
 
-    cy.mailosaurGetMessage(
-      unregisteredAccount.serverId,
-      {
-        sentTo: existingWithPassword.email,
-      },
-      {
-        receivedAfter: timeRequestWasMade,
-      },
-    ).then((email) => {
-      cy.getEmailDetails(email, /\/reset-password\/([^"]*)/).then(
-        ({ links, body, id, token }) => {
-          expect(body).to.have.string('This account already exists');
-          expect(body).to.have.string('Sign in');
-          expect(body).to.have.string('Reset password');
-          expect(body).to.have.string(
-            'This link is only valid for 30 minutes.',
-          );
+      cy.checkForEmailAndGetDetails(
+        emailAddress,
+        timeRequestWasMade,
+        /\/reset-password\/([^"]*)/,
+      ).then(({ links, body, token }) => {
+        expect(body).to.have.string('This account already exists');
+        expect(body).to.have.string('Sign in');
+        expect(body).to.have.string('Reset password');
+        expect(body).to.have.string('This link is only valid for 30 minutes.');
 
-          expect(links.length).to.eq(3);
+        expect(links.length).to.eq(3);
 
-          const passwordResetLink = links.find(
-            (link) => link.text === 'Reset password',
-          );
+        const passwordResetLink = links.find(
+          (link) => link.text === 'Reset password',
+        );
 
-          expect(passwordResetLink).not.to.be.undefined;
+        expect(passwordResetLink).not.to.be.undefined;
 
-          cy.visit(`/reset-password/${token}`);
-          cy.contains('Reset password');
-
-          cy.mailosaurDeleteMessage(id);
-        },
-      );
+        cy.visit(`/reset-password/${token}`);
+        cy.contains('Reset password');
+      });
     });
   });
 
   it('sends user an account exists without password email for user with existing account without password trying to register, clicks create password on email', () => {
-    cy.visit('/register');
-    const timeRequestWasMade = new Date();
+    cy.createTestUser({
+      isUserEmailValidated: false,
+      isGuestUser: true,
+    })?.then(({ emailAddress }) => {
+      cy.visit('/register');
+      const timeRequestWasMade = new Date();
 
-    cy.get('input[name=email]').type(existingWithoutPassword.email);
-    cy.get('[data-cy="register-button"]').click();
+      cy.get('input[name=email]').type(emailAddress);
+      cy.get('[data-cy="register-button"]').click();
 
-    cy.contains('Email sent');
-    cy.contains(existingWithoutPassword.email);
-    cy.contains('Resend email');
-    cy.contains('Change email address');
+      cy.contains('Check your email inbox');
+      cy.contains(emailAddress);
+      cy.contains('Resend email');
+      cy.contains('Change email address');
 
-    cy.mailosaurGetMessage(
-      unregisteredAccount.serverId,
-      {
-        sentTo: existingWithoutPassword.email,
-      },
-      {
-        receivedAfter: timeRequestWasMade,
-      },
-    ).then((email) => {
-      cy.getEmailDetails(email, /\/set-password\/([^"]*)/).then(
-        ({ links, body, id, token }) => {
-          expect(body).to.have.string('This account already exists');
-          expect(body).to.have.string(
-            'To continue to your account please click below to create a password.',
-          );
-          expect(body).to.have.string(
-            'This link is only valid for 30 minutes.',
-          );
-          expect(body).to.have.string('Create password');
+      cy.checkForEmailAndGetDetails(
+        emailAddress,
+        timeRequestWasMade,
+        /\/set-password\/([^"]*)/,
+      ).then(({ links, body, token }) => {
+        expect(body).to.have.string('This account already exists');
+        expect(body).to.have.string(
+          'To continue to your account please click below to create a password.',
+        );
+        expect(body).to.have.string('This link is only valid for 30 minutes.');
+        expect(body).to.have.string('Create password');
 
-          expect(links.length).to.eq(2);
+        expect(links.length).to.eq(2);
 
-          const createPasswordLink = links.find(
-            (link) => link.text === 'Create password',
-          );
+        const createPasswordLink = links.find(
+          (link) => link.text === 'Create password',
+        );
 
-          expect(createPasswordLink).not.to.be.undefined;
+        expect(createPasswordLink).not.to.be.undefined;
 
-          cy.visit(`/set-password/${token}`);
-          cy.contains('Create password');
-
-          cy.mailosaurDeleteMessage(id);
-        },
-      );
+        cy.visit(`/set-password/${token}`);
+        cy.contains('Create password');
+      });
     });
   });
 
-  it('errors when the user tries to register offline and allows registration when back online', () => {
+  it('shows reCAPTCHA errors when the user tries to register offline and allows registration when back online', () => {
+    const unregisteredEmail = randomMailosaurEmail();
+
     cy.visit('/register');
 
-    cy.network({ offline: true });
+    // Simulate going offline by failing to reCAPTCHA POST request.
+    cy.intercept({
+      method: 'POST',
+      url: 'https://www.google.com/recaptcha/api2/**',
+      times: 1,
+    });
 
-    cy.get('input[name=email').type(unregisteredAccount.email);
+    cy.get('input[name=email').type(unregisteredEmail);
     cy.get('[data-cy="register-button"]').click();
     cy.contains('Google reCAPTCHA verification failed. Please try again.');
 
@@ -309,28 +294,19 @@ describe('Registration flow', () => {
     );
     cy.contains('If the problem persists please try the following:');
 
-    cy.network({ offline: false });
     const timeRequestWasMade = new Date();
     cy.get('[data-cy="register-button"]').click();
+
     cy.contains(
       'Google reCAPTCHA verification failed. Please try again.',
     ).should('not.exist');
 
-    cy.contains('Email sent');
-    cy.contains(unregisteredAccount.email);
-
-    cy.mailosaurGetMessage(
-      unregisteredAccount.serverId,
-      {
-        sentTo: unregisteredAccount.email,
+    cy.contains('Check your email inbox');
+    cy.contains(unregisteredEmail);
+    cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(
+      ({ body }) => {
+        expect(body).to.have.string('Complete registration');
       },
-      {
-        receivedAfter: timeRequestWasMade,
-      },
-    ).then((email) => {
-      cy.getEmailDetails(email).then(({ id }) => {
-        cy.mailosaurDeleteMessage(id);
-      });
-    });
+    );
   });
 });

@@ -1,16 +1,13 @@
 import React, { createRef, useEffect, useRef } from 'react';
-import { Button } from '@guardian/src-button';
-import { Routes } from '@/shared/model/Routes';
-import { PageTitle } from '@/shared/model/PageTitle';
+import { Button } from '@guardian/source-react-components';
 import { Header } from '@/client/components/Header';
 import { Nav } from '@/client/components/Nav';
 import { Footer } from '@/client/components/Footer';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { Terms } from '@/client/components/Terms';
 import { SocialButtons } from '@/client/components/SocialButtons';
-import { border, space } from '@guardian/src-foundations';
+import { border, space, from } from '@guardian/source-foundations';
 import { css } from '@emotion/react';
-import { from } from '@guardian/src-foundations/mq';
 import { MainGrid } from '../layouts/MainGrid';
 import { gridItemSignInAndRegistration } from '../styles/Grid';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
@@ -19,15 +16,21 @@ import useRecaptcha, {
   RecaptchaElement,
 } from '@/client/lib/hooks/useRecaptcha';
 import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
-import locations from '@/client/lib/locations';
+import locations from '@/shared/lib/locations';
 import { EmailInput } from '@/client/components/EmailInput';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import { QueryParams } from '@/shared/model/QueryParams';
+import { GeoLocation } from '@/shared/model/Geolocation';
+import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
+import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 
 export type RegistrationProps = {
   returnUrl?: string;
   email?: string;
   recaptchaSiteKey: string;
   oauthBaseUrl: string;
-  queryString?: string;
+  queryParams: QueryParams;
+  geolocation?: GeoLocation;
 };
 
 const registerButton = css`
@@ -55,17 +58,21 @@ const divider = css`
   }
 `;
 
+// TODO: migrate to use the MainForm component
 export const Registration = ({
   returnUrl,
   email,
   recaptchaSiteKey,
   oauthBaseUrl,
-  queryString,
+  queryParams,
+  geolocation,
 }: RegistrationProps) => {
+  const formTrackingName = 'register';
   const registerFormRef = createRef<HTMLFormElement>();
   const recaptchaElementRef = useRef<HTMLDivElement>(null);
   const captchaElement = recaptchaElementRef.current ?? 'register-recaptcha';
-
+  const { clientId } = queryParams;
+  const isJobs = clientId === 'jobs';
   const { token, error, expired, requestCount, executeCaptcha } = useRecaptcha(
     recaptchaSiteKey,
     captchaElement,
@@ -88,26 +95,29 @@ export const Registration = ({
     if (token) {
       registerFormElement?.submit();
     }
-  }, [token]);
+  }, [registerFormRef, token]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    trackFormSubmit(formTrackingName);
     executeCaptcha();
   };
 
   return (
     <>
-      <Header />
+      <Header geolocation={geolocation} />
       <Nav
         tabs={[
           {
-            displayText: PageTitle.SIGN_IN,
-            linkTo: Routes.SIGN_IN,
+            displayText: 'Sign in',
+            linkTo: '/signin',
+            queryParams: queryParams,
             isActive: false,
           },
           {
-            displayText: PageTitle.REGISTRATION,
-            linkTo: Routes.REGISTRATION,
+            displayText: 'Register',
+            queryParams: queryParams,
+            linkTo: '/register',
             isActive: true,
           },
         ]}
@@ -120,14 +130,17 @@ export const Registration = ({
       >
         <form
           method="post"
-          action={`${Routes.REGISTRATION}${queryString}`}
+          action={buildUrlWithQueryParams('/register', {}, queryParams)}
           ref={registerFormRef}
           onSubmit={handleSubmit}
+          onFocus={(e) => trackFormFocusBlur(formTrackingName, e, 'focus')}
+          onBlur={(e) => trackFormFocusBlur(formTrackingName, e, 'blur')}
         >
           <RecaptchaElement id="register-recaptcha" />
           <CsrfFormField />
+          <RefTrackingFormFields />
           <EmailInput defaultValue={email} />
-          <Terms />
+          <Terms isJobs={isJobs} />
           <Button css={registerButton} type="submit" data-cy="register-button">
             Register
           </Button>

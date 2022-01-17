@@ -10,6 +10,9 @@ export default {
   args: {
     recaptchaSiteKey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
     oauthBaseUrl: 'https://oauth.theguardian.com/',
+    queryParams: {
+      returnUrl: 'https://www.theguardian.com/uk',
+    },
   },
 } as Meta<RegistrationProps>;
 
@@ -33,8 +36,8 @@ Email.story = {
 };
 
 export const InvalidRecaptcha = (args: RegistrationProps) => (
-  <Registration {...args} recaptchaSiteKey="" />
+  <Registration {...args} recaptchaSiteKey="invalid-key" />
 );
 InvalidRecaptcha.story = {
-  name: 'with invalid reCAPTCHA',
+  name: 'with reCAPTCHA error',
 };

@@ -1,34 +1,35 @@
 import React from 'react';
 
 import { MjmlSection, MjmlColumn, MjmlText, MjmlDivider } from 'mjml-react';
-import { background, text } from '@guardian/src-foundations/palette';
+import { background, text } from '@guardian/source-foundations';
 
 type Props = { children: React.ReactNode };
 
 export const SubHeader = ({ children }: Props) => (
   <>
-    <MjmlSection background-color={background.primary} padding-bottom="0">
+    <MjmlSection
+      backgroundColor={background.primary}
+      padding="24px 24px 0 24px"
+    >
       <MjmlColumn>
-        <MjmlDivider
-          border-width="1px"
-          border-color="#DCDCDC"
-          padding="0 48px"
-        />
+        <MjmlDivider border-width="1px" border-color="#DCDCDC" padding="0" />
       </MjmlColumn>
     </MjmlSection>
-    <MjmlSection background-color={background.primary} padding="0">
+    <MjmlSection
+      backgroundColor={background.primary}
+      padding="0px 24px 20px 24px"
+    >
       <MjmlColumn>
         <MjmlText
-          padding="4px 48px"
-          font-size="20px"
-          line-height="20px"
+          padding="4px 0px"
+          fontSize="20px"
+          lineHeight="1.15"
+          letterSpacing="-0.02px"
           fontWeight={700}
-          fontFamily="GH Guardian Headline, Guardian Egyptian Web, Georgia, serif"
+          fontFamily="Georgia, serif"
           color={text.primary}
         >
-          <span>
-            <strong>{children}</strong>
-          </span>
+          <span>{children}</span>
         </MjmlText>
       </MjmlColumn>
     </MjmlSection>

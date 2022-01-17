@@ -23,6 +23,9 @@ Parameters:
   OauthBaseUrl:
     Description: The base url for social sign-in with facebook, google or apple
     Type: AWS::SSM::Parameter::Value<String>
+  OktaOrgUrl:
+    Description: The org url for interacting with okta APIs
+    Type: AWS::SSM::Parameter::Value<String>
   CertificateArn:
     Description: ARN of certificate for loadbalancer use.
     Type: String
@@ -81,6 +84,10 @@ Mappings:
       MinInstances: 3
       LatencyAlarmThreshold: 0.5
       LatencyAlarmPeriod: 60
+    AlarmPriorities:
+      P1: 'CRITICAL Respond Immediately'
+      P2: 'URGENT 9-5'
+      P3: 'MODERATE'
 Conditions:
   IsProd: !Equals [!Ref Stage, PROD]
 Resources:
@@ -200,8 +207,11 @@ Resources:
                   OKTA_CLIENT_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaClientSecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   GOOGLE_RECAPTCHA_SITE_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/recaptcha-site-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   GOOGLE_RECAPTCHA_SECRET_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/recaptcha-secret-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
-                  ENCRYPTION_SECRET_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/encryption-secret-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
-
+                  ENCRYPTION_SECRET_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/encryption-secret-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
+                  OKTA_API_TOKEN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/okta-api-token' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
+                  OKTA_CUSTOM_OAUTH_SERVER=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaCustomOAuthServer' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
+                  OKTA_CLIENT_ID=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaClientId' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
+                  OKTA_CLIENT_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaClientSecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   then break
                 fi
 
@@ -237,53 +247,18 @@ Resources:
             Environment=GOOGLE_RECAPTCHA_SITE_KEY=$GOOGLE_RECAPTCHA_SITE_KEY
             Environment=GOOGLE_RECAPTCHA_SECRET_KEY=$GOOGLE_RECAPTCHA_SECRET_KEY
             Environment=ENCRYPTION_SECRET_KEY=$ENCRYPTION_SECRET_KEY
+            Environment=OKTA_ORG_URL=${OktaOrgUrl}
+            Environment=OKTA_API_TOKEN=$OKTA_API_TOKEN
+            Environment=OKTA_CUSTOM_OAUTH_SERVER=$OKTA_CUSTOM_OAUTH_SERVER
+            Environment=OKTA_CLIENT_ID=$OKTA_CLIENT_ID
+            Environment=OKTA_CLIENT_SECRET=$OKTA_CLIENT_SECRET
+            Environment=LOGGING_KINESIS_STREAM=${KinesisStream}
+            Environment=EC2_INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
 
             [Install]
             WantedBy=multi-user.target
             EOL
 
-            # logstash setup
-            sed -i 's/-Xms.*/-Xms512m/g' /etc/logstash/jvm.options
-            sed -i 's/-Xmx.*/-Xmx512m/g' /etc/logstash/jvm.options
-
-            instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
-
-            cat > /etc/logstash/conf.d/logstash.conf <<__END__
-            input {
-              stdin {}
-              file {
-                add_field => {
-                  'app' => '${App}'
-                  'stage' => '${Stage}'
-                  'stack' => '${Stack}'
-                  'ec2_instance' => '$instanceid'
-                }
-                path => "/var/log/identity-gateway.log"
-                type => "app"
-                start_position => "beginning"
-              }
-            }
-            output {
-              kinesis {
-                stream_name => "${KinesisStream}"
-                region => "${AWS::Region}"
-              }
-            }
-            filter {
-                if [type] == "app" {
-                    multiline {
-                        pattern => "^\s"
-                        what => "previous"
-                      }
-                }
-                date {
-                    match => [ "timestamp" , "yyyy-MM-dd HH:mm:ss,SSS" ]
-                }
-            }
-            __END__
-
-            # Run
-            systemctl start logstash
             systemctl enable identity-gateway
             systemctl start identity-gateway
 
@@ -559,3 +534,47 @@ Resources:
     DependsOn:
       - TargetGroup
       - LoadBalancer
+  SigninInactivityAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmName: !Sub
+        - '${Priority} - ${App} ${Stage} has had no new sign-ins in the last 20 minutes'
+        - Priority: !FindInMap [StageVariables, AlarmPriorities, P1]
+      AlarmDescription: No one has successfully signed ins in the last 20 minutes.
+      Namespace: Gateway
+      MetricName: 'SignIn::Success'
+      Statistic: Sum
+      ComparisonOperator: LessThanThreshold
+      Threshold: 1
+      Period: 1200
+      EvaluationPeriods: 1
+      AlarmActions:
+        - !Ref 'TopicSendEmail'
+      InsufficientDataActions:
+        - !Ref 'TopicSendEmail'
+      Dimensions:
+        - Name: Stage
+          Value: !Ref 'Stage'
+  RegisterInactivityAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmName: !Sub
+        - '${Priority} - ${App} ${Stage} has had no new registrations in the last hour'
+        - Priority: !FindInMap [StageVariables, AlarmPriorities, P1]
+      AlarmDescription: No one has successfully registered in the last hour.
+      Namespace: Gateway
+      MetricName: 'SignIn::Failure'
+      Statistic: Sum
+      ComparisonOperator: LessThanThreshold
+      Threshold: 1
+      Period: 3600
+      EvaluationPeriods: 1
+      AlarmActions:
+        - !Ref 'TopicSendEmail'
+      InsufficientDataActions:
+        - !Ref 'TopicSendEmail'
+      Dimensions:
+        - Name: Stage
+          Value: !Ref 'Stage'

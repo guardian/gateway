@@ -1,37 +1,74 @@
 import {
+  AWSConfiguration,
   Configuration,
   GA_UID,
   GA_UID_HASH,
   GU_API_DOMAIN,
   GU_DOMAIN,
+  Stage,
 } from '@/server/models/Configuration';
+import { featureSwitches } from '@/shared/lib/featureSwitches';
 
-const getOrThrow = (value: string | undefined, errorMessage: string) => {
-  if (!value) {
+const getOrThrow = (
+  value: string | undefined,
+  errorMessage: string,
+  strictCheck = true,
+) => {
+  if (typeof value === 'undefined' || (strictCheck && value === '')) {
     throw Error(errorMessage);
   }
   return value;
 };
 
-const gaUIDFromStage = (stage: string): [string, string] => {
-  switch (stage) {
-    case 'PROD':
-      return [GA_UID.PROD, GA_UID_HASH.PROD];
+const getStage = (value: string | undefined): Stage => {
+  const maybeStage = getOrThrow(value, 'Stage variable missing.');
+
+  switch (maybeStage) {
+    case 'DEV':
+      return 'DEV';
     case 'CODE':
-      return [GA_UID.CODE, GA_UID_HASH.CODE];
+      return 'CODE';
+    case 'PROD':
+      return 'PROD';
     default:
-      return [GA_UID.DEV, GA_UID_HASH.DEV];
+      throw Error('Invalid stage variable');
   }
 };
 
-const guardianDomainFromStage = (stage: string): [string, string] => {
+interface StageVariables {
+  gaId: string;
+  gaIdHash: string;
+  domain: string;
+  apiDomain: string;
+  oktaEnabled: boolean;
+}
+
+const getStageVariables = (stage: Stage): StageVariables => {
   switch (stage) {
     case 'PROD':
-      return [GU_DOMAIN.PROD, GU_API_DOMAIN.PROD];
+      return {
+        gaId: GA_UID.PROD,
+        gaIdHash: GA_UID_HASH.PROD,
+        domain: GU_DOMAIN.PROD,
+        apiDomain: GU_API_DOMAIN.PROD,
+        oktaEnabled: featureSwitches.oktaEnabled.PROD,
+      };
     case 'CODE':
-      return [GU_DOMAIN.CODE, GU_API_DOMAIN.CODE];
+      return {
+        gaId: GA_UID.CODE,
+        gaIdHash: GA_UID_HASH.CODE,
+        domain: GU_DOMAIN.CODE,
+        apiDomain: GU_API_DOMAIN.CODE,
+        oktaEnabled: featureSwitches.oktaEnabled.CODE,
+      };
     default:
-      return [GU_DOMAIN.DEV, GU_API_DOMAIN.DEV];
+      return {
+        gaId: GA_UID.DEV,
+        gaIdHash: GA_UID_HASH.DEV,
+        domain: GU_DOMAIN.DEV,
+        apiDomain: GU_API_DOMAIN.DEV,
+        oktaEnabled: featureSwitches.oktaEnabled.DEV,
+      };
   }
 };
 
@@ -65,11 +102,10 @@ export const getConfiguration = (): Configuration => {
     'Default return URI missing.',
   );
 
-  const stage = getOrThrow(process.env.STAGE, 'Stage variable missing.');
+  const stage = getStage(process.env.STAGE);
 
-  const [gaId, gaIdHash] = gaUIDFromStage(stage);
-
-  const [domain, apiDomain] = guardianDomainFromStage(stage);
+  const { gaId, gaIdHash, domain, apiDomain, oktaEnabled } =
+    getStageVariables(stage);
 
   const isHttps: boolean = JSON.parse(
     getOrThrow(process.env.IS_HTTPS, 'IS_HTTPS config missing.'),
@@ -83,21 +119,6 @@ export const getConfiguration = (): Configuration => {
   const oktaDomain: string = getOrThrow(
     process.env.OKTA_DOMAIN,
     'OKTA_DOMAIN is missing',
-  );
-
-  const oktaCustomOAuthServer: string = getOrThrow(
-    process.env.OKTA_CUSTOM_OAUTH_SERVER,
-    'OKTA_CUSTOM_OAUTH_SERVER is missing',
-  );
-
-  const oktaClientId: string = getOrThrow(
-    process.env.OKTA_CLIENT_ID,
-    'OKTA_CLIENT_ID is missing',
-  );
-
-  const oktaClientSecret: string = getOrThrow(
-    process.env.OKTA_CLIENT_SECRET,
-    'OKTA_CLIENT_SECRET is missing',
   );
 
   const googleRecaptchaSiteKey = getOrThrow(
@@ -120,6 +141,40 @@ export const getConfiguration = (): Configuration => {
     'OAuth Base URL missing.',
   );
 
+  const okta = {
+    enabled: oktaEnabled,
+    orgUrl: getOrThrow(process.env.OKTA_ORG_URL, 'OKTA org URL missing'),
+    token: getOrThrow(process.env.OKTA_API_TOKEN, 'OKTA API token missing'),
+    authServerId: getOrThrow(
+      process.env.OKTA_CUSTOM_OAUTH_SERVER,
+      'OKTA custom oauth server id missing',
+    ),
+    clientId: getOrThrow(process.env.OKTA_CLIENT_ID, 'OKTA client id missing'),
+    clientSecret: getOrThrow(
+      process.env.OKTA_CLIENT_SECRET,
+      'OKTA client secret missing',
+    ),
+  };
+
+  const aws: AWSConfiguration = {
+    kinesisStreamName:
+      stage === 'DEV'
+        ? process.env.LOGGING_KINESIS_STREAM || ''
+        : getOrThrow(
+            process.env.LOGGING_KINESIS_STREAM,
+            'LOGGING_KINESIS_STREAM missing',
+            false,
+          ),
+    instanceId:
+      stage === 'DEV'
+        ? ''
+        : getOrThrow(
+            process.env.EC2_INSTANCE_ID,
+            'EC2_INSTANCE_ID missing',
+            false,
+          ),
+  };
+
   return {
     port: +port,
     idapiBaseUrl,
@@ -138,14 +193,13 @@ export const getConfiguration = (): Configuration => {
     isHttps,
     appSecret,
     oktaDomain,
-    oktaCustomOAuthServer,
-    oktaClientId,
-    oktaClientSecret,
     googleRecaptcha: {
       siteKey: googleRecaptchaSiteKey,
       secretKey: googleRecaptchaSecretKey,
     },
     encryptionSecretKey,
     oauthBaseUrl,
+    okta,
+    aws,
   };
 };

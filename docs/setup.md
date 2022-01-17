@@ -13,6 +13,7 @@ Make sure you have one or the other or both:
 
 - [Docker](https://www.docker.com/) - Make sure `docker` and `docker-compose` are available in your terminal.
   - Not required if running everything on your local machine using Node and Yarn.
+  - We generally don't recommend Docker due to it's low performance on macOS machines.
 
 ## Configuration
 
@@ -34,11 +35,23 @@ Nginx will attempt to resolve from gateway first, followed by dotcom/identity se
 
 When using nginx, be sure to set `BASE_URI` environment variable in `.env` to `profile.thegulocal.com` which will set the correct cookie domain and CSP (Content Secure Policy) headers.
 
+Also since Node does not use the system root store, so it won't accept the `*.thegulocal.com` certificates automatically. Instead, you will have to set the `NODE_EXTRA_CA_CERTS` environment variable. The best place to do this would be to add the following to your shell configuration (e.g. `.bashrc` for `bash`/`.zshrc` for `zsh`).
+
+```sh
+export NODE_EXTRA_CA_CERTS="$(mkcert -CAROOT)/rootCA.pem"
+```
+
+This ensures that you don't get any certificate errors when running gateway and calling another service running on `thegulocal`, e.g.
+
+```sh
+FetchError: request to https://idapi.thegulocal.com/auth?format=cookies failed, reason: unable to verify the first certificate\n
+```
+
 ### S3 Config
 
 You can get a preset `.env` file from the S3 private config. Be sure to have the `identity` Janus credentials.
 
-With dev-nginx (profile.thegulocal.com):
+Recommended: With nginx setup (profile.thegulocal.com):
 
 ```sh
 # IDAPI/Okta pointing to DEV environment (Recommended for development)
@@ -65,9 +78,38 @@ If using nginx, nginx will look for gateway on port `8861`, so be sure to use th
 
 If not using nginx, you can then access gateway on `http://localhost:8861`.
 
-### With Docker
+You can choose to run gateway locally, or using Docker.
 
-The easiest way to get developing is to use Docker. Development mode can be handled using `docker-compose` using the service name `gateway`.
+### Locally
+
+Firstly make sure your running the version of Node given by `.nvmrc`, if you have `nvm` installed, just run `nvm use`.
+
+Then to install dependencies and start the development server:
+
+```sh
+$ make dev
+```
+
+If you fancy running both dev commands in a tiled view you can run:
+
+```sh
+$ make dev-tile-v # vertical tiling
+$ make dev-tile-h # horizontal tiling
+```
+
+This adds the environment variables from the `.env` file and starts the development server.
+
+On the first run/ after removing the `build` folder, you may see errors in your console, this is because the `build` folder and project haven't finished compiling yet, just wait for a while for webpack to finish the bundling process.
+
+Once you see `{"level":"info","message":"server running on port 8861"}` in the console, the application is running.
+
+If your build folder is getting quite large, use `make clean-build` to remove the build folder. Then on the next `make dev` command, it will rebuild the application.
+
+You can see the [`makefile`](../makefile) for the full list of commands.
+
+### Docker
+
+Development mode can be handled using `docker-compose` using the service name `gateway` if you prefer this way.
 
 To start the development server, navigate to the root project folder with the `docker-compose.yml` file and run:
 
@@ -104,39 +146,6 @@ Finally, to directly access the container shell to run commands use
 ```sh
 $ docker-compose exec gateway /bin/sh
 ```
-
-### Without Docker
-
-It is also possible to run gateway without Docker.
-
-Firstly make sure your running the version of Node given by `.nvmrc`, if you have `nvm` installed, just run `nvm use`.
-
-Next install dependencies:
-
-```sh
-$ make install
-```
-
-Then to start the development server:
-
-```sh
-$ make dev
-```
-
-If you fancy running both dev commands in a tiled view you can run:
-
-```sh
-$ make dev-tile-v # vertical tiling
-$ make dev-tile-h # horizontal tiling
-```
-
-This adds the environment variables from the `.env` file and starts the development server.
-
-On the first run/ after removing the `build` folder, you may see errors in your console, this is because the `build` folder and project haven't finished compiling yet, just wait for a while for webpack to finish the bundling process.
-
-Once you see `{"level":"info","message":"server running on port 8861"}` in the console, the application is running.
-
-If your build folder is getting quite large, use `make clean-build` to remove the build folder. Then on the next `make dev` command, it will rebuild the application.
 
 ## Debugging
 
@@ -195,6 +204,8 @@ $ ./cypress-mocked.sh
 You can also open the end to end test runner using:
 
 ```sh
+$ make cypress-ete
+# or
 $ ./cypress-ete.sh
 ```
 
@@ -211,7 +222,7 @@ $ ./ci.sh
 To access gateway routes on `CODE` (and `PROD`) alongside the current profile/identity-frontend routes, you'll add the
 `GU_GATEWAY` with the value `true` to your cookies.
 
-When you access the `profile.` subdomain, a `GU_GATEWAY` cookie is automatically added with either `true` or `false` value randomly. Make sure the cookie is set to `true` through your browsers developer tools, or alternatively add a `gateway` query parameter to force this to true automatically, examples: `https://profile.theguardian.com/reset?returnUrl=https%3A%2F%2Fwww.theguardian.com&skipConfirmation=false&gateway` or `https://profile.theguardian.com/reset?gateway`.
+When you access the `profile.` subdomain, a `GU_GATEWAY` cookie is automatically added with either `true` or `false` value randomly. Make sure the cookie is set to `true` through your browsers developer tools, or alternatively add a `gateway` query parameter to force this to true automatically, examples: `https://profile.theguardian.com/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com&skipConfirmation=false&gateway` or `https://profile.theguardian.com/signin?gateway`.
 
 Once this cookie value is `true`, you'll automatically be directed to the `gateway` routes that have been migrated so far.
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { space } from '@guardian/src-foundations';
+import { from, space } from '@guardian/source-foundations';
 import {
   gridItem,
   gridItemColumnConsents,
@@ -10,7 +10,6 @@ import {
 } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { NewsletterCard } from '@/client/components/NewsletterCard';
-import { from } from '@guardian/src-foundations/mq';
 import { heading, text } from '@/client/styles/Consents';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import {

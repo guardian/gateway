@@ -1,7 +1,6 @@
 import React from 'react';
-import { textSans } from '@guardian/src-foundations/typography';
 import { css } from '@emotion/react';
-import { space, neutral } from '@guardian/src-foundations';
+import { from, space } from '@guardian/source-foundations';
 import {
   getAutoRow,
   gridItemColumnConsents,
@@ -11,8 +10,6 @@ import { CommunicationCard } from '@/client/components/CommunicationCard';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { heading, text } from '@/client/styles/Consents';
 import { Consent } from '@/shared/model/Consent';
-import { Checkbox, CheckboxGroup } from '@guardian/src-checkbox';
-import { from } from '@guardian/src-foundations/mq';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import {
   ConsentsContent,
@@ -20,20 +17,8 @@ import {
 } from '@/client/layouts/shared/Consents';
 
 type ConsentsCommunicationProps = {
-  marketResearchOptout?: Consent;
-  consentsWithoutOptout: Consent[];
+  consents: Consent[];
 };
-
-const fieldset = css`
-  border: 0;
-  padding: 0;
-  margin: 14px 0 ${space[1]}px 0;
-  ${textSans.medium()}
-`;
-
-const checkboxLabel = css`
-  color: ${neutral[46]};
-`;
 
 const communicationCardContainer = css`
   display: flex;
@@ -61,14 +46,9 @@ const communicationCardSpanDef = {
 };
 
 export const ConsentsCommunication = ({
-  marketResearchOptout,
-  consentsWithoutOptout,
+  consents,
 }: ConsentsCommunicationProps) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
-
-  const label = (
-    <span css={checkboxLabel}>{marketResearchOptout?.description}</span>
-  );
 
   return (
     <ConsentsLayout
@@ -85,7 +65,7 @@ export const ConsentsCommunication = ({
         <div
           css={[communicationCardContainer, autoRow(communicationCardSpanDef)]}
         >
-          {consentsWithoutOptout.map((consent) => (
+          {consents.map((consent) => (
             <CommunicationCard
               key={consent.id}
               title={consent.name}
@@ -95,28 +75,6 @@ export const ConsentsCommunication = ({
             />
           ))}
         </div>
-        {marketResearchOptout && (
-          <>
-            <h2 css={[heading, autoRow()]}>
-              Using your data for market research
-            </h2>
-            <p css={[text, autoRow()]}>
-              From time to time we may contact you for market research purposes
-              inviting you to complete a survey, or take part in a group
-              discussion. Normally, this invitation would be sent via email, but
-              we may also contact you by phone.
-            </p>
-            <fieldset css={[fieldset, autoRow()]}>
-              <CheckboxGroup name={marketResearchOptout.id}>
-                <Checkbox
-                  value="consent-option"
-                  label={label}
-                  defaultChecked={marketResearchOptout.consented}
-                />
-              </CheckboxGroup>
-            </fieldset>
-          </>
-        )}
       </ConsentsContent>
     </ConsentsLayout>
   );

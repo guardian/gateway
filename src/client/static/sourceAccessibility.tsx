@@ -1,4 +1,4 @@
-import { FocusStyleManager } from '@guardian/src-foundations/utils';
+import { FocusStyleManager } from '@guardian/source-foundations';
 
 // https://www.theguardian.design/2a1e5182b/p/6691bb-accessibility/t/32e9fb
 // While providing a clear focus state is essential to support keyboard navigation, it is less important, and arguably distracting, for mouse users.

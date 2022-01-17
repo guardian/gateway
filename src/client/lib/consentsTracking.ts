@@ -1,5 +1,4 @@
 import { PageData } from '@/shared/model/ClientState';
-import { Routes } from '@/shared/model/Routes';
 import { sendOphanInteractionEvent } from './ophan';
 
 const trackInputElementInteraction = (
@@ -76,10 +75,10 @@ export const onboardingFormSubmitOphanTracking = (
 
   // we add a starting slash to the page, to match the route enums
   switch (`/${page}`) {
-    case Routes.CONSENTS_COMMUNICATION:
-    case Routes.CONSENTS_DATA:
+    case '/communication':
+    case '/data':
       return consentsFormSubmitOphanTracking(inputElems, pageData);
-    case Routes.CONSENTS_NEWSLETTERS:
+    case '/newsletters':
       return newslettersFormSubmitOphanTracking(inputElems, pageData);
     default:
       return;

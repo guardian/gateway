@@ -1,5 +1,5 @@
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { Routes } from '@/shared/model/Routes';
+import { RoutePaths } from '@/shared/model/Routes';
 
 const validHostnames = [
   '.theguardian.com',
@@ -7,7 +7,7 @@ const validHostnames = [
   '.thegulocal.com',
 ];
 
-const invalidPaths = [Routes.SIGN_IN, Routes.REGISTRATION];
+const invalidPaths: RoutePaths[] = ['/signin', '/register'];
 
 const { defaultReturnUri } = getConfiguration();
 

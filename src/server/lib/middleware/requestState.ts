@@ -3,19 +3,25 @@
 // Requires: csurf middlware
 import { getGeolocationRegion } from '@/server/lib/getGeolocationRegion';
 import { parseExpressQueryParams } from '@/server/lib/queryParams';
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { tests } from '@/shared/model/experiments/abTests';
 import { getABTesting } from '@/server/lib/getABTesting';
-import { RequestState } from '@/server/models/Express';
+import { RequestState, RequestWithTypedQuery } from '@/server/models/Express';
 
-const config = getConfiguration();
+const { idapiBaseUrl, oauthBaseUrl, googleRecaptcha } = getConfiguration();
 
-const { idapiBaseUrl, oauthBaseUrl, googleRecaptcha } = config;
+const getRequestState = (req: RequestWithTypedQuery): RequestState => {
+  const [abTesting, abTestAPI] = getABTesting(req, tests);
 
-const getRequestState = (req: Request): RequestState => {
-  const [abTesting, abTestAPI] = getABTesting(req, config, tests);
-  const queryParams = parseExpressQueryParams(req.method, req.query);
+  // tracking parameters might be from body too
+  const { ref, refViewId } = req.body;
+
+  const queryParams = parseExpressQueryParams(req.method, req.query, {
+    ref,
+    refViewId,
+  });
+
   return {
     queryParams,
     pageData: {
@@ -33,11 +39,16 @@ const getRequestState = (req: Request): RequestState => {
       oauthBaseUrl,
     },
     recaptchaConfig: { recaptchaSiteKey: googleRecaptcha.siteKey },
+    ophanConfig: {
+      bwid: req.cookies.bwid,
+      consentUUID: req.cookies.consentUUID,
+      viewId: queryParams.refViewId,
+    },
   };
 };
 
 export const requestStateMiddleware = (
-  req: Request,
+  req: RequestWithTypedQuery,
   res: Response,
   next: NextFunction,
 ) => {

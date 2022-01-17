@@ -3,7 +3,6 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { SignInErrors } from '@/shared/model/Errors';
 import { joinUrl } from '@guardian/libs';
 import { OktaApiError } from '@/server/models/Error';
-import { OktaRoutes } from '@/shared/model/Routes';
 import { fetch } from '@/server/lib/fetch';
 import {
   AuthenticationRequestParameters,
@@ -74,7 +73,7 @@ export const authenticate = async (email: string, password: string) => {
   };
 
   const response = await fetch(
-    joinUrl(oktaDomain, OktaRoutes.AUTHENTICATION),
+    joinUrl(oktaDomain, '/api/v1/authn'),
     requestOptions,
   );
   if (!response.ok) {

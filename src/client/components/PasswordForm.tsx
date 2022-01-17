@@ -1,24 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import { Button } from '@guardian/src-button';
+import React, { ReactNode, useEffect, useState } from 'react';
 import {
+  Button,
   SvgCross,
   SvgAlertTriangle,
   SvgCheckmark,
   SvgArrowRightStraight,
-} from '@guardian/src-icons';
-import { success, error, neutral } from '@guardian/src-foundations/palette';
-import { textSans } from '@guardian/src-foundations/typography';
+} from '@guardian/source-react-components';
+import {
+  success,
+  error,
+  neutral,
+  textSans,
+  space,
+} from '@guardian/source-foundations';
 import { button } from '@/client/styles/Shared';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
-import { space } from '@guardian/src-foundations';
 import { css } from '@emotion/react';
 
 import sha1 from 'js-sha1';
-import { PasswordInput } from '@/client/components/PasswordInput';
+import {
+  PasswordAutoComplete,
+  PasswordInput,
+} from '@/client/components/PasswordInput';
 import { FieldError } from '@/shared/model/ClientState';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import { AutoRow, passwordFormSpanDef } from '@/client/styles/Grid';
+import { MainForm } from '@/client/components/MainForm';
+import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 
 type Props = {
   submitUrl: string;
@@ -27,6 +36,11 @@ type Props = {
   labelText: string;
   // for grid layout on consents page
   gridAutoRow?: AutoRow;
+  recaptchaSiteKey?: string;
+  setRecaptchaErrorMessage?: React.Dispatch<React.SetStateAction<string>>;
+  setRecaptchaErrorContext?: React.Dispatch<React.SetStateAction<ReactNode>>;
+  autoComplete?: PasswordAutoComplete;
+  formTrackingName?: string;
 };
 
 const baseIconStyles = css`
@@ -65,12 +79,12 @@ const form = css`
 `;
 
 const passwordInput = css`
-  margin-bottom: ${space[3]}px;
+  margin-bottom: ${space[2]}px;
 `;
 
-const TooLong = () => {
+const TooLong = ({ noMargin = false }) => {
   return (
-    <div css={messageWrapperStyles}>
+    <div css={noMargin ? undefined : messageWrapperStyles}>
       <div css={[baseIconStyles, failureIconStyles]}>
         <SvgCross />
       </div>
@@ -79,9 +93,9 @@ const TooLong = () => {
   );
 };
 
-const TooShort = () => {
+const TooShort = ({ noMargin = false }) => {
   return (
-    <div css={messageWrapperStyles}>
+    <div css={noMargin ? undefined : messageWrapperStyles}>
       <div css={[baseIconStyles, failureIconStyles]}>
         <SvgCross />
       </div>
@@ -90,7 +104,7 @@ const TooShort = () => {
   );
 };
 
-const Valid = () => {
+const Valid = ({ noMargin = false }) => {
   const successIconStyles = css`
     svg {
       background: ${success[400]};
@@ -102,7 +116,7 @@ const Valid = () => {
   `;
 
   return (
-    <div css={messageWrapperStyles}>
+    <div css={noMargin ? undefined : messageWrapperStyles}>
       <div css={[baseIconStyles, successIconStyles]}>
         <SvgCheckmark />
       </div>
@@ -121,15 +135,15 @@ const Valid = () => {
   );
 };
 
-const Checking = () => {
+const Checking = ({ noMargin = false }) => {
   return (
-    <div css={messageWrapperStyles}>
+    <div css={noMargin ? undefined : messageWrapperStyles}>
       <div css={baseMessageStyles}>Checking...</div>
     </div>
   );
 };
 
-const Weak = () => {
+const Weak = ({ noMargin = false }) => {
   const errorIconStyles = css`
     svg {
       fill: ${error['400']};
@@ -147,7 +161,7 @@ const Weak = () => {
   `;
 
   return (
-    <div css={[messageWrapperStyles, baseMessageStyles]}>
+    <div css={[noMargin ? undefined : messageWrapperStyles, baseMessageStyles]}>
       <div css={[baseIconStyles, errorIconStyles]}>
         <SvgAlertTriangle />
       </div>
@@ -162,22 +176,24 @@ const ValidationMessage = ({
   isTooShort,
   isTooLong,
   isChecking,
+  noMargin,
 }: {
   isWeak: boolean;
   isTooShort: boolean;
   isTooLong: boolean;
   isChecking: boolean;
+  noMargin?: boolean;
 }) => {
   if (isTooShort) {
-    return <TooShort />;
+    return <TooShort noMargin={noMargin} />;
   } else if (isTooLong) {
-    return <TooLong />;
+    return <TooLong noMargin={noMargin} />;
   } else if (isChecking) {
-    return <Checking />;
+    return <Checking noMargin={noMargin} />;
   } else if (isWeak) {
-    return <Weak />;
+    return <Weak noMargin={noMargin} />;
   } else {
-    return <Valid />;
+    return <Valid noMargin={noMargin} />;
   }
 };
 
@@ -209,6 +225,8 @@ export const PasswordForm = ({
   submitButtonText,
   labelText,
   gridAutoRow,
+  autoComplete,
+  formTrackingName,
 }: Props) => {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | undefined>(
@@ -251,6 +269,9 @@ export const PasswordForm = ({
       method="post"
       action={submitUrl}
       onSubmit={(e) => {
+        if (formTrackingName) {
+          trackFormSubmit(formTrackingName);
+        }
         if (isTooShort) {
           setError(ChangePasswordErrors.AT_LEAST_8);
           e.preventDefault();
@@ -262,15 +283,23 @@ export const PasswordForm = ({
           e.preventDefault();
         }
       }}
+      onFocus={(e) =>
+        formTrackingName && trackFormFocusBlur(formTrackingName, e, 'focus')
+      }
+      onBlur={(e) =>
+        formTrackingName && trackFormFocusBlur(formTrackingName, e, 'blur')
+      }
     >
       <CsrfFormField />
       <div css={passwordInput}>
         <PasswordInput
+          displayEye={true}
           error={error}
           label={labelText}
           onChange={(e) => {
             setPassword(e.target.value);
           }}
+          autoComplete={autoComplete}
         />
       </div>
       {!error && (
@@ -292,5 +321,99 @@ export const PasswordForm = ({
         {submitButtonText}
       </Button>
     </form>
+  );
+};
+
+// this is mostly duplicated from the form above, as the above form is still
+// being used on the welcome/onboarding page until that is redesigned
+// so we created this new component to use with the `MainLayout` for the time being
+export const PasswordFormMainLayout = ({
+  submitUrl,
+  fieldErrors,
+  submitButtonText,
+  labelText,
+  recaptchaSiteKey,
+  setRecaptchaErrorMessage,
+  setRecaptchaErrorContext,
+  autoComplete,
+  formTrackingName,
+}: Props) => {
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string | undefined>(
+    fieldErrors.find((fieldError) => fieldError.field === 'password')?.message,
+  );
+  const [isWeak, setIsWeak] = useState<boolean>(false);
+  const [isTooShort, setIsTooShort] = useState<boolean>(true);
+  const [isTooLong, setIsTooLong] = useState<boolean>(false);
+  const [isChecking, setIsChecking] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Typing anything clears the big red error, falling back to the dynamic validation message
+    if (password.length > 0) setError(undefined);
+    setIsTooShort(password.length < 8);
+    setIsTooLong(password.length > 72);
+
+    if (password.length >= 8 && password.length <= 72) {
+      // Only make api calls to check if breached when length rules are not broken
+      setIsChecking(true);
+      isBreached(password)
+        .then((breached) => {
+          if (breached) {
+            // Password is breached ❌
+            setIsWeak(true);
+          } else {
+            // Password is valid ✔
+            setIsWeak(false);
+          }
+        })
+        .finally(() => setIsChecking(false));
+    } else {
+      // Password is not an acceptable length ❌
+      setIsWeak(false);
+    }
+  }, [password]);
+
+  return (
+    <MainForm
+      formAction={submitUrl}
+      submitButtonText={submitButtonText}
+      onSubmitOverride={(e) => {
+        if (isTooShort) {
+          setError(ChangePasswordErrors.AT_LEAST_8);
+          e.preventDefault();
+        } else if (isTooLong) {
+          setError(ChangePasswordErrors.MAXIMUM_72);
+          e.preventDefault();
+        } else if (isWeak) {
+          setError(ChangePasswordErrors.COMMON_PASSWORD);
+          e.preventDefault();
+        }
+      }}
+      recaptchaSiteKey={recaptchaSiteKey}
+      setRecaptchaErrorMessage={setRecaptchaErrorMessage}
+      setRecaptchaErrorContext={setRecaptchaErrorContext}
+      formTrackingName={formTrackingName}
+    >
+      <div css={error ? undefined : passwordInput}>
+        <PasswordInput
+          error={error}
+          label={labelText}
+          onChange={(e) => {
+            setPassword(e.target.value);
+          }}
+          displayEye={true}
+          autoComplete={autoComplete}
+        />
+      </div>
+      {!error && (
+        <ValidationMessage
+          isWeak={isWeak}
+          isTooShort={isTooShort}
+          isTooLong={isTooLong}
+          isChecking={isChecking}
+          noMargin
+        />
+      )}
+    </MainForm>
   );
 };

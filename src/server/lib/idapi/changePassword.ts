@@ -5,14 +5,13 @@ import {
   APIPostOptions,
   IDAPIError,
 } from '@/server/lib/IDAPIFetch';
-import { ApiRoutes } from '@/shared/model/Routes';
-import { stringify } from 'querystring';
 import {
   IdapiErrorMessages,
   ChangePasswordErrors,
 } from '@/shared/model/Errors';
 import { logger } from '@/server/lib/logger';
 import { IdapiError } from '@/server/models/Error';
+import { IdapiCookies } from '../setIDAPICookies';
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
   if (error.status === 'error' && error.errors?.length) {
@@ -45,31 +44,43 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
 export async function validate(
   token: string,
   ip: string,
-): Promise<{ email?: string; tokenExpiryTimestamp?: number }> {
+): Promise<{
+  email?: string;
+  tokenExpiryTimestamp?: number;
+  timeUntilTokenExpiry?: number;
+}> {
   const options = APIGetOptions();
 
   const params = {
     token,
   };
 
-  const qs = stringify(params);
-
-  const url = `${ApiRoutes.CHANGE_PASSWORD_TOKEN_VALIDATION}?${qs}`;
-
   try {
-    const result = await idapiFetch(url, APIAddClientAccessToken(options, ip));
+    const result = await idapiFetch({
+      path: '/pwd-reset/user-for-token',
+      options: APIAddClientAccessToken(options, ip),
+      queryParams: params,
+    });
 
     return {
       email: result.user?.primaryEmailAddress,
       tokenExpiryTimestamp: result.expiryTimestamp,
+      timeUntilTokenExpiry: result.timeUntilExpiry,
     };
   } catch (error) {
-    logger.error(`IDAPI Error changePassword validate ${url}`, error);
+    logger.error(
+      `IDAPI Error changePassword validate '/pwd-reset/user-for-token'`,
+      error,
+    );
     return handleError(error as IDAPIError);
   }
 }
 
-export async function change(password: string, token: string, ip: string) {
+export async function change(
+  password: string,
+  token: string,
+  ip: string,
+): Promise<IdapiCookies | undefined> {
   const options = APIPostOptions({
     password,
     token,
@@ -77,14 +88,14 @@ export async function change(password: string, token: string, ip: string) {
   });
 
   try {
-    const result = await idapiFetch(
-      ApiRoutes.CHANGE_PASSWORD,
-      APIAddClientAccessToken(options, ip),
-    );
+    const result = await idapiFetch({
+      path: '/pwd-reset/reset-pwd-for-user',
+      options: APIAddClientAccessToken(options, ip),
+    });
     return result.cookies;
   } catch (error) {
     logger.error(
-      `IDAPI Error changePassword change ${ApiRoutes.CHANGE_PASSWORD}`,
+      `IDAPI Error changePassword change '/pwd-reset/reset-pwd-for-user'`,
       error,
     );
     handleError(error as IDAPIError);

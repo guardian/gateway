@@ -1,14 +1,18 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import { SerializedStyles } from '@emotion/react';
-import { brand, neutral } from '@guardian/src-foundations/palette';
-import { space } from '@guardian/src-foundations';
+import {
+  brand,
+  neutral,
+  space,
+  from,
+  textSans,
+  titlepiece,
+} from '@guardian/source-foundations';
 import { AutoRow, gridItemColumnConsents, gridRow } from '@/client/styles/Grid';
-import { from } from '@guardian/src-foundations/mq';
-import { textSans, titlepiece } from '@guardian/src-foundations/typography';
 import { CONSENTS_PAGES_ARR } from '@/client/models/ConsentsPages';
 import { CONSENTS_MAIN_COLOR } from '@/client/layouts/shared/Consents';
-import { SvgCheckmark } from '@guardian/src-icons';
+import { SvgCheckmark } from '@guardian/source-react-components';
 
 type Props = {
   autoRow: AutoRow;
@@ -65,7 +69,7 @@ const circle = `
   width: ${CIRCLE_DIAMETER}px;
 `;
 
-const li = (numPages: number) => css`
+const li = (numPages: number, isLastPage: boolean) => css`
   ${textSans.xxsmall()}
   ${from.mobileMedium} {
     ${textSans.xsmall()}
@@ -74,8 +78,9 @@ const li = (numPages: number) => css`
     ${textSans.small()}
   }
   position: relative;
-  width: ${100 / numPages}%;
+  width: ${isLastPage ? 'min-content' : 100 / (numPages - 1) + '%'};
   display: flex;
+  flex-grow: ${isLastPage ? '0' : '1'};
   flex-direction: column;
   justify-content: flex-start;
   padding-top: ${space[6] + space[2]}px;
@@ -154,9 +159,14 @@ const pageProgression = css`
 const ul = css`
   display: flex;
   list-style: none;
+  justify-content: space-between;
   height: 54px;
   padding: 0;
   margin: 0;
+`;
+
+const maxContentOverride = (isLastPage: boolean) => css`
+  width: ${isLastPage ? 'max-content' : 'initial'};
 `;
 
 const PageProgression = ({
@@ -181,12 +191,19 @@ const PageProgression = ({
   };
   return (
     <ul css={[ul, cssOverrides]}>
-      {pages.map((page, i) => (
-        <li className={getClassName(i)} key={i} css={li(pages.length)}>
-          <SvgCheckmark />
-          <div>{page}</div>
-        </li>
-      ))}
+      {pages.map((page, i) => {
+        const isLastPage = i === pages.length - 1;
+        return (
+          <li
+            className={getClassName(i)}
+            key={i}
+            css={li(pages.length, isLastPage)}
+          >
+            <SvgCheckmark />
+            <div css={maxContentOverride(isLastPage)}>{page}</div>
+          </li>
+        );
+      })}
     </ul>
   );
 };

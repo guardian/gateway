@@ -2,25 +2,31 @@ import React, { useContext } from 'react';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
-import { useLocation } from 'react-router-dom';
-import { PageBodyText } from '../components/PageBodyText';
+import { MainBodyText } from '@/client/components/MainBodyText';
 
 export const ResetPasswordPage = () => {
-  const { search } = useLocation();
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData: { email = '' } = {} } = clientState;
+  const {
+    pageData: { email = '' } = {},
+    queryParams,
+    recaptchaConfig,
+  } = clientState;
+  const { recaptchaSiteKey } = recaptchaConfig;
 
   return (
     <ResetPassword
       email={email}
-      headerText="Forgotten password"
-      buttonText="Reset Password"
-      queryString={search}
+      headerText="Forgot password"
+      buttonText="Reset password"
+      queryString={queryParams}
+      showNoAccessEmail
+      recaptchaSiteKey={recaptchaSiteKey}
+      formPageTrackingName="forgot-password"
     >
-      <PageBodyText>
-        Forgotten or need to set your password? We will email you a link to
-        change or set it.
-      </PageBodyText>
+      <MainBodyText>
+        Forgot your password? Enter your email address and we’ll send you a link
+        to create a new one.
+      </MainBodyText>
     </ResetPassword>
   );
 };

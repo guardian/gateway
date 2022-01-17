@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { mocked } from 'ts-jest/utils';
+import { mocked } from 'jest-mock';
 import { Configuration } from '@/server/models/Configuration';
 import { decrypt, encrypt } from '../crypto';
 import { getConfiguration } from '../getConfiguration';

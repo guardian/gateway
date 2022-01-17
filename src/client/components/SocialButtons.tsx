@@ -1,11 +1,12 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { space, brand } from '@guardian/src-foundations';
-import { LinkButton } from '@guardian/src-button';
-import { SvgGoogleBrand } from '@guardian/src-icons';
-import { SvgAppleBrand } from '@guardian/src-icons';
-import { SvgFacebookBrand } from '@guardian/src-icons';
-import { from } from '@guardian/src-foundations/mq';
+import { space, brand, from } from '@guardian/source-foundations';
+import {
+  LinkButton,
+  SvgGoogleBrand,
+  SvgAppleBrand,
+  SvgFacebookBrand,
+} from '@guardian/source-react-components';
 
 type SocialButtonProps = {
   returnUrl?: string;
@@ -83,6 +84,7 @@ export const SocialButtons = ({
         icon={<SvgGoogleBrand />}
         href={buildUrl(oauthBaseUrl, 'google', returnUrl)}
         data-cy="google-sign-in-button"
+        data-link-name="google-social-button"
       >
         Google
       </LinkButton>
@@ -93,6 +95,7 @@ export const SocialButtons = ({
         icon={<SvgFacebookBrand />}
         href={buildUrl(oauthBaseUrl, 'facebook', returnUrl)}
         data-cy="facebook-sign-in-button"
+        data-link-name="facebook-social-button"
       >
         Facebook
       </LinkButton>
@@ -103,6 +106,7 @@ export const SocialButtons = ({
         icon={<SvgAppleBrand />}
         href={buildUrl(oauthBaseUrl, 'apple', returnUrl)}
         data-cy="apple-sign-in-button"
+        data-link-name="apple-social-button"
       >
         Apple
       </LinkButton>

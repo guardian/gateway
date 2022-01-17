@@ -1,8 +1,12 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { space, success, neutral } from '@guardian/src-foundations';
-import { textSans } from '@guardian/src-foundations/typography';
-import { SvgTickRound } from '@guardian/src-icons';
+import {
+  space,
+  success,
+  neutral,
+  textSans,
+} from '@guardian/source-foundations';
+import { SvgTickRound } from '@guardian/source-react-components';
 import {
   COLUMNS,
   gridItem,

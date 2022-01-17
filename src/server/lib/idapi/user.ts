@@ -14,12 +14,21 @@ import {
   ResetPasswordErrors,
 } from '@/shared/model/Errors';
 import User from '@/shared/model/User';
-import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { IdapiError } from '@/server/models/Error';
-import { ApiRoutes } from '@/shared/model/Routes';
+import { trackMetric } from '@/server/lib/trackMetric';
+import { emailSendMetric } from '@/server/models/Metrics';
+import {
+  OphanConfig,
+  sendOphanInteractionEventServer,
+} from '@/server/lib/ophan';
 
 interface APIResponse {
   user: User;
+}
+
+interface APIGroupResponse {
+  status: string;
+  groupCode: string;
 }
 
 /**
@@ -36,6 +45,10 @@ export enum UserType {
   NEW = 'new',
   CURRENT = 'current',
   GUEST = 'guest',
+}
+
+export enum GroupCode {
+  GRS = 'GRS',
 }
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
@@ -76,16 +89,40 @@ const responseToEntity = (response: APIResponse): User => {
 };
 
 export const read = async (ip: string, sc_gu_u: string): Promise<User> => {
-  const url = `${ApiRoutes.USER}${ApiRoutes.ME}`;
   const options = APIForwardSessionIdentifier(
     APIAddClientAccessToken(APIGetOptions(), ip),
     sc_gu_u,
   );
   try {
-    const response = (await idapiFetch(url, options)) as APIResponse;
+    const response = (await idapiFetch({
+      path: '/user/me',
+      options,
+    })) as APIResponse;
     return responseToEntity(response);
   } catch (error) {
-    logger.error(`IDAPI Error user read ${url}`, error);
+    logger.error(`IDAPI Error user read '/user/me'`, error);
+    return handleError(error as IDAPIError);
+  }
+};
+
+export const addToGroup = async (
+  groupCode: GroupCode,
+  ip: string,
+  sc_gu_u: string,
+) => {
+  const options = APIForwardSessionIdentifier(
+    APIAddClientAccessToken(APIPostOptions(), ip),
+    sc_gu_u,
+  );
+  try {
+    const response = (await idapiFetch({
+      path: '/user/me/group/:groupCode',
+      options,
+      tokenisationParam: { groupCode },
+    })) as APIGroupResponse;
+    return response;
+  } catch (error) {
+    logger.error(`IDAPI error assigning user to group: ${groupCode}`, error);
     return handleError(error as IDAPIError);
   }
 };
@@ -94,12 +131,14 @@ export const readUserType = async (
   email: string,
   ip: string,
 ): Promise<UserType> => {
-  const url = `${ApiRoutes.USER}${ApiRoutes.TYPE}/${email}`;
-
   const options = APIAddClientAccessToken(APIGetOptions(), ip);
 
   try {
-    const { userType } = await idapiFetch(url, options);
+    const { userType } = await idapiFetch({
+      path: '/user/type/:email',
+      options,
+      tokenisationParam: { email },
+    });
 
     switch (userType) {
       // new users without accounts
@@ -117,7 +156,7 @@ export const readUserType = async (
         throw new Error('Invalid UserType');
     }
   } catch (error) {
-    logger.error(`IDAPI Error read user type ${url}`, error);
+    logger.error(`IDAPI Error read user type '/user/type/:email'`, error);
     return handleError(error as IDAPIError);
   }
 };
@@ -126,18 +165,34 @@ export const sendAccountVerificationEmail = async (
   email: string,
   ip: string,
   returnUrl: string,
+  ref?: string,
+  refViewId?: string,
+  clientId?: string,
+  ophanTrackingConfig?: OphanConfig,
 ) => {
-  const url = `${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_VERIFICATION_EMAIL}`;
   const options = APIPostOptions({
     'email-address': email,
   });
   try {
-    await idapiFetch(
-      addReturnUrlToPath(url, returnUrl),
-      APIAddClientAccessToken(options, ip),
+    await idapiFetch({
+      path: '/user/send-account-verification-email',
+      options: APIAddClientAccessToken(options, ip),
+      queryParams: { returnUrl, ref, refViewId, clientId },
+    });
+    sendOphanInteractionEventServer(
+      {
+        component: 'email-send',
+        value: 'account-verification',
+      },
+      ophanTrackingConfig,
     );
+    trackMetric(emailSendMetric('AccountVerification', 'Success'));
   } catch (error) {
-    logger.error(`IDAPI Error send account verification email ${url}`, error);
+    logger.error(
+      `IDAPI Error send account verification email '/user/send-account-verification-email'`,
+      error,
+    );
+    trackMetric(emailSendMetric('AccountVerification', 'Failure'));
     return handleError(error as IDAPIError);
   }
 };
@@ -146,18 +201,33 @@ export const sendAccountExistsEmail = async (
   email: string,
   ip: string,
   returnUrl: string,
+  ref?: string,
+  refViewId?: string,
+  ophanTrackingConfig?: OphanConfig,
 ) => {
-  const url = `${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_EXISTS_EMAIL}`;
   const options = APIPostOptions({
     'email-address': email,
   });
   try {
-    await idapiFetch(
-      addReturnUrlToPath(url, returnUrl),
-      APIAddClientAccessToken(options, ip),
+    await idapiFetch({
+      path: '/user/send-account-exists-email',
+      options: APIAddClientAccessToken(options, ip),
+      queryParams: { returnUrl, ref, refViewId },
+    });
+    sendOphanInteractionEventServer(
+      {
+        component: 'email-send',
+        value: 'account-exists',
+      },
+      ophanTrackingConfig,
     );
+    trackMetric(emailSendMetric('AccountExists', 'Success'));
   } catch (error) {
-    logger.error(`IDAPI Error send account exists email ${url}`, error);
+    logger.error(
+      `IDAPI Error send account exists email '/user/send-account-exists-email'`,
+      error,
+    );
+    trackMetric(emailSendMetric('AccountExists', 'Failure'));
     return handleError(error as IDAPIError);
   }
 };
@@ -166,21 +236,33 @@ export const sendAccountWithoutPasswordExistsEmail = async (
   email: string,
   ip: string,
   returnUrl: string,
+  ref?: string,
+  refViewId?: string,
+  ophanTrackingConfig?: OphanConfig,
 ) => {
-  const url = `${ApiRoutes.USER}${ApiRoutes.SEND_ACCOUNT_WITHOUT_PASSWORD_EXISTS_EMAIL}`;
   const options = APIPostOptions({
     'email-address': email,
   });
   try {
-    await idapiFetch(
-      addReturnUrlToPath(url, returnUrl),
-      APIAddClientAccessToken(options, ip),
+    await idapiFetch({
+      path: '/user/send-account-without-password-exists-email',
+      options: APIAddClientAccessToken(options, ip),
+      queryParams: { returnUrl, ref, refViewId },
+    });
+    sendOphanInteractionEventServer(
+      {
+        component: 'email-send',
+        value: 'account-without-password-exists',
+      },
+      ophanTrackingConfig,
     );
+    trackMetric(emailSendMetric('AccountExistsWithoutPassword', 'Success'));
   } catch (error) {
     logger.error(
-      `IDAPI Error send account without password exists email ${url}`,
+      `IDAPI Error send account without password exists email '/user/send-account-without-password-exists-email'`,
       error,
     );
+    trackMetric(emailSendMetric('AccountExistsWithoutPassword', 'Failure'));
     return handleError(error as IDAPIError);
   }
 };
@@ -189,18 +271,33 @@ export const sendCreatePasswordEmail = async (
   email: string,
   ip: string,
   returnUrl: string,
+  ref?: string,
+  refViewId?: string,
+  ophanTrackingConfig?: OphanConfig,
 ) => {
-  const url = `${ApiRoutes.USER}${ApiRoutes.SEND_CREATE_PASSWORD_ACCOUNT_EXISTS_EMAIL}`;
   const options = APIPostOptions({
     'email-address': email,
   });
   try {
-    await idapiFetch(
-      addReturnUrlToPath(url, returnUrl),
-      APIAddClientAccessToken(options, ip),
+    await idapiFetch({
+      path: '/user/send-create-password-account-exists-email',
+      options: APIAddClientAccessToken(options, ip),
+      queryParams: { returnUrl, ref, refViewId },
+    });
+    sendOphanInteractionEventServer(
+      {
+        component: 'email-send',
+        value: 'create-password-account-exists',
+      },
+      ophanTrackingConfig,
     );
+    trackMetric(emailSendMetric('CreatePassword', 'Success'));
   } catch (error) {
-    logger.error(`IDAPI Error send create password email ${url}`, error);
+    logger.error(
+      `IDAPI Error send create password email '/user/send-create-password-account-exists-email'`,
+      error,
+    );
+    trackMetric(emailSendMetric('CreatePassword', 'Failure'));
     return handleError(error as IDAPIError);
   }
 };

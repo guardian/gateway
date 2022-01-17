@@ -1,3 +1,4 @@
+export type Stage = 'DEV' | 'CODE' | 'PROD';
 export interface Configuration {
   port: number;
   idapiClientAccessToken: string;
@@ -6,7 +7,7 @@ export interface Configuration {
   signInPageUrl: string;
   baseUri: string;
   defaultReturnUri: string;
-  stage: string;
+  stage: Stage;
   gaUID: {
     id: string;
     hash: string;
@@ -20,11 +21,24 @@ export interface Configuration {
   isHttps: boolean;
   appSecret: string;
   oktaDomain: string;
-  oktaCustomOAuthServer: string;
-  oktaClientId: string;
-  oktaClientSecret: string;
   encryptionSecretKey: string;
   oauthBaseUrl: string;
+  okta: Okta;
+  aws: AWSConfiguration;
+}
+
+export interface AWSConfiguration {
+  kinesisStreamName: string;
+  instanceId: string;
+}
+
+export interface Okta {
+  enabled: boolean;
+  orgUrl: string;
+  token: string;
+  authServerId: string;
+  clientId: string;
+  clientSecret: string;
 }
 
 export enum GA_UID {

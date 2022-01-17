@@ -1,6 +1,6 @@
-import { Request, Router } from 'express';
+import { typedRouter as router } from '@/server/lib/typedRoutes';
+import { Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
-import { Routes } from '@/shared/model/Routes';
 import {
   deleteAuthorizationStateCookie,
   getAuthorizationStateCookie,
@@ -10,7 +10,6 @@ import {
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/logger';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { Metrics } from '@/server/models/Metrics';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { exchangeAccessTokenForCookies } from '@/server/lib/idapi/auth';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
@@ -21,8 +20,6 @@ interface OAuthError {
   error: string;
   error_description: string;
 }
-
-const router = Router();
 
 const { signInPageUrl, defaultReturnUri } = getConfiguration();
 
@@ -47,7 +44,7 @@ const redirectForGenericError = (res: ResponseWithRequestState) => {
 };
 
 router.get(
-  Routes.OAUTH_AUTH_CODE_CALLBACK,
+  '/oauth/authorization-code/callback',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     try {
       // params returned from the /authorize endpoint
@@ -68,7 +65,7 @@ router.get(
         // no state! is this an attack?
         // redirect to sign in and cancel flow
         logger.error('Missing auth state cookie on OAuth Callback!');
-        trackMetric(Metrics.AUTHORIZATION_FAILURE);
+        trackMetric('OAuthAuthorization::Failure');
         return redirectForGenericError(res);
       }
 
@@ -97,7 +94,7 @@ router.get(
         logger.error(
           'Missing access_token from /token endpoint in OAuth Callback',
         );
-        trackMetric(Metrics.AUTHORIZATION_FAILURE);
+        trackMetric('OAuthAuthorization::Failure');
         return redirectForGenericError(res);
       }
 
@@ -114,13 +111,13 @@ router.get(
       // adds set cookie headers
       setIDAPICookies(res, cookies);
 
-      trackMetric(Metrics.AUTHORIZATION_SUCCESS);
+      trackMetric('OAuthAuthorization::Success');
 
       // return to url from state or default url
       return res.redirect(authState.returnUrl || defaultReturnUri);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      trackMetric(Metrics.AUTHORIZATION_ERROR);
+      trackMetric('OAuthAuthorization::Failure');
       // if there's been an error from the authorization_code flow
       // then propagate it as a query parameter (error + error_description)
       if (isOAuthError(error)) {
@@ -138,4 +135,4 @@ router.get(
   }),
 );
 
-export default router;
+export default router.router;

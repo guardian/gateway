@@ -10,9 +10,8 @@ The [`renderer`](../src/server/lib/renderer.ts) method abstracts the rendering a
 
 ```ts
 // example of rendering a route
-// normally an enum is used for the url and pageTitle to make it easier to manage in multiple places
-// hardcoded for the example
-const html: string = renderer('/reset/email-sent', {
+// the url and pageTitle are both typed so new values must be added to the model before they will be accepted
+const html: string = renderer('/reset-password/email-sent', {
   pageTitle: 'Check your inbox',
   requestState: res.locals,
 });
@@ -28,34 +27,51 @@ When a browser makes a request to gateway, routes must render an output, this go
 
 Due to SSR, routing is a bit complicated than simply using client-side routing. We do routing through a combination of Express.js and React Router.
 
-To make it easier to keep track of routes/paths, we define then in a `Routes` enum in the [shared/model/Routes.ts](../src/shared/model/Routes.ts) file. The enum is then consumed by both Express and React Router so we can share the paths between them.
+To make it easier to keep track of routes/paths, we define then in a `Routes` types in the [shared/model/Routes.ts](../src/shared/model/Routes.ts) file. The type is then consumed by both Express and React Router so we can share the paths between them.
 
 Firstly, for rendering routes on the client, we use React Router's [`StaticRouter`](https://reacttraining.com/react-router/web/api/StaticRouter) in our [server renderer](../src/server/lib/renderer.tsx) file, this sets up router which location does not change once rendered (no client-side routing). We add client side routes in the client [routes.tsx](../src/client/routes.tsx) file, which react router looks at to determine what to render for that particular path.
 
-Here's an example of a route, with a component it will render inside that route:
+We also use typed route paths. This enforces type safety when added new routes. To add a new route you need to add another entry in the [`RoutePaths`](../src/shared/model/Routes.ts) type.
+In the client [routes.tsx](../src/client/routes.tsx), there is a `routes` array, which contains all the routes than can be rendered on the client, this array takes the `path` property to be of type [`RoutePaths`](../src/shared/model/Routes.ts) and therefore only accepts strings that are part of the `RoutePaths` type, and the `element` property which is the `ReactElement` to render on that path. You can add a new route to the client by adding to the array.
+
+Here's an example of the `routes` array, with a path and element it will render inside that route:
 
 ```tsx
 ...
-  <Route exact path={Routes.RESET_RESEND}>
-    <ResendPasswordPage />
-  </Route>
+const routes: Array<{
+  path: RoutePaths;
+  element: React.ReactElement;
+}> = [
+  ...
+  {
+    path: '/reset-password/email-sent', // this is a path matching `RoutePaths`
+    element: <EmailSentPage noAccountInfo />, // This is the element to render when the `path` matches
+  },
+  {
+    path: '/reset-password/:token', // example with a parameter
+    element: <ChangePasswordPage />,
+  },
+  ...
+]
 ...
 ```
 
 To be able to actually access the route that was defined in the client, express on the server also needs to know about the route. All the server routes should be defined in the [`routes`](../src/server/routes) folder.
 
-Routes should be separated into files which share common functionality. For example, functionality relating to sending the reset password email, is in the [`reset.ts`](../src/server/routes/reset.ts) file. The file should export an Express router, which will be consumed by express to register the routes.
+Routes should be separated into files which share common functionality. For example, functionality relating to resetting your password is in the [`resetPassword.ts`](../src/server/routes/resetPassword.ts) file. The file should export an Express router, which will be consumed by express to register the routes.
+
+We also support typed routes here too, using the [`typedRoutes`](../src/server/lib/typedRoutes.ts) object, which extends Express' `Router`.
 
 Here's an example of a `GET` route, which renders a page and returns it to the client.
 
 ```ts
 ...
-const router = Router();
+import { typedRouter as router } from '@/server/lib/typedRoutes';
 ...
 // tell express the method (GET)
 router.get(
-  // on what path/url/route, e.g. /reset
-  Routes.GET_ROUTE,
+  // on what path/url/route, e.g. /reset-password
+  '/reset-password', //note this is a typed route of type RoutePaths
   (_: Request, res: ResponseWithRequestState) => {
     // some optional actions/logic here
     ...
@@ -67,7 +83,7 @@ router.get(
   },
 );
 ...
-export default router;
+export default router.router;
 ```
 
 Most routes perform some action, and then render something and return it to the user.
@@ -76,7 +92,7 @@ To register it with the running express server, import the created express route
 
 ```ts
 ...
-import { default as reset } from './reset';
+import { default as resetPassword } from './resetPassword';
 ...
 ```
 
@@ -84,7 +100,7 @@ Add to router in that file which will register it with the express server, with 
 
 ```ts
 ...
-router.use(noCache, queryParamsMiddleware, reset);
+router.use(noCache, queryParamsMiddleware, resetPassword);
 ...
 ```
 
@@ -112,6 +128,33 @@ router.get(
 #### Why?
 
 In Express 4, async handlers which fail to call next() (or specific functions on the response) leave the TCP connection open (indicating a leak) and don't return any data.
+
+#### Client side routing
+
+We also support typed routing in client side components using the `buildUrl` and `buildUrlWithQueryParams` helper functions.
+
+`buildUrl`
+If you need to use a internal gateway route in a client side file you can do the following
+
+```ts
+<form
+          method="post"
+          action={buildUrl('/register')}
+          ref={registerFormRef}
+          onSubmit={handleSubmit}
+        >
+```
+
+and with query Params
+
+```ts
+<form
+          method="post"
+          action={buildUrlWithQueryParams('/register', {}, queryString)}
+          ref={registerFormRef}
+          onSubmit={handleSubmit}
+        >
+```
 
 ## Developing Components/Pages using Storybook
 
@@ -345,34 +388,6 @@ This file also exposes an `addQueryParamsToPath` method which can be used to app
 
 #### Server
 
-To make sure the query params are parsed on the server, make sure to add the param to the [`parseExpressQueryParams`](../src/server/lib/queryParams.ts) and the [`unit tests`](../src/server/lib/__tests__/queryParams.test.ts) too.
-
-```ts
-// src/server/lib/queryParams.ts#
-export const parseExpressQueryParams = ({
-  returnUrl,
-  clientId,
-  testParam,
-}: {
-  returnUrl?: string;
-  clientId?: string;
-  testParam?: string;
-}): QueryParams => {
-  return {
-    returnUrl: validateReturnUrl(returnUrl),
-    clientId: validateClientId(clientId),
-    testParam: validateTestParam(testParams), // method to check if the parameter is valid, defined elsewhere
-  };
-};
-```
-
-Then simply include the [`queryParamsMiddleware`](../src/server/lib/middleware/queryParams.ts) on any routes that should parse the querystring.
-
-```ts
-// example on all reset password routes
-router.use(noCache, queryParamsMiddleware, reset);
-```
-
 You can access this server side on the `ResponseWithRequestState` object as `res.locals.queryParams`. For example you could get the `returnUrl` using:
 
 ```ts
@@ -457,12 +472,11 @@ Example of styling and adding it to a `p` tag using Emotion and Source:
 ```tsx
 import * as React from 'react';
 import { css } from '@emotion/react';
-import { textSans } from '@guardian/src-foundations/typography';
-import { palette } from '@guardian/src-foundations';
+import { textSans, neutral } from '@guardian/source-foundations';
 
 // style the tag using the css string literal
 const p = css`
-  color: ${palette.neutral[100]};
+  color: ${neutral[100]};
   margin: 0;
   ${textSans.small()};
 `;
@@ -512,21 +526,27 @@ Environment variables appear in a lot of places, so it's likely you'll need to u
    thisMethodNeedsTheKey(envKey);
    ```
 
-5. Github Actions (`.github/workflows/ci.yaml`)
+5. [Github Actions](../.github/workflows)
    - For GitHub Actions CI
    - Add development values to allow tests to pass
-   - For secret values, use a fake value
-   ```yml
-   env:
-     ENV_KEY: ENV_VALUE
-   ```
+   - For secret values depending on the use case either
+   - Use a fake value if not required in E2E testing
+     ```yml
+     env:
+       ENV_KEY: value
+     ```
+   - If required in E2E testing, store in [settings `"Secrets -> Actions"`](https://github.com/guardian/gateway/settings/secrets/actions) and use notation
+     ```yml
+     env:
+       ENV_KEY: ${{ secrets.ENV_KEY }}
+     ```
 6. S3 Config
    - If an environment variable has been changed/added/deleted, it might be useful to update the default S3 private DEV config for the project to help other developers
    - AWS `identity` account, in the `s3://identity-private-config/DEV/identity-gateway/` folder.
 
 ## Client Side Scripts
 
-The app itself is server side rendered for browsers not running JavaScript. We also hydrate the components with react, necessary for interactive components.
+The app itself is server side rendered. We also hydrate the components with react, necessary for interactive components, and for reCAPTCHA support where required.
 Also, there may need to be some scripts that fire on the client side, for example for analytics, or the consents management platform.
 
 To facilitate this, a client bundle is created at build time to the `build/static` folder. This corresponds to the script imported in the [`src/client/static/index.tsx`](../src/client/static/index.tsx) file, with a script tag pointing to the bundle delivered along with the rendered html.

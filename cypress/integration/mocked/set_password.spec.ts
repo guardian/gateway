@@ -3,11 +3,11 @@
 import { injectAndCheckAxe } from '../../support/cypress-axe';
 
 describe('Password set/create flow', () => {
-  const fakeValidationRespone = (expiryTimestamp?: number) => ({
+  const fakeValidationRespone = (timeUntilExpiry?: number) => ({
     user: {
       primaryEmailAddress: 'name@example.com',
     },
-    expiryTimestamp,
+    timeUntilExpiry,
   });
 
   const fakeSuccessResponse = {
@@ -106,8 +106,31 @@ describe('Password set/create flow', () => {
       cy.contains('Link expired');
     });
 
+    it('does not allow email resend if reCAPTCHA check fails', () => {
+      cy.mockNext(500, {
+        status: 'error',
+        errors: [
+          {
+            message: 'Invalid token',
+          },
+        ],
+      });
+      cy.visit(`/set-password/fake_token`);
+      cy.contains('Link expired');
+      cy.get('input[name="email"]').type('some@email.com');
+      cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
+        statusCode: 500,
+      });
+      cy.get('button[type="submit"]').click();
+      cy.contains('Google reCAPTCHA verification failed. Please try again.');
+      cy.get('button[type="submit"]').click();
+      cy.contains('Google reCAPTCHA verification failed.');
+      cy.contains('If the problem persists please try the following:');
+      cy.contains('userhelp@');
+    });
+
     it('shows the session time out page if the token expires while on the set password page', () => {
-      cy.mockNext(200, fakeValidationRespone(Date.now() + 1000));
+      cy.mockNext(200, fakeValidationRespone(1000));
       cy.visit(`/set-password/fake_token`);
       cy.contains('Session timed out');
     });

@@ -4,7 +4,6 @@ import { randomBytes } from 'crypto';
 import { Request } from 'express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { getProfileUrl } from '@/server/lib/getProfileUrl';
-import { Routes } from '@/shared/model/Routes';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { logger } from '@/server/lib/logger';
 import { joinUrl } from '@guardian/libs';
@@ -50,8 +49,7 @@ interface OpenIdClientRedirectUris {
   WEB: string;
 }
 
-const { oktaDomain, oktaClientId, oktaClientSecret, oktaCustomOAuthServer } =
-  getConfiguration();
+const { oktaDomain, okta } = getConfiguration();
 
 /**
  * https://developer.okta.com/docs/reference/api/oidc/#well-known-openid-configuration
@@ -59,7 +57,7 @@ const { oktaDomain, oktaClientId, oktaClientSecret, oktaCustomOAuthServer } =
  * used by openid-client to create the "Issuer" and "Client"
  * we only expose the endpoints here
  */
-const issuer = joinUrl(oktaDomain, '/oauth2/', oktaCustomOAuthServer);
+const issuer = joinUrl(oktaDomain, '/oauth2/', okta.authServerId);
 const OIDC_METADATA: IssuerMetadata = {
   issuer,
   authorization_endpoint: joinUrl(issuer, '/v1/authorize'),
@@ -84,7 +82,7 @@ const OIDCIssuer = new Issuer(OIDC_METADATA);
  * Native apps will likely have different redirect URIs
  */
 export const ProfileOpenIdClientRedirectUris: OpenIdClientRedirectUris = {
-  WEB: `${getProfileUrl()}${Routes.OAUTH_AUTH_CODE_CALLBACK}`,
+  WEB: `${getProfileUrl()}/oauth/authorization-code/callback`,
 };
 
 /**
@@ -96,8 +94,8 @@ export const ProfileOpenIdClientRedirectUris: OpenIdClientRedirectUris = {
  * @property `oauthCallback` - Method used in the callback (redirect_uri) endpoint to get OAuth tokens
  */
 export const ProfileOpenIdClient = new OIDCIssuer.Client({
-  client_id: oktaClientId,
-  client_secret: oktaClientSecret,
+  client_id: okta.clientId,
+  client_secret: okta.clientSecret,
   redirect_uris: Object.values(ProfileOpenIdClientRedirectUris),
 }) as OpenIdClient;
 

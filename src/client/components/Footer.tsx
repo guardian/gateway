@@ -5,12 +5,12 @@ import {
   brandText,
   brandAlt,
   brandBackground,
-} from '@guardian/src-foundations/palette';
-import { space } from '@guardian/src-foundations';
-import { textSans } from '@guardian/src-foundations/typography';
-import { from } from '@guardian/src-foundations/mq';
-import { Hide } from '@guardian/src-layout';
-import locations from '@/client/lib/locations';
+  space,
+  textSans,
+  from,
+} from '@guardian/source-foundations';
+import { Hide } from '@guardian/source-react-components';
+import locations from '@/shared/lib/locations';
 import { BackToTop } from '@/client/components/BackToTop';
 import { Container } from '@/client/components/Container';
 import { ExternalLink } from '@/client/components/ExternalLink';
@@ -142,7 +142,7 @@ export const Footer = () => (
   <footer css={footer}>
     {/* What you see below desktop */}
     <Hide above="desktop">
-      <Container sideBorders={true}>
+      <Container sideBorders>
         <div css={ulWrapperStyles}>
           <ul css={[ulStyles, columnStyles]}>
             <li>
@@ -179,7 +179,7 @@ export const Footer = () => (
     </Hide>
     {/* What you see above desktop */}
     <Hide below="desktop">
-      <Container sideBorders={true}>
+      <Container sideBorders>
         <div css={ulWrapperStyles}>
           <ul css={[ulStyles, columnStyles]}>
             <li>

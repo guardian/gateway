@@ -12,6 +12,7 @@ export const ChangePasswordCompletePage = () => {
       headerText="Password updated"
       email={email}
       returnUrl={returnUrl}
+      action="updated"
     />
   );
 };

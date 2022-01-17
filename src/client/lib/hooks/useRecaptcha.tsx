@@ -50,7 +50,7 @@ const useRecaptchaScript = (src: string) => {
     recaptchaScriptLoadPromise
       .then(initialiseRecaptcha)
       .catch(() => setError(true));
-  }, []);
+  }, [src]);
 
   return {
     loaded,
@@ -69,7 +69,7 @@ type UseRecaptcha = (
   src?: string,
 ) => UseRecaptchaReturnValue;
 
-type UseRecaptchaReturnValue = {
+export type UseRecaptchaReturnValue = {
   // Token returned from Google reCAPTCHA upon a successful request.
   // Initial value: ''
   token: string;
@@ -85,7 +85,7 @@ type UseRecaptchaReturnValue = {
   // Ask Google reCAPTCHA for a token and update the token and error state.
   // If successful, `token` is set and `error` + `expired` are reset to false.
   // Returns a bool to indicate whether `grecaptcha.execute` was called successfully.
-  executeCaptcha: () => void;
+  executeCaptcha: () => boolean;
   // Keeps track of the number of times the `executeRecaptcha` has been called.
   // Initial value: 0.
   requestCount: number;
@@ -118,14 +118,7 @@ const useRecaptcha: UseRecaptcha = (
 
   // We can't initialise recaptcha if no site key or render element is provided.
   if (siteKey === '' || renderElement === '') {
-    return {
-      token,
-      error: true,
-      expired,
-      widgetId,
-      executeCaptcha: () => null,
-      requestCount,
-    };
+    throw new Error('No site key or render element passed');
   }
 
   const { loaded, error: scriptLoadError } = useRecaptchaScript(src);
@@ -154,7 +147,7 @@ const useRecaptcha: UseRecaptcha = (
       });
       setWidgetId(widgetId);
     }
-  }, [loaded]);
+  }, [loaded, renderElement, siteKey, size]);
 
   const executeCaptcha = React.useCallback(() => {
     if (!recaptchaReady()) {
@@ -179,6 +172,43 @@ const useRecaptcha: UseRecaptcha = (
 };
 
 export default useRecaptcha;
+
+/**
+ * Wrapper component for the useRecaptcha hook.
+ *
+ * Runs the hook in a wrapper and passes the state back up to the parent component.
+ * Useful for instances where we want to conditionally include the reCAPTCHA check.
+ *
+ * @returns The reCAPTCHA form element.
+ */
+export const RecaptchaWrapper: React.FC<{
+  recaptchaSiteKey: string;
+  setRecaptchaState: React.Dispatch<
+    React.SetStateAction<UseRecaptchaReturnValue | undefined>
+  >;
+}> = ({ recaptchaSiteKey, setRecaptchaState }) => {
+  const { error, executeCaptcha, expired, requestCount, token, widgetId } =
+    useRecaptcha(recaptchaSiteKey, 'recaptcha');
+  React.useEffect(() => {
+    setRecaptchaState({
+      error,
+      executeCaptcha,
+      expired,
+      requestCount,
+      token,
+      widgetId,
+    });
+  }, [
+    error,
+    executeCaptcha,
+    expired,
+    requestCount,
+    setRecaptchaState,
+    token,
+    widgetId,
+  ]);
+  return <RecaptchaElement id="recaptcha" />;
+};
 
 /**
  * Provides a standardised way to bind Recaptcha to your page.

@@ -2,11 +2,10 @@ import { NextFunction, Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { getCsrfPageUrl } from '@/server/lib/getCsrfPageUrl';
 import { renderer } from '@/server/lib/renderer';
-import { Routes } from '@/shared/model/Routes';
-import { PageTitle } from '@/shared/model/PageTitle';
 import { logger } from '@/server/lib/logger';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
 import { getConfiguration } from '@/server/lib/getConfiguration';
+import { trackMetric } from '@/server/lib/trackMetric';
 
 const { defaultReturnUri } = getConfiguration();
 
@@ -24,7 +23,7 @@ export const routeErrorHandler = (
     // we also have to manually build the query params object, as it may not be defined in an unexpected csrf error
     res.redirect(
       303,
-      addQueryParamsToPath(
+      addQueryParamsToUntypedPath(
         getCsrfPageUrl(req),
         { ...res.locals.queryParams, returnUrl: defaultReturnUri },
         {
@@ -33,13 +32,29 @@ export const routeErrorHandler = (
       ),
     );
     return next(err);
+  } else if (err.code === 'EBADRECAPTCHA') {
+    trackMetric('RecaptchaMiddleware::Failure');
+    res.redirect(
+      303,
+      addQueryParamsToUntypedPath(
+        req.url,
+        {
+          ...res.locals.queryParams,
+          returnUrl: defaultReturnUri,
+        },
+        {
+          recaptchaError: true,
+        },
+      ),
+    );
+    return next(err);
   }
 
   logger.error('unexpected error', err);
 
-  const html = renderer(`${Routes.UNEXPECTED_ERROR}`, {
+  const html = renderer('/error', {
     requestState: res.locals,
-    pageTitle: PageTitle.UNEXPECTED_ERROR,
+    pageTitle: 'Unexpected Error',
   });
   return res.status(500).type('html').send(html);
 };
