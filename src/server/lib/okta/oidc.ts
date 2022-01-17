@@ -5,7 +5,7 @@ import { Request } from 'express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { getProfileUrl } from '@/server/lib/getProfileUrl';
 import { ResponseWithRequestState } from '@/server/models/Express';
-import { logger } from '@/server/lib/logger';
+import { logger } from '@/server/lib/serverSideLogger';
 import { joinUrl } from '@guardian/libs';
 
 /**

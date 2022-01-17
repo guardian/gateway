@@ -25,6 +25,8 @@ export interface Configuration {
   oauthBaseUrl: string;
   okta: Okta;
   aws: AWSConfiguration;
+  githubRunNumber: string;
+  sentryDsn: string;
 }
 
 export interface AWSConfiguration {

@@ -42,6 +42,8 @@ describe('getConfiguration', () => {
     process.env.OKTA_CUSTOM_OAUTH_SERVER = 'customoauthserverid';
     process.env.OKTA_CLIENT_ID = 'oktaclientid';
     process.env.OKTA_CLIENT_SECRET = 'oktaclientsecret';
+    process.env.SENTRY_DSN = 'sentry-dsn';
+    process.env.GITHUB_RUN_NUMBER = '5';
 
     const output = getConfiguration();
     const expected = {
@@ -81,6 +83,8 @@ describe('getConfiguration', () => {
         kinesisStreamName: '',
         instanceId: '',
       },
+      githubRunNumber: '5',
+      sentryDsn: 'sentry-dsn',
     };
     expect(output).toEqual(expected);
   });

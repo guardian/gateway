@@ -1,6 +1,6 @@
 import { OphanEvent, OphanInteraction } from '@/shared/model/ophan';
 import { fetch } from '@/server/lib/fetch';
-import { logger } from '@/server/lib/logger';
+import { logger } from '@/server/lib/serverSideLogger';
 import timeoutSignal from 'timeout-signal';
 import { stringify } from 'query-string';
 

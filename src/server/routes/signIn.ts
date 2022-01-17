@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import deepmerge from 'deepmerge';
-import { logger } from '@/server/lib/logger';
+import { logger } from '@/server/lib/serverSideLogger';
 import { renderer } from '@/server/lib/renderer';
 
 import { ResponseWithRequestState } from '@/server/models/Express';

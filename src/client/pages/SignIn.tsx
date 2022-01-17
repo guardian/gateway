@@ -24,6 +24,7 @@ import useRecaptcha, {
 import locations from '@/shared/lib/locations';
 import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
 import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
+import { logger } from '@/client/lib/clientSideLogger';
 
 export type SignInProps = {
   returnUrl?: string;
@@ -155,6 +156,10 @@ export const SignIn = ({
   // We want to show a more detailed reCAPTCHA error if
   // the user has requested a check more than once.
   const recaptchaCheckFailed = recaptchaError || expired;
+  if (recaptchaCheckFailed) {
+    logger.info('Recaptcha check failed');
+  }
+
   const showErrorContext = recaptchaCheckFailed && requestCount > 1;
   const reCaptchaErrorMessage = showErrorContext
     ? CaptchaErrors.RETRY

@@ -20,6 +20,13 @@ const getOrThrow = (
   return value;
 };
 
+const getOrDefault = (value: string | undefined, defaultValue: string) => {
+  if (typeof value === 'undefined') {
+    return defaultValue;
+  }
+  return value;
+};
+
 const getStage = (value: string | undefined): Stage => {
   const maybeStage = getOrThrow(value, 'Stage variable missing.');
 
@@ -156,6 +163,9 @@ export const getConfiguration = (): Configuration => {
     ),
   };
 
+  const sentryDsn = getOrDefault(process.env.SENTRY_DSN, '');
+  const githubRunNumber = getOrDefault(process.env.GITHUB_RUN_NUMBER, '0');
+
   const aws: AWSConfiguration = {
     kinesisStreamName:
       stage === 'DEV'
@@ -201,5 +211,7 @@ export const getConfiguration = (): Configuration => {
     oauthBaseUrl,
     okta,
     aws,
+    githubRunNumber,
+    sentryDsn,
   };
 };

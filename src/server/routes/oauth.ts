@@ -8,7 +8,7 @@ import {
   ProfileOpenIdClientRedirectUris,
 } from '@/server/lib/okta/oidc';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { logger } from '@/server/lib/logger';
+import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { exchangeAccessTokenForCookies } from '@/server/lib/idapi/auth';
