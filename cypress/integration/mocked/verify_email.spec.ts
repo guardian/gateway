@@ -60,7 +60,7 @@ describe('Verify email flow', () => {
   });
 
   context('Verify email', () => {
-    it('successfuly verifies the email using a token and sets auth cookies', () => {
+    it('successfully verifies the email using a token and sets auth cookies', () => {
       // mock validation success response (200 with auth cookies)
       cy.mockNext(200, authCookieResponse);
 
@@ -87,7 +87,7 @@ describe('Verify email flow', () => {
       cy.url().should('include', '/consents');
     });
 
-    it('successfuly verifies the email using a token and sets auth cookies, and preserves encoded return url', () => {
+    it('successfully verifies the email using a token and sets auth cookies, and preserves encoded return url', () => {
       // mock validation success response (200 with auth cookies)
       cy.mockNext(200, authCookieResponse);
 
@@ -125,7 +125,7 @@ describe('Verify email flow', () => {
       cy.url().should('include', `returnUrl=${returnUrl}`);
     });
 
-    it('successfuly verifies the email using a token and sets auth cookies, and perserves and encodes return url', () => {
+    it('successfully verifies the email using a token and sets auth cookies, and preserves and encodes return url', () => {
       // mock validation success response (200 with auth cookies)
       cy.mockNext(200, authCookieResponse);
 
@@ -261,7 +261,7 @@ describe('Verify email flow', () => {
       cy.contains(VerifyEmail.CONTENT.EMAIL_SENT);
     });
 
-    it('verification token is invalid, logged in, shows page to to resend validation email and fails reCAPTCHA check before succeeding', () => {
+    it('verification token is invalid, logged in, shows page to to resend validation email and shows recaptcha error message when reCAPTCHA token request fails', () => {
       // set logged in cookies
       setAuthCookies();
 
@@ -284,25 +284,18 @@ describe('Verify email flow', () => {
       cy.contains(VerifyEmail.CONTENT.CONFIRM_EMAIL);
       cy.contains(verifiedUserWithNoConsent.user.primaryEmailAddress);
 
-      cy.intercept({
-        method: 'POST',
-        url: 'https://www.google.com/recaptcha/api2/**',
-        times: 1,
+      cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
+        statusCode: 500,
       });
 
-      // click on send link button and expect reCAPTCHA errors for first two clicks.
       cy.contains(VerifyEmail.CONTENT.SEND_LINK).click();
       cy.contains('Google reCAPTCHA verification failed. Please try again.');
 
+      // show extended reCaptcha message on the second failure
       cy.contains(VerifyEmail.CONTENT.SEND_LINK).click();
       cy.contains('Google reCAPTCHA verification failed.');
       cy.contains('If the problem persists please try the following:');
       cy.contains('userhelp@');
-
-      cy.contains(VerifyEmail.CONTENT.SEND_LINK).click();
-
-      // expect email sent page
-      cy.contains(VerifyEmail.CONTENT.EMAIL_SENT);
     });
   });
 });
