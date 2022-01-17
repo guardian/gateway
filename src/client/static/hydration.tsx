@@ -7,6 +7,8 @@ import { RoutingConfig } from '@/client/routes';
 import { App } from '@/client/app';
 import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
+import * as Sentry from '@sentry/browser';
+import { Integrations } from '@sentry/tracing';
 
 export const hydrateApp = () => {
   const routingConfig: RoutingConfig = JSON.parse(
@@ -15,8 +17,21 @@ export const hydrateApp = () => {
 
   const clientState = routingConfig.clientState;
 
-  const { abTesting: { mvtId = 0, forcedTestVariants = {} } = {} } =
-    clientState;
+  const {
+    abTesting: { mvtId = 0, forcedTestVariants = {} } = {},
+    sentryConfig: { stage, build, dsn },
+  } = clientState;
+
+  // Disable Sentry client side logging during local development.
+  if (dsn) {
+    Sentry.init({
+      dsn,
+      integrations: [new Integrations.BrowserTracing()],
+      environment: stage,
+      release: `gateway@${build}`,
+      tracesSampleRate: 0.2,
+    });
+  }
 
   hydrate(
     <ABProvider

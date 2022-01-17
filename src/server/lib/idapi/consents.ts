@@ -5,7 +5,7 @@ import {
   APIForwardSessionIdentifier,
   APIGetOptions,
 } from '@/server/lib/IDAPIFetch';
-import { logger } from '@/server/lib/logger';
+import { logger } from '@/server/lib/serverSideLogger';
 import { ConsentsErrors } from '@/shared/model/Errors';
 import { Consent } from '@/shared/model/Consent';
 import { UserConsent } from '@/shared/model/User';
