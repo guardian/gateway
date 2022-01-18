@@ -121,7 +121,7 @@
     "@guardian/consent-management-platform": "^10.1.0",
     "@guardian/libs": "^3.5.1",
     "@guardian/source-foundations": "^4.0.0-rc.5",
-    "@guardian/source-react-components": "^4.0.0-rc.3",
+    "@guardian/source-react-components": "^4.0.0-rc.4",
     "@guardian/source-react-components-development-kitchen": "^1.0.0-rc.1",
     "@okta/okta-sdk-nodejs": "6.2.0",
     "@sentry/browser": "^6.16.1",
