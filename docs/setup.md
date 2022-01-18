@@ -23,8 +23,6 @@ Populate a `.env` file by using the examples from [`.env.example`](../.env.examp
 
 Depending on which stage (`DEV` or `CODE`) you want to connect to [Identity API (IDAPI)](https://github.com/guardian/identity), the `IDAPI_CLIENT_ACCESS_TOKEN` and `IDAPI_BASE_URL` variables will be different. If using the S3 config, it will point to the `CODE` instance of IDAPI.
 
-`PLAY_SESSION_COOKIE_SECRET` should be the `play.crypto.secret` used by [Identity Frontend](https://github.com/guardian/identity-frontend), as found in the `DEV` private configuration. This is used to decode the scala play session cookie, and will only be in use while migration from play is ongoing, and will be removed when migration is complete, or is no longer required.
-
 ### Nginx
 
 You can setup gateway to use a domain name locally (`https://profile.thegulocal.com`) and alongside identity-frontend by following the instructions from [`identity-platform/nginx`](https://github.com/guardian/identity-platform/tree/master/nginx).
