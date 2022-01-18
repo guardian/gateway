@@ -6,6 +6,7 @@ const AssetsPlugin = require('assets-webpack-plugin');
 const { merge } = require('webpack-merge');
 const nodeExternals = require('webpack-node-externals');
 const Dotenv = require('dotenv-webpack');
+const TerserPlugin = require("terser-webpack-plugin");
 
 const mode =
   process.env.ENVIRONMENT === 'production' ? 'production' : 'development';
@@ -209,6 +210,15 @@ const browser = ({ isLegacy }) => {
       ]
     },
     optimization: {
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            mangle: {
+              safari10: true,
+            }
+          }
+        }),
+      ],
       splitChunks: {
         cacheGroups: {
           commons: {
