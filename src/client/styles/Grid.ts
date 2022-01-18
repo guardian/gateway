@@ -1,5 +1,4 @@
-import { SerializedStyles } from '@emotion/react';
-import { css } from '@emotion/react';
+import { SerializedStyles, css } from '@emotion/react';
 import { from, space } from '@guardian/source-foundations';
 
 export enum COLUMNS {
