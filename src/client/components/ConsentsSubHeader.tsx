@@ -1,6 +1,5 @@
 import React from 'react';
-import { css } from '@emotion/react';
-import { SerializedStyles } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import {
   brand,
   neutral,

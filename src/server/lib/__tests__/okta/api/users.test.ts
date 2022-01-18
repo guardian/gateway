@@ -1,7 +1,6 @@
 import { mocked } from 'jest-mock';
 import { fetch } from '@/server/lib/fetch';
-import type { Response } from 'node-fetch';
-import type { RequestInfo, RequestInit } from 'node-fetch';
+import type { Response, RequestInfo, RequestInit } from 'node-fetch';
 import {
   activateUser,
   createUser,
