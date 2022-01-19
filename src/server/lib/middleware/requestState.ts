@@ -8,6 +8,7 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { tests } from '@/shared/model/experiments/abTests';
 import { getABTesting } from '@/server/lib/getABTesting';
 import { RequestState, RequestWithTypedQuery } from '@/server/models/Express';
+import Bowser from 'bowser';
 
 const {
   idapiBaseUrl,
@@ -28,6 +29,8 @@ const getRequestState = (req: RequestWithTypedQuery): RequestState => {
     ref,
     refViewId,
   });
+
+  const browser = Bowser.getParser(req.header('user-agent') || 'unknown');
 
   return {
     queryParams,
@@ -56,6 +59,7 @@ const getRequestState = (req: RequestWithTypedQuery): RequestState => {
       stage,
       dsn: sentryDsn,
     },
+    browser: browser.getBrowser(),
   };
 };
 
