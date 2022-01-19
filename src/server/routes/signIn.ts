@@ -27,7 +27,6 @@ router.get(
       encryptedEmail && (await decrypt(encryptedEmail, req.ip));
 
     // followed by the gateway EncryptedState
-    // and the identity-frontend playSessionCookie
     // if it exists
     const email = decryptedEmail || readEmailCookie(req);
 

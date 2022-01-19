@@ -92,11 +92,6 @@ export const getConfiguration = (): Configuration => {
     'IDAPI Client Access Token missing.',
   );
 
-  const playSessionCookieSecret = getOrThrow(
-    process.env.PLAY_SESSION_COOKIE_SECRET,
-    'Play Session Cookie Secret missing.',
-  );
-
   const signInPageUrl = getOrThrow(
     process.env.SIGN_IN_PAGE_URL,
     'Sign in page URL page missing',
@@ -184,7 +179,6 @@ export const getConfiguration = (): Configuration => {
     port: +port,
     idapiBaseUrl,
     idapiClientAccessToken,
-    playSessionCookieSecret,
     signInPageUrl,
     baseUri,
     defaultReturnUri,
