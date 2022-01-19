@@ -9,6 +9,7 @@ import {
 } from '@/shared/model/ClientState';
 import { Participations, ABTestAPI } from '@guardian/ab-core';
 import { OphanConfig } from '@/server/lib/ophan';
+import Bowser from 'bowser';
 
 export interface ABTesting {
   mvtId: number;
@@ -30,6 +31,7 @@ export interface RequestState {
   recaptchaConfig: RecaptchaConfig;
   ophanConfig: OphanConfig;
   sentryConfig: SentryConfig;
+  browser: Bowser.Parser.Details;
 }
 
 export interface ResponseWithRequestState extends Response {
