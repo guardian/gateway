@@ -7,7 +7,7 @@ import { renderer } from '@/server/lib/renderer';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
+import { setIDAPICookies } from '@/server/lib/idapi/setIDAPICookies';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { decrypt } from '@/server/lib/idapi/decryptToken';
 import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
@@ -27,6 +27,16 @@ import {
 } from '@/server/lib/encryptedStateCookie';
 import { getPersistableQueryParams } from '@/shared/lib/queryParams';
 import { RoutePaths } from '@/shared/model/Routes';
+import { TEST_ID as OPT_IN_PROMPT_TEST_ID } from '@/shared/model/experiments/tests/opt-in-prompt';
+import { addReturnUrlToPath } from '@/server/lib/queryParams';
+import { CONSENTS_POST_SIGN_IN_PAGE, Consents } from '@/shared/model/Consent';
+import {
+  getUserConsentsForPage,
+  getConsentValueFromRequestBody,
+  update as patchConsents,
+} from '@/server/lib/idapi/consents';
+import { loginMiddleware } from '@/server/lib/middleware/login';
+import { hasExperimentRun, setExperimentRan } from '@/server/lib/experiments';
 
 const { defaultReturnUri, okta } = getConfiguration();
 
@@ -180,6 +190,7 @@ const idapiSignInController = async (
   const { email = '', password = '' } = req.body;
 
   const { returnUrl } = state.pageData;
+  const redirectUrl = returnUrl || defaultReturnUri;
 
   try {
     const cookies = await authenticateWithIdapi(email, password, req.ip);
@@ -188,7 +199,48 @@ const idapiSignInController = async (
 
     trackMetric('SignIn::Success');
 
-    return res.redirect(303, returnUrl || defaultReturnUri);
+    const optInPromptActive = await (async () => {
+      if (!state.abTesting.participations[OPT_IN_PROMPT_TEST_ID]) {
+        return false;
+      }
+
+      // Treating paths that only differ due to trailing slash as equivalent
+      const noTrailingSlash = (str: string) => str.replace(/\/$/, '');
+      if (noTrailingSlash(redirectUrl) !== noTrailingSlash(defaultReturnUri)) {
+        return false;
+      }
+
+      if (hasExperimentRun(req, OPT_IN_PROMPT_TEST_ID)) {
+        return false;
+      } else {
+        setExperimentRan(req, res, OPT_IN_PROMPT_TEST_ID, true);
+      }
+
+      const sc_gu_u = cookies.values.find(
+        ({ key }) => key === 'SC_GU_U',
+      )?.value;
+
+      if (!sc_gu_u) {
+        return false;
+      }
+
+      const consents = await getUserConsentsForPage(
+        CONSENTS_POST_SIGN_IN_PAGE,
+        req.ip,
+        sc_gu_u,
+      );
+
+      return !consents.find(({ id }) => id === Consents.SUPPORTER)?.consented;
+    })();
+
+    if (optInPromptActive) {
+      return res.redirect(
+        303,
+        addReturnUrlToPath('/signin/success', redirectUrl),
+      );
+    }
+
+    return res.redirect(303, redirectUrl);
   } catch (error) {
     logger.error(`${req.method} ${req.originalUrl}  Error`, error);
     const { message, status } =
@@ -274,5 +326,49 @@ const oktaSignInController = async (
     return res.status(status).type('html').send(html);
   }
 };
+
+router.get(
+  '/signin/success',
+  loginMiddleware,
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    const state = res.locals;
+    const consents = await getUserConsentsForPage(
+      CONSENTS_POST_SIGN_IN_PAGE,
+      req.ip,
+      req.cookies.SC_GU_U,
+    );
+
+    const html = renderer('/signin/success', {
+      requestState: deepmerge(state, {
+        pageData: {
+          consents,
+        },
+      }),
+      pageTitle: 'Signed in',
+    });
+    res.type('html').send(html);
+  }),
+);
+
+router.post(
+  '/signin/success',
+  loginMiddleware,
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    const state = res.locals;
+    const { returnUrl } = state.pageData;
+    const { defaultReturnUri } = getConfiguration();
+    const redirectUrl = returnUrl || defaultReturnUri;
+    const sc_gu_u = req.cookies.SC_GU_U;
+
+    const consents = CONSENTS_POST_SIGN_IN_PAGE.map((id) => ({
+      id,
+      consented: getConsentValueFromRequestBody(id, req.body),
+    }));
+
+    await patchConsents(req.ip, sc_gu_u, consents);
+
+    return res.redirect(303, redirectUrl);
+  }),
+);
 
 export default router.router;

@@ -8,7 +8,7 @@ import {
 } from '@/server/lib/idapi/verifyEmail';
 import { logger } from '@/server/lib/serverSideLogger';
 import { renderer } from '@/server/lib/renderer';
-import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
+import { setIDAPICookies } from '@/server/lib/idapi/setIDAPICookies';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { ApiError } from '@/server/models/Error';
 import { ResponseWithRequestState } from '@/server/models/Express';

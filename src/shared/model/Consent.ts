@@ -17,3 +17,5 @@ export enum Consents {
 export const CONSENTS_DATA_PAGE: string[] = [Consents.PROFILING];
 
 export const CONSENTS_COMMUNICATION_PAGE: string[] = [Consents.SUPPORTER];
+
+export const CONSENTS_POST_SIGN_IN_PAGE: string[] = [Consents.SUPPORTER];

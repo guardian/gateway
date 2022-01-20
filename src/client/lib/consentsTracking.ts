@@ -77,6 +77,7 @@ export const onboardingFormSubmitOphanTracking = (
   switch (`/${page}`) {
     case '/communication':
     case '/data':
+    case '/signin/success':
       return consentsFormSubmitOphanTracking(inputElems, pageData);
     case '/newsletters':
       return newslettersFormSubmitOphanTracking(inputElems, pageData);

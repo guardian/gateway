@@ -16,6 +16,7 @@ import { ResendEmailVerificationPage } from '@/client/pages/ResendEmailVerificat
 import { UnexpectedErrorPage } from '@/client/pages/UnexpectedErrorPage';
 import { ClientState } from '@/shared/model/ClientState';
 import { SignInPage } from '@/client/pages/SignInPage';
+import { SignInSuccessPage } from '@/client/pages/SignInSuccessPage';
 import { MagicLinkPage } from '@/client/pages/MagicLinkPage';
 import { WelcomePage } from '@/client/pages/WelcomePage';
 import { WelcomeResendPage } from '@/client/pages/WelcomeResendPage';
@@ -41,6 +42,10 @@ const routes: Array<{
   {
     path: '/signin',
     element: <SignInPage />,
+  },
+  {
+    path: '/signin/success',
+    element: <SignInSuccessPage />,
   },
   {
     path: '/register',
