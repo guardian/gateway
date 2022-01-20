@@ -18,7 +18,6 @@ import {
   register as registerWithOkta,
   resendRegistrationEmail,
 } from '@/server/lib/okta/register';
-import { getEmailFromPlaySessionCookie } from '@/server/lib/playSessionCookie';
 import { renderer } from '@/server/lib/renderer';
 import { typedRouter as router } from '@/server/lib/typedRoutes';
 import { trackMetric } from '@/server/lib/trackMetric';
@@ -48,9 +47,7 @@ router.get(
     const html = renderer('/register/email-sent', {
       requestState: deepmerge(state, {
         pageData: {
-          email:
-            getEmailFromPlaySessionCookie(req) ||
-            readEncryptedStateCookie(req)?.email,
+          email: readEncryptedStateCookie(req)?.email,
         },
       }),
       pageTitle: 'Check Your Inbox',
@@ -76,12 +73,7 @@ router.post(
         // read and parse the encrypted state cookie
         const encryptedState = readEncryptedStateCookie(req);
 
-        // read the email from the PlaySessionCookie or the EncryptedState
-        // we attempt to read from the PlaySessionCookie first as it's likely
-        // the registration came from identity-frontend until the register page
-        // is at 100% of all users on gateway
-        const email =
-          getEmailFromPlaySessionCookie(req) || encryptedState?.email;
+        const email = encryptedState?.email;
 
         // check the email exists
         if (typeof email !== 'undefined') {

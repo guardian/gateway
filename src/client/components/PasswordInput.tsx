@@ -4,11 +4,9 @@ import {
   TextInput,
   textInputThemeDefault,
 } from '@guardian/source-react-components';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { css } from '@emotion/react';
 import { neutral, height } from '@guardian/source-foundations';
-import { ClientState } from '@/shared/model/ClientState';
-import { ClientStateContext } from '@/client/components/ClientState';
 import {
   disableAutofillBackground,
   noBorderRadius,
@@ -23,18 +21,6 @@ export type PasswordInputProps = {
   supporting?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   autoComplete?: PasswordAutoComplete;
-};
-
-export const isDisplayEyeOnBrowser = (browserName: string | undefined) => {
-  // These browsers already have an input box overlay where the eye is positioned
-  switch (browserName) {
-    case 'Microsoft Edge':
-    case 'Internet Explorer':
-    case 'Safari':
-      return false;
-    default:
-      return true;
-  }
 };
 
 // remove the border and shorten the width of the text input box so the text does not overlap the password eye
@@ -130,11 +116,6 @@ export const PasswordInput = ({
   autoComplete,
 }: PasswordInputProps) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const { pageData: { browserName } = {} }: ClientState =
-    useContext(ClientStateContext);
-
-  const isEyeDisplayedOnBrowser =
-    displayEye && isDisplayEyeOnBrowser(browserName);
 
   return (
     <div
@@ -159,14 +140,15 @@ export const PasswordInput = ({
           type={passwordVisible ? 'text' : 'password'}
           autoComplete={autoComplete}
           cssOverrides={[
-            noBorder(isEyeDisplayedOnBrowser),
+            noBorder(displayEye),
             noBorderRadius,
-            paddingRight(isEyeDisplayedOnBrowser),
+            paddingRight(displayEye),
             disableAutofillBackground,
           ]}
         />
       </div>
-      {isEyeDisplayedOnBrowser ? (
+
+      {displayEye && (
         <EyeSymbol
           error={error}
           isOpen={passwordVisible}
@@ -175,7 +157,7 @@ export const PasswordInput = ({
             setPasswordVisible((previousState) => !previousState);
           }}
         />
-      ) : null}
+      )}
     </div>
   );
 };

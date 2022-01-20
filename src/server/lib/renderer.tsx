@@ -17,6 +17,7 @@ import deepmerge from 'deepmerge';
 import { RoutePaths } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
 import serialize from 'serialize-javascript';
+import Bowser from 'bowser';
 
 const assets = getAssets();
 const legacyAssets = getAssets(true);
@@ -33,6 +34,31 @@ interface RendererOpts {
 }
 
 const { gaUID } = getConfiguration();
+
+// for safari 10 and 11 although they support modules, we want then to use the legacy bundle
+// as the modern bundle is not compatible with these browser versions
+const isSafari10Or11 = (browser: Bowser.Parser.Details): boolean =>
+  browser.name === 'Safari' &&
+  (!!browser.version?.includes('10.') || !!browser.version?.includes('11.'));
+
+const getScriptTags = (isSafari10Or11: boolean): string => {
+  if (isSafari10Or11) {
+    return `
+      <script src="/${legacyAssets.runtime}" defer></script>
+      <script src="/${legacyAssets.vendors}" defer></script>
+      <script src="/${legacyAssets.main}" defer></script>
+    `;
+  }
+  return `
+    <script type="module" src="/${assets.runtime}" defer></script>
+    <script type="module" src="/${assets.vendors}" defer></script>
+    <script type="module" src="/${assets.main}" defer></script>
+
+    <script nomodule src="/${legacyAssets.runtime}" defer></script>
+    <script nomodule src="/${legacyAssets.vendors}" defer></script>
+    <script nomodule src="/${legacyAssets.main}" defer></script>
+  `;
+};
 
 const clientStateFromRequestStateLocals = ({
   csrf,
@@ -125,6 +151,8 @@ export const renderer: <P extends RoutePaths>(
     location,
   };
 
+  const scriptTags = getScriptTags(isSafari10Or11(requestState.browser));
+
   return `
     <!DOCTYPE html>
     <html lang="en">
@@ -138,13 +166,7 @@ export const renderer: <P extends RoutePaths>(
 
         <script src="https://assets.guim.co.uk/polyfill.io/v3/polyfill.min.js?features=Object.fromEntries" defer></script>
 
-        <script type="module" src="/${assets.runtime}" defer></script>
-        <script type="module" src="/${assets.vendors}" defer></script>
-        <script type="module" src="/${assets.main}" defer></script>
-
-        <script nomodule src="/${legacyAssets.runtime}" defer></script>
-        <script nomodule src="/${legacyAssets.vendors}" defer></script>
-        <script nomodule src="/${legacyAssets.main}" defer></script>
+        ${scriptTags}
 
         <script id="routingConfig" type="application/json">${serialize(
           routingConfig,
