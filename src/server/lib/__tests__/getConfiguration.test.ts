@@ -68,7 +68,7 @@ describe('getConfiguration', () => {
         'f3d87b231ddd6f50d99e227c5bc9b7cbb649387b321008df412fd73805ac2e32',
       oauthBaseUrl: 'http://localhost:5678',
       okta: {
-        registrationEnabled: false,
+        enabled: false,
         orgUrl: 'oktaorgurl',
         token: 'oktatoken',
         authServerId: 'customoauthserverid',
