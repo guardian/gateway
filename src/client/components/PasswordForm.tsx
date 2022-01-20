@@ -28,6 +28,7 @@ import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import { AutoRow, passwordFormSpanDef } from '@/client/styles/Grid';
 import { MainForm } from '@/client/components/MainForm';
 import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
+import { logger } from '../lib/clientSideLogger';
 
 type Props = {
   submitUrl: string;
@@ -198,23 +199,35 @@ const ValidationMessage = ({
 };
 
 const isBreached = AwesomeDebouncePromise(
-  (password: string): Promise<boolean> => {
-    const hashedPassword = sha1(password);
-    const firstFive = hashedPassword.substr(0, 5);
-    const remainingHash = hashedPassword.substr(5, hashedPassword.length);
-    return fetch(`https://api.pwnedpasswords.com/range/${firstFive}`)
-      .then((r) =>
-        r.text().then((results) => {
-          if (results.includes(remainingHash.toUpperCase())) {
-            return true;
-          } else {
-            return false;
-          }
-        }),
-      )
-      .catch(() => {
-        return false;
-      });
+  async (password: string): Promise<boolean> => {
+    try {
+      const hashedPassword = sha1(password);
+      const firstFive = hashedPassword.substr(0, 5);
+      const remainingHash = hashedPassword.substr(5, hashedPassword.length);
+
+      const response = await fetch(
+        `https://api.pwnedpasswords.com/range/${firstFive}`,
+      );
+
+      if (response.ok) {
+        const text = await response.text();
+
+        if (text.includes(remainingHash.toUpperCase())) {
+          return true;
+        }
+      } else {
+        logger.warn(
+          'breach password check failed with status',
+          response.status,
+        );
+      }
+
+      // return false as the password is not breached or a fallback in case the api is down
+      return false;
+    } catch (error) {
+      logger.warn('breach password check failed with error', error);
+      return false;
+    }
   },
   300,
 );
@@ -246,17 +259,16 @@ export const PasswordForm = ({
     if (password.length >= 8 && password.length <= 72) {
       // Only make api calls to check if breached when length rules are not broken
       setIsChecking(true);
-      isBreached(password)
-        .then((breached) => {
-          if (breached) {
-            // Password is breached ❌
-            setIsWeak(true);
-          } else {
-            // Password is valid ✔
-            setIsWeak(false);
-          }
-        })
-        .finally(() => setIsChecking(false));
+      isBreached(password).then((breached) => {
+        if (breached) {
+          // Password is breached ❌
+          setIsWeak(true);
+        } else {
+          // Password is valid ✔
+          setIsWeak(false);
+        }
+        setIsChecking(false);
+      });
     } else {
       // Password is not an acceptable length ❌
       setIsWeak(false);
@@ -356,17 +368,16 @@ export const PasswordFormMainLayout = ({
     if (password.length >= 8 && password.length <= 72) {
       // Only make api calls to check if breached when length rules are not broken
       setIsChecking(true);
-      isBreached(password)
-        .then((breached) => {
-          if (breached) {
-            // Password is breached ❌
-            setIsWeak(true);
-          } else {
-            // Password is valid ✔
-            setIsWeak(false);
-          }
-        })
-        .finally(() => setIsChecking(false));
+      isBreached(password).then((breached) => {
+        if (breached) {
+          // Password is breached ❌
+          setIsWeak(true);
+        } else {
+          // Password is valid ✔
+          setIsWeak(false);
+        }
+        setIsChecking(false);
+      });
     } else {
       // Password is not an acceptable length ❌
       setIsWeak(false);
