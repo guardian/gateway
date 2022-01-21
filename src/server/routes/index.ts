@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { noCache } from '@/server/lib/middleware/cache';
 
 import { default as core } from './core';
 import { default as signIn } from './signIn';
@@ -10,7 +12,9 @@ import { default as magicLink } from './magicLink';
 import { default as welcome } from './welcome';
 import { default as setPassword } from './setPassword';
 import { default as maintenance } from './maintenance';
-import { noCache } from '@/server/lib/middleware/cache';
+import { default as oauth } from './oauth';
+
+const { okta } = getConfiguration();
 
 const router = Router();
 const uncachedRoutes = Router();
@@ -48,6 +52,11 @@ uncachedRoutes.use(magicLink);
 
 // welcome routes
 uncachedRoutes.use(welcome);
+
+// oauth callback routes
+if (okta.enabled) {
+  uncachedRoutes.use(oauth);
+}
 
 router.use(uncachedRoutes);
 
