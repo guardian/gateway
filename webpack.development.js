@@ -24,11 +24,7 @@ const serverConfig = {
         test: /\.ts(x?)$/,
         use: [
           {
-            loader: 'babel-loader',
-            options: {
-              cacheCompression: false,
-              cacheDirectory: true,
-            },
+            loader: 'swc-loader'
           },
         ],
       },
@@ -84,16 +80,16 @@ module.exports = [
   merge(
     baseServerConfig,
     common,
-    serverConfig,
+    // serverConfig,
   ),
   merge(
     baseBrowserLegacyConfig,
     common,
-    browserConfig(true),
+    // browserConfig(true),
   ),
   merge(
     baseBrowserConfig,
     common,
-    browserConfig(false),
+    // browserConfig(false),
   )
 ]

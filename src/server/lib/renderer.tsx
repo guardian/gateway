@@ -50,8 +50,6 @@ const getScriptTags = (isSafari10Or11: boolean): string => {
     `;
   }
   return `
-    <script type="module" src="https://assets.guim.co.uk/polyfill.io/v3/polyfill.min.js?features=es2015%2Ces2016%2Ces2017%2Ces2018%2Ces2019%2Ces2020%2Ces2021%2Cfetch" defer></script>
-  
     <script type="module" src="/${assets.runtime}" defer></script>
     <script type="module" src="/${assets.vendors}" defer></script>
     <script type="module" src="/${assets.main}" defer></script>
@@ -165,7 +163,7 @@ export const renderer: <P extends RoutePaths>(
         <link rel="icon" href="https://static.guim.co.uk/images/${favicon}">
         <title>${pageTitle} | The Guardian</title>
         <script>window.gaUID = "${gaUID.id}"</script>
-
+        <script src="https://assets.guim.co.uk/polyfill.io/v3/polyfill.min.js?features=es2015%2Ces2016%2Ces2017%2Ces2018%2Ces2019%2Ces2020%2Ces2021%2Cfetch" defer></script>
         ${scriptTags}
 
         <script id="routingConfig" type="application/json">${serialize(
