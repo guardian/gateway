@@ -98,3 +98,27 @@ export const authenticate = async (
     handleError(error as IDAPIError);
   }
 };
+
+export const exchangeAccessTokenForCookies = async (
+  token: string,
+  ip: string,
+) => {
+  const options = APIPostOptions({
+    token,
+  });
+
+  try {
+    const response = await idapiFetch({
+      path: `/auth/oauth-token`,
+      options: APIAddClientAccessToken(options, ip),
+      queryParams: { format: 'cookies' },
+    });
+    return response.cookies;
+  } catch (error) {
+    logger.error(
+      `IDAPI Error auth exchangeAccessTokenForCookies '/auth/oauth-token'`,
+      error,
+    );
+    handleError(error as IDAPIError);
+  }
+};

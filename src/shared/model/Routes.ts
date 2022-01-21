@@ -45,6 +45,7 @@ export type RoutePaths =
  */
 export type ApiRoutePaths =
   | '/auth'
+  | '/auth/oauth-token'
   | '/auth/redirect'
   | '/consents'
   | '/guest'
