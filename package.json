@@ -136,7 +136,7 @@
     "deepmerge": "^4.2.2",
     "express": "^4.17.2",
     "express-recaptcha": "^5.0.2",
-    "helmet": "^4.6.0",
+    "helmet": "^5.0.1",
     "http-errors": "^1.8.1",
     "js-sha1": "^0.6.0",
     "jsonwebtoken": "^8.5.1",
