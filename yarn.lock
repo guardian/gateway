@@ -2238,19 +2238,19 @@
   dependencies:
     "@guardian/libs" "1.6.1 - 3.3.0"
 
-"@guardian/eslint-plugin-source-foundations@^4.0.0-rc.6":
-  version "4.0.0-rc.6"
-  resolved "https://registry.yarnpkg.com/@guardian/eslint-plugin-source-foundations/-/eslint-plugin-source-foundations-4.0.0-rc.6.tgz#3a6f5ce93a560b5aeb8097a0931f8c97f22fa193"
-  integrity sha512-sAsmjiEwPMXnnYJJBO61hOsxyz76VIehdNPRHxw1og3WHsduWJOrotDvxyXd05IpKLE3qZzGgu0e0tzRiXTocg==
+"@guardian/eslint-plugin-source-foundations@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.npmjs.org/@guardian/eslint-plugin-source-foundations/-/eslint-plugin-source-foundations-4.0.2.tgz#38c543896cae907ddf857781838316973e49d062"
+  integrity sha512-F9DDVV5T3AXkzAb+c4F3mt3MQrVRsAxLsCClY/0eWy6k0eFWvUcpqUt4HCb+EW1COAAulRnSdCkqpqulGQ0nrw==
   dependencies:
     "@typescript-eslint/eslint-plugin" "5.9.1"
     "@typescript-eslint/parser" "5.9.1"
     eslint-plugin-import "2.25.4"
 
-"@guardian/eslint-plugin-source-react-components@4.0.0-rc.6":
-  version "4.0.0-rc.6"
-  resolved "https://registry.yarnpkg.com/@guardian/eslint-plugin-source-react-components/-/eslint-plugin-source-react-components-4.0.0-rc.6.tgz#a7c1813ba3a5ac304c9a4aeb52fead8ab97c0a82"
-  integrity sha512-hqKtupcqJELhWHUE5IQJU4jVPlRWxXV5AXjfpkAwbBlD0NOkHlhEpehH+PphomqI5VT+MK+o4DOFa4dryoUqPw==
+"@guardian/eslint-plugin-source-react-components@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.npmjs.org/@guardian/eslint-plugin-source-react-components/-/eslint-plugin-source-react-components-4.0.2.tgz#d62e2a34722b77ba8661935676ece072881e8f2f"
+  integrity sha512-28xzl6tImEMxBIYTZlzsSs0fIx1+THdIxHbC2LVzlztYPKMRCe8DHG5Va2bOUyB2o7Z2kmH6rh8cdSuD+qFZsw==
   dependencies:
     "@typescript-eslint/eslint-plugin" "5.9.1"
     "@typescript-eslint/parser" "5.9.1"
@@ -2279,22 +2279,22 @@
     yaml "^1.7.2"
     yargs "^15.4.1"
 
-"@guardian/source-foundations@4.0.0-rc.7":
-  version "4.0.0-rc.7"
-  resolved "https://registry.yarnpkg.com/@guardian/source-foundations/-/source-foundations-4.0.0-rc.7.tgz#7111c5a268a1bea75bcbbd2d0ca3e49f14a0708a"
-  integrity sha512-lEgumDnkWEp150sKgk5C3EtynS6TDMM1dnl/Koz6ETF3eiAYYK/8HRb5MxVAF27wYFD3NhwsedictXCeevXFTw==
+"@guardian/source-foundations@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.npmjs.org/@guardian/source-foundations/-/source-foundations-4.0.2.tgz#aa012b80b821a0d70b6d55507ea2526730ef603b"
+  integrity sha512-qG7gxv0tBlCbWP1E+wSYYcvIzgwaiafhfh2xNHJ8cz4Kj+bdW2BdC6r/sAIlo5TRuKHCJ1Fi2pVRCcQQaZ/BMg==
   dependencies:
     mini-svg-data-uri "^1.3.3"
 
-"@guardian/source-react-components-development-kitchen@0.0.25-rc.2":
-  version "0.0.25-rc.2"
-  resolved "https://registry.yarnpkg.com/@guardian/source-react-components-development-kitchen/-/source-react-components-development-kitchen-0.0.25-rc.2.tgz#6dc794e981e156a047244f553b8e46152d320f23"
-  integrity sha512-PWY4G4xoNVuuHB0EasXNtXlPy8PUNwNV1BdSwi1gvocDbhJvqddW9560U79IIVNeUxx0YipTrtAGrza4KK19/Q==
+"@guardian/source-react-components-development-kitchen@^0.0.29":
+  version "0.0.29"
+  resolved "https://registry.npmjs.org/@guardian/source-react-components-development-kitchen/-/source-react-components-development-kitchen-0.0.29.tgz#eeeb6fffadaed05953c58a83d30a0eafeb0b8652"
+  integrity sha512-/y+P2p76a2hhTe7d4Km7YzV/zOILVDj43/c2bQrsDc84nSeoSB9WYUF5uPppgSe9E0co2QpZ3R8+lcOPKPfsRA==
 
-"@guardian/source-react-components@4.0.0-rc.5":
-  version "4.0.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@guardian/source-react-components/-/source-react-components-4.0.0-rc.5.tgz#fc38d9c297b44e3c63fc1d0731e935b8f19004e4"
-  integrity sha512-DscDPAa4b3pOL0h8LkQ+G8OQEiFwwYe+XOj8mLjfN9BEKCcKpmMrx9Vf4p8xBvRmr3jKvkSj6jZaZMjUtNjqjQ==
+"@guardian/source-react-components@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.npmjs.org/@guardian/source-react-components/-/source-react-components-4.0.1.tgz#36b3b0310c8cdc55d41da79e4344a5b0169b8200"
+  integrity sha512-YpnrQuCJEltqmYxZjyCIvT2N15TMrb275QJS4qpZlGDoNOlP3Hl4xQxUUPbZgWOewlKHjsfWyLLNHXTZ2E4sSQ==
 
 "@hapi/hoek@^9.0.0":
   version "9.2.1"
@@ -4679,22 +4679,22 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
-"@webpack-cli/configtest@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@webpack-cli/configtest/-/configtest-1.1.0.tgz#8342bef0badfb7dfd3b576f2574ab80c725be043"
-  integrity sha512-ttOkEkoalEHa7RaFYpM0ErK1xc4twg3Am9hfHhL7MVqlHebnkYd2wuI/ZqTDj0cVzZho6PdinY0phFZV3O0Mzg==
+"@webpack-cli/configtest@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@webpack-cli/configtest/-/configtest-1.1.1.tgz#9f53b1b7946a6efc2a749095a4f450e2932e8356"
+  integrity sha512-1FBc1f9G4P/AxMqIgfZgeOTuRnwZMten8E7zap5zgpPInnCrP8D4Q81+4CWIch8i/Nf7nXjP0v6CjjbHOrXhKg==
 
-"@webpack-cli/info@^1.4.0":
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/@webpack-cli/info/-/info-1.4.0.tgz#b9179c3227ab09cbbb149aa733475fcf99430223"
-  integrity sha512-F6b+Man0rwE4n0409FyAJHStYA5OIZERxmnUfLVwv0mc0V1wLad3V7jqRlMkgKBeAq07jUvglacNaa6g9lOpuw==
+"@webpack-cli/info@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@webpack-cli/info/-/info-1.4.1.tgz#2360ea1710cbbb97ff156a3f0f24556e0fc1ebea"
+  integrity sha512-PKVGmazEq3oAo46Q63tpMr4HipI3OPfP7LiNOEJg963RMgT0rqheag28NCML0o3GIzA3DmxP1ZIAv9oTX1CUIA==
   dependencies:
     envinfo "^7.7.3"
 
-"@webpack-cli/serve@^1.6.0":
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/@webpack-cli/serve/-/serve-1.6.0.tgz#2c275aa05c895eccebbfc34cfb223c6e8bd591a2"
-  integrity sha512-ZkVeqEmRpBV2GHvjjUZqEai2PpUbuq8Bqd//vEYsp63J8WyexI8ppCqVS3Zs0QADf6aWuPdU+0XsPI647PVlQA==
+"@webpack-cli/serve@^1.6.1":
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/@webpack-cli/serve/-/serve-1.6.1.tgz#0de2875ac31b46b6c5bb1ae0a7d7f0ba5678dffe"
+  integrity sha512-gNGTiTrjEVQ0OcVnzsRSqTxaBSr+dmTfm+qJsCDluky8uhdLWep7Gcr62QsAKHTMxjCS/8nEITsmFAhfIx+QSw==
 
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
@@ -16993,15 +16993,15 @@ webidl-conversions@^7.0.0:
   resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-7.0.0.tgz#256b4e1882be7debbf01d05f0aa2039778ea080a"
   integrity sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==
 
-webpack-cli@^4.9.1:
-  version "4.9.1"
-  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-4.9.1.tgz#b64be825e2d1b130f285c314caa3b1ba9a4632b3"
-  integrity sha512-JYRFVuyFpzDxMDB+v/nanUdQYcZtqFPGzmlW4s+UkPMFhSpfRNmf1z4AwYcHJVdvEFAM7FFCQdNTpsBYhDLusQ==
+webpack-cli@^4.9.2:
+  version "4.9.2"
+  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-4.9.2.tgz#77c1adaea020c3f9e2db8aad8ea78d235c83659d"
+  integrity sha512-m3/AACnBBzK/kMTcxWHcZFPrw/eQuY4Df1TxvIWfWM2x7mRqBQCqKEd96oCUa9jkapLBaFfRce33eGDb4Pr7YQ==
   dependencies:
     "@discoveryjs/json-ext" "^0.5.0"
-    "@webpack-cli/configtest" "^1.1.0"
-    "@webpack-cli/info" "^1.4.0"
-    "@webpack-cli/serve" "^1.6.0"
+    "@webpack-cli/configtest" "^1.1.1"
+    "@webpack-cli/info" "^1.4.1"
+    "@webpack-cli/serve" "^1.6.1"
     colorette "^2.0.14"
     commander "^7.0.0"
     execa "^5.0.0"
