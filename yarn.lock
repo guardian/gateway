@@ -2247,10 +2247,10 @@
     "@typescript-eslint/parser" "5.9.1"
     eslint-plugin-import "2.25.4"
 
-"@guardian/eslint-plugin-source-react-components@4.0.0-rc.6":
-  version "4.0.0-rc.6"
-  resolved "https://registry.yarnpkg.com/@guardian/eslint-plugin-source-react-components/-/eslint-plugin-source-react-components-4.0.0-rc.6.tgz#a7c1813ba3a5ac304c9a4aeb52fead8ab97c0a82"
-  integrity sha512-hqKtupcqJELhWHUE5IQJU4jVPlRWxXV5AXjfpkAwbBlD0NOkHlhEpehH+PphomqI5VT+MK+o4DOFa4dryoUqPw==
+"@guardian/eslint-plugin-source-react-components@4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@guardian/eslint-plugin-source-react-components/-/eslint-plugin-source-react-components-4.0.0.tgz#2d61aca2258bb2cb5ed37681453689b5ad813a49"
+  integrity sha512-587yKh7ywDi6unt0T43s9f7zHfyrz/U++0QqY8rSDoCeB6Ri9fLSD6gwmsZMX1sQNbIr2BAqd2Nmyj2bsHRfEA==
   dependencies:
     "@typescript-eslint/eslint-plugin" "5.9.1"
     "@typescript-eslint/parser" "5.9.1"
