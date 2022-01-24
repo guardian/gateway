@@ -82,8 +82,9 @@ const OktaAuthentication = async (
     const { stateToken, expiresAt, _embedded } = await authenticateWithOkta({
       token,
     });
-    const email = _embedded?.user.profile.email;
-    const timeUntilTokenExpiry = Date.parse(expiresAt) - Date.now();
+    const email = _embedded?.user.profile.login;
+    const timeUntilTokenExpiry =
+      expiresAt && Date.parse(expiresAt) - Date.now();
 
     setEncryptedStateCookie(res, { email, stateToken });
 
