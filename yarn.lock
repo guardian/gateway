@@ -2238,19 +2238,19 @@
   dependencies:
     "@guardian/libs" "1.6.1 - 3.3.0"
 
-"@guardian/eslint-plugin-source-foundations@^4.0.0-rc.6":
-  version "4.0.0-rc.6"
-  resolved "https://registry.yarnpkg.com/@guardian/eslint-plugin-source-foundations/-/eslint-plugin-source-foundations-4.0.0-rc.6.tgz#3a6f5ce93a560b5aeb8097a0931f8c97f22fa193"
-  integrity sha512-sAsmjiEwPMXnnYJJBO61hOsxyz76VIehdNPRHxw1og3WHsduWJOrotDvxyXd05IpKLE3qZzGgu0e0tzRiXTocg==
+"@guardian/eslint-plugin-source-foundations@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.npmjs.org/@guardian/eslint-plugin-source-foundations/-/eslint-plugin-source-foundations-4.0.2.tgz#38c543896cae907ddf857781838316973e49d062"
+  integrity sha512-F9DDVV5T3AXkzAb+c4F3mt3MQrVRsAxLsCClY/0eWy6k0eFWvUcpqUt4HCb+EW1COAAulRnSdCkqpqulGQ0nrw==
   dependencies:
     "@typescript-eslint/eslint-plugin" "5.9.1"
     "@typescript-eslint/parser" "5.9.1"
     eslint-plugin-import "2.25.4"
 
-"@guardian/eslint-plugin-source-react-components@4.0.0-rc.6":
-  version "4.0.0-rc.6"
-  resolved "https://registry.yarnpkg.com/@guardian/eslint-plugin-source-react-components/-/eslint-plugin-source-react-components-4.0.0-rc.6.tgz#a7c1813ba3a5ac304c9a4aeb52fead8ab97c0a82"
-  integrity sha512-hqKtupcqJELhWHUE5IQJU4jVPlRWxXV5AXjfpkAwbBlD0NOkHlhEpehH+PphomqI5VT+MK+o4DOFa4dryoUqPw==
+"@guardian/eslint-plugin-source-react-components@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.npmjs.org/@guardian/eslint-plugin-source-react-components/-/eslint-plugin-source-react-components-4.0.2.tgz#d62e2a34722b77ba8661935676ece072881e8f2f"
+  integrity sha512-28xzl6tImEMxBIYTZlzsSs0fIx1+THdIxHbC2LVzlztYPKMRCe8DHG5Va2bOUyB2o7Z2kmH6rh8cdSuD+qFZsw==
   dependencies:
     "@typescript-eslint/eslint-plugin" "5.9.1"
     "@typescript-eslint/parser" "5.9.1"
@@ -2279,22 +2279,22 @@
     yaml "^1.7.2"
     yargs "^15.4.1"
 
-"@guardian/source-foundations@4.0.0-rc.7":
-  version "4.0.0-rc.7"
-  resolved "https://registry.yarnpkg.com/@guardian/source-foundations/-/source-foundations-4.0.0-rc.7.tgz#7111c5a268a1bea75bcbbd2d0ca3e49f14a0708a"
-  integrity sha512-lEgumDnkWEp150sKgk5C3EtynS6TDMM1dnl/Koz6ETF3eiAYYK/8HRb5MxVAF27wYFD3NhwsedictXCeevXFTw==
+"@guardian/source-foundations@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.npmjs.org/@guardian/source-foundations/-/source-foundations-4.0.2.tgz#aa012b80b821a0d70b6d55507ea2526730ef603b"
+  integrity sha512-qG7gxv0tBlCbWP1E+wSYYcvIzgwaiafhfh2xNHJ8cz4Kj+bdW2BdC6r/sAIlo5TRuKHCJ1Fi2pVRCcQQaZ/BMg==
   dependencies:
     mini-svg-data-uri "^1.3.3"
 
-"@guardian/source-react-components-development-kitchen@0.0.25-rc.2":
-  version "0.0.25-rc.2"
-  resolved "https://registry.yarnpkg.com/@guardian/source-react-components-development-kitchen/-/source-react-components-development-kitchen-0.0.25-rc.2.tgz#6dc794e981e156a047244f553b8e46152d320f23"
-  integrity sha512-PWY4G4xoNVuuHB0EasXNtXlPy8PUNwNV1BdSwi1gvocDbhJvqddW9560U79IIVNeUxx0YipTrtAGrza4KK19/Q==
+"@guardian/source-react-components-development-kitchen@^0.0.29":
+  version "0.0.29"
+  resolved "https://registry.npmjs.org/@guardian/source-react-components-development-kitchen/-/source-react-components-development-kitchen-0.0.29.tgz#eeeb6fffadaed05953c58a83d30a0eafeb0b8652"
+  integrity sha512-/y+P2p76a2hhTe7d4Km7YzV/zOILVDj43/c2bQrsDc84nSeoSB9WYUF5uPppgSe9E0co2QpZ3R8+lcOPKPfsRA==
 
-"@guardian/source-react-components@4.0.0-rc.5":
-  version "4.0.0-rc.5"
-  resolved "https://registry.yarnpkg.com/@guardian/source-react-components/-/source-react-components-4.0.0-rc.5.tgz#fc38d9c297b44e3c63fc1d0731e935b8f19004e4"
-  integrity sha512-DscDPAa4b3pOL0h8LkQ+G8OQEiFwwYe+XOj8mLjfN9BEKCcKpmMrx9Vf4p8xBvRmr3jKvkSj6jZaZMjUtNjqjQ==
+"@guardian/source-react-components@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.npmjs.org/@guardian/source-react-components/-/source-react-components-4.0.1.tgz#36b3b0310c8cdc55d41da79e4344a5b0169b8200"
+  integrity sha512-YpnrQuCJEltqmYxZjyCIvT2N15TMrb275QJS4qpZlGDoNOlP3Hl4xQxUUPbZgWOewlKHjsfWyLLNHXTZ2E4sSQ==
 
 "@hapi/hoek@^9.0.0":
   version "9.2.1"
@@ -3960,20 +3960,15 @@
   dependencies:
     node-fetch "*"
 
-"@types/node@*":
-  version "16.11.12"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.12.tgz#ac7fb693ac587ee182c3780c26eb65546a1a3c10"
-  integrity sha512-+2Iggwg7PxoO5Kyhvsq9VarmPbIelXP070HMImEpbtGCoyWNINQj4wzjbQCXzdHTRXnqufutJb5KAURZANNBAw==
+"@types/node@*", "@types/node@^17.0.9":
+  version "17.0.9"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.9.tgz#0b7f161afb5b1cc12518d29b2cdc7175d5490628"
+  integrity sha512-5dNBXu/FOER+EXnyah7rn8xlNrfMOQb/qXnw4NQgLkCygKBKhdmF/CA5oXVOKZLBEahw8s2WP9LxIcN/oDDRgQ==
 
 "@types/node@^14.0.10", "@types/node@^14.14.31":
   version "14.18.0"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.18.0.tgz#98df2397f6936bfbff4f089e40e06fa5dd88d32a"
   integrity sha512-0GeIl2kmVMXEnx8tg1SlG6Gg8vkqirrW752KqolYo1PHevhhZN3bhJ67qHj+bQaINhX0Ra3TlWwRvMCd9iEfNQ==
-
-"@types/node@^17.0.9":
-  version "17.0.9"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.9.tgz#0b7f161afb5b1cc12518d29b2cdc7175d5490628"
-  integrity sha512-5dNBXu/FOER+EXnyah7rn8xlNrfMOQb/qXnw4NQgLkCygKBKhdmF/CA5oXVOKZLBEahw8s2WP9LxIcN/oDDRgQ==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
@@ -4099,10 +4094,10 @@
     "@types/mime" "^1"
     "@types/node" "*"
 
-"@types/sinonjs__fake-timers@^6.0.2":
-  version "6.0.4"
-  resolved "https://registry.yarnpkg.com/@types/sinonjs__fake-timers/-/sinonjs__fake-timers-6.0.4.tgz#0ecc1b9259b76598ef01942f547904ce61a6a77d"
-  integrity sha512-IFQTJARgMUBF+xVd2b+hIgXWrZEjND3vJtRCvIelcFB5SIXfjV4bOHbHJ0eXKh+0COrBRc8MqteKAz/j88rE0A==
+"@types/sinonjs__fake-timers@8.1.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@types/sinonjs__fake-timers/-/sinonjs__fake-timers-8.1.1.tgz#b49c2c70150141a15e0fa7e79cf1f92a72934ce3"
+  integrity sha512-0kSuKjAS0TrGLJ0M/+8MaFkGsQhZpB6pxOmvS3K8FYI72K//YmdfoW9X2qPsAKh1mkwxGD5zib9s1FIFed6E8g==
 
 "@types/sizzle@^2.3.2":
   version "2.3.3"
@@ -5766,7 +5761,7 @@ blob-util@^2.0.2:
   resolved "https://registry.yarnpkg.com/blob-util/-/blob-util-2.0.2.tgz#3b4e3c281111bb7f11128518006cdc60b403a1eb"
   integrity sha512-T7JQa+zsXXEa6/8ZhHcQEW1UFfVM49Ts65uBkFL6fz2QmrElqmbajIDJvuA0tEhRe5eIjpV9ZF+0RfZR9voJFQ==
 
-bluebird@3.7.2, bluebird@^3.3.5, bluebird@^3.5.5:
+bluebird@^3.3.5, bluebird@^3.5.5, bluebird@^3.7.2:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.7.2.tgz#9f229c15be272454ffa973ace0dbee79a1b0c36f"
   integrity sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==
@@ -6022,7 +6017,7 @@ buffer@4.9.2, buffer@^4.3.0:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
-buffer@^5.1.0, buffer@^5.2.1, buffer@^5.5.0:
+buffer@^5.1.0, buffer@^5.2.1, buffer@^5.5.0, buffer@^5.6.0:
   version "5.7.1"
   resolved "https://registry.yarnpkg.com/buffer/-/buffer-5.7.1.tgz#ba62e7c13133053582197160851a8f648e99eed0"
   integrity sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==
@@ -7194,19 +7189,20 @@ cypress-mailosaur@2.6.0:
   resolved "https://registry.yarnpkg.com/cypress-mailosaur/-/cypress-mailosaur-2.6.0.tgz#325f89f428bf2306be04d73d760283eb5a83edf8"
   integrity sha512-hRmsfb2SuCbv8af5zvpkaLQgbZQ3jcBEuVTSGQi6szc3o2byhPhGLgjn7MZJaIb/U1dEsO5zLj8rXzSDLDQmQA==
 
-cypress@^9.2.1:
-  version "9.2.1"
-  resolved "https://registry.yarnpkg.com/cypress/-/cypress-9.2.1.tgz#47f2457e5ca7ede48be9a4176f20f30ccf3b3902"
-  integrity sha512-LVEe4yWCo4xO0Vd8iYjFHRyd5ulRvM56XqMgAdn05Qb9kJ6iJdO/MmjKD8gNd768698cp1FDuSmFQZHVZGk+Og==
+cypress@^9.3.1:
+  version "9.3.1"
+  resolved "https://registry.yarnpkg.com/cypress/-/cypress-9.3.1.tgz#8116f52d49d6daf90a91e88f3eafd940234d2958"
+  integrity sha512-BODdPesxX6bkVUnH8BVsV8I/jn57zQtO1FEOUTiuG2us3kslW7g0tcuwiny7CKCmJUZz8S/D587ppC+s58a+5Q==
   dependencies:
     "@cypress/request" "^2.88.10"
     "@cypress/xvfb" "^1.2.4"
     "@types/node" "^14.14.31"
-    "@types/sinonjs__fake-timers" "^6.0.2"
+    "@types/sinonjs__fake-timers" "8.1.1"
     "@types/sizzle" "^2.3.2"
     arch "^2.2.0"
     blob-util "^2.0.2"
-    bluebird "3.7.2"
+    bluebird "^3.7.2"
+    buffer "^5.6.0"
     cachedir "^2.3.0"
     chalk "^4.1.0"
     check-more-types "^2.24.0"
