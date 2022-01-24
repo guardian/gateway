@@ -125,7 +125,7 @@
     "@guardian/source-foundations": "^4.0.2",
     "@guardian/source-react-components": "^4.0.1",
     "@guardian/source-react-components-development-kitchen": "^0.0.29",
-    "@sentry/browser": "^6.16.1",
+    "@sentry/browser": "^6.17.0",
     "@sentry/tracing": "^6.16.1",
     "awesome-debounce-promise": "^2.1.0",
     "aws-sdk": "2.1058.0",
