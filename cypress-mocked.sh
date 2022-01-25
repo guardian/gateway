@@ -8,6 +8,7 @@ trap 'kill $(jobs -p)' INT TERM EXIT
 source cypress-mocked.env
 CI_ENV=$(cat cypress-mocked.env | tr '\n' ',')
 CI_ENV=${CI_ENV%?}
+
 yarn build
 yarn mock-server &
 yarn wait-on:mock-server
