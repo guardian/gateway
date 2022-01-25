@@ -10,7 +10,10 @@ export const setEncryptedStateCookie = (
   res: Response,
   state: EncryptedState,
 ) => {
-  const encrypted = encrypt(JSON.stringify(state));
+  const encrypted = encrypt(
+    JSON.stringify(state),
+    getConfiguration().encryptionSecretKey, // prevent the key from lingering in memory by only calling when needed
+  );
 
   return res.cookie(
     'GU_GATEWAY_STATE',
@@ -34,7 +37,10 @@ export const readEncryptedStateCookie = (
 
   try {
     if (encryptedCookie) {
-      const decrypted = decrypt(encryptedCookie);
+      const decrypted = decrypt(
+        encryptedCookie,
+        getConfiguration().encryptionSecretKey, // prevent the key from lingering in memory by only calling when needed
+      );
       return JSON.parse(decrypted);
     }
   } catch (error) {
