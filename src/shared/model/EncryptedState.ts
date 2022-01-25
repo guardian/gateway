@@ -6,4 +6,5 @@ export interface EncryptedState {
   passwordSetOnWelcomePage?: boolean;
   status?: string;
   stateToken?: string;
+  signInRedirect?: boolean; // TODO: possibly rename for clarity
 }

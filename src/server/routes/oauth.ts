@@ -4,6 +4,7 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import {
   deleteAuthorizationStateCookie,
   getAuthorizationStateCookie,
+  OpenIdErrors,
   ProfileOpenIdClient,
   ProfileOpenIdClientRedirectUris,
 } from '@/server/lib/okta/openid-connect';
@@ -13,15 +14,19 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { exchangeAccessTokenForCookies } from '@/server/lib/idapi/auth';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
-import { stringify } from 'querystring';
 import { SignInErrors } from '@/shared/model/Errors';
+import {
+  readEncryptedStateCookie,
+  setEncryptedStateCookie,
+} from '@/server/lib/encryptedStateCookie';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 interface OAuthError {
   error: string;
   error_description: string;
 }
 
-const { signInPageUrl, defaultReturnUri } = getConfiguration();
+const { defaultReturnUri } = getConfiguration();
 
 /**
  * Type guard to check that a given error is an OAuth error.
@@ -41,11 +46,22 @@ const isOAuthError = (
  * a generic error message if we don't want to expose the error
  * back to the client. Be sure to log the error though!
  */
-const redirectForGenericError = (res: ResponseWithRequestState) => {
+const redirectForGenericError = (
+  req: Request,
+  res: ResponseWithRequestState,
+) => {
+  // we set the sign in redirect to true so that we can render the sign in page
+  // without getting into a redirect loop
+  const encryptedState = readEncryptedStateCookie(req);
+  setEncryptedStateCookie(res, {
+    ...encryptedState,
+    signInRedirect: true,
+  });
+
   return res.redirect(
-    `${signInPageUrl}?${stringify({
+    addQueryParamsToPath('/signin', res.locals.queryParams, {
       error_description: SignInErrors.GENERIC,
-    })}`,
+    }),
   );
 };
 
@@ -76,12 +92,30 @@ router.get(
         // the state cookie is used to prevent CSRF attacks
         logger.error('Missing auth state cookie on OAuth Callback!');
         trackMetric('OAuthAuthorization::Failure');
-        return redirectForGenericError(res);
+        return redirectForGenericError(req, res);
       }
 
       // we have the Authorization State now, so the cookie is
       // no longer required, so mark cookie for deletion in the response
       deleteAuthorizationStateCookie(res);
+
+      // check if the callback params contain an login_required error
+      // used to check if a session existed before the user is shown a sign in page
+      if (
+        isOAuthError(callbackParams) &&
+        callbackParams.error === OpenIdErrors.LOGIN_REQUIRED
+      ) {
+        // set the signInRedirect flag so we can render the sign in page as a session doesn't exist
+        const encryptedState = readEncryptedStateCookie(req);
+        setEncryptedStateCookie(res, {
+          ...encryptedState,
+          signInRedirect: true,
+        });
+
+        return res.redirect(
+          addQueryParamsToPath('/signin', authState.queryParams),
+        );
+      }
 
       // exchange the auth code for access token + id token
       // and check the "state" we got back from the callback
@@ -107,7 +141,7 @@ router.get(
           'Missing access_token from /token endpoint in OAuth Callback',
         );
         trackMetric('OAuthAuthorization::Failure');
-        return redirectForGenericError(res);
+        return redirectForGenericError(req, res);
       }
 
       // call the IDAPI /auth/oauth-token endpoint
@@ -127,24 +161,23 @@ router.get(
       trackMetric('OAuthAuthorization::Success');
 
       // return to url from state or default url
-      return res.redirect(303, authState.returnUrl || defaultReturnUri);
+      return res.redirect(
+        303,
+        authState.queryParams.returnUrl || defaultReturnUri,
+      );
     } catch (error) {
+      // check if it's an oauth/oidc error
+      if (isOAuthError(error)) {
+        // log the specific error
+        logger.error('OAuth/OIDC Error:', error);
+      }
+
+      // log and track the error
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
       trackMetric('OAuthAuthorization::Failure');
-      // if there's been an error from the authorization_code flow
-      // then propagate it as a query parameter (error + error_description)
-      // TODO: we probably don't want to expose oauth errors directly to the user, although they will be visible in the url as they are query params returned from the /authorize endpoint, so worth discussing this before production
-      if (isOAuthError(error)) {
-        return res.redirect(
-          `${signInPageUrl}?${stringify({
-            error: error.error,
-            error_description: `${error.error_description} Please try again.`,
-          })}`,
-        );
-      } else {
-        // otherwise it's a generic error, so redirect to sign in with a generic error message
-        return redirectForGenericError(res);
-      }
+
+      // fallthrough redirect to sign in with generic error
+      return redirectForGenericError(req, res);
     }
   }),
 );

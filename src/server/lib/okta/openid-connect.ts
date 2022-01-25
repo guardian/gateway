@@ -3,7 +3,7 @@ import { Issuer, IssuerMetadata, Client } from 'openid-client';
 import { randomBytes } from 'crypto';
 import { Request } from 'express';
 import { joinUrl } from '@guardian/libs';
-import { TrackingQueryParams } from '@/shared/model/QueryParams';
+import { PersistableQueryParams } from '@/shared/model/QueryParams';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { getProfileUrl } from '@/server/lib/getProfileUrl';
 import { ResponseWithRequestState } from '@/server/models/Express';
@@ -15,9 +15,6 @@ import { RoutePaths } from '@/shared/model/Routes';
  * Authorization Code flow.
  * - `nonce` - Used as the `state` parameter in the Authorization Code Flow
  *   to prevent CSRF attacks
- * - `returnUrl` - The URL of the page/article/etc. that the user was on
- *   before landing on the sign in page, so we can redirect them back there
- *   once successfully authenticated
  *   - See "state" parameter details here:
  *   - https://developer.okta.com/docs/reference/api/oidc/#parameter-details
  * - `queryParams` - Query params that were used to start the flow,
@@ -26,8 +23,7 @@ import { RoutePaths } from '@/shared/model/Routes';
  */
 interface AuthorizationState {
   nonce: string;
-  returnUrl: string;
-  trackingParams?: TrackingQueryParams;
+  queryParams: PersistableQueryParams;
 }
 
 /**
@@ -37,14 +33,14 @@ interface AuthorizationState {
  *
  * @property `authorizationUrl` - Generate the `/authorize` url for the Authorization Code Flow (w or w/o PKCE)
  * @property `callbackParams` - Get OpenID Connect query parameters returned to the callback (redirect_uri)
- * @property `oauthCallback` - Method used in the callback (redirect_uri) endpoint to get OAuth tokens
+ * @property `callback` - Method used in the callback (redirect_uri) endpoint to get OAuth tokens
  *
  * @interface OpenIdClient
  */
 
 type OpenIdClient = Pick<
   Client,
-  'authorizationUrl' | 'callbackParams' | 'oauthCallback'
+  'authorizationUrl' | 'callbackParams' | 'callback'
 >;
 
 /**
@@ -107,6 +103,23 @@ export const ProfileOpenIdClient = new OIDCIssuer.Client({
 }) as OpenIdClient;
 
 /**
+ * Possible `error` types return by OpenID Connect and social login flows with okta
+ * Sourced from https://developer.okta.com/docs/reference/error-codes/#example-errors-for-openid-connect-and-social-login
+ */
+export enum OpenIdErrors {
+  UNAUTHORIZED_CLIENT = 'unauthorized_client',
+  ACCESS_DENIED = 'access_denied',
+  UNSUPPORTED_RESPONSE_TYPE = 'unsupported_response_type',
+  INVALID_SCOPE = 'invalid_scope',
+  SERVER_ERROR = 'server_error',
+  TEMPORARILY_UNAVAILABLE = 'temporarily_unavailable',
+  INVALID_CLIENT = 'invalid_client',
+  LOGIN_REQUIRED = 'login_required',
+  INVALID_REQUEST = 'invalid_request',
+  USER_CANCELED_REQUEST = 'user_canceled_request',
+}
+
+/**
  * Generate a cryptographically secure random string to be used
  * as the `state` parameter in the authorization code flow
  * which is used as a nonce value to prevent CSRF attacks.
@@ -125,7 +138,7 @@ const generateNonce = (bytes = 16): string =>
  */
 const isAuthorizationState = (obj: unknown): obj is AuthorizationState => {
   const objAsAuthState = obj as AuthorizationState;
-  return !!(objAsAuthState.nonce && objAsAuthState.returnUrl);
+  return !!(objAsAuthState.nonce && objAsAuthState.queryParams);
 };
 
 /**
@@ -136,10 +149,10 @@ const isAuthorizationState = (obj: unknown): obj is AuthorizationState => {
  * @return {*} `AuthorizationState`
  */
 export const generateAuthorizationState = (
-  returnUrl: string,
+  queryParams: PersistableQueryParams,
 ): AuthorizationState => ({
   nonce: generateNonce(),
-  returnUrl,
+  queryParams,
 });
 
 /**

@@ -1,7 +1,6 @@
 import { QueryParams, TrackingQueryParams } from '@/shared/model/QueryParams';
 import { validateReturnUrl, validateRefUrl } from '@/server/lib/validateUrl';
 import { validateClientId } from '@/server/lib/validateClientId';
-import { FederationErrors } from '@/shared/model/Errors';
 
 const isStringBoolean = (maybeBoolean?: string): boolean | undefined => {
   if (!maybeBoolean) {
@@ -27,11 +26,6 @@ const validateGetOnlyError = (
   }
 };
 
-const validateError = (error?: string): string | undefined => {
-  const validErrorCodes = [FederationErrors.SOCIAL_SIGNIN_BLOCKED];
-  return validErrorCodes.find((code) => code === error);
-};
-
 export const parseExpressQueryParams = (
   method: string,
   {
@@ -45,6 +39,7 @@ export const parseExpressQueryParams = (
     ref,
     encryptedEmail,
     error,
+    error_description,
     useOkta,
   }: Record<keyof QueryParams, string | undefined>, // parameters from req.query
   // some parameters may be manually passed in req.body too,
@@ -61,7 +56,8 @@ export const parseExpressQueryParams = (
     refViewId: refViewId || bodyParams.refViewId,
     ref: (ref || bodyParams.ref) && validateRefUrl(ref || bodyParams.ref),
     encryptedEmail,
-    error: validateError(error),
+    error,
+    error_description,
     useOkta: isStringBoolean(useOkta),
   };
 };

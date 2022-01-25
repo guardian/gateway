@@ -24,40 +24,118 @@ import {
   AuthenticationFailedError,
   OktaError,
 } from '@/server/models/okta/Error';
+import {
+  readEncryptedStateCookie,
+  setEncryptedStateCookie,
+} from '@/server/lib/encryptedStateCookie';
+import { getPersistableQueryParams } from '@/shared/lib/queryParams';
 
 const { defaultReturnUri, okta } = getConfiguration();
+
+/**
+ * Method to perform the Authorization Code Flow
+ * for a) the sign in session check
+ * and b) post authentication (with the session token)
+ * @param res - the express response object
+ * @param sessionToken (optional) - if provided, we'll use this to set the session cookie
+ * @returns 303 redirect to the okta /authorize endpoint
+ */
+const performAuthCodeFlow = (
+  res: ResponseWithRequestState,
+  sessionToken?: string,
+) => {
+  // firstly we generate and store a "state"
+  // as a http only, secure, signed session cookie
+  // which is a json object that contains a nonce and the query params
+  // the nonce is used to protect against csrf
+  const authState = generateAuthorizationState(
+    getPersistableQueryParams(res.locals.queryParams),
+  );
+  setAuthorizationStateCookie(authState, res);
+
+  // generate the /authorize endpoint url which we'll redirect the user too
+  const authorizeUrl = ProfileOpenIdClient.authorizationUrl({
+    // Don't prompt for authentication or consent
+    prompt: 'none',
+    // The sessionToken from authentication to exchange for session cookie
+    sessionToken,
+    // we send the generated nonce as the state parameter
+    state: authState.nonce,
+    // any scopes, by default the 'openid' scope is required
+    // the idapi_token_cookie_exchange scope is checked on IDAPI to return
+    // idapi cookies on authentication
+    scope: 'openid idapi_token_cookie_exchange',
+  });
+
+  // redirect the user to the /authorize endpoint
+  return res.redirect(303, authorizeUrl);
+};
+
+/**
+ * Controller to render the sign in page in both IDAPI and Okta
+ */
+const showSignInPage = async (req: Request, res: ResponseWithRequestState) => {
+  const state = res.locals;
+  const { encryptedEmail, error, error_description } = state.queryParams;
+
+  // first attempt to get email from IDAPI encryptedEmail if it exists
+  const decryptedEmail =
+    encryptedEmail && (await decrypt(encryptedEmail, req.ip));
+
+  // followed by the gateway EncryptedState
+  // if it exists
+  const email = decryptedEmail || readEmailCookie(req);
+
+  const errorMessage =
+    error === FederationErrors.SOCIAL_SIGNIN_BLOCKED
+      ? SignInErrors.ACCOUNT_ALREADY_EXISTS
+      : error_description;
+
+  const html = renderer('/signin', {
+    requestState: deepmerge(state, {
+      pageData: {
+        email,
+      },
+      globalMessage: {
+        error: errorMessage,
+      },
+    }),
+    pageTitle: 'Sign in',
+  });
+  return res.type('html').send(html);
+};
 
 router.get(
   '/signin',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const state = res.locals;
-    const { encryptedEmail, error } = state.queryParams;
+    const { useOkta } = res.locals.queryParams;
+    if (okta.enabled && useOkta) {
+      // for okta users landing on sign in, we want to first check if a session exists
+      // if a session already exists then we want to refresh it and redirect back to the returnUrl
+      // otherwise we want to show the sign in page
+      // to facilitate this we'll use the EncryptedState cookie, and the `signInRedirect` property
+      const encryptedState = readEncryptedStateCookie(req);
 
-    // first attempt to get email from IDAPI encryptedEmail if it exists
-    const decryptedEmail =
-      encryptedEmail && (await decrypt(encryptedEmail, req.ip));
+      // first check that the sign in session is checked (signInRedirect is true)
+      // this means that the check is complete and show the sign in page
+      if (encryptedState?.signInRedirect) {
+        // remove the signInRedirect value from the cookie as the check is complete
+        // as we've been redirected here from the oauth callback
+        setEncryptedStateCookie(res, {
+          ...encryptedState,
+          signInRedirect: undefined,
+        });
 
-    // followed by the gateway EncryptedState
-    // if it exists
-    const email = decryptedEmail || readEmailCookie(req);
-
-    const errorMessage =
-      error === FederationErrors.SOCIAL_SIGNIN_BLOCKED
-        ? SignInErrors.ACCOUNT_ALREADY_EXISTS
-        : '';
-
-    const html = renderer('/signin', {
-      requestState: deepmerge(state, {
-        pageData: {
-          email,
-        },
-        globalMessage: {
-          error: errorMessage,
-        },
-      }),
-      pageTitle: 'Sign in',
-    });
-    res.type('html').send(html);
+        // render the sign in page
+        return showSignInPage(req, res);
+      } else {
+        // sign in session check is not complete, so we want to check if a session exists
+        // we do this by making an auth code request to okta
+        return performAuthCodeFlow(res);
+      }
+    } else {
+      return showSignInPage(req, res);
+    }
   }),
 );
 
@@ -66,7 +144,6 @@ router.post(
   handleRecaptcha,
   handleAsyncErrors((req: Request, res: ResponseWithRequestState) => {
     const { useOkta } = res.locals.queryParams;
-
     if (okta.enabled && useOkta) {
       // if okta feature switch enabled, use okta authentication
       return oktaSignInController(req, res);
@@ -142,32 +219,7 @@ const oktaSignInController = async (
     // we now need to generate an okta session
     // so we'll call the OIDC /authorize endpoint which sets a session cookie
     // we'll pretty much be performing the Authorization Code Flow
-
-    // firstly we generate and store a "state"
-    // as a http only, secure, signed session cookie
-    // which is a json object that contains a nonce and the return url
-    // the nonce is used to protect against csrf
-    const authState = generateAuthorizationState(
-      res.locals.queryParams.returnUrl,
-    );
-    setAuthorizationStateCookie(authState, res);
-
-    // generate the /authorize endpoint url which we'll redirect the user too
-    const authorizeUrl = ProfileOpenIdClient.authorizationUrl({
-      // Don't prompt for authentication or consent
-      prompt: 'none',
-      // The sessionToken from authentication to exchange for session cookie
-      sessionToken: response.sessionToken,
-      // we send the generated nonce as the state parameter
-      state: authState.nonce,
-      // any scopes, by default the 'openid' scope is required
-      // the idapi_token_cookie_exchange scope is checked on IDAPI to return
-      // idapi cookies on authentication
-      scope: 'openid idapi_token_cookie_exchange',
-    });
-
-    // redirect the user to the /authorize endpoint
-    return res.redirect(authorizeUrl);
+    return performAuthCodeFlow(res, response.sessionToken);
   } catch (error) {
     trackMetric('SignIn::Failure');
 

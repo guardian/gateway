@@ -1,3 +1,9 @@
+/**
+ * File related to Okta error codes and descriptions
+ * Errors sourced from:
+ * https://developer.okta.com/docs/reference/error-codes/
+ */
+
 export interface ErrorResponse {
   errorCode: ErrorCode;
   errorSummary: string;
