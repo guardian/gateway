@@ -14,7 +14,8 @@ import {
   ConsentsContent,
   CONSENTS_MAIN_COLOR,
 } from '@/client/layouts/shared/Consents';
-import { CommunicationCard } from '../components/CommunicationCard';
+import { CommunicationCard } from '@/client/components/CommunicationCard';
+import { CONSENT_IMAGES } from '@/client/models/ConsentImages';
 
 type ConsentsCommunicationProps = {
   consents: Consent[];
@@ -80,6 +81,7 @@ export const ConsentsCommunication = ({
                 body={consent.description}
                 value={consent.id}
                 checked={!!consent.consented}
+                image={CONSENT_IMAGES[consent.id]}
               />
             ))}
           </div>
