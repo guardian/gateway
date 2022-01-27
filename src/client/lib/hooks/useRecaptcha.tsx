@@ -24,6 +24,9 @@ const useRecaptchaScript = (src: string) => {
       typeof document !== undefined &&
       document.getElementById('g-captcha-script') !== null;
 
+    console.log('scriptExists', scriptExists);
+    console.log('recaptchaReady', recaptchaReady());
+
     // If the script has been loaded and the reCAPTCHA window object exists, we have no need to continue.
     if (scriptExists && recaptchaReady()) {
       setLoaded(true);
@@ -37,10 +40,14 @@ const useRecaptchaScript = (src: string) => {
       id: 'g-captcha-script',
     });
 
+    console.log(recaptchaScriptLoadPromise);
+
     const initialiseRecaptcha = () => {
+      console.log('initialiseRecaptcha');
       // This is the first time the Google reCAPTCHA script has been added to the page.
       // When the recaptcha script is first loaded, the `.ready` method lets us instantiate it.
       window.grecaptcha.ready(() => {
+        console.log('recaptcha ready', recaptchaReady());
         if (recaptchaReady()) {
           setLoaded(true);
         }
@@ -121,7 +128,11 @@ const useRecaptcha: UseRecaptcha = (
     throw new Error('No site key or render element passed');
   }
 
+  console.log('useRecaptcha', siteKey, renderElement, size, src);
+
   const { loaded, error: scriptLoadError } = useRecaptchaScript(src);
+
+  console.log('useRecaptchaScript', loaded, scriptLoadError);
 
   // Check if an error occurs whilst loading the recaptcha script.
   React.useEffect(() => {

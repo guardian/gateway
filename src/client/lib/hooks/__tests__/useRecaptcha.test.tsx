@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/preact-hooks';
 
 import type { RenderOptions } from '../useRecaptcha';
 import useRecaptcha from '../useRecaptcha';
@@ -22,18 +22,26 @@ setupRecaptchaScriptMutationObserver(
 
 beforeEach(setupRecaptchaObject);
 
-test('should expect an empty token on successful initial load of useRecaptcha', async () => {
+test.only('should expect an empty token on successful initial load of useRecaptcha', async () => {
   // Mock the Google Recaptcha object
   const windowSpy = jest.spyOn(global.window, 'grecaptcha', 'get');
+  console.log('windowSpy', windowSpy);
   const mockedGrecaptchaRender = jest.fn().mockReturnValue(0);
+  console.log('mockedGrecaptchaRender', mockedGrecaptchaRender);
   const mockedGrecaptchaReset = jest.fn();
+  console.log('mockedGrecaptchaReset', mockedGrecaptchaReset);
   const mockedGrecaptchaReady = jest.fn();
+  console.log('mockedGrecaptchaReady', mockedGrecaptchaReady);
   const mockedGrecaptchaExecute = jest.fn();
+  console.log('mockedGrecaptchaExecute', mockedGrecaptchaExecute);
 
   // Begin test.
   const { result, waitFor } = renderHook(() =>
     useRecaptcha('public-recaptcha-token', 'render-element'),
   );
+
+  console.log('result', result);
+  console.log('waitFor', waitFor);
 
   // Simulate the grecaptcha object loading in after the hook is executed.
   windowSpy.mockImplementation(() => ({
@@ -45,8 +53,11 @@ test('should expect an empty token on successful initial load of useRecaptcha', 
 
   // Mock recaptcha calling the ready callback once instantiated.
   await waitFor(() => {
+    console.log('made it to waitFor');
     expect(mockedGrecaptchaReady).toHaveBeenCalled();
+    console.log('made it to waitFor 2');
     const setCaptchaReadyState = mockedGrecaptchaReady.mock.calls[0][0];
+    console.log('made it to waitFor 3', setCaptchaReadyState);
     setCaptchaReadyState();
   });
 
@@ -61,10 +72,10 @@ test('should expect an empty token on successful initial load of useRecaptcha', 
   expect(mockedGrecaptchaExecute).not.toHaveBeenCalled();
 
   // Make sure no token has been returned and there is no error state.
-  expect(result.current.token).toEqual('');
-  expect(result.current.error).toEqual(false);
-  expect(result.current.expired).toEqual(false);
-  expect(result.current.widgetId).toEqual(0);
+  expect(result.current?.token).toEqual('');
+  expect(result.current?.error).toEqual(false);
+  expect(result.current?.expired).toEqual(false);
+  expect(result.current?.widgetId).toEqual(0);
 
   windowSpy.mockRestore();
 });
@@ -106,7 +117,7 @@ test('should receive a valid token back when the reCAPTCHA check is successful',
 
   // Request a token from recaptcha.
   act(() => {
-    const captchaExecutionResult = result.current.executeCaptcha();
+    const captchaExecutionResult = result.current?.executeCaptcha();
     expect(captchaExecutionResult).toBe(true);
   });
 
@@ -121,10 +132,10 @@ test('should receive a valid token back when the reCAPTCHA check is successful',
   expect(mockedGrecaptchaExecute).toHaveBeenCalled();
 
   // Check that a valid token is returned from successful check.
-  expect(result.current.token).toEqual('valid-token');
-  expect(result.current.error).toEqual(false);
-  expect(result.current.expired).toEqual(false);
-  expect(result.current.widgetId).toEqual(0);
+  expect(result.current?.token).toEqual('valid-token');
+  expect(result.current?.error).toEqual(false);
+  expect(result.current?.expired).toEqual(false);
+  expect(result.current?.widgetId).toEqual(0);
 
   windowSpy.mockRestore();
 });
@@ -138,7 +149,7 @@ test('should not be able to execute a call to reCAPTCHA if the script has not lo
 
     await waitFor(() => {
       // Request a token from recaptcha.
-      const recaptchaExecutionResult = result.current.executeCaptcha();
+      const recaptchaExecutionResult = result.current?.executeCaptcha();
       expect(recaptchaExecutionResult).toBe(false);
     });
   });
@@ -182,7 +193,7 @@ test('should receive an error back when the reCAPTCHA check is unsuccessful', as
 
   // Request a token from recaptcha.
   act(() => {
-    result.current.executeCaptcha();
+    result.current?.executeCaptcha();
   });
 
   // Check that the recaptcha render method was called.
@@ -196,10 +207,10 @@ test('should receive an error back when the reCAPTCHA check is unsuccessful', as
   expect(mockedGrecaptchaExecute).toHaveBeenCalled();
 
   // Check that no token was returned and errors indicate an unsuccessful check.
-  expect(result.current.token).toEqual('');
-  expect(result.current.error).toEqual(true);
-  expect(result.current.expired).toEqual(true);
-  expect(result.current.widgetId).toEqual(0);
+  expect(result.current?.token).toEqual('');
+  expect(result.current?.error).toEqual(true);
+  expect(result.current?.expired).toEqual(true);
+  expect(result.current?.widgetId).toEqual(0);
 
   windowSpy.mockRestore();
 });
@@ -244,7 +255,7 @@ test('should not load and intialise the Google reCAPTCHA script again if the hoo
     expect.anything(),
   );
 
-  expect(result.current.token).toEqual('');
+  expect(result.current?.token).toEqual('');
 
   // Second use of the hook //
   // This time, the hook will check for the existing instance of recaptcha.
@@ -258,10 +269,10 @@ test('should not load and intialise the Google reCAPTCHA script again if the hoo
     expect.anything(),
   );
 
-  expect(secondInstantiation.current.token).toEqual('');
-  expect(secondInstantiation.current.error).toEqual(false);
-  expect(secondInstantiation.current.expired).toEqual(false);
-  expect(secondInstantiation.current.widgetId).toEqual(0);
+  expect(secondInstantiation.current?.token).toEqual('');
+  expect(secondInstantiation.current?.error).toEqual(false);
+  expect(secondInstantiation.current?.expired).toEqual(false);
+  expect(secondInstantiation.current?.widgetId).toEqual(0);
 
   // Make sure that only one recaptcha script has been loaded after running the hook twice.
   expect(
@@ -299,7 +310,7 @@ test('should expect an error state when the Google reCAPTCHA script fails to loa
 
   await waitForNextUpdate();
 
-  expect(result.current.error).toBe(true);
+  expect(result.current?.error).toBe(true);
 
   windowSpy.mockRestore();
 });
@@ -363,17 +374,17 @@ test('should try again successfully after an unsuccessful reCAPTCHA check and re
 
   // Request a token from recaptcha.
   act(() => {
-    result.current.executeCaptcha();
+    result.current?.executeCaptcha();
   });
 
   expect(mockedGrecaptchaReset).toHaveBeenCalled();
   expect(mockedGrecaptchaExecuteError).toHaveBeenCalled();
 
   // Check that expected token is returned.
-  expect(result.current.token).toEqual('');
-  expect(result.current.error).toEqual(true);
-  expect(result.current.expired).toEqual(true);
-  expect(result.current.widgetId).toEqual(0);
+  expect(result.current?.token).toEqual('');
+  expect(result.current?.error).toEqual(true);
+  expect(result.current?.expired).toEqual(true);
+  expect(result.current?.widgetId).toEqual(0);
 
   // Mock Google Recaptcha calling the success callback with a valid token.
   const mockedGrecaptchaExecuteSuccess = jest.fn(() => {
@@ -392,17 +403,17 @@ test('should try again successfully after an unsuccessful reCAPTCHA check and re
 
   // Request a token from recaptcha.
   act(() => {
-    result.current.executeCaptcha();
+    result.current?.executeCaptcha();
   });
 
   expect(mockedGrecaptchaReset).toHaveBeenCalledTimes(2);
   expect(mockedGrecaptchaExecuteSuccess).toHaveBeenCalled();
 
   // Check that expected token is returned.
-  expect(result.current.token).toEqual('valid-token');
-  expect(result.current.error).toEqual(false);
-  expect(result.current.expired).toEqual(false);
-  expect(result.current.widgetId).toEqual(0);
+  expect(result.current?.token).toEqual('valid-token');
+  expect(result.current?.error).toEqual(false);
+  expect(result.current?.expired).toEqual(false);
+  expect(result.current?.widgetId).toEqual(0);
 
   windowSpy.mockRestore();
 });
