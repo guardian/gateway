@@ -1,22 +1,26 @@
 import React from 'react';
-import Locations from '@/shared/lib/locations';
 import { css } from '@emotion/react';
-import { space, neutral, textSans } from '@guardian/source-foundations';
+import { neutral, space, textSans } from '@guardian/source-foundations';
 import {
   getAutoRow,
   gridItemColumnConsents,
   consentsParagraphSpanDef,
 } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
-import { heading, text, headingMarginSpace6 } from '@/client/styles/Consents';
+import {
+  heading,
+  text,
+  headingMarginSpace6,
+  greyBorderTop,
+} from '@/client/styles/Consents';
 import { Checkbox, CheckboxGroup } from '@guardian/source-react-components';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
+import { Consents } from '@/shared/model/Consent';
+
 import {
   ConsentsContent,
   CONSENTS_MAIN_COLOR,
 } from '@/client/layouts/shared/Consents';
-import { Consents } from '@/shared/model/Consent';
-import { ExternalLink } from '@/client/components/ExternalLink';
 
 type ConsentsDataProps = {
   consented?: boolean;
@@ -31,6 +35,12 @@ const fieldset = css`
 `;
 
 const checkboxLabel = css`
+  color: ${neutral[7]};
+`;
+
+const marketingText = css`
+  ${text}
+  margin-top: ${space[4]}px;
   color: ${neutral[46]};
 `;
 
@@ -47,20 +57,14 @@ export const ConsentsData = ({ consented, description }: ConsentsDataProps) => {
     >
       {description && (
         <ConsentsContent>
-          <h2 css={[heading, autoRow()]}>Our commitment to you</h2>
+          <h2 css={[heading, greyBorderTop, autoRow()]}>
+            We never share your data without your permission
+          </h2>
           <p css={[text, autoRow(consentsParagraphSpanDef)]}>
             We think carefully about our use of personal data and use it
-            responsibly. We never share it without your permission and we have a
-            team who are dedicated to keeping any data we collect safe and
-            secure. You can find out more about how the Guardian aims to
-            safeguard users data by going to the{' '}
-            <ExternalLink
-              href={Locations.PRIVACY}
-              subdued={true}
-              target="_blank"
-            >
-              Privacy
-            </ExternalLink>{' '}
+            responsibly. We have a team who are dedicated to keeping any data we
+            collect safe and secure. You can find out more about how The
+            Guardian aims to safeguard users data by going to the Privacy
             section of the website.
           </p>
           <h2 css={[heading, headingMarginSpace6, autoRow()]}>
@@ -75,15 +79,21 @@ export const ConsentsData = ({ consented, description }: ConsentsDataProps) => {
             preferences so that we can make our marketing communication more
             relevant to you.
           </p>
-          <fieldset css={[fieldset, autoRow()]}>
-            <CheckboxGroup name={Consents.PROFILING}>
-              <Checkbox
-                value="consent-option"
-                label={label}
-                defaultChecked={consented}
-              />
-            </CheckboxGroup>
-          </fieldset>
+          <div css={autoRow()}>
+            <p css={[marketingText, autoRow(consentsParagraphSpanDef)]}>
+              I am happy for the Guardian to use my personal data for marketing
+              analysis purposes
+            </p>
+            <fieldset css={[fieldset, autoRow()]}>
+              <CheckboxGroup name={Consents.PROFILING}>
+                <Checkbox
+                  value="consent-option"
+                  label={label}
+                  defaultChecked={consented}
+                />
+              </CheckboxGroup>
+            </fieldset>
+          </div>
         </ConsentsContent>
       )}
     </ConsentsLayout>

@@ -10,12 +10,6 @@ class ReviewPage extends OnboardingPage {
       GREEN_LIGHT: 'Green Light',
       BOOKMARKS: 'Bookmarks',
     },
-    CONSENT: {
-      SUBSCRIPTIONS: 'Subscriptions, membership and contributions',
-    },
-    CONSENT_OPTOUT: {
-      ANALYSIS: 'Marketing analysis',
-    },
     NEWSLETTER_SECTION_TITLE: 'Newsletters',
     CONSENTS_SECTION_TITLE: 'Products & services:',
     BUTTON_RETURN_GUARDIAN: 'Return to the Guardian',
@@ -37,14 +31,6 @@ class ReviewPage extends OnboardingPage {
       .contains(ReviewPage.CONTENT.NEWSLETTER_SECTION_TITLE)
       .parent()
       .siblings();
-  }
-
-  static marketingAnalysisChoice() {
-    return cy
-      .contains(ReviewPage.CONTENT.CONSENT_OPTOUT.ANALYSIS)
-      .parent()
-      .siblings()
-      .children();
   }
 }
 

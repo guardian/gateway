@@ -10,7 +10,7 @@ import {
 } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { NewsletterCard } from '@/client/components/NewsletterCard';
-import { heading, text } from '@/client/styles/Consents';
+import { greyBorderTop, heading, text } from '@/client/styles/Consents';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import {
   CONSENTS_MAIN_COLOR,
@@ -65,18 +65,22 @@ export const ConsentsNewsletters = ({
       bgColor={CONSENTS_MAIN_COLOR}
     >
       <ConsentsContent>
-        <h2 css={[heading, autoRow()]}>Free newsletters from the Guardian</h2>
+        <h2 css={[heading, greyBorderTop, autoRow()]}>
+          Free newsletters from the Guardian
+        </h2>
         <p css={[text, paragraphSpacing, autoRow(consentsParagraphSpanDef)]}>
           Our newsletters help you get closer to our quality, independent
           journalism.
         </p>
-        {newsletters.map((newsletter, i) => (
-          <NewsletterCard
-            newsletter={newsletter}
-            key={newsletter.id}
-            cssOverrides={getNewsletterCardCss(i)}
-          />
-        ))}
+        <div css={autoRow()}>
+          {newsletters.map((newsletter, i) => (
+            <NewsletterCard
+              newsletter={newsletter}
+              key={newsletter.id}
+              cssOverrides={getNewsletterCardCss(i)}
+            />
+          ))}
+        </div>
       </ConsentsContent>
     </ConsentsLayout>
   );

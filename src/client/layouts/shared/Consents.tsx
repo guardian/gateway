@@ -1,16 +1,16 @@
 import React, { FunctionComponent } from 'react';
-import { from, brand, space } from '@guardian/source-foundations';
+import { from, neutral, space } from '@guardian/source-foundations';
 import { css, SerializedStyles } from '@emotion/react';
 import { gridRow } from '@/client/styles/Grid';
 
 export const CONSENTS_MAIN_COLOR = '#eaf1fd';
 
-const blueBorder = css`
+const greyBorder = css`
   margin: 0 auto;
 
   ${from.tablet} {
-    border-left: 1px solid ${brand[400]};
-    border-right: 1px solid ${brand[400]};
+    border-left: 1px solid ${neutral[86]};
+    border-right: 1px solid ${neutral[86]};
   }
 `;
 
@@ -20,16 +20,16 @@ const content = css`
   width: 100%;
   padding-top: ${space[6]}px;
   padding-bottom: ${space[6]}px;
-  ${blueBorder}
+  ${greyBorder}
 `;
 
 export const controls = css`
-  padding: ${space[5]}px 0 ${space[24]}px 0;
+  padding: 0 0 ${space[24]}px 0;
   ${from.tablet} {
-    padding: ${space[9]}px 0 ${space[12]}px 0;
+    padding: 0 0 ${space[12]}px 0;
   }
   ${from.desktop} {
-    padding: ${space[9]}px 0 ${space[24]}px 0;
+    padding: 0 0 ${space[24]}px 0;
   }
 `;
 

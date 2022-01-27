@@ -13,7 +13,7 @@ class CommunicationsPage extends OnboardingPage {
       .contains(title)
       .parent()
       .siblings()
-      .contains('Sign Up')
+      .contains('Yes, sign me up')
       .find('input');
   }
 }

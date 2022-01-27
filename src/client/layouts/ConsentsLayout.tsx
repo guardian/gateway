@@ -3,10 +3,10 @@ import { Footer } from '@/client/components/Footer';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { css } from '@emotion/react';
-import { brand, space } from '@guardian/source-foundations';
 import {
   Button,
   LinkButton,
+  SvgArrowLeftStraight,
   SvgArrowRightStraight,
 } from '@guardian/source-react-components';
 import {
@@ -31,22 +31,6 @@ interface ConsentsLayoutProps {
   showContinueButton?: boolean;
 }
 
-const mainBackground = css`
-  position: relative;
-  z-index: 0;
-  &:before {
-    content: ' ';
-    background-color: ${brand[400]};
-    opacity: 0.8;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: -1;
-  }
-`;
-
 const form = css`
   display: flex;
   flex: 1 0 auto;
@@ -65,14 +49,15 @@ const mainStyles = css`
   flex: 1 0 auto;
 `;
 
-const linkButton = css`
-  margin-left: ${space[5]}px;
-`;
-
 const sectionStyles = css`
   display: flex;
   flex-direction: column;
   flex: 1 0 auto;
+`;
+
+const navigationControls = css`
+  display: flex;
+  justify-content: space-between;
 `;
 
 export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
@@ -128,36 +113,37 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
           <CsrfFormField />
 
           <section css={sectionStyles}>
-            <div css={[mainBackground, ieFlexFix, optionalBgColor]}>
-              {children}
-            </div>
+            <div css={[ieFlexFix, optionalBgColor]}>{children}</div>
             <ConsentsBlueBackground>
               <div css={[gridItem(gridItemColumnConsents), controls]}>
-                {!error && showContinueButton && (
-                  <Button
-                    iconSide="right"
-                    nudgeIcon={true}
-                    icon={<SvgArrowRightStraight />}
-                    type="submit"
-                  >
-                    Save and continue
-                  </Button>
-                )}
-                {previousPage && (
-                  <LinkButton
-                    css={linkButton}
-                    href={buildUrlWithQueryParams(
-                      '/consents/:page',
-                      {
-                        page: previousPage,
-                      },
-                      queryParams,
-                    )}
-                    priority="subdued"
-                  >
-                    Go back
-                  </LinkButton>
-                )}
+                <div css={navigationControls}>
+                  {previousPage && (
+                    <LinkButton
+                      iconSide="left"
+                      icon={<SvgArrowLeftStraight />}
+                      href={buildUrlWithQueryParams(
+                        '/consents/:page',
+                        {
+                          page: previousPage,
+                        },
+                        queryParams,
+                      )}
+                      priority="tertiary"
+                    >
+                      Go back
+                    </LinkButton>
+                  )}
+                  {!error && showContinueButton && (
+                    <Button
+                      iconSide="right"
+                      nudgeIcon={true}
+                      icon={<SvgArrowRightStraight />}
+                      type="submit"
+                    >
+                      Continue
+                    </Button>
+                  )}
+                </div>
               </div>
             </ConsentsBlueBackground>
           </section>

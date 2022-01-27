@@ -157,92 +157,10 @@ describe('Onboarding flow', () => {
       ReviewPage.backButton().should('not.exist');
       ReviewPage.saveAndContinueButton().should('not.exist');
 
-      // contains opted in consents
-      Object.values(ReviewPage.CONTENT.CONSENT).forEach((consent) =>
-        cy.contains(consent),
-      );
-
       // contains opted in newsletters
       Object.values(ReviewPage.CONTENT.NEWSLETTERS).forEach((newsletter) =>
         cy.contains(newsletter),
       );
-
-      ReviewPage.marketingAnalysisChoice().contains('Yes');
-
-      ReviewPage.returnButton()
-        .should('have.attr', 'href')
-        .and('include', decodeURIComponent(returnUrl));
-    });
-
-    it('goes through full flow, opt out all consents/newsletters, preserve returnUrl', () => {
-      const returnUrl = encodeURIComponent(
-        `https://www.theguardian.com/science/grrlscientist/2012/aug/07/3`,
-      );
-
-      CommunicationsPage.gotoFlowStart({
-        query: {
-          returnUrl,
-        },
-      });
-
-      cy.url().should('include', CommunicationsPage.URL);
-      cy.url().should('include', `returnUrl=${returnUrl}`);
-
-      CommunicationsPage.backButton().should('not.exist');
-
-      CommunicationsPage.allCheckboxes().should('not.be.checked');
-      CommunicationsPage.allOptoutCheckboxes()
-        // select parent (to avoid cypress element not visible error)
-        .parent()
-        .click({ multiple: true });
-
-      // mock form save success
-      cy.mockNext(200);
-
-      CommunicationsPage.saveAndContinueButton().click();
-
-      cy.lastPayloadIs([{ id: 'supporter', consented: true }]);
-
-      cy.url().should('include', NewslettersPage.URL);
-      cy.url().should('include', `returnUrl=${returnUrl}`);
-
-      NewslettersPage.backButton()
-        .should('have.attr', 'href')
-        .and('include', CommunicationsPage.URL);
-
-      // mock form save success
-      cy.mockNext(200);
-
-      NewslettersPage.saveAndContinueButton().click();
-      cy.lastPayloadIs([]);
-
-      cy.url().should('include', YourDataPage.URL);
-      cy.url().should('include', `returnUrl=${returnUrl}`);
-
-      YourDataPage.backButton()
-        .should('have.attr', 'href')
-        .and('include', NewslettersPage.URL);
-
-      YourDataPage.marketingOptoutClickableSection().click();
-
-      // mock form save success
-      cy.mockNext(200);
-
-      cy.mockAll(200, createUser(optedOutUserConsent), USER_ENDPOINT);
-
-      YourDataPage.saveAndContinueButton().click();
-      cy.lastPayloadIs([{ id: 'profiling_optout', consented: true }]);
-
-      cy.url().should('include', ReviewPage.URL);
-      cy.url().should('include', `returnUrl=${returnUrl}`);
-
-      ReviewPage.backButton().should('not.exist');
-      ReviewPage.saveAndContinueButton().should('not.exist');
-
-      ReviewPage.newslettersSection().contains('N/A');
-      ReviewPage.consentsSection().contains('N/A');
-
-      ReviewPage.marketingAnalysisChoice().contains('No');
 
       ReviewPage.returnButton()
         .should('have.attr', 'href')
@@ -443,16 +361,6 @@ describe('Onboarding flow', () => {
       CommunicationsPage.goto();
       CommunicationsPage.backButton().should('not.exist');
       CommunicationsPage.allCheckboxes().should('not.be.checked');
-    });
-
-    it('shows any previously selected consents', () => {
-      const consented = getUserConsents(['supporter']);
-      cy.mockAll(200, createUser(consented), USER_ENDPOINT);
-      CommunicationsPage.goto();
-      CommunicationsPage.backButton().should('not.exist');
-      CommunicationsPage.consentCheckboxWithTitle(
-        'Subscriptions, membership and contributions',
-      ).should('be.checked');
     });
 
     it('display a relevant error message on user end point failure', () => {
