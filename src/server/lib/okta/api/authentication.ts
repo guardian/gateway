@@ -76,7 +76,7 @@ const handleTokenResponse = async (
         };
       });
     } catch (error) {
-      throw new OktaAPIResponseParsingError(`${error}`);
+      throw new OktaAPIResponseParsingError(error);
     }
   } else {
     return await handleErrorResponse(response);

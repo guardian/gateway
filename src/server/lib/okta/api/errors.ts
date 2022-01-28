@@ -30,7 +30,7 @@ const extractErrorResponse = async (
       };
     });
   } catch (error) {
-    throw new OktaAPIResponseParsingError(`${error}`);
+    throw new OktaAPIResponseParsingError(error);
   }
 };
 

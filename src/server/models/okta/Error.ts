@@ -127,7 +127,14 @@ export class TooManyRequestsError extends OktaError {
 }
 
 export class OktaAPIResponseParsingError extends OktaError {
-  constructor(message?: string) {
-    super(message);
+  constructor(error?: unknown) {
+    // Used for handling unknown errors
+    // first check if error is an Error object
+    if (error instanceof Error) {
+      super(error.message, error.name);
+    } else {
+      // if not, assume it is a string
+      super(error as string);
+    }
   }
 }
