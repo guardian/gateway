@@ -15,10 +15,7 @@ import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { exchangeAccessTokenForCookies } from '@/server/lib/idapi/auth';
 import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { SignInErrors } from '@/shared/model/Errors';
-import {
-  readEncryptedStateCookie,
-  setEncryptedStateCookie,
-} from '@/server/lib/encryptedStateCookie';
+import { updateEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 interface OAuthError {
@@ -52,9 +49,7 @@ const redirectForGenericError = (
 ) => {
   // we set the sign in redirect to true so that we can render the sign in page
   // without getting into a redirect loop
-  const encryptedState = readEncryptedStateCookie(req);
-  setEncryptedStateCookie(res, {
-    ...encryptedState,
+  updateEncryptedStateCookie(req, res, {
     signInRedirect: true,
   });
 
@@ -106,9 +101,7 @@ router.get(
         callbackParams.error === OpenIdErrors.LOGIN_REQUIRED
       ) {
         // set the signInRedirect flag so we can render the sign in page as a session doesn't exist
-        const encryptedState = readEncryptedStateCookie(req);
-        setEncryptedStateCookie(res, {
-          ...encryptedState,
+        updateEncryptedStateCookie(req, res, {
           signInRedirect: true,
         });
 

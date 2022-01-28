@@ -26,7 +26,7 @@ import {
 } from '@/server/models/okta/Error';
 import {
   readEncryptedStateCookie,
-  setEncryptedStateCookie,
+  updateEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
 import { getPersistableQueryParams } from '@/shared/lib/queryParams';
 
@@ -121,8 +121,7 @@ router.get(
       if (encryptedState?.signInRedirect) {
         // remove the signInRedirect value from the cookie as the check is complete
         // as we've been redirected here from the oauth callback
-        setEncryptedStateCookie(res, {
-          ...encryptedState,
+        updateEncryptedStateCookie(req, res, {
           signInRedirect: undefined,
         });
 

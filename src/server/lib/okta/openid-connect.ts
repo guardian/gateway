@@ -1,7 +1,7 @@
 /* eslint-disable functional/immutable-data */
 import { Issuer, IssuerMetadata, Client } from 'openid-client';
 import { randomBytes } from 'crypto';
-import { Request } from 'express';
+import { Request, CookieOptions } from 'express';
 import { joinUrl } from '@guardian/libs';
 import { PersistableQueryParams } from '@/shared/model/QueryParams';
 import { getConfiguration } from '@/server/lib/getConfiguration';
@@ -162,6 +162,17 @@ export const generateAuthorizationState = (
 const AuthorizationStateCookieName = 'GU_oidc_auth_state';
 
 /**
+ * Authorization state cookie options
+ * No expiry/max-age, so cookie is deleted when browser session closes
+ */
+const AuthorizationStateCookieOptions: CookieOptions = {
+  httpOnly: true,
+  secure: true,
+  signed: true,
+  sameSite: 'strict',
+};
+
+/**
  * Tells express to set the cookie response header for the
  * `AuthorizationState` The value is Base64 encoded. Name set
  * as `${AuthorizationStateCookieName}`.
@@ -182,12 +193,7 @@ export const setAuthorizationStateCookie = (
     res.cookie(
       AuthorizationStateCookieName,
       Buffer.from(JSON.stringify(state)).toString('base64'),
-      {
-        httpOnly: true,
-        secure: true,
-        signed: true,
-        sameSite: 'strict',
-      },
+      AuthorizationStateCookieOptions,
     );
   } catch (error) {
     logger.error(`setAuthorizationStateCookie Error`, error);
@@ -236,9 +242,11 @@ export const getAuthorizationStateCookie = (
 export const deleteAuthorizationStateCookie = (
   res: ResponseWithRequestState,
 ) => {
-  // http specification has no way of deleting cookies
-  // so a workaround is to set the cookie expiry to now
-  res.cookie(AuthorizationStateCookieName, '', {
-    expires: new Date(),
-  });
+  // Web browsers and other compliant clients will only clear the cookie
+  // if the given options is identical to those given to res.cookie()
+  // excluding expires and maxAge.
+  res.clearCookie(
+    AuthorizationStateCookieName,
+    AuthorizationStateCookieOptions,
+  );
 };

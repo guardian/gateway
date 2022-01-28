@@ -14,7 +14,7 @@ import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
 import { trackMetric } from '@/server/lib/trackMetric';
 import {
   readEncryptedStateCookie,
-  setEncryptedStateCookie,
+  updateEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
 import { ApiError } from '@/server/models/Error';
 import { PasswordRoutePath, RoutePaths } from '@/shared/model/Routes';
@@ -63,9 +63,7 @@ export const setPasswordController = (
         // if the user navigates back to the welcome page after they have set a password, this
         // ensures we show them a custom error page rather than the link expired page
         if (path === '/welcome') {
-          const currentState = readEncryptedStateCookie(req);
-          setEncryptedStateCookie(res, {
-            ...currentState,
+          updateEncryptedStateCookie(req, res, {
             passwordSetOnWelcomePage: true,
           });
         }
@@ -185,9 +183,7 @@ const OktaSetPassword = async (
       trackMetric('OktaSetPasswordOnWelcomePage::Success');
 
       if (path === '/welcome') {
-        const currentState = readEncryptedStateCookie(req);
-        setEncryptedStateCookie(res, {
-          ...currentState,
+        updateEncryptedStateCookie(req, res, {
           passwordSetOnWelcomePage: true,
         });
       }
