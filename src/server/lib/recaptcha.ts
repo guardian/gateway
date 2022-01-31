@@ -1,10 +1,10 @@
-import { CaptchaErrors } from '@/shared/model/Errors';
 import { NextFunction, Request, Response } from 'express';
 import { RecaptchaV2 } from 'express-recaptcha';
-import { getConfiguration } from './getConfiguration';
-import createError from 'http-errors';
+import { CaptchaErrors } from '@/shared/model/Errors';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
+import { HttpError } from '@/server/models/Error';
 
 const {
   googleRecaptcha: { secretKey, siteKey },
@@ -12,15 +12,18 @@ const {
 
 const recaptcha = new RecaptchaV2(siteKey, secretKey);
 
+const recaptchaError = new HttpError({
+  message: CaptchaErrors.GENERIC,
+  status: 400,
+  name: 'RecaptchaError',
+  code: 'EBADRECAPTCHA',
+});
+
 /**
  * Throws a generic error if the recaptcha check has failed.
  * @param recaptchaResponse
  */
 const checkRecaptchaError = (req: Request, _: Response, next: NextFunction) => {
-  const recaptchaError = createError(400, CaptchaErrors.GENERIC, {
-    code: 'EBADRECAPTCHA',
-  });
-
   if (!req.recaptcha) {
     return next(recaptchaError);
   }

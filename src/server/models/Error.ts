@@ -35,3 +35,22 @@ export class IdapiError extends ApiError {
     super({ message, status, field, name: 'IdapiError' });
   }
 }
+
+export class HttpError extends ApiError {
+  code?: string;
+
+  constructor({
+    message = GenericErrors.DEFAULT,
+    name = 'HttpError',
+    status = 500,
+    code,
+  }: {
+    message?: string;
+    name?: string;
+    status?: number;
+    code?: string;
+  } = {}) {
+    super({ message, name, status });
+    this.code = code;
+  }
+}
