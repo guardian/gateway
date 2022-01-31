@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
 import { MainBodyText } from '@/client/components/MainBodyText';
+import { logger } from '@/client/lib/clientSideLogger';
 
 export const ResendPasswordPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
@@ -13,6 +14,18 @@ export const ResendPasswordPage = () => {
   } = clientState;
 
   const { recaptchaSiteKey } = recaptchaConfig;
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const suppliedToken = window.location.pathname.split('/').pop();
+      // logging to debug scenarios where users are seeing an invalid token page with a supposedly valid token.
+      logger.info(
+        suppliedToken === 'resend'
+          ? 'Reset password: link expired page shown'
+          : `Reset password: link expired page shown with token: ${suppliedToken}`,
+      );
+    }
+  }, []);
 
   return (
     <ResetPassword

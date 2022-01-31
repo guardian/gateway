@@ -5,6 +5,7 @@ import { ClientStateContext } from '@/client/components/ClientState';
 
 import { Welcome } from '@/client/pages/Welcome';
 import { buildUrl, buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import { logger } from '@/client/lib/clientSideLogger';
 
 export const WelcomePage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
@@ -21,7 +22,13 @@ export const WelcomePage = () => {
     // we redirect to the session expired page
     // if the token expires while the user is on the current page
     if (typeof window !== 'undefined' && timeUntilTokenExpiry) {
+      logger.info(
+        `Welcome page: loaded successfully with a token expiry of: ${timeUntilTokenExpiry}`,
+      );
       setTimeout(() => {
+        logger.info(
+          `Welcome page: redirecting to token expired page after: ${timeUntilTokenExpiry}ms`,
+        );
         window.location.replace(buildUrl('/welcome/expired'));
       }, timeUntilTokenExpiry);
     }
