@@ -17,6 +17,7 @@ export const ResetPasswordSessionExpiredPage = () => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      // logging to debug scenarios where users are seeing an expired session token page with a supposedly valid token.
       logger.info('Reset password: session expired page shown');
     }
   }, []);

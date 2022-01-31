@@ -19,6 +19,7 @@ export const WelcomeSessionExpiredPage = () => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      // logging to debug scenarios where users are seeing an expired session token page with a supposedly valid token.
       logger.info('Welcome: session expired page shown');
     }
   }, []);

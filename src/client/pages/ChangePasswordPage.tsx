@@ -22,6 +22,7 @@ export const ChangePasswordPage = () => {
     // if the token expires while the user is on the current page
     if (typeof window !== 'undefined' && timeUntilTokenExpiry) {
       setTimeout(() => {
+        // logging to debug scenarios where users are seeing an expired token page with a supposedly valid token.
         logger.info(
           `Change password page: redirecting to token expired page after: ${timeUntilTokenExpiry}ms`,
         );
