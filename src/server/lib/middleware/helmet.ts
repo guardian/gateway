@@ -1,4 +1,4 @@
-import { default as helmet } from 'helmet';
+import helmet, { HelmetOptions } from 'helmet';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 
 const { baseUri, gaUID, apiDomain, idapiBaseUrl, stage } = getConfiguration();
@@ -38,7 +38,7 @@ const scriptSrc = [
 ];
 if (stage === 'DEV') scriptSrc.push(HELMET_OPTIONS.UNSAFE_EVAL);
 
-const helmetConfig = {
+const helmetConfig: HelmetOptions = {
   contentSecurityPolicy: {
     directives: {
       baseUri: [HELMET_OPTIONS.NONE],
@@ -66,8 +66,10 @@ const helmetConfig = {
         CSP_VALID_URI.SENTRY,
       ],
       frameSrc: [CSP_VALID_URI.CMP, CSP_VALID_URI.GOOGLE_RECAPTCHA],
+      formAction: null,
     },
   },
+  crossOriginEmbedderPolicy: false,
 };
 
 export const helmetMiddleware = helmet(helmetConfig);
