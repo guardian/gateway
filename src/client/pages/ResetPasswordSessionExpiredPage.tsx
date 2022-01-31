@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { ClientState } from '@/shared/model/ClientState';
 import { ClientStateContext } from '@/client/components/ClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
 import { MainBodyText } from '@/client/components/MainBodyText';
+import { logger } from '@/client/lib/clientSideLogger';
 
 export const ResetPasswordSessionExpiredPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
@@ -13,6 +14,12 @@ export const ResetPasswordSessionExpiredPage = () => {
   } = clientState;
 
   const { recaptchaSiteKey } = recaptchaConfig;
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      logger.info('Reset password: session expired page shown');
+    }
+  }, []);
 
   return (
     <ResetPassword
