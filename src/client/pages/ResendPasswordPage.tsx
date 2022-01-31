@@ -21,8 +21,8 @@ export const ResendPasswordPage = () => {
       // logging to debug scenarios where users are seeing an invalid token page with a supposedly valid token.
       logger.info(
         suppliedToken === 'resend'
-          ? `Reset password: link expired page shown with token: ${suppliedToken}`
-          : 'Reset password: link expired page shown',
+          ? 'Reset password: link expired page shown'
+          : `Reset password: link expired page shown with token: ${suppliedToken}`,
       );
     }
   }, []);
