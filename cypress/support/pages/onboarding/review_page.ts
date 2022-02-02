@@ -11,26 +11,13 @@ class ReviewPage extends OnboardingPage {
       BOOKMARKS: 'Bookmarks',
     },
     NEWSLETTER_SECTION_TITLE: 'Newsletters',
-    CONSENTS_SECTION_TITLE: 'Products & services:',
+    SUPPORTER_CONSENT_TITLE: 'Products & services:',
     BUTTON_RETURN_GUARDIAN: 'Return to the Guardian',
+    NO_NEWSLETTERS_TITLE: 'Didn’t find anything you like?',
   };
 
   static returnButton() {
     return cy.contains(ReviewPage.CONTENT.BUTTON_RETURN_GUARDIAN);
-  }
-
-  static consentsSection() {
-    return cy
-      .contains(ReviewPage.CONTENT.CONSENTS_SECTION_TITLE)
-      .parent()
-      .siblings();
-  }
-
-  static newslettersSection() {
-    return cy
-      .contains(ReviewPage.CONTENT.NEWSLETTER_SECTION_TITLE)
-      .parent()
-      .siblings();
   }
 }
 

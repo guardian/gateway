@@ -11,7 +11,6 @@ class CommunicationsPage extends OnboardingPage {
   static consentCheckboxWithTitle(title: string) {
     return cy
       .contains(title)
-      .parent()
       .siblings()
       .contains('Yes, sign me up')
       .find('input');

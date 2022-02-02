@@ -165,7 +165,7 @@ export const ConsentsConfirmation = ({
               .
             </p>
             <div css={[autoRow()]}>
-              {subscribedNewsletters.length ? (
+              {!!subscribedNewsletters.length && (
                 <ReviewTableRow title="Newsletters">
                   {subscribedNewsletters.map((n) => (
                     <div key={n.id} css={consentStyles}>
@@ -176,8 +176,8 @@ export const ConsentsConfirmation = ({
                     </div>
                   ))}
                 </ReviewTableRow>
-              ) : null}
-              {productConsents.length ? (
+              )}
+              {!!productConsents.length && (
                 <ReviewTableRow title="Products &amp; services">
                   {productConsents.map((c) => (
                     <div key={c.id} css={consentStyles}>
@@ -188,23 +188,28 @@ export const ConsentsConfirmation = ({
                     </div>
                   ))}
                 </ReviewTableRow>
-              ) : null}
+              )}
             </div>
-            <h2 css={[headingWithMq, autoRow(), greyBorderTop]}>
-              Guardian newsletters
-            </h2>
-            <p css={[text, autoRow()]}>Didn’t find anything you like?</p>
-            <p css={[text, autoRow()]}>
-              We have over&nbsp;
-              <ExternalLink
-                href="https://manage.theguardian.com/email-prefs"
-                subdued={true}
-              >
-                40 different newsletters
-              </ExternalLink>
-              &nbsp;that focus on a range of diverse topics - from politics to
-              the latest tech documentaries, sport and scientific breakthroughs.
-            </p>
+            {!subscribedNewsletters.length && (
+              <>
+                <h2 css={[headingWithMq, autoRow(), greyBorderTop]}>
+                  Guardian newsletters
+                </h2>
+                <p css={[text, autoRow()]}>Didn’t find anything you like?</p>
+                <p css={[text, autoRow()]}>
+                  We have over&nbsp;
+                  <ExternalLink
+                    href="https://manage.theguardian.com/email-prefs"
+                    subdued={true}
+                  >
+                    40 different newsletters
+                  </ExternalLink>
+                  &nbsp;that focus on a range of diverse topics - from politics
+                  to the latest tech documentaries, sport and scientific
+                  breakthroughs.
+                </p>
+              </>
+            )}
           </ConsentsContent>
           <ConsentsBlueBackground cssOverrides={continueBoxFlex}>
             <div css={[gridItem(gridItemColumnConsents)]}>
