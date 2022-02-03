@@ -1,6 +1,7 @@
 import { BaseLogger } from '@/shared/lib/baseLogger';
 import { LogLevel } from '@/shared/model/Logger';
 import * as Sentry from '@sentry/browser';
+import { Extras } from '@sentry/types';
 
 const getSentryLevel = (level: LogLevel) => {
   switch (level) {
@@ -17,24 +18,51 @@ const getSentryLevel = (level: LogLevel) => {
 
 class ClientSideLogger extends BaseLogger {
   // eslint-disable-next-line
-  log(level: LogLevel, message: string, error?: any) {
+  log(level: LogLevel, message: string, error?: any, extra?: Extras) {
+    // Wrap the log in a new Sentry transaction.
+    // Setting `sampled` to true ensures that it is logged every time.
+    const transaction = Sentry.startTransaction({
+      name: 'logger-event',
+      sampled: true,
+    });
+
     if (
+      level === LogLevel.ERROR &&
       error &&
       typeof error === 'object' &&
       error.stack &&
       typeof error.message === 'string'
     ) {
-      return Sentry.captureException(error);
+      Sentry.captureException(error, { extra });
+      return transaction.finish();
     }
 
     if (error) {
-      return Sentry.captureMessage(
-        `${message} - ${error}`,
-        getSentryLevel(level),
-      );
+      Sentry.captureMessage(`${message} - ${error}`, {
+        level: getSentryLevel(level),
+        extra,
+      });
+      return transaction.finish();
     }
 
-    return Sentry.captureMessage(message, getSentryLevel(level));
+    // `extra` is a free-form object that we can use to specify extra information in our logs.
+    Sentry.captureMessage(message, { level: getSentryLevel(level), extra });
+    return transaction.finish();
+  }
+
+  // eslint-disable-next-line
+  info(message: string, error?: any, extra?: Extras) {
+    return this.log(LogLevel.INFO, message, error, extra);
+  }
+
+  // eslint-disable-next-line
+  warn(message: string, error?: any, extra?: Extras) {
+    return this.log(LogLevel.WARN, message, error, extra);
+  }
+
+  // eslint-disable-next-line
+  error(message: string, error?: any, extra?: Extras) {
+    return this.log(LogLevel.ERROR, message, error, extra);
   }
 }
 

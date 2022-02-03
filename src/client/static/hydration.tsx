@@ -9,6 +9,10 @@ import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
 import * as Sentry from '@sentry/browser';
 import { Integrations } from '@sentry/tracing';
+import {
+  getConsentFor,
+  onConsentChange,
+} from '@guardian/consent-management-platform';
 
 export const hydrateApp = () => {
   const routingConfig: RoutingConfig = JSON.parse(
@@ -22,16 +26,25 @@ export const hydrateApp = () => {
     sentryConfig: { stage, build, dsn },
   } = clientState;
 
-  // Disable Sentry client side logging during local development.
-  if (dsn) {
-    Sentry.init({
-      dsn,
-      integrations: [new Integrations.BrowserTracing()],
-      environment: stage,
-      release: `gateway@${build}`,
-      tracesSampleRate: 0.2,
+  const initSentryWhenConsented = () => {
+    onConsentChange((consentState) => {
+      const sentryConsentGranted = getConsentFor('sentry', consentState);
+      if (sentryConsentGranted && dsn) {
+        Sentry.init({
+          dsn,
+          integrations: [new Integrations.BrowserTracing()],
+          environment: stage,
+          release: `gateway@${build}`,
+          // If you want to log something all the time, wrap your call to
+          // Sentry in a new Transaction and set `sampled` to true.
+          // An example of this is in clientSideLogger.ts
+          sampleRate: 0.2,
+        });
+      }
     });
-  }
+  };
+
+  initSentryWhenConsented();
 
   hydrate(
     <ABProvider

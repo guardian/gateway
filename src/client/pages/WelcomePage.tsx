@@ -22,12 +22,14 @@ export const WelcomePage = () => {
     // we redirect to the session expired page
     // if the token expires while the user is on the current page
     if (typeof window !== 'undefined' && timeUntilTokenExpiry) {
-      logger.info(
-        `Welcome page: loaded successfully with a token expiry of: ${timeUntilTokenExpiry}`,
-      );
+      logger.info(`Welcome page: loaded successfully`, undefined, {
+        timeUntilTokenExpiry,
+      });
       setTimeout(() => {
         logger.info(
-          `Welcome page: redirecting to token expired page after: ${timeUntilTokenExpiry}ms`,
+          `Welcome page: redirecting to token expired page`,
+          undefined,
+          { timeUntilTokenExpiry },
         );
         window.location.replace(buildUrl('/welcome/expired'));
       }, timeUntilTokenExpiry);
