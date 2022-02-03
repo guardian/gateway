@@ -34,7 +34,7 @@ class ClientSideLogger extends BaseLogger {
       typeof error.message === 'string'
     ) {
       Sentry.captureException(error, { extra });
-      return transaction.finish();
+      return transaction?.finish();
     }
 
     if (error) {
@@ -42,12 +42,12 @@ class ClientSideLogger extends BaseLogger {
         level: getSentryLevel(level),
         extra,
       });
-      return transaction.finish();
+      return transaction?.finish();
     }
 
-    // `extra` is a free-form object that we can use to specify extra information in our logs.
+    // should it be needed, `extra` is a free-form object that we can use to add additional debug info to Sentry logs.
     Sentry.captureMessage(message, { level: getSentryLevel(level), extra });
-    return transaction.finish();
+    return transaction?.finish();
   }
 
   // eslint-disable-next-line
