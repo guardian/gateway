@@ -1,18 +1,18 @@
 import { FieldError } from '@/shared/model/ClientState';
-import { ChangePasswordErrors } from '@/shared/model/Errors';
+import { PasswordFieldErrors } from '@/shared/model/Errors';
 
 export const validatePasswordField = (password: string): Array<FieldError> => {
   const errors: Array<FieldError> = [];
 
-  if (!password) {
+  if (!password || password.length < 8) {
     errors.push({
       field: 'password',
-      message: ChangePasswordErrors.PASSWORD_BLANK,
+      message: PasswordFieldErrors.AT_LEAST_8,
     });
-  } else if (password.length < 8 || password.length > 72) {
+  } else if (password.length > 72) {
     errors.push({
       field: 'password',
-      message: ChangePasswordErrors.PASSWORD_LENGTH,
+      message: PasswordFieldErrors.MAXIMUM_72,
     });
   }
 

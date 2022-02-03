@@ -15,7 +15,11 @@ describe('validatePasswordField', () => {
     const output = validatePasswordField(password);
 
     expect(output).toEqual([
-      { field: 'password', message: 'Password field must not be blank' },
+      {
+        field: 'password',
+        message:
+          'Please make sure your password is at least 8 characters long.',
+      },
     ]);
   });
 
@@ -27,7 +31,8 @@ describe('validatePasswordField', () => {
     expect(output).toEqual([
       {
         field: 'password',
-        message: 'Password must be between 8 and 72 characters',
+        message:
+          'Please make sure your password is at least 8 characters long.',
       },
     ]);
   });
@@ -41,7 +46,8 @@ describe('validatePasswordField', () => {
     expect(output).toEqual([
       {
         field: 'password',
-        message: 'Password must be between 8 and 72 characters',
+        message:
+          'Please make sure your password is not longer than 72 characters.',
       },
     ]);
   });

@@ -1,5 +1,4 @@
 import locations from '@/shared/lib/locations';
-import { ChangePasswordErrors } from '@/shared/model/Errors';
 
 interface ErrorLink {
   link: string;
@@ -8,7 +7,6 @@ interface ErrorLink {
 
 enum linkText {
   DEFAULT = 'Report this error',
-  PASSWORD = 'Password FAQs',
 }
 
 const DEFAULT_ERROR_LINK: ErrorLink = {
@@ -16,15 +14,8 @@ const DEFAULT_ERROR_LINK: ErrorLink = {
   linkText: linkText.DEFAULT,
 };
 
-const CUSTOM_ERROR_LINKS = new Map<string, ErrorLink>([
-  [
-    ChangePasswordErrors.PASSWORD_NO_MATCH,
-    { link: locations.HELP, linkText: linkText.PASSWORD },
-  ],
-]);
-
-const getErrorLink = (error: string): ErrorLink => {
-  return CUSTOM_ERROR_LINKS.get(error) || DEFAULT_ERROR_LINK;
+const getErrorLink = (): ErrorLink => {
+  return DEFAULT_ERROR_LINK;
 };
 
 export { ErrorLink, getErrorLink };

@@ -14,7 +14,7 @@ type Props = {
 export const ConsentsHeader = ({ error, success, geolocation }: Props) => (
   <>
     <Header geolocation={geolocation} />
-    {error && <GlobalError error={error} link={getErrorLink(error)} left />}
+    {error && <GlobalError error={error} link={getErrorLink()} left />}
     {success && <GlobalSuccess success={success} />}
   </>
 );

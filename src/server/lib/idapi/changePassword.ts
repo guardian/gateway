@@ -8,6 +8,7 @@ import {
 import {
   IdapiErrorMessages,
   ChangePasswordErrors,
+  PasswordFieldErrors,
 } from '@/shared/model/Errors';
 import { logger } from '@/server/lib/serverSideLogger';
 import { IdapiError } from '@/server/models/Error';
@@ -19,14 +20,9 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
     const { message } = err;
 
     switch (message) {
-      case IdapiErrorMessages.INVALID_TOKEN:
-        throw new IdapiError({
-          message: ChangePasswordErrors.INVALID_TOKEN,
-          status,
-        });
       case IdapiErrorMessages.BREACHED_PASSWORD:
         throw new IdapiError({
-          message: ChangePasswordErrors.COMMON_PASSWORD,
+          message: PasswordFieldErrors.COMMON_PASSWORD,
           status,
           field: 'password',
         });
