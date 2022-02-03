@@ -52,28 +52,7 @@ export const setPasswordController = (
       });
 
       try {
-        const fieldErrors = validatePasswordField(password);
-
-        if (fieldErrors.length) {
-          const { email, timeUntilTokenExpiry } = await validateToken(
-            token,
-            req.ip,
-          );
-
-          requestState = deepmerge(requestState, {
-            pageData: {
-              email,
-              timeUntilTokenExpiry,
-              fieldErrors,
-            },
-          });
-          const html = renderer(
-            `${path}/:token`,
-            { requestState, pageTitle },
-            { token },
-          );
-          return res.status(422).type('html').send(html);
-        }
+        validatePasswordField(password);
 
         const cookies = await changePassword(password, token, req.ip);
 
