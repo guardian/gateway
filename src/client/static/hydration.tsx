@@ -40,6 +40,9 @@ export const hydrateApp = () => {
           // An example of this is in clientSideLogger.ts
           sampleRate: 0.2,
         });
+      } else {
+        // Close the sentry client if consent changes to disallow logging.
+        Sentry.close();
       }
     });
   };
