@@ -19,6 +19,7 @@ type ConditionalMetrics =
   | 'OAuthAuthorization'
   | 'OktaRegistration'
   | 'OktaRegistrationResendEmail'
+  | 'OktaSignIn'
   | 'OktaSetPasswordOnWelcomePage'
   | 'OktaWelcomeResendEmail'
   | 'Register'
