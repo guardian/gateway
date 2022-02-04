@@ -1,7 +1,7 @@
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
-import { validate as validateToken } from '@/server/lib/idapi/changePassword';
+import { validate as validateTokenInIDAPI } from '@/server/lib/idapi/changePassword';
 import deepmerge from 'deepmerge';
 import { getBrowserNameFromUserAgent } from '@/server/lib/getBrowserName';
 import {
@@ -13,7 +13,8 @@ import { logger } from '@/server/lib/serverSideLogger';
 import { PasswordRoutePath } from '@/shared/model/Routes';
 import { PasswordPageTitle } from '@/shared/model/PageTitle';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { authenticate as authenticateWithOkta } from '@/server/lib/okta/api/authentication';
+import { validateRecoveryToken as validateTokenInOkta } from '@/server/lib/okta/api/authentication';
+import { trackMetric } from '@/server/lib/trackMetric';
 
 const { okta } = getConfiguration();
 
@@ -23,95 +24,12 @@ export const checkPasswordTokenController = (
 ) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { useOkta } = res.locals.queryParams;
-    if (okta.enabled && useOkta && path === '/welcome') {
-      await OktaAuthentication(path, pageTitle, req, res);
+    if (okta.enabled && useOkta) {
+      await checkTokenInOkta(path, pageTitle, req, res);
     } else {
-      let requestState = res.locals;
-      const { token } = req.params;
-
-      try {
-        const { email, timeUntilTokenExpiry } = await validateToken(
-          token,
-          req.ip,
-        );
-
-        requestState = deepmerge(requestState, {
-          pageData: {
-            browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
-            email,
-            timeUntilTokenExpiry,
-          },
-        });
-
-        // add email to encrypted state, so we can display it on the confirmation page
-        setEncryptedStateCookie(res, { email });
-
-        const html = renderer(
-          `${path}/:token`,
-          { requestState, pageTitle },
-          { token },
-        );
-        return res.type('html').send(html);
-      } catch (error) {
-        logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-
-        if (path === '/welcome') {
-          handleBackButtonEventOnWelcomePage(path, pageTitle, req, res);
-        } else {
-          return res.type('html').send(
-            renderer(`${path}/resend`, {
-              requestState,
-              pageTitle: `Resend ${pageTitle} Email`,
-            }),
-          );
-        }
-      }
+      await checkTokenInIDAPI(path, pageTitle, req, res);
     }
   });
-
-const OktaAuthentication = async (
-  path: PasswordRoutePath,
-  pageTitle: PasswordPageTitle,
-  req: Request,
-  res: ResponseWithRequestState,
-) => {
-  let requestState = res.locals;
-  const { token } = req.params;
-
-  try {
-    const { stateToken, expiresAt, _embedded } = await authenticateWithOkta({
-      token,
-    });
-    const email = _embedded?.user.profile.email;
-    const timeUntilTokenExpiry = Date.parse(expiresAt) - Date.now();
-
-    setEncryptedStateCookie(res, { email, stateToken });
-
-    requestState = deepmerge(requestState, {
-      pageData: {
-        browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
-        email,
-        timeUntilTokenExpiry,
-      },
-    });
-
-    return res
-      .type('html')
-      .send(renderer(`${path}/:token`, { requestState, pageTitle }, { token }));
-  } catch (error) {
-    logger.error('Okta Token authentication failure', error);
-    if (path === '/welcome') {
-      handleBackButtonEventOnWelcomePage(path, pageTitle, req, res);
-    } else {
-      return res.type('html').send(
-        renderer(`${path}/resend`, {
-          requestState,
-          pageTitle: `Resend ${pageTitle} Email`,
-        }),
-      );
-    }
-  }
-};
 
 const handleBackButtonEventOnWelcomePage = (
   path: PasswordRoutePath,
@@ -140,5 +58,108 @@ const handleBackButtonEventOnWelcomePage = (
         pageTitle: `Resend ${pageTitle} Email`,
       }),
     );
+  }
+};
+
+const checkTokenInIDAPI = async (
+  path: PasswordRoutePath,
+  pageTitle: PasswordPageTitle,
+  req: Request,
+  res: ResponseWithRequestState,
+) => {
+  const { token } = req.params;
+
+  try {
+    const { email, timeUntilTokenExpiry } = await validateTokenInIDAPI(
+      token,
+      req.ip,
+    );
+
+    setEncryptedStateCookie(res, { email });
+
+    trackMetric('ValidatePasswordToken::Success');
+
+    const html = renderer(
+      `${path}/:token`,
+      {
+        pageTitle,
+        requestState: deepmerge(res.locals, {
+          pageData: {
+            browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
+            email,
+            timeUntilTokenExpiry,
+          },
+        }),
+      },
+      { token },
+    );
+
+    return res.type('html').send(html);
+  } catch (error) {
+    logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+
+    trackMetric('ValidatePasswordToken::Failure');
+
+    if (path === '/welcome') {
+      handleBackButtonEventOnWelcomePage(path, pageTitle, req, res);
+    } else {
+      const html = renderer(`${path}/resend`, {
+        pageTitle: `Resend ${pageTitle} Email`,
+        requestState: res.locals,
+      });
+      return res.type('html').send(html);
+    }
+  }
+};
+
+export const checkTokenInOkta = async (
+  path: PasswordRoutePath,
+  pageTitle: PasswordPageTitle,
+  req: Request,
+  res: ResponseWithRequestState,
+) => {
+  const { token } = req.params;
+
+  try {
+    const { stateToken, expiresAt, _embedded } = await validateTokenInOkta({
+      recoveryToken: token,
+    });
+    const email = _embedded?.user.profile.login;
+    const timeUntilTokenExpiry = Date.parse(expiresAt) - Date.now();
+
+    setEncryptedStateCookie(res, { email, stateToken });
+
+    trackMetric('OktaValidatePasswordToken::Success');
+
+    const html = renderer(
+      `${path}/:token`,
+      {
+        pageTitle,
+        requestState: deepmerge(res.locals, {
+          pageData: {
+            browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
+            email,
+            timeUntilTokenExpiry,
+          },
+        }),
+      },
+      { token },
+    );
+
+    return res.type('html').send(html);
+  } catch (error) {
+    logger.error('Okta validate password token failure', error);
+
+    trackMetric('OktaValidatePasswordToken::Failure');
+
+    if (path === '/welcome') {
+      handleBackButtonEventOnWelcomePage(path, pageTitle, req, res);
+    } else {
+      const html = renderer(`${path}/resend`, {
+        pageTitle: `Resend ${pageTitle} Email`,
+        requestState: res.locals,
+      });
+      return res.type('html').send(html);
+    }
   }
 };

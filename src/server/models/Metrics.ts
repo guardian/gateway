@@ -23,10 +23,12 @@ type ConditionalMetrics =
   | `${EmailMetrics}EmailSend`
   | `${'Get' | 'Post'}ConsentsPage-${string}`
   | `RecaptchaMiddleware`
+  | 'ValidatePasswordToken'
   | 'OktaRegistration'
   | 'OktaRegistrationResendEmail'
   | 'OktaSetPasswordOnWelcomePage'
-  | 'OktaWelcomeResendEmail';
+  | 'OktaWelcomeResendEmail'
+  | 'OktaValidatePasswordToken';
 
 // Unconditional metrics that we want to track directly
 type UnconditionalMetrics =

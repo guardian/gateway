@@ -10,7 +10,11 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { Response } from 'node-fetch';
 import { handleErrorResponse } from '@/server/lib/okta/api/errors';
 import { OktaAPIResponseParsingError } from '@/server/models/okta/Error';
-import { handleVoidResponse } from '@/server/lib/okta/api/responses';
+import {
+  handleRecoveryTransactionResponse,
+  handleVoidResponse,
+} from '@/server/lib/okta/api/responses';
+import { RecoveryTransaction } from '@/server/models/okta/RecoveryTransaction';
 
 const { okta } = getConfiguration();
 
@@ -85,6 +89,25 @@ export const sendForgotPasswordEmail = async (
     // into an administrator action and locks the user out of their account
     headers: defaultHeaders,
   }).then(handleVoidResponse);
+};
+
+/**
+ * Validates a recovery token that was distributed to the end user to continue a recovery transaction (such as
+ * resetting a password or completing account activation).
+ *
+ * If valid, a state token is returned which can be used to complete the recovery transaction.
+ *
+ * @param body.recoveryToken Recovery token that was distributed to the end user via out-of-band mechanism such as email
+ */
+export const validateRecoveryToken = async (body: {
+  recoveryToken: string;
+}): Promise<RecoveryTransaction> => {
+  const path = buildUrl('/api/v1/authn/recovery/token');
+  return await fetch(joinUrl(okta.orgUrl, path), {
+    method: 'POST',
+    body: JSON.stringify(body),
+    headers: defaultHeaders,
+  }).then(handleRecoveryTransactionResponse);
 };
 
 const handleTokenResponse = async (response: Response): Promise<Token> => {
