@@ -14,8 +14,4 @@ const DEFAULT_ERROR_LINK: ErrorLink = {
   linkText: linkText.DEFAULT,
 };
 
-const getErrorLink = (): ErrorLink => {
-  return DEFAULT_ERROR_LINK;
-};
-
-export { ErrorLink, getErrorLink };
+export { ErrorLink, DEFAULT_ERROR_LINK };
