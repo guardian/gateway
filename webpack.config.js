@@ -182,7 +182,6 @@ const browser = ({ isLegacy }) => {
         {
           include: /node_modules/,
           exclude: [
-            /node_modules[\\\/]core-js/,
             /node_modules[\\\/]@babel/,
             /node_modules[\\\/]webpack[\\\/]buildin/,
           ],
