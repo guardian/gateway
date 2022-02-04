@@ -134,8 +134,6 @@ const browser = ({ isLegacy }) => {
     '@babel/env',
     {
       bugfixes: true,
-      useBuiltIns: 'usage',
-      corejs: '3.14'
     },
   ]
   
@@ -143,9 +141,7 @@ const browser = ({ isLegacy }) => {
     '@babel/env',
     {
       bugfixes: true,
-      useBuiltIns: 'usage',
-      corejs: '3.14',
-      modules: 'amd'
+      modules: 'amd',
     },
   ]
   
@@ -186,7 +182,6 @@ const browser = ({ isLegacy }) => {
         {
           include: /node_modules/,
           exclude: [
-            /node_modules[\\\/]core-js/,
             /node_modules[\\\/]@babel/,
             /node_modules[\\\/]webpack[\\\/]buildin/,
           ],
