@@ -134,8 +134,6 @@ const browser = ({ isLegacy }) => {
     '@babel/env',
     {
       bugfixes: true,
-      useBuiltIns: 'usage',
-      corejs: '3.14'
     },
   ]
   
@@ -143,9 +141,7 @@ const browser = ({ isLegacy }) => {
     '@babel/env',
     {
       bugfixes: true,
-      useBuiltIns: 'usage',
-      corejs: '3.14',
-      modules: 'amd'
+      modules: 'amd',
     },
   ]
   
