@@ -6,7 +6,8 @@ type EmailMetrics =
   | 'AccountExists'
   | 'AccountExistsWithoutPassword'
   | 'CreatePassword'
-  | 'ResetPassword';
+  | 'ResetPassword'
+  | 'OktaResetPassword';
 
 // Any metrics with conditions to append to the end
 // i.e ::Success or ::Failure

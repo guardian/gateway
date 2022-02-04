@@ -47,7 +47,7 @@ router.post(
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { useOkta } = res.locals.queryParams;
-    if (okta.registrationEnabled && useOkta) {
+    if (okta.enabled && useOkta) {
       await OktaResendEmail(req, res);
     } else {
       const { email } = req.body;

@@ -10,6 +10,7 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { Response } from 'node-fetch';
 import { handleErrorResponse } from '@/server/lib/okta/api/errors';
 import { OktaAPIResponseParsingError } from '@/server/models/okta/Error';
+import { handleVoidResponse } from '@/server/lib/okta/api/responses';
 
 const { okta } = getConfiguration();
 
@@ -53,6 +54,37 @@ export const resetPassword = async (body: {
     body: JSON.stringify(body),
     headers: { ...defaultHeaders, ...authorizationHeader() },
   }).then(handleTokenResponse);
+};
+
+/**
+ * Starts a new forgot password process by sending a reset password email
+ * https://developer.okta.com/docs/reference/api/authn/#forgot-password-with-email-factor
+ *
+ * There are two ways to use this endpoint:
+ * 1. without an API token - this starts a self-service forgotten password flow. The user
+ * is still ACTIVE and can still sign-in without resetting their password
+ * 2. with an API token - this becomes an administrator-initiated reset password flow which
+ * puts the user into the RECOVERY state. This prevents them from signing in until they have
+ * completed the recovery action and set a new password
+ *
+ * @param username User's short-name (for example: dade.murphy) or unique fully-qualified sign in
+ * name (for example: dade.murphy@example.com)
+ */
+export const sendForgotPasswordEmail = async (
+  username: string,
+): Promise<void> => {
+  const path = buildUrl('/api/v1/authn/recovery/password');
+  const body = {
+    username,
+    factorType: 'EMAIL',
+  };
+  return await fetch(joinUrl(okta.orgUrl, path), {
+    method: 'POST',
+    body: JSON.stringify(body),
+    // do not add authorization headers here as this turns the operation
+    // into an administrator action and locks the user out of their account
+    headers: defaultHeaders,
+  }).then(handleVoidResponse);
 };
 
 const handleTokenResponse = async (response: Response): Promise<Token> => {

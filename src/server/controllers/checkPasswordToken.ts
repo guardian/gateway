@@ -23,7 +23,7 @@ export const checkPasswordTokenController = (
 ) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { useOkta } = res.locals.queryParams;
-    if (okta.registrationEnabled && useOkta && path === '/welcome') {
+    if (okta.enabled && useOkta && path === '/welcome') {
       await OktaAuthentication(path, pageTitle, req, res);
     } else {
       let requestState = res.locals;

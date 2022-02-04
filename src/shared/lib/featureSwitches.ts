@@ -8,7 +8,7 @@
  */
 interface FeatureSwitches {
   demoSwitch: boolean;
-  oktaRegistrationEnabled: {
+  oktaEnabled: {
     DEV: boolean;
     CODE: boolean;
     PROD: boolean;
@@ -17,7 +17,7 @@ interface FeatureSwitches {
 
 export const featureSwitches: FeatureSwitches = {
   demoSwitch: false,
-  oktaRegistrationEnabled: {
+  oktaEnabled: {
     DEV: false,
     CODE: true,
     PROD: false,

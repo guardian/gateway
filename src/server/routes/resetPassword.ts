@@ -8,135 +8,62 @@ import { setPasswordController } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { typedRouter as router } from '@/server/lib/typedRoutes';
 import handleRecaptcha from '@/server/lib/recaptcha';
-import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { sendResetPasswordEmail } from '@/server/lib/idapi/resetPassword';
-import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
-import { logger } from '@/server/lib/serverSideLogger';
-import { ApiError } from '@/server/models/Error';
-import { ResetPasswordErrors } from '@/shared/model/Errors';
-import { trackMetric } from '@/server/lib/trackMetric';
-import { emailSendMetric } from '@/server/models/Metrics';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { sendOphanInteractionEventServer } from '../lib/ophan';
+import { sendChangePasswordEmailController } from '@/server/controllers/sendChangePasswordEmail';
 
+// forgot password email form
 router.get('/reset-password', (req: Request, res: ResponseWithRequestState) => {
-  let state = res.locals;
-  const email = readEmailCookie(req);
-
-  if (email) {
-    state = deepmerge(state, {
-      pageData: {
-        email,
-      },
-    });
-  }
-
   const html = renderer('/reset-password', {
-    requestState: state,
     pageTitle: 'Reset Password',
+    requestState: deepmerge(res.locals, {
+      pageData: {
+        email: readEmailCookie(req),
+      },
+    }),
   });
   res.type('html').send(html);
 });
 
+// send reset password email
 router.post(
   '/reset-password',
   handleRecaptcha,
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    let state = res.locals;
-
-    const { email = '' } = req.body;
-
-    const { returnUrl, emailSentSuccess, ref, refViewId } =
-      res.locals.queryParams;
-
-    try {
-      await sendResetPasswordEmail(email, req.ip, returnUrl, ref, refViewId);
-
-      setEncryptedStateCookie(res, { email });
-    } catch (error) {
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-
-      const { message, status } =
-        error instanceof ApiError
-          ? error
-          : new ApiError({ message: ResetPasswordErrors.GENERIC });
-
-      trackMetric(emailSendMetric('ResetPassword', 'Failure'));
-
-      state = deepmerge(state, {
-        globalMessage: {
-          error: message,
-        },
-      });
-
-      const html = renderer('/reset-password', {
-        requestState: state,
-        pageTitle: 'Reset Password',
-      });
-      return res.status(status).type('html').send(html);
-    }
-
-    sendOphanInteractionEventServer(
-      {
-        component: 'email-send',
-        value: 'reset-password',
-      },
-      state.ophanConfig,
-    );
-    trackMetric(emailSendMetric('ResetPassword', 'Success'));
-
-    return res.redirect(
-      303,
-      addQueryParamsToPath(
-        '/reset-password/email-sent',
-        res.locals.queryParams,
-        {
-          emailSentSuccess,
-        },
-      ),
-    );
-  }),
+  sendChangePasswordEmailController(),
 );
 
+// reset password email sent page
 router.get(
   '/reset-password/email-sent',
   (req: Request, res: ResponseWithRequestState) => {
-    let state = res.locals;
-
-    const email = readEmailCookie(req);
-
-    state = deepmerge(state, {
-      pageData: {
-        email,
-        previousPage: '/reset-password',
-      },
-    });
-
     const html = renderer('/reset-password/email-sent', {
       pageTitle: 'Check Your Inbox',
-      requestState: state,
+      requestState: deepmerge(res.locals, {
+        pageData: {
+          email: readEmailCookie(req),
+          previousPage: '/reset-password',
+        },
+      }),
     });
     res.type('html').send(html);
   },
 );
 
+// password updated confirmation page
 router.get(
   '/reset-password/complete',
   (req: Request, res: ResponseWithRequestState) => {
-    const email = readEmailCookie(req);
-
     const html = renderer('/reset-password/complete', {
+      pageTitle: 'Password Changed',
       requestState: deepmerge(res.locals, {
         pageData: {
-          email,
+          email: readEmailCookie(req),
         },
       }),
-      pageTitle: 'Password Changed',
     });
     return res.type('html').send(html);
   },
 );
 
+// link expired page
 router.get(
   '/reset-password/resend',
   (_: Request, res: ResponseWithRequestState) => {
@@ -148,6 +75,7 @@ router.get(
   },
 );
 
+// session timed out page
 router.get(
   '/reset-password/expired',
   (_: Request, res: ResponseWithRequestState) => {
@@ -159,12 +87,17 @@ router.get(
   },
 );
 
-// The below routes must be defined below the other /reset-password/* routes otherwise the other routes will fail
+// IMPORTANT: The /reset-password/:token routes must be defined below the other routes.
+// If not, the other routes will fail as the router will try and read the second part
+// of the path as the token parameter.
+
+// reset password form
 router.get(
   '/reset-password/:token',
   checkPasswordTokenController('/reset-password', 'Change Password'),
 );
 
+// update password
 router.post(
   '/reset-password/:token',
   setPasswordController(
