@@ -4,7 +4,6 @@ import {
   space,
   headline,
   textSans,
-  body,
   neutral,
 } from '@guardian/source-foundations';
 
@@ -12,6 +11,7 @@ export const heading = css`
   color: ${neutral[0]};
   margin: 0 0 ${space[3]}px;
   ${headline.xxsmall({ fontWeight: 'bold' })};
+  font-size: 17px;
 `;
 
 export const headingMarginSpace6 = css`
@@ -28,15 +28,8 @@ export const headingWithMq = css`
 
 export const text = css`
   margin: 0;
-  color: ${neutral[20]};
+  color: ${neutral[7]};
   ${textSans.medium()}
-  max-width: 640px;
-`;
-
-export const textEgyptian = css`
-  ${body.medium()}
-  margin: 0;
-  color: ${neutral[20]};
   max-width: 640px;
 `;
 

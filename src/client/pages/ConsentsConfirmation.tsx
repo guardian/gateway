@@ -5,9 +5,8 @@ import {
   getAutoRow,
   gridItem,
   gridItemColumnConsents,
-  SpanDefinition,
 } from '@/client/styles/Grid';
-import { ConsentsContent } from '@/client/layouts/shared/Consents';
+import { ConsentsContent, controls } from '@/client/layouts/shared/Consents';
 import { ConsentsSubHeader } from '@/client/components/ConsentsSubHeader';
 import { ConsentsBlueBackground } from '@/client/components/ConsentsBlueBackground';
 import { ConsentsHeader } from '@/client/components/ConsentsHeader';
@@ -63,7 +62,7 @@ const ReviewTableRow: FunctionComponent<{ title: string }> = ({
 }) => (
   <div css={reviewTableRow}>
     <div css={reviewTableCell}>
-      <p css={reviewTableTextBold}>{title}:</p>
+      <p css={reviewTableTextBold}>{title}</p>
     </div>
     <div css={reviewTableCell}>{children}</div>
   </div>
@@ -73,30 +72,10 @@ const continueBoxFlex = css`
   flex: 0 0 auto;
 `;
 
-const confirmationSpanDefinition: SpanDefinition = {
-  TABLET: {
-    start: 1,
-    span: 9,
-  },
-  DESKTOP: {
-    start: 2,
-    span: 8,
-  },
-  LEFT_COL: {
-    start: 2,
-    span: 8,
-  },
-  WIDE: {
-    start: 3,
-    span: 10,
-  },
-};
-
 const sectionStyles = css`
   display: flex;
   flex-direction: column;
   flex: 1 0 auto;
-  padding-bottom: ${space[24]}px;
 `;
 
 const iconStyles = css`
@@ -122,8 +101,11 @@ const itemText = css`
   margin-left: ${space[2]}px;
 `;
 
-const textPadding = css`
-  ${text}
+const paddingTop = css`
+  padding-top: ${space[4]}px;
+`;
+
+const paddingBottom = css`
   padding-bottom: ${space[4]}px;
 `;
 
@@ -132,10 +114,21 @@ export const ConsentsConfirmation = ({
   success,
   returnUrl,
   productConsents,
+  optedOutOfProfiling,
   subscribedNewsletters,
   geolocation,
 }: ConsentsConfirmationProps) => {
-  const autoRow = getAutoRow(1, confirmationSpanDefinition);
+  const autoRow = getAutoRow(1, gridItemColumnConsents);
+  const anyConsents =
+    !optedOutOfProfiling ||
+    !!productConsents.length ||
+    !!subscribedNewsletters.length;
+  console.log(
+    anyConsents,
+    !optedOutOfProfiling,
+    !!productConsents.length,
+    !!subscribedNewsletters.length,
+  );
   return (
     <>
       <ConsentsHeader
@@ -153,18 +146,36 @@ export const ConsentsConfirmation = ({
             <h2 css={[headingWithMq, autoRow(), greyBorderTop]}>
               Thank you for completing your registration
             </h2>
-            <p css={[textPadding, autoRow()]}>
-              You now have an account with the Guardian and you can manage your
-              preferences and options at anytime under&nbsp;
-              <ExternalLink
-                href="https://manage.theguardian.com/email-prefs"
-                subdued={true}
-              >
-                Emails &amp; marketing
-              </ExternalLink>
-              .
-            </p>
+            {anyConsents ? (
+              <p css={[text, autoRow()]}>
+                Please find below a summary of your selections.
+              </p>
+            ) : (
+              <p css={[text, paddingBottom, autoRow()]}>
+                You now have an account with the Guardian and you can manage
+                your preferences and options at anytime under&nbsp;
+                <ExternalLink
+                  href="https://manage.theguardian.com/email-prefs"
+                  subdued={true}
+                >
+                  Emails &amp; marketing
+                </ExternalLink>
+                .
+              </p>
+            )}
             <div css={[autoRow()]}>
+              {!!productConsents.length && (
+                <ReviewTableRow title="Emails">
+                  {productConsents.map((c) => (
+                    <div key={c.id} css={consentStyles}>
+                      <span css={iconStyles}>
+                        <SvgTickRound />
+                      </span>
+                      <p css={[text, itemText]}>{c.name}</p>
+                    </div>
+                  ))}
+                </ReviewTableRow>
+              )}
               {!!subscribedNewsletters.length && (
                 <ReviewTableRow title="Newsletters">
                   {subscribedNewsletters.map((n) => (
@@ -177,19 +188,31 @@ export const ConsentsConfirmation = ({
                   ))}
                 </ReviewTableRow>
               )}
-              {!!productConsents.length && (
-                <ReviewTableRow title="Products &amp; services">
-                  {productConsents.map((c) => (
-                    <div key={c.id} css={consentStyles}>
-                      <span css={iconStyles}>
-                        <SvgTickRound />
-                      </span>
-                      <p css={[text, itemText]}>{c.name}</p>
-                    </div>
-                  ))}
+              {!optedOutOfProfiling && (
+                <ReviewTableRow title="Consents">
+                  <div css={consentStyles}>
+                    <span css={iconStyles}>
+                      <SvgTickRound />
+                    </span>
+                    <p css={[text, itemText]}>
+                      Using your data for marketing analysis
+                    </p>
+                  </div>
                 </ReviewTableRow>
               )}
             </div>
+            {anyConsents && (
+              <p css={[text, paddingTop, paddingBottom, autoRow()]}>
+                You can change these anytime in your account under&nbsp;
+                <ExternalLink
+                  href="https://manage.theguardian.com/email-prefs"
+                  subdued={true}
+                >
+                  Emails &amp; marketing
+                </ExternalLink>
+                .
+              </p>
+            )}
             {!subscribedNewsletters.length && (
               <>
                 <h2 css={[headingWithMq, autoRow(), greyBorderTop]}>
@@ -212,7 +235,7 @@ export const ConsentsConfirmation = ({
             )}
           </ConsentsContent>
           <ConsentsBlueBackground cssOverrides={continueBoxFlex}>
-            <div css={[gridItem(gridItemColumnConsents)]}>
+            <div css={[controls, gridItem(gridItemColumnConsents)]}>
               <ExternalLinkButton iconSide="right" href={returnUrl}>
                 Return to the Guardian
               </ExternalLinkButton>

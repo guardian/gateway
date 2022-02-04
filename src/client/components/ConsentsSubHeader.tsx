@@ -6,9 +6,9 @@ import {
   space,
   from,
   textSans,
-  titlepiece,
+  headline,
 } from '@guardian/source-foundations';
-import { AutoRow, gridItemColumnConsents, gridRow } from '@/client/styles/Grid';
+import { AutoRow, gridRow } from '@/client/styles/Grid';
 import { CONSENTS_PAGES_ARR } from '@/client/models/ConsentsPages';
 
 type Props = {
@@ -36,18 +36,15 @@ const greyBorder = css`
 `;
 
 const h1 = css`
-  color: ${neutral[0]};
-  margin: ${space[12]}px 0 ${space[5]}px 0;
-  ${titlepiece.small({ fontWeight: 'bold' })};
-  font-size: 38px;
-  line-height: 1;
+  color: ${neutral[7]};
+  margin: ${space[9]}px 0 ${space[6]}px;
+  ${headline.small({ fontWeight: 'bold' })}};
+`;
+
+// For some reason this media query only applies if we use a separate style
+const h1ResponsiveText = css`
   ${from.tablet} {
-    ${titlepiece.medium({ fontWeight: 'bold' })};
-    font-size: 42px;
-  }
-  ${from.desktop} {
-    ${titlepiece.large({ fontWeight: 'bold' })};
-    font-size: 50px;
+    font-size: 32px;
   }
 `;
 
@@ -261,12 +258,12 @@ export const ConsentsSubHeader = ({ autoRow, title, current }: Props) => (
     <div css={[greyBorder, gridRow]}>
       {current && (
         <PageProgression
-          cssOverrides={[pageProgression, autoRow(gridItemColumnConsents)]}
+          cssOverrides={[pageProgression, autoRow()]}
           pages={CONSENTS_PAGES_ARR}
           current={current}
         />
       )}
-      <h1 css={[h1, autoRow(gridItemColumnConsents)]}>{title}</h1>
+      <h1 css={[h1, h1ResponsiveText, autoRow()]}>{title}</h1>
     </div>
   </header>
 );

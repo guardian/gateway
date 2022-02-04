@@ -3,8 +3,6 @@ import { from, neutral, space } from '@guardian/source-foundations';
 import { css, SerializedStyles } from '@emotion/react';
 import { gridRow } from '@/client/styles/Grid';
 
-export const CONSENTS_MAIN_COLOR = '#eaf1fd';
-
 const greyBorder = css`
   margin: 0 auto;
 
@@ -18,17 +16,13 @@ const content = css`
   ${gridRow}
   background-color: white;
   width: 100%;
-  padding-top: ${space[6]}px;
   padding-bottom: ${space[6]}px;
   ${greyBorder}
 `;
 
 export const controls = css`
-  padding: 0 0 ${space[24]}px 0;
+  padding: 0 0 64px 0;
   ${from.tablet} {
-    padding: 0 0 ${space[12]}px 0;
-  }
-  ${from.desktop} {
     padding: 0 0 ${space[24]}px 0;
   }
 `;

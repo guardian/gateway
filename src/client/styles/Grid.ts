@@ -227,23 +227,16 @@ export const gridItem = (spanDefinition?: SpanDefinition) => {
 
 export const gridItemColumnConsents: SpanDefinition = {
   TABLET: { start: 1, span: 10 },
-  DESKTOP: { start: 2, span: 8 },
-  LEFT_COL: { start: 2, span: 10 },
-  WIDE: { start: 3, span: 10 },
-};
-
-export const consentsParagraphSpanDef: SpanDefinition = {
-  TABLET: { start: 1, span: 10 },
-  DESKTOP: { start: 2, span: 8 },
-  LEFT_COL: { start: 2, span: 9 },
-  WIDE: { start: 3, span: 10 },
+  DESKTOP: { start: 3, span: 8 },
+  LEFT_COL: { start: 3, span: 8 },
+  WIDE: { start: 4, span: 8 },
 };
 
 export const passwordFormSpanDef: SpanDefinition = {
   TABLET: { start: 1, span: 8 },
-  DESKTOP: { start: 2, span: 6 },
-  LEFT_COL: { start: 2, span: 6 },
-  WIDE: { start: 3, span: 8 },
+  DESKTOP: { start: 3, span: 6 },
+  LEFT_COL: { start: 3, span: 6 },
+  WIDE: { start: 4, span: 6 },
 };
 
 export const gridItemSignInAndRegistration: SpanDefinition = {

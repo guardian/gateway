@@ -5,17 +5,13 @@ import {
   gridItem,
   gridItemColumnConsents,
   getAutoRow,
-  consentsParagraphSpanDef,
   SpanDefinition,
 } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { NewsletterCard } from '@/client/components/NewsletterCard';
 import { greyBorderTop, heading, text } from '@/client/styles/Consents';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
-import {
-  CONSENTS_MAIN_COLOR,
-  ConsentsContent,
-} from '@/client/layouts/shared/Consents';
+import { ConsentsContent } from '@/client/layouts/shared/Consents';
 import { NewsLetter } from '@/shared/model/Newsletter';
 
 type ConsentsNewslettersProps = {
@@ -59,16 +55,12 @@ export const ConsentsNewsletters = ({
   const autoRow = getAutoRow(1, gridItemColumnConsents);
 
   return (
-    <ConsentsLayout
-      title="Newsletters"
-      current={CONSENTS_PAGES.NEWSLETTERS}
-      bgColor={CONSENTS_MAIN_COLOR}
-    >
+    <ConsentsLayout title="Newsletters" current={CONSENTS_PAGES.NEWSLETTERS}>
       <ConsentsContent>
         <h2 css={[heading, greyBorderTop, autoRow()]}>
           Free newsletters from the Guardian
         </h2>
-        <p css={[text, paragraphSpacing, autoRow(consentsParagraphSpanDef)]}>
+        <p css={[text, paragraphSpacing, autoRow()]}>
           Our newsletters help you get closer to our quality, independent
           journalism.
         </p>

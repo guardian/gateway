@@ -1,11 +1,7 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import { neutral, space, textSans } from '@guardian/source-foundations';
-import {
-  getAutoRow,
-  gridItemColumnConsents,
-  consentsParagraphSpanDef,
-} from '@/client/styles/Grid';
+import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import {
   heading,
@@ -17,10 +13,7 @@ import { Checkbox, CheckboxGroup } from '@guardian/source-react-components';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { Consents } from '@/shared/model/Consent';
 
-import {
-  ConsentsContent,
-  CONSENTS_MAIN_COLOR,
-} from '@/client/layouts/shared/Consents';
+import { ConsentsContent } from '@/client/layouts/shared/Consents';
 
 type ConsentsDataProps = {
   consented?: boolean;
@@ -41,7 +34,6 @@ const checkboxLabel = css`
 const marketingText = css`
   ${text}
   margin-top: ${space[4]}px;
-  color: ${neutral[46]};
 `;
 
 export const ConsentsData = ({ consented, description }: ConsentsDataProps) => {
@@ -50,17 +42,13 @@ export const ConsentsData = ({ consented, description }: ConsentsDataProps) => {
   const label = <span css={checkboxLabel}>{description}</span>;
 
   return (
-    <ConsentsLayout
-      title="Your data"
-      current={CONSENTS_PAGES.YOUR_DATA}
-      bgColor={CONSENTS_MAIN_COLOR}
-    >
+    <ConsentsLayout title="Your data" current={CONSENTS_PAGES.YOUR_DATA}>
       {description && (
         <ConsentsContent>
           <h2 css={[heading, greyBorderTop, autoRow()]}>
             We never share your data without your permission
           </h2>
-          <p css={[text, autoRow(consentsParagraphSpanDef)]}>
+          <p css={[text, autoRow()]}>
             We think carefully about our use of personal data and use it
             responsibly. We have a team who are dedicated to keeping any data we
             collect safe and secure. You can find out more about how The
@@ -70,7 +58,7 @@ export const ConsentsData = ({ consented, description }: ConsentsDataProps) => {
           <h2 css={[heading, headingMarginSpace6, autoRow()]}>
             Using your data for marketing analysis
           </h2>
-          <p css={[text, autoRow(consentsParagraphSpanDef)]}>
+          <p css={[text, autoRow()]}>
             From time to time we may use your personal data for marketing
             analysis. That includes looking at what products or services you
             have bought from us and what pages you have been viewing on
@@ -80,7 +68,7 @@ export const ConsentsData = ({ consented, description }: ConsentsDataProps) => {
             relevant to you.
           </p>
           <div css={autoRow()}>
-            <p css={[marketingText, autoRow(consentsParagraphSpanDef)]}>
+            <p css={[marketingText, autoRow()]}>
               I am happy for the Guardian to use my personal data for marketing
               analysis purposes
             </p>

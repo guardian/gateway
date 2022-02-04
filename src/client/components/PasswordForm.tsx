@@ -26,7 +26,7 @@ import {
   ShortPasswordFieldErrors,
 } from '@/shared/model/Errors';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
-import { AutoRow, passwordFormSpanDef } from '@/client/styles/Grid';
+import { AutoRow } from '@/client/styles/Grid';
 import { MainForm } from '@/client/components/MainForm';
 import { passwordButton } from '../styles/Consents';
 import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
@@ -279,7 +279,7 @@ export const PasswordForm = ({
 
   return (
     <form
-      css={[form, gridAutoRow && gridAutoRow(passwordFormSpanDef)]}
+      css={[form, gridAutoRow && gridAutoRow()]}
       method="post"
       action={submitUrl}
       onSubmit={(e) => {

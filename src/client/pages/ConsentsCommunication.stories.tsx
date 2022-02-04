@@ -18,33 +18,14 @@ export const WithoutOptout = () => (
   <ConsentsCommunication
     consents={[
       {
-        id: '0',
-        name: 'My Consent Name',
-        description: 'Consent description',
+        id: 'supporter',
+        name: 'Supporting the Guardian',
+        description:
+          'Stay up-to-date with our latest offers and the aims of the organisation, as well as the ways to enjoy and support our journalism.',
       },
     ]}
   />
 );
 WithoutOptout.story = {
   name: 'with consents',
-};
-
-export const MultipleConsents = () => (
-  <ConsentsCommunication
-    consents={[
-      {
-        id: '0',
-        name: 'My Consent Name',
-        description: 'Consent description',
-      },
-      {
-        id: '1',
-        name: 'My Other Consent Name',
-        description: 'Other consent description',
-      },
-    ]}
-  />
-);
-MultipleConsents.story = {
-  name: 'with multiple consents',
 };

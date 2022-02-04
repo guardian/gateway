@@ -27,7 +27,6 @@ interface ConsentsLayoutProps {
   children?: React.ReactNode;
   current?: string;
   title: string;
-  bgColor?: string;
   showContinueButton?: boolean;
 }
 
@@ -64,7 +63,6 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
   children,
   current,
   title,
-  bgColor,
   showContinueButton = true,
 }) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
@@ -76,14 +74,6 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
   } = clientState;
   const { page = '', previousPage, geolocation } = pageData;
 
-  const optionalBgColor =
-    bgColor &&
-    css`
-      &:before {
-        background-color: ${bgColor};
-        opacity: 0.4;
-      }
-    `;
   return (
     <>
       <ConsentsHeader
@@ -113,7 +103,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
           <CsrfFormField />
 
           <section css={sectionStyles}>
-            <div css={[ieFlexFix, optionalBgColor]}>{children}</div>
+            <div css={ieFlexFix}>{children}</div>
             <ConsentsBlueBackground>
               <div css={[gridItem(gridItemColumnConsents), controls]}>
                 <div css={navigationControls}>
