@@ -1,66 +1,64 @@
 import { BaseLogger } from '@/shared/lib/baseLogger';
 import { LogLevel } from '@/shared/model/Logger';
-// import * as Sentry from '@sentry/browser';
-// import { Extras } from '@sentry/types';
+import { Severity } from '@sentry/browser';
+import type { CaptureContext, Extras } from '@sentry/types';
 
-// const getSentryLevel = (level: LogLevel) => {
-//   switch (level) {
-//     case LogLevel.ERROR:
-//       return Sentry.Severity.Error;
-//     case LogLevel.INFO:
-//       return Sentry.Severity.Info;
-//     case LogLevel.WARN:
-//       return Sentry.Severity.Warning;
-//     default:
-//       return Sentry.Severity.Log;
-//   }
-// };
+const getSentryLevel = (level: LogLevel) => {
+  switch (level) {
+    case LogLevel.ERROR:
+      return Severity.Error;
+    case LogLevel.INFO:
+      return Severity.Info;
+    case LogLevel.WARN:
+      return Severity.Warning;
+    default:
+      return Severity.Log;
+  }
+};
 
 class ClientSideLogger extends BaseLogger {
   // eslint-disable-next-line
-  log(level: LogLevel, message: string, error?: any) {
-    // Wrap the log in a new Sentry transaction.
-    // Setting `sampled` to true ensures that it is logged every time.
-    // const transaction = Sentry.startTransaction({
-    //   name: 'logger-event',
-    //   sampled: true,
-    // });
-    // if (
-    //   level === LogLevel.ERROR &&
-    //   error &&
-    //   typeof error === 'object' &&
-    //   error.stack &&
-    //   typeof error.message === 'string'
-    // ) {
-    //   Sentry.captureException(error, { extra });
-    //   return transaction?.finish();
-    // }
-    // if (error) {
-    //   Sentry.captureMessage(`${message} - ${error}`, {
-    //     level: getSentryLevel(level),
-    //     extra,
-    //   });
-    //   return transaction?.finish();
-    // }
-    // console.log('capture');
-    // // should it be needed, `extra` is a free-form object that we can use to add additional debug info to Sentry logs.
-    // Sentry.captureMessage(message, { level: getSentryLevel(level), extra });
-    // return transaction?.finish();
+  log(level: LogLevel, message: string, error?: any, extra?: Extras) {
+    if (typeof window !== 'undefined' && window.guardian?.modules) {
+      const { reportError, reportMessage } = window.guardian?.modules?.sentry;
+
+      if (
+        level === LogLevel.ERROR &&
+        error &&
+        typeof error === 'object' &&
+        error.stack &&
+        typeof error.message === 'string'
+      ) {
+        reportError(error, undefined, { extra });
+      }
+
+      const captureContext: CaptureContext = {
+        level: getSentryLevel(level),
+        extra,
+      };
+
+      if (error) {
+        reportMessage(`${message} - ${error}`, undefined, captureContext);
+      }
+
+      // should it be needed, `extra` is a free-form object that we can use to add additional debug info to Sentry logs.
+      reportMessage(message, undefined, captureContext);
+    }
   }
 
   // eslint-disable-next-line
-  info(message: string, error?: any) {
-    return this.log(LogLevel.INFO, message, error);
+  info(message: string, error?: any, extra?: Extras) {
+    return this.log(LogLevel.INFO, message, error, extra);
   }
 
   // eslint-disable-next-line
-  warn(message: string, error?: any) {
-    return this.log(LogLevel.WARN, message, error);
+  warn(message: string, error?: any, extra?: Extras) {
+    return this.log(LogLevel.WARN, message, error, extra);
   }
 
   // eslint-disable-next-line
-  error(message: string, error?: any) {
-    return this.log(LogLevel.ERROR, message, error);
+  error(message: string, error?: any, extra?: Extras) {
+    return this.log(LogLevel.ERROR, message, error, extra);
   }
 }
 

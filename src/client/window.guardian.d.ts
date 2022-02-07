@@ -1,6 +1,7 @@
 /// <reference types="@emotion/react/types/css-prop" />
 
 import { RenderOptions } from '@/client/lib/hooks/useRecaptcha';
+import type { CaptureContext, Severity } from '@sentry/types';
 
 declare global {
   /*
@@ -16,7 +17,16 @@ declare global {
       };
       modules: {
         sentry: {
-          reportError: (error: Error, feature: string) => void;
+          reportError: (
+            error: Error,
+            feature?: string,
+            captureContext?: CaptureContext | undefined,
+          ) => void;
+          reportMessage: (
+            message: string,
+            feature?: string,
+            captureContext?: CaptureContext | undefined,
+          ) => void;
         };
       };
     };

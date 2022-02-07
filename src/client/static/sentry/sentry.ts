@@ -1,6 +1,7 @@
 import { RoutingConfig } from '@/client/routes';
 import * as Sentry from '@sentry/browser';
-// import { CaptureConsole } from '@sentry/integrations';
+import { CaptureConsole } from '@sentry/integrations';
+import type { CaptureContext } from '@sentry/types';
 
 // Only send errors matching these regexes
 const whitelistUrls = [
@@ -37,17 +38,15 @@ const {
   sentryConfig: { stage, build, dsn },
 } = clientState;
 
-console.log(dsn);
 Sentry.init({
   enabled: true,
-  // ignoreErrors,
-  // whitelistUrls,
+  ignoreErrors,
+  whitelistUrls,
   dsn,
   environment: stage,
-  // integrations: [],
-  // maxBreadcrumbs: 50,
+  integrations: [new CaptureConsole({ levels: ['error'] })],
+  maxBreadcrumbs: 50,
   release: `gateway@${build}`,
-  sampleRate: 0.2,
   // sampleRate: // We use Math.random in init.ts to sample errors
   /*beforeSend(event) {
     // Skip sending events in certain situations
@@ -59,11 +58,28 @@ Sentry.init({
   },*/
 });
 
-export const reportError = (error: Error, feature?: string): void => {
+export const reportError = (
+  error: Error,
+  feature?: string,
+  captureContext?: CaptureContext | undefined,
+): void => {
   Sentry.withScope(() => {
     if (feature) {
       Sentry.setTag('feature', feature);
     }
-    Sentry.captureException(error);
+    Sentry.captureException(error, captureContext);
+  });
+};
+
+export const reportMessage = (
+  message: string,
+  feature?: string,
+  captureContext?: CaptureContext | undefined,
+): void => {
+  Sentry.withScope(() => {
+    if (feature) {
+      Sentry.setTag('feature', feature);
+    }
+    Sentry.captureMessage(message, captureContext);
   });
 };

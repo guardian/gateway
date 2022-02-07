@@ -1,7 +1,5 @@
-// import '../webpackPublicPath';
-// import { startup } from '@root/src/web/browser/startup';
-
 import { isAdBlockInUse } from '@guardian/commercial-core';
+import { CaptureContext } from '@sentry/types';
 
 const init = async (): Promise<void> => {
   // Stub so that reportError exists before sentry has loaded.
@@ -9,6 +7,7 @@ const init = async (): Promise<void> => {
   window.guardian.modules = {
     sentry: {
       reportError: () => null,
+      reportMessage: () => null,
     },
   };
 
@@ -32,16 +31,24 @@ const init = async (): Promise<void> => {
 
   // The other 1% of the time (randomCentile === 100) we continue
   try {
-    // Downloading and initiliasing Sentry is asynchronous so we need a way
+    // Downloading and initialising Sentry is asynchronous so we need a way
     // to ensure injection only happens once and to capture any other errors that
     // might happen while this script is loading
     let injected = false;
-    const queue: Error[] = [];
+
+    interface SentryLogQueueEntry {
+      error?: Error;
+      message?: string;
+      feature?: string;
+      captureContext?: CaptureContext | undefined;
+    }
+
+    const sentryLogQueue: SentryLogQueueEntry[] = [];
 
     // Function that gets called when an error happens before Sentry is ready
-    const injectSentry = async (error?: Error) => {
+    const injectSentry = async (sentryLogQueueEntry?: SentryLogQueueEntry) => {
       // Remember this error for later
-      if (error) queue.push(error);
+      if (sentryLogQueueEntry) sentryLogQueue.push(sentryLogQueueEntry);
 
       // Only inject once
       if (injected) {
@@ -49,7 +56,7 @@ const init = async (): Promise<void> => {
       }
       injected = true;
 
-      // Make this call blocking. We are queing errors while we wait for this code to run
+      // Make this call blocking. We are queueing errors while we wait for this code to run
       // so we won't miss any and by waiting here we ensure we will never make calls we
       // expect to be blocked
       const adBlockInUse: boolean = await isAdBlockInUse();
@@ -59,7 +66,7 @@ const init = async (): Promise<void> => {
       }
 
       // Load sentry.ts
-      const { reportError } = await import(
+      const { reportError, reportMessage } = await import(
         /* webpackChunkName: "sentry" */ './sentry'
       );
 
@@ -68,27 +75,48 @@ const init = async (): Promise<void> => {
       // manually redefine our own custom error reporting function
       // eslint-disable-next-line functional/immutable-data
       window.guardian.modules.sentry.reportError = reportError;
+      // Allow access to the full Sentry context for custom logging.
+      // eslint-disable-next-line functional/immutable-data
+      window.guardian.modules.sentry.reportMessage = reportMessage;
 
       // Now that we have the real reportError function available,
-      // send any queued errors
-      while (queue.length) {
-        const queuedError = queue.shift();
-        if (queuedError) reportError(queuedError);
+      // send any queued errors or messages.
+      while (sentryLogQueue.length) {
+        const queuedLogEntry = sentryLogQueue.shift();
+        if (queuedLogEntry) {
+          const { error, captureContext, message, feature } = queuedLogEntry;
+          console.log(queuedLogEntry);
+          if (error) reportError(error, feature, captureContext);
+          if (message) reportMessage(message, feature, captureContext);
+        }
       }
     };
-
-    injectSentry();
 
     // This is how we lazy load Sentry. We setup custom functions and
     // listeners to inject Sentry when an error happens
     // eslint-disable-next-line functional/immutable-data
-    window.onerror = (message, url, line, column, error) => injectSentry(error);
+    window.onerror = (message, url, line, column, error) =>
+      injectSentry({ error });
     // eslint-disable-next-line functional/immutable-data
     window.onunhandledrejection = (event: undefined | { reason?: any }) =>
-      event && injectSentry(event.reason);
+      event && injectSentry({ error: event.reason });
     // eslint-disable-next-line functional/immutable-data
-    window.guardian.modules.sentry.reportError = (error) => {
-      injectSentry(error).catch((e) =>
+    window.guardian.modules.sentry.reportError = (
+      error,
+      feature,
+      captureContext,
+    ) => {
+      injectSentry({ error, feature, captureContext }).catch((e) =>
+        console.error(`injectSentry - error: ${e}`),
+      );
+    };
+    // eslint-disable-next-line functional/immutable-data
+    window.guardian.modules.sentry.reportMessage = (
+      message,
+      feature,
+      captureContext,
+    ) => {
+      injectSentry({ message, feature, captureContext }).catch((e) =>
         console.error(`injectSentry - error: ${e}`),
       );
     };

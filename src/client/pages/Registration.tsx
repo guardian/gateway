@@ -82,9 +82,11 @@ export const Registration = ({
   // We want to show a more detailed reCAPTCHA error if
   // the user has requested a check more than once.
   const recaptchaCheckFailed = error || expired;
-  if (recaptchaCheckFailed) {
-    logger.info('Recaptcha check failed');
-  }
+  useEffect(() => {
+    if (recaptchaCheckFailed) {
+      logger.info('Recaptcha check failed');
+    }
+  }, [expired, recaptchaCheckFailed]);
 
   const showErrorContext = recaptchaCheckFailed && requestCount > 1;
   const reCaptchaErrorMessage = showErrorContext
