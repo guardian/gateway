@@ -21,13 +21,13 @@ declare global {
             error: Error,
             feature?: string,
             captureContext?: CaptureContext | undefined,
-            forceSentry?: boolean,
+            alwaysSample?: boolean,
           ) => void;
           reportMessage: (
             message: string,
             feature?: string,
             captureContext?: CaptureContext | undefined,
-            forceSentry?: boolean,
+            alwaysSample?: boolean,
           ) => void;
         };
       };

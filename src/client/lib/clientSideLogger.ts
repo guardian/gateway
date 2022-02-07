@@ -18,7 +18,13 @@ const getSentryLevel = (level: LogLevel) => {
 
 class ClientSideLogger extends BaseLogger {
   // eslint-disable-next-line
-  log(level: LogLevel, message: string, error?: any, extra?: Extras) {
+  log(
+    level: LogLevel,
+    message: string,
+    error?: any,
+    extra?: Extras,
+    alwaysSample?: boolean,
+  ) {
     if (typeof window !== 'undefined' && window.guardian?.modules) {
       const { reportError, reportMessage } = window.guardian?.modules?.sentry;
 
@@ -29,7 +35,7 @@ class ClientSideLogger extends BaseLogger {
         error.stack &&
         typeof error.message === 'string'
       ) {
-        reportError(error, undefined, { extra });
+        reportError(error, undefined, { extra }, alwaysSample);
       }
 
       const captureContext: CaptureContext = {
@@ -38,27 +44,34 @@ class ClientSideLogger extends BaseLogger {
       };
 
       if (error) {
-        reportMessage(`${message} - ${error}`, undefined, captureContext);
+        reportMessage(
+          `${message} - ${error}`,
+          undefined,
+          captureContext,
+          alwaysSample,
+        );
       }
 
       // should it be needed, `extra` is a free-form object that we can use to add additional debug info to Sentry logs.
-      reportMessage(message, undefined, captureContext);
+      reportMessage(message, undefined, captureContext, alwaysSample);
     }
   }
 
+  // We default `alwaysSample` to true here because currently, for ever explicit of the client side logger we want to ensure we send the event to Gateway.
+
   // eslint-disable-next-line
-  info(message: string, error?: any, extra?: Extras) {
-    return this.log(LogLevel.INFO, message, error, extra);
+  info(message: string, error?: any, extra?: Extras, alwaysSample = true) {
+    return this.log(LogLevel.INFO, message, error, extra, alwaysSample);
   }
 
   // eslint-disable-next-line
-  warn(message: string, error?: any, extra?: Extras) {
-    return this.log(LogLevel.WARN, message, error, extra);
+  warn(message: string, error?: any, extra?: Extras, alwaysSample = true) {
+    return this.log(LogLevel.WARN, message, error, extra, alwaysSample);
   }
 
   // eslint-disable-next-line
-  error(message: string, error?: any, extra?: Extras) {
-    return this.log(LogLevel.ERROR, message, error, extra);
+  error(message: string, error?: any, extra?: Extras, alwaysSample = true) {
+    return this.log(LogLevel.ERROR, message, error, extra, alwaysSample);
   }
 }
 

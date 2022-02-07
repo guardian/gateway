@@ -1,8 +1,9 @@
+import '../webpackPublicPath';
 import { isAdBlockInUse } from '@guardian/commercial-core';
 import { CaptureContext } from '@sentry/types';
 
 const init = async (): Promise<void> => {
-  // Stub so that reportError exists before sentry has loaded.
+  // Stub so that report functions exist before sentry has loaded.
   // eslint-disable-next-line functional/immutable-data
   window.guardian.modules = {
     sentry: {
@@ -18,12 +19,6 @@ const init = async (): Promise<void> => {
   // Sentry 99% of the time. So instead we just do some basic math here
   // and use that to prevent the Sentry script from ever loading.
   // 80% of the time we don't want to remotely log errors with Sentry and so
-  // we just console them out unless the forceSample flag is set.
-  // eslint-disable-next-line functional/immutable-data
-  // window.guardian.modules.sentry.reportError = (error) => {
-  //   // eslint-disable-next-line no-console
-  //   console.error(error);
-  // };
 
   const randomCentile = Math.floor(Math.random() * 100) + 1; // A number between 1 - 100
   const sentryEnabled = !(randomCentile <= 80);
@@ -46,7 +41,7 @@ const init = async (): Promise<void> => {
 
     // Function that gets called when an error happens before Sentry is ready
     const injectSentry = async (sentryLogQueueEntry?: SentryLogQueueEntry) => {
-      // Remember this error for later
+      // Remember this Sentry log entry for later.
       if (sentryLogQueueEntry) sentryLogQueue.push(sentryLogQueueEntry);
 
       // Only inject once
@@ -90,28 +85,37 @@ const init = async (): Promise<void> => {
       }
     };
 
-    // This is how we lazy load Sentry. We setup custom functions and
-    // listeners to inject Sentry when an error happens
-    // eslint-disable-next-line functional/immutable-data
-    window.onerror = (message, url, line, column, error) => {
-      sentryEnabled && injectSentry({ error });
-    };
+    if (sentryEnabled) {
+      // This is how we lazy load Sentry. We setup custom functions and
+      // listeners to inject Sentry when an error happens
+      // eslint-disable-next-line functional/immutable-data
+      window.onerror = (message, url, line, column, error) => {
+        injectSentry({ error });
+      };
 
-    // eslint-disable-next-line functional/immutable-data
-    window.onunhandledrejection = (event: undefined | { reason?: any }) =>
-      sentryEnabled && event && injectSentry({ error: event.reason });
+      // eslint-disable-next-line functional/immutable-data
+      window.onunhandledrejection = (event: undefined | { reason?: any }) =>
+        event && injectSentry({ error: event.reason });
+    }
+
+    // We always register these handlers so that we can override `sentryEnabled` using
+    // the `alwaysSample` flag. If both are false, we just error or log to the
+    // console and bypass Sentry.
 
     // eslint-disable-next-line functional/immutable-data
     window.guardian.modules.sentry.reportError = (
       error,
       feature,
       captureContext,
-      forceSentry = false,
+      alwaysSample = false,
     ) => {
-      (sentryEnabled || forceSentry) &&
+      if (sentryEnabled || alwaysSample) {
         injectSentry({ error, feature, captureContext }).catch((e) =>
           console.error(`injectSentry - error: ${e}`),
         );
+      } else {
+        console.error(error);
+      }
     };
 
     // eslint-disable-next-line functional/immutable-data
@@ -119,12 +123,15 @@ const init = async (): Promise<void> => {
       message,
       feature,
       captureContext,
-      forceSentry,
+      alwaysSample = false,
     ) => {
-      (sentryEnabled || forceSentry) &&
+      if (sentryEnabled || alwaysSample) {
         injectSentry({ message, feature, captureContext }).catch((e) =>
           console.error(`injectSentry - error: ${e}`),
         );
+      } else {
+        console.info(message);
+      }
     };
   } catch {
     // We failed to setup Sentry :(
