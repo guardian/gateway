@@ -17,8 +17,8 @@ const init = async (): Promise<void> => {
   // happen but if we used sampleRate to do this we'd be needlessly downloading
   // Sentry 99% of the time. So instead we just do some basic math here
   // and use that to prevent the Sentry script from ever loading.
-  /*const randomCentile = Math.floor(Math.random() * 100) + 1; // A number between 1 - 100
-  if (randomCentile <= 99) {
+  const randomCentile = Math.floor(Math.random() * 100) + 1; // A number between 1 - 100
+  if (randomCentile <= 80) {
     // 99% of the time we don't want to remotely log errors with Sentry and so
     // we just console them out
     // eslint-disable-next-line functional/immutable-data
@@ -27,7 +27,7 @@ const init = async (): Promise<void> => {
       console.error(error);
     };
     return; // Don't initialise Sentry
-  }*/
+  }
 
   // The other 1% of the time (randomCentile === 100) we continue
   try {
@@ -85,7 +85,6 @@ const init = async (): Promise<void> => {
         const queuedLogEntry = sentryLogQueue.shift();
         if (queuedLogEntry) {
           const { error, captureContext, message, feature } = queuedLogEntry;
-          console.log(queuedLogEntry);
           if (error) reportError(error, feature, captureContext);
           if (message) reportMessage(message, feature, captureContext);
         }
