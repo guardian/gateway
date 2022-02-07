@@ -2233,6 +2233,11 @@
   resolved "https://registry.yarnpkg.com/@guardian/ab-react/-/ab-react-2.0.1.tgz#f018898de584c8e70a48e69ec9e499e08f512cc5"
   integrity sha512-iOKbIxoLwRMv2eHddxL5l9mNBy/B9QaOOJgA3VUdo/jH5cUVzbF6W8yYDGcZJTolIVhSu5GPR8fitsOoup6Vww==
 
+"@guardian/commercial-core@^0.39.0":
+  version "0.39.0"
+  resolved "https://registry.yarnpkg.com/@guardian/commercial-core/-/commercial-core-0.39.0.tgz#314af346a02599d75219492dac89a89be169cc93"
+  integrity sha512-3OGfM9K3KQR1PMOJoPM6EL1tuy6s4YRoIfnFTvM4NY+Z5Yc11uDZXqthzXBmRjlnf8EHVMZo2a2ffDlZnrguTA==
+
 "@guardian/consent-management-platform@^10.1.1":
   version "10.1.1"
   resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-10.1.1.tgz#c49ccdde26582b571accd925f576fb178c619004"
@@ -2714,6 +2719,16 @@
   dependencies:
     "@sentry/types" "6.17.4"
     "@sentry/utils" "6.17.4"
+    tslib "^1.9.3"
+
+"@sentry/integrations@^6.17.4":
+  version "6.17.4"
+  resolved "https://registry.yarnpkg.com/@sentry/integrations/-/integrations-6.17.4.tgz#a894526ce25020aea1dc9b2f2a4aa584c7de9b3a"
+  integrity sha512-NmFbv9w4AK1d4NYi0beTuJgn6t81bdiGZmkNZ9VKVI0mBfoZfwxIo7fGNrla3HMkeTwLHntXuzUu4v+w1EARqA==
+  dependencies:
+    "@sentry/types" "6.17.4"
+    "@sentry/utils" "6.17.4"
+    localforage "^1.8.1"
     tslib "^1.9.3"
 
 "@sentry/minimal@6.17.4":
@@ -10345,6 +10360,11 @@ imagemin@^7.0.1:
     p-pipe "^3.0.0"
     replace-ext "^1.0.0"
 
+immediate@~3.0.5:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/immediate/-/immediate-3.0.6.tgz#9db1dbd0faf8de6fbe0f5dd5e56bb606280de69b"
+  integrity sha1-nbHb0Pr43m++D13V5Wu2BigN5ps=
+
 import-fresh@^3.0.0, import-fresh@^3.1.0, import-fresh@^3.2.1:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/import-fresh/-/import-fresh-3.3.0.tgz#37162c25fcb9ebaa2e6e53d5b4d88ce17d9e0c2b"
@@ -11987,6 +12007,13 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
+lie@3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/lie/-/lie-3.1.1.tgz#9a436b2cc7746ca59de7a41fa469b3efb76bd87e"
+  integrity sha1-mkNrLMd0bKWd56QfpGmz77dr2H4=
+  dependencies:
+    immediate "~3.0.5"
+
 lines-and-columns@^1.1.6:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.2.4.tgz#eca284f75d2965079309dc0ad9255abb2ebc1632"
@@ -12053,6 +12080,13 @@ loader-utils@^2.0.0:
     big.js "^5.2.2"
     emojis-list "^3.0.0"
     json5 "^2.1.2"
+
+localforage@^1.8.1:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/localforage/-/localforage-1.10.0.tgz#5c465dc5f62b2807c3a84c0c6a1b1b3212781dd4"
+  integrity sha512-14/H1aX7hzBBmmh7sGPd+AOMkkIrHM3Z1PAyGgZigA1H1p5O5ANnMyWzvpAETtG68/dC4pC0ncy3+PPGzXZHPg==
+  dependencies:
+    lie "3.1.1"
 
 locate-path@^2.0.0:
   version "2.0.0"

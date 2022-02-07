@@ -116,17 +116,17 @@ const server = () => ({
   },
   optimization: {
     minimize: false,
-    runtimeChunk: false
+    runtimeChunk: false,
   },
   target: 'node'
 });
 
 const browser = ({ isLegacy }) => {
 
-  const entry = ['./src/client/static/index.tsx']
+  const entry = {main:'./src/client/static/index.tsx', sentryLoader: './src/client/static/sentry/init.ts'}
   const target = ['web']
   if (isLegacy) {
-    entry.unshift('whatwg-fetch')
+    entry['whatwg'] = 'whatwg-fetch';
     target.push('es5')
   }
   
@@ -217,9 +217,9 @@ const browser = ({ isLegacy }) => {
       splitChunks: {
         cacheGroups: {
           commons: {
-            test: /[\\/]node_modules[\\/]/,
+            test: /[\\/]node_modules[\\/]((?!(@sentry)).*)[\\/]/,
             name: 'vendors',
-            chunks: 'all',
+            chunks: 'all'
           },
         },
       },

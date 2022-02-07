@@ -7,12 +7,6 @@ import { RoutingConfig } from '@/client/routes';
 import { App } from '@/client/app';
 import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
-import * as Sentry from '@sentry/browser';
-import { Integrations } from '@sentry/tracing';
-import {
-  getConsentFor,
-  onConsentChange,
-} from '@guardian/consent-management-platform';
 
 export const hydrateApp = () => {
   const routingConfig: RoutingConfig = JSON.parse(
@@ -21,33 +15,8 @@ export const hydrateApp = () => {
 
   const clientState = routingConfig.clientState;
 
-  const {
-    abTesting: { mvtId = 0, forcedTestVariants = {} } = {},
-    sentryConfig: { stage, build, dsn },
-  } = clientState;
-
-  const initSentryWhenConsented = () => {
-    onConsentChange((consentState) => {
-      const sentryConsentGranted = getConsentFor('sentry', consentState);
-      if (sentryConsentGranted && dsn) {
-        Sentry.init({
-          dsn,
-          integrations: [new Integrations.BrowserTracing()],
-          environment: stage,
-          release: `gateway@${build}`,
-          // If you want to log something all the time, wrap your call to
-          // Sentry in a new Transaction and set `sampled` to true.
-          // An example of this is in clientSideLogger.ts
-          sampleRate: 0.2,
-        });
-      } else {
-        // Close the sentry client if consent changes to disallow logging.
-        Sentry.close();
-      }
-    });
-  };
-
-  initSentryWhenConsented();
+  const { abTesting: { mvtId = 0, forcedTestVariants = {} } = {} } =
+    clientState;
 
   hydrate(
     <ABProvider

@@ -12,12 +12,16 @@ interface AssetsFile {
   vendors: {
     js: string;
   };
+  sentryLoader: {
+    js: string;
+  };
 }
 
 interface Assets {
   runtime: string;
   main: string;
   vendors: string;
+  sentryLoader: string;
 }
 
 export const getAssets = (isLegacy = false): Assets => {
@@ -35,6 +39,7 @@ export const getAssets = (isLegacy = false): Assets => {
     const main = parsedAssetsFile.main?.js;
     const vendors = parsedAssetsFile.vendors?.js;
     const runtime = parsedAssetsFile.runtime?.js;
+    const sentryLoader = parsedAssetsFile.sentryLoader?.js;
 
     if (!main || !vendors || !runtime) {
       throw new Error('Missing field from assets file');
@@ -44,6 +49,7 @@ export const getAssets = (isLegacy = false): Assets => {
       main,
       vendors,
       runtime,
+      sentryLoader,
     };
   } catch (e) {
     logger.error('Error retrieving assets', e);

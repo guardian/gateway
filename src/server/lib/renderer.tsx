@@ -47,16 +47,20 @@ const getScriptTags = (isSafari10Or11: boolean): string => {
       <script src="/${legacyAssets.runtime}" defer></script>
       <script src="/${legacyAssets.vendors}" defer></script>
       <script src="/${legacyAssets.main}" defer></script>
+      <script src="/${legacyAssets.sentryLoader}" defer></script>
     `;
   }
   return `
     <script type="module" src="/${assets.runtime}" defer></script>
     <script type="module" src="/${assets.vendors}" defer></script>
     <script type="module" src="/${assets.main}" defer></script>
+    <script type="module" src="/${assets.sentryLoader}" defer></script>
+    
 
     <script nomodule src="/${legacyAssets.runtime}" defer></script>
     <script nomodule src="/${legacyAssets.vendors}" defer></script>
     <script nomodule src="/${legacyAssets.main}" defer></script>
+    <script nomodule src="/${legacyAssets.sentryLoader}" defer></script>
   `;
 };
 
@@ -171,6 +175,7 @@ export const renderer: <P extends RoutePaths>(
           routingConfig,
           { isJSON: true },
         )}</script>
+
         <style>${resets.defaults}</style>
       </head>
       <body style="margin:0">

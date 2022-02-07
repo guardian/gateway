@@ -160,6 +160,8 @@ export const SignIn = ({
     logger.info('Recaptcha check failed');
   }
 
+  logger.info('Recaptcha check failed');
+
   const showErrorContext = recaptchaCheckFailed && requestCount > 1;
   const reCaptchaErrorMessage = showErrorContext
     ? CaptchaErrors.RETRY

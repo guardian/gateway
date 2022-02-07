@@ -14,6 +14,11 @@ declare global {
         viewId: string;
         pageViewId: string;
       };
+      modules: {
+        sentry: {
+          reportError: (error: Error, feature: string) => void;
+        };
+      };
     };
     Cypress: unknown;
     ga: unknown;
