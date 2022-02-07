@@ -28,7 +28,8 @@ type ConditionalMetrics =
   | 'OktaRegistrationResendEmail'
   | 'OktaSetPasswordOnWelcomePage'
   | 'OktaWelcomeResendEmail'
-  | 'OktaValidatePasswordToken';
+  | 'OktaValidatePasswordToken'
+  | 'OktaUpdatePassword';
 
 // Unconditional metrics that we want to track directly
 type UnconditionalMetrics =

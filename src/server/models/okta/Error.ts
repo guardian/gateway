@@ -10,78 +10,45 @@ export interface ErrorCause {
   errorSummary: string;
 }
 
-export type ErrorCode = 'E0000001' | 'E0000007' | 'E0000016' | 'E0000038';
+export type ErrorCode =
+  | 'E0000001'
+  | 'E0000007'
+  | 'E0000016'
+  | 'E0000038'
+  | 'E0000080';
+
+export type ErrorName =
+  | 'ApiValidationError'
+  | 'ResourceNotFoundError'
+  | 'ActivateUserFailedError'
+  | 'UserOperationForbiddenError'
+  | 'PasswordPolicyViolationError'
+  | 'OktaError';
+
+export const ErrorName = new Map<ErrorCode, ErrorName>([
+  ['E0000001', 'ApiValidationError'],
+  ['E0000007', 'ResourceNotFoundError'],
+  ['E0000016', 'ActivateUserFailedError'],
+  ['E0000038', 'UserOperationForbiddenError'],
+  ['E0000080', 'PasswordPolicyViolationError'],
+]);
 
 export class OktaError extends Error {
-  name: string;
+  name: ErrorName;
+  causes: Array<ErrorCause>;
+  status?: number;
   code?: ErrorCode;
-  constructor(message?: string, name = 'OktaError', code?: ErrorCode) {
-    super(message);
-    this.name = name;
-    this.code = code;
-  }
-}
-
-export class ApiValidationError extends OktaError {
-  constructor(
-    message?: string,
-    name = 'ApiValidationError',
-    code: ErrorCode = 'E0000001',
-  ) {
-    super(message, name, code);
-  }
-}
-
-export class ResourceAlreadyExistsError extends ApiValidationError {
-  constructor(message?: string, name = 'ResourceAlreadyExistsError') {
-    super(message, name);
-  }
-}
-
-export class InvalidEmailFormatError extends ApiValidationError {
-  constructor(message?: string, name = 'InvalidEmailFormatError') {
-    super(message, name);
-  }
-}
-
-export class MissingRequiredFieldError extends ApiValidationError {
-  constructor(message?: string, name = 'MissingRequiredFieldError') {
-    super(message, name);
-  }
-}
-
-export class ResourceNotFoundError extends OktaError {
-  constructor(
-    message?: string,
-    name = 'ResourceNotFoundError',
-    code: ErrorCode = 'E0000007',
-  ) {
-    super(message, name, code);
-  }
-}
-
-export class ActivateUserFailedError extends OktaError {
-  constructor(
-    message?: string,
-    name = 'ActivateUserFailedError',
-    code: ErrorCode = 'E0000016',
-  ) {
-    super(message, name, code);
-  }
-}
-
-export class OperationForbiddenError extends OktaError {
-  constructor(
-    message?: string,
-    name = 'OperationForbiddenError',
-    code: ErrorCode = 'E0000038',
-  ) {
-    super(message, name, code);
-  }
-}
-
-export class OktaAPIResponseParsingError extends OktaError {
-  constructor(message?: string) {
-    super(message);
+  constructor(error: {
+    message?: string;
+    status?: number;
+    code?: ErrorCode;
+    causes?: Array<ErrorCause>;
+  }) {
+    super(error.message);
+    this.name =
+      (error.code ? ErrorName.get(error.code) : 'OktaError') ?? 'OktaError';
+    this.causes = error.causes ?? [];
+    this.status = error.status;
+    this.code = error.code;
   }
 }

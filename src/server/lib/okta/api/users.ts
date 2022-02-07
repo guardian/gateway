@@ -13,9 +13,9 @@ import {
   authorizationHeader,
   defaultHeaders,
 } from '@/server/lib/okta/api/headers';
-import { OktaAPIResponseParsingError } from '@/server/models/okta/Error';
 import { Profile, User } from '@/server/models/okta/User';
 import { handleVoidResponse } from './responses';
+import { OktaError } from '@/server/models/okta/Error';
 
 /**
  * Okta's Users API endpoints, see - https://developer.okta.com/docs/reference/api/users/
@@ -108,6 +108,6 @@ const extractUser = async (response: Response): Promise<User> => {
       };
     });
   } catch (error) {
-    throw new OktaAPIResponseParsingError(`${error}`);
+    throw new OktaError({ message: 'Could not parse user response' });
   }
 };

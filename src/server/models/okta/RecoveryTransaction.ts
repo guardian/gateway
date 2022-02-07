@@ -5,7 +5,8 @@
  */
 
 export interface RecoveryTransaction {
-  stateToken: string;
+  stateToken?: string;
+  sessionToken?: string;
   expiresAt: string;
   _embedded: {
     user: {

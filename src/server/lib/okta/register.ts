@@ -5,16 +5,18 @@ import {
   activateUser,
   reactivateUser,
 } from '@/server/lib/okta/api/users';
-import {
-  OktaError,
-  ResourceAlreadyExistsError,
-} from '@/server/models/okta/Error';
+import { OktaError } from '@/server/models/okta/Error';
+import { causesInclude } from '@/server/lib/okta/api/errors';
 
 export const register = async (email: string): Promise<User> => {
   try {
     return await createUser(email);
   } catch (error) {
-    if (error instanceof ResourceAlreadyExistsError) {
+    const oktaError = error as OktaError;
+    if (
+      oktaError.name === 'ApiValidationError' &&
+      causesInclude(oktaError.causes, 'already exists')
+    ) {
       const user = await fetchUser({ id: email });
       const { status } = user;
       switch (status) {
@@ -28,14 +30,14 @@ export const register = async (email: string): Promise<User> => {
         }
         case Status.ACTIVE || Status.RECOVERY || Status.PASSWORD_EXPIRED: {
           // TODO: implement reset password email; this throws an error for now so registration fails
-          throw new OktaError(
-            `Okta registration failed with unaccepted Okta user status: ${user.status}`,
-          );
+          throw new OktaError({
+            message: `Okta registration failed with unaccepted Okta user status: ${user.status}`,
+          });
         }
         default:
-          throw new OktaError(
-            `Okta registration failed with unaccepted Okta user status: ${user.status}`,
-          );
+          throw new OktaError({
+            message: `Okta registration failed with unaccepted Okta user status: ${user.status}`,
+          });
       }
     } else {
       throw error;
@@ -57,8 +59,8 @@ export const resendRegistrationEmail = async (email: string) => {
     }
     // TODO: implement reset password email & emails for other user STATUSES
     default:
-      throw new OktaError(
-        `Okta registration resend email failed with Okta user status: ${status}`,
-      );
+      throw new OktaError({
+        message: `Okta registration resend email failed with Okta user status: ${status}`,
+      });
   }
 };

@@ -1,7 +1,7 @@
 import { Response } from 'node-fetch';
 import { handleErrorResponse } from '@/server/lib/okta/api/errors';
 import { RecoveryTransaction } from '@/server/models/okta/RecoveryTransaction';
-import { OktaAPIResponseParsingError } from '@/server/models/okta/Error';
+import { OktaError } from '@/server/models/okta/Error';
 
 export const handleVoidResponse = async (response: Response): Promise<void> => {
   if (response.ok) {
@@ -21,6 +21,7 @@ export const handleRecoveryTransactionResponse = async (
         const user = response._embedded.user;
         return {
           stateToken: response.stateToken,
+          sessionToken: response.sessionToken,
           expiresAt: response.expiresAt,
           _embedded: {
             user: {
@@ -33,7 +34,9 @@ export const handleRecoveryTransactionResponse = async (
         };
       });
     } catch (error) {
-      throw new OktaAPIResponseParsingError(JSON.stringify(error));
+      throw new OktaError({
+        message: 'Could not parse recovery transaction response',
+      });
     }
   } else {
     return await handleErrorResponse(response);

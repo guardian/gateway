@@ -7,14 +7,7 @@ import {
   fetchUser,
   reactivateUser,
 } from '@/server/lib/okta/api/users';
-import {
-  ActivateUserFailedError,
-  InvalidEmailFormatError,
-  MissingRequiredFieldError,
-  OperationForbiddenError,
-  ResourceAlreadyExistsError,
-  ResourceNotFoundError,
-} from '@/server/models/okta/Error';
+import { OktaError } from '@/server/models/okta/Error';
 
 const userId = '12345';
 const email = 'test@test.com';
@@ -66,7 +59,7 @@ describe('okta#createUser', () => {
     expect(response).toEqual(user);
   });
 
-  test('should throw ResourceAlreadyExists error if user already exists', async () => {
+  test('should throw an error if user already exists', async () => {
     const userAlreadyExists = {
       errorCode: 'E0000001',
       errorSummary: 'Api validation failed: login',
@@ -85,26 +78,26 @@ describe('okta#createUser', () => {
       Promise.resolve({ ok: false, status: 400, json } as Response),
     );
 
-    await expect(createUser(userId)).rejects.toThrow(
-      ResourceAlreadyExistsError,
+    await expect(createUser(userId)).rejects.toThrowError(
+      new OktaError({ message: 'Api validation failed: login' }),
     );
   });
 
-  test('should throw InvalidEmailFormat error if email address is invalid', async () => {
+  test('should throw an error if email address is invalid', async () => {
+    const causes = [
+      {
+        errorSummary: 'login: Username must be in the form of an email address',
+      },
+      {
+        errorSummary: 'email: Does not match required pattern',
+      },
+    ];
     const emailAddressInvalid = {
       errorCode: 'E0000001',
       errorSummary: 'Api validation failed: login',
       errorLink: 'E0000001',
       errorId: '123456',
-      errorCauses: [
-        {
-          errorSummary:
-            'login: Username must be in the form of an email address',
-        },
-        {
-          errorSummary: 'email: Does not match required pattern',
-        },
-      ],
+      errorCauses: causes,
     };
 
     json.mockResolvedValueOnce(emailAddressInvalid);
@@ -112,10 +105,12 @@ describe('okta#createUser', () => {
       Promise.resolve({ ok: false, status: 400, json } as Response),
     );
 
-    await expect(createUser(userId)).rejects.toThrow(InvalidEmailFormatError);
+    await expect(createUser(userId)).rejects.toThrowError(
+      new OktaError({ message: 'Api validation failed: login', causes }),
+    );
   });
 
-  test('should throw MissingRequiredFieldError error if required field is missing', async () => {
+  test('should throw an error if required field is missing', async () => {
     const emailAddressMissing = {
       errorCode: 'E0000001',
       errorSummary: 'Api validation failed: login',
@@ -133,7 +128,9 @@ describe('okta#createUser', () => {
       Promise.resolve({ ok: false, status: 400, json } as Response),
     );
 
-    await expect(createUser(userId)).rejects.toThrow(MissingRequiredFieldError);
+    await expect(createUser(userId)).rejects.toThrowError(
+      new OktaError({ message: 'Api validation failed: login' }),
+    );
   });
 });
 
@@ -158,7 +155,7 @@ describe('okta#fetchUser', () => {
     expect(response).toEqual(user);
   });
 
-  test('should throw ResourceNotFound error if user is not found', async () => {
+  test('should throw an error if user is not found', async () => {
     const userNotFound = {
       errorCode: 'E0000007',
       errorSummary: 'Not found: Resource not found: 12345 (User)',
@@ -171,7 +168,9 @@ describe('okta#fetchUser', () => {
       Promise.resolve({ ok: false, status: 404, json } as Response),
     );
 
-    await expect(fetchUser(userId)).rejects.toThrow(ResourceNotFoundError);
+    await expect(fetchUser(userId)).rejects.toThrowError(
+      new OktaError({ message: 'Not found: Resource not found: 12345 (User)' }),
+    );
   });
 });
 
@@ -188,7 +187,7 @@ describe('okta#activateUser', () => {
     await expect(activateUser(userId)).resolves.toEqual(undefined);
   });
 
-  test('should throw a ActivateUserFailed error when a user is already activated', async () => {
+  test('should throw an error when a user is already activated', async () => {
     const errorResponse = {
       errorCode: 'E0000016',
       errorSummary: 'Activation failed because the user is already active',
@@ -202,7 +201,11 @@ describe('okta#activateUser', () => {
       Promise.resolve({ ok: false, status: 403, json } as Response),
     );
 
-    await expect(activateUser(userId)).rejects.toThrow(ActivateUserFailedError);
+    await expect(activateUser(userId)).rejects.toThrowError(
+      new OktaError({
+        message: 'Activation failed because the user is already active',
+      }),
+    );
   });
 });
 
@@ -219,7 +222,7 @@ describe('okta#reactivateUser', () => {
     await expect(reactivateUser(userId)).resolves.toEqual(undefined);
   });
 
-  test('throw a OperationNotAllowed error when a user cannot be reactivated', async () => {
+  test('throw an error when a user cannot be reactivated', async () => {
     const errorResponse = {
       errorCode: 'E0000038',
       errorSummary:
@@ -235,7 +238,9 @@ describe('okta#reactivateUser', () => {
     );
 
     await expect(reactivateUser(userId)).rejects.toThrow(
-      OperationForbiddenError,
+      new OktaError({
+        message: "This operation is not allowed in the user's current status.",
+      }),
     );
   });
 });

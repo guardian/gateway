@@ -28,7 +28,8 @@ import { EmailType } from '@/shared/model/EmailType';
 import { GenericErrors, RegistrationErrors } from '@/shared/model/Errors';
 import deepmerge from 'deepmerge';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { InvalidEmailFormatError, OktaError } from '@/server/models/okta/Error';
+import { OktaError } from '@/server/models/okta/Error';
+import { causesInclude } from '@/server/lib/okta/api/errors';
 
 const { okta } = getConfiguration();
 
@@ -296,9 +297,13 @@ const OktaRegistration = async (
     );
   } catch (error) {
     logger.error('Okta Registration failure', error);
+    const { causes } =
+      error instanceof OktaError
+        ? error
+        : new OktaError({ message: 'Unknown Okta error' });
 
     const errorMessage = () => {
-      if (error instanceof InvalidEmailFormatError) {
+      if (causesInclude(causes, 'email: Does not match required pattern')) {
         return RegistrationErrors.EMAIL_INVALID;
       } else {
         return RegistrationErrors.GENERIC;
@@ -340,9 +345,9 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
         }),
       );
     } else
-      throw new OktaError(
-        'Could not resend registration email as email was undefined',
-      );
+      throw new OktaError({
+        message: 'Could not resend registration email as email was undefined',
+      });
   } catch (error) {
     logger.error('Okta Registration resend email failure', error);
 

@@ -7,10 +7,7 @@ import {
   reactivateUser,
 } from '@/server/lib/okta/api/users';
 import { User, Status } from '@/server/models/okta/User';
-import {
-  OktaError,
-  ResourceAlreadyExistsError,
-} from '@/server/models/okta/Error';
+import { ErrorCause, ErrorCode, OktaError } from '@/server/models/okta/Error';
 
 // mocked configuration
 jest.mock('@/server/lib/getConfiguration', () => ({
@@ -51,6 +48,16 @@ const User = (status: Status) => {
     },
   } as User;
 };
+const userExistsError = {
+  message: 'Api validation failed: login',
+  code: 'E0000001' as ErrorCode,
+  causes: [
+    {
+      errorSummary:
+        'login: An object with this field already exists in the current organization',
+    } as ErrorCause,
+  ],
+};
 
 describe('okta#register', () => {
   beforeEach(() => {
@@ -68,9 +75,7 @@ describe('okta#register', () => {
   test('should activate a STAGED user', async () => {
     const user = User(Status.STAGED);
 
-    mockedCreateOktaUser.mockRejectedValueOnce(
-      new ResourceAlreadyExistsError(),
-    );
+    mockedCreateOktaUser.mockRejectedValueOnce(new OktaError(userExistsError));
     mockedFetchOktaUser.mockReturnValueOnce(Promise.resolve(user));
     mockedActivateOktaUser.mockReturnValueOnce(Promise.resolve());
 
@@ -80,9 +85,7 @@ describe('okta#register', () => {
   test('should reactivate a PROVISIONED user', async () => {
     const user = User(Status.PROVISIONED);
 
-    mockedCreateOktaUser.mockRejectedValueOnce(
-      new ResourceAlreadyExistsError(),
-    );
+    mockedCreateOktaUser.mockRejectedValueOnce(new OktaError(userExistsError));
     mockedFetchOktaUser.mockReturnValueOnce(Promise.resolve(user));
     mockedReactivateOktaUser.mockReturnValueOnce(Promise.resolve());
 
@@ -92,9 +95,7 @@ describe('okta#register', () => {
   test('should error for any other user status', async () => {
     const user = User(Status.ACTIVE);
 
-    mockedCreateOktaUser.mockRejectedValueOnce(
-      new ResourceAlreadyExistsError(),
-    );
+    mockedCreateOktaUser.mockRejectedValueOnce(new OktaError(userExistsError));
     mockedFetchOktaUser.mockReturnValueOnce(Promise.resolve(user));
 
     await expect(register(email)).rejects.toThrow(OktaError);
