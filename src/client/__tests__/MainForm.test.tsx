@@ -3,7 +3,7 @@
  */
 /** @jsx jsx */
 
-import { jsx } from '@emotion/core';
+import { jsx } from '@emotion/react';
 import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MainForm, MainFormProps } from '../components/MainForm';
