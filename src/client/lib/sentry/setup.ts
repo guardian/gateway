@@ -1,7 +1,7 @@
 import '../../static/webpackPublicPath';
 import { isAdBlockInUse } from '@guardian/commercial-core';
-import { CaptureContext } from '@sentry/types';
-import { BrowserOptions } from '@sentry/browser';
+import type { CaptureContext } from '@sentry/types';
+import type { BrowserOptions } from '@sentry/browser';
 
 export const setupSentry = async (
   sentryConfiguration?: BrowserOptions,

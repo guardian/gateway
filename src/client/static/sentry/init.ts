@@ -1,5 +1,6 @@
 import { setupSentry } from '@/client/lib/sentry/setup';
 import { RoutingConfig } from '@/client/routes';
+import { CaptureConsole } from '@sentry/integrations';
 
 // Define Gateway Sentry configuration object and bootstrap Sentry so it loads
 // on the page if the user is opted in.
@@ -46,4 +47,5 @@ setupSentry({
   release: `gateway@${build}`,
   allowUrls,
   ignoreErrors,
+  integrations: [new CaptureConsole({ levels: ['error'] })],
 });
