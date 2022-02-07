@@ -4,6 +4,9 @@ const babelConfig = require('../babel.config');
 module.exports = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
   addons: ['@storybook/addon-links', '@storybook/addon-essentials'],
+  core: {
+    builder: 'webpack5',
+  },
   webpackFinal: async (config) => {
     // Add the @client alias to prevent imports using it from failing
     // Nb. __dirname is the current working directory, so .storybook in this case
@@ -56,6 +59,7 @@ module.exports = {
         ...config.module,
         rules: [...config.module.rules, transpileModules],
       },
+      target: ['web', 'es5'],
     };
   },
 };

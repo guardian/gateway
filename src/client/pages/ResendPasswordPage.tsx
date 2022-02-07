@@ -19,11 +19,13 @@ export const ResendPasswordPage = () => {
     if (typeof window !== 'undefined') {
       const suppliedToken = window.location.pathname.split('/').pop();
       // logging to debug scenarios where users are seeing an invalid token page with a supposedly valid token.
-      logger.info(
-        suppliedToken === 'resend'
-          ? 'Reset password: link expired page shown'
-          : `Reset password: link expired page shown with token: ${suppliedToken}`,
-      );
+      if (suppliedToken === 'resend') {
+        logger.info('Reset password: link expired page shown');
+      } else {
+        logger.info('Reset password: link expired page shown', undefined, {
+          suppliedToken,
+        });
+      }
     }
   }, []);
 
