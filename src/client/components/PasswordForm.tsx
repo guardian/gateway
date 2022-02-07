@@ -23,7 +23,10 @@ import {
   PasswordInput,
 } from '@/client/components/PasswordInput';
 import { FieldError } from '@/shared/model/ClientState';
-import { ChangePasswordErrors } from '@/shared/model/Errors';
+import {
+  PasswordFieldErrors,
+  ShortPasswordFieldErrors,
+} from '@/shared/model/Errors';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import { AutoRow, passwordFormSpanDef } from '@/client/styles/Grid';
 import { MainForm } from '@/client/components/MainForm';
@@ -89,7 +92,7 @@ const TooLong = ({ noMargin = false }) => {
       <div css={[baseIconStyles, failureIconStyles]}>
         <SvgCross />
       </div>
-      <div css={baseMessageStyles}>{ChangePasswordErrors.MAXIMUM_72_SHORT}</div>
+      <div css={baseMessageStyles}>{ShortPasswordFieldErrors.MAXIMUM_72}</div>
     </div>
   );
 };
@@ -100,7 +103,7 @@ const TooShort = ({ noMargin = false }) => {
       <div css={[baseIconStyles, failureIconStyles]}>
         <SvgCross />
       </div>
-      <div css={baseMessageStyles}>{ChangePasswordErrors.AT_LEAST_8_SHORT}</div>
+      <div css={baseMessageStyles}>{ShortPasswordFieldErrors.AT_LEAST_8}</div>
     </div>
   );
 };
@@ -167,7 +170,7 @@ const Weak = ({ noMargin = false }) => {
         <SvgAlertTriangle />
       </div>
       <span css={redText}>Weak password:</span>{' '}
-      {ChangePasswordErrors.COMMON_PASSWORD_SHORT}
+      {ShortPasswordFieldErrors.COMMON_PASSWORD}
     </div>
   );
 };
@@ -285,13 +288,13 @@ export const PasswordForm = ({
           trackFormSubmit(formTrackingName);
         }
         if (isTooShort) {
-          setError(ChangePasswordErrors.AT_LEAST_8);
+          setError(PasswordFieldErrors.AT_LEAST_8);
           e.preventDefault();
         } else if (isTooLong) {
-          setError(ChangePasswordErrors.MAXIMUM_72);
+          setError(PasswordFieldErrors.MAXIMUM_72);
           e.preventDefault();
         } else if (isWeak) {
-          setError(ChangePasswordErrors.COMMON_PASSWORD);
+          setError(PasswordFieldErrors.COMMON_PASSWORD);
           e.preventDefault();
         }
       }}
@@ -390,13 +393,13 @@ export const PasswordFormMainLayout = ({
       submitButtonText={submitButtonText}
       onSubmitOverride={(e) => {
         if (isTooShort) {
-          setError(ChangePasswordErrors.AT_LEAST_8);
+          setError(PasswordFieldErrors.AT_LEAST_8);
           e.preventDefault();
         } else if (isTooLong) {
-          setError(ChangePasswordErrors.MAXIMUM_72);
+          setError(PasswordFieldErrors.MAXIMUM_72);
           e.preventDefault();
         } else if (isWeak) {
-          setError(ChangePasswordErrors.COMMON_PASSWORD);
+          setError(PasswordFieldErrors.COMMON_PASSWORD);
           e.preventDefault();
         }
       }}

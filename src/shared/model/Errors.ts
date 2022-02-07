@@ -36,22 +36,23 @@ export enum RegistrationErrors {
   EMAIL_INVALID = 'Please enter a valid email address.',
 }
 
+// shown at the top of the change password page when something goes wrong
 export enum ChangePasswordErrors {
   GENERIC = 'There was a problem changing your password, please try again.',
-  INVALID_TOKEN = 'The token that was supplied has expired, please try again.',
-  PASSWORD_BLANK = 'Password field must not be blank',
-  PASSWORD_NO_MATCH = 'The passwords do not match, please try again',
-  PASSWORD_LENGTH = 'Password must be between 8 and 72 characters',
+}
 
+// shown above the password input field when a password is submitted that does not meet our complexity requirements
+export enum PasswordFieldErrors {
   AT_LEAST_8 = 'Please make sure your password is at least 8 characters long.',
   MAXIMUM_72 = 'Please make sure your password is not longer than 72 characters.',
   COMMON_PASSWORD = 'Please use a password that is hard to guess.',
-  PASSWORDS_NOT_MATCH = 'Passwords don’t match',
-  PASSWORDS_MATCH = 'Passwords match',
+}
 
-  AT_LEAST_8_SHORT = 'At least 8 characters',
-  MAXIMUM_72_SHORT = 'Maximum of 72 characters',
-  COMMON_PASSWORD_SHORT = 'Please use a password that is hard to guess.',
+// shown below the password input field as the user types a password (before they click the submit button)
+export enum ShortPasswordFieldErrors {
+  AT_LEAST_8 = 'At least 8 characters',
+  MAXIMUM_72 = 'Maximum of 72 characters',
+  COMMON_PASSWORD = 'Please use a password that is hard to guess.',
 }
 
 export enum VerifyEmailErrors {
