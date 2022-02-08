@@ -25,18 +25,6 @@ const communicationCardContainer = css`
   }
 `;
 
-const communicationCardSpanDef = {
-  ...gridItemColumnConsents,
-  DESKTOP: {
-    start: 2,
-    span: 9,
-  },
-  WIDE: {
-    start: 3,
-    span: 9,
-  },
-};
-
 const p = css`
   margin-bottom: ${space[6]}px;
 `;
@@ -56,24 +44,17 @@ export const ConsentsCommunication = ({
           Would you like to join our mailing list to stay informed and up to
           date with all that the Guardian has to offer?
         </p>
-        <div css={[autoRow()]}>
-          <div
-            css={[
-              communicationCardContainer,
-              autoRow(communicationCardSpanDef),
-            ]}
-          >
-            {consents.map((consent) => (
-              <CommunicationCard
-                key={consent.id}
-                title={consent.name}
-                body={consent.description}
-                value={consent.id}
-                checked={!!consent.consented}
-                image={CONSENT_IMAGES[consent.id]}
-              />
-            ))}
-          </div>
+        <div css={[communicationCardContainer, autoRow()]}>
+          {consents.map((consent) => (
+            <CommunicationCard
+              key={consent.id}
+              title={consent.name}
+              body={consent.description}
+              value={consent.id}
+              checked={!!consent.consented}
+              image={CONSENT_IMAGES[consent.id]}
+            />
+          ))}
         </div>
       </ConsentsContent>
     </ConsentsLayout>
