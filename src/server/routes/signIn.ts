@@ -46,8 +46,8 @@ const performAuthCodeFlow = (
 ) => {
   // firstly we generate and store a "state"
   // as a http only, secure, signed session cookie
-  // which is a json object that contains a nonce and the query params
-  // the nonce is used to protect against csrf
+  // which is a json object that contains a stateParam and the query params
+  // the stateParam is used to protect against csrf
   const authState = generateAuthorizationState(
     getPersistableQueryParams(res.locals.queryParams),
   );
@@ -59,8 +59,8 @@ const performAuthCodeFlow = (
     prompt: 'none',
     // The sessionToken from authentication to exchange for session cookie
     sessionToken,
-    // we send the generated nonce as the state parameter
-    state: authState.nonce,
+    // we send the generated stateParam as the state parameter
+    state: authState.stateParam,
     // any scopes, by default the 'openid' scope is required
     // the idapi_token_cookie_exchange scope is checked on IDAPI to return
     // idapi cookies on authentication

@@ -67,12 +67,12 @@ router.get(
       // params returned from the /authorize endpoint
       // for auth code flow they will be "code" and "state"
       // "code" is the authorization code to exchange for access token
-      // "state" will be the "nonce" value set in the oidc_auth_state cookie
+      // "state" will be the "stateParam" value set in the oidc_auth_state cookie
       // if there were any errors, then an "error", and "error_description" params
       // will be returned instead
       const callbackParams = ProfileOpenIdClient.callbackParams(req);
 
-      // get the oidc_auth_state cookie which contains the "nonce"
+      // get the oidc_auth_state cookie which contains the "stateParam" value
       // and "returnUrl" so we can get the user back to the page they
       // initially landed on sign in from
       const authState = getAuthorizationStateCookie(req);
@@ -112,7 +112,7 @@ router.get(
 
       // exchange the auth code for access token + id token
       // and check the "state" we got back from the callback
-      // to the "nonce" that was set in the AuthorizationState
+      // to the "stateParam" that was set in the AuthorizationState
       // to prevent CSRF attacks
       const tokenSet = await ProfileOpenIdClient.callback(
         // the redirectUri is the callback location (this route)
@@ -123,8 +123,8 @@ router.get(
         {
           // we're doing the auth code flow, so check for the correct type
           response_type: 'code',
-          // check that the nonce is the same
-          state: authState.nonce,
+          // check that the stateParam is the same
+          state: authState.stateParam,
         },
       );
 

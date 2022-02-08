@@ -13,7 +13,7 @@ import { RoutePaths } from '@/shared/model/Routes';
 /**
  * An object to hold the state the user was in while performing the
  * Authorization Code flow.
- * - `nonce` - Used as the `state` parameter in the Authorization Code Flow
+ * - `stateParam` - Used as the `state` parameter in the Authorization Code Flow
  *   to prevent CSRF attacks
  *   - See "state" parameter details here:
  *   - https://developer.okta.com/docs/reference/api/oidc/#parameter-details
@@ -22,7 +22,7 @@ import { RoutePaths } from '@/shared/model/Routes';
  * @interface AuthorizationState
  */
 interface AuthorizationState {
-  nonce: string;
+  stateParam: string;
   queryParams: PersistableQueryParams;
 }
 
@@ -122,11 +122,11 @@ export enum OpenIdErrors {
 /**
  * Generate a cryptographically secure random string to be used
  * as the `state` parameter in the authorization code flow
- * which is used as a nonce value to prevent CSRF attacks.
+ * which is used as the state parameter value to prevent CSRF attacks.
  * @param {number} [bytes=16]
  * @return {string}
  */
-const generateNonce = (bytes = 16): string =>
+const generateRandomString = (bytes = 16): string =>
   randomBytes(bytes).toString('hex');
 
 /**
@@ -138,12 +138,12 @@ const generateNonce = (bytes = 16): string =>
  */
 const isAuthorizationState = (obj: unknown): obj is AuthorizationState => {
   const objAsAuthState = obj as AuthorizationState;
-  return !!(objAsAuthState.nonce && objAsAuthState.queryParams);
+  return !!(objAsAuthState.stateParam && objAsAuthState.queryParams);
 };
 
 /**
  * Generate the `AuthorizationState` object to be stored as a
- * cookie on the client, and the `nonce` used by the Authorization
+ * cookie on the client, and the `stateParam` used by the Authorization
  * Code flow.
  * @param {string} returnUrl
  * @return {*} `AuthorizationState`
@@ -151,7 +151,7 @@ const isAuthorizationState = (obj: unknown): obj is AuthorizationState => {
 export const generateAuthorizationState = (
   queryParams: PersistableQueryParams,
 ): AuthorizationState => ({
-  nonce: generateNonce(),
+  stateParam: generateRandomString(),
   queryParams,
 });
 
