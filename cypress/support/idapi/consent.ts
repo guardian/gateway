@@ -65,7 +65,7 @@ export const allConsents = [
     id: 'supporter',
     isOptOut: false,
     isChannel: false,
-    name: 'Subscriptions, membership and contributions',
+    name: 'Supporting the Guardian',
     description:
       'News and offers from the Guardian, The Observer and Guardian Weekly, on the ways to read and support our journalism. Already a member, subscriber or contributor? Opt in here to receive your regular emails and updates.',
   },

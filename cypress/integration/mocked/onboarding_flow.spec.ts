@@ -162,8 +162,9 @@ describe('Onboarding flow', () => {
         cy.contains(newsletter),
       );
 
-      // contains opted in consent
-      cy.contains(ReviewPage.CONTENT.SUPPORTER_CONSENT_TITLE);
+      // contains consents
+      cy.contains(ReviewPage.CONTENT.SUPPORTER_CONSENT);
+      cy.contains(ReviewPage.CONTENT.PROFILING_CONSENT);
 
       // does not contain messaging encouraging user to consider other newsletters
       cy.contains(ReviewPage.CONTENT.NO_NEWSLETTERS_TITLE).should('not.exist');
@@ -243,10 +244,9 @@ describe('Onboarding flow', () => {
         cy.contains(newsletter).should('not.exist'),
       );
 
-      // contains no opted in consent
-      cy.contains(ReviewPage.CONTENT.SUPPORTER_CONSENT_TITLE).should(
-        'not.exist',
-      );
+      // contains no consents
+      cy.contains(ReviewPage.CONTENT.SUPPORTER_CONSENT).should('not.exist');
+      cy.contains(ReviewPage.CONTENT.PROFILING_CONSENT).should('not.exist');
 
       // contains messaging encouraging user to explore other newsletters
       cy.contains(ReviewPage.CONTENT.NO_NEWSLETTERS_TITLE);
@@ -458,7 +458,7 @@ describe('Onboarding flow', () => {
       CommunicationsPage.goto();
       CommunicationsPage.backButton().should('not.exist');
       CommunicationsPage.consentCheckboxWithTitle(
-        'Subscriptions, membership and contributions',
+        'Supporting the Guardian',
       ).should('be.checked');
     });
 

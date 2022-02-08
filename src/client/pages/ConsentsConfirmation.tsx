@@ -123,12 +123,6 @@ export const ConsentsConfirmation = ({
     !optedOutOfProfiling ||
     !!productConsents.length ||
     !!subscribedNewsletters.length;
-  console.log(
-    anyConsents,
-    !optedOutOfProfiling,
-    !!productConsents.length,
-    !!subscribedNewsletters.length,
-  );
   return (
     <>
       <ConsentsHeader

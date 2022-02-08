@@ -10,8 +10,8 @@ class ReviewPage extends OnboardingPage {
       GREEN_LIGHT: 'Green Light',
       BOOKMARKS: 'Bookmarks',
     },
-    NEWSLETTER_SECTION_TITLE: 'Newsletters',
-    SUPPORTER_CONSENT_TITLE: 'Products & services:',
+    SUPPORTER_CONSENT: 'Supporting the Guardian',
+    PROFILING_CONSENT: 'Using your data for marketing analysis',
     BUTTON_RETURN_GUARDIAN: 'Return to the Guardian',
     NO_NEWSLETTERS_TITLE: 'Didn’t find anything you like?',
   };
