@@ -78,10 +78,14 @@ const communicationCardInfoContainer = css`
   }
 `;
 
+// min-height here is due to IE being strange
+// https://stackoverflow.com/questions/8673356/ie-doesnt-support-height-auto-for-images-what-should-i-use
 const img = css`
   width: 100%;
+  height: auto;
+  min-height: 1px;
   ${from.tablet} {
-    width: initial;
+    width: auto;
     height: 162px;
   }
 `;
