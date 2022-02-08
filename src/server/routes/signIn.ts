@@ -72,6 +72,25 @@ const performAuthCodeFlow = (
 };
 
 /**
+ * Helper method to determine if a global error should show on the sign in page
+ * and return a user facing error if so
+ * if there's no error it returns undefined
+ * @param error - error query parameter
+ * @param error_description - error_description query parameter
+ * @returns string | undefined - user facing error message
+ */
+const getErrorMessage = (error?: string, error_description?: string) => {
+  // show error if account linking required
+  if (error === FederationErrors.SOCIAL_SIGNIN_BLOCKED) {
+    return SignInErrors.ACCOUNT_ALREADY_EXISTS;
+  }
+  // TODO: we're propagating a generic error message for now until we know what we're doing with the error_description parameter
+  if (error_description) {
+    return SignInErrors.GENERIC;
+  }
+};
+
+/**
  * Controller to render the sign in page in both IDAPI and Okta
  */
 const showSignInPage = async (req: Request, res: ResponseWithRequestState) => {
@@ -86,18 +105,13 @@ const showSignInPage = async (req: Request, res: ResponseWithRequestState) => {
   // if it exists
   const email = decryptedEmail || readEmailCookie(req);
 
-  const errorMessage =
-    error === FederationErrors.SOCIAL_SIGNIN_BLOCKED
-      ? SignInErrors.ACCOUNT_ALREADY_EXISTS
-      : error_description;
-
   const html = renderer('/signin', {
     requestState: deepmerge(state, {
       pageData: {
         email,
       },
       globalMessage: {
-        error: errorMessage,
+        error: getErrorMessage(error, error_description),
       },
     }),
     pageTitle: 'Sign in',

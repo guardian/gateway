@@ -154,14 +154,6 @@ describe('Sign in flow', () => {
       cy.setEncryptedStateCookie({ signInRedirect: true });
     });
 
-    it('renders global error if there is the error_description parameter in url', function () {
-      const error = 'There has been an error';
-      cy.visit(
-        `/signin?error_description=${encodeURIComponent(error)}&useOkta=true`,
-      );
-      cy.contains(error);
-    });
-
     it('shows an error message when okta authentication fails', function () {
       cy.visit('/signin?useOkta=true');
       cy.get('input[name="email"]').type('example@example.com');
