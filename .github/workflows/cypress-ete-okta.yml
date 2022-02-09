@@ -22,7 +22,7 @@ jobs:
           CYPRESS_IDAPI_CLIENT_ACCESS_TOKEN: ${{ secrets.IDAPI_CLIENT_ACCESS_TOKEN }}
           IDAPI_BASE_URL: https://idapi.code.dev-theguardian.com
           CYPRESS_IDAPI_BASE_URL: https://idapi.code.dev-theguardian.com
-          DEFAULT_RETURN_URI: https://m.code.dev-theguardian.com
+          DEFAULT_RETURN_URI: http://localhost:8861/signin
           CYPRESS_DEFAULT_RETURN_URI: https://m.code.dev-theguardian.com
           SIGN_IN_PAGE_URL: https://profile.code.dev-theguardian.com/signin
           OAUTH_BASE_URL: https://oauth.code.dev-theguardian.com
