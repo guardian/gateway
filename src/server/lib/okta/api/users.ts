@@ -15,6 +15,7 @@ import {
 } from '@/server/lib/okta/api/headers';
 import { OktaAPIResponseParsingError } from '@/server/models/okta/Error';
 import { Profile, User } from '@/server/models/okta/User';
+import { handleVoidResponse } from '@/server/lib/okta/api/responses';
 
 /**
  * Okta's Users API endpoints, see - https://developer.okta.com/docs/reference/api/users/
@@ -87,14 +88,6 @@ export const reactivateUser = async <P extends OktaApiRoutePaths>(
 const handleUserResponse = async (response: Response): Promise<User> => {
   if (response.ok) {
     return await extractUser(response);
-  } else {
-    return await handleErrorResponse(response);
-  }
-};
-
-const handleVoidResponse = async (response: Response): Promise<void> => {
-  if (response.ok) {
-    return Promise.resolve();
   } else {
     return await handleErrorResponse(response);
   }
