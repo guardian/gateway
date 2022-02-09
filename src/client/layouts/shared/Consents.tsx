@@ -16,7 +16,7 @@ const content = css`
   ${gridRow}
   background-color: white;
   width: 100%;
-  padding-bottom: ${space[6]}px;
+  padding-bottom: 22px;
   ${greyBorder}
 `;
 

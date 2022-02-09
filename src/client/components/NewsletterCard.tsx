@@ -15,7 +15,6 @@ import {
   from,
   news,
   culture,
-  until,
 } from '@guardian/source-foundations';
 import { NewsLetter } from '@/shared/model/Newsletter';
 import { NEWSLETTER_IMAGES } from '@/client/models/Newsletter';
@@ -103,7 +102,6 @@ const article = css`
 
 const spaceBottom = css`
   margin-bottom: ${space[5]}px;
-  padding-bottom: ${space[1]}px;
 `;
 
 // @TODO: hacked background colour, should be fixed in future source checkbox implementation
@@ -122,12 +120,7 @@ export const iconStyles = css`
     height: 22px;
     width: 22px;
   }
-  margin-bottom: ${space[1]}px;
   margin-right: ${space[1]}px;
-
-  ${from.tablet} {
-    margin-top: ${space[2]}px;
-  }
 `;
 
 const descriptionBlock = css`
@@ -156,10 +149,7 @@ const ieFlexOverflowFix = css`
 const frequencyStyles = css`
   display: flex;
   align-items: center;
-
-  ${until.tablet} {
-    margin-top: ${space[2]}px;
-  }
+  padding: ${space[2]}px 0;
 `;
 
 const idColor: (arg0: string) => string | undefined = (id) => {
