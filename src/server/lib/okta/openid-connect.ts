@@ -52,7 +52,7 @@ interface OpenIdClientRedirectUris {
   WEB: `${string}${Extract<'/oauth/authorization-code/callback', RoutePaths>}`;
 }
 
-const { okta } = getConfiguration();
+const { okta, baseUri } = getConfiguration();
 
 /**
  * https://developer.okta.com/docs/reference/api/oidc/#well-known-openid-configuration
@@ -167,8 +167,8 @@ const AuthorizationStateCookieName = 'GU_oidc_auth_state';
  */
 const AuthorizationStateCookieOptions: CookieOptions = {
   httpOnly: true,
-  secure: true,
-  signed: true,
+  secure: !baseUri.includes('localhost'),
+  signed: !baseUri.includes('localhost'),
   sameSite: 'strict',
 };
 
@@ -196,7 +196,7 @@ export const setAuthorizationStateCookie = (
       AuthorizationStateCookieOptions,
     );
   } catch (error) {
-    logger.error(`setAuthorizationStateCookie Error`, error);
+    logger.error('setAuthorizationStateCookie Error', error);
   }
 };
 
@@ -228,7 +228,7 @@ export const getAuthorizationStateCookie = (
 
     return null;
   } catch (error) {
-    logger.error(`getAuthorizationStateCookie Error`, error);
+    logger.error('getAuthorizationStateCookie Error', error);
     return null;
   }
 };

@@ -9,7 +9,7 @@ const { baseUri } = getConfiguration();
 const encryptedStateCookieName = 'GU_GATEWAY_STATE';
 
 const encryptedStateCookieOptions: CookieOptions = {
-  httpOnly: !baseUri.includes('localhost'),
+  httpOnly: true,
   secure: !baseUri.includes('localhost'),
   signed: !baseUri.includes('localhost'),
   sameSite: 'strict',

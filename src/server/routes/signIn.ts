@@ -79,7 +79,10 @@ const performAuthCodeFlow = (
  * @param error_description - error_description query parameter
  * @returns string | undefined - user facing error message
  */
-const getErrorMessage = (error?: string, error_description?: string) => {
+const getErrorMessageFromQueryParams = (
+  error?: string,
+  error_description?: string,
+) => {
   // show error if account linking required
   if (error === FederationErrors.SOCIAL_SIGNIN_BLOCKED) {
     return SignInErrors.ACCOUNT_ALREADY_EXISTS;
@@ -111,7 +114,7 @@ const showSignInPage = async (req: Request, res: ResponseWithRequestState) => {
         email,
       },
       globalMessage: {
-        error: getErrorMessage(error, error_description),
+        error: getErrorMessageFromQueryParams(error, error_description),
       },
     }),
     pageTitle: 'Sign in',
@@ -209,6 +212,18 @@ const idapiSignInController = async (
   }
 };
 
+// handles errors in the catch block to return a error to display to the user
+const oktaSignInControllerErrorHandler = (error: unknown) => {
+  if (error instanceof AuthenticationFailedError) {
+    return {
+      status: error.status,
+      message: SignInErrors.AUTHENTICATION_FAILED,
+    };
+  }
+
+  return new OktaError(SignInErrors.GENERIC);
+};
+
 const oktaSignInController = async (
   req: Request,
   res: ResponseWithRequestState,
@@ -238,16 +253,7 @@ const oktaSignInController = async (
 
     logger.error('Okta authentication error:', error);
 
-    const { message, status } = ((error: unknown) => {
-      if (error instanceof AuthenticationFailedError) {
-        return {
-          status: error.status,
-          message: SignInErrors.AUTHENTICATION_FAILED,
-        };
-      }
-
-      return new OktaError(SignInErrors.GENERIC);
-    })(error);
+    const { message, status } = oktaSignInControllerErrorHandler(error);
 
     const html = renderer('/signin', {
       requestState: deepmerge(res.locals, {
