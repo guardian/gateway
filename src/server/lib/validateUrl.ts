@@ -29,6 +29,7 @@ export const validateReturnUrl = (returnUrl = ''): string => {
     return `https://${url.hostname}${url.pathname}`;
   } catch (error) {
     // error parsing url so return the default
+    console.log(defaultReturnUri);
     return defaultReturnUri;
   }
 };
