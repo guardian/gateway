@@ -36,12 +36,6 @@ const form = css`
   flex-direction: column;
 `;
 
-// fixes overlapping text issue in IE
-// derived from this solution https://stackoverflow.com/a/49368815
-const ieFlexFix = css`
-  flex: 0 0 auto;
-`;
-
 const mainStyles = css`
   display: flex;
   flex-direction: column;
@@ -103,7 +97,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
           <CsrfFormField />
 
           <section css={sectionStyles}>
-            <div css={ieFlexFix}>{children}</div>
+            <div>{children}</div>
             <ConsentsBlueBackground>
               <div css={[gridItem(gridItemColumnConsents), controls]}>
                 <div css={navigationControls}>

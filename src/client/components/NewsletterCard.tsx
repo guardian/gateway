@@ -8,13 +8,14 @@ import {
 import {
   brand,
   space,
-  titlepiece,
+  headline,
   textSans,
   body,
   neutral,
   from,
   news,
   culture,
+  until,
 } from '@guardian/source-foundations';
 import { NewsLetter } from '@/shared/model/Newsletter';
 import { NEWSLETTER_IMAGES } from '@/client/models/Newsletter';
@@ -75,7 +76,7 @@ const image = (id?: string) => {
 
 const h1 = css`
   color: ${brand[400]};
-  ${titlepiece.small()};
+  ${headline.small()};
   margin: ${space[2]}px 0 ${space[1]}px 0;
   /* Override */
   font-size: 24px;
@@ -84,6 +85,7 @@ const h1 = css`
 const h2 = css`
   color: ${brand[600]};
   ${textSans.small({ fontWeight: 'bold' })};
+  font-size: 12px;
   margin: 0;
 `;
 
@@ -146,11 +148,17 @@ const infoGroup = css`
   }
 `;
 
+// IE11 doesn't know that block-level elements shouldn't overflow their parent
+const ieFlexOverflowFix = css`
+  width: 100%;
+`;
+
 const frequencyStyles = css`
   display: flex;
   align-items: center;
-  h2 {
-    margin-left: ${space[2]};
+
+  ${until.tablet} {
+    margin-top: ${space[2]}px;
   }
 `;
 
@@ -186,7 +194,7 @@ export const NewsletterCard: FunctionComponent<NewsletterCardProps> = (
     >
       <div css={descriptionBlock}>
         <div css={image(props.newsletter.id)} />
-        <div css={infoGroup}>
+        <div css={[infoGroup, ieFlexOverflowFix]}>
           <h1 css={[h1, `color: ${idColor(nameId)}`]}>{name}</h1>
           <p css={p}>{description}</p>
           <CheckboxGroup

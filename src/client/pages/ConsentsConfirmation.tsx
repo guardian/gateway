@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { css } from '@emotion/react';
-import { from, space, success, neutral } from '@guardian/source-foundations';
+import { space, success, neutral, until } from '@guardian/source-foundations';
 import {
   getAutoRow,
   gridItem,
@@ -42,14 +42,6 @@ const reviewTableRow = css`
   }
 `;
 
-const reviewTableCell = css`
-  flex: 1 1 auto;
-
-  ${from.tablet} {
-    flex: 1 1 0px;
-  }
-`;
-
 const reviewTableTextBold = css`
   ${text}
   font-weight: bold;
@@ -61,10 +53,8 @@ const ReviewTableRow: FunctionComponent<{ title: string }> = ({
   children,
 }) => (
   <div css={reviewTableRow}>
-    <div css={reviewTableCell}>
-      <p css={reviewTableTextBold}>{title}</p>
-    </div>
-    <div css={reviewTableCell}>{children}</div>
+    <p css={reviewTableTextBold}>{title}</p>
+    {children}
   </div>
 );
 
@@ -105,8 +95,15 @@ const paddingTop = css`
   padding-top: ${space[4]}px;
 `;
 
-const paddingBottom = css`
-  padding-bottom: ${space[4]}px;
+const marginTop = css`
+  margin-top: ${space[4]}px;
+`;
+
+const returnButton = css`
+  ${until.tablet} {
+    width: 100%;
+    justify-content: center;
+  }
 `;
 
 export const ConsentsConfirmation = ({
@@ -145,7 +142,7 @@ export const ConsentsConfirmation = ({
                 Please find below a summary of your selections.
               </p>
             ) : (
-              <p css={[text, paddingBottom, autoRow()]}>
+              <p css={[text, autoRow()]}>
                 You now have an account with the Guardian and you can manage
                 your preferences and options at anytime under&nbsp;
                 <ExternalLink
@@ -196,7 +193,7 @@ export const ConsentsConfirmation = ({
               )}
             </div>
             {anyConsents && (
-              <p css={[text, paddingTop, paddingBottom, autoRow()]}>
+              <p css={[text, paddingTop, autoRow()]}>
                 You can change these anytime in your account under&nbsp;
                 <ExternalLink
                   href="https://manage.theguardian.com/email-prefs"
@@ -209,7 +206,7 @@ export const ConsentsConfirmation = ({
             )}
             {!subscribedNewsletters.length && (
               <>
-                <h2 css={[headingWithMq, autoRow(), greyBorderTop]}>
+                <h2 css={[headingWithMq, autoRow(), greyBorderTop, marginTop]}>
                   Guardian newsletters
                 </h2>
                 <p css={[text, autoRow()]}>Didn’t find anything you like?</p>
@@ -230,7 +227,11 @@ export const ConsentsConfirmation = ({
           </ConsentsContent>
           <ConsentsBlueBackground cssOverrides={continueBoxFlex}>
             <div css={[controls, gridItem(gridItemColumnConsents)]}>
-              <ExternalLinkButton iconSide="right" href={returnUrl}>
+              <ExternalLinkButton
+                iconSide="right"
+                href={returnUrl}
+                cssOverrides={returnButton}
+              >
                 Return to the Guardian
               </ExternalLinkButton>
             </div>

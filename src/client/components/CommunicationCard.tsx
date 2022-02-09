@@ -109,6 +109,11 @@ const blueBorderBottom = css`
   padding-bottom: ${space[1]}px;
 `;
 
+// IE11 doesn't know that block-level elements shouldn't overflow their parent
+const ieFlexOverflowFix = css`
+  width: 100%;
+`;
+
 export const CommunicationCard: FunctionComponent<CommunicationCardProps> = ({
   title,
   body,
@@ -117,10 +122,10 @@ export const CommunicationCard: FunctionComponent<CommunicationCardProps> = ({
   checked,
 }) => {
   return (
-    <div css={[greyBorderTop, blueBorderBottom]}>
+    <div css={[greyBorderTop, blueBorderBottom, ieFlexOverflowFix]}>
       <div css={[communicationCardInfoContainer]}>
         <img css={img} src={image} alt={title} />
-        <div>
+        <div css={ieFlexOverflowFix}>
           <h3 css={communicationCardHeadingText}>{title}</h3>
           <div css={communicationCardBodyContainer}>
             <p css={communicationCardBodyText}>{body}</p>

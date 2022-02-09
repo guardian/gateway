@@ -23,7 +23,7 @@ type ConsentsDataProps = {
 const fieldset = css`
   border: 0;
   padding: 0;
-  margin: ${space[6]}px 0 0 0;
+  margin: ${space[4]}px 0 0 0;
   ${textSans.medium()}
 `;
 
@@ -33,6 +33,7 @@ const checkboxLabel = css`
 
 const marketingText = css`
   ${text}
+  color: ${neutral[46]};
   margin-top: ${space[4]}px;
 `;
 

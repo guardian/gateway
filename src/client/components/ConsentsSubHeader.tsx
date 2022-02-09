@@ -20,12 +20,6 @@ type Props = {
 const BORDER_SIZE = 2;
 const CIRCLE_DIAMETER = 12;
 
-// fixes overlapping text issue in IE
-// derived from this solution https://stackoverflow.com/a/49368815
-const ieFlexFix = css`
-  flex: 0 0 auto;
-`;
-
 const greyBorder = css`
   margin: 0 auto;
 
@@ -254,7 +248,7 @@ const PageProgression = ({
 };
 
 export const ConsentsSubHeader = ({ autoRow, title, current }: Props) => (
-  <header css={[ieFlexFix]} data-cy="exclude-a11y-check">
+  <header data-cy="exclude-a11y-check">
     <div css={[greyBorder, gridRow]}>
       {current && (
         <PageProgression
