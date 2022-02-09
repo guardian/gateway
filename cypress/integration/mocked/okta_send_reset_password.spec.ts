@@ -1,11 +1,11 @@
-describe('Password reset in Okta', () => {
+describe('Send password reset email in Okta', () => {
   const email = 'mrtest@theguardian.com';
 
   beforeEach(() => {
     cy.mockPurge();
   });
 
-  context('Reset password in Okta', () => {
+  context.skip('send reset password email', () => {
     it('shows email sent page when successful', () => {
       cy.visit('/reset-password?useOkta=true');
       cy.get('input[name="email"]').type(email);

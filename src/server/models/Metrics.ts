@@ -23,12 +23,14 @@ type ConditionalMetrics =
   | 'OktaSignIn'
   | 'OktaSetPasswordOnWelcomePage'
   | 'OktaWelcomeResendEmail'
+  | 'OktaValidatePasswordToken'
   | 'Register'
   | 'SendMagicLink'
   | 'SendValidationEmail'
   | 'SignIn'
   | 'UpdatePassword'
-  | 'RecaptchaMiddleware';
+  | 'RecaptchaMiddleware'
+  | 'ValidatePasswordToken';
 
 // Unconditional metrics that we want to track directly
 type UnconditionalMetrics =
