@@ -23,14 +23,14 @@ const defaultDimensions = {
 export const trackMetric = (
   metricName: Metrics,
   dimensions?: MetricDimensions,
-) => {
+): void => {
   // merge defaultDimensions with dimensions from parameter in case some were changed,
   const mergedDimensions = {
     ...defaultDimensions,
     ...dimensions,
   };
 
-  return CloudWatch.putMetricData({
+  CloudWatch.putMetricData({
     Namespace: 'Gateway',
     MetricData: [
       {

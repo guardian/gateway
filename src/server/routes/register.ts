@@ -61,7 +61,7 @@ router.post(
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { useOkta } = res.locals.queryParams;
-    if (okta.registrationEnabled && useOkta) {
+    if (okta.enabled && useOkta) {
       await OktaResendEmail(req, res);
     } else {
       const state = res.locals;
@@ -168,7 +168,7 @@ router.post(
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { useOkta } = res.locals.queryParams;
-    if (okta.registrationEnabled && useOkta) {
+    if (okta.enabled && useOkta) {
       await OktaRegistration(req, res);
     } else {
       let state = res.locals;

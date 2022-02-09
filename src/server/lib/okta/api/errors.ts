@@ -11,7 +11,32 @@ import {
   ResourceNotFoundError,
   ActivateUserFailedError,
   OperationForbiddenError,
+  AuthenticationFailedError,
+  TooManyRequestsError,
 } from '@/server/models/okta/Error';
+
+const extractErrorResponse = async (
+  response: Response,
+): Promise<ErrorResponse> => {
+  try {
+    return await response.json().then((json) => {
+      const error = json as ErrorResponse;
+      return {
+        errorCode: error.errorCode,
+        errorSummary: error.errorSummary,
+        errorLink: error.errorLink,
+        errorId: error.errorId,
+        errorCauses: error.errorCauses,
+      };
+    });
+  } catch (error) {
+    throw new OktaAPIResponseParsingError(error);
+  }
+};
+
+const errorCausesToString = (errorCauses: Array<ErrorCause>): string => {
+  return errorCauses.map((cause) => cause.errorSummary).join(', ');
+};
 
 export const handleErrorResponse = async (response: Response) => {
   const error = await extractErrorResponse(response);
@@ -42,6 +67,9 @@ export const handleErrorResponse = async (response: Response) => {
         }
         throw new ApiValidationError(errorSummary);
       }
+      case 'E0000004': {
+        throw new AuthenticationFailedError(error.errorSummary);
+      }
       case 'E0000007': {
         throw new ResourceNotFoundError(error.errorSummary);
       }
@@ -51,32 +79,12 @@ export const handleErrorResponse = async (response: Response) => {
       case 'E0000038': {
         throw new OperationForbiddenError(error.errorSummary);
       }
+      case 'E0000047': {
+        throw new TooManyRequestsError(error.errorSummary);
+      }
       default:
         throw new OktaError(JSON.stringify(error));
     }
   }
   throw new OktaError(JSON.stringify(error));
-};
-
-export const extractErrorResponse = async (
-  response: Response,
-): Promise<ErrorResponse> => {
-  try {
-    return await response.json().then((json) => {
-      const error = json as ErrorResponse;
-      return {
-        errorCode: error.errorCode,
-        errorSummary: error.errorSummary,
-        errorLink: error.errorLink,
-        errorId: error.errorId,
-        errorCauses: error.errorCauses,
-      };
-    });
-  } catch (error) {
-    throw new OktaAPIResponseParsingError(`${error}`);
-  }
-};
-
-const errorCausesToString = (errorCauses: Array<ErrorCause>): string => {
-  return errorCauses.map((cause) => cause.errorSummary).join(', ');
 };

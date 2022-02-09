@@ -23,7 +23,7 @@ const email = 'test@test.com';
 jest.mock('@/server/lib/getConfiguration', () => ({
   getConfiguration: () => ({
     okta: {
-      registrationEnabled: true,
+      enabled: true,
       orgUrl: 'someOrgUrl',
       token: 'token',
       authServerId: 'authServerId',

@@ -115,6 +115,6 @@ const extractUser = async (response: Response): Promise<User> => {
       };
     });
   } catch (error) {
-    throw new OktaAPIResponseParsingError(`${error}`);
+    throw new OktaAPIResponseParsingError(error);
   }
 };

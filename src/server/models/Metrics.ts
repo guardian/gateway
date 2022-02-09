@@ -2,36 +2,38 @@
 
 // Specific emails to track
 type EmailMetrics =
-  | 'AccountVerification'
   | 'AccountExists'
   | 'AccountExistsWithoutPassword'
+  | 'AccountVerification'
   | 'CreatePassword'
   | 'ResetPassword';
 
 // Any metrics with conditions to append to the end
 // i.e ::Success or ::Failure
 type ConditionalMetrics =
-  | 'SendMagicLink'
-  | 'SignIn'
-  | 'Register'
-  | 'UpdatePassword'
-  | 'LoginMiddleware'
-  | 'SendValidationEmail'
-  | 'EmailValidated'
   | 'AccountVerification'
   | `${EmailMetrics}EmailSend`
+  | 'EmailValidated'
   | `${'Get' | 'Post'}ConsentsPage-${string}`
-  | `RecaptchaMiddleware`
+  | 'LoginMiddleware'
+  | 'OAuthAuthorization'
   | 'OktaRegistration'
   | 'OktaRegistrationResendEmail'
+  | 'OktaSignIn'
   | 'OktaSetPasswordOnWelcomePage'
-  | 'OktaWelcomeResendEmail';
+  | 'OktaWelcomeResendEmail'
+  | 'Register'
+  | 'SendMagicLink'
+  | 'SendValidationEmail'
+  | 'SignIn'
+  | 'UpdatePassword'
+  | 'RecaptchaMiddleware';
 
 // Unconditional metrics that we want to track directly
 type UnconditionalMetrics =
-  | 'LoginMiddlewareUnverified'
   | 'LoginMiddlewareNotRecent'
-  | 'LoginMiddlewareNotSignedIn';
+  | 'LoginMiddlewareNotSignedIn'
+  | 'LoginMiddlewareUnverified';
 
 // Combine all the metrics above together into a type
 export type Metrics =

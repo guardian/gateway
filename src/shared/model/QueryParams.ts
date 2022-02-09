@@ -42,4 +42,5 @@ export interface QueryParams
   recaptchaError?: boolean;
   encryptedEmail?: string;
   error?: string;
+  error_description?: string;
 }

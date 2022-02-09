@@ -33,7 +33,7 @@ export interface AWSConfiguration {
 }
 
 export interface Okta {
-  registrationEnabled: boolean;
+  enabled: boolean;
   orgUrl: string;
   token: string;
   authServerId: string;

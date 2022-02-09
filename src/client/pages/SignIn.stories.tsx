@@ -22,6 +22,27 @@ Default.story = {
   name: 'with defaults',
 };
 
+export const WithEmail = (args: SignInProps) => (
+  <SignIn email="test@example.com" {...args} />
+);
+WithEmail.story = {
+  name: 'with email',
+};
+
+export const WithSummaryError = (args: SignInProps) => (
+  <SignIn error="This is an error" {...args} />
+);
+WithSummaryError.story = {
+  name: 'with summary error',
+};
+
+export const WithSummaryErrorAndEmail = (args: SignInProps) => (
+  <SignIn error="This is an error" email="test@example.com" {...args} />
+);
+WithSummaryErrorAndEmail.story = {
+  name: 'with summary error and email',
+};
+
 export const SocialSigninBlocked = (args: SignInProps) => (
   <SignIn
     {...args}

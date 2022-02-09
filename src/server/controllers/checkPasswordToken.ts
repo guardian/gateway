@@ -23,7 +23,7 @@ export const checkPasswordTokenController = (
 ) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { useOkta } = res.locals.queryParams;
-    if (okta.registrationEnabled && useOkta && path === '/welcome') {
+    if (okta.enabled && useOkta && path === '/welcome') {
       await OktaAuthentication(path, pageTitle, req, res);
     } else {
       let requestState = res.locals;
@@ -82,8 +82,9 @@ const OktaAuthentication = async (
     const { stateToken, expiresAt, _embedded } = await authenticateWithOkta({
       token,
     });
-    const email = _embedded?.user.profile.email;
-    const timeUntilTokenExpiry = Date.parse(expiresAt) - Date.now();
+    const email = _embedded?.user.profile.login;
+    const timeUntilTokenExpiry =
+      expiresAt && Date.parse(expiresAt) - Date.now();
 
     setEncryptedStateCookie(res, { email, stateToken });
 

@@ -47,7 +47,7 @@ interface StageVariables {
   gaIdHash: string;
   domain: string;
   apiDomain: string;
-  oktaRegistrationEnabled: boolean;
+  oktaEnabled: boolean;
 }
 
 const getStageVariables = (stage: Stage): StageVariables => {
@@ -58,7 +58,7 @@ const getStageVariables = (stage: Stage): StageVariables => {
         gaIdHash: GA_UID_HASH.PROD,
         domain: GU_DOMAIN.PROD,
         apiDomain: GU_API_DOMAIN.PROD,
-        oktaRegistrationEnabled: featureSwitches.oktaRegistrationEnabled.PROD,
+        oktaEnabled: featureSwitches.oktaEnabled.PROD,
       };
     case 'CODE':
       return {
@@ -66,7 +66,7 @@ const getStageVariables = (stage: Stage): StageVariables => {
         gaIdHash: GA_UID_HASH.CODE,
         domain: GU_DOMAIN.CODE,
         apiDomain: GU_API_DOMAIN.CODE,
-        oktaRegistrationEnabled: featureSwitches.oktaRegistrationEnabled.CODE,
+        oktaEnabled: featureSwitches.oktaEnabled.CODE,
       };
     default:
       return {
@@ -74,7 +74,7 @@ const getStageVariables = (stage: Stage): StageVariables => {
         gaIdHash: GA_UID_HASH.DEV,
         domain: GU_DOMAIN.DEV,
         apiDomain: GU_API_DOMAIN.DEV,
-        oktaRegistrationEnabled: featureSwitches.oktaRegistrationEnabled.DEV,
+        oktaEnabled: featureSwitches.oktaEnabled.DEV,
       };
   }
 };
@@ -106,7 +106,7 @@ export const getConfiguration = (): Configuration => {
 
   const stage = getStage(process.env.STAGE);
 
-  const { gaId, gaIdHash, domain, apiDomain, oktaRegistrationEnabled } =
+  const { gaId, gaIdHash, domain, apiDomain, oktaEnabled } =
     getStageVariables(stage);
 
   const isHttps: boolean = JSON.parse(
@@ -139,7 +139,7 @@ export const getConfiguration = (): Configuration => {
   );
 
   const okta = {
-    registrationEnabled: oktaRegistrationEnabled,
+    enabled: oktaEnabled,
     orgUrl: getOrThrow(process.env.OKTA_ORG_URL, 'OKTA org URL missing'),
     token: getOrThrow(process.env.OKTA_API_TOKEN, 'OKTA API token missing'),
     authServerId: getOrThrow(

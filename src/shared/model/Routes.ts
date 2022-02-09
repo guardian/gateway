@@ -3,67 +3,69 @@
  * If you want to add a new route, it will need to be added below
  */
 export type RoutePaths =
-  | '/signin'
+  | '/404'
+  | '/consents'
+  | '/consents/:page'
+  | '/consents/communication'
+  | '/consents/data'
+  | '/consents/newsletters'
+  | '/consents/review'
+  | '/error'
+  | '/magic-link' //this is not being used until MVP4
+  | '/magic-link/email-sent' //this is not being used until MVP4
+  | '/maintenance'
+  | '/oauth/authorization-code/callback'
   | '/register'
   | '/register/email-sent'
   | '/register/email-sent/resend'
   | '/reset-password'
-  | '/reset-password/email-sent'
-  | '/reset-password/expired'
   | '/reset-password/:token'
   | '/reset-password/complete'
+  | '/reset-password/email-sent'
+  | '/reset-password/expired'
   | '/reset-password/resend'
   | '/set-password'
-  | '/set-password/expired'
   | '/set-password/:token'
   | '/set-password/complete'
-  | '/set-password/resend'
   | '/set-password/email-sent'
-  | '/consents/data'
-  | '/consents/communication'
-  | '/consents/newsletters'
-  | '/consents/review'
-  | '/consents/:page'
-  | '/consents'
-  | '/welcome'
-  | '/welcome/resend'
-  | '/welcome/expired'
-  | '/welcome/email-sent'
-  | '/welcome/complete'
-  | '/welcome/:token'
+  | '/set-password/expired'
+  | '/set-password/resend'
+  | '/signin'
   | '/verify-email' //this can be removed once Jobs has been migrated
-  | '/magic-link' //this is not being used until MVP4
-  | '/magic-link/email-sent' //this is not being used until MVP4
-  | '/error'
-  | '/404'
-  | '/maintenance';
+  | '/welcome'
+  | '/welcome/:token'
+  | '/welcome/complete'
+  | '/welcome/email-sent'
+  | '/welcome/expired'
+  | '/welcome/resend';
 
 /**
  * These are all valid paths for the Identity API
  * New routes should be added below
  */
 export type ApiRoutePaths =
-  | '/pwd-reset/send-password-reset-email'
-  | '/pwd-reset/user-for-token'
-  | '/pwd-reset/reset-pwd-for-user'
-  | '/user/validate-email/:token'
-  | '/user/send-validation-email'
-  | '/signin-token/token/:token'
-  | '/auth/redirect'
   | '/auth'
+  | '/auth/oauth-token'
+  | '/auth/redirect'
   | '/consents'
-  | '/user/me/consents'
-  | '/users/me/consents'
-  | '/users/me/newsletters'
-  | '/user/me'
-  | '/user/me/group/:groupCode'
-  | '/user/type/:email'
   | '/guest'
   | '/newsletters'
-  | '/user/send-account-verification-email'
+  | '/pwd-reset/reset-pwd-for-user'
+  | '/pwd-reset/send-password-reset-email'
+  | '/pwd-reset/user-for-token'
+  | '/signin-token/token/:token'
+  | '/user/me'
+  | '/user/me/consents'
+  | '/user/me/group/:groupCode'
   | '/user/send-account-exists-email'
+  | '/user/send-account-verification-email'
   | '/user/send-account-without-password-exists-email'
-  | '/user/send-create-password-account-exists-email';
+  | '/user/send-create-password-account-exists-email'
+  | '/user/send-validation-email'
+  | '/user/type/:email'
+  | '/user/validate-email/:token'
+  | '/users/me/consents'
+  | '/users/me/newsletters';
 
 export type OktaApiRoutePaths =
   | '/api/v1/authn'
