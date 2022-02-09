@@ -152,7 +152,7 @@ const frequencyStyles = css`
   padding: ${space[2]}px 0;
 `;
 
-const idColor: (arg0: string) => string | undefined = (id) => {
+const idColor = (id: string) => {
   if (id.includes('today')) {
     return news[400];
   }
