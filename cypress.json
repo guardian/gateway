@@ -1,7 +1,6 @@
 {
   "baseUrl": "http://localhost:8861",
   "video": false,
-  "failOnStatusCode": false,
   "chromeWebSecurity": false,
   "defaultCommandTimeout": 12000,
   "responseTimeout": 12000,
