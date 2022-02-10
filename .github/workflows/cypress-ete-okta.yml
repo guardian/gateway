@@ -1,5 +1,10 @@
 name: cypress-ete-okta
-on: push
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: ['review_requested']
 jobs:
   cypress-ete-okta:
     name: Cypress (ete using okta)
