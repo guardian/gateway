@@ -71,6 +71,9 @@ const image = (id?: string) => {
         transparent 50.5%,
         transparent 100%
       );
+    ${from.tablet} {
+      padding: 28% calc(38% - 6px) 0 0;
+    }
   `;
 };
 
