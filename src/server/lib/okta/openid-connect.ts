@@ -211,8 +211,9 @@ export const setAuthorizationStateCookie = (
 export const getAuthorizationStateCookie = (
   req: Request,
 ): AuthorizationState | null => {
-  const stateCookie = req.signedCookies[AuthorizationStateCookieName];
-
+  const stateCookie = baseUri.includes('localhost')
+    ? req.cookies[AuthorizationStateCookieName]
+    : req.signedCookies[AuthorizationStateCookieName];
   if (!stateCookie) {
     return null;
   }
