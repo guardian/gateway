@@ -24,6 +24,7 @@ import { RoutePaths } from '@/shared/model/Routes';
 interface AuthorizationState {
   stateParam: string;
   queryParams: PersistableQueryParams;
+  confirmationPage?: RoutePaths;
 }
 
 /**
@@ -146,13 +147,16 @@ const isAuthorizationState = (obj: unknown): obj is AuthorizationState => {
  * cookie on the client, and the `stateParam` used by the Authorization
  * Code flow.
  * @param {string} returnUrl
+ * @param confirmationPage (optional) - page to redirect the user to after authentication
  * @return {*} `AuthorizationState`
  */
 export const generateAuthorizationState = (
   queryParams: PersistableQueryParams,
+  confirmationPage?: RoutePaths,
 ): AuthorizationState => ({
   stateParam: generateRandomString(),
   queryParams,
+  confirmationPage,
 });
 
 /**

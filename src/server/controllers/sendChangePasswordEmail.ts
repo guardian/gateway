@@ -62,19 +62,16 @@ const sendEmailInIDAPI = async (
 
     trackMetric(emailSendMetric('ResetPassword', 'Failure'));
 
-    return res
-      .status(status)
-      .type('html')
-      .send(
-        renderer('/reset-password', {
-          pageTitle: 'Reset Password',
-          requestState: deepmerge(state, {
-            globalMessage: {
-              error: message,
-            },
-          }),
-        }),
-      );
+    const html = renderer('/reset-password', {
+      pageTitle: 'Reset Password',
+      requestState: deepmerge(state, {
+        globalMessage: {
+          error: message,
+        },
+      }),
+    });
+
+    return res.status(status).type('html').send(html);
   }
 };
 
@@ -102,16 +99,16 @@ const sendEmailInOkta = async (req: Request, res: ResponseWithRequestState) => {
 
     trackMetric(emailSendMetric('OktaResetPassword', 'Failure'));
 
-    return res.type('html').send(
-      renderer('/reset-password', {
-        pageTitle: 'Reset Password',
-        requestState: deepmerge(state, {
-          globalMessage: {
-            error: GenericErrors.DEFAULT,
-          },
-        }),
+    const html = renderer('/reset-password', {
+      pageTitle: 'Reset Password',
+      requestState: deepmerge(state, {
+        globalMessage: {
+          error: GenericErrors.DEFAULT,
+        },
       }),
-    );
+    });
+
+    return res.type('html').send(html);
   }
 };
 

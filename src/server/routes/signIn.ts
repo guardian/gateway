@@ -20,15 +20,13 @@ import {
   ProfileOpenIdClient,
   setAuthorizationStateCookie,
 } from '@/server/lib/okta/openid-connect';
-import {
-  AuthenticationFailedError,
-  OktaError,
-} from '@/server/models/okta/Error';
+import { OktaError } from '@/server/models/okta/Error';
 import {
   readEncryptedStateCookie,
   updateEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
 import { getPersistableQueryParams } from '@/shared/lib/queryParams';
+import { RoutePaths } from '@/shared/model/Routes';
 
 const { defaultReturnUri, okta } = getConfiguration();
 
@@ -38,11 +36,13 @@ const { defaultReturnUri, okta } = getConfiguration();
  * and b) post authentication (with the session token)
  * @param res - the express response object
  * @param sessionToken (optional) - if provided, we'll use this to set the session cookie
+ * @param confirmationPagePath (optional) - page to redirect the user to after authentication
  * @returns 303 redirect to the okta /authorize endpoint
  */
-const performAuthCodeFlow = (
+export const performAuthCodeFlow = (
   res: ResponseWithRequestState,
   sessionToken?: string,
+  confirmationPagePath?: RoutePaths,
 ) => {
   // firstly we generate and store a "state"
   // as a http only, secure, signed session cookie
@@ -50,6 +50,7 @@ const performAuthCodeFlow = (
   // the stateParam is used to protect against csrf
   const authState = generateAuthorizationState(
     getPersistableQueryParams(res.locals.queryParams),
+    confirmationPagePath,
   );
   setAuthorizationStateCookie(authState, res);
 
@@ -214,14 +215,17 @@ const idapiSignInController = async (
 
 // handles errors in the catch block to return a error to display to the user
 const oktaSignInControllerErrorHandler = (error: unknown) => {
-  if (error instanceof AuthenticationFailedError) {
+  if (
+    error instanceof OktaError &&
+    error.name === 'AuthenticationFailedError'
+  ) {
     return {
       status: error.status,
       message: SignInErrors.AUTHENTICATION_FAILED,
     };
   }
 
-  return new OktaError(SignInErrors.GENERIC);
+  return new OktaError({ message: SignInErrors.GENERIC });
 };
 
 const oktaSignInController = async (

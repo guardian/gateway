@@ -15,6 +15,8 @@ import { PasswordPageTitle } from '@/shared/model/PageTitle';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { validateRecoveryToken as validateTokenInOkta } from '@/server/lib/okta/api/authentication';
 import { trackMetric } from '@/server/lib/trackMetric';
+import { ChangePasswordErrors } from '@/shared/model/Errors';
+import { FieldError } from '@/shared/model/ClientState';
 
 const { okta } = getConfiguration();
 
@@ -98,11 +100,13 @@ const checkTokenInIDAPI = async (
   }
 };
 
-const checkTokenInOkta = async (
+export const checkTokenInOkta = async (
   path: PasswordRoutePath,
   pageTitle: PasswordPageTitle,
   req: Request,
   res: ResponseWithRequestState,
+  error?: ChangePasswordErrors,
+  fieldErrors?: Array<FieldError>,
 ) => {
   const { token } = req.params;
 
@@ -127,6 +131,10 @@ const checkTokenInOkta = async (
             browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
             email,
             timeUntilTokenExpiry,
+            fieldErrors,
+          },
+          globalMessage: {
+            error,
           },
         }),
       },

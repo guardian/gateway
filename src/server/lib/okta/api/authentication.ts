@@ -8,16 +8,12 @@ import {
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { Response } from 'node-fetch';
 import { handleErrorResponse } from '@/server/lib/okta/api/errors';
-import { OktaAPIResponseParsingError } from '@/server/models/okta/Error';
+import { OktaError } from '@/server/models/okta/Error';
 import {
   AuthenticationRequestParameters,
   AuthenticationTransaction,
 } from '@/server/models/okta/Authentication';
-import {
-  handleRecoveryTransactionResponse,
-  handleVoidResponse,
-} from '@/server/lib/okta/api/responses';
-import { RecoveryTransaction } from '@/server/models/okta/RecoveryTransaction';
+import { handleVoidResponse } from '@/server/lib/okta/api/responses';
 
 const { okta } = getConfiguration();
 
@@ -91,13 +87,13 @@ export const sendForgotPasswordEmail = async (
  */
 export const validateRecoveryToken = async (body: {
   recoveryToken: string;
-}): Promise<RecoveryTransaction> => {
+}): Promise<AuthenticationTransaction> => {
   const path = buildUrl('/api/v1/authn/recovery/token');
   return await fetch(joinUrl(okta.orgUrl, path), {
     method: 'POST',
     body: JSON.stringify(body),
     headers: defaultHeaders,
-  }).then(handleRecoveryTransactionResponse);
+  }).then(handleTokenResponse);
 };
 
 /**
@@ -128,10 +124,15 @@ const handleTokenResponse = async (
           stateToken: token.stateToken,
           sessionToken: token.sessionToken,
           expiresAt: token.expiresAt,
+          _embedded: token._embedded,
         };
       });
     } catch (error) {
-      throw new OktaAPIResponseParsingError(error);
+      throw new OktaError({
+        message: `Could not parse Okta user response ${JSON.stringify(
+          response,
+        )}`,
+      });
     }
   } else {
     return await handleErrorResponse(response);
