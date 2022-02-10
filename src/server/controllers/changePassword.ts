@@ -184,7 +184,6 @@ const changePasswordInOkta = async (
         stateToken,
         newPassword: password,
       });
-      logger.info(`***** Session token: ${sessionToken}`);
 
       trackMetric('OktaUpdatePassword::Success');
 
