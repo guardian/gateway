@@ -2,12 +2,9 @@ import React from 'react';
 import { PasswordForm } from '@/client/components/PasswordForm';
 import { FieldError } from '@/shared/model/ClientState';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
-import {
-  ConsentsContent,
-  CONSENTS_MAIN_COLOR,
-} from '@/client/layouts/shared/Consents';
-import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
-import { text } from '@/client/styles/Consents';
+import { ConsentsContent } from '@/client/layouts/shared/Consents';
+import { getAutoRow, passwordFormSpanDef } from '@/client/styles/Grid';
+import { text, greyBorderTop } from '@/client/styles/Consents';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import {
   LinkButton,
@@ -30,27 +27,30 @@ const linkButton = css`
   margin-top: ${space[3]}px;
 `;
 
+const emailSpan = css`
+  font-weight: bold;
+`;
+
 export const Welcome = ({
   submitUrl,
   email,
   fieldErrors,
   passwordSet = false,
 }: Props) => {
-  const autoRow = getAutoRow(1, gridItemColumnConsents);
+  const autoRow = getAutoRow(1, passwordFormSpanDef);
 
   return (
     <ConsentsLayout
       title="Welcome to the Guardian"
       current={CONSENTS_PAGES.PASSWORD}
-      bgColor={CONSENTS_MAIN_COLOR}
       showContinueButton={false}
     >
       <ConsentsContent>
-        <p css={[text, autoRow()]}>
+        <p css={[text, greyBorderTop, autoRow()]}>
           {passwordSet
             ? 'Password already set for '
             : 'Please create a password for '}{' '}
-          {email || 'your new account'}
+          {<span css={emailSpan}>{email}</span> || 'your new account'}
         </p>
         {passwordSet ? (
           <div css={autoRow()}>

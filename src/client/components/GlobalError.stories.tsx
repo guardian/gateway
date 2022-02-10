@@ -14,7 +14,7 @@ export const Default = () => (
       link: '',
       linkText: 'click here',
     }}
-    error="An error message. For more informaition"
+    error="An error message. For more information"
   />
 );
 Default.storyName = 'default';
@@ -25,7 +25,7 @@ export const Left = () => (
       link: '',
       linkText: 'click here',
     }}
-    error="An error message. For more informaition"
+    error="An error message. For more information"
     left={true}
   />
 );

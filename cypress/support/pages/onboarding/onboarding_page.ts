@@ -4,17 +4,17 @@ class Onboarding {
   static URL = '/consents';
 
   static CONTENT = {
-    SAVE_CONTINUE_BUTTON: 'Save and continue',
-    GO_BACK_BUTTON: 'Go back',
+    CONTINUE_BUTTON: 'Continue',
+    PREVIOUS_BUTTON: 'Go back',
     REPORT_ERROR_LINK: 'Report this error',
   };
 
   static backButton() {
-    return cy.contains(Onboarding.CONTENT.GO_BACK_BUTTON);
+    return cy.contains(Onboarding.CONTENT.PREVIOUS_BUTTON);
   }
 
   static saveAndContinueButton() {
-    return cy.contains(Onboarding.CONTENT.SAVE_CONTINUE_BUTTON);
+    return cy.contains(Onboarding.CONTENT.CONTINUE_BUTTON);
   }
 
   static allCheckboxes() {

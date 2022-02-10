@@ -23,5 +23,14 @@ export const terminalLog = (violations: axe.Result[]) => {
 // for use on page reloads after axction taken
 export const injectAndCheckAxe = () => {
   cy.injectAxe();
+  cy.configureAxe({
+    rules: [
+      {
+        selector: '[data-cy="exclude-a11y-check"]',
+        matches: 'color-contrast-evaluate',
+        id: 'color-contrast',
+      },
+    ],
+  });
   cy.checkA11y(undefined, undefined, terminalLog);
 };

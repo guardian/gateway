@@ -157,17 +157,17 @@ describe('Onboarding flow', () => {
       ReviewPage.backButton().should('not.exist');
       ReviewPage.saveAndContinueButton().should('not.exist');
 
-      // contains opted in consents
-      Object.values(ReviewPage.CONTENT.CONSENT).forEach((consent) =>
-        cy.contains(consent),
-      );
-
       // contains opted in newsletters
       Object.values(ReviewPage.CONTENT.NEWSLETTERS).forEach((newsletter) =>
         cy.contains(newsletter),
       );
 
-      ReviewPage.marketingAnalysisChoice().contains('Yes');
+      // contains consents
+      cy.contains(ReviewPage.CONTENT.SUPPORTER_CONSENT);
+      cy.contains(ReviewPage.CONTENT.PROFILING_CONSENT);
+
+      // does not contain messaging encouraging user to consider other newsletters
+      cy.contains(ReviewPage.CONTENT.NO_NEWSLETTERS_TITLE).should('not.exist');
 
       ReviewPage.returnButton()
         .should('have.attr', 'href')
@@ -239,10 +239,17 @@ describe('Onboarding flow', () => {
       ReviewPage.backButton().should('not.exist');
       ReviewPage.saveAndContinueButton().should('not.exist');
 
-      ReviewPage.newslettersSection().contains('N/A');
-      ReviewPage.consentsSection().contains('N/A');
+      // contains no opted in newsletters
+      Object.values(ReviewPage.CONTENT.NEWSLETTERS).forEach((newsletter) =>
+        cy.contains(newsletter).should('not.exist'),
+      );
 
-      ReviewPage.marketingAnalysisChoice().contains('No');
+      // contains no consents
+      cy.contains(ReviewPage.CONTENT.SUPPORTER_CONSENT).should('not.exist');
+      cy.contains(ReviewPage.CONTENT.PROFILING_CONSENT).should('not.exist');
+
+      // contains messaging encouraging user to explore other newsletters
+      cy.contains(ReviewPage.CONTENT.NO_NEWSLETTERS_TITLE);
 
       ReviewPage.returnButton()
         .should('have.attr', 'href')
@@ -451,11 +458,11 @@ describe('Onboarding flow', () => {
       CommunicationsPage.goto();
       CommunicationsPage.backButton().should('not.exist');
       CommunicationsPage.consentCheckboxWithTitle(
-        'Subscriptions, membership and contributions',
+        'Supporting the Guardian',
       ).should('be.checked');
     });
 
-    it('display a relevant error message on user end point failure', () => {
+    it('displays a relevant error message on user end point failure', () => {
       cy.mockAll(500, {}, USER_ENDPOINT);
       CommunicationsPage.goto();
       CommunicationsPage.errorBanner().contains(USER_ERRORS.GENERIC);
