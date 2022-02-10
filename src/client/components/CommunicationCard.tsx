@@ -1,15 +1,19 @@
 import React, { FunctionComponent } from 'react';
 import {
-  background,
-  text,
   neutral,
-  titlepiece,
-  textSans,
   space,
   from,
+  brand,
+  headline,
+  body,
 } from '@guardian/source-foundations';
 import { css, SerializedStyles } from '@emotion/react';
-import { CheckboxGroup, Checkbox } from '@guardian/source-react-components';
+import {
+  CheckboxGroup,
+  Checkbox,
+  SvgEnvelope,
+} from '@guardian/source-react-components';
+import { greyBorderBottom, greyBorderTop } from '../styles/Consents';
 
 interface CommunicationCardProps {
   title: string;
@@ -20,41 +24,15 @@ interface CommunicationCardProps {
   cssOverrides?: SerializedStyles;
 }
 
-const communicationCard = css`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  border: 1px solid white;
-  margin: 0px 0px ${space[4]}px 0px;
-`;
-
-const communicationCardHeadingImage = (image: string) => css`
-  background-image: url('${image}');
-  background-position: bottom 0px right 0px;
-  background-repeat: no-repeat;
-  background-size: 75%;
-`;
-
-const communicationCardHeadingContainer = (image?: string) => css`
-  background-color: ${background.ctaPrimary};
-
-  ${image && communicationCardHeadingImage(image)}
-
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 14px ${space[3]}px 14px ${space[3]}px;
-  ${from.tablet} {
-    height: auto;
-  }
-`;
-
 const communicationCardHeadingText = css`
-  color: ${text.ctaPrimary};
+  color: ${brand[400]};
   margin: 0;
-  ${titlepiece.small()};
+  ${headline.medium()};
   font-size: 20px;
   letter-spacing: 0.3px;
+  ${from.tablet} {
+    padding-left: ${space[3]}px;
+  }
 `;
 
 const communicationCardBodyContainer = css`
@@ -62,14 +40,16 @@ const communicationCardBodyContainer = css`
   flex-direction: column;
   justify-content: flex-start;
   flex: 1 1 auto;
-  background-color: #eaeef5;
-  padding: ${space[3]}px ${space[3]}px 6px ${space[3]}px;
+  padding: ${space[3]}px 0 6px;
+  ${from.tablet} {
+    padding: ${space[3]}px ${space[3]}px 6px ${space[3]}px;
+  }
 `;
 
 const communicationCardBodyText = css`
   color: ${neutral[20]};
   margin: 0;
-  ${textSans.medium()}
+  ${body.medium()}
   max-width: 640px;
 `;
 
@@ -77,8 +57,10 @@ const communicationCardCheckboxContainer = css`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  background-color: #eaeef5;
-  padding: ${space[2]}px ${space[3]}px;
+  padding: ${space[2]}px 0;
+  ${from.tablet} {
+    padding: ${space[2]}px ${space[3]}px;
+  }
 `;
 
 // TODO: hacked background colour, should be fixed in future source checkbox implementation
@@ -87,32 +69,82 @@ const communicationCardCheckbox = css`
   z-index: 0 !important;
 `;
 
+const communicationCardInfoContainer = css`
+  display: flex;
+  flex-direction: column;
+  ${from.tablet} {
+    flex-direction: row;
+    ${greyBorderBottom}
+  }
+`;
+
+// min-height here is due to IE being strange
+// https://stackoverflow.com/questions/8673356/ie-doesnt-support-height-auto-for-images-what-should-i-use
+const img = css`
+  width: 100%;
+  height: auto;
+  min-height: 1px;
+  ${from.tablet} {
+    width: auto;
+    height: 162px;
+  }
+`;
+
+const iconStyles = css`
+  display: inline-block;
+  background-color: ${brand[400]};
+  border-radius: 100%;
+  margin-top: ${space[2]}px;
+  padding: 2px;
+  svg {
+    display: block;
+    fill: ${neutral[100]};
+    height: 22px;
+    width: 22px;
+  }
+`;
+
+const blueBorderBottom = css`
+  border-bottom: 1px solid ${brand[400]};
+  padding-bottom: ${space[1]}px;
+`;
+
+// IE11 doesn't know that block-level elements shouldn't overflow their parent
+const ieFlexOverflowFix = css`
+  width: 100%;
+`;
+
 export const CommunicationCard: FunctionComponent<CommunicationCardProps> = ({
   title,
   body,
   value,
   image,
   checked,
-  cssOverrides,
 }) => {
   return (
-    <div css={[communicationCard, cssOverrides]}>
-      <div css={communicationCardHeadingContainer(image)}>
-        <h3 css={communicationCardHeadingText}>{title}</h3>
+    <div css={[greyBorderTop, blueBorderBottom, ieFlexOverflowFix]}>
+      <div css={[communicationCardInfoContainer]}>
+        <img css={img} src={image} alt={title} />
+        <div css={ieFlexOverflowFix}>
+          <h3 css={communicationCardHeadingText}>{title}</h3>
+          <div css={communicationCardBodyContainer}>
+            <p css={communicationCardBodyText}>{body}</p>
+          </div>
+          <div css={communicationCardCheckboxContainer}>
+            <CheckboxGroup name={value} label={title} hideLabel={true}>
+              <Checkbox
+                cssOverrides={communicationCardCheckbox}
+                value={value}
+                label="Yes, sign me up"
+                defaultChecked={checked}
+              />
+            </CheckboxGroup>
+          </div>
+        </div>
       </div>
-      <div css={communicationCardBodyContainer}>
-        <p css={communicationCardBodyText}>{body}</p>
-      </div>
-      <div css={communicationCardCheckboxContainer}>
-        <CheckboxGroup name={value} label={title} hideLabel={true}>
-          <Checkbox
-            cssOverrides={communicationCardCheckbox}
-            value={value}
-            label="Sign Up"
-            defaultChecked={checked}
-          />
-        </CheckboxGroup>
-      </div>
+      <span css={iconStyles}>
+        <SvgEnvelope />
+      </span>
     </div>
   );
 };

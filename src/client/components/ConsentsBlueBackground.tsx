@@ -1,5 +1,5 @@
 import React from 'react';
-import { brand, from } from '@guardian/source-foundations';
+import { neutral, from } from '@guardian/source-foundations';
 import { css, SerializedStyles } from '@emotion/react';
 import { gridRow } from '@/client/styles/Grid';
 
@@ -8,18 +8,12 @@ type Props = {
   children: React.ReactNode;
 };
 
-const CONSENTS_MAIN_COLOR = '#eaf1fd';
-
-const consentsBackground = css`
-  background-color: ${CONSENTS_MAIN_COLOR};
-`;
-
-const blueBorder = css`
+const greyBorder = css`
   margin: 0 auto;
 
   ${from.tablet} {
-    border-left: 1px solid ${brand[400]};
-    border-right: 1px solid ${brand[400]};
+    border-left: 1px solid ${neutral[86]};
+    border-right: 1px solid ${neutral[86]};
   }
 `;
 
@@ -32,7 +26,7 @@ const flex = css`
 `;
 
 export const ConsentsBlueBackground = ({ children, cssOverrides }: Props) => (
-  <div css={[consentsBackground, flex, cssOverrides]}>
-    <div css={[gridRow, blueBorder]}>{children}</div>
+  <div css={[flex, cssOverrides]}>
+    <div css={[gridRow, greyBorder]}>{children}</div>
   </div>
 );

@@ -6,12 +6,10 @@ import {
   space,
   from,
   textSans,
-  titlepiece,
+  headline,
 } from '@guardian/source-foundations';
-import { AutoRow, gridItemColumnConsents, gridRow } from '@/client/styles/Grid';
+import { AutoRow, gridRow } from '@/client/styles/Grid';
 import { CONSENTS_PAGES_ARR } from '@/client/models/ConsentsPages';
-import { CONSENTS_MAIN_COLOR } from '@/client/layouts/shared/Consents';
-import { SvgCheckmark } from '@guardian/source-react-components';
 
 type Props = {
   autoRow: AutoRow;
@@ -20,40 +18,27 @@ type Props = {
 };
 
 const BORDER_SIZE = 2;
-const CIRCLE_DIAMETER = 24;
+const CIRCLE_DIAMETER = 12;
 
-const consentsBackground = css`
-  background-color: ${CONSENTS_MAIN_COLOR};
-`;
-
-// fixes overlapping text issue in IE
-// derived from this solution https://stackoverflow.com/a/49368815
-const ieFlexFix = css`
-  flex: 0 0 auto;
-`;
-
-const blueBorder = css`
+const greyBorder = css`
   margin: 0 auto;
 
   ${from.tablet} {
-    border-left: 1px solid ${brand[400]};
-    border-right: 1px solid ${brand[400]};
+    border-left: 1px solid ${neutral[86]};
+    border-right: 1px solid ${neutral[86]};
   }
 `;
 
 const h1 = css`
-  color: ${brand[400]};
-  margin: ${space[12]}px 0 ${space[5]}px 0;
-  ${titlepiece.small({ fontWeight: 'bold' })};
-  font-size: 38px;
-  line-height: 1;
+  color: ${neutral[7]};
+  margin: ${space[9]}px 0 ${space[6]}px;
+  ${headline.small({ fontWeight: 'bold' })}};
+`;
+
+// For some reason this media query only applies if we use a separate style
+const h1ResponsiveText = css`
   ${from.tablet} {
-    ${titlepiece.medium({ fontWeight: 'bold' })};
-    font-size: 42px;
-  }
-  ${from.desktop} {
-    ${titlepiece.large({ fontWeight: 'bold' })};
-    font-size: 50px;
+    font-size: 32px;
   }
 `;
 
@@ -91,38 +76,80 @@ const li = (numPages: number, isLastPage: boolean) => css`
     ${from.phablet} {
       ${textSans.small({ fontWeight: 'bold' })}
     }
+
+    &::after {
+      background-color: ${neutral[60]};
+    }
   }
 
   &::after,
   &.complete::after {
     content: ' ';
-    background-color: ${neutral[60]};
     height: ${BORDER_SIZE}px;
     position: absolute;
     /* Border position from top is distance of a semicircle minus half the border thickness */
     top: ${CIRCLE_DIAMETER / 2 + BORDER_SIZE - BORDER_SIZE / 2}px;
-    left: ${CIRCLE_DIAMETER + 2 * BORDER_SIZE}px;
+    left: 0;
     right: 0;
   }
   &.complete::after {
     height: ${BORDER_SIZE * 2}px;
     background-color: ${brand[400]};
   }
-  &:last-child::after {
-    display: none;
-  }
   &::before {
     border: ${BORDER_SIZE}px solid ${neutral[60]};
     border-radius: 50%;
     ${circle}
+    z-index: 100;
   }
   &.active::before,
   &.complete::before {
     content: ' ';
+    border: 3px solid ${brand[400]};
+    ${circle};
+  }
+  &.complete::before {
     background-color: ${brand[400]};
-    border: ${BORDER_SIZE}px solid ${brand[400]};
+  }
+  &:first-child.complete::before {
+    left: 0;
+  }
+
+  &:last-child::after {
+    border: ${BORDER_SIZE}px solid ${neutral[60]};
+    border-radius: 50%;
+    ${circle}
+    z-index: 100;
+    left: 0;
+  }
+  &.active:last-child::after,
+  &.complete:last-child::after {
+    content: ' ';
+    border: 3px solid ${brand[400]};
     ${circle}
   }
+  &.complete:last-child::after {
+    background-color: ${brand[400]};
+  }
+
+  &:last-child::before,
+  &:last-child.complete::before {
+    box-sizing: initial;
+    border-radius: initial;
+    border: none;
+    width: initial;
+    content: ' ';
+    height: ${BORDER_SIZE}px;
+    position: absolute;
+    /* Border position from top is distance of a semicircle minus half the border thickness */
+    top: ${CIRCLE_DIAMETER / 2 + BORDER_SIZE - BORDER_SIZE / 2}px;
+    left: 0;
+  }
+  &:last-child.complete::before {
+    height: ${BORDER_SIZE * 2}px;
+    background-color: ${brand[400]};
+  }
+
   & svg {
     display: none;
   }
@@ -144,12 +171,26 @@ const pageProgression = css`
   margin-top: ${space[5]}px;
   margin-bottom: 0;
   li {
-    color: ${brand[400]};
+    color: ${neutral[60]};
+    &.active,
+    &.complete {
+      color: ${neutral[0]};
+    }
     &::after {
-      background-color: ${brand[400]};
+      background-color: ${neutral[60]};
     }
     &::before {
-      border: 2px solid ${brand[400]};
+      border: 2px solid ${neutral[60]};
+      background-color: white;
+    }
+    &:first-child::before {
+      left: 0;
+    }
+    &:last-child::before {
+      background-color: ${neutral[60]};
+    }
+    &:last-child::after {
+      border: 2px solid ${neutral[60]};
       background-color: white;
     }
   }
@@ -198,7 +239,6 @@ const PageProgression = ({
             key={i}
             css={li(pages.length, isLastPage)}
           >
-            <SvgCheckmark />
             <div css={maxContentOverride(isLastPage)}>{page}</div>
           </li>
         );
@@ -208,16 +248,16 @@ const PageProgression = ({
 };
 
 export const ConsentsSubHeader = ({ autoRow, title, current }: Props) => (
-  <header css={[consentsBackground, ieFlexFix]}>
-    <div css={[blueBorder, gridRow]}>
+  <header data-cy="exclude-a11y-check">
+    <div css={[greyBorder, gridRow]}>
       {current && (
         <PageProgression
-          cssOverrides={[pageProgression, autoRow(gridItemColumnConsents)]}
+          cssOverrides={[pageProgression, autoRow()]}
           pages={CONSENTS_PAGES_ARR}
           current={current}
         />
       )}
-      <h1 css={[h1, autoRow(gridItemColumnConsents)]}>{title}</h1>
+      <h1 css={[h1, h1ResponsiveText, autoRow()]}>{title}</h1>
     </div>
   </header>
 );

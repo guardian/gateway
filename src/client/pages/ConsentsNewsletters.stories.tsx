@@ -23,6 +23,7 @@ export const SingleNewsletter = () => (
         nameId: 'n0',
         description: 'Newsletter description',
         name: 'Newsletter Name',
+        frequency: 'Weekly',
       },
     ]}
   />
@@ -39,12 +40,14 @@ export const MultipleNewsletter = () => (
         nameId: 'n0',
         description: 'Newsletter description',
         name: 'Newsletter Name',
+        frequency: 'Weekly',
       },
       {
         id: '4166',
         nameId: 'n1',
         description: 'Another newsletter description',
         name: 'Another Newsletter Name',
+        frequency: 'Every day',
       },
     ]}
   />

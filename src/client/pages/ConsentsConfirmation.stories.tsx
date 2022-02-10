@@ -9,6 +9,55 @@ export default {
   parameters: { layout: 'fullscreen' },
 } as Meta;
 
+const productConsents = [
+  {
+    id: '',
+    description: '',
+    consented: true,
+    name: 'Product One',
+  },
+  {
+    id: '',
+    description: '',
+    consented: true,
+    name: 'Product Two',
+  },
+  {
+    id: '',
+    description: '',
+    consented: true,
+    name: 'Product Three',
+  },
+];
+const subscribedNewsletters = [
+  {
+    id: '',
+    description: '',
+    nameId: '',
+    subscribed: true,
+    name: 'Newsletter One',
+  },
+  {
+    id: '',
+    description: '',
+    nameId: '',
+    subscribed: true,
+    name: 'Newsletter Two',
+  },
+];
+
+export const None = () => (
+  <ConsentsConfirmation
+    returnUrl=""
+    optedOutOfProfiling={true}
+    productConsents={[]}
+    subscribedNewsletters={[]}
+  />
+);
+None.story = {
+  name: 'with no consents given',
+};
+
 export const Profiling = () => (
   <ConsentsConfirmation
     returnUrl=""
@@ -26,22 +75,7 @@ export const Newsletters = () => (
     returnUrl=""
     optedOutOfProfiling={true}
     productConsents={[]}
-    subscribedNewsletters={[
-      {
-        id: '',
-        description: '',
-        nameId: '',
-        subscribed: true,
-        name: 'Newsletter One',
-      },
-      {
-        id: '',
-        description: '',
-        nameId: '',
-        subscribed: true,
-        name: 'Newsletter Two',
-      },
-    ]}
+    subscribedNewsletters={subscribedNewsletters}
   />
 );
 Newsletters.story = {
@@ -52,29 +86,22 @@ export const Products = () => (
   <ConsentsConfirmation
     returnUrl=""
     optedOutOfProfiling={true}
-    productConsents={[
-      {
-        id: '',
-        description: '',
-        consented: true,
-        name: 'Product One',
-      },
-      {
-        id: '',
-        description: '',
-        consented: true,
-        name: 'Product Two',
-      },
-      {
-        id: '',
-        description: '',
-        consented: true,
-        name: 'Product Three',
-      },
-    ]}
+    productConsents={productConsents}
     subscribedNewsletters={[]}
   />
 );
 Products.story = {
   name: 'with multiple products consented to',
+};
+
+export const Everything = () => (
+  <ConsentsConfirmation
+    returnUrl=""
+    optedOutOfProfiling={false}
+    productConsents={productConsents}
+    subscribedNewsletters={subscribedNewsletters}
+  />
+);
+Everything.story = {
+  name: 'with everything consented to',
 };

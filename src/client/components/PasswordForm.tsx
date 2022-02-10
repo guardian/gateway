@@ -4,7 +4,6 @@ import {
   SvgCross,
   SvgAlertTriangle,
   SvgCheckmark,
-  SvgArrowRightStraight,
 } from '@guardian/source-react-components';
 import {
   success,
@@ -13,7 +12,6 @@ import {
   textSans,
   space,
 } from '@guardian/source-foundations';
-import { button } from '@/client/styles/Shared';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { css } from '@emotion/react';
 
@@ -28,8 +26,9 @@ import {
   ShortPasswordFieldErrors,
 } from '@/shared/model/Errors';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
-import { AutoRow, passwordFormSpanDef } from '@/client/styles/Grid';
+import { AutoRow } from '@/client/styles/Grid';
 import { MainForm } from '@/client/components/MainForm';
+import { passwordButton } from '../styles/Consents';
 import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 import { logger } from '../lib/clientSideLogger';
 
@@ -280,7 +279,7 @@ export const PasswordForm = ({
 
   return (
     <form
-      css={[form, gridAutoRow && gridAutoRow(passwordFormSpanDef)]}
+      css={[form, gridAutoRow && gridAutoRow()]}
       method="post"
       action={submitUrl}
       onSubmit={(e) => {
@@ -327,9 +326,8 @@ export const PasswordForm = ({
       )}
 
       <Button
-        css={button}
+        css={passwordButton}
         type="submit"
-        icon={<SvgArrowRightStraight />}
         iconSide="right"
         data-cy="change-password-button"
       >
