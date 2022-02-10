@@ -85,7 +85,7 @@ export const reactivateUser = async <P extends OktaApiRoutePaths>(
   }).then(handleVoidResponse);
 };
 
-export const handleUserResponse = async (response: Response): Promise<User> => {
+const handleUserResponse = async (response: Response): Promise<User> => {
   if (response.ok) {
     try {
       return await response.json().then((json) => {
