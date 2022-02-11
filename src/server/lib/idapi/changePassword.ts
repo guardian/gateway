@@ -12,7 +12,7 @@ import {
 } from '@/shared/model/Errors';
 import { logger } from '@/server/lib/serverSideLogger';
 import { IdapiError } from '@/server/models/Error';
-import { IdapiCookies } from '@/shared/model/IDAPIAuth';
+import { IdapiCookies } from '@/server/lib/idapi/IDAPICookies';
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
   if (error.status === 'error' && error.errors?.length) {

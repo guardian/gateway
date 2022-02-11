@@ -26,10 +26,11 @@ export const loginMiddleware = async (
         ...res.locals.queryParams,
         returnUrl: joinUrl(profileUrl, req.path),
       });
-      return res.redirect(redirect);
+      return res.redirect(303, redirect);
     }
 
     return res.redirect(
+      303,
       addQueryParamsToUntypedPath(LOGIN_REDIRECT_URL, {
         ...res.locals.queryParams,
         returnUrl: joinUrl(profileUrl, req.path),
@@ -42,6 +43,7 @@ export const loginMiddleware = async (
 
   if (!sc_gu_u || !sc_gu_la) {
     res.redirect(
+      303,
       addQueryParamsToUntypedPath(LOGIN_REDIRECT_URL, {
         ...res.locals.queryParams,
         returnUrl: joinUrl(profileUrl, req.path),
@@ -74,6 +76,7 @@ export const loginMiddleware = async (
     logger.error('loginMiddlewareFailure', e);
     trackMetric('LoginMiddleware::Failure');
     res.redirect(
+      303,
       addQueryParamsToUntypedPath(
         LOGIN_REDIRECT_URL,
         {
