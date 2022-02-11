@@ -14,13 +14,16 @@ export interface NewsletterPatch {
 
 export enum Newsletters {
   BOOKMARKS = '4137',
-  GREENLIGHT = '4147',
-  TODAY_UK = '4151',
+  DOWN_TO_EARTH = '4147',
+  MORNING_BRIEFING_AU = '4148',
+  MORNING_BRIEFING_UK = '4156',
+  MORNING_BRIEFING_US = '4300',
+  THE_GUIDE = '6006',
   THE_LONG_READ = '4165',
-  TODAY_US = '4152',
   TODAY_AU = '4150',
-  US_MORNING_BRIEFING = '4300',
-  MINUTE_US = '4166',
+  TODAY_UK = '4151',
+  TODAY_US = '4152',
+  WORD_OF_MOUTH = '6002',
 }
 
 export const ALL_NEWSLETTER_IDS = Object.values(Newsletters);

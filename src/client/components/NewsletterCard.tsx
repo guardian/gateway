@@ -15,6 +15,7 @@ import {
   from,
   news,
   culture,
+  lifestyle,
 } from '@guardian/source-foundations';
 import { NewsLetter } from '@/shared/model/Newsletter';
 import { NEWSLETTER_IMAGES } from '@/client/models/Newsletter';
@@ -70,11 +71,13 @@ const image = (id?: string) => {
         transparent 50.5%,
         transparent 100%
       );
+    ${from.tablet} {
+      padding: 28% calc(38% - 6px) 0 0;
+    }
   `;
 };
 
 const h1 = css`
-  color: ${brand[400]};
   ${headline.small()};
   margin: ${space[2]}px 0 ${space[1]}px 0;
   /* Override */
@@ -82,7 +85,6 @@ const h1 = css`
 `;
 
 const h2 = css`
-  color: ${brand[600]};
   ${textSans.small({ fontWeight: 'bold' })};
   font-size: 12px;
   margin: 0;
@@ -153,7 +155,7 @@ const frequencyStyles = css`
 `;
 
 const idColor = (id: string) => {
-  if (id.includes('today')) {
+  if (/today|morning/.test(id)) {
     return news[400];
   }
   if (id === 'the-long-read') {
@@ -164,6 +166,9 @@ const idColor = (id: string) => {
   }
   if (id === 'bookmarks') {
     return culture[400];
+  }
+  if (id === 'word-of-mouth' || id === 'the-guide-staying-in') {
+    return lifestyle[400];
   }
   return brand[400];
 };
