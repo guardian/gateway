@@ -20,6 +20,7 @@ import {
 } from '@/client/components/ExternalLink';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { SvgTickRound } from '@guardian/source-react-components';
+import locations from '@/shared/lib/locations';
 
 type ConsentsConfirmationProps = {
   error?: string;
@@ -146,7 +147,7 @@ export const ConsentsConfirmation = ({
                 You now have an account with the Guardian and you can manage
                 your preferences and options at anytime under&nbsp;
                 <ExternalLink
-                  href="https://manage.theguardian.com/email-prefs"
+                  href={locations.MMA_EMAIL_PREFERENCES}
                   subdued={true}
                 >
                   Emails &amp; marketing
@@ -196,7 +197,7 @@ export const ConsentsConfirmation = ({
               <p css={[text, paddingTop, autoRow()]}>
                 You can change these anytime in your account under&nbsp;
                 <ExternalLink
-                  href="https://manage.theguardian.com/email-prefs"
+                  href={locations.MMA_EMAIL_PREFERENCES}
                   subdued={true}
                 >
                   Emails &amp; marketing
@@ -213,7 +214,7 @@ export const ConsentsConfirmation = ({
                 <p css={[text, autoRow()]}>
                   We have over&nbsp;
                   <ExternalLink
-                    href="https://manage.theguardian.com/email-prefs"
+                    href={locations.MMA_EMAIL_PREFERENCES}
                     subdued={true}
                   >
                     40 different newsletters
