@@ -140,7 +140,7 @@ export const ConsentsConfirmation = ({
             </h2>
             {anyConsents ? (
               <p css={[text, autoRow()]}>
-                Please find below a summary of your selections.
+                Please find below a summary of your settings.
               </p>
             ) : (
               <p css={[text, autoRow()]}>
@@ -181,13 +181,13 @@ export const ConsentsConfirmation = ({
                 </ReviewTableRow>
               )}
               {!optedOutOfProfiling && (
-                <ReviewTableRow title="Consents">
+                <ReviewTableRow title="Data">
                   <div css={consentStyles}>
                     <span css={iconStyles}>
                       <SvgTickRound />
                     </span>
                     <p css={[text, itemText]}>
-                      Using your data for marketing analysis
+                      Allow analysis of my data for marketing
                     </p>
                   </div>
                 </ReviewTableRow>
