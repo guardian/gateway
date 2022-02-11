@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import {
-  from,
   space,
   headline,
   textSans,
@@ -10,20 +9,11 @@ import {
 export const heading = css`
   color: ${neutral[0]};
   margin: 0 0 ${space[3]}px;
-  ${headline.xxsmall({ fontWeight: 'bold' })};
-  font-size: 17px;
+  ${headline.xxxsmall({ fontWeight: 'bold' })};
 `;
 
 export const headingMarginSpace6 = css`
   margin-top: ${space[6]}px;
-`;
-
-export const headingWithMq = css`
-  ${heading}
-
-  ${from.tablet} {
-    ${headline.xxsmall({ fontWeight: 'bold' })}
-  }
 `;
 
 export const text = css`

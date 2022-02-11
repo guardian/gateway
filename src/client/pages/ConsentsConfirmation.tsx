@@ -11,7 +11,7 @@ import { ConsentsSubHeader } from '@/client/components/ConsentsSubHeader';
 import { ConsentsBlueBackground } from '@/client/components/ConsentsBlueBackground';
 import { ConsentsHeader } from '@/client/components/ConsentsHeader';
 import { Footer } from '@/client/components/Footer';
-import { greyBorderTop, headingWithMq, text } from '@/client/styles/Consents';
+import { greyBorderTop, heading, text } from '@/client/styles/Consents';
 import { Consent } from '@/shared/model/Consent';
 import { NewsLetter } from '@/shared/model/Newsletter';
 import {
@@ -137,7 +137,7 @@ export const ConsentsConfirmation = ({
         />
         <section css={[sectionStyles]}>
           <ConsentsContent>
-            <h2 css={[headingWithMq, autoRow(), greyBorderTop]}>
+            <h2 css={[heading, autoRow(), greyBorderTop]}>
               Thank you for completing your registration
             </h2>
             {anyConsents ? (
@@ -209,7 +209,7 @@ export const ConsentsConfirmation = ({
             )}
             {!subscribedNewsletters.length && (
               <>
-                <h2 css={[headingWithMq, autoRow(), greyBorderTop, marginTop]}>
+                <h2 css={[heading, autoRow(), greyBorderTop, marginTop]}>
                   Guardian newsletters
                 </h2>
                 <p css={[text, autoRow()]}>Didn’t find anything you like?</p>
