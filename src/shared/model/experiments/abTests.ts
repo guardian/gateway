@@ -1,5 +1,6 @@
 import { AB, ABTest, Participations } from '@guardian/ab-core';
 import { abSwitches } from './abSwitches';
+import { onboardingNewslettersTest } from './tests/onboarding-newsletters';
 
 interface ABTestConfiguration {
   abTestSwitches: Record<string, boolean>;
@@ -9,7 +10,7 @@ interface ABTestConfiguration {
 }
 
 // Add AB tests to run in this array
-export const tests: ABTest[] = [];
+export const tests: ABTest[] = [onboardingNewslettersTest];
 
 const getDefaultABTestConfiguration = (): ABTestConfiguration => ({
   abTestSwitches: abSwitches,
