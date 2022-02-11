@@ -102,9 +102,7 @@ const handleUserResponse = async (response: Response): Promise<User> => {
       });
     } catch (error) {
       throw new OktaError({
-        message: `Could not parse Okta user response ${JSON.stringify(
-          response,
-        )}`,
+        message: 'Could not parse Okta user response',
       });
     }
   } else {

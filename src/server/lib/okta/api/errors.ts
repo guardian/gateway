@@ -21,9 +21,7 @@ const extractErrorResponse = async (
     });
   } catch (error) {
     throw new OktaError({
-      message: `Could not parse Okta error response ${JSON.stringify(
-        response,
-      )}`,
+      message: 'Could not parse Okta error response',
     });
   }
 };

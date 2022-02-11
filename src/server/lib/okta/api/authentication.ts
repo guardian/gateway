@@ -129,9 +129,7 @@ const handleTokenResponse = async (
       });
     } catch (error) {
       throw new OktaError({
-        message: `Could not parse Okta user response ${JSON.stringify(
-          response,
-        )}`,
+        message: 'Could not parse Okta authentication transaction response',
       });
     }
   } else {
