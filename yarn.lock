@@ -8678,10 +8678,10 @@ expect@^27.5.0:
     jest-matcher-utils "^27.5.0"
     jest-message-util "^27.5.0"
 
-express-recaptcha@^5.0.2:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/express-recaptcha/-/express-recaptcha-5.0.2.tgz#17de212c165489462ab85e1e07c4ea81661d5e5f"
-  integrity sha512-111xDDJo1HPVwcU+hG1X3vOzRFWx/Yp9pyQ7qOVjkSfRXh2qeU9tLo1I0HBa1oLrB8rQlyxLUI9XXP5iUePnnw==
+express-recaptcha@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/express-recaptcha/-/express-recaptcha-5.1.0.tgz#e7aa67f85597ec4b90d68db540586f7205c46e7e"
+  integrity sha512-L9BSaHbwVzEAf38LNnFwEbk4qpX1LiD1z8viBGYBuxyBWWVKMgBrKDb1mNLq6uSxubJzZbyIz+0ldgTSXfxsvQ==
 
 express@^4.17.1:
   version "4.17.1"
