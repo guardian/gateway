@@ -60,9 +60,13 @@ export const ConsentsNewsletters = ({
         <h2 css={[heading, greyBorderTop, autoRow()]}>
           Free newsletters from the Guardian
         </h2>
-        <p css={[text, paragraphSpacing, autoRow()]}>
+        <p css={[text, autoRow()]}>
           Our newsletters help you get closer to our quality, independent
           journalism.
+        </p>
+        <p css={[text, paragraphSpacing, autoRow()]}>
+          Newsletters may contain information about Guardian products, services
+          and chosen charities or online advertisements.
         </p>
         <div css={autoRow()}>
           {newsletters.map((newsletter, i) => (
