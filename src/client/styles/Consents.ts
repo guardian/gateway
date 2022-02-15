@@ -23,6 +23,11 @@ export const text = css`
   max-width: 640px;
 `;
 
+export const textBold = css`
+  ${text};
+  ${textSans.medium({ fontWeight: 'bold' })};
+`;
+
 export const greyBorderTop = css`
   border-top: 1px solid ${neutral[86]};
   padding-top: ${space[1]}px;

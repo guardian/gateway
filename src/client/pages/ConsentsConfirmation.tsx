@@ -11,7 +11,12 @@ import { ConsentsSubHeader } from '@/client/components/ConsentsSubHeader';
 import { ConsentsBlueBackground } from '@/client/components/ConsentsBlueBackground';
 import { ConsentsHeader } from '@/client/components/ConsentsHeader';
 import { Footer } from '@/client/components/Footer';
-import { greyBorderTop, heading, text } from '@/client/styles/Consents';
+import {
+  greyBorderTop,
+  heading,
+  text,
+  textBold,
+} from '@/client/styles/Consents';
 import { Consent } from '@/shared/model/Consent';
 import { NewsLetter } from '@/shared/model/Newsletter';
 import {
@@ -45,8 +50,7 @@ const reviewTableRow = css`
 `;
 
 const reviewTableTextBold = css`
-  ${text}
-  font-weight: bold;
+  ${textBold}
   padding-bottom: ${space[2]}px;
 `;
 

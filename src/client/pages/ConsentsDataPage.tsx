@@ -18,6 +18,8 @@ export const ConsentsDataPage = () => {
     <ConsentsData
       consented={profiling_optout?.consented}
       description={profiling_optout?.description}
+      name={profiling_optout?.name}
+      id={profiling_optout?.id || Consents.PROFILING}
     />
   );
 };

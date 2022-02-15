@@ -246,6 +246,13 @@ export const gridItemSignInAndRegistration: SpanDefinition = {
   WIDE: { start: 4, span: 6 },
 };
 
+export const gridItemToggleSwitch: SpanDefinition = {
+  TABLET: { start: 1, span: 8 },
+  DESKTOP: { start: 3, span: 6 },
+  LEFT_COL: { start: 3, span: 6 },
+  WIDE: { start: 4, span: 6 },
+};
+
 export const getAutoRow = (
   offset = 0,
   spanDefinition?: SpanDefinition,

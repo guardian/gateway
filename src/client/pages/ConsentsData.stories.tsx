@@ -3,6 +3,7 @@ import React from 'react';
 import { Meta } from '@storybook/react';
 
 import { ConsentsData } from './ConsentsData';
+import { Consents } from '@/shared/model/Consent';
 
 export default {
   title: 'Pages/ConsentsData',
@@ -10,13 +11,14 @@ export default {
   parameters: { layout: 'fullscreen' },
 } as Meta;
 
-export const NoDescription = () => <ConsentsData />;
+export const NoDescription = () => <ConsentsData id={Consents.PROFILING} />;
 NoDescription.story = {
   name: 'with no description',
 };
 
 export const ConsentedTrue = () => (
   <ConsentsData
+    id={Consents.PROFILING}
     name="Allow the Guardian to analyse this data to improve marketing content"
     consented={true}
   />
@@ -27,6 +29,7 @@ ConsentedTrue.story = {
 
 export const ConsentedFalse = () => (
   <ConsentsData
+    id={Consents.PROFILING}
     name="Allow the Guardian to analyse this data to improve marketing content"
     consented={false}
   />
