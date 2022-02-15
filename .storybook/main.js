@@ -7,6 +7,10 @@ module.exports = {
   core: {
     builder: 'webpack5',
   },
+  babel: async (options) => {
+    options.presets.push('@emotion/babel-preset-css-prop');
+    return options;
+  },
   webpackFinal: async (config) => {
     // Add the @client alias to prevent imports using it from failing
     // Nb. __dirname is the current working directory, so .storybook in this case
