@@ -17,7 +17,7 @@ NoDescription.story = {
 
 export const ConsentedTrue = () => (
   <ConsentsData
-    description="I do NOT wish to be contacted by the Guardian for market research purposes."
+    name="Allow the Guardian to analyse this data to improve marketing content"
     consented={true}
   />
 );
@@ -27,7 +27,7 @@ ConsentedTrue.story = {
 
 export const ConsentedFalse = () => (
   <ConsentsData
-    description="I do NOT wish to be contacted by the Guardian for market research purposes."
+    name="Allow the Guardian to analyse this data to improve marketing content"
     consented={false}
   />
 );
