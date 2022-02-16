@@ -36,7 +36,7 @@ const form = css`
   flex-direction: column;
 `;
 
-const mainStyles = css`
+export const mainStyles = css`
   display: flex;
   flex-direction: column;
   flex: 1 0 auto;

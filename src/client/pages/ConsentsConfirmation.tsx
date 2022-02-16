@@ -21,6 +21,7 @@ import {
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { SvgTickRound } from '@guardian/source-react-components';
 import locations from '@/shared/lib/locations';
+import { mainStyles } from '@/client/layouts/ConsentsLayout';
 
 type ConsentsConfirmationProps = {
   error?: string;
@@ -60,7 +61,8 @@ const ReviewTableRow: FunctionComponent<{ title: string }> = ({
 );
 
 const continueBoxFlex = css`
-  flex: 0 0 auto;
+  display: flex;
+  flex: 1 0 auto;
 `;
 
 const sectionStyles = css`
@@ -128,7 +130,7 @@ export const ConsentsConfirmation = ({
         success={success}
         geolocation={geolocation}
       />
-      <main>
+      <main css={mainStyles}>
         <ConsentsSubHeader
           autoRow={autoRow}
           title="Your registration is complete"
