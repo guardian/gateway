@@ -27,18 +27,18 @@ import {
 } from '@/server/lib/encryptedStateCookie';
 import { getPersistableQueryParams } from '@/shared/lib/queryParams';
 import { RoutePaths } from '@/shared/model/Routes';
-import { TEST_ID as OPT_IN_PROMPT_TEST_ID } from '@/shared/model/experiments/tests/opt-in-prompt';
-import { addReturnUrlToPath } from '@/server/lib/queryParams';
-import { CONSENTS_POST_SIGN_IN_PAGE, Consents } from '@/shared/model/Consent';
+import { CONSENTS_POST_SIGN_IN_PAGE } from '@/shared/model/Consent';
 import {
   getUserConsentsForPage,
   getConsentValueFromRequestBody,
   update as patchConsents,
 } from '@/server/lib/idapi/consents';
 import { loginMiddleware } from '@/server/lib/middleware/login';
-import { hasExperimentRun, setExperimentRan } from '@/server/lib/experiments';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { _ } from '@guardian/libs/dist/types/logger';
+import postSignInController from '@/server/lib/postSignInController';
 
-const { defaultReturnUri, okta } = getConfiguration();
+const { okta } = getConfiguration();
 
 /**
  * Method to perform the Authorization Code Flow
@@ -185,12 +185,7 @@ const idapiSignInController = async (
   req: Request,
   res: ResponseWithRequestState,
 ) => {
-  const state = res.locals;
-
   const { email = '', password = '' } = req.body;
-
-  const { returnUrl } = state.pageData;
-  const redirectUrl = returnUrl || defaultReturnUri;
 
   try {
     const cookies = await authenticateWithIdapi(email, password, req.ip);
@@ -199,48 +194,7 @@ const idapiSignInController = async (
 
     trackMetric('SignIn::Success');
 
-    const optInPromptActive = await (async () => {
-      if (!state.abTesting.participations[OPT_IN_PROMPT_TEST_ID]) {
-        return false;
-      }
-
-      // Treating paths that only differ due to trailing slash as equivalent
-      const noTrailingSlash = (str: string) => str.replace(/\/$/, '');
-      if (noTrailingSlash(redirectUrl) !== noTrailingSlash(defaultReturnUri)) {
-        return false;
-      }
-
-      if (hasExperimentRun(req, OPT_IN_PROMPT_TEST_ID)) {
-        return false;
-      } else {
-        setExperimentRan(req, res, OPT_IN_PROMPT_TEST_ID, true);
-      }
-
-      const sc_gu_u = cookies.values.find(
-        ({ key }) => key === 'SC_GU_U',
-      )?.value;
-
-      if (!sc_gu_u) {
-        return false;
-      }
-
-      const consents = await getUserConsentsForPage(
-        CONSENTS_POST_SIGN_IN_PAGE,
-        req.ip,
-        sc_gu_u,
-      );
-
-      return !consents.find(({ id }) => id === Consents.SUPPORTER)?.consented;
-    })();
-
-    if (optInPromptActive) {
-      return res.redirect(
-        303,
-        addReturnUrlToPath('/signin/success', redirectUrl),
-      );
-    }
-
-    return res.redirect(303, redirectUrl);
+    return postSignInController(req, res, cookies);
   } catch (error) {
     logger.error(`${req.method} ${req.originalUrl}  Error`, error);
     const { message, status } =
