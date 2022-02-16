@@ -61,7 +61,8 @@ const ReviewTableRow: FunctionComponent<{ title: string }> = ({
 );
 
 const continueBoxFlex = css`
-  flex: 0 0 auto;
+  display: flex;
+  flex: 1 0 auto;
 `;
 
 const sectionStyles = css`
