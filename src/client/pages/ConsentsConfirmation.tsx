@@ -21,6 +21,7 @@ import {
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { SvgTickRound } from '@guardian/source-react-components';
 import locations from '@/shared/lib/locations';
+import { mainStyles } from '@/client/layouts/ConsentsLayout';
 
 type ConsentsConfirmationProps = {
   error?: string;
@@ -128,7 +129,7 @@ export const ConsentsConfirmation = ({
         success={success}
         geolocation={geolocation}
       />
-      <main>
+      <main css={mainStyles}>
         <ConsentsSubHeader
           autoRow={autoRow}
           title="Your registration is complete"
