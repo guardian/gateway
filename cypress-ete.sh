@@ -7,6 +7,10 @@ trap 'kill $(jobs -p)' INT TERM EXIT
 
 source .env
 
+# Set USE_OKTA=true to run the okta e2e tests.
+# We default to false here.
+: "${USE_OKTA:=false}"
+
 if [[ -z "${CYPRESS_MAILOSAUR_API_KEY}" ]]; then
   echo "You don't have the CYPRESS_MAILOSAUR_API_KEY environment variable set!"
   echo
@@ -23,5 +27,10 @@ else
   yarn build
   yarn start &
   yarn wait-on:server
-  yarn cypress open --env $CI_ENV --config '{"testFiles":["ete/**/*.ts"]}'
+
+  if [[ "$USE_OKTA" == "true" ]]; then
+    yarn cypress open --env $CI_ENV --config '{"testFiles":["ete-okta/**/*.ts"]}'
+  else
+    yarn cypress open --env $CI_ENV --config '{"testFiles":["ete/**/*.ts"]}'
+  fi
 fi
