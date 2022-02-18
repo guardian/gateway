@@ -77,8 +77,14 @@ export const EmailInput: React.FC<EmailInputProps> = ({
         // Transition error state when the input box loses focus.
         transitionState(e.target.validity);
       }}
-      onKeyDown={(e) => {
-        if (e.code === '') {
+      onInput={(e) => {
+        // We check the `composed` variable to see if the event originated from user input.
+        // This is so that we can run validation when users submit an email through a password manager.
+        // Composed is not supported in IE11, so we check to see if it's undefined first.
+        const notOriginatingFromUserInput =
+          e.nativeEvent.composed !== undefined && !e.nativeEvent.composed;
+
+        if (notOriginatingFromUserInput) {
           e.currentTarget.checkValidity();
           transitionState(e.currentTarget.validity);
         }
