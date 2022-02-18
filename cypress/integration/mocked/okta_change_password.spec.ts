@@ -296,11 +296,13 @@ describe('Change password in Okta', () => {
       mockPasswordResetSuccess();
 
       cy.intercept(
-        `http://localhost:9000/oauth2/${Cypress.env(
+        `${Cypress.env('OKTA_ORG_URL')}/oauth2/${Cypress.env(
           'OKTA_CUSTOM_OAUTH_SERVER',
         )}/v1/authorize*`,
         (req) => {
-          req.redirect('http://localhost:8861/reset-password/complete');
+          req.redirect(
+            `http://${Cypress.env('BASE_URI')}/reset-password/complete`,
+          );
         },
       ).as('authRedirect');
 
