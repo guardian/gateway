@@ -68,6 +68,9 @@ export const performAuthCodeFlow = (
     scope: 'openid idapi_token_cookie_exchange',
   });
 
+  // TODO Debug logging - remove me!!
+  logger.info(`Authorization URL: ${authorizeUrl}`);
+
   // redirect the user to the /authorize endpoint
   return res.redirect(303, authorizeUrl);
 };
