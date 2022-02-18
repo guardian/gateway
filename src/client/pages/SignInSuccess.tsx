@@ -136,7 +136,7 @@ const consentDescription = css`
       position: absolute;
       top: 0;
       right: 100%;
-      width: 60px;
+      width: 80px;
       height: 1px;
       background: ${neutral[86]};
     }
@@ -210,23 +210,25 @@ export const SignInSuccess = ({ consents }: SignInSuccessProps) => {
   return (
     <>
       <Header geolocation={geolocation} />
-      <div css={titleWrapper}>
-        <div css={[autoMargin, gridRow]}>
-          <h1 css={title}>Get the latest offers sent to your inbox</h1>
+      <main>
+        <div css={titleWrapper}>
+          <div css={[autoMargin, gridRow]}>
+            <h1 css={title}>Get the latest offers sent to your inbox</h1>
+          </div>
         </div>
-      </div>
-      <div css={formBackground}>
-        <div css={[autoMargin, gridRowPadding]}>
-          <div css={[formWrapper]}>
-            <div css={[innerGridRow, formGridRow]}>
-              <div css={envelopeImageWrapper}>
-                <EnvelopeImage invertColors cssOverrides={envelopeImage} />
+        <div css={formBackground}>
+          <div css={[autoMargin, gridRowPadding]}>
+            <div css={formWrapper}>
+              <div css={[innerGridRow, formGridRow]}>
+                <div css={envelopeImageWrapper}>
+                  <EnvelopeImage invertColors cssOverrides={envelopeImage} />
+                </div>
+                {renderForm()}
               </div>
-              {renderForm()}
             </div>
           </div>
         </div>
-      </div>
+      </main>
       <Footer />
     </>
   );
