@@ -93,27 +93,24 @@ export enum MAX_WIDTH {
   WIDE = maxWidth(COLUMNS.WIDE, 60, space[5], space[5]),
 }
 
+const generateGridPaddingCss = (padding: number, maxWidth?: number) => `
+  padding-left: ${px(padding)};
+  padding-right: ${px(padding)};
+  max-width: ${maxWidth ? px(maxWidth) : '100%'};
+`;
+
 const generateGridRowCss = (
   padding: number,
   columnWidth: string,
   columnNumber: number,
-  maxWidth?: number,
 ) => `
     -ms-grid-columns: (${columnWidth} 20px\)[${
   columnNumber - 1
 }] ${columnWidth};
     grid-template-columns: repeat(${columnNumber}, ${columnWidth});
-    padding-left: ${px(padding)};
-    padding-right: ${px(padding)};
-    max-width: ${maxWidth ? px(maxWidth) : '100%'};
 `;
 
-// this styles should be applied to an element to make it behave as
-// the grid container, it defines the css on how all the breakpoints
-// should behave
-// anything items should be added inside this container, and use
-// either the autoRow/getAutoRow or manualRow functionality to layout the items
-export const gridRow = css`
+export const innerGridRow = css`
   display: -ms-grid;
   display: grid;
   width: 100%;
@@ -140,12 +137,7 @@ export const gridRow = css`
   }
 
   ${from.tablet} {
-    ${generateGridRowCss(
-      SPACING.TABLET,
-      COLUMN_WIDTH.TABLET,
-      COLUMNS.TABLET,
-      MAX_WIDTH.TABLET,
-    )}
+    ${generateGridRowCss(SPACING.TABLET, COLUMN_WIDTH.TABLET, COLUMNS.TABLET)}
   }
 
   ${from.desktop} {
@@ -153,7 +145,6 @@ export const gridRow = css`
       SPACING.DESKTOP,
       COLUMN_WIDTH.DESKTOP,
       COLUMNS.DESKTOP,
-      MAX_WIDTH.DESKTOP,
     )}
   }
 
@@ -162,18 +153,50 @@ export const gridRow = css`
       SPACING.LEFT_COL,
       COLUMN_WIDTH.LEFT_COL,
       COLUMNS.LEFT_COL,
-      MAX_WIDTH.LEFT_COL,
     )}
   }
 
   ${from.wide} {
-    ${generateGridRowCss(
-      SPACING.WIDE,
-      COLUMN_WIDTH.WIDE,
-      COLUMNS.WIDE,
-      MAX_WIDTH.WIDE,
-    )}
+    ${generateGridRowCss(SPACING.WIDE, COLUMN_WIDTH.WIDE, COLUMNS.WIDE)}
   }
+`;
+
+export const gridRowPadding = css`
+  ${generateGridPaddingCss(SPACING.MOBILE)}
+
+  ${from.mobileMedium} {
+    ${generateGridPaddingCss(SPACING.MOBILE_MEDIUM)}
+  }
+
+  ${from.mobileLandscape} {
+    ${generateGridPaddingCss(SPACING.MOBILE_LANDSCAPE)}
+  }
+
+  ${from.tablet} {
+    ${generateGridPaddingCss(SPACING.TABLET, MAX_WIDTH.TABLET)}
+  }
+
+  ${from.desktop} {
+    ${generateGridPaddingCss(SPACING.DESKTOP, MAX_WIDTH.DESKTOP)}
+  }
+
+  ${from.leftCol} {
+    ${generateGridPaddingCss(SPACING.LEFT_COL, MAX_WIDTH.LEFT_COL)}
+  }
+
+  ${from.wide} {
+    ${generateGridPaddingCss(SPACING.WIDE, MAX_WIDTH.WIDE)}
+  }
+`;
+
+// this styles should be applied to an element to make it behave as
+// the grid container, it defines the css on how all the breakpoints
+// should behave
+// anything items should be added inside this container, and use
+// either the autoRow/getAutoRow or manualRow functionality to layout the items
+export const gridRow = css`
+  ${innerGridRow}
+  ${gridRowPadding}
 `;
 
 const generateGridItemCss = (columnStart: number, columnSpan: number) => `

@@ -5,14 +5,8 @@ import { ClientStateContext } from '@/client/components/ClientState';
 
 export const SignInSuccessPage = () => {
   const clientState: ClientState = useContext(ClientStateContext);
-  const { pageData = {}, queryParams } = clientState;
+  const { pageData = {} } = clientState;
   const { geolocation, consents = [] } = pageData;
 
-  return (
-    <SignInSuccess
-      queryParams={queryParams}
-      geolocation={geolocation}
-      consents={consents}
-    />
-  );
+  return <SignInSuccess geolocation={geolocation} consents={consents} />;
 };
