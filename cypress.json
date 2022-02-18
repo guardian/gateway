@@ -5,6 +5,7 @@
   "defaultCommandTimeout": 12000,
   "responseTimeout": 12000,
   "requestTimeout": 12000,
+  "ignoreTestFiles": "*.shared.ts",
   "env": {
     "mockingEndpoint": "localhost:9000/mock"
   }

@@ -72,6 +72,11 @@ cypress-ete: clear
 	$(call log, "opening cypress")
 	@(./cypress-ete.sh)
 
+cypress-ete-okta: export USE_OKTA = true
+cypress-ete-okta: clear
+	$(call log, "opening cypress using okta tests")
+	@(./cypress-ete.sh)
+
 # helpers
 
 clean-build:
