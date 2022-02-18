@@ -48,8 +48,7 @@ export class OktaError extends Error {
     causes?: Array<ErrorCause>;
   }) {
     super(error.message);
-    this.name =
-      (error.code ? ErrorName.get(error.code) : 'OktaError') ?? 'OktaError';
+    this.name = (error.code && ErrorName.get(error.code)) || 'OktaError';
     this.causes = error.causes ?? [];
     this.status = error.status || 500;
     this.code = error.code;

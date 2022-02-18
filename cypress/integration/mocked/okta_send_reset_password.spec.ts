@@ -5,7 +5,7 @@ describe('Send password reset email in Okta', () => {
     cy.mockPurge();
   });
 
-  context.skip('send reset password email', () => {
+  context('send reset password email', () => {
     it('shows email sent page when successful', () => {
       cy.visit('/reset-password?useOkta=true');
       cy.get('input[name="email"]').type(email);

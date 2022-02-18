@@ -18,7 +18,7 @@
  */
 
 describe('Change password in Okta', () => {
-  context.skip('reset password page', () => {
+  context('reset password page', () => {
     const email = 'mrtest@theguardian.com';
 
     beforeEach(() => {

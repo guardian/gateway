@@ -51,8 +51,8 @@ export const authenticate = async (
  * https://developer.okta.com/docs/reference/api/authn/#forgot-password-with-email-factor
  *
  * There are two ways to use this endpoint:
- * 1. without an API token - this starts a self-service forgotten password flow. The user
- * is still ACTIVE and can still sign-in without resetting their password
+ * 1. without an API token - this starts a self-service forgotten password flow. The user is still
+ * ACTIVE and can still sign-in without resetting their password. This is the flow we are using.
  * 2. with an API token - this becomes an administrator-initiated reset password flow which
  * puts the user into the RECOVERY state. This prevents them from signing in until they have
  * completed the recovery action and set a new password
