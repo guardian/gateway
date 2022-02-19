@@ -5,6 +5,8 @@ import {
   GA_UID_HASH,
   GU_API_DOMAIN,
   GU_DOMAIN,
+  RateLimiterConfiguration,
+  RedisConfiguration,
   Stage,
 } from '@/server/models/Configuration';
 import { featureSwitches } from '@/shared/lib/featureSwitches';
@@ -175,6 +177,13 @@ export const getConfiguration = (): Configuration => {
           ),
   };
 
+  const redisConfiguration: RedisConfiguration = {
+    password: getOrThrow(process.env.REDIS_PASSWORD, 'Redis Password Missing'),
+    host: getOrThrow(process.env.REDIS_HOST, 'Redis Host missing'),
+  };
+
+  const rateLimiterConfiguration: RateLimiterConfiguration = {};
+
   return {
     port: +port,
     idapiBaseUrl,
@@ -201,5 +210,7 @@ export const getConfiguration = (): Configuration => {
     aws,
     githubRunNumber,
     sentryDsn,
+    rateLimiterConfiguration,
+    redisConfiguration,
   };
 };
