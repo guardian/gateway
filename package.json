@@ -141,6 +141,7 @@
     "express-recaptcha": "^5.1.0",
     "hal-types": "^1.7.4",
     "helmet": "^5.0.2",
+    "ioredis": "^4.28.5",
     "js-sha1": "^0.6.0",
     "jsonwebtoken": "^8.5.1",
     "mjml": "^4.12.0",
