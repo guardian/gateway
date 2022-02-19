@@ -17,8 +17,8 @@ interface RateLimitTokenData {
 
 interface RateLimitData {
   redisKey: string;
-  value?: RateLimitTokenData;
-  remainingTimeMs?: number;
+  value: RateLimitTokenData;
+  remainingTimeMs: number;
 }
 
 const getPipelinedDataForKey = (key: string, pipeline: Pipeline) => {
@@ -78,7 +78,9 @@ export const rateLimiterMiddleware = async (
 ) => {
   const rateLimiterName = 'signin';
 
-  const bucketCapacity = 100;
+  const bucketCapacity = 1;
+  const bucketAddTokenMs = 333;
+
   const maxTtlSeconds = 43200; // 12 hours in seconds
 
   const rateLimitIpKeyName = `gw-rl-${rateLimiterName}-ip-${sha256(req.ip)}`;
@@ -96,14 +98,42 @@ export const rateLimiterMiddleware = async (
 
   const pipelinedWrites = redisClient.pipeline();
 
-  const rateLimitUsingPipelinedData = async (
+  const executeRateLimitAndCheckIfLimitNotHit = async (
     pipelinedData: PipelinedData,
     pipelinedWrites: Redis.Pipeline,
   ) => {
     try {
       // Rate limit existing key ..
       const parsed = await fromPipelinedData(pipelinedData);
-      console.log('parsed', parsed);
+
+      const timePassedMs =
+        parsed.value.maxTtlSeconds * 1000 - parsed.remainingTimeMs;
+
+      const newTokensAccumulated = Math.floor(timePassedMs / bucketAddTokenMs);
+
+      const tokensPlusAccumulated = Math.min(
+        parsed.value.tokens + newTokensAccumulated,
+        bucketCapacity,
+      );
+
+      const [tokensMinusUsed, noHit] = (() => {
+        if (tokensPlusAccumulated - 1 >= 0) {
+          return [tokensPlusAccumulated - 1, true];
+        } else {
+          return [tokensPlusAccumulated, false];
+        }
+      })();
+
+      const rateLimitTokenData: RateLimitTokenData = {
+        tokens: tokensMinusUsed,
+        maxTtlSeconds,
+      };
+
+      pipelinedWrites
+        .set(pipelinedData.redisKey, JSON.stringify(rateLimitTokenData))
+        .expire(pipelinedData.redisKey, maxTtlSeconds);
+
+      return noHit;
     } catch {
       // Rate limit new key ..
 
@@ -120,8 +150,19 @@ export const rateLimiterMiddleware = async (
     }
   };
 
-  await rateLimitUsingPipelinedData(global, pipelinedWrites);
-  await rateLimitUsingPipelinedData(ip, pipelinedWrites);
+  // Continue evaluating rate limits until one is hit.
+  const ipNotHit = await executeRateLimitAndCheckIfLimitNotHit(
+    ip,
+    pipelinedWrites,
+  );
+  const globalNotHit =
+    ipNotHit &&
+    (await executeRateLimitAndCheckIfLimitNotHit(global, pipelinedWrites));
+
+  if (!globalNotHit || !ipNotHit) {
+    res.status(429).send('Too Many Requests');
+    return;
+  }
 
   // Exec all awaiting read promises;
   console.time('Write time');
