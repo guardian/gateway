@@ -1,4 +1,4 @@
-import Redis, { Pipeline } from 'ioredis';
+import type Redis from 'ioredis';
 
 interface RateLimitTokenData {
   tokens: number;
@@ -11,7 +11,40 @@ interface RateLimitData {
   remainingTimeMs: number;
 }
 
-export const getPipelinedDataForKey = (key: string, pipeline: Pipeline) => {
+interface BucketDefinition {
+  name: string;
+  capacity: number;
+  addTokenMs: number;
+}
+
+export interface RateLimitConfig {
+  name: string;
+  globalBucketDefinition?: BucketDefinition;
+  accessTokenBucketDefinition?: BucketDefinition;
+  ipBucketDefinition?: BucketDefinition;
+  emailBucketDefinition?: BucketDefinition;
+  oktaIdentifierBucketDefinition?: BucketDefinition;
+}
+
+export interface RateLimiter {
+  rateLimiterConfig: RateLimitConfig;
+  accessToken?: string;
+  ip?: string;
+  email?: string;
+  oktaIdentifier?: string;
+}
+
+// type RateLimitType =
+//   | 'oktaIdentifier'
+//   | 'accessToken'
+//   | 'ip'
+//   | 'global'
+//   | 'email';
+
+export const getPipelinedDataForKey = (
+  key: string,
+  pipeline: Redis.Pipeline,
+) => {
   return {
     redisKey: key,
     data: new Promise<{
@@ -63,12 +96,10 @@ export const fromPipelinedData = async (pipelinedData: PipelinedData) => {
 
 export const executeRateLimitAndCheckIfLimitNotHit = async (
   pipelinedData: PipelinedData,
+  bucketDefinition: BucketDefinition,
   pipelinedWrites: Redis.Pipeline,
 ) => {
-  const bucketCapacity = 100;
-  const bucketAddTokenMs = 333;
-
-  const maxTtlSeconds = 43200; // 12 hours in seconds
+  const maxTtlSeconds = 21700; // 6 hours in seconds
 
   try {
     // Rate limit existing key ..
@@ -77,11 +108,13 @@ export const executeRateLimitAndCheckIfLimitNotHit = async (
     const timePassedMs =
       parsed.value.maxTtlSeconds * 1000 - parsed.remainingTimeMs;
 
-    const newTokensAccumulated = Math.floor(timePassedMs / bucketAddTokenMs);
+    const newTokensAccumulated = Math.floor(
+      timePassedMs / bucketDefinition.addTokenMs,
+    );
 
     const tokensPlusAccumulated = Math.min(
       parsed.value.tokens + newTokensAccumulated,
-      bucketCapacity,
+      bucketDefinition.capacity,
     );
 
     const [tokensMinusUsed, noHit] = (() => {
@@ -105,7 +138,7 @@ export const executeRateLimitAndCheckIfLimitNotHit = async (
   } catch {
     // Rate limit new key ..
     const rateLimitTokenData: RateLimitTokenData = {
-      tokens: bucketCapacity - 1,
+      tokens: bucketDefinition.capacity - 1,
       maxTtlSeconds,
     };
 

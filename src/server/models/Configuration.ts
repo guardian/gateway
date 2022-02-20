@@ -25,7 +25,7 @@ export interface Configuration {
   aws: AWSConfiguration;
   githubRunNumber: string;
   sentryDsn: string;
-  rateLimiterConfiguration: RateLimiterConfiguration;
+  rateLimiterConfiguration: RateLimitConfiguration;
   redisConfiguration: RedisConfiguration;
 }
 
@@ -69,7 +69,7 @@ export enum GU_API_DOMAIN {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface RateLimiterConfiguration {
+export interface RateLimitConfiguration {
   //...
 }
 
