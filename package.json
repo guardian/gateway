@@ -130,7 +130,7 @@
     "@sentry/browser": "^6.17.8",
     "@sentry/tracing": "^6.17.8",
     "awesome-debounce-promise": "^2.1.0",
-    "aws-sdk": "2.1074.0",
+    "aws-sdk": "2.1077.0",
     "bowser": "^2.11.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
