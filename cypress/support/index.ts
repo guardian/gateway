@@ -27,4 +27,5 @@ import 'cypress-mailosaur';
 // ***********************************************
 
 export const MOCKING_ENDPOINT = 'localhost:9000/mock';
+
 import './commands';
