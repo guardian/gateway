@@ -7,14 +7,15 @@ import {
 import { OktaApiRoutePaths } from '@/shared/model/Routes';
 import { joinUrl } from '@guardian/libs';
 import { fetch } from '@/server/lib/fetch';
-import type { Response } from 'node-fetch';
-import { handleErrorResponse } from '@/server/lib/okta/api/errors';
 import {
   authorizationHeader,
   defaultHeaders,
 } from '@/server/lib/okta/api/headers';
-import { OktaAPIResponseParsingError } from '@/server/models/okta/Error';
 import { Profile, User } from '@/server/models/okta/User';
+import { handleVoidResponse } from '@/server/lib/okta/api/responses';
+import { Response } from 'node-fetch';
+import { OktaError } from '@/server/models/okta/Error';
+import { handleErrorResponse } from '@/server/lib/okta/api/errors';
 
 /**
  * Okta's Users API endpoints, see - https://developer.okta.com/docs/reference/api/users/
@@ -86,35 +87,25 @@ export const reactivateUser = async <P extends OktaApiRoutePaths>(
 
 const handleUserResponse = async (response: Response): Promise<User> => {
   if (response.ok) {
-    return await extractUser(response);
+    try {
+      return await response.json().then((json) => {
+        const user = json as User;
+        return {
+          id: user.id,
+          status: user.status,
+          profile: {
+            email: user.profile.email,
+            login: user.profile.login,
+            isGuardianUser: user.profile.isGuardianUser,
+          },
+        };
+      });
+    } catch (error) {
+      throw new OktaError({
+        message: 'Could not parse Okta user response',
+      });
+    }
   } else {
     return await handleErrorResponse(response);
-  }
-};
-
-const handleVoidResponse = async (response: Response): Promise<void> => {
-  if (response.ok) {
-    return Promise.resolve();
-  } else {
-    return await handleErrorResponse(response);
-  }
-};
-
-const extractUser = async (response: Response): Promise<User> => {
-  try {
-    return await response.json().then((json) => {
-      const user = json as User;
-      return {
-        id: user.id,
-        status: user.status,
-        profile: {
-          email: user.profile.email,
-          login: user.profile.login,
-          isGuardianUser: user.profile.isGuardianUser,
-        },
-      };
-    });
-  } catch (error) {
-    throw new OktaAPIResponseParsingError(error);
   }
 };

@@ -153,11 +153,15 @@ router.get(
       // track the success metric
       trackMetric('OAuthAuthorization::Success');
 
-      // return to url from state or default url
-      return res.redirect(
-        303,
-        authState.queryParams.returnUrl || defaultReturnUri,
-      );
+      // return url from confirmation page, state or default url
+      const returnUrl = authState.confirmationPage
+        ? addQueryParamsToPath(
+            authState.confirmationPage,
+            authState.queryParams,
+          )
+        : authState.queryParams.returnUrl || defaultReturnUri;
+
+      return res.redirect(303, returnUrl);
     } catch (error) {
       // check if it's an oauth/oidc error
       if (isOAuthError(error)) {

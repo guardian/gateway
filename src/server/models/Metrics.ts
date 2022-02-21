@@ -6,7 +6,8 @@ type EmailMetrics =
   | 'AccountExistsWithoutPassword'
   | 'AccountVerification'
   | 'CreatePassword'
-  | 'ResetPassword';
+  | 'ResetPassword'
+  | 'OktaResetPassword';
 
 // Any metrics with conditions to append to the end
 // i.e ::Success or ::Failure
@@ -20,14 +21,16 @@ type ConditionalMetrics =
   | 'OktaRegistration'
   | 'OktaRegistrationResendEmail'
   | 'OktaSignIn'
-  | 'OktaSetPasswordOnWelcomePage'
+  | 'OktaUpdatePassword'
+  | 'OktaValidatePasswordToken'
   | 'OktaWelcomeResendEmail'
   | 'Register'
   | 'SendMagicLink'
   | 'SendValidationEmail'
   | 'SignIn'
   | 'UpdatePassword'
-  | 'RecaptchaMiddleware';
+  | 'RecaptchaMiddleware'
+  | 'ValidatePasswordToken';
 
 // Unconditional metrics that we want to track directly
 type UnconditionalMetrics =

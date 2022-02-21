@@ -46,6 +46,7 @@ export enum PasswordFieldErrors {
   AT_LEAST_8 = 'Please make sure your password is at least 8 characters long.',
   MAXIMUM_72 = 'Please make sure your password is not longer than 72 characters.',
   COMMON_PASSWORD = 'Please use a password that is hard to guess.',
+  SAME_PASSWORD = 'Please use a password that is different to your current password.',
 }
 
 // shown below the password input field as the user types a password (before they click the submit button)

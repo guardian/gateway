@@ -34,7 +34,7 @@ jobs:
           GOOGLE_RECAPTCHA_SITE_KEY: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
           GOOGLE_RECAPTCHA_SECRET_KEY: 6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
           ENCRYPTION_SECRET_KEY: f3d87b231ddd6f50d99e227c5bc9b7cbb649387b321008df412fd73805ac2e32
-          OKTA_ORG_URL: oktaorgurl
+          OKTA_ORG_URL: http://localhost:9000
           OKTA_API_TOKEN: oktatoken
           OKTA_CUSTOM_OAUTH_SERVER: oktaoauthserverid
           OKTA_CLIENT_ID: oktaclientid
