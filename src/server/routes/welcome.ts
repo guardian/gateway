@@ -135,32 +135,36 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 
     if (typeof email !== 'undefined') {
       await resendRegistrationEmail(email);
+
       trackMetric('OktaWelcomeResendEmail::Success');
+
+      const queryParams = res.locals.queryParams;
+
       return res.redirect(
         303,
-        addQueryParamsToPath('/welcome/email-sent', res.locals.queryParams, {
+        addQueryParamsToPath('/welcome/email-sent', queryParams, {
           emailSentSuccess: true,
         }),
       );
     } else
-      throw new OktaError(
-        'Could not resend welcome email as email was undefined',
-      );
+      throw new OktaError({
+        message: 'Could not resend welcome email as email was undefined',
+      });
   } catch (error) {
     logger.error('Okta Registration resend email failure', error);
 
     trackMetric('OktaWelcomeResendEmail::Failure');
 
-    return res.type('html').send(
-      renderer('/welcome/email-sent', {
-        pageTitle: 'Check Your Inbox',
-        requestState: deepmerge(res.locals, {
-          globalMessage: {
-            error: GenericErrors.DEFAULT,
-          },
-        }),
+    const html = renderer('/welcome/email-sent', {
+      pageTitle: 'Check Your Inbox',
+      requestState: deepmerge(res.locals, {
+        globalMessage: {
+          error: GenericErrors.DEFAULT,
+        },
       }),
-    );
+    });
+
+    return res.type('html').send(html);
   }
 };
 
