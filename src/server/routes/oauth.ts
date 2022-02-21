@@ -16,7 +16,7 @@ import { setIDAPICookies } from '@/server/lib/idapi/setIDAPICookies';
 import { SignInErrors } from '@/shared/model/Errors';
 import { updateEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import postSignInController from '@/server/routes/signIn';
+import postSignInController from '@/server/lib/postSignInController';
 
 interface OAuthError {
   error: string;
@@ -158,7 +158,7 @@ router.get(
           )
         : authState.queryParams.returnUrl;
 
-      postSignInController(req, res, cookies);
+      postSignInController(req, res, cookies, returnUrl);
     } catch (error) {
       // check if it's an oauth/oidc error
       if (isOAuthError(error)) {

@@ -14,10 +14,9 @@ const postSignInController = async (
   req: Request,
   res: ResponseWithRequestState,
   idapiCookies: IdapiCookies,
+  returnUrl?: string,
 ) => {
   const state = res.locals;
-
-  const { returnUrl } = state.pageData;
   const redirectUrl = returnUrl || defaultReturnUri;
 
   const optInPromptActive = await (async () => {

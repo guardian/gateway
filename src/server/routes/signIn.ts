@@ -186,6 +186,8 @@ const idapiSignInController = async (
   res: ResponseWithRequestState,
 ) => {
   const { email = '', password = '' } = req.body;
+  const { pageData } = res.locals;
+  const { returnUrl } = pageData;
 
   try {
     const cookies = await authenticateWithIdapi(email, password, req.ip);
@@ -194,7 +196,7 @@ const idapiSignInController = async (
 
     trackMetric('SignIn::Success');
 
-    return postSignInController(req, res, cookies);
+    return postSignInController(req, res, cookies, returnUrl);
   } catch (error) {
     logger.error(`${req.method} ${req.originalUrl}  Error`, error);
     const { message, status } =
