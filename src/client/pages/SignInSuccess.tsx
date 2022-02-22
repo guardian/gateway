@@ -18,6 +18,12 @@ import { ConsentsContent, controls } from '@/client/layouts/shared/Consents';
 import { mainStyles } from '@/client/layouts/ConsentsLayout';
 import { ConsentsBlueBackground } from '@/client/components/ConsentsBlueBackground';
 
+const form = css`
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+`;
+
 const heading = css`
   ${headline.small({ fontWeight: 'bold' })}
 
@@ -55,7 +61,7 @@ export const SignInSuccess = ({
       <Header geolocation={geolocation} />
       <main css={mainStyles}>
         <form
-          css={[autoRow()]}
+          css={[form, autoRow()]}
           action={buildUrlWithQueryParams('/signin/success', {}, queryParams)}
           method="post"
           onSubmit={({ target: form }) => {
@@ -72,7 +78,7 @@ export const SignInSuccess = ({
             <h1 css={[heading, autoRow()]}>
               Get the latest offers sent to your inbox
             </h1>
-            <div css={[autoRow()]}>
+            <div css={autoRow()}>
               {consents.map((consent) => (
                 <CommunicationCard
                   key={consent.id}
