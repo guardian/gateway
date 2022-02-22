@@ -166,7 +166,7 @@ describe('Password change flow', () => {
   });
 
   context('Valid password entered', () => {
-    it.only('shows password change success screen, with a default redirect button.', () => {
+    it('shows password change success screen, with a default redirect button.', () => {
       cy.mockNext(200);
       cy.mockNext(200, fakeSuccessResponse);
       cy.intercept({
