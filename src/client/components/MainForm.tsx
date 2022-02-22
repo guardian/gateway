@@ -33,8 +33,9 @@ export interface MainFormProps {
     React.SetStateAction<ReactNode | string>
   >;
   hasGuardianTerms?: boolean;
-  onSubmitOverride?: React.FormEventHandler<HTMLFormElement>;
+  onSubmit?: React.FormEventHandler<HTMLFormElement>;
   formTrackingName?: string;
+  disableOnSubmit?: boolean;
 }
 
 const formStyles = css`
@@ -66,8 +67,9 @@ export const MainForm = ({
   setRecaptchaErrorMessage,
   setRecaptchaErrorContext,
   hasGuardianTerms = false,
-  onSubmitOverride,
+  onSubmit,
   formTrackingName,
+  disableOnSubmit = false,
 }: PropsWithChildren<MainFormProps>) => {
   const recaptchaEnabled = !!recaptchaSiteKey;
   const hasTerms = recaptchaEnabled || hasGuardianTerms;
@@ -76,9 +78,12 @@ export const MainForm = ({
   const [recaptchaState, setRecaptchaState] =
     useState<UseRecaptchaReturnValue>();
 
+  const [isFormDisabled, setIsFormDisabled] = useState(false);
+
   /**
    * Executes the reCAPTCHA check and form submit tracking.
    * Prevents the form from submitting until the reCAPTCHA check is complete.
+   * Disables the form on submit conditional on `disableOnSubmit`
    */
   const handleSubmit = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
@@ -86,8 +91,12 @@ export const MainForm = ({
         trackFormSubmit(formTrackingName);
       }
 
-      if (onSubmitOverride) {
-        onSubmitOverride(event);
+      if (!isFormDisabled && disableOnSubmit) {
+        setIsFormDisabled(true);
+      }
+
+      if (onSubmit) {
+        onSubmit(event);
       }
 
       if (recaptchaEnabled && !recaptchaState?.token) {
@@ -95,7 +104,14 @@ export const MainForm = ({
         recaptchaState?.executeCaptcha();
       }
     },
-    [onSubmitOverride, recaptchaEnabled, recaptchaState, formTrackingName],
+    [
+      formTrackingName,
+      isFormDisabled,
+      disableOnSubmit,
+      onSubmit,
+      recaptchaEnabled,
+      recaptchaState,
+    ],
   );
 
   /**
@@ -119,6 +135,11 @@ export const MainForm = ({
 
       if (recaptchaCheckFailed) {
         logger.info('Recaptcha check failed');
+      }
+
+      if (recaptchaCheckFailed && isFormDisabled) {
+        // Re-enable the disabled form submit button
+        setIsFormDisabled(false);
       }
 
       // Used to show a more detailed reCAPTCHA error if
@@ -184,6 +205,8 @@ export const MainForm = ({
         type="submit"
         priority={submitButtonPriority}
         data-cy="main-form-submit-button"
+        disabled={isFormDisabled}
+        aria-disabled={isFormDisabled}
       >
         {submitButtonText}
       </Button>

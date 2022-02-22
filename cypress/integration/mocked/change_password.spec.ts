@@ -1,7 +1,7 @@
 import { injectAndCheckAxe } from '../../support/cypress-axe';
 
 describe('Password change flow', () => {
-  const fakeValidationRespone = (
+  const fakeValidationResponse = (
     timeUntilExpiry: number | undefined = undefined,
   ) => ({
     user: {
@@ -107,7 +107,7 @@ describe('Password change flow', () => {
     });
 
     it('shows the session time out page if the token expires while on the set password page', () => {
-      cy.mockNext(200, fakeValidationRespone(1000));
+      cy.mockNext(200, fakeValidationResponse(1000));
       cy.visit(`/reset-password/fake_token`);
       cy.contains('Session timed out');
     });
@@ -159,14 +159,14 @@ describe('Password change flow', () => {
 
   context('Email shown on page', () => {
     it('shows the users email address on the page', () => {
-      cy.mockNext(200, fakeValidationRespone());
+      cy.mockNext(200, fakeValidationResponse());
       cy.visit(`/reset-password/fake_token`);
-      cy.contains(fakeValidationRespone().user.primaryEmailAddress);
+      cy.contains(fakeValidationResponse().user.primaryEmailAddress);
     });
   });
 
   context('Valid password entered', () => {
-    it('shows password change success screen, with a default redirect button.', () => {
+    it.only('shows password change success screen, with a default redirect button.', () => {
       cy.mockNext(200);
       cy.mockNext(200, fakeSuccessResponse);
       cy.intercept({
@@ -177,7 +177,8 @@ describe('Password change flow', () => {
 
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
       cy.wait('@breachCheck');
-      cy.get('button[type="submit"]').click();
+      // Submit the button and check that it is disabled after submit.
+      cy.get('button[type="submit"]').click().should('be.disabled');
       cy.contains('Password updated');
       cy.contains('Continue to the Guardian').should(
         'have.attr',
@@ -193,14 +194,14 @@ describe('Password change flow', () => {
     });
 
     it('shows password change success screen, with default redirect button, and users email', () => {
-      cy.mockNext(200, fakeValidationRespone());
+      cy.mockNext(200, fakeValidationResponse());
       cy.mockNext(200, fakeSuccessResponse);
       cy.intercept({
         method: 'GET',
         url: 'https://api.pwnedpasswords.com/range/*',
       }).as('breachCheck');
       cy.visit(`/reset-password/fake_token`);
-      cy.contains(fakeValidationRespone().user.primaryEmailAddress);
+      cy.contains(fakeValidationResponse().user.primaryEmailAddress);
 
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
       cy.wait('@breachCheck');
@@ -211,7 +212,7 @@ describe('Password change flow', () => {
         'href',
         `${Cypress.env('DEFAULT_RETURN_URI')}/`,
       );
-      cy.contains(fakeValidationRespone().user.primaryEmailAddress);
+      cy.contains(fakeValidationResponse().user.primaryEmailAddress);
     });
   });
 

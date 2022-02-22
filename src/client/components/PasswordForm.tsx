@@ -389,7 +389,7 @@ export const PasswordFormMainLayout = ({
     <MainForm
       formAction={submitUrl}
       submitButtonText={submitButtonText}
-      onSubmitOverride={(e) => {
+      onSubmit={(e) => {
         if (isTooShort) {
           setError(PasswordFieldErrors.AT_LEAST_8);
           e.preventDefault();
@@ -405,6 +405,7 @@ export const PasswordFormMainLayout = ({
       setRecaptchaErrorMessage={setRecaptchaErrorMessage}
       setRecaptchaErrorContext={setRecaptchaErrorContext}
       formTrackingName={formTrackingName}
+      disableOnSubmit={true}
     >
       <div css={error ? undefined : passwordInput}>
         <PasswordInput

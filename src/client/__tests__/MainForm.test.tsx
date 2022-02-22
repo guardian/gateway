@@ -76,7 +76,7 @@ test('shows sets an error message when the reCAPTCHA check is unsuccessful', asy
 test('calls the form submit override method if defined', async () => {
   const mockedSubmitOverride = jest.fn();
   const { findByText } = setup({
-    onSubmitOverride: mockedSubmitOverride,
+    onSubmit: mockedSubmitOverride,
     recaptchaSiteKey: 'invalid-key',
   });
 
