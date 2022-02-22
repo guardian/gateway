@@ -99,7 +99,6 @@ test('disables the form submit button when disableOnSubmit is set', async () => 
   const mockedSubmitOverride = jest.fn();
   const { findByText } = setup({
     onSubmit: mockedSubmitOverride,
-    recaptchaSiteKey: 'invalid-key',
     disableOnSubmit: true,
   });
 

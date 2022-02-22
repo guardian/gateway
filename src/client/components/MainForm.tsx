@@ -128,6 +128,17 @@ export const MainForm = ({
   }, [recaptchaEnabled, recaptchaState, recaptchaState?.token]);
 
   useEffect(() => {
+    // Determine is something went wrong with the check.
+    const recaptchaCheckFailed =
+      recaptchaState?.error || recaptchaState?.expired;
+
+    if (recaptchaCheckFailed && isFormDisabled) {
+      // Re-enable the disabled form submit button
+      setIsFormDisabled(false);
+    }
+  }, [isFormDisabled, recaptchaState?.error, recaptchaState?.expired]);
+
+  useEffect(() => {
     if (recaptchaEnabled) {
       // Determine is something went wrong with the check.
       const recaptchaCheckFailed =
@@ -135,11 +146,6 @@ export const MainForm = ({
 
       if (recaptchaCheckFailed) {
         logger.info('Recaptcha check failed');
-      }
-
-      if (recaptchaCheckFailed && isFormDisabled) {
-        // Re-enable the disabled form submit button
-        setIsFormDisabled(false);
       }
 
       // Used to show a more detailed reCAPTCHA error if
