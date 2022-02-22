@@ -390,16 +390,25 @@ export const PasswordFormMainLayout = ({
       formAction={submitUrl}
       submitButtonText={submitButtonText}
       onSubmit={(e) => {
+        let errorOccurred = false;
+
         if (isTooShort) {
           setError(PasswordFieldErrors.AT_LEAST_8);
+          errorOccurred = true;
           e.preventDefault();
         } else if (isTooLong) {
           setError(PasswordFieldErrors.MAXIMUM_72);
+          errorOccurred = true;
           e.preventDefault();
         } else if (isWeak) {
           setError(PasswordFieldErrors.COMMON_PASSWORD);
+          errorOccurred = true;
           e.preventDefault();
         }
+
+        return {
+          errorOccurred,
+        };
       }}
       recaptchaSiteKey={recaptchaSiteKey}
       setRecaptchaErrorMessage={setRecaptchaErrorMessage}

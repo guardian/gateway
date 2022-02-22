@@ -33,7 +33,11 @@ export interface MainFormProps {
     React.SetStateAction<ReactNode | string>
   >;
   hasGuardianTerms?: boolean;
-  onSubmit?: React.FormEventHandler<HTMLFormElement>;
+  onSubmit?: (e: React.FormEvent<HTMLFormElement>) =>
+    | {
+        errorOccurred: boolean;
+      }
+    | undefined;
   formTrackingName?: string;
   disableOnSubmit?: boolean;
 }
@@ -84,6 +88,7 @@ export const MainForm = ({
    * Executes the reCAPTCHA check and form submit tracking.
    * Prevents the form from submitting until the reCAPTCHA check is complete.
    * Disables the form on submit conditional on `disableOnSubmit`
+   * Keeps the form enabled if the outside submit handler reports an error
    */
   const handleSubmit = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
@@ -91,12 +96,17 @@ export const MainForm = ({
         trackFormSubmit(formTrackingName);
       }
 
-      if (!isFormDisabled && disableOnSubmit) {
-        setIsFormDisabled(true);
-      }
+      const errorInSubmitHandler = onSubmit && onSubmit(event)?.errorOccurred;
 
-      if (onSubmit) {
-        onSubmit(event);
+      if (disableOnSubmit) {
+        if (errorInSubmitHandler === undefined) {
+          if (!isFormDisabled) {
+            setIsFormDisabled(true);
+          }
+        } else {
+          const formSubmitSuccess = !errorInSubmitHandler;
+          setIsFormDisabled(formSubmitSuccess);
+        }
       }
 
       if (recaptchaEnabled && !recaptchaState?.token) {
@@ -106,11 +116,11 @@ export const MainForm = ({
     },
     [
       formTrackingName,
-      isFormDisabled,
-      disableOnSubmit,
       onSubmit,
+      disableOnSubmit,
       recaptchaEnabled,
       recaptchaState,
+      isFormDisabled,
     ],
   );
 
@@ -128,15 +138,22 @@ export const MainForm = ({
   }, [recaptchaEnabled, recaptchaState, recaptchaState?.token]);
 
   useEffect(() => {
-    // Determine is something went wrong with the check.
-    const recaptchaCheckFailed =
-      recaptchaState?.error || recaptchaState?.expired;
+    if (recaptchaEnabled) {
+      // Determine is something went wrong with the check.
+      const recaptchaCheckFailed =
+        recaptchaState?.error || recaptchaState?.expired;
 
-    if (recaptchaCheckFailed && isFormDisabled) {
-      // Re-enable the disabled form submit button
-      setIsFormDisabled(false);
+      if (recaptchaCheckFailed && isFormDisabled) {
+        // Re-enable the disabled form submit button
+        setIsFormDisabled(false);
+      }
     }
-  }, [isFormDisabled, recaptchaState?.error, recaptchaState?.expired]);
+  }, [
+    isFormDisabled,
+    recaptchaEnabled,
+    recaptchaState?.error,
+    recaptchaState?.expired,
+  ]);
 
   useEffect(() => {
     if (recaptchaEnabled) {

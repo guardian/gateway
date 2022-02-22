@@ -96,10 +96,12 @@ test('calls the form submit override method if defined', async () => {
 });
 
 test('disables the form submit button when disableOnSubmit is set', async () => {
-  const mockedSubmitOverride = jest.fn();
   const { findByText } = setup({
-    onSubmit: mockedSubmitOverride,
     disableOnSubmit: true,
+    onSubmit: (e) => {
+      e.preventDefault(); // Jest does not implement form submit, so we make sure to preventDefault here.
+      return { errorOccurred: false };
+    },
   });
 
   const submitButton = await findByText('Submit');
@@ -112,6 +114,28 @@ test('disables the form submit button when disableOnSubmit is set', async () => 
 
   await waitFor(() => {
     expect(submitButton).toBeDisabled();
+  });
+});
+
+test('enables the form submit button when onSubmit returns an error state', async () => {
+  const { findByText } = setup({
+    disableOnSubmit: true,
+    onSubmit: (e) => {
+      e.preventDefault(); // Jest does not implement form submit, so we make sure to preventDefault here.
+      return { errorOccurred: true };
+    },
+  });
+
+  const submitButton = await findByText('Submit');
+
+  expect(submitButton).not.toBeDisabled();
+
+  act(() => {
+    fireEvent.click(submitButton);
+  });
+
+  await waitFor(() => {
+    expect(submitButton).not.toBeDisabled();
   });
 });
 
