@@ -17,6 +17,7 @@ import { greyBorderBottom, greyBorderTop } from '../styles/Consents';
 
 interface CommunicationCardProps {
   title: string;
+  titleLevel?: 1 | 2 | 3 | 4 | 5;
   body: string;
   value: string;
   checked: boolean;
@@ -116,17 +117,20 @@ const ieFlexOverflowFix = css`
 
 export const CommunicationCard: FunctionComponent<CommunicationCardProps> = ({
   title,
+  titleLevel = 3,
   body,
   value,
   image,
   checked,
 }) => {
+  const HeadingTag = `h${titleLevel}` as const;
+
   return (
     <div css={[greyBorderTop, blueBorderBottom, ieFlexOverflowFix]}>
       <div css={[communicationCardInfoContainer]}>
         <img css={img} src={image} alt={title} />
         <div css={ieFlexOverflowFix}>
-          <h3 css={communicationCardHeadingText}>{title}</h3>
+          <HeadingTag css={communicationCardHeadingText}>{title}</HeadingTag>
           <div css={communicationCardBodyContainer}>
             <p css={communicationCardBodyText}>{body}</p>
           </div>

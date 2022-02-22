@@ -47,7 +47,7 @@ describe('Post sign-in prompt', () => {
     // mock form save success
     cy.mockNext(200);
 
-    cy.findByText('Continue to The Guardian').click();
+    cy.findByText('Continue to the Guardian').click();
     cy.lastPayloadIs([{ id: 'supporter', consented: true }]);
     cy.url().should('include', defaultReturnUrl);
   });
@@ -65,7 +65,7 @@ describe('Post sign-in prompt', () => {
     // mock form save success
     cy.mockNext(200);
 
-    cy.findByText('Continue to The Guardian').click();
+    cy.findByText('Continue to the Guardian').click();
     cy.lastPayloadIs([{ id: 'supporter', consented: false }]);
     cy.url().should('include', defaultReturnUrl);
   });
@@ -76,7 +76,7 @@ describe('Post sign-in prompt', () => {
     // mock form save success
     cy.mockNext(200);
 
-    cy.findByText('Continue to The Guardian').click();
+    cy.findByText('Continue to the Guardian').click();
     cy.lastPayloadIs([{ id: 'supporter', consented: false }]);
     cy.url().should('include', returnUrl);
   });
