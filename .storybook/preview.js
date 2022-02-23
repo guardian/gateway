@@ -3,10 +3,13 @@ import { Breakpoints } from '@/client/models/Style';
 import React from 'react';
 import { FocusStyleManager } from '@guardian/source-foundations';
 
+/* Source provides a global utility that manages the appearance of focus styles. When enabled,
+ * focus styles will be hidden while the user interacts using the mouse.
+ * They will appear when the tab key is pressed to begin keyboard navigation. */
 export const FocusManagerDecorator = (storyFn) => {
   React.useEffect(() => {
     FocusStyleManager.onlyShowFocusOnTabs();
-  });
+  }, []);
 
   return <>{storyFn()}</>;
 };
