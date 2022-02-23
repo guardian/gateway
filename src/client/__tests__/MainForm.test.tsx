@@ -76,7 +76,7 @@ test('shows sets an error message when the reCAPTCHA check is unsuccessful', asy
 test('calls the form submit override method if defined', async () => {
   const mockedSubmitOverride = jest.fn();
   const { findByText } = setup({
-    onSubmitOverride: mockedSubmitOverride,
+    onSubmit: mockedSubmitOverride,
     recaptchaSiteKey: 'invalid-key',
   });
 
@@ -95,6 +95,50 @@ test('calls the form submit override method if defined', async () => {
   });
 });
 
+test('disables the form submit button when disableOnSubmit is set', async () => {
+  const { findByText } = setup({
+    disableOnSubmit: true,
+    onSubmit: (e) => {
+      e.preventDefault(); // Jest does not implement form submit, so we make sure to preventDefault here.
+      return { errorOccurred: false };
+    },
+  });
+
+  const submitButton = await findByText('Submit');
+
+  expect(submitButton).not.toBeDisabled();
+
+  act(() => {
+    fireEvent.click(submitButton);
+  });
+
+  await waitFor(() => {
+    expect(submitButton).toBeDisabled();
+  });
+});
+
+test('enables the form submit button when onSubmit returns an error state', async () => {
+  const { findByText } = setup({
+    disableOnSubmit: true,
+    onSubmit: (e) => {
+      e.preventDefault(); // Jest does not implement form submit, so we make sure to preventDefault here.
+      return { errorOccurred: true };
+    },
+  });
+
+  const submitButton = await findByText('Submit');
+
+  expect(submitButton).not.toBeDisabled();
+
+  act(() => {
+    fireEvent.click(submitButton);
+  });
+
+  await waitFor(() => {
+    expect(submitButton).not.toBeDisabled();
+  });
+});
+
 test('sets error message and context and prevents form submission when the reCAPTCHA check is unsuccessful', async () => {
   setupRecaptchaScriptMutationObserver();
   setupRecaptchaObject();
@@ -110,7 +154,9 @@ test('sets error message and context and prevents form submission when the reCAP
     const renderOptions: RenderOptions =
       mockedGrecaptchaRender.mock.calls[0][1];
     // Simulate the error callback being called after the recaptcha check.
-    renderOptions['error-callback'](undefined);
+    setTimeout(() => {
+      renderOptions['error-callback'](undefined);
+    }, 10);
   });
 
   const setRecaptchaErrorMessage = jest.fn();
@@ -125,6 +171,7 @@ test('sets error message and context and prevents form submission when the reCAP
     recaptchaSiteKey: 'public-recaptcha-token',
     setRecaptchaErrorMessage,
     setRecaptchaErrorContext,
+    disableOnSubmit: true,
   });
 
   await waitFor(() => {
@@ -147,12 +194,16 @@ test('sets error message and context and prevents form submission when the reCAP
 
   const submitButton = await findByText('Submit');
 
+  expect(submitButton).not.toBeDisabled();
+
   act(() => {
     fireEvent.click(submitButton);
   });
 
   // Check that a recaptcha check has been requested.
   await waitFor(() => {
+    expect(submitButton).toBeDisabled();
+
     expect(mockedGrecaptchaReset).toHaveBeenCalledTimes(1);
     expect(mockedGrecaptchaExecute).toHaveBeenCalledTimes(1);
     // Check form is not submitted.
@@ -161,6 +212,9 @@ test('sets error message and context and prevents form submission when the reCAP
 
   // Check that initial error message is shown.
   await waitFor(() => {
+    // Ensure that the submit button is re-enabled if the recaptcha check fails.
+    expect(submitButton).not.toBeDisabled();
+
     expect(setRecaptchaErrorMessage).toBeCalledTimes(1);
     expect(setRecaptchaErrorMessage).toHaveBeenCalledWith(
       'Google reCAPTCHA verification failed. Please try again.',

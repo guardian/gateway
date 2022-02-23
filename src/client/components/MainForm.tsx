@@ -33,8 +33,13 @@ export interface MainFormProps {
     React.SetStateAction<ReactNode | string>
   >;
   hasGuardianTerms?: boolean;
-  onSubmitOverride?: React.FormEventHandler<HTMLFormElement>;
+  onSubmit?: (e: React.FormEvent<HTMLFormElement>) =>
+    | {
+        errorOccurred: boolean;
+      }
+    | undefined;
   formTrackingName?: string;
+  disableOnSubmit?: boolean;
 }
 
 const formStyles = css`
@@ -66,8 +71,9 @@ export const MainForm = ({
   setRecaptchaErrorMessage,
   setRecaptchaErrorContext,
   hasGuardianTerms = false,
-  onSubmitOverride,
+  onSubmit,
   formTrackingName,
+  disableOnSubmit = false,
 }: PropsWithChildren<MainFormProps>) => {
   const recaptchaEnabled = !!recaptchaSiteKey;
   const hasTerms = recaptchaEnabled || hasGuardianTerms;
@@ -76,9 +82,13 @@ export const MainForm = ({
   const [recaptchaState, setRecaptchaState] =
     useState<UseRecaptchaReturnValue>();
 
+  const [isFormDisabled, setIsFormDisabled] = useState(false);
+
   /**
    * Executes the reCAPTCHA check and form submit tracking.
    * Prevents the form from submitting until the reCAPTCHA check is complete.
+   * Disables the form on submit conditional on `disableOnSubmit`
+   * Keeps the form enabled if the outside submit handler reports an error
    */
   const handleSubmit = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
@@ -86,8 +96,17 @@ export const MainForm = ({
         trackFormSubmit(formTrackingName);
       }
 
-      if (onSubmitOverride) {
-        onSubmitOverride(event);
+      const errorInSubmitHandler = onSubmit && onSubmit(event)?.errorOccurred;
+
+      if (disableOnSubmit) {
+        if (errorInSubmitHandler === undefined) {
+          if (!isFormDisabled) {
+            setIsFormDisabled(true);
+          }
+        } else {
+          const formSubmitSuccess = !errorInSubmitHandler;
+          setIsFormDisabled(formSubmitSuccess);
+        }
       }
 
       if (recaptchaEnabled && !recaptchaState?.token) {
@@ -95,7 +114,14 @@ export const MainForm = ({
         recaptchaState?.executeCaptcha();
       }
     },
-    [onSubmitOverride, recaptchaEnabled, recaptchaState, formTrackingName],
+    [
+      formTrackingName,
+      onSubmit,
+      disableOnSubmit,
+      recaptchaEnabled,
+      recaptchaState,
+      isFormDisabled,
+    ],
   );
 
   /**
@@ -110,6 +136,24 @@ export const MainForm = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recaptchaEnabled, recaptchaState, recaptchaState?.token]);
+
+  useEffect(() => {
+    if (recaptchaEnabled) {
+      // Determine is something went wrong with the check.
+      const recaptchaCheckFailed =
+        recaptchaState?.error || recaptchaState?.expired;
+
+      if (recaptchaCheckFailed && isFormDisabled) {
+        // Re-enable the disabled form submit button
+        setIsFormDisabled(false);
+      }
+    }
+  }, [
+    isFormDisabled,
+    recaptchaEnabled,
+    recaptchaState?.error,
+    recaptchaState?.expired,
+  ]);
 
   useEffect(() => {
     if (recaptchaEnabled) {
@@ -184,6 +228,8 @@ export const MainForm = ({
         type="submit"
         priority={submitButtonPriority}
         data-cy="main-form-submit-button"
+        disabled={isFormDisabled}
+        aria-disabled={isFormDisabled}
       >
         {submitButtonText}
       </Button>

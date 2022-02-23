@@ -107,6 +107,14 @@ export const buttonStyles = ({ hasTerms = false, halfWidth = false }) => css`
   justify-content: center;
   width: 100%;
 
+  /* Set the cursor when disabled temporarily so we have a visual indication
+   * until we have a loading spinner.
+   * PR for loading spinner in Source: https://github.com/guardian/source/pull/1275
+   */
+  :disabled {
+    cursor: not-allowed;
+  }
+
   ${from.tablet} {
     ${halfWidth
       ? css`
