@@ -4,7 +4,6 @@ export const TEST_ID = 'OptInPromptPostSignIn';
 
 export const optInPrompt: ABTest = {
   id: TEST_ID,
-  // TODO: change start / expiry before release
   start: '2022-01-01',
   expiry: '2022-12-31',
   author: 'liam.duffy.freelancer@guardian.co.uk',
