@@ -1,5 +1,15 @@
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 import { Breakpoints } from '@/client/models/Style';
+import React from 'react';
+import { FocusStyleManager } from '@guardian/source-foundations';
+
+export const FocusManagerDecorator = (storyFn) => {
+  React.useEffect(() => {
+    FocusStyleManager.onlyShowFocusOnTabs();
+  });
+
+  return <>{storyFn()}</>;
+};
 
 const customViewports = {};
 for (let breakpoint in Breakpoints) {
@@ -14,6 +24,8 @@ for (let breakpoint in Breakpoints) {
     };
   }
 }
+
+export const decorators = [FocusManagerDecorator];
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
