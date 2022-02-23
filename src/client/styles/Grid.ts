@@ -111,7 +111,7 @@ const generateGridRowCss = (
 // this styles should be applied to an element to make it behave as
 // the grid container, it defines the css on how all the breakpoints
 // should behave
-// anything items should be added inside this container, and use
+// any items should be added inside this container, and use
 // either the autoRow/getAutoRow or manualRow functionality to layout the items
 export const gridRow = css`
   display: -ms-grid;
