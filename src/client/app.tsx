@@ -40,9 +40,15 @@ export const App = (props: ClientState) => {
             display: flex;
             flex-direction: column;
           }
-          * {
+          html {
             box-sizing: border-box;
           }
+          *,
+          *:before,
+          *:after {
+            box-sizing: inherit;
+          }
+
           // Badge is hidden for Gateway, because we're using
           // the legal text to do this job
           .grecaptcha-badge {
