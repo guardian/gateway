@@ -28,6 +28,7 @@ type ConditionalMetrics =
   | 'SendMagicLink'
   | 'SendValidationEmail'
   | 'SignIn'
+  | 'SignOut'
   | 'UpdatePassword'
   | 'RecaptchaMiddleware'
   | 'ValidatePasswordToken';

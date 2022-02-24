@@ -11,6 +11,7 @@ import {
 } from '@/server/lib/idapi/IDAPICookies';
 import { deleteAuthorizationStateCookie } from '../lib/okta/openid-connect';
 import { clearEncryptedStateCookie } from '../lib/encryptedStateCookie';
+import { trackMetric } from '../lib/trackMetric';
 
 const { defaultReturnUri, baseUri } = getConfiguration();
 
@@ -40,18 +41,23 @@ router.get(
 
     try {
       // get the SC_GU_U cookie here
-      // it *may* not be defined or valid here, but we use it in the IDAPI logout call
-      const sc_gu_u = req.cookies.SC_GU_U;
+      const sc_gu_u: string | undefined = req.cookies.SC_GU_U;
 
-      // perform the logout and get back the GU_SO cookie
-      const cookies = await logout(sc_gu_u, req.ip);
+      // only attempt log out if we have a SC_GU_U cookie
+      if (sc_gu_u) {
+        // perform the logout and get back the GU_SO cookie
+        const cookies = await logout(sc_gu_u, req.ip);
 
-      // set the GU_SO cookie
-      if (cookies) {
-        setIDAPICookies(res, cookies);
+        // set the GU_SO cookie
+        if (cookies) {
+          setIDAPICookies(res, cookies);
+        }
+
+        trackMetric('SignOut::Success');
       }
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+      trackMetric('SignOut::Failure');
     } finally {
       // we want to clear the IDAPI cookies anyway even if there was an
       // idapi error so that we don't prevent users from logging out on their
