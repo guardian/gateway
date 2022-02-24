@@ -165,6 +165,7 @@ const li = (index: number, status: PageStatus) => {
 
 const progressWrapper = css`
   padding: 0 ${CIRCLE_RADIUS}px;
+  overflow: hidden;
 `;
 
 const hiddenText = css`
