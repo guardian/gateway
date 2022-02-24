@@ -69,12 +69,12 @@ export interface Buckets {
   oktaIdentifierBucketDefinition?: BucketConfiguration;
 }
 
-// type RateLimitType =
-//   | 'oktaIdentifier'
-//   | 'accessToken'
-//   | 'ip'
-//   | 'global'
-//   | 'email';
+export type BucketName =
+  | 'oktaIdentifier'
+  | 'accessToken'
+  | 'ip'
+  | 'global'
+  | 'email';
 
 type RedisTokenDataPromise = {
   error: Error | null;
@@ -87,23 +87,67 @@ type RedisTimeUntilExpiryPromise = {
 };
 
 export const getPipelinedBucketDataForKey = (
-  key: string,
+  redisKey: string,
   pipeline: Redis.Pipeline,
 ) => {
   return {
-    redisKey: key,
+    redisKey,
     tokenData: new Promise<RedisTokenDataPromise>((res) =>
-      pipeline.get(key, (error, data) => res({ error, data })),
+      pipeline.get(redisKey, (error, data) => res({ error, data })),
     ),
     timeLeftUntilExpiry: new Promise<RedisTimeUntilExpiryPromise>((res) =>
-      pipeline.pttl(key, (error, data) => res({ error, data })),
+      pipeline.pttl(redisKey, (error, data) => res({ error, data })),
     ),
   };
 };
 
 type PipelinedData = ReturnType<typeof getPipelinedBucketDataForKey>;
 
-export const parseBucketFromPipelinedData = async (
+const getParsedBucketPromise = (
+  key: string | undefined,
+  pipeline: Redis.Pipeline,
+) =>
+  key
+    ? parseBucketFromPipelinedData(getPipelinedBucketDataForKey(key, pipeline))
+    : undefined;
+
+export const fetchAndParseBucketsFromPipelinedData = async (
+  redisClient: Redis.Redis,
+  buckets: {
+    accessTokenKey?: string;
+    oktaIdKey?: string;
+    emailKey?: string;
+    ipKey?: string;
+    globalKey: string;
+  },
+) => {
+  const readPipeline = redisClient.pipeline();
+  const { globalKey, accessTokenKey, emailKey, ipKey, oktaIdKey } = buckets;
+
+  const globalBucket = getParsedBucketPromise(globalKey, readPipeline);
+  const ipBucket = getParsedBucketPromise(ipKey, readPipeline);
+  const emailBucket = getParsedBucketPromise(emailKey, readPipeline);
+  const accessTokenBucket = getParsedBucketPromise(
+    accessTokenKey,
+    readPipeline,
+  );
+  const oktaIdentifierBucket = getParsedBucketPromise(oktaIdKey, readPipeline);
+
+  // Exec all awaiting read promises;
+  console.time('Read time');
+  await readPipeline.exec();
+  console.timeEnd('Read time');
+
+  return {
+    accessToken: await accessTokenBucket,
+    oktaIdentifier: await oktaIdentifierBucket,
+    email: await emailBucket,
+    ip: await ipBucket,
+    global: await globalBucket,
+  };
+};
+
+const parseBucketFromPipelinedData = async (
   pipelinedData: PipelinedData,
 ): Promise<RateLimitBucket> => {
   const { redisKey, ...redisData } = pipelinedData;
@@ -123,8 +167,8 @@ export const parseBucketFromPipelinedData = async (
     throw timeLeftUntilExpiryResult.error;
   }
 
-  // If no data is found for this bucket in Redis, we return undefined
-  // we know to create a new bucket in the calling function.
+  // If no data is found for this bucket in Redis we leave the data
+  // undefined so we know to create a new bucket in the calling function.
   if (tokenDataValue === null || timeLeftUntilExpiry === null) {
     return {
       redisKey,
@@ -144,7 +188,7 @@ export const parseBucketFromPipelinedData = async (
   }
 };
 
-export const executeRateLimitAndCheckIfLimitNotHit = async (
+export const executeRateLimitAndCheckIfLimitNotHit = (
   bucket: RateLimitBucket,
   bucketConfiguration: BucketConfiguration,
   pipelinedWrites: Redis.Pipeline,

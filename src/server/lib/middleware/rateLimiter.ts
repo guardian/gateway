@@ -5,8 +5,7 @@ import { readEmailCookie } from '../emailCookie';
 import { getConfiguration } from '../getConfiguration';
 import {
   executeRateLimitAndCheckIfLimitNotHit,
-  getPipelinedBucketDataForKey,
-  parseBucketFromPipelinedData,
+  fetchAndParseBucketsFromPipelinedData,
   RateLimiter,
 } from '../rateLimit';
 import { logger } from '../serverSideLogger';
@@ -19,6 +18,9 @@ const redisClient = new Redis({
   host: redisConfiguration.host,
 });
 
+const getRateLimitKey = (name: string, bucketName: string, value?: string) =>
+  `gw-rl-${name}-${bucketName}${value ? '-' + sha256(value) : ''}`;
+
 const rateLimit = async ({
   name,
   buckets,
@@ -28,88 +30,107 @@ const rateLimit = async ({
   oktaIdentifier,
 }: RateLimiter) => {
   const {
-    // accessTokenBucketDefinition,
+    accessTokenBucketDefinition,
     ipBucketDefinition,
-    // emailBucketDefinition,
+    emailBucketDefinition,
     globalBucketDefinition,
-    // oktaIdentifierBucketDefinition,
+    oktaIdentifierBucketDefinition,
   } = buckets;
 
-  // const rateLimitAccessTokenKey =
-  //   accessTokenBucketDefinition &&
-  //   accessToken &&
-  //   `gw-rl-${name}-${accessTokenBucketDefinition?.name}-${sha256(accessToken)}`;
+  const accessTokenKey =
+    accessTokenBucketDefinition &&
+    accessToken &&
+    getRateLimitKey(name, accessTokenBucketDefinition.name, accessToken);
 
-  // const rateLimitOktaIdentifierKey =
-  //   oktaIdentifierBucketDefinition &&
-  //   oktaIdentifier &&
-  //   `gw-rl-${name}-${oktaIdentifierBucketDefinition?.name}-${sha256(
-  //     oktaIdentifier,
-  //   )}`;
+  const oktaIdKey =
+    oktaIdentifierBucketDefinition &&
+    oktaIdentifier &&
+    getRateLimitKey(name, oktaIdentifierBucketDefinition.name, oktaIdentifier);
 
-  // const rateLimitEmailKey =
-  //   email && `gw-rl-${name}-${emailBucketDefinition?.name}-${sha256(email)}`;
+  const emailKey =
+    emailBucketDefinition &&
+    email &&
+    getRateLimitKey(name, emailBucketDefinition.name, email);
 
-  const rateLimitIpKey =
+  const ipKey =
     ipBucketDefinition &&
     ip &&
-    `gw-rl-${name}-${ipBucketDefinition?.name}-${sha256(ip)}`;
+    getRateLimitKey(name, ipBucketDefinition.name, ip);
 
-  const rateLimitGlobalKey =
-    globalBucketDefinition && `gw-rl-${name}-${globalBucketDefinition?.name}`;
-
-  const pipelinedReads = redisClient.pipeline();
-
-  const globalTokenData = getPipelinedBucketDataForKey(
-    rateLimitGlobalKey,
-    pipelinedReads,
-  );
-
-  const ipTokenData = rateLimitIpKey
-    ? getPipelinedBucketDataForKey(rateLimitIpKey, pipelinedReads)
-    : undefined;
-
-  // Exec all awaiting read promises;
-  console.time('Read time');
-  await pipelinedReads.exec();
-  console.timeEnd('Read time');
+  const globalKey = getRateLimitKey(name, globalBucketDefinition.name);
 
   try {
-    const globalTokenBucket = await parseBucketFromPipelinedData(
-      globalTokenData,
-    );
-
-    const ipTokenBucket = ipTokenData
-      ? await parseBucketFromPipelinedData(ipTokenData)
-      : undefined;
+    const buckets = await fetchAndParseBucketsFromPipelinedData(redisClient, {
+      accessTokenKey,
+      oktaIdKey,
+      emailKey,
+      ipKey,
+      globalKey,
+    });
 
     const pipelinedWrites = redisClient.pipeline();
 
     // Continue evaluating rate limits until one is hit.
+    const oktaNotHit = buckets.oktaIdentifier
+      ? oktaIdentifierBucketDefinition !== undefined &&
+        executeRateLimitAndCheckIfLimitNotHit(
+          buckets.oktaIdentifier,
+          oktaIdentifierBucketDefinition,
+          pipelinedWrites,
+        )
+      : true;
+
+    const accessTokenNotHit =
+      oktaNotHit && buckets.accessToken
+        ? accessTokenBucketDefinition !== undefined &&
+          executeRateLimitAndCheckIfLimitNotHit(
+            buckets.accessToken,
+            accessTokenBucketDefinition,
+            pipelinedWrites,
+          )
+        : true;
+
+    const emailNotHit =
+      accessTokenNotHit && buckets.email
+        ? emailBucketDefinition !== undefined &&
+          executeRateLimitAndCheckIfLimitNotHit(
+            buckets.email,
+            emailBucketDefinition,
+            pipelinedWrites,
+          )
+        : true;
+
     const ipNotHit =
-      ipTokenBucket &&
-      ipBucketDefinition &&
-      (await executeRateLimitAndCheckIfLimitNotHit(
-        ipTokenBucket,
-        ipBucketDefinition,
-        pipelinedWrites,
-      ));
+      emailNotHit && buckets.ip
+        ? ipBucketDefinition !== undefined &&
+          executeRateLimitAndCheckIfLimitNotHit(
+            buckets.ip,
+            ipBucketDefinition,
+            pipelinedWrites,
+          )
+        : true;
 
     const globalNotHit =
-      ipNotHit &&
-      globalTokenData &&
-      (await executeRateLimitAndCheckIfLimitNotHit(
-        globalTokenBucket,
-        globalBucketDefinition,
-        pipelinedWrites,
-      ));
+      ipNotHit && buckets.global
+        ? executeRateLimitAndCheckIfLimitNotHit(
+            buckets.global,
+            globalBucketDefinition,
+            pipelinedWrites,
+          )
+        : false;
 
     // Exec all awaiting read promises;
     console.time('Write time');
     await pipelinedWrites.exec();
     console.timeEnd('Write time');
 
-    return !globalNotHit || !ipNotHit;
+    return (
+      !globalNotHit ||
+      !ipNotHit ||
+      !emailNotHit ||
+      !accessTokenNotHit ||
+      !oktaNotHit
+    );
   } catch (e) {
     logger.error('Encountered an error fetching bucket data', e);
   }
@@ -123,10 +144,10 @@ export const rateLimiterMiddleware = async (
   const isRateLimited = await rateLimit({
     name: 'signin',
     buckets: {
-      ipBucketDefinition: { addTokenMs: 100, capacity: 100, name: 'ip' }, // test values
+      ipBucketDefinition: { addTokenMs: 1000, capacity: 1, name: 'ip' },
       globalBucketDefinition: {
         addTokenMs: 1000,
-        capacity: 2,
+        capacity: 10,
         name: 'global',
       },
     },
