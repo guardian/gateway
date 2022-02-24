@@ -67,7 +67,7 @@ const rateLimit = async ({
 
   // Exec all awaiting read promises;
   console.time('Read time');
-  await pipelinedReads.exec();
+  // await pipelinedReads.exec();
   console.timeEnd('Read time');
 
   const pipelinedWrites = redisClient.pipeline();
@@ -104,14 +104,14 @@ export const rateLimiterMiddleware = async (
   next: NextFunction,
 ) => {
   const isRateLimited = await rateLimit({
-    rateLimiterConfig: {
-      name: 'signin',
+    name: 'signin',
+    buckets: {
       ipBucketDefinition: { addTokenMs: 100, capacity: 100, name: 'ip' }, // test values
       globalBucketDefinition: {
         addTokenMs: 100,
         capacity: 100,
         name: 'global',
-      }, // test values
+      },
     },
     ip: req.ip,
     email: readEmailCookie(req),
