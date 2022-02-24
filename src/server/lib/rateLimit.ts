@@ -1,5 +1,4 @@
 import type Redis from 'ioredis';
-import { logger } from './serverSideLogger';
 
 /**
  * This interface describes the object that we use to store the data
@@ -22,11 +21,11 @@ interface RateLimitBucket {
 
   // The number of tokens left in the bucket and time until expiry.
   // This is stored in Redis as a JSON encoded object.
-  tokenData: RateLimitBucketContents;
+  tokenData?: RateLimitBucketContents;
 
   // The time left in ms before the bucket contents are deleted.
   // This is stored and managed by Redis.
-  timeLeftUntilExpiry: number;
+  timeLeftUntilExpiry?: number;
 }
 
 /**
@@ -106,7 +105,7 @@ type PipelinedData = ReturnType<typeof getPipelinedBucketDataForKey>;
 
 export const parseBucketFromPipelinedData = async (
   pipelinedData: PipelinedData,
-) => {
+): Promise<RateLimitBucket> => {
   const { redisKey, ...redisData } = pipelinedData;
 
   const [tokenDataResult, timeLeftUntilExpiryResult] = await Promise.all([
@@ -117,25 +116,19 @@ export const parseBucketFromPipelinedData = async (
   const tokenDataValue = tokenDataResult.data;
   const timeLeftUntilExpiry = timeLeftUntilExpiryResult.data;
 
-  // If an error occurred while fetching data from Redis, log it and return undefined.
+  // If an error occurred while fetching data from Redis
   if (tokenDataResult.error) {
-    logger.error(
-      'There was a problem fetching rate limit data from Redis',
-      tokenDataResult.error,
-    );
-    return undefined;
+    throw tokenDataResult.error;
   } else if (timeLeftUntilExpiryResult.error) {
-    logger.error(
-      'There was a problem fetching rate limit ttl from Redis',
-      timeLeftUntilExpiryResult.error,
-    );
-    return undefined;
+    throw timeLeftUntilExpiryResult.error;
   }
 
-  // If no data is found for this bucket in Redis, we throw an error so
+  // If no data is found for this bucket in Redis, we return undefined
   // we know to create a new bucket in the calling function.
   if (tokenDataValue === null || timeLeftUntilExpiry === null) {
-    throw new Error('No data found for key');
+    return {
+      redisKey,
+    };
   }
 
   try {
@@ -145,27 +138,24 @@ export const parseBucketFromPipelinedData = async (
       redisKey,
       timeLeftUntilExpiry,
       tokenData,
-    } as RateLimitBucket;
+    };
   } catch (e) {
-    // ... otherwise, log the parsing error and return undefined.
-    logger.error('Error parsing rate limit data: ', e);
-    return undefined;
+    throw e;
   }
 };
 
 export const executeRateLimitAndCheckIfLimitNotHit = async (
-  pipelinedData: PipelinedData,
+  bucket: RateLimitBucket,
   bucketConfiguration: BucketConfiguration,
   pipelinedWrites: Redis.Pipeline,
 ) => {
   const maxTtlSeconds = 21700; // 6 hours in seconds
 
-  try {
-    // Rate limit against an existing key
+  const { redisKey, timeLeftUntilExpiry, tokenData } = bucket;
+  const bucketExists =
+    timeLeftUntilExpiry !== undefined && tokenData !== undefined;
 
-    const { redisKey, timeLeftUntilExpiry, tokenData } =
-      await parseBucketFromPipelinedData(pipelinedData);
-
+  if (bucketExists) {
     // Calculate how much time has passed in milliseconds since the last token was removed.
     const timePassedMs =
       tokenData.maximumTimeBeforeExpiry * 1000 - timeLeftUntilExpiry;
@@ -201,17 +191,17 @@ export const executeRateLimitAndCheckIfLimitNotHit = async (
       .expire(redisKey, maxTtlSeconds);
 
     return rateLimitNotHit;
-  } catch {
-    // Rate limit against a new key.
-    const rateLimitTokenData: RateLimitBucketContents = {
-      tokens: bucketConfiguration.capacity - 1,
-      maximumTimeBeforeExpiry: maxTtlSeconds,
-    };
-
-    pipelinedWrites
-      .set(pipelinedData.redisKey, JSON.stringify(rateLimitTokenData))
-      .expire(pipelinedData.redisKey, maxTtlSeconds);
-
-    return true;
   }
+
+  // Bucket information was not defined, so we create a new record for this key.
+  const rateLimitTokenData: RateLimitBucketContents = {
+    tokens: bucketConfiguration.capacity - 1,
+    maximumTimeBeforeExpiry: maxTtlSeconds,
+  };
+
+  pipelinedWrites
+    .set(redisKey, JSON.stringify(rateLimitTokenData))
+    .expire(redisKey, maxTtlSeconds);
+
+  return true;
 };

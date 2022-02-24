@@ -5,9 +5,11 @@ import { readEmailCookie } from '../emailCookie';
 import { getConfiguration } from '../getConfiguration';
 import {
   executeRateLimitAndCheckIfLimitNotHit,
-  getPipelinedDataForKey,
+  getPipelinedBucketDataForKey,
+  parseBucketFromPipelinedData,
   RateLimiter,
 } from '../rateLimit';
+import { logger } from '../serverSideLogger';
 
 const { redisConfiguration } = getConfiguration();
 
@@ -18,20 +20,20 @@ const redisClient = new Redis({
 });
 
 const rateLimit = async ({
-  rateLimiterConfig,
+  name,
+  buckets,
   ip,
   accessToken,
   email,
   oktaIdentifier,
 }: RateLimiter) => {
   const {
-    name,
     // accessTokenBucketDefinition,
     ipBucketDefinition,
     // emailBucketDefinition,
     globalBucketDefinition,
     // oktaIdentifierBucketDefinition,
-  } = rateLimiterConfig;
+  } = buckets;
 
   // const rateLimitAccessTokenKey =
   //   accessTokenBucketDefinition &&
@@ -58,44 +60,59 @@ const rateLimit = async ({
 
   const pipelinedReads = redisClient.pipeline();
 
-  const globalTokenData =
-    rateLimitGlobalKey &&
-    getPipelinedDataForKey(rateLimitGlobalKey, pipelinedReads);
+  const globalTokenData = getPipelinedBucketDataForKey(
+    rateLimitGlobalKey,
+    pipelinedReads,
+  );
 
-  const ipTokenData =
-    rateLimitIpKey && getPipelinedDataForKey(rateLimitIpKey, pipelinedReads);
+  const ipTokenData = rateLimitIpKey
+    ? getPipelinedBucketDataForKey(rateLimitIpKey, pipelinedReads)
+    : undefined;
 
   // Exec all awaiting read promises;
   console.time('Read time');
-  // await pipelinedReads.exec();
+  await pipelinedReads.exec();
   console.timeEnd('Read time');
 
-  const pipelinedWrites = redisClient.pipeline();
-
-  // Continue evaluating rate limits until one is hit.
-  const ipNotHit =
-    ipTokenData &&
-    (await executeRateLimitAndCheckIfLimitNotHit(
-      ipTokenData,
-      ipBucketDefinition,
-      pipelinedWrites,
-    ));
-
-  const globalNotHit =
-    ipNotHit &&
-    globalTokenData &&
-    (await executeRateLimitAndCheckIfLimitNotHit(
+  try {
+    const globalTokenBucket = await parseBucketFromPipelinedData(
       globalTokenData,
-      globalBucketDefinition,
-      pipelinedWrites,
-    ));
+    );
 
-  // Exec all awaiting read promises;
-  console.time('Write time');
-  await pipelinedWrites.exec();
-  console.timeEnd('Write time');
+    const ipTokenBucket = ipTokenData
+      ? await parseBucketFromPipelinedData(ipTokenData)
+      : undefined;
 
-  return !globalNotHit || !ipNotHit;
+    const pipelinedWrites = redisClient.pipeline();
+
+    // Continue evaluating rate limits until one is hit.
+    const ipNotHit =
+      ipTokenBucket &&
+      ipBucketDefinition &&
+      (await executeRateLimitAndCheckIfLimitNotHit(
+        ipTokenBucket,
+        ipBucketDefinition,
+        pipelinedWrites,
+      ));
+
+    const globalNotHit =
+      ipNotHit &&
+      globalTokenData &&
+      (await executeRateLimitAndCheckIfLimitNotHit(
+        globalTokenBucket,
+        globalBucketDefinition,
+        pipelinedWrites,
+      ));
+
+    // Exec all awaiting read promises;
+    console.time('Write time');
+    await pipelinedWrites.exec();
+    console.timeEnd('Write time');
+
+    return !globalNotHit || !ipNotHit;
+  } catch (e) {
+    logger.error('Encountered an error fetching bucket data', e);
+  }
 };
 
 export const rateLimiterMiddleware = async (
@@ -108,8 +125,8 @@ export const rateLimiterMiddleware = async (
     buckets: {
       ipBucketDefinition: { addTokenMs: 100, capacity: 100, name: 'ip' }, // test values
       globalBucketDefinition: {
-        addTokenMs: 100,
-        capacity: 100,
+        addTokenMs: 1000,
+        capacity: 2,
         name: 'global',
       },
     },
