@@ -61,15 +61,15 @@ const ol = (active: number) => {
   return css`
     list-style: none;
     height: ${CIRCLE_DIAMETER}px;
-    margin: 14px 0 44px;
+    margin: 14px 0 40px;
     position: relative;
 
     ${from.tablet} {
-      margin: 18px 0 32px;
+      margin: 18px 0 28px;
     }
 
     ${from.desktop} {
-      margin: 26px 0 26px;
+      margin: 26px 0 22px;
     }
 
     &:before,
@@ -141,6 +141,8 @@ const li = (index: number, status: PageStatus) => {
       height: ${CIRCLE_DIAMETER}px;
       position: absolute;
       left: -${CIRCLE_RADIUS}px;
+      /* TODO: apply this to psuedo elements globally */
+      box-sizing: border-box;
       ${status === 'active' &&
       `
         background: ${neutral[100]};

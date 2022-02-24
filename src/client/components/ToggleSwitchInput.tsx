@@ -64,6 +64,11 @@ const switchStyles = css`
   height: 1.5rem;
   border-radius: 15.5px;
 
+  &:before,
+  &:after {
+    box-sizing: border-box;
+  }
+
   &:before {
     content: '';
     position: absolute;
