@@ -6,18 +6,17 @@ import { renderer } from '@/server/lib/renderer';
 import { typedRouter as router } from '@/server/lib/typedRoutes';
 import {
   update as patchConsents,
-  read as readConsents,
+  getUserConsentsForPage,
+  getConsentValueFromRequestBody,
 } from '@/server/lib/idapi/consents';
 import {
   update as patchNewsletters,
   readUserNewsletters,
   read as getNewsletters,
 } from '@/server/lib/idapi/newsletters';
-import { read as getUser } from '@/server/lib/idapi/user';
 import { PageData } from '@/shared/model/ClientState';
 import { ALL_NEWSLETTER_IDS, NewsLetter } from '@/shared/model/Newsletter';
 import {
-  Consent,
   CONSENTS_COMMUNICATION_PAGE,
   CONSENTS_DATA_PAGE,
 } from '@/shared/model/Consent';
@@ -64,52 +63,6 @@ interface ConsentPage {
     body: { [key: string]: string },
   ) => Promise<void>;
 }
-
-const getConsentValueFromRequestBody = (
-  key: string,
-  body: { [key: string]: string },
-): boolean => {
-  if (body[key] === undefined || typeof body[key] !== 'string') {
-    return false;
-  }
-
-  switch (body[key]) {
-    case 'true':
-      return true;
-    case 'false':
-      return false;
-    default:
-      return !!body[key];
-  }
-};
-
-const getUserConsentsForPage = async (
-  pageConsents: string[],
-  ip: string,
-  sc_gu_u: string,
-): Promise<Consent[]> => {
-  const allConsents = await readConsents();
-  const userConsents = (await getUser(ip, sc_gu_u)).consents;
-
-  return pageConsents
-    .map((id) => allConsents.find((consent) => consent.id === id))
-    .map((consent) => {
-      if (consent) {
-        let updated = consent;
-        const userConsent = userConsents.find((uc) => uc.id === consent.id);
-
-        if (userConsent) {
-          updated = {
-            ...updated,
-            consented: userConsent.consented,
-          };
-        }
-
-        return updated;
-      }
-    })
-    .filter(Boolean) as Consent[];
-};
 
 const getUserNewsletterSubscriptions = async (
   newslettersOnPage: string[],

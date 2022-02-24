@@ -7,6 +7,7 @@ export type PageTitle =
   | 'Register'
   | 'Reset Password'
   | 'Sign in'
+  | 'Signed in'
   | 'Check Your Inbox'
   | 'Create Password'
   | 'Resend Create Password Email'

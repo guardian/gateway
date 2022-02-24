@@ -31,6 +31,7 @@ export type RoutePaths =
   | '/set-password/expired'
   | '/set-password/resend'
   | '/signin'
+  | '/signin/success'
   | '/verify-email' //this can be removed once Jobs has been migrated
   | '/welcome'
   | '/welcome/:token'

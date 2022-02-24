@@ -1,16 +1,6 @@
 import { Response } from 'express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-
-interface IdapiCookie {
-  key: string;
-  value: string;
-  sessionCookie?: boolean;
-}
-
-export interface IdapiCookies {
-  values: Array<IdapiCookie>;
-  expiresAt: string;
-}
+import { IdapiCookies } from '@/shared/model/IDAPIAuth';
 
 const { baseUri } = getConfiguration();
 

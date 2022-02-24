@@ -7,7 +7,7 @@ import { renderer } from '@/server/lib/renderer';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
+import { setIDAPICookies } from '@/server/lib/idapi/setIDAPICookies';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { decrypt } from '@/server/lib/idapi/decryptToken';
 import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
@@ -27,8 +27,18 @@ import {
 } from '@/server/lib/encryptedStateCookie';
 import { getPersistableQueryParams } from '@/shared/lib/queryParams';
 import { RoutePaths } from '@/shared/model/Routes';
+import { CONSENTS_POST_SIGN_IN_PAGE } from '@/shared/model/Consent';
+import {
+  getUserConsentsForPage,
+  getConsentValueFromRequestBody,
+  update as patchConsents,
+} from '@/server/lib/idapi/consents';
+import { loginMiddleware } from '@/server/lib/middleware/login';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { _ } from '@guardian/libs/dist/types/logger';
+import postSignInController from '@/server/lib/postSignInController';
 
-const { defaultReturnUri, okta } = getConfiguration();
+const { okta } = getConfiguration();
 
 /**
  * Method to perform the Authorization Code Flow
@@ -175,11 +185,9 @@ const idapiSignInController = async (
   req: Request,
   res: ResponseWithRequestState,
 ) => {
-  const state = res.locals;
-
   const { email = '', password = '' } = req.body;
-
-  const { returnUrl } = state.pageData;
+  const { pageData } = res.locals;
+  const { returnUrl } = pageData;
 
   try {
     const cookies = await authenticateWithIdapi(email, password, req.ip);
@@ -188,7 +196,7 @@ const idapiSignInController = async (
 
     trackMetric('SignIn::Success');
 
-    return res.redirect(303, returnUrl || defaultReturnUri);
+    return postSignInController(req, res, cookies, returnUrl);
   } catch (error) {
     logger.error(`${req.method} ${req.originalUrl}  Error`, error);
     const { message, status } =
@@ -274,5 +282,49 @@ const oktaSignInController = async (
     return res.status(status).type('html').send(html);
   }
 };
+
+router.get(
+  '/signin/success',
+  loginMiddleware,
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    const state = res.locals;
+    const consents = await getUserConsentsForPage(
+      CONSENTS_POST_SIGN_IN_PAGE,
+      req.ip,
+      req.cookies.SC_GU_U,
+    );
+
+    const html = renderer('/signin/success', {
+      requestState: deepmerge(state, {
+        pageData: {
+          consents,
+        },
+      }),
+      pageTitle: 'Signed in',
+    });
+    res.type('html').send(html);
+  }),
+);
+
+router.post(
+  '/signin/success',
+  loginMiddleware,
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    const state = res.locals;
+    const { returnUrl } = state.pageData;
+    const { defaultReturnUri } = getConfiguration();
+    const redirectUrl = returnUrl || defaultReturnUri;
+    const sc_gu_u = req.cookies.SC_GU_U;
+
+    const consents = CONSENTS_POST_SIGN_IN_PAGE.map((id) => ({
+      id,
+      consented: getConsentValueFromRequestBody(id, req.body),
+    }));
+
+    await patchConsents(req.ip, sc_gu_u, consents);
+
+    return res.redirect(303, redirectUrl);
+  }),
+);
 
 export default router.router;

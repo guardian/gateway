@@ -8,22 +8,20 @@ import {
   ProfileOpenIdClient,
   ProfileOpenIdClientRedirectUris,
 } from '@/server/lib/okta/openid-connect';
-import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { exchangeAccessTokenForCookies } from '@/server/lib/idapi/auth';
-import { setIDAPICookies } from '@/server/lib/setIDAPICookies';
+import { setIDAPICookies } from '@/server/lib/idapi/setIDAPICookies';
 import { SignInErrors } from '@/shared/model/Errors';
 import { updateEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import postSignInController from '@/server/lib/postSignInController';
 
 interface OAuthError {
   error: string;
   error_description: string;
 }
-
-const { defaultReturnUri } = getConfiguration();
 
 /**
  * Type guard to check that a given error is an OAuth error.
@@ -153,15 +151,14 @@ router.get(
       // track the success metric
       trackMetric('OAuthAuthorization::Success');
 
-      // return url from confirmation page, state or default url
       const returnUrl = authState.confirmationPage
         ? addQueryParamsToPath(
             authState.confirmationPage,
             authState.queryParams,
           )
-        : authState.queryParams.returnUrl || defaultReturnUri;
+        : authState.queryParams.returnUrl;
 
-      return res.redirect(303, returnUrl);
+      postSignInController(req, res, cookies, returnUrl);
     } catch (error) {
       // check if it's an oauth/oidc error
       if (isOAuthError(error)) {

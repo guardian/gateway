@@ -1,3 +1,5 @@
+import '@testing-library/cypress/add-commands';
+
 import { mockNext } from './commands/mockNext';
 import { mockAll } from './commands/mockAll';
 import { mockPurge } from './commands/mockPurge';

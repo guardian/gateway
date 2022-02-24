@@ -1,6 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { from, space } from '@guardian/source-foundations';
+import { space } from '@guardian/source-foundations';
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { Consent } from '@/shared/model/Consent';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
@@ -13,17 +13,6 @@ import { CONSENT_IMAGES } from '@/client/models/ConsentImages';
 type ConsentsCommunicationProps = {
   consents: Consent[];
 };
-
-const communicationCardContainer = css`
-  display: flex;
-  flex-flow: row wrap;
-  ${from.desktop} {
-    grid-column: 2 / span 9;
-  }
-  ${from.wide} {
-    grid-column: 3 / span 9;
-  }
-`;
 
 const p = css`
   margin-bottom: ${space[6]}px;
@@ -44,7 +33,7 @@ export const ConsentsCommunication = ({
           Would you like to join our mailing list to stay informed and up to
           date with all that the Guardian has to offer?
         </p>
-        <div css={[communicationCardContainer, autoRow()]}>
+        <div css={autoRow()}>
           {consents.map((consent) => (
             <CommunicationCard
               key={consent.id}

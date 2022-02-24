@@ -9,7 +9,11 @@ import {
 import { logger } from '@/server/lib/serverSideLogger';
 import { IdapiError } from '@/server/models/Error';
 import { IdapiErrorMessages, SignInErrors } from '@/shared/model/Errors';
-import { IDAPIAuthRedirect, IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
+import {
+  IDAPIAuthRedirect,
+  IDAPIAuthStatus,
+  IdapiCookies,
+} from '@/shared/model/IDAPIAuth';
 
 interface APIResponse {
   emailValidated: true;
@@ -92,10 +96,10 @@ export const authenticate = async (
       options: APIAddClientAccessToken(options, ip),
       queryParams: { format: 'cookies' },
     });
-    return response.cookies;
+    return response.cookies as IdapiCookies;
   } catch (error) {
     logger.error(`IDAPI Error auth authenticate '/auth?format=cookies'`, error);
-    handleError(error as IDAPIError);
+    return handleError(error as IDAPIError);
   }
 };
 
