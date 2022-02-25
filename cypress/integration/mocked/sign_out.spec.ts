@@ -7,7 +7,7 @@ describe('Sign out flow', () => {
   ];
 
   context('Signs a user out', () => {
-    it('Removes IDAPI log in cookies when signing out', () => {
+    it('Removes IDAPI log in cookies and dotcom cookies when signing out', () => {
       cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
         req.reply(200);
       }).as('successRedirect');
@@ -35,7 +35,7 @@ describe('Sign out flow', () => {
               value: 'the_SC_GU_U_cookie',
             },
           ],
-          expiresAt: new Date(Date.now() + 1800000 /* 30min */).toISOString(),
+          expiresAt: 'tomorrow',
         },
       });
 
