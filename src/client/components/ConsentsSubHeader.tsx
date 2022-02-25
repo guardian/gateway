@@ -8,6 +8,7 @@ import {
   until,
   textSans,
   headline,
+  visuallyHidden,
 } from '@guardian/source-foundations';
 import { AutoRow, gridRow } from '@/client/styles/Grid';
 import { CONSENTS_PAGES_ARR } from '@/client/models/ConsentsPages';
@@ -172,8 +173,8 @@ const progressWrapper = css`
   overflow: hidden;
 `;
 
-const hiddenText = css`
-  display: none;
+const screenReaderTextStyles = css`
+  ${visuallyHidden}
 `;
 
 export const ConsentsSubHeader = ({ autoRow, title, current }: Props) => {
@@ -202,7 +203,7 @@ export const ConsentsSubHeader = ({ autoRow, title, current }: Props) => {
             <li key={page} css={li(index, status)}>
               <span>
                 {screenReaderText && (
-                  <span css={hiddenText}>{screenReaderText}</span>
+                  <span css={screenReaderTextStyles}>{screenReaderText}</span>
                 )}
                 {page}
               </span>
