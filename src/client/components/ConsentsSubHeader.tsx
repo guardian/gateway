@@ -5,6 +5,7 @@ import {
   neutral,
   space,
   from,
+  until,
   textSans,
   headline,
 } from '@guardian/source-foundations';
@@ -99,38 +100,41 @@ const ol = (active: number) => {
 
 const li = (index: number, status: PageStatus) => {
   const progressSections = CONSENTS_PAGES_COUNT - 1;
-  const progressSectionWidth = 100 / progressSections;
-  const spanWidth = progressSectionWidth;
-  const spanOffset = spanWidth / 2;
   const position = index / progressSections;
 
   return css`
     ${textSans.xxsmall()}
     position: absolute;
-    width: 100%;
     left: ${position * 100}%;
     color: ${status === 'pending' ? PENDING_COLOR : neutral[7]};
 
     > span {
       top: ${CIRCLE_DIAMETER + space[1]}px;
       position: absolute;
-      width: ${spanWidth}%;
-      left: -${spanOffset}%;
+      width: 90px;
+      left: -45px;
       text-align: center;
-    }
 
-    &:first-of-type > span,
-    &:last-of-type > span {
-      width: calc(${spanWidth / 2}% + ${CIRCLE_RADIUS}px);
+      /* Hack, see explanation below */
+      white-space: nowrap;
     }
 
     &:first-of-type > span {
       left: -${CIRCLE_RADIUS}px;
       text-align: left;
+
+      /**
+       * This allows us to force only "Create password" to wrap on mobile
+       */
+      ${until.mobileLandscape} {
+        white-space: normal;
+        width: 60px;
+      }
     }
 
     &:last-of-type > span {
       right: -${CIRCLE_RADIUS}px;
+      left: auto;
       text-align: right;
     }
 
