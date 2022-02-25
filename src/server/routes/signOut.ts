@@ -23,11 +23,14 @@ const DotComCookies = [
 ];
 
 const clearDotComCookies = (res: ResponseWithRequestState) => {
+  // the baseUri is profile.theguardian.com so we strip the 'profile' as the cookie domain should be .theguardian.com
+  // we also remove the port after the ':' to make it work in localhost for development and testing
+  const domain = `${baseUri.replace('profile.', '').split(':')[0]}`;
   DotComCookies.forEach((key) => {
     // we can't use res.clearCookie because we don't know the exact settings for these cookies
     // so we overwrite them with an empty string, and expire them immediately
     res.cookie(key, '', {
-      domain: `${baseUri.replace('profile.', '')}`,
+      domain,
       maxAge: 0, // set to 0 to expire cookie immediately, and clear these cookies
     });
   });
