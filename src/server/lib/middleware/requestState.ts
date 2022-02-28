@@ -25,10 +25,18 @@ const getRequestState = (req: RequestWithTypedQuery): RequestState => {
   // tracking parameters might be from body too
   const { ref, refViewId } = req.body;
 
-  const queryParams = parseExpressQueryParams(req.method, req.query, {
-    ref,
-    refViewId,
-  });
+  const queryParams = parseExpressQueryParams(
+    req.method,
+    {
+      ...req.query,
+      // returnUrl may be a query parameter or referrer header
+      returnUrl: req.query.returnUrl || req.get('Referrer'),
+    },
+    {
+      ref,
+      refViewId,
+    },
+  );
 
   const browser = Bowser.getParser(req.header('user-agent') || 'unknown');
 
