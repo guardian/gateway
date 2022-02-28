@@ -23,3 +23,9 @@ export const WithLabel = (props: Partial<ToggleSwitchInputProps>) => (
 );
 
 WithLabel.storyName = 'Form switch with label';
+
+export const Checked = (props: Partial<ToggleSwitchInputProps>) => (
+  <ToggleSwitchInput label={'I am a label'} defaultChecked {...props} />
+);
+
+Checked.storyName = 'Checked by default';

@@ -66,12 +66,3 @@ export const YourData = () => (
   />
 );
 YourData.storyName = 'With Your Data as current';
-
-export const Review = () => (
-  <ConsentsSubHeader
-    autoRow={autoRow}
-    title="My Title"
-    current={CONSENTS_PAGES.REVIEW}
-  />
-);
-YourData.storyName = 'With Review as current';
