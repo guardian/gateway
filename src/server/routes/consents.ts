@@ -40,7 +40,7 @@ import { fourZeroFourRender } from '@/server/lib/middleware/404';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { logger } from '@/server/lib/serverSideLogger';
 import { ApiError } from '@/server/models/Error';
-import { RoutePaths } from '@/shared/model/Routes';
+import { ConsentPath, RoutePaths } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
 import {
   TEST_ID as ONBOARDING_NEWSLETTERS_TEST_ID,
@@ -48,7 +48,7 @@ import {
 } from '@/shared/model/experiments/tests/onboarding-newsletters';
 
 interface ConsentPage {
-  page: string;
+  page: ConsentPath;
   path: RoutePaths;
   read: (
     ip: string,
@@ -112,7 +112,7 @@ export const consentPages: ConsentPage[] = [
     },
   },
   {
-    page: '/newsletters'.slice(1),
+    page: 'newsletters',
     path: '/consents/newsletters',
     pageTitle: CONSENTS_PAGES.NEWSLETTERS,
     read: async (ip, sc_gu_u, geo, newsLettersTestActive) => {
@@ -120,13 +120,13 @@ export const consentPages: ConsentPage[] = [
         ? TestNewsletterMap
         : NewsletterMap;
       return {
-        page: '/newsletters'.slice(1),
+        page: 'newsletters',
         newsletters: await getUserNewsletterSubscriptions(
           newsletterMap.get(geo) as string[],
           ip,
           sc_gu_u,
         ),
-        previousPage: '/communication'.slice(1),
+        previousPage: 'communication',
       };
     },
     update: async (ip, sc_gu_u, body) => {

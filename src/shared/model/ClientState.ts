@@ -5,6 +5,7 @@ import { EmailType } from '@/shared/model/EmailType';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { Participations } from '@guardian/ab-core';
 import { Stage } from '@/server/models/Configuration';
+import { ConsentPath } from '@/shared/model/Routes';
 
 export interface FieldError {
   field: string;
@@ -36,8 +37,8 @@ export interface PageData {
   // onboarding specific
   newsletters?: NewsLetter[];
   consents?: Consent[];
-  page?: string;
-  previousPage?: string;
+  page?: ConsentPath;
+  previousPage?: ConsentPath;
   // reset password token specific
   timeUntilTokenExpiry?: number;
 }
