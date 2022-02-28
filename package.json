@@ -126,7 +126,7 @@
     "@guardian/consent-management-platform": "^10.1.2",
     "@guardian/libs": "^3.6.1",
     "@guardian/source-foundations": "^4.1.0",
-    "@guardian/source-react-components": "^4.0.3",
+    "@guardian/source-react-components": "^4.1.0",
     "@guardian/source-react-components-development-kitchen": "^0.0.33",
     "@sentry/browser": "^6.17.9",
     "@sentry/tracing": "^6.17.9",

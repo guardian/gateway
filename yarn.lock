@@ -1461,10 +1461,10 @@
   resolved "https://registry.yarnpkg.com/@guardian/source-react-components-development-kitchen/-/source-react-components-development-kitchen-0.0.33.tgz#d785992f833f6072072848f1d748d6f9b1e82cb7"
   integrity sha512-/jpVvjzWxbnhf7Of7lVRv67SAa2i2bQGsvTz+JsZIjgllmZKSLfuwn8SoYzJnQIiRhJhPzRY6PZFhMhZOtcPDw==
 
-"@guardian/source-react-components@^4.0.3":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@guardian/source-react-components/-/source-react-components-4.0.3.tgz#0c361a18b5b21fe0db9bb6e4fb8f7e4136bb2ea6"
-  integrity sha512-EZhf48NUtp+3j3lCkBa3pWgT0NC6JCze+yStwlpOfyGR981Z7mgPxjyexIY35Xc7pcgpTXNUpSRWrkYMkSylgw==
+"@guardian/source-react-components@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@guardian/source-react-components/-/source-react-components-4.1.0.tgz#cdf080e5433550555744e5572827173985abda2d"
+  integrity sha512-vuqLtztkc7sa+xDIij0ZqXDMTObAl+wooBlSl46vKmB1rq/85dCLPQ0FQtf+bnfXS4rlN5t85H913MQRS4qUGQ==
 
 "@hapi/hoek@^9.0.0":
   version "9.2.1"
