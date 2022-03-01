@@ -7,7 +7,7 @@ import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { Consent } from '@/shared/model/Consent';
-import { CommunicationCard } from '@/client/components/CommunicationCard';
+import { ConsentCard } from '@/client/components/ConsentCard';
 import { CONSENT_IMAGES } from '@/client/models/ConsentImages';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
@@ -80,14 +80,14 @@ export const SignInSuccess = ({
             </h1>
             <div css={autoRow()}>
               {consents.map((consent) => (
-                <CommunicationCard
+                <ConsentCard
                   key={consent.id}
                   title={consent.name}
                   titleLevel={2}
-                  body={consent.description}
-                  value={consent.id}
-                  checked={!!consent.consented}
-                  image={CONSENT_IMAGES[consent.id]}
+                  description={consent.description}
+                  id={consent.id}
+                  defaultChecked={!!consent.consented}
+                  imagePath={CONSENT_IMAGES[consent.id]}
                 />
               ))}
             </div>

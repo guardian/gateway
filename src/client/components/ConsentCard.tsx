@@ -13,42 +13,27 @@ import {
   body,
   neutral,
   from,
-  news,
-  culture,
-  lifestyle,
 } from '@guardian/source-foundations';
-import { NewsLetter } from '@/shared/model/Newsletter';
-import { NEWSLETTER_IMAGES } from '@/client/models/Newsletter';
 
-interface NewsletterCardProps {
-  newsletter: NewsLetter;
-  cssOverrides?: SerializedStyles;
-  frequency?: string;
-}
-
-const image = (id?: string) => {
+const image = (imagePath?: string) => {
   const base = css`
     display: block;
     height: 0;
     width: 0;
   `;
 
-  if (id) {
-    const imagePath = NEWSLETTER_IMAGES[id];
-
-    if (imagePath) {
-      return css`
-        ${base}
-        padding: 55% 100% 0 0;
-        background-image: url('${imagePath}');
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-        ${from.tablet} {
-          padding: 28% 38% 0 0;
-        }
-      `;
-    }
+  if (imagePath) {
+    return css`
+      ${base}
+      padding: 55% 100% 0 0;
+      background-image: url('${imagePath}');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      ${from.tablet} {
+        padding: 28% 38% 0 0;
+      }
+    `;
   }
 
   return css`
@@ -77,14 +62,14 @@ const image = (id?: string) => {
   `;
 };
 
-const h1 = css`
+const titleHeading = css`
   ${headline.small()};
   margin: ${space[2]}px 0 ${space[1]}px 0;
   /* Override */
   font-size: 24px;
 `;
 
-const h2 = css`
+const frequencyHeading = css`
   ${textSans.small({ fontWeight: 'bold' })};
   font-size: 12px;
   margin: 0;
@@ -154,66 +139,88 @@ const frequencyStyles = css`
   padding: ${space[2]}px 0;
 `;
 
-const idColor = (id: string) => {
-  if (/today|morning/.test(id)) {
-    return news[400];
-  }
-  if (id === 'the-long-read') {
-    return brand[400];
-  }
-  if (id === 'green-light') {
-    return news[400];
-  }
-  if (id === 'bookmarks') {
-    return culture[400];
-  }
-  if (id === 'word-of-mouth' || id === 'the-guide-staying-in') {
-    return lifestyle[400];
-  }
-  return brand[400];
-};
+type HeadingLevel = 1 | 2 | 3 | 4 | 5;
 
-export const NewsletterCard: FunctionComponent<NewsletterCardProps> = (
-  props,
-) => {
-  const { description, frequency, name, nameId } = props.newsletter;
+interface ConsentCardProps {
+  title: string;
+  titleLevel?: HeadingLevel;
+  description: string;
+  id: string;
+  defaultChecked?: boolean;
+  imagePath?: string;
+  highlightColor?: string;
+  frequency?: string;
+  hiddenInput?: boolean;
+  cssOverrides?: SerializedStyles;
+}
+
+export const ConsentCard: FunctionComponent<ConsentCardProps> = ({
+  title,
+  titleLevel = 1,
+  description,
+  id,
+  defaultChecked,
+  imagePath,
+  highlightColor = brand[400],
+  frequency,
+  hiddenInput = false,
+  cssOverrides,
+}) => {
+  const TitleHeadingTag = `h${titleLevel}` as const;
+  const frequencyHeadingLevel = Math.min(titleLevel + 1, 5) as HeadingLevel;
+  const FrequencyHeadingTag = `h${frequencyHeadingLevel}` as const;
+  const checkboxChildren = [
+    <Checkbox
+      value={id}
+      cssOverrides={checkBoxBackgroundColorBugFix}
+      label="Yes, sign me up"
+      defaultChecked={defaultChecked}
+      key="visible"
+    />,
+  ];
+
+  if (hiddenInput) {
+    /**
+     * if the Checkbox is unchecked, this hidden empty value will be sent in
+     * form submit POST, to signal possible unsubscribe event
+     */
+    checkboxChildren.push(
+      <input type="hidden" name={id} value="" key="hidden" />,
+    );
+  }
 
   return (
     <article
       css={[
         article,
         spaceBottom,
-        `border-bottom: 1px solid ${idColor(nameId)}}`,
-        props.cssOverrides,
+        `border-bottom: 1px solid ${highlightColor}}`,
+        cssOverrides,
       ]}
     >
       <div css={descriptionBlock}>
-        <div css={image(props.newsletter.id)} />
+        <div css={image(imagePath)} />
         <div css={[infoGroup, ieFlexOverflowFix]}>
-          <h1 css={[h1, `color: ${idColor(nameId)}`]}>{name}</h1>
+          <TitleHeadingTag css={[titleHeading, `color: ${highlightColor}`]}>
+            {title}
+          </TitleHeadingTag>
           <p css={p}>{description}</p>
-          <CheckboxGroup
-            name={props.newsletter.id}
-            label={name}
-            hideLabel={true}
-          >
-            {/* if the Checkbox is unchecked, this hidden empty value will be sent in form submit POST,
-            to signal possible unsubscribe event */}
-            <input type="hidden" name={props.newsletter.id} value="" />
-            <Checkbox
-              value={props.newsletter.id}
-              cssOverrides={checkBoxBackgroundColorBugFix}
-              label="Yes, sign me up"
-              defaultChecked={props.newsletter.subscribed}
-            />
+          <CheckboxGroup name={id} label={title} hideLabel={true}>
+            {checkboxChildren}
           </CheckboxGroup>
         </div>
       </div>
       <div css={frequencyStyles}>
-        <div css={[iconStyles, `background-color:${idColor(nameId)}`]}>
+        <div css={[iconStyles, `background-color:${highlightColor}`]}>
           <SvgEnvelope />
         </div>
-        <h2 css={[h2, `color: ${idColor(nameId)}`]}>{frequency}</h2>
+        {frequency && (
+          <FrequencyHeadingTag
+            css={[frequencyHeading, `color: ${highlightColor}`]}
+          >
+            {frequency}
+          </FrequencyHeadingTag>
+        )}
       </div>
     </article>
   );
