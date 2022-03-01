@@ -10,16 +10,16 @@ export const ConsentsDataPage = () => {
   const { pageData = {} } = clientState;
   const { consents = [] } = pageData;
 
-  const profiling_optout = consents.find(
+  const profiling = consents.find(
     (consent) => consent.id === Consents.PROFILING,
   );
 
   return (
     <ConsentsData
-      consented={profiling_optout?.consented}
-      description={profiling_optout?.description}
-      name={profiling_optout?.name}
-      id={profiling_optout?.id || Consents.PROFILING}
+      consented={profiling?.consented}
+      description={profiling?.description}
+      name={profiling?.name}
+      id={profiling?.id || Consents.PROFILING}
     />
   );
 };

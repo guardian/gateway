@@ -32,7 +32,7 @@ type ConsentsConfirmationProps = {
   error?: string;
   success?: string;
   returnUrl: string;
-  optedOutOfProfiling: boolean;
+  optedIntoProfiling: boolean;
   productConsents: Consent[];
   subscribedNewsletters: NewsLetter[];
   geolocation?: GeoLocation;
@@ -118,13 +118,13 @@ export const ConsentsConfirmation = ({
   success,
   returnUrl,
   productConsents,
-  optedOutOfProfiling,
+  optedIntoProfiling,
   subscribedNewsletters,
   geolocation,
 }: ConsentsConfirmationProps) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
   const anyConsents =
-    !optedOutOfProfiling ||
+    !optedIntoProfiling ||
     !!productConsents.length ||
     !!subscribedNewsletters.length;
   return (
@@ -186,7 +186,7 @@ export const ConsentsConfirmation = ({
                   ))}
                 </ReviewTableRow>
               )}
-              {!optedOutOfProfiling && (
+              {!!optedIntoProfiling && (
                 <ReviewTableRow title="Data">
                   <div css={consentStyles}>
                     <span css={iconStyles}>

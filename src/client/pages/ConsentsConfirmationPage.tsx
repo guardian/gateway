@@ -14,14 +14,14 @@ export const ConsentsConfirmationPage = () => {
     returnUrl = 'https://www.theguardian.com',
   } = pageData;
 
-  const optedOutOfProfiling = !!consents.find(
+  const optedIntoProfiling = !!consents.find(
     // If consent option present and consented === true, this means the user has expressed a
     // preference to NOT be contacted - eg. They opted OUT
     (consent) => consent.id === Consents.PROFILING && consent.consented,
   );
 
   const productConsents = consents.filter(
-    (c) => !c.id.includes('_optout') && c.consented,
+    (c) => !c.id.includes('_optin') && c.consented,
   );
 
   const subscribedNewsletters = newsletters.filter((n) => n.subscribed);
@@ -31,7 +31,7 @@ export const ConsentsConfirmationPage = () => {
       error={error}
       success={success}
       returnUrl={returnUrl}
-      optedOutOfProfiling={optedOutOfProfiling}
+      optedIntoProfiling={optedIntoProfiling}
       productConsents={productConsents}
       subscribedNewsletters={subscribedNewsletters}
     />
