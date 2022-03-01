@@ -6,16 +6,17 @@ import {
 } from '@guardian/consent-management-platform';
 import { getLocale } from '@guardian/libs';
 import { RoutingConfig } from '@/client/routes';
+import { loadableReady } from '@loadable/component';
 
-// loading a js file without types, so ignore ts
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { init as gaInit } from './analytics/ga';
 import { init as ophanInit } from './analytics/ophan';
-import { init as isletInit } from './islet';
+import { init as sourceAccessibilityInit } from './sourceAccessibility';
 
-// initialise source accessibility
-import './sourceAccessibility';
+/**
+ * allows us to define public path dynamically
+ * dynamic imports will use this as the base to find their assets
+ * https://webpack.js.org/guides/public-path/#on-the-fly
+ */
+__webpack_public_path__ = '/gateway-static/';
 
 const initGoogleAnalyticsWhenConsented = () => {
   onConsentChange((consentState) => {
@@ -23,7 +24,11 @@ const initGoogleAnalyticsWhenConsented = () => {
       getConsentFor('google-analytics', consentState) &&
       window.ga === undefined
     ) {
-      gaInit();
+      // loading a js file without types, so use ts-ignore
+      // also uses dynamic import to load ga only if required
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      import('./analytics/ga').then(({ init }) => init());
     }
   });
 };
@@ -32,11 +37,9 @@ const routingConfig: RoutingConfig = JSON.parse(
   document.getElementById('routingConfig')?.innerHTML ?? '{}',
 );
 
-// initalise ophan
-ophanInit();
-
-// load CMP
+// only load cmp and analytics if we are not in native app oauth flow
 if (!routingConfig.clientState.pageData?.isNativeApp) {
+  // load CMP
   if (window.Cypress) {
     cmp.init({ country: 'GB' }); // CI hosted on GithubActions runs in US by default
   } else {
@@ -47,18 +50,25 @@ if (!routingConfig.clientState.pageData?.isNativeApp) {
         cmp.init({ country });
       }
     })();
+
+    initGoogleAnalyticsWhenConsented();
+    ophanInit();
   }
 }
 
-initGoogleAnalyticsWhenConsented();
+loadableReady(() => {
+  sourceAccessibilityInit();
 
-const params = new URLSearchParams(window.location.search);
+  const params = new URLSearchParams(window.location.search);
 
-if (params.has('useIslets')) {
-  console.log('init islets');
-  isletInit();
-} else {
-  import('./hydration').then(({ hydrateApp }) => {
-    hydrateApp({ routingConfig });
-  });
-}
+  if (params.has('useIslets')) {
+    console.log('init islets');
+    import('./islet').then(({ init }) => {
+      init();
+    });
+  } else {
+    import('./hydration').then(({ hydrateApp }) => {
+      hydrateApp({ routingConfig });
+    });
+  }
+});

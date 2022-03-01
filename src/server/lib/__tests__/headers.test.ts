@@ -14,12 +14,11 @@ jest.setTimeout(10000);
  * runs complete without throwing early errors. We're only testing the headers
  * we set in middleware here.
  */
-jest.mock('@/server/lib/getAssets', () => ({
-  getAssets: () => ({
-    main: { js: 'mocked' },
-    vendors: { js: 'mocked' },
-    runtime: { js: 'mocked' },
-  }),
+jest.mock('@loadable/server', () => ({
+  ChunkExtractor: jest.fn().mockImplementation(() => ({
+    collectChunks: (e: unknown) => e,
+    getScriptTags: () => '__mock_script_tags__',
+  })),
 }));
 jest.mock('@/server/lib/serverSideLogger', () => ({
   logger: {
@@ -28,13 +27,6 @@ jest.mock('@/server/lib/serverSideLogger', () => ({
   },
 }));
 jest.mock('aws-sdk');
-jest.mock('@/server/lib/getAssets', () => ({
-  getAssets: () => ({
-    main: { js: 'mocked' },
-    vendors: { js: 'mocked' },
-    runtime: { js: 'mocked' },
-  }),
-}));
 jest.mock('@/server/lib/serverSideLogger', () => ({
   logger: {
     info: jest.fn(),

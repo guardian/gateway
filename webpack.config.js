@@ -2,13 +2,13 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const babelConfig = require('./babel.config');
-const AssetsPlugin = require('assets-webpack-plugin');
 const { merge } = require('webpack-merge');
 const nodeExternals = require('webpack-node-externals');
 const Dotenv = require('dotenv-webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-
+const LoadablePlugin = require('@loadable/webpack-plugin')
+  
 const mode =
   process.env.ENVIRONMENT === 'production' ? 'production' : 'development';
 
@@ -224,15 +224,6 @@ const browser = ({ isLegacy }) => {
           },
         }),
       ],
-      splitChunks: {
-        cacheGroups: {
-          commons: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all',
-          },
-        },
-      },
       runtimeChunk: {
         name: 'runtime',
       },
@@ -244,10 +235,7 @@ const browser = ({ isLegacy }) => {
       publicPath: 'gateway-static/',
     },
     plugins: [
-      new AssetsPlugin({
-        path: path.resolve(__dirname, 'build'),
-        filename: `${isLegacy ? 'legacy.' : ''}webpack-assets.json`,
-      }),
+      new LoadablePlugin({ filename: `${isLegacy ? 'legacy.' : ''}loadable-stats.json`, writeToDisk: true }),
     ],
     target,
     performance: {

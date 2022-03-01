@@ -2,13 +2,6 @@ import { createElement } from 'react';
 import { hydrate } from 'react-dom';
 
 /**
- * allows us to define public path dynamically
- * dynamic imports will use this as the base to find their assets
- * https://webpack.js.org/guides/public-path/#on-the-fly
- */
-__webpack_public_path__ = '/gateway-static/';
-
-/**
  * use `whenIdle` to execute the given callback when the browser is 'idle'
  *
  * @param callback Fired when `requestIdleCallback` runs, when event loop is idle. If not executed within the `timeout`, the callback is added to the event loop. If `requestIdleCallback` is not supported, use `setTimeout` fallback.
