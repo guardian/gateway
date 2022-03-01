@@ -1,5 +1,3 @@
-import { hydrateApp } from '@/client/static/hydration';
-
 // method to check if the cmp should show
 import {
   cmp,
@@ -14,6 +12,7 @@ import { RoutingConfig } from '@/client/routes';
 // @ts-ignore
 import { init as gaInit } from './analytics/ga';
 import { init as ophanInit } from './analytics/ophan';
+import { init as isletInit } from './islet';
 
 // initialise source accessibility
 import './sourceAccessibility';
@@ -32,8 +31,6 @@ const initGoogleAnalyticsWhenConsented = () => {
 const routingConfig: RoutingConfig = JSON.parse(
   document.getElementById('routingConfig')?.innerHTML ?? '{}',
 );
-
-hydrateApp({ routingConfig });
 
 // initalise ophan
 ophanInit();
@@ -54,3 +51,14 @@ if (!routingConfig.clientState.pageData?.isNativeApp) {
 }
 
 initGoogleAnalyticsWhenConsented();
+
+const params = new URLSearchParams(window.location.search);
+
+if (params.has('useIslets')) {
+  console.log('init islets');
+  isletInit();
+} else {
+  import('./hydration').then(({ hydrateApp }) => {
+    hydrateApp({ routingConfig });
+  });
+}
