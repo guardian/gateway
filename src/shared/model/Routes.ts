@@ -1,3 +1,5 @@
+export type ConsentPath = 'communication' | 'newsletters' | 'data' | 'review';
+
 /**
  * These are all the accepted url routes for this application
  * If you want to add a new route, it will need to be added below
@@ -6,10 +8,7 @@ export type RoutePaths =
   | '/404'
   | '/consents'
   | '/consents/:page'
-  | '/consents/communication'
-  | '/consents/data'
-  | '/consents/newsletters'
-  | '/consents/review'
+  | `/consents/${ConsentPath}`
   | '/error'
   | '/magic-link' //this is not being used until MVP4
   | '/magic-link/email-sent' //this is not being used until MVP4
