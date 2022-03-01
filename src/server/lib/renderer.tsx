@@ -164,7 +164,7 @@ export const renderer: <P extends RoutePaths>(
         <title>${pageTitle} | The Guardian</title>
         <script>window.gaUID = "${gaUID.id}"</script>
 
-        <script src="https://assets.guim.co.uk/polyfill.io/v3/polyfill.min.js?features=es2015%2Ces2016%2Ces2017%2Ces2018%2Ces2019%2Ces2020%2Ces2021%2Cfetch%2CglobalThis" defer></script>
+        <script src="https://assets.guim.co.uk/polyfill.io/v3/polyfill.min.js?features=es2015%2Ces2016%2Ces2017%2Ces2018%2Ces2019%2Ces2020%2Ces2021%2Cfetch%2CglobalThis%2CNodeList.prototype.forEach%2CURLSearchParams" defer></script>
         ${scriptTags}
 
         <script id="routingConfig" type="application/json">${serialize(
