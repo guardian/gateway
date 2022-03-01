@@ -1,5 +1,3 @@
-import { hydrateApp } from '@/client/static/hydration';
-
 // method to check if the cmp should show
 import {
   cmp,
@@ -13,6 +11,7 @@ import { getLocale } from '@guardian/libs';
 // @ts-ignore
 import { init as gaInit } from './analytics/ga';
 import { init as ophanInit } from './analytics/ophan';
+import { init as isletInit } from './islet';
 
 // initialise source accessibility
 import './sourceAccessibility';
@@ -27,8 +26,6 @@ const initGoogleAnalyticsWhenConsented = () => {
     }
   });
 };
-
-hydrateApp();
 
 // initalise ophan
 ophanInit();
@@ -47,3 +44,14 @@ if (window.Cypress) {
 }
 
 initGoogleAnalyticsWhenConsented();
+
+const params = new URLSearchParams(window.location.search);
+
+if (params.has('useIslets')) {
+  console.log('init islets');
+  isletInit();
+} else {
+  import('./hydration').then(({ hydrateApp }) => {
+    hydrateApp();
+  });
+}
