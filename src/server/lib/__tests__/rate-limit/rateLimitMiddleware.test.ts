@@ -41,12 +41,11 @@ describe('rate limiter middleware', () => {
     jest.resetModules();
     jest.useFakeTimers();
 
-    jest.mock('@/server/lib/getAssets', () => ({
-      getAssets: () => ({
-        main: { js: 'mocked' },
-        vendors: { js: 'mocked' },
-        runtime: { js: 'mocked' },
-      }),
+    jest.mock('@loadable/server', () => ({
+      ChunkExtractor: jest.fn().mockImplementation(() => ({
+        collectChunks: (e: unknown) => e,
+        getScriptTags: () => '__mock_script_tags__',
+      })),
     }));
 
     jest.mock('aws-sdk');
@@ -64,6 +63,7 @@ describe('rate limiter middleware', () => {
     jest.mock('@/server/lib/serverSideLogger', () => ({
       logger: {
         info: loggerInfoMock,
+        error: loggerInfoMock,
       },
     }));
 
