@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
+
 import { useAB } from '@guardian/ab-react';
 import { tests } from '@/shared/model/experiments/abTests';
 import { exampleTest } from '@/shared/model/experiments/tests/example-test';
-import { ClientState } from '@/shared/model/ClientState';
-import { ClientStateContext } from './ClientState';
+import useClientState from '@/client/lib/hooks/useClientState';
 
 export const ABTestDemo = () => {
   // load the AB Hook
@@ -61,7 +61,7 @@ export const ABTestDemo = () => {
 
   // Example:
   // Load the client state
-  const clientState: ClientState = useContext(ClientStateContext);
+  const clientState = useClientState();
   // Get the AB Tests from clientState, these are the AB Tests the user is in with
   // format is { [key: string]: { variant: string }}
   const { abTesting: { participations = {} } = {} } = clientState;

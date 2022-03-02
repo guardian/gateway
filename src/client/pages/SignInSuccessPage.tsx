@@ -1,10 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { SignInSuccess } from '@/client/pages/SignInSuccess';
-import { ClientState } from '@/shared/model/ClientState';
-import { ClientStateContext } from '@/client/components/ClientState';
+import useClientState from '@/client/lib/hooks/useClientState';
 
 export const SignInSuccessPage = () => {
-  const clientState: ClientState = useContext(ClientStateContext);
+  const clientState = useClientState();
   const { pageData = {} } = clientState;
   const { geolocation, consents = [] } = pageData;
 

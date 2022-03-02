@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { css } from '@emotion/react';
 import { from, headline, until } from '@guardian/source-foundations';
 import { Button } from '@guardian/source-react-components';
@@ -12,8 +12,7 @@ import { CONSENT_IMAGES } from '@/client/models/ConsentImages';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { onboardingFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
-import { ClientState } from '@/shared/model/ClientState';
-import { ClientStateContext } from '@/client/components/ClientState';
+import useClientState from '@/client/lib/hooks/useClientState';
 import { ConsentsContent, controls } from '@/client/layouts/shared/Consents';
 import { mainStyles } from '@/client/layouts/ConsentsLayout';
 import { ConsentsBlueBackground } from '@/client/components/ConsentsBlueBackground';
@@ -53,7 +52,7 @@ export const SignInSuccess = ({
   consents,
 }: SignInSuccessProps) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
-  const clientState: ClientState = useContext(ClientStateContext);
+  const clientState = useClientState();
   const { pageData = {}, queryParams } = clientState;
 
   return (

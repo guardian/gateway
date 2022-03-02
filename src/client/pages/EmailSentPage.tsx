@@ -1,6 +1,5 @@
-import React, { useContext } from 'react';
-import { ClientState } from '@/shared/model/ClientState';
-import { ClientStateContext } from '@/client/components/ClientState';
+import React from 'react';
+import useClientState from '@/client/lib/hooks/useClientState';
 import { EmailSent } from '@/client/pages/EmailSent';
 import { buildQueryParamsString } from '@/shared/lib/queryParams';
 
@@ -10,7 +9,7 @@ interface Props {
 }
 
 export const EmailSentPage = ({ noAccountInfo, formTrackingName }: Props) => {
-  const clientState: ClientState = useContext(ClientStateContext);
+  const clientState = useClientState();
   const {
     pageData = {},
     queryParams,
