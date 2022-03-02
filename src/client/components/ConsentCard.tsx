@@ -26,20 +26,20 @@ const image = (imagePath?: string) => {
   if (imagePath) {
     return css`
       ${base}
-      padding: 55% 100% 0 0;
+      padding: 60% 100% 0 0;
       background-image: url('${imagePath}');
       background-position: center;
       background-repeat: no-repeat;
       background-size: cover;
       ${from.tablet} {
-        padding: 28% 38% 0 0;
+        padding: 26% 38% 0 0;
       }
     `;
   }
 
   return css`
     ${base}
-    padding: 55% calc(100% - 6px) 0 0;
+    padding: 60% calc(100% - 6px) 0 0;
     border: 3px solid black;
     background: linear-gradient(
         to top right,
@@ -58,7 +58,7 @@ const image = (imagePath?: string) => {
         transparent 100%
       );
     ${from.tablet} {
-      padding: 28% calc(38% - 6px) 0 0;
+      padding: 26% calc(38% - 6px) 0 0;
     }
   `;
 };
@@ -85,7 +85,7 @@ const frequencyHeading = css`
 
 const p = css`
   color: ${neutral[7]};
-  margin: 0 0 ${space[3]}px;
+  margin: 0;
   ${body.medium()};
   flex-grow: 1;
 
