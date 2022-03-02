@@ -13,6 +13,7 @@ import {
   body,
   neutral,
   from,
+  between,
 } from '@guardian/source-foundations';
 
 const image = (imagePath?: string) => {
@@ -64,9 +65,16 @@ const image = (imagePath?: string) => {
 
 const titleHeading = css`
   ${headline.small()};
-  margin: ${space[2]}px 0 ${space[1]}px 0;
-  /* Override */
+  margin: ${space[3]}px 0 ${space[2]}px;
   font-size: 24px;
+
+  ${between.tablet.and.desktop} {
+    font-size: 20px;
+  }
+
+  ${from.tablet} {
+    margin-top: ${space[1]}px;
+  }
 `;
 
 const frequencyHeading = css`
@@ -76,10 +84,24 @@ const frequencyHeading = css`
 `;
 
 const p = css`
-  color: ${neutral[0]};
+  color: ${neutral[7]};
   margin: 0 0 ${space[3]}px;
   ${body.medium()};
-  flex: 1;
+  flex-grow: 1;
+
+  ${between.tablet.and.desktop} {
+    ${body.small()};
+  }
+`;
+
+const checkbox = css`
+  label * {
+    ${textSans.medium()};
+
+    ${from.tablet} {
+      ${textSans.small()};
+    }
+  }
 `;
 
 const article = css`
@@ -205,7 +227,7 @@ export const ConsentCard: FunctionComponent<ConsentCardProps> = ({
             {title}
           </TitleHeadingTag>
           <p css={p}>{description}</p>
-          <CheckboxGroup name={id} label={title} hideLabel={true}>
+          <CheckboxGroup name={id} cssOverrides={checkbox}>
             {checkboxChildren}
           </CheckboxGroup>
         </div>
