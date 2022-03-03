@@ -1,6 +1,5 @@
-import React, { useContext } from 'react';
-import { ClientState } from '@/shared/model/ClientState';
-import { ClientStateContext } from '@/client/components/ClientState';
+import React from 'react';
+import useClientState from '@/client/lib/hooks/useClientState';
 import { css } from '@emotion/react';
 import { error, space, textSans } from '@guardian/source-foundations';
 
@@ -12,7 +11,7 @@ const csrfErrorStyle = css`
 `;
 
 export const CsrfFormField = () => {
-  const clientState: ClientState = useContext(ClientStateContext);
+  const clientState = useClientState();
 
   const { pageData: { fieldErrors } = {} } = clientState;
 

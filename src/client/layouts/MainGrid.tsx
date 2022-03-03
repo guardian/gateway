@@ -1,8 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { gridRow, gridItem, SpanDefinition } from '@/client/styles/Grid';
 import { css } from '@emotion/react';
-import { ClientState } from '@/shared/model/ClientState';
-import { ClientStateContext } from '@/client/components/ClientState';
+import useClientState from '@/client/lib/hooks/useClientState';
 import { SubHeader } from '@/client/components/SubHeader';
 import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 import { ErrorSummary } from '@guardian/source-react-components-development-kitchen';
@@ -55,7 +54,7 @@ export const MainGrid = ({
   children,
   gridSpanDefinition,
 }: Props) => {
-  const clientState: ClientState = useContext(ClientStateContext);
+  const clientState = useClientState();
   const { globalMessage: { error, success } = {} } = clientState;
 
   const successMessage = successOverride || success;

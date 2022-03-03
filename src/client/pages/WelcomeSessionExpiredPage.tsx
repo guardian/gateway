@@ -1,6 +1,5 @@
-import React, { useContext, useEffect } from 'react';
-import { ClientState } from '@/shared/model/ClientState';
-import { ClientStateContext } from '@/client/components/ClientState';
+import React, { useEffect } from 'react';
+import useClientState from '@/client/lib/hooks/useClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
 
 import { MainBodyText } from '../components/MainBodyText';
@@ -8,7 +7,7 @@ import { buildUrl } from '@/shared/lib/routeUtils';
 import { logger } from '@/client/lib/clientSideLogger';
 
 export const WelcomeSessionExpiredPage = () => {
-  const clientState: ClientState = useContext(ClientStateContext);
+  const clientState = useClientState();
   const {
     pageData: { email = '' } = {},
     queryParams,

@@ -1,10 +1,9 @@
-import React, { useContext } from 'react';
-import { ClientStateContext } from '@/client/components/ClientState';
-import { ClientState } from '@/shared/model/ClientState';
+import React from 'react';
+import useClientState from '@/client/lib/hooks/useClientState';
 import { ConsentsNewsletters } from '@/client/pages/ConsentsNewsletters';
 
 export const ConsentsNewslettersPage = () => {
-  const clientState = useContext<ClientState>(ClientStateContext);
+  const clientState = useClientState();
   const newsletters = clientState?.pageData?.newsletters ?? [];
 
   return <ConsentsNewsletters newsletters={newsletters} />;

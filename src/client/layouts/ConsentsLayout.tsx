@@ -1,7 +1,6 @@
-import React, { useContext, FunctionComponent } from 'react';
+import React, { FunctionComponent } from 'react';
 import { Footer } from '@/client/components/Footer';
-import { ClientState } from '@/shared/model/ClientState';
-import { ClientStateContext } from '@/client/components/ClientState';
+import useClientState from '@/client/lib/hooks/useClientState';
 import { css } from '@emotion/react';
 import {
   Button,
@@ -60,7 +59,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
   showContinueButton = true,
 }) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
-  const clientState: ClientState = useContext(ClientStateContext);
+  const clientState = useClientState();
   const {
     pageData = {},
     globalMessage: { error, success } = {},
