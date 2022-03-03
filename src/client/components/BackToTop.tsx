@@ -49,8 +49,8 @@ const icon = css`
     border-bottom: 0;
     border-right: 0;
     content: '';
-    height: 12px;
-    width: 12px;
+    height: 14px;
+    width: 14px;
     transform: rotate(45deg);
   }
 `;

@@ -146,8 +146,6 @@ const li = (index: number, status: PageStatus) => {
       height: ${CIRCLE_DIAMETER}px;
       position: absolute;
       left: -${CIRCLE_RADIUS}px;
-      /* TODO: apply this to psuedo elements globally */
-      box-sizing: border-box;
       ${status === 'active' &&
       `
         background: ${neutral[100]};
