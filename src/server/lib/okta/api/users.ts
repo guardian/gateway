@@ -157,12 +157,38 @@ export const reactivateUser = async <P extends OktaApiRoutePaths>(
 };
 
 /**
+ * Clear User sessions
+ *
+ * Removes all active identity provider sessions. This forces the user to authenticate on the next operation.
+ * Optionally revokes OpenID Connect and OAuth refresh and access tokens issued to the user.
+ *
+ * https://developer.okta.com/docs/reference/api/users/#clear-user-sessions
+ *
+ * @param id Okta user ID
+ * @param oauthTokens (optional, default: `true`) Revoke issued OpenID Connect and OAuth refresh and access tokens
+ * @returns Promise<void>
+ */
+export const clearUserSessions = async <P extends OktaApiRoutePaths>(
+  id: ExtractRouteParams<P>,
+  oauthTokens = true,
+): Promise<void> => {
+  const path = buildApiUrlWithQueryParams('/api/v1/users/:id/sessions', id, {
+    oauthTokens,
+  });
+  return await fetch(joinUrl(okta.orgUrl, path), {
+    method: 'DELETE',
+    headers: { ...defaultHeaders, ...authorizationHeader() },
+  }).then(handleVoidResponse);
+};
+
+/*
  * @name handleUserResponse
  * @description Handles the response from Okta's /users endpoint
  * and converts it to a UserResponse object
  * @param response node-fetch response object
  * @returns Promise<UserResponse>
  */
+
 const handleUserResponse = async (
   response: Response,
 ): Promise<UserResponse> => {
