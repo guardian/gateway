@@ -44,6 +44,7 @@ node_modules/
 
 # Environment Variable File
 .env
+cypress-ete.env
 
 # Cypress videos
 cypress/videos

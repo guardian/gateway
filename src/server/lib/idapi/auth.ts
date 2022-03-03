@@ -53,8 +53,8 @@ const responseToEntity = (response: APIResponse) => {
 
 export const read = async (
   sc_gu_u: string,
-  sc_gu_la: string,
-  ip: string,
+  sc_gu_la = '',
+  ip = '',
 ): Promise<IDAPIAuthRedirect> => {
   const options = APIAddClientAccessToken(
     APIForwardSessionIdentifier(APIGetOptions(), sc_gu_u),

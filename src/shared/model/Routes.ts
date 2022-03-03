@@ -31,6 +31,7 @@ export type RoutePaths =
   | '/set-password/resend'
   | '/signin'
   | '/signin/success'
+  | '/signout'
   | '/verify-email' //this can be removed once Jobs has been migrated
   | '/welcome'
   | '/welcome/:token'
@@ -54,6 +55,7 @@ export type ApiRoutePaths =
   | '/pwd-reset/send-password-reset-email'
   | '/pwd-reset/user-for-token'
   | '/signin-token/token/:token'
+  | '/unauth'
   | '/user/me'
   | '/user/me/consents'
   | '/user/me/group/:groupCode'

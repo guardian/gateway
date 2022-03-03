@@ -304,7 +304,7 @@ describe('Onboarding flow', () => {
         url: Onboarding.URL,
         followRedirect: false,
       }).then((res) => {
-        expect(res.status).to.eq(302);
+        expect(res.status).to.eq(303);
         expect(res.redirectedToUrl).to.include(signInUrl);
       });
     });
@@ -318,7 +318,7 @@ describe('Onboarding flow', () => {
         url: Onboarding.URL,
         followRedirect: false,
       }).then((res) => {
-        expect(res.status).to.eq(302);
+        expect(res.status).to.eq(303);
         expect(res.redirectedToUrl).to.include(signInUrl);
       });
     });
@@ -372,7 +372,7 @@ describe('Onboarding flow', () => {
         url: Onboarding.URL,
         followRedirect: false,
       }).then((res) => {
-        expect(res.status).to.eq(302);
+        expect(res.status).to.eq(303);
         expect(res.redirectedToUrl).to.include(
           'https://fakeloginfortest.code.dev-theguardian.co.uk',
         );
@@ -394,7 +394,7 @@ describe('Onboarding flow', () => {
         url: Onboarding.URL,
         followRedirect: false,
       }).then((res) => {
-        expect(res.status).to.eq(302);
+        expect(res.status).to.eq(303);
         expect(res.redirectedToUrl).to.include(signInUrl);
       });
     });
@@ -406,7 +406,7 @@ describe('Onboarding flow', () => {
         url: Onboarding.URL,
         followRedirect: false,
       }).then((res) => {
-        expect(res.status).to.eq(302);
+        expect(res.status).to.eq(303);
         expect(res.redirectedToUrl).to.include(
           `error=signin-error-bad-request`,
         );

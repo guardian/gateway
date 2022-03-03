@@ -4,6 +4,7 @@ import { noCache } from '@/server/lib/middleware/cache';
 
 import { default as core } from './core';
 import { default as signIn } from './signIn';
+import { default as signOut } from './signOut';
 import { default as register } from './register';
 import { default as resetPassword } from './resetPassword';
 import { default as consents } from './consents';
@@ -31,6 +32,9 @@ uncachedRoutes.use(maintenance);
 
 // request sign in routes
 uncachedRoutes.use(signIn);
+
+// request sign out routes
+uncachedRoutes.use(signOut);
 
 // request registration routes
 uncachedRoutes.use(register);
