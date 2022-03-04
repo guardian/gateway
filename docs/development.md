@@ -239,7 +239,7 @@ Sometimes data is needed by the client to render a specific component, e.g. an e
   making it possible to access data further down a component tree without having to manually pass props down at each level.
 - Pass the same data as JSON on the document, and use this for react hydration on the browser. Hydration is executed from the static bundle's entrypoint.
 
-It's then possible to access the state through the [`useContext`](https://reactjs.org/docs/hooks-reference.html#usecontext) hook in a descendent component.
+It's then possible to access the state through the [`useClientState`](../src/client/lib/hooks/useClientState.ts) hook in a descendent component.
 
 Here's an example of adding some test data to the client state.
 
@@ -293,16 +293,15 @@ const clientStateFromRequestStateLocals = ({
 };
 ```
 
-It's then possible to access it somewhere in the React app using the [`useContext`](https://reactjs.org/docs/hooks-reference.html#usecontext) hook:
+It's then possible to access it somewhere in the React app using the [`useClientState`](../src/client/lib/hooks/useClientState.ts) hook:
 
 ```tsx
-import React, { useContext } from 'react';
-import { ClientStateContext } from '@/client/components/ClientState';
+import useClientState from '@/client/lib/hooks/useClientState';
 
 // export some react component
 export const TestComponent = () => {
   // get the client state from the context
-  const clientState: ClientState = useContext(ClientStateContext);
+  const clientState = useClientState();
   // extract the data we need from the state
   const { test } = clientState;
 
@@ -312,19 +311,18 @@ export const TestComponent = () => {
 };
 ```
 
-In most cases you want to `useContext` outside a presentation component, and pass in the values you need as a prop to the component. This allows us to independently render this component in tests/storybook without relying on the rest of the app and state.
+In most cases you want to `useClientState` outside a presentation component, and pass in the values you need as a prop to the component. This allows us to independently render this component in tests/storybook without relying on the rest of the app and state.
 
 Here's a contrived example:
 
 ```tsx
 // container component
-import React, { useContext } from 'react';
-import { ClientStateContext } from '@/client/components/ClientState';
+import useClientState from '@/client/lib/hooks/useClientState';
 
 // export some react component
 export const TestContainer = () => {
   // get the client state from the context
-  const clientState: ClientState = useContext(ClientStateContext);
+  const clientState = useClientState();
   // extract the data we need from the state
   const { test } = clientState;
 
@@ -417,14 +415,13 @@ You can also use `addReturnUrlToPath` if all you need to add is the `returnUrl`,
 To access the query parameters on the client, you can use the [`ClientState`](../src/shared/model/ClientState.ts) to do so, as a `queryParams` object is available as a property on the `ClientState`. Again you can use the `addQueryParamsToPath` to convert the query parameters to a string, which can be appended on the client to a link/form action. Some contrived examples below:
 
 ```tsx
-import React, { useContext } from 'react';
-import { ClientStateContext } from '@/client/components/ClientState';
+import useClientState from '@/client/lib/hooks/useClientState';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 // export some react component
 export const TestContainer = () => {
   // get the client state from the context
-  const clientState: ClientState = useContext(ClientStateContext);
+  const clientState = useClientState();
   // extract the queryParams we need from the state
   const { queryParams } = clientState;
   // extract the values we need from the queryParam

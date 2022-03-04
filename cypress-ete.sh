@@ -5,7 +5,7 @@ set -ae
 
 trap 'kill $(jobs -p)' INT TERM EXIT
 
-source .env
+source cypress-ete.env
 
 # Set USE_OKTA=true to run the okta e2e tests.
 # We default to false here.

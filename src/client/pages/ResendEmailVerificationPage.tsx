@@ -1,14 +1,13 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { ResendEmailVerification } from '@/client/pages/ResendEmailVerification';
-import { ClientState } from '@/shared/model/ClientState';
-import { ClientStateContext } from '@/client/components/ClientState';
+import useClientState from '@/client/lib/hooks/useClientState';
 
 export const ResendEmailVerificationPage = () => {
   const {
     globalMessage: { success } = {},
     pageData: { email, signInPageUrl } = {},
     recaptchaConfig,
-  } = useContext<ClientState>(ClientStateContext);
+  } = useClientState();
 
   const { recaptchaSiteKey } = recaptchaConfig;
 

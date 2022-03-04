@@ -12,7 +12,7 @@ import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { exchangeAccessTokenForCookies } from '@/server/lib/idapi/auth';
-import { setIDAPICookies } from '@/server/lib/idapi/setIDAPICookies';
+import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import { SignInErrors } from '@/shared/model/Errors';
 import { updateEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';

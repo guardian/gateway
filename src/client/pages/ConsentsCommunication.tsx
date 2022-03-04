@@ -7,7 +7,7 @@ import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { heading, text, greyBorderTop } from '@/client/styles/Consents';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { ConsentsContent } from '@/client/layouts/shared/Consents';
-import { CommunicationCard } from '@/client/components/CommunicationCard';
+import { ConsentCard } from '@/client/components/ConsentCard';
 import { CONSENT_IMAGES } from '@/client/models/ConsentImages';
 
 type ConsentsCommunicationProps = {
@@ -35,13 +35,14 @@ export const ConsentsCommunication = ({
         </p>
         <div css={autoRow()}>
           {consents.map((consent) => (
-            <CommunicationCard
+            <ConsentCard
               key={consent.id}
               title={consent.name}
-              body={consent.description}
-              value={consent.id}
-              checked={!!consent.consented}
-              image={CONSENT_IMAGES[consent.id]}
+              titleLevel={3}
+              description={consent.description}
+              id={consent.id}
+              defaultChecked={!!consent.consented}
+              imagePath={CONSENT_IMAGES[consent.id]}
             />
           ))}
         </div>

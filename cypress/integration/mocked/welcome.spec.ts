@@ -40,7 +40,7 @@ describe('Welcome and set password page', () => {
           value: 'FAKE_VALUE_2',
         },
       ],
-      expiresAt: 1,
+      expiresAt: 'tomorrow',
     },
   };
 
@@ -63,7 +63,6 @@ describe('Welcome and set password page', () => {
     );
     cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
     cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
-    setAuthCookies();
     cy.visit(`/welcome/fake_token`);
     cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
     cy.wait('@breachCheck');

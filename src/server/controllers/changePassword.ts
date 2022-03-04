@@ -10,7 +10,7 @@ import {
   validate as validateToken,
   change as changePassword,
 } from '@/server/lib/idapi/changePassword';
-import { setIDAPICookies } from '@/server/lib/idapi/setIDAPICookies';
+import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import { trackMetric } from '@/server/lib/trackMetric';
 import {
   readEncryptedStateCookie,
