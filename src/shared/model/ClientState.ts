@@ -11,10 +11,11 @@ export interface FieldError {
   field: string;
   message: string;
 }
-interface ABTesting {
-  mvtId?: number;
-  participations?: Participations;
-  forcedTestVariants?: Participations;
+export interface ABTesting {
+  mvtId: number;
+  participations: Participations;
+  forcedTestVariants: Participations;
+  hasParticipations: boolean;
 }
 
 interface GlobalMessage {
@@ -60,10 +61,10 @@ export interface ClientHosts {
 
 export interface ClientState {
   queryParams: QueryParams;
-  globalMessage?: GlobalMessage;
-  pageData?: PageData;
-  csrf?: CsrfState;
-  abTesting?: ABTesting;
+  globalMessage: GlobalMessage;
+  pageData: PageData;
+  csrf: CsrfState;
+  abTesting: ABTesting;
   clientHosts: ClientHosts;
   recaptchaConfig: RecaptchaConfig;
   sentryConfig: SentryConfig;
@@ -74,11 +75,20 @@ export type CsrfState = {
   pageUrl?: string;
 };
 
-export const defaultClientState = {
+export const defaultClientState: ClientState = {
   clientHosts: { idapiBaseUrl: '', oauthBaseUrl: '' },
   recaptchaConfig: { recaptchaSiteKey: '' },
   sentryConfig: { build: '0', stage: 'DEV' as const, dsn: '' },
   queryParams: {
     returnUrl: 'https://theguardian.com',
   },
+  abTesting: {
+    mvtId: 0,
+    participations: {},
+    forcedTestVariants: {},
+    hasParticipations: false,
+  },
+  csrf: {},
+  globalMessage: {},
+  pageData: {},
 };

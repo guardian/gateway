@@ -70,8 +70,14 @@ if (window.Cypress) {
   })();
 }
 
-loadableReady(() => {
+loadableReady(async () => {
   const config = setupConfig();
+
+  // only initialise ab testing api if there are any tests to run
+  if (config.clientState.abTesting.hasParticipations) {
+    const { init: abInit } = await import('./abTesting');
+    abInit(config.clientState.abTesting);
+  }
 
   sourceAccessibilityInit();
 
@@ -79,12 +85,10 @@ loadableReady(() => {
 
   if (params.has('useIslets')) {
     console.log('init islets');
-    import('./islet').then(({ init }) => {
-      init();
-    });
+    const { init: isletInit } = await import('./islet');
+    isletInit();
   } else {
-    import('./hydration').then(({ hydrateApp }) => {
-      hydrateApp(config);
-    });
+    const { hydrateApp } = await import('./hydration');
+    hydrateApp(config);
   }
 });

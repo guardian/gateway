@@ -1,4 +1,4 @@
-import { ABTesting } from '@/server/models/Express';
+import { ABTesting } from '@/shared/model/ClientState';
 import { getMvtId } from './getMvtId';
 import { Request } from 'express';
 import { getABForcedVariants } from './getABForcedVariants';
@@ -29,6 +29,7 @@ export const getABTesting = (
     mvtId,
     forcedTestVariants,
     participations: Object.fromEntries(participations),
+    hasParticipations: !!participations.length,
   };
 
   return [abTesting, abTestAPI];

@@ -2,6 +2,7 @@
 
 import { RenderOptions } from '@/client/lib/hooks/useRecaptcha';
 import { RoutingConfig } from '@/shared/model/RoutingConfig';
+import { ABTestAPI } from '@guardian/ab-core';
 
 declare global {
   /*
@@ -16,6 +17,7 @@ declare global {
         pageViewId: string;
       };
       routingConfig: RoutingConfig;
+      abTestApi?: ABTestAPI;
     };
     Cypress: unknown;
     ga: unknown;

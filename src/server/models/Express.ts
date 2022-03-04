@@ -1,21 +1,16 @@
 import { Request, Response } from 'express';
 import { QueryParams } from '@/shared/model/QueryParams';
 import {
+  ABTesting,
   ClientHosts,
   CsrfState,
   PageData,
   RecaptchaConfig,
   SentryConfig,
 } from '@/shared/model/ClientState';
-import { Participations, ABTestAPI } from '@guardian/ab-core';
+import { ABTestAPI } from '@guardian/ab-core';
 import { OphanConfig } from '@/server/lib/ophan';
 import Bowser from 'bowser';
-
-export interface ABTesting {
-  mvtId: number;
-  participations: Participations;
-  forcedTestVariants: Participations;
-}
 
 export interface RequestState {
   globalMessage: {
