@@ -44,7 +44,7 @@ const removeMargin = css`
 
 const toggleSwitchAlignment = css`
   justify-content: space-between;
-  button {
+  span {
     align-self: flex-start;
     margin-top: 4px;
   }
@@ -72,6 +72,13 @@ const listBullets = css`
     width: 12px;
     height: 12px;
     border-radius: 50%;
+  }
+`;
+
+const labelStyles = css`
+  ${textBold}
+  label {
+    line-height: ${remSpace[6]};
   }
 `;
 
@@ -109,7 +116,7 @@ export const ConsentsData = ({ id, consented, name }: ConsentsDataProps) => {
                 'Allow the Guardian to analyse this data to improve marketing content'
               }
               defaultChecked={consented ?? true} // legitimate interests so defaults to true
-              cssOverrides={[textBold, toggleSwitchAlignment]}
+              cssOverrides={[labelStyles, toggleSwitchAlignment]}
             />
           </fieldset>
           <div css={[autoRow()]}>
