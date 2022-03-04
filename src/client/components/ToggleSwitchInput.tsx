@@ -21,7 +21,6 @@ const labelStyles = css`
   position: relative;
   ${textSans.small()};
   display: flex;
-  color: ${neutral[7]};
   align-items: center;
   cursor: pointer;
 `;

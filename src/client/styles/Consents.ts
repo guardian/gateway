@@ -28,7 +28,6 @@ export const headingWithMq = css`
 
 export const text = css`
   margin: 0;
-  color: ${neutral[7]};
   ${textSans.medium()}
   max-width: 640px;
 `;
@@ -46,4 +45,11 @@ export const greyBorderBottom = css`
 export const passwordButton = css`
   width: 100%;
   justify-content: center;
+`;
+
+export const controls = css`
+  padding: 22px 0 64px;
+  ${from.tablet} {
+    padding-bottom: ${space[24]}px;
+  }
 `;

@@ -84,7 +84,6 @@ const frequencyHeading = css`
 `;
 
 const p = css`
-  color: ${neutral[7]};
   margin: 0;
   ${body.medium()};
   flex-grow: 1;
@@ -110,7 +109,9 @@ const article = css`
 `;
 
 const spaceBottom = css`
-  margin-bottom: ${space[5]}px;
+  :not(:last-of-type) {
+    margin-bottom: ${space[5]}px;
+  }
 `;
 
 // @TODO: hacked background colour, should be fixed in future source checkbox implementation

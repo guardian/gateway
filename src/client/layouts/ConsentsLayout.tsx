@@ -1,71 +1,55 @@
 import React, { FunctionComponent } from 'react';
+import { css } from '@emotion/react';
+import { from, neutral, space, until } from '@guardian/source-foundations';
+
 import { Footer } from '@/client/components/Footer';
 import useClientState from '@/client/lib/hooks/useClientState';
-import { css } from '@emotion/react';
-import {
-  Button,
-  LinkButton,
-  SvgArrowLeftStraight,
-  SvgArrowRightStraight,
-} from '@guardian/source-react-components';
 import {
   getAutoRow,
-  gridItem,
   gridItemColumnConsents,
+  gridRow,
 } from '@/client/styles/Grid';
-import { controls } from '@/client/layouts/shared/Consents';
 import { ConsentsSubHeader } from '@/client/components/ConsentsSubHeader';
-import { ConsentsBlueBackground } from '@/client/components/ConsentsBlueBackground';
 import { ConsentsHeader } from '@/client/components/ConsentsHeader';
 
-import { onboardingFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
-import { CsrfFormField } from '@/client/components/CsrfFormField';
-import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-
 interface ConsentsLayoutProps {
-  children?: React.ReactNode;
   current?: string;
   title: string;
   showContinueButton?: boolean;
 }
 
-const form = css`
-  display: flex;
-  flex: 1 0 auto;
-  flex-direction: column;
-`;
-
 export const mainStyles = css`
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   flex: 1 0 auto;
+
+  ${from.tablet} {
+    border-left: 1px solid ${neutral[86]};
+    border-right: 1px solid ${neutral[86]};
+  }
+
+  ${until.tablet} {
+    width: 100%;
+  }
 `;
 
-const sectionStyles = css`
-  display: flex;
-  flex-direction: column;
-  flex: 1 0 auto;
-`;
-
-const navigationControls = css`
-  display: flex;
-  justify-content: space-between;
+export const controls = css`
+  padding: 22px 0 64px;
+  ${from.tablet} {
+    padding-bottom: ${space[24]}px;
+  }
 `;
 
 export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
   children,
   current,
   title,
-  showContinueButton = true,
 }) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
   const clientState = useClientState();
-  const {
-    pageData = {},
-    globalMessage: { error, success } = {},
-    queryParams,
-  } = clientState;
-  const { page = '', previousPage, geolocation } = pageData;
+  const { pageData = {}, globalMessage: { error, success } = {} } = clientState;
+  const { geolocation } = pageData;
 
   return (
     <>
@@ -76,61 +60,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
       />
       <main css={mainStyles}>
         <ConsentsSubHeader autoRow={autoRow} title={title} current={current} />
-        <form
-          css={form}
-          action={buildUrlWithQueryParams(
-            '/consents/:page',
-            { page },
-            queryParams,
-          )}
-          method="post"
-          onSubmit={({ target: form }) => {
-            onboardingFormSubmitOphanTracking(
-              page,
-              pageData,
-              // have to explicitly type as HTMLFormElement as typescript can't infer type of the event.target
-              form as HTMLFormElement,
-            );
-          }}
-        >
-          <CsrfFormField />
-
-          <section css={sectionStyles}>
-            <div>{children}</div>
-            <ConsentsBlueBackground>
-              <div css={[gridItem(gridItemColumnConsents), controls]}>
-                <div css={navigationControls}>
-                  {previousPage && (
-                    <LinkButton
-                      iconSide="left"
-                      icon={<SvgArrowLeftStraight />}
-                      href={buildUrlWithQueryParams(
-                        '/consents/:page',
-                        {
-                          page: previousPage,
-                        },
-                        queryParams,
-                      )}
-                      priority="tertiary"
-                    >
-                      Go back
-                    </LinkButton>
-                  )}
-                  {!error && showContinueButton && (
-                    <Button
-                      iconSide="right"
-                      nudgeIcon={true}
-                      icon={<SvgArrowRightStraight />}
-                      type="submit"
-                    >
-                      Continue
-                    </Button>
-                  )}
-                </div>
-              </div>
-            </ConsentsBlueBackground>
-          </section>
-        </form>
+        {children && <section css={gridRow}>{children}</section>}
       </main>
       <Footer />
     </>

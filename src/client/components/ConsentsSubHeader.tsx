@@ -29,17 +29,7 @@ const PENDING_COLOR = neutral[60];
 const CIRCLE_DIAMETER = 12;
 const CIRCLE_RADIUS = CIRCLE_DIAMETER / 2;
 
-const greyBorder = css`
-  margin: 0 auto;
-
-  ${from.tablet} {
-    border-left: 1px solid ${neutral[86]};
-    border-right: 1px solid ${neutral[86]};
-  }
-`;
-
 const h1 = css`
-  color: ${neutral[7]};
   margin: ${space[6]}px 0 ${space[6]}px;
   ${headline.small({ fontWeight: 'bold' })}};
 `;
@@ -214,7 +204,7 @@ export const ConsentsSubHeader = ({ autoRow, title, current }: Props) => {
 
   return (
     <header data-cy="exclude-a11y-check">
-      <div css={[greyBorder, gridRow]}>
+      <div css={gridRow}>
         {pageProgression}
         <h1 css={[h1, h1ResponsiveText, autoRow()]}>{title}</h1>
       </div>

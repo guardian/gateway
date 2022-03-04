@@ -25,7 +25,7 @@ const flex = css`
   flex: 1 1 auto;
 `;
 
-export const ConsentsBlueBackground = ({ children, cssOverrides }: Props) => (
+export const ConsentsGridRow = ({ children, cssOverrides }: Props) => (
   <div css={[flex, cssOverrides]}>
     <div css={[gridRow, greyBorder]}>{children}</div>
   </div>
