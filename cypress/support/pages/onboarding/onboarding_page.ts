@@ -22,9 +22,9 @@ class Onboarding {
     return cy.get('[type="checkbox"]');
   }
 
-  static allOptoutCheckboxes() {
+  static allOptInCheckboxes() {
     // @TODO: This is generic selector based approach, make a page specific user based approach, e.g. use contains
-    return this.allCheckboxes().not('[name*="_optout"]');
+    return this.allCheckboxes().not('[name*="_optin"]');
   }
 
   static errorBanner() {

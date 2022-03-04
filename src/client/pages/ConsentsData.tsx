@@ -108,7 +108,7 @@ export const ConsentsData = ({ id, consented, name }: ConsentsDataProps) => {
               label={
                 'Allow the Guardian to analyse this data to improve marketing content'
               }
-              defaultChecked={!!consented ? consented : true} // TODO check legitimate interest
+              defaultChecked={consented ?? true} // legitimate interests so defaults to true
               cssOverrides={[textBold, toggleSwitchAlignment]}
             />
           </fieldset>
