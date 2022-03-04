@@ -73,3 +73,12 @@ export type CsrfState = {
   token?: string;
   pageUrl?: string;
 };
+
+export const defaultClientState = {
+  clientHosts: { idapiBaseUrl: '', oauthBaseUrl: '' },
+  recaptchaConfig: { recaptchaSiteKey: '' },
+  sentryConfig: { build: '0', stage: 'DEV' as const, dsn: '' },
+  queryParams: {
+    returnUrl: 'https://theguardian.com',
+  },
+};

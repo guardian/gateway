@@ -3,20 +3,14 @@ import { record } from '@/client/lib/ophan';
 import { ABProvider } from '@guardian/ab-react';
 import { StaticRouter } from 'react-router-dom/server';
 import { hydrate } from 'react-dom';
-import { RoutingConfig } from '@/client/routes';
 import { App } from '@/client/app';
 import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
 import * as Sentry from '@sentry/browser';
 import { Integrations } from '@sentry/tracing';
+import { RoutingConfig } from '@/shared/model/RoutingConfig';
 
-export const hydrateApp = () => {
-  const routingConfig: RoutingConfig = JSON.parse(
-    document.getElementById('routingConfig')?.innerHTML ?? '{}',
-  );
-
-  const clientState = routingConfig.clientState;
-
+export const hydrateApp = ({ clientState, location }: RoutingConfig) => {
   const {
     abTesting: { mvtId = 0, forcedTestVariants = {} } = {},
     sentryConfig: { stage, build, dsn },
@@ -45,7 +39,7 @@ export const hydrateApp = () => {
       ophanRecord={record}
       forcedTestVariants={forcedTestVariants}
     >
-      <StaticRouter location={`${routingConfig.location}`}>
+      <StaticRouter location={location}>
         <App {...clientState} />
       </StaticRouter>
     </ABProvider>,

@@ -1,6 +1,7 @@
 /// <reference types="@emotion/react/types/css-prop" />
 
 import { RenderOptions } from '@/client/lib/hooks/useRecaptcha';
+import { RoutingConfig } from '@/shared/model/RoutingConfig';
 
 declare global {
   /*
@@ -14,6 +15,7 @@ declare global {
         viewId: string;
         pageViewId: string;
       };
+      routingConfig: RoutingConfig;
     };
     Cypress: unknown;
     ga: unknown;

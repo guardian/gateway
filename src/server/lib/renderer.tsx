@@ -4,7 +4,7 @@ import React from 'react';
 import { StaticRouter } from 'react-router-dom/server';
 import { App } from '@/client/app';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { RoutingConfig } from '@/client/routes';
+import { RoutingConfig } from '@/shared/model/RoutingConfig';
 import { RequestState } from '@/server/models/Express';
 import { CaptchaErrors, CsrfErrors } from '@/shared/model/Errors';
 import { ABProvider } from '@guardian/ab-react';

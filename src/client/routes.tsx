@@ -14,7 +14,6 @@ import { ConsentsNewslettersPage } from '@/client/pages/ConsentsNewslettersPage'
 import { ConsentsConfirmationPage } from '@/client/pages/ConsentsConfirmationPage';
 import { ResendEmailVerificationPage } from '@/client/pages/ResendEmailVerificationPage';
 import { UnexpectedErrorPage } from '@/client/pages/UnexpectedErrorPage';
-import { ClientState } from '@/shared/model/ClientState';
 import { SignInPage } from '@/client/pages/SignInPage';
 import { SignInSuccessPage } from '@/client/pages/SignInSuccessPage';
 import { MagicLinkPage } from '@/client/pages/MagicLinkPage';
@@ -29,11 +28,6 @@ import { SetPasswordResendPage } from '@/client/pages/SetPasswordResendPage';
 import { SetPasswordSessionExpiredPage } from '@/client/pages/SetPasswordSessionExpiredPage';
 import { SetPasswordCompletePage } from '@/client/pages/SetPasswordCompletePage';
 import { MaintenancePage } from '@/client/pages/MaintenancePage';
-
-export type RoutingConfig = {
-  clientState: ClientState;
-  location: string;
-};
 
 const routes: Array<{
   path: RoutePaths;

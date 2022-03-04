@@ -1,12 +1,13 @@
-// method to check if the cmp should show
+/* eslint-disable functional/immutable-data */
+import { loadableReady } from '@loadable/component';
 import {
   cmp,
   getConsentFor,
   onConsentChange,
 } from '@guardian/consent-management-platform';
 import { getLocale } from '@guardian/libs';
-import { loadableReady } from '@loadable/component';
-
+import { RoutingConfig } from '@/shared/model/RoutingConfig';
+import { defaultClientState } from '@/shared/model/ClientState';
 import { init as ophanInit } from './analytics/ophan';
 import { init as sourceAccessibilityInit } from './sourceAccessibility';
 
@@ -16,6 +17,27 @@ import { init as sourceAccessibilityInit } from './sourceAccessibility';
  * https://webpack.js.org/guides/public-path/#on-the-fly
  */
 __webpack_public_path__ = '/gateway-static/';
+
+const setupConfig = (): RoutingConfig => {
+  const routingConfigElement = document.getElementById('routingConfig');
+
+  const routingConfig: RoutingConfig = routingConfigElement
+    ? JSON.parse(routingConfigElement.innerHTML)
+    : {
+        clientState: defaultClientState,
+        location: `${window.location.pathname}${window.location.search}`,
+      };
+
+  if (!window.guardian) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    window.guardian = {};
+  }
+
+  window.guardian.routingConfig = routingConfig;
+
+  return routingConfig;
+};
 
 const initGoogleAnalyticsWhenConsented = () => {
   onConsentChange((consentState) => {
@@ -49,6 +71,8 @@ if (window.Cypress) {
 }
 
 loadableReady(() => {
+  const config = setupConfig();
+
   sourceAccessibilityInit();
 
   const params = new URLSearchParams(window.location.search);
@@ -60,7 +84,7 @@ loadableReady(() => {
     });
   } else {
     import('./hydration').then(({ hydrateApp }) => {
-      hydrateApp();
+      hydrateApp(config);
     });
   }
 });
