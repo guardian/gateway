@@ -1,15 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
 import Redis from 'ioredis';
-import { readEmailCookie } from '../emailCookie';
 import { getConfiguration } from '../getConfiguration';
 import rateLimit from '../rate-limit';
 
-const { redisConfiguration } = getConfiguration();
+const { redis } = getConfiguration();
 
 const redisClient = new Redis({
   enableOfflineQueue: false,
-  password: redisConfiguration.password,
-  host: redisConfiguration.host,
+  password: redis.password,
+  host: redis.host,
 });
 
 export const rateLimiterMiddleware = async (
@@ -35,10 +34,7 @@ export const rateLimiterMiddleware = async (
       },
     },
     bucketValues: {
-      ip: req.ip + Math.random(), // are we rate limiting fastly by accident potentially?
-      email: readEmailCookie(req), // POST body, read email cookie, maybe: encrypted email param
-      accessToken: undefined, // which IDAPI token is it? (user/session?) .. pull Identity ID from sc_gu, then RL against that instead?
-      oktaIdentifier: undefined,
+      ip: req.ip,
     },
   });
 

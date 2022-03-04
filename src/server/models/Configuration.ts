@@ -25,8 +25,8 @@ export interface Configuration {
   aws: AWSConfiguration;
   githubRunNumber: string;
   sentryDsn: string;
-  rateLimiterConfiguration: RateLimitConfiguration;
-  redisConfiguration: RedisConfiguration;
+  rateLimiter: RateLimitConfiguration;
+  redis: RedisConfiguration;
 }
 
 export interface AWSConfiguration {

@@ -177,12 +177,12 @@ export const getConfiguration = (): Configuration => {
           ),
   };
 
-  const redisConfiguration: RedisConfiguration = {
+  const redis: RedisConfiguration = {
     password: getOrThrow(process.env.REDIS_PASSWORD, 'Redis Password Missing'),
     host: getOrThrow(process.env.REDIS_HOST, 'Redis Host missing'),
   };
 
-  const rateLimiterConfiguration: RateLimitConfiguration = {};
+  const rateLimiter: RateLimitConfiguration = {};
 
   return {
     port: +port,
@@ -210,7 +210,7 @@ export const getConfiguration = (): Configuration => {
     aws,
     githubRunNumber,
     sentryDsn,
-    rateLimiterConfiguration,
-    redisConfiguration,
+    rateLimiter,
+    redis,
   };
 };
