@@ -37,22 +37,24 @@ export const MultipleNewsletter = () => (
     newsletters={[
       {
         id: '4147',
-        nameId: 'n0',
-        description: 'Newsletter description',
-        name: 'Newsletter Name',
+        nameId: 'green-light',
+        description:
+          'Exclusive articles from our top environment correspondents and a round up of the planet’s most important stories of the week',
+        name: 'Down to Earth',
         frequency: 'Weekly',
       },
       {
         id: '4137',
-        nameId: 'n1',
-        description: 'Another newsletter description',
-        name: 'Another Newsletter Name',
+        nameId: 'bookmarks',
+        description:
+          'Discover new books with our expert reviews, author interviews and top 10s. Literary delights delivered direct you',
+        name: 'Bookmarks',
         frequency: 'Every day',
       },
       {
         id: '9001',
-        nameId: 'n',
-        description: 'No image description',
+        nameId: 'over-nine-thousand',
+        description: '',
         name: 'No image',
         frequency: 'Monthly',
       },

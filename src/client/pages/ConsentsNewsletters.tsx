@@ -1,6 +1,13 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { from, space } from '@guardian/source-foundations';
+import {
+  brand,
+  culture,
+  from,
+  lifestyle,
+  news,
+  space,
+} from '@guardian/source-foundations';
 import {
   gridItem,
   gridItemColumnConsents,
@@ -8,14 +15,34 @@ import {
   SpanDefinition,
 } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
-import { NewsletterCard } from '@/client/components/NewsletterCard';
+import { ConsentCard } from '@/client/components/ConsentCard';
 import { greyBorderTop, heading, text } from '@/client/styles/Consents';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { ConsentsContent } from '@/client/layouts/shared/Consents';
 import { NewsLetter } from '@/shared/model/Newsletter';
+import { NEWSLETTER_IMAGES } from '@/client/models/Newsletter';
 
 type ConsentsNewslettersProps = {
   newsletters: NewsLetter[];
+};
+
+const idColor = (id: string) => {
+  if (/today|morning/.test(id)) {
+    return news[400];
+  }
+  if (id === 'the-long-read') {
+    return brand[400];
+  }
+  if (id === 'green-light') {
+    return news[400];
+  }
+  if (id === 'bookmarks') {
+    return culture[400];
+  }
+  if (id === 'word-of-mouth' || id === 'the-guide-staying-in') {
+    return lifestyle[400];
+  }
+  return brand[400];
 };
 
 const getNewsletterCardCss = (index: number) => {
@@ -70,10 +97,17 @@ export const ConsentsNewsletters = ({
         </p>
         <div css={autoRow()}>
           {newsletters.map((newsletter, i) => (
-            <NewsletterCard
-              newsletter={newsletter}
-              key={newsletter.id}
+            <ConsentCard
+              title={newsletter.name}
+              description={newsletter.description}
+              id={newsletter.id}
+              defaultChecked={newsletter.subscribed}
+              imagePath={NEWSLETTER_IMAGES[newsletter.id]}
+              highlightColor={idColor(newsletter.nameId)}
+              frequency={newsletter.frequency}
+              hiddenInput
               cssOverrides={getNewsletterCardCss(i)}
+              key={newsletter.id}
             />
           ))}
         </div>

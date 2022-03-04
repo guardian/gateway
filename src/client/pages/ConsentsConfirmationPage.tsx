@@ -1,11 +1,10 @@
-import React, { useContext } from 'react';
-import { ClientState } from '@/shared/model/ClientState';
-import { ClientStateContext } from '@/client/components/ClientState';
+import React from 'react';
+import useClientState from '@/client/lib/hooks/useClientState';
 import { ConsentsConfirmation } from '@/client/pages/ConsentsConfirmation';
 import { Consents } from '@/shared/model/Consent';
 
 export const ConsentsConfirmationPage = () => {
-  const clientState: ClientState = useContext(ClientStateContext);
+  const clientState = useClientState();
   const { pageData = {}, globalMessage: { error, success } = {} } = clientState;
 
   const {

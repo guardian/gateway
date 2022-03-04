@@ -1,5 +1,6 @@
 const path = require('path');
 const babelConfig = require('../babel.config');
+const { resets } = require('@guardian/source-foundations');
 
 module.exports = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -11,6 +12,12 @@ module.exports = {
     options.presets.push('@emotion/babel-preset-css-prop');
     return options;
   },
+  previewHead: (head) => `
+    ${head}
+    <style>
+      ${resets.defaults}
+    </style>
+  `,
   webpackFinal: async (config) => {
     // Add the @client alias to prevent imports using it from failing
     // Nb. __dirname is the current working directory, so .storybook in this case

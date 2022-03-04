@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useContext } from 'react';
+import React, { PropsWithChildren } from 'react';
 import { css } from '@emotion/react';
 import {
   from,
@@ -14,8 +14,7 @@ import {
 import { gridRow, gridItem, SpanDefinition } from '@/client/styles/Grid';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
-import { ClientStateContext } from '@/client/components/ClientState';
-import { ClientState } from '@/shared/model/ClientState';
+import useClientState from '@/client/lib/hooks/useClientState';
 
 interface MainLayoutProps {
   pageHeader?: string;
@@ -138,7 +137,7 @@ export const MainLayout = ({
   errorOverride,
   errorContext,
 }: PropsWithChildren<MainLayoutProps>) => {
-  const clientState: ClientState = useContext(ClientStateContext);
+  const clientState = useClientState();
   const {
     globalMessage: { error, success } = {},
     pageData: { geolocation } = {},

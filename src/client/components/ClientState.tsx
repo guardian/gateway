@@ -1,4 +1,5 @@
 import React, { createContext, FunctionComponent } from 'react';
+
 import { ClientState } from '@/shared/model/ClientState';
 
 export const defaultClientState = {

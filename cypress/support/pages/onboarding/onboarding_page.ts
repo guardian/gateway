@@ -22,11 +22,6 @@ class Onboarding {
     return cy.get('[type="checkbox"]');
   }
 
-  static allOptoutCheckboxes() {
-    // @TODO: This is generic selector based approach, make a page specific user based approach, e.g. use contains
-    return this.allCheckboxes().not('[name*="_optout"]');
-  }
-
   static errorBanner() {
     return cy.contains(Onboarding.CONTENT.REPORT_ERROR_LINK).parent();
   }

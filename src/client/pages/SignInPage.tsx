@@ -1,11 +1,10 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { SignIn } from '@/client/pages/SignIn';
-import { ClientState } from '@/shared/model/ClientState';
-import { ClientStateContext } from '@/client/components/ClientState';
+import useClientState from '@/client/lib/hooks/useClientState';
 import { useRemoveEncryptedEmailParam } from '@/client/lib/hooks/useRemoveEncryptedEmailParam';
 
 export const SignInPage = () => {
-  const clientState: ClientState = useContext(ClientStateContext);
+  const clientState = useClientState();
   const {
     pageData = {},
     globalMessage = {},

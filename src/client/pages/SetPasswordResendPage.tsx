@@ -1,12 +1,11 @@
-import React, { useContext } from 'react';
-import { ClientState } from '@/shared/model/ClientState';
-import { ClientStateContext } from '@/client/components/ClientState';
+import React from 'react';
+import useClientState from '@/client/lib/hooks/useClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { buildUrl } from '@/shared/lib/routeUtils';
 
 export const SetPasswordResendPage = () => {
-  const clientState: ClientState = useContext(ClientStateContext);
+  const clientState = useClientState();
   const {
     pageData: { email = '' } = {},
     queryParams,

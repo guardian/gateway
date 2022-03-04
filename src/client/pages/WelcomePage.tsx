@@ -1,14 +1,13 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { ClientState } from '@/shared/model/ClientState';
-import { ClientStateContext } from '@/client/components/ClientState';
+import useClientState from '@/client/lib/hooks/useClientState';
 
 import { Welcome } from '@/client/pages/Welcome';
 import { buildUrl, buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { logger } from '@/client/lib/clientSideLogger';
 
 export const WelcomePage = () => {
-  const clientState: ClientState = useContext(ClientStateContext);
+  const clientState = useClientState();
   const {
     pageData: { email, fieldErrors = [], timeUntilTokenExpiry } = {},
     queryParams,

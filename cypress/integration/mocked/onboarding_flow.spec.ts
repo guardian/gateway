@@ -94,13 +94,16 @@ describe('Onboarding flow', () => {
 
       CommunicationsPage.backButton().should('not.exist');
       CommunicationsPage.allCheckboxes().should('not.be.checked');
+      CommunicationsPage.allCheckboxes()
+        // select parent (to avoid cypress element not visible error)
+        .parent()
+        .click({ multiple: true });
 
       // mock form save success
       cy.mockNext(200);
 
       CommunicationsPage.saveAndContinueButton().click();
-
-      cy.lastPayloadIs([{ id: 'supporter', consented: false }]);
+      cy.lastPayloadIs([{ id: 'supporter', consented: true }]);
 
       cy.url().should('include', NewslettersPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
@@ -150,6 +153,7 @@ describe('Onboarding flow', () => {
       );
 
       YourDataPage.saveAndContinueButton().click();
+      cy.lastPayloadIs([{ id: 'profiling_optout', consented: false }]);
 
       cy.url().should('include', ReviewPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
@@ -191,17 +195,12 @@ describe('Onboarding flow', () => {
       CommunicationsPage.backButton().should('not.exist');
 
       CommunicationsPage.allCheckboxes().should('not.be.checked');
-      CommunicationsPage.allOptoutCheckboxes()
-        // select parent (to avoid cypress element not visible error)
-        .parent()
-        .click({ multiple: true });
 
       // mock form save success
       cy.mockNext(200);
 
       CommunicationsPage.saveAndContinueButton().click();
-
-      cy.lastPayloadIs([{ id: 'supporter', consented: true }]);
+      cy.lastPayloadIs([{ id: 'supporter', consented: false }]);
 
       cy.url().should('include', NewslettersPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
@@ -305,7 +304,7 @@ describe('Onboarding flow', () => {
         url: Onboarding.URL,
         followRedirect: false,
       }).then((res) => {
-        expect(res.status).to.eq(302);
+        expect(res.status).to.eq(303);
         expect(res.redirectedToUrl).to.include(signInUrl);
       });
     });
@@ -319,7 +318,7 @@ describe('Onboarding flow', () => {
         url: Onboarding.URL,
         followRedirect: false,
       }).then((res) => {
-        expect(res.status).to.eq(302);
+        expect(res.status).to.eq(303);
         expect(res.redirectedToUrl).to.include(signInUrl);
       });
     });
@@ -373,7 +372,7 @@ describe('Onboarding flow', () => {
         url: Onboarding.URL,
         followRedirect: false,
       }).then((res) => {
-        expect(res.status).to.eq(302);
+        expect(res.status).to.eq(303);
         expect(res.redirectedToUrl).to.include(
           'https://fakeloginfortest.code.dev-theguardian.co.uk',
         );
@@ -395,7 +394,7 @@ describe('Onboarding flow', () => {
         url: Onboarding.URL,
         followRedirect: false,
       }).then((res) => {
-        expect(res.status).to.eq(302);
+        expect(res.status).to.eq(303);
         expect(res.redirectedToUrl).to.include(signInUrl);
       });
     });
@@ -407,7 +406,7 @@ describe('Onboarding flow', () => {
         url: Onboarding.URL,
         followRedirect: false,
       }).then((res) => {
-        expect(res.status).to.eq(302);
+        expect(res.status).to.eq(303);
         expect(res.redirectedToUrl).to.include(
           `error=signin-error-bad-request`,
         );

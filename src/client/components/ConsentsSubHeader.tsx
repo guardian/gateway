@@ -1,12 +1,14 @@
 import React from 'react';
-import { css, SerializedStyles } from '@emotion/react';
+import { css } from '@emotion/react';
 import {
   brand,
   neutral,
   space,
   from,
+  until,
   textSans,
   headline,
+  visuallyHidden,
 } from '@guardian/source-foundations';
 import { AutoRow, gridRow } from '@/client/styles/Grid';
 import { CONSENTS_PAGES_ARR } from '@/client/models/ConsentsPages';
@@ -17,8 +19,15 @@ type Props = {
   current?: string;
 };
 
-const BORDER_SIZE = 2;
+type PageStatus = 'active' | 'complete' | 'pending';
+
+const CONSENTS_PAGES_COUNT = CONSENTS_PAGES_ARR.length;
+const COMPLETED_BORDER_SIZE = 2;
+const COMPLETED_COLOR = brand[400];
+const PENDING_BORDER_SIZE = 1;
+const PENDING_COLOR = neutral[60];
 const CIRCLE_DIAMETER = 12;
+const CIRCLE_RADIUS = CIRCLE_DIAMETER / 2;
 
 const greyBorder = css`
   margin: 0 auto;
@@ -31,7 +40,7 @@ const greyBorder = css`
 
 const h1 = css`
   color: ${neutral[7]};
-  margin: ${space[9]}px 0 ${space[6]}px;
+  margin: ${space[6]}px 0 ${space[6]}px;
   ${headline.small({ fontWeight: 'bold' })}};
 `;
 
@@ -40,224 +49,175 @@ const h1ResponsiveText = css`
   ${from.tablet} {
     font-size: 32px;
   }
+
+  ${from.desktop} {
+    margin-top: 30px;
+  }
 `;
 
-const circle = `
-  content: ' ';
-  box-sizing: content-box;
-  border-radius: 50%;
-  height: ${CIRCLE_DIAMETER}px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: ${CIRCLE_DIAMETER}px;
-`;
+const ol = (active: number) => {
+  const progressSections = CONSENTS_PAGES_COUNT - 1;
+  const progressPercentage = Math.min((active / progressSections) * 100, 100);
+  const remainingPercentage = 100 - progressPercentage;
 
-const li = (numPages: number, isLastPage: boolean) => css`
-  ${textSans.xxsmall()}
-  ${from.mobileMedium} {
-    ${textSans.xsmall()}
-  }
-  ${from.phablet} {
-    ${textSans.small()}
-  }
-  position: relative;
-  width: ${isLastPage ? 'min-content' : 100 / (numPages - 1) + '%'};
-  display: flex;
-  flex-grow: ${isLastPage ? '0' : '1'};
-  flex-direction: column;
-  justify-content: flex-start;
-  padding-top: ${space[6] + space[2]}px;
-  &.active {
-    ${textSans.xxsmall({ fontWeight: 'bold' })}
-    ${from.mobileMedium} {
-      ${textSans.xsmall({ fontWeight: 'bold' })}
-    }
-    ${from.phablet} {
-      ${textSans.small({ fontWeight: 'bold' })}
-    }
-
-    &::after {
-      background-color: ${neutral[60]};
-    }
-  }
-
-  &::after,
-  &.complete::after {
-    content: ' ';
-    height: ${BORDER_SIZE}px;
-    position: absolute;
-    /* Border position from top is distance of a semicircle minus half the border thickness */
-    top: ${CIRCLE_DIAMETER / 2 + BORDER_SIZE - BORDER_SIZE / 2}px;
-    left: 0;
-    right: 0;
-  }
-  &.complete::after {
-    height: ${BORDER_SIZE * 2}px;
-    background-color: ${brand[400]};
-  }
-  &::before {
-    border: ${BORDER_SIZE}px solid ${neutral[60]};
-    border-radius: 50%;
-    ${circle}
-    z-index: 100;
-  }
-  &.active::before,
-  &.complete::before {
-    content: ' ';
-    border: 3px solid ${brand[400]};
-    ${circle};
-  }
-  &.complete::before {
-    background-color: ${brand[400]};
-  }
-  &:first-child.complete::before {
-    left: 0;
-  }
-
-  &:last-child::after {
-    border: ${BORDER_SIZE}px solid ${neutral[60]};
-    border-radius: 50%;
-    ${circle}
-    z-index: 100;
-    left: 0;
-  }
-  &.active:last-child::after,
-  &.complete:last-child::after {
-    content: ' ';
-    border: 3px solid ${brand[400]};
-    ${circle}
-  }
-  &.complete:last-child::after {
-    background-color: ${brand[400]};
-  }
-
-  &:last-child::before,
-  &:last-child.complete::before {
-    box-sizing: initial;
-    border-radius: initial;
-    border: none;
-    width: initial;
-    content: ' ';
-    height: ${BORDER_SIZE}px;
-    position: absolute;
-    /* Border position from top is distance of a semicircle minus half the border thickness */
-    top: ${CIRCLE_DIAMETER / 2 + BORDER_SIZE - BORDER_SIZE / 2}px;
-    left: 0;
-  }
-  &:last-child.complete::before {
-    height: ${BORDER_SIZE * 2}px;
-    background-color: ${brand[400]};
-  }
-
-  & svg {
-    display: none;
-  }
-  &.complete svg {
-    position: absolute;
-    display: block;
-    stroke: white;
-    fill: white;
+  return css`
+    list-style: none;
     height: ${CIRCLE_DIAMETER}px;
-    width: ${CIRCLE_DIAMETER}px;
-    margin: ${BORDER_SIZE}px;
-    top: 0;
-    left: 0;
-    z-index: 1;
-  }
-`;
+    margin: 14px 0 40px;
+    position: relative;
 
-const pageProgression = css`
-  margin-top: ${space[5]}px;
-  margin-bottom: 0;
-  li {
-    color: ${neutral[60]};
-    &.active,
-    &.complete {
-      color: ${neutral[0]};
+    ${from.tablet} {
+      margin: 18px 0 28px;
     }
-    &::after {
-      background-color: ${neutral[60]};
+
+    ${from.desktop} {
+      margin: 26px 0 22px;
     }
-    &::before {
-      border: 2px solid ${neutral[60]};
-      background-color: white;
+
+    &:before,
+    &:after {
+      content: '';
+      position: absolute;
     }
-    &:first-child::before {
+
+    &:before {
+      width: ${progressPercentage}%;
+      height: ${COMPLETED_BORDER_SIZE}px;
+      background: ${COMPLETED_COLOR};
+      top: ${(CIRCLE_DIAMETER - COMPLETED_BORDER_SIZE) / 2}px;
       left: 0;
     }
-    &:last-child::before {
-      background-color: ${neutral[60]};
-    }
-    &:last-child::after {
-      border: 2px solid ${neutral[60]};
-      background-color: white;
-    }
-  }
-`;
 
-const ul = css`
-  display: flex;
-  list-style: none;
-  justify-content: space-between;
-  height: 54px;
-  padding: 0;
-  margin: 0;
-`;
-
-const maxContentOverride = (isLastPage: boolean) => css`
-  width: ${isLastPage ? 'max-content' : 'initial'};
-`;
-
-const PageProgression = ({
-  pages,
-  current,
-  cssOverrides,
-}: {
-  pages: string[];
-  current?: string;
-  cssOverrides?: SerializedStyles | SerializedStyles[];
-}) => {
-  const active = current ? pages.indexOf(current) : 0;
-  const getClassName = (i: number) => {
-    switch (true) {
-      case i === active:
-        return 'active';
-      case i < active:
-        return 'complete';
-      default:
-        return '';
+    &:after {
+      width: ${remainingPercentage}%;
+      height: ${PENDING_BORDER_SIZE}px;
+      background: ${PENDING_COLOR};
+      top: ${(CIRCLE_DIAMETER - PENDING_BORDER_SIZE) / 2}px;
+      right: 0;
+      z-index: -1;
     }
-  };
-  return (
-    <ul css={[ul, cssOverrides]}>
-      {pages.map((page, i) => {
-        const isLastPage = i === pages.length - 1;
-        return (
-          <li
-            className={getClassName(i)}
-            key={i}
-            css={li(pages.length, isLastPage)}
-          >
-            <div css={maxContentOverride(isLastPage)}>{page}</div>
-          </li>
-        );
-      })}
-    </ul>
-  );
+  `;
 };
 
-export const ConsentsSubHeader = ({ autoRow, title, current }: Props) => (
-  <header data-cy="exclude-a11y-check">
-    <div css={[greyBorder, gridRow]}>
-      {current && (
-        <PageProgression
-          cssOverrides={[pageProgression, autoRow()]}
-          pages={CONSENTS_PAGES_ARR}
-          current={current}
-        />
-      )}
-      <h1 css={[h1, h1ResponsiveText, autoRow()]}>{title}</h1>
+const li = (index: number, status: PageStatus) => {
+  const progressSections = CONSENTS_PAGES_COUNT - 1;
+  const position = index / progressSections;
+
+  return css`
+    ${textSans.xxsmall()}
+    position: absolute;
+    left: ${position * 100}%;
+    color: ${status === 'pending' ? PENDING_COLOR : neutral[7]};
+
+    > span {
+      top: ${CIRCLE_DIAMETER + space[1]}px;
+      position: absolute;
+      width: 90px;
+      left: -45px;
+      text-align: center;
+
+      /* Hack, see explanation below */
+      white-space: nowrap;
+    }
+
+    &:first-of-type > span {
+      left: -${CIRCLE_RADIUS}px;
+      text-align: left;
+
+      /**
+       * This allows us to force only "Create password" to wrap on mobile
+       */
+      ${until.mobileLandscape} {
+        white-space: normal;
+        width: 60px;
+      }
+    }
+
+    &:last-of-type > span {
+      right: -${CIRCLE_RADIUS}px;
+      left: auto;
+      text-align: right;
+    }
+
+    &::before {
+      content: '';
+      border-radius: 50%;
+      width: ${CIRCLE_DIAMETER}px;
+      height: ${CIRCLE_DIAMETER}px;
+      position: absolute;
+      left: -${CIRCLE_RADIUS}px;
+      ${status === 'active' &&
+      `
+        background: ${neutral[100]};
+        border: ${COMPLETED_BORDER_SIZE}px solid ${COMPLETED_COLOR};
+      `}
+      ${status === 'pending' &&
+      `
+        background: ${neutral[100]};
+        border: ${PENDING_BORDER_SIZE}px solid ${PENDING_COLOR};
+      `}
+      ${status === 'complete' &&
+      `
+        background: ${brand[400]}
+      `}
+    }
+
+    ${status === 'active' && textSans.xxsmall({ fontWeight: 'bold' })}
+  `;
+};
+
+const progressWrapper = css`
+  padding: 0 ${CIRCLE_RADIUS}px;
+  overflow: hidden;
+`;
+
+const screenReaderTextStyles = css`
+  ${visuallyHidden}
+`;
+
+export const ConsentsSubHeader = ({ autoRow, title, current }: Props) => {
+  const active = current
+    ? (CONSENTS_PAGES_ARR as string[]).indexOf(current)
+    : 0;
+
+  const pageProgression = current && (
+    <div css={[progressWrapper, autoRow()]}>
+      <ol css={ol(active)}>
+        {CONSENTS_PAGES_ARR.map((page, index) => {
+          const status: PageStatus = (() => {
+            if (index === active) {
+              return 'active';
+            }
+            if (index < active) {
+              return 'complete';
+            }
+            return 'pending';
+          })();
+          const screenReaderText = {
+            active: 'Current: ',
+            complete: 'Completed: ',
+          }[status as string];
+          return (
+            <li key={page} css={li(index, status)}>
+              <span>
+                {screenReaderText && (
+                  <span css={screenReaderTextStyles}>{screenReaderText}</span>
+                )}
+                {page}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
     </div>
-  </header>
-);
+  );
+
+  return (
+    <header data-cy="exclude-a11y-check">
+      <div css={[greyBorder, gridRow]}>
+        {pageProgression}
+        <h1 css={[h1, h1ResponsiveText, autoRow()]}>{title}</h1>
+      </div>
+    </header>
+  );
+};
