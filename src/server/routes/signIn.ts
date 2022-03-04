@@ -88,10 +88,6 @@ const showSignInPage = async (req: Request, res: ResponseWithRequestState) => {
 router.get(
   '/signin',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    // Get rate limit config
-    // See if signin is there
-    // if tehre then rate limit as usual all good :)
-
     const { useOkta } = res.locals.queryParams;
     if (okta.enabled && useOkta) {
       // for okta users landing on sign in, we want to first check if a session exists

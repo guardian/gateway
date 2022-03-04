@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import Redis from 'ioredis';
 import { readEmailCookie } from '../emailCookie';
 import { getConfiguration } from '../getConfiguration';
-import rateLimit from '../rateLimit';
+import rateLimit from '../rate-limit';
 
 const { redisConfiguration } = getConfiguration();
 
@@ -18,14 +18,20 @@ export const rateLimiterMiddleware = async (
   next: NextFunction,
 ) => {
   const isRateLimited = await rateLimit({
-    name: 'signin',
+    name: '/signin',
     redisClient,
-    bucketDefinitions: {
-      ipBucket: { addTokenMs: 1000, capacity: 1, name: 'ip' },
+    bucketConfiguration: {
+      ipBucket: {
+        addTokenMs: 1000,
+        capacity: 1,
+        name: 'ip',
+        maximumTimeBeforeTokenExpiry: 21700, // 6 hours in seconds
+      },
       globalBucket: {
         addTokenMs: 1000,
         capacity: 10,
         name: 'global',
+        maximumTimeBeforeTokenExpiry: 21700, // 6 hours in seconds
       },
     },
     bucketValues: {
