@@ -21,9 +21,10 @@ import useRecaptcha, {
   RecaptchaElement,
 } from '@/client/lib/hooks/useRecaptcha';
 import locations from '@/shared/lib/locations';
-import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
+import { RefTrackingFormFields } from '../components/RefTrackingFormFields.importable';
 import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 import { logger } from '@/client/lib/clientSideLogger';
+import { Islet } from '@/client/components/Islet';
 
 export type SignInProps = {
   returnUrl?: string;
@@ -220,7 +221,9 @@ export const SignIn = ({
         >
           <RecaptchaElement id="signin-recaptcha" />
           <CsrfFormField />
-          <RefTrackingFormFields />
+          <Islet type="component" deferUntil="idle">
+            <RefTrackingFormFields />
+          </Islet>
           <EmailInput defaultValue={email} />
           <div css={passwordInput}>
             <PasswordInput label="Password" autoComplete="current-password" />

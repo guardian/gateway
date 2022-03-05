@@ -18,9 +18,10 @@ import {
 } from '@/client/lib/hooks/useRecaptcha';
 import { CaptchaErrors } from '@/shared/model/Errors';
 import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
-import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
+import { RefTrackingFormFields } from '../components/RefTrackingFormFields.importable';
 import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 import { logger } from '@/client/lib/clientSideLogger';
+import { Islet } from '@/client/components/Islet';
 
 export interface MainFormProps {
   formAction: string;
@@ -219,7 +220,9 @@ export const MainForm = ({
         />
       )}
       <CsrfFormField />
-      <RefTrackingFormFields />
+      <Islet type="component" deferUntil="idle">
+        <RefTrackingFormFields />
+      </Islet>
       <div css={inputStyles(hasTerms)}>{children}</div>
       {hasGuardianTerms && <GuardianTerms />}
       {recaptchaEnabled && <RecaptchaTerms />}

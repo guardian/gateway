@@ -20,9 +20,10 @@ import locations from '@/shared/lib/locations';
 import { EmailInput } from '@/client/components/EmailInput';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
-import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
+import { RefTrackingFormFields } from '../components/RefTrackingFormFields.importable';
 import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 import { logger } from '@/client/lib/clientSideLogger';
+import { Islet } from '@/client/components/Islet';
 
 export type RegistrationProps = {
   returnUrl?: string;
@@ -140,7 +141,9 @@ export const Registration = ({
         >
           <RecaptchaElement id="register-recaptcha" />
           <CsrfFormField />
-          <RefTrackingFormFields />
+          <Islet type="component" deferUntil="idle">
+            <RefTrackingFormFields />
+          </Islet>
           <EmailInput defaultValue={email} />
           <Terms isJobs={isJobs} />
           <Button css={registerButton} type="submit" data-cy="register-button">
