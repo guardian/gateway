@@ -1,7 +1,8 @@
 import React from 'react';
 import { SignIn } from '@/client/pages/SignIn';
 import useClientState from '@/client/lib/hooks/useClientState';
-import { useRemoveEncryptedEmailParam } from '@/client/lib/hooks/useRemoveEncryptedEmailParam';
+import { Islet } from '@/client/components/Islet';
+import { removeEncryptedEmailParam } from '../lib/removeEncryptedEmailParam.importable';
 
 export const SignInPage = () => {
   const clientState = useClientState();
@@ -17,16 +18,22 @@ export const SignInPage = () => {
   const { oauthBaseUrl } = clientHosts;
   const { recaptchaSiteKey } = recaptchaConfig;
 
-  // we use the encryptedEmail parameter to pre-fill the email field, but then want to remove it from the url
-  useRemoveEncryptedEmailParam();
   return (
-    <SignIn
-      returnUrl={returnUrl}
-      email={email}
-      error={error}
-      oauthBaseUrl={oauthBaseUrl}
-      queryParams={queryParams}
-      recaptchaSiteKey={recaptchaSiteKey}
-    />
+    <>
+      <SignIn
+        returnUrl={returnUrl}
+        email={email}
+        error={error}
+        oauthBaseUrl={oauthBaseUrl}
+        queryParams={queryParams}
+        recaptchaSiteKey={recaptchaSiteKey}
+      />
+      {/* we use the encryptedEmail parameter to pre-fill the email field, but then want to remove it from the url */}
+      <Islet
+        name={removeEncryptedEmailParam.name}
+        type="script"
+        deferUntil="idle"
+      />
+    </>
   );
 };
