@@ -1,5 +1,5 @@
 import type Redis from 'ioredis';
-import { logger } from '../serverSideLogger';
+// import { logger } from '../serverSideLogger';
 import { rateLimitBucket, getBucketsFromRedis } from './bucket';
 import { getBucketKeys } from './keys';
 import type {
@@ -50,9 +50,9 @@ const rateLimitBuckets = async (
     );
 
   // Exec all awaiting read promises;
-  console.time('Write time');
+  // console.time('Write time');
   await writePipeline.exec();
-  console.timeEnd('Write time');
+  // console.timeEnd('Write time');
 
   // The rate limit reached if any bucket is hit.
   const rateLimitReached =
@@ -91,7 +91,7 @@ const rateLimit = async ({
 
     return isRateLimited;
   } catch (e) {
-    logger.error('Encountered an error fetching or parsing bucket data', e);
+    // logger.error('Encountered an error fetching or parsing bucket data', e);
     return true;
   }
 };

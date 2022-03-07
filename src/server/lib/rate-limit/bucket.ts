@@ -79,25 +79,23 @@ export const getBucketsFromRedis = async (
   redisClient: Redis.Redis,
   bucketKeys: BucketKeys,
 ) => {
-  const pipeline = redisClient.pipeline();
+  const readPipeline = redisClient.pipeline();
 
   const { globalKey, accessTokenKey, emailKey, ipKey, oktaIdentifierKey } =
     bucketKeys;
 
-  const globalBucket = getBucket(globalKey, pipeline);
-  const ipBucket = ipKey ? getBucket(ipKey, pipeline) : undefined;
-  const emailBucket = emailKey ? getBucket(emailKey, pipeline) : undefined;
+  const globalBucket = getBucket(globalKey, readPipeline);
+  const ipBucket = ipKey ? getBucket(ipKey, readPipeline) : undefined;
+  const emailBucket = emailKey ? getBucket(emailKey, readPipeline) : undefined;
   const accessTokenBucket = accessTokenKey
-    ? getBucket(accessTokenKey, pipeline)
+    ? getBucket(accessTokenKey, readPipeline)
     : undefined;
   const oktaIdentifierBucket = oktaIdentifierKey
-    ? getBucket(oktaIdentifierKey, pipeline)
+    ? getBucket(oktaIdentifierKey, readPipeline)
     : undefined;
 
   // Exec all awaiting read promises;
-  console.time('Read time');
-  await pipeline.exec();
-  console.timeEnd('Read time');
+  await readPipeline.exec();
 
   // The promises will all have resolved now the pipeline exec has finished.
   return {
