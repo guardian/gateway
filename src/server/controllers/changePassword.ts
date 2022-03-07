@@ -30,7 +30,7 @@ import { resetPassword as resetPasswordInOkta } from '@/server/lib/okta/api/auth
 import { OktaError } from '@/server/models/okta/Error';
 import { addToGroup, GroupCode } from '@/server/lib/idapi/user';
 import { checkTokenInOkta } from '@/server/controllers/checkPasswordToken';
-import { performAuthCodeFlow } from '@/server/routes/signIn';
+import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
 
 const { okta } = getConfiguration();
 
@@ -194,7 +194,11 @@ const changePasswordInOkta = async (
       }
 
       // TODO: once sign out with Okta has been implemented, invalidate current sessions before kicking off code flow
-      return performAuthCodeFlow(res, sessionToken, successRedirectPath);
+      return performAuthorizationCodeFlow(
+        res,
+        sessionToken,
+        successRedirectPath,
+      );
     } else {
       throw new OktaError({ message: 'Okta state token missing' });
     }
