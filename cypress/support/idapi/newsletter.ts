@@ -8,54 +8,32 @@ export const NEWSLETTER_ERRORS = {
 
 export const allNewsletters = [
   {
-    id: 'today-uk',
-    name: 'Guardian Today: UK',
-    theme: 'news',
+    id: 'morning-mail',
+    name: "Guardian Australia's Morning Mail",
     description:
-      'The headlines, the analysis, the debate. Get the whole picture from a source you trust, emailed to you every morning. The biggest stories examined, and diverse, independent views - the Guardian Today delivers the best of our journalism',
-    frequency: 'Every day',
-    exactTargetListId: 4151,
+      'Our Australian morning briefing email breaks down the key national and international stories of the day and why they matter',
+    frequency: 'Every weekday',
+    exactTargetListId: 4148,
   },
   {
-    id: 'today-us',
-    name: 'Guardian Today: US',
-    theme: 'news',
+    id: 'morning-briefing',
+    name: 'Guardian Morning Briefing',
     description:
-      'Cut through the noise. Get straight to the heart of the day’s breaking news in double-quick time with the Guardian Today. We’ll email you the stories you need to read, and bundle them up with the best of sport, culture, lifestyle and more',
+      'Start the day one step ahead. Our email breaks down the key stories of the day and why they matter',
     frequency: 'Every weekday',
-    exactTargetListId: 4152,
-  },
-  {
-    id: 'today-au',
-    name: 'Guardian Today: AUS',
-    theme: 'news',
-    description:
-      "Our editors’ picks for the day's top news and commentary delivered to your inbox each weekday",
-    frequency: 'Every weekday',
-    exactTargetListId: 4150,
+    exactTargetListId: 4156,
   },
   {
     id: 'us-morning-newsletter',
     name: 'First Thing: the US morning briefing',
-    theme: 'news',
     description:
       "Stay informed with a summary of the top stories from the US and the day's must-reads from across the Guardian",
     frequency: 'Every weekday',
     exactTargetListId: 4300,
   },
   {
-    id: 'minute-us',
-    name: 'Fight to Vote',
-    theme: 'news',
-    description:
-      'The US could face the biggest ballot brawl in its history this November – stay informed about election integrity and voting rights in the 2020 election',
-    frequency: 'Weekly',
-    exactTargetListId: 4166,
-  },
-  {
     id: 'green-light',
     name: 'Green Light',
-    theme: 'news',
     description:
       'In each weekly edition our editors highlight the most important environment stories of the week including data, opinion pieces and background guides. We’ll also flag up our best video, picture galleries, podcasts, blogs and green living guides',
     frequency: 'Weekly',
@@ -64,20 +42,19 @@ export const allNewsletters = [
   {
     id: 'the-long-read',
     name: 'The Long Read',
-    theme: 'features',
     description:
       'Get lost in a great story. From politics to fashion, international investigations to new thinking, culture to crime - we’ll bring you the biggest ideas and the arguments that matter. Sign up to have the Guardian’s award-winning long reads emailed to you every Saturday morning',
     frequency: 'Every Saturday',
     exactTargetListId: 4165,
   },
   {
-    id: 'bookmarks',
-    name: 'Bookmarks',
-    theme: 'culture',
+    id: 'the-guide-staying-in',
+    name: 'The Guide',
     description:
-      'Join us in the world of books. Discover new books with our expert reviews, author interviews and top 10s, plus enjoy highlights from our columnists and community. Kick back on a Sunday with our weekly email full of literary delights',
-    frequency: 'Every Sunday',
-    exactTargetListId: 4137,
+      'Home entertainment tips delivered straight to your sofa. The best TV and box sets, games, podcasts, books and more',
+    frequency: 'Weekly',
+    listIdV1: -1,
+    exactTargetListId: 6006,
   },
 ];
 

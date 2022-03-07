@@ -4,12 +4,12 @@ class NewslettersPage extends OnboardingPage {
   static CONTENT = {
     ...OnboardingPage.CONTENT,
     NEWSLETTERS: {
-      TODAY_UK: 'Guardian Today: UK',
-      TODAY_US: 'Guardian Today: US',
-      TODAY_AUS: 'Guardian Today: AUS',
+      MORNING_BRIEFING_UK: 'Guardian Morning Briefing',
+      MORNING_BRIEFING_US: 'First Thing: the US morning briefing',
+      MORNING_BRIEFING_AUS: "Guardian Australia's Morning Mail",
       LONG_READ: 'The Long Read',
       GREEN_LIGHT: 'Green Light',
-      BOOKMARKS: 'Bookmarks',
+      THE_GUIDE: 'The Guide',
     },
   };
   static newsletterCheckboxWithTitle(title: string) {

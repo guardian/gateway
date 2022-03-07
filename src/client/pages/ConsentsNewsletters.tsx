@@ -2,7 +2,6 @@ import React from 'react';
 import { css } from '@emotion/react';
 import {
   brand,
-  culture,
   from,
   lifestyle,
   news,
@@ -28,7 +27,7 @@ type ConsentsNewslettersProps = {
 };
 
 const idColor = (id: string) => {
-  if (/today|morning/.test(id)) {
+  if (/morning/.test(id)) {
     return news[400];
   }
   if (id === 'the-long-read') {
@@ -37,10 +36,7 @@ const idColor = (id: string) => {
   if (id === 'green-light') {
     return news[400];
   }
-  if (id === 'bookmarks') {
-    return culture[400];
-  }
-  if (id === 'word-of-mouth' || id === 'the-guide-staying-in') {
+  if (id === 'the-guide-staying-in') {
     return lifestyle[400];
   }
   return brand[400];
