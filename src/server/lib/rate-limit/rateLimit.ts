@@ -3,7 +3,7 @@ import { logger } from '@/server/lib/serverSideLogger';
 import { rateLimitBucket, getBucketsFromRedis } from './bucket';
 import { getBucketKeys } from './keys';
 import type {
-  RateLimit,
+  RateLimitParameters,
   RateLimitBucketsConfiguration,
   ParsedRateLimitBuckets,
   BucketType,
@@ -74,7 +74,7 @@ const rateLimit = async ({
   redisClient,
   bucketConfiguration,
   bucketValues,
-}: RateLimit) => {
+}: RateLimitParameters) => {
   const { accessTokenKey, globalKey, emailKey, ipKey, oktaIdentifierKey } =
     getBucketKeys(name, bucketConfiguration, bucketValues);
 
