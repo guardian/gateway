@@ -5,7 +5,6 @@ import {
   GA_UID_HASH,
   GU_API_DOMAIN,
   GU_DOMAIN,
-  RateLimitConfiguration,
   RedisConfiguration,
   Stage,
 } from '@/server/models/Configuration';
@@ -182,8 +181,6 @@ export const getConfiguration = (): Configuration => {
     host: getOrThrow(process.env.REDIS_HOST, 'Redis Host missing'),
   };
 
-  const rateLimiter: RateLimitConfiguration = {};
-
   return {
     port: +port,
     idapiBaseUrl,
@@ -210,7 +207,6 @@ export const getConfiguration = (): Configuration => {
     aws,
     githubRunNumber,
     sentryDsn,
-    rateLimiter,
     redis,
   };
 };

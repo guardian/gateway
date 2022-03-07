@@ -83,7 +83,6 @@ describe('getConfiguration', () => {
       },
       githubRunNumber: '5',
       sentryDsn: 'sentry-dsn',
-      rateLimiter: {},
       redis: {
         password: 'redispassword',
         host: 'localhost:1234',

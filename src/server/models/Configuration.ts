@@ -25,7 +25,6 @@ export interface Configuration {
   aws: AWSConfiguration;
   githubRunNumber: string;
   sentryDsn: string;
-  rateLimiter: RateLimitConfiguration;
   redis: RedisConfiguration;
 }
 
@@ -66,11 +65,6 @@ export enum GU_API_DOMAIN {
   DEV = 'code.dev-guardianapis.com',
   CODE = 'code.dev-guardianapis.com',
   PROD = 'guardianapis.com',
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface RateLimitConfiguration {
-  //...
 }
 
 export interface RedisConfiguration {

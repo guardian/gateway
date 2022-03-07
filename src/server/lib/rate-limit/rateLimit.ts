@@ -69,6 +69,51 @@ const rateLimitBuckets = async (
   }
 };
 
+/**
+ * Use this method to rate limit requests based on the
+ * buckets defined and the values passed to them.
+ *
+ * All calls should include a name for the rate limiter,
+ * an instance of ioredis and configurations for all of
+ * the buckets in use. A configuration for the global
+ * bucket must be provided.
+ *
+ * If a value is provided in bucketValues and the corresponding
+ * bucket is defined in bucketConfiguration, a token will be
+ * taken from the bucket under the hash of the value. If this
+ * leaves the bucket empty, the name of the bucket that was
+ * limited will be returned.
+ *
+ * Example:
+ * ```
+ * await rateLimit({
+ *   name: '/signin',
+ *   redisClient,
+ *   bucketConfiguration: {
+ *     ipBucket: { addTokenMs: 500, capacity: 2 },
+ *     globalBucket: { addTokenMs: 500, capacity: 5 },
+ *   },
+ *   bucketValues: {
+ *     ip: '127.0.0.1',
+ *   }
+ * })```
+ *
+ * If the example above is executed with the same ip two
+ * times within 500ms the ipBucket will be empty and the
+ * method will return false. User is not rate limited.
+ *
+ * Because the two requests above were made successfully,
+ * the global rate limit bucket now has three tokens left.
+ *
+ * If a further request is made before 500ms has passed,
+ * the rate limiter will kick in and return 'ip', indicating
+ * that the ip bucket has been limited.
+ *
+ * @usage Examples of usage can be found in: rateLimit.test.ts
+ *
+ * @param {RateLimitParameters} params Rate limiter configuration
+ * @returns Bucket type if rate limited, otherwise `false` if not rate limited.
+ */
 const rateLimit = async ({
   name,
   redisClient,
@@ -96,7 +141,7 @@ const rateLimit = async ({
     return isRateLimited;
   } catch (e) {
     logger.error('Encountered an error fetching or parsing bucket data', e);
-    return true;
+    return false;
   }
 };
 
