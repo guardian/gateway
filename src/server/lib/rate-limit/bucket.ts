@@ -20,6 +20,9 @@ export const rateLimitBucket = (
     return true;
   }
 
+  const maximumTimeBeforeExpiry =
+    bucketConfiguration?.maximumTimeBeforeTokenExpiry || 21700; // Default to 6 hours in seconds
+
   const { redisKey, timeLeftUntilExpiry, tokenData } = bucket;
   const bucketExists =
     timeLeftUntilExpiry !== undefined && tokenData !== undefined;
@@ -52,12 +55,12 @@ export const rateLimitBucket = (
     // Write the updated token count for this
     const rateLimitTokenData: RateLimitBucketContents = {
       tokens: newTokenCount,
-      maximumTimeBeforeExpiry: bucketConfiguration.maximumTimeBeforeTokenExpiry,
+      maximumTimeBeforeExpiry,
     };
 
     pipelinedWrites
       .set(redisKey, JSON.stringify(rateLimitTokenData))
-      .expire(redisKey, bucketConfiguration.maximumTimeBeforeTokenExpiry);
+      .expire(redisKey, maximumTimeBeforeExpiry);
 
     return rateLimitNotHit;
   }
@@ -65,12 +68,12 @@ export const rateLimitBucket = (
   // Bucket information was not defined, so we create a new record for this key.
   const rateLimitTokenData: RateLimitBucketContents = {
     tokens: bucketConfiguration.capacity - 1,
-    maximumTimeBeforeExpiry: bucketConfiguration.maximumTimeBeforeTokenExpiry,
+    maximumTimeBeforeExpiry,
   };
 
   pipelinedWrites
     .set(redisKey, JSON.stringify(rateLimitTokenData))
-    .expire(redisKey, bucketConfiguration.maximumTimeBeforeTokenExpiry);
+    .expire(redisKey, maximumTimeBeforeExpiry);
 
   return true;
 };

@@ -6,13 +6,14 @@ import type {
   RateLimit,
   RateLimitBucketsConfiguration,
   ParsedRateLimitBuckets,
+  BucketType,
 } from './types';
 
 const rateLimitBuckets = async (
   redisClient: Redis.Redis,
   buckets: ParsedRateLimitBuckets,
   bucketConfiguration: RateLimitBucketsConfiguration,
-) => {
+): Promise<BucketType | false> => {
   const writePipeline = redisClient.pipeline();
 
   const oktaIdentifierNotHit = rateLimitBucket(
@@ -21,16 +22,8 @@ const rateLimitBuckets = async (
     writePipeline,
   );
 
-  const accessTokenNotHit =
-    oktaIdentifierNotHit &&
-    rateLimitBucket(
-      buckets.accessToken,
-      bucketConfiguration.accessTokenBucket,
-      writePipeline,
-    );
-
   const emailNotHit =
-    accessTokenNotHit &&
+    oktaIdentifierNotHit &&
     rateLimitBucket(
       buckets.email,
       bucketConfiguration.emailBucket,
@@ -41,8 +34,16 @@ const rateLimitBuckets = async (
     emailNotHit &&
     rateLimitBucket(buckets.ip, bucketConfiguration.ipBucket, writePipeline);
 
-  const globalNotHit =
+  const accessTokenNotHit =
     ipNotHit &&
+    rateLimitBucket(
+      buckets.accessToken,
+      bucketConfiguration.accessTokenBucket,
+      writePipeline,
+    );
+
+  const globalNotHit =
+    accessTokenNotHit &&
     rateLimitBucket(
       buckets.global,
       bucketConfiguration.globalBucket,
@@ -50,19 +51,22 @@ const rateLimitBuckets = async (
     );
 
   // Exec all awaiting read promises;
-  // console.time('Write time');
   await writePipeline.exec();
-  // console.timeEnd('Write time');
 
-  // The rate limit reached if any bucket is hit.
-  const rateLimitReached =
-    !oktaIdentifierNotHit ||
-    !accessTokenNotHit ||
-    !emailNotHit ||
-    !ipNotHit ||
-    !globalNotHit;
-
-  return rateLimitReached;
+  // Return the type of bucket that was limited, in the order of precedence they were applied.
+  if (!oktaIdentifierNotHit) {
+    return 'oktaIdentifier';
+  } else if (!emailNotHit) {
+    return 'email';
+  } else if (!ipNotHit) {
+    return 'ip';
+  } else if (!accessTokenNotHit) {
+    return 'accessToken';
+  } else if (!globalNotHit) {
+    return 'global';
+  } else {
+    return false;
+  }
 };
 
 const rateLimit = async ({

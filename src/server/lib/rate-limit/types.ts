@@ -69,13 +69,18 @@ export interface RateLimitBucketsConfiguration {
   oktaIdentifierBucket?: BucketConfiguration;
 }
 
-type BucketType = 'email' | 'global' | 'ip' | 'accessToken' | 'oktaIdentifier';
+export type BucketType =
+  | 'email'
+  | 'global'
+  | 'ip'
+  | 'accessToken'
+  | 'oktaIdentifier';
 
 export interface BucketConfiguration {
-  name: BucketType;
+  name?: BucketType;
   capacity: number;
   addTokenMs: number;
-  maximumTimeBeforeTokenExpiry: number;
+  maximumTimeBeforeTokenExpiry?: number;
 }
 
 export interface BucketValues {
