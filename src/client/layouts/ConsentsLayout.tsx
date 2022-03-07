@@ -19,7 +19,7 @@ interface ConsentsLayoutProps {
   showContinueButton?: boolean;
 }
 
-export const mainStyles = css`
+const mainStyles = css`
   display: flex;
   flex-direction: column;
   flex: 1 0 auto;
@@ -30,6 +30,11 @@ export const controls = css`
   ${from.tablet} {
     padding-bottom: ${space[24]}px;
   }
+`;
+
+// Ensures grey borders reach to bottom of page
+const spacer = css`
+  flex-grow: 1;
 `;
 
 export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
@@ -54,6 +59,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
         {children && (
           <section css={[gridRow, greyBorderSides]}>{children}</section>
         )}
+        <div css={[spacer, gridRow, greyBorderSides]} />
       </main>
       <Footer />
     </>
