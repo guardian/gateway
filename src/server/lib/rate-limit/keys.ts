@@ -3,27 +3,26 @@ import {
   RateLimitBucketsConfiguration,
   BucketValues,
   BucketKeys,
+  BucketType,
 } from './types';
 
-const getRateLimitKey = (name: string, bucketName: string, value?: string) =>
-  `gw-rl-${name}-${bucketName}${value ? '-' + sha256(value) : ''}`;
+const getRateLimitKey = (
+  name: string,
+  bucketName: BucketType,
+  value?: string,
+) => `gw-rl-${name}-${bucketName}${value ? '-' + sha256(value) : ''}`;
 
 export const getBucketKeys = (
   name: string,
   bucketConfiguration: RateLimitBucketsConfiguration,
   bucketValues?: BucketValues,
 ): BucketKeys => {
-  const {
-    accessTokenBucket,
-    ipBucket,
-    emailBucket,
-    globalBucket,
-    oktaIdentifierBucket,
-  } = bucketConfiguration;
+  const { accessTokenBucket, ipBucket, emailBucket, oktaIdentifierBucket } =
+    bucketConfiguration;
 
   // No extra buckets are being used, return just the global bucket key.
   if (bucketValues === undefined) {
-    return { globalKey: getRateLimitKey(name, globalBucket.name) };
+    return { globalKey: getRateLimitKey(name, 'global') };
   }
 
   const { accessToken, email, ip, oktaIdentifier } = bucketValues;
@@ -32,14 +31,13 @@ export const getBucketKeys = (
     accessTokenKey:
       accessTokenBucket &&
       accessToken &&
-      getRateLimitKey(name, accessTokenBucket.name, accessToken),
-    emailKey:
-      emailBucket && email && getRateLimitKey(name, emailBucket.name, email),
-    ipKey: ipBucket && ip && getRateLimitKey(name, ipBucket.name, ip),
+      getRateLimitKey(name, 'accessToken', accessToken),
+    emailKey: emailBucket && email && getRateLimitKey(name, 'email', email),
+    ipKey: ipBucket && ip && getRateLimitKey(name, 'ip', ip),
     oktaIdentifierKey:
       oktaIdentifierBucket &&
       oktaIdentifier &&
-      getRateLimitKey(name, oktaIdentifierBucket.name, oktaIdentifier),
-    globalKey: getRateLimitKey(name, globalBucket.name),
+      getRateLimitKey(name, 'oktaIdentifier', oktaIdentifier),
+    globalKey: getRateLimitKey(name, 'global'),
   };
 };

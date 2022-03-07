@@ -23,14 +23,10 @@ export const rateLimiterMiddleware = async (
       ipBucket: {
         addTokenMs: 1000,
         capacity: 1,
-        name: 'ip',
-        maximumTimeBeforeTokenExpiry: 21700, // 6 hours in seconds
       },
       globalBucket: {
         addTokenMs: 1000,
         capacity: 10,
-        name: 'global',
-        maximumTimeBeforeTokenExpiry: 21700, // 6 hours in seconds
       },
     },
     bucketValues: {

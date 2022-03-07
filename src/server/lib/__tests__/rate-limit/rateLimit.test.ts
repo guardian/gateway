@@ -1,8 +1,5 @@
 import Redis from 'ioredis-mock';
-import rateLimit, {
-  BucketConfiguration,
-  BucketValues,
-} from '@/server/lib/rate-limit';
+import rateLimit, { BucketValues } from '@/server/lib/rate-limit';
 
 // Integration testing rate limiting with Redis
 
@@ -206,7 +203,73 @@ describe('rateLimit', () => {
     expect(rateLimitTypeAfterNewTokensConsumed).toBe('global');
   });
 
-  it.only('should not rate limit higher precedence buckets when limited by a more local bucket', async () => {
+  it('should not rate limit by ip, email, okta id or access token if values are not provided', async () => {
+    const applyRateLimit = async () =>
+      await rateLimit({
+        name: '/signin',
+        redisClient: new Redis(),
+        bucketConfiguration: {
+          oktaIdentifierBucket: { capacity: 5, addTokenMs: 500 },
+          emailBucket: { capacity: 5, addTokenMs: 500 },
+          ipBucket: { capacity: 5, addTokenMs: 500 },
+          accessTokenBucket: { capacity: 5, addTokenMs: 500 },
+          globalBucket: { capacity: 100, addTokenMs: 500 },
+        },
+      });
+
+    for (let i = 0; i < 10; i++) {
+      expect(await applyRateLimit()).toBeFalsy();
+    }
+  });
+
+  it('should not rate limit by ip, email, okta id or access token if values are provided but buckets not defined', async () => {
+    const applyRateLimit = async () =>
+      await rateLimit({
+        name: '/signin',
+        redisClient: new Redis(),
+        bucketConfiguration: {
+          globalBucket: { capacity: 100, addTokenMs: 500 },
+        },
+        bucketValues: {
+          ip: '127.0.0.1',
+          accessToken: 'access-token',
+          email: 'test@gu.com',
+          oktaIdentifier: 'okta-identifier',
+        },
+      });
+
+    for (let i = 0; i < 10; i++) {
+      expect(await applyRateLimit()).toBeFalsy();
+    }
+  });
+
+  it('should rate limit when email limit is hit and no okta id is passed', async () => {
+    const applyRateLimit = async () =>
+      await rateLimit({
+        name: '/signin',
+        redisClient: new Redis(),
+        bucketConfiguration: {
+          oktaIdentifierBucket: { capacity: 100, addTokenMs: 500 },
+          emailBucket: { capacity: 5, addTokenMs: 500 },
+          ipBucket: { capacity: 100, addTokenMs: 500 },
+          accessTokenBucket: { capacity: 100, addTokenMs: 500 },
+          globalBucket: { capacity: 100, addTokenMs: 500 },
+        },
+        bucketValues: {
+          ip: '127.0.0.1',
+          accessToken: 'access-token',
+          email: 'test@gu.com',
+        },
+      });
+
+    for (let i = 0; i < 5; i++) {
+      expect(await applyRateLimit()).toBeFalsy();
+    }
+
+    expect(await applyRateLimit()).toBe('email');
+  });
+
+  it('should not rate limit higher precedence buckets when limited by a more local bucket', async () => {
     const applyRateLimit = async (bucketValues?: BucketValues) =>
       await rateLimit({
         name: '/signin',

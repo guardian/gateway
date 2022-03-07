@@ -77,7 +77,6 @@ export type BucketType =
   | 'oktaIdentifier';
 
 export interface BucketConfiguration {
-  name?: BucketType;
   capacity: number;
   addTokenMs: number;
   maximumTimeBeforeTokenExpiry?: number;
