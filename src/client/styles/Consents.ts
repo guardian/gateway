@@ -32,14 +32,25 @@ export const text = css`
   max-width: 640px;
 `;
 
+const greyBorder = `1px solid ${neutral[86]}`;
+
 export const greyBorderTop = css`
-  border-top: 1px solid ${neutral[86]};
+  border-top: ${greyBorder};
   padding-top: ${space[1]}px;
 `;
 
 export const greyBorderBottom = css`
-  border-bottom: 1px solid ${neutral[86]};
+  border-bottom: ${greyBorder};
   padding-bottom: ${space[1]}px;
+`;
+
+export const greyBorderSides = css`
+  margin: 0 auto;
+
+  ${from.tablet} {
+    border-left: ${greyBorder};
+    border-right: ${greyBorder};
+  }
 `;
 
 export const passwordButton = css`

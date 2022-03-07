@@ -11,6 +11,7 @@ import {
   visuallyHidden,
 } from '@guardian/source-foundations';
 import { AutoRow, gridRow } from '@/client/styles/Grid';
+import { greyBorderSides } from '@/client/styles/Consents';
 import { CONSENTS_PAGES_ARR } from '@/client/models/ConsentsPages';
 
 type Props = {
@@ -204,7 +205,7 @@ export const ConsentsSubHeader = ({ autoRow, title, current }: Props) => {
 
   return (
     <header data-cy="exclude-a11y-check">
-      <div css={gridRow}>
+      <div css={[gridRow, greyBorderSides]}>
         {pageProgression}
         <h1 css={[h1, h1ResponsiveText, autoRow()]}>{title}</h1>
       </div>
