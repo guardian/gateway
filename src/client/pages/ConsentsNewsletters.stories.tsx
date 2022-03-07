@@ -19,7 +19,7 @@ export const SingleNewsletter = () => (
   <ConsentsNewsletters
     newsletters={[
       {
-        id: '4151',
+        id: '4156',
         nameId: 'n0',
         description: 'Newsletter description',
         name: 'Newsletter Name',
@@ -44,12 +44,12 @@ export const MultipleNewsletter = () => (
         frequency: 'Weekly',
       },
       {
-        id: '4137',
-        nameId: 'bookmarks',
+        id: '4165',
+        nameId: 'the-long-read',
         description:
-          'Discover new books with our expert reviews, author interviews and top 10s. Literary delights delivered direct you',
-        name: 'Bookmarks',
-        frequency: 'Every day',
+          'Lose yourself in a great story: from politics to psychology, food to technology, culture to crime',
+        name: 'The Long Read',
+        frequency: 'Weekly',
       },
       {
         id: '9001',
