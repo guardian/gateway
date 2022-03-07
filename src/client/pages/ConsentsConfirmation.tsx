@@ -2,11 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { css } from '@emotion/react';
 import { space, success, neutral, until } from '@guardian/source-foundations';
 
-import {
-  getAutoRow,
-  gridItem,
-  gridItemColumnConsents,
-} from '@/client/styles/Grid';
+import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import {
   controls,
@@ -193,7 +189,7 @@ export const ConsentsConfirmation = ({
           </p>
         </>
       )}
-      <div css={[controls, gridItem(gridItemColumnConsents)]}>
+      <div css={[controls, autoRow()]}>
         <ExternalLinkButton
           iconSide="right"
           href={returnUrl}
