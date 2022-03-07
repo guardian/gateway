@@ -1,7 +1,18 @@
 import Redis from 'ioredis-mock';
 import rateLimit, { BucketValues } from '@/server/lib/rate-limit';
 
-// Integration testing rate limiting with Redis
+// mock the server side logger
+jest.mock('@/server/lib/serverSideLogger');
+
+// mocked configuration
+jest.mock('@/server/lib/getConfiguration', () => ({
+  getConfiguration: () => ({
+    stage: 'DEV',
+    aws: {},
+  }),
+}));
+
+// Integration tests for rate limiting with Redis
 
 describe('rateLimit', () => {
   afterEach((done) => {

@@ -1,5 +1,5 @@
 import type Redis from 'ioredis';
-// import { logger } from '../serverSideLogger';
+import { logger } from '@/server/lib/serverSideLogger';
 import { rateLimitBucket, getBucketsFromRedis } from './bucket';
 import { getBucketKeys } from './keys';
 import type {
@@ -95,7 +95,7 @@ const rateLimit = async ({
 
     return isRateLimited;
   } catch (e) {
-    // logger.error('Encountered an error fetching or parsing bucket data', e);
+    logger.error('Encountered an error fetching or parsing bucket data', e);
     return true;
   }
 };
