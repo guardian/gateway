@@ -231,6 +231,7 @@ export const MainForm = ({
         isLoading={isFormDisabled}
         disabled={isFormDisabled}
         aria-disabled={isFormDisabled}
+        iconSide="right"
       >
         {submitButtonText}
       </Button>
