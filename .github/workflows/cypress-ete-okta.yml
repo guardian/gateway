@@ -41,7 +41,7 @@ jobs:
           GOOGLE_RECAPTCHA_SITE_KEY: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
           GOOGLE_RECAPTCHA_SECRET_KEY: 6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
           ENCRYPTION_SECRET_KEY: ${{ secrets.ENCRYPTION_SECRET_KEY }}
-          OKTA_ORG_URL: https://auth.code.dev-theguardian.com
+          OKTA_ORG_URL: ${{ secrets.OKTA_ORG_URL }}
           OKTA_API_TOKEN: ${{ secrets.OKTA_API_TOKEN }}
           OKTA_CUSTOM_OAUTH_SERVER: ${{ secrets.OKTA_CUSTOM_OAUTH_SERVER }}
           OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID }}
