@@ -49,7 +49,7 @@ const subscribedNewsletters = [
 export const None = () => (
   <ConsentsConfirmation
     returnUrl=""
-    optedIntoProfiling={true}
+    optedIntoProfiling={false}
     productConsents={[]}
     subscribedNewsletters={[]}
   />
@@ -61,13 +61,13 @@ None.story = {
 export const Profiling = () => (
   <ConsentsConfirmation
     returnUrl=""
-    optedIntoProfiling={false}
+    optedIntoProfiling={true}
     productConsents={[]}
     subscribedNewsletters={[]}
   />
 );
 Profiling.story = {
-  name: 'with consent given to profilling',
+  name: 'with consent given to profiling',
 };
 
 export const Newsletters = () => (
@@ -85,7 +85,7 @@ Newsletters.story = {
 export const Products = () => (
   <ConsentsConfirmation
     returnUrl=""
-    optedIntoProfiling={true}
+    optedIntoProfiling={false}
     productConsents={productConsents}
     subscribedNewsletters={[]}
   />
@@ -97,7 +97,7 @@ Products.story = {
 export const Everything = () => (
   <ConsentsConfirmation
     returnUrl=""
-    optedIntoProfiling={false}
+    optedIntoProfiling={true}
     productConsents={productConsents}
     subscribedNewsletters={subscribedNewsletters}
   />
