@@ -2,9 +2,8 @@ import React from 'react';
 import { PasswordForm } from '@/client/components/PasswordForm';
 import { FieldError } from '@/shared/model/ClientState';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
-import { ConsentsContent } from '@/client/layouts/shared/Consents';
 import { getAutoRow, passwordFormSpanDef } from '@/client/styles/Grid';
-import { text, greyBorderTop } from '@/client/styles/Consents';
+import { controls, text, greyBorderTop } from '@/client/styles/Consents';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import {
   LinkButton,
@@ -45,37 +44,35 @@ export const Welcome = ({
       current={CONSENTS_PAGES.PASSWORD}
       showContinueButton={false}
     >
-      <ConsentsContent>
-        <p css={[text, greyBorderTop, autoRow()]}>
-          {passwordSet
-            ? 'Password already set for '
-            : 'Please create a password for '}{' '}
-          {<span css={emailSpan}>{email}</span> || 'your new account'}
-        </p>
-        {passwordSet ? (
-          <div css={autoRow()}>
-            <LinkButton
-              css={linkButton}
-              href={buildUrl('/consents')}
-              priority="primary"
-              icon={<SvgArrowRightStraight />}
-              iconSide="right"
-            >
-              Continue
-            </LinkButton>
-          </div>
-        ) : (
-          <PasswordForm
-            submitUrl={submitUrl}
-            fieldErrors={fieldErrors}
-            labelText="Password"
-            submitButtonText="Create password"
-            gridAutoRow={autoRow}
-            autoComplete="new-password"
-            formTrackingName="welcome"
-          />
-        )}
-      </ConsentsContent>
+      <p css={[text, greyBorderTop, autoRow()]}>
+        {passwordSet
+          ? 'Password already set for '
+          : 'Please create a password for '}{' '}
+        {<span css={emailSpan}>{email}</span> || 'your new account'}
+      </p>
+      {passwordSet ? (
+        <div css={[controls, autoRow()]}>
+          <LinkButton
+            css={linkButton}
+            href={buildUrl('/consents')}
+            priority="primary"
+            icon={<SvgArrowRightStraight />}
+            iconSide="right"
+          >
+            Continue
+          </LinkButton>
+        </div>
+      ) : (
+        <PasswordForm
+          submitUrl={submitUrl}
+          fieldErrors={fieldErrors}
+          labelText="Password"
+          submitButtonText="Create password"
+          gridAutoRow={autoRow}
+          autoComplete="new-password"
+          formTrackingName="welcome"
+        />
+      )}
     </ConsentsLayout>
   );
 };

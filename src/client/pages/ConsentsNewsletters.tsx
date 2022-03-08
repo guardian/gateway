@@ -16,9 +16,10 @@ import {
 } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { ConsentCard } from '@/client/components/ConsentCard';
+import { ConsentsForm } from '@/client/components/ConsentsForm';
+import { ConsentsNavigation } from '@/client/components/ConsentsNavigation';
 import { greyBorderTop, heading, text } from '@/client/styles/Consents';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
-import { ConsentsContent } from '@/client/layouts/shared/Consents';
 import { NewsLetter } from '@/shared/model/Newsletter';
 import { NEWSLETTER_IMAGES } from '@/client/models/Newsletter';
 
@@ -83,35 +84,34 @@ export const ConsentsNewsletters = ({
 
   return (
     <ConsentsLayout title="Newsletters" current={CONSENTS_PAGES.NEWSLETTERS}>
-      <ConsentsContent>
-        <h2 css={[heading, greyBorderTop, autoRow()]}>
-          Free newsletters from the Guardian
-        </h2>
-        <p css={[text, autoRow()]}>
-          Our newsletters help you get closer to our quality, independent
-          journalism.
-        </p>
-        <p css={[text, paragraphSpacing, autoRow()]}>
-          Newsletters may contain information about Guardian products, services
-          and chosen charities or online advertisements.
-        </p>
-        <div css={autoRow()}>
-          {newsletters.map((newsletter, i) => (
-            <ConsentCard
-              title={newsletter.name}
-              description={newsletter.description}
-              id={newsletter.id}
-              defaultChecked={newsletter.subscribed}
-              imagePath={NEWSLETTER_IMAGES[newsletter.id]}
-              highlightColor={idColor(newsletter.nameId)}
-              frequency={newsletter.frequency}
-              hiddenInput
-              cssOverrides={getNewsletterCardCss(i)}
-              key={newsletter.id}
-            />
-          ))}
-        </div>
-      </ConsentsContent>
+      <h2 css={[heading, greyBorderTop, autoRow()]}>
+        Free newsletters from the Guardian
+      </h2>
+      <p css={[text, autoRow()]}>
+        Our newsletters help you get closer to our quality, independent
+        journalism.
+      </p>
+      <p css={[text, paragraphSpacing, autoRow()]}>
+        Newsletters may contain information about Guardian products, services
+        and chosen charities or online advertisements.
+      </p>
+      <ConsentsForm cssOverrides={autoRow()}>
+        {newsletters.map((newsletter, i) => (
+          <ConsentCard
+            title={newsletter.name}
+            description={newsletter.description}
+            id={newsletter.id}
+            defaultChecked={newsletter.subscribed}
+            imagePath={NEWSLETTER_IMAGES[newsletter.id]}
+            highlightColor={idColor(newsletter.nameId)}
+            frequency={newsletter.frequency}
+            hiddenInput
+            cssOverrides={getNewsletterCardCss(i)}
+            key={newsletter.id}
+          />
+        ))}
+        <ConsentsNavigation />
+      </ConsentsForm>
     </ConsentsLayout>
   );
 };
