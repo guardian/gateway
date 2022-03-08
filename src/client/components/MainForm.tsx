@@ -228,8 +228,10 @@ export const MainForm = ({
         type="submit"
         priority={submitButtonPriority}
         data-cy="main-form-submit-button"
+        isLoading={isFormDisabled}
         disabled={isFormDisabled}
         aria-disabled={isFormDisabled}
+        iconSide="right"
       >
         {submitButtonText}
       </Button>
