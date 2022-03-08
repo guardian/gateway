@@ -73,7 +73,7 @@ Profiling.story = {
 export const Newsletters = () => (
   <ConsentsConfirmation
     returnUrl=""
-    optedIntoProfiling={true}
+    optedIntoProfiling={false}
     productConsents={[]}
     subscribedNewsletters={subscribedNewsletters}
   />

@@ -124,7 +124,7 @@ export const ConsentsConfirmation = ({
 }: ConsentsConfirmationProps) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
   const anyConsents =
-    !optedIntoProfiling ||
+    optedIntoProfiling ||
     !!productConsents.length ||
     !!subscribedNewsletters.length;
   return (
@@ -186,7 +186,7 @@ export const ConsentsConfirmation = ({
                   ))}
                 </ReviewTableRow>
               )}
-              {!!optedIntoProfiling && (
+              {optedIntoProfiling && (
                 <ReviewTableRow title="Data">
                   <div css={consentStyles}>
                     <span css={iconStyles}>

@@ -54,15 +54,15 @@ const listBullets = css`
   list-style: none;
   line-height: ${remSpace[6]};
   padding-left: 0;
-  text-indent: -18px; // second line indentation
-  margin-left: 18px; // second line indentation
+  text-indent: -18px; /* second line indentation */
+  margin-left: 18px; /* second line indentation */
   li {
     font-size: 17px;
   }
   li:first-of-type {
     margin-top: ${space[2]}px;
   }
-  // ::marker is not supported in IE11
+  /* ::marker is not supported in IE11 */
   li::before {
     content: '';
     margin-right: ${space[2]}px;
@@ -84,7 +84,6 @@ const labelStyles = css`
 
 const marketingText = css`
   ${text}
-  color: ${neutral[46]};
   margin-top: ${space[4]}px;
 `;
 

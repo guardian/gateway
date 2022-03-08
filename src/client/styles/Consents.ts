@@ -25,7 +25,7 @@ export const text = css`
 
 export const textBold = css`
   ${text};
-  ${textSans.medium({ fontWeight: 'bold' })};
+  font-weight: bold;
 `;
 
 export const greyBorderTop = css`
