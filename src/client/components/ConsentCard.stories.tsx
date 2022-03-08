@@ -11,9 +11,8 @@ export default {
 } as ComponentMeta<typeof ConsentCard>;
 
 type PartialProps = Partial<React.ComponentProps<typeof ConsentCard>>;
-type ConsentCardStory = Story<PartialProps>;
 
-const Template = (props: PartialProps) => (
+const Template: Story<PartialProps> = (props: PartialProps) => (
   <ConsentCard
     title="Consent Name"
     description="Consent description"
@@ -23,17 +22,17 @@ const Template = (props: PartialProps) => (
   />
 );
 
-export const Default: ConsentCardStory = Template.bind({});
+export const Default = Template.bind({});
 Default.storyName = 'default';
 
-export const Frequency: ConsentCardStory = Template.bind({});
+export const Frequency = Template.bind({});
 Frequency.storyName = 'with email frequency';
 Frequency.args = { frequency: 'Weekly' };
 
-export const HighlightColor: ConsentCardStory = Template.bind({});
+export const HighlightColor = Template.bind({});
 HighlightColor.storyName = 'with highlight color';
 HighlightColor.args = { highlightColor: news[400] };
 
-export const NoImage: ConsentCardStory = Template.bind({});
+export const NoImage = Template.bind({});
 NoImage.storyName = 'when there is no image';
 NoImage.args = { imagePath: undefined };

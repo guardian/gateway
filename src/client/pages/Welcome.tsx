@@ -26,6 +26,10 @@ const linkButton = css`
   margin-top: ${space[3]}px;
 `;
 
+const passwordInstructions = css`
+  overflow: hidden;
+`;
+
 const emailSpan = css`
   font-weight: bold;
 `;
@@ -44,11 +48,11 @@ export const Welcome = ({
       current={CONSENTS_PAGES.PASSWORD}
       showContinueButton={false}
     >
-      <p css={[text, greyBorderTop, autoRow()]}>
+      <p css={[text, greyBorderTop, passwordInstructions, autoRow()]}>
         {passwordSet
           ? 'Password already set for '
-          : 'Please create a password for '}{' '}
-        {<span css={emailSpan}>{email}</span> || 'your new account'}
+          : 'Please create a password for '}
+        {email ? <span css={emailSpan}>{email}</span> : 'your new account'}
       </p>
       {passwordSet ? (
         <div css={[controls, autoRow()]}>
