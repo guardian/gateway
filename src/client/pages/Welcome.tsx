@@ -1,18 +1,18 @@
 import React from 'react';
+import { css } from '@emotion/react';
+import { space, until } from '@guardian/source-foundations';
+import {
+  LinkButton,
+  SvgArrowRightStraight,
+} from '@guardian/source-react-components';
+
 import { PasswordForm } from '@/client/components/PasswordForm';
 import { FieldError } from '@/shared/model/ClientState';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { getAutoRow, passwordFormSpanDef } from '@/client/styles/Grid';
 import { controls, text, greyBorderTop } from '@/client/styles/Consents';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
-import {
-  LinkButton,
-  SvgArrowRightStraight,
-} from '@guardian/source-react-components';
-
-import { css } from '@emotion/react';
 import { buildUrl } from '@/shared/lib/routeUtils';
-import { space } from '@guardian/source-foundations';
 
 type Props = {
   submitUrl: string;
@@ -28,6 +28,15 @@ const linkButton = css`
 
 const emailSpan = css`
   font-weight: bold;
+
+  /* Avoid long emails causing the page to be scrollable horizontally */
+  ${until.tablet} {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    vertical-align: bottom;
+    max-width: 100%;
+  }
 `;
 
 export const Welcome = ({
@@ -47,8 +56,8 @@ export const Welcome = ({
       <p css={[text, greyBorderTop, autoRow()]}>
         {passwordSet
           ? 'Password already set for '
-          : 'Please create a password for '}{' '}
-        {<span css={emailSpan}>{email}</span> || 'your new account'}
+          : 'Please create a password for '}
+        {email ? <span css={emailSpan}>{email}</span> : 'your new account'}
       </p>
       {passwordSet ? (
         <div css={[controls, autoRow()]}>
