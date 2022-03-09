@@ -9,7 +9,10 @@ import {
 import {
   getAutoRow,
   gridItemColumnConsents,
-  gridItemToggleSwitch,
+  gridItemYourData,
+  gridRow,
+  subGridItemToggleSwitch,
+  subGridOverrides,
 } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import {
@@ -91,7 +94,8 @@ const marketingText = css`
 
 export const ConsentsData = ({ id, consented, name }: ConsentsDataProps) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
-  const autoSwitchRow = getAutoRow(1, gridItemToggleSwitch);
+  const autoYourDataRow = getAutoRow(1, gridItemYourData);
+  const autoSwitchRow = getAutoRow(1, subGridItemToggleSwitch);
 
   const layoutProps = { title: 'Your data', current: CONSENTS_PAGES.YOUR_DATA };
 
@@ -110,7 +114,7 @@ export const ConsentsData = ({ id, consented, name }: ConsentsDataProps) => {
       <h2 css={[heading, greyBorderTop, autoRow(), removeMargin]}>
         What we mean by your data
       </h2>
-      <ul css={[text, listBullets, autoSwitchRow()]}>
+      <ul css={[text, listBullets, autoYourDataRow()]}>
         <li>Information you provide e.g. email address</li>
         <li>Products or services you buy from us</li>
         <li>
@@ -120,17 +124,19 @@ export const ConsentsData = ({ id, consented, name }: ConsentsDataProps) => {
       </ul>
 
       <ConsentsForm cssOverrides={autoRow()}>
-        <fieldset css={[switchRow, greyBorderTop, autoSwitchRow()]}>
-          <ToggleSwitchInput
-            id={id}
-            // TODO replace with Consent.name once IDAPI model is updated
-            label={
-              'Allow the Guardian to analyse this data to improve marketing content'
-            }
-            defaultChecked={consented ?? true} // legitimate interests so defaults to true
-            cssOverrides={[labelStyles, toggleSwitchAlignment]}
-          />
-        </fieldset>
+        <div css={[gridRow, subGridOverrides]}>
+          <fieldset css={[switchRow, greyBorderTop, autoSwitchRow()]}>
+            <ToggleSwitchInput
+              id={id}
+              // TODO replace with Consent.name once IDAPI model is updated
+              label={
+                'Allow the Guardian to analyse this data to improve marketing content'
+              }
+              defaultChecked={consented ?? true} // legitimate interests so defaults to true
+              cssOverrides={[labelStyles, toggleSwitchAlignment]}
+            />
+          </fieldset>
+        </div>
         <div css={[autoRow()]}>
           <p css={[marketingText, greyBorderTop, autoRow()]}>
             You can change your settings under&nbsp;

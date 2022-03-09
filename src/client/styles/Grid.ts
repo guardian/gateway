@@ -108,6 +108,12 @@ const generateGridRowCss = (
     max-width: ${maxWidth ? px(maxWidth) : '100%'};
 `;
 
+// For nested gridRow
+export const subGridOverrides = css`
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+`;
+
 // this styles should be applied to an element to make it behave as
 // the grid container, it defines the css on how all the breakpoints
 // should behave
@@ -246,11 +252,18 @@ export const gridItemSignInAndRegistration: SpanDefinition = {
   WIDE: { start: 4, span: 6 },
 };
 
-export const gridItemToggleSwitch: SpanDefinition = {
+export const gridItemYourData: SpanDefinition = {
   TABLET: { start: 1, span: 8 },
   DESKTOP: { start: 3, span: 6 },
   LEFT_COL: { start: 3, span: 6 },
   WIDE: { start: 4, span: 6 },
+};
+
+export const subGridItemToggleSwitch: SpanDefinition = {
+  TABLET: { start: 1, span: 8 },
+  DESKTOP: { start: 1, span: 6 },
+  LEFT_COL: { start: 1, span: 6 },
+  WIDE: { start: 1, span: 6 },
 };
 
 export const getAutoRow = (
