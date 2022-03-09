@@ -12,18 +12,17 @@ export default {
   },
 } as ComponentMeta<typeof ConsentsCommunication>;
 
-const consents = [
-  {
-    id: 'supporter',
-    name: 'Supporting the Guardian',
-    description:
-      'Stay up-to-date with our latest offers and the aims of the organisation, as well as the ways to enjoy and support our journalism.',
-  },
-];
-
-const Template: ComponentStory<typeof ConsentsCommunication> = (
-  props = { consents },
-) => <ConsentsCommunication {...props} />;
+const Template: ComponentStory<typeof ConsentsCommunication> = ({
+  consents = [
+    {
+      id: 'supporter',
+      name: 'Supporting the Guardian',
+      description:
+        'Stay up-to-date with our latest offers and the aims of the organisation, as well as the ways to enjoy and support our journalism.',
+    },
+  ],
+  ...otherProps
+}) => <ConsentsCommunication consents={consents} {...otherProps} />;
 
 export const NoConsent = Template.bind({});
 NoConsent.args = { consents: [] };

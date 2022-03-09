@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentMeta, Story } from '@storybook/react';
+import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 import { Welcome } from './Welcome';
 
@@ -9,10 +9,12 @@ export default {
   parameters: { layout: 'fullscreen' },
 } as ComponentMeta<typeof Welcome>;
 
-type PartialProps = Partial<React.ComponentProps<typeof Welcome>>;
-
-const Template: Story<PartialProps> = (props) => (
-  <Welcome submitUrl="" fieldErrors={[]} {...props} />
+const Template: ComponentStory<typeof Welcome> = ({
+  submitUrl = '',
+  fieldErrors = [],
+  ...otherProps
+}) => (
+  <Welcome submitUrl={submitUrl} fieldErrors={fieldErrors} {...otherProps} />
 );
 
 export const Default = Template.bind({});

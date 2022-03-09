@@ -12,8 +12,8 @@ export default {
   },
 } as ComponentMeta<typeof ConsentsNewsletters>;
 
-const Template: ComponentStory<typeof ConsentsNewsletters> = (args) => (
-  <ConsentsNewsletters {...args} />
+const Template: ComponentStory<typeof ConsentsNewsletters> = (props) => (
+  <ConsentsNewsletters {...props} />
 );
 
 export const NoNewsletters = Template.bind({});

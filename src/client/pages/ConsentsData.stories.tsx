@@ -12,8 +12,8 @@ export default {
   },
 } as ComponentMeta<typeof ConsentsData>;
 
-const Template: ComponentStory<typeof ConsentsData> = (args) => (
-  <ConsentsData {...args} />
+const Template: ComponentStory<typeof ConsentsData> = (props) => (
+  <ConsentsData {...props} />
 );
 
 export const NoDescription = Template.bind({});

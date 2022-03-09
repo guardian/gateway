@@ -186,9 +186,10 @@ export default {
 } as ComponentMeta<typeof ErrorSummary>;
 
 // Define a template (optional)
-const Template: ComponentStory<typeof ErrorSummary> = (
-  args = { error: 'There has been an error' },
-) => <ErrorSummary {...args} />;
+const Template: ComponentStory<typeof ErrorSummary> = ({
+  error = 'There has been an error',
+  ...otherProps
+}) => <ErrorSummary error={error} {...otherProps} />;
 
 // export a story (using template)
 export const Default = () => Template.bind({});
