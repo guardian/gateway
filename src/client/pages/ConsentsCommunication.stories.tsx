@@ -1,5 +1,5 @@
 import React from 'react';
-import { Meta } from '@storybook/react';
+import { ComponentMeta, Story, DecoratorFn } from '@storybook/react';
 
 import { ConsentsCommunication } from './ConsentsCommunication';
 import {
@@ -7,11 +7,25 @@ import {
   defaultClientState,
 } from '@/client/components/ClientState';
 
+const clientStateDecorator: DecoratorFn = (StoryToDecorate, context) => (
+  <ClientStateProvider
+    clientState={{
+      ...defaultClientState,
+      ...context.parameters.clientState,
+    }}
+  >
+    <StoryToDecorate />
+  </ClientStateProvider>
+);
+
 export default {
   title: 'Pages/ConsentsCommunication',
   component: ConsentsCommunication,
   parameters: { layout: 'fullscreen' },
-} as Meta;
+  decorators: [clientStateDecorator],
+} as ComponentMeta<typeof ConsentsCommunication>;
+
+type PartialProps = Partial<React.ComponentProps<typeof ConsentsCommunication>>;
 
 const consents = [
   {
@@ -22,42 +36,49 @@ const consents = [
   },
 ];
 
-export const NoConsent = () => <ConsentsCommunication consents={[]} />;
-NoConsent.story = {
-  name: 'with no consents',
-};
-
-export const WithoutOptout = () => (
-  <ConsentsCommunication consents={consents} />
+const Template: Story<PartialProps> = (props) => (
+  <ConsentsCommunication consents={consents} {...props} />
 );
-WithoutOptout.story = {
-  name: 'with consents',
-};
 
-export const WithSuccessMessage = () => (
-  <ClientStateProvider
-    clientState={{
-      ...defaultClientState,
-      globalMessage: { success: 'Some kind of success message' },
-    }}
-  >
-    <ConsentsCommunication consents={consents} />
-  </ClientStateProvider>
-);
-WithSuccessMessage.story = {
-  name: 'with success message',
-};
+// export const NoConsent = Template.bind({});
+// NoConsent.args = { consents: [] };
+// NoConsent.storyName = 'with no consents';
 
-export const WithErrorMessage = () => (
-  <ClientStateProvider
-    clientState={{
-      ...defaultClientState,
-      globalMessage: { error: 'Some kind of error message' },
-    }}
-  >
-    <ConsentsCommunication consents={consents} />
-  </ClientStateProvider>
-);
-WithErrorMessage.story = {
-  name: 'with error message',
+// export const WithConsent = Template.bind({});
+// WithConsent.storyName = 'with consents';
+
+// export const WithSuccessMessage = () => (
+//   <ClientStateProvider
+//     clientState={{
+//       ...defaultClientState,
+//       globalMessage: { success: 'Some kind of success message' },
+//     }}
+//   >
+//     <ConsentsCommunication consents={consents} />
+//   </ClientStateProvider>
+// );
+// WithSuccessMessage.story = {
+//   name: 'with success message',
+// };
+
+// export const WithErrorMessage = () => (
+//   <ClientStateProvider
+//     clientState={{
+//       ...defaultClientState,
+//       globalMessage: { error: 'Some kind of error message' },
+//     }}
+//   >
+//     <ConsentsCommunication consents={consents} />
+//   </ClientStateProvider>
+// );
+// WithErrorMessage.story = {
+//   name: 'with error message',
+// };
+
+export const Test = Template.bind({});
+Test.parameters = {
+  clientState: {
+    globalMessage: { error: 'Some kind of error message' },
+  },
 };
+Test.storyName = 'test';
