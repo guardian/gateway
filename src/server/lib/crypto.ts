@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import crypto, { createHash } from 'crypto';
 
 // based on a cleaned up version of https://stackoverflow.com/a/53573115
 
@@ -65,3 +65,6 @@ export const decrypt = (
     decipher.final(),
   ]).toString('utf-8');
 };
+
+export const sha256 = (input: string) =>
+  createHash('sha256').update(input).digest('base64');

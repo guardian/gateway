@@ -20,6 +20,9 @@ Parameters:
   OktaOrgUrl:
     Description: The org url for interacting with okta APIs
     Type: AWS::SSM::Parameter::Value<String>
+  RedisHost:
+    Description: The Redis server URL, used for rate limiting.
+    Type: AWS::SSM::Parameter::Value<String>
   SentryDsn:
     Description: Public data source name for us to send Sentry logs to
     Type: AWS::SSM::Parameter::Value<String>
@@ -201,6 +204,7 @@ Resources:
                   APP_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/appSecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   GOOGLE_RECAPTCHA_SITE_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/recaptcha-site-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   GOOGLE_RECAPTCHA_SECRET_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/recaptcha-secret-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
+                  REDIS_PASSWORD=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/redis-password' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   ENCRYPTION_SECRET_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/encryption-secret-key' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   OKTA_API_TOKEN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/okta-api-token' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   OKTA_CUSTOM_OAUTH_SERVER=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaCustomOAuthServer' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
@@ -244,6 +248,8 @@ Resources:
             Environment=LOGGING_KINESIS_STREAM=${KinesisStream}
             Environment=EC2_INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
             Environment=SENTRY_DSN=${SentryDsn}
+            Environment=REDIS_PASSWORD=$REDIS_PASSWORD
+            Environment=REDIS_HOST=${RedisHost}
 
             [Install]
             WantedBy=multi-user.target

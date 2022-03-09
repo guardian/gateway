@@ -25,6 +25,7 @@ export interface Configuration {
   aws: AWSConfiguration;
   githubRunNumber: string;
   sentryDsn: string;
+  redis: RedisConfiguration;
 }
 
 export interface AWSConfiguration {
@@ -64,4 +65,9 @@ export enum GU_API_DOMAIN {
   DEV = 'code.dev-guardianapis.com',
   CODE = 'code.dev-guardianapis.com',
   PROD = 'guardianapis.com',
+}
+
+export interface RedisConfiguration {
+  password: string;
+  host: string;
 }
