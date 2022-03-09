@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentMeta, Story } from '@storybook/react';
+import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 import { ConsentsCommunication } from './ConsentsCommunication';
 
@@ -12,8 +12,6 @@ export default {
   },
 } as ComponentMeta<typeof ConsentsCommunication>;
 
-type PartialProps = Partial<React.ComponentProps<typeof ConsentsCommunication>>;
-
 const consents = [
   {
     id: 'supporter',
@@ -23,9 +21,9 @@ const consents = [
   },
 ];
 
-const Template: Story<PartialProps> = (props) => (
-  <ConsentsCommunication consents={consents} {...props} />
-);
+const Template: ComponentStory<typeof ConsentsCommunication> = (
+  props = { consents },
+) => <ConsentsCommunication {...props} />;
 
 export const NoConsent = Template.bind({});
 NoConsent.args = { consents: [] };

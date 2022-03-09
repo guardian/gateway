@@ -174,7 +174,7 @@ To make a new story, simply make a new `*.stories.tsx` file in the same folder a
 // ErrorSummary.stories.tsx
 
 import React from 'react';
-import { Meta } from '@storybook/react';
+import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 // import the react component
 import { ErrorSummary } from './ErrorSummary';
@@ -183,20 +183,27 @@ import { ErrorSummary } from './ErrorSummary';
 export default {
   title: 'Components/ErrorSummary',
   component: ErrorSummary,
-} as Meta;
+} as ComponentMeta<typeof ErrorSummary>;
 
-// export a story
+// Define a template (optional)
+const Template: ComponentStory<typeof ErrorSummary> = (
+  args = { error: 'There has been an error' },
+) => <ErrorSummary {...args} />;
+
+// export a story (using template)
+export const Default = () => Template.bind({});
+Default.storyName = 'default';
+
+// export a story (without using template)
 export const Default = () => <ErrorSummary error="There has been an error" />;
 Default.storyName = 'default';
 
 // export another story
-export const WithContext = () => (
-  <ErrorSummary
-    error="There has been an error"
-    context="Here's some more information about this error"
-  />
-);
-WithContext.storyName = 'withContext';
+export const WithErrorContext = Template.bind({});
+WithErrorContext.args = {
+  context: "Here's some more information about this error",
+};
+WithErrorContext.storyName = 'with errror context';
 ```
 
 Each story has to export a default metadata object with information on the title and component which is visible in storybook:
@@ -205,7 +212,7 @@ Each story has to export a default metadata object with information on the title
 export default {
   title: 'Components/ErrorSummary',
   component: ErrorSummary,
-} as Meta;
+} as ComponentMeta<typeof ErrorSummary>;
 
 /**
  * Title Format:
@@ -311,7 +318,7 @@ export const TestComponent = () => {
 };
 ```
 
-In most cases you want to `useClientState` outside a presentation component, and pass in the values you need as a prop to the component. This allows us to independently render this component in tests/storybook without relying on the rest of the app and state.
+In most cases you want to `useClientState` outside a presentation component, and pass in the values you need as a prop to the component. This allows us to independently render this component in tests/storybook without having to mock the rest of the app and state.
 
 Here's a contrived example:
 
