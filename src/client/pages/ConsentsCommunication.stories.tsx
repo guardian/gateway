@@ -21,7 +21,10 @@ const clientStateDecorator: DecoratorFn = (StoryToDecorate, context) => (
 export default {
   title: 'Pages/ConsentsCommunication',
   component: ConsentsCommunication,
-  parameters: { layout: 'fullscreen' },
+  parameters: {
+    layout: 'fullscreen',
+    clientState: { pageData: { previousPage: 'fake_page' } },
+  },
   decorators: [clientStateDecorator],
 } as ComponentMeta<typeof ConsentsCommunication>;
 
