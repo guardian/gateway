@@ -1,7 +1,9 @@
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
-import { Breakpoints } from '@/client/models/Style';
 import React from 'react';
 import { FocusStyleManager } from '@guardian/source-foundations';
+
+import { Breakpoints } from '@/client/models/Style';
+import clientStateDecorator from './clientStateDecorator';
 
 /* Source provides a global utility that manages the appearance of focus styles. When enabled,
  * focus styles will be hidden while the user interacts using the mouse.
@@ -28,7 +30,7 @@ for (let breakpoint in Breakpoints) {
   }
 }
 
-export const decorators = [FocusManagerDecorator];
+export const decorators = [FocusManagerDecorator, clientStateDecorator];
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },

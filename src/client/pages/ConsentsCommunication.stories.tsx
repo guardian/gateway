@@ -1,22 +1,7 @@
 import React from 'react';
-import { ComponentMeta, Story, DecoratorFn } from '@storybook/react';
+import { ComponentMeta, Story } from '@storybook/react';
 
 import { ConsentsCommunication } from './ConsentsCommunication';
-import {
-  ClientStateProvider,
-  defaultClientState,
-} from '@/client/components/ClientState';
-
-const clientStateDecorator: DecoratorFn = (StoryToDecorate, context) => (
-  <ClientStateProvider
-    clientState={{
-      ...defaultClientState,
-      ...context.parameters.clientState,
-    }}
-  >
-    <StoryToDecorate />
-  </ClientStateProvider>
-);
 
 export default {
   title: 'Pages/ConsentsCommunication',
@@ -25,7 +10,6 @@ export default {
     layout: 'fullscreen',
     clientState: { pageData: { previousPage: 'fake_page' } },
   },
-  decorators: [clientStateDecorator],
 } as ComponentMeta<typeof ConsentsCommunication>;
 
 type PartialProps = Partial<React.ComponentProps<typeof ConsentsCommunication>>;

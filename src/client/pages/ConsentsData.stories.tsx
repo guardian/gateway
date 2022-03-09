@@ -7,7 +7,10 @@ import { ConsentsData } from './ConsentsData';
 export default {
   title: 'Pages/ConsentsData',
   component: ConsentsData,
-  parameters: { layout: 'fullscreen' },
+  parameters: {
+    layout: 'fullscreen',
+    clientState: { pageData: { previousPage: 'fake_page' } },
+  },
 } as Meta;
 
 export const NoDescription = () => <ConsentsData />;
