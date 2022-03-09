@@ -39,4 +39,4 @@ HighlightColor.args = { highlightColor: news[400] };
 
 export const NoImage = Template.bind({});
 NoImage.storyName = 'when there is no image';
-NoImage.args = { imagePath: undefined };
+NoImage.args = { imagePath: '' };
