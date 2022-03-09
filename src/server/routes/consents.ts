@@ -32,7 +32,6 @@ import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import {
   NewsletterMap,
-  TestNewsletterMap,
   newslettersSubscriptionsFromFormBody,
 } from '@/shared/lib/newsletter';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
@@ -42,20 +41,11 @@ import { logger } from '@/server/lib/serverSideLogger';
 import { ApiError } from '@/server/models/Error';
 import { ConsentPath, RoutePaths } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
-import {
-  TEST_ID as ONBOARDING_NEWSLETTERS_TEST_ID,
-  TEST_VARIANT as ONBOARD_NEWSLETTERS_TEST_VARIANT,
-} from '@/shared/model/experiments/tests/onboarding-newsletters';
 
 interface ConsentPage {
   page: ConsentPath;
   path: RoutePaths;
-  read: (
-    ip: string,
-    sc_gu_u: string,
-    geo?: GeoLocation,
-    newslettersTestActive?: boolean,
-  ) => Promise<PageData>;
+  read: (ip: string, sc_gu_u: string, geo?: GeoLocation) => Promise<PageData>;
   pageTitle: PageTitle;
   update?: (
     ip: string,
@@ -115,20 +105,15 @@ export const consentPages: ConsentPage[] = [
     page: 'newsletters',
     path: '/consents/newsletters',
     pageTitle: CONSENTS_PAGES.NEWSLETTERS,
-    read: async (ip, sc_gu_u, geo, newsLettersTestActive) => {
-      const newsletterMap = newsLettersTestActive
-        ? TestNewsletterMap
-        : NewsletterMap;
-      return {
-        page: 'newsletters',
-        newsletters: await getUserNewsletterSubscriptions(
-          newsletterMap.get(geo) as string[],
-          ip,
-          sc_gu_u,
-        ),
-        previousPage: 'communication',
-      };
-    },
+    read: async (ip, sc_gu_u, geo) => ({
+      page: 'newsletters',
+      newsletters: await getUserNewsletterSubscriptions(
+        NewsletterMap.get(geo) as string[],
+        ip,
+        sc_gu_u,
+      ),
+      previousPage: 'communication',
+    }),
     update: async (ip, sc_gu_u, body) => {
       const userNewsletterSubscriptions = await getUserNewsletterSubscriptions(
         ALL_NEWSLETTER_IDS,
@@ -188,20 +173,17 @@ export const consentPages: ConsentPage[] = [
     page: 'review',
     path: '/consents/review',
     pageTitle: CONSENTS_PAGES.REVIEW,
-    read: async (ip, sc_gu_u, geo, newslettersTestActive) => {
+    read: async (ip, sc_gu_u, geo) => {
       const ALL_CONSENT = [
         ...CONSENTS_DATA_PAGE,
         ...CONSENTS_COMMUNICATION_PAGE,
       ];
-      const newsLetterMap = newslettersTestActive
-        ? TestNewsletterMap
-        : NewsletterMap;
 
       return {
         page: 'review',
         consents: await getUserConsentsForPage(ALL_CONSENT, ip, sc_gu_u),
         newsletters: await getUserNewsletterSubscriptions(
-          newsLetterMap.get(geo) as string[],
+          NewsletterMap.get(geo) as string[],
           ip,
           sc_gu_u,
         ),
@@ -250,18 +232,10 @@ router.get(
     try {
       const { read, pageTitle: _pageTitle } = consentPages[pageIndex];
       pageTitle = _pageTitle;
-      const newslettersTestActive =
-        state.abTesting.participations[ONBOARDING_NEWSLETTERS_TEST_ID]
-          ?.variant === ONBOARD_NEWSLETTERS_TEST_VARIANT;
 
       state = deepmerge(state, {
         pageData: {
-          ...(await read(
-            req.ip,
-            sc_gu_u,
-            state.pageData.geolocation,
-            newslettersTestActive,
-          )),
+          ...(await read(req.ip, sc_gu_u, state.pageData.geolocation)),
         },
       } as RequestState);
     } catch (error) {
