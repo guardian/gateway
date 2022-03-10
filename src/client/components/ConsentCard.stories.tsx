@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentMeta, Story } from '@storybook/react';
+import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { news } from '@guardian/source-foundations';
 
 import { DOWN_TO_EARTH_IMAGE } from '@/client/assets/newsletters';
@@ -10,15 +10,19 @@ export default {
   component: ConsentCard,
 } as ComponentMeta<typeof ConsentCard>;
 
-type PartialProps = Partial<React.ComponentProps<typeof ConsentCard>>;
-
-const Template: Story<PartialProps> = (props: PartialProps) => (
+const Template: ComponentStory<typeof ConsentCard> = ({
+  title = 'Consent Name',
+  description = 'Consent description',
+  id = '4147',
+  imagePath = DOWN_TO_EARTH_IMAGE,
+  ...otherProps
+}) => (
   <ConsentCard
-    title="Consent Name"
-    description="Consent description"
-    id="4147"
-    imagePath={DOWN_TO_EARTH_IMAGE}
-    {...props}
+    title={title}
+    description={description}
+    id={id}
+    imagePath={imagePath}
+    {...otherProps}
   />
 );
 
@@ -35,4 +39,4 @@ HighlightColor.args = { highlightColor: news[400] };
 
 export const NoImage = Template.bind({});
 NoImage.storyName = 'when there is no image';
-NoImage.args = { imagePath: undefined };
+NoImage.args = { imagePath: '' };
