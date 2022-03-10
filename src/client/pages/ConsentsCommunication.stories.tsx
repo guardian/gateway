@@ -6,10 +6,7 @@ import { ConsentsCommunication } from './ConsentsCommunication';
 export default {
   title: 'Pages/ConsentsCommunication',
   component: ConsentsCommunication,
-  parameters: {
-    layout: 'fullscreen',
-    clientState: { pageData: { previousPage: 'fake_page' } },
-  },
+  parameters: { layout: 'fullscreen' },
 } as ComponentMeta<typeof ConsentsCommunication>;
 
 const Template: ComponentStory<typeof ConsentsCommunication> = ({
