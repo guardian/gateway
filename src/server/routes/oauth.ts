@@ -151,6 +151,12 @@ router.get(
       // track the success metric
       trackMetric('OAuthAuthorization::Success');
 
+      if (authState.queryParams.fromURI) {
+        const fromURI = authState.queryParams.fromURI;
+        // TODO: explain why this is happening, and type up the query param to the url
+        return res.redirect(fromURI);
+      }
+
       const returnUrl = authState.confirmationPage
         ? addQueryParamsToPath(
             authState.confirmationPage,

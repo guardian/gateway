@@ -19,6 +19,7 @@ describe('getPersistableQueryParams', () => {
       error: 'error',
       ref: 'ref',
       refViewId: 'refViewId',
+      fromURI: 'fromUri',
     };
 
     const output = getPersistableQueryParams(input);
@@ -28,6 +29,7 @@ describe('getPersistableQueryParams', () => {
       clientId: 'jobs',
       ref: 'ref',
       refViewId: 'refViewId',
+      fromURI: 'fromUri',
       useOkta: undefined,
     };
 

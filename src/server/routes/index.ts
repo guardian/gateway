@@ -14,6 +14,7 @@ import { default as welcome } from './welcome';
 import { default as setPassword } from './setPassword';
 import { default as maintenance } from './maintenance';
 import { default as oauth } from './oauth';
+import { default as login } from './login';
 
 const { okta } = getConfiguration();
 
@@ -56,6 +57,8 @@ uncachedRoutes.use(magicLink);
 
 // welcome routes
 uncachedRoutes.use(welcome);
+
+uncachedRoutes.use(login);
 
 // oauth callback routes
 if (okta.enabled) {

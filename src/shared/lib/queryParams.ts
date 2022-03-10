@@ -14,6 +14,7 @@ export const getPersistableQueryParams = (
   ref: params.ref,
   refViewId: params.refViewId,
   useOkta: params.useOkta,
+  fromURI: params.fromURI,
 });
 
 /**

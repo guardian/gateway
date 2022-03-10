@@ -23,6 +23,7 @@ export interface PersistableQueryParams
   returnUrl: string;
   useOkta?: boolean;
   clientId?: ValidClientId;
+  fromURI?: string;
 }
 
 /**

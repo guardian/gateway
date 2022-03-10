@@ -10,6 +10,7 @@ export type RoutePaths =
   | '/consents/:page'
   | `/consents/${ConsentPath}`
   | '/error'
+  | '/login/login.htm'
   | '/magic-link' //this is not being used until MVP4
   | '/magic-link/email-sent' //this is not being used until MVP4
   | '/maintenance'
