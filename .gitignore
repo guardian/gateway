@@ -51,3 +51,6 @@ cypress/videos
 
 # Cypress screenshots
 cypress/screenshots
+
+# vscode settings
+.vscode/settings.json

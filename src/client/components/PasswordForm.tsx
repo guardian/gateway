@@ -28,7 +28,7 @@ import {
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import { AutoRow } from '@/client/styles/Grid';
 import { MainForm } from '@/client/components/MainForm';
-import { passwordButton } from '../styles/Consents';
+import { passwordButton, controls } from '../styles/Consents';
 import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 import { logger } from '../lib/clientSideLogger';
 
@@ -73,10 +73,6 @@ const failureIconStyles = css`
   }
 `;
 
-const messageWrapperStyles = css`
-  margin-bottom: ${space[6]}px;
-`;
-
 const form = css`
   padding-top: ${space[3]}px;
 `;
@@ -85,9 +81,9 @@ const passwordInput = css`
   margin-bottom: ${space[2]}px;
 `;
 
-const TooLong = ({ noMargin = false }) => {
+const TooLong = () => {
   return (
-    <div css={noMargin ? undefined : messageWrapperStyles}>
+    <div>
       <div css={[baseIconStyles, failureIconStyles]}>
         <SvgCross />
       </div>
@@ -96,9 +92,9 @@ const TooLong = ({ noMargin = false }) => {
   );
 };
 
-const TooShort = ({ noMargin = false }) => {
+const TooShort = () => {
   return (
-    <div css={noMargin ? undefined : messageWrapperStyles}>
+    <div>
       <div css={[baseIconStyles, failureIconStyles]}>
         <SvgCross />
       </div>
@@ -107,7 +103,7 @@ const TooShort = ({ noMargin = false }) => {
   );
 };
 
-const Valid = ({ noMargin = false }) => {
+const Valid = () => {
   const successIconStyles = css`
     svg {
       background: ${success[400]};
@@ -119,7 +115,7 @@ const Valid = ({ noMargin = false }) => {
   `;
 
   return (
-    <div css={noMargin ? undefined : messageWrapperStyles}>
+    <div>
       <div css={[baseIconStyles, successIconStyles]}>
         <SvgCheckmark />
       </div>
@@ -138,15 +134,15 @@ const Valid = ({ noMargin = false }) => {
   );
 };
 
-const Checking = ({ noMargin = false }) => {
+const Checking = () => {
   return (
-    <div css={noMargin ? undefined : messageWrapperStyles}>
+    <div>
       <div css={baseMessageStyles}>Checking...</div>
     </div>
   );
 };
 
-const Weak = ({ noMargin = false }) => {
+const Weak = () => {
   const errorIconStyles = css`
     svg {
       fill: ${error['400']};
@@ -164,7 +160,7 @@ const Weak = ({ noMargin = false }) => {
   `;
 
   return (
-    <div css={[noMargin ? undefined : messageWrapperStyles, baseMessageStyles]}>
+    <div css={baseMessageStyles}>
       <div css={[baseIconStyles, errorIconStyles]}>
         <SvgAlertTriangle />
       </div>
@@ -179,24 +175,22 @@ const ValidationMessage = ({
   isTooShort,
   isTooLong,
   isChecking,
-  noMargin,
 }: {
   isWeak: boolean;
   isTooShort: boolean;
   isTooLong: boolean;
   isChecking: boolean;
-  noMargin?: boolean;
 }) => {
   if (isTooShort) {
-    return <TooShort noMargin={noMargin} />;
+    return <TooShort />;
   } else if (isTooLong) {
-    return <TooLong noMargin={noMargin} />;
+    return <TooLong />;
   } else if (isChecking) {
-    return <Checking noMargin={noMargin} />;
+    return <Checking />;
   } else if (isWeak) {
-    return <Weak noMargin={noMargin} />;
+    return <Weak />;
   } else {
-    return <Valid noMargin={noMargin} />;
+    return <Valid />;
   }
 };
 
@@ -325,14 +319,16 @@ export const PasswordForm = ({
         />
       )}
 
-      <Button
-        css={passwordButton}
-        type="submit"
-        iconSide="right"
-        data-cy="change-password-button"
-      >
-        {submitButtonText}
-      </Button>
+      <div css={controls}>
+        <Button
+          css={passwordButton}
+          type="submit"
+          iconSide="right"
+          data-cy="change-password-button"
+        >
+          {submitButtonText}
+        </Button>
+      </div>
     </form>
   );
 };
@@ -433,7 +429,6 @@ export const PasswordFormMainLayout = ({
           isTooShort={isTooShort}
           isTooLong={isTooLong}
           isChecking={isChecking}
-          noMargin
         />
       )}
     </MainForm>

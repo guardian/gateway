@@ -5,10 +5,10 @@ class ReviewPage extends OnboardingPage {
   static CONTENT = {
     ...OnboardingPage.CONTENT,
     NEWSLETTERS: {
-      TODAY_UK: 'Guardian Today: UK',
-      LONG_READ: 'The Long Read',
       GREEN_LIGHT: 'Green Light',
-      BOOKMARKS: 'Bookmarks',
+      LONG_READ: 'The Long Read',
+      MORNING_BRIEFING_UK: 'Guardian Morning Briefing',
+      THE_GUIDE: 'The Guide',
     },
     SUPPORTER_CONSENT: 'Supporting the Guardian',
     PROFILING_CONSENT: 'Allow analysis of my data for marketing',

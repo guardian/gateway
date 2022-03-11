@@ -62,10 +62,10 @@ describe('Onboarding flow', () => {
 
     it('goes through full flow, opt in all consents/newsletters, preserve returnUrl', () => {
       const newslettersToSubscribe = [
-        { listId: 4151 },
         { listId: 4147 },
+        { listId: 4156 },
+        { listId: 6006 },
         { listId: 4165 },
-        { listId: 4137 },
       ];
 
       const consent = defaultUserConsent.map(({ id }) => {
@@ -124,10 +124,10 @@ describe('Onboarding flow', () => {
       NewslettersPage.saveAndContinueButton().click();
 
       cy.lastPayloadIs([
-        { id: '4137', subscribed: true },
         { id: '4147', subscribed: true },
+        { id: '4156', subscribed: true },
+        { id: '6006', subscribed: true },
         { id: '4165', subscribed: true },
-        { id: '4151', subscribed: true },
       ]);
 
       cy.url().should('include', YourDataPage.URL);
@@ -521,16 +521,16 @@ describe('Onboarding flow', () => {
 
       cy.visit(NewslettersPage.URL, { headers });
 
-      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.TODAY_UK).should(
-        'not.be.checked',
-      );
+      NewslettersPage.newsletterCheckboxWithTitle(
+        NEWSLETTERS.MORNING_BRIEFING_UK,
+      ).should('not.be.checked');
       NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.LONG_READ).should(
         'not.be.checked',
       );
       NewslettersPage.newsletterCheckboxWithTitle(
         NEWSLETTERS.GREEN_LIGHT,
       ).should('not.be.checked');
-      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.BOOKMARKS).should(
+      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.THE_GUIDE).should(
         'not.be.checked',
       );
 
@@ -543,16 +543,16 @@ describe('Onboarding flow', () => {
 
       cy.visit(NewslettersPage.URL, { headers });
 
-      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.TODAY_US).should(
-        'not.be.checked',
-      );
+      NewslettersPage.newsletterCheckboxWithTitle(
+        NEWSLETTERS.MORNING_BRIEFING_US,
+      ).should('not.be.checked');
       NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.LONG_READ).should(
         'not.be.checked',
       );
       NewslettersPage.newsletterCheckboxWithTitle(
         NEWSLETTERS.GREEN_LIGHT,
       ).should('not.be.checked');
-      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.BOOKMARKS).should(
+      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.THE_GUIDE).should(
         'not.be.checked',
       );
 
@@ -565,16 +565,16 @@ describe('Onboarding flow', () => {
 
       cy.visit(NewslettersPage.URL, { headers });
 
-      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.TODAY_AUS).should(
-        'not.be.checked',
-      );
+      NewslettersPage.newsletterCheckboxWithTitle(
+        NEWSLETTERS.MORNING_BRIEFING_AUS,
+      ).should('not.be.checked');
       NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.LONG_READ).should(
         'not.be.checked',
       );
       NewslettersPage.newsletterCheckboxWithTitle(
         NEWSLETTERS.GREEN_LIGHT,
       ).should('not.be.checked');
-      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.BOOKMARKS).should(
+      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.THE_GUIDE).should(
         'not.be.checked',
       );
 
@@ -587,16 +587,16 @@ describe('Onboarding flow', () => {
 
       cy.visit(NewslettersPage.URL, { headers });
 
-      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.TODAY_UK).should(
-        'not.be.checked',
-      );
+      NewslettersPage.newsletterCheckboxWithTitle(
+        NEWSLETTERS.MORNING_BRIEFING_UK,
+      ).should('not.be.checked');
       NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.LONG_READ).should(
         'not.be.checked',
       );
       NewslettersPage.newsletterCheckboxWithTitle(
         NEWSLETTERS.GREEN_LIGHT,
       ).should('not.be.checked');
-      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.BOOKMARKS).should(
+      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.THE_GUIDE).should(
         'not.be.checked',
       );
 
@@ -613,16 +613,16 @@ describe('Onboarding flow', () => {
       );
       NewslettersPage.goto();
 
-      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.TODAY_UK).should(
-        'not.be.checked',
-      );
+      NewslettersPage.newsletterCheckboxWithTitle(
+        NEWSLETTERS.MORNING_BRIEFING_UK,
+      ).should('not.be.checked');
       NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.LONG_READ).should(
         'be.checked',
       );
       NewslettersPage.newsletterCheckboxWithTitle(
         NEWSLETTERS.GREEN_LIGHT,
       ).should('be.checked');
-      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.BOOKMARKS).should(
+      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.THE_GUIDE).should(
         'not.be.checked',
       );
     });

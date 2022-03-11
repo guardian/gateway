@@ -13,9 +13,10 @@ import * as qs from 'query-string';
 import CommunicationsPage from '../../support/pages/onboarding/communications_page';
 
 describe('Welcome and set password page', () => {
-  const email = 'someone@theguardian.com';
+  const defaultEmail = 'someone@theguardian.com';
   const checkTokenSuccessResponse = (
     timeUntilExpiry: number | null = null,
+    email = defaultEmail,
   ) => ({
     user: {
       primaryEmailAddress: email,
@@ -132,7 +133,7 @@ describe('Welcome and set password page', () => {
     it('shows a different message if the user has set a password and then clicked the back button', () => {
       setPasswordAndSignIn();
       cy.go('back');
-      cy.contains(`Password already set for ${email}`);
+      cy.contains(`Password already set for ${defaultEmail}`);
       cy.contains('Continue').click();
       cy.contains('Thank you for registering');
     });
@@ -215,6 +216,26 @@ describe('Welcome and set password page', () => {
       cy.get('input[name="password"]').type('password');
       cy.get('button[type="submit"]').click();
       cy.contains('Please use a password that is hard to guess.');
+    });
+
+    it('shows prompt to create password', () => {
+      cy.mockNext(200, checkTokenSuccessResponse());
+      cy.intercept({
+        method: 'GET',
+        url: 'https://api.pwnedpasswords.com/range/*',
+      }).as('breachCheck');
+      cy.visit(`/welcome/fake_token`);
+      cy.contains(`Please create a password for ${defaultEmail}`);
+    });
+
+    it('shows prompt to create password without email if none exists', () => {
+      cy.mockNext(200, checkTokenSuccessResponse(null, ''));
+      cy.intercept({
+        method: 'GET',
+        url: 'https://api.pwnedpasswords.com/range/*',
+      }).as('breachCheck');
+      cy.visit(`/welcome/fake_token`);
+      cy.contains(`Please create a password for your new account`);
     });
   });
 

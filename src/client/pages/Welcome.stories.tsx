@@ -1,5 +1,5 @@
 import React from 'react';
-import { Meta } from '@storybook/react';
+import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 import { Welcome } from './Welcome';
 
@@ -7,44 +7,39 @@ export default {
   title: 'Pages/Welcome',
   component: Welcome,
   parameters: { layout: 'fullscreen' },
-} as Meta;
+} as ComponentMeta<typeof Welcome>;
 
-export const Default = () => <Welcome submitUrl="" fieldErrors={[]} />;
-Default.story = {
-  name: 'with defaults',
-};
-
-export const Email = () => (
-  <Welcome submitUrl="" email="example@theguardian.com" fieldErrors={[]} />
+const Template: ComponentStory<typeof Welcome> = ({
+  submitUrl = '',
+  fieldErrors = [],
+  ...otherProps
+}) => (
+  <Welcome submitUrl={submitUrl} fieldErrors={fieldErrors} {...otherProps} />
 );
-Email.story = {
-  name: 'with email',
-};
 
-export const FieldErrorPW = () => (
-  <Welcome
-    submitUrl=""
-    email="example@theguardian.com"
-    fieldErrors={[
-      {
-        field: 'password',
-        message: 'Password must be between 8 and 72 characters.',
-      },
-    ]}
-  />
-);
-FieldErrorPW.story = {
-  name: 'with error on password',
-};
+export const Default = Template.bind({});
+Default.storyName = 'with defaults';
 
-export const PasswordAlreadySet = () => (
-  <Welcome
-    submitUrl=""
-    email="example@theguardian.com"
-    fieldErrors={[]}
-    passwordSet={true}
-  />
-);
-PasswordAlreadySet.story = {
-  name: 'with password already set',
+export const Email = Template.bind({});
+Email.args = { email: 'example@theguardian.com' };
+Email.storyName = 'with email';
+
+export const FieldErrorPW = Template.bind({});
+FieldErrorPW.args = {
+  email: 'example@theguardian.com',
+  fieldErrors: [
+    {
+      field: 'password',
+      message: 'Password must be between 8 and 72 characters.',
+    },
+  ],
 };
+FieldErrorPW.storyName = 'with error on password';
+
+export const PasswordAlreadySet = Template.bind({});
+PasswordAlreadySet.args = {
+  email: 'example@theguardian.com',
+  submitUrl: '',
+  passwordSet: true,
+};
+PasswordAlreadySet.storyName = 'with password already set';

@@ -1,39 +1,34 @@
-/* eslint-disable functional/immutable-data */
 import React from 'react';
-import { Meta } from '@storybook/react';
+import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 import { ConsentsData } from './ConsentsData';
-import { Consents } from '@/shared/model/Consent';
 
 export default {
   title: 'Pages/ConsentsData',
   component: ConsentsData,
-  parameters: { layout: 'fullscreen' },
-} as Meta;
+  parameters: {
+    layout: 'fullscreen',
+    clientState: { pageData: { previousPage: 'fake_page' } },
+  },
+} as ComponentMeta<typeof ConsentsData>;
 
-export const NoDescription = () => <ConsentsData id={Consents.PROFILING} />;
-NoDescription.story = {
-  name: 'with no description',
-};
-
-export const ConsentedTrue = () => (
-  <ConsentsData
-    id={Consents.PROFILING}
-    name="Allow the Guardian to analyse this data to improve marketing content"
-    consented={true}
-  />
+const Template: ComponentStory<typeof ConsentsData> = (props) => (
+  <ConsentsData {...props} />
 );
-ConsentedTrue.story = {
-  name: 'with consented true',
-};
 
-export const ConsentedFalse = () => (
-  <ConsentsData
-    id={Consents.PROFILING}
-    name="Allow the Guardian to analyse this data to improve marketing content"
-    consented={false}
-  />
-);
-ConsentedFalse.story = {
-  name: 'with consented false',
+export const NoDescription = Template.bind({});
+NoDescription.storyName = 'with no description';
+
+export const ConsentedTrue = Template.bind({});
+ConsentedTrue.args = {
+  name: 'Allow the Guardian to analyse this data to improve marketing content',
+  consented: true,
 };
+ConsentedTrue.storyName = 'with consented true';
+
+export const ConsentedFalse = Template.bind({});
+ConsentedFalse.args = {
+  name: 'Allow the Guardian to analyse this data to improve marketing content',
+  consented: false,
+};
+ConsentedFalse.storyName = 'with consented false';
