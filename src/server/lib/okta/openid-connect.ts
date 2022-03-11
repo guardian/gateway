@@ -104,6 +104,28 @@ export const ProfileOpenIdClient = new OIDCIssuer.Client({
 }) as OpenIdClient;
 
 /**
+ * DEV ONLY
+ * Generates a new issuer per request in dev env to simulate
+ * custom domain as the issuer
+ * this is because locally the issuer is probably profile.thegulocal.com
+ * while okta tokens will be the okta url, so we need to replace the issuer
+ * with the okta domain
+ * @param devIssuer - The okta domain issuer url to use for development
+ */
+export const DevProfileIdClient = (devIssuer: string) => {
+  const devOidcIssuer = new Issuer({
+    ...OIDC_METADATA,
+    issuer: issuer.replace(okta.orgUrl.replace('https://', ''), devIssuer),
+  });
+
+  return new devOidcIssuer.Client({
+    client_id: okta.clientId,
+    client_secret: okta.clientSecret,
+    redirect_uris: Object.values(ProfileOpenIdClientRedirectUris),
+  }) as OpenIdClient;
+};
+
+/**
  * Possible `error` types return by OpenID Connect and social login flows with okta
  * Sourced from https://developer.okta.com/docs/reference/error-codes/#example-errors-for-openid-connect-and-social-login
  */
