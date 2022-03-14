@@ -3,9 +3,9 @@ import { RequestWithTypedQuery } from '@/server/models/Express';
 import { RoutePaths } from '@/shared/model/Routes';
 import { NextFunction, Response } from 'express';
 import { getConfiguration } from '../getConfiguration';
-import rateLimit from '../rate-limit';
 
-import redisClient from '../redis/client';
+import rateLimit from '@/server/lib/rate-limit';
+import redisClient from '@/server/lib/redis/redisClient';
 
 const getBucketConfigForRoute = (
   route: RoutePaths,
@@ -17,6 +17,10 @@ export const rateLimiterMiddleware = async (
   res: Response,
   next: NextFunction,
 ) => {
+  if (!redisClient) {
+    return next();
+  }
+
   const { rateLimiter } = getConfiguration();
 
   // Gets the route in the form /welcome/:token
@@ -34,8 +38,8 @@ export const rateLimiterMiddleware = async (
   });
 
   if (isRatelimited) {
-    res.status(429).send("Sorry, you've hit the rate limit");
-  } else {
-    next();
+    return res.status(429).send("Sorry, you've hit the rate limit");
   }
+
+  return next();
 };

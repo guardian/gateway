@@ -34,6 +34,7 @@ export interface Configuration {
 }
 
 export interface RateLimiterConfiguration {
+  enabled: boolean;
   defaultBuckets: RateLimitBucketsConfiguration;
   routeBuckets?: {
     [route in RoutePaths]: RateLimitBucketsConfiguration;
