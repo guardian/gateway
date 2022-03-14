@@ -1,4 +1,5 @@
 import { RateLimitBucketsConfiguration } from '@/server/lib/rate-limit';
+import { RoutePaths } from '@/shared/model/Routes';
 
 export type Stage = 'DEV' | 'CODE' | 'PROD';
 export interface Configuration {
@@ -35,7 +36,7 @@ export interface Configuration {
 export interface RateLimiterConfiguration {
   defaultBuckets: RateLimitBucketsConfiguration;
   routeBuckets?: {
-    [route: string]: RateLimitBucketsConfiguration;
+    [route in RoutePaths]: RateLimitBucketsConfiguration;
   };
 }
 

@@ -55,13 +55,13 @@ import type {
  * @returns Bucket type if rate limited, otherwise `false` if not rate limited.
  */
 const rateLimit = async ({
-  name,
+  route,
   redisClient,
   bucketConfiguration,
   bucketValues,
 }: RateLimitParameters) => {
   const { accessTokenKey, globalKey, emailKey, ipKey, oktaIdentifierKey } =
-    getBucketKeys(name, bucketConfiguration, bucketValues);
+    getBucketKeys(route, bucketConfiguration, bucketValues);
 
   try {
     const buckets = await getBucketsFromRedis(redisClient, {

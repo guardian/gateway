@@ -1,3 +1,4 @@
+import { RoutePaths } from '@/shared/model/Routes';
 import { sha256 } from '../crypto';
 import {
   RateLimitBucketsConfiguration,
@@ -7,13 +8,13 @@ import {
 } from './types';
 
 const getRateLimitKey = (
-  name: string,
+  route: RoutePaths,
   bucketName: BucketType,
   value?: string,
-) => `gw-rl-${name}-${bucketName}${value ? '-' + sha256(value) : ''}`;
+) => `gw-rl-${route}-${bucketName}${value ? '-' + sha256(value) : ''}`;
 
 export const getBucketKeys = (
-  name: string,
+  route: RoutePaths,
   bucketConfiguration: RateLimitBucketsConfiguration,
   bucketValues?: BucketValues,
 ): BucketKeys => {
@@ -22,7 +23,7 @@ export const getBucketKeys = (
 
   // No extra buckets are being used, return just the global bucket key.
   if (bucketValues === undefined) {
-    return { globalKey: getRateLimitKey(name, 'global') };
+    return { globalKey: getRateLimitKey(route, 'global') };
   }
 
   const { accessToken, email, ip, oktaIdentifier } = bucketValues;
@@ -31,13 +32,13 @@ export const getBucketKeys = (
     accessTokenKey:
       accessTokenBucket &&
       accessToken &&
-      getRateLimitKey(name, 'accessToken', accessToken),
-    emailKey: emailBucket && email && getRateLimitKey(name, 'email', email),
-    ipKey: ipBucket && ip && getRateLimitKey(name, 'ip', ip),
+      getRateLimitKey(route, 'accessToken', accessToken),
+    emailKey: emailBucket && email && getRateLimitKey(route, 'email', email),
+    ipKey: ipBucket && ip && getRateLimitKey(route, 'ip', ip),
     oktaIdentifierKey:
       oktaIdentifierBucket &&
       oktaIdentifier &&
-      getRateLimitKey(name, 'oktaIdentifier', oktaIdentifier),
-    globalKey: getRateLimitKey(name, 'global'),
+      getRateLimitKey(route, 'oktaIdentifier', oktaIdentifier),
+    globalKey: getRateLimitKey(route, 'global'),
   };
 };
