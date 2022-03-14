@@ -18,12 +18,17 @@ export const rateLimiterMiddleware = async (
   next: NextFunction,
 ) => {
   const { rateLimiter } = getConfiguration();
-  console.log(req.path);
-  console.log(res.locals.rateLimitData);
+
+  // Gets the route in the form /welcome/:token
+  // TODO: decide if we also want to rate limit against specific tokens
+  const routePathDefinition = req.route.path;
 
   const isRatelimited = await rateLimit({
-    route: '/signin',
-    bucketConfiguration: getBucketConfigForRoute('/signin', rateLimiter),
+    route: routePathDefinition,
+    bucketConfiguration: getBucketConfigForRoute(
+      routePathDefinition,
+      rateLimiter,
+    ),
     redisClient,
     bucketValues: res.locals.rateLimitData,
   });
