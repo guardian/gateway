@@ -9,6 +9,7 @@ import { tests } from '@/shared/model/experiments/abTests';
 import { getABTesting } from '@/server/lib/getABTesting';
 import { RequestState, RequestWithTypedQuery } from '@/server/models/Express';
 import Bowser from 'bowser';
+import { readEmailCookie } from '../emailCookie';
 
 const {
   idapiBaseUrl,
@@ -19,8 +20,29 @@ const {
   sentryDsn,
 } = getConfiguration();
 
+const removeEmailAlias = (email?: string) => {
+  const removalRegex = /\+.*@/g;
+  return email?.replace(removalRegex, '@');
+};
+
 const getRequestState = (req: RequestWithTypedQuery): RequestState => {
   const [abTesting, abTestAPI] = getABTesting(req, tests);
+
+  // Attempt to get following info
+
+  // Client ip
+  // trust.proxy is set, so we are getting the forwarded-for ip when requests are directed from Fastly.
+  const ip = req.ip;
+
+  // Email
+  const { email: formEmail = '' } = req.body;
+  const encryptedStateEmail = readEmailCookie(req);
+
+  const email = removeEmailAlias(formEmail || encryptedStateEmail);
+
+  // Access token
+  // Rate limit against the sc_gu cookie
+  const sc_gu_u = req.cookies.SC_GU_U;
 
   // tracking parameters might be from body too
   const { ref, refViewId } = req.body;
@@ -41,6 +63,11 @@ const getRequestState = (req: RequestWithTypedQuery): RequestState => {
   const browser = Bowser.getParser(req.header('user-agent') || 'unknown');
 
   return {
+    rateLimitData: {
+      email,
+      ip,
+      accessToken: sc_gu_u,
+    },
     queryParams,
     pageData: {
       geolocation: getGeolocationRegion(req),

@@ -10,6 +10,7 @@ import {
   GU_MANAGE_URL,
 } from '@/server/models/Configuration';
 import { featureSwitches } from '@/shared/lib/featureSwitches';
+import rateLimiter from '@/../rate-limiter.config';
 
 const getOrThrow = (
   value: string | undefined,
@@ -220,5 +221,6 @@ export const getConfiguration = (): Configuration => {
     sentryDsn,
     redis,
     accountManagementUrl,
+    rateLimiter,
   };
 };

@@ -181,7 +181,6 @@ export const SignIn = ({
     trackFormSubmit(formTrackingName);
     executeCaptcha();
   };
-
   return (
     <>
       <Header geolocation={geolocation} />

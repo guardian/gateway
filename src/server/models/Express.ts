@@ -32,6 +32,12 @@ export interface RequestState {
   ophanConfig: OphanConfig;
   sentryConfig: SentryConfig;
   browser: Bowser.Parser.Details;
+  rateLimitData: {
+    ip?: string;
+    email?: string;
+    accessToken?: string;
+    oktaId?: string;
+  };
 }
 
 export interface ResponseWithRequestState extends Response {

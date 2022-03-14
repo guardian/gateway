@@ -52,9 +52,9 @@ export interface ParsedRateLimitBuckets {
 /**
  * Standardised definition of an individual bucket.
  *
- * @param capacity The maximum number of tokens that can be stored in the bucket.
- * @param addTokenMs The rate in milliseconds at which the bucket is refilled
- * @param maximumTimeBeforeTokenExpiry The maximum duration in seconds before the bucket is removed from Redis.
+ * @param {number} capacity The maximum number of tokens that can be stored in the bucket.
+ * @param {number} addTokenMs The rate in milliseconds at which the bucket is refilled
+ * @param {number} maximumTimeBeforeTokenExpiry The maximum duration in seconds before the bucket is removed from Redis.
  */
 export interface BucketConfiguration {
   capacity: number;
