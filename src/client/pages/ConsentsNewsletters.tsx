@@ -102,6 +102,7 @@ export const ConsentsNewsletters = ({
             highlightColor={idColor(newsletter.nameId)}
             frequency={newsletter.frequency}
             hiddenInput
+            noTopBorderMobile
             cssOverrides={getNewsletterCardCss(i)}
             key={newsletter.id}
           />

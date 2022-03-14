@@ -12,8 +12,7 @@ export const optInPrompt: ABTest = {
   audience: 0.1,
   audienceOffset: 0,
   successMeasure: 'Understand impact on opt in rates',
-  audienceCriteria:
-    'Half of users viewing consent flow will see prompt after signing in',
+  audienceCriteria: 'Half of users will see prompt after signing in',
   canRun: () => true,
   variants: [
     {
