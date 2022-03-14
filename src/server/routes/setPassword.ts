@@ -16,10 +16,12 @@ import deepmerge from 'deepmerge';
 import { Request } from 'express';
 import { ApiError } from '../models/Error';
 import { buildUrl } from '@/shared/lib/routeUtils';
+import { rateLimiterMiddleware } from '../lib/middleware/rateLimiter';
 
 // set password complete page
 router.get(
   '/set-password/complete',
+  rateLimiterMiddleware,
   (req: Request, res: ResponseWithRequestState) => {
     const email = readEmailCookie(req);
 
@@ -38,6 +40,7 @@ router.get(
 // resend "create (set) password" email page
 router.get(
   '/set-password/resend',
+  rateLimiterMiddleware,
   (_: Request, res: ResponseWithRequestState) => {
     const html = renderer('/set-password/resend', {
       pageTitle: 'Resend Create Password Email',
@@ -50,6 +53,7 @@ router.get(
 // set password page session expired
 router.get(
   '/set-password/expired',
+  rateLimiterMiddleware,
   (_: Request, res: ResponseWithRequestState) => {
     const html = renderer('/set-password/expired', {
       pageTitle: 'Resend Create Password Email',
@@ -62,6 +66,7 @@ router.get(
 // POST handler for resending "create (set) password" email
 router.post(
   '/set-password/resend',
+  rateLimiterMiddleware,
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { email } = req.body;
@@ -117,6 +122,7 @@ router.post(
 // email sent page
 router.get(
   '/set-password/email-sent',
+  rateLimiterMiddleware,
   (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
@@ -141,12 +147,14 @@ router.get(
 // The below route must be defined below the other GET /set-password/* routes otherwise the other routes will fail
 router.get(
   '/set-password/:token',
+  rateLimiterMiddleware,
   checkPasswordTokenController('/set-password', 'Create Password'),
 );
 
 // POST handler for set password page to set password
 router.post(
   '/set-password/:token',
+  rateLimiterMiddleware,
   setPasswordController(
     '/set-password',
     'Create Password',

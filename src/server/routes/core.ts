@@ -1,6 +1,7 @@
 import { default as express, Router, Response } from 'express';
 import path from 'path';
 import ms from 'ms';
+import { rateLimiterMiddleware } from '../lib/middleware/rateLimiter';
 
 const router = Router();
 
@@ -16,7 +17,7 @@ router.use(
   }),
 );
 
-router.get('/healthcheck', (_, res: Response) => {
+router.get('/healthcheck', rateLimiterMiddleware, (_, res: Response) => {
   res.status(200).send('200 OK');
 });
 

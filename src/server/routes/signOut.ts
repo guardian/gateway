@@ -14,6 +14,7 @@ import { clearEncryptedStateCookie } from '../lib/encryptedStateCookie';
 import { trackMetric } from '../lib/trackMetric';
 import { clearUserSessions } from '../lib/okta/api/users';
 import { getSession } from '../lib/okta/api/sessions';
+import { rateLimiterMiddleware } from '../lib/middleware/rateLimiter';
 
 const { defaultReturnUri, baseUri } = getConfiguration();
 
@@ -52,6 +53,7 @@ export const clearOktaCookies = (res: ResponseWithRequestState) => {
 
 router.get(
   '/signout',
+  rateLimiterMiddleware,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { returnUrl } = res.locals.pageData;
 
