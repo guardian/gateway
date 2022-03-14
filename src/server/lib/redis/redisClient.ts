@@ -1,7 +1,9 @@
 import Redis from 'ioredis';
 import { getConfiguration } from '../getConfiguration';
 
-const { redis, rateLimiter } = getConfiguration();
+import rateLimiter from '../rate-limit/config';
+
+const { redis } = getConfiguration();
 
 export default rateLimiter.enabled
   ? new Redis({

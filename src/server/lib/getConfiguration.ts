@@ -9,8 +9,8 @@ import {
   Stage,
   GU_MANAGE_URL,
 } from '@/server/models/Configuration';
+
 import { featureSwitches } from '@/shared/lib/featureSwitches';
-import rateLimiter from '@/../rate-limiter.config';
 
 const getOrThrow = (
   value: string | undefined,
@@ -193,6 +193,14 @@ export const getConfiguration = (): Configuration => {
     host: getOrThrow(process.env.REDIS_HOST, 'Redis Host missing'),
   };
 
+  // const rateLimiter =
+  //   stage === 'PROD'
+  //     ? getOrThrow(
+  //         process.env.RATE_LIMITER_CONFIG,
+  //         'Rate limiter configuration not found',
+  //       )
+  //     : process.env.RATE_LIMITER_CONFIG;
+
   return {
     port: +port,
     idapiBaseUrl,
@@ -221,6 +229,5 @@ export const getConfiguration = (): Configuration => {
     sentryDsn,
     redis,
     accountManagementUrl,
-    rateLimiter,
   };
 };

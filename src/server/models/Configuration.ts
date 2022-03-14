@@ -30,7 +30,6 @@ export interface Configuration {
   sentryDsn: string;
   redis: RedisConfiguration;
   accountManagementUrl: string;
-  rateLimiter: RateLimiterConfiguration;
 }
 
 export interface RateLimiterConfiguration {

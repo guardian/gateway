@@ -2,9 +2,9 @@ import { RateLimiterConfiguration } from '@/server/models/Configuration';
 import { RequestWithTypedQuery } from '@/server/models/Express';
 import { RoutePaths } from '@/shared/model/Routes';
 import { NextFunction, Response } from 'express';
-import { getConfiguration } from '../getConfiguration';
 
 import rateLimit from '@/server/lib/rate-limit';
+import rateLimiter from '../rate-limit/config';
 import redisClient from '@/server/lib/redis/redisClient';
 
 const getBucketConfigForRoute = (
@@ -20,8 +20,6 @@ export const rateLimiterMiddleware = async (
   if (!redisClient) {
     return next();
   }
-
-  const { rateLimiter } = getConfiguration();
 
   // Gets the route in the form /welcome/:token
   // TODO: decide if we also want to rate limit against specific tokens
