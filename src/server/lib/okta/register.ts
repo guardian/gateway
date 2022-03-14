@@ -1,4 +1,4 @@
-import { Status, User } from '@/server/models/okta/User';
+import { Status, UserResponse } from '@/server/models/okta/User';
 import {
   createUser,
   fetchUser,
@@ -8,9 +8,16 @@ import {
 import { OktaError } from '@/server/models/okta/Error';
 import { causesInclude } from '@/server/lib/okta/api/errors';
 
-export const register = async (email: string): Promise<User> => {
+export const register = async (email: string): Promise<UserResponse> => {
   try {
-    return await createUser(email);
+    return await createUser({
+      profile: {
+        email: email,
+        login: email,
+        isGuardianUser: true,
+        registrationPlatform: 'identity-gateway',
+      },
+    });
   } catch (error) {
     if (
       error instanceof OktaError &&
@@ -46,7 +53,7 @@ export const register = async (email: string): Promise<User> => {
 };
 
 export const resendRegistrationEmail = async (email: string) => {
-  const user: User = await fetchUser({ id: email });
+  const user: UserResponse = await fetchUser({ id: email });
   const { status } = user;
   switch (status) {
     case Status.STAGED: {

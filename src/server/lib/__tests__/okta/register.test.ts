@@ -6,7 +6,11 @@ import {
   activateUser,
   reactivateUser,
 } from '@/server/lib/okta/api/users';
-import { User, Status } from '@/server/models/okta/User';
+import {
+  UserResponse,
+  Status,
+  UserCreationRequest,
+} from '@/server/models/okta/User';
 import { ErrorCause, OktaError } from '@/server/models/okta/Error';
 
 // mocked configuration
@@ -26,8 +30,9 @@ jest.mock('@/server/lib/getConfiguration', () => ({
 // mocked Okta Users API
 jest.mock('@/server/lib/okta/api/users');
 const mockedCreateOktaUser =
-  mocked<(email: string) => Promise<User>>(createUser);
-const mockedFetchOktaUser = mocked<(id: string) => Promise<User>>(fetchUser);
+  mocked<(body: UserCreationRequest) => Promise<UserResponse>>(createUser);
+const mockedFetchOktaUser =
+  mocked<(id: string) => Promise<UserResponse>>(fetchUser);
 const mockedActivateOktaUser =
   mocked<(id: string) => Promise<void>>(activateUser);
 const mockedReactivateOktaUser =
@@ -37,7 +42,7 @@ const mockedReactivateOktaUser =
 jest.mock('@/server/lib/serverSideLogger');
 
 const email = 'someemail';
-const User = (status: Status) => {
+const User = (status: Status): UserResponse => {
   return {
     id: 'someuserid',
     status: status,
@@ -46,7 +51,7 @@ const User = (status: Status) => {
       isGuardianUser: true,
       email: email,
     },
-  } as User;
+  };
 };
 const userExistsError = {
   message: 'Api validation failed: login',

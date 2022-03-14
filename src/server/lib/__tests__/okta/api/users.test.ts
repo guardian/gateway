@@ -8,6 +8,7 @@ import {
   reactivateUser,
 } from '@/server/lib/okta/api/users';
 import { OktaError } from '@/server/models/okta/Error';
+import { UserCreationRequest } from '@/server/models/okta/User';
 
 const userId = '12345';
 const email = 'test@test.com';
@@ -38,6 +39,17 @@ const json = jest.fn() as jest.MockedFunction<any>;
 // mocked logger
 jest.mock('@/server/lib/serverSideLogger');
 
+const userCreationRequest = (email: string): UserCreationRequest => {
+  return {
+    profile: {
+      email,
+      login: email,
+      isGuardianUser: true,
+      registrationPlatform: 'identity-gateway',
+    },
+  };
+};
+
 describe('okta#createUser', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -55,7 +67,7 @@ describe('okta#createUser', () => {
       Promise.resolve({ ok: true, json } as Response),
     );
 
-    const response = await createUser(email);
+    const response = await createUser(userCreationRequest(email));
     expect(response).toEqual(user);
   });
 
@@ -78,7 +90,7 @@ describe('okta#createUser', () => {
       Promise.resolve({ ok: false, status: 400, json } as Response),
     );
 
-    await expect(createUser(userId)).rejects.toThrowError(
+    await expect(createUser(userCreationRequest(userId))).rejects.toThrowError(
       new OktaError({ message: 'Api validation failed: login' }),
     );
   });
@@ -106,7 +118,7 @@ describe('okta#createUser', () => {
       Promise.resolve({ ok: false, status: 400, json } as Response),
     );
 
-    await expect(createUser(userId)).rejects.toThrowError(
+    await expect(createUser(userCreationRequest(userId))).rejects.toThrowError(
       new OktaError({ message: 'Api validation failed: login', causes }),
     );
   });
@@ -130,7 +142,7 @@ describe('okta#createUser', () => {
       Promise.resolve({ ok: false, status: 400, json } as Response),
     );
 
-    await expect(createUser(userId)).rejects.toThrowError(
+    await expect(createUser(userCreationRequest(userId))).rejects.toThrowError(
       new OktaError({ message: 'Api validation failed: login', causes }),
     );
   });
