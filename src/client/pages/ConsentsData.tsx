@@ -128,10 +128,7 @@ export const ConsentsData = ({ id, consented, name }: ConsentsDataProps) => {
           <fieldset css={[switchRow, greyBorderTop, autoSwitchRow()]}>
             <ToggleSwitchInput
               id={id}
-              // TODO replace with Consent.name once IDAPI model is updated
-              label={
-                'Allow the Guardian to analyse this data to improve marketing content'
-              }
+              label={name}
               defaultChecked={consented ?? true} // legitimate interests so defaults to true
               cssOverrides={[labelStyles, toggleSwitchAlignment]}
             />

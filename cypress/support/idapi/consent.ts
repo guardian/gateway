@@ -25,9 +25,9 @@ export const allConsents = [
     id: 'market_research_optout',
     isOptOut: true,
     isChannel: false,
-    name: 'Market Research Optout',
+    name: 'Allow the Guardian to contact me for market research purposes',
     description:
-      'I do NOT wish to be contacted by the Guardian for market research purposes.',
+      'From time to time we may contact you for market research purposes inviting you to complete a survey, or take part in a group discussion. Normally, this invitation would be sent via email, but we may also contact you by phone.',
   },
   {
     id: 'offers',
@@ -41,25 +41,19 @@ export const allConsents = [
     id: 'post_optout',
     isOptOut: true,
     isChannel: false,
-    name: 'Post Optout',
-    description:
-      'I do NOT wish to receive communications from the Guardian by post.',
+    name: 'Allow the Guardian to send communications by post',
   },
   {
     id: 'profiling_optout',
     isOptOut: true,
     isChannel: false,
-    name: 'Profiling Optout',
-    description:
-      'I do NOT want the Guardian to use my personal data for marketing analysis.',
+    name: 'Allow the Guardian to analyse this data to improve marketing content',
   },
   {
     id: 'phone_optout',
     isOptOut: true,
     isChannel: true,
-    name: 'Telephone Optout',
-    description:
-      'I do NOT wish to receive communications from the Guardian by telephone.',
+    name: 'Allow the Guardian to send communications by telephone',
   },
   {
     id: 'supporter',
