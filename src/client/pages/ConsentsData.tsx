@@ -1,44 +1,105 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { neutral, space, textSans } from '@guardian/source-foundations';
-
-import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
+import {
+  neutral,
+  space,
+  remSpace,
+  textSans,
+} from '@guardian/source-foundations';
+import {
+  getAutoRow,
+  gridItemColumnConsents,
+  gridItemYourData,
+  gridRow,
+  subGridItemToggleSwitch,
+  subGridOverrides,
+} from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import {
   heading,
   text,
-  headingMarginSpace6,
+  textBold,
   greyBorderTop,
 } from '@/client/styles/Consents';
-import { Checkbox, CheckboxGroup } from '@guardian/source-react-components';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
-import { Consents } from '@/shared/model/Consent';
+import { ExternalLink } from '../components/ExternalLink';
+import locations from '@/shared/lib/locations';
+import { ToggleSwitchInput } from '../components/ToggleSwitchInput';
+
 import { ConsentsForm } from '@/client/components/ConsentsForm';
 import { ConsentsNavigation } from '@/client/components/ConsentsNavigation';
 
 type ConsentsDataProps = {
   consented?: boolean;
   description?: string;
+  name?: string;
+  id: string;
 };
 
-const fieldset = css`
+const switchRow = css`
   border: 0;
   padding: 0;
   margin: ${space[4]}px 0 0 0;
   ${textSans.medium()}
 `;
 
+const removeMargin = css`
+  margin: 0;
+  -ms-grid-row: 1; /* fix top margin on IE11 */
+`;
+
+const toggleSwitchAlignment = css`
+  justify-content: space-between;
+  span {
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+`;
+
+const listBullets = css`
+  list-style: none;
+  padding-left: 0;
+  text-indent: -18px; /* second line indentation */
+  margin-left: 18px; /* second line indentation */
+  li {
+    font-size: 17px;
+  }
+  li:first-of-type {
+    margin-top: 6px;
+  }
+  /* ::marker is not supported in IE11 */
+  li::before {
+    content: '';
+    margin-right: ${space[2]}px;
+    margin-top: ${space[2]}px;
+    background-color: ${neutral[86]};
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+`;
+
+const labelStyles = css`
+  ${textBold}
+  label {
+    line-height: ${remSpace[6]};
+  }
+`;
+
 const marketingText = css`
   ${text}
-  color: ${neutral[46]};
   margin-top: ${space[4]}px;
 `;
 
-export const ConsentsData = ({ consented, description }: ConsentsDataProps) => {
+export const ConsentsData = ({ id, consented, name }: ConsentsDataProps) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
+  const autoYourDataRow = getAutoRow(1, gridItemYourData);
+  const autoSwitchRow = getAutoRow(1, subGridItemToggleSwitch);
+
   const layoutProps = { title: 'Your data', current: CONSENTS_PAGES.YOUR_DATA };
 
-  if (!description) {
+  if (!name) {
     return (
       <ConsentsLayout {...layoutProps}>
         <ConsentsForm cssOverrides={autoRow()}>
@@ -50,41 +111,48 @@ export const ConsentsData = ({ consented, description }: ConsentsDataProps) => {
 
   return (
     <ConsentsLayout {...layoutProps}>
-      <h2 css={[heading, greyBorderTop, autoRow()]}>
-        We never share your data without your permission
+      <h2 css={[heading, greyBorderTop, autoRow(), removeMargin]}>
+        What we mean by your data
       </h2>
-      <p css={[text, autoRow()]}>
-        We think carefully about our use of personal data and use it
-        responsibly. We have a team who are dedicated to keeping any data we
-        collect safe and secure. You can find out more about how The Guardian
-        aims to safeguard users data by going to the Privacy section of the
-        website.
-      </p>
-      <h2 css={[heading, headingMarginSpace6, autoRow()]}>
-        Using your data for marketing analysis
-      </h2>
-      <p css={[text, autoRow()]}>
-        From time to time we may use your personal data for marketing analysis.
-        That includes looking at what products or services you have bought from
-        us and what pages you have been viewing on theguardian.com and other
-        Guardian websites (e.g. Guardian Jobs or Guardian Holidays). We do this
-        to understand your interests and preferences so that we can make our
-        marketing communication more relevant to you.
-      </p>
+      <ul css={[text, listBullets, autoYourDataRow()]}>
+        <li>Information you provide e.g. email address</li>
+        <li>Products or services you buy from us</li>
+        <li>
+          Pages you view on theguardian.com or other Guardian websites when
+          signed in
+        </li>
+      </ul>
+
       <ConsentsForm cssOverrides={autoRow()}>
-        <p css={marketingText}>
-          I am happy for the Guardian to use my personal data for marketing
-          analysis purposes
-        </p>
-        <fieldset css={fieldset}>
-          <CheckboxGroup name={Consents.PROFILING}>
-            <Checkbox
-              value="consent-option"
-              label={description}
-              defaultChecked={consented}
+        <div css={[gridRow, subGridOverrides]}>
+          <fieldset css={[switchRow, greyBorderTop, autoSwitchRow()]}>
+            <ToggleSwitchInput
+              id={id}
+              // TODO replace with Consent.name once IDAPI model is updated
+              label={
+                'Allow the Guardian to analyse this data to improve marketing content'
+              }
+              defaultChecked={consented ?? true} // legitimate interests so defaults to true
+              cssOverrides={[labelStyles, toggleSwitchAlignment]}
             />
-          </CheckboxGroup>
-        </fieldset>
+          </fieldset>
+        </div>
+        <div css={[autoRow()]}>
+          <p css={[marketingText, greyBorderTop, autoRow()]}>
+            You can change your settings under&nbsp;
+            <ExternalLink href={locations.MMA_EMAIL_PREFERENCES} subdued={true}>
+              Emails &amp; marketing
+            </ExternalLink>
+            &nbsp;on your Guardian account at any time.
+          </p>
+          <p css={[marketingText, autoRow()]}>
+            Learn how we use data in our{' '}
+            <ExternalLink href={locations.PRIVACY} subdued={true}>
+              privacy policy
+            </ExternalLink>
+            .
+          </p>
+        </div>
         <ConsentsNavigation />
       </ConsentsForm>
     </ConsentsLayout>

@@ -93,17 +93,9 @@ const switchStyles = css`
 
 export interface ToggleSwitchInputProps extends Props {
   /**
-   * Whether the ToggleSwitch is checked. This is necessary when using the
-   * [controlled approach](https://reactjs.org/docs/forms.html#controlled-components)
-   * (recommended) to form state management.
-   *
-   * Note: if you pass the `checked` prop, you MUST also pass an `onChange`
-   * handler, or the field will be rendered as read-only.
-   */
-  checked?: boolean;
-  /**
-   * When using the [uncontrolled approach](https://reactjs.org/docs/uncontrolled-components.html),
-   * use defaultChecked to indicate the whether the ToggleSwitch is checked initially.
+   * Whether the ToggleSwitch is checked.
+   * Gateway uses the [uncontrolled approach](https://reactjs.org/docs/uncontrolled-components.html),
+   * Use defaultChecked to indicate the whether the ToggleSwitch is checked initially.
    */
   defaultChecked?: boolean;
   /**
@@ -119,7 +111,6 @@ export interface ToggleSwitchInputProps extends Props {
 export const ToggleSwitchInput = ({
   id,
   label,
-  checked,
   defaultChecked,
   cssOverrides,
 }: ToggleSwitchInputProps): EmotionJSX.Element => {
@@ -135,7 +126,6 @@ export const ToggleSwitchInput = ({
         type="checkbox"
         role="switch"
         defaultChecked={defaultChecked}
-        checked={checked != undefined ? checked : defaultChecked}
         aria-labelledby={labelId}
       ></input>
       <span

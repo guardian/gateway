@@ -6,7 +6,9 @@ export interface Consent {
 }
 
 export enum Consents {
-  PROFILING = 'profiling_optout',
+  // OPT OUT API CONSENTS (modeled as opt ins in Gateway)
+  PROFILING = 'profiling_optin',
+  // PRODUCT CONSENTS
   SUPPORTER = 'supporter',
   JOBS = 'jobs',
   HOLIDAYS = 'holidays',

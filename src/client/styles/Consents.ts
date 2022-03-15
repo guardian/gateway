@@ -1,35 +1,31 @@
 import { css } from '@emotion/react';
 import {
-  from,
   space,
   headline,
   textSans,
   neutral,
+  from,
 } from '@guardian/source-foundations';
 
 export const heading = css`
   color: ${neutral[0]};
   margin: 0 0 ${space[3]}px;
-  ${headline.xxsmall({ fontWeight: 'bold' })};
-  font-size: 17px;
+  ${headline.xxxsmall({ fontWeight: 'bold' })};
 `;
 
 export const headingMarginSpace6 = css`
   margin-top: ${space[6]}px;
 `;
 
-export const headingWithMq = css`
-  ${heading}
-
-  ${from.tablet} {
-    ${headline.xxsmall({ fontWeight: 'bold' })}
-  }
-`;
-
 export const text = css`
   margin: 0;
   ${textSans.medium()}
   max-width: 640px;
+`;
+
+export const textBold = css`
+  ${text};
+  font-weight: bold;
 `;
 
 const greyBorder = `1px solid ${neutral[86]}`;

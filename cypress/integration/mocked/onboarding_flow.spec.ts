@@ -137,7 +137,7 @@ describe('Onboarding flow', () => {
         .should('have.attr', 'href')
         .and('include', NewslettersPage.URL);
 
-      YourDataPage.allCheckboxes().should('not.be.checked');
+      YourDataPage.allCheckboxes().should('be.checked');
 
       // mock form save success
       cy.mockNext(200);
@@ -153,6 +153,7 @@ describe('Onboarding flow', () => {
       );
 
       YourDataPage.saveAndContinueButton().click();
+      // Explicity check '_optin' consents are in inverted back to '_optouts' when posted
       cy.lastPayloadIs([{ id: 'profiling_optout', consented: false }]);
 
       cy.url().should('include', ReviewPage.URL);
@@ -222,7 +223,7 @@ describe('Onboarding flow', () => {
         .should('have.attr', 'href')
         .and('include', NewslettersPage.URL);
 
-      YourDataPage.marketingOptoutClickableSection().click();
+      YourDataPage.marketingOptInClickableSection().click();
 
       // mock form save success
       cy.mockNext(200);
@@ -230,6 +231,7 @@ describe('Onboarding flow', () => {
       cy.mockAll(200, createUser(optedOutUserConsent), USER_ENDPOINT);
 
       YourDataPage.saveAndContinueButton().click();
+      // Explicity check '_optin' consents are in inverted back to '_optouts' when posted
       cy.lastPayloadIs([{ id: 'profiling_optout', consented: true }]);
 
       cy.url().should('include', ReviewPage.URL);
@@ -279,7 +281,7 @@ describe('Onboarding flow', () => {
       cy.url().should('include', YourDataPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
 
-      YourDataPage.marketingOptoutClickableSection().click();
+      YourDataPage.marketingOptInClickableSection().click();
 
       // mock form save success
       cy.mockNext(200);
@@ -671,15 +673,15 @@ describe('Onboarding flow', () => {
       injectAndCheckAxe();
     });
 
-    it('displays the marketing opt out, unchecked by default', () => {
+    it('displays the marketing profile opt in switch, toggled ON by default', () => {
       YourDataPage.goto();
-      YourDataPage.marketingOptoutCheckbox().should('not.be.checked');
+      YourDataPage.marketingOptInSwitch().should('be.checked');
     });
 
-    it('displays the marketing opt out, checked if the user has previously opted out', () => {
+    it('displays the marketing profile opt in switch, toggled OFF if the user has previously opted out', () => {
       cy.mockAll(200, createUser(optedOutUserConsent), USER_ENDPOINT);
       YourDataPage.goto();
-      YourDataPage.marketingOptoutCheckbox().should('be.checked');
+      YourDataPage.marketingOptInSwitch().should('not.be.checked');
     });
 
     it('display a relevant error message on user end point failure', () => {
