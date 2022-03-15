@@ -11,6 +11,10 @@ import { Consent } from '@/shared/model/Consent';
 import { UserConsent } from '@/shared/model/User';
 import { IdapiError } from '@/server/models/Error';
 import { read as getUser } from './user';
+import {
+  invertOptInConsents,
+  invertOptOutConsents,
+} from './invertOptOutConsents';
 
 const handleError = (): never => {
   throw new IdapiError({ message: ConsentsErrors.GENERIC, status: 500 });
@@ -53,8 +57,11 @@ export const update = async (
   sc_gu_u: string,
   payload: UserConsent[],
 ) => {
+  // Inversion required of four legitimate interest consents that are modelled as opt OUTS in the backend data model
+  // but which are presented as opt INs on the client UI/UX
+  const invertedPayload = invertOptInConsents(payload) as UserConsent[];
   const options = APIForwardSessionIdentifier(
-    APIAddClientAccessToken(APIPatchOptions(payload), ip),
+    APIAddClientAccessToken(APIPatchOptions(invertedPayload), ip),
     sc_gu_u,
   );
   try {
@@ -74,8 +81,12 @@ export const getUserConsentsForPage = async (
   ip: string,
   sc_gu_u: string,
 ): Promise<Consent[]> => {
-  const allConsents = await read();
-  const userConsents = (await getUser(ip, sc_gu_u)).consents;
+  // Inversion required of four legitimate interest consents that are modelled as opt OUTS in the backend data model
+  // but which are presented as opt INs on the client UI/UX
+  const allConsents = invertOptOutConsents(await read());
+  const userConsents = invertOptOutConsents(
+    (await getUser(ip, sc_gu_u)).consents,
+  );
 
   return pageConsents
     .map((id) => allConsents.find((consent) => consent.id === id))

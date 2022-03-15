@@ -5,10 +5,11 @@ import { space, success, neutral, until } from '@guardian/source-foundations';
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import {
-  controls,
   greyBorderTop,
-  headingWithMq,
+  heading,
   text,
+  textBold,
+  controls,
 } from '@/client/styles/Consents';
 import { Consent } from '@/shared/model/Consent';
 import { NewsLetter } from '@/shared/model/Newsletter';
@@ -24,7 +25,7 @@ type ConsentsConfirmationProps = {
   error?: string;
   success?: string;
   returnUrl: string;
-  optedOutOfProfiling: boolean;
+  optedIntoProfiling: boolean;
   productConsents: Consent[];
   subscribedNewsletters: NewsLetter[];
   geolocation?: GeoLocation;
@@ -42,8 +43,7 @@ const reviewTableRow = css`
 `;
 
 const reviewTableTextBold = css`
-  ${text}
-  font-weight: bold;
+  ${textBold}
   padding-bottom: ${space[2]}px;
 `;
 
@@ -98,18 +98,18 @@ const returnButton = css`
 export const ConsentsConfirmation = ({
   returnUrl,
   productConsents,
-  optedOutOfProfiling,
+  optedIntoProfiling,
   subscribedNewsletters,
 }: ConsentsConfirmationProps) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
   const anyConsents =
-    !optedOutOfProfiling ||
+    optedIntoProfiling ||
     !!productConsents.length ||
     !!subscribedNewsletters.length;
 
   return (
     <ConsentsLayout title="Your registration is complete">
-      <h2 css={[headingWithMq, autoRow(), greyBorderTop]}>
+      <h2 css={[heading, autoRow(), greyBorderTop]}>
         Thank you for completing your registration
       </h2>
       {anyConsents ? (
@@ -151,7 +151,7 @@ export const ConsentsConfirmation = ({
             ))}
           </ReviewTableRow>
         )}
-        {!optedOutOfProfiling && (
+        {optedIntoProfiling && (
           <ReviewTableRow title="Data">
             <div css={consentStyles}>
               <span css={iconStyles}>
@@ -175,7 +175,7 @@ export const ConsentsConfirmation = ({
       )}
       {!subscribedNewsletters.length && (
         <>
-          <h2 css={[headingWithMq, autoRow(), greyBorderTop, marginTop]}>
+          <h2 css={[heading, autoRow(), greyBorderTop, marginTop]}>
             Guardian newsletters
           </h2>
           <p css={[text, autoRow()]}>Didn’t find anything you like?</p>

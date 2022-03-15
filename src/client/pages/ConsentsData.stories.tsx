@@ -21,16 +21,14 @@ NoDescription.storyName = 'with no description';
 
 export const ConsentedTrue = Template.bind({});
 ConsentedTrue.args = {
-  description:
-    'I do NOT wish to be contacted by the Guardian for market research purposes.',
+  name: 'Allow the Guardian to analyse this data to improve marketing content',
   consented: true,
 };
 ConsentedTrue.storyName = 'with consented true';
 
 export const ConsentedFalse = Template.bind({});
 ConsentedFalse.args = {
-  description:
-    'I do NOT wish to be contacted by the Guardian for market research purposes.',
+  name: 'Allow the Guardian to analyse this data to improve marketing content',
   consented: false,
 };
 ConsentedFalse.storyName = 'with consented false';
