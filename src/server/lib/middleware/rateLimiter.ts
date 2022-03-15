@@ -4,7 +4,7 @@ import { RoutePaths } from '@/shared/model/Routes';
 import { NextFunction, Response } from 'express';
 
 import rateLimit from '@/server/lib/rate-limit';
-import rateLimiter from '../rate-limit/config';
+import rateLimiter from 'rate-limit-config';
 import redisClient from '@/server/lib/redis/redisClient';
 
 const getBucketConfigForRoute = (

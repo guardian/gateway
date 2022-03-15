@@ -55,4 +55,4 @@ cypress/screenshots
 # vscode settings
 .vscode/settings.json
 
-.ratelimiter.json
+.ratelimit.json

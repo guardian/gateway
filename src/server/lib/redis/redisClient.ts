@@ -1,7 +1,7 @@
 import Redis from 'ioredis';
 import { getConfiguration } from '../getConfiguration';
 
-import rateLimiter from '../rate-limit/config';
+import rateLimiter from 'rate-limit-config';
 
 const { redis } = getConfiguration();
 

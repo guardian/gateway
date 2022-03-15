@@ -11,7 +11,8 @@
     "types": ["@emotion/react", "jest", "@testing-library/jest-dom"],
     "baseUrl": "src",
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["*"],
+      "rate-limit-config": ["../.ratelimit.json"]
     },
     "lib": ["ES2019", "DOM"],
     "resolveJsonModule": true
