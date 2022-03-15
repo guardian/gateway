@@ -20,29 +20,12 @@ const {
   sentryDsn,
 } = getConfiguration();
 
-const removeEmailAlias = (email?: string) => {
-  const removalRegex = /\+.*@/g;
-  return email?.replace(removalRegex, '@');
-};
-
 const getRequestState = (req: RequestWithTypedQuery): RequestState => {
   const [abTesting, abTestAPI] = getABTesting(req, tests);
 
-  // Attempt to get following info
-
-  // Client ip
-  // trust.proxy is set, so we are getting the forwarded-for ip when requests are directed from Fastly.
-  const ip = req.ip;
-
-  // Email
+  // Look for an email in form submissions and the encrypted email cookie
   const { email: formEmail = '' } = req.body;
   const encryptedStateEmail = readEmailCookie(req);
-
-  const email = removeEmailAlias(formEmail || encryptedStateEmail);
-
-  // Access token
-  // Rate limit against the sc_gu cookie
-  const sc_gu_u = req.cookies.SC_GU_U;
 
   // tracking parameters might be from body too
   const { ref, refViewId } = req.body;
@@ -64,9 +47,9 @@ const getRequestState = (req: RequestWithTypedQuery): RequestState => {
 
   return {
     rateLimitData: {
-      email,
-      ip,
-      accessToken: sc_gu_u,
+      email: formEmail || encryptedStateEmail,
+      ip: req.ip,
+      accessToken: req.cookies.SC_GU_U,
     },
     queryParams,
     pageData: {

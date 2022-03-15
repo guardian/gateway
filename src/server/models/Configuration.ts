@@ -1,5 +1,4 @@
-import { RateLimitBucketsConfiguration } from '@/server/lib/rate-limit';
-import { RoutePaths } from '@/shared/model/Routes';
+import type { RateLimiterConfiguration } from '@/server/lib/rate-limit';
 
 export type Stage = 'DEV' | 'CODE' | 'PROD';
 export interface Configuration {
@@ -30,14 +29,7 @@ export interface Configuration {
   sentryDsn: string;
   redis: RedisConfiguration;
   accountManagementUrl: string;
-}
-
-export interface RateLimiterConfiguration {
-  enabled: boolean;
-  defaultBuckets: RateLimitBucketsConfiguration;
-  routeBuckets?: {
-    [route in RoutePaths]?: RateLimitBucketsConfiguration;
-  };
+  rateLimiter: RateLimiterConfiguration;
 }
 
 export interface AWSConfiguration {

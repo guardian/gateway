@@ -12,6 +12,8 @@ import {
 
 import { featureSwitches } from '@/shared/lib/featureSwitches';
 
+import { rateLimiterConfig } from './rate-limit';
+
 const getOrThrow = (
   value: string | undefined,
   errorMessage: string,
@@ -193,14 +195,6 @@ export const getConfiguration = (): Configuration => {
     host: getOrThrow(process.env.REDIS_HOST, 'Redis Host missing'),
   };
 
-  // const rateLimiter =
-  //   stage === 'PROD'
-  //     ? getOrThrow(
-  //         process.env.RATE_LIMITER_CONFIG,
-  //         'Rate limiter configuration not found',
-  //       )
-  //     : process.env.RATE_LIMITER_CONFIG;
-
   return {
     port: +port,
     idapiBaseUrl,
@@ -229,5 +223,6 @@ export const getConfiguration = (): Configuration => {
     sentryDsn,
     redis,
     accountManagementUrl,
+    rateLimiter: rateLimiterConfig,
   };
 };

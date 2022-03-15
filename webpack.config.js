@@ -58,7 +58,6 @@ const common = ({ platform }) => ({
     extensions,
     alias: {
       '@': path.join(__dirname, 'src'),
-      'rate-limit-config': path.join(__dirname, '.ratelimit.json')
     },
   },
   watchOptions,

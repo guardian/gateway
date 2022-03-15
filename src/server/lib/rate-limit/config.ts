@@ -1,27 +1,71 @@
-// import type { RateLimiterConfiguration } from '@/server/models/Configuration';
+import { existsSync, readFileSync } from 'fs';
+import * as Joi from 'joi';
 
-// const rateLimitConfigLoader: () => Promise<RateLimiterConfiguration> =
-//   async () => {
-//     try {
-//       return await import('@/../ratelimiter.config.json');
-//       // return require('rate-limit-config') as RateLimiterConfiguration;
-//     } catch (e) {
-//       console.log(
-//         'There was a problem resolving the rate limiter configuration. Falling back to defaults.',
-//       );
-//       return {
-//         enabled: false,
-//         defaultBuckets: {
-//           globalBucket: { capacity: 500, addTokenMs: 50 },
-//           ipBucket: { capacity: 100, addTokenMs: 50 },
-//           emailBucket: { capacity: 100, addTokenMs: 50 },
-//           oktaIdentifierBucket: { capacity: 100, addTokenMs: 50 },
-//           accessTokenBucket: { capacity: 100, addTokenMs: 50 },
-//         },
+import type {
+  BucketConfiguration,
+  RateLimitBucketsConfiguration,
+  RateLimiterConfiguration,
+} from './types';
 
-//         routeBuckets: {},
-//       } as RateLimiterConfiguration;
-//     }
-//   };
+const checkedJoiObject = <TSchema>(schema: {
+  [key in keyof TSchema]: Joi.SchemaLike | Joi.SchemaLike[];
+}) => Joi.object<TSchema>(schema);
 
-// export default rateLimitConfigLoader();
+const bucketConfigObject = checkedJoiObject<BucketConfiguration>({
+  capacity: Joi.number().required(),
+  addTokenMs: Joi.number().required(),
+  maximumTimeBeforeTokenExpiry: Joi.number().optional(),
+});
+
+const bucketsConfigObject = checkedJoiObject<RateLimitBucketsConfiguration>({
+  globalBucket: bucketConfigObject.required(),
+  accessTokenBucket: bucketConfigObject.optional(),
+  ipBucket: bucketConfigObject.optional(),
+  emailBucket: bucketConfigObject.optional(),
+  oktaIdentifierBucket: bucketConfigObject.optional(),
+});
+
+const schema = checkedJoiObject<RateLimiterConfiguration>({
+  enabled: Joi.boolean().required(),
+  defaultBuckets: bucketsConfigObject.required(),
+  routeBuckets: Joi.object()
+    .pattern(Joi.string(), bucketsConfigObject)
+    .optional(),
+});
+
+const validateRateLimiterConfiguration = (configuration: unknown) =>
+  schema.validate(configuration);
+
+const tryReadConfigFile = () => {
+  if (existsSync('.ratelimit.json')) {
+    const configJson = readFileSync('.ratelimit.json', 'utf-8');
+    if (configJson) {
+      return JSON.parse(configJson);
+    }
+  }
+};
+
+const tryReadEnvironmentVariable = () => {
+  const configJson = process.env.RATE_LIMITER_CONFIG || '';
+  if (configJson) {
+    return JSON.parse(configJson);
+  }
+};
+
+const loadConfiguration = () => {
+  const unvalidatedConfig = tryReadEnvironmentVariable() ?? tryReadConfigFile();
+
+  if (typeof unvalidatedConfig === 'undefined') {
+    throw Error('Rate limiter configuration missing or malformed');
+  }
+
+  const { error, value } = validateRateLimiterConfiguration(unvalidatedConfig);
+
+  if (error) {
+    throw error;
+  }
+
+  return value;
+};
+
+export default loadConfiguration();
