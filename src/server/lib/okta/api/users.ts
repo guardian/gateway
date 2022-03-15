@@ -50,7 +50,7 @@ export const updateUser = async <P extends OktaApiRoutePaths>(
   id: ExtractRouteParams<P>,
   body: UserUpdateRequest,
 ): Promise<UserResponse> => {
-  const path = buildUrl('/api/v1/users/:id');
+  const path = buildUrl('/api/v1/users/:id', id);
   return await fetch(joinUrl(okta.orgUrl, path), {
     method: 'POST',
     body: JSON.stringify(body),
