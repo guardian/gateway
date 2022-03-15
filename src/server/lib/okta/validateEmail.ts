@@ -3,15 +3,17 @@ import { UserResponse } from '@/server/models/okta/User';
 
 export const validateEmailAndPasswordSetSecurely = async (
   id: string,
-): Promise<UserResponse> =>
-  await updateUser(
+): Promise<UserResponse> => {
+  const timestamp = new Date().toISOString();
+  return await updateUser(
     { id: id },
     {
       profile: {
         emailValidated: true,
-        lastEmailValidatedTimestamp: new Date(),
+        lastEmailValidatedTimestamp: timestamp,
         passwordSetSecurely: true,
-        lastPasswordSetSecurelyTimestamp: new Date(),
+        lastPasswordSetSecurelyTimestamp: timestamp,
       },
     },
   );
+};

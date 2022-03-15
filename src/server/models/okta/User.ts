@@ -23,9 +23,9 @@ export interface UserUpdateRequest {
     email?: string;
     login?: string;
     emailValidated?: boolean;
-    lastEmailValidatedTimestamp?: Date;
+    lastEmailValidatedTimestamp?: string;
     passwordSetSecurely?: boolean;
-    lastPasswordSetSecurelyTimestamp?: Date;
+    lastPasswordSetSecurelyTimestamp?: string;
     registrationIdp?: RegistrationIdp;
     googleExternalId?: string;
     appleExternalId?: string;
