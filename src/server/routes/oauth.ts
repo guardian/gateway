@@ -3,6 +3,7 @@ import { Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import {
   deleteAuthorizationStateCookie,
+  DevProfileIdClient,
   getAuthorizationStateCookie,
   OpenIdErrors,
   ProfileOpenIdClient,
@@ -17,11 +18,14 @@ import { SignInErrors } from '@/shared/model/Errors';
 import { updateEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import postSignInController from '@/server/lib/postSignInController';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 
 interface OAuthError {
   error: string;
   error_description: string;
 }
+
+const { stage } = getConfiguration();
 
 /**
  * Type guard to check that a given error is an OAuth error.
@@ -62,13 +66,18 @@ router.get(
   '/oauth/authorization-code/callback',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     try {
+      const OpenIdClient =
+        stage === 'DEV' && req.get('X-GU-Okta-Env')
+          ? DevProfileIdClient(req.get('X-GU-Okta-Env') as string)
+          : ProfileOpenIdClient;
+
       // params returned from the /authorize endpoint
       // for auth code flow they will be "code" and "state"
       // "code" is the authorization code to exchange for access token
       // "state" will be the "stateParam" value set in the oidc_auth_state cookie
       // if there were any errors, then an "error", and "error_description" params
       // will be returned instead
-      const callbackParams = ProfileOpenIdClient.callbackParams(req);
+      const callbackParams = OpenIdClient.callbackParams(req);
 
       // get the oidc_auth_state cookie which contains the "stateParam" value
       // and "returnUrl" so we can get the user back to the page they
@@ -112,7 +121,7 @@ router.get(
       // and check the "state" we got back from the callback
       // to the "stateParam" that was set in the AuthorizationState
       // to prevent CSRF attacks
-      const tokenSet = await ProfileOpenIdClient.callback(
+      const tokenSet = await OpenIdClient.callback(
         // the redirectUri is the callback location (this route)
         ProfileOpenIdClientRedirectUris.WEB,
         // the params sent to the callback
