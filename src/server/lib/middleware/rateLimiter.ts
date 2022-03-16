@@ -18,8 +18,8 @@ export const rateLimiterMiddleware = async (
   res: Response,
   next: NextFunction,
 ) => {
-  // No rate limiting if the limiter is explicitly disabled.
-  if (rateLimiter.enabled === false) {
+  // Skip rate limiting if the rate limiter is disabled or the redis client not initialised.
+  if (rateLimiter.enabled === false || typeof redisClient === 'undefined') {
     return next();
   }
 

@@ -1,9 +1,11 @@
 import Redis from 'ioredis';
 import { getConfiguration } from '../getConfiguration';
 
-const { redis } = getConfiguration();
+const { redis, rateLimiter } = getConfiguration();
 
-export default new Redis({
-  host: redis.host,
-  password: redis.password,
-});
+export default rateLimiter.enabled
+  ? new Redis({
+      host: redis.host,
+      password: redis.password,
+    })
+  : undefined;

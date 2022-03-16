@@ -10,8 +10,42 @@ import {
   GU_MANAGE_URL,
 } from '@/server/models/Configuration';
 
+import { existsSync, readFileSync } from 'fs';
 import { featureSwitches } from '@/shared/lib/featureSwitches';
-import loadRateLimiterConfiguration from './rate-limit/getRateLimiterConfiguration';
+import validateRateLimiterConfiguration from './rate-limit/getRateLimiterConfiguration';
+
+const tryReadConfigFile = () => {
+  if (existsSync('.ratelimit.json')) {
+    const configJson = readFileSync('.ratelimit.json', 'utf-8');
+    if (configJson) {
+      return JSON.parse(configJson);
+    }
+  }
+};
+
+const tryReadEnvironmentVariable = () => {
+  const configJson = process.env.RATE_LIMITER_CONFIG || '';
+
+  if (configJson) {
+    return JSON.parse(configJson);
+  }
+};
+
+const loadRateLimiterConfiguration = () => {
+  const unvalidatedConfig = tryReadEnvironmentVariable() ?? tryReadConfigFile();
+
+  if (typeof unvalidatedConfig === 'undefined') {
+    throw Error('Rate limiter configuration missing or malformed');
+  }
+
+  const { error, value } = validateRateLimiterConfiguration(unvalidatedConfig);
+
+  if (error) {
+    throw error;
+  }
+
+  return value;
+};
 
 const rateLimiter = loadRateLimiterConfiguration();
 

@@ -1,4 +1,3 @@
-import { existsSync, readFileSync } from 'fs';
 import * as Joi from 'joi';
 
 import type {
@@ -36,36 +35,4 @@ const schema = checkedJoiObject<RateLimiterConfiguration>({
 const validateRateLimiterConfiguration = (configuration: unknown) =>
   schema.validate(configuration);
 
-const tryReadConfigFile = () => {
-  if (existsSync('.ratelimit.json')) {
-    const configJson = readFileSync('.ratelimit.json', 'utf-8');
-    if (configJson) {
-      return JSON.parse(configJson);
-    }
-  }
-};
-
-const tryReadEnvironmentVariable = () => {
-  const configJson = process.env.RATE_LIMITER_CONFIG || '';
-  if (configJson) {
-    return JSON.parse(configJson);
-  }
-};
-
-const getRateLimiterConfiguration = () => {
-  const unvalidatedConfig = tryReadEnvironmentVariable() ?? tryReadConfigFile();
-
-  if (typeof unvalidatedConfig === 'undefined') {
-    throw Error('Rate limiter configuration missing or malformed');
-  }
-
-  const { error, value } = validateRateLimiterConfiguration(unvalidatedConfig);
-
-  if (error) {
-    throw error;
-  }
-
-  return value;
-};
-
-export default getRateLimiterConfiguration;
+export default validateRateLimiterConfiguration;
