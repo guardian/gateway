@@ -4,8 +4,8 @@ export const TEST_ID = 'OptInPromptPostSignInImage';
 
 export const optInPromptImage: ABTest = {
   id: TEST_ID,
-  start: '2022-03-15',
-  expiry: '2022-03-21',
+  start: '2022-03-17',
+  expiry: '2022-03-24',
   author: 'liam.duffy.freelancer@guardian.co.uk',
   description:
     'Testing if presence of image affects opt in rates on post sign in prompt',
