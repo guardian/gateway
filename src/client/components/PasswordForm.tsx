@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import {
   Button,
-  SvgCross,
+  SvgInfo,
   SvgAlertTriangle,
   SvgCheckmark,
 } from '@guardian/source-react-components';
@@ -46,31 +46,48 @@ type Props = {
   formTrackingName?: string;
 };
 
-const baseIconStyles = css`
-  display: inline-block;
+const feedbackMessageStyles = css`
+  display: flex;
+  align-items: flex-start;
+  min-height: ${space[6]}px;
+  div:first-of-type {
+    width: ${space[6]}px;
+  }
+`;
+
+const feedbackMessageIconStyles = css`
+  display: flex;
   position: relative;
   top: 3px;
   svg {
+    color: ${neutral[46]};
+  }
+`;
+
+const smallIconStyles = css`
+  svg {
     height: 18px;
     width: 18px;
+    position: relative;
   }
 `;
 
 const baseMessageStyles = css`
   ${textSans.small()};
-  margin-left: 3px;
-  display: inline-block;
   color: ${neutral[46]};
 `;
 
-const failureIconStyles = css`
+const errorIconStyles = css`
+  position: static;
   svg {
-    background: ${neutral[46]};
-    fill: ${neutral[100]};
-    height: 17px;
-    width: 17px;
-    border-radius: 50%;
+    fill: ${error['400']};
+    height: 24px;
+    width: 24px;
   }
+`;
+
+const redText = css`
+  color: ${error[400]};
 `;
 
 const form = css`
@@ -83,20 +100,33 @@ const passwordInput = css`
 
 const TooLong = () => {
   return (
-    <div>
-      <div css={[baseIconStyles, failureIconStyles]}>
-        <SvgCross />
+    <div css={feedbackMessageStyles}>
+      <div css={[feedbackMessageIconStyles, errorIconStyles]}>
+        <SvgAlertTriangle />
       </div>
-      <div css={baseMessageStyles}>{ShortPasswordFieldErrors.MAXIMUM_72}</div>
+      <div css={[baseMessageStyles, redText]}>
+        {ShortPasswordFieldErrors.MAXIMUM_72}
+      </div>
     </div>
   );
 };
 
 const TooShort = () => {
+  const infoIconStyles = css`
+    svg {
+      fill: ${neutral[46]};
+      border-radius: 50%;
+      // Bit of a hack - the SVG for the tick icon is positioned more fully
+      // inside its viewBox than the SVG for the info icon, so this forces the
+      // info icon to take up the same amount of pixel space.
+      transform: scale(1.355);
+    }
+  `;
+
   return (
-    <div>
-      <div css={[baseIconStyles, failureIconStyles]}>
-        <SvgCross />
+    <div css={feedbackMessageStyles}>
+      <div css={[feedbackMessageIconStyles, smallIconStyles, infoIconStyles]}>
+        <SvgInfo />
       </div>
       <div css={baseMessageStyles}>{ShortPasswordFieldErrors.AT_LEAST_8}</div>
     </div>
@@ -108,15 +138,15 @@ const Valid = () => {
     svg {
       background: ${success[400]};
       fill: ${neutral[100]};
-      height: 17px;
-      width: 17px;
       border-radius: 50%;
     }
   `;
 
   return (
-    <div>
-      <div css={[baseIconStyles, successIconStyles]}>
+    <div css={feedbackMessageStyles}>
+      <div
+        css={[feedbackMessageIconStyles, smallIconStyles, successIconStyles]}
+      >
         <SvgCheckmark />
       </div>
       <div
@@ -136,36 +166,22 @@ const Valid = () => {
 
 const Checking = () => {
   return (
-    <div>
+    <div css={feedbackMessageStyles}>
       <div css={baseMessageStyles}>Checking...</div>
     </div>
   );
 };
 
 const Weak = () => {
-  const errorIconStyles = css`
-    svg {
-      fill: ${error['400']};
-      height: 24px;
-      width: 24px;
-      margin-bottom: -4px;
-      margin-top: -4px;
-      margin-left: -4px;
-    }
-  `;
-
-  const redText = css`
-    color: ${error[400]};
-    font-weight: bold;
-  `;
-
   return (
-    <div css={baseMessageStyles}>
-      <div css={[baseIconStyles, errorIconStyles]}>
+    <div css={feedbackMessageStyles}>
+      <div css={[feedbackMessageIconStyles, errorIconStyles]}>
         <SvgAlertTriangle />
       </div>
-      <span css={redText}>Weak password:</span>{' '}
-      {ShortPasswordFieldErrors.COMMON_PASSWORD}
+      <div css={[baseMessageStyles, redText]}>
+        <strong>Weak password:</strong>{' '}
+        {ShortPasswordFieldErrors.COMMON_PASSWORD}
+      </div>
     </div>
   );
 };
