@@ -238,21 +238,29 @@ router.get(
   loginMiddleware,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
-    const consents = await getUserConsentsForPage(
-      CONSENTS_POST_SIGN_IN_PAGE,
-      req.ip,
-      req.cookies.SC_GU_U,
-    );
+    const { returnUrl } = state.pageData;
+    const { defaultReturnUri } = getConfiguration();
+    const redirectUrl = returnUrl || defaultReturnUri;
 
-    const html = renderer('/signin/success', {
-      requestState: deepmerge(state, {
-        pageData: {
-          consents,
-        },
-      }),
-      pageTitle: 'Signed in',
-    });
-    res.type('html').send(html);
+    try {
+      const consents = await getUserConsentsForPage(
+        CONSENTS_POST_SIGN_IN_PAGE,
+        req.ip,
+        req.cookies.SC_GU_U,
+      );
+      const html = renderer('/signin/success', {
+        requestState: deepmerge(state, {
+          pageData: {
+            consents,
+          },
+        }),
+        pageTitle: 'Signed in',
+      });
+      res.type('html').send(html);
+    } catch (error) {
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+      return res.redirect(303, redirectUrl);
+    }
   }),
 );
 
