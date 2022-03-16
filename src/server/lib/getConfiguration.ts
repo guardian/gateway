@@ -33,21 +33,10 @@ const tryReadEnvironmentVariable = () => {
 
 const loadRateLimiterConfiguration = () => {
   const unvalidatedConfig = tryReadEnvironmentVariable() ?? tryReadConfigFile();
-
-  if (typeof unvalidatedConfig === 'undefined') {
-    throw Error('Rate limiter configuration missing or malformed');
-  }
-
-  const { error, value } = validateRateLimiterConfiguration(unvalidatedConfig);
-
-  if (error) {
-    throw error;
-  }
-
-  return value;
+  return validateRateLimiterConfiguration(unvalidatedConfig);
 };
 
-const rateLimiter = loadRateLimiterConfiguration();
+const validatedRateLimiterConfig = loadRateLimiterConfiguration();
 
 const getOrThrow = (
   value: string | undefined,
@@ -125,6 +114,17 @@ const getStageVariables = (stage: Stage): StageVariables => {
 
 export const getConfiguration = (): Configuration => {
   const port = getOrThrow(process.env.PORT, 'Port configuration missing.');
+
+  const { error: rateLimiterParseError, value: rateLimiter } =
+    validatedRateLimiterConfig;
+
+  if (typeof rateLimiter === 'undefined') {
+    throw Error('Rate limiter configuration missing');
+  }
+
+  if (rateLimiterParseError) {
+    throw rateLimiterParseError;
+  }
 
   const idapiBaseUrl = getOrThrow(
     process.env.IDAPI_BASE_URL,

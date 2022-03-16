@@ -19,23 +19,6 @@ describe('getConfiguration', () => {
     process.env = ORIGINAL_ENVIRONMENT_VARIABLES;
   });
 
-  const rateLimiterConfig = `
-  {
-    "enabled": true,
-    "defaultBuckets": {
-      "globalBucket": { "capacity": 500, "addTokenMs": 50 },
-      "ipBucket": { "capacity": 100, "addTokenMs": 50 },
-      "emailBucket": { "capacity": 100, "addTokenMs": 50 },
-      "oktaIdentifierBucket": { "capacity": 100, "addTokenMs": 50 },
-      "accessTokenBucket": { "capacity": 100, "addTokenMs": 50 }
-    },
-    "routeBuckets": {
-      "/signin": {
-        "globalBucket": { "capacity": 500, "addTokenMs": 50 }
-      }
-    }
-  }`;
-
   test('it returns the configuration object with the correct values', async () => {
     process.env.PORT = '9000';
     process.env.IDAPI_CLIENT_ACCESS_TOKEN = 'idapi_api_key';
@@ -60,6 +43,22 @@ describe('getConfiguration', () => {
     process.env.GITHUB_RUN_NUMBER = '5';
     process.env.REDIS_PASSWORD = 'redispassword';
     process.env.REDIS_HOST = 'localhost:1234';
+
+    const rateLimiterConfig = `{
+      "enabled": true,
+      "defaultBuckets": {
+        "globalBucket": { "capacity": 500, "addTokenMs": 50 },
+        "ipBucket": { "capacity": 100, "addTokenMs": 50 },
+        "emailBucket": { "capacity": 100, "addTokenMs": 50 },
+        "oktaIdentifierBucket": { "capacity": 100, "addTokenMs": 50 },
+        "accessTokenBucket": { "capacity": 100, "addTokenMs": 50 }
+      },
+      "routeBuckets": {
+        "/signin": {
+          "globalBucket": { "capacity": 500, "addTokenMs": 50 }
+        }
+      }
+    }`;
     process.env.RATE_LIMITER_CONFIG = rateLimiterConfig;
 
     const { getConfiguration } = await import('@/server/lib/getConfiguration');
@@ -128,21 +127,37 @@ describe('getConfiguration', () => {
   });
 
   test('it throws an exception if the port is not set', async () => {
-    process.env = {
-      RATE_LIMITER_CONFIG: rateLimiterConfig,
-    };
+    process.env = {};
     const { getConfiguration } = await import('@/server/lib/getConfiguration');
     expect(() => getConfiguration()).toThrow();
   });
 
   test('it throws an exception if the rate limiter configuration is not set', async () => {
-    process.env = {};
-    try {
-      await import('@/server/lib/getConfiguration');
-    } catch (error) {
-      expect(error).toEqual(
-        Error('Rate limiter configuration missing or malformed'),
-      );
-    }
+    process.env = { PORT: '9001' };
+
+    const { getConfiguration } = await import('@/server/lib/getConfiguration');
+    expect(getConfiguration).toThrowError(
+      Error('Rate limiter configuration missing'),
+    );
+  });
+
+  test('it throws an exception if a malformed rate limiter configuration is provided', async () => {
+    // Missing the required globalBucket from the defaultBuckets
+    const badRateLimiterConfig = `{
+      "enabled": true,
+      "defaultBuckets": { },
+      "routeBuckets": {
+        "/signin": {
+          "globalBucket": { "capacity": 500, "addTokenMs": 50 }
+        }
+      }
+    }`;
+    process.env = { PORT: '9001', RATE_LIMITER_CONFIG: badRateLimiterConfig };
+
+    const { getConfiguration } = await import('@/server/lib/getConfiguration');
+
+    expect(getConfiguration).toThrowError(
+      Error('"defaultBuckets.globalBucket" is required'),
+    );
   });
 });
