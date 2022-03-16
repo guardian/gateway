@@ -18,6 +18,11 @@ export const rateLimiterMiddleware = async (
   res: Response,
   next: NextFunction,
 ) => {
+  // No rate limiting if the limiter is explicitly disabled.
+  if (rateLimiter.enabled === false) {
+    return next();
+  }
+
   // Gets the route in the form /welcome/:token
   // TODO: decide if we also want to rate limit against specific tokens
   const routePathDefinition = req.route.path;

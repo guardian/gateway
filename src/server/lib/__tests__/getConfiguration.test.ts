@@ -2,6 +2,7 @@
 /* Linting rule disable as unit test needs to mutate env */
 
 import { getConfiguration } from '@/server/lib/getConfiguration';
+import type { Configuration } from '@/server/models/Configuration';
 import {
   GA_UID,
   GA_UID_HASH,
@@ -45,6 +46,23 @@ describe('getConfiguration', () => {
     process.env.REDIS_PASSWORD = 'redispassword';
     process.env.REDIS_HOST = 'localhost:1234';
 
+    process.env.RATE_LIMIT_CONFIGURATION = `
+    {
+      "enabled": true,
+      "defaultBuckets": {
+        "globalBucket": { "capacity": 500, "addTokenMs": 50 },
+        "ipBucket": { "capacity": 100, "addTokenMs": 50 },
+        "emailBucket": { "capacity": 100, "addTokenMs": 50 },
+        "oktaIdentifierBucket": { "capacity": 100, "addTokenMs": 50 },
+        "accessTokenBucket": { "capacity": 100, "addTokenMs": 50 }
+      },
+      "routeBuckets": {
+        "/signin": {
+          "globalBucket": { "capacity": 500, "addTokenMs": 50 }
+        }
+      }
+    }`;
+
     const output = getConfiguration();
     const expected = {
       port: 9000,
@@ -87,8 +105,25 @@ describe('getConfiguration', () => {
         password: 'redispassword',
         host: 'localhost:1234',
       },
+
       accountManagementUrl: 'https://manage.code.dev-theguardian.com',
-    };
+      rateLimiter: {
+        enabled: true,
+        defaultBuckets: {
+          globalBucket: { capacity: 500, addTokenMs: 50 },
+          ipBucket: { capacity: 100, addTokenMs: 50 },
+          emailBucket: { capacity: 100, addTokenMs: 50 },
+          oktaIdentifierBucket: { capacity: 100, addTokenMs: 50 },
+          accessTokenBucket: { capacity: 100, addTokenMs: 50 },
+        },
+        routeBuckets: {
+          '/signin': {
+            globalBucket: { capacity: 500, addTokenMs: 50 },
+          },
+        },
+      },
+    } as Configuration;
+
     expect(output).toEqual(expected);
   });
 

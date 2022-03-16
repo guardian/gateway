@@ -11,8 +11,9 @@ import {
 } from '@/server/models/Configuration';
 
 import { featureSwitches } from '@/shared/lib/featureSwitches';
+import loadRateLimiterConfiguration from './rate-limit/getRateLimiterConfiguration';
 
-import { rateLimiterConfig } from './rate-limit';
+const rateLimiter = loadRateLimiterConfiguration();
 
 const getOrThrow = (
   value: string | undefined,
@@ -223,6 +224,6 @@ export const getConfiguration = (): Configuration => {
     sentryDsn,
     redis,
     accountManagementUrl,
-    rateLimiter: rateLimiterConfig,
+    rateLimiter,
   };
 };

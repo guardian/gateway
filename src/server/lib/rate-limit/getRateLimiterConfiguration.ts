@@ -52,7 +52,7 @@ const tryReadEnvironmentVariable = () => {
   }
 };
 
-const loadConfiguration = () => {
+const getRateLimiterConfiguration = () => {
   const unvalidatedConfig = tryReadEnvironmentVariable() ?? tryReadConfigFile();
 
   if (typeof unvalidatedConfig === 'undefined') {
@@ -68,4 +68,4 @@ const loadConfiguration = () => {
   return value;
 };
 
-export default loadConfiguration();
+export default getRateLimiterConfiguration;
