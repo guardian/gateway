@@ -9,7 +9,7 @@ export const optInPrompt: ABTest = {
   author: 'liam.duffy.freelancer@guardian.co.uk',
   description:
     'Testing prompting users to opt in to newsletter / marketing after sign in',
-  audience: 0.1,
+  audience: 1,
   audienceOffset: 0,
   successMeasure: 'Understand impact on opt in rates',
   audienceCriteria:

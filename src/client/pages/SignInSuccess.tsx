@@ -14,6 +14,7 @@ import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { onboardingFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
+import { TEST_ID as IMAGE_TEST_ID } from '@/shared/model/experiments/tests/opt-in-prompt-image';
 
 const continueButtonWrapper = css`
   text-align: right;
@@ -34,10 +35,12 @@ type SignInSuccessProps = {
 export const SignInSuccess = ({ consents }: SignInSuccessProps) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
   const clientState = useClientState();
-  const { pageData = {}, queryParams } = clientState;
+  const { pageData = {}, queryParams, abTesting } = clientState;
+  const { participations } = abTesting ?? {};
+  const noImage = participations?.[IMAGE_TEST_ID]?.variant === 'no-image';
 
   return (
-    <ConsentsLayout title="Get the headlines sent to your inbox">
+    <ConsentsLayout title="Get the latest offers sent to your inbox">
       <form
         css={autoRow()}
         action={buildUrlWithQueryParams('/signin/success', {}, queryParams)}
@@ -61,6 +64,7 @@ export const SignInSuccess = ({ consents }: SignInSuccessProps) => {
             id={consent.id}
             defaultChecked={!!consent.consented}
             imagePath={CONSENT_IMAGES[consent.id]}
+            noImage={noImage}
           />
         ))}
         <div css={[controls, continueButtonWrapper]}>

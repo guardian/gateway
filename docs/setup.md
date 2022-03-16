@@ -19,7 +19,7 @@ Make sure you have one or the other or both:
 
 ### Environment File
 
-Populate `.env` and `cypress-ete.env` files by using the examples from [`.env.example`](../.env.example) and [`cypress-ete.env.example`](../cypress-ete.env.example.example). These `.env` files should **never** be committed as they store secrets.
+Populate `.env` and `cypress-ete.env` files by using the examples from [`.env.example`](../.env.example) and [`cypress-ete.env.example`](../cypress-ete.env.example). These `.env` files should **never** be committed as they store secrets.
 
 Depending on which stage (`DEV` or `CODE`) you want to connect to [Identity API (IDAPI)](https://github.com/guardian/identity), the `IDAPI_CLIENT_ACCESS_TOKEN` and `IDAPI_BASE_URL` variables will be different. If using the S3 config, it will point to the `CODE` instance of IDAPI.
 
