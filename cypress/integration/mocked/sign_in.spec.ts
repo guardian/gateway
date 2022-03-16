@@ -343,12 +343,6 @@ describe('Sign in flow', () => {
       );
     });
 
-    it('unless mvt id not in a / b test', () => {
-      cy.setCookie('GU_mvt_id', '100001');
-      signIn();
-      cy.url().should('include', defaultReturnUrl);
-    });
-
     it('unless no mvt id', () => {
       cy.clearCookie('GU_mvt_id');
       signIn();

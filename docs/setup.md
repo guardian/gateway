@@ -17,19 +17,15 @@ Make sure you have one or the other or both:
 
 ## Configuration
 
-### Environment File
-
-Populate `.env` and `cypress-ete.env` files by using the examples from [`.env.example`](../.env.example) and [`cypress-ete.env.example`](../cypress-ete.env.example.example). These `.env` files should **never** be committed as they store secrets.
-
-Depending on which stage (`DEV` or `CODE`) you want to connect to [Identity API (IDAPI)](https://github.com/guardian/identity), the `IDAPI_CLIENT_ACCESS_TOKEN` and `IDAPI_BASE_URL` variables will be different. If using the S3 config, it will point to the `CODE` instance of IDAPI.
-
 ### Nginx
 
 You can setup gateway to use a domain name locally (`https://profile.thegulocal.com`) and alongside identity-frontend by following the instructions from [`identity-platform/nginx`](https://github.com/guardian/identity-platform/tree/master/nginx).
 
 Using nginx is recommended as it secured with HTTPS and has a domain name allowing cookies to be set correctly, especially as many of the flows in gateway rely on Secure, SameSite=strict cookies.
 
-Nginx will attempt to resolve from gateway first, followed by dotcom/identity second, and finally identity-frontend on the `profile.thegulocal.com` subdomain.
+It is also _required_ for development against Okta, as Okta cookies, specifically the session cookie, have to be on the same domain as gateway so that we can use it for API calls.
+
+Nginx will attempt to resolve from gateway first, followed by dotcom/identity second, and finally identity-frontend on the `profile.thegulocal.com` subdomain. It also works as a reverse proxy against Okta for specific paths as mentioned in the reason above.
 
 When using nginx, be sure to set `BASE_URI` environment variable in `.env` to `profile.thegulocal.com` which will set the correct cookie domain and CSP (Content Secure Policy) headers.
 
@@ -44,6 +40,12 @@ This ensures that you don't get any certificate errors when running gateway and 
 ```sh
 FetchError: request to https://idapi.thegulocal.com/auth?format=cookies failed, reason: unable to verify the first certificate\n
 ```
+
+### Environment File
+
+Populate `.env` and `cypress-ete.env` files by using the examples from [`.env.example`](../.env.example) and [`cypress-ete.env.example`](../cypress-ete.example.env). These `.env` files should **never** be committed as they store secrets.
+
+Depending on which stage (`DEV` or `CODE`) you want to connect to [Identity API (IDAPI)](https://github.com/guardian/identity), the `IDAPI_CLIENT_ACCESS_TOKEN` and `IDAPI_BASE_URL` variables will be different. If using the S3 config, it will point to the `CODE` instance of IDAPI.
 
 ### S3 Config
 
@@ -60,7 +62,7 @@ $ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway
 $ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway/env-thegulocal-idapi-okta-code .env
 ```
 
-Without nginx (localhost:8861):
+Without nginx (localhost:8861), things will be broken if developing against Okta endpoints:
 
 ```sh
 # IDAPI/Okta pointing to DEV environment

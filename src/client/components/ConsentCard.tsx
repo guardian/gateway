@@ -63,9 +63,9 @@ const image = (imagePath?: string) => {
   `;
 };
 
-const titleHeading = css`
+const titleHeading = (noImage?: boolean) => css`
   ${headline.small()};
-  margin: ${space[3]}px 0 ${space[2]}px;
+  margin: ${space[noImage ? 1 : 3]}px 0 ${space[2]}px;
   font-size: 24px;
 
   ${between.tablet.and.desktop} {
@@ -121,34 +121,38 @@ const checkBoxBackgroundColorBugFix = css`
 `;
 
 export const iconStyles = css`
-  width: fit-content;
+  width: 23px;
+  height: 23px;
   border-radius: 100%;
   padding: 2px;
   svg {
     display: block;
     fill: ${neutral[100]};
-    height: 22px;
-    width: 22px;
   }
   margin-right: ${space[1]}px;
 `;
 
-const descriptionBlock = css`
+const descriptionBlock = (noTopBorderMobile?: boolean) => css`
+  ${!noTopBorderMobile && `border-top: 1px solid ${neutral[86]};`}
+
   ${from.tablet} {
     display: flex;
-    border-top: 1px solid ${neutral[86]};
     border-bottom: 1px solid ${neutral[86]};
+    border-top: 1px solid ${neutral[86]};
   }
 `;
 
-const infoGroup = css`
+const infoGroup = (noImage?: boolean) => css`
   position: relative;
   display: flex;
   flex-direction: column;
 
-  ${from.tablet} {
-    padding-left: ${space[5]}px;
-  }
+  ${!noImage &&
+  `
+    ${from.tablet} {
+      padding-left: ${space[5]}px;
+    }
+  `}
 `;
 
 // IE11 doesn't know that block-level elements shouldn't overflow their parent
@@ -171,9 +175,11 @@ interface ConsentCardProps {
   id: string;
   defaultChecked?: boolean;
   imagePath?: string;
+  noImage?: boolean;
   highlightColor?: string;
   frequency?: string;
   hiddenInput?: boolean;
+  noTopBorderMobile?: boolean;
   cssOverrides?: SerializedStyles;
 }
 
@@ -184,9 +190,11 @@ export const ConsentCard: FunctionComponent<ConsentCardProps> = ({
   id,
   defaultChecked,
   imagePath,
+  noImage,
   highlightColor = brand[400],
   frequency,
   hiddenInput = false,
+  noTopBorderMobile,
   cssOverrides,
 }) => {
   const TitleHeadingTag = `h${titleLevel}` as const;
@@ -221,10 +229,12 @@ export const ConsentCard: FunctionComponent<ConsentCardProps> = ({
         cssOverrides,
       ]}
     >
-      <div css={descriptionBlock}>
-        <div css={image(imagePath)} />
-        <div css={[infoGroup, ieFlexOverflowFix]}>
-          <TitleHeadingTag css={[titleHeading, `color: ${highlightColor}`]}>
+      <div css={descriptionBlock(noTopBorderMobile)}>
+        {!noImage && <div css={image(imagePath)} />}
+        <div css={[infoGroup(noImage), ieFlexOverflowFix]}>
+          <TitleHeadingTag
+            css={[titleHeading(noImage), `color: ${highlightColor}`]}
+          >
             {title}
           </TitleHeadingTag>
           <p css={p}>{description}</p>
