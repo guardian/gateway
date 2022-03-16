@@ -27,8 +27,6 @@ import {
   update as patchConsents,
 } from '@/server/lib/idapi/consents';
 import { loginMiddleware } from '@/server/lib/middleware/login';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { _ } from '@guardian/libs/dist/types/logger';
 import postSignInController from '@/server/lib/postSignInController';
 import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
 
