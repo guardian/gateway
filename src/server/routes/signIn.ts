@@ -279,7 +279,11 @@ router.post(
       consented: getConsentValueFromRequestBody(id, req.body),
     }));
 
-    await patchConsents(req.ip, sc_gu_u, consents);
+    try {
+      await patchConsents(req.ip, sc_gu_u, consents);
+    } catch (error) {
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+    }
 
     return res.redirect(303, redirectUrl);
   }),

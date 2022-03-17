@@ -343,12 +343,6 @@ describe('Sign in flow', () => {
       );
     });
 
-    it('unless no mvt id', () => {
-      cy.clearCookie('GU_mvt_id');
-      signIn();
-      cy.url().should('include', defaultReturnUrl);
-    });
-
     it('unless returnUrl is not default', () => {
       signIn(returnUrl);
       cy.url().should('include', returnUrl);
@@ -377,6 +371,18 @@ describe('Sign in flow', () => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const consentData = [{ ...supporterConsent!, consented: true }];
       cy.mockAll(200, createUser(consentData), USER_ENDPOINT);
+      signIn();
+      cy.url().should('include', defaultReturnUrl);
+    });
+
+    it('unless fetching consents fails', () => {
+      cy.mockAll(500, undefined, CONSENTS_ENDPOINT);
+      signIn();
+      cy.url().should('include', defaultReturnUrl);
+    });
+
+    it('unless fetching user consents fails', () => {
+      cy.mockAll(500, undefined, USER_ENDPOINT);
       signIn();
       cy.url().should('include', defaultReturnUrl);
     });
