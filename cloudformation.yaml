@@ -114,6 +114,10 @@ Resources:
                 Resource:
                   - !Sub arn:aws:s3:::identity-artifacts/${Stage}/${App}/*
               - Effect: Allow
+                Action: s3:GetObject
+                Resource:
+                  - !Sub arn:aws:s3:::identity-private-config/${Stage}/identity-gateway/*
+              - Effect: Allow
                 Action:
                   - kinesis:Describe*
                   - kinesis:Put*
@@ -188,6 +192,9 @@ Resources:
             aws s3 cp s3://identity-artifacts/${Stage}/${App}/${App}.zip /etc/gu
             unzip -o /etc/gu/${App}.zip -d /etc/gu
 
+            # Get Rate Limiter configuration file
+            aws s3 cp s3://identity-private-config/${Stage}/identity-gateway/.ratelimit.json /etc/gu/.ratelimit.json
+
             # Setup user
             groupadd identity-gateway
             useradd -r -s /usr/bin/nologin -g identity-gateway identity-gateway
@@ -215,6 +222,7 @@ Resources:
 
                 sleep 1
             done
+
 
             # systemd setup
             cat > /etc/systemd/system/identity-gateway.service <<EOL

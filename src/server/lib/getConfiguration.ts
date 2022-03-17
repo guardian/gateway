@@ -9,14 +9,17 @@ import {
   Stage,
   GU_MANAGE_URL,
 } from '@/server/models/Configuration';
-
 import { existsSync, readFileSync } from 'fs';
 import { featureSwitches } from '@/shared/lib/featureSwitches';
 import validateRateLimiterConfiguration from './rate-limit/getRateLimiterConfiguration';
+import path from 'path';
 
 const tryReadConfigFile = () => {
-  if (existsSync('.ratelimit.json')) {
-    const configJson = readFileSync('.ratelimit.json', 'utf-8');
+  if (existsSync(path.resolve(__dirname, '.ratelimit.json'))) {
+    const configJson = readFileSync(
+      path.resolve(__dirname, '.ratelimit.json'),
+      'utf-8',
+    );
     if (configJson) {
       return JSON.parse(configJson);
     }
