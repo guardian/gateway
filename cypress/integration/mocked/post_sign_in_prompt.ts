@@ -82,14 +82,26 @@ describe('Post sign-in prompt', () => {
     cy.url().should('include', returnUrl);
   });
 
-  it('fails silently if submit fails', () => {
+  it('fails silently if submit fails, but user did not consent', () => {
+    cy.mockAll(500, {}, USER_CONSENTS_ENDPOINT);
+    cy.visit('/signin/success');
+
+    cy.findByText('Continue to the Guardian').click();
+    cy.lastPayloadIs([{ id: 'supporter', consented: false }]);
+    cy.url().should('include', defaultReturnUrl);
+  });
+
+  it('shows error if submit fails and user did consent', () => {
     cy.mockAll(500, {}, USER_CONSENTS_ENDPOINT);
     cy.visit('/signin/success');
     cy.findByLabelText('Yes, sign me up').click();
 
     cy.findByText('Continue to the Guardian').click();
     cy.lastPayloadIs([{ id: 'supporter', consented: true }]);
-    cy.url().should('include', defaultReturnUrl);
+    cy.url().should('include', '/signin/success');
+    cy.findByText(
+      'There was a problem saving your choice, please try again.',
+    ).should('exist');
   });
 
   it('redirects to returnUrl if fetching consents fails', () => {

@@ -233,35 +233,48 @@ const oktaSignInController = async (
   }
 };
 
+const optInPromptController = async (
+  req: Request,
+  res: ResponseWithRequestState,
+  errorMessage?: string,
+) => {
+  const state = res.locals;
+  const { returnUrl } = state.pageData;
+  const { defaultReturnUri } = getConfiguration();
+  const redirectUrl = returnUrl || defaultReturnUri;
+
+  try {
+    const consents = await getUserConsentsForPage(
+      CONSENTS_POST_SIGN_IN_PAGE,
+      req.ip,
+      req.cookies.SC_GU_U,
+    );
+    const html = renderer('/signin/success', {
+      requestState: deepmerge(state, {
+        pageData: {
+          consents,
+        },
+        ...(errorMessage && {
+          globalMessage: {
+            error: errorMessage,
+          },
+        }),
+      }),
+      pageTitle: 'Signed in',
+    });
+    res.type('html').send(html);
+  } catch (error) {
+    logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+    return res.redirect(303, redirectUrl);
+  }
+};
+
 router.get(
   '/signin/success',
   loginMiddleware,
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const state = res.locals;
-    const { returnUrl } = state.pageData;
-    const { defaultReturnUri } = getConfiguration();
-    const redirectUrl = returnUrl || defaultReturnUri;
-
-    try {
-      const consents = await getUserConsentsForPage(
-        CONSENTS_POST_SIGN_IN_PAGE,
-        req.ip,
-        req.cookies.SC_GU_U,
-      );
-      const html = renderer('/signin/success', {
-        requestState: deepmerge(state, {
-          pageData: {
-            consents,
-          },
-        }),
-        pageTitle: 'Signed in',
-      });
-      res.type('html').send(html);
-    } catch (error) {
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
-      return res.redirect(303, redirectUrl);
-    }
-  }),
+  handleAsyncErrors((req: Request, res: ResponseWithRequestState) =>
+    optInPromptController(req, res),
+  ),
 );
 
 router.post(
@@ -278,11 +291,22 @@ router.post(
       id,
       consented: getConsentValueFromRequestBody(id, req.body),
     }));
+    const consented = consents.some((consent) => consent.consented);
 
     try {
       await patchConsents(req.ip, sc_gu_u, consents);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+
+      /**
+       * If user has consented, show them their preference failed to save
+       * Otherwise, send them on their way as they are already opted out
+       * (only opted out users are shown the prompt)
+       */
+      if (consented) {
+        const { message } = error instanceof ApiError ? error : new ApiError();
+        return optInPromptController(req, res, message);
+      }
     }
 
     return res.redirect(303, redirectUrl);
