@@ -44,13 +44,13 @@ autonumber
   User->>In app Browser Tab:submits password in password form
   In app Browser Tab->>Gateway:POST /welcome/{activationToken}
   note over Gateway:add session cookie to browser
-  Gateway->>In app Browser Tab: set Okta session Cookie and returns a redirect request to a "custom URL scheme" or claimed "https" scheme URIs
+  Gateway->>In app Browser Tab: set Okta session Cookie and returns a redirect <br/> request to a "custom URL scheme" or claimed "https" scheme URIs
   In app Browser Tab->>Native layer: picks up redirect request
   note over Native layer: use SDK to get user access tokens using .signIn(prompt=none) method
   Native layer->>In app Browser Tab: opens /authorize and
-  In app Browser Tab->>Okta: call /authorize and use Okta session cookie from previous step to get an authorization code
+  In app Browser Tab->>Okta: call /authorize and use Okta session <br/>cookie from previous step to get an authorization code
   Okta->>In app Browser Tab: return redirect request to the redirect_uri with an authorization code
-  In app Browser Tab->>Native layer: authorization code is returned to the configured callback uri which is a "custom URL scheme"
+  In app Browser Tab->>Native layer: authorization code is returned to the <br/>configured callback uri which is a "custom URL scheme"
   Native layer->>Okta: request for exchange for authorization code for tokens
   Okta->>Native layer: Id token, access token and refresh tokens are returned
   note over Native layer: The tokens are stored, and the user is authorized
