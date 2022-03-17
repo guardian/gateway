@@ -6,7 +6,7 @@ export const validateEmailAndPasswordSetSecurely = async (
 ): Promise<UserResponse> => {
   const timestamp = new Date().toISOString();
   return await updateUser(
-    { id: id },
+    { id },
     {
       profile: {
         emailValidated: true,

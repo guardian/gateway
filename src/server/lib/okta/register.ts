@@ -12,7 +12,7 @@ export const register = async (email: string): Promise<UserResponse> => {
   try {
     return await createUser({
       profile: {
-        email: email,
+        email,
         login: email,
         isGuardianUser: true,
         registrationPlatform: 'identity-gateway',
