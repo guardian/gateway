@@ -1,15 +1,41 @@
-export interface User {
+// https://developer.okta.com/docs/reference/api/users/#user-object
+export interface UserResponse {
   id: string;
   status: string;
-  profile: Profile;
+  profile: {
+    email: string;
+    login: string;
+    isGuardianUser?: boolean;
+  };
 }
 
-export interface Profile {
-  email: string;
-  login: string;
-  isGuardianUser?: boolean;
+export interface UserCreationRequest {
+  profile: {
+    email: string;
+    login: string;
+    isGuardianUser: boolean;
+    registrationPlatform: string;
+  };
 }
 
+export interface UserUpdateRequest {
+  profile: {
+    email?: string;
+    login?: string;
+    emailValidated?: boolean;
+    lastEmailValidatedTimestamp?: string;
+    passwordSetSecurely?: boolean;
+    lastPasswordSetSecurelyTimestamp?: string;
+    registrationIdp?: RegistrationIdp;
+    googleExternalId?: string;
+    appleExternalId?: string;
+    facebookExternalId?: string;
+  };
+}
+
+type RegistrationIdp = 'google' | 'apple' | 'facebook';
+
+// https://developer.okta.com/docs/reference/api/users/#user-status
 export enum Status {
   STAGED = 'STAGED',
   ACTIVE = 'ACTIVE',

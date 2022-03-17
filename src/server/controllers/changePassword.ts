@@ -31,6 +31,7 @@ import { OktaError } from '@/server/models/okta/Error';
 import { addToGroup, GroupCode } from '@/server/lib/idapi/user';
 import { checkTokenInOkta } from '@/server/controllers/checkPasswordToken';
 import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
+import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
 
 const { okta } = getConfiguration();
 
@@ -180,10 +181,19 @@ const changePasswordInOkta = async (
     validatePasswordFieldForOkta(password);
 
     if (stateToken) {
-      const { sessionToken } = await resetPasswordInOkta({
+      const { sessionToken, _embedded } = await resetPasswordInOkta({
         stateToken,
         newPassword: password,
       });
+
+      const { id } = _embedded?.user ?? {};
+      if (id) {
+        await validateEmailAndPasswordSetSecurely(id);
+      } else {
+        logger.error(
+          'Failed to set validation flags in Okta as there was no id',
+        );
+      }
 
       trackMetric('OktaUpdatePassword::Success');
 
