@@ -11,7 +11,7 @@ export default {
 export const Default = () => (
   <GlobalError
     link={{
-      link: '',
+      link: 'https://example.com',
       linkText: 'click here',
     }}
     error="An error message. For more information"
@@ -22,7 +22,7 @@ Default.storyName = 'default';
 export const Left = () => (
   <GlobalError
     link={{
-      link: '',
+      link: 'https://example.com',
       linkText: 'click here',
     }}
     error="An error message. For more information"
