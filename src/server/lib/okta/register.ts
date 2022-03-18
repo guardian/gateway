@@ -36,15 +36,15 @@ export const register = async (email: string): Promise<UserResponse> => {
       error.name === 'ApiValidationError' &&
       causesInclude(error.causes, 'already exists')
     ) {
-      const user = await getUser({ id: email });
+      const user = await getUser(email);
       const { status } = user;
       switch (status) {
         case Status.STAGED: {
-          await activateUser({ id: user.id });
+          await activateUser(user.id);
           return user;
         }
         case Status.PROVISIONED: {
-          await reactivateUser({ id: user.id });
+          await reactivateUser(user.id);
           return user;
         }
         case Status.ACTIVE || Status.RECOVERY || Status.PASSWORD_EXPIRED: {
@@ -77,15 +77,15 @@ export const register = async (email: string): Promise<UserResponse> => {
  * @returns {Promise<UserResponse>} Promise that resolves to the user object
  */
 export const resendRegistrationEmail = async (email: string) => {
-  const user: UserResponse = await getUser({ id: email });
+  const user: UserResponse = await getUser(email);
   const { status } = user;
   switch (status) {
     case Status.STAGED: {
-      await activateUser({ id: email });
+      await activateUser(email);
       break;
     }
     case Status.PROVISIONED: {
-      await reactivateUser({ id: email });
+      await reactivateUser(email);
       break;
     }
     // TODO: implement reset password email & emails for other user STATUSES
