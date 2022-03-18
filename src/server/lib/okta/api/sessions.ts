@@ -33,7 +33,7 @@ export const getSession = async (
   }).then(handleSessionResponse);
 };
 
-const handleSessionResponse = async (
+export const handleSessionResponse = async (
   response: Response,
 ): Promise<SessionResponse> => {
   if (response.ok) {
