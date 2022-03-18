@@ -1,39 +1,43 @@
+// social registration identity provider type
+type RegistrationIdp = 'google' | 'apple' | 'facebook';
+
+// https://developer.okta.com/docs/reference/api/users/#profile-object
+interface UserProfile {
+  email: string;
+  login: string;
+  isGuardianUser?: boolean;
+  registrationPlatform?: string;
+  emailValidated?: boolean;
+  lastEmailValidatedTimestamp?: string;
+  passwordSetSecurely?: boolean;
+  lastPasswordSetSecurelyTimestamp?: string;
+  registrationIdp?: RegistrationIdp;
+  googleExternalId?: string;
+  appleExternalId?: string;
+  facebookExternalId?: string;
+}
+
 // https://developer.okta.com/docs/reference/api/users/#user-object
 export interface UserResponse {
   id: string;
   status: string;
-  profile: {
-    email: string;
-    login: string;
-    isGuardianUser?: boolean;
-  };
+  profile: Pick<UserProfile, 'email' | 'login' | 'isGuardianUser'>;
 }
 
+// https://developer.okta.com/docs/reference/api/users/#request-parameters
 export interface UserCreationRequest {
-  profile: {
-    email: string;
-    login: string;
-    isGuardianUser: boolean;
-    registrationPlatform: string;
-  };
+  profile: NonNullable<
+    Pick<
+      UserProfile,
+      'email' | 'login' | 'isGuardianUser' | 'registrationPlatform'
+    >
+  >;
 }
 
+// https://developer.okta.com/docs/reference/api/users/#request-parameters-6
 export interface UserUpdateRequest {
-  profile: {
-    email?: string;
-    login?: string;
-    emailValidated?: boolean;
-    lastEmailValidatedTimestamp?: string;
-    passwordSetSecurely?: boolean;
-    lastPasswordSetSecurelyTimestamp?: string;
-    registrationIdp?: RegistrationIdp;
-    googleExternalId?: string;
-    appleExternalId?: string;
-    facebookExternalId?: string;
-  };
+  profile: Partial<UserProfile>;
 }
-
-type RegistrationIdp = 'google' | 'apple' | 'facebook';
 
 // https://developer.okta.com/docs/reference/api/users/#user-status
 export enum Status {

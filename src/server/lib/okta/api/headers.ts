@@ -5,6 +5,11 @@ export const defaultHeaders = {
   'Content-Type': 'application/json',
 };
 
+/**
+ * AuthorizationHeader
+ *
+ * @returns Authorization header with API token
+ */
 export const authorizationHeader = () => {
   const { okta } = getConfiguration();
   return {

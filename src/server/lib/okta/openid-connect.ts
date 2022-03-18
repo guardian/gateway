@@ -11,6 +11,7 @@ import { logger } from '@/server/lib/serverSideLogger';
 import { RoutePaths } from '@/shared/model/Routes';
 
 /**
+ * @interface AuthorizationState
  * An object to hold the state the user was in while performing the
  * Authorization Code flow.
  * - `stateParam` - Used as the `state` parameter in the Authorization Code Flow
@@ -19,7 +20,6 @@ import { RoutePaths } from '@/shared/model/Routes';
  *   - https://developer.okta.com/docs/reference/api/oidc/#parameter-details
  * - `queryParams` - Query params that were used to start the flow,
  *   for example the returnUrl, tracking (ref, refViewId), clientId, etc.
- * @interface AuthorizationState
  */
 interface AuthorizationState {
   stateParam: string;
@@ -28,6 +28,7 @@ interface AuthorizationState {
 }
 
 /**
+ * @interface OpenIdClient
  * Subset of properties of the 'openid-client' Client class.
  * This is so we can support a minimal set of mechanisms for
  * things we actually need to use.
@@ -36,7 +37,6 @@ interface AuthorizationState {
  * @property `callbackParams` - Get OpenID Connect query parameters returned to the callback (redirect_uri)
  * @property `callback` - Method used in the callback (redirect_uri) endpoint to get OAuth tokens
  *
- * @interface OpenIdClient
  */
 
 type OpenIdClient = Pick<
@@ -45,9 +45,9 @@ type OpenIdClient = Pick<
 >;
 
 /**
- * Object of redirect URIs used by OAuth apps (clients)
- *
  * @interface OpenIdClientRedirectUris
+ *
+ * Object of redirect URIs used by OAuth apps (clients)
  */
 interface OpenIdClientRedirectUris {
   WEB: `${string}${Extract<'/oauth/authorization-code/callback', RoutePaths>}`;
@@ -90,6 +90,8 @@ export const ProfileOpenIdClientRedirectUris: OpenIdClientRedirectUris = {
 };
 
 /**
+ * @class ProfileOpenIdClient
+ *
  * A subset of the 'openid-client' lib `Client` class
  * features/mechanisms to expose.
  * The client/app is the "profile" OAuth app in Okta
@@ -104,7 +106,10 @@ export const ProfileOpenIdClient = new OIDCIssuer.Client({
 }) as OpenIdClient;
 
 /**
+ * @class DevProfileIdClient
+ *
  * DEV ONLY
+ *
  * Generates a new issuer per request in dev env to simulate
  * custom domain as the issuer
  * this is because locally the issuer is probably profile.thegulocal.com
@@ -143,6 +148,8 @@ export enum OpenIdErrors {
 }
 
 /**
+ * @function generateRandomString
+ *
  * Generate a cryptographically secure random string to be used
  * as the `state` parameter in the authorization code flow
  * which is used as the state parameter value to prevent CSRF attacks.
@@ -153,6 +160,8 @@ const generateRandomString = (bytes = 16): string =>
   randomBytes(bytes).toString('hex');
 
 /**
+ * @function isAuthorizationState
+ *
  * Type guard to check that the parsed cookie is actually
  * of type Authorization state
  *
@@ -165,6 +174,8 @@ const isAuthorizationState = (obj: unknown): obj is AuthorizationState => {
 };
 
 /**
+ * @function generateAuthorizationState
+ *
  * Generate the `AuthorizationState` object to be stored as a
  * cookie on the client, and the `stateParam` used by the Authorization
  * Code flow.
@@ -199,6 +210,8 @@ const AuthorizationStateCookieOptions: CookieOptions = {
 };
 
 /**
+ * @name setAuthorizationStateCookie
+ *
  * Tells express to set the cookie response header for the
  * `AuthorizationState` The value is Base64 encoded. Name set
  * as `${AuthorizationStateCookieName}`.
@@ -227,6 +240,8 @@ export const setAuthorizationStateCookie = (
 };
 
 /**
+ * @name getAuthorizationStateCookie
+ *
  * Get the `AuthorizationState` cookie (${AuthorizationStateCookieName}).
  * If the cookie doesn't exist, or the signature failed
  * verification then `null` is returned.
@@ -261,6 +276,8 @@ export const getAuthorizationStateCookie = (
 };
 
 /**
+ * @name deleteAuthorizationStateCookie
+ *
  * Delete the `AuthorizationState` cookie (`${AuthorizationStateCookieName}`).
  * This should be called once the Authorization Code Flow is complete
  * as the cookie has been used and no longer required.

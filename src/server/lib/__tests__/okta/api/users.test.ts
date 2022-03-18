@@ -4,7 +4,7 @@ import type { Response, RequestInfo, RequestInit } from 'node-fetch';
 import {
   activateUser,
   createUser,
-  fetchUser,
+  getUser,
   reactivateUser,
 } from '@/server/lib/okta/api/users';
 import { OktaError } from '@/server/models/okta/Error';
@@ -165,7 +165,7 @@ describe('okta#fetchUser', () => {
       Promise.resolve({ ok: true, json } as Response),
     );
 
-    const response = await fetchUser(userId);
+    const response = await getUser(userId);
     expect(response).toEqual(user);
   });
 
@@ -182,7 +182,7 @@ describe('okta#fetchUser', () => {
       Promise.resolve({ ok: false, status: 404, json } as Response),
     );
 
-    await expect(fetchUser(userId)).rejects.toThrowError(
+    await expect(getUser(userId)).rejects.toThrowError(
       new OktaError({ message: 'Not found: Resource not found: 12345 (User)' }),
     );
   });

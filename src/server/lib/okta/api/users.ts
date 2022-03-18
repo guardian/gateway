@@ -21,14 +21,22 @@ import { Response } from 'node-fetch';
 import { OktaError } from '@/server/models/okta/Error';
 import { handleErrorResponse } from '@/server/lib/okta/api/errors';
 
-/**
- * Okta's Users API endpoints, see - https://developer.okta.com/docs/reference/api/users/
- */
-
 const { okta } = getConfiguration();
 
 /**
- * @param body the request body to create a user in Okta
+ * Okta's Users API
+ * https://developer.okta.com/docs/reference/api/users/
+ */
+
+/**
+ * @name createUser
+ * @description Creates a new user in Okta with or without credentials
+ *
+ * https://developer.okta.com/docs/reference/api/users/#create-user
+ *
+ * @param {UserCreationRequest} body the request body to create a user in Okta
+ *
+ * @returns Promise<UserResponse>
  */
 export const createUser = async (
   body: UserCreationRequest,
@@ -42,9 +50,16 @@ export const createUser = async (
 };
 
 /**
+ * @name updateUser
+ * @description Updates a user's profile or credentials with partial update semantics
+ *
+ * https://developer.okta.com/docs/reference/api/users/#update-profile-with-id
+ *
  * @param id accepts the Okta user ID, email address (login) or login shortname (as long as it is unambiguous)
  * @param body the fields to update on the User object. This performs a partial update, so it is only necessary
  * to pass in the fields you wish to update.
+ *
+ * @returns Promise<UserResponse>
  */
 export const updateUser = async <P extends OktaApiRoutePaths>(
   id: ExtractRouteParams<P>,
@@ -59,9 +74,16 @@ export const updateUser = async <P extends OktaApiRoutePaths>(
 };
 
 /**
+ * @name getUser
+ * @description Get a user by ID/Email/Login
+ *
+ * https://developer.okta.com/docs/reference/api/users/#get-user
+ *
  * @param id accepts the Okta user ID, email address (login) or login shortname (as long as it is unambiguous)
+ *
+ * @returns Promise<UserResponse>
  */
-export const fetchUser = async <P extends OktaApiRoutePaths>(
+export const getUser = async <P extends OktaApiRoutePaths>(
   id: ExtractRouteParams<P>,
 ): Promise<UserResponse> => {
   const path = buildUrl('/api/v1/users/:id', id);
@@ -71,7 +93,23 @@ export const fetchUser = async <P extends OktaApiRoutePaths>(
 };
 
 /**
+ * @name activateUser
+ * @description Activates a user
+ *
+ * https://developer.okta.com/docs/reference/api/users/#activate-user
+ *
+ * This operation can only be performed on users with a `STAGED` or `DEPROVISIONED` status.
+ * Activation of a user is an asynchronous operation.
+ *
+ * - The user's `transitioningToStatus` property has a value of `ACTIVE` during activation to indicate that the user hasn't completed the asynchronous operation.
+ * - The user's status is `ACTIVE` when the activation process is complete.
+ *
+ * Users who don't have a password must complete the welcome flow
+ * by visiting the activation link to complete the transition to `ACTIVE` status.
+ *
  * @param id accepts the Okta user ID, email address (login) or login shortname (as long as it is unambiguous)
+ *
+ * @returns Promise<void>
  */
 export const activateUser = async <P extends OktaApiRoutePaths>(
   id: ExtractRouteParams<P>,
@@ -88,7 +126,21 @@ export const activateUser = async <P extends OktaApiRoutePaths>(
 };
 
 /**
+ * @name reactivateUser
+ * @description Reactivates a user
+ *
+ * https://developer.okta.com/docs/reference/api/users/#reactivate-user
+ *
+ * This operation can only be performed on users with a `PROVISIONED` status.
+ * This operation restarts the activation workflow if for some reason the
+ * user activation was not completed when using the activationToken from Activate User.
+ *
+ * Users that don't have a password must complete the flow by completing
+ * Reset Password steps to transition the user to `ACTIVE` status.
+ *
  * @param id accepts the Okta user ID, email address (login) or login shortname (as long as it is unambiguous)
+ *
+ * @returns Promise<void>
  */
 export const reactivateUser = async <P extends OktaApiRoutePaths>(
   id: ExtractRouteParams<P>,
@@ -104,6 +156,13 @@ export const reactivateUser = async <P extends OktaApiRoutePaths>(
   }).then(handleVoidResponse);
 };
 
+/**
+ * @name handleUserResponse
+ * @description Handles the response from Okta's /users endpoint
+ * and converts it to a UserResponse object
+ * @param response node-fetch response object
+ * @returns Promise<UserResponse>
+ */
 const handleUserResponse = async (
   response: Response,
 ): Promise<UserResponse> => {

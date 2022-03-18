@@ -8,9 +8,11 @@ import {
 } from '@/server/lib/okta/openid-connect';
 
 /**
- * Method to perform the Authorization Code Flow
- * for a) the sign in session check
- * and b) post authentication (with the session token)
+ * @name performAuthorizationCodeFlow
+ * @description Helper method to perform the Authorization Code Flow
+ *
+ * Used for post authentication with the session token to set a session cookie.
+ *
  * @param res - the express response object
  * @param sessionToken (optional) - if provided, we'll use this to set the session cookie
  * @param confirmationPagePath (optional) - page to redirect the user to after authentication
