@@ -170,6 +170,7 @@
     "timeout-signal": "^1.1.0",
     "winston": "^3.7.2",
     "winston-transport": "^4.5.0",
-    "zod": "^3.16.0"
+    "zod": "^3.16.0",
+    "zustand": "^3.7.1"
   }
 }
