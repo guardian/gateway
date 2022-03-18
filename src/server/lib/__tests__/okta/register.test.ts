@@ -2,7 +2,7 @@ import { register } from '@/server/lib/okta/register';
 import { mocked } from 'jest-mock';
 import {
   createUser,
-  fetchUser,
+  getUser,
   activateUser,
   reactivateUser,
 } from '@/server/lib/okta/api/users';
@@ -32,7 +32,7 @@ jest.mock('@/server/lib/okta/api/users');
 const mockedCreateOktaUser =
   mocked<(body: UserCreationRequest) => Promise<UserResponse>>(createUser);
 const mockedFetchOktaUser =
-  mocked<(id: string) => Promise<UserResponse>>(fetchUser);
+  mocked<(id: string) => Promise<UserResponse>>(getUser);
 const mockedActivateOktaUser =
   mocked<(id: string) => Promise<void>>(activateUser);
 const mockedReactivateOktaUser =

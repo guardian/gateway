@@ -26,6 +26,13 @@ const extractErrorResponse = async (
   }
 };
 
+/**
+ * @name extractErrorResponse
+ * @description Handles the response from an Okta error response
+ * and converts it to a ErrorResponse object
+ * @param response node-fetch response object
+ * @returns Promise<ErrorResponse>
+ */
 export const handleErrorResponse = async (response: Response) => {
   const error = await extractErrorResponse(response);
   throw new OktaError({
@@ -36,6 +43,13 @@ export const handleErrorResponse = async (response: Response) => {
   });
 };
 
+/**
+ * @name causesInclude
+ * @description Checks the error `causes` array for a specific error cause
+ * @param {string[]} causes Array of error causes
+ * @param {string} substring
+ * @returns boolean
+ */
 export const causesInclude = (
   causes: Array<ErrorCause>,
   substring: string,
