@@ -11,7 +11,6 @@ import {
 describe('Sign in flow', () => {
   beforeEach(() => {
     cy.mockPurge();
-    cy.fixture('users').as('users');
   });
 
   context('A11y checks', () => {
@@ -308,7 +307,6 @@ describe('Sign in flow', () => {
     beforeEach(() => {
       cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
       cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
-      cy.setCookie('GU_mvt_id', '1');
       // Intercept the pages that we would redirect to.
       // We just want to check that the redirect happens, not that the page loads.
       cy.intercept('GET', '/signin/success*', (req) => {

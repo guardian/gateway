@@ -1,7 +1,17 @@
+import { stringify } from 'query-string';
+
 const oauthBaseUrl = 'https://oauth.code.dev-theguardian.com';
 const returnUrl =
   'https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance';
 const defaultReturnUrl = 'https://m.code.dev-theguardian.com';
+
+export const beforeEach = () => {
+  // Disable redirect to /signin/success by default
+  cy.setCookie(
+    'GU_ran_experiments',
+    stringify({ OptInPromptPostSignIn: Date.now() }),
+  );
+};
 
 export const linksToTheGoogleTermsOfServicePage = (isOkta = false) => {
   return [

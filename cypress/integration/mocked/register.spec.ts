@@ -4,7 +4,6 @@ import { invalidEmailAddress } from '../../support/idapi/guest';
 describe('Registration flow', () => {
   beforeEach(() => {
     cy.mockPurge();
-    cy.fixture('users').as('users');
   });
 
   context('A11y checks', () => {
