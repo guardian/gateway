@@ -14,7 +14,7 @@ const handleError = ({ status = 500 }: IDAPIError) => {
   throw new IdapiError({ message: GenericErrors.DEFAULT, status });
 };
 
-export const logout = async (
+export const logoutFromIDAPI = async (
   sc_gu_u: string,
   ip: string,
 ): Promise<IdapiCookies | undefined> => {
