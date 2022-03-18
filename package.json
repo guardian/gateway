@@ -170,6 +170,7 @@
     "supertest": "^6.3.3",
     "winston": "^3.8.2",
     "winston-transport": "^4.5.0",
-    "zod": "^3.19.1"
+    "zod": "^3.19.1",
+    "zustand": "^3.7.1"
   }
 }
