@@ -1,10 +1,5 @@
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import {
-  buildApiUrlWithQueryParams,
-  buildUrl,
-  ExtractRouteParams,
-} from '@/shared/lib/routeUtils';
-import { OktaApiRoutePaths } from '@/shared/model/Routes';
+import { buildApiUrlWithQueryParams, buildUrl } from '@/shared/lib/routeUtils';
 import { joinUrl } from '@guardian/libs';
 import { fetch } from '@/server/lib/fetch';
 import {
@@ -61,11 +56,11 @@ export const createUser = async (
  *
  * @returns Promise<UserResponse>
  */
-export const updateUser = async <P extends OktaApiRoutePaths>(
-  id: ExtractRouteParams<P>,
+export const updateUser = async (
+  id: string,
   body: UserUpdateRequest,
 ): Promise<UserResponse> => {
-  const path = buildUrl('/api/v1/users/:id', id);
+  const path = buildUrl('/api/v1/users/:id', { id });
   return await fetch(joinUrl(okta.orgUrl, path), {
     method: 'POST',
     body: JSON.stringify(body),
@@ -83,10 +78,9 @@ export const updateUser = async <P extends OktaApiRoutePaths>(
  *
  * @returns Promise<UserResponse>
  */
-export const getUser = async <P extends OktaApiRoutePaths>(
-  id: ExtractRouteParams<P>,
-): Promise<UserResponse> => {
-  const path = buildUrl('/api/v1/users/:id', id);
+
+export const getUser = async (id: string): Promise<UserResponse> => {
+  const path = buildUrl('/api/v1/users/:id', { id });
   return fetch(joinUrl(okta.orgUrl, path), {
     headers: { ...defaultHeaders, ...authorizationHeader() },
   }).then(handleUserResponse);
@@ -111,12 +105,10 @@ export const getUser = async <P extends OktaApiRoutePaths>(
  *
  * @returns Promise<void>
  */
-export const activateUser = async <P extends OktaApiRoutePaths>(
-  id: ExtractRouteParams<P>,
-): Promise<void> => {
+export const activateUser = async (id: string): Promise<void> => {
   const path = buildApiUrlWithQueryParams(
     '/api/v1/users/:id/lifecycle/activate',
-    id,
+    { id },
     { sendEmail: true },
   );
   return await fetch(joinUrl(okta.orgUrl, path), {
@@ -142,12 +134,10 @@ export const activateUser = async <P extends OktaApiRoutePaths>(
  *
  * @returns Promise<void>
  */
-export const reactivateUser = async <P extends OktaApiRoutePaths>(
-  id: ExtractRouteParams<P>,
-): Promise<void> => {
+export const reactivateUser = async (id: string): Promise<void> => {
   const path = buildApiUrlWithQueryParams(
     '/api/v1/users/:id/lifecycle/reactivate',
-    id,
+    { id },
     { sendEmail: true },
   );
   return await fetch(joinUrl(okta.orgUrl, path), {
@@ -168,13 +158,17 @@ export const reactivateUser = async <P extends OktaApiRoutePaths>(
  * @param oauthTokens (optional, default: `true`) Revoke issued OpenID Connect and OAuth refresh and access tokens
  * @returns Promise<void>
  */
-export const clearUserSessions = async <P extends OktaApiRoutePaths>(
-  id: ExtractRouteParams<P>,
+export const clearUserSessions = async (
+  id: string,
   oauthTokens = true,
 ): Promise<void> => {
-  const path = buildApiUrlWithQueryParams('/api/v1/users/:id/sessions', id, {
-    oauthTokens,
-  });
+  const path = buildApiUrlWithQueryParams(
+    '/api/v1/users/:id/sessions',
+    { id },
+    {
+      oauthTokens,
+    },
+  );
   return await fetch(joinUrl(okta.orgUrl, path), {
     method: 'DELETE',
     headers: { ...defaultHeaders, ...authorizationHeader() },
