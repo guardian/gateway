@@ -251,6 +251,8 @@ Sometimes data is needed by the client to render a specific component, e.g. an e
 
 It's then possible to access the state through the [`useClientState`](../src/client/lib/hooks/useClientState.ts) hook in a descendent component.
 
+If you're looking to add interactivity to the client, you should use the [`Islet`](#islets---islands-architecture) (islands architecture) pattern, defined below in this file.
+
 Here's an example of adding some test data to the client state.
 
 Firstly define it in the [`RequestState`](../src/server/models/Express.ts) interface. It can be optional or required property. It's also helpful to set a sensible default value in `getDefaultRequestState` method if it needs to be defined.
@@ -274,9 +276,23 @@ This is added to `res.locals` **ONLY** in `requestStateMiddleware`.
 
 Make sure the state addition does not in anyway remember state between requests, for example **DO NOT USE** the singleton pattern/export raw object literals.
 
-Object mutation will be disabled via linting in the near future.
+If you would like to add or change properties inside the request state, you can use the `deepmerge` library to merge the state with the existing state.
 
-Next make it available in the [`ClientState`](../src/shared/model/ClientState.ts) interface, if you want it accessible on the client. It should be optional property, as the client can never be sure that the property will exist.
+```ts
+...
+import deepmerge from 'deepmerge';
+...
+const html = renderer(path, {
+  ...
+  requestState: deepmerge(state, {
+    globalMessage: {
+      error: message,
+    },
+  }),
+});
+```
+
+Next make it available in the [`ClientState`](../src/shared/model/ClientState.ts) interface, if you want it accessible on the client. It should be optional property, as the client can never be sure that the property will exist. This state is also immutable, and should not be changes on the client side, as it's primary goal is to be used for rendering.
 
 ```ts
 ...
@@ -561,6 +577,225 @@ To facilitate this, a client bundle is created at build time to the `build/stati
 We provide two bundles to the client; a `modern` bundle for browsers who support `<script type="module">`, and a `legacy` bundle for browsers who do not. The modern bundle means we can provide a smaller javascript payload to the browser as we don't have to provide polyfills/shims for features like `fetch`, `Promise`, `async await`, etc. The legacy bundle targets ES5 and IE11, and thus is of larger size to provide compatibility with modern features.
 
 When developing be sure to pay attention to the outputted bundle sizes. For `modern` browsers, an asset cannot be over `384kb`, and the total entrypoint cannot be over `512kb`. For legacy it's `512kb` for an asset, and `768kb` for the total entrypoint. While we don't throw an error if these limits are exceeded, a warning does appear in the console.
+
+### Islets - Islands Architecture
+
+The [islands architecture](https://www.patterns.dev/posts/islands-architecture/) is a form of partial hydration, where instead of [hydrating](https://reactjs.org/docs/react-dom.html#hydrate) the whole server rendered application, we only hydrate and add interactivity only to parts of the page that require it.
+
+There are a number of benefits to this approach:
+
+1. Reduces bundle size
+
+- The code sent only consists of the script required for interactive components, which is much less than the script needed to recreate the virtual DOM for the entire page and rehydrate all the elements on the page.
+- The smaller size of JavaScript automatically corresponds to faster page loads and Time to Interactive (TTI).
+
+2. Promotes code-splitting
+
+- Code-splitting is an integral part of partial hydration because chunks of code need to be created for individual components are lazy-loaded.
+
+3. Promotes a component-based architecture
+
+- Forces us to think about components/scripts in a small and self contained way
+
+4. Accessibility
+
+- Nearly everything is static HTML and CSS, which means that lower performance devices, and slow connections will be able to use the website without waiting too long
+
+We call our implementation of this architecture "Islets". From:
+
+**islet**
+/ˈʌɪlɪt/
+_noun_
+a small island
+
+We call them "Islets" to emphasize that these should be small and self contained islands of interactivity. Our approach goes a steps further and only allows for hydration of server rendered components, as well as the insertion/execution of vanilla JS scripts/functions.
+
+#### Implementation details
+
+- By default all components should be rendered on the server
+- Use islets for any client side code
+- Client side code should not be essential for functionality
+  - Except for the current implementation of recaptcha
+- Islets should allow for vanilla JS, as well as React components (hydrated).
+  - Vanilla JS methods should be used for non-user facing things, e.g. tracking
+  - React components should be used for user facing things, e.g. adding interactivity to forms
+- Islets should be used as a getaway destination
+  - i.e. a last resort if it cannot be done on the server
+  - or to add interactivity to server rendered components without making the client side interactivity essential
+- Islets should be as small and self contained as possible
+
+#### Usage
+
+##### Component
+
+Mark your React component as importable using the `[ComponentName].importable.tsx` syntax in the `src/client/components` directory.
+
+`[ComponentName]` **must** be the name of the **only** export, and the same in the filename. Otherwise webpack will do some funky things. You also can't use path aliases for `.importable` files, as the path name for dynamic imports has to be static.
+
+```ts
+// NO:
+import { ExampleComponent } from '@/client/components/ExampleComponent.importable';
+
+// YES
+import { ExampleComponent } from '../components/ExampleComponent.importable';
+```
+
+```tsx
+// src/client/components/ExampleComponent.importable.tsx
+
+import React from 'react';
+
+interface Props {
+  foo: string;
+}
+
+export const ExampleComponent = ({ foo }: Props) => {
+  const [bar, setBar] = React.useState(0);
+
+  return (
+    <>
+      <h1>{foo}</h1>
+      <p>{bar}</p>
+      <button onClick={() => setBar(bar + 1)}>Increment</button>
+    </>
+  );
+};
+```
+
+Then you wrap this component with the `Islet` component when you want to use it. For React components, you have to pass the `type="component"` prop to tell the Islet code that you're trying to import a React component. We also recommend to provide the `deferUntil` prop, but this is optional. This is used to delay when the component should hydrate.
+
+```tsx
+import React from 'react';
+import { Islet } from '@/client/components/Islet';
+import { ExampleComponent } from '../components/ExampleComponent.importable';
+
+export const SomePage = (props: Props) => {
+  return (
+    <>
+      ...
+      <Islet type="component" deferUntil="idle">
+        <ExampleComponent foo="Hello" />
+      </Islet>
+      ...
+    </>
+  );
+};
+```
+
+##### Script/Function/Method
+
+You can also use Islets to dynamically import and execute a vanilla JavaScript script/function/method.
+
+Mark your script as importable using the `[ScriptName].importable.ts` syntax in the `src/client/lib` directory.
+
+`[ScriptName]` **must** be the name of the **only** export, and the same in the filename. Otherwise webpack will do some funky things.
+
+```ts
+// src/client/lib/ExampleScript.importable.ts
+
+interface ExampleScriptArgs {
+  foo?: string;
+}
+
+export const ExampleScript = ({ foo }: ExampleScriptArgs = {}) => {
+  alert('hello from ExampleScript.importable.tsx! Foo is ' + foo);
+};
+```
+
+Then you wrap this component with the `Islet` component when you want to use it.
+For scripts, you have to pass the `type="script"` prop to tell the Islet code that you're trying to import and execute a vanilla JS script method.
+You **must** pass the `name` of the script/method as an argument.
+You can also provide arguments to the function through the `args` prop, this should be a `JSON.stringify`able object.
+We also recommend to provide the `deferUntil` prop, but this is optional. This is used to delay when the component should execute.
+
+```tsx
+import React from 'react';
+import { Islet } from '@/client/components/Islet';
+import { ExampleScript } from '../lib/ExampleScript.importable';
+
+export const SomePage = (props: Props) => {
+  return (
+    <>
+      ...
+      <Islet
+        type="script"
+        name={ExampleScript.name}
+        args={{ foo: 'idle' }}
+        deferUntil="idle"
+      />
+      ...
+    </>
+  );
+};
+```
+
+#### Islet State Sharing
+
+It's also possible to share and update a state between Islets. This is available through the `isletStateStore` and `useIsletStateStore` hook.
+
+This is achieved using [Zustand](https://github.com/pmndrs/zustand), which is a small state-management library which is able to share state between different renderers i.e. different islets/islands.
+
+This PR has a barebones implementation of the library, just setting up the store itself and the hook.
+
+This is useful, for example, if we want an action from one Islet to update something in another Islet.
+This is not possible with React Context currently, and we don't want to use a large state management solution (Zustand is <1kb gzipped).
+
+This also doesn't replace our usage of React Context (through `ClientState`), which is used to load a state based on the request, and should be immutable.
+
+##### Usage
+
+Add the property to the `IsletState` interface, and if required, a default value in the store:
+
+```ts
+// src/client/lib/isletStateStore.ts
+...
+interface IsletState {
+  count: number;
+  setIsletState: (state: Partial<IsletState>) => void;
+}
+...
+export const isletStateStore = create<IsletState>((set) => ({
+  count: 0,
+  setIsletState: (isletState) => set((state) => ({ ...state, ...isletState })),
+}));
+
+```
+
+Then inside your `importable` you can use this:
+
+```tsx
+// src/client/components/ExampleComponent.importable.tsx
+
+import React from 'react';
+import { useIsletStateStore } from '../lib/hooks/useIsletStateStore';
+
+interface Props {
+  foo: string;
+}
+
+export const ExampleComponent = ({ foo }: Props) => {
+  const setIsletState = useIsletStateStore((state) => state.setIsletState);
+  const count = useIsletStateStore((state) => state.count);
+
+  return (
+    <>
+      <h1>{foo}</h1>
+      <p>Count: {count}</p>
+      <button
+        onClick={() => {
+          setIsletState({ count: count + 1 });
+        }}
+      >
+        Increment from {foo}
+      </button>
+    </>
+  );
+};
+```
+
+This state is shared between all Islets using this store:
+
+![chrome_w1zKNnpajx](https://user-images.githubusercontent.com/13315440/159052638-0f9fd7c4-4137-47f4-b8d6-f7b113584e2d.gif)
 
 ## CSP (Content Secure Policy)
 

@@ -4,8 +4,16 @@ import create from 'zustand/vanilla';
  * @name IsletState
  * @description Add properties to this interface to share between Islet components.
  */
-interface IsletState {
-  setIsletState: (state: Partial<Omit<IsletState, 'setIsletState'>>) => void;
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface IsletState {}
+
+/**
+ * @name IsletStateStore
+ * @description Generic store state used to set state, use IsletState for properties
+ */
+interface IsletStateStore {
+  isletState: IsletState;
+  setIsletState: (isletState: IsletState) => void;
 }
 
 /**
@@ -18,6 +26,8 @@ interface IsletState {
  *
  * You probably want to use the hook [`useIsletStateStore`](./hooks/useIsletStateStore.ts) for React Islet components.
  */
-export const isletStateStore = create<IsletState>((set) => ({
-  setIsletState: (isletState) => set((state) => ({ ...state, ...isletState })),
+export const isletStateStore = create<IsletStateStore>((set) => ({
+  isletState: {},
+  setIsletState: (newIsletState) =>
+    set((state) => ({ isletState: { ...state.isletState, ...newIsletState } })),
 }));

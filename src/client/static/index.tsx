@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable functional/immutable-data */
 import { loadableReady } from '@loadable/component';
 import {

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { createElement } from 'react';
 import { hydrate } from 'react-dom';
 
