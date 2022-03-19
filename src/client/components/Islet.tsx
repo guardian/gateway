@@ -42,6 +42,8 @@ type Props = ComponentIsletProps | ScriptIsletProps;
  * @param name - The name of the exported method/function from a script being inserted. Use with `type` of `script`.
  * @param args - The arguments object to pass to the given method/function from a script being inserted. Use with `type` of `script`.
  * @param cssOverrides - Overrides for the islet's css styles.
+ *
+ * See [development docs - `Islet`](https://github.com/guardian/gateway/blob/main/docs/development.md#islets---islands-architecture) for implementation/usage details.
  */
 export const Islet = ({
   children,
