@@ -80,43 +80,66 @@ describe('rate limiter middleware', () => {
     new Redis().flushall().then(() => done());
   });
 
-  it('should rate limit all clients when the global bucket is empty', async () => {
-    const rateLimiterConfig = JSON.stringify({
-      enabled: true,
-      defaultBuckets: {
-        globalBucket: { capacity: 2, addTokenMs: 100 },
-      },
-    } as RateLimiterConfiguration);
+  const getServerInstance = async (
+    rateLimiterConfig: RateLimiterConfiguration,
+  ) => {
     // eslint-disable-next-line functional/immutable-data
-    process.env = { ...defaultEnv, RATE_LIMITER_CONFIG: rateLimiterConfig };
+    process.env = {
+      ...defaultEnv,
+      RATE_LIMITER_CONFIG: JSON.stringify(rateLimiterConfig),
+    };
 
     // Start the application server.
     const { default: server } = await import('@/server/index');
 
+    const handle = setTimeout(() => {
+      if (server.listening) {
+        server.close();
+      }
+    }, 14000);
+
+    const done = async () => {
+      clearTimeout(handle);
+      await new Promise((r) => server.close(r));
+    };
+
+    return { server, done };
+  };
+
+  it('should rate limit all clients when the global bucket is empty', async () => {
+    const rateLimiterConfig = {
+      enabled: true,
+      defaultBuckets: {
+        globalBucket: { capacity: 2, addTokenMs: 500 },
+      },
+    } as RateLimiterConfiguration;
+
+    const { server, done } = await getServerInstance(rateLimiterConfig);
+
+    // Consume both global tokens, expect third request to be limited.
     await request(server).get('/register').expect(200);
     await request(server).get('/register').expect(200);
     await request(server).get('/register').expect(429);
 
-    await new Promise((r) => setTimeout(r, 100));
+    await new Promise((r) => setTimeout(r, 500));
 
+    // After 100ms, user can make a request again.
     await request(server).get('/register').expect(200);
 
-    await new Promise((res) => server.close(res));
+    await done();
   });
 
   it('should rate limit when the ip rate limit bucket is empty', async () => {
-    const rateLimiterConfig = JSON.stringify({
+    const rateLimiterConfig = {
       enabled: true,
       defaultBuckets: {
-        globalBucket: { capacity: 10, addTokenMs: 100 },
-        ipBucket: { capacity: 2, addTokenMs: 100 },
+        globalBucket: { capacity: 10, addTokenMs: 500 },
+        ipBucket: { capacity: 2, addTokenMs: 500 },
       },
-    } as RateLimiterConfiguration);
-    // eslint-disable-next-line functional/immutable-data
-    process.env = { ...defaultEnv, RATE_LIMITER_CONFIG: rateLimiterConfig };
+    } as RateLimiterConfiguration;
 
     // Start the application server.
-    const { default: server } = await import('@/server/index');
+    const { server, done } = await getServerInstance(rateLimiterConfig);
 
     // After two requests, 192.168.2.1 should hit the rate limit.
     await request(server)
@@ -138,7 +161,7 @@ describe('rate limiter middleware', () => {
       .set('X-Forwarded-For', '192.168.2.7')
       .expect(200);
 
-    await new Promise((r) => setTimeout(r, 100));
+    await new Promise((r) => setTimeout(r, 500));
 
     // After 100ms 192.168.2.1 can make a request again.
     await request(server)
@@ -146,22 +169,20 @@ describe('rate limiter middleware', () => {
       .set('X-Forwarded-For', '192.168.2.1')
       .expect(200);
 
-    await new Promise((res) => server.close(res));
+    await done();
   });
 
   it('should rate limit when the access token bucket is empty', async () => {
-    const rateLimiterConfig = JSON.stringify({
+    const rateLimiterConfig = {
       enabled: true,
       defaultBuckets: {
-        globalBucket: { capacity: 10, addTokenMs: 100 },
-        accessTokenBucket: { capacity: 2, addTokenMs: 100 },
+        globalBucket: { capacity: 10, addTokenMs: 500 },
+        accessTokenBucket: { capacity: 2, addTokenMs: 500 },
       },
-    } as RateLimiterConfiguration);
-    // eslint-disable-next-line functional/immutable-data
-    process.env = { ...defaultEnv, RATE_LIMITER_CONFIG: rateLimiterConfig };
+    } as RateLimiterConfiguration;
 
     // Start the application server.
-    const { default: server } = await import('@/server/index');
+    const { server, done } = await getServerInstance(rateLimiterConfig);
 
     // After two requests, SC_GU_U=test should hit the rate limit.
     await request(server)
@@ -183,7 +204,7 @@ describe('rate limiter middleware', () => {
       .set('Cookie', 'SC_GU_U=other')
       .expect(200);
 
-    await new Promise((r) => setTimeout(r, 100));
+    await new Promise((r) => setTimeout(r, 500));
 
     // After 100ms SC_GU_U=test can make a request again.
     await request(server)
@@ -191,27 +212,25 @@ describe('rate limiter middleware', () => {
       .set('Cookie', 'SC_GU_U=test')
       .expect(200);
 
-    await new Promise((res) => server.close(res));
+    await done();
   });
 
-  it('should rate limit /signin when the email bucket is empty', async () => {
-    const rateLimiterConfig = JSON.stringify({
+  it('should rate limit /signin form when the email bucket is empty', async () => {
+    const rateLimiterConfig = {
       enabled: true,
       defaultBuckets: {
-        globalBucket: { capacity: 500, addTokenMs: 100 },
+        globalBucket: { capacity: 500, addTokenMs: 500 },
       },
       routeBuckets: {
         '/signin': {
           globalBucket: { capacity: 500, addTokenMs: 50 },
-          emailBucket: { capacity: 1, addTokenMs: 100 },
+          emailBucket: { capacity: 1, addTokenMs: 500 },
         },
       },
-    });
-    // eslint-disable-next-line functional/immutable-data
-    process.env = { ...defaultEnv, RATE_LIMITER_CONFIG: rateLimiterConfig };
+    };
 
     // Start the application server.
-    const { default: server } = await import('@/server/index');
+    const { server, done } = await getServerInstance(rateLimiterConfig);
 
     // Consume the only token available for this email
     await request(server)
@@ -246,7 +265,7 @@ describe('rate limiter middleware', () => {
       .expect('Location', 'https://www.theguardian.com/uk');
 
     // Wait 100ms for a token to be added back to the bucket.
-    await new Promise((r) => setTimeout(r, 100));
+    await new Promise((r) => setTimeout(r, 500));
 
     // Check that a new request goes through successfully
     await request(server)
@@ -258,6 +277,6 @@ describe('rate limiter middleware', () => {
       })
       .expect(303);
 
-    await new Promise((res) => server.close(res));
+    await done();
   });
 });

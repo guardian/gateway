@@ -339,28 +339,32 @@ export const removesEncryptedEmailParameterAndPreservesAllOtherValidParameters =
     ] as const;
   };
 
-export const hitsEmailRateLimitAndRecoversTokenAfterTimeout = (
+export const hitsAccessTokenRateLimitAndRecoversTokenAfterTimeout = (
   isOkta = false,
 ) => {
   return [
-    'hits email rate limit and recovers token after timeout',
+    'hits access token rate limit and recovers token after timeout',
     () => {
-      const visitUrl = isOkta ? '/signin?useOkta=true' : '/signin';
-      cy.visit(visitUrl);
-      cy.contains('Sign in');
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
+        req.reply(200);
+      });
+      cy.createTestUser({
+        isUserEmailValidated: true,
+      })?.then(({ emailAddress, finalPassword }) => {
+        const visitUrl = isOkta ? '/signin?useOkta=true' : '/signin';
+        cy.visit(visitUrl);
+        cy.get('input[name=email]').type(emailAddress);
+        cy.get('input[name=password]').type(finalPassword);
+        cy.get('[data-cy="sign-in-button"]').click();
+        cy.url().should('include', 'https://m.code.dev-theguardian.com/');
 
-      cy.get('input[name=email]').type('fakeEmail@guardian.co.uk');
-      cy.get('input[name=password]').type('fake_password');
-
-      cy.get('[data-cy="sign-in-button"]').click();
-
-      // cy.get('input[name=password]').should('have.value', '');
-      // cy.get('input[name=password]').type('fake_password');
-
-      cy.get('[data-cy="sign-in-button"]').click();
-
-      // Now expect email rate limit to be hit
-      cy.contains('Rate limit exceeded');
+        cy.visit('/signin');
+        cy.contains('Sign');
+        Cypress._.times(6, () => cy.reload());
+        cy.contains('Rate limit exceeded');
+      });
     },
   ] as const;
 };

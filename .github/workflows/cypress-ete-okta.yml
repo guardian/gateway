@@ -65,7 +65,7 @@ jobs:
           SENTRY_DSN: ''
           REDIS_HOST: localhost
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
-          RATE_LIMITER_CONFIG: '{"enabled":true,"defaultBuckets":{"globalBucket":{"capacity":500,"addTokenMs":50},"ipBucket":{"capacity":100,"addTokenMs":50},"emailBucket":{"capacity":100,"addTokenMs":50},"oktaIdentifierBucket":{"capacity":100,"addTokenMs":50},"accessTokenBucket":{"capacity":100,"addTokenMs":50}},"routeBuckets":{}}'
+          RATE_LIMITER_CONFIG: '{"enabled":true,"defaultBuckets":{"globalBucket":{"capacity":500,"addTokenMs":50},"ipBucket":{"capacity":100,"addTokenMs":50},"emailBucket":{"capacity":100,"addTokenMs":50},"oktaIdentifierBucket":{"capacity":100,"addTokenMs":50},"accessTokenBucket":{"capacity":4,"addTokenMs":5000}},"routeBuckets":{}}'
         with:
           build: yarn build
           start: yarn start

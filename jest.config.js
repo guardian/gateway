@@ -13,7 +13,7 @@ module.exports = {
     '<rootDir>/node_modules/',
     'utils',
   ],
-
+  testTimeout: 15000,
   globals: {
     'ts-jest': {
       isolatedModules: true,
