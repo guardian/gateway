@@ -297,6 +297,7 @@ router.post(
       await patchConsents(req.ip, sc_gu_u, consents);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+      trackMetric('PostSignInPrompt::Failure');
 
       /**
        * If user has consented, show them their preference failed to save

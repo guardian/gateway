@@ -7,6 +7,7 @@ import { getUserConsentsForPage } from '@/server/lib/idapi/consents';
 import { hasExperimentRun, setExperimentRan } from '@/server/lib/experiments';
 import { IdapiCookies } from '@/shared/model/IDAPIAuth';
 import { logger } from '@/server/lib/serverSideLogger';
+import { trackMetric } from '@/server/lib/trackMetric';
 
 const OPT_IN_PROMPT_TEST_ID = 'OptInPromptPostSignIn';
 
@@ -51,6 +52,7 @@ const postSignInController = async (
       return !consents.find(({ id }) => id === Consents.SUPPORTER)?.consented;
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+      trackMetric('PostSignInPromptRedirect::Failure');
       return false;
     }
   })();

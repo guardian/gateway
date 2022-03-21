@@ -24,6 +24,8 @@ type ConditionalMetrics =
   | 'OktaUpdatePassword'
   | 'OktaValidatePasswordToken'
   | 'OktaWelcomeResendEmail'
+  | 'PostSignInPrompt'
+  | 'PostSignInPromptRedirect'
   | 'Register'
   | 'SendMagicLink'
   | 'SendValidationEmail'
