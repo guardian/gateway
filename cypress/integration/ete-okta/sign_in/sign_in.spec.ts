@@ -1,6 +1,10 @@
 import * as SignIn from '../../ete/sign_in/sign_in.shared';
 
 describe('Sign in flow, Okta enabled', () => {
+  beforeEach(() => {
+    SignIn.beforeEach();
+  });
+
   context('Terms and Conditions links', () => {
     it(...SignIn.linksToTheGoogleTermsOfServicePage(true));
     it(...SignIn.linksToTheGooglePrivacyPolicyPage(true));

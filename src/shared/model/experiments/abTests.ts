@@ -1,6 +1,5 @@
 import { AB, ABTest, Participations } from '@guardian/ab-core';
 import { abSwitches } from './abSwitches';
-import { optInPrompt } from './tests/opt-in-prompt';
 import { optInPromptImage } from './tests/opt-in-prompt-image';
 
 interface ABTestConfiguration {
@@ -11,7 +10,7 @@ interface ABTestConfiguration {
 }
 
 // Add AB tests to run in this array
-export const tests: ABTest[] = [optInPrompt, optInPromptImage];
+export const tests: ABTest[] = [optInPromptImage];
 
 const getDefaultABTestConfiguration = (): ABTestConfiguration => ({
   abTestSwitches: abSwitches,

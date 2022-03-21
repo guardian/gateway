@@ -1,12 +1,15 @@
 import { Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { TEST_ID as OPT_IN_PROMPT_TEST_ID } from '@/shared/model/experiments/tests/opt-in-prompt';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { CONSENTS_POST_SIGN_IN_PAGE, Consents } from '@/shared/model/Consent';
 import { getUserConsentsForPage } from '@/server/lib/idapi/consents';
 import { hasExperimentRun, setExperimentRan } from '@/server/lib/experiments';
 import { IdapiCookies } from '@/shared/model/IDAPIAuth';
+import { logger } from '@/server/lib/serverSideLogger';
+import { trackMetric } from '@/server/lib/trackMetric';
+
+const OPT_IN_PROMPT_TEST_ID = 'OptInPromptPostSignIn';
 
 const { defaultReturnUri } = getConfiguration();
 
@@ -16,14 +19,9 @@ const postSignInController = async (
   idapiCookies: IdapiCookies,
   returnUrl?: string,
 ) => {
-  const state = res.locals;
   const redirectUrl = returnUrl || defaultReturnUri;
 
   const optInPromptActive = await (async () => {
-    if (!state.abTesting.participations[OPT_IN_PROMPT_TEST_ID]) {
-      return false;
-    }
-
     // Treating paths that only differ due to trailing slash as equivalent
     const noTrailingSlash = (str: string) => str.replace(/\/$/, '');
     if (noTrailingSlash(redirectUrl) !== noTrailingSlash(defaultReturnUri)) {
@@ -44,13 +42,19 @@ const postSignInController = async (
       return false;
     }
 
-    const consents = await getUserConsentsForPage(
-      CONSENTS_POST_SIGN_IN_PAGE,
-      req.ip,
-      sc_gu_u,
-    );
+    try {
+      const consents = await getUserConsentsForPage(
+        CONSENTS_POST_SIGN_IN_PAGE,
+        req.ip,
+        sc_gu_u,
+      );
 
-    return !consents.find(({ id }) => id === Consents.SUPPORTER)?.consented;
+      return !consents.find(({ id }) => id === Consents.SUPPORTER)?.consented;
+    } catch (error) {
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+      trackMetric('PostSignInPromptRedirect::Failure');
+      return false;
+    }
   })();
 
   if (optInPromptActive) {
