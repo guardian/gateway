@@ -36,4 +36,5 @@ describe('Sign in flow, Okta disabled', () => {
   it(
     ...SignIn.showsRecaptchaErrorsWhenTheUserTriesToSignInOfflineAndAllowsSignInWhenBackOnline(),
   );
+  it(...SignIn.redirectsToOptInPrompt());
 });

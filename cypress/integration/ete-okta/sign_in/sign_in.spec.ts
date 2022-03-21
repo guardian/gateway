@@ -40,6 +40,7 @@ describe('Sign in flow, Okta enabled', () => {
       true,
     ),
   );
+  it(...SignIn.redirectsToOptInPrompt());
 
   // These tests are skipped for now, because the social sign in implementation for Okta is still a work in progress.
   it.skip(...SignIn.redirectsCorrectlyForSocialSignIn(true));
