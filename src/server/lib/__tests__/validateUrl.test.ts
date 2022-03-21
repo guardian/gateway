@@ -38,6 +38,89 @@ describe('validateReturnUrl', () => {
 
     expect(output).toEqual(defaultReturnUri);
   });
+
+  test('it should handle an native app redirect returnUrl - android live', () => {
+    const input = 'com.theguardian:/authentication/callback';
+
+    const output = validateReturnUrl(input);
+
+    expect(output).toEqual(input);
+  });
+
+  test('it should remove an native app redirect returnUrl with query params  - android live', () => {
+    const input = 'com.theguardian:/authentication/callback?foo=bar';
+
+    const output = validateReturnUrl(input);
+
+    const expected = 'com.theguardian:/authentication/callback';
+
+    expect(output).toEqual(expected);
+  });
+
+  test('it should handle an native app redirect returnUrl - android live debug', () => {
+    const input = 'com.theguardian.debug:/authentication/callback';
+
+    const output = validateReturnUrl(input);
+
+    expect(output).toEqual(input);
+  });
+
+  test('it should remove an native app redirect returnUrl with query params  - android live debug', () => {
+    const input = 'com.theguardian.debug:/authentication/callback?foo=bar';
+
+    const output = validateReturnUrl(input);
+
+    const expected = 'com.theguardian.debug:/authentication/callback';
+
+    expect(output).toEqual(expected);
+  });
+
+  test('it should handle an native app redirect returnUrl - iOS live', () => {
+    const input = 'uk.co.guardian.iphone2:/authentication/callback';
+
+    const output = validateReturnUrl(input);
+
+    expect(output).toEqual(input);
+  });
+
+  test('it should remove an native app redirect returnUrl with query params  - iOS live', () => {
+    const input = 'uk.co.guardian.iphone2:/authentication/callback?foo=bar';
+
+    const output = validateReturnUrl(input);
+
+    const expected = 'uk.co.guardian.iphone2:/authentication/callback';
+
+    expect(output).toEqual(expected);
+  });
+
+  test('it should handle an native app redirect returnUrl - ios live debug', () => {
+    const input = 'uk.co.guardian.iphone2.debug:/authentication/callback';
+
+    const output = validateReturnUrl(input);
+
+    expect(output).toEqual(input);
+  });
+
+  test('it should remove an native app redirect returnUrl with query params  - ios live debug', () => {
+    const input =
+      'uk.co.guardian.iphone2.debug:/authentication/callback?foo=bar';
+
+    const output = validateReturnUrl(input);
+
+    const expected = 'uk.co.guardian.iphone2.debug:/authentication/callback';
+
+    expect(output).toEqual(expected);
+  });
+
+  test('it should return default returnUrl if app redirect is malformed', () => {
+    const input1 = 'com.thegrauniad.live-app:/authentication/callback';
+    const output1 = validateReturnUrl(input1);
+    expect(output1).toEqual(defaultReturnUri);
+
+    const input2 = 'com.theguardian:/auth/callback';
+    const output2 = validateReturnUrl(input2);
+    expect(output2).toEqual(defaultReturnUri);
+  });
 });
 
 describe('validateRefUrl', () => {
