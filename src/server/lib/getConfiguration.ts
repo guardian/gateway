@@ -14,16 +14,26 @@ import { featureSwitches } from '@/shared/lib/featureSwitches';
 import validateRateLimiterConfiguration from './rate-limit/getRateLimiterConfiguration';
 import path from 'path';
 
-const tryReadConfigFile = () => {
-  if (existsSync(path.resolve(__dirname, '.ratelimit.json'))) {
-    const configJson = readFileSync(
-      path.resolve(__dirname, '.ratelimit.json'),
-      'utf-8',
-    );
+const tryReadRateLimitConfigFile = () => {
+  // Try relative to the source file first, fall back to current directory if not found.
+  const primaryPath = path.resolve(__dirname, '.ratelimit.json');
+  const fallbackPath = '.ratelimit.json';
+
+  if (existsSync(primaryPath)) {
+    const configJson = readFileSync(primaryPath, 'utf-8');
     if (configJson) {
       return JSON.parse(configJson);
     }
   }
+
+  if (existsSync(fallbackPath)) {
+    const configJson = readFileSync(fallbackPath, 'utf-8');
+    if (configJson) {
+      return JSON.parse(configJson);
+    }
+  }
+
+  return undefined;
 };
 
 const tryReadEnvironmentVariable = () => {
@@ -32,14 +42,21 @@ const tryReadEnvironmentVariable = () => {
   if (configJson) {
     return JSON.parse(configJson);
   }
+
+  return undefined;
 };
 
 const loadRateLimiterConfiguration = () => {
-  const unvalidatedConfig = tryReadEnvironmentVariable() ?? tryReadConfigFile();
+  // Env var takes precedence over file system configuration file.
+  const unvalidatedConfig =
+    tryReadEnvironmentVariable() ?? tryReadRateLimitConfigFile();
+
+  // We validate the loaded JSON object to ensure that it follows the rate limit config schema
   return validateRateLimiterConfiguration(unvalidatedConfig);
 };
 
 const validatedRateLimiterConfig = loadRateLimiterConfiguration();
+console.log(validatedRateLimiterConfig);
 
 const getOrThrow = (
   value: string | undefined,

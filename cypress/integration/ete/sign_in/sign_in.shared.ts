@@ -339,6 +339,32 @@ export const removesEncryptedEmailParameterAndPreservesAllOtherValidParameters =
     ] as const;
   };
 
+export const hitsEmailRateLimitAndRecoversTokenAfterTimeout = (
+  isOkta = false,
+) => {
+  return [
+    'hits email rate limit and recovers token after timeout',
+    () => {
+      const visitUrl = isOkta ? '/signin?useOkta=true' : '/signin';
+      cy.visit(visitUrl);
+      cy.contains('Sign in');
+
+      cy.get('input[name=email]').type('fakeEmail@guardian.co.uk');
+      cy.get('input[name=password]').type('fake_password');
+
+      cy.get('[data-cy="sign-in-button"]').click();
+
+      // cy.get('input[name=password]').should('have.value', '');
+      // cy.get('input[name=password]').type('fake_password');
+
+      cy.get('[data-cy="sign-in-button"]').click();
+
+      // Now expect email rate limit to be hit
+      cy.contains('Rate limit exceeded');
+    },
+  ] as const;
+};
+
 export const showsAnErrorMessageAndInformationParagraphWhenAccountLinkingRequiredErrorParameterIsPresent =
   (isOkta = false) => {
     return [

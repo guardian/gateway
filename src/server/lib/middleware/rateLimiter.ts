@@ -23,7 +23,7 @@ export const rateLimiterMiddleware = async (
     return next();
   }
 
-  // Gets the route in the form /welcome/:token
+  // Gets the route in express path format, e.g: /welcome/:token
   // TODO: decide if we also want to rate limit against specific tokens
   const routePathDefinition = req.route.path;
 
@@ -38,7 +38,9 @@ export const rateLimiterMiddleware = async (
   });
 
   if (isRatelimited) {
-    return res.status(429).send("Sorry, you've hit the rate limit");
+    return res
+      .status(429)
+      .send('Rate limit exceeded — please wait a few moments then try again ');
   }
 
   return next();
