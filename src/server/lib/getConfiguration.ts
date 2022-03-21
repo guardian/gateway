@@ -56,7 +56,6 @@ const loadRateLimiterConfiguration = () => {
 };
 
 const validatedRateLimiterConfig = loadRateLimiterConfiguration();
-console.log(validatedRateLimiterConfig);
 
 const getOrThrow = (
   value: string | undefined,

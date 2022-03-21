@@ -13,6 +13,7 @@ describe('getConfiguration', () => {
   beforeEach(() => {
     jest.resetModules();
     process.env = { ...ORIGINAL_ENVIRONMENT_VARIABLES };
+    jest.mock('fs');
   });
 
   afterEach(() => {
@@ -124,6 +125,16 @@ describe('getConfiguration', () => {
     } as Configuration;
 
     expect(output).toEqual(expected);
+  });
+
+  beforeEach(() => {
+    jest.resetModules();
+    jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    jest.resetModules();
+    jest.clearAllMocks();
   });
 
   test('it throws an exception if the port is not set', async () => {

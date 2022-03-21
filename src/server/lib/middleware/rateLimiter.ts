@@ -26,7 +26,6 @@ export const rateLimiterMiddleware = async (
   // Gets the route in express path format, e.g: /welcome/:token
   // TODO: decide if we also want to rate limit against specific tokens
   const routePathDefinition = req.route.path;
-
   const isRatelimited = await rateLimit({
     route: routePathDefinition,
     bucketConfiguration: getBucketConfigForRoute(
