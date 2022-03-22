@@ -42,7 +42,8 @@ const clearDotComCookies = (res: ResponseWithRequestState) => {
 
 const clearOktaCookies = (res: ResponseWithRequestState) => {
   res.cookie(OKTA_COOKIE_NAME, '', {
-    domain: baseUri,
+    //remove the port number from domain if one exists
+    domain: baseUri.split(':')[0],
     maxAge: 0, // set to 0 to expire cookie immediately, and clear these cookies
   });
 };
