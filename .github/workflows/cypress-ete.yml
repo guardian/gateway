@@ -21,7 +21,7 @@ jobs:
         env:
           PORT: 8861
           ENVIRONMENT: production
-          STAGE: CODE
+          STAGE: DEV
           BASE_URI: localhost:8861
           IDAPI_CLIENT_ACCESS_TOKEN: ${{ secrets.IDAPI_CLIENT_ACCESS_TOKEN }}
           CYPRESS_IDAPI_CLIENT_ACCESS_TOKEN: ${{ secrets.IDAPI_CLIENT_ACCESS_TOKEN }}
