@@ -10,6 +10,8 @@ import { ConsentCard } from '@/client/components/ConsentCard';
 import { ConsentsForm } from '@/client/components/ConsentsForm';
 import { ConsentsNavigation } from '@/client/components/ConsentsNavigation';
 import { CONSENT_IMAGES } from '@/client/models/ConsentImages';
+import useClientState from '@/client/lib/hooks/useClientState';
+import { TEST_ID as IMAGE_TEST_ID } from '@/shared/model/experiments/tests/marketing-consent-image';
 
 type ConsentsCommunicationProps = {
   consents: Consent[];
@@ -23,6 +25,10 @@ export const ConsentsCommunication = ({
   consents,
 }: ConsentsCommunicationProps) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
+  const clientState = useClientState();
+  const { abTesting } = clientState;
+  const { participations } = abTesting ?? {};
+  const noImage = participations?.[IMAGE_TEST_ID]?.variant === 'no-image';
 
   return (
     <ConsentsLayout title="Stay in touch" current={CONSENTS_PAGES.CONTACT}>
@@ -43,6 +49,7 @@ export const ConsentsCommunication = ({
             id={consent.id}
             defaultChecked={!!consent.consented}
             imagePath={CONSENT_IMAGES[consent.id]}
+            noImage={noImage}
           />
         ))}
         <ConsentsNavigation />
