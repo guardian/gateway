@@ -116,9 +116,9 @@ const TooShort = () => {
     svg {
       fill: ${neutral[46]};
       border-radius: 50%;
-      // Bit of a hack - the SVG for the tick icon is positioned more fully
-      // inside its viewBox than the SVG for the info icon, so this forces the
-      // info icon to take up the same amount of pixel space.
+      /* Bit of a hack - the SVG for the tick icon is positioned more fully
+       inside its viewBox than the SVG for the info icon, so this forces the
+       info icon to take up the same amount of pixel space. */
       transform: scale(1.355);
     }
   `;
