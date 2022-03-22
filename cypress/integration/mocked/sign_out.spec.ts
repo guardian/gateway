@@ -56,18 +56,22 @@ describe('Sign out flow', () => {
       });
 
       // mock IDAPI sign-out cookie response
-      cy.mockNext(200, {
-        status: 'ok',
-        cookies: {
-          values: [
-            {
-              key: 'GU_SO',
-              value: 'the_GU_SO_cookie',
-            },
-          ],
-          expiresAt: new Date(Date.now() + 1800000 /* 30min */).toISOString(),
+      cy.mockPattern(
+        200,
+        {
+          status: 'ok',
+          cookies: {
+            values: [
+              {
+                key: 'GU_SO',
+                value: 'the_GU_SO_cookie',
+              },
+            ],
+            expiresAt: new Date(Date.now() + 1800000 /* 30min */).toISOString(),
+          },
         },
-      });
+        '/unauth',
+      );
 
       cy.request('/signout').then(() => {
         cy.getCookie('GU_SO').should('exist');
