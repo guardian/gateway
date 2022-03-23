@@ -160,9 +160,16 @@ describe('getConfiguration', () => {
     process.env = { PORT: '9001', RATE_LIMITER_CONFIG: badRateLimiterConfig };
 
     const { getConfiguration } = await import('@/server/lib/getConfiguration');
-
-    expect(getConfiguration).toThrowError(
-      Error('"defaultBuckets.globalBucket" is required'),
-    );
+    expect(getConfiguration).toThrowErrorMatchingInlineSnapshot(`
+      "There was a problem parsing the rate limiter configuration [
+        {
+          code: 'invalid_type',
+          expected: 'object',
+          received: 'undefined',
+          path: [ 'defaultBuckets', 'globalBucket' ],
+          message: 'Required'
+        }
+      ]"
+    `);
   });
 });

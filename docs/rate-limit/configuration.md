@@ -23,7 +23,7 @@ We define the configuration as a JSON string that follows this shape:
 
 When Gateway is started, we first validate the configuration to ensure that it is in the shape we expect.
 
-The validation process happens in validateConfiguration.ts where we validate against a strongly typed schema defined using the Joi library.
+The validation process happens in validateConfiguration.ts where we validate against a strongly typed schema defined using the Zod library.
 
 ## Entry: `enabled`
 

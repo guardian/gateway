@@ -13,6 +13,7 @@ import { existsSync, readFileSync } from 'fs';
 import { featureSwitches } from '@/shared/lib/featureSwitches';
 import validateRateLimiterConfiguration from './rate-limit/validateConfiguration';
 import path from 'path';
+import { format } from 'util';
 
 const tryReadRateLimitConfigFile = () => {
   // Try relative to the source file first, fall back to current directory if not found.
@@ -135,8 +136,18 @@ export const getConfiguration = (): Configuration => {
   const port = getOrThrow(process.env.PORT, 'Port configuration missing.');
 
   const configValidationResult = validatedRateLimiterConfig;
+
+  if (typeof configValidationResult === 'undefined') {
+    throw new Error('Rate limiter configuration missing');
+  }
+
   if (!configValidationResult.success) {
-    throw configValidationResult.error;
+    const validationError = configValidationResult.error;
+    const formattedError = format('%O', validationError.issues);
+    throw new Error(
+      'There was a problem parsing the rate limiter configuration ' +
+        formattedError,
+    );
   }
 
   const rateLimiter = configValidationResult.data;
