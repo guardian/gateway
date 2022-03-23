@@ -19,7 +19,7 @@ import sha1 from 'js-sha1';
 import {
   PasswordAutoComplete,
   PasswordInput,
-} from '@/client/components/PasswordInput';
+} from './PasswordInput.importable';
 import { FieldError } from '@/shared/model/ClientState';
 import {
   PasswordFieldErrors,

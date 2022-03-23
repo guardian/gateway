@@ -3,7 +3,7 @@ import { Meta } from '@storybook/react';
 
 import { inputMarginBottomSpacingStyle, MainForm } from './MainForm';
 import { EmailInput } from './EmailInput';
-import { PasswordInput } from './PasswordInput';
+import { PasswordInput } from './PasswordInput.importable';
 
 export default {
   title: 'Components/MainForm',

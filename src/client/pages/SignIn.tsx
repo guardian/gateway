@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { MainGrid } from '@/client/layouts/MainGrid';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
-import { PasswordInput } from '@/client/components/PasswordInput';
+import { PasswordInput } from '../components/PasswordInput.importable';
 import { Nav } from '@/client/components/Nav';
 import { Button, Link } from '@guardian/source-react-components';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
@@ -24,6 +24,7 @@ import locations from '@/shared/lib/locations';
 import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
 import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 import { logger } from '@/client/lib/clientSideLogger';
+import { Islet } from '@/client/components/Islet';
 
 export type SignInProps = {
   returnUrl?: string;
@@ -223,7 +224,9 @@ export const SignIn = ({
           <RefTrackingFormFields />
           <EmailInput defaultValue={email} />
           <div css={passwordInput}>
-            <PasswordInput label="Password" autoComplete="current-password" />
+            <Islet type="component" deferUntil="idle">
+              <PasswordInput label="Password" autoComplete="current-password" />
+            </Islet>
           </div>
           <Links>
             <Link
