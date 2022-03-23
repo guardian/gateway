@@ -144,10 +144,10 @@ type RedisTimeUntilExpiryPromise = Promise<{
   data: number | null;
 }>;
 
-export interface RateLimiterConfiguration {
-  enabled: boolean;
-  defaultBuckets: RateLimitBucketsConfiguration;
-  routeBuckets?: {
-    [route in RoutePaths]?: RateLimitBucketsConfiguration;
-  };
-}
+// export interface RateLimiterConfiguration {
+//   enabled: boolean;
+//   defaultBuckets: RateLimitBucketsConfiguration;
+//   routeBuckets?: {
+//     [route in RoutePaths]?: RateLimitBucketsConfiguration;
+//   };
+// }

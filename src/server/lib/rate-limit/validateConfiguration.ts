@@ -1,38 +1,33 @@
-import * as Joi from 'joi';
+import { z } from 'zod';
+import { ValidRoutePathsArray } from '@/shared/model/Routes';
 
-import type {
-  BucketConfiguration,
-  RateLimitBucketsConfiguration,
-  RateLimiterConfiguration,
-} from './types';
-
-const checkedJoiObject = <TSchema>(schema: {
-  [key in keyof TSchema]: Joi.SchemaLike | Joi.SchemaLike[];
-}) => Joi.object<TSchema>(schema);
-
-const bucketConfigObject = checkedJoiObject<BucketConfiguration>({
-  capacity: Joi.number().required(),
-  addTokenMs: Joi.number().required(),
-  maximumTimeBeforeTokenExpiry: Joi.number().optional(),
+const bucketSchema = z.object({
+  capacity: z.number(),
+  addTokenMs: z.number(),
+  maximumTimeBeforeTokenExpiry: z.number().optional(),
 });
 
-const bucketsConfigObject = checkedJoiObject<RateLimitBucketsConfiguration>({
-  globalBucket: bucketConfigObject.required(),
-  accessTokenBucket: bucketConfigObject.optional(),
-  ipBucket: bucketConfigObject.optional(),
-  emailBucket: bucketConfigObject.optional(),
-  oktaIdentifierBucket: bucketConfigObject.optional(),
+const bucketsSchema = z.object({
+  globalBucket: bucketSchema,
+  accessTokenBucket: bucketSchema.optional(),
+  ipBucket: bucketSchema.optional(),
+  emailBucket: bucketSchema.optional(),
+  oktaIdentifierBucket: bucketSchema.optional(),
 });
 
-const schema = checkedJoiObject<RateLimiterConfiguration>({
-  enabled: Joi.boolean().required(),
-  defaultBuckets: bucketsConfigObject.required(),
-  routeBuckets: Joi.object()
-    .pattern(Joi.string(), bucketsConfigObject)
+const rateLimiteronfigurationSchema = z.object({
+  enabled: z.boolean(),
+  defaultBuckets: bucketsSchema,
+  routeBuckets: z
+    .record(z.enum(ValidRoutePathsArray), bucketsSchema)
     .optional(),
 });
 
 const validateRateLimiterConfiguration = (configuration: unknown) =>
-  schema.validate(configuration);
+  rateLimiteronfigurationSchema.safeParse(configuration);
+
+export type RateLimiterConfiguration = z.infer<
+  typeof rateLimiteronfigurationSchema
+>;
 
 export default validateRateLimiterConfiguration;

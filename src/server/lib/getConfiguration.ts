@@ -134,16 +134,12 @@ const getStageVariables = (stage: Stage): StageVariables => {
 export const getConfiguration = (): Configuration => {
   const port = getOrThrow(process.env.PORT, 'Port configuration missing.');
 
-  const { error: rateLimiterParseError, value: rateLimiter } =
-    validatedRateLimiterConfig;
-
-  if (typeof rateLimiter === 'undefined') {
-    throw Error('Rate limiter configuration missing');
+  const configValidationResult = validatedRateLimiterConfig;
+  if (!configValidationResult.success) {
+    throw configValidationResult.error;
   }
 
-  if (rateLimiterParseError) {
-    throw rateLimiterParseError;
-  }
+  const rateLimiter = configValidationResult.data;
 
   const idapiBaseUrl = getOrThrow(
     process.env.IDAPI_BASE_URL,

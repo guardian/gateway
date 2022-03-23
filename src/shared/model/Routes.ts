@@ -4,41 +4,47 @@ export type ConsentPath = 'communication' | 'newsletters' | 'data' | 'review';
  * These are all the accepted url routes for this application
  * If you want to add a new route, it will need to be added below
  */
-export type RoutePaths =
-  | '/404'
-  | '/consents'
-  | '/consents/:page'
-  | `/consents/${ConsentPath}`
-  | '/error'
-  | '/magic-link' //this is not being used until MVP4
-  | '/magic-link/email-sent' //this is not being used until MVP4
-  | '/maintenance'
-  | '/oauth/authorization-code/callback'
-  | '/register'
-  | '/register/email-sent'
-  | '/register/email-sent/resend'
-  | '/reset-password'
-  | '/reset-password/:token'
-  | '/reset-password/complete'
-  | '/reset-password/email-sent'
-  | '/reset-password/expired'
-  | '/reset-password/resend'
-  | '/set-password'
-  | '/set-password/:token'
-  | '/set-password/complete'
-  | '/set-password/email-sent'
-  | '/set-password/expired'
-  | '/set-password/resend'
-  | '/signin'
-  | '/signin/success'
-  | '/signout'
-  | '/verify-email' //this can be removed once Jobs has been migrated
-  | '/welcome'
-  | '/welcome/:token'
-  | '/welcome/complete'
-  | '/welcome/email-sent'
-  | '/welcome/expired'
-  | '/welcome/resend';
+export const ValidRoutePathsArray = [
+  '/404',
+  '/consents',
+  '/consents/:page',
+  '/consents/communication',
+  '/consents/newsletters',
+  '/consents/data',
+  '/consents/review',
+  '/error',
+  '/magic-link', //this is not being used until MVP4
+  '/magic-link/email-sent', //this is not being used until MVP4
+  '/maintenance',
+  '/oauth/authorization-code/callback',
+  '/register',
+  '/register/email-sent',
+  '/register/email-sent/resend',
+  '/reset-password',
+  '/reset-password/:token',
+  '/reset-password/complete',
+  '/reset-password/email-sent',
+  '/reset-password/expired',
+  '/reset-password/resend',
+  '/set-password',
+  '/set-password/:token',
+  '/set-password/complete',
+  '/set-password/email-sent',
+  '/set-password/expired',
+  '/set-password/resend',
+  '/signin',
+  '/signin/success',
+  '/signout',
+  '/verify-email', //this can be removed once Jobs has been migrated
+  '/welcome',
+  '/welcome/:token',
+  '/welcome/complete',
+  '/welcome/email-sent',
+  '/welcome/expired',
+  '/welcome/resend',
+] as const;
+
+export type RoutePaths = typeof ValidRoutePathsArray[number];
 
 /**
  * These are all valid paths for the Identity API
