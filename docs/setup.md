@@ -59,7 +59,7 @@ If you have no intention of developing against the rate limiter, you can copy th
 
 To work with the rate limiter, you'll need an instance of Redis running locally. Here's a quick start guide for macOS: https://redis.io/docs/getting-started/installation/install-redis-on-mac-os/. An alternative option is to use the Redis docker container provided by the identity-platform project.
 
-Once you have a Redis instance running, populate the `REDIS_HOST`, `REDIS_PASSWORD`, and `REDIS_SSL_ON` env variables with the correct values.
+Once you have a Redis instance running, populate the `REDIS_HOST`, `REDIS_PASSWORD`, and `REDIS_SSL_ON` env variables with the correct values according to how you have configured your local instance.
 
 If you're running against the identity-platform Redis container, these will be:
 
@@ -79,8 +79,9 @@ Here's a quick-start configuration that you can copy-paste into `.ratelimit.json
 {
   "enabled": true,
   "defaultBuckets": {
-    "globalBucket": { "capacity": 500, "addTokenMs": 50 },
+    "globalBucket": { "capacity": 500, "addTokenMs": 50 }
   }
+}
 ```
 
 When you start Gateway it will first attempt to read from the `RATE_LIMIT_CONFIG` environment variable. If that is not defined, it will read the `.ratelimit.json` file we just made into its configuration.
