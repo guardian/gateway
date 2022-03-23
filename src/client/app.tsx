@@ -49,8 +49,8 @@ export const App = (props: ClientState) => {
           *:after {
             box-sizing: inherit;
           }
-          // Badge is hidden for Gateway, because we're using
-          // the legal text to do this job
+          /* Badge is hidden for Gateway, because we're using
+          the legal text to do this job */
           .grecaptcha-badge {
             visibility: hidden;
           }

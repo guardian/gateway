@@ -75,6 +75,4 @@ module.exports = {
       target: ['web', 'es5'],
     };
   },
-  /* We are self-hosting fonts, due to issues with IE11 */
-  staticDirs: ['static'],
 };
