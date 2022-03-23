@@ -53,6 +53,7 @@ describe('rate limiter middleware', () => {
     }));
     jest.mock('@/server/lib/idapi/IDAPICookies');
     jest.mock('@/server/lib/trackMetric');
+    jest.mock('@/server/lib/serverSideLogger');
 
     jest.mock(
       'csurf',
