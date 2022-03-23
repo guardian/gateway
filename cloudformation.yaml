@@ -258,6 +258,7 @@ Resources:
             Environment=SENTRY_DSN=${SentryDsn}
             Environment=REDIS_PASSWORD=$REDIS_PASSWORD
             Environment=REDIS_HOST=${RedisHost}
+            Environment=REDIS_SSL_ON=true
 
             [Install]
             WantedBy=multi-user.target

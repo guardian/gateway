@@ -13,7 +13,6 @@ describe('getConfiguration', () => {
   beforeEach(() => {
     jest.resetModules();
     process.env = { ...ORIGINAL_ENVIRONMENT_VARIABLES };
-    jest.mock('fs');
   });
 
   afterEach(() => {
@@ -44,6 +43,7 @@ describe('getConfiguration', () => {
     process.env.GITHUB_RUN_NUMBER = '5';
     process.env.REDIS_PASSWORD = 'redispassword';
     process.env.REDIS_HOST = 'localhost:1234';
+    process.env.REDIS_SSL_ON = 'false';
 
     const rateLimiterConfig = `{
       "enabled": true,
@@ -104,6 +104,7 @@ describe('getConfiguration', () => {
       redis: {
         password: 'redispassword',
         host: 'localhost:1234',
+        sslOn: false,
       },
 
       accountManagementUrl: 'https://manage.code.dev-theguardian.com',
@@ -127,16 +128,6 @@ describe('getConfiguration', () => {
     expect(output).toEqual(expected);
   });
 
-  beforeEach(() => {
-    jest.resetModules();
-    jest.clearAllMocks();
-  });
-
-  afterAll(() => {
-    jest.resetModules();
-    jest.clearAllMocks();
-  });
-
   test('it throws an exception if the port is not set', async () => {
     process.env = {};
     const { getConfiguration } = await import('@/server/lib/getConfiguration');
@@ -144,6 +135,9 @@ describe('getConfiguration', () => {
   });
 
   test('it throws an exception if the rate limiter configuration is not set', async () => {
+    // Mock fs so that the rate limiter won't fall back to a local config file.
+    jest.mock('fs');
+
     process.env = { PORT: '9001' };
 
     const { getConfiguration } = await import('@/server/lib/getConfiguration');

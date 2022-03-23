@@ -11,7 +11,7 @@ import {
 } from '@/server/models/Configuration';
 import { existsSync, readFileSync } from 'fs';
 import { featureSwitches } from '@/shared/lib/featureSwitches';
-import validateRateLimiterConfiguration from './rate-limit/getRateLimiterConfiguration';
+import validateRateLimiterConfiguration from './rate-limit/validateConfiguration';
 import path from 'path';
 
 const tryReadRateLimitConfigFile = () => {
@@ -247,6 +247,7 @@ export const getConfiguration = (): Configuration => {
   const redis: RedisConfiguration = {
     password: getOrThrow(process.env.REDIS_PASSWORD, 'Redis Password Missing'),
     host: getOrThrow(process.env.REDIS_HOST, 'Redis Host missing'),
+    sslOn: JSON.parse(getOrDefault(process.env.REDIS_SSL_ON, 'false')),
   };
 
   return {

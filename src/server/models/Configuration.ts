@@ -79,4 +79,5 @@ export enum GU_MANAGE_URL {
 export interface RedisConfiguration {
   password: string;
   host: string;
+  sslOn: boolean;
 }

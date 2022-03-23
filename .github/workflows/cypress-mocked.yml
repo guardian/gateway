@@ -58,6 +58,7 @@ jobs:
           SENTRY_DSN: ''
           REDIS_HOST: localhost
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          REDIS_SSL_ON: false
           RATE_LIMITER_CONFIG: '{"enabled":true,"defaultBuckets":{"globalBucket":{"capacity":500,"addTokenMs":50}}}'
         with:
           build: yarn build

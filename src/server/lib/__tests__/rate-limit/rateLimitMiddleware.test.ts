@@ -27,6 +27,7 @@ const defaultEnv = {
   GITHUB_RUN_NUMBER: '5',
   REDIS_PASSWORD: 'redispassword',
   REDIS_HOST: 'localhost:1234',
+  REDIS_SSL: 'false',
 };
 
 describe('rate limiter middleware', () => {
@@ -93,18 +94,24 @@ describe('rate limiter middleware', () => {
     // Start the application server.
     const { default: server } = await import('@/server/index');
 
-    const handle = setTimeout(() => {
+    // 500ms before the Jest max test timeout.
+    const MAX_RUNTIME = 14500;
+
+    // If the test errors, this makes sure that the server instance is torn down.
+    const scheduledServerTeardown = setTimeout(() => {
       if (server.listening) {
         server.close();
       }
-    }, 14000);
+    }, MAX_RUNTIME);
 
-    const done = async () => {
-      clearTimeout(handle);
+    // Tests call this method once they have successfully completed to tear-down the server.
+    const teardownServer = async () => {
+      // Remove the scheduled teardown because we're doing it now.
+      clearTimeout(scheduledServerTeardown);
       await new Promise((r) => server.close(r));
     };
 
-    return { server, done };
+    return { server, teardownServer };
   };
 
   it('should rate limit all clients when the global bucket is empty', async () => {
@@ -115,7 +122,9 @@ describe('rate limiter middleware', () => {
       },
     } as RateLimiterConfiguration;
 
-    const { server, done } = await getServerInstance(rateLimiterConfig);
+    const { server, teardownServer } = await getServerInstance(
+      rateLimiterConfig,
+    );
 
     // Consume both global tokens, expect third request to be limited.
     await request(server).get('/register').expect(200);
@@ -127,7 +136,7 @@ describe('rate limiter middleware', () => {
     // After 100ms, user can make a request again.
     await request(server).get('/register').expect(200);
 
-    await done();
+    await teardownServer();
   });
 
   it('should rate limit when the ip rate limit bucket is empty', async () => {
@@ -140,7 +149,9 @@ describe('rate limiter middleware', () => {
     } as RateLimiterConfiguration;
 
     // Start the application server.
-    const { server, done } = await getServerInstance(rateLimiterConfig);
+    const { server, teardownServer } = await getServerInstance(
+      rateLimiterConfig,
+    );
 
     // After two requests, 192.168.2.1 should hit the rate limit.
     await request(server)
@@ -170,7 +181,7 @@ describe('rate limiter middleware', () => {
       .set('X-Forwarded-For', '192.168.2.1')
       .expect(200);
 
-    await done();
+    await teardownServer();
   });
 
   it('should rate limit when the access token bucket is empty', async () => {
@@ -183,7 +194,9 @@ describe('rate limiter middleware', () => {
     } as RateLimiterConfiguration;
 
     // Start the application server.
-    const { server, done } = await getServerInstance(rateLimiterConfig);
+    const { server, teardownServer } = await getServerInstance(
+      rateLimiterConfig,
+    );
 
     // After two requests, SC_GU_U=test should hit the rate limit.
     await request(server)
@@ -213,7 +226,7 @@ describe('rate limiter middleware', () => {
       .set('Cookie', 'SC_GU_U=test')
       .expect(200);
 
-    await done();
+    await teardownServer();
   });
 
   it('should rate limit /signin form when the email bucket is empty', async () => {
@@ -231,7 +244,9 @@ describe('rate limiter middleware', () => {
     };
 
     // Start the application server.
-    const { server, done } = await getServerInstance(rateLimiterConfig);
+    const { server, teardownServer } = await getServerInstance(
+      rateLimiterConfig,
+    );
 
     // Consume the only token available for this email
     await request(server)
@@ -250,6 +265,16 @@ describe('rate limiter middleware', () => {
       .type('application/x-www-form-urlencoded')
       .send({
         email: 'test@test.com',
+        password: '',
+      })
+      .expect(429);
+
+    // Make sure that the email can't be let through with an email alias
+    await request(server)
+      .post('/signin')
+      .type('application/x-www-form-urlencoded')
+      .send({
+        email: 'test+maliciousalias@test.com',
         password: '',
       })
       .expect(429);
@@ -278,6 +303,6 @@ describe('rate limiter middleware', () => {
       })
       .expect(303);
 
-    await done();
+    await teardownServer();
   });
 });
