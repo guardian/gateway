@@ -19,7 +19,7 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { OktaError } from '@/server/models/okta/Error';
 import { GenericErrors } from '@/shared/model/Errors';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { rateLimiterMiddleware } from '../lib/middleware/rateLimiter';
+import { rateLimiterMiddleware } from '../lib/middleware/rateLimit';
 
 const { okta } = getConfiguration();
 

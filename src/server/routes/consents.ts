@@ -41,7 +41,7 @@ import { logger } from '@/server/lib/serverSideLogger';
 import { ApiError } from '@/server/models/Error';
 import { ConsentPath, RoutePaths } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
-import { rateLimiterMiddleware } from '../lib/middleware/rateLimiter';
+import { rateLimiterMiddleware } from '../lib/middleware/rateLimit';
 
 interface ConsentPage {
   page: ConsentPath;

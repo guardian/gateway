@@ -10,7 +10,7 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { ApiError } from '@/server/models/Error';
 import handleRecaptcha from '@/server/lib/recaptcha';
-import { rateLimiterMiddleware } from '../lib/middleware/rateLimiter';
+import { rateLimiterMiddleware } from '../lib/middleware/rateLimit';
 
 router.get(
   '/magic-link',

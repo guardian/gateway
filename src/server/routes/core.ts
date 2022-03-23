@@ -1,7 +1,7 @@
 import { default as express, Router, Response } from 'express';
 import path from 'path';
 import ms from 'ms';
-import { rateLimiterMiddleware } from '../lib/middleware/rateLimiter';
+import { rateLimiterMiddleware } from '../lib/middleware/rateLimit';
 
 const router = Router();
 

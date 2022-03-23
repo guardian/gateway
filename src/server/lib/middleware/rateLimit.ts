@@ -1,10 +1,16 @@
-import { RequestWithTypedQuery } from '@/server/models/Express';
+import {
+  RequestWithTypedQuery,
+  ResponseWithRequestState,
+} from '@/server/models/Express';
 import { RoutePaths } from '@/shared/model/Routes';
-import { NextFunction, Response } from 'express';
-
+import { NextFunction } from 'express';
 import rateLimit, { RateLimiterConfiguration } from '@/server/lib/rate-limit';
 import { getConfiguration } from '../getConfiguration';
-import redisClient from '../redis/redisClient';
+import redisClient from '@/server/lib/redis/redisClient';
+import { logger } from '@/server/lib/serverSideLogger';
+import { trackMetric } from '../trackMetric';
+import { rateLimitHitMetric } from '@/server/models/Metrics';
+import { RatelimitErrors } from '@/shared/model/Errors';
 
 const getBucketConfigForRoute = (
   route: RoutePaths,
@@ -15,7 +21,7 @@ const { rateLimiter } = getConfiguration();
 
 export const rateLimiterMiddleware = async (
   req: RequestWithTypedQuery,
-  res: Response,
+  res: ResponseWithRequestState,
   next: NextFunction,
 ) => {
   // Skip rate limiting if the rate limiter is disabled or the redis client not initialised.
@@ -26,7 +32,8 @@ export const rateLimiterMiddleware = async (
   // Gets the route in express path format, e.g: /welcome/:token
   // TODO: decide if we also want to rate limit against specific tokens
   const routePathDefinition = req.route.path;
-  const isRatelimited = await rateLimit({
+
+  const ratelimitBucketTypeIfHit = await rateLimit({
     route: routePathDefinition,
     bucketConfiguration: getBucketConfigForRoute(
       routePathDefinition,
@@ -36,10 +43,14 @@ export const rateLimiterMiddleware = async (
     bucketValues: res.locals.rateLimitData,
   });
 
-  if (isRatelimited) {
-    return res
-      .status(429)
-      .send('Rate limit exceeded — please wait a few moments then try again ');
+  if (ratelimitBucketTypeIfHit) {
+    logger.info(
+      `Rate limit hit for ${res.locals.rateLimitData.ip} on request to ${req.path}. Bucket type: ${ratelimitBucketTypeIfHit}`,
+    );
+
+    trackMetric(rateLimitHitMetric(ratelimitBucketTypeIfHit));
+
+    return res.status(429).send(RatelimitErrors.GENERIC);
   }
 
   return next();

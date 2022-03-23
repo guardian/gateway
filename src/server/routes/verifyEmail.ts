@@ -20,7 +20,7 @@ import { buildUrl } from '@/shared/lib/routeUtils';
 import deepmerge from 'deepmerge';
 import { Request, Router } from 'express';
 import handleRecaptcha from '@/server/lib/recaptcha';
-import { rateLimiterMiddleware } from '../lib/middleware/rateLimiter';
+import { rateLimiterMiddleware } from '../lib/middleware/rateLimit';
 
 const router = Router();
 

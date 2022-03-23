@@ -27,7 +27,7 @@ import postSignInController from '@/server/lib/postSignInController';
 import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
 import { getSession } from '../lib/okta/api/sessions';
 import { validAppProtocols, validateReturnUrl } from '../lib/validateUrl';
-import { rateLimiterMiddleware } from '../lib/middleware/rateLimiter';
+import { rateLimiterMiddleware } from '../lib/middleware/rateLimit';
 
 const { okta, accountManagementUrl, defaultReturnUri } = getConfiguration();
 

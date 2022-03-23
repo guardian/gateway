@@ -19,7 +19,7 @@ import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import postSignInController from '@/server/lib/postSignInController';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { validAppProtocols } from '../lib/validateUrl';
-import { rateLimiterMiddleware } from '../lib/middleware/rateLimiter';
+import { rateLimiterMiddleware } from '../lib/middleware/rateLimit';
 
 interface OAuthError {
   error: string;

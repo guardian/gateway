@@ -9,7 +9,7 @@ import { readEmailCookie } from '@/server/lib/emailCookie';
 import { typedRouter as router } from '@/server/lib/typedRoutes';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { sendChangePasswordEmailController } from '@/server/controllers/sendChangePasswordEmail';
-import { rateLimiterMiddleware } from '../lib/middleware/rateLimiter';
+import { rateLimiterMiddleware } from '../lib/middleware/rateLimit';
 
 // reset password email form
 router.get(

@@ -16,7 +16,7 @@ import deepmerge from 'deepmerge';
 import { Request } from 'express';
 import { ApiError } from '../models/Error';
 import { buildUrl } from '@/shared/lib/routeUtils';
-import { rateLimiterMiddleware } from '../lib/middleware/rateLimiter';
+import { rateLimiterMiddleware } from '../lib/middleware/rateLimit';
 
 // set password complete page
 router.get(

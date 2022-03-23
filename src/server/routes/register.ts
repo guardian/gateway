@@ -31,7 +31,7 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { OktaError } from '@/server/models/okta/Error';
 import { causesInclude } from '@/server/lib/okta/api/errors';
 import { registerMiddleware } from '../lib/middleware/register';
-import { rateLimiterMiddleware } from '../lib/middleware/rateLimiter';
+import { rateLimiterMiddleware } from '../lib/middleware/rateLimit';
 
 const { okta } = getConfiguration();
 
