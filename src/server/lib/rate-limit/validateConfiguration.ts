@@ -15,13 +15,15 @@ const bucketsSchema = z.object({
   oktaIdentifierBucket: bucketSchema.optional(),
 });
 
-const rateLimiterConfigurationSchema = z.object({
-  enabled: z.boolean(),
-  defaultBuckets: bucketsSchema,
-  routeBuckets: z
-    .record(z.enum(ValidRoutePathsArray), bucketsSchema)
-    .optional(),
-});
+const rateLimiterConfigurationSchema = z
+  .object({
+    enabled: z.boolean(),
+    defaultBuckets: bucketsSchema,
+    routeBuckets: z
+      .record(z.enum(ValidRoutePathsArray), bucketsSchema)
+      .optional(),
+  })
+  .strict();
 
 const validateRateLimiterConfiguration = (configuration: unknown) =>
   typeof configuration === 'undefined'

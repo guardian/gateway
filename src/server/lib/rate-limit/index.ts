@@ -1,6 +1,8 @@
 import rateLimit from './rateLimit';
 
-export { RateLimiterConfiguration } from './validateConfiguration';
+import { RateLimiterConfiguration as _RateLimiterConfiguration } from './validateConfiguration';
+
+export type RateLimiterConfiguration = _RateLimiterConfiguration;
 
 export * from './types';
 export default rateLimit;

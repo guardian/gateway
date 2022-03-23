@@ -21,7 +21,7 @@
     "tsc": "tsc --noEmit --skipLibCheck",
     "tsc:cypress": "tsc --noEmit --skipLibCheck --project cypress/tsconfig.json",
     "watch:cypress": "yarn tsc:cypress --watch",
-    "watch:server": "mkdir -p ./build && touch ./build/server.js && nodemon --inspect ./build/server.js",
+    "watch:server": "mkdir -p ./build && touch ./build/server.js && nodemon --inspect ./build/server.js --watch ./build/server.js --watch .ratelimit.json",
     "watch": "webpack --watch --config webpack.development.js",
     "wait-on:server": "wait-on http://localhost:8861/healthcheck",
     "wait-on:mock-server": "wait-on http://localhost:9000/healthcheck",

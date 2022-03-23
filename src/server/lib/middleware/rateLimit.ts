@@ -2,7 +2,7 @@ import {
   RequestWithTypedQuery,
   ResponseWithRequestState,
 } from '@/server/models/Express';
-import { RoutePaths } from '@/shared/model/Routes';
+import { RoutePaths, ValidRoutePathsArray } from '@/shared/model/Routes';
 import { NextFunction } from 'express';
 import rateLimit, { RateLimiterConfiguration } from '@/server/lib/rate-limit';
 import { getConfiguration } from '../getConfiguration';
@@ -32,6 +32,12 @@ export const rateLimiterMiddleware = async (
   // Gets the route in express path format, e.g: /welcome/:token
   // TODO: decide if we also want to rate limit against specific tokens
   const routePathDefinition = req.route.path;
+
+  if (!ValidRoutePathsArray.includes(routePathDefinition)) {
+    logger.warn(
+      'Rate limiting against an invalid route path. Falling back to default bucket configuration',
+    );
+  }
 
   const ratelimitBucketTypeIfHit = await rateLimit({
     route: routePathDefinition,
