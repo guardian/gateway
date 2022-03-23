@@ -40,7 +40,7 @@ const clearDotComCookies = (res: ResponseWithRequestState) => {
   });
 };
 
-const clearOktaCookies = (res: ResponseWithRequestState) => {
+export const clearOktaCookies = (res: ResponseWithRequestState) => {
   res.cookie(OKTA_COOKIE_NAME, '', {
     //remove the port number from domain if one exists
     domain: baseUri.split(':')[0],
