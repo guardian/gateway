@@ -30,6 +30,8 @@ import deepmerge from 'deepmerge';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { OktaError } from '@/server/models/okta/Error';
 import { causesInclude } from '@/server/lib/okta/api/errors';
+import { getSession } from '../lib/okta/api/sessions';
+import { clearOktaCookies } from './signOut';
 
 const { okta } = getConfiguration();
 
@@ -280,6 +282,23 @@ const OktaRegistration = async (
   res: ResponseWithRequestState,
 ) => {
   const { email = '' } = req.body;
+
+  // Check if the user has and existing Okta session and retun an error if
+  const oktaSessionCookieId: string | undefined = req.cookies.sid;
+  if (oktaSessionCookieId) {
+    try {
+      await getSession(oktaSessionCookieId);
+      return res.redirect('https://manage.theguardian.com/');
+    } catch {
+      //if the cookie exists, but the session is invalid, we remove the cookie
+      clearOktaCookies(res);
+      logger.info(
+        'User had an existing Okta session cookie, but it was invalid',
+      );
+      //we redirect to /register to make sure the Okta sid cookie has been removed
+      return res.redirect('/register');
+    }
+  }
 
   try {
     const user = await registerWithOkta(email);
