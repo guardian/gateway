@@ -47,6 +47,44 @@ Populate `.env` and `cypress-ete.env` files by using the examples from [`.env.ex
 
 Depending on which stage (`DEV` or `CODE`) you want to connect to [Identity API (IDAPI)](https://github.com/guardian/identity), the `IDAPI_CLIENT_ACCESS_TOKEN` and `IDAPI_BASE_URL` variables will be different. If using the S3 config, it will point to the `CODE` instance of IDAPI.
 
+### Rate Limiter
+
+We use a Redis backed rate-limiting implementation in Gateway to handle scenarios where we are experiencing a high level of traffic. To read more about the rate limiter implementation and how it is configured, please see the documentation: [TODO]
+
+#### Quick configuration
+
+If you have no intention of developing against the rate limiter, you can copy the example config in `.ratelimit.example.json` to `.ratelimit.json`. This disables rate limiting by default and will completely bypass the Redis connection attempt and the rate limiter middleware.
+
+#### Redis
+
+To work with the rate limiter, you'll need an instance of Redis running locally. Here's a quick start guide for macOS: https://redis.io/docs/getting-started/installation/install-redis-on-mac-os/. An alternative option is to use the Redis docker container provided by the identity-platform project.
+
+Once you have a Redis instance running, populate the `REDIS_HOST`, `REDIS_PASSWORD`, and `REDIS_SSL_ON` env variables with the correct values.
+
+If you're running against the identity-platform Redis container, these will be:
+
+```
+REDIS_HOST=localhost
+REDIS_PASSWORD=redis_password
+REDIS_SSL_ON=false
+```
+
+#### Full Configuration
+
+Now copy the example config in `.ratelimit.example.json` to `.ratelimit.json`. This will be disabled by default, so you'll need to modify the `enabled` flag to be set to `true`.
+
+Here's a quick-start configuration that you can copy-paste into `.ratelimit.json` to get you started:
+
+```json
+{
+  "enabled": true,
+  "defaultBuckets": {
+    "globalBucket": { "capacity": 500, "addTokenMs": 50 },
+  }
+```
+
+When you start Gateway it will first attempt to read from the `RATE_LIMIT_CONFIG` environment variable. If that is not defined, it will read the `.ratelimit.json` file we just made into its configuration.
+
 ### S3 Config
 
 You can get a preset `.env` file from the S3 private config. Be sure to have the `identity` Janus credentials.
