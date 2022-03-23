@@ -5,7 +5,7 @@ import {
   belowFormMarginTopSpacingStyle,
   MainForm,
 } from '@/client/components/MainForm';
-import { EmailInput } from '@/client/components/EmailInput';
+import { EmailInput } from '../components/EmailInput.importable';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { InfoSummary } from '@guardian/source-react-components-development-kitchen';
 import locations from '@/shared/lib/locations';
@@ -14,6 +14,7 @@ import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
 import { usePageLoadOphanInteraction } from '../lib/hooks/usePageLoadOphanInteraction';
+import { Islet } from '@/client/components/Islet';
 
 interface ResetPasswordProps {
   email?: string;
@@ -67,7 +68,9 @@ export const ResetPassword = ({
         setRecaptchaErrorContext={setRecaptchaErrorContext}
         formTrackingName={formPageTrackingName}
       >
-        <EmailInput label={emailInputLabel} defaultValue={email} />
+        <Islet type="component" deferUntil="idle">
+          <EmailInput label={emailInputLabel} defaultValue={email} />
+        </Islet>
       </MainForm>
       {showNoAccessEmail && (
         <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>

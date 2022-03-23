@@ -17,12 +17,13 @@ import useRecaptcha, {
 } from '@/client/lib/hooks/useRecaptcha';
 import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
 import locations from '@/shared/lib/locations';
-import { EmailInput } from '@/client/components/EmailInput';
+import { EmailInput } from '../components/EmailInput.importable';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
 import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 import { logger } from '@/client/lib/clientSideLogger';
+import { Islet } from '@/client/components/Islet';
 
 export type RegistrationProps = {
   returnUrl?: string;
@@ -141,7 +142,9 @@ export const Registration = ({
           <RecaptchaElement id="register-recaptcha" />
           <CsrfFormField />
           <RefTrackingFormFields />
-          <EmailInput defaultValue={email} />
+          <Islet type="component" deferUntil="idle">
+            <EmailInput defaultValue={email} />
+          </Islet>
           <Terms isJobs={isJobs} />
           <Button css={registerButton} type="submit" data-cy="register-button">
             Register

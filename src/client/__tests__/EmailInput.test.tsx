@@ -5,7 +5,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { EmailInput } from '../components/EmailInput';
+import { EmailInput } from '../components/EmailInput.importable';
 
 const setup = () => {
   const utils = render(<EmailInput defaultValue="test@email.com" />);

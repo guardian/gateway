@@ -4,8 +4,9 @@ import { LinkButton } from '@guardian/source-react-components';
 import { buttonStyles, MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { MainForm } from '@/client/components/MainForm';
-import { EmailInput } from '@/client/components/EmailInput';
+import { EmailInput } from '../components/EmailInput.importable';
 import { buildUrl } from '@/shared/lib/routeUtils';
+import { Islet } from '@/client/components/Islet';
 
 type ResendEmailVerificationProps = {
   email?: string;
@@ -68,7 +69,9 @@ const LoggedIn = ({
           setRecaptchaErrorMessage={setRecaptchaErrorMessage}
           setRecaptchaErrorContext={setRecaptchaErrorContext}
         >
-          <EmailInput defaultValue={email} hidden hideLabel />
+          <Islet type="component" deferUntil="idle">
+            <EmailInput defaultValue={email} hidden hideLabel />
+          </Islet>
         </MainForm>
       )}
     </MainLayout>

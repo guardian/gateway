@@ -5,10 +5,11 @@ import {
   belowFormMarginTopSpacingStyle,
   MainForm,
 } from '@/client/components/MainForm';
-import { EmailInput } from '@/client/components/EmailInput';
+import { EmailInput } from '../components/EmailInput.importable';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import { buildUrl } from '@/shared/lib/routeUtils';
 import locations from '@/shared/lib/locations';
+import { Islet } from '@/client/components/Islet';
 
 type Props = {
   email?: string;
@@ -35,7 +36,9 @@ export const MagicLink = ({ email, recaptchaSiteKey }: Props) => {
         setRecaptchaErrorContext={setRecaptchaErrorContext}
         setRecaptchaErrorMessage={setRecaptchaErrorMessage}
       >
-        <EmailInput defaultValue={email} />
+        <Islet type="component" deferUntil="idle">
+          <EmailInput defaultValue={email} />
+        </Islet>
       </MainForm>
       <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
         If you no longer have access to this email account please{' '}

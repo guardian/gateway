@@ -7,10 +7,11 @@ import {
   belowFormMarginTopSpacingStyle,
   MainForm,
 } from '@/client/components/MainForm';
-import { EmailInput } from '@/client/components/EmailInput';
+import { EmailInput } from '../components/EmailInput.importable';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import { css } from '@emotion/react';
 import { buildUrl } from '@/shared/lib/routeUtils';
+import { Islet } from '@/client/components/Islet';
 
 type Props = {
   email?: string;
@@ -102,7 +103,9 @@ export const EmailSent = ({
             setRecaptchaErrorMessage={setRecaptchaErrorMessage}
             formTrackingName={formTrackingName}
           >
-            <EmailInput defaultValue={email} hidden hideLabel />
+            <Islet type="component" deferUntil="idle">
+              <EmailInput defaultValue={email} hidden hideLabel />
+            </Islet>
           </MainForm>
           <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
             If you are still having trouble, contact our customer service team

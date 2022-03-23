@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { EmailInput, EmailInputFieldState } from './EmailInput';
+import { EmailInput, EmailInputFieldState } from './EmailInput.importable';
 
 export default {
   title: 'Components/EmailInput',
