@@ -35,13 +35,18 @@ import { clearOktaCookies } from './signOut';
 
 const { okta } = getConfiguration();
 
-router.get('/register', (req: Request, res: ResponseWithRequestState) => {
-  const html = renderer('/register', {
-    requestState: res.locals,
-    pageTitle: 'Register',
-  });
-  res.type('html').send(html);
-});
+router.get(
+  '/register',
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    await RedirectIfOktaSessionExists(req, res);
+
+    const html = renderer('/register', {
+      requestState: res.locals,
+      pageTitle: 'Register',
+    });
+    res.type('html').send(html);
+  }),
+);
 
 router.get(
   '/register/email-sent',
@@ -294,25 +299,7 @@ const OktaRegistration = async (
 ) => {
   const { email = '' } = req.body;
 
-  // Check if the user has an existing Okta session. If they do and it's valid,
-  // they're already logged in and are redirected to the account management
-  // page. If the session isn't valid, they are redirected to the register
-  // page.
-  const oktaSessionCookieId: string | undefined = req.cookies.sid;
-  if (oktaSessionCookieId) {
-    try {
-      await getSession(oktaSessionCookieId);
-      return res.redirect('https://manage.theguardian.com/');
-    } catch {
-      //if the cookie exists, but the session is invalid, we remove the cookie
-      clearOktaCookies(res);
-      logger.info(
-        'User attempting to register had an existing Okta session cookie, but it was invalid',
-      );
-      //we redirect to /register to make sure the Okta sid cookie has been removed
-      return res.redirect('/register');
-    }
-  }
+  await RedirectIfOktaSessionExists(req, res);
 
   try {
     const user = await registerWithOkta(email);
@@ -395,6 +382,33 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
         }),
       }),
     );
+  }
+};
+
+const RedirectIfOktaSessionExists = async (
+  req: Request,
+  res: ResponseWithRequestState,
+) => {
+  // Check if the user has an existing Okta session. If they do and it's valid,
+  // they're already logged in and are redirected to the account management
+  // page. If the session isn't valid, they are redirected to the register
+  // page.
+  const oktaSessionCookieId: string | undefined = req.cookies.sid;
+  if (oktaSessionCookieId) {
+    try {
+      await getSession(oktaSessionCookieId);
+      return res.redirect('https://manage.theguardian.com/');
+    } catch {
+      //if the cookie exists, but the session is invalid, we remove the cookie
+      clearOktaCookies(res);
+      logger.info(
+        'User attempting to register had an existing Okta session cookie, but it was invalid',
+      );
+      //we redirect to /register to make sure the Okta sid cookie has been removed
+      return res.redirect(
+        addQueryParamsToPath('/register', res.locals.queryParams),
+      );
+    }
   }
 };
 
