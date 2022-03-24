@@ -428,3 +428,33 @@ export const showsRecaptchaErrorsWhenTheUserTriesToSignInOfflineAndAllowsSignInW
       },
     ] as const;
   };
+
+export const redirectsToOptInPrompt = (isOkta = false) => {
+  return [
+    'redirects user to prompt if they are not a supporter',
+    () => {
+      // Intercept the prompt page
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', '/signin/success*', (req) => {
+        req.reply(200);
+      });
+      // Enable the opt in prompt "experiment"
+      cy.clearCookie('GU_ran_experiments');
+      cy.createTestUser({
+        isUserEmailValidated: true,
+      })?.then(({ emailAddress, finalPassword }) => {
+        const visitUrl = isOkta ? '/signin?useOkta=true' : '/signin';
+        cy.visit(visitUrl);
+        cy.get('input[name=email]').type(emailAddress);
+        cy.get('input[name=password]').type(finalPassword);
+        cy.get('[data-cy="sign-in-button"]').click();
+        cy.url().should(
+          'include',
+          `/signin/success?returnUrl=${encodeURIComponent(
+            'https://m.code.dev-theguardian.com/',
+          )}`,
+        );
+      });
+    },
+  ] as const;
+};

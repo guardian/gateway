@@ -1,3 +1,5 @@
+import { stringify } from 'query-string';
+
 describe('Sign out flow', () => {
   const DotComCookies = [
     'gu_user_features_expiry',
@@ -8,6 +10,11 @@ describe('Sign out flow', () => {
 
   context('Signs a user out', () => {
     it('Removes IDAPI log in cookies and dotcom cookies when signing out', () => {
+      // Disable redirect to /signin/success by default
+      cy.setCookie(
+        'GU_ran_experiments',
+        stringify({ OptInPromptPostSignIn: Date.now() }),
+      );
       cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
         req.reply(200);
       }).as('successRedirect');

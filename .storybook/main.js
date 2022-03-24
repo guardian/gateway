@@ -1,6 +1,6 @@
 const path = require('path');
+const { neutral } = require('@guardian/source-foundations');
 const babelConfig = require('../babel.config');
-const { resets } = require('@guardian/source-foundations');
 
 module.exports = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -15,7 +15,9 @@ module.exports = {
   previewHead: (head) => `
     ${head}
     <style>
-      ${resets.defaults}
+      body {
+        color: ${neutral[7]};
+      }
     </style>
   `,
   webpackFinal: async (config) => {
