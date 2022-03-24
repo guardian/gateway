@@ -45,19 +45,13 @@ describe('Okta Register flow', () => {
       });
       cy.get('[data-cy=register-button]').click();
 
-      //we need to catch the redirect as it happens, because the user is not signed in
-      // and manage.theguardian.com will also do a redirect for a logged out user
-      cy.wait('@manage').then((intercept) => {
-        //The types from cypress for IncomingResponse are not correct and missing the url attribute
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        expect(intercept.response?.url).to.eq(
-          'https://manage.theguardian.com/',
-        );
-      });
+      cy.url().should(
+        'eq',
+        'https://profile.theguardian.com/signin?returnUrl=https%3A%2F%2Fmanage.theguardian.com%2F',
+      );
     });
 
-    it('should redirect to / if the sid Okta session cookie is set, but invalid', () => {
+    it('should redirect to /register if the sid Okta session cookie is set, but invalid', () => {
       cy.mockPattern(404, '/api/v1/sessions/the_sid_cookie');
 
       cy.mockPattern(204, {}, '/api/v1/users/userId/sessions');
@@ -78,7 +72,7 @@ describe('Okta Register flow', () => {
 
       cy.get('[data-cy=register-button]').click();
 
-      cy.intercept('/register').as('register');
+      cy.intercept('/register*').as('register');
 
       //we redirect to /register and unset the sid cookie, so we need to wait till the redirect has happened
       cy.wait('@register');
