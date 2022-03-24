@@ -294,7 +294,10 @@ const OktaRegistration = async (
 ) => {
   const { email = '' } = req.body;
 
-  // Check if the user has and existing Okta session and retun an error if
+  // Check if the user has an existing Okta session. If they do and it's valid,
+  // they're already logged in and are redirected to the account management
+  // page. If the session isn't valid, they are redirected to the register
+  // page.
   const oktaSessionCookieId: string | undefined = req.cookies.sid;
   if (oktaSessionCookieId) {
     try {
@@ -304,7 +307,7 @@ const OktaRegistration = async (
       //if the cookie exists, but the session is invalid, we remove the cookie
       clearOktaCookies(res);
       logger.info(
-        'User had an existing Okta session cookie, but it was invalid',
+        'User attempting to register had an existing Okta session cookie, but it was invalid',
       );
       //we redirect to /register to make sure the Okta sid cookie has been removed
       return res.redirect('/register');
