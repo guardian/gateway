@@ -174,6 +174,17 @@ router.post(
     if (okta.enabled && useOkta) {
       await OktaRegistration(req, res);
     } else {
+      // Check if IDAPI session cookies are already set - this means there might
+      // be a valid IDAPI session, which we want to log (to know whether we
+      // have a lot of authed users hitting /register for whatever reason)
+      const sc_gu_u = req.cookies.SC_GU_U;
+      const sc_gu_la = req.cookies.SC_GU_LA;
+      if (sc_gu_la && sc_gu_u) {
+        logger.info(
+          'User attempting to register had existing IDAPI cookies set.',
+        );
+      }
+
       let state = res.locals;
 
       const { email = '' } = req.body;
