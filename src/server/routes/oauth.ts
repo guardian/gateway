@@ -19,6 +19,7 @@ import { updateEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import postSignInController from '@/server/lib/postSignInController';
 import { getConfiguration } from '@/server/lib/getConfiguration';
+import { validAppProtocols } from '../lib/validateUrl';
 
 interface OAuthError {
   error: string;
@@ -166,6 +167,16 @@ router.get(
             authState.queryParams,
           )
         : authState.queryParams.returnUrl;
+
+      // TODO: This is a temp hack to handle the apps redirects
+      // back to the deep link from sign in/registration
+      // the hard coded query param is also temp to test if they're
+      // able to read data we send back
+      if (
+        validAppProtocols.some((protocol) => returnUrl.startsWith(protocol))
+      ) {
+        return res.redirect(303, `${returnUrl}?reason=signin`);
+      }
 
       postSignInController(req, res, cookies, returnUrl);
     } catch (error) {

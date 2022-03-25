@@ -1,10 +1,27 @@
 import { getConfiguration } from '@/server/lib/getConfiguration';
 
+// valid web hostnames
 const validHostnames = [
   '.theguardian.com',
   '.code.dev-theguardian.com',
   '.thegulocal.com',
 ];
+
+// valid app custom url schemes
+// TODO: update documentation on how to add new app clients
+export const validAppProtocols = [
+  // android live app
+  'com.theguardian:',
+  // android live app debug
+  'com.theguardian.debug:',
+  // iOS live app
+  'uk.co.guardian.iphone2:',
+  // iOS live app debug
+  'uk.co.guardian.iphone2.debug:',
+];
+
+// valid app custom pathnames
+const validAppPathnames = ['/authentication/callback'];
 
 const invalidPaths = ['/signin', '/register'];
 
@@ -15,6 +32,16 @@ export const validateReturnUrl = (returnUrl = ''): string => {
     // we decode the returnUrl as we cant know for sure if it's been encoded or not
     // so decode just to be safe
     const url = new URL(decodeURIComponent(returnUrl));
+
+    // we first want to check for an app redirect using the x-gu: custom protocol
+    // and identity hostname, with the callback path
+    if (
+      validAppProtocols.includes(url.protocol) &&
+      validAppPathnames.includes(url.pathname)
+    ) {
+      // return the uri without query params
+      return `${url.protocol}${url.pathname}`;
+    }
 
     // check the hostname is valid
     if (!validHostnames.some((hostname) => url.hostname.endsWith(hostname))) {
