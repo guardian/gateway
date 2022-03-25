@@ -52,6 +52,9 @@ export const None = () => (
     optedIntoProfiling={false}
     productConsents={[]}
     subscribedNewsletters={[]}
+    // @ABTEST
+    optedIntoPersonalisedAdvertising={false}
+    isUserInVariant={false}
   />
 );
 None.story = {
@@ -64,6 +67,9 @@ export const Profiling = () => (
     optedIntoProfiling={true}
     productConsents={[]}
     subscribedNewsletters={[]}
+    // @ABTEST
+    optedIntoPersonalisedAdvertising={false}
+    isUserInVariant={false}
   />
 );
 Profiling.story = {
@@ -76,6 +82,9 @@ export const Newsletters = () => (
     optedIntoProfiling={false}
     productConsents={[]}
     subscribedNewsletters={subscribedNewsletters}
+    // @ABTEST
+    optedIntoPersonalisedAdvertising={false}
+    isUserInVariant={false}
   />
 );
 Newsletters.story = {
@@ -88,6 +97,9 @@ export const Products = () => (
     optedIntoProfiling={false}
     productConsents={productConsents}
     subscribedNewsletters={[]}
+    // @ABTEST
+    optedIntoPersonalisedAdvertising={false}
+    isUserInVariant={false}
   />
 );
 Products.story = {
@@ -100,8 +112,41 @@ export const Everything = () => (
     optedIntoProfiling={true}
     productConsents={productConsents}
     subscribedNewsletters={subscribedNewsletters}
+    // @ABTEST
+    optedIntoPersonalisedAdvertising={false}
+    isUserInVariant={false}
   />
 );
 Everything.story = {
   name: 'with everything consented to',
+};
+
+export const InAdvertisingABTestConsented = () => (
+  <ConsentsConfirmation
+    returnUrl=""
+    optedIntoProfiling={true}
+    productConsents={productConsents}
+    subscribedNewsletters={subscribedNewsletters}
+    // @ABTEST
+    optedIntoPersonalisedAdvertising={true}
+    isUserInVariant={true}
+  />
+);
+InAdvertisingABTestConsented.story = {
+  name: 'in AB test advertising consented',
+};
+
+export const InAdvertisingABTestNotConsented = () => (
+  <ConsentsConfirmation
+    returnUrl=""
+    optedIntoProfiling={true}
+    productConsents={productConsents}
+    subscribedNewsletters={subscribedNewsletters}
+    // @ABTEST
+    optedIntoPersonalisedAdvertising={false}
+    isUserInVariant={true}
+  />
+);
+InAdvertisingABTestNotConsented.story = {
+  name: 'in AB test advertising not consented',
 };

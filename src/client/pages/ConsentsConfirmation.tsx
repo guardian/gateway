@@ -26,6 +26,10 @@ type ConsentsConfirmationProps = {
   success?: string;
   returnUrl: string;
   optedIntoProfiling: boolean;
+  // @AB_TEST: props
+  optedIntoPersonalisedAdvertising: boolean;
+  isUserInVariant: boolean;
+  // @AB_TEST: props end
   productConsents: Consent[];
   subscribedNewsletters: NewsLetter[];
   geolocation?: GeoLocation;
@@ -76,6 +80,10 @@ const consentStyles = css`
   }
 `;
 
+const noTopBorder = css`
+  border-top: 0;
+`;
+
 const itemText = css`
   margin-left: ${space[2]}px;
 `;
@@ -99,13 +107,18 @@ export const ConsentsConfirmation = ({
   returnUrl,
   productConsents,
   optedIntoProfiling,
+  optedIntoPersonalisedAdvertising,
+  isUserInVariant,
   subscribedNewsletters,
 }: ConsentsConfirmationProps) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
   const anyConsents =
     optedIntoProfiling ||
+    optedIntoPersonalisedAdvertising ||
     !!productConsents.length ||
     !!subscribedNewsletters.length;
+
+  console.log('anyconsents', anyConsents);
 
   return (
     <ConsentsLayout title="Your registration is complete">
@@ -162,6 +175,17 @@ export const ConsentsConfirmation = ({
               </p>
             </div>
           </ReviewTableRow>
+        )}
+        {isUserInVariant && optedIntoPersonalisedAdvertising && (
+          <div css={[consentStyles, noTopBorder]}>
+            <span css={iconStyles}>
+              <SvgTickRound />
+            </span>
+            <p css={[text, itemText]}>
+              Allow personalised advertising using my data - this supports the
+              Guardian
+            </p>
+          </div>
         )}
       </div>
       {anyConsents && (
