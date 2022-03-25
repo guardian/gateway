@@ -16,10 +16,6 @@ import { typedRouter as router } from '@/server/lib/typedRoutes';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { OktaError } from '@/server/models/okta/Error';
-import {
-  readEncryptedStateCookie,
-  updateEncryptedStateCookie,
-} from '@/server/lib/encryptedStateCookie';
 import { CONSENTS_POST_SIGN_IN_PAGE } from '@/shared/model/Consent';
 import {
   getUserConsentsForPage,
@@ -29,6 +25,7 @@ import {
 import { loginMiddleware } from '@/server/lib/middleware/login';
 import postSignInController from '@/server/lib/postSignInController';
 import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
+import { getSession } from '../lib/okta/api/sessions';
 
 const { okta } = getConfiguration();
 
@@ -86,29 +83,21 @@ const showSignInPage = async (req: Request, res: ResponseWithRequestState) => {
 router.get(
   '/signin',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { useOkta } = res.locals.queryParams;
-    if (okta.enabled && useOkta) {
+    const { useOkta, returnUrl } = res.locals.queryParams;
+    const oktaSessionCookieId: string | undefined = req.cookies.sid;
+
+    if (okta.enabled && useOkta && oktaSessionCookieId) {
       // for okta users landing on sign in, we want to first check if a session exists
       // if a session already exists then we want to refresh it and redirect back to the returnUrl
       // otherwise we want to show the sign in page
-      // to facilitate this we'll use the EncryptedState cookie, and the `signInRedirect` property
-      const encryptedState = readEncryptedStateCookie(req);
-
-      // first check that the sign in session is checked (signInRedirect is true)
-      // this means that the check is complete and show the sign in page
-      if (encryptedState?.signInRedirect) {
-        // remove the signInRedirect value from the cookie as the check is complete
-        // as we've been redirected here from the oauth callback
-        updateEncryptedStateCookie(req, res, {
-          signInRedirect: undefined,
-        });
-
-        // render the sign in page
+      try {
+        //check if the user has a session, if they do, take them to the returnUrl
+        await getSession(oktaSessionCookieId);
+        res.redirect(returnUrl);
+      } catch {
+        //if their session was invalid, the Okta sessions api returns a 404 and the promise fails,
+        //so we fall through to this catch block
         return showSignInPage(req, res);
-      } else {
-        // sign in session check is not complete, so we want to check if a session exists
-        // we do this by making an auth code request to okta
-        return performAuthorizationCodeFlow(res);
       }
     } else {
       return showSignInPage(req, res);
@@ -192,6 +181,19 @@ const oktaSignInController = async (
 ) => {
   // get the email and password from the request body
   const { email = '', password = '' } = req.body;
+  const oktaSessionCookieId: string | undefined = req.cookies.sid;
+
+  try {
+    if (oktaSessionCookieId) {
+      //if the user somehow is already logged in we take them back to the return url
+      const { returnUrl } = res.locals.queryParams;
+      await getSession(oktaSessionCookieId);
+      res.redirect(returnUrl);
+    }
+  } catch {
+    // We log this scenario as it is quite unlikely, but we continue to sign the user in.
+    logger.info('User POSTed to /signin with an invalid `sid` session cookie');
+  }
 
   try {
     // attempt to authenticate with okta
