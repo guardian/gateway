@@ -1,4 +1,68 @@
 describe('Okta Register flow', () => {
+  context('Signed in user visits to /register with IDAPI cookies', () => {
+    beforeEach(() => {
+      cy.mockPurge();
+    });
+    it('should redirect to manage.theguardian.com if the SC_GU_U session cookie is set', () => {
+      cy.setCookie('GU_U', 'the_GU_U_cookie');
+      cy.setCookie('SC_GU_LA', 'the_SC_GU_LA_cookie');
+      cy.setCookie('SC_GU_U', 'the_SC_GU_U_cookie');
+
+      cy.mockPattern(
+        200,
+        {
+          signInStatus: 'signedInNotRecently',
+          userId: 'xxx',
+          displayName: 'xxx',
+          email: 'xxx',
+          emailValidated: false,
+          redirect: {
+            url: 'xxx',
+          },
+        },
+        '/auth/redirect',
+      );
+
+      cy.visit('/register?useOkta=true');
+
+      cy.url().should(
+        'eq',
+        'https://profile.theguardian.com/signin?returnUrl=https%3A%2F%2Fmanage.theguardian.com%2F',
+      );
+    });
+
+    it('should redirect to /register if the SU_GU_U session cookie is set but invalid', () => {
+      cy.setCookie('GU_U', 'the_GU_U_cookie');
+      cy.setCookie('SC_GU_LA', 'the_SC_GU_LA_cookie');
+      cy.setCookie('SC_GU_U', 'the_SC_GU_U_cookie');
+
+      cy.mockPattern(
+        200,
+        {
+          signInStatus: 'signedOut',
+          userId: 'xxx',
+          displayName: 'xxx',
+          email: 'xxx',
+          emailValidated: false,
+          redirect: {
+            url: 'xxx',
+          },
+        },
+        '/auth/redirect',
+      );
+
+      cy.visit('/register?useOkta=true');
+
+      cy.url().should(
+        'eq',
+        'http://localhost:8861/register?returnUrl=https%3A%2F%2Fm.code.dev-theguardian.com&useOkta=true',
+      );
+      cy.getCookie('GU_U').should('not.exist');
+      cy.getCookie('SC_GU_LA').should('not.exist');
+      cy.getCookie('SC_GU_U').should('not.exist');
+    });
+  });
+
   context('Signed in user posts to /register', () => {
     beforeEach(() => {
       cy.mockPurge();
