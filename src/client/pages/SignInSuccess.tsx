@@ -60,7 +60,7 @@ export const SignInSuccess = ({ consents }: SignInSuccessProps) => {
             key={consent.id}
             title={consent.name}
             titleLevel={2}
-            description={consent.description}
+            description={consent.description || ''}
             id={consent.id}
             defaultChecked={!!consent.consented}
             imagePath={CONSENT_IMAGES[consent.id]}

@@ -1,11 +1,12 @@
 export interface Consent {
   id: string;
   name: string;
-  description: string;
+  description?: string;
   consented?: boolean;
 }
 
 export enum Consents {
+  ADVERTISING = 'personalised_advertising',
   // OPT OUT API CONSENTS (modeled as opt ins in Gateway)
   PROFILING = 'profiling_optin',
   // PRODUCT CONSENTS
@@ -16,7 +17,10 @@ export enum Consents {
   OFFERS = 'offers',
 }
 
-export const CONSENTS_DATA_PAGE: string[] = [Consents.PROFILING];
+export const CONSENTS_DATA_PAGE: string[] = [
+  Consents.PROFILING,
+  Consents.ADVERTISING,
+];
 
 export const CONSENTS_COMMUNICATION_PAGE: string[] = [Consents.SUPPORTER];
 
