@@ -30,22 +30,20 @@ import deepmerge from 'deepmerge';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { OktaError } from '@/server/models/okta/Error';
 import { causesInclude } from '@/server/lib/okta/api/errors';
-import { getSession } from '../lib/okta/api/sessions';
-import { clearOktaCookies } from './signOut';
+import { registerMiddleware } from '../lib/middleware/register';
 
 const { okta } = getConfiguration();
 
 router.get(
   '/register',
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    await RedirectIfOktaSessionExists(req, res);
-
+  registerMiddleware,
+  (req: Request, res: ResponseWithRequestState) => {
     const html = renderer('/register', {
       requestState: res.locals,
       pageTitle: 'Register',
     });
     res.type('html').send(html);
-  }),
+  },
 );
 
 router.get(
@@ -174,6 +172,7 @@ router.post(
 router.post(
   '/register',
   handleRecaptcha,
+  registerMiddleware,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { useOkta } = res.locals.queryParams;
     if (okta.enabled && useOkta) {
@@ -299,8 +298,6 @@ const OktaRegistration = async (
 ) => {
   const { email = '' } = req.body;
 
-  await RedirectIfOktaSessionExists(req, res);
-
   try {
     const user = await registerWithOkta(email);
 
@@ -382,33 +379,6 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
         }),
       }),
     );
-  }
-};
-
-const RedirectIfOktaSessionExists = async (
-  req: Request,
-  res: ResponseWithRequestState,
-) => {
-  // Check if the user has an existing Okta session. If they do and it's valid,
-  // they're already logged in and are redirected to the account management
-  // page. If the session isn't valid, they are redirected to the register
-  // page.
-  const oktaSessionCookieId: string | undefined = req.cookies.sid;
-  if (oktaSessionCookieId) {
-    try {
-      await getSession(oktaSessionCookieId);
-      return res.redirect('https://manage.theguardian.com/');
-    } catch {
-      //if the cookie exists, but the session is invalid, we remove the cookie
-      clearOktaCookies(res);
-      logger.info(
-        'User attempting to register had an existing Okta session cookie, but it was invalid',
-      );
-      //we redirect to /register to make sure the Okta sid cookie has been removed
-      return res.redirect(
-        addQueryParamsToPath('/register', res.locals.queryParams),
-      );
-    }
   }
 };
 
