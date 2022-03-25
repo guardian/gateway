@@ -19,16 +19,8 @@ Throughout the implementation of the sign in code, there are many in line commen
 In general the steps of sign in with email and password are summarised as follows, assuming okta is enabled, this does not detail all technical requirements, just the main high level:
 
 - User navigates to `/signin`
-  - Check `EncryptedState` cookie for `signInRedirect` value
-    - if `true` render the sign in page, as we've checked for an existing session
-    - if `false` or `undefined` we need to check for an existing session
-      - Check for existing session by performing auth code flow by redirecting user to `/authorize`
-      - Okta will redirect to callback endpoint `/oauth/authorization-code/callback`
-        - if okta session exists, complete the auth code flow and refreshing identity cookies, redirect to original `returnUrl`
-        - if no okta session, okta returns `login_required` error, intercept this
-          - set the `EncryptedState` cookie for `signInRedirect` value to `true`
-          - redirect to sign in, now that `signInRedirect` is `true`, the page will render
-  - If sign in page shown
+  - Check `sid` cookie for existing Okta session, if this is present it checks if the session is still valid.
+  - If the current session does not exist, or is invalid, sign in page shown
     - user enters email and password, makes request to gateway `POST /signin`
     - Use okta authenticate endpoint with the email and password `/api/v1/authn`
       - If email/password wrong, show `email or password was incorrect` error
@@ -49,18 +41,10 @@ sequenceDiagram
   participant Okta
   participant Identity API
   Browser->>Gateway: Request gateway /signin
-  note over Gateway: Sign in session is not checked<br/>(encryptedState.signInRedirect == false | undefined)
-  note over Gateway: <br/>We check session using Okta OAuth Auth Code flow<br/>using `prompt=none` means no okta login is shown,<br/>and "error" returned instead
-  Gateway->>Browser: Redirect request to OAuth auth code flow<br/>/authorize?prompt=none...<br>see notes for other parameters/implementation
-  Browser->>Okta: Request /authorize
-  note over Okta: check for existing session<br>in this case none exists
-  Okta->>Browser: Redirect request to gateway<br>/oauth/authorization-code/callback?error=login_required
-  Browser->>Gateway: Request /oauth/authorization-code/callback?error=login_required
-  note over Gateway: check for `error=login_required`<br/>set `encryptedState.signInRedirect = true` as cookie
-  Gateway->>Browser: Redirect request to gateway `/signin`
-  Browser->>Gateway: Request gateway /signin
-  note over Gateway: Sign in session is checked<br/>(encryptedState.signInRedirect == true)<br>remove/set to false from the encryptedState
-  Gateway->>Browser: Return rendered sign in page
+  note over Gateway: Sign in session is checked by inspecting the `sid` cookie
+  Gateway->>Okta: GET /api/v1/sessions/:sessionId
+  Okta->>Gateway: return invalid session response
+  Gateway->>Browser: render sign in page
   Browser->>Gateway: Login form POST /signin (email + password)
   Gateway->>Okta: Authenticate with Okta<br/>/authn with email + pw)
   note over Okta: validate email + password
@@ -90,19 +74,9 @@ sequenceDiagram
   participant Okta
   participant Identity API
   Browser->>Gateway: Request gateway /signin
-  note over Gateway: Sign in session is not checked<br/>(encryptedState.signInRedirect == false | undefined)
-  note over Gateway: <br/>We check session using Okta OAuth Auth Code flow<br/>using `prompt=none` means no okta login is shown
-  Gateway->>Browser: Redirect request to OAuth auth code flow<br/>/authorize?prompt=none...<br>see notes for other parameters/implementation
-  Browser->>Okta: Request /authorize
-  note over Okta: check for existing session<br>in this case session exists<br>Okta will refresh the existing session
-  Okta->>Browser: Redirect request to gateway<br>/oauth/authorization-code/callback?code={auth_code}...<br/>see notes for other parameters/implementation
-  Browser->>Gateway: Request to gateway<br>/oauth/authorization-code/callback?code={auth_code}...
-  opt Get IDAPI Cookies (dual running)
-    Gateway->>Okta: exchange auth_code<br/>for access_token
-    Okta->>Gateway: Return access_token
-    Gateway->>Identity API: Request identity cookies for user using access_token
-    note over Identity API: check the access token is valid<br>create identity session/cookies if valid
-    Identity API->>Gateway: return signed identity cookie values
-  end
-  Gateway->>Browser: Redirect to return_url (usually on *.theguardian.com)<br>set identity cookies if applicable
+  note over Gateway: Sign in session is checked by inspecting the `sid` cookie and validating the session against the Okta session API
+  note over Okta: check for existing session<br>in this case a session exists
+  Gateway->>Okta: GET /api/v1/sessions/:sessionId
+  Okta->>Gateway: return valid session response
+  Gateway->>Browser: Redirect to return_url (usually on *.theguardian.com)
 ```
