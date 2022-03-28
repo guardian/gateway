@@ -35,8 +35,8 @@ const renderEmailTemplate = (template: EMAIL_TEMPLATE_TYPE) => {
   }
 };
 
-/* GET a valid email template name. Returns 404 for invalid template
- * names. */
+/* GET a valid email template name.
+ * Returns 406 for invalid template names. */
 router.get(
   '/email/:template',
   (req: Request, res: ResponseWithRequestState) => {
