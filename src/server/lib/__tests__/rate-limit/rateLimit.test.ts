@@ -1,3 +1,4 @@
+import type { Redis as IORedis } from 'ioredis';
 import Redis from 'ioredis-mock';
 import rateLimit, { BucketValues } from '@/server/lib/rate-limit';
 
@@ -25,7 +26,7 @@ describe('rateLimit', () => {
     const applyGlobalRateLimit = async () =>
       await rateLimit({
         name: '/signin',
-        redisClient: new Redis(),
+        redisClient: new Redis() as IORedis,
         bucketConfiguration: {
           globalBucket: { addTokenMs: 500, capacity: 5 },
         },
@@ -53,7 +54,7 @@ describe('rateLimit', () => {
     const applyIpRateLimit = async () =>
       await rateLimit({
         name: '/signin',
-        redisClient: new Redis(),
+        redisClient: new Redis() as IORedis,
         bucketConfiguration: {
           ipBucket: { addTokenMs: 500, capacity: 5 },
           globalBucket: { addTokenMs: 500, capacity: 100 },
@@ -85,7 +86,7 @@ describe('rateLimit', () => {
     const applyEmailRateLimit = async () =>
       await rateLimit({
         name: '/signin',
-        redisClient: new Redis(),
+        redisClient: new Redis() as IORedis,
         bucketConfiguration: {
           emailBucket: { addTokenMs: 500, capacity: 5 },
           globalBucket: { addTokenMs: 500, capacity: 100 },
@@ -117,7 +118,7 @@ describe('rateLimit', () => {
     const applyIpRateLimit = async () =>
       await rateLimit({
         name: '/signin',
-        redisClient: new Redis(),
+        redisClient: new Redis() as IORedis,
         bucketConfiguration: {
           accessTokenBucket: { addTokenMs: 500, capacity: 5 },
           globalBucket: { addTokenMs: 500, capacity: 100 },
@@ -149,7 +150,7 @@ describe('rateLimit', () => {
     const applyOktaRateLimit = async () =>
       await rateLimit({
         name: '/signin',
-        redisClient: new Redis(),
+        redisClient: new Redis() as IORedis,
         bucketConfiguration: {
           oktaIdentifierBucket: { addTokenMs: 500, capacity: 5 },
           globalBucket: { addTokenMs: 500, capacity: 100 },
@@ -181,7 +182,7 @@ describe('rateLimit', () => {
     const applyIpRateLimit = async () =>
       await rateLimit({
         name: '/signin',
-        redisClient: new Redis(),
+        redisClient: new Redis() as IORedis,
         bucketConfiguration: {
           globalBucket: { capacity: 2, addTokenMs: 50 },
         },
@@ -218,7 +219,7 @@ describe('rateLimit', () => {
     const applyRateLimit = async () =>
       await rateLimit({
         name: '/signin',
-        redisClient: new Redis(),
+        redisClient: new Redis() as IORedis,
         bucketConfiguration: {
           oktaIdentifierBucket: { capacity: 5, addTokenMs: 500 },
           emailBucket: { capacity: 5, addTokenMs: 500 },
@@ -237,7 +238,7 @@ describe('rateLimit', () => {
     const applyRateLimit = async () =>
       await rateLimit({
         name: '/signin',
-        redisClient: new Redis(),
+        redisClient: new Redis() as IORedis,
         bucketConfiguration: {
           globalBucket: { capacity: 100, addTokenMs: 500 },
         },
@@ -258,7 +259,7 @@ describe('rateLimit', () => {
     const applyRateLimit = async () =>
       await rateLimit({
         name: '/signin',
-        redisClient: new Redis(),
+        redisClient: new Redis() as IORedis,
         bucketConfiguration: {
           oktaIdentifierBucket: { capacity: 100, addTokenMs: 500 },
           emailBucket: { capacity: 5, addTokenMs: 500 },
@@ -284,7 +285,7 @@ describe('rateLimit', () => {
     const applyRateLimit = async (bucketValues?: BucketValues) =>
       await rateLimit({
         name: '/signin',
-        redisClient: new Redis(),
+        redisClient: new Redis() as IORedis,
         // Buckets are declared in order of precedence.
         bucketConfiguration: {
           oktaIdentifierBucket: { capacity: 4, addTokenMs: 10000 },
