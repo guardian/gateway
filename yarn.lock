@@ -9600,10 +9600,10 @@ invert-kv@^2.0.0:
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-2.0.0.tgz#7393f5afa59ec9ff5f67a27620d11c226e3eec02"
   integrity sha512-wPVv/y/QQ/Uiirj/vh3oP+1Ww+AWehmi1g5fFWGPF6IpCBCDVrhgHRMvrLfdYcwDh3QJbGXDW4JAuzxElLSqKA==
 
-ioredis-mock@^7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/ioredis-mock/-/ioredis-mock-7.1.0.tgz#36850e2f405152755b6f68d49edd7781a5a9c958"
-  integrity sha512-Qq71Xf1ACz/k/DHF9ZH9owROLQSYGWGk/nOKIl1220mMuWRNWwLfgIxdK4KimuzZGNFpZLfN7QDAHrVjEfS0LA==
+ioredis-mock@^7.2.0:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/ioredis-mock/-/ioredis-mock-7.2.0.tgz#48f006c07ef7f1f93f75e60d8f9035fa46c4ef0a"
+  integrity sha512-xzABBG3NhfDBGxH1KX9n6vs7WGNn9lhcxMT3b+vjynVImxlUV+vOXU+tjGzSUnGmx4IYllA8RqbXN8z6ROMPVA==
   dependencies:
     fengari "^0.1.4"
     fengari-interop "^0.1.3"
