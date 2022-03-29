@@ -30,16 +30,21 @@ import deepmerge from 'deepmerge';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { OktaError } from '@/server/models/okta/Error';
 import { causesInclude } from '@/server/lib/okta/api/errors';
+import { registerMiddleware } from '../lib/middleware/register';
 
 const { okta } = getConfiguration();
 
-router.get('/register', (req: Request, res: ResponseWithRequestState) => {
-  const html = renderer('/register', {
-    requestState: res.locals,
-    pageTitle: 'Register',
-  });
-  res.type('html').send(html);
-});
+router.get(
+  '/register',
+  registerMiddleware,
+  (req: Request, res: ResponseWithRequestState) => {
+    const html = renderer('/register', {
+      requestState: res.locals,
+      pageTitle: 'Register',
+    });
+    res.type('html').send(html);
+  },
+);
 
 router.get(
   '/register/email-sent',
@@ -167,6 +172,7 @@ router.post(
 router.post(
   '/register',
   handleRecaptcha,
+  registerMiddleware,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { useOkta } = res.locals.queryParams;
     if (okta.enabled && useOkta) {
