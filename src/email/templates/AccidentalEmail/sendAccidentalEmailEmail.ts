@@ -1,6 +1,5 @@
 import { render } from 'mjml-react';
 import { send } from '@/email/lib/send';
-import { getProfileUrl } from '@/server/lib/getProfileUrl';
 
 import { AccidentalEmail } from './AccidentalEmail';
 import { AccidentalEmailText } from './AccidentalEmailText';
