@@ -63,9 +63,9 @@ if (okta.enabled) {
   uncachedRoutes.use(oauth);
 }
 
-router.use(uncachedRoutes);
-
 // email template routes
 uncachedRoutes.use(emailTemplates);
+
+router.use(uncachedRoutes);
 
 export default router;
