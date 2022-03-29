@@ -9,26 +9,28 @@ import { VerifyText } from '../../email/templates/Verify/VerifyText';
 
 const router = Router();
 
-const emailTemplateTypes = ['ResetPassword', 'Verify'] as const;
-type EMAIL_TEMPLATE_TYPE = typeof emailTemplateTypes[number];
+const emailTemplateTypes = ['reset-password', 'verify'] as const;
+type EmailTemplateType = typeof emailTemplateTypes[number];
 
-type EMAIL_RENDER_RESULT = {
+type EmailRenderResult = {
   plain: string;
   html: string;
 };
 
-const renderEmailTemplate = (template: EMAIL_TEMPLATE_TYPE) => {
+const renderEmailTemplate = (
+  template: EmailTemplateType,
+): EmailRenderResult | undefined => {
   switch (template) {
-    case 'ResetPassword':
+    case 'reset-password':
       return {
         plain: ResetPasswordText(),
         html: render(ResetPassword()).html,
-      } as EMAIL_RENDER_RESULT;
-    case 'Verify':
+      } as EmailRenderResult;
+    case 'verify':
       return {
         plain: VerifyText(),
         html: render(Verify()).html,
-      } as EMAIL_RENDER_RESULT;
+      } as EmailRenderResult;
     default:
       // We don't want to do anything for invalid template names
       return undefined;
@@ -40,7 +42,7 @@ const renderEmailTemplate = (template: EMAIL_TEMPLATE_TYPE) => {
 router.get(
   '/email/:template',
   (req: Request, res: ResponseWithRequestState) => {
-    const template = req.params.template as EMAIL_TEMPLATE_TYPE;
+    const template = req.params.template as EmailTemplateType;
     const templateIsValid = emailTemplateTypes.includes(template);
 
     return templateIsValid
