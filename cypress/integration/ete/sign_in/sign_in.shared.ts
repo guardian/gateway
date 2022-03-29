@@ -305,12 +305,8 @@ export const removesEncryptedEmailParameterFromQueryString = (
         : '/signin?encryptedEmail=bhvlabgflbgyil';
       cy.visit(visitUrl);
 
-      // We add a '/' to the Okta assertion because at some point in the oauth flow it is added to the returnUrl.
-      // This is because `url.pathname` in validateUrl.ts (validateReturnUrl) returns '/'
       const finalUrl = isOkta
-        ? `?returnUrl=${encodeURIComponent(
-            defaultReturnUrl + '/',
-          )}&useOkta=true`
+        ? `?returnUrl=${encodeURIComponent(defaultReturnUrl)}&useOkta=true`
         : `?returnUrl=${encodeURIComponent(defaultReturnUrl)}`;
       cy.location('search').should('eq', finalUrl);
     },

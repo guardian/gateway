@@ -15,7 +15,6 @@ import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { exchangeAccessTokenForCookies } from '@/server/lib/idapi/auth';
 import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import { SignInErrors } from '@/shared/model/Errors';
-import { updateEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import postSignInController from '@/server/lib/postSignInController';
 import { getConfiguration } from '@/server/lib/getConfiguration';
@@ -50,12 +49,6 @@ const redirectForGenericError = (
   req: Request,
   res: ResponseWithRequestState,
 ) => {
-  // we set the sign in redirect to true so that we can render the sign in page
-  // without getting into a redirect loop
-  updateEncryptedStateCookie(req, res, {
-    signInRedirect: true,
-  });
-
   return res.redirect(
     addQueryParamsToPath('/signin', res.locals.queryParams, {
       error_description: SignInErrors.GENERIC,
@@ -108,11 +101,6 @@ router.get(
         isOAuthError(callbackParams) &&
         callbackParams.error === OpenIdErrors.LOGIN_REQUIRED
       ) {
-        // set the signInRedirect flag so we can render the sign in page as a session doesn't exist
-        updateEncryptedStateCookie(req, res, {
-          signInRedirect: true,
-        });
-
         return res.redirect(
           addQueryParamsToPath('/signin', authState.queryParams),
         );
