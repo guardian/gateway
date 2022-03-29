@@ -6,10 +6,16 @@ import { ResetPassword } from '../../email/templates/ResetPassword/ResetPassword
 import { ResetPasswordText } from '../../email/templates/ResetPassword/ResetPasswordText';
 import { Verify } from '../../email/templates/Verify/Verify';
 import { VerifyText } from '../../email/templates/Verify/VerifyText';
+import { AccidentalEmail } from '../../email/templates/AccidentalEmail/AccidentalEmail';
+import { AccidentalEmailText } from '../../email/templates/AccidentalEmail/AccidentalEmailText';
 
 const router = Router();
 
-const emailTemplateTypes = ['reset-password', 'verify'] as const;
+const emailTemplateTypes = [
+  'reset-password',
+  'verify',
+  'accidental-email',
+] as const;
 type EmailTemplateType = typeof emailTemplateTypes[number];
 
 type EmailRenderResult = {
@@ -30,6 +36,11 @@ const renderEmailTemplate = (
       return {
         plain: VerifyText(),
         html: render(Verify()).html,
+      } as EmailRenderResult;
+    case 'accidental-email':
+      return {
+        plain: AccidentalEmailText(),
+        html: render(AccidentalEmail()).html,
       } as EmailRenderResult;
     default:
       // We don't want to do anything for invalid template names
