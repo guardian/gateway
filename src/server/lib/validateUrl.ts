@@ -5,15 +5,16 @@ const validHostnames = [
   '.theguardian.com',
   '.code.dev-theguardian.com',
   '.thegulocal.com',
+  'profile.theguardian.com',
 ];
 
 // valid app custom url schemes
 // TODO: update documentation on how to add new app clients
 export const validAppProtocols = [
   // android live app
-  'com.theguardian:',
+  'com.guardian:',
   // android live app debug
-  'com.theguardian.debug:',
+  'com.guardian.debug:',
   // iOS live app
   'uk.co.guardian.iphone2:',
   // iOS live app debug
@@ -37,10 +38,16 @@ export const validateReturnUrl = (returnUrl = ''): string => {
     // and identity hostname, with the callback path
     if (
       validAppProtocols.includes(url.protocol) &&
-      validAppPathnames.includes(url.pathname)
+      validAppPathnames.includes(url.pathname) &&
+      validHostnames.includes(url.hostname)
     ) {
       // return the uri without query params
-      return `${url.protocol}${url.pathname}`;
+      return `${url.protocol}//${url.hostname}${url.pathname}`;
+    }
+
+    //This guards against invalid protocol, including app ones
+    if (url.protocol !== 'https:') {
+      throw 'Invalid protocol';
     }
 
     // check the hostname is valid
