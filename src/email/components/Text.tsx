@@ -3,12 +3,21 @@ import React from 'react';
 import { MjmlSection, MjmlColumn, MjmlText } from 'mjml-react';
 import { background, text } from '@guardian/source-foundations';
 
-type Props = { children: React.ReactNode; noPaddingBottom?: boolean };
+type Props = {
+  children: React.ReactNode;
+  noPaddingBottom?: boolean;
+  cssClass?: string;
+};
 
-export const Text = ({ children, noPaddingBottom = false }: Props) => (
+export const Text = ({
+  children,
+  noPaddingBottom = false,
+  cssClass,
+}: Props) => (
   <MjmlSection
     background-color={background.primary}
     padding={noPaddingBottom ? '0 24px' : '0 24px 12px 24px'}
+    cssClass={cssClass}
   >
     <MjmlColumn>
       <MjmlText
