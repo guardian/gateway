@@ -1,6 +1,13 @@
 import React, { FunctionComponent } from 'react';
 import { css } from '@emotion/react';
-import { space, success, neutral, until } from '@guardian/source-foundations';
+import {
+  space,
+  remSpace,
+  success,
+  neutral,
+  until,
+  textSans,
+} from '@guardian/source-foundations';
 
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
@@ -10,6 +17,7 @@ import {
   text,
   textBold,
   controls,
+  subText,
 } from '@/client/styles/Consents';
 import { Consent } from '@/shared/model/Consent';
 import { NewsLetter } from '@/shared/model/Newsletter';
@@ -103,6 +111,18 @@ const returnButton = css`
   }
 `;
 
+const marketingText = css`
+  ${subText}
+  p {
+    color: ${neutral[20]};
+  }
+  a,
+  p {
+    ${textSans.small()}
+    line-height: ${remSpace[5]};
+  }
+`;
+
 export const ConsentsConfirmation = ({
   returnUrl,
   productConsents,
@@ -188,7 +208,16 @@ export const ConsentsConfirmation = ({
           </div>
         )}
       </div>
-      {anyConsents && (
+      {isUserInVariant && anyConsents && (
+        <p css={[marketingText, paddingTop, autoRow()]}>
+          You can change these anytime in your account under&nbsp;
+          <ExternalLink href={locations.MMA_EMAIL_PREFERENCES} subdued={true}>
+            Emails &amp; marketing
+          </ExternalLink>
+          .
+        </p>
+      )}
+      {!isUserInVariant && anyConsents && (
         <p css={[text, paddingTop, autoRow()]}>
           You can change these anytime in your account under&nbsp;
           <ExternalLink href={locations.MMA_EMAIL_PREFERENCES} subdued={true}>

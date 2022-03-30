@@ -21,6 +21,7 @@ import {
   text,
   textBold,
   greyBorderTop,
+  subText,
 } from '@/client/styles/Consents';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { ExternalLink } from '../components/ExternalLink';
@@ -39,24 +40,16 @@ const topMargin = css`
   margin: ${space[4]}px 0 0 0;
 `;
 
-const switchRow = css`
-  border: 0;
-  padding: 0;
-  ${topMargin}
-  ${textSans.medium()}
-`;
-
 const removeMargin = css`
   margin: 0;
   -ms-grid-row: 1; /* fix top margin on IE11 */
 `;
 
-const adConsentText = css`
-  color: ${neutral[46]};
-  p {
-    ${removeMargin}
-    margin-top: 6px;
-  }
+const switchRow = css`
+  border: 0;
+  padding: 0;
+  ${topMargin}
+  ${textSans.medium()}
 `;
 
 const toggleSwitchAlignment = css`
@@ -71,11 +64,8 @@ const listBullets = css`
   list-style: none;
   padding-left: 0;
   margin: 0;
-  text-indent: -18px; /* second line indentation */
-  margin-left: 18px; /* second line indentation */
-  li {
-    font-size: 17px;
-  }
+  text-indent: -20px; /* second line indentation */
+  margin-left: 20px; /* second line indentation */
   li:first-of-type {
     margin-top: 6px;
   }
@@ -99,14 +89,40 @@ const labelStyles = css`
   }
 `;
 
-const marketingText = css`
+const adConsentText = css`
+  ${subText}
+  line-height: ${remSpace[5]};
+  color: ${neutral[46]};
   p {
-    ${text}
-    color: ${neutral[20]};
+    ${removeMargin}
     margin-top: 6px;
   }
-  p:first-of-type {
-    margin-top: 0px;
+  && ul {
+    text-indent: -18px; /* second line indentation */
+    margin-left: 18px; /* second line indentation */
+  }
+  && li {
+    ${textSans.small()}
+    line-height: ${remSpace[5]};
+  }
+  && li::before {
+    width: 10px;
+    height: 10px;
+  }
+`;
+
+const marketingText = css`
+  p {
+    ${subText}
+    color: ${neutral[20]};
+  }
+  a,
+  p {
+    ${textSans.small()}
+    line-height: ${remSpace[5]};
+  }
+  p:last-of-type {
+    margin-top: 6px;
   }
 `;
 
@@ -167,7 +183,7 @@ export const ConsentsDataAB = ({
                   cssOverrides={[labelStyles, toggleSwitchAlignment]}
                 />
               </fieldset>
-              <div css={[text, autoSwitchRow(), adConsentText]}>
+              <div css={[adConsentText, autoSwitchRow()]}>
                 <p>
                   Advertising is a crucial source of our funding. You won&apos;t
                   see more ads, and your data won&apos;t be shared with third
