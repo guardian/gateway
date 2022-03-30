@@ -58,7 +58,7 @@ router.get(
 
     return templateIsValid
       ? res.json(renderEmailTemplate(template))
-      : res.send(406); // 406: Not Acceptable
+      : res.sendStatus(404);
   },
 );
 
