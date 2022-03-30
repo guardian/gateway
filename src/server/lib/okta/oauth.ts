@@ -62,8 +62,6 @@ export const performAuthorizationCodeFlow = (
     redirect_uri: ProfileOpenIdClientRedirectUris.WEB,
   });
 
-  console.log(authorizeUrl);
-
   // redirect the user to the /authorize endpoint
   return res.redirect(303, authorizeUrl);
 };
