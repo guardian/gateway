@@ -1,13 +1,11 @@
 import { Request, Router } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
-import { render } from 'mjml-react';
 
-import { ResetPassword } from '../../email/templates/ResetPassword/ResetPassword';
-import { ResetPasswordText } from '../../email/templates/ResetPassword/ResetPasswordText';
-import { Verify } from '../../email/templates/Verify/Verify';
-import { VerifyText } from '../../email/templates/Verify/VerifyText';
-import { AccidentalEmail } from '../../email/templates/AccidentalEmail/AccidentalEmail';
-import { AccidentalEmailText } from '../../email/templates/AccidentalEmail/AccidentalEmailText';
+import {
+  renderedResetPasswordEmail,
+  renderedVerifyEmail,
+  renderedAccidentalEmail,
+} from '@/email/templates/renderedTemplates';
 
 const router = Router();
 
@@ -28,20 +26,11 @@ const renderEmailTemplate = (
 ): EmailRenderResult | undefined => {
   switch (template) {
     case 'reset-password':
-      return {
-        plain: ResetPasswordText(),
-        html: render(ResetPassword()).html,
-      } as EmailRenderResult;
+      return renderedResetPasswordEmail;
     case 'verify':
-      return {
-        plain: VerifyText(),
-        html: render(Verify()).html,
-      } as EmailRenderResult;
+      return renderedVerifyEmail;
     case 'accidental-email':
-      return {
-        plain: AccidentalEmailText(),
-        html: render(AccidentalEmail()).html,
-      } as EmailRenderResult;
+      return renderedAccidentalEmail;
     default:
       // We don't want to do anything for invalid template names
       return undefined;
@@ -49,7 +38,9 @@ const renderEmailTemplate = (
 };
 
 /* GET a valid email template name.
- * Returns 406 for invalid template names. */
+ * Returns a JSON object with the fields 'plain' and 'html' which contain the
+ * plain-text and HTML versions of the requested email template.
+ * Returns 404 for invalid template names. */
 router.get(
   '/email/:template',
   (req: Request, res: ResponseWithRequestState) => {
