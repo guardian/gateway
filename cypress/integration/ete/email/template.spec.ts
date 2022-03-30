@@ -31,12 +31,12 @@ describe('Email template generation', () => {
       );
     });
   });
-  it('returns a 406 error for an invalid template name', () => {
+  it('returns a 404 error for an invalid template name', () => {
     cy.request({
       url: '/email/invalid-template',
       failOnStatusCode: false,
     }).then((response) => {
-      expect(response.status).to.equal(406);
+      expect(response.status).to.equal(404);
       expect(response.body.plain).to.not.exist;
       expect(response.body.html).to.not.exist;
     });
