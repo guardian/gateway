@@ -61,6 +61,7 @@ router.get(
 
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     try {
+      // Determine which OpenIdClient to use, in DEV we use the DevProfileIdClient, otherwise we use the ProfileOpenIdClient
       const OpenIdClient =
         stage === 'DEV' && req.get('X-GU-Okta-Env')
           ? DevProfileIdClient(req.get('X-GU-Okta-Env') as string)

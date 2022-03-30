@@ -205,6 +205,7 @@ const changePasswordInOkta = async (
 
       // TODO: once sign out with Okta has been implemented, invalidate current sessions before kicking off code flow
       return performAuthorizationCodeFlow(
+        req,
         res,
         sessionToken,
         successRedirectPath,
