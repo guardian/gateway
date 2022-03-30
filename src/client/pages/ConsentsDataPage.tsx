@@ -4,6 +4,7 @@ import { Consents } from '@/shared/model/Consent';
 import { ConsentsData } from '@/client/pages/ConsentsData';
 import { ConsentsDataAB } from './ConsentsDataAB';
 import { useAB } from '@guardian/ab-react';
+import { useCmpConsent } from '../lib/hooks/useCmpConsent';
 
 export const ConsentsDataPage = () => {
   const clientState = useClientState();
@@ -20,18 +21,19 @@ export const ConsentsDataPage = () => {
 
   // @AB_TEST: AdvertisingPermissionRegistrationPrompt: START
   const ABTestAPI = useAB();
-  // TODO CMP Cookie consent check
 
   const isUserInVariant = ABTestAPI.isUserInVariant(
     'AdvertisingPermissionRegistrationPrompt',
     'variant-show-ad-permission',
   );
 
+  const hasCmpConsent = useCmpConsent();
   // @AB_TEST: AdvertisingPermissionRegistrationPrompt: END
 
   return (
     <>
-      {isUserInVariant ? (
+      {/* @AB_TEST: AdvertisingPermissionRegistrationPrompt */}
+      {isUserInVariant && hasCmpConsent ? (
         <ConsentsDataAB profiling={profiling} advertising={advertising} />
       ) : (
         <ConsentsData
