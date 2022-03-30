@@ -82,6 +82,6 @@ export enum CaptchaErrors {
   RETRY = 'Google reCAPTCHA verification failed.',
 }
 
-export enum RatelimitErrors {
+export enum RateLimitErrors {
   GENERIC = 'Rate limit exceeded. This request has been rate limited, please try again shortly.',
 }

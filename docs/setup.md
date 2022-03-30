@@ -71,7 +71,7 @@ REDIS_SSL_ON=false
 
 #### Full Configuration
 
-Now copy the example config in `.ratelimit.example.json` to `.ratelimit.json`. This will be disabled by default, so you'll need to modify the `enabled` flag to be set to `true`.
+Copy the example config in `.ratelimit.example.json` to `.ratelimit.json`. This will be disabled by default, so you'll need to modify the `enabled` flag to be set to `true`.
 
 Here's a quick-start configuration that you can copy-paste into `.ratelimit.json` to get you started:
 

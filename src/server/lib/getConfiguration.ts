@@ -9,54 +9,9 @@ import {
   Stage,
   GU_MANAGE_URL,
 } from '@/server/models/Configuration';
-import { existsSync, readFileSync } from 'fs';
 import { featureSwitches } from '@/shared/lib/featureSwitches';
-import validateRateLimiterConfiguration from './rate-limit/validateConfiguration';
-import path from 'path';
+import validatedRateLimiterConfiguration from '@/server/lib/rateLimiterConfiguration';
 import { format } from 'util';
-
-const tryReadRateLimitConfigFile = () => {
-  // Try relative to the source file first, fall back to current directory if not found.
-  const primaryPath = path.resolve(__dirname, '.ratelimit.json');
-  const fallbackPath = '.ratelimit.json';
-
-  if (existsSync(primaryPath)) {
-    const configJson = readFileSync(primaryPath, 'utf-8');
-    if (configJson) {
-      return JSON.parse(configJson);
-    }
-  }
-
-  if (existsSync(fallbackPath)) {
-    const configJson = readFileSync(fallbackPath, 'utf-8');
-    if (configJson) {
-      return JSON.parse(configJson);
-    }
-  }
-
-  return undefined;
-};
-
-const tryReadEnvironmentVariable = () => {
-  const configJson = process.env.RATE_LIMITER_CONFIG || '';
-
-  if (configJson) {
-    return JSON.parse(configJson);
-  }
-
-  return undefined;
-};
-
-const loadRateLimiterConfiguration = () => {
-  // Env var takes precedence over file system configuration file.
-  const unvalidatedConfig =
-    tryReadEnvironmentVariable() ?? tryReadRateLimitConfigFile();
-
-  // We validate the loaded JSON object to ensure that it follows the rate limit config schema
-  return validateRateLimiterConfiguration(unvalidatedConfig);
-};
-
-const validatedRateLimiterConfig = loadRateLimiterConfiguration();
 
 const getOrThrow = (
   value: string | undefined,
@@ -135,14 +90,14 @@ const getStageVariables = (stage: Stage): StageVariables => {
 export const getConfiguration = (): Configuration => {
   const port = getOrThrow(process.env.PORT, 'Port configuration missing.');
 
-  const configValidationResult = validatedRateLimiterConfig;
-
-  if (typeof configValidationResult === 'undefined') {
+  // Make sure that there was not an error reading the rate limiter configuration.
+  if (typeof validatedRateLimiterConfiguration === 'undefined') {
     throw new Error('Rate limiter configuration missing');
   }
 
-  if (!configValidationResult.success) {
-    const validationError = configValidationResult.error;
+  // Check that there was not an error validating the loaded configuration.
+  if (!validatedRateLimiterConfiguration.success) {
+    const validationError = validatedRateLimiterConfiguration.error;
     const formattedError = format('%O', validationError.issues);
     throw new Error(
       'There was a problem parsing the rate limiter configuration ' +
@@ -150,7 +105,8 @@ export const getConfiguration = (): Configuration => {
     );
   }
 
-  const rateLimiter = configValidationResult.data;
+  // Continue with the validated configuration.
+  const rateLimiter = validatedRateLimiterConfiguration.data;
 
   const idapiBaseUrl = getOrThrow(
     process.env.IDAPI_BASE_URL,

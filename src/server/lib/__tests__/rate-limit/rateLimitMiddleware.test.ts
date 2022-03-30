@@ -1,7 +1,7 @@
 import Redis from 'ioredis-mock';
-import { default as request } from 'supertest';
+import request from 'supertest';
 import { RequestHandler } from 'express';
-import { RateLimiterConfiguration } from '../../rate-limit';
+import { RateLimiterConfiguration } from '@/server/lib/rate-limit';
 
 const defaultEnv = {
   PORT: '9000',

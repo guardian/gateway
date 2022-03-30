@@ -9,7 +9,6 @@ import { tests } from '@/shared/model/experiments/abTests';
 import { getABTesting } from '@/server/lib/getABTesting';
 import { RequestState, RequestWithTypedQuery } from '@/server/models/Express';
 import Bowser from 'bowser';
-import { readEmailCookie } from '../emailCookie';
 
 const {
   idapiBaseUrl,
@@ -22,10 +21,6 @@ const {
 
 const getRequestState = (req: RequestWithTypedQuery): RequestState => {
   const [abTesting, abTestAPI] = getABTesting(req, tests);
-
-  // Look for an email in form submissions and the encrypted email cookie
-  const { email: formEmail = '' } = req.body;
-  const encryptedStateEmail = readEmailCookie(req);
 
   // tracking parameters might be from body too
   const { ref, refViewId } = req.body;
@@ -46,11 +41,6 @@ const getRequestState = (req: RequestWithTypedQuery): RequestState => {
   const browser = Bowser.getParser(req.header('user-agent') || 'unknown');
 
   return {
-    rateLimitData: {
-      email: formEmail || encryptedStateEmail,
-      ip: req.ip,
-      accessToken: req.cookies.SC_GU_U,
-    },
     queryParams,
     pageData: {
       geolocation: getGeolocationRegion(req),

@@ -5,12 +5,13 @@ import {
 import { RoutePaths, ValidRoutePathsArray } from '@/shared/model/Routes';
 import { NextFunction } from 'express';
 import rateLimit, { RateLimiterConfiguration } from '@/server/lib/rate-limit';
-import { getConfiguration } from '../getConfiguration';
+import { getConfiguration } from '@/server/lib/getConfiguration';
 import redisClient from '@/server/lib/redis/redisClient';
 import { logger } from '@/server/lib/serverSideLogger';
-import { trackMetric } from '../trackMetric';
+import { trackMetric } from '@/server/lib/trackMetric';
 import { rateLimitHitMetric } from '@/server/models/Metrics';
-import { RatelimitErrors } from '@/shared/model/Errors';
+import { RateLimitErrors } from '@/shared/model/Errors';
+import { readEmailCookie } from '@/server/lib/emailCookie';
 
 const getBucketConfigForRoute = (
   route: RoutePaths,
@@ -39,6 +40,16 @@ export const rateLimiterMiddleware = async (
     );
   }
 
+  // Look for an email in form submissions and the encrypted email cookie
+  const { email: formEmail = '' } = req.body;
+  const encryptedStateEmail = readEmailCookie(req);
+
+  const rateLimitData = {
+    email: formEmail || encryptedStateEmail,
+    ip: req.ip,
+    accessToken: req.cookies.SC_GU_U,
+  };
+
   const ratelimitBucketTypeIfHit = await rateLimit({
     route: routePathDefinition,
     bucketConfiguration: getBucketConfigForRoute(
@@ -46,17 +57,17 @@ export const rateLimiterMiddleware = async (
       rateLimiter,
     ),
     redisClient,
-    bucketValues: res.locals.rateLimitData,
+    bucketValues: rateLimitData,
   });
 
   if (ratelimitBucketTypeIfHit) {
     logger.info(
-      `Rate limit hit for ${res.locals.rateLimitData.ip} on request to ${req.path}. Bucket type: ${ratelimitBucketTypeIfHit}`,
+      `Rate limit hit for ${rateLimitData.ip} on request to ${req.path}. Bucket type: ${ratelimitBucketTypeIfHit}`,
     );
 
     trackMetric(rateLimitHitMetric(ratelimitBucketTypeIfHit));
 
-    return res.status(429).send(RatelimitErrors.GENERIC);
+    return res.status(429).send(RateLimitErrors.GENERIC);
   }
 
   return next();

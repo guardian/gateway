@@ -63,7 +63,9 @@ describe('getConfiguration', () => {
     process.env.RATE_LIMITER_CONFIG = rateLimiterConfig;
 
     const { getConfiguration } = await import('@/server/lib/getConfiguration');
+
     const output = getConfiguration();
+
     const expected = {
       port: 9000,
       idapiClientAccessToken: 'idapi_api_key',
