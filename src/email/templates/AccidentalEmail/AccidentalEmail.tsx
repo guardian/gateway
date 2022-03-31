@@ -11,7 +11,9 @@ export const AccidentalEmail = () => {
     <Mjml>
       <MjmlHead>
         <MjmlTitle>Please ignore this email | The Guardian</MjmlTitle>
-        <MjmlStyle>{`.accidental-email-cta { display: {{CTA_DISPLAY}}; }`}</MjmlStyle>
+        <MjmlStyle
+          inline={true}
+        >{`.accidental-email-cta { display: [[CTA_DISPLAY]]; }`}</MjmlStyle>
       </MjmlHead>
       <MjmlBody width={600}>
         <Header />
