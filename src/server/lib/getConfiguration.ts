@@ -7,6 +7,7 @@ import {
   GU_DOMAIN,
   RedisConfiguration,
   Stage,
+  GU_MANAGE_URL,
 } from '@/server/models/Configuration';
 import { featureSwitches } from '@/shared/lib/featureSwitches';
 
@@ -49,6 +50,7 @@ interface StageVariables {
   domain: string;
   apiDomain: string;
   oktaEnabled: boolean;
+  accountManagementUrl: string;
 }
 
 const getStageVariables = (stage: Stage): StageVariables => {
@@ -60,6 +62,7 @@ const getStageVariables = (stage: Stage): StageVariables => {
         domain: GU_DOMAIN.PROD,
         apiDomain: GU_API_DOMAIN.PROD,
         oktaEnabled: featureSwitches.oktaEnabled.PROD,
+        accountManagementUrl: GU_MANAGE_URL.PROD,
       };
     case 'CODE':
       return {
@@ -68,6 +71,7 @@ const getStageVariables = (stage: Stage): StageVariables => {
         domain: GU_DOMAIN.CODE,
         apiDomain: GU_API_DOMAIN.CODE,
         oktaEnabled: featureSwitches.oktaEnabled.CODE,
+        accountManagementUrl: GU_MANAGE_URL.CODE,
       };
     default:
       return {
@@ -76,6 +80,7 @@ const getStageVariables = (stage: Stage): StageVariables => {
         domain: GU_DOMAIN.DEV,
         apiDomain: GU_API_DOMAIN.DEV,
         oktaEnabled: featureSwitches.oktaEnabled.DEV,
+        accountManagementUrl: GU_MANAGE_URL.DEV,
       };
   }
 };
@@ -107,8 +112,14 @@ export const getConfiguration = (): Configuration => {
 
   const stage = getStage(process.env.STAGE);
 
-  const { gaId, gaIdHash, domain, apiDomain, oktaEnabled } =
-    getStageVariables(stage);
+  const {
+    gaId,
+    gaIdHash,
+    domain,
+    apiDomain,
+    oktaEnabled,
+    accountManagementUrl,
+  } = getStageVariables(stage);
 
   const isHttps: boolean = JSON.parse(
     getOrThrow(process.env.IS_HTTPS, 'IS_HTTPS config missing.'),
@@ -208,5 +219,6 @@ export const getConfiguration = (): Configuration => {
     githubRunNumber,
     sentryDsn,
     redis,
+    accountManagementUrl,
   };
 };

@@ -9,7 +9,8 @@ describe('Sign out flow', () => {
   ];
 
   context('Signs a user out', () => {
-    it('Removes IDAPI log in cookies and dotcom cookies when signing out', () => {
+    // skipping for now, until we can run this test on an actual domain
+    it.skip('Removes IDAPI log in cookies and dotcom cookies when signing out', () => {
       // Disable redirect to /signin/success by default
       cy.setCookie(
         'GU_ran_experiments',
