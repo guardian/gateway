@@ -50,7 +50,9 @@ export const Footer = ({ mistakeParagraphComponent, hiddenText }: Props) => (
         9GU, United Kingdom
       </FooterText>
       {hiddenText && (
-        <MjmlRaw>{`<div style="display:none;">${hiddenText}</div>`}</MjmlRaw>
+        <MjmlRaw>
+          <div style={{ display: 'none' }}>{hiddenText}</div>
+        </MjmlRaw>
       )}
     </MjmlColumn>
   </MjmlSection>
