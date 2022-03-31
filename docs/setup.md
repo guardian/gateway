@@ -84,7 +84,7 @@ Here's a quick-start configuration that you can copy-paste into `.ratelimit.json
 }
 ```
 
-When you start Gateway it will first attempt to read from the `RATE_LIMIT_CONFIG` environment variable. If that is not defined, it will read the `.ratelimit.json` file we just made into its configuration.
+When you start Gateway it will first attempt to read from the `RATE_LIMITER_CONFIG` environment variable. If that is not defined, it will read the `.ratelimit.json` file we just made into its configuration.
 
 ### S3 Config
 

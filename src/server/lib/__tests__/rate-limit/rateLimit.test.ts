@@ -1,6 +1,7 @@
 import type { Redis as IORedis } from 'ioredis';
 import Redis from 'ioredis-mock';
 import rateLimit, { BucketValues } from '@/server/lib/rate-limit';
+import { fakeWait } from '../utils';
 
 // mock the server side logger
 jest.mock('@/server/lib/serverSideLogger');
@@ -16,7 +17,14 @@ jest.mock('@/server/lib/getConfiguration', () => ({
 // Integration tests for rate limiting with Redis
 
 describe('rateLimit', () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
   afterEach((done) => {
+    // Reset fake timers.
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
     // in-memory redis store is persisted after each run
     // make sure to clear the store after each test
     new Redis().flushall().then(() => done());
@@ -43,7 +51,7 @@ describe('rateLimit', () => {
     expect(rateLimitType).toBe('global');
 
     // Wait 500ms for a token to be added back to the bucket.
-    await new Promise((r) => setTimeout(r, 500));
+    fakeWait(500);
 
     // We should have a token after the timeout.
     const isRateLimited = await applyGlobalRateLimit();
@@ -75,7 +83,7 @@ describe('rateLimit', () => {
     expect(shouldBeRateLimited).toBe('ip');
 
     // Wait 500ms for a token to be added back to the bucket.
-    await new Promise((r) => setTimeout(r, 500));
+    fakeWait(500);
 
     // We should have a token after the timeout.
     const isRateLimited = await applyIpRateLimit();
@@ -107,7 +115,7 @@ describe('rateLimit', () => {
     expect(rateLimitType).toBe('email');
 
     // Wait 500ms for a token to be added back to the bucket.
-    await new Promise((r) => setTimeout(r, 500));
+    fakeWait(500);
 
     // We should have a token after the timeout.
     const isRateLimited = await applyEmailRateLimit();
@@ -139,7 +147,7 @@ describe('rateLimit', () => {
     expect(rateLimitType).toBe('accessToken');
 
     // Wait 500ms for a token to be added back to the bucket.
-    await new Promise((r) => setTimeout(r, 500));
+    fakeWait(500);
 
     // We should have a token after the timeout.
     const isRateLimited = await applyIpRateLimit();
@@ -171,7 +179,7 @@ describe('rateLimit', () => {
     expect(rateLimitType).toBe('oktaIdentifier');
 
     // Wait 500ms for a token to be added back to the bucket.
-    await new Promise((r) => setTimeout(r, 500));
+    fakeWait(500);
 
     // We should have a token after the timeout.
     const isRateLimited = await applyOktaRateLimit();
@@ -202,7 +210,7 @@ describe('rateLimit', () => {
     expect(rateLimitType).toBe('global');
 
     // Wait 500ms for all the tokens to be restored.
-    await new Promise((r) => setTimeout(r, 500));
+    fakeWait(500);
 
     // Consume all of the newly added tokens.
     for (let i = 0; i < 2; i++) {

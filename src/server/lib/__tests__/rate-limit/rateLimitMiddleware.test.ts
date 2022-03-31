@@ -2,6 +2,7 @@ import Redis from 'ioredis-mock';
 import request from 'supertest';
 import { RequestHandler } from 'express';
 import { RateLimiterConfiguration } from '@/server/lib/rate-limit';
+import { fakeWait } from '../utils';
 
 const defaultEnv = {
   PORT: '9000',
@@ -34,6 +35,7 @@ describe('rate limiter middleware', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.resetModules();
+    jest.useFakeTimers();
 
     jest.mock('@/server/lib/getAssets', () => ({
       getAssets: () => ({
@@ -77,6 +79,9 @@ describe('rate limiter middleware', () => {
   });
 
   afterEach((done) => {
+    // Reset fake timers.
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
     // in-memory redis store is persisted after each run
     // make sure to clear the store after each test
     new Redis().flushall().then(() => done());
@@ -94,20 +99,9 @@ describe('rate limiter middleware', () => {
     // Start the application server.
     const { default: server } = await import('@/server/index');
 
-    // 500ms before the Jest max test timeout.
-    const MAX_RUNTIME = 14500;
-
-    // If the test errors, this makes sure that the server instance is torn down.
-    const scheduledServerTeardown = setTimeout(() => {
-      if (server.listening) {
-        server.close();
-      }
-    }, MAX_RUNTIME);
-
-    // Tests call this method once they have successfully completed to tear-down the server.
+    // Tests call this method on success and error to tear down the server.
     const teardownServer = async () => {
       // Remove the scheduled teardown because we're doing it now.
-      clearTimeout(scheduledServerTeardown);
       await new Promise((r) => server.close(r));
     };
 
@@ -125,18 +119,22 @@ describe('rate limiter middleware', () => {
     const { server, teardownServer } = await getServerInstance(
       rateLimiterConfig,
     );
+    try {
+      // Consume both global tokens, expect third request to be limited.
+      await request(server).get('/register').expect(200);
+      await request(server).get('/register').expect(200);
+      await request(server).get('/register').expect(429);
 
-    // Consume both global tokens, expect third request to be limited.
-    await request(server).get('/register').expect(200);
-    await request(server).get('/register').expect(200);
-    await request(server).get('/register').expect(429);
+      fakeWait(500);
 
-    await new Promise((r) => setTimeout(r, 500));
+      // After waiting, user can make a request again.
+      await request(server).get('/register').expect(200);
 
-    // After 100ms, user can make a request again.
-    await request(server).get('/register').expect(200);
-
-    await teardownServer();
+      await teardownServer();
+    } catch (error) {
+      await teardownServer();
+      throw error;
+    }
   });
 
   it('should rate limit when the ip rate limit bucket is empty', async () => {
@@ -153,35 +151,40 @@ describe('rate limiter middleware', () => {
       rateLimiterConfig,
     );
 
-    // After two requests, 192.168.2.1 should hit the rate limit.
-    await request(server)
-      .get('/register')
-      .set('X-Forwarded-For', '192.168.2.1')
-      .expect(200);
-    await request(server)
-      .get('/register')
-      .set('X-Forwarded-For', '192.168.2.1')
-      .expect(200);
-    await request(server)
-      .get('/register')
-      .set('X-Forwarded-For', '192.168.2.1')
-      .expect(429);
+    try {
+      // After two requests, 192.168.2.1 should hit the rate limit.
+      await request(server)
+        .get('/register')
+        .set('X-Forwarded-For', '192.168.2.1')
+        .expect(200);
+      await request(server)
+        .get('/register')
+        .set('X-Forwarded-For', '192.168.2.1')
+        .expect(200);
+      await request(server)
+        .get('/register')
+        .set('X-Forwarded-For', '192.168.2.1')
+        .expect(429);
 
-    // 192.168.2.7 should be allowed to make a request.
-    await request(server)
-      .get('/register')
-      .set('X-Forwarded-For', '192.168.2.7')
-      .expect(200);
+      // 192.168.2.7 should be allowed to make a request.
+      await request(server)
+        .get('/register')
+        .set('X-Forwarded-For', '192.168.2.7')
+        .expect(200);
 
-    await new Promise((r) => setTimeout(r, 500));
+      fakeWait(500);
 
-    // After 100ms 192.168.2.1 can make a request again.
-    await request(server)
-      .get('/register')
-      .set('X-Forwarded-For', '192.168.2.1')
-      .expect(200);
+      // After 100ms 192.168.2.1 can make a request again.
+      await request(server)
+        .get('/register')
+        .set('X-Forwarded-For', '192.168.2.1')
+        .expect(200);
 
-    await teardownServer();
+      await teardownServer();
+    } catch (error) {
+      await teardownServer();
+      throw error;
+    }
   });
 
   it('should rate limit when the access token bucket is empty', async () => {
@@ -198,35 +201,40 @@ describe('rate limiter middleware', () => {
       rateLimiterConfig,
     );
 
-    // After two requests, SC_GU_U=test should hit the rate limit.
-    await request(server)
-      .get('/register')
-      .set('Cookie', 'SC_GU_U=test')
-      .expect(200);
-    await request(server)
-      .get('/register')
-      .set('Cookie', 'SC_GU_U=test')
-      .expect(200);
-    await request(server)
-      .get('/register')
-      .set('Cookie', 'SC_GU_U=test')
-      .expect(429);
+    try {
+      // After two requests, SC_GU_U=test should hit the rate limit.
+      await request(server)
+        .get('/register')
+        .set('Cookie', 'SC_GU_U=test')
+        .expect(200);
+      await request(server)
+        .get('/register')
+        .set('Cookie', 'SC_GU_U=test')
+        .expect(200);
+      await request(server)
+        .get('/register')
+        .set('Cookie', 'SC_GU_U=test')
+        .expect(429);
 
-    // SC_GU_U=other should be allowed to make a request
-    await request(server)
-      .get('/register')
-      .set('Cookie', 'SC_GU_U=other')
-      .expect(200);
+      // SC_GU_U=other should be allowed to make a request
+      await request(server)
+        .get('/register')
+        .set('Cookie', 'SC_GU_U=other')
+        .expect(200);
 
-    await new Promise((r) => setTimeout(r, 500));
+      fakeWait(500);
 
-    // After 100ms SC_GU_U=test can make a request again.
-    await request(server)
-      .get('/register')
-      .set('Cookie', 'SC_GU_U=test')
-      .expect(200);
+      // After waiting, SC_GU_U=test can make a request again.
+      await request(server)
+        .get('/register')
+        .set('Cookie', 'SC_GU_U=test')
+        .expect(200);
 
-    await teardownServer();
+      await teardownServer();
+    } catch (error) {
+      await teardownServer();
+      throw error;
+    }
   });
 
   it('should rate limit /signin form when the email bucket is empty', async () => {
@@ -248,61 +256,65 @@ describe('rate limiter middleware', () => {
       rateLimiterConfig,
     );
 
-    // Consume the only token available for this email
-    await request(server)
-      .post('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fuk')
-      .type('application/x-www-form-urlencoded')
-      .send({
-        email: 'test@test.com',
-        password: '',
-      })
-      .expect(303)
-      .expect('Location', 'https://www.theguardian.com/uk');
+    try {
+      // Consume the only token available for this email
+      await request(server)
+        .post('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fuk')
+        .type('application/x-www-form-urlencoded')
+        .send({
+          email: 'test@test.com',
+          password: '',
+        })
+        .expect(303)
+        .expect('Location', 'https://www.theguardian.com/uk');
 
-    // No more tokens left for this email, check that rate limiter kicks in
-    await request(server)
-      .post('/signin')
-      .type('application/x-www-form-urlencoded')
-      .send({
-        email: 'test@test.com',
-        password: '',
-      })
-      .expect(429);
+      // No more tokens left for this email, check that rate limiter kicks in
+      await request(server)
+        .post('/signin')
+        .type('application/x-www-form-urlencoded')
+        .send({
+          email: 'test@test.com',
+          password: '',
+        })
+        .expect(429);
 
-    // Make sure that the email can't be let through with an email alias
-    await request(server)
-      .post('/signin')
-      .type('application/x-www-form-urlencoded')
-      .send({
-        email: 'test+maliciousalias@test.com',
-        password: '',
-      })
-      .expect(429);
+      // Make sure that the email can't be let through with an email alias
+      await request(server)
+        .post('/signin')
+        .type('application/x-www-form-urlencoded')
+        .send({
+          email: 'test+maliciousalias@test.com',
+          password: '',
+        })
+        .expect(429);
 
-    // Make sure that other emails are still allowed through the rate limiter
-    await request(server)
-      .post('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fuk')
-      .type('application/x-www-form-urlencoded')
-      .send({
-        email: 'newTest@test.com',
-        password: '',
-      })
-      .expect(303)
-      .expect('Location', 'https://www.theguardian.com/uk');
+      // Make sure that other emails are still allowed through the rate limiter
+      await request(server)
+        .post('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fuk')
+        .type('application/x-www-form-urlencoded')
+        .send({
+          email: 'newTest@test.com',
+          password: '',
+        })
+        .expect(303)
+        .expect('Location', 'https://www.theguardian.com/uk');
 
-    // Wait 100ms for a token to be added back to the bucket.
-    await new Promise((r) => setTimeout(r, 500));
+      fakeWait(500);
 
-    // Check that a new request goes through successfully
-    await request(server)
-      .post('/signin')
-      .type('application/x-www-form-urlencoded')
-      .send({
-        email: 'test@test.com',
-        password: 'tests',
-      })
-      .expect(303);
+      // Check that a new request goes through successfully
+      await request(server)
+        .post('/signin')
+        .type('application/x-www-form-urlencoded')
+        .send({
+          email: 'test@test.com',
+          password: 'tests',
+        })
+        .expect(303);
 
-    await teardownServer();
+      await teardownServer();
+    } catch (error) {
+      await teardownServer();
+      throw error;
+    }
   });
 });
