@@ -41,32 +41,42 @@ const clearDotComCookies = (res: ResponseWithRequestState) => {
 };
 
 export const clearOktaCookies = (res: ResponseWithRequestState) => {
+  // We do not set a domain attribute as doing this makes the hostOnly=false
+  // and when the cookie is set by Okta, they do not specify a domain in the set-cookie header,
+  // so the Okta sid cookie is consider hostOnly=true
+  // https://www.appsecmonkey.com/blog/cookie-security#hostonly-property
   res.cookie(OKTA_COOKIE_NAME, '', {
-    //remove the port number from domain if one exists
-    domain: baseUri.split(':')[0],
-    maxAge: 0, // set to 0 to expire cookie immediately, and clear these cookies
+    maxAge: 0,
   });
 };
 
 router.get(
   '/signout',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const state = res.locals;
-    const { returnUrl } = state.pageData;
+    const { returnUrl } = res.locals.pageData;
 
-    //We try the logout operations independently of each other and don't care about the results
-    await Promise.allSettled([
-      signOutFromOkta(req, res),
-      signOutFromIDAPI(req, res),
-    ]);
-    // clear dotcom cookies
-    clearDotComCookies(res);
+    // We try the logout sequentially, as we need to log users out from Okta first,
+    const oktaSessionCookieId: string | undefined = req.cookies.sid;
 
-    // clear gateway specific cookies
-    deleteAuthorizationStateCookie(res);
-    clearEncryptedStateCookie(res);
+    if (oktaSessionCookieId) {
+      await signOutFromOkta(req, res);
+      // We try and remove their session and then unset their sid cookie by redirecting back to /signout
+      // this keeps them on the profile domain to remove the Okta cookies
+      return res.redirect(303, '/signout');
+    } else {
+      // if the user has no Okta sid cookie, we will then try and log them out from IDAPI
+      // the user will be in this state if they previously had their Okta cookie removed and got
+      // redirected back to the /signout endpoint
+      await signOutFromIDAPI(req, res),
+        // clear dotcom cookies
+        clearDotComCookies(res);
 
-    return res.redirect(303, returnUrl || defaultReturnUri);
+      // clear gateway specific cookies
+      deleteAuthorizationStateCookie(res);
+      clearEncryptedStateCookie(res);
+
+      return res.redirect(303, returnUrl || defaultReturnUri);
+    }
   }),
 );
 
