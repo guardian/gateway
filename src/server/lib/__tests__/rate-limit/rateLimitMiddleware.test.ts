@@ -2,7 +2,6 @@ import Redis from 'ioredis-mock';
 import request from 'supertest';
 import { RequestHandler } from 'express';
 import { RateLimiterConfiguration } from '@/server/lib/rate-limit';
-import { fakeWait } from '../utils';
 
 const defaultEnv = {
   PORT: '9000',
@@ -79,12 +78,15 @@ describe('rate limiter middleware', () => {
   });
 
   afterEach((done) => {
-    // Reset fake timers.
-    jest.runOnlyPendingTimers();
-    jest.useRealTimers();
     // in-memory redis store is persisted after each run
     // make sure to clear the store after each test
     new Redis().flushall().then(() => done());
+  });
+
+  afterAll(() => {
+    // Reset fake timers.
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
   });
 
   const getServerInstance = async (
@@ -125,7 +127,7 @@ describe('rate limiter middleware', () => {
       await request(server).get('/register').expect(200);
       await request(server).get('/register').expect(429);
 
-      fakeWait(500);
+      jest.advanceTimersByTime(500);
 
       // After waiting, user can make a request again.
       await request(server).get('/register').expect(200);
@@ -172,9 +174,9 @@ describe('rate limiter middleware', () => {
         .set('X-Forwarded-For', '192.168.2.7')
         .expect(200);
 
-      fakeWait(500);
+      jest.advanceTimersByTime(500);
 
-      // After 100ms 192.168.2.1 can make a request again.
+      // After 500ms 192.168.2.1 can make a request again.
       await request(server)
         .get('/register')
         .set('X-Forwarded-For', '192.168.2.1')
@@ -222,7 +224,7 @@ describe('rate limiter middleware', () => {
         .set('Cookie', 'SC_GU_U=other')
         .expect(200);
 
-      fakeWait(500);
+      jest.advanceTimersByTime(500);
 
       // After waiting, SC_GU_U=test can make a request again.
       await request(server)
@@ -299,7 +301,7 @@ describe('rate limiter middleware', () => {
         .expect(303)
         .expect('Location', 'https://www.theguardian.com/uk');
 
-      fakeWait(500);
+      jest.advanceTimersByTime(500);
 
       // Check that a new request goes through successfully
       await request(server)
