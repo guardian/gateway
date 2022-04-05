@@ -9,6 +9,10 @@ const server: Express = express();
 
 applyMiddleware(server);
 
-server.listen(port);
+const serverInstance = server.listen(port);
+
 server.set('trust proxy', true);
+
 logger.info(`server running on port ${port}`);
+
+export default serverInstance;

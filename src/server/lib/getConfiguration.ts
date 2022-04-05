@@ -10,6 +10,8 @@ import {
   GU_MANAGE_URL,
 } from '@/server/models/Configuration';
 import { featureSwitches } from '@/shared/lib/featureSwitches';
+import validatedRateLimiterConfiguration from '@/server/lib/rateLimiterConfiguration';
+import { format } from 'util';
 
 const getOrThrow = (
   value: string | undefined,
@@ -87,6 +89,24 @@ const getStageVariables = (stage: Stage): StageVariables => {
 
 export const getConfiguration = (): Configuration => {
   const port = getOrThrow(process.env.PORT, 'Port configuration missing.');
+
+  // Make sure that there was not an error reading the rate limiter configuration.
+  if (typeof validatedRateLimiterConfiguration === 'undefined') {
+    throw new Error('Rate limiter configuration missing');
+  }
+
+  // Check that there was not an error validating the loaded configuration.
+  if (!validatedRateLimiterConfiguration.success) {
+    const validationError = validatedRateLimiterConfiguration.error;
+    const formattedError = format('%O', validationError.issues);
+    throw new Error(
+      'There was a problem parsing the rate limiter configuration ' +
+        formattedError,
+    );
+  }
+
+  // Continue with the validated configuration.
+  const rateLimiter = validatedRateLimiterConfiguration.data;
 
   const idapiBaseUrl = getOrThrow(
     process.env.IDAPI_BASE_URL,
@@ -190,6 +210,7 @@ export const getConfiguration = (): Configuration => {
   const redis: RedisConfiguration = {
     password: getOrThrow(process.env.REDIS_PASSWORD, 'Redis Password Missing'),
     host: getOrThrow(process.env.REDIS_HOST, 'Redis Host missing'),
+    sslOn: JSON.parse(getOrDefault(process.env.REDIS_SSL_ON, 'false')),
   };
 
   return {
@@ -220,5 +241,6 @@ export const getConfiguration = (): Configuration => {
     sentryDsn,
     redis,
     accountManagementUrl,
+    rateLimiter,
   };
 };

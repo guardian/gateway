@@ -4,6 +4,18 @@ jobs:
   cypress-mocked:
     name: Cypress (mocked)
     runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis
+        # Set health checks to wait until redis has started
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps Redis port 6379 on service container to the host
+          - 6379:6379
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -46,6 +58,8 @@ jobs:
           SENTRY_DSN: ''
           REDIS_HOST: localhost
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          REDIS_SSL_ON: false
+          RATE_LIMITER_CONFIG: '{"enabled":true,"defaultBuckets":{"globalBucket":{"capacity":500,"addTokenMs":50}}}'
         with:
           build: yarn build
           start: yarn start, yarn mock-server

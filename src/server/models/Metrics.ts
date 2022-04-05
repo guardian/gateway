@@ -1,5 +1,7 @@
 // This file defines the metrics that we would like to track in cloudwatch
 
+import { BucketType } from '@/server/lib/rate-limit';
+
 // Specific emails to track
 type EmailMetrics =
   | 'AccountExists'
@@ -8,6 +10,9 @@ type EmailMetrics =
   | 'CreatePassword'
   | 'ResetPassword'
   | 'OktaResetPassword';
+
+// Rate limit buckets to track
+type RateLimitMetrics = BucketType;
 
 // Any metrics with conditions to append to the end
 // i.e ::Success or ::Failure
@@ -40,7 +45,8 @@ type ConditionalMetrics =
 type UnconditionalMetrics =
   | 'LoginMiddlewareNotRecent'
   | 'LoginMiddlewareNotSignedIn'
-  | 'LoginMiddlewareUnverified';
+  | 'LoginMiddlewareUnverified'
+  | `${RateLimitMetrics}RateLimitHit`;
 
 // Combine all the metrics above together into a type
 export type Metrics =
@@ -59,3 +65,6 @@ export const emailSendMetric = (
   email: EmailMetrics,
   type: 'Success' | 'Failure',
 ): Metrics => `${email}EmailSend::${type}`;
+
+export const rateLimitHitMetric = (bucketType: RateLimitMetrics): Metrics =>
+  `${bucketType}RateLimitHit`;

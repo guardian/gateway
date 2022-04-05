@@ -1,3 +1,5 @@
+import type { RateLimiterConfiguration } from '@/server/lib/rate-limit';
+
 export type Stage = 'DEV' | 'CODE' | 'PROD';
 export interface Configuration {
   port: number;
@@ -27,6 +29,7 @@ export interface Configuration {
   sentryDsn: string;
   redis: RedisConfiguration;
   accountManagementUrl: string;
+  rateLimiter: RateLimiterConfiguration;
 }
 
 export interface AWSConfiguration {
@@ -76,4 +79,5 @@ export enum GU_MANAGE_URL {
 export interface RedisConfiguration {
   password: string;
   host: string;
+  sslOn: boolean;
 }

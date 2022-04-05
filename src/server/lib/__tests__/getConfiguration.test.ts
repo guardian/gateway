@@ -1,7 +1,6 @@
 /* eslint-disable functional/immutable-data */
 /* Linting rule disable as unit test needs to mutate env */
-
-import { getConfiguration } from '@/server/lib/getConfiguration';
+import type { Configuration } from '@/server/models/Configuration';
 import {
   GA_UID,
   GA_UID_HASH,
@@ -20,7 +19,7 @@ describe('getConfiguration', () => {
     process.env = ORIGINAL_ENVIRONMENT_VARIABLES;
   });
 
-  test('it returns the configuration object with the correct values', () => {
+  test('it returns the configuration object with the correct values', async () => {
     process.env.PORT = '9000';
     process.env.IDAPI_CLIENT_ACCESS_TOKEN = 'idapi_api_key';
     process.env.IDAPI_BASE_URL = 'http://localhost:1234';
@@ -44,8 +43,29 @@ describe('getConfiguration', () => {
     process.env.GITHUB_RUN_NUMBER = '5';
     process.env.REDIS_PASSWORD = 'redispassword';
     process.env.REDIS_HOST = 'localhost:1234';
+    process.env.REDIS_SSL_ON = 'false';
+
+    const rateLimiterConfig = `{
+      "enabled": true,
+      "defaultBuckets": {
+        "globalBucket": { "capacity": 500, "addTokenMs": 50 },
+        "ipBucket": { "capacity": 100, "addTokenMs": 50 },
+        "emailBucket": { "capacity": 100, "addTokenMs": 50 },
+        "oktaIdentifierBucket": { "capacity": 100, "addTokenMs": 50 },
+        "accessTokenBucket": { "capacity": 100, "addTokenMs": 50 }
+      },
+      "routeBuckets": {
+        "/signin": {
+          "globalBucket": { "capacity": 500, "addTokenMs": 50 }
+        }
+      }
+    }`;
+    process.env.RATE_LIMITER_CONFIG = rateLimiterConfig;
+
+    const { getConfiguration } = await import('@/server/lib/getConfiguration');
 
     const output = getConfiguration();
+
     const expected = {
       port: 9000,
       idapiClientAccessToken: 'idapi_api_key',
@@ -86,14 +106,72 @@ describe('getConfiguration', () => {
       redis: {
         password: 'redispassword',
         host: 'localhost:1234',
+        sslOn: false,
       },
+
       accountManagementUrl: 'https://manage.code.dev-theguardian.com',
-    };
+      rateLimiter: {
+        enabled: true,
+        defaultBuckets: {
+          globalBucket: { capacity: 500, addTokenMs: 50 },
+          ipBucket: { capacity: 100, addTokenMs: 50 },
+          emailBucket: { capacity: 100, addTokenMs: 50 },
+          oktaIdentifierBucket: { capacity: 100, addTokenMs: 50 },
+          accessTokenBucket: { capacity: 100, addTokenMs: 50 },
+        },
+        routeBuckets: {
+          '/signin': {
+            globalBucket: { capacity: 500, addTokenMs: 50 },
+          },
+        },
+      },
+    } as Configuration;
+
     expect(output).toEqual(expected);
   });
 
-  test('it throws and exception if the port is not set', () => {
+  test('it throws an exception if the port is not set', async () => {
     process.env = {};
+    const { getConfiguration } = await import('@/server/lib/getConfiguration');
     expect(() => getConfiguration()).toThrow();
+  });
+
+  test('it throws an exception if the rate limiter configuration is not set', async () => {
+    // Mock fs so that the rate limiter won't fall back to a local config file.
+    jest.mock('fs');
+
+    process.env = { PORT: '9001' };
+
+    const { getConfiguration } = await import('@/server/lib/getConfiguration');
+    expect(getConfiguration).toThrowError(
+      Error('Rate limiter configuration missing'),
+    );
+  });
+
+  test('it throws an exception if a malformed rate limiter configuration is provided', async () => {
+    // Missing the required globalBucket from the defaultBuckets
+    const badRateLimiterConfig = `{
+      "enabled": true,
+      "defaultBuckets": { },
+      "routeBuckets": {
+        "/signin": {
+          "globalBucket": { "capacity": 500, "addTokenMs": 50 }
+        }
+      }
+    }`;
+    process.env = { PORT: '9001', RATE_LIMITER_CONFIG: badRateLimiterConfig };
+
+    const { getConfiguration } = await import('@/server/lib/getConfiguration');
+    expect(getConfiguration).toThrowErrorMatchingInlineSnapshot(`
+      "There was a problem parsing the rate limiter configuration [
+        {
+          code: 'invalid_type',
+          expected: 'object',
+          received: 'undefined',
+          path: [ 'defaultBuckets', 'globalBucket' ],
+          message: 'Required'
+        }
+      ]"
+    `);
   });
 });

@@ -1,0 +1,11 @@
+{
+  "enabled": false,
+  "defaultBuckets": {
+    "globalBucket": { "capacity": 500, "addTokenMs": 50 },
+    "ipBucket": { "capacity": 100, "addTokenMs": 50 },
+    "emailBucket": { "capacity": 100, "addTokenMs": 50 },
+    "oktaIdentifierBucket": { "capacity": 100, "addTokenMs": 50 },
+    "accessTokenBucket": { "capacity": 100, "addTokenMs": 50 }
+  },
+  "routeBuckets": {}
+}

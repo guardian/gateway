@@ -16,16 +16,26 @@ jest.mock('@/server/lib/getConfiguration', () => ({
 // Integration tests for rate limiting with Redis
 
 describe('rateLimit', () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
   afterEach((done) => {
     // in-memory redis store is persisted after each run
     // make sure to clear the store after each test
     new Redis().flushall().then(() => done());
   });
 
+  afterAll(() => {
+    // Reset fake timers.
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
+  });
+
   it('should rate limit when the global rate bucket capacity is reached and refill the bucket after configured timeout', async () => {
     const applyGlobalRateLimit = async () =>
       await rateLimit({
-        name: '/signin',
+        route: '/signin',
         redisClient: new Redis() as IORedis,
         bucketConfiguration: {
           globalBucket: { addTokenMs: 500, capacity: 5 },
@@ -43,7 +53,7 @@ describe('rateLimit', () => {
     expect(rateLimitType).toBe('global');
 
     // Wait 500ms for a token to be added back to the bucket.
-    await new Promise((r) => setTimeout(r, 500));
+    jest.advanceTimersByTime(500);
 
     // We should have a token after the timeout.
     const isRateLimited = await applyGlobalRateLimit();
@@ -53,7 +63,7 @@ describe('rateLimit', () => {
   it('should rate limit when the ip rate bucket capacity is reached', async () => {
     const applyIpRateLimit = async () =>
       await rateLimit({
-        name: '/signin',
+        route: '/signin',
         redisClient: new Redis() as IORedis,
         bucketConfiguration: {
           ipBucket: { addTokenMs: 500, capacity: 5 },
@@ -75,7 +85,7 @@ describe('rateLimit', () => {
     expect(shouldBeRateLimited).toBe('ip');
 
     // Wait 500ms for a token to be added back to the bucket.
-    await new Promise((r) => setTimeout(r, 500));
+    jest.advanceTimersByTime(500);
 
     // We should have a token after the timeout.
     const isRateLimited = await applyIpRateLimit();
@@ -85,7 +95,7 @@ describe('rateLimit', () => {
   it('should rate limit when the email rate bucket capacity is reached', async () => {
     const applyEmailRateLimit = async () =>
       await rateLimit({
-        name: '/signin',
+        route: '/signin',
         redisClient: new Redis() as IORedis,
         bucketConfiguration: {
           emailBucket: { addTokenMs: 500, capacity: 5 },
@@ -107,7 +117,7 @@ describe('rateLimit', () => {
     expect(rateLimitType).toBe('email');
 
     // Wait 500ms for a token to be added back to the bucket.
-    await new Promise((r) => setTimeout(r, 500));
+    jest.advanceTimersByTime(500);
 
     // We should have a token after the timeout.
     const isRateLimited = await applyEmailRateLimit();
@@ -117,7 +127,7 @@ describe('rateLimit', () => {
   it('should rate limit when the access token rate bucket capacity is reached', async () => {
     const applyIpRateLimit = async () =>
       await rateLimit({
-        name: '/signin',
+        route: '/signin',
         redisClient: new Redis() as IORedis,
         bucketConfiguration: {
           accessTokenBucket: { addTokenMs: 500, capacity: 5 },
@@ -139,7 +149,7 @@ describe('rateLimit', () => {
     expect(rateLimitType).toBe('accessToken');
 
     // Wait 500ms for a token to be added back to the bucket.
-    await new Promise((r) => setTimeout(r, 500));
+    jest.advanceTimersByTime(500);
 
     // We should have a token after the timeout.
     const isRateLimited = await applyIpRateLimit();
@@ -149,7 +159,7 @@ describe('rateLimit', () => {
   it('should rate limit when the okta id token rate bucket capacity is reached', async () => {
     const applyOktaRateLimit = async () =>
       await rateLimit({
-        name: '/signin',
+        route: '/signin',
         redisClient: new Redis() as IORedis,
         bucketConfiguration: {
           oktaIdentifierBucket: { addTokenMs: 500, capacity: 5 },
@@ -171,7 +181,7 @@ describe('rateLimit', () => {
     expect(rateLimitType).toBe('oktaIdentifier');
 
     // Wait 500ms for a token to be added back to the bucket.
-    await new Promise((r) => setTimeout(r, 500));
+    jest.advanceTimersByTime(500);
 
     // We should have a token after the timeout.
     const isRateLimited = await applyOktaRateLimit();
@@ -181,7 +191,7 @@ describe('rateLimit', () => {
   it('should rate limit when the global rate limit bucket capacity is reached and recover tokens up to the maximum limit', async () => {
     const applyIpRateLimit = async () =>
       await rateLimit({
-        name: '/signin',
+        route: '/signin',
         redisClient: new Redis() as IORedis,
         bucketConfiguration: {
           globalBucket: { capacity: 2, addTokenMs: 50 },
@@ -202,7 +212,7 @@ describe('rateLimit', () => {
     expect(rateLimitType).toBe('global');
 
     // Wait 500ms for all the tokens to be restored.
-    await new Promise((r) => setTimeout(r, 500));
+    jest.advanceTimersByTime(500);
 
     // Consume all of the newly added tokens.
     for (let i = 0; i < 2; i++) {
@@ -218,7 +228,7 @@ describe('rateLimit', () => {
   it('should not rate limit by ip, email, okta id or access token if values are not provided', async () => {
     const applyRateLimit = async () =>
       await rateLimit({
-        name: '/signin',
+        route: '/signin',
         redisClient: new Redis() as IORedis,
         bucketConfiguration: {
           oktaIdentifierBucket: { capacity: 5, addTokenMs: 500 },
@@ -237,7 +247,7 @@ describe('rateLimit', () => {
   it('should not rate limit by ip, email, okta id or access token if values are provided but buckets not defined', async () => {
     const applyRateLimit = async () =>
       await rateLimit({
-        name: '/signin',
+        route: '/signin',
         redisClient: new Redis() as IORedis,
         bucketConfiguration: {
           globalBucket: { capacity: 100, addTokenMs: 500 },
@@ -258,7 +268,7 @@ describe('rateLimit', () => {
   it('should rate limit when email limit is hit and no okta id is passed', async () => {
     const applyRateLimit = async () =>
       await rateLimit({
-        name: '/signin',
+        route: '/signin',
         redisClient: new Redis() as IORedis,
         bucketConfiguration: {
           oktaIdentifierBucket: { capacity: 100, addTokenMs: 500 },
@@ -284,7 +294,7 @@ describe('rateLimit', () => {
   it('should not rate limit higher precedence buckets when limited by a more local bucket', async () => {
     const applyRateLimit = async (bucketValues?: BucketValues) =>
       await rateLimit({
-        name: '/signin',
+        route: '/signin',
         redisClient: new Redis() as IORedis,
         // Buckets are declared in order of precedence.
         bucketConfiguration: {

@@ -339,6 +339,36 @@ export const removesEncryptedEmailParameterAndPreservesAllOtherValidParameters =
     ] as const;
   };
 
+export const hitsAccessTokenRateLimitAndRecoversTokenAfterTimeout = (
+  isOkta = false,
+) => {
+  return [
+    'hits access token rate limit and recovers token after timeout',
+    () => {
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
+        req.reply(200);
+      });
+      cy.createTestUser({
+        isUserEmailValidated: true,
+      })?.then(({ emailAddress, finalPassword }) => {
+        const visitUrl = isOkta ? '/signin?useOkta=true' : '/signin';
+        cy.visit(visitUrl);
+        cy.get('input[name=email]').type(emailAddress);
+        cy.get('input[name=password]').type(finalPassword);
+        cy.get('[data-cy="sign-in-button"]').click();
+        cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+
+        cy.visit('/signin');
+        cy.contains('Sign');
+        Cypress._.times(6, () => cy.reload());
+        cy.contains('Rate limit exceeded');
+      });
+    },
+  ] as const;
+};
+
 export const showsAnErrorMessageAndInformationParagraphWhenAccountLinkingRequiredErrorParameterIsPresent =
   (isOkta = false) => {
     return [

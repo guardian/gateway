@@ -41,6 +41,7 @@ import { logger } from '@/server/lib/serverSideLogger';
 import { ApiError } from '@/server/models/Error';
 import { ConsentPath, RoutePaths } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
+import { rateLimiterMiddleware } from '../lib/middleware/rateLimit';
 
 interface ConsentPage {
   page: ConsentPath;
@@ -192,17 +193,23 @@ export const consentPages: ConsentPage[] = [
   },
 ];
 
-router.get('/consents', loginMiddleware, (_: Request, res: Response) => {
-  const url = addQueryParamsToPath(
-    `${consentPages[0].path}`,
-    res.locals.queryParams,
-  );
+router.get(
+  '/consents',
+  rateLimiterMiddleware,
+  loginMiddleware,
+  (_: Request, res: Response) => {
+    const url = addQueryParamsToPath(
+      `${consentPages[0].path}`,
+      res.locals.queryParams,
+    );
 
-  res.redirect(303, url);
-});
+    res.redirect(303, url);
+  },
+);
 
 router.get(
   '/consents/:page',
+  rateLimiterMiddleware,
   loginMiddleware,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
@@ -274,6 +281,7 @@ router.get(
 
 router.post(
   '/consents/:page',
+  rateLimiterMiddleware,
   loginMiddleware,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;

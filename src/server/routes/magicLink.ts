@@ -10,17 +10,23 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { ApiError } from '@/server/models/Error';
 import handleRecaptcha from '@/server/lib/recaptcha';
+import { rateLimiterMiddleware } from '../lib/middleware/rateLimit';
 
-router.get('/magic-link', (req: Request, res: ResponseWithRequestState) => {
-  const html = renderer('/magic-link', {
-    requestState: res.locals,
-    pageTitle: 'Sign in',
-  });
-  res.type('html').send(html);
-});
+router.get(
+  '/magic-link',
+  rateLimiterMiddleware,
+  (req: Request, res: ResponseWithRequestState) => {
+    const html = renderer('/magic-link', {
+      requestState: res.locals,
+      pageTitle: 'Sign in',
+    });
+    res.type('html').send(html);
+  },
+);
 
 router.post(
   '/magic-link',
+  rateLimiterMiddleware,
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
@@ -59,6 +65,7 @@ router.post(
 
 router.get(
   '/magic-link/email-sent',
+  rateLimiterMiddleware,
   (_: Request, res: ResponseWithRequestState) => {
     const html = renderer('/magic-link/email-sent', {
       pageTitle: 'Sign in',

@@ -41,6 +41,7 @@ describe('Sign in flow, Okta enabled', () => {
     ),
   );
   it(...SignIn.redirectsToOptInPrompt());
+  it(...SignIn.hitsAccessTokenRateLimitAndRecoversTokenAfterTimeout(true));
 
   // These tests are skipped for now, because the social sign in implementation for Okta is still a work in progress.
   it.skip(...SignIn.redirectsCorrectlyForSocialSignIn(true));

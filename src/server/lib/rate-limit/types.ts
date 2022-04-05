@@ -1,3 +1,4 @@
+import { RoutePaths } from '@/shared/model/Routes';
 import type Redis from 'ioredis';
 
 /**
@@ -52,9 +53,9 @@ export interface ParsedRateLimitBuckets {
 /**
  * Standardised definition of an individual bucket.
  *
- * @param capacity The maximum number of tokens that can be stored in the bucket.
- * @param addTokenMs The rate in milliseconds at which the bucket is refilled
- * @param maximumTimeBeforeTokenExpiry The maximum duration in seconds before the bucket is removed from Redis.
+ * @param {number} capacity The maximum number of tokens that can be stored in the bucket.
+ * @param {number} addTokenMs The rate in milliseconds at which the bucket is refilled
+ * @param {number} maximumTimeBeforeTokenExpiry The maximum duration in seconds before the bucket is removed from Redis.
  */
 export interface BucketConfiguration {
   capacity: number;
@@ -94,13 +95,13 @@ export interface BucketValues {
 /**
  * The type signature for the rateLimit method.
  *
- * @param name A unique name for the rate limiter. For example, the route it is protecting.
+ * @param {RoutePaths} route The route to protect using the rate limiter.
  * @param redisClient An instance of the ioredis client.
  * @param bucketConfiguration Definitions for each bucket in use by this rate limiter.
  * @param bucketValues Optional values for each bucket to deduct tokens against.
  */
 export interface RateLimitParameters {
-  name: string;
+  route: RoutePaths;
   redisClient: Redis.Redis;
   bucketConfiguration: RateLimitBucketsConfiguration;
   bucketValues?: BucketValues;

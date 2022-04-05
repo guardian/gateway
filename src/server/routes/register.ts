@@ -31,11 +31,13 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { OktaError } from '@/server/models/okta/Error';
 import { causesInclude } from '@/server/lib/okta/api/errors';
 import { registerMiddleware } from '../lib/middleware/register';
+import { rateLimiterMiddleware } from '../lib/middleware/rateLimit';
 
 const { okta } = getConfiguration();
 
 router.get(
   '/register',
+  rateLimiterMiddleware,
   registerMiddleware,
   (req: Request, res: ResponseWithRequestState) => {
     const html = renderer('/register', {
@@ -48,6 +50,7 @@ router.get(
 
 router.get(
   '/register/email-sent',
+  rateLimiterMiddleware,
   (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
     const html = renderer('/register/email-sent', {
@@ -64,6 +67,7 @@ router.get(
 
 router.post(
   '/register/email-sent/resend',
+  rateLimiterMiddleware,
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { useOkta } = res.locals.queryParams;
@@ -171,6 +175,7 @@ router.post(
 
 router.post(
   '/register',
+  rateLimiterMiddleware,
   handleRecaptcha,
   registerMiddleware,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {

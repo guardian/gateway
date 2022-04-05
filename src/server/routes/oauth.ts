@@ -19,6 +19,7 @@ import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import postSignInController from '@/server/lib/postSignInController';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { validAppProtocols } from '../lib/validateUrl';
+import { rateLimiterMiddleware } from '../lib/middleware/rateLimit';
 
 interface OAuthError {
   error: string;
@@ -58,6 +59,7 @@ const redirectForGenericError = (
 
 router.get(
   '/oauth/authorization-code/callback',
+  rateLimiterMiddleware,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     try {
       const OpenIdClient =
