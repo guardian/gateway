@@ -80,6 +80,18 @@ describe('Change password in Okta', () => {
       });
     };
 
+    const mockUpdateUserSuccess = () => {
+      cy.mockNext(200, {
+        id: '12345',
+        status: 'SUCCESS',
+        profile: {
+          login: email,
+          email,
+          isGuardianUser: true,
+        },
+      });
+    };
+
     const mockPasswordResetFailure = (cause: string) => {
       cy.mockNext(403, {
         errorCode: 'E0000080',
@@ -109,7 +121,7 @@ describe('Change password in Okta', () => {
       cy.intercept({
         method: 'GET',
         url: 'https://api.pwnedpasswords.com/range/*',
-      });
+      }).as('breachCheck');
     };
 
     it('shows the session expired page if the token is expired', () => {
@@ -289,38 +301,38 @@ describe('Change password in Okta', () => {
       cy.contains('Please use a password that is hard to guess.');
     });
 
-    // skipping test for now - this passes locally but fails in Github Actions
-    // we think this may be to do with intercepting redirects
-    it.skip('shows the password updated page on successful update', () => {
+    it('shows the password updated page on successful update', () => {
       interceptBreachPasswordCheck();
 
       mockValidateRecoveryTokenSuccess();
       mockPasswordResetSuccess();
+      mockUpdateUserSuccess();
 
       cy.intercept(
-        `${Cypress.env('OKTA_ORG_URL')}/oauth2/${Cypress.env(
+        `http://localhost:9000/oauth2/${Cypress.env(
           'OKTA_CUSTOM_OAUTH_SERVER',
         )}/v1/authorize*`,
         (req) => {
           req.redirect(
-            `http://${Cypress.env('BASE_URI')}/reset-password/complete`,
+            `https://${Cypress.env('BASE_URI')}/reset-password/complete`,
           );
         },
       ).as('authRedirect');
 
       cy.visit(`/reset-password/token?useOkta=true`);
 
-      cy.get('input[name="password"]').type('mysuperduperpassword');
+      cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
+      cy.wait('@breachCheck');
       cy.get('button[type="submit"]').click();
-
-      cy.wait('@authRedirect');
-      cy.contains('Password updated');
-      cy.contains(email);
-      cy.contains('Continue to the Guardian').should(
-        'have.attr',
-        'href',
-        `${Cypress.env('DEFAULT_RETURN_URI')}`,
-      );
+      cy.wait('@authRedirect').then(() => {
+        cy.contains('Password updated');
+        cy.contains(email);
+        cy.contains('Continue to the Guardian').should(
+          'have.attr',
+          'href',
+          `${Cypress.env('DEFAULT_RETURN_URI')}`,
+        );
+      });
     });
   });
 });

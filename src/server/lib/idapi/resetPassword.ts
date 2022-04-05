@@ -13,11 +13,6 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
     const { message } = err;
 
     switch (message) {
-      case IdapiErrorMessages.NOT_FOUND:
-        throw new IdapiError({
-          message: ResetPasswordErrors.NO_ACCOUNT,
-          status,
-        });
       case IdapiErrorMessages.MISSING_FIELD:
         throw new IdapiError({ message: ResetPasswordErrors.NO_EMAIL, status });
       default:

@@ -177,7 +177,9 @@ describe('Verify email flow', () => {
         .should('have.attr', 'href')
         .and(
           'include',
-          `${signInUrl}?returnUrl=http%3A%2F%2Flocalhost%3A8861%2Fverify-email`,
+          `${signInUrl}?returnUrl=${encodeURIComponent(
+            `https://${Cypress.env('BASE_URI')}/verify-email`,
+          )}`,
         );
     });
 
@@ -197,7 +199,9 @@ describe('Verify email flow', () => {
         .should('have.attr', 'href')
         .and(
           'include',
-          `${signInUrl}?returnUrl=http%3A%2F%2Flocalhost%3A8861%2Fverify-email`,
+          `${signInUrl}?returnUrl=${encodeURIComponent(
+            `https://${Cypress.env('BASE_URI')}/verify-email`,
+          )}`,
         );
     });
 

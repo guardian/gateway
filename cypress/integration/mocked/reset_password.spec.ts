@@ -42,18 +42,6 @@ describe('Password reset flow', () => {
     });
   });
 
-  context(`Email doesn't exist`, () => {
-    it('shows a message saying the email address does not exist', function () {
-      const { email } = this.users.emailNotRegistered;
-      cy.mockNext(404, {
-        status: 'error',
-        errors: [{ message: 'Not found' }],
-      });
-      page.submitEmailAddress(email);
-      cy.contains(PageResetPassword.CONTENT.ERRORS.NO_ACCOUNT);
-    });
-  });
-
   context('Email field is left blank', () => {
     it('displays the standard HTML validation', () => {
       page.clickResetPassword();
