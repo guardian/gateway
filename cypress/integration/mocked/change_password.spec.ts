@@ -127,10 +127,6 @@ describe('Password change flow', () => {
       cy.contains('use a password that is hard to guess');
       cy.get('button[type="submit"]').click().should('not.be.disabled');
       cy.contains('Please use a password that is hard to guess.');
-      cy.get('input[name="password"]').type('iamaveryuniqueandlongstring');
-      cy.wait('@breachCheck');
-      cy.contains('Valid password');
-      cy.get('button[type="submit"]').click().should('be.disabled');
     });
   });
 
