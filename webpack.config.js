@@ -32,7 +32,6 @@ const imageLoader = (path) => {
       {
         loader: 'image-webpack-loader',
         options: {
-          disable: true, // Disables the loader in webpack debug mode (during development). Recommended by their docs.
           mozjpeg: {
             progressive: true,
             quality: 65,
