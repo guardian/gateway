@@ -26,6 +26,7 @@ export interface Configuration {
   githubRunNumber: string;
   sentryDsn: string;
   redis: RedisConfiguration;
+  accountManagementUrl: string;
 }
 
 export interface AWSConfiguration {
@@ -67,6 +68,11 @@ export enum GU_API_DOMAIN {
   PROD = 'guardianapis.com',
 }
 
+export enum GU_MANAGE_URL {
+  DEV = 'https://manage.code.dev-theguardian.com',
+  CODE = 'https://manage.code.dev-theguardian.com',
+  PROD = 'https://manage.theguardian.com',
+}
 export interface RedisConfiguration {
   password: string;
   host: string;

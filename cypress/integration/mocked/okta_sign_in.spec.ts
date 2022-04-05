@@ -6,7 +6,7 @@ describe('Sign in flow', () => {
       cy.mockPurge();
     });
 
-    it('loads the redirectUrl if user is already authenticated', function () {
+    it('loads the account management page if user is already authenticated', function () {
       cy.mockPattern(
         200,
         {
@@ -31,17 +31,12 @@ describe('Sign in flow', () => {
 
       cy.setCookie('sid', `the_sid_cookie`);
 
-      // we can't actually check the authorization code flow
-      // so intercept the request and redirect to the guardian about page
-
-      cy.visit(
-        '/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout&useOkta=true',
-      );
-
-      Cypress.on('uncaught:exception', () => {
-        return false;
-      });
-      cy.contains('theguardian.com');
+      cy.visit('/signin?useOkta=true');
+      // The code version of manage will redirect the user twice,
+      // once to manage.code.dev-theguardian.com and then because the user is not signed in
+      // a 2nd redirect to profile.code.dev-theguardian.com,
+      // and we cannot intercept redirects on cy.visit so we just assert on the value of the 2nd redirect
+      cy.url().should('match', /profile.code.dev-theguardian.com\/signin/);
     });
 
     it('shows an error message when okta authentication fails', function () {

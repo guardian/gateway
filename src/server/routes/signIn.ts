@@ -26,8 +26,9 @@ import { loginMiddleware } from '@/server/lib/middleware/login';
 import postSignInController from '@/server/lib/postSignInController';
 import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
 import { getSession } from '../lib/okta/api/sessions';
+import { validAppProtocols, validateReturnUrl } from '../lib/validateUrl';
 
-const { okta } = getConfiguration();
+const { okta, accountManagementUrl, defaultReturnUri } = getConfiguration();
 
 /**
  * Helper method to determine if a global error should show on the sign in page
@@ -83,17 +84,20 @@ const showSignInPage = async (req: Request, res: ResponseWithRequestState) => {
 router.get(
   '/signin',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { useOkta, returnUrl } = res.locals.queryParams;
+    const { pageData } = res.locals;
+    const { returnUrl } = pageData;
+    const { useOkta } = res.locals.queryParams;
     const oktaSessionCookieId: string | undefined = req.cookies.sid;
 
     if (okta.enabled && useOkta && oktaSessionCookieId) {
       // for okta users landing on sign in, we want to first check if a session exists
-      // if a session already exists then we want to refresh it and redirect back to the returnUrl
+      // if a session already exists then we redirect back to the returnUrl for apps, and the account management page for web
       // otherwise we want to show the sign in page
       try {
-        //check if the user has a session, if they do, take them to the returnUrl
+        //check if the user has a session, if they do, take them to the account management page,
+        // or returnUrl for apps users
         await getSession(oktaSessionCookieId);
-        res.redirect(returnUrl);
+        return handleAppRedirect(res, returnUrl);
       } catch {
         //if their session was invalid, the Okta sessions api returns a 404 and the promise fails,
         //so we fall through to this catch block
@@ -182,13 +186,13 @@ const oktaSignInController = async (
   // get the email and password from the request body
   const { email = '', password = '' } = req.body;
   const oktaSessionCookieId: string | undefined = req.cookies.sid;
-
+  const { pageData } = res.locals;
+  const { returnUrl } = pageData;
   try {
     if (oktaSessionCookieId) {
-      //if the user somehow is already logged in we take them back to the return url
-      const { returnUrl } = res.locals.queryParams;
+      // if a session already exists then we redirect back to the returnUrl for apps, and the account management page for web
       await getSession(oktaSessionCookieId);
-      res.redirect(returnUrl);
+      return handleAppRedirect(res, returnUrl);
     }
   } catch {
     // We log this scenario as it is quite unlikely, but we continue to sign the user in.
@@ -315,5 +319,25 @@ router.post(
     return res.redirect(303, redirectUrl);
   }),
 );
+
+const handleAppRedirect = (
+  res: ResponseWithRequestState,
+  returnUrl?: string,
+): void => {
+  if (returnUrl) {
+    const url = new URL(decodeURIComponent(returnUrl));
+    // we check to see if the return url has a custom scheme
+    // which lets us know the request has come from the app
+    // so we can redirect back to the app
+    if (
+      validAppProtocols.includes(url.protocol) &&
+      validateReturnUrl(returnUrl) !== defaultReturnUri
+    ) {
+      return res.redirect(returnUrl);
+    }
+  }
+  // otherwise return to manage account page
+  return res.redirect(accountManagementUrl);
+};
 
 export default router.router;

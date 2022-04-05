@@ -87,6 +87,7 @@ describe('getConfiguration', () => {
         password: 'redispassword',
         host: 'localhost:1234',
       },
+      accountManagementUrl: 'https://manage.code.dev-theguardian.com',
     };
     expect(output).toEqual(expected);
   });

@@ -14,10 +14,10 @@ export const registerMiddleware = async (
   res: ResponseWithRequestState,
   next: NextFunction,
 ) => {
-  const ACCOUNT_MANAGEMENT_URL = 'https://manage.theguardian.com';
+  const { okta, accountManagementUrl } = getConfiguration();
 
   const { useOkta } = res.locals.queryParams;
-  const { okta } = getConfiguration();
+
   const oktaSessionCookieId: string | undefined = req.cookies.sid;
 
   const identitySessionCookie = req.cookies.SC_GU_U;
@@ -30,7 +30,7 @@ export const registerMiddleware = async (
   if (okta.enabled && useOkta && oktaSessionCookieId) {
     try {
       await getSession(oktaSessionCookieId);
-      return res.redirect(ACCOUNT_MANAGEMENT_URL);
+      return res.redirect(accountManagementUrl);
     } catch {
       //if the cookie exists, but the session is invalid, we remove the cookie
       clearOktaCookies(res);
@@ -42,7 +42,13 @@ export const registerMiddleware = async (
         addQueryParamsToPath('/register', res.locals.queryParams),
       );
     }
-  } else if (identitySessionCookie && identityLastAccessCookie) {
+  } else if (
+    identitySessionCookie &&
+    identityLastAccessCookie &&
+    !okta.enabled
+    // we only want to check for identity cookies if okta is not enabled, this is to support apps,
+    // who are using the Okta SDK logout, which does not remove Identity cookies on sign out
+  ) {
     logger.info('User attempting to register had existing IDAPI cookies set.');
 
     //Check if the current Identity session cookie is valid
@@ -56,7 +62,7 @@ export const registerMiddleware = async (
       auth.status === IDAPIAuthStatus.RECENT ||
       auth.status === IDAPIAuthStatus.NOT_RECENT
     ) {
-      return res.redirect(ACCOUNT_MANAGEMENT_URL);
+      return res.redirect(accountManagementUrl);
     } else {
       //otherwise the user has invalid session cookie, so we take them back to the /register page and delete the Identity cookies
       clearIDAPICookies(res);

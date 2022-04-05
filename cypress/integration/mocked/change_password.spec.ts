@@ -116,6 +116,7 @@ describe('Password change flow', () => {
   context('Password exists in breach dataset', () => {
     it('displays a breached error', () => {
       cy.mockNext(200);
+      cy.mockNext(200, fakeSuccessResponse);
       cy.intercept({
         method: 'GET',
         url: 'https://api.pwnedpasswords.com/range/*',
