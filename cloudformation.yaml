@@ -193,7 +193,14 @@ Resources:
             unzip -o /etc/gu/${App}.zip -d /etc/gu
 
             # Get Rate Limiter configuration file
-            aws s3 cp s3://identity-private-config/${Stage}/identity-gateway/.ratelimit.json /etc/gu/.ratelimit.json
+            # Try multiple times to the config file. The s3 cp command can fail when called immediately on instance startup.
+            while true; do
+              if \
+                aws s3 cp s3://identity-private-config/${Stage}/identity-gateway/.ratelimit.json /etc/gu/.ratelimit.json
+                then break
+              fi
+              sleep 1
+            done
 
             # Setup user
             groupadd identity-gateway
