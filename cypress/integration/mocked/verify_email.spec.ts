@@ -288,9 +288,7 @@ describe('Verify email flow', () => {
       cy.contains(VerifyEmail.CONTENT.CONFIRM_EMAIL);
       cy.contains(verifiedUserWithNoConsent.user.primaryEmailAddress);
 
-      cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
-        statusCode: 500,
-      });
+      cy.mockRecaptcha(true);
 
       cy.contains(VerifyEmail.CONTENT.SEND_LINK).click();
       cy.contains('Google reCAPTCHA verification failed. Please try again.');

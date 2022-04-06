@@ -20,12 +20,14 @@ describe('Password reset flow', () => {
     });
 
     it('Has no detectable a11y violations on reset password page with error', () => {
+      cy.mockRecaptcha();
       cy.mockNext(500);
       page.submitEmailAddress('example@example.com');
       injectAndCheckAxe();
     });
 
     it('Has no detectable a11y violations on email sent page', function () {
+      cy.mockRecaptcha();
       const { email } = this.users.validEmail;
       cy.mockNext(200);
       page.submitEmailAddress(email);
@@ -35,6 +37,7 @@ describe('Password reset flow', () => {
 
   context('Valid email already exits', () => {
     it('successfully submits the request', function () {
+      cy.mockRecaptcha();
       const { email } = this.users.validEmail;
       cy.mockNext(200);
       page.submitEmailAddress(email);
@@ -44,6 +47,7 @@ describe('Password reset flow', () => {
 
   context('Email field is left blank', () => {
     it('displays the standard HTML validation', () => {
+      cy.mockRecaptcha();
       page.clickResetPassword();
       page.invalidEmailAddressField().should('have.length', 1);
     });
@@ -51,6 +55,7 @@ describe('Password reset flow', () => {
 
   context('Email is invalid', () => {
     it('displays the standard HTML validation', () => {
+      cy.mockRecaptcha();
       page.submitEmailAddress('bademail£');
       page.invalidEmailAddressField().should('have.length', 1);
     });
@@ -58,6 +63,7 @@ describe('Password reset flow', () => {
 
   context('General IDAPI failure', () => {
     it('displays a generic error message', function () {
+      cy.mockRecaptcha();
       const { email } = this.users.validEmail;
       cy.mockNext(500);
       page.submitEmailAddress(email);
@@ -67,18 +73,14 @@ describe('Password reset flow', () => {
 
   context('Recaptcha errors', () => {
     it('shows recaptcha error message when reCAPTCHA token request fails', function () {
-      cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
-        statusCode: 500,
-      });
+      cy.mockRecaptcha(true);
       const { email } = this.users.emailNotRegistered;
       page.submitEmailAddress(email);
       cy.contains('Google reCAPTCHA verification failed. Please try again.');
     });
 
     it('shows detailed recaptcha error message when reCAPTCHA token request fails two times', function () {
-      cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
-        statusCode: 500,
-      });
+      cy.mockRecaptcha(true);
       const { email } = this.users.emailNotRegistered;
       page.submitEmailAddress(email);
       cy.contains('Google reCAPTCHA verification failed. Please try again.');

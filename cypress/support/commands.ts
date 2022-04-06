@@ -10,6 +10,7 @@ import { mockPattern } from './commands/mockPattern';
 import { lastPayloadIs } from './commands/lastPayloadIs';
 import { checkForEmailAndGetDetails } from './commands/getEmailDetails';
 import { createTestUser } from './commands/testUser';
+import { mockRecaptcha } from './commands/mockRecaptcha';
 
 Cypress.Commands.add('mockNext', mockNext);
 Cypress.Commands.add('mockPattern', mockPattern); // unused, candidate for removal
@@ -21,3 +22,4 @@ Cypress.Commands.add('setEncryptedStateCookie', setEncryptedStateCookie);
 Cypress.Commands.add('lastPayloadIs', lastPayloadIs);
 Cypress.Commands.add('checkForEmailAndGetDetails', checkForEmailAndGetDetails);
 Cypress.Commands.add('createTestUser', createTestUser);
+Cypress.Commands.add('mockRecaptcha', mockRecaptcha);

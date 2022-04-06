@@ -44,6 +44,7 @@ const { NEWSLETTERS } = NewslettersPage.CONTENT;
 describe('Onboarding flow', () => {
   beforeEach(() => {
     cy.mockPurge();
+    cy.mockRecaptcha();
   });
 
   context('Full flow', () => {

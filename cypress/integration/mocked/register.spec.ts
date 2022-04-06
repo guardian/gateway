@@ -8,11 +8,13 @@ describe('Registration flow', () => {
 
   context('A11y checks', () => {
     it('Has no detectable a11y violations on registration page', () => {
+      cy.mockRecaptcha();
       cy.visit('/register');
       injectAndCheckAxe();
     });
 
     it('Has no detectable a11y violations on registration page with error', () => {
+      cy.mockRecaptcha();
       cy.visit('/register');
       cy.get('input[name="email"]').type('Invalid email');
       cy.mockNext(500);
@@ -23,6 +25,7 @@ describe('Registration flow', () => {
 
   context('Registering', () => {
     it('shows a generic error message when registration fails', () => {
+      cy.mockRecaptcha();
       cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
       cy.get('input[name="email"]').type('example@example.com');
       cy.mockNext(200, {
@@ -41,6 +44,7 @@ describe('Registration flow', () => {
     });
 
     it('shows a email field error message when no email is sent', () => {
+      cy.mockRecaptcha();
       cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
       cy.get('input[name="email"]').type('placeholder@example.com');
       cy.mockNext(200, {
@@ -52,16 +56,15 @@ describe('Registration flow', () => {
     });
 
     it('shows recaptcha error message when reCAPTCHA token request fails', () => {
+      cy.mockRecaptcha(true);
       cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
       cy.get('input[name="email"]').type('placeholder@example.com');
-      cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
-        statusCode: 500,
-      });
       cy.get('[data-cy=register-button]').click();
       cy.contains('Google reCAPTCHA verification failed. Please try again.');
     });
 
     it('shows detailed recaptcha error message when reCAPTCHA token request fails two times', () => {
+      cy.mockRecaptcha(true);
       // Intercept "Report this error" link because we just check it is linked to.
       cy.intercept(
         'GET',
@@ -72,9 +75,6 @@ describe('Registration flow', () => {
       );
       cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
       cy.get('input[name="email"]').type('placeholder@example.com');
-      cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
-        statusCode: 500,
-      });
       cy.get('[data-cy=register-button]').click();
       cy.contains('Google reCAPTCHA verification failed. Please try again.');
       cy.get('[data-cy=register-button]').click();
@@ -88,6 +88,7 @@ describe('Registration flow', () => {
     });
 
     it('redirects to email sent page upon successful guest registration', () => {
+      cy.mockRecaptcha();
       cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
       cy.get('input[name="email"]').type('example@example.com');
       cy.mockNext(200, {
@@ -103,6 +104,7 @@ describe('Registration flow', () => {
     });
 
     it('redirects to email sent page when existing user with password attempts to register', () => {
+      cy.mockRecaptcha();
       cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
       cy.get('input[name="email"]').type('example@example.com');
       cy.mockNext(200, {
@@ -115,6 +117,7 @@ describe('Registration flow', () => {
     });
 
     it('redirects to email sent page when existing user without password attempts to register', () => {
+      cy.mockRecaptcha();
       cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
       cy.get('input[name="email"]').type('example@example.com');
       cy.mockNext(200, {
@@ -129,6 +132,7 @@ describe('Registration flow', () => {
 
   context('General IDAPI failure', () => {
     it('displays a generic error message', function () {
+      cy.mockRecaptcha();
       cy.mockNext(200, {
         userType: 'new',
       });

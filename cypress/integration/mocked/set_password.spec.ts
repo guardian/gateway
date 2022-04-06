@@ -37,6 +37,7 @@ describe('Password set/create flow', () => {
 
   context('A11y checks', () => {
     it('Has no detectable a11y violations on resend password page', () => {
+      cy.mockRecaptcha();
       cy.mockNext(500, {
         status: 'error',
         errors: [
@@ -50,6 +51,7 @@ describe('Password set/create flow', () => {
     });
 
     it('Has no detectable a11y violations on create/set password page', () => {
+      cy.mockRecaptcha();
       cy.mockNext(200);
       cy.mockNext(200, fakeSuccessResponse);
       cy.visit(`/set-password/fake_token`);
@@ -57,6 +59,7 @@ describe('Password set/create flow', () => {
     });
 
     it('Has no detectable a11y violations on create/set password page with error', () => {
+      cy.mockRecaptcha();
       cy.mockNext(200);
       cy.visit(`/set-password/fake_token`);
       cy.get('input[name="password"]').type('short');
@@ -65,6 +68,7 @@ describe('Password set/create flow', () => {
     });
 
     it('Has no detectable a11y violations on create/set password complete page', () => {
+      cy.mockRecaptcha();
       cy.mockNext(200);
       cy.mockNext(200, fakeSuccessResponse);
       cy.intercept({
@@ -81,6 +85,7 @@ describe('Password set/create flow', () => {
 
   context('show / hide password eye button', () => {
     it('clicking on the password eye shows the password and clicking it again hides it', () => {
+      cy.mockRecaptcha();
       cy.mockNext(200);
       cy.visit(`/set-password/fake_token`);
       cy.get('input[name="password"]').should('have.attr', 'type', 'password');
@@ -94,6 +99,7 @@ describe('Password set/create flow', () => {
 
   context('An expired/invalid token is used', () => {
     it('shows a resend password page', () => {
+      cy.mockRecaptcha();
       cy.mockNext(500, {
         status: 'error',
         errors: [
@@ -107,6 +113,7 @@ describe('Password set/create flow', () => {
     });
 
     it('does not allow email resend if reCAPTCHA check fails', () => {
+      cy.mockRecaptcha(true);
       cy.mockNext(500, {
         status: 'error',
         errors: [
@@ -118,9 +125,6 @@ describe('Password set/create flow', () => {
       cy.visit(`/set-password/fake_token`);
       cy.contains('Link expired');
       cy.get('input[name="email"]').type('some@email.com');
-      cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
-        statusCode: 500,
-      });
       cy.get('button[type="submit"]').click();
       cy.contains('Google reCAPTCHA verification failed. Please try again.');
       cy.get('button[type="submit"]').click();
@@ -130,6 +134,7 @@ describe('Password set/create flow', () => {
     });
 
     it('shows the session time out page if the token expires while on the set password page', () => {
+      cy.mockRecaptcha();
       cy.mockNext(200, fakeValidationRespone(1000));
       cy.visit(`/set-password/fake_token`);
       cy.contains('Session timed out');
@@ -138,6 +143,7 @@ describe('Password set/create flow', () => {
 
   context('Email shown on page', () => {
     it('shows the users email address on the page', () => {
+      cy.mockRecaptcha();
       cy.mockNext(200, fakeValidationRespone());
       cy.visit(`/set-password/fake_token`);
       cy.contains(fakeValidationRespone().user.primaryEmailAddress);
@@ -146,6 +152,7 @@ describe('Password set/create flow', () => {
 
   context('Valid password entered', () => {
     it('shows password set success screen, with a default redirect button.', () => {
+      cy.mockRecaptcha();
       cy.mockNext(200);
       cy.mockNext(200, fakeSuccessResponse);
       cy.intercept({
@@ -166,6 +173,7 @@ describe('Password set/create flow', () => {
     });
 
     it('shows password change success screen, with default redirect button, and users email', () => {
+      cy.mockRecaptcha();
       cy.mockNext(200, fakeValidationRespone());
       cy.mockNext(200, fakeSuccessResponse);
       cy.intercept({
@@ -192,6 +200,7 @@ describe('Password set/create flow', () => {
     'Valid password entered and a return url with a Guardian domain is specified.',
     () => {
       it('shows password created success screen, with a redirect button linking to the return url.', () => {
+        cy.mockRecaptcha();
         cy.mockNext(200);
         cy.mockNext(200, fakeSuccessResponse);
         cy.intercept({
@@ -220,6 +229,7 @@ describe('Password set/create flow', () => {
     'Valid password entered and an return url from a non-Guardian domain is specified.',
     () => {
       it('shows password created success screen, with a default redirect button.', () => {
+        cy.mockRecaptcha();
         cy.mockNext(200);
         cy.mockNext(200, fakeSuccessResponse);
         cy.intercept({
@@ -244,6 +254,7 @@ describe('Password set/create flow', () => {
 
   context('General IDAPI failure on token read', () => {
     it('displays the password resend page', () => {
+      cy.mockRecaptcha();
       cy.mockNext(500);
       cy.visit(`/set-password/fake_token`);
       cy.contains('Link expired');
@@ -252,6 +263,7 @@ describe('Password set/create flow', () => {
 
   context('General IDAPI failure on password change', () => {
     it('displays a generic error message', () => {
+      cy.mockRecaptcha();
       cy.mockNext(200);
       cy.mockNext(500);
       cy.mockNext(200);

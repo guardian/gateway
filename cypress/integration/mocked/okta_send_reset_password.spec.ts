@@ -3,6 +3,7 @@ describe('Send password reset email in Okta', () => {
 
   beforeEach(() => {
     cy.mockPurge();
+    cy.mockRecaptcha();
   });
 
   context('send reset password email', () => {

@@ -20,6 +20,7 @@ describe('Sign in flow', () => {
     });
 
     it('Has no detectable a11y violations on sign in page with error', () => {
+      cy.mockRecaptcha();
       cy.visit('/signin');
       cy.get('input[name="email"]').type('Invalid email');
       cy.get('input[name="password"]').type('Invalid password');
@@ -32,6 +33,7 @@ describe('Sign in flow', () => {
   context('Signing in', () => {
     const defaultReturnUrl = 'https://m.code.dev-theguardian.com';
     it('shows an error message when sign in fails', function () {
+      cy.mockRecaptcha();
       cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
@@ -49,6 +51,7 @@ describe('Sign in flow', () => {
     });
 
     it('shows a generic error message when the api error response is not known', function () {
+      cy.mockRecaptcha();
       cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
@@ -65,6 +68,7 @@ describe('Sign in flow', () => {
     });
 
     it('loads the returnUrl upon successful authentication', function () {
+      cy.mockRecaptcha();
       const returnUrl = 'https://www.theguardian.com/about';
       // Intercept the external redirect page.
       // We just want to check that the redirect happens, not that the page loads.
@@ -85,6 +89,7 @@ describe('Sign in flow', () => {
     });
 
     it('redirects to the default url if no returnUrl given', function () {
+      cy.mockRecaptcha();
       // Intercept the external redirect page.
       // We just want to check that the redirect happens, not that the page loads.
       cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
@@ -105,6 +110,7 @@ describe('Sign in flow', () => {
     });
 
     it('auto-fills the email field when encryptedEmail is successfully decrypted', () => {
+      cy.mockRecaptcha();
       cy.mockNext(200, {
         status: 'ok',
         email: 'test@test.com',
@@ -114,17 +120,16 @@ describe('Sign in flow', () => {
     });
 
     it('shows recaptcha error message when reCAPTCHA token request fails', () => {
+      cy.mockRecaptcha(true);
       cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
       cy.get('input[name="email"]').type('placeholder@example.com');
       cy.get('input[name="password"]').type('definitelynotarealpassword');
-      cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
-        statusCode: 500,
-      });
       cy.get('[data-cy=sign-in-button]').click();
       cy.contains('Google reCAPTCHA verification failed. Please try again.');
     });
 
     it('shows detailed recaptcha error message when reCAPTCHA token request fails two times', () => {
+      cy.mockRecaptcha();
       // Intercept "Report this error" link because we just check it is linked to.
       cy.intercept(
         'GET',
@@ -154,6 +159,7 @@ describe('Sign in flow', () => {
 
   context('General IDAPI failure', () => {
     it('displays a generic error message', function () {
+      cy.mockRecaptcha();
       cy.mockNext(500);
       cy.visit('/signin?returnUrl=https%3A%2F%2Flocalhost%3A8861%2Fsignin');
       cy.get('input[name="email"]').type('example@example.com');

@@ -7,6 +7,7 @@ describe('Sign in flow', () => {
     });
 
     it('loads the account management page if user is already authenticated', function () {
+      cy.mockRecaptcha();
       cy.mockPattern(
         200,
         {
@@ -40,6 +41,7 @@ describe('Sign in flow', () => {
     });
 
     it('shows an error message when okta authentication fails', function () {
+      cy.mockRecaptcha();
       cy.visit('/signin?useOkta=true');
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
@@ -55,6 +57,7 @@ describe('Sign in flow', () => {
     });
 
     it('shows a generic error message when okta rate limited', function () {
+      cy.mockRecaptcha();
       cy.visit('/signin?useOkta=true');
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
@@ -70,6 +73,7 @@ describe('Sign in flow', () => {
     });
 
     it('shows a generic error message when okta api response unknown', function () {
+      cy.mockRecaptcha();
       cy.visit('/signin?useOkta=true');
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
@@ -85,11 +89,13 @@ describe('Sign in flow', () => {
     });
 
     it('loads the redirectUrl upon successful authentication', function () {
+      cy.mockRecaptcha();
       cy.visit(
         '/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout&useOkta=true',
       );
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
+
       cy.mockNext(200, {
         expiresAt: '3000-01-01T00:00:00.000Z',
         status: 'SUCCESS',
@@ -127,9 +133,11 @@ describe('Sign in flow', () => {
     });
 
     it('redirects to the default url if no redirectUrl given', function () {
+      cy.mockRecaptcha();
       cy.visit('/signin?useOkta=true');
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
+
       cy.mockNext(200, {
         expiresAt: '3000-01-01T00:00:00.000Z',
         status: 'SUCCESS',
@@ -150,6 +158,8 @@ describe('Sign in flow', () => {
       });
 
       cy.get('[data-cy=sign-in-button]').click();
+
+      cy.mockPurge();
       // we can't actually check the authorization code flow
       // so intercept the request and redirect to the guardian about page
       cy.intercept(
