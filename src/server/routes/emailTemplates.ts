@@ -1,5 +1,6 @@
 import { Request, Router } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
+import { rateLimiterMiddleware } from '../lib/middleware/rateLimit';
 
 import {
   renderedAccidentalEmail,
@@ -59,6 +60,7 @@ const renderEmailTemplate = (
  * Returns 404 for invalid template names. */
 router.get(
   '/email/:template',
+  rateLimiterMiddleware,
   (req: Request, res: ResponseWithRequestState) => {
     const template = req.params.template as EmailTemplateType;
     const templateIsValid = emailTemplateTypes.includes(template);
