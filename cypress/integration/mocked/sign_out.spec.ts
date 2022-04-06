@@ -14,7 +14,7 @@ describe('Sign out flow', () => {
     });
 
     it('Removes IDAPI log in cookies and dotcom cookies when signing out', () => {
-      const returnUrl = 'https://profile.thegulocal.com/reset-password';
+      const returnUrl = `https://${Cypress.env('BASE_URI')}/reset-password`;
       // Intercept the external redirect page.
       // We just want to check that the redirect happens, not that the page loads.
       cy.visit(`/signin?returnUrl=${encodeURIComponent(returnUrl)}`);

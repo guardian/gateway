@@ -4,16 +4,10 @@ Need help? Contact the Identity team on [Digital/Identity](https://chat.google.c
 
 ## Requirements
 
-Make sure you have one or the other or both:
-
 - [Node.js](https://nodejs.org) - Version is specified by [.nvmrc](../.nvmrc), run [`$ nvm use`](https://github.com/creationix/nvm#nvmrc) to use it.
 
   - We use [`yarn`](https://classic.yarnpkg.com/en/) for dependency management, so if using Node, make sure to get yarn too.
   - Node and Yarn are not required if running everything through docker.
-
-- [Docker](https://www.docker.com/) - Make sure `docker` and `docker-compose` are available in your terminal.
-  - Not required if running everything on your local machine using Node and Yarn.
-  - We generally don't recommend Docker due to it's low performance on macOS machines.
 
 ## Configuration
 
@@ -40,12 +34,6 @@ This ensures that you don't get any certificate errors when running gateway and 
 ```sh
 FetchError: request to https://idapi.thegulocal.com/auth?format=cookies failed, reason: unable to verify the first certificate\n
 ```
-
-### Environment File
-
-Populate `.env` and `cypress-ete.env` files by using the examples from [`.env.example`](../.env.example) and [`cypress-ete.env.example`](../cypress-ete.env.example). These `.env` files should **never** be committed as they store secrets.
-
-Depending on which stage (`DEV` or `CODE`) you want to connect to [Identity API (IDAPI)](https://github.com/guardian/identity), the `IDAPI_CLIENT_ACCESS_TOKEN` and `IDAPI_BASE_URL` variables will be different. If using the S3 config, it will point to the `CODE` instance of IDAPI.
 
 ### Rate Limiter
 
@@ -86,11 +74,17 @@ Here's a quick-start configuration that you can copy-paste into `.ratelimit.json
 
 When you start Gateway it will first attempt to read from the `RATE_LIMITER_CONFIG` environment variable. If that is not defined, it will read the `.ratelimit.json` file we just made into its configuration.
 
+### Environment File
+
+Populate `.env` files by using the examples from [`.env.example`](../.env.example). The `.env` files should **never** be committed as they store secrets.
+
+Depending on which stage (`DEV` or `CODE`) you want to connect to [Identity API (IDAPI)](https://github.com/guardian/identity), the `IDAPI_CLIENT_ACCESS_TOKEN` and `IDAPI_BASE_URL` variables will be different. If using the S3 config, it will point to the `CODE` instance of IDAPI.
+
 ### S3 Config
 
 You can get a preset `.env` file from the S3 private config. Be sure to have the `identity` Janus credentials.
 
-Recommended: With nginx setup (profile.thegulocal.com):
+With nginx setup (profile.thegulocal.com):
 
 ```sh
 # IDAPI/Okta pointing to DEV environment (Recommended for development)
@@ -101,23 +95,11 @@ $ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway
 $ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway/env-thegulocal-idapi-okta-code .env
 ```
 
-Without nginx (localhost:8861), things will be broken if developing against Okta endpoints:
-
-```sh
-# IDAPI/Okta pointing to DEV environment
-$ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway/env-localhost-idapi-okta-dev .env
-
-# IDAPI/Okta pointing to CODE environment
-$ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway/env-localhost-idapi-okta-code .env
-```
-
 ## Running
 
 If using nginx, nginx will look for gateway on port `8861`, so be sure to use that port. You can access gateway on `https://profile.thegulocal.com`, nginx prioritises gateway first.
 
-If not using nginx, you can then access gateway on `http://localhost:8861`.
-
-You can choose to run gateway locally, or using Docker.
+You can choose to run gateway locally.
 
 ### Locally
 
@@ -146,7 +128,9 @@ If your build folder is getting quite large, use `make clean-build` to remove th
 
 You can see the [`makefile`](../makefile) for the full list of commands.
 
-### Docker
+### Docker (optional)
+
+You only need to do this if you prefer docker.
 
 Development mode can be handled using `docker-compose` using the service name `gateway` if you prefer this way.
 
