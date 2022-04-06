@@ -8,6 +8,7 @@ on:
 
 jobs:
   cypress-nginx-okta:
+    name: Cypress (ete-okta)
     runs-on: ubuntu-latest
     services:
       redis:
