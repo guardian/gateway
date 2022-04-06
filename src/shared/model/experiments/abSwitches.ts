@@ -1,6 +1,6 @@
 export const abSwitches = {
   abExampleTest: false,
-  abAdvertisingPermissionRegistrationPrompt: false,
+  abAdvertisingPermissionRegistrationPrompt: true,
   abOptInPromptPostSignInImage: true,
   abMarketingConsentImage: true,
 };
