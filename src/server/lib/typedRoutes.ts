@@ -4,7 +4,7 @@ import { rateLimiterMiddleware } from './middleware/rateLimit';
 
 const router = Router();
 
-export const typedRouter = {
+const typedRouter = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   get: (path: RoutePaths, ...handlers: Array<any>) => {
     return router.get(path, ...handlers);
