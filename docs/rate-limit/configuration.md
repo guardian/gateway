@@ -36,7 +36,15 @@ If the Redis connection fails, the server refuse to serve any requests until the
 
 ## Entry: `defaultBuckets`
 
-The bucket entries in `defaultBuckets` are applied across all routes served by Gateway. Configuration for any specific route can be overridden by specifying its path in `routeBuckets`. Rate limiting on all routes can be disabled by setting `enabled` to false. Routes can then be selectively allowed by setting `enabled` to `true` in the individual `routeBuckets` configuration.
+The bucket entries in `defaultBuckets` are applied across all routes served by Gateway. Configuration for any specific route can be overridden by specifying its path in `routeBuckets`.
+
+### Allowing the rate limiter on specific routes only
+
+- Setting `enabled` to `false` will disable rate limiting by default on all routes. Rate limiting for individual routes can then be selectively enabled by setting `enabled` to `true` in the individual `routeBuckets` configuration.
+
+- Setting `enabled` to `true` will enable rate limiting by default on all routes. Rate limiting for individual routes can then be selectively disabled by setting `enabled` to `false` in the individual `routeBuckets` configuration.
+
+**Note:** Disabling rate limiting on a route only means that the rate limiter will not run - it does not stop the route from being accesed.
 
 ## Entry: `routeBuckets`
 

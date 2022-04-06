@@ -60,6 +60,12 @@ const rateLimit = async ({
   bucketConfiguration,
   bucketValues,
 }: RateLimitParameters) => {
+  // If the route bucket configuration is disabled, we do not rate limit.
+  // We enable all by default, config.enabled must be explicitly set to false.
+  if (bucketConfiguration.enabled === false) {
+    return false;
+  }
+
   const { accessTokenKey, globalKey, emailKey, ipKey, oktaIdentifierKey } =
     getBucketKeys(route, bucketConfiguration, bucketValues);
 
@@ -90,12 +96,6 @@ const rateLimitBuckets = async (
   buckets: ParsedRateLimitBuckets,
   bucketConfiguration: RateLimiterBucketsConfiguration,
 ): Promise<BucketType | false> => {
-  // If the route bucket configuration is disabled, we do not rate limit.
-  // We enable all by default, config.enabled must be explicitly set to false.
-  if (bucketConfiguration.enabled === false) {
-    return false;
-  }
-
   const writePipeline = redisClient.pipeline();
 
   const oktaIdentifierNotHit = rateLimitBucket(
