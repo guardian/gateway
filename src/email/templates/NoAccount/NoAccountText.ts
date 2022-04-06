@@ -5,7 +5,7 @@ Hello,
 
 You are not registered with The Guardian.
 
-It's quick an easy to create an account and we won't ask you for personal details.
+It's quick and easy to create an account and we won't ask you for personal details.
 
 Please click below to register.
 

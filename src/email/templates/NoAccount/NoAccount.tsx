@@ -17,7 +17,7 @@ export const NoAccount = () => {
         <strong>You are not registered with The Guardian</strong>
       </Text>
       <Text>
-        It&apos;s quick an easy to create an account and we won&apos;t ask you
+        It&apos;s quick and easy to create an account and we won&apos;t ask you
         for personal details.
       </Text>
       <Text noPaddingBottom>Please click below to register.</Text>
