@@ -30,6 +30,9 @@ const defaultEnv = {
   REDIS_SSL: 'false',
 };
 
+// Override the default 5s max timeout for these tests because Supertest takes some time to run.
+jest.setTimeout(10000);
+
 describe('rate limiter middleware', () => {
   beforeEach(() => {
     jest.clearAllMocks();
