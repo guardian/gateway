@@ -62,6 +62,8 @@ Routes should be separated into files which share common functionality. For exam
 
 We also support typed routes here too, using the [`typedRoutes`](../src/server/lib/typedRoutes.ts) object, which extends Express' `Router`.
 
+There is also a variant of this object [`rateLimitedTypedRouter`](../src/server/lib/typedRoutes.ts) which also adds our rate limiter middleware to each registered route.
+
 Here's an example of a `GET` route, which renders a page and returns it to the client.
 
 ```ts

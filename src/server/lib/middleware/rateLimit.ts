@@ -34,9 +34,13 @@ export const rateLimiterMiddleware = async (
   // TODO: decide if we also want to rate limit against specific tokens
   const routePathDefinition = req.route.path;
 
+  // All routes in ValidRoutePathsArray can be individually configured.
+  // If the path does not exist in the array, we still rate limit
+  // but only using the default configuration.
+  // This logs when this happens so that we have visibility of these routes.
   if (!ValidRoutePathsArray.includes(routePathDefinition)) {
-    logger.warn(
-      'Rate limiting against an invalid route path. Falling back to default bucket configuration',
+    logger.info(
+      `Rate limiter — falling back to default configuration for unregistered path: ${routePathDefinition}`,
     );
   }
 

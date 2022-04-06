@@ -15,6 +15,8 @@ const bucketsSchema = z.object({
   oktaIdentifierBucket: bucketSchema.optional(),
 });
 
+const routeBucketConfigurationSchema = z.object({});
+
 const rateLimiterConfigurationSchema = z
   .object({
     enabled: z.boolean(),

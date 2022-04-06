@@ -20,7 +20,6 @@ import { buildUrl } from '@/shared/lib/routeUtils';
 import deepmerge from 'deepmerge';
 import { Request, Router } from 'express';
 import handleRecaptcha from '@/server/lib/recaptcha';
-import { rateLimiterMiddleware } from '../lib/middleware/rateLimit';
 
 const router = Router();
 
@@ -29,7 +28,7 @@ const profileUrl = getProfileUrl();
 
 router.get(
   '/verify-email',
-  rateLimiterMiddleware,
+
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
@@ -86,7 +85,7 @@ router.get(
 
 router.post(
   '/verify-email',
-  rateLimiterMiddleware,
+
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
@@ -147,7 +146,7 @@ router.post(
 
 router.get(
   '/verify-email/:token',
-  rateLimiterMiddleware,
+
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { token } = req.params;
 

@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { typedRouter as router } from '@/server/lib/typedRoutes';
+import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { logoutFromIDAPI } from '@/server/lib/idapi/unauth';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
@@ -14,7 +14,6 @@ import { clearEncryptedStateCookie } from '../lib/encryptedStateCookie';
 import { trackMetric } from '../lib/trackMetric';
 import { clearUserSessions } from '../lib/okta/api/users';
 import { getSession } from '../lib/okta/api/sessions';
-import { rateLimiterMiddleware } from '../lib/middleware/rateLimit';
 
 const { defaultReturnUri, baseUri } = getConfiguration();
 
@@ -53,7 +52,7 @@ export const clearOktaCookies = (res: ResponseWithRequestState) => {
 
 router.get(
   '/signout',
-  rateLimiterMiddleware,
+
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { returnUrl } = res.locals.pageData;
 
