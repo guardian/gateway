@@ -5,6 +5,7 @@ import { ConsentsData } from '@/client/pages/ConsentsData';
 import { ConsentsDataAB } from './ConsentsDataAB';
 import { useAB } from '@guardian/ab-react';
 import { useCmpConsent } from '../lib/hooks/useCmpConsent';
+import { useAdFreeCookie } from '../lib/hooks/useAdFreeCookie';
 
 export const ConsentsDataPage = () => {
   const clientState = useClientState();
@@ -28,12 +29,13 @@ export const ConsentsDataPage = () => {
   );
 
   const hasCmpConsent = useCmpConsent();
+  const isDigitalSubscriber = useAdFreeCookie();
   // @AB_TEST: AdvertisingPermissionRegistrationPrompt: END
 
   return (
     <>
       {/* @AB_TEST: AdvertisingPermissionRegistrationPrompt */}
-      {isUserInVariant && hasCmpConsent ? (
+      {isUserInVariant && hasCmpConsent && !isDigitalSubscriber ? (
         <ConsentsDataAB profiling={profiling} advertising={advertising} />
       ) : (
         <ConsentsData
