@@ -1,6 +1,5 @@
 import { render } from 'mjml-react';
 import { send } from '@/email/lib/send';
-import { getProfileUrl } from '@/server/lib/getProfileUrl';
 
 import { NoAccount } from './NoAccount';
 import { NoAccountText } from './NoAccountText';
@@ -11,11 +10,7 @@ type Props = {
 };
 
 const plainText = NoAccountText();
-const { html } = render(
-  NoAccount({
-    profileUrl: getProfileUrl(),
-  }),
-);
+const { html } = render(NoAccount());
 
 export const sendNoAccountEmail = ({
   to,

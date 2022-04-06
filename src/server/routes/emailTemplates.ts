@@ -2,17 +2,25 @@ import { Request, Router } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
 
 import {
+  renderedAccidentalEmail,
+  renderedAccountExists,
+  renderedAccountWithoutPasswordExists,
+  renderedCreatePassword,
+  renderedNoAccount,
   renderedResetPasswordEmail,
   renderedVerifyEmail,
-  renderedAccidentalEmail,
 } from '@/email/templates/renderedTemplates';
 
 const router = Router();
 
 const emailTemplateTypes = [
+  'accidental-email',
+  'account-exists',
+  'account-without-password-exists',
+  'create-password',
+  'no-account',
   'reset-password',
   'verify',
-  'accidental-email',
 ] as const;
 type EmailTemplateType = typeof emailTemplateTypes[number];
 
@@ -25,12 +33,20 @@ const renderEmailTemplate = (
   template: EmailTemplateType,
 ): EmailRenderResult | undefined => {
   switch (template) {
+    case 'accidental-email':
+      return renderedAccidentalEmail;
+    case 'account-exists':
+      return renderedAccountExists;
+    case 'account-without-password-exists':
+      return renderedAccountWithoutPasswordExists;
+    case 'create-password':
+      return renderedCreatePassword;
+    case 'no-account':
+      return renderedNoAccount;
     case 'reset-password':
       return renderedResetPasswordEmail;
     case 'verify':
       return renderedVerifyEmail;
-    case 'accidental-email':
-      return renderedAccidentalEmail;
     default:
       // We don't want to do anything for invalid template names
       return undefined;
