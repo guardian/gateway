@@ -1,7 +1,7 @@
 describe('Okta Register flow', () => {
   const setSidCookie = () => {
     cy.setCookie('sid', `the_sid_cookie`, {
-      domain: 'profile.thegulocal.com',
+      domain: Cypress.env('BASE_URI'),
     });
   };
 

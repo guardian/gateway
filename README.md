@@ -33,20 +33,6 @@ $ make dev
 
 On the first run, you may see errors in your console, this is because the `build` folder and project haven't finished compiling yet, just wait for a while for webpack to finish the bundling process.
 
-#### OR 2. Running with Docker
-
-3. Start development server:
-
-```sh
-$ docker-compose up -d
-```
-
-4. Logs:
-
-```sh
-$ docker-compose logs -f
-```
-
 ## Development Guides
 
 Need help? Check the [development guide](docs/development.md) first!
