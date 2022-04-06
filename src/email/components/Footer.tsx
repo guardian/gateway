@@ -1,10 +1,13 @@
 import React from 'react';
-import { MjmlSection, MjmlColumn, MjmlText } from 'mjml-react';
+import { MjmlSection, MjmlColumn, MjmlText, MjmlRaw } from 'mjml-react';
 
 import { background, text } from '@guardian/source-foundations';
 import { Link } from '@/email/components/Link';
 
-type Props = { mistakeParagraphComponent?: React.ReactNode };
+type Props = {
+  mistakeParagraphComponent?: React.ReactNode;
+  hiddenText?: string;
+};
 
 const FooterText = ({
   children,
@@ -25,7 +28,7 @@ const FooterText = ({
   </MjmlText>
 );
 
-export const Footer = ({ mistakeParagraphComponent }: Props) => (
+export const Footer = ({ mistakeParagraphComponent, hiddenText }: Props) => (
   <MjmlSection padding="0 12px">
     <MjmlColumn
       padding="12px 12px 24px 12px"
@@ -46,6 +49,11 @@ export const Footer = ({ mistakeParagraphComponent }: Props) => (
         Guardian News and Media Limited, Kings Place, 90 York Way, London, N1
         9GU, United Kingdom
       </FooterText>
+      {hiddenText && (
+        <MjmlRaw>
+          <div style={{ display: 'none' }}>{hiddenText}</div>
+        </MjmlRaw>
+      )}
     </MjmlColumn>
   </MjmlSection>
 );

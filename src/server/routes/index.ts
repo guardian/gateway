@@ -14,6 +14,7 @@ import { default as welcome } from './welcome';
 import { default as setPassword } from './setPassword';
 import { default as maintenance } from './maintenance';
 import { default as oauth } from './oauth';
+import { default as emailTemplates } from './emailTemplates';
 
 const { okta } = getConfiguration();
 
@@ -61,6 +62,9 @@ uncachedRoutes.use(welcome);
 if (okta.enabled) {
   uncachedRoutes.use(oauth);
 }
+
+// email template routes
+router.use(emailTemplates);
 
 router.use(uncachedRoutes);
 

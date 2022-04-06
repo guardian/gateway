@@ -26,6 +26,7 @@ export const ResetPassword = () => {
             accessed your account.
           </>
         }
+        hiddenText="${resetPasswordLink}"
       />
     </Page>
   );

@@ -6,13 +6,8 @@ import { Header } from '@/email/components/Header';
 import { SubHeader } from '@/email/components/SubHeader';
 import { Text } from '@/email/components/Text';
 import { Footer } from '@/email/components/Footer';
-import { buildUrl } from '@/shared/lib/routeUtils';
 
-interface Props {
-  profileUrl: string;
-}
-
-export const NoAccount = ({ profileUrl }: Props) => {
+export const NoAccount = () => {
   return (
     <Page title="No account">
       <Header />
@@ -22,13 +17,11 @@ export const NoAccount = ({ profileUrl }: Props) => {
         <strong>You are not registered with The Guardian</strong>
       </Text>
       <Text>
-        It&apos;s quick an easy to create an account and we won&apos;t ask you
+        It&apos;s quick and easy to create an account and we won&apos;t ask you
         for personal details.
       </Text>
       <Text noPaddingBottom>Please click below to register.</Text>
-      <Button href={`${profileUrl}${buildUrl('/register')}`}>
-        Register with The Guardian
-      </Button>
+      <Button href="$registerLink">Register with The Guardian</Button>
       <Footer
         mistakeParagraphComponent={
           <>
