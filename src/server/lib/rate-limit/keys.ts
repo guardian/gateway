@@ -1,12 +1,13 @@
 import { RoutePaths } from '@/shared/model/Routes';
 import { sha256 } from '../crypto';
 import {
-  RateLimitBucketsConfiguration,
+  RateLimiterBucketsConfiguration,
   BucketValues,
   BucketKeys,
   BucketType,
 } from './types';
 
+// Generates a unique key to store in Redis for a given route, bucket and value.
 const getRateLimitKey = (
   route: RoutePaths,
   bucketName: BucketType,
@@ -20,7 +21,7 @@ const removeEmailAlias = (email?: string) => {
 
 export const getBucketKeys = (
   route: RoutePaths,
-  bucketConfiguration: RateLimitBucketsConfiguration,
+  bucketConfiguration: RateLimiterBucketsConfiguration,
   bucketValues?: BucketValues,
 ): BucketKeys => {
   const { accessTokenBucket, ipBucket, emailBucket, oktaIdentifierBucket } =

@@ -114,7 +114,7 @@ describe('rate limiter middleware', () => {
   };
 
   it('should rate limit all clients when the global bucket is empty', async () => {
-    const rateLimiterConfig = {
+    const rateLimiterConfig: RateLimiterConfiguration = {
       enabled: true,
       defaultBuckets: {
         globalBucket: { capacity: 2, addTokenMs: 500 },
@@ -143,7 +143,7 @@ describe('rate limiter middleware', () => {
   });
 
   it('should rate limit when the ip rate limit bucket is empty', async () => {
-    const rateLimiterConfig = {
+    const rateLimiterConfig: RateLimiterConfiguration = {
       enabled: true,
       defaultBuckets: {
         globalBucket: { capacity: 10, addTokenMs: 500 },
@@ -193,7 +193,7 @@ describe('rate limiter middleware', () => {
   });
 
   it('should rate limit when the access token bucket is empty', async () => {
-    const rateLimiterConfig = {
+    const rateLimiterConfig: RateLimiterConfiguration = {
       enabled: true,
       defaultBuckets: {
         globalBucket: { capacity: 10, addTokenMs: 500 },
@@ -242,8 +242,115 @@ describe('rate limiter middleware', () => {
     }
   });
 
+  it('should allow you to disable rate limiting for selected routes ', async () => {
+    const rateLimiterConfig: RateLimiterConfiguration = {
+      enabled: true,
+      defaultBuckets: {
+        enabled: true,
+        globalBucket: { capacity: 1, addTokenMs: 500 },
+      },
+      routeBuckets: {
+        '/signin': {
+          enabled: false,
+          globalBucket: { capacity: 1, addTokenMs: 50 },
+        },
+        '/register': {
+          enabled: true,
+          globalBucket: { capacity: 1, addTokenMs: 50 },
+        },
+      },
+    };
+
+    // Start the application server.
+    const { server, teardownServer } = await getServerInstance(
+      rateLimiterConfig,
+    );
+
+    try {
+      // Confirm that route: /signin is never rate limited.
+      await request(server).get('/signin').expect(200);
+      await request(server).get('/signin').expect(200);
+
+      // Confirm that route: /reset-password covered by the defaults is rate limited
+      await request(server).get('/reset-password').expect(200);
+      await request(server).get('/reset-password').expect(429);
+
+      // Confirm that enabled overridden route: /register is rate limited.
+      await request(server).get('/register').expect(200);
+      await request(server).get('/register').expect(429);
+
+      await teardownServer();
+    } catch (error) {
+      await teardownServer();
+      throw error;
+    }
+  });
+
+  it('should not rate limit disabled routes and only rate limit enabled routes', async () => {
+    const rateLimiterConfig: RateLimiterConfiguration = {
+      enabled: true,
+      defaultBuckets: {
+        enabled: false,
+        globalBucket: { capacity: 1, addTokenMs: 500 },
+      },
+      routeBuckets: {
+        '/signin': {
+          enabled: true,
+          globalBucket: { capacity: 500, addTokenMs: 50 },
+          emailBucket: { capacity: 1, addTokenMs: 500 },
+        },
+        '/reset-password': {
+          enabled: true,
+          globalBucket: { capacity: 1, addTokenMs: 50 },
+        },
+      },
+    };
+
+    // Start the application server.
+    const { server, teardownServer } = await getServerInstance(
+      rateLimiterConfig,
+    );
+
+    try {
+      // Confirm that /signin and /reset-password are rate limited.
+
+      // Consume the only token available for this email
+      await request(server)
+        .post('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fuk')
+        .type('application/x-www-form-urlencoded')
+        .send({
+          email: 'test@test.com',
+          password: '',
+        })
+        .expect(303)
+        .expect('Location', 'https://www.theguardian.com/uk');
+
+      // No more tokens left for this email, check that rate limiter kicks in
+      await request(server)
+        .post('/signin')
+        .type('application/x-www-form-urlencoded')
+        .send({
+          email: 'test@test.com',
+          password: '',
+        })
+        .expect(429);
+
+      await request(server).get('/reset-password').expect(200);
+      await request(server).get('/reset-password').expect(429);
+
+      // Confirm that /register (disabled by the default config) is never rate limited.
+      await request(server).get('/register').expect(200);
+      await request(server).get('/register').expect(200);
+
+      await teardownServer();
+    } catch (error) {
+      await teardownServer();
+      throw error;
+    }
+  });
+
   it('should rate limit /signin form when the email bucket is empty', async () => {
-    const rateLimiterConfig = {
+    const rateLimiterConfig: RateLimiterConfiguration = {
       enabled: true,
       defaultBuckets: {
         globalBucket: { capacity: 500, addTokenMs: 500 },

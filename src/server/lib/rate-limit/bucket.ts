@@ -4,7 +4,7 @@ import type {
   ParsedRateLimitBucket,
   RateLimitBucketContents,
   BucketKeys,
-  BucketConfiguration,
+  RateLimiterBucketConfiguration,
   PipelinedBucketData,
 } from './types';
 
@@ -59,7 +59,7 @@ import type {
  */
 export const rateLimitBucket = (
   bucket: ParsedRateLimitBucket | undefined,
-  bucketConfiguration: BucketConfiguration | undefined,
+  bucketConfiguration: RateLimiterBucketConfiguration | undefined,
   pipelinedWrites: Redis.Pipeline,
 ) => {
   // If either the bucket or the bucket configuration are undefined
