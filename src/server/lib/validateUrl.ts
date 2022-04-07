@@ -24,7 +24,7 @@ export const validAppProtocols = [
 // valid app custom pathnames
 const validAppPathnames = ['/authentication/callback'];
 
-const invalidPaths = ['/signin', '/register'];
+const invalidPaths = ['/signin', '/register', '/signout'];
 
 const { defaultReturnUri } = getConfiguration();
 
