@@ -9,11 +9,12 @@ import {
   clearIDAPICookies,
   setIDAPICookies,
 } from '@/server/lib/idapi/IDAPICookies';
-import { deleteAuthorizationStateCookie } from '../lib/okta/openid-connect';
-import { clearEncryptedStateCookie } from '../lib/encryptedStateCookie';
-import { trackMetric } from '../lib/trackMetric';
-import { clearUserSessions } from '../lib/okta/api/users';
-import { getSession } from '../lib/okta/api/sessions';
+import { deleteAuthorizationStateCookie } from '@/server/lib/okta/openid-connect';
+import { clearEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
+import { trackMetric } from '@/server/lib/trackMetric';
+import { clearUserSessions } from '@/server/lib/okta/api/users';
+import { getSession } from '@/server/lib/okta/api/sessions';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 const { defaultReturnUri, baseUri } = getConfiguration();
 
@@ -63,7 +64,9 @@ router.get(
       await signOutFromOkta(req, res);
       // We try and remove their session and then unset their sid cookie by redirecting back to /signout
       // this keeps them on the profile domain to remove the Okta cookies
-      return res.redirect(303, '/signout');
+      return res.redirect(
+        addQueryParamsToPath('/signout', res.locals.queryParams),
+      );
     } else {
       // if the user has no Okta sid cookie, we will then try and log them out from IDAPI
       // the user will be in this state if they previously had their Okta cookie removed and got

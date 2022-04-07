@@ -50,6 +50,7 @@ jobs:
           ENVIRONMENT: production
           STAGE: DEV
           BASE_URI: profile.thegulocal.com
+          CYPRESS_BASE_URI: profile.thegulocal.com
           IDAPI_CLIENT_ACCESS_TOKEN: ${{ secrets.IDAPI_CLIENT_ACCESS_TOKEN }}
           CYPRESS_IDAPI_CLIENT_ACCESS_TOKEN: ${{ secrets.IDAPI_CLIENT_ACCESS_TOKEN }}
           IDAPI_BASE_URL: https://idapi.code.dev-theguardian.com
