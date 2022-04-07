@@ -18,7 +18,6 @@ const hasRequiredConsents = (): Promise<boolean> => {
 
   return new Promise((resolve) => {
     onConsentChange((state) => {
-      console.log(state);
       if (state.tcfv2) {
         return resolve(hasConsentedToAll(state));
       }

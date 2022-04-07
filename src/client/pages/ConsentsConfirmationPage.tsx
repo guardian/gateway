@@ -2,7 +2,8 @@ import React from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { ConsentsConfirmation } from '@/client/pages/ConsentsConfirmation';
 import { Consents } from '@/shared/model/Consent';
-import { useAB } from '@guardian/ab-react';
+import { useCmpConsent } from '../lib/hooks/useCmpConsent';
+import { useAdFreeCookie } from '../lib/hooks/useAdFreeCookie';
 
 export const ConsentsConfirmationPage = () => {
   const clientState = useClientState();
@@ -14,15 +15,10 @@ export const ConsentsConfirmationPage = () => {
     returnUrl = 'https://www.theguardian.com',
   } = pageData;
 
-  // @AB_TEST: AdvertisingPermissionRegistrationPrompt: START
-  const ABTestAPI = useAB();
-  // TODO cmp Cookie Consent
-
-  const isUserInVariant = ABTestAPI.isUserInVariant(
-    'AdvertisingPermissionRegistrationPrompt',
-    'variant-show-ad-permission',
-  );
-  // @AB_TEST: AdvertisingPermissionRegistrationPrompt: END
+  const hasCmpConsent = useCmpConsent();
+  const isDigitalSubscriber = useAdFreeCookie();
+  const shouldPersonalisedAdvertisingRender =
+    hasCmpConsent && !isDigitalSubscriber;
 
   const optedIntoProfiling = !!consents.find(
     // If consent option present and consented === true, this means the user has expressed a
@@ -52,7 +48,7 @@ export const ConsentsConfirmationPage = () => {
       returnUrl={returnUrl}
       optedIntoProfiling={optedIntoProfiling}
       optedIntoPersonalisedAdvertising={optedIntoPersonalisedAdvertising}
-      isUserInVariant={isUserInVariant}
+      shouldPersonalisedAdvertisingRender={shouldPersonalisedAdvertisingRender}
       productConsents={productConsents}
       subscribedNewsletters={subscribedNewsletters}
     />

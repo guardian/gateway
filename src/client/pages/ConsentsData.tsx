@@ -14,12 +14,14 @@ import {
   subGridItemToggleSwitch,
   subGridOverrides,
 } from '@/client/styles/Grid';
+import { Consent } from '@/shared/model/Consent';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import {
   heading,
   text,
   textBold,
   greyBorderTop,
+  subText,
 } from '@/client/styles/Consents';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { ExternalLink } from '../components/ExternalLink';
@@ -30,22 +32,24 @@ import { ConsentsForm } from '@/client/components/ConsentsForm';
 import { ConsentsNavigation } from '@/client/components/ConsentsNavigation';
 
 type ConsentsDataProps = {
-  consented?: boolean;
-  description?: string;
-  name?: string;
-  id: string;
+  profiling?: Consent;
+  advertising?: Consent;
 };
 
-const switchRow = css`
-  border: 0;
-  padding: 0;
+const topMargin = css`
   margin: ${space[4]}px 0 0 0;
-  ${textSans.medium()}
 `;
 
 const removeMargin = css`
   margin: 0;
   -ms-grid-row: 1; /* fix top margin on IE11 */
+`;
+
+const switchRow = css`
+  border: 0;
+  padding: 0;
+  ${topMargin}
+  ${textSans.medium()}
 `;
 
 const toggleSwitchAlignment = css`
@@ -59,11 +63,9 @@ const toggleSwitchAlignment = css`
 const listBullets = css`
   list-style: none;
   padding-left: 0;
-  text-indent: -18px; /* second line indentation */
-  margin-left: 18px; /* second line indentation */
-  li {
-    font-size: 17px;
-  }
+  margin: 0;
+  text-indent: -20px; /* second line indentation */
+  margin-left: 20px; /* second line indentation */
   li:first-of-type {
     margin-top: 6px;
   }
@@ -87,19 +89,51 @@ const labelStyles = css`
   }
 `;
 
-const marketingText = css`
-  ${text}
-  margin-top: ${space[4]}px;
+const adConsentText = css`
+  ${subText}
+  line-height: ${remSpace[5]};
+  color: ${neutral[46]};
+  p {
+    ${removeMargin}
+    margin-top: 6px;
+  }
+  && ul {
+    text-indent: -18px; /* second line indentation */
+    margin-left: 18px; /* second line indentation */
+  }
+  && li {
+    ${textSans.small()}
+    line-height: ${remSpace[5]};
+  }
+  && li::before {
+    width: 10px;
+    height: 10px;
+  }
 `;
 
-export const ConsentsData = ({ id, consented, name }: ConsentsDataProps) => {
+const marketingText = css`
+  p {
+    ${subText}
+    color: ${neutral[20]};
+  }
+  a,
+  p {
+    ${textSans.small()}
+    line-height: ${remSpace[5]};
+  }
+  p:last-of-type {
+    margin-top: 6px;
+  }
+`;
+
+export const ConsentsData = ({ profiling, advertising }: ConsentsDataProps) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
   const autoYourDataRow = getAutoRow(1, gridItemYourData);
   const autoSwitchRow = getAutoRow(1, subGridItemToggleSwitch);
 
   const layoutProps = { title: 'Your data', current: CONSENTS_PAGES.YOUR_DATA };
 
-  if (!name) {
+  if (!profiling && !advertising) {
     return (
       <ConsentsLayout {...layoutProps}>
         <ConsentsForm cssOverrides={autoRow()}>
@@ -125,24 +159,60 @@ export const ConsentsData = ({ id, consented, name }: ConsentsDataProps) => {
 
       <ConsentsForm cssOverrides={autoRow()}>
         <div css={[gridRow, subGridOverrides]}>
-          <fieldset css={[switchRow, greyBorderTop, autoSwitchRow()]}>
-            <ToggleSwitchInput
-              id={id}
-              label={name}
-              defaultChecked={consented ?? true} // legitimate interests so defaults to true
-              cssOverrides={[labelStyles, toggleSwitchAlignment]}
-            />
-          </fieldset>
+          {!!profiling && (
+            <fieldset css={[switchRow, greyBorderTop, autoSwitchRow()]}>
+              <ToggleSwitchInput
+                id={profiling.id}
+                label={profiling.name}
+                defaultChecked={profiling.consented ?? true} // legitimate interests so defaults to true
+                cssOverrides={[labelStyles, toggleSwitchAlignment]}
+              />
+            </fieldset>
+          )}
+
+          {!!advertising && (
+            <>
+              <fieldset css={[switchRow, greyBorderTop, autoSwitchRow()]}>
+                <ToggleSwitchInput
+                  id={advertising.id}
+                  label={advertising.name}
+                  defaultChecked={advertising.consented ?? false}
+                  cssOverrides={[labelStyles, toggleSwitchAlignment]}
+                />
+              </fieldset>
+              <div css={[adConsentText, autoSwitchRow()]}>
+                <p>
+                  Advertising is a crucial source of our funding. You won&apos;t
+                  see more ads, and your data won&apos;t be shared with third
+                  parties to use for their own advertising.
+                </p>
+                <p>We do this by:</p>
+                <ul css={[listBullets]}>
+                  <li>
+                    Analysing your information to predict what you might be
+                    interested in.
+                  </li>
+                  <li>
+                    Checking if you are already a customer of other trusted
+                    partners.
+                  </li>
+                </ul>
+              </div>
+            </>
+          )}
         </div>
-        <div css={[autoRow()]}>
-          <p css={[marketingText, greyBorderTop, autoRow()]}>
+
+        <div css={[greyBorderTop, topMargin, autoRow()]} />
+
+        <div css={[marketingText, gridRow, subGridOverrides]}>
+          <p css={[autoSwitchRow()]}>
             You can change your settings under&nbsp;
             <ExternalLink href={locations.MMA_EMAIL_PREFERENCES} subdued={true}>
               Emails &amp; marketing
             </ExternalLink>
             &nbsp;on your Guardian account at any time.
           </p>
-          <p css={[marketingText, autoRow()]}>
+          <p css={[autoSwitchRow()]}>
             Learn how we use data in our{' '}
             <ExternalLink href={locations.PRIVACY} subdued={true}>
               privacy policy
@@ -150,6 +220,7 @@ export const ConsentsData = ({ id, consented, name }: ConsentsDataProps) => {
             .
           </p>
         </div>
+
         <ConsentsNavigation />
       </ConsentsForm>
     </ConsentsLayout>

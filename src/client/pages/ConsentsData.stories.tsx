@@ -1,6 +1,7 @@
 import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
+import { Consent } from '@/shared/model/Consent';
 import { ConsentsData } from './ConsentsData';
 
 export default {
@@ -16,19 +17,30 @@ const Template: ComponentStory<typeof ConsentsData> = (props) => (
   <ConsentsData {...props} />
 );
 
-export const NoDescription = Template.bind({});
-NoDescription.storyName = 'with no description';
+const advertising: Consent = {
+  id: 'personalised_advertising',
+  name: 'Allow personalised advertising using this data - this supports the Guardian',
+  consented: false,
+};
 
-export const ConsentedTrue = Template.bind({});
-ConsentedTrue.args = {
+const profiling: Consent = {
+  id: 'profiling_optin',
   name: 'Allow the Guardian to analyse this data to improve marketing content',
   consented: true,
 };
-ConsentedTrue.storyName = 'with consented true';
 
-export const ConsentedFalse = Template.bind({});
-ConsentedFalse.args = {
-  name: 'Allow the Guardian to analyse this data to improve marketing content',
-  consented: false,
+export const NoDescription = Template.bind({});
+NoDescription.storyName = 'with no description';
+
+export const onlyProfilingConsent = Template.bind({});
+onlyProfilingConsent.args = {
+  profiling: profiling,
 };
-ConsentedFalse.storyName = 'with consented false';
+onlyProfilingConsent.storyName = 'with profiling consent only';
+
+export const bothConsents = Template.bind({});
+bothConsents.args = {
+  profiling: profiling,
+  advertising: advertising,
+};
+bothConsents.storyName = 'with both consents';

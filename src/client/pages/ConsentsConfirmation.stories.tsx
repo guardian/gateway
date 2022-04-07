@@ -46,15 +46,16 @@ const subscribedNewsletters = [
   },
 ];
 
+// TODO update these stories
+
 export const None = () => (
   <ConsentsConfirmation
     returnUrl=""
     optedIntoProfiling={false}
     productConsents={[]}
     subscribedNewsletters={[]}
-    // @ABTEST
     optedIntoPersonalisedAdvertising={false}
-    isUserInVariant={false}
+    shouldPersonalisedAdvertisingRender={false}
   />
 );
 None.story = {
@@ -67,13 +68,40 @@ export const Profiling = () => (
     optedIntoProfiling={true}
     productConsents={[]}
     subscribedNewsletters={[]}
-    // @ABTEST
     optedIntoPersonalisedAdvertising={false}
-    isUserInVariant={false}
+    shouldPersonalisedAdvertisingRender={true}
   />
 );
 Profiling.story = {
   name: 'with consent given to profiling',
+};
+
+export const Advertising = () => (
+  <ConsentsConfirmation
+    returnUrl=""
+    optedIntoProfiling={false}
+    productConsents={[]}
+    subscribedNewsletters={[]}
+    optedIntoPersonalisedAdvertising={true}
+    shouldPersonalisedAdvertisingRender={true}
+  />
+);
+Advertising.story = {
+  name: 'with consent given to personalised advertising',
+};
+
+export const Data = () => (
+  <ConsentsConfirmation
+    returnUrl=""
+    optedIntoProfiling={true}
+    productConsents={[]}
+    subscribedNewsletters={[]}
+    optedIntoPersonalisedAdvertising={true}
+    shouldPersonalisedAdvertisingRender={true}
+  />
+);
+Data.story = {
+  name: 'with all data consents given',
 };
 
 export const Newsletters = () => (
@@ -82,9 +110,8 @@ export const Newsletters = () => (
     optedIntoProfiling={false}
     productConsents={[]}
     subscribedNewsletters={subscribedNewsletters}
-    // @ABTEST
     optedIntoPersonalisedAdvertising={false}
-    isUserInVariant={false}
+    shouldPersonalisedAdvertisingRender={false}
   />
 );
 Newsletters.story = {
@@ -97,9 +124,8 @@ export const Products = () => (
     optedIntoProfiling={false}
     productConsents={productConsents}
     subscribedNewsletters={[]}
-    // @ABTEST
     optedIntoPersonalisedAdvertising={false}
-    isUserInVariant={false}
+    shouldPersonalisedAdvertisingRender={false}
   />
 );
 Products.story = {
@@ -112,41 +138,10 @@ export const Everything = () => (
     optedIntoProfiling={true}
     productConsents={productConsents}
     subscribedNewsletters={subscribedNewsletters}
-    // @ABTEST
-    optedIntoPersonalisedAdvertising={false}
-    isUserInVariant={false}
+    optedIntoPersonalisedAdvertising={true}
+    shouldPersonalisedAdvertisingRender={true}
   />
 );
 Everything.story = {
   name: 'with everything consented to',
-};
-
-export const InAdvertisingABTestConsented = () => (
-  <ConsentsConfirmation
-    returnUrl=""
-    optedIntoProfiling={true}
-    productConsents={productConsents}
-    subscribedNewsletters={subscribedNewsletters}
-    // @ABTEST
-    optedIntoPersonalisedAdvertising={true}
-    isUserInVariant={true}
-  />
-);
-InAdvertisingABTestConsented.story = {
-  name: 'in AB test advertising consented',
-};
-
-export const InAdvertisingABTestNotConsented = () => (
-  <ConsentsConfirmation
-    returnUrl=""
-    optedIntoProfiling={true}
-    productConsents={productConsents}
-    subscribedNewsletters={subscribedNewsletters}
-    // @ABTEST
-    optedIntoPersonalisedAdvertising={false}
-    isUserInVariant={true}
-  />
-);
-InAdvertisingABTestNotConsented.story = {
-  name: 'in AB test advertising not consented',
 };
