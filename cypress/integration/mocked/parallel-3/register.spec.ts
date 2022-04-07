@@ -1,5 +1,5 @@
-import { injectAndCheckAxe } from '../../support/cypress-axe';
-import { invalidEmailAddress } from '../../support/idapi/guest';
+import { injectAndCheckAxe } from '../../../support/cypress-axe';
+import { invalidEmailAddress } from '../../../support/idapi/guest';
 
 describe('Registration flow', () => {
   beforeEach(() => {

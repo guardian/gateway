@@ -3,7 +3,7 @@
 import {
   authRedirectSignInRecentlyEmailValidated,
   AUTH_REDIRECT_ENDPOINT,
-} from '../../support/idapi/auth';
+} from '../../../support/idapi/auth';
 import {
   allConsents,
   defaultUserConsent,
@@ -11,19 +11,19 @@ import {
   getUserConsents,
   CONSENTS_ENDPOINT,
   CONSENT_ERRORS,
-} from '../../support/idapi/consent';
+} from '../../../support/idapi/consent';
 import {
   verifiedUserWithNoConsent,
   createUser,
   USER_ERRORS,
   USER_ENDPOINT,
-} from '../../support/idapi/user';
-import { setAuthCookies } from '../../support/idapi/cookie';
-import CommunicationsPage from '../../support/pages/onboarding/communications_page';
-import NewslettersPage from '../../support/pages/onboarding/newsletters_page';
-import YourDataPage from '../../support/pages/onboarding/your_data_page';
-import ReviewPage from '../../support/pages/onboarding/review_page';
-import { injectAndCheckAxe } from '../../support/cypress-axe';
+} from '../../../support/idapi/user';
+import { setAuthCookies } from '../../../support/idapi/cookie';
+import CommunicationsPage from '../../../support/pages/onboarding/communications_page';
+import NewslettersPage from '../../../support/pages/onboarding/newsletters_page';
+import YourDataPage from '../../../support/pages/onboarding/your_data_page';
+import ReviewPage from '../../../support/pages/onboarding/review_page';
+import { injectAndCheckAxe } from '../../../support/cypress-axe';
 
 import {
   allNewsletters,
@@ -31,13 +31,13 @@ import {
   NEWSLETTER_ENDPOINT,
   NEWSLETTER_SUBSCRIPTION_ENDPOINT,
   NEWSLETTER_ERRORS,
-} from '../../support/idapi/newsletter';
-import Onboarding from '../../support/pages/onboarding/onboarding_page';
-import VerifyEmail from '../../support/pages/verify_email';
+} from '../../../support/idapi/newsletter';
+import Onboarding from '../../../support/pages/onboarding/onboarding_page';
+import VerifyEmail from '../../../support/pages/verify_email';
 import {
   getGeoLocationHeaders,
   GEOLOCATION_CODES,
-} from '../../support/geolocation';
+} from '../../../support/geolocation';
 
 const { NEWSLETTERS } = NewslettersPage.CONTENT;
 

@@ -1,16 +1,16 @@
-import { injectAndCheckAxe } from '../../support/cypress-axe';
+import { injectAndCheckAxe } from '../../../support/cypress-axe';
 import {
   authRedirectSignInRecentlyEmailValidated,
   AUTH_REDIRECT_ENDPOINT,
-} from '../../support/idapi/auth';
-import { allConsents, CONSENTS_ENDPOINT } from '../../support/idapi/consent';
-import { setAuthCookies } from '../../support/idapi/cookie';
+} from '../../../support/idapi/auth';
+import { allConsents, CONSENTS_ENDPOINT } from '../../../support/idapi/consent';
+import { setAuthCookies } from '../../../support/idapi/cookie';
 import {
   verifiedUserWithNoConsent,
   USER_ENDPOINT,
-} from '../../support/idapi/user';
+} from '../../../support/idapi/user';
 import * as qs from 'query-string';
-import CommunicationsPage from '../../support/pages/onboarding/communications_page';
+import CommunicationsPage from '../../../support/pages/onboarding/communications_page';
 
 describe('Welcome and set password page', () => {
   const defaultEmail = 'someone@theguardian.com';

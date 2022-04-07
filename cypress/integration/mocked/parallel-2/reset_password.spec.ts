@@ -1,5 +1,5 @@
-import { injectAndCheckAxe } from '../../support/cypress-axe';
-import PageResetPassword from '../../support/pages/reset_password_page';
+import { injectAndCheckAxe } from '../../../support/cypress-axe';
+import PageResetPassword from '../../../support/pages/reset_password_page';
 
 describe('Password reset flow', () => {
   const page = new PageResetPassword();

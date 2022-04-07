@@ -1,4 +1,4 @@
-import { randomMailosaurEmail } from '../../../support/commands/testUser';
+import { randomMailosaurEmail } from '../../../../support/commands/testUser';
 
 describe('Registration flow', () => {
   context('Terms and Conditions links', () => {

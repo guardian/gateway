@@ -1,15 +1,18 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-import { injectAndCheckAxe } from '../../support/cypress-axe';
-import { authRedirectSignInRecentlyEmailValidated } from '../../support/idapi/auth';
-import { allConsents } from '../../support/idapi/consent';
-import { authCookieResponse, setAuthCookies } from '../../support/idapi/cookie';
-import { verifiedUserWithNoConsent } from '../../support/idapi/user';
+import { injectAndCheckAxe } from '../../../support/cypress-axe';
+import { authRedirectSignInRecentlyEmailValidated } from '../../../support/idapi/auth';
+import { allConsents } from '../../../support/idapi/consent';
+import {
+  authCookieResponse,
+  setAuthCookies,
+} from '../../../support/idapi/cookie';
+import { verifiedUserWithNoConsent } from '../../../support/idapi/user';
 import {
   validationTokenExpired,
   validationTokenInvalid,
-} from '../../support/idapi/verify_email';
-import VerifyEmail from '../../support/pages/verify_email';
+} from '../../../support/idapi/verify_email';
+import VerifyEmail from '../../../support/pages/verify_email';
 
 describe('Verify email flow', () => {
   const verifyEmailFlow = new VerifyEmail();

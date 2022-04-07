@@ -1,4 +1,4 @@
-import { randomPassword } from '../../../support/commands/testUser';
+import { randomPassword } from '../../../../support/commands/testUser';
 
 describe('Password reset flow', () => {
   context('Account exists', () => {

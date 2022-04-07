@@ -1,16 +1,16 @@
 import {
   authRedirectSignInRecentlyEmailValidated,
   AUTH_REDIRECT_ENDPOINT,
-} from '../../support/idapi/auth';
-import { allConsents, CONSENTS_ENDPOINT } from '../../support/idapi/consent';
+} from '../../../support/idapi/auth';
+import { allConsents, CONSENTS_ENDPOINT } from '../../../support/idapi/consent';
 import {
   verifiedUserWithNoConsent,
   createUser,
   USER_ENDPOINT,
   USER_CONSENTS_ENDPOINT,
-} from '../../support/idapi/user';
-import { setAuthCookies } from '../../support/idapi/cookie';
-import { injectAndCheckAxe } from '../../support/cypress-axe';
+} from '../../../support/idapi/user';
+import { setAuthCookies } from '../../../support/idapi/cookie';
+import { injectAndCheckAxe } from '../../../support/cypress-axe';
 
 describe('Post sign-in prompt', () => {
   const defaultReturnUrl = 'https://m.code.dev-theguardian.com';

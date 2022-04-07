@@ -1,12 +1,12 @@
 import { stringify } from 'query-string';
 
-import { injectAndCheckAxe } from '../../support/cypress-axe';
-import { allConsents, CONSENTS_ENDPOINT } from '../../support/idapi/consent';
+import { injectAndCheckAxe } from '../../../support/cypress-axe';
+import { allConsents, CONSENTS_ENDPOINT } from '../../../support/idapi/consent';
 import {
   verifiedUserWithNoConsent,
   createUser,
   USER_ENDPOINT,
-} from '../../support/idapi/user';
+} from '../../../support/idapi/user';
 
 describe('Sign in flow', () => {
   beforeEach(() => {

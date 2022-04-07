@@ -1,9 +1,33 @@
 name: cypress-mocked
 on: push
 jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+      - name: Build project
+        run: yarn install --frozen-lockfile && yarn build
+      - name: zip build folder
+        run: zip -r build.zip ./build
+      - name: Save build folder
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          if-no-files-found: error
+          path: build.zip
   cypress-mocked:
     name: Cypress (mocked)
     runs-on: ubuntu-latest
+    needs: install
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [1, 2, 3, 4]
     services:
       redis:
         image: redis
@@ -19,10 +43,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'yarn'
       - name: Setup OS, Nginx, and Certs
         run: |
           sudo apt-get update -y
@@ -38,6 +58,12 @@ jobs:
           sudo dev-nginx setup-cert "profile.thegulocal.com"
           sudo cp ./scripts/nginx.conf /etc/nginx/nginx.conf
           sudo dev-nginx restart-nginx
+      - name: Download the build folders
+        uses: actions/download-artifact@v2
+        with:
+          name: build
+      - name: Unzip build folder
+        run: unzip build.zip
       - name: Cypress run
         uses: cypress-io/github-action@v2
         env:
@@ -80,12 +106,11 @@ jobs:
           # Required for the Cypress tests to run as we're unable to verify the created certs
           NODE_TLS_REJECT_UNAUTHORIZED: 0
         with:
-          build: yarn build
           start: yarn start, yarn mock-server
           wait-on: 'https://profile.thegulocal.com/healthcheck, http://localhost:9000/healthcheck'
           wait-on-timeout: 60
           browser: chrome
-          spec: cypress/integration/mocked/*.ts
+          spec: cypress/integration/mocked/parallel-${{ matrix.group }}/**/*.ts
           config: '{"chromeWebSecurity": false,"baseUrl":"https://profile.thegulocal.com"}'
       - name: Upload screenshots
         uses: actions/upload-artifact@v2

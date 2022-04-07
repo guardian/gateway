@@ -1,4 +1,4 @@
-import { authCookieResponse } from '../../support/idapi/cookie';
+import { authCookieResponse } from '../../../support/idapi/cookie';
 
 describe('Sign out flow', () => {
   const DotComCookies = [

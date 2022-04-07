@@ -1,5 +1,5 @@
-import { injectAndCheckAxe } from '../../../support/cypress-axe';
-import { randomMailosaurEmail } from '../../../support/commands/testUser';
+import { injectAndCheckAxe } from '../../../../support/cypress-axe';
+import { randomMailosaurEmail } from '../../../../support/commands/testUser';
 
 describe('Registration email sent page', () => {
   context('A11y checks', () => {
