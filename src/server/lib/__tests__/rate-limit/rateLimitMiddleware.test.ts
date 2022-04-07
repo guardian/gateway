@@ -119,7 +119,7 @@ describe('rate limiter middleware', () => {
       defaultBuckets: {
         globalBucket: { capacity: 2, addTokenMs: 500 },
       },
-    } as RateLimiterConfiguration;
+    };
 
     const { server, teardownServer } = await getServerInstance(
       rateLimiterConfig,
@@ -149,7 +149,7 @@ describe('rate limiter middleware', () => {
         globalBucket: { capacity: 10, addTokenMs: 500 },
         ipBucket: { capacity: 2, addTokenMs: 500 },
       },
-    } as RateLimiterConfiguration;
+    };
 
     // Start the application server.
     const { server, teardownServer } = await getServerInstance(
@@ -199,7 +199,7 @@ describe('rate limiter middleware', () => {
         globalBucket: { capacity: 10, addTokenMs: 500 },
         accessTokenBucket: { capacity: 2, addTokenMs: 500 },
       },
-    } as RateLimiterConfiguration;
+    };
 
     // Start the application server.
     const { server, teardownServer } = await getServerInstance(
