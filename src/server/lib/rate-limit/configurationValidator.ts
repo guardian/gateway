@@ -1,26 +1,31 @@
 import { z } from 'zod';
 import { ValidRoutePathsArray } from '@/shared/model/Routes';
 
-const bucketSchema = z.object({
-  capacity: z.number(),
-  addTokenMs: z.number(),
-  maximumTimeBeforeTokenExpiry: z.number().optional(),
-});
+export const bucketSchema = z
+  .object({
+    capacity: z.number(),
+    addTokenMs: z.number(),
+    maximumTimeBeforeTokenExpiry: z.number().optional(),
+  })
+  .strict();
 
-const bucketsSchema = z.object({
-  globalBucket: bucketSchema,
-  accessTokenBucket: bucketSchema.optional(),
-  ipBucket: bucketSchema.optional(),
-  emailBucket: bucketSchema.optional(),
-  oktaIdentifierBucket: bucketSchema.optional(),
-});
+export const routeBucketsConfigurationSchema = z
+  .object({
+    enabled: z.boolean().optional(),
+    globalBucket: bucketSchema,
+    accessTokenBucket: bucketSchema.optional(),
+    ipBucket: bucketSchema.optional(),
+    emailBucket: bucketSchema.optional(),
+    oktaIdentifierBucket: bucketSchema.optional(),
+  })
+  .strict();
 
-const rateLimiterConfigurationSchema = z
+export const rateLimiterConfigurationSchema = z
   .object({
     enabled: z.boolean(),
-    defaultBuckets: bucketsSchema,
+    defaultBuckets: routeBucketsConfigurationSchema,
     routeBuckets: z
-      .record(z.enum(ValidRoutePathsArray), bucketsSchema)
+      .record(z.enum(ValidRoutePathsArray), routeBucketsConfigurationSchema)
       .optional(),
   })
   .strict();
@@ -29,9 +34,5 @@ const validateRateLimiterConfiguration = (configuration: unknown) =>
   typeof configuration === 'undefined'
     ? undefined
     : rateLimiterConfigurationSchema.safeParse(configuration);
-
-export type RateLimiterConfiguration = z.infer<
-  typeof rateLimiterConfigurationSchema
->;
 
 export default validateRateLimiterConfiguration;

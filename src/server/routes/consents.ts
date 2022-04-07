@@ -3,7 +3,7 @@ import deepmerge from 'deepmerge';
 
 import { renderer } from '@/server/lib/renderer';
 
-import { typedRouter as router } from '@/server/lib/typedRoutes';
+import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import {
   update as patchConsents,
   getUserConsentsForPage,
@@ -41,7 +41,6 @@ import { logger } from '@/server/lib/serverSideLogger';
 import { ApiError } from '@/server/models/Error';
 import { ConsentPath, RoutePaths } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
-import { rateLimiterMiddleware } from '../lib/middleware/rateLimit';
 
 interface ConsentPage {
   page: ConsentPath;
@@ -195,7 +194,7 @@ export const consentPages: ConsentPage[] = [
 
 router.get(
   '/consents',
-  rateLimiterMiddleware,
+
   loginMiddleware,
   (_: Request, res: Response) => {
     const url = addQueryParamsToPath(
@@ -209,7 +208,7 @@ router.get(
 
 router.get(
   '/consents/:page',
-  rateLimiterMiddleware,
+
   loginMiddleware,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
@@ -281,7 +280,7 @@ router.get(
 
 router.post(
   '/consents/:page',
-  rateLimiterMiddleware,
+
   loginMiddleware,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;

@@ -1,5 +1,11 @@
 import { RoutePaths } from '@/shared/model/Routes';
 import type Redis from 'ioredis';
+import { z } from 'zod';
+import {
+  bucketSchema,
+  rateLimiterConfigurationSchema,
+  routeBucketsConfigurationSchema,
+} from './configurationValidator';
 
 /**
  * This interface describes the object that we use to store the data
@@ -51,30 +57,35 @@ export interface ParsedRateLimitBuckets {
 }
 
 /**
- * Standardised definition of an individual bucket.
+ * Defines all of the configuration options for the rate limiter.
  *
- * @param {number} capacity The maximum number of tokens that can be stored in the bucket.
- * @param {number} addTokenMs The rate in milliseconds at which the bucket is refilled
- * @param {number} maximumTimeBeforeTokenExpiry The maximum duration in seconds before the bucket is removed from Redis.
+ * Types generated using the zod config validation schema.
  */
-export interface BucketConfiguration {
-  capacity: number;
-  addTokenMs: number;
-  maximumTimeBeforeTokenExpiry?: number;
-}
+export type RateLimiterConfiguration = z.infer<
+  typeof rateLimiterConfigurationSchema
+>;
 
 /**
  * All of the available bucket types that can be passed to
  * an instance of the rate limiter. Every rate limiter requires a
  * global bucket definition, but the other buckets are optional.
+ *
+ * Types generated using the zod config validation schema.
  */
-export interface RateLimitBucketsConfiguration {
-  globalBucket: BucketConfiguration;
-  accessTokenBucket?: BucketConfiguration;
-  ipBucket?: BucketConfiguration;
-  emailBucket?: BucketConfiguration;
-  oktaIdentifierBucket?: BucketConfiguration;
-}
+export type RateLimiterBucketsConfiguration = z.infer<
+  typeof routeBucketsConfigurationSchema
+>;
+
+/**
+ * Standardised definition of an individual bucket.
+ *
+ * Types generated using the zod config validation schema.
+ *
+ * @param {number} capacity The maximum number of tokens that can be stored in the bucket.
+ * @param {number} addTokenMs The rate in milliseconds at which the bucket is refilled
+ * @param {number} maximumTimeBeforeTokenExpiry The maximum duration in seconds before the bucket is removed from Redis.
+ */
+export type RateLimiterBucketConfiguration = z.infer<typeof bucketSchema>;
 
 /**
  * Values corresponding to the buckets configured for each bucket.
@@ -103,7 +114,7 @@ export interface BucketValues {
 export interface RateLimitParameters {
   route: RoutePaths;
   redisClient: Redis.Redis;
-  bucketConfiguration: RateLimitBucketsConfiguration;
+  bucketConfiguration: RateLimiterBucketsConfiguration;
   bucketValues?: BucketValues;
 }
 

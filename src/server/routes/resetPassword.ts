@@ -6,15 +6,14 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { checkPasswordTokenController } from '@/server/controllers/checkPasswordToken';
 import { setPasswordController } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
-import { typedRouter as router } from '@/server/lib/typedRoutes';
+import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { sendChangePasswordEmailController } from '@/server/controllers/sendChangePasswordEmail';
-import { rateLimiterMiddleware } from '../lib/middleware/rateLimit';
 
 // reset password email form
 router.get(
   '/reset-password',
-  rateLimiterMiddleware,
+
   (req: Request, res: ResponseWithRequestState) => {
     const html = renderer('/reset-password', {
       pageTitle: 'Reset Password',
@@ -31,7 +30,7 @@ router.get(
 // send reset password email
 router.post(
   '/reset-password',
-  rateLimiterMiddleware,
+
   handleRecaptcha,
   sendChangePasswordEmailController(),
 );
@@ -39,7 +38,7 @@ router.post(
 // reset password email sent page
 router.get(
   '/reset-password/email-sent',
-  rateLimiterMiddleware,
+
   (req: Request, res: ResponseWithRequestState) => {
     const html = renderer('/reset-password/email-sent', {
       pageTitle: 'Check Your Inbox',
@@ -57,7 +56,7 @@ router.get(
 // password updated confirmation page
 router.get(
   '/reset-password/complete',
-  rateLimiterMiddleware,
+
   (req: Request, res: ResponseWithRequestState) => {
     const html = renderer('/reset-password/complete', {
       requestState: deepmerge(res.locals, {
@@ -74,7 +73,7 @@ router.get(
 // link expired page
 router.get(
   '/reset-password/resend',
-  rateLimiterMiddleware,
+
   (_: Request, res: ResponseWithRequestState) => {
     const html = renderer('/reset-password/resend', {
       pageTitle: 'Resend Change Password Email',
@@ -87,7 +86,7 @@ router.get(
 // session timed out page
 router.get(
   '/reset-password/expired',
-  rateLimiterMiddleware,
+
   (_: Request, res: ResponseWithRequestState) => {
     const html = renderer('/reset-password/expired', {
       pageTitle: 'Resend Change Password Email',
@@ -104,14 +103,14 @@ router.get(
 // reset password form
 router.get(
   '/reset-password/:token',
-  rateLimiterMiddleware,
+
   checkPasswordTokenController('/reset-password', 'Change Password'),
 );
 
 // update password
 router.post(
   '/reset-password/:token',
-  rateLimiterMiddleware,
+
   setPasswordController(
     '/reset-password',
     'Change Password',

@@ -6,6 +6,7 @@ We define the configuration as a JSON string that follows this shape:
 {
   "enabled": true,
   "defaultBuckets": {
+    "enabled": true,
     "globalBucket": { "capacity": 500, "addTokenMs": 50 },
     "ipBucket": { "capacity": 100, "addTokenMs": 50 },
     "emailBucket": { "capacity": 100, "addTokenMs": 50 },
@@ -13,7 +14,7 @@ We define the configuration as a JSON string that follows this shape:
     "accessTokenBucket": { "capacity": 100, "addTokenMs": 50 }
   },
   "routeBuckets": {
-    "/signin": { "capacity": 100, "addTokenMs": 50 },
+    "/signin": { "enabled": true, "capacity": 100, "addTokenMs": 50 },
     ...any other other routes to override...
   }
 }
@@ -37,8 +38,18 @@ If the Redis connection fails, the server refuse to serve any requests until the
 
 The bucket entries in `defaultBuckets` are applied across all routes served by Gateway. Configuration for any specific route can be overridden by specifying its path in `routeBuckets`.
 
+### Allowing the rate limiter on specific routes only
+
+- Setting `enabled` to `false` will disable rate limiting by default on all routes. Rate limiting for individual routes can then be selectively enabled by setting `enabled` to `true` in the individual `routeBuckets` configuration.
+
+- Setting `enabled` to `true` will enable rate limiting by default on all routes. Rate limiting for individual routes can then be selectively disabled by setting `enabled` to `false` in the individual `routeBuckets` configuration.
+
+**Note:** Disabling rate limiting on a route only means that the rate limiter will not run - it does not stop the route from being accesed.
+
 ## Entry: `routeBuckets`
 
 By default, every route in the application will be protected by the buckets defined in `defaultBuckets`.
 
 This isn't always desired however, in some cases we would like to override those definitions for specific routes. `routeBuckets` allows us to do this by specifying a route to override and applying a custom set of buckets to it.
+
+Rate limiting for individual routes can be enabled or disabled by setting the `enabled` property.

@@ -291,6 +291,24 @@ describe('rateLimit', () => {
     expect(await applyRateLimit()).toBe('email');
   });
 
+  it('should not rate limit against a disabled bucket configuration', async () => {
+    const applyDisabledRateLimit = async () =>
+      await rateLimit({
+        route: '/signin',
+        redisClient: new Redis() as IORedis,
+        bucketConfiguration: {
+          enabled: false,
+          globalBucket: { addTokenMs: 500, capacity: 2 },
+        },
+      });
+
+    // Rate limit five times.
+    for (let i = 0; i < 5; i++) {
+      const isRateLimited = await applyDisabledRateLimit();
+      expect(isRateLimited).toBeFalsy();
+    }
+  });
+
   it('should not rate limit higher precedence buckets when limited by a more local bucket', async () => {
     const applyRateLimit = async (bucketValues?: BucketValues) =>
       await rateLimit({

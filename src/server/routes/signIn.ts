@@ -12,7 +12,7 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { decrypt } from '@/server/lib/idapi/decryptToken';
 import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
 import { ApiError } from '@/server/models/Error';
-import { typedRouter as router } from '@/server/lib/typedRoutes';
+import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { OktaError } from '@/server/models/okta/Error';
@@ -27,7 +27,6 @@ import postSignInController from '@/server/lib/postSignInController';
 import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
 import { getSession } from '../lib/okta/api/sessions';
 import { validAppProtocols, validateReturnUrl } from '../lib/validateUrl';
-import { rateLimiterMiddleware } from '../lib/middleware/rateLimit';
 
 const { okta, accountManagementUrl, defaultReturnUri } = getConfiguration();
 
@@ -84,7 +83,7 @@ const showSignInPage = async (req: Request, res: ResponseWithRequestState) => {
 
 router.get(
   '/signin',
-  rateLimiterMiddleware,
+
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { pageData } = res.locals;
     const { returnUrl } = pageData;
@@ -113,7 +112,7 @@ router.get(
 
 router.post(
   '/signin',
-  rateLimiterMiddleware,
+
   handleRecaptcha,
   handleAsyncErrors((req: Request, res: ResponseWithRequestState) => {
     const { useOkta } = res.locals.queryParams;
@@ -280,7 +279,7 @@ const optInPromptController = async (
 
 router.get(
   '/signin/success',
-  rateLimiterMiddleware,
+
   loginMiddleware,
   handleAsyncErrors((req: Request, res: ResponseWithRequestState) =>
     optInPromptController(req, res),
@@ -289,7 +288,7 @@ router.get(
 
 router.post(
   '/signin/success',
-  rateLimiterMiddleware,
+
   loginMiddleware,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;

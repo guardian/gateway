@@ -19,7 +19,6 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { OktaError } from '@/server/models/okta/Error';
 import { GenericErrors } from '@/shared/model/Errors';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { rateLimiterMiddleware } from '../lib/middleware/rateLimit';
 
 const { okta } = getConfiguration();
 
@@ -27,7 +26,7 @@ const router = Router();
 // resend account verification page
 router.get(
   '/welcome/resend',
-  rateLimiterMiddleware,
+
   (_: Request, res: ResponseWithRequestState) => {
     const html = renderer('/welcome/resend', {
       pageTitle: 'Resend Welcome Email',
@@ -40,7 +39,7 @@ router.get(
 // resend account verification page, session expired
 router.get(
   '/welcome/expired',
-  rateLimiterMiddleware,
+
   (_: Request, res: ResponseWithRequestState) => {
     const html = renderer('/welcome/expired', {
       pageTitle: 'Resend Welcome Email',
@@ -53,7 +52,7 @@ router.get(
 // POST form handler to resend account verification email
 router.post(
   '/welcome/resend',
-  rateLimiterMiddleware,
+
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { useOkta } = res.locals.queryParams;
@@ -107,7 +106,7 @@ router.post(
 // email sent page
 router.get(
   '/welcome/email-sent',
-  rateLimiterMiddleware,
+
   (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
@@ -131,14 +130,14 @@ router.get(
 // welcome page, check token and display set password page
 router.get(
   '/welcome/:token',
-  rateLimiterMiddleware,
+
   checkPasswordTokenController('/welcome', 'Welcome'),
 );
 
 // POST form handler to set password on welcome page
 router.post(
   '/welcome/:token',
-  rateLimiterMiddleware,
+
   setPasswordController('/welcome', 'Welcome', consentPages[0].path),
 );
 
