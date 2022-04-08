@@ -13,12 +13,16 @@ import { ResetPasswordText } from './ResetPassword/ResetPasswordText';
 import { Verify } from './Verify/Verify';
 import { VerifyText } from './Verify/VerifyText';
 
-import { render } from 'mjml-react';
+import { render as mjmlRender } from 'mjml-react';
 
 type EmailRenderResult = {
   plain: string;
   html: string;
 };
+
+// The minify option is deprecated in mjml-react's minification library, so we
+// turn off minification here. Cf: https://github.com/wix-incubator/mjml-react/issues/58
+const render = (input: JSX.Element) => mjmlRender(input, { minify: false });
 
 export const renderedAccidentalEmail = {
   plain: AccidentalEmailText(),
