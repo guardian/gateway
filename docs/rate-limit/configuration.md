@@ -5,6 +5,7 @@ We define the configuration as a JSON string that follows this shape:
 ```json
 {
   "enabled": true,
+  "debug": false,
   "defaultBuckets": {
     "enabled": true,
     "globalBucket": { "capacity": 500, "addTokenMs": 50 },

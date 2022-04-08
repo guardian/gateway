@@ -12,7 +12,6 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { rateLimitHitMetric } from '@/server/models/Metrics';
 import { RateLimitErrors } from '@/shared/model/Errors';
 import { readEmailCookie } from '@/server/lib/emailCookie';
-import { LogLevel } from '@/shared/model/Logger';
 
 const getBucketConfigForRoute = (
   route: RoutePaths,
@@ -20,26 +19,6 @@ const getBucketConfigForRoute = (
 ) => config?.routeBuckets?.[route] ?? config.defaultBuckets;
 
 const { rateLimiter } = getConfiguration();
-
-setInterval(async () => {
-  if (redisClient) {
-    const keys = await redisClient.keys('*-global');
-    for (const key of keys) {
-      const value = await redisClient.get(key);
-      if (value) {
-        const tokensLeft = JSON.parse(value)?.tokens;
-        logger.log(
-          LogLevel.INFO,
-          `Bucket: ${key} | Tokens Remaining: ${tokensLeft}`,
-          undefined,
-          {
-            bucket_capacity: tokensLeft,
-          },
-        );
-      }
-    }
-  }
-}, 1000);
 
 export const rateLimiterMiddleware = async (
   req: RequestWithTypedQuery,
@@ -61,7 +40,7 @@ export const rateLimiterMiddleware = async (
   // This logs when this happens so that we have visibility of these routes.
   if (!ValidRoutePathsArray.includes(routePathDefinition)) {
     logger.info(
-      `Rate limiter — falling back to default configuration for unregistered path: ${routePathDefinition}`,
+      `RateLimit falling back to default configuration for unregistered path: ${routePathDefinition}`,
     );
   }
 
@@ -86,13 +65,18 @@ export const rateLimiterMiddleware = async (
   });
 
   if (ratelimitBucketTypeIfHit) {
-    logger.info(
-      `Rate limit hit for ${rateLimitData.ip} on request to ${req.path}. Bucket type: ${ratelimitBucketTypeIfHit}`,
+    // This closely follows the same format of our other rate limiter
+    // output log, to make it easy to port across the Kibana dashboard.
+    logger.warn(
+      `RateLimit ${ratelimitBucketTypeIfHit} email=Some(${rateLimitData.email}) ip=Some(${rateLimitData.ip}) accessToken=Some(${rateLimitData.accessToken}) identity-gateway ${req.method} ${routePathDefinition}`,
     );
 
     trackMetric(rateLimitHitMetric(ratelimitBucketTypeIfHit));
 
-    return res.status(429).send(RateLimitErrors.GENERIC);
+    // Only rate limit if we are not in debug mode.
+    if (rateLimiter.debug === false) {
+      return res.status(429).send(RateLimitErrors.GENERIC);
+    }
   }
 
   return next();

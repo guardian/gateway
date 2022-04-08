@@ -23,6 +23,7 @@ export const routeBucketsConfigurationSchema = z
 export const rateLimiterConfigurationSchema = z
   .object({
     enabled: z.boolean(),
+    debug: z.boolean(),
     defaultBuckets: routeBucketsConfigurationSchema,
     routeBuckets: z
       .record(z.enum(ValidRoutePathsArray), routeBucketsConfigurationSchema)

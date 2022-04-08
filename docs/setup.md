@@ -66,6 +66,7 @@ Here's a quick-start configuration that you can copy-paste into `.ratelimit.json
 ```json
 {
   "enabled": true,
+  "debug": false,
   "defaultBuckets": {
     "globalBucket": { "capacity": 500, "addTokenMs": 50 }
   }

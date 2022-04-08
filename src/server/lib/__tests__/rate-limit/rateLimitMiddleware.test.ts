@@ -116,6 +116,7 @@ describe('rate limiter middleware', () => {
   it('should rate limit all clients when the global bucket is empty', async () => {
     const rateLimiterConfig: RateLimiterConfiguration = {
       enabled: true,
+      debug: false,
       defaultBuckets: {
         globalBucket: { capacity: 2, addTokenMs: 500 },
       },
@@ -145,6 +146,7 @@ describe('rate limiter middleware', () => {
   it('should rate limit when the ip rate limit bucket is empty', async () => {
     const rateLimiterConfig: RateLimiterConfiguration = {
       enabled: true,
+      debug: false,
       defaultBuckets: {
         globalBucket: { capacity: 10, addTokenMs: 500 },
         ipBucket: { capacity: 2, addTokenMs: 500 },
@@ -195,6 +197,7 @@ describe('rate limiter middleware', () => {
   it('should rate limit when the access token bucket is empty', async () => {
     const rateLimiterConfig: RateLimiterConfiguration = {
       enabled: true,
+      debug: false,
       defaultBuckets: {
         globalBucket: { capacity: 10, addTokenMs: 500 },
         accessTokenBucket: { capacity: 2, addTokenMs: 500 },
@@ -245,6 +248,7 @@ describe('rate limiter middleware', () => {
   it('should allow you to disable rate limiting for selected routes ', async () => {
     const rateLimiterConfig: RateLimiterConfiguration = {
       enabled: true,
+      debug: false,
       defaultBuckets: {
         enabled: true,
         globalBucket: { capacity: 1, addTokenMs: 500 },
@@ -289,6 +293,7 @@ describe('rate limiter middleware', () => {
   it('should not rate limit disabled routes and only rate limit enabled routes', async () => {
     const rateLimiterConfig: RateLimiterConfiguration = {
       enabled: true,
+      debug: false,
       defaultBuckets: {
         enabled: false,
         globalBucket: { capacity: 1, addTokenMs: 500 },
@@ -352,6 +357,7 @@ describe('rate limiter middleware', () => {
   it('should rate limit /signin form when the email bucket is empty', async () => {
     const rateLimiterConfig: RateLimiterConfiguration = {
       enabled: true,
+      debug: false,
       defaultBuckets: {
         globalBucket: { capacity: 500, addTokenMs: 500 },
       },

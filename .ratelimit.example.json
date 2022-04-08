@@ -1,5 +1,6 @@
 {
   "enabled": false,
+  "debug": false,
   "defaultBuckets": {
     "globalBucket": { "capacity": 500, "addTokenMs": 50 },
     "ipBucket": { "capacity": 100, "addTokenMs": 50 },
