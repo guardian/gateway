@@ -25,7 +25,7 @@ class KinesisTransport extends Transport {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public log(info: any, callback: () => void) {
-    const { level, message } = info;
+    const { level, message, ...extraFields } = info;
 
     setImmediate(() => {
       this.emit('logger', level);
@@ -43,6 +43,7 @@ class KinesisTransport extends Transport {
               stage,
               level,
               message,
+              ...extraFields,
             }),
           })
           .promise()
@@ -80,7 +81,7 @@ const formatLogParam = (message?: any) =>
 
 class ServerSideLogger extends BaseLogger {
   // eslint-disable-next-line
-  log(level: LogLevel, message: string, error?: any) {
+  log(level: LogLevel, message: string, error?: any, extraFields?: any) {
     if (
       error &&
       typeof error === 'object' &&
@@ -92,16 +93,18 @@ class ServerSideLogger extends BaseLogger {
         `${formatLogParam(message)} - ${formatLogParam(
           error.message,
         )} - ${formatLogParam(error.stack)}`,
+        extraFields,
       );
     }
     if (error) {
       return winstonLogger.log(
         level,
         `${formatLogParam(message)} - ${formatLogParam(error)}`,
+        extraFields,
       );
     }
 
-    return winstonLogger.log(level, `${formatLogParam(message)}`);
+    return winstonLogger.log(level, `${formatLogParam(message)}`, extraFields);
   }
 }
 

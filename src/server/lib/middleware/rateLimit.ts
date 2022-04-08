@@ -12,6 +12,7 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { rateLimitHitMetric } from '@/server/models/Metrics';
 import { RateLimitErrors } from '@/shared/model/Errors';
 import { readEmailCookie } from '@/server/lib/emailCookie';
+import { LogLevel } from '@/shared/model/Logger';
 
 const getBucketConfigForRoute = (
   route: RoutePaths,
@@ -19,6 +20,26 @@ const getBucketConfigForRoute = (
 ) => config?.routeBuckets?.[route] ?? config.defaultBuckets;
 
 const { rateLimiter } = getConfiguration();
+
+setInterval(async () => {
+  if (redisClient) {
+    const keys = await redisClient.keys('*-global');
+    for (const key of keys) {
+      const value = await redisClient.get(key);
+      if (value) {
+        const tokensLeft = JSON.parse(value)?.tokens;
+        logger.log(
+          LogLevel.INFO,
+          `Bucket: ${key} | Tokens Remaining: ${tokensLeft}`,
+          undefined,
+          {
+            bucket_capacity: tokensLeft,
+          },
+        );
+      }
+    }
+  }
+}, 1000);
 
 export const rateLimiterMiddleware = async (
   req: RequestWithTypedQuery,
