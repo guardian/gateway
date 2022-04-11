@@ -47,7 +47,10 @@ describe('getConfiguration', () => {
 
     const rateLimiterConfig = `{
       "enabled": true,
-      "debug": false,
+      "settings": {
+        "logOnly": false,
+        "trackBucketCapacity": false
+      },
       "defaultBuckets": {
         "globalBucket": { "capacity": 500, "addTokenMs": 50 },
         "ipBucket": { "capacity": 100, "addTokenMs": 50 },
@@ -112,7 +115,10 @@ describe('getConfiguration', () => {
       accountManagementUrl: 'https://manage.code.dev-theguardian.com',
       rateLimiter: {
         enabled: true,
-        debug: false,
+        settings: {
+          logOnly: false,
+          trackBucketCapacity: false,
+        },
         defaultBuckets: {
           globalBucket: { capacity: 500, addTokenMs: 50 },
           ipBucket: { capacity: 100, addTokenMs: 50 },
@@ -153,7 +159,10 @@ describe('getConfiguration', () => {
     // Missing the required globalBucket from the defaultBuckets
     const badRateLimiterConfig = `{
       "enabled": true,
-      "debug": false,
+      "settings": {
+        "logOnly": false,
+        "trackBucketCapacity": false
+      },
       "defaultBuckets": { },
       "routeBuckets": {
         "/signin": {

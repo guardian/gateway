@@ -46,7 +46,7 @@ type UnconditionalMetrics =
   | 'LoginMiddlewareNotRecent'
   | 'LoginMiddlewareNotSignedIn'
   | 'LoginMiddlewareUnverified'
-  | `${RateLimitMetrics}RateLimitHit`;
+  | `${RateLimitMetrics}GatewayRateLimitHit`;
 
 // Combine all the metrics above together into a type
 export type Metrics =
@@ -67,4 +67,4 @@ export const emailSendMetric = (
 ): Metrics => `${email}EmailSend::${type}`;
 
 export const rateLimitHitMetric = (bucketType: RateLimitMetrics): Metrics =>
-  `${bucketType}RateLimitHit`;
+  `${bucketType}GatewayRateLimitHit`;

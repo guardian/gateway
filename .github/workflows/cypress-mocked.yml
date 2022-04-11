@@ -76,7 +76,7 @@ jobs:
           REDIS_HOST: localhost
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
           REDIS_SSL_ON: false
-          RATE_LIMITER_CONFIG: '{"enabled":true,"debug":false,"defaultBuckets":{"globalBucket":{"capacity":500,"addTokenMs":50}}}'
+          RATE_LIMITER_CONFIG: '{"enabled":true,"defaultBuckets":{"globalBucket":{"capacity":500,"addTokenMs":50}}}'
           # Required for the Cypress tests to run as we're unable to verify the created certs
           NODE_TLS_REJECT_UNAUTHORIZED: 0
         with:

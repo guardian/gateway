@@ -65,18 +65,19 @@ export const rateLimiterMiddleware = async (
   });
 
   if (ratelimitBucketTypeIfHit) {
-    // This closely follows the same format of our other rate limiter
-    // output log, to make it easy to port across the Kibana dashboard.
-    logger.warn(
-      `RateLimit ${ratelimitBucketTypeIfHit} email=Some(${rateLimitData.email}) ip=Some(${rateLimitData.ip}) accessToken=Some(${rateLimitData.accessToken}) identity-gateway ${req.method} ${routePathDefinition}`,
+    // We append `-Gateway` so that we can differentiate between IDAPI rate limit log entries.
+    logger.info(
+      `RateLimit-Gateway ${ratelimitBucketTypeIfHit}Bucket email=${rateLimitData.email} ip=${rateLimitData.ip} accessToken=${rateLimitData.accessToken} identity-gateway ${req.method} ${routePathDefinition}`,
     );
 
     trackMetric(rateLimitHitMetric(ratelimitBucketTypeIfHit));
 
-    // Only rate limit if we are not in debug mode.
-    if (rateLimiter.debug === false) {
-      return res.status(429).send(RateLimitErrors.GENERIC);
+    // Don't rate limit users if we are configured to log only.
+    if (rateLimiter.settings?.logOnly === true) {
+      return next();
     }
+
+    return res.status(429).send(RateLimitErrors.GENERIC);
   }
 
   return next();
