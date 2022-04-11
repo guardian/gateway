@@ -22,6 +22,7 @@ export const Button = ({ children, href }: Props) => (
         fontFamily="Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif"
         fontWeight={700}
         fontSize="17px"
+        cssClass="guardian-email-button"
       >
         {children}
       </MjmlButton>
