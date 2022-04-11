@@ -5,13 +5,9 @@ import { RoutePaths } from '@/shared/model/Routes';
 import {
   generateAuthorizationState,
   setAuthorizationStateCookie,
-  ProfileOpenIdClient,
   ProfileOpenIdClientRedirectUris,
-  DevProfileIdClient,
+  getOpenIdClient,
 } from '@/server/lib/okta/openid-connect';
-import { getConfiguration } from '../getConfiguration';
-
-const { stage } = getConfiguration();
 
 /**
  * @name performAuthorizationCodeFlow
@@ -31,10 +27,7 @@ export const performAuthorizationCodeFlow = (
   confirmationPagePath?: RoutePaths,
 ) => {
   // Determine which OpenIdClient to use, in DEV we use the DevProfileIdClient, otherwise we use the ProfileOpenIdClient
-  const OpenIdClient =
-    stage === 'DEV' && req.get('X-GU-Okta-Env')
-      ? DevProfileIdClient(req.get('X-GU-Okta-Env') as string)
-      : ProfileOpenIdClient;
+  const OpenIdClient = getOpenIdClient(req);
 
   // firstly we generate and store a "state"
   // as a http only, secure, signed session cookie

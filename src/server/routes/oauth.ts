@@ -3,10 +3,9 @@ import { Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import {
   deleteAuthorizationStateCookie,
-  DevProfileIdClient,
   getAuthorizationStateCookie,
+  getOpenIdClient,
   OpenIdErrors,
-  ProfileOpenIdClient,
   ProfileOpenIdClientRedirectUris,
 } from '@/server/lib/okta/openid-connect';
 import { logger } from '@/server/lib/serverSideLogger';
@@ -17,15 +16,12 @@ import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import { SignInErrors } from '@/shared/model/Errors';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import postSignInController from '@/server/lib/postSignInController';
-import { getConfiguration } from '@/server/lib/getConfiguration';
 import { validAppProtocols } from '../lib/validateUrl';
 
 interface OAuthError {
   error: string;
   error_description: string;
 }
-
-const { stage } = getConfiguration();
 
 /**
  * Type guard to check that a given error is an OAuth error.
@@ -62,10 +58,7 @@ router.get(
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     try {
       // Determine which OpenIdClient to use, in DEV we use the DevProfileIdClient, otherwise we use the ProfileOpenIdClient
-      const OpenIdClient =
-        stage === 'DEV' && req.get('X-GU-Okta-Env')
-          ? DevProfileIdClient(req.get('X-GU-Okta-Env') as string)
-          : ProfileOpenIdClient;
+      const OpenIdClient = getOpenIdClient(req);
 
       // params returned from the /authorize endpoint
       // for auth code flow they will be "code" and "state"

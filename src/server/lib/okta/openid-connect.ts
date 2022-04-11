@@ -53,7 +53,7 @@ interface OpenIdClientRedirectUris {
   WEB: `${string}${Extract<'/oauth/authorization-code/callback', RoutePaths>}`;
 }
 
-const { okta, baseUri } = getConfiguration();
+const { okta, baseUri, stage } = getConfiguration();
 
 /**
  * https://developer.okta.com/docs/reference/api/oidc/#well-known-openid-configuration
@@ -117,7 +117,7 @@ export const ProfileOpenIdClient = new OIDCIssuer.Client({
  * with the okta domain
  * @param devIssuer - The okta domain issuer url to use for development
  */
-export const DevProfileIdClient = (devIssuer: string) => {
+const DevProfileIdClient = (devIssuer: string) => {
   const devOidcIssuer = new Issuer({
     ...OIDC_METADATA,
     issuer: issuer.replace(okta.orgUrl.replace('https://', ''), devIssuer),
@@ -128,6 +128,24 @@ export const DevProfileIdClient = (devIssuer: string) => {
     client_secret: okta.clientSecret,
     redirect_uris: Object.values(ProfileOpenIdClientRedirectUris),
   }) as OpenIdClient;
+};
+
+/**
+ * @function getOpenIdClient
+ *
+ * Used to determine which OpenIdClient to get based on the stage and headers
+ * In development, we use the dev issuer to simulate a custom domain, so we
+ * want the DevProfileIdClient
+ * In production, we use the production issuer, so we want the ProfileOpenIdClient
+ *
+ * @param req Express request
+ * @returns OpenIdClient
+ */
+export const getOpenIdClient = (req: Request): OpenIdClient => {
+  if (stage === 'DEV' && req.get('X-GU-Okta-Env')) {
+    return DevProfileIdClient(req.get('X-GU-Okta-Env') as string);
+  }
+  return ProfileOpenIdClient;
 };
 
 /**
