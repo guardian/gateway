@@ -84,16 +84,26 @@ Depending on which stage (`DEV` or `CODE`) you want to connect to [Identity API 
 
 You can get a preset `.env` file from the S3 private config. Be sure to have the `identity` Janus credentials.
 
+By default Okta points to the `CODE` environment.
+
 With nginx setup (profile.thegulocal.com):
 
 ```sh
-# IDAPI/Okta pointing to DEV environment (Recommended for development)
-$ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway/env-thegulocal-idapi-okta-dev .env
+# In most cases, if just working on Gateway, we point IDAPI to the CODE environment to save having to run IDAPI locally.
+# IDAPI pointing to CODE environment
+$ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway/env-idapi-code .env
 
-# IDAPI/Okta pointing to CODE environment (Recommended for development against CODE)
-# Some cookies may not work due to domain differences
-$ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway/env-thegulocal-idapi-okta-code .env
+# IDAPI pointing to DEV environment
+$ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway/env-idapi-dev .env
 ```
+
+You can enable Okta to point to the `DEV` environment by running the following command:
+
+```sh
+$ aws s3 cp --profile identity s3://identity-private-config/DEV/identity-gateway/env-okta-dev - >> .env
+```
+
+Revert to the Okta `CODE` environment by removing the Okta `DEV` config lines in `.env`.
 
 ## Running
 
