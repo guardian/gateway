@@ -37,6 +37,19 @@ describe('parseExpressQueryParams', () => {
     });
   });
 
+  describe('componentEventParams', () => {
+    test('it returns query params when componentEventParams is passed in', () => {
+      const input = {
+        componentEventParams:
+          'componentType%3Dsigningate%26componentId%3Dmain_variant_4%26abTestName%3DSignInGateMain%26abTestVariant%3Dmain-variant-4%26browserId%3DidFromPV_EPayYBwrFU6V13wZIDiMLw%26visitId%3DAYAIQL2G%26viewId%3Dl1q5pdg4slc3vzz68dzs',
+      };
+
+      const output = parseExpressQueryParams('GET', input);
+
+      expect(output).toEqual({ ...input, returnUrl: defaultReturnUri });
+    });
+  });
+
   describe('clientId', () => {
     test('it returns clientId in query params if valid', () => {
       const input = {

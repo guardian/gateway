@@ -135,7 +135,12 @@ const idapiSignInController = async (
   const { returnUrl } = pageData;
 
   try {
-    const cookies = await authenticateWithIdapi(email, password, req.ip);
+    const cookies = await authenticateWithIdapi(
+      email,
+      password,
+      req.ip,
+      res.locals.queryParams,
+    );
 
     setIDAPICookies(res, cookies);
 

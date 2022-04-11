@@ -41,6 +41,7 @@ export const parseExpressQueryParams = (
     error,
     error_description,
     useOkta,
+    componentEventParams,
   }: Record<keyof QueryParams, string | undefined>, // parameters from req.query
   // some parameters may be manually passed in req.body too,
   // generally for tracking purposes
@@ -55,6 +56,8 @@ export const parseExpressQueryParams = (
     recaptchaError: validateGetOnlyError(method, recaptchaError),
     refViewId: refViewId || bodyParams.refViewId,
     ref: (ref || bodyParams.ref) && validateRefUrl(ref || bodyParams.ref),
+    componentEventParams:
+      componentEventParams || bodyParams.componentEventParams,
     encryptedEmail,
     error,
     error_description,

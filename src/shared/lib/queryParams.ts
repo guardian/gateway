@@ -6,6 +6,10 @@ import {
 import { IdApiQueryParams } from '../model/IdapiQueryParams';
 import { AllRoutes } from '../model/Routes';
 
+/**
+ * @param params QueryParams object with all query parameters
+ * @returns PersistableQueryParams - object with query parameters to persist between requests
+ */
 export const getPersistableQueryParams = (
   params: QueryParams,
 ): PersistableQueryParams => ({
@@ -14,6 +18,7 @@ export const getPersistableQueryParams = (
   ref: params.ref,
   refViewId: params.refViewId,
   useOkta: params.useOkta,
+  componentEventParams: params.componentEventParams,
 });
 
 /**

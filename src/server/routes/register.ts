@@ -75,8 +75,7 @@ router.post(
     } else {
       const state = res.locals;
 
-      const { returnUrl, emailSentSuccess, ref, refViewId, clientId } =
-        state.queryParams;
+      const { emailSentSuccess } = state.queryParams;
 
       try {
         // read and parse the encrypted state cookie
@@ -100,10 +99,7 @@ router.post(
               await sendAccountVerificationEmail(
                 email,
                 req.ip,
-                returnUrl,
-                ref,
-                refViewId,
-                clientId,
+                state.queryParams,
                 state.ophanConfig,
               );
               break;
@@ -112,9 +108,7 @@ router.post(
               await sendAccountExistsEmail(
                 email,
                 req.ip,
-                returnUrl,
-                ref,
-                refViewId,
+                state.queryParams,
                 state.ophanConfig,
               );
               break;
@@ -124,9 +118,7 @@ router.post(
               await sendAccountWithoutPasswordExistsEmail(
                 email,
                 req.ip,
-                returnUrl,
-                ref,
-                refViewId,
+                state.queryParams,
                 state.ophanConfig,
               );
               break;
@@ -185,7 +177,6 @@ router.post(
       let state = res.locals;
 
       const { email = '' } = req.body;
-      const { returnUrl, ref, refViewId, clientId } = state.queryParams;
 
       try {
         // use idapi user type endpoint to determine user type
@@ -196,15 +187,7 @@ router.post(
           // new user, so call guest register endpoint to create user account without password
           // and automatically send account verification email
           case UserType.NEW:
-            await guest(
-              email,
-              req.ip,
-              returnUrl,
-              refViewId,
-              ref,
-              clientId,
-              state.ophanConfig,
-            );
+            await guest(email, req.ip, state.queryParams, state.ophanConfig);
             // set the encrypted state cookie in each case, so the next page is aware
             // of the email address and type of email sent
             // so if needed it can resend the correct email
@@ -219,9 +202,7 @@ router.post(
             await sendAccountExistsEmail(
               email,
               req.ip,
-              returnUrl,
-              ref,
-              refViewId,
+              state.queryParams,
               state.ophanConfig,
             );
             setEncryptedStateCookie(res, {
@@ -235,9 +216,7 @@ router.post(
             await sendAccountWithoutPasswordExistsEmail(
               email,
               req.ip,
-              returnUrl,
-              ref,
-              refViewId,
+              state.queryParams,
               state.ophanConfig,
             );
             setEncryptedStateCookie(res, {
