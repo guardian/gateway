@@ -1,8 +1,8 @@
 {
   "enabled": false,
   "settings": {
-    "debug": true,
-    "logOnly": true
+    "logOnly": false,
+    "trackBucketCapacity": false
   },
   "defaultBuckets": {
     "globalBucket": { "capacity": 500, "addTokenMs": 50 },

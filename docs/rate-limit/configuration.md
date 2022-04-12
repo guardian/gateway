@@ -5,7 +5,10 @@ We define the configuration as a JSON string that follows this shape:
 ```json
 {
   "enabled": true,
-  "debug": false,
+  "settings": {
+    "logOnly": false,
+    "trackBucketCapacity": false
+  },
   "defaultBuckets": {
     "enabled": true,
     "globalBucket": { "capacity": 500, "addTokenMs": 50 },
@@ -34,6 +37,13 @@ A boolean value that indicates whether the rate limiter is enabled or not. If it
 If `true`, upon startup Gateway will make an attempt to connect to Redis using the `REDIS_HOST` and `REDIS_PASSWORD` environment variables provided at startup.
 
 If the Redis connection fails, the server refuse to serve any requests until the connection has been established.
+
+## Entry: `settings`
+
+An optional object which lets you enable some extra debug functionality
+
+- When `logOnly` is set to `true`, the rate limiter logic will still run, but the result will not be enforced. This is useful for when you want to try out some new configuration values but you don't want to actually apply them yet.
+- When `trackBucketCapacity` is set to `true`, it will log the global bucket capacity for every route periodically. This is used mainly for our dashboard so that we can keep track of any buckets at critically low values.
 
 ## Entry: `defaultBuckets`
 

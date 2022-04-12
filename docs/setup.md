@@ -67,8 +67,8 @@ Here's a quick-start configuration that you can copy-paste into `.ratelimit.json
 {
   "enabled": true,
   "settings": {
-    "debug": true,
-    "logOnly": true
+    "logOnly": false,
+    "trackBucketCapacity": false
   },
   "defaultBuckets": {
     "globalBucket": { "capacity": 500, "addTokenMs": 50 }
