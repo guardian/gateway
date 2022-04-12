@@ -177,7 +177,7 @@ describe('Password change flow', () => {
       cy.wait('@breachCheck');
       // Submit the button
       cy.contains('Valid password');
-      cy.get('button[type="submit"]').click().should('be.disabled');
+      cy.get('button[type="submit"]').click();
       cy.contains('Password updated');
       cy.contains('Continue to the Guardian').should(
         'have.attr',
