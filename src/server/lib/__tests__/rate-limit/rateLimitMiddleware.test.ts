@@ -254,6 +254,36 @@ describe('rate limiter middleware', () => {
     }
   });
 
+  it('should not apply the rate limiter when logOnly is set to true', async () => {
+    const rateLimiterConfig: RateLimiterConfiguration = {
+      enabled: true,
+      settings: {
+        logOnly: true,
+        trackBucketCapacity: false,
+      },
+      defaultBuckets: {
+        enabled: true,
+        globalBucket: { capacity: 1, addTokenMs: 500 },
+      },
+    };
+
+    // Start the application server.
+    const { server, teardownServer } = await getServerInstance(
+      rateLimiterConfig,
+    );
+
+    try {
+      // Confirm that we are not rate limited when logOnly is set to true.
+      await request(server).get('/signin').expect(200);
+      await request(server).get('/signin').expect(200);
+
+      await teardownServer();
+    } catch (error) {
+      await teardownServer();
+      throw error;
+    }
+  });
+
   it('should allow you to disable rate limiting for selected routes ', async () => {
     const rateLimiterConfig: RateLimiterConfiguration = {
       enabled: true,
