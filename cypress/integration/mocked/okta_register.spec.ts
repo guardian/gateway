@@ -1,4 +1,10 @@
 describe('Okta Register flow', () => {
+  const setSidCookie = () => {
+    cy.setCookie('sid', `the_sid_cookie`, {
+      domain: Cypress.env('BASE_URI'),
+    });
+  };
+
   context('Signed in user posts to /register', () => {
     beforeEach(() => {
       cy.mockPurge();
@@ -6,6 +12,7 @@ describe('Okta Register flow', () => {
       // we visit the healthcheck page to make sure the cookies are cleared from the browser
       cy.visit('/healthcheck');
     });
+
     it('should redirect to manage.theguardian.com if the sid Okta session cookie is valid', () => {
       cy.mockPattern(
         200,
@@ -33,7 +40,7 @@ describe('Okta Register flow', () => {
 
       cy.visit('/register?useOkta=true');
 
-      cy.setCookie('sid', `the_sid_cookie`);
+      setSidCookie();
 
       cy.get('input[name="email"]').type('example@example.com');
       cy.mockNext(200, {
@@ -56,26 +63,12 @@ describe('Okta Register flow', () => {
 
       cy.mockPattern(204, {}, '/api/v1/users/userId/sessions');
 
+      setSidCookie();
+
+      // visit healthcheck to set the cookie
+      cy.visit('/healthcheck');
+
       cy.visit('/register?useOkta=true');
-
-      cy.setCookie('sid', `the_sid_cookie`);
-
-      cy.get('input[name="email"]').type('example@example.com');
-      //mock the response from register
-      cy.mockNext(200, {
-        userType: 'new',
-      });
-      cy.mockNext(200, {
-        status: 'success',
-        errors: [],
-      });
-
-      cy.get('[data-cy=register-button]').click();
-
-      cy.intercept('/register*').as('register');
-
-      //we redirect to /register and unset the sid cookie, so we need to wait till the redirect has happened
-      cy.wait('@register');
 
       cy.location('pathname').should('eq', '/register');
 
@@ -110,7 +103,7 @@ describe('Okta Register flow', () => {
 
       cy.mockPattern(204, {}, '/api/v1/users/userId/sessions');
 
-      cy.setCookie('sid', `the_sid_cookie`);
+      setSidCookie();
 
       cy.visit('/register?useOkta=true');
 
@@ -125,8 +118,9 @@ describe('Okta Register flow', () => {
 
       cy.mockPattern(204, {}, '/api/v1/users/userId/sessions');
 
-      cy.setCookie('sid', `the_sid_cookie`);
+      setSidCookie();
 
+      // visit healthcheck to set the cookie
       cy.visit('/healthcheck');
 
       cy.visit('/register?useOkta=true');

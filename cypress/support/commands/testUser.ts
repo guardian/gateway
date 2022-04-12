@@ -77,6 +77,7 @@ export const createTestUser = ({
           deleteAfterMinute,
           isGuestUser,
         } as IDAPITestUserOptions,
+        retryOnStatusCodeFailure: true,
       })
       .then((res) => {
         return cy.wrap({

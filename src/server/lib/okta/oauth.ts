@@ -1,10 +1,12 @@
+import { Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { getPersistableQueryParams } from '@/shared/lib/queryParams';
 import { RoutePaths } from '@/shared/model/Routes';
 import {
   generateAuthorizationState,
   setAuthorizationStateCookie,
-  ProfileOpenIdClient,
+  ProfileOpenIdClientRedirectUris,
+  getOpenIdClient,
 } from '@/server/lib/okta/openid-connect';
 
 /**
@@ -19,10 +21,14 @@ import {
  * @returns 303 redirect to the okta /authorize endpoint
  */
 export const performAuthorizationCodeFlow = (
+  req: Request,
   res: ResponseWithRequestState,
   sessionToken?: string,
   confirmationPagePath?: RoutePaths,
 ) => {
+  // Determine which OpenIdClient to use, in DEV we use the DevProfileIdClient, otherwise we use the ProfileOpenIdClient
+  const OpenIdClient = getOpenIdClient(req);
+
   // firstly we generate and store a "state"
   // as a http only, secure, signed session cookie
   // which is a json object that contains a stateParam and the query params
@@ -34,7 +40,7 @@ export const performAuthorizationCodeFlow = (
   setAuthorizationStateCookie(authState, res);
 
   // generate the /authorize endpoint url which we'll redirect the user too
-  const authorizeUrl = ProfileOpenIdClient.authorizationUrl({
+  const authorizeUrl = OpenIdClient.authorizationUrl({
     // Don't prompt for authentication or consent
     prompt: 'none',
     // The sessionToken from authentication to exchange for session cookie
@@ -45,6 +51,8 @@ export const performAuthorizationCodeFlow = (
     // the idapi_token_cookie_exchange scope is checked on IDAPI to return
     // idapi cookies on authentication
     scope: 'openid idapi_token_cookie_exchange',
+    // the redirect_uri is the url that we'll redirect the user to after
+    redirect_uri: ProfileOpenIdClientRedirectUris.WEB,
   });
 
   // redirect the user to the /authorize endpoint

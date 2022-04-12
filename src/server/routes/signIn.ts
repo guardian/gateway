@@ -222,7 +222,7 @@ const oktaSignInController = async (
     // we now need to generate an okta session
     // so we'll call the OIDC /authorize endpoint which sets a session cookie
     // we'll pretty much be performing the Authorization Code Flow
-    return performAuthorizationCodeFlow(res, response.sessionToken);
+    return performAuthorizationCodeFlow(req, res, response.sessionToken);
   } catch (error) {
     trackMetric('OktaSignIn::Failure');
 
