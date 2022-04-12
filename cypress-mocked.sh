@@ -19,6 +19,14 @@ source cypress-mocked.env
 CI_ENV=$(cat cypress-mocked.env | tr '\n' ',')
 CI_ENV=${CI_ENV%?}
 
+if [ -z ${NODE_EXTRA_CA_CERTS+x} ]; then
+  echo "NODE_EXTRA_CA_CERTS is unset in your bash config, see setup docs on how to set this."
+  echo "Setting NODE_EXTRA_CA_CERTS locally for now."
+  NODE_EXTRA_CA_CERTS="$(mkcert -CAROOT)/rootCA.pem"
+else 
+  echo "NODE_EXTRA_CA_CERTS is set."
+fi
+
 echo "building gateway"
 yarn build
 echo "starting mock server"
