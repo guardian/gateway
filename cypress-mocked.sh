@@ -32,7 +32,7 @@ yarn build
 echo "starting mock server"
 yarn mock-server &
 yarn wait-on:mock-server
-echo "starting gateway server, and waiting for https://profile.thegulocal.com/healtcheck"
+echo "starting gateway server, and waiting for https://profile.thegulocal.com/healthcheck"
 yarn start &
 yarn wait-on:server
 echo "opening cypress"

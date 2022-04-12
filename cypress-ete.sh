@@ -52,7 +52,7 @@ fi
 
 echo "building gateway"
 yarn build
-echo "starting gateway server, and waiting for https://profile.thegulocal.com/healtcheck"
+echo "starting gateway server, and waiting for https://profile.thegulocal.com/healthcheck"
 yarn start &
 yarn wait-on:server
 
