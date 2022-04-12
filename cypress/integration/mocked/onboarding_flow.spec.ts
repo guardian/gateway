@@ -94,10 +94,7 @@ describe('Onboarding flow', () => {
 
       CommunicationsPage.backButton().should('not.exist');
       CommunicationsPage.allCheckboxes().should('not.be.checked');
-      CommunicationsPage.allCheckboxes()
-        // select parent (to avoid cypress element not visible error)
-        .parent()
-        .click({ multiple: true });
+      CommunicationsPage.allCheckboxes().click({ multiple: true });
 
       // mock form save success
       cy.mockNext(200);
@@ -114,8 +111,6 @@ describe('Onboarding flow', () => {
 
       NewslettersPage.allCheckboxes()
         .should('not.be.checked')
-        // select parent (to avoid cypress element not visible error)
-        .parent()
         .click({ multiple: true });
 
       // mock form save success

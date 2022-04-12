@@ -54,7 +54,7 @@ describe('Okta Register flow', () => {
 
       cy.url().should(
         'eq',
-        'https://profile.code.dev-theguardian.com/signin?returnUrl=https%3A%2F%2Fmanage.code.dev-theguardian.com%2F',
+        'https://profile.code.dev-theguardian.com/signin?componentEventParams=componentType%3Didentityauthentication%26componentId%3Didapi_signin_redirect&returnUrl=https%3A%2F%2Fmanage.code.dev-theguardian.com%2F',
       );
     });
 
@@ -109,7 +109,7 @@ describe('Okta Register flow', () => {
 
       cy.url().should(
         'eq',
-        'https://profile.code.dev-theguardian.com/signin?returnUrl=https%3A%2F%2Fmanage.code.dev-theguardian.com%2F',
+        'https://profile.code.dev-theguardian.com/signin?componentEventParams=componentType%3Didentityauthentication%26componentId%3Didapi_signin_redirect&returnUrl=https%3A%2F%2Fmanage.code.dev-theguardian.com%2F',
       );
     });
 

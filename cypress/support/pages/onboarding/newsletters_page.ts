@@ -13,11 +13,7 @@ class NewslettersPage extends OnboardingPage {
     },
   };
   static newsletterCheckboxWithTitle(title: string) {
-    return cy
-      .contains(title)
-      .parent()
-      .contains('Yes, sign me up')
-      .find('input');
+    return cy.contains(title).parent().find('input[type="checkbox"]');
   }
   static URL = '/consents/newsletters';
 }
