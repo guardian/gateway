@@ -70,15 +70,13 @@ router.post(
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { email } = req.body;
     const state = res.locals;
-    const { returnUrl, emailSentSuccess, ref, refViewId } = state.queryParams;
+    const { emailSentSuccess } = state.queryParams;
 
     try {
       await sendCreatePasswordEmail(
         email,
         req.ip,
-        returnUrl,
-        ref,
-        refViewId,
+        state.queryParams,
         state.ophanConfig,
       );
 

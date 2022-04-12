@@ -19,6 +19,7 @@ describe('getPersistableQueryParams', () => {
       error: 'error',
       ref: 'ref',
       refViewId: 'refViewId',
+      componentEventParams: 'componentEventParams',
     };
 
     const output = getPersistableQueryParams(input);
@@ -28,6 +29,7 @@ describe('getPersistableQueryParams', () => {
       clientId: 'jobs',
       ref: 'ref',
       refViewId: 'refViewId',
+      componentEventParams: 'componentEventParams',
       useOkta: undefined,
     };
 
@@ -47,12 +49,13 @@ describe('addQueryParamsToPath', () => {
       error: 'error',
       ref: 'ref',
       refViewId: 'refViewId',
+      componentEventParams: 'componentEventParams',
     };
 
     const output = addQueryParamsToPath('/newsletters', input);
 
     expect(output).toEqual(
-      '/newsletters?clientId=jobs&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
+      '/newsletters?clientId=jobs&componentEventParams=componentEventParams&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
     );
   });
 
@@ -67,6 +70,7 @@ describe('addQueryParamsToPath', () => {
       error: 'error',
       ref: 'ref',
       refViewId: 'refViewId',
+      componentEventParams: 'componentEventParams',
     };
 
     const inputOverride: Partial<QueryParams> = {
@@ -78,7 +82,7 @@ describe('addQueryParamsToPath', () => {
     const output = addQueryParamsToPath('/newsletters', input, inputOverride);
 
     expect(output).toEqual(
-      '/newsletters?clientId=jobs&csrfError=true&encryptedEmail=an%20encrypted%20email&recaptchaError=true&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
+      '/newsletters?clientId=jobs&componentEventParams=componentEventParams&csrfError=true&encryptedEmail=an%20encrypted%20email&recaptchaError=true&ref=ref&refViewId=refViewId&returnUrl=returnUrl',
     );
   });
 });

@@ -61,17 +61,13 @@ router.post(
     } else {
       const { email } = req.body;
       const state = res.locals;
-      const { returnUrl, emailSentSuccess, ref, refViewId, clientId } =
-        state.queryParams;
+      const { emailSentSuccess } = state.queryParams;
 
       try {
         await sendAccountVerificationEmail(
           email,
           req.ip,
-          returnUrl,
-          ref,
-          refViewId,
-          clientId,
+          state.queryParams,
           state.ophanConfig,
         );
 

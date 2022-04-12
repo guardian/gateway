@@ -15,6 +15,7 @@ import {
   OphanConfig,
   sendOphanInteractionEventServer,
 } from '@/server/lib/ophan';
+import { IdApiQueryParams } from '@/shared/model/IdapiQueryParams';
 
 const { defaultReturnUri } = getConfiguration();
 
@@ -40,10 +41,7 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
 export const guest = async (
   email: string,
   ip: string,
-  returnUrl?: string,
-  refViewId?: string,
-  ref?: string,
-  clientId?: string,
+  trackingParams: IdApiQueryParams,
   ophanTrackingConfig?: OphanConfig,
 ): Promise<EmailType> => {
   const options = APIPostOptions({
@@ -51,6 +49,8 @@ export const guest = async (
   });
 
   try {
+    const { returnUrl, ref, refViewId, clientId } = trackingParams;
+
     await idapiFetch({
       path: '/guest',
       options: APIAddClientAccessToken(options, ip),

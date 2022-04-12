@@ -14,6 +14,7 @@ import {
   IDAPIAuthStatus,
   IdapiCookies,
 } from '@/shared/model/IDAPIAuth';
+import { IdApiQueryParams } from '@/shared/model/IdapiQueryParams';
 
 interface APIResponse {
   emailValidated: true;
@@ -84,6 +85,7 @@ export const authenticate = async (
   email: string,
   password: string,
   ip: string,
+  trackingData: IdApiQueryParams = {},
 ) => {
   const options = APIPostOptions({
     email,
@@ -91,10 +93,11 @@ export const authenticate = async (
   });
 
   try {
+    const { ref, refViewId, componentEventParams } = trackingData;
     const response = await idapiFetch({
       path: '/auth',
       options: APIAddClientAccessToken(options, ip),
-      queryParams: { format: 'cookies' },
+      queryParams: { format: 'cookies', ref, refViewId, componentEventParams },
     });
     return response.cookies as IdapiCookies;
   } catch (error) {
