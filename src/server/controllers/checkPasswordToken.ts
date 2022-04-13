@@ -7,6 +7,7 @@ import { getBrowserNameFromUserAgent } from '@/server/lib/getBrowserName';
 import {
   readEncryptedStateCookie,
   setEncryptedStateCookie,
+  updateEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
 import { renderer } from '@/server/lib/renderer';
 import { logger } from '@/server/lib/serverSideLogger';
@@ -17,8 +18,9 @@ import { validateRecoveryToken as validateTokenInOkta } from '@/server/lib/okta/
 import { trackMetric } from '@/server/lib/trackMetric';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
 import { FieldError } from '@/shared/model/ClientState';
+import { PersistableQueryParams } from '@/shared/model/QueryParams';
 
-const { okta } = getConfiguration();
+const { okta, defaultReturnUri } = getConfiguration();
 
 const handleBackButtonEventOnWelcomePage = (
   path: PasswordRoutePath,
@@ -118,15 +120,48 @@ export const checkTokenInOkta = async (
     const timeUntilTokenExpiry =
       expiresAt && Date.parse(expiresAt) - Date.now();
 
-    setEncryptedStateCookie(res, { email, stateToken });
+    updateEncryptedStateCookie(req, res, { email, stateToken });
 
     trackMetric('OktaValidatePasswordToken::Success');
+
+    // since we can't pass query parameters through okta emails, we set the encryptedStateCookie
+    // as the email was sent to the user containing the query params at that time
+    // so we read them here, if the user comes back on the same browser
+    const encryptedState = readEncryptedStateCookie(req);
+
+    // get query params from the encrypted state cookie, or set empty object if not found
+    const encryptedStateQueryParams =
+      encryptedState?.queryParams ?? ({} as PersistableQueryParams);
+
+    // get the returnUrl
+    const returnUrl: string = (() => {
+      // check that the returnUrl in requestState is not the defaultReturnUri
+      // as this suggests that it would have been modified, such as the native apps
+      // setting the return url on email link intercept
+      if (res.locals.queryParams.returnUrl !== defaultReturnUri) {
+        return res.locals.queryParams.returnUrl;
+      }
+      // otherwise check the encrypted state cookie for a returnUrl
+      // and use that
+      if (encryptedStateQueryParams.returnUrl) {
+        return encryptedStateQueryParams.returnUrl;
+      }
+      // finally use the defaultReturnUri if all else fails
+      return defaultReturnUri;
+    })();
+
+    // finally generate the queryParams object to merge in with the requestState
+    // with the correct returnUrl for this request
+    const queryParams = deepmerge(encryptedStateQueryParams, {
+      returnUrl,
+    });
 
     const html = renderer(
       `${path}/:token`,
       {
         pageTitle,
         requestState: deepmerge(res.locals, {
+          queryParams,
           pageData: {
             browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
             email,
