@@ -1,0 +1,35 @@
+[
+  {
+    "relation": ["delegate_permission/common.get_login_creds"],
+    "target": {
+      "namespace": "web",
+      "site": "https://profile.code.dev-theguardian.com"
+    }
+  },
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.guardian",
+      "sha256_cert_fingerprints": [
+        "49:65:42:9E:AD:99:25:1C:84:C2:D5:57:D4:E6:F3:6C:7B:C3:B3:5C:1E:A1:8E:19:96:BC:CA:13:E5:5A:9E:7D"
+      ]
+    }
+  },
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.guardian.debug",
+      "sha256_cert_fingerprints": [
+        "1B:5D:35:D1:3F:22:4A:6B:53:64:DA:8C:EA:2D:DE:96:A3:F9:9E:83:63:F5:71:71:00:6D:DB:4A:9C:F4:CD:93"
+      ]
+    }
+  }
+]
