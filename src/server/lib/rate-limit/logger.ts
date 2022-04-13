@@ -15,16 +15,22 @@ export const startGlobalBucketCapacityLogger = (
   interval: number,
 ): NodeJS.Timer =>
   setInterval(async () => {
-    const keys = await redisClient.pipeline().keys('*-global').exec();
+    try {
+      const keys = await redisClient.pipeline().keys('*-global').exec();
 
-    if (keys) {
-      // Flatten the result from Redis.
-      const globalKeys = keys[0][1];
-      const globalValues = await redisClient.mget(globalKeys);
+      if (keys) {
+        // Flatten the result from Redis.
+        const globalKeys = keys[0][1];
+        if (typeof globalKeys !== 'undefined') {
+          const globalValues = await redisClient.mget(globalKeys);
 
-      if (globalValues) {
-        logValues(globalKeys, globalValues);
+          if (globalValues) {
+            logValues(globalKeys, globalValues);
+          }
+        }
       }
+    } catch (e) {
+      logger.error('Unable to log global bucket values', e);
     }
   }, interval);
 
