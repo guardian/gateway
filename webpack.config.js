@@ -6,7 +6,8 @@ const AssetsPlugin = require('assets-webpack-plugin');
 const { merge } = require('webpack-merge');
 const nodeExternals = require('webpack-node-externals');
 const Dotenv = require('dotenv-webpack');
-const TerserPlugin = require("terser-webpack-plugin");
+const TerserPlugin = require('terser-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const mode =
   process.env.ENVIRONMENT === 'production' ? 'production' : 'development';
@@ -61,10 +62,12 @@ const common = ({ platform }) => ({
     },
   },
   watchOptions,
-  plugins: [new Dotenv({
-    // Required to ensure Dotenv doesn't override any existing env vars that have been set by the system
-    systemvars: true
-  })],
+  plugins: [
+    new Dotenv({
+      // Required to ensure Dotenv doesn't override any existing env vars that have been set by the system
+      systemvars: true,
+    }),
+  ],
 });
 
 const server = () => ({
@@ -112,48 +115,57 @@ const server = () => ({
     filename: 'server.js',
     chunkFilename: '[name].js',
     path: path.resolve(__dirname, 'build'),
-    libraryTarget: 'commonjs2'
+    libraryTarget: 'commonjs2',
   },
   optimization: {
     minimize: false,
-    runtimeChunk: false
+    runtimeChunk: false,
   },
-  target: 'node'
+  target: 'node',
+  plugins: [
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'src/client/.well-known',
+          to: '.well-known',
+        },
+      ],
+    }),
+  ],
 });
 
 const browser = ({ isLegacy }) => {
-
-  const entry = ['./src/client/static/index.tsx']
-  const target = ['web']
+  const entry = ['./src/client/static/index.tsx'];
+  const target = ['web'];
   if (isLegacy) {
-    entry.unshift('whatwg-fetch')
-    target.push('es5')
+    entry.unshift('whatwg-fetch');
+    target.push('es5');
   }
-  
+
   const legacyBabelConfig = [
     '@babel/env',
     {
       bugfixes: true,
     },
-  ]
-  
+  ];
+
   const legacyBabelConfigNodeModules = [
     '@babel/env',
     {
       bugfixes: true,
       modules: 'amd',
     },
-  ]
-  
+  ];
+
   const modernBabelConfig = [
     '@babel/env',
     {
       bugfixes: true,
       targets: {
-        esmodules: true
-      }
-  }
-]
+        esmodules: true,
+      },
+    },
+  ];
 
   const filename = `[name]${isLegacy ? '.legacy' : ''}.[chunkhash].js`;
 
@@ -170,8 +182,7 @@ const browser = ({ isLegacy }) => {
               loader: 'babel-loader',
               options: {
                 presets: [
-                  isLegacy ? legacyBabelConfig : modernBabelConfig
-                  ,
+                  isLegacy ? legacyBabelConfig : modernBabelConfig,
                   ...babelConfig.presets,
                 ],
                 plugins: [...babelConfig.plugins],
@@ -191,18 +202,16 @@ const browser = ({ isLegacy }) => {
               loader: 'babel-loader',
               options: {
                 presets: [
-                  isLegacy ? legacyBabelConfigNodeModules : modernBabelConfig
-                  ,
+                  isLegacy ? legacyBabelConfigNodeModules : modernBabelConfig,
                   ...babelConfig.presets,
-
                 ],
                 plugins: [...babelConfig.plugins],
               },
             },
           ],
         },
-        imageLoader('./')
-      ]
+        imageLoader('./'),
+      ],
     },
     optimization: {
       minimizer: [
@@ -210,8 +219,8 @@ const browser = ({ isLegacy }) => {
           terserOptions: {
             mangle: {
               safari10: true,
-            }
-          }
+            },
+          },
         }),
       ],
       splitChunks: {
@@ -236,28 +245,38 @@ const browser = ({ isLegacy }) => {
     plugins: [
       new AssetsPlugin({
         path: path.resolve(__dirname, 'build'),
-        filename: `${isLegacy ? 'legacy.' : ''}webpack-assets.json`
-      })
+        filename: `${isLegacy ? 'legacy.' : ''}webpack-assets.json`,
+      }),
     ],
     target,
     performance: {
       maxEntrypointSize: isLegacy ? 768000 : 512000,
-      maxAssetSize: isLegacy ? 512000 : 384000
-    }
-  }
-}
+      maxAssetSize: isLegacy ? 512000 : 384000,
+    },
+  };
+};
 
 module.exports = [
   merge(
-    common({ platform: 'server' }),
-    server()
+    common({
+      platform: 'server',
+    }),
+    server(),
   ),
   merge(
-    common({ platform: 'browser.legacy' }),
-    browser({ isLegacy: true })
+    common({
+      platform: 'browser.legacy',
+    }),
+    browser({
+      isLegacy: true,
+    }),
   ),
   merge(
-    common({ platform: 'browser' }),
-    browser({ isLegacy: false })
-  )
-]
+    common({
+      platform: 'browser',
+    }),
+    browser({
+      isLegacy: false,
+    }),
+  ),
+];

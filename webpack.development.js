@@ -32,9 +32,9 @@ const serverConfig = {
           },
         ],
       },
-    ]
-  }
-}
+    ],
+  },
+};
 
 const browserConfig = (isLegacy = false) => ({
   module: {
@@ -51,17 +51,24 @@ const browserConfig = (isLegacy = false) => ({
           },
         ],
       },
-    ]
+    ],
   },
   plugins: [
-    ...(isLegacy ? [] : [new ForkTsCheckerWebpackPlugin({
-      async: true,
-      typescript: {
-        mode: 'write-references' // for better babel-loader perf.
-      }
-    })]),
-    new ForkTsCheckerNotifierWebpackPlugin({ excludeWarnings: true, skipFirstNotification: true }),
-  ]
+    ...(isLegacy
+      ? []
+      : [
+          new ForkTsCheckerWebpackPlugin({
+            async: true,
+            typescript: {
+              mode: 'write-references', // for better babel-loader perf.
+            },
+          }),
+        ]),
+    new ForkTsCheckerNotifierWebpackPlugin({
+      excludeWarnings: true,
+      skipFirstNotification: true,
+    }),
+  ],
 });
 
 const baseServerConfig = baseConfig[0];
@@ -71,29 +78,17 @@ const baseBrowserConfig = baseConfig[2];
 const merge = mergeWithRules({
   module: {
     rules: {
-      test: "match",
+      test: 'match',
       use: {
-        loader: "match",
-        options: "merge",
+        loader: 'match',
+        options: 'merge',
       },
     },
   },
-}); 
+});
 
 module.exports = [
-  merge(
-    baseServerConfig,
-    common,
-    serverConfig,
-  ),
-  merge(
-    baseBrowserLegacyConfig,
-    common,
-    browserConfig(true),
-  ),
-  merge(
-    baseBrowserConfig,
-    common,
-    browserConfig(false),
-  )
-]
+  merge(baseServerConfig, common, serverConfig),
+  merge(baseBrowserLegacyConfig, common, browserConfig(true)),
+  merge(baseBrowserConfig, common, browserConfig(false)),
+];

@@ -16,6 +16,16 @@ router.use(
   }),
 );
 
+router.use(
+  '/.well-known',
+  express.static(path.resolve(__dirname, '.well-known'), {
+    cacheControl: true,
+    // setting to 30 mins for development, so we don't have to invalidate
+    // the cache on every update to a .well-known file
+    maxAge: ms('30m'),
+  }),
+);
+
 router.get('/healthcheck', (_, res: Response) => {
   res.status(200).send('200 OK');
 });
