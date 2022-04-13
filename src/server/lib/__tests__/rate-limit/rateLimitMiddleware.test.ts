@@ -138,11 +138,10 @@ describe('rate limiter middleware', () => {
 
       // After waiting, user can make a request again.
       await request(server).get('/register').expect(200);
-
-      await teardownServer();
     } catch (error) {
-      await teardownServer();
       throw error;
+    } finally {
+      await teardownServer();
     }
   });
 
@@ -192,11 +191,10 @@ describe('rate limiter middleware', () => {
         .get('/register')
         .set('X-Forwarded-For', '192.168.2.1')
         .expect(200);
-
-      await teardownServer();
     } catch (error) {
-      await teardownServer();
       throw error;
+    } finally {
+      await teardownServer();
     }
   });
 
@@ -246,11 +244,10 @@ describe('rate limiter middleware', () => {
         .get('/register')
         .set('Cookie', 'SC_GU_U=test')
         .expect(200);
-
-      await teardownServer();
     } catch (error) {
-      await teardownServer();
       throw error;
+    } finally {
+      await teardownServer();
     }
   });
 
@@ -276,11 +273,10 @@ describe('rate limiter middleware', () => {
       // Confirm that we are not rate limited when logOnly is set to true.
       await request(server).get('/signin').expect(200);
       await request(server).get('/signin').expect(200);
-
-      await teardownServer();
     } catch (error) {
-      await teardownServer();
       throw error;
+    } finally {
+      await teardownServer();
     }
   });
 
@@ -324,11 +320,10 @@ describe('rate limiter middleware', () => {
       // Confirm that enabled overridden route: /register is rate limited.
       await request(server).get('/register').expect(200);
       await request(server).get('/register').expect(429);
-
-      await teardownServer();
     } catch (error) {
-      await teardownServer();
       throw error;
+    } finally {
+      await teardownServer();
     }
   });
 
@@ -391,11 +386,10 @@ describe('rate limiter middleware', () => {
       // Confirm that /register (disabled by the default config) is never rate limited.
       await request(server).get('/register').expect(200);
       await request(server).get('/register').expect(200);
-
-      await teardownServer();
     } catch (error) {
-      await teardownServer();
       throw error;
+    } finally {
+      await teardownServer();
     }
   });
 
@@ -476,11 +470,10 @@ describe('rate limiter middleware', () => {
           password: 'tests',
         })
         .expect(303);
-
-      await teardownServer();
     } catch (error) {
-      await teardownServer();
       throw error;
+    } finally {
+      await teardownServer();
     }
   });
 });
