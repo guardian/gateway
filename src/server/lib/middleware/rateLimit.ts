@@ -65,9 +65,13 @@ export const rateLimiterMiddleware = async (
   });
 
   if (ratelimitBucketTypeIfHit) {
+    const truncatedAccessToken = rateLimitData.accessToken
+      ? rateLimitData.accessToken.substring(0, 6)
+      : '';
+
     // We append `-Gateway` so that we can differentiate between IDAPI rate limit log entries.
     logger.info(
-      `RateLimit-Gateway ${ratelimitBucketTypeIfHit}Bucket email=${rateLimitData.email} ip=${rateLimitData.ip} accessToken=${rateLimitData.accessToken} identity-gateway ${req.method} ${routePathDefinition}`,
+      `RateLimit-Gateway ${ratelimitBucketTypeIfHit}Bucket email=${rateLimitData.email} ip=${rateLimitData.ip} accessToken=${truncatedAccessToken} identity-gateway ${req.method} ${routePathDefinition}`,
     );
 
     trackMetric(rateLimitHitMetric(ratelimitBucketTypeIfHit));
