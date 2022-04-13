@@ -20,9 +20,17 @@ export const routeBucketsConfigurationSchema = z
   })
   .strict();
 
+export const settingsConfigurationSchema = z
+  .object({
+    logOnly: z.boolean().optional(),
+    trackBucketCapacity: z.boolean().optional(),
+  })
+  .strict();
+
 export const rateLimiterConfigurationSchema = z
   .object({
     enabled: z.boolean(),
+    settings: settingsConfigurationSchema.optional(),
     defaultBuckets: routeBucketsConfigurationSchema,
     routeBuckets: z
       .record(z.enum(ValidRoutePathsArray), routeBucketsConfigurationSchema)

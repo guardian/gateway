@@ -116,6 +116,10 @@ describe('rate limiter middleware', () => {
   it('should rate limit all clients when the global bucket is empty', async () => {
     const rateLimiterConfig: RateLimiterConfiguration = {
       enabled: true,
+      settings: {
+        logOnly: false,
+        trackBucketCapacity: false,
+      },
       defaultBuckets: {
         globalBucket: { capacity: 2, addTokenMs: 500 },
       },
@@ -134,17 +138,20 @@ describe('rate limiter middleware', () => {
 
       // After waiting, user can make a request again.
       await request(server).get('/register').expect(200);
-
-      await teardownServer();
     } catch (error) {
-      await teardownServer();
       throw error;
+    } finally {
+      await teardownServer();
     }
   });
 
   it('should rate limit when the ip rate limit bucket is empty', async () => {
     const rateLimiterConfig: RateLimiterConfiguration = {
       enabled: true,
+      settings: {
+        logOnly: false,
+        trackBucketCapacity: false,
+      },
       defaultBuckets: {
         globalBucket: { capacity: 10, addTokenMs: 500 },
         ipBucket: { capacity: 2, addTokenMs: 500 },
@@ -184,17 +191,20 @@ describe('rate limiter middleware', () => {
         .get('/register')
         .set('X-Forwarded-For', '192.168.2.1')
         .expect(200);
-
-      await teardownServer();
     } catch (error) {
-      await teardownServer();
       throw error;
+    } finally {
+      await teardownServer();
     }
   });
 
   it('should rate limit when the access token bucket is empty', async () => {
     const rateLimiterConfig: RateLimiterConfiguration = {
       enabled: true,
+      settings: {
+        logOnly: false,
+        trackBucketCapacity: false,
+      },
       defaultBuckets: {
         globalBucket: { capacity: 10, addTokenMs: 500 },
         accessTokenBucket: { capacity: 2, addTokenMs: 500 },
@@ -234,17 +244,49 @@ describe('rate limiter middleware', () => {
         .get('/register')
         .set('Cookie', 'SC_GU_U=test')
         .expect(200);
-
-      await teardownServer();
     } catch (error) {
-      await teardownServer();
       throw error;
+    } finally {
+      await teardownServer();
+    }
+  });
+
+  it('should not apply the rate limiter when logOnly is set to true', async () => {
+    const rateLimiterConfig: RateLimiterConfiguration = {
+      enabled: true,
+      settings: {
+        logOnly: true,
+        trackBucketCapacity: false,
+      },
+      defaultBuckets: {
+        enabled: true,
+        globalBucket: { capacity: 1, addTokenMs: 500 },
+      },
+    };
+
+    // Start the application server.
+    const { server, teardownServer } = await getServerInstance(
+      rateLimiterConfig,
+    );
+
+    try {
+      // Confirm that we are not rate limited when logOnly is set to true.
+      await request(server).get('/signin').expect(200);
+      await request(server).get('/signin').expect(200);
+    } catch (error) {
+      throw error;
+    } finally {
+      await teardownServer();
     }
   });
 
   it('should allow you to disable rate limiting for selected routes ', async () => {
     const rateLimiterConfig: RateLimiterConfiguration = {
       enabled: true,
+      settings: {
+        logOnly: false,
+        trackBucketCapacity: false,
+      },
       defaultBuckets: {
         enabled: true,
         globalBucket: { capacity: 1, addTokenMs: 500 },
@@ -278,17 +320,20 @@ describe('rate limiter middleware', () => {
       // Confirm that enabled overridden route: /register is rate limited.
       await request(server).get('/register').expect(200);
       await request(server).get('/register').expect(429);
-
-      await teardownServer();
     } catch (error) {
-      await teardownServer();
       throw error;
+    } finally {
+      await teardownServer();
     }
   });
 
   it('should not rate limit disabled routes and only rate limit enabled routes', async () => {
     const rateLimiterConfig: RateLimiterConfiguration = {
       enabled: true,
+      settings: {
+        logOnly: false,
+        trackBucketCapacity: false,
+      },
       defaultBuckets: {
         enabled: false,
         globalBucket: { capacity: 1, addTokenMs: 500 },
@@ -341,17 +386,20 @@ describe('rate limiter middleware', () => {
       // Confirm that /register (disabled by the default config) is never rate limited.
       await request(server).get('/register').expect(200);
       await request(server).get('/register').expect(200);
-
-      await teardownServer();
     } catch (error) {
-      await teardownServer();
       throw error;
+    } finally {
+      await teardownServer();
     }
   });
 
   it('should rate limit /signin form when the email bucket is empty', async () => {
     const rateLimiterConfig: RateLimiterConfiguration = {
       enabled: true,
+      settings: {
+        logOnly: false,
+        trackBucketCapacity: false,
+      },
       defaultBuckets: {
         globalBucket: { capacity: 500, addTokenMs: 500 },
       },
@@ -422,11 +470,10 @@ describe('rate limiter middleware', () => {
           password: 'tests',
         })
         .expect(303);
-
-      await teardownServer();
     } catch (error) {
-      await teardownServer();
       throw error;
+    } finally {
+      await teardownServer();
     }
   });
 });
