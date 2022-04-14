@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
-    "build": "webpack --mode production && node scripts/copyNodeModules.js",
+    "build": "webpack --mode production && yarn install --modules-folder ./build/node_modules --production --frozen-lockfile",
     "cypress": "cypress",
     "cypress:ci": "cypress run",
     "cypress:ete": "./cypress-ete.sh",
@@ -41,7 +41,6 @@
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",
-    "@babel/runtime": "^7.17.9",
     "@emotion/babel-preset-css-prop": "^11.2.0",
     "@guardian/eslint-plugin-source-foundations": "^4.0.2",
     "@guardian/eslint-plugin-source-react-components": "^4.1.0",
@@ -124,6 +123,7 @@
     "whatwg-fetch": "^3.6.2"
   },
   "dependencies": {
+    "@babel/runtime": "^7.17.9",
     "@emotion/react": "^11.9.0",
     "@guardian/ab-core": "^2.0.0",
     "@guardian/ab-react": "^2.0.1",
