@@ -94,7 +94,7 @@ jobs:
           wait-on-timeout: 60
           browser: chrome
           spec: cypress/integration/ete-okta/**/*.ts
-          config: '{"chromeWebSecurity": false,"baseUrl":"https://profile.thegulocal.com"}'
+          config: '{"chromeWebSecurity": false,"baseUrl":"https://profile.thegulocal.com","numTestsKeptInMemory":"1"}'
       - uses: actions/upload-artifact@v2
         if: failure()
         with:

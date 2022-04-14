@@ -87,7 +87,7 @@ jobs:
           wait-on-timeout: 60
           browser: chrome
           spec: cypress/integration/mocked/*.ts
-          config: '{"chromeWebSecurity": false,"baseUrl":"https://profile.thegulocal.com"}'
+          config: '{"chromeWebSecurity": false,"baseUrl":"https://profile.thegulocal.com","numTestsKeptInMemory":"1"}'
       - name: Upload screenshots
         uses: actions/upload-artifact@v2
         if: failure()
