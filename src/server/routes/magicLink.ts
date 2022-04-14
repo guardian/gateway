@@ -11,21 +11,16 @@ import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { ApiError } from '@/server/models/Error';
 import handleRecaptcha from '@/server/lib/recaptcha';
 
-router.get(
-  '/magic-link',
-
-  (req: Request, res: ResponseWithRequestState) => {
-    const html = renderer('/magic-link', {
-      requestState: res.locals,
-      pageTitle: 'Sign in',
-    });
-    res.type('html').send(html);
-  },
-);
+router.get('/magic-link', (req: Request, res: ResponseWithRequestState) => {
+  const html = renderer('/magic-link', {
+    requestState: res.locals,
+    pageTitle: 'Sign in',
+  });
+  res.type('html').send(html);
+});
 
 router.post(
   '/magic-link',
-
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
@@ -64,7 +59,6 @@ router.post(
 
 router.get(
   '/magic-link/email-sent',
-
   (_: Request, res: ResponseWithRequestState) => {
     const html = renderer('/magic-link/email-sent', {
       pageTitle: 'Sign in',

@@ -24,35 +24,26 @@ const { okta } = getConfiguration();
 
 const router = Router();
 // resend account verification page
-router.get(
-  '/welcome/resend',
-
-  (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer('/welcome/resend', {
-      pageTitle: 'Resend Welcome Email',
-      requestState: res.locals,
-    });
-    res.type('html').send(html);
-  },
-);
+router.get('/welcome/resend', (_: Request, res: ResponseWithRequestState) => {
+  const html = renderer('/welcome/resend', {
+    pageTitle: 'Resend Welcome Email',
+    requestState: res.locals,
+  });
+  res.type('html').send(html);
+});
 
 // resend account verification page, session expired
-router.get(
-  '/welcome/expired',
-
-  (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer('/welcome/expired', {
-      pageTitle: 'Resend Welcome Email',
-      requestState: res.locals,
-    });
-    res.type('html').send(html);
-  },
-);
+router.get('/welcome/expired', (_: Request, res: ResponseWithRequestState) => {
+  const html = renderer('/welcome/expired', {
+    pageTitle: 'Resend Welcome Email',
+    requestState: res.locals,
+  });
+  res.type('html').send(html);
+});
 
 // POST form handler to resend account verification email
 router.post(
   '/welcome/resend',
-
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { useOkta } = res.locals.queryParams;
@@ -102,7 +93,6 @@ router.post(
 // email sent page
 router.get(
   '/welcome/email-sent',
-
   (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
@@ -126,14 +116,12 @@ router.get(
 // welcome page, check token and display set password page
 router.get(
   '/welcome/:token',
-
   checkPasswordTokenController('/welcome', 'Welcome'),
 );
 
 // POST form handler to set password on welcome page
 router.post(
   '/welcome/:token',
-
   setPasswordController('/welcome', 'Welcome', consentPages[0].path),
 );
 

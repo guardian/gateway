@@ -53,7 +53,6 @@ export const clearOktaCookies = (res: ResponseWithRequestState) => {
 
 router.get(
   '/signout',
-
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { returnUrl } = res.locals.pageData;
 

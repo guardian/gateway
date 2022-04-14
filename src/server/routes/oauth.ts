@@ -54,7 +54,6 @@ const redirectForGenericError = (
 
 router.get(
   '/oauth/authorization-code/callback',
-
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     try {
       // Determine which OpenIdClient to use, in DEV we use the DevProfileIdClient, otherwise we use the ProfileOpenIdClient

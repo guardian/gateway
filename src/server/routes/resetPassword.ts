@@ -11,26 +11,21 @@ import handleRecaptcha from '@/server/lib/recaptcha';
 import { sendChangePasswordEmailController } from '@/server/controllers/sendChangePasswordEmail';
 
 // reset password email form
-router.get(
-  '/reset-password',
-
-  (req: Request, res: ResponseWithRequestState) => {
-    const html = renderer('/reset-password', {
-      pageTitle: 'Reset Password',
-      requestState: deepmerge(res.locals, {
-        pageData: {
-          email: readEmailCookie(req),
-        },
-      }),
-    });
-    res.type('html').send(html);
-  },
-);
+router.get('/reset-password', (req: Request, res: ResponseWithRequestState) => {
+  const html = renderer('/reset-password', {
+    pageTitle: 'Reset Password',
+    requestState: deepmerge(res.locals, {
+      pageData: {
+        email: readEmailCookie(req),
+      },
+    }),
+  });
+  res.type('html').send(html);
+});
 
 // send reset password email
 router.post(
   '/reset-password',
-
   handleRecaptcha,
   sendChangePasswordEmailController(),
 );
@@ -38,7 +33,6 @@ router.post(
 // reset password email sent page
 router.get(
   '/reset-password/email-sent',
-
   (req: Request, res: ResponseWithRequestState) => {
     const html = renderer('/reset-password/email-sent', {
       pageTitle: 'Check Your Inbox',
@@ -56,7 +50,6 @@ router.get(
 // password updated confirmation page
 router.get(
   '/reset-password/complete',
-
   (req: Request, res: ResponseWithRequestState) => {
     const html = renderer('/reset-password/complete', {
       requestState: deepmerge(res.locals, {
@@ -73,7 +66,6 @@ router.get(
 // link expired page
 router.get(
   '/reset-password/resend',
-
   (_: Request, res: ResponseWithRequestState) => {
     const html = renderer('/reset-password/resend', {
       pageTitle: 'Resend Change Password Email',
@@ -86,7 +78,6 @@ router.get(
 // session timed out page
 router.get(
   '/reset-password/expired',
-
   (_: Request, res: ResponseWithRequestState) => {
     const html = renderer('/reset-password/expired', {
       pageTitle: 'Resend Change Password Email',
@@ -103,14 +94,12 @@ router.get(
 // reset password form
 router.get(
   '/reset-password/:token',
-
   checkPasswordTokenController('/reset-password', 'Change Password'),
 );
 
 // update password
 router.post(
   '/reset-password/:token',
-
   setPasswordController(
     '/reset-password',
     'Change Password',

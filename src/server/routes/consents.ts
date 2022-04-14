@@ -192,23 +192,17 @@ export const consentPages: ConsentPage[] = [
   },
 ];
 
-router.get(
-  '/consents',
+router.get('/consents', loginMiddleware, (_: Request, res: Response) => {
+  const url = addQueryParamsToPath(
+    `${consentPages[0].path}`,
+    res.locals.queryParams,
+  );
 
-  loginMiddleware,
-  (_: Request, res: Response) => {
-    const url = addQueryParamsToPath(
-      `${consentPages[0].path}`,
-      res.locals.queryParams,
-    );
-
-    res.redirect(303, url);
-  },
-);
+  res.redirect(303, url);
+});
 
 router.get(
   '/consents/:page',
-
   loginMiddleware,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
@@ -280,7 +274,6 @@ router.get(
 
 router.post(
   '/consents/:page',
-
   loginMiddleware,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
