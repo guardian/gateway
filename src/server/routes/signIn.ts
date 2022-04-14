@@ -83,7 +83,6 @@ const showSignInPage = async (req: Request, res: ResponseWithRequestState) => {
 
 router.get(
   '/signin',
-
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { pageData } = res.locals;
     const { returnUrl } = pageData;

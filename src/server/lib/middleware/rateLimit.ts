@@ -65,6 +65,7 @@ export const rateLimiterMiddleware = async (
   });
 
   if (ratelimitBucketTypeIfHit) {
+    // Cut down the size of the access token so we don't make the log line too long.
     const truncatedAccessToken = rateLimitData.accessToken
       ? rateLimitData.accessToken.substring(0, 6)
       : '';

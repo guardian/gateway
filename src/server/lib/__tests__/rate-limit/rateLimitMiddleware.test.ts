@@ -34,6 +34,8 @@ const defaultEnv = {
 jest.setTimeout(10000);
 
 describe('rate limiter middleware', () => {
+  const loggerInfoMock = jest.fn();
+
   beforeEach(() => {
     jest.clearAllMocks();
     jest.resetModules();
@@ -58,7 +60,12 @@ describe('rate limiter middleware', () => {
     }));
     jest.mock('@/server/lib/idapi/IDAPICookies');
     jest.mock('@/server/lib/trackMetric');
-    jest.mock('@/server/lib/serverSideLogger');
+
+    jest.mock('@/server/lib/serverSideLogger', () => ({
+      logger: {
+        info: loggerInfoMock,
+      },
+    }));
 
     jest.mock(
       'csurf',
@@ -178,6 +185,10 @@ describe('rate limiter middleware', () => {
         .set('X-Forwarded-For', '192.168.2.1')
         .expect(429);
 
+      expect(loggerInfoMock).toHaveBeenLastCalledWith(
+        `RateLimit-Gateway ipBucket email=undefined ip=192.168.2.1 accessToken= identity-gateway GET /register`,
+      );
+
       // 192.168.2.7 should be allowed to make a request.
       await request(server)
         .get('/register')
@@ -220,16 +231,21 @@ describe('rate limiter middleware', () => {
       // After two requests, SC_GU_U=test should hit the rate limit.
       await request(server)
         .get('/register')
-        .set('Cookie', 'SC_GU_U=test')
+        .set('Cookie', 'SC_GU_U=verylongaccesstoken')
         .expect(200);
       await request(server)
         .get('/register')
-        .set('Cookie', 'SC_GU_U=test')
+        .set('Cookie', 'SC_GU_U=verylongaccesstoken')
         .expect(200);
       await request(server)
         .get('/register')
-        .set('Cookie', 'SC_GU_U=test')
+        .set('Cookie', 'SC_GU_U=verylongaccesstoken')
         .expect(429);
+
+      // Expect the access token to be truncated so we don't exceed the maximum message size for message.keywords in Kibana.
+      expect(loggerInfoMock).toHaveBeenLastCalledWith(
+        `RateLimit-Gateway accessTokenBucket email=undefined ip=::ffff:127.0.0.1 accessToken=verylo identity-gateway GET /register`,
+      );
 
       // SC_GU_U=other should be allowed to make a request
       await request(server)
@@ -242,7 +258,7 @@ describe('rate limiter middleware', () => {
       // After waiting, SC_GU_U=test can make a request again.
       await request(server)
         .get('/register')
-        .set('Cookie', 'SC_GU_U=test')
+        .set('Cookie', 'SC_GU_U=verylongaccesstoken')
         .expect(200);
     } catch (error) {
       throw error;
@@ -317,6 +333,10 @@ describe('rate limiter middleware', () => {
       await request(server).get('/reset-password').expect(200);
       await request(server).get('/reset-password').expect(429);
 
+      expect(loggerInfoMock).toHaveBeenLastCalledWith(
+        `RateLimit-Gateway globalBucket email=undefined ip=::ffff:127.0.0.1 accessToken= identity-gateway GET /reset-password`,
+      );
+
       // Confirm that enabled overridden route: /register is rate limited.
       await request(server).get('/register').expect(200);
       await request(server).get('/register').expect(429);
@@ -379,6 +399,10 @@ describe('rate limiter middleware', () => {
           password: '',
         })
         .expect(429);
+
+      expect(loggerInfoMock).toHaveBeenLastCalledWith(
+        `RateLimit-Gateway emailBucket email=test@test.com ip=::ffff:127.0.0.1 accessToken= identity-gateway POST /signin`,
+      );
 
       await request(server).get('/reset-password').expect(200);
       await request(server).get('/reset-password').expect(429);
