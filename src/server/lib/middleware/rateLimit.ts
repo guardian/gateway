@@ -66,9 +66,10 @@ export const rateLimiterMiddleware = async (
 
   if (ratelimitBucketTypeIfHit) {
     // Cut down the size of the access token so we don't make the log line too long.
-    const truncatedAccessToken = rateLimitData.accessToken
-      ? rateLimitData.accessToken.substring(0, 6)
-      : '';
+    const truncatedAccessToken =
+      typeof rateLimitData.accessToken === 'string'
+        ? rateLimitData.accessToken.substring(0, 6)
+        : '';
 
     // We append `-Gateway` so that we can differentiate between IDAPI rate limit log entries.
     logger.info(
