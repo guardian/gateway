@@ -10,6 +10,7 @@ jobs:
   cypress-nginx-okta:
     name: Cypress (ete-okta)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     services:
       redis:
         image: redis

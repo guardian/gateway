@@ -4,6 +4,7 @@ jobs:
   cypress-mocked:
     name: Cypress (mocked)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     services:
       redis:
         image: redis

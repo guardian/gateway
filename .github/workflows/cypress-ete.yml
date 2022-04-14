@@ -9,6 +9,7 @@ jobs:
   cypress-ete:
     name: Cypress (ete)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     services:
       redis:
         image: redis
