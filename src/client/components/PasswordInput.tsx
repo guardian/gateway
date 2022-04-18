@@ -39,6 +39,20 @@ const noBorder = (isEyeDisplayedOnBrowser: boolean) =>
       `
     : css();
 
+// hide the microsoft password reveal eye if we're using
+// our own custom reveal field
+// https://docs.microsoft.com/en-us/microsoft-edge/web-platform/password-reveal
+const hideMsReveal = (isEyeDisplayedOnBrowser: boolean) => {
+  if (isEyeDisplayedOnBrowser) {
+    return css`
+      ::-ms-reveal {
+        display: none;
+      }
+    `;
+  }
+  return css``;
+};
+
 const EyeIcon = ({ isOpen }: { isOpen: boolean }) => {
   const iconStyles = css`
     svg {
@@ -144,6 +158,7 @@ export const PasswordInput = ({
             noBorderRadius,
             paddingRight(displayEye),
             disableAutofillBackground,
+            hideMsReveal(displayEye),
           ]}
         />
       </div>
