@@ -1,6 +1,9 @@
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { Request } from 'express';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import {
+  RequestState,
+  ResponseWithRequestState,
+} from '@/server/models/Express';
 import { validate as validateTokenInIDAPI } from '@/server/lib/idapi/changePassword';
 import deepmerge from 'deepmerge';
 import { getBrowserNameFromUserAgent } from '@/server/lib/getBrowserName';
@@ -19,6 +22,7 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
 import { FieldError } from '@/shared/model/ClientState';
 import { PersistableQueryParams } from '@/shared/model/QueryParams';
+import { validateReturnUrl } from '../lib/validateUrl';
 
 const { okta, defaultReturnUri } = getConfiguration();
 
@@ -102,6 +106,34 @@ const checkTokenInIDAPI = async (
   }
 };
 
+/**
+ * This function decides which return url should take presidence when multi choice are availble
+ * If it's passed as a url query parameter, this takes higest presidence, followed by the value in the state cookie.
+ * If neither are present the default return url is used
+ *
+ * @param requestState - this is request state from response.locals
+ * @param encryptedStateQueryParams - this is the query parameters from the encryptedState Cookie
+ * @returns string
+ */
+const getReturnUrl = (
+  requestState: RequestState,
+  encryptedStateQueryParams: PersistableQueryParams,
+): string => {
+  // check that the returnUrl in requestState is not the defaultReturnUri
+  // as this suggests that it would have been modified, such as the native apps
+  // setting the return url on email link intercept
+  if (requestState.queryParams.returnUrl !== defaultReturnUri) {
+    return requestState.queryParams.returnUrl;
+  }
+  // otherwise check the encrypted state cookie for a returnUrl
+  // We always want to validate the returl url value, just in case its been incorrectly set though developer error
+  if (encryptedStateQueryParams.returnUrl) {
+    return validateReturnUrl(encryptedStateQueryParams.returnUrl);
+  }
+  // finally use the defaultReturnUri if all else fails
+  return defaultReturnUri;
+};
+
 export const checkTokenInOkta = async (
   path: PasswordRoutePath,
   pageTitle: PasswordPageTitle,
@@ -134,21 +166,7 @@ export const checkTokenInOkta = async (
       encryptedState?.queryParams ?? ({} as PersistableQueryParams);
 
     // get the returnUrl
-    const returnUrl: string = (() => {
-      // check that the returnUrl in requestState is not the defaultReturnUri
-      // as this suggests that it would have been modified, such as the native apps
-      // setting the return url on email link intercept
-      if (res.locals.queryParams.returnUrl !== defaultReturnUri) {
-        return res.locals.queryParams.returnUrl;
-      }
-      // otherwise check the encrypted state cookie for a returnUrl
-      // and use that
-      if (encryptedStateQueryParams.returnUrl) {
-        return encryptedStateQueryParams.returnUrl;
-      }
-      // finally use the defaultReturnUri if all else fails
-      return defaultReturnUri;
-    })();
+    const returnUrl = getReturnUrl(res.locals, encryptedStateQueryParams);
 
     // finally generate the queryParams object to merge in with the requestState
     // with the correct returnUrl for this request
