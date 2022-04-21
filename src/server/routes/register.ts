@@ -36,7 +36,6 @@ const { okta } = getConfiguration();
 
 router.get(
   '/register',
-
   registerMiddleware,
   (req: Request, res: ResponseWithRequestState) => {
     const html = renderer('/register', {
@@ -49,7 +48,6 @@ router.get(
 
 router.get(
   '/register/email-sent',
-
   (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
     const html = renderer('/register/email-sent', {
@@ -66,7 +64,6 @@ router.get(
 
 router.post(
   '/register/email-sent/resend',
-
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { useOkta } = res.locals.queryParams;
@@ -166,7 +163,6 @@ router.post(
 
 router.post(
   '/register',
-
   handleRecaptcha,
   registerMiddleware,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {

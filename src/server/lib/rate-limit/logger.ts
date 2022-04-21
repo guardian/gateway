@@ -21,7 +21,7 @@ export const startGlobalBucketCapacityLogger = (
       if (keys) {
         // Flatten the result from Redis.
         const globalKeys = keys[0][1];
-        if (typeof globalKeys !== 'undefined') {
+        if (Array.isArray(globalKeys) && globalKeys.length > 0) {
           const globalValues = await redisClient.mget(globalKeys);
 
           if (globalValues) {

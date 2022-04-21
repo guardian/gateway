@@ -28,7 +28,6 @@ const profileUrl = getProfileUrl();
 
 router.get(
   '/verify-email',
-
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
@@ -85,7 +84,6 @@ router.get(
 
 router.post(
   '/verify-email',
-
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
@@ -146,7 +144,6 @@ router.post(
 
 router.get(
   '/verify-email/:token',
-
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { token } = req.params;
 

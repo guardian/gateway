@@ -83,7 +83,6 @@ const showSignInPage = async (req: Request, res: ResponseWithRequestState) => {
 
 router.get(
   '/signin',
-
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { pageData } = res.locals;
     const { returnUrl } = pageData;
@@ -112,7 +111,6 @@ router.get(
 
 router.post(
   '/signin',
-
   handleRecaptcha,
   handleAsyncErrors((req: Request, res: ResponseWithRequestState) => {
     const { useOkta } = res.locals.queryParams;
@@ -284,7 +282,6 @@ const optInPromptController = async (
 
 router.get(
   '/signin/success',
-
   loginMiddleware,
   handleAsyncErrors((req: Request, res: ResponseWithRequestState) =>
     optInPromptController(req, res),
@@ -293,7 +290,6 @@ router.get(
 
 router.post(
   '/signin/success',
-
   loginMiddleware,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;

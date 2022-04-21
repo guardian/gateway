@@ -20,7 +20,6 @@ import { buildUrl } from '@/shared/lib/routeUtils';
 // set password complete page
 router.get(
   '/set-password/complete',
-
   (req: Request, res: ResponseWithRequestState) => {
     const email = readEmailCookie(req);
 
@@ -39,7 +38,6 @@ router.get(
 // resend "create (set) password" email page
 router.get(
   '/set-password/resend',
-
   (_: Request, res: ResponseWithRequestState) => {
     const html = renderer('/set-password/resend', {
       pageTitle: 'Resend Create Password Email',
@@ -52,7 +50,6 @@ router.get(
 // set password page session expired
 router.get(
   '/set-password/expired',
-
   (_: Request, res: ResponseWithRequestState) => {
     const html = renderer('/set-password/expired', {
       pageTitle: 'Resend Create Password Email',
@@ -65,7 +62,6 @@ router.get(
 // POST handler for resending "create (set) password" email
 router.post(
   '/set-password/resend',
-
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { email } = req.body;
@@ -119,7 +115,6 @@ router.post(
 // email sent page
 router.get(
   '/set-password/email-sent',
-
   (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
@@ -144,14 +139,12 @@ router.get(
 // The below route must be defined below the other GET /set-password/* routes otherwise the other routes will fail
 router.get(
   '/set-password/:token',
-
   checkPasswordTokenController('/set-password', 'Create Password'),
 );
 
 // POST handler for set password page to set password
 router.post(
   '/set-password/:token',
-
   setPasswordController(
     '/set-password',
     'Create Password',
