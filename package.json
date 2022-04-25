@@ -107,7 +107,7 @@
     "nodemon": "^2.0.15",
     "prettier": "^2.6.2",
     "react-test-renderer": "^17.0.2",
-    "snyk": "^1.908.0",
+    "snyk": "^1.912.0",
     "stmux": "^1.8.3",
     "terser-webpack-plugin": "^5.3.1",
     "ts-jest": "^27.1.4",
