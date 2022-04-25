@@ -1,4 +1,3 @@
-import { render } from 'mjml-react';
 import { send } from '@/email/lib/send';
 import { generateUrl } from '@/email/lib/generateUrl';
 import { renderedResetPassword } from '../renderedTemplates';

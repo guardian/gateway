@@ -10,6 +10,7 @@ import {
   UserResponse,
   Status,
   UserCreationRequest,
+  TokenResponse,
 } from '@/server/models/okta/User';
 import { ErrorCause, OktaError } from '@/server/models/okta/Error';
 
@@ -34,9 +35,13 @@ const mockedCreateOktaUser =
 const mockedFetchOktaUser =
   mocked<(id: string) => Promise<UserResponse>>(getUser);
 const mockedActivateOktaUser =
-  mocked<(id: string) => Promise<void>>(activateUser);
+  mocked<(id: string, sendEmail: boolean) => Promise<TokenResponse | void>>(
+    activateUser,
+  );
 const mockedReactivateOktaUser =
-  mocked<(id: string) => Promise<void>>(reactivateUser);
+  mocked<(id: string, sendEmail: boolean) => Promise<TokenResponse | void>>(
+    reactivateUser,
+  );
 
 // mocked logger
 jest.mock('@/server/lib/serverSideLogger');
