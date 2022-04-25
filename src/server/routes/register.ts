@@ -123,7 +123,7 @@ router.post(
               );
               break;
             default:
-              // somethings gone wrong, throw a generic error
+              // something's gone wrong, throw a generic error
               throw new ApiError({
                 message: GenericErrors.DEFAULT,
                 status: 500,
