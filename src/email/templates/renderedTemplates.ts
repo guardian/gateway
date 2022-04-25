@@ -49,12 +49,12 @@ export const renderedNoAccount = {
   html: render(NoAccount()).html,
 } as EmailRenderResult;
 
-export const renderedResetPasswordEmail = {
+export const renderedResetPassword = {
   plain: ResetPasswordText(),
   html: render(ResetPassword()).html,
 } as EmailRenderResult;
 
-export const renderedVerifyEmail = {
+export const renderedVerify = {
   plain: VerifyText(),
   html: render(Verify()).html,
 } as EmailRenderResult;

@@ -1,24 +1,33 @@
 import { render } from 'mjml-react';
 import { send } from '@/email/lib/send';
-
-import { ResetPassword } from './ResetPassword';
-import { ResetPasswordText } from './ResetPasswordText';
+import { generateUrl } from '@/email/lib/generateUrl';
+import { renderedResetPassword } from '../renderedTemplates';
 
 type Props = {
   to: string;
   subject?: string;
+  resetPasswordToken: string;
 };
-
-const plainText = ResetPasswordText();
-const { html } = render(ResetPassword());
 
 export const sendResetPasswordEmail = ({
   to,
   subject = 'Reset your theguardian.com password',
+  resetPasswordToken,
 }: Props) => {
+  const resetPasswordUrl = generateUrl({
+    path: 'reset-password',
+    token: resetPasswordToken,
+  });
+  console.log('Sending email with link:', resetPasswordUrl);
   return send({
-    html,
-    plainText,
+    html: renderedResetPassword.html.replace(
+      '$passwordResetLink',
+      resetPasswordUrl,
+    ),
+    plainText: renderedResetPassword.plain.replace(
+      '$passwordResetLink',
+      resetPasswordUrl,
+    ),
     subject,
     to,
   });

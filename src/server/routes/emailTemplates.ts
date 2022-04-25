@@ -8,8 +8,8 @@ import {
   renderedAccountWithoutPasswordExists,
   renderedCreatePassword,
   renderedNoAccount,
-  renderedResetPasswordEmail,
-  renderedVerifyEmail,
+  renderedResetPassword,
+  renderedVerify,
 } from '@/email/templates/renderedTemplates';
 
 const emailTemplateTypes = [
@@ -43,9 +43,9 @@ const renderEmailTemplate = (
     case 'no-account':
       return renderedNoAccount;
     case 'reset-password':
-      return renderedResetPasswordEmail;
+      return renderedResetPassword;
     case 'verify':
-      return renderedVerifyEmail;
+      return renderedVerify;
     default:
       // We don't want to do anything for invalid template names
       return undefined;

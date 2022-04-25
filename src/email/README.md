@@ -4,6 +4,12 @@ The Gateway Email Service allows the creation of email templates and exposes fun
 
 ## Usage
 
+All emails, in both HTML and plain text versions, are pre-rendered at app
+startup and should not need to be rendered again.
+
+The email sending functions automatically fetch the pre-rendered templates for
+each email when sending.
+
 ### Sending an email
 
 To send an email

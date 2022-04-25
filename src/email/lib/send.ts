@@ -21,7 +21,12 @@ type Props = {
   to: string;
 };
 
-export const send = ({ html, plainText, subject, to }: Props) => {
+export const send = async ({
+  html,
+  plainText,
+  subject,
+  to,
+}: Props): Promise<boolean> => {
   const params: AWS.SESV2.SendEmailRequest = {
     Content: {
       Simple: {
@@ -44,5 +49,14 @@ export const send = ({ html, plainText, subject, to }: Props) => {
     FromEmailAddress: 'registration-reply@theguardian.com',
   };
 
-  return SESV2.sendEmail(params).promise();
+  const maxRetries = 3;
+  for (let tries = 0; tries < maxRetries; tries++) {
+    try {
+      await SESV2.sendEmail(params).promise();
+      return true;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  return false;
 };
