@@ -108,7 +108,7 @@ const checkTokenInIDAPI = async (
 
 /**
  * This function decides which return url should take presidence when multi choice are availble
- * If it's passed as a url query parameter, this takes higest presidence, followed by the value in the state cookie.
+ * If it's passed as a url query parameter, this takes highest precedence, followed by the value in the state cookie.
  * If neither are present the default return url is used
  *
  * @param requestState - this is request state from response.locals
