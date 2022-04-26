@@ -35,7 +35,6 @@ type ConsentsConfirmationProps = {
   returnUrl: string;
   optedIntoProfiling: boolean;
   optedIntoPersonalisedAdvertising: boolean;
-  shouldPersonalisedAdvertisingRender: boolean;
   productConsents: Consent[];
   subscribedNewsletters: NewsLetter[];
   geolocation?: GeoLocation;
@@ -121,14 +120,13 @@ const marketingText = css`
   }
 `;
 
-// TODO Fix consents confirmation Data consent display
+// TODO FIXME Fix consents confirmation Data consent display row top border
 
 export const ConsentsConfirmation = ({
   returnUrl,
   productConsents,
   optedIntoProfiling,
   optedIntoPersonalisedAdvertising,
-  shouldPersonalisedAdvertisingRender,
   subscribedNewsletters,
 }: ConsentsConfirmationProps) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
@@ -137,8 +135,6 @@ export const ConsentsConfirmation = ({
     optedIntoPersonalisedAdvertising ||
     !!productConsents.length ||
     !!subscribedNewsletters.length;
-
-  console.log('anyconsents', anyConsents);
 
   return (
     <ConsentsLayout title="Your registration is complete">
@@ -196,21 +192,20 @@ export const ConsentsConfirmation = ({
             </div>
           </ReviewTableRow>
         )}
-        {shouldPersonalisedAdvertisingRender &&
-          optedIntoPersonalisedAdvertising && (
-            <div css={[consentStyles, noTopBorder]}>
-              <span css={iconStyles}>
-                <SvgTickRound />
-              </span>
-              <p css={[text, itemText]}>
-                Allow personalised advertising using my data - this supports the
-                Guardian
-              </p>
-            </div>
-          )}
+        {optedIntoPersonalisedAdvertising && (
+          <div css={[consentStyles, noTopBorder]}>
+            <span css={iconStyles}>
+              <SvgTickRound />
+            </span>
+            <p css={[text, itemText]}>
+              Allow personalised advertising using my data - this supports the
+              Guardian
+            </p>
+          </div>
+        )}
       </div>
 
-      {shouldPersonalisedAdvertisingRender && anyConsents && (
+      {optedIntoPersonalisedAdvertising && anyConsents && (
         <p css={[marketingText, paddingTop, autoRow()]}>
           You can change these anytime in your account under&nbsp;
           <ExternalLink href={locations.MMA_EMAIL_PREFERENCES} subdued={true}>
@@ -219,7 +214,7 @@ export const ConsentsConfirmation = ({
           .
         </p>
       )}
-      {!shouldPersonalisedAdvertisingRender && anyConsents && (
+      {!optedIntoPersonalisedAdvertising && anyConsents && (
         <p css={[text, paddingTop, autoRow()]}>
           You can change these anytime in your account under&nbsp;
           <ExternalLink href={locations.MMA_EMAIL_PREFERENCES} subdued={true}>

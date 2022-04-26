@@ -46,16 +46,13 @@ const subscribedNewsletters = [
   },
 ];
 
-// TODO update these stories
-
 export const None = () => (
   <ConsentsConfirmation
     returnUrl=""
-    optedIntoProfiling={false}
     productConsents={[]}
     subscribedNewsletters={[]}
+    optedIntoProfiling={false}
     optedIntoPersonalisedAdvertising={false}
-    shouldPersonalisedAdvertisingRender={false}
   />
 );
 None.story = {
@@ -65,25 +62,24 @@ None.story = {
 export const Profiling = () => (
   <ConsentsConfirmation
     returnUrl=""
-    optedIntoProfiling={true}
     productConsents={[]}
     subscribedNewsletters={[]}
+    optedIntoProfiling={true}
     optedIntoPersonalisedAdvertising={false}
-    shouldPersonalisedAdvertisingRender={true}
   />
 );
 Profiling.story = {
   name: 'with consent given to profiling',
 };
 
+// TODO FIXME this view is broken
 export const Advertising = () => (
   <ConsentsConfirmation
     returnUrl=""
-    optedIntoProfiling={false}
     productConsents={[]}
     subscribedNewsletters={[]}
+    optedIntoProfiling={false}
     optedIntoPersonalisedAdvertising={true}
-    shouldPersonalisedAdvertisingRender={true}
   />
 );
 Advertising.story = {
@@ -93,11 +89,10 @@ Advertising.story = {
 export const Data = () => (
   <ConsentsConfirmation
     returnUrl=""
-    optedIntoProfiling={true}
     productConsents={[]}
     subscribedNewsletters={[]}
+    optedIntoProfiling={true}
     optedIntoPersonalisedAdvertising={true}
-    shouldPersonalisedAdvertisingRender={true}
   />
 );
 Data.story = {
@@ -107,11 +102,10 @@ Data.story = {
 export const Newsletters = () => (
   <ConsentsConfirmation
     returnUrl=""
-    optedIntoProfiling={false}
     productConsents={[]}
     subscribedNewsletters={subscribedNewsletters}
+    optedIntoProfiling={false}
     optedIntoPersonalisedAdvertising={false}
-    shouldPersonalisedAdvertisingRender={false}
   />
 );
 Newsletters.story = {
@@ -121,11 +115,10 @@ Newsletters.story = {
 export const Products = () => (
   <ConsentsConfirmation
     returnUrl=""
-    optedIntoProfiling={false}
     productConsents={productConsents}
     subscribedNewsletters={[]}
+    optedIntoProfiling={false}
     optedIntoPersonalisedAdvertising={false}
-    shouldPersonalisedAdvertisingRender={false}
   />
 );
 Products.story = {
@@ -135,11 +128,10 @@ Products.story = {
 export const Everything = () => (
   <ConsentsConfirmation
     returnUrl=""
-    optedIntoProfiling={true}
     productConsents={productConsents}
     subscribedNewsletters={subscribedNewsletters}
+    optedIntoProfiling={true}
     optedIntoPersonalisedAdvertising={true}
-    shouldPersonalisedAdvertisingRender={true}
   />
 );
 Everything.story = {

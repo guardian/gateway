@@ -2,8 +2,6 @@ import React from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { ConsentsConfirmation } from '@/client/pages/ConsentsConfirmation';
 import { Consents } from '@/shared/model/Consent';
-import { useCmpConsent } from '../lib/hooks/useCmpConsent';
-import { useAdFreeCookie } from '../lib/hooks/useAdFreeCookie';
 
 export const ConsentsConfirmationPage = () => {
   const clientState = useClientState();
@@ -14,11 +12,6 @@ export const ConsentsConfirmationPage = () => {
     newsletters = [],
     returnUrl = 'https://www.theguardian.com',
   } = pageData;
-
-  const hasCmpConsent = useCmpConsent();
-  const isDigitalSubscriber = useAdFreeCookie();
-  const shouldPersonalisedAdvertisingRender =
-    hasCmpConsent && !isDigitalSubscriber;
 
   const optedIntoProfiling = !!consents.find(
     // If consent option present and consented === true, this means the user has expressed a
@@ -48,7 +41,6 @@ export const ConsentsConfirmationPage = () => {
       returnUrl={returnUrl}
       optedIntoProfiling={optedIntoProfiling}
       optedIntoPersonalisedAdvertising={optedIntoPersonalisedAdvertising}
-      shouldPersonalisedAdvertisingRender={shouldPersonalisedAdvertisingRender}
       productConsents={productConsents}
       subscribedNewsletters={subscribedNewsletters}
     />

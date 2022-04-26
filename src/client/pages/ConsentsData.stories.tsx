@@ -32,15 +32,15 @@ const profiling: Consent = {
 export const NoDescription = Template.bind({});
 NoDescription.storyName = 'with no description';
 
-export const onlyProfilingConsent = Template.bind({});
-onlyProfilingConsent.args = {
+export const OnlyProfilingConsent = Template.bind({});
+OnlyProfilingConsent.args = {
   profiling: profiling,
 };
-onlyProfilingConsent.storyName = 'with profiling consent only';
+OnlyProfilingConsent.storyName = 'with profiling consent only';
 
-export const bothConsents = Template.bind({});
-bothConsents.args = {
+export const BothConsents = Template.bind({});
+BothConsents.args = {
   profiling: profiling,
   advertising: advertising,
 };
-bothConsents.storyName = 'with both consents';
+BothConsents.storyName = 'with both consents';
