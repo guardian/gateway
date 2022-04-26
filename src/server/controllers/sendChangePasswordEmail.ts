@@ -9,7 +9,10 @@ import {
 } from '@/server/lib/ophan';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { emailSendMetric } from '@/server/models/Metrics';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import {
+  addQueryParamsToPath,
+  getPersistableQueryParams,
+} from '@/shared/lib/queryParams';
 import { logger } from '@/server/lib/serverSideLogger';
 import { ApiError } from '@/server/models/Error';
 import { GenericErrors } from '@/shared/model/Errors';
@@ -82,7 +85,12 @@ const sendEmailInOkta = async (req: Request, res: ResponseWithRequestState) => {
   try {
     await sendForgotPasswordEmail(email);
 
-    setEncryptedStateCookie(res, { email });
+    setEncryptedStateCookie(res, {
+      email,
+      // We set queryParams here to allow state to be persisted as part of the registration flow,
+      // because we are unable to pass these query parameters via the email activation link in Okta email templates
+      queryParams: getPersistableQueryParams(res.locals.queryParams),
+    });
 
     sendOphanEvent(state.ophanConfig);
 

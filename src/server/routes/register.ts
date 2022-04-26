@@ -23,7 +23,10 @@ import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { ApiError } from '@/server/models/Error';
 import { ResponseWithRequestState } from '@/server/models/Express';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import {
+  addQueryParamsToPath,
+  getPersistableQueryParams,
+} from '@/shared/lib/queryParams';
 import { EmailType } from '@/shared/model/EmailType';
 import { GenericErrors, RegistrationErrors } from '@/shared/model/Errors';
 import deepmerge from 'deepmerge';
@@ -272,6 +275,9 @@ const OktaRegistration = async (
     setEncryptedStateCookie(res, {
       email: user.profile.email,
       status: user.status,
+      // We set queryParams here to allow state to be persisted as part of the registration flow,
+      // because we are unable to pass these query parameters via the email activation link in Okta email templates
+      queryParams: getPersistableQueryParams(res.locals.queryParams),
     });
 
     trackMetric('OktaRegistration::Success');

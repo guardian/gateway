@@ -197,11 +197,12 @@ const changePasswordInOkta = async (
 
       trackMetric('OktaUpdatePassword::Success');
 
-      if (path === '/welcome') {
-        updateEncryptedStateCookie(req, res, {
-          passwordSetOnWelcomePage: true,
-        });
-      }
+      updateEncryptedStateCookie(req, res, {
+        // Update the passwordSetOnWelcomePage only when we are on the welcome page
+        ...(path === '/welcome' && { passwordSetOnWelcomePage: true }),
+        // We want to remove all query params from the cookie after the password is set,
+        queryParams: undefined,
+      });
 
       // TODO: once sign out with Okta has been implemented, invalidate current sessions before kicking off code flow
       return performAuthorizationCodeFlow(
