@@ -126,7 +126,7 @@ const getReturnUrl = (
     return requestState.queryParams.returnUrl;
   }
   // otherwise check the encrypted state cookie for a returnUrl
-  // We always want to validate the returl url value, just in case its been incorrectly set though developer error
+  // We always want to validate the returl url value, just in case it's been incorrectly set through developer error
   if (encryptedStateQueryParams.returnUrl) {
     return validateReturnUrl(encryptedStateQueryParams.returnUrl);
   }
