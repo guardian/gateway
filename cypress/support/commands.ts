@@ -10,13 +10,20 @@ import { network } from './commands/network';
 import { mockPattern } from './commands/mockPattern';
 import { lastPayloadIs } from './commands/lastPayloadIs';
 import { checkForEmailAndGetDetails } from './commands/getEmailDetails';
-import { createTestUser } from './commands/testUser';
 import {
   disableCMP,
   enableCMP,
   acceptCMP,
   declineCMP,
 } from './commands/manageCmp';
+import {
+  getTestOktaUser,
+  activateTestOktaUser,
+  createTestUser,
+  resetOktaUserPassword,
+  expireOktaUserPassword,
+  suspendOktaUser,
+} from './commands/testUser';
 
 Cypress.Commands.add('mockNext', mockNext);
 Cypress.Commands.add('mockPattern', mockPattern); // unused, candidate for removal
@@ -33,3 +40,8 @@ Cypress.Commands.add('declineCMP', declineCMP);
 Cypress.Commands.add('lastPayloadIs', lastPayloadIs);
 Cypress.Commands.add('checkForEmailAndGetDetails', checkForEmailAndGetDetails);
 Cypress.Commands.add('createTestUser', createTestUser);
+Cypress.Commands.add('getTestOktaUser', getTestOktaUser);
+Cypress.Commands.add('activateTestOktaUser', activateTestOktaUser);
+Cypress.Commands.add('resetOktaUserPassword', resetOktaUserPassword);
+Cypress.Commands.add('expireOktaUserPassword', expireOktaUserPassword);
+Cypress.Commands.add('suspendOktaUser', suspendOktaUser);
