@@ -44,6 +44,11 @@ export interface Okta {
   authServerId: string;
   clientId: string;
   clientSecret: string;
+  social: {
+    apple: string;
+    facebook: string;
+    google: string;
+  };
 }
 
 export enum GA_UID {

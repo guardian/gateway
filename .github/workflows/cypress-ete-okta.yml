@@ -85,6 +85,9 @@ jobs:
           OKTA_CUSTOM_OAUTH_SERVER: ${{ secrets.OKTA_CUSTOM_OAUTH_SERVER }}
           OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID }}
           OKTA_CLIENT_SECRET: ${{ secrets.OKTA_CLIENT_SECRET }}
+          OKTA_IDP_APPLE: ${{ secrets.OKTA_IDP_APPLE }}
+          OKTA_IDP_GOOGLE: ${{ secrets.OKTA_IDP_GOOGLE }}
+          OKTA_IDP_FACEBOOK: ${{ secrets.OKTA_IDP_FACEBOOK }}
           LOGGING_KINESIS_STREAM: ''
           EC2_INSTANCE_ID: ''
           # This is a public URL+key sent to Sentry on the client side
