@@ -26,7 +26,6 @@ export const text = css`
 export const subText = css`
   margin: 0;
   ${textSans.small()}
-  max-width: 640px;
 `;
 
 export const textBold = css`

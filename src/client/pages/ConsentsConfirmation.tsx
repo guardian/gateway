@@ -85,10 +85,6 @@ const consentStyles = css`
   }
 `;
 
-const noTopBorder = css`
-  border-top: 0;
-`;
-
 const itemText = css`
   margin-left: ${space[2]}px;
 `;
@@ -141,6 +137,7 @@ export const ConsentsConfirmation = ({
       <h2 css={[heading, autoRow(), greyBorderTop]}>
         Thank you for completing your registration
       </h2>
+
       {anyConsents ? (
         <p css={[text, autoRow()]}>
           Please find below a summary of your settings.
@@ -155,6 +152,7 @@ export const ConsentsConfirmation = ({
           .
         </p>
       )}
+
       <div css={[autoRow()]}>
         {!!productConsents.length && (
           <ReviewTableRow title="Emails">
@@ -180,32 +178,34 @@ export const ConsentsConfirmation = ({
             ))}
           </ReviewTableRow>
         )}
-        {optedIntoProfiling && (
+        {(optedIntoProfiling || optedIntoPersonalisedAdvertising) && (
           <ReviewTableRow title="Data">
-            <div css={consentStyles}>
-              <span css={iconStyles}>
-                <SvgTickRound />
-              </span>
-              <p css={[text, itemText]}>
-                Allow analysis of my data for marketing
-              </p>
-            </div>
+            {optedIntoProfiling && (
+              <div css={consentStyles}>
+                <span css={iconStyles}>
+                  <SvgTickRound />
+                </span>
+                <p css={[text, itemText]}>
+                  Allow analysis of my data for marketing
+                </p>
+              </div>
+            )}
+            {optedIntoPersonalisedAdvertising && (
+              <div css={[consentStyles]}>
+                <span css={iconStyles}>
+                  <SvgTickRound />
+                </span>
+                <p css={[text, itemText]}>
+                  Allow personalised advertising using my data - this supports
+                  the Guardian
+                </p>
+              </div>
+            )}
           </ReviewTableRow>
-        )}
-        {optedIntoPersonalisedAdvertising && (
-          <div css={[consentStyles, noTopBorder]}>
-            <span css={iconStyles}>
-              <SvgTickRound />
-            </span>
-            <p css={[text, itemText]}>
-              Allow personalised advertising using my data - this supports the
-              Guardian
-            </p>
-          </div>
         )}
       </div>
 
-      {optedIntoPersonalisedAdvertising && anyConsents && (
+      {anyConsents && (
         <p css={[marketingText, paddingTop, autoRow()]}>
           You can change these anytime in your account under&nbsp;
           <ExternalLink href={locations.MMA_EMAIL_PREFERENCES} subdued={true}>
@@ -214,15 +214,7 @@ export const ConsentsConfirmation = ({
           .
         </p>
       )}
-      {!optedIntoPersonalisedAdvertising && anyConsents && (
-        <p css={[text, paddingTop, autoRow()]}>
-          You can change these anytime in your account under&nbsp;
-          <ExternalLink href={locations.MMA_EMAIL_PREFERENCES} subdued={true}>
-            Emails &amp; marketing
-          </ExternalLink>
-          .
-        </p>
-      )}
+
       {!subscribedNewsletters.length && (
         <>
           <h2 css={[heading, autoRow(), greyBorderTop, marginTop]}>
@@ -239,6 +231,7 @@ export const ConsentsConfirmation = ({
           </p>
         </>
       )}
+
       <div css={[controls, autoRow()]}>
         <ExternalLinkButton
           iconSide="right"

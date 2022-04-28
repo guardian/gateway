@@ -12,6 +12,7 @@ export const ConsentsDataPage = () => {
   const { pageData = {} } = clientState;
   const { consents = [] } = pageData;
 
+  // Note: profiling_optout is modelled as profiling_optin for Gateway
   const profiling = consents.find(
     (consent) => consent.id === Consents.PROFILING,
   );
@@ -25,12 +26,9 @@ export const ConsentsDataPage = () => {
     hasCmpConsent && !isDigitalSubscriber;
 
   return (
-    <>
-      {shouldPersonalisedAdvertisingPermissionRender ? (
-        <ConsentsData profiling={profiling} advertising={advertising} />
-      ) : (
-        <ConsentsData profiling={profiling} />
-      )}
-    </>
+    <ConsentsData
+      profiling={profiling}
+      {...(shouldPersonalisedAdvertisingPermissionRender && { advertising })}
+    />
   );
 };

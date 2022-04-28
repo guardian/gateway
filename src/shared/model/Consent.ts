@@ -18,7 +18,7 @@ export enum Consents {
 }
 
 export const CONSENTS_DATA_PAGE: string[] = [
-  Consents.PROFILING,
+  Consents.PROFILING, // modelled as an opt in in Gateway
   Consents.ADVERTISING,
 ];
 

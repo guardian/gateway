@@ -13,15 +13,12 @@ export const ConsentsConfirmationPage = () => {
     returnUrl = 'https://www.theguardian.com',
   } = pageData;
 
+  // Note: profiling_optout is modelled as profiling_optin for Gateway
   const optedIntoProfiling = !!consents.find(
-    // If consent option present and consented === true, this means the user has expressed a
-    // preference to NOT be contacted - eg. They opted OUT
     (consent) => consent.id === Consents.PROFILING && consent.consented,
   );
 
   const optedIntoPersonalisedAdvertising = !!consents.find(
-    // If consent option present and consented === true, this means the user has expressed a
-    // preference to NOT be contacted - eg. They opted OUT
     (consent) => consent.id === Consents.ADVERTISING && consent.consented,
   );
 
