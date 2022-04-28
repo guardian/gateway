@@ -7,20 +7,11 @@ import {
   SvgAppleBrand,
   SvgFacebookBrand,
 } from '@guardian/source-react-components';
+import { QueryParams } from '@/shared/model/QueryParams';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 
 type SocialButtonProps = {
-  returnUrl?: string;
-  oauthBaseUrl: string;
-};
-
-const buildUrl = (
-  oauthBaseUrl: string,
-  IdP: string,
-  returnUrl?: string,
-): string => {
-  const socialUrl = new URL(`${oauthBaseUrl}/${IdP}/signin`);
-  if (returnUrl) socialUrl.searchParams.append('returnUrl', returnUrl);
-  return socialUrl.toString();
+  queryParams: QueryParams;
 };
 
 const containerStyles = css`
@@ -72,17 +63,20 @@ const Gap = () => (
   ></span>
 );
 
-export const SocialButtons = ({
-  returnUrl,
-  oauthBaseUrl,
-}: SocialButtonProps) => {
+export const SocialButtons = ({ queryParams }: SocialButtonProps) => {
   return (
     <div css={containerStyles}>
       <LinkButton
         priority="tertiary"
         cssOverrides={[buttonOverrides, iconOverrides]}
         icon={<SvgGoogleBrand />}
-        href={buildUrl(oauthBaseUrl, 'google', returnUrl)}
+        href={buildUrlWithQueryParams(
+          '/signin/:social',
+          {
+            social: 'google',
+          },
+          queryParams,
+        )}
         data-cy="google-sign-in-button"
         data-link-name="google-social-button"
       >
@@ -93,7 +87,13 @@ export const SocialButtons = ({
         priority="tertiary"
         cssOverrides={buttonOverrides}
         icon={<SvgFacebookBrand />}
-        href={buildUrl(oauthBaseUrl, 'facebook', returnUrl)}
+        href={buildUrlWithQueryParams(
+          '/signin/:social',
+          {
+            social: 'facebook',
+          },
+          queryParams,
+        )}
         data-cy="facebook-sign-in-button"
         data-link-name="facebook-social-button"
       >
@@ -104,7 +104,13 @@ export const SocialButtons = ({
         priority="tertiary"
         cssOverrides={[buttonOverrides, iconOverrides]}
         icon={<SvgAppleBrand />}
-        href={buildUrl(oauthBaseUrl, 'apple', returnUrl)}
+        href={buildUrlWithQueryParams(
+          '/signin/:social',
+          {
+            social: 'apple',
+          },
+          queryParams,
+        )}
         data-cy="apple-sign-in-button"
         data-link-name="apple-social-button"
       >

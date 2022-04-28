@@ -22,7 +22,10 @@ Default.story = {
 };
 
 export const ReturnUrl = (args: RegistrationProps) => (
-  <Registration {...args} returnUrl="https://www.theguardian.com/uk" />
+  <Registration
+    {...args}
+    queryParams={{ returnUrl: 'https://www.theguardian.com/uk' }}
+  />
 );
 ReturnUrl.story = {
   name: 'with returnUrl',

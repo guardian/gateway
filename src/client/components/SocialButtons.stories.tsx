@@ -10,8 +10,7 @@ export default {
 
 export const Desktop = () => (
   <SocialButtons
-    returnUrl="https://www.theguardian.com/uk/"
-    oauthBaseUrl="https://oauth.theguardian.com/"
+    queryParams={{ returnUrl: 'https://www.theguardian.com/uk/' }}
   />
 );
 Desktop.storyName = 'At desktop';
@@ -24,8 +23,7 @@ Desktop.parameters = {
 
 export const Mobile = () => (
   <SocialButtons
-    returnUrl="https://www.theguardian.com/uk/"
-    oauthBaseUrl="https://oauth.theguardian.com/"
+    queryParams={{ returnUrl: 'https://www.theguardian.com/uk/' }}
   />
 );
 Mobile.storyName = 'At mobile 320';

@@ -8,23 +8,19 @@ export const SignInPage = () => {
   const {
     pageData = {},
     globalMessage = {},
-    clientHosts,
     queryParams,
     recaptchaConfig,
   } = clientState;
-  const { returnUrl, email } = pageData;
+  const { email } = pageData;
   const { error } = globalMessage;
-  const { oauthBaseUrl } = clientHosts;
   const { recaptchaSiteKey } = recaptchaConfig;
 
   // we use the encryptedEmail parameter to pre-fill the email field, but then want to remove it from the url
   useRemoveEncryptedEmailParam();
   return (
     <SignIn
-      returnUrl={returnUrl}
       email={email}
       error={error}
-      oauthBaseUrl={oauthBaseUrl}
       queryParams={queryParams}
       recaptchaSiteKey={recaptchaSiteKey}
     />

@@ -25,10 +25,8 @@ import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 import { logger } from '@/client/lib/clientSideLogger';
 
 export type RegistrationProps = {
-  returnUrl?: string;
   email?: string;
   recaptchaSiteKey: string;
-  oauthBaseUrl: string;
   queryParams: QueryParams;
 };
 
@@ -59,10 +57,8 @@ const divider = css`
 
 // TODO: migrate to use the MainForm component
 export const Registration = ({
-  returnUrl,
   email,
   recaptchaSiteKey,
-  oauthBaseUrl,
   queryParams,
 }: RegistrationProps) => {
   const formTrackingName = 'register';
@@ -152,7 +148,7 @@ export const Registration = ({
           displayText="or continue with"
           cssOverrides={divider}
         />
-        <SocialButtons returnUrl={returnUrl} oauthBaseUrl={oauthBaseUrl} />
+        <SocialButtons queryParams={queryParams} />
       </MainGrid>
       <Footer />
     </>
