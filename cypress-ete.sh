@@ -1,6 +1,16 @@
 #!/bin/bash
 # Quickly fire up Cypress using the CI settings for interactive local usage.
 
+# Set DEV_MODE=true to run the mocked tests with the development server.
+# We default to false here.
+: "${DEV_MODE:=false}"
+
+if [[ "$DEV_MODE" == "true" ]]; then
+  echo "Running with development config and server..."
+else
+  echo "Running with production build..."
+fi
+
 # Set USE_OKTA=true to run the okta e2e tests.
 # We default to false here.
 : "${USE_OKTA:=false}"
@@ -50,11 +60,16 @@ elif [[ -z "${CYPRESS_MAILOSAUR_SERVER_ID}" ]]; then
   exit
 fi
 
-echo "building gateway"
-yarn build
-echo "starting gateway server, and waiting for https://profile.thegulocal.com/healthcheck"
-yarn start &
-yarn wait-on:server
+if [[ "$DEV_MODE" == "false" ]]; then
+  echo "building gateway"
+  yarn build
+  echo "starting gateway server, and waiting for https://profile.thegulocal.com/healthcheck"
+  yarn start &
+  yarn wait-on:server
+else
+  echo "starting gateway server in watch and dev mode, and waiting for https://profile.thegulocal.com/healthcheck"
+  yarn watch:server & yarn watch & yarn wait-on:server
+fi
 
 echo "opening cypress"
 if [[ "$USE_OKTA" == "true" ]]; then
