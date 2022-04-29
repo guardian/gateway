@@ -29,6 +29,12 @@ class KinesisTransport extends Transport {
 
     setImmediate(() => {
       this.emit('logger', level);
+
+      if (process.env.CYPRESS === 'true') {
+        // return void in cypress
+        return;
+      }
+
       if (kinesisStreamName) {
         this.kinesis
           .putRecord({

@@ -80,14 +80,17 @@ jobs:
           RATE_LIMITER_CONFIG: '{"enabled":true,"defaultBuckets":{"globalBucket":{"capacity":500,"addTokenMs":50}}}'
           # Required for the Cypress tests to run as we're unable to verify the created certs
           NODE_TLS_REJECT_UNAUTHORIZED: 0
+          # used to tell gateway server we're running in cypress
+          CYPRESS: true
         with:
           build: yarn build
           start: yarn start, yarn mock-server
           wait-on: 'https://profile.thegulocal.com/healthcheck, http://localhost:9000/healthcheck'
           wait-on-timeout: 60
           browser: chrome
+          headless: true
           spec: cypress/integration/mocked/*.ts
-          config: '{"chromeWebSecurity": false,"baseUrl":"https://profile.thegulocal.com","numTestsKeptInMemory":"1"}'
+          config: '{"chromeWebSecurity": false,"baseUrl":"https://profile.thegulocal.com","numTestsKeptInMemory":"0"}'
       - name: Upload screenshots
         uses: actions/upload-artifact@v2
         if: failure()

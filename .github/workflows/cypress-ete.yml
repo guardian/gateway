@@ -86,14 +86,17 @@ jobs:
           RATE_LIMITER_CONFIG: '{"enabled":true,"defaultBuckets":{"globalBucket":{"capacity":500,"addTokenMs":50},"ipBucket":{"capacity":100,"addTokenMs":50},"emailBucket":{"capacity":100,"addTokenMs":50},"oktaIdentifierBucket":{"capacity":100,"addTokenMs":50},"accessTokenBucket":{"capacity":4,"addTokenMs":5000}},"routeBuckets":{}}'
           # Required for the Cypress tests to run as we're unable to verify the created certs
           NODE_TLS_REJECT_UNAUTHORIZED: 0
+          # used to tell gateway server we're running in cypress
+          CYPRESS: true
         with:
           build: yarn build
           start: yarn start
           wait-on: 'https://profile.thegulocal.com/healthcheck'
           wait-on-timeout: 60
           browser: chrome
+          headless: true
           spec: cypress/integration/ete/**/*.ts
-          config: '{"chromeWebSecurity": false,"baseUrl":"https://profile.thegulocal.com","numTestsKeptInMemory":"1"}'
+          config: '{"chromeWebSecurity": false,"baseUrl":"https://profile.thegulocal.com","numTestsKeptInMemory":"0"}'
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
