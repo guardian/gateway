@@ -132,7 +132,7 @@
     "@guardian/source-react-components": "^4.3.1",
     "@guardian/source-react-components-development-kitchen": "^0.0.35",
     "@sentry/browser": "^6.19.6",
-    "@sentry/tracing": "^6.19.6",
+    "@sentry/tracing": "^6.19.7",
     "@types/supertest": "^2.0.12",
     "awesome-debounce-promise": "^2.1.0",
     "aws-sdk": "2.1120.0",
