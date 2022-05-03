@@ -20,6 +20,8 @@ describe('getPersistableQueryParams', () => {
       ref: 'ref',
       refViewId: 'refViewId',
       componentEventParams: 'componentEventParams',
+      fromURI: 'fromURI',
+      appClientId: 'appClientId',
     };
 
     const output = getPersistableQueryParams(input);
@@ -31,6 +33,8 @@ describe('getPersistableQueryParams', () => {
       refViewId: 'refViewId',
       componentEventParams: 'componentEventParams',
       useOkta: undefined,
+      fromURI: 'fromURI',
+      appClientId: 'appClientId',
     };
 
     expect(output).toStrictEqual(expected);

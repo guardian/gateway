@@ -150,14 +150,22 @@ router.get(
           )
         : authState.queryParams.returnUrl;
 
-      // TODO: This is a temp hack to handle the apps redirects
+      // This is a fallback to handle the apps redirects
       // back to the deep link from sign in/registration
       // the hard coded query param is also temp to test if they're
       // able to read data we send back
       if (
         validAppProtocols.some((protocol) => returnUrl.startsWith(protocol))
       ) {
-        return res.redirect(303, `${returnUrl}?reason=signin`);
+        return res.redirect(303, returnUrl);
+      }
+
+      // We only use to this option if the app does not provide a deep link with a custom scheme
+      // This allows the native apps to complete the authorization code flow for the app.
+      // the fromURI parameter is an undocumented feature from Okta that allows us to
+      // rejoin the authorization code flow after we have set a session cookie on our own platform
+      if (authState.queryParams.fromURI) {
+        return res.redirect(303, authState.queryParams.fromURI);
       }
 
       postSignInController(req, res, cookies, returnUrl);
