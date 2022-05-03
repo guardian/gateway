@@ -1,9 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import {
-  ResetPasswordUrlResponse,
-  TokenResponse,
-  UserResponse,
-} from '@/server/models/okta/User';
+import { TokenResponse, UserResponse } from '@/server/models/okta/User';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
