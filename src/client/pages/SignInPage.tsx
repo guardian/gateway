@@ -11,7 +11,7 @@ export const SignInPage = () => {
     queryParams,
     recaptchaConfig,
   } = clientState;
-  const { returnUrl, email, displayRegisterTab = true } = pageData;
+  const { email, displayRegisterTab = true } = pageData;
   const { error } = globalMessage;
   const { recaptchaSiteKey } = recaptchaConfig;
 

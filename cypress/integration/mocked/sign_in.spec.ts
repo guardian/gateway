@@ -150,6 +150,39 @@ describe('Sign in flow', () => {
         'https://manage.theguardian.com/help-centre/contact-us',
       );
     });
+
+    it('redirects to homepage when user with existing valid session visits signin page', () => {
+      cy.setCookie('SC_GU_U', 'sessionvalue');
+      cy.setCookie('SC_GU_LA', 'la_value');
+
+      cy.request({
+        url: '/signin',
+        followRedirect: false,
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.eq(302);
+        expect(response.redirectedToUrl).to.eq(
+          'https://m.code.dev-theguardian.com/',
+        );
+      });
+      cy.mockNext(200, {
+        status: 'signedInRecently',
+        emailValidated: true,
+      });
+    });
+
+    it('redirects to /reauthenticate when user with existing invalid session visits signin page', () => {
+      cy.setCookie('SC_GU_U', 'sessionvalue');
+      cy.setCookie('SC_GU_LA', 'la_value');
+
+      cy.mockNext(200, {
+        status: 'signedInNotRecently',
+        emailValidated: true,
+      });
+      cy.visit('/signin');
+
+      cy.location('pathname').should('eq', '/reauthenticate');
+    });
   });
 
   context('General IDAPI failure', () => {

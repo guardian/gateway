@@ -17,7 +17,7 @@ export interface Configuration {
     siteKey: string;
     secretKey: string;
   };
-  domain: string;
+  guardianDotcomDomain: string;
   apiDomain: string;
   isHttps: boolean;
   appSecret: string;

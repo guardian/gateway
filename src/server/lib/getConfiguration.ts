@@ -50,7 +50,7 @@ const getStage = (value: string | undefined): Stage => {
 interface StageVariables {
   gaId: string;
   gaIdHash: string;
-  domain: string;
+  guardianDotcomDomain: string;
   apiDomain: string;
   oktaEnabled: boolean;
   accountManagementUrl: string;
@@ -62,7 +62,7 @@ const getStageVariables = (stage: Stage): StageVariables => {
       return {
         gaId: GA_UID.PROD,
         gaIdHash: GA_UID_HASH.PROD,
-        domain: GU_DOMAIN.PROD,
+        guardianDotcomDomain: GU_DOMAIN.PROD,
         apiDomain: GU_API_DOMAIN.PROD,
         oktaEnabled: featureSwitches.oktaEnabled.PROD,
         accountManagementUrl: GU_MANAGE_URL.PROD,
@@ -71,7 +71,7 @@ const getStageVariables = (stage: Stage): StageVariables => {
       return {
         gaId: GA_UID.CODE,
         gaIdHash: GA_UID_HASH.CODE,
-        domain: GU_DOMAIN.CODE,
+        guardianDotcomDomain: GU_DOMAIN.CODE,
         apiDomain: GU_API_DOMAIN.CODE,
         oktaEnabled: featureSwitches.oktaEnabled.CODE,
         accountManagementUrl: GU_MANAGE_URL.CODE,
@@ -80,7 +80,7 @@ const getStageVariables = (stage: Stage): StageVariables => {
       return {
         gaId: GA_UID.DEV,
         gaIdHash: GA_UID_HASH.DEV,
-        domain: GU_DOMAIN.DEV,
+        guardianDotcomDomain: GU_DOMAIN.DEV,
         apiDomain: GU_API_DOMAIN.DEV,
         oktaEnabled: featureSwitches.oktaEnabled.DEV,
         accountManagementUrl: GU_MANAGE_URL.DEV,
@@ -136,7 +136,7 @@ export const getConfiguration = (): Configuration => {
   const {
     gaId,
     gaIdHash,
-    domain,
+    guardianDotcomDomain,
     apiDomain,
     oktaEnabled,
     accountManagementUrl,
@@ -240,7 +240,7 @@ export const getConfiguration = (): Configuration => {
       id: gaId,
       hash: gaIdHash,
     },
-    domain,
+    guardianDotcomDomain,
     apiDomain,
     isHttps,
     appSecret,

@@ -41,10 +41,15 @@ export interface PageData {
   previousPage?: ConsentPath;
   // reset password token specific
   timeUntilTokenExpiry?: number;
+
   // jobs specific
   firstName?: string;
   secondName?: string;
   userBelongsToGRS?: boolean;
+
+  // Sign in page specific (we want to hide the register tab when the user
+  // already has an active session but may need to reauthenticate)
+  displayRegisterTab?: boolean;
 }
 
 export interface RecaptchaConfig {

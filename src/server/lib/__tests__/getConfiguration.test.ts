@@ -85,7 +85,7 @@ describe('getConfiguration', () => {
         id: GA_UID.DEV,
         hash: GA_UID_HASH.DEV,
       },
-      domain: GU_DOMAIN.DEV,
+      guardianDotcomDomain: GU_DOMAIN.DEV,
       apiDomain: GU_API_DOMAIN.DEV,
       isHttps: true,
       appSecret: 'app-secret',

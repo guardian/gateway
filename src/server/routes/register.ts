@@ -33,13 +33,13 @@ import deepmerge from 'deepmerge';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { OktaError } from '@/server/models/okta/Error';
 import { causesInclude } from '@/server/lib/okta/api/errors';
-import { registerMiddleware } from '../lib/middleware/register';
+import { redirectIfLoggedIn } from '../lib/middleware/redirectIfLoggedIn';
 
 const { okta } = getConfiguration();
 
 router.get(
   '/register',
-  registerMiddleware,
+  redirectIfLoggedIn,
   (req: Request, res: ResponseWithRequestState) => {
     const html = renderer('/register', {
       requestState: res.locals,
@@ -167,7 +167,7 @@ router.post(
 router.post(
   '/register',
   handleRecaptcha,
-  registerMiddleware,
+  redirectIfLoggedIn,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { useOkta } = res.locals.queryParams;
     if (okta.enabled && useOkta) {

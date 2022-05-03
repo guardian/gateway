@@ -35,6 +35,7 @@ export const ValidRoutePathsArray = [
   '/signin',
   '/signin/success',
   '/signin/:social',
+  '/reauthenticate',
   '/signout',
   '/verify-email', //this can be removed once Jobs has been migrated
   '/welcome',
