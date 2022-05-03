@@ -61,3 +61,10 @@ export const InvalidRecaptcha = (args: SignInProps) => (
 InvalidRecaptcha.story = {
   name: 'with reCAPTCHA error',
 };
+
+export const WithoutRegisterButton = (args: SignInProps) => (
+  <SignIn {...args} displayRegisterTab={false} />
+);
+WithoutRegisterButton.story = {
+  name: 'without register button',
+};

@@ -178,23 +178,23 @@ export const SignIn = ({
     executeCaptcha();
   };
 
-  const tabs: TabType[] = [
-    {
-      displayText: 'Sign in',
-      queryParams: queryParams,
-      linkTo: '/signin',
-      isActive: true,
-    },
-  ];
+  const signInTab: TabType = {
+    displayText: 'Sign in',
+    queryParams: queryParams,
+    linkTo: '/signin',
+    isActive: true,
+  };
 
-  if (displayRegisterTab) {
-    tabs.push({
-      displayText: 'Register',
-      queryParams: queryParams,
-      linkTo: '/register',
-      isActive: false,
-    });
-  }
+  const registerTab: TabType = {
+    displayText: 'Register',
+    queryParams: queryParams,
+    linkTo: '/register',
+    isActive: false,
+  };
+
+  const tabs: TabType[] = displayRegisterTab
+    ? [signInTab, registerTab]
+    : [signInTab];
 
   return (
     <>
