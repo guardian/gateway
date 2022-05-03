@@ -68,7 +68,17 @@ cypress-mocked: clear
 	$(call log, "opening cypress using mocks")
 	@(./cypress-mocked.sh)
 
+cypress-mocked-dev: export DEV_MODE = true
+cypress-mocked-dev: clear
+	$(call log, "opening cypress in dev mode using mocks")
+	@(./cypress-mocked.sh)
+
 cypress-ete: clear
+	$(call log, "opening cypress")
+	@(./cypress-ete.sh)
+
+cypress-ete-dev: export DEV_MODE = true
+cypress-ete-dev: clear
 	$(call log, "opening cypress")
 	@(./cypress-ete.sh)
 
@@ -76,6 +86,14 @@ cypress-ete-okta: export USE_OKTA = true
 cypress-ete-okta: clear
 	$(call log, "opening cypress using okta tests")
 	@(./cypress-ete.sh)
+
+cypress-ete-okta-dev: export USE_OKTA = true
+cypress-ete-okta-dev: export DEV_MODE = true
+cypress-ete-okta-dev: clear
+	$(call log, "opening cypress in dev mode using okta tests")
+	@(./cypress-ete.sh)
+
+
 
 # helpers
 

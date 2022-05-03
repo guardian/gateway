@@ -230,21 +230,39 @@ Integration tests are provided by [Cypress](https://cypress.io). They are all de
 
 First make sure that the development environment isn't running, since the following scripts will set them up automatically.
 
-You can then open the test runner using:
+We now support a development mode that allows you to make code changes to the server without having the restart cypress to check your changes against the tests.
+
+You can also run the tests with the production build (as is done in CI) without the ability to automatically reload the gateway server.
+
+You can then open the test runner in using:
 
 ```sh
+# to run in dev mode
+$ make cypress-mocked-dev
+# or to run in production mode
 $ make cypress-mocked
-# or
-$ ./cypress-mocked.sh
 ```
 
 You can also open the end to end test runner using:
 
 ```sh
+# to run in dev mode
+$ make cypress-ete-dev
+# or to run in production mode
 $ make cypress-ete
-# or
-$ ./cypress-ete.sh
 ```
+
+You can also run the Okta specific end to end tests using:
+
+```sh
+# to run in dev mode
+$ make cypress-ete-okta-dev
+# or to run in production mode
+$ make cypress-ete-okta
+```
+
+It's recommended to use the `make` commands rather than calling the file directly e.g `./cypress-ete-okta.sh`
+as the test runners use environment variables to check the running mode.
 
 To run the jest tests headless and automatically (how they are run on CI) use:
 
