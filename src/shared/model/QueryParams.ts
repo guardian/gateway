@@ -33,6 +33,12 @@ export interface PersistableQueryParams
   returnUrl: string;
   useOkta?: boolean;
   clientId?: ValidClientId;
+  // This is the fromURI query parameter from Otka authorization code flow
+  // that we intercept in fastly. We can send a user back to this uri
+  // to complete the authorization code flow for that application
+  fromURI?: string;
+  // This is the client Id of a calling application in Okta (ie iOS app etc)
+  appClientId?: string;
 }
 
 /**

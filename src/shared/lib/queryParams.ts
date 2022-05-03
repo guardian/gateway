@@ -19,6 +19,8 @@ export const getPersistableQueryParams = (
   refViewId: params.refViewId,
   useOkta: params.useOkta,
   componentEventParams: params.componentEventParams,
+  fromURI: params.fromURI,
+  appClientId: params.appClientId,
 });
 
 /**
