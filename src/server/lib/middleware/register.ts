@@ -14,7 +14,6 @@ export const registerMiddleware = async (
   res: ResponseWithRequestState,
   next: NextFunction,
 ) => {
-  console.log('RUNNING REGISTER MIDDLEWARE');
   const { okta, accountManagementUrl } = getConfiguration();
 
   const { useOkta } = res.locals.queryParams;
@@ -29,20 +28,16 @@ export const registerMiddleware = async (
   // page. If the session isn't valid, they are redirected to the register
   // page.
   if (okta.enabled && useOkta && oktaSessionCookieId) {
-    console.log('BRANCH 1');
     try {
       await getSession(oktaSessionCookieId);
-      console.log('RETURN');
       return res.redirect(accountManagementUrl);
     } catch {
-      console.log('BRANCH 1 CATCH');
       //if the cookie exists, but the session is invalid, we remove the cookie
       clearOktaCookies(res);
       logger.info(
         'User attempting to register had an existing Okta session cookie, but it was invalid',
       );
       //we redirect to /register to make sure the Okta sid cookie has been removed
-      console.log('RETURN');
       return res.redirect(
         addQueryParamsToPath('/register', res.locals.queryParams),
       );
@@ -54,7 +49,6 @@ export const registerMiddleware = async (
     // we only want to check for identity cookies if okta is not enabled, this is to support apps,
     // who are using the Okta SDK logout, which does not remove Identity cookies on sign out
   ) {
-    console.log('BRANCH 2');
     logger.info('User attempting to register had existing IDAPI cookies set.');
 
     //Check if the current Identity session cookie is valid
@@ -68,10 +62,8 @@ export const registerMiddleware = async (
       auth.status === IDAPIAuthStatus.RECENT ||
       auth.status === IDAPIAuthStatus.NOT_RECENT
     ) {
-      console.log('BRANCH 2 SUBBRANCH 1');
       return res.redirect(accountManagementUrl);
     } else {
-      console.log('BRANCH 2 SUBBRANCH 2');
       //otherwise the user has invalid session cookie, so we take them back to the /register page and delete the Identity cookies
       clearIDAPICookies(res);
       return res.redirect(
@@ -79,7 +71,6 @@ export const registerMiddleware = async (
       );
     }
   } else {
-    console.log('BRANCH 3');
     next();
   }
 };
