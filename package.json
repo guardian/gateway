@@ -78,7 +78,7 @@
     "@typescript-eslint/parser": "^5.22.0",
     "assets-webpack-plugin": "^7.1.1",
     "axe-core": "^4.4.1",
-    "babel-jest": "^27.5.1",
+    "babel-jest": "^28.0.3",
     "babel-loader": "^8.2.5",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "chalk-rainbow": "^1.0.0",
