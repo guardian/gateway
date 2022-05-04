@@ -46,6 +46,7 @@ export const register = async (email: string): Promise<UserResponse> => {
            *    Then Gateway should ask Okta for my activation token
            *    And I should be sent a set password email with the activation
            *    token through Gateway
+           *    And my status should become PROVISIONED
            */
           const tokenResponse = await activateUser(user.id, false);
           if (tokenResponse?.token.length) {
@@ -72,6 +73,7 @@ export const register = async (email: string): Promise<UserResponse> => {
            *    Then Gateway should ask Okta for my activation token
            *    And I should be sent a set password email with the activation
            *    token through Gateway
+           *    And my status should remain PROVISIONED
            */
           const tokenResponse = await reactivateUser(user.id, false);
           if (tokenResponse?.token.length) {
@@ -97,6 +99,7 @@ export const register = async (email: string): Promise<UserResponse> => {
            *    When I try to register
            *    Then I should be sent an email with a link to the reset
            *    password form (with no token)
+           *    And my status should remain ACTIVE
            */
           await sendAccountExistsEmail({
             to: user.profile.email,
@@ -110,6 +113,7 @@ export const register = async (email: string): Promise<UserResponse> => {
            *    Then Gateway should ask Okta for my reset password token
            *    And I should be sent a reset password email with the activation
            *    token through Gateway
+           *    And my status should become RECOVERY
            */
           const tokenResponse = await generateResetPasswordToken(
             user.id,
