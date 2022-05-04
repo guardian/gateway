@@ -33,16 +33,13 @@ hydrateApp();
 // initalise ophan
 ophanInit();
 
-// don't load this if running in cypress
-if (!window.Cypress) {
-  // load cmp if it should show
-  (async () => {
-    const country = await getLocale();
+// load cmp
+(async () => {
+  const country = await getLocale();
 
-    if (country) {
-      cmp.init({ country });
-    }
-  })();
-}
+  if (country) {
+    cmp.init({ country });
+  }
+})();
 
 initGoogleAnalyticsWhenConsented();

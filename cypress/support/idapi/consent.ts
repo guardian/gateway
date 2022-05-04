@@ -79,6 +79,12 @@ export const allConsents = [
     description:
       'Learn from leading minds at our Guardian live events, including discussions and debates, short courses and bespoke training. Available in the UK, Aus and US.',
   },
+  {
+    id: 'personalised_advertising',
+    isOptOut: false,
+    isChannel: false,
+    name: 'Allow personalised advertising using this data - this supports the Guardian',
+  },
 ];
 
 export const defaultUserConsent = allConsents.map(({ id }) => ({
@@ -101,4 +107,8 @@ export const getUserConsents = (consented: Array<string>) => {
 export const optedOutUserConsent = getUserConsents([
   'profiling_optout',
   'market_research_optout',
+]);
+
+export const optedIntoPersonalisedAdvertisingUserConsent = getUserConsents([
+  'personalised_advertising',
 ]);

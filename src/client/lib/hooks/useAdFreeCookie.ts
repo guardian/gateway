@@ -9,14 +9,13 @@ export const useAdFreeCookie = (): boolean => {
 
   useEffect(() => {
     const adfreeCookieExists = !!getCookie({ name: 'GU_AF1' }); // Ad Free session cookie valid 48hrs
-    const digitalSubscriberCookieExists = !!getCookie({
+    const isDigitalSubscriber = !!getCookie({
       name: 'gu_digital_subscriber',
-    });
+    })?.valueOf();
 
     setHasAdFree(adfreeCookieExists);
-    setIsDigitalSubscriber(digitalSubscriberCookieExists);
+    setIsDigitalSubscriber(isDigitalSubscriber);
   }, []);
 
-  console.log(`has ad free: ${hasAdFree}`);
   return hasAdFree || isDigitalSubscriber;
 };

@@ -12,6 +12,8 @@ class ReviewPage extends OnboardingPage {
     },
     SUPPORTER_CONSENT: 'Supporting the Guardian',
     PROFILING_CONSENT: 'Allow analysis of my data for marketing',
+    PERSONALISED_ADVERTISING_CONSENT:
+      'Allow personalised advertising using my data - this supports the Guardian',
     BUTTON_RETURN_GUARDIAN: 'Return to the Guardian',
     NO_NEWSLETTERS_TITLE: 'Didn’t find anything you like?',
   };
