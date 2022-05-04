@@ -29,7 +29,7 @@ import { SetPasswordResendPage } from '@/client/pages/SetPasswordResendPage';
 import { SetPasswordSessionExpiredPage } from '@/client/pages/SetPasswordSessionExpiredPage';
 import { SetPasswordCompletePage } from '@/client/pages/SetPasswordCompletePage';
 import { MaintenancePage } from '@/client/pages/MaintenancePage';
-import { JobsTermsPage } from './pages/JobsTermsPage';
+import { JobsTermsPage } from './pages/JobsTermsAcceptPage';
 
 export type RoutingConfig = {
   clientState: ClientState;

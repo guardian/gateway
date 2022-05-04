@@ -1,15 +1,15 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { JobsTerms } from './JobsTerms';
+import { JobsTermsAccept } from './JobsTermsAccept';
 
 export default {
-  title: 'Pages/JobsTerms',
-  component: JobsTerms,
+  title: 'Pages/JobsTermsAccept',
+  component: JobsTermsAccept,
   parameters: { layout: 'fullscreen' },
 } as Meta;
 
-export const Default = () => <JobsTerms />;
+export const Default = () => <JobsTermsAccept />;
 Default.story = {
   name: 'with defaults',
 };

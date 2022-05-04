@@ -1,5 +1,5 @@
 import React from 'react';
-import { JobsTerms } from './JobsTerms';
+import { JobsTermsAccept } from './JobsTermsAccept';
 
 export const JobsTermsPage = () => {
   // const clientState = useClientState();
@@ -14,5 +14,5 @@ export const JobsTermsPage = () => {
   // const { error } = globalMessage;
   // const { recaptchaSiteKey } = recaptchaConfig;
 
-  return <JobsTerms />;
+  return <JobsTermsAccept />;
 };

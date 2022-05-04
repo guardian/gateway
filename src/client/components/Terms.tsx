@@ -62,8 +62,27 @@ export const GuardianTerms = () => (
   </>
 );
 
-const JobsTerms = () => (
+export const JobsStandaloneTerms = () => (
   <>
+    <Text>
+      By proceeding, you agree to our{' '}
+      <TermsLink href="https://jobs.theguardian.com/terms-and-conditions/">
+        Guardian&#39;s Jobs terms &amp; conditions
+      </TermsLink>
+      .
+    </Text>
+    <Text>
+      For information about how we use your data, see our{' '}
+      <TermsLink href="https://jobs.theguardian.com/privacy-policy/">
+        Guardian Jobs&#39; privacy policy
+      </TermsLink>
+      .
+    </Text>
+  </>
+);
+
+const JobsTerms = () => (
+  <div css={terms}>
     <Text>
       By proceeding, you agree to our{' '}
       <TermsLink href="https://www.theguardian.com/help/terms-of-service">
@@ -86,7 +105,7 @@ const JobsTerms = () => (
       </TermsLink>
       .
     </Text>
-  </>
+  </div>
 );
 
 export const RecaptchaTerms = () => (
