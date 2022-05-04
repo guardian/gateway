@@ -20,7 +20,6 @@ import locations from '@/shared/lib/locations';
 import { EmailInput } from '@/client/components/EmailInput';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
-import { GeoLocation } from '@/shared/model/Geolocation';
 import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
 import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 import { logger } from '@/client/lib/clientSideLogger';
@@ -31,7 +30,6 @@ export type RegistrationProps = {
   recaptchaSiteKey: string;
   oauthBaseUrl: string;
   queryParams: QueryParams;
-  geolocation?: GeoLocation;
 };
 
 const registerButton = css`
@@ -66,7 +64,6 @@ export const Registration = ({
   recaptchaSiteKey,
   oauthBaseUrl,
   queryParams,
-  geolocation,
 }: RegistrationProps) => {
   const formTrackingName = 'register';
   const registerFormRef = createRef<HTMLFormElement>();
@@ -110,7 +107,7 @@ export const Registration = ({
 
   return (
     <>
-      <Header geolocation={geolocation} />
+      <Header />
       <Nav
         tabs={[
           {

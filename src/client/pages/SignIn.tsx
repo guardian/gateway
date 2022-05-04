@@ -15,7 +15,6 @@ import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { CaptchaErrors, SignInErrors } from '@/shared/model/Errors';
 import { EmailInput } from '@/client/components/EmailInput';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-import { GeoLocation } from '@/shared/model/Geolocation';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
 import useRecaptcha, {
@@ -32,7 +31,6 @@ export type SignInProps = {
   email?: string;
   error?: string;
   oauthBaseUrl: string;
-  geolocation?: GeoLocation;
   recaptchaSiteKey: string;
 };
 
@@ -136,7 +134,6 @@ export const SignIn = ({
   error: pageLevelError,
   oauthBaseUrl,
   queryParams,
-  geolocation,
   recaptchaSiteKey,
 }: SignInProps) => {
   const formTrackingName = 'sign-in';
@@ -184,7 +181,7 @@ export const SignIn = ({
 
   return (
     <>
-      <Header geolocation={geolocation} />
+      <Header />
       <Nav
         tabs={[
           {

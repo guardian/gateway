@@ -12,7 +12,7 @@ export const SignInPage = () => {
     queryParams,
     recaptchaConfig,
   } = clientState;
-  const { returnUrl, email, geolocation } = pageData;
+  const { returnUrl, email } = pageData;
   const { error } = globalMessage;
   const { oauthBaseUrl } = clientHosts;
   const { recaptchaSiteKey } = recaptchaConfig;
@@ -26,7 +26,6 @@ export const SignInPage = () => {
       error={error}
       oauthBaseUrl={oauthBaseUrl}
       queryParams={queryParams}
-      geolocation={geolocation}
       recaptchaSiteKey={recaptchaSiteKey}
     />
   );

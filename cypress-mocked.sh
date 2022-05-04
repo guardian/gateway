@@ -1,6 +1,15 @@
 #!/bin/bash
 # Quickly fire up Cypress using the CI settings for interactive local usage.
-echo "Opening Cypress mocked tests..."
+
+# Set DEV_MODE=true to run the mocked tests with the development server.
+# We default to false here.
+: "${DEV_MODE:=false}"
+
+if [[ "$DEV_MODE" == "true" ]]; then
+  echo "Opening Cypress mocked tests with development server..."
+else
+  echo "Opening Cypress mocked tests..."
+fi
 
 if pgrep "nginx" >/dev/null 
 then
@@ -27,13 +36,26 @@ else
   echo "NODE_EXTRA_CA_CERTS is set."
 fi
 
-echo "building gateway"
-yarn build
+# In CI we build from the production config
+if [[ "$DEV_MODE" == "false" ]]; then
+  echo "building gateway"
+  yarn build
+fi
+
 echo "starting mock server"
 yarn mock-server &
 yarn wait-on:mock-server
 echo "starting gateway server, and waiting for https://profile.thegulocal.com/healthcheck"
-yarn start &
-yarn wait-on:server
+
+# In CI we build from the start the production server
+if [[ "$DEV_MODE" == "false" ]]; then
+  yarn start &
+  yarn wait-on:server
+else
+  # In DEV we want to watch and reload the server 
+  yarn watch:server & yarn watch & yarn wait-on:server
+fi
+
 echo "opening cypress"
 yarn cypress open --env $CI_ENV --config '{"testFiles":["mocked/**/*.ts"]}'
+
