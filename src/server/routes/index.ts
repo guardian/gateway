@@ -15,6 +15,7 @@ import { default as setPassword } from './setPassword';
 import { default as maintenance } from './maintenance';
 import { default as oauth } from './oauth';
 import { default as emailTemplates } from './emailTemplates';
+import { default as agree } from './agree';
 
 const { okta } = getConfiguration();
 
@@ -57,6 +58,9 @@ uncachedRoutes.use(magicLink);
 
 // welcome routes
 uncachedRoutes.use(welcome);
+
+// terms and conditions routes
+uncachedRoutes.use(agree);
 
 // oauth callback routes
 if (okta.enabled) {

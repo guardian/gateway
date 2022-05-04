@@ -43,6 +43,7 @@ export const ValidRoutePathsArray = [
   '/welcome/email-sent',
   '/welcome/expired',
   '/welcome/resend',
+  '/agree/GRS',
   '/email/:template',
 ] as const;
 

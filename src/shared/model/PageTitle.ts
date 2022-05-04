@@ -23,7 +23,8 @@ export type PageTitle =
   | 'Stay in touch'
   | 'Newsletters'
   | 'Review'
-  | 'Maintenance';
+  | 'Maintenance'
+  | 'Jobs';
 
 export type PasswordPageTitle = Extract<
   'Welcome' | 'Create Password' | 'Change Password',

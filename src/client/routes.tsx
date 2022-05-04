@@ -29,6 +29,7 @@ import { SetPasswordResendPage } from '@/client/pages/SetPasswordResendPage';
 import { SetPasswordSessionExpiredPage } from '@/client/pages/SetPasswordSessionExpiredPage';
 import { SetPasswordCompletePage } from '@/client/pages/SetPasswordCompletePage';
 import { MaintenancePage } from '@/client/pages/MaintenancePage';
+import { JobsTermsPage } from './pages/JobsTermsPage';
 
 export type RoutingConfig = {
   clientState: ClientState;
@@ -132,6 +133,10 @@ const routes: Array<{
   {
     path: '/welcome/complete',
     element: <WelcomePasswordAlreadySetPage />,
+  },
+  {
+    path: '/agree/GRS',
+    element: <JobsTermsPage />,
   },
   {
     path: '/welcome/:token',
