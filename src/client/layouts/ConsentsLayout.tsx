@@ -44,16 +44,11 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
 }) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
   const clientState = useClientState();
-  const { pageData = {}, globalMessage: { error, success } = {} } = clientState;
-  const { geolocation } = pageData;
+  const { globalMessage: { error, success } = {} } = clientState;
 
   return (
     <>
-      <ConsentsHeader
-        error={error}
-        success={success}
-        geolocation={geolocation}
-      />
+      <ConsentsHeader error={error} success={success} />
       <main css={mainStyles}>
         <ConsentsSubHeader autoRow={autoRow} title={title} current={current} />
         {children && (
