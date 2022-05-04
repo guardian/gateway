@@ -63,7 +63,7 @@ export const GuardianTerms = () => (
 );
 
 export const JobsStandaloneTerms = () => (
-  <>
+  <div css={terms}>
     <Text>
       By proceeding, you agree to our{' '}
       <TermsLink href="https://jobs.theguardian.com/terms-and-conditions/">
@@ -78,7 +78,7 @@ export const JobsStandaloneTerms = () => (
       </TermsLink>
       .
     </Text>
-  </>
+  </div>
 );
 
 const JobsTerms = () => (

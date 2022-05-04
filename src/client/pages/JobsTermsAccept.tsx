@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { buttonStyles, MainLayout } from '@/client/layouts/Main';
+import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { css } from '@emotion/react';
 import {
@@ -11,8 +11,8 @@ import {
 } from '@guardian/source-foundations';
 import { getAutoRow, gridItemYourData } from '../styles/Grid';
 import { InfoSummary } from '@guardian/source-react-components-development-kitchen';
-import { Button, Link } from '@guardian/source-react-components';
-import { JobsStandaloneTerms } from '../components/Terms';
+import { Link, TextInput } from '@guardian/source-react-components';
+import { MainForm } from '../components/MainForm';
 
 const listBullets = css`
   list-style: none;
@@ -87,22 +87,18 @@ export const JobsTermsAccept = () => {
           </>
         }
       />
-      <form
-        css={css`
-          margin-top: ${space[5]}px;
-        `}
-      >
-        <JobsStandaloneTerms />
-        <Button
-          css={buttonStyles({ hasTerms: true })}
-          type="submit"
-          priority={'primary'}
-          data-cy="jobs-consent-submit-button"
-          iconSide="right"
-        >
-          Continue
-        </Button>
-      </form>
+      <MainForm submitButtonText="Continue" hasJobsTerms={true} formAction="/">
+        <TextInput
+          required
+          label={'First Name'}
+          name="first-name"
+          type="text"
+          css={css`
+            margin-bottom: ${space[2]}px;
+          `}
+        />
+        <TextInput required label={'Last Name'} name="last-name" type="text" />
+      </MainForm>
       <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
         Or{' '}
         <Link subdued={true} href={'/signout'}>
