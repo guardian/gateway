@@ -22,6 +22,7 @@ export const enableCMP = () => {
   });
 };
 
+// CMP helpers work for GB/tcfv2 region only //
 const cmpIframe = () => {
   return cy
     .get('iframe[id^="sp_message_iframe"]')

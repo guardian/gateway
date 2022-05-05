@@ -33,13 +33,17 @@ hydrateApp();
 // initalise ophan
 ophanInit();
 
-// load cmp
-(async () => {
-  const country = await getLocale();
+// load CMP
+if (window.Cypress) {
+  cmp.init({ country: 'GB' }); // CI hosted on GithubActions runs in US by default
+} else {
+  (async () => {
+    const country = await getLocale();
 
-  if (country) {
-    cmp.init({ country });
-  }
-})();
+    if (country) {
+      cmp.init({ country });
+    }
+  })();
+}
 
 initGoogleAnalyticsWhenConsented();
