@@ -5,6 +5,8 @@ on:
       - main
   pull_request:
     types: ['review_requested']
+permissions:
+  id-token: write
 
 jobs:
   cypress-nginx-okta:
