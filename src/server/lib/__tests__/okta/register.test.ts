@@ -5,7 +5,7 @@ import {
   getUser,
   activateUser,
   reactivateUser,
-  generateResetPasswordToken,
+  resetPassword,
 } from '@/server/lib/okta/api/users';
 import {
   UserResponse,
@@ -47,9 +47,10 @@ const mockedReactivateOktaUser =
   mocked<(id: string, sendEmail: boolean) => Promise<TokenResponse | void>>(
     reactivateUser,
   );
-const mockedGenerateResetPasswordToken = mocked<
-  (id: string, sendEmail: boolean) => Promise<TokenResponse | void>
->(generateResetPasswordToken);
+const mockedResetPassword =
+  mocked<(id: string, sendEmail: boolean) => Promise<string | void>>(
+    resetPassword,
+  );
 const mockedSendAccountExistsEmail = mocked<
   (params: { to: string; activationToken: string }) => Promise<boolean>
 >(sendAccountExistsEmail);
@@ -69,6 +70,10 @@ const User = (status: Status): UserResponse => {
       login: email,
       isGuardianUser: true,
       email: email,
+    },
+    credentials: {
+      password: {},
+      provider: {},
     },
   };
 };
@@ -176,13 +181,11 @@ describe('okta#register', () => {
 
     mockedCreateOktaUser.mockRejectedValueOnce(new OktaError(userExistsError));
     mockedFetchOktaUser.mockReturnValueOnce(Promise.resolve(user));
-    mockedGenerateResetPasswordToken.mockReturnValueOnce(
-      Promise.resolve({ token: 'sometoken' } as TokenResponse),
-    );
+    mockedResetPassword.mockReturnValueOnce(Promise.resolve('sometoken'));
     mockedSendResetPasswordEmail.mockReturnValueOnce(Promise.resolve(true));
 
     await expect(register(email)).resolves.toEqual(user);
-    expect(mockedGenerateResetPasswordToken).toHaveBeenCalled();
+    expect(mockedResetPassword).toHaveBeenCalled();
     expect(mockedSendResetPasswordEmail).toHaveBeenCalled();
     // Make sure the function from the other branch of the switch isn't called
     expect(mockedActivateOktaUser).not.toHaveBeenCalled();
@@ -201,13 +204,11 @@ describe('okta#register', () => {
 
     mockedCreateOktaUser.mockRejectedValueOnce(new OktaError(userExistsError));
     mockedFetchOktaUser.mockReturnValueOnce(Promise.resolve(user));
-    mockedGenerateResetPasswordToken.mockReturnValueOnce(
-      Promise.resolve({ token: 'sometoken' } as TokenResponse),
-    );
+    mockedResetPassword.mockReturnValueOnce(Promise.resolve('sometoken'));
     mockedSendResetPasswordEmail.mockReturnValueOnce(Promise.resolve(true));
 
     await expect(register(email)).resolves.toEqual(user);
-    expect(mockedGenerateResetPasswordToken).toHaveBeenCalled();
+    expect(mockedResetPassword).toHaveBeenCalled();
     expect(mockedSendResetPasswordEmail).toHaveBeenCalled();
     // Make sure the function from the other branch of the switch isn't called
     expect(mockedActivateOktaUser).not.toHaveBeenCalled();

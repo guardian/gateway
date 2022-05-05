@@ -35,6 +35,7 @@ const extractErrorResponse = async (
  */
 export const handleErrorResponse = async (response: Response) => {
   const error = await extractErrorResponse(response);
+
   throw new OktaError({
     message: error.errorSummary,
     status: response.status,
@@ -55,4 +56,13 @@ export const causesInclude = (
   substring: string,
 ): boolean => {
   return causes.some((cause) => cause.errorSummary.includes(substring));
+};
+
+/**
+ * Typescript type predicate to check and narrow the type of error is an OktaError
+ * @param error unknown error
+ * @returns boolean
+ */
+export const isOktaError = (error: unknown): error is OktaError => {
+  return error instanceof OktaError;
 };
