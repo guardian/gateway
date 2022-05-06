@@ -11,8 +11,9 @@ import {
 } from '@guardian/source-foundations';
 import { getAutoRow, gridItemYourData } from '../styles/Grid';
 import { InfoSummary } from '@guardian/source-react-components-development-kitchen';
-import { Link, TextInput } from '@guardian/source-react-components';
+import { Link } from '@guardian/source-react-components';
 import { MainForm } from '../components/MainForm';
+import NameInputFieldset from '../components/NameInputFieldset';
 
 const listBullets = css`
   list-style: none;
@@ -88,16 +89,7 @@ export const JobsTermsAccept = () => {
         }
       />
       <MainForm submitButtonText="Continue" hasJobsTerms={true} formAction="/">
-        <TextInput
-          required
-          label={'First Name'}
-          name="first-name"
-          type="text"
-          css={css`
-            margin-bottom: ${space[2]}px;
-          `}
-        />
-        <TextInput required label={'Last Name'} name="last-name" type="text" />
+        <NameInputFieldset />
       </MainForm>
       <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
         Or{' '}

@@ -35,7 +35,7 @@ export const Password = () => (
   <ConsentsSubHeader
     autoRow={autoRow}
     title="My Title"
-    current={CONSENTS_PAGES.PASSWORD}
+    current={CONSENTS_PAGES.DETAILS}
   />
 );
 Password.storyName = 'With Password as current';

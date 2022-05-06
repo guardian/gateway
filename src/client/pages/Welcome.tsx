@@ -50,7 +50,7 @@ export const Welcome = ({
   return (
     <ConsentsLayout
       title="Welcome to the Guardian"
-      current={CONSENTS_PAGES.PASSWORD}
+      current={CONSENTS_PAGES.DETAILS}
       showContinueButton={false}
     >
       <p css={[text, greyBorderTop, autoRow()]}>

@@ -5,21 +5,45 @@ import {
   noBorderRadius,
 } from '@/client/styles/Shared';
 
-export enum EmailInputFieldState {
+export enum InputFieldState {
   VALID = 'valid',
   EMPTY = 'empty',
   INVALID = 'invalid',
 }
 
-enum EmailInputFieldErrorMessages {
-  INVALID = 'Please enter a valid email format.',
-  EMPTY = 'Please enter your email.',
+enum InputFieldErrorMessages {
+  EMAIL_INVALID = 'Please enter a valid email format.',
+  EMAIL_EMPTY = 'Please enter your email.',
+
+  FIRST_NAME_EMPTY = 'Please enter your First name',
+  LAST_NAME_EMPTY = 'Please enter your Last name',
 }
+
+const useInputValidityState = (initialState: InputFieldState) => {
+  const [inputFieldState, setInputFieldState] =
+    useState<InputFieldState>(initialState);
+
+  // Set the error message based on the current state.
+  const errorMessage = React.useMemo(() => {
+    switch (inputFieldState) {
+      case InputFieldState.INVALID:
+        return EmailInputFieldErrorMessages.INVALID;
+      case InputFieldState.EMPTY:
+        return EmailInputFieldErrorMessages.EMPTY;
+    }
+  }, [inputFieldState]);
+
+  return {
+    onBlur: undefined,
+    onInput: undefined,
+    onInvalid: undefined,
+  };
+};
 
 interface EmailInputProps extends Omit<TextInputProps, 'label'> {
   label?: string;
   defaultValue?: string;
-  initialState?: EmailInputFieldState;
+  initialState?: InputFieldState;
 }
 
 export const EmailInput: React.FC<EmailInputProps> = ({
@@ -27,19 +51,6 @@ export const EmailInput: React.FC<EmailInputProps> = ({
   initialState = EmailInputFieldState.VALID,
   ...rest
 }) => {
-  const [emailInputFieldState, setEmailInputFieldState] =
-    useState<EmailInputFieldState>(initialState);
-
-  // Set the error message based on the current state.
-  const errorMessage = React.useMemo(() => {
-    switch (emailInputFieldState) {
-      case EmailInputFieldState.INVALID:
-        return EmailInputFieldErrorMessages.INVALID;
-      case EmailInputFieldState.EMPTY:
-        return EmailInputFieldErrorMessages.EMPTY;
-    }
-  }, [emailInputFieldState]);
-
   // Transition error message state based upon the
   // HTML ValidityState object returned from the input.
   const transitionState = (validityState: ValidityState) => {
