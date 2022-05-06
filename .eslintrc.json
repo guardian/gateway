@@ -48,5 +48,6 @@
     "react": {
       "version": "detect"
     }
-  }
+  },
+  "ignorePatterns": ["scripts/okta/**/*"]
 }
