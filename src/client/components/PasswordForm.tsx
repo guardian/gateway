@@ -1,4 +1,9 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, {
+  PropsWithChildren,
+  ReactNode,
+  useEffect,
+  useState,
+} from 'react';
 import {
   Button,
   SvgInfo,
@@ -252,7 +257,7 @@ export const PasswordForm = ({
   gridAutoRow,
   autoComplete,
   formTrackingName,
-}: Props) => {
+}: PropsWithChildren<Props>) => {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | undefined>(
     fieldErrors.find((fieldError) => fieldError.field === 'password')?.message,

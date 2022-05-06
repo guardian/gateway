@@ -13,6 +13,7 @@ import { getAutoRow, passwordFormSpanDef } from '@/client/styles/Grid';
 import { controls, text, greyBorderTop } from '@/client/styles/Consents';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { buildUrl } from '@/shared/lib/routeUtils';
+import NameInputFieldset from '../components/NameInputFieldset';
 
 type Props = {
   submitUrl: string;
@@ -80,7 +81,9 @@ export const Welcome = ({
           gridAutoRow={autoRow}
           autoComplete="new-password"
           formTrackingName="welcome"
-        />
+        >
+          <NameInputFieldset />
+        </PasswordForm>
       )}
     </ConsentsLayout>
   );

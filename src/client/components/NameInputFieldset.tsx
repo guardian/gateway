@@ -1,7 +1,11 @@
 import { css } from '@emotion/react';
 import { space, textSans } from '@guardian/source-foundations';
 import { TextInput } from '@guardian/source-react-components';
-import React, { useState } from 'react';
+import React from 'react';
+import {
+  InputFieldState,
+  useInputValidityState,
+} from '../lib/hooks/useInputValidityState';
 
 const fieldSpacing = css`
   margin-bottom: ${space[2]}px;
@@ -14,28 +18,56 @@ const fieldset = css`
   ${textSans.medium()}
 `;
 
+const FirstNameInput = () => {
+  const { onBlur, inputFieldState, onInput, onInvalid } =
+    useInputValidityState();
+
+  const isEmpty = inputFieldState === InputFieldState.EMPTY;
+  const errorMessage = isEmpty ? 'Please enter your First name' : undefined;
+
+  return (
+    <TextInput
+      required
+      label={'First Name'}
+      name="first-name"
+      type="text"
+      autoComplete="given-name"
+      css={fieldSpacing}
+      onBlur={onBlur}
+      onInput={onInput}
+      onInvalid={onInvalid}
+      error={errorMessage}
+    />
+  );
+};
+
+const LastNameInput = () => {
+  const { onBlur, inputFieldState, onInput, onInvalid } =
+    useInputValidityState();
+
+  const isEmpty = inputFieldState === InputFieldState.EMPTY;
+  const errorMessage = isEmpty ? 'Please enter your Last name' : undefined;
+
+  return (
+    <TextInput
+      required
+      label={'Last Name'}
+      name="last-name"
+      type="text"
+      autoComplete="family-name"
+      onBlur={onBlur}
+      onInput={onInput}
+      onInvalid={onInvalid}
+      error={errorMessage}
+    />
+  );
+};
+
 const NameInputFieldset = () => {
-  const [firstNameError, setFirstNameError] = useState<string>();
-  const [lastNameError, setLastNameError] = useState<string>();
   return (
     <fieldset css={fieldset}>
-      <TextInput
-        required
-        label={'First Name'}
-        name="first-name"
-        type="text"
-        error="Please enter your First name"
-        autoComplete="given-name"
-        css={fieldSpacing}
-      />
-      <TextInput
-        required
-        label={'Last Name'}
-        name="last-name"
-        type="text"
-        autoComplete="family-name"
-        error="Please enter your Last name"
-      />
+      <FirstNameInput />
+      <LastNameInput />
     </fieldset>
   );
 };

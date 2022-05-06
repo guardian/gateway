@@ -7,12 +7,11 @@ export enum InputFieldState {
 }
 
 export const useInputValidityState = (
-  initialState: InputFieldState,
+  initialState = InputFieldState.VALID,
 ): {
   onBlur: React.FocusEventHandler<HTMLInputElement>;
   onInput: React.FormEventHandler<HTMLInputElement>;
   onInvalid: React.FormEventHandler<HTMLInputElement>;
-  transitionState: (validityState: ValidityState) => void;
   inputFieldState: InputFieldState;
 } => {
   const [inputFieldState, setInputFieldState] =
@@ -81,7 +80,6 @@ export const useInputValidityState = (
     onBlur,
     onInput,
     onInvalid,
-    transitionState,
     inputFieldState,
   };
 };
