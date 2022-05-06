@@ -3,7 +3,6 @@ declare global {
   namespace Cypress {
     interface Chainable {
       setAdFreeCookie: typeof setAdFreeCookie;
-      setDigitalSubscriberCookie: typeof setDigitalSubscriberCookie;
     }
   }
 }
@@ -17,12 +16,6 @@ declare global {
 export const setAdFreeCookie = (expiryInDays = 1) => {
   const tz = Date.now() + 1000 * 60 * 60 * 24 * expiryInDays;
   return cy.setCookie('GU_AF1', tz.toString(), {
-    log: true,
-  });
-};
-
-export const setDigitalSubscriberCookie = (value = true) => {
-  return cy.setCookie('gu_digital_subscriber', value.toString(), {
     log: true,
   });
 };

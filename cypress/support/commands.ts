@@ -4,10 +4,7 @@ import { mockNext } from './commands/mockNext';
 import { mockAll } from './commands/mockAll';
 import { mockPurge } from './commands/mockPurge';
 import { setMvtId } from './commands/setMvtId';
-import {
-  setAdFreeCookie,
-  setDigitalSubscriberCookie,
-} from './commands/setAdFreeCookie';
+import { setAdFreeCookie } from './commands/setAdFreeCookie';
 import { setEncryptedStateCookie } from './commands/setEncryptedStateCookie';
 import { network } from './commands/network';
 import { mockPattern } from './commands/mockPattern';
@@ -28,7 +25,6 @@ Cypress.Commands.add('mockPurge', mockPurge);
 Cypress.Commands.add('mockAll', mockAll);
 Cypress.Commands.add('setMvtId', setMvtId);
 Cypress.Commands.add('setAdFreeCookie', setAdFreeCookie);
-Cypress.Commands.add('setDigitalSubscriberCookie', setDigitalSubscriberCookie);
 Cypress.Commands.add('setEncryptedStateCookie', setEncryptedStateCookie);
 Cypress.Commands.add('disableCMP', disableCMP);
 Cypress.Commands.add('enableCMP', enableCMP);

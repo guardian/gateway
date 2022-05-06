@@ -749,15 +749,6 @@ describe('Onboarding flow', () => {
       YourDataPage.personalisedAdvertisingOptIn().should('not.exist');
     });
 
-    it('does not display the personalised advertising permission if user has all CMP consents, but a digital subscriber cookie', () => {
-      cy.enableCMP();
-      cy.setDigitalSubscriberCookie();
-      YourDataPage.goto();
-      cy.acceptCMP();
-
-      YourDataPage.personalisedAdvertisingOptIn().should('not.exist');
-    });
-
     it('display a relevant error message on user end point failure', () => {
       cy.mockAll(500, {}, USER_ENDPOINT);
       YourDataPage.goto();
