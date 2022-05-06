@@ -5,6 +5,7 @@ import {
   deleteAuthorizationStateCookie,
   getAuthorizationStateCookie,
   getOpenIdClient,
+  OpenIdErrorDescriptions,
   OpenIdErrors,
   ProfileOpenIdClientRedirectUris,
 } from '@/server/lib/okta/openid-connect';
@@ -13,7 +14,7 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { exchangeAccessTokenForCookies } from '@/server/lib/idapi/auth';
 import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
-import { SignInErrors } from '@/shared/model/Errors';
+import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import postSignInController from '@/server/lib/postSignInController';
 import { validAppProtocols } from '../lib/validateUrl';
@@ -89,15 +90,29 @@ router.get(
       // no longer required, so mark cookie for deletion in the response
       deleteAuthorizationStateCookie(res);
 
-      // check if the callback params contain an login_required error
-      // used to check if a session existed before the user is shown a sign in page
-      if (
-        isOAuthError(callbackParams) &&
-        callbackParams.error === OpenIdErrors.LOGIN_REQUIRED
-      ) {
-        return res.redirect(
-          addQueryParamsToPath('/signin', authState.queryParams),
-        );
+      // check for specific oauth errors and handle them as required
+      if (isOAuthError(callbackParams)) {
+        // check if the callback params contain an login_required error
+        // used to check if a session existed before the user is shown a sign in page
+        if (callbackParams.error === OpenIdErrors.LOGIN_REQUIRED) {
+          return res.redirect(
+            addQueryParamsToPath('/signin', authState.queryParams),
+          );
+        }
+
+        // check for social account linking errors
+        // and redirect to the sign in page with the social sign in blocked error
+        if (
+          callbackParams.error === OpenIdErrors.ACCESS_DENIED &&
+          callbackParams.error_description ===
+            OpenIdErrorDescriptions.ACCOUNT_LINKING_DENIED_GROUPS
+        ) {
+          return res.redirect(
+            addQueryParamsToPath('/signin', authState.queryParams, {
+              error: FederationErrors.SOCIAL_SIGNIN_BLOCKED,
+            }),
+          );
+        }
       }
 
       // exchange the auth code for access token + id token
