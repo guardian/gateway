@@ -12,4 +12,9 @@ router.get('/agree/GRS', (req: Request, res: ResponseWithRequestState) => {
   res.type('html').send(html);
 });
 
+router.post('/agree/GRS', (req: Request, res: ResponseWithRequestState) => {
+  // redirect
+  res.send(302);
+});
+
 export default router.router;
