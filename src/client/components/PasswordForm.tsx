@@ -257,6 +257,7 @@ export const PasswordForm = ({
   gridAutoRow,
   autoComplete,
   formTrackingName,
+  children,
 }: PropsWithChildren<Props>) => {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | undefined>(
@@ -320,6 +321,7 @@ export const PasswordForm = ({
       }
     >
       <CsrfFormField />
+      {children}
       <div css={passwordInput}>
         <PasswordInput
           displayEye={true}

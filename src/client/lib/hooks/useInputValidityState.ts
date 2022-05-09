@@ -58,7 +58,13 @@ export const useInputValidityState = (
       const notOriginatingFromUserInput =
         e.nativeEvent.composed !== undefined && !e.nativeEvent.composed;
 
-      if (notOriginatingFromUserInput) {
+      // We also validate the field when filled via an autocomplete action in the browser.
+      // When this happens the `data` property will be undefined.
+      const originatingFromAutoComplete =
+        e.nativeEvent.composed !== undefined &&
+        (e.nativeEvent as Event & { data?: string })?.data === undefined;
+
+      if (notOriginatingFromUserInput || originatingFromAutoComplete) {
         e.currentTarget.checkValidity();
         transitionState(e.currentTarget.validity);
       }
