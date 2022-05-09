@@ -22,6 +22,7 @@ type Props = {
   email?: string;
   fieldErrors: FieldError[];
   passwordSet?: boolean;
+  isJobs?: boolean;
 };
 
 const linkButton = css`
@@ -47,6 +48,7 @@ export const Welcome = ({
   email,
   fieldErrors,
   passwordSet = false,
+  isJobs = false,
 }: Props) => {
   const autoRow = getAutoRow(1, passwordFormSpanDef);
   const {
@@ -93,7 +95,7 @@ export const Welcome = ({
           formTrackingName="welcome"
           onInvalid={() => setFormInvalidOnSubmit(true)}
         >
-          <NameInputField onGroupError={setGroupError} />
+          {isJobs && <NameInputField onGroupError={setGroupError} />}
         </PasswordForm>
       )}
     </ConsentsLayout>
