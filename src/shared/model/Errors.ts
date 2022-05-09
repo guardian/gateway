@@ -49,6 +49,11 @@ export enum PasswordFieldErrors {
   SAME_PASSWORD = 'Please use a password that is different to your current password.',
 }
 
+export enum NameFieldErrors {
+  INFORMATION_MISSING = 'Some information is missing',
+  INFORMATION_MISSING_CONTEXT = 'Please enter your First name and Last name',
+}
+
 // shown below the password input field as the user types a password (before they click the submit button)
 export enum ShortPasswordFieldErrors {
   AT_LEAST_8 = 'At least 8 characters.',

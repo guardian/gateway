@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
@@ -13,7 +13,9 @@ import { getAutoRow, gridItemYourData } from '../styles/Grid';
 import { InfoSummary } from '@guardian/source-react-components-development-kitchen';
 import { Link } from '@guardian/source-react-components';
 import { MainForm } from '../components/MainForm';
-import NameInputField from '../components/NameInputField';
+import NameInputField, {
+  useNameInputFieldError,
+} from '../components/NameInputField';
 
 const listBullets = css`
   list-style: none;
@@ -56,16 +58,20 @@ const heading = css`
 
 export const JobsTermsAccept = () => {
   const autoYourDataRow = getAutoRow(1, gridItemYourData);
-  const [groupError, setGroupError] = useState(false);
+
+  const {
+    nameFieldError,
+    nameFieldErrorContext,
+    setGroupError,
+    setFormInvalidOnSubmit,
+  } = useNameInputFieldError();
 
   return (
     <>
       <MainLayout
         pageHeader="Welcome to Guardian Jobs"
-        errorOverride={groupError ? 'Some information is missing' : undefined}
-        errorContext={
-          groupError ? 'Please enter your First name and Last name' : undefined
-        }
+        errorOverride={nameFieldError}
+        errorContext={nameFieldErrorContext}
       >
         <h2 css={[heading]}>
           Click &lsquo;continue&rsquo; to automatically use your existing
@@ -101,6 +107,7 @@ export const JobsTermsAccept = () => {
           submitButtonText="Continue"
           hasJobsTerms={true}
           formAction="/"
+          onInvalid={() => setFormInvalidOnSubmit(true)}
         >
           <NameInputField onGroupError={setGroupError} />
         </MainForm>

@@ -13,7 +13,9 @@ import { getAutoRow, passwordFormSpanDef } from '@/client/styles/Grid';
 import { controls, text, greyBorderTop } from '@/client/styles/Consents';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { buildUrl } from '@/shared/lib/routeUtils';
-import NameInputField from '../components/NameInputField';
+import NameInputField, {
+  useNameInputFieldError,
+} from '../components/NameInputField';
 
 type Props = {
   submitUrl: string;
@@ -47,12 +49,20 @@ export const Welcome = ({
   passwordSet = false,
 }: Props) => {
   const autoRow = getAutoRow(1, passwordFormSpanDef);
+  const {
+    nameFieldError,
+    nameFieldErrorContext,
+    setGroupError,
+    setFormInvalidOnSubmit,
+  } = useNameInputFieldError();
 
   return (
     <ConsentsLayout
       title="Welcome to the Guardian"
       current={CONSENTS_PAGES.DETAILS}
       showContinueButton={false}
+      errorMessage={nameFieldError}
+      errorContext={nameFieldErrorContext}
     >
       <p css={[text, greyBorderTop, autoRow()]}>
         {passwordSet
@@ -81,8 +91,9 @@ export const Welcome = ({
           gridAutoRow={autoRow}
           autoComplete="new-password"
           formTrackingName="welcome"
+          onInvalid={() => setFormInvalidOnSubmit(true)}
         >
-          <NameInputField />
+          <NameInputField onGroupError={setGroupError} />
         </PasswordForm>
       )}
     </ConsentsLayout>

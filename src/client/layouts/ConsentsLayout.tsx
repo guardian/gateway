@@ -17,6 +17,8 @@ interface ConsentsLayoutProps {
   current?: string;
   title: string;
   showContinueButton?: boolean;
+  errorMessage?: string;
+  errorContext?: React.ReactNode;
 }
 
 const mainStyles = css`
@@ -41,16 +43,25 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
   children,
   current,
   title,
+  errorMessage,
+  errorContext,
 }) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
   const clientState = useClientState();
-  const { globalMessage: { error, success } = {} } = clientState;
+  const { globalMessage: { error: globalError, success: globalSuccess } = {} } =
+    clientState;
 
   return (
     <>
-      <ConsentsHeader error={error} success={success} />
+      <ConsentsHeader error={globalError} success={globalSuccess} />
       <main css={mainStyles}>
-        <ConsentsSubHeader autoRow={autoRow} title={title} current={current} />
+        <ConsentsSubHeader
+          autoRow={autoRow}
+          title={title}
+          current={current}
+          errorMessage={errorMessage}
+          errorContext={errorContext}
+        />
         {children && (
           <section css={[gridRow, greyBorderSides]}>{children}</section>
         )}

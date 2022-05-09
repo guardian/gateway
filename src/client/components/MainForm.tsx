@@ -43,6 +43,7 @@ export interface MainFormProps {
         errorOccurred: boolean;
       }
     | undefined;
+  onInvalid?: React.FormEventHandler<HTMLFormElement> | undefined;
   formTrackingName?: string;
   disableOnSubmit?: boolean;
 }
@@ -78,6 +79,7 @@ export const MainForm = ({
   hasGuardianTerms = false,
   hasJobsTerms = false,
   onSubmit,
+  onInvalid,
   formTrackingName,
   disableOnSubmit = false,
 }: PropsWithChildren<MainFormProps>) => {
@@ -217,6 +219,7 @@ export const MainForm = ({
       onBlur={(e) =>
         formTrackingName && trackFormFocusBlur(formTrackingName, e, 'blur')
       }
+      onInvalid={(e) => onInvalid && onInvalid(e)}
     >
       {recaptchaEnabled && (
         <RecaptchaWrapper
