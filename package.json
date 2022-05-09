@@ -135,7 +135,7 @@
     "@sentry/tracing": "^6.19.7",
     "@types/supertest": "^2.0.12",
     "awesome-debounce-promise": "^2.1.0",
-    "aws-sdk": "2.1126.0",
+    "aws-sdk": "2.1130.0",
     "bowser": "^2.11.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
