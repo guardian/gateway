@@ -28,7 +28,7 @@ import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { resetPassword as resetPasswordInOkta } from '@/server/lib/okta/api/authentication';
 import { OktaError } from '@/server/models/okta/Error';
-import { addToGroup, GroupCode } from '@/server/lib/idapi/user';
+import { addToGroup, GroupCode, updateName } from '@/server/lib/idapi/user';
 import { checkTokenInOkta } from '@/server/controllers/checkPasswordToken';
 import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
 import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
@@ -46,7 +46,7 @@ const changePasswordInIDAPI = async (
 
   const { token } = req.params;
   const { clientId } = req.query;
-  const { password } = req.body;
+  const { password, firstName, lastName } = req.body;
 
   requestState = deepmerge(requestState, {
     pageData: {
@@ -82,10 +82,17 @@ const changePasswordInIDAPI = async (
     if (clientId === 'jobs' && path === '/welcome') {
       const SC_GU_U = cookies?.values.find(({ key }) => key === 'SC_GU_U');
       if (SC_GU_U) {
+        if (firstName && lastName) {
+          await updateName(firstName, lastName, req.ip, SC_GU_U.value);
+        } else {
+          logger.error(
+            'No first or last name provided for Jobs user creation request.',
+          );
+        }
         await addToGroup(GroupCode.GRS, req.ip, SC_GU_U.value);
       } else {
         logger.error(
-          'Failed to add the user to the GRS group because the SC_GU_U cookie is not set.',
+          'Failed to add the user to the GRS group or set their full name because the SC_GU_U cookie is not set.',
         );
       }
     }

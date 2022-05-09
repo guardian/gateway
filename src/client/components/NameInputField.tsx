@@ -43,7 +43,7 @@ const FirstNameInput = (props: NameInputProps) => {
     <TextInput
       required
       label={'First Name'}
-      name="first-name"
+      name="firstName"
       type="text"
       autoComplete="given-name"
       css={fieldSpacing}
@@ -74,7 +74,7 @@ const LastNameInput = (props: NameInputProps) => {
     <TextInput
       required
       label={'Last Name'}
-      name="last-name"
+      name="lastName"
       type="text"
       autoComplete="family-name"
       onBlur={onBlur}

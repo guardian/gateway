@@ -168,7 +168,7 @@ describe('Welcome and set password page', () => {
       cy.url().should('include', `returnUrl=${returnUrl}`);
     });
 
-    it('redirects to onboarding flow and adds Jobs user to the GRS group if valid password is set and preserves returnUrl', () => {
+    it.only('redirects to onboarding flow and adds Jobs user to the GRS group if valid password is set and preserves returnUrl', () => {
       const returnUrl = encodeURIComponent(
         `https://www.theguardian.com/science/grrlscientist/2012/aug/07/3`,
       );
@@ -192,6 +192,8 @@ describe('Welcome and set password page', () => {
       setAuthCookies();
 
       cy.visit(`/welcome/fake_token?${query}`);
+      cy.get('input[name="firstName"]').type('First Name');
+      cy.get('input[name="lastName"]').type('Last Name');
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
       cy.wait('@breachCheck');
       cy.get('button[type="submit"]').click();

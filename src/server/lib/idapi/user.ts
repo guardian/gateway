@@ -106,6 +106,36 @@ export const read = async (ip: string, sc_gu_u: string): Promise<User> => {
   }
 };
 
+export const updateName = async (
+  firstName: string,
+  secondName: string,
+  ip: string,
+  sc_gu_u: string,
+): Promise<User> => {
+  const options = APIForwardSessionIdentifier(
+    APIAddClientAccessToken(
+      APIPostOptions({
+        privateFields: {
+          firstName,
+          secondName,
+        },
+      }),
+      ip,
+    ),
+    sc_gu_u,
+  );
+  try {
+    const response = await idapiFetch({
+      path: '/user/me',
+      options,
+    });
+    return response;
+  } catch (error) {
+    logger.error(`IDAPI error updating first and last name for ${ip}`, error);
+    return handleError(error as IDAPIError);
+  }
+};
+
 export const addToGroup = async (
   groupCode: GroupCode,
   ip: string,
