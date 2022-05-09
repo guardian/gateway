@@ -5,8 +5,10 @@ import {
   activateUser,
   clearUserSessions,
   createUser,
+  forgotPassword,
   getUser,
   reactivateUser,
+  resetPassword,
 } from '@/server/lib/okta/api/users';
 import { OktaError } from '@/server/models/okta/Error';
 import { UserCreationRequest } from '@/server/models/okta/User';
@@ -288,6 +290,148 @@ describe('okta#clearUserSessions', () => {
     await expect(clearUserSessions(userId)).rejects.toThrow(
       new OktaError({
         message: 'Not found: Resource not found: <userId> (User)',
+      }),
+    );
+  });
+});
+
+describe('okta#resetPassword', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('should generate reset password token for user', async () => {
+    const token = 'XE6wE17zmphl3KqAPFxO';
+    json.mockResolvedValueOnce({
+      resetPasswordUrl: `https://someOrgUrl.com/reset_password/${token}`,
+    });
+
+    mockedFetch.mockReturnValueOnce(
+      Promise.resolve({ ok: true, json } as Response),
+    );
+
+    await expect(resetPassword(userId)).resolves.toEqual(token);
+  });
+
+  test('handle unable to parse response', async () => {
+    const token = 'invalidtoken';
+
+    json.mockResolvedValueOnce({
+      resetPasswordUrl: `https://someOrgUrl/reset_password/${token}`,
+    });
+
+    mockedFetch.mockReturnValueOnce(
+      Promise.resolve({ ok: true, json } as Response),
+    );
+
+    await expect(resetPassword(userId)).rejects.toThrow(
+      new OktaError({
+        message: 'Could not parse Okta reset password url response',
+      }),
+    );
+  });
+
+  test('should throw an error when a user not found', async () => {
+    const errorResponse = {
+      errorCode: 'E0000007',
+      errorSummary: 'Not found: Resource not found: <userId> (User)',
+      errorLink: 'E0000007',
+      errorId: 'oaeZm9ypzgqQOq0n4PYgiFlZQ',
+      errorCauses: [],
+    };
+
+    json.mockResolvedValueOnce(errorResponse);
+    mockedFetch.mockReturnValueOnce(
+      Promise.resolve({ ok: false, status: 404, json } as Response),
+    );
+
+    await expect(resetPassword(userId)).rejects.toThrow(
+      new OktaError({
+        message: 'Not found: Resource not found: <userId> (User)',
+      }),
+    );
+  });
+});
+
+describe('okta#forgotPassword', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('should generate reset password token for user', async () => {
+    const token = 'XE6wE17zmphl3KqAPFxO';
+    json.mockResolvedValueOnce({
+      resetPasswordUrl: `https://someOrgUrl.com/signin/reset_password/${token}`,
+    });
+
+    mockedFetch.mockReturnValueOnce(
+      Promise.resolve({ ok: true, json } as Response),
+    );
+
+    await expect(forgotPassword(userId)).resolves.toEqual(token);
+  });
+
+  test('handle unable to parse response', async () => {
+    const token = 'invalidtoken';
+
+    json.mockResolvedValueOnce({
+      resetPasswordUrl: `https://someOrgUrl/reset_password/${token}`,
+    });
+
+    mockedFetch.mockReturnValueOnce(
+      Promise.resolve({ ok: true, json } as Response),
+    );
+
+    await expect(forgotPassword(userId)).rejects.toThrow(
+      new OktaError({
+        message: 'Could not parse Okta reset password url response',
+      }),
+    );
+  });
+
+  test('should throw an error when a user not found', async () => {
+    const errorResponse = {
+      errorCode: 'E0000007',
+      errorSummary: 'Not found: Resource not found: <userId> (User)',
+      errorLink: 'E0000007',
+      errorId: 'oaeZm9ypzgqQOq0n4PYgiFlZQ',
+      errorCauses: [],
+    };
+
+    json.mockResolvedValueOnce(errorResponse);
+    mockedFetch.mockReturnValueOnce(
+      Promise.resolve({ ok: false, status: 404, json } as Response),
+    );
+
+    await expect(forgotPassword(userId)).rejects.toThrow(
+      new OktaError({
+        message: 'Not found: Resource not found: <userId> (User)',
+      }),
+    );
+  });
+
+  test('should throw an error if user not in correct status', async () => {
+    const errorResponse = {
+      errorCode: 'E0000017',
+      errorSummary: 'Password reset failed',
+      errorLink: 'E0000017',
+      errorId: 'oaeqifntmx0RzOD30WhsK-zhQ',
+      errorCauses: [
+        {
+          errorSummary:
+            "Forgot password is not supported for the user's login type",
+        },
+      ],
+    };
+
+    json.mockResolvedValueOnce(errorResponse);
+    mockedFetch.mockReturnValueOnce(
+      Promise.resolve({ ok: false, status: 403, json } as Response),
+    );
+
+    await expect(forgotPassword(userId)).rejects.toThrow(
+      new OktaError({
+        message: 'Password reset failed',
       }),
     );
   });
