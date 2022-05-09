@@ -9300,10 +9300,10 @@ growly@^1.3.0:
   resolved "https://registry.yarnpkg.com/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
   integrity sha1-8QdIy+dq+WS3yWyTxrzCivEgwIE=
 
-hal-types@^1.7.4:
-  version "1.7.4"
-  resolved "https://registry.yarnpkg.com/hal-types/-/hal-types-1.7.4.tgz#3abd41cf738e7412c9fa255790e9eedb97e53cf7"
-  integrity sha512-MXIm5IbUZJ+gr6hhXvf0FH59eNDgSW4UbDip4Pv/9sa6gHlVQUbO+tYl0CsD26jN5lw3TgIbcFoi4frcS4jPdg==
+hal-types@^1.7.7:
+  version "1.7.7"
+  resolved "https://registry.yarnpkg.com/hal-types/-/hal-types-1.7.7.tgz#bf3041a8012c92d8601e8ff7aee350b54908ad92"
+  integrity sha512-o1MG92pVxrehRk2tH3rJnpMad7Hg78tuyDN7oSlQ5VNczJrjL/AGIdm/biwi0gUOxZdFuN1mdKHklP0IBguIOA==
 
 handlebars@^4.7.7:
   version "4.7.7"
