@@ -1,4 +1,5 @@
 import * as AWS from 'aws-sdk';
+import retry from '@/server/lib/retry';
 import { awsConfig } from '@/server/lib/awsConfig';
 
 // We need to adjust the SES timeouts to be longer than the standard AWS
@@ -49,14 +50,15 @@ export const send = async ({
     FromEmailAddress: 'registration-reply@theguardian.com',
   };
 
-  const maxRetries = 3;
-  for (let tries = 0; tries < maxRetries; tries++) {
-    try {
-      await SESV2.sendEmail(params).promise();
-      return true;
-    } catch (error) {
-      console.error(error);
-    }
+  // Retry the sendEmail function 3 times before giving up.
+  // Waits exponentially longer between each retry.
+  const result = await retry({
+    fn: () => SESV2.sendEmail(params).promise(),
+    exponential: true,
+  });
+  // Check if sendEmail has returned a MessageId (which means it was successful)
+  if (result.MessageId) {
+    return true;
   }
   return false;
 };
