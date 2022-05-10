@@ -106,6 +106,9 @@ describe('Okta Register flow', () => {
 
       setSidCookie();
 
+      // disable the cmp on the redirect
+      cy.setCookie('gu-cmp-disabled', 'true');
+
       cy.visit('/register?useOkta=true');
 
       cy.url().should(

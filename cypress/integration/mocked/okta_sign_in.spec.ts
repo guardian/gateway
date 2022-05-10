@@ -31,7 +31,11 @@ describe('Sign in flow', () => {
 
       cy.setCookie('sid', `the_sid_cookie`);
 
+      // disable the cmp  on the redirect
+      cy.setCookie('gu-cmp-disabled', 'true');
+
       cy.visit('/signin?useOkta=true');
+
       // The code version of manage will redirect the user twice,
       // once to manage.code.dev-theguardian.com and then because the user is not signed in
       // a 2nd redirect to profile.code.dev-theguardian.com,
