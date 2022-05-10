@@ -33,9 +33,10 @@ hydrateApp();
 // initalise ophan
 ophanInit();
 
-// don't load this if running in cypress
-if (!window.Cypress) {
-  // load cmp if it should show
+// load CMP
+if (window.Cypress) {
+  cmp.init({ country: 'GB' }); // CI hosted on GithubActions runs in US by default
+} else {
   (async () => {
     const country = await getLocale();
 

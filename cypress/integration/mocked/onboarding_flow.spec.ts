@@ -8,6 +8,7 @@ import {
   allConsents,
   defaultUserConsent,
   optedOutUserConsent,
+  optedIntoPersonalisedAdvertisingUserConsent,
   getUserConsents,
   CONSENTS_ENDPOINT,
   CONSENT_ERRORS,
@@ -73,6 +74,9 @@ describe('Onboarding flow', () => {
         if (id.includes('_optout')) {
           consented = false;
         }
+        if (id.includes('personalised_advertising')) {
+          consented = true;
+        }
         return {
           id,
           consented,
@@ -116,6 +120,7 @@ describe('Onboarding flow', () => {
       // mock form save success
       cy.mockNext(200);
 
+      cy.enableCMP(); // Prep cmp for next page
       NewslettersPage.saveAndContinueButton().click();
 
       cy.lastPayloadIs([
@@ -132,8 +137,12 @@ describe('Onboarding flow', () => {
         .should('have.attr', 'href')
         .and('include', NewslettersPage.URL);
 
-      YourDataPage.allCheckboxes().should('be.checked');
+      cy.acceptCMP();
+      YourDataPage.personalisedAdvertisingOptInInput().should('not.be.checked');
 
+      YourDataPage.personalisedAdvertisingOptInSwitch().click();
+      YourDataPage.marketingOptInSwitch().should('be.checked');
+      YourDataPage.personalisedAdvertisingOptInInput().should('be.checked');
       // mock form save success
       cy.mockNext(200);
 
@@ -149,7 +158,10 @@ describe('Onboarding flow', () => {
 
       YourDataPage.saveAndContinueButton().click();
       // Explicity check '_optin' consents are in inverted back to '_optouts' when posted
-      cy.lastPayloadIs([{ id: 'profiling_optout', consented: false }]);
+      cy.lastPayloadIs([
+        { id: 'profiling_optout', consented: false },
+        { id: 'personalised_advertising', consented: true },
+      ]);
 
       cy.url().should('include', ReviewPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
@@ -165,6 +177,7 @@ describe('Onboarding flow', () => {
       // contains consents
       cy.contains(ReviewPage.CONTENT.SUPPORTER_CONSENT);
       cy.contains(ReviewPage.CONTENT.PROFILING_CONSENT);
+      cy.contains(ReviewPage.CONTENT.PERSONALISED_ADVERTISING_CONSENT);
 
       // does not contain messaging encouraging user to consider other newsletters
       cy.contains(ReviewPage.CONTENT.NO_NEWSLETTERS_TITLE).should('not.exist');
@@ -208,8 +221,10 @@ describe('Onboarding flow', () => {
       // mock form save success
       cy.mockNext(200);
 
+      cy.enableCMP();
       NewslettersPage.saveAndContinueButton().click();
       cy.lastPayloadIs([]);
+      cy.acceptCMP();
 
       cy.url().should('include', YourDataPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
@@ -218,7 +233,11 @@ describe('Onboarding flow', () => {
         .should('have.attr', 'href')
         .and('include', NewslettersPage.URL);
 
+      YourDataPage.marketingOptInSwitch().should('be.checked');
       YourDataPage.marketingOptInClickableSection().click();
+      YourDataPage.marketingOptInSwitch().should('not.be.checked');
+      YourDataPage.personalisedAdvertisingOptInSwitch().should('exist');
+      YourDataPage.personalisedAdvertisingOptInInput().should('not.be.checked');
 
       // mock form save success
       cy.mockNext(200);
@@ -227,7 +246,10 @@ describe('Onboarding flow', () => {
 
       YourDataPage.saveAndContinueButton().click();
       // Explicity check '_optin' consents are in inverted back to '_optouts' when posted
-      cy.lastPayloadIs([{ id: 'profiling_optout', consented: true }]);
+      cy.lastPayloadIs([
+        { id: 'profiling_optout', consented: true },
+        { id: 'personalised_advertising', consented: false },
+      ]);
 
       cy.url().should('include', ReviewPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
@@ -243,6 +265,9 @@ describe('Onboarding flow', () => {
       // contains no consents
       cy.contains(ReviewPage.CONTENT.SUPPORTER_CONSENT).should('not.exist');
       cy.contains(ReviewPage.CONTENT.PROFILING_CONSENT).should('not.exist');
+      cy.contains(ReviewPage.CONTENT.PERSONALISED_ADVERTISING_CONSENT).should(
+        'not.exist',
+      );
 
       // contains messaging encouraging user to explore other newsletters
       cy.contains(ReviewPage.CONTENT.NO_NEWSLETTERS_TITLE);
@@ -677,6 +702,51 @@ describe('Onboarding flow', () => {
       cy.mockAll(200, createUser(optedOutUserConsent), USER_ENDPOINT);
       YourDataPage.goto();
       YourDataPage.marketingOptInSwitch().should('not.be.checked');
+    });
+
+    it('displays the personalised advertising permission if user has all CMP consents, toggled OFF by default', () => {
+      cy.enableCMP();
+      YourDataPage.goto();
+      cy.acceptCMP();
+
+      YourDataPage.marketingOptInSwitch().should('be.checked');
+      YourDataPage.personalisedAdvertisingOptInInput().should('not.be.checked');
+    });
+
+    it('displays the personalised advertising permission if user has all CMP consents, toggled ON if user previously opted in', () => {
+      cy.enableCMP();
+      cy.mockAll(
+        200,
+        createUser(optedIntoPersonalisedAdvertisingUserConsent),
+        USER_ENDPOINT,
+      );
+      YourDataPage.goto();
+      cy.acceptCMP();
+
+      YourDataPage.marketingOptInSwitch().should('be.checked');
+      YourDataPage.personalisedAdvertisingOptInInput().should('be.checked');
+    });
+
+    it('does not display the personalised advertising permission if user does not have CMP consents set', () => {
+      YourDataPage.goto();
+      YourDataPage.personalisedAdvertisingOptIn().should('not.exist');
+    });
+
+    it('does not display the personalised advertising permission if user has not accepted CMP consents', () => {
+      cy.enableCMP();
+      YourDataPage.goto();
+      cy.declineCMP();
+
+      YourDataPage.personalisedAdvertisingOptIn().should('not.exist');
+    });
+
+    it('does not display the personalised advertising permission if user has all CMP consents, but has an ad free gu cookie', () => {
+      cy.enableCMP();
+      cy.setAdFreeCookie();
+      YourDataPage.goto();
+      cy.acceptCMP();
+
+      YourDataPage.personalisedAdvertisingOptIn().should('not.exist');
     });
 
     it('display a relevant error message on user end point failure', () => {

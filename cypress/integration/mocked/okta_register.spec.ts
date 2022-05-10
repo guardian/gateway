@@ -11,6 +11,7 @@ describe('Okta Register flow', () => {
       cy.clearCookies();
       // we visit the healthcheck page to make sure the cookies are cleared from the browser
       cy.visit('/healthcheck');
+      cy.disableCMP();
     });
 
     it('should redirect to manage.theguardian.com if the sid Okta session cookie is valid', () => {
@@ -106,7 +107,7 @@ describe('Okta Register flow', () => {
       setSidCookie();
 
       // disable the cmp on the redirect
-      cy.setCookie('gu-cmp-disabled', 'true');
+      cy.disableCMP();
 
       cy.visit('/register?useOkta=true');
 

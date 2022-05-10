@@ -1,6 +1,13 @@
 import React, { FunctionComponent } from 'react';
 import { css } from '@emotion/react';
-import { space, success, neutral, until } from '@guardian/source-foundations';
+import {
+  space,
+  remSpace,
+  success,
+  neutral,
+  until,
+  textSans,
+} from '@guardian/source-foundations';
 
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
@@ -10,6 +17,7 @@ import {
   text,
   textBold,
   controls,
+  subText,
 } from '@/client/styles/Consents';
 import { Consent } from '@/shared/model/Consent';
 import { NewsLetter } from '@/shared/model/Newsletter';
@@ -26,6 +34,7 @@ type ConsentsConfirmationProps = {
   success?: string;
   returnUrl: string;
   optedIntoProfiling: boolean;
+  optedIntoPersonalisedAdvertising: boolean;
   productConsents: Consent[];
   subscribedNewsletters: NewsLetter[];
   geolocation?: GeoLocation;
@@ -95,15 +104,31 @@ const returnButton = css`
   }
 `;
 
+const marketingText = css`
+  ${subText}
+  p {
+    color: ${neutral[20]};
+  }
+  a,
+  p {
+    ${textSans.small()}
+    line-height: ${remSpace[5]};
+  }
+`;
+
+// TODO FIXME Fix consents confirmation Data consent display row top border
+
 export const ConsentsConfirmation = ({
   returnUrl,
   productConsents,
   optedIntoProfiling,
+  optedIntoPersonalisedAdvertising,
   subscribedNewsletters,
 }: ConsentsConfirmationProps) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
   const anyConsents =
     optedIntoProfiling ||
+    optedIntoPersonalisedAdvertising ||
     !!productConsents.length ||
     !!subscribedNewsletters.length;
 
@@ -112,6 +137,7 @@ export const ConsentsConfirmation = ({
       <h2 css={[heading, autoRow(), greyBorderTop]}>
         Thank you for completing your registration
       </h2>
+
       {anyConsents ? (
         <p css={[text, autoRow()]}>
           Please find below a summary of your settings.
@@ -126,6 +152,7 @@ export const ConsentsConfirmation = ({
           .
         </p>
       )}
+
       <div css={[autoRow()]}>
         {!!productConsents.length && (
           <ReviewTableRow title="Emails">
@@ -151,21 +178,35 @@ export const ConsentsConfirmation = ({
             ))}
           </ReviewTableRow>
         )}
-        {optedIntoProfiling && (
+        {(optedIntoProfiling || optedIntoPersonalisedAdvertising) && (
           <ReviewTableRow title="Data">
-            <div css={consentStyles}>
-              <span css={iconStyles}>
-                <SvgTickRound />
-              </span>
-              <p css={[text, itemText]}>
-                Allow analysis of my data for marketing
-              </p>
-            </div>
+            {optedIntoProfiling && (
+              <div css={consentStyles}>
+                <span css={iconStyles}>
+                  <SvgTickRound />
+                </span>
+                <p css={[text, itemText]}>
+                  Allow analysis of my data for marketing
+                </p>
+              </div>
+            )}
+            {optedIntoPersonalisedAdvertising && (
+              <div css={[consentStyles]}>
+                <span css={iconStyles}>
+                  <SvgTickRound />
+                </span>
+                <p css={[text, itemText]}>
+                  Allow personalised advertising using my data - this supports
+                  the Guardian
+                </p>
+              </div>
+            )}
           </ReviewTableRow>
         )}
       </div>
+
       {anyConsents && (
-        <p css={[text, paddingTop, autoRow()]}>
+        <p css={[marketingText, paddingTop, autoRow()]}>
           You can change these anytime in your account under&nbsp;
           <ExternalLink href={locations.MMA_EMAIL_PREFERENCES} subdued={true}>
             Emails &amp; marketing
@@ -173,6 +214,7 @@ export const ConsentsConfirmation = ({
           .
         </p>
       )}
+
       {!subscribedNewsletters.length && (
         <>
           <h2 css={[heading, autoRow(), greyBorderTop, marginTop]}>
@@ -189,6 +231,7 @@ export const ConsentsConfirmation = ({
           </p>
         </>
       )}
+
       <div css={[controls, autoRow()]}>
         <ExternalLinkButton
           iconSide="right"

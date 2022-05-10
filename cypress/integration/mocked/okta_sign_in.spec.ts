@@ -32,7 +32,7 @@ describe('Sign in flow', () => {
       cy.setCookie('sid', `the_sid_cookie`);
 
       // disable the cmp  on the redirect
-      cy.setCookie('gu-cmp-disabled', 'true');
+      cy.disableCMP();
 
       cy.visit('/signin?useOkta=true');
 

@@ -23,6 +23,11 @@ export const text = css`
   max-width: 640px;
 `;
 
+export const subText = css`
+  margin: 0;
+  ${textSans.small()}
+`;
+
 export const textBold = css`
   ${text};
   font-weight: bold;
