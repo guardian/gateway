@@ -5,7 +5,6 @@ import {
   LinkButton,
   SvgArrowRightStraight,
 } from '@guardian/source-react-components';
-
 import { PasswordForm } from '@/client/components/PasswordForm';
 import { FieldError } from '@/shared/model/ClientState';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
@@ -13,9 +12,8 @@ import { getAutoRow, passwordFormSpanDef } from '@/client/styles/Grid';
 import { controls, text, greyBorderTop } from '@/client/styles/Consents';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { buildUrl } from '@/shared/lib/routeUtils';
-import NameInputField, {
-  useNameInputFieldError,
-} from '../components/NameInputField';
+import NameInputField from '@/client/components/NameInputField';
+import { useNameInputFieldError } from '@/client/lib/hooks/useNameFieldInputError';
 
 type Props = {
   submitUrl: string;

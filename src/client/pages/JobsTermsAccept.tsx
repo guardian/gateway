@@ -12,10 +12,9 @@ import {
 import { getAutoRow, gridItemYourData } from '../styles/Grid';
 import { InfoSummary } from '@guardian/source-react-components-development-kitchen';
 import { Link } from '@guardian/source-react-components';
-import { MainForm } from '../components/MainForm';
-import NameInputField, {
-  useNameInputFieldError,
-} from '../components/NameInputField';
+import { MainForm } from '@/client/components/MainForm';
+import NameInputField from '@/client/components/NameInputField';
+import { useNameInputFieldError } from '@/client/lib/hooks/useNameFieldInputError';
 
 const listBullets = css`
   list-style: none;
