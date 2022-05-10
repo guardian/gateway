@@ -22,6 +22,7 @@ const fieldset = css`
 
 interface NameInputProps {
   onError: (state: boolean) => void;
+  defaultValue?: string;
 }
 
 const FirstNameInput = (props: NameInputProps) => {
@@ -51,11 +52,12 @@ const FirstNameInput = (props: NameInputProps) => {
       onInput={onInput}
       onInvalid={onInvalid}
       error={errorMessage}
+      defaultValue={props.defaultValue}
     />
   );
 };
 
-const LastNameInput = (props: NameInputProps) => {
+const SecondNameInput = (props: NameInputProps) => {
   const { onBlur, inputFieldState, onInput, onInvalid } =
     useInputValidityState();
 
@@ -74,13 +76,14 @@ const LastNameInput = (props: NameInputProps) => {
     <TextInput
       required
       label={'Last Name'}
-      name="lastName"
+      name="secondName"
       type="text"
       autoComplete="family-name"
       onBlur={onBlur}
       onInput={onInput}
       onInvalid={onInvalid}
       error={errorMessage}
+      defaultValue={props.defaultValue}
     />
   );
 };
@@ -118,24 +121,31 @@ export const useNameInputFieldError = () => {
 interface NameInputFieldProps
   extends FieldsetHTMLAttributes<HTMLFieldSetElement> {
   onGroupError?: (state: boolean) => void;
+  firstName?: string;
+  secondName?: string;
 }
 
 const NameInputField: React.FC<NameInputFieldProps> = (props) => {
-  const { onGroupError: setGroupError, ...restProps } = props;
+  const {
+    onGroupError: setGroupError,
+    firstName,
+    secondName,
+    ...restProps
+  } = props;
 
   const [firstNameError, setFirstNameError] = useState(false);
-  const [lastNameError, setLastNameError] = useState(false);
+  const [secondNameError, setSecondNameError] = useState(false);
 
   useEffect(() => {
     if (setGroupError) {
-      setGroupError(firstNameError || lastNameError);
+      setGroupError(firstNameError || secondNameError);
     }
-  }, [firstNameError, lastNameError, setGroupError]);
+  }, [firstNameError, secondNameError, setGroupError]);
 
   return (
     <fieldset css={fieldset} {...restProps}>
-      <FirstNameInput onError={setFirstNameError} />
-      <LastNameInput onError={setLastNameError} />
+      <FirstNameInput onError={setFirstNameError} defaultValue={firstName} />
+      <SecondNameInput onError={setSecondNameError} defaultValue={secondName} />
     </fieldset>
   );
 };

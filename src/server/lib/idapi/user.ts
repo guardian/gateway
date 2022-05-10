@@ -86,6 +86,11 @@ const responseToEntity = (response: APIResponse): User => {
     consents,
     primaryEmailAddress: response.user.primaryEmailAddress,
     statusFields: response.user.statusFields,
+    userGroups: response.user.userGroups,
+    privateFields: {
+      firstName: response.user.privateFields?.firstName,
+      secondName: response.user.privateFields?.secondName,
+    },
   };
 };
 
@@ -129,7 +134,7 @@ export const updateName = async (
       path: '/user/me',
       options,
     });
-    return response;
+    return responseToEntity(response);
   } catch (error) {
     logger.error(`IDAPI error updating first and last name for ${ip}`, error);
     return handleError(error as IDAPIError);

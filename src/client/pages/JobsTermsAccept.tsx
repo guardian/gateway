@@ -56,7 +56,17 @@ const heading = css`
   ${headline.xxxsmall({ fontWeight: 'bold' })};
 `;
 
-export const JobsTermsAccept = () => {
+interface JobsTermsAcceptProps {
+  submitUrl: string;
+  firstName?: string;
+  secondName?: string;
+}
+
+export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
+  firstName,
+  secondName,
+  submitUrl,
+}) => {
   const autoYourDataRow = getAutoRow(1, gridItemYourData);
 
   const {
@@ -106,10 +116,14 @@ export const JobsTermsAccept = () => {
         <MainForm
           submitButtonText="Continue"
           hasJobsTerms={true}
-          formAction="/agree/GRS"
+          formAction={submitUrl}
           onInvalid={() => setFormInvalidOnSubmit(true)}
         >
-          <NameInputField onGroupError={setGroupError} />
+          <NameInputField
+            onGroupError={setGroupError}
+            firstName={firstName}
+            secondName={secondName}
+          />
         </MainForm>
         <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
           Or{' '}

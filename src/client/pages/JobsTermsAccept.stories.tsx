@@ -9,7 +9,7 @@ export default {
   parameters: { layout: 'fullscreen' },
 } as Meta;
 
-export const Default = () => <JobsTermsAccept />;
+export const Default = () => <JobsTermsAccept submitUrl="/" />;
 Default.story = {
   name: 'with defaults',
 };

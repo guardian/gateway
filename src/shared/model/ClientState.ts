@@ -41,6 +41,8 @@ export interface PageData {
   previousPage?: ConsentPath;
   // reset password token specific
   timeUntilTokenExpiry?: number;
+  firstName?: string;
+  secondName?: string;
 }
 
 export interface RecaptchaConfig {

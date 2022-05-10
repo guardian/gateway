@@ -47,7 +47,7 @@ describe('Registration flow', () => {
         cy.reload();
 
         cy.get('input[name="firstName"]').type('First Name');
-        cy.get('input[name="lastName"]').type('Last Name');
+        cy.get('input[name="secondName"]').type('Last Name');
         cy.get('input[name="password"]').type(randomPassword());
         cy.get('button[type="submit"]').click();
         cy.url().should('contain', encodedReturnUrl);

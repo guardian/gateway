@@ -50,7 +50,7 @@ interface AuthenticationEmbeddedUser {
 // https://developer.okta.com/docs/reference/api/authn/#user-profile-object
 interface AuthenticationEmbeddedUserProfile {
   firstName: string;
-  lastName: string;
+  secondName: string;
   locale?: string;
   login: string;
   timeZone?: string;

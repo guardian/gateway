@@ -46,7 +46,7 @@ const changePasswordInIDAPI = async (
 
   const { token } = req.params;
   const { clientId } = req.query;
-  const { password, firstName, lastName } = req.body;
+  const { password, firstName, secondName } = req.body;
 
   requestState = deepmerge(requestState, {
     pageData: {
@@ -82,8 +82,8 @@ const changePasswordInIDAPI = async (
     if (clientId === 'jobs' && path === '/welcome') {
       const SC_GU_U = cookies?.values.find(({ key }) => key === 'SC_GU_U');
       if (SC_GU_U) {
-        if (firstName && lastName) {
-          await updateName(firstName, lastName, req.ip, SC_GU_U.value);
+        if (firstName && secondName) {
+          await updateName(firstName, secondName, req.ip, SC_GU_U.value);
         } else {
           logger.error(
             'No first or last name provided for Jobs user creation request.',

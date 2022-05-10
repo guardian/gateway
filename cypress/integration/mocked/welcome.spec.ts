@@ -193,7 +193,7 @@ describe('Welcome and set password page', () => {
 
       cy.visit(`/welcome/fake_token?${query}`);
       cy.get('input[name="firstName"]').type('First Name');
-      cy.get('input[name="lastName"]').type('Last Name');
+      cy.get('input[name="secondName"]').type('Last Name');
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
       cy.wait('@breachCheck');
       cy.get('button[type="submit"]').click();
