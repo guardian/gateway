@@ -1,27 +1,19 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import NameInput from './NameInputField';
+import NameInputField from './NameInputField';
 
 export default {
-  title: 'Components/NameInputFieldset',
-  component: NameInput,
+  title: 'Components/NameInputField',
+  component: NameInputField,
 } as Meta;
 
 export const Default = () => {
-  return <NameInput />;
+  return <NameInputField />;
 };
 Default.storyName = 'default';
 
-// export const WithEmptyError = () => (
-//   <EmailInput defaultValue="" initialState={EmailInputFieldState.EMPTY} />
-// );
-// WithEmptyError.storyName = 'with empty error';
-
-// export const WithInvalidError = () => (
-//   <EmailInput
-//     defaultValue="invalid.email"
-//     initialState={EmailInputFieldState.INVALID}
-//   />
-// );
-// WithInvalidError.storyName = 'with invalid error';
+export const DefaultNameValues = () => {
+  return <NameInputField firstName="John" secondName="Smith" />;
+};
+DefaultNameValues.storyName = 'with default values';

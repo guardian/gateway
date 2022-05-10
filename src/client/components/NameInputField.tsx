@@ -88,19 +88,29 @@ const SecondNameInput = (props: NameInputProps) => {
   );
 };
 
+/**
+ * Utility hook to show the global name input field error on submit only.
+ *
+ * Usage:
+ * When your form is submitted, call `setFormSubmitted(true)`.
+ * Error field value and context will be set as long as `groupError` is true.
+ *
+ * When `groupError` is set to `false`, `formSubmitted` is also set to `false`—
+ * this is so the global error will not show again until the next submit attempt.
+ */
 export const useNameInputFieldError = () => {
   const [groupError, setGroupError] = useState(false);
-  const [formInvalidOnSubmit, setFormInvalidOnSubmit] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   // We show a global name field error above the fold on submit if the form is submitted without one — or both — of the name fields
   // When the user corrects the global error, this effect resets the flag so it does not show again until the next submit attempt.
   useEffect(() => {
-    if (!groupError) {
-      setFormInvalidOnSubmit(false);
+    if (groupError === false) {
+      setFormSubmitted(false);
     }
-  }, [groupError, setFormInvalidOnSubmit]);
+  }, [groupError, setFormSubmitted]);
 
-  const showNameFieldError = formInvalidOnSubmit && groupError;
+  const showNameFieldError = formSubmitted && groupError;
 
   const nameFieldError = showNameFieldError
     ? NameFieldErrors.INFORMATION_MISSING
@@ -114,33 +124,28 @@ export const useNameInputFieldError = () => {
     nameFieldError,
     nameFieldErrorContext,
     setGroupError,
-    setFormInvalidOnSubmit,
+    setFormSubmitted,
   };
 };
 
 interface NameInputFieldProps
   extends FieldsetHTMLAttributes<HTMLFieldSetElement> {
-  onGroupError?: (state: boolean) => void;
+  onGroupError?: (errorOccurred: boolean) => void;
   firstName?: string;
   secondName?: string;
 }
 
 const NameInputField: React.FC<NameInputFieldProps> = (props) => {
-  const {
-    onGroupError: setGroupError,
-    firstName,
-    secondName,
-    ...restProps
-  } = props;
+  const { onGroupError, firstName, secondName, ...restProps } = props;
 
   const [firstNameError, setFirstNameError] = useState(false);
   const [secondNameError, setSecondNameError] = useState(false);
 
   useEffect(() => {
-    if (setGroupError) {
-      setGroupError(firstNameError || secondNameError);
+    if (onGroupError) {
+      onGroupError(firstNameError || secondNameError);
     }
-  }, [firstNameError, secondNameError, setGroupError]);
+  }, [firstNameError, secondNameError, onGroupError]);
 
   return (
     <fieldset css={fieldset} {...restProps}>

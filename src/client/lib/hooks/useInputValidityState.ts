@@ -20,7 +20,7 @@ export const useInputValidityState = (
   // Transition error message state based upon the
   // HTML ValidityState object returned from the input.
   const transitionState = useCallback((validityState: ValidityState) => {
-    const emailInputIsInvalid =
+    const inputIsInvalid =
       validityState.customError ||
       validityState.badInput ||
       validityState.patternMismatch ||
@@ -31,11 +31,11 @@ export const useInputValidityState = (
       validityState.stepMismatch ||
       validityState.typeMismatch;
 
-    const emailInputIsEmpty = validityState.valueMissing;
+    const inputIsEmpty = validityState.valueMissing;
 
-    if (emailInputIsEmpty) {
+    if (inputIsEmpty) {
       setInputFieldState(InputFieldState.EMPTY);
-    } else if (emailInputIsInvalid) {
+    } else if (inputIsInvalid) {
       setInputFieldState(InputFieldState.INVALID);
     } else {
       setInputFieldState(InputFieldState.VALID);
@@ -53,13 +53,14 @@ export const useInputValidityState = (
   const onInput = useCallback<React.FormEventHandler<HTMLInputElement>>(
     (e) => {
       // We check the `composed` variable to see if the event originated from user input.
-      // This is so that we can run validation when users submit an email through a password manager.
+      // This is so that we can run validation when users submit values through a password manager.
       // Composed is not supported in IE11, so we check to see if it's undefined first.
       const notOriginatingFromUserInput =
         e.nativeEvent.composed !== undefined && !e.nativeEvent.composed;
 
       // We also validate the field when filled via an autocomplete action in the browser.
-      // When this happens the `data` property will be undefined.
+      // We can tell when this happens because the `data` property will be undefined.
+      // Usually from a keystroke, `data` would contain the value.
       const originatingFromAutoComplete =
         e.nativeEvent.composed !== undefined &&
         (e.nativeEvent as Event & { data?: string })?.data === undefined;
