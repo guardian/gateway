@@ -106,7 +106,7 @@ export const JobsTermsAccept = () => {
         <MainForm
           submitButtonText="Continue"
           hasJobsTerms={true}
-          formAction="/"
+          formAction="/agree/GRS"
           onInvalid={() => setFormInvalidOnSubmit(true)}
         >
           <NameInputField onGroupError={setGroupError} />
