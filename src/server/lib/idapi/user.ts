@@ -130,13 +130,13 @@ export const updateName = async (
     sc_gu_u,
   );
   try {
-    const response = await idapiFetch({
+    const response = (await idapiFetch({
       path: '/user/me',
       options,
-    });
+    })) as APIResponse;
     return responseToEntity(response);
   } catch (error) {
-    logger.error(`IDAPI error updating first and last name for ${ip}`, error);
+    logger.error(`IDAPI error updating name for ${ip}`, error);
     return handleError(error as IDAPIError);
   }
 };

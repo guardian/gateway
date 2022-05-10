@@ -28,10 +28,10 @@ import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { resetPassword as resetPasswordInOkta } from '@/server/lib/okta/api/authentication';
 import { OktaError } from '@/server/models/okta/Error';
-import { addToGroup, GroupCode, updateName } from '@/server/lib/idapi/user';
 import { checkTokenInOkta } from '@/server/controllers/checkPasswordToken';
 import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
 import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
+import setupJobsUser from '../lib/jobs';
 
 const { okta } = getConfiguration();
 
@@ -71,29 +71,12 @@ const changePasswordInIDAPI = async (
       });
     }
 
-    // When a jobs user is registering, we'd like to add them to the GRS group.
-    // We only do this for users going through the welcome flow.
-    //
-    // Once they belong to this group, they aren't shown a confirmation page when-
-    // they first visit the jobs site.
-    //
-    // If the SC_GU_U cookie exists, we try to add the user to the group.
-    // If the cookie doesn't exist for some reason, we log the incident.
+    // When a jobs user is registering, we add them to the GRS group and set their name
     if (clientId === 'jobs' && path === '/welcome') {
       const SC_GU_U = cookies?.values.find(({ key }) => key === 'SC_GU_U');
       if (SC_GU_U) {
-        if (firstName && secondName) {
-          await updateName(firstName, secondName, req.ip, SC_GU_U.value);
-        } else {
-          logger.error(
-            'No first or last name provided for Jobs user creation request.',
-          );
-        }
-        await addToGroup(GroupCode.GRS, req.ip, SC_GU_U.value);
-      } else {
-        logger.error(
-          'Failed to add the user to the GRS group or set their full name because the SC_GU_U cookie is not set.',
-        );
+        await setupJobsUser(firstName, secondName, req.ip, SC_GU_U.value);
+        trackMetric('JobsGRSGroupAgree::Success');
       }
     }
 
@@ -103,7 +86,7 @@ const changePasswordInIDAPI = async (
     // a) account verification
     // b) change password
     // since these could happen at different points in time, it's best
-    // to keep them as two seperate metrics
+    // to keep them as two separate metrics
     trackMetric('AccountVerification::Success');
     trackMetric('UpdatePassword::Success');
 
@@ -118,6 +101,9 @@ const changePasswordInIDAPI = async (
     logger.error(`${req.method} ${req.originalUrl}  Error`, error);
 
     // see the comment above around the success metrics
+    if (clientId === 'jobs' && path === '/welcome') {
+      trackMetric('JobsGRSGroupAgree::Failure');
+    }
     trackMetric('AccountVerification::Failure');
     trackMetric('UpdatePassword::Failure');
 

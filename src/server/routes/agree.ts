@@ -1,5 +1,4 @@
 import { Request } from 'express';
-
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { renderer } from '@/server/lib/renderer';
 import { ResponseWithRequestState } from '@/server/models/Express';
@@ -21,6 +20,7 @@ router.get(
     const { returnUrl } = state.pageData;
     const { signInPageUrl } = getConfiguration();
 
+    // Redirect to /signin if no session cookie.
     if (!SC_GU_U) {
       return res.redirect(
         303,
@@ -38,7 +38,11 @@ router.get(
         (group) => group.packageCode === 'GRS',
       );
 
-      if (userBelongsToGRS) {
+      const userFullNameSet = !!firstName && !!secondName;
+
+      // The user is redirected immediately if they are already
+      // part of the group and have their name set.
+      if (userBelongsToGRS && userFullNameSet) {
         const redirectUrl = returnUrl || defaultReturnUri;
         return res.redirect(
           303,
@@ -46,19 +50,20 @@ router.get(
         );
       }
 
-      const requestState = deepmerge(res.locals, {
-        pageData: {
-          firstName,
-          secondName,
-        },
-      });
-
       const html = renderer('/agree/GRS', {
-        requestState,
+        requestState: deepmerge(res.locals, {
+          pageData: {
+            firstName,
+            secondName,
+          },
+        }),
         pageTitle: 'Jobs',
       });
+
       return res.type('html').send(html);
     } catch (error) {
+      logger.error(`${req.method} ${req.originalUrl} Error`, error);
+      // Redirect to /signin if an error occurs when fetching the users' data.
       return res.redirect(
         303,
         addQueryParamsToUntypedPath(signInPageUrl, res.locals.queryParams),
@@ -78,7 +83,7 @@ router.post(
       await setupJobsUser(firstName, secondName, req.ip, req.cookies.SC_GU_U);
       trackMetric('JobsGRSGroupAgree::Success');
     } catch (error) {
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+      logger.error(`${req.method} ${req.originalUrl} Error`, error);
       trackMetric('JobsGRSGroupAgree::Failure');
     } finally {
       return res.redirect(303, redirectUrl);
