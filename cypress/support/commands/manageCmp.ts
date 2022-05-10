@@ -11,15 +11,11 @@ declare global {
 }
 
 export const disableCMP = () => {
-  return cy.setCookie('gu-cmp-disabled', 'true', {
-    log: true,
-  });
+  return cy.setCookie('gu-cmp-disabled', 'true');
 };
 
 export const enableCMP = () => {
-  return cy.setCookie('gu-cmp-disabled', 'false', {
-    log: true,
-  });
+  return cy.setCookie('gu-cmp-disabled', 'false');
 };
 
 // CMP helpers work for GB/tcfv2 region only //
