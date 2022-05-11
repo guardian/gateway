@@ -8,13 +8,11 @@ import { GeoLocation } from '@/shared/model/Geolocation';
 import { Consent } from '@/shared/model/Consent';
 import { ConsentCard } from '@/client/components/ConsentCard';
 import { controls } from '@/client/styles/Consents';
-import { CONSENT_IMAGES } from '@/client/models/ConsentImages';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { onboardingFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
-import { TEST_ID as IMAGE_TEST_ID } from '@/shared/model/experiments/tests/opt-in-prompt-image';
 
 const continueButtonWrapper = css`
   text-align: right;
@@ -35,9 +33,7 @@ type SignInSuccessProps = {
 export const SignInSuccess = ({ consents }: SignInSuccessProps) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
   const clientState = useClientState();
-  const { pageData = {}, queryParams, abTesting } = clientState;
-  const { participations } = abTesting ?? {};
-  const noImage = participations?.[IMAGE_TEST_ID]?.variant === 'no-image';
+  const { pageData = {}, queryParams } = clientState;
 
   return (
     <ConsentsLayout title="Get the latest offers sent to your inbox">
@@ -63,8 +59,7 @@ export const SignInSuccess = ({ consents }: SignInSuccessProps) => {
             description={consent.description || ''}
             id={consent.id}
             defaultChecked={!!consent.consented}
-            imagePath={CONSENT_IMAGES[consent.id]}
-            noImage={noImage}
+            noImage
           />
         ))}
         <div css={[controls, continueButtonWrapper]}>
