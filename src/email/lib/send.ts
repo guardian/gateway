@@ -1,7 +1,18 @@
 import * as AWS from 'aws-sdk';
 import { awsConfig } from '@/server/lib/awsConfig';
 
-const SESV2 = new AWS.SESV2(awsConfig);
+// We need to adjust the SES timeouts to be longer than the standard AWS
+// timeouts
+const sesConfig = {
+  ...awsConfig,
+  httpOptions: {
+    ...awsConfig.httpOptions,
+    connectTimeout: 1000,
+    timeout: 1000,
+  },
+};
+
+const SESV2 = new AWS.SESV2(sesConfig);
 
 type Props = {
   html: string;

@@ -5,6 +5,8 @@ on:
       - main
   pull_request:
     types: ['review_requested']
+permissions:
+  id-token: write
 
 jobs:
   cypress-nginx-okta:
@@ -45,6 +47,11 @@ jobs:
           sudo dev-nginx setup-cert "profile.thegulocal.com"
           sudo cp ./scripts/nginx.conf /etc/nginx/nginx.conf
           sudo dev-nginx restart-nginx
+      - name: Configure AWS credentials for SES
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_SES_SEND_EMAIL_ROLE_ARN }}
+          aws-region: eu-west-1
       - name: Cypress run
         uses: cypress-io/github-action@v2
         env:
@@ -87,6 +94,8 @@ jobs:
           RATE_LIMITER_CONFIG: '{"enabled":true,"defaultBuckets":{"globalBucket":{"capacity":500,"addTokenMs":50},"ipBucket":{"capacity":100,"addTokenMs":50},"emailBucket":{"capacity":100,"addTokenMs":50},"oktaIdentifierBucket":{"capacity":100,"addTokenMs":50},"accessTokenBucket":{"capacity":4,"addTokenMs":5000}},"routeBuckets":{}}'
           # Required for the Cypress tests to run as we're unable to verify the created certs
           NODE_TLS_REJECT_UNAUTHORIZED: 0
+          # Used to tell Gateway server we're running in Cypress
+          RUNNING_IN_CYPRESS: true
         with:
           build: yarn build
           start: yarn start

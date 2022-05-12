@@ -38,6 +38,10 @@ source .env
 CI_ENV=$(cat .env | tr '\n' ',')
 CI_ENV=${CI_ENV%?}
 
+# Used to tell Gateway server we're running in Cypress
+RUNNING_IN_CYPRESS=true
+
+
 if [ -z ${NODE_EXTRA_CA_CERTS+x} ]; then
   echo "NODE_EXTRA_CA_CERTS is unset in your bash config, see setup docs on how to set this."
   echo "Setting NODE_EXTRA_CA_CERTS locally for now."

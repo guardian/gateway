@@ -24,6 +24,11 @@ export const trackMetric = (
   metricName: Metrics,
   dimensions?: MetricDimensions,
 ): void => {
+  if (process.env.RUNNING_IN_CYPRESS === 'true') {
+    // return void in cypress
+    return;
+  }
+
   // merge defaultDimensions with dimensions from parameter in case some were changed,
   const mergedDimensions = {
     ...defaultDimensions,
