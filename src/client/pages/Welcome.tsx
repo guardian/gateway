@@ -53,7 +53,7 @@ export const Welcome = ({
     nameFieldError,
     nameFieldErrorContext,
     setGroupError,
-    setFormSubmitted,
+    setFormSubmitAttempted,
   } = useNameInputFieldError();
 
   return (
@@ -91,7 +91,7 @@ export const Welcome = ({
           gridAutoRow={autoRow}
           autoComplete="new-password"
           formTrackingName="welcome"
-          onInvalid={() => setFormSubmitted(true)}
+          onInvalid={() => setFormSubmitAttempted(true)}
         >
           {isJobs && <NameInputField onGroupError={setGroupError} />}
         </PasswordForm>

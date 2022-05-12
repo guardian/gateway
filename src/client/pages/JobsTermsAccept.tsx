@@ -3,14 +3,8 @@ import React from 'react';
 import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { css } from '@emotion/react';
-import {
-  headline,
-  neutral,
-  space,
-  textSans,
-} from '@guardian/source-foundations';
+import { neutral, space, textSans } from '@guardian/source-foundations';
 import { getAutoRow, gridItemYourData } from '../styles/Grid';
-import { InfoSummary } from '@guardian/source-react-components-development-kitchen';
 import { Link } from '@guardian/source-react-components';
 import { MainForm } from '@/client/components/MainForm';
 import NameInputField from '@/client/components/NameInputField';
@@ -19,8 +13,8 @@ import { useNameInputFieldError } from '@/client/lib/hooks/useNameFieldInputErro
 const listBullets = css`
   list-style: none;
   padding-left: 0;
-  text-indent: -18px; /* second line indentation */
-  margin-left: 18px; /* second line indentation */
+  text-indent: -${space[5]}px; /* second line indentation */
+  margin-left: ${space[5]}px; /* second line indentation */
   li {
     font-size: 17px;
   }
@@ -52,7 +46,7 @@ const belowFormMarginTopSpacingStyle = css`
 const heading = css`
   color: ${neutral[0]};
   margin: 0 0 ${space[3]}px;
-  ${headline.xxxsmall({ fontWeight: 'bold' })};
+  font-weight: bold;
 `;
 
 interface JobsTermsAcceptProps {
@@ -72,66 +66,54 @@ export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
     nameFieldError,
     nameFieldErrorContext,
     setGroupError,
-    setFormSubmitted,
+    setFormSubmitAttempted,
   } = useNameInputFieldError();
 
   return (
-    <>
-      <MainLayout
-        pageHeader="Welcome to Guardian Jobs"
-        errorOverride={nameFieldError}
-        errorContext={nameFieldErrorContext}
+    <MainLayout
+      pageHeader="Welcome to Guardian&nbsp;Jobs"
+      errorOverride={nameFieldError}
+      errorContext={nameFieldErrorContext}
+    >
+      <MainBodyText cssOverrides={heading}>
+        Click &lsquo;continue&rsquo; to automatically use your existing Guardian
+        account to sign in with Guardian&nbsp;Jobs.
+      </MainBodyText>
+      <MainBodyText>
+        By activating your Guardian&nbsp;Jobs account you will receive a welcome
+        email detailing the range of career-enhancing features that can be set
+        up on our jobs site. These include:
+      </MainBodyText>
+      <ul css={[text, listBullets, autoYourDataRow()]}>
+        <li>
+          Creating a job alert and receiving relevant jobs straight to your
+          inbox
+        </li>
+        <li>
+          Shortlisting jobs that interest you so you can access them later on
+          different devices
+        </li>
+        <li>Uploading your CV and let employers find you</li>
+      </ul>
+      <MainForm
+        submitButtonText="Continue"
+        hasJobsTerms={true}
+        formAction={submitUrl}
+        onInvalid={() => setFormSubmitAttempted(true)}
       >
-        <h2 css={[heading]}>
-          Click &lsquo;continue&rsquo; to automatically use your existing
-          Guardian account to sign in with Guardian Jobs
-        </h2>
-        <InfoSummary
-          cssOverrides={belowFormMarginTopSpacingStyle}
-          message={
-            <MainBodyText>
-              By activating your Guardian Jobs account you will receive a
-              welcome email detailing the range of career-enhancing features
-              that can be set up on our jobs site.
-            </MainBodyText>
-          }
-          context={
-            <>
-              <p css={text}>These include:</p>
-              <ul css={[text, listBullets, autoYourDataRow()]}>
-                <li>
-                  Creating a job alert and receiving relevant jobs straight to
-                  your inbox
-                </li>
-                <li>
-                  Shortlisting jobs that interest you so you can access them
-                  later on different devices
-                </li>
-                <li>Uploading your CV and let employers find you</li>
-              </ul>
-            </>
-          }
+        <NameInputField
+          onGroupError={setGroupError}
+          firstName={firstName}
+          secondName={secondName}
         />
-        <MainForm
-          submitButtonText="Continue"
-          hasJobsTerms={true}
-          formAction={submitUrl}
-          onInvalid={() => setFormSubmitted(true)}
-        >
-          <NameInputField
-            onGroupError={setGroupError}
-            firstName={firstName}
-            secondName={secondName}
-          />
-        </MainForm>
-        <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
-          Or{' '}
-          <Link subdued={true} href={'/signout'}>
-            sign out
-          </Link>{' '}
-          to browse jobs anonymously.
-        </MainBodyText>
-      </MainLayout>
-    </>
+      </MainForm>
+      <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
+        Or{' '}
+        <Link subdued={true} href={'/signout'}>
+          sign out
+        </Link>{' '}
+        to browse jobs anonymously.
+      </MainBodyText>
+    </MainLayout>
   );
 };
