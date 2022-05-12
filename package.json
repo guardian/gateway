@@ -101,7 +101,7 @@
     "fork-ts-checker-webpack-plugin": "^7.2.11",
     "husky": "^8.0.1",
     "image-webpack-loader": "^8.1.0",
-    "ioredis-mock": "^7.2.0",
+    "ioredis-mock": "^7.4.0",
     "jest": "^27.5.1",
     "jest-mock": "^27.5.1",
     "nodemon": "^2.0.16",

@@ -10021,10 +10021,10 @@ invariant@^2.2.2:
   dependencies:
     loose-envify "^1.0.0"
 
-ioredis-mock@^7.2.0:
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/ioredis-mock/-/ioredis-mock-7.2.0.tgz#48f006c07ef7f1f93f75e60d8f9035fa46c4ef0a"
-  integrity sha512-xzABBG3NhfDBGxH1KX9n6vs7WGNn9lhcxMT3b+vjynVImxlUV+vOXU+tjGzSUnGmx4IYllA8RqbXN8z6ROMPVA==
+ioredis-mock@^7.4.0:
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/ioredis-mock/-/ioredis-mock-7.4.0.tgz#953ca4ccd79eec36a78d86b5d5028f4d6098eaae"
+  integrity sha512-jcNG+9YjjBA1p6Hb1nYaC1yhW+n9S5VOgbGZXt59ZmtI2WrPWH+lSD4gE017uaGitPqW7tquFdAfcBPvFEQbew==
   dependencies:
     fengari "^0.1.4"
     fengari-interop "^0.1.3"
