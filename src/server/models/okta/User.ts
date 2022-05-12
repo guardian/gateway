@@ -24,6 +24,24 @@ export interface UserResponse {
   profile: Pick<UserProfile, 'email' | 'login' | 'isGuardianUser'>;
 }
 
+// https://developer.okta.com/docs/reference/api/users/#activate-user
+// https://developer.okta.com/docs/reference/api/users/#reactivate-user
+export interface ActivationTokenResponse {
+  activationUrl: string;
+  activationToken: string;
+}
+
+// https://developer.okta.com/docs/reference/api/users/#reset-password
+export interface ResetPasswordUrlResponse {
+  resetPasswordUrl: string;
+}
+
+// Our methods consume the activate_user, reactivate_user, and reset_password
+// endpoints and return a token response.
+export interface TokenResponse {
+  token: string;
+}
+
 // https://developer.okta.com/docs/reference/api/users/#request-parameters
 export interface UserCreationRequest {
   profile: NonNullable<
