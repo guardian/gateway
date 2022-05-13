@@ -46,7 +46,10 @@ router.get(
         const redirectUrl = returnUrl || defaultReturnUri;
         return res.redirect(
           303,
-          addQueryParamsToUntypedPath(redirectUrl, res.locals.queryParams),
+          addQueryParamsToUntypedPath(redirectUrl, {
+            ...res.locals.queryParams,
+            returnUrl: '', // unset returnUrl so redirect won't point to itself.
+          }),
         );
       }
 

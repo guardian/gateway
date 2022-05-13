@@ -15,6 +15,7 @@ declare global {
       addOktaUserToGroup: typeof addOktaUserToGroup;
       findEmailValidatedOktaGroupId: typeof findEmailValidatedOktaGroupId;
       getOktaUserGroups: typeof getOktaUserGroups;
+      getTestUserDetails: typeof getTestUserDetails;
     }
   }
 }
@@ -34,6 +35,18 @@ type IDAPITestUserOptions = {
   deleteAfterMinute?: boolean;
   isGuestUser?: boolean;
 };
+
+interface User {
+  privateFields: {
+    firstName?: string;
+    secondName?: string;
+  };
+  userGroups: {
+    path: string;
+    packageCode: string;
+    joinedDate: string;
+  }[];
+}
 
 type IDAPITestUserResponse = [
   {
@@ -56,6 +69,29 @@ export const randomMailosaurEmail = () => {
 };
 
 export const randomPassword = () => uuidv4();
+
+export const getTestUserDetails = () =>
+  cy.getCookie('SC_GU_U').then((cookie) =>
+    cy
+      .request({
+        url: Cypress.env('IDAPI_BASE_URL') + '/user/me',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Origin: 'https://profile.thegulocal.com',
+          'X-GU-ID-Client-Access-Token': `Bearer ${Cypress.env(
+            'IDAPI_CLIENT_ACCESS_TOKEN',
+          )}`,
+          'X-GU-ID-FOWARDED-SC-GU-U': cookie?.value,
+        },
+      })
+      .then((res) =>
+        cy.wrap({
+          status: res.body.status,
+          user: res.body.user as User,
+        }),
+      ),
+  );
 
 export const createTestUser = ({
   primaryEmailAddress,

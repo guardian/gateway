@@ -227,7 +227,7 @@ describe('Welcome and set password page', () => {
         url: 'https://api.pwnedpasswords.com/range/*',
       }).as('breachCheck');
       cy.visit(`/welcome/fake_token`);
-      cy.contains(`Please create a password for ${defaultEmail}`);
+      cy.contains(`Please complete your details for ${defaultEmail}`);
     });
 
     it('shows prompt to create password without email if none exists', () => {
@@ -237,7 +237,7 @@ describe('Welcome and set password page', () => {
         url: 'https://api.pwnedpasswords.com/range/*',
       }).as('breachCheck');
       cy.visit(`/welcome/fake_token`);
-      cy.contains(`Please create a password for your new account`);
+      cy.contains(`Please complete your details for your new account`);
     });
   });
 

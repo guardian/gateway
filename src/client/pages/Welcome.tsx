@@ -67,7 +67,7 @@ export const Welcome = ({
       <p css={[text, greyBorderTop, autoRow()]}>
         {passwordSet
           ? 'Password already set for '
-          : 'Please create a password for '}
+          : 'Please complete your details for '}
         {email ? <span css={emailSpan}>{email}</span> : 'your new account'}
       </p>
       {passwordSet ? (
@@ -87,7 +87,7 @@ export const Welcome = ({
           submitUrl={submitUrl}
           fieldErrors={fieldErrors}
           labelText="Password"
-          submitButtonText="Create password"
+          submitButtonText="Save and continue"
           gridAutoRow={autoRow}
           autoComplete="new-password"
           formTrackingName="welcome"

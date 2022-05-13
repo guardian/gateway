@@ -26,6 +26,7 @@ import {
   addOktaUserToGroup,
   findEmailValidatedOktaGroupId,
   getOktaUserGroups,
+  getTestUserDetails,
 } from './commands/testUser';
 
 Cypress.Commands.add('mockNext', mockNext);
@@ -54,3 +55,4 @@ Cypress.Commands.add(
   findEmailValidatedOktaGroupId,
 );
 Cypress.Commands.add('getOktaUserGroups', getOktaUserGroups);
+Cypress.Commands.add('getTestUserDetails', getTestUserDetails);

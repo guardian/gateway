@@ -34,7 +34,7 @@ describe('Registration flow', () => {
       ).then(({ body, token }) => {
         expect(body).to.have.string('Complete registration');
         cy.visit(`/welcome/${token}`);
-        cy.contains('Create password');
+        cy.contains('Save and continue');
 
         cy.get('form')
           .should('have.attr', 'action')
@@ -77,7 +77,7 @@ describe('Registration flow', () => {
       ).then(({ body, token }) => {
         expect(body).to.have.string('Complete registration');
         cy.visit(`/welcome/${token}`);
-        cy.contains('Create password');
+        cy.contains('Save and continue');
 
         cy.get('input[name="password"]').type(randomPassword());
         cy.get('button[type="submit"]').click();
@@ -114,7 +114,7 @@ describe('Registration flow', () => {
           'https://www.theguardian.com/technology/2017/may/04/nier-automata-sci-fi-game-sleeper-hit-designer-yoko-taro',
         );
         cy.visit(`/welcome/${token}&returnUrl=${newReturnUrl}`);
-        cy.contains('Create password');
+        cy.contains('Save and continue');
         cy.url()
           .should('contain', newReturnUrl)
           .and('not.contain', encodedReturnUrl);
