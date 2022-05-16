@@ -6894,10 +6894,10 @@ cypress-axe@^0.14.0:
   resolved "https://registry.yarnpkg.com/cypress-axe/-/cypress-axe-0.14.0.tgz#5f5e70fb36b8cb3ba73a8ba01e9262ff1268d5e2"
   integrity sha512-7Rdjnko0MjggCmndc1wECAkvQBIhuy+DRtjF7bd5YPZRFvubfMNvrxfqD8PWQmxm7MZE0ffS4Xr43V6ZmvLopg==
 
-cypress-mailosaur@2.7.0:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/cypress-mailosaur/-/cypress-mailosaur-2.7.0.tgz#ab564589b299635d38765ae5f2c21e833f0a2268"
-  integrity sha512-QopxYYvzgF1RWYubgyz9tkNr5GlXcCl94RmIPYgwjNbIuJ3CTOkxeaMsaUd+zpVsu6Xhw+4nzAfYRHjUyFc//A==
+cypress-mailosaur@2.8.0:
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/cypress-mailosaur/-/cypress-mailosaur-2.8.0.tgz#68cf6cad16cec41c68078533806bbb1ae07fc4b6"
+  integrity sha512-y/Wrnlhge83HDLak7ywTHuwh0jantsFvD2DxpuQR+aiW0zoN3lNDZoaFAvIv4/1J7VQoYraD9eOanJVslTyQjQ==
 
 cypress@^9.6.1:
   version "9.6.1"
