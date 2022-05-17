@@ -12,7 +12,7 @@ import {
   SuccessSummary,
 } from '@guardian/source-react-components-development-kitchen';
 import { gridRow, gridItem, SpanDefinition } from '@/client/styles/Grid';
-import { Header } from '@/client/components/Header';
+import { Header, JobsHeader } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import useClientState from '@/client/lib/hooks/useClientState';
 
@@ -21,6 +21,7 @@ interface MainLayoutProps {
   successOverride?: string;
   errorOverride?: string;
   errorContext?: React.ReactNode;
+  useJobsHeader?: React.ReactNode;
 }
 
 const mainStyles = css`
@@ -136,6 +137,7 @@ export const MainLayout = ({
   successOverride,
   errorOverride,
   errorContext,
+  useJobsHeader,
 }: PropsWithChildren<MainLayoutProps>) => {
   const clientState = useClientState();
   const { globalMessage: { error, success } = {} } = clientState;
@@ -148,7 +150,7 @@ export const MainLayout = ({
 
   return (
     <>
-      <Header />
+      {useJobsHeader ? <JobsHeader /> : <Header />}
       <main css={[mainStyles, gridRow]}>
         <section css={gridItem(gridSpanDefinition)}>
           {errorMessage && (

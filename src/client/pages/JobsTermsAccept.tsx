@@ -53,15 +53,17 @@ interface JobsTermsAcceptProps {
   submitUrl: string;
   firstName?: string;
   secondName?: string;
+  email?: string;
 }
 
 export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
   firstName,
   secondName,
   submitUrl,
+  email,
 }) => {
   const autoYourDataRow = getAutoRow(1, gridItemYourData);
-
+  const isNameSet = !!firstName && !!secondName;
   const {
     nameFieldError,
     nameFieldErrorContext,
@@ -71,49 +73,82 @@ export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
 
   return (
     <MainLayout
+      useJobsHeader={true}
       pageHeader="Welcome to Guardian&nbsp;Jobs"
       errorOverride={nameFieldError}
       errorContext={nameFieldErrorContext}
     >
-      <MainBodyText cssOverrides={heading}>
-        Click &lsquo;continue&rsquo; to automatically use your existing Guardian
-        account to sign in with Guardian&nbsp;Jobs.
-      </MainBodyText>
-      <MainBodyText>
-        By activating your Guardian&nbsp;Jobs account you will receive a welcome
-        email detailing the range of career-enhancing features that can be set
-        up on our jobs site. These include:
-      </MainBodyText>
-      <ul css={[text, listBullets, autoYourDataRow()]}>
-        <li>
-          Creating a job alert and receiving relevant jobs straight to your
-          inbox
-        </li>
-        <li>
-          Shortlisting jobs that interest you so you can access them later on
-          different devices
-        </li>
-        <li>Uploading your CV and let employers find you</li>
-      </ul>
-      <MainForm
-        submitButtonText="Continue"
-        hasJobsTerms={true}
-        formAction={submitUrl}
-        onInvalid={() => setFormSubmitAttempted(true)}
-      >
-        <NameInputField
-          onGroupError={setGroupError}
-          firstName={firstName}
-          secondName={secondName}
-        />
-      </MainForm>
-      <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
-        Or{' '}
-        <Link subdued={true} href={'/signout'}>
-          sign out
-        </Link>{' '}
-        to browse jobs anonymously.
-      </MainBodyText>
+      {isNameSet ? (
+        <>
+          <MainBodyText cssOverrides={heading}>
+            Click &lsquo;continue&rsquo; to automatically use your existing
+            Guardian account to sign in with Guardian&nbsp;Jobs.
+          </MainBodyText>
+          <MainBodyText>
+            By activating your Guardian&nbsp;Jobs account you will receive a
+            welcome email detailing the range of career-enhancing features that
+            can be set up on our jobs site. These include:
+          </MainBodyText>
+          <ul css={[text, listBullets, autoYourDataRow()]}>
+            <li>
+              Creating a job alert and receiving relevant jobs straight to your
+              inbox
+            </li>
+            <li>
+              Shortlisting jobs that interest you so you can access them later
+              on different devices
+            </li>
+            <li>Uploading your CV and let employers find you</li>
+          </ul>
+          <MainForm
+            submitButtonText="Continue"
+            hasJobsTerms={true}
+            formAction={submitUrl}
+            onInvalid={() => setFormSubmitAttempted(true)}
+          >
+            <NameInputField
+              onGroupError={setGroupError}
+              firstName={firstName}
+              secondName={secondName}
+            />
+          </MainForm>
+          <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
+            Or{' '}
+            <Link subdued={true} href={'/signout'}>
+              sign out
+            </Link>{' '}
+            to browse jobs anonymously.
+          </MainBodyText>
+        </>
+      ) : (
+        <>
+          {email ? (
+            <>
+              <MainBodyText>Please complete your details for</MainBodyText>
+              <MainBodyText cssOverrides={css({ fontWeight: 'bold' })}>
+                {email}
+              </MainBodyText>
+            </>
+          ) : (
+            <MainBodyText>Please complete your details</MainBodyText>
+          )}
+          <MainBodyText>
+            We will use these details on your job applications.
+          </MainBodyText>
+          <MainForm
+            submitButtonText="Save and continue"
+            hasJobsTerms={false}
+            formAction={submitUrl}
+            onInvalid={() => setFormSubmitAttempted(true)}
+          >
+            <NameInputField
+              onGroupError={setGroupError}
+              firstName={firstName}
+              secondName={secondName}
+            />
+          </MainForm>
+        </>
+      )}
     </MainLayout>
   );
 };

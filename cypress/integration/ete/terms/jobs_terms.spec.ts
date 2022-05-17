@@ -24,7 +24,57 @@ describe('Jobs terms and conditions flow', () => {
       );
     });
 
-    // it('should show the jobs terms page for users who do not have first/last name set, but are part of GRS', () => {});
+    it('should show the jobs terms page for users who do not have first/last name set, but are part of GRS', () => {
+      cy.createTestUser({
+        isUserEmailValidated: true,
+      })?.then(({ emailAddress, finalPassword }) => {
+        cy.visit('/signin');
+        cy.get('input[name=email]').type(emailAddress);
+        cy.get('input[name=password]').type(finalPassword);
+
+        cy.get('[data-cy="sign-in-button"]').click();
+
+        cy.url().should('include', '/signin/success');
+
+        const termsAcceptPageUrl = `https://${Cypress.env(
+          'BASE_URI',
+        )}/agree/GRS?returnUrl=https://profile.thegulocal.com/healthcheck`;
+
+        // Create a test user without a first/last name who is in the GRS group.
+        cy.updateTestUser({
+          privateFields: {
+            firstName: '',
+            secondName: '',
+          },
+        })
+          .then(cy.addToGRS)
+          .then(() => {
+            cy.visit(termsAcceptPageUrl);
+            cy.contains('Please complete your details for');
+            cy.contains(emailAddress);
+            cy.contains('We will use these details on your job applications');
+
+            cy.get('input[name=firstName]').should('be.empty');
+            cy.get('input[name=secondName]').should('be.empty');
+
+            cy.get('input[name=firstName]').type('First Name');
+            cy.get('input[name=secondName]').type('Second Name');
+
+            cy.findByText('Save and continue').click();
+
+            // User should be in the GRS group and have First/Last name set to our custom values.
+            cy.getTestUserDetails().then(({ user, status }) => {
+              expect(status).to.eq('ok');
+              expect(user.privateFields.firstName).to.eq('First Name');
+              expect(user.privateFields.secondName).to.eq('Second Name');
+              const joinedGroups = user.userGroups.map(
+                (group) => group.packageCode,
+              );
+              expect(joinedGroups).to.include('GRS');
+            });
+          });
+      });
+    });
 
     it('should redirect users who have already accepted the terms away', () => {
       cy.createTestUser({

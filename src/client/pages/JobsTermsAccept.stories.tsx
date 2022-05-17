@@ -9,7 +9,21 @@ export default {
   parameters: { layout: 'fullscreen' },
 } as Meta;
 
-export const Default = () => <JobsTermsAccept submitUrl="/" />;
+export const Default = () => (
+  <JobsTermsAccept
+    firstName="First name"
+    secondName="Second name"
+    submitUrl="/"
+  />
+);
 Default.story = {
   name: 'with defaults',
 };
+
+export const NameOnly = () => (
+  <JobsTermsAccept
+    submitUrl="/"
+    email="test@email.com"
+    secondName="I'm the only name set!"
+  />
+);

@@ -30,6 +30,7 @@ router.get(
 
     try {
       const {
+        primaryEmailAddress,
         privateFields: { firstName, secondName },
         userGroups,
       } = await read(req.ip, SC_GU_U);
@@ -58,6 +59,7 @@ router.get(
           pageData: {
             firstName,
             secondName,
+            email: primaryEmailAddress,
           },
         }),
         pageTitle: 'Jobs',
