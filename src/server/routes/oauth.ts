@@ -18,10 +18,17 @@ import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import postSignInController from '@/server/lib/postSignInController';
 import { validAppProtocols } from '../lib/validateUrl';
+import { IdTokenClaims } from 'openid-client';
+import { updateUser } from '../lib/okta/api/users';
 
 interface OAuthError {
   error: string;
   error_description: string;
+}
+
+interface CustomClaims extends IdTokenClaims {
+  user_groups?: string[];
+  email_validated?: boolean;
 }
 
 /**
@@ -140,6 +147,28 @@ router.get(
         );
         trackMetric('OAuthAuthorization::Failure');
         return redirectForGenericError(req, res);
+      }
+
+      // We're unable to set the user.emailValidated field in the Okta user profile
+      // for social users when they are created, but we are able to put them in the
+      // GuardianUser-EmailValidated group.
+      // So this is a workaround to set the emailValidated field to true in the Okta user profile
+      // if the user is in the GuardianUser-EmailValidated group, based on custom claims we have
+      // set up on the id_token.
+      if (tokenSet.id_token) {
+        // extracting the custom claims from the id_token and the sub (user id)
+        const { user_groups, email_validated, sub } =
+          tokenSet.claims() as CustomClaims;
+
+        // if the user is in the GuardianUser-EmailValidated group, but the emailValidated field is falsy
+        // then we set the emailValidated field to true in the Okta user profile by manually updating the user
+        if (
+          !email_validated &&
+          user_groups?.some((group) => group === 'GuardianUser-EmailValidated')
+        ) {
+          // updated the user profile emailValidated to true
+          await updateUser(sub, { profile: { emailValidated: true } });
+        }
       }
 
       // call the IDAPI /auth/oauth-token endpoint
