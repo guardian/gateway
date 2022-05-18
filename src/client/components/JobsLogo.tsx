@@ -5,16 +5,13 @@ import { from, visuallyHidden } from '@guardian/source-foundations';
 import jobsLogo from '@/client/assets/jobs/jobs-logo.png';
 
 const imgSize = css`
-  width: 270px;
+  width: 232px;
   height: auto;
   ${from.mobileMedium} {
-    width: 297px;
-  }
-  ${from.tablet} {
-    width: 313px;
+    width: 306px;
   }
   ${from.desktop} {
-    width: 397px;
+    width: 375px;
   }
 `;
 

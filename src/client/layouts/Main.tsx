@@ -134,9 +134,25 @@ export const buttonStyles = ({ hasTerms = false, halfWidth = false }) => css`
 
 const jobsHeaderStyles = css`
   background-color: ${neutral[100]};
-
   /* border */
   border-bottom: 1px solid ${neutral[86]};
+`;
+
+const jobsHeaderMarginOverrides = css`
+  margin-top: initial;
+  margin-bottom: 2px;
+  margin-left: auto;
+  margin-right: auto;
+  ${from.mobileMedium} {
+    margin-top: initial;
+  }
+  ${from.tablet} {
+    margin-top: initial;
+  }
+  ${from.desktop} {
+    margin-top: initial;
+    margin-bottom: initial;
+  }
 `;
 
 export const MainLayout = ({
@@ -159,7 +175,11 @@ export const MainLayout = ({
   return (
     <>
       {useJobsHeader ? (
-        <Header cssOverrides={jobsHeaderStyles} logoOverride={<JobsLogo />} />
+        <Header
+          cssOverrides={jobsHeaderStyles}
+          marginOverrides={jobsHeaderMarginOverrides}
+          logoOverride={<JobsLogo />}
+        />
       ) : (
         <Header />
       )}

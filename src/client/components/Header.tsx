@@ -50,11 +50,16 @@ const headerSpanDefinition: SpanDefinition = {
 type Props = {
   logoOverride?: React.ReactNode;
   cssOverrides?: SerializedStyles;
+  marginOverrides?: SerializedStyles;
 };
 
-export const Header = ({ logoOverride, cssOverrides }: Props) => (
+export const Header = ({
+  logoOverride,
+  cssOverrides,
+  marginOverrides,
+}: Props) => (
   <header id="top" css={[backgroundColor, cssOverrides]}>
-    <div css={[gridRow, marginStyles]}>
+    <div css={[gridRow, marginStyles, marginOverrides]}>
       <div css={[manualRow(1, headerSpanDefinition), headerGridRightToLeft]}>
         {logoOverride ? logoOverride : <Logo />}
       </div>

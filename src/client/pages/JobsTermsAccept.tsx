@@ -3,7 +3,7 @@ import React from 'react';
 import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { css } from '@emotion/react';
-import { neutral, space, textSans } from '@guardian/source-foundations';
+import { neutral, space, textSans, until } from '@guardian/source-foundations';
 import { getAutoRow, gridItemYourData } from '../styles/Grid';
 import { Link } from '@guardian/source-react-components';
 import { MainForm } from '@/client/components/MainForm';
@@ -15,12 +15,9 @@ const listBullets = css`
   padding-left: 0;
   text-indent: -${space[5]}px; /* second line indentation */
   margin-left: ${space[5]}px; /* second line indentation */
-  margin-bottom: 6px;
   li {
     font-size: 17px;
-  }
-  li:first-of-type {
-    /* margin-top: 6px; */
+    margin-top: 6px;
   }
   /* ::marker is not supported in IE11 */
   li::before {
@@ -52,6 +49,23 @@ const heading = css`
 
 const textSpacing = css`
   margin-bottom: ${space[2]}px;
+`;
+
+const noMargin = css`
+  margin-top: initial;
+`;
+
+const emailSpan = css`
+  font-weight: bold;
+
+  /* Avoid long emails causing the page to be scrollable horizontally */
+  ${until.tablet} {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    vertical-align: bottom;
+    max-width: 100%;
+  }
 `;
 
 interface JobsTermsAcceptProps {
@@ -120,24 +134,23 @@ export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
           <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
             Or{' '}
             <Link subdued={true} href={'/signout'}>
-              sign out
-            </Link>{' '}
-            to browse jobs anonymously.
+              sign out and continue
+            </Link>
           </MainBodyText>
         </>
       ) : (
         <>
           {email ? (
-            <>
-              <MainBodyText>Please complete your details for</MainBodyText>
-              <MainBodyText cssOverrides={css({ fontWeight: 'bold' })}>
-                {email}
-              </MainBodyText>
-            </>
+            <MainBodyText cssOverrides={textSpacing}>
+              Please complete your details for{' '}
+              <span css={emailSpan}>{email}</span>
+            </MainBodyText>
           ) : (
-            <MainBodyText>Please complete your details</MainBodyText>
+            <MainBodyText cssOverrides={textSpacing}>
+              Please complete your details
+            </MainBodyText>
           )}
-          <MainBodyText>
+          <MainBodyText cssOverrides={noMargin}>
             We will use these details on your job applications.
           </MainBodyText>
           <MainForm
