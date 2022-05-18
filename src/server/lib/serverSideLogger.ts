@@ -55,11 +55,13 @@ class KinesisTransport extends Transport {
           .promise()
           .catch((error: AWSError) => {
             if (error.code.includes('ExpiredToken') && stage === 'DEV') {
+              // eslint-disable-next-line no-console
               console.warn(
                 'AWS Credentials Expired. Have you added `Identity` Janus credentials?',
               );
             }
             if (error.code.includes('TimeoutError')) {
+              // eslint-disable-next-line no-console
               console.warn('Timeout when attempting to log to kinesis stream.');
             }
           });

@@ -34,7 +34,8 @@
     "no-var": "error",
     "no-param-reassign": "error",
     "prefer-const": "error",
-    "no-sequences": "error"
+    "no-sequences": "error",
+    "no-console": "error"
   },
   "overrides": [
     {

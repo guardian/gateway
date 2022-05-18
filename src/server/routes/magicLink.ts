@@ -28,8 +28,8 @@ router.post(
     const { email = '' } = req.body;
 
     try {
-      console.log(
-        `TODO: Implement the logic to send the magic link to ${email} here`,
+      logger.info(
+        `TODO: Implement the logic to send the magic link to ${email} here.`,
       );
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error);
