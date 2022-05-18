@@ -51,7 +51,6 @@ export const send = async ({
   };
 
   const result = await SESV2.sendEmail(params).promise();
-  console.log(result);
   if (!result?.MessageId) {
     return false;
   }
