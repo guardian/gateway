@@ -15,6 +15,7 @@ const listBullets = css`
   padding-left: 0;
   text-indent: -${space[5]}px; /* second line indentation */
   margin-left: ${space[5]}px; /* second line indentation */
+  margin-bottom: 6px;
   li {
     font-size: 17px;
   }
@@ -45,8 +46,12 @@ const belowFormMarginTopSpacingStyle = css`
 
 const heading = css`
   color: ${neutral[0]};
-  margin: 0 0 ${space[3]}px;
+  margin: 0 0 ${space[2]}px;
   font-weight: bold;
+`;
+
+const textSpacing = css`
+  margin-bottom: ${space[2]}px;
 `;
 
 interface JobsTermsAcceptProps {
@@ -84,7 +89,7 @@ export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
             Click &lsquo;continue&rsquo; to automatically use your existing
             Guardian account to sign in with Guardian&nbsp;Jobs.
           </MainBodyText>
-          <MainBodyText>
+          <MainBodyText cssOverrides={textSpacing}>
             By activating your Guardian&nbsp;Jobs account you will receive a
             welcome email detailing the range of career-enhancing features that
             can be set up on our jobs site. These include:

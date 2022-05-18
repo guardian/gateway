@@ -12,16 +12,17 @@ import {
   SuccessSummary,
 } from '@guardian/source-react-components-development-kitchen';
 import { gridRow, gridItem, SpanDefinition } from '@/client/styles/Grid';
-import { Header, JobsHeader } from '@/client/components/Header';
+import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import useClientState from '@/client/lib/hooks/useClientState';
+import { JobsLogo } from '../components/JobsLogo';
 
 interface MainLayoutProps {
   pageHeader?: string;
   successOverride?: string;
   errorOverride?: string;
   errorContext?: React.ReactNode;
-  useJobsHeader?: React.ReactNode;
+  useJobsHeader?: boolean;
 }
 
 const mainStyles = css`
@@ -131,13 +132,20 @@ export const buttonStyles = ({ hasTerms = false, halfWidth = false }) => css`
   `}
 `;
 
+const jobsHeaderStyles = css`
+  background-color: ${neutral[100]};
+
+  /* border */
+  border-bottom: 1px solid ${neutral[86]};
+`;
+
 export const MainLayout = ({
   children,
   pageHeader,
   successOverride,
   errorOverride,
   errorContext,
-  useJobsHeader,
+  useJobsHeader = false,
 }: PropsWithChildren<MainLayoutProps>) => {
   const clientState = useClientState();
   const { globalMessage: { error, success } = {} } = clientState;
@@ -150,7 +158,11 @@ export const MainLayout = ({
 
   return (
     <>
-      {useJobsHeader ? <JobsHeader /> : <Header />}
+      {useJobsHeader ? (
+        <Header cssOverrides={jobsHeaderStyles} logoOverride={<JobsLogo />} />
+      ) : (
+        <Header />
+      )}
       <main css={[mainStyles, gridRow]}>
         <section css={gridItem(gridSpanDefinition)}>
           {errorMessage && (
