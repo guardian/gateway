@@ -5,6 +5,7 @@ import { awsConfig } from '@/server/lib/awsConfig';
 // timeouts
 const sesConfig = {
   ...awsConfig,
+  maxRetries: 3,
   httpOptions: {
     ...awsConfig.httpOptions,
     connectTimeout: 1000,
@@ -21,7 +22,12 @@ type Props = {
   to: string;
 };
 
-export const send = ({ html, plainText, subject, to }: Props) => {
+export const send = async ({
+  html,
+  plainText,
+  subject,
+  to,
+}: Props): Promise<boolean> => {
   const params: AWS.SESV2.SendEmailRequest = {
     Content: {
       Simple: {
@@ -44,5 +50,9 @@ export const send = ({ html, plainText, subject, to }: Props) => {
     FromEmailAddress: 'registration-reply@theguardian.com',
   };
 
-  return SESV2.sendEmail(params).promise();
+  const result = await SESV2.sendEmail(params).promise();
+  if (!result?.MessageId) {
+    return false;
+  }
+  return true;
 };

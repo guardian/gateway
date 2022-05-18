@@ -86,6 +86,7 @@ export type OktaApiRoutePaths =
   | '/api/v1/users/:id'
   | '/api/v1/users/:id/lifecycle/activate'
   | '/api/v1/users/:id/lifecycle/reactivate'
+  | '/api/v1/users/:id/lifecycle/reset_password'
   | '/api/v1/users/:id/sessions';
 
 export type PasswordRoutePath = Extract<

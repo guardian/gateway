@@ -17,12 +17,11 @@ export const AccountExists = () => {
       <Text>
         <strong>You are already registered with the Guardian.</strong>
       </Text>
-      <Text>
-        Know your password? <Link href={'$signInLink'}>Sign in</Link>
-      </Text>
+      <Button href="$signInLink">Sign in</Button>
       <Text>If you forgot your password, you can click below to reset it.</Text>
-      <Text noPaddingBottom>This link is only valid for 30 minutes.</Text>
-      <Button href="$passwordResetLink">Reset password</Button>
+      <Text>
+        <Link href="$passwordResetLink">Reset password</Link>
+      </Text>
       <Footer
         mistakeParagraphComponent={
           <>

@@ -79,7 +79,9 @@ jobs:
           GOOGLE_RECAPTCHA_SECRET_KEY: 6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
           ENCRYPTION_SECRET_KEY: ${{ secrets.ENCRYPTION_SECRET_KEY }}
           OKTA_ORG_URL: https://profile.thegulocal.com
+          CYPRESS_OKTA_ORG_URL: https://profile.thegulocal.com
           OKTA_API_TOKEN: ${{ secrets.OKTA_API_TOKEN }}
+          CYPRESS_OKTA_API_TOKEN: ${{ secrets.OKTA_API_TOKEN }}
           OKTA_CUSTOM_OAUTH_SERVER: ${{ secrets.OKTA_CUSTOM_OAUTH_SERVER }}
           OKTA_CLIENT_ID: ${{ secrets.OKTA_CLIENT_ID }}
           OKTA_CLIENT_SECRET: ${{ secrets.OKTA_CLIENT_SECRET }}
