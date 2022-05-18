@@ -20,7 +20,10 @@ import { ConsentsNavigation } from '@/client/components/ConsentsNavigation';
 import { greyBorderTop, heading, text } from '@/client/styles/Consents';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { NewsLetter } from '@/shared/model/Newsletter';
-import { NEWSLETTER_IMAGES } from '@/client/models/Newsletter';
+import {
+  NEWSLETTER_IMAGES,
+  NEWSLETTER_IMAGE_POSITIONS,
+} from '@/client/models/Newsletter';
 
 type ConsentsNewslettersProps = {
   newsletters: NewsLetter[];
@@ -60,6 +63,7 @@ const getNewsletterCardCss = (index: number) => {
     -ms-grid-row: ${row};
 
     margin-bottom: ${space[5]}px;
+
     ${from.tablet} {
       margin-bottom: ${space[6]}px;
     }
@@ -99,6 +103,7 @@ export const ConsentsNewsletters = ({
             id={newsletter.id}
             defaultChecked={newsletter.subscribed}
             imagePath={NEWSLETTER_IMAGES[newsletter.id]}
+            imagePosition={NEWSLETTER_IMAGE_POSITIONS[newsletter.id]}
             highlightColor={idColor(newsletter.nameId)}
             frequency={newsletter.frequency}
             hiddenInput

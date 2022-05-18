@@ -16,7 +16,7 @@ import {
   between,
 } from '@guardian/source-foundations';
 
-const image = (imagePath?: string) => {
+const image = (imagePath?: string, imagePosition?: string) => {
   const base = css`
     display: block;
     height: 0;
@@ -28,7 +28,7 @@ const image = (imagePath?: string) => {
       ${base}
       padding: 60% 100% 0 0;
       background-image: url('${imagePath}');
-      background-position: center;
+      background-position: ${imagePosition ?? 'center'};
       background-repeat: no-repeat;
       background-size: cover;
       ${from.tablet} {
@@ -175,6 +175,7 @@ interface ConsentCardProps {
   id: string;
   defaultChecked?: boolean;
   imagePath?: string;
+  imagePosition?: string;
   noImage?: boolean;
   highlightColor?: string;
   frequency?: string;
@@ -190,6 +191,7 @@ export const ConsentCard: FunctionComponent<ConsentCardProps> = ({
   id,
   defaultChecked,
   imagePath,
+  imagePosition,
   noImage,
   highlightColor = brand[400],
   frequency,
@@ -230,7 +232,7 @@ export const ConsentCard: FunctionComponent<ConsentCardProps> = ({
       ]}
     >
       <div css={descriptionBlock(noTopBorderMobile)}>
-        {!noImage && <div css={image(imagePath)} />}
+        {!noImage && <div css={image(imagePath, imagePosition)} />}
         <div css={[infoGroup(noImage), ieFlexOverflowFix]}>
           <TitleHeadingTag
             css={[titleHeading(noImage), `color: ${highlightColor}`]}

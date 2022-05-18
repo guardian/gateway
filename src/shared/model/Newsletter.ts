@@ -14,8 +14,8 @@ export interface NewsletterPatch {
 
 export enum Newsletters {
   DOWN_TO_EARTH = '4147',
+  FIRST_EDITION_UK = '4156',
   MORNING_BRIEFING_AU = '4148',
-  MORNING_BRIEFING_UK = '4156',
   MORNING_BRIEFING_US = '4300',
   THE_GUIDE = '6006',
   THE_LONG_READ = '4165',

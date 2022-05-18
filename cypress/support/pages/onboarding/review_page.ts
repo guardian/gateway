@@ -7,7 +7,7 @@ class ReviewPage extends OnboardingPage {
     NEWSLETTERS: {
       GREEN_LIGHT: 'Green Light',
       LONG_READ: 'The Long Read',
-      MORNING_BRIEFING_UK: 'Guardian Morning Briefing',
+      FIRST_EDITION_UK: 'Guardian Morning Briefing',
       THE_GUIDE: 'The Guide',
     },
     SUPPORTER_CONSENT: 'Supporting the Guardian',
