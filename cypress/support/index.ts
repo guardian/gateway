@@ -38,6 +38,7 @@ Cypress.on('uncaught:exception', (err) => {
   // We don't want to throw an error if the consent framework isn't loaded in the tests
   // https://github.com/guardian/consent-management-platform/blob/main/src/onConsentChange.ts#L34
   if (err.message.includes('no IAB consent framework found on the page')) {
+    // eslint-disable-next-line no-console
     console.warn(err);
     return false;
   }
