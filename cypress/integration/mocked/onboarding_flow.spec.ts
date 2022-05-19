@@ -542,7 +542,7 @@ describe('Onboarding flow', () => {
       cy.visit(NewslettersPage.URL, { headers });
 
       NewslettersPage.newsletterCheckboxWithTitle(
-        NEWSLETTERS.MORNING_BRIEFING_UK,
+        NEWSLETTERS.FIRST_EDITION_UK,
       ).should('not.be.checked');
       NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.LONG_READ).should(
         'not.be.checked',
@@ -608,7 +608,7 @@ describe('Onboarding flow', () => {
       cy.visit(NewslettersPage.URL, { headers });
 
       NewslettersPage.newsletterCheckboxWithTitle(
-        NEWSLETTERS.MORNING_BRIEFING_UK,
+        NEWSLETTERS.FIRST_EDITION_UK,
       ).should('not.be.checked');
       NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.LONG_READ).should(
         'not.be.checked',
@@ -634,7 +634,7 @@ describe('Onboarding flow', () => {
       NewslettersPage.goto();
 
       NewslettersPage.newsletterCheckboxWithTitle(
-        NEWSLETTERS.MORNING_BRIEFING_UK,
+        NEWSLETTERS.FIRST_EDITION_UK,
       ).should('not.be.checked');
       NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.LONG_READ).should(
         'be.checked',

@@ -17,9 +17,9 @@ export const allNewsletters = [
   },
   {
     id: 'morning-briefing',
-    name: 'Guardian Morning Briefing',
+    name: 'First Edition',
     description:
-      'Start the day one step ahead. Our email breaks down the key stories of the day and why they matter',
+      'Archie Bland and Nimo Omer take you through the top stories and what they mean, free every weekday morning',
     frequency: 'Every weekday',
     exactTargetListId: 4156,
   },

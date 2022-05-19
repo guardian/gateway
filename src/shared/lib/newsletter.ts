@@ -13,7 +13,7 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
     [
       Newsletters.DOWN_TO_EARTH,
       Newsletters.THE_LONG_READ,
-      Newsletters.MORNING_BRIEFING_UK,
+      Newsletters.FIRST_EDITION_UK,
       Newsletters.THE_GUIDE,
     ],
   ],
@@ -22,7 +22,7 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
     [
       Newsletters.DOWN_TO_EARTH,
       Newsletters.THE_LONG_READ,
-      Newsletters.MORNING_BRIEFING_UK,
+      Newsletters.FIRST_EDITION_UK,
       Newsletters.THE_GUIDE,
     ],
   ],
@@ -31,7 +31,7 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
     [
       Newsletters.DOWN_TO_EARTH,
       Newsletters.THE_LONG_READ,
-      Newsletters.MORNING_BRIEFING_UK,
+      Newsletters.FIRST_EDITION_UK,
       Newsletters.THE_GUIDE,
     ],
   ],
