@@ -4,7 +4,7 @@ class NewslettersPage extends OnboardingPage {
   static CONTENT = {
     ...OnboardingPage.CONTENT,
     NEWSLETTERS: {
-      FIRST_EDITION_UK: 'Guardian Morning Briefing',
+      FIRST_EDITION_UK: 'First Edition',
       MORNING_BRIEFING_US: 'First Thing: the US morning briefing',
       MORNING_BRIEFING_AUS: "Guardian Australia's Morning Mail",
       LONG_READ: 'The Long Read',

@@ -59,5 +59,4 @@ cypress/screenshots
 .ratelimit.json
 
 # Mac OS finder app metadata
-
 .DS_Store
