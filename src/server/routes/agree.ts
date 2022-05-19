@@ -10,15 +10,14 @@ import deepmerge from 'deepmerge';
 import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
 import setupJobsUser from '../lib/jobs';
 
-const { defaultReturnUri } = getConfiguration();
+const { defaultReturnUri, signInPageUrl } = getConfiguration();
 
 router.get(
   '/agree/GRS',
   async (req: Request, res: ResponseWithRequestState) => {
     const SC_GU_U = req.cookies.SC_GU_U;
     const state = res.locals;
-    const { returnUrl } = state.pageData;
-    const { signInPageUrl } = getConfiguration();
+    const { returnUrl } = state.queryParams;
 
     // Redirect to /signin if no session cookie.
     if (!SC_GU_U) {
@@ -80,10 +79,10 @@ router.get(
 router.post(
   '/agree/GRS',
   async (req: Request, res: ResponseWithRequestState) => {
-    const state = res.locals;
+    const { queryParams } = res.locals;
+    const { returnUrl } = queryParams;
     const { firstName, secondName } = req.body;
-    const { returnUrl } = state.pageData;
-    const redirectUrl = returnUrl || defaultReturnUri;
+
     try {
       await setupJobsUser(firstName, secondName, req.ip, req.cookies.SC_GU_U);
       trackMetric('JobsGRSGroupAgree::Success');
@@ -91,7 +90,7 @@ router.post(
       logger.error(`${req.method} ${req.originalUrl} Error`, error);
       trackMetric('JobsGRSGroupAgree::Failure');
     } finally {
-      return res.redirect(303, redirectUrl);
+      return res.redirect(303, returnUrl);
     }
   },
 );

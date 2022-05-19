@@ -41,6 +41,7 @@ export interface PageData {
   previousPage?: ConsentPath;
   // reset password token specific
   timeUntilTokenExpiry?: number;
+  // required fields for jobs
   firstName?: string;
   secondName?: string;
 }
