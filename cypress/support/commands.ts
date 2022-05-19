@@ -23,6 +23,9 @@ import {
   resetOktaUserPassword,
   expireOktaUserPassword,
   suspendOktaUser,
+  addOktaUserToGroup,
+  findEmailValidatedOktaGroupId,
+  getOktaUserGroups,
 } from './commands/testUser';
 
 Cypress.Commands.add('mockNext', mockNext);
@@ -45,3 +48,9 @@ Cypress.Commands.add('activateTestOktaUser', activateTestOktaUser);
 Cypress.Commands.add('resetOktaUserPassword', resetOktaUserPassword);
 Cypress.Commands.add('expireOktaUserPassword', expireOktaUserPassword);
 Cypress.Commands.add('suspendOktaUser', suspendOktaUser);
+Cypress.Commands.add('addOktaUserToGroup', addOktaUserToGroup);
+Cypress.Commands.add(
+  'findEmailValidatedOktaGroupId',
+  findEmailValidatedOktaGroupId,
+);
+Cypress.Commands.add('getOktaUserGroups', getOktaUserGroups);

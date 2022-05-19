@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { TokenResponse, UserResponse } from '@/server/models/okta/User';
+import { Group } from '@/server/models/okta/Group';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -11,6 +12,9 @@ declare global {
       resetOktaUserPassword: typeof resetOktaUserPassword;
       expireOktaUserPassword: typeof expireOktaUserPassword;
       suspendOktaUser: typeof suspendOktaUser;
+      addOktaUserToGroup: typeof addOktaUserToGroup;
+      findEmailValidatedOktaGroupId: typeof findEmailValidatedOktaGroupId;
+      getOktaUserGroups: typeof getOktaUserGroups;
     }
   }
 }
@@ -203,5 +207,73 @@ export const suspendOktaUser = (id: string) => {
       });
   } catch (error) {
     throw new Error('Failed to suspend Okta test user: ' + error);
+  }
+};
+
+export const getOktaUserGroups = (id: string) => {
+  try {
+    return cy
+      .request({
+        url: `${Cypress.env('OKTA_ORG_URL')}/api/v1/users/${id}/groups`,
+        method: 'GET',
+        headers: {
+          Authorization: `SSWS ${Cypress.env('OKTA_API_TOKEN')}`,
+        },
+        retryOnStatusCodeFailure: true,
+      })
+      .then((res) => {
+        const user = res.body as Group[];
+        return cy.wrap(user);
+      });
+  } catch (error) {
+    throw new Error('Failed to get user groups: ' + error);
+  }
+};
+
+export const addOktaUserToGroup = (id: string, groupId: string) => {
+  try {
+    return cy
+      .request({
+        url: `${Cypress.env(
+          'OKTA_ORG_URL',
+        )}/api/v1/groups/${groupId}/users/${id}`,
+        method: 'PUT',
+        headers: {
+          Authorization: `SSWS ${Cypress.env('OKTA_API_TOKEN')}`,
+        },
+        retryOnStatusCodeFailure: true,
+      })
+      .then(() => {
+        return cy.wrap(true);
+      });
+  } catch (error) {
+    throw new Error('Failed to add Okta test user to group: ' + error);
+  }
+};
+
+export const findEmailValidatedOktaGroupId = () => {
+  try {
+    return cy
+      .request({
+        url: `${Cypress.env(
+          'OKTA_ORG_URL',
+        )}/api/v1/groups?q=GuardianUser-EmailValidated`,
+        method: 'GET',
+        headers: {
+          Authorization: `SSWS ${Cypress.env('OKTA_API_TOKEN')}`,
+        },
+        retryOnStatusCodeFailure: true,
+      })
+      .then((res) => {
+        const group = res.body[0]?.id as string | undefined;
+        if (!group) {
+          throw new Error('Failed to find Okta group');
+        }
+        return cy.wrap(group);
+      });
+  } catch (error) {
+    throw new Error(
+      'Failed to get ID of GuardianUser-EmailValidated group: ' + error,
+    );
   }
 };

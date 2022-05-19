@@ -41,7 +41,10 @@ interface UserCredentials {
 export interface UserResponse {
   id: string;
   status: string;
-  profile: Pick<UserProfile, 'email' | 'login' | 'isGuardianUser'>;
+  profile: Pick<
+    UserProfile,
+    'email' | 'login' | 'isGuardianUser' | 'emailValidated'
+  >;
   credentials: UserCredentials;
 }
 
