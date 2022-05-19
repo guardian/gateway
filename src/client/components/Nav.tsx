@@ -18,7 +18,7 @@ type Props = {
   tabs: TabType[];
 };
 
-type TabType = {
+export type TabType = {
   displayText: string;
   linkTo: RoutePaths;
   queryParams?: QueryParams;

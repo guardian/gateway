@@ -14,6 +14,7 @@ export default {
     queryParams: {
       returnUrl: 'https://www.theguardian.com/uk',
     },
+    displayRegisterTab: true,
   },
 } as Meta<SignInProps>;
 
