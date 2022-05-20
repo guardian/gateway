@@ -25,5 +25,6 @@ export const NameOnly = () => (
     submitUrl="/"
     email="test@email.com"
     secondName="I'm the only name set!"
+    userBelongsToGRS={true}
   />
 );

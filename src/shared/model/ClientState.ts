@@ -41,9 +41,10 @@ export interface PageData {
   previousPage?: ConsentPath;
   // reset password token specific
   timeUntilTokenExpiry?: number;
-  // required fields for jobs
+  // jobs specific
   firstName?: string;
   secondName?: string;
+  userBelongsToGRS?: boolean;
 }
 
 export interface RecaptchaConfig {

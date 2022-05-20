@@ -72,23 +72,30 @@ interface JobsTermsAcceptProps {
   submitUrl: string;
   firstName?: string;
   secondName?: string;
+  userBelongsToGRS?: boolean;
   email?: string;
 }
 
 export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
   firstName,
   secondName,
+  userBelongsToGRS,
   submitUrl,
   email,
 }) => {
   const autoYourDataRow = getAutoRow(1, gridItemYourData);
-  const isNameSet = !!firstName && !!secondName;
+
   const {
     nameFieldError,
     nameFieldErrorContext,
     setGroupError,
     setFormSubmitAttempted,
   } = useNameInputFieldError();
+
+  const isNameSet = !!firstName && !!secondName;
+  // We just ask for the users' name if they belong to GRS but don't have a name set.
+  // Otherwise we show the whole form.
+  const showOnlyNameFields = userBelongsToGRS && !isNameSet;
 
   return (
     <MainLayout
@@ -97,7 +104,35 @@ export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
       errorOverride={nameFieldError}
       errorContext={nameFieldErrorContext}
     >
-      {isNameSet ? (
+      {showOnlyNameFields ? (
+        <>
+          {email ? (
+            <MainBodyText cssOverrides={textSpacing}>
+              Please complete your details for{' '}
+              <span css={emailSpan}>{email}</span>
+            </MainBodyText>
+          ) : (
+            <MainBodyText cssOverrides={textSpacing}>
+              Please complete your details
+            </MainBodyText>
+          )}
+          <MainBodyText cssOverrides={noMargin}>
+            We will use these details on your job applications.
+          </MainBodyText>
+          <MainForm
+            submitButtonText="Save and continue"
+            hasJobsTerms={false}
+            formAction={submitUrl}
+            onInvalid={() => setFormSubmitAttempted(true)}
+          >
+            <NameInputField
+              onGroupError={setGroupError}
+              firstName={firstName}
+              secondName={secondName}
+            />
+          </MainForm>
+        </>
+      ) : (
         <>
           <MainBodyText cssOverrides={heading}>
             Click &lsquo;continue&rsquo; to automatically use your existing
@@ -137,34 +172,6 @@ export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
               sign out and continue
             </Link>
           </MainBodyText>
-        </>
-      ) : (
-        <>
-          {email ? (
-            <MainBodyText cssOverrides={textSpacing}>
-              Please complete your details for{' '}
-              <span css={emailSpan}>{email}</span>
-            </MainBodyText>
-          ) : (
-            <MainBodyText cssOverrides={textSpacing}>
-              Please complete your details
-            </MainBodyText>
-          )}
-          <MainBodyText cssOverrides={noMargin}>
-            We will use these details on your job applications.
-          </MainBodyText>
-          <MainForm
-            submitButtonText="Save and continue"
-            hasJobsTerms={false}
-            formAction={submitUrl}
-            onInvalid={() => setFormSubmitAttempted(true)}
-          >
-            <NameInputField
-              onGroupError={setGroupError}
-              firstName={firstName}
-              secondName={secondName}
-            />
-          </MainForm>
         </>
       )}
     </MainLayout>

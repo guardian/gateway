@@ -58,6 +58,7 @@ router.get(
           pageData: {
             firstName,
             secondName,
+            userBelongsToGRS,
             email: primaryEmailAddress,
           },
         }),

@@ -6,13 +6,14 @@ import { JobsTermsAccept } from './JobsTermsAccept';
 export const JobsTermsPage = () => {
   const clientState = useClientState();
   const { pageData = {}, queryParams } = clientState;
-  const { firstName, secondName, email } = pageData;
+  const { firstName, secondName, email, userBelongsToGRS } = pageData;
 
   return (
     <JobsTermsAccept
       submitUrl={buildUrlWithQueryParams('/agree/GRS', {}, queryParams)}
       firstName={firstName}
       secondName={secondName}
+      userBelongsToGRS={userBelongsToGRS}
       email={email}
     />
   );
