@@ -5,7 +5,6 @@ import {
   LinkButton,
   SvgArrowRightStraight,
 } from '@guardian/source-react-components';
-
 import { PasswordForm } from '@/client/components/PasswordForm';
 import { FieldError } from '@/shared/model/ClientState';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
@@ -13,12 +12,15 @@ import { getAutoRow, passwordFormSpanDef } from '@/client/styles/Grid';
 import { controls, text, greyBorderTop } from '@/client/styles/Consents';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { buildUrl } from '@/shared/lib/routeUtils';
+import NameInputField from '@/client/components/NameInputField';
+import { useNameInputFieldError } from '@/client/lib/hooks/useNameFieldInputError';
 
 type Props = {
   submitUrl: string;
   email?: string;
   fieldErrors: FieldError[];
   passwordSet?: boolean;
+  isJobs?: boolean;
 };
 
 const linkButton = css`
@@ -44,19 +46,28 @@ export const Welcome = ({
   email,
   fieldErrors,
   passwordSet = false,
+  isJobs = false,
 }: Props) => {
   const autoRow = getAutoRow(1, passwordFormSpanDef);
+  const {
+    nameFieldError,
+    nameFieldErrorContext,
+    setGroupError,
+    setFormSubmitAttempted,
+  } = useNameInputFieldError();
 
   return (
     <ConsentsLayout
       title="Welcome to the Guardian"
-      current={CONSENTS_PAGES.PASSWORD}
+      current={CONSENTS_PAGES.DETAILS}
       showContinueButton={false}
+      errorMessage={nameFieldError}
+      errorContext={nameFieldErrorContext}
     >
       <p css={[text, greyBorderTop, autoRow()]}>
         {passwordSet
           ? 'Password already set for '
-          : 'Please create a password for '}
+          : 'Please complete your details for '}
         {email ? <span css={emailSpan}>{email}</span> : 'your new account'}
       </p>
       {passwordSet ? (
@@ -76,11 +87,14 @@ export const Welcome = ({
           submitUrl={submitUrl}
           fieldErrors={fieldErrors}
           labelText="Password"
-          submitButtonText="Create password"
+          submitButtonText="Save and continue"
           gridAutoRow={autoRow}
           autoComplete="new-password"
           formTrackingName="welcome"
-        />
+          onInvalid={() => setFormSubmitAttempted(true)}
+        >
+          {isJobs && <NameInputField onGroupError={setGroupError} />}
+        </PasswordForm>
       )}
     </ConsentsLayout>
   );

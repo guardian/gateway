@@ -13,11 +13,14 @@ import {
 import { AutoRow, gridRow } from '@/client/styles/Grid';
 import { greyBorderSides } from '@/client/styles/Consents';
 import { CONSENTS_PAGES_ARR } from '@/client/models/ConsentsPages';
+import { ErrorSummary } from '@guardian/source-react-components-development-kitchen';
 
 type Props = {
   autoRow: AutoRow;
   title: string;
   current?: string;
+  errorMessage?: string;
+  errorContext?: React.ReactNode;
 };
 
 type PageStatus = 'active' | 'complete' | 'pending';
@@ -166,7 +169,17 @@ const screenReaderTextStyles = css`
   ${visuallyHidden}
 `;
 
-export const ConsentsSubHeader = ({ autoRow, title, current }: Props) => {
+const summaryStyles = css`
+  margin-top: ${space[6]}px;
+`;
+
+export const ConsentsSubHeader = ({
+  autoRow,
+  title,
+  current,
+  errorContext,
+  errorMessage,
+}: Props) => {
   const active = current
     ? (CONSENTS_PAGES_ARR as string[]).indexOf(current)
     : 0;
@@ -207,6 +220,13 @@ export const ConsentsSubHeader = ({ autoRow, title, current }: Props) => {
     <header data-cy="exclude-a11y-check">
       <div css={[gridRow, greyBorderSides]}>
         {pageProgression}
+        {errorMessage && (
+          <ErrorSummary
+            cssOverrides={[autoRow(), summaryStyles]}
+            message={errorMessage}
+            context={errorContext}
+          />
+        )}
         <h1 css={[h1, h1ResponsiveText, autoRow()]}>{title}</h1>
       </div>
     </header>

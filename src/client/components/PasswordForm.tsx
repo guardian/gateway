@@ -1,4 +1,9 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, {
+  PropsWithChildren,
+  ReactNode,
+  useEffect,
+  useState,
+} from 'react';
 import {
   Button,
   SvgInfo,
@@ -44,6 +49,7 @@ type Props = {
   setRecaptchaErrorContext?: React.Dispatch<React.SetStateAction<ReactNode>>;
   autoComplete?: PasswordAutoComplete;
   formTrackingName?: string;
+  onInvalid?: React.FormEventHandler<HTMLFormElement> | undefined;
 };
 
 const feedbackMessageStyles = css`
@@ -252,7 +258,9 @@ export const PasswordForm = ({
   gridAutoRow,
   autoComplete,
   formTrackingName,
-}: Props) => {
+  onInvalid,
+  children,
+}: PropsWithChildren<Props>) => {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | undefined>(
     fieldErrors.find((fieldError) => fieldError.field === 'password')?.message,
@@ -313,8 +321,10 @@ export const PasswordForm = ({
       onBlur={(e) =>
         formTrackingName && trackFormFocusBlur(formTrackingName, e, 'blur')
       }
+      onInvalid={onInvalid}
     >
       <CsrfFormField />
+      {children}
       <div css={passwordInput}>
         <PasswordInput
           displayEye={true}

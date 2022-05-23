@@ -145,7 +145,7 @@ describe('Registration flow', () => {
       expect(body).to.have.string('refViewId=' + refViewId);
       expect(body).to.have.string('clientId=' + clientId);
       cy.visit(`/welcome/${token}`);
-      cy.contains('Create password');
+      cy.contains('Save and continue');
     });
   });
 

@@ -9,7 +9,11 @@ import React, {
 import { css } from '@emotion/react';
 import { Button } from '@guardian/source-react-components';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
-import { GuardianTerms, RecaptchaTerms } from '@/client/components/Terms';
+import {
+  GuardianTerms,
+  JobsStandaloneTerms,
+  RecaptchaTerms,
+} from '@/client/components/Terms';
 import { space } from '@guardian/source-foundations';
 import { buttonStyles } from '@/client/layouts/Main';
 import {
@@ -33,11 +37,13 @@ export interface MainFormProps {
     React.SetStateAction<ReactNode | string>
   >;
   hasGuardianTerms?: boolean;
+  hasJobsTerms?: boolean;
   onSubmit?: (e: React.FormEvent<HTMLFormElement>) =>
     | {
         errorOccurred: boolean;
       }
     | undefined;
+  onInvalid?: React.FormEventHandler<HTMLFormElement> | undefined;
   formTrackingName?: string;
   disableOnSubmit?: boolean;
 }
@@ -71,7 +77,9 @@ export const MainForm = ({
   setRecaptchaErrorMessage,
   setRecaptchaErrorContext,
   hasGuardianTerms = false,
+  hasJobsTerms = false,
   onSubmit,
+  onInvalid,
   formTrackingName,
   disableOnSubmit = false,
 }: PropsWithChildren<MainFormProps>) => {
@@ -211,6 +219,7 @@ export const MainForm = ({
       onBlur={(e) =>
         formTrackingName && trackFormFocusBlur(formTrackingName, e, 'blur')
       }
+      onInvalid={(e) => onInvalid && onInvalid(e)}
     >
       {recaptchaEnabled && (
         <RecaptchaWrapper
@@ -222,6 +231,7 @@ export const MainForm = ({
       <RefTrackingFormFields />
       <div css={inputStyles(hasTerms)}>{children}</div>
       {hasGuardianTerms && <GuardianTerms />}
+      {hasJobsTerms && <JobsStandaloneTerms />}
       {recaptchaEnabled && <RecaptchaTerms />}
       <Button
         css={buttonStyles({ hasTerms, halfWidth: submitButtonHalfWidth })}

@@ -192,6 +192,8 @@ describe('Welcome and set password page', () => {
       setAuthCookies();
 
       cy.visit(`/welcome/fake_token?${query}`);
+      cy.get('input[name="firstName"]').type('First Name');
+      cy.get('input[name="secondName"]').type('Last Name');
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
       cy.wait('@breachCheck');
       cy.get('button[type="submit"]').click();
@@ -225,7 +227,7 @@ describe('Welcome and set password page', () => {
         url: 'https://api.pwnedpasswords.com/range/*',
       }).as('breachCheck');
       cy.visit(`/welcome/fake_token`);
-      cy.contains(`Please create a password for ${defaultEmail}`);
+      cy.contains(`Please complete your details for ${defaultEmail}`);
     });
 
     it('shows prompt to create password without email if none exists', () => {
@@ -235,7 +237,7 @@ describe('Welcome and set password page', () => {
         url: 'https://api.pwnedpasswords.com/range/*',
       }).as('breachCheck');
       cy.visit(`/welcome/fake_token`);
-      cy.contains(`Please create a password for your new account`);
+      cy.contains(`Please complete your details for your new account`);
     });
   });
 

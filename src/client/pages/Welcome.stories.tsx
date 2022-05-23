@@ -24,6 +24,10 @@ export const Email = Template.bind({});
 Email.args = { email: 'example@theguardian.com' };
 Email.storyName = 'with email';
 
+export const Jobs = Template.bind({});
+Jobs.args = { isJobs: true };
+Jobs.storyName = 'with clientId=jobs';
+
 export const FieldErrorPW = Template.bind({});
 FieldErrorPW.args = {
   email: 'example@theguardian.com',

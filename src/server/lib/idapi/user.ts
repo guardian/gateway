@@ -86,6 +86,11 @@ const responseToEntity = (response: APIResponse): User => {
     consents,
     primaryEmailAddress: response.user.primaryEmailAddress,
     statusFields: response.user.statusFields,
+    userGroups: response.user.userGroups,
+    privateFields: {
+      firstName: response.user.privateFields?.firstName,
+      secondName: response.user.privateFields?.secondName,
+    },
   };
 };
 
@@ -102,6 +107,36 @@ export const read = async (ip: string, sc_gu_u: string): Promise<User> => {
     return responseToEntity(response);
   } catch (error) {
     logger.error(`IDAPI Error user read '/user/me'`, error);
+    return handleError(error as IDAPIError);
+  }
+};
+
+export const updateName = async (
+  firstName: string,
+  secondName: string,
+  ip: string,
+  sc_gu_u: string,
+): Promise<User> => {
+  const options = APIForwardSessionIdentifier(
+    APIAddClientAccessToken(
+      APIPostOptions({
+        privateFields: {
+          firstName,
+          secondName,
+        },
+      }),
+      ip,
+    ),
+    sc_gu_u,
+  );
+  try {
+    const response = (await idapiFetch({
+      path: '/user/me',
+      options,
+    })) as APIResponse;
+    return responseToEntity(response);
+  } catch (error) {
+    logger.error(`IDAPI error updating name for ${ip}`, error);
     return handleError(error as IDAPIError);
   }
 };

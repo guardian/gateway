@@ -15,12 +15,14 @@ import { gridRow, gridItem, SpanDefinition } from '@/client/styles/Grid';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import useClientState from '@/client/lib/hooks/useClientState';
+import { JobsLogo } from '../components/JobsLogo';
 
 interface MainLayoutProps {
   pageHeader?: string;
   successOverride?: string;
   errorOverride?: string;
   errorContext?: React.ReactNode;
+  useJobsHeader?: boolean;
 }
 
 const mainStyles = css`
@@ -130,12 +132,36 @@ export const buttonStyles = ({ hasTerms = false, halfWidth = false }) => css`
   `}
 `;
 
+const jobsHeaderStyles = css`
+  background-color: ${neutral[100]};
+  /* border */
+  border-bottom: 1px solid ${neutral[86]};
+`;
+
+const jobsHeaderMarginOverrides = css`
+  margin-top: initial;
+  margin-bottom: 2px;
+  margin-left: auto;
+  margin-right: auto;
+  ${from.mobileMedium} {
+    margin-top: initial;
+  }
+  ${from.tablet} {
+    margin-top: initial;
+  }
+  ${from.desktop} {
+    margin-top: initial;
+    margin-bottom: initial;
+  }
+`;
+
 export const MainLayout = ({
   children,
   pageHeader,
   successOverride,
   errorOverride,
   errorContext,
+  useJobsHeader = false,
 }: PropsWithChildren<MainLayoutProps>) => {
   const clientState = useClientState();
   const { globalMessage: { error, success } = {} } = clientState;
@@ -148,7 +174,15 @@ export const MainLayout = ({
 
   return (
     <>
-      <Header />
+      {useJobsHeader ? (
+        <Header
+          cssOverrides={jobsHeaderStyles}
+          marginOverrides={jobsHeaderMarginOverrides}
+          logoOverride={<JobsLogo />}
+        />
+      ) : (
+        <Header />
+      )}
       <main css={[mainStyles, gridRow]}>
         <section css={gridItem(gridSpanDefinition)}>
           {errorMessage && (

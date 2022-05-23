@@ -12,6 +12,8 @@ export const WelcomePage = () => {
     pageData: { email, fieldErrors = [], timeUntilTokenExpiry } = {},
     queryParams,
   } = clientState;
+  const { clientId } = queryParams;
+  const isJobs = clientId === 'jobs';
   const { token } = useParams();
 
   useEffect(() => {
@@ -44,6 +46,7 @@ export const WelcomePage = () => {
       )}
       email={email}
       fieldErrors={fieldErrors}
+      isJobs={isJobs}
     />
   );
 };

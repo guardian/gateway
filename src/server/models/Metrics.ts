@@ -39,7 +39,8 @@ type ConditionalMetrics =
   | 'SignOut'
   | 'UpdatePassword'
   | 'RecaptchaMiddleware'
-  | 'ValidatePasswordToken';
+  | 'ValidatePasswordToken'
+  | 'JobsGRSGroupAgree';
 
 // Unconditional metrics that we want to track directly
 type UnconditionalMetrics =

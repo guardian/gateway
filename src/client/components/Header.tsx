@@ -1,5 +1,5 @@
 import React from 'react';
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import { brand, from, space } from '@guardian/source-foundations';
 import { Logo } from '@guardian/source-react-components-development-kitchen';
 import { gridRow, manualRow, SpanDefinition } from '@/client/styles/Grid';
@@ -47,11 +47,21 @@ const headerSpanDefinition: SpanDefinition = {
   },
 };
 
-export const Header = () => (
-  <header id="top" css={backgroundColor}>
-    <div css={[gridRow, marginStyles]}>
+type Props = {
+  logoOverride?: React.ReactNode;
+  cssOverrides?: SerializedStyles;
+  marginOverrides?: SerializedStyles;
+};
+
+export const Header = ({
+  logoOverride,
+  cssOverrides,
+  marginOverrides,
+}: Props) => (
+  <header id="top" css={[backgroundColor, cssOverrides]}>
+    <div css={[gridRow, marginStyles, marginOverrides]}>
       <div css={[manualRow(1, headerSpanDefinition), headerGridRightToLeft]}>
-        <Logo />
+        {logoOverride ? logoOverride : <Logo />}
       </div>
     </div>
   </header>

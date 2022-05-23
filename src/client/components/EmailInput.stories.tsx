@@ -1,7 +1,8 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { EmailInput, EmailInputFieldState } from './EmailInput';
+import { EmailInput } from './EmailInput';
+import { InputFieldState } from '../lib/hooks/useInputValidityState';
 
 export default {
   title: 'Components/EmailInput',
@@ -14,14 +15,14 @@ export const Default = () => {
 Default.storyName = 'default';
 
 export const WithEmptyError = () => (
-  <EmailInput defaultValue="" initialState={EmailInputFieldState.EMPTY} />
+  <EmailInput defaultValue="" initialState={InputFieldState.EMPTY} />
 );
 WithEmptyError.storyName = 'with empty error';
 
 export const WithInvalidError = () => (
   <EmailInput
     defaultValue="invalid.email"
-    initialState={EmailInputFieldState.INVALID}
+    initialState={InputFieldState.INVALID}
   />
 );
 WithInvalidError.storyName = 'with invalid error';
