@@ -34,7 +34,7 @@
     "ts-prune": "ts-prune -i .stories.tsx"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.12",
+    "@babel/core": "^7.18.0",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.17.12",
     "@babel/plugin-proposal-optional-chaining": "^7.17.12",
     "@babel/plugin-transform-runtime": "^7.17.12",
