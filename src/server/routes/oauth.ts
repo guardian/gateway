@@ -5,6 +5,7 @@ import {
   deleteAuthorizationStateCookie,
   getAuthorizationStateCookie,
   getOpenIdClient,
+  OpenIdErrorDescriptions,
   OpenIdErrors,
   ProfileOpenIdClientRedirectUris,
 } from '@/server/lib/okta/openid-connect';
@@ -13,14 +14,21 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { exchangeAccessTokenForCookies } from '@/server/lib/idapi/auth';
 import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
-import { SignInErrors } from '@/shared/model/Errors';
+import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import postSignInController from '@/server/lib/postSignInController';
 import { validAppProtocols } from '../lib/validateUrl';
+import { IdTokenClaims } from 'openid-client';
+import { updateUser } from '../lib/okta/api/users';
 
 interface OAuthError {
   error: string;
   error_description: string;
+}
+
+interface CustomClaims extends IdTokenClaims {
+  user_groups?: string[];
+  email_validated?: boolean;
 }
 
 /**
@@ -89,15 +97,29 @@ router.get(
       // no longer required, so mark cookie for deletion in the response
       deleteAuthorizationStateCookie(res);
 
-      // check if the callback params contain an login_required error
-      // used to check if a session existed before the user is shown a sign in page
-      if (
-        isOAuthError(callbackParams) &&
-        callbackParams.error === OpenIdErrors.LOGIN_REQUIRED
-      ) {
-        return res.redirect(
-          addQueryParamsToPath('/signin', authState.queryParams),
-        );
+      // check for specific oauth errors and handle them as required
+      if (isOAuthError(callbackParams)) {
+        // check if the callback params contain an login_required error
+        // used to check if a session existed before the user is shown a sign in page
+        if (callbackParams.error === OpenIdErrors.LOGIN_REQUIRED) {
+          return res.redirect(
+            addQueryParamsToPath('/signin', authState.queryParams),
+          );
+        }
+
+        // check for social account linking errors
+        // and redirect to the sign in page with the social sign in blocked error
+        if (
+          callbackParams.error === OpenIdErrors.ACCESS_DENIED &&
+          callbackParams.error_description ===
+            OpenIdErrorDescriptions.ACCOUNT_LINKING_DENIED_GROUPS
+        ) {
+          return res.redirect(
+            addQueryParamsToPath('/signin', authState.queryParams, {
+              error: FederationErrors.SOCIAL_SIGNIN_BLOCKED,
+            }),
+          );
+        }
       }
 
       // exchange the auth code for access token + id token
@@ -125,6 +147,28 @@ router.get(
         );
         trackMetric('OAuthAuthorization::Failure');
         return redirectForGenericError(req, res);
+      }
+
+      // We're unable to set the user.emailValidated field in the Okta user profile
+      // for social users when they are created, but we are able to put them in the
+      // GuardianUser-EmailValidated group.
+      // So this is a workaround to set the emailValidated field to true in the Okta user profile
+      // if the user is in the GuardianUser-EmailValidated group, based on custom claims we have
+      // set up on the id_token.
+      if (tokenSet.id_token) {
+        // extracting the custom claims from the id_token and the sub (user id)
+        const { user_groups, email_validated, sub } =
+          tokenSet.claims() as CustomClaims;
+
+        // if the user is in the GuardianUser-EmailValidated group, but the emailValidated field is falsy
+        // then we set the emailValidated field to true in the Okta user profile by manually updating the user
+        if (
+          !email_validated &&
+          user_groups?.some((group) => group === 'GuardianUser-EmailValidated')
+        ) {
+          // updated the user profile emailValidated to true
+          await updateUser(sub, { profile: { emailValidated: true } });
+        }
       }
 
       // call the IDAPI /auth/oauth-token endpoint

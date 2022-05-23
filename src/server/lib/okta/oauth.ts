@@ -23,8 +23,15 @@ import {
 export const performAuthorizationCodeFlow = (
   req: Request,
   res: ResponseWithRequestState,
-  sessionToken?: string,
-  confirmationPagePath?: RoutePaths,
+  {
+    sessionToken,
+    confirmationPagePath,
+    idp,
+  }: {
+    sessionToken?: string;
+    confirmationPagePath?: RoutePaths;
+    idp?: string;
+  } = {},
 ) => {
   // Determine which OpenIdClient to use, in DEV we use the DevProfileIdClient, otherwise we use the ProfileOpenIdClient
   const OpenIdClient = getOpenIdClient(req);
@@ -41,8 +48,8 @@ export const performAuthorizationCodeFlow = (
 
   // generate the /authorize endpoint url which we'll redirect the user too
   const authorizeUrl = OpenIdClient.authorizationUrl({
-    // Don't prompt for authentication or consent
-    prompt: 'none',
+    // Don't prompt for authentication or consent if idp parameter is not provided
+    prompt: !idp ? 'none' : undefined,
     // The sessionToken from authentication to exchange for session cookie
     sessionToken,
     // we send the generated stateParam as the state parameter
@@ -53,6 +60,8 @@ export const performAuthorizationCodeFlow = (
     scope: 'openid idapi_token_cookie_exchange',
     // the redirect_uri is the url that we'll redirect the user to after
     redirect_uri: ProfileOpenIdClientRedirectUris.WEB,
+    // the identity provider if doing social login
+    idp,
   });
 
   // redirect the user to the /authorize endpoint

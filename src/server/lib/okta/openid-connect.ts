@@ -165,6 +165,10 @@ export enum OpenIdErrors {
   USER_CANCELED_REQUEST = 'user_canceled_request',
 }
 
+export enum OpenIdErrorDescriptions {
+  ACCOUNT_LINKING_DENIED_GROUPS = 'User linking was denied because the user is not in any of the specified groups.',
+}
+
 /**
  * @function generateRandomString
  *

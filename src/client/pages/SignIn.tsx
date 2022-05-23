@@ -26,11 +26,9 @@ import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 import { logger } from '@/client/lib/clientSideLogger';
 
 export type SignInProps = {
-  returnUrl?: string;
   queryParams: QueryParams;
   email?: string;
   error?: string;
-  oauthBaseUrl: string;
   recaptchaSiteKey: string;
 };
 
@@ -97,8 +95,7 @@ const getErrorContext = (error: string | undefined) => {
 
 const showSocialButtons = (
   error: string | undefined,
-  returnUrl: string | undefined,
-  oauthBaseUrl: string,
+  queryParams: QueryParams,
 ) => {
   if (error !== SignInErrors.ACCOUNT_ALREADY_EXISTS) {
     return (
@@ -108,7 +105,7 @@ const showSocialButtons = (
           displayText="or continue with"
           cssOverrides={divider}
         />
-        <SocialButtons returnUrl={returnUrl} oauthBaseUrl={oauthBaseUrl} />
+        <SocialButtons queryParams={queryParams} />
       </>
     );
   } else {
@@ -129,10 +126,8 @@ const showSocialButtons = (
 
 // TODO: migrate to use the MainForm component
 export const SignIn = ({
-  returnUrl,
   email,
   error: pageLevelError,
-  oauthBaseUrl,
   queryParams,
   recaptchaSiteKey,
 }: SignInProps) => {
@@ -239,7 +234,7 @@ export const SignIn = ({
             Sign in
           </Button>
         </form>
-        {showSocialButtons(pageLevelError, returnUrl, oauthBaseUrl)}
+        {showSocialButtons(pageLevelError, queryParams)}
       </MainGrid>
       <Footer />
     </>

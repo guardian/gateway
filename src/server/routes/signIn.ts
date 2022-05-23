@@ -28,7 +28,36 @@ import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
 import { getSession } from '../lib/okta/api/sessions';
 import { validAppProtocols, validateReturnUrl } from '../lib/validateUrl';
 
-const { okta, accountManagementUrl, defaultReturnUri } = getConfiguration();
+const { okta, accountManagementUrl, defaultReturnUri, oauthBaseUrl } =
+  getConfiguration();
+
+/**
+ * Used to handle redirect back to the app after sign in
+ * if the return url has a custom scheme
+ * or redirect normally if it doesn't to manage or returnUrl
+ * @param res
+ * @param returnUrl
+ * @returns
+ */
+const handleAppRedirect = (
+  res: ResponseWithRequestState,
+  returnUrl?: string,
+): void => {
+  if (returnUrl) {
+    const url = new URL(decodeURIComponent(returnUrl));
+    // we check to see if the return url has a custom scheme
+    // which lets us know the request has come from the app
+    // so we can redirect back to the app
+    if (
+      validAppProtocols.includes(url.protocol) &&
+      validateReturnUrl(returnUrl) !== defaultReturnUri
+    ) {
+      return res.redirect(returnUrl);
+    }
+  }
+  // otherwise return to manage account page
+  return res.redirect(accountManagementUrl);
+};
 
 /**
  * Helper method to determine if a global error should show on the sign in page
@@ -220,7 +249,9 @@ const oktaSignInController = async (
     // we now need to generate an okta session
     // so we'll call the OIDC /authorize endpoint which sets a session cookie
     // we'll pretty much be performing the Authorization Code Flow
-    return performAuthorizationCodeFlow(req, res, response.sessionToken);
+    return performAuthorizationCodeFlow(req, res, {
+      sessionToken: response.sessionToken,
+    });
   } catch (error) {
     trackMetric('OktaSignIn::Failure');
 
@@ -325,24 +356,32 @@ router.post(
   }),
 );
 
-const handleAppRedirect = (
-  res: ResponseWithRequestState,
-  returnUrl?: string,
-): void => {
-  if (returnUrl) {
-    const url = new URL(decodeURIComponent(returnUrl));
-    // we check to see if the return url has a custom scheme
-    // which lets us know the request has come from the app
-    // so we can redirect back to the app
-    if (
-      validAppProtocols.includes(url.protocol) &&
-      validateReturnUrl(returnUrl) !== defaultReturnUri
-    ) {
-      return res.redirect(returnUrl);
-    }
+type SocialProvider = 'google' | 'facebook' | 'apple';
+
+const isValidSocialProvider = (provider: string): boolean =>
+  ['facebook', 'google', 'apple'].includes(provider);
+
+router.get('/signin/:social', (req: Request, res: ResponseWithRequestState) => {
+  // todo can we use the login middleware here to stopped logged in users from accessing this endpoint?
+  const { useOkta, returnUrl } = res.locals.queryParams;
+  const socialIdp = req.params.social as SocialProvider;
+
+  if (!isValidSocialProvider(socialIdp)) {
+    return res.redirect(303, '/signin');
   }
-  // otherwise return to manage account page
-  return res.redirect(accountManagementUrl);
-};
+
+  if (okta.enabled && useOkta) {
+    // get the IDP id from the config
+    const idp = okta.social[socialIdp];
+    // if okta feature switch enabled, perform authorization code flow with idp
+    return performAuthorizationCodeFlow(req, res, { idp });
+  } else {
+    // if okta feature switch disabled, redirect to identity-federation-api
+    const socialUrl = new URL(`${oauthBaseUrl}/${socialIdp}/signin`);
+    socialUrl.searchParams.append('returnUrl', returnUrl);
+
+    return res.redirect(303, socialUrl.toString());
+  }
+});
 
 export default router.router;

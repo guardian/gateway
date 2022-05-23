@@ -1,6 +1,5 @@
 import { stringify } from 'query-string';
 
-const oauthBaseUrl = 'https://oauth.code.dev-theguardian.com';
 const returnUrl =
   'https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance';
 const defaultReturnUrl = 'https://m.code.dev-theguardian.com';
@@ -272,23 +271,23 @@ export const redirectsCorrectlyForSocialSignIn = (isOkta = false) => {
       cy.get('[data-cy="google-sign-in-button"]').should(
         'have.attr',
         'href',
-        `${oauthBaseUrl}/google/signin?returnUrl=${encodeURIComponent(
-          returnUrl,
-        )}`,
+        `/signin/google?returnUrl=${encodeURIComponent(returnUrl)}${
+          isOkta ? '&useOkta=true' : ''
+        }`,
       );
       cy.get('[data-cy="facebook-sign-in-button"]').should(
         'have.attr',
         'href',
-        `${oauthBaseUrl}/facebook/signin?returnUrl=${encodeURIComponent(
-          returnUrl,
-        )}`,
+        `/signin/facebook?returnUrl=${encodeURIComponent(returnUrl)}${
+          isOkta ? '&useOkta=true' : ''
+        }`,
       );
       cy.get('[data-cy="apple-sign-in-button"]').should(
         'have.attr',
         'href',
-        `${oauthBaseUrl}/apple/signin?returnUrl=${encodeURIComponent(
-          returnUrl,
-        )}`,
+        `/signin/apple?returnUrl=${encodeURIComponent(returnUrl)}${
+          isOkta ? '&useOkta=true' : ''
+        }`,
       );
     },
   ] as const;

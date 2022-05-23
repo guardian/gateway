@@ -205,12 +205,10 @@ const changePasswordInOkta = async (
       });
 
       // TODO: once sign out with Okta has been implemented, invalidate current sessions before kicking off code flow
-      return performAuthorizationCodeFlow(
-        req,
-        res,
+      return performAuthorizationCodeFlow(req, res, {
         sessionToken,
-        successRedirectPath,
-      );
+        confirmationPagePath: successRedirectPath,
+      });
     } else {
       throw new OktaError({ message: 'Okta state token missing' });
     }

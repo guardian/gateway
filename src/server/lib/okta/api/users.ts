@@ -174,44 +174,42 @@ export const reactivateUser = async (
 };
 
 /**
- * @name generateResetPasswordToken
- * @description Generates a reset password token for a user
+ * @name dangerouslyResetPassword
+ *
+ * YOU PROBABLY DON'T WANT TO USE THIS TO RESET PASSWORD
+ *
+ * USE `resetPassword` method from the authentication API (./authentication.ts)
+ *  OR `forgotPassword` method method below
+ *
+ * AS THEY DO NOT CHANGE THE USER'S STATE
+ *
+ * USE THIS ONLY IF YOU KNOW WHY YOU NEED TO
+ *
+ * Currently used by the reset password flow to set a placeholder password for SOCIAL
+ * users who don't have a password. This method is the only way to change their provider
+ * from SOCIAL to OKTA so that a password can be set and then reset.
+ *
+ * Generates a one-time token (OTT) that can be used to reset a user's password.
+ *
+ * This operation will transition the user to the status of RECOVERY and the user
+ * will not be able to login or initiate a forgot password flow until they complete
+ * the reset flow.
  *
  * https://developer.okta.com/docs/reference/api/users/#reset-password
  *
- * Generates a one-time token (OTT) that can be used to reset a user's password.
- * The OTT link can be automatically emailed to the user or returned to the API
- * caller and distributed using a custom flow.
- *
- * This operation will transition the user to the status of RECOVERY and the
- * user will not be able to login or initiate a forgot password flow until they
- * complete the reset flow.
- *
- * Returns an empty object by default. If sendEmail is false, returns a link
- * for the user to reset their password.
- *
- * @param id accepts the Okta user ID, email address (login) or login shortname (as long as it is unambiguous)
- * @param sendEmail Sends an activation email to the user if true
- *
- * @returns Promise<TokenResponse | void>
+ * @param id Okta user Id
+ * @returns Promise<string>
  */
-export const generateResetPasswordToken = async (
-  id: string,
-  sendEmail = false,
-): Promise<TokenResponse | void> => {
+export const dangerouslyResetPassword = async (id: string): Promise<string> => {
   const path = buildApiUrlWithQueryParams(
     '/api/v1/users/:id/lifecycle/reset_password',
     { id },
-    { sendEmail },
+    { sendEmail: false },
   );
   return await fetch(joinUrl(okta.orgUrl, path), {
     method: 'POST',
     headers: { ...defaultHeaders, ...authorizationHeader() },
-  }).then(async (response) => {
-    return sendEmail
-      ? await handleVoidResponse(response)
-      : await handleResetPasswordUrlResponse(response);
-  });
+  }).then(handleResetPasswordUrlResponse);
 };
 
 /**
@@ -244,13 +242,36 @@ export const clearUserSessions = async (
 };
 
 /**
+ * Credential operations - Forgot Password
+ *
+ * Generates a one-time token (OTT) that can be used to reset a user's password
+ *
+ * This operation can only be performed on users with an ACTIVE status.
+ *
+ * https://developer.okta.com/docs/reference/api/users/#forgot-password
+ *
+ * @param id Okta user Id
+ * @returns Promise<string>
+ */
+export const forgotPassword = async (id: string): Promise<string> => {
+  const path = buildApiUrlWithQueryParams(
+    '/api/v1/users/:id/credentials/forgot_password',
+    { id },
+    { sendEmail: false },
+  );
+  return await fetch(joinUrl(okta.orgUrl, path), {
+    method: 'POST',
+    headers: { ...defaultHeaders, ...authorizationHeader() },
+  }).then(handleResetPasswordUrlResponse);
+};
+
+/**
  * @name handleUserResponse
  * @description Handles the response from Okta's /users endpoint
  * and converts it to a UserResponse object
  * @param response node-fetch response object
  * @returns Promise<UserResponse>
  */
-
 const handleUserResponse = async (
   response: Response,
 ): Promise<UserResponse> => {
@@ -266,6 +287,7 @@ const handleUserResponse = async (
             login: user.profile.login,
             isGuardianUser: user.profile.isGuardianUser,
           },
+          credentials: user.credentials,
         };
       });
     } catch (error) {
@@ -308,27 +330,37 @@ const handleActivationTokenResponse = async (
 };
 
 /**
- * @name handleActivationTokenResponse
- * @description Handles the response from Okta's /lifecycle/reset_password
- * endpoint
- *
+ * @name handleResetPasswordUrlResponse
+ * @description Handles the response from Okta's /credentials/forgot_password endpoint
+ * It extracts the OTT from the resetPasswordUrl in the response and returns it
  * @param response node-fetch response object
- * @returns Promise<TokenResponse>
+ * @returns Promise<string>
  */
 const handleResetPasswordUrlResponse = async (
   response: Response,
-): Promise<TokenResponse> => {
+): Promise<string> => {
   if (response.ok) {
     try {
       return await response.json().then((json) => {
-        const response = json as ResetPasswordUrlResponse;
-        // Extract the token from the URL and return just it
-        const token: string = response.resetPasswordUrl.split('/').slice(-1)[0];
-        return { token };
+        const { resetPasswordUrl } = json as ResetPasswordUrlResponse;
+        const url = new URL(resetPasswordUrl);
+        const token = url.pathname.split('/').at(-1);
+
+        // validate should exist, be length 20, and not equal to "signin" or "reset-password"
+        if (
+          token &&
+          token.length === 20 &&
+          token !== 'signin' &&
+          token !== 'reset-password'
+        ) {
+          return token;
+        } else {
+          throw new Error('Could not parse OTT from resetPasswordUrl');
+        }
       });
     } catch (error) {
       throw new OktaError({
-        message: 'Could not parse Okta reset password token response',
+        message: 'Could not parse Okta reset password url response',
       });
     }
   } else {

@@ -44,6 +44,9 @@ describe('getConfiguration', () => {
     process.env.REDIS_PASSWORD = 'redispassword';
     process.env.REDIS_HOST = 'localhost:1234';
     process.env.REDIS_SSL_ON = 'false';
+    process.env.OKTA_IDP_APPLE = 'okta-idp-apple';
+    process.env.OKTA_IDP_FACEBOOK = 'okta-idp-facebook';
+    process.env.OKTA_IDP_GOOGLE = 'okta-idp-google';
 
     const rateLimiterConfig = `{
       "enabled": true,
@@ -100,6 +103,11 @@ describe('getConfiguration', () => {
         authServerId: 'customoauthserverid',
         clientId: 'oktaclientid',
         clientSecret: 'oktaclientsecret',
+        social: {
+          apple: 'okta-idp-apple',
+          facebook: 'okta-idp-facebook',
+          google: 'okta-idp-google',
+        },
       },
       aws: {
         kinesisStreamName: '',

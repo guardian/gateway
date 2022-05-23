@@ -8,6 +8,7 @@ import {
   RedisConfiguration,
   Stage,
   GU_MANAGE_URL,
+  Okta,
 } from '@/server/models/Configuration';
 import { featureSwitches } from '@/shared/lib/featureSwitches';
 import validatedRateLimiterConfiguration from '@/server/lib/rateLimiterConfiguration';
@@ -170,7 +171,7 @@ export const getConfiguration = (): Configuration => {
     'OAuth Base URL missing.',
   );
 
-  const okta = {
+  const okta: Okta = {
     enabled: oktaEnabled,
     orgUrl: getOrThrow(process.env.OKTA_ORG_URL, 'OKTA org URL missing'),
     token: getOrThrow(process.env.OKTA_API_TOKEN, 'OKTA API token missing'),
@@ -183,6 +184,20 @@ export const getConfiguration = (): Configuration => {
       process.env.OKTA_CLIENT_SECRET,
       'OKTA client secret missing',
     ),
+    social: {
+      apple: getOrThrow(
+        process.env.OKTA_IDP_APPLE,
+        'OKTA Apple IDP id missing',
+      ),
+      facebook: getOrThrow(
+        process.env.OKTA_IDP_FACEBOOK,
+        'OKTA Facebook IDP id missing',
+      ),
+      google: getOrThrow(
+        process.env.OKTA_IDP_GOOGLE,
+        'OKTA Google IDP id missing',
+      ),
+    },
   };
 
   const sentryDsn = getOrDefault(process.env.SENTRY_DSN, '');

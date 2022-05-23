@@ -34,6 +34,7 @@ export const ValidRoutePathsArray = [
   '/set-password/resend',
   '/signin',
   '/signin/success',
+  '/signin/:social',
   '/signout',
   '/verify-email', //this can be removed once Jobs has been migrated
   '/welcome',
@@ -84,6 +85,7 @@ export type OktaApiRoutePaths =
   | '/api/v1/sessions/:sessionId'
   | '/api/v1/users'
   | '/api/v1/users/:id'
+  | '/api/v1/users/:id/credentials/forgot_password'
   | '/api/v1/users/:id/lifecycle/activate'
   | '/api/v1/users/:id/lifecycle/reactivate'
   | '/api/v1/users/:id/lifecycle/reset_password'
