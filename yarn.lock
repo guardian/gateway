@@ -1633,14 +1633,7 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.10.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.13.10", "@babel/runtime@^7.14.6", "@babel/runtime@^7.16.3", "@babel/runtime@^7.5.0", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
-  version "7.17.2"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.17.2.tgz#66f68591605e59da47523c631416b18508779941"
-  integrity sha512-hzeyJyMA1YGdJTuWU0e/j4wKXrU4OMFvY2MSlaI9B7VQb0r5cxTE3EAIS2Q7Tn2RIcDkRvTA/v2JsAEhxe99uw==
-  dependencies:
-    regenerator-runtime "^0.13.4"
-
-"@babel/runtime@^7.17.8", "@babel/runtime@^7.17.9":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.10.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.13.10", "@babel/runtime@^7.14.6", "@babel/runtime@^7.16.3", "@babel/runtime@^7.17.8", "@babel/runtime@^7.17.9", "@babel/runtime@^7.5.0", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.6", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
   version "7.17.9"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.17.9.tgz#d19fbf802d01a8cb6cf053a64e472d42c434ba72"
   integrity sha512-lSiBBvodq29uShpWGNbgFdKYNiFDo5/HIYsaCEY9ff4sb10x9jizo2+pRrSyF4jKZCXqgzuqBOQKbUm90gQwJg==
@@ -12692,10 +12685,10 @@ mjml-raw@4.12.0:
     lodash "^4.17.21"
     mjml-core "4.12.0"
 
-mjml-react@^2.0.7:
-  version "2.0.7"
-  resolved "https://registry.yarnpkg.com/mjml-react/-/mjml-react-2.0.7.tgz#1c36b74099d684a5db9d0c258024f5060ec1c9f8"
-  integrity sha512-253MtaC1PhB68+4DQ4TZ0vEwdOngwZ0aNgynoR7J0jc97gRObCq+aug+MPMIvgpWOgBt2nObcRPmpSjTKFiLSg==
+mjml-react@^2.0.8:
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/mjml-react/-/mjml-react-2.0.8.tgz#3100e5aad9e8be110c6ba3c9ccea24a1d871eb4d"
+  integrity sha512-3wtHZZs1Y7e7Tl+ImojD/+aPE8Z0xshMww7MKSQlD9A1E/92amWQilGZN3T+WjWWaDueKcH2Gc1RJ72PLGSRGA==
   dependencies:
     "@babel/runtime" "^7.14.6"
     babel-runtime "~6.25.0"
