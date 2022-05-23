@@ -144,7 +144,7 @@
     "express": "^4.17.3",
     "express-recaptcha": "^5.1.0",
     "hal-types": "^1.7.7",
-    "helmet": "^5.0.2",
+    "helmet": "^5.1.0",
     "ioredis": "^4.28.5",
     "js-sha1": "^0.6.0",
     "jsonwebtoken": "^8.5.1",
