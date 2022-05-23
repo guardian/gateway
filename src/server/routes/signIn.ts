@@ -358,14 +358,15 @@ router.post(
 
 type SocialProvider = 'google' | 'facebook' | 'apple';
 
+const isValidSocialProvider = (provider: string): boolean =>
+  ['facebook', 'google', 'apple'].includes(provider);
+
 router.get('/signin/:social', (req: Request, res: ResponseWithRequestState) => {
   // todo can we use the login middleware here to stopped logged in users from accessing this endpoint?
   const { useOkta, returnUrl } = res.locals.queryParams;
   const socialIdp = req.params.social as SocialProvider;
 
-  // validate social is one of facebook, google, or apple
-  // if not, redirect to signin
-  if (!['facebook', 'google', 'apple'].includes(socialIdp)) {
+  if (!isValidSocialProvider(socialIdp)) {
     return res.redirect(303, '/signin');
   }
 
