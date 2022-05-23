@@ -8,7 +8,7 @@ import {
   forgotPassword,
   getUser,
   reactivateUser,
-  resetPassword,
+  dangerouslyResetPassword,
 } from '@/server/lib/okta/api/users';
 import { OktaError } from '@/server/models/okta/Error';
 import { UserCreationRequest } from '@/server/models/okta/User';
@@ -295,7 +295,7 @@ describe('okta#clearUserSessions', () => {
   });
 });
 
-describe('okta#resetPassword', () => {
+describe('okta#dangerouslyResetPassword', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -310,7 +310,7 @@ describe('okta#resetPassword', () => {
       Promise.resolve({ ok: true, json } as Response),
     );
 
-    await expect(resetPassword(userId)).resolves.toEqual(token);
+    await expect(dangerouslyResetPassword(userId)).resolves.toEqual(token);
   });
 
   test('handle unable to parse response', async () => {
@@ -324,7 +324,7 @@ describe('okta#resetPassword', () => {
       Promise.resolve({ ok: true, json } as Response),
     );
 
-    await expect(resetPassword(userId)).rejects.toThrow(
+    await expect(dangerouslyResetPassword(userId)).rejects.toThrow(
       new OktaError({
         message: 'Could not parse Okta reset password url response',
       }),
@@ -345,7 +345,7 @@ describe('okta#resetPassword', () => {
       Promise.resolve({ ok: false, status: 404, json } as Response),
     );
 
-    await expect(resetPassword(userId)).rejects.toThrow(
+    await expect(dangerouslyResetPassword(userId)).rejects.toThrow(
       new OktaError({
         message: 'Not found: Resource not found: <userId> (User)',
       }),

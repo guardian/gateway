@@ -174,7 +174,7 @@ export const reactivateUser = async (
 };
 
 /**
- * @name resetPassword
+ * @name dangerouslyResetPassword
  *
  * YOU PROBABLY DON'T WANT TO USE THIS TO RESET PASSWORD
  *
@@ -200,7 +200,7 @@ export const reactivateUser = async (
  * @param id Okta user Id
  * @returns Promise<string>
  */
-export const resetPassword = async (id: string): Promise<string> => {
+export const dangerouslyResetPassword = async (id: string): Promise<string> => {
   const path = buildApiUrlWithQueryParams(
     '/api/v1/users/:id/lifecycle/reset_password',
     { id },

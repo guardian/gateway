@@ -26,10 +26,7 @@ import {
   resetPassword as authenticationResetPassword,
 } from '@/server/lib/okta/api/authentication';
 import { isOktaError } from '@/server/lib/okta/api/errors';
-import {
-  getUser,
-  resetPassword as usersResetPassword,
-} from '@/server/lib/okta/api/users';
+import { getUser, dangerouslyResetPassword } from '@/server/lib/okta/api/users';
 
 const { okta } = getConfiguration();
 
@@ -121,7 +118,7 @@ const sendEmailInOkta = async (
         if (!user.credentials.password) {
           // generate an recoveryToken OTT and put user into RECOVERY state
           // this is the only way to create a password for a SOCIAL user who doesn't have one
-          const recoveryToken = await usersResetPassword(user.id);
+          const recoveryToken = await dangerouslyResetPassword(user.id);
 
           // validate the token
           const { stateToken } = await validateRecoveryToken({ recoveryToken });

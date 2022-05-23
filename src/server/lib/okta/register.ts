@@ -4,7 +4,7 @@ import {
   getUser,
   activateUser,
   reactivateUser,
-  resetPassword,
+  dangerouslyResetPassword,
 } from '@/server/lib/okta/api/users';
 import { OktaError } from '@/server/models/okta/Error';
 import { causesInclude } from '@/server/lib/okta/api/errors';
@@ -111,7 +111,7 @@ export const register = async (email: string): Promise<UserResponse> => {
            *    token through Gateway
            *    And my status should become RECOVERY
            */
-          const token = await resetPassword(user.id);
+          const token = await dangerouslyResetPassword(user.id);
           if (!token) {
             throw new OktaError({
               message: `Okta user activation failed: missing reset password token`,
@@ -199,7 +199,7 @@ export const resendRegistrationEmail = async (
        *    And I should be sent a reset password email with the activation
        *    token through Gateway
        */
-      const token = await resetPassword(user.id);
+      const token = await dangerouslyResetPassword(user.id);
       if (!token) {
         throw new OktaError({
           message: `Okta user activation failed: missing reset password token`,
