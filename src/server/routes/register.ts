@@ -25,7 +25,7 @@ import { ApiError } from '@/server/models/Error';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import {
   addQueryParamsToPath,
-  getPersistableQueryParams,
+  getPersistableQueryParamsWithoutOktaParams,
 } from '@/shared/lib/queryParams';
 import { EmailType } from '@/shared/model/EmailType';
 import { GenericErrors, RegistrationErrors } from '@/shared/model/Errors';
@@ -277,7 +277,9 @@ const OktaRegistration = async (
       status: user.status,
       // We set queryParams here to allow state to be persisted as part of the registration flow,
       // because we are unable to pass these query parameters via the email activation link in Okta email templates
-      queryParams: getPersistableQueryParams(res.locals.queryParams),
+      queryParams: getPersistableQueryParamsWithoutOktaParams(
+        res.locals.queryParams,
+      ),
     });
 
     trackMetric('OktaRegistration::Success');

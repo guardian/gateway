@@ -168,10 +168,16 @@ export const checkTokenInOkta = async (
     // get the returnUrl
     const returnUrl = getReturnUrl(res.locals, encryptedStateQueryParams);
 
+    // get fromURI and appClientId, which are parameters from the Okta SDK
+    // and unique to this request
+    const { fromURI, appClientId } = res.locals.queryParams;
+
     // finally generate the queryParams object to merge in with the requestState
     // with the correct returnUrl for this request
     const queryParams = deepmerge(encryptedStateQueryParams, {
       returnUrl,
+      fromURI,
+      appClientId,
     });
 
     const html = renderer(
