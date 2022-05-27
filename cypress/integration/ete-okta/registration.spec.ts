@@ -14,8 +14,14 @@ describe('Registration flow', () => {
       const refViewId = 'testRefViewId';
       const clientId = 'jobs';
 
+      // these params should *not* persist between initial registration and welcome page
+      // despite the fact that they PersistableQueryParams, as these are set by the Okta SDK sign in method
+      // and subsequent interception, and not by gateway
+      const appClientId = 'appClientId1';
+      const fromURI = 'fromURI1';
+
       cy.visit(
-        `/register?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&useOkta=true`,
+        `/register?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&appClientId=${appClientId}&fromURI=${fromURI}&useOkta=true`,
       );
 
       const timeRequestWasMade = new Date();
@@ -41,7 +47,9 @@ describe('Registration flow', () => {
           .and('match', new RegExp(encodedReturnUrl))
           .and('match', new RegExp(refViewId))
           .and('match', new RegExp(encodedRef))
-          .and('match', new RegExp(clientId));
+          .and('match', new RegExp(clientId))
+          .and('not.match', new RegExp(appClientId))
+          .and('not.match', new RegExp(fromURI));
 
         //we are reloading here to make sure the params are persisted even on page refresh
         cy.reload();
@@ -54,6 +62,8 @@ describe('Registration flow', () => {
         cy.url().should('contain', refViewId);
         cy.url().should('contain', encodedRef);
         cy.url().should('contain', clientId);
+        cy.url().should('not.contain', appClientId);
+        cy.url().should('not.contain', fromURI);
       });
     });
 
@@ -132,6 +142,58 @@ describe('Registration flow', () => {
         cy.url()
           .should('contain', newReturnUrl)
           .and('not.contain', encodedReturnUrl);
+      });
+    });
+
+    it('overrides appClientId and fromURI if set on activation link', () => {
+      const encodedReturnUrl =
+        'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
+      const unregisteredEmail = randomMailosaurEmail();
+
+      // these params should *not* persist between initial registration and welcome page
+      // despite the fact that they PersistableQueryParams, as these are set by the Okta SDK sign in method
+      // and subsequent interception, and not by gateway
+      const appClientId1 = 'appClientId1';
+      const fromURI1 = 'fromURI1';
+
+      cy.visit(
+        `/register?returnUrl=${encodedReturnUrl}&appClientId=${appClientId1}&fromURI=${fromURI1}&useOkta=true`,
+      );
+
+      const timeRequestWasMade = new Date();
+      cy.get('input[name=email]').type(unregisteredEmail);
+      cy.get('[data-cy="register-button"]').click();
+
+      cy.contains('Check your email inbox');
+      cy.contains(unregisteredEmail);
+      cy.contains('Resend email');
+      cy.contains('Change email address');
+
+      cy.checkForEmailAndGetDetails(
+        unregisteredEmail,
+        timeRequestWasMade,
+        /welcome\/([^"]*)/,
+      ).then(({ body, token }) => {
+        expect(body).to.have.string('Complete registration');
+        // should contain these params instead
+        const appClientId2 = 'appClientId2';
+        const fromURI2 = 'fromURI2';
+        cy.visit(
+          `/welcome/${token}&appClientId=${appClientId2}&fromURI=${fromURI2}`,
+        );
+        cy.contains('Save and continue');
+        cy.url()
+          .should('contain', appClientId2)
+          .and('contain', fromURI2)
+          .and('not.contain', appClientId1)
+          .and('not.contain', fromURI1);
+
+        cy.get('form')
+          .should('have.attr', 'action')
+          .and('match', new RegExp(appClientId2))
+          .and('match', new RegExp(fromURI2))
+          .and('not.match', new RegExp(appClientId1))
+          .and('not.match', new RegExp(fromURI1));
       });
     });
   });

@@ -24,6 +24,21 @@ export const getPersistableQueryParams = (
 });
 
 /**
+ * @param params QueryParams object with all query parameters
+ * @returns PersistableQueryParams - object with query parameters to persist between requests but without the appClientId and fromURI params which are Okta specific
+ */
+export const getPersistableQueryParamsWithoutOktaParams = (
+  params: QueryParams,
+): PersistableQueryParams => {
+  const persistableQueryParams = getPersistableQueryParams(params);
+  // eslint-disable-next-line functional/immutable-data
+  delete persistableQueryParams.appClientId;
+  // eslint-disable-next-line functional/immutable-data
+  delete persistableQueryParams.fromURI;
+  return persistableQueryParams;
+};
+
+/**
  *
  * @param path a path segment of a url that is typed as part of RoutePaths
  * @param params QueryParams - any query params to be added to the path
