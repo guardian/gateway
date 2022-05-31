@@ -73,6 +73,16 @@ module.exports = {
         rules: [...config.module.rules, transpileModules],
       },
       target: ['web', 'es5'],
+      resolve: {
+        ...config.resolve,
+        fallback: {
+          ...config.resolve.fallback,
+          fs: false,
+          os: false,
+          https: false,
+          http: false,
+        },
+      },
     };
   },
 };
