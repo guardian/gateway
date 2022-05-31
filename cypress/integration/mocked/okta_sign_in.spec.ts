@@ -121,13 +121,13 @@ describe('Sign in flow', () => {
           'OKTA_CUSTOM_OAUTH_SERVER',
         )}/v1/authorize*`,
         (req) => {
-          req.redirect('https://m.code.dev-theguardian.com/');
+          req.redirect('https://www.theguardian.com/about');
         },
       ).as('authRedirect');
 
       cy.get('[data-cy=sign-in-button]').click();
-      cy.waitFor('@authRedirect').then(() => {
-        cy.url().contains('https://theguardian.com/about');
+      cy.wait('@authRedirect').then(() => {
+        cy.url().should('include', 'https://www.theguardian.com/about');
       });
     });
 
@@ -156,7 +156,7 @@ describe('Sign in flow', () => {
 
       cy.get('[data-cy=sign-in-button]').click();
       // we can't actually check the authorization code flow
-      // so intercept the request and redirect to the guardian about page
+      // so intercept the request and redirect to the default return URL
       cy.intercept(
         `http://localhost:9000/oauth2/${Cypress.env(
           'OKTA_CUSTOM_OAUTH_SERVER',
@@ -167,8 +167,8 @@ describe('Sign in flow', () => {
       ).as('authRedirect');
 
       cy.get('[data-cy=sign-in-button]').click();
-      cy.waitFor('@authRedirect').then(() => {
-        cy.url().contains('https://theguardian.com/about');
+      cy.wait('@authRedirect').then(() => {
+        cy.url().should('include', 'https://m.code.dev-theguardian.com/');
       });
     });
   });
