@@ -27,6 +27,9 @@ module.exports = {
       ...config.resolve.alias,
       '@': path.join(__dirname, '../src'),
       mjml: 'mjml-browser',
+      // We stub these libraries required by mjml because Storybook cannot run these on the client side.
+      'uglify-js': false,
+      'clean-css': false,
     };
 
     // transpile certain modules so we can get them to work with ie11 storybook
@@ -73,16 +76,6 @@ module.exports = {
         rules: [...config.module.rules, transpileModules],
       },
       target: ['web', 'es5'],
-      resolve: {
-        ...config.resolve,
-        fallback: {
-          ...config.resolve.fallback,
-          fs: false,
-          os: false,
-          https: false,
-          http: false,
-        },
-      },
     };
   },
 };
