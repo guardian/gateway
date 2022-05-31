@@ -1,12 +1,10 @@
 describe('Sign in flow', () => {
   context('Signing in - Okta', () => {
-    const defaultReturnUrl = 'https://m.code.dev-theguardian.com';
-
     beforeEach(() => {
       cy.mockPurge();
     });
 
-    it('loads the account management page if user is already authenticated', function () {
+    it('loads the homepage if user is already authenticated', function () {
       cy.mockPattern(
         200,
         {
@@ -34,13 +32,16 @@ describe('Sign in flow', () => {
       // disable the cmp  on the redirect
       cy.disableCMP();
 
-      cy.visit('/signin?useOkta=true');
-
-      // The code version of manage will redirect the user twice,
-      // once to manage.code.dev-theguardian.com and then because the user is not signed in
-      // a 2nd redirect to profile.code.dev-theguardian.com,
-      // and we cannot intercept redirects on cy.visit so we just assert on the value of the 2nd redirect
-      cy.url().should('match', /profile.code.dev-theguardian.com\/signin/);
+      cy.request({
+        url: '/signin?useOkta=true',
+        followRedirect: false,
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.eq(302);
+        expect(response.redirectedToUrl).to.eq(
+          'https://m.code.dev-theguardian.com/',
+        );
+      });
     });
 
     it('shows an error message when okta authentication fails', function () {
@@ -120,7 +121,7 @@ describe('Sign in flow', () => {
           'OKTA_CUSTOM_OAUTH_SERVER',
         )}/v1/authorize*`,
         (req) => {
-          req.redirect(defaultReturnUrl);
+          req.redirect('https://m.code.dev-theguardian.com/');
         },
       ).as('authRedirect');
 
@@ -161,7 +162,7 @@ describe('Sign in flow', () => {
           'OKTA_CUSTOM_OAUTH_SERVER',
         )}/v1/authorize*`,
         (req) => {
-          req.redirect(defaultReturnUrl);
+          req.redirect('https://m.code.dev-theguardian.com/');
         },
       ).as('authRedirect');
 

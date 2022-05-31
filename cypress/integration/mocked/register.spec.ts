@@ -125,6 +125,38 @@ describe('Registration flow', () => {
       cy.contains('Check your email inbox');
       cy.contains('example@example.com');
     });
+
+    it('redirects to homepage when user with existing valid session visits register page', () => {
+      cy.setCookie('SC_GU_U', 'sessionvalue');
+      cy.setCookie('SC_GU_LA', 'la_value');
+
+      cy.request({
+        url: '/register',
+        followRedirect: false,
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.eq(302);
+        expect(response.redirectedToUrl).to.eq(
+          'https://m.code.dev-theguardian.com/',
+        );
+      });
+      cy.mockNext(200, {
+        status: 'signedInRecently',
+        emailValidated: true,
+      });
+    });
+    it('redirects to /reauthenticate when user with existing invalid session visits register page', () => {
+      cy.setCookie('SC_GU_U', 'sessionvalue');
+      cy.setCookie('SC_GU_LA', 'la_value');
+
+      cy.mockNext(200, {
+        status: 'signedInNotRecently',
+        emailValidated: true,
+      });
+      cy.visit('/register');
+
+      cy.location('pathname').should('eq', '/reauthenticate');
+    });
   });
 
   context('General IDAPI failure', () => {

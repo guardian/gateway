@@ -359,7 +359,10 @@ export const hitsAccessTokenRateLimitAndRecoversTokenAfterTimeout = (
         cy.get('[data-cy="sign-in-button"]').click();
         cy.url().should('include', 'https://m.code.dev-theguardian.com/');
 
-        cy.visit('/signin');
+        // We visit reauthenticate here because if we visit /signin or
+        // /register, the logged in user guard will redirect us away before
+        // the ratelimiter has a chance to work
+        cy.visit('/reauthenticate');
         cy.contains('Sign');
         Cypress._.times(6, () => cy.reload());
         cy.contains('Rate limit exceeded');

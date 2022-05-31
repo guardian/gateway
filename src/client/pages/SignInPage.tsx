@@ -11,7 +11,7 @@ export const SignInPage = () => {
     queryParams,
     recaptchaConfig,
   } = clientState;
-  const { email } = pageData;
+  const { email, displayRegisterTab = true } = pageData;
   const { error } = globalMessage;
   const { recaptchaSiteKey } = recaptchaConfig;
 
@@ -23,6 +23,7 @@ export const SignInPage = () => {
       error={error}
       queryParams={queryParams}
       recaptchaSiteKey={recaptchaSiteKey}
+      displayRegisterTab={displayRegisterTab}
     />
   );
 };

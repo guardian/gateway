@@ -27,6 +27,7 @@ import postSignInController from '@/server/lib/postSignInController';
 import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
 import { getSession } from '../lib/okta/api/sessions';
 import { validAppProtocols, validateReturnUrl } from '../lib/validateUrl';
+import { redirectIfLoggedIn } from '../lib/middleware/redirectIfLoggedIn';
 
 const { okta, accountManagementUrl, defaultReturnUri, oauthBaseUrl } =
   getConfiguration();
@@ -112,6 +113,7 @@ const showSignInPage = async (req: Request, res: ResponseWithRequestState) => {
 
 router.get(
   '/signin',
+  redirectIfLoggedIn,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { pageData } = res.locals;
     const { returnUrl } = pageData;
@@ -120,10 +122,10 @@ router.get(
 
     if (okta.enabled && useOkta && oktaSessionCookieId) {
       // for okta users landing on sign in, we want to first check if a session exists
-      // if a session already exists then we redirect back to the returnUrl for apps, and the account management page for web
+      // if a session already exists then we redirect back to the returnUrl for apps, and the dotcom homepage for web
       // otherwise we want to show the sign in page
       try {
-        //check if the user has a session, if they do, take them to the account management page,
+        //check if the user has a session, if they do, take them to the dotcom homepage,
         // or returnUrl for apps users
         await getSession(oktaSessionCookieId);
         return handleAppRedirect(res, returnUrl);
@@ -135,6 +137,39 @@ router.get(
     } else {
       return showSignInPage(req, res);
     }
+  }),
+);
+
+// We don't do any session checking on /reauthenticate - if someone's ended up
+// here, it's probably because their session is invalid or expired and they need
+// to be allowed to attempt to sign in again.
+router.get(
+  '/reauthenticate',
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    const state = res.locals;
+    const { encryptedEmail, error, error_description } = state.queryParams;
+
+    // first attempt to get email from IDAPI encryptedEmail if it exists
+    const decryptedEmail =
+      encryptedEmail && (await decrypt(encryptedEmail, req.ip));
+
+    // followed by the gateway EncryptedState
+    // if it exists
+    const email = decryptedEmail || readEmailCookie(req);
+
+    const html = renderer('/reauthenticate', {
+      requestState: deepmerge(state, {
+        pageData: {
+          email,
+          displayRegisterTab: false,
+        },
+        globalMessage: {
+          error: getErrorMessageFromQueryParams(error, error_description),
+        },
+      }),
+      pageTitle: 'Sign in',
+    });
+    res.type('html').send(html);
   }),
 );
 
@@ -224,7 +259,7 @@ const oktaSignInController = async (
   const { returnUrl } = pageData;
   try {
     if (oktaSessionCookieId) {
-      // if a session already exists then we redirect back to the returnUrl for apps, and the account management page for web
+      // if a session already exists then we redirect back to the returnUrl for apps, and the dotcom homepage for web
       await getSession(oktaSessionCookieId);
       return handleAppRedirect(res, returnUrl);
     }

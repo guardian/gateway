@@ -4,7 +4,7 @@ import { MainGrid } from '@/client/layouts/MainGrid';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import { PasswordInput } from '@/client/components/PasswordInput';
-import { Nav } from '@/client/components/Nav';
+import { Nav, TabType } from '@/client/components/Nav';
 import { Button, Link } from '@guardian/source-react-components';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { Terms } from '@/client/components/Terms';
@@ -30,6 +30,9 @@ export type SignInProps = {
   email?: string;
   error?: string;
   recaptchaSiteKey: string;
+  // The register tab is hidden on the /reauthenticate version of the sign-in
+  // page, but displayed on the vanilla /signin version.
+  displayRegisterTab: boolean;
 };
 
 const passwordInput = css`
@@ -130,6 +133,7 @@ export const SignIn = ({
   error: pageLevelError,
   queryParams,
   recaptchaSiteKey,
+  displayRegisterTab,
 }: SignInProps) => {
   const formTrackingName = 'sign-in';
   const signInFormRef = createRef<HTMLFormElement>();
@@ -174,25 +178,28 @@ export const SignIn = ({
     executeCaptcha();
   };
 
+  const signInTab: TabType = {
+    displayText: 'Sign in',
+    queryParams: queryParams,
+    linkTo: '/signin',
+    isActive: true,
+  };
+
+  const registerTab: TabType = {
+    displayText: 'Register',
+    queryParams: queryParams,
+    linkTo: '/register',
+    isActive: false,
+  };
+
+  const tabs: TabType[] = displayRegisterTab
+    ? [signInTab, registerTab]
+    : [signInTab];
+
   return (
     <>
       <Header />
-      <Nav
-        tabs={[
-          {
-            displayText: 'Sign in',
-            queryParams: queryParams,
-            linkTo: '/signin',
-            isActive: true,
-          },
-          {
-            displayText: 'Register',
-            queryParams: queryParams,
-            linkTo: '/register',
-            isActive: false,
-          },
-        ]}
-      />
+      <Nav tabs={tabs} />
       <MainGrid
         gridSpanDefinition={gridItemSignInAndRegistration}
         errorOverride={

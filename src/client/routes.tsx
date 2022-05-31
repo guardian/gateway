@@ -49,6 +49,10 @@ const routes: Array<{
     element: <SignInSuccessPage />,
   },
   {
+    path: '/reauthenticate',
+    element: <SignInPage />,
+  },
+  {
     path: '/register',
     element: <RegistrationPage />,
   },

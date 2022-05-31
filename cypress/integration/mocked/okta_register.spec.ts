@@ -14,7 +14,7 @@ describe('Okta Register flow', () => {
       cy.disableCMP();
     });
 
-    it('should redirect to manage.theguardian.com if the sid Okta session cookie is valid', () => {
+    it('should redirect to homepage if the sid Okta session cookie is valid', () => {
       cy.mockPattern(
         200,
         {
@@ -35,14 +35,13 @@ describe('Okta Register flow', () => {
         '/api/v1/sessions/the_sid_cookie',
       );
 
-      cy.intercept('https://manage.theguardian.com').as('manage');
-
       cy.mockPattern(204, {}, '/api/v1/users/userId/sessions');
+
+      cy.intercept('POST', '/register**').as('registerPost');
 
       cy.visit('/register?useOkta=true');
 
       setSidCookie();
-
       cy.get('input[name="email"]').type('example@example.com');
       cy.mockNext(200, {
         userType: 'new',
@@ -53,13 +52,15 @@ describe('Okta Register flow', () => {
       });
       cy.get('[data-cy=register-button]').click();
 
-      cy.url().should(
-        'eq',
-        'https://profile.code.dev-theguardian.com/signin?componentEventParams=componentType%3Didentityauthentication%26componentId%3Didapi_signin_redirect&returnUrl=https%3A%2F%2Fmanage.code.dev-theguardian.com%2F',
-      );
+      cy.wait('@registerPost').then((interception) => {
+        expect(interception?.response?.statusCode).to.eq(302);
+        expect(interception?.response?.headers?.location).to.eq(
+          'https://m.code.dev-theguardian.com',
+        );
+      });
     });
 
-    it('should redirect to /register if the sid Okta session cookie is set, but invalid', () => {
+    it('should redirect to /reauthenticate if the sid Okta session cookie is set, but invalid', () => {
       cy.mockPattern(404, '/api/v1/sessions/the_sid_cookie');
 
       cy.mockPattern(204, {}, '/api/v1/users/userId/sessions');
@@ -71,17 +72,17 @@ describe('Okta Register flow', () => {
 
       cy.visit('/register?useOkta=true');
 
-      cy.location('pathname').should('eq', '/register');
+      cy.location('pathname').should('eq', '/reauthenticate');
 
       cy.getCookie('sid').should('not.exist');
     });
   });
 
-  context('Signed in user visits to /register', () => {
+  context('Signed in user visits /register', () => {
     beforeEach(() => {
       cy.mockPurge();
     });
-    it('should redirect to manage.theguardian.com if the sid Okta session cookie is valid', () => {
+    it('should redirect to homepage if the sid Okta session cookie is valid', () => {
       cy.mockPattern(
         200,
         {
@@ -109,15 +110,19 @@ describe('Okta Register flow', () => {
       // disable the cmp on the redirect
       cy.disableCMP();
 
-      cy.visit('/register?useOkta=true');
-
-      cy.url().should(
-        'eq',
-        'https://profile.code.dev-theguardian.com/signin?componentEventParams=componentType%3Didentityauthentication%26componentId%3Didapi_signin_redirect&returnUrl=https%3A%2F%2Fmanage.code.dev-theguardian.com%2F',
-      );
+      cy.request({
+        url: '/register?useOkta=true',
+        followRedirect: false,
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.eq(302);
+        expect(response.redirectedToUrl).to.eq(
+          'https://m.code.dev-theguardian.com/',
+        );
+      });
     });
 
-    it('should redirect to /register if the sid Okta session cookie is set but invalid', () => {
+    it('should redirect to /reauthenticate if the sid Okta session cookie is set but invalid', () => {
       cy.mockPattern(404, '/api/v1/sessions/the_sid_cookie');
 
       cy.mockPattern(204, {}, '/api/v1/users/userId/sessions');
@@ -129,7 +134,7 @@ describe('Okta Register flow', () => {
 
       cy.visit('/register?useOkta=true');
 
-      cy.location('pathname').should('eq', '/register');
+      cy.location('pathname').should('eq', '/reauthenticate');
 
       cy.getCookie('sid').should('not.exist');
     });
