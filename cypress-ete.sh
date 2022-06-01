@@ -77,7 +77,7 @@ fi
 
 echo "opening cypress"
 if [[ "$USE_OKTA" == "true" ]]; then
-  yarn cypress open --env $CI_ENV --config '{"testFiles":["ete-okta/**/*.ts"]}'
+  yarn cypress open --env $CI_ENV --config '{"e2e":{"specPattern":["**/ete-okta/**/*.cy.ts"]}}' --e2e --browser chrome
 else
-  yarn cypress open --env $CI_ENV --config '{"testFiles":["ete/**/*.ts"]}'
+  yarn cypress open --env $CI_ENV --config '{"e2e":{"specPattern":["**/ete/**/*.cy.ts"]}}' --e2e --browser chrome
 fi
