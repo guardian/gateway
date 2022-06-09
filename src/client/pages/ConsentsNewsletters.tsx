@@ -6,6 +6,7 @@ import {
   lifestyle,
   news,
   space,
+  neutral,
 } from '@guardian/source-foundations';
 import {
   gridItem,
@@ -19,14 +20,26 @@ import { ConsentsForm } from '@/client/components/ConsentsForm';
 import { ConsentsNavigation } from '@/client/components/ConsentsNavigation';
 import { greyBorderTop, heading, text } from '@/client/styles/Consents';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
+import { Consent } from '@/shared/model/Consent';
 import { NewsLetter } from '@/shared/model/Newsletter';
 import {
   NEWSLETTER_IMAGES,
   NEWSLETTER_IMAGE_POSITIONS,
 } from '@/client/models/Newsletter';
+import { CONSENT_IMAGES } from '@/client/models/ConsentImages';
+
+interface ConsentOption {
+  type: 'consent';
+  consent: Consent;
+}
+interface NewsletterOption {
+  type: 'newsletter';
+  consent: NewsLetter;
+}
+type NewsletterPageConsent = ConsentOption | NewsletterOption;
 
 type ConsentsNewslettersProps = {
-  newsletters: NewsLetter[];
+  consents: NewsletterPageConsent[];
 };
 
 const idColor = (id: string) => {
@@ -77,9 +90,7 @@ const paragraphSpacing = css`
   margin-bottom: ${space[6]}px;
 `;
 
-export const ConsentsNewsletters = ({
-  newsletters,
-}: ConsentsNewslettersProps) => {
+export const ConsentsNewsletters = ({ consents }: ConsentsNewslettersProps) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
 
   return (
@@ -96,22 +107,36 @@ export const ConsentsNewsletters = ({
         and chosen charities or online advertisements.
       </p>
       <ConsentsForm cssOverrides={autoRow()}>
-        {newsletters.map((newsletter, i) => (
-          <ConsentCard
-            title={newsletter.name}
-            description={newsletter.description}
-            id={newsletter.id}
-            defaultChecked={newsletter.subscribed}
-            imagePath={NEWSLETTER_IMAGES[newsletter.id]}
-            imagePosition={NEWSLETTER_IMAGE_POSITIONS[newsletter.id]}
-            highlightColor={idColor(newsletter.nameId)}
-            frequency={newsletter.frequency}
-            hiddenInput
-            noTopBorderMobile
-            cssOverrides={getNewsletterCardCss(i)}
-            key={newsletter.id}
-          />
-        ))}
+        {consents.map(({ type, consent }, i) => {
+          const extraProps =
+            type === 'consent'
+              ? {
+                  id: consent.id,
+                  defaultChecked: !!consent.consented,
+                  highlightColor: neutral[46],
+                  imagePath: CONSENT_IMAGES[consent.id],
+                }
+              : {
+                  id: consent.id, // TODO: adjust this to differentiate on backend
+                  defaultChecked: consent.subscribed,
+                  imagePath: NEWSLETTER_IMAGES[consent.id],
+                  imagePosition: NEWSLETTER_IMAGE_POSITIONS[consent.id],
+                  highlightColor: idColor(consent.nameId),
+                  frequency: consent.frequency,
+                  hiddenInput: true,
+                };
+
+          return (
+            <ConsentCard
+              key={consent.id}
+              title={consent.name}
+              description={consent.description || ''}
+              noTopBorderMobile
+              cssOverrides={getNewsletterCardCss(i)}
+              {...extraProps}
+            />
+          );
+        })}
         <ConsentsNavigation />
       </ConsentsForm>
     </ConsentsLayout>
