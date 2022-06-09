@@ -510,6 +510,8 @@ describe('Onboarding flow', () => {
       );
       cy.mockAll(200, allNewsletters, NEWSLETTER_ENDPOINT);
       cy.mockAll(200, userNewsletters(), NEWSLETTER_SUBSCRIPTION_ENDPOINT);
+      cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
+      cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
     });
 
     it('has no detectable a11y violations', () => {
@@ -550,9 +552,6 @@ describe('Onboarding flow', () => {
       NewslettersPage.newsletterCheckboxWithTitle(
         NEWSLETTERS.GREEN_LIGHT,
       ).should('not.be.checked');
-      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.THE_GUIDE).should(
-        'not.be.checked',
-      );
 
       CommunicationsPage.backButton().should('exist');
       CommunicationsPage.saveAndContinueButton().should('exist');
@@ -572,9 +571,6 @@ describe('Onboarding flow', () => {
       NewslettersPage.newsletterCheckboxWithTitle(
         NEWSLETTERS.GREEN_LIGHT,
       ).should('not.be.checked');
-      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.THE_GUIDE).should(
-        'not.be.checked',
-      );
 
       CommunicationsPage.backButton().should('exist');
       CommunicationsPage.saveAndContinueButton().should('exist');
@@ -594,9 +590,6 @@ describe('Onboarding flow', () => {
       NewslettersPage.newsletterCheckboxWithTitle(
         NEWSLETTERS.GREEN_LIGHT,
       ).should('not.be.checked');
-      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.THE_GUIDE).should(
-        'not.be.checked',
-      );
 
       CommunicationsPage.backButton().should('exist');
       CommunicationsPage.saveAndContinueButton().should('exist');
@@ -616,9 +609,6 @@ describe('Onboarding flow', () => {
       NewslettersPage.newsletterCheckboxWithTitle(
         NEWSLETTERS.GREEN_LIGHT,
       ).should('not.be.checked');
-      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.THE_GUIDE).should(
-        'not.be.checked',
-      );
 
       CommunicationsPage.backButton().should('exist');
       CommunicationsPage.saveAndContinueButton().should('exist');
@@ -642,9 +632,6 @@ describe('Onboarding flow', () => {
       NewslettersPage.newsletterCheckboxWithTitle(
         NEWSLETTERS.GREEN_LIGHT,
       ).should('be.checked');
-      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.THE_GUIDE).should(
-        'not.be.checked',
-      );
     });
 
     it('displays a relevant error on newsletters endpoint failure', () => {

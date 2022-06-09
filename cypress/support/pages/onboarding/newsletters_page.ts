@@ -9,7 +9,6 @@ class NewslettersPage extends OnboardingPage {
       MORNING_BRIEFING_AUS: "Guardian Australia's Morning Mail",
       LONG_READ: 'The Long Read',
       GREEN_LIGHT: 'Green Light',
-      THE_GUIDE: 'The Guide',
     },
   };
   static newsletterCheckboxWithTitle(title: string) {
