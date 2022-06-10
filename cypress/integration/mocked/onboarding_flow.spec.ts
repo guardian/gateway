@@ -553,6 +553,9 @@ describe('Onboarding flow', () => {
       NewslettersPage.checkboxWithTitle(NEWSLETTERS.GREEN_LIGHT).should(
         'not.be.checked',
       );
+      NewslettersPage.checkboxWithTitle(
+        NewslettersPage.CONTENT.Consents.EVENTS,
+      ).should('not.be.checked');
 
       CommunicationsPage.backButton().should('exist');
       CommunicationsPage.saveAndContinueButton().should('exist');
@@ -572,6 +575,9 @@ describe('Onboarding flow', () => {
       NewslettersPage.checkboxWithTitle(NEWSLETTERS.GREEN_LIGHT).should(
         'not.be.checked',
       );
+      NewslettersPage.checkboxWithTitle(
+        NewslettersPage.CONTENT.Consents.EVENTS,
+      ).should('not.be.checked');
 
       CommunicationsPage.backButton().should('exist');
       CommunicationsPage.saveAndContinueButton().should('exist');
@@ -591,6 +597,9 @@ describe('Onboarding flow', () => {
       NewslettersPage.checkboxWithTitle(NEWSLETTERS.GREEN_LIGHT).should(
         'not.be.checked',
       );
+      NewslettersPage.checkboxWithTitle(
+        NewslettersPage.CONTENT.Consents.EVENTS,
+      ).should('not.be.checked');
 
       CommunicationsPage.backButton().should('exist');
       CommunicationsPage.saveAndContinueButton().should('exist');
@@ -610,18 +619,23 @@ describe('Onboarding flow', () => {
       NewslettersPage.checkboxWithTitle(NEWSLETTERS.GREEN_LIGHT).should(
         'not.be.checked',
       );
+      NewslettersPage.checkboxWithTitle(
+        NewslettersPage.CONTENT.Consents.EVENTS,
+      ).should('not.be.checked');
 
       CommunicationsPage.backButton().should('exist');
       CommunicationsPage.saveAndContinueButton().should('exist');
     });
 
-    it('show already selected newsletters', () => {
+    it('show already selected newsletters / consents', () => {
       const newslettersToSubscribe = [{ listId: 4147 }, { listId: 4165 }];
       cy.mockAll(
         200,
         userNewsletters(newslettersToSubscribe),
         NEWSLETTER_SUBSCRIPTION_ENDPOINT,
       );
+      const consented = getUserConsents(['events']);
+      cy.mockAll(200, createUser(consented), USER_ENDPOINT);
       NewslettersPage.goto();
 
       NewslettersPage.checkboxWithTitle(NEWSLETTERS.FIRST_EDITION_UK).should(
@@ -633,6 +647,9 @@ describe('Onboarding flow', () => {
       NewslettersPage.checkboxWithTitle(NEWSLETTERS.GREEN_LIGHT).should(
         'be.checked',
       );
+      NewslettersPage.checkboxWithTitle(
+        NewslettersPage.CONTENT.Consents.EVENTS,
+      ).should('be.checked');
     });
 
     it('displays a relevant error on newsletters endpoint failure', () => {
