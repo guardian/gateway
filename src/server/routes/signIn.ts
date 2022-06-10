@@ -27,6 +27,7 @@ import postSignInController from '@/server/lib/postSignInController';
 import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
 import { getSession } from '../lib/okta/api/sessions';
 import { redirectIfLoggedIn } from '../lib/middleware/redirectIfLoggedIn';
+import { getUser } from '../lib/okta/api/users';
 
 const { okta, accountManagementUrl, oauthBaseUrl } = getConfiguration();
 
@@ -246,6 +247,17 @@ const oktaSignInController = async (
 
     // we're authenticated track this metric
     trackMetric('OktaSignIn::Success');
+
+    // If the user was able to log in with Okta BUT NOT VALIDATED, we will still try and sign them in with Identity
+    // This is because we will initally block unvalidated users from getting Okta sessions, but still allow them
+    // Identity sessions.
+
+    if (response._embedded?.user.id) {
+      const user = await getUser(response._embedded.user.id);
+      if (!user.profile.emailValidated) {
+        return idapiSignInController(req, res);
+      }
+    }
 
     // we now need to generate an okta session
     // so we'll call the OIDC /authorize endpoint which sets a session cookie

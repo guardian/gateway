@@ -89,7 +89,7 @@ describe('Sign in flow', () => {
       cy.contains('There was a problem signing in, please try again.');
     });
 
-    it('loads the redirectUrl upon successful authentication', function () {
+    it('loads the redirectUrl upon successful authentication for validated user', function () {
       cy.visit(
         '/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout&useOkta=true',
       );
@@ -114,6 +114,20 @@ describe('Sign in flow', () => {
         },
       });
 
+      cy.mockNext(200, {
+        id: 'okta-id',
+        passwordChanged: '2020-01-01T00:00:00.000Z',
+        profile: {
+          login: 'test.man1@example.com',
+          emailValidated: true,
+          firstName: 'Test',
+          lastName: 'Man',
+          locale: 'en_GB',
+          timeZone: 'Europe/London',
+          email: 'test.man1@example.com',
+        },
+      });
+
       // we can't actually check the authorization code flow
       // so intercept the request and redirect to the guardian about page
       cy.intercept(
@@ -129,6 +143,60 @@ describe('Sign in flow', () => {
       cy.wait('@authRedirect').then(() => {
         cy.url().should('include', 'https://www.theguardian.com/about');
       });
+    });
+
+    it('loads the redirectUrl upon Okta success but with unvalidated user, and IDAPI successful authentication', function () {
+      const returnUrl = 'https://profile.thegulocal.com/healthcheck';
+      cy.visit(
+        '/signin?returnUrl=https%3A%2F%2Fprofile.thegulocal.com%2Fhealthcheck&useOkta=true',
+      );
+      cy.get('input[name="email"]').type('example@example.com');
+      cy.get('input[name="password"]').type('password');
+
+      cy.mockNext(200, {
+        expiresAt: '3000-01-01T00:00:00.000Z',
+        status: 'SUCCESS',
+        sessionToken: 'some-session-token',
+        _embedded: {
+          user: {
+            id: 'okta-id',
+            passwordChanged: '2020-01-01T00:00:00.000Z',
+            profile: {
+              login: 'test.man@example.com',
+              firstName: 'Test',
+              lastName: 'Man',
+              locale: 'en_GB',
+              timeZone: 'Europe/London',
+            },
+          },
+        },
+      });
+      cy.mockNext(200, {
+        id: 'okta-id',
+        passwordChanged: '2020-01-01T00:00:00.000Z',
+        profile: {
+          login: 'test.man@example.com',
+          firstName: 'Test',
+          lastName: 'Man',
+          locale: 'en_GB',
+          timeZone: 'Europe/London',
+          emailValidated: false,
+        },
+      });
+
+      cy.mockNext(200, {
+        cookies: {
+          values: [{ key: 'SC_GU_U', value: 'value' }],
+          expiresAt: 'tomorrow',
+        },
+      });
+
+      cy.get('[data-cy=sign-in-button]').click();
+
+      cy.url().should('include', returnUrl);
+
+      cy.getCookie('sid').should('not.exist');
+      cy.getCookie('SC_GU_U').should('exist');
     });
 
     it('redirects to the default url if no redirectUrl given', function () {
@@ -151,6 +219,20 @@ describe('Sign in flow', () => {
               timeZone: 'Europe/London',
             },
           },
+        },
+      });
+
+      cy.mockNext(200, {
+        id: 'okta-id',
+        passwordChanged: '2020-01-01T00:00:00.000Z',
+        profile: {
+          login: 'test.man1@example.com',
+          emailValidated: true,
+          firstName: 'Test',
+          lastName: 'Man',
+          locale: 'en_GB',
+          timeZone: 'Europe/London',
+          email: 'test.man1@example.com',
         },
       });
 
