@@ -286,6 +286,7 @@ const handleUserResponse = async (
             email: user.profile.email,
             login: user.profile.login,
             isGuardianUser: user.profile.isGuardianUser,
+            emailValidated: user.profile.emailValidated,
           },
           credentials: user.credentials,
         };
