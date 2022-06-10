@@ -117,7 +117,7 @@ export const ConsentsNewsletters = ({ consents }: ConsentsNewslettersProps) => {
                   imagePath: CONSENT_IMAGES[consent.id],
                 }
               : {
-                  id: consent.id, // TODO: adjust this to differentiate on backend
+                  id: consent.id,
                   defaultChecked: consent.subscribed,
                   imagePath: NEWSLETTER_IMAGES[consent.id],
                   imagePosition: NEWSLETTER_IMAGE_POSITIONS[consent.id],
