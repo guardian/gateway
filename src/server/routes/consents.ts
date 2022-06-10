@@ -155,6 +155,13 @@ export const consentPages: ConsentPage[] = [
         });
 
       await patchNewsletters(ip, sc_gu_u, newsletterSubscriptionsToUpdate);
+
+      const consents = CONSENTS_NEWSLETTERS_PAGE.map((id) => ({
+        id,
+        consented: getConsentValueFromRequestBody(id, body),
+      }));
+
+      await patchConsents(ip, sc_gu_u, consents);
     },
   },
   {
@@ -182,6 +189,7 @@ export const consentPages: ConsentPage[] = [
     read: async (ip, sc_gu_u, geo) => {
       const ALL_CONSENT = [
         ...CONSENTS_DATA_PAGE,
+        ...CONSENTS_NEWSLETTERS_PAGE,
         ...CONSENTS_COMMUNICATION_PAGE,
       ];
 

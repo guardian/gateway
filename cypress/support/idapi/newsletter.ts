@@ -47,15 +47,6 @@ export const allNewsletters = [
     frequency: 'Every Saturday',
     exactTargetListId: 4165,
   },
-  {
-    id: 'the-guide-staying-in',
-    name: 'The Guide',
-    description:
-      'Home entertainment tips delivered straight to your sofa. The best TV and box sets, games, podcasts, books and more',
-    frequency: 'Weekly',
-    listIdV1: -1,
-    exactTargetListId: 6006,
-  },
 ];
 
 export const userNewsletters = (

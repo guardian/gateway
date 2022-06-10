@@ -10,8 +10,11 @@ class NewslettersPage extends OnboardingPage {
       LONG_READ: 'The Long Read',
       GREEN_LIGHT: 'Green Light',
     },
+    Consents: {
+      EVENTS: 'Events & Masterclasses',
+    },
   };
-  static newsletterCheckboxWithTitle(title: string) {
+  static checkboxWithTitle(title: string) {
     return cy.contains(title).parent().find('input[type="checkbox"]');
   }
   static URL = '/consents/newsletters';

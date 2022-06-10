@@ -8,7 +8,6 @@ class ReviewPage extends OnboardingPage {
       GREEN_LIGHT: 'Green Light',
       LONG_READ: 'The Long Read',
       FIRST_EDITION_UK: 'First Edition',
-      THE_GUIDE: 'The Guide',
     },
     SUPPORTER_CONSENT: 'Supporting the Guardian',
     PROFILING_CONSENT: 'Allow analysis of my data for marketing',

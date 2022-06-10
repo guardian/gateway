@@ -65,7 +65,6 @@ describe('Onboarding flow', () => {
       const newslettersToSubscribe = [
         { listId: 4147 },
         { listId: 4156 },
-        { listId: 6006 },
         { listId: 4165 },
       ];
 
@@ -123,11 +122,13 @@ describe('Onboarding flow', () => {
       cy.enableCMP(); // Prep cmp for next page
       NewslettersPage.saveAndContinueButton().click();
 
-      cy.lastPayloadIs([
-        { id: '4147', subscribed: true },
-        { id: '4156', subscribed: true },
-        { id: '6006', subscribed: true },
-        { id: '4165', subscribed: true },
+      cy.lastPayloadsAre([
+        [
+          { id: '4147', subscribed: true },
+          { id: '4156', subscribed: true },
+          { id: '4165', subscribed: true },
+        ],
+        [{ id: 'events', consented: true }],
       ]);
 
       cy.url().should('include', YourDataPage.URL);
@@ -223,7 +224,7 @@ describe('Onboarding flow', () => {
 
       cy.enableCMP();
       NewslettersPage.saveAndContinueButton().click();
-      cy.lastPayloadIs([]);
+      cy.lastPayloadsAre([[], [{ id: 'events', consented: false }]]);
       cy.acceptCMP();
 
       cy.url().should('include', YourDataPage.URL);
@@ -543,15 +544,15 @@ describe('Onboarding flow', () => {
 
       cy.visit(NewslettersPage.URL, { headers });
 
-      NewslettersPage.newsletterCheckboxWithTitle(
-        NEWSLETTERS.FIRST_EDITION_UK,
-      ).should('not.be.checked');
-      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.LONG_READ).should(
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.FIRST_EDITION_UK).should(
         'not.be.checked',
       );
-      NewslettersPage.newsletterCheckboxWithTitle(
-        NEWSLETTERS.GREEN_LIGHT,
-      ).should('not.be.checked');
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.LONG_READ).should(
+        'not.be.checked',
+      );
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.GREEN_LIGHT).should(
+        'not.be.checked',
+      );
 
       CommunicationsPage.backButton().should('exist');
       CommunicationsPage.saveAndContinueButton().should('exist');
@@ -562,15 +563,15 @@ describe('Onboarding flow', () => {
 
       cy.visit(NewslettersPage.URL, { headers });
 
-      NewslettersPage.newsletterCheckboxWithTitle(
-        NEWSLETTERS.MORNING_BRIEFING_US,
-      ).should('not.be.checked');
-      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.LONG_READ).should(
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.MORNING_BRIEFING_US).should(
         'not.be.checked',
       );
-      NewslettersPage.newsletterCheckboxWithTitle(
-        NEWSLETTERS.GREEN_LIGHT,
-      ).should('not.be.checked');
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.LONG_READ).should(
+        'not.be.checked',
+      );
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.GREEN_LIGHT).should(
+        'not.be.checked',
+      );
 
       CommunicationsPage.backButton().should('exist');
       CommunicationsPage.saveAndContinueButton().should('exist');
@@ -581,15 +582,15 @@ describe('Onboarding flow', () => {
 
       cy.visit(NewslettersPage.URL, { headers });
 
-      NewslettersPage.newsletterCheckboxWithTitle(
+      NewslettersPage.checkboxWithTitle(
         NEWSLETTERS.MORNING_BRIEFING_AUS,
       ).should('not.be.checked');
-      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.LONG_READ).should(
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.LONG_READ).should(
         'not.be.checked',
       );
-      NewslettersPage.newsletterCheckboxWithTitle(
-        NEWSLETTERS.GREEN_LIGHT,
-      ).should('not.be.checked');
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.GREEN_LIGHT).should(
+        'not.be.checked',
+      );
 
       CommunicationsPage.backButton().should('exist');
       CommunicationsPage.saveAndContinueButton().should('exist');
@@ -600,15 +601,15 @@ describe('Onboarding flow', () => {
 
       cy.visit(NewslettersPage.URL, { headers });
 
-      NewslettersPage.newsletterCheckboxWithTitle(
-        NEWSLETTERS.FIRST_EDITION_UK,
-      ).should('not.be.checked');
-      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.LONG_READ).should(
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.FIRST_EDITION_UK).should(
         'not.be.checked',
       );
-      NewslettersPage.newsletterCheckboxWithTitle(
-        NEWSLETTERS.GREEN_LIGHT,
-      ).should('not.be.checked');
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.LONG_READ).should(
+        'not.be.checked',
+      );
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.GREEN_LIGHT).should(
+        'not.be.checked',
+      );
 
       CommunicationsPage.backButton().should('exist');
       CommunicationsPage.saveAndContinueButton().should('exist');
@@ -623,15 +624,15 @@ describe('Onboarding flow', () => {
       );
       NewslettersPage.goto();
 
-      NewslettersPage.newsletterCheckboxWithTitle(
-        NEWSLETTERS.FIRST_EDITION_UK,
-      ).should('not.be.checked');
-      NewslettersPage.newsletterCheckboxWithTitle(NEWSLETTERS.LONG_READ).should(
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.FIRST_EDITION_UK).should(
+        'not.be.checked',
+      );
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.LONG_READ).should(
         'be.checked',
       );
-      NewslettersPage.newsletterCheckboxWithTitle(
-        NEWSLETTERS.GREEN_LIGHT,
-      ).should('be.checked');
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.GREEN_LIGHT).should(
+        'be.checked',
+      );
     });
 
     it('displays a relevant error on newsletters endpoint failure', () => {
