@@ -9,10 +9,12 @@ class NewslettersPage extends OnboardingPage {
       MORNING_BRIEFING_AUS: "Guardian Australia's Morning Mail",
       LONG_READ: 'The Long Read',
       GREEN_LIGHT: 'Green Light',
-      THE_GUIDE: 'The Guide',
+    },
+    Consents: {
+      EVENTS: 'Events & Masterclasses',
     },
   };
-  static newsletterCheckboxWithTitle(title: string) {
+  static checkboxWithTitle(title: string) {
     return cy.contains(title).parent().find('input[type="checkbox"]');
   }
   static URL = '/consents/newsletters';

@@ -20,7 +20,7 @@ let permanentPatterns = [];
 const findPattern = (path) =>
   permanentPatterns.find(({ pattern }) => new RegExp(pattern).test(path));
 
-let payload = {};
+const payloads = [];
 
 app.use(bodyParser.json({ strict: false }));
 app.use(express.urlencoded({ extended: true }));
@@ -36,6 +36,7 @@ app.get('/mock/purge', (_, res) => {
   responses.length = 0;
   permanent.clear();
   permanentPatterns = [];
+  payloads.length = 0;
   res.sendStatus(204);
 });
 
@@ -63,7 +64,12 @@ app.post('/mock/permanent', (req, res) => {
 
 // Return last POST or PATCH'd request payload
 app.get('/mock/payload', (_, res) => {
-  res.json(payload);
+  res.json(payloads[payloads.length - 1]);
+});
+
+// Return all POST or PATCH'd request payloads
+app.get('/mock/payloads', (_, res) => {
+  res.json(payloads);
 });
 
 // For any request, if permanent, return permanent mock, otherwise pop from mock stack.
@@ -75,7 +81,7 @@ app.all('*', (req, res) => {
 
   const { method } = req;
   if (method === 'POST' || method === 'PATCH') {
-    payload = req.body;
+    payloads.push(req.body);
   }
 
   if (permanent.has(req.path)) {

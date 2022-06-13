@@ -19,6 +19,7 @@ import { ALL_NEWSLETTER_IDS, NewsLetter } from '@/shared/model/Newsletter';
 import {
   CONSENTS_COMMUNICATION_PAGE,
   CONSENTS_DATA_PAGE,
+  CONSENTS_NEWSLETTERS_PAGE,
 } from '@/shared/model/Consent';
 import { loginMiddleware } from '@/server/lib/middleware/login';
 import {
@@ -107,6 +108,11 @@ export const consentPages: ConsentPage[] = [
     pageTitle: CONSENTS_PAGES.NEWSLETTERS,
     read: async (ip, sc_gu_u, geo) => ({
       page: 'newsletters',
+      consents: await getUserConsentsForPage(
+        CONSENTS_NEWSLETTERS_PAGE,
+        ip,
+        sc_gu_u,
+      ),
       newsletters: await getUserNewsletterSubscriptions(
         NewsletterMap.get(geo) as string[],
         ip,
@@ -149,6 +155,13 @@ export const consentPages: ConsentPage[] = [
         });
 
       await patchNewsletters(ip, sc_gu_u, newsletterSubscriptionsToUpdate);
+
+      const consents = CONSENTS_NEWSLETTERS_PAGE.map((id) => ({
+        id,
+        consented: getConsentValueFromRequestBody(id, body),
+      }));
+
+      await patchConsents(ip, sc_gu_u, consents);
     },
   },
   {
@@ -176,6 +189,7 @@ export const consentPages: ConsentPage[] = [
     read: async (ip, sc_gu_u, geo) => {
       const ALL_CONSENT = [
         ...CONSENTS_DATA_PAGE,
+        ...CONSENTS_NEWSLETTERS_PAGE,
         ...CONSENTS_COMMUNICATION_PAGE,
       ];
 
