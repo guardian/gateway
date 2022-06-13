@@ -15589,10 +15589,10 @@ snapdragon@^0.8.1:
     source-map-resolve "^0.5.0"
     use "^3.1.0"
 
-snyk@^1.946.0:
-  version "1.946.0"
-  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.946.0.tgz#d95afad5321f5bb15499c8f3fef5be17e0fd39ef"
-  integrity sha512-3XE1rk5qF1DOb5t5bQlOFDyp4x1V7HjpppH+RDVIqq7is0Hf9NTHeOpeNALplJjVVyEIfAzqiJThKupWDx5ptg==
+snyk@^1.948.0:
+  version "1.948.0"
+  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.948.0.tgz#3b467eb630683c48628791f02a06d17284ba77b7"
+  integrity sha512-+GT3nJ9NF7ELcHp7KM9CcciKAPM7Cb7iNTD2h2Uhm0zoaR6vH3rZCPy92sREuVtLr28Rx9lJKlfZn/eaqY/l4A==
 
 sort-keys-length@^1.0.0:
   version "1.0.1"
