@@ -74,7 +74,7 @@
     "@types/react-test-renderer": "^17.0.1",
     "@types/serialize-javascript": "^5.0.2",
     "@types/uuid": "^8.3.4",
-    "@typescript-eslint/eslint-plugin": "^5.27.0",
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.0",
     "assets-webpack-plugin": "^7.1.1",
     "axe-core": "^4.4.2",
