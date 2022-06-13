@@ -17,7 +17,6 @@ export enum Newsletters {
   FIRST_EDITION_UK = '4156',
   MORNING_BRIEFING_AU = '4148',
   MORNING_BRIEFING_US = '4300',
-  THE_GUIDE = '6006',
   THE_LONG_READ = '4165',
 }
 

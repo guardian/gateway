@@ -9,6 +9,7 @@ import { setEncryptedStateCookie } from './commands/setEncryptedStateCookie';
 import { network } from './commands/network';
 import { mockPattern } from './commands/mockPattern';
 import { lastPayloadIs } from './commands/lastPayloadIs';
+import { lastPayloadsAre } from './commands/lastPayloadsAre';
 import { checkForEmailAndGetDetails } from './commands/getEmailDetails';
 import {
   disableCMP,
@@ -44,6 +45,7 @@ Cypress.Commands.add('enableCMP', enableCMP);
 Cypress.Commands.add('acceptCMP', acceptCMP);
 Cypress.Commands.add('declineCMP', declineCMP);
 Cypress.Commands.add('lastPayloadIs', lastPayloadIs);
+Cypress.Commands.add('lastPayloadsAre', lastPayloadsAre);
 Cypress.Commands.add('checkForEmailAndGetDetails', checkForEmailAndGetDetails);
 Cypress.Commands.add('createTestUser', createTestUser);
 Cypress.Commands.add('getTestOktaUser', getTestOktaUser);
