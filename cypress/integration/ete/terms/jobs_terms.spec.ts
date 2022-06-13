@@ -157,7 +157,10 @@ describe('Jobs terms and conditions flow', () => {
       });
     });
 
-    it('should allow a non-jobs user to enter their first/last name and accept the terms', () => {
+    // Skipping this test for now, because of some flakiness where
+    // users' first and last name aren't updated by the time we make the request
+    // to /user/me to check their info.
+    it.skip('should allow a non-jobs user to enter their first/last name and accept the terms', () => {
       cy.createTestUser({
         isUserEmailValidated: true,
       })?.then(({ emailAddress, finalPassword }) => {
