@@ -17,9 +17,9 @@ import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import postSignInController from '@/server/lib/postSignInController';
-import { validAppProtocols } from '../lib/validateUrl';
 import { IdTokenClaims } from 'openid-client';
 import { updateUser } from '../lib/okta/api/users';
+import { getApp } from '../lib/okta/api/apps';
 
 interface OAuthError {
   error: string;
@@ -187,23 +187,6 @@ router.get(
       // track the success metric
       trackMetric('OAuthAuthorization::Success');
 
-      const returnUrl = authState.confirmationPage
-        ? addQueryParamsToPath(
-            authState.confirmationPage,
-            authState.queryParams,
-          )
-        : authState.queryParams.returnUrl;
-
-      // This is a fallback to handle the apps redirects
-      // back to the deep link from sign in/registration
-      // the hard coded query param is also temp to test if they're
-      // able to read data we send back
-      if (
-        validAppProtocols.some((protocol) => returnUrl.startsWith(protocol))
-      ) {
-        return res.redirect(303, returnUrl);
-      }
-
       // We only use to this option if the app does not provide a deep link with a custom scheme
       // This allows the native apps to complete the authorization code flow for the app.
       // the fromURI parameter is an undocumented feature from Okta that allows us to
@@ -211,6 +194,44 @@ router.get(
       if (authState.queryParams.fromURI) {
         return res.redirect(303, authState.queryParams.fromURI);
       }
+
+      // fallback option for apps
+      // if we can't get the fromURI from Okta, we can still use the client id to redirect
+      // back to the application, where they can use the session cookie to complete the flow
+      // by calling the signin/signinwithbrowser sdk method with the prompt=none parameter
+      // firstly check if we have the client id parameter
+      if (authState.queryParams.appClientId) {
+        try {
+          // attempt to find the native app by the client id
+          const nativeApp = await getApp(authState.queryParams.appClientId);
+
+          // Check for fallback link if found
+          if (nativeApp) {
+            // check if the fallback link is set
+            const fallbackUrl =
+              nativeApp.settings.oauthClient.redirect_uris.find((url) =>
+                url.includes('://identity/fallback'),
+              );
+            // if the fallback link is set, redirect to it
+            if (fallbackUrl) {
+              return res.redirect(303, fallbackUrl);
+            }
+          }
+        } catch (error) {
+          // catch if the getApp call fails, we log error, but fall through to prevent runtime errors
+          logger.error(
+            `Failed to get app config for app ${authState.queryParams.appClientId}`,
+            error,
+          );
+        }
+      }
+
+      const returnUrl = authState.confirmationPage
+        ? addQueryParamsToPath(
+            authState.confirmationPage,
+            authState.queryParams,
+          )
+        : authState.queryParams.returnUrl;
 
       postSignInController(req, res, cookies, returnUrl);
     } catch (error) {

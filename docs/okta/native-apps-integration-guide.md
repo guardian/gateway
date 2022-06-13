@@ -94,7 +94,7 @@ To setup a native app, we will need to register the application as an client wit
 3. A redirect URI for handling generic redirects from identity to app as a fallback
    - Due to the possibility that Okta may change how things work with their login page, we need a fallback to allow users to sign in should the interception fail
    - This endpoint will ONLY be called if the interception fails
-   - See fallback section below for more details about this
+   - See [fallback](#fallback) section below for more details about this
    - We suggest a custom URL scheme for this URI, which we can identify (`your-app://identity/fallback`).
    - e.g. `com.theguardian.app://identity/fallback`
 
@@ -239,4 +239,44 @@ note over NativeLayer: the SDK manages the tokens, which can now be used to<br/>
 
 ## Fallback
 
-TODO
+While we are confident that the above approach is robust enough to work, we will also include a fallback option in case something does go wrong with the above approach.
+
+Specifically a fallback option will be used if we're unable to intercept the `fromURI` parameter from Okta.
+
+To handle this fallback option, a [private-use URI scheme](https://datatracker.ietf.org/doc/html/rfc8252#section-7.1) (referred to as "custom URL scheme") will have to be registered with the app. We suggest a custom URL scheme for this URI, which we can identify (`your-app://identity/fallback`) e.g. `com.theguardian.app://identity/fallback`. This should also be added as a valid redirect URI within the Okta configuration so that we can dynamically redirect to this custom URL scheme (by reading the URL from the Okta API, instead of hardcoding it) from within Gateway.
+
+If after sign in or creating a password, we're unable to redirect to the `fromURI` parameter, we will redirect to the custom URL scheme fallback endpoint once the session has been set in the browser.
+
+When listening on this endpoint in the app, it should just call the `signin`/`signInWithBrowser` method again, with the `prompt=none` parameter. This will still trigger the authorization code flow, and an access token will be returned to the browser, however on iOS the user will see an additional cookie popup, and on android the user will experience a browser flash.
+
+```mermaid
+sequenceDiagram
+autonumber
+
+participant NativeLayer
+participant InAppBrowserTab
+participant Gateway
+participant Okta
+
+NativeLayer->>InAppBrowserTab: Call `signin`/`signInWithBrowser`<br/>to perform<br />Authorization Code Flow with PKCE
+note over InAppBrowserTab: SDK will launch another in-app browser<br/>tab to handle the session check,<br/> and redirect back to the app with auth code
+InAppBrowserTab->>Okta: call OAuth /authorize
+note over Okta: session check
+opt no existing session
+  Okta->>InAppBrowserTab: Return /login/login.html
+  note over InAppBrowserTab: Load html, run JS redirect<br>since this is the fallback option, fromURI is not available<br>to /signin or /welcome/:token<br> with clientId param
+  InAppBrowserTab->>Gateway: Request /signin or /welcome/:token with clientId
+  Gateway->>InAppBrowserTab: Load /signin or /welcome/:token
+  note over InAppBrowserTab: User sign in with<br>email+password/social/set password<br>session set in browser<br>fromURI is not available<br>redirect to fallback URI<br>com.theguardian.app://identity/fallback
+end
+InAppBrowserTab->>NativeLayer: Redirect request com.theguardian.app://identity/fallback
+note over NativeLayer: Listen for custom URL scheme<br/>com.theguardian.app://identity/fallback<br>if this is called do the following
+NativeLayer->>InAppBrowserTab: Call `signin`/`signInWithBrowser`<br>with `prompt=none` parameter<br/>to perform<br />Authorization Code Flow with PKCE
+InAppBrowserTab->>Okta: call OAuth /authorize
+note over Okta: session check, session exists
+Okta->>InAppBrowserTab: Redirect request to app with the `auth_code` parameter<br/>oauth redirect_uri
+InAppBrowserTab->>NativeLayer: Handle redirect request<br/>in-app browser tab to app<br/>oauth redirect_uri?auth_code={code}
+NativeLayer->>Okta: SDK uses auth_code to call OAuth /token to get OAuth tokens
+Okta->>NativeLayer: Return tokens to SDK
+note over NativeLayer: the SDK manages the tokens, which can now be used to<br/>authenticate requests, and for checking the user's<br/>session
+```

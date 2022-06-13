@@ -80,6 +80,7 @@ export type ApiRoutePaths =
   | '/users/me/newsletters';
 
 export type OktaApiRoutePaths =
+  | '/api/v1/apps/:id'
   | '/api/v1/authn'
   | '/api/v1/authn/credentials/reset_password'
   | '/api/v1/authn/recovery/password'
