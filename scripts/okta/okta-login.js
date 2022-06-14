@@ -26,9 +26,9 @@
 
   // Variable holders for the Okta params we want to pass to our own login page
   // This is the URI to redirect to after the user has logged in and has a session set to complete the Authorization Code Flow from the SDK.
-  var fromURI = undefined;
+  var fromURI;
   // This is the client ID of the application that is calling the SDK and in turn performing the Authorization Code Flow. This parameter can be used to customise the experience our pages. We attempt to get it from the OktaUtil object, with the existing search parameters as a fallback option
-  var clientId = undefined;
+  var clientId;
 
   // force fallback flag, used to test fallback behaviour
   var forceFallback = searchParams.get('force_fallback');
@@ -61,8 +61,12 @@
   }
 
   // add the parameters to the params class
-  params.set('fromURI', fromURI);
-  params.set('appClientId', clientId);
+  if (fromURI) {
+    params.set('fromURI', fromURI);
+  }
+  if (clientId) {
+    params.set('appClientId', clientId);
+  }
   // set the useOkta flag
   params.set('useOkta', 'true');
 
