@@ -60,5 +60,5 @@ else
 fi
 
 echo "opening cypress"
-yarn cypress open --env $CI_ENV --config '{"testFiles":["mocked/**/*.ts"]}'
+yarn cypress open --env $CI_ENV --config '{"e2e":{"specPattern":["**/mocked/**/*.cy.ts"]}}' --e2e --browser chrome
 

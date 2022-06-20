@@ -1,4 +1,4 @@
-import * as SignIn from '../ete/sign_in/sign_in.shared';
+import * as SignIn from '../shared/sign_in.shared';
 
 describe('Sign in flow, Okta enabled', () => {
   beforeEach(() => {

@@ -53,7 +53,7 @@ jobs:
           role-to-assume: ${{ secrets.AWS_SES_SEND_EMAIL_ROLE_ARN }}
           aws-region: eu-west-1
       - name: Cypress run
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v4
         env:
           PORT: 8861
           ENVIRONMENT: production
@@ -107,8 +107,8 @@ jobs:
           wait-on: 'https://profile.thegulocal.com/healthcheck'
           wait-on-timeout: 60
           browser: chrome
-          spec: cypress/integration/ete-okta/**/*.ts
-          config: '{"chromeWebSecurity": false,"baseUrl":"https://profile.thegulocal.com","numTestsKeptInMemory":"1"}'
+          spec: cypress/integration/ete-okta/**/*.cy.ts
+          config: '{"chromeWebSecurity": false,"baseUrl":"https://profile.thegulocal.com","numTestsKeptInMemory":"1","e2e":{"specPattern": ["cypress/integration/ete-okta/**/*.cy.ts"]}}'
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
