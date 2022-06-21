@@ -146,7 +146,7 @@ export const ConsentsConfirmation = ({
         <p css={[text, autoRow()]}>
           You now have an account with the Guardian and you can manage your
           preferences and options at anytime under&nbsp;
-          <ExternalLink href={locations.MMA_EMAIL_PREFERENCES} subdued={true}>
+          <ExternalLink href={locations.MMA_EMAIL_PREFERENCES}>
             Emails &amp; marketing
           </ExternalLink>
           .
@@ -208,7 +208,7 @@ export const ConsentsConfirmation = ({
       {anyConsents && (
         <p css={[marketingText, paddingTop, autoRow()]}>
           You can change these anytime in your account under&nbsp;
-          <ExternalLink href={locations.MMA_EMAIL_PREFERENCES} subdued={true}>
+          <ExternalLink href={locations.MMA_EMAIL_PREFERENCES}>
             Emails &amp; marketing
           </ExternalLink>
           .
@@ -223,7 +223,7 @@ export const ConsentsConfirmation = ({
           <p css={[text, autoRow()]}>Didn’t find anything you like?</p>
           <p css={[text, autoRow()]}>
             We have over&nbsp;
-            <ExternalLink href={locations.MMA_EMAIL_PREFERENCES} subdued={true}>
+            <ExternalLink href={locations.MMA_EMAIL_PREFERENCES}>
               40 different newsletters
             </ExternalLink>
             &nbsp;that focus on a range of diverse topics - from politics to the

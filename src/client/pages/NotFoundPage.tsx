@@ -9,10 +9,7 @@ export const NotFoundPage = () => (
     <MainBodyText>
       You may have followed an outdated link, or have mistyped a URL. If you
       believe this to be an error, please{' '}
-      <ExternalLink href={locations.REPORT_ISSUE} subdued={true}>
-        report it
-      </ExternalLink>
-      .
+      <ExternalLink href={locations.REPORT_ISSUE}>report it</ExternalLink>.
     </MainBodyText>
   </MainLayout>
 );

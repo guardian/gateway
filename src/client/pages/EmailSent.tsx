@@ -61,10 +61,7 @@ export const EmailSent = ({
       {previousPage && (
         <MainBodyText>
           Wrong email address?{' '}
-          <Link subdued href={previousPage}>
-            Change email address
-          </Link>
-          .
+          <Link href={previousPage}>Change email address</Link>.
         </MainBodyText>
       )}
       {email && resendEmailAction && (
@@ -84,9 +81,7 @@ export const EmailSent = ({
                     </b>
                     <br />
                     Don’t have an account?{' '}
-                    <Link subdued href={buildUrl('/register')}>
-                      Register for free
-                    </Link>
+                    <Link href={buildUrl('/register')}>Register for free</Link>
                   </>
                 )}
               </>
@@ -111,7 +106,6 @@ export const EmailSent = ({
               cssOverrides={css`
                 font-weight: 700;
               `}
-              subdued
               href="mailto:userhelp@theguardian.com"
             >
               userhelp@guardian.com

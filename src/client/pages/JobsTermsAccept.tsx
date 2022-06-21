@@ -167,10 +167,7 @@ export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
             />
           </MainForm>
           <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
-            Or{' '}
-            <Link subdued={true} href={'/signout'}>
-              sign out and continue
-            </Link>
+            Or <Link href={'/signout'}>sign out and continue</Link>
           </MainBodyText>
         </>
       )}

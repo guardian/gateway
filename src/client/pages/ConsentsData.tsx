@@ -207,16 +207,14 @@ export const ConsentsData = ({ profiling, advertising }: ConsentsDataProps) => {
         <div css={[marketingText, gridRow, subGridOverrides]}>
           <p css={[autoSwitchRow()]}>
             You can change your settings under&nbsp;
-            <ExternalLink href={locations.MMA_EMAIL_PREFERENCES} subdued={true}>
+            <ExternalLink href={locations.MMA_EMAIL_PREFERENCES}>
               Emails &amp; marketing
             </ExternalLink>
             &nbsp;on your Guardian account at any time.
           </p>
           <p css={[autoSwitchRow()]}>
             Learn how we use data in our{' '}
-            <ExternalLink href={locations.PRIVACY} subdued={true}>
-              privacy policy
-            </ExternalLink>
+            <ExternalLink href={locations.PRIVACY}>privacy policy</ExternalLink>
             .
           </p>
         </div>
