@@ -229,7 +229,6 @@ export const SignIn = ({
           </div>
           <Links>
             <Link
-              subdued={true}
               href={buildUrlWithQueryParams('/reset-password', {}, queryParams)}
               cssOverrides={resetPassword}
             >

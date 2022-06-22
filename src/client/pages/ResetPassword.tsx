@@ -72,7 +72,7 @@ export const ResetPassword = ({
       {showNoAccessEmail && (
         <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
           If you no longer have access to this email account please{' '}
-          <ExternalLink subdued href={locations.REPORT_ISSUE}>
+          <ExternalLink href={locations.REPORT_ISSUE}>
             contact our help department
           </ExternalLink>
         </MainBodyText>
@@ -85,7 +85,7 @@ export const ResetPassword = ({
             <>
               If you are having trouble, please contact our customer service
               team at{' '}
-              <ExternalLink subdued href={locations.REPORT_ISSUE}>
+              <ExternalLink href={locations.REPORT_ISSUE}>
                 userhelp@guardian.com
               </ExternalLink>
             </>

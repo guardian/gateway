@@ -39,7 +39,7 @@ export const MagicLink = ({ email, recaptchaSiteKey }: Props) => {
       </MainForm>
       <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
         If you no longer have access to this email account please{' '}
-        <ExternalLink subdued href={locations.REPORT_ISSUE}>
+        <ExternalLink href={locations.REPORT_ISSUE}>
           contact our help department
         </ExternalLink>
       </MainBodyText>

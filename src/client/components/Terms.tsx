@@ -23,7 +23,6 @@ const TermsLink = ({
   href: string;
 }) => (
   <ExternalLink
-    subdued={true}
     cssOverrides={css`
       ${textSans.xxsmall()}
     `}
