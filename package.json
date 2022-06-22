@@ -131,7 +131,7 @@
     "@guardian/source-foundations": "^5.0.0",
     "@guardian/source-react-components": "^5.0.0",
     "@guardian/source-react-components-development-kitchen": "^1.0.1",
-    "@sentry/browser": "^6.19.7",
+    "@sentry/browser": "^7.2.0",
     "@sentry/tracing": "^6.19.7",
     "@types/supertest": "^2.0.12",
     "awesome-debounce-promise": "^2.1.0",
