@@ -30,3 +30,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           # 👇 Chromatic projectToken, refer to the manage page to obtain it.
           projectToken: ${{ secrets.CHROMATIC_APP_CODE }}
+          # Turn on Turbosnap, so we try to check only components that
+          # have changed using the webpack dependency graph.
+          # https://www.chromatic.com/docs/turbosnap
+          onlyChanged: '!(main)' # only turbosnap on non-main branches
