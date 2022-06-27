@@ -6,7 +6,7 @@ import {
 } from '@guardian/source-react-components';
 import React, { useState } from 'react';
 import { css } from '@emotion/react';
-import { neutral, height } from '@guardian/source-foundations';
+import { neutral, height, focusHalo } from '@guardian/source-foundations';
 import {
   disableAutofillBackground,
   noBorderRadius,
@@ -105,6 +105,9 @@ const EyeSymbol = ({
     padding-top: 4px;
     margin-left: 0;
     margin-right: 0;
+    :focus {
+      ${focusHalo};
+    }
   `;
 
   return (
