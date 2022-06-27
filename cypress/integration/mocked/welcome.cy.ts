@@ -41,7 +41,7 @@ describe('Welcome and set password page', () => {
           value: 'FAKE_VALUE_2',
         },
       ],
-      expiresAt: 'tomorrow',
+      expiresAt: new Date(Date.now() + 1800000 /* 30min */).toISOString(),
     },
   };
 

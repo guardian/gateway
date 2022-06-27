@@ -77,7 +77,7 @@ describe('Sign in flow', () => {
       cy.mockNext(200, {
         cookies: {
           values: [{ key: 'key', value: 'value' }],
-          expiresAt: 'tomorrow',
+          expiresAt: new Date(Date.now() + 1800000 /* 30min */).toISOString(),
         },
       });
       cy.get('[data-cy=sign-in-button]').click();
@@ -97,7 +97,7 @@ describe('Sign in flow', () => {
       cy.mockNext(200, {
         cookies: {
           values: [{ key: 'key', value: 'value' }],
-          expiresAt: 'tomorrow',
+          expiresAt: new Date(Date.now() + 1800000 /* 30min */).toISOString(),
         },
       });
       cy.get('[data-cy=sign-in-button]').click();
@@ -223,7 +223,7 @@ describe('Sign in flow', () => {
       cy.mockNext(200, {
         cookies: {
           values: [{ key: 'SC_GU_U', value: 'something' }],
-          expiresAt: 'tomorrow',
+          expiresAt: new Date(Date.now() + 1800000 /* 30min */).toISOString(),
         },
       });
       cy.get('[data-cy=sign-in-button]').click();
