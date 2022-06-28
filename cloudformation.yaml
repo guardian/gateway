@@ -600,7 +600,10 @@ Resources:
             Metric:
               Namespace: Gateway
               MetricName: 'SignIn::Success'
-            Period: 60
+              Dimensions:
+                - Name: Stage
+                  Value: !Ref 'Stage'
+            Period: 1200
             Stat: Sum
             Unit: Count
           ReturnData: false
@@ -609,21 +612,20 @@ Resources:
             Metric:
               Namespace: Gateway
               MetricName: 'OktaSignIn::Success'
-            Period: 60
+              Dimensions:
+                - Name: Stage
+                  Value: !Ref 'Stage'
+            Period: 1200
             Stat: Sum
             Unit: Count
           ReturnData: false
       ComparisonOperator: LessThanThreshold
       Threshold: 1
-      Period: 1200
       EvaluationPeriods: 1
       AlarmActions:
         - !Ref 'TopicSendEmail'
       InsufficientDataActions:
         - !Ref 'TopicSendEmail'
-      Dimensions:
-        - Name: Stage
-          Value: !Ref 'Stage'
   RegisterInactivityAlarm:
     Type: AWS::CloudWatch::Alarm
     Condition: IsProd
@@ -641,7 +643,10 @@ Resources:
             Metric:
               Namespace: Gateway
               MetricName: 'Register::Success'
-            Period: 60
+              Dimensions:
+                - Name: Stage
+                  Value: !Ref 'Stage'
+            Period: 3600
             Stat: Sum
             Unit: Count
           ReturnData: false
@@ -650,18 +655,17 @@ Resources:
             Metric:
               Namespace: Gateway
               MetricName: 'OktaRegistration::Success'
-            Period: 60
+              Dimensions:
+                - Name: Stage
+                  Value: !Ref 'Stage'
+            Period: 3600
             Stat: Sum
             Unit: Count
           ReturnData: false
       ComparisonOperator: LessThanThreshold
       Threshold: 1
-      Period: 3600
       EvaluationPeriods: 1
       AlarmActions:
         - !Ref 'TopicSendEmail'
       InsufficientDataActions:
         - !Ref 'TopicSendEmail'
-      Dimensions:
-        - Name: Stage
-          Value: !Ref 'Stage'
