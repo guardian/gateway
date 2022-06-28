@@ -591,9 +591,28 @@ Resources:
         - '${Priority} - ${App} ${Stage} has had no new sign-ins in the last 20 minutes'
         - Priority: !FindInMap [StageVariables, AlarmPriorities, P1]
       AlarmDescription: No one has successfully signed ins in the last 20 minutes.
-      Namespace: Gateway
-      MetricName: 'SignIn::Success'
-      Statistic: Sum
+      Metrics:
+        - Id: totalSignInCount
+          Expression: idapiSignInCount + oktaSignInCount
+          Label: 'Total sign-ins between IDAPI and Okta'
+        - Id: idapiSignInCount
+          MetricStat:
+            Metric:
+              Namespace: Gateway
+              MetricName: 'SignIn::Success'
+            Period: 60
+            Stat: Sum
+            Unit: Count
+          ReturnData: false
+        - Id: oktaSignInCount
+          MetricStat:
+            Metric:
+              Namespace: Gateway
+              MetricName: 'OktaSignIn::Success'
+            Period: 60
+            Stat: Sum
+            Unit: Count
+          ReturnData: false
       ComparisonOperator: LessThanThreshold
       Threshold: 1
       Period: 1200
@@ -613,9 +632,28 @@ Resources:
         - '${Priority} - ${App} ${Stage} has had no new registrations in the last hour'
         - Priority: !FindInMap [StageVariables, AlarmPriorities, P1]
       AlarmDescription: No one has successfully registered in the last hour.
-      Namespace: Gateway
-      MetricName: 'SignIn::Failure'
-      Statistic: Sum
+      Metrics:
+        - Id: totalRegistrationCount
+          Expression: idapiRegistrationCount + oktaRegistrationCount
+          Label: 'Total sign-ins between IDAPI and Okta'
+        - Id: idapiRegistrationCount
+          MetricStat:
+            Metric:
+              Namespace: Gateway
+              MetricName: 'Register::Success'
+            Period: 60
+            Stat: Sum
+            Unit: Count
+          ReturnData: false
+        - Id: oktaRegistrationCount
+          MetricStat:
+            Metric:
+              Namespace: Gateway
+              MetricName: 'OktaRegistration::Success'
+            Period: 60
+            Stat: Sum
+            Unit: Count
+          ReturnData: false
       ComparisonOperator: LessThanThreshold
       Threshold: 1
       Period: 3600
