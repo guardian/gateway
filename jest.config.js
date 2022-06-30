@@ -12,6 +12,7 @@ module.exports = {
     '<rootDir>/cypress/',
     '<rootDir>/node_modules/',
     'utils',
+    '<rootDir>/src/server/lib/__tests__/sharedConfig.ts',
   ],
   globals: {
     'ts-jest': {
