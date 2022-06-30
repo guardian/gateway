@@ -302,10 +302,13 @@ const handleUserResponse = async (
           id: user.id,
           status: user.status,
           profile: {
+            firstName: user.profile.firstName,
+            lastName: user.profile.lastName,
             email: user.profile.email,
             login: user.profile.login,
             isGuardianUser: user.profile.isGuardianUser,
             emailValidated: user.profile.emailValidated,
+            isJobsUser: user.profile.isJobsUser,
           },
           credentials: user.credentials,
         };
