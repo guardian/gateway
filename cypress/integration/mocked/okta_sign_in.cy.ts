@@ -114,19 +114,15 @@ describe('Sign in flow', () => {
         },
       });
 
-      cy.mockNext(200, {
-        id: 'okta-id',
-        passwordChanged: '2020-01-01T00:00:00.000Z',
-        profile: {
-          login: 'test.man1@example.com',
-          emailValidated: true,
-          firstName: 'Test',
-          lastName: 'Man',
-          locale: 'en_GB',
-          timeZone: 'Europe/London',
-          email: 'test.man1@example.com',
+      cy.mockNext(200, [
+        {
+          id: '123',
+          profile: {
+            name: 'GuardianUser-EmailValidated',
+            description: 'User has validated their email',
+          },
         },
-      });
+      ]);
 
       // we can't actually check the authorization code flow
       // so intercept the request and redirect to the guardian about page
@@ -171,18 +167,8 @@ describe('Sign in flow', () => {
           },
         },
       });
-      cy.mockNext(200, {
-        id: 'okta-id',
-        passwordChanged: '2020-01-01T00:00:00.000Z',
-        profile: {
-          login: 'test.man@example.com',
-          firstName: 'Test',
-          lastName: 'Man',
-          locale: 'en_GB',
-          timeZone: 'Europe/London',
-          emailValidated: false,
-        },
-      });
+      //User is not in the email validated group, so we return an empty response for the group membership api
+      cy.mockNext(200, []);
 
       cy.mockNext(200, {
         cookies: {
@@ -202,7 +188,6 @@ describe('Sign in flow', () => {
     it('errors upon Okta non success status  but with unvalidated user and will not try IDAPI authentication', function () {
       // authentication can result in many non success status values - https://developer.okta.com/docs/reference/api/authn/#transaction-state
 
-      const returnUrl = 'https://profile.thegulocal.com/healthcheck';
       cy.visit(
         '/signin?returnUrl=https%3A%2F%2Fprofile.thegulocal.com%2Fhealthcheck&useOkta=true',
       );
@@ -227,18 +212,8 @@ describe('Sign in flow', () => {
           },
         },
       });
-      cy.mockNext(200, {
-        id: 'okta-id',
-        passwordChanged: '2020-01-01T00:00:00.000Z',
-        profile: {
-          login: 'test.man@example.com',
-          firstName: 'Test',
-          lastName: 'Man',
-          locale: 'en_GB',
-          timeZone: 'Europe/London',
-          emailValidated: false,
-        },
-      });
+      //User is not in the email validated group, so we return an empty response for the group membership api
+      cy.mockNext(200, []);
 
       cy.mockNext(200, {
         cookies: {
@@ -275,19 +250,15 @@ describe('Sign in flow', () => {
         },
       });
 
-      cy.mockNext(200, {
-        id: 'okta-id',
-        passwordChanged: '2020-01-01T00:00:00.000Z',
-        profile: {
-          login: 'test.man1@example.com',
-          emailValidated: true,
-          firstName: 'Test',
-          lastName: 'Man',
-          locale: 'en_GB',
-          timeZone: 'Europe/London',
-          email: 'test.man1@example.com',
+      cy.mockNext(200, [
+        {
+          id: '123',
+          profile: {
+            name: 'GuardianUser-EmailValidated',
+            description: 'User has validated their email',
+          },
         },
-      });
+      ]);
 
       cy.get('[data-cy=sign-in-button]').click();
       // we can't actually check the authorization code flow

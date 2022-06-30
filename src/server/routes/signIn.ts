@@ -27,7 +27,7 @@ import postSignInController from '@/server/lib/postSignInController';
 import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
 import { getSession } from '../lib/okta/api/sessions';
 import { redirectIfLoggedIn } from '../lib/middleware/redirectIfLoggedIn';
-import { getUser } from '../lib/okta/api/users';
+import { getUserGroups } from '../lib/okta/api/users';
 
 const { okta, accountManagementUrl, oauthBaseUrl } = getConfiguration();
 
@@ -261,10 +261,15 @@ const oktaSignInController = async (
     // If the user was able to log in with Okta BUT NOT VALIDATED, we will still try and sign them in with Identity
     // This is because we will initally block unvalidated users from getting Okta sessions, but still allow them
     // Identity sessions.
+    // We use the groups api to get the group membership, rather than checking the email validated field because
+    // social users do not have the email validated flag set until after they login for the first time (but are in the email validated group)
 
     if (response._embedded?.user.id) {
-      const user = await getUser(response._embedded.user.id);
-      if (!user.profile.emailValidated) {
+      const groups = await getUserGroups(response._embedded.user.id);
+      const emailValidated = groups.some(
+        (group) => group.profile.name === 'GuardianUser-EmailValidated',
+      );
+      if (!emailValidated) {
         return idapiSignInController(req, res);
       }
     }
