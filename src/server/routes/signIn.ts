@@ -245,6 +245,16 @@ const oktaSignInController = async (
       password,
     });
 
+    // we only support the SUCESSS status for Okta authetication in gateway
+    // Other statuses could be supported in the future https://developer.okta.com/docs/reference/api/authn/#transaction-state
+    if (response.status !== 'SUCCESS') {
+      throw new ApiError({
+        message:
+          'User autheticating was blocked due to unsupported Okta Authenetication status property',
+        status: 403,
+      });
+    }
+
     // we're authenticated track this metric
     trackMetric('OktaSignIn::Success');
 

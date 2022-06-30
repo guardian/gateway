@@ -155,6 +155,7 @@ const handleAuthenticationResponse = async (
           sessionToken: token.sessionToken,
           expiresAt: token.expiresAt,
           _embedded: token._embedded,
+          status: token.status,
         };
       });
     } catch (error) {

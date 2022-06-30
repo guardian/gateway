@@ -187,7 +187,7 @@ describe('Sign in flow', () => {
       cy.mockNext(200, {
         cookies: {
           values: [{ key: 'SC_GU_U', value: 'value' }],
-          expiresAt: 'tomorrow',
+          expiresAt: new Date(Date.now() + 1800000 /* 30min */).toISOString(),
         },
       });
 
@@ -197,6 +197,59 @@ describe('Sign in flow', () => {
 
       cy.getCookie('sid').should('not.exist');
       cy.getCookie('SC_GU_U').should('exist');
+    });
+
+    it('errors upon Okta non success status  but with unvalidated user and will not try IDAPI authentication', function () {
+      // authentication can result in many non success status values - https://developer.okta.com/docs/reference/api/authn/#transaction-state
+
+      const returnUrl = 'https://profile.thegulocal.com/healthcheck';
+      cy.visit(
+        '/signin?returnUrl=https%3A%2F%2Fprofile.thegulocal.com%2Fhealthcheck&useOkta=true',
+      );
+      cy.get('input[name="email"]').type('example@example.com');
+      cy.get('input[name="password"]').type('password');
+
+      cy.mockNext(200, {
+        expiresAt: '3000-01-01T00:00:00.000Z',
+        status: 'MFA_CHALLENGE',
+        sessionToken: 'some-session-token',
+        _embedded: {
+          user: {
+            id: 'okta-id',
+            passwordChanged: '2020-01-01T00:00:00.000Z',
+            profile: {
+              login: 'test.man@example.com',
+              firstName: 'Test',
+              lastName: 'Man',
+              locale: 'en_GB',
+              timeZone: 'Europe/London',
+            },
+          },
+        },
+      });
+      cy.mockNext(200, {
+        id: 'okta-id',
+        passwordChanged: '2020-01-01T00:00:00.000Z',
+        profile: {
+          login: 'test.man@example.com',
+          firstName: 'Test',
+          lastName: 'Man',
+          locale: 'en_GB',
+          timeZone: 'Europe/London',
+          emailValidated: false,
+        },
+      });
+
+      cy.mockNext(200, {
+        cookies: {
+          values: [{ key: 'SC_GU_U', value: 'value' }],
+          expiresAt: new Date(Date.now() + 1800000 /* 30min */).toISOString(),
+        },
+      });
+
+      cy.get('[data-cy=sign-in-button]').click();
+
+      cy.contains('There was a problem signing in, please try again.');
     });
 
     it('redirects to the default url if no redirectUrl given', function () {
