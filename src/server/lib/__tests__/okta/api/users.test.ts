@@ -9,6 +9,7 @@ import {
   getUser,
   reactivateUser,
   dangerouslyResetPassword,
+  getUserGroups,
 } from '@/server/lib/okta/api/users';
 import { OktaError } from '@/server/models/okta/Error';
 import { UserCreationRequest } from '@/server/models/okta/User';
@@ -186,6 +187,50 @@ describe('okta#fetchUser', () => {
     );
 
     await expect(getUser(userId)).rejects.toThrowError(
+      new OktaError({ message: 'Not found: Resource not found: 12345 (User)' }),
+    );
+  });
+});
+
+describe('okta#getUserGroups', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('should return an array of user groups', async () => {
+    const groups = [
+      {
+        id: '0gabcd1234',
+        profile: {
+          name: 'Cloud App Users',
+          description: 'Users can access cloud apps',
+        },
+      },
+    ];
+
+    json.mockResolvedValueOnce(groups);
+    mockedFetch.mockReturnValueOnce(
+      Promise.resolve({ ok: true, json } as Response),
+    );
+
+    const response = await getUserGroups(userId);
+    expect(response).toEqual(groups);
+  });
+
+  test('should throw an error if user is not found', async () => {
+    const userNotFound = {
+      errorCode: 'E0000007',
+      errorSummary: 'Not found: Resource not found: 12345 (User)',
+      errorLink: 'E0000007',
+      errorId: '123456',
+    };
+
+    json.mockResolvedValueOnce(userNotFound);
+    mockedFetch.mockReturnValueOnce(
+      Promise.resolve({ ok: false, status: 404, json } as Response),
+    );
+
+    await expect(getUserGroups(userId)).rejects.toThrowError(
       new OktaError({ message: 'Not found: Resource not found: 12345 (User)' }),
     );
   });

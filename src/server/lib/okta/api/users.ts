@@ -18,6 +18,7 @@ import { handleVoidResponse } from '@/server/lib/okta/api/responses';
 import { Response } from 'node-fetch';
 import { OktaError } from '@/server/models/okta/Error';
 import { handleErrorResponse } from '@/server/lib/okta/api/errors';
+import { Group } from '@/server/models/okta/Group';
 
 const { okta } = getConfiguration();
 
@@ -87,6 +88,24 @@ export const getUser = async (id: string): Promise<UserResponse> => {
   return fetch(joinUrl(okta.orgUrl, path), {
     headers: { ...defaultHeaders, ...authorizationHeader() },
   }).then(handleUserResponse);
+};
+
+/**
+ * @name getUserGroups
+ * @description Get a users groups by User ID
+ *
+ * https://developer.okta.com/docs/reference/api/users/#get-user-s-groups
+ *
+ * @param id accepts the Okta user ID, email address (login) or login shortname (as long as it is unambiguous)
+ *
+ * @returns Promise<Group[]>
+ */
+
+export const getUserGroups = async (id: string): Promise<Group[]> => {
+  const path = buildUrl('/api/v1/users/:id/groups', { id });
+  return fetch(joinUrl(okta.orgUrl, path), {
+    headers: { ...defaultHeaders, ...authorizationHeader() },
+  }).then(handleGroupsResponse);
 };
 
 /**
@@ -294,6 +313,36 @@ const handleUserResponse = async (
     } catch (error) {
       throw new OktaError({
         message: 'Could not parse Okta user response',
+      });
+    }
+  } else {
+    return await handleErrorResponse(response);
+  }
+};
+
+/**
+ * @name handleGroupsResponse
+ * @description Handles the response from Okta's /users/:id/groups endpoint
+ * and converts it to an array of Group
+ * @param response node-fetch response object
+ * @returns Promise<Group[]>
+ */
+const handleGroupsResponse = async (response: Response): Promise<Group[]> => {
+  if (response.ok) {
+    try {
+      return await response.json().then((json) => {
+        const groups = json as Group[];
+        return groups.map((group) => ({
+          id: group.id,
+          profile: {
+            name: group.profile.name,
+            description: group.profile.description,
+          },
+        }));
+      });
+    } catch (error) {
+      throw new OktaError({
+        message: 'Could not parse Okta user group response',
       });
     }
   } else {
