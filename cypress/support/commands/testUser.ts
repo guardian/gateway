@@ -18,6 +18,7 @@ declare global {
       getTestUserDetails: typeof getTestUserDetails;
       addToGRS: typeof addToGRS;
       updateTestUser: typeof updateTestUser;
+      updateOktaTestUserProfile: typeof updateOktaTestUserProfile;
     }
   }
 }
@@ -38,7 +39,9 @@ type IDAPITestUserOptions = {
   isGuestUser?: boolean;
 };
 
-interface User {
+/* More fields exist in the user profile, but we only care about the ones we define in the interfaces below. */
+
+interface IDAPIUserProfile {
   privateFields: {
     firstName?: string;
     secondName?: string;
@@ -48,6 +51,12 @@ interface User {
     packageCode: string;
     joinedDate: string;
   }[];
+}
+
+interface OktaUserProfile {
+  isJobsUser?: boolean;
+  firstName?: string;
+  lastName?: string;
 }
 
 type IDAPITestUserResponse = [
@@ -86,11 +95,12 @@ export const getTestUserDetails = () =>
           )}`,
           'X-GU-ID-FOWARDED-SC-GU-U': cookie?.value,
         },
+        retryOnStatusCodeFailure: true,
       })
       .then((res) =>
         cy.wrap({
           status: res.body.status,
-          user: res.body.user as User,
+          user: res.body.user as IDAPIUserProfile,
         }),
       ),
   );
@@ -110,6 +120,7 @@ export const updateTestUser = (body: object) =>
           'X-GU-ID-FOWARDED-SC-GU-U': cookie?.value,
         },
         body: JSON.stringify(body) || undefined,
+        retryOnStatusCodeFailure: true,
       })
       .then((res) => {
         cy.wrap({
@@ -132,6 +143,7 @@ export const addToGRS = () =>
           )}`,
           'X-GU-ID-FOWARDED-SC-GU-U': cookie?.value,
         },
+        retryOnStatusCodeFailure: true,
       })
       .then((res) => {
         cy.wrap({
@@ -203,6 +215,33 @@ export const getTestOktaUser = (id: string) => {
     throw new Error('Failed to create Okta test user: ' + error);
   }
 };
+
+export const updateOktaTestUserProfile = (
+  id: string,
+  profile: OktaUserProfile,
+) => {
+  try {
+    return cy
+      .request({
+        url: `${Cypress.env('OKTA_ORG_URL')}/api/v1/users/${id}`,
+        method: 'POST',
+        headers: {
+          Authorization: `SSWS ${Cypress.env('OKTA_API_TOKEN')}`,
+        },
+        body: {
+          profile,
+        },
+        retryOnStatusCodeFailure: true,
+      })
+      .then((res) => {
+        const token = res.body as TokenResponse;
+        return cy.wrap(token);
+      });
+  } catch (error) {
+    throw new Error('Failed to update Okta test user: ' + error);
+  }
+};
+
 export const activateTestOktaUser = (id: string) => {
   try {
     return cy

@@ -70,7 +70,10 @@ const IDAPIAgreeGetController = async (
 
     return res.type('html').send(html);
   } catch (error) {
-    logger.error(`${req.method} ${req.originalUrl} Error`, error);
+    logger.error(
+      `${req.method} ${req.originalUrl} Error Updating Jobs user in IDAPI`,
+      error,
+    );
     // Redirect to /signin if an error occurs when fetching the users' data.
     return res.redirect(
       303,
@@ -130,7 +133,10 @@ const OktaAgreeGetController = async (
 
     return res.type('html').send(html);
   } catch (error) {
-    logger.error(`${req.method} ${req.originalUrl} Error`, error);
+    logger.error(
+      `${req.method} ${req.originalUrl} Error Updating Jobs user in Okta`,
+      error,
+    );
     // Redirect to /signin if an error occurs when fetching the users' data.
     return res.redirect(
       303,
