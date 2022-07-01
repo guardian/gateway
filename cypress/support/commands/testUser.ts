@@ -89,7 +89,6 @@ export const getTestUserDetails = () =>
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Origin: 'https://profile.thegulocal.com',
           'X-GU-ID-Client-Access-Token': `Bearer ${Cypress.env(
             'IDAPI_CLIENT_ACCESS_TOKEN',
           )}`,
@@ -113,7 +112,6 @@ export const updateTestUser = (body: object) =>
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Origin: 'https://profile.thegulocal.com',
           'X-GU-ID-Client-Access-Token': `Bearer ${Cypress.env(
             'IDAPI_CLIENT_ACCESS_TOKEN',
           )}`,
@@ -137,7 +135,6 @@ export const addToGRS = () =>
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Origin: 'https://profile.thegulocal.com',
           'X-GU-ID-Client-Access-Token': `Bearer ${Cypress.env(
             'IDAPI_CLIENT_ACCESS_TOKEN',
           )}`,

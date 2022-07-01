@@ -43,7 +43,7 @@ export const setupJobsUserInIDAPI = (
   // they try to sign in to the Jobs site for the first time.
   //
   // We can resolve both promises here because they are not dependent on each other.
-  return Promise.all([
+  return Promise.allSettled([
     updateName(firstName, secondName, ip, sc_gu_u),
     addToGroup(GroupCode.GRS, ip, sc_gu_u),
   ]);
