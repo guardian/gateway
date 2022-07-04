@@ -42,7 +42,7 @@
     "@babel/preset-react": "^7.16.7",
     "@babel/preset-typescript": "^7.17.12",
     "@emotion/babel-preset-css-prop": "^11.2.0",
-    "@guardian/eslint-plugin-source-foundations": "^5.0.0",
+    "@guardian/eslint-plugin-source-foundations": "^5.0.1",
     "@guardian/eslint-plugin-source-react-components": "^5.0.0",
     "@guardian/node-riffraff-artifact": "^0.3.2",
     "@storybook/addon-actions": "^6.5.9",
