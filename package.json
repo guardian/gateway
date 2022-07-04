@@ -82,7 +82,7 @@
     "babel-loader": "^8.2.5",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "chalk-rainbow": "^1.0.0",
-    "chromatic": "^6.6.4",
+    "chromatic": "^6.7.0",
     "copy-webpack-plugin": "^11.0.0",
     "cypress": "^10.2.0",
     "cypress-axe": "^1.0.0",
