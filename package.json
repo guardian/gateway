@@ -163,7 +163,7 @@
     "serialize-javascript": "^6.0.0",
     "supertest": "^6.2.3",
     "timeout-signal": "^1.1.0",
-    "winston": "^3.8.0",
+    "winston": "^3.8.1",
     "winston-transport": "^4.5.0",
     "zod": "^3.17.3"
   }
