@@ -5300,25 +5300,10 @@ awesome-only-resolves-last-promise@^1.0.3:
   dependencies:
     awesome-imperative-promise "^1.0.1"
 
-aws-sdk@2.1162.0:
-  version "2.1162.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1162.0.tgz#e19ff30f255e5c4021eaf02a80ec0a368a4712a0"
-  integrity sha512-tRDAa5GOqSkphVR/Yhc8eyLcV9ZGTgmZ7kY5ODJDMw52Cd/92kXfe6YDoFWFLyeA/z5H9o/2uZ6+3CjU96Ap/g==
-  dependencies:
-    buffer "4.9.2"
-    events "1.1.1"
-    ieee754 "1.1.13"
-    jmespath "0.16.0"
-    querystring "0.2.0"
-    sax "1.2.1"
-    url "0.10.3"
-    uuid "8.0.0"
-    xml2js "0.4.19"
-
-aws-sdk@^2.946.0:
-  version "2.1149.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1149.0.tgz#c7a4e10ca898341bd736ca9ace6cbf19387bc274"
-  integrity sha512-wNb3YMLhXoK4UkjXhGAWMjRdrXT/Zhv3KdgPmd7VWlr3nXMViLwVJEEYdVmALUdkzCefdzY1JUTRLMgCxtn9EA==
+aws-sdk@2.1167.0, aws-sdk@^2.946.0:
+  version "2.1167.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1167.0.tgz#e8614bce1a7355782734b6928792f14d11b39231"
+  integrity sha512-hUJzAqWVfNYpct1S+GjyPIc2s+GZcAhbWVqIG4qbLYZ3+sBTcjv3lLH5zx7K+qcTGINDU0g4EsMi6hIrAU+blg==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
