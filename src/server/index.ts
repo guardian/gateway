@@ -1,19 +1,13 @@
-import { default as express, Express } from 'express';
+import createServer from '@/server/server';
 import { logger } from '@/server/lib/serverSideLogger';
-import { getConfiguration } from '@/server/lib/getConfiguration';
-import { applyMiddleware } from '@/server/lib/middleware';
 import redisClient from '@/server/lib/redis/redisClient';
 import { startGlobalBucketCapacityLogger } from '@/server/lib/rate-limit';
-
+import { getConfiguration } from '@/server/lib/getConfiguration';
 const { port, rateLimiter } = getConfiguration();
 
-const server: Express = express();
+const server = createServer();
 
-applyMiddleware(server);
-
-const serverInstance = server.listen(port);
-
-server.set('trust proxy', true);
+server.listen(port);
 
 logger.info(`server running on port ${port}`);
 
@@ -24,5 +18,3 @@ if (
 ) {
   startGlobalBucketCapacityLogger(redisClient, 5000);
 }
-
-export default serverInstance;
