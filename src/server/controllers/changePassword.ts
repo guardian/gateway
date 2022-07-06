@@ -31,7 +31,7 @@ import { OktaError } from '@/server/models/okta/Error';
 import { checkTokenInOkta } from '@/server/controllers/checkPasswordToken';
 import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
 import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
-import setupJobsUser from '../lib/jobs';
+import { setupJobsUserInIDAPI, setupJobsUserInOkta } from '../lib/jobs';
 
 const { okta } = getConfiguration();
 
@@ -75,7 +75,12 @@ const changePasswordInIDAPI = async (
     if (clientId === 'jobs' && path === '/welcome') {
       const SC_GU_U = cookies?.values.find(({ key }) => key === 'SC_GU_U');
       if (SC_GU_U) {
-        await setupJobsUser(firstName, secondName, req.ip, SC_GU_U.value);
+        await setupJobsUserInIDAPI(
+          firstName,
+          secondName,
+          req.ip,
+          SC_GU_U.value,
+        );
         trackMetric('JobsGRSGroupAgree::Success');
       }
     }
@@ -168,7 +173,8 @@ const changePasswordInOkta = async (
   successRedirectPath: RoutePaths,
 ) => {
   const { stateToken } = readEncryptedStateCookie(req) ?? {};
-  const { password } = req.body;
+  const { password, firstName, secondName } = req.body;
+  const { clientId } = req.query;
 
   try {
     validatePasswordFieldForOkta(password);
@@ -186,6 +192,18 @@ const changePasswordInOkta = async (
         logger.error(
           'Failed to set validation flags in Okta as there was no id',
         );
+      }
+
+      // When a jobs user is registering, we add them to the GRS group and set their name
+      if (clientId === 'jobs' && path === '/welcome') {
+        if (id) {
+          await setupJobsUserInOkta(firstName, secondName, id);
+          trackMetric('JobsGRSGroupAgree::Success');
+        } else {
+          logger.error(
+            'Failed to set jobs user name and field in Okta as there was no id',
+          );
+        }
       }
 
       trackMetric('OktaUpdatePassword::Success');
@@ -207,6 +225,11 @@ const changePasswordInOkta = async (
     }
   } catch (error) {
     logger.error('Okta change password failure', error);
+
+    // see the comment above around the success metrics
+    if (clientId === 'jobs' && path === '/welcome') {
+      trackMetric('JobsGRSGroupAgree::Failure');
+    }
 
     trackMetric('OktaUpdatePassword::Failure');
 

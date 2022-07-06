@@ -30,6 +30,7 @@ import {
   getTestUserDetails,
   addToGRS,
   updateTestUser,
+  updateOktaTestUserProfile,
 } from './commands/testUser';
 
 Cypress.Commands.add('mockNext', mockNext);
@@ -62,3 +63,4 @@ Cypress.Commands.add('getOktaUserGroups', getOktaUserGroups);
 Cypress.Commands.add('getTestUserDetails', getTestUserDetails);
 Cypress.Commands.add('updateTestUser', updateTestUser);
 Cypress.Commands.add('addToGRS', addToGRS);
+Cypress.Commands.add('updateOktaTestUserProfile', updateOktaTestUserProfile);

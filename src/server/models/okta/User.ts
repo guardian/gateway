@@ -15,6 +15,9 @@ interface UserProfile {
   googleExternalId?: string;
   appleExternalId?: string;
   facebookExternalId?: string;
+  isJobsUser?: boolean;
+  firstName?: string;
+  lastName?: string;
 }
 
 // https://developer.okta.com/docs/reference/api/users/#password-object
@@ -37,14 +40,20 @@ interface UserCredentials {
   provider: unknown;
 }
 
+type OktaUserFieldsInResponse =
+  | 'email'
+  | 'login'
+  | 'isGuardianUser'
+  | 'emailValidated'
+  | 'firstName'
+  | 'lastName'
+  | 'isJobsUser';
+
 // https://developer.okta.com/docs/reference/api/users/#user-object
 export interface UserResponse {
   id: string;
   status: string;
-  profile: Pick<
-    UserProfile,
-    'email' | 'login' | 'isGuardianUser' | 'emailValidated'
-  >;
+  profile: Pick<UserProfile, OktaUserFieldsInResponse>;
   credentials: UserCredentials;
 }
 
