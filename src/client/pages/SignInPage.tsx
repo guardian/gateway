@@ -3,7 +3,11 @@ import { SignIn } from '@/client/pages/SignIn';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { useRemoveEncryptedEmailParam } from '@/client/lib/hooks/useRemoveEncryptedEmailParam';
 
-export const SignInPage = () => {
+interface Props {
+  isReauthenticate?: boolean;
+}
+
+export const SignInPage = ({ isReauthenticate = false }: Props) => {
   const clientState = useClientState();
   const {
     pageData = {},
@@ -11,7 +15,7 @@ export const SignInPage = () => {
     queryParams,
     recaptchaConfig,
   } = clientState;
-  const { email, displayRegisterTab = true } = pageData;
+  const { email } = pageData;
   const { error } = globalMessage;
   const { recaptchaSiteKey } = recaptchaConfig;
 
@@ -23,7 +27,7 @@ export const SignInPage = () => {
       error={error}
       queryParams={queryParams}
       recaptchaSiteKey={recaptchaSiteKey}
-      displayRegisterTab={displayRegisterTab}
+      isReauthenticate={isReauthenticate}
     />
   );
 };

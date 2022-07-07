@@ -30,9 +30,7 @@ export type SignInProps = {
   email?: string;
   error?: string;
   recaptchaSiteKey: string;
-  // The register tab is hidden on the /reauthenticate version of the sign-in
-  // page, but displayed on the vanilla /signin version.
-  displayRegisterTab: boolean;
+  isReauthenticate?: boolean;
 };
 
 const passwordInput = css`
@@ -133,7 +131,7 @@ export const SignIn = ({
   error: pageLevelError,
   queryParams,
   recaptchaSiteKey,
-  displayRegisterTab,
+  isReauthenticate = false,
 }: SignInProps) => {
   const formTrackingName = 'sign-in';
   const signInFormRef = createRef<HTMLFormElement>();
@@ -192,9 +190,9 @@ export const SignIn = ({
     isActive: false,
   };
 
-  const tabs: TabType[] = displayRegisterTab
-    ? [signInTab, registerTab]
-    : [signInTab];
+  const tabs: TabType[] = isReauthenticate
+    ? [signInTab]
+    : [signInTab, registerTab];
 
   return (
     <>
@@ -214,7 +212,11 @@ export const SignIn = ({
       >
         <form
           method="post"
-          action={buildUrlWithQueryParams('/signin', {}, queryParams)}
+          action={buildUrlWithQueryParams(
+            isReauthenticate ? '/reauthenticate' : '/signin',
+            {},
+            queryParams,
+          )}
           ref={signInFormRef}
           onSubmit={handleSubmit}
           onFocus={(e) => trackFormFocusBlur(formTrackingName, e, 'focus')}
