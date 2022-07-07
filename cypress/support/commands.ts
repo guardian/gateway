@@ -31,6 +31,7 @@ import {
   addToGRS,
   updateTestUser,
   updateOktaTestUserProfile,
+  getCurrentOktaSession,
 } from './commands/testUser';
 
 Cypress.Commands.add('mockNext', mockNext);
@@ -64,3 +65,4 @@ Cypress.Commands.add('getTestUserDetails', getTestUserDetails);
 Cypress.Commands.add('updateTestUser', updateTestUser);
 Cypress.Commands.add('addToGRS', addToGRS);
 Cypress.Commands.add('updateOktaTestUserProfile', updateOktaTestUserProfile);
+Cypress.Commands.add('getCurrentOktaSession', getCurrentOktaSession);

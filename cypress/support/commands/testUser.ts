@@ -1,5 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
-import { TokenResponse, UserResponse } from '@/server/models/okta/User';
+import {
+  TokenResponse,
+  UserResponse,
+  SessionResponse,
+} from '@/server/models/okta/User';
 import { Group } from '@/server/models/okta/Group';
 
 declare global {
@@ -19,6 +23,7 @@ declare global {
       addToGRS: typeof addToGRS;
       updateTestUser: typeof updateTestUser;
       updateOktaTestUserProfile: typeof updateOktaTestUserProfile;
+      getCurrentOktaSession: typeof getCurrentOktaSession;
     }
   }
 }
@@ -394,5 +399,25 @@ export const findEmailValidatedOktaGroupId = () => {
     throw new Error(
       'Failed to get ID of GuardianUser-EmailValidated group: ' + error,
     );
+  }
+};
+
+export const getCurrentOktaSession = (sid: string) => {
+  try {
+    return cy
+      .request({
+        url: `${Cypress.env('OKTA_ORG_URL')}/api/v1/sessions/${sid}`,
+        method: 'GET',
+        headers: {
+          Authorization: `SSWS ${Cypress.env('OKTA_API_TOKEN')}`,
+        },
+        retryOnStatusCodeFailure: true,
+      })
+      .then((res) => {
+        const session = res.body as SessionResponse;
+        return cy.wrap(session);
+      });
+  } catch (error) {
+    throw new Error('Failed to get current Okta session: ' + error);
   }
 };
