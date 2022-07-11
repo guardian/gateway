@@ -12964,10 +12964,10 @@ mjml-body@4.12.0:
     lodash "^4.17.21"
     mjml-core "4.12.0"
 
-mjml-browser@^4.12.0:
-  version "4.12.0"
-  resolved "https://registry.yarnpkg.com/mjml-browser/-/mjml-browser-4.12.0.tgz#61a0458bac77479032814ced5e2b63edf84200d6"
-  integrity sha512-dD2DJmR2a5o4+LjB2u2Xt9nhE5YWJYD5+iVKpk2/oc50LMmX5KL6HcIbGJjYltt4ehtQADZPZ8YVsl11BgS0Zg==
+mjml-browser@^4.13.0:
+  version "4.13.0"
+  resolved "https://registry.yarnpkg.com/mjml-browser/-/mjml-browser-4.13.0.tgz#ff648cad8e37ea9056a9cdac8ff55d960e03d44f"
+  integrity sha512-ZlQNcw7sBzA36gjBM9In5v+85cXb+LFrC4QdTZq6pjCKyF/in1KmVM9PoYbBDl/HqwFbFC9uEv+HiAY6ZmfMxw==
 
 mjml-button@4.12.0:
   version "4.12.0"
