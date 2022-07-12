@@ -1,18 +1,19 @@
 import { BaseLogger } from '@/shared/lib/baseLogger';
 import { LogLevel } from '@/shared/model/Logger';
 import * as Sentry from '@sentry/browser';
+import { SeverityLevel } from '@sentry/browser';
 import { Extras } from '@sentry/types';
 
-const getSentryLevel = (level: LogLevel) => {
+const getSentryLevel = (level: LogLevel): SeverityLevel => {
   switch (level) {
     case LogLevel.ERROR:
-      return Sentry.Severity.Error;
+      return 'error';
     case LogLevel.INFO:
-      return Sentry.Severity.Info;
+      return 'info';
     case LogLevel.WARN:
-      return Sentry.Severity.Warning;
+      return 'warning';
     default:
-      return Sentry.Severity.Log;
+      return 'log';
   }
 };
 
