@@ -1,4 +1,4 @@
-import type Redis from 'ioredis';
+import Redis, { ChainableCommander } from 'ioredis';
 
 import type {
   ParsedRateLimitBucket,
@@ -60,7 +60,7 @@ import type {
 export const rateLimitBucket = (
   bucket: ParsedRateLimitBucket | undefined,
   bucketConfiguration: RateLimiterBucketConfiguration | undefined,
-  pipelinedWrites: Redis.Pipeline,
+  pipelinedWrites: ChainableCommander,
 ) => {
   // If either the bucket or the bucket configuration are undefined
   // we don't want to include this bucket in the rate limiting
@@ -128,7 +128,7 @@ export const rateLimitBucket = (
 };
 
 export const getBucketsFromRedis = async (
-  redisClient: Redis.Redis,
+  redisClient: Redis,
   bucketKeys: BucketKeys,
 ) => {
   const readPipeline = redisClient.pipeline();
@@ -161,22 +161,26 @@ export const getBucketsFromRedis = async (
 
 export const getPipelinedBucketData = (
   redisKey: string,
-  pipeline: Redis.Pipeline,
+  pipeline: ChainableCommander,
 ): PipelinedBucketData => {
   return {
     redisKey,
     tokenData: new Promise((res) =>
-      pipeline.get(redisKey, (error, data) => res({ error, data })),
+      pipeline.get(redisKey, (error, data) =>
+        res({ error: error ?? null, data: data ?? null }),
+      ),
     ),
     timeLeftUntilExpiry: new Promise((res) =>
-      pipeline.pttl(redisKey, (error, data) => res({ error, data })),
+      pipeline.pttl(redisKey, (error, data) =>
+        res({ error: error ?? null, data: data ?? null }),
+      ),
     ),
   };
 };
 
 const getBucket = async (
   key: string,
-  pipeline: Redis.Pipeline,
+  pipeline: ChainableCommander,
 ): Promise<ParsedRateLimitBucket> => {
   const pipelinedBucketData = getPipelinedBucketData(key, pipeline);
 
