@@ -14,7 +14,7 @@ export default {
     queryParams: {
       returnUrl: 'https://www.theguardian.com/uk',
     },
-    displayRegisterTab: true,
+    isReauthenticate: false,
   },
 } as Meta<SignInProps>;
 
@@ -63,7 +63,7 @@ InvalidRecaptcha.story = {
 };
 
 export const WithoutRegisterButton = (args: SignInProps) => (
-  <SignIn {...args} displayRegisterTab={false} />
+  <SignIn {...args} isReauthenticate />
 );
 WithoutRegisterButton.story = {
   name: 'without register button',

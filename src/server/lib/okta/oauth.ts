@@ -8,6 +8,7 @@ import {
   ProfileOpenIdClientRedirectUris,
   getOpenIdClient,
 } from '@/server/lib/okta/openid-connect';
+import { closeSession } from './api/sessions';
 
 /**
  * @name performAuthorizationCodeFlow
@@ -15,24 +16,37 @@ import {
  *
  * Used for post authentication with the session token to set a session cookie.
  *
+ * @param req - the express request object
  * @param res - the express response object
  * @param sessionToken (optional) - if provided, we'll use this to set the session cookie
  * @param confirmationPagePath (optional) - page to redirect the user to after authentication
+ * @param idp (optional) - okta id of the social identity provider to use
+ * @param closeExistingSession (optional) - if true, we'll close any existing okta session before calling the authorization code flow
  * @returns 303 redirect to the okta /authorize endpoint
  */
-export const performAuthorizationCodeFlow = (
+export const performAuthorizationCodeFlow = async (
   req: Request,
   res: ResponseWithRequestState,
   {
     sessionToken,
     confirmationPagePath,
     idp,
+    closeExistingSession,
   }: {
     sessionToken?: string;
     confirmationPagePath?: RoutePaths;
     idp?: string;
+    closeExistingSession?: boolean;
   } = {},
 ) => {
+  if (closeExistingSession) {
+    const oktaSessionCookieId: string | undefined = req.cookies.sid;
+    // clear existing okta session cookie if it exists
+    if (oktaSessionCookieId) {
+      await closeSession(oktaSessionCookieId);
+    }
+  }
+
   // Determine which OpenIdClient to use, in DEV we use the DevProfileIdClient, otherwise we use the ProfileOpenIdClient
   const OpenIdClient = getOpenIdClient(req);
 
@@ -48,8 +62,10 @@ export const performAuthorizationCodeFlow = (
 
   // generate the /authorize endpoint url which we'll redirect the user too
   const authorizeUrl = OpenIdClient.authorizationUrl({
-    // Don't prompt for authentication or consent if idp parameter is not provided
-    prompt: !idp ? 'none' : undefined,
+    // Prompt for login if the idp is provided to make sure the user sees
+    // the social provider login page
+    // Don't prompt for authentication if the idp is not provided (default behaviour)
+    prompt: idp ? 'login' : 'none',
     // The sessionToken from authentication to exchange for session cookie
     sessionToken,
     // we send the generated stateParam as the state parameter

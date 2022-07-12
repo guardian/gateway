@@ -33,6 +33,29 @@ export const getSession = async (
   }).then(handleSessionResponse);
 };
 
+/**
+ * Close a User session by session Id
+ *
+ * https://developer.okta.com/docs/reference/api/sessions/#close-session
+ *
+ * The Okta API closes the users session on success or
+ * returns a 404 on invalid.
+ *
+ * @param sessionId Okta session ID
+ * @returns Promise<boolean>
+ */
+export const closeSession = async (sessionId: string): Promise<undefined> => {
+  const path = buildUrl('/api/v1/sessions/:sessionId', { sessionId });
+  const response = await fetch(joinUrl(okta.orgUrl, path), {
+    method: 'DELETE',
+    headers: { ...defaultHeaders, ...authorizationHeader() },
+  });
+
+  if (!(response.ok || response.status === 404)) {
+    return handleErrorResponse(response);
+  }
+};
+
 export const handleSessionResponse = async (
   response: Response,
 ): Promise<SessionResponse> => {

@@ -130,7 +130,6 @@ router.get(
       requestState: deepmerge(state, {
         pageData: {
           email,
-          displayRegisterTab: false,
         },
         globalMessage: {
           error: getErrorMessageFromQueryParams(error, error_description),
@@ -139,6 +138,21 @@ router.get(
       pageTitle: 'Sign in',
     });
     res.type('html').send(html);
+  }),
+);
+
+router.post(
+  '/reauthenticate',
+  handleRecaptcha,
+  handleAsyncErrors((req: Request, res: ResponseWithRequestState) => {
+    const { useOkta } = res.locals.queryParams;
+    if (okta.enabled && useOkta) {
+      // if okta feature switch enabled, use okta authentication
+      return oktaSignInController(req, res, true);
+    } else {
+      // if okta feature switch disabled, use identity authentication
+      return idapiSignInController(req, res);
+    }
   }),
 );
 
@@ -220,19 +234,25 @@ const oktaSignInControllerErrorHandler = (error: unknown) => {
 const oktaSignInController = async (
   req: Request,
   res: ResponseWithRequestState,
+  isReauthenticate = false,
 ) => {
   // get the email and password from the request body
   const { email = '', password = '' } = req.body;
   const oktaSessionCookieId: string | undefined = req.cookies.sid;
-  try {
-    if (oktaSessionCookieId) {
-      // if a session already exists then we redirect back to the returnUrl for apps, and the dotcom homepage for web
-      await getSession(oktaSessionCookieId);
-      return res.redirect(accountManagementUrl);
+
+  if (!isReauthenticate) {
+    try {
+      if (oktaSessionCookieId) {
+        // if a session already exists then we redirect back to the returnUrl for apps, and the dotcom homepage for web
+        await getSession(oktaSessionCookieId);
+        return res.redirect(accountManagementUrl);
+      }
+    } catch {
+      // We log this scenario as it is quite unlikely, but we continue to sign the user in.
+      logger.info(
+        'User POSTed to /signin with an invalid `sid` session cookie',
+      );
     }
-  } catch {
-    // We log this scenario as it is quite unlikely, but we continue to sign the user in.
-    logger.info('User POSTed to /signin with an invalid `sid` session cookie');
   }
 
   try {
@@ -277,8 +297,9 @@ const oktaSignInController = async (
     // we now need to generate an okta session
     // so we'll call the OIDC /authorize endpoint which sets a session cookie
     // we'll pretty much be performing the Authorization Code Flow
-    return performAuthorizationCodeFlow(req, res, {
+    return await performAuthorizationCodeFlow(req, res, {
       sessionToken: response.sessionToken,
+      closeExistingSession: true,
     });
   } catch (error) {
     trackMetric('OktaSignIn::Failure');
@@ -389,27 +410,34 @@ type SocialProvider = 'google' | 'facebook' | 'apple';
 const isValidSocialProvider = (provider: string): boolean =>
   ['facebook', 'google', 'apple'].includes(provider);
 
-router.get('/signin/:social', (req: Request, res: ResponseWithRequestState) => {
-  // todo can we use the login middleware here to stopped logged in users from accessing this endpoint?
-  const { useOkta, returnUrl } = res.locals.queryParams;
-  const socialIdp = req.params.social as SocialProvider;
+router.get(
+  '/signin/:social',
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    // todo can we use the login middleware here to stopped logged in users from accessing this endpoint?
+    const { useOkta, returnUrl } = res.locals.queryParams;
+    const socialIdp = req.params.social as SocialProvider;
 
-  if (!isValidSocialProvider(socialIdp)) {
-    return res.redirect(303, '/signin');
-  }
+    if (!isValidSocialProvider(socialIdp)) {
+      return res.redirect(303, '/signin');
+    }
 
-  if (okta.enabled && useOkta) {
-    // get the IDP id from the config
-    const idp = okta.social[socialIdp];
-    // if okta feature switch enabled, perform authorization code flow with idp
-    return performAuthorizationCodeFlow(req, res, { idp });
-  } else {
-    // if okta feature switch disabled, redirect to identity-federation-api
-    const socialUrl = new URL(`${oauthBaseUrl}/${socialIdp}/signin`);
-    socialUrl.searchParams.append('returnUrl', returnUrl);
+    if (okta.enabled && useOkta) {
+      // get the IDP id from the config
+      const idp = okta.social[socialIdp];
 
-    return res.redirect(303, socialUrl.toString());
-  }
-});
+      // if okta feature switch enabled, perform authorization code flow with idp
+      return await performAuthorizationCodeFlow(req, res, {
+        idp,
+        closeExistingSession: true,
+      });
+    } else {
+      // if okta feature switch disabled, redirect to identity-federation-api
+      const socialUrl = new URL(`${oauthBaseUrl}/${socialIdp}/signin`);
+      socialUrl.searchParams.append('returnUrl', returnUrl);
+
+      return res.redirect(303, socialUrl.toString());
+    }
+  }),
+);
 
 export default router.router;
