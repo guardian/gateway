@@ -4,7 +4,10 @@ import {
 } from '@/server/models/Express';
 import { RoutePaths, ValidRoutePathsArray } from '@/shared/model/Routes';
 import { NextFunction } from 'express';
-import rateLimit, { RateLimiterConfiguration } from '@/server/lib/rate-limit';
+import rateLimit, {
+  BucketValues,
+  RateLimiterConfiguration,
+} from '@/server/lib/rate-limit';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import redisClient from '@/server/lib/redis/redisClient';
 import { logger } from '@/server/lib/serverSideLogger';
@@ -18,7 +21,7 @@ const getBucketConfigForRoute = (
   config: RateLimiterConfiguration,
 ) => config?.routeBuckets?.[route] ?? config.defaultBuckets;
 
-const { rateLimiter } = getConfiguration();
+const { rateLimiter, okta } = getConfiguration();
 
 export const rateLimiterMiddleware = async (
   req: RequestWithTypedQuery,
@@ -48,11 +51,17 @@ export const rateLimiterMiddleware = async (
   const { email: formEmail = '' } = req.body;
   const encryptedStateEmail = readEmailCookie(req);
 
+  // If Okta is enabled, rate limit based on the Okta identifier.
+  const { useOkta } = res.locals.queryParams;
+  const oktaSessionCookieId: string | undefined = req.cookies.sid;
+  const isOktaInUse = okta.enabled && useOkta && oktaSessionCookieId;
+
   const rateLimitData = {
     email: formEmail || encryptedStateEmail,
     ip: req.ip,
     accessToken: req.cookies.SC_GU_U,
-  };
+    oktaIdentifier: isOktaInUse ? oktaSessionCookieId : undefined,
+  } as BucketValues;
 
   const ratelimitBucketTypeIfHit = await rateLimit({
     route: routePathDefinition,
