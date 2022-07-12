@@ -101,3 +101,12 @@ export enum Status {
   PASSWORD_RESET = 'PASSWORD_RESET',
   SUSPENDED = 'SUSPENDED',
 }
+
+// https://developer.okta.com/docs/reference/api/sessions/#session-object
+export interface SessionResponse {
+  id: string;
+  login: string;
+  userId: string;
+  expiresAt: string;
+  status: string;
+}

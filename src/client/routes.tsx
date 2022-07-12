@@ -50,7 +50,7 @@ const routes: Array<{
   },
   {
     path: '/reauthenticate',
-    element: <SignInPage />,
+    element: <SignInPage isReauthenticate />,
   },
   {
     path: '/register',
