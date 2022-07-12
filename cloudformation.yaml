@@ -603,6 +603,8 @@ Resources:
               Dimensions:
                 - Name: Stage
                   Value: !Ref 'Stage'
+                - Name: ApiMode
+                  Value: identity-gateway
             Period: 1200
             Stat: Sum
             Unit: Count
@@ -615,6 +617,8 @@ Resources:
               Dimensions:
                 - Name: Stage
                   Value: !Ref 'Stage'
+                - Name: ApiMode
+                  Value: identity-gateway
             Period: 1200
             Stat: Sum
             Unit: Count
@@ -637,7 +641,7 @@ Resources:
       Metrics:
         - Id: totalRegistrationCount
           Expression: idapiRegistrationCount + oktaRegistrationCount
-          Label: 'Total sign-ins between IDAPI and Okta'
+          Label: 'Total registrations between IDAPI and Okta'
         - Id: idapiRegistrationCount
           MetricStat:
             Metric:
@@ -646,6 +650,8 @@ Resources:
               Dimensions:
                 - Name: Stage
                   Value: !Ref 'Stage'
+                - Name: ApiMode
+                  Value: identity-gateway
             Period: 3600
             Stat: Sum
             Unit: Count
@@ -658,6 +664,8 @@ Resources:
               Dimensions:
                 - Name: Stage
                   Value: !Ref 'Stage'
+                - Name: ApiMode
+                  Value: identity-gateway
             Period: 3600
             Stat: Sum
             Unit: Count
