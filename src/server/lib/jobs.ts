@@ -1,4 +1,10 @@
-import { addToGroup, GroupCode, updateName } from './idapi/user';
+import User from '@/shared/model/User';
+import {
+  addToGroup,
+  APIGroupResponse,
+  GroupCode,
+  updateName,
+} from './idapi/user';
 import { updateUser } from './okta/api/users';
 
 export const setupJobsUserInOkta = (
@@ -27,13 +33,24 @@ export const setupJobsUserInOkta = (
   });
 };
 
+// Wrap a call to setTimeout in a promise so we can await it in our retry logic below.
+const waitForTimeout = (ms: number) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+
+type SetupJobsUserInIdapiResult = [
+  PromiseSettledResult<User>,
+  PromiseSettledResult<APIGroupResponse>,
+];
+
 export const setupJobsUserInIDAPI = async (
   firstName: string,
   secondName: string,
   ip: string,
   sc_gu_u: string,
   retries: number,
-) => {
+): Promise<SetupJobsUserInIdapiResult> => {
   if (firstName === '' || secondName === '') {
     throw new Error('Empty values not permitted for first or last name.');
   }
@@ -54,9 +71,17 @@ export const setupJobsUserInIDAPI = async (
     ]);
   } catch (error) {
     if (retries > 0) {
-      setTimeout(() => {
-        setupJobsUserInIDAPI(firstName, secondName, ip, sc_gu_u, retries - 1);
-      }, 100);
+      // Wait 100ms before our next attempt.
+      await waitForTimeout(100);
+
+      // Recurse to initiate the next retry.
+      return setupJobsUserInIDAPI(
+        firstName,
+        secondName,
+        ip,
+        sc_gu_u,
+        retries - 1,
+      );
     } else {
       throw error;
     }

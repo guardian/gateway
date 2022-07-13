@@ -178,7 +178,7 @@ router.post(
           secondName,
           req.ip,
           req.cookies.SC_GU_U,
-          3,
+          5,
         );
         trackMetric('JobsGRSGroupAgree::Success');
       }
