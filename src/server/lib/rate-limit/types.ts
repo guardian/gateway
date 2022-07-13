@@ -113,7 +113,7 @@ export interface BucketValues {
  */
 export interface RateLimitParameters {
   route: RoutePaths;
-  redisClient: Redis.Redis;
+  redisClient: Redis;
   bucketConfiguration: RateLimiterBucketsConfiguration;
   bucketValues?: BucketValues;
 }

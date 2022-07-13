@@ -92,7 +92,7 @@ const rateLimit = async ({
 };
 
 const rateLimitBuckets = async (
-  redisClient: Redis.Redis,
+  redisClient: Redis,
   buckets: ParsedRateLimitBuckets,
   bucketConfiguration: RateLimiterBucketsConfiguration,
 ): Promise<BucketType | false> => {
