@@ -32,6 +32,12 @@ module.exports = {
       'clean-css': false,
     };
 
+    // Remove '@emotion/babel-preset-css-prop' from the preset list as we add it manually in the babel method above
+    const indexToRemove = babelConfig.presets.indexOf(
+      '@emotion/babel-preset-css-prop',
+    );
+    const babelLoaderPresets = babelConfig.presets.splice(indexToRemove, 1);
+
     // transpile certain modules so we can get them to work with ie11 storybook
     const transpileModules = {
       include: [
@@ -60,7 +66,7 @@ module.exports = {
                   modules: 'amd',
                 },
               ],
-              ...babelConfig.presets,
+              ...babelLoaderPresets,
             ],
             plugins: [...babelConfig.plugins],
           },
