@@ -414,7 +414,6 @@ router.post(
  */
 router.get(
   '/signin/refresh',
-  loginMiddleware,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { useOkta, returnUrl } = res.locals.queryParams;
     const oktaSessionCookieId: string | undefined = req.cookies.sid;
