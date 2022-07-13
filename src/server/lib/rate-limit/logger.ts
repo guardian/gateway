@@ -11,7 +11,7 @@ import { LogLevel } from '@/shared/model/Logger';
  * @returns {NodeJS.Timer}
  */
 export const startGlobalBucketCapacityLogger = (
-  redisClient: Redis.Redis,
+  redisClient: Redis,
   interval: number,
 ): NodeJS.Timer =>
   setInterval(async () => {
