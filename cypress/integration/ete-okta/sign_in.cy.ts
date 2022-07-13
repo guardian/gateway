@@ -113,4 +113,48 @@ describe('Sign in flow, Okta enabled', () => {
       });
     });
   });
+
+  it('refreshes a valid Okta session', () => {
+    // Intercept the external redirect page.
+    // We just want to check that the redirect happens, not that the page loads.
+    cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
+      req.reply(200);
+    });
+
+    // Create a validated test user
+    cy.createTestUser({ isUserEmailValidated: true }).then(
+      ({ emailAddress, finalPassword }) => {
+        // Sign our new user in
+        cy.visit('/signin?useOkta=true');
+        cy.get('input[name=email]').type(emailAddress);
+        cy.get('input[name=password]').type(finalPassword);
+        cy.get('[data-cy="sign-in-button"]').click();
+        cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+
+        // Get the current session data
+        cy.getCookie('sid').then((originalSidCookie) => {
+          expect(originalSidCookie).to.exist;
+
+          // Refresh our user session
+          cy.visit(
+            `/signin/refresh?returnUrl=${encodeURIComponent(
+              `https://${Cypress.env('BASE_URI')}/consents`,
+            )}&useOkta=true`,
+          );
+          cy.url().should('include', '/consents');
+
+          // Get the refreshed session data
+          cy.getCookie('sid').then((newSidCookie) => {
+            expect(newSidCookie).to.exist;
+            expect(newSidCookie?.value).to.equal(originalSidCookie?.value);
+            if (newSidCookie?.expiry && originalSidCookie?.expiry) {
+              expect(newSidCookie?.expiry).to.be.greaterThan(
+                originalSidCookie?.expiry,
+              );
+            }
+          });
+        });
+      },
+    );
+  });
 });
