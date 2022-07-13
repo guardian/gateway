@@ -423,7 +423,7 @@ export const getCurrentOktaSession = (sid: string) => {
   }
 };
 
-export const closeCurrentOktaSession = (sid: string) => {
+export const closeCurrentOktaSession = (sid: string | undefined) => {
   try {
     return cy
       .request({
