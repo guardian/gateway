@@ -80,6 +80,7 @@ const changePasswordInIDAPI = async (
           secondName,
           req.ip,
           SC_GU_U.value,
+          3,
         );
         trackMetric('JobsGRSGroupAgree::Success');
       }

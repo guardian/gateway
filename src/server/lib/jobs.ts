@@ -27,11 +27,12 @@ export const setupJobsUserInOkta = (
   });
 };
 
-export const setupJobsUserInIDAPI = (
+export const setupJobsUserInIDAPI = async (
   firstName: string,
   secondName: string,
   ip: string,
   sc_gu_u: string,
+  retries: number,
 ) => {
   if (firstName === '' || secondName === '') {
     throw new Error('Empty values not permitted for first or last name.');
@@ -43,8 +44,21 @@ export const setupJobsUserInIDAPI = (
   // they try to sign in to the Jobs site for the first time.
   //
   // We can resolve both promises here because they are not dependent on each other.
-  return Promise.allSettled([
-    updateName(firstName, secondName, ip, sc_gu_u),
-    addToGroup(GroupCode.GRS, ip, sc_gu_u),
-  ]);
+  //
+  // We retry this operation up to the number of retries specified because the requests
+  // to IDAPI can intermittently fail.
+  try {
+    return await Promise.allSettled([
+      updateName(firstName, secondName, ip, sc_gu_u),
+      addToGroup(GroupCode.GRS, ip, sc_gu_u),
+    ]);
+  } catch (error) {
+    if (retries > 0) {
+      setTimeout(() => {
+        setupJobsUserInIDAPI(firstName, secondName, ip, sc_gu_u, retries - 1);
+      }, 100);
+    } else {
+      throw error;
+    }
+  }
 };
