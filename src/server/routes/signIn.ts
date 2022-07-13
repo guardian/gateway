@@ -406,6 +406,49 @@ router.post(
   }),
 );
 
+/**
+ * If an Okta session exists, this route will re-authenticate the Okta session
+ * and also refresh the IDAPI session concurrently, synchronising the expiry
+ * times of the Okta and IDAPI sessions, before returning the client to the URL
+ * they came from.
+ */
+router.get(
+  '/signin/refresh',
+  loginMiddleware,
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    const { useOkta, returnUrl } = res.locals.queryParams;
+    const oktaSessionCookieId: string | undefined = req.cookies.sid;
+    const identitySessionCookie = req.cookies.SC_GU_U;
+    const identityLastAccessCookie = req.cookies.SC_GU_LA;
+
+    const { defaultReturnUri } = getConfiguration();
+    const redirectUrl = returnUrl || defaultReturnUri;
+
+    // Check if the user has an existing Okta session.
+    if (okta.enabled && useOkta && oktaSessionCookieId) {
+      try {
+        // If the user session is valid, we re-authenticate them, supplying
+        // the SID cookie value to Okta.
+        await getSession(oktaSessionCookieId);
+        return performAuthorizationCodeFlow(req, res);
+      } catch {
+        //if the cookie exists, but the session is invalid, we remove the cookie
+        //and return them to the URL they came from
+        clearOktaCookies(res);
+        return res.redirect(redirectUrl);
+      }
+    } else if (identitySessionCookie && identityLastAccessCookie) {
+      // If there isn't an Okta session, there's nothing to synchronise the
+      // IDAPI session with, so we bail here and return to the URL they came from
+      return res.redirect(redirectUrl);
+    } else {
+      // If there are no Okta or IDAPI cookies, why are you here? We bail and
+      // send the client to the /signin page.
+      return res.redirect('/signin');
+    }
+  }),
+);
+
 type SocialProvider = 'google' | 'facebook' | 'apple';
 
 const isValidSocialProvider = (provider: string): boolean =>
@@ -437,38 +480,6 @@ router.get(
       socialUrl.searchParams.append('returnUrl', returnUrl);
 
       return res.redirect(303, socialUrl.toString());
-    }
-  }),
-);
-
-router.get(
-  '/signin/refresh',
-  loginMiddleware,
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const returnUrl = req.params.returnUrl;
-    const oktaSessionCookieId: string | undefined = req.cookies.sid;
-    const identitySessionCookie = req.cookies.SC_GU_U;
-    const identityLastAccessCookie = req.cookies.SC_GU_LA;
-    const { useOkta } = res.locals.queryParams;
-    const { defaultReturnUri } = getConfiguration();
-    const redirectUrl = returnUrl || defaultReturnUri;
-
-    // Check if the user has an existing Okta session. If they do and it's valid,
-    // they're already logged in and are redirected to the logged in redirect URL.
-    if (okta.enabled && useOkta && oktaSessionCookieId) {
-      try {
-        await getSession(oktaSessionCookieId);
-        return performAuthorizationCodeFlow(req, res);
-      } catch {
-        //if the cookie exists, but the session is invalid, we remove the cookie
-        clearOktaCookies(res);
-        return res.redirect(redirectUrl);
-      }
-    } else if (identitySessionCookie && identityLastAccessCookie) {
-      return res.redirect(redirectUrl);
-    } else {
-      // No Okta cookies or Identity cookies
-      return res.redirect('/signin');
     }
   }),
 );
