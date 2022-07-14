@@ -1,11 +1,6 @@
-import User from '@/shared/model/User';
-import {
-  addToGroup,
-  APIGroupResponse,
-  GroupCode,
-  updateName,
-} from './idapi/user';
+import { addToGroup, GroupCode, updateName } from './idapi/user';
 import { updateUser } from './okta/api/users';
+import { logger } from '@/server/lib/serverSideLogger';
 
 export const setupJobsUserInOkta = (
   firstName: string,
@@ -33,24 +28,12 @@ export const setupJobsUserInOkta = (
   });
 };
 
-// Wrap a call to setTimeout in a promise so we can await it in our retry logic below.
-const waitForTimeout = (ms: number) =>
-  new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-
-type SetupJobsUserInIdapiResult = [
-  PromiseSettledResult<User>,
-  PromiseSettledResult<APIGroupResponse>,
-];
-
 export const setupJobsUserInIDAPI = async (
   firstName: string,
   secondName: string,
   ip: string,
   sc_gu_u: string,
-  retries: number,
-): Promise<SetupJobsUserInIdapiResult> => {
+) => {
   if (firstName === '' || secondName === '') {
     throw new Error('Empty values not permitted for first or last name.');
   }
@@ -61,29 +44,14 @@ export const setupJobsUserInIDAPI = async (
   // they try to sign in to the Jobs site for the first time.
   //
   // We can resolve both promises here because they are not dependent on each other.
-  //
-  // We retry this operation up to the number of retries specified because the requests
-  // to IDAPI can intermittently fail.
   try {
-    return await Promise.allSettled([
-      updateName(firstName, secondName, ip, sc_gu_u),
-      addToGroup(GroupCode.GRS, ip, sc_gu_u),
-    ]);
+    await updateName(firstName, secondName, ip, sc_gu_u);
+    await addToGroup(GroupCode.GRS, ip, sc_gu_u);
+    return true;
   } catch (error) {
-    if (retries > 0) {
-      // Wait 100ms before our next attempt.
-      await waitForTimeout(100);
-
-      // Recurse to initiate the next retry.
-      return setupJobsUserInIDAPI(
-        firstName,
-        secondName,
-        ip,
-        sc_gu_u,
-        retries - 1,
-      );
-    } else {
-      throw error;
-    }
+    logger.error(
+      'Jobs: Failed setting the name and/or the group for Jobs user.',
+    );
+    throw error;
   }
 };

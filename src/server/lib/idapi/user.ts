@@ -27,7 +27,7 @@ interface APIResponse {
   user: User;
 }
 
-export interface APIGroupResponse {
+interface APIGroupResponse {
   status: string;
   groupCode: string;
 }
