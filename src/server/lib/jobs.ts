@@ -1,5 +1,6 @@
 import { addToGroup, GroupCode, updateName } from './idapi/user';
 import { updateUser } from './okta/api/users';
+import { logger } from '@/server/lib/serverSideLogger';
 
 export const setupJobsUserInOkta = (
   firstName: string,
@@ -27,7 +28,7 @@ export const setupJobsUserInOkta = (
   });
 };
 
-export const setupJobsUserInIDAPI = (
+export const setupJobsUserInIDAPI = async (
   firstName: string,
   secondName: string,
   ip: string,
@@ -43,8 +44,14 @@ export const setupJobsUserInIDAPI = (
   // they try to sign in to the Jobs site for the first time.
   //
   // We can resolve both promises here because they are not dependent on each other.
-  return Promise.allSettled([
-    updateName(firstName, secondName, ip, sc_gu_u),
-    addToGroup(GroupCode.GRS, ip, sc_gu_u),
-  ]);
+  try {
+    await updateName(firstName, secondName, ip, sc_gu_u);
+    await addToGroup(GroupCode.GRS, ip, sc_gu_u);
+    return true;
+  } catch (error) {
+    logger.error(
+      'Jobs: Failed setting the name and/or the group for Jobs user.',
+    );
+    throw error;
+  }
 };
