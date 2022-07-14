@@ -75,6 +75,15 @@ export const getErrorMessage = (error: unknown) => {
         },
       ],
     };
+  } else if (error instanceof ApiError && error.field === 'password') {
+    return {
+      fieldErrors: [
+        {
+          field: 'password',
+          message: error.message,
+        },
+      ],
+    };
   } else {
     return {
       globalError: ChangePasswordErrors.GENERIC,

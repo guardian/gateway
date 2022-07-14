@@ -18,6 +18,7 @@ type RateLimitMetrics = BucketType;
 // i.e ::Success or ::Failure
 type ConditionalMetrics =
   | 'AccountVerification'
+  | 'BreachedPasswordCheck'
   | `${EmailMetrics}EmailSend`
   | 'EmailValidated'
   | `${'Get' | 'Post'}ConsentsPage-${string}`

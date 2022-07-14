@@ -14,6 +14,9 @@ import {
   AuthenticationTransaction,
 } from '@/server/models/okta/Authentication';
 import { handleVoidResponse } from '@/server/lib/okta/api/responses';
+import { isBreachedPassword } from '../../breachedPasswordCheck';
+import { ApiError } from '@/server/models/Error';
+import { PasswordFieldErrors } from '@/shared/model/Errors';
 
 const { okta } = getConfiguration();
 
@@ -118,6 +121,13 @@ export const validateRecoveryToken = async (body: {
  *
  * https://developer.okta.com/docs/reference/api/authn/#reset-password
  *
+ * This is used to set a new password for a user. For security reasons, this method also performs the breached password check,
+ * with the pwned password API. This is tightly coupled to this method so that in all cases where a password is reset, the password
+ * is checked against the pwned password API.
+ *
+ * The documentation for the pwned password API is here:
+ * https://haveibeenpwned.com/API/v3#PwnedPasswords
+ *
  * @param {string} body.stateToken State token for the current transaction. State tokens can be obtained by starting a forgotten
  * password flow or admin-initiated reset password flow or by passing an activation token into the /authn endpoint
  * @param {string} body.newPassword User's new password
@@ -129,6 +139,14 @@ export const resetPassword = async (body: {
   newPassword: string;
 }): Promise<AuthenticationTransaction> => {
   const path = buildUrl('/api/v1/authn/credentials/reset_password');
+
+  if (await isBreachedPassword(body.newPassword)) {
+    throw new ApiError({
+      field: 'password',
+      message: PasswordFieldErrors.COMMON_PASSWORD,
+    });
+  }
+
   return await fetch(joinUrl(okta.orgUrl, path), {
     method: 'POST',
     body: JSON.stringify(body),
