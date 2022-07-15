@@ -1,6 +1,6 @@
 describe('Jobs terms and conditions flow', () => {
   context('Accepts Jobs terms and conditions and sets their name', () => {
-    it.skip('should redirect users with an invalid SC_GU_U cookie to the signin page', () => {
+    it('should redirect users with an invalid SC_GU_U cookie to the signin page', () => {
       // load the consents page as its on the same domain
       const termsAcceptPageUrl = `https://${Cypress.env(
         'BASE_URI',
@@ -12,7 +12,7 @@ describe('Jobs terms and conditions flow', () => {
       cy.url().should('include', 'https://profile.thegulocal.com/signin');
     });
 
-    it.skip('should redirect users with no SC_GU_U cookie to the signin page', () => {
+    it('should redirect users with no SC_GU_U cookie to the signin page', () => {
       // load the consents page as its on the same domain
       const termsAcceptPageUrl = `https://${Cypress.env(
         'BASE_URI',
@@ -24,7 +24,7 @@ describe('Jobs terms and conditions flow', () => {
       );
     });
 
-    it.skip('should show the jobs terms page for users who do not have first/last name set, but are part of GRS', () => {
+    it('should show the jobs terms page for users who do not have first/last name set, but are part of GRS', () => {
       cy.createTestUser({
         isUserEmailValidated: true,
       })?.then(({ emailAddress, finalPassword }) => {
@@ -76,7 +76,7 @@ describe('Jobs terms and conditions flow', () => {
       });
     });
 
-    it.skip('should redirect users who have already accepted the terms away', () => {
+    it('should redirect users who have already accepted the terms away', () => {
       cy.createTestUser({
         isUserEmailValidated: true,
       })?.then(({ emailAddress, finalPassword }) => {
