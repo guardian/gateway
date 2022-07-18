@@ -7602,10 +7602,10 @@ cypress-axe@^1.0.0:
   resolved "https://registry.yarnpkg.com/cypress-axe/-/cypress-axe-1.0.0.tgz#ab4e9486eaa3bb956a90a1ae40d52df42827b4f0"
   integrity sha512-QBlNMAd5eZoyhG8RGGR/pLtpHGkvgWXm2tkP68scJ+AjYiNNOlJihxoEwH93RT+rWOLrefw4iWwEx8kpEcrvJA==
 
-cypress-mailosaur@2.9.0:
-  version "2.9.0"
-  resolved "https://registry.yarnpkg.com/cypress-mailosaur/-/cypress-mailosaur-2.9.0.tgz#2c005c56860eb77634f2164a9c0f90b7055bd91a"
-  integrity sha512-iWfXgN3XmKVjQOmsV9x7FL85qhD4t3+qW4Viz2mIAO5gYyYgZncRPPe6aa4AtL/jT0kvBt0XQWxVvu2wpsUDFg==
+cypress-mailosaur@2.10.0:
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/cypress-mailosaur/-/cypress-mailosaur-2.10.0.tgz#0f227b1710002e29541bfd4474f0386824f2999e"
+  integrity sha512-Rh6zW7fWXokzttkf7YMZBJs4VXMFaDiuZ9asl5dsfPfEP1CxY9NaE/fHErOpSB+wJXUNF7gjWEBqVfK0mPXBlw==
 
 cypress@^10.3.0:
   version "10.3.0"
