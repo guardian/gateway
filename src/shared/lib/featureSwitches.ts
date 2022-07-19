@@ -22,7 +22,7 @@ export const featureSwitches: FeatureSwitches = {
   oktaEnabled: {
     DEV: true,
     CODE: true,
-    PROD: false,
+    PROD: true,
   },
   recaptchaEnabledDev: false,
 };
