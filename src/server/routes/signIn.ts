@@ -429,7 +429,9 @@ router.get(
         // If the user session is valid, we re-authenticate them, supplying
         // the SID cookie value to Okta.
         await getSession(oktaSessionCookieId);
-        return performAuthorizationCodeFlow(req, res);
+        return performAuthorizationCodeFlow(req, res, {
+          doNotSetLastAccessCookie: true,
+        });
       } catch {
         //if the cookie exists, but the session is invalid, we remove the cookie
         //and return them to the URL they came from

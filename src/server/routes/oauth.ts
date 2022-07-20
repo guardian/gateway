@@ -182,7 +182,7 @@ router.get(
       );
 
       // adds set cookie headers
-      setIDAPICookies(res, cookies);
+      setIDAPICookies(res, cookies, authState.doNotSetLastAccessCookie);
 
       // track the success metric
       trackMetric('OAuthAuthorization::Success');
