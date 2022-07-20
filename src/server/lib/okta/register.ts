@@ -10,6 +10,124 @@ import { OktaError } from '@/server/models/okta/Error';
 import { causesInclude } from '@/server/lib/okta/api/errors';
 import { sendAccountExistsEmail } from '@/email/templates/AccountExists/sendAccountExistsEmail';
 import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
+import { sendAccountWithoutPasswordExistsEmail } from '@/email/templates/AccountWithoutPasswordExists/sendAccountWithoutPasswordExists';
+
+/**
+ * @name sendRegistrationEmailByUserState
+ *
+ * Used by the register page and the email sent page to share code between the two.
+ *
+ * In case of the register page, user creation is attempted, if that fails, and the user
+ * exists, we use this method to send the correct email to the user based on state
+ *
+ * The email sent page uses this method directly to send the email to the user based on the user
+ * state.
+ *
+ * We read the state of the user by email and send the appropriate email based on the user status.
+ *
+ * @param email
+ * @returns {Promise<UserResponse>} Promise that resolves to the user object
+ */
+export const sendRegistrationEmailByUserState = async (
+  email: string,
+): Promise<UserResponse> => {
+  const user = await getUser(email);
+  const { status } = user;
+  switch (status) {
+    case Status.STAGED: {
+      /* Given I'm a STAGED user
+       *    When I try to register/resend
+       *    Then Gateway should ask Okta for my activation token
+       *    And I should be sent a set password email with the activation
+       *    token through Gateway
+       *    And my status should become PROVISIONED
+       */
+      const tokenResponse = await activateUser(user.id, false);
+      if (!tokenResponse?.token.length) {
+        throw new OktaError({
+          message: `Okta user activation failed: missing activation token`,
+        });
+      }
+      const emailIsSent = await sendAccountWithoutPasswordExistsEmail({
+        to: user.profile.email,
+        activationToken: tokenResponse.token,
+      });
+      if (!emailIsSent) {
+        throw new OktaError({
+          message: `Okta user activation failed: Failed to send email`,
+        });
+      }
+      return user;
+    }
+    case Status.PROVISIONED: {
+      /* Given I'm a PROVISIONED user
+       *    When I try to register/resend
+       *    Then Gateway should ask Okta for my activation token
+       *    And I should be sent a set password email with the activation
+       *    token through Gateway
+       *    And my status should remain PROVISIONED
+       */
+      const tokenResponse = await reactivateUser(user.id, false);
+      if (!tokenResponse?.token.length) {
+        throw new OktaError({
+          message: `Okta user reactivation failed: missing re-activation token`,
+        });
+      }
+      const emailIsSent = await sendAccountWithoutPasswordExistsEmail({
+        to: user.profile.email,
+        activationToken: tokenResponse.token,
+      });
+      if (!emailIsSent) {
+        throw new OktaError({
+          message: `Okta user reactivation failed: Failed to send email`,
+        });
+      }
+      return user;
+    }
+    case Status.ACTIVE: {
+      /* Given I'm an ACTIVE user
+       *    When I try to register
+       *    Then I should be sent an email with a link to the reset
+       *    password form (with no token)
+       *    And my status should remain ACTIVE
+       */
+      await sendAccountExistsEmail({
+        to: user.profile.email,
+      });
+      return user;
+    }
+    case Status.RECOVERY:
+    case Status.PASSWORD_EXPIRED: {
+      /* Given I'm a RECOVERY or PASSWORD_EXPIRED user
+       *    When I try to register
+       *    Then Gateway should ask Okta for my reset password token
+       *    And I should be sent a reset password email with the activation
+       *    token through Gateway
+       *    And my status should become RECOVERY
+       */
+      const token = await dangerouslyResetPassword(user.id);
+      if (!token) {
+        throw new OktaError({
+          message: `Okta user reset password failed: missing reset password token`,
+        });
+      }
+      const emailIsSent = await sendResetPasswordEmail({
+        to: user.profile.email,
+        resetPasswordToken: token,
+      });
+      if (!emailIsSent) {
+        throw new OktaError({
+          message: `Okta user reset password failed: Failed to send email`,
+        });
+      }
+      return user;
+    }
+    default:
+      throw new OktaError({
+        message: `Okta registration/resend failed with unaccepted Okta user status: ${user.status}`,
+      });
+  }
+};
 
 /**
  * @method register
@@ -37,188 +155,9 @@ export const register = async (email: string): Promise<UserResponse> => {
       error.name === 'ApiValidationError' &&
       causesInclude(error.causes, 'already exists')
     ) {
-      const user = await getUser(email);
-      const { status } = user;
-      switch (status) {
-        case Status.STAGED: {
-          /* Given I'm a STAGED user
-           *    When I try to register
-           *    Then Gateway should ask Okta for my activation token
-           *    And I should be sent a set password email with the activation
-           *    token through Gateway
-           *    And my status should become PROVISIONED
-           */
-          const tokenResponse = await activateUser(user.id, false);
-          if (!tokenResponse?.token.length) {
-            throw new OktaError({
-              message: `Okta user activation failed: missing activation token`,
-            });
-          }
-          const emailIsSent = await sendAccountExistsEmail({
-            to: user.profile.email,
-            activationToken: tokenResponse.token,
-          });
-          if (!emailIsSent) {
-            throw new OktaError({
-              message: `Okta user activation failed: Failed to send email`,
-            });
-          }
-          return user;
-        }
-        case Status.PROVISIONED: {
-          /* Given I'm a PROVISIONED user
-           *    When I try to register
-           *    Then Gateway should ask Okta for my activation token
-           *    And I should be sent a set password email with the activation
-           *    token through Gateway
-           *    And my status should remain PROVISIONED
-           */
-          const tokenResponse = await reactivateUser(user.id, false);
-          if (!tokenResponse?.token.length) {
-            throw new OktaError({
-              message: `Okta registration failed: missing re-activation token`,
-            });
-          }
-          const emailIsSent = await sendAccountExistsEmail({
-            to: user.profile.email,
-            activationToken: tokenResponse.token,
-          });
-          if (!emailIsSent) {
-            throw new OktaError({
-              message: `Okta user activation failed: Failed to send email`,
-            });
-          }
-          return user;
-        }
-        case Status.ACTIVE: {
-          /* Given I'm an ACTIVE user
-           *    When I try to register
-           *    Then I should be sent an email with a link to the reset
-           *    password form (with no token)
-           *    And my status should remain ACTIVE
-           */
-          await sendAccountExistsEmail({
-            to: user.profile.email,
-          });
-          return user;
-        }
-        case Status.RECOVERY:
-        case Status.PASSWORD_EXPIRED: {
-          /* Given I'm a RECOVERY or PASSWORD_EXPIRED user
-           *    When I try to register
-           *    Then Gateway should ask Okta for my reset password token
-           *    And I should be sent a reset password email with the activation
-           *    token through Gateway
-           *    And my status should become RECOVERY
-           */
-          const token = await dangerouslyResetPassword(user.id);
-          if (!token) {
-            throw new OktaError({
-              message: `Okta user activation failed: missing reset password token`,
-            });
-          }
-          const emailIsSent = await sendResetPasswordEmail({
-            to: user.profile.email,
-            resetPasswordToken: token,
-          });
-          if (!emailIsSent) {
-            throw new OktaError({
-              message: `Okta user activation failed: Failed to send email`,
-            });
-          }
-          return user;
-        }
-        default:
-          throw new OktaError({
-            message: `Okta registration failed with unaccepted Okta user status: ${user.status}`,
-          });
-      }
+      return sendRegistrationEmailByUserState(email);
     } else {
       throw error;
     }
-  }
-};
-
-/**
- * @method resendRegistrationEmail
- *
- * Used by the email sent page if we need to resend the registration email.
- *
- * We read the state of the user and send the appropriate email.
- *
- * @param {string} email
- * @returns {Promise<UserResponse>} Promise that resolves to the user object
- */
-export const resendRegistrationEmail = async (
-  email: string,
-): Promise<UserResponse> => {
-  const user: UserResponse = await getUser(email);
-  const { status } = user;
-  switch (status) {
-    case Status.STAGED:
-    case Status.PROVISIONED: {
-      /* Given I'm a STAGED or PROVISIONED user
-       *    When I ask for my email to be resent
-       *    Then Gateway should ask Okta for my activation token
-       *    And I should be sent a set password email with the activation
-       *    token through Gateway
-       */
-      const tokenResponse = await reactivateUser(user.id, false);
-      if (!tokenResponse?.token.length) {
-        throw new OktaError({
-          message: `Okta registration failed: missing re-activation token`,
-        });
-      }
-      const emailIsSent = await sendAccountExistsEmail({
-        to: user.profile.email,
-        activationToken: tokenResponse.token,
-      });
-      if (!emailIsSent) {
-        throw new OktaError({
-          message: `Okta user activation failed: Failed to send email`,
-        });
-      }
-      return user;
-    }
-    case Status.ACTIVE: {
-      /* Given I'm an ACTIVE user
-       *    When I ask for my email to be resent
-       *    Then I should be sent an email with a link to the reset
-       *    password form (with no token)
-       */
-      await sendAccountExistsEmail({
-        to: user.profile.email,
-      });
-      return user;
-    }
-    case Status.RECOVERY:
-    case Status.PASSWORD_EXPIRED: {
-      /* Given I'm a RECOVERY or PASSWORD_EXPIRED user
-       *    When I ask for my email to be resent
-       *    Then Gateway should ask Okta for my reset password token
-       *    And I should be sent a reset password email with the activation
-       *    token through Gateway
-       */
-      const token = await dangerouslyResetPassword(user.id);
-      if (!token) {
-        throw new OktaError({
-          message: `Okta user activation failed: missing reset password token`,
-        });
-      }
-      const emailIsSent = await sendResetPasswordEmail({
-        to: user.profile.email,
-        resetPasswordToken: token,
-      });
-      if (!emailIsSent) {
-        throw new OktaError({
-          message: `Okta user activation failed: Failed to send email`,
-        });
-      }
-      return user;
-    }
-    default:
-      throw new OktaError({
-        message: `Okta email resend failed with unaccepted Okta user status: ${user.status}`,
-      });
   }
 };

@@ -16,7 +16,7 @@ import {
 import { logger } from '@/server/lib/serverSideLogger';
 import {
   register as registerWithOkta,
-  resendRegistrationEmail,
+  sendRegistrationEmailByUserState,
 } from '@/server/lib/okta/register';
 import { renderer } from '@/server/lib/renderer';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
@@ -268,7 +268,6 @@ const OktaRegistration = async (
   res: ResponseWithRequestState,
 ) => {
   const { email = '' } = req.body;
-
   try {
     const user = await registerWithOkta(email);
 
@@ -328,7 +327,7 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
     const { email } = encryptedState ?? {};
 
     if (typeof email !== 'undefined') {
-      await resendRegistrationEmail(email);
+      await sendRegistrationEmailByUserState(email);
       trackMetric('OktaRegistrationResendEmail::Success');
       return res.redirect(
         303,
