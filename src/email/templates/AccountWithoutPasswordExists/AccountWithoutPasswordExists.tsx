@@ -19,7 +19,7 @@ export const AccountWithoutPasswordExists = () => {
       <Text>
         To continue to your account please click below to create a password.
       </Text>
-      <Text noPaddingBottom>This link is only valid for 30 minutes.</Text>
+      <Text noPaddingBottom>This link is only valid for 60 minutes.</Text>
       <Button href="$createPasswordLink">Create password</Button>
       <Footer
         mistakeParagraphComponent={
