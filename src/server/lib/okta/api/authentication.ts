@@ -99,6 +99,7 @@ export const sendForgotPasswordEmail = async (
  * resetting a password or completing account activation).
  *
  * If valid, a state token is returned which can be used to complete the recovery transaction.
+ * This is a short-lived token with an expiry time of 5 minutes 30 seconds.
  *
  * @param {string} body.recoveryToken Recovery token that was distributed to the end user via out-of-band mechanism such as email
  *
