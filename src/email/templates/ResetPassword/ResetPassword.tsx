@@ -16,7 +16,7 @@ export const ResetPassword = () => {
       <Text>
         You&apos;ve asked us to send you a link to reset your password.
       </Text>
-      <Text noPaddingBottom>This link is only valid for 60 minutes.</Text>
+      <Text noPaddingBottom>This link is valid for 60 minutes.</Text>
       <Button href={'$passwordResetLink'}>Reset password</Button>
       <Footer
         mistakeParagraphComponent={

@@ -9,7 +9,7 @@ $signInLink
 
 If you forgot your password, you can use the link below to reset it.
 
-This link is only valid for 60 minutes.
+This link is valid for 60 minutes.
 
 $passwordResetLink
 

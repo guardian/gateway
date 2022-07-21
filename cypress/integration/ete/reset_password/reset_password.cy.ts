@@ -161,7 +161,7 @@ describe('Password set flow', () => {
             'Please click below to create a password for your account.',
           );
           expect(body).to.have.string(
-            'This link is only valid for 60 minutes.',
+            'This link is only valid for 30 minutes.',
           );
           expect(body).to.have.string('Create password');
         });
@@ -181,7 +181,7 @@ describe('Password set flow', () => {
             'Please click below to create a password for your account.',
           );
           expect(body).to.have.string(
-            'This link is only valid for 60 minutes.',
+            'This link is only valid for 30 minutes.',
           );
           expect(body).to.have.string('Create password');
 

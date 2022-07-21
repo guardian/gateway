@@ -69,7 +69,7 @@ describe('Registration email sent page', () => {
         expect(body).to.have.string(
           'To continue to your account please click below to create a password.',
         );
-        expect(body).to.have.string('This link is only valid for 60 minutes.');
+        expect(body).to.have.string('This link is only valid for 30 minutes.');
         expect(body).to.have.string('Create password');
       });
 
@@ -86,7 +86,7 @@ describe('Registration email sent page', () => {
             'To continue to your account please click below to create a password.',
           );
           expect(body).to.have.string(
-            'This link is only valid for 60 minutes.',
+            'This link is only valid for 30 minutes.',
           );
           expect(body).to.have.string('Create password');
         },

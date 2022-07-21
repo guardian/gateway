@@ -209,7 +209,7 @@ describe('Registration flow', () => {
         expect(body).to.have.string('This account already exists');
         expect(body).to.have.string('Sign in');
         expect(body).to.have.string('Reset password');
-        expect(body).to.have.string('This link is only valid for 60 minutes.');
+        expect(body).to.have.string('This link is only valid for 30 minutes.');
 
         expect(links.length).to.eq(3);
 
@@ -250,7 +250,7 @@ describe('Registration flow', () => {
         expect(body).to.have.string(
           'To continue to your account please click below to create a password.',
         );
-        expect(body).to.have.string('This link is only valid for 60 minutes.');
+        expect(body).to.have.string('This link is only valid for 30 minutes.');
         expect(body).to.have.string('Create password');
 
         expect(links.length).to.eq(2);

@@ -3,7 +3,7 @@ Hello again,
 
 Please click below to create a password for your account.
 
-This link is only valid for 60 minutes.
+This link is valid for 60 minutes.
 
 $createPasswordLink
 
