@@ -240,5 +240,61 @@ describe('Sign in flow, Okta enabled', () => {
         },
       );
     });
+    it('leaves the last access cookie unchanged when refreshing a valid Okta session', () => {
+      // Create a validated test user
+      cy.createTestUser({ isUserEmailValidated: true }).then(
+        ({ emailAddress, finalPassword }) => {
+          // Sign our new user in
+          cy.visit('/signin?useOkta=true');
+          cy.get('input[name=email]').type(emailAddress);
+          cy.get('input[name=password]').type(finalPassword);
+          cy.get('[data-cy="sign-in-button"]').click();
+          cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+
+          // Get the current session data
+          cy.getCookie('SC_GU_LA').then((originalLastAccessCookie) => {
+            cy.getCookie('SC_GU_U').then((originalSecureIdapiCookie) => {
+              expect(originalLastAccessCookie).to.exist;
+              expect(originalSecureIdapiCookie).to.exist;
+
+              // Refresh our user session
+              cy.visit(
+                `/signin/refresh?returnUrl=${encodeURIComponent(
+                  `https://${Cypress.env('BASE_URI')}/consents`,
+                )}&useOkta=true`,
+              );
+              cy.url().should('include', '/consents');
+
+              // Expect the last access cookie to be unchanged
+              cy.getCookie('SC_GU_LA').then((lastAccessCookie) => {
+                expect(lastAccessCookie).to.exist;
+                expect(lastAccessCookie?.value).to.equal(
+                  originalLastAccessCookie?.value,
+                );
+                expect(lastAccessCookie?.expiry).to.equal(
+                  originalLastAccessCookie?.expiry,
+                );
+              });
+
+              // Expect other Idapi cookies to have changed
+              cy.getCookie('SC_GU_U').then((secureIdapiCookie) => {
+                expect(secureIdapiCookie).to.exist;
+                expect(secureIdapiCookie?.value).not.to.equal(
+                  originalSecureIdapiCookie?.value,
+                );
+                if (
+                  secureIdapiCookie?.expiry &&
+                  originalSecureIdapiCookie?.expiry
+                ) {
+                  expect(secureIdapiCookie?.expiry).to.be.greaterThan(
+                    originalSecureIdapiCookie?.expiry,
+                  );
+                }
+              });
+            });
+          });
+        },
+      );
+    });
   });
 });
