@@ -30,7 +30,8 @@ import { redirectIfLoggedIn } from '../lib/middleware/redirectIfLoggedIn';
 import { getUserGroups } from '../lib/okta/api/users';
 import { clearOktaCookies } from '@/server/routes/signOut';
 
-const { okta, accountManagementUrl, oauthBaseUrl } = getConfiguration();
+const { okta, accountManagementUrl, oauthBaseUrl, defaultReturnUri } =
+  getConfiguration();
 
 /**
  * Helper method to determine if a global error should show on the sign in page
@@ -420,7 +421,6 @@ router.get(
     const identitySessionCookie = req.cookies.SC_GU_U;
     const identityLastAccessCookie = req.cookies.SC_GU_LA;
 
-    const { defaultReturnUri } = getConfiguration();
     const redirectUrl = returnUrl || defaultReturnUri;
 
     // Check if the user has an existing Okta session.
