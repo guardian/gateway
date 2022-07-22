@@ -419,7 +419,6 @@ router.get(
     const { useOkta, returnUrl } = res.locals.queryParams;
     const oktaSessionCookieId: string | undefined = req.cookies.sid;
     const identitySessionCookie = req.cookies.SC_GU_U;
-    const identityLastAccessCookie = req.cookies.SC_GU_LA;
 
     const redirectUrl = returnUrl || defaultReturnUri;
 
