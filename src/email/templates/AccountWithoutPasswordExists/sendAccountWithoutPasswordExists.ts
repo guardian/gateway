@@ -1,25 +1,32 @@
-import { render } from 'mjml-react';
 import { send } from '@/email/lib/send';
-
-import { AccountWithoutPasswordExists } from './AccountWithoutPasswordExists';
-import { AccountWithoutPasswordExistsText } from './AccountWithoutPasswordExistsText';
+import { generateUrl } from '@/email/lib/generateUrl';
+import { renderedAccountWithoutPasswordExists } from '../renderedTemplates';
 
 type Props = {
   to: string;
   subject?: string;
+  activationToken: string;
 };
-
-const plainText = AccountWithoutPasswordExistsText();
-
-const { html } = render(AccountWithoutPasswordExists());
 
 export const sendAccountWithoutPasswordExistsEmail = ({
   to,
   subject = 'Nearly there...',
+  activationToken,
 }: Props) => {
+  const setPasswordUrl = generateUrl({
+    path: 'set-password',
+    token: activationToken,
+  });
+
   return send({
-    html,
-    plainText,
+    html: renderedAccountWithoutPasswordExists.html.replace(
+      '$createPasswordLink',
+      setPasswordUrl,
+    ),
+    plainText: renderedAccountWithoutPasswordExists.plain.replace(
+      '$createPasswordLink',
+      setPasswordUrl,
+    ),
     subject,
     to,
   });
