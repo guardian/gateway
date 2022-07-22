@@ -438,7 +438,7 @@ router.get(
         clearOktaCookies(res);
         return res.redirect(redirectUrl);
       }
-    } else if (identitySessionCookie && identityLastAccessCookie) {
+    } else if (identitySessionCookie) {
       // If there isn't an Okta session, there's nothing to synchronise the
       // IDAPI session with, so we bail here and return to the URL they came from
       return res.redirect(redirectUrl);
