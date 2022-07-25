@@ -5,7 +5,7 @@ You are already registered with the Guardian.
 
 To continue to your account please click below to create a password.
 
-This link is only valid for 30 minutes.
+This link is valid for 60 minutes.
 
 $createPasswordLink
 

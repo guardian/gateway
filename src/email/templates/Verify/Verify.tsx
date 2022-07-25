@@ -13,7 +13,7 @@ export const Verify = () => {
       <Header />
       <SubHeader>Welcome to the Guardian</SubHeader>
       <Text>Please click below to complete your registration.</Text>
-      <Text noPaddingBottom>This link is only valid for 30 minutes.</Text>
+      <Text noPaddingBottom>This link is valid for 60 minutes.</Text>
       <Button href="$verificationLink">Complete registration</Button>
       <Footer
         mistakeParagraphComponent={

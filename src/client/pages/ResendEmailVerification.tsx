@@ -18,7 +18,7 @@ const LoggedOut = ({ signInPageUrl }: { signInPageUrl?: string }) => (
   <MainLayout pageHeader="Link Expired">
     <MainBodyText>Your email confirmation link has expired</MainBodyText>
     <MainBodyText noMargin>
-      The link we sent you was valid for 30 minutes. Please sign in again and we
+      The link we sent you was valid for 60 minutes. Please sign in again and we
       will resend a verification email.
     </MainBodyText>
     <LinkButton css={buttonStyles({ halfWidth: true })} href={signInPageUrl}>
@@ -53,7 +53,7 @@ const LoggedIn = ({
       </MainBodyText>
       <MainBodyText>
         We will send you a verification link to your email to ensure that it’s
-        you. Please note that the link will expire in 30 minutes.
+        you. Please note that the link will expire in 60 minutes.
       </MainBodyText>
       <MainBodyText>
         If you don&apos;t see it in your inbox, please check your spam filter.

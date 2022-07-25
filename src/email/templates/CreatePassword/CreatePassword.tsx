@@ -14,7 +14,7 @@ export const CreatePassword = () => {
       <SubHeader>Welcome back</SubHeader>
       <Text>Hello again,</Text>
       <Text>Please click below to create a password for your account.</Text>
-      <Text noPaddingBottom>This link is only valid for 30 minutes.</Text>
+      <Text noPaddingBottom>This link is valid for 60 minutes.</Text>
       <Button href={'$createPasswordLink'}>Create password</Button>
       <Footer
         mistakeParagraphComponent={

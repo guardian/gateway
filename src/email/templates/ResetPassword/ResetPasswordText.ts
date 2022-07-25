@@ -1,7 +1,7 @@
 export const ResetPasswordText = () => `
 Hello,
 You’ve asked us to send you a link to reset your password.
-This link is only valid for 30 minutes.
+This link is valid for 60 minutes.
 
 $passwordResetLink
 
