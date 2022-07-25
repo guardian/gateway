@@ -28,6 +28,11 @@ export const send = async ({
   subject,
   to,
 }: Props): Promise<boolean> => {
+  // used to mock email send in cypress mocked tests
+  if (process.env.RUNNING_IN_CYPRESS_MOCKED === 'true') {
+    return true;
+  }
+
   const params: AWS.SESV2.SendEmailRequest = {
     Content: {
       Simple: {
