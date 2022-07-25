@@ -44,6 +44,9 @@ export interface Okta {
   authServerId: string;
   clientId: string;
   clientSecret: string;
+  groupIds: {
+    GuardianUserAll: string;
+  };
   social: {
     apple: string;
     facebook: string;
