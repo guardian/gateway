@@ -85,6 +85,7 @@ jobs:
           NODE_TLS_REJECT_UNAUTHORIZED: 0
           # Used to tell Gateway server we're running in Cypress
           RUNNING_IN_CYPRESS: true
+          RUNNING_IN_CYPRESS_MOCKED: true
         with:
           build: yarn build
           start: yarn start, yarn mock-server

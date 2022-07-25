@@ -30,6 +30,7 @@ CI_ENV=${CI_ENV%?}
 
 # Used to tell Gateway server we're running in Cypress
 RUNNING_IN_CYPRESS=true
+RUNNING_IN_CYPRESS_MOCKED=true
 
 if [ -z ${NODE_EXTRA_CA_CERTS+x} ]; then
   echo "NODE_EXTRA_CA_CERTS is unset in your bash config, see setup docs on how to set this."

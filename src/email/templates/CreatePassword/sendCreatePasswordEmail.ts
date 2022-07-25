@@ -1,24 +1,32 @@
-import { render } from 'mjml-react';
 import { send } from '@/email/lib/send';
-
-import { CreatePassword } from './CreatePassword';
-import { CreatePasswordText } from './CreatePasswordText';
+import { generateUrl } from '@/email/lib/generateUrl';
+import { renderedCreatePassword } from '../renderedTemplates';
 
 type Props = {
   to: string;
   subject?: string;
+  setPasswordToken: string;
 };
 
-const plainText = CreatePasswordText();
-const { html } = render(CreatePassword());
-
-export const sendNoAccountEmail = ({
+export const sendCreatePasswordEmail = ({
   to,
   subject = 'Nearly there...',
+  setPasswordToken,
 }: Props) => {
+  const setPasswordUrl = generateUrl({
+    path: 'reset-password',
+    token: setPasswordToken,
+  });
+
   return send({
-    html,
-    plainText,
+    html: renderedCreatePassword.html.replace(
+      '$createPasswordLink',
+      setPasswordUrl,
+    ),
+    plainText: renderedCreatePassword.plain.replace(
+      '$createPasswordLink',
+      setPasswordUrl,
+    ),
     subject,
     to,
   });
