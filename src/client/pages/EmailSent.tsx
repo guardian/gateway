@@ -56,7 +56,7 @@ export const EmailSent = ({
       )}
       <MainBodyText>Please follow the instructions in this email.</MainBodyText>
       <MainBodyText>
-        <b>The link is only valid for 30 minutes.</b>
+        <b>The link is valid for 60 minutes.</b>
       </MainBodyText>
       {previousPage && (
         <MainBodyText>
