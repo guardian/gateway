@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
-import { sendResetPasswordEmail } from '@/server/lib/idapi/resetPassword';
+import { sendResetPasswordEmail as sendResetPasswordEmailIDAPI } from '@/server/lib/idapi/resetPassword';
 import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import {
   OphanConfig,
@@ -26,7 +26,16 @@ import {
   resetPassword as authenticationResetPassword,
 } from '@/server/lib/okta/api/authentication';
 import { isOktaError } from '@/server/lib/okta/api/errors';
-import { getUser, dangerouslyResetPassword } from '@/server/lib/okta/api/users';
+import {
+  getUser,
+  dangerouslyResetPassword,
+  activateUser,
+  reactivateUser,
+} from '@/server/lib/okta/api/users';
+import { Status } from '@/server/models/okta/User';
+import { OktaError } from '@/server/models/okta/Error';
+import { sendCreatePasswordEmail } from '@/email/templates/CreatePassword/sendCreatePasswordEmail';
+import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
 
 const { okta } = getConfiguration();
 
@@ -50,7 +59,7 @@ const sendEmailInIDAPI = async (
   const { returnUrl, emailSentSuccess, ref, refViewId } = state.queryParams;
 
   try {
-    await sendResetPasswordEmail(email, req.ip, returnUrl, ref, refViewId);
+    await sendResetPasswordEmailIDAPI(email, req.ip, returnUrl, ref, refViewId);
 
     setEncryptedStateCookie(res, { email });
 
@@ -93,54 +102,132 @@ const sendEmailInOkta = async (
   const { email = '' } = req.body;
 
   try {
-    try {
-      // attempt to send a reset password email
-      await sendForgotPasswordEmail(email);
-    } catch (error) {
-      // we need to catch an error here to check if the user
-      // does not have a password set, for example for social users
-      // we still want to send a reset password email for these users
-      // so we have to check for the correct error response
-      // set an placeholder unknown password and then send the email
-      if (
-        isOktaError(error) &&
-        error.status === 403 &&
-        error.code === 'E0000006'
-      ) {
-        // a user *should* only hit this error if no password set
-        // but we do a few checks to make sure that it's the case
+    // get the user object to check user status
+    const user = await getUser(email);
 
-        // first get the user object to check status
-        const user = await getUser(email);
+    switch (user.status) {
+      case Status.ACTIVE:
+        // inner try-catch block to handle specific errors from sendForgotPasswordEmail
+        try {
+          // attempt to send a reset password email
+          await sendForgotPasswordEmail(email);
+        } catch (error) {
+          // we need to catch an error here to check if the user
+          // does not have a password set, for example for social users
+          // we still want to send a reset password email for these users
+          // so we have to check for the correct error response
+          // set an placeholder unknown password and then send the email
+          if (
+            isOktaError(error) &&
+            error.status === 403 &&
+            error.code === 'E0000006'
+          ) {
+            // a user *should* only hit this error if no password set
+            // but we do a few checks to make sure that it's the case
 
-        // check for user does not have a password set
-        // (to make sure we don't override any existing password)
-        if (!user.credentials.password) {
-          // generate an recoveryToken OTT and put user into RECOVERY state
-          // this is the only way to create a password for a SOCIAL user who doesn't have one
-          const recoveryToken = await dangerouslyResetPassword(user.id);
+            // check for user does not have a password set
+            // (to make sure we don't override any existing password)
+            if (!user.credentials.password) {
+              // generate an recoveryToken OTT and put user into RECOVERY state
+              // this is the only way to create a password for a SOCIAL user who doesn't have one
+              const recoveryToken = await dangerouslyResetPassword(user.id);
 
-          // validate the token
-          const { stateToken } = await validateRecoveryToken({ recoveryToken });
+              // validate the token
+              const { stateToken } = await validateRecoveryToken({
+                recoveryToken,
+              });
 
-          // check state token is defined
-          if (stateToken) {
-            // set the placeholder password as a cryptographically secure UUID
-            await authenticationResetPassword({
-              stateToken,
-              newPassword: crypto.randomUUID(),
+              // check state token is defined
+              if (stateToken) {
+                // set the placeholder password as a cryptographically secure UUID
+                await authenticationResetPassword({
+                  stateToken,
+                  newPassword: crypto.randomUUID(),
+                });
+
+                // now that the placeholder password has been set, the user behaves like a
+                // normal user (provider = OKTA) and we can send the email by calling this method again
+                return sendEmailInOkta(req, res);
+              }
+            }
+          }
+
+          // otherwise throw the error to the outer catch block
+          // as it's not handled in the if statement above
+          throw error;
+        }
+        break;
+      case Status.STAGED:
+        {
+          // if the user is STAGED, we need to activate them before we can send them an email
+          // this will put them into the PROVISIONED state
+          // we will send them a create password email
+          const tokenResponse = await activateUser(user.id, false);
+          if (!tokenResponse?.token.length) {
+            throw new OktaError({
+              message: `Okta user activation failed: missing activation token`,
             });
-
-            // now that the placeholder password has been set, the user behaves like a
-            // normal user (provider = OKTA) and we can send the email by calling this method again
-            return sendEmailInOkta(req, res);
+          }
+          const emailIsSent = await sendCreatePasswordEmail({
+            to: user.profile.email,
+            setPasswordToken: tokenResponse.token,
+          });
+          if (!emailIsSent) {
+            throw new OktaError({
+              message: `Okta user activation failed: Failed to send email`,
+            });
           }
         }
-      }
-
-      // otherwise throw the error to the outer catch block
-      // as it's not handled in the if statement above
-      throw error;
+        break;
+      case Status.PROVISIONED:
+        {
+          // if the user is PROVISIONED, we need to reactivate them before we can send them an email
+          // this will keep them in the PROVISIONED state
+          // we will send them a create password email
+          const tokenResponse = await reactivateUser(user.id, false);
+          if (!tokenResponse?.token.length) {
+            throw new OktaError({
+              message: `Okta user reactivation failed: missing re-activation token`,
+            });
+          }
+          const emailIsSent = await sendCreatePasswordEmail({
+            to: user.profile.email,
+            setPasswordToken: tokenResponse.token,
+          });
+          if (!emailIsSent) {
+            throw new OktaError({
+              message: `Okta user reactivation failed: Failed to send email`,
+            });
+          }
+        }
+        break;
+      case Status.RECOVERY:
+      case Status.PASSWORD_EXPIRED:
+        {
+          // if the user is RECOVERY or PASSWORD_EXPIRED, we use the
+          // dangerouslyResetPassword method to put them into the RECOVERY state
+          // and send them a reset password email
+          const token = await dangerouslyResetPassword(user.id);
+          if (!token) {
+            throw new OktaError({
+              message: `Okta user reset password failed: missing reset password token`,
+            });
+          }
+          const emailIsSent = await sendResetPasswordEmail({
+            to: user.profile.email,
+            resetPasswordToken: token,
+          });
+          if (!emailIsSent) {
+            throw new OktaError({
+              message: `Okta user reset password failed: Failed to send email`,
+            });
+          }
+        }
+        break;
+      default:
+        throw new OktaError({
+          message: `Okta reset password failed with unaccepted Okta user status: ${user.status}`,
+        });
     }
 
     setEncryptedStateCookie(res, {
