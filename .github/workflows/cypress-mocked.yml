@@ -1,37 +1,14 @@
 name: cypress-mocked
-on: push
+on:
+  workflow_call:
 jobs:
-  build:
-    name: Build Gateway
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup node
-        uses: actions/setup-node@v2
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'yarn'
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile --immutable
-      - name: Build project
-        run: yarn build
-      - name: 'Zip build'
-        run: zip -r -q build.zip ./build
-      - name: 'Upload build'
-        uses: actions/upload-artifact@v3
-        with:
-          name: build
-          path: build.zip
-          retention-days: 1
   cypress-mocked:
     name: Cypress (mocked)
     runs-on: ubuntu-latest
-    needs: build
     strategy:
       fail-fast: false
       matrix:
-        group: [1, 2, 3, 4, 5]
+        group: [1, 2, 3, 4, 5, 6]
     timeout-minutes: 15
     services:
       redis:
@@ -128,7 +105,7 @@ jobs:
           wait-on-timeout: 60
           browser: chrome
           spec: cypress/integration/mocked/*.cy.ts
-          config: '{"chromeWebSecurity": false,"baseUrl":"https://profile.thegulocal.com","numTestsKeptInMemory":"1","e2e":{"specPattern": ["cypress/integration/mocked//**/*.${{ matrix.group }}.cy.ts"]}}'
+          config: '{"chromeWebSecurity": false,"baseUrl":"https://profile.thegulocal.com","numTestsKeptInMemory":"1","e2e":{"specPattern": ["cypress/integration/mocked/**/*.${{ matrix.group }}.cy.ts"]}}'
       - name: Upload screenshots
         uses: actions/upload-artifact@v2
         if: failure()
