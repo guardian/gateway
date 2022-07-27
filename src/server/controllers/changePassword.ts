@@ -12,10 +12,7 @@ import {
 } from '@/server/lib/idapi/changePassword';
 import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import { trackMetric } from '@/server/lib/trackMetric';
-import {
-  readEncryptedStateCookie,
-  updateEncryptedStateCookie,
-} from '@/server/lib/encryptedStateCookie';
+import { updateEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { ApiError } from '@/server/models/Error';
 import { PasswordRoutePath, RoutePaths } from '@/shared/model/Routes';
 import { PasswordPageTitle } from '@/shared/model/PageTitle';
@@ -26,7 +23,10 @@ import {
 } from '@/server/lib/validatePasswordField';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { resetPassword as resetPasswordInOkta } from '@/server/lib/okta/api/authentication';
+import {
+  resetPassword as resetPasswordInOkta,
+  validateRecoveryToken as validateTokenInOkta,
+} from '@/server/lib/okta/api/authentication';
 import { OktaError } from '@/server/models/okta/Error';
 import { checkTokenInOkta } from '@/server/controllers/checkPasswordToken';
 import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
@@ -172,12 +172,23 @@ const changePasswordInOkta = async (
   res: ResponseWithRequestState,
   successRedirectPath: RoutePaths,
 ) => {
-  const { stateToken } = readEncryptedStateCookie(req) ?? {};
+  const recoveryToken = req.params?.token;
   const { password, firstName, secondName } = req.body;
   const { clientId } = req.query;
 
   try {
+    if (!recoveryToken) {
+      throw new OktaError({ message: 'Okta recovery token missing' });
+    }
+
     validatePasswordFieldForOkta(password);
+
+    // We exhange the Okta recovery token for a freshly minted short-lived state
+    // token, to complete this change password operation. If the recovery token
+    // is invalid, we will show the user the link expired page.
+    const { stateToken } = await validateTokenInOkta({
+      recoveryToken,
+    });
 
     if (stateToken) {
       const { sessionToken, _embedded } = await resetPasswordInOkta({
@@ -236,6 +247,10 @@ const changePasswordInOkta = async (
 
     const { globalError, fieldErrors } = getErrorMessage(error);
 
+    // If the recovery token is valid, this call will redirect the client back
+    // to the same page, but with an error message. If the token is invalid, the
+    // client will be redirected to the /reset-password/expired page and asked
+    // to request a new reset password link.
     await checkTokenInOkta(path, pageTitle, req, res, globalError, fieldErrors);
   }
 };

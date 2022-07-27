@@ -145,14 +145,14 @@ export const checkTokenInOkta = async (
   const { token } = req.params;
 
   try {
-    const { stateToken, expiresAt, _embedded } = await validateTokenInOkta({
+    // Verify that the recovery token is still valid. If invalid, this will
+    // return an error and we will show the link expired page.
+    const { _embedded } = await validateTokenInOkta({
       recoveryToken: token,
     });
     const email = _embedded?.user.profile.login;
-    const timeUntilTokenExpiry =
-      expiresAt && Date.parse(expiresAt) - Date.now();
 
-    updateEncryptedStateCookie(req, res, { email, stateToken });
+    updateEncryptedStateCookie(req, res, { email });
 
     trackMetric('OktaValidatePasswordToken::Success');
 
@@ -189,7 +189,6 @@ export const checkTokenInOkta = async (
           pageData: {
             browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
             email,
-            timeUntilTokenExpiry,
             fieldErrors,
           },
           globalMessage: {
