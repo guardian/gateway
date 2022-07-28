@@ -35,7 +35,7 @@ export const WelcomeSessionExpiredPage = () => {
       formPageTrackingName="welcome-session-expired"
     >
       <MainBodyText>
-        The link we sent you was valid for 30 minutes and it has now expired.
+        The link we sent you was valid for 60 minutes and it has now expired.
       </MainBodyText>
       <MainBodyText>
         To receive a new link, please enter your email address below.

@@ -14,7 +14,7 @@ import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import deepmerge from 'deepmerge';
 import { Request, Router } from 'express';
 import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
-import { resendRegistrationEmail } from '@/server/lib/okta/register';
+import { sendRegistrationEmailByUserState } from '@/server/lib/okta/register';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { OktaError } from '@/server/models/okta/Error';
 import { GenericErrors } from '@/shared/model/Errors';
@@ -130,7 +130,7 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
     const { email } = req.body;
 
     if (typeof email !== 'undefined') {
-      await resendRegistrationEmail(email);
+      await sendRegistrationEmailByUserState(email);
 
       trackMetric('OktaWelcomeResendEmail::Success');
 

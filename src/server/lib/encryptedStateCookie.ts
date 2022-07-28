@@ -12,7 +12,7 @@ const encryptedStateCookieOptions: CookieOptions = {
   httpOnly: true,
   secure: !baseUri.includes('localhost'),
   signed: !baseUri.includes('localhost'),
-  sameSite: 'strict',
+  sameSite: 'lax',
 };
 
 export const setEncryptedStateCookie = (

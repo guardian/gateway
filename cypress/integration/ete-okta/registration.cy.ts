@@ -230,11 +230,11 @@ describe('Registration flow', () => {
             /set-password\/([^"]*)/,
           ).then(({ links, body, token }) => {
             expect(body).to.have.string('This account already exists');
-            expect(body).to.have.string('Sign in');
-            expect(body).to.have.string('Reset password');
-            expect(links.length).to.eq(3);
+
+            expect(body).to.have.string('Create password');
+            expect(links.length).to.eq(2);
             const setPasswordLink = links.find((s) =>
-              s.text?.includes('Reset password'),
+              s.text?.includes('Create password'),
             );
             expect(setPasswordLink?.href ?? '').to.have.string('useOkta=true');
             cy.visit(`/set-password/${token}`);
@@ -268,11 +268,10 @@ describe('Registration flow', () => {
               /set-password\/([^"]*)/,
             ).then(({ links, body, token }) => {
               expect(body).to.have.string('This account already exists');
-              expect(body).to.have.string('Sign in');
-              expect(body).to.have.string('Reset password');
-              expect(links.length).to.eq(3);
+              expect(body).to.have.string('Create password');
+              expect(links.length).to.eq(2);
               const setPasswordLink = links.find((s) =>
-                s.text?.includes('Reset password'),
+                s.text?.includes('Create password'),
               );
               expect(setPasswordLink?.href ?? '').to.have.string(
                 'useOkta=true',
@@ -463,11 +462,10 @@ describe('Registration flow', () => {
                 /set-password\/([^"]*)/,
               ).then(({ links, body, token }) => {
                 expect(body).to.have.string('This account already exists');
-                expect(body).to.have.string('Sign in');
-                expect(body).to.have.string('Reset password');
-                expect(links.length).to.eq(3);
+                expect(body).to.have.string('Create password');
+                expect(links.length).to.eq(2);
                 const setPasswordLink = links.find((s) =>
-                  s.text?.includes('Reset password'),
+                  s.text?.includes('Create password'),
                 );
                 expect(setPasswordLink?.href ?? '').to.have.string(
                   'useOkta=true',
@@ -513,11 +511,10 @@ describe('Registration flow', () => {
                   /set-password\/([^"]*)/,
                 ).then(({ links, body, token }) => {
                   expect(body).to.have.string('This account already exists');
-                  expect(body).to.have.string('Sign in');
-                  expect(body).to.have.string('Reset password');
-                  expect(links.length).to.eq(3);
+                  expect(body).to.have.string('Create password');
+                  expect(links.length).to.eq(2);
                   const setPasswordLink = links.find((s) =>
-                    s.text?.includes('Reset password'),
+                    s.text?.includes('Create password'),
                   );
                   expect(setPasswordLink?.href ?? '').to.have.string(
                     'useOkta=true',

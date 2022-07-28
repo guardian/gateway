@@ -14,6 +14,7 @@ import {
   TokenResponse,
 } from '@/server/models/okta/User';
 import { sendAccountExistsEmail } from '@/email/templates/AccountExists/sendAccountExistsEmail';
+import { sendAccountWithoutPasswordExistsEmail } from '@/email/templates/AccountWithoutPasswordExists/sendAccountWithoutPasswordExists';
 import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
 import { ErrorCause, OktaError } from '@/server/models/okta/Error';
 
@@ -34,6 +35,9 @@ jest.mock('@/server/lib/getConfiguration', () => ({
 // mocked Okta Users API
 jest.mock('@/server/lib/okta/api/users');
 jest.mock('@/email/templates/AccountExists/sendAccountExistsEmail');
+jest.mock(
+  '@/email/templates/AccountWithoutPasswordExists/sendAccountWithoutPasswordExists',
+);
 jest.mock('@/email/templates/ResetPassword/sendResetPasswordEmail');
 const mockedCreateOktaUser =
   mocked<(body: UserCreationRequest) => Promise<UserResponse>>(createUser);
@@ -53,6 +57,9 @@ const mockedDangerouslyResetPassword = mocked<
 const mockedSendAccountExistsEmail = mocked<
   (params: { to: string; activationToken: string }) => Promise<boolean>
 >(sendAccountExistsEmail);
+const mockedSendAccountWithoutPasswordExistsEmail = mocked<
+  (params: { to: string; activationToken: string }) => Promise<boolean>
+>(sendAccountWithoutPasswordExistsEmail);
 const mockedSendResetPasswordEmail = mocked<
   (params: { to: string; resetPasswordToken: string }) => Promise<boolean>
 >(sendResetPasswordEmail);
@@ -115,11 +122,13 @@ describe('okta#register', () => {
     mockedActivateOktaUser.mockReturnValueOnce(
       Promise.resolve({ token: 'sometoken' } as TokenResponse),
     );
-    mockedSendAccountExistsEmail.mockReturnValueOnce(Promise.resolve(true));
+    mockedSendAccountWithoutPasswordExistsEmail.mockReturnValueOnce(
+      Promise.resolve(true),
+    );
 
     await expect(register(email)).resolves.toEqual(user);
     expect(mockedActivateOktaUser).toHaveBeenCalled();
-    expect(mockedSendAccountExistsEmail).toHaveBeenCalled();
+    expect(mockedSendAccountWithoutPasswordExistsEmail).toHaveBeenCalled();
     // Make sure the function from the other branch of the switch isn't called
     expect(mockedReactivateOktaUser).not.toHaveBeenCalled();
   });
@@ -139,11 +148,13 @@ describe('okta#register', () => {
     mockedReactivateOktaUser.mockReturnValueOnce(
       Promise.resolve({ token: 'sometoken' } as TokenResponse),
     );
-    mockedSendAccountExistsEmail.mockReturnValueOnce(Promise.resolve(true));
+    mockedSendAccountWithoutPasswordExistsEmail.mockReturnValueOnce(
+      Promise.resolve(true),
+    );
 
     await expect(register(email)).resolves.toEqual(user);
     expect(mockedReactivateOktaUser).toHaveBeenCalled();
-    expect(mockedSendAccountExistsEmail).toHaveBeenCalled();
+    expect(mockedSendAccountWithoutPasswordExistsEmail).toHaveBeenCalled();
     // Make sure the function from the other branch of the switch isn't called
     expect(mockedActivateOktaUser).not.toHaveBeenCalled();
   });

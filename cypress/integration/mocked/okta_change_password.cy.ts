@@ -17,6 +17,8 @@
  * Password set successfully                        | show password updated confirmation page
  */
 
+import { randomPassword } from '../../support/commands/testUser';
+
 describe('Change password in Okta', () => {
   context('reset password page', () => {
     const email = 'mrtest@theguardian.com';
@@ -124,12 +126,6 @@ describe('Change password in Okta', () => {
       }).as('breachCheck');
     };
 
-    it('shows the session expired page if the token is expired', () => {
-      mockPasswordResetSuccess(new Date(Date.now() - 1000));
-      cy.visit(`/reset-password/fake_token?useOkta=true`);
-      cy.contains('Session timed out');
-    });
-
     it('shows the link expired page if the state token and the recovery token are invalid', () => {
       interceptBreachPasswordCheck();
 
@@ -139,7 +135,7 @@ describe('Change password in Okta', () => {
 
       cy.visit(`/reset-password/token?useOkta=true`);
 
-      cy.get('input[name="password"]').type('mysuperduperpassword');
+      cy.get('input[name="password"]').type(randomPassword());
       cy.get('button[type="submit"]').click();
 
       cy.contains('Link expired');
@@ -149,12 +145,13 @@ describe('Change password in Okta', () => {
       interceptBreachPasswordCheck();
 
       mockValidateRecoveryTokenSuccess();
+      mockValidateRecoveryTokenSuccess();
       mockPasswordResetInvalidStateTokenFailure();
       mockValidateRecoveryTokenSuccess();
 
       cy.visit(`/reset-password/token?useOkta=true`);
 
-      cy.get('input[name="password"]').type('mysuperduperpassword');
+      cy.get('input[name="password"]').type(randomPassword());
       cy.get('button[type="submit"]').click();
 
       cy.contains('Reset password');
@@ -164,26 +161,7 @@ describe('Change password in Okta', () => {
       );
     });
 
-    it('shows the password reset page with errors if state token is absent but recovery token is still valid', () => {
-      interceptBreachPasswordCheck();
-
-      mockValidateRecoveryTokenSuccess();
-      mockValidateRecoveryTokenSuccess();
-
-      cy.visit(`/reset-password/token?useOkta=true`);
-      cy.clearCookie('GU_GATEWAY_STATE');
-
-      cy.get('input[name="password"]').type('mysuperduperpassword');
-      cy.get('button[type="submit"]').click();
-
-      cy.contains('Reset password');
-      cy.contains(`Please enter your new password for ${email}`);
-      cy.contains(
-        'There was a problem changing your password, please try again.',
-      );
-    });
-
-    it('shows the link expired page if state token is absent and recovery token is invalid', () => {
+    it('shows the link expired page if recovery token is invalid after submitting password', () => {
       interceptBreachPasswordCheck();
 
       mockValidateRecoveryTokenSuccess();
@@ -192,7 +170,7 @@ describe('Change password in Okta', () => {
       cy.visit(`/reset-password/token?useOkta=true`);
       cy.clearCookie('GU_GATEWAY_STATE');
 
-      cy.get('input[name="password"]').type('mysuperduperpassword');
+      cy.get('input[name="password"]').type(randomPassword());
       cy.get('button[type="submit"]').click();
 
       cy.contains('Link expired');
@@ -213,7 +191,7 @@ describe('Change password in Okta', () => {
 
       cy.visit(`/reset-password/token?useOkta=true`);
 
-      cy.get('input[name="password"]').type('mysuperduperpassword');
+      cy.get('input[name="password"]').type(randomPassword());
       cy.get('button[type="submit"]').click();
 
       cy.contains('Reset password');
@@ -236,7 +214,7 @@ describe('Change password in Okta', () => {
 
       // even though this test is for a short password, we enter a valid password here to bypass
       // client-side password complexity checks in order to test the server-side response
-      cy.get('input[name="password"]').type('mysuperduperpassword');
+      cy.get('input[name="password"]').type(randomPassword());
       cy.get('button[type="submit"]').click();
 
       cy.contains('Reset password');
@@ -256,7 +234,7 @@ describe('Change password in Okta', () => {
 
       cy.visit(`/reset-password/token?useOkta=true`);
 
-      cy.get('input[name="password"]').type('mysuperduperpassword');
+      cy.get('input[name="password"]').type(randomPassword());
       cy.get('button[type="submit"]').click();
 
       cy.contains('Reset password');
@@ -274,7 +252,7 @@ describe('Change password in Okta', () => {
 
       cy.visit(`/reset-password/token?useOkta=true`);
 
-      cy.get('input[name="password"]').type('mysuperduperpassword');
+      cy.get('input[name="password"]').type(randomPassword());
       cy.get('button[type="submit"]').click();
 
       cy.contains('Reset password');
@@ -294,7 +272,7 @@ describe('Change password in Okta', () => {
 
       cy.visit(`/reset-password/token?useOkta=true`);
 
-      cy.get('input[name="password"]').type('mysuperduperpassword');
+      cy.get('input[name="password"]').type(randomPassword());
       cy.get('button[type="submit"]').click();
 
       cy.contains('Reset password');
@@ -304,6 +282,7 @@ describe('Change password in Okta', () => {
     it('shows the password updated page on successful update', () => {
       interceptBreachPasswordCheck();
 
+      mockValidateRecoveryTokenSuccess();
       mockValidateRecoveryTokenSuccess();
       mockPasswordResetSuccess();
       mockUpdateUserSuccess();
