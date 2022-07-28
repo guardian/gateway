@@ -186,8 +186,8 @@ export const getConfiguration = (): Configuration => {
     ),
     groupIds: {
       GuardianUserAll: getOrThrow(
-        process.env.OKTA_GUARDIAN_USERS_GROUP_ID,
-        'OKTA_GUARDIAN_USERS_GROUP_ID missing',
+        process.env.OKTA_GUARDIAN_USERS_ALL_GROUP_ID,
+        'OKTA_GUARDIAN_USERS_ALL_GROUP_ID missing',
       ),
     },
     social: {
