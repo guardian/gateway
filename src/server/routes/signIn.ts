@@ -29,6 +29,7 @@ import { getSession } from '../lib/okta/api/sessions';
 import { redirectIfLoggedIn } from '../lib/middleware/redirectIfLoggedIn';
 import { getUserGroups } from '../lib/okta/api/users';
 import { clearOktaCookies } from '@/server/routes/signOut';
+import { sendOphanComponentEventFromQueryParamsServer } from '../lib/ophan';
 
 const { okta, accountManagementUrl, oauthBaseUrl, defaultReturnUri } =
   getConfiguration();
@@ -277,6 +278,16 @@ const oktaSignInController = async (
       });
     }
 
+    // fire ophan component event if applicable when a session is set
+    if (res.locals.queryParams.componentEventParams) {
+      sendOphanComponentEventFromQueryParamsServer(
+        res.locals.queryParams.componentEventParams,
+        'SIGN_IN',
+        'web',
+        res.locals.ophanConfig.consentUUID,
+      );
+    }
+
     // we're authenticated track this metric
     trackMetric('OktaSignIn::Success');
 
@@ -468,6 +479,16 @@ router.get(
     if (okta.enabled && useOkta) {
       // get the IDP id from the config
       const idp = okta.social[socialIdp];
+
+      // fire ophan component event if applicable when a session is set
+      if (res.locals.queryParams.componentEventParams) {
+        sendOphanComponentEventFromQueryParamsServer(
+          res.locals.queryParams.componentEventParams,
+          'SIGN_IN',
+          req.params.social,
+          res.locals.ophanConfig.consentUUID,
+        );
+      }
 
       // if okta feature switch enabled, perform authorization code flow with idp
       return await performAuthorizationCodeFlow(req, res, {

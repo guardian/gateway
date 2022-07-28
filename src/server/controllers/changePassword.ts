@@ -32,6 +32,7 @@ import { checkTokenInOkta } from '@/server/controllers/checkPasswordToken';
 import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
 import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
 import { setupJobsUserInIDAPI, setupJobsUserInOkta } from '../lib/jobs';
+import { sendOphanComponentEventFromQueryParamsServer } from '../lib/ophan';
 
 const { okta } = getConfiguration();
 
@@ -226,7 +227,16 @@ const changePasswordInOkta = async (
         queryParams: undefined,
       });
 
-      // TODO: once sign out with Okta has been implemented, invalidate current sessions before kicking off code flow
+      // fire ophan component event if applicable
+      if (res.locals.queryParams.componentEventParams) {
+        sendOphanComponentEventFromQueryParamsServer(
+          res.locals.queryParams.componentEventParams,
+          'SIGN_IN',
+          'web',
+          res.locals.ophanConfig.consentUUID,
+        );
+      }
+
       return await performAuthorizationCodeFlow(req, res, {
         sessionToken,
         confirmationPagePath: successRedirectPath,
