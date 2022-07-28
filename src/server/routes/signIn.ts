@@ -28,8 +28,10 @@ import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
 import { getSession } from '../lib/okta/api/sessions';
 import { redirectIfLoggedIn } from '../lib/middleware/redirectIfLoggedIn';
 import { getUserGroups } from '../lib/okta/api/users';
+import { clearOktaCookies } from '@/server/routes/signOut';
 
-const { okta, accountManagementUrl, oauthBaseUrl } = getConfiguration();
+const { okta, accountManagementUrl, oauthBaseUrl, defaultReturnUri } =
+  getConfiguration();
 
 /**
  * Helper method to determine if a global error should show on the sign in page
@@ -402,6 +404,48 @@ router.post(
     }
 
     return res.redirect(303, redirectUrl);
+  }),
+);
+
+/**
+ * If an Okta session exists, this route will re-authenticate the Okta session
+ * and also refresh the IDAPI session concurrently, synchronising the expiry
+ * times of the Okta and IDAPI sessions, before returning the client to the URL
+ * they came from.
+ */
+router.get(
+  '/signin/refresh',
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    const { useOkta, returnUrl } = res.locals.queryParams;
+    const oktaSessionCookieId: string | undefined = req.cookies.sid;
+    const identitySessionCookie = req.cookies.SC_GU_U;
+
+    const redirectUrl = returnUrl || defaultReturnUri;
+
+    // Check if the user has an existing Okta session.
+    if (okta.enabled && useOkta && oktaSessionCookieId) {
+      try {
+        // If the user session is valid, we re-authenticate them, supplying
+        // the SID cookie value to Okta.
+        await getSession(oktaSessionCookieId);
+        return performAuthorizationCodeFlow(req, res, {
+          doNotSetLastAccessCookie: true,
+        });
+      } catch {
+        //if the cookie exists, but the session is invalid, we remove the cookie
+        //and return them to the URL they came from
+        clearOktaCookies(res);
+        return res.redirect(redirectUrl);
+      }
+    } else if (identitySessionCookie) {
+      // If there isn't an Okta session, there's nothing to synchronise the
+      // IDAPI session with, so we bail here and return to the URL they came from
+      return res.redirect(redirectUrl);
+    } else {
+      // If there are no Okta or IDAPI cookies, why are you here? We bail and
+      // send the client to the /signin page.
+      return res.redirect('/signin');
+    }
   }),
 );
 

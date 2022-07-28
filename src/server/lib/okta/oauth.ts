@@ -22,6 +22,7 @@ import { closeSession } from './api/sessions';
  * @param confirmationPagePath (optional) - page to redirect the user to after authentication
  * @param idp (optional) - okta id of the social identity provider to use
  * @param closeExistingSession (optional) - if true, we'll close any existing okta session before calling the authorization code flow
+ * @param doNotSetLastAccessCookie (optional) - if true, does not update the SC_GU_LA cookie during update of Idapi cookies.  Default false.
  * @returns 303 redirect to the okta /authorize endpoint
  */
 export const performAuthorizationCodeFlow = async (
@@ -32,11 +33,13 @@ export const performAuthorizationCodeFlow = async (
     confirmationPagePath,
     idp,
     closeExistingSession,
+    doNotSetLastAccessCookie = false,
   }: {
     sessionToken?: string;
     confirmationPagePath?: RoutePaths;
     idp?: string;
     closeExistingSession?: boolean;
+    doNotSetLastAccessCookie?: boolean;
   } = {},
 ) => {
   if (closeExistingSession) {
@@ -57,6 +60,7 @@ export const performAuthorizationCodeFlow = async (
   const authState = generateAuthorizationState(
     getPersistableQueryParams(res.locals.queryParams),
     confirmationPagePath,
+    doNotSetLastAccessCookie,
   );
   setAuthorizationStateCookie(authState, res);
 

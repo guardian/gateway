@@ -25,6 +25,7 @@ interface AuthorizationState {
   stateParam: string;
   queryParams: PersistableQueryParams;
   confirmationPage?: RoutePaths;
+  doNotSetLastAccessCookie?: boolean;
 }
 
 /**
@@ -203,15 +204,18 @@ const isAuthorizationState = (obj: unknown): obj is AuthorizationState => {
  * Code flow.
  * @param {string} returnUrl
  * @param confirmationPage (optional) - page to redirect the user to after authentication
+ * @param doNotSetLastAccessCookie (optional) - if true, ignore the last access cookie when setting the other Idapi cookies
  * @return {*} `AuthorizationState`
  */
 export const generateAuthorizationState = (
   queryParams: PersistableQueryParams,
   confirmationPage?: RoutePaths,
+  doNotSetLastAccessCookie?: boolean,
 ): AuthorizationState => ({
   stateParam: generateRandomString(),
   queryParams,
   confirmationPage,
+  doNotSetLastAccessCookie,
 });
 
 /**

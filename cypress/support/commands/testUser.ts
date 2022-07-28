@@ -24,6 +24,7 @@ declare global {
       updateTestUser: typeof updateTestUser;
       updateOktaTestUserProfile: typeof updateOktaTestUserProfile;
       getCurrentOktaSession: typeof getCurrentOktaSession;
+      closeCurrentOktaSession: typeof closeCurrentOktaSession;
     }
   }
 }
@@ -419,5 +420,27 @@ export const getCurrentOktaSession = (sid: string) => {
       });
   } catch (error) {
     throw new Error('Failed to get current Okta session: ' + error);
+  }
+};
+
+export const closeCurrentOktaSession = (sid: string | undefined) => {
+  try {
+    return cy
+      .request({
+        url: `${Cypress.env('OKTA_ORG_URL')}/api/v1/sessions/${sid}`,
+        method: 'DELETE',
+        headers: {
+          Authorization: `SSWS ${Cypress.env('OKTA_API_TOKEN')}`,
+        },
+        retryOnStatusCodeFailure: true,
+      })
+      .then((res) => {
+        if (res.status === 204 || res.status == 404) {
+          return true;
+        }
+        return false;
+      });
+  } catch (error) {
+    throw new Error('Failed to close current Okta session: ' + error);
   }
 };
