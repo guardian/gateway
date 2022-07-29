@@ -28,7 +28,7 @@ const componentEventParamsSchema = z
   })
   .strict();
 
-type ComponentEventParams = z.infer<typeof componentEventParamsSchema>;
+export type ComponentEventParams = z.infer<typeof componentEventParamsSchema>;
 
 /**
  * OphanConfig is the configuration for an Ophan event,
@@ -46,11 +46,11 @@ export interface OphanConfig {
  * ComponentEventParams type using zod, return undefined if
  * unable to parse the query string
  */
-const parseComponentEventParams = async (
+export const parseComponentEventParams = async (
   componentEventParams: string,
 ): Promise<ComponentEventParams | undefined> => {
   try {
-    const parsedQuery = parse(componentEventParams.replace('undefined', ''));
+    const parsedQuery = parse(componentEventParams.replaceAll('undefined', ''));
 
     const componentEventParamsParsed =
       await componentEventParamsSchema.safeParseAsync(parsedQuery);
@@ -69,8 +69,9 @@ const parseComponentEventParams = async (
  * In some cases in DCR and Frontend we send the component type
  * as a lowercase string with no spaces, so we need to convert them
  * to the correct case (upper snake case)
+ * otherwise we just return the component type as is
  */
-const getComponentType = (componentType: string) => {
+export const getComponentType = (componentType: string) => {
   if (componentType === 'signingate') {
     return 'SIGN_IN_GATE';
   }
@@ -83,7 +84,7 @@ const getComponentType = (componentType: string) => {
 /**
  * Generate the OphanComponentEvent object for the given componentEventParams
  */
-const generateOphanComponentEvent = (
+export const generateOphanComponentEvent = (
   componentEventParams: ComponentEventParams,
   action: OphanAction,
   value?: string,
