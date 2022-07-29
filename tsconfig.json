@@ -7,13 +7,13 @@
     "noUnusedLocals": true,
     "outDir": "build",
     "strict": true,
-    "target": "ES2019",
+    "target": "ES2022",
     "types": ["@emotion/react", "jest", "@testing-library/jest-dom"],
     "baseUrl": "src",
     "paths": {
       "@/*": ["*"]
     },
-    "lib": ["ES2019", "DOM"]
+    "lib": ["ES2022", "DOM"]
   },
   "include": ["src"]
 }
