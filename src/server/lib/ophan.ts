@@ -78,6 +78,12 @@ export const getComponentType = (componentType: string) => {
   if (componentType === 'identityauthentication') {
     return 'IDENTITY_AUTHENTICATION';
   }
+  if (componentType === 'acquisitionsheader') {
+    return 'ACQUISITIONS_HEADER';
+  }
+  if (componentType === 'acquisitionsengagementbanner') {
+    return 'ACQUISITIONS_ENGAGEMENT_BANNER';
+  }
   return componentType as OphanComponentType;
 };
 

@@ -89,6 +89,16 @@ describe('ophan#getComponentType', () => {
     );
   });
 
+  test('it should convert "acquisitionsheader" to "ACQUISITIONS_HEADER"', () => {
+    expect(getComponentType('acquisitionsheader')).toBe('ACQUISITIONS_HEADER');
+  });
+
+  test('it should convert "acquisitionsengagementbanner" to "ACQUISITIONS_ENGAGEMENT_BANNER"', () => {
+    expect(getComponentType('acquisitionsengagementbanner')).toBe(
+      'ACQUISITIONS_ENGAGEMENT_BANNER',
+    );
+  });
+
   test('it should return the same string if the component type is not "signingate" or "identityauthentication"', () => {
     expect(getComponentType('NEWSLETTER_SUBSCRIPTION')).toBe(
       'NEWSLETTER_SUBSCRIPTION',
