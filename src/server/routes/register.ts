@@ -34,6 +34,7 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { OktaError } from '@/server/models/okta/Error';
 import { causesInclude } from '@/server/lib/okta/api/errors';
 import { redirectIfLoggedIn } from '../lib/middleware/redirectIfLoggedIn';
+import { sendOphanComponentEventFromQueryParamsServer } from '../lib/ophan';
 
 const { okta } = getConfiguration();
 
@@ -270,6 +271,16 @@ const OktaRegistration = async (
   const { email = '' } = req.body;
   try {
     const user = await registerWithOkta(email);
+
+    // fire ophan component event if applicable
+    if (res.locals.queryParams.componentEventParams) {
+      sendOphanComponentEventFromQueryParamsServer(
+        res.locals.queryParams.componentEventParams,
+        'CREATE_ACCOUNT',
+        'web',
+        res.locals.ophanConfig.consentUUID,
+      );
+    }
 
     setEncryptedStateCookie(res, {
       email: user.profile.email,
