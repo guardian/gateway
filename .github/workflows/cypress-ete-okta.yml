@@ -1,17 +1,17 @@
 name: Cypress E2E tests with Okta
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: ['review_requested']
+  workflow_call:
 permissions:
   id-token: write
 
 jobs:
   cypress-nginx-okta:
-    name: Cypress (ete-okta)
+    name: Cypress End to End tests against Okta
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [1, 2, 3, 4]
     timeout-minutes: 15
     services:
       redis:
@@ -28,10 +28,6 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'yarn'
       - name: Setup OS, Nginx, and Certs
         run: |
           sudo apt-get update -y
@@ -52,6 +48,16 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_SES_SEND_EMAIL_ROLE_ARN }}
           aws-region: eu-west-1
+      - name: Download build
+        uses: actions/download-artifact@v2
+        with:
+          name: build
+      - name: Unzip build
+        run: unzip -q build.zip
+      - uses: actions/setup-node@v2
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
       - name: Cypress run
         uses: cypress-io/github-action@v4
         env:
@@ -102,13 +108,13 @@ jobs:
           # Used to tell Gateway server we're running in Cypress
           RUNNING_IN_CYPRESS: true
         with:
-          build: yarn build
+          install: yarn install --frozen-lockfile --immutable
           start: yarn start
           wait-on: 'https://profile.thegulocal.com/healthcheck'
           wait-on-timeout: 60
           browser: chrome
           spec: cypress/integration/ete-okta/**/*.cy.ts
-          config: '{"chromeWebSecurity": false,"baseUrl":"https://profile.thegulocal.com","numTestsKeptInMemory":"1","e2e":{"specPattern": ["cypress/integration/ete-okta/**/*.cy.ts"]}}'
+          config: '{"chromeWebSecurity": false,"baseUrl":"https://profile.thegulocal.com","numTestsKeptInMemory":"1","e2e":{"specPattern": ["cypress/integration/ete-okta/**/*.${{ matrix.group }}.cy.ts"]}}'
       - uses: actions/upload-artifact@v2
         if: failure()
         with:

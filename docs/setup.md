@@ -208,6 +208,15 @@ You can now pause execution by adding a `debugger` statement in any file within 
 
 We run unit tests using [`jest`](https://jestjs.io/). Our unit tests are defined in `__tests__` folders spread throughout the `src` directory.
 
+```sh
+# for a full ci test (Build, Lint, Unit Tests)
+$ make ci
+# or for lint and unit tests
+$ yarn test
+# or unit tests only
+$ yarn test:unit
+```
+
 #### Running tests with Docker
 
 To run all the unit tests:
@@ -264,13 +273,17 @@ $ make cypress-ete-okta
 It's recommended to use the `make` commands rather than calling the file directly e.g `./cypress-ete-okta.sh`
 as the test runners use environment variables to check the running mode.
 
-To run the jest tests headless and automatically (how they are run on CI) use:
+When creating new Cypress test files be sure to add a number to the name of the file so that GitHub actions can detect the test files and determine which machine to run the test on (`*.${{ matrix.group }}.cy.ts`).
 
-```sh
-$ make ci
-# or
-$ ./ci.sh
-```
+e.g. `cypress/integration/mocked/test.1.cy.ts`
+
+This allows us to run the tests in parallel on the CI environment. To determine how many machines we can run the tests on, you can check the `matrix.group` variable in the `.github/workflows/cypress-*.yml` files.
+
+In terms of how Cypress works in github actions, it's kicked off by the `.github/workflows/cypress.yml` file. The workflow only runs on the following events: On `main` branch, on PR `review_request`, and on `workflow_dispatch` which let's us run this from the Actions tab. This workflow will first build the project, upload the build, and then kick off the other Cypress workflows.
+
+The other workflows are defined in the `.github/workflows/cypress-*.yml` files. Namely: `cypress-ete-okta.yml`, `cypress-ete.yml`, and `cypress-mocked.yml`. These define the environments to run the Cypress E2E tests against Okta, Cypress E2E tests against IDAPI, and Cypress Mocked tests respectively. These workflows only run on `workflow_call`, so they can only run when called by another workflow, namely the `cypress.yml` workflow.
+
+As mentioned previously these are also set to run on a matrix group. This splits the cypress tests out into a parallel set of cypress tests rather than running all the tests on a single machine. This means that by running tests in parallel that they should run slightly faster as each individual matrix machine has less tests to run. It should help with test flakiness, or at least being able to identify which tests are flaky. This is also why we use the `matrix.group` variable in the `.github/workflows/cypress-*.yml` files and append it to the test file name: `*.${{ matrix.group }}.cy.ts`.
 
 ## Accessing Gateway on CODE or PROD
 

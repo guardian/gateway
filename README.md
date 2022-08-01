@@ -2,9 +2,9 @@
 
 ## Description
 
-The (new) profile (dot) theguardian (dot) com
+profile (dot) theguardian (dot) com
 
-Gateway is the new frontend to sign-in and registration at the Guardian at [profile.theguardian.com](https://profile.theguardian.com).
+Gateway is the frontend to sign-in and registration at the Guardian at [profile.theguardian.com](https://profile.theguardian.com).
 
 Need help? Contact the Identity team on [Digital/Identity](https://chat.google.com/room/AAAAFdv9gK8).
 
@@ -52,6 +52,10 @@ Other documentation in the [docs](docs) folder.
 - `make cypress-ete` or `./cypress-ete`
   - This runs cypress end-to-end tests against the [Identity API](https://github.com/guardian/identity) defined in `.env`
   - Be sure to use sparingly, this relies on [Mailosaur](https://mailosaur.com/) which has a limited number of emails we can test with it each day
+- `make cypress-ete-okta`
+  - This runs cypress end-to-end tests against the Okta environment defined in `.env`
+  - Be sure to use sparingly, this relies on [Mailosaur](https://mailosaur.com/) which has a limited number of emails we can test with it each day, and the Okta API which has a number of rate limits.
+- You can add `-dev` to the end of any of the above commands to run the tests against the development server. e.g. `make cypress-ete-okta-dev`
 
 4. Make sure your branch is up to date with `main`
 
