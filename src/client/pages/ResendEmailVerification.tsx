@@ -67,6 +67,7 @@ const LoggedIn = ({
           recaptchaSiteKey={recaptchaSiteKey}
           setRecaptchaErrorMessage={setRecaptchaErrorMessage}
           setRecaptchaErrorContext={setRecaptchaErrorContext}
+          disableOnSubmit
         >
           <EmailInput defaultValue={email} hidden hideLabel />
         </MainForm>

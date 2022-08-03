@@ -282,6 +282,7 @@ describe('Welcome and set password page', () => {
       cy.get('button[type="submit"]').click();
 
       cy.mockNext(200);
+      cy.contains('Check your email inbox');
       cy.get('button[type="submit"]').click();
       cy.contains('Check your email inbox');
     });

@@ -260,7 +260,6 @@ describe('Sign in flow', () => {
         },
       ]);
 
-      cy.get('[data-cy=sign-in-button]').click();
       // we can't actually check the authorization code flow
       // so intercept the request and redirect to the default return URL
       cy.intercept(
