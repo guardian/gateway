@@ -28,6 +28,9 @@ jest.mock('@/server/lib/getConfiguration', () => ({
       authServerId: 'authServerId',
       clientId: 'clientId',
       clientSecret: 'clientSecret',
+      groupIds: {
+        GuardianUserAll: 'okta-guardian-users-group-id',
+      },
     },
   }),
 }));

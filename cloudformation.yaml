@@ -258,6 +258,8 @@ Resources:
                   OKTA_IDP_APPLE=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaIdpApple' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   OKTA_IDP_FACEBOOK=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaIdpFacebook' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   OKTA_IDP_GOOGLE=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaIdpGoogle' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+                  OKTA_GUARDIAN_USERS_ALL_GROUP_ID=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaGuardianUsersAllGroupId' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
+
                   then break
                 fi
 
@@ -297,6 +299,7 @@ Resources:
             Environment=OKTA_IDP_APPLE=$OKTA_IDP_APPLE
             Environment=OKTA_IDP_FACEBOOK=$OKTA_IDP_FACEBOOK
             Environment=OKTA_IDP_GOOGLE=$OKTA_IDP_GOOGLE
+            Environment=OKTA_GUARDIAN_USERS_ALL_GROUP_ID=$OKTA_GUARDIAN_USERS_ALL_GROUP_ID            
             Environment=LOGGING_KINESIS_STREAM=${KinesisStream}
             Environment=EC2_INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
             Environment=SENTRY_DSN=${SentryDsn}

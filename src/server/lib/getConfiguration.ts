@@ -184,6 +184,12 @@ export const getConfiguration = (): Configuration => {
       process.env.OKTA_CLIENT_SECRET,
       'OKTA client secret missing',
     ),
+    groupIds: {
+      GuardianUserAll: getOrThrow(
+        process.env.OKTA_GUARDIAN_USERS_ALL_GROUP_ID,
+        'OKTA_GUARDIAN_USERS_ALL_GROUP_ID missing',
+      ),
+    },
     social: {
       apple: getOrThrow(
         process.env.OKTA_IDP_APPLE,

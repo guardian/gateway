@@ -11,6 +11,9 @@ import { causesInclude } from '@/server/lib/okta/api/errors';
 import { sendAccountExistsEmail } from '@/email/templates/AccountExists/sendAccountExistsEmail';
 import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
 import { sendAccountWithoutPasswordExistsEmail } from '@/email/templates/AccountWithoutPasswordExists/sendAccountWithoutPasswordExists';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+
+const { okta } = getConfiguration();
 
 /**
  * @name sendRegistrationEmailByUserState
@@ -148,6 +151,7 @@ export const register = async (email: string): Promise<UserResponse> => {
         isGuardianUser: true,
         registrationPlatform: 'identity-gateway',
       },
+      groupIds: [okta.groupIds.GuardianUserAll],
     });
   } catch (error) {
     if (

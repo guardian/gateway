@@ -47,6 +47,8 @@ describe('getConfiguration', () => {
     process.env.OKTA_IDP_APPLE = 'okta-idp-apple';
     process.env.OKTA_IDP_FACEBOOK = 'okta-idp-facebook';
     process.env.OKTA_IDP_GOOGLE = 'okta-idp-google';
+    process.env.OKTA_GUARDIAN_USERS_ALL_GROUP_ID =
+      'okta-guardian-users-group-id';
 
     const rateLimiterConfig = `{
       "enabled": true,
@@ -107,6 +109,9 @@ describe('getConfiguration', () => {
           apple: 'okta-idp-apple',
           facebook: 'okta-idp-facebook',
           google: 'okta-idp-google',
+        },
+        groupIds: {
+          GuardianUserAll: 'okta-guardian-users-group-id',
         },
       },
       aws: {

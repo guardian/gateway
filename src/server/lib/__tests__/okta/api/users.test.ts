@@ -51,6 +51,7 @@ const userCreationRequest = (email: string): UserCreationRequest => {
       isGuardianUser: true,
       registrationPlatform: 'identity-gateway',
     },
+    groupIds: ['groupId1'],
   };
 };
 
