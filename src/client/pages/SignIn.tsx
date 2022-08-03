@@ -1,4 +1,10 @@
-import React, { createRef, useEffect, useRef } from 'react';
+import React, {
+  createRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { css } from '@emotion/react';
 import { MainGrid } from '@/client/layouts/MainGrid';
 import { Header } from '@/client/components/Header';
@@ -146,6 +152,7 @@ export const SignIn = ({
     requestCount,
     executeCaptcha,
   } = useRecaptcha(recaptchaSiteKey, captchaElement);
+  const [isFormDisabled, setIsFormDisabled] = useState(false);
 
   // We want to show a more detailed reCAPTCHA error if
   // the user has requested a check more than once.
@@ -170,11 +177,31 @@ export const SignIn = ({
     }
   }, [signInFormRef, token]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    trackFormSubmit(formTrackingName);
-    executeCaptcha();
-  };
+  useEffect(() => {
+    // Determine is something went wrong with the check.
+    const recaptchaCheckFailed = recaptchaError || expired;
+
+    if (recaptchaCheckFailed && isFormDisabled) {
+      // Re-enable the disabled form submit button
+      setIsFormDisabled(false);
+    }
+  }, [isFormDisabled, recaptchaError, expired]);
+
+  const handleSubmit = useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
+      trackFormSubmit(formTrackingName);
+
+      if (!isFormDisabled) {
+        setIsFormDisabled(true);
+      }
+
+      if (!token) {
+        event.preventDefault();
+        executeCaptcha();
+      }
+    },
+    [executeCaptcha, isFormDisabled, token],
+  );
 
   const signInTab: TabType = {
     displayText: 'Sign in',
@@ -238,7 +265,14 @@ export const SignIn = ({
             </Link>
           </Links>
           <Terms isJobs={isJobs} />
-          <Button css={signInButton} type="submit" data-cy="sign-in-button">
+          <Button
+            css={signInButton}
+            type="submit"
+            data-cy="sign-in-button"
+            isLoading={isFormDisabled}
+            disabled={isFormDisabled}
+            aria-disabled={isFormDisabled}
+          >
             Sign in
           </Button>
         </form>

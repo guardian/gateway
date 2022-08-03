@@ -1,4 +1,10 @@
-import React, { createRef, useEffect, useRef } from 'react';
+import React, {
+  createRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Button } from '@guardian/source-react-components';
 import { Header } from '@/client/components/Header';
 import { Nav } from '@/client/components/Nav';
@@ -72,6 +78,8 @@ export const Registration = ({
     captchaElement,
   );
 
+  const [isFormDisabled, setIsFormDisabled] = useState(false);
+
   // We want to show a more detailed reCAPTCHA error if
   // the user has requested a check more than once.
   const recaptchaCheckFailed = error || expired;
@@ -95,11 +103,31 @@ export const Registration = ({
     }
   }, [registerFormRef, token]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    trackFormSubmit(formTrackingName);
-    executeCaptcha();
-  };
+  useEffect(() => {
+    // Determine is something went wrong with the check.
+    const recaptchaCheckFailed = error || expired;
+
+    if (recaptchaCheckFailed && isFormDisabled) {
+      // Re-enable the disabled form submit button
+      setIsFormDisabled(false);
+    }
+  }, [isFormDisabled, error, expired]);
+
+  const handleSubmit = useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
+      trackFormSubmit(formTrackingName);
+
+      if (!isFormDisabled) {
+        setIsFormDisabled(true);
+      }
+
+      if (!token) {
+        event.preventDefault();
+        executeCaptcha();
+      }
+    },
+    [executeCaptcha, isFormDisabled, token],
+  );
 
   return (
     <>
@@ -139,7 +167,14 @@ export const Registration = ({
           <RefTrackingFormFields />
           <EmailInput defaultValue={email} />
           <Terms isJobs={isJobs} />
-          <Button css={registerButton} type="submit" data-cy="register-button">
+          <Button
+            css={registerButton}
+            type="submit"
+            data-cy="register-button"
+            isLoading={isFormDisabled}
+            disabled={isFormDisabled}
+            aria-disabled={isFormDisabled}
+          >
             Register
           </Button>
         </form>
