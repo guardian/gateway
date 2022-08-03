@@ -48,7 +48,10 @@ type UnconditionalMetrics =
   | 'LoginMiddlewareNotRecent'
   | 'LoginMiddlewareNotSignedIn'
   | 'LoginMiddlewareUnverified'
-  | `${RateLimitMetrics}GatewayRateLimitHit`;
+  | `${RateLimitMetrics}GatewayRateLimitHit`
+  | `User-${'EmailValidated' | 'EmailNotValidated'}-${
+      | 'WeakPassword'
+      | 'StrongPassword'}`;
 
 // Combine all the metrics above together into a type
 export type Metrics =
