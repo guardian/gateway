@@ -78,7 +78,7 @@ export interface UserCreationRequest {
       'email' | 'login' | 'isGuardianUser' | 'registrationPlatform'
     >
   >;
-  groupIds?: Array<string>;
+  groupIds: Array<string>;
 }
 
 // https://developer.okta.com/docs/reference/api/users/#request-parameters-6
