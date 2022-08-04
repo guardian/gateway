@@ -58,5 +58,8 @@ cypress/screenshots
 # Rate limiter configuration
 .ratelimit.json
 
+# Rate limiter JSON schema (generated on install)
+ratelimit.schema.json
+
 # Mac OS finder app metadata
 .DS_Store
