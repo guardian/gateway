@@ -252,6 +252,23 @@ const sendEmailInOkta = async (
       }),
     );
   } catch (error) {
+    // handle check for if the user is not found
+    // this is a special case because we don't want to send an email
+    // but we want to show the email sent page
+    // so the reset password page cannot be used for account enumeration
+    if (
+      isOktaError(error) &&
+      error.status === 404 &&
+      error.code === 'E0000007'
+    ) {
+      return res.redirect(
+        303,
+        addQueryParamsToPath('/reset-password/email-sent', state.queryParams, {
+          emailSentSuccess: true,
+        }),
+      );
+    }
+
     logger.error('Okta send reset password email failed', error, {
       request_id: res.locals.requestId,
     });
