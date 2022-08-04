@@ -234,6 +234,22 @@ describe('Send password reset email in Okta', () => {
     });
   });
 
+  context('user not found', () => {
+    it('shows email sent page even when user not found', () => {
+      cy.visit('/reset-password?useOkta=true');
+      cy.get('input[name="email"]').type(email);
+      cy.mockNext(404, {
+        errorCode: 'E0000007',
+        errorSummary: 'User not found',
+        errorLink: 'E0000007',
+        errorId: 'errorId',
+        errorCauses: [],
+      });
+      cy.get('button[type="submit"]').click();
+      cy.contains('Check your email inbox');
+    });
+  });
+
   context('generic error handling', () => {
     it('shows a generic error when something goes wrong', () => {
       cy.visit('/reset-password?useOkta=true');
