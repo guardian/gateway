@@ -40,7 +40,8 @@ If the Redis connection fails, the server refuse to serve any requests until the
 
 ## Entry: `settings`
 
-An optional object which lets you enable some extra debug functionality
+An optional object which lets you enable some extra debug functionality.
+The `settings` configuration object is also available for individual routes, so you can override the global settings selectively on a route-by-route basis.
 
 - When `logOnly` is set to `true`, the rate limiter logic will still run, but the result will not be enforced. This is useful for when you want to try out some new configuration values but you don't want to actually apply them yet.
 - When `trackBucketCapacity` is set to `true`, it will log the global bucket capacity for every route periodically. This is used mainly for our dashboard so that we can keep track of any buckets at critically low values.
