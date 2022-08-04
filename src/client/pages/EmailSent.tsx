@@ -96,6 +96,7 @@ export const EmailSent = ({
             setRecaptchaErrorContext={setRecaptchaErrorContext}
             setRecaptchaErrorMessage={setRecaptchaErrorMessage}
             formTrackingName={formTrackingName}
+            disableOnSubmit
           >
             <EmailInput defaultValue={email} hidden hideLabel />
           </MainForm>

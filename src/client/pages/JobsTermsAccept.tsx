@@ -124,6 +124,7 @@ export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
             hasJobsTerms={false}
             formAction={submitUrl}
             onInvalid={() => setFormSubmitAttempted(true)}
+            disableOnSubmit
           >
             <NameInputField
               onGroupError={setGroupError}
@@ -159,6 +160,7 @@ export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
             hasJobsTerms={true}
             formAction={submitUrl}
             onInvalid={() => setFormSubmitAttempted(true)}
+            disableOnSubmit
           >
             <NameInputField
               onGroupError={setGroupError}

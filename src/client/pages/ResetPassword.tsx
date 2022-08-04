@@ -66,6 +66,7 @@ export const ResetPassword = ({
         setRecaptchaErrorMessage={setRecaptchaErrorMessage}
         setRecaptchaErrorContext={setRecaptchaErrorContext}
         formTrackingName={formPageTrackingName}
+        disableOnSubmit
       >
         <EmailInput label={emailInputLabel} defaultValue={email} />
       </MainForm>
