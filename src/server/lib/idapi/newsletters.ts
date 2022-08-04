@@ -35,7 +35,7 @@ const responseToEntity = (newsletter: NewsletterAPIResponse): NewsLetter => {
   };
 };
 
-export const read = async (): Promise<NewsLetter[]> => {
+export const read = async (request_id?: string): Promise<NewsLetter[]> => {
   const options = APIGetOptions();
   try {
     return (
@@ -45,7 +45,9 @@ export const read = async (): Promise<NewsLetter[]> => {
       })) as NewsletterAPIResponse[]
     ).map(responseToEntity);
   } catch (error) {
-    logger.error(`IDAPI Error newsletters read '/newsletters'`, error);
+    logger.error(`IDAPI Error newsletters read '/newsletters'`, error, {
+      request_id,
+    });
     return handleError();
   }
 };
@@ -54,6 +56,7 @@ export const update = async (
   ip: string,
   sc_gu_u: string,
   payload: NewsletterPatch[],
+  request_id?: string,
 ) => {
   const options = APIForwardSessionIdentifier(
     APIAddClientAccessToken(APIPatchOptions(payload), ip),
@@ -70,6 +73,9 @@ export const update = async (
     logger.error(
       `IDAPI Error newsletters update '/users/me/newsletters'`,
       error,
+      {
+        request_id,
+      },
     );
     return handleError();
   }
@@ -79,7 +85,11 @@ interface Subscription {
   listId: number;
 }
 
-export const readUserNewsletters = async (ip: string, sc_gu_u: string) => {
+export const readUserNewsletters = async (
+  ip: string,
+  sc_gu_u: string,
+  request_id?: string,
+) => {
   const options = APIForwardSessionIdentifier(
     APIAddClientAccessToken(APIGetOptions(), ip),
     sc_gu_u,
@@ -96,6 +106,9 @@ export const readUserNewsletters = async (ip: string, sc_gu_u: string) => {
     logger.error(
       `IDAPI Error readUserNewsletters '/users/me/newsletters'`,
       error,
+      {
+        request_id,
+      },
     );
     return handleError();
   }

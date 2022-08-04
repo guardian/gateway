@@ -40,6 +40,7 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
 export async function validate(
   token: string,
   ip: string,
+  request_id?: string,
 ): Promise<{
   email?: string;
   tokenExpiryTimestamp?: number;
@@ -67,6 +68,9 @@ export async function validate(
     logger.error(
       `IDAPI Error changePassword validate '/pwd-reset/user-for-token'`,
       error,
+      {
+        request_id,
+      },
     );
     return handleError(error as IDAPIError);
   }
@@ -76,6 +80,7 @@ export async function change(
   password: string,
   token: string,
   ip: string,
+  request_id?: string,
 ): Promise<IdapiCookies | undefined> {
   const options = APIPostOptions({
     password,
@@ -93,6 +98,9 @@ export async function change(
     logger.error(
       `IDAPI Error changePassword change '/pwd-reset/reset-pwd-for-user'`,
       error,
+      {
+        request_id,
+      },
     );
     handleError(error as IDAPIError);
   }

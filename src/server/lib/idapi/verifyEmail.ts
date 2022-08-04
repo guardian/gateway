@@ -38,7 +38,11 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
   throw new IdapiError({ message: VerifyEmailErrors.GENERIC, status });
 };
 
-export async function verifyEmail(token: string, ip: string) {
+export async function verifyEmail(
+  token: string,
+  ip: string,
+  request_id?: string,
+) {
   const options = APIPostOptions();
 
   try {
@@ -52,12 +56,13 @@ export async function verifyEmail(token: string, ip: string) {
     logger.error(
       `IDAPI Error verifyEmail '/user/validate-email/:token'`,
       error,
+      { request_id },
     );
     handleError(error as IDAPIError);
   }
 }
 
-export async function send(ip: string, sc_gu_u: string) {
+export async function send(ip: string, sc_gu_u: string, request_id?: string) {
   const options = APIForwardSessionIdentifier(
     APIAddClientAccessToken(APIPostOptions(), ip),
     sc_gu_u,
@@ -68,6 +73,7 @@ export async function send(ip: string, sc_gu_u: string) {
     logger.error(
       `IDAPI Error verifyEmail send '/user/send-validation-email'`,
       error,
+      { request_id },
     );
     return handleError(error as IDAPIError);
   }

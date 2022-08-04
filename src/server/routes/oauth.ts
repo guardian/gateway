@@ -88,7 +88,13 @@ router.get(
         // b) someone is trying to attack the oauth flow
         // for example with an invalid state cookie, or without the state cookie
         // the state cookie is used to prevent CSRF attacks
-        logger.error('Missing auth state cookie on OAuth Callback!');
+        logger.error(
+          'Missing auth state cookie on OAuth Callback!',
+          undefined,
+          {
+            request_id: res.locals.requestId,
+          },
+        );
         trackMetric('OAuthAuthorization::Failure');
         return redirectForGenericError(req, res);
       }
@@ -144,6 +150,10 @@ router.get(
       if (!tokenSet.access_token) {
         logger.error(
           'Missing access_token from /token endpoint in OAuth Callback',
+          undefined,
+          {
+            request_id: res.locals.requestId,
+          },
         );
         trackMetric('OAuthAuthorization::Failure');
         return redirectForGenericError(req, res);
@@ -179,6 +189,7 @@ router.get(
       const cookies = await exchangeAccessTokenForCookies(
         tokenSet.access_token,
         req.ip,
+        res.locals.requestId,
       );
 
       // adds set cookie headers
@@ -222,6 +233,9 @@ router.get(
           logger.error(
             `Failed to get app config for app ${authState.queryParams.appClientId}`,
             error,
+            {
+              request_id: res.locals.requestId,
+            },
           );
         }
       }
@@ -238,11 +252,15 @@ router.get(
       // check if it's an oauth/oidc error
       if (isOAuthError(error)) {
         // log the specific error
-        logger.error('OAuth/OIDC Error:', error);
+        logger.error('OAuth/OIDC Error:', error, {
+          request_id: res.locals.requestId,
+        });
       }
 
       // log and track the error
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+        request_id: res.locals.requestId,
+      });
       trackMetric('OAuthAuthorization::Failure');
 
       // fallthrough redirect to sign in with generic error

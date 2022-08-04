@@ -74,7 +74,9 @@ const sendEmailInIDAPI = async (
       }),
     );
   } catch (error) {
-    logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+    logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+      request_id: res.locals.requestId,
+    });
 
     const { message, status } =
       error instanceof ApiError ? error : new ApiError();
@@ -250,7 +252,9 @@ const sendEmailInOkta = async (
       }),
     );
   } catch (error) {
-    logger.error('Okta send reset password email failed', error);
+    logger.error('Okta send reset password email failed', error, {
+      request_id: res.locals.requestId,
+    });
 
     trackMetric(emailSendMetric('OktaResetPassword', 'Failure'));
 

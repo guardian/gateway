@@ -60,6 +60,7 @@ router.post(
           req.ip,
           state.queryParams,
           state.ophanConfig,
+          state.requestId,
         );
 
         setEncryptedStateCookie(res, { email });
@@ -74,7 +75,9 @@ router.post(
         const { message, status } =
           error instanceof ApiError ? error : new ApiError();
 
-        logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+        logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+          request_id: state.requestId,
+        });
 
         const html = renderer('/welcome/resend', {
           pageTitle: 'Resend Welcome Email',
@@ -147,7 +150,9 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
         message: 'Could not resend welcome email as email was undefined',
       });
   } catch (error) {
-    logger.error('Okta Registration resend email failure', error);
+    logger.error('Okta Registration resend email failure', error, {
+      request_id: res.locals.requestId,
+    });
 
     trackMetric('OktaWelcomeResendEmail::Failure');
 

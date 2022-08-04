@@ -35,7 +35,7 @@ const IDAPIAgreeGetController = async (
       primaryEmailAddress,
       privateFields: { firstName, secondName },
       userGroups,
-    } = await read(req.ip, SC_GU_U);
+    } = await read(req.ip, SC_GU_U, res.locals.requestId);
 
     const userBelongsToGRS = userGroups.find(
       (group) => group.packageCode === 'GRS',
@@ -73,6 +73,9 @@ const IDAPIAgreeGetController = async (
     logger.error(
       `${req.method} ${req.originalUrl} Error fetching Jobs user in IDAPI`,
       error,
+      {
+        request_id: res.locals.requestId,
+      },
     );
     // Redirect to /signin if an error occurs when fetching the users' data.
     return res.redirect(
@@ -136,6 +139,9 @@ const OktaAgreeGetController = async (
     logger.error(
       `${req.method} ${req.originalUrl} Error fetching Jobs user in Okta`,
       error,
+      {
+        request_id: res.locals.requestId,
+      },
     );
     // Redirect to /signin if an error occurs when fetching the users' data.
     return res.redirect(
@@ -178,6 +184,7 @@ router.post(
           secondName,
           req.ip,
           req.cookies.SC_GU_U,
+          res.locals.requestId,
         );
         trackMetric('JobsGRSGroupAgree::Success');
       }
@@ -185,6 +192,9 @@ router.post(
       logger.error(
         `${req.method} ${req.originalUrl} Error updating Jobs user information`,
         error,
+        {
+          request_id: res.locals.requestId,
+        },
       );
       trackMetric('JobsGRSGroupAgree::Failure');
     } finally {

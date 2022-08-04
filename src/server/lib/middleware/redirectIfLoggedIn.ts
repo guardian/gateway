@@ -37,6 +37,10 @@ export const redirectIfLoggedIn = async (
       clearOktaCookies(res);
       logger.info(
         'User attempting to access signed-out-only route had an existing Okta session cookie, but it was invalid',
+        undefined,
+        {
+          request_id: res.locals.requestId,
+        },
       );
       //we redirect to /reauthenticate to make sure the Okta sid cookie has been removed
       return res.redirect(
@@ -47,6 +51,10 @@ export const redirectIfLoggedIn = async (
     if (identitySessionCookie && identityLastAccessCookie) {
       logger.info(
         'User attempting to access signed-out-only route had existing IDAPI cookies set.',
+        undefined,
+        {
+          request_id: res.locals.requestId,
+        },
       );
       try {
         //Check if the current Identity session cookie is valid
@@ -54,6 +62,7 @@ export const redirectIfLoggedIn = async (
           identitySessionCookie,
           identityLastAccessCookie,
           req.ip,
+          res.locals.requestId,
         );
         //if the current session is valid redirect to the chosen URL
         if (

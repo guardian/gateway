@@ -66,7 +66,8 @@ const showSignInPage = async (req: Request, res: ResponseWithRequestState) => {
 
   // first attempt to get email from IDAPI encryptedEmail if it exists
   const decryptedEmail =
-    encryptedEmail && (await decrypt(encryptedEmail, req.ip));
+    encryptedEmail &&
+    (await decrypt(encryptedEmail, req.ip, res.locals.requestId));
 
   // followed by the gateway EncryptedState
   // if it exists
@@ -124,7 +125,8 @@ router.get(
 
     // first attempt to get email from IDAPI encryptedEmail if it exists
     const decryptedEmail =
-      encryptedEmail && (await decrypt(encryptedEmail, req.ip));
+      encryptedEmail &&
+      (await decrypt(encryptedEmail, req.ip, res.locals.requestId));
 
     // followed by the gateway EncryptedState
     // if it exists
@@ -189,6 +191,7 @@ const idapiSignInController = async (
       password,
       req.ip,
       res.locals.queryParams,
+      res.locals.requestId,
     );
 
     setIDAPICookies(res, cookies);
@@ -197,7 +200,9 @@ const idapiSignInController = async (
 
     return postSignInController(req, res, cookies, returnUrl);
   } catch (error) {
-    logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+    logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+      request_id: res.locals.requestId,
+    });
     const { message, status } =
       error instanceof ApiError ? error : new ApiError();
 
@@ -255,6 +260,8 @@ const oktaSignInController = async (
       // We log this scenario as it is quite unlikely, but we continue to sign the user in.
       logger.info(
         'User POSTed to /signin with an invalid `sid` session cookie',
+        undefined,
+        { request_id: res.locals.requestId },
       );
     }
   }
@@ -286,6 +293,7 @@ const oktaSignInController = async (
         'SIGN_IN',
         'web',
         res.locals.ophanConfig.consentUUID,
+        res.locals.requestId,
       );
     }
 
@@ -339,7 +347,9 @@ const oktaSignInController = async (
   } catch (error) {
     trackMetric('OktaSignIn::Failure');
 
-    logger.error('Okta authentication error:', error);
+    logger.error('Okta authentication error:', error, {
+      request_id: res.locals.requestId,
+    });
 
     const { message, status } = oktaSignInControllerErrorHandler(error);
 
@@ -374,6 +384,7 @@ const optInPromptController = async (
       CONSENTS_POST_SIGN_IN_PAGE,
       req.ip,
       req.cookies.SC_GU_U,
+      res.locals.requestId,
     );
     const html = renderer('/signin/success', {
       requestState: deepmerge(state, {
@@ -390,7 +401,9 @@ const optInPromptController = async (
     });
     res.type('html').send(html);
   } catch (error) {
-    logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+    logger.error(`${req.method} ${req.originalUrl} Error`, error, {
+      request_id: res.locals.requestId,
+    });
     return res.redirect(303, redirectUrl);
   }
 };
@@ -422,7 +435,9 @@ router.post(
     try {
       await patchConsents(req.ip, sc_gu_u, consents);
     } catch (error) {
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+        request_id: res.locals.requestId,
+      });
       trackMetric('PostSignInPrompt::Failure');
 
       /**
@@ -509,6 +524,7 @@ router.get(
           'SIGN_IN',
           req.params.social,
           res.locals.ophanConfig.consentUUID,
+          res.locals.requestId,
         );
       }
 

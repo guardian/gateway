@@ -10,10 +10,13 @@ import { requestStateMiddleware } from '@/server/lib/middleware/requestState';
 import { default as routes } from '@/server/routes';
 import { routeErrorHandler } from '@/server/lib/middleware/errorHandler';
 import { fourZeroFourMiddleware } from '@/server/lib/middleware/404';
+import { requestIdMiddleware } from './requestId';
 
 const { appSecret, stage } = getConfiguration();
 
 export const applyMiddleware = (server: Express): void => {
+  // add request id middleware
+  server.use(requestIdMiddleware);
   // apply helmet before anything else
   server.use(helmetMiddleware as RequestHandler);
   server.use(urlencoded({ extended: true }) as RequestHandler);

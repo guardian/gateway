@@ -74,6 +74,7 @@ router.post(
         req.ip,
         state.queryParams,
         state.ophanConfig,
+        state.requestId,
       );
 
       setEncryptedStateCookie(res, {
@@ -97,7 +98,9 @@ router.post(
           ? error
           : new ApiError({ message: ResetPasswordErrors.GENERIC });
 
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+        request_id: state.requestId,
+      });
 
       const html = renderer('/set-password/resend', {
         pageTitle: 'Resend Create Password Email',

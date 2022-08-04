@@ -33,6 +33,7 @@ export const setupJobsUserInIDAPI = async (
   secondName: string,
   ip: string,
   sc_gu_u: string,
+  request_id?: string,
 ) => {
   if (firstName === '' || secondName === '') {
     throw new Error('Empty values not permitted for first or last name.');
@@ -45,12 +46,14 @@ export const setupJobsUserInIDAPI = async (
   //
   // We can resolve both promises here because they are not dependent on each other.
   try {
-    await updateName(firstName, secondName, ip, sc_gu_u);
-    await addToGroup(GroupCode.GRS, ip, sc_gu_u);
+    await updateName(firstName, secondName, ip, sc_gu_u, request_id);
+    await addToGroup(GroupCode.GRS, ip, sc_gu_u, request_id);
     return true;
   } catch (error) {
     logger.error(
       'Jobs: Failed setting the name and/or the group for Jobs user.',
+      error,
+      { request_id },
     );
     throw error;
   }

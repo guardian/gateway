@@ -6,6 +6,8 @@ export const loggerMiddleware = (
   _: Response,
   next: NextFunction,
 ) => {
-  logger.info(`${req.method}, ${req.path}`);
+  logger.info(`${req.method}, ${req.path}`, undefined, {
+    request_id: req.get('x-request-id'),
+  });
   next();
 };

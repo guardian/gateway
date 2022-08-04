@@ -1,21 +1,28 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { LogLevel, Logger } from '@/shared/model/Logger';
 
+export interface ExtraLogFields {
+  request_id?: string;
+  [key: string]: any;
+}
+
 export abstract class BaseLogger implements Logger {
-  // eslint-disable-next-line
-  abstract log(logLevel: LogLevel, message: string, error?: any): void;
+  abstract log(
+    logLevel: LogLevel,
+    message: string,
+    error?: any,
+    extra?: ExtraLogFields,
+  ): void;
 
-  // eslint-disable-next-line
-  error(message: string, error?: any) {
-    return this.log(LogLevel.ERROR, message, error);
+  error(message: string, error?: any, extra?: ExtraLogFields) {
+    return this.log(LogLevel.ERROR, message, error, extra);
   }
 
-  // eslint-disable-next-line
-  warn(message: string, error?: any) {
-    return this.log(LogLevel.WARN, message, error);
+  warn(message: string, error?: any, extra?: ExtraLogFields) {
+    return this.log(LogLevel.WARN, message, error, extra);
   }
 
-  // eslint-disable-next-line
-  info(message: string, error?: any) {
-    return this.log(LogLevel.INFO, message, error);
+  info(message: string, error?: any, extra?: ExtraLogFields) {
+    return this.log(LogLevel.INFO, message, error, extra);
   }
 }
