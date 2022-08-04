@@ -68,6 +68,7 @@ const getRequestState = (req: RequestWithTypedQuery): RequestState => {
       dsn: sentryDsn,
     },
     browser: browser.getBrowser(),
+    requestId: req.get('x-request-id'),
   };
 };
 

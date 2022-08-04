@@ -51,14 +51,20 @@ router.get(
         });
       }
 
-      const { primaryEmailAddress } = await getUser(req.ip, sc_gu_u);
+      const { primaryEmailAddress } = await getUser(
+        req.ip,
+        sc_gu_u,
+        state.requestId,
+      );
       state = deepmerge(state, {
         pageData: {
           email: primaryEmailAddress,
         },
       });
     } catch (error) {
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+        request_id: state.requestId,
+      });
       const { message, status: errorStatus } =
         error instanceof ApiError ? error : new ApiError();
 
@@ -99,8 +105,10 @@ router.post(
         });
       }
 
-      const { email = (await getUser(req.ip, sc_gu_u)).primaryEmailAddress } =
-        req.body;
+      const {
+        email = (await getUser(req.ip, sc_gu_u, state.requestId))
+          .primaryEmailAddress,
+      } = req.body;
 
       state = deepmerge(state, {
         pageData: {
@@ -108,7 +116,7 @@ router.post(
         },
       });
 
-      await sendVerificationEmail(req.ip, sc_gu_u);
+      await sendVerificationEmail(req.ip, sc_gu_u, state.requestId);
       trackMetric('SendValidationEmail::Success');
 
       state = deepmerge(state, {
@@ -117,7 +125,9 @@ router.post(
         },
       });
     } catch (error) {
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+        request_id: state.requestId,
+      });
 
       trackMetric('SendValidationEmail::Failure');
 
@@ -148,11 +158,13 @@ router.get(
     const { token } = req.params;
 
     try {
-      const cookies = await verifyEmail(token, req.ip);
+      const cookies = await verifyEmail(token, req.ip, res.locals.requestId);
       trackMetric('EmailValidated::Success');
       setIDAPICookies(res, cookies);
     } catch (error) {
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+        request_id: res.locals.requestId,
+      });
 
       const { message } = error instanceof ApiError ? error : new ApiError();
 

@@ -17,6 +17,7 @@ const handleError = ({ status = 500 }: IDAPIError) => {
 export const logoutFromIDAPI = async (
   sc_gu_u: string,
   ip: string,
+  request_id?: string,
 ): Promise<IdapiCookies | undefined> => {
   const options = APIAddClientAccessToken(
     APIForwardSessionIdentifier(APIPostOptions(), sc_gu_u),
@@ -30,7 +31,9 @@ export const logoutFromIDAPI = async (
 
     return response.cookies;
   } catch (error) {
-    logger.error(`IDAPI Error auth logout '/unauth'`, error);
+    logger.error(`IDAPI Error auth logout '/unauth'`, error, {
+      request_id,
+    });
     return handleError(error as IDAPIError);
   }
 };

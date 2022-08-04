@@ -53,7 +53,7 @@ export const loginMiddleware = async (
   }
 
   try {
-    const auth = await read(sc_gu_u, sc_gu_la, req.ip);
+    const auth = await read(sc_gu_u, sc_gu_la, req.ip, res.locals.requestId);
 
     if (auth.status === IDAPIAuthStatus.SIGNED_OUT) {
       trackMetric('LoginMiddlewareNotSignedIn');
@@ -73,7 +73,9 @@ export const loginMiddleware = async (
       return redirectAuth(auth);
     }
   } catch (e) {
-    logger.error('loginMiddlewareFailure', e);
+    logger.error('loginMiddlewareFailure', e, {
+      request_id: res.locals.requestId,
+    });
     trackMetric('LoginMiddleware::Failure');
     res.redirect(
       303,

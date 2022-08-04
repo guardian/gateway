@@ -102,6 +102,7 @@ router.post(
                 req.ip,
                 state.queryParams,
                 state.ophanConfig,
+                state.requestId,
               );
               break;
             // they were an already registered user, so resend the AccountExists Email
@@ -111,6 +112,7 @@ router.post(
                 req.ip,
                 state.queryParams,
                 state.ophanConfig,
+                state.requestId,
               );
               break;
             // they were an already registered user without password
@@ -121,6 +123,7 @@ router.post(
                 req.ip,
                 state.queryParams,
                 state.ophanConfig,
+                state.requestId,
               );
               break;
             default:
@@ -149,7 +152,9 @@ router.post(
         const { message, status } =
           error instanceof ApiError ? error : new ApiError();
 
-        logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+        logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+          request_id: state.requestId,
+        });
 
         const html = renderer('/register/email-sent', {
           pageTitle: 'Check Your Inbox',
@@ -180,14 +185,20 @@ router.post(
 
       try {
         // use idapi user type endpoint to determine user type
-        const userType = await readUserType(email, req.ip);
+        const userType = await readUserType(email, req.ip, state.requestId);
 
         // check what type of user they are to determine course of action
         switch (userType) {
           // new user, so call guest register endpoint to create user account without password
           // and automatically send account verification email
           case UserType.NEW:
-            await guest(email, req.ip, state.queryParams, state.ophanConfig);
+            await guest(
+              email,
+              req.ip,
+              state.queryParams,
+              state.ophanConfig,
+              state.requestId,
+            );
             // set the encrypted state cookie in each case, so the next page is aware
             // of the email address and type of email sent
             // so if needed it can resend the correct email
@@ -204,6 +215,7 @@ router.post(
               req.ip,
               state.queryParams,
               state.ophanConfig,
+              state.requestId,
             );
             setEncryptedStateCookie(res, {
               email,
@@ -218,6 +230,7 @@ router.post(
               req.ip,
               state.queryParams,
               state.ophanConfig,
+              state.requestId,
             );
             setEncryptedStateCookie(res, {
               email,
@@ -238,7 +251,9 @@ router.post(
           addQueryParamsToPath('/register/email-sent', res.locals.queryParams),
         );
       } catch (error) {
-        logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+        logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+          request_id: state.requestId,
+        });
 
         const { message, status } =
           error instanceof ApiError ? error : new ApiError();
@@ -279,6 +294,7 @@ const OktaRegistration = async (
         'CREATE_ACCOUNT',
         'web',
         res.locals.ophanConfig.consentUUID,
+        res.locals.requestId,
       );
     }
 
@@ -299,7 +315,9 @@ const OktaRegistration = async (
       addQueryParamsToPath('/register/email-sent', res.locals.queryParams),
     );
   } catch (error) {
-    logger.error('Okta Registration failure', error);
+    logger.error('Okta Registration failure', error, {
+      request_id: res.locals.requestId,
+    });
 
     const errorMessage = () => {
       if (
@@ -351,7 +369,9 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
         message: 'Could not resend registration email as email was undefined',
       });
   } catch (error) {
-    logger.error('Okta Registration resend email failure', error);
+    logger.error('Okta Registration resend email failure', error, {
+      request_id: res.locals.requestId,
+    });
 
     trackMetric('OktaRegistrationResendEmail::Failure');
 

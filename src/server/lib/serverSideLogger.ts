@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AWSError, Kinesis } from 'aws-sdk';
 import { LogLevel } from '@/shared/model/Logger';
 import { createLogger, transports } from 'winston';
@@ -5,7 +6,7 @@ import Transport, { TransportStreamOptions } from 'winston-transport';
 import { formatWithOptions, InspectOptions } from 'util';
 import { awsConfig } from './awsConfig';
 import { getConfiguration } from './getConfiguration';
-import { BaseLogger } from '@/shared/lib/baseLogger';
+import { BaseLogger, ExtraLogFields } from '@/shared/lib/baseLogger';
 
 const {
   stage,
@@ -88,8 +89,12 @@ const formatLogParam = (message?: any) =>
   formatWithOptions(loggingOptions, message);
 
 class ServerSideLogger extends BaseLogger {
-  // eslint-disable-next-line
-  log(level: LogLevel, message: string, error?: any, extraFields?: any) {
+  log(
+    level: LogLevel,
+    message: string,
+    error?: any,
+    extraFields?: ExtraLogFields,
+  ) {
     if (
       error &&
       typeof error === 'object' &&

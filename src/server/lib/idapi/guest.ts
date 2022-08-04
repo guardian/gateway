@@ -43,6 +43,7 @@ export const guest = async (
   ip: string,
   trackingParams: IdApiQueryParams,
   ophanTrackingConfig?: OphanConfig,
+  request_id?: string,
 ): Promise<EmailType> => {
   const options = APIPostOptions({
     primaryEmailAddress: email,
@@ -75,6 +76,9 @@ export const guest = async (
     logger.error(
       `IDAPI Error: guest account creation '/guest?accountVerificationEmail=true'}`,
       error,
+      {
+        request_id,
+      },
     );
     trackMetric(emailSendMetric('AccountVerification', 'Failure'));
     return handleError(error as IDAPIError);

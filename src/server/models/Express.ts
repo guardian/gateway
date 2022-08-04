@@ -32,6 +32,7 @@ export interface RequestState {
   ophanConfig: OphanConfig;
   sentryConfig: SentryConfig;
   browser: Bowser.Parser.Details;
+  requestId?: string;
 }
 
 export interface ResponseWithRequestState extends Response {

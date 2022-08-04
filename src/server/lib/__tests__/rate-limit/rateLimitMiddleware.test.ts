@@ -129,6 +129,10 @@ describe('rate limiter middleware', () => {
 
     expect(loggerInfoMock).toHaveBeenLastCalledWith(
       `RateLimit-Gateway ipBucket email=undefined ip=192.168.2.1 accessToken= identity-gateway GET /register`,
+      undefined,
+      {
+        request_id: expect.any(String),
+      },
     );
 
     // 192.168.2.7 should be allowed to make a request.
@@ -179,6 +183,10 @@ describe('rate limiter middleware', () => {
     // Expect the access token to be truncated so we don't exceed the maximum message size for message.keywords in Kibana.
     expect(loggerInfoMock).toHaveBeenLastCalledWith(
       `RateLimit-Gateway accessTokenBucket email=undefined ip=::ffff:127.0.0.1 accessToken=verylo identity-gateway GET /register`,
+      undefined,
+      {
+        request_id: expect.any(String),
+      },
     );
 
     // SC_GU_U=other should be allowed to make a request
@@ -253,6 +261,10 @@ describe('rate limiter middleware', () => {
 
     expect(loggerInfoMock).toHaveBeenLastCalledWith(
       `RateLimit-Gateway globalBucket email=undefined ip=::ffff:127.0.0.1 accessToken= identity-gateway GET /reset-password`,
+      undefined,
+      {
+        request_id: expect.any(String),
+      },
     );
 
     // Confirm that enabled overridden route: /register is rate limited.
@@ -312,6 +324,10 @@ describe('rate limiter middleware', () => {
 
     expect(loggerInfoMock).toHaveBeenLastCalledWith(
       `RateLimit-Gateway emailBucket email=test@test.com ip=::ffff:127.0.0.1 accessToken= identity-gateway POST /signin`,
+      undefined,
+      {
+        request_id: expect.any(String),
+      },
     );
 
     await request(server).get('/reset-password').expect(200);

@@ -58,7 +58,12 @@ const changePasswordInIDAPI = async (
   try {
     validatePasswordField(password);
 
-    const cookies = await changePassword(password, token, req.ip);
+    const cookies = await changePassword(
+      password,
+      token,
+      req.ip,
+      res.locals.requestId,
+    );
 
     if (cookies) {
       setIDAPICookies(res, cookies);
@@ -81,6 +86,7 @@ const changePasswordInIDAPI = async (
           secondName,
           req.ip,
           SC_GU_U.value,
+          res.locals.requestId,
         );
         trackMetric('JobsGRSGroupAgree::Success');
       }
@@ -104,7 +110,9 @@ const changePasswordInIDAPI = async (
     const { message, status, field } =
       error instanceof ApiError ? error : new ApiError();
 
-    logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+    logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+      request_id: res.locals.requestId,
+    });
 
     // see the comment above around the success metrics
     if (clientId === 'jobs' && path === '/welcome') {
@@ -119,6 +127,7 @@ const changePasswordInIDAPI = async (
       const { email, timeUntilTokenExpiry } = await validateToken(
         token,
         req.ip,
+        res.locals.requestId,
       );
 
       if (field) {
@@ -153,7 +162,9 @@ const changePasswordInIDAPI = async (
       );
       return res.status(status).type('html').send(html);
     } catch (error) {
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+        request_id: res.locals.requestId,
+      });
       // if theres an error with the token validation, we have to take them back
       // to the resend page
       return res.type('html').send(
@@ -203,6 +214,10 @@ const changePasswordInOkta = async (
       } else {
         logger.error(
           'Failed to set validation flags in Okta as there was no id',
+          undefined,
+          {
+            request_id: res.locals.requestId,
+          },
         );
       }
 
@@ -214,6 +229,10 @@ const changePasswordInOkta = async (
         } else {
           logger.error(
             'Failed to set jobs user name and field in Okta as there was no id',
+            undefined,
+            {
+              request_id: res.locals.requestId,
+            },
           );
         }
       }
@@ -234,6 +253,7 @@ const changePasswordInOkta = async (
           'SIGN_IN',
           'web',
           res.locals.ophanConfig.consentUUID,
+          res.locals.requestId,
         );
       }
 
@@ -246,7 +266,9 @@ const changePasswordInOkta = async (
       throw new OktaError({ message: 'Okta state token missing' });
     }
   } catch (error) {
-    logger.error('Okta change password failure', error);
+    logger.error('Okta change password failure', error, {
+      request_id: res.locals.requestId,
+    });
 
     // see the comment above around the success metrics
     if (clientId === 'jobs' && path === '/welcome') {

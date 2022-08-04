@@ -37,7 +37,7 @@ const responseToEntity = (consent: ConsentAPIResponse): Consent => {
   };
 };
 
-const read = async (): Promise<Consent[]> => {
+const read = async (request_id?: string): Promise<Consent[]> => {
   const options = APIGetOptions();
   try {
     return (
@@ -47,7 +47,9 @@ const read = async (): Promise<Consent[]> => {
       })) as ConsentAPIResponse[]
     ).map(responseToEntity);
   } catch (error) {
-    logger.error(`IDAPI Error consents read '/consents'`, error);
+    logger.error(`IDAPI Error consents read '/consents'`, error, {
+      request_id,
+    });
     return handleError();
   }
 };
@@ -56,6 +58,7 @@ export const update = async (
   ip: string,
   sc_gu_u: string,
   payload: UserConsent[],
+  request_id?: string,
 ) => {
   // Inversion required of four legitimate interest consents that are modelled as opt OUTS in the backend data model
   // but which are presented as opt INs on the client UI/UX
@@ -71,7 +74,9 @@ export const update = async (
     });
     return;
   } catch (error) {
-    logger.error(`IDAPI Error consents update  '/users/me/consents'`, error);
+    logger.error(`IDAPI Error consents update  '/users/me/consents'`, error, {
+      request_id,
+    });
     return handleError();
   }
 };
@@ -80,12 +85,13 @@ export const getUserConsentsForPage = async (
   pageConsents: string[],
   ip: string,
   sc_gu_u: string,
+  request_id?: string,
 ): Promise<Consent[]> => {
   // Inversion required of four legitimate interest consents that are modelled as opt OUTS in the backend data model
   // but which are presented as opt INs on the client UI/UX
-  const allConsents = invertOptOutConsents(await read());
+  const allConsents = invertOptOutConsents(await read(request_id));
   const userConsents = invertOptOutConsents(
-    (await getUser(ip, sc_gu_u)).consents,
+    (await getUser(ip, sc_gu_u, request_id)).consents,
   );
 
   return pageConsents

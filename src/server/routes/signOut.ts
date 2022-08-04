@@ -94,7 +94,11 @@ const signOutFromIDAPI = async (
     // attempt log out from Identity if we have a SC_GU_U cookie
     if (sc_gu_u) {
       // perform the logout and get back the GU_SO cookie
-      const cookies = await logoutFromIDAPI(sc_gu_u, req.ip);
+      const cookies = await logoutFromIDAPI(
+        sc_gu_u,
+        req.ip,
+        res.locals.requestId,
+      );
 
       // set the GU_SO cookie
       if (cookies) {
@@ -104,7 +108,9 @@ const signOutFromIDAPI = async (
 
     trackMetric('SignOut::Success');
   } catch (error) {
-    logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+    logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+      request_id: res.locals.requestId,
+    });
     trackMetric('SignOut::Failure');
   } finally {
     // we want to clear the IDAPI cookies anyway even if there was an
@@ -129,7 +135,9 @@ const signOutFromOkta = async (
       await clearUserSessions(userId);
     }
   } catch (error) {
-    logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+    logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+      request_id: res.locals.requestId,
+    });
     trackMetric('OktaSignOut::Failure');
   } finally {
     //clear okta cookie

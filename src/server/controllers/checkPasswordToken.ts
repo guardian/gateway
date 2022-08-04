@@ -69,6 +69,7 @@ const checkTokenInIDAPI = async (
     const { email, timeUntilTokenExpiry } = await validateTokenInIDAPI(
       token,
       req.ip,
+      res.locals.requestId,
     );
 
     requestState = deepmerge(requestState, {
@@ -91,7 +92,9 @@ const checkTokenInIDAPI = async (
     );
     return res.type('html').send(html);
   } catch (error) {
-    logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+    logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+      request_id: res.locals.requestId,
+    });
 
     if (path === '/welcome') {
       handleBackButtonEventOnWelcomePage(path, pageTitle, req, res);
@@ -201,7 +204,9 @@ export const checkTokenInOkta = async (
 
     return res.type('html').send(html);
   } catch (error) {
-    logger.error('Okta validate password token failure', error);
+    logger.error('Okta validate password token failure', error, {
+      request_id: res.locals.requestId,
+    });
 
     trackMetric('OktaValidatePasswordToken::Failure');
 

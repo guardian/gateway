@@ -46,12 +46,18 @@ import { PageTitle } from '@/shared/model/PageTitle';
 interface ConsentPage {
   page: ConsentPath;
   path: RoutePaths;
-  read: (ip: string, sc_gu_u: string, geo?: GeoLocation) => Promise<PageData>;
+  read: (
+    ip: string,
+    sc_gu_u: string,
+    geo?: GeoLocation,
+    request_id?: string,
+  ) => Promise<PageData>;
   pageTitle: PageTitle;
   update?: (
     ip: string,
     sc_gu_u: string,
     body: { [key: string]: string },
+    request_id?: string,
   ) => Promise<void>;
 }
 
@@ -59,9 +65,14 @@ const getUserNewsletterSubscriptions = async (
   newslettersOnPage: string[],
   ip: string,
   sc_gu_u: string,
+  request_id?: string,
 ): Promise<NewsLetter[]> => {
-  const allNewsletters = await getNewsletters();
-  const userNewsletterSubscriptions = await readUserNewsletters(ip, sc_gu_u);
+  const allNewsletters = await getNewsletters(request_id);
+  const userNewsletterSubscriptions = await readUserNewsletters(
+    ip,
+    sc_gu_u,
+    request_id,
+  );
 
   return newslettersOnPage
     .map((id) => allNewsletters.find((newsletter) => newsletter.id === id))
@@ -85,46 +96,50 @@ export const consentPages: ConsentPage[] = [
     page: 'communication',
     path: '/consents/communication',
     pageTitle: CONSENTS_PAGES.CONTACT,
-    read: async (ip, sc_gu_u) => ({
+    read: async (ip, sc_gu_u, _, request_id) => ({
       consents: await getUserConsentsForPage(
         CONSENTS_COMMUNICATION_PAGE,
         ip,
         sc_gu_u,
+        request_id,
       ),
       page: 'communication',
     }),
-    update: async (ip, sc_gu_u, body) => {
+    update: async (ip, sc_gu_u, body, request_id) => {
       const consents = CONSENTS_COMMUNICATION_PAGE.map((id) => ({
         id,
         consented: getConsentValueFromRequestBody(id, body),
       }));
 
-      await patchConsents(ip, sc_gu_u, consents);
+      await patchConsents(ip, sc_gu_u, consents, request_id);
     },
   },
   {
     page: 'newsletters',
     path: '/consents/newsletters',
     pageTitle: CONSENTS_PAGES.NEWSLETTERS,
-    read: async (ip, sc_gu_u, geo) => ({
+    read: async (ip, sc_gu_u, geo, request_id) => ({
       page: 'newsletters',
       consents: await getUserConsentsForPage(
         CONSENTS_NEWSLETTERS_PAGE,
         ip,
         sc_gu_u,
+        request_id,
       ),
       newsletters: await getUserNewsletterSubscriptions(
         NewsletterMap.get(geo) as string[],
         ip,
         sc_gu_u,
+        request_id,
       ),
       previousPage: 'communication',
     }),
-    update: async (ip, sc_gu_u, body) => {
+    update: async (ip, sc_gu_u, body, request_id) => {
       const userNewsletterSubscriptions = await getUserNewsletterSubscriptions(
         ALL_NEWSLETTER_IDS,
         ip,
         sc_gu_u,
+        request_id,
       );
 
       // get a list of newsletters to update that have changed from the users current subscription
@@ -154,39 +169,49 @@ export const consentPages: ConsentPage[] = [
           return false;
         });
 
-      await patchNewsletters(ip, sc_gu_u, newsletterSubscriptionsToUpdate);
+      await patchNewsletters(
+        ip,
+        sc_gu_u,
+        newsletterSubscriptionsToUpdate,
+        request_id,
+      );
 
       const consents = CONSENTS_NEWSLETTERS_PAGE.map((id) => ({
         id,
         consented: getConsentValueFromRequestBody(id, body),
       }));
 
-      await patchConsents(ip, sc_gu_u, consents);
+      await patchConsents(ip, sc_gu_u, consents, request_id);
     },
   },
   {
     page: 'data',
     path: '/consents/data',
     pageTitle: CONSENTS_PAGES.YOUR_DATA,
-    read: async (ip, sc_gu_u) => ({
-      consents: await getUserConsentsForPage(CONSENTS_DATA_PAGE, ip, sc_gu_u),
+    read: async (ip, sc_gu_u, _, request_id) => ({
+      consents: await getUserConsentsForPage(
+        CONSENTS_DATA_PAGE,
+        ip,
+        sc_gu_u,
+        request_id,
+      ),
       page: 'data',
       previousPage: 'newsletters',
     }),
-    update: async (ip, sc_gu_u, body) => {
+    update: async (ip, sc_gu_u, body, request_id) => {
       const consents = CONSENTS_DATA_PAGE.map((id) => ({
         id,
         consented: getConsentValueFromRequestBody(id, body),
       }));
 
-      await patchConsents(ip, sc_gu_u, consents);
+      await patchConsents(ip, sc_gu_u, consents, request_id);
     },
   },
   {
     page: 'review',
     path: '/consents/review',
     pageTitle: CONSENTS_PAGES.REVIEW,
-    read: async (ip, sc_gu_u, geo) => {
+    read: async (ip, sc_gu_u, geo, request_id) => {
       const ALL_CONSENT = [
         ...CONSENTS_DATA_PAGE,
         ...CONSENTS_NEWSLETTERS_PAGE,
@@ -195,11 +220,17 @@ export const consentPages: ConsentPage[] = [
 
       return {
         page: 'review',
-        consents: await getUserConsentsForPage(ALL_CONSENT, ip, sc_gu_u),
+        consents: await getUserConsentsForPage(
+          ALL_CONSENT,
+          ip,
+          sc_gu_u,
+          request_id,
+        ),
         newsletters: await getUserNewsletterSubscriptions(
           NewsletterMap.get(geo) as string[],
           ip,
           sc_gu_u,
+          request_id,
         ),
       };
     },
@@ -249,11 +280,18 @@ router.get(
 
       state = deepmerge(state, {
         pageData: {
-          ...(await read(req.ip, sc_gu_u, state.pageData.geolocation)),
+          ...(await read(
+            req.ip,
+            sc_gu_u,
+            state.pageData.geolocation,
+            res.locals.requestId,
+          )),
         },
       } as RequestState);
     } catch (error) {
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+        request_id: res.locals.requestId,
+      });
 
       const { message, status: errorStatus } =
         error instanceof ApiError ? error : new ApiError();
@@ -310,7 +348,7 @@ router.post(
       pageTitle = _pageTitle;
 
       if (update) {
-        await update(req.ip, sc_gu_u, req.body);
+        await update(req.ip, sc_gu_u, req.body, res.locals.requestId);
       }
 
       trackMetric(consentsPageMetric(page, 'Post', 'Success'));
@@ -322,7 +360,9 @@ router.post(
 
       return res.redirect(303, url);
     } catch (error) {
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+        request_id: res.locals.requestId,
+      });
 
       const { message, status: errorStatus } =
         error instanceof ApiError ? error : new ApiError();

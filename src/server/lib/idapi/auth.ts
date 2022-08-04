@@ -56,6 +56,7 @@ export const read = async (
   sc_gu_u: string,
   sc_gu_la = '',
   ip = '',
+  request_id?: string,
 ): Promise<IDAPIAuthRedirect> => {
   const options = APIAddClientAccessToken(
     APIForwardSessionIdentifier(APIGetOptions(), sc_gu_u),
@@ -76,7 +77,9 @@ export const read = async (
       })) as APIResponse,
     );
   } catch (error) {
-    logger.error(`IDAPI Error auth read '/auth/redirect'`, error);
+    logger.error(`IDAPI Error auth read '/auth/redirect'`, error, {
+      request_id,
+    });
     return handleError(error as IDAPIError);
   }
 };
@@ -86,6 +89,7 @@ export const authenticate = async (
   password: string,
   ip: string,
   trackingData: IdApiQueryParams = {},
+  request_id?: string,
 ) => {
   const options = APIPostOptions({
     email,
@@ -101,7 +105,13 @@ export const authenticate = async (
     });
     return response.cookies as IdapiCookies;
   } catch (error) {
-    logger.error(`IDAPI Error auth authenticate '/auth?format=cookies'`, error);
+    logger.error(
+      `IDAPI Error auth authenticate '/auth?format=cookies'`,
+      error,
+      {
+        request_id,
+      },
+    );
     return handleError(error as IDAPIError);
   }
 };
@@ -109,6 +119,7 @@ export const authenticate = async (
 export const exchangeAccessTokenForCookies = async (
   token: string,
   ip: string,
+  request_id?: string,
 ) => {
   const options = APIPostOptions({
     token,
@@ -125,6 +136,9 @@ export const exchangeAccessTokenForCookies = async (
     logger.error(
       `IDAPI Error auth exchangeAccessTokenForCookies '/auth/oauth-token'`,
       error,
+      {
+        request_id,
+      },
     );
     handleError(error as IDAPIError);
   }

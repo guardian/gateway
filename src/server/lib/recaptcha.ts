@@ -32,7 +32,9 @@ const checkRecaptchaError = (req: Request, _: Response, next: NextFunction) => {
 
   const { error } = req.recaptcha;
   if (error) {
-    logger.error('Problem verifying recaptcha, error response: ', error);
+    logger.error('Problem verifying recaptcha, error response: ', error, {
+      request_id: req.get('x-request-id'),
+    });
     return next(recaptchaError);
   }
 

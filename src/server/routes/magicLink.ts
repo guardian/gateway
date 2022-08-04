@@ -32,7 +32,9 @@ router.post(
         `TODO: Implement the logic to send the magic link to ${email} here.`,
       );
     } catch (error) {
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+        request_id: state.requestId,
+      });
       const { message, status } =
         error instanceof ApiError ? error : new ApiError();
 

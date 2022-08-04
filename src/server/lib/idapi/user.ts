@@ -94,7 +94,11 @@ const responseToEntity = (response: APIResponse): User => {
   };
 };
 
-export const read = async (ip: string, sc_gu_u: string): Promise<User> => {
+export const read = async (
+  ip: string,
+  sc_gu_u: string,
+  request_id?: string,
+): Promise<User> => {
   const options = APIForwardSessionIdentifier(
     APIAddClientAccessToken(APIGetOptions(), ip),
     sc_gu_u,
@@ -106,7 +110,9 @@ export const read = async (ip: string, sc_gu_u: string): Promise<User> => {
     })) as APIResponse;
     return responseToEntity(response);
   } catch (error) {
-    logger.error(`IDAPI Error user read '/user/me'`, error);
+    logger.error(`IDAPI Error user read '/user/me'`, error, {
+      request_id,
+    });
     return handleError(error as IDAPIError);
   }
 };
@@ -116,6 +122,7 @@ export const updateName = async (
   secondName: string,
   ip: string,
   sc_gu_u: string,
+  request_id?: string,
 ): Promise<User> => {
   const options = APIForwardSessionIdentifier(
     APIAddClientAccessToken(
@@ -136,7 +143,9 @@ export const updateName = async (
     })) as APIResponse;
     return responseToEntity(response);
   } catch (error) {
-    logger.error(`IDAPI error updating name for ${ip}`, error);
+    logger.error(`IDAPI error updating name for ${ip}`, error, {
+      request_id,
+    });
     return handleError(error as IDAPIError);
   }
 };
@@ -145,6 +154,7 @@ export const addToGroup = async (
   groupCode: GroupCode,
   ip: string,
   sc_gu_u: string,
+  request_id?: string,
 ) => {
   const options = APIForwardSessionIdentifier(
     APIAddClientAccessToken(APIPostOptions(), ip),
@@ -158,7 +168,9 @@ export const addToGroup = async (
     })) as APIGroupResponse;
     return response;
   } catch (error) {
-    logger.error(`IDAPI error assigning user to group: ${groupCode}`, error);
+    logger.error(`IDAPI error assigning user to group: ${groupCode}`, error, {
+      request_id,
+    });
     return handleError(error as IDAPIError);
   }
 };
@@ -166,6 +178,7 @@ export const addToGroup = async (
 export const readUserType = async (
   email: string,
   ip: string,
+  request_id?: string,
 ): Promise<UserType> => {
   const options = APIAddClientAccessToken(APIGetOptions(), ip);
 
@@ -192,7 +205,9 @@ export const readUserType = async (
         throw new Error('Invalid UserType');
     }
   } catch (error) {
-    logger.error(`IDAPI Error read user type '/user/type/:email'`, error);
+    logger.error(`IDAPI Error read user type '/user/type/:email'`, error, {
+      request_id,
+    });
     return handleError(error as IDAPIError);
   }
 };
@@ -202,6 +217,7 @@ export const sendAccountVerificationEmail = async (
   ip: string,
   trackingParams: IdApiQueryParams,
   ophanTrackingConfig?: OphanConfig,
+  request_id?: string,
 ) => {
   const options = APIPostOptions({
     'email-address': email,
@@ -232,6 +248,7 @@ export const sendAccountVerificationEmail = async (
     logger.error(
       `IDAPI Error send account verification email '/user/send-account-verification-email'`,
       error,
+      { request_id },
     );
     trackMetric(emailSendMetric('AccountVerification', 'Failure'));
     return handleError(error as IDAPIError);
@@ -243,6 +260,7 @@ export const sendAccountExistsEmail = async (
   ip: string,
   trackingParams: IdApiQueryParams,
   ophanTrackingConfig?: OphanConfig,
+  request_id?: string,
 ) => {
   const options = APIPostOptions({
     'email-address': email,
@@ -266,6 +284,7 @@ export const sendAccountExistsEmail = async (
     logger.error(
       `IDAPI Error send account exists email '/user/send-account-exists-email'`,
       error,
+      { request_id },
     );
     trackMetric(emailSendMetric('AccountExists', 'Failure'));
     return handleError(error as IDAPIError);
@@ -277,6 +296,7 @@ export const sendAccountWithoutPasswordExistsEmail = async (
   ip: string,
   trackingParams: IdApiQueryParams,
   ophanTrackingConfig?: OphanConfig,
+  request_id?: string,
 ) => {
   const options = APIPostOptions({
     'email-address': email,
@@ -300,6 +320,9 @@ export const sendAccountWithoutPasswordExistsEmail = async (
     logger.error(
       `IDAPI Error send account without password exists email '/user/send-account-without-password-exists-email'`,
       error,
+      {
+        request_id,
+      },
     );
     trackMetric(emailSendMetric('AccountExistsWithoutPassword', 'Failure'));
     return handleError(error as IDAPIError);
@@ -311,6 +334,7 @@ export const sendCreatePasswordEmail = async (
   ip: string,
   trackingParams: IdApiQueryParams,
   ophanTrackingConfig?: OphanConfig,
+  request_id?: string,
 ) => {
   const options = APIPostOptions({
     'email-address': email,
@@ -334,6 +358,7 @@ export const sendCreatePasswordEmail = async (
     logger.error(
       `IDAPI Error send create password email '/user/send-create-password-account-exists-email'`,
       error,
+      { request_id },
     );
     trackMetric(emailSendMetric('CreatePassword', 'Failure'));
     return handleError(error as IDAPIError);

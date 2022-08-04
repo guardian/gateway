@@ -47,11 +47,14 @@ const postSignInController = async (
         CONSENTS_POST_SIGN_IN_PAGE,
         req.ip,
         sc_gu_u,
+        res.locals.requestId,
       );
 
       return !consents.find(({ id }) => id === Consents.SUPPORTER)?.consented;
     } catch (error) {
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error);
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+        request_id: res.locals.requestId,
+      });
       trackMetric('PostSignInPromptRedirect::Failure');
       return false;
     }

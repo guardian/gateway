@@ -50,7 +50,9 @@ export const routeErrorHandler = (
     return next(err);
   }
 
-  logger.error('unexpected error', err);
+  logger.error('unexpected error', err, {
+    request_id: req.get('x-request-id'),
+  });
 
   const html = renderer('/error', {
     requestState: res.locals,
