@@ -30,6 +30,7 @@ import { redirectIfLoggedIn } from '../lib/middleware/redirectIfLoggedIn';
 import { getUserGroups } from '../lib/okta/api/users';
 import { clearOktaCookies } from '@/server/routes/signOut';
 import { sendOphanComponentEventFromQueryParamsServer } from '../lib/ophan';
+import { isBreachedPassword } from '../lib/breachedPasswordCheck';
 
 const { okta, accountManagementUrl, oauthBaseUrl, defaultReturnUri } =
   getConfiguration();
@@ -268,12 +269,12 @@ const oktaSignInController = async (
       password,
     });
 
-    // we only support the SUCESSS status for Okta authetication in gateway
+    // we only support the SUCCESS status for Okta authentication in gateway
     // Other statuses could be supported in the future https://developer.okta.com/docs/reference/api/authn/#transaction-state
     if (response.status !== 'SUCCESS') {
       throw new ApiError({
         message:
-          'User autheticating was blocked due to unsupported Okta Authenetication status property',
+          'User authenticating was blocked due to unsupported Okta Authentication status property',
         status: 403,
       });
     }
@@ -291,17 +292,38 @@ const oktaSignInController = async (
     // we're authenticated track this metric
     trackMetric('OktaSignIn::Success');
 
-    // If the user was able to log in with Okta BUT NOT VALIDATED, we will still try and sign them in with Identity
-    // This is because we will initally block unvalidated users from getting Okta sessions, but still allow them
-    // Identity sessions.
-    // We use the groups api to get the group membership, rather than checking the email validated field because
-    // social users do not have the email validated flag set until after they login for the first time (but are in the email validated group)
-
     if (response._embedded?.user.id) {
+      // retrieve the user groups
       const groups = await getUserGroups(response._embedded.user.id);
+
+      // check if the user has their email validated based on group membership
       const emailValidated = groups.some(
         (group) => group.profile.name === 'GuardianUser-EmailValidated',
       );
+
+      // check the user password strength
+      const hasWeakPassword = await isBreachedPassword(password);
+
+      // For MVP2 we want to log if the user is in one of the 4 following states
+      // 1. User is in the GuardianUser-EmailValidated group and has a strong password
+      // 2. User is in the GuardianUser-EmailValidated group and has a weak password
+      // 3. User is not in the GuardianUser-EmailValidated group and has a strong password
+      // 4. User is not in the GuardianUser-EmailValidated group and has a weak password
+      if (emailValidated && !hasWeakPassword) {
+        trackMetric('User-EmailValidated-StrongPassword');
+      } else if (emailValidated && hasWeakPassword) {
+        trackMetric('User-EmailValidated-WeakPassword');
+      } else if (!emailValidated && !hasWeakPassword) {
+        trackMetric('User-EmailNotValidated-StrongPassword');
+      } else if (!emailValidated && hasWeakPassword) {
+        trackMetric('User-EmailNotValidated-WeakPassword');
+      }
+
+      // If the user was able to log in with Okta BUT NOT VALIDATED, we will still try and sign them in with Identity
+      // This is because we will initially block unvalidated users from getting Okta sessions, but still allow them
+      // Identity sessions.
+      // We use the groups api to get the group membership, rather than checking the email validated field because
+      // social users do not have the email validated flag set until after they login for the first time (but are in the email validated group)
       if (!emailValidated) {
         return idapiSignInController(req, res);
       }
