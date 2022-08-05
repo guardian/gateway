@@ -31,7 +31,7 @@ const { okta } = getConfiguration();
  * @param email
  * @returns {Promise<UserResponse>} Promise that resolves to the user object
  */
-export const sendRegistrationEmailByUserState = async (
+const sendRegistrationEmailByUserState = async (
   email: string,
 ): Promise<UserResponse> => {
   const user = await getUser(email);

@@ -13,12 +13,13 @@ import { consentPages } from '@/server/routes/consents';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import deepmerge from 'deepmerge';
 import { Request, Router } from 'express';
-import { setEncryptedStateCookie } from '../lib/encryptedStateCookie';
-import { sendRegistrationEmailByUserState } from '@/server/lib/okta/register';
+import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
+import { register } from '@/server/lib/okta/register';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { OktaError } from '@/server/models/okta/Error';
 import { GenericErrors } from '@/shared/model/Errors';
 import { getConfiguration } from '@/server/lib/getConfiguration';
+import { setEncryptedStateCookieForOktaRegistration } from './register';
 
 const { okta } = getConfiguration();
 
@@ -133,15 +134,15 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
     const { email } = req.body;
 
     if (typeof email !== 'undefined') {
-      await sendRegistrationEmailByUserState(email);
+      const user = await register(email);
 
       trackMetric('OktaWelcomeResendEmail::Success');
 
-      const queryParams = res.locals.queryParams;
+      setEncryptedStateCookieForOktaRegistration(res, user);
 
       return res.redirect(
         303,
-        addQueryParamsToPath('/welcome/email-sent', queryParams, {
+        addQueryParamsToPath('/welcome/email-sent', res.locals.queryParams, {
           emailSentSuccess: true,
         }),
       );
