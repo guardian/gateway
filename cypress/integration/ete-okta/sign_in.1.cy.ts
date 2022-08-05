@@ -80,7 +80,7 @@ describe('Sign in flow, Okta enabled', () => {
             );
             cy.get('input[name=email]').type(emailAddress);
             cy.get('input[name=password]').type(finalPassword);
-            cy.get('[data-cy="sign-in-button"]').click();
+            cy.get('[data-cy="main-form-submit-button"]').click();
             cy.url().should('include', '/consents');
 
             // at this point the oauth callback route will have run, so we can recheck the user profile to see if the emailValidated flag has been set
@@ -116,7 +116,7 @@ describe('Sign in flow, Okta enabled', () => {
           cy.visit('/signin');
           cy.get('input[name=email]').type(emailAddress);
           cy.get('input[name=password]').type(finalPassword);
-          cy.get('[data-cy="sign-in-button"]').click();
+          cy.get('[data-cy="main-form-submit-button"]').click();
           cy.url().should('include', 'https://m.code.dev-theguardian.com/');
 
           // Get the current session data
@@ -153,7 +153,7 @@ describe('Sign in flow, Okta enabled', () => {
           cy.visit('/signin');
           cy.get('input[name=email]').type(emailAddress);
           cy.get('input[name=password]').type(finalPassword);
-          cy.get('[data-cy="sign-in-button"]').click();
+          cy.get('[data-cy="main-form-submit-button"]').click();
           cy.url().should('include', 'https://m.code.dev-theguardian.com/');
 
           // Get the current session data
@@ -180,7 +180,7 @@ describe('Sign in flow, Okta enabled', () => {
           cy.visit('/signin');
           cy.get('input[name=email]').type(emailAddress);
           cy.get('input[name=password]').type(finalPassword);
-          cy.get('[data-cy="sign-in-button"]').click();
+          cy.get('[data-cy="main-form-submit-button"]').click();
           cy.url().should('include', 'https://m.code.dev-theguardian.com/');
 
           // Delete the Okta sid cookie
@@ -206,7 +206,7 @@ describe('Sign in flow, Okta enabled', () => {
           cy.visit('/signin');
           cy.get('input[name=email]').type(emailAddress);
           cy.get('input[name=password]').type(finalPassword);
-          cy.get('[data-cy="sign-in-button"]').click();
+          cy.get('[data-cy="main-form-submit-button"]').click();
           cy.url().should('include', 'https://m.code.dev-theguardian.com/');
 
           // Delete all cookies (Okta and IDAPI)
@@ -234,7 +234,7 @@ describe('Sign in flow, Okta enabled', () => {
           cy.visit('/signin');
           cy.get('input[name=email]').type(emailAddress);
           cy.get('input[name=password]').type(finalPassword);
-          cy.get('[data-cy="sign-in-button"]').click();
+          cy.get('[data-cy="main-form-submit-button"]').click();
           cy.url().should('include', 'https://m.code.dev-theguardian.com/');
 
           // Get the current session data

@@ -1,35 +1,18 @@
-import React, {
-  createRef,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { css } from '@emotion/react';
-import { MainGrid } from '@/client/layouts/MainGrid';
-import { Header } from '@/client/components/Header';
-import { Footer } from '@/client/components/Footer';
-import { PasswordInput } from '@/client/components/PasswordInput';
-import { Nav, TabType } from '@/client/components/Nav';
-import { Button, Link } from '@guardian/source-react-components';
-import { CsrfFormField } from '@/client/components/CsrfFormField';
-import { Terms } from '@/client/components/Terms';
-import { SocialButtons } from '@/client/components/SocialButtons';
-import { gridItemSignInAndRegistration } from '@/client/styles/Grid';
-import { from, textSans, border, space } from '@guardian/source-foundations';
-import { Divider } from '@guardian/source-react-components-development-kitchen';
-import { CaptchaErrors, SignInErrors } from '@/shared/model/Errors';
-import { EmailInput } from '@/client/components/EmailInput';
-import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import React, { ReactNode, useState } from 'react';
+import { SignInErrors } from '@/shared/model/Errors';
 import { QueryParams } from '@/shared/model/QueryParams';
-import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
-import useRecaptcha, {
-  RecaptchaElement,
-} from '@/client/lib/hooks/useRecaptcha';
-import locations from '@/shared/lib/locations';
-import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
-import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
-import { logger } from '@/client/lib/clientSideLogger';
+import { TabType } from '@/client/components/Nav';
+import { MainLayout } from '@/client/layouts/Main';
+import { MainForm } from '@/client/components/MainForm';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
+import { EmailInput } from '@/client/components/EmailInput';
+import { PasswordInput } from '@/client/components/PasswordInput';
+import { css } from '@emotion/react';
+import { border, from, space, textSans } from '@guardian/source-foundations';
+import { Link } from '@guardian/source-react-components';
+import { Divider } from '@guardian/source-react-components-development-kitchen';
+import { SocialButtons } from '@/client/components/SocialButtons';
 
 export type SignInProps = {
   queryParams: QueryParams;
@@ -49,15 +32,6 @@ const passwordInput = css`
 
 const resetPassword = css`
   ${textSans.small()}
-`;
-
-const signInButton = css`
-  width: 100%;
-  justify-content: center;
-  margin-top: ${space[5]}px;
-  ${from.mobileMedium} {
-    margin-top: 16px;
-  }
 `;
 
 const divider = css`
@@ -131,7 +105,6 @@ const showSocialButtons = (
   }
 };
 
-// TODO: migrate to use the MainForm component
 export const SignIn = ({
   email,
   error: pageLevelError,
@@ -140,68 +113,15 @@ export const SignIn = ({
   isReauthenticate = false,
 }: SignInProps) => {
   const formTrackingName = 'sign-in';
-  const signInFormRef = createRef<HTMLFormElement>();
-  const recaptchaElementRef = useRef<HTMLDivElement>(null);
-  const captchaElement = recaptchaElementRef.current ?? 'signin-recaptcha';
+
   const { clientId } = queryParams;
   const isJobs = clientId === 'jobs';
-  const {
-    token,
-    error: recaptchaError,
-    expired,
-    requestCount,
-    executeCaptcha,
-  } = useRecaptcha(recaptchaSiteKey, captchaElement);
-  const [isFormDisabled, setIsFormDisabled] = useState(false);
 
-  // We want to show a more detailed reCAPTCHA error if
-  // the user has requested a check more than once.
-  const recaptchaCheckFailed = recaptchaError || expired;
-  if (recaptchaCheckFailed) {
-    logger.info('Recaptcha check failed');
-  }
+  const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
+  const [recaptchaErrorContext, setRecaptchaErrorContext] =
+    useState<ReactNode>(null);
 
-  const showErrorContext = recaptchaCheckFailed && requestCount > 1;
-  const reCaptchaErrorMessage = showErrorContext
-    ? CaptchaErrors.RETRY
-    : CaptchaErrors.GENERIC;
-  const reCaptchaErrorContext = showErrorContext ? (
-    <DetailedRecaptchaError />
-  ) : undefined;
-
-  // Form is only submitted when a valid recaptcha token is returned.
-  useEffect(() => {
-    const registerFormElement = signInFormRef.current;
-    if (token) {
-      registerFormElement?.submit();
-    }
-  }, [signInFormRef, token]);
-
-  useEffect(() => {
-    // Determine is something went wrong with the check.
-    const recaptchaCheckFailed = recaptchaError || expired;
-
-    if (recaptchaCheckFailed && isFormDisabled) {
-      // Re-enable the disabled form submit button
-      setIsFormDisabled(false);
-    }
-  }, [isFormDisabled, recaptchaError, expired]);
-
-  const handleSubmit = useCallback(
-    (event: React.FormEvent<HTMLFormElement>) => {
-      trackFormSubmit(formTrackingName);
-
-      if (!isFormDisabled) {
-        setIsFormDisabled(true);
-      }
-
-      if (!token) {
-        event.preventDefault();
-        executeCaptcha();
-      }
-    },
-    [executeCaptcha, isFormDisabled, token],
-  );
+  usePageLoadOphanInteraction(formTrackingName);
 
   const signInTab: TabType = {
     displayText: 'Sign in',
@@ -222,64 +142,47 @@ export const SignIn = ({
     : [signInTab, registerTab];
 
   return (
-    <>
-      <Header />
-      <Nav tabs={tabs} />
-      <MainGrid
-        gridSpanDefinition={gridItemSignInAndRegistration}
-        errorOverride={
-          recaptchaCheckFailed ? reCaptchaErrorMessage : pageLevelError
-        }
-        errorContext={
-          reCaptchaErrorContext
-            ? reCaptchaErrorContext
-            : getErrorContext(pageLevelError)
-        }
-        errorReportUrl={showErrorContext ? locations.REPORT_ISSUE : undefined}
+    <MainLayout
+      errorOverride={
+        recaptchaErrorMessage ? recaptchaErrorMessage : pageLevelError
+      }
+      errorContext={
+        recaptchaErrorContext
+          ? recaptchaErrorContext
+          : getErrorContext(pageLevelError)
+      }
+      showErrorReportUrl={!!recaptchaErrorContext}
+      tabs={tabs}
+    >
+      <MainForm
+        formAction={buildUrlWithQueryParams(
+          isReauthenticate ? '/reauthenticate' : '/signin',
+          {},
+          queryParams,
+        )}
+        submitButtonText="Sign in"
+        recaptchaSiteKey={recaptchaSiteKey}
+        formTrackingName={formTrackingName}
+        disableOnSubmit
+        setRecaptchaErrorMessage={setRecaptchaErrorMessage}
+        setRecaptchaErrorContext={setRecaptchaErrorContext}
+        hasGuardianTerms={!isJobs}
+        hasJobsTerms={isJobs}
       >
-        <form
-          method="post"
-          action={buildUrlWithQueryParams(
-            isReauthenticate ? '/reauthenticate' : '/signin',
-            {},
-            queryParams,
-          )}
-          ref={signInFormRef}
-          onSubmit={handleSubmit}
-          onFocus={(e) => trackFormFocusBlur(formTrackingName, e, 'focus')}
-          onBlur={(e) => trackFormFocusBlur(formTrackingName, e, 'blur')}
-        >
-          <RecaptchaElement id="signin-recaptcha" />
-          <CsrfFormField />
-          <RefTrackingFormFields />
-          <EmailInput defaultValue={email} />
-          <div css={passwordInput}>
-            <PasswordInput label="Password" autoComplete="current-password" />
-          </div>
-          <Links>
-            <Link
-              href={buildUrlWithQueryParams('/reset-password', {}, queryParams)}
-              cssOverrides={resetPassword}
-            >
-              Reset password
-            </Link>
-          </Links>
-          <Terms isJobs={isJobs} />
-          <Button
-            css={signInButton}
-            type="submit"
-            data-cy="sign-in-button"
-            isLoading={isFormDisabled}
-            disabled={isFormDisabled}
-            aria-disabled={isFormDisabled}
-            iconSide="right"
+        <EmailInput defaultValue={email} />
+        <div css={passwordInput}>
+          <PasswordInput label="Password" autoComplete="current-password" />
+        </div>
+        <Links>
+          <Link
+            href={buildUrlWithQueryParams('/reset-password', {}, queryParams)}
+            cssOverrides={resetPassword}
           >
-            Sign in
-          </Button>
-        </form>
-        {showSocialButtons(pageLevelError, queryParams)}
-      </MainGrid>
-      <Footer />
-    </>
+            Reset password
+          </Link>
+        </Links>
+      </MainForm>
+      {showSocialButtons(pageLevelError, queryParams)}
+    </MainLayout>
   );
 };

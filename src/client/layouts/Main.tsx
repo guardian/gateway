@@ -15,14 +15,18 @@ import { gridRow, gridItem, SpanDefinition } from '@/client/styles/Grid';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import useClientState from '@/client/lib/hooks/useClientState';
-import { JobsLogo } from '../components/JobsLogo';
+import { JobsLogo } from '@/client/components/JobsLogo';
+import { Nav, TabType } from '@/client/components/Nav';
+import locations from '@/shared/lib/locations';
 
 interface MainLayoutProps {
   pageHeader?: string;
   successOverride?: string;
   errorOverride?: string;
   errorContext?: React.ReactNode;
+  showErrorReportUrl?: boolean;
   useJobsHeader?: boolean;
+  tabs?: TabType[];
 }
 
 const mainStyles = css`
@@ -161,7 +165,9 @@ export const MainLayout = ({
   successOverride,
   errorOverride,
   errorContext,
+  showErrorReportUrl = false,
   useJobsHeader = false,
+  tabs,
 }: PropsWithChildren<MainLayoutProps>) => {
   const clientState = useClientState();
   const { globalMessage: { error, success } = {} } = clientState;
@@ -183,6 +189,7 @@ export const MainLayout = ({
       ) : (
         <Header />
       )}
+      {tabs && <Nav tabs={tabs} />}
       <main css={[mainStyles, gridRow]}>
         <section css={gridItem(gridSpanDefinition)}>
           {errorMessage && (
@@ -190,6 +197,9 @@ export const MainLayout = ({
               cssOverrides={summaryStyles}
               message={errorMessage}
               context={errorContext}
+              errorReportUrl={
+                showErrorReportUrl ? locations.REPORT_ISSUE : undefined
+              }
             />
           )}
           {successMessage && !errorMessage && (
