@@ -1,7 +1,7 @@
 import React, { ReactNode, useState } from 'react';
 import { SignInErrors } from '@/shared/model/Errors';
 import { QueryParams } from '@/shared/model/QueryParams';
-import { TabType } from '@/client/components/Nav';
+import { generateSignInRegisterTabs } from '@/client/components/Nav';
 import { MainLayout } from '@/client/layouts/Main';
 import { MainForm } from '@/client/components/MainForm';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
@@ -9,10 +9,11 @@ import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphan
 import { EmailInput } from '@/client/components/EmailInput';
 import { PasswordInput } from '@/client/components/PasswordInput';
 import { css } from '@emotion/react';
-import { border, from, space, textSans } from '@guardian/source-foundations';
+import { from, space, textSans } from '@guardian/source-foundations';
 import { Link } from '@guardian/source-react-components';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { SocialButtons } from '@/client/components/SocialButtons';
+import { socialButtonDivider } from '@/client/styles/Shared';
 
 export type SignInProps = {
   queryParams: QueryParams;
@@ -32,22 +33,6 @@ const passwordInput = css`
 
 const resetPassword = css`
   ${textSans.small()}
-`;
-
-const divider = css`
-  /* Undoes the negative margin */
-  margin-bottom: 0;
-  margin-top: ${space[4]}px;
-  ${from.mobileMedium} {
-    margin-top: ${space[6]}px;
-  }
-  :before,
-  :after {
-    content: '';
-    flex: 1 1;
-    border-bottom: 1px solid ${border.secondary};
-    margin: 8px;
-  }
 `;
 
 const Links = ({ children }: { children: React.ReactNode }) => (
@@ -84,7 +69,7 @@ const showSocialButtons = (
         <Divider
           spaceAbove="loose"
           displayText="or continue with"
-          cssOverrides={divider}
+          cssOverrides={socialButtonDivider}
         />
         <SocialButtons queryParams={queryParams} />
       </>
@@ -123,23 +108,11 @@ export const SignIn = ({
 
   usePageLoadOphanInteraction(formTrackingName);
 
-  const signInTab: TabType = {
-    displayText: 'Sign in',
-    queryParams: queryParams,
-    linkTo: '/signin',
-    isActive: true,
-  };
-
-  const registerTab: TabType = {
-    displayText: 'Register',
-    queryParams: queryParams,
-    linkTo: '/register',
-    isActive: false,
-  };
-
-  const tabs: TabType[] = isReauthenticate
-    ? [signInTab]
-    : [signInTab, registerTab];
+  const tabs = generateSignInRegisterTabs({
+    isActive: 'signin',
+    isReauthenticate,
+    queryParams,
+  });
 
   return (
     <MainLayout
