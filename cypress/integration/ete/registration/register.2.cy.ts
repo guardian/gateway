@@ -90,8 +90,8 @@ describe('Registration flow', () => {
     cy.url().should('contain', 'clientId=jobs');
   });
   it('does not proceed when no email provided', () => {
-    cy.visit('/register?useIdapi=true');
-    cy.get('[data-cy="register-button"]').click();
+    cy.visit('/register');
+    cy.get('[data-cy="main-form-submit-button"]').click();
     // check that form isn't submitted
     cy.url().should('not.contain', 'returnUrl');
     cy.contains('Please enter your email.');
@@ -101,7 +101,7 @@ describe('Registration flow', () => {
     cy.visit('/register?useIdapi=true');
     const invalidEmail = 'invalid.email.com';
     cy.get('input[name=email]').type(invalidEmail);
-    cy.get('[data-cy="register-button"]').click();
+    cy.get('[data-cy="main-form-submit-button"]').click();
     // check that form isn't submitted
     cy.url().should('not.contain', 'returnUrl');
     cy.contains('Please enter a valid email format.');
@@ -120,7 +120,7 @@ describe('Registration flow', () => {
     );
     const timeRequestWasMade = new Date();
     cy.get('input[name=email]').type(unregisteredEmail);
-    cy.get('[data-cy="register-button"]').click();
+    cy.get('[data-cy="main-form-submit-button"]').click();
 
     cy.contains('Check your email inbox');
     cy.contains(unregisteredEmail);
@@ -150,7 +150,7 @@ describe('Registration flow', () => {
       const timeRequestWasMade = new Date();
 
       cy.get('input[name=email]').type(emailAddress);
-      cy.get('[data-cy="register-button"]').click();
+      cy.get('[data-cy="main-form-submit-button"]').click();
 
       cy.contains('Check your email inbox');
       cy.contains(emailAddress);
@@ -187,7 +187,7 @@ describe('Registration flow', () => {
       const timeRequestWasMade = new Date();
 
       cy.get('input[name=email]').type(emailAddress);
-      cy.get('[data-cy="register-button"]').click();
+      cy.get('[data-cy="main-form-submit-button"]').click();
 
       cy.contains('Check your email inbox');
       cy.contains(emailAddress);
@@ -227,7 +227,7 @@ describe('Registration flow', () => {
       const timeRequestWasMade = new Date();
 
       cy.get('input[name=email]').type(emailAddress);
-      cy.get('[data-cy="register-button"]').click();
+      cy.get('[data-cy="main-form-submit-button"]').click();
 
       cy.contains('Check your email inbox');
       cy.contains(emailAddress);
@@ -273,11 +273,11 @@ describe('Registration flow', () => {
     });
 
     cy.get('input[name=email').type(unregisteredEmail);
-    cy.get('[data-cy="register-button"]').click();
+    cy.get('[data-cy="main-form-submit-button"]').click();
     cy.contains('Google reCAPTCHA verification failed. Please try again.');
 
     // On second click, an expanded error is shown.
-    cy.get('[data-cy="register-button"]').click();
+    cy.get('[data-cy="main-form-submit-button"]').click();
 
     cy.contains('Google reCAPTCHA verification failed.');
     cy.contains('Report this error').should(
@@ -288,7 +288,7 @@ describe('Registration flow', () => {
     cy.contains('If the problem persists please try the following:');
 
     const timeRequestWasMade = new Date();
-    cy.get('[data-cy="register-button"]').click();
+    cy.get('[data-cy="main-form-submit-button"]').click();
 
     cy.contains(
       'Google reCAPTCHA verification failed. Please try again.',

@@ -16,7 +16,7 @@ describe('Registration email sent page', () => {
     cy.visit(`/register?clientId=${clientId}&useIdapi=true`);
     cy.get('input[name=email]').type(unregisteredEmail);
     const timeRequestWasMadeInitialEmail = new Date();
-    cy.get('[data-cy="register-button"]').click();
+    cy.get('[data-cy="main-form-submit-button"]').click();
 
     cy.contains('Check your email inbox');
     cy.contains(unregisteredEmail);
@@ -53,7 +53,7 @@ describe('Registration email sent page', () => {
       cy.visit('/register?useIdapi=true');
       cy.get('input[name=email]').type(emailAddress);
       const timeRequestWasMadeInitialEmail = new Date();
-      cy.get('[data-cy="register-button"]').click();
+      cy.get('[data-cy="main-form-submit-button"]').click();
 
       cy.contains('Check your email inbox');
       cy.contains(emailAddress);
@@ -99,7 +99,7 @@ describe('Registration email sent page', () => {
       cy.visit('/register?useIdapi=true');
       cy.get('input[name=email]').type(emailAddress);
       const timeRequestWasMadeInitialEmail = new Date();
-      cy.get('[data-cy="register-button"]').click();
+      cy.get('[data-cy="main-form-submit-button"]').click();
 
       cy.contains('Check your email inbox');
       cy.contains(emailAddress);
@@ -153,7 +153,7 @@ describe('Registration email sent page', () => {
 
       const timeRequestWasMadeInitialEmail = new Date();
 
-      cy.get('[data-cy="register-button"]').click();
+      cy.get('[data-cy="main-form-submit-button"]').click();
 
       cy.contains('Check your email inbox');
       cy.contains(emailAddress);

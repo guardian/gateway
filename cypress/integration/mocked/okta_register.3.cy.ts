@@ -50,7 +50,7 @@ describe('Okta Register flow', () => {
         status: 'success',
         errors: [],
       });
-      cy.get('[data-cy=register-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
 
       cy.wait('@registerPost').then((interception) => {
         expect(interception?.response?.statusCode).to.eq(302);

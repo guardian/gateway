@@ -230,7 +230,7 @@ export const navigatesToRegistration = (isIdapi = false) => {
       const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
       cy.visit(visitUrl);
       cy.contains('Register').click();
-      cy.get('[data-cy="register-button"]').should('be.visible');
+      cy.get('[data-cy="main-form-submit-button"]').should('be.visible');
     },
   ] as const;
 };
