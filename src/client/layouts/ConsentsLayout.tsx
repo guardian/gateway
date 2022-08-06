@@ -1,7 +1,5 @@
 import React, { FunctionComponent } from 'react';
 import { css } from '@emotion/react';
-import { from, space } from '@guardian/source-foundations';
-
 import { Footer } from '@/client/components/Footer';
 import useClientState from '@/client/lib/hooks/useClientState';
 import {
@@ -25,13 +23,6 @@ const mainStyles = css`
   display: flex;
   flex-direction: column;
   flex: 1 0 auto;
-`;
-
-export const controls = css`
-  padding: 22px 0 64px;
-  ${from.tablet} {
-    padding-bottom: ${space[24]}px;
-  }
 `;
 
 // Ensures grey borders reach to bottom of page

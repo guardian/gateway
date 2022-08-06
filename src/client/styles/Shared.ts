@@ -1,14 +1,6 @@
 import { css } from '@emotion/react';
 import { border, from, space } from '@guardian/source-foundations';
 
-export const button = css`
-  width: 100%;
-
-  ${from.mobileMedium} {
-    width: max-content;
-  }
-`;
-
 export const topMargin = css`
   margin-top: ${space[2]}px;
   ${from.mobileMedium} {
