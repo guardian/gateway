@@ -464,14 +464,14 @@ router.post(
 router.get(
   '/signin/refresh',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { useOkta, returnUrl } = res.locals.queryParams;
+    const { returnUrl } = res.locals.queryParams;
     const oktaSessionCookieId: string | undefined = req.cookies.sid;
     const identitySessionCookie = req.cookies.SC_GU_U;
 
     const redirectUrl = returnUrl || defaultReturnUri;
 
     // Check if the user has an existing Okta session.
-    if (okta.enabled && useOkta && oktaSessionCookieId) {
+    if (okta.enabled && oktaSessionCookieId) {
       try {
         // If the user session is valid, we re-authenticate them, supplying
         // the SID cookie value to Okta.
