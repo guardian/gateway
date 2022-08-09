@@ -99,9 +99,7 @@ This permission is termed: `Reset users authenticators`. We grant it to our Gate
 
 The validation email template used by Okta for this process is called `Email Verification`. The description given by them is:
 
-```
-These emails are sent to users who are enrolling in email as a factor and must follow the provided link to complete enrollment of email as a factor.
-```
+> These emails are sent to users who are enrolling in email as a factor and must follow the provided link to complete enrollment of email as a factor.
 
 The following variable: `${transactionToken}` is provided by Okta, which represents the token necessary to complete the email validation flow.
 
