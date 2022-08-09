@@ -31,7 +31,9 @@
     "prettier:fix": "prettier . --write",
     "prepare": "husky install",
     "clear:cache": "rm -rf ./node_modules/.cache",
-    "ts-prune": "ts-prune -i .stories.tsx"
+    "ts-prune": "ts-prune -i .stories.tsx",
+    "gen:ratelimit:schema": "yarn ts-node --transpileOnly ./scripts/generate-rate-limit-schema.ts",
+    "postinstall": "yarn gen:ratelimit:schema"
   },
   "devDependencies": {
     "@babel/core": "^7.18.9",
@@ -66,7 +68,7 @@
     "@types/mjml": "^4.7.0",
     "@types/mjml-react": "^2.0.4",
     "@types/ms": "^0.7.31",
-    "@types/node": "^18.6.3",
+    "@types/node": "^18.6.5",
     "@types/node-fetch": "^3.0.3",
     "@types/react": "^17.0.43",
     "@types/react-dom": "^17.0.14",
@@ -112,6 +114,7 @@
     "stmux": "^1.8.4",
     "terser-webpack-plugin": "^5.3.3",
     "ts-jest": "^28.0.7",
+    "ts-node": "^10.9.1",
     "ts-prune": "^0.10.3",
     "typescript": "^4.7.4",
     "wait-on": "^6.0.1",
@@ -120,7 +123,8 @@
     "webpack-cli": "^4.10.0",
     "webpack-merge": "^5.8.0",
     "webpack-node-externals": "^3.0.0",
-    "whatwg-fetch": "^3.6.2"
+    "whatwg-fetch": "^3.6.2",
+    "zod-to-json-schema": "^3.17.1"
   },
   "dependencies": {
     "@babel/runtime": "^7.18.9",
