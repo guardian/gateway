@@ -77,19 +77,23 @@ The following configuration steps in Okta are taken to support email factor veri
 
 ### Enable the email factor
 
-![A screenshot of the multifactor management page in Okta](https://user-images.githubusercontent.com/1771189/183671580-db811a0b-3496-46df-bb20-444919946597.png)
+The email authentication factor must be enabled in the multifactor configuration page for this to work.
+
+The maximum `Email OTP token lifetime (minutes)` value is 30 which should be taken into account in any Gateway user journeys that rely upon this flow.
+
+<img src="https://user-images.githubusercontent.com/1771189/183671580-db811a0b-3496-46df-bb20-444919946597.png" alt="A screenshot of the multifactor management page in Okta]" width="500">
 
 ### Set up the factor enrollment policy
 
 We set the factor policy so that it is optionally for members of the `GuardianUsers-All` group. This allows us to use it for our intended purpose (validating emails) without hampering our existing sign in and registration process.
 
-![Factor enrollment policy page for the email factor, showing the email account factor as being optionally enforced for the GuardianUser-All group](https://user-images.githubusercontent.com/1771189/183672796-a4079fb6-d0bf-4c67-98ba-386ec74e006b.png)
+<img src="https://user-images.githubusercontent.com/1771189/183672796-a4079fb6-d0bf-4c67-98ba-386ec74e006b.png" alt="Factor enrollment policy page for the email factor, showing the email account factor as being optionally enforced for the GuardianUser-All group" width="500">
 
 ### Grant factor management permission on the service account
 
 This permission is termed: `Reset users authenticators`. We grant it to our Gateway service account so that we can manage the email factor for users as they progress through the validation process.
 
-![Service account permissions configuration page, showing the 'Reset users authenticators' option](https://user-images.githubusercontent.com/1771189/183672335-45d14bf0-2e7d-4101-9a9e-5bdcc0a6c570.png)
+<img src="https://user-images.githubusercontent.com/1771189/183672335-45d14bf0-2e7d-4101-9a9e-5bdcc0a6c570.png" alt="Service account permissions configuration page, showing the 'Reset users authenticators' option" width="200">
 
 ### Customise the email template
 
