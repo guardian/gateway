@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ValidRoutePathsArray } from '@/shared/model/Routes';
+import { ValidRoutePathsArray } from '../../../shared/model/Routes';
 
 export const bucketSchema = z
   .object({

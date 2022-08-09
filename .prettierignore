@@ -1,3 +1,4 @@
 webpack.config.js
 webpack.development.js
 build
+.ratelimit.schema.json
