@@ -37,7 +37,7 @@ FetchError: request to https://idapi.thegulocal.com/auth?format=cookies failed, 
 
 ### Rate Limiter
 
-We use a Redis backed rate-limiting implementation in Gateway to handle scenarios where we are experiencing a high level of traffic. To read more about the rate limiter implementation and how it is configured, please see the documentation: [TODO]
+We use a Redis backed rate-limiting implementation in Gateway to handle scenarios where we are experiencing a high level of traffic. To read more about the rate limiter implementation and how it is configured, please see [the documentation](./rate-limit/configuration.md).
 
 #### Quick configuration
 

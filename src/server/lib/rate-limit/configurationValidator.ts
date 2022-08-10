@@ -9,21 +9,28 @@ export const bucketSchema = z
   })
   .strict();
 
+export const settingsConfigurationSchema = z
+  .object({
+    logOnly: z.boolean().optional(),
+    trackBucketCapacity: z.boolean().optional(),
+  })
+  .strict();
+
+export const routeBucketSettingsConfigurationSchema = z
+  .object({
+    logOnly: z.boolean().optional(),
+  })
+  .strict();
+
 export const routeBucketsConfigurationSchema = z
   .object({
     enabled: z.boolean().optional(),
+    settings: routeBucketSettingsConfigurationSchema.optional(),
     globalBucket: bucketSchema,
     accessTokenBucket: bucketSchema.optional(),
     ipBucket: bucketSchema.optional(),
     emailBucket: bucketSchema.optional(),
     oktaIdentifierBucket: bucketSchema.optional(),
-  })
-  .strict();
-
-export const settingsConfigurationSchema = z
-  .object({
-    logOnly: z.boolean().optional(),
-    trackBucketCapacity: z.boolean().optional(),
   })
   .strict();
 

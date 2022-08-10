@@ -67,12 +67,14 @@ export const rateLimiterMiddleware = async (
     oktaIdentifier: isOktaInUse ? oktaSessionCookieId : undefined,
   } as BucketValues;
 
+  const bucketConfiguration = getBucketConfigForRoute(
+    routePathDefinition,
+    rateLimiter,
+  );
+
   const ratelimitBucketTypeIfHit = await rateLimit({
     route: routePathDefinition,
-    bucketConfiguration: getBucketConfigForRoute(
-      routePathDefinition,
-      rateLimiter,
-    ),
+    bucketConfiguration,
     redisClient,
     bucketValues: rateLimitData,
   });
@@ -96,7 +98,17 @@ export const rateLimiterMiddleware = async (
     trackMetric(rateLimitHitMetric(ratelimitBucketTypeIfHit));
 
     // Don't rate limit users if we are configured to log only.
-    if (rateLimiter.settings?.logOnly === true) {
+    // Also check for whether this is overridden on a per-route level as well as generally.
+    const logOnlyOverride = bucketConfiguration?.settings?.logOnly;
+
+    if (logOnlyOverride === true) {
+      return next();
+    }
+
+    const isLogOnlyAndNotOverriddenAtTheRouteLevel =
+      rateLimiter.settings?.logOnly === true && logOnlyOverride !== false;
+
+    if (isLogOnlyAndNotOverriddenAtTheRouteLevel) {
       return next();
     }
 
