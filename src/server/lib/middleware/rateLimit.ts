@@ -98,17 +98,17 @@ export const rateLimiterMiddleware = async (
     trackMetric(rateLimitHitMetric(ratelimitBucketTypeIfHit));
 
     // Don't rate limit users if we are configured to log only.
-    // Also check for whether this is overridden on a per-route level.
+    // Also check for whether this is overridden on a per-route level as well as generally.
     const logOnlyOverride = bucketConfiguration?.settings?.logOnly;
 
     if (logOnlyOverride === true) {
       return next();
     }
 
-    const isLogOnlyAndNotOverriden =
+    const isLogOnlyAndNotOverriddenAtTheRouteLevel =
       rateLimiter.settings?.logOnly === true && logOnlyOverride !== false;
 
-    if (isLogOnlyAndNotOverriden) {
+    if (isLogOnlyAndNotOverriddenAtTheRouteLevel) {
       return next();
     }
 
