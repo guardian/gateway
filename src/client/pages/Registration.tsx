@@ -174,6 +174,7 @@ export const Registration = ({
             isLoading={isFormDisabled}
             disabled={isFormDisabled}
             aria-disabled={isFormDisabled}
+            iconSide="right"
           >
             Register
           </Button>

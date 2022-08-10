@@ -272,6 +272,7 @@ export const SignIn = ({
             isLoading={isFormDisabled}
             disabled={isFormDisabled}
             aria-disabled={isFormDisabled}
+            iconSide="right"
           >
             Sign in
           </Button>
