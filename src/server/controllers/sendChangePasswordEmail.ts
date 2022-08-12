@@ -96,6 +96,20 @@ const sendEmailInIDAPI = async (
   }
 };
 
+const setEncryptedCookieOkta = (
+  res: ResponseWithRequestState,
+  email: string,
+) => {
+  setEncryptedStateCookie(res, {
+    email,
+    // We set queryParams here to allow state to be persisted as part of the registration flow,
+    // because we are unable to pass these query parameters via the email activation link in Okta email templates
+    queryParams: getPersistableQueryParamsWithoutOktaParams(
+      res.locals.queryParams,
+    ),
+  });
+};
+
 const sendEmailInOkta = async (
   req: Request,
   res: ResponseWithRequestState,
@@ -232,14 +246,7 @@ const sendEmailInOkta = async (
         });
     }
 
-    setEncryptedStateCookie(res, {
-      email,
-      // We set queryParams here to allow state to be persisted as part of the registration flow,
-      // because we are unable to pass these query parameters via the email activation link in Okta email templates
-      queryParams: getPersistableQueryParamsWithoutOktaParams(
-        res.locals.queryParams,
-      ),
-    });
+    setEncryptedCookieOkta(res, email);
 
     sendOphanEvent(state.ophanConfig);
 
@@ -261,6 +268,8 @@ const sendEmailInOkta = async (
       error.status === 404 &&
       error.code === 'E0000007'
     ) {
+      setEncryptedCookieOkta(res, email);
+
       return res.redirect(
         303,
         addQueryParamsToPath('/reset-password/email-sent', state.queryParams, {
