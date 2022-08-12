@@ -111,6 +111,8 @@ describe('Send password reset email in Okta', () => {
       });
       cy.get('button[type="submit"]').click();
       cy.contains('Check your email inbox');
+      cy.contains('email within 2 minutes');
+      cy.contains('Resend email');
     });
   });
 
@@ -175,6 +177,8 @@ describe('Send password reset email in Okta', () => {
       });
       cy.get('button[type="submit"]').click();
       cy.contains('Check your email inbox');
+      cy.contains('email within 2 minutes');
+      cy.contains('Resend email');
     });
   });
 
@@ -188,6 +192,8 @@ describe('Send password reset email in Okta', () => {
       });
       cy.get('button[type="submit"]').click();
       cy.contains('Check your email inbox');
+      cy.contains('email within 2 minutes');
+      cy.contains('Resend email');
     });
   });
 
@@ -201,6 +207,8 @@ describe('Send password reset email in Okta', () => {
       });
       cy.get('button[type="submit"]').click();
       cy.contains('Check your email inbox');
+      cy.contains('email within 2 minutes');
+      cy.contains('Resend email');
     });
   });
 
@@ -216,6 +224,8 @@ describe('Send password reset email in Okta', () => {
       });
       cy.get('button[type="submit"]').click();
       cy.contains('Check your email inbox');
+      cy.contains('email within 2 minutes');
+      cy.contains('Resend email');
     });
   });
 
@@ -231,6 +241,8 @@ describe('Send password reset email in Okta', () => {
       });
       cy.get('button[type="submit"]').click();
       cy.contains('Check your email inbox');
+      cy.contains('email within 2 minutes');
+      cy.contains('Resend email');
     });
   });
 
@@ -247,6 +259,8 @@ describe('Send password reset email in Okta', () => {
       });
       cy.get('button[type="submit"]').click();
       cy.contains('Check your email inbox');
+      cy.contains('email within 2 minutes');
+      cy.contains('Resend email');
     });
   });
 

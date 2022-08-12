@@ -14,7 +14,7 @@ export const sendCreatePasswordEmail = ({
   setPasswordToken,
 }: Props) => {
   const setPasswordUrl = generateUrl({
-    path: 'reset-password',
+    path: 'set-password',
     token: setPasswordToken,
   });
 
