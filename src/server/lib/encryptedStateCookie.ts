@@ -35,9 +35,17 @@ export const setEncryptedStateCookie = (
 export const readEncryptedStateCookie = (
   req: Request,
 ): EncryptedState | undefined => {
-  const encryptedCookie = baseUri.includes('localhost')
-    ? req.cookies[encryptedStateCookieName]
-    : req.signedCookies[encryptedStateCookieName];
+  // TODO: We need to double check the security implications of using an env variable
+  // to read from the unsigned cookie storage.
+  const encryptedCookie =
+    baseUri.includes('localhost') || process.env.RUNNING_IN_CYPRESS === 'true'
+      ? // If we're in testing or localhost, first try reading from signedCookies,
+        // and only then fall back to regular cookies.
+        Object.keys(req.signedCookies).includes(encryptedStateCookieName)
+        ? req.signedCookies[encryptedStateCookieName]
+        : req.cookies[encryptedStateCookieName]
+      : // If we're not in testing, always read from signedCookies.
+        req.signedCookies[encryptedStateCookieName];
 
   try {
     if (encryptedCookie) {
