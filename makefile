@@ -93,6 +93,14 @@ cypress-ete-okta-dev: clear
 	$(call log, "opening cypress in dev mode using okta tests")
 	@(./cypress-ete.sh)
 
+cypress-mocked-okta: clear
+	$(call log, "opening cypress using Okta mocked tests")
+	@(./cypress-mocked-okta.sh)
+
+cypress-mocked-okta-dev: export DEV_MODE = true
+cypress-mocked-okta-dev: clear
+	$(call log, "opening cypress in dev mode using Okta mocked tests")
+	@(./cypress-mocked-okta.sh)
 
 
 # helpers

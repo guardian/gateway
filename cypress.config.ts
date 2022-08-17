@@ -13,5 +13,16 @@ export default defineConfig({
     baseUrl: 'https://profile.thegulocal.com',
     specPattern: 'cypress/integration/**/*.cy.ts',
     excludeSpecPattern: '*.shared.ts',
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    setupNodeEvents(on, config) {
+      on('task', {
+        log(message) {
+          // eslint-disable-next-line no-console
+          console.log(`CYPRESS: ${message}`);
+
+          return null;
+        },
+      });
+    },
   },
 });

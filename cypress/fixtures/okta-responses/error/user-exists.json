@@ -1,0 +1,14 @@
+{
+  "code": 401,
+  "response": {
+    "errorCode": "E0000001",
+    "errorSummary": "Api validation failed: login",
+    "errorLink": "E0000001",
+    "errorId": "mocked-error-id",
+    "errorCauses": [
+      {
+        "errorSummary": "login: An object with this field already exists in the current organization"
+      }
+    ]
+  }
+}

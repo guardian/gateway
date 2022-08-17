@@ -48,12 +48,14 @@ Other documentation in the [docs](docs) folder.
 - `make ci` or `./ci.sh`
   - This runs linting, type-check, unit tests, build checks
 - `make cypress-mocked` or `./cypress-mocked`
-  - This runs cypress integration tests against a mocked version of [Identity API](https://github.com/guardian/identity)
+  - This runs Cypress integration tests against a mocked version of [Identity API](https://github.com/guardian/identity)
+- `make cypress-mocked-okta` or `./cypress-mocked-okta`
+  - This runs Cypress integration tests against a mocked version of the Okta API
 - `make cypress-ete` or `./cypress-ete`
-  - This runs cypress end-to-end tests against the [Identity API](https://github.com/guardian/identity) defined in `.env`
+  - This runs Cypress end-to-end tests against the [Identity API](https://github.com/guardian/identity) defined in `.env`
   - Be sure to use sparingly, this relies on [Mailosaur](https://mailosaur.com/) which has a limited number of emails we can test with it each day
 - `make cypress-ete-okta`
-  - This runs cypress end-to-end tests against the Okta environment defined in `.env`
+  - This runs Cypress end-to-end tests against the Okta environment defined in `.env`
   - Be sure to use sparingly, this relies on [Mailosaur](https://mailosaur.com/) which has a limited number of emails we can test with it each day, and the Okta API which has a number of rate limits.
 - You can add `-dev` to the end of any of the above commands to run the tests against the development server. e.g. `make cypress-ete-okta-dev`
 

@@ -8,6 +8,8 @@ const { baseUri } = getConfiguration();
 
 const encryptedStateCookieName = 'GU_GATEWAY_STATE';
 
+type CookieSource = 'cookies' | 'signedCookies';
+
 const encryptedStateCookieOptions: CookieOptions = {
   httpOnly: true,
   secure: !baseUri.includes('localhost'),
@@ -32,13 +34,27 @@ export const setEncryptedStateCookie = (
   );
 };
 
+const getEncryptedStateCookie = (req: Request): string | undefined => {
+  let cookieSource: CookieSource;
+  if (process.env.RUNNING_IN_CYPRESS === 'true') {
+    // If we're in testing, first try reading from signedCookies,
+    // and only then fall back to regular cookies.
+    if (Object.keys(req.signedCookies).includes(encryptedStateCookieName)) {
+      cookieSource = 'signedCookies';
+    } else {
+      cookieSource = 'cookies';
+    }
+  } else {
+    // If we're not in testing, always read from signedCookies.
+    cookieSource = 'signedCookies';
+  }
+  return req?.[cookieSource]?.[encryptedStateCookieName];
+};
+
 export const readEncryptedStateCookie = (
   req: Request,
 ): EncryptedState | undefined => {
-  const encryptedCookie = baseUri.includes('localhost')
-    ? req.cookies[encryptedStateCookieName]
-    : req.signedCookies[encryptedStateCookieName];
-
+  const encryptedCookie = getEncryptedStateCookie(req);
   try {
     if (encryptedCookie) {
       const decrypted = decrypt(
