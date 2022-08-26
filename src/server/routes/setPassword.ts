@@ -14,8 +14,12 @@ import { EmailType } from '@/shared/model/EmailType';
 import { ResetPasswordErrors } from '@/shared/model/Errors';
 import deepmerge from 'deepmerge';
 import { Request } from 'express';
-import { ApiError } from '../models/Error';
+import { ApiError } from '@/server/models/Error';
 import { buildUrl } from '@/shared/lib/routeUtils';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { sendEmailInOkta as sendResetPasswordEmailInOktaController } from '@/server/controllers/sendChangePasswordEmail';
+
+const { okta } = getConfiguration();
 
 // set password complete page
 router.get(
@@ -64,53 +68,58 @@ router.post(
   '/set-password/resend',
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { email } = req.body;
-    const state = res.locals;
-    const { emailSentSuccess } = state.queryParams;
+    const { useOkta } = res.locals.queryParams;
+    if (okta.enabled && useOkta) {
+      return await sendResetPasswordEmailInOktaController(req, res);
+    } else {
+      const { email } = req.body;
+      const state = res.locals;
+      const { emailSentSuccess } = state.queryParams;
 
-    try {
-      await sendCreatePasswordEmail(
-        email,
-        req.ip,
-        state.queryParams,
-        state.ophanConfig,
-        state.requestId,
-      );
+      try {
+        await sendCreatePasswordEmail(
+          email,
+          req.ip,
+          state.queryParams,
+          state.ophanConfig,
+          state.requestId,
+        );
 
-      setEncryptedStateCookie(res, {
-        email,
-        emailType: EmailType.CREATE_PASSWORD,
-      });
+        setEncryptedStateCookie(res, {
+          email,
+          emailType: EmailType.CREATE_PASSWORD,
+        });
 
-      return res.redirect(
-        303,
-        addQueryParamsToPath(
-          '/set-password/email-sent',
-          res.locals.queryParams,
-          {
-            emailSentSuccess,
-          },
-        ),
-      );
-    } catch (error) {
-      const { message, status } =
-        error instanceof ApiError
-          ? error
-          : new ApiError({ message: ResetPasswordErrors.GENERIC });
+        return res.redirect(
+          303,
+          addQueryParamsToPath(
+            '/set-password/email-sent',
+            res.locals.queryParams,
+            {
+              emailSentSuccess,
+            },
+          ),
+        );
+      } catch (error) {
+        const { message, status } =
+          error instanceof ApiError
+            ? error
+            : new ApiError({ message: ResetPasswordErrors.GENERIC });
 
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-        request_id: state.requestId,
-      });
+        logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+          request_id: state.requestId,
+        });
 
-      const html = renderer('/set-password/resend', {
-        pageTitle: 'Resend Create Password Email',
-        requestState: deepmerge(res.locals, {
-          globalMessage: {
-            error: message,
-          },
-        }),
-      });
-      return res.status(status).type('html').send(html);
+        const html = renderer('/set-password/resend', {
+          pageTitle: 'Resend Create Password Email',
+          requestState: deepmerge(res.locals, {
+            globalMessage: {
+              error: message,
+            },
+          }),
+        });
+        return res.status(status).type('html').send(html);
+      }
     }
   }),
 );
