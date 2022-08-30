@@ -36,8 +36,18 @@ import { Status } from '@/server/models/okta/User';
 import { OktaError } from '@/server/models/okta/Error';
 import { sendCreatePasswordEmail } from '@/email/templates/CreatePassword/sendCreatePasswordEmail';
 import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
+import { PasswordRoutePath } from '@/shared/model/Routes';
 
 const { okta } = getConfiguration();
+
+const getPath = (req: Request): PasswordRoutePath => {
+  const path = req.path;
+
+  if (path.startsWith('/set-password')) {
+    return '/set-password';
+  }
+  return '/reset-password';
+};
 
 const sendOphanEvent = (ophanConfig: OphanConfig) => {
   sendOphanInteractionEventServer(
@@ -110,12 +120,13 @@ const setEncryptedCookieOkta = (
   });
 };
 
-const sendEmailInOkta = async (
+export const sendEmailInOkta = async (
   req: Request,
   res: ResponseWithRequestState,
 ): Promise<void | ResponseWithRequestState> => {
   const state = res.locals;
   const { email = '' } = req.body;
+  const path = getPath(req);
 
   try {
     // get the user object to check user status
@@ -254,7 +265,7 @@ const sendEmailInOkta = async (
 
     return res.redirect(
       303,
-      addQueryParamsToPath('/reset-password/email-sent', state.queryParams, {
+      addQueryParamsToPath(`${path}/email-sent`, state.queryParams, {
         emailSentSuccess: true,
       }),
     );
@@ -272,7 +283,7 @@ const sendEmailInOkta = async (
 
       return res.redirect(
         303,
-        addQueryParamsToPath('/reset-password/email-sent', state.queryParams, {
+        addQueryParamsToPath(`${path}/email-sent`, state.queryParams, {
           emailSentSuccess: true,
         }),
       );
