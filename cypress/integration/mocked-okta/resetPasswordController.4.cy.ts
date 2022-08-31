@@ -1,6 +1,10 @@
 import userStatuses from '../../support/okta/userStatuses';
 import ResponseFixture from '../../support/types/ResponseFixture';
-
+import userNotFoundError from '../../fixtures/okta-responses/error/user-not-found.json';
+import forgotPasswordResponse from '../../fixtures/okta-responses/success/forgot-password-email-factor';
+import userResponse from '../../fixtures/okta-responses/success/user.json';
+import tokenResponse from '../../fixtures/okta-responses/success/token.json';
+import resetPasswordResponse from '../../fixtures/okta-responses/success/reset-password.json';
 beforeEach(() => {
   cy.mockPurge();
 });
@@ -17,19 +21,12 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/error/user-not-found').then(
-                (userNotFoundError: ResponseFixture) => {
-                  cy.mockNext(
-                    userNotFoundError.code,
-                    userNotFoundError.response,
-                  );
-                  cy.get('button[type=submit]').click();
-                  cy.contains('Check your email inbox');
-                  cy.contains('Resend email');
-                  cy.contains('Email sent');
-                  cy.contains('within 2 minutes');
-                },
-              );
+              cy.mockNext(userNotFoundError.code, userNotFoundError.response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes');
             },
           );
           break;
@@ -37,26 +34,18 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture(
-                    'okta-responses/success/forgot-password-email-factor',
-                  ).then((forgotPasswordResponse: ResponseFixture) => {
-                    // Set the correct user status on the response
-                    const response = { ...userResponse.response, status };
-                    cy.mockNext(userResponse.code, response);
-                    cy.mockNext(
-                      forgotPasswordResponse.code,
-                      forgotPasswordResponse.response,
-                    );
-                    cy.get('button[type=submit]').click();
-                    cy.contains('Check your email inbox');
-                    cy.contains('Resend email');
-                    cy.contains('Email sent');
-                    cy.contains('within 2 minutes');
-                  });
-                },
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(
+                forgotPasswordResponse.code,
+                forgotPasswordResponse.response,
               );
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes');
             },
           );
           break;
@@ -64,23 +53,15 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/token').then(
-                    (tokenResponse: ResponseFixture) => {
-                      // Set the correct user status on the response
-                      const response = { ...userResponse.response, status };
-                      cy.mockNext(userResponse.code, response);
-                      cy.mockNext(tokenResponse.code, tokenResponse.response);
-                      cy.get('button[type=submit]').click();
-                      cy.contains('Check your email inbox');
-                      cy.contains('Resend email');
-                      cy.contains('Email sent');
-                      cy.contains('within 2 minutes');
-                    },
-                  );
-                },
-              );
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(tokenResponse.code, tokenResponse.response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes');
             },
           );
           break;
@@ -88,23 +69,15 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/token').then(
-                    (tokenResponse: ResponseFixture) => {
-                      // Set the correct user status on the response
-                      const response = { ...userResponse.response, status };
-                      cy.mockNext(userResponse.code, response);
-                      cy.mockNext(tokenResponse.code, tokenResponse.response);
-                      cy.get('button[type=submit]').click();
-                      cy.contains('Check your email inbox');
-                      cy.contains('Resend email');
-                      cy.contains('Email sent');
-                      cy.contains('within 2 minutes');
-                    },
-                  );
-                },
-              );
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(tokenResponse.code, tokenResponse.response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes');
             },
           );
           break;
@@ -113,26 +86,18 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/reset-password').then(
-                    (resetPasswordResponse: ResponseFixture) => {
-                      // Set the correct user status on the response
-                      const response = { ...userResponse.response, status };
-                      cy.mockNext(userResponse.code, response);
-                      cy.mockNext(
-                        resetPasswordResponse.code,
-                        resetPasswordResponse.response,
-                      );
-                      cy.get('button[type=submit]').click();
-                      cy.contains('Check your email inbox');
-                      cy.contains('Resend email');
-                      cy.contains('Email sent');
-                      cy.contains('within 2 minutes');
-                    },
-                  );
-                },
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(
+                resetPasswordResponse.code,
+                resetPasswordResponse.response,
               );
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes');
             },
           );
           break;
@@ -155,19 +120,12 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/error/user-not-found').then(
-                (userNotFoundError: ResponseFixture) => {
-                  cy.mockNext(
-                    userNotFoundError.code,
-                    userNotFoundError.response,
-                  );
-                  cy.get('button[type=submit]').click();
-                  cy.contains('Check your email inbox');
-                  cy.contains('Resend email');
-                  cy.contains('Email sent');
-                  cy.contains('within 2 minutes');
-                },
-              );
+              cy.mockNext(userNotFoundError.code, userNotFoundError.response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes');
             },
           );
           break;
@@ -175,26 +133,18 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture(
-                    'okta-responses/success/forgot-password-email-factor',
-                  ).then((forgotPasswordResponse: ResponseFixture) => {
-                    // Set the correct user status on the response
-                    const response = { ...userResponse.response, status };
-                    cy.mockNext(userResponse.code, response);
-                    cy.mockNext(
-                      forgotPasswordResponse.code,
-                      forgotPasswordResponse.response,
-                    );
-                    cy.get('button[type=submit]').click();
-                    cy.contains('Check your email inbox');
-                    cy.contains('Resend email');
-                    cy.contains('Email sent');
-                    cy.contains('within 2 minutes');
-                  });
-                },
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(
+                forgotPasswordResponse.code,
+                forgotPasswordResponse.response,
               );
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes');
             },
           );
           break;
@@ -202,23 +152,15 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/token').then(
-                    (tokenResponse: ResponseFixture) => {
-                      // Set the correct user status on the response
-                      const response = { ...userResponse.response, status };
-                      cy.mockNext(userResponse.code, response);
-                      cy.mockNext(tokenResponse.code, tokenResponse.response);
-                      cy.get('button[type=submit]').click();
-                      cy.contains('Check your email inbox');
-                      cy.contains('Resend email');
-                      cy.contains('Email sent');
-                      cy.contains('within 2 minutes');
-                    },
-                  );
-                },
-              );
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(tokenResponse.code, tokenResponse.response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes');
             },
           );
           break;
@@ -226,23 +168,15 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/token').then(
-                    (tokenResponse: ResponseFixture) => {
-                      // Set the correct user status on the response
-                      const response = { ...userResponse.response, status };
-                      cy.mockNext(userResponse.code, response);
-                      cy.mockNext(tokenResponse.code, tokenResponse.response);
-                      cy.get('button[type=submit]').click();
-                      cy.contains('Check your email inbox');
-                      cy.contains('Resend email');
-                      cy.contains('Email sent');
-                      cy.contains('within 2 minutes');
-                    },
-                  );
-                },
-              );
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(tokenResponse.code, tokenResponse.response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes');
             },
           );
           break;
@@ -251,26 +185,18 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/reset-password').then(
-                    (resetPasswordResponse: ResponseFixture) => {
-                      // Set the correct user status on the response
-                      const response = { ...userResponse.response, status };
-                      cy.mockNext(userResponse.code, response);
-                      cy.mockNext(
-                        resetPasswordResponse.code,
-                        resetPasswordResponse.response,
-                      );
-                      cy.get('button[type=submit]').click();
-                      cy.contains('Check your email inbox');
-                      cy.contains('Resend email');
-                      cy.contains('Email sent');
-                      cy.contains('within 2 minutes');
-                    },
-                  );
-                },
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(
+                resetPasswordResponse.code,
+                resetPasswordResponse.response,
               );
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes');
             },
           );
           break;
@@ -286,19 +212,12 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/error/user-not-found').then(
-                (userNotFoundError: ResponseFixture) => {
-                  cy.mockNext(
-                    userNotFoundError.code,
-                    userNotFoundError.response,
-                  );
-                  cy.get('button[type=submit]').click();
-                  cy.contains('Check your email inbox');
-                  cy.contains('Resend email');
-                  cy.contains('Email sent');
-                  cy.contains('within 2 minutes');
-                },
-              );
+              cy.mockNext(userNotFoundError.code, userNotFoundError.response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes');
             },
           );
           break;
@@ -306,26 +225,18 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture(
-                    'okta-responses/success/forgot-password-email-factor',
-                  ).then((forgotPasswordResponse: ResponseFixture) => {
-                    // Set the correct user status on the response
-                    const response = { ...userResponse.response, status };
-                    cy.mockNext(userResponse.code, response);
-                    cy.mockNext(
-                      forgotPasswordResponse.code,
-                      forgotPasswordResponse.response,
-                    );
-                    cy.get('button[type=submit]').click();
-                    cy.contains('Check your email inbox');
-                    cy.contains('Resend email');
-                    cy.contains('Email sent');
-                    cy.contains('within 2 minutes');
-                  });
-                },
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(
+                forgotPasswordResponse.code,
+                forgotPasswordResponse.response,
               );
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes');
             },
           );
           break;
@@ -333,23 +244,15 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/token').then(
-                    (tokenResponse: ResponseFixture) => {
-                      // Set the correct user status on the response
-                      const response = { ...userResponse.response, status };
-                      cy.mockNext(userResponse.code, response);
-                      cy.mockNext(tokenResponse.code, tokenResponse.response);
-                      cy.get('button[type=submit]').click();
-                      cy.contains('Check your email inbox');
-                      cy.contains('Resend email');
-                      cy.contains('Email sent');
-                      cy.contains('within 2 minutes');
-                    },
-                  );
-                },
-              );
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(tokenResponse.code, tokenResponse.response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes');
             },
           );
           break;
@@ -357,23 +260,15 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/token').then(
-                    (tokenResponse: ResponseFixture) => {
-                      // Set the correct user status on the response
-                      const response = { ...userResponse.response, status };
-                      cy.mockNext(userResponse.code, response);
-                      cy.mockNext(tokenResponse.code, tokenResponse.response);
-                      cy.get('button[type=submit]').click();
-                      cy.contains('Check your email inbox');
-                      cy.contains('Resend email');
-                      cy.contains('Email sent');
-                      cy.contains('within 2 minutes');
-                    },
-                  );
-                },
-              );
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(tokenResponse.code, tokenResponse.response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes');
             },
           );
           break;
@@ -382,26 +277,18 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/reset-password').then(
-                    (resetPasswordResponse: ResponseFixture) => {
-                      // Set the correct user status on the response
-                      const response = { ...userResponse.response, status };
-                      cy.mockNext(userResponse.code, response);
-                      cy.mockNext(
-                        resetPasswordResponse.code,
-                        resetPasswordResponse.response,
-                      );
-                      cy.get('button[type=submit]').click();
-                      cy.contains('Check your email inbox');
-                      cy.contains('Resend email');
-                      cy.contains('Email sent');
-                      cy.contains('within 2 minutes');
-                    },
-                  );
-                },
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(
+                resetPasswordResponse.code,
+                resetPasswordResponse.response,
               );
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes');
             },
           );
           break;
@@ -417,19 +304,12 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/error/user-not-found').then(
-                (userNotFoundError: ResponseFixture) => {
-                  cy.mockNext(
-                    userNotFoundError.code,
-                    userNotFoundError.response,
-                  );
-                  cy.get('button[type=submit]').click();
-                  cy.contains('Check your email inbox');
-                  cy.contains('Resend email');
-                  cy.contains('Email sent');
-                  cy.contains('within 2 minutes');
-                },
-              );
+              cy.mockNext(userNotFoundError.code, userNotFoundError.response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes');
             },
           );
           break;
@@ -437,26 +317,18 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture(
-                    'okta-responses/success/forgot-password-email-factor',
-                  ).then((forgotPasswordResponse: ResponseFixture) => {
-                    // Set the correct user status on the response
-                    const response = { ...userResponse.response, status };
-                    cy.mockNext(userResponse.code, response);
-                    cy.mockNext(
-                      forgotPasswordResponse.code,
-                      forgotPasswordResponse.response,
-                    );
-                    cy.get('button[type=submit]').click();
-                    cy.contains('Check your email inbox');
-                    cy.contains('Resend email');
-                    cy.contains('Email sent');
-                    cy.contains('within 2 minutes');
-                  });
-                },
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(
+                forgotPasswordResponse.code,
+                forgotPasswordResponse.response,
               );
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes');
             },
           );
           break;
@@ -464,23 +336,15 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/token').then(
-                    (tokenResponse: ResponseFixture) => {
-                      // Set the correct user status on the response
-                      const response = { ...userResponse.response, status };
-                      cy.mockNext(userResponse.code, response);
-                      cy.mockNext(tokenResponse.code, tokenResponse.response);
-                      cy.get('button[type=submit]').click();
-                      cy.contains('Check your email inbox');
-                      cy.contains('Resend email');
-                      cy.contains('Email sent');
-                      cy.contains('within 2 minutes');
-                    },
-                  );
-                },
-              );
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(tokenResponse.code, tokenResponse.response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes');
             },
           );
           break;
@@ -488,23 +352,15 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/token').then(
-                    (tokenResponse: ResponseFixture) => {
-                      // Set the correct user status on the response
-                      const response = { ...userResponse.response, status };
-                      cy.mockNext(userResponse.code, response);
-                      cy.mockNext(tokenResponse.code, tokenResponse.response);
-                      cy.get('button[type=submit]').click();
-                      cy.contains('Check your email inbox');
-                      cy.contains('Resend email');
-                      cy.contains('Email sent');
-                      cy.contains('within 2 minutes');
-                    },
-                  );
-                },
-              );
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(tokenResponse.code, tokenResponse.response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes');
             },
           );
           break;
@@ -513,26 +369,18 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/reset-password').then(
-                    (resetPasswordResponse: ResponseFixture) => {
-                      // Set the correct user status on the response
-                      const response = { ...userResponse.response, status };
-                      cy.mockNext(userResponse.code, response);
-                      cy.mockNext(
-                        resetPasswordResponse.code,
-                        resetPasswordResponse.response,
-                      );
-                      cy.get('button[type=submit]').click();
-                      cy.contains('Check your email inbox');
-                      cy.contains('Resend email');
-                      cy.contains('Email sent');
-                      cy.contains('within 2 minutes');
-                    },
-                  );
-                },
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(
+                resetPasswordResponse.code,
+                resetPasswordResponse.response,
               );
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes');
             },
           );
           break;
@@ -555,19 +403,12 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/error/user-not-found').then(
-                (userNotFoundError: ResponseFixture) => {
-                  cy.mockNext(
-                    userNotFoundError.code,
-                    userNotFoundError.response,
-                  );
-                  cy.get('button[type=submit]').click();
-                  cy.contains('Check your email inbox');
-                  cy.contains('Resend email');
-                  cy.contains('Email sent');
-                  cy.contains('within 2 minutes').should('not.exist');
-                },
-              );
+              cy.mockNext(userNotFoundError.code, userNotFoundError.response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes').should('not.exist');
             },
           );
           break;
@@ -575,26 +416,18 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture(
-                    'okta-responses/success/forgot-password-email-factor',
-                  ).then((forgotPasswordResponse: ResponseFixture) => {
-                    // Set the correct user status on the response
-                    const response = { ...userResponse.response, status };
-                    cy.mockNext(userResponse.code, response);
-                    cy.mockNext(
-                      forgotPasswordResponse.code,
-                      forgotPasswordResponse.response,
-                    );
-                    cy.get('button[type=submit]').click();
-                    cy.contains('Check your email inbox');
-                    cy.contains('Resend email');
-                    cy.contains('Email sent');
-                    cy.contains('within 2 minutes').should('not.exist');
-                  });
-                },
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(
+                forgotPasswordResponse.code,
+                forgotPasswordResponse.response,
               );
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes').should('not.exist');
             },
           );
           break;
@@ -602,23 +435,15 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/token').then(
-                    (tokenResponse: ResponseFixture) => {
-                      // Set the correct user status on the response
-                      const response = { ...userResponse.response, status };
-                      cy.mockNext(userResponse.code, response);
-                      cy.mockNext(tokenResponse.code, tokenResponse.response);
-                      cy.get('button[type=submit]').click();
-                      cy.contains('Check your email inbox');
-                      cy.contains('Resend email');
-                      cy.contains('Email sent');
-                      cy.contains('within 2 minutes').should('not.exist');
-                    },
-                  );
-                },
-              );
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(tokenResponse.code, tokenResponse.response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes').should('not.exist');
             },
           );
           break;
@@ -626,23 +451,15 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/token').then(
-                    (tokenResponse: ResponseFixture) => {
-                      // Set the correct user status on the response
-                      const response = { ...userResponse.response, status };
-                      cy.mockNext(userResponse.code, response);
-                      cy.mockNext(tokenResponse.code, tokenResponse.response);
-                      cy.get('button[type=submit]').click();
-                      cy.contains('Check your email inbox');
-                      cy.contains('Resend email');
-                      cy.contains('Email sent');
-                      cy.contains('within 2 minutes').should('not.exist');
-                    },
-                  );
-                },
-              );
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(tokenResponse.code, tokenResponse.response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes').should('not.exist');
             },
           );
           break;
@@ -651,26 +468,18 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/reset-password').then(
-                    (resetPasswordResponse: ResponseFixture) => {
-                      // Set the correct user status on the response
-                      const response = { ...userResponse.response, status };
-                      cy.mockNext(userResponse.code, response);
-                      cy.mockNext(
-                        resetPasswordResponse.code,
-                        resetPasswordResponse.response,
-                      );
-                      cy.get('button[type=submit]').click();
-                      cy.contains('Check your email inbox');
-                      cy.contains('Resend email');
-                      cy.contains('Email sent');
-                      cy.contains('within 2 minutes').should('not.exist');
-                    },
-                  );
-                },
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(
+                resetPasswordResponse.code,
+                resetPasswordResponse.response,
               );
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes').should('not.exist');
             },
           );
           break;
@@ -686,19 +495,12 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/error/user-not-found').then(
-                (userNotFoundError: ResponseFixture) => {
-                  cy.mockNext(
-                    userNotFoundError.code,
-                    userNotFoundError.response,
-                  );
-                  cy.get('button[type=submit]').click();
-                  cy.contains('Check your email inbox');
-                  cy.contains('Resend email');
-                  cy.contains('Email sent');
-                  cy.contains('within 2 minutes').should('not.exist');
-                },
-              );
+              cy.mockNext(userNotFoundError.code, userNotFoundError.response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes').should('not.exist');
             },
           );
           break;
@@ -706,26 +508,18 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture(
-                    'okta-responses/success/forgot-password-email-factor',
-                  ).then((forgotPasswordResponse: ResponseFixture) => {
-                    // Set the correct user status on the response
-                    const response = { ...userResponse.response, status };
-                    cy.mockNext(userResponse.code, response);
-                    cy.mockNext(
-                      forgotPasswordResponse.code,
-                      forgotPasswordResponse.response,
-                    );
-                    cy.get('button[type=submit]').click();
-                    cy.contains('Check your email inbox');
-                    cy.contains('Resend email');
-                    cy.contains('Email sent');
-                    cy.contains('within 2 minutes').should('not.exist');
-                  });
-                },
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(
+                forgotPasswordResponse.code,
+                forgotPasswordResponse.response,
               );
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes').should('not.exist');
             },
           );
           break;
@@ -733,23 +527,15 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/token').then(
-                    (tokenResponse: ResponseFixture) => {
-                      // Set the correct user status on the response
-                      const response = { ...userResponse.response, status };
-                      cy.mockNext(userResponse.code, response);
-                      cy.mockNext(tokenResponse.code, tokenResponse.response);
-                      cy.get('button[type=submit]').click();
-                      cy.contains('Check your email inbox');
-                      cy.contains('Resend email');
-                      cy.contains('Email sent');
-                      cy.contains('within 2 minutes').should('not.exist');
-                    },
-                  );
-                },
-              );
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(tokenResponse.code, tokenResponse.response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes').should('not.exist');
             },
           );
           break;
@@ -757,23 +543,15 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/token').then(
-                    (tokenResponse: ResponseFixture) => {
-                      // Set the correct user status on the response
-                      const response = { ...userResponse.response, status };
-                      cy.mockNext(userResponse.code, response);
-                      cy.mockNext(tokenResponse.code, tokenResponse.response);
-                      cy.get('button[type=submit]').click();
-                      cy.contains('Check your email inbox');
-                      cy.contains('Resend email');
-                      cy.contains('Email sent');
-                      cy.contains('within 2 minutes').should('not.exist');
-                    },
-                  );
-                },
-              );
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(tokenResponse.code, tokenResponse.response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes').should('not.exist');
             },
           );
           break;
@@ -782,26 +560,18 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/reset-password').then(
-                    (resetPasswordResponse: ResponseFixture) => {
-                      // Set the correct user status on the response
-                      const response = { ...userResponse.response, status };
-                      cy.mockNext(userResponse.code, response);
-                      cy.mockNext(
-                        resetPasswordResponse.code,
-                        resetPasswordResponse.response,
-                      );
-                      cy.get('button[type=submit]').click();
-                      cy.contains('Check your email inbox');
-                      cy.contains('Resend email');
-                      cy.contains('Email sent');
-                      cy.contains('within 2 minutes').should('not.exist');
-                    },
-                  );
-                },
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(
+                resetPasswordResponse.code,
+                resetPasswordResponse.response,
               );
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes').should('not.exist');
             },
           );
           break;
@@ -818,19 +588,12 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/error/user-not-found').then(
-                (userNotFoundError: ResponseFixture) => {
-                  cy.mockNext(
-                    userNotFoundError.code,
-                    userNotFoundError.response,
-                  );
-                  cy.get('button[type=submit]').click();
-                  cy.contains('Check your email inbox');
-                  cy.contains('Resend email');
-                  cy.contains('Email sent');
-                  cy.contains('within 2 minutes').should('not.exist');
-                },
-              );
+              cy.mockNext(userNotFoundError.code, userNotFoundError.response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes').should('not.exist');
             },
           );
           break;
@@ -838,26 +601,18 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture(
-                    'okta-responses/success/forgot-password-email-factor',
-                  ).then((forgotPasswordResponse: ResponseFixture) => {
-                    // Set the correct user status on the response
-                    const response = { ...userResponse.response, status };
-                    cy.mockNext(userResponse.code, response);
-                    cy.mockNext(
-                      forgotPasswordResponse.code,
-                      forgotPasswordResponse.response,
-                    );
-                    cy.get('button[type=submit]').click();
-                    cy.contains('Check your email inbox');
-                    cy.contains('Resend email');
-                    cy.contains('Email sent');
-                    cy.contains('within 2 minutes').should('not.exist');
-                  });
-                },
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(
+                forgotPasswordResponse.code,
+                forgotPasswordResponse.response,
               );
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes').should('not.exist');
             },
           );
           break;
@@ -865,23 +620,15 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/token').then(
-                    (tokenResponse: ResponseFixture) => {
-                      // Set the correct user status on the response
-                      const response = { ...userResponse.response, status };
-                      cy.mockNext(userResponse.code, response);
-                      cy.mockNext(tokenResponse.code, tokenResponse.response);
-                      cy.get('button[type=submit]').click();
-                      cy.contains('Check your email inbox');
-                      cy.contains('Resend email');
-                      cy.contains('Email sent');
-                      cy.contains('within 2 minutes').should('not.exist');
-                    },
-                  );
-                },
-              );
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(tokenResponse.code, tokenResponse.response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes').should('not.exist');
             },
           );
           break;
@@ -889,23 +636,15 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/token').then(
-                    (tokenResponse: ResponseFixture) => {
-                      // Set the correct user status on the response
-                      const response = { ...userResponse.response, status };
-                      cy.mockNext(userResponse.code, response);
-                      cy.mockNext(tokenResponse.code, tokenResponse.response);
-                      cy.get('button[type=submit]').click();
-                      cy.contains('Check your email inbox');
-                      cy.contains('Resend email');
-                      cy.contains('Email sent');
-                      cy.contains('within 2 minutes').should('not.exist');
-                    },
-                  );
-                },
-              );
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(tokenResponse.code, tokenResponse.response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes').should('not.exist');
             },
           );
           break;
@@ -914,26 +653,18 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/reset-password').then(
-                    (resetPasswordResponse: ResponseFixture) => {
-                      // Set the correct user status on the response
-                      const response = { ...userResponse.response, status };
-                      cy.mockNext(userResponse.code, response);
-                      cy.mockNext(
-                        resetPasswordResponse.code,
-                        resetPasswordResponse.response,
-                      );
-                      cy.get('button[type=submit]').click();
-                      cy.contains('Check your email inbox');
-                      cy.contains('Resend email');
-                      cy.contains('Email sent');
-                      cy.contains('within 2 minutes').should('not.exist');
-                    },
-                  );
-                },
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(
+                resetPasswordResponse.code,
+                resetPasswordResponse.response,
               );
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
+              cy.contains('Email sent');
+              cy.contains('within 2 minutes').should('not.exist');
             },
           );
           break;
