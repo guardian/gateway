@@ -1,5 +1,8 @@
 import userStatuses from '../../support/okta/userStatuses';
-import ResponseFixture from '../../support/types/ResponseFixture';
+import userResponse from '../../fixtures/okta-responses/success/user.json';
+import userExistsError from '../../fixtures/okta-responses/error/user-exists.json';
+import successTokenResponse from '../../fixtures/okta-responses/success/token.json';
+import resetPasswordResponse from '../../fixtures/okta-responses/success/reset-password.json';
 
 beforeEach(() => {
   cy.mockPurge();
@@ -17,16 +20,12 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/success/user').then(
-                (userResponse: ResponseFixture) => {
-                  // Set the correct user status on the response
-                  const response = { ...userResponse.response, status };
-                  cy.mockNext(userResponse.code, response);
-                  cy.get('button[type=submit]').click();
-                  cy.contains('Check your email inbox');
-                  cy.contains('Resend email');
-                },
-              );
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userResponse.code, response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
             },
           );
           break;
@@ -34,26 +33,17 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/error/user-exists').then(
-                (userExistsError: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/user').then(
-                    (userResponse: ResponseFixture) => {
-                      // Set the correct user status on the response
-                      const response = { ...userResponse.response, status };
-                      cy.mockNext(
-                        userExistsError.code,
-                        userExistsError.response,
-                      );
-                      cy.mockNext(userResponse.code, response);
-                      cy.get('button[type=submit]').click();
-                      cy.contains('Check your email inbox');
-                      cy.contains('Resend email');
-                    },
-                  );
-                },
-              );
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userExistsError.code, userExistsError.response);
+              cy.mockNext(userResponse.code, response);
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
             },
           );
+          //not sure if we need to do anything for the social case here. the only mocked response I can change is the user response
+          //but it would be changing fields that no one looks at
           break;
         case 'PROVISIONED':
         case 'STAGED':
@@ -61,32 +51,17 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/error/user-exists').then(
-                (userExistsError: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/user').then(
-                    (userResponse: ResponseFixture) => {
-                      cy.fixture('okta-responses/success/token').then(
-                        (tokenResponse: ResponseFixture) => {
-                          // Set the correct user status on the response
-                          const response = { ...userResponse.response, status };
-                          cy.mockNext(
-                            userExistsError.code,
-                            userExistsError.response,
-                          );
-                          cy.mockNext(userResponse.code, response);
-                          cy.mockNext(
-                            tokenResponse.code,
-                            tokenResponse.response,
-                          );
-                          cy.get('button[type=submit]').click();
-                          cy.contains('Check your email inbox');
-                          cy.contains('Resend email');
-                        },
-                      );
-                    },
-                  );
-                },
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userExistsError.code, userExistsError.response);
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(
+                successTokenResponse.code,
+                successTokenResponse.response,
               );
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
             },
           );
           break;
@@ -96,32 +71,17 @@ userStatuses.forEach((status) => {
           specify(
             "Then I should be shown the 'Check your email inbox' page",
             () => {
-              cy.fixture('okta-responses/error/user-exists').then(
-                (userExistsError: ResponseFixture) => {
-                  cy.fixture('okta-responses/success/user').then(
-                    (userResponse: ResponseFixture) => {
-                      cy.fixture('okta-responses/success/reset-password').then(
-                        (tokenResponse: ResponseFixture) => {
-                          // Set the correct user status on the response
-                          const response = { ...userResponse.response, status };
-                          cy.mockNext(
-                            userExistsError.code,
-                            userExistsError.response,
-                          );
-                          cy.mockNext(userResponse.code, response);
-                          cy.mockNext(
-                            tokenResponse.code,
-                            tokenResponse.response,
-                          );
-                          cy.get('button[type=submit]').click();
-                          cy.contains('Check your email inbox');
-                          cy.contains('Resend email');
-                        },
-                      );
-                    },
-                  );
-                },
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userExistsError.code, userExistsError.response);
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(
+                resetPasswordResponse.code,
+                resetPasswordResponse.response,
               );
+              cy.get('button[type=submit]').click();
+              cy.contains('Check your email inbox');
+              cy.contains('Resend email');
             },
           );
           break;
