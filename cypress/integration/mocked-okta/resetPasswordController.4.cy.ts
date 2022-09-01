@@ -9,6 +9,19 @@ beforeEach(() => {
   cy.mockPurge();
 });
 
+const verifyIn2MinutesEmailSentPage = () => {
+  cy.contains('Check your email inbox');
+  cy.contains('Resend email');
+  cy.contains('Email sent');
+  cy.contains('within 2 minutes');
+};
+const verifyInRegularEmailSentPage = () => {
+  cy.contains('Check your email inbox');
+  cy.contains('Resend email');
+  cy.contains('Email sent');
+  cy.contains('within 2 minutes').should('not.exist');
+};
+
 userStatuses.forEach((status) => {
   context(`Given I am a ${status || 'nonexistent'} user`, () => {
     context('When I submit the form on /reset-password', () => {
@@ -23,10 +36,7 @@ userStatuses.forEach((status) => {
             () => {
               cy.mockNext(userNotFoundError.code, userNotFoundError.response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes');
+              verifyIn2MinutesEmailSentPage();
             },
           );
           break;
@@ -42,10 +52,7 @@ userStatuses.forEach((status) => {
                 forgotPasswordResponse.response,
               );
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes');
+              verifyIn2MinutesEmailSentPage();
             },
           );
           break;
@@ -58,10 +65,7 @@ userStatuses.forEach((status) => {
               cy.mockNext(userResponse.code, response);
               cy.mockNext(tokenResponse.code, tokenResponse.response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes');
+              verifyIn2MinutesEmailSentPage();
             },
           );
           break;
@@ -74,10 +78,7 @@ userStatuses.forEach((status) => {
               cy.mockNext(userResponse.code, response);
               cy.mockNext(tokenResponse.code, tokenResponse.response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes');
+              verifyIn2MinutesEmailSentPage();
             },
           );
           break;
@@ -94,10 +95,7 @@ userStatuses.forEach((status) => {
                 resetPasswordResponse.response,
               );
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes');
+              verifyIn2MinutesEmailSentPage();
             },
           );
           break;
@@ -122,10 +120,7 @@ userStatuses.forEach((status) => {
             () => {
               cy.mockNext(userNotFoundError.code, userNotFoundError.response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes');
+              verifyIn2MinutesEmailSentPage();
             },
           );
           break;
@@ -141,10 +136,7 @@ userStatuses.forEach((status) => {
                 forgotPasswordResponse.response,
               );
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes');
+              verifyIn2MinutesEmailSentPage();
             },
           );
           break;
@@ -157,10 +149,7 @@ userStatuses.forEach((status) => {
               cy.mockNext(userResponse.code, response);
               cy.mockNext(tokenResponse.code, tokenResponse.response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes');
+              verifyIn2MinutesEmailSentPage();
             },
           );
           break;
@@ -173,10 +162,7 @@ userStatuses.forEach((status) => {
               cy.mockNext(userResponse.code, response);
               cy.mockNext(tokenResponse.code, tokenResponse.response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes');
+              verifyIn2MinutesEmailSentPage();
             },
           );
           break;
@@ -193,10 +179,7 @@ userStatuses.forEach((status) => {
                 resetPasswordResponse.response,
               );
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes');
+              verifyIn2MinutesEmailSentPage();
             },
           );
           break;
@@ -214,10 +197,7 @@ userStatuses.forEach((status) => {
             () => {
               cy.mockNext(userNotFoundError.code, userNotFoundError.response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes');
+              verifyIn2MinutesEmailSentPage();
             },
           );
           break;
@@ -233,10 +213,7 @@ userStatuses.forEach((status) => {
                 forgotPasswordResponse.response,
               );
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes');
+              verifyIn2MinutesEmailSentPage();
             },
           );
           break;
@@ -249,10 +226,7 @@ userStatuses.forEach((status) => {
               cy.mockNext(userResponse.code, response);
               cy.mockNext(tokenResponse.code, tokenResponse.response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes');
+              verifyIn2MinutesEmailSentPage();
             },
           );
           break;
@@ -265,10 +239,7 @@ userStatuses.forEach((status) => {
               cy.mockNext(userResponse.code, response);
               cy.mockNext(tokenResponse.code, tokenResponse.response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes');
+              verifyIn2MinutesEmailSentPage();
             },
           );
           break;
@@ -285,10 +256,7 @@ userStatuses.forEach((status) => {
                 resetPasswordResponse.response,
               );
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes');
+              verifyIn2MinutesEmailSentPage();
             },
           );
           break;
@@ -306,10 +274,7 @@ userStatuses.forEach((status) => {
             () => {
               cy.mockNext(userNotFoundError.code, userNotFoundError.response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes');
+              verifyIn2MinutesEmailSentPage();
             },
           );
           break;
@@ -325,10 +290,7 @@ userStatuses.forEach((status) => {
                 forgotPasswordResponse.response,
               );
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes');
+              verifyIn2MinutesEmailSentPage();
             },
           );
           break;
@@ -341,10 +303,7 @@ userStatuses.forEach((status) => {
               cy.mockNext(userResponse.code, response);
               cy.mockNext(tokenResponse.code, tokenResponse.response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes');
+              verifyIn2MinutesEmailSentPage();
             },
           );
           break;
@@ -357,10 +316,7 @@ userStatuses.forEach((status) => {
               cy.mockNext(userResponse.code, response);
               cy.mockNext(tokenResponse.code, tokenResponse.response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes');
+              verifyIn2MinutesEmailSentPage();
             },
           );
           break;
@@ -377,10 +333,7 @@ userStatuses.forEach((status) => {
                 resetPasswordResponse.response,
               );
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes');
+              verifyIn2MinutesEmailSentPage();
             },
           );
           break;
@@ -405,10 +358,7 @@ userStatuses.forEach((status) => {
             () => {
               cy.mockNext(userNotFoundError.code, userNotFoundError.response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes').should('not.exist');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -424,10 +374,7 @@ userStatuses.forEach((status) => {
                 forgotPasswordResponse.response,
               );
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes').should('not.exist');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -440,10 +387,7 @@ userStatuses.forEach((status) => {
               cy.mockNext(userResponse.code, response);
               cy.mockNext(tokenResponse.code, tokenResponse.response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes').should('not.exist');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -456,10 +400,7 @@ userStatuses.forEach((status) => {
               cy.mockNext(userResponse.code, response);
               cy.mockNext(tokenResponse.code, tokenResponse.response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes').should('not.exist');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -476,10 +417,7 @@ userStatuses.forEach((status) => {
                 resetPasswordResponse.response,
               );
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes').should('not.exist');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -497,10 +435,7 @@ userStatuses.forEach((status) => {
             () => {
               cy.mockNext(userNotFoundError.code, userNotFoundError.response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes').should('not.exist');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -516,10 +451,7 @@ userStatuses.forEach((status) => {
                 forgotPasswordResponse.response,
               );
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes').should('not.exist');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -532,10 +464,7 @@ userStatuses.forEach((status) => {
               cy.mockNext(userResponse.code, response);
               cy.mockNext(tokenResponse.code, tokenResponse.response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes').should('not.exist');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -548,10 +477,7 @@ userStatuses.forEach((status) => {
               cy.mockNext(userResponse.code, response);
               cy.mockNext(tokenResponse.code, tokenResponse.response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes').should('not.exist');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -568,10 +494,7 @@ userStatuses.forEach((status) => {
                 resetPasswordResponse.response,
               );
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes').should('not.exist');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -590,10 +513,7 @@ userStatuses.forEach((status) => {
             () => {
               cy.mockNext(userNotFoundError.code, userNotFoundError.response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes').should('not.exist');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -609,10 +529,7 @@ userStatuses.forEach((status) => {
                 forgotPasswordResponse.response,
               );
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes').should('not.exist');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -625,10 +542,7 @@ userStatuses.forEach((status) => {
               cy.mockNext(userResponse.code, response);
               cy.mockNext(tokenResponse.code, tokenResponse.response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes').should('not.exist');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -641,10 +555,7 @@ userStatuses.forEach((status) => {
               cy.mockNext(userResponse.code, response);
               cy.mockNext(tokenResponse.code, tokenResponse.response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes').should('not.exist');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -661,10 +572,7 @@ userStatuses.forEach((status) => {
                 resetPasswordResponse.response,
               );
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
-              cy.contains('within 2 minutes').should('not.exist');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
