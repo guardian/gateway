@@ -1,10 +1,13 @@
 import userStatuses from '../../support/okta/userStatuses';
-import ResponseFixture from '../../support/types/ResponseFixture';
 import userNotFoundError from '../../fixtures/okta-responses/error/user-not-found.json';
-import forgotPasswordResponse from '../../fixtures/okta-responses/success/forgot-password-email-factor';
+import oktaPermissionsError from '../../fixtures/okta-responses/error/no-permission.json';
+import forgotPasswordResponse from '../../fixtures/okta-responses/success/forgot-password-email-factor.json';
 import userResponse from '../../fixtures/okta-responses/success/user.json';
+import socialUserResponse from '../../fixtures/okta-responses/success/social-user.json';
 import tokenResponse from '../../fixtures/okta-responses/success/token.json';
 import resetPasswordResponse from '../../fixtures/okta-responses/success/reset-password.json';
+import verifyRecoveryTokenReponse from '../../fixtures/okta-responses/success/verify-recovery-token.json';
+import authResetPasswordResponse from '../../fixtures/okta-responses/success/auth-reset-password.json';
 beforeEach(() => {
   cy.mockPurge();
 });
@@ -20,6 +23,33 @@ const verifyInRegularEmailSentPage = () => {
   cy.contains('Resend email');
   cy.contains('Email sent');
   cy.contains('within 2 minutes').should('not.exist');
+};
+
+const setupMocksForSocialUserPasswordReset = () => {
+  //first attempt to reset the password ..
+
+  //get the user
+  cy.mockNext(socialUserResponse.code, socialUserResponse.response);
+
+  //first time we reset the password okta will return with a permission error because the user has no password
+  cy.mockNext(oktaPermissionsError.code, oktaPermissionsError.response);
+  //dangerously set the password
+  cy.mockNext(resetPasswordResponse.code, resetPasswordResponse.response);
+  //verify recovery token
+  cy.mockNext(
+    verifyRecoveryTokenReponse.code,
+    verifyRecoveryTokenReponse.response,
+  );
+  //set placeholder password
+  cy.mockNext(
+    authResetPasswordResponse.code,
+    authResetPasswordResponse.response,
+  );
+
+  //retry sending the email now that the user is "fixed"
+  // so we need to mock the same as for the non social user
+  cy.mockNext(socialUserResponse.code, socialUserResponse.response);
+  cy.mockNext(forgotPasswordResponse.code, forgotPasswordResponse.response);
 };
 
 userStatuses.forEach((status) => {
@@ -51,6 +81,14 @@ userStatuses.forEach((status) => {
                 forgotPasswordResponse.code,
                 forgotPasswordResponse.response,
               );
+              cy.get('button[type=submit]').click();
+              verifyIn2MinutesEmailSentPage();
+            },
+          );
+          specify(
+            "Then I should be shown the 'Check your email inbox' page for social user",
+            () => {
+              setupMocksForSocialUserPasswordReset();
               cy.get('button[type=submit]').click();
               verifyIn2MinutesEmailSentPage();
             },
@@ -139,6 +177,14 @@ userStatuses.forEach((status) => {
               verifyIn2MinutesEmailSentPage();
             },
           );
+          specify(
+            "Then I should be shown the 'Check your email inbox' pag for social user",
+            () => {
+              setupMocksForSocialUserPasswordReset();
+              cy.get('button[type=submit]').click();
+              verifyIn2MinutesEmailSentPage();
+            },
+          );
           break;
         case 'PROVISIONED':
           specify(
@@ -216,6 +262,14 @@ userStatuses.forEach((status) => {
               verifyIn2MinutesEmailSentPage();
             },
           );
+          specify(
+            "Then I should be shown the 'Check your email inbox' page for social user",
+            () => {
+              setupMocksForSocialUserPasswordReset();
+              cy.get('button[type=submit]').click();
+              verifyIn2MinutesEmailSentPage();
+            },
+          );
           break;
         case 'PROVISIONED':
           specify(
@@ -289,6 +343,14 @@ userStatuses.forEach((status) => {
                 forgotPasswordResponse.code,
                 forgotPasswordResponse.response,
               );
+              cy.get('button[type=submit]').click();
+              verifyIn2MinutesEmailSentPage();
+            },
+          );
+          specify(
+            "Then I should be shown the 'Check your email inbox' page for social user",
+            () => {
+              setupMocksForSocialUserPasswordReset();
               cy.get('button[type=submit]').click();
               verifyIn2MinutesEmailSentPage();
             },
@@ -377,6 +439,14 @@ userStatuses.forEach((status) => {
               verifyInRegularEmailSentPage();
             },
           );
+          specify(
+            "Then I should be shown the 'Check your email inbox' page for social user",
+            () => {
+              setupMocksForSocialUserPasswordReset();
+              cy.get('button[type=submit]').click();
+              verifyInRegularEmailSentPage();
+            },
+          );
           break;
         case 'PROVISIONED':
           specify(
@@ -450,6 +520,14 @@ userStatuses.forEach((status) => {
                 forgotPasswordResponse.code,
                 forgotPasswordResponse.response,
               );
+              cy.get('button[type=submit]').click();
+              verifyInRegularEmailSentPage();
+            },
+          );
+          specify(
+            "Then I should be shown the 'Check your email inbox' page for social user",
+            () => {
+              setupMocksForSocialUserPasswordReset();
               cy.get('button[type=submit]').click();
               verifyInRegularEmailSentPage();
             },
@@ -528,6 +606,14 @@ userStatuses.forEach((status) => {
                 forgotPasswordResponse.code,
                 forgotPasswordResponse.response,
               );
+              cy.get('button[type=submit]').click();
+              verifyInRegularEmailSentPage();
+            },
+          );
+          specify(
+            "Then I should be shown the 'Check your email inbox' page for social user",
+            () => {
+              setupMocksForSocialUserPasswordReset();
               cy.get('button[type=submit]').click();
               verifyInRegularEmailSentPage();
             },
