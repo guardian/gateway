@@ -35,7 +35,8 @@
     "no-param-reassign": "error",
     "prefer-const": "error",
     "no-sequences": "error",
-    "no-console": "error"
+    "no-console": "error",
+    "react/no-unknown-property": ["error", { "ignore": ["css"] }]
   },
   "overrides": [
     {
