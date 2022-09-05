@@ -189,6 +189,7 @@ export const SignIn = ({
 
   const handleSubmit = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
+      debugger;
       trackFormSubmit(formTrackingName);
 
       if (!isFormDisabled) {

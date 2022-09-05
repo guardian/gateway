@@ -38,7 +38,7 @@ export const ResetPassword = ({
   showNoAccessEmail,
   showRecentEmailSummary,
   children,
-  recaptchaSiteKey,
+  // recaptchaSiteKey,
   formPageTrackingName,
 }: PropsWithChildren<ResetPasswordProps>) => {
   // track page/form load
@@ -62,11 +62,11 @@ export const ResetPassword = ({
             : buildUrlWithQueryParams('/reset-password', {}, queryString)
         }
         submitButtonText={buttonText}
-        recaptchaSiteKey={recaptchaSiteKey}
+        // recaptchaSiteKey={recaptchaSiteKey}
         setRecaptchaErrorMessage={setRecaptchaErrorMessage}
         setRecaptchaErrorContext={setRecaptchaErrorContext}
         formTrackingName={formPageTrackingName}
-        disableOnSubmit
+        // disableOnSubmit
       >
         <EmailInput label={emailInputLabel} defaultValue={email} />
       </MainForm>
