@@ -108,7 +108,6 @@ describe('Content Security Policy headers', () => {
           'o14302.ingest.sentry.io',
         ].join(' '),
       );
-      expect(splitCSPHeader).toContain('block-all-mixed-content');
       expect(splitCSPHeader).toContain("object-src 'none'");
       expect(splitCSPHeader).toContain("script-src-attr 'none'");
       expect(splitCSPHeader).toContain('upgrade-insecure-requests');
