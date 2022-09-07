@@ -20,6 +20,7 @@ import { buildUrl } from '@/shared/lib/routeUtils';
 import deepmerge from 'deepmerge';
 import { Request, Router } from 'express';
 import handleRecaptcha from '@/server/lib/recaptcha';
+import { clearOktaCookies } from './signOut';
 
 const router = Router();
 
@@ -160,6 +161,10 @@ router.get(
     try {
       const cookies = await verifyEmail(token, req.ip, res.locals.requestId);
       trackMetric('EmailValidated::Success');
+      // because we are verifying the email using idapi, and a new okta
+      // session will not be created, so we will need to clear the okta
+      // cookies to keep the sessions in sync
+      clearOktaCookies(res);
       setIDAPICookies(res, cookies);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
