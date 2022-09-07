@@ -14,6 +14,7 @@ import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
 import { usePageLoadOphanInteraction } from '../lib/hooks/usePageLoadOphanInteraction';
+import Reaptcha from 'reaptcha';
 
 interface ResetPasswordProps {
   email?: string;
@@ -38,7 +39,7 @@ export const ResetPassword = ({
   showNoAccessEmail,
   showRecentEmailSummary,
   children,
-  // recaptchaSiteKey,
+  recaptchaSiteKey,
   formPageTrackingName,
 }: PropsWithChildren<ResetPasswordProps>) => {
   // track page/form load
@@ -68,6 +69,7 @@ export const ResetPassword = ({
         formTrackingName={formPageTrackingName}
         // disableOnSubmit
       >
+        <Reaptcha sitekey={recaptchaSiteKey} />
         <EmailInput label={emailInputLabel} defaultValue={email} />
       </MainForm>
       {showNoAccessEmail && (

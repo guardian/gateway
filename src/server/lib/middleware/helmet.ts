@@ -35,6 +35,7 @@ const scriptSrc = [
   CSP_VALID_URI.GOOGLE_RECAPTCHA,
   CSP_VALID_URI.GSTATIC_RECAPTCHA,
   CSP_VALID_URI.GUARDIAN_ASSETS,
+  'recaptcha.net',
 ];
 if (stage === 'DEV') scriptSrc.push(HELMET_OPTIONS.UNSAFE_EVAL);
 
@@ -65,7 +66,11 @@ const helmetConfig: HelmetOptions = {
         CSP_VALID_URI.GOOGLE_RECAPTCHA,
         CSP_VALID_URI.SENTRY,
       ],
-      frameSrc: [CSP_VALID_URI.CMP, CSP_VALID_URI.GOOGLE_RECAPTCHA],
+      frameSrc: [
+        CSP_VALID_URI.CMP,
+        CSP_VALID_URI.GOOGLE_RECAPTCHA,
+        'recaptcha.net',
+      ],
       formAction: null,
     },
   },

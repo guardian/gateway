@@ -40,7 +40,7 @@ const useRecaptchaScript = (src: string) => {
     const initialiseRecaptcha = () => {
       // This is the first time the Google reCAPTCHA script has been added to the page.
       // When the recaptcha script is first loaded, the `.ready` method lets us instantiate it.
-      window.grecaptcha.ready(() => {
+      window.grecaptcha?.ready(() => {
         if (recaptchaReady()) {
           setLoaded(true);
         }
@@ -132,7 +132,7 @@ const useRecaptcha: UseRecaptcha = (
 
   React.useEffect(() => {
     if (loaded) {
-      const widgetId = window.grecaptcha.render(renderElement, {
+      const widgetId = window.grecaptcha?.render(renderElement as HTMLElement, {
         sitekey: siteKey,
         size: size,
         callback: (token) => {
@@ -145,7 +145,7 @@ const useRecaptcha: UseRecaptcha = (
         'error-callback': () => setError(true),
         'expired-callback': () => setExpired(true),
       });
-      setWidgetId(widgetId);
+      setWidgetId(widgetId || NaN);
     }
   }, [loaded, renderElement, siteKey, size]);
 
@@ -153,8 +153,8 @@ const useRecaptcha: UseRecaptcha = (
     if (!recaptchaReady()) {
       return false;
     }
-    window.grecaptcha.reset(widgetId);
-    window.grecaptcha.execute(widgetId);
+    window.grecaptcha?.reset(widgetId);
+    window.grecaptcha?.execute(widgetId);
 
     setRequestCount(requestCount + 1);
 

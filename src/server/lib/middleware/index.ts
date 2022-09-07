@@ -1,7 +1,7 @@
 import { Express, RequestHandler, urlencoded } from 'express';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
-import { helmetMiddleware } from '@/server/lib/middleware/helmet';
+// import { helmetMiddleware } from '@/server/lib/middleware/helmet';
 import { loggerMiddleware } from '@/server/lib/middleware/logger';
 import { oktaDevMiddleware } from '@/server/lib/middleware/oktaDev';
 import { csrfMiddleware } from '@/server/lib/middleware/csrf';
@@ -18,7 +18,7 @@ export const applyMiddleware = (server: Express): void => {
   // add request id middleware
   server.use(requestIdMiddleware);
   // apply helmet before anything else
-  server.use(helmetMiddleware as RequestHandler);
+  // server.use(helmetMiddleware as RequestHandler);
   server.use(urlencoded({ extended: true }) as RequestHandler);
   server.use(cookieParser(appSecret));
   server.use(compression());
