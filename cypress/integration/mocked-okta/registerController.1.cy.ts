@@ -7,6 +7,10 @@ import resetPasswordResponse from '../../fixtures/okta-responses/success/reset-p
 beforeEach(() => {
   cy.mockPurge();
 });
+const verifyInRegularEmailSentPage = () => {
+  cy.contains('Check your email inbox');
+  cy.contains('Resend email');
+};
 
 userStatuses.forEach((status) => {
   context(`Given I am a ${status || 'nonexistent'} user`, () => {
@@ -24,8 +28,7 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userResponse.code, response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -38,8 +41,7 @@ userStatuses.forEach((status) => {
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
+              verifyInRegularEmailSentPage();
             },
           );
           //not sure if we need to do anything for the social case here. the only mocked response I can change is the user response
@@ -60,8 +62,7 @@ userStatuses.forEach((status) => {
                 successTokenResponse.response,
               );
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -80,8 +81,7 @@ userStatuses.forEach((status) => {
                 resetPasswordResponse.response,
               );
               cy.get('button[type=submit]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
+              verifyInRegularEmailSentPage();
             },
           );
           break;

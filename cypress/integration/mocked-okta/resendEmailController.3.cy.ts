@@ -7,7 +7,12 @@ import resetPasswordResponse from '../../fixtures/okta-responses/success/reset-p
 beforeEach(() => {
   cy.mockPurge();
 });
-
+const verifyInRegularEmailSentPage = () => {
+  cy.contains('Check your email inbox');
+  cy.contains('Resend email');
+  cy.contains('Email sent');
+  cy.contains('within 2 minutes').should('not.exist');
+};
 userStatuses.forEach((status) => {
   context(`Given I am a ${status || 'nonexistent'} user`, () => {
     context('When I submit the form on /register/email-sent', () => {
@@ -31,9 +36,7 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userResponse.code, response);
               cy.get('[data-cy="main-form-submit-button"]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -46,9 +49,7 @@ userStatuses.forEach((status) => {
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
               cy.get('[data-cy="main-form-submit-button"]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
+              verifyInRegularEmailSentPage();
             },
           );
           //i Think this is the same as register.. I don't know if I should add the modked social user here
@@ -69,9 +70,7 @@ userStatuses.forEach((status) => {
                 successTokenResponse.response,
               );
               cy.get('[data-cy="main-form-submit-button"]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -90,9 +89,7 @@ userStatuses.forEach((status) => {
                 resetPasswordResponse.response,
               );
               cy.get('[data-cy="main-form-submit-button"]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -119,9 +116,7 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userResponse.code, response);
               cy.get('[data-cy="main-form-submit-button"]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -155,9 +150,7 @@ userStatuses.forEach((status) => {
                 successTokenResponse.response,
               );
               cy.get('[data-cy="main-form-submit-button"]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -176,9 +169,7 @@ userStatuses.forEach((status) => {
                 resetPasswordResponse.response,
               );
               cy.get('[data-cy="main-form-submit-button"]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -198,9 +189,7 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userResponse.code, response);
               cy.get('[data-cy="main-form-submit-button"]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -213,9 +202,7 @@ userStatuses.forEach((status) => {
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
               cy.get('[data-cy="main-form-submit-button"]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -234,9 +221,7 @@ userStatuses.forEach((status) => {
                 successTokenResponse.response,
               );
               cy.get('[data-cy="main-form-submit-button"]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -255,9 +240,7 @@ userStatuses.forEach((status) => {
                 resetPasswordResponse.response,
               );
               cy.get('[data-cy="main-form-submit-button"]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -277,9 +260,7 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userResponse.code, response);
               cy.get('[data-cy="main-form-submit-button"]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -292,9 +273,7 @@ userStatuses.forEach((status) => {
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
               cy.get('[data-cy="main-form-submit-button"]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
@@ -334,9 +313,7 @@ userStatuses.forEach((status) => {
                 resetPasswordResponse.response,
               );
               cy.get('[data-cy="main-form-submit-button"]').click();
-              cy.contains('Check your email inbox');
-              cy.contains('Resend email');
-              cy.contains('Email sent');
+              verifyInRegularEmailSentPage();
             },
           );
           break;
