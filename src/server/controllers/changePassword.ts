@@ -33,6 +33,7 @@ import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
 import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
 import { setupJobsUserInIDAPI, setupJobsUserInOkta } from '../lib/jobs';
 import { sendOphanComponentEventFromQueryParamsServer } from '../lib/ophan';
+import { clearOktaCookies } from '../routes/signOut';
 
 const { okta } = getConfiguration();
 
@@ -66,6 +67,10 @@ const changePasswordInIDAPI = async (
     );
 
     if (cookies) {
+      // because we are changing the password using idapi, and a new okta
+      // session will not be created, so we will need to clear the okta
+      // cookies to keep the sessions in sync
+      clearOktaCookies(res);
       setIDAPICookies(res, cookies);
     }
 

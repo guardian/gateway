@@ -194,6 +194,10 @@ const idapiSignInController = async (
       res.locals.requestId,
     );
 
+    // because we are signing in using idapi, and a new okta
+    // session will not be created, so we will need to clear the okta
+    // cookies to keep the sessions in sync
+    clearOktaCookies(res);
     setIDAPICookies(res, cookies);
 
     trackMetric('SignIn::Success');
