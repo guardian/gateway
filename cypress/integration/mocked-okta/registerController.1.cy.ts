@@ -1,5 +1,6 @@
 import userStatuses from '../../support/okta/userStatuses';
 import userResponse from '../../fixtures/okta-responses/success/user.json';
+import socialUserResponse from '../../fixtures/okta-responses/success/social-user.json';
 import userExistsError from '../../fixtures/okta-responses/error/user-exists.json';
 import successTokenResponse from '../../fixtures/okta-responses/success/token.json';
 import resetPasswordResponse from '../../fixtures/okta-responses/success/reset-password.json';
@@ -40,6 +41,15 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
+              cy.get('button[type=submit]').click();
+              verifyInRegularEmailSentPage();
+            },
+          );
+          specify(
+            "Then I should be shown the 'Check your email inbox' page for social user",
+            () => {
+              cy.mockNext(userExistsError.code, userExistsError.response);
+              cy.mockNext(socialUserResponse.code, socialUserResponse.response);
               cy.get('button[type=submit]').click();
               verifyInRegularEmailSentPage();
             },
