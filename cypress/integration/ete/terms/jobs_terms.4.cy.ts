@@ -28,7 +28,7 @@ describe('Jobs terms and conditions flow', () => {
       cy.createTestUser({
         isUserEmailValidated: true,
       })?.then(({ emailAddress, finalPassword }) => {
-        cy.visit('/signin');
+        cy.visit('/signin?useIdapi=true');
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
 
@@ -38,7 +38,7 @@ describe('Jobs terms and conditions flow', () => {
 
         const termsAcceptPageUrl = `https://${Cypress.env(
           'BASE_URI',
-        )}/agree/GRS?returnUrl=https://profile.thegulocal.com/healthcheck`;
+        )}/agree/GRS?returnUrl=https://profile.thegulocal.com/healthcheck&useIdapi=true`;
 
         // Create a test user without a first/last name who is in the GRS group.
         cy.updateTestUser({
@@ -83,9 +83,9 @@ describe('Jobs terms and conditions flow', () => {
         // load the consents page as its on the same domain
         const termsAcceptPageUrl = `https://${Cypress.env(
           'BASE_URI',
-        )}/agree/GRS?returnUrl=https://profile.thegulocal.com/healthcheck`;
+        )}/agree/GRS?returnUrl=https://profile.thegulocal.com/healthcheck&useIdapi=true`;
 
-        cy.visit('/signin');
+        cy.visit('/signin?useIdapi=true');
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
 
@@ -145,7 +145,7 @@ describe('Jobs terms and conditions flow', () => {
 
         const finalTermsAcceptPageUrl = `https://${Cypress.env(
           'BASE_URI',
-        )}/agree/GRS?returnUrl=https://profile.thegulocal.com/maintenance`;
+        )}/agree/GRS?returnUrl=https://profile.thegulocal.com/maintenance&useIdapi=true`;
 
         cy.visit(finalTermsAcceptPageUrl, { failOnStatusCode: false });
 
@@ -167,9 +167,9 @@ describe('Jobs terms and conditions flow', () => {
         // load the consents page as its on the same domain
         const termsAcceptPageUrl = `https://${Cypress.env(
           'BASE_URI',
-        )}/agree/GRS?returnUrl=https://jobs.theguardian.com/`;
+        )}/agree/GRS?returnUrl=https://jobs.theguardian.com/&useIdapi=true`;
 
-        cy.visit('/signin');
+        cy.visit('/signin?useIdapi=true');
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
 

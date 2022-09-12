@@ -8,12 +8,12 @@ describe('Registration flow', () => {
 
   context('A11y checks', () => {
     it('Has no detectable a11y violations on registration page', () => {
-      cy.visit('/register');
+      cy.visit('/register?useIdapi=true');
       injectAndCheckAxe();
     });
 
     it('Has no detectable a11y violations on registration page with error', () => {
-      cy.visit('/register');
+      cy.visit('/register?useIdapi=true');
       cy.get('input[name="email"]').type('Invalid email');
       cy.mockNext(500);
       cy.get('[data-cy=register-button]').click();
@@ -23,7 +23,9 @@ describe('Registration flow', () => {
 
   context('Registering', () => {
     it('shows a generic error message when registration fails', () => {
-      cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.visit(
+        '/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout&useIdapi=true',
+      );
       cy.get('input[name="email"]').type('example@example.com');
       cy.mockNext(200, {
         userType: 'new',
@@ -41,7 +43,9 @@ describe('Registration flow', () => {
     });
 
     it('shows a email field error message when no email is sent', () => {
-      cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.visit(
+        '/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout&useIdapi=true',
+      );
       cy.get('input[name="email"]').type('placeholder@example.com');
       cy.mockNext(200, {
         userType: 'new',
@@ -52,7 +56,9 @@ describe('Registration flow', () => {
     });
 
     it('shows recaptcha error message when reCAPTCHA token request fails', () => {
-      cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.visit(
+        '/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout&useIdapi=true',
+      );
       cy.get('input[name="email"]').type('placeholder@example.com');
       cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
         statusCode: 500,
@@ -70,7 +76,9 @@ describe('Registration flow', () => {
           statusCode: 200,
         },
       );
-      cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.visit(
+        '/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout&useIdapi=true',
+      );
       cy.get('input[name="email"]').type('placeholder@example.com');
       cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
         statusCode: 500,
@@ -88,7 +96,9 @@ describe('Registration flow', () => {
     });
 
     it('redirects to email sent page upon successful guest registration', () => {
-      cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.visit(
+        '/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout&useIdapi=true',
+      );
       cy.get('input[name="email"]').type('example@example.com');
       cy.mockNext(200, {
         userType: 'new',
@@ -103,7 +113,9 @@ describe('Registration flow', () => {
     });
 
     it('redirects to email sent page when existing user with password attempts to register', () => {
-      cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.visit(
+        '/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout&useIdapi=true',
+      );
       cy.get('input[name="email"]').type('example@example.com');
       cy.mockNext(200, {
         userType: 'current',
@@ -115,7 +127,9 @@ describe('Registration flow', () => {
     });
 
     it('redirects to email sent page when existing user without password attempts to register', () => {
-      cy.visit('/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.visit(
+        '/register?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout&useIdapi=true',
+      );
       cy.get('input[name="email"]').type('example@example.com');
       cy.mockNext(200, {
         userType: 'guest',
@@ -153,7 +167,7 @@ describe('Registration flow', () => {
         status: 'signedInNotRecently',
         emailValidated: true,
       });
-      cy.visit('/register');
+      cy.visit('/register?useIdapi=true');
 
       cy.location('pathname').should('eq', '/reauthenticate');
     });
@@ -165,7 +179,9 @@ describe('Registration flow', () => {
         userType: 'new',
       });
       cy.mockNext(500);
-      cy.visit('/register?returnUrl=https%3A%2F%2Flocalhost%3A8861%2Fsignin');
+      cy.visit(
+        '/register?returnUrl=https%3A%2F%2Flocalhost%3A8861%2Fsignin&useIdapi=true',
+      );
 
       cy.get('input[name=email]').type('example@example.com');
       cy.get('[data-cy="register-button"]').click();

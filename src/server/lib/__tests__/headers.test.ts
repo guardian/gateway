@@ -46,6 +46,7 @@ jest.mock('@/server/lib/middleware/login', () => ({
   loginMiddleware: jest.fn((req, res, next) => next()),
 }));
 jest.mock('@/server/lib/IDAPIFetch');
+jest.mock('@/server/lib/okta/api/authentication');
 
 describe('Content Security Policy headers', () => {
   test.each(ValidRoutePathsArray)(

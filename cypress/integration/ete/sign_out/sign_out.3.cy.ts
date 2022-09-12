@@ -24,7 +24,7 @@ describe('Sign out flow', () => {
         )}/consents/data`;
         const visitUrl = `/signin?returnUrl=${encodeURIComponent(
           postSignInReturnUrl,
-        )}`;
+        )}&useIdapi=true`;
         cy.visit(visitUrl);
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
@@ -50,7 +50,9 @@ describe('Sign out flow', () => {
           'BASE_URI',
         )}/reset-password`;
         cy.visit(
-          `/signout?returnUrl=${encodeURIComponent(postSignOutReturnUrl)}`,
+          `/signout?returnUrl=${encodeURIComponent(
+            postSignOutReturnUrl,
+          )}&useIdapi=true`,
         );
         // check cookies are removed
         cy.getCookie('SC_GU_U').should('not.exist');

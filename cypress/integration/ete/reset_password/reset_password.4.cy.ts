@@ -11,7 +11,7 @@ describe('Password reset flow', () => {
       cy.createTestUser({
         isUserEmailValidated: true,
       })?.then(({ emailAddress }) => {
-        cy.visit('/signin');
+        cy.visit('/signin?useIdapi=true');
         const timeRequestWasMade = new Date();
         cy.contains('Reset password').click();
 
@@ -64,7 +64,7 @@ describe('Password reset flow', () => {
       cy.createTestUser({
         isUserEmailValidated: true,
       })?.then(({ emailAddress }) => {
-        cy.visit('/signin');
+        cy.visit('/signin?useIdapi=true');
         const timeRequestWasMade = new Date();
         cy.contains('Reset password').click();
 
@@ -107,7 +107,7 @@ describe('Password reset flow', () => {
 
   context('No Account', () => {
     it('shows the email sent page with link to register when attempting to reset password', () => {
-      cy.visit('/reset-password');
+      cy.visit('/reset-password?useIdapi=true');
       cy.contains('Forgot password');
       cy.get('input[name=email]').type('invalid@doesnotexist.com');
       cy.get('[data-cy="main-form-submit-button"]').click();
@@ -124,7 +124,7 @@ describe('Password set flow', () => {
         isUserEmailValidated: false,
         isGuestUser: true,
       })?.then(({ emailAddress }) => {
-        cy.visit('/set-password/expired');
+        cy.visit('/set-password/expired?useIdapi=true');
 
         // Simulate going offline by failing the reCAPTCHA POST request.
         cy.intercept({

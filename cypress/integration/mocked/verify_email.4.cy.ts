@@ -16,7 +16,7 @@ describe('Verify email flow', () => {
 
   beforeEach(() => {
     cy.mockPurge();
-    cy.visit('/signin');
+    cy.visit('/signin?useIdapi=true');
   });
 
   context('A11y checks', () => {

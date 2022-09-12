@@ -17,7 +17,7 @@ export const getPersistableQueryParams = (
   clientId: params.clientId,
   ref: params.ref,
   refViewId: params.refViewId,
-  useOkta: params.useOkta,
+  useIdapi: params.useIdapi,
   componentEventParams: params.componentEventParams,
   fromURI: params.fromURI,
   appClientId: params.appClientId,

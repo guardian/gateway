@@ -33,7 +33,7 @@ describe('Sign in flow', () => {
       cy.disableCMP();
 
       cy.request({
-        url: '/signin?useOkta=true',
+        url: '/signin',
         followRedirect: false,
         failOnStatusCode: false,
       }).then((response) => {
@@ -45,7 +45,7 @@ describe('Sign in flow', () => {
     });
 
     it('shows an error message when okta authentication fails', function () {
-      cy.visit('/signin?useOkta=true');
+      cy.visit('/signin');
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
       cy.mockNext(401, {
@@ -60,7 +60,7 @@ describe('Sign in flow', () => {
     });
 
     it('shows a generic error message when okta rate limited', function () {
-      cy.visit('/signin?useOkta=true');
+      cy.visit('/signin');
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
       cy.mockNext(429, {
@@ -75,7 +75,7 @@ describe('Sign in flow', () => {
     });
 
     it('shows a generic error message when okta api response unknown', function () {
-      cy.visit('/signin?useOkta=true');
+      cy.visit('/signin');
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
       cy.mockNext(403, {
@@ -90,9 +90,7 @@ describe('Sign in flow', () => {
     });
 
     it('loads the redirectUrl upon successful authentication for validated user', function () {
-      cy.visit(
-        '/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout&useOkta=true',
-      );
+      cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
       cy.mockNext(200, {
@@ -144,7 +142,7 @@ describe('Sign in flow', () => {
     it('loads the redirectUrl upon Okta success but with unvalidated user, and IDAPI successful authentication', function () {
       const returnUrl = 'https://profile.thegulocal.com/healthcheck';
       cy.visit(
-        '/signin?returnUrl=https%3A%2F%2Fprofile.thegulocal.com%2Fhealthcheck&useOkta=true',
+        '/signin?returnUrl=https%3A%2F%2Fprofile.thegulocal.com%2Fhealthcheck',
       );
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
@@ -189,7 +187,7 @@ describe('Sign in flow', () => {
       // authentication can result in many non success status values - https://developer.okta.com/docs/reference/api/authn/#transaction-state
 
       cy.visit(
-        '/signin?returnUrl=https%3A%2F%2Fprofile.thegulocal.com%2Fhealthcheck&useOkta=true',
+        '/signin?returnUrl=https%3A%2F%2Fprofile.thegulocal.com%2Fhealthcheck',
       );
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
@@ -228,7 +226,7 @@ describe('Sign in flow', () => {
     });
 
     it('redirects to the default url if no redirectUrl given', function () {
-      cy.visit('/signin?useOkta=true');
+      cy.visit('/signin');
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
       cy.mockNext(200, {

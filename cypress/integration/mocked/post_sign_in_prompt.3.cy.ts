@@ -35,12 +35,12 @@ describe('Post sign-in prompt', () => {
   });
 
   it('has no detectable a11y violations on prompt page', () => {
-    cy.visit('/signin/success');
+    cy.visit('/signin/success?useIdapi=true');
     injectAndCheckAxe();
   });
 
   it('allows user to opt in and continue', () => {
-    cy.visit('/signin/success');
+    cy.visit('/signin/success?useIdapi=true');
     const checkbox = cy.findByLabelText('Yes, sign me up');
     checkbox.should('not.be.checked');
     checkbox.click();
@@ -58,7 +58,7 @@ describe('Post sign-in prompt', () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const consentData = [{ ...supporterConsent!, consented: true }];
     cy.mockAll(200, createUser(consentData), USER_ENDPOINT);
-    cy.visit('/signin/success');
+    cy.visit('/signin/success?useIdapi=true');
     const checkbox = cy.findByLabelText('Yes, sign me up');
     checkbox.should('be.checked');
     checkbox.click();
@@ -72,7 +72,11 @@ describe('Post sign-in prompt', () => {
   });
 
   it('allows user to continue to different returnUrl', () => {
-    cy.visit(`/signin/success?returnUrl=${encodeURIComponent(returnUrl)}`);
+    cy.visit(
+      `/signin/success?returnUrl=${encodeURIComponent(
+        returnUrl,
+      )}&useIdapi=true`,
+    );
 
     // mock form save success
     cy.mockAll(200, {}, USER_CONSENTS_ENDPOINT);
@@ -84,7 +88,7 @@ describe('Post sign-in prompt', () => {
 
   it('fails silently if submit fails, but user did not consent', () => {
     cy.mockAll(500, {}, USER_CONSENTS_ENDPOINT);
-    cy.visit('/signin/success');
+    cy.visit('/signin/success?useIdapi=true');
 
     cy.findByText('Continue to the Guardian').click();
     cy.lastPayloadIs([{ id: 'supporter', consented: false }]);
@@ -93,7 +97,7 @@ describe('Post sign-in prompt', () => {
 
   it('shows error if submit fails and user did consent', () => {
     cy.mockAll(500, {}, USER_CONSENTS_ENDPOINT);
-    cy.visit('/signin/success');
+    cy.visit('/signin/success?useIdapi=true');
     cy.findByLabelText('Yes, sign me up').click();
 
     cy.findByText('Continue to the Guardian').click();

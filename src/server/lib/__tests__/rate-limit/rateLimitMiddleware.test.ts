@@ -337,7 +337,9 @@ describe('rate limiter middleware', () => {
 
     // Consume the only token available for this email
     await request(server)
-      .post('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fuk')
+      .post(
+        '/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fuk&useIdapi=true',
+      )
       .type('application/x-www-form-urlencoded')
       .send({
         email: 'test@test.com',
@@ -348,7 +350,7 @@ describe('rate limiter middleware', () => {
 
     // No more tokens left for this email, check that rate limiter kicks in
     await request(server)
-      .post('/signin')
+      .post('/signin?useIdapi=true')
       .type('application/x-www-form-urlencoded')
       .send({
         email: 'test@test.com',
@@ -395,7 +397,9 @@ describe('rate limiter middleware', () => {
 
     // Consume the only token available for this email
     await request(server)
-      .post('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fuk')
+      .post(
+        '/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fuk&useIdapi=true',
+      )
       .type('application/x-www-form-urlencoded')
       .send({
         email: 'test@test.com',
@@ -406,7 +410,7 @@ describe('rate limiter middleware', () => {
 
     // No more tokens left for this email, check that rate limiter kicks in
     await request(server)
-      .post('/signin')
+      .post('/signin?useIdapi=true')
       .type('application/x-www-form-urlencoded')
       .send({
         email: 'test@test.com',
@@ -416,7 +420,7 @@ describe('rate limiter middleware', () => {
 
     // Make sure that the email can't be let through with an email alias
     await request(server)
-      .post('/signin')
+      .post('/signin?useIdapi=true')
       .type('application/x-www-form-urlencoded')
       .send({
         email: 'test+maliciousalias@test.com',
@@ -426,7 +430,9 @@ describe('rate limiter middleware', () => {
 
     // Make sure that other emails are still allowed through the rate limiter
     await request(server)
-      .post('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fuk')
+      .post(
+        '/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fuk&useIdapi=true',
+      )
       .type('application/x-www-form-urlencoded')
       .send({
         email: 'newTest@test.com',
@@ -439,7 +445,7 @@ describe('rate limiter middleware', () => {
 
     // Check that a new request goes through successfully
     await request(server)
-      .post('/signin')
+      .post('/signin?useIdapi=true')
       .type('application/x-www-form-urlencoded')
       .send({
         email: 'test@test.com',

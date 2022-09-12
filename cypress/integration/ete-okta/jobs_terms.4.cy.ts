@@ -4,7 +4,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
       // load the consents page as its on the same domain
       const termsAcceptPageUrl = `https://${Cypress.env(
         'BASE_URI',
-      )}/agree/GRS?returnUrl=https://profile.thegulocal.com/signin?returnUrl=https%3A%2F%2Fm.code.dev-theguardian.com%2F&useOkta=true`;
+      )}/agree/GRS?returnUrl=https://profile.thegulocal.com/signin?returnUrl=https%3A%2F%2Fm.code.dev-theguardian.com%2F`;
       cy.setCookie('sid', 'invalid-cookie');
       cy.visit(termsAcceptPageUrl);
       cy.url().should(
@@ -17,11 +17,11 @@ describe('Jobs terms and conditions flow in Okta', () => {
       // load the consents page as its on the same domain
       const termsAcceptPageUrl = `https://${Cypress.env(
         'BASE_URI',
-      )}/agree/GRS?useOkta=true&returnUrl=https://profile.thegulocal.com/healthcheck`;
+      )}/agree/GRS?returnUrl=https://profile.thegulocal.com/healthcheck`;
       cy.visit(termsAcceptPageUrl);
       cy.url().should(
         'include',
-        'https://profile.thegulocal.com/signin?returnUrl=https%3A%2F%2Fprofile.thegulocal.com%2Fhealthcheck&useOkta=true',
+        'https://profile.thegulocal.com/signin?returnUrl=https%3A%2F%2Fprofile.thegulocal.com%2Fhealthcheck',
       );
     });
 
@@ -29,7 +29,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
       cy.createTestUser({
         isUserEmailValidated: true,
       })?.then(({ emailAddress, finalPassword }) => {
-        cy.visit('/signin?useOkta=true');
+        cy.visit('/signin');
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
 
@@ -39,7 +39,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
 
         const termsAcceptPageUrl = `https://${Cypress.env(
           'BASE_URI',
-        )}/agree/GRS?returnUrl=https://profile.thegulocal.com/healthcheck&useOkta=true`;
+        )}/agree/GRS?returnUrl=https://profile.thegulocal.com/healthcheck`;
 
         // Create a test user without a first/last name who has `isJobsUser` set to true.
         cy.updateOktaTestUserProfile(emailAddress, {
@@ -79,9 +79,9 @@ describe('Jobs terms and conditions flow in Okta', () => {
         // load the consents page as its on the same domain
         const termsAcceptPageUrl = `https://${Cypress.env(
           'BASE_URI',
-        )}/agree/GRS?returnUrl=https://profile.thegulocal.com/healthcheck&useOkta=true`;
+        )}/agree/GRS?returnUrl=https://profile.thegulocal.com/healthcheck`;
 
-        cy.visit('/signin?useOkta=true');
+        cy.visit('/signin');
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
 
@@ -123,9 +123,9 @@ describe('Jobs terms and conditions flow in Okta', () => {
         // load the consents page as its on the same domain
         const termsAcceptPageUrl = `https://${Cypress.env(
           'BASE_URI',
-        )}/agree/GRS?useOkta=true&returnUrl=https://jobs.theguardian.com/`;
+        )}/agree/GRS?returnUrl=https://jobs.theguardian.com/`;
 
-        cy.visit('/signin?useOkta=true');
+        cy.visit('/signin');
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
 

@@ -6,53 +6,39 @@ describe('Sign in flow, Okta enabled', () => {
   });
 
   context('Terms and Conditions links', () => {
-    it(...SignIn.linksToTheGoogleTermsOfServicePage(true));
-    it(...SignIn.linksToTheGooglePrivacyPolicyPage(true));
-    it(...SignIn.linksToTheGuardianTermsAndConditionsPage(true));
-    it(...SignIn.linksToTheGuardianPrivacyPolicyPage(true));
+    it(...SignIn.linksToTheGoogleTermsOfServicePage());
+    it(...SignIn.linksToTheGooglePrivacyPolicyPage());
+    it(...SignIn.linksToTheGuardianTermsAndConditionsPage());
+    it(...SignIn.linksToTheGuardianPrivacyPolicyPage());
     it(
-      ...SignIn.linksToTheGuardianJobsTermsAndConditionsPageWhenJobsClientIdSet(
-        true,
-      ),
+      ...SignIn.linksToTheGuardianJobsTermsAndConditionsPageWhenJobsClientIdSet(),
     );
-    it(
-      ...SignIn.linksToTheGuardianJobsPrivacyPolicyPageWhenJobsClientIdSet(
-        true,
-      ),
-    );
+    it(...SignIn.linksToTheGuardianJobsPrivacyPolicyPageWhenJobsClientIdSet());
   });
 
-  it(...SignIn.persistsTheClientIdWhenNavigatingAway(true));
-  it(...SignIn.appliesFormValidationToEmailAndPasswordInputFields(true));
-  it(...SignIn.showsAMessageWhenCredentialsAreInvalid(true));
-  it(...SignIn.correctlySignsInAnExistingUser(true));
-  it(...SignIn.navigatesToResetPassword(true));
-  it(...SignIn.navigatesToRegistration(true));
-  it(...SignIn.respectsTheReturnUrlQueryParam(true));
-  it(...SignIn.removesEncryptedEmailParameterFromQueryString(true));
+  it(...SignIn.persistsTheClientIdWhenNavigatingAway());
+  it(...SignIn.appliesFormValidationToEmailAndPasswordInputFields());
+  it(...SignIn.showsAMessageWhenCredentialsAreInvalid());
+  it(...SignIn.correctlySignsInAnExistingUser());
+  it(...SignIn.navigatesToResetPassword());
+  it(...SignIn.navigatesToRegistration());
+  it(...SignIn.respectsTheReturnUrlQueryParam());
+  it(...SignIn.removesEncryptedEmailParameterFromQueryString());
   it(
-    ...SignIn.removesEncryptedEmailParameterAndPreservesAllOtherValidParameters(
-      true,
-    ),
+    ...SignIn.removesEncryptedEmailParameterAndPreservesAllOtherValidParameters(),
   );
   it(
-    ...SignIn.showsRecaptchaErrorsWhenTheUserTriesToSignInOfflineAndAllowsSignInWhenBackOnline(
-      true,
-    ),
+    ...SignIn.showsRecaptchaErrorsWhenTheUserTriesToSignInOfflineAndAllowsSignInWhenBackOnline(),
   );
   it(...SignIn.redirectsToOptInPrompt());
-  it(...SignIn.hitsAccessTokenRateLimitAndRecoversTokenAfterTimeout(true));
+  it(...SignIn.hitsAccessTokenRateLimitAndRecoversTokenAfterTimeout());
 
-  it(...SignIn.redirectsCorrectlyForSocialSignIn(true));
+  it(...SignIn.redirectsCorrectlyForSocialSignIn());
   it(
-    ...SignIn.showsAnErrorMessageAndInformationParagraphWhenAccountLinkingRequiredErrorParameterIsPresent(
-      true,
-    ),
+    ...SignIn.showsAnErrorMessageAndInformationParagraphWhenAccountLinkingRequiredErrorParameterIsPresent(),
   );
   it(
-    ...SignIn.doesNotDisplaySocialButtonsWhenAccountLinkingRequiredErrorParameterIsPresent(
-      true,
-    ),
+    ...SignIn.doesNotDisplaySocialButtonsWhenAccountLinkingRequiredErrorParameterIsPresent(),
   );
 
   it('sets emailValidated flag on oauth callback', () => {
@@ -90,7 +76,7 @@ describe('Sign in flow, Okta enabled', () => {
             cy.visit(
               `/signin?returnUrl=${encodeURIComponent(
                 `https://${Cypress.env('BASE_URI')}/consents`,
-              )}&useOkta=true`,
+              )}`,
             );
             cy.get('input[name=email]').type(emailAddress);
             cy.get('input[name=password]').type(finalPassword);
@@ -127,7 +113,7 @@ describe('Sign in flow, Okta enabled', () => {
       cy.createTestUser({ isUserEmailValidated: true }).then(
         ({ emailAddress, finalPassword }) => {
           // Sign our new user in
-          cy.visit('/signin?useOkta=true');
+          cy.visit('/signin');
           cy.get('input[name=email]').type(emailAddress);
           cy.get('input[name=password]').type(finalPassword);
           cy.get('[data-cy="sign-in-button"]').click();
@@ -141,7 +127,7 @@ describe('Sign in flow, Okta enabled', () => {
             cy.visit(
               `/signin/refresh?returnUrl=${encodeURIComponent(
                 `https://${Cypress.env('BASE_URI')}/consents`,
-              )}&useOkta=true`,
+              )}`,
             );
             cy.url().should('include', '/consents');
 
@@ -164,7 +150,7 @@ describe('Sign in flow, Okta enabled', () => {
       cy.createTestUser({ isUserEmailValidated: true }).then(
         ({ emailAddress, finalPassword }) => {
           // Sign our new user in
-          cy.visit('/signin?useOkta=true');
+          cy.visit('/signin');
           cy.get('input[name=email]').type(emailAddress);
           cy.get('input[name=password]').type(finalPassword);
           cy.get('[data-cy="sign-in-button"]').click();
@@ -178,7 +164,7 @@ describe('Sign in flow, Okta enabled', () => {
               cy.visit(
                 `/signin/refresh?returnUrl=${encodeURIComponent(
                   `https://${Cypress.env('BASE_URI')}/consents`,
-                )}&useOkta=true`,
+                )}`,
               );
               cy.url().should('include', '/consents');
             });
@@ -191,7 +177,7 @@ describe('Sign in flow, Okta enabled', () => {
       cy.createTestUser({ isUserEmailValidated: true }).then(
         ({ emailAddress, finalPassword }) => {
           // Sign our new user in
-          cy.visit('/signin?useOkta=true');
+          cy.visit('/signin');
           cy.get('input[name=email]').type(emailAddress);
           cy.get('input[name=password]').type(finalPassword);
           cy.get('[data-cy="sign-in-button"]').click();
@@ -204,7 +190,7 @@ describe('Sign in flow, Okta enabled', () => {
           cy.visit(
             `/signin/refresh?returnUrl=${encodeURIComponent(
               `https://${Cypress.env('BASE_URI')}/consents`,
-            )}&useOkta=true`,
+            )}`,
           );
           cy.url().should('include', '/consents');
 
@@ -217,7 +203,7 @@ describe('Sign in flow, Okta enabled', () => {
       cy.createTestUser({ isUserEmailValidated: true }).then(
         ({ emailAddress, finalPassword }) => {
           // Sign our new user in
-          cy.visit('/signin?useOkta=true');
+          cy.visit('/signin');
           cy.get('input[name=email]').type(emailAddress);
           cy.get('input[name=password]').type(finalPassword);
           cy.get('[data-cy="sign-in-button"]').click();
@@ -230,7 +216,7 @@ describe('Sign in flow, Okta enabled', () => {
           cy.visit(
             `/signin/refresh?returnUrl=${encodeURIComponent(
               `https://${Cypress.env('BASE_URI')}/consents`,
-            )}&useOkta=true`,
+            )}`,
           );
           cy.url().should('include', '/signin');
 
@@ -245,7 +231,7 @@ describe('Sign in flow, Okta enabled', () => {
       cy.createTestUser({ isUserEmailValidated: true }).then(
         ({ emailAddress, finalPassword }) => {
           // Sign our new user in
-          cy.visit('/signin?useOkta=true');
+          cy.visit('/signin');
           cy.get('input[name=email]').type(emailAddress);
           cy.get('input[name=password]').type(finalPassword);
           cy.get('[data-cy="sign-in-button"]').click();
@@ -261,7 +247,7 @@ describe('Sign in flow, Okta enabled', () => {
               cy.visit(
                 `/signin/refresh?returnUrl=${encodeURIComponent(
                   `https://${Cypress.env('BASE_URI')}/consents`,
-                )}&useOkta=true`,
+                )}`,
               );
               cy.url().should('include', '/consents');
 
