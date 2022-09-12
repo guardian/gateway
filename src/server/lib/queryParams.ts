@@ -40,7 +40,7 @@ export const parseExpressQueryParams = (
     encryptedEmail,
     error,
     error_description,
-    useOkta,
+    useIdapi,
     componentEventParams,
     fromURI,
     appClientId,
@@ -63,7 +63,7 @@ export const parseExpressQueryParams = (
     encryptedEmail,
     error,
     error_description,
-    useOkta: isStringBoolean(useOkta),
+    useIdapi: isStringBoolean(useIdapi),
     fromURI,
     appClientId,
   };

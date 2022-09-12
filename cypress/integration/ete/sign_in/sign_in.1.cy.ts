@@ -6,36 +6,50 @@ describe('Sign in flow, Okta disabled', () => {
   });
 
   context('Terms and Conditions links', () => {
-    it(...SignIn.linksToTheGoogleTermsOfServicePage());
-    it(...SignIn.linksToTheGooglePrivacyPolicyPage());
-    it(...SignIn.linksToTheGuardianTermsAndConditionsPage());
-    it(...SignIn.linksToTheGuardianPrivacyPolicyPage());
+    it(...SignIn.linksToTheGoogleTermsOfServicePage(true));
+    it(...SignIn.linksToTheGooglePrivacyPolicyPage(true));
+    it(...SignIn.linksToTheGuardianTermsAndConditionsPage(true));
+    it(...SignIn.linksToTheGuardianPrivacyPolicyPage(true));
     it(
-      ...SignIn.linksToTheGuardianJobsTermsAndConditionsPageWhenJobsClientIdSet(),
+      ...SignIn.linksToTheGuardianJobsTermsAndConditionsPageWhenJobsClientIdSet(
+        true,
+      ),
     );
-    it(...SignIn.linksToTheGuardianJobsPrivacyPolicyPageWhenJobsClientIdSet());
+    it(
+      ...SignIn.linksToTheGuardianJobsPrivacyPolicyPageWhenJobsClientIdSet(
+        true,
+      ),
+    );
   });
-  it(...SignIn.persistsTheClientIdWhenNavigatingAway());
-  it(...SignIn.appliesFormValidationToEmailAndPasswordInputFields());
-  it(...SignIn.showsAMessageWhenCredentialsAreInvalid());
-  it(...SignIn.correctlySignsInAnExistingUser());
-  it(...SignIn.navigatesToResetPassword());
-  it(...SignIn.navigatesToRegistration());
-  it(...SignIn.respectsTheReturnUrlQueryParam());
-  it(...SignIn.redirectsCorrectlyForSocialSignIn());
-  it(...SignIn.removesEncryptedEmailParameterFromQueryString());
+  it(...SignIn.persistsTheClientIdWhenNavigatingAway(true));
+  it(...SignIn.appliesFormValidationToEmailAndPasswordInputFields(true));
+  it(...SignIn.showsAMessageWhenCredentialsAreInvalid(true));
+  it(...SignIn.correctlySignsInAnExistingUser(true));
+  it(...SignIn.navigatesToResetPassword(true));
+  it(...SignIn.navigatesToRegistration(true));
+  it(...SignIn.respectsTheReturnUrlQueryParam(true));
+  it(...SignIn.redirectsCorrectlyForSocialSignIn(true));
+  it(...SignIn.removesEncryptedEmailParameterFromQueryString(true));
   it(
-    ...SignIn.removesEncryptedEmailParameterAndPreservesAllOtherValidParameters(),
+    ...SignIn.removesEncryptedEmailParameterAndPreservesAllOtherValidParameters(
+      true,
+    ),
   );
   it(
-    ...SignIn.showsAnErrorMessageAndInformationParagraphWhenAccountLinkingRequiredErrorParameterIsPresent(),
+    ...SignIn.showsAnErrorMessageAndInformationParagraphWhenAccountLinkingRequiredErrorParameterIsPresent(
+      true,
+    ),
   );
   it(
-    ...SignIn.doesNotDisplaySocialButtonsWhenAccountLinkingRequiredErrorParameterIsPresent(),
+    ...SignIn.doesNotDisplaySocialButtonsWhenAccountLinkingRequiredErrorParameterIsPresent(
+      true,
+    ),
   );
   it(
-    ...SignIn.showsRecaptchaErrorsWhenTheUserTriesToSignInOfflineAndAllowsSignInWhenBackOnline(),
+    ...SignIn.showsRecaptchaErrorsWhenTheUserTriesToSignInOfflineAndAllowsSignInWhenBackOnline(
+      true,
+    ),
   );
-  it(...SignIn.redirectsToOptInPrompt());
-  it(...SignIn.hitsAccessTokenRateLimitAndRecoversTokenAfterTimeout());
+  it(...SignIn.redirectsToOptInPrompt(true));
+  it(...SignIn.hitsAccessTokenRateLimitAndRecoversTokenAfterTimeout(true));
 });

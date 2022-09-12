@@ -91,10 +91,10 @@ router.get(
   '/signin',
   redirectIfLoggedIn,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { useOkta } = res.locals.queryParams;
+    const { useIdapi } = res.locals.queryParams;
     const oktaSessionCookieId: string | undefined = req.cookies.sid;
 
-    if (okta.enabled && useOkta && oktaSessionCookieId) {
+    if (okta.enabled && !useIdapi && oktaSessionCookieId) {
       // for okta users landing on sign in, we want to first check if a session exists
       // if a session already exists then we redirect back to the returnUrl for apps, and the dotcom homepage for web
       // otherwise we want to show the sign in page
@@ -151,8 +151,8 @@ router.post(
   '/reauthenticate',
   handleRecaptcha,
   handleAsyncErrors((req: Request, res: ResponseWithRequestState) => {
-    const { useOkta } = res.locals.queryParams;
-    if (okta.enabled && useOkta) {
+    const { useIdapi } = res.locals.queryParams;
+    if (okta.enabled && !useIdapi) {
       // if okta feature switch enabled, use okta authentication
       return oktaSignInController(req, res, true);
     } else {
@@ -166,8 +166,8 @@ router.post(
   '/signin',
   handleRecaptcha,
   handleAsyncErrors((req: Request, res: ResponseWithRequestState) => {
-    const { useOkta } = res.locals.queryParams;
-    if (okta.enabled && useOkta) {
+    const { useIdapi } = res.locals.queryParams;
+    if (okta.enabled && !useIdapi) {
       // if okta feature switch enabled, use okta authentication
       return oktaSignInController(req, res);
     } else {
@@ -510,14 +510,14 @@ router.get(
   '/signin/:social',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     // todo can we use the login middleware here to stopped logged in users from accessing this endpoint?
-    const { useOkta, returnUrl } = res.locals.queryParams;
+    const { useIdapi, returnUrl } = res.locals.queryParams;
     const socialIdp = req.params.social as SocialProvider;
 
     if (!isValidSocialProvider(socialIdp)) {
       return res.redirect(303, '/signin');
     }
 
-    if (okta.enabled && useOkta) {
+    if (okta.enabled && !useIdapi) {
       // get the IDP id from the config
       const idp = okta.social[socialIdp];
 

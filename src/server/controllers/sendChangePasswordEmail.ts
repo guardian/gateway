@@ -310,8 +310,8 @@ export const sendEmailInOkta = async (
 
 export const sendChangePasswordEmailController = () =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { useOkta } = res.locals.queryParams;
-    if (okta.enabled && useOkta) {
+    const { useIdapi } = res.locals.queryParams;
+    if (okta.enabled && !useIdapi) {
       await sendEmailInOkta(req, res);
     } else {
       await sendEmailInIDAPI(req, res);

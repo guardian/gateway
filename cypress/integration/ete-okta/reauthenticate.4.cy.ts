@@ -17,14 +17,14 @@ describe('Reauthenticate flow, Okta enabled', () => {
           req.reply(200);
         });
         // First, sign in
-        cy.visit('/signin?useOkta=true');
+        cy.visit('/signin');
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
         cy.get('[data-cy="sign-in-button"]').click();
         cy.url().should('include', 'https://m.code.dev-theguardian.com/');
 
         // Then, try to reauthenticate
-        cy.visit('/reauthenticate?useOkta=true');
+        cy.visit('/reauthenticate');
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
         cy.get('[data-cy="sign-in-button"]').click();
@@ -53,7 +53,7 @@ describe('Reauthenticate flow, Okta enabled', () => {
           req.reply(200);
         });
         // First, sign in as User A
-        cy.visit('/signin?useOkta=true');
+        cy.visit('/signin');
         cy.get('input[name=email]').type(emailAddressA);
         cy.get('input[name=password]').type(finalPasswordA);
         cy.get('[data-cy="sign-in-button"]').click();
@@ -63,7 +63,7 @@ describe('Reauthenticate flow, Okta enabled', () => {
         cy.createTestUser({ isUserEmailValidated: true })?.then(
           ({ emailAddress: emailAddressB, finalPassword: finalPasswordB }) => {
             // Then, try to reauthenticate as User B
-            cy.visit('/reauthenticate?useOkta=true');
+            cy.visit('/reauthenticate');
             cy.get('input[name=email]').type(emailAddressB);
             cy.get('input[name=password]').type(finalPasswordB);
             cy.get('[data-cy="sign-in-button"]').click();

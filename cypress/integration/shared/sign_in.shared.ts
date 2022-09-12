@@ -12,7 +12,7 @@ export const beforeEach = () => {
   );
 };
 
-export const linksToTheGoogleTermsOfServicePage = (isOkta = false) => {
+export const linksToTheGoogleTermsOfServicePage = (isIdapi = false) => {
   return [
     'links to the Google terms of service page',
     () => {
@@ -22,7 +22,7 @@ export const linksToTheGoogleTermsOfServicePage = (isOkta = false) => {
       cy.intercept('GET', googleTermsUrl, (req) => {
         req.reply(200);
       });
-      const visitUrl = isOkta ? '/signin?useOkta=true' : '/signin';
+      const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
       cy.visit(visitUrl);
       cy.contains('terms of service').click();
       cy.url().should('eq', googleTermsUrl);
@@ -30,7 +30,7 @@ export const linksToTheGoogleTermsOfServicePage = (isOkta = false) => {
   ] as const;
 };
 
-export const linksToTheGooglePrivacyPolicyPage = (isOkta = false) => {
+export const linksToTheGooglePrivacyPolicyPage = (isIdapi = false) => {
   return [
     'links to the Google privacy policy page',
     () => {
@@ -40,7 +40,7 @@ export const linksToTheGooglePrivacyPolicyPage = (isOkta = false) => {
       cy.intercept('GET', googlePrivacyPolicyUrl, (req) => {
         req.reply(200);
       });
-      const visitUrl = isOkta ? '/signin?useOkta=true' : '/signin';
+      const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
       cy.visit(visitUrl);
       cy.contains('This site is protected by reCAPTCHA and the Google')
         .contains('privacy policy')
@@ -50,7 +50,7 @@ export const linksToTheGooglePrivacyPolicyPage = (isOkta = false) => {
   ] as const;
 };
 
-export const linksToTheGuardianTermsAndConditionsPage = (isOkta = false) => {
+export const linksToTheGuardianTermsAndConditionsPage = (isIdapi = false) => {
   return [
     'links to the Guardian terms and conditions page',
     () => {
@@ -61,7 +61,7 @@ export const linksToTheGuardianTermsAndConditionsPage = (isOkta = false) => {
       cy.intercept('GET', guardianTermsOfServiceUrl, (req) => {
         req.reply(200);
       });
-      const visitUrl = isOkta ? '/signin?useOkta=true' : '/signin';
+      const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
       cy.visit(visitUrl);
       cy.contains('terms & conditions').click();
       cy.url().should('eq', guardianTermsOfServiceUrl);
@@ -69,7 +69,7 @@ export const linksToTheGuardianTermsAndConditionsPage = (isOkta = false) => {
   ] as const;
 };
 
-export const linksToTheGuardianPrivacyPolicyPage = (isOkta = false) => {
+export const linksToTheGuardianPrivacyPolicyPage = (isIdapi = false) => {
   return [
     'links to the Guardian privacy policy page',
     () => {
@@ -80,7 +80,7 @@ export const linksToTheGuardianPrivacyPolicyPage = (isOkta = false) => {
       cy.intercept('GET', guardianPrivacyPolicyUrl, (req) => {
         req.reply(200);
       });
-      const visitUrl = isOkta ? '/signin?useOkta=true' : '/signin';
+      const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
       cy.visit(visitUrl);
       cy.contains('For information about how we use your data')
         .contains('privacy policy')
@@ -91,7 +91,7 @@ export const linksToTheGuardianPrivacyPolicyPage = (isOkta = false) => {
 };
 
 export const linksToTheGuardianJobsTermsAndConditionsPageWhenJobsClientIdSet = (
-  isOkta = false,
+  isIdapi = false,
 ) => {
   return [
     'links to the Guardian jobs terms and conditions page when jobs clientId set',
@@ -103,8 +103,8 @@ export const linksToTheGuardianJobsTermsAndConditionsPageWhenJobsClientIdSet = (
       cy.intercept('GET', guardianJobsTermsOfServiceUrl, (req) => {
         req.reply(200);
       });
-      const visitUrl = isOkta
-        ? '/signin?clientId=jobs&useOkta=true'
+      const visitUrl = isIdapi
+        ? '/signin?clientId=jobs&useIdapi=true'
         : '/signin?clientId=jobs';
       cy.visit(visitUrl);
       cy.contains("Guardian's Jobs terms & conditions").click();
@@ -114,7 +114,7 @@ export const linksToTheGuardianJobsTermsAndConditionsPageWhenJobsClientIdSet = (
 };
 
 export const linksToTheGuardianJobsPrivacyPolicyPageWhenJobsClientIdSet = (
-  isOkta = false,
+  isIdapi = false,
 ) => {
   return [
     'links to the Guardian jobs privacy policy page when jobs clientId set',
@@ -126,8 +126,8 @@ export const linksToTheGuardianJobsPrivacyPolicyPageWhenJobsClientIdSet = (
       cy.intercept('GET', guardianJobsPrivacyPolicyUrl, (req) => {
         req.reply(200);
       });
-      const visitUrl = isOkta
-        ? '/signin?clientId=jobs&useOkta=true'
+      const visitUrl = isIdapi
+        ? '/signin?clientId=jobs&useIdapi=true'
         : '/signin?clientId=jobs';
       cy.visit(visitUrl);
       cy.contains('For information about how we use your data')
@@ -138,12 +138,12 @@ export const linksToTheGuardianJobsPrivacyPolicyPageWhenJobsClientIdSet = (
   ] as const;
 };
 
-export const persistsTheClientIdWhenNavigatingAway = (isOkta = false) => {
+export const persistsTheClientIdWhenNavigatingAway = (isIdapi = false) => {
   return [
     'persists the clientId when navigating away',
     () => {
-      const visitUrl = isOkta
-        ? '/signin?clientId=jobs&useOkta=true'
+      const visitUrl = isIdapi
+        ? '/signin?clientId=jobs&useIdapi=true'
         : '/signin?clientId=jobs';
       cy.visit(visitUrl);
       cy.contains('Register').click();
@@ -153,12 +153,12 @@ export const persistsTheClientIdWhenNavigatingAway = (isOkta = false) => {
 };
 
 export const appliesFormValidationToEmailAndPasswordInputFields = (
-  isOkta = false,
+  isIdapi = false,
 ) => {
   return [
     'applies form validation to email and password input fields',
     () => {
-      const visitUrl = isOkta ? '/signin?useOkta=true' : '/signin';
+      const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
       cy.visit(visitUrl);
 
       cy.get('form').within(() => {
@@ -174,11 +174,11 @@ export const appliesFormValidationToEmailAndPasswordInputFields = (
   ] as const;
 };
 
-export const showsAMessageWhenCredentialsAreInvalid = (isOkta = false) => {
+export const showsAMessageWhenCredentialsAreInvalid = (isIdapi = false) => {
   return [
     'shows a message when credentials are invalid',
     () => {
-      const visitUrl = isOkta ? '/signin?useOkta=true' : '/signin';
+      const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
       cy.visit(visitUrl);
       cy.get('input[name=email]').type('invalid@doesnotexist.com');
       cy.get('input[name=password]').type('password');
@@ -188,7 +188,7 @@ export const showsAMessageWhenCredentialsAreInvalid = (isOkta = false) => {
   ] as const;
 };
 
-export const correctlySignsInAnExistingUser = (isOkta = false) => {
+export const correctlySignsInAnExistingUser = (isIdapi = false) => {
   return [
     'correctly signs in an existing user',
     () => {
@@ -200,7 +200,7 @@ export const correctlySignsInAnExistingUser = (isOkta = false) => {
       cy.createTestUser({
         isUserEmailValidated: true,
       })?.then(({ emailAddress, finalPassword }) => {
-        const visitUrl = isOkta ? '/signin?useOkta=true' : '/signin';
+        const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
         cy.visit(visitUrl);
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
@@ -211,11 +211,11 @@ export const correctlySignsInAnExistingUser = (isOkta = false) => {
   ] as const;
 };
 
-export const navigatesToResetPassword = (isOkta = false) => {
+export const navigatesToResetPassword = (isIdapi = false) => {
   return [
     'navigates to reset password',
     () => {
-      const visitUrl = isOkta ? '/signin?useOkta=true' : '/signin';
+      const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
       cy.visit(visitUrl);
       cy.contains('Reset password').click();
       cy.contains('Forgot password');
@@ -223,11 +223,11 @@ export const navigatesToResetPassword = (isOkta = false) => {
   ] as const;
 };
 
-export const navigatesToRegistration = (isOkta = false) => {
+export const navigatesToRegistration = (isIdapi = false) => {
   return [
     'navigates to registration',
     () => {
-      const visitUrl = isOkta ? '/signin?useOkta=true' : '/signin';
+      const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
       cy.visit(visitUrl);
       cy.contains('Register').click();
       cy.get('[data-cy="register-button"]').should('be.visible');
@@ -235,7 +235,7 @@ export const navigatesToRegistration = (isOkta = false) => {
   ] as const;
 };
 
-export const respectsTheReturnUrlQueryParam = (isOkta = false) => {
+export const respectsTheReturnUrlQueryParam = (isIdapi = false) => {
   return [
     'respects the returnUrl query param',
     () => {
@@ -247,8 +247,8 @@ export const respectsTheReturnUrlQueryParam = (isOkta = false) => {
       cy.createTestUser({
         isUserEmailValidated: true,
       })?.then(({ emailAddress, finalPassword }) => {
-        const visitUrl = isOkta
-          ? `/signin?returnUrl=${encodeURIComponent(returnUrl)}&useOkta=true`
+        const visitUrl = isIdapi
+          ? `/signin?returnUrl=${encodeURIComponent(returnUrl)}&useIdapi=true`
           : `/signin?returnUrl=${encodeURIComponent(returnUrl)}`;
         cy.visit(visitUrl);
         cy.get('input[name=email]').type(emailAddress);
@@ -260,33 +260,33 @@ export const respectsTheReturnUrlQueryParam = (isOkta = false) => {
   ] as const;
 };
 
-export const redirectsCorrectlyForSocialSignIn = (isOkta = false) => {
+export const redirectsCorrectlyForSocialSignIn = (isIdapi = false) => {
   return [
     'redirects correctly for social sign in',
     () => {
-      const visitUrl = isOkta
-        ? `/signin?returnUrl=${encodeURIComponent(returnUrl)}&useOkta=true`
+      const visitUrl = isIdapi
+        ? `/signin?returnUrl=${encodeURIComponent(returnUrl)}&useIdapi=true`
         : `/signin?returnUrl=${encodeURIComponent(returnUrl)}`;
       cy.visit(visitUrl);
       cy.get('[data-cy="google-sign-in-button"]').should(
         'have.attr',
         'href',
         `/signin/google?returnUrl=${encodeURIComponent(returnUrl)}${
-          isOkta ? '&useOkta=true' : ''
+          isIdapi ? '&useIdapi=true' : ''
         }`,
       );
       cy.get('[data-cy="facebook-sign-in-button"]').should(
         'have.attr',
         'href',
         `/signin/facebook?returnUrl=${encodeURIComponent(returnUrl)}${
-          isOkta ? '&useOkta=true' : ''
+          isIdapi ? '&useIdapi=true' : ''
         }`,
       );
       cy.get('[data-cy="apple-sign-in-button"]').should(
         'have.attr',
         'href',
         `/signin/apple?returnUrl=${encodeURIComponent(returnUrl)}${
-          isOkta ? '&useOkta=true' : ''
+          isIdapi ? '&useIdapi=true' : ''
         }`,
       );
     },
@@ -294,18 +294,18 @@ export const redirectsCorrectlyForSocialSignIn = (isOkta = false) => {
 };
 
 export const removesEncryptedEmailParameterFromQueryString = (
-  isOkta = false,
+  isIdapi = false,
 ) => {
   return [
     'removes encryptedEmail parameter from query string',
     () => {
-      const visitUrl = isOkta
-        ? '/signin?encryptedEmail=bhvlabgflbgyil&useOkta=true'
+      const visitUrl = isIdapi
+        ? '/signin?encryptedEmail=bhvlabgflbgyil&useIdapi=true'
         : '/signin?encryptedEmail=bhvlabgflbgyil';
       cy.visit(visitUrl);
 
-      const finalUrl = isOkta
-        ? `?returnUrl=${encodeURIComponent(defaultReturnUrl)}&useOkta=true`
+      const finalUrl = isIdapi
+        ? `?returnUrl=${encodeURIComponent(defaultReturnUrl)}&useIdapi=true`
         : `?returnUrl=${encodeURIComponent(defaultReturnUrl)}`;
       cy.location('search').should('eq', finalUrl);
     },
@@ -313,14 +313,14 @@ export const removesEncryptedEmailParameterFromQueryString = (
 };
 
 export const removesEncryptedEmailParameterAndPreservesAllOtherValidParameters =
-  (isOkta = false) => {
+  (isIdapi = false) => {
     return [
       'removes encryptedEmail parameter and preserves all other valid parameters',
       () => {
-        const visitUrl = isOkta
+        const visitUrl = isIdapi
           ? `/signin?returnUrl=${encodeURIComponent(
               returnUrl,
-            )}&encryptedEmail=bdfalrbagbgu&refViewId=12345&useOkta=true`
+            )}&encryptedEmail=bdfalrbagbgu&refViewId=12345&useIdapi=true`
           : `/signin?returnUrl=${encodeURIComponent(
               returnUrl,
             )}&encryptedEmail=bdfalrbagbgu&refViewId=12345`;
@@ -328,10 +328,10 @@ export const removesEncryptedEmailParameterAndPreservesAllOtherValidParameters =
 
         // We add a '/' to the Okta assertion because at some point in the oauth flow it is added to the returnUrl.
         // This is because `url.pathname` in validateUrl.ts (validateReturnUrl) returns '/'
-        const finalUrl = isOkta
+        const finalUrl = isIdapi
           ? `?refViewId=12345&returnUrl=${encodeURIComponent(
               returnUrl,
-            )}&useOkta=true`
+            )}&useIdapi=true`
           : `?refViewId=12345&returnUrl=${encodeURIComponent(returnUrl)}`;
         cy.location('search').should('eq', finalUrl);
       },
@@ -339,7 +339,7 @@ export const removesEncryptedEmailParameterAndPreservesAllOtherValidParameters =
   };
 
 export const hitsAccessTokenRateLimitAndRecoversTokenAfterTimeout = (
-  isOkta = false,
+  isIdapi = false,
 ) => {
   return [
     'hits access token rate limit and recovers token after timeout',
@@ -352,7 +352,7 @@ export const hitsAccessTokenRateLimitAndRecoversTokenAfterTimeout = (
       cy.createTestUser({
         isUserEmailValidated: true,
       })?.then(({ emailAddress, finalPassword }) => {
-        const visitUrl = isOkta ? '/signin?useOkta=true' : '/signin';
+        const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
         cy.visit(visitUrl);
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
@@ -362,7 +362,10 @@ export const hitsAccessTokenRateLimitAndRecoversTokenAfterTimeout = (
         // We visit reauthenticate here because if we visit /signin or
         // /register, the logged in user guard will redirect us away before
         // the ratelimiter has a chance to work
-        cy.visit('/reauthenticate');
+        const reauthUrl = isIdapi
+          ? '/reauthenticate?useIdapi=true'
+          : '/reauthenticate';
+        cy.visit(reauthUrl);
         cy.contains('Sign');
         Cypress._.times(6, () => cy.reload());
         cy.contains('Rate limit exceeded');
@@ -372,12 +375,12 @@ export const hitsAccessTokenRateLimitAndRecoversTokenAfterTimeout = (
 };
 
 export const showsAnErrorMessageAndInformationParagraphWhenAccountLinkingRequiredErrorParameterIsPresent =
-  (isOkta = false) => {
+  (isIdapi = false) => {
     return [
       'shows an error message and information paragraph when accountLinkingRequired error parameter is present',
       () => {
-        const visitUrl = isOkta
-          ? '/signin?error=accountLinkingRequired&useOkta=true'
+        const visitUrl = isIdapi
+          ? '/signin?error=accountLinkingRequired&useIdapi=true'
           : '/signin?error=accountLinkingRequired';
         cy.visit(visitUrl);
         cy.contains(
@@ -389,12 +392,12 @@ export const showsAnErrorMessageAndInformationParagraphWhenAccountLinkingRequire
   };
 
 export const doesNotDisplaySocialButtonsWhenAccountLinkingRequiredErrorParameterIsPresent =
-  (isOkta = false) => {
+  (isIdapi = false) => {
     return [
       'does not display social buttons when accountLinkingRequired error parameter is present',
       () => {
-        const visitUrl = isOkta
-          ? '/signin?error=accountLinkingRequired&useOkta=true'
+        const visitUrl = isIdapi
+          ? '/signin?error=accountLinkingRequired&useIdapi=true'
           : '/signin?error=accountLinkingRequired';
         cy.visit(visitUrl);
         cy.get('[data-cy="google-sign-in-button"]').should('not.exist');
@@ -405,7 +408,7 @@ export const doesNotDisplaySocialButtonsWhenAccountLinkingRequiredErrorParameter
   };
 
 export const showsRecaptchaErrorsWhenTheUserTriesToSignInOfflineAndAllowsSignInWhenBackOnline =
-  (isOkta = false) => {
+  (isIdapi = false) => {
     return [
       'shows reCAPTCHA errors when the user tries to sign in offline and allows sign in when back online',
       () => {
@@ -417,7 +420,7 @@ export const showsRecaptchaErrorsWhenTheUserTriesToSignInOfflineAndAllowsSignInW
         cy.createTestUser({
           isUserEmailValidated: true,
         })?.then(({ emailAddress, finalPassword }) => {
-          const visitUrl = isOkta ? '/signin?useOkta=true' : '/signin';
+          const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
           cy.visit(visitUrl);
 
           // Simulate going offline by failing to reCAPTCHA POST request.
@@ -457,7 +460,7 @@ export const showsRecaptchaErrorsWhenTheUserTriesToSignInOfflineAndAllowsSignInW
     ] as const;
   };
 
-export const redirectsToOptInPrompt = (isOkta = false) => {
+export const redirectsToOptInPrompt = (isIdapi = false) => {
   return [
     'redirects user to prompt if they are not a supporter',
     () => {
@@ -471,7 +474,7 @@ export const redirectsToOptInPrompt = (isOkta = false) => {
       cy.createTestUser({
         isUserEmailValidated: true,
       })?.then(({ emailAddress, finalPassword }) => {
-        const visitUrl = isOkta ? '/signin?useOkta=true' : '/signin';
+        const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
         cy.visit(visitUrl);
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);

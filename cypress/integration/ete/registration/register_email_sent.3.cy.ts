@@ -4,7 +4,7 @@ import { randomMailosaurEmail } from '../../../support/commands/testUser';
 describe('Registration email sent page', () => {
   context('A11y checks', () => {
     it('has no detectable a11y violations on the registration email sent page', () => {
-      cy.visit(`/register/email-sent`);
+      cy.visit('/register/email-sent?useIdapi=true');
       injectAndCheckAxe();
     });
   });
@@ -13,7 +13,7 @@ describe('Registration email sent page', () => {
     const unregisteredEmail = randomMailosaurEmail();
 
     const clientId = 'jobs';
-    cy.visit('/register?clientId=' + clientId);
+    cy.visit(`/register?clientId=${clientId}&useIdapi=true`);
     cy.get('input[name=email]').type(unregisteredEmail);
     const timeRequestWasMadeInitialEmail = new Date();
     cy.get('[data-cy="register-button"]').click();
@@ -50,7 +50,7 @@ describe('Registration email sent page', () => {
       isUserEmailValidated: false,
       isGuestUser: true,
     })?.then(({ emailAddress }) => {
-      cy.visit('/register');
+      cy.visit('/register?useIdapi=true');
       cy.get('input[name=email]').type(emailAddress);
       const timeRequestWasMadeInitialEmail = new Date();
       cy.get('[data-cy="register-button"]').click();
@@ -96,7 +96,7 @@ describe('Registration email sent page', () => {
     cy.createTestUser({
       isUserEmailValidated: false,
     })?.then(({ emailAddress }) => {
-      cy.visit('/register');
+      cy.visit('/register?useIdapi=true');
       cy.get('input[name=email]').type(emailAddress);
       const timeRequestWasMadeInitialEmail = new Date();
       cy.get('[data-cy="register-button"]').click();
@@ -132,14 +132,14 @@ describe('Registration email sent page', () => {
   });
 
   it('should navigate back to the correct page when change email is clicked', () => {
-    cy.visit(`/register/email-sent`);
+    cy.visit('/register/email-sent?useIdapi=true');
     cy.contains('Change email address').click();
     cy.contains('Sign in');
     cy.title().should('eq', 'Sign in | The Guardian');
   });
 
   it('should render properly if the encrypted email cookie is not set', () => {
-    cy.visit(`/register/email-sent`);
+    cy.visit('/register/email-sent?useIdapi=true');
     cy.contains('Change email address');
     cy.contains('Check your email inbox');
   });
@@ -148,7 +148,7 @@ describe('Registration email sent page', () => {
     cy.createTestUser({
       isUserEmailValidated: false,
     })?.then(({ emailAddress }) => {
-      cy.visit('/register');
+      cy.visit('/register?useIdapi=true');
       cy.get('input[name=email]').type(emailAddress);
 
       const timeRequestWasMadeInitialEmail = new Date();

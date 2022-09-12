@@ -1,4 +1,4 @@
-import { UserResponse } from '../../../src/server/models/okta/User';
+import { UserResponse } from '@/server/models/okta/User';
 
 describe('Send password reset email in Okta', () => {
   const email = 'mrtest@theguardian.com';
@@ -100,7 +100,7 @@ describe('Send password reset email in Okta', () => {
 
   context('send reset password email for ACTIVE user', () => {
     it('shows email sent page when successful', () => {
-      cy.visit('/reset-password?useOkta=true');
+      cy.visit('/reset-password');
       cy.get('input[name="email"]').type(email);
       cy.mockNext(200, mockUserActiveWithPassword);
       cy.mockNext(200, {
@@ -118,7 +118,7 @@ describe('Send password reset email in Okta', () => {
 
   context('send reset password email for ACTIVE user without password', () => {
     it('shows email sent page when successful', () => {
-      cy.visit('/reset-password?useOkta=true');
+      cy.visit('/reset-password');
       cy.get('input[name="email"]').type(email);
       cy.mockNext(200, mockUserActiveWithoutPassword);
       cy.mockNext(403, {
@@ -184,7 +184,7 @@ describe('Send password reset email in Okta', () => {
 
   context('send create password email for STAGED user', () => {
     it('shows email sent page when successful', () => {
-      cy.visit('/reset-password?useOkta=true');
+      cy.visit('/reset-password');
       cy.get('input[name="email"]').type(email);
       cy.mockNext(200, mockUserStaged);
       cy.mockNext(200, {
@@ -199,7 +199,7 @@ describe('Send password reset email in Okta', () => {
 
   context('send create password email for PROVISIONED user', () => {
     it('shows email sent page when successful', () => {
-      cy.visit('/reset-password?useOkta=true');
+      cy.visit('/reset-password');
       cy.get('input[name="email"]').type(email);
       cy.mockNext(200, mockUserProvisioned);
       cy.mockNext(200, {
@@ -214,7 +214,7 @@ describe('Send password reset email in Okta', () => {
 
   context('send reset password email for RECOVERY user', () => {
     it('shows email sent page when successful', () => {
-      cy.visit('/reset-password?useOkta=true');
+      cy.visit('/reset-password');
       cy.get('input[name="email"]').type(email);
       cy.mockNext(200, mockUserRecovery);
       cy.mockNext(200, {
@@ -231,7 +231,7 @@ describe('Send password reset email in Okta', () => {
 
   context('send reset password email for PASSWORD_EXPIRED user', () => {
     it('shows email sent page when successful', () => {
-      cy.visit('/reset-password?useOkta=true');
+      cy.visit('/reset-password');
       cy.get('input[name="email"]').type(email);
       cy.mockNext(200, mockUserPasswordExpired);
       cy.mockNext(200, {
@@ -248,7 +248,7 @@ describe('Send password reset email in Okta', () => {
 
   context('user not found', () => {
     it('shows email sent page even when user not found', () => {
-      cy.visit('/reset-password?useOkta=true');
+      cy.visit('/reset-password');
       cy.get('input[name="email"]').type(email);
       cy.mockNext(404, {
         errorCode: 'E0000007',
@@ -266,7 +266,7 @@ describe('Send password reset email in Okta', () => {
 
   context('generic error handling', () => {
     it('shows a generic error when something goes wrong', () => {
-      cy.visit('/reset-password?useOkta=true');
+      cy.visit('/reset-password');
       cy.get('input[name="email"]').type(email);
       cy.mockNext(200, mockUserActiveWithPassword);
       cy.mockNext(403, {

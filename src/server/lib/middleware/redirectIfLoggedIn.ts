@@ -19,7 +19,7 @@ export const redirectIfLoggedIn = async (
   res: ResponseWithRequestState,
   next: NextFunction,
 ) => {
-  const { useOkta } = res.locals.queryParams;
+  const { useIdapi } = res.locals.queryParams;
 
   const oktaSessionCookieId: string | undefined = req.cookies.sid;
 
@@ -28,7 +28,7 @@ export const redirectIfLoggedIn = async (
 
   // Check if the user has an existing Okta session. If they do and it's valid,
   // they're already logged in and are redirected to the logged in redirect URL.
-  if (okta.enabled && useOkta && oktaSessionCookieId) {
+  if (okta.enabled && !useIdapi && oktaSessionCookieId) {
     try {
       await getSession(oktaSessionCookieId);
       return res.redirect(defaultReturnUri);

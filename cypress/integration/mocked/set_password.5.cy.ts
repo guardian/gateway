@@ -45,20 +45,20 @@ describe('Password set/create flow', () => {
           },
         ],
       });
-      cy.visit(`/set-password/fake_token`);
+      cy.visit('/set-password/fake_token?useIdapi=true');
       injectAndCheckAxe();
     });
 
     it('Has no detectable a11y violations on create/set password page', () => {
       cy.mockNext(200);
       cy.mockNext(200, fakeSuccessResponse);
-      cy.visit(`/set-password/fake_token`);
+      cy.visit('/set-password/fake_token?useIdapi=true');
       injectAndCheckAxe();
     });
 
     it('Has no detectable a11y violations on create/set password page with error', () => {
       cy.mockNext(200);
-      cy.visit(`/set-password/fake_token`);
+      cy.visit('/set-password/fake_token?useIdapi=true');
       cy.get('input[name="password"]').type('short');
       cy.get('button[type="submit"]').click();
       injectAndCheckAxe();
@@ -71,7 +71,7 @@ describe('Password set/create flow', () => {
         method: 'GET',
         url: 'https://api.pwnedpasswords.com/range/*',
       }).as('breachCheck');
-      cy.visit(`/set-password/fake_token`);
+      cy.visit('/set-password/fake_token?useIdapi=true');
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
       cy.wait('@breachCheck');
       cy.get('button[type="submit"]').click();
@@ -82,7 +82,7 @@ describe('Password set/create flow', () => {
   context('show / hide password eye button', () => {
     it('clicking on the password eye shows the password and clicking it again hides it', () => {
       cy.mockNext(200);
-      cy.visit(`/set-password/fake_token`);
+      cy.visit('/set-password/fake_token?useIdapi=true');
       cy.get('input[name="password"]').should('have.attr', 'type', 'password');
       cy.get('input[name="password"]').type('some_password');
       cy.get('[data-cy=password-input-eye-button]').click();
@@ -102,7 +102,7 @@ describe('Password set/create flow', () => {
           },
         ],
       });
-      cy.visit(`/set-password/fake_token`);
+      cy.visit('/set-password/fake_token?useIdapi=true');
       cy.contains('Link expired');
     });
 
@@ -115,7 +115,7 @@ describe('Password set/create flow', () => {
           },
         ],
       });
-      cy.visit(`/set-password/fake_token`);
+      cy.visit('/set-password/fake_token?useIdapi=true');
       cy.contains('Link expired');
       cy.get('input[name="email"]').type('some@email.com');
       cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
@@ -131,7 +131,7 @@ describe('Password set/create flow', () => {
 
     it('shows the session time out page if the token expires while on the set password page', () => {
       cy.mockNext(200, fakeValidationRespone(1000));
-      cy.visit(`/set-password/fake_token`);
+      cy.visit('/set-password/fake_token?useIdapi=true');
       cy.contains('Session timed out');
     });
   });
@@ -139,7 +139,7 @@ describe('Password set/create flow', () => {
   context('Email shown on page', () => {
     it('shows the users email address on the page', () => {
       cy.mockNext(200, fakeValidationRespone());
-      cy.visit(`/set-password/fake_token`);
+      cy.visit('/set-password/fake_token?useIdapi=true');
       cy.contains(fakeValidationRespone().user.primaryEmailAddress);
     });
   });
@@ -152,7 +152,7 @@ describe('Password set/create flow', () => {
         method: 'GET',
         url: 'https://api.pwnedpasswords.com/range/*',
       }).as('breachCheck');
-      cy.visit(`/set-password/fake_token`);
+      cy.visit('/set-password/fake_token?useIdapi=true');
 
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
       cy.wait('@breachCheck');
@@ -172,7 +172,7 @@ describe('Password set/create flow', () => {
         method: 'GET',
         url: 'https://api.pwnedpasswords.com/range/*',
       }).as('breachCheck');
-      cy.visit(`/set-password/fake_token`);
+      cy.visit('/set-password/fake_token?useIdapi=true');
       cy.contains(fakeValidationRespone().user.primaryEmailAddress);
 
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
@@ -199,7 +199,7 @@ describe('Password set/create flow', () => {
           url: 'https://api.pwnedpasswords.com/range/*',
         }).as('breachCheck');
         cy.visit(
-          `/set-password/fake_token?returnUrl=https://news.theguardian.com`,
+          '/set-password/fake_token?returnUrl=https://news.theguardian.com&useIdapi=true',
         );
         cy.get('input[name="password"]').type(
           'thisisalongandunbreachedpassword',
@@ -226,7 +226,9 @@ describe('Password set/create flow', () => {
           method: 'GET',
           url: 'https://api.pwnedpasswords.com/range/*',
         }).as('breachCheck');
-        cy.visit(`/set-password/fake_token?returnUrl=https://news.badsite.com`);
+        cy.visit(
+          '/set-password/fake_token?returnUrl=https://news.badsite.com&useIdapi=true',
+        );
         cy.get('input[name="password"]').type(
           'thisisalongandunbreachedpassword',
         );
@@ -245,7 +247,7 @@ describe('Password set/create flow', () => {
   context('General IDAPI failure on token read', () => {
     it('displays the password resend page', () => {
       cy.mockNext(500);
-      cy.visit(`/set-password/fake_token`);
+      cy.visit('/set-password/fake_token?useIdapi=true');
       cy.contains('Link expired');
     });
   });
@@ -259,7 +261,7 @@ describe('Password set/create flow', () => {
         method: 'GET',
         url: 'https://api.pwnedpasswords.com/range/*',
       }).as('breachCheck');
-      cy.visit(`/set-password/fake_token`);
+      cy.visit('/set-password/fake_token?useIdapi=true');
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
       cy.wait('@breachCheck');
       cy.get('button[type="submit"]').click();

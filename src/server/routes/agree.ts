@@ -152,10 +152,9 @@ const OktaAgreeGetController = async (
 };
 
 router.get('/agree/GRS', (req: Request, res: ResponseWithRequestState) => {
-  const { useOkta } = res.locals.queryParams;
-  const oktaSessionCookieId: string | undefined = req.cookies.sid;
+  const { useIdapi } = res.locals.queryParams;
 
-  if (okta.enabled && useOkta && oktaSessionCookieId) {
+  if (okta.enabled && !useIdapi) {
     return OktaAgreeGetController(req, res);
   } else {
     return IDAPIAgreeGetController(req, res);
@@ -165,7 +164,7 @@ router.get('/agree/GRS', (req: Request, res: ResponseWithRequestState) => {
 router.post(
   '/agree/GRS',
   async (req: Request, res: ResponseWithRequestState) => {
-    const { useOkta } = res.locals.queryParams;
+    const { useIdapi } = res.locals.queryParams;
     const oktaSessionCookieId: string | undefined = req.cookies.sid;
 
     const { queryParams } = res.locals;
@@ -173,7 +172,7 @@ router.post(
     const { firstName, secondName } = req.body;
 
     try {
-      if (okta.enabled && useOkta && oktaSessionCookieId) {
+      if (okta.enabled && !useIdapi && oktaSessionCookieId) {
         // Get the id from Okta
         const { userId } = await getSession(oktaSessionCookieId);
         await setupJobsUserInOkta(firstName, secondName, userId);
