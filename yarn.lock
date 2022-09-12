@@ -2658,10 +2658,10 @@
     yaml "^1.7.2"
     yargs "^15.4.1"
 
-"@guardian/source-foundations@^5.1.0":
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/@guardian/source-foundations/-/source-foundations-5.1.0.tgz#dc5143a43dd088fb742315bd26ed0b040c199566"
-  integrity sha512-+eRB9usaFMcrsUnt3a2U1BK+E5e7/v1kMMHeJVDy4Bk8gNgFW+/sw7G5p0wHJRcyAbOPVyxbVLUjQOY4e+S/kw==
+"@guardian/source-foundations@^5.2.1":
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/@guardian/source-foundations/-/source-foundations-5.2.1.tgz#5c6bc8967bdcd579ac307b8087028917933386eb"
+  integrity sha512-zBAZsT0thtWxR1d4Wl4PeNVHHcfrSfuNHExBMnQKZAPnwsGbHKF8ETPzP14YnU290Wb/fStNti6wTzCqmkRgnw==
   dependencies:
     mini-svg-data-uri "^1.3.3"
 
