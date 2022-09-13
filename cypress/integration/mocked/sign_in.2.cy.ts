@@ -15,12 +15,12 @@ describe('Sign in flow', () => {
 
   context('A11y checks', () => {
     it('Has no detectable a11y violations on sign in page', () => {
-      cy.visit('/signin');
+      cy.visit('/signin?useIdapi=true');
       injectAndCheckAxe();
     });
 
     it('Has no detectable a11y violations on sign in page with error', () => {
-      cy.visit('/signin');
+      cy.visit('/signin?useIdapi=true');
       cy.get('input[name="email"]').type('Invalid email');
       cy.get('input[name="password"]').type('Invalid password');
       cy.mockNext(500);
@@ -32,7 +32,9 @@ describe('Sign in flow', () => {
   context('Signing in', () => {
     const defaultReturnUrl = 'https://m.code.dev-theguardian.com';
     it('shows an error message when sign in fails', function () {
-      cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.visit(
+        '/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout&useIdapi=true',
+      );
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
       cy.mockNext(403, {
@@ -49,7 +51,9 @@ describe('Sign in flow', () => {
     });
 
     it('shows a generic error message when the api error response is not known', function () {
-      cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.visit(
+        '/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout&useIdapi=true',
+      );
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
       cy.mockNext(403, {
@@ -71,7 +75,9 @@ describe('Sign in flow', () => {
       cy.intercept('GET', returnUrl, (req) => {
         req.reply(200);
       });
-      cy.visit(`/signin?returnUrl=${encodeURIComponent(returnUrl)}`);
+      cy.visit(
+        `/signin?returnUrl=${encodeURIComponent(returnUrl)}&useIdapi=true`,
+      );
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
       cy.mockNext(200, {
@@ -91,7 +97,7 @@ describe('Sign in flow', () => {
         req.reply(200);
       });
 
-      cy.visit('/signin');
+      cy.visit('/signin?useIdapi=true');
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
       cy.mockNext(200, {
@@ -109,12 +115,14 @@ describe('Sign in flow', () => {
         status: 'ok',
         email: 'test@test.com',
       });
-      cy.visit(`/signin?encryptedEmail=bdfalrbagbgu`);
+      cy.visit(`/signin?encryptedEmail=bdfalrbagbgu&useIdapi=true`);
       cy.get('input[name="email"]').should('have.value', 'test@test.com');
     });
 
     it('shows recaptcha error message when reCAPTCHA token request fails', () => {
-      cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.visit(
+        '/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout&useIdapi=true',
+      );
       cy.get('input[name="email"]').type('placeholder@example.com');
       cy.get('input[name="password"]').type('definitelynotarealpassword');
       cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
@@ -133,7 +141,9 @@ describe('Sign in flow', () => {
           statusCode: 200,
         },
       );
-      cy.visit('/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout');
+      cy.visit(
+        '/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout&useIdapi=true',
+      );
       cy.get('input[name="email"]').type('placeholder@example.com');
       cy.get('input[name="password"]').type('definitelynotarealpassword');
       cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
@@ -179,7 +189,7 @@ describe('Sign in flow', () => {
         status: 'signedInNotRecently',
         emailValidated: true,
       });
-      cy.visit('/signin');
+      cy.visit('/signin?useIdapi=true');
 
       cy.location('pathname').should('eq', '/reauthenticate');
     });
@@ -188,7 +198,9 @@ describe('Sign in flow', () => {
   context('General IDAPI failure', () => {
     it('displays a generic error message', function () {
       cy.mockNext(500);
-      cy.visit('/signin?returnUrl=https%3A%2F%2Flocalhost%3A8861%2Fsignin');
+      cy.visit(
+        '/signin?returnUrl=https%3A%2F%2Flocalhost%3A8861%2Fsignin&useIdapi=true',
+      );
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
       cy.get('[data-cy=sign-in-button]').click();
@@ -217,7 +229,9 @@ describe('Sign in flow', () => {
     });
 
     const signIn = (returnUrl = defaultReturnUrl) => {
-      cy.visit(`/signin?returnUrl=${encodeURIComponent(returnUrl)}`);
+      cy.visit(
+        `/signin?returnUrl=${encodeURIComponent(returnUrl)}&useIdapi=true`,
+      );
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
       cy.mockNext(200, {

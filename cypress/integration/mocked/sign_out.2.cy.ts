@@ -17,7 +17,9 @@ describe('Sign out flow', () => {
       const returnUrl = `https://${Cypress.env('BASE_URI')}/reset-password`;
       // Intercept the external redirect page.
       // We just want to check that the redirect happens, not that the page loads.
-      cy.visit(`/signin?returnUrl=${encodeURIComponent(returnUrl)}`);
+      cy.visit(
+        `/signin?returnUrl=${encodeURIComponent(returnUrl)}&useIdapi=true`,
+      );
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
       cy.mockNext(200, {

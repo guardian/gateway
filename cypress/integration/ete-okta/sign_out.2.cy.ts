@@ -16,7 +16,7 @@ describe('Sign out flow', () => {
         const postSignInReturnUrl = `https://${Cypress.env(
           'BASE_URI',
         )}/consents/data`;
-        const visitUrl = `/signin?useOkta=true&returnUrl=${encodeURIComponent(
+        const visitUrl = `/signin?returnUrl=${encodeURIComponent(
           postSignInReturnUrl,
         )}`;
         cy.visit(visitUrl);
@@ -37,9 +37,7 @@ describe('Sign out flow', () => {
           'BASE_URI',
         )}/reset-password`;
         cy.visit(
-          `/signout?useOkta=true&returnUrl=${encodeURIComponent(
-            postSignOutReturnUrl,
-          )}`,
+          `/signout?returnUrl=${encodeURIComponent(postSignOutReturnUrl)}`,
         );
         cy.getCookie('sid').should('not.exist');
         // check cookies are removed

@@ -227,8 +227,8 @@ export const checkPasswordTokenController = (
   pageTitle: PasswordPageTitle,
 ) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { useOkta } = res.locals.queryParams;
-    if (okta.enabled && useOkta) {
+    const { useIdapi } = res.locals.queryParams;
+    if (okta.enabled && !useIdapi) {
       await checkTokenInOkta(path, pageTitle, req, res);
     } else {
       await checkTokenInIDAPI(path, pageTitle, req, res);

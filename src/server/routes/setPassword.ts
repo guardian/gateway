@@ -68,8 +68,8 @@ router.post(
   '/set-password/resend',
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { useOkta } = res.locals.queryParams;
-    if (okta.enabled && useOkta) {
+    const { useIdapi } = res.locals.queryParams;
+    if (okta.enabled && !useIdapi) {
       return await sendResetPasswordEmailInOktaController(req, res);
     } else {
       const { email } = req.body;

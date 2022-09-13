@@ -56,9 +56,9 @@ export const rateLimiterMiddleware = async (
   const encryptedStateEmail = readEmailCookie(req);
 
   // If Okta is enabled, rate limit based on the Okta identifier.
-  const { useOkta } = res.locals.queryParams;
+  const { useIdapi } = res.locals.queryParams;
   const oktaSessionCookieId: string | undefined = req.cookies.sid;
-  const isOktaInUse = okta.enabled && useOkta && oktaSessionCookieId;
+  const isOktaInUse = okta.enabled && !useIdapi && oktaSessionCookieId;
 
   const rateLimitData = {
     email: formEmail || encryptedStateEmail,

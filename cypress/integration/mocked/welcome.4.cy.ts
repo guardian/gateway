@@ -64,7 +64,7 @@ describe('Welcome and set password page', () => {
     );
     cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
     cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
-    cy.visit(`/welcome/fake_token`);
+    cy.visit(`/welcome/fake_token?useIdapi=true`);
     cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
     cy.wait('@breachCheck');
     cy.get('button[type="submit"]').click();
@@ -77,13 +77,13 @@ describe('Welcome and set password page', () => {
   context('A11y checks', () => {
     it('has no detectable a11y violations on the set password page', () => {
       cy.mockNext(200, checkTokenSuccessResponse());
-      cy.visit(`/welcome/fake_token`);
+      cy.visit(`/welcome/fake_token?useIdapi=true`);
       injectAndCheckAxe();
     });
 
     it('has no detectable a11y violations on set password page with global error', () => {
       cy.mockNext(200, checkTokenSuccessResponse());
-      cy.visit(`/welcome/fake_token`);
+      cy.visit(`/welcome/fake_token?useIdapi=true`);
       cy.mockNext(500);
       cy.get('input[name="password"]').type('short');
       cy.get('button[type="submit"]').click();
@@ -91,12 +91,12 @@ describe('Welcome and set password page', () => {
     });
 
     it('has no detectable a11y violations on the resend page', () => {
-      cy.visit(`/welcome/resend`);
+      cy.visit(`/welcome/resend?useIdapi=true`);
       injectAndCheckAxe();
     });
 
     it('has no detectable a11y violations on the resend page with global error', () => {
-      cy.visit(`/welcome/resend`);
+      cy.visit(`/welcome/resend?useIdapi=true`);
 
       cy.mockNext(500);
       cy.get('input[name="email"]').type(
@@ -107,7 +107,7 @@ describe('Welcome and set password page', () => {
     });
 
     it('has no detectable a11y violations on the email sent page with resend box', () => {
-      cy.visit(`/welcome/resend`);
+      cy.visit(`/welcome/resend?useIdapi=true`);
 
       cy.mockNext(200);
       cy.get('input[name="email"]').type(
@@ -118,7 +118,7 @@ describe('Welcome and set password page', () => {
     });
 
     it('has no detectable a11y violations on the email sent page without resend box', () => {
-      cy.visit(`/welcome/email-sent`);
+      cy.visit(`/welcome/email-sent?useIdapi=true`);
       injectAndCheckAxe();
     });
   });
@@ -159,7 +159,7 @@ describe('Welcome and set password page', () => {
       cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
       setAuthCookies();
 
-      cy.visit(`/welcome/fake_token?${query}`);
+      cy.visit(`/welcome/fake_token?${query}&useIdapi=true`);
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
       cy.wait('@breachCheck');
       cy.get('button[type="submit"]').click();
@@ -191,7 +191,7 @@ describe('Welcome and set password page', () => {
       cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
       setAuthCookies();
 
-      cy.visit(`/welcome/fake_token?${query}`);
+      cy.visit(`/welcome/fake_token?${query}&useIdapi=true`);
       cy.get('input[name="firstName"]').type('First Name');
       cy.get('input[name="secondName"]').type('Last Name');
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
@@ -214,7 +214,7 @@ describe('Welcome and set password page', () => {
         ],
       });
       cy.mockNext(200, checkTokenSuccessResponse());
-      cy.visit(`/welcome/fake_token`);
+      cy.visit(`/welcome/fake_token?useIdapi=true`);
       cy.get('input[name="password"]').type('password');
       cy.get('button[type="submit"]').click();
       cy.contains('Please use a password that is hard to guess.');
@@ -226,7 +226,7 @@ describe('Welcome and set password page', () => {
         method: 'GET',
         url: 'https://api.pwnedpasswords.com/range/*',
       }).as('breachCheck');
-      cy.visit(`/welcome/fake_token`);
+      cy.visit(`/welcome/fake_token?useIdapi=true`);
       cy.contains(`Please complete your details for ${defaultEmail}`);
     });
 
@@ -236,7 +236,7 @@ describe('Welcome and set password page', () => {
         method: 'GET',
         url: 'https://api.pwnedpasswords.com/range/*',
       }).as('breachCheck');
-      cy.visit(`/welcome/fake_token`);
+      cy.visit(`/welcome/fake_token?useIdapi=true`);
       cy.contains(`Please complete your details for your new account`);
     });
   });
@@ -253,7 +253,7 @@ describe('Welcome and set password page', () => {
       });
       cy.mockNext(200);
       cy.mockNext(200);
-      cy.visit(`/welcome/fake_token`);
+      cy.visit(`/welcome/fake_token?useIdapi=true`);
       cy.contains('Link expired');
       cy.get('input[name="email"]').type(
         checkTokenSuccessResponse().user.primaryEmailAddress,
@@ -266,14 +266,14 @@ describe('Welcome and set password page', () => {
 
     it('shows the session time out page if the token expires while on the set password page', () => {
       cy.mockNext(200, checkTokenSuccessResponse(1000));
-      cy.visit(`/welcome/fake_token`);
+      cy.visit(`/welcome/fake_token?useIdapi=true`);
       cy.contains('Session timed out');
     });
   });
 
   context('Email sent page', () => {
     it('resends email if button exists', () => {
-      cy.visit(`/welcome/resend`);
+      cy.visit(`/welcome/resend?useIdapi=true`);
 
       cy.mockNext(200);
       cy.get('input[name="email"]').type(
@@ -288,7 +288,7 @@ describe('Welcome and set password page', () => {
     });
 
     it('fails to resend email if reCAPTCHA check is unsuccessful', () => {
-      cy.visit(`/welcome/resend`);
+      cy.visit(`/welcome/resend?useIdapi=true`);
 
       cy.mockNext(200);
 
@@ -308,7 +308,7 @@ describe('Welcome and set password page', () => {
     });
 
     it('takes user back to link expired page if "Change email address" clicked', () => {
-      cy.visit(`/welcome/resend`);
+      cy.visit(`/welcome/resend?useIdapi=true`);
 
       cy.mockNext(200);
       cy.get('input[name="email"]').type(

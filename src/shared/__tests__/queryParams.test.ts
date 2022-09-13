@@ -32,7 +32,7 @@ describe('getPersistableQueryParams', () => {
       ref: 'ref',
       refViewId: 'refViewId',
       componentEventParams: 'componentEventParams',
-      useOkta: undefined,
+      useIdapi: undefined,
       fromURI: 'fromURI',
       appClientId: 'appClientId',
     };

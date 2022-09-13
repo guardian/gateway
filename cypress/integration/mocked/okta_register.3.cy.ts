@@ -39,7 +39,7 @@ describe('Okta Register flow', () => {
 
       cy.intercept('POST', '/register**').as('registerPost');
 
-      cy.visit('/register?useOkta=true');
+      cy.visit('/register');
 
       setSidCookie();
       cy.get('input[name="email"]').type('example@example.com');
@@ -70,7 +70,7 @@ describe('Okta Register flow', () => {
       // visit healthcheck to set the cookie
       cy.visit('/healthcheck');
 
-      cy.visit('/register?useOkta=true');
+      cy.visit('/register');
 
       cy.location('pathname').should('eq', '/reauthenticate');
 
@@ -111,7 +111,7 @@ describe('Okta Register flow', () => {
       cy.disableCMP();
 
       cy.request({
-        url: '/register?useOkta=true',
+        url: '/register',
         followRedirect: false,
         failOnStatusCode: false,
       }).then((response) => {
@@ -132,7 +132,7 @@ describe('Okta Register flow', () => {
       // visit healthcheck to set the cookie
       cy.visit('/healthcheck');
 
-      cy.visit('/register?useOkta=true');
+      cy.visit('/register');
 
       cy.location('pathname').should('eq', '/reauthenticate');
 

@@ -28,7 +28,7 @@ describe('Password reset flow in Okta', () => {
         isUserEmailValidated: true,
       })?.then(({ emailAddress }) => {
         cy.visit(
-          `/reset-password?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&appClientId=${appClientId}&fromURI=${fromURI}&useOkta=true`,
+          `/reset-password?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&appClientId=${appClientId}&fromURI=${fromURI}`,
         );
         const timeRequestWasMade = new Date();
 
@@ -70,7 +70,7 @@ describe('Password reset flow in Okta', () => {
           cy.url().should('contain', refViewId);
           cy.url().should('contain', encodedRef);
           cy.url().should('contain', clientId);
-          cy.url().should('contain', 'useOkta=true');
+          cy.url().should('not.contain', 'useOkta=true');
           cy.url().should('not.contain', appClientId);
           cy.url().should('not.contain', fromURI);
         });
@@ -85,7 +85,7 @@ describe('Password reset flow in Okta', () => {
       cy.createTestUser({
         isUserEmailValidated: true,
       })?.then(({ emailAddress }) => {
-        cy.visit(`/reset-password?returnUrl=${encodedReturnUrl}&useOkta=true`);
+        cy.visit(`/reset-password?returnUrl=${encodedReturnUrl}`);
         const timeRequestWasMade = new Date();
 
         cy.contains('Forgot password');
@@ -128,7 +128,7 @@ describe('Password reset flow in Okta', () => {
           cy.url()
             .should('contain', newReturnUrl)
             .and('not.contain', encodedReturnUrl)
-            .and('contain', 'useOkta=true');
+            .and('not.contain', 'useOkta=true');
         });
       });
     });
@@ -148,7 +148,7 @@ describe('Password reset flow in Okta', () => {
         isUserEmailValidated: true,
       })?.then(({ emailAddress }) => {
         cy.visit(
-          `/reset-password?returnUrl=${encodedReturnUrl}&appClientId=${appClientId1}&fromURI=${fromURI1}&useOkta=true`,
+          `/reset-password?returnUrl=${encodedReturnUrl}&appClientId=${appClientId1}&fromURI=${fromURI1}`,
         );
         const timeRequestWasMade = new Date();
 
@@ -194,7 +194,7 @@ describe('Password reset flow in Okta', () => {
         cy.getTestOktaUser(emailAddress).then((oktaUser) => {
           expect(oktaUser.status).to.eq(Status.STAGED);
 
-          cy.visit('/reset-password?useOkta=true');
+          cy.visit('/reset-password');
           const timeRequestWasMade = new Date();
 
           cy.get('input[name=email]').type(emailAddress);
@@ -217,7 +217,9 @@ describe('Password reset flow in Okta', () => {
             const setPasswordLink = links.find((s) =>
               s.text?.includes('Create password'),
             );
-            expect(setPasswordLink?.href ?? '').to.have.string('useOkta=true');
+            expect(setPasswordLink?.href ?? '').not.to.have.string(
+              'useOkta=true',
+            );
             cy.visit(`/set-password/${token}`);
             cy.contains('Create password');
             cy.contains(emailAddress);
@@ -244,7 +246,7 @@ describe('Password reset flow in Okta', () => {
           cy.getTestOktaUser(emailAddress).then((oktaUser) => {
             expect(oktaUser.status).to.eq(Status.PROVISIONED);
 
-            cy.visit('/reset-password?useOkta=true');
+            cy.visit('/reset-password');
             const timeRequestWasMade = new Date();
 
             cy.get('input[name=email]').type(emailAddress);
@@ -267,7 +269,7 @@ describe('Password reset flow in Okta', () => {
               const setPasswordLink = links.find((s) =>
                 s.text?.includes('Create password'),
               );
-              expect(setPasswordLink?.href ?? '').to.have.string(
+              expect(setPasswordLink?.href ?? '').not.to.have.string(
                 'useOkta=true',
               );
               cy.visit(`/set-password/${token}`);
@@ -297,7 +299,7 @@ describe('Password reset flow in Okta', () => {
           cy.getTestOktaUser(emailAddress).then((oktaUser) => {
             expect(oktaUser.status).to.eq(Status.RECOVERY);
 
-            cy.visit('/reset-password?useOkta=true');
+            cy.visit('/reset-password');
             const timeRequestWasMade = new Date();
 
             cy.get('input[name=email]').type(emailAddress);
@@ -319,7 +321,7 @@ describe('Password reset flow in Okta', () => {
               const resetPasswordLink = links.find((s) =>
                 s.text?.includes('Reset password'),
               );
-              expect(resetPasswordLink?.href ?? '').to.have.string(
+              expect(resetPasswordLink?.href ?? '').not.to.have.string(
                 'useOkta=true',
               );
               expect(resetPasswordLink?.href ?? '').to.have.string(
@@ -352,7 +354,7 @@ describe('Password reset flow in Okta', () => {
           cy.getTestOktaUser(emailAddress).then((oktaUser) => {
             expect(oktaUser.status).to.eq(Status.PASSWORD_EXPIRED);
 
-            cy.visit('/reset-password?useOkta=true');
+            cy.visit('/reset-password');
             const timeRequestWasMade = new Date();
 
             cy.get('input[name=email]').type(emailAddress);
@@ -374,7 +376,7 @@ describe('Password reset flow in Okta', () => {
               const resetPasswordLink = links.find((s) =>
                 s.text?.includes('Reset password'),
               );
-              expect(resetPasswordLink?.href ?? '').to.have.string(
+              expect(resetPasswordLink?.href ?? '').not.to.have.string(
                 'useOkta=true',
               );
               expect(resetPasswordLink?.href ?? '').to.have.string(

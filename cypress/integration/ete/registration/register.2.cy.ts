@@ -9,7 +9,7 @@ describe('Registration flow', () => {
       cy.intercept('GET', googleTermsUrl, (req) => {
         req.reply(200);
       });
-      cy.visit('/signin');
+      cy.visit('/signin?useIdapi=true');
       cy.contains('terms of service').click();
       cy.url().should('eq', googleTermsUrl);
     });
@@ -21,7 +21,7 @@ describe('Registration flow', () => {
       cy.intercept('GET', googlePrivacyPolicyUrl, (req) => {
         req.reply(200);
       });
-      cy.visit('/signin');
+      cy.visit('/signin?useIdapi=true');
       cy.contains('This site is protected by reCAPTCHA and the Google')
         .contains('privacy policy')
         .click();
@@ -36,7 +36,7 @@ describe('Registration flow', () => {
       cy.intercept('GET', guardianTermsOfServiceUrl, (req) => {
         req.reply(200);
       });
-      cy.visit('/signin');
+      cy.visit('/signin?useIdapi=true');
       cy.contains('terms & conditions').click();
       cy.url().should('eq', guardianTermsOfServiceUrl);
     });
@@ -49,7 +49,7 @@ describe('Registration flow', () => {
       cy.intercept('GET', guardianPrivacyPolicyUrl, (req) => {
         req.reply(200);
       });
-      cy.visit('/signin');
+      cy.visit('/signin?useIdapi=true');
       cy.contains('For information about how we use your data')
         .contains('privacy policy')
         .click();
@@ -64,7 +64,7 @@ describe('Registration flow', () => {
       cy.intercept('GET', guardianJobsTermsOfServiceUrl, (req) => {
         req.reply(200);
       });
-      cy.visit('/signin?clientId=jobs');
+      cy.visit('/signin?clientId=jobs&useIdapi=true');
       cy.contains("Guardian's Jobs terms & conditions").click();
       cy.url().should('eq', guardianJobsTermsOfServiceUrl);
     });
@@ -77,7 +77,7 @@ describe('Registration flow', () => {
       cy.intercept('GET', guardianJobsPrivacyPolicyUrl, (req) => {
         req.reply(200);
       });
-      cy.visit('/signin?clientId=jobs');
+      cy.visit('/signin?clientId=jobs&useIdapi=true');
       cy.contains('For information about how we use your data')
         .contains("Guardian Jobs' privacy policy")
         .click();
@@ -85,12 +85,12 @@ describe('Registration flow', () => {
     });
   });
   it('persists the clientId when navigating away', () => {
-    cy.visit('/register?clientId=jobs');
+    cy.visit('/register?clientId=jobs&useIdapi=true');
     cy.contains('Sign in').click();
     cy.url().should('contain', 'clientId=jobs');
   });
   it('does not proceed when no email provided', () => {
-    cy.visit('/register');
+    cy.visit('/register?useIdapi=true');
     cy.get('[data-cy="register-button"]').click();
     // check that form isn't submitted
     cy.url().should('not.contain', 'returnUrl');
@@ -98,7 +98,7 @@ describe('Registration flow', () => {
   });
 
   it('does not proceed when invalid email provided', () => {
-    cy.visit('/register');
+    cy.visit('/register?useIdapi=true');
     const invalidEmail = 'invalid.email.com';
     cy.get('input[name=email]').type(invalidEmail);
     cy.get('[data-cy="register-button"]').click();
@@ -116,14 +116,7 @@ describe('Registration flow', () => {
     const unregisteredEmail = randomMailosaurEmail();
 
     cy.visit(
-      '/register?returnUrl=' +
-        encodedReturnUrl +
-        '&ref=' +
-        encodedRef +
-        '&refViewId=' +
-        refViewId +
-        '&clientId=' +
-        clientId,
+      `/register?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&useIdapi=true`,
     );
     const timeRequestWasMade = new Date();
     cy.get('input[name=email]').type(unregisteredEmail);
@@ -153,7 +146,7 @@ describe('Registration flow', () => {
     cy.createTestUser({
       isUserEmailValidated: true,
     })?.then(({ emailAddress }) => {
-      cy.visit('/register');
+      cy.visit('/register?useIdapi=true');
       const timeRequestWasMade = new Date();
 
       cy.get('input[name=email]').type(emailAddress);
@@ -190,7 +183,7 @@ describe('Registration flow', () => {
     cy.createTestUser({
       isUserEmailValidated: true,
     })?.then(({ emailAddress }) => {
-      cy.visit('/register');
+      cy.visit('/register?useIdapi=true');
       const timeRequestWasMade = new Date();
 
       cy.get('input[name=email]').type(emailAddress);
@@ -230,7 +223,7 @@ describe('Registration flow', () => {
       isUserEmailValidated: false,
       isGuestUser: true,
     })?.then(({ emailAddress }) => {
-      cy.visit('/register');
+      cy.visit('/register?useIdapi=true');
       const timeRequestWasMade = new Date();
 
       cy.get('input[name=email]').type(emailAddress);
@@ -270,7 +263,7 @@ describe('Registration flow', () => {
   it('shows reCAPTCHA errors when the user tries to register offline and allows registration when back online', () => {
     const unregisteredEmail = randomMailosaurEmail();
 
-    cy.visit('/register');
+    cy.visit('/register?useIdapi=true');
 
     // Simulate going offline by failing to reCAPTCHA POST request.
     cy.intercept({

@@ -133,7 +133,7 @@ describe('Change password in Okta', () => {
       mockPasswordResetInvalidStateTokenFailure();
       mockValidateRecoveryTokenFailure();
 
-      cy.visit(`/reset-password/token?useOkta=true`);
+      cy.visit('/reset-password/token');
 
       cy.get('input[name="password"]').type(randomPassword());
       cy.get('button[type="submit"]').click();
@@ -149,7 +149,7 @@ describe('Change password in Okta', () => {
       mockPasswordResetInvalidStateTokenFailure();
       mockValidateRecoveryTokenSuccess();
 
-      cy.visit(`/reset-password/token?useOkta=true`);
+      cy.visit('/reset-password/token');
 
       cy.get('input[name="password"]').type(randomPassword());
       cy.get('button[type="submit"]').click();
@@ -167,7 +167,7 @@ describe('Change password in Okta', () => {
       mockValidateRecoveryTokenSuccess();
       mockValidateRecoveryTokenFailure();
 
-      cy.visit(`/reset-password/token?useOkta=true`);
+      cy.visit('/reset-password/token');
       cy.clearCookie('GU_GATEWAY_STATE');
 
       cy.get('input[name="password"]').type(randomPassword());
@@ -178,7 +178,7 @@ describe('Change password in Okta', () => {
 
     it('shows the link expired page if an unexpected error occurred when validating the recovery token', () => {
       cy.mockNext(500);
-      cy.visit(`/reset-password/token?useOkta=true`);
+      cy.visit('/reset-password/token');
       cy.contains('Link expired');
     });
 
@@ -189,7 +189,7 @@ describe('Change password in Okta', () => {
       cy.mockNext(503);
       mockValidateRecoveryTokenSuccess();
 
-      cy.visit(`/reset-password/token?useOkta=true`);
+      cy.visit('/reset-password/token');
 
       cy.get('input[name="password"]').type(randomPassword());
       cy.get('button[type="submit"]').click();
@@ -210,7 +210,7 @@ describe('Change password in Okta', () => {
       );
       mockValidateRecoveryTokenSuccess();
 
-      cy.visit(`/reset-password/token?useOkta=true`);
+      cy.visit('/reset-password/token');
 
       // even though this test is for a short password, we enter a valid password here to bypass
       // client-side password complexity checks in order to test the server-side response
@@ -232,7 +232,7 @@ describe('Change password in Okta', () => {
       );
       mockValidateRecoveryTokenSuccess();
 
-      cy.visit(`/reset-password/token?useOkta=true`);
+      cy.visit('/reset-password/token');
 
       cy.get('input[name="password"]').type(randomPassword());
       cy.get('button[type="submit"]').click();
@@ -250,7 +250,7 @@ describe('Change password in Okta', () => {
       mockPasswordResetFailure('Password cannot be your current password');
       mockValidateRecoveryTokenSuccess();
 
-      cy.visit(`/reset-password/token?useOkta=true`);
+      cy.visit('/reset-password/token');
 
       cy.get('input[name="password"]').type(randomPassword());
       cy.get('button[type="submit"]').click();
@@ -270,7 +270,7 @@ describe('Change password in Okta', () => {
       );
       mockValidateRecoveryTokenSuccess();
 
-      cy.visit(`/reset-password/token?useOkta=true`);
+      cy.visit('/reset-password/token');
 
       cy.get('input[name="password"]').type(randomPassword());
       cy.get('button[type="submit"]').click();
@@ -298,7 +298,7 @@ describe('Change password in Okta', () => {
         },
       ).as('authRedirect');
 
-      cy.visit(`/reset-password/token?useOkta=true`);
+      cy.visit('/reset-password/token');
 
       cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
       cy.wait('@breachCheck');
