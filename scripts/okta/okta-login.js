@@ -67,9 +67,6 @@
   if (clientId) {
     params.set('appClientId', clientId);
   }
-  // set the useOkta flag
-  params.set('useOkta', 'true');
-
   // check the Okta hosted login page query params for an activation toke
   var activationToken = searchParams.get('activation_token');
   if (activationToken) {
