@@ -43,6 +43,7 @@ export const Registration = ({
       errorContext={recaptchaErrorContext}
       showErrorReportUrl={!!recaptchaErrorContext}
       tabs={tabs}
+      errorSmallMarginBottom={!!recaptchaErrorMessage}
     >
       <MainForm
         formAction={buildUrlWithQueryParams('/register', {}, queryParams)}
@@ -54,6 +55,7 @@ export const Registration = ({
         setRecaptchaErrorContext={setRecaptchaErrorContext}
         hasGuardianTerms={!isJobs}
         hasJobsTerms={isJobs}
+        largeFormMarginTop={!recaptchaErrorMessage}
       >
         <EmailInput defaultValue={email} />
       </MainForm>

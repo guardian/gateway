@@ -27,6 +27,7 @@ interface MainLayoutProps {
   showErrorReportUrl?: boolean;
   useJobsHeader?: boolean;
   tabs?: TabType[];
+  errorSmallMarginBottom?: boolean;
 }
 
 const mainStyles = css`
@@ -96,8 +97,9 @@ const pageTitleStyles = css`
   color: ${text.primary};
 `;
 
-const summaryStyles = css`
-  margin: ${space[6]}px 0;
+const summaryStyles = (smallMarginBottom = false) => css`
+  margin-top: ${space[6]}px;
+  margin-bottom: ${smallMarginBottom ? space[4] : space[6]}px;
 `;
 
 const bodyStyles = (hasTitleOrSummary: boolean) => css`
@@ -168,6 +170,7 @@ export const MainLayout = ({
   showErrorReportUrl = false,
   useJobsHeader = false,
   tabs,
+  errorSmallMarginBottom,
 }: PropsWithChildren<MainLayoutProps>) => {
   const clientState = useClientState();
   const { globalMessage: { error, success } = {} } = clientState;
@@ -194,7 +197,7 @@ export const MainLayout = ({
         <section css={gridItem(gridSpanDefinition)}>
           {errorMessage && (
             <ErrorSummary
-              cssOverrides={summaryStyles}
+              cssOverrides={summaryStyles(errorSmallMarginBottom)}
               message={errorMessage}
               context={errorContext}
               errorReportUrl={
@@ -204,7 +207,7 @@ export const MainLayout = ({
           )}
           {successMessage && !errorMessage && (
             <SuccessSummary
-              cssOverrides={summaryStyles}
+              cssOverrides={summaryStyles(errorSmallMarginBottom)}
               message={successMessage}
             />
           )}

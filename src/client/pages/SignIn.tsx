@@ -114,18 +114,21 @@ export const SignIn = ({
     queryParams,
   });
 
+  const errorOverride = recaptchaErrorMessage
+    ? recaptchaErrorMessage
+    : pageLevelError;
+
+  const errorContext = recaptchaErrorContext
+    ? recaptchaErrorContext
+    : getErrorContext(pageLevelError);
+
   return (
     <MainLayout
-      errorOverride={
-        recaptchaErrorMessage ? recaptchaErrorMessage : pageLevelError
-      }
-      errorContext={
-        recaptchaErrorContext
-          ? recaptchaErrorContext
-          : getErrorContext(pageLevelError)
-      }
+      errorOverride={errorOverride}
+      errorContext={errorContext}
       showErrorReportUrl={!!recaptchaErrorContext}
       tabs={tabs}
+      errorSmallMarginBottom={!!errorOverride}
     >
       <MainForm
         formAction={buildUrlWithQueryParams(
@@ -141,6 +144,7 @@ export const SignIn = ({
         setRecaptchaErrorContext={setRecaptchaErrorContext}
         hasGuardianTerms={!isJobs}
         hasJobsTerms={isJobs}
+        largeFormMarginTop={!errorOverride}
       >
         <EmailInput defaultValue={email} />
         <div css={passwordInput}>
