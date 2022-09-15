@@ -46,10 +46,11 @@ export interface MainFormProps {
   onInvalid?: React.FormEventHandler<HTMLFormElement> | undefined;
   formTrackingName?: string;
   disableOnSubmit?: boolean;
+  largeFormMarginTop?: boolean;
 }
 
-const formStyles = css`
-  margin-top: 16px;
+const formStyles = (largeFormMarginTop = false) => css`
+  margin-top: ${largeFormMarginTop ? space[6] : space[4]}px;
 `;
 
 const inputStyles = (hasTerms = false) => css`
@@ -82,6 +83,7 @@ export const MainForm = ({
   onInvalid,
   formTrackingName,
   disableOnSubmit = false,
+  largeFormMarginTop = false,
 }: PropsWithChildren<MainFormProps>) => {
   const recaptchaEnabled = !!recaptchaSiteKey;
   const hasTerms = recaptchaEnabled || hasGuardianTerms;
@@ -208,7 +210,7 @@ export const MainForm = ({
 
   return (
     <form
-      css={formStyles}
+      css={formStyles(largeFormMarginTop)}
       method="post"
       action={formAction}
       onSubmit={handleSubmit}

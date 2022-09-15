@@ -212,3 +212,33 @@ export const Nav = ({ tabs }: Props) => (
     </Container>
   </nav>
 );
+
+export const generateSignInRegisterTabs = ({
+  isActive,
+  isReauthenticate = false,
+  queryParams,
+}: {
+  queryParams: QueryParams;
+  isActive: 'signin' | 'register';
+  isReauthenticate?: boolean;
+}): TabType[] => {
+  const signInTab: TabType = {
+    displayText: 'Sign in',
+    queryParams,
+    linkTo: '/signin',
+    isActive: isActive === 'signin',
+  };
+
+  if (isReauthenticate) {
+    return [signInTab];
+  }
+
+  const registerTab: TabType = {
+    displayText: 'Register',
+    queryParams,
+    linkTo: '/register',
+    isActive: isActive === 'register',
+  };
+
+  return [signInTab, registerTab];
+};

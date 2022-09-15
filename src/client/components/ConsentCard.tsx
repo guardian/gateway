@@ -120,7 +120,7 @@ const checkBoxBackgroundColorBugFix = css`
   z-index: 0 !important;
 `;
 
-export const iconStyles = css`
+const iconStyles = css`
   width: 23px;
   height: 23px;
   border-radius: 100%;

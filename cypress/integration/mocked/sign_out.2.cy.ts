@@ -26,7 +26,7 @@ describe('Sign out flow', () => {
         status: 'ok',
         ...authCookieResponse,
       });
-      cy.get('[data-cy=sign-in-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       cy.url().should('eq', returnUrl);
 
       cy.getCookie('SC_GU_U').should('exist');

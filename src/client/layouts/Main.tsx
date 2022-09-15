@@ -15,14 +15,19 @@ import { gridRow, gridItem, SpanDefinition } from '@/client/styles/Grid';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import useClientState from '@/client/lib/hooks/useClientState';
-import { JobsLogo } from '../components/JobsLogo';
+import { JobsLogo } from '@/client/components/JobsLogo';
+import { Nav, TabType } from '@/client/components/Nav';
+import locations from '@/shared/lib/locations';
 
 interface MainLayoutProps {
   pageHeader?: string;
   successOverride?: string;
   errorOverride?: string;
   errorContext?: React.ReactNode;
+  showErrorReportUrl?: boolean;
   useJobsHeader?: boolean;
+  tabs?: TabType[];
+  errorSmallMarginBottom?: boolean;
 }
 
 const mainStyles = css`
@@ -92,8 +97,9 @@ const pageTitleStyles = css`
   color: ${text.primary};
 `;
 
-const summaryStyles = css`
-  margin: ${space[6]}px 0;
+const summaryStyles = (smallMarginBottom = false) => css`
+  margin-top: ${space[6]}px;
+  margin-bottom: ${smallMarginBottom ? space[4] : space[6]}px;
 `;
 
 const bodyStyles = (hasTitleOrSummary: boolean) => css`
@@ -161,7 +167,10 @@ export const MainLayout = ({
   successOverride,
   errorOverride,
   errorContext,
+  showErrorReportUrl = false,
   useJobsHeader = false,
+  tabs,
+  errorSmallMarginBottom,
 }: PropsWithChildren<MainLayoutProps>) => {
   const clientState = useClientState();
   const { globalMessage: { error, success } = {} } = clientState;
@@ -183,18 +192,22 @@ export const MainLayout = ({
       ) : (
         <Header />
       )}
+      {tabs && <Nav tabs={tabs} />}
       <main css={[mainStyles, gridRow]}>
         <section css={gridItem(gridSpanDefinition)}>
           {errorMessage && (
             <ErrorSummary
-              cssOverrides={summaryStyles}
+              cssOverrides={summaryStyles(errorSmallMarginBottom)}
               message={errorMessage}
               context={errorContext}
+              errorReportUrl={
+                showErrorReportUrl ? locations.REPORT_ISSUE : undefined
+              }
             />
           )}
           {successMessage && !errorMessage && (
             <SuccessSummary
-              cssOverrides={summaryStyles}
+              cssOverrides={summaryStyles(errorSmallMarginBottom)}
               message={successMessage}
             />
           )}

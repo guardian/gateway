@@ -13,10 +13,6 @@ export const heading = css`
   ${headline.xxxsmall({ fontWeight: 'bold' })};
 `;
 
-export const headingMarginSpace6 = css`
-  margin-top: ${space[6]}px;
-`;
-
 export const text = css`
   margin: 0;
   ${textSans.medium()}
@@ -38,11 +34,6 @@ const greyBorder = `1px solid ${neutral[86]}`;
 export const greyBorderTop = css`
   border-top: ${greyBorder};
   padding-top: ${space[1]}px;
-`;
-
-export const greyBorderBottom = css`
-  border-bottom: ${greyBorder};
-  padding-bottom: ${space[1]}px;
 `;
 
 export const greyBorderSides = css`

@@ -16,7 +16,7 @@ describe('Registration flow', () => {
       cy.visit('/register?useIdapi=true');
       cy.get('input[name="email"]').type('Invalid email');
       cy.mockNext(500);
-      cy.get('[data-cy=register-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       injectAndCheckAxe();
     });
   });
@@ -38,7 +38,7 @@ describe('Registration flow', () => {
           },
         ],
       });
-      cy.get('[data-cy=register-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       cy.contains('There was a problem registering, please try again.');
     });
 
@@ -51,7 +51,7 @@ describe('Registration flow', () => {
         userType: 'new',
       });
       cy.mockNext(400, invalidEmailAddress);
-      cy.get('[data-cy=register-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       cy.contains('Please enter a valid email address.');
     });
 
@@ -63,7 +63,7 @@ describe('Registration flow', () => {
       cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
         statusCode: 500,
       });
-      cy.get('[data-cy=register-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       cy.contains('Google reCAPTCHA verification failed. Please try again.');
     });
 
@@ -83,9 +83,9 @@ describe('Registration flow', () => {
       cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
         statusCode: 500,
       });
-      cy.get('[data-cy=register-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       cy.contains('Google reCAPTCHA verification failed. Please try again.');
-      cy.get('[data-cy=register-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       cy.contains('Google reCAPTCHA verification failed.');
       cy.contains('If the problem persists please try the following:');
       cy.contains('Report this error').click();
@@ -107,7 +107,7 @@ describe('Registration flow', () => {
         status: 'success',
         errors: [],
       });
-      cy.get('[data-cy=register-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       cy.contains('Check your email inbox');
       cy.contains('example@example.com');
     });
@@ -121,7 +121,7 @@ describe('Registration flow', () => {
         userType: 'current',
       });
       cy.mockNext(200);
-      cy.get('[data-cy=register-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       cy.contains('Check your email inbox');
       cy.contains('example@example.com');
     });
@@ -135,7 +135,7 @@ describe('Registration flow', () => {
         userType: 'guest',
       });
       cy.mockNext(200);
-      cy.get('[data-cy=register-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       cy.contains('Check your email inbox');
       cy.contains('example@example.com');
     });
@@ -184,7 +184,7 @@ describe('Registration flow', () => {
       );
 
       cy.get('input[name=email]').type('example@example.com');
-      cy.get('[data-cy="register-button"]').click();
+      cy.get('[data-cy="main-form-submit-button"]').click();
 
       cy.contains('There was a problem registering, please try again.');
     });

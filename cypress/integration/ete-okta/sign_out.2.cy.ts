@@ -22,7 +22,7 @@ describe('Sign out flow', () => {
         cy.visit(visitUrl);
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
-        cy.get('[data-cy="sign-in-button"]').click();
+        cy.get('[data-cy="main-form-submit-button"]').click();
         // check sign in has worked first
         cy.url().should('include', `/consents/data`);
         // check session cookie is set

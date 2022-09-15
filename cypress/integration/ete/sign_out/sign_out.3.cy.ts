@@ -33,7 +33,7 @@ describe('Sign out flow', () => {
           cy.setCookie(cookie, `the_${cookie}_cookie`);
         });
 
-        cy.get('[data-cy="sign-in-button"]').click();
+        cy.get('[data-cy="main-form-submit-button"]').click();
 
         // check sign in has worked first
         cy.url().should('include', `/consents/data`);

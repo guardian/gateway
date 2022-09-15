@@ -26,7 +26,7 @@ describe('Registration flow', () => {
 
       const timeRequestWasMade = new Date();
       cy.get('input[name=email]').type(unregisteredEmail);
-      cy.get('[data-cy="register-button"]').click();
+      cy.get('[data-cy="main-form-submit-button"]').click();
 
       cy.contains('Check your email inbox');
       cy.contains(unregisteredEmail);
@@ -73,7 +73,7 @@ describe('Registration flow', () => {
 
       const timeRequestWasMade = new Date();
       cy.get('input[name=email]').type(unregisteredEmail);
-      cy.get('[data-cy="register-button"]').click();
+      cy.get('[data-cy="main-form-submit-button"]').click();
 
       cy.contains('Check your email inbox');
       cy.contains(unregisteredEmail);
@@ -107,7 +107,7 @@ describe('Registration flow', () => {
 
       const timeRequestWasMade = new Date();
       cy.get('input[name=email]').type(unregisteredEmail);
-      cy.get('[data-cy="register-button"]').click();
+      cy.get('[data-cy="main-form-submit-button"]').click();
 
       cy.contains('Check your email inbox');
       cy.contains(unregisteredEmail);
@@ -162,7 +162,7 @@ describe('Registration flow', () => {
 
       const timeRequestWasMade = new Date();
       cy.get('input[name=email]').type(unregisteredEmail);
-      cy.get('[data-cy="register-button"]').click();
+      cy.get('[data-cy="main-form-submit-button"]').click();
 
       cy.contains('Check your email inbox');
       cy.contains(unregisteredEmail);
@@ -217,7 +217,7 @@ describe('Registration flow', () => {
           const timeRequestWasMade = new Date();
 
           cy.get('input[name=email]').type(emailAddress);
-          cy.get('[data-cy="register-button"]').click();
+          cy.get('[data-cy="main-form-submit-button"]').click();
 
           cy.contains('Check your email inbox');
           cy.contains(emailAddress);
@@ -257,7 +257,7 @@ describe('Registration flow', () => {
             const timeRequestWasMade = new Date();
 
             cy.get('input[name=email]').type(emailAddress);
-            cy.get('[data-cy="register-button"]').click();
+            cy.get('[data-cy="main-form-submit-button"]').click();
 
             cy.contains('Check your email inbox');
             cy.contains(emailAddress);
@@ -295,7 +295,7 @@ describe('Registration flow', () => {
           const timeRequestWasMade = new Date();
 
           cy.get('input[name=email]').type(emailAddress);
-          cy.get('[data-cy="register-button"]').click();
+          cy.get('[data-cy="main-form-submit-button"]').click();
 
           cy.contains('Check your email inbox');
           cy.contains(emailAddress);
@@ -335,7 +335,7 @@ describe('Registration flow', () => {
             const timeRequestWasMade = new Date();
 
             cy.get('input[name=email]').type(emailAddress);
-            cy.get('[data-cy="register-button"]').click();
+            cy.get('[data-cy="main-form-submit-button"]').click();
 
             cy.contains('Check your email inbox');
             cy.contains(emailAddress);
@@ -377,7 +377,7 @@ describe('Registration flow', () => {
             const timeRequestWasMade = new Date();
 
             cy.get('input[name=email]').type(emailAddress);
-            cy.get('[data-cy="register-button"]').click();
+            cy.get('[data-cy="main-form-submit-button"]').click();
 
             cy.contains('Check your email inbox');
             cy.contains(emailAddress);
@@ -418,7 +418,7 @@ describe('Registration flow', () => {
             cy.visit('/register');
 
             cy.get('input[name=email]').type(emailAddress);
-            cy.get('[data-cy="register-button"]').click();
+            cy.get('[data-cy="main-form-submit-button"]').click();
 
             cy.contains('There was a problem registering, please try again.');
           });
@@ -440,7 +440,7 @@ describe('Registration flow', () => {
             let timeRequestWasMade = new Date();
 
             cy.get('input[name=email]').type(emailAddress);
-            cy.get('[data-cy="register-button"]').click();
+            cy.get('[data-cy="main-form-submit-button"]').click();
 
             cy.contains('Check your email inbox');
             cy.contains(emailAddress);
@@ -492,7 +492,7 @@ describe('Registration flow', () => {
               let timeRequestWasMade = new Date();
 
               cy.get('input[name=email]').type(emailAddress);
-              cy.get('[data-cy="register-button"]').click();
+              cy.get('[data-cy="main-form-submit-button"]').click();
 
               cy.contains('Check your email inbox');
               cy.contains(emailAddress);
@@ -539,7 +539,7 @@ describe('Registration flow', () => {
             let timeRequestWasMade = new Date();
 
             cy.get('input[name=email]').type(emailAddress);
-            cy.get('[data-cy="register-button"]').click();
+            cy.get('[data-cy="main-form-submit-button"]').click();
 
             cy.contains('Check your email inbox');
             cy.contains(emailAddress);
@@ -588,7 +588,7 @@ describe('Registration flow', () => {
               let timeRequestWasMade = new Date();
 
               cy.get('input[name=email]').type(emailAddress);
-              cy.get('[data-cy="register-button"]').click();
+              cy.get('[data-cy="main-form-submit-button"]').click();
 
               cy.contains('Check your email inbox');
               cy.contains(emailAddress);
@@ -639,7 +639,7 @@ describe('Registration flow', () => {
               let timeRequestWasMade = new Date();
 
               cy.get('input[name=email]').type(emailAddress);
-              cy.get('[data-cy="register-button"]').click();
+              cy.get('[data-cy="main-form-submit-button"]').click();
 
               cy.contains('Check your email inbox');
               cy.contains(emailAddress);

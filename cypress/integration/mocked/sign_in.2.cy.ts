@@ -24,7 +24,7 @@ describe('Sign in flow', () => {
       cy.get('input[name="email"]').type('Invalid email');
       cy.get('input[name="password"]').type('Invalid password');
       cy.mockNext(500);
-      cy.get('[data-cy=sign-in-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       injectAndCheckAxe();
     });
   });
@@ -45,7 +45,7 @@ describe('Sign in flow', () => {
           },
         ],
       });
-      cy.get('[data-cy=sign-in-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       cy.contains("Email and password don't match");
       cy.get('input[name="email"]').should('have.value', 'example@example.com');
     });
@@ -64,7 +64,7 @@ describe('Sign in flow', () => {
           },
         ],
       });
-      cy.get('[data-cy=sign-in-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       cy.contains('There was a problem signing in, please try again');
     });
 
@@ -86,7 +86,7 @@ describe('Sign in flow', () => {
           expiresAt: new Date(Date.now() + 1800000 /* 30min */).toISOString(),
         },
       });
-      cy.get('[data-cy=sign-in-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       cy.url().should('eq', returnUrl);
     });
 
@@ -106,7 +106,7 @@ describe('Sign in flow', () => {
           expiresAt: new Date(Date.now() + 1800000 /* 30min */).toISOString(),
         },
       });
-      cy.get('[data-cy=sign-in-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       cy.url().should('include', defaultReturnUrl);
     });
 
@@ -128,7 +128,7 @@ describe('Sign in flow', () => {
       cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
         statusCode: 500,
       });
-      cy.get('[data-cy=sign-in-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       cy.contains('Google reCAPTCHA verification failed. Please try again.');
     });
 
@@ -149,9 +149,9 @@ describe('Sign in flow', () => {
       cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
         statusCode: 500,
       });
-      cy.get('[data-cy=sign-in-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       cy.contains('Google reCAPTCHA verification failed. Please try again.');
-      cy.get('[data-cy=sign-in-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       cy.contains('Google reCAPTCHA verification failed.');
       cy.contains('If the problem persists please try the following:');
       cy.contains('Report this error').click();
@@ -203,7 +203,7 @@ describe('Sign in flow', () => {
       );
       cy.get('input[name="email"]').type('example@example.com');
       cy.get('input[name="password"]').type('password');
-      cy.get('[data-cy=sign-in-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       cy.contains('There was a problem signing in, please try again');
     });
   });
@@ -240,7 +240,7 @@ describe('Sign in flow', () => {
           expiresAt: new Date(Date.now() + 1800000 /* 30min */).toISOString(),
         },
       });
-      cy.get('[data-cy=sign-in-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
     };
 
     it('if all conditions met', () => {
