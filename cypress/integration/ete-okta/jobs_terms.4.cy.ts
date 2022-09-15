@@ -33,7 +33,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
 
-        cy.get('[data-cy="sign-in-button"]').click();
+        cy.get('[data-cy="main-form-submit-button"]').click();
 
         cy.url().should('include', '/signin/success');
 
@@ -85,7 +85,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
 
-        cy.get('[data-cy="sign-in-button"]').click();
+        cy.get('[data-cy="main-form-submit-button"]').click();
 
         cy.url().should('include', '/signin/success');
 
@@ -129,7 +129,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
 
-        cy.get('[data-cy="sign-in-button"]').click();
+        cy.get('[data-cy="main-form-submit-button"]').click();
 
         cy.url().should('include', '/signin/success');
 

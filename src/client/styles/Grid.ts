@@ -86,7 +86,7 @@ const maxWidth = (
 ): number =>
   columnWidth * numColumns + (numColumns - 1) * gapSize + 2 * paddingSize;
 
-export enum MAX_WIDTH {
+enum MAX_WIDTH {
   TABLET = maxWidth(COLUMNS.TABLET, 40, space[5], space[5]),
   DESKTOP = maxWidth(COLUMNS.DESKTOP, 60, space[5], space[5]),
   LEFT_COL = maxWidth(COLUMNS.LEFT_COL, 60, space[5], space[5]),
@@ -241,13 +241,6 @@ export const gridItemColumnConsents: SpanDefinition = {
 export const passwordFormSpanDef: SpanDefinition = {
   TABLET: { start: 1, span: 8 },
   DESKTOP: { start: 3, span: 6 },
-  LEFT_COL: { start: 3, span: 6 },
-  WIDE: { start: 4, span: 6 },
-};
-
-export const gridItemSignInAndRegistration: SpanDefinition = {
-  TABLET: { start: 1, span: 8 },
-  DESKTOP: { start: 2, span: 6 },
   LEFT_COL: { start: 3, span: 6 },
   WIDE: { start: 4, span: 6 },
 };

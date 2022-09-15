@@ -55,7 +55,7 @@ describe('Sign in flow', () => {
         errorId: 'errorId',
         errorCauses: [],
       });
-      cy.get('[data-cy=sign-in-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       cy.contains("Email and password don't match");
     });
 
@@ -70,7 +70,7 @@ describe('Sign in flow', () => {
         errorId: 'errorId',
         errorCauses: [],
       });
-      cy.get('[data-cy=sign-in-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       cy.contains('There was a problem signing in, please try again.');
     });
 
@@ -85,7 +85,7 @@ describe('Sign in flow', () => {
         errorId: 'errorId',
         errorCauses: [],
       });
-      cy.get('[data-cy=sign-in-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       cy.contains('There was a problem signing in, please try again.');
     });
 
@@ -133,7 +133,7 @@ describe('Sign in flow', () => {
         },
       ).as('authRedirect');
 
-      cy.get('[data-cy=sign-in-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       cy.wait('@authRedirect').then(() => {
         cy.url().should('include', 'https://www.theguardian.com/about');
       });
@@ -175,7 +175,7 @@ describe('Sign in flow', () => {
         },
       });
 
-      cy.get('[data-cy=sign-in-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
 
       cy.url().should('include', returnUrl);
 
@@ -220,7 +220,7 @@ describe('Sign in flow', () => {
         },
       });
 
-      cy.get('[data-cy=sign-in-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
 
       cy.contains('There was a problem signing in, please try again.');
     });
@@ -269,7 +269,7 @@ describe('Sign in flow', () => {
         },
       ).as('authRedirect');
 
-      cy.get('[data-cy=sign-in-button]').click();
+      cy.get('[data-cy=main-form-submit-button]').click();
       cy.wait('@authRedirect').then(() => {
         cy.url().should('include', 'https://m.code.dev-theguardian.com/');
       });

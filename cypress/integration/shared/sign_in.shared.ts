@@ -182,7 +182,7 @@ export const showsAMessageWhenCredentialsAreInvalid = (isIdapi = false) => {
       cy.visit(visitUrl);
       cy.get('input[name=email]').type('invalid@doesnotexist.com');
       cy.get('input[name=password]').type('password');
-      cy.get('[data-cy="sign-in-button"]').click();
+      cy.get('[data-cy="main-form-submit-button"]').click();
       cy.contains("Email and password don't match");
     },
   ] as const;
@@ -204,7 +204,7 @@ export const correctlySignsInAnExistingUser = (isIdapi = false) => {
         cy.visit(visitUrl);
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
-        cy.get('[data-cy="sign-in-button"]').click();
+        cy.get('[data-cy="main-form-submit-button"]').click();
         cy.url().should('include', 'https://m.code.dev-theguardian.com/');
       });
     },
@@ -230,7 +230,7 @@ export const navigatesToRegistration = (isIdapi = false) => {
       const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
       cy.visit(visitUrl);
       cy.contains('Register').click();
-      cy.get('[data-cy="register-button"]').should('be.visible');
+      cy.get('[data-cy="main-form-submit-button"]').should('be.visible');
     },
   ] as const;
 };
@@ -253,7 +253,7 @@ export const respectsTheReturnUrlQueryParam = (isIdapi = false) => {
         cy.visit(visitUrl);
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
-        cy.get('[data-cy="sign-in-button"]').click();
+        cy.get('[data-cy="main-form-submit-button"]').click();
         cy.url().should('eq', returnUrl);
       });
     },
@@ -356,7 +356,7 @@ export const hitsAccessTokenRateLimitAndRecoversTokenAfterTimeout = (
         cy.visit(visitUrl);
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
-        cy.get('[data-cy="sign-in-button"]').click();
+        cy.get('[data-cy="main-form-submit-button"]').click();
         cy.url().should('include', 'https://m.code.dev-theguardian.com/');
 
         // We visit reauthenticate here because if we visit /signin or
@@ -432,13 +432,13 @@ export const showsRecaptchaErrorsWhenTheUserTriesToSignInOfflineAndAllowsSignInW
 
           cy.get('input[name=email]').type(emailAddress);
           cy.get('input[name=password]').type(finalPassword);
-          cy.get('[data-cy="sign-in-button"]').click();
+          cy.get('[data-cy="main-form-submit-button"]').click();
           cy.contains(
             'Google reCAPTCHA verification failed. Please try again.',
           );
 
           // On second click, an expanded error is shown.
-          cy.get('[data-cy="sign-in-button"]').click();
+          cy.get('[data-cy="main-form-submit-button"]').click();
 
           cy.contains('Google reCAPTCHA verification failed.');
           cy.contains('Report this error').should(
@@ -448,7 +448,7 @@ export const showsRecaptchaErrorsWhenTheUserTriesToSignInOfflineAndAllowsSignInW
           );
           cy.contains('If the problem persists please try the following:');
 
-          cy.get('[data-cy="sign-in-button"]').click();
+          cy.get('[data-cy="main-form-submit-button"]').click();
 
           cy.contains(
             'Google reCAPTCHA verification failed. Please try again.',
@@ -478,7 +478,7 @@ export const redirectsToOptInPrompt = (isIdapi = false) => {
         cy.visit(visitUrl);
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
-        cy.get('[data-cy="sign-in-button"]').click();
+        cy.get('[data-cy="main-form-submit-button"]').click();
         cy.url().should(
           'include',
           `/signin/success?returnUrl=${encodeURIComponent(

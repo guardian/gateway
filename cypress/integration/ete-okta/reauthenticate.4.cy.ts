@@ -20,14 +20,14 @@ describe('Reauthenticate flow, Okta enabled', () => {
         cy.visit('/signin');
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
-        cy.get('[data-cy="sign-in-button"]').click();
+        cy.get('[data-cy="main-form-submit-button"]').click();
         cy.url().should('include', 'https://m.code.dev-theguardian.com/');
 
         // Then, try to reauthenticate
         cy.visit('/reauthenticate');
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
-        cy.get('[data-cy="sign-in-button"]').click();
+        cy.get('[data-cy="main-form-submit-button"]').click();
         cy.url().should('include', 'https://m.code.dev-theguardian.com/');
 
         // Get the current session data
@@ -56,7 +56,7 @@ describe('Reauthenticate flow, Okta enabled', () => {
         cy.visit('/signin');
         cy.get('input[name=email]').type(emailAddressA);
         cy.get('input[name=password]').type(finalPasswordA);
-        cy.get('[data-cy="sign-in-button"]').click();
+        cy.get('[data-cy="main-form-submit-button"]').click();
         cy.url().should('include', 'https://m.code.dev-theguardian.com/');
 
         // Create User B
@@ -66,7 +66,7 @@ describe('Reauthenticate flow, Okta enabled', () => {
             cy.visit('/reauthenticate');
             cy.get('input[name=email]').type(emailAddressB);
             cy.get('input[name=password]').type(finalPasswordB);
-            cy.get('[data-cy="sign-in-button"]').click();
+            cy.get('[data-cy="main-form-submit-button"]').click();
             cy.url().should('include', 'https://m.code.dev-theguardian.com/');
 
             // Get the current session data
