@@ -32,7 +32,7 @@ const listBullets = css`
   }
 `;
 
-export const text = css`
+const text = css`
   margin: 0;
   ${textSans.medium()}
 `;

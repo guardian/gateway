@@ -1,13 +1,5 @@
 import { css } from '@emotion/react';
-import { from, space } from '@guardian/source-foundations';
-
-export const button = css`
-  width: 100%;
-
-  ${from.mobileMedium} {
-    width: max-content;
-  }
-`;
+import { border, from, space } from '@guardian/source-foundations';
 
 export const topMargin = css`
   margin-top: ${space[2]}px;
@@ -32,4 +24,20 @@ export const disableAutofillBackground = css`
 
 export const noBorderRadius = css`
   border-radius: 0;
+`;
+
+export const socialButtonDivider = css`
+  /* Undoes the negative margin */
+  margin-bottom: 0;
+  margin-top: ${space[4]}px;
+  ${from.mobileMedium} {
+    margin-top: ${space[6]}px;
+  }
+  :before,
+  :after {
+    content: '';
+    flex: 1 1;
+    border-bottom: 1px solid ${border.secondary};
+    margin: 8px;
+  }
 `;
