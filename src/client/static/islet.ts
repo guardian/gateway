@@ -1,6 +1,6 @@
-/* eslint-disable no-console */
 import { createElement } from 'react';
 import { hydrate } from 'react-dom';
+import { log } from '@guardian/libs';
 
 /**
  * use `whenIdle` to execute the given callback when the browser is 'idle'
@@ -73,10 +73,10 @@ const performImport = (
   )
     .then((module) => {
       if (type === 'component') {
-        console.log(`Hydrating island ${name}`);
+        log('identity', `Hydrating island ${name}`);
         hydrate(createElement(module[name], props), element);
       } else if (type === 'script') {
-        console.log(`Script island ${name}`);
+        log('identity', `Script island ${name}`);
         module[name](props);
       }
 
@@ -84,7 +84,8 @@ const performImport = (
     })
     .catch((error) => {
       if (name && error.message.includes(name)) {
-        console.error(
+        log(
+          'identity',
           `🚨 Error importing ${name}. Components must live in the root of /components and follow the [MyComponent].importable.(m?)(j|t)s(x?) naming convention 🚨`,
         );
       }
@@ -125,15 +126,15 @@ export const init = (): void => {
 
       switch (deferUntil) {
         case 'idle':
-          console.log('when idle');
+          log('identity', 'when idle');
           whenIdle(() => performImport(name, type, element, props));
           break;
         case 'visible':
-          console.log('when visible');
+          log('identity', 'when visible');
           whenVisible(element, () => performImport(name, type, element, props));
           break;
         default:
-          console.log('now');
+          log('identity', 'now');
           performImport(name, type, element, props);
       }
     }
