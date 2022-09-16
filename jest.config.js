@@ -14,9 +14,12 @@ module.exports = {
     'utils',
     '<rootDir>/src/server/lib/__tests__/sharedConfig.ts',
   ],
-  globals: {
-    'ts-jest': {
-      isolatedModules: true,
-    },
+  transform: {
+    '<regex_match_files>': [
+      'ts-jest',
+      {
+        isolatedModules: true,
+      },
+    ],
   },
 };
