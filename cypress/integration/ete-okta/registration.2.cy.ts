@@ -123,7 +123,7 @@ describe('Registration flow', () => {
         const newReturnUrl = encodeURIComponent(
           'https://www.theguardian.com/technology/2017/may/04/nier-automata-sci-fi-game-sleeper-hit-designer-yoko-taro',
         );
-        cy.visit(`/welcome/${token}&returnUrl=${newReturnUrl}`);
+        cy.visit(`/welcome/${token}?returnUrl=${newReturnUrl}`);
         cy.contains('Save and continue');
         cy.url()
           .should('contain', newReturnUrl)
@@ -179,7 +179,7 @@ describe('Registration flow', () => {
         const appClientId2 = 'appClientId2';
         const fromURI2 = 'fromURI2';
         cy.visit(
-          `/welcome/${token}&appClientId=${appClientId2}&fromURI=${fromURI2}`,
+          `/welcome/${token}?appClientId=${appClientId2}&fromURI=${fromURI2}`,
         );
         cy.contains('Save and continue');
         cy.url()
