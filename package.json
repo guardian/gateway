@@ -92,7 +92,7 @@
     "dotenv-webpack": "^8.0.1",
     "eslint": "^8.23.1",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-functional": "^4.3.0",
+    "eslint-plugin-functional": "^4.3.1",
     "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.31.8",
