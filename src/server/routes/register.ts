@@ -14,10 +14,7 @@ import {
   UserType,
 } from '@/server/lib/idapi/user';
 import { logger } from '@/server/lib/serverSideLogger';
-import {
-  register as registerWithOkta,
-  sendRegistrationEmailByUserState,
-} from '@/server/lib/okta/register';
+import { register as registerWithOkta } from '@/server/lib/okta/register';
 import { renderer } from '@/server/lib/renderer';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { trackMetric } from '@/server/lib/trackMetric';
@@ -186,8 +183,13 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
     const { email } = encryptedState ?? {};
 
     if (typeof email !== 'undefined') {
-      await sendRegistrationEmailByUserState(email);
+      // Always attempt to register the user first when their email is resent.
+      // If the user doesn't exist, this creates them and Okta sends them an email.
+      // If the user does exist, this returns an error and we send them an email
+      // as part of the registerWithOkta function's error handler.
+      const user = await registerWithOkta(email);
       trackMetric('OktaRegistrationResendEmail::Success');
+      setEncryptedStateCookieForOktaRegistration(res, user);
       return res.redirect(
         303,
         addQueryParamsToPath('/register/email-sent', res.locals.queryParams, {
