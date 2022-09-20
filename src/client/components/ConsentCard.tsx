@@ -217,6 +217,7 @@ export const ConsentCard: FunctionComponent<ConsentCardProps> = ({
      * if the Checkbox is unchecked, this hidden empty value will be sent in
      * form submit POST, to signal possible unsubscribe event
      */
+    // eslint-disable-next-line functional/immutable-data
     checkboxChildren.push(
       <input type="hidden" name={id} value="" key="hidden" />,
     );

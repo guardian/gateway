@@ -88,6 +88,7 @@ const clientStateFromRequestStateLocals = ({
     // this is just a check to get typescript to compile
     const fieldErrors: Array<FieldError> =
       clientState.pageData?.fieldErrors ?? [];
+    // eslint-disable-next-line functional/immutable-data
     fieldErrors.push({
       field: 'csrf',
       message: CsrfErrors.CSRF_ERROR,
@@ -164,7 +165,7 @@ export const renderer: <P extends RoutePaths>(
         <title>${pageTitle} | The Guardian</title>
         <script>window.gaUID = "${gaUID.id}"</script>
 
-        <script src="https://assets.guim.co.uk/polyfill.io/v3/polyfill.min.js?features=es2015%2Ces2016%2Ces2017%2Ces2018%2Ces2019%2Ces2020%2Ces2021%2Cfetch%2CglobalThis" defer></script>
+        <script src="https://assets.guim.co.uk/polyfill.io/v3/polyfill.min.js?features=es2015%2Ces2016%2Ces2017%2Ces2018%2Ces2019%2Ces2020%2Ces2021%2Ces2022%2Cfetch%2CglobalThis" defer></script>
         ${scriptTags}
 
         <script id="routingConfig" type="application/json">${serialize(
