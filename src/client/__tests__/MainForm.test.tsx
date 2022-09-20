@@ -163,6 +163,7 @@ test('sets error message and context and prevents form submission when the reCAP
   const setRecaptchaErrorContext = jest.fn();
 
   const mockedFormSubmit = jest.fn();
+  // eslint-disable-next-line functional/immutable-data
   Object.defineProperty(window.HTMLFormElement.prototype, 'submit', {
     value: mockedFormSubmit,
   });
@@ -269,6 +270,7 @@ test('submits the form when the reCAPTCHA validation check is successful', async
   });
 
   const mockedFormSubmit = jest.fn();
+  // eslint-disable-next-line functional/immutable-data
   Object.defineProperty(window.HTMLFormElement.prototype, 'submit', {
     value: mockedFormSubmit,
   });

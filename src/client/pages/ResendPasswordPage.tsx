@@ -16,7 +16,7 @@ export const ResendPasswordPage = () => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const suppliedToken = window.location.pathname.split('/').pop();
+      const suppliedToken = window.location.pathname.split('/').at(-1);
       // logging to debug scenarios where users are seeing an invalid token page with a supposedly valid token.
       if (suppliedToken === 'resend') {
         logger.info('Reset password: link expired page shown');

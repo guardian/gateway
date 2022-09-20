@@ -36,6 +36,7 @@ const scriptSrc = [
   CSP_VALID_URI.GSTATIC_RECAPTCHA,
   CSP_VALID_URI.GUARDIAN_ASSETS,
 ];
+// eslint-disable-next-line functional/immutable-data
 if (stage === 'DEV') scriptSrc.push(HELMET_OPTIONS.UNSAFE_EVAL);
 
 const helmetConfig: HelmetOptions = {
