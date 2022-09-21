@@ -5,7 +5,7 @@ import { RateLimiterConfiguration } from '@/server/lib/rate-limit';
 import { getServerInstance } from '../sharedConfig';
 
 // Override the default 5s max timeout for these tests because Supertest takes some time to run.
-jest.setTimeout(10000);
+jest.setTimeout(20000);
 
 describe('rate limiter middleware', () => {
   const loggerInfoMock = jest.fn();
