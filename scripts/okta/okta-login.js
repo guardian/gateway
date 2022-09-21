@@ -33,6 +33,14 @@
   // force fallback flag, used to test fallback behaviour
   var forceFallback = searchParams.get('force_fallback');
 
+  // third party `clientId` query param in Identity, used for `jobs` (Guardian Jobs)
+  // where we need to add this to the query params we send to gateway
+  var thirdPartyClientId;
+
+  // third party `returnUrl` query param in Identity, used for `jobs` (Guardian Jobs)
+  // where we need to add this to the query params we send to gateway
+  var thirdPartyReturnUrl;
+
   // attempt to get the parameters we need from the Okta hosted login page OktaUtil object
   if (window.OktaUtil && !forceFallback) {
     // try getting fromURI from OktaUtil signInWidgetConfig (property is called called relayState)
@@ -46,12 +54,24 @@
     // try getting clientId from OktaUtil requestContext
     var requestContext =
       window.OktaUtil.getRequestContext && window.OktaUtil.getRequestContext();
-    if (
-      requestContext &&
-      requestContext.target &&
-      requestContext.target.clientId
-    ) {
-      clientId = requestContext.target.clientId;
+    if (requestContext && requestContext.target) {
+      if (requestContext.target.clientId) {
+        clientId = requestContext.target.clientId;
+      }
+
+      // determine if this is a third party client e.g. jobs and set the thirdPartyClientId and thirdPartyReturnUrl
+      if (requestContext.target.label) {
+        switch (requestContext.target.label) {
+          case 'jobs_site':
+            thirdPartyClientId = 'jobs';
+            thirdPartyReturnUrl = window.encodeURIComponent(
+              window.location.origin.replace('profile', 'jobs'),
+            );
+            break;
+          default:
+            break;
+        }
+      }
     }
   }
 
@@ -66,6 +86,12 @@
   }
   if (clientId) {
     params.set('appClientId', clientId);
+  }
+  if (thirdPartyClientId) {
+    params.set('clientId', thirdPartyClientId);
+  }
+  if (thirdPartyReturnUrl) {
+    params.set('returnUrl', thirdPartyReturnUrl);
   }
   // check the Okta hosted login page query params for an activation toke
   var activationToken = searchParams.get('activation_token');

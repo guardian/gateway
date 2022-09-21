@@ -93,7 +93,7 @@ const OktaAgreeGetController = async (
   const oktaSessionCookieId: string | undefined = req.cookies.sid;
 
   const state = res.locals;
-  const { returnUrl } = state.queryParams;
+  const { returnUrl, fromURI } = state.queryParams;
 
   // Redirect to /signin if no session cookie.
   if (!oktaSessionCookieId) {
@@ -113,6 +113,13 @@ const OktaAgreeGetController = async (
     // The user is redirected immediately if they are already
     // a jobs user and have they have their full name set.
     if (isJobsUser && userFullNameSet) {
+      // complete the oauth flow if coming from the okta sign in page
+      // through the oauth flow initiated by the jobs site
+      if (fromURI) {
+        return res.redirect(303, fromURI);
+      }
+
+      // otherwise try going to the return url
       const redirectUrl = returnUrl || defaultReturnUri;
       return res.redirect(
         303,
@@ -165,11 +172,9 @@ router.get('/agree/GRS', (req: Request, res: ResponseWithRequestState) => {
 router.post(
   '/agree/GRS',
   async (req: Request, res: ResponseWithRequestState) => {
-    const { useIdapi } = res.locals.queryParams;
+    const { useIdapi, returnUrl, fromURI } = res.locals.queryParams;
     const oktaSessionCookieId: string | undefined = req.cookies.sid;
 
-    const { queryParams } = res.locals;
-    const { returnUrl } = queryParams;
     const { firstName, secondName } = req.body;
 
     try {
@@ -198,6 +203,12 @@ router.post(
       );
       trackMetric('JobsGRSGroupAgree::Failure');
     } finally {
+      // complete the oauth flow if coming from the okta sign in page
+      // through the oauth flow initiated by the jobs site
+      if (fromURI) {
+        return res.redirect(303, fromURI);
+      }
+      // otherwise try going to the return url
       return res.redirect(303, returnUrl);
     }
   },
