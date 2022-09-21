@@ -18,6 +18,16 @@ import {
 const setup = (extraProps?: Partial<MainFormProps>) =>
   render(<MainForm formAction="/" submitButtonText="Submit" {...extraProps} />);
 
+beforeEach(() => {
+  // Ensure that the mocked recaptcha script is loaded before each test.
+  // The whole grecaptcha object is then mocked in the test setup file, as if the script had really loaded.
+  // It will cause the useRecaptcha hook to error, unless the grecaptcha methods are also mocked.
+  // An example of mocking the methods to feign success can be found in this test which is part of the suite:
+  //  "submits the form when the reCAPTCHA validation check is successful"
+  setupRecaptchaScriptMutationObserver();
+  setupRecaptchaObject();
+});
+
 test('terms and conditions in the document when hasGuardianTerms is true', async () => {
   const { queryByText } = setup({ hasGuardianTerms: true });
   const terms = queryByText(
@@ -62,14 +72,16 @@ test('renders the reCAPTCHA terms and conditions when recaptchaSiteKey is define
   });
 });
 
-test('shows sets an error message when the reCAPTCHA check is unsuccessful', async () => {
+test('calls method to set an error message when reCAPTCHA does not load correctly', async () => {
   const setRecaptchaErrorMessage = jest.fn();
   setup({
     recaptchaSiteKey: 'invalid-key',
     setRecaptchaErrorMessage,
   });
   await waitFor(() => {
-    expect(setRecaptchaErrorMessage).toBeCalled();
+    expect(setRecaptchaErrorMessage).toHaveBeenCalledWith(
+      'Google reCAPTCHA verification failed. Please try again.',
+    );
   });
 });
 
@@ -140,10 +152,7 @@ test('enables the form submit button when onSubmit returns an error state', asyn
 });
 
 test('sets error message and context and prevents form submission when the reCAPTCHA check is unsuccessful', async () => {
-  setupRecaptchaScriptMutationObserver();
-  setupRecaptchaObject();
-
-  // Mock the Google Recaptcha object
+  // Extend the mocked Google Recaptcha object so that the success callback is called with a valid token.
   const windowSpy = jest.spyOn(global.window, 'grecaptcha', 'get');
   const mockedGrecaptchaRender = jest.fn().mockReturnValue(0);
   const mockedGrecaptchaReset = jest.fn();
@@ -251,11 +260,7 @@ test('sets error message and context and prevents form submission when the reCAP
 });
 
 test('submits the form when the reCAPTCHA validation check is successful', async () => {
-  // Set up recaptcha mocked script and object.
-  setupRecaptchaScriptMutationObserver();
-  setupRecaptchaObject();
-
-  // Mock the Google Recaptcha object
+  // Extend the mocked Google Recaptcha object so that the success callback is called with a valid token.
   const windowSpy = jest.spyOn(global.window, 'grecaptcha', 'get');
   const mockedGrecaptchaRender = jest.fn().mockReturnValue(0);
   const mockedGrecaptchaReset = jest.fn();

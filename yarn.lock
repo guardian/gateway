@@ -2670,15 +2670,15 @@
     "@typescript-eslint/eslint-plugin" "5.21.0"
     "@typescript-eslint/parser" "5.21.0"
 
-"@guardian/libs@^6.2.0":
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/@guardian/libs/-/libs-6.2.0.tgz#db5a3d0a5abd3687563ed347b4a054c7e02319f1"
-  integrity sha512-8ppELyuQ52RTvqnukxICCU38ogBsboEtSqpeznWFytqxx8Zc8R5FKlf5g4KoDjxANWqpGv7RxIh+Gee8GSrDgQ==
-
 "@guardian/libs@^7.1.4":
   version "7.1.4"
   resolved "https://registry.yarnpkg.com/@guardian/libs/-/libs-7.1.4.tgz#f5de14f52a32cb677361d49157c94eb046a2b9a8"
   integrity sha512-r2AJk+4EakNLCLXHhUEqdYSjFhuq19k7tsQO5+53YZc6x6ADEXFNRVE/7EzbODgu5pVwk5SQ/rMuWsE7+5qdVQ==
+
+"@guardian/libs@^8.0.5":
+  version "8.0.5"
+  resolved "https://registry.yarnpkg.com/@guardian/libs/-/libs-8.0.5.tgz#b4c2a93f024322cda79a18bef5fbc0ee6f46922b"
+  integrity sha512-+1E2Okc9x306z+AjKOg52mlWm0Pzb3SCKmSdOqoVcnhXIm2SfF+ivAdnc3vPwZP6ltXDov4gYyNFxYCwbCESSA==
 
 "@guardian/node-riffraff-artifact@^0.3.2":
   version "0.3.2"
