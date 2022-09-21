@@ -31,7 +31,7 @@ export interface PageData {
   fieldErrors?: Array<FieldError>;
   browserName?: string;
 
-  // email sent page specific
+  // email sent pages specific
   emailType?: EmailType;
   resendEmailAction?: RoutePaths;
   changeEmailPage?: RoutePaths;
@@ -41,6 +41,7 @@ export interface PageData {
   consents?: Consent[];
   page?: ConsentPath;
   previousPage?: ConsentPath;
+
   // reset password token specific
   timeUntilTokenExpiry?: number;
 

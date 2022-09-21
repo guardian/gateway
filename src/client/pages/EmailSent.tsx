@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { PropsWithChildren, ReactNode, useState } from 'react';
 import { Link } from '@guardian/source-react-components';
 import { InfoSummary } from '@guardian/source-react-components-development-kitchen';
 import { MainLayout } from '@/client/layouts/Main';
@@ -34,7 +34,8 @@ export const EmailSent = ({
   noAccountInfo,
   recaptchaSiteKey,
   formTrackingName,
-}: Props) => {
+  children,
+}: PropsWithChildren<Props>) => {
   const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
   const [recaptchaErrorContext, setRecaptchaErrorContext] =
     useState<ReactNode>(null);
@@ -47,6 +48,7 @@ export const EmailSent = ({
       }
       errorContext={recaptchaErrorContext}
     >
+      {children}
       {email ? (
         <MainBodyText>
           We’ve sent an email to <b>{email}</b>.
