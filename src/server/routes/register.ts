@@ -33,6 +33,7 @@ import { causesInclude } from '@/server/lib/okta/api/errors';
 import { redirectIfLoggedIn } from '@/server/lib/middleware/redirectIfLoggedIn';
 import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
 import { UserResponse } from '@/server/models/okta/User';
+import { mergeRequestState } from '@/server/lib/requestState';
 
 const { okta } = getConfiguration();
 
@@ -53,7 +54,7 @@ router.get(
   (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
     const html = renderer('/register/email-sent', {
-      requestState: deepmerge(state, {
+      requestState: mergeRequestState(state, {
         pageData: {
           email: readEncryptedStateCookie(req)?.email,
         },
@@ -210,7 +211,7 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
     return res.type('html').send(
       renderer('/register/email-sent', {
         pageTitle: 'Check Your Inbox',
-        requestState: deepmerge(res.locals, {
+        requestState: mergeRequestState(res.locals, {
           globalMessage: {
             error: GenericErrors.DEFAULT,
           },
@@ -305,7 +306,7 @@ const IdapiResendEmail = async (
 
     const html = renderer('/register/email-sent', {
       pageTitle: 'Check Your Inbox',
-      requestState: deepmerge(res.locals, {
+      requestState: mergeRequestState(res.locals, {
         globalMessage: {
           error: message,
         },
@@ -400,7 +401,7 @@ const IdapiRegistration = async (
 
     trackMetric('Register::Failure');
 
-    state = deepmerge(state, {
+    state = mergeRequestState(state, {
       globalMessage: {
         error: message,
       },

@@ -14,7 +14,7 @@ import { buildUrl } from '@/shared/lib/routeUtils';
 
 type Props = {
   email?: string;
-  previousPage?: string;
+  changeEmailPage?: string;
   resendEmailAction?: string;
   queryString?: string;
   showSuccess?: boolean;
@@ -26,7 +26,7 @@ type Props = {
 
 export const EmailSent = ({
   email,
-  previousPage = '/',
+  changeEmailPage,
   resendEmailAction,
   queryString,
   showSuccess,
@@ -58,10 +58,10 @@ export const EmailSent = ({
       <MainBodyText>
         <b>The link is valid for 60 minutes.</b>
       </MainBodyText>
-      {previousPage && (
+      {changeEmailPage && (
         <MainBodyText>
           Wrong email address?{' '}
-          <Link href={previousPage}>Change email address</Link>.
+          <Link href={changeEmailPage}>Change email address</Link>.
         </MainBodyText>
       )}
       {email && resendEmailAction && (

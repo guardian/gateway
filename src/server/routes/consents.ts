@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import deepmerge from 'deepmerge';
 
 import { renderer } from '@/server/lib/renderer';
 
@@ -42,6 +41,7 @@ import { logger } from '@/server/lib/serverSideLogger';
 import { ApiError } from '@/server/models/Error';
 import { ConsentPath, RoutePaths } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
+import { mergeRequestState } from '@/server/lib/requestState';
 
 interface ConsentPage {
   page: ConsentPath;
@@ -256,7 +256,7 @@ router.get(
     const { emailVerified } = state.queryParams;
 
     if (emailVerified) {
-      state = deepmerge(state, {
+      state = mergeRequestState(state, {
         globalMessage: {
           success: VERIFY_EMAIL.SUCCESS,
         },
@@ -278,7 +278,7 @@ router.get(
       const { read, pageTitle: _pageTitle } = consentPages[pageIndex];
       pageTitle = _pageTitle;
 
-      state = deepmerge(state, {
+      state = mergeRequestState(state, {
         pageData: {
           ...(await read(
             req.ip,
@@ -297,7 +297,7 @@ router.get(
         error instanceof ApiError ? error : new ApiError();
 
       status = errorStatus;
-      state = deepmerge(state, {
+      state = mergeRequestState(state, {
         globalMessage: {
           error: message,
         },
@@ -368,7 +368,7 @@ router.post(
         error instanceof ApiError ? error : new ApiError();
 
       status = errorStatus;
-      state = deepmerge(state, {
+      state = mergeRequestState(state, {
         globalMessage: {
           error: message,
         },

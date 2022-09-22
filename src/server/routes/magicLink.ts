@@ -1,5 +1,4 @@
 import { Request } from 'express';
-import deepmerge from 'deepmerge';
 
 import { buildUrl } from '@/shared/lib/routeUtils';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
@@ -10,6 +9,7 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { ApiError } from '@/server/models/Error';
 import handleRecaptcha from '@/server/lib/recaptcha';
+import { mergeRequestState } from '@/server/lib/requestState';
 
 router.get('/magic-link', (req: Request, res: ResponseWithRequestState) => {
   const html = renderer('/magic-link', {
@@ -40,7 +40,7 @@ router.post(
 
       trackMetric('SendMagicLink::Failure');
 
-      state = deepmerge(state, {
+      state = mergeRequestState(state, {
         globalMessage: {
           error: message,
         },

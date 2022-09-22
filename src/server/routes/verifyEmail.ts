@@ -17,10 +17,10 @@ import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { ConsentsErrors, VerifyEmailErrors } from '@/shared/model/Errors';
 import { EMAIL_SENT } from '@/shared/model/Success';
 import { buildUrl } from '@/shared/lib/routeUtils';
-import deepmerge from 'deepmerge';
 import { Request, Router } from 'express';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { clearOktaCookies } from './signOut';
+import { mergeRequestState } from '@/server/lib/requestState';
 
 const router = Router();
 
@@ -32,7 +32,7 @@ router.get(
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     let state = res.locals;
 
-    state = deepmerge(state, {
+    state = mergeRequestState(state, {
       pageData: {
         signInPageUrl: `${signInPageUrl}?returnUrl=${encodeURIComponent(
           `${profileUrl}${buildUrl('/verify-email')}`,
@@ -57,7 +57,7 @@ router.get(
         sc_gu_u,
         state.requestId,
       );
-      state = deepmerge(state, {
+      state = mergeRequestState(state, {
         pageData: {
           email: primaryEmailAddress,
         },
@@ -72,7 +72,7 @@ router.get(
       status = errorStatus;
 
       if (status === 500) {
-        state = deepmerge(state, {
+        state = mergeRequestState(state, {
           globalMessage: {
             error: message,
           },
@@ -111,7 +111,7 @@ router.post(
           .primaryEmailAddress,
       } = req.body;
 
-      state = deepmerge(state, {
+      state = mergeRequestState(state, {
         pageData: {
           email,
         },
@@ -120,7 +120,7 @@ router.post(
       await sendVerificationEmail(req.ip, sc_gu_u, state.requestId);
       trackMetric('SendValidationEmail::Success');
 
-      state = deepmerge(state, {
+      state = mergeRequestState(state, {
         globalMessage: {
           success: EMAIL_SENT.SUCCESS,
         },
@@ -137,7 +137,7 @@ router.post(
 
       status = errorStatus;
 
-      state = deepmerge(state, {
+      state = mergeRequestState(state, {
         globalMessage: {
           error: message,
         },

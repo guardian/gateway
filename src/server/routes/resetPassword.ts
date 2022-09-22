@@ -1,6 +1,4 @@
 import { Request } from 'express';
-import deepmerge from 'deepmerge';
-
 import { renderer } from '@/server/lib/renderer';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { checkPasswordTokenController } from '@/server/controllers/checkPasswordToken';
@@ -9,12 +7,13 @@ import { readEmailCookie } from '@/server/lib/emailCookie';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { sendChangePasswordEmailController } from '@/server/controllers/sendChangePasswordEmail';
+import { mergeRequestState } from '@/server/lib/requestState';
 
 // reset password email form
 router.get('/reset-password', (req: Request, res: ResponseWithRequestState) => {
   const html = renderer('/reset-password', {
     pageTitle: 'Reset Password',
-    requestState: deepmerge(res.locals, {
+    requestState: mergeRequestState(res.locals, {
       pageData: {
         email: readEmailCookie(req),
       },
@@ -36,10 +35,11 @@ router.get(
   (req: Request, res: ResponseWithRequestState) => {
     const html = renderer('/reset-password/email-sent', {
       pageTitle: 'Check Your Inbox',
-      requestState: deepmerge(res.locals, {
+      requestState: mergeRequestState(res.locals, {
         pageData: {
           email: readEmailCookie(req),
-          previousPage: '/reset-password',
+          resendEmailAction: '/reset-password',
+          changeEmailPage: '/reset-password',
         },
       }),
     });
@@ -52,7 +52,7 @@ router.get(
   '/reset-password/complete',
   (req: Request, res: ResponseWithRequestState) => {
     const html = renderer('/reset-password/complete', {
-      requestState: deepmerge(res.locals, {
+      requestState: mergeRequestState(res.locals, {
         pageData: {
           email: readEmailCookie(req),
         },
