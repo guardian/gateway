@@ -283,4 +283,51 @@ describe('Sign in flow, Okta enabled', () => {
       );
     });
   });
+
+  context('Okta unvalidated email flow', () => {
+    it('Sends a user with an unvalidated email a reset password email on sign in', () => {
+      cy.createTestUser({
+        isUserEmailValidated: false,
+      })?.then(({ emailAddress, finalPassword }) => {
+        const timeRequestWasMade = new Date();
+        cy.visit('/signin');
+        cy.get('input[name=email]').type(emailAddress);
+        cy.get('input[name=password]').type(finalPassword);
+        cy.get('[data-cy="main-form-submit-button"]').click();
+        cy.url().should('include', '/signin/email-sent');
+        cy.contains(
+          'For security reasons we need you to change your password.',
+        );
+        cy.contains(emailAddress);
+        cy.contains('Resend email');
+        cy.contains('Change email address');
+
+        // Ensure the user's authentication cookies are not set
+        cy.getCookie('sid').then((sidCookie) => {
+          expect(sidCookie).to.not.exist;
+
+          cy.checkForEmailAndGetDetails(
+            emailAddress,
+            timeRequestWasMade,
+            /reset-password\/([^"]*)/,
+          ).then(({ links, body, token }) => {
+            expect(body).to.have.string(
+              'Because your security is extremely important to us, we have changed our password policy.',
+            );
+            expect(body).to.have.string('Reset password');
+            expect(links.length).to.eq(2);
+            const resetPasswordLink = links.find((s) =>
+              s.text?.includes('Reset password'),
+            );
+            expect(resetPasswordLink?.href ?? '').to.have.string(
+              'reset-password',
+            );
+            cy.visit(`/reset-password/${token}`);
+            cy.contains(emailAddress);
+            cy.contains('Reset password');
+          });
+        });
+      });
+    });
+  });
 });
