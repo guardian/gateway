@@ -8,6 +8,7 @@ import { getConfiguration } from '../getConfiguration';
 import { read } from '../idapi/auth';
 import { IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
 import { clearIDAPICookies } from '../idapi/IDAPICookies';
+import { performAuthorizationCodeFlow } from '../okta/oauth';
 const { okta, defaultReturnUri } = getConfiguration();
 
 /** Middleware function which will redirect the client to the base Guardian
@@ -26,12 +27,16 @@ export const redirectIfLoggedIn = async (
   const identitySessionCookie = req.cookies.SC_GU_U;
   const identityLastAccessCookie = req.cookies.SC_GU_LA;
 
-  // Check if the user has an existing Okta session. If they do and it's valid,
-  // they're already logged in and are redirected to the logged in redirect URL.
+  // Check if the user has an existing Okta session.
   if (okta.enabled && !useIdapi && oktaSessionCookieId) {
     try {
+      // If they do and it's valid,
       await getSession(oktaSessionCookieId);
-      return res.redirect(defaultReturnUri);
+      // then perform the authorization code flow to refresh the session.
+      // Get new identity cookies, and redirect back to the returnUrl or defaultReturnUri.
+      return await performAuthorizationCodeFlow(req, res, {
+        doNotSetLastAccessCookie: true,
+      });
     } catch {
       //if the cookie exists, but the session is invalid, we remove the cookie
       clearOktaCookies(res);

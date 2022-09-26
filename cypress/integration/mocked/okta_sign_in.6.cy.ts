@@ -32,15 +32,30 @@ describe('Sign in flow', () => {
       // disable the cmp  on the redirect
       cy.disableCMP();
 
+      // we can't actually check the authorization code flow
+      // so intercept the request and redirect to the default return URL
+      cy.intercept(
+        `http://localhost:9000/oauth2/${Cypress.env(
+          'OKTA_CUSTOM_OAUTH_SERVER',
+        )}/v1/authorize*`,
+        (req) => {
+          req.redirect('https://m.code.dev-theguardian.com/');
+        },
+      ).as('authRedirect');
+
       cy.request({
         url: '/signin',
         followRedirect: false,
         failOnStatusCode: false,
       }).then((response) => {
-        expect(response.status).to.eq(302);
-        expect(response.redirectedToUrl).to.eq(
-          'https://m.code.dev-theguardian.com/',
-        );
+        expect(response.status).to.eq(303);
+        expect(response.redirectedToUrl).to.include('/v1/authorize');
+
+        cy.visit(response.redirectedToUrl as string);
+      });
+
+      cy.wait('@authRedirect').then(() => {
+        cy.url().should('include', 'https://m.code.dev-theguardian.com/');
       });
     });
 

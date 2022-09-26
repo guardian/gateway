@@ -60,57 +60,34 @@ const getErrorMessageFromQueryParams = (
 /**
  * Controller to render the sign in page in both IDAPI and Okta
  */
-const showSignInPage = async (req: Request, res: ResponseWithRequestState) => {
-  const state = res.locals;
-  const { encryptedEmail, error, error_description } = state.queryParams;
-
-  // first attempt to get email from IDAPI encryptedEmail if it exists
-  const decryptedEmail =
-    encryptedEmail &&
-    (await decrypt(encryptedEmail, req.ip, res.locals.requestId));
-
-  // followed by the gateway EncryptedState
-  // if it exists
-  const email = decryptedEmail || readEmailCookie(req);
-
-  const html = renderer('/signin', {
-    requestState: mergeRequestState(state, {
-      pageData: {
-        email,
-      },
-      globalMessage: {
-        error: getErrorMessageFromQueryParams(error, error_description),
-      },
-    }),
-    pageTitle: 'Sign in',
-  });
-  return res.type('html').send(html);
-};
-
 router.get(
   '/signin',
   redirectIfLoggedIn,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { useIdapi } = res.locals.queryParams;
-    const oktaSessionCookieId: string | undefined = req.cookies.sid;
+    const state = res.locals;
+    const { encryptedEmail, error, error_description } = state.queryParams;
 
-    if (okta.enabled && !useIdapi && oktaSessionCookieId) {
-      // for okta users landing on sign in, we want to first check if a session exists
-      // if a session already exists then we redirect back to the returnUrl for apps, and the dotcom homepage for web
-      // otherwise we want to show the sign in page
-      try {
-        //check if the user has a session, if they do, take them to the dotcom homepage,
-        // or returnUrl for apps users
-        await getSession(oktaSessionCookieId);
-        return res.redirect(accountManagementUrl);
-      } catch {
-        //if their session was invalid, the Okta sessions api returns a 404 and the promise fails,
-        //so we fall through to this catch block
-        return showSignInPage(req, res);
-      }
-    } else {
-      return showSignInPage(req, res);
-    }
+    // first attempt to get email from IDAPI encryptedEmail if it exists
+    const decryptedEmail =
+      encryptedEmail &&
+      (await decrypt(encryptedEmail, req.ip, res.locals.requestId));
+
+    // followed by the gateway EncryptedState
+    // if it exists
+    const email = decryptedEmail || readEmailCookie(req);
+
+    const html = renderer('/signin', {
+      requestState: mergeRequestState(state, {
+        pageData: {
+          email,
+        },
+        globalMessage: {
+          error: getErrorMessageFromQueryParams(error, error_description),
+        },
+      }),
+      pageTitle: 'Sign in',
+    });
+    return res.type('html').send(html);
   }),
 );
 
