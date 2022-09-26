@@ -7,7 +7,6 @@ import { logger } from '@/server/lib/serverSideLogger';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { renderer } from '@/server/lib/renderer';
 import { ApiError } from '@/server/models/Error';
-import { buildUrl } from '@/shared/lib/routeUtils';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { consentPages } from '@/server/routes/consents';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
@@ -20,6 +19,7 @@ import { OktaError } from '@/server/models/okta/Error';
 import { GenericErrors } from '@/shared/model/Errors';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { setEncryptedStateCookieForOktaRegistration } from './register';
+import { mergeRequestState } from '@/server/lib/requestState';
 
 const { okta } = getConfiguration();
 
@@ -82,7 +82,7 @@ router.post(
 
         const html = renderer('/welcome/resend', {
           pageTitle: 'Resend Welcome Email',
-          requestState: deepmerge(res.locals, {
+          requestState: mergeRequestState(res.locals, {
             globalMessage: {
               error: message,
             },
@@ -102,10 +102,11 @@ router.get(
 
     const email = readEmailCookie(req);
 
-    state = deepmerge(state, {
+    state = mergeRequestState(state, {
       pageData: {
         email,
-        previousPage: buildUrl('/welcome/resend'),
+        resendEmailAction: '/welcome/resend',
+        changeEmailPage: '/welcome/resend',
       },
     });
 

@@ -12,12 +12,11 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { EmailType } from '@/shared/model/EmailType';
 import { ResetPasswordErrors } from '@/shared/model/Errors';
-import deepmerge from 'deepmerge';
 import { Request } from 'express';
 import { ApiError } from '@/server/models/Error';
-import { buildUrl } from '@/shared/lib/routeUtils';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { sendEmailInOkta as sendResetPasswordEmailInOktaController } from '@/server/controllers/sendChangePasswordEmail';
+import { mergeRequestState } from '@/server/lib/requestState';
 
 const { okta } = getConfiguration();
 
@@ -28,7 +27,7 @@ router.get(
     const email = readEmailCookie(req);
 
     const html = renderer('/set-password/complete', {
-      requestState: deepmerge(res.locals, {
+      requestState: mergeRequestState(res.locals, {
         pageData: {
           email,
         },
@@ -112,7 +111,7 @@ router.post(
 
         const html = renderer('/set-password/resend', {
           pageTitle: 'Resend Create Password Email',
-          requestState: deepmerge(res.locals, {
+          requestState: mergeRequestState(res.locals, {
             globalMessage: {
               error: message,
             },
@@ -132,10 +131,11 @@ router.get(
 
     const email = readEmailCookie(req);
 
-    state = deepmerge(state, {
+    state = mergeRequestState(state, {
       pageData: {
         email,
-        previousPage: buildUrl('/set-password/resend'),
+        resendEmailAction: '/set-password/resend',
+        changeEmailPage: '/set-password/resend',
       },
     });
 

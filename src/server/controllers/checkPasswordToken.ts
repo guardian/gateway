@@ -23,6 +23,7 @@ import { ChangePasswordErrors } from '@/shared/model/Errors';
 import { FieldError } from '@/shared/model/ClientState';
 import { PersistableQueryParams } from '@/shared/model/QueryParams';
 import { validateReturnUrl } from '../lib/validateUrl';
+import { mergeRequestState } from '@/server/lib/requestState';
 
 const { okta, defaultReturnUri } = getConfiguration();
 
@@ -34,7 +35,7 @@ const handleBackButtonEventOnWelcomePage = (
 ) => {
   const { email, passwordSetOnWelcomePage } =
     readEncryptedStateCookie(req) ?? {};
-  const requestState = deepmerge(res.locals, {
+  const requestState = mergeRequestState(res.locals, {
     pageData: {
       email,
     },
@@ -72,7 +73,7 @@ const checkTokenInIDAPI = async (
       res.locals.requestId,
     );
 
-    requestState = deepmerge(requestState, {
+    requestState = mergeRequestState(requestState, {
       pageData: {
         browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
         email,
@@ -177,17 +178,20 @@ export const checkTokenInOkta = async (
 
     // finally generate the queryParams object to merge in with the requestState
     // with the correct returnUrl for this request
-    const queryParams = deepmerge(encryptedStateQueryParams, {
-      returnUrl,
-      fromURI,
-      appClientId,
-    });
+    const queryParams = deepmerge<PersistableQueryParams>(
+      encryptedStateQueryParams,
+      {
+        returnUrl,
+        fromURI,
+        appClientId,
+      },
+    );
 
     const html = renderer(
       `${path}/:token`,
       {
         pageTitle,
-        requestState: deepmerge(res.locals, {
+        requestState: mergeRequestState(res.locals, {
           queryParams,
           pageData: {
             browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),

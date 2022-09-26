@@ -1,5 +1,4 @@
 import { Request } from 'express';
-import deepmerge from 'deepmerge';
 import { authenticate as authenticateWithIdapi } from '@/server/lib/idapi/auth';
 import { authenticate as authenticateWithOkta } from '@/server/lib/okta/api/authentication';
 import { logger } from '@/server/lib/serverSideLogger';
@@ -31,6 +30,7 @@ import { getUserGroups } from '../lib/okta/api/users';
 import { clearOktaCookies } from '@/server/routes/signOut';
 import { sendOphanComponentEventFromQueryParamsServer } from '../lib/ophan';
 import { isBreachedPassword } from '../lib/breachedPasswordCheck';
+import { mergeRequestState } from '@/server/lib/requestState';
 
 const { okta, accountManagementUrl, oauthBaseUrl, defaultReturnUri } =
   getConfiguration();
@@ -74,7 +74,7 @@ const showSignInPage = async (req: Request, res: ResponseWithRequestState) => {
   const email = decryptedEmail || readEmailCookie(req);
 
   const html = renderer('/signin', {
-    requestState: deepmerge(state, {
+    requestState: mergeRequestState(state, {
       pageData: {
         email,
       },
@@ -133,7 +133,7 @@ router.get(
     const email = decryptedEmail || readEmailCookie(req);
 
     const html = renderer('/reauthenticate', {
-      requestState: deepmerge(state, {
+      requestState: mergeRequestState(state, {
         pageData: {
           email,
         },
@@ -214,7 +214,7 @@ const idapiSignInController = async (
 
     // re-render the sign in page on error, with pre-filled email
     const html = renderer('/signin', {
-      requestState: deepmerge(res.locals, {
+      requestState: mergeRequestState(res.locals, {
         globalMessage: {
           error: message,
         },
@@ -358,7 +358,7 @@ const oktaSignInController = async (
     const { message, status } = oktaSignInControllerErrorHandler(error);
 
     const html = renderer('/signin', {
-      requestState: deepmerge(res.locals, {
+      requestState: mergeRequestState(res.locals, {
         pageData: {
           email,
         },
@@ -391,7 +391,7 @@ const optInPromptController = async (
       res.locals.requestId,
     );
     const html = renderer('/signin/success', {
-      requestState: deepmerge(state, {
+      requestState: mergeRequestState(state, {
         pageData: {
           consents,
         },

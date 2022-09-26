@@ -16,7 +16,7 @@ export const EmailSentPage = ({ noAccountInfo, formTrackingName }: Props) => {
     globalMessage = {},
     recaptchaConfig,
   } = clientState;
-  const { email, previousPage } = pageData;
+  const { email, resendEmailAction, changeEmailPage } = pageData;
   const { emailSentSuccess } = queryParams;
   const { error } = globalMessage;
   const { recaptchaSiteKey } = recaptchaConfig;
@@ -28,8 +28,8 @@ export const EmailSentPage = ({ noAccountInfo, formTrackingName }: Props) => {
   return (
     <EmailSent
       email={email}
-      previousPage={previousPage}
-      resendEmailAction={previousPage}
+      changeEmailPage={changeEmailPage}
+      resendEmailAction={resendEmailAction}
       queryString={queryString}
       showSuccess={emailSentSuccess}
       errorMessage={error}

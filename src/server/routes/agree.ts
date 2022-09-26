@@ -11,6 +11,7 @@ import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
 import { setupJobsUserInIDAPI, setupJobsUserInOkta } from '../lib/jobs';
 import { getSession } from '../lib/okta/api/sessions';
 import { getUser } from '../lib/okta/api/users';
+import { mergeRequestState } from '@/server/lib/requestState';
 
 const { defaultReturnUri, signInPageUrl, okta } = getConfiguration();
 
@@ -37,7 +38,7 @@ const IDAPIAgreeGetController = async (
       userGroups,
     } = await read(req.ip, SC_GU_U, res.locals.requestId);
 
-    const userBelongsToGRS = userGroups.find(
+    const userBelongsToGRS = userGroups.some(
       (group) => group.packageCode === 'GRS',
     );
 
@@ -57,7 +58,7 @@ const IDAPIAgreeGetController = async (
     }
 
     const html = renderer('/agree/GRS', {
-      requestState: deepmerge(res.locals, {
+      requestState: mergeRequestState(res.locals, {
         pageData: {
           firstName,
           secondName,

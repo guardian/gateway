@@ -18,7 +18,6 @@ import { logger } from '@/server/lib/serverSideLogger';
 import { ApiError } from '@/server/models/Error';
 import { GenericErrors } from '@/shared/model/Errors';
 import { renderer } from '@/server/lib/renderer';
-import deepmerge from 'deepmerge';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import {
   sendForgotPasswordEmail,
@@ -37,6 +36,7 @@ import { OktaError } from '@/server/models/okta/Error';
 import { sendCreatePasswordEmail } from '@/email/templates/CreatePassword/sendCreatePasswordEmail';
 import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
 import { PasswordRoutePath } from '@/shared/model/Routes';
+import { mergeRequestState } from '@/server/lib/requestState';
 
 const { okta } = getConfiguration();
 
@@ -95,7 +95,7 @@ const sendEmailInIDAPI = async (
 
     const html = renderer('/reset-password', {
       pageTitle: 'Reset Password',
-      requestState: deepmerge(state, {
+      requestState: mergeRequestState(state, {
         globalMessage: {
           error: message,
         },
@@ -297,7 +297,7 @@ export const sendEmailInOkta = async (
 
     const html = renderer('/reset-password', {
       pageTitle: 'Reset Password',
-      requestState: deepmerge(state, {
+      requestState: mergeRequestState(state, {
         globalMessage: {
           error: GenericErrors.DEFAULT,
         },

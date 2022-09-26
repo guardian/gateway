@@ -5,7 +5,7 @@ import { EmailType } from '@/shared/model/EmailType';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { Participations } from '@guardian/ab-core';
 import { Stage } from '@/server/models/Configuration';
-import { ConsentPath } from '@/shared/model/Routes';
+import { ConsentPath, RoutePaths } from '@/shared/model/Routes';
 
 export interface FieldError {
   field: string;
@@ -33,6 +33,8 @@ export interface PageData {
 
   // email sent page specific
   emailType?: EmailType;
+  resendEmailAction?: RoutePaths;
+  changeEmailPage?: RoutePaths;
 
   // onboarding specific
   newsletters?: NewsLetter[];

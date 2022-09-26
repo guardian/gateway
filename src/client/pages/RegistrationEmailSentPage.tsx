@@ -26,7 +26,7 @@ export const RegistrationEmailSentPage = () => {
     <EmailSent
       email={email}
       queryString={queryString}
-      previousPage={buildUrlWithQueryParams('/signin', {}, queryParams)}
+      changeEmailPage={buildUrlWithQueryParams('/register', {}, queryParams)}
       resendEmailAction={buildUrl('/register/email-sent/resend')}
       showSuccess={emailSentSuccess}
       errorMessage={error}

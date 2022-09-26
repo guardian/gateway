@@ -105,7 +105,7 @@ const clientStateFromRequestStateLocals = ({
   // checking if recaptcha error exists in query params, and attaching it to the
   // forms field errors
   if (queryParams.recaptchaError) {
-    return deepmerge(clientState, {
+    return deepmerge<ClientState>(clientState, {
       globalMessage: {
         error: CaptchaErrors.GENERIC,
       },

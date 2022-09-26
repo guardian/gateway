@@ -1,6 +1,5 @@
 import { Request } from 'express';
 
-import deepmerge from 'deepmerge';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { getBrowserNameFromUserAgent } from '@/server/lib/getBrowserName';
 import { logger } from '@/server/lib/serverSideLogger';
@@ -34,6 +33,7 @@ import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateE
 import { setupJobsUserInIDAPI, setupJobsUserInOkta } from '../lib/jobs';
 import { sendOphanComponentEventFromQueryParamsServer } from '../lib/ophan';
 import { clearOktaCookies } from '../routes/signOut';
+import { mergeRequestState } from '@/server/lib/requestState';
 
 const { okta } = getConfiguration();
 
@@ -50,7 +50,7 @@ const changePasswordInIDAPI = async (
   const { clientId } = req.query;
   const { password, firstName, secondName } = req.body;
 
-  requestState = deepmerge(requestState, {
+  requestState = mergeRequestState(requestState, {
     pageData: {
       browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
     },
@@ -136,7 +136,7 @@ const changePasswordInIDAPI = async (
       );
 
       if (field) {
-        requestState = deepmerge(requestState, {
+        requestState = mergeRequestState(requestState, {
           pageData: {
             email,
             timeUntilTokenExpiry,
@@ -149,7 +149,7 @@ const changePasswordInIDAPI = async (
           },
         });
       } else {
-        requestState = deepmerge(requestState, {
+        requestState = mergeRequestState(requestState, {
           pageData: {
             email,
             timeUntilTokenExpiry,
