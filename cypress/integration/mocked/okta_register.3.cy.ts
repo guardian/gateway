@@ -42,6 +42,7 @@ describe('Okta Register flow', () => {
       cy.visit('/register');
 
       setSidCookie();
+
       cy.get('input[name="email"]').type('example@example.com');
       cy.mockNext(200, {
         userType: 'new',
@@ -52,11 +53,23 @@ describe('Okta Register flow', () => {
       });
       cy.get('[data-cy=main-form-submit-button]').click();
 
+      // we can't actually check the authorization code flow
+      // so intercept the request and redirect to the default return URL
+      cy.intercept(
+        `http://localhost:9000/oauth2/${Cypress.env(
+          'OKTA_CUSTOM_OAUTH_SERVER',
+        )}/v1/authorize*`,
+        (req) => {
+          req.redirect('https://m.code.dev-theguardian.com/');
+        },
+      ).as('authRedirect');
+
       cy.wait('@registerPost').then((interception) => {
-        expect(interception?.response?.statusCode).to.eq(302);
-        expect(interception?.response?.headers?.location).to.eq(
-          'https://m.code.dev-theguardian.com',
-        );
+        expect(interception?.response?.statusCode).to.eq(303);
+      });
+
+      cy.wait('@authRedirect').then(() => {
+        cy.url().should('include', 'https://m.code.dev-theguardian.com/');
       });
     });
 
@@ -110,15 +123,30 @@ describe('Okta Register flow', () => {
       // disable the cmp on the redirect
       cy.disableCMP();
 
+      // we can't actually check the authorization code flow
+      // so intercept the request and redirect to the default return URL
+      cy.intercept(
+        `http://localhost:9000/oauth2/${Cypress.env(
+          'OKTA_CUSTOM_OAUTH_SERVER',
+        )}/v1/authorize*`,
+        (req) => {
+          req.redirect('https://m.code.dev-theguardian.com/');
+        },
+      ).as('authRedirect');
+
       cy.request({
         url: '/register',
         followRedirect: false,
         failOnStatusCode: false,
       }).then((response) => {
-        expect(response.status).to.eq(302);
-        expect(response.redirectedToUrl).to.eq(
-          'https://m.code.dev-theguardian.com/',
-        );
+        expect(response.status).to.eq(303);
+        expect(response.redirectedToUrl).to.include('/v1/authorize');
+
+        cy.visit(response.redirectedToUrl as string);
+      });
+
+      cy.wait('@authRedirect').then(() => {
+        cy.url().should('include', 'https://m.code.dev-theguardian.com/');
       });
     });
 
