@@ -6,14 +6,10 @@ import { MainBodyText } from '../components/MainBodyText';
 import { EmailSent } from './EmailSent';
 
 interface Props {
-  noAccountInfo?: boolean;
   formTrackingName?: string;
 }
 
-export const UnvalidatedEmailEmailSentPage = ({
-  noAccountInfo,
-  formTrackingName,
-}: Props) => {
+export const UnvalidatedEmailEmailSentPage = ({ formTrackingName }: Props) => {
   const clientState = useClientState();
   const {
     pageData = {},
@@ -38,7 +34,6 @@ export const UnvalidatedEmailEmailSentPage = ({
       queryString={queryString}
       showSuccess={emailSentSuccess}
       errorMessage={error}
-      noAccountInfo={noAccountInfo}
       recaptchaSiteKey={recaptchaSiteKey}
       formTrackingName={formTrackingName}
     >

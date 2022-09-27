@@ -1,5 +1,6 @@
 export const UnvalidatedEmailResetPasswordText = () => `
 Hello,
+
 Because your security is extremely important to us, we have changed our password policy. For this reason, you need to reset your password.
 This link is valid for 60 minutes.
 

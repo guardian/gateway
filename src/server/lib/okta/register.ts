@@ -5,6 +5,7 @@ import {
   activateUser,
   reactivateUser,
   dangerouslyResetPassword,
+  getUserGroups,
 } from '@/server/lib/okta/api/users';
 import { OktaError } from '@/server/models/okta/Error';
 import { causesInclude } from '@/server/lib/okta/api/errors';
@@ -12,6 +13,8 @@ import { sendAccountExistsEmail } from '@/email/templates/AccountExists/sendAcco
 import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
 import { sendAccountWithoutPasswordExistsEmail } from '@/email/templates/AccountWithoutPasswordExists/sendAccountWithoutPasswordExists';
 import { getConfiguration } from '@/server/lib/getConfiguration';
+import { sendEmailToUnvalidatedUser } from '@/server/routes/signIn';
+import { trackMetric } from '../trackMetric';
 
 const { okta } = getConfiguration();
 
@@ -35,7 +38,23 @@ export const sendRegistrationEmailByUserState = async (
   email: string,
 ): Promise<UserResponse> => {
   const user = await getUser(email);
-  const { status } = user;
+  const { id, status } = user;
+
+  // First, check if the user's email is unvalidated. If not, we send
+  // an email asking them to change their password, then return from here
+  // to show the user the regular post-registration 'email sent' page.
+  const groups = await getUserGroups(id);
+  // check if the user has their email validated based on group membership
+  const emailValidated = groups.some(
+    (group) => group.profile.name === 'GuardianUser-EmailValidated',
+  );
+  if (!emailValidated) {
+    await sendEmailToUnvalidatedUser(id, user.profile.email);
+    trackMetric('OktaUnvalidatedUserResendEmail::Success');
+    return user;
+  }
+
+  // The user's email is validated - continue with the user status flows.
   switch (status) {
     case Status.STAGED: {
       /* Given I'm a STAGED user
