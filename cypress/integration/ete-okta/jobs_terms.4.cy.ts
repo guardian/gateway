@@ -1,4 +1,26 @@
 describe('Jobs terms and conditions flow in Okta', () => {
+  context('Shows the terms and conditions page on Sign In', () => {
+    it('visits /agree/GRS after sign in if clientId=jobs parameter is set', () => {
+      cy.intercept('GET', 'https://jobs.theguardian.com/', (req) => {
+        req.reply(200);
+      });
+
+      cy.createTestUser({
+        isUserEmailValidated: true,
+      })?.then(({ emailAddress, finalPassword }) => {
+        const visitUrl =
+          '/signin?clientId=jobs&returnUrl=https%3A%2F%2Fjobs.theguardian.com%2F';
+        cy.visit(visitUrl);
+        cy.get('input[name=email]').type(emailAddress);
+        cy.get('input[name=password]').type(finalPassword);
+        cy.get('[data-cy="main-form-submit-button"]').click();
+        cy.url().should('include', '/agree/GRS');
+        cy.get('[data-cy="main-form-submit-button"]').click();
+        cy.url().should('include', 'https://jobs.theguardian.com/');
+      });
+    });
+  });
+
   context('Accepts Jobs terms and conditions and sets their name', () => {
     it('should redirect users with an invalid session cookie to reauthenticate', () => {
       // load the consents page as its on the same domain

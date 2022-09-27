@@ -198,6 +198,18 @@ router.get(
       // track the success metric
       trackMetric('OAuthAuthorization::Success');
 
+      // redirect for jobs to show the jobs t&c page
+      // but not if confirmationPage is set (so that we can still show onboarding flow first)
+      // before redirecting to the jobs t&c page
+      if (
+        authState.queryParams.clientId === 'jobs' &&
+        !authState.confirmationPage
+      ) {
+        return res.redirect(
+          addQueryParamsToPath('/agree/GRS', authState.queryParams),
+        );
+      }
+
       // We only use to this option if the app does not provide a deep link with a custom scheme
       // This allows the native apps to complete the authorization code flow for the app.
       // the fromURI parameter is an undocumented feature from Okta that allows us to
