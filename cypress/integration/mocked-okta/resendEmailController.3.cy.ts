@@ -1,6 +1,7 @@
 import userStatuses from '../../support/okta/userStatuses';
 import userExistsError from '../../fixtures/okta-responses/error/user-exists.json';
 import userResponse from '../../fixtures/okta-responses/success/user.json';
+import userGroupsResponse from '../../fixtures/okta-responses/success/valid-user-groups.json';
 import socialUserResponse from '../../fixtures/okta-responses/success/social-user.json';
 import successTokenResponse from '../../fixtures/okta-responses/success/token.json';
 import resetPasswordResponse from '../../fixtures/okta-responses/success/reset-password.json';
@@ -49,6 +50,7 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
+              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.get('[data-cy="main-form-submit-button"]').click();
               verifyInRegularEmailSentPage();
             },
@@ -58,6 +60,7 @@ userStatuses.forEach((status) => {
             () => {
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(socialUserResponse.code, socialUserResponse.response);
+              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.get('[data-cy="main-form-submit-button"]').click();
               verifyInRegularEmailSentPage();
             },
@@ -75,6 +78,7 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
+              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.mockNext(
                 successTokenResponse.code,
                 successTokenResponse.response,
@@ -94,6 +98,7 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
+              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.mockNext(
                 resetPasswordResponse.code,
                 resetPasswordResponse.response,
@@ -138,6 +143,7 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
+              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.get('[data-cy="main-form-submit-button"]').click();
               cy.contains('Check your email inbox');
               cy.contains('Resend email');
@@ -149,6 +155,7 @@ userStatuses.forEach((status) => {
             () => {
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(socialUserResponse.code, socialUserResponse.response);
+              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.get('[data-cy="main-form-submit-button"]').click();
               cy.contains('Check your email inbox');
               cy.contains('Resend email');
@@ -166,6 +173,7 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
+              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.mockNext(
                 successTokenResponse.code,
                 successTokenResponse.response,
@@ -185,6 +193,7 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
+              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.mockNext(
                 resetPasswordResponse.code,
                 resetPasswordResponse.response,
@@ -222,6 +231,7 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
+              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.get('[data-cy="main-form-submit-button"]').click();
               verifyInRegularEmailSentPage();
             },
@@ -231,6 +241,7 @@ userStatuses.forEach((status) => {
             () => {
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(socialUserResponse.code, socialUserResponse.response);
+              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.get('[data-cy="main-form-submit-button"]').click();
               verifyInRegularEmailSentPage();
             },
@@ -246,6 +257,7 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
+              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.mockNext(
                 successTokenResponse.code,
                 successTokenResponse.response,
@@ -265,6 +277,7 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
+              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.mockNext(
                 resetPasswordResponse.code,
                 resetPasswordResponse.response,
@@ -302,6 +315,7 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
+              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.get('[data-cy="main-form-submit-button"]').click();
               verifyInRegularEmailSentPage();
             },
@@ -311,6 +325,7 @@ userStatuses.forEach((status) => {
             () => {
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(socialUserResponse.code, socialUserResponse.response);
+              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.get('[data-cy="main-form-submit-button"]').click();
               verifyInRegularEmailSentPage();
             },
@@ -326,6 +341,7 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
+              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.mockNext(
                 successTokenResponse.code,
                 successTokenResponse.response,
@@ -347,6 +363,7 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
+              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.mockNext(
                 resetPasswordResponse.code,
                 resetPasswordResponse.response,

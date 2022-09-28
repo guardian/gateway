@@ -1,5 +1,6 @@
 import userStatuses from '../../support/okta/userStatuses';
 import userResponse from '../../fixtures/okta-responses/success/user.json';
+import userGroupsResponse from '../../fixtures/okta-responses/success/valid-user-groups.json';
 import socialUserResponse from '../../fixtures/okta-responses/success/social-user.json';
 import userExistsError from '../../fixtures/okta-responses/error/user-exists.json';
 import successTokenResponse from '../../fixtures/okta-responses/success/token.json';
@@ -41,6 +42,7 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
+              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.get('button[type=submit]').click();
               verifyInRegularEmailSentPage();
             },
@@ -50,6 +52,7 @@ userStatuses.forEach((status) => {
             () => {
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(socialUserResponse.code, socialUserResponse.response);
+              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.get('button[type=submit]').click();
               verifyInRegularEmailSentPage();
             },
@@ -67,6 +70,7 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
+              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.mockNext(
                 successTokenResponse.code,
                 successTokenResponse.response,
@@ -86,6 +90,7 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
+              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.mockNext(
                 resetPasswordResponse.code,
                 resetPasswordResponse.response,
