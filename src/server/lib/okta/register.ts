@@ -13,8 +13,8 @@ import { sendAccountExistsEmail } from '@/email/templates/AccountExists/sendAcco
 import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
 import { sendAccountWithoutPasswordExistsEmail } from '@/email/templates/AccountWithoutPasswordExists/sendAccountWithoutPasswordExists';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { sendEmailToUnvalidatedUser } from '@/server/routes/signIn';
-import { trackMetric } from '../trackMetric';
+import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
+import { trackMetric } from '@/server/lib/trackMetric';
 
 const { okta } = getConfiguration();
 

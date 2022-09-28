@@ -30,17 +30,17 @@ import postSignInController from '@/server/lib/postSignInController';
 import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
 import { getSession } from '../lib/okta/api/sessions';
 import { redirectIfLoggedIn } from '../lib/middleware/redirectIfLoggedIn';
-import { forgotPassword, getUser, getUserGroups } from '../lib/okta/api/users';
+import { getUser, getUserGroups } from '../lib/okta/api/users';
 import { clearOktaCookies } from '@/server/routes/signOut';
 import { sendOphanComponentEventFromQueryParamsServer } from '../lib/ophan';
 import { isBreachedPassword } from '../lib/breachedPasswordCheck';
 import { mergeRequestState } from '@/server/lib/requestState';
-import { sendUnvalidatedEmailResetPasswordEmail } from '@/email/templates/UnvalidatedEmailResetPassword/sendUnvalidatedEmailResetPasswordEmail';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import {
   readEncryptedStateCookie,
   setEncryptedStateCookie,
 } from '../lib/encryptedStateCookie';
+import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
 
 const { okta, accountManagementUrl, oauthBaseUrl, defaultReturnUri } =
   getConfiguration();
@@ -618,34 +618,5 @@ router.get(
     }
   }),
 );
-
-/**
- * @name sendEmailToUnvalidatedUser
- * @description If a user is a) registered and b) is signing in or registering
- * via Okta and c) has an unvalidated email address, send that user an email
- * asking them to change their password, which validates their email address as
- * a side effect.
- * @param id Okta user Id
- */
-export const sendEmailToUnvalidatedUser = async (
-  id: string,
-  email: string,
-): Promise<void> => {
-  const token = await forgotPassword(id);
-  if (!token) {
-    throw new OktaError({
-      message: `Unvalidated email sign-in failed: missing reset password token`,
-    });
-  }
-  const emailIsSent = await sendUnvalidatedEmailResetPasswordEmail({
-    to: email,
-    resetPasswordToken: token,
-  });
-  if (!emailIsSent) {
-    throw new OktaError({
-      message: `Unvalidated email sign-in failed: failed to send email`,
-    });
-  }
-};
 
 export default router.router;
