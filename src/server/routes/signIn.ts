@@ -486,15 +486,14 @@ const isValidSocialProvider = (provider: string): boolean =>
 router.get(
   '/signin/:social',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    // todo can we use the login middleware here to stopped logged in users from accessing this endpoint?
-    const { useIdapi, returnUrl } = res.locals.queryParams;
+    const { returnUrl } = res.locals.queryParams;
     const socialIdp = req.params.social as SocialProvider;
 
     if (!isValidSocialProvider(socialIdp)) {
       return res.redirect(303, '/signin');
     }
 
-    if (okta.enabled && !useIdapi) {
+    if (okta.enabled) {
       // get the IDP id from the config
       const idp = okta.social[socialIdp];
 
