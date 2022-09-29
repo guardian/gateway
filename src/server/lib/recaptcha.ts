@@ -52,11 +52,20 @@ const checkRecaptchaError = (req: Request, _: Response, next: NextFunction) => {
  * we just automatically pass next() instead of running the middleware in the
  * DEV stage, unless the 'recaptchaEnabledDev' feature switch is set to true.
  *
+ * +----------------+---------------------------+----------------------+
+ * | Running on DEV | recaptchaEnabledDev value |        Output        |
+ * +----------------+---------------------------+----------------------+
+ * | Yes (1)        | True (1)                  | handleRecaptcha runs |
+ * | Yes (1)        | False (0)                 | next()               |
+ * | No (0)         | True (1)                  | handleRecaptcha runs |
+ * | No (0)         | False (0)                 | handleRecaptcha runs |
+ * +----------------+---------------------------+----------------------+
+ *
  * TODO: Get to the bottom of this - it would be ideal if we didn't have to do
  * this workaround.
  */
 const handleRecaptcha =
-  stage === 'DEV' && featureSwitches.recaptchaEnabledDev
+  stage === 'DEV' && !featureSwitches.recaptchaEnabledDev
     ? (_: Request, __: Response, next: NextFunction) => next()
     : [recaptcha.middleware.verify, checkRecaptchaError];
 
