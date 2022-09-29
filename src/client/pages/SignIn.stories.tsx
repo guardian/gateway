@@ -30,18 +30,18 @@ WithEmail.story = {
   name: 'with email',
 };
 
-export const WithSummaryError = (args: SignInProps) => (
+export const WithPageLevelError = (args: SignInProps) => (
   <SignIn error="This is an error" {...args} />
 );
-WithSummaryError.story = {
-  name: 'with summary error',
+WithPageLevelError.story = {
+  name: 'with page level error',
 };
 
-export const WithSummaryErrorAndEmail = (args: SignInProps) => (
+export const WithPageLevelErrorAndEmail = (args: SignInProps) => (
   <SignIn error="This is an error" email="test@example.com" {...args} />
 );
-WithSummaryErrorAndEmail.story = {
-  name: 'with summary error and email',
+WithPageLevelErrorAndEmail.story = {
+  name: 'with page level error and email',
 };
 
 export const SocialSigninBlocked = (args: SignInProps) => (
@@ -67,4 +67,24 @@ export const WithoutRegisterButton = (args: SignInProps) => (
 );
 WithoutRegisterButton.story = {
   name: 'without register button',
+};
+
+export const WithJobs = (args: SignInProps) => (
+  <SignIn
+    {...{ ...args, queryParams: { ...args.queryParams, clientId: 'jobs' } }}
+  />
+);
+WithJobs.story = {
+  name: 'with Jobs terms',
+};
+
+export const WithJobsAndSocialSigninBlocked = (args: SignInProps) => (
+  <SignIn
+    {...{ ...args, queryParams: { ...args.queryParams, clientId: 'jobs' } }}
+    error={SignInErrors.ACCOUNT_ALREADY_EXISTS}
+    email="someone@theguardian.com"
+  />
+);
+WithJobsAndSocialSigninBlocked.story = {
+  name: 'with Jobs terms and social sign-in blocked',
 };

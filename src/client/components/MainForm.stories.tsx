@@ -55,6 +55,18 @@ export const FormWithRecaptchaGuardianTerms = () => (
 );
 FormWithRecaptchaGuardianTerms.storyName = 'FormWithRecaptchaGuardianTerms';
 
+export const FormWithRecaptchaJobsTerms = () => (
+  <MainForm
+    formAction=""
+    submitButtonText="Send me a link"
+    recaptchaSiteKey="test"
+    hasJobsTerms
+  >
+    <EmailInput />
+  </MainForm>
+);
+FormWithRecaptchaJobsTerms.storyName = 'FormWithRecaptchaJobsTerms';
+
 export const TertiarySubmitButton = () => (
   <MainForm
     formAction=""

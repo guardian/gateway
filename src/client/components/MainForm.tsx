@@ -11,7 +11,7 @@ import { Button } from '@guardian/source-react-components';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import {
   GuardianTerms,
-  JobsStandaloneTerms,
+  JobsTerms,
   RecaptchaTerms,
 } from '@/client/components/Terms';
 import { space } from '@guardian/source-foundations';
@@ -25,6 +25,8 @@ import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaErr
 import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
 import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 import { logger } from '@/client/lib/clientSideLogger';
+import { ErrorSummary } from '@guardian/source-react-components-development-kitchen';
+import locations from '@/shared/lib/locations';
 
 export interface MainFormProps {
   formAction: string;
@@ -32,10 +34,15 @@ export interface MainFormProps {
   submitButtonPriority?: 'primary' | 'tertiary';
   submitButtonHalfWidth?: boolean;
   recaptchaSiteKey?: string;
+  // These two props are used to pass a setter callback from the parent component
+  // to MainForm, in instances when we want the error message to appear somewhere in the
+  // parent component.
   setRecaptchaErrorMessage?: React.Dispatch<React.SetStateAction<string>>;
   setRecaptchaErrorContext?: React.Dispatch<
     React.SetStateAction<ReactNode | string>
   >;
+  formLevelErrorOverride?: string;
+  formLevelErrorContext?: ReactNode;
   hasGuardianTerms?: boolean;
   hasJobsTerms?: boolean;
   onSubmit?: (e: React.FormEvent<HTMLFormElement>) =>
@@ -58,6 +65,11 @@ const inputStyles = (hasTerms = false) => css`
   css`
     margin-bottom: ${space[2]}px;
   `}
+`;
+
+const summaryStyles = (smallMarginBottom = false) => css`
+  margin-top: ${space[6]}px;
+  margin-bottom: ${smallMarginBottom ? space[4] : space[6]}px;
 `;
 
 export const inputMarginBottomSpacingStyle = css`
@@ -86,13 +98,23 @@ export const MainForm = ({
   largeFormMarginTop = false,
 }: PropsWithChildren<MainFormProps>) => {
   const recaptchaEnabled = !!recaptchaSiteKey;
-  const hasTerms = recaptchaEnabled || hasGuardianTerms;
+  const hasTerms = recaptchaEnabled || hasGuardianTerms || hasJobsTerms;
+
+  // These setters are used to set the error message locally, in this component.
+  // We want to use these when we want to display errors at the level of the form.
+  // We do this on the Registration and SignIn pages.
+  const [formLevelErrorMessage, setFormLevelErrorMessage] = useState('');
+  const [formLevelErrorContext, setFormLevelErrorContext] =
+    useState<ReactNode>(null);
 
   const formRef = createRef<HTMLFormElement>();
   const [recaptchaState, setRecaptchaState] =
     useState<UseRecaptchaReturnValue>();
 
   const [isFormDisabled, setIsFormDisabled] = useState(false);
+
+  const formLevelErrorMargin = !!formLevelErrorMessage;
+  const showFormLevelReportUrl = !!formLevelErrorContext;
 
   /**
    * Executes the reCAPTCHA check and form submit tracking.
@@ -149,7 +171,7 @@ export const MainForm = ({
 
   useEffect(() => {
     if (recaptchaEnabled) {
-      // Determine is something went wrong with the check.
+      // Determine if something went wrong with the check.
       const recaptchaCheckFailed =
         recaptchaState?.error || recaptchaState?.expired;
 
@@ -167,12 +189,12 @@ export const MainForm = ({
 
   useEffect(() => {
     if (recaptchaEnabled) {
-      // Determine is something went wrong with the check.
+      // Determine if something went wrong with the check.
       const recaptchaCheckFailed =
         recaptchaState?.error || recaptchaState?.expired;
 
       if (recaptchaCheckFailed) {
-        logger.info('Recaptcha check failed');
+        logger.info('reCAPTCHA check failed');
       }
 
       // Used to show a more detailed reCAPTCHA error if
@@ -190,15 +212,32 @@ export const MainForm = ({
         <DetailedRecaptchaError />
       ) : undefined;
 
-      // Pass the error states back to the parent component if setters are provided.
-      if (recaptchaCheckFailed && setRecaptchaErrorMessage) {
-        setRecaptchaErrorMessage(recaptchaErrorMessage);
+      // Don't show the reCAPTCHA error if the key is set to 'test'
+      const isTestKey = recaptchaSiteKey === 'test';
+      const showRecaptchaError = recaptchaCheckFailed && !isTestKey;
+      if (!showRecaptchaError) {
+        return;
       }
-      if (showErrorContext && setRecaptchaErrorContext) {
-        setRecaptchaErrorContext(recaptchaErrorContext);
+
+      // If setters are provided, pass the error message and context to the parent component.
+      // If they're not provided, display the error message and context as a form level error.
+      if (recaptchaCheckFailed) {
+        if (setRecaptchaErrorMessage) {
+          setRecaptchaErrorMessage(recaptchaErrorMessage);
+        } else {
+          setFormLevelErrorMessage(recaptchaErrorMessage);
+        }
+      }
+      if (showErrorContext) {
+        if (setRecaptchaErrorContext) {
+          setRecaptchaErrorContext(recaptchaErrorContext);
+        } else {
+          setFormLevelErrorContext(recaptchaErrorContext);
+        }
       }
     }
   }, [
+    recaptchaSiteKey,
     recaptchaEnabled,
     recaptchaState,
     recaptchaState?.error,
@@ -223,6 +262,16 @@ export const MainForm = ({
       }
       onInvalid={(e) => onInvalid && onInvalid(e)}
     >
+      {formLevelErrorMessage && (
+        <ErrorSummary
+          cssOverrides={summaryStyles(formLevelErrorMargin)}
+          message={formLevelErrorMessage}
+          context={formLevelErrorContext}
+          errorReportUrl={
+            showFormLevelReportUrl ? locations.REPORT_ISSUE : undefined
+          }
+        />
+      )}
       {recaptchaEnabled && (
         <RecaptchaWrapper
           recaptchaSiteKey={recaptchaSiteKey}
@@ -233,10 +282,13 @@ export const MainForm = ({
       <RefTrackingFormFields />
       <div css={inputStyles(hasTerms)}>{children}</div>
       {hasGuardianTerms && <GuardianTerms />}
-      {hasJobsTerms && <JobsStandaloneTerms />}
+      {hasJobsTerms && <JobsTerms />}
       {recaptchaEnabled && <RecaptchaTerms />}
       <Button
-        css={buttonStyles({ hasTerms, halfWidth: submitButtonHalfWidth })}
+        css={buttonStyles({
+          hasTerms,
+          halfWidth: submitButtonHalfWidth,
+        })}
         type="submit"
         priority={submitButtonPriority}
         data-cy="main-form-submit-button"
