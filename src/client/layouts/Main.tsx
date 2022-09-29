@@ -109,7 +109,12 @@ const bodyStyles = (hasTitleOrSummary: boolean) => css`
   `}
 `;
 
-export const buttonStyles = ({ hasTerms = false, halfWidth = false }) => css`
+export const buttonStyles = ({
+  hasTerms = false,
+  halfWidth = false,
+  halfWidthAtMobile = false,
+  hasMarginBottom = false,
+}) => css`
   margin-top: 22px;
   justify-content: center;
   width: 100%;
@@ -120,6 +125,16 @@ export const buttonStyles = ({ hasTerms = false, halfWidth = false }) => css`
    */
   :disabled {
     cursor: not-allowed;
+  }
+
+  ${from.mobile} {
+    ${halfWidthAtMobile
+      ? css`
+          width: 50%;
+        `
+      : css`
+          width: 100%;
+        `}
   }
 
   ${from.tablet} {
@@ -134,7 +149,12 @@ export const buttonStyles = ({ hasTerms = false, halfWidth = false }) => css`
 
   ${hasTerms &&
   css`
-    margin-top: 16px;
+    margin-top: ${space[4]}px;
+  `}
+
+  ${hasMarginBottom &&
+  css`
+    margin-bottom: ${space[6]}px;
   `}
 `;
 
