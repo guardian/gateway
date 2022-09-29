@@ -8,19 +8,22 @@ import { getConfiguration } from '../getConfiguration';
 import { read } from '../idapi/auth';
 import { IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
 import { clearIDAPICookies } from '../idapi/IDAPICookies';
-import { performAuthorizationCodeFlow } from '../okta/oauth';
-const { okta, defaultReturnUri } = getConfiguration();
+import { renderer } from '@/server/lib/renderer';
+import { mergeRequestState } from '../requestState';
+import { getApp } from '../okta/api/apps';
 
-/** Middleware function which will redirect the client to the base Guardian
- * domain if a valid logged in session is found. Currently checks both IDAPI and
- * Okta session validity.
+const { okta, defaultReturnUri, baseUri } = getConfiguration();
+
+/** Middleware function which will either show the SignedInAs page (for Okta),
+ * or redirect to the returnUrl (for IDAPI).
  */
 export const redirectIfLoggedIn = async (
   req: Request,
   res: ResponseWithRequestState,
   next: NextFunction,
 ) => {
-  const { useIdapi } = res.locals.queryParams;
+  const state = res.locals;
+  const { useIdapi } = state.queryParams;
 
   const oktaSessionCookieId: string | undefined = req.cookies.sid;
 
@@ -30,16 +33,58 @@ export const redirectIfLoggedIn = async (
   // Check if the user has an existing Okta session.
   if (okta.enabled && !useIdapi && oktaSessionCookieId) {
     try {
-      // If they do and it's valid,
-      await getSession(oktaSessionCookieId);
-      // then perform the authorization code flow to refresh the session.
-      // Get new identity cookies, and redirect back to the returnUrl or defaultReturnUri.
-      return await performAuthorizationCodeFlow(req, res, {
-        doNotSetLastAccessCookie: true,
+      // If they do and it's valid, get the session info
+      const session = await getSession(oktaSessionCookieId);
+
+      // pull the user email from the session, which we need to display
+      const email = session.login;
+
+      // determine the "Continue" button link, either "fromURI" if coming from Okta login page (and OAuth flow)
+      // or returnUrl if not
+      const continueLink =
+        state.queryParams.fromURI || state.queryParams.returnUrl;
+
+      // the "Sign in" link is used to log in as a different user, so we add the parameters we need to the link
+      const signInLink = encodeURIComponent(
+        `https://${baseUri}${addQueryParamsToPath(
+          '/signin',
+          state.queryParams,
+        )}`,
+      );
+
+      // the sign out link is what's the "Sign in with a different email" link is pointing to
+      // it signs the user out first, and then redirects to the sign in page with the required parameters
+      const signOutLink = addQueryParamsToPath('/signout', {
+        returnUrl: signInLink,
       });
+
+      // we also need to know if the flow was initiated by a native app, hence we get the app info from the api
+      // and determine this based on the label, whether it contains "android" or "ios"
+      const isNativeApp =
+        !!state.queryParams.appClientId &&
+        /android|ios/i.test(
+          (await getApp(state.queryParams.appClientId)).label,
+        );
+
+      // show the signed in as page
+      const html = renderer('/signed-in-as', {
+        requestState: mergeRequestState(state, {
+          pageData: {
+            email,
+            continueLink,
+            signOutLink,
+            isNativeApp,
+          },
+        }),
+        pageTitle: 'Sign in',
+      });
+
+      return res.type('html').send(html);
     } catch {
-      //if the cookie exists, but the session is invalid, we remove the cookie
+      // if the cookie exists, but the session is invalid, we remove the cookie
       clearOktaCookies(res);
+      // we also clear the identity cookies, to keep the parity
+      clearIDAPICookies(res);
       logger.info(
         'User attempting to access signed-out-only route had an existing Okta session cookie, but it was invalid',
         undefined,
@@ -47,12 +92,13 @@ export const redirectIfLoggedIn = async (
           request_id: res.locals.requestId,
         },
       );
-      //we redirect to /reauthenticate to make sure the Okta sid cookie has been removed
+      //we redirect to /reauthenticate to make sure the cookies has been removed
       return res.redirect(
         addQueryParamsToPath('/reauthenticate', res.locals.queryParams),
       );
     }
   } else {
+    // this is the IDAPI only flow, i.e with no Okta cookie, or with the useIdapi flag
     if (identitySessionCookie && identityLastAccessCookie) {
       logger.info(
         'User attempting to access signed-out-only route had existing IDAPI cookies set.',

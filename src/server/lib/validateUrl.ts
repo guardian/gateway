@@ -7,7 +7,7 @@ const validHostnames = [
   '.thegulocal.com',
 ];
 
-const invalidPaths = ['/signin', '/register', '/signout'];
+const invalidPaths = ['/signout'];
 
 const { defaultReturnUri } = getConfiguration();
 

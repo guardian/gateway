@@ -32,7 +32,7 @@ describe('validateReturnUrl', () => {
   });
 
   test('it should return default returnUrl if returnUrl parameter includes an invalid path', () => {
-    const input = 'https://www.theguardian.com/signin';
+    const input = 'https://www.theguardian.com/signout';
 
     const output = validateReturnUrl(input);
 
