@@ -32,8 +32,9 @@ import { OktaError } from '@/server/models/okta/Error';
 import { causesInclude } from '@/server/lib/okta/api/errors';
 import { redirectIfLoggedIn } from '@/server/lib/middleware/redirectIfLoggedIn';
 import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
-import { UserResponse } from '@/server/models/okta/User';
 import { mergeRequestState } from '@/server/lib/requestState';
+import { RegistrationLocation, UserResponse } from '@/server/models/okta/User';
+import { getRegistrationLocation } from '../lib/getRegistrationLocation';
 
 const { okta } = getConfiguration();
 
@@ -111,10 +112,12 @@ const OktaRegistration = async (
   req: Request,
   res: ResponseWithRequestState,
 ) => {
-  const { email = '' } = req.body;
-  try {
-    const user = await registerWithOkta(email);
+  const { email = '', _cmpConsentedState = false } = req.body;
+  const registrationLocation: RegistrationLocation | undefined =
+    getRegistrationLocation(req, JSON.parse(_cmpConsentedState));
 
+  try {
+    const user = await registerWithOkta(email, registrationLocation);
     // fire ophan component event if applicable
     if (res.locals.queryParams.componentEventParams) {
       sendOphanComponentEventFromQueryParamsServer(

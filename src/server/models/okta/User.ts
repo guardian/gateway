@@ -1,6 +1,16 @@
 // social registration identity provider type
 type RegistrationIdp = 'google' | 'apple' | 'facebook';
 
+export type RegistrationLocation =
+  | 'Prefer not to say'
+  | 'United Kingdom'
+  | 'Europe'
+  | 'United States'
+  | 'Canada'
+  | 'Australia'
+  | 'New Zealand'
+  | 'Other';
+
 // https://developer.okta.com/docs/reference/api/users/#profile-object
 interface UserProfile {
   email: string;
@@ -12,6 +22,7 @@ interface UserProfile {
   passwordSetSecurely?: boolean;
   lastPasswordSetSecurelyTimestamp?: string;
   registrationIdp?: RegistrationIdp;
+  registrationLocation?: RegistrationLocation;
   googleExternalId?: string;
   appleExternalId?: string;
   facebookExternalId?: string;
@@ -75,7 +86,11 @@ export interface UserCreationRequest {
   profile: NonNullable<
     Pick<
       UserProfile,
-      'email' | 'login' | 'isGuardianUser' | 'registrationPlatform'
+      | 'email'
+      | 'login'
+      | 'isGuardianUser'
+      | 'registrationPlatform'
+      | 'registrationLocation'
     >
   >;
   groupIds: Array<string>;
