@@ -31,6 +31,7 @@ import { SetPasswordSessionExpiredPage } from '@/client/pages/SetPasswordSession
 import { SetPasswordCompletePage } from '@/client/pages/SetPasswordCompletePage';
 import { MaintenancePage } from '@/client/pages/MaintenancePage';
 import { JobsTermsPage } from './pages/JobsTermsAcceptPage';
+import { SignedInAsPage } from './pages/SignedInAsPage';
 
 export type RoutingConfig = {
   clientState: ClientState;
@@ -41,6 +42,10 @@ const routes: Array<{
   path: RoutePaths;
   element: React.ReactElement;
 }> = [
+  {
+    path: '/signed-in-as',
+    element: <SignedInAsPage />,
+  },
   {
     path: '/signin',
     element: <SignInPage />,
