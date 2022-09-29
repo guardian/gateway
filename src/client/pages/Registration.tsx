@@ -10,6 +10,8 @@ import { SocialButtons } from '@/client/components/SocialButtons';
 import { socialButtonDivider } from '@/client/styles/Shared';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import { GuardianTerms, JobsTerms, termsContainer } from '../components/Terms';
+import { CmpConsentedStateHiddenInput } from '../components/CmpConsentStateHiddenInput';
+import { useCmpConsent } from '../lib/hooks/useCmpConsent';
 
 export type RegistrationProps = {
   email?: string;
@@ -37,6 +39,7 @@ export const Registration = ({
   const isJobs = clientId === 'jobs';
 
   usePageLoadOphanInteraction(formTrackingName);
+  const hasCmpConsent = useCmpConsent();
 
   const tabs = generateSignInRegisterTabs({
     queryParams,
@@ -61,6 +64,7 @@ export const Registration = ({
         formErrorMessageFromParent={formError}
       >
         <EmailInput defaultValue={email} />
+        <CmpConsentedStateHiddenInput cmpConsentedState={hasCmpConsent} />
       </MainForm>
     </MainLayout>
   );
