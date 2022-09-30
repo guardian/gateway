@@ -9,7 +9,11 @@ import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { decrypt } from '@/server/lib/idapi/decryptToken';
-import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
+import {
+  FederationErrors,
+  GenericErrors,
+  SignInErrors,
+} from '@/shared/model/Errors';
 import { ApiError } from '@/server/models/Error';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { readEmailCookie } from '@/server/lib/emailCookie';
@@ -26,11 +30,17 @@ import postSignInController from '@/server/lib/postSignInController';
 import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
 import { getSession } from '../lib/okta/api/sessions';
 import { redirectIfLoggedIn } from '../lib/middleware/redirectIfLoggedIn';
-import { getUserGroups } from '../lib/okta/api/users';
+import { getUser, getUserGroups } from '../lib/okta/api/users';
 import { clearOktaCookies } from '@/server/routes/signOut';
 import { sendOphanComponentEventFromQueryParamsServer } from '../lib/ophan';
 import { isBreachedPassword } from '../lib/breachedPasswordCheck';
 import { mergeRequestState } from '@/server/lib/requestState';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import {
+  readEncryptedStateCookie,
+  setEncryptedStateCookie,
+} from '../lib/encryptedStateCookie';
+import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
 
 const { okta, accountManagementUrl, oauthBaseUrl, defaultReturnUri } =
   getConfiguration();
@@ -88,6 +98,84 @@ router.get(
       pageTitle: 'Sign in',
     });
     return res.type('html').send(html);
+  }),
+);
+
+router.get(
+  '/signin/email-sent',
+  (req: Request, res: ResponseWithRequestState) => {
+    const state = res.locals;
+    const html = renderer('/signin/email-sent', {
+      requestState: mergeRequestState(state, {
+        pageData: {
+          email: readEncryptedStateCookie(req)?.email,
+        },
+      }),
+      pageTitle: 'Check Your Inbox',
+    });
+    res.type('html').send(html);
+  },
+);
+
+router.post(
+  '/signin/email-sent/resend',
+  handleRecaptcha,
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    // We don't need to check the useIdapi flag as a user can only
+    // get into this flow after an attempt to login with Okta
+    try {
+      const encryptedState = readEncryptedStateCookie(req);
+      const { email } = encryptedState ?? {};
+
+      if (typeof email == 'undefined') {
+        throw new OktaError({
+          message:
+            'Could not resend unvalidated user email as email was undefined',
+        });
+      }
+
+      const user = await getUser(email);
+      const { id } = user;
+      const groups = await getUserGroups(id);
+      // check if the user has their email validated based on group membership
+      const emailValidated = groups.some(
+        (group) => group.profile.name === 'GuardianUser-EmailValidated',
+      );
+      if (emailValidated) {
+        throw new OktaError({
+          message:
+            'Could not resend unvalidated user email as user is already validated.',
+        });
+      }
+
+      await sendEmailToUnvalidatedUser(id, user.profile.email);
+      setEncryptedStateCookie(res, {
+        email: user.profile.email,
+      });
+      trackMetric('OktaUnvalidatedUserResendEmail::Success');
+
+      return res.redirect(
+        303,
+        addQueryParamsToPath('/signin/email-sent', res.locals.queryParams, {
+          emailSentSuccess: true,
+        }),
+      );
+    } catch (error) {
+      logger.error('Okta unvalidated user resend email failure', error, {
+        request_id: res.locals.requestId,
+      });
+      trackMetric('OktaUnvalidatedUserResendEmail::Failure');
+      return res.type('html').send(
+        renderer('/signin/email-sent', {
+          pageTitle: 'Check Your Inbox',
+          requestState: mergeRequestState(res.locals, {
+            globalMessage: {
+              error: GenericErrors.DEFAULT,
+            },
+          }),
+        }),
+      );
+    }
   }),
 );
 
@@ -308,13 +396,21 @@ const oktaSignInController = async (
         trackMetric('User-EmailNotValidated-WeakPassword');
       }
 
-      // If the user was able to log in with Okta BUT NOT VALIDATED, we will still try and sign them in with Identity
-      // This is because we will initially block unvalidated users from getting Okta sessions, but still allow them
-      // Identity sessions.
-      // We use the groups api to get the group membership, rather than checking the email validated field because
-      // social users do not have the email validated flag set until after they login for the first time (but are in the email validated group)
       if (!emailValidated) {
-        return idapiSignInController(req, res);
+        await sendEmailToUnvalidatedUser(
+          response._embedded.user.id,
+          response._embedded.user.profile.login,
+        );
+        setEncryptedStateCookie(res, {
+          email: response._embedded.user.profile.login,
+        });
+
+        return res.redirect(
+          303,
+          addQueryParamsToPath('/signin/email-sent', res.locals.queryParams, {
+            emailSentSuccess: true,
+          }),
+        );
       }
     }
 

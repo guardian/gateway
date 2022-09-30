@@ -10,6 +10,8 @@ import { NoAccount } from './NoAccount/NoAccount';
 import { NoAccountText } from './NoAccount/NoAccountText';
 import { ResetPassword } from './ResetPassword/ResetPassword';
 import { ResetPasswordText } from './ResetPassword/ResetPasswordText';
+import { UnvalidatedEmailResetPassword } from './UnvalidatedEmailResetPassword/UnvalidatedEmailResetPassword';
+import { UnvalidatedEmailResetPasswordText } from './UnvalidatedEmailResetPassword/UnvalidatedEmailResetPasswordText';
 import { Verify } from './Verify/Verify';
 import { VerifyText } from './Verify/VerifyText';
 
@@ -52,6 +54,11 @@ export const renderedNoAccount = {
 export const renderedResetPassword = {
   plain: ResetPasswordText(),
   html: render(ResetPassword()).html,
+} as EmailRenderResult;
+
+export const renderedUnvalidatedEmailResetPassword = {
+  plain: UnvalidatedEmailResetPasswordText(),
+  html: render(UnvalidatedEmailResetPassword()).html,
 } as EmailRenderResult;
 
 export const renderedVerify = {

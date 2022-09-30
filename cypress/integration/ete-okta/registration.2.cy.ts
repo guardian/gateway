@@ -209,7 +209,10 @@ describe('Registration flow', () => {
       // rebuild these tests to not use IDAPI at all, we need to figure out a
       // way to test STAGED and PROVISIONED users (probably by just passing an
       // optional `activate` prop to a createUser function).
-      cy.createTestUser({ isGuestUser: true })?.then(({ emailAddress }) => {
+      cy.createTestUser({
+        isGuestUser: true,
+        isUserEmailValidated: true,
+      })?.then(({ emailAddress }) => {
         cy.getTestOktaUser(emailAddress).then((oktaUser) => {
           expect(oktaUser.status).to.eq(Status.STAGED);
 
@@ -248,7 +251,10 @@ describe('Registration flow', () => {
     });
 
     it('should send a PROVISIONED user a set password email with an Okta activation token', () => {
-      cy.createTestUser({ isGuestUser: true })?.then(({ emailAddress }) => {
+      cy.createTestUser({
+        isGuestUser: true,
+        isUserEmailValidated: true,
+      })?.then(({ emailAddress }) => {
         cy.activateTestOktaUser(emailAddress).then(() => {
           cy.getTestOktaUser(emailAddress).then((oktaUser) => {
             expect(oktaUser.status).to.eq(Status.PROVISIONED);
@@ -287,7 +293,10 @@ describe('Registration flow', () => {
       });
     });
     it('should send an ACTIVE user a reset password email with no activation token', () => {
-      cy.createTestUser({ isGuestUser: false })?.then(({ emailAddress }) => {
+      cy.createTestUser({
+        isGuestUser: false,
+        isUserEmailValidated: true,
+      })?.then(({ emailAddress }) => {
         cy.getTestOktaUser(emailAddress).then((oktaUser) => {
           expect(oktaUser.status).to.eq(Status.ACTIVE);
 
@@ -326,7 +335,10 @@ describe('Registration flow', () => {
       });
     });
     it('should send a RECOVERY user a reset password email with an Okta activation token', () => {
-      cy.createTestUser({ isGuestUser: false })?.then(({ emailAddress }) => {
+      cy.createTestUser({
+        isGuestUser: false,
+        isUserEmailValidated: true,
+      })?.then(({ emailAddress }) => {
         cy.resetOktaUserPassword(emailAddress).then(() => {
           cy.getTestOktaUser(emailAddress).then((oktaUser) => {
             expect(oktaUser.status).to.eq(Status.RECOVERY);
@@ -368,7 +380,10 @@ describe('Registration flow', () => {
       });
     });
     it('should send a PASSWORD_EXPIRED user a reset password email with an Okta activation token', () => {
-      cy.createTestUser({ isGuestUser: false })?.then(({ emailAddress }) => {
+      cy.createTestUser({
+        isGuestUser: false,
+        isUserEmailValidated: true,
+      })?.then(({ emailAddress }) => {
         cy.expireOktaUserPassword(emailAddress).then(() => {
           cy.getTestOktaUser(emailAddress).then((oktaUser) => {
             expect(oktaUser.status).to.eq(Status.PASSWORD_EXPIRED);
@@ -410,7 +425,10 @@ describe('Registration flow', () => {
       });
     });
     it('should display an error if a SUSPENDED user attempts to register', () => {
-      cy.createTestUser({ isGuestUser: false })?.then(({ emailAddress }) => {
+      cy.createTestUser({
+        isGuestUser: false,
+        isUserEmailValidated: true,
+      })?.then(({ emailAddress }) => {
         cy.suspendOktaUser(emailAddress).then(() => {
           cy.getTestOktaUser(emailAddress).then((oktaUser) => {
             expect(oktaUser.status).to.eq(Status.SUSPENDED);
@@ -431,7 +449,10 @@ describe('Registration flow', () => {
     'Existing users asking for an email to be resent after attempting to register with Okta',
     () => {
       it('should resend a STAGED user a set password email with an Okta activation token', () => {
-        cy.createTestUser({ isGuestUser: true })?.then(({ emailAddress }) => {
+        cy.createTestUser({
+          isGuestUser: true,
+          isUserEmailValidated: true,
+        })?.then(({ emailAddress }) => {
           cy.getTestOktaUser(emailAddress).then((oktaUser) => {
             expect(oktaUser.status).to.eq(Status.STAGED);
 
@@ -482,7 +503,10 @@ describe('Registration flow', () => {
       });
 
       it('should resend a PROVISIONED user a set password email with an Okta activation token', () => {
-        cy.createTestUser({ isGuestUser: true })?.then(({ emailAddress }) => {
+        cy.createTestUser({
+          isGuestUser: true,
+          isUserEmailValidated: true,
+        })?.then(({ emailAddress }) => {
           cy.activateTestOktaUser(emailAddress).then(() => {
             cy.getTestOktaUser(emailAddress).then((oktaUser) => {
               expect(oktaUser.status).to.eq(Status.PROVISIONED);
@@ -531,7 +555,10 @@ describe('Registration flow', () => {
         });
       });
       it('should send an ACTIVE user a reset password email with no activation token', () => {
-        cy.createTestUser({ isGuestUser: false })?.then(({ emailAddress }) => {
+        cy.createTestUser({
+          isGuestUser: false,
+          isUserEmailValidated: true,
+        })?.then(({ emailAddress }) => {
           cy.getTestOktaUser(emailAddress).then((oktaUser) => {
             expect(oktaUser.status).to.eq(Status.ACTIVE);
 
@@ -579,7 +606,10 @@ describe('Registration flow', () => {
         });
       });
       it('should send a RECOVERY user a reset password email with an Okta activation token', () => {
-        cy.createTestUser({ isGuestUser: false })?.then(({ emailAddress }) => {
+        cy.createTestUser({
+          isGuestUser: false,
+          isUserEmailValidated: true,
+        })?.then(({ emailAddress }) => {
           cy.resetOktaUserPassword(emailAddress).then(() => {
             cy.getTestOktaUser(emailAddress).then((oktaUser) => {
               expect(oktaUser.status).to.eq(Status.RECOVERY);
@@ -630,7 +660,10 @@ describe('Registration flow', () => {
         });
       });
       it('should send a PASSWORD_EXPIRED user a reset password email with an Okta activation token', () => {
-        cy.createTestUser({ isGuestUser: false })?.then(({ emailAddress }) => {
+        cy.createTestUser({
+          isGuestUser: false,
+          isUserEmailValidated: true,
+        })?.then(({ emailAddress }) => {
           cy.expireOktaUserPassword(emailAddress).then(() => {
             cy.getTestOktaUser(emailAddress).then((oktaUser) => {
               expect(oktaUser.status).to.eq(Status.PASSWORD_EXPIRED);
@@ -723,7 +756,10 @@ describe('Registration flow', () => {
     });
 
     it('should resend a STAGED user a set password email with an Okta activation token', () => {
-      cy.createTestUser({ isGuestUser: true })?.then(({ emailAddress }) => {
+      cy.createTestUser({
+        isGuestUser: true,
+        isUserEmailValidated: true,
+      })?.then(({ emailAddress }) => {
         cy.getTestOktaUser(emailAddress).then((oktaUser) => {
           expect(oktaUser.status).to.eq(Status.STAGED);
 
@@ -773,7 +809,10 @@ describe('Registration flow', () => {
       });
     });
     it('should resend a PROVISIONED user a set password email with an Okta activation token', () => {
-      cy.createTestUser({ isGuestUser: true })?.then(({ emailAddress }) => {
+      cy.createTestUser({
+        isGuestUser: true,
+        isUserEmailValidated: true,
+      })?.then(({ emailAddress }) => {
         cy.activateTestOktaUser(emailAddress).then(() => {
           cy.getTestOktaUser(emailAddress).then((oktaUser) => {
             expect(oktaUser.status).to.eq(Status.PROVISIONED);
@@ -822,7 +861,10 @@ describe('Registration flow', () => {
       });
     });
     it('should send an ACTIVE user a reset password email with no activation token', () => {
-      cy.createTestUser({ isGuestUser: false })?.then(({ emailAddress }) => {
+      cy.createTestUser({
+        isGuestUser: false,
+        isUserEmailValidated: true,
+      })?.then(({ emailAddress }) => {
         cy.getTestOktaUser(emailAddress).then((oktaUser) => {
           expect(oktaUser.status).to.eq(Status.ACTIVE);
 
@@ -869,7 +911,10 @@ describe('Registration flow', () => {
       });
     });
     it('should send a RECOVERY user a reset password email with an Okta activation token', () => {
-      cy.createTestUser({ isGuestUser: false })?.then(({ emailAddress }) => {
+      cy.createTestUser({
+        isGuestUser: false,
+        isUserEmailValidated: true,
+      })?.then(({ emailAddress }) => {
         cy.resetOktaUserPassword(emailAddress).then(() => {
           cy.getTestOktaUser(emailAddress).then((oktaUser) => {
             expect(oktaUser.status).to.eq(Status.RECOVERY);
@@ -920,7 +965,10 @@ describe('Registration flow', () => {
       });
     });
     it('should send a PASSWORD_EXPIRED user a reset password email with an Okta activation token', () => {
-      cy.createTestUser({ isGuestUser: false })?.then(({ emailAddress }) => {
+      cy.createTestUser({
+        isGuestUser: false,
+        isUserEmailValidated: true,
+      })?.then(({ emailAddress }) => {
         cy.expireOktaUserPassword(emailAddress).then(() => {
           cy.getTestOktaUser(emailAddress).then((oktaUser) => {
             expect(oktaUser.status).to.eq(Status.PASSWORD_EXPIRED);
@@ -967,6 +1015,48 @@ describe('Registration flow', () => {
               });
             });
           });
+        });
+      });
+    });
+  });
+
+  context('Okta unvalidated email flow', () => {
+    it('Sends an existing user with an unvalidated email a reset password email on register', () => {
+      cy.createTestUser({
+        isUserEmailValidated: false,
+      })?.then(({ emailAddress }) => {
+        const timeRequestWasMade = new Date();
+        cy.visit('/register');
+        cy.get('input[name=email]').type(emailAddress);
+        cy.get('[data-cy="main-form-submit-button"]').click();
+        // Make sure that we don't get sent to the 'security reasons' page
+        cy.url().should('include', '/register/email-sent');
+        cy.contains(
+          'For security reasons we need you to change your password.',
+        ).should('not.exist');
+        cy.contains(emailAddress);
+        cy.contains('Resend email');
+        cy.contains('Change email address');
+
+        cy.checkForEmailAndGetDetails(
+          emailAddress,
+          timeRequestWasMade,
+          /reset-password\/([^"]*)/,
+        ).then(({ links, body, token }) => {
+          expect(body).to.have.string(
+            'Because your security is extremely important to us, we have changed our password policy.',
+          );
+          expect(body).to.have.string('Reset password');
+          expect(links.length).to.eq(2);
+          const resetPasswordLink = links.find((s) =>
+            s.text?.includes('Reset password'),
+          );
+          expect(resetPasswordLink?.href ?? '').to.have.string(
+            'reset-password',
+          );
+          cy.visit(`/reset-password/${token}`);
+          cy.contains(emailAddress);
+          cy.contains('Reset password');
         });
       });
     });

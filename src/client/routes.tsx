@@ -4,6 +4,7 @@ import { RoutePaths } from '@/shared/model/Routes';
 import { RegistrationPage } from '@/client/pages/RegistrationPage';
 import { ResetPasswordPage } from '@/client/pages/ResetPasswordPage';
 import { EmailSentPage } from '@/client/pages/EmailSentPage';
+import { UnvalidatedEmailEmailSentPage } from './pages/UnvalidatedEmailEmailSentPage';
 import { NotFoundPage } from '@/client/pages/NotFoundPage';
 import { ChangePasswordPage } from '@/client/pages/ChangePasswordPage';
 import { ChangePasswordCompletePage } from '@/client/pages/ChangePasswordCompletePage';
@@ -47,6 +48,12 @@ const routes: Array<{
   {
     path: '/signin/success',
     element: <SignInSuccessPage />,
+  },
+  {
+    path: '/signin/email-sent',
+    element: (
+      <UnvalidatedEmailEmailSentPage formTrackingName="unvalidated-email-resend" />
+    ),
   },
   {
     path: '/reauthenticate',

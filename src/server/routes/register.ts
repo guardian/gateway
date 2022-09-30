@@ -197,10 +197,11 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
           emailSentSuccess: true,
         }),
       );
-    } else
+    } else {
       throw new OktaError({
         message: 'Could not resend registration email as email was undefined',
       });
+    }
   } catch (error) {
     logger.error('Okta Registration resend email failure', error, {
       request_id: res.locals.requestId,

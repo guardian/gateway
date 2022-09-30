@@ -31,6 +31,8 @@ type ConditionalMetrics =
   | 'OktaUpdatePassword'
   | 'OktaValidatePasswordToken'
   | 'OktaWelcomeResendEmail'
+  | 'OktaUnvalidatedUserSendEmail'
+  | 'OktaUnvalidatedUserResendEmail'
   | 'PostSignInPrompt'
   | 'PostSignInPromptRedirect'
   | 'Register'

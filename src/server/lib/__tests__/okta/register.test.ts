@@ -6,6 +6,7 @@ import {
   activateUser,
   reactivateUser,
   dangerouslyResetPassword,
+  getUserGroups,
 } from '@/server/lib/okta/api/users';
 import {
   UserResponse,
@@ -17,6 +18,8 @@ import { sendAccountExistsEmail } from '@/email/templates/AccountExists/sendAcco
 import { sendAccountWithoutPasswordExistsEmail } from '@/email/templates/AccountWithoutPasswordExists/sendAccountWithoutPasswordExists';
 import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
 import { ErrorCause, OktaError } from '@/server/models/okta/Error';
+import { Group } from '@/server/models/okta/Group';
+import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
 
 // mocked configuration
 jest.mock('@/server/lib/getConfiguration', () => ({
@@ -42,6 +45,11 @@ jest.mock(
   '@/email/templates/AccountWithoutPasswordExists/sendAccountWithoutPasswordExists',
 );
 jest.mock('@/email/templates/ResetPassword/sendResetPasswordEmail');
+jest.mock(
+  '@/email/templates/UnvalidatedEmailResetPassword/sendUnvalidatedEmailResetPasswordEmail',
+);
+jest.mock('@/server/lib/unvalidatedEmail');
+
 const mockedCreateOktaUser =
   mocked<(body: UserCreationRequest) => Promise<UserResponse>>(createUser);
 const mockedFetchOktaUser =
@@ -57,6 +65,8 @@ const mockedReactivateOktaUser =
 const mockedDangerouslyResetPassword = mocked<
   (id: string, sendEmail: boolean) => Promise<string | void>
 >(dangerouslyResetPassword);
+const mockedGetUserGroups =
+  mocked<(id: string) => Promise<Group[]>>(getUserGroups);
 const mockedSendAccountExistsEmail = mocked<
   (params: { to: string; activationToken: string }) => Promise<boolean>
 >(sendAccountExistsEmail);
@@ -66,9 +76,16 @@ const mockedSendAccountWithoutPasswordExistsEmail = mocked<
 const mockedSendResetPasswordEmail = mocked<
   (params: { to: string; resetPasswordToken: string }) => Promise<boolean>
 >(sendResetPasswordEmail);
+const mockedSendEmailToUnvalidatedUser = mocked<
+  (id: string, email: string) => Promise<void>
+>(sendEmailToUnvalidatedUser);
 
 // mocked logger
 jest.mock('@/server/lib/serverSideLogger');
+// mocked trackMetric
+jest.mock('@/server/lib/trackMetric', () => ({
+  trackMetric: jest.fn(),
+}));
 
 const email = 'someemail';
 const User = (status: Status): UserResponse => {
@@ -97,6 +114,28 @@ const userExistsError = {
   ],
 };
 
+const existingUserGroups: Group[] = [
+  {
+    id: 'group-id-1',
+    profile: {
+      name: 'Everyone',
+      description: 'All users in your organization',
+    },
+  },
+  {
+    id: 'group-id-2',
+    profile: { name: 'GuardianUser-All', description: '' },
+  },
+  {
+    id: 'group-id-2',
+    profile: { name: 'GuardianUser-EmailValidated', description: '' },
+  },
+];
+
+const existingUnvalidatedUserGroups: Group[] = existingUserGroups.filter(
+  (group) => group.profile.name !== 'GuardianUser-EmailValidated',
+);
+
 describe('okta#register', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -121,6 +160,9 @@ describe('okta#register', () => {
     const user = User(Status.STAGED);
 
     mockedCreateOktaUser.mockRejectedValueOnce(new OktaError(userExistsError));
+    mockedGetUserGroups.mockReturnValueOnce(
+      Promise.resolve(existingUserGroups),
+    );
     mockedFetchOktaUser.mockReturnValueOnce(Promise.resolve(user));
     mockedActivateOktaUser.mockReturnValueOnce(
       Promise.resolve({ token: 'sometoken' } as TokenResponse),
@@ -147,6 +189,9 @@ describe('okta#register', () => {
     const user = User(Status.PROVISIONED);
 
     mockedCreateOktaUser.mockRejectedValueOnce(new OktaError(userExistsError));
+    mockedGetUserGroups.mockReturnValueOnce(
+      Promise.resolve(existingUserGroups),
+    );
     mockedFetchOktaUser.mockReturnValueOnce(Promise.resolve(user));
     mockedReactivateOktaUser.mockReturnValueOnce(
       Promise.resolve({ token: 'sometoken' } as TokenResponse),
@@ -172,6 +217,9 @@ describe('okta#register', () => {
     const user = User(Status.ACTIVE);
 
     mockedCreateOktaUser.mockRejectedValueOnce(new OktaError(userExistsError));
+    mockedGetUserGroups.mockReturnValueOnce(
+      Promise.resolve(existingUserGroups),
+    );
     mockedFetchOktaUser.mockReturnValueOnce(Promise.resolve(user));
     mockedSendAccountExistsEmail.mockReturnValueOnce(Promise.resolve(true));
 
@@ -193,6 +241,9 @@ describe('okta#register', () => {
     const user = User(Status.RECOVERY);
 
     mockedCreateOktaUser.mockRejectedValueOnce(new OktaError(userExistsError));
+    mockedGetUserGroups.mockReturnValueOnce(
+      Promise.resolve(existingUserGroups),
+    );
     mockedFetchOktaUser.mockReturnValueOnce(Promise.resolve(user));
     mockedDangerouslyResetPassword.mockReturnValueOnce(
       Promise.resolve('sometoken'),
@@ -218,6 +269,9 @@ describe('okta#register', () => {
     const user = User(Status.PASSWORD_EXPIRED);
 
     mockedCreateOktaUser.mockRejectedValueOnce(new OktaError(userExistsError));
+    mockedGetUserGroups.mockReturnValueOnce(
+      Promise.resolve(existingUserGroups),
+    );
     mockedFetchOktaUser.mockReturnValueOnce(Promise.resolve(user));
     mockedDangerouslyResetPassword.mockReturnValueOnce(
       Promise.resolve('sometoken'),
@@ -236,10 +290,26 @@ describe('okta#register', () => {
     const user = User(Status.SUSPENDED);
 
     mockedCreateOktaUser.mockRejectedValueOnce(new OktaError(userExistsError));
+    mockedGetUserGroups.mockReturnValueOnce(
+      Promise.resolve(existingUserGroups),
+    );
     mockedFetchOktaUser.mockReturnValueOnce(Promise.resolve(user));
 
     await expect(register(email)).rejects.toThrow(OktaError);
     expect(mockedActivateOktaUser).not.toHaveBeenCalled();
     expect(mockedReactivateOktaUser).not.toHaveBeenCalled();
+  });
+
+  test('should send an unvalidated user email to an unvalidated user', async () => {
+    const user = User(Status.ACTIVE);
+    mockedCreateOktaUser.mockRejectedValueOnce(new OktaError(userExistsError));
+    mockedGetUserGroups.mockReturnValueOnce(
+      Promise.resolve(existingUnvalidatedUserGroups),
+    );
+    mockedFetchOktaUser.mockReturnValueOnce(Promise.resolve(user));
+    mockedSendEmailToUnvalidatedUser.mockReturnValueOnce(Promise.resolve());
+
+    await expect(register(email)).resolves.toEqual(user);
+    expect(mockedSendEmailToUnvalidatedUser).toHaveBeenCalled();
   });
 });
