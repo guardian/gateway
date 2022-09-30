@@ -32,6 +32,7 @@
     "prepare": "husky install",
     "clear:cache": "rm -rf ./node_modules/.cache",
     "ts-prune": "ts-prune -i .stories.tsx",
+    "gen:okta-login": "tsc --project ./scripts/okta/tsconfig.json && webpack --config ./scripts/okta/webpack.config.js",
     "gen:ratelimit:schema": "yarn ts-node --transpileOnly ./scripts/generate-rate-limit-schema.ts",
     "postinstall": "yarn gen:ratelimit:schema"
   },
