@@ -107,7 +107,7 @@ export const linksToTheGuardianJobsTermsAndConditionsPageWhenJobsClientIdSet = (
         ? '/signin?clientId=jobs&useIdapi=true'
         : '/signin?clientId=jobs';
       cy.visit(visitUrl);
-      cy.contains("Guardian's Jobs terms & conditions").click();
+      cy.contains('Guardian Jobs terms & conditions').click();
       cy.url().should('eq', guardianJobsTermsOfServiceUrl);
     },
   ] as const;
@@ -131,7 +131,7 @@ export const linksToTheGuardianJobsPrivacyPolicyPageWhenJobsClientIdSet = (
         : '/signin?clientId=jobs';
       cy.visit(visitUrl);
       cy.contains('For information about how we use your data')
-        .contains("Guardian Jobs' privacy policy")
+        .contains('Guardian Jobs privacy policy')
         .click();
       cy.url().should('eq', guardianJobsPrivacyPolicyUrl);
     },
