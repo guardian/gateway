@@ -106,7 +106,7 @@
     "ioredis-mock": "^8.2.2",
     "jest": "^29.0.3",
     "jest-environment-jsdom": "^29.0.3",
-    "jest-mock": "^29.0.3",
+    "jest-mock": "^29.1.2",
     "nodemon": "^2.0.20",
     "prettier": "^2.7.1",
     "react-test-renderer": "^17.0.2",
