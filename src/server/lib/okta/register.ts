@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { Status, UserResponse } from '@/server/models/okta/User';
 import {
   createUser,
@@ -15,6 +16,10 @@ import { sendAccountWithoutPasswordExistsEmail } from '@/email/templates/Account
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
 import { trackMetric } from '@/server/lib/trackMetric';
+import {
+  validateRecoveryToken,
+  resetPassword as authenticationResetPassword,
+} from './api/authentication';
 
 const { okta } = getConfiguration();
 
@@ -40,21 +45,6 @@ export const sendRegistrationEmailByUserState = async (
   const user = await getUser(email);
   const { id, status } = user;
 
-  // First, check if the user's email is unvalidated. If not, we send
-  // an email asking them to change their password, then return from here
-  // to show the user the regular post-registration 'email sent' page.
-  const groups = await getUserGroups(id);
-  // check if the user has their email validated based on group membership
-  const emailValidated = groups.some(
-    (group) => group.profile.name === 'GuardianUser-EmailValidated',
-  );
-  if (!emailValidated) {
-    await sendEmailToUnvalidatedUser(id, user.profile.email);
-    trackMetric('OktaUnvalidatedUserResendEmail::Success');
-    return user;
-  }
-
-  // The user's email is validated - continue with the user status flows.
   switch (status) {
     case Status.STAGED: {
       /* Given I'm a STAGED user
@@ -109,13 +99,62 @@ export const sendRegistrationEmailByUserState = async (
     case Status.ACTIVE: {
       /* Given I'm an ACTIVE user
        *    When I try to register
-       *    Then I should be sent an email with a link to the reset
-       *    password form (with no token)
+       *    Given I don't have a validated email
+       *        Given I have a password set
+       *            Then I should be sent an email with a reset password token
+       *        Given I do NOT have a password set
+       *            Then I should have my password dangerously reset, and then
+       *            sent an email with a reset password token
+       *    Given I have a validated email
+       *        Then I should be sent an email with NO reset password token
        *    And my status should remain ACTIVE
        */
-      await sendAccountExistsEmail({
-        to: user.profile.email,
-      });
+
+      const doesNotHavePassword = !user.credentials.password;
+
+      const groups = await getUserGroups(id);
+      // check if the user has their email validated based on group membership
+      const emailValidated = groups.some(
+        (group) => group.profile.name === 'GuardianUser-EmailValidated',
+      );
+
+      if (!emailValidated) {
+        if (doesNotHavePassword) {
+          // Dangerously reset the password so we _can_ send them an email with a forgot password token
+          // generate an recoveryToken OTT and put user into RECOVERY state
+          const recoveryToken = await dangerouslyResetPassword(user.id);
+
+          // validate the token
+          const { stateToken } = await validateRecoveryToken({
+            recoveryToken,
+          });
+
+          // check state token is defined
+          if (stateToken) {
+            // set the placeholder password as a cryptographically secure UUID
+            await authenticationResetPassword({
+              stateToken,
+              newPassword: crypto.randomUUID(),
+            });
+          } else {
+            throw new OktaError({
+              message: `Okta user reset password failed: missing state token`,
+            });
+          }
+        }
+        // They either now have a placeholder password, or already had a password set,
+        // so we can send them an email with a forgot password token
+        await sendEmailToUnvalidatedUser(id, user.profile.email);
+        trackMetric('OktaUnvalidatedUserResendEmail::Success');
+      } else {
+        // The user's email is validated - continue with the user status flows.
+        // TODO: This could be improved by sending the user a direct reset password token email
+        // (generated via users.ts/forgotPassword) if they do have a password, and this same
+        // generic email if they don't have a password.
+        await sendAccountExistsEmail({
+          to: user.profile.email,
+        });
+      }
       return user;
     }
     case Status.RECOVERY:

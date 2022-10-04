@@ -14,9 +14,20 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  A[GET /register] --> B[POST /register] --> OktaRegistration --> registerWithOkta --> setEncryptedStateCookieForOktaRegistration --> C[302 /register/email-sent]
+  A[GET /register] --> B[POST /register] --> OktaRegistration --> registerWithOkta --> redirectToEmailSent2[302 /register/email-sent]
   registerWithOkta --> createUser
   createUser --> catch --> sendRegistrationEmailByUserState
+  sendRegistrationEmailByUserState --> getUser
+  getUser --> userStatus{User status?}
+  userStatus -- ACTIVE --> emailValidated{Email validated?}
+  emailValidated -- Yes --> sendAccountExistsEmail --> redirectToEmailSent
+  emailValidated -- No --> hasPassword{Has password?}
+  hasPassword -- Yes --> sendEmailToUnvalidatedUser --> redirectToEmailSent
+  hasPassword -- No --> resetAndSetPassword[Reset and set placeholder password] --> sendEmailToUnvalidatedUser
+  userStatus -- STAGED --> activateUser --> sendAccountWithoutPasswordExistsEmail --> redirectToEmailSent
+  userStatus -- PROVISIONED --> reactivateUser --> sendAccountWithoutPasswordExistsEmail
+  userStatus -- RECOVERY/PASSWORD_EXPIRED --> dangerouslyResetPassword --> sendResetPasswordEmail --> redirectToEmailSent
+  redirectToEmailSent[302 /register/email-sent]
 ```
 
 ## Resend registration email
