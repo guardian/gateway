@@ -330,4 +330,52 @@ describe('Sign in flow, Okta enabled', () => {
       });
     });
   });
+
+  context('Okta session exists on /signin', () => {
+    beforeEach(() => {
+      // Intercept the external redirect page.
+      // We just want to check that the redirect happens, not that the page loads.
+      cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
+        req.reply(200);
+      });
+    });
+
+    it('shows the signed in as page', () => {
+      // Create a validated test user
+      cy.createTestUser({ isUserEmailValidated: true }).then(
+        ({ emailAddress, finalPassword }) => {
+          // Sign our new user in
+          cy.visit('/signin');
+          cy.get('input[name=email]').type(emailAddress);
+          cy.get('input[name=password]').type(finalPassword);
+          cy.get('[data-cy="main-form-submit-button"]').click();
+          cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+
+          // Get the current session data
+          cy.getCookie('sid').then((originalSidCookie) => {
+            expect(originalSidCookie).to.exist;
+
+            // Visit sign in again
+            cy.visit(
+              `/signin?returnUrl=${encodeURIComponent(
+                `https://${Cypress.env('BASE_URI')}/consents`,
+              )}`,
+            );
+            cy.url().should('include', '/signin');
+
+            cy.contains('Sign in to the Guardian');
+            cy.contains('You are signed in with');
+            cy.contains(emailAddress);
+            cy.contains('Continue')
+              .should('have.attr', 'href')
+              .and('include', `https://${Cypress.env('BASE_URI')}/consents`);
+            cy.contains('a', 'Sign in')
+              .should('have.attr', 'href')
+              .and('include', '/signout?returnUrl=');
+            cy.contains('Sign in with a different email');
+          });
+        },
+      );
+    });
+  });
 });
