@@ -292,7 +292,53 @@ describe('Registration flow', () => {
         });
       });
     });
-    it('should send an ACTIVE user a reset password email with no activation token', () => {
+    it('should send an ACTIVE UNvalidated user with a password a security email with activation token', () => {
+      cy.createTestUser({
+        isGuestUser: false,
+        isUserEmailValidated: false,
+      })?.then(({ emailAddress }) => {
+        cy.getTestOktaUser(emailAddress).then((oktaUser) => {
+          expect(oktaUser.status).to.eq(Status.ACTIVE);
+
+          cy.visit('/register');
+          const timeRequestWasMade = new Date();
+
+          cy.get('input[name=email]').type(emailAddress);
+          cy.get('[data-cy="main-form-submit-button"]').click();
+
+          // Make sure that we don't get sent to the 'security reasons' page
+          cy.url().should('include', '/register/email-sent');
+          cy.contains(
+            'For security reasons we need you to change your password.',
+          ).should('not.exist');
+          cy.contains(emailAddress);
+          cy.contains('Resend email');
+          cy.contains('Change email address');
+
+          cy.checkForEmailAndGetDetails(
+            emailAddress,
+            timeRequestWasMade,
+            /reset-password\/([^"]*)/,
+          ).then(({ links, body, token }) => {
+            expect(body).to.have.string(
+              'Because your security is extremely important to us, we have changed our password policy.',
+            );
+            expect(body).to.have.string('Reset password');
+            expect(links.length).to.eq(2);
+            const resetPasswordLink = links.find((s) =>
+              s.text?.includes('Reset password'),
+            );
+            expect(resetPasswordLink?.href ?? '').to.have.string(
+              'reset-password',
+            );
+            cy.visit(`/reset-password/${token}`);
+            cy.contains(emailAddress);
+            cy.contains('Reset password');
+          });
+        });
+      });
+    });
+    it('should send an ACTIVE validated user a reset password email with no activation token', () => {
       cy.createTestUser({
         isGuestUser: false,
         isUserEmailValidated: true,
@@ -1015,48 +1061,6 @@ describe('Registration flow', () => {
               });
             });
           });
-        });
-      });
-    });
-  });
-
-  context('Okta unvalidated email flow', () => {
-    it('Sends an existing user with an unvalidated email a reset password email on register', () => {
-      cy.createTestUser({
-        isUserEmailValidated: false,
-      })?.then(({ emailAddress }) => {
-        const timeRequestWasMade = new Date();
-        cy.visit('/register');
-        cy.get('input[name=email]').type(emailAddress);
-        cy.get('[data-cy="main-form-submit-button"]').click();
-        // Make sure that we don't get sent to the 'security reasons' page
-        cy.url().should('include', '/register/email-sent');
-        cy.contains(
-          'For security reasons we need you to change your password.',
-        ).should('not.exist');
-        cy.contains(emailAddress);
-        cy.contains('Resend email');
-        cy.contains('Change email address');
-
-        cy.checkForEmailAndGetDetails(
-          emailAddress,
-          timeRequestWasMade,
-          /reset-password\/([^"]*)/,
-        ).then(({ links, body, token }) => {
-          expect(body).to.have.string(
-            'Because your security is extremely important to us, we have changed our password policy.',
-          );
-          expect(body).to.have.string('Reset password');
-          expect(links.length).to.eq(2);
-          const resetPasswordLink = links.find((s) =>
-            s.text?.includes('Reset password'),
-          );
-          expect(resetPasswordLink?.href ?? '').to.have.string(
-            'reset-password',
-          );
-          cy.visit(`/reset-password/${token}`);
-          cy.contains(emailAddress);
-          cy.contains('Reset password');
         });
       });
     });

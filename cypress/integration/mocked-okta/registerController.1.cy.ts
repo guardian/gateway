@@ -36,7 +36,7 @@ userStatuses.forEach((status) => {
           break;
         case 'ACTIVE':
           specify(
-            "Then I should be shown the 'Check your email inbox' page",
+            "Then I should be shown the 'Check your email inbox' page if I have a validated email",
             () => {
               // Set the correct user status on the response
               const response = { ...userResponse.response, status };
@@ -57,6 +57,55 @@ userStatuses.forEach((status) => {
               verifyInRegularEmailSentPage();
             },
           );
+          specify(
+            "Then I should be shown the 'Check your email inbox' page if I don't have a validated email and don't have a password set",
+            () => {
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userExistsError.code, userExistsError.response);
+              // This user response doesn't have a password credential
+              cy.mockNext(userResponse.code, response);
+              const userGroupsResponseWithoutEmailValidated =
+                userGroupsResponse.response.filter(
+                  (group) =>
+                    group.profile.name !== 'GuardianUser-EmailValidated',
+                );
+              cy.mockNext(
+                userGroupsResponse.code,
+                userGroupsResponseWithoutEmailValidated,
+              );
+              // dangerouslyResetPassword()
+              cy.mockNext(200, {
+                resetPasswordUrl:
+                  'https://example.com/reset_password/XE6wE17zmphl3KqAPFxO',
+              });
+              // validateRecoveryToken()
+              cy.mockNext(200, {
+                stateToken: 'sometoken',
+              });
+              // authenticationResetPassword()
+              cy.mockNext(200, {});
+              // from sendEmailToUnvalidatedUser() --> forgotPassword()
+              cy.mockNext(200, {
+                resetPasswordUrl:
+                  'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
+              });
+              cy.get('button[type=submit]').click();
+              verifyInRegularEmailSentPage();
+            },
+          );
+          specify(
+            "Then I should be shown the 'Check your email inbox' page if I don't have a validated email and do have a password set",
+            () => {
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
+              cy.mockNext(userExistsError.code, userExistsError.response);
+              cy.mockNext(userResponse.code, response);
+              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
+              cy.get('button[type=submit]').click();
+              verifyInRegularEmailSentPage();
+            },
+          );
           //not sure if we need to do anything for the social case here. the only mocked response I can change is the user response
           //but it would be changing fields that no one looks at
           break;
@@ -70,7 +119,6 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
-              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.mockNext(
                 successTokenResponse.code,
                 successTokenResponse.response,
@@ -90,7 +138,6 @@ userStatuses.forEach((status) => {
               const response = { ...userResponse.response, status };
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
-              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.mockNext(
                 resetPasswordResponse.code,
                 resetPasswordResponse.response,
