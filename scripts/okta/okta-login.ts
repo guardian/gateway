@@ -24,9 +24,16 @@ import { getRedirectUrl } from './lib/helper';
 
 // When modifying these files, be sure to code defensively, as we want to handle any errors or unexpected flows that may occur.
 
+// The Okta hosted sign in page doesn't have just one url which it executes on.
+// We've noticed the following two urls (paths):
+// - /login/login.htm
+// - /oauth2/<authorization server id>/v1/authorize
+// each will have a different query string and different config objects which are handled as appropriate in helper.ts.
+
 const redirectUrl = getRedirectUrl(
   window.location.search,
   window.location.origin,
+  window.location.pathname,
   window.OktaUtil,
 );
 
