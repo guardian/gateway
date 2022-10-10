@@ -31,12 +31,20 @@ describe('validateReturnUrl', () => {
     expect(output).toEqual(defaultReturnUri);
   });
 
-  test('it should return default returnUrl if returnUrl parameter includes an invalid path', () => {
-    const input = 'https://www.theguardian.com/signin';
+  test('it should return default returnUrl if returnUrl parameter includes an invalid path, and is on profile subdomain', () => {
+    const input = 'https://profile.theguardian.com/signout';
 
     const output = validateReturnUrl(input);
 
     expect(output).toEqual(defaultReturnUri);
+  });
+
+  test('it should return returnUrl with query parameters if on profile subdomain', () => {
+    const input = 'https://profile.theguardian.com/signin?clientId=jobs';
+
+    const output = validateReturnUrl(input);
+
+    expect(output).toEqual(input);
   });
 });
 

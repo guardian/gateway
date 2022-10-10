@@ -134,6 +134,7 @@ export const getThirdPartyReturnUrl = (
 export const getRedirectUrl = (
   locationSearch: string,
   locationOrigin: string,
+  locationPathname: string,
   oktaUtil?: OktaUtil,
 ): string => {
   // set up params class to hold the parameters we'll be passing to our own login page
@@ -181,6 +182,17 @@ export const getRedirectUrl = (
   // if we're unable to get clientId from OktaUtil, try to get it from the search params where it will exist
   if (!clientId || forceFallback) {
     clientId = searchParams.get('client_id') || undefined;
+  }
+
+  // if fromURI doesn't exist, which is the case when prompt="login" is set and the user is already logged in
+  // we pass the current url as the fromURI so that the user completes the OAuth flow after login
+  // as all the parameters we need are in the url
+  // however this works only in the case when the pathname starts with /oauth2/
+  if (!fromURI && locationPathname.startsWith('/oauth2/')) {
+    // delete the prompt parameter so that the user doesn't get stuck in a login loop
+    searchParams.delete('prompt');
+    // set the fromURI parameter
+    params.set('fromURI', locationPathname + '?' + searchParams.toString());
   }
 
   // add the parameters to the params class

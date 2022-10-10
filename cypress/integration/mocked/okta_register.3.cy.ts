@@ -53,24 +53,19 @@ describe('Okta Register flow', () => {
       });
       cy.get('[data-cy=main-form-submit-button]').click();
 
-      // we can't actually check the authorization code flow
-      // so intercept the request and redirect to the default return URL
-      cy.intercept(
-        `http://localhost:9000/oauth2/${Cypress.env(
-          'OKTA_CUSTOM_OAUTH_SERVER',
-        )}/v1/authorize*`,
-        (req) => {
-          req.redirect('https://m.code.dev-theguardian.com/');
-        },
-      ).as('authRedirect');
-
-      cy.wait('@registerPost').then((interception) => {
-        expect(interception?.response?.statusCode).to.eq(303);
-      });
-
-      cy.wait('@authRedirect').then(() => {
-        cy.url().should('include', 'https://m.code.dev-theguardian.com/');
-      });
+      cy.contains('Sign in to the Guardian');
+      cy.contains('You are signed in with');
+      cy.contains('user@example.com');
+      cy.contains('Continue')
+        .should('have.attr', 'href')
+        .and('include', 'https://m.code.dev-theguardian.com');
+      cy.contains('a', 'Sign in')
+        .should('have.attr', 'href')
+        .and(
+          'include',
+          '/signout?returnUrl=https%253A%252F%252Fprofile.thegulocal.com%252Fsignin',
+        );
+      cy.contains('Sign in with a different email');
     });
 
     it('should redirect to /reauthenticate if the sid Okta session cookie is set, but invalid', () => {
@@ -123,31 +118,21 @@ describe('Okta Register flow', () => {
       // disable the cmp on the redirect
       cy.disableCMP();
 
-      // we can't actually check the authorization code flow
-      // so intercept the request and redirect to the default return URL
-      cy.intercept(
-        `http://localhost:9000/oauth2/${Cypress.env(
-          'OKTA_CUSTOM_OAUTH_SERVER',
-        )}/v1/authorize*`,
-        (req) => {
-          req.redirect('https://m.code.dev-theguardian.com/');
-        },
-      ).as('authRedirect');
+      cy.visit('/register');
 
-      cy.request({
-        url: '/register',
-        followRedirect: false,
-        failOnStatusCode: false,
-      }).then((response) => {
-        expect(response.status).to.eq(303);
-        expect(response.redirectedToUrl).to.include('/v1/authorize');
-
-        cy.visit(response.redirectedToUrl as string);
-      });
-
-      cy.wait('@authRedirect').then(() => {
-        cy.url().should('include', 'https://m.code.dev-theguardian.com/');
-      });
+      cy.contains('Sign in to the Guardian');
+      cy.contains('You are signed in with');
+      cy.contains('user@example.com');
+      cy.contains('Continue')
+        .should('have.attr', 'href')
+        .and('include', 'https://m.code.dev-theguardian.com');
+      cy.contains('a', 'Sign in')
+        .should('have.attr', 'href')
+        .and(
+          'include',
+          '/signout?returnUrl=https%253A%252F%252Fprofile.thegulocal.com%252Fsignin',
+        );
+      cy.contains('Sign in with a different email');
     });
 
     it('should redirect to /reauthenticate if the sid Okta session cookie is set but invalid', () => {

@@ -14,7 +14,6 @@ import { clearEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { clearUserSessions } from '@/server/lib/okta/api/users';
 import { getSession } from '@/server/lib/okta/api/sessions';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 const { defaultReturnUri, baseUri } = getConfiguration();
 
@@ -54,32 +53,22 @@ export const clearOktaCookies = (res: ResponseWithRequestState) => {
 router.get(
   '/signout',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { returnUrl } = res.locals.pageData;
+    const { returnUrl } = res.locals.queryParams;
 
     // We try the logout sequentially, as we need to log users out from Okta first,
-    const oktaSessionCookieId: string | undefined = req.cookies.sid;
+    await signOutFromOkta(req, res);
+    // if the user has no Okta sid cookie, we will then try and log them out from IDAPI
+    // the user will be in this state if they previously had their Okta cookie removed and got
+    // redirected back to the /signout endpoint
+    await signOutFromIDAPI(req, res);
+    // clear dotcom cookies
+    clearDotComCookies(res);
 
-    if (oktaSessionCookieId) {
-      await signOutFromOkta(req, res);
-      // We try and remove their session and then unset their sid cookie by redirecting back to /signout
-      // this keeps them on the profile domain to remove the Okta cookies
-      return res.redirect(
-        addQueryParamsToPath('/signout', res.locals.queryParams),
-      );
-    } else {
-      // if the user has no Okta sid cookie, we will then try and log them out from IDAPI
-      // the user will be in this state if they previously had their Okta cookie removed and got
-      // redirected back to the /signout endpoint
-      await signOutFromIDAPI(req, res);
-      // clear dotcom cookies
-      clearDotComCookies(res);
+    // clear gateway specific cookies
+    deleteAuthorizationStateCookie(res);
+    clearEncryptedStateCookie(res);
 
-      // clear gateway specific cookies
-      deleteAuthorizationStateCookie(res);
-      clearEncryptedStateCookie(res);
-
-      return res.redirect(303, returnUrl || defaultReturnUri);
-    }
+    return res.redirect(303, returnUrl || defaultReturnUri);
   }),
 );
 
@@ -133,6 +122,7 @@ const signOutFromOkta = async (
     if (oktaSessionCookieId) {
       const { userId } = await getSession(oktaSessionCookieId);
       await clearUserSessions(userId);
+      trackMetric('OktaSignOut::Success');
     }
   } catch (error) {
     logger.error(`${req.method} ${req.originalUrl}  Error`, error, {

@@ -30,6 +30,7 @@ export interface PageData {
   geolocation?: GeoLocation;
   fieldErrors?: Array<FieldError>;
   browserName?: string;
+  isNativeApp?: boolean;
 
   // email sent pages specific
   emailType?: EmailType;
@@ -49,6 +50,10 @@ export interface PageData {
   firstName?: string;
   secondName?: string;
   userBelongsToGRS?: boolean;
+
+  // signed in as page specific
+  continueLink?: string;
+  signOutLink?: string;
 }
 
 export interface RecaptchaConfig {
