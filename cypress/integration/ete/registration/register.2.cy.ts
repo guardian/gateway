@@ -65,7 +65,7 @@ describe('Registration flow', () => {
         req.reply(200);
       });
       cy.visit('/signin?clientId=jobs&useIdapi=true');
-      cy.contains("Guardian's Jobs terms & conditions").click();
+      cy.contains('Guardian Jobs terms & conditions').click();
       cy.url().should('eq', guardianJobsTermsOfServiceUrl);
     });
 
@@ -79,7 +79,7 @@ describe('Registration flow', () => {
       });
       cy.visit('/signin?clientId=jobs&useIdapi=true');
       cy.contains('For information about how we use your data')
-        .contains("Guardian Jobs' privacy policy")
+        .contains('Guardian Jobs privacy policy')
         .click();
       cy.url().should('eq', guardianJobsPrivacyPolicyUrl);
     });

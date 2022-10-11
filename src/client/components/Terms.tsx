@@ -1,7 +1,11 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { from, space, textSans } from '@guardian/source-foundations';
+import { space, textSans } from '@guardian/source-foundations';
 import { ExternalLink } from '@/client/components/ExternalLink';
+
+export const termsContainer = css`
+  margin-top: ${space[5]}px;]};
+`;
 
 const Text = ({ children }: { children: React.ReactNode }) => (
   <p
@@ -32,16 +36,6 @@ const TermsLink = ({
   </ExternalLink>
 );
 
-const terms = css`
-  margin-top: ${space[3]}px;
-  ${from.mobileMedium} {
-    margin-top: ${space[4]}px;
-  }
-  ${from.tablet} {
-    margin-top: ${space[3]}px;
-  }
-`;
-
 export const GuardianTerms = () => (
   <>
     <Text>
@@ -61,50 +55,23 @@ export const GuardianTerms = () => (
   </>
 );
 
-export const JobsStandaloneTerms = () => (
-  <div css={terms}>
+export const JobsTerms = () => (
+  <>
     <Text>
       By proceeding, you agree to our{' '}
       <TermsLink href="https://jobs.theguardian.com/terms-and-conditions/">
-        Guardian&#39;s Jobs terms &amp; conditions
+        Guardian Jobs terms &amp; conditions
       </TermsLink>
       .
     </Text>
     <Text>
       For information about how we use your data, see our{' '}
       <TermsLink href="https://jobs.theguardian.com/privacy-policy/">
-        Guardian Jobs&#39; privacy policy
+        Guardian Jobs privacy policy
       </TermsLink>
       .
     </Text>
-  </div>
-);
-
-const JobsTerms = () => (
-  <div css={terms}>
-    <Text>
-      By proceeding, you agree to our{' '}
-      <TermsLink href="https://www.theguardian.com/help/terms-of-service">
-        terms &amp; conditions
-      </TermsLink>{' '}
-      and{' '}
-      <TermsLink href="https://jobs.theguardian.com/terms-and-conditions/">
-        Guardian&#39;s Jobs terms &amp; conditions
-      </TermsLink>
-      .
-    </Text>
-    <Text>
-      For information about how we use your data, see our{' '}
-      <TermsLink href="https://www.theguardian.com/help/privacy-policy">
-        privacy policy
-      </TermsLink>{' '}
-      and{' '}
-      <TermsLink href="https://jobs.theguardian.com/privacy-policy/">
-        Guardian Jobs&#39; privacy policy
-      </TermsLink>
-      .
-    </Text>
-  </div>
+  </>
 );
 
 export const RecaptchaTerms = () => (
@@ -119,11 +86,4 @@ export const RecaptchaTerms = () => (
     </TermsLink>{' '}
     apply.
   </Text>
-);
-
-export const Terms = ({ isJobs = false }) => (
-  <div css={terms}>
-    {isJobs ? <JobsTerms /> : <GuardianTerms />}
-    <RecaptchaTerms />
-  </div>
 );

@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React from 'react';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { MainLayout } from '@/client/layouts/Main';
 import { MainForm } from '@/client/components/MainForm';
@@ -9,12 +9,20 @@ import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { SocialButtons } from '@/client/components/SocialButtons';
 import { socialButtonDivider } from '@/client/styles/Shared';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
+import { GuardianTerms, JobsTerms, termsContainer } from '../components/Terms';
 
 export type RegistrationProps = {
   email?: string;
   recaptchaSiteKey: string;
   queryParams: QueryParams;
 };
+
+const RegistrationTerms = ({ isJobs }: { isJobs: boolean }) => (
+  <div css={termsContainer}>
+    {!isJobs && <GuardianTerms />}
+    {isJobs && <JobsTerms />}
+  </div>
+);
 
 export const Registration = ({
   email,
@@ -26,10 +34,6 @@ export const Registration = ({
   const { clientId } = queryParams;
   const isJobs = clientId === 'jobs';
 
-  const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
-  const [recaptchaErrorContext, setRecaptchaErrorContext] =
-    useState<ReactNode>(null);
-
   usePageLoadOphanInteraction(formTrackingName);
 
   const tabs = generateSignInRegisterTabs({
@@ -38,33 +42,23 @@ export const Registration = ({
   });
 
   return (
-    <MainLayout
-      errorOverride={recaptchaErrorMessage}
-      errorContext={recaptchaErrorContext}
-      showErrorReportUrl={!!recaptchaErrorContext}
-      tabs={tabs}
-      errorSmallMarginBottom={!!recaptchaErrorMessage}
-    >
+    <MainLayout tabs={tabs}>
+      <RegistrationTerms isJobs={isJobs} />
+      <SocialButtons queryParams={queryParams} marginTop={true} />
+      <Divider
+        spaceAbove="loose"
+        displayText="or continue with"
+        cssOverrides={socialButtonDivider}
+      />
       <MainForm
         formAction={buildUrlWithQueryParams('/register', {}, queryParams)}
         submitButtonText="Register"
         recaptchaSiteKey={recaptchaSiteKey}
         formTrackingName={formTrackingName}
         disableOnSubmit
-        setRecaptchaErrorMessage={setRecaptchaErrorMessage}
-        setRecaptchaErrorContext={setRecaptchaErrorContext}
-        hasGuardianTerms={!isJobs}
-        hasJobsTerms={isJobs}
-        largeFormMarginTop={!recaptchaErrorMessage}
       >
         <EmailInput defaultValue={email} />
       </MainForm>
-      <Divider
-        spaceAbove="loose"
-        displayText="or continue with"
-        cssOverrides={socialButtonDivider}
-      />
-      <SocialButtons queryParams={queryParams} />
     </MainLayout>
   );
 };

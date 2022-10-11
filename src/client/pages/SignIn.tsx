@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React from 'react';
 import { SignInErrors } from '@/shared/model/Errors';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { generateSignInRegisterTabs } from '@/client/components/Nav';
@@ -14,6 +14,7 @@ import { Link } from '@guardian/source-react-components';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { SocialButtons } from '@/client/components/SocialButtons';
 import { socialButtonDivider } from '@/client/styles/Shared';
+import { GuardianTerms, JobsTerms, termsContainer } from '../components/Terms';
 
 export type SignInProps = {
   queryParams: QueryParams;
@@ -62,30 +63,22 @@ const getErrorContext = (error: string | undefined) => {
 const showSocialButtons = (
   error: string | undefined,
   queryParams: QueryParams,
+  isJobs: boolean,
 ) => {
   if (error !== SignInErrors.ACCOUNT_ALREADY_EXISTS) {
     return (
       <>
+        <div css={termsContainer}>
+          {!isJobs && <GuardianTerms />}
+          {isJobs && <JobsTerms />}
+        </div>
+        <SocialButtons queryParams={queryParams} marginTop={true} />
         <Divider
           spaceAbove="loose"
           displayText="or continue with"
           cssOverrides={socialButtonDivider}
         />
-        <SocialButtons queryParams={queryParams} />
       </>
-    );
-  } else {
-    return (
-      // force a minimum bottom margin if social buttons are not present
-      <span
-        css={css`
-          display: inline-block;
-          height: 60px;
-          ${from.desktop} {
-            height: ${space[24]}px;
-          }
-        `}
-      />
     );
   }
 };
@@ -102,10 +95,6 @@ export const SignIn = ({
   const { clientId } = queryParams;
   const isJobs = clientId === 'jobs';
 
-  const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
-  const [recaptchaErrorContext, setRecaptchaErrorContext] =
-    useState<ReactNode>(null);
-
   usePageLoadOphanInteraction(formTrackingName);
 
   const tabs = generateSignInRegisterTabs({
@@ -114,22 +103,15 @@ export const SignIn = ({
     queryParams,
   });
 
-  const errorOverride = recaptchaErrorMessage
-    ? recaptchaErrorMessage
-    : pageLevelError;
-
-  const errorContext = recaptchaErrorContext
-    ? recaptchaErrorContext
-    : getErrorContext(pageLevelError);
-
   return (
     <MainLayout
-      errorOverride={errorOverride}
-      errorContext={errorContext}
-      showErrorReportUrl={!!recaptchaErrorContext}
+      errorOverride={pageLevelError}
+      errorContext={getErrorContext(pageLevelError)}
       tabs={tabs}
-      errorSmallMarginBottom={!!errorOverride}
+      errorSmallMarginBottom={!!pageLevelError}
     >
+      {/* SocialButtons component with show boolean */}
+      {showSocialButtons(pageLevelError, queryParams, isJobs)}
       <MainForm
         formAction={buildUrlWithQueryParams(
           isReauthenticate ? '/reauthenticate' : '/signin',
@@ -140,11 +122,12 @@ export const SignIn = ({
         recaptchaSiteKey={recaptchaSiteKey}
         formTrackingName={formTrackingName}
         disableOnSubmit
-        setRecaptchaErrorMessage={setRecaptchaErrorMessage}
-        setRecaptchaErrorContext={setRecaptchaErrorContext}
-        hasGuardianTerms={!isJobs}
-        hasJobsTerms={isJobs}
-        largeFormMarginTop={!errorOverride}
+        hasGuardianTerms={
+          !isJobs && pageLevelError === SignInErrors.ACCOUNT_ALREADY_EXISTS
+        }
+        hasJobsTerms={
+          isJobs && pageLevelError === SignInErrors.ACCOUNT_ALREADY_EXISTS
+        }
       >
         <EmailInput defaultValue={email} />
         <div css={passwordInput}>
@@ -159,7 +142,6 @@ export const SignIn = ({
           </Link>
         </Links>
       </MainForm>
-      {showSocialButtons(pageLevelError, queryParams)}
     </MainLayout>
   );
 };

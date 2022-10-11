@@ -12,22 +12,19 @@ import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 
 type SocialButtonProps = {
   queryParams: QueryParams;
+  marginTop?: boolean;
 };
 
-const containerStyles = css`
+const containerStyles = (marginTop = false) => css`
   display: flex;
   flex-direction: column;
   ${from.tablet} {
     flex-direction: row;
   }
   justify-content: center;
-  margin-top: ${space[5]}px;
+  margin-top: ${marginTop ? space[5] : 0}px;
   ${from.mobileMedium} {
-    margin-top: ${space[6]}px;
-  }
-  margin-bottom: 60px;
-  ${from.desktop} {
-    margin-bottom: ${space[24]}px;
+    margin-top: ${marginTop ? space[6] : 0}px;
   }
   width: 100%;
 `;
@@ -63,9 +60,12 @@ const Gap = () => (
   ></span>
 );
 
-export const SocialButtons = ({ queryParams }: SocialButtonProps) => {
+export const SocialButtons = ({
+  queryParams,
+  marginTop,
+}: SocialButtonProps) => {
   return (
-    <div css={containerStyles}>
+    <div css={containerStyles(marginTop)}>
       <LinkButton
         priority="tertiary"
         cssOverrides={[buttonOverrides, iconOverrides]}
