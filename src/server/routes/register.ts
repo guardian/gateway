@@ -113,6 +113,7 @@ const OktaRegistration = async (
   res: ResponseWithRequestState,
 ) => {
   const { email = '', _cmpConsentedState = false } = req.body;
+
   const registrationLocation: RegistrationLocation | undefined =
     getRegistrationLocation(req, JSON.parse(_cmpConsentedState));
 

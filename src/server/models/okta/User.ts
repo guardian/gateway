@@ -58,7 +58,8 @@ type OktaUserFieldsInResponse =
   | 'emailValidated'
   | 'firstName'
   | 'lastName'
-  | 'isJobsUser';
+  | 'isJobsUser'
+  | 'registrationLocation';
 
 // https://developer.okta.com/docs/reference/api/users/#user-object
 export interface UserResponse {

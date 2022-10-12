@@ -309,6 +309,7 @@ const handleUserResponse = async (
             isGuardianUser: user.profile.isGuardianUser,
             emailValidated: user.profile.emailValidated,
             isJobsUser: user.profile.isJobsUser,
+            registrationLocation: user.profile.registrationLocation,
           },
           credentials: user.credentials,
         };

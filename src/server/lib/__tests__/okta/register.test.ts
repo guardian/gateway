@@ -13,6 +13,7 @@ import {
   Status,
   UserCreationRequest,
   TokenResponse,
+  RegistrationLocation,
 } from '@/server/models/okta/User';
 import {
   validateRecoveryToken,
@@ -108,7 +109,11 @@ jest.mock('@/server/lib/trackMetric', () => ({
 }));
 
 const email = 'someemail';
-const User = (status: Status, hasPassword = true): UserResponse => {
+const User = (
+  status: Status,
+  hasPassword = true,
+  registrationLocation: RegistrationLocation | undefined = undefined,
+): UserResponse => {
   return {
     id: 'someuserid',
     status: status,
@@ -116,6 +121,7 @@ const User = (status: Status, hasPassword = true): UserResponse => {
       login: email,
       isGuardianUser: true,
       email: email,
+      registrationLocation: registrationLocation,
     },
     credentials: {
       password: hasPassword ? {} : undefined,
@@ -166,6 +172,14 @@ describe('okta#register', () => {
 
     mockedCreateOktaUser.mockReturnValueOnce(Promise.resolve(user));
     const result = await register(email);
+    expect(result).toEqual(user);
+  });
+
+  test('should register a new user with registration location', async () => {
+    const user = User(Status.PROVISIONED, true, 'United Kingdom');
+
+    mockedCreateOktaUser.mockReturnValueOnce(Promise.resolve(user));
+    const result = await register(email, 'United Kingdom');
     expect(result).toEqual(user);
   });
 
