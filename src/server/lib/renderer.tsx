@@ -106,8 +106,8 @@ const clientStateFromRequestStateLocals = ({
   // forms field errors
   if (queryParams.recaptchaError) {
     return deepmerge<ClientState>(clientState, {
-      globalMessage: {
-        error: CaptchaErrors.GENERIC,
+      pageData: {
+        formError: CaptchaErrors.GENERIC,
       },
     });
   }

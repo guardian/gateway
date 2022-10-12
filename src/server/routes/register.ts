@@ -161,11 +161,9 @@ const OktaRegistration = async (
     trackMetric('OktaRegistration::Failure');
 
     const requestState = deepmerge(res.locals, {
-      globalMessage: {
-        error: errorMessage(),
-      },
       pageData: {
         email,
+        formError: errorMessage(),
       },
     });
 
@@ -213,8 +211,8 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
       renderer('/register/email-sent', {
         pageTitle: 'Check Your Inbox',
         requestState: mergeRequestState(res.locals, {
-          globalMessage: {
-            error: GenericErrors.DEFAULT,
+          pageData: {
+            formError: GenericErrors.DEFAULT,
           },
         }),
       }),
@@ -308,8 +306,8 @@ const IdapiResendEmail = async (
     const html = renderer('/register/email-sent', {
       pageTitle: 'Check Your Inbox',
       requestState: mergeRequestState(res.locals, {
-        globalMessage: {
-          error: message,
+        pageData: {
+          formError: message,
         },
       }),
     });
@@ -403,11 +401,9 @@ const IdapiRegistration = async (
     trackMetric('Register::Failure');
 
     state = mergeRequestState(state, {
-      globalMessage: {
-        error: message,
-      },
       pageData: {
         email,
+        formError: message,
       },
     });
 

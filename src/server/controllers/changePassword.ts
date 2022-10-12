@@ -153,9 +153,7 @@ const changePasswordInIDAPI = async (
           pageData: {
             email,
             timeUntilTokenExpiry,
-          },
-          globalMessage: {
-            error: message,
+            formError: message,
           },
         });
       }

@@ -169,8 +169,8 @@ router.post(
         renderer('/signin/email-sent', {
           pageTitle: 'Check Your Inbox',
           requestState: mergeRequestState(res.locals, {
-            globalMessage: {
-              error: GenericErrors.DEFAULT,
+            pageData: {
+              formError: GenericErrors.DEFAULT,
             },
           }),
         }),
@@ -280,11 +280,9 @@ const idapiSignInController = async (
     // re-render the sign in page on error, with pre-filled email
     const html = renderer('/signin', {
       requestState: mergeRequestState(res.locals, {
-        globalMessage: {
-          error: message,
-        },
         pageData: {
           email,
+          formError: message,
         },
       }),
       pageTitle: 'Sign in',
@@ -434,9 +432,7 @@ const oktaSignInController = async (
       requestState: mergeRequestState(res.locals, {
         pageData: {
           email,
-        },
-        globalMessage: {
-          error: message,
+          formError: message,
         },
       }),
       pageTitle: 'Sign in',

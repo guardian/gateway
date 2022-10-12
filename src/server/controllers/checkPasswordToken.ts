@@ -197,9 +197,7 @@ export const checkTokenInOkta = async (
             browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
             email,
             fieldErrors,
-          },
-          globalMessage: {
-            error,
+            formError: error,
           },
         }),
       },

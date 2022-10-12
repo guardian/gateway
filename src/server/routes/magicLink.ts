@@ -41,8 +41,8 @@ router.post(
       trackMetric('SendMagicLink::Failure');
 
       state = mergeRequestState(state, {
-        globalMessage: {
-          error: message,
+        pageData: {
+          formError: message,
         },
       });
 
