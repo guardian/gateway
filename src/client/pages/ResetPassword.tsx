@@ -26,6 +26,7 @@ interface ResetPasswordProps {
   showRecentEmailSummary?: boolean;
   recaptchaSiteKey?: string;
   formPageTrackingName?: string;
+  formError?: string;
 }
 
 export const ResetPassword = ({
@@ -40,6 +41,7 @@ export const ResetPassword = ({
   children,
   recaptchaSiteKey,
   formPageTrackingName,
+  formError,
 }: PropsWithChildren<ResetPasswordProps>) => {
   // track page/form load
   usePageLoadOphanInteraction(formPageTrackingName);
@@ -67,6 +69,7 @@ export const ResetPassword = ({
         setRecaptchaErrorContext={setRecaptchaErrorContext}
         formTrackingName={formPageTrackingName}
         disableOnSubmit
+        formErrorMessageFromParent={formError}
       >
         <EmailInput label={emailInputLabel} defaultValue={email} />
       </MainForm>

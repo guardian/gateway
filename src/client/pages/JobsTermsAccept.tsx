@@ -74,6 +74,7 @@ interface JobsTermsAcceptProps {
   secondName?: string;
   userBelongsToGRS?: boolean;
   email?: string;
+  formError?: string;
 }
 
 export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
@@ -82,6 +83,7 @@ export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
   userBelongsToGRS,
   submitUrl,
   email,
+  formError,
 }) => {
   const autoYourDataRow = getAutoRow(1, gridItemYourData);
 
@@ -125,6 +127,7 @@ export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
             formAction={submitUrl}
             onInvalid={() => setFormSubmitAttempted(true)}
             disableOnSubmit
+            formErrorMessageFromParent={formError}
           >
             <NameInputField
               onGroupError={setGroupError}
@@ -161,6 +164,7 @@ export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
             formAction={submitUrl}
             onInvalid={() => setFormSubmitAttempted(true)}
             disableOnSubmit
+            formErrorMessageFromParent={formError}
           >
             <NameInputField
               onGroupError={setGroupError}

@@ -6,7 +6,7 @@ import { MainBodyText } from '@/client/components/MainBodyText';
 export const ResetPasswordPage = () => {
   const clientState = useClientState();
   const {
-    pageData: { email = '' } = {},
+    pageData: { email = '', formError } = {},
     queryParams,
     recaptchaConfig,
   } = clientState;
@@ -14,6 +14,7 @@ export const ResetPasswordPage = () => {
 
   return (
     <ResetPassword
+      formError={formError}
       email={email}
       headerText="Forgot password"
       buttonText="Reset password"

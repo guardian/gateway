@@ -318,3 +318,11 @@ test('submits the form when the reCAPTCHA validation check is successful', async
 
   windowSpy.mockRestore();
 });
+
+test('Shows an error inside the form when formError is set', async () => {
+  const errorText = 'Alas, poor Yorick, an error has occurred.';
+  const { queryByText } = setup({ formErrorMessageFromParent: errorText });
+  await waitFor(() => {
+    expect(queryByText(errorText, { exact: false })).toBeInTheDocument();
+  });
+});

@@ -4,7 +4,7 @@ import { space, textSans } from '@guardian/source-foundations';
 import { ExternalLink } from '@/client/components/ExternalLink';
 
 export const termsContainer = css`
-  margin-top: ${space[5]}px;]};
+  margin-top: ${space[5]}px;
 `;
 
 const Text = ({ children }: { children: React.ReactNode }) => (

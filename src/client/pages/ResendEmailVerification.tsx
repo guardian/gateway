@@ -12,6 +12,7 @@ type ResendEmailVerificationProps = {
   signInPageUrl?: string;
   successText?: string;
   recaptchaSiteKey?: string;
+  formError?: string;
 };
 
 const LoggedOut = ({ signInPageUrl }: { signInPageUrl?: string }) => (
@@ -31,10 +32,12 @@ const LoggedIn = ({
   email,
   successText,
   recaptchaSiteKey,
+  formError,
 }: {
   email: string;
   successText?: string;
   recaptchaSiteKey?: string;
+  formError?: string;
 }) => {
   const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
   const [recaptchaErrorContext, setRecaptchaErrorContext] =
@@ -68,6 +71,7 @@ const LoggedIn = ({
           setRecaptchaErrorMessage={setRecaptchaErrorMessage}
           setRecaptchaErrorContext={setRecaptchaErrorContext}
           disableOnSubmit
+          formErrorMessageFromParent={formError}
         >
           <EmailInput defaultValue={email} hidden hideLabel />
         </MainForm>
@@ -81,10 +85,12 @@ export const ResendEmailVerification = ({
   signInPageUrl,
   successText,
   recaptchaSiteKey,
+  formError,
 }: ResendEmailVerificationProps) => {
   if (email) {
     return (
       <LoggedIn
+        formError={formError}
         email={email}
         successText={successText}
         recaptchaSiteKey={recaptchaSiteKey}
