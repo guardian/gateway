@@ -9,6 +9,8 @@ import { tests } from '@/shared/model/experiments/abTests';
 import { getABTesting } from '@/server/lib/getABTesting';
 import { RequestState, RequestWithTypedQuery } from '@/server/models/Express';
 import Bowser from 'bowser';
+import { logger } from '@/server/lib/serverSideLogger';
+import { getApp } from '@/server/lib/okta/api/apps';
 
 const {
   idapiBaseUrl,
@@ -19,7 +21,9 @@ const {
   sentryDsn,
 } = getConfiguration();
 
-const getRequestState = (req: RequestWithTypedQuery): RequestState => {
+const getRequestState = async (
+  req: RequestWithTypedQuery,
+): Promise<RequestState> => {
   const [abTesting, abTestAPI] = getABTesting(req, tests);
 
   // tracking parameters might be from body too
@@ -40,11 +44,23 @@ const getRequestState = (req: RequestWithTypedQuery): RequestState => {
 
   const browser = Bowser.getParser(req.header('user-agent') || 'unknown');
 
+  // we also need to know if the flow was initiated by a native app, hence we get the app info from the api
+  // and determine this based on the label, whether it contains "android" or "ios"
+  let isNativeApp = false;
+  try {
+    isNativeApp =
+      !!queryParams.appClientId &&
+      /android|ios/i.test((await getApp(queryParams.appClientId)).label);
+  } catch (error) {
+    logger.error('Error getting app info in request state', error);
+  }
+
   return {
     queryParams,
     pageData: {
       geolocation: getGeolocationRegion(req),
       returnUrl: queryParams.returnUrl,
+      isNativeApp,
     },
     globalMessage: {},
     csrf: {
@@ -72,16 +88,21 @@ const getRequestState = (req: RequestWithTypedQuery): RequestState => {
   };
 };
 
-export const requestStateMiddleware = (
+export const requestStateMiddleware = async (
   req: RequestWithTypedQuery,
   res: Response,
   next: NextFunction,
 ) => {
-  const state = getRequestState(req);
+  try {
+    const state = await getRequestState(req);
 
-  /* This is the only place mutation of res.locals should occur */
-  /* eslint-disable-next-line functional/immutable-data */
-  res.locals = state;
+    /* This is the only place mutation of res.locals should occur */
+    /* eslint-disable-next-line functional/immutable-data */
+    res.locals = state;
 
-  next();
+    return next();
+  } catch (error) {
+    logger.error('Error in requestStateMiddleware', error);
+    return next(error);
+  }
 };
