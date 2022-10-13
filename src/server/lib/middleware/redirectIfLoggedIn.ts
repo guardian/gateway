@@ -10,7 +10,6 @@ import { IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
 import { clearIDAPICookies } from '../idapi/IDAPICookies';
 import { renderer } from '@/server/lib/renderer';
 import { mergeRequestState } from '../requestState';
-import { getApp } from '../okta/api/apps';
 
 const { okta, defaultReturnUri, baseUri } = getConfiguration();
 
@@ -58,14 +57,6 @@ export const redirectIfLoggedIn = async (
         returnUrl: signInLink,
       });
 
-      // we also need to know if the flow was initiated by a native app, hence we get the app info from the api
-      // and determine this based on the label, whether it contains "android" or "ios"
-      const isNativeApp =
-        !!state.queryParams.appClientId &&
-        /android|ios/i.test(
-          (await getApp(state.queryParams.appClientId)).label,
-        );
-
       // show the signed in as page
       const html = renderer('/signed-in-as', {
         requestState: mergeRequestState(state, {
@@ -73,7 +64,6 @@ export const redirectIfLoggedIn = async (
             email,
             continueLink,
             signOutLink,
-            isNativeApp,
           },
         }),
         pageTitle: 'Sign in',
