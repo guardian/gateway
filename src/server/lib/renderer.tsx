@@ -1,4 +1,4 @@
-import { ClientState, FieldError } from '@/shared/model/ClientState';
+import { ClientState } from '@/shared/model/ClientState';
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
 import { StaticRouter } from 'react-router-dom/server';
@@ -84,20 +84,11 @@ const clientStateFromRequestStateLocals = ({
   // checking if csrf error exists in query params, and attaching it to the
   // forms field errors
   if (queryParams.csrfError) {
-    // global state page data will already exist at this point
-    // this is just a check to get typescript to compile
-    const fieldErrors: Array<FieldError> =
-      clientState.pageData?.fieldErrors ?? [];
-    // eslint-disable-next-line functional/immutable-data
-    fieldErrors.push({
-      field: 'csrf',
-      message: CsrfErrors.CSRF_ERROR,
-    });
     return {
       ...clientState,
       pageData: {
         ...clientState.pageData,
-        fieldErrors,
+        formError: CsrfErrors.CSRF_ERROR,
       },
     };
   }
