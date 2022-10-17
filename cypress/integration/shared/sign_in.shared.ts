@@ -42,7 +42,7 @@ export const linksToTheGooglePrivacyPolicyPage = (isIdapi = false) => {
       });
       const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
       cy.visit(visitUrl);
-      cy.contains('This site is protected by reCAPTCHA and the Google')
+      cy.contains('This service is protected by reCAPTCHA and the Google')
         .contains('privacy policy')
         .click();
       cy.url().should('eq', googlePrivacyPolicyUrl);

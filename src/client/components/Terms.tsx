@@ -76,7 +76,7 @@ export const JobsTerms = () => (
 
 export const RecaptchaTerms = () => (
   <Text>
-    This site is protected by reCAPTCHA and the Google{' '}
+    This service is protected by reCAPTCHA and the Google{' '}
     <TermsLink href="https://policies.google.com/privacy">
       privacy policy
     </TermsLink>{' '}

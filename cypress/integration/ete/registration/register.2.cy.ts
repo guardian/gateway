@@ -22,7 +22,7 @@ describe('Registration flow', () => {
         req.reply(200);
       });
       cy.visit('/signin?useIdapi=true');
-      cy.contains('This site is protected by reCAPTCHA and the Google')
+      cy.contains('This service is protected by reCAPTCHA and the Google')
         .contains('privacy policy')
         .click();
       cy.url().should('eq', googlePrivacyPolicyUrl);
