@@ -11,6 +11,7 @@ import { RequestState, RequestWithTypedQuery } from '@/server/models/Express';
 import Bowser from 'bowser';
 import { logger } from '@/server/lib/serverSideLogger';
 import { getApp } from '@/server/lib/okta/api/apps';
+import { IsNativeApp } from '@/shared/model/ClientState';
 
 const {
   idapiBaseUrl,
@@ -46,11 +47,20 @@ const getRequestState = async (
 
   // we also need to know if the flow was initiated by a native app, hence we get the app info from the api
   // and determine this based on the label, whether it contains "android" or "ios"
-  let isNativeApp = false;
+  let isNativeApp: IsNativeApp;
+
   try {
-    isNativeApp =
-      !!queryParams.appClientId &&
-      /android|ios/i.test((await getApp(queryParams.appClientId)).label);
+    if (!!queryParams.appClientId) {
+      const app = await getApp(queryParams.appClientId);
+
+      const label = app.label.toLowerCase();
+
+      if (label.startsWith('android_')) {
+        isNativeApp = 'android';
+      } else if (label.startsWith('ios_')) {
+        isNativeApp = 'ios';
+      }
+    }
   } catch (error) {
     logger.error('Error getting app info in request state', error);
   }

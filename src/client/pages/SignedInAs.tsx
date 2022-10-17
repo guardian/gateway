@@ -2,12 +2,13 @@ import React from 'react';
 import { buttonStyles, MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { Link, LinkButton } from '@guardian/source-react-components';
+import { IsNativeApp } from '@/shared/model/ClientState';
 
 interface Props {
   email: string;
   continueLink: string;
   signOutLink: string;
-  isNativeApp?: boolean;
+  isNativeApp?: IsNativeApp;
 }
 
 export const SignedInAs = ({
@@ -17,7 +18,7 @@ export const SignedInAs = ({
   isNativeApp,
 }: Props) => (
   <MainLayout
-    pageHeader={`Sign in to the Guardian${isNativeApp ? ' app' : ''}`}
+    pageHeader={`Sign in to the Guardian${!!isNativeApp ? ' app' : ''}`}
   >
     <MainBodyText noMargin>
       You are signed in with <br />
