@@ -419,11 +419,11 @@ Resources:
       Subscription:
         - Endpoint: !Ref 'AlarmEmailAddress'
           Protocol: email
-  HighLatencyAlarm:
+  HighLatencyScalingAlarm:
     Type: AWS::CloudWatch::Alarm
     Condition: IsProd
     Properties:
-      AlarmName: !Sub '${App}-${Stage} high load balancer latency'
+      AlarmName: !Sub '${App}-${Stage} high load balancer latency scaling'
       AlarmDescription: !Sub
         - 'Scale-Up if latency is greater than ${Threshold} seconds over last ${Period} seconds'
         - Period: !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmPeriod]
@@ -442,9 +442,6 @@ Resources:
       EvaluationPeriods: 1
       AlarmActions:
         - !Ref 'ScaleUpPolicy'
-        - !Ref 'TopicSendEmail'
-      InsufficientDataActions:
-        - !Ref 'TopicSendEmail'
       OKActions:
         - !Ref 'ScaleDownPolicy'
   ScaleUpPolicy:
@@ -461,6 +458,31 @@ Resources:
       AutoScalingGroupName: !Ref 'AutoScalingGroup'
       Cooldown: 1800
       ScalingAdjustment: -1
+  AlarmHighLatency:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmName: !Sub '${App}-${Stage} high load balancer latency'
+      AlarmDescription: !Sub
+        - 'Latency is greater than ${Threshold} seconds over ${Period} seconds for last 5 periods'
+        - Period: !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmPeriod]
+          Threshold:
+            !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmThreshold]
+      Namespace: AWS/ApplicationELB
+      MetricName: TargetResponseTime
+      Statistic: Average
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+        - Name: LoadBalancer
+          Value: !GetAtt 'LoadBalancer.LoadBalancerFullName'
+      Threshold:
+        !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmThreshold]
+      Period: !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmPeriod]
+      EvaluationPeriods: 5
+      AlarmActions:
+        - !Ref 'TopicSendEmail'
+      InsufficientDataActions:
+        - !Ref 'TopicSendEmail'
   AlarmNoHealthyHosts:
     Type: AWS::CloudWatch::Alarm
     Condition: IsProd
