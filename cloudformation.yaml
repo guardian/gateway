@@ -464,7 +464,7 @@ Resources:
     Properties:
       AlarmName: !Sub '${App}-${Stage} high load balancer latency'
       AlarmDescription: !Sub
-        - 'Latency is greater than ${Threshold} seconds over ${Period} seconds for last ${EvaluationPeriods} periods'
+        - 'Latency is greater than ${Threshold} seconds over ${Period} seconds for last 5 periods'
         - Period: !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmPeriod]
           Threshold:
             !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmThreshold]
