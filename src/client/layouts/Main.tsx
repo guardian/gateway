@@ -15,7 +15,6 @@ import { gridRow, gridItem, SpanDefinition } from '@/client/styles/Grid';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';
 import useClientState from '@/client/lib/hooks/useClientState';
-import { JobsLogo } from '@/client/components/JobsLogo';
 import { Nav, TabType } from '@/client/components/Nav';
 import locations from '@/shared/lib/locations';
 
@@ -158,29 +157,6 @@ export const buttonStyles = ({
   `}
 `;
 
-const jobsHeaderStyles = css`
-  background-color: ${neutral[100]};
-  /* border */
-  border-bottom: 1px solid ${neutral[86]};
-`;
-
-const jobsHeaderMarginOverrides = css`
-  margin-top: initial;
-  margin-bottom: 2px;
-  margin-left: auto;
-  margin-right: auto;
-  ${from.mobileMedium} {
-    margin-top: initial;
-  }
-  ${from.tablet} {
-    margin-top: initial;
-  }
-  ${from.desktop} {
-    margin-top: initial;
-    margin-bottom: initial;
-  }
-`;
-
 export const MainLayout = ({
   children,
   pageHeader,
@@ -193,7 +169,10 @@ export const MainLayout = ({
   errorSmallMarginBottom,
 }: PropsWithChildren<MainLayoutProps>) => {
   const clientState = useClientState();
-  const { globalMessage: { error, success } = {} } = clientState;
+  const {
+    globalMessage: { error, success } = {},
+    pageData: { isNativeApp } = {},
+  } = clientState;
 
   const successMessage = successOverride || success;
   const errorMessage = errorOverride || error;
@@ -203,15 +182,7 @@ export const MainLayout = ({
 
   return (
     <>
-      {useJobsHeader ? (
-        <Header
-          cssOverrides={jobsHeaderStyles}
-          marginOverrides={jobsHeaderMarginOverrides}
-          logoOverride={<JobsLogo />}
-        />
-      ) : (
-        <Header />
-      )}
+      <Header isJobs={useJobsHeader} isNativeApp={isNativeApp} />
       {tabs && <Nav tabs={tabs} />}
       <main css={[mainStyles, gridRow]}>
         <section css={gridItem(gridSpanDefinition)}>

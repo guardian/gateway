@@ -108,3 +108,11 @@ export const WithMultipleInputs = () => (
   </MainLayout>
 );
 WithMultipleInputs.storyName = 'with multiple inputs';
+
+export const OnNativeApp = () => (
+  <MainLayout pageHeader="Some page header">
+    <Paragraphs />
+    <MultipleInputFields />
+  </MainLayout>
+);
+OnNativeApp.storyName = 'on native app';
