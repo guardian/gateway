@@ -5,7 +5,7 @@ import useClientState from '@/client/lib/hooks/useClientState';
 export const ResendEmailVerificationPage = () => {
   const {
     globalMessage: { success } = {},
-    pageData: { email, signInPageUrl } = {},
+    pageData: { email, signInPageUrl, formError } = {},
     recaptchaConfig,
   } = useClientState();
 
@@ -13,6 +13,7 @@ export const ResendEmailVerificationPage = () => {
 
   return (
     <ResendEmailVerification
+      formError={formError}
       email={email}
       signInPageUrl={signInPageUrl}
       successText={success}

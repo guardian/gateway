@@ -96,8 +96,8 @@ const sendEmailInIDAPI = async (
     const html = renderer('/reset-password', {
       pageTitle: 'Reset Password',
       requestState: mergeRequestState(state, {
-        globalMessage: {
-          error: message,
+        pageData: {
+          formError: message,
         },
       }),
     });
@@ -298,8 +298,8 @@ export const sendEmailInOkta = async (
     const html = renderer('/reset-password', {
       pageTitle: 'Reset Password',
       requestState: mergeRequestState(state, {
-        globalMessage: {
-          error: GenericErrors.DEFAULT,
+        pageData: {
+          formError: GenericErrors.DEFAULT,
         },
       }),
     });

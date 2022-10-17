@@ -13,9 +13,10 @@ import locations from '@/shared/lib/locations';
 type Props = {
   email?: string;
   recaptchaSiteKey?: string;
+  formError?: string;
 };
 
-export const MagicLink = ({ email, recaptchaSiteKey }: Props) => {
+export const MagicLink = ({ email, recaptchaSiteKey, formError }: Props) => {
   const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
   const [recaptchaErrorContext, setRecaptchaErrorContext] =
     useState<ReactNode>(null);
@@ -34,6 +35,7 @@ export const MagicLink = ({ email, recaptchaSiteKey }: Props) => {
         recaptchaSiteKey={recaptchaSiteKey}
         setRecaptchaErrorContext={setRecaptchaErrorContext}
         setRecaptchaErrorMessage={setRecaptchaErrorMessage}
+        formErrorMessageFromParent={formError}
       >
         <EmailInput defaultValue={email} />
       </MainForm>

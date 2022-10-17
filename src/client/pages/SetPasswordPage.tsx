@@ -9,7 +9,12 @@ import { logger } from '@/client/lib/clientSideLogger';
 export const SetPasswordPage = () => {
   const clientState = useClientState();
   const {
-    pageData: { email = '', fieldErrors = [], timeUntilTokenExpiry } = {},
+    pageData: {
+      email = '',
+      fieldErrors = [],
+      timeUntilTokenExpiry,
+      formError,
+    } = {},
     queryParams,
   } = clientState;
   const { token } = useParams();
@@ -46,6 +51,7 @@ export const SetPasswordPage = () => {
       )}
       email={email}
       fieldErrors={fieldErrors}
+      formError={formError}
     />
   );
 };

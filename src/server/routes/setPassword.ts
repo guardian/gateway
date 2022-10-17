@@ -112,8 +112,8 @@ router.post(
         const html = renderer('/set-password/resend', {
           pageTitle: 'Resend Create Password Email',
           requestState: mergeRequestState(res.locals, {
-            globalMessage: {
-              error: message,
+            pageData: {
+              formError: message,
             },
           }),
         });

@@ -4,7 +4,7 @@
 /** @jsx jsx */
 
 import { jsx } from '@emotion/react';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, within } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { SignIn, SignInProps } from '../pages/SignIn';
 
@@ -107,5 +107,30 @@ test('Jobs terms and conditions in document when clientId equals "jobs"', async 
     expect(defaultTerms).not.toBeInTheDocument();
     expect(privacyPolicy).toBeInTheDocument();
     expect(jobsTerms).toBeInTheDocument();
+  });
+});
+
+test('Shows an error inside the form when formError is set', async () => {
+  const errorText = 'Alas, poor Yorick, an error has occurred.';
+  const { getByTestId } = setup({
+    formError: errorText,
+  });
+  const mainForm = getByTestId('main-form');
+  const formError = within(mainForm).queryByText(errorText, { exact: false });
+  await waitFor(() => {
+    expect(formError).toBeInTheDocument();
+  });
+});
+
+test('Shows an error outside the form when pageError is set', async () => {
+  const errorText = 'Alas, poor Yorick, an error has occurred.';
+  const { getByTestId, queryByText } = setup({
+    pageError: errorText,
+  });
+  const mainForm = getByTestId('main-form');
+  const formError = within(mainForm).queryByText(errorText, { exact: false });
+  await waitFor(() => {
+    expect(formError).not.toBeInTheDocument();
+    expect(queryByText(errorText)).toBeInTheDocument();
   });
 });

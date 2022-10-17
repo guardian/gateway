@@ -15,6 +15,7 @@ export type RegistrationProps = {
   email?: string;
   recaptchaSiteKey: string;
   queryParams: QueryParams;
+  formError?: string;
 };
 
 const RegistrationTerms = ({ isJobs }: { isJobs: boolean }) => (
@@ -28,6 +29,7 @@ export const Registration = ({
   email,
   recaptchaSiteKey,
   queryParams,
+  formError,
 }: RegistrationProps) => {
   const formTrackingName = 'register';
 
@@ -56,6 +58,7 @@ export const Registration = ({
         recaptchaSiteKey={recaptchaSiteKey}
         formTrackingName={formTrackingName}
         disableOnSubmit
+        formErrorMessageFromParent={formError}
       >
         <EmailInput defaultValue={email} />
       </MainForm>

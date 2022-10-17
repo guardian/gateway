@@ -10,6 +10,7 @@ type Props = {
   submitUrl: string;
   email: string;
   fieldErrors: FieldError[];
+  formError?: string;
 };
 
 export const ChangePassword = ({
@@ -18,6 +19,7 @@ export const ChangePassword = ({
   submitUrl,
   email,
   fieldErrors,
+  formError,
 }: Props) => (
   <MainLayout pageHeader={headerText}>
     <MainBodyText>
@@ -30,6 +32,7 @@ export const ChangePassword = ({
       labelText="Password"
       autoComplete="new-password"
       formTrackingName="new-password"
+      formError={formError}
     />
   </MainLayout>
 );

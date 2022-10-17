@@ -15,8 +15,8 @@ export const SignInPage = ({ isReauthenticate = false }: Props) => {
     queryParams,
     recaptchaConfig,
   } = clientState;
-  const { email } = pageData;
-  const { error } = globalMessage;
+  const { email, formError } = pageData;
+  const { error: pageError } = globalMessage;
   const { recaptchaSiteKey } = recaptchaConfig;
 
   // we use the encryptedEmail parameter to pre-fill the email field, but then want to remove it from the url
@@ -24,7 +24,8 @@ export const SignInPage = ({ isReauthenticate = false }: Props) => {
   return (
     <SignIn
       email={email}
-      error={error}
+      pageError={pageError}
+      formError={formError}
       queryParams={queryParams}
       recaptchaSiteKey={recaptchaSiteKey}
       isReauthenticate={isReauthenticate}

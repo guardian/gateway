@@ -77,3 +77,15 @@ export const TertiarySubmitButton = () => (
   </MainForm>
 );
 TertiarySubmitButton.storyName = 'TertiarySubmitButton';
+
+export const FormWithError = () => (
+  <MainForm
+    formAction=""
+    submitButtonText="Send me a link"
+    formErrorMessageFromParent="This is an error"
+    formErrorContextFromParent={<>This is additional error context</>}
+  >
+    <EmailInput />
+  </MainForm>
+);
+FormWithError.storyName = 'FormWithError';

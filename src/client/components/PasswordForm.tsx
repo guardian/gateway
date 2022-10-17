@@ -50,6 +50,7 @@ type Props = {
   autoComplete?: PasswordAutoComplete;
   formTrackingName?: string;
   onInvalid?: React.FormEventHandler<HTMLFormElement> | undefined;
+  formError?: string;
 };
 
 const feedbackMessageStyles = css`
@@ -372,6 +373,7 @@ export const PasswordFormMainLayout = ({
   setRecaptchaErrorContext,
   autoComplete,
   formTrackingName,
+  formError,
 }: Props) => {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | undefined>(
@@ -437,6 +439,7 @@ export const PasswordFormMainLayout = ({
       setRecaptchaErrorContext={setRecaptchaErrorContext}
       formTrackingName={formTrackingName}
       disableOnSubmit={true}
+      formErrorMessageFromParent={formError}
     >
       <div css={error ? undefined : passwordInput}>
         <PasswordInput

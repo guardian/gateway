@@ -29,6 +29,7 @@ export interface PageData {
   signInPageUrl?: string;
   geolocation?: GeoLocation;
   fieldErrors?: Array<FieldError>;
+  formError?: string;
   browserName?: string;
   isNativeApp?: boolean;
 

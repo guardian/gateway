@@ -4,6 +4,7 @@ import { Meta } from '@storybook/react';
 import { MainLayout } from './Main';
 import {
   BasicForm,
+  FormWithError,
   FormWithRecaptcha,
   MultipleInputFields,
 } from '../components/MainForm.stories';
@@ -82,6 +83,23 @@ export const WithFormAndRecaptcha = () => (
   </MainLayout>
 );
 WithFormAndRecaptcha.storyName = 'with Form and reCAPTCHA';
+
+export const WithFormWithFormLevelError = () => (
+  <MainLayout pageHeader="Some page header">
+    <Paragraphs />
+    <FormWithError />
+  </MainLayout>
+);
+WithFormWithFormLevelError.storyName = 'with Form with form-level error';
+
+export const WithErrorAndFormWithFormLevelError = () => (
+  <MainLayout pageHeader="Some page header" errorOverride="Error message">
+    <Paragraphs />
+    <FormWithError />
+  </MainLayout>
+);
+WithErrorAndFormWithFormLevelError.storyName =
+  'with Error and Form with form-level error';
 
 export const WithMultipleInputs = () => (
   <MainLayout pageHeader="Some page header">

@@ -31,14 +31,14 @@ WithEmail.story = {
 };
 
 export const WithPageLevelError = (args: SignInProps) => (
-  <SignIn error="This is an error" {...args} />
+  <SignIn pageError="This is an error" {...args} />
 );
 WithPageLevelError.story = {
   name: 'with page level error',
 };
 
 export const WithPageLevelErrorAndEmail = (args: SignInProps) => (
-  <SignIn error="This is an error" email="test@example.com" {...args} />
+  <SignIn pageError="This is an error" email="test@example.com" {...args} />
 );
 WithPageLevelErrorAndEmail.story = {
   name: 'with page level error and email',
@@ -47,12 +47,38 @@ WithPageLevelErrorAndEmail.story = {
 export const SocialSigninBlocked = (args: SignInProps) => (
   <SignIn
     {...args}
-    error={SignInErrors.ACCOUNT_ALREADY_EXISTS}
+    pageError={SignInErrors.ACCOUNT_ALREADY_EXISTS}
     email="someone@theguardian.com"
   />
 );
 SocialSigninBlocked.story = {
   name: 'social sign-in blocked',
+};
+
+export const WithFormLevelError = (args: SignInProps) => (
+  <SignIn formError="This is an error" {...args} />
+);
+WithFormLevelError.story = {
+  name: 'with form level error',
+};
+
+export const WithFormLevelErrorAndEmail = (args: SignInProps) => (
+  <SignIn formError="This is an error" email="test@example.com" {...args} />
+);
+WithFormLevelErrorAndEmail.story = {
+  name: 'with form level error and email',
+};
+
+export const WithFormLevelErrorAndSocialSigninBlocked = (args: SignInProps) => (
+  <SignIn
+    {...args}
+    pageError={SignInErrors.ACCOUNT_ALREADY_EXISTS}
+    formError="This is an error"
+    email="someone@theguardian.com"
+  />
+);
+WithFormLevelErrorAndSocialSigninBlocked.story = {
+  name: 'form level error and social sign-in blocked',
 };
 
 export const InvalidRecaptcha = (args: SignInProps) => (
@@ -81,7 +107,7 @@ WithJobs.story = {
 export const WithJobsAndSocialSigninBlocked = (args: SignInProps) => (
   <SignIn
     {...{ ...args, queryParams: { ...args.queryParams, clientId: 'jobs' } }}
-    error={SignInErrors.ACCOUNT_ALREADY_EXISTS}
+    pageError={SignInErrors.ACCOUNT_ALREADY_EXISTS}
     email="someone@theguardian.com"
   />
 );

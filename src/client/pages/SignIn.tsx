@@ -19,7 +19,10 @@ import { GuardianTerms, JobsTerms, termsContainer } from '../components/Terms';
 export type SignInProps = {
   queryParams: QueryParams;
   email?: string;
-  error?: string;
+  // An error to be displayed at the top of the page
+  pageError?: string;
+  // An error to be displayed at the top of the MainForm component
+  formError?: string;
   recaptchaSiteKey: string;
   isReauthenticate?: boolean;
 };
@@ -61,11 +64,11 @@ const getErrorContext = (error: string | undefined) => {
 };
 
 const showSocialButtons = (
-  error: string | undefined,
+  socialSigninBlocked: boolean,
   queryParams: QueryParams,
   isJobs: boolean,
 ) => {
-  if (error !== SignInErrors.ACCOUNT_ALREADY_EXISTS) {
+  if (socialSigninBlocked === false) {
     return (
       <>
         <div css={termsContainer}>
@@ -85,12 +88,16 @@ const showSocialButtons = (
 
 export const SignIn = ({
   email,
-  error: pageLevelError,
+  pageError,
+  formError,
   queryParams,
   recaptchaSiteKey,
   isReauthenticate = false,
 }: SignInProps) => {
   const formTrackingName = 'sign-in';
+
+  // The page level error is equivalent to this enum if social signin has been blocked.
+  const socialSigninBlocked = pageError === SignInErrors.ACCOUNT_ALREADY_EXISTS;
 
   const { clientId } = queryParams;
   const isJobs = clientId === 'jobs';
@@ -105,14 +112,16 @@ export const SignIn = ({
 
   return (
     <MainLayout
-      errorOverride={pageLevelError}
-      errorContext={getErrorContext(pageLevelError)}
+      errorOverride={pageError}
+      errorContext={getErrorContext(pageError)}
       tabs={tabs}
-      errorSmallMarginBottom={!!pageLevelError}
+      errorSmallMarginBottom={!!pageError}
     >
       {/* SocialButtons component with show boolean */}
-      {showSocialButtons(pageLevelError, queryParams, isJobs)}
+      {showSocialButtons(socialSigninBlocked, queryParams, isJobs)}
       <MainForm
+        formErrorMessageFromParent={formError}
+        formErrorContextFromParent={getErrorContext(formError)}
         formAction={buildUrlWithQueryParams(
           isReauthenticate ? '/reauthenticate' : '/signin',
           {},
@@ -122,12 +131,10 @@ export const SignIn = ({
         recaptchaSiteKey={recaptchaSiteKey}
         formTrackingName={formTrackingName}
         disableOnSubmit
-        hasGuardianTerms={
-          !isJobs && pageLevelError === SignInErrors.ACCOUNT_ALREADY_EXISTS
-        }
-        hasJobsTerms={
-          isJobs && pageLevelError === SignInErrors.ACCOUNT_ALREADY_EXISTS
-        }
+        // If social signin is blocked, terms and conditions appear inside MainForm
+        // instead of being handled by showSocialButtons(), above.
+        hasGuardianTerms={!isJobs && socialSigninBlocked}
+        hasJobsTerms={isJobs && socialSigninBlocked}
       >
         <EmailInput defaultValue={email} />
         <div css={passwordInput}>

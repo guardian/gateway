@@ -8,7 +8,12 @@ import { logger } from '@/client/lib/clientSideLogger';
 export const ChangePasswordPage = () => {
   const clientState = useClientState();
   const {
-    pageData: { email = '', fieldErrors = [], timeUntilTokenExpiry } = {},
+    pageData: {
+      email = '',
+      fieldErrors = [],
+      timeUntilTokenExpiry,
+      formError,
+    } = {},
     queryParams,
   } = clientState;
   const { token } = useParams();
@@ -39,6 +44,7 @@ export const ChangePasswordPage = () => {
 
   return (
     <ChangePassword
+      formError={formError}
       headerText="Reset password"
       buttonText="Confirm new password"
       submitUrl={buildUrlWithQueryParams(
