@@ -46,7 +46,11 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
 
   return (
     <>
-      <ConsentsHeader error={globalError} success={globalSuccess} />
+      <ConsentsHeader
+        error={globalError}
+        success={globalSuccess}
+        isNativeApp={isNativeApp}
+      />
       <main css={mainStyles}>
         <ConsentsSubHeader
           autoRow={autoRow}
@@ -54,6 +58,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
           current={current}
           errorMessage={errorMessage}
           errorContext={errorContext}
+          isNativeApp={isNativeApp}
         />
         {children && (
           <section css={[gridRow, greyBorderSides]}>{children}</section>

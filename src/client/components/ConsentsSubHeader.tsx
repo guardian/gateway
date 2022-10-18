@@ -14,6 +14,7 @@ import { AutoRow, gridRow } from '@/client/styles/Grid';
 import { greyBorderSides } from '@/client/styles/Consents';
 import { CONSENTS_PAGES_ARR } from '@/client/models/ConsentsPages';
 import { ErrorSummary } from '@guardian/source-react-components-development-kitchen';
+import { IsNativeApp } from '@/shared/model/ClientState';
 
 type Props = {
   autoRow: AutoRow;
@@ -21,6 +22,7 @@ type Props = {
   current?: string;
   errorMessage?: string;
   errorContext?: React.ReactNode;
+  isNativeApp?: IsNativeApp;
 };
 
 type PageStatus = 'active' | 'complete' | 'pending';
@@ -179,6 +181,7 @@ export const ConsentsSubHeader = ({
   current,
   errorContext,
   errorMessage,
+  isNativeApp,
 }: Props) => {
   const active = current
     ? (CONSENTS_PAGES_ARR as string[]).indexOf(current)
@@ -219,7 +222,7 @@ export const ConsentsSubHeader = ({
   return (
     <header data-cy="exclude-a11y-check">
       <div css={[gridRow, greyBorderSides]}>
-        {pageProgression}
+        {!isNativeApp && pageProgression}
         {errorMessage && (
           <ErrorSummary
             cssOverrides={[autoRow(), summaryStyles]}
