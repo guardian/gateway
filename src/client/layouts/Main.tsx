@@ -210,7 +210,7 @@ export const MainLayout = ({
           <div css={bodyStyles(hasTitleOrSummary)}>{children}</div>
         </section>
       </main>
-      <Footer />
+      {!isNativeApp && <Footer />}
     </>
   );
 };

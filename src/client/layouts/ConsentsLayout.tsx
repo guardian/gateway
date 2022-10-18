@@ -39,8 +39,10 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
 }) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
   const clientState = useClientState();
-  const { globalMessage: { error: globalError, success: globalSuccess } = {} } =
-    clientState;
+  const {
+    globalMessage: { error: globalError, success: globalSuccess } = {},
+    pageData: { isNativeApp } = {},
+  } = clientState;
 
   return (
     <>
@@ -58,7 +60,7 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
         )}
         <div css={[spacer, gridRow, greyBorderSides]} />
       </main>
-      <Footer />
+      {!isNativeApp && <Footer />}
     </>
   );
 };
