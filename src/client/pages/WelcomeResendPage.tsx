@@ -7,7 +7,7 @@ import { buildUrl } from '@/shared/lib/routeUtils';
 export const WelcomeResendPage = () => {
   const clientState = useClientState();
   const {
-    pageData: { email = '' } = {},
+    pageData: { email = '', formError } = {},
     queryParams,
     recaptchaConfig,
   } = clientState;
@@ -25,6 +25,7 @@ export const WelcomeResendPage = () => {
       showRecentEmailSummary
       recaptchaSiteKey={recaptchaSiteKey}
       formPageTrackingName="welcome-link-expired"
+      formError={formError}
     >
       <MainBodyText>This link has expired.</MainBodyText>
       <MainBodyText>

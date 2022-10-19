@@ -7,7 +7,7 @@ import { logger } from '@/client/lib/clientSideLogger';
 export const ResendPasswordPage = () => {
   const clientState = useClientState();
   const {
-    pageData: { email = '' } = {},
+    pageData: { email = '', formError } = {},
     queryParams,
     recaptchaConfig,
   } = clientState;
@@ -38,6 +38,7 @@ export const ResendPasswordPage = () => {
       showRecentEmailSummary
       recaptchaSiteKey={recaptchaSiteKey}
       formPageTrackingName="reset-password-link-expired"
+      formError={formError}
     >
       <MainBodyText>This link has expired.</MainBodyText>
       <MainBodyText>

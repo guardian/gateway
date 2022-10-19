@@ -9,7 +9,7 @@ import { logger } from '@/client/lib/clientSideLogger';
 export const WelcomeSessionExpiredPage = () => {
   const clientState = useClientState();
   const {
-    pageData: { email = '' } = {},
+    pageData: { email = '', formError } = {},
     queryParams,
     recaptchaConfig,
   } = clientState;
@@ -33,6 +33,7 @@ export const WelcomeSessionExpiredPage = () => {
       emailInputLabel="Email address"
       recaptchaSiteKey={recaptchaSiteKey}
       formPageTrackingName="welcome-session-expired"
+      formError={formError}
     >
       <MainBodyText>
         The link we sent you was valid for 60 minutes and it has now expired.
