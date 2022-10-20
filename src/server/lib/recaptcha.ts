@@ -46,10 +46,6 @@ const handleRecaptcha = async (
   _: Response,
   next: NextFunction,
 ): Promise<void> => {
-  // Skip the reCAPTCHA check if we're running in a test environment
-  if (process.env.RUNNING_IN_CYPRESS === 'true') {
-    return next();
-  }
   const recaptchaToken = req.body['g-recaptcha-response'];
   // If the recaptcha response is missing entirely, throw an error which will be shown to the user.
   if (!recaptchaToken) {
