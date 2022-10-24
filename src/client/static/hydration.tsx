@@ -10,11 +10,11 @@ import { abSwitches } from '@/shared/model/experiments/abSwitches';
 import * as Sentry from '@sentry/browser';
 import { Integrations } from '@sentry/tracing';
 
-export const hydrateApp = () => {
-  const routingConfig: RoutingConfig = JSON.parse(
-    document.getElementById('routingConfig')?.innerHTML ?? '{}',
-  );
+type Props = {
+  routingConfig: RoutingConfig;
+};
 
+export const hydrateApp = ({ routingConfig }: Props) => {
   const clientState = routingConfig.clientState;
 
   const {

@@ -18,6 +18,6 @@ export const NativeApp = () => (
     email="test@example.com"
     continueLink="#"
     signOutLink="#"
-    isNativeApp
+    isNativeApp="android"
   />
 );

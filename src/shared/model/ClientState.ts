@@ -22,6 +22,8 @@ interface GlobalMessage {
   success?: string;
 }
 
+export type IsNativeApp = 'android' | 'ios' | undefined;
+
 export interface PageData {
   // general page data
   returnUrl?: string;
@@ -31,7 +33,7 @@ export interface PageData {
   fieldErrors?: Array<FieldError>;
   formError?: string;
   browserName?: string;
-  isNativeApp?: boolean;
+  isNativeApp?: IsNativeApp;
 
   // email sent pages specific
   emailType?: EmailType;

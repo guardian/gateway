@@ -1,8 +1,10 @@
 import React from 'react';
 import { css, SerializedStyles } from '@emotion/react';
-import { brand, from, space } from '@guardian/source-foundations';
+import { brand, from, space, neutral } from '@guardian/source-foundations';
 import { Logo } from '@guardian/source-react-components-development-kitchen';
+import { JobsLogo } from '@/client/components/JobsLogo';
 import { gridRow, manualRow, SpanDefinition } from '@/client/styles/Grid';
+import { IsNativeApp } from '@/shared/model/ClientState';
 
 const marginStyles = css`
   margin-top: ${space[5]}px;
@@ -47,22 +49,77 @@ const headerSpanDefinition: SpanDefinition = {
   },
 };
 
+const jobsHeaderStyles = css`
+  background-color: ${neutral[100]};
+  /* border */
+  border-bottom: 1px solid ${neutral[86]};
+`;
+
+const jobsHeaderMarginOverrides = css`
+  margin-top: initial;
+  margin-bottom: 2px;
+  margin-left: auto;
+  margin-right: auto;
+  ${from.mobileMedium} {
+    margin-top: initial;
+  }
+  ${from.tablet} {
+    margin-top: initial;
+  }
+  ${from.desktop} {
+    margin-top: initial;
+    margin-bottom: initial;
+  }
+`;
+
+const nativeAppMarginOverrides = css`
+  margin-top: ${space[1]}px;
+  margin-bottom: ${space[1]}px;
+  ${from.mobileMedium} {
+    margin-top: ${space[1]}px;
+  }
+  ${from.tablet} {
+    margin-top: ${space[1]}px;
+  }
+`;
+
 type Props = {
-  logoOverride?: React.ReactNode;
   cssOverrides?: SerializedStyles;
-  marginOverrides?: SerializedStyles;
+  isJobs?: boolean;
+  isNativeApp?: IsNativeApp;
+};
+
+const marginStyleOverrides = (isJobs: boolean, isNativeApp: IsNativeApp) => {
+  if (isJobs) {
+    return jobsHeaderMarginOverrides;
+  }
+  if (isNativeApp) {
+    return nativeAppMarginOverrides;
+  }
+  return undefined;
 };
 
 export const Header = ({
-  logoOverride,
   cssOverrides,
-  marginOverrides,
-}: Props) => (
-  <header id="top" css={[backgroundColor, cssOverrides]}>
-    <div css={[gridRow, marginStyles, marginOverrides]}>
-      <div css={[manualRow(1, headerSpanDefinition), headerGridRightToLeft]}>
-        {logoOverride ? logoOverride : <Logo />}
+  isJobs = false,
+  isNativeApp,
+}: Props) => {
+  return (
+    <header
+      id="top"
+      css={[
+        backgroundColor,
+        isJobs ? jobsHeaderStyles : undefined,
+        cssOverrides,
+      ]}
+    >
+      <div
+        css={[gridRow, marginStyles, marginStyleOverrides(isJobs, isNativeApp)]}
+      >
+        <div css={[manualRow(1, headerSpanDefinition), headerGridRightToLeft]}>
+          {isJobs ? <JobsLogo /> : <Logo />}
+        </div>
       </div>
-    </div>
-  </header>
-);
+    </header>
+  );
+};

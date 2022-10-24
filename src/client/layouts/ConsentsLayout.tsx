@@ -39,12 +39,18 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
 }) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
   const clientState = useClientState();
-  const { globalMessage: { error: globalError, success: globalSuccess } = {} } =
-    clientState;
+  const {
+    globalMessage: { error: globalError, success: globalSuccess } = {},
+    pageData: { isNativeApp } = {},
+  } = clientState;
 
   return (
     <>
-      <ConsentsHeader error={globalError} success={globalSuccess} />
+      <ConsentsHeader
+        error={globalError}
+        success={globalSuccess}
+        isNativeApp={isNativeApp}
+      />
       <main css={mainStyles}>
         <ConsentsSubHeader
           autoRow={autoRow}
@@ -52,13 +58,14 @@ export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
           current={current}
           errorMessage={errorMessage}
           errorContext={errorContext}
+          isNativeApp={isNativeApp}
         />
         {children && (
           <section css={[gridRow, greyBorderSides]}>{children}</section>
         )}
         <div css={[spacer, gridRow, greyBorderSides]} />
       </main>
-      <Footer />
+      {!isNativeApp && <Footer />}
     </>
   );
 };

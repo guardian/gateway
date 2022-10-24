@@ -7,6 +7,7 @@ import {
   onConsentChange,
 } from '@guardian/consent-management-platform';
 import { getLocale } from '@guardian/libs';
+import { RoutingConfig } from '@/client/routes';
 
 // loading a js file without types, so ignore ts
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -28,22 +29,28 @@ const initGoogleAnalyticsWhenConsented = () => {
   });
 };
 
-hydrateApp();
+const routingConfig: RoutingConfig = JSON.parse(
+  document.getElementById('routingConfig')?.innerHTML ?? '{}',
+);
+
+hydrateApp({ routingConfig });
 
 // initalise ophan
 ophanInit();
 
 // load CMP
-if (window.Cypress) {
-  cmp.init({ country: 'GB' }); // CI hosted on GithubActions runs in US by default
-} else {
-  (async () => {
-    const country = await getLocale();
+if (!routingConfig.clientState.pageData?.isNativeApp) {
+  if (window.Cypress) {
+    cmp.init({ country: 'GB' }); // CI hosted on GithubActions runs in US by default
+  } else {
+    (async () => {
+      const country = await getLocale();
 
-    if (country) {
-      cmp.init({ country });
-    }
-  })();
+      if (country) {
+        cmp.init({ country });
+      }
+    })();
+  }
 }
 
 initGoogleAnalyticsWhenConsented();

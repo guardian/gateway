@@ -35,3 +35,9 @@ Mobile.parameters = {
 
 export const GeoGB = () => <Header />;
 GeoGB.storyName = 'with defaults';
+
+export const Jobs = () => <Header isJobs={true} />;
+Jobs.storyName = 'on Jobs';
+
+export const OnNativeApp = () => <Header isNativeApp={'android'} />;
+OnNativeApp.storyName = 'on native app';

@@ -53,7 +53,7 @@ test('terms and conditions not in the document when hasGuardianTerms is false', 
 test('does not render the reCAPTCHA terms and conditions when recaptchaSiteKey is undefined', async () => {
   const { queryByText } = setup();
   const terms = queryByText(
-    'This site is protected by reCAPTCHA and the Google',
+    'This service is protected by reCAPTCHA and the Google',
     { exact: false },
   );
   await waitFor(() => {
@@ -64,7 +64,7 @@ test('does not render the reCAPTCHA terms and conditions when recaptchaSiteKey i
 test('renders the reCAPTCHA terms and conditions when recaptchaSiteKey is defined', async () => {
   const { queryByText } = setup({ recaptchaSiteKey: 'invalid-key' });
   const terms = queryByText(
-    'This site is protected by reCAPTCHA and the Google',
+    'This service is protected by reCAPTCHA and the Google',
     { exact: false },
   );
   await waitFor(() => {
