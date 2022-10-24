@@ -39,9 +39,13 @@ export const redirectIfLoggedIn = async (
       const email = session.login;
 
       // determine the "Continue" button link, either "fromURI" if coming from Okta login page (and OAuth flow)
-      // or returnUrl if not
+      // or /signin/refresh if not (this will refresh their identity and okta session and redirect them back to the returnUrl)
       const continueLink =
-        state.queryParams.fromURI || state.queryParams.returnUrl;
+        state.queryParams.fromURI ||
+        `https://${baseUri}${addQueryParamsToPath(
+          '/signin/refresh',
+          state.queryParams,
+        )}`;
 
       // the "Sign in" link is used to log in as a different user, so we add the parameters we need to the link
       const signInLink = encodeURIComponent(

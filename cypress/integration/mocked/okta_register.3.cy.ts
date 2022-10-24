@@ -58,7 +58,11 @@ describe('Okta Register flow', () => {
       cy.contains('user@example.com');
       cy.contains('Continue')
         .should('have.attr', 'href')
-        .and('include', 'https://m.code.dev-theguardian.com');
+        .and('include', '/signin/refresh')
+        .and(
+          'include',
+          'returnUrl=https%3A%2F%2Fm.code.dev-theguardian.com%2F',
+        );
       cy.contains('a', 'Sign in')
         .should('have.attr', 'href')
         .and(
@@ -125,7 +129,8 @@ describe('Okta Register flow', () => {
       cy.contains('user@example.com');
       cy.contains('Continue')
         .should('have.attr', 'href')
-        .and('include', 'https://m.code.dev-theguardian.com');
+        .and('include', '/signin/refresh')
+        .and('include', 'returnUrl=https%3A%2F%2Fm.code.dev-theguardian.com');
       cy.contains('a', 'Sign in')
         .should('have.attr', 'href')
         .and(
