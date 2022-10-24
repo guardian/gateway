@@ -368,7 +368,12 @@ describe('Sign in flow, Okta enabled', () => {
             cy.contains(emailAddress);
             cy.contains('Continue')
               .should('have.attr', 'href')
-              .and('include', `https://${Cypress.env('BASE_URI')}/consents`);
+              .and(
+                'include',
+                `https://${Cypress.env(
+                  'BASE_URI',
+                )}/signin/refresh?returnUrl=https%3A%2F%2Fprofile.thegulocal.com%2Fconsents`,
+              );
             cy.contains('a', 'Sign in')
               .should('have.attr', 'href')
               .and('include', '/signout?returnUrl=');
