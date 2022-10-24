@@ -148,7 +148,6 @@
     "csurf": "^1.11.0",
     "deepmerge": "^4.2.2",
     "express": "^4.18.2",
-    "express-recaptcha": "^5.1.0",
     "hal-types": "^1.8.0",
     "helmet": "^6.0.0",
     "ioredis": "^5.2.3",

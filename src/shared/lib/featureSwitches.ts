@@ -13,8 +13,6 @@ interface FeatureSwitches {
     CODE: boolean;
     PROD: boolean;
   };
-  // reCAPTCHA is disabled in the DEV stage by default.
-  recaptchaEnabledDev: boolean;
 }
 
 export const featureSwitches: FeatureSwitches = {
@@ -24,5 +22,4 @@ export const featureSwitches: FeatureSwitches = {
     CODE: true,
     PROD: true,
   },
-  recaptchaEnabledDev: false,
 };

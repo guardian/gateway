@@ -1,18 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
-import { RecaptchaV2 } from 'express-recaptcha';
 import { CaptchaErrors } from '@/shared/model/Errors';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { HttpError } from '@/server/models/Error';
-import { featureSwitches } from '@/shared/lib/featureSwitches';
+import { fetch } from '@/server/lib/fetch';
 
 const {
-  googleRecaptcha: { secretKey, siteKey },
-  stage,
+  googleRecaptcha: { secretKey },
 } = getConfiguration();
-
-const recaptcha = new RecaptchaV2(siteKey, secretKey);
 
 const recaptchaError = new HttpError({
   message: CaptchaErrors.GENERIC,
@@ -21,53 +17,77 @@ const recaptchaError = new HttpError({
   code: 'EBADRECAPTCHA',
 });
 
+type RecaptchaErrorCode =
+  | 'missing-input-secret'
+  | 'invalid-input-secret'
+  | 'missing-input-response'
+  | 'invalid-input-response'
+  | 'bad-request'
+  | 'timeout-or-duplicate';
+
+interface RecaptchaAPIResponse {
+  success: boolean;
+  challenge_ts: string;
+  hostname: string;
+  'error-codes'?: RecaptchaErrorCode[];
+}
+
 /**
- * Throws a generic error if the recaptcha check has failed.
- * @param recaptchaResponse
+ * Takes the reCAPTCHA token from the client and sends it to the Google reCAPTCHA API to verify it.
+ * If the token is valid, the request will be allowed to continue; if not, an error will be thrown.
+ * Documentation: https://developers.google.com/recaptcha/docs/verify
+ * @param req Express request object
+ * @param _ Express response object (not used)
+ * @param next Express next function
+ * @returns Throws an error if the reCAPTCHA check has failed; otherwise, calls the next function
  */
-const checkRecaptchaError = (req: Request, _: Response, next: NextFunction) => {
-  if (!req.recaptcha) {
+const handleRecaptcha = async (
+  req: Request,
+  _: Response,
+  next: NextFunction,
+): Promise<void> => {
+  const recaptchaToken = req.body['g-recaptcha-response'];
+  // If the recaptcha response is missing entirely, throw an error which will be shown to the user.
+  if (!recaptchaToken) {
     return next(recaptchaError);
   }
 
-  const { error } = req.recaptcha;
-  if (error) {
-    logger.error('Problem verifying recaptcha, error response: ', error, {
+  try {
+    const recaptchaResponse = await fetch(
+      'https://www.google.com/recaptcha/api/siteverify',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `secret=${secretKey}&response=${recaptchaToken}`,
+      },
+    );
+    const recaptchaResponseJson =
+      (await recaptchaResponse.json()) as RecaptchaAPIResponse;
+    if (!recaptchaResponseJson.success) {
+      const formattedErrorCodes = recaptchaResponseJson['error-codes']?.length
+        ? recaptchaResponseJson['error-codes']?.join(', ')
+        : 'unknown';
+      logger.error(
+        'Problem verifying reCAPTCHA, error response',
+        formattedErrorCodes,
+        {
+          request_id: req.get('x-request-id'),
+        },
+      );
+      return next(recaptchaError);
+    }
+
+    trackMetric('RecaptchaMiddleware::Success');
+    next();
+  } catch (error) {
+    logger.error('Error verifying reCAPTCHA token', error, {
       request_id: req.get('x-request-id'),
     });
     return next(recaptchaError);
   }
-
-  trackMetric('RecaptchaMiddleware::Success');
-  next();
 };
-
-/**
- * When running the handleRecaptcha middleware locally, we consistently saw a
- * bug where the route handler would be called multiple times, causing 'Cannot
- * set headers after they are sent to the client' errors and running everything
- * in the handler multiple times. Our guesses for why this happens are (1) the
- * testing keys for reCAPTCHA are somehow broken; (2) express-recaptcha is
- * somehow broken; (3) the way we integrate it is somehow broken. To solve it,
- * we just automatically pass next() instead of running the middleware in the
- * DEV stage, unless the 'recaptchaEnabledDev' feature switch is set to true.
- *
- * +----------------+---------------------------+----------------------+
- * | Running on DEV | recaptchaEnabledDev value |        Output        |
- * +----------------+---------------------------+----------------------+
- * | Yes (1)        | True (1)                  | handleRecaptcha runs |
- * | Yes (1)        | False (0)                 | next()               |
- * | No (0)         | True (1)                  | handleRecaptcha runs |
- * | No (0)         | False (0)                 | handleRecaptcha runs |
- * +----------------+---------------------------+----------------------+
- *
- * TODO: Get to the bottom of this - it would be ideal if we didn't have to do
- * this workaround.
- */
-const handleRecaptcha =
-  stage === 'DEV' && !featureSwitches.recaptchaEnabledDev
-    ? (_: Request, __: Response, next: NextFunction) => next()
-    : [recaptcha.middleware.verify, checkRecaptchaError];
 
 /**
  * Protects a route with recaptcha.
