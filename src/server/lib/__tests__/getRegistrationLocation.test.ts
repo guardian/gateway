@@ -14,6 +14,12 @@ describe('getRegistrationLocation', () => {
     ).toBe(undefined);
   });
 
+  test(`returns undefined if cmp consent state is undefined `, () => {
+    expect(
+      getRegistrationLocation(getFakeRequest('GB') as Request, undefined),
+    ).toBe(undefined);
+  });
+
   [
     { input: 'GB', output: 'United Kingdom' },
     { input: 'US', output: 'United States' },
@@ -26,7 +32,7 @@ describe('getRegistrationLocation', () => {
     { input: '', output: undefined },
     { input: 'foobar', output: undefined },
   ].forEach(({ input, output }) => {
-    test(`given ${input} it returns ${output}`, () => {
+    test(`given ${input} , and the cmp consent state is true, it returns ${output}`, () => {
       expect(
         getRegistrationLocation(getFakeRequest(input) as Request, true),
       ).toBe(output);

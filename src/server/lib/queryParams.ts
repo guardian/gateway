@@ -1,18 +1,7 @@
 import { QueryParams, TrackingQueryParams } from '@/shared/model/QueryParams';
 import { validateReturnUrl, validateRefUrl } from '@/server/lib/validateUrl';
 import { validateClientId } from '@/server/lib/validateClientId';
-
-const isStringBoolean = (maybeBoolean?: string): boolean | undefined => {
-  if (!maybeBoolean) {
-    return undefined;
-  }
-
-  if (maybeBoolean === 'true') {
-    return true;
-  }
-
-  return false;
-};
+import { isStringBoolean } from './isStringBoolean';
 
 const validateGetOnlyError = (
   method: string,

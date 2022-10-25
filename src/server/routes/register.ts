@@ -35,6 +35,7 @@ import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan
 import { mergeRequestState } from '@/server/lib/requestState';
 import { RegistrationLocation, UserResponse } from '@/server/models/okta/User';
 import { getRegistrationLocation } from '../lib/getRegistrationLocation';
+import { isStringBoolean } from '../lib/isStringBoolean';
 
 const { okta } = getConfiguration();
 
@@ -115,7 +116,7 @@ const OktaRegistration = async (
   const { email = '', _cmpConsentedState = false } = req.body;
 
   const registrationLocation: RegistrationLocation | undefined =
-    getRegistrationLocation(req, JSON.parse(_cmpConsentedState));
+    getRegistrationLocation(req, isStringBoolean(_cmpConsentedState));
 
   try {
     const user = await registerWithOkta(email, registrationLocation);
