@@ -33,3 +33,19 @@ Mobile.parameters = {
   },
   chromatic: { viewports: [320] },
 };
+
+export const NativeAppAndroid = () => (
+  <SocialButtons
+    queryParams={{ returnUrl: 'https://www.theguardian.com/uk/' }}
+    isNativeApp="android"
+  />
+);
+NativeAppAndroid.storyName = 'Android native app';
+
+export const NativeAppIos = () => (
+  <SocialButtons
+    queryParams={{ returnUrl: 'https://www.theguardian.com/uk/' }}
+    isNativeApp="ios"
+  />
+);
+NativeAppIos.storyName = 'iOS native app';

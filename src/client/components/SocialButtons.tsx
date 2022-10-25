@@ -9,18 +9,30 @@ import {
 } from '@guardian/source-react-components';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import { IsNativeApp } from '@/shared/model/ClientState';
 
-type SocialButtonProps = {
+type SocialButtonsProps = {
   queryParams: QueryParams;
   marginTop?: boolean;
+  isNativeApp?: IsNativeApp;
 };
 
-const containerStyles = (marginTop = false) => css`
+type SocialButtonProps = {
+  label: string;
+  icon: React.ReactElement;
+  socialProvider: string;
+  queryParams: QueryParams;
+  showGap: boolean;
+  isNativeApp?: IsNativeApp;
+};
+
+const containerStyles = (marginTop = false, isNativeApp: IsNativeApp) => css`
   display: flex;
   flex-direction: column;
-  ${from.tablet} {
-    flex-direction: row;
-  }
+  ${!isNativeApp &&
+  `${from.tablet} {
+      flex-direction: row;
+  }`}
   justify-content: center;
   margin-top: ${marginTop ? space[5] : 0}px;
   ${from.mobileMedium} {
@@ -47,75 +59,106 @@ const iconOverrides = css`
   }
 `;
 
-const Gap = () => (
+const Gap = ({ isNativeApp }: { isNativeApp: IsNativeApp }) => (
   <span
     css={css`
       width: 0;
       height: ${space[3]}px;
-      ${from.tablet} {
+      ${!isNativeApp &&
+      `${from.tablet} {
         width: ${space[3]}px;
         height: 0;
-      }
+      }`}
     `}
   ></span>
 );
 
+const SocialButton = ({
+  label,
+  icon,
+  socialProvider,
+  queryParams,
+  showGap,
+  isNativeApp,
+}: SocialButtonProps) => {
+  return (
+    <>
+      <LinkButton
+        priority="tertiary"
+        cssOverrides={[buttonOverrides, iconOverrides]}
+        icon={icon}
+        href={buildUrlWithQueryParams(
+          '/signin/:social',
+          {
+            social: socialProvider,
+          },
+          queryParams,
+        )}
+        data-cy={`${socialProvider}-sign-in-button`}
+        data-link-name={`${socialProvider}-social-button`}
+      >
+        {socialButtonLabel(label, isNativeApp)}
+      </LinkButton>
+      {showGap && <Gap isNativeApp={isNativeApp} />}
+    </>
+  );
+};
+
+const socialButtonLabel = (label: string, isNativeApp?: IsNativeApp) => {
+  const capitalisedLabel = label.charAt(0).toUpperCase() + label.slice(1);
+  if (isNativeApp) {
+    return `Continue with ${capitalisedLabel}`;
+  } else {
+    return capitalisedLabel;
+  }
+};
+
+const socialButtonIcon = (socialProvider: string): React.ReactElement => {
+  switch (socialProvider) {
+    case 'google':
+      return <SvgGoogleBrand />;
+    case 'apple':
+      return <SvgAppleBrand />;
+    case 'facebook':
+      return <SvgFacebookBrand />;
+    default:
+      // null is the officially recommended way to return nothing from a React component,
+      // but LinkButton doesn't accept it, so we return an empty JSX element instead
+      // cf. https://stackoverflow.com/a/47192387
+      return <></>;
+  }
+};
+
+const getButtonOrder = (isNativeApp?: IsNativeApp): string[] => {
+  switch (isNativeApp) {
+    case 'ios':
+      return ['apple', 'google', 'facebook'];
+    case 'android':
+      return ['google', 'apple', 'facebook'];
+    default:
+      return ['google', 'apple', 'facebook'];
+  }
+};
+
 export const SocialButtons = ({
   queryParams,
   marginTop,
-}: SocialButtonProps) => {
+  isNativeApp,
+}: SocialButtonsProps) => {
+  const buttonOrder = getButtonOrder(isNativeApp);
   return (
-    <div css={containerStyles(marginTop)}>
-      <LinkButton
-        priority="tertiary"
-        cssOverrides={[buttonOverrides, iconOverrides]}
-        icon={<SvgGoogleBrand />}
-        href={buildUrlWithQueryParams(
-          '/signin/:social',
-          {
-            social: 'google',
-          },
-          queryParams,
-        )}
-        data-cy="google-sign-in-button"
-        data-link-name="google-social-button"
-      >
-        Google
-      </LinkButton>
-      <Gap />
-      <LinkButton
-        priority="tertiary"
-        cssOverrides={buttonOverrides}
-        icon={<SvgFacebookBrand />}
-        href={buildUrlWithQueryParams(
-          '/signin/:social',
-          {
-            social: 'facebook',
-          },
-          queryParams,
-        )}
-        data-cy="facebook-sign-in-button"
-        data-link-name="facebook-social-button"
-      >
-        Facebook
-      </LinkButton>
-      <Gap />
-      <LinkButton
-        priority="tertiary"
-        cssOverrides={[buttonOverrides, iconOverrides]}
-        icon={<SvgAppleBrand />}
-        href={buildUrlWithQueryParams(
-          '/signin/:social',
-          {
-            social: 'apple',
-          },
-          queryParams,
-        )}
-        data-cy="apple-sign-in-button"
-        data-link-name="apple-social-button"
-      >
-        Apple
-      </LinkButton>
+    <div css={containerStyles(marginTop, isNativeApp)}>
+      {buttonOrder.map((socialProvider, index) => (
+        <SocialButton
+          key={socialProvider}
+          label={socialProvider}
+          icon={socialButtonIcon(socialProvider)}
+          socialProvider={socialProvider}
+          queryParams={queryParams}
+          showGap={index < buttonOrder.length - 1}
+          isNativeApp={isNativeApp}
+        />
+      ))}
     </div>
   );
 };
