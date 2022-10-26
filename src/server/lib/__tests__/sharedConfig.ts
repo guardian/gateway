@@ -24,6 +24,7 @@ export const defaultEnv = {
   BASE_URI: 'base-uri',
   DEFAULT_RETURN_URI: 'default-return-uri',
   SIGN_IN_PAGE_URL: 'sign-in-page-url',
+  MEMBERS_DATA_API_URL: 'members-data-api-url',
   STAGE: 'DEV',
   IS_HTTPS: 'true',
   APP_SECRET: 'app-secret',

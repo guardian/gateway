@@ -17,11 +17,17 @@ import { getSession } from '@/server/lib/okta/api/sessions';
 
 const { defaultReturnUri, baseUri } = getConfiguration();
 
+// taken from https://github.com/guardian/frontend/blob/7d227003a16b9b7d9a2f571d4e23e8ed4f981a2c/static/src/javascripts/projects/common/modules/commercial/user-features.ts#L134
+// dotcom expects these cookies to be cleared as part of signout
 const DotComCookies = [
+  'GU_AF1',
   'gu_user_features_expiry',
   'gu_paying_member',
   'gu_recurring_contributor',
   'gu_digital_subscriber',
+  'gu_action_required_for',
+  'gu_hide_support_messaging',
+  'gu_one_off_contribution_date',
 ];
 
 const OKTA_COOKIE_NAME = 'sid';

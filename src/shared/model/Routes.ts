@@ -99,6 +99,8 @@ export type OktaApiRoutePaths =
   | '/api/v1/users/:id/lifecycle/reset_password'
   | '/api/v1/users/:id/sessions';
 
+export type MembersDataApiRoutePaths = '/user-attributes/me';
+
 export type PasswordRoutePath = Extract<
   '/reset-password' | '/set-password' | '/welcome',
   RoutePaths
@@ -107,4 +109,8 @@ export type PasswordRoutePath = Extract<
 /**
  * This is all valid routes on the site, only used for the helper function addQueryParamsToPath
  */
-export type AllRoutes = ApiRoutePaths | RoutePaths | OktaApiRoutePaths;
+export type AllRoutes =
+  | ApiRoutePaths
+  | RoutePaths
+  | OktaApiRoutePaths
+  | MembersDataApiRoutePaths;

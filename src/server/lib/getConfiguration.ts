@@ -171,6 +171,11 @@ export const getConfiguration = (): Configuration => {
     'OAuth Base URL missing.',
   );
 
+  const membersDataApiUrl = getOrThrow(
+    process.env.MEMBERS_DATA_API_URL,
+    'Members Data API URL missing.',
+  );
+
   const okta: Okta = {
     enabled: oktaEnabled,
     orgUrl: getOrThrow(process.env.OKTA_ORG_URL, 'OKTA org URL missing'),
@@ -263,5 +268,6 @@ export const getConfiguration = (): Configuration => {
     redis,
     accountManagementUrl,
     rateLimiter,
+    membersDataApiUrl,
   };
 };

@@ -18,8 +18,9 @@ import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import postSignInController from '@/server/lib/postSignInController';
 import { IdTokenClaims } from 'openid-client';
-import { updateUser } from '../lib/okta/api/users';
-import { getApp } from '../lib/okta/api/apps';
+import { updateUser } from '@/server/lib/okta/api/users';
+import { getApp } from '@/server/lib/okta/api/apps';
+import { setUserFeatureCookies } from '@/server/lib/user-features';
 
 interface OAuthError {
   error: string;
@@ -192,8 +193,28 @@ router.get(
         res.locals.requestId,
       );
 
-      // adds set cookie headers
-      setIDAPICookies(res, cookies, authState.doNotSetLastAccessCookie);
+      if (cookies) {
+        // adds set cookie headers
+        setIDAPICookies(res, cookies, authState.doNotSetLastAccessCookie);
+
+        // get the SC_GU_U cookie so we can use it to get the user's attributes
+        // and set any required feature cookies
+        const scGuUCookie = cookies.values.find(
+          (cookie) => cookie.key === 'SC_GU_U',
+        );
+        if (scGuUCookie) {
+          // set feature cookies should a user have a product
+          await setUserFeatureCookies(
+            scGuUCookie.value,
+            res,
+            res.locals.requestId,
+          );
+        }
+      } else {
+        logger.error('No cookies returned from IDAPI', undefined, {
+          request_id: res.locals.requestId,
+        });
+      }
 
       // track the success metric
       trackMetric('OAuthAuthorization::Success');

@@ -131,7 +131,7 @@ export const exchangeAccessTokenForCookies = async (
       options: APIAddClientAccessToken(options, ip),
       queryParams: { format: 'cookies' },
     });
-    return response.cookies;
+    return response.cookies as IdapiCookies;
   } catch (error) {
     logger.error(
       `IDAPI Error auth exchangeAccessTokenForCookies '/auth/oauth-token'`,

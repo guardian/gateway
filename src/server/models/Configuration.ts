@@ -30,6 +30,7 @@ export interface Configuration {
   redis: RedisConfiguration;
   accountManagementUrl: string;
   rateLimiter: RateLimiterConfiguration;
+  membersDataApiUrl: string;
 }
 
 export interface AWSConfiguration {
