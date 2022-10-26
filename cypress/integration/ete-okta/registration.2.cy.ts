@@ -68,6 +68,40 @@ describe('Registration flow', () => {
       });
     });
 
+    it('does not register registrationLocation for email with no existing account if cmp is not consented', () => {
+      const unregisteredEmail = randomMailosaurEmail();
+      cy.enableCMP();
+      cy.visit(`/register`);
+      cy.setCookie('GU_geo_country', 'FR');
+      cy.declineCMP();
+
+      cy.get('input[name=email]').type(unregisteredEmail);
+      cy.get('input[name=_cmpConsentedState]').should('have.value', 'false');
+
+      cy.get('[data-cy="main-form-submit-button"]').click();
+      cy.intercept('POST', '/register**', (req) => {
+        expect(req.body).to.include('_cmpConsentedState=false');
+        expect(req.headers.cookie).to.include('GU_geo_country=FR');
+      });
+    });
+
+    it('successfully registers registrationLocation for email with no existing account if cmp consented', () => {
+      const unregisteredEmail = randomMailosaurEmail();
+      cy.enableCMP();
+      cy.visit(`/register`);
+      cy.setCookie('GU_geo_country', 'FR');
+      cy.acceptCMP();
+
+      cy.get('input[name=email]').type(unregisteredEmail);
+      cy.get('input[name=_cmpConsentedState]').should('have.value', 'true');
+
+      cy.get('[data-cy="main-form-submit-button"]').click();
+      cy.intercept('POST', '/register**', (req) => {
+        expect(req.body).to.include('_cmpConsentedState=true');
+        expect(req.headers.cookie).to.include('GU_geo_country=FR');
+      });
+    });
+
     it('successfully blocks the password set page /welcome if a password has already been set', () => {
       const unregisteredEmail = randomMailosaurEmail();
       cy.visit(`/register`);

@@ -1,5 +1,9 @@
 import crypto from 'crypto';
-import { Status, UserResponse } from '@/server/models/okta/User';
+import {
+  RegistrationLocation,
+  Status,
+  UserResponse,
+} from '@/server/models/okta/User';
 import {
   createUser,
   getUser,
@@ -198,9 +202,13 @@ export const sendRegistrationEmailByUserState = async (
  * If a user already exists, we read the state of the user and take a recovery flow action depending on that.
  *
  * @param {string} email
+ * @param {RegistrationLocation} registrationLocation
  * @returns {Promise<UserResponse>} Promise that resolves to the user object
  */
-export const register = async (email: string): Promise<UserResponse> => {
+export const register = async (
+  email: string,
+  registrationLocation?: RegistrationLocation,
+): Promise<UserResponse> => {
   try {
     return await createUser({
       profile: {
@@ -208,6 +216,7 @@ export const register = async (email: string): Promise<UserResponse> => {
         login: email,
         isGuardianUser: true,
         registrationPlatform: 'identity-gateway',
+        registrationLocation: registrationLocation,
       },
       groupIds: [okta.groupIds.GuardianUserAll],
     });
