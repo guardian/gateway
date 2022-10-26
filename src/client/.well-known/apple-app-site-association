@@ -9,11 +9,8 @@
         ],
         "components": [
           {
-            "/": "/welcome/?*",
-            "?": {
-              "useOkta": "true"
-            },
-            "comment": "Matches any URL whose path starts with /welcome/<randomString> and which has a query item with name 'useOkta' and a value of 'true'"
+            "/": "/welcome/*",
+            "comment": "Matches any URL whose path starts with /welcome/<randomString> where <randomString> is a token"
           },
           {
              "/": "/identity/fallback/*",
