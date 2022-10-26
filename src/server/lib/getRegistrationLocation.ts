@@ -6,7 +6,6 @@ import { RegistrationLocation } from '../models/okta/User';
  * The registrationLocation regions are derived from the first column (region_code)
  * of the Data Design team regional classifications here:
  * https://github.com/guardian/data-platform-models/blob/1f21699dd8a3609ee158e74daee79a58f4e7ebc1/dbt/data/seed_country.csv
- * (Notes: ROW British Virgin Islands (VG) and EU Kosovo (XK) have been removed to validate type checking)
  *
  * The registrationLocation field is stored in Okta and can by changed by user via ManageMyAccount.
  */
@@ -32,7 +31,6 @@ export const getRegistrationLocation = (
 
 const Us: (CountryCode | undefined)[] = ['US', 'AS', 'GU', 'MP', 'PR', 'VI'];
 
-// XK Kosovo removed
 const Europe: (CountryCode | undefined)[] = [
   'AX',
   'AL',
@@ -86,7 +84,6 @@ const Europe: (CountryCode | undefined)[] = [
   'VA',
 ];
 
-// TODO fix in library - missing 'VG' British Virgin Islands
 const Row: (CountryCode | undefined)[] = [
   'AW',
   'AF',
@@ -268,6 +265,7 @@ const Row: (CountryCode | undefined)[] = [
   'UZ',
   'VC',
   'VE',
+  'VG',
   'VN',
   'VU',
   'WF',
