@@ -1,5 +1,6 @@
 import type { Response } from 'node-fetch';
 import {
+  errorResponseSchema,
   ErrorResponse,
   OktaError,
   ErrorCause,
@@ -9,16 +10,7 @@ const extractErrorResponse = async (
   response: Response,
 ): Promise<ErrorResponse> => {
   try {
-    return await response.json().then((json) => {
-      const error = json as ErrorResponse;
-      return {
-        errorCode: error.errorCode,
-        errorSummary: error.errorSummary,
-        errorLink: error.errorLink,
-        errorId: error.errorId,
-        errorCauses: error.errorCauses,
-      };
-    });
+    return errorResponseSchema.parse(await response.json());
   } catch (error) {
     throw new OktaError({
       message: 'Could not parse Okta error response',
