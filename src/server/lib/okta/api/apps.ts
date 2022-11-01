@@ -1,5 +1,5 @@
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { AppResponse } from '@/server/models/okta/App';
+import { AppResponse, appResponseSchema } from '@/server/models/okta/App';
 import { OktaError } from '@/server/models/okta/Error';
 import { buildUrl } from '@/shared/lib/routeUtils';
 import { joinUrl } from '@guardian/libs';
@@ -45,14 +45,7 @@ export const getApp = async (id: string): Promise<AppResponse> => {
 const handleAppResponse = async (response: Response): Promise<AppResponse> => {
   if (response.ok) {
     try {
-      return await response.json().then((json) => {
-        const app = json as AppResponse;
-        return {
-          id: app.id,
-          label: app.label,
-          settings: app.settings,
-        };
-      });
+      return appResponseSchema.parse(await response.json());
     } catch (error) {
       throw new OktaError({
         message: 'Could not parse Okta app response',
