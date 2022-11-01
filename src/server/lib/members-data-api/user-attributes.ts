@@ -79,12 +79,7 @@ export const getUserAttributes = async (
       );
     }
 
-    const unparsed = await response.json();
-
-    const userAttributesResponse =
-      await userAttributesResponseSchema.parseAsync(unparsed);
-
-    return userAttributesResponse;
+    return userAttributesResponseSchema.parse(await response.json());
   } catch (error) {
     logger.error(`MDAPI Error getUserAttributes '/user-attributes/me'`, error, {
       request_id,
