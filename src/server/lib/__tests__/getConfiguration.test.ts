@@ -49,6 +49,7 @@ describe('getConfiguration', () => {
     process.env.OKTA_IDP_GOOGLE = 'okta-idp-google';
     process.env.OKTA_GUARDIAN_USERS_ALL_GROUP_ID =
       'okta-guardian-users-group-id';
+    process.env.MEMBERS_DATA_API_URL = 'members-data-api-url';
 
     const rateLimiterConfig = `{
       "enabled": true,
@@ -145,6 +146,7 @@ describe('getConfiguration', () => {
           },
         },
       },
+      membersDataApiUrl: 'members-data-api-url',
     } as Configuration;
 
     expect(output).toEqual(expected);

@@ -20,6 +20,9 @@ Parameters:
   OktaOrgUrl:
     Description: The org url for interacting with okta APIs
     Type: AWS::SSM::Parameter::Value<String>
+  MembersDataApiUrl:
+    Description: The url for members-data-api
+    Type: AWS::SSM::Parameter::Value<String>
   RedisHost:
     Description: The Redis server URL, used for rate limiting.
     Type: AWS::SSM::Parameter::Value<String>
@@ -306,6 +309,7 @@ Resources:
             Environment=REDIS_PASSWORD=$REDIS_PASSWORD
             Environment=REDIS_HOST=${RedisHost}
             Environment=REDIS_SSL_ON=true
+            Environment=MEMBERS_DATA_API_URL=${MembersDataApiUrl}
 
             [Install]
             WantedBy=multi-user.target

@@ -16,7 +16,7 @@ const { defaultReturnUri } = getConfiguration();
 const postSignInController = async (
   req: Request,
   res: ResponseWithRequestState,
-  idapiCookies: IdapiCookies,
+  idapiCookies?: IdapiCookies,
   returnUrl?: string,
 ) => {
   const redirectUrl = returnUrl || defaultReturnUri;
@@ -34,7 +34,7 @@ const postSignInController = async (
       setExperimentRan(req, res, OPT_IN_PROMPT_TEST_ID, true);
     }
 
-    const sc_gu_u = idapiCookies.values.find(
+    const sc_gu_u = idapiCookies?.values.find(
       ({ key }) => key === 'SC_GU_U',
     )?.value;
 
