@@ -35,7 +35,7 @@ export const performAuthorizationCodeFlow = async (
     closeExistingSession,
     doNotSetLastAccessCookie = false,
   }: {
-    sessionToken?: string;
+    sessionToken?: string | null;
     confirmationPagePath?: RoutePaths;
     idp?: string;
     closeExistingSession?: boolean;
