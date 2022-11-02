@@ -1,112 +1,118 @@
-// social registration identity provider type
-type RegistrationIdp = 'google' | 'apple' | 'facebook';
+import { z } from 'zod';
 
-export type RegistrationLocation =
-  | 'Prefer not to say'
-  | 'United Kingdom'
-  | 'Europe'
-  | 'United States'
-  | 'Canada'
-  | 'Australia'
-  | 'New Zealand'
-  | 'Other';
+// social registration identity provider type
+const RegistrationIdp = z.enum(['google', 'apple', 'facebook']);
+
+const RegistrationLocation = z.enum([
+  'Prefer not to say',
+  'United Kingdom',
+  'Europe',
+  'United States',
+  'Canada',
+  'Australia',
+  'New Zealand',
+  'Other',
+]);
+export type RegistrationLocation = z.infer<typeof RegistrationLocation>;
 
 // https://developer.okta.com/docs/reference/api/users/#profile-object
-interface UserProfile {
-  email: string;
-  login: string;
-  isGuardianUser?: boolean;
-  registrationPlatform?: string;
-  emailValidated?: boolean;
-  lastEmailValidatedTimestamp?: string;
-  passwordSetSecurely?: boolean;
-  lastPasswordSetSecurelyTimestamp?: string;
-  registrationIdp?: RegistrationIdp;
-  registrationLocation?: RegistrationLocation;
-  googleExternalId?: string;
-  appleExternalId?: string;
-  facebookExternalId?: string;
-  isJobsUser?: boolean;
-  firstName?: string;
-  lastName?: string;
-}
+const userProfileSchema = z.object({
+  email: z.string(),
+  login: z.string(),
+  isGuardianUser: z.boolean().nullable().optional(),
+  registrationPlatform: z.string().nullable().optional(),
+  emailValidated: z.boolean().nullable().optional(),
+  lastEmailValidatedTimestamp: z.string().nullable().optional(),
+  passwordSetSecurely: z.boolean().nullable().optional(),
+  lastPasswordSetSecurelyTimestamp: z.string().nullable().optional(),
+  registrationIdp: RegistrationIdp.nullable().optional(),
+  registrationLocation: RegistrationLocation.nullable().optional(),
+  googleExternalId: z.string().nullable().optional(),
+  appleExternalId: z.string().nullable().optional(),
+  facebookExternalId: z.string().nullable().optional(),
+  isJobsUser: z.boolean().nullable().optional(),
+  firstName: z.string().nullable().optional(),
+  lastName: z.string().nullable().optional(),
+});
 
 // https://developer.okta.com/docs/reference/api/users/#password-object
 // A password `value` is a write-only property. It is not returned in the response when reading.
 // When a user has a valid password, or imported hashed password, or password hook,
 // and a response object contains a password credential, then the Password object is a bare object
 // without the value property defined(for example, `password: {}`), to indicate that a password value exists.
-interface UserCredentialsPassword {
-  value?: string;
-}
+const userCredentialsPasswordSchema = z.object({
+  value: z.string().nullable().optional(),
+});
 
 // https://developer.okta.com/docs/reference/api/users/#credentials-object
-interface UserCredentials {
-  password?: UserCredentialsPassword;
-  // Not implemented in our system
-  // see https://developer.okta.com/docs/reference/api/users/#recovery-question-object if ever required
-  recovery_question?: unknown;
-  // Not implemented in our system
-  // see https://developer.okta.com/docs/reference/api/users/#provider-object if ever required
-  provider: unknown;
-}
-
-type OktaUserFieldsInResponse =
-  | 'email'
-  | 'login'
-  | 'isGuardianUser'
-  | 'emailValidated'
-  | 'firstName'
-  | 'lastName'
-  | 'isJobsUser'
-  | 'registrationLocation';
+const userCredentialsSchema = z.object({
+  password: userCredentialsPasswordSchema.nullable().optional(),
+  recovery_question: z.unknown().nullable().optional(),
+  provider: z.unknown().nullable().optional(),
+});
 
 // https://developer.okta.com/docs/reference/api/users/#user-object
-export interface UserResponse {
-  id: string;
-  status: string;
-  profile: Pick<UserProfile, OktaUserFieldsInResponse>;
-  credentials: UserCredentials;
-}
+export const userResponseSchema = z.object({
+  id: z.string(),
+  status: z.string(),
+  profile: userProfileSchema.pick({
+    email: true,
+    login: true,
+    isGuardianUser: true,
+    emailValidated: true,
+    firstName: true,
+    lastName: true,
+    isJobsUser: true,
+    registrationLocation: true,
+  }),
+  credentials: userCredentialsSchema,
+});
+export type UserResponse = z.infer<typeof userResponseSchema>;
 
 // https://developer.okta.com/docs/reference/api/users/#activate-user
 // https://developer.okta.com/docs/reference/api/users/#reactivate-user
-export interface ActivationTokenResponse {
-  activationUrl: string;
-  activationToken: string;
-}
+export const activationTokenResponseSchema = z.object({
+  activationUrl: z.string(),
+  activationToken: z.string(),
+});
+export type ActivationTokenResponse = z.infer<
+  typeof activationTokenResponseSchema
+>;
 
 // Our methods consume the activate_user, reactivate_user, and reset_password
 // endpoints and return a token response.
-export interface TokenResponse {
-  token: string;
-}
+const tokenResponseSchema = z.object({
+  token: z.string(),
+});
+export type TokenResponse = z.infer<typeof tokenResponseSchema>;
 
 // https://developer.okta.com/docs/reference/api/users/#request-parameters
-export interface UserCreationRequest {
-  profile: NonNullable<
-    Pick<
-      UserProfile,
-      | 'email'
-      | 'login'
-      | 'isGuardianUser'
-      | 'registrationPlatform'
-      | 'registrationLocation'
-    >
-  >;
-  groupIds: Array<string>;
-}
+const userCreationRequestSchema = z.object({
+  profile: userProfileSchema.pick({
+    email: true,
+    login: true,
+    isGuardianUser: true,
+    registrationPlatform: true,
+    registrationLocation: true,
+  }),
+  groupIds: z.array(z.string()),
+});
+export type UserCreationRequest = z.infer<typeof userCreationRequestSchema>;
 
 // https://developer.okta.com/docs/reference/api/users/#request-parameters-6
-export interface UserUpdateRequest {
-  profile?: Partial<UserProfile>;
-  credentials?: Partial<UserCredentials>;
-}
+const userUpdateRequestSchema = z.object({
+  profile: userProfileSchema.partial().nullable().optional(),
+  credentials: userCredentialsSchema.partial().nullable().optional(),
+});
+export type UserUpdateRequest = z.infer<typeof userUpdateRequestSchema>;
 
 // https://developer.okta.com/docs/reference/api/users/#response-example-39
-export interface ResetPasswordUrlResponse {
-  resetPasswordUrl: string;
-}
+export const resetPasswordUrlResponseSchema = z.object({
+  resetPasswordUrl: z.string(),
+});
+export type ResetPasswordUrlResponse = z.infer<
+  typeof resetPasswordUrlResponseSchema
+>;
 
 // https://developer.okta.com/docs/reference/api/users/#user-status
 export enum Status {
@@ -120,10 +126,11 @@ export enum Status {
 }
 
 // https://developer.okta.com/docs/reference/api/sessions/#session-object
-export interface SessionResponse {
-  id: string;
-  login: string;
-  userId: string;
-  expiresAt: string;
-  status: string;
-}
+const sessionResponseSchema = z.object({
+  id: z.string(),
+  login: z.string(),
+  userId: z.string(),
+  expiresAt: z.string(),
+  status: z.string(),
+});
+export type SessionResponse = z.infer<typeof sessionResponseSchema>;
