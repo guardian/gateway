@@ -91,6 +91,7 @@ describe('Change password in Okta', () => {
           email,
           isGuardianUser: true,
         },
+        credentials: {},
       });
     };
 

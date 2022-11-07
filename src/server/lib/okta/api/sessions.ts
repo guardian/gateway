@@ -1,5 +1,5 @@
 import { OktaError } from '@/server/models/okta/Error';
-import { SessionResponse } from '@/server/models/okta/Session';
+import { SessionResponse, sessionSchema } from '@/server/models/okta/Session';
 import { buildUrl } from '@/shared/lib/routeUtils';
 import { joinUrl } from '@guardian/libs';
 import { getConfiguration } from '../../getConfiguration';
@@ -61,19 +61,7 @@ export const handleSessionResponse = async (
 ): Promise<SessionResponse> => {
   if (response.ok) {
     try {
-      return await response.json().then((json) => {
-        const session = json as SessionResponse;
-        return {
-          id: session.id,
-          login: session.login,
-          userId: session.userId,
-          expiresAt: session.expiresAt,
-          status: session.status,
-          lastPasswordVerification: session.lastPasswordVerification,
-          lastFactorVerification: session.lastFactorVerification,
-          mfaActive: session.mfaActive,
-        };
-      });
+      return sessionSchema.parse(await response.json());
     } catch (error) {
       throw new OktaError({
         message: 'Could not parse Okta session response',

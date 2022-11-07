@@ -12,6 +12,7 @@ import { OktaError } from '@/server/models/okta/Error';
 import {
   AuthenticationRequestParameters,
   AuthenticationTransaction,
+  authenticationTransactionSchema,
 } from '@/server/models/okta/Authentication';
 import { handleVoidResponse } from '@/server/lib/okta/api/responses';
 import { isBreachedPassword } from '../../breachedPasswordCheck';
@@ -167,16 +168,7 @@ const handleAuthenticationResponse = async (
 ): Promise<AuthenticationTransaction> => {
   if (response.ok) {
     try {
-      return await response.json().then((json) => {
-        const token = json as AuthenticationTransaction;
-        return {
-          stateToken: token.stateToken,
-          sessionToken: token.sessionToken,
-          expiresAt: token.expiresAt,
-          _embedded: token._embedded,
-          status: token.status,
-        };
-      });
+      return authenticationTransactionSchema.parse(await response.json());
     } catch (error) {
       throw new OktaError({
         message: 'Could not parse Okta authentication transaction response',

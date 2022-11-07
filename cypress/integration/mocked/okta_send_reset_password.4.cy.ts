@@ -188,6 +188,7 @@ describe('Send password reset email in Okta', () => {
       cy.get('input[name="email"]').type(email);
       cy.mockNext(200, mockUserStaged);
       cy.mockNext(200, {
+        activationUrl: `token_token_token_to`,
         activationToken: `token_token_token_to`,
       });
       cy.get('button[type="submit"]').click();
@@ -203,6 +204,7 @@ describe('Send password reset email in Okta', () => {
       cy.get('input[name="email"]').type(email);
       cy.mockNext(200, mockUserProvisioned);
       cy.mockNext(200, {
+        activationUrl: `token_token_token_to`,
         activationToken: `token_token_token_to`,
       });
       cy.get('button[type="submit"]').click();

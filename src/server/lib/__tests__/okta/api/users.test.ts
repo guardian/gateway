@@ -12,7 +12,7 @@ import {
   getUserGroups,
 } from '@/server/lib/okta/api/users';
 import { OktaError } from '@/server/models/okta/Error';
-import { UserCreationRequest } from '@/server/models/okta/User';
+import { UserCreationRequest, UserResponse } from '@/server/models/okta/User';
 
 const userId = '12345';
 const email = 'test@test.com';
@@ -65,7 +65,8 @@ describe('okta#createUser', () => {
       id: userId,
       status: 'PROVISIONED',
       profile: { email: email, login: email, isGuardianUser: true },
-    };
+      credentials: {},
+    } as UserResponse;
 
     json.mockResolvedValueOnce(user);
     mockedFetch.mockReturnValueOnce(
@@ -163,7 +164,8 @@ describe('okta#fetchUser', () => {
       id: userId,
       status: 'ACTIVE',
       profile: { email: email, login: email, isGuardianUser: true },
-    };
+      credentials: {},
+    } as UserResponse;
 
     json.mockResolvedValueOnce(user);
     mockedFetch.mockReturnValueOnce(

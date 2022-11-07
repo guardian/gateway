@@ -10,15 +10,17 @@ import {
   UserCreationRequest,
   UserResponse,
   UserUpdateRequest,
-  ActivationTokenResponse,
-  ResetPasswordUrlResponse,
   TokenResponse,
+  userResponseSchema,
+  activationTokenResponseSchema,
+  resetPasswordUrlResponseSchema,
 } from '@/server/models/okta/User';
 import { handleVoidResponse } from '@/server/lib/okta/api/responses';
 import { Response } from 'node-fetch';
 import { OktaError } from '@/server/models/okta/Error';
 import { handleErrorResponse } from '@/server/lib/okta/api/errors';
-import { Group } from '@/server/models/okta/Group';
+import { Group, groupSchema } from '@/server/models/okta/Group';
+import { z } from 'zod';
 
 const { okta } = getConfiguration();
 
@@ -296,24 +298,7 @@ const handleUserResponse = async (
 ): Promise<UserResponse> => {
   if (response.ok) {
     try {
-      return await response.json().then((json) => {
-        const user = json as UserResponse;
-        return {
-          id: user.id,
-          status: user.status,
-          profile: {
-            firstName: user.profile.firstName,
-            lastName: user.profile.lastName,
-            email: user.profile.email,
-            login: user.profile.login,
-            isGuardianUser: user.profile.isGuardianUser,
-            emailValidated: user.profile.emailValidated,
-            isJobsUser: user.profile.isJobsUser,
-            registrationLocation: user.profile.registrationLocation,
-          },
-          credentials: user.credentials,
-        };
-      });
+      return userResponseSchema.parse(await response.json());
     } catch (error) {
       throw new OktaError({
         message: 'Could not parse Okta user response',
@@ -334,16 +319,7 @@ const handleUserResponse = async (
 const handleGroupsResponse = async (response: Response): Promise<Group[]> => {
   if (response.ok) {
     try {
-      return await response.json().then((json) => {
-        const groups = json as Group[];
-        return groups.map((group) => ({
-          id: group.id,
-          profile: {
-            name: group.profile.name,
-            description: group.profile.description,
-          },
-        }));
-      });
+      return z.array(groupSchema).parse(await response.json());
     } catch (error) {
       throw new OktaError({
         message: 'Could not parse Okta user group response',
@@ -367,12 +343,13 @@ const handleActivationTokenResponse = async (
 ): Promise<TokenResponse> => {
   if (response.ok) {
     try {
-      return await response.json().then((json) => {
-        const response = json as ActivationTokenResponse;
-        return {
-          token: response.activationToken,
-        };
-      });
+      const activationTokenResponse = activationTokenResponseSchema.parse(
+        await response.json(),
+      );
+
+      return {
+        token: activationTokenResponse.activationToken,
+      };
     } catch (error) {
       throw new OktaError({
         message: 'Could not parse Okta activation token response',
@@ -395,23 +372,24 @@ const handleResetPasswordUrlResponse = async (
 ): Promise<string> => {
   if (response.ok) {
     try {
-      return await response.json().then((json) => {
-        const { resetPasswordUrl } = json as ResetPasswordUrlResponse;
-        const url = new URL(resetPasswordUrl);
-        const token = url.pathname.split('/').at(-1);
+      const { resetPasswordUrl } = resetPasswordUrlResponseSchema.parse(
+        await response.json(),
+      );
 
-        // validate should exist, be length 20, and not equal to "signin" or "reset-password"
-        if (
-          token &&
-          token.length === 20 &&
-          token !== 'signin' &&
-          token !== 'reset-password'
-        ) {
-          return token;
-        } else {
-          throw new Error('Could not parse OTT from resetPasswordUrl');
-        }
-      });
+      const url = new URL(resetPasswordUrl);
+      const token = url.pathname.split('/').at(-1);
+
+      // validate should exist, be length 20, and not equal to "signin" or "reset-password"
+      if (
+        token &&
+        token.length === 20 &&
+        token !== 'signin' &&
+        token !== 'reset-password'
+      ) {
+        return token;
+      } else {
+        throw new Error('Could not parse OTT from resetPasswordUrl');
+      }
     } catch (error) {
       throw new OktaError({
         message: 'Could not parse Okta reset password url response',

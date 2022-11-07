@@ -35,7 +35,7 @@ userStatuses.forEach((status) => {
             "Then I should be shown the 'Check your email inbox' page",
             () => {
               // Set the correct user status on the response
-              const response = { ...userResponse.response, status };
+              const response = { ...userResponse.response, status: 'STAGED' };
               cy.mockNext(userResponse.code, response);
               cy.get('[data-cy="main-form-submit-button"]').click();
               verifyInRegularEmailSentPage();
@@ -175,7 +175,7 @@ userStatuses.forEach((status) => {
             "Then I should be shown the 'Check your email inbox' page",
             () => {
               // Set the correct user status on the response
-              const response = { ...userResponse.response, status };
+              const response = { ...userResponse.response, status: 'STAGED' };
               cy.mockNext(userResponse.code, response);
               cy.get('[data-cy="main-form-submit-button"]').click();
               verifyInRegularEmailSentPage();
@@ -261,7 +261,7 @@ userStatuses.forEach((status) => {
             "Then I should be shown the 'Check your email inbox' page",
             () => {
               // Set the correct user status on the response
-              const response = { ...userResponse.response, status };
+              const response = { ...userResponse.response, status: 'STAGED' };
               cy.mockNext(userResponse.code, response);
               cy.get('[data-cy="main-form-submit-button"]').click();
               verifyInRegularEmailSentPage();
@@ -343,7 +343,7 @@ userStatuses.forEach((status) => {
             "Then I should be shown the 'Check your email inbox' page",
             () => {
               // Set the correct user status on the response
-              const response = { ...userResponse.response, status };
+              const response = { ...userResponse.response, status: 'STAGED' };
               cy.mockNext(userResponse.code, response);
               cy.get('[data-cy="main-form-submit-button"]').click();
               verifyInRegularEmailSentPage();
