@@ -209,14 +209,30 @@ export const getRedirectUrl = (
     params.set('returnUrl', thirdPartyReturnUrl);
   }
 
-  // check the Okta hosted login page query params for an activation toke
+  // check the Okta hosted login page query params for an activation token for welcome page
   const activationToken = searchParams.get('activation_token');
 
+  // check for reset password token
+  const resetPasswordToken = searchParams.get('reset_password_token');
+
+  // check for set password token
+  const setPasswordToken = searchParams.get('set_password_token');
+
+  // if we have an activation token, we know we need to go to the create password/welcome page
   if (activationToken) {
-    // if we have an activation token, we know we need to go to the create password/welcome page
     return `/welcome/${activationToken}?${params.toString()}`;
-  } else {
-    // if we don't have an activation token, we need to go to the sign in page
-    return `/signin?${params.toString()}`;
   }
+
+  // if we have a reset password token, we know we need to go to the reset password page
+  if (resetPasswordToken) {
+    return `/reset-password/${resetPasswordToken}?${params.toString()}`;
+  }
+
+  // if we have a set password token, we know we need to go to the set password page
+  if (setPasswordToken) {
+    return `/set-password/${setPasswordToken}?${params.toString()}`;
+  }
+
+  // if we don't have any tokens, we need to go to the sign in page
+  return `/signin?${params.toString()}`;
 };

@@ -13,6 +13,14 @@
             "comment": "Matches any URL whose path starts with /welcome/<randomString> where <randomString> is a token"
           },
           {
+            "/": "/reset-password/*",
+            "comment": "Matches any URL whose path starts with /reset-password/<randomString> where <randomString> is a token"
+          },
+          {
+            "/": "/set-password/*",
+            "comment": "Matches any URL whose path starts with /set-password/<randomString> where <randomString> is a token"
+          },
+          {
              "/": "/identity/fallback/*",
              "comment": "Matches any URL whose path starts with /identity/fallback/"
           }
