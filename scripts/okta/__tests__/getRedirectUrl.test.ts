@@ -84,6 +84,52 @@ describe('getRedirectUrl', () => {
     );
   });
 
+  it('should return /reset-password/:token with valid query params and third party return url and third party client id', () => {
+    expect(
+      getRedirectUrl(
+        '?reset_password_token=123',
+        'https://profile.theguardian.com',
+        '',
+        {
+          getRequestContext: () => ({
+            target: {
+              clientId: 'test123',
+              label: 'jobs_site',
+            },
+          }),
+          getSignInWidgetConfig: () => ({
+            relayState: '/testFromURI',
+          }),
+        },
+      ),
+    ).toBe(
+      '/reset-password/123?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com',
+    );
+  });
+
+  it('should return /set-password/:token with valid query params and third party return url and third party client id', () => {
+    expect(
+      getRedirectUrl(
+        '?set_password_token=123',
+        'https://profile.theguardian.com',
+        '',
+        {
+          getRequestContext: () => ({
+            target: {
+              clientId: 'test123',
+              label: 'jobs_site',
+            },
+          }),
+          getSignInWidgetConfig: () => ({
+            relayState: '/testFromURI',
+          }),
+        },
+      ),
+    ).toBe(
+      '/set-password/123?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com',
+    );
+  });
+
   it('should return /signin only with clientId if force_fallback is set', () => {
     expect(
       getRedirectUrl(
