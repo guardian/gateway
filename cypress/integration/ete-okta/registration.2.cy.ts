@@ -265,8 +265,8 @@ describe('Registration flow', () => {
           cy.checkForEmailAndGetDetails(
             emailAddress,
             timeRequestWasMade,
-            /set-password\/([^"]*)/,
-          ).then(({ links, body, token }) => {
+            /\/set-password\/([^"]*)/,
+          ).then(({ links, body }) => {
             expect(body).to.have.string('This account already exists');
 
             expect(body).to.have.string('Create password');
@@ -274,10 +274,8 @@ describe('Registration flow', () => {
             const setPasswordLink = links.find((s) =>
               s.text?.includes('Create password'),
             );
-            expect(setPasswordLink?.href ?? '').not.to.have.string(
-              'useOkta=true',
-            );
-            cy.visit(`/set-password/${token}`);
+            expect(setPasswordLink?.href).not.to.have.string('useOkta=true');
+            cy.visit(setPasswordLink?.href as string);
             cy.contains('Create password');
             cy.contains(emailAddress);
           });
@@ -308,18 +306,16 @@ describe('Registration flow', () => {
             cy.checkForEmailAndGetDetails(
               emailAddress,
               timeRequestWasMade,
-              /set-password\/([^"]*)/,
-            ).then(({ links, body, token }) => {
+              /\/set-password\/([^"]*)/,
+            ).then(({ links, body }) => {
               expect(body).to.have.string('This account already exists');
               expect(body).to.have.string('Create password');
               expect(links.length).to.eq(2);
               const setPasswordLink = links.find((s) =>
                 s.text?.includes('Create password'),
               );
-              expect(setPasswordLink?.href ?? '').not.to.have.string(
-                'useOkta=true',
-              );
-              cy.visit(`/set-password/${token}`);
+              expect(setPasswordLink?.href).not.to.have.string('useOkta=true');
+              cy.visit(setPasswordLink?.href as string);
               cy.contains('Create password');
               cy.contains(emailAddress);
             });
@@ -354,7 +350,7 @@ describe('Registration flow', () => {
             emailAddress,
             timeRequestWasMade,
             /reset-password\/([^"]*)/,
-          ).then(({ links, body, token }) => {
+          ).then(({ links, body }) => {
             expect(body).to.have.string(
               'Because your security is extremely important to us, we have changed our password policy.',
             );
@@ -363,17 +359,14 @@ describe('Registration flow', () => {
             const resetPasswordLink = links.find((s) =>
               s.text?.includes('Reset password'),
             );
-            expect(resetPasswordLink?.href ?? '').to.have.string(
-              'reset-password',
-            );
-            cy.visit(`/reset-password/${token}`);
+            cy.visit(resetPasswordLink?.href as string);
             cy.contains(emailAddress);
             cy.contains('Reset password');
           });
         });
       });
     });
-    it('should send an ACTIVE validated user a reset password email with no activation token', () => {
+    it('should send an ACTIVE validated user WITH a password a reset password email with an activation token', () => {
       cy.createTestUser({
         isGuestUser: false,
         isUserEmailValidated: true,
@@ -392,26 +385,25 @@ describe('Registration flow', () => {
           cy.contains('Resend email');
           cy.contains('Change email address');
 
-          cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
-            ({ links, body }) => {
-              expect(body).to.have.string('This account already exists');
-              expect(body).to.have.string('Sign in');
-              expect(body).to.have.string('Reset password');
-              expect(links.length).to.eq(3);
-              const resetPasswordLink = links.find((s) =>
-                s.text?.includes('Reset password'),
-              );
-              expect(resetPasswordLink?.href ?? '').not.to.have.string(
-                'useOkta=true',
-              );
-              expect(resetPasswordLink?.href ?? '').to.have.string(
-                'reset-password',
-              );
-              cy.visit(`/reset-password`);
-              cy.contains('Forgot password');
-              cy.contains('Reset password');
-            },
-          );
+          cy.checkForEmailAndGetDetails(
+            emailAddress,
+            timeRequestWasMade,
+            /reset-password\/([^"]*)/,
+          ).then(({ links, body }) => {
+            expect(body).to.have.string('This account already exists');
+            expect(body).to.have.string('Sign in');
+            expect(body).to.have.string('Reset password');
+            expect(links.length).to.eq(3);
+            const resetPasswordLink = links.find((s) =>
+              s.text?.includes('Reset password'),
+            );
+            expect(resetPasswordLink?.href ?? '').not.to.have.string(
+              'useOkta=true',
+            );
+            cy.visit(resetPasswordLink?.href as string);
+            cy.contains(emailAddress);
+            cy.contains('Reset password');
+          });
         });
       });
     });
@@ -438,8 +430,8 @@ describe('Registration flow', () => {
             cy.checkForEmailAndGetDetails(
               emailAddress,
               timeRequestWasMade,
-              /set-password\/([^"]*)/,
-            ).then(({ links, body, token }) => {
+              /reset-password\/([^"]*)/,
+            ).then(({ links, body }) => {
               expect(body).to.have.string('Password reset');
               expect(body).to.have.string('Reset password');
               expect(links.length).to.eq(2);
@@ -449,10 +441,7 @@ describe('Registration flow', () => {
               expect(resetPasswordLink?.href ?? '').not.to.have.string(
                 'useOkta=true',
               );
-              expect(resetPasswordLink?.href ?? '').to.have.string(
-                'reset-password',
-              );
-              cy.visit(`/reset-password/${token}`);
+              cy.visit(resetPasswordLink?.href as string);
               cy.contains('Reset password');
               cy.contains(emailAddress);
             });
@@ -483,8 +472,8 @@ describe('Registration flow', () => {
             cy.checkForEmailAndGetDetails(
               emailAddress,
               timeRequestWasMade,
-              /set-password\/([^"]*)/,
-            ).then(({ links, body, token }) => {
+              /reset-password\/([^"]*)/,
+            ).then(({ links, body }) => {
               expect(body).to.have.string('Password reset');
               expect(body).to.have.string('Reset password');
               expect(links.length).to.eq(2);
@@ -494,10 +483,7 @@ describe('Registration flow', () => {
               expect(resetPasswordLink?.href ?? '').not.to.have.string(
                 'useOkta=true',
               );
-              expect(resetPasswordLink?.href ?? '').to.have.string(
-                'reset-password',
-              );
-              cy.visit(`/reset-password/${token}`);
+              cy.visit(resetPasswordLink?.href as string);
               cy.contains('Reset password');
               cy.contains(emailAddress);
             });
@@ -553,7 +539,7 @@ describe('Registration flow', () => {
             cy.checkForEmailAndGetDetails(
               emailAddress,
               timeRequestWasMade,
-              /set-password\/([^"]*)/,
+              /\/set-password\/([^"]*)/,
             ).then(() => {
               timeRequestWasMade = new Date();
 
@@ -563,8 +549,8 @@ describe('Registration flow', () => {
               cy.checkForEmailAndGetDetails(
                 emailAddress,
                 timeRequestWasMade,
-                /set-password\/([^"]*)/,
-              ).then(({ links, body, token }) => {
+                /\/set-password\/([^"]*)/,
+              ).then(({ links, body }) => {
                 expect(body).to.have.string('This account already exists');
                 expect(body).to.have.string('Create password');
                 expect(links.length).to.eq(2);
@@ -574,7 +560,7 @@ describe('Registration flow', () => {
                 expect(setPasswordLink?.href ?? '').not.to.have.string(
                   'useOkta=true',
                 );
-                cy.visit(`/set-password/${token}`);
+                cy.visit(setPasswordLink?.href as string);
                 cy.contains('Create password');
                 cy.contains(emailAddress);
               });
@@ -607,7 +593,7 @@ describe('Registration flow', () => {
               cy.checkForEmailAndGetDetails(
                 emailAddress,
                 timeRequestWasMade,
-                /set-password\/([^"]*)/,
+                /\/set-password\/([^"]*)/,
               ).then(() => {
                 timeRequestWasMade = new Date();
                 cy.get('[data-cy="main-form-submit-button"]').click();
@@ -615,8 +601,8 @@ describe('Registration flow', () => {
                 cy.checkForEmailAndGetDetails(
                   emailAddress,
                   timeRequestWasMade,
-                  /set-password\/([^"]*)/,
-                ).then(({ links, body, token }) => {
+                  /\/set-password\/([^"]*)/,
+                ).then(({ links, body }) => {
                   expect(body).to.have.string('This account already exists');
                   expect(body).to.have.string('Create password');
                   expect(links.length).to.eq(2);
@@ -626,7 +612,7 @@ describe('Registration flow', () => {
                   expect(setPasswordLink?.href ?? '').not.to.have.string(
                     'useOkta=true',
                   );
-                  cy.visit(`/set-password/${token}`);
+                  cy.visit(setPasswordLink?.href as string);
                   cy.contains('Create password');
                   cy.contains(emailAddress);
                 });
@@ -635,7 +621,7 @@ describe('Registration flow', () => {
           });
         });
       });
-      it('should send an ACTIVE user a reset password email with no activation token', () => {
+      it('should send an ACTIVE user a reset password email with an Okta activation token', () => {
         cy.createTestUser({
           isGuestUser: false,
           isUserEmailValidated: true,
@@ -664,6 +650,7 @@ describe('Registration flow', () => {
               cy.checkForEmailAndGetDetails(
                 emailAddress,
                 timeRequestWasMade,
+                /reset-password\/([^"]*)/,
               ).then(({ links, body }) => {
                 expect(body).to.have.string('This account already exists');
                 expect(body).to.have.string('Sign in');
@@ -675,12 +662,9 @@ describe('Registration flow', () => {
                 expect(resetPasswordLink?.href ?? '').not.to.have.string(
                   'useOkta=true',
                 );
-                expect(resetPasswordLink?.href ?? '').to.have.string(
-                  'reset-password',
-                );
-                cy.visit(`/reset-password`);
-                cy.contains('Forgot password');
+                cy.visit(resetPasswordLink?.href as string);
                 cy.contains('Reset password');
+                cy.contains(emailAddress);
               });
             });
           });
@@ -709,7 +693,7 @@ describe('Registration flow', () => {
               cy.checkForEmailAndGetDetails(
                 emailAddress,
                 timeRequestWasMade,
-                /set-password\/([^"]*)/,
+                /reset-password\/([^"]*)/,
               ).then(() => {
                 timeRequestWasMade = new Date();
                 cy.get('[data-cy="main-form-submit-button"]').click();
@@ -717,8 +701,8 @@ describe('Registration flow', () => {
                 cy.checkForEmailAndGetDetails(
                   emailAddress,
                   timeRequestWasMade,
-                  /set-password\/([^"]*)/,
-                ).then(({ links, body, token }) => {
+                  /reset-password\/([^"]*)/,
+                ).then(({ links, body }) => {
                   expect(body).to.have.string('Password reset');
                   expect(body).to.have.string('Reset password');
                   expect(links.length).to.eq(2);
@@ -728,10 +712,7 @@ describe('Registration flow', () => {
                   expect(resetPasswordLink?.href ?? '').not.to.have.string(
                     'useOkta=true',
                   );
-                  expect(resetPasswordLink?.href ?? '').to.have.string(
-                    'reset-password',
-                  );
-                  cy.visit(`/reset-password/${token}`);
+                  cy.visit(resetPasswordLink?.href as string);
                   cy.contains('Reset password');
                   cy.contains(emailAddress);
                 });
@@ -763,7 +744,7 @@ describe('Registration flow', () => {
               cy.checkForEmailAndGetDetails(
                 emailAddress,
                 timeRequestWasMade,
-                /set-password\/([^"]*)/,
+                /reset-password\/([^"]*)/,
               ).then(() => {
                 timeRequestWasMade = new Date();
                 cy.get('[data-cy="main-form-submit-button"]').click();
@@ -771,8 +752,8 @@ describe('Registration flow', () => {
                 cy.checkForEmailAndGetDetails(
                   emailAddress,
                   timeRequestWasMade,
-                  /set-password\/([^"]*)/,
-                ).then(({ links, body, token }) => {
+                  /reset-password\/([^"]*)/,
+                ).then(({ links, body }) => {
                   expect(body).to.have.string('Password reset');
                   expect(body).to.have.string('Reset password');
                   expect(links.length).to.eq(2);
@@ -782,10 +763,7 @@ describe('Registration flow', () => {
                   expect(resetPasswordLink?.href ?? '').not.to.have.string(
                     'useOkta=true',
                   );
-                  expect(resetPasswordLink?.href ?? '').to.have.string(
-                    'reset-password',
-                  );
-                  cy.visit(`/reset-password/${token}`);
+                  cy.visit(resetPasswordLink?.href as string);
                   cy.contains('Reset password');
                   cy.contains(emailAddress);
                 });
@@ -860,7 +838,7 @@ describe('Registration flow', () => {
           cy.checkForEmailAndGetDetails(
             emailAddress,
             timeRequestWasMade,
-            /set-password\/([^"]*)/,
+            /\/set-password\/([^"]*)/,
           ).then(() => {
             timeRequestWasMade = new Date();
 
@@ -870,8 +848,8 @@ describe('Registration flow', () => {
             cy.checkForEmailAndGetDetails(
               emailAddress,
               timeRequestWasMade,
-              /set-password\/([^"]*)/,
-            ).then(({ links, body, token }) => {
+              /\/set-password\/([^"]*)/,
+            ).then(({ links, body }) => {
               expect(body).to.have.string('This account already exists');
               expect(body).to.have.string('Create password');
               expect(links.length).to.eq(2);
@@ -881,7 +859,7 @@ describe('Registration flow', () => {
               expect(setPasswordLink?.href ?? '').not.to.have.string(
                 'useOkta=true',
               );
-              cy.visit(`/set-password/${token}`);
+              cy.visit(setPasswordLink?.href as string);
               cy.contains('Create password');
               cy.contains(emailAddress);
             });
@@ -913,7 +891,7 @@ describe('Registration flow', () => {
             cy.checkForEmailAndGetDetails(
               emailAddress,
               timeRequestWasMade,
-              /set-password\/([^"]*)/,
+              /\/set-password\/([^"]*)/,
             ).then(() => {
               timeRequestWasMade = new Date();
               cy.get('[data-cy="main-form-submit-button"]').click();
@@ -921,8 +899,8 @@ describe('Registration flow', () => {
               cy.checkForEmailAndGetDetails(
                 emailAddress,
                 timeRequestWasMade,
-                /set-password\/([^"]*)/,
-              ).then(({ links, body, token }) => {
+                /\/set-password\/([^"]*)/,
+              ).then(({ links, body }) => {
                 expect(body).to.have.string('This account already exists');
                 expect(body).to.have.string('Create password');
                 expect(links.length).to.eq(2);
@@ -932,7 +910,7 @@ describe('Registration flow', () => {
                 expect(setPasswordLink?.href ?? '').not.to.have.string(
                   'useOkta=true',
                 );
-                cy.visit(`/set-password/${token}`);
+                cy.visit(setPasswordLink?.href as string);
                 cy.contains('Create password');
                 cy.contains(emailAddress);
               });
@@ -941,7 +919,7 @@ describe('Registration flow', () => {
         });
       });
     });
-    it('should send an ACTIVE user a reset password email with no activation token', () => {
+    it('should send an ACTIVE user a reset password email with an activation token', () => {
       cy.createTestUser({
         isGuestUser: false,
         isUserEmailValidated: true,
@@ -968,6 +946,7 @@ describe('Registration flow', () => {
               cy.checkForEmailAndGetDetails(
                 emailAddress,
                 timeRequestWasMade,
+                /reset-password\/([^"]*)/,
               ).then(({ links, body }) => {
                 expect(body).to.have.string('This account already exists');
                 expect(body).to.have.string('Sign in');
@@ -979,12 +958,9 @@ describe('Registration flow', () => {
                 expect(resetPasswordLink?.href ?? '').not.to.have.string(
                   'useOkta=true',
                 );
-                expect(resetPasswordLink?.href ?? '').to.have.string(
-                  'reset-password',
-                );
-                cy.visit(`/reset-password`);
-                cy.contains('Forgot password');
+                cy.visit(resetPasswordLink?.href as string);
                 cy.contains('Reset password');
+                cy.contains(emailAddress);
               });
             },
           );
@@ -1014,7 +990,7 @@ describe('Registration flow', () => {
             cy.checkForEmailAndGetDetails(
               emailAddress,
               timeRequestWasMade,
-              /set-password\/([^"]*)/,
+              /reset-password\/([^"]*)/,
             ).then(() => {
               timeRequestWasMade = new Date();
               cy.get('[data-cy="main-form-submit-button"]').click();
@@ -1022,8 +998,8 @@ describe('Registration flow', () => {
               cy.checkForEmailAndGetDetails(
                 emailAddress,
                 timeRequestWasMade,
-                /set-password\/([^"]*)/,
-              ).then(({ links, body, token }) => {
+                /reset-password\/([^"]*)/,
+              ).then(({ links, body }) => {
                 expect(body).to.have.string('Password reset');
                 expect(body).to.have.string('Reset password');
                 expect(links.length).to.eq(2);
@@ -1033,10 +1009,7 @@ describe('Registration flow', () => {
                 expect(resetPasswordLink?.href ?? '').not.to.have.string(
                   'useOkta=true',
                 );
-                expect(resetPasswordLink?.href ?? '').to.have.string(
-                  'reset-password',
-                );
-                cy.visit(`/reset-password/${token}`);
+                cy.visit(resetPasswordLink?.href as string);
                 cy.contains('Reset password');
                 cy.contains(emailAddress);
               });
@@ -1068,7 +1041,7 @@ describe('Registration flow', () => {
             cy.checkForEmailAndGetDetails(
               emailAddress,
               timeRequestWasMade,
-              /set-password\/([^"]*)/,
+              /reset-password\/([^"]*)/,
             ).then(() => {
               timeRequestWasMade = new Date();
               cy.get('[data-cy="main-form-submit-button"]').click();
@@ -1076,8 +1049,8 @@ describe('Registration flow', () => {
               cy.checkForEmailAndGetDetails(
                 emailAddress,
                 timeRequestWasMade,
-                /set-password\/([^"]*)/,
-              ).then(({ links, body, token }) => {
+                /reset-password\/([^"]*)/,
+              ).then(({ links, body }) => {
                 expect(body).to.have.string('Password reset');
                 expect(body).to.have.string('Reset password');
                 expect(links.length).to.eq(2);
@@ -1087,10 +1060,7 @@ describe('Registration flow', () => {
                 expect(resetPasswordLink?.href ?? '').not.to.have.string(
                   'useOkta=true',
                 );
-                expect(resetPasswordLink?.href ?? '').to.have.string(
-                  'reset-password',
-                );
-                cy.visit(`/reset-password/${token}`);
+                cy.visit(resetPasswordLink?.href as string);
                 cy.contains('Reset password');
                 cy.contains(emailAddress);
               });

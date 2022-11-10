@@ -13,11 +13,10 @@ export const sendAccountExistsEmail = ({
   subject = 'Nearly there...',
   activationToken,
 }: Props) => {
-  // If we have a token, the URL should be /set-password/:token. If we don't, we
-  // can't send the user to /set-password, so we send them to /reset-password
-  // instead.
+  // If we have a token, the URL should be /reset-password/:token. If we don't,
+  // we send them to /reset-password instead, without a token.
   const resetPasswordUrl = generateUrl({
-    path: activationToken ? 'set-password' : 'reset-password',
+    path: 'reset-password',
     token: activationToken,
   });
   const signInUrl = generateUrl({

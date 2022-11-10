@@ -18,7 +18,7 @@ userStatuses.forEach((status) => {
   context(`Given I am a ${status || 'nonexistent'} user`, () => {
     context('When I submit the form on /register', () => {
       beforeEach(() => {
-        cy.visit(`/register?useOkta=true`);
+        cy.visit(`/register`);
         cy.get('input[name="email"]').type('example@example.com');
       });
       switch (status) {
@@ -40,9 +40,44 @@ userStatuses.forEach((status) => {
             () => {
               // Set the correct user status on the response
               const response = { ...userResponse.response, status };
+              const responseWithPassword = {
+                ...response,
+                credentials: {
+                  ...response.credentials,
+                  password: {},
+                },
+              };
+              cy.mockNext(userExistsError.code, userExistsError.response);
+              cy.mockNext(userResponse.code, responseWithPassword);
+              cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
+              cy.get('button[type=submit]').click();
+              verifyInRegularEmailSentPage();
+            },
+          );
+          specify(
+            "Then I should be shown the 'Check your email inbox' page if I have a validated email but no password",
+            () => {
+              // Set the correct user status on the response
+              const response = { ...userResponse.response, status };
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(userResponse.code, response);
               cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
+              // dangerouslyResetPassword()
+              cy.mockNext(200, {
+                resetPasswordUrl:
+                  'https://example.com/reset_password/XE6wE17zmphl3KqAPFxO',
+              });
+              // validateRecoveryToken()
+              cy.mockNext(200, {
+                stateToken: 'sometoken',
+              });
+              // authenticationResetPassword()
+              cy.mockNext(200, {});
+              // from sendEmailToUnvalidatedUser() --> forgotPassword()
+              cy.mockNext(200, {
+                resetPasswordUrl:
+                  'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
+              });
               cy.get('button[type=submit]').click();
               verifyInRegularEmailSentPage();
             },
@@ -53,6 +88,22 @@ userStatuses.forEach((status) => {
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(socialUserResponse.code, socialUserResponse.response);
               cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
+              // dangerouslyResetPassword()
+              cy.mockNext(200, {
+                resetPasswordUrl:
+                  'https://example.com/reset_password/XE6wE17zmphl3KqAPFxO',
+              });
+              // validateRecoveryToken()
+              cy.mockNext(200, {
+                stateToken: 'sometoken',
+              });
+              // authenticationResetPassword()
+              cy.mockNext(200, {});
+              // from sendEmailToUnvalidatedUser() --> forgotPassword()
+              cy.mockNext(200, {
+                resetPasswordUrl:
+                  'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
+              });
               cy.get('button[type=submit]').click();
               verifyInRegularEmailSentPage();
             },
@@ -94,13 +145,20 @@ userStatuses.forEach((status) => {
               verifyInRegularEmailSentPage();
             },
           );
-          specify(
+          specify.only(
             "Then I should be shown the 'Check your email inbox' page if I don't have a validated email and do have a password set",
             () => {
               // Set the correct user status on the response
               const response = { ...userResponse.response, status };
+              const responseWithPassword = {
+                ...response,
+                credentials: {
+                  ...response.credentials,
+                  password: {},
+                },
+              };
               cy.mockNext(userExistsError.code, userExistsError.response);
-              cy.mockNext(userResponse.code, response);
+              cy.mockNext(userResponse.code, responseWithPassword);
               cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.get('button[type=submit]').click();
               verifyInRegularEmailSentPage();

@@ -1,4 +1,3 @@
-import crypto from 'crypto';
 import {
   RegistrationLocation,
   Status,
@@ -11,6 +10,7 @@ import {
   reactivateUser,
   dangerouslyResetPassword,
   getUserGroups,
+  forgotPassword,
 } from '@/server/lib/okta/api/users';
 import { OktaError } from '@/server/models/okta/Error';
 import { causesInclude } from '@/server/lib/okta/api/errors';
@@ -20,10 +20,8 @@ import { sendAccountWithoutPasswordExistsEmail } from '@/email/templates/Account
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
 import { trackMetric } from '@/server/lib/trackMetric';
-import {
-  validateRecoveryToken,
-  resetPassword as authenticationResetPassword,
-} from './api/authentication';
+import { logger } from '../serverSideLogger';
+import dangerouslySetPlaceholderPassword from './dangerouslySetPlaceholderPassword';
 
 const { okta } = getConfiguration();
 
@@ -110,7 +108,11 @@ export const sendRegistrationEmailByUserState = async (
        *            Then I should have my password dangerously reset, and then
        *            sent an email with a reset password token
        *    Given I have a validated email
-       *        Then I should be sent an email with NO reset password token
+       *        Given I have a password set
+       *            Then I should be sent an email with a reset password token
+       *        Given I do NOT have a password set (how did I get here??)
+       *            Then I should have my password dangerously reset, and then
+       *            sent an email with a reset password token
        *    And my status should remain ACTIVE
        */
 
@@ -122,42 +124,47 @@ export const sendRegistrationEmailByUserState = async (
         (group) => group.profile.name === 'GuardianUser-EmailValidated',
       );
 
+      if (doesNotHavePassword) {
+        // The user does not have a password set, so we set a placeholder
+        // password first, then proceed with the rest of the operation.
+        await dangerouslySetPlaceholderPassword(user.id);
+      }
+      // Now the user has a password set, so we can get a reset password token
+      // and send them an email which contains it, allowing them to immediately
+      // set their password.
       if (!emailValidated) {
-        if (doesNotHavePassword) {
-          // Dangerously reset the password so we _can_ send them an email with a forgot password token
-          // generate an recoveryToken OTT and put user into RECOVERY state
-          const recoveryToken = await dangerouslyResetPassword(user.id);
-
-          // validate the token
-          const { stateToken } = await validateRecoveryToken({
-            recoveryToken,
-          });
-
-          // check state token is defined
-          if (stateToken) {
-            // set the placeholder password as a cryptographically secure UUID
-            await authenticationResetPassword({
-              stateToken,
-              newPassword: crypto.randomUUID(),
-            });
-          } else {
-            throw new OktaError({
-              message: `Okta user reset password failed: missing state token`,
-            });
-          }
-        }
-        // They either now have a placeholder password, or already had a password set,
-        // so we can send them an email with a forgot password token
+        // The user has a password set, but their email is not validated,
+        // so we send an unvalidated email address email. This function
+        // generates the forgot password token too.
         await sendEmailToUnvalidatedUser(id, user.profile.email);
         trackMetric('OktaUnvalidatedUserResendEmail::Success');
       } else {
-        // The user's email is validated - continue with the user status flows.
-        // TODO: This could be improved by sending the user a direct reset password token email
-        // (generated via users.ts/forgotPassword) if they do have a password, and this same
-        // generic email if they don't have a password.
-        await sendAccountExistsEmail({
-          to: user.profile.email,
-        });
+        // The user has a validated email and a password set, so we can send
+        // them an email with a reset password token. This ensures that their
+        // account does not get locked into a non-ACTIVE state (if they remember
+        // their password, they will still be able to log in and can disregard
+        // the token in the email).
+        try {
+          const activationToken = await forgotPassword(id);
+          await sendAccountExistsEmail({
+            to: user.profile.email,
+            activationToken,
+          });
+        } catch (error) {
+          // If the forgot password operation failed for whatever reason, we catch and
+          // log it but continue by sending the user a generic email.
+          if (error instanceof OktaError) {
+            logger.error(
+              'Okta forgot password token retrieval error',
+              error.message,
+            );
+          } else {
+            logger.error('Okta forgot password token retrieval error', error);
+          }
+          await sendAccountExistsEmail({
+            to: user.profile.email,
+          });
+        }
       }
       return user;
     }

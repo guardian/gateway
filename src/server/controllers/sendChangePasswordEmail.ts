@@ -1,4 +1,3 @@
-import crypto from 'crypto';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
@@ -19,11 +18,7 @@ import { ApiError } from '@/server/models/Error';
 import { GenericErrors } from '@/shared/model/Errors';
 import { renderer } from '@/server/lib/renderer';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import {
-  sendForgotPasswordEmail,
-  validateRecoveryToken,
-  resetPassword as authenticationResetPassword,
-} from '@/server/lib/okta/api/authentication';
+import { sendForgotPasswordEmail } from '@/server/lib/okta/api/authentication';
 import { isOktaError } from '@/server/lib/okta/api/errors';
 import {
   getUser,
@@ -37,6 +32,7 @@ import { sendCreatePasswordEmail } from '@/email/templates/CreatePassword/sendCr
 import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
 import { PasswordRoutePath } from '@/shared/model/Routes';
 import { mergeRequestState } from '@/server/lib/requestState';
+import dangerouslySetPlaceholderPassword from '../lib/okta/dangerouslySetPlaceholderPassword';
 
 const { okta } = getConfiguration();
 
@@ -155,27 +151,10 @@ export const sendEmailInOkta = async (
             // check for user does not have a password set
             // (to make sure we don't override any existing password)
             if (!user.credentials.password) {
-              // generate an recoveryToken OTT and put user into RECOVERY state
-              // this is the only way to create a password for a SOCIAL user who doesn't have one
-              const recoveryToken = await dangerouslyResetPassword(user.id);
-
-              // validate the token
-              const { stateToken } = await validateRecoveryToken({
-                recoveryToken,
-              });
-
-              // check state token is defined
-              if (stateToken) {
-                // set the placeholder password as a cryptographically secure UUID
-                await authenticationResetPassword({
-                  stateToken,
-                  newPassword: crypto.randomUUID(),
-                });
-
-                // now that the placeholder password has been set, the user behaves like a
-                // normal user (provider = OKTA) and we can send the email by calling this method again
-                return sendEmailInOkta(req, res);
-              }
+              await dangerouslySetPlaceholderPassword(user.id);
+              // now that the placeholder password has been set, the user behaves like a
+              // normal user (provider = OKTA) and we can send the email by calling this method again
+              return sendEmailInOkta(req, res);
             }
           }
 
