@@ -5,8 +5,6 @@ import { joinUrl } from '@guardian/libs';
 import { getConfiguration } from '../../getConfiguration';
 import { handleErrorResponse } from './errors';
 import { defaultHeaders, authorizationHeader } from './headers';
-import { Response } from 'node-fetch';
-import { fetch } from '@/server/lib/fetch';
 
 const { okta } = getConfiguration();
 

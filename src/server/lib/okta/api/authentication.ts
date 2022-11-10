@@ -1,12 +1,10 @@
 import { buildUrl } from '@/shared/lib/routeUtils';
-import { fetch } from '@/server/lib/fetch';
 import { joinUrl } from '@guardian/libs';
 import {
   authorizationHeader,
   defaultHeaders,
 } from '@/server/lib/okta/api/headers';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { Response } from 'node-fetch';
 import { handleErrorResponse } from '@/server/lib/okta/api/errors';
 import { OktaError } from '@/server/models/okta/Error';
 import {
@@ -160,7 +158,7 @@ export const resetPassword = async (body: {
  * @name handleAuthenticationResponse
  * @description Handles the response from Okta's /authn endpoint
  * and converts it to a AuthenticationTransaction object
- * @param response node-fetch response object
+ * @param response fetch response object
  * @returns Promise<AuthenticationTransaction>
  */
 const handleAuthenticationResponse = async (

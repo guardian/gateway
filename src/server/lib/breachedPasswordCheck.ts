@@ -1,5 +1,4 @@
 import { createHash } from 'crypto';
-import { fetch } from '@/server/lib/fetch';
 import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
 

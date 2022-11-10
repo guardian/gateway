@@ -1,6 +1,3 @@
-import type { Response, RequestInfo, RequestInit } from 'node-fetch';
-import { mocked } from 'jest-mock';
-import { fetch } from '@/server/lib/fetch';
 import {
   getUserAttributes,
   UserAttributesResponse,
@@ -12,12 +9,8 @@ jest.mock('@/server/lib/getConfiguration', () => ({
   }),
 }));
 
-// mocked fetch
-jest.mock('@/server/lib/fetch');
-const mockedFetch =
-  mocked<(url: RequestInfo, init?: RequestInit) => Partial<Promise<Response>>>(
-    fetch,
-  );
+const mockedFetch = jest.spyOn(global, 'fetch');
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const json = jest.fn() as jest.MockedFunction<any>;
 

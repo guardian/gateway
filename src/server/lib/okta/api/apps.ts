@@ -5,8 +5,6 @@ import { buildUrl } from '@/shared/lib/routeUtils';
 import { joinUrl } from '@guardian/libs';
 import { authorizationHeader, defaultHeaders } from './headers';
 import { handleErrorResponse } from '@/server/lib/okta/api/errors';
-import { Response } from 'node-fetch';
-import { fetch } from '@/server/lib/fetch';
 
 const { okta } = getConfiguration();
 
