@@ -1,4 +1,3 @@
-import type { Response } from 'node-fetch';
 import {
   errorResponseSchema,
   ErrorResponse,
@@ -22,7 +21,7 @@ const extractErrorResponse = async (
  * @name extractErrorResponse
  * @description Handles the response from an Okta error response
  * and converts it to a ErrorResponse object
- * @param response node-fetch response object
+ * @param response fetch response object
  * @returns Promise<ErrorResponse>
  */
 export const handleErrorResponse = async (response: Response) => {

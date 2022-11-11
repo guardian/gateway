@@ -1,7 +1,5 @@
 import { OphanEvent, OphanInteraction } from '@/shared/model/ophan';
-import { fetch } from '@/server/lib/fetch';
 import { logger } from '@/server/lib/serverSideLogger';
-import timeoutSignal from 'timeout-signal';
 import { stringify, parse } from 'query-string';
 import { z } from 'zod';
 import {
@@ -11,6 +9,7 @@ import {
   OphanComponentType,
 } from '@guardian/libs';
 import serialize from 'serialize-javascript';
+import { timeoutSignal } from './timeoutSignal';
 
 const ophanUrl = 'https://ophan.theguardian.com/img/2';
 
