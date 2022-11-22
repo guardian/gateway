@@ -208,8 +208,8 @@ describe('Password reset flow in Okta', () => {
           cy.checkForEmailAndGetDetails(
             emailAddress,
             timeRequestWasMade,
-            /set-password\/([^"]*)/,
-          ).then(({ links, body, token }) => {
+            /\/set-password\/([^"]*)/,
+          ).then(({ links, body }) => {
             expect(body).to.have.string('Welcome back');
 
             expect(body).to.have.string('Create password');
@@ -220,7 +220,7 @@ describe('Password reset flow in Okta', () => {
             expect(setPasswordLink?.href ?? '').not.to.have.string(
               'useOkta=true',
             );
-            cy.visit(`/set-password/${token}`);
+            cy.visit(setPasswordLink?.href as string);
             cy.contains('Create password');
             cy.contains(emailAddress);
 
@@ -260,8 +260,8 @@ describe('Password reset flow in Okta', () => {
             cy.checkForEmailAndGetDetails(
               emailAddress,
               timeRequestWasMade,
-              /set-password\/([^"]*)/,
-            ).then(({ links, body, token }) => {
+              /\/set-password\/([^"]*)/,
+            ).then(({ links, body }) => {
               expect(body).to.have.string('Welcome back');
 
               expect(body).to.have.string('Create password');
@@ -272,7 +272,7 @@ describe('Password reset flow in Okta', () => {
               expect(setPasswordLink?.href ?? '').not.to.have.string(
                 'useOkta=true',
               );
-              cy.visit(`/set-password/${token}`);
+              cy.visit(setPasswordLink?.href as string);
               cy.contains('Create password');
               cy.contains(emailAddress);
 
@@ -313,8 +313,8 @@ describe('Password reset flow in Okta', () => {
             cy.checkForEmailAndGetDetails(
               emailAddress,
               timeRequestWasMade,
-              /set-password\/([^"]*)/,
-            ).then(({ links, body, token }) => {
+              /reset-password\/([^"]*)/,
+            ).then(({ links, body }) => {
               expect(body).to.have.string('Password reset');
               expect(body).to.have.string('Reset password');
               expect(links.length).to.eq(2);
@@ -324,10 +324,7 @@ describe('Password reset flow in Okta', () => {
               expect(resetPasswordLink?.href ?? '').not.to.have.string(
                 'useOkta=true',
               );
-              expect(resetPasswordLink?.href ?? '').to.have.string(
-                'reset-password',
-              );
-              cy.visit(`/reset-password/${token}`);
+              cy.visit(resetPasswordLink?.href as string);
               cy.contains('Reset password');
               cy.contains(emailAddress);
 
@@ -368,8 +365,8 @@ describe('Password reset flow in Okta', () => {
             cy.checkForEmailAndGetDetails(
               emailAddress,
               timeRequestWasMade,
-              /set-password\/([^"]*)/,
-            ).then(({ links, body, token }) => {
+              /reset-password\/([^"]*)/,
+            ).then(({ links, body }) => {
               expect(body).to.have.string('Password reset');
               expect(body).to.have.string('Reset password');
               expect(links.length).to.eq(2);
@@ -379,10 +376,7 @@ describe('Password reset flow in Okta', () => {
               expect(resetPasswordLink?.href ?? '').not.to.have.string(
                 'useOkta=true',
               );
-              expect(resetPasswordLink?.href ?? '').to.have.string(
-                'reset-password',
-              );
-              cy.visit(`/reset-password/${token}`);
+              cy.visit(resetPasswordLink?.href as string);
               cy.contains('Reset password');
               cy.contains(emailAddress);
 

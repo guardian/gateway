@@ -7,7 +7,7 @@ beforeEach(() => {
 });
 context('When I submit the form on /signin', () => {
   beforeEach(() => {
-    cy.visit(`/signin?useOkta=true`);
+    cy.visit(`/signin`);
     cy.get('input[name="email"]').type('example@example.com');
     cy.get('input[name="password"]').type('password');
   });
@@ -43,7 +43,7 @@ context('When I submit the form on /signin', () => {
 
 context('When I submit the form on /reauthenticate', () => {
   beforeEach(() => {
-    cy.visit(`/reauthenticate?useOkta=true`);
+    cy.visit(`/reauthenticate`);
     cy.get('input[name="email"]').type('example@example.com');
     cy.get('input[name="password"]').type('password');
   });

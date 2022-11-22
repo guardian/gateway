@@ -27,7 +27,7 @@ userStatuses.forEach((status) => {
           email: 'example@example.com',
           status: String(status),
         });
-        cy.visit(`/register/email-sent?useOkta=true`);
+        cy.visit(`/register/email-sent`);
       });
       switch (status) {
         case false:
@@ -167,7 +167,7 @@ userStatuses.forEach((status) => {
           email: 'example@example.com',
           status: String(status),
         });
-        cy.visit(`/welcome/email-sent?useOkta=true`);
+        cy.visit(`/welcome/email-sent`);
       });
       switch (status) {
         case false:
@@ -188,8 +188,15 @@ userStatuses.forEach((status) => {
             () => {
               // Set the correct user status on the response
               const response = { ...userResponse.response, status };
+              const responseWithPassword = {
+                ...response,
+                credentials: {
+                  ...response.credentials,
+                  password: {},
+                },
+              };
               cy.mockNext(userExistsError.code, userExistsError.response);
-              cy.mockNext(userResponse.code, response);
+              cy.mockNext(userResponse.code, responseWithPassword);
               cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.get('[data-cy="main-form-submit-button"]').click();
               cy.contains('Check your email inbox');
@@ -201,8 +208,26 @@ userStatuses.forEach((status) => {
             "Then I should be shown the 'Check your email inbox' page for social user",
             () => {
               cy.mockNext(userExistsError.code, userExistsError.response);
+              // This user response doesn't have a password, which is what we want
+              // for a social user.
               cy.mockNext(socialUserResponse.code, socialUserResponse.response);
               cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
+              // dangerouslyResetPassword()
+              cy.mockNext(200, {
+                resetPasswordUrl:
+                  'https://example.com/reset_password/XE6wE17zmphl3KqAPFxO',
+              });
+              // validateRecoveryToken()
+              cy.mockNext(200, {
+                stateToken: 'sometoken',
+              });
+              // authenticationResetPassword()
+              cy.mockNext(200, {});
+              // from sendEmailToUnvalidatedUser() --> forgotPassword()
+              cy.mockNext(200, {
+                resetPasswordUrl:
+                  'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
+              });
               cy.get('[data-cy="main-form-submit-button"]').click();
               cy.contains('Check your email inbox');
               cy.contains('Resend email');
@@ -252,7 +277,7 @@ userStatuses.forEach((status) => {
     });
     context('When I submit the form on /welcome/resend', () => {
       beforeEach(() => {
-        cy.visit(`/welcome/resend?useOkta=true`);
+        cy.visit(`/welcome/resend`);
         cy.get('input[name="email"]').type('example@example.com');
       });
       switch (status) {
@@ -274,8 +299,15 @@ userStatuses.forEach((status) => {
             () => {
               // Set the correct user status on the response
               const response = { ...userResponse.response, status };
+              const responseWithPassword = {
+                ...response,
+                credentials: {
+                  ...response.credentials,
+                  password: {},
+                },
+              };
               cy.mockNext(userExistsError.code, userExistsError.response);
-              cy.mockNext(userResponse.code, response);
+              cy.mockNext(userResponse.code, responseWithPassword);
               cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.get('[data-cy="main-form-submit-button"]').click();
               verifyInRegularEmailSentPage();
@@ -287,6 +319,22 @@ userStatuses.forEach((status) => {
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(socialUserResponse.code, socialUserResponse.response);
               cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
+              // dangerouslyResetPassword()
+              cy.mockNext(200, {
+                resetPasswordUrl:
+                  'https://example.com/reset_password/XE6wE17zmphl3KqAPFxO',
+              });
+              // validateRecoveryToken()
+              cy.mockNext(200, {
+                stateToken: 'sometoken',
+              });
+              // authenticationResetPassword()
+              cy.mockNext(200, {});
+              // from sendEmailToUnvalidatedUser() --> forgotPassword()
+              cy.mockNext(200, {
+                resetPasswordUrl:
+                  'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
+              });
               cy.get('[data-cy="main-form-submit-button"]').click();
               verifyInRegularEmailSentPage();
             },
@@ -334,7 +382,7 @@ userStatuses.forEach((status) => {
     });
     context('When I submit the form on /welcome/expired', () => {
       beforeEach(() => {
-        cy.visit(`/welcome/expired?useOkta=true`);
+        cy.visit(`/welcome/expired`);
         cy.get('input[name="email"]').type('example@example.com');
       });
       switch (status) {
@@ -356,19 +404,42 @@ userStatuses.forEach((status) => {
             () => {
               // Set the correct user status on the response
               const response = { ...userResponse.response, status };
+              const responseWithPassword = {
+                ...response,
+                credentials: {
+                  ...response.credentials,
+                  password: {},
+                },
+              };
               cy.mockNext(userExistsError.code, userExistsError.response);
-              cy.mockNext(userResponse.code, response);
+              cy.mockNext(userResponse.code, responseWithPassword);
               cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
               cy.get('[data-cy="main-form-submit-button"]').click();
               verifyInRegularEmailSentPage();
             },
           );
           specify(
-            "Then I should be shown the 'Check your email inbox' page",
+            "Then I should be shown the 'Check your email inbox' page for social users",
             () => {
               cy.mockNext(userExistsError.code, userExistsError.response);
               cy.mockNext(socialUserResponse.code, socialUserResponse.response);
               cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
+              // dangerouslyResetPassword()
+              cy.mockNext(200, {
+                resetPasswordUrl:
+                  'https://example.com/reset_password/XE6wE17zmphl3KqAPFxO',
+              });
+              // validateRecoveryToken()
+              cy.mockNext(200, {
+                stateToken: 'sometoken',
+              });
+              // authenticationResetPassword()
+              cy.mockNext(200, {});
+              // from sendEmailToUnvalidatedUser() --> forgotPassword()
+              cy.mockNext(200, {
+                resetPasswordUrl:
+                  'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
+              });
               cy.get('[data-cy="main-form-submit-button"]').click();
               verifyInRegularEmailSentPage();
             },

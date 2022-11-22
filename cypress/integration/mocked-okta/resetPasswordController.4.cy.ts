@@ -26,27 +26,24 @@ const verifyInRegularEmailSentPage = () => {
 };
 
 const setupMocksForSocialUserPasswordReset = () => {
-  //first attempt to reset the password ..
-
-  //get the user
+  // Response from getUser()
   cy.mockNext(socialUserResponse.code, socialUserResponse.response);
-
-  //first time we reset the password okta will return with a permission error because the user has no password
+  // Response from sendForgotPasswordEmail() - an Okta error
   cy.mockNext(oktaPermissionsError.code, oktaPermissionsError.response);
-  //dangerously set the password
+  // Response from dangerouslyResetPassword() - a reset password URL
   cy.mockNext(resetPasswordResponse.code, resetPasswordResponse.response);
-  //verify recovery token
+  // Response from validateRecoveryToken() - a state token
   cy.mockNext(
     verifyRecoveryTokenReponse.code,
     verifyRecoveryTokenReponse.response,
   );
-  //set placeholder password
+  // Response from resetPassword()
   cy.mockNext(
     authResetPasswordResponse.code,
     authResetPasswordResponse.response,
   );
 
-  //retry sending the email now that the user is "fixed"
+  // retry sending the email now that the user is "fixed"
   // so we need to mock the same as for the non social user
   cy.mockNext(socialUserResponse.code, socialUserResponse.response);
   cy.mockNext(forgotPasswordResponse.code, forgotPasswordResponse.response);
@@ -56,7 +53,7 @@ userStatuses.forEach((status) => {
   context(`Given I am a ${status || 'nonexistent'} user`, () => {
     context('When I submit the form on /reset-password', () => {
       beforeEach(() => {
-        cy.visit(`/reset-password?useOkta=true`);
+        cy.visit(`/reset-password`);
         cy.get('input[name="email"]').type('example@example.com');
       });
       switch (status) {
@@ -149,7 +146,7 @@ userStatuses.forEach((status) => {
           email: 'example@example.com',
           status: String(status),
         });
-        cy.visit(`/reset-password/email-sent?useOkta=true`);
+        cy.visit(`/reset-password/email-sent`);
       });
       switch (status) {
         case false:
@@ -178,7 +175,7 @@ userStatuses.forEach((status) => {
             },
           );
           specify(
-            "Then I should be shown the 'Check your email inbox' pag for social user",
+            "Then I should be shown the 'Check your email inbox' page for social user",
             () => {
               setupMocksForSocialUserPasswordReset();
               cy.get('button[type=submit]').click();
@@ -233,7 +230,7 @@ userStatuses.forEach((status) => {
     });
     context('When I submit the form on /reset-password/resend', () => {
       beforeEach(() => {
-        cy.visit(`/reset-password/resend?useOkta=true`);
+        cy.visit(`/reset-password/resend`);
         cy.get('input[name="email"]').type('example@example.com');
       });
       switch (status) {
@@ -318,7 +315,7 @@ userStatuses.forEach((status) => {
     });
     context('When I submit the form on /reset-password/expired', () => {
       beforeEach(() => {
-        cy.visit(`/reset-password/expired?useOkta=true`);
+        cy.visit(`/reset-password/expired`);
         cy.get('input[name="email"]').type('example@example.com');
       });
       switch (status) {
@@ -411,7 +408,7 @@ userStatuses.forEach((status) => {
           email: 'example@example.com',
           status: String(status),
         });
-        cy.visit(`/set-password/email-sent?useOkta=true`);
+        cy.visit(`/set-password/email-sent`);
       });
       switch (status) {
         case false:
@@ -495,7 +492,7 @@ userStatuses.forEach((status) => {
     });
     context('When I submit the form on /set-password/resend', () => {
       beforeEach(() => {
-        cy.visit(`/set-password/resend?useOkta=true`);
+        cy.visit(`/set-password/resend`);
         cy.get('input[name="email"]').type('example@example.com');
       });
       switch (status) {
@@ -581,7 +578,7 @@ userStatuses.forEach((status) => {
 
     context('When I submit the form on /set-password/expired', () => {
       beforeEach(() => {
-        cy.visit(`/set-password/expired?useOkta=true`);
+        cy.visit(`/set-password/expired`);
         cy.get('input[name="email"]').type('example@example.com');
       });
       switch (status) {

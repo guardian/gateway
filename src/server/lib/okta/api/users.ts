@@ -198,7 +198,7 @@ export const reactivateUser = async (
  * YOU PROBABLY DON'T WANT TO USE THIS TO RESET PASSWORD
  *
  * USE `resetPassword` method from the authentication API (./authentication.ts)
- *  OR `forgotPassword` method method below
+ *  OR `forgotPassword` method below
  *
  * AS THEY DO NOT CHANGE THE USER'S STATE
  *
