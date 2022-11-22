@@ -4,7 +4,6 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { HttpError } from '@/server/models/Error';
-import { fetch } from '@/server/lib/fetch';
 
 const {
   googleRecaptcha: { secretKey },

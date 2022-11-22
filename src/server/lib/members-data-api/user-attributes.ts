@@ -1,4 +1,3 @@
-import { fetch } from '@/server/lib/fetch';
 import { buildUrl } from '@/shared/lib/routeUtils';
 import { joinUrl } from '@guardian/libs';
 import { z } from 'zod';

@@ -1,7 +1,6 @@
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { buildApiUrlWithQueryParams, buildUrl } from '@/shared/lib/routeUtils';
 import { joinUrl } from '@guardian/libs';
-import { fetch } from '@/server/lib/fetch';
 import {
   authorizationHeader,
   defaultHeaders,
@@ -16,7 +15,6 @@ import {
   resetPasswordUrlResponseSchema,
 } from '@/server/models/okta/User';
 import { handleVoidResponse } from '@/server/lib/okta/api/responses';
-import { Response } from 'node-fetch';
 import { OktaError } from '@/server/models/okta/Error';
 import { handleErrorResponse } from '@/server/lib/okta/api/errors';
 import { Group, groupSchema } from '@/server/models/okta/Group';
@@ -290,7 +288,7 @@ export const forgotPassword = async (id: string): Promise<string> => {
  * @name handleUserResponse
  * @description Handles the response from Okta's /users endpoint
  * and converts it to a UserResponse object
- * @param response node-fetch response object
+ * @param response fetch response object
  * @returns Promise<UserResponse>
  */
 const handleUserResponse = async (
@@ -313,7 +311,7 @@ const handleUserResponse = async (
  * @name handleGroupsResponse
  * @description Handles the response from Okta's /users/:id/groups endpoint
  * and converts it to an array of Group
- * @param response node-fetch response object
+ * @param response fetch response object
  * @returns Promise<Group[]>
  */
 const handleGroupsResponse = async (response: Response): Promise<Group[]> => {
@@ -335,7 +333,7 @@ const handleGroupsResponse = async (response: Response): Promise<Group[]> => {
  * @description Handles the response from Okta's /lifecycle/activate and
  * /lifecycle/reactivate endpoints
  *
- * @param response node-fetch response object
+ * @param response fetch response object
  * @returns Promise<TokenResponse>
  */
 const handleActivationTokenResponse = async (
@@ -364,7 +362,7 @@ const handleActivationTokenResponse = async (
  * @name handleResetPasswordUrlResponse
  * @description Handles the response from Okta's /credentials/forgot_password endpoint
  * It extracts the OTT from the resetPasswordUrl in the response and returns it
- * @param response node-fetch response object
+ * @param response fetch response object
  * @returns Promise<string>
  */
 const handleResetPasswordUrlResponse = async (

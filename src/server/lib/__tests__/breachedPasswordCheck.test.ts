@@ -1,6 +1,3 @@
-import { mocked } from 'jest-mock';
-import { fetch } from '@/server/lib/fetch';
-import type { Response, RequestInfo, RequestInit } from 'node-fetch';
 import { isBreachedPassword } from '../breachedPasswordCheck';
 
 // mocked trackMetric
@@ -15,12 +12,7 @@ jest.mock('@/server/lib/serverSideLogger', () => ({
   },
 }));
 
-// mocked fetch
-jest.mock('@/server/lib/fetch');
-const mockedFetch =
-  mocked<(url: RequestInfo, init?: RequestInit) => Partial<Promise<Response>>>(
-    fetch,
-  );
+const mockedFetch = jest.spyOn(global, 'fetch');
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const text = jest.fn() as jest.MockedFunction<any>;
