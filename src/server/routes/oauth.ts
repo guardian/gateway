@@ -21,6 +21,11 @@ import { IdTokenClaims } from 'openid-client';
 import { updateUser } from '@/server/lib/okta/api/users';
 import { getApp } from '@/server/lib/okta/api/apps';
 import { setUserFeatureCookies } from '@/server/lib/user-features';
+import {
+  getGroupByName,
+  removeUserFromGroup,
+} from '@/server/lib/okta/api/groups';
+import { consentPages } from '@/server/routes/consents';
 
 interface OAuthError {
   error: string;
@@ -179,6 +184,27 @@ router.get(
         ) {
           // updated the user profile emailValidated to true
           await updateUser(sub, { profile: { emailValidated: true } });
+        }
+
+        // if the user is in the GuardianUser-SocialShowOnboardingUser group, set the showOnboarding flag to true
+        // to redirect the user to the onboarding page, and remove the user from the group
+        if (
+          user_groups?.some(
+            (group) => group === 'GuardianUser-SocialShowOnboardingUser',
+          )
+        ) {
+          // we use the `confirmationPage` flag to redirect the user to the onboarding page
+          // eslint-disable-next-line functional/immutable-data
+          authState.confirmationPage = consentPages[0].path;
+
+          // remove the user from the GuardianUser-SocialShowOnboardingUser group
+          // as they will only see the onboarding page once
+          const group = await getGroupByName(
+            'GuardianUser-SocialShowOnboardingUser',
+          );
+          if (group) {
+            await removeUserFromGroup(sub, group.id);
+          }
         }
       }
 

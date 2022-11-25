@@ -17,8 +17,8 @@ import {
 import { handleVoidResponse } from '@/server/lib/okta/api/responses';
 import { OktaError } from '@/server/models/okta/Error';
 import { handleErrorResponse } from '@/server/lib/okta/api/errors';
-import { Group, groupSchema } from '@/server/models/okta/Group';
-import { z } from 'zod';
+import { Group } from '@/server/models/okta/Group';
+import { handleGroupsResponse } from '@/server/lib/okta/api/groups';
 
 const { okta } = getConfiguration();
 
@@ -300,27 +300,6 @@ const handleUserResponse = async (
     } catch (error) {
       throw new OktaError({
         message: 'Could not parse Okta user response',
-      });
-    }
-  } else {
-    return await handleErrorResponse(response);
-  }
-};
-
-/**
- * @name handleGroupsResponse
- * @description Handles the response from Okta's /users/:id/groups endpoint
- * and converts it to an array of Group
- * @param response fetch response object
- * @returns Promise<Group[]>
- */
-const handleGroupsResponse = async (response: Response): Promise<Group[]> => {
-  if (response.ok) {
-    try {
-      return z.array(groupSchema).parse(await response.json());
-    } catch (error) {
-      throw new OktaError({
-        message: 'Could not parse Okta user group response',
       });
     }
   } else {
