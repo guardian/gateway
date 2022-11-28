@@ -125,7 +125,7 @@
     "zod-to-json-schema": "^3.19.1"
   },
   "dependencies": {
-    "@babel/runtime": "^7.20.1",
+    "@babel/runtime": "^7.20.6",
     "@emotion/react": "^11.10.5",
     "@guardian/ab-core": "^2.0.0",
     "@guardian/ab-react": "^2.0.1",
