@@ -9,7 +9,7 @@ import { Footer } from '@/email/components/Footer';
 
 export const ResetPassword = () => {
   return (
-    <Page title="Password reset">
+    <Page title="Reset your password">
       <Header />
       <SubHeader>Password reset</SubHeader>
       <Text>Hello,</Text>
@@ -26,7 +26,6 @@ export const ResetPassword = () => {
             accessed your account.
           </>
         }
-        hiddenText="${resetPasswordLink}"
       />
     </Page>
   );

@@ -12,8 +12,8 @@ import { ResetPassword } from './ResetPassword/ResetPassword';
 import { ResetPasswordText } from './ResetPassword/ResetPasswordText';
 import { UnvalidatedEmailResetPassword } from './UnvalidatedEmailResetPassword/UnvalidatedEmailResetPassword';
 import { UnvalidatedEmailResetPasswordText } from './UnvalidatedEmailResetPassword/UnvalidatedEmailResetPasswordText';
-import { Verify } from './Verify/Verify';
-import { VerifyText } from './Verify/VerifyText';
+import { CompleteRegistration } from './CompleteRegistration/CompleteRegistration';
+import { CompleteRegistrationText } from './CompleteRegistration/CompleteRegistrationText';
 
 import { render as mjmlRender } from 'mjml-react';
 
@@ -61,7 +61,7 @@ export const renderedUnvalidatedEmailResetPassword = {
   html: render(UnvalidatedEmailResetPassword()).html,
 } as EmailRenderResult;
 
-export const renderedVerify = {
-  plain: VerifyText(),
-  html: render(Verify()).html,
+export const renderedCompleteRegistration = {
+  plain: CompleteRegistrationText(),
+  html: render(CompleteRegistration()).html,
 } as EmailRenderResult;

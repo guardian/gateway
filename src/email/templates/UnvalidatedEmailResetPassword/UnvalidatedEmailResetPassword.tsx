@@ -27,7 +27,6 @@ export const UnvalidatedEmailResetPassword = () => {
             accessed your account.
           </>
         }
-        hiddenText="${resetPasswordLink}"
       />
     </Page>
   );

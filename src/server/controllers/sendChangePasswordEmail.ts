@@ -18,13 +18,13 @@ import { ApiError } from '@/server/models/Error';
 import { GenericErrors } from '@/shared/model/Errors';
 import { renderer } from '@/server/lib/renderer';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { sendForgotPasswordEmail } from '@/server/lib/okta/api/authentication';
 import { isOktaError } from '@/server/lib/okta/api/errors';
 import {
   getUser,
   dangerouslyResetPassword,
   activateUser,
   reactivateUser,
+  forgotPassword,
 } from '@/server/lib/okta/api/users';
 import { Status } from '@/server/models/okta/User';
 import { OktaError } from '@/server/models/okta/Error';
@@ -132,8 +132,21 @@ export const sendEmailInOkta = async (
       case Status.ACTIVE:
         // inner try-catch block to handle specific errors from sendForgotPasswordEmail
         try {
-          // attempt to send a reset password email
-          await sendForgotPasswordEmail(email);
+          const token = await forgotPassword(user.id);
+          if (!token) {
+            throw new OktaError({
+              message: `Okta user reset password failed: missing reset password token`,
+            });
+          }
+          const emailIsSent = await sendResetPasswordEmail({
+            to: user.profile.email,
+            resetPasswordToken: token,
+          });
+          if (!emailIsSent) {
+            throw new OktaError({
+              message: `Okta user reset password failed: Failed to send email`,
+            });
+          }
         } catch (error) {
           // we need to catch an error here to check if the user
           // does not have a password set, for example for social users
@@ -168,7 +181,7 @@ export const sendEmailInOkta = async (
           // if the user is STAGED, we need to activate them before we can send them an email
           // this will put them into the PROVISIONED state
           // we will send them a create password email
-          const tokenResponse = await activateUser(user.id, false);
+          const tokenResponse = await activateUser(user.id);
           if (!tokenResponse?.token.length) {
             throw new OktaError({
               message: `Okta user activation failed: missing activation token`,
@@ -190,7 +203,7 @@ export const sendEmailInOkta = async (
           // if the user is PROVISIONED, we need to reactivate them before we can send them an email
           // this will keep them in the PROVISIONED state
           // we will send them a create password email
-          const tokenResponse = await reactivateUser(user.id, false);
+          const tokenResponse = await reactivateUser(user.id);
           if (!tokenResponse?.token.length) {
             throw new OktaError({
               message: `Okta user reactivation failed: missing re-activation token`,

@@ -177,6 +177,10 @@ userStatuses.forEach((status) => {
               // Set the correct user status on the response
               const response = { ...userResponse.response, status: 'STAGED' };
               cy.mockNext(userResponse.code, response);
+              cy.mockNext(
+                successTokenResponse.code,
+                successTokenResponse.response,
+              );
               cy.get('[data-cy="main-form-submit-button"]').click();
               verifyInRegularEmailSentPage();
             },
@@ -288,6 +292,10 @@ userStatuses.forEach((status) => {
               // Set the correct user status on the response
               const response = { ...userResponse.response, status: 'STAGED' };
               cy.mockNext(userResponse.code, response);
+              cy.mockNext(
+                successTokenResponse.code,
+                successTokenResponse.response,
+              );
               cy.get('[data-cy="main-form-submit-button"]').click();
               verifyInRegularEmailSentPage();
             },
@@ -393,6 +401,10 @@ userStatuses.forEach((status) => {
               // Set the correct user status on the response
               const response = { ...userResponse.response, status: 'STAGED' };
               cy.mockNext(userResponse.code, response);
+              cy.mockNext(
+                successTokenResponse.code,
+                successTokenResponse.response,
+              );
               cy.get('[data-cy="main-form-submit-button"]').click();
               verifyInRegularEmailSentPage();
             },

@@ -29,6 +29,10 @@ userStatuses.forEach((status) => {
               // Set the correct user status on the response
               const response = { ...userResponse.response, status: 'STAGED' };
               cy.mockNext(userResponse.code, response);
+              cy.mockNext(
+                successTokenResponse.code,
+                successTokenResponse.response,
+              );
               cy.get('button[type=submit]').click();
               verifyInRegularEmailSentPage();
             },
@@ -145,7 +149,7 @@ userStatuses.forEach((status) => {
               verifyInRegularEmailSentPage();
             },
           );
-          specify.only(
+          specify(
             "Then I should be shown the 'Check your email inbox' page if I don't have a validated email and do have a password set",
             () => {
               // Set the correct user status on the response

@@ -104,10 +104,8 @@ describe('Send password reset email in Okta', () => {
       cy.get('input[name="email"]').type(email);
       cy.mockNext(200, mockUserActiveWithPassword);
       cy.mockNext(200, {
-        status: 'RECOVERY_CHALLENGE',
-        factorResult: 'WAITING',
-        factorType: 'EMAIL',
-        recoveryType: 'PASSWORD',
+        resetPasswordUrl:
+          'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
       });
       cy.get('button[type="submit"]').click();
       cy.contains('Check your email inbox');
@@ -170,10 +168,8 @@ describe('Send password reset email in Okta', () => {
       });
       cy.mockNext(200, mockUserActiveWithoutPassword);
       cy.mockNext(200, {
-        status: 'RECOVERY_CHALLENGE',
-        factorResult: 'WAITING',
-        factorType: 'EMAIL',
-        recoveryType: 'PASSWORD',
+        resetPasswordUrl:
+          'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
       });
       cy.get('button[type="submit"]').click();
       cy.contains('Check your email inbox');

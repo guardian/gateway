@@ -29,7 +29,10 @@ const { okta } = getConfiguration();
 
 /**
  * @name createUser
- * @description Creates a new user in Okta with or without credentials
+ * @description Creates a new user in Okta with or without credentials.
+ * If activate is true, Okta will perform the activation lifecycle operation
+ * on the user. If activate is false, the user will be created in a "STAGED" state
+ * and will need to be sent an activation token in a subsequent call to activateUser.
  *
  * https://developer.okta.com/docs/reference/api/users/#create-user
  *
@@ -40,7 +43,17 @@ const { okta } = getConfiguration();
 export const createUser = async (
   body: UserCreationRequest,
 ): Promise<UserResponse> => {
-  const path = buildUrl('/api/v1/users');
+  // If 'activate' is true, Okta will peform the activation lifecycle operation
+  // on the user, which in the case of a user without a password will send them
+  // an activation email but not transition their state from 'STAGED' to 'ACTIVE'.
+  // If 'activate' is false, Okta will only create the user, and neither
+  // send an email nor transition their state.
+  // We always set 'activate' to false.
+  const path = buildApiUrlWithQueryParams(
+    '/api/v1/users',
+    {},
+    { activate: false },
+  );
   return await fetch(joinUrl(okta.orgUrl, path), {
     method: 'POST',
     body: JSON.stringify(body),
@@ -134,7 +147,7 @@ export const getUserGroups = async (id: string): Promise<Group[]> => {
  */
 export const activateUser = async (
   id: string,
-  sendEmail = true,
+  sendEmail = false,
 ): Promise<TokenResponse | void> => {
   const path = buildApiUrlWithQueryParams(
     '/api/v1/users/:id/lifecycle/activate',
@@ -175,7 +188,7 @@ export const activateUser = async (
  */
 export const reactivateUser = async (
   id: string,
-  sendEmail = true,
+  sendEmail = false,
 ): Promise<TokenResponse | void> => {
   const path = buildApiUrlWithQueryParams(
     '/api/v1/users/:id/lifecycle/reactivate',
