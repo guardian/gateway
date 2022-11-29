@@ -21,6 +21,7 @@ import { IdTokenClaims } from 'openid-client';
 import { updateUser } from '@/server/lib/okta/api/users';
 import { getApp } from '@/server/lib/okta/api/apps';
 import { setUserFeatureCookies } from '@/server/lib/user-features';
+import { consentPages } from './consents';
 
 interface OAuthError {
   error: string;
@@ -166,6 +167,10 @@ router.get(
       // So this is a workaround to set the emailValidated field to true in the Okta user profile
       // if the user is in the GuardianUser-EmailValidated group, based on custom claims we have
       // set up on the id_token.
+      // This scenario only occurs in the case of new social users, as existing users will have
+      // the emailValidated field set to true in their Okta user profile.
+      // So we can use this functionality to show the onboarding flow for new social users, as
+      // there is no other trivial way to do this.
       if (tokenSet.id_token) {
         // extracting the custom claims from the id_token and the sub (user id)
         const { user_groups, email_validated, sub } =
@@ -179,6 +184,11 @@ router.get(
         ) {
           // updated the user profile emailValidated to true
           await updateUser(sub, { profile: { emailValidated: true } });
+
+          // since this is a new social user, we want to show the onboarding flow too
+          // we use the `confirmationPage` flag to redirect the user to the onboarding page
+          // eslint-disable-next-line functional/immutable-data
+          authState.confirmationPage = consentPages[0].path;
         }
       }
 
