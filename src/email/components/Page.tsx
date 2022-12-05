@@ -1,6 +1,12 @@
 import React from 'react';
 
-import { Mjml, MjmlHead, MjmlBody, MjmlTitle, MjmlStyle } from 'mjml-react';
+import {
+  Mjml,
+  MjmlHead,
+  MjmlBody,
+  MjmlTitle,
+  MjmlStyle,
+} from '@faire/mjml-react';
 
 type Props = { children: React.ReactNode; title: string };
 

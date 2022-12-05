@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { MjmlSection, MjmlColumn, MjmlImage } from 'mjml-react';
+import { MjmlSection, MjmlColumn, MjmlImage } from '@faire/mjml-react';
 import { brandBackground } from '@guardian/source-foundations';
 
 // header should be 72px in height, using the width 192px of the design, and 6px of top/bottom padding

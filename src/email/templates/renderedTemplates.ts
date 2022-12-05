@@ -15,7 +15,9 @@ import { UnvalidatedEmailResetPasswordText } from './UnvalidatedEmailResetPasswo
 import { Verify } from './Verify/Verify';
 import { VerifyText } from './Verify/VerifyText';
 
-import { render as mjmlRender } from 'mjml-react';
+// Strange import path: see https://github.com/Faire/mjml-react/issues/64
+// TODO: Fix import path if imports are fixed upstream
+import { render as mjmlRender } from '@faire/mjml-react/dist/src/utils/render';
 
 type EmailRenderResult = {
   plain: string;

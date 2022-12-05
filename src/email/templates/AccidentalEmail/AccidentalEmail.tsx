@@ -1,6 +1,12 @@
 import React from 'react';
 
-import { Mjml, MjmlBody, MjmlHead, MjmlTitle, MjmlStyle } from 'mjml-react';
+import {
+  Mjml,
+  MjmlBody,
+  MjmlHead,
+  MjmlTitle,
+  MjmlStyle,
+} from '@faire/mjml-react';
 import { Header } from '@/email/components/Header';
 import { SubHeader } from '@/email/components/SubHeader';
 import { Text } from '@/email/components/Text';
