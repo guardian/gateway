@@ -122,7 +122,7 @@
     "webpack-merge": "^5.8.0",
     "webpack-node-externals": "^3.0.0",
     "whatwg-fetch": "^3.6.2",
-    "zod-to-json-schema": "^3.19.1"
+    "zod-to-json-schema": "^3.19.3"
   },
   "dependencies": {
     "@babel/runtime": "^7.20.1",
