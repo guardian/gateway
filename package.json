@@ -86,7 +86,7 @@
     "chromatic": "^6.11.4",
     "copy-webpack-plugin": "^11.0.0",
     "cypress": "^11.2.0",
-    "cypress-axe": "^1.0.0",
+    "cypress-axe": "^1.1.0",
     "cypress-mailosaur": "2.13.0",
     "dotenv-webpack": "^8.0.1",
     "eslint": "^8.28.0",
