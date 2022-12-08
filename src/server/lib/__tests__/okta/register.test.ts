@@ -22,6 +22,7 @@ import {
 import { sendAccountExistsEmail } from '@/email/templates/AccountExists/sendAccountExistsEmail';
 import { sendAccountWithoutPasswordExistsEmail } from '@/email/templates/AccountWithoutPasswordExists/sendAccountWithoutPasswordExists';
 import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
+import { sendCompleteRegistration } from '@/email/templates/CompleteRegistration/sendCompleteRegistration';
 import { ErrorCause, OktaError } from '@/server/models/okta/Error';
 import { Group } from '@/server/models/okta/Group';
 import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
@@ -59,6 +60,7 @@ jest.mock('@/email/templates/ResetPassword/sendResetPasswordEmail');
 jest.mock(
   '@/email/templates/UnvalidatedEmailResetPassword/sendUnvalidatedEmailResetPasswordEmail',
 );
+jest.mock('@/email/templates/CompleteRegistration/sendCompleteRegistration');
 jest.mock('@/server/lib/unvalidatedEmail');
 
 const mockedCreateOktaUser =
@@ -100,6 +102,9 @@ const mockedSendResetPasswordEmail = mocked<
 const mockedSendEmailToUnvalidatedUser = mocked<
   (id: string, email: string) => Promise<void>
 >(sendEmailToUnvalidatedUser);
+const mockedSendCompleteRegistration = mocked<
+  (params: { to: string; activationToken: string }) => Promise<boolean>
+>(sendCompleteRegistration);
 
 // mocked logger
 jest.mock('@/server/lib/serverSideLogger');
@@ -171,6 +176,10 @@ describe('okta#register', () => {
     const user = User(Status.PROVISIONED);
 
     mockedCreateOktaUser.mockReturnValueOnce(Promise.resolve(user));
+    mockedActivateOktaUser.mockReturnValueOnce(
+      Promise.resolve({ token: 'sometoken' } as TokenResponse),
+    );
+    mockedSendCompleteRegistration.mockReturnValueOnce(Promise.resolve(true));
     const result = await register(email);
     expect(result).toEqual(user);
   });
@@ -179,6 +188,10 @@ describe('okta#register', () => {
     const user = User(Status.PROVISIONED, true, 'United Kingdom');
 
     mockedCreateOktaUser.mockReturnValueOnce(Promise.resolve(user));
+    mockedActivateOktaUser.mockReturnValueOnce(
+      Promise.resolve({ token: 'sometoken' } as TokenResponse),
+    );
+    mockedSendCompleteRegistration.mockReturnValueOnce(Promise.resolve(true));
     const result = await register(email, 'United Kingdom');
     expect(result).toEqual(user);
   });

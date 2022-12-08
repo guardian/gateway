@@ -1,7 +1,6 @@
 import userStatuses from '../../support/okta/userStatuses';
 import userNotFoundError from '../../fixtures/okta-responses/error/user-not-found.json';
 import oktaPermissionsError from '../../fixtures/okta-responses/error/no-permission.json';
-import forgotPasswordResponse from '../../fixtures/okta-responses/success/forgot-password-email-factor.json';
 import userResponse from '../../fixtures/okta-responses/success/user.json';
 import socialUserResponse from '../../fixtures/okta-responses/success/social-user.json';
 import tokenResponse from '../../fixtures/okta-responses/success/token.json';
@@ -46,7 +45,11 @@ const setupMocksForSocialUserPasswordReset = () => {
   // retry sending the email now that the user is "fixed"
   // so we need to mock the same as for the non social user
   cy.mockNext(socialUserResponse.code, socialUserResponse.response);
-  cy.mockNext(forgotPasswordResponse.code, forgotPasswordResponse.response);
+  // forgotPassword()
+  cy.mockNext(200, {
+    resetPasswordUrl:
+      'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
+  });
 };
 
 userStatuses.forEach((status) => {
@@ -74,10 +77,11 @@ userStatuses.forEach((status) => {
               // Set the correct user status on the response
               const response = { ...userResponse.response, status };
               cy.mockNext(userResponse.code, response);
-              cy.mockNext(
-                forgotPasswordResponse.code,
-                forgotPasswordResponse.response,
-              );
+              // forgotPassword()
+              cy.mockNext(200, {
+                resetPasswordUrl:
+                  'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
+              });
               cy.get('button[type=submit]').click();
               verifyIn2MinutesEmailSentPage();
             },
@@ -166,10 +170,11 @@ userStatuses.forEach((status) => {
               // Set the correct user status on the response
               const response = { ...userResponse.response, status };
               cy.mockNext(userResponse.code, response);
-              cy.mockNext(
-                forgotPasswordResponse.code,
-                forgotPasswordResponse.response,
-              );
+              // forgotPassword()
+              cy.mockNext(200, {
+                resetPasswordUrl:
+                  'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
+              });
               cy.get('button[type=submit]').click();
               verifyIn2MinutesEmailSentPage();
             },
@@ -251,10 +256,11 @@ userStatuses.forEach((status) => {
               // Set the correct user status on the response
               const response = { ...userResponse.response, status };
               cy.mockNext(userResponse.code, response);
-              cy.mockNext(
-                forgotPasswordResponse.code,
-                forgotPasswordResponse.response,
-              );
+              // forgotPassword()
+              cy.mockNext(200, {
+                resetPasswordUrl:
+                  'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
+              });
               cy.get('button[type=submit]').click();
               verifyIn2MinutesEmailSentPage();
             },
@@ -336,10 +342,11 @@ userStatuses.forEach((status) => {
               // Set the correct user status on the response
               const response = { ...userResponse.response, status };
               cy.mockNext(userResponse.code, response);
-              cy.mockNext(
-                forgotPasswordResponse.code,
-                forgotPasswordResponse.response,
-              );
+              // forgotPassword()
+              cy.mockNext(200, {
+                resetPasswordUrl:
+                  'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
+              });
               cy.get('button[type=submit]').click();
               verifyIn2MinutesEmailSentPage();
             },
@@ -428,10 +435,11 @@ userStatuses.forEach((status) => {
               // Set the correct user status on the response
               const response = { ...userResponse.response, status };
               cy.mockNext(userResponse.code, response);
-              cy.mockNext(
-                forgotPasswordResponse.code,
-                forgotPasswordResponse.response,
-              );
+              // forgotPassword()
+              cy.mockNext(200, {
+                resetPasswordUrl:
+                  'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
+              });
               cy.get('button[type=submit]').click();
               verifyInRegularEmailSentPage();
             },
@@ -513,10 +521,11 @@ userStatuses.forEach((status) => {
               // Set the correct user status on the response
               const response = { ...userResponse.response, status };
               cy.mockNext(userResponse.code, response);
-              cy.mockNext(
-                forgotPasswordResponse.code,
-                forgotPasswordResponse.response,
-              );
+              // forgotPassword()
+              cy.mockNext(200, {
+                resetPasswordUrl:
+                  'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
+              });
               cy.get('button[type=submit]').click();
               verifyInRegularEmailSentPage();
             },
@@ -599,10 +608,11 @@ userStatuses.forEach((status) => {
               // Set the correct user status on the response
               const response = { ...userResponse.response, status };
               cy.mockNext(userResponse.code, response);
-              cy.mockNext(
-                forgotPasswordResponse.code,
-                forgotPasswordResponse.response,
-              );
+              // forgotPassword()
+              cy.mockNext(200, {
+                resetPasswordUrl:
+                  'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
+              });
               cy.get('button[type=submit]').click();
               verifyInRegularEmailSentPage();
             },

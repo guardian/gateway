@@ -1,16 +1,16 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { Verify } from './Verify';
+import { CompleteRegistration } from './CompleteRegistration';
 import { renderMJML } from '../../testUtils';
 
 export default {
-  title: 'Email/Templates/Verify',
-  component: Verify,
+  title: 'Email/Templates/CompleteRegistration',
+  component: CompleteRegistration,
   parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => {
-  return renderMJML(<Verify />);
+  return renderMJML(<CompleteRegistration />);
 };
 Default.storyName = 'with defaults';

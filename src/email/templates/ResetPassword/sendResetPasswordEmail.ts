@@ -10,7 +10,7 @@ type Props = {
 
 export const sendResetPasswordEmail = ({
   to,
-  subject = 'Reset your theguardian.com password',
+  subject = 'Reset your password',
   resetPasswordToken,
 }: Props) => {
   const resetPasswordUrl = generateUrl({

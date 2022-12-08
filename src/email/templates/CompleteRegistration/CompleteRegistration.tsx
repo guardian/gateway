@@ -7,14 +7,14 @@ import { SubHeader } from '@/email/components/SubHeader';
 import { Text } from '@/email/components/Text';
 import { Footer } from '@/email/components/Footer';
 
-export const Verify = () => {
+export const CompleteRegistration = () => {
   return (
-    <Page title="Complete registration">
+    <Page title="Complete your Guardian account">
       <Header />
       <SubHeader>Welcome to the Guardian</SubHeader>
       <Text>Please click below to complete your registration.</Text>
       <Text noPaddingBottom>This link is valid for 60 minutes.</Text>
-      <Button href="$verificationLink">Complete registration</Button>
+      <Button href={'$activateLink'}>Complete registration</Button>
       <Footer
         mistakeParagraphComponent={
           <>

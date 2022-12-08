@@ -242,7 +242,7 @@ describe('okta#activateUser', () => {
       Promise.resolve({ ok: true, json } as Response),
     );
 
-    await expect(activateUser(userId)).resolves.toEqual(undefined);
+    await expect(activateUser(userId, true)).resolves.toEqual(undefined);
   });
 
   test('should throw an error when a user is already activated', async () => {
@@ -277,7 +277,7 @@ describe('okta#reactivateUser', () => {
       Promise.resolve({ ok: true, json } as Response),
     );
 
-    await expect(reactivateUser(userId)).resolves.toEqual(undefined);
+    await expect(reactivateUser(userId, true)).resolves.toEqual(undefined);
   });
 
   test('throw a an error when a user cannot be reactivated', async () => {

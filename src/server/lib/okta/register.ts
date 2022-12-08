@@ -22,6 +22,7 @@ import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { logger } from '../serverSideLogger';
 import dangerouslySetPlaceholderPassword from './dangerouslySetPlaceholderPassword';
+import { sendCompleteRegistration } from '@/email/templates/CompleteRegistration/sendCompleteRegistration';
 
 const { okta } = getConfiguration();
 
@@ -56,7 +57,7 @@ export const sendRegistrationEmailByUserState = async (
        *    token through Gateway
        *    And my status should become PROVISIONED
        */
-      const tokenResponse = await activateUser(user.id, false);
+      const tokenResponse = await activateUser(user.id);
       if (!tokenResponse?.token.length) {
         throw new OktaError({
           message: `Okta user activation failed: missing activation token`,
@@ -81,7 +82,7 @@ export const sendRegistrationEmailByUserState = async (
        *    token through Gateway
        *    And my status should remain PROVISIONED
        */
-      const tokenResponse = await reactivateUser(user.id, false);
+      const tokenResponse = await reactivateUser(user.id);
       if (!tokenResponse?.token.length) {
         throw new OktaError({
           message: `Okta user reactivation failed: missing re-activation token`,
@@ -217,7 +218,9 @@ export const register = async (
   registrationLocation?: RegistrationLocation,
 ): Promise<UserResponse> => {
   try {
-    return await createUser({
+    // Create the user in Okta, but do not send the activation email
+    // because we send the email ourselves through Gateway.
+    const userResponse = await createUser({
       profile: {
         email,
         login: email,
@@ -227,6 +230,33 @@ export const register = async (
       },
       groupIds: [okta.groupIds.GuardianUserAll],
     });
+    if (!userResponse) {
+      throw new OktaError({
+        message: `Okta user creation failed: missing user response`,
+      });
+    }
+    const {
+      id,
+      profile: { email: emailAddress },
+    } = userResponse;
+    // Generate an activation token for the new user...
+    const tokenResponse = await activateUser(id);
+    if (!tokenResponse?.token.length) {
+      throw new OktaError({
+        message: `Okta user creation failed: missing activation token`,
+      });
+    }
+    // ...and send the activation email.
+    const emailIsSent = await sendCompleteRegistration({
+      to: emailAddress,
+      activationToken: tokenResponse.token,
+    });
+    if (!emailIsSent) {
+      throw new OktaError({
+        message: `Okta user creation failed: failed to send email`,
+      });
+    }
+    return userResponse;
   } catch (error) {
     if (
       error instanceof OktaError &&
