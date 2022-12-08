@@ -201,6 +201,7 @@ const browser = ({ isLegacy }) => {
             {
               loader: 'babel-loader',
               options: {
+                sourceType: 'unambiguous',
                 presets: [
                   isLegacy ? legacyBabelConfigNodeModules : modernBabelConfig,
                   ...babelConfig.presets,
