@@ -42,6 +42,13 @@ import { ApiError } from '@/server/models/Error';
 import { ConsentPath, RoutePaths } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { mergeRequestState } from '@/server/lib/requestState';
+import { RegistrationLocation } from '@/server/models/okta/User';
+import { isStringBoolean } from '@/server/lib/isStringBoolean';
+import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
+import {
+  read as readIdapiUser,
+  addRegistrationLocation,
+} from '@/server/lib/idapi/user';
 
 interface ConsentPage {
   page: ConsentPath;
@@ -60,6 +67,42 @@ interface ConsentPage {
     request_id?: string,
   ) => Promise<void>;
 }
+
+/**
+ * Until Gateway/Onboarding journey is migrated to Okta sessions, we don't have access to Okta User ID, only sg_gu_u cookie,
+ * so we need to add reg location via idapi (which updates Okta immediately). When Okta sessions are available, this should be refactored
+ * to use okta directly (Which is the source of truth for the user's registration location field)
+ */
+// TODO write a test
+const updateRegistrationLocationViaIDAPI = async (
+  ip: string,
+  sc_gu_u: string,
+  req: Request,
+) => {
+  const { _cmpConsentedState = false } = req.body;
+
+  const registrationLocation: RegistrationLocation | undefined =
+    getRegistrationLocation(req, isStringBoolean(_cmpConsentedState));
+
+  if (!!registrationLocation) {
+    try {
+      const user = await readIdapiUser(ip, sc_gu_u);
+      // don't update users who already have a location set
+      if (user.privateFields.registrationLocation) {
+        return;
+      }
+      await addRegistrationLocation(registrationLocation, ip, sc_gu_u);
+    } catch (error) {
+      logger.error(
+        `${req.method} ${req.originalUrl} Error updating registrationLocation via IDAPI`,
+        error,
+        {
+          request_id: req.get('x-request-id'),
+        },
+      );
+    }
+  }
+};
 
 const getUserNewsletterSubscriptions = async (
   newslettersOnPage: string[],
@@ -346,6 +389,10 @@ router.post(
     try {
       const { update, pageTitle: _pageTitle } = consentPages[pageIndex];
       pageTitle = _pageTitle;
+
+      // If on the first page, attempt to update location for consented users.
+      pageTitle == 'Stay in touch' &&
+        updateRegistrationLocationViaIDAPI(req.ip, sc_gu_u, req);
 
       if (update) {
         await update(req.ip, sc_gu_u, req.body, res.locals.requestId);

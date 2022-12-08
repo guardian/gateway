@@ -1,3 +1,5 @@
+import { RegistrationLocation } from '@/server/models/okta/User';
+
 export default interface User {
   consents: UserConsent[];
   primaryEmailAddress: string;
@@ -24,4 +26,5 @@ interface UserStatusFields {
 interface PrivateFields {
   firstName?: string;
   secondName?: string;
+  registrationLocation?: RegistrationLocation;
 }

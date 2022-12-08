@@ -22,6 +22,7 @@ import {
   sendOphanInteractionEventServer,
 } from '@/server/lib/ophan';
 import { IdApiQueryParams } from '@/shared/model/IdapiQueryParams';
+import { RegistrationLocation } from '@/server/models/okta/User';
 
 interface APIResponse {
   user: User;
@@ -90,6 +91,7 @@ const responseToEntity = (response: APIResponse): User => {
     privateFields: {
       firstName: response.user.privateFields?.firstName,
       secondName: response.user.privateFields?.secondName,
+      registrationLocation: response.user.privateFields?.registrationLocation,
     },
   };
 };
@@ -146,6 +148,47 @@ export const updateName = async (
     logger.error(`IDAPI error updating name for ${ip}`, error, {
       request_id,
     });
+    return handleError(error as IDAPIError);
+  }
+};
+
+/**
+ * Until Gateway/Onboarding journey is migrated to Okta sessions, we don't have access to Okta User ID, only sg_gu_u cookie,
+ * so we need to add reg location via idapi (which updates Okta immediately). When Okta sessions are available, this should be refactored
+ * to use okta directly (Which is the source of truth for the user field)
+ */
+export const addRegistrationLocation = async (
+  registrationLocation: RegistrationLocation,
+  ip: string,
+  sc_gu_u: string,
+  request_id?: string,
+): Promise<User> => {
+  const options = APIForwardSessionIdentifier(
+    APIAddClientAccessToken(
+      APIPostOptions({
+        privateFields: {
+          registrationLocation,
+        },
+      }),
+      ip,
+    ),
+    sc_gu_u,
+  );
+
+  try {
+    const response = (await idapiFetch({
+      path: '/user/me',
+      options,
+    })) as APIResponse;
+    return responseToEntity(response);
+  } catch (error) {
+    logger.error(
+      `IDAPI error updating registration location for ${ip}`,
+      error,
+      {
+        request_id,
+      },
+    );
     return handleError(error as IDAPIError);
   }
 };
