@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { parse } from 'regexparam';
 import { RoutePaths } from '@/shared/model/Routes';
 import { RegistrationPage } from '@/client/pages/RegistrationPage';
 import { ResetPasswordPage } from '@/client/pages/ResetPasswordPage';
@@ -184,10 +184,15 @@ const routes: Array<{
   },
 ];
 
-export const GatewayRoutes = () => (
-  <Routes>
-    {routes.map(({ path, element }) => (
-      <Route key={path} path={path} element={element}></Route>
-    ))}
-  </Routes>
-);
+interface Props {
+  location: string;
+}
+
+export const GatewayRoutes = ({ location }: Props) => {
+  for (const route of routes) {
+    if (parse(route.path).pattern.test(location)) {
+      return route.element;
+    }
+  }
+  return <NotFoundPage />;
+};

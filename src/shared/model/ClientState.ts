@@ -35,6 +35,9 @@ export interface PageData {
   browserName?: string;
   isNativeApp?: IsNativeApp;
 
+  // token
+  token?: string;
+
   // email sent pages specific
   emailType?: EmailType;
   resendEmailAction?: RoutePaths;
