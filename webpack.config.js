@@ -8,6 +8,8 @@ const nodeExternals = require('webpack-node-externals');
 const Dotenv = require('dotenv-webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const webpack = require('webpack');
 
 const mode =
   process.env.ENVIRONMENT === 'production' ? 'production' : 'development';
@@ -247,6 +249,16 @@ const browser = ({ isLegacy }) => {
       new AssetsPlugin({
         path: path.resolve(__dirname, 'build'),
         filename: `${isLegacy ? 'legacy.' : ''}webpack-assets.json`,
+      }),
+      new BundleAnalyzerPlugin({
+        analyzerMode: 'static',
+        openAnalyzer: false,
+        reportFilename: `../webpack-report-${isLegacy ? 'legacy' : 'modern'}.html`
+      }),
+      // Reduce Sentry bundle size
+      new webpack.DefinePlugin({
+        __SENTRY_DEBUG__: false,
+        __SENTRY_TRACING__: false,
       }),
     ],
     target,
