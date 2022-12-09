@@ -19,8 +19,6 @@ import {
 } from '@guardian/source-foundations';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { css } from '@emotion/react';
-
-import sha1 from 'js-sha1';
 import {
   PasswordAutoComplete,
   PasswordInput,
@@ -217,12 +215,20 @@ const ValidationMessage = ({
   }
 };
 
+const sha1 = async (str: string): Promise<string> => {
+  const buffer = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest('SHA-1', buffer);
+  return Array.from(new Uint8Array(hash))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+};
+
 const isBreached = AwesomeDebouncePromise(
   async (password: string): Promise<boolean> => {
     try {
-      const hashedPassword = sha1(password);
-      const firstFive = hashedPassword.substr(0, 5);
-      const remainingHash = hashedPassword.substr(5, hashedPassword.length);
+      const hashedPassword = await sha1(password);
+      const firstFive = hashedPassword.substring(0, 5);
+      const remainingHash = hashedPassword.substring(5);
 
       const response = await fetch(
         `https://api.pwnedpasswords.com/range/${firstFive}`,
