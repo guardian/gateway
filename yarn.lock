@@ -2750,10 +2750,10 @@
     "@typescript-eslint/parser" "5.45.0"
     eslint-plugin-import "2.26.0"
 
-"@guardian/eslint-plugin-source-react-components@^10.0.3":
-  version "10.0.3"
-  resolved "https://registry.yarnpkg.com/@guardian/eslint-plugin-source-react-components/-/eslint-plugin-source-react-components-10.0.3.tgz#ffa352179a695b26bbbad763c75dc9a6670d9afb"
-  integrity sha512-hDZmtZ/km3KtK+vz3QAIcipTBhTowlHNzrlmLxjfXuwTvqnTbn/JX+JeRwohMxr6ZMoon77SMVLJkoe6HJjGoQ==
+"@guardian/eslint-plugin-source-react-components@^11.0.0":
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/@guardian/eslint-plugin-source-react-components/-/eslint-plugin-source-react-components-11.0.0.tgz#ccbc258cf7b3fa45348ae178b0b1e0faf2510809"
+  integrity sha512-hI6moxIQKrNpHIEFuu+0mYSgfMQdZuaPDyCHGAbrrASxaRFgpE2xFuq3Hfrhp1+2XeHXlkWNNLZ+BKgqCkqcZQ==
   dependencies:
     "@typescript-eslint/eslint-plugin" "5.45.0"
     "@typescript-eslint/parser" "5.45.0"
