@@ -2741,10 +2741,10 @@
   resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-11.0.0.tgz#240083bbe4e8c4c22410cfa4c867b608e7c0e92f"
   integrity sha512-j97gI5NbhVLXy1s8465lyT/w/nU3K+HewkfHIQ/NLOvzBS2mmcgB6A6sRXsKCOYRt4W8eNoTX5xgAdemFgvLAw==
 
-"@guardian/eslint-plugin-source-foundations@^8.0.3":
-  version "8.0.3"
-  resolved "https://registry.yarnpkg.com/@guardian/eslint-plugin-source-foundations/-/eslint-plugin-source-foundations-8.0.3.tgz#add9f22c2017de627cebf47718405e7cffc9cd79"
-  integrity sha512-p/qHo4kePwZY2aJzdRnLX/y2nCJNLqsWtgA/yrJzmtBAlFfIiJ7MaY73Q4LBi0YFxVMZoblZ5FWbW7ENLGesPA==
+"@guardian/eslint-plugin-source-foundations@^9.0.0":
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/@guardian/eslint-plugin-source-foundations/-/eslint-plugin-source-foundations-9.0.0.tgz#14d64d4eec7e6d7d4a38e66cf25d5d0039c001f7"
+  integrity sha512-VppTu1Omknaa30yYwW3dTWTPxDNQan5KZEJE+c0WgiF7I4Y5ze+zp8mrrYxRkq83SwHrQl6dMY4d3ZUKuacWZQ==
   dependencies:
     "@typescript-eslint/eslint-plugin" "5.45.0"
     "@typescript-eslint/parser" "5.45.0"
