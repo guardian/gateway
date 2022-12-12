@@ -134,7 +134,7 @@
     "@guardian/libs": "^10.1.1",
     "@guardian/source-foundations": "^7.0.3",
     "@guardian/source-react-components": "^9.1.1",
-    "@guardian/source-react-components-development-kitchen": "^7.1.1",
+    "@guardian/source-react-components-development-kitchen": "^8.0.0",
     "@sentry/browser": "^7.24.2",
     "@sentry/tracing": "^7.24.2",
     "@types/supertest": "^2.0.12",
