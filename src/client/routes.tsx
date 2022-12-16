@@ -1,5 +1,5 @@
 import React from 'react';
-import { parse } from 'regexparam';
+import { parse } from '@/shared/lib/regexparam';
 import { RoutePaths } from '@/shared/model/Routes';
 import { RegistrationPage } from '@/client/pages/RegistrationPage';
 import { ResetPasswordPage } from '@/client/pages/ResetPasswordPage';
