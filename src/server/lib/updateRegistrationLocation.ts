@@ -23,22 +23,25 @@ export const updateRegistrationLocationViaIDAPI = async (
   const registrationLocation: RegistrationLocation | undefined =
     getRegistrationLocation(req, isStringBoolean(_cmpConsentedState));
 
-  if (!!registrationLocation) {
-    try {
-      const user = await readIdapiUser(ip, sc_gu_u);
-      // don't update users who already have a location set
-      if (!!user.privateFields.registrationLocation) {
-        return;
-      }
-      await addRegistrationLocation(registrationLocation, ip, sc_gu_u);
-    } catch (error) {
-      logger.error(
-        `${req.method} ${req.originalUrl} Error updating registrationLocation via IDAPI`,
-        error,
-        {
-          request_id: req.get('x-request-id'),
-        },
-      );
+  // don't update users if we can't derive location from request
+  if (!registrationLocation) {
+    return;
+  }
+
+  try {
+    const user = await readIdapiUser(ip, sc_gu_u);
+    // don't update users who already have a location set
+    if (!!user.privateFields.registrationLocation) {
+      return;
     }
+    await addRegistrationLocation(registrationLocation, ip, sc_gu_u);
+  } catch (error) {
+    logger.error(
+      `${req.method} ${req.originalUrl} Error updating registrationLocation via IDAPI`,
+      error,
+      {
+        request_id: req.get('x-request-id'),
+      },
+    );
   }
 };

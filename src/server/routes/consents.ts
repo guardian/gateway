@@ -350,8 +350,9 @@ router.post(
       pageTitle = _pageTitle;
 
       // If on the first page, attempt to update location for consented users.
-      pageTitle == 'Stay in touch' &&
+      if (pageIndex === 0) {
         updateRegistrationLocationViaIDAPI(req.ip, sc_gu_u, req);
+      }
 
       if (update) {
         await update(req.ip, sc_gu_u, req.body, res.locals.requestId);
