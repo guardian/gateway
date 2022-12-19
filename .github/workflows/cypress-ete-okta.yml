@@ -59,7 +59,7 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'yarn'
       - name: Cypress run
-        uses: cypress-io/github-action@v4
+        uses: cypress-io/github-action@v5
         env:
           PORT: 8861
           ENVIRONMENT: production
