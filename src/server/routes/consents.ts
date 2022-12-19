@@ -42,6 +42,7 @@ import { ApiError } from '@/server/models/Error';
 import { ConsentPath, RoutePaths } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { mergeRequestState } from '@/server/lib/requestState';
+import { updateRegistrationLocationViaIDAPI } from '../lib/updateRegistrationLocation';
 
 interface ConsentPage {
   page: ConsentPath;
@@ -324,6 +325,7 @@ router.get(
   }),
 );
 
+// On the first page ("Stay in touch") this POST will also post a registration_location update
 router.post(
   '/consents/:page',
   loginMiddleware,
@@ -346,6 +348,11 @@ router.post(
     try {
       const { update, pageTitle: _pageTitle } = consentPages[pageIndex];
       pageTitle = _pageTitle;
+
+      // If on the first page, attempt to update location for consented users.
+      if (pageIndex === 0) {
+        updateRegistrationLocationViaIDAPI(req.ip, sc_gu_u, req);
+      }
 
       if (update) {
         await update(req.ip, sc_gu_u, req.body, res.locals.requestId);

@@ -86,15 +86,17 @@ describe('Onboarding flow', () => {
         `https://www.theguardian.com/science/grrlscientist/2012/aug/07/3`,
       );
 
+      cy.enableCMP();
       CommunicationsPage.gotoFlowStart({
         query: {
           returnUrl,
         },
       });
-
+      cy.acceptCMP();
+      cy.setCookie('GU_geo_country', 'FR');
       cy.url().should('include', CommunicationsPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
-
+      cy.get('input[name=_cmpConsentedState]').should('have.value', 'true');
       CommunicationsPage.backButton().should('not.exist');
       CommunicationsPage.allCheckboxes().should('not.be.checked');
       CommunicationsPage.allCheckboxes().click({ multiple: true });
@@ -103,7 +105,10 @@ describe('Onboarding flow', () => {
       cy.mockNext(200);
 
       CommunicationsPage.saveAndContinueButton().click();
-      cy.lastPayloadIs([{ id: 'supporter', consented: true }]);
+      cy.lastPayloadsAre([
+        [{ id: 'supporter', consented: true }],
+        { privateFields: { registrationLocation: 'Europe' } },
+      ]);
 
       cy.url().should('include', NewslettersPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
@@ -119,7 +124,6 @@ describe('Onboarding flow', () => {
       // mock form save success
       cy.mockNext(200);
 
-      cy.enableCMP(); // Prep cmp for next page
       NewslettersPage.saveAndContinueButton().click();
 
       cy.lastPayloadsAre([
@@ -138,7 +142,6 @@ describe('Onboarding flow', () => {
         .should('have.attr', 'href')
         .and('include', NewslettersPage.URL);
 
-      cy.acceptCMP();
       YourDataPage.personalisedAdvertisingOptInInput().should('not.be.checked');
 
       YourDataPage.personalisedAdvertisingOptInSwitch().click();
@@ -205,12 +208,15 @@ describe('Onboarding flow', () => {
       CommunicationsPage.backButton().should('not.exist');
 
       CommunicationsPage.allCheckboxes().should('not.be.checked');
+      cy.get('input[name=_cmpConsentedState]').should('have.value', 'false');
 
       // mock form save success
       cy.mockNext(200);
 
       CommunicationsPage.saveAndContinueButton().click();
-      cy.lastPayloadIs([{ id: 'supporter', consented: false }]);
+
+      // Use .lastPayloadsAre to ensure the IDAPI registrationLocation update is NOT posted
+      cy.lastPayloadsAre([[{ id: 'supporter', consented: false }]]);
 
       cy.url().should('include', NewslettersPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
