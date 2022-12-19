@@ -246,7 +246,13 @@ router.get(
       // the fromURI parameter is an undocumented feature from Okta that allows us to
       // rejoin the authorization code flow after we have set a session cookie on our own platform
       if (authState.queryParams.fromURI) {
-        return res.redirect(303, authState.queryParams.fromURI);
+        return res.redirect(
+          303,
+          addQueryParamsToPath(
+            '/oauth/authorization-code/complete',
+            authState.queryParams,
+          ),
+        );
       }
 
       // fallback option for apps
@@ -310,6 +316,22 @@ router.get(
       return redirectForGenericError(req, res);
     }
   }),
+);
+
+/**
+ * This is a route used to redirect the user to should they have a fromURI parameter,
+ * this is only so that we're able to set any cookies in the browser we need to before
+ * redirecting the user back to fromURI parameter, usually a native app.
+ */
+router.get(
+  '/oauth/authorization-code/complete',
+  (_: Request, res: ResponseWithRequestState) => {
+    const { queryParams } = res.locals;
+    if (queryParams.fromURI) {
+      return res.redirect(303, queryParams.fromURI);
+    }
+    return res.redirect(303, '/signin');
+  },
 );
 
 export default router.router;

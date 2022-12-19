@@ -17,6 +17,7 @@ export const ValidRoutePathsArray = [
   '/magic-link/email-sent', //this is not being used until MVP4
   '/maintenance',
   '/oauth/authorization-code/callback',
+  '/oauth/authorization-code/complete',
   '/register',
   '/register/email-sent',
   '/register/email-sent/resend',
