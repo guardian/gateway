@@ -13,9 +13,10 @@ import {
   authenticationTransactionSchema,
 } from '@/server/models/okta/Authentication';
 import { handleVoidResponse } from '@/server/lib/okta/api/responses';
-import { isBreachedPassword } from '../../breachedPasswordCheck';
+import { isBreachedPassword } from '@/server/lib/breachedPasswordCheck';
 import { ApiError } from '@/server/models/Error';
 import { PasswordFieldErrors } from '@/shared/model/Errors';
+import { extractOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 
 const { okta } = getConfiguration();
 
@@ -104,10 +105,17 @@ export const sendForgotPasswordEmail = async (
  *
  * @returns Promise<AuthenticationTransaction>
  */
-export const validateRecoveryToken = async (body: {
+export const validateRecoveryToken = async ({
+  recoveryToken,
+}: {
   recoveryToken: string;
 }): Promise<AuthenticationTransaction> => {
   const path = buildUrl('/api/v1/authn/recovery/token');
+
+  const body = {
+    recoveryToken: extractOktaRecoveryToken(recoveryToken),
+  };
+
   return await fetch(joinUrl(okta.orgUrl, path), {
     method: 'POST',
     body: JSON.stringify(body),

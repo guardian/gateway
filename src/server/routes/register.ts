@@ -115,11 +115,21 @@ const OktaRegistration = async (
 ) => {
   const { email = '', _cmpConsentedState = false } = req.body;
 
+  const {
+    queryParams: { appClientId },
+    requestId: request_id,
+  } = res.locals;
+
   const registrationLocation: RegistrationLocation | undefined =
     getRegistrationLocation(req, isStringBoolean(_cmpConsentedState));
 
   try {
-    const user = await registerWithOkta(email, registrationLocation);
+    const user = await registerWithOkta({
+      email,
+      registrationLocation,
+      appClientId,
+      request_id,
+    });
     // fire ophan component event if applicable
     if (res.locals.queryParams.componentEventParams) {
       sendOphanComponentEventFromQueryParamsServer(
@@ -184,14 +194,17 @@ const OktaRegistration = async (
 const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
   try {
     const encryptedState = readEncryptedStateCookie(req);
-    const { email } = encryptedState ?? {};
+    const { email, queryParams } = encryptedState ?? {};
 
     if (typeof email !== 'undefined') {
       // Always attempt to register the user first when their email is resent.
       // If the user doesn't exist, this creates them and Okta sends them an email.
       // If the user does exist, this returns an error and we send them an email
       // as part of the registerWithOkta function's error handler.
-      const user = await registerWithOkta(email);
+      const user = await registerWithOkta({
+        email,
+        appClientId: queryParams?.appClientId,
+      });
       trackMetric('OktaRegistrationResendEmail::Success');
       setEncryptedStateCookieForOktaRegistration(res, user);
       return res.redirect(
