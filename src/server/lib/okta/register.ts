@@ -298,7 +298,11 @@ export const register = async ({
       error.name === 'ApiValidationError' &&
       causesInclude(error.causes, 'already exists')
     ) {
-      return sendRegistrationEmailByUserState({ email, request_id });
+      return sendRegistrationEmailByUserState({
+        email,
+        appClientId,
+        request_id,
+      });
     } else {
       throw error;
     }
