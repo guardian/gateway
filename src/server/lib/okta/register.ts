@@ -153,7 +153,12 @@ export const sendRegistrationEmailByUserState = async ({
         // The user has a password set, but their email is not validated,
         // so we send an unvalidated email address email. This function
         // generates the forgot password token too.
-        await sendEmailToUnvalidatedUser(id, user.profile.email);
+        await sendEmailToUnvalidatedUser({
+          id,
+          email: user.profile.email,
+          appClientId,
+          request_id,
+        });
         trackMetric('OktaUnvalidatedUserResendEmail::Success');
       } else {
         // The user has a validated email and a password set, so we can send

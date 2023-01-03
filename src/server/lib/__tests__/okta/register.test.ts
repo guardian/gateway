@@ -100,7 +100,12 @@ const mockedSendResetPasswordEmail = mocked<
   (params: { to: string; resetPasswordToken: string }) => Promise<boolean>
 >(sendResetPasswordEmail);
 const mockedSendEmailToUnvalidatedUser = mocked<
-  (id: string, email: string) => Promise<void>
+  (params: {
+    id: string;
+    email: string;
+    appClientId: string;
+    request_id: string;
+  }) => Promise<void>
 >(sendEmailToUnvalidatedUser);
 const mockedSendCompleteRegistration = mocked<
   (params: { to: string; activationToken: string }) => Promise<boolean>

@@ -121,6 +121,11 @@ router.post(
   '/signin/email-sent/resend',
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    const {
+      queryParams: { appClientId },
+      requestId: request_id,
+    } = res.locals;
+
     // We don't need to check the useIdapi flag as a user can only
     // get into this flow after an attempt to login with Okta
     try {
@@ -148,7 +153,12 @@ router.post(
         });
       }
 
-      await sendEmailToUnvalidatedUser(id, user.profile.email);
+      await sendEmailToUnvalidatedUser({
+        id,
+        email: user.profile.email,
+        appClientId,
+        request_id,
+      });
       setEncryptedStateCookie(res, {
         email: user.profile.email,
       });
@@ -217,9 +227,19 @@ router.post(
   handleRecaptcha,
   handleAsyncErrors((req: Request, res: ResponseWithRequestState) => {
     const { useIdapi } = res.locals.queryParams;
+    const {
+      queryParams: { appClientId },
+      requestId: request_id,
+    } = res.locals;
     if (okta.enabled && !useIdapi) {
       // if okta feature switch enabled, use okta authentication
-      return oktaSignInController(req, res, true);
+      return oktaSignInController({
+        req,
+        res,
+        isReauthenticate: true,
+        appClientId,
+        request_id,
+      });
     } else {
       // if okta feature switch disabled, use identity authentication
       return idapiSignInController(req, res);
@@ -232,9 +252,19 @@ router.post(
   handleRecaptcha,
   handleAsyncErrors((req: Request, res: ResponseWithRequestState) => {
     const { useIdapi } = res.locals.queryParams;
+    const {
+      queryParams: { appClientId },
+      requestId: request_id,
+    } = res.locals;
     if (okta.enabled && !useIdapi) {
       // if okta feature switch enabled, use okta authentication
-      return oktaSignInController(req, res);
+      return oktaSignInController({
+        req,
+        res,
+        isReauthenticate: false,
+        appClientId,
+        request_id,
+      });
     } else {
       // if okta feature switch disabled, use identity authentication
       return idapiSignInController(req, res);
@@ -307,11 +337,19 @@ const oktaSignInControllerErrorHandler = (error: unknown) => {
   return new OktaError({ message: SignInErrors.GENERIC });
 };
 
-const oktaSignInController = async (
-  req: Request,
-  res: ResponseWithRequestState,
+const oktaSignInController = async ({
+  req,
+  res,
   isReauthenticate = false,
-) => {
+  appClientId,
+  request_id,
+}: {
+  req: Request;
+  res: ResponseWithRequestState;
+  isReauthenticate?: boolean;
+  appClientId?: string;
+  request_id?: string;
+}) => {
   // get the email and password from the request body
   const { email = '', password = '' } = req.body;
   const oktaSessionCookieId: string | undefined = req.cookies.sid;
@@ -395,10 +433,12 @@ const oktaSignInController = async (
       }
 
       if (!emailValidated) {
-        await sendEmailToUnvalidatedUser(
-          response._embedded.user.id,
-          response._embedded.user.profile.login,
-        );
+        await sendEmailToUnvalidatedUser({
+          id: response._embedded.user.id,
+          email: response._embedded.user.profile.login,
+          appClientId,
+          request_id,
+        });
         setEncryptedStateCookie(res, {
           email: response._embedded.user.profile.login,
         });
