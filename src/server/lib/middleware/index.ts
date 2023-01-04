@@ -20,8 +20,8 @@ export const applyMiddleware = (server: Express): void => {
   // apply helmet before anything else
   server.use(helmetMiddleware as RequestHandler);
   server.use(urlencoded({ extended: true }) as RequestHandler);
-  server.use(cookieParser(appSecret));
-  server.use(compression());
+  server.use(cookieParser(appSecret) as RequestHandler);
+  server.use(compression() as RequestHandler);
 
   // add the DEV okta middleware if state === DEV
   if (stage === 'DEV') {
@@ -29,7 +29,7 @@ export const applyMiddleware = (server: Express): void => {
   }
 
   server.use(loggerMiddleware);
-  server.use(csrfMiddleware);
+  server.use(csrfMiddleware as RequestHandler);
   server.use(requestStateMiddleware);
   server.use(routes);
   server.use(fourZeroFourMiddleware);
