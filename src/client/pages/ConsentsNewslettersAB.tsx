@@ -41,6 +41,7 @@ type NewsletterPageConsent = ConsentOption | NewsletterOption;
 
 type ConsentsNewslettersProps = {
   consents: NewsletterPageConsent[];
+  defaultOnboardingEmailConsentState: boolean;
 };
 
 const idColor = (id: string) => {
@@ -89,13 +90,17 @@ const getNewsletterCardCss = (index: number) => {
 
 export const ConsentsNewslettersAB = ({
   consents,
+  defaultOnboardingEmailConsentState,
 }: ConsentsNewslettersProps) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
 
   return (
     <ConsentsLayout title="Newsletters" current={CONSENTS_PAGES.NEWSLETTERS}>
       <ConsentsForm cssOverrides={autoRow()}>
-        <ConsentCardOnboarding id={'fixme'} />
+        <ConsentCardOnboarding
+          id={'fixme'}
+          defaultChecked={defaultOnboardingEmailConsentState}
+        />
         <h1 css={[h1, h1ResponsiveText, autoRow()]}>You might also like...</h1>
         {consents.map(({ type, consent }, i) => {
           const extraProps =
