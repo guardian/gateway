@@ -37,7 +37,7 @@ const CIRCLE_RADIUS = CIRCLE_DIAMETER / 2;
 
 const h1 = css`
   margin: ${space[6]}px 0 ${space[6]}px;
-  ${headline.small({ fontWeight: 'bold' })}};
+  ${headline.small({ fontWeight: 'bold' })};
 `;
 
 // For some reason this media query only applies if we use a separate style
