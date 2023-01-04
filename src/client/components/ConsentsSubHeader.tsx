@@ -7,11 +7,14 @@ import {
   from,
   until,
   textSans,
-  headline,
   visuallyHidden,
 } from '@guardian/source-foundations';
 import { AutoRow, gridRow } from '@/client/styles/Grid';
-import { greyBorderSides } from '@/client/styles/Consents';
+import {
+  greyBorderSides,
+  h1,
+  h1ResponsiveText,
+} from '@/client/styles/Consents';
 import { CONSENTS_PAGES_ARR } from '@/client/models/ConsentsPages';
 import { ErrorSummary } from '@guardian/source-react-components-development-kitchen';
 import { IsNativeApp } from '@/shared/model/ClientState';
@@ -34,22 +37,6 @@ const PENDING_BORDER_SIZE = 1;
 const PENDING_COLOR = neutral[60];
 const CIRCLE_DIAMETER = 12;
 const CIRCLE_RADIUS = CIRCLE_DIAMETER / 2;
-
-const h1 = css`
-  margin: ${space[6]}px 0 ${space[6]}px;
-  ${headline.small({ fontWeight: 'bold' })};
-`;
-
-// For some reason this media query only applies if we use a separate style
-const h1ResponsiveText = css`
-  ${from.tablet} {
-    font-size: 32px;
-  }
-
-  ${from.desktop} {
-    margin-top: 30px;
-  }
-`;
 
 const ol = (active: number) => {
   const progressSections = CONSENTS_PAGES_COUNT - 1;
