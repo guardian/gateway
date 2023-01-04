@@ -270,6 +270,7 @@ export const PasswordForm = ({
   const [isTooShort, setIsTooShort] = useState<boolean>(true);
   const [isTooLong, setIsTooLong] = useState<boolean>(false);
   const [isChecking, setIsChecking] = useState<boolean>(false);
+  const [isFormDisabled, setIsFormDisabled] = useState<boolean>(false);
 
   useEffect(() => {
     // Typing anything clears the big red error, falling back to the dynamic validation message
@@ -315,6 +316,7 @@ export const PasswordForm = ({
           setError(PasswordFieldErrors.COMMON_PASSWORD);
           e.preventDefault();
         }
+        setIsFormDisabled(true);
       }}
       onFocus={(e) =>
         formTrackingName && trackFormFocusBlur(formTrackingName, e, 'focus')
@@ -352,6 +354,9 @@ export const PasswordForm = ({
           type="submit"
           iconSide="right"
           data-cy="change-password-button"
+          isLoading={isFormDisabled}
+          disabled={isFormDisabled}
+          aria-disabled={isFormDisabled}
         >
           {submitButtonText}
         </Button>
