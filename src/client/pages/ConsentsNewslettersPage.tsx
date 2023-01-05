@@ -21,23 +21,22 @@ export const ConsentsNewslettersPage = () => {
 
   // @AB_TEST: Default Weekly Newsletter Test: START
   const ABTestAPI = useAB();
-  const isInABTest = ABTestAPI.runnableTest(abDefaultWeeklyNewsletterTest);
+  const isInABTestVariant = ABTestAPI.isUserInVariant(
+    abDefaultWeeklyNewsletterTest.id,
+    abDefaultWeeklyNewsletterTest.variants[0].id,
+  );
 
-  switch (isInABTest?.variantToRun.id) {
-    case 'control-off':
-      return (
-        <ConsentsNewslettersAB
-          consents={consents}
-          defaultOnboardingEmailConsentState={false}
-        />
-      );
-    case 'variant-on':
-      return (
-        <ConsentsNewslettersAB
-          consents={consents}
-          defaultOnboardingEmailConsentState={true}
-        />
-      );
+  const geolocation = pageData?.geolocation;
+  const isInRegion = geolocation && ['GB', 'US', 'AU'].includes(geolocation);
+
+  if (isInABTestVariant && isInRegion) {
+    return (
+      <ConsentsNewslettersAB
+        consents={consents}
+        defaultOnboardingEmailId={'fixme'}
+        defaultOnboardingEmailConsentState={true}
+      />
+    );
   }
   // @AB_TEST: Default Weekly Newsletter Test: END
 
