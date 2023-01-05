@@ -47,17 +47,15 @@ const switchRow = css`
   ${topMargin}
 `;
 
-interface ConsentCardProps {
+interface ConsentCardOnboardingEmailProps {
   id: string;
   defaultChecked?: boolean;
   cssOverrides?: SerializedStyles;
 }
 
-export const ConsentCardOnboarding: FunctionComponent<ConsentCardProps> = ({
-  id,
-  defaultChecked,
-  cssOverrides,
-}) => {
+export const ConsentCardOnboarding: FunctionComponent<
+  ConsentCardOnboardingEmailProps
+> = ({ id, defaultChecked, cssOverrides }) => {
   return (
     <article css={[containerStyles, cssOverrides]}>
       <p css={[text]}>
@@ -67,6 +65,8 @@ export const ConsentCardOnboarding: FunctionComponent<ConsentCardProps> = ({
         journalism.
       </p>
       <fieldset css={[switchRow, greyBorderTop]}>
+        {/* Hidden input required to capture unsubscribe events */}
+        <input type="hidden" name={id} value="" key="hidden" />
         <ToggleSwitchInput
           id={id}
           defaultChecked={defaultChecked}

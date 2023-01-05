@@ -41,6 +41,7 @@ type NewsletterPageConsent = ConsentOption | NewsletterOption;
 
 type ConsentsNewslettersProps = {
   consents: NewsletterPageConsent[];
+  defaultOnboardingEmailId: string;
   defaultOnboardingEmailConsentState: boolean;
 };
 
@@ -90,6 +91,7 @@ const getNewsletterCardCss = (index: number) => {
 
 export const ConsentsNewslettersAB = ({
   consents,
+  defaultOnboardingEmailId,
   defaultOnboardingEmailConsentState,
 }: ConsentsNewslettersProps) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
@@ -98,7 +100,7 @@ export const ConsentsNewslettersAB = ({
     <ConsentsLayout title="Newsletters" current={CONSENTS_PAGES.NEWSLETTERS}>
       <ConsentsForm cssOverrides={autoRow()}>
         <ConsentCardOnboarding
-          id={'fixme'}
+          id={defaultOnboardingEmailId}
           defaultChecked={defaultOnboardingEmailConsentState}
         />
         <h1 css={[h1, h1ResponsiveText, autoRow()]}>You might also like...</h1>
