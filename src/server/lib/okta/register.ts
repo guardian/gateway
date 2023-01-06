@@ -23,6 +23,7 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { logger } from '../serverSideLogger';
 import dangerouslySetPlaceholderPassword from './dangerouslySetPlaceholderPassword';
 import { sendCompleteRegistration } from '@/email/templates/CompleteRegistration/sendCompleteRegistration';
+import { addAppPrefixToOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 
 const { okta } = getConfiguration();
 
@@ -40,11 +41,18 @@ const { okta } = getConfiguration();
  * We read the state of the user by email and send the appropriate email based on the user status.
  *
  * @param email
+ * @param appClientId - optional, used to determine if the user is coming from a native app
  * @returns {Promise<UserResponse>} Promise that resolves to the user object
  */
-export const sendRegistrationEmailByUserState = async (
-  email: string,
-): Promise<UserResponse> => {
+export const sendRegistrationEmailByUserState = async ({
+  email,
+  appClientId,
+  request_id,
+}: {
+  email: string;
+  appClientId?: string;
+  request_id?: string;
+}): Promise<UserResponse> => {
   const user = await getUser(email);
   const { id, status } = user;
 
@@ -65,7 +73,11 @@ export const sendRegistrationEmailByUserState = async (
       }
       const emailIsSent = await sendAccountWithoutPasswordExistsEmail({
         to: user.profile.email,
-        activationToken: tokenResponse.token,
+        activationToken: await addAppPrefixToOktaRecoveryToken(
+          tokenResponse.token,
+          appClientId,
+          request_id,
+        ),
       });
       if (!emailIsSent) {
         throw new OktaError({
@@ -90,7 +102,11 @@ export const sendRegistrationEmailByUserState = async (
       }
       const emailIsSent = await sendAccountWithoutPasswordExistsEmail({
         to: user.profile.email,
-        activationToken: tokenResponse.token,
+        activationToken: await addAppPrefixToOktaRecoveryToken(
+          tokenResponse.token,
+          appClientId,
+          request_id,
+        ),
       });
       if (!emailIsSent) {
         throw new OktaError({
@@ -137,7 +153,12 @@ export const sendRegistrationEmailByUserState = async (
         // The user has a password set, but their email is not validated,
         // so we send an unvalidated email address email. This function
         // generates the forgot password token too.
-        await sendEmailToUnvalidatedUser(id, user.profile.email);
+        await sendEmailToUnvalidatedUser({
+          id,
+          email: user.profile.email,
+          appClientId,
+          request_id,
+        });
         trackMetric('OktaUnvalidatedUserResendEmail::Success');
       } else {
         // The user has a validated email and a password set, so we can send
@@ -149,7 +170,11 @@ export const sendRegistrationEmailByUserState = async (
           const activationToken = await forgotPassword(id);
           await sendAccountExistsEmail({
             to: user.profile.email,
-            activationToken,
+            activationToken: await addAppPrefixToOktaRecoveryToken(
+              activationToken,
+              appClientId,
+              request_id,
+            ),
           });
         } catch (error) {
           // If the forgot password operation failed for whatever reason, we catch and
@@ -186,7 +211,11 @@ export const sendRegistrationEmailByUserState = async (
       }
       const emailIsSent = await sendResetPasswordEmail({
         to: user.profile.email,
-        resetPasswordToken: token,
+        resetPasswordToken: await addAppPrefixToOktaRecoveryToken(
+          token,
+          appClientId,
+          request_id,
+        ),
       });
       if (!emailIsSent) {
         throw new OktaError({
@@ -213,10 +242,17 @@ export const sendRegistrationEmailByUserState = async (
  * @param {RegistrationLocation} registrationLocation
  * @returns {Promise<UserResponse>} Promise that resolves to the user object
  */
-export const register = async (
-  email: string,
-  registrationLocation?: RegistrationLocation,
-): Promise<UserResponse> => {
+export const register = async ({
+  email,
+  registrationLocation,
+  appClientId,
+  request_id,
+}: {
+  email: string;
+  registrationLocation?: RegistrationLocation;
+  appClientId?: string;
+  request_id?: string;
+}): Promise<UserResponse> => {
   try {
     // Create the user in Okta, but do not send the activation email
     // because we send the email ourselves through Gateway.
@@ -249,7 +285,11 @@ export const register = async (
     // ...and send the activation email.
     const emailIsSent = await sendCompleteRegistration({
       to: emailAddress,
-      activationToken: tokenResponse.token,
+      activationToken: await addAppPrefixToOktaRecoveryToken(
+        tokenResponse.token,
+        appClientId,
+        request_id,
+      ),
     });
     if (!emailIsSent) {
       throw new OktaError({
@@ -263,7 +303,11 @@ export const register = async (
       error.name === 'ApiValidationError' &&
       causesInclude(error.causes, 'already exists')
     ) {
-      return sendRegistrationEmailByUserState(email);
+      return sendRegistrationEmailByUserState({
+        email,
+        appClientId,
+        request_id,
+      });
     } else {
       throw error;
     }

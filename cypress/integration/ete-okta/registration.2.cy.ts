@@ -68,6 +68,68 @@ describe('Registration flow', () => {
       });
     });
 
+    it('successfully registers using an email with no existing account, and has a prefixed activation token when using a native app', () => {
+      const encodedReturnUrl =
+        'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
+      const unregisteredEmail = randomMailosaurEmail();
+      const encodedRef = 'https%3A%2F%2Fm.theguardian.com';
+      const refViewId = 'testRefViewId';
+      const clientId = 'jobs';
+
+      // these params should *not* persist between initial registration and welcome page
+      // despite the fact that they PersistableQueryParams, as these are set by the Okta SDK sign in method
+      // and subsequent interception, and not by gateway
+      const appClientId = Cypress.env('OKTA_ANDROID_CLIENT_ID');
+      const fromURI = 'fromURI1';
+
+      cy.visit(
+        `/register?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&appClientId=${appClientId}&fromURI=${fromURI}`,
+      );
+
+      const timeRequestWasMade = new Date();
+      cy.get('input[name=email]').type(unregisteredEmail);
+      cy.get('[data-cy="main-form-submit-button"]').click();
+
+      cy.contains('Check your email inbox');
+      cy.contains(unregisteredEmail);
+      cy.contains('Resend email');
+      cy.contains('Change email address');
+
+      cy.checkForEmailAndGetDetails(
+        unregisteredEmail,
+        timeRequestWasMade,
+        /welcome\/([^"]*)/,
+      ).then(({ body, token }) => {
+        expect(body).to.have.string('Complete registration');
+        expect(token).to.have.string('al_');
+        cy.visit(`/welcome/${token}`);
+        cy.contains('Save and continue');
+
+        cy.get('form')
+          .should('have.attr', 'action')
+          .and('match', new RegExp(encodedReturnUrl))
+          .and('match', new RegExp(refViewId))
+          .and('match', new RegExp(encodedRef))
+          .and('match', new RegExp(clientId))
+          .and('not.match', new RegExp(appClientId))
+          .and('not.match', new RegExp(fromURI));
+
+        //we are reloading here to make sure the params are persisted even on page refresh
+        cy.reload();
+
+        cy.get('input[name="firstName"]').type('First Name');
+        cy.get('input[name="secondName"]').type('Last Name');
+        cy.get('input[name="password"]').type(randomPassword());
+        cy.get('button[type="submit"]').click();
+        cy.url().should('contain', encodedReturnUrl);
+        cy.url().should('contain', refViewId);
+        cy.url().should('contain', encodedRef);
+        cy.url().should('contain', clientId);
+        cy.url().should('not.contain', appClientId);
+        cy.url().should('not.contain', fromURI);
+      });
+    });
+
     it('does not register registrationLocation for email with no existing account if cmp is not consented', () => {
       const unregisteredEmail = randomMailosaurEmail();
       cy.enableCMP();
@@ -283,6 +345,61 @@ describe('Registration flow', () => {
       });
     });
 
+    it('should send a STAGED user a set password email with an Okta activation token, and has a prefixed activation token when using a native app', () => {
+      // Test users created via IDAPI-with-Okta do not have the activation
+      // lifecycle run at creation, so they don't transition immediately from
+      // STAGED to PROVISIONED (c.f.
+      // https://developer.okta.com/docs/reference/api/users/#create-user) .
+      // This is useful for us as we can test STAGED users first, then test
+      // PROVISIONED users in the next test by activating a STAGED user. Users
+      // created through Gateway-with-Okta do have this lifecycle run, so if we
+      // rebuild these tests to not use IDAPI at all, we need to figure out a
+      // way to test STAGED and PROVISIONED users (probably by just passing an
+      // optional `activate` prop to a createUser function).
+      cy.createTestUser({
+        isGuestUser: true,
+        isUserEmailValidated: true,
+      })?.then(({ emailAddress }) => {
+        cy.getTestOktaUser(emailAddress).then((oktaUser) => {
+          expect(oktaUser.status).to.eq(Status.STAGED);
+
+          const appClientId = Cypress.env('OKTA_ANDROID_CLIENT_ID');
+          const fromURI = 'fromURI1';
+
+          cy.visit(`/register?appClientId=${appClientId}&fromURI=${fromURI}`);
+          const timeRequestWasMade = new Date();
+
+          cy.get('input[name=email]').type(emailAddress);
+          cy.get('[data-cy="main-form-submit-button"]').click();
+
+          cy.contains('Check your email inbox');
+          cy.contains(emailAddress);
+          cy.contains('Resend email');
+          cy.contains('Change email address');
+
+          cy.checkForEmailAndGetDetails(
+            emailAddress,
+            timeRequestWasMade,
+            /\/set-password\/([^"]*)/,
+          ).then(({ links, body }) => {
+            expect(body).to.have.string('This account already exists');
+
+            expect(body).to.have.string('Create password');
+            expect(links.length).to.eq(2);
+            const setPasswordLink = links.find((s) =>
+              s.text?.includes('Create password'),
+            );
+            expect(setPasswordLink?.href ?? '')
+              .to.have.string('al_')
+              .and.not.to.have.string('useOkta=true');
+            cy.visit(setPasswordLink?.href as string);
+            cy.contains('Create password');
+            cy.contains(emailAddress);
+          });
+        });
+      });
+    });
+
     it('should send a PROVISIONED user a set password email with an Okta activation token', () => {
       cy.createTestUser({
         isGuestUser: true,
@@ -400,6 +517,50 @@ describe('Registration flow', () => {
             expect(resetPasswordLink?.href ?? '').not.to.have.string(
               'useOkta=true',
             );
+            cy.visit(resetPasswordLink?.href as string);
+            cy.contains(emailAddress);
+            cy.contains('Reset password');
+          });
+        });
+      });
+    });
+    it('should send an ACTIVE validated user WITH a password a reset password email with an activation token, and prefixed activation token if using native app', () => {
+      cy.createTestUser({
+        isGuestUser: false,
+        isUserEmailValidated: true,
+      })?.then(({ emailAddress }) => {
+        cy.getTestOktaUser(emailAddress).then((oktaUser) => {
+          expect(oktaUser.status).to.eq(Status.ACTIVE);
+
+          const appClientId = Cypress.env('OKTA_ANDROID_CLIENT_ID');
+          const fromURI = 'fromURI1';
+
+          cy.visit(`/register?appClientId=${appClientId}&fromURI=${fromURI}`);
+          const timeRequestWasMade = new Date();
+
+          cy.get('input[name=email]').type(emailAddress);
+          cy.get('[data-cy="main-form-submit-button"]').click();
+
+          cy.contains('Check your email inbox');
+          cy.contains(emailAddress);
+          cy.contains('Resend email');
+          cy.contains('Change email address');
+
+          cy.checkForEmailAndGetDetails(
+            emailAddress,
+            timeRequestWasMade,
+            /reset-password\/([^"]*)/,
+          ).then(({ links, body }) => {
+            expect(body).to.have.string('This account already exists');
+            expect(body).to.have.string('Sign in');
+            expect(body).to.have.string('Reset password');
+            expect(links.length).to.eq(3);
+            const resetPasswordLink = links.find((s) =>
+              s.text?.includes('Reset password'),
+            );
+            expect(resetPasswordLink?.href ?? '')
+              .to.have.string('al_')
+              .and.not.to.have.string('useOkta=true');
             cy.visit(resetPasswordLink?.href as string);
             cy.contains(emailAddress);
             cy.contains('Reset password');

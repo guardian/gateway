@@ -62,6 +62,12 @@ elif [[ -z "${CYPRESS_MAILOSAUR_SERVER_ID}" ]]; then
   echo "This ID is required to run these ete Cypress tests. Check your .env file." 
   echo
   exit
+elif [[ -z "${CYPRESS_OKTA_ANDROID_CLIENT_ID}" ]]; then
+  echo "You don't have the CYPRESS_OKTA_ANDROID_CLIENT_ID environment variable set!"
+  echo
+  echo "The Okta Android Client ID is required to run these ete Cypress tests. Check your .env file." 
+  echo
+  exit
 fi
 
 if [[ "$DEV_MODE" == "false" ]]; then

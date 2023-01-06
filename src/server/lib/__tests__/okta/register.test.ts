@@ -100,7 +100,12 @@ const mockedSendResetPasswordEmail = mocked<
   (params: { to: string; resetPasswordToken: string }) => Promise<boolean>
 >(sendResetPasswordEmail);
 const mockedSendEmailToUnvalidatedUser = mocked<
-  (id: string, email: string) => Promise<void>
+  (params: {
+    id: string;
+    email: string;
+    appClientId: string;
+    request_id: string;
+  }) => Promise<void>
 >(sendEmailToUnvalidatedUser);
 const mockedSendCompleteRegistration = mocked<
   (params: { to: string; activationToken: string }) => Promise<boolean>
@@ -180,7 +185,7 @@ describe('okta#register', () => {
       Promise.resolve({ token: 'sometoken' } as TokenResponse),
     );
     mockedSendCompleteRegistration.mockReturnValueOnce(Promise.resolve(true));
-    const result = await register(email);
+    const result = await register({ email });
     expect(result).toEqual(user);
   });
 
@@ -192,7 +197,10 @@ describe('okta#register', () => {
       Promise.resolve({ token: 'sometoken' } as TokenResponse),
     );
     mockedSendCompleteRegistration.mockReturnValueOnce(Promise.resolve(true));
-    const result = await register(email, 'United Kingdom');
+    const result = await register({
+      email,
+      registrationLocation: 'United Kingdom',
+    });
     expect(result).toEqual(user);
   });
 
@@ -215,7 +223,7 @@ describe('okta#register', () => {
       Promise.resolve(true),
     );
 
-    await expect(register(email)).resolves.toEqual(user);
+    await expect(register({ email })).resolves.toEqual(user);
     expect(mockedActivateOktaUser).toHaveBeenCalled();
     expect(mockedSendAccountWithoutPasswordExistsEmail).toHaveBeenCalled();
     // Make sure the function from the other branch of the switch isn't called
@@ -241,7 +249,7 @@ describe('okta#register', () => {
       Promise.resolve(true),
     );
 
-    await expect(register(email)).resolves.toEqual(user);
+    await expect(register({ email })).resolves.toEqual(user);
     expect(mockedReactivateOktaUser).toHaveBeenCalled();
     expect(mockedSendAccountWithoutPasswordExistsEmail).toHaveBeenCalled();
     // Make sure the function from the other branch of the switch isn't called
@@ -264,7 +272,7 @@ describe('okta#register', () => {
     mockedFetchOktaUser.mockReturnValueOnce(Promise.resolve(user));
     mockedSendAccountExistsEmail.mockReturnValueOnce(Promise.resolve(true));
 
-    await expect(register(email)).resolves.toEqual(user);
+    await expect(register({ email })).resolves.toEqual(user);
     expect(mockedSendAccountExistsEmail).toHaveBeenCalled();
     // Make sure the function from the other branch of the switch isn't called
     expect(mockedActivateOktaUser).not.toHaveBeenCalled();
@@ -288,7 +296,7 @@ describe('okta#register', () => {
     );
     mockedSendResetPasswordEmail.mockReturnValueOnce(Promise.resolve(true));
 
-    await expect(register(email)).resolves.toEqual(user);
+    await expect(register({ email })).resolves.toEqual(user);
     expect(mockedDangerouslyResetPassword).toHaveBeenCalled();
     expect(mockedSendResetPasswordEmail).toHaveBeenCalled();
     // Make sure the function from the other branch of the switch isn't called
@@ -313,7 +321,7 @@ describe('okta#register', () => {
     );
     mockedSendResetPasswordEmail.mockReturnValueOnce(Promise.resolve(true));
 
-    await expect(register(email)).resolves.toEqual(user);
+    await expect(register({ email })).resolves.toEqual(user);
     expect(mockedDangerouslyResetPassword).toHaveBeenCalled();
     expect(mockedSendResetPasswordEmail).toHaveBeenCalled();
     // Make sure the function from the other branch of the switch isn't called
@@ -327,7 +335,7 @@ describe('okta#register', () => {
     mockedCreateOktaUser.mockRejectedValueOnce(new OktaError(userExistsError));
     mockedFetchOktaUser.mockReturnValueOnce(Promise.resolve(user));
 
-    await expect(register(email)).rejects.toThrow(OktaError);
+    await expect(register({ email })).rejects.toThrow(OktaError);
     expect(mockedActivateOktaUser).not.toHaveBeenCalled();
     expect(mockedReactivateOktaUser).not.toHaveBeenCalled();
   });
@@ -341,7 +349,7 @@ describe('okta#register', () => {
     mockedFetchOktaUser.mockReturnValueOnce(Promise.resolve(user));
     mockedSendEmailToUnvalidatedUser.mockReturnValueOnce(Promise.resolve());
 
-    await expect(register(email)).resolves.toEqual(user);
+    await expect(register({ email })).resolves.toEqual(user);
     expect(mockedResetPassword).not.toHaveBeenCalled();
     expect(mockedSendEmailToUnvalidatedUser).toHaveBeenCalled();
   });
@@ -360,7 +368,7 @@ describe('okta#register', () => {
       Promise.resolve({ stateToken: 'sometoken' }),
     );
 
-    await expect(register(email)).resolves.toEqual(user);
+    await expect(register({ email })).resolves.toEqual(user);
     expect(dangerouslyResetPassword).toHaveBeenCalled();
     expect(mockedResetPassword).toHaveBeenCalled();
     expect(mockedSendEmailToUnvalidatedUser).toHaveBeenCalled();

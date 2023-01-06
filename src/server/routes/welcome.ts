@@ -133,9 +133,14 @@ router.post(
 const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
   try {
     const { email } = req.body;
+    const state = res.locals;
 
     if (typeof email !== 'undefined') {
-      const user = await register(email);
+      const user = await register({
+        email,
+        appClientId: state.queryParams.appClientId,
+        request_id: state.requestId,
+      });
 
       trackMetric('OktaWelcomeResendEmail::Success');
 

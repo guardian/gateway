@@ -9,16 +9,16 @@
         ],
         "components": [
           {
-            "/": "/welcome/*",
-            "comment": "Matches any URL whose path starts with /welcome/<randomString> where <randomString> is a token"
+            "/": "/welcome/il_*",
+            "comment": "Matches any URL whose path starts with /welcome/il_<randomString> where <randomString> is a token"
           },
           {
-            "/": "/reset-password/*",
-            "comment": "Matches any URL whose path starts with /reset-password/<randomString> where <randomString> is a token"
+            "/": "/reset-password/il_*",
+            "comment": "Matches any URL whose path starts with /reset-password/il_<randomString> where <randomString> is a token"
           },
           {
-            "/": "/set-password/*",
-            "comment": "Matches any URL whose path starts with /set-password/<randomString> where <randomString> is a token"
+            "/": "/set-password/il_*",
+            "comment": "Matches any URL whose path starts with /set-password/il_<randomString> where <randomString> is a token"
           },
           {
              "/": "/identity/fallback/*",

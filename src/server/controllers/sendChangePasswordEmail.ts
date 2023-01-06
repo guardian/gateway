@@ -32,7 +32,8 @@ import { sendCreatePasswordEmail } from '@/email/templates/CreatePassword/sendCr
 import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendResetPasswordEmail';
 import { PasswordRoutePath } from '@/shared/model/Routes';
 import { mergeRequestState } from '@/server/lib/requestState';
-import dangerouslySetPlaceholderPassword from '../lib/okta/dangerouslySetPlaceholderPassword';
+import dangerouslySetPlaceholderPassword from '@/server/lib/okta/dangerouslySetPlaceholderPassword';
+import { addAppPrefixToOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 
 const { okta } = getConfiguration();
 
@@ -123,6 +124,10 @@ export const sendEmailInOkta = async (
   const state = res.locals;
   const { email = '' } = req.body;
   const path = getPath(req);
+  const {
+    queryParams: { appClientId },
+    requestId: request_id,
+  } = state;
 
   try {
     // get the user object to check user status
@@ -140,7 +145,11 @@ export const sendEmailInOkta = async (
           }
           const emailIsSent = await sendResetPasswordEmail({
             to: user.profile.email,
-            resetPasswordToken: token,
+            resetPasswordToken: await addAppPrefixToOktaRecoveryToken(
+              token,
+              appClientId,
+              request_id,
+            ),
           });
           if (!emailIsSent) {
             throw new OktaError({
@@ -189,7 +198,11 @@ export const sendEmailInOkta = async (
           }
           const emailIsSent = await sendCreatePasswordEmail({
             to: user.profile.email,
-            setPasswordToken: tokenResponse.token,
+            setPasswordToken: await addAppPrefixToOktaRecoveryToken(
+              tokenResponse.token,
+              appClientId,
+              request_id,
+            ),
           });
           if (!emailIsSent) {
             throw new OktaError({
@@ -211,7 +224,11 @@ export const sendEmailInOkta = async (
           }
           const emailIsSent = await sendCreatePasswordEmail({
             to: user.profile.email,
-            setPasswordToken: tokenResponse.token,
+            setPasswordToken: await addAppPrefixToOktaRecoveryToken(
+              tokenResponse.token,
+              appClientId,
+              request_id,
+            ),
           });
           if (!emailIsSent) {
             throw new OktaError({
@@ -234,7 +251,11 @@ export const sendEmailInOkta = async (
           }
           const emailIsSent = await sendResetPasswordEmail({
             to: user.profile.email,
-            resetPasswordToken: token,
+            resetPasswordToken: await addAppPrefixToOktaRecoveryToken(
+              token,
+              appClientId,
+              request_id,
+            ),
           });
           if (!emailIsSent) {
             throw new OktaError({
