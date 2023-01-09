@@ -22,7 +22,7 @@ const appPrefixes = [
   'al_', // Android live app
   'il_', // iOS live app
 ];
-type AppPrefix = typeof appPrefixes[number];
+type AppPrefix = (typeof appPrefixes)[number];
 
 /**
  * @name extractOktaRecoveryToken

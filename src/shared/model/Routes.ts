@@ -52,7 +52,7 @@ export const ValidRoutePathsArray = [
   '/email/:template',
 ] as const;
 
-export type RoutePaths = typeof ValidRoutePathsArray[number];
+export type RoutePaths = (typeof ValidRoutePathsArray)[number];
 
 /**
  * These are all valid paths for the Identity API

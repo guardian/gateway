@@ -5,7 +5,7 @@ import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { renderedAccidentalEmail } from '@/email/templates/renderedTemplates';
 
 const emailTemplateTypes = ['accidental-email'] as const;
-type EmailTemplateType = typeof emailTemplateTypes[number];
+type EmailTemplateType = (typeof emailTemplateTypes)[number];
 
 type EmailRenderResult = {
   plain: string;

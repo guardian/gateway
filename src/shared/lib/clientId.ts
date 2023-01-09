@@ -6,4 +6,4 @@ export const validClientId = [
   'subscriptions',
 ] as const;
 
-export type ValidClientId = typeof validClientId[number];
+export type ValidClientId = (typeof validClientId)[number];
