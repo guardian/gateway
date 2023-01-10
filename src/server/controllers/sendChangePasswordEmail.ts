@@ -162,10 +162,12 @@ export const sendEmailInOkta = async (
           // we still want to send a reset password email for these users
           // so we have to check for the correct error response
           // set an placeholder unknown password and then send the email
+          // E0000006 - Access denied exception
+          // E0000017 - Reset password failed exception
           if (
             isOktaError(error) &&
             error.status === 403 &&
-            error.code === 'E0000006'
+            (error.code === 'E0000006' || error.code === 'E0000017')
           ) {
             // a user *should* only hit this error if no password set
             // but we do a few checks to make sure that it's the case
