@@ -37,9 +37,22 @@ export const setIDAPICookies = (
       }
     })
     .forEach(({ key, value, sessionCookie = false }) => {
+      const expires: Date | undefined = (() => {
+        if (key === 'SC_GU_LA') {
+          // have SC_GU_LA cookie expire in 30 mins, despite the fact that it is a session cookie
+          // this is to support the Native App logging in with an in-app browser, so the cookie
+          // isn't immediately deleted when the in app browser is closed
+          return new Date(Date.now() + 30 * 60 * 1000);
+        }
+        if (sessionCookie) {
+          return undefined;
+        }
+        return new Date(expiresAt);
+      })();
+
       res.cookie(key, value, {
         domain,
-        expires: sessionCookie ? undefined : new Date(expiresAt),
+        expires,
         httpOnly: !['GU_U', 'GU_SO'].includes(key), // unless GU_U/GU_SO cookie, set to true
         secure: isHttps && key !== 'GU_U', // unless GU_U cookie, set to isHttps (set to true, except in local dev)
         sameSite: 'lax',
