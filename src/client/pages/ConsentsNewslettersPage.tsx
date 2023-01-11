@@ -33,7 +33,7 @@ export const ConsentsNewslettersPage = () => {
     return (
       <ConsentsNewslettersAB
         consents={consents}
-        defaultOnboardingEmailId={'fixme'}
+        defaultOnboardingEmailId={'6028'}
         defaultOnboardingEmailConsentState={true}
       />
     );

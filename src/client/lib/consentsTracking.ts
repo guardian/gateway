@@ -63,6 +63,18 @@ const newslettersFormSubmitOphanTracking = (
       }
     });
   }
+
+  // @AB_TEST: Default Weekly Newsletter Test: required for tracking
+  inputElems.forEach((elem) => {
+    const defaultWeeklyNewsletter = elem.name === '6028';
+    if (defaultWeeklyNewsletter) {
+      trackInputElementInteraction(
+        elem,
+        'newsletter',
+        'saturday-roundup-trial',
+      );
+    }
+  });
 };
 
 // handle generic form (direct to one of the two below based on page)
