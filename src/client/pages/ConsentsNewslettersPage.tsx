@@ -1,5 +1,6 @@
 import React from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
+import { useCmpConsent } from '@/client/lib/hooks/useCmpConsent';
 import { ConsentsNewsletters } from '@/client/pages/ConsentsNewsletters';
 import { ConsentsNewslettersAB } from '@/client/pages/ConsentsNewslettersAB';
 import { useAB } from '@guardian/ab-react';
@@ -28,8 +29,9 @@ export const ConsentsNewslettersPage = () => {
 
   const geolocation = pageData?.geolocation;
   const isInRegion = geolocation && ['GB', 'US', 'AU'].includes(geolocation);
+  const hasCmpConsent = useCmpConsent();
 
-  if (isInABTestVariant && isInRegion) {
+  if (isInABTestVariant && hasCmpConsent && isInRegion) {
     return (
       <ConsentsNewslettersAB
         consents={consents}
