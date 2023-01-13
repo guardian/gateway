@@ -1,4 +1,5 @@
 import { Newsletters } from '@/shared/model/Newsletter';
+import { brand, lifestyle, news } from '@guardian/source-foundations';
 
 import {
   DOWN_TO_EARTH_IMAGE,
@@ -26,4 +27,15 @@ export const NEWSLETTER_IMAGE_POSITIONS: Record<string, string> = {
   [Newsletters.FIRST_EDITION_UK]: 'bottom left',
   [Newsletters.MORNING_MAIL_AU]: 'bottom left',
   [Newsletters.AFTERNOON_UPDATE_AU]: 'bottom left',
+};
+
+export const NEWSLETTER_COLOURS: Record<string, string> = {
+  [Newsletters.DOWN_TO_EARTH]: news[400],
+  [Newsletters.FIRST_EDITION_UK]: news[400],
+  [Newsletters.MORNING_BRIEFING_US]: news[400],
+  [Newsletters.THE_LONG_READ]: brand[400],
+  [Newsletters.MORNING_MAIL_AU]: news[400],
+  [Newsletters.AFTERNOON_UPDATE_AU]: news[400],
+  [Newsletters.FIVE_GREAT_READS_AU]: brand[400],
+  [Newsletters.SAVED_FOR_LATER_AU]: lifestyle[400],
 };
