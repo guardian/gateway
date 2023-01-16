@@ -65,7 +65,10 @@ export const EmailSent = ({
       {changeEmailPage && (
         <MainBodyText>
           Wrong email address?{' '}
-          <Link href={changeEmailPage}>Change email address</Link>.
+          <Link href={`${changeEmailPage}${queryString}`}>
+            Change email address
+          </Link>
+          .
         </MainBodyText>
       )}
       {email && resendEmailAction && (
@@ -85,7 +88,9 @@ export const EmailSent = ({
                     </b>
                     <br />
                     Don’t have an account?{' '}
-                    <Link href={buildUrl('/register')}>Register for free</Link>
+                    <Link href={`${buildUrl('/register')}${queryString}`}>
+                      Register for free
+                    </Link>
                   </>
                 )}
               </>
