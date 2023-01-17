@@ -30,10 +30,11 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { consentsPageMetric } from '@/server/models/Metrics';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { GeoLocation } from '@/shared/model/Geolocation';
+import { newslettersSubscriptionsFromFormBody } from '@/shared/lib/newsletter';
 import {
+  ConsentsOnNewslettersPageMap,
   NewsletterMap,
-  newslettersSubscriptionsFromFormBody,
-} from '@/shared/lib/newsletter';
+} from '@/shared/lib/newsletterConsentsPageLocalisation';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { fourZeroFourRender } from '@/server/lib/middleware/404';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
@@ -124,7 +125,7 @@ export const consentPages: ConsentPage[] = [
     read: async (ip, sc_gu_u, geo, request_id) => ({
       page: 'newsletters',
       consents: await getUserConsentsForPage(
-        CONSENTS_NEWSLETTERS_PAGE,
+        ConsentsOnNewslettersPageMap.get(geo) as string[],
         ip,
         sc_gu_u,
         request_id,
