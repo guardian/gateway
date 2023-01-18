@@ -131,8 +131,8 @@ router.post(
 );
 
 const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
+  const { email } = req.body;
   try {
-    const { email } = req.body;
     const state = res.locals;
 
     if (typeof email !== 'undefined') {
@@ -168,6 +168,11 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
       requestState: deepmerge(res.locals, {
         globalMessage: {
           error: GenericErrors.DEFAULT,
+        },
+        pageData: {
+          email,
+          resendEmailAction: '/welcome/resend',
+          changeEmailPage: '/welcome/resend',
         },
       }),
     });
