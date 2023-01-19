@@ -56,3 +56,19 @@ export const controls = css`
     padding-bottom: ${space[24]}px;
   }
 `;
+
+export const h1 = css`
+  margin: ${space[6]}px 0 ${space[6]}px;
+  ${headline.small({ fontWeight: 'bold' })};
+`;
+
+// For some reason this media query only applies if we use a separate style
+export const h1ResponsiveText = css`
+  ${from.tablet} {
+    font-size: 32px;
+  }
+
+  ${from.desktop} {
+    margin-top: 30px;
+  }
+`;
