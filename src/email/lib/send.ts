@@ -1,4 +1,4 @@
-import * as AWS from 'aws-sdk';
+import { SESV2 } from 'aws-sdk';
 import { awsConfig } from '@/server/lib/awsConfig';
 
 // We need to adjust the SES timeouts to be longer than the standard AWS
@@ -13,7 +13,7 @@ const sesConfig = {
   },
 };
 
-const SESV2 = new AWS.SESV2(sesConfig);
+const ses = new SESV2(sesConfig);
 
 type Props = {
   html: string;
@@ -33,7 +33,7 @@ export const send = async ({
     return true;
   }
 
-  const params: AWS.SESV2.SendEmailRequest = {
+  const params: SESV2.SendEmailRequest = {
     Content: {
       Simple: {
         Body: {
@@ -55,7 +55,7 @@ export const send = async ({
     FromEmailAddress: 'registration-reply@theguardian.com',
   };
 
-  const result = await SESV2.sendEmail(params).promise();
+  const result = await ses.sendEmail(params).promise();
   if (!result?.MessageId) {
     return false;
   }
