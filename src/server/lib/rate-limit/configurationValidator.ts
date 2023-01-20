@@ -9,14 +9,14 @@ export const bucketSchema = z
   })
   .strict();
 
-export const settingsConfigurationSchema = z
+const settingsConfigurationSchema = z
   .object({
     logOnly: z.boolean().optional(),
     trackBucketCapacity: z.boolean().optional(),
   })
   .strict();
 
-export const routeBucketSettingsConfigurationSchema = z
+const routeBucketSettingsConfigurationSchema = z
   .object({
     logOnly: z.boolean().optional(),
   })

@@ -54,7 +54,7 @@ export const closeSession = async (sessionId: string): Promise<undefined> => {
   }
 };
 
-export const handleSessionResponse = async (
+const handleSessionResponse = async (
   response: Response,
 ): Promise<SessionResponse> => {
   if (response.ok) {

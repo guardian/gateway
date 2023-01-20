@@ -83,7 +83,7 @@ export type ApiRoutePaths =
   | '/users/me/consents'
   | '/users/me/newsletters';
 
-export type OktaApiRoutePaths =
+type OktaApiRoutePaths =
   | '/api/v1/apps/:id'
   | '/api/v1/authn'
   | '/api/v1/authn/credentials/reset_password'
@@ -99,7 +99,7 @@ export type OktaApiRoutePaths =
   | '/api/v1/users/:id/lifecycle/reset_password'
   | '/api/v1/users/:id/sessions';
 
-export type MembersDataApiRoutePaths = '/user-attributes/me';
+type MembersDataApiRoutePaths = '/user-attributes/me';
 
 export type PasswordRoutePath = Extract<
   '/reset-password' | '/set-password' | '/welcome',

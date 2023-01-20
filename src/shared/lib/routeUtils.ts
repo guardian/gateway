@@ -35,7 +35,7 @@ export type ExtractRouteParams<T> = string extends T
 
 export type PathParams<P extends AllRoutes> = ExtractRouteParams<P>;
 
-export type BuildUrl = <P extends AllRoutes>(
+type BuildUrl = <P extends AllRoutes>(
   path: P,
   params?: ExtractRouteParams<P>,
 ) => string;

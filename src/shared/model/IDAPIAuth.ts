@@ -12,7 +12,7 @@ export interface IDAPIAuthRedirect {
   };
 }
 
-export interface IdapiCookie {
+interface IdapiCookie {
   key: string;
   value: string;
   sessionCookie?: boolean;

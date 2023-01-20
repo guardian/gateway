@@ -75,9 +75,6 @@ export const activationTokenResponseSchema = z.object({
   activationUrl: z.string(),
   activationToken: z.string(),
 });
-export type ActivationTokenResponse = z.infer<
-  typeof activationTokenResponseSchema
->;
 
 // Our methods consume the activate_user, reactivate_user, and reset_password
 // endpoints and return a token response.
@@ -110,9 +107,6 @@ export type UserUpdateRequest = z.infer<typeof userUpdateRequestSchema>;
 export const resetPasswordUrlResponseSchema = z.object({
   resetPasswordUrl: z.string(),
 });
-export type ResetPasswordUrlResponse = z.infer<
-  typeof resetPasswordUrlResponseSchema
->;
 
 // https://developer.okta.com/docs/reference/api/users/#user-status
 export enum Status {

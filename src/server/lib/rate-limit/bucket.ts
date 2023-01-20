@@ -159,7 +159,7 @@ export const getBucketsFromRedis = async (
   };
 };
 
-export const getPipelinedBucketData = (
+const getPipelinedBucketData = (
   redisKey: string,
   pipeline: ChainableCommander,
 ): PipelinedBucketData => {

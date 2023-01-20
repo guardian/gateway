@@ -44,7 +44,7 @@ const { okta } = getConfiguration();
  * @param appClientId - optional, used to determine if the user is coming from a native app
  * @returns {Promise<UserResponse>} Promise that resolves to the user object
  */
-export const sendRegistrationEmailByUserState = async ({
+const sendRegistrationEmailByUserState = async ({
   email,
   appClientId,
   request_id,

@@ -16,7 +16,7 @@ export const defaultRateLimiterConfiguration = {
   routeBuckets: {},
 };
 
-export const defaultEnv = {
+const defaultEnv = {
   PORT: '9000',
   IDAPI_CLIENT_ACCESS_TOKEN: 'idapi_api_key',
   IDAPI_BASE_URL: 'http://localhost:1234',
