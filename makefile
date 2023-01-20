@@ -19,6 +19,10 @@ endef
 build: clear clean-build install
 	$(call log, "building production bundles")
 	@yarn build
+	
+build-analyze: clear clean-build install
+	$(call log, "building production bundles and analyze bundle size")
+	@yarn build:analyze
 
 # dev
 
