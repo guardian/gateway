@@ -1,5 +1,11 @@
-import { StringifiableRecord } from 'query-string';
 import { ValidClientId } from '../lib/clientId';
+
+export type Stringifiable = string | boolean | number | null | undefined;
+
+export type StringifiableRecord = Record<
+  string,
+  Stringifiable | readonly Stringifiable[]
+>;
 
 export interface TrackingQueryParams {
   // this is the url of the referring page

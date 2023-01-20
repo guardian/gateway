@@ -1,5 +1,3 @@
-import { stringify } from 'query-string';
-
 describe('Sign out flow', () => {
   context('Signs a user out', () => {
     it('Removes Okta cookies and dotcom cookies when signing out', () => {
@@ -9,7 +7,9 @@ describe('Sign out flow', () => {
         // Disable redirect to /signin/success by default
         cy.setCookie(
           'GU_ran_experiments',
-          stringify({ OptInPromptPostSignIn: Date.now() }),
+          new URLSearchParams({
+            OptInPromptPostSignIn: Date.now().toString(),
+          }).toString(),
         );
 
         // load the consents page as its on the same domain

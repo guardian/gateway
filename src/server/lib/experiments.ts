@@ -1,5 +1,4 @@
 import { Request } from 'express';
-import { parse, stringify } from 'query-string';
 import ms from 'ms';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 
@@ -13,7 +12,7 @@ const getRanExperiments = (req: Request) => {
 
   if (!ranExperimentsValue) return {};
 
-  return parse(ranExperimentsValue);
+  return Object.fromEntries(new URLSearchParams(ranExperimentsValue));
 };
 
 export const hasExperimentRun = (req: Request, experimentId: string) => {
@@ -41,7 +40,7 @@ export const setExperimentRan = (
     const { [experimentId]: omit, ...otherExperiments } = ranExperiments;
     newExperiments = otherExperiments;
   }
-  const newValue = stringify(newExperiments);
+  const newValue = new URLSearchParams(newExperiments).toString();
   res.cookie(RAN_EXPERIMENTS_COOKIE_NAME, newValue, {
     httpOnly: true,
     maxAge: ms('1yr'),

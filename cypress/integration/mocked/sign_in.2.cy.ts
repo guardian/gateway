@@ -1,5 +1,3 @@
-import { stringify } from 'query-string';
-
 import { injectAndCheckAxe } from '../../support/cypress-axe';
 import { allConsents, CONSENTS_ENDPOINT } from '../../support/idapi/consent';
 import {
@@ -259,7 +257,9 @@ describe('Sign in flow', () => {
     it('unless experiment already viewed', () => {
       cy.setCookie(
         'GU_ran_experiments',
-        stringify({ OptInPromptPostSignIn: Date.now() }),
+        new URLSearchParams({
+          OptInPromptPostSignIn: Date.now().toString(),
+        }).toString(),
       );
       signIn();
       cy.url().should('include', defaultReturnUrl);
