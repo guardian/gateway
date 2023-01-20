@@ -25,13 +25,12 @@ When a browser makes a request to gateway, routes must render an output, this go
 
 ## Routing
 
-Due to SSR, routing is a bit complicated than simply using client-side routing. We do routing through a combination of Express.js and React Router.
+Due to SSR, routing is a bit complicated than simply using client-side routing. We do routing through a combination of Express.js and a routes file in React.
 
-To make it easier to keep track of routes/paths, we define then in a `Routes` types in the [shared/model/Routes.ts](../src/shared/model/Routes.ts) file. The type is then consumed by both Express and React Router so we can share the paths between them.
+To make it easier to keep track of routes/paths, we define then in a `Routes` types in the [shared/model/Routes.ts](../src/shared/model/Routes.ts) file. The type is then consumed by both Express and client-side React so we can share the paths between them. This enforces type safety when added new routes. To add a new route you need to add another entry in the [`RoutePaths`](../src/shared/model/Routes.ts) type.
 
-Firstly, for rendering routes on the client, we use React Router's [`StaticRouter`](https://reacttraining.com/react-router/web/api/StaticRouter) in our [server renderer](../src/server/lib/renderer.tsx) file, this sets up router which location does not change once rendered (no client-side routing). We add client side routes in the client [routes.tsx](../src/client/routes.tsx) file, which react router looks at to determine what to render for that particular path.
+Firstly, for rendering routes on the client, we add client side routes in the client [routes.tsx](../src/client/routes.tsx) file, which React uses to determine which component to render for that particular path. The `<GatewayRoutes>` component inside `<App>` component and consumes the current path (`location` prop) and renders the appropriate component for that route.
 
-We also use typed route paths. This enforces type safety when added new routes. To add a new route you need to add another entry in the [`RoutePaths`](../src/shared/model/Routes.ts) type.
 In the client [routes.tsx](../src/client/routes.tsx), there is a `routes` array, which contains all the routes than can be rendered on the client, this array takes the `path` property to be of type [`RoutePaths`](../src/shared/model/Routes.ts) and therefore only accepts strings that are part of the `RoutePaths` type, and the `element` property which is the `ReactElement` to render on that path. You can add a new route to the client by adding to the array.
 
 Here's an example of the `routes` array, with a path and element it will render inside that route:
