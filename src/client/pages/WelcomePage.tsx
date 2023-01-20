@@ -8,7 +8,13 @@ import { logger } from '@/client/lib/clientSideLogger';
 export const WelcomePage = () => {
   const clientState = useClientState();
   const {
-    pageData: { email, fieldErrors = [], timeUntilTokenExpiry, token } = {},
+    pageData: {
+      email,
+      fieldErrors = [],
+      timeUntilTokenExpiry,
+      token,
+      browserName,
+    } = {},
     queryParams,
   } = clientState;
   const { clientId } = queryParams;
@@ -45,6 +51,7 @@ export const WelcomePage = () => {
       email={email}
       fieldErrors={fieldErrors}
       isJobs={isJobs}
+      browserName={browserName}
     />
   );
 };

@@ -21,6 +21,7 @@ type Props = {
   fieldErrors: FieldError[];
   passwordSet?: boolean;
   isJobs?: boolean;
+  browserName?: string;
 };
 
 const linkButton = css`
@@ -47,6 +48,7 @@ export const Welcome = ({
   fieldErrors,
   passwordSet = false,
   isJobs = false,
+  browserName,
 }: Props) => {
   const autoRow = getAutoRow(1, passwordFormSpanDef);
   const {
@@ -92,6 +94,7 @@ export const Welcome = ({
           autoComplete="new-password"
           formTrackingName="welcome"
           onInvalid={() => setFormSubmitAttempted(true)}
+          browserName={browserName}
         >
           {isJobs && <NameInputField onGroupError={setGroupError} />}
         </PasswordForm>

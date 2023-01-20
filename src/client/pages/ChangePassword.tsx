@@ -11,6 +11,7 @@ type Props = {
   email: string;
   fieldErrors: FieldError[];
   formError?: string;
+  browserName?: string;
 };
 
 export const ChangePassword = ({
@@ -20,6 +21,7 @@ export const ChangePassword = ({
   email,
   fieldErrors,
   formError,
+  browserName,
 }: Props) => (
   <MainLayout pageHeader={headerText}>
     <MainBodyText>
@@ -33,6 +35,7 @@ export const ChangePassword = ({
       autoComplete="new-password"
       formTrackingName="new-password"
       formError={formError}
+      browserName={browserName}
     />
   </MainLayout>
 );

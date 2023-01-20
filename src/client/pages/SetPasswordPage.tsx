@@ -14,6 +14,7 @@ export const SetPasswordPage = () => {
       timeUntilTokenExpiry,
       formError,
       token,
+      browserName,
     } = {},
     queryParams,
   } = clientState;
@@ -51,6 +52,7 @@ export const SetPasswordPage = () => {
       email={email}
       fieldErrors={fieldErrors}
       formError={formError}
+      browserName={browserName}
     />
   );
 };
