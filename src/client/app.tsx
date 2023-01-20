@@ -9,7 +9,11 @@ import { GatewayRoutes } from './routes';
 import { tests } from '@/shared/model/experiments/abTests';
 import { useAB } from '@guardian/ab-react';
 
-export const App = (props: ClientState) => {
+interface Props extends ClientState {
+  location: string;
+}
+
+export const App = (props: Props) => {
   // initialise the AB Test Framework:
   // load the AB Hook
   const ABTestAPI = useAB();
@@ -57,7 +61,7 @@ export const App = (props: ClientState) => {
         `}
       />
       <ClientStateProvider clientState={props}>
-        <GatewayRoutes />
+        <GatewayRoutes location={props.location} />
       </ClientStateProvider>
     </>
   );

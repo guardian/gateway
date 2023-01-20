@@ -1,7 +1,6 @@
 import { ClientState } from '@/shared/model/ClientState';
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
-import { StaticRouter } from 'react-router-dom/server';
 import { App } from '@/client/app';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { RoutingConfig } from '@/client/routes';
@@ -11,7 +10,7 @@ import { CaptchaErrors, CsrfErrors } from '@/shared/model/Errors';
 import { ABProvider } from '@guardian/ab-react';
 import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
-import { buildUrlWithQueryParams, PathParams } from '@/shared/lib/routeUtils';
+import { buildUrl, PathParams } from '@/shared/lib/routeUtils';
 import { brandBackground, resets } from '@guardian/source-foundations';
 import deepmerge from 'deepmerge';
 import { RoutePaths } from '@/shared/model/Routes';
@@ -113,11 +112,7 @@ export const renderer: <P extends RoutePaths>(
 ) => string = (url, { requestState, pageTitle }, tokenisationParams) => {
   const clientState = clientStateFromRequestStateLocals(requestState);
 
-  const location = buildUrlWithQueryParams(
-    url,
-    tokenisationParams,
-    requestState.queryParams,
-  );
+  const location = buildUrl(url, tokenisationParams);
 
   const { abTesting: { mvtId = 0, forcedTestVariants = {} } = {} } =
     clientState;
@@ -132,9 +127,7 @@ export const renderer: <P extends RoutePaths>(
       mvtId={mvtId}
       forcedTestVariants={forcedTestVariants}
     >
-      <StaticRouter location={location}>
-        <App {...clientState}></App>
-      </StaticRouter>
+      <App {...clientState} location={location}></App>
     </ABProvider>,
   );
 

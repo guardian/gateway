@@ -78,6 +78,7 @@ const checkTokenInIDAPI = async (
         browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
         email,
         timeUntilTokenExpiry,
+        token,
       },
     });
 
@@ -198,6 +199,7 @@ export const checkTokenInOkta = async (
             email,
             fieldErrors,
             formError: error,
+            token,
           },
         }),
       },
