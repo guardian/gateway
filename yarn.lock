@@ -2816,10 +2816,10 @@
     "@typescript-eslint/eslint-plugin" "5.45.0"
     "@typescript-eslint/parser" "5.45.0"
 
-"@guardian/libs@^11.1.2":
-  version "11.1.2"
-  resolved "https://registry.yarnpkg.com/@guardian/libs/-/libs-11.1.2.tgz#accd1e79cccb712c12ee34951de9c86814fa7d66"
-  integrity sha512-xO5j2A4qqwhH4q+oP7fkNtkn+2/8mkRoJKy7luCM0zI7+qOyK0WjWDMFAuKEhakmh/sw6EP9FnyssgdNz+06QA==
+"@guardian/libs@^12.0.0":
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/@guardian/libs/-/libs-12.0.0.tgz#cb9f78d2d0c04a5afc46d2efaa540d95dccb49f9"
+  integrity sha512-Xjg/GC11x/YhereuwAZt8yKhWafJ49ak7kZJFE5nIc7MlPLAwr5xv+83vFKvYiqbHSnq4P/OHXA2Da9RkEIgsw==
 
 "@guardian/node-riffraff-artifact@^0.3.2":
   version "0.3.2"
