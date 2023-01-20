@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 
 export const removeEncryptedParam = (search: string) => {
   const qs = new URLSearchParams(search);
@@ -8,11 +7,11 @@ export const removeEncryptedParam = (search: string) => {
 };
 
 export const useRemoveEncryptedEmailParam = () => {
-  const { pathname, search } = useLocation();
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      const { pathname, search } = window.location;
       const qs = removeEncryptedParam(search);
       window.history.replaceState(null, '', `${pathname}?${qs}`);
     }
-  }, [pathname, search]);
+  }, []);
 };
