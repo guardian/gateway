@@ -477,7 +477,7 @@ It's also used as [the Guardian Source Design System](https://theguardian.design
 Example of styling and adding it to a `p` tag using Emotion and Source:
 
 ```tsx
-import * as React from 'react';
+import React from 'react';
 import { css } from '@emotion/react';
 import { textSans, neutral } from '@guardian/source-foundations';
 

@@ -1,14 +1,18 @@
-import * as AWS from 'aws-sdk';
+import {
+  ConfigurationOptions,
+  CredentialProviderChain,
+  SharedIniFileCredentials,
+} from 'aws-sdk';
 
 const AWS_REGION = 'eu-west-1';
 const PROFILE = 'identity';
 
-const CREDENTIAL_PROVIDER = new AWS.CredentialProviderChain([
-  () => new AWS.SharedIniFileCredentials({ profile: PROFILE }),
-  ...AWS.CredentialProviderChain.defaultProviders,
+const CREDENTIAL_PROVIDER = new CredentialProviderChain([
+  () => new SharedIniFileCredentials({ profile: PROFILE }),
+  ...CredentialProviderChain.defaultProviders,
 ]);
 
-export const awsConfig: AWS.ConfigurationOptions = {
+export const awsConfig: ConfigurationOptions = {
   region: AWS_REGION,
   credentialProvider: CREDENTIAL_PROVIDER,
   maxRetries: 0,
