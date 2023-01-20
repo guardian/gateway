@@ -60,9 +60,8 @@ export const ConsentCardOnboarding: FunctionComponent<
     <article css={[containerStyles, cssOverrides]}>
       <p css={[text]}>
         As a benefit of creating an account, you&apos;ll receive Saturday
-        Roundup, an exclusive newsletter free for four weeks, featuring
-        highlights of the last week from the Guardian and ways to support our
-        journalism.
+        Roundup for four weeks, an exclusive newsletter featuring highlights of
+        the last week from the Guardian and ways to support our journalism.
       </p>
       <fieldset css={[switchRow, greyBorderTop]}>
         {/* Hidden input required to capture unsubscribe events */}
