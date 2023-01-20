@@ -1,6 +1,5 @@
 import { default as express, Router, Response } from 'express';
 import path from 'path';
-import ms from 'ms';
 
 const router = Router();
 
@@ -12,7 +11,7 @@ router.use(
   '/gateway-static',
   express.static(path.resolve(__dirname, 'static'), {
     cacheControl: true,
-    maxAge: ms('1y'),
+    maxAge: 31536000000, // 1 year in milliseconds
   }),
 );
 
@@ -20,9 +19,7 @@ router.use(
   '/.well-known',
   express.static(path.resolve(__dirname, '.well-known'), {
     cacheControl: true,
-    // setting to 30 mins for development, so we don't have to invalidate
-    // the cache on every update to a .well-known file
-    maxAge: ms('30m'),
+    maxAge: 2592000000, // 30 days in milliseconds
   }),
 );
 

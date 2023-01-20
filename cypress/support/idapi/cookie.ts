@@ -1,5 +1,3 @@
-import ms from 'ms';
-
 export const authCookieResponse = {
   cookies: {
     values: [
@@ -17,7 +15,7 @@ export const authCookieResponse = {
         value: 'FAKE_SC_GU_U',
       },
     ],
-    expiresAt: ms('30d') * 1000,
+    expiresAt: 2592000, // 30 days in seconds
   },
 };
 

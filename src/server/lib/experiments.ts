@@ -1,6 +1,5 @@
 import { Request } from 'express';
 import { parse, stringify } from 'query-string';
-import ms from 'ms';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 
 import { ResponseWithRequestState } from '@/server/models/Express';
@@ -44,7 +43,7 @@ export const setExperimentRan = (
   const newValue = stringify(newExperiments);
   res.cookie(RAN_EXPERIMENTS_COOKIE_NAME, newValue, {
     httpOnly: true,
-    maxAge: ms('1yr'),
+    maxAge: 31536000000, // 1 year in milliseconds
     sameSite: 'strict',
     secure: isHttps,
   });
