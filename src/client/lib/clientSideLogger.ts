@@ -1,7 +1,11 @@
 import { BaseLogger, ExtraLogFields } from '@/shared/lib/baseLogger';
 import { LogLevel } from '@/shared/model/Logger';
-import * as Sentry from '@sentry/browser';
-import { SeverityLevel } from '@sentry/browser';
+import {
+  captureException,
+  captureMessage,
+  startTransaction,
+  SeverityLevel,
+} from '@sentry/browser';
 
 const getSentryLevel = (level: LogLevel): SeverityLevel => {
   switch (level) {
@@ -21,7 +25,7 @@ class ClientSideLogger extends BaseLogger {
   log(level: LogLevel, message: string, error?: any, extra?: ExtraLogFields) {
     // Wrap the log in a new Sentry transaction.
     // Setting `sampled` to true ensures that it is logged every time.
-    const transaction = Sentry.startTransaction({
+    const transaction = startTransaction({
       name: 'logger-event',
       sampled: true,
     });
@@ -33,12 +37,12 @@ class ClientSideLogger extends BaseLogger {
       error.stack &&
       typeof error.message === 'string'
     ) {
-      Sentry.captureException(error, { extra });
+      captureException(error, { extra });
       return transaction?.finish();
     }
 
     if (error) {
-      Sentry.captureMessage(`${message} - ${error}`, {
+      captureMessage(`${message} - ${error}`, {
         level: getSentryLevel(level),
         extra,
       });
@@ -46,7 +50,7 @@ class ClientSideLogger extends BaseLogger {
     }
 
     // should it be needed, `extra` is a free-form object that we can use to add additional debug info to Sentry logs.
-    Sentry.captureMessage(message, { level: getSentryLevel(level), extra });
+    captureMessage(message, { level: getSentryLevel(level), extra });
     return transaction?.finish();
   }
 

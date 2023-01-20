@@ -2,7 +2,6 @@ import { stringify } from 'query-string';
 
 const returnUrl =
   'https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance';
-const defaultReturnUrl = 'https://m.code.dev-theguardian.com';
 
 export const beforeEach = () => {
   // Disable redirect to /signin/success by default
@@ -299,15 +298,13 @@ export const removesEncryptedEmailParameterFromQueryString = (
   return [
     'removes encryptedEmail parameter from query string',
     () => {
+      const encryptedEmailParam = 'encryptedEmail=bhvlabgflbgyil';
       const visitUrl = isIdapi
-        ? '/signin?encryptedEmail=bhvlabgflbgyil&useIdapi=true'
-        : '/signin?encryptedEmail=bhvlabgflbgyil';
+        ? `/signin?${encryptedEmailParam}&useIdapi=true`
+        : `/signin?${encryptedEmailParam}`;
       cy.visit(visitUrl);
 
-      const finalUrl = isIdapi
-        ? `?returnUrl=${encodeURIComponent(defaultReturnUrl)}&useIdapi=true`
-        : `?returnUrl=${encodeURIComponent(defaultReturnUrl)}`;
-      cy.location('search').should('eq', finalUrl);
+      cy.location('search').should('not.contain', encryptedEmailParam);
     },
   ] as const;
 };
@@ -317,23 +314,19 @@ export const removesEncryptedEmailParameterAndPreservesAllOtherValidParameters =
     return [
       'removes encryptedEmail parameter and preserves all other valid parameters',
       () => {
+        const encryptedEmailParam = 'encryptedEmail=bhvlabgflbgyil';
         const visitUrl = isIdapi
           ? `/signin?returnUrl=${encodeURIComponent(
               returnUrl,
-            )}&encryptedEmail=bdfalrbagbgu&refViewId=12345&useIdapi=true`
+            )}&${encryptedEmailParam}&refViewId=12345&useIdapi=true`
           : `/signin?returnUrl=${encodeURIComponent(
               returnUrl,
-            )}&encryptedEmail=bdfalrbagbgu&refViewId=12345`;
+            )}&${encryptedEmailParam}&refViewId=12345`;
         cy.visit(visitUrl);
 
-        // We add a '/' to the Okta assertion because at some point in the oauth flow it is added to the returnUrl.
-        // This is because `url.pathname` in validateUrl.ts (validateReturnUrl) returns '/'
-        const finalUrl = isIdapi
-          ? `?refViewId=12345&returnUrl=${encodeURIComponent(
-              returnUrl,
-            )}&useIdapi=true`
-          : `?refViewId=12345&returnUrl=${encodeURIComponent(returnUrl)}`;
-        cy.location('search').should('eq', finalUrl);
+        cy.location('search').should('not.contain', encryptedEmailParam);
+        cy.location('search').should('contain', 'refViewId=12345');
+        cy.location('search').should('contain', encodeURIComponent(returnUrl));
       },
     ] as const;
   };

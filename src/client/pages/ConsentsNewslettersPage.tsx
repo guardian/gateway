@@ -5,6 +5,7 @@ import { ConsentsNewsletters } from '@/client/pages/ConsentsNewsletters';
 import { ConsentsNewslettersAB } from '@/client/pages/ConsentsNewslettersAB';
 import { useAB } from '@guardian/ab-react';
 import { abDefaultWeeklyNewsletterTest } from '@/shared/model/experiments/tests/abDefaultWeeklyNewsletterTest';
+import { Newsletters } from '@/shared/model/Newsletter';
 
 export const ConsentsNewslettersPage = () => {
   const clientState = useClientState();
@@ -21,6 +22,11 @@ export const ConsentsNewslettersPage = () => {
   ];
 
   // @AB_TEST: Default Weekly Newsletter Test: START
+  const filteredConsents = consents.filter(
+    (consentType) =>
+      consentType.consent?.id !== Newsletters.SATURDAY_ROUNDUP_TRIAL,
+  );
+
   const ABTestAPI = useAB();
   const isInABTestVariant = ABTestAPI.isUserInVariant(
     abDefaultWeeklyNewsletterTest.id,
@@ -34,13 +40,13 @@ export const ConsentsNewslettersPage = () => {
   if (isInABTestVariant && hasCmpConsent && isInRegion) {
     return (
       <ConsentsNewslettersAB
-        consents={consents}
-        defaultOnboardingEmailId={'6028'}
+        consents={filteredConsents}
+        defaultOnboardingEmailId={Newsletters.SATURDAY_ROUNDUP_TRIAL}
         defaultOnboardingEmailConsentState={true}
       />
     );
   }
   // @AB_TEST: Default Weekly Newsletter Test: END
 
-  return <ConsentsNewsletters consents={consents} />;
+  return <ConsentsNewsletters consents={filteredConsents} />; // @AB_TEST: filtering out the Default Weekly Newsletter
 };

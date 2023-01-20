@@ -8,9 +8,13 @@ const nodeExternals = require('webpack-node-externals');
 const Dotenv = require('dotenv-webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const webpack = require('webpack');
 
 const mode =
   process.env.ENVIRONMENT === 'production' ? 'production' : 'development';
+  
+const analyzeBundle = process.env.WEBPACK_ANALYZE_BUNDLE === 'true';
 
 const extensions = ['.ts', '.tsx', '.js'];
 
@@ -168,6 +172,26 @@ const browser = ({ isLegacy }) => {
   ];
 
   const filename = `[name]${isLegacy ? '.legacy' : ''}.[chunkhash].js`;
+  
+  const plugins = [
+    new AssetsPlugin({
+      path: path.resolve(__dirname, 'build'),
+      filename: `${isLegacy ? 'legacy.' : ''}webpack-assets.json`,
+    }),
+    // Reduce Sentry bundle size
+    new webpack.DefinePlugin({
+      __SENTRY_DEBUG__: false,
+      __SENTRY_TRACING__: false,
+    }),
+  ]
+  
+  if (analyzeBundle) {
+    plugins.push(new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      openAnalyzer: true,
+      reportFilename: `../webpack-report-${isLegacy ? 'legacy' : 'modern'}.html`
+    }));
+  }
 
   return {
     entry,
@@ -243,12 +267,7 @@ const browser = ({ isLegacy }) => {
       path: path.resolve(__dirname, 'build/static/'),
       publicPath: 'gateway-static/',
     },
-    plugins: [
-      new AssetsPlugin({
-        path: path.resolve(__dirname, 'build'),
-        filename: `${isLegacy ? 'legacy.' : ''}webpack-assets.json`,
-      }),
-    ],
+    plugins,
     target,
     performance: {
       maxEntrypointSize: isLegacy ? 768000 : 512000,

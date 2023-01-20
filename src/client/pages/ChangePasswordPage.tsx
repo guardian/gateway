@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { ChangePassword } from '@/client/pages/ChangePassword';
 import { buildUrl, buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
@@ -13,10 +12,10 @@ export const ChangePasswordPage = () => {
       fieldErrors = [],
       timeUntilTokenExpiry,
       formError,
+      token,
     } = {},
     queryParams,
   } = clientState;
-  const { token } = useParams();
 
   useEffect(() => {
     // we only want this to run in the browser as window is not

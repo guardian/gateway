@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import useClientState from '@/client/lib/hooks/useClientState';
 
 import { Welcome } from '@/client/pages/Welcome';
@@ -9,12 +8,11 @@ import { logger } from '@/client/lib/clientSideLogger';
 export const WelcomePage = () => {
   const clientState = useClientState();
   const {
-    pageData: { email, fieldErrors = [], timeUntilTokenExpiry } = {},
+    pageData: { email, fieldErrors = [], timeUntilTokenExpiry, token } = {},
     queryParams,
   } = clientState;
   const { clientId } = queryParams;
   const isJobs = clientId === 'jobs';
-  const { token } = useParams();
 
   useEffect(() => {
     // we only want this to run in the browser as window is not

@@ -53,6 +53,7 @@ const changePasswordInIDAPI = async (
   requestState = mergeRequestState(requestState, {
     pageData: {
       browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
+      token,
     },
   });
 

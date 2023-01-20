@@ -1,14 +1,21 @@
 import React from 'react';
 import { record } from '@/client/lib/ophan';
 import { ABProvider } from '@guardian/ab-react';
-import { StaticRouter } from 'react-router-dom/server';
 import { hydrate } from 'react-dom';
 import { RoutingConfig } from '@/client/routes';
 import { App } from '@/client/app';
 import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
-import * as Sentry from '@sentry/browser';
-import { Integrations } from '@sentry/tracing';
+import {
+  BrowserClient,
+  Breadcrumbs,
+  Dedupe,
+  defaultStackParser,
+  getCurrentHub,
+  GlobalHandlers,
+  makeFetchTransport,
+  HttpContext,
+} from '@sentry/browser';
 
 type Props = {
   routingConfig: RoutingConfig;
@@ -23,16 +30,25 @@ export const hydrateApp = ({ routingConfig }: Props) => {
   } = clientState;
 
   if (dsn) {
-    Sentry.init({
+    const client = new BrowserClient({
       dsn,
-      integrations: [new Integrations.BrowserTracing()],
       environment: stage,
       release: `gateway@${build}`,
       // If you want to log something all the time, wrap your call to
       // Sentry in a new Transaction and set `sampled` to true.
       // An example of this is in clientSideLogger.ts
       sampleRate: 0.2,
+      transport: makeFetchTransport,
+      stackParser: defaultStackParser,
+      integrations: [
+        new Breadcrumbs(),
+        new GlobalHandlers(),
+        new Dedupe(),
+        new HttpContext(),
+      ],
     });
+
+    getCurrentHub().bindClient(client);
   }
 
   hydrate(
@@ -45,9 +61,7 @@ export const hydrateApp = ({ routingConfig }: Props) => {
       ophanRecord={record}
       forcedTestVariants={forcedTestVariants}
     >
-      <StaticRouter location={`${routingConfig.location}`}>
-        <App {...clientState} />
-      </StaticRouter>
+      <App {...clientState} location={`${routingConfig.location}`} />
     </ABProvider>,
     document.getElementById('app'),
   );

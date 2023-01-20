@@ -1,7 +1,6 @@
-import * as AWS from 'aws-sdk';
+import { AWSError, CloudWatch } from 'aws-sdk';
 import { Metrics } from '@/server/models/Metrics';
 import { logger } from '@/server/lib/serverSideLogger';
-import { AWSError } from 'aws-sdk';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { awsConfig } from '@/server/lib/awsConfig';
 
@@ -11,7 +10,7 @@ interface MetricDimensions {
   [name: string]: string;
 }
 
-const CloudWatch = new AWS.CloudWatch(awsConfig);
+const cloudwatch = new CloudWatch(awsConfig);
 
 const defaultDimensions = {
   Stage,
@@ -35,20 +34,21 @@ export const trackMetric = (
     ...dimensions,
   };
 
-  CloudWatch.putMetricData({
-    Namespace: 'Gateway',
-    MetricData: [
-      {
-        MetricName: metricName,
-        Dimensions: Object.entries(mergedDimensions).map(([Name, Value]) => ({
-          Name,
-          Value,
-        })),
-        Value: 1,
-        Unit: 'Count',
-      },
-    ],
-  })
+  cloudwatch
+    .putMetricData({
+      Namespace: 'Gateway',
+      MetricData: [
+        {
+          MetricName: metricName,
+          Dimensions: Object.entries(mergedDimensions).map(([Name, Value]) => ({
+            Name,
+            Value,
+          })),
+          Value: 1,
+          Unit: 'Count',
+        },
+      ],
+    })
     .promise()
     .catch((error: AWSError) => {
       if (error.code.includes('ExpiredToken') && Stage === 'DEV') {
