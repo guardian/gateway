@@ -16,7 +16,7 @@ export const getABTesting = (
 
   const runnableTests = abTestAPI.allRunnableTests(tests);
 
-  const participations = runnableTests.map((test: Runnable) => {
+  const participations = runnableTests.map((test: Runnable<ABTest>) => {
     return [
       test.id,
       {
