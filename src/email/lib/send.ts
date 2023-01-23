@@ -52,7 +52,7 @@ export const send = async ({
     Destination: {
       ToAddresses: [to],
     },
-    FromEmailAddress: 'registration-reply@theguardian.com',
+    FromEmailAddress: 'The Guardian <registration-reply@theguardian.com>',
   };
 
   const result = await ses.sendEmail(params).promise();
