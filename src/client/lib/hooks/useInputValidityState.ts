@@ -1,5 +1,16 @@
 import { useCallback, useState } from 'react';
 
+const isInputInvalid = (validityState: ValidityState) =>
+  validityState.customError ||
+  validityState.badInput ||
+  validityState.patternMismatch ||
+  validityState.rangeOverflow ||
+  validityState.rangeUnderflow ||
+  validityState.tooLong ||
+  validityState.tooShort ||
+  validityState.stepMismatch ||
+  validityState.typeMismatch;
+
 export enum InputFieldState {
   VALID = 'valid',
   EMPTY = 'empty',
@@ -20,16 +31,7 @@ export const useInputValidityState = (
   // Transition error message state based upon the
   // HTML ValidityState object returned from the input.
   const transitionState = useCallback((validityState: ValidityState) => {
-    const inputIsInvalid =
-      validityState.customError ||
-      validityState.badInput ||
-      validityState.patternMismatch ||
-      validityState.rangeOverflow ||
-      validityState.rangeUnderflow ||
-      validityState.tooLong ||
-      validityState.tooShort ||
-      validityState.stepMismatch ||
-      validityState.typeMismatch;
+    const inputIsInvalid = isInputInvalid(validityState);
 
     const inputIsEmpty = validityState.valueMissing;
 
@@ -44,28 +46,20 @@ export const useInputValidityState = (
 
   const onBlur = useCallback<React.FocusEventHandler<HTMLInputElement>>(
     (e) => {
-      // Transition error state when the input box loses focus.
-      transitionState(e.target.validity);
+      // Transition error state when the input box loses focus,
+      // but only if the input is not empty.
+      if (e.target.value !== '') {
+        transitionState(e.target.validity);
+      }
     },
     [transitionState],
   );
 
   const onInput = useCallback<React.FormEventHandler<HTMLInputElement>>(
     (e) => {
-      // We check the `composed` variable to see if the event originated from user input.
-      // This is so that we can run validation when users submit values through a password manager.
-      // Composed is not supported in IE11, so we check to see if it's undefined first.
-      const notOriginatingFromUserInput =
-        e.nativeEvent.composed !== undefined && !e.nativeEvent.composed;
-
-      // We also validate the field when filled via an autocomplete action in the browser.
-      // We can tell when this happens because the `data` property will be undefined.
-      // Usually from a keystroke, `data` would contain the value.
-      const originatingFromAutoComplete =
-        e.nativeEvent.composed !== undefined &&
-        (e.nativeEvent as Event & { data?: string })?.data === undefined;
-
-      if (notOriginatingFromUserInput || originatingFromAutoComplete) {
+      // transition the error state when the input box is updated,
+      // but only if the input is valid.
+      if (!isInputInvalid(e.currentTarget.validity)) {
         e.currentTarget.checkValidity();
         transitionState(e.currentTarget.validity);
       }
