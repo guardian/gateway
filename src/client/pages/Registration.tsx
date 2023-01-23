@@ -63,7 +63,7 @@ export const Registration = ({
         disableOnSubmit
         formErrorMessageFromParent={formError}
       >
-        <EmailInput defaultValue={email} />
+        <EmailInput defaultValue={email} autoComplete="off" />
         <CmpConsentedStateHiddenInput cmpConsentedState={hasCmpConsent} />
       </MainForm>
     </MainLayout>
