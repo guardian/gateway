@@ -20,9 +20,8 @@ const setup = () => {
 
 test('errors with nothing submitted', async () => {
   const { emailInput, queryByText } = setup();
-  // Input text and blur to trigger error
-  fireEvent.change(emailInput, { target: { value: '' } });
-  fireEvent.blur(emailInput);
+  // Input empty text to trigger error
+  fireEvent.input(emailInput, { target: { value: '' } });
   expect(emailInput.value).toEqual('');
 
   // Check error message
