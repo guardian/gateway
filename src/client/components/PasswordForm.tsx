@@ -19,8 +19,6 @@ import {
 } from '@guardian/source-foundations';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { css } from '@emotion/react';
-
-import sha1 from 'js-sha1';
 import {
   PasswordAutoComplete,
   PasswordInput,
@@ -51,6 +49,7 @@ type Props = {
   formTrackingName?: string;
   onInvalid?: React.FormEventHandler<HTMLFormElement> | undefined;
   formError?: string;
+  browserName?: string;
 };
 
 const feedbackMessageStyles = css`
@@ -217,12 +216,35 @@ const ValidationMessage = ({
   }
 };
 
+const cryptoSubtleFeatureTest = (browserName?: string): boolean => {
+  try {
+    return (
+      browserName?.toLowerCase() !== 'internet explorer' &&
+      typeof window !== 'undefined' &&
+      'crypto' in window &&
+      'subtle' in window.crypto &&
+      'digest' in window.crypto.subtle
+    );
+  } catch (e) {
+    logger.error('Error testing for crypto.subtle support', e);
+    return false;
+  }
+};
+
+const sha1 = async (str: string): Promise<string> => {
+  const buffer = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest('SHA-1', buffer);
+  return Array.from(new Uint8Array(hash))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+};
+
 const isBreached = AwesomeDebouncePromise(
   async (password: string): Promise<boolean> => {
     try {
-      const hashedPassword = sha1(password);
-      const firstFive = hashedPassword.substr(0, 5);
-      const remainingHash = hashedPassword.substr(5, hashedPassword.length);
+      const hashedPassword = await sha1(password);
+      const firstFive = hashedPassword.substring(0, 5);
+      const remainingHash = hashedPassword.substring(5);
 
       const response = await fetch(
         `https://api.pwnedpasswords.com/range/${firstFive}`,
@@ -261,6 +283,7 @@ export const PasswordForm = ({
   formTrackingName,
   onInvalid,
   children,
+  browserName,
 }: PropsWithChildren<Props>) => {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | undefined>(
@@ -281,21 +304,28 @@ export const PasswordForm = ({
     if (password.length >= 8 && password.length <= 72) {
       // Only make api calls to check if breached when length rules are not broken
       setIsChecking(true);
-      isBreached(password).then((breached) => {
-        if (breached) {
-          // Password is breached ❌
-          setIsWeak(true);
-        } else {
-          // Password is valid ✔
-          setIsWeak(false);
-        }
+      if (cryptoSubtleFeatureTest(browserName)) {
+        isBreached(password).then((breached) => {
+          if (breached) {
+            // Password is breached ❌
+            setIsWeak(true);
+          } else {
+            // Password is valid ✔
+            setIsWeak(false);
+          }
+          setIsChecking(false);
+        });
+      } else {
+        // Assume password is valid if crypto.subtle is not supported
+        // will be checked on the server side anyway for breached passwords
+        setIsWeak(false);
         setIsChecking(false);
-      });
+      }
     } else {
       // Password is not an acceptable length ❌
       setIsWeak(false);
     }
-  }, [password]);
+  }, [browserName, password]);
 
   return (
     <form
@@ -379,6 +409,7 @@ export const PasswordFormMainLayout = ({
   autoComplete,
   formTrackingName,
   formError,
+  browserName,
 }: Props) => {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | undefined>(
@@ -398,21 +429,28 @@ export const PasswordFormMainLayout = ({
     if (password.length >= 8 && password.length <= 72) {
       // Only make api calls to check if breached when length rules are not broken
       setIsChecking(true);
-      isBreached(password).then((breached) => {
-        if (breached) {
-          // Password is breached ❌
-          setIsWeak(true);
-        } else {
-          // Password is valid ✔
-          setIsWeak(false);
-        }
+      if (cryptoSubtleFeatureTest(browserName)) {
+        isBreached(password).then((breached) => {
+          if (breached) {
+            // Password is breached ❌
+            setIsWeak(true);
+          } else {
+            // Password is valid ✔
+            setIsWeak(false);
+          }
+          setIsChecking(false);
+        });
+      } else {
+        // Assume password is valid if crypto.subtle is not supported
+        // will be checked on the server side anyway for breached passwords
+        setIsWeak(false);
         setIsChecking(false);
-      });
+      }
     } else {
       // Password is not an acceptable length ❌
       setIsWeak(false);
     }
-  }, [password]);
+  }, [browserName, password]);
 
   return (
     <MainForm
