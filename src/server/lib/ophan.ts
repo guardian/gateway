@@ -1,6 +1,5 @@
 import { OphanEvent, OphanInteraction } from '@/shared/model/ophan';
 import { logger } from '@/server/lib/serverSideLogger';
-import { stringify, parse } from 'query-string';
 import { z } from 'zod';
 import {
   OphanAction,
@@ -10,6 +9,7 @@ import {
 } from '@guardian/libs';
 import serialize from 'serialize-javascript';
 import { timeoutSignal } from './timeoutSignal';
+import { removeEmptyKeysFromObjectAndConvertValuesToString } from '@/shared/lib/queryParams';
 
 const ophanUrl = 'https://ophan.theguardian.com/img/2';
 
@@ -50,7 +50,9 @@ export const parseComponentEventParams = async (
   request_id?: string,
 ): Promise<ComponentEventParams | undefined> => {
   try {
-    const parsedQuery = parse(componentEventParams.replaceAll('undefined', ''));
+    const parsedQuery = Object.fromEntries(
+      new URLSearchParams(componentEventParams.replaceAll('undefined', '')),
+    );
 
     const componentEventParamsParsed =
       await componentEventParamsSchema.safeParseAsync(parsedQuery);
@@ -141,22 +143,25 @@ const record = (
   const { bwid, consentUUID, viewId } = config;
 
   if (bwid && viewId) {
-    const query = stringify(
-      { viewId, ...event },
-      {
-        skipNull: true,
-        skipEmptyString: true,
-      },
+    const query = new URLSearchParams(
+      removeEmptyKeysFromObjectAndConvertValuesToString({
+        viewId,
+        ...event,
+      }),
     );
 
-    fetch(`${ophanUrl}?${query}`, {
+    const cookie = new URLSearchParams(
+      removeEmptyKeysFromObjectAndConvertValuesToString({
+        bwid,
+        consentUUID,
+      }),
+    );
+
+    fetch(`${ophanUrl}?${query.toString()}`, {
       method: 'GET',
       signal: timeoutSignal(250),
       headers: {
-        Cookie: stringify(
-          { bwid, consentUUID },
-          { skipNull: true, skipEmptyString: true },
-        ).replace('&', ';'),
+        Cookie: cookie.toString().replace('&', ';'),
       },
     }).catch((error) => {
       logger.warn(`Ophan: Failed to record Ophan event`, error, { request_id });

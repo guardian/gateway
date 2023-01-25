@@ -1,5 +1,3 @@
-import { stringify } from 'query-string';
-
 const returnUrl =
   'https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance';
 
@@ -7,7 +5,9 @@ export const beforeEach = () => {
   // Disable redirect to /signin/success by default
   cy.setCookie(
     'GU_ran_experiments',
-    stringify({ OptInPromptPostSignIn: Date.now() }),
+    new URLSearchParams({
+      OptInPromptPostSignIn: Date.now().toString(),
+    }).toString(),
   );
 };
 

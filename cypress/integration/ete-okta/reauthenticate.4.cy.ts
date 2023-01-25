@@ -1,11 +1,11 @@
-import { stringify } from 'query-string';
-
 describe('Reauthenticate flow, Okta enabled', () => {
   beforeEach(() => {
     // Disable redirect to /signin/success by default
     cy.setCookie(
       'GU_ran_experiments',
-      stringify({ OptInPromptPostSignIn: Date.now() }),
+      new URLSearchParams({
+        OptInPromptPostSignIn: Date.now().toString(),
+      }).toString(),
     );
   });
   it('keeps User A signed in when User A attempts to reauthenticate', () => {

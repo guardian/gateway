@@ -1,5 +1,3 @@
-import * as qs from 'query-string';
-
 class VerifyEmail {
   static URL = '/verify-email';
 
@@ -16,7 +14,7 @@ class VerifyEmail {
   };
 
   goto(token: string, { failOnStatusCode = true, query = {} } = {}) {
-    const querystring = qs.stringify(query);
+    const querystring = new URLSearchParams(query).toString();
 
     cy.visit(
       `${VerifyEmail.URL}${token ? `/${token}` : ''}${

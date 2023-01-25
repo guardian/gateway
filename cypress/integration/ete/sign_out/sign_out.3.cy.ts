@@ -1,5 +1,3 @@
-import { stringify } from 'query-string';
-
 describe('Sign out flow', () => {
   const DotComCookies = [
     'gu_user_features_expiry',
@@ -16,7 +14,9 @@ describe('Sign out flow', () => {
         // Disable redirect to /signin/success by default
         cy.setCookie(
           'GU_ran_experiments',
-          stringify({ OptInPromptPostSignIn: Date.now() }),
+          new URLSearchParams({
+            OptInPromptPostSignIn: Date.now().toString(),
+          }).toString(),
         );
         // load the consents page as its on the same domain
         const postSignInReturnUrl = `https://${Cypress.env(

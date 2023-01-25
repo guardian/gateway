@@ -1,5 +1,3 @@
-import * as qs from 'query-string';
-
 class Onboarding {
   static URL = '/consents';
 
@@ -31,7 +29,7 @@ class Onboarding {
   }
 
   static gotoFlowStart({ failOnStatusCode = true, query = {} } = {}) {
-    const querystring = qs.stringify(query);
+    const querystring = new URLSearchParams(query).toString();
 
     cy.visit(`${Onboarding.URL}${querystring ? `?${querystring}` : ''}`, {
       failOnStatusCode,

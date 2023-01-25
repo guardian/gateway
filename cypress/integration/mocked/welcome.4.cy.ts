@@ -9,7 +9,6 @@ import {
   verifiedUserWithNoConsent,
   USER_ENDPOINT,
 } from '../../support/idapi/user';
-import * as qs from 'query-string';
 import CommunicationsPage from '../../support/pages/onboarding/communications_page';
 
 describe('Welcome and set password page', () => {
@@ -142,7 +141,7 @@ describe('Welcome and set password page', () => {
       const returnUrl = encodeURIComponent(
         `https://www.theguardian.com/science/grrlscientist/2012/aug/07/3`,
       );
-      const query = qs.stringify({ returnUrl });
+      const query = new URLSearchParams({ returnUrl }).toString();
 
       cy.mockNext(200, checkTokenSuccessResponse());
       cy.intercept({
@@ -173,7 +172,7 @@ describe('Welcome and set password page', () => {
         `https://www.theguardian.com/science/grrlscientist/2012/aug/07/3`,
       );
       const clientId = 'jobs';
-      const query = qs.stringify({ returnUrl, clientId });
+      const query = new URLSearchParams({ returnUrl, clientId }).toString();
 
       cy.mockNext(200, checkTokenSuccessResponse());
       cy.intercept({

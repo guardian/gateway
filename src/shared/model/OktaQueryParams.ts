@@ -1,4 +1,4 @@
-import { StringifiableRecord } from 'query-string';
+import { StringifiableRecord } from './QueryParams';
 
 /**
  * OktaQueryParams are query parameters

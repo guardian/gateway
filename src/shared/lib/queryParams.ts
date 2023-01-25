@@ -1,10 +1,30 @@
-import { stringify } from 'query-string';
 import {
   QueryParams,
   PersistableQueryParams,
 } from '@/shared/model/QueryParams';
 import { IdApiQueryParams } from '../model/IdapiQueryParams';
 import { AllRoutes } from '../model/Routes';
+
+/**
+ * function to remove undefined, null, and empty string values from an object
+ * and covert the values to strings so they can be used in a query string using
+ * the URLSearchParams object
+ * @param obj Object to remove empty keys from
+ * @returns Object with empty keys removed and values converted to strings
+ */
+export const removeEmptyKeysFromObjectAndConvertValuesToString = (
+  obj: Record<string, unknown>,
+) => {
+  const newObj: Record<string, string> = {};
+  Object.keys(obj).forEach((key) => {
+    const asStr = obj[key]?.toString();
+    if (asStr) {
+      // eslint-disable-next-line functional/immutable-data
+      newObj[key] = asStr;
+    }
+  });
+  return newObj;
+};
 
 /**
  * @param params QueryParams object with all query parameters
@@ -74,14 +94,17 @@ export const addQueryParamsToUntypedPath = (
   overrides?: Partial<QueryParams>,
 ): string => {
   const divider = path.includes('?') ? '&' : '?';
-  const queryString = stringify(
-    { ...getPersistableQueryParams(params), ...overrides },
-    {
-      skipNull: true,
-      skipEmptyString: true,
-    },
+  const searchParams = new URLSearchParams(
+    removeEmptyKeysFromObjectAndConvertValuesToString({
+      ...getPersistableQueryParams(params),
+      ...overrides,
+    }),
   );
-  return `${path}${divider}${queryString}`;
+
+  // eslint-disable-next-line functional/immutable-data
+  searchParams.sort();
+
+  return `${path}${divider}${searchParams.toString()}`;
 };
 
 /**
@@ -100,14 +123,16 @@ export const addApiQueryParamsToPath = (
   overrides?: Partial<QueryParams>,
 ): string => {
   const divider = path.includes('?') ? '&' : '?';
-  const queryString = stringify(
-    { ...params, ...overrides },
-    {
-      skipNull: true,
-      skipEmptyString: true,
-    },
+  const searchParams = new URLSearchParams(
+    removeEmptyKeysFromObjectAndConvertValuesToString({
+      ...params,
+      ...overrides,
+    }),
   );
-  return `${path}${divider}${queryString}`;
+  // eslint-disable-next-line functional/immutable-data
+  searchParams.sort();
+
+  return `${path}${divider}${searchParams.toString()}`;
 };
 
 /**
@@ -115,7 +140,7 @@ export const addApiQueryParamsToPath = (
  * @param params QueryParams - any query params to be added to the path
  * @param overrides Any query parameter overrides
  * @returns string
- * buildQueryParamsString is for building a Gateway compatabile query string
+ * buildQueryParamsString is for building a Gateway compatible query string
  * These parameters are are filtered, so only allowed parameters can be added.
  */
 
@@ -123,12 +148,15 @@ export const buildQueryParamsString = (
   params: QueryParams,
   overrides?: Partial<QueryParams>,
 ): string => {
-  const queryString = stringify(
-    { ...getPersistableQueryParams(params), ...overrides },
-    {
-      skipNull: true,
-      skipEmptyString: true,
-    },
+  const searchParams = new URLSearchParams(
+    removeEmptyKeysFromObjectAndConvertValuesToString({
+      ...getPersistableQueryParams(params),
+      ...overrides,
+    }),
   );
-  return `?${queryString}`;
+
+  // eslint-disable-next-line functional/immutable-data
+  searchParams.sort();
+
+  return `?${searchParams.toString()}`;
 };

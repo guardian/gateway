@@ -3,7 +3,6 @@ import {
   randomPassword,
 } from '../../support/commands/testUser';
 import { Status } from '../../../src/server/models/okta/User';
-import { stringify } from 'query-string';
 
 describe('Registration flow', () => {
   context('Registering with Okta', () => {
@@ -1237,7 +1236,9 @@ describe('Registration flow', () => {
       // Disable redirect to /signin/success by default
       cy.setCookie(
         'GU_ran_experiments',
-        stringify({ OptInPromptPostSignIn: Date.now() }),
+        new URLSearchParams({
+          OptInPromptPostSignIn: Date.now().toString(),
+        }).toString(),
       );
       // Intercept the external redirect page.
       // We just want to check that the redirect happens, not that the page loads.
