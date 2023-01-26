@@ -5,7 +5,7 @@ import {
 import { Newsletters } from '@/shared/model/Newsletter';
 import { CONSENTS_NEWSLETTERS_PAGE } from '../model/Consent';
 
-// TODO add a test
+// Permissions a geolocation if cmp consent is true
 export const getPermissionedGeolocation = (
   cmpConsentState: boolean | undefined,
   geolocation: GeoLocation | undefined,
