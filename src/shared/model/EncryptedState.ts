@@ -7,5 +7,6 @@ export interface EncryptedState {
   passwordSetOnWelcomePage?: boolean;
   status?: string;
   signInRedirect?: boolean; // TODO: possibly rename for clarity
+  cmpConsentedState?: boolean;
   queryParams?: PersistableQueryParams;
 }

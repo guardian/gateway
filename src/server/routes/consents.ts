@@ -43,6 +43,8 @@ import { ConsentPath, RoutePaths } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { updateRegistrationLocationViaIDAPI } from '../lib/updateRegistrationLocation';
+import { updateEncryptedStateCookie } from '../lib/encryptedStateCookie';
+import { isStringBoolean } from '../lib/isStringBoolean';
 
 interface ConsentPage {
   page: ConsentPath;
@@ -333,6 +335,7 @@ router.post(
     let state = res.locals;
 
     const sc_gu_u = req.cookies.SC_GU_U;
+    const _cmpConsentedState = isStringBoolean(req.body._cmpConsentedState);
 
     const { page } = req.params;
     let status = 200;
@@ -364,6 +367,10 @@ router.post(
         `${consentPages[pageIndex + 1].path}`,
         state.queryParams,
       );
+
+      updateEncryptedStateCookie(req, res, {
+        cmpConsentedState: _cmpConsentedState,
+      });
 
       return res.redirect(303, url);
     } catch (error) {
