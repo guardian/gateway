@@ -30,7 +30,9 @@ describe('Sign out flow', () => {
         cy.get('input[name=password]').type(finalPassword);
 
         DotComCookies.forEach((cookie) => {
-          cy.setCookie(cookie, `the_${cookie}_cookie`);
+          cy.setCookie(cookie, `the_${cookie}_cookie`, {
+            domain: Cypress.env('BASE_URI')?.replace('profile', ''),
+          });
         });
 
         cy.get('[data-cy="main-form-submit-button"]').click();

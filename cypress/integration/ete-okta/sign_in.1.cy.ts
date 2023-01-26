@@ -100,24 +100,20 @@ describe('Sign in flow, Okta enabled', () => {
     });
   });
   context('Okta session refresh', () => {
-    beforeEach(() => {
-      // Intercept the external redirect page.
-      // We just want to check that the redirect happens, not that the page loads.
-      cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
-        req.reply(200);
-      });
-    });
-
     it('refreshes a valid Okta session', () => {
       // Create a validated test user
       cy.createTestUser({ isUserEmailValidated: true }).then(
         ({ emailAddress, finalPassword }) => {
           // Sign our new user in
-          cy.visit('/signin');
+          cy.visit(
+            `/signin?returnUrl=${encodeURIComponent(
+              `https://${Cypress.env('BASE_URI')}/consents`,
+            )}`,
+          );
           cy.get('input[name=email]').type(emailAddress);
           cy.get('input[name=password]').type(finalPassword);
           cy.get('[data-cy="main-form-submit-button"]').click();
-          cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+          cy.url().should('include', '/consents');
 
           // Get the current session data
           cy.getCookie('sid').then((originalSidCookie) => {
@@ -150,11 +146,15 @@ describe('Sign in flow, Okta enabled', () => {
       cy.createTestUser({ isUserEmailValidated: true }).then(
         ({ emailAddress, finalPassword }) => {
           // Sign our new user in
-          cy.visit('/signin');
+          cy.visit(
+            `/signin?returnUrl=${encodeURIComponent(
+              `https://${Cypress.env('BASE_URI')}/consents`,
+            )}`,
+          );
           cy.get('input[name=email]').type(emailAddress);
           cy.get('input[name=password]').type(finalPassword);
           cy.get('[data-cy="main-form-submit-button"]').click();
-          cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+          cy.url().should('include', '/consents');
 
           // Get the current session data
           cy.getCookie('sid').then((sidCookie) => {
@@ -177,14 +177,28 @@ describe('Sign in flow, Okta enabled', () => {
       cy.createTestUser({ isUserEmailValidated: true }).then(
         ({ emailAddress, finalPassword }) => {
           // Sign our new user in
-          cy.visit('/signin');
+          cy.visit(
+            `/signin?returnUrl=${encodeURIComponent(
+              `https://${Cypress.env('BASE_URI')}/consents`,
+            )}`,
+          );
           cy.get('input[name=email]').type(emailAddress);
           cy.get('input[name=password]').type(finalPassword);
           cy.get('[data-cy="main-form-submit-button"]').click();
-          cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+          cy.url().should('include', '/consents');
 
           // Delete the Okta sid cookie
-          cy.clearCookie('sid');
+          // strange behaviour form Cypress 12
+          // where we need to delete cookie from both domains
+          // to get the test to pass
+          // cypress 12 seems to have issues with hostOnly cookies not being removed or persisting after clear
+          // https://github.com/cypress-io/cypress/issues/25174
+          cy.clearCookie('sid', {
+            domain: Cypress.env('BASE_URI'),
+          });
+          cy.clearCookie('sid', {
+            domain: `.${Cypress.env('BASE_URI')}`,
+          });
 
           // Visit the refresh endpoint
           cy.visit(
@@ -203,11 +217,15 @@ describe('Sign in flow, Okta enabled', () => {
       cy.createTestUser({ isUserEmailValidated: true }).then(
         ({ emailAddress, finalPassword }) => {
           // Sign our new user in
-          cy.visit('/signin');
+          cy.visit(
+            `/signin?returnUrl=${encodeURIComponent(
+              `https://${Cypress.env('BASE_URI')}/consents`,
+            )}`,
+          );
           cy.get('input[name=email]').type(emailAddress);
           cy.get('input[name=password]').type(finalPassword);
           cy.get('[data-cy="main-form-submit-button"]').click();
-          cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+          cy.url().should('include', '/consents');
 
           // Delete all cookies (Okta and IDAPI)
           cy.clearCookies();
@@ -231,11 +249,15 @@ describe('Sign in flow, Okta enabled', () => {
       cy.createTestUser({ isUserEmailValidated: true }).then(
         ({ emailAddress, finalPassword }) => {
           // Sign our new user in
-          cy.visit('/signin');
+          cy.visit(
+            `/signin?returnUrl=${encodeURIComponent(
+              `https://${Cypress.env('BASE_URI')}/consents`,
+            )}`,
+          );
           cy.get('input[name=email]').type(emailAddress);
           cy.get('input[name=password]').type(finalPassword);
           cy.get('[data-cy="main-form-submit-button"]').click();
-          cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+          cy.url().should('include', '/consents');
 
           // Get the current session data
           cy.getCookie('SC_GU_LA').then((originalLastAccessCookie) => {
@@ -345,11 +367,15 @@ describe('Sign in flow, Okta enabled', () => {
       cy.createTestUser({ isUserEmailValidated: true }).then(
         ({ emailAddress, finalPassword }) => {
           // Sign our new user in
-          cy.visit('/signin');
+          cy.visit(
+            `/signin?returnUrl=${encodeURIComponent(
+              `https://${Cypress.env('BASE_URI')}/consents`,
+            )}`,
+          );
           cy.get('input[name=email]').type(emailAddress);
           cy.get('input[name=password]').type(finalPassword);
           cy.get('[data-cy="main-form-submit-button"]').click();
-          cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+          cy.url().should('include', '/consents');
 
           // Get the current session data
           cy.getCookie('sid').then((originalSidCookie) => {

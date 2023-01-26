@@ -1252,11 +1252,15 @@ describe('Registration flow', () => {
       cy.createTestUser({ isUserEmailValidated: true }).then(
         ({ emailAddress, finalPassword }) => {
           // Sign our new user in
-          cy.visit('/signin');
+          cy.visit(
+            `/signin?returnUrl=${encodeURIComponent(
+              `https://${Cypress.env('BASE_URI')}/consents`,
+            )}`,
+          );
           cy.get('input[name=email]').type(emailAddress);
           cy.get('input[name=password]').type(finalPassword);
           cy.get('[data-cy="main-form-submit-button"]').click();
-          cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+          cy.url().should('include', '/consents');
 
           // Get the current session data
           cy.getCookie('sid').then((originalSidCookie) => {

@@ -167,7 +167,7 @@ describe('Jobs terms and conditions flow', () => {
         // load the consents page as its on the same domain
         const termsAcceptPageUrl = `https://${Cypress.env(
           'BASE_URI',
-        )}/agree/GRS?returnUrl=https://jobs.theguardian.com/&useIdapi=true`;
+        )}/agree/GRS?returnUrl=https://jobs.thegulocal.com/&useIdapi=true`;
 
         cy.visit('/signin?useIdapi=true');
         cy.get('input[name=email]').type(emailAddress);
@@ -211,14 +211,14 @@ describe('Jobs terms and conditions flow', () => {
 
         // Intercept the external redirect page.
         // We just want to check that the redirect happens, not that the page loads.
-        cy.intercept('GET', 'https://jobs.theguardian.com/', (req) => {
+        cy.intercept('GET', 'https://jobs.thegulocal.com/', (req) => {
           req.reply(200);
         });
 
         cy.findByText('Continue').click();
 
         // Make sure the returnURL is respected.
-        cy.url().should('include', 'https://jobs.theguardian.com/');
+        cy.url().should('include', 'https://jobs.thegulocal.com/');
 
         // User should be in the GRS group and have First/Last name set.
         cy.getTestUserDetails().then(({ user, status }) => {
