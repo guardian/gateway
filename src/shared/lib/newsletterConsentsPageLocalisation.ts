@@ -1,10 +1,23 @@
-import { GeoLocation } from '@/shared/model/Geolocation';
+import {
+  GeoLocation,
+  PermissionedGeolocation,
+} from '@/shared/model/Geolocation';
 import { Newsletters } from '@/shared/model/Newsletter';
 import { CONSENTS_NEWSLETTERS_PAGE } from '../model/Consent';
 
+// TODO add a test
+export const getPermissionedGeolocation = (
+  cmpConsentState: boolean | undefined,
+  geolocation: GeoLocation | undefined,
+): GeoLocation | PermissionedGeolocation | undefined =>
+  !!cmpConsentState && geolocation === 'AU' ? 'AU_permissioned' : geolocation;
+
 // map of newsletters to country codes
 // undefined also included as key, in case of fallback
-export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
+export const NewsletterMap = new Map<
+  GeoLocation | PermissionedGeolocation | undefined,
+  Newsletters[]
+>([
   [
     undefined,
     [
@@ -32,6 +45,14 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
   [
     'AU',
     [
+      Newsletters.DOWN_TO_EARTH,
+      Newsletters.THE_LONG_READ,
+      Newsletters.MORNING_MAIL_AU,
+    ],
+  ],
+  [
+    'AU_permissioned',
+    [
       Newsletters.MORNING_MAIL_AU,
       Newsletters.AFTERNOON_UPDATE_AU,
       Newsletters.FIVE_GREAT_READS_AU,
@@ -51,12 +72,13 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
 // map of consents for newsletter page to country codes
 // undefined also included as key, in case of fallback
 export const ConsentsOnNewslettersPageMap = new Map<
-  GeoLocation | undefined,
+  GeoLocation | PermissionedGeolocation | undefined,
   string[]
 >([
   [undefined, CONSENTS_NEWSLETTERS_PAGE],
   ['ROW', CONSENTS_NEWSLETTERS_PAGE],
   ['GB', CONSENTS_NEWSLETTERS_PAGE],
-  ['AU', []],
+  ['AU', CONSENTS_NEWSLETTERS_PAGE],
+  ['AU_permissioned', []],
   ['US', CONSENTS_NEWSLETTERS_PAGE],
 ]);

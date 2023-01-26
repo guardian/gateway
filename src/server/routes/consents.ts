@@ -18,7 +18,6 @@ import { ALL_NEWSLETTER_IDS, NewsLetter } from '@/shared/model/Newsletter';
 import {
   CONSENTS_COMMUNICATION_PAGE,
   CONSENTS_DATA_PAGE,
-  CONSENTS_NEWSLETTERS_PAGE,
 } from '@/shared/model/Consent';
 import { loginMiddleware } from '@/server/lib/middleware/login';
 import {
@@ -29,10 +28,14 @@ import { VERIFY_EMAIL } from '@/shared/model/Success';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { consentsPageMetric } from '@/server/models/Metrics';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { GeoLocation } from '@/shared/model/Geolocation';
+import {
+  GeoLocation,
+  PermissionedGeolocation,
+} from '@/shared/model/Geolocation';
 import { newslettersSubscriptionsFromFormBody } from '@/shared/lib/newsletter';
 import {
   ConsentsOnNewslettersPageMap,
+  getPermissionedGeolocation,
   NewsletterMap,
 } from '@/shared/lib/newsletterConsentsPageLocalisation';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
@@ -44,7 +47,10 @@ import { ConsentPath, RoutePaths } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { updateRegistrationLocationViaIDAPI } from '../lib/updateRegistrationLocation';
-import { updateEncryptedStateCookie } from '../lib/encryptedStateCookie';
+import {
+  readEncryptedStateCookie,
+  updateEncryptedStateCookie,
+} from '../lib/encryptedStateCookie';
 import { isStringBoolean } from '../lib/isStringBoolean';
 
 interface ConsentPage {
@@ -53,7 +59,7 @@ interface ConsentPage {
   read: (
     ip: string,
     sc_gu_u: string,
-    geo?: GeoLocation,
+    geo?: GeoLocation | PermissionedGeolocation,
     request_id?: string,
   ) => Promise<PageData>;
   pageTitle: PageTitle;
@@ -61,6 +67,7 @@ interface ConsentPage {
     ip: string,
     sc_gu_u: string,
     body: { [key: string]: string },
+    geo?: GeoLocation | PermissionedGeolocation,
     request_id?: string,
   ) => Promise<void>;
 }
@@ -109,7 +116,7 @@ export const consentPages: ConsentPage[] = [
       ),
       page: 'communication',
     }),
-    update: async (ip, sc_gu_u, body, request_id) => {
+    update: async (ip, sc_gu_u, body, _, request_id) => {
       const consents = CONSENTS_COMMUNICATION_PAGE.map((id) => ({
         id,
         consented: getConsentValueFromRequestBody(id, body),
@@ -122,23 +129,25 @@ export const consentPages: ConsentPage[] = [
     page: 'newsletters',
     path: '/consents/newsletters',
     pageTitle: CONSENTS_PAGES.NEWSLETTERS,
-    read: async (ip, sc_gu_u, geo, request_id) => ({
-      page: 'newsletters',
-      consents: await getUserConsentsForPage(
-        ConsentsOnNewslettersPageMap.get(geo) as string[],
-        ip,
-        sc_gu_u,
-        request_id,
-      ),
-      newsletters: await getUserNewsletterSubscriptions(
-        NewsletterMap.get(geo) as string[],
-        ip,
-        sc_gu_u,
-        request_id,
-      ),
-      previousPage: 'communication',
-    }),
-    update: async (ip, sc_gu_u, body, request_id) => {
+    read: async (ip, sc_gu_u, geo, request_id) => {
+      return {
+        page: 'newsletters',
+        consents: await getUserConsentsForPage(
+          ConsentsOnNewslettersPageMap.get(geo) as string[],
+          ip,
+          sc_gu_u,
+          request_id,
+        ),
+        newsletters: await getUserNewsletterSubscriptions(
+          NewsletterMap.get(geo) as string[],
+          ip,
+          sc_gu_u,
+          request_id,
+        ),
+        previousPage: 'communication',
+      };
+    },
+    update: async (ip, sc_gu_u, body, geo, request_id) => {
       const userNewsletterSubscriptions = await getUserNewsletterSubscriptions(
         ALL_NEWSLETTER_IDS,
         ip,
@@ -180,10 +189,12 @@ export const consentPages: ConsentPage[] = [
         request_id,
       );
 
-      const consents = CONSENTS_NEWSLETTERS_PAGE.map((id) => ({
-        id,
-        consented: getConsentValueFromRequestBody(id, body),
-      }));
+      const consents = (ConsentsOnNewslettersPageMap.get(geo) as string[]).map(
+        (id) => ({
+          id,
+          consented: getConsentValueFromRequestBody(id, body),
+        }),
+      );
 
       await patchConsents(ip, sc_gu_u, consents, request_id);
     },
@@ -202,7 +213,7 @@ export const consentPages: ConsentPage[] = [
       page: 'data',
       previousPage: 'newsletters',
     }),
-    update: async (ip, sc_gu_u, body, request_id) => {
+    update: async (ip, sc_gu_u, body, _, request_id) => {
       const consents = CONSENTS_DATA_PAGE.map((id) => ({
         id,
         consented: getConsentValueFromRequestBody(id, body),
@@ -218,7 +229,7 @@ export const consentPages: ConsentPage[] = [
     read: async (ip, sc_gu_u, geo, request_id) => {
       const ALL_CONSENT = [
         ...CONSENTS_DATA_PAGE,
-        ...CONSENTS_NEWSLETTERS_PAGE,
+        ...(ConsentsOnNewslettersPageMap.get(geo) as string[]),
         ...CONSENTS_COMMUNICATION_PAGE,
       ];
 
@@ -267,6 +278,10 @@ router.get(
       });
     }
 
+    // Checks if we can localize content
+    const encryptedState = readEncryptedStateCookie(req);
+    const { isCmpConsented } = encryptedState ?? {};
+
     const { page } = req.params;
     let status = 200;
 
@@ -282,12 +297,20 @@ router.get(
       const { read, pageTitle: _pageTitle } = consentPages[pageIndex];
       pageTitle = _pageTitle;
 
+      const permissionedGeolocation:
+        | GeoLocation
+        | PermissionedGeolocation
+        | undefined = getPermissionedGeolocation(
+        isCmpConsented,
+        state.pageData.geolocation,
+      );
+
       state = mergeRequestState(state, {
         pageData: {
           ...(await read(
             req.ip,
             sc_gu_u,
-            state.pageData.geolocation,
+            permissionedGeolocation,
             res.locals.requestId,
           )),
         },
@@ -358,8 +381,23 @@ router.post(
         updateRegistrationLocationViaIDAPI(req.ip, sc_gu_u, req);
       }
 
+      // we need this in the Post update so consents are not unintentionally unsubscribed in Permissioned views without consents
+      const permissionedGeolocation:
+        | GeoLocation
+        | PermissionedGeolocation
+        | undefined = getPermissionedGeolocation(
+        _cmpConsentedState,
+        state.pageData.geolocation,
+      );
+
       if (update) {
-        await update(req.ip, sc_gu_u, req.body, res.locals.requestId);
+        await update(
+          req.ip,
+          sc_gu_u,
+          req.body,
+          permissionedGeolocation,
+          res.locals.requestId,
+        );
       }
 
       trackMetric(consentsPageMetric(page, 'Post', 'Success'));
@@ -370,7 +408,7 @@ router.post(
       );
 
       updateEncryptedStateCookie(req, res, {
-        cmpConsentedState: _cmpConsentedState,
+        isCmpConsented: _cmpConsentedState,
       });
 
       return res.redirect(303, url);
