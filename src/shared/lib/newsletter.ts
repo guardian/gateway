@@ -30,8 +30,6 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
       Newsletters.DOWN_TO_EARTH,
       Newsletters.THE_LONG_READ,
       Newsletters.FIRST_EDITION_UK,
-      // @AB_TEST: Default Weekly Newsletter Test:
-      Newsletters.SATURDAY_ROUNDUP_TRIAL,
     ],
   ],
   [
@@ -40,8 +38,6 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
       Newsletters.DOWN_TO_EARTH,
       Newsletters.THE_LONG_READ,
       Newsletters.MORNING_BRIEFING_AU,
-      // @AB_TEST: Default Weekly Newsletter Test:
-      Newsletters.SATURDAY_ROUNDUP_TRIAL,
     ],
   ],
   [
@@ -50,8 +46,6 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
       Newsletters.DOWN_TO_EARTH,
       Newsletters.THE_LONG_READ,
       Newsletters.MORNING_BRIEFING_US,
-      // @AB_TEST: Default Weekly Newsletter Test:
-      Newsletters.SATURDAY_ROUNDUP_TRIAL,
     ],
   ],
 ]);
