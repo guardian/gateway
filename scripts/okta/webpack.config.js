@@ -1,7 +1,8 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
-const babelConfig = require('../../babel.config');
+const deepmerge = require('deepmerge');
+const sharedLoader = require('../../.swcrc.config');
 
 class BannerPlugin {
   constructor(options) {
@@ -32,18 +33,18 @@ module.exports = {
   module: {
     rules: [{
       test: /\.ts$/,
-      use: [{
-        loader: 'babel-loader',
-        options: {
-          presets: [[
-            '@babel/env',
-            {
-              bugfixes: true,
-            },
-          ], ...babelConfig.presets],
-          plugins: [...babelConfig.plugins],
-        }
-      }]
+      use: [
+        deepmerge(sharedLoader, {
+          options: {
+            env: {
+              targets: {
+                // min browser versions
+                ie: '11'
+              }
+            }
+          }
+        }),
+      ]
     }]
   },
   output: {

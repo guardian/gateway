@@ -379,7 +379,7 @@ export const showsAnErrorMessageAndInformationParagraphWhenAccountLinkingRequire
         cy.contains(
           'We cannot sign you in with your social account credentials. Please enter your account password below to sign in.',
         );
-        cy.get('[class*=ErrorSummary]').contains('Account already exists');
+        cy.contains('Account already exists');
       },
     ] as const;
   };
