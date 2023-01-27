@@ -11,24 +11,27 @@ describe('Reauthenticate flow, Okta enabled', () => {
   it('keeps User A signed in when User A attempts to reauthenticate', () => {
     cy.createTestUser({ isUserEmailValidated: true })?.then(
       ({ emailAddress, finalPassword }) => {
-        // Intercept the external redirect page.
-        // We just want to check that the redirect happens, not that the page loads.
-        cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
-          req.reply(200);
-        });
         // First, sign in
-        cy.visit('/signin');
+        cy.visit(
+          `/signin?returnUrl=${encodeURIComponent(
+            `https://${Cypress.env('BASE_URI')}/consents/data`,
+          )}`,
+        );
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
         cy.get('[data-cy="main-form-submit-button"]').click();
-        cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+        cy.url().should('include', '/consents/data');
 
         // Then, try to reauthenticate
-        cy.visit('/reauthenticate');
+        cy.visit(
+          `/reauthenticate?returnUrl=${encodeURIComponent(
+            `https://${Cypress.env('BASE_URI')}/consents/data`,
+          )}`,
+        );
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
         cy.get('[data-cy="main-form-submit-button"]').click();
-        cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+        cy.url().should('include', '/consents/data');
 
         // Get the current session data
         cy.getCookie('sid').then((sidCookie) => {
@@ -47,27 +50,30 @@ describe('Reauthenticate flow, Okta enabled', () => {
     // Create User A
     cy.createTestUser({ isUserEmailValidated: true })?.then(
       ({ emailAddress: emailAddressA, finalPassword: finalPasswordA }) => {
-        // Intercept the external redirect page.
-        // We just want to check that the redirect happens, not that the page loads.
-        cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
-          req.reply(200);
-        });
         // First, sign in as User A
-        cy.visit('/signin');
+        cy.visit(
+          `/signin?returnUrl=${encodeURIComponent(
+            `https://${Cypress.env('BASE_URI')}/consents/data`,
+          )}`,
+        );
         cy.get('input[name=email]').type(emailAddressA);
         cy.get('input[name=password]').type(finalPasswordA);
         cy.get('[data-cy="main-form-submit-button"]').click();
-        cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+        cy.url().should('include', '/consents/data');
 
         // Create User B
         cy.createTestUser({ isUserEmailValidated: true })?.then(
           ({ emailAddress: emailAddressB, finalPassword: finalPasswordB }) => {
             // Then, try to reauthenticate as User B
-            cy.visit('/reauthenticate');
+            cy.visit(
+              `/reauthenticate?returnUrl=${encodeURIComponent(
+                `https://${Cypress.env('BASE_URI')}/consents/data`,
+              )}`,
+            );
             cy.get('input[name=email]').type(emailAddressB);
             cy.get('input[name=password]').type(finalPasswordB);
             cy.get('[data-cy="main-form-submit-button"]').click();
-            cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+            cy.url().should('include', '/consents/data');
 
             // Get the current session data
             cy.getCookie('sid').then((sidCookie) => {

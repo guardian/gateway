@@ -32,14 +32,19 @@ describe('Sign out flow', () => {
         cy.getCookie('SC_GU_LA').should('exist');
         cy.getCookie('GU_U').should('exist');
 
-        // attempt to sign out and redirect to reset password as it's on same domain
+        // attempt to sign out and redirect to sign in to make sure the cookies are removed
+        // and the signed in as page isn't visible
         const postSignOutReturnUrl = `https://${Cypress.env(
           'BASE_URI',
-        )}/reset-password`;
+        )}/signin`;
         cy.visit(
           `/signout?returnUrl=${encodeURIComponent(postSignOutReturnUrl)}`,
         );
-        cy.getCookie('sid').should('not.exist');
+        // cypress 12 seems to have issues with hostOnly cookies not being removed or persisting after clear
+        // https://github.com/cypress-io/cypress/issues/25174
+        // so for now I've changed this check to make sure the "Signed in as" page isn't visible
+        // cy.getCookie('sid').should('not.exist');
+        cy.contains('You are signed in with').should('not.exist');
         // check cookies are removed
         cy.getCookie('SC_GU_U').should('not.exist');
         cy.getCookie('SC_GU_LA').should('not.exist');
