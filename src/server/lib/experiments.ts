@@ -1,8 +1,6 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import ms from 'ms';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-
-import { ResponseWithRequestState } from '@/server/models/Express';
 
 const RAN_EXPERIMENTS_COOKIE_NAME = 'GU_ran_experiments';
 const { isHttps } = getConfiguration();
@@ -22,7 +20,7 @@ export const hasExperimentRun = (req: Request, experimentId: string) => {
 
 export const setExperimentRan = (
   req: Request,
-  res: ResponseWithRequestState,
+  res: Response,
   experimentId: string,
   ran: boolean,
 ) => {

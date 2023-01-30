@@ -1,6 +1,5 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { renderer } from '@/server/lib/renderer';
-import { ResponseWithRequestState } from '@/server/models/Express';
 import { checkPasswordTokenController } from '@/server/controllers/checkPasswordToken';
 import { setPasswordController } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
@@ -10,10 +9,10 @@ import { sendChangePasswordEmailController } from '@/server/controllers/sendChan
 import { mergeRequestState } from '@/server/lib/requestState';
 
 // reset password email form
-router.get('/reset-password', (req: Request, res: ResponseWithRequestState) => {
+router.get('/reset-password', (req: Request, res: Response) => {
   const html = renderer('/reset-password', {
     pageTitle: 'Reset Password',
-    requestState: mergeRequestState(res.locals, {
+    requestState: mergeRequestState(res.requestState, {
       pageData: {
         email: readEmailCookie(req),
       },
@@ -30,62 +29,50 @@ router.post(
 );
 
 // reset password email sent page
-router.get(
-  '/reset-password/email-sent',
-  (req: Request, res: ResponseWithRequestState) => {
-    const html = renderer('/reset-password/email-sent', {
-      pageTitle: 'Check Your Inbox',
-      requestState: mergeRequestState(res.locals, {
-        pageData: {
-          email: readEmailCookie(req),
-          resendEmailAction: '/reset-password',
-          changeEmailPage: '/reset-password',
-        },
-      }),
-    });
-    res.type('html').send(html);
-  },
-);
+router.get('/reset-password/email-sent', (req: Request, res: Response) => {
+  const html = renderer('/reset-password/email-sent', {
+    pageTitle: 'Check Your Inbox',
+    requestState: mergeRequestState(res.requestState, {
+      pageData: {
+        email: readEmailCookie(req),
+        resendEmailAction: '/reset-password',
+        changeEmailPage: '/reset-password',
+      },
+    }),
+  });
+  res.type('html').send(html);
+});
 
 // password updated confirmation page
-router.get(
-  '/reset-password/complete',
-  (req: Request, res: ResponseWithRequestState) => {
-    const html = renderer('/reset-password/complete', {
-      requestState: mergeRequestState(res.locals, {
-        pageData: {
-          email: readEmailCookie(req),
-        },
-      }),
-      pageTitle: 'Password Changed',
-    });
-    return res.type('html').send(html);
-  },
-);
+router.get('/reset-password/complete', (req: Request, res: Response) => {
+  const html = renderer('/reset-password/complete', {
+    requestState: mergeRequestState(res.requestState, {
+      pageData: {
+        email: readEmailCookie(req),
+      },
+    }),
+    pageTitle: 'Password Changed',
+  });
+  return res.type('html').send(html);
+});
 
 // link expired page
-router.get(
-  '/reset-password/resend',
-  (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer('/reset-password/resend', {
-      pageTitle: 'Resend Change Password Email',
-      requestState: res.locals,
-    });
-    res.type('html').send(html);
-  },
-);
+router.get('/reset-password/resend', (_: Request, res: Response) => {
+  const html = renderer('/reset-password/resend', {
+    pageTitle: 'Resend Change Password Email',
+    requestState: res.requestState,
+  });
+  res.type('html').send(html);
+});
 
 // session timed out page
-router.get(
-  '/reset-password/expired',
-  (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer('/reset-password/expired', {
-      pageTitle: 'Resend Change Password Email',
-      requestState: res.locals,
-    });
-    res.type('html').send(html);
-  },
-);
+router.get('/reset-password/expired', (_: Request, res: Response) => {
+  const html = renderer('/reset-password/expired', {
+    pageTitle: 'Resend Change Password Email',
+    requestState: res.requestState,
+  });
+  res.type('html').send(html);
+});
 
 // IMPORTANT: The /reset-password/:token routes must be defined below the other routes.
 // If not, the other routes will fail as the router will try and read the second part

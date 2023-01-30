@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import {
   readEncryptedStateCookie,
@@ -19,7 +19,6 @@ import { renderer } from '@/server/lib/renderer';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { ApiError } from '@/server/models/Error';
-import { ResponseWithRequestState } from '@/server/models/Express';
 import {
   addQueryParamsToPath,
   getPersistableQueryParamsWithoutOktaParams,
@@ -39,39 +38,32 @@ import { isStringBoolean } from '../lib/isStringBoolean';
 
 const { okta } = getConfiguration();
 
-router.get(
-  '/register',
-  redirectIfLoggedIn,
-  (req: Request, res: ResponseWithRequestState) => {
-    const html = renderer('/register', {
-      requestState: res.locals,
-      pageTitle: 'Register',
-    });
-    res.type('html').send(html);
-  },
-);
+router.get('/register', redirectIfLoggedIn, (req: Request, res: Response) => {
+  const html = renderer('/register', {
+    requestState: res.requestState,
+    pageTitle: 'Register',
+  });
+  res.type('html').send(html);
+});
 
-router.get(
-  '/register/email-sent',
-  (req: Request, res: ResponseWithRequestState) => {
-    const state = res.locals;
-    const html = renderer('/register/email-sent', {
-      requestState: mergeRequestState(state, {
-        pageData: {
-          email: readEncryptedStateCookie(req)?.email,
-        },
-      }),
-      pageTitle: 'Check Your Inbox',
-    });
-    res.type('html').send(html);
-  },
-);
+router.get('/register/email-sent', (req: Request, res: Response) => {
+  const state = res.requestState;
+  const html = renderer('/register/email-sent', {
+    requestState: mergeRequestState(state, {
+      pageData: {
+        email: readEncryptedStateCookie(req)?.email,
+      },
+    }),
+    pageTitle: 'Check Your Inbox',
+  });
+  res.type('html').send(html);
+});
 
 router.post(
   '/register/email-sent/resend',
   handleRecaptcha,
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { useIdapi } = res.locals.queryParams;
+  handleAsyncErrors(async (req: Request, res: Response) => {
+    const { useIdapi } = res.requestState.queryParams;
     if (!okta.enabled || useIdapi) {
       await IdapiResendEmail(req, res);
     } else {
@@ -84,8 +76,8 @@ router.post(
   '/register',
   handleRecaptcha,
   redirectIfLoggedIn,
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { useIdapi } = res.locals.queryParams;
+  handleAsyncErrors(async (req: Request, res: Response) => {
+    const { useIdapi } = res.requestState.queryParams;
     if (!okta.enabled || useIdapi) {
       await IdapiRegistration(req, res);
     } else {
@@ -95,7 +87,7 @@ router.post(
 );
 
 export const setEncryptedStateCookieForOktaRegistration = (
-  res: ResponseWithRequestState,
+  res: Response,
   user: UserResponse,
 ) => {
   setEncryptedStateCookie(res, {
@@ -104,21 +96,18 @@ export const setEncryptedStateCookieForOktaRegistration = (
     // We set queryParams here to allow state to be persisted as part of the registration flow,
     // because we are unable to pass these query parameters via the email activation link in Okta email templates
     queryParams: getPersistableQueryParamsWithoutOktaParams(
-      res.locals.queryParams,
+      res.requestState.queryParams,
     ),
   });
 };
 
-const OktaRegistration = async (
-  req: Request,
-  res: ResponseWithRequestState,
-) => {
+const OktaRegistration = async (req: Request, res: Response) => {
   const { email = '', _cmpConsentedState = false } = req.body;
 
   const {
     queryParams: { appClientId },
     requestId: request_id,
-  } = res.locals;
+  } = res.requestState;
 
   const registrationLocation: RegistrationLocation | undefined =
     getRegistrationLocation(req, isStringBoolean(_cmpConsentedState));
@@ -131,13 +120,13 @@ const OktaRegistration = async (
       request_id,
     });
     // fire ophan component event if applicable
-    if (res.locals.queryParams.componentEventParams) {
+    if (res.requestState.queryParams.componentEventParams) {
       sendOphanComponentEventFromQueryParamsServer(
-        res.locals.queryParams.componentEventParams,
+        res.requestState.queryParams.componentEventParams,
         'CREATE_ACCOUNT',
         'web',
-        res.locals.ophanConfig.consentUUID,
-        res.locals.requestId,
+        res.requestState.ophanConfig.consentUUID,
+        res.requestState.requestId,
       );
     }
 
@@ -147,7 +136,7 @@ const OktaRegistration = async (
       // We set queryParams here to allow state to be persisted as part of the registration flow,
       // because we are unable to pass these query parameters via the email activation link in Okta email templates
       queryParams: getPersistableQueryParamsWithoutOktaParams(
-        res.locals.queryParams,
+        res.requestState.queryParams,
       ),
     });
 
@@ -155,11 +144,14 @@ const OktaRegistration = async (
 
     return res.redirect(
       303,
-      addQueryParamsToPath('/register/email-sent', res.locals.queryParams),
+      addQueryParamsToPath(
+        '/register/email-sent',
+        res.requestState.queryParams,
+      ),
     );
   } catch (error) {
     logger.error('Okta Registration failure', error, {
-      request_id: res.locals.requestId,
+      request_id: res.requestState.requestId,
     });
 
     const errorMessage = () => {
@@ -175,7 +167,7 @@ const OktaRegistration = async (
 
     trackMetric('OktaRegistration::Failure');
 
-    const requestState = deepmerge(res.locals, {
+    const requestState = deepmerge(res.requestState, {
       pageData: {
         email,
         formError: errorMessage(),
@@ -191,7 +183,7 @@ const OktaRegistration = async (
   }
 };
 
-const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
+const OktaResendEmail = async (req: Request, res: Response) => {
   try {
     const encryptedState = readEncryptedStateCookie(req);
     const { email, queryParams } = encryptedState ?? {};
@@ -209,9 +201,13 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
       setEncryptedStateCookieForOktaRegistration(res, user);
       return res.redirect(
         303,
-        addQueryParamsToPath('/register/email-sent', res.locals.queryParams, {
-          emailSentSuccess: true,
-        }),
+        addQueryParamsToPath(
+          '/register/email-sent',
+          res.requestState.queryParams,
+          {
+            emailSentSuccess: true,
+          },
+        ),
       );
     } else {
       throw new OktaError({
@@ -220,7 +216,7 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
     }
   } catch (error) {
     logger.error('Okta Registration resend email failure', error, {
-      request_id: res.locals.requestId,
+      request_id: res.requestState.requestId,
     });
 
     trackMetric('OktaRegistrationResendEmail::Failure');
@@ -228,7 +224,7 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
     return res.type('html').send(
       renderer('/register/email-sent', {
         pageTitle: 'Check Your Inbox',
-        requestState: mergeRequestState(res.locals, {
+        requestState: mergeRequestState(res.requestState, {
           pageData: {
             formError: GenericErrors.DEFAULT,
           },
@@ -239,11 +235,8 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 };
 
 // TODO: Can we combine some reset email functions together?
-const IdapiResendEmail = async (
-  req: Request,
-  res: ResponseWithRequestState,
-) => {
-  const state = res.locals;
+const IdapiResendEmail = async (req: Request, res: Response) => {
+  const state = res.requestState;
 
   const { emailSentSuccess } = state.queryParams;
 
@@ -306,9 +299,13 @@ const IdapiResendEmail = async (
       setEncryptedStateCookie(res, { email, emailType });
       return res.redirect(
         303,
-        addQueryParamsToPath('/register/email-sent', res.locals.queryParams, {
-          emailSentSuccess,
-        }),
+        addQueryParamsToPath(
+          '/register/email-sent',
+          res.requestState.queryParams,
+          {
+            emailSentSuccess,
+          },
+        ),
       );
     } else {
       throw new ApiError({ message: GenericErrors.DEFAULT, status: 500 });
@@ -323,7 +320,7 @@ const IdapiResendEmail = async (
 
     const html = renderer('/register/email-sent', {
       pageTitle: 'Check Your Inbox',
-      requestState: mergeRequestState(res.locals, {
+      requestState: mergeRequestState(res.requestState, {
         pageData: {
           formError: message,
         },
@@ -333,11 +330,8 @@ const IdapiResendEmail = async (
   }
 };
 
-const IdapiRegistration = async (
-  req: Request,
-  res: ResponseWithRequestState,
-) => {
-  let state = res.locals;
+const IdapiRegistration = async (req: Request, res: Response) => {
+  let state = res.requestState;
 
   const { email = '' } = req.body;
 
@@ -406,7 +400,10 @@ const IdapiRegistration = async (
     // redirect the user to the email sent page
     return res.redirect(
       303,
-      addQueryParamsToPath('/register/email-sent', res.locals.queryParams),
+      addQueryParamsToPath(
+        '/register/email-sent',
+        res.requestState.queryParams,
+      ),
     );
   } catch (error) {
     logger.error(`${req.method} ${req.originalUrl}  Error`, error, {

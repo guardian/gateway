@@ -1,14 +1,13 @@
-import { NextFunction, Request } from 'express';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import { NextFunction, Request, Response } from 'express';
 
 type AsyncHandler = (
   req: Request,
-  res: ResponseWithRequestState,
+  res: Response,
   next: NextFunction,
-) => Promise<ResponseWithRequestState | void>;
+) => Promise<Response | void>;
 
 export const handleAsyncErrors = (handler: AsyncHandler) => {
-  return (req: Request, res: ResponseWithRequestState, next: NextFunction) => {
+  return (req: Request, res: Response, next: NextFunction) => {
     return handler(req, res, next).catch((error) => {
       next(error);
     });

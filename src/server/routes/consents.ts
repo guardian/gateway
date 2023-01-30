@@ -21,10 +21,7 @@ import {
   CONSENTS_NEWSLETTERS_PAGE,
 } from '@/shared/model/Consent';
 import { loginMiddleware } from '@/server/lib/middleware/login';
-import {
-  RequestState,
-  ResponseWithRequestState,
-} from '@/server/models/Express';
+import { RequestState } from '@/server/models/Express';
 import { VERIFY_EMAIL } from '@/shared/model/Success';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { consentsPageMetric } from '@/server/models/Metrics';
@@ -243,7 +240,7 @@ export const consentPages: ConsentPage[] = [
 router.get('/consents', loginMiddleware, (_: Request, res: Response) => {
   const url = addQueryParamsToPath(
     `${consentPages[0].path}`,
-    res.locals.queryParams,
+    res.requestState.queryParams,
   );
 
   res.redirect(303, url);
@@ -252,8 +249,8 @@ router.get('/consents', loginMiddleware, (_: Request, res: Response) => {
 router.get(
   '/consents/:page',
   loginMiddleware,
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    let state = res.locals;
+  handleAsyncErrors(async (req: Request, res: Response) => {
+    let state = res.requestState;
     const sc_gu_u = req.cookies.SC_GU_U;
 
     const { emailVerified } = state.queryParams;
@@ -287,13 +284,13 @@ router.get(
             req.ip,
             sc_gu_u,
             state.pageData.geolocation,
-            res.locals.requestId,
+            res.requestState.requestId,
           )),
         },
       } as RequestState);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-        request_id: res.locals.requestId,
+        request_id: res.requestState.requestId,
       });
 
       const { message, status: errorStatus } =
@@ -331,8 +328,8 @@ router.get(
 router.post(
   '/consents/:page',
   loginMiddleware,
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    let state = res.locals;
+  handleAsyncErrors(async (req: Request, res: Response) => {
+    let state = res.requestState;
 
     const sc_gu_u = req.cookies.SC_GU_U;
     const _cmpConsentedState = isStringBoolean(req.body._cmpConsentedState);
@@ -358,7 +355,7 @@ router.post(
       }
 
       if (update) {
-        await update(req.ip, sc_gu_u, req.body, res.locals.requestId);
+        await update(req.ip, sc_gu_u, req.body, res.requestState.requestId);
       }
 
       trackMetric(consentsPageMetric(page, 'Post', 'Success'));
@@ -375,7 +372,7 @@ router.post(
       return res.redirect(303, url);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-        request_id: res.locals.requestId,
+        request_id: res.requestState.requestId,
       });
 
       const { message, status: errorStatus } =

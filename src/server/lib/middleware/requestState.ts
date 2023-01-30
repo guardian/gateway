@@ -1,5 +1,5 @@
-// Middleware for assigning important parts of the request state to res.locals.
-// This should be the only place res.locals is mutated.
+// Middleware for assigning important parts of the request state to res.requestState.
+// This should be the only place res.requestState is mutated.
 // Requires: csurf middlware
 import { getGeolocationRegion } from '@/server/lib/getGeolocationRegion';
 import { parseExpressQueryParams } from '@/server/lib/queryParams';
@@ -108,9 +108,9 @@ export const requestStateMiddleware = async (
   try {
     const state = await getRequestState(req);
 
-    /* This is the only place mutation of res.locals should occur */
+    /* This is the only place mutation of res.requestState should occur */
     /* eslint-disable-next-line functional/immutable-data */
-    res.locals = state;
+    res.requestState = state;
 
     return next();
   } catch (error) {

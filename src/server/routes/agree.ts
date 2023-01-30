@@ -1,7 +1,6 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { renderer } from '@/server/lib/renderer';
-import { ResponseWithRequestState } from '@/server/models/Express';
 import { read } from '../lib/idapi/user';
 import { logger } from '../lib/serverSideLogger';
 import { getConfiguration } from '../lib/getConfiguration';
@@ -15,19 +14,16 @@ import { mergeRequestState } from '@/server/lib/requestState';
 
 const { defaultReturnUri, signInPageUrl, okta } = getConfiguration();
 
-const IDAPIAgreeGetController = async (
-  req: Request,
-  res: ResponseWithRequestState,
-) => {
+const IDAPIAgreeGetController = async (req: Request, res: Response) => {
   const SC_GU_U = req.cookies.SC_GU_U;
-  const state = res.locals;
+  const state = res.requestState;
   const { returnUrl } = state.queryParams;
 
   // Redirect to /signin if no session cookie.
   if (!SC_GU_U) {
     return res.redirect(
       303,
-      addQueryParamsToUntypedPath(signInPageUrl, res.locals.queryParams),
+      addQueryParamsToUntypedPath(signInPageUrl, res.requestState.queryParams),
     );
   }
 
@@ -36,7 +32,7 @@ const IDAPIAgreeGetController = async (
       primaryEmailAddress,
       privateFields: { firstName, secondName },
       userGroups,
-    } = await read(req.ip, SC_GU_U, res.locals.requestId);
+    } = await read(req.ip, SC_GU_U, res.requestState.requestId);
 
     const userBelongsToGRS = userGroups.some(
       (group) => group.packageCode === 'GRS',
@@ -51,14 +47,14 @@ const IDAPIAgreeGetController = async (
       return res.redirect(
         303,
         addQueryParamsToUntypedPath(redirectUrl, {
-          ...res.locals.queryParams,
+          ...res.requestState.queryParams,
           returnUrl: '', // unset returnUrl so redirect won't point to itself.
         }),
       );
     }
 
     const html = renderer('/agree/GRS', {
-      requestState: mergeRequestState(res.locals, {
+      requestState: mergeRequestState(res.requestState, {
         pageData: {
           firstName,
           secondName,
@@ -75,31 +71,28 @@ const IDAPIAgreeGetController = async (
       `${req.method} ${req.originalUrl} Error fetching Jobs user in IDAPI`,
       error,
       {
-        request_id: res.locals.requestId,
+        request_id: res.requestState.requestId,
       },
     );
     // Redirect to /signin if an error occurs when fetching the users' data.
     return res.redirect(
       303,
-      addQueryParamsToUntypedPath(signInPageUrl, res.locals.queryParams),
+      addQueryParamsToUntypedPath(signInPageUrl, res.requestState.queryParams),
     );
   }
 };
 
-const OktaAgreeGetController = async (
-  req: Request,
-  res: ResponseWithRequestState,
-) => {
+const OktaAgreeGetController = async (req: Request, res: Response) => {
   const oktaSessionCookieId: string | undefined = req.cookies.sid;
 
-  const state = res.locals;
+  const state = res.requestState;
   const { returnUrl, fromURI } = state.queryParams;
 
   // Redirect to /signin if no session cookie.
   if (!oktaSessionCookieId) {
     return res.redirect(
       303,
-      addQueryParamsToUntypedPath(signInPageUrl, res.locals.queryParams),
+      addQueryParamsToUntypedPath(signInPageUrl, res.requestState.queryParams),
     );
   }
 
@@ -124,14 +117,14 @@ const OktaAgreeGetController = async (
       return res.redirect(
         303,
         addQueryParamsToUntypedPath(redirectUrl, {
-          ...res.locals.queryParams,
+          ...res.requestState.queryParams,
           returnUrl: '', // unset returnUrl so redirect won't point to itself.
         }),
       );
     }
 
     const html = renderer('/agree/GRS', {
-      requestState: deepmerge(res.locals, {
+      requestState: deepmerge(res.requestState, {
         pageData: {
           firstName,
           secondName: lastName,
@@ -148,19 +141,19 @@ const OktaAgreeGetController = async (
       `${req.method} ${req.originalUrl} Error fetching Jobs user in Okta`,
       error,
       {
-        request_id: res.locals.requestId,
+        request_id: res.requestState.requestId,
       },
     );
     // Redirect to /signin if an error occurs when fetching the users' data.
     return res.redirect(
       303,
-      addQueryParamsToUntypedPath(signInPageUrl, res.locals.queryParams),
+      addQueryParamsToUntypedPath(signInPageUrl, res.requestState.queryParams),
     );
   }
 };
 
-router.get('/agree/GRS', (req: Request, res: ResponseWithRequestState) => {
-  const { useIdapi } = res.locals.queryParams;
+router.get('/agree/GRS', (req: Request, res: Response) => {
+  const { useIdapi } = res.requestState.queryParams;
 
   if (okta.enabled && !useIdapi) {
     return OktaAgreeGetController(req, res);
@@ -169,49 +162,46 @@ router.get('/agree/GRS', (req: Request, res: ResponseWithRequestState) => {
   }
 });
 
-router.post(
-  '/agree/GRS',
-  async (req: Request, res: ResponseWithRequestState) => {
-    const { useIdapi, returnUrl, fromURI } = res.locals.queryParams;
-    const oktaSessionCookieId: string | undefined = req.cookies.sid;
+router.post('/agree/GRS', async (req: Request, res: Response) => {
+  const { useIdapi, returnUrl, fromURI } = res.requestState.queryParams;
+  const oktaSessionCookieId: string | undefined = req.cookies.sid;
 
-    const { firstName, secondName } = req.body;
+  const { firstName, secondName } = req.body;
 
-    try {
-      if (okta.enabled && !useIdapi && oktaSessionCookieId) {
-        // Get the id from Okta
-        const { userId } = await getSession(oktaSessionCookieId);
-        await setupJobsUserInOkta(firstName, secondName, userId);
-        trackMetric('JobsGRSGroupAgree::Success');
-      } else {
-        await setupJobsUserInIDAPI(
-          firstName,
-          secondName,
-          req.ip,
-          req.cookies.SC_GU_U,
-          res.locals.requestId,
-        );
-        trackMetric('JobsGRSGroupAgree::Success');
-      }
-    } catch (error) {
-      logger.error(
-        `${req.method} ${req.originalUrl} Error updating Jobs user information`,
-        error,
-        {
-          request_id: res.locals.requestId,
-        },
+  try {
+    if (okta.enabled && !useIdapi && oktaSessionCookieId) {
+      // Get the id from Okta
+      const { userId } = await getSession(oktaSessionCookieId);
+      await setupJobsUserInOkta(firstName, secondName, userId);
+      trackMetric('JobsGRSGroupAgree::Success');
+    } else {
+      await setupJobsUserInIDAPI(
+        firstName,
+        secondName,
+        req.ip,
+        req.cookies.SC_GU_U,
+        res.requestState.requestId,
       );
-      trackMetric('JobsGRSGroupAgree::Failure');
-    } finally {
-      // complete the oauth flow if coming from the okta sign in page
-      // through the oauth flow initiated by the jobs site
-      if (fromURI) {
-        return res.redirect(303, fromURI);
-      }
-      // otherwise try going to the return url
-      return res.redirect(303, returnUrl);
+      trackMetric('JobsGRSGroupAgree::Success');
     }
-  },
-);
+  } catch (error) {
+    logger.error(
+      `${req.method} ${req.originalUrl} Error updating Jobs user information`,
+      error,
+      {
+        request_id: res.requestState.requestId,
+      },
+    );
+    trackMetric('JobsGRSGroupAgree::Failure');
+  } finally {
+    // complete the oauth flow if coming from the okta sign in page
+    // through the oauth flow initiated by the jobs site
+    if (fromURI) {
+      return res.redirect(303, fromURI);
+    }
+    // otherwise try going to the return url
+    return res.redirect(303, returnUrl);
+  }
+});
 
 export default router.router;

@@ -1,17 +1,13 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { renderer } from '@/server/lib/renderer';
-import { ResponseWithRequestState } from '@/server/models/Express';
 
-export const fourZeroFourRender = (res: ResponseWithRequestState) =>
+export const fourZeroFourRender = (res: Response) =>
   renderer('/404', {
     pageTitle: 'Not Found',
-    requestState: res.locals,
+    requestState: res.requestState,
   });
 
-export const fourZeroFourMiddleware = (
-  _: Request,
-  res: ResponseWithRequestState,
-) => {
+export const fourZeroFourMiddleware = (_: Request, res: Response) => {
   const html = fourZeroFourRender(res);
   res.type('html').status(404).send(html);
 };

@@ -1,6 +1,5 @@
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { Request } from 'express';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import { Request, Response } from 'express';
 import { sendResetPasswordEmail as sendResetPasswordEmailIDAPI } from '@/server/lib/idapi/resetPassword';
 import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import {
@@ -56,11 +55,8 @@ const sendOphanEvent = (ophanConfig: OphanConfig) => {
   );
 };
 
-const sendEmailInIDAPI = async (
-  req: Request,
-  res: ResponseWithRequestState,
-) => {
-  const state = res.locals;
+const sendEmailInIDAPI = async (req: Request, res: Response) => {
+  const state = res.requestState;
   const { email = '' } = req.body;
 
   const { returnUrl, emailSentSuccess, ref, refViewId } = state.queryParams;
@@ -82,7 +78,7 @@ const sendEmailInIDAPI = async (
     );
   } catch (error) {
     logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-      request_id: res.locals.requestId,
+      request_id: res.requestState.requestId,
     });
 
     const { message, status } =
@@ -103,25 +99,22 @@ const sendEmailInIDAPI = async (
   }
 };
 
-const setEncryptedCookieOkta = (
-  res: ResponseWithRequestState,
-  email: string,
-) => {
+const setEncryptedCookieOkta = (res: Response, email: string) => {
   setEncryptedStateCookie(res, {
     email,
     // We set queryParams here to allow state to be persisted as part of the registration flow,
     // because we are unable to pass these query parameters via the email activation link in Okta email templates
     queryParams: getPersistableQueryParamsWithoutOktaParams(
-      res.locals.queryParams,
+      res.requestState.queryParams,
     ),
   });
 };
 
 export const sendEmailInOkta = async (
   req: Request,
-  res: ResponseWithRequestState,
-): Promise<void | ResponseWithRequestState> => {
-  const state = res.locals;
+  res: Response,
+): Promise<void | Response> => {
+  const state = res.requestState;
   const { email = '' } = req.body;
   const path = getPath(req);
   const {
@@ -305,7 +298,7 @@ export const sendEmailInOkta = async (
     }
 
     logger.error('Okta send reset password email failed', error, {
-      request_id: res.locals.requestId,
+      request_id: res.requestState.requestId,
     });
 
     trackMetric(emailSendMetric('OktaResetPassword', 'Failure'));
@@ -324,8 +317,8 @@ export const sendEmailInOkta = async (
 };
 
 export const sendChangePasswordEmailController = () =>
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { useIdapi } = res.locals.queryParams;
+  handleAsyncErrors(async (req: Request, res: Response) => {
+    const { useIdapi } = res.requestState.queryParams;
     if (okta.enabled && !useIdapi) {
       await sendEmailInOkta(req, res);
     } else {

@@ -11,13 +11,12 @@ import { renderer } from '@/server/lib/renderer';
 import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { ApiError } from '@/server/models/Error';
-import { ResponseWithRequestState } from '@/server/models/Express';
 import { consentPages } from '@/server/routes/consents';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { ConsentsErrors, VerifyEmailErrors } from '@/shared/model/Errors';
 import { EMAIL_SENT } from '@/shared/model/Success';
 import { buildUrl } from '@/shared/lib/routeUtils';
-import { Request, Router } from 'express';
+import { Request, Response, Router } from 'express';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { clearOktaCookies } from './signOut';
 import { mergeRequestState } from '@/server/lib/requestState';
@@ -27,10 +26,14 @@ const router = Router();
 const { signInPageUrl } = getConfiguration();
 const profileUrl = getProfileUrl();
 
+router.get('/test', (req: Request, res: Response) => {
+  res.send('test');
+});
+
 router.get(
   '/verify-email',
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    let state = res.locals;
+  handleAsyncErrors(async (req: Request, res: Response) => {
+    let state = res.requestState;
 
     state = mergeRequestState(state, {
       pageData: {
@@ -92,8 +95,8 @@ router.get(
 router.post(
   '/verify-email',
   handleRecaptcha,
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    let state = res.locals;
+  handleAsyncErrors(async (req: Request, res: Response) => {
+    let state = res.requestState;
     let status = 200;
 
     try {
@@ -155,11 +158,15 @@ router.post(
 
 router.get(
   '/verify-email/:token',
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+  handleAsyncErrors(async (req: Request, res: Response) => {
     const { token } = req.params;
 
     try {
-      const cookies = await verifyEmail(token, req.ip, res.locals.requestId);
+      const cookies = await verifyEmail(
+        token,
+        req.ip,
+        res.requestState.requestId,
+      );
       trackMetric('EmailValidated::Success');
       // because we are verifying the email using idapi, and a new okta
       // session will not be created, so we will need to clear the okta
@@ -168,7 +175,7 @@ router.get(
       setIDAPICookies(res, cookies);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-        request_id: res.locals.requestId,
+        request_id: res.requestState.requestId,
       });
 
       const { message } = error instanceof ApiError ? error : new ApiError();
@@ -178,7 +185,7 @@ router.get(
           303,
           addQueryParamsToPath(
             `${consentPages[0].path}`,
-            res.locals.queryParams,
+            res.requestState.queryParams,
           ),
         );
       }
@@ -187,15 +194,19 @@ router.get(
 
       return res.redirect(
         303,
-        addQueryParamsToPath('/verify-email', res.locals.queryParams),
+        addQueryParamsToPath('/verify-email', res.requestState.queryParams),
       );
     }
 
     return res.redirect(
       303,
-      addQueryParamsToPath(`${consentPages[0].path}`, res.locals.queryParams, {
-        emailVerified: true,
-      }),
+      addQueryParamsToPath(
+        `${consentPages[0].path}`,
+        res.requestState.queryParams,
+        {
+          emailVerified: true,
+        },
+      ),
     );
   }),
 );

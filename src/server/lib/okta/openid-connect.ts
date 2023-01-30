@@ -1,12 +1,11 @@
 /* eslint-disable functional/immutable-data */
 import { Issuer, IssuerMetadata, Client } from 'openid-client';
 import { randomBytes } from 'crypto';
-import { Request, CookieOptions } from 'express';
+import { Request, Response, CookieOptions } from 'express';
 import { joinUrl } from '@guardian/libs';
 import { PersistableQueryParams } from '@/shared/model/QueryParams';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { getProfileUrl } from '@/server/lib/getProfileUrl';
-import { ResponseWithRequestState } from '@/server/models/Express';
 import { logger } from '@/server/lib/serverSideLogger';
 import { RoutePaths } from '@/shared/model/Routes';
 
@@ -248,11 +247,11 @@ const AuthorizationStateCookieOptions: CookieOptions = {
  * should be stored in the cookie. By signing the cookie
  * we can make sure that it hasn't been tampered by a malicious actor.
  * @param {AuthorizationState} state
- * @param {ResponseWithRequestState} res
+ * @param {Response} res
  */
 export const setAuthorizationStateCookie = (
   state: AuthorizationState,
-  res: ResponseWithRequestState,
+  res: Response,
 ) => {
   try {
     res.cookie(
@@ -262,7 +261,7 @@ export const setAuthorizationStateCookie = (
     );
   } catch (error) {
     logger.error('setAuthorizationStateCookie Error', error, {
-      request_id: res.locals.requestId,
+      request_id: res.requestState.requestId,
     });
   }
 };
@@ -311,11 +310,9 @@ export const getAuthorizationStateCookie = (
  * Delete the `AuthorizationState` cookie (`${AuthorizationStateCookieName}`).
  * This should be called once the Authorization Code Flow is complete
  * as the cookie has been used and no longer required.
- * @param {ResponseWithRequestState} res
+ * @param {Response} res
  */
-export const deleteAuthorizationStateCookie = (
-  res: ResponseWithRequestState,
-) => {
+export const deleteAuthorizationStateCookie = (res: Response) => {
   // Web browsers and other compliant clients will only clear the cookie
   // if the given options is identical to those given to res.cookie()
   // excluding expires and maxAge.

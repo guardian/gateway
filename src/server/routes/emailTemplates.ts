@@ -1,5 +1,4 @@
-import { Request } from 'express';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import { Request, Response } from 'express';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 
 import { renderedAccidentalEmail } from '@/email/templates/renderedTemplates';
@@ -28,16 +27,13 @@ const renderEmailTemplate = (
  * Returns a JSON object with the fields 'plain' and 'html' which contain the
  * plain-text and HTML versions of the requested email template.
  * Returns 404 for invalid template names. */
-router.get(
-  '/email/:template',
-  (req: Request, res: ResponseWithRequestState) => {
-    const template = req.params.template as EmailTemplateType;
-    const templateIsValid = emailTemplateTypes.includes(template);
+router.get('/email/:template', (req: Request, res: Response) => {
+  const template = req.params.template as EmailTemplateType;
+  const templateIsValid = emailTemplateTypes.includes(template);
 
-    return templateIsValid
-      ? res.json(renderEmailTemplate(template))
-      : res.sendStatus(404);
-  },
-);
+  return templateIsValid
+    ? res.json(renderEmailTemplate(template))
+    : res.sendStatus(404);
+});
 
 export default router.router;

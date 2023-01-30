@@ -1,13 +1,12 @@
-import { Router } from 'express';
+import { Router, Response } from 'express';
 import { renderer } from '@/server/lib/renderer';
-import { ResponseWithRequestState } from '@/server/models/Express';
 
 const router = Router();
 
-router.use('/maintenance', (_, res: ResponseWithRequestState) => {
+router.use('/maintenance', (_, res: Response) => {
   const html = renderer('/maintenance', {
     pageTitle: 'Maintenance',
-    requestState: res.locals,
+    requestState: res.requestState,
   });
   return res.type('html').status(503).send(html);
 });

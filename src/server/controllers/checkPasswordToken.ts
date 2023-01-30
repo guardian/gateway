@@ -1,9 +1,6 @@
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { Request } from 'express';
-import {
-  RequestState,
-  ResponseWithRequestState,
-} from '@/server/models/Express';
+import { Request, Response } from 'express';
+import { RequestState } from '@/server/models/Express';
 import { validate as validateTokenInIDAPI } from '@/server/lib/idapi/changePassword';
 import deepmerge from 'deepmerge';
 import { getBrowserNameFromUserAgent } from '@/server/lib/getBrowserName';
@@ -31,11 +28,11 @@ const handleBackButtonEventOnWelcomePage = (
   path: PasswordRoutePath,
   pageTitle: PasswordPageTitle,
   req: Request,
-  res: ResponseWithRequestState,
+  res: Response,
 ) => {
   const { email, passwordSetOnWelcomePage } =
     readEncryptedStateCookie(req) ?? {};
-  const requestState = mergeRequestState(res.locals, {
+  const requestState = mergeRequestState(res.requestState, {
     pageData: {
       email,
     },
@@ -61,16 +58,16 @@ const checkTokenInIDAPI = async (
   path: PasswordRoutePath,
   pageTitle: PasswordPageTitle,
   req: Request,
-  res: ResponseWithRequestState,
+  res: Response,
 ) => {
-  let requestState = res.locals;
+  let requestState = res.requestState;
   const { token } = req.params;
 
   try {
     const { email, timeUntilTokenExpiry } = await validateTokenInIDAPI(
       token,
       req.ip,
-      res.locals.requestId,
+      res.requestState.requestId,
     );
 
     requestState = mergeRequestState(requestState, {
@@ -95,7 +92,7 @@ const checkTokenInIDAPI = async (
     return res.type('html').send(html);
   } catch (error) {
     logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-      request_id: res.locals.requestId,
+      request_id: res.requestState.requestId,
     });
 
     if (path === '/welcome') {
@@ -143,7 +140,7 @@ export const checkTokenInOkta = async (
   path: PasswordRoutePath,
   pageTitle: PasswordPageTitle,
   req: Request,
-  res: ResponseWithRequestState,
+  res: Response,
   error?: ChangePasswordErrors,
   fieldErrors?: Array<FieldError>,
 ) => {
@@ -171,11 +168,11 @@ export const checkTokenInOkta = async (
       encryptedState?.queryParams ?? ({} as PersistableQueryParams);
 
     // get the returnUrl
-    const returnUrl = getReturnUrl(res.locals, encryptedStateQueryParams);
+    const returnUrl = getReturnUrl(res.requestState, encryptedStateQueryParams);
 
     // get fromURI and appClientId, which are parameters from the Okta SDK
     // and unique to this request
-    const { fromURI, appClientId } = res.locals.queryParams;
+    const { fromURI, appClientId } = res.requestState.queryParams;
 
     // finally generate the queryParams object to merge in with the requestState
     // with the correct returnUrl for this request
@@ -192,7 +189,7 @@ export const checkTokenInOkta = async (
       `${path}/:token`,
       {
         pageTitle,
-        requestState: mergeRequestState(res.locals, {
+        requestState: mergeRequestState(res.requestState, {
           queryParams,
           pageData: {
             browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
@@ -209,7 +206,7 @@ export const checkTokenInOkta = async (
     return res.type('html').send(html);
   } catch (error) {
     logger.error('Okta validate password token failure', error, {
-      request_id: res.locals.requestId,
+      request_id: res.requestState.requestId,
     });
 
     trackMetric('OktaValidatePasswordToken::Failure');
@@ -219,7 +216,7 @@ export const checkTokenInOkta = async (
     } else {
       const html = renderer(`${path}/resend`, {
         pageTitle: `Resend ${pageTitle} Email`,
-        requestState: res.locals,
+        requestState: res.requestState,
       });
       return res.type('html').send(html);
     }
@@ -230,8 +227,8 @@ export const checkPasswordTokenController = (
   path: PasswordRoutePath,
   pageTitle: PasswordPageTitle,
 ) =>
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { useIdapi } = res.locals.queryParams;
+  handleAsyncErrors(async (req: Request, res: Response) => {
+    const { useIdapi } = res.requestState.queryParams;
     if (okta.enabled && !useIdapi) {
       await checkTokenInOkta(path, pageTitle, req, res);
     } else {

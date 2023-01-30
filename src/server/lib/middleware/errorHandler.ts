@@ -1,5 +1,4 @@
-import { NextFunction, Request } from 'express';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import { NextFunction, Request, Response } from 'express';
 import { getCsrfPageUrl } from '@/server/lib/getCsrfPageUrl';
 import { renderer } from '@/server/lib/renderer';
 import { logger } from '@/server/lib/serverSideLogger';
@@ -13,19 +12,19 @@ export const routeErrorHandler = (
   // eslint-disable-next-line
   err: any, // ErrorRequestHandler uses type any
   req: Request,
-  res: ResponseWithRequestState,
+  res: Response,
   next: NextFunction,
 ) => {
   if (err.code === 'EBADCSRFTOKEN') {
     // handle CSRF token errors here
-    // we attempt to redirect to res.locals.csrf.pageUrl provided by a hidden form field falling back to req.url
-    // we use res.locals.csrf.pageUrl since the URL might not be GET-able if the request was a POST
+    // we attempt to redirect to res.requestState.csrf.pageUrl provided by a hidden form field falling back to req.url
+    // we use res.requestState.csrf.pageUrl since the URL might not be GET-able if the request was a POST
     // we also have to manually build the query params object, as it may not be defined in an unexpected csrf error
     res.redirect(
       303,
       addQueryParamsToUntypedPath(
         getCsrfPageUrl(req),
-        { ...res.locals.queryParams, returnUrl: defaultReturnUri },
+        { ...res.requestState.queryParams, returnUrl: defaultReturnUri },
         {
           csrfError: true,
         },
@@ -39,7 +38,7 @@ export const routeErrorHandler = (
       addQueryParamsToUntypedPath(
         req.url,
         {
-          ...res.locals.queryParams,
+          ...res.requestState.queryParams,
           returnUrl: defaultReturnUri,
         },
         {
@@ -55,7 +54,7 @@ export const routeErrorHandler = (
   });
 
   const html = renderer('/error', {
-    requestState: res.locals,
+    requestState: res.requestState,
     pageTitle: 'Unexpected Error',
   });
   return res.status(500).type('html').send(html);

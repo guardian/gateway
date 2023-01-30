@@ -1,9 +1,8 @@
-import { NextFunction, Request } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { getSession } from '../okta/api/sessions';
 import { clearOktaCookies } from '@/server/routes/signOut';
 import { logger } from '../serverSideLogger';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { ResponseWithRequestState } from '@/server/models/Express';
 import { getConfiguration } from '../getConfiguration';
 import { read } from '../idapi/auth';
 import { IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
@@ -18,10 +17,10 @@ const { okta, defaultReturnUri, baseUri } = getConfiguration();
  */
 export const redirectIfLoggedIn = async (
   req: Request,
-  res: ResponseWithRequestState,
+  res: Response,
   next: NextFunction,
 ) => {
-  const state = res.locals;
+  const state = res.requestState;
   const { useIdapi } = state.queryParams;
 
   const oktaSessionCookieId: string | undefined = req.cookies.sid;
@@ -83,12 +82,12 @@ export const redirectIfLoggedIn = async (
         'User attempting to access signed-out-only route had an existing Okta session cookie, but it was invalid',
         undefined,
         {
-          request_id: res.locals.requestId,
+          request_id: res.requestState.requestId,
         },
       );
       //we redirect to /reauthenticate to make sure the cookies has been removed
       return res.redirect(
-        addQueryParamsToPath('/reauthenticate', res.locals.queryParams),
+        addQueryParamsToPath('/reauthenticate', res.requestState.queryParams),
       );
     }
   } else {
@@ -98,7 +97,7 @@ export const redirectIfLoggedIn = async (
         'User attempting to access signed-out-only route had existing IDAPI cookies set.',
         undefined,
         {
-          request_id: res.locals.requestId,
+          request_id: res.requestState.requestId,
         },
       );
       try {
@@ -107,7 +106,7 @@ export const redirectIfLoggedIn = async (
           identitySessionCookie,
           identityLastAccessCookie,
           req.ip,
-          res.locals.requestId,
+          res.requestState.requestId,
         );
         //if the current session is valid redirect to the chosen URL
         if (
@@ -120,7 +119,10 @@ export const redirectIfLoggedIn = async (
           // /reauthenticate and delete the Identity cookies
           clearIDAPICookies(res);
           return res.redirect(
-            addQueryParamsToPath('/reauthenticate', res.locals.queryParams),
+            addQueryParamsToPath(
+              '/reauthenticate',
+              res.requestState.queryParams,
+            ),
           );
         }
       } catch {

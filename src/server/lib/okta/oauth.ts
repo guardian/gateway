@@ -1,5 +1,4 @@
-import { Request } from 'express';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import { Request, Response } from 'express';
 import { getPersistableQueryParams } from '@/shared/lib/queryParams';
 import { RoutePaths } from '@/shared/model/Routes';
 import {
@@ -27,7 +26,7 @@ import { closeSession } from './api/sessions';
  */
 export const performAuthorizationCodeFlow = async (
   req: Request,
-  res: ResponseWithRequestState,
+  res: Response,
   {
     sessionToken,
     confirmationPagePath,
@@ -58,7 +57,7 @@ export const performAuthorizationCodeFlow = async (
   // which is a json object that contains a stateParam and the query params
   // the stateParam is used to protect against csrf
   const authState = generateAuthorizationState(
-    getPersistableQueryParams(res.locals.queryParams),
+    getPersistableQueryParams(res.requestState.queryParams),
     confirmationPagePath,
     doNotSetLastAccessCookie,
   );

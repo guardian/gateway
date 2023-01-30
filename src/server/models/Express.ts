@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { QueryParams } from '@/shared/model/QueryParams';
 import {
   ClientHosts,
@@ -33,10 +33,6 @@ export interface RequestState {
   sentryConfig: SentryConfig;
   browser: Bowser.Parser.Details;
   requestId?: string;
-}
-
-export interface ResponseWithRequestState extends Response {
-  locals: RequestState;
 }
 
 export interface RequestWithTypedQuery extends Request {

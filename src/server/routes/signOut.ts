@@ -1,6 +1,5 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
-import { ResponseWithRequestState } from '@/server/models/Express';
 import { logoutFromIDAPI } from '@/server/lib/idapi/unauth';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { logger } from '@/server/lib/serverSideLogger';
@@ -32,7 +31,7 @@ const DotComCookies = [
 
 const OKTA_COOKIE_NAME = 'sid';
 
-const clearDotComCookies = (res: ResponseWithRequestState) => {
+const clearDotComCookies = (res: Response) => {
   // the baseUri is profile.theguardian.com so we strip the 'profile' as the cookie domain should be .theguardian.com
   // we also remove the port after the ':' to make it work in localhost for development and testing
   const domain = `${baseUri.replace('profile.', '').split(':')[0]}`;
@@ -46,7 +45,7 @@ const clearDotComCookies = (res: ResponseWithRequestState) => {
   });
 };
 
-export const clearOktaCookies = (res: ResponseWithRequestState) => {
+export const clearOktaCookies = (res: Response) => {
   // We do not set a domain attribute as doing this makes the hostOnly=false
   // and when the cookie is set by Okta, they do not specify a domain in the set-cookie header,
   // so the Okta sid cookie is consider hostOnly=true
@@ -58,8 +57,8 @@ export const clearOktaCookies = (res: ResponseWithRequestState) => {
 
 router.get(
   '/signout',
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { returnUrl } = res.locals.queryParams;
+  handleAsyncErrors(async (req: Request, res: Response) => {
+    const { returnUrl } = res.requestState.queryParams;
 
     // We try the logout sequentially, as we need to log users out from Okta first,
     await signOutFromOkta(req, res);
@@ -78,10 +77,7 @@ router.get(
   }),
 );
 
-const signOutFromIDAPI = async (
-  req: Request,
-  res: ResponseWithRequestState,
-): Promise<void> => {
+const signOutFromIDAPI = async (req: Request, res: Response): Promise<void> => {
   try {
     // get the SC_GU_U cookie here
     const sc_gu_u: string | undefined = req.cookies.SC_GU_U;
@@ -92,7 +88,7 @@ const signOutFromIDAPI = async (
       const cookies = await logoutFromIDAPI(
         sc_gu_u,
         req.ip,
-        res.locals.requestId,
+        res.requestState.requestId,
       );
 
       // set the GU_SO cookie
@@ -104,7 +100,7 @@ const signOutFromIDAPI = async (
     trackMetric('SignOut::Success');
   } catch (error) {
     logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-      request_id: res.locals.requestId,
+      request_id: res.requestState.requestId,
     });
     trackMetric('SignOut::Failure');
   } finally {
@@ -117,10 +113,7 @@ const signOutFromIDAPI = async (
   }
 };
 
-const signOutFromOkta = async (
-  req: Request,
-  res: ResponseWithRequestState,
-): Promise<void> => {
+const signOutFromOkta = async (req: Request, res: Response): Promise<void> => {
   try {
     // attempt to log out from Okta if we have Okta session cookie
     const oktaSessionCookieId: string | undefined = req.cookies.sid;
@@ -132,7 +125,7 @@ const signOutFromOkta = async (
     }
   } catch (error) {
     logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-      request_id: res.locals.requestId,
+      request_id: res.requestState.requestId,
     });
     trackMetric('OktaSignOut::Failure');
   } finally {

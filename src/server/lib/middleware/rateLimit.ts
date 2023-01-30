@@ -1,9 +1,6 @@
-import {
-  RequestWithTypedQuery,
-  ResponseWithRequestState,
-} from '@/server/models/Express';
+import { RequestWithTypedQuery } from '@/server/models/Express';
 import { RoutePaths, ValidRoutePathsArray } from '@/shared/model/Routes';
-import { NextFunction } from 'express';
+import { NextFunction, Response } from 'express';
 import rateLimit, {
   BucketValues,
   RateLimiterConfiguration,
@@ -25,7 +22,7 @@ const { rateLimiter, okta } = getConfiguration();
 
 export const rateLimiterMiddleware = async (
   req: RequestWithTypedQuery,
-  res: ResponseWithRequestState,
+  res: Response,
   next: NextFunction,
 ) => {
   // Skip rate limiting if the rate limiter is disabled or the redis client not initialised.
@@ -46,7 +43,7 @@ export const rateLimiterMiddleware = async (
       `RateLimit falling back to default configuration for unregistered path: ${routePathDefinition}`,
       undefined,
       {
-        request_id: res.locals.requestId,
+        request_id: res.requestState.requestId,
       },
     );
   }
@@ -56,7 +53,7 @@ export const rateLimiterMiddleware = async (
   const encryptedStateEmail = readEmailCookie(req);
 
   // If Okta is enabled, rate limit based on the Okta identifier.
-  const { useIdapi } = res.locals.queryParams;
+  const { useIdapi } = res.requestState.queryParams;
   const oktaSessionCookieId: string | undefined = req.cookies.sid;
   const isOktaInUse = okta.enabled && !useIdapi && oktaSessionCookieId;
 
@@ -91,7 +88,7 @@ export const rateLimiterMiddleware = async (
       `RateLimit-Gateway ${ratelimitBucketTypeIfHit}Bucket email=${rateLimitData.email} ip=${rateLimitData.ip} accessToken=${truncatedAccessToken} identity-gateway ${req.method} ${routePathDefinition}`,
       undefined,
       {
-        request_id: res.locals.requestId,
+        request_id: res.requestState.requestId,
       },
     );
 

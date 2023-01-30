@@ -1,10 +1,9 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { getBrowserNameFromUserAgent } from '@/server/lib/getBrowserName';
 import { logger } from '@/server/lib/serverSideLogger';
 import { renderer } from '@/server/lib/renderer';
-import { ResponseWithRequestState } from '@/server/models/Express';
 import {
   validate as validateToken,
   change as changePassword,
@@ -41,10 +40,10 @@ const changePasswordInIDAPI = async (
   path: PasswordRoutePath,
   pageTitle: PasswordPageTitle,
   req: Request,
-  res: ResponseWithRequestState,
+  res: Response,
   successRedirectPath: RoutePaths,
 ) => {
-  let requestState = res.locals;
+  let requestState = res.requestState;
 
   const { token } = req.params;
   const { clientId } = req.query;
@@ -64,7 +63,7 @@ const changePasswordInIDAPI = async (
       password,
       token,
       req.ip,
-      res.locals.requestId,
+      res.requestState.requestId,
     );
 
     if (cookies) {
@@ -92,7 +91,7 @@ const changePasswordInIDAPI = async (
           secondName,
           req.ip,
           SC_GU_U.value,
-          res.locals.requestId,
+          res.requestState.requestId,
         );
         trackMetric('JobsGRSGroupAgree::Success');
       }
@@ -117,7 +116,7 @@ const changePasswordInIDAPI = async (
       error instanceof ApiError ? error : new ApiError();
 
     logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-      request_id: res.locals.requestId,
+      request_id: res.requestState.requestId,
     });
 
     // see the comment above around the success metrics
@@ -133,7 +132,7 @@ const changePasswordInIDAPI = async (
       const { email, timeUntilTokenExpiry } = await validateToken(
         token,
         req.ip,
-        res.locals.requestId,
+        res.requestState.requestId,
       );
 
       if (field) {
@@ -167,7 +166,7 @@ const changePasswordInIDAPI = async (
       return res.status(status).type('html').send(html);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-        request_id: res.locals.requestId,
+        request_id: res.requestState.requestId,
       });
       // if theres an error with the token validation, we have to take them back
       // to the resend page
@@ -185,7 +184,7 @@ const changePasswordInOkta = async (
   path: PasswordRoutePath,
   pageTitle: PasswordPageTitle,
   req: Request,
-  res: ResponseWithRequestState,
+  res: Response,
   successRedirectPath: RoutePaths,
 ) => {
   const recoveryToken = req.params?.token;
@@ -220,7 +219,7 @@ const changePasswordInOkta = async (
           'Failed to set validation flags in Okta as there was no id',
           undefined,
           {
-            request_id: res.locals.requestId,
+            request_id: res.requestState.requestId,
           },
         );
       }
@@ -235,7 +234,7 @@ const changePasswordInOkta = async (
             'Failed to set jobs user name and field in Okta as there was no id',
             undefined,
             {
-              request_id: res.locals.requestId,
+              request_id: res.requestState.requestId,
             },
           );
         }
@@ -251,13 +250,13 @@ const changePasswordInOkta = async (
       });
 
       // fire ophan component event if applicable
-      if (res.locals.queryParams.componentEventParams) {
+      if (res.requestState.queryParams.componentEventParams) {
         sendOphanComponentEventFromQueryParamsServer(
-          res.locals.queryParams.componentEventParams,
+          res.requestState.queryParams.componentEventParams,
           'SIGN_IN',
           'web',
-          res.locals.ophanConfig.consentUUID,
-          res.locals.requestId,
+          res.requestState.ophanConfig.consentUUID,
+          res.requestState.requestId,
         );
       }
 
@@ -271,7 +270,7 @@ const changePasswordInOkta = async (
     }
   } catch (error) {
     logger.error('Okta change password failure', error, {
-      request_id: res.locals.requestId,
+      request_id: res.requestState.requestId,
     });
 
     // see the comment above around the success metrics
@@ -296,8 +295,8 @@ export const setPasswordController = (
   pageTitle: PasswordPageTitle,
   successRedirectPath: RoutePaths,
 ) =>
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { useIdapi } = res.locals.queryParams;
+  handleAsyncErrors(async (req: Request, res: Response) => {
+    const { useIdapi } = res.requestState.queryParams;
     if (okta.enabled && !useIdapi) {
       await changePasswordInOkta(
         path,

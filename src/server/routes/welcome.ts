@@ -7,11 +7,10 @@ import { logger } from '@/server/lib/serverSideLogger';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { renderer } from '@/server/lib/renderer';
 import { ApiError } from '@/server/models/Error';
-import { ResponseWithRequestState } from '@/server/models/Express';
 import { consentPages } from '@/server/routes/consents';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import deepmerge from 'deepmerge';
-import { Request, Router } from 'express';
+import { Request, Response, Router } from 'express';
 import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { register } from '@/server/lib/okta/register';
 import { trackMetric } from '@/server/lib/trackMetric';
@@ -25,19 +24,19 @@ const { okta } = getConfiguration();
 
 const router = Router();
 // resend account verification page
-router.get('/welcome/resend', (_: Request, res: ResponseWithRequestState) => {
+router.get('/welcome/resend', (_: Request, res: Response) => {
   const html = renderer('/welcome/resend', {
     pageTitle: 'Resend Welcome Email',
-    requestState: res.locals,
+    requestState: res.requestState,
   });
   res.type('html').send(html);
 });
 
 // resend account verification page, session expired
-router.get('/welcome/expired', (_: Request, res: ResponseWithRequestState) => {
+router.get('/welcome/expired', (_: Request, res: Response) => {
   const html = renderer('/welcome/expired', {
     pageTitle: 'Resend Welcome Email',
-    requestState: res.locals,
+    requestState: res.requestState,
   });
   res.type('html').send(html);
 });
@@ -46,13 +45,13 @@ router.get('/welcome/expired', (_: Request, res: ResponseWithRequestState) => {
 router.post(
   '/welcome/resend',
   handleRecaptcha,
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { useIdapi } = res.locals.queryParams;
+  handleAsyncErrors(async (req: Request, res: Response) => {
+    const { useIdapi } = res.requestState.queryParams;
     if (okta.enabled && !useIdapi) {
       await OktaResendEmail(req, res);
     } else {
       const { email } = req.body;
-      const state = res.locals;
+      const state = res.requestState;
       const { emailSentSuccess } = state.queryParams;
 
       try {
@@ -68,9 +67,13 @@ router.post(
 
         return res.redirect(
           303,
-          addQueryParamsToPath('/welcome/email-sent', res.locals.queryParams, {
-            emailSentSuccess,
-          }),
+          addQueryParamsToPath(
+            '/welcome/email-sent',
+            res.requestState.queryParams,
+            {
+              emailSentSuccess,
+            },
+          ),
         );
       } catch (error) {
         const { message, status } =
@@ -82,7 +85,7 @@ router.post(
 
         const html = renderer('/welcome/resend', {
           pageTitle: 'Resend Welcome Email',
-          requestState: mergeRequestState(res.locals, {
+          requestState: mergeRequestState(res.requestState, {
             globalMessage: {
               error: message,
             },
@@ -95,28 +98,25 @@ router.post(
 );
 
 // email sent page
-router.get(
-  '/welcome/email-sent',
-  (req: Request, res: ResponseWithRequestState) => {
-    let state = res.locals;
+router.get('/welcome/email-sent', (req: Request, res: Response) => {
+  let state = res.requestState;
 
-    const email = readEmailCookie(req);
+  const email = readEmailCookie(req);
 
-    state = mergeRequestState(state, {
-      pageData: {
-        email,
-        resendEmailAction: '/welcome/resend',
-        changeEmailPage: '/welcome/resend',
-      },
-    });
+  state = mergeRequestState(state, {
+    pageData: {
+      email,
+      resendEmailAction: '/welcome/resend',
+      changeEmailPage: '/welcome/resend',
+    },
+  });
 
-    const html = renderer('/welcome/email-sent', {
-      pageTitle: 'Check Your Inbox',
-      requestState: state,
-    });
-    res.type('html').send(html);
-  },
-);
+  const html = renderer('/welcome/email-sent', {
+    pageTitle: 'Check Your Inbox',
+    requestState: state,
+  });
+  res.type('html').send(html);
+});
 
 // welcome page, check token and display set password page
 router.get(
@@ -130,10 +130,10 @@ router.post(
   setPasswordController('/welcome', 'Welcome', consentPages[0].path),
 );
 
-const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
+const OktaResendEmail = async (req: Request, res: Response) => {
   const { email } = req.body;
   try {
-    const state = res.locals;
+    const state = res.requestState;
 
     if (typeof email !== 'undefined') {
       const user = await register({
@@ -148,9 +148,13 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 
       return res.redirect(
         303,
-        addQueryParamsToPath('/welcome/email-sent', res.locals.queryParams, {
-          emailSentSuccess: true,
-        }),
+        addQueryParamsToPath(
+          '/welcome/email-sent',
+          res.requestState.queryParams,
+          {
+            emailSentSuccess: true,
+          },
+        ),
       );
     } else
       throw new OktaError({
@@ -158,14 +162,14 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
       });
   } catch (error) {
     logger.error('Okta Registration resend email failure', error, {
-      request_id: res.locals.requestId,
+      request_id: res.requestState.requestId,
     });
 
     trackMetric('OktaWelcomeResendEmail::Failure');
 
     const html = renderer('/welcome/email-sent', {
       pageTitle: 'Check Your Inbox',
-      requestState: deepmerge(res.locals, {
+      requestState: deepmerge(res.requestState, {
         globalMessage: {
           error: GenericErrors.DEFAULT,
         },

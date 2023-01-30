@@ -1,5 +1,4 @@
-import { Request } from 'express';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import { Request, Response } from 'express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { CONSENTS_POST_SIGN_IN_PAGE, Consents } from '@/shared/model/Consent';
@@ -15,7 +14,7 @@ const { defaultReturnUri } = getConfiguration();
 
 const postSignInController = async (
   req: Request,
-  res: ResponseWithRequestState,
+  res: Response,
   idapiCookies?: IdapiCookies,
   returnUrl?: string,
 ) => {
@@ -47,13 +46,13 @@ const postSignInController = async (
         CONSENTS_POST_SIGN_IN_PAGE,
         req.ip,
         sc_gu_u,
-        res.locals.requestId,
+        res.requestState.requestId,
       );
 
       return !consents.find(({ id }) => id === Consents.SUPPORTER)?.consented;
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-        request_id: res.locals.requestId,
+        request_id: res.requestState.requestId,
       });
       trackMetric('PostSignInPromptRedirect::Failure');
       return false;

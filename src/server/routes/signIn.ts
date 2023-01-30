@@ -1,9 +1,8 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { authenticate as authenticateWithIdapi } from '@/server/lib/idapi/auth';
 import { authenticate as authenticateWithOkta } from '@/server/lib/okta/api/authentication';
 import { logger } from '@/server/lib/serverSideLogger';
 import { renderer } from '@/server/lib/renderer';
-import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
@@ -73,14 +72,14 @@ const getErrorMessageFromQueryParams = (
 router.get(
   '/signin',
   redirectIfLoggedIn,
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const state = res.locals;
+  handleAsyncErrors(async (req: Request, res: Response) => {
+    const state = res.requestState;
     const { encryptedEmail, error, error_description } = state.queryParams;
 
     // first attempt to get email from IDAPI encryptedEmail if it exists
     const decryptedEmail =
       encryptedEmail &&
-      (await decrypt(encryptedEmail, req.ip, res.locals.requestId));
+      (await decrypt(encryptedEmail, req.ip, res.requestState.requestId));
 
     // followed by the gateway EncryptedState
     // if it exists
@@ -101,30 +100,27 @@ router.get(
   }),
 );
 
-router.get(
-  '/signin/email-sent',
-  (req: Request, res: ResponseWithRequestState) => {
-    const state = res.locals;
-    const html = renderer('/signin/email-sent', {
-      requestState: mergeRequestState(state, {
-        pageData: {
-          email: readEncryptedStateCookie(req)?.email,
-        },
-      }),
-      pageTitle: 'Check Your Inbox',
-    });
-    res.type('html').send(html);
-  },
-);
+router.get('/signin/email-sent', (req: Request, res: Response) => {
+  const state = res.requestState;
+  const html = renderer('/signin/email-sent', {
+    requestState: mergeRequestState(state, {
+      pageData: {
+        email: readEncryptedStateCookie(req)?.email,
+      },
+    }),
+    pageTitle: 'Check Your Inbox',
+  });
+  res.type('html').send(html);
+});
 
 router.post(
   '/signin/email-sent/resend',
   handleRecaptcha,
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+  handleAsyncErrors(async (req: Request, res: Response) => {
     const {
       queryParams: { appClientId },
       requestId: request_id,
-    } = res.locals;
+    } = res.requestState;
 
     // We don't need to check the useIdapi flag as a user can only
     // get into this flow after an attempt to login with Okta
@@ -166,19 +162,23 @@ router.post(
 
       return res.redirect(
         303,
-        addQueryParamsToPath('/signin/email-sent', res.locals.queryParams, {
-          emailSentSuccess: true,
-        }),
+        addQueryParamsToPath(
+          '/signin/email-sent',
+          res.requestState.queryParams,
+          {
+            emailSentSuccess: true,
+          },
+        ),
       );
     } catch (error) {
       logger.error('Okta unvalidated user resend email failure', error, {
-        request_id: res.locals.requestId,
+        request_id: res.requestState.requestId,
       });
       trackMetric('OktaUnvalidatedUserResendEmail::Failure');
       return res.type('html').send(
         renderer('/signin/email-sent', {
           pageTitle: 'Check Your Inbox',
-          requestState: mergeRequestState(res.locals, {
+          requestState: mergeRequestState(res.requestState, {
             pageData: {
               formError: GenericErrors.DEFAULT,
             },
@@ -194,14 +194,14 @@ router.post(
 // to be allowed to attempt to sign in again.
 router.get(
   '/reauthenticate',
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const state = res.locals;
+  handleAsyncErrors(async (req: Request, res: Response) => {
+    const state = res.requestState;
     const { encryptedEmail, error, error_description } = state.queryParams;
 
     // first attempt to get email from IDAPI encryptedEmail if it exists
     const decryptedEmail =
       encryptedEmail &&
-      (await decrypt(encryptedEmail, req.ip, res.locals.requestId));
+      (await decrypt(encryptedEmail, req.ip, res.requestState.requestId));
 
     // followed by the gateway EncryptedState
     // if it exists
@@ -225,12 +225,12 @@ router.get(
 router.post(
   '/reauthenticate',
   handleRecaptcha,
-  handleAsyncErrors((req: Request, res: ResponseWithRequestState) => {
-    const { useIdapi } = res.locals.queryParams;
+  handleAsyncErrors((req: Request, res: Response) => {
+    const { useIdapi } = res.requestState.queryParams;
     const {
       queryParams: { appClientId },
       requestId: request_id,
-    } = res.locals;
+    } = res.requestState;
     if (okta.enabled && !useIdapi) {
       // if okta feature switch enabled, use okta authentication
       return oktaSignInController({
@@ -250,12 +250,12 @@ router.post(
 router.post(
   '/signin',
   handleRecaptcha,
-  handleAsyncErrors((req: Request, res: ResponseWithRequestState) => {
-    const { useIdapi } = res.locals.queryParams;
+  handleAsyncErrors((req: Request, res: Response) => {
+    const { useIdapi } = res.requestState.queryParams;
     const {
       queryParams: { appClientId },
       requestId: request_id,
-    } = res.locals;
+    } = res.requestState;
     if (okta.enabled && !useIdapi) {
       // if okta feature switch enabled, use okta authentication
       return oktaSignInController({
@@ -272,12 +272,9 @@ router.post(
   }),
 );
 
-const idapiSignInController = async (
-  req: Request,
-  res: ResponseWithRequestState,
-) => {
+const idapiSignInController = async (req: Request, res: Response) => {
   const { email = '', password = '' } = req.body;
-  const { pageData } = res.locals;
+  const { pageData } = res.requestState;
   const { returnUrl } = pageData;
 
   try {
@@ -285,8 +282,8 @@ const idapiSignInController = async (
       email,
       password,
       req.ip,
-      res.locals.queryParams,
-      res.locals.requestId,
+      res.requestState.queryParams,
+      res.requestState.requestId,
     );
 
     // because we are signing in using idapi, and a new okta
@@ -300,7 +297,7 @@ const idapiSignInController = async (
     return postSignInController(req, res, cookies, returnUrl);
   } catch (error) {
     logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-      request_id: res.locals.requestId,
+      request_id: res.requestState.requestId,
     });
     const { message, status } =
       error instanceof ApiError ? error : new ApiError();
@@ -309,7 +306,7 @@ const idapiSignInController = async (
 
     // re-render the sign in page on error, with pre-filled email
     const html = renderer('/signin', {
-      requestState: mergeRequestState(res.locals, {
+      requestState: mergeRequestState(res.requestState, {
         pageData: {
           email,
           formError: message,
@@ -345,7 +342,7 @@ const oktaSignInController = async ({
   request_id,
 }: {
   req: Request;
-  res: ResponseWithRequestState;
+  res: Response;
   isReauthenticate?: boolean;
   appClientId?: string;
   request_id?: string;
@@ -366,7 +363,7 @@ const oktaSignInController = async ({
       logger.info(
         'User POSTed to /signin with an invalid `sid` session cookie',
         undefined,
-        { request_id: res.locals.requestId },
+        { request_id: res.requestState.requestId },
       );
     }
   }
@@ -392,13 +389,13 @@ const oktaSignInController = async ({
     }
 
     // fire ophan component event if applicable when a session is set
-    if (res.locals.queryParams.componentEventParams) {
+    if (res.requestState.queryParams.componentEventParams) {
       sendOphanComponentEventFromQueryParamsServer(
-        res.locals.queryParams.componentEventParams,
+        res.requestState.queryParams.componentEventParams,
         'SIGN_IN',
         'web',
-        res.locals.ophanConfig.consentUUID,
-        res.locals.requestId,
+        res.requestState.ophanConfig.consentUUID,
+        res.requestState.requestId,
       );
     }
 
@@ -445,9 +442,13 @@ const oktaSignInController = async ({
 
         return res.redirect(
           303,
-          addQueryParamsToPath('/signin/email-sent', res.locals.queryParams, {
-            emailSentSuccess: true,
-          }),
+          addQueryParamsToPath(
+            '/signin/email-sent',
+            res.requestState.queryParams,
+            {
+              emailSentSuccess: true,
+            },
+          ),
         );
       }
     }
@@ -463,13 +464,13 @@ const oktaSignInController = async ({
     trackMetric('OktaSignIn::Failure');
 
     logger.error('Okta authentication error:', error, {
-      request_id: res.locals.requestId,
+      request_id: res.requestState.requestId,
     });
 
     const { message, status } = oktaSignInControllerErrorHandler(error);
 
     const html = renderer('/signin', {
-      requestState: mergeRequestState(res.locals, {
+      requestState: mergeRequestState(res.requestState, {
         pageData: {
           email,
           formError: message,
@@ -484,10 +485,10 @@ const oktaSignInController = async ({
 
 const optInPromptController = async (
   req: Request,
-  res: ResponseWithRequestState,
+  res: Response,
   errorMessage?: string,
 ) => {
-  const state = res.locals;
+  const state = res.requestState;
   const { returnUrl } = state.pageData;
   const { defaultReturnUri } = getConfiguration();
   const redirectUrl = returnUrl || defaultReturnUri;
@@ -497,7 +498,7 @@ const optInPromptController = async (
       CONSENTS_POST_SIGN_IN_PAGE,
       req.ip,
       req.cookies.SC_GU_U,
-      res.locals.requestId,
+      res.requestState.requestId,
     );
     const html = renderer('/signin/success', {
       requestState: mergeRequestState(state, {
@@ -515,7 +516,7 @@ const optInPromptController = async (
     res.type('html').send(html);
   } catch (error) {
     logger.error(`${req.method} ${req.originalUrl} Error`, error, {
-      request_id: res.locals.requestId,
+      request_id: res.requestState.requestId,
     });
     return res.redirect(303, redirectUrl);
   }
@@ -524,7 +525,7 @@ const optInPromptController = async (
 router.get(
   '/signin/success',
   loginMiddleware,
-  handleAsyncErrors((req: Request, res: ResponseWithRequestState) =>
+  handleAsyncErrors((req: Request, res: Response) =>
     optInPromptController(req, res),
   ),
 );
@@ -532,8 +533,8 @@ router.get(
 router.post(
   '/signin/success',
   loginMiddleware,
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const state = res.locals;
+  handleAsyncErrors(async (req: Request, res: Response) => {
+    const state = res.requestState;
     const { returnUrl } = state.pageData;
     const { defaultReturnUri } = getConfiguration();
     const redirectUrl = returnUrl || defaultReturnUri;
@@ -549,7 +550,7 @@ router.post(
       await patchConsents(req.ip, sc_gu_u, consents);
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-        request_id: res.locals.requestId,
+        request_id: res.requestState.requestId,
       });
       trackMetric('PostSignInPrompt::Failure');
 
@@ -576,8 +577,8 @@ router.post(
  */
 router.get(
   '/signin/refresh',
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { returnUrl } = res.locals.queryParams;
+  handleAsyncErrors(async (req: Request, res: Response) => {
+    const { returnUrl } = res.requestState.queryParams;
     const oktaSessionCookieId: string | undefined = req.cookies.sid;
     const identitySessionCookie = req.cookies.SC_GU_U;
 
@@ -617,8 +618,8 @@ const isValidSocialProvider = (provider: string): boolean =>
 
 router.get(
   '/signin/:social',
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { returnUrl } = res.locals.queryParams;
+  handleAsyncErrors(async (req: Request, res: Response) => {
+    const { returnUrl } = res.requestState.queryParams;
     const socialIdp = req.params.social as SocialProvider;
 
     if (!isValidSocialProvider(socialIdp)) {
@@ -630,13 +631,13 @@ router.get(
       const idp = okta.social[socialIdp];
 
       // fire ophan component event if applicable when a session is set
-      if (res.locals.queryParams.componentEventParams) {
+      if (res.requestState.queryParams.componentEventParams) {
         sendOphanComponentEventFromQueryParamsServer(
-          res.locals.queryParams.componentEventParams,
+          res.requestState.queryParams.componentEventParams,
           'SIGN_IN',
           req.params.social,
-          res.locals.ophanConfig.consentUUID,
-          res.locals.requestId,
+          res.requestState.ophanConfig.consentUUID,
+          res.requestState.requestId,
         );
       }
 

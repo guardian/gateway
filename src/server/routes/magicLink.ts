@@ -1,19 +1,18 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 import { buildUrl } from '@/shared/lib/routeUtils';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { logger } from '@/server/lib/serverSideLogger';
 import { renderer } from '@/server/lib/renderer';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { ApiError } from '@/server/models/Error';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { mergeRequestState } from '@/server/lib/requestState';
 
-router.get('/magic-link', (req: Request, res: ResponseWithRequestState) => {
+router.get('/magic-link', (req: Request, res: Response) => {
   const html = renderer('/magic-link', {
-    requestState: res.locals,
+    requestState: res.requestState,
     pageTitle: 'Sign in',
   });
   res.type('html').send(html);
@@ -22,8 +21,8 @@ router.get('/magic-link', (req: Request, res: ResponseWithRequestState) => {
 router.post(
   '/magic-link',
   handleRecaptcha,
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    let state = res.locals;
+  handleAsyncErrors(async (req: Request, res: Response) => {
+    let state = res.requestState;
 
     const { email = '' } = req.body;
 
@@ -59,15 +58,12 @@ router.post(
   }),
 );
 
-router.get(
-  '/magic-link/email-sent',
-  (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer('/magic-link/email-sent', {
-      pageTitle: 'Sign in',
-      requestState: res.locals,
-    });
-    res.type('html').send(html);
-  },
-);
+router.get('/magic-link/email-sent', (_: Request, res: Response) => {
+  const html = renderer('/magic-link/email-sent', {
+    pageTitle: 'Sign in',
+    requestState: res.requestState,
+  });
+  res.type('html').send(html);
+});
 
 export default router.router;

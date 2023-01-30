@@ -1,6 +1,5 @@
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
-import { Request } from 'express';
-import { ResponseWithRequestState } from '@/server/models/Express';
+import { Request, Response } from 'express';
 import {
   deleteAuthorizationStateCookie,
   getAuthorizationStateCookie,
@@ -51,12 +50,9 @@ const isOAuthError = (
  * a generic error message if we don't want to expose the error
  * back to the client. Be sure to log the error though!
  */
-const redirectForGenericError = (
-  req: Request,
-  res: ResponseWithRequestState,
-) => {
+const redirectForGenericError = (req: Request, res: Response) => {
   return res.redirect(
-    addQueryParamsToPath('/signin', res.locals.queryParams, {
+    addQueryParamsToPath('/signin', res.requestState.queryParams, {
       error_description: SignInErrors.GENERIC,
     }),
   );
@@ -64,7 +60,7 @@ const redirectForGenericError = (
 
 router.get(
   '/oauth/authorization-code/callback',
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+  handleAsyncErrors(async (req: Request, res: Response) => {
     try {
       // Determine which OpenIdClient to use, in DEV we use the DevProfileIdClient, otherwise we use the ProfileOpenIdClient
       const OpenIdClient = getOpenIdClient(req);
@@ -94,7 +90,7 @@ router.get(
           'Missing auth state cookie on OAuth Callback!',
           undefined,
           {
-            request_id: res.locals.requestId,
+            request_id: res.requestState.requestId,
           },
         );
         trackMetric('OAuthAuthorization::Failure');
@@ -154,7 +150,7 @@ router.get(
           'Missing access_token from /token endpoint in OAuth Callback',
           undefined,
           {
-            request_id: res.locals.requestId,
+            request_id: res.requestState.requestId,
           },
         );
         trackMetric('OAuthAuthorization::Failure');
@@ -200,7 +196,7 @@ router.get(
       const cookies = await exchangeAccessTokenForCookies(
         tokenSet.access_token,
         req.ip,
-        res.locals.requestId,
+        res.requestState.requestId,
       );
 
       if (cookies) {
@@ -217,12 +213,12 @@ router.get(
           await setUserFeatureCookies(
             scGuUCookie.value,
             res,
-            res.locals.requestId,
+            res.requestState.requestId,
           );
         }
       } else {
         logger.error('No cookies returned from IDAPI', undefined, {
-          request_id: res.locals.requestId,
+          request_id: res.requestState.requestId,
         });
       }
 
@@ -277,7 +273,7 @@ router.get(
             `Failed to get app config for app ${authState.queryParams.appClientId}`,
             error,
             {
-              request_id: res.locals.requestId,
+              request_id: res.requestState.requestId,
             },
           );
         }
@@ -296,13 +292,13 @@ router.get(
       if (isOAuthError(error)) {
         // log the specific error
         logger.error('OAuth/OIDC Error:', error, {
-          request_id: res.locals.requestId,
+          request_id: res.requestState.requestId,
         });
       }
 
       // log and track the error
       logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-        request_id: res.locals.requestId,
+        request_id: res.requestState.requestId,
       });
       trackMetric('OAuthAuthorization::Failure');
 
