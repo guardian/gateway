@@ -2626,12 +2626,7 @@
     enabled "2.0.x"
     kuler "^2.0.0"
 
-"@discoveryjs/json-ext@^0.5.0", "@discoveryjs/json-ext@^0.5.3":
-  version "0.5.6"
-  resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.6.tgz#d5e0706cf8c6acd8c6032f8d54070af261bbbb2f"
-  integrity sha512-ws57AidsDvREKrZKYffXddNkyaF14iHNHm8VQnZH6t99E8gczjNN0GpvcGny0imC80yQ0tHz1xVUKk/KFQSUyA==
-
-"@discoveryjs/json-ext@^0.5.7":
+"@discoveryjs/json-ext@^0.5.0", "@discoveryjs/json-ext@^0.5.3", "@discoveryjs/json-ext@^0.5.7":
   version "0.5.7"
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz#1d572bfbbe14b7704e0ba0f39b74815b84870d70"
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
@@ -7604,10 +7599,10 @@ chownr@^2.0.0:
   resolved "https://registry.yarnpkg.com/chownr/-/chownr-2.0.0.tgz#15bfbe53d2eab4cf70f18a8cd68ebe5b3cb1dece"
   integrity sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==
 
-chromatic@^6.14.0:
-  version "6.14.0"
-  resolved "https://registry.yarnpkg.com/chromatic/-/chromatic-6.14.0.tgz#c2abf7fc4142013357a23ede2fecca3f83bc3c5f"
-  integrity sha512-wc/BdtV9yJEnKb9VCDgOkysTZK135sdExA7JFCpNbjBaDqRdpsoZewpgiy6Nqf1782/z3EplTtMsBDX5wSkiAA==
+chromatic@^6.15.0:
+  version "6.15.0"
+  resolved "https://registry.yarnpkg.com/chromatic/-/chromatic-6.15.0.tgz#0a1c82a5576ca418bc70ad2a915bcdda3607d22c"
+  integrity sha512-cdB9ar8zLLpqJHgHH70iWnNXdd4pGCXCqZwSz/z35gNuftlJZKQJewOUnLUe9Mu6pdxKCS/aKVPfpDwzdWvslQ==
   dependencies:
     "@discoveryjs/json-ext" "^0.5.7"
     "@types/webpack-env" "^1.17.0"
