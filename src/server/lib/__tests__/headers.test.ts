@@ -7,7 +7,7 @@ import {
 } from './sharedConfig';
 
 // Override the default 5s max timeout for these tests because Supertest takes some time to run.
-jest.setTimeout(10000);
+jest.setTimeout(20000);
 
 /**
  * We mock a section of our app infrastruture so that the routes that Supertest
