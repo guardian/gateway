@@ -18,6 +18,8 @@ export enum Newsletters {
   MORNING_BRIEFING_AU = '4148',
   MORNING_BRIEFING_US = '4300',
   THE_LONG_READ = '4165',
+  // @AB_TEST: Default Weekly Newsletter Test:
+  SATURDAY_ROUNDUP_TRIAL = '6028',
 }
 
 export const ALL_NEWSLETTER_IDS = Object.values(Newsletters);
