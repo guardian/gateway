@@ -7,12 +7,12 @@ export const abDefaultWeeklyNewsletterTest: ABTest = {
   author: 'Personalisation',
   description:
     'How successful a default opt in newsletter could be in the registration onboarding journey',
-  audience: 0.1,
+  audience: 0.2,
   audienceOffset: 0,
   successMeasure:
-    'An opt in rate of over 20% and an unsubscribe rate of under 4%',
+    'An email open rate of over 20% and an unsubscribe rate of under 4%',
   audienceCriteria:
-    '10% of onboarding flow traffic over one week, limited to US, UK and AU',
+    '20% of onboarding flow traffic over one week, limited to US, UK and AU',
   idealOutcome:
     'Success measure plus look at customer feedback, impact on deliverability and impact on supporter consent opt in as secondary measures',
   showForSensitive: true, // Should this A/B test run on sensitive articles?
