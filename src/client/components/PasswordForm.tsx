@@ -338,14 +338,17 @@ export const PasswordForm = ({
         }
         if (isTooShort) {
           setError(PasswordFieldErrors.AT_LEAST_8);
-          e.preventDefault();
         } else if (isTooLong) {
           setError(PasswordFieldErrors.MAXIMUM_72);
-          e.preventDefault();
         } else if (isWeak) {
           setError(PasswordFieldErrors.COMMON_PASSWORD);
-          e.preventDefault();
         }
+        // If there are errors, don't submit the form and return here
+        if (isTooShort || isTooLong || isWeak) {
+          e.preventDefault();
+          return;
+        }
+        // If there are no errors, disable the form and submit it
         setIsFormDisabled(true);
       }}
       onFocus={(e) =>
