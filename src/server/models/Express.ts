@@ -35,9 +35,7 @@ export interface RequestState {
   requestId?: string;
 }
 
-export interface ResponseWithRequestState extends Response {
-  locals: RequestState;
-}
+export type ResponseWithRequestState = Response<unknown, RequestState>;
 
 export interface RequestWithTypedQuery extends Request {
   query: Record<keyof QueryParams, string | undefined>;
