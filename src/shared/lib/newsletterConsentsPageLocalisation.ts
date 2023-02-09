@@ -9,8 +9,10 @@ import { CONSENTS_NEWSLETTERS_PAGE } from '../model/Consent';
 export const getPermissionedGeolocation = (
   cmpConsentState: boolean | undefined,
   geolocation: GeoLocation | undefined,
-): GeoLocation | PermissionedGeolocation | undefined =>
-  !!cmpConsentState && geolocation === 'AU' ? 'AU_permissioned' : geolocation;
+): GeoLocation | PermissionedGeolocation | undefined => {
+  if (!!cmpConsentState && geolocation === 'AU') return 'AU_permissioned';
+  return geolocation;
+};
 
 // map of newsletters to country codes
 // undefined also included as key, in case of fallback

@@ -279,8 +279,7 @@ router.get(
     }
 
     // Checks if we can localize content
-    const encryptedState = readEncryptedStateCookie(req);
-    const { isCmpConsented } = encryptedState ?? {};
+    const { isCmpConsented } = readEncryptedStateCookie(req) ?? {};
 
     const { page } = req.params;
     let status = 200;
