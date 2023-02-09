@@ -2,6 +2,8 @@ import React from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { ConsentsConfirmation } from '@/client/pages/ConsentsConfirmation';
 import { Consents } from '@/shared/model/Consent';
+import { abSwitches } from '@/shared/model/experiments/abSwitches';
+import { Newsletters } from '@/shared/model/Newsletter';
 
 export const ConsentsConfirmationPage = () => {
   const clientState = useClientState();
@@ -31,6 +33,16 @@ export const ConsentsConfirmationPage = () => {
 
   const subscribedNewsletters = newsletters.filter((n) => n.subscribed);
 
+  // @AB_TEST: Default Weekly Newsletter Test:
+  // When the switch is off, the trial newsletter will still show up on the confirmation page
+  // if an existing user who signed up during the trial manually navigates back to the /consents/confirmation page
+  // We need to filter for this until the AB Test Saturday Roundup is deleted including from the Newsletter Enum here: src/shared/model/Newsletter.ts
+  const filteredSubscribedNewsletters = abSwitches.abDefaultWeeklyNewsletterTest
+    ? subscribedNewsletters
+    : subscribedNewsletters.filter(
+        (n) => n.id !== Newsletters.SATURDAY_ROUNDUP_TRIAL,
+      );
+
   return (
     <ConsentsConfirmation
       error={error}
@@ -39,7 +51,7 @@ export const ConsentsConfirmationPage = () => {
       optedIntoProfiling={optedIntoProfiling}
       optedIntoPersonalisedAdvertising={optedIntoPersonalisedAdvertising}
       productConsents={productConsents}
-      subscribedNewsletters={subscribedNewsletters}
+      subscribedNewsletters={filteredSubscribedNewsletters}
     />
   );
 };
