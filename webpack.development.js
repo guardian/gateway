@@ -24,7 +24,7 @@ const serverConfig = {
         test: /\.ts(x?)$/,
         use: [
           {
-            loader: 'babel-loader',
+            loader: 'swc-loader',
             options: {
               cacheCompression: false,
               cacheDirectory: true,
@@ -43,7 +43,7 @@ const browserConfig = (isLegacy = false) => ({
         test: /\.(m?)(j|t)s(x?)/,
         use: [
           {
-            loader: 'babel-loader',
+            loader: 'swc-loader',
             options: {
               cacheCompression: false,
               cacheDirectory: true,
@@ -59,9 +59,6 @@ const browserConfig = (isLegacy = false) => ({
       : [
           new ForkTsCheckerWebpackPlugin({
             async: true,
-            typescript: {
-              mode: 'write-references', // for better babel-loader perf.
-            },
           }),
         ]),
     new ForkTsCheckerNotifierWebpackPlugin({

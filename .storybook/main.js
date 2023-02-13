@@ -1,6 +1,7 @@
 const path = require('path');
 const { neutral } = require('@guardian/source-foundations');
-const babelConfig = require('../babel.config');
+const deepmerge = require('deepmerge');
+const sharedLoader = require('../.swcrc.config');
 
 module.exports = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -21,8 +22,8 @@ module.exports = {
     </style>
   `,
   webpackFinal: async (config) => {
-    // Add the @client alias to prevent imports using it from failing
-    // Nb. __dirname is the current working directory, so .storybook in this case
+    // Add the @client alias to prevent imports using it from failing
+    // Nb. __dirname is the current working directory, so .storybook in this case
     config.resolve.alias = {
       ...config.resolve.alias,
       '@': path.join(__dirname, '../src'),
@@ -32,45 +33,24 @@ module.exports = {
       'clean-css': false,
     };
 
-    // Remove '@emotion/babel-preset-css-prop' from the preset list as we add it manually in the babel method above
-    const indexToRemove = babelConfig.presets.indexOf(
-      '@emotion/babel-preset-css-prop',
-    );
-    const babelLoaderPresets = babelConfig.presets.splice(indexToRemove, 1);
-
     // transpile certain modules so we can get them to work with ie11 storybook
     const transpileModules = {
-      include: [
-        /node_modules[\\\/]@guardian/,
-        /node_modules[\\\/]strip-ansi/,
-        // query string related transpilation start
-        /node_modules[\\\/]query-string/,
-        /node_modules[\\\/]ansi-regex/,
-        /node_modules[\\\/]split-on-first/,
-        /node_modules[\\\/]strict-uri-encode/,
-        /node_modules[\\\/]react-element-to-jsx-string[\\\/]dist[\\\/]cjs/,
-        // query string related transpilation end
-      ],
+      include: [/node_modules[\\\/]@guardian/],
       test: /\.(m?)(j|t)s(x?)/,
       use: [
-        {
-          loader: 'babel-loader',
+        deepmerge(sharedLoader, {
           options: {
-            presets: [
-              [
-                '@babel/env',
-                {
-                  bugfixes: true,
-                  useBuiltIns: 'usage',
-                  corejs: '3.14',
-                  modules: 'amd',
-                },
-              ],
-              ...babelLoaderPresets,
-            ],
-            plugins: [...babelConfig.plugins],
+            env: {
+              targets: {
+                // browsers that support type="module" and dynamic import
+                chrome: '66',
+                edge: '79',
+                firefox: '67',
+                safari: '13',
+              },
+            },
           },
-        },
+        }),
       ],
     };
 
@@ -81,7 +61,7 @@ module.exports = {
         ...config.module,
         rules: [...config.module.rules, transpileModules],
       },
-      target: ['web', 'es5'],
+      target: ['web'],
     };
   },
 };

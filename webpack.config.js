@@ -1,7 +1,6 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
-const babelConfig = require('./babel.config');
 const AssetsPlugin = require('assets-webpack-plugin');
 const { merge } = require('webpack-merge');
 const nodeExternals = require('webpack-node-externals');
@@ -10,9 +9,13 @@ const TerserPlugin = require('terser-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const webpack = require('webpack');
+const deepmerge = require('deepmerge');
+const sharedLoader = require('./.swcrc.config');
 
 const mode =
   process.env.ENVIRONMENT === 'production' ? 'production' : 'development';
+
+process.stdout.write(`Building in ${mode} mode.\n`)
   
 const analyzeBundle = process.env.WEBPACK_ANALYZE_BUNDLE === 'true';
 
@@ -88,24 +91,15 @@ const server = () => ({
         exclude: /node_modules/,
         test: /\.ts(x?)$/,
         use: [
-          {
-            loader: 'babel-loader',
+          deepmerge(sharedLoader, {
             options: {
-              presets: [
-                [
-                  '@babel/env',
-                  {
-                    targets: {
-                      node: 'current',
-                    },
-                    ignoreBrowserslistConfig: true,
-                  },
-                ],
-                ...babelConfig.presets,
-              ],
-              plugins: [...babelConfig.plugins],
-            },
-          },
+              env: {
+                targets: {
+                  node: process.versions.node,
+                },
+              },
+            }
+          }),
         ],
       },
       imageLoader('static/'),
@@ -121,10 +115,6 @@ const server = () => ({
     path: path.resolve(__dirname, 'build'),
     libraryTarget: 'commonjs2',
   },
-  optimization: {
-    minimize: false,
-    runtimeChunk: false,
-  },
   target: 'node',
   plugins: [
     new CopyWebpackPlugin({
@@ -136,40 +126,46 @@ const server = () => ({
       ],
     }),
   ],
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        minify: TerserPlugin.swcMinify,
+      }),
+    ],
+  },
 });
 
 const browser = ({ isLegacy }) => {
   const entry = ['./src/client/static/index.tsx'];
   const target = ['web'];
   if (isLegacy) {
-    entry.unshift('whatwg-fetch');
     target.push('es5');
   }
 
-  const legacyBabelConfig = [
-    '@babel/env',
-    {
-      bugfixes: true,
+  const modernLoader = deepmerge(sharedLoader, {
+    options: {
+      env: {
+        targets: {
+          // browsers that support type="module" and dynamic import
+          chrome: '66',
+          edge: '79',
+          firefox: '67',
+          safari: '13'
+        }
+      }
     },
-  ];
+  });
 
-  const legacyBabelConfigNodeModules = [
-    '@babel/env',
-    {
-      bugfixes: true,
-      modules: 'amd',
+  const legacyLoader = deepmerge(sharedLoader, {
+    options: {
+      env: {
+        targets: {
+          // min browser versions
+          ie: '11'
+        }
+      }
     },
-  ];
-
-  const modernBabelConfig = [
-    '@babel/env',
-    {
-      bugfixes: true,
-      targets: {
-        esmodules: true,
-      },
-    },
-  ];
+  });
 
   const filename = `[name]${isLegacy ? '.legacy' : ''}.[chunkhash].js`;
   
@@ -195,45 +191,14 @@ const browser = ({ isLegacy }) => {
 
   return {
     entry,
-    mode: 'production',
+    mode,
     module: {
       rules: [
         {
-          exclude: /node_modules/,
           test: /\.(m?)(j|t)s(x?)/,
           use: [
-            {
-              loader: 'babel-loader',
-              options: {
-                presets: [
-                  isLegacy ? legacyBabelConfig : modernBabelConfig,
-                  ...babelConfig.presets,
-                ],
-                plugins: [...babelConfig.plugins],
-              },
-            },
-          ],
-        },
-        {
-          include: /node_modules/,
-          exclude: [
-            /node_modules[\\\/]@babel/,
-            /node_modules[\\\/]webpack[\\\/]buildin/,
-          ],
-          test: /\.(m?)(j|t)s(x?)/,
-          use: [
-            {
-              loader: 'babel-loader',
-              options: {
-                sourceType: 'unambiguous',
-                presets: [
-                  isLegacy ? legacyBabelConfigNodeModules : modernBabelConfig,
-                  ...babelConfig.presets,
-                ],
-                plugins: [...babelConfig.plugins],
-              },
-            },
-          ],
+            isLegacy ? legacyLoader : modernLoader
+          ]
         },
         imageLoader('./'),
       ],
@@ -241,6 +206,7 @@ const browser = ({ isLegacy }) => {
     optimization: {
       minimizer: [
         new TerserPlugin({
+          minify: TerserPlugin.swcMinify,
           terserOptions: {
             mangle: {
               safari10: true,
@@ -273,6 +239,7 @@ const browser = ({ isLegacy }) => {
       maxEntrypointSize: isLegacy ? 768000 : 512000,
       maxAssetSize: isLegacy ? 512000 : 384000,
     },
+    devtool: 'source-map',
   };
 };
 

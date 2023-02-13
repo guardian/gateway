@@ -60,3 +60,6 @@ cypress/screenshots
 
 # Mac OS finder app metadata
 .DS_Store
+
+# swc
+.swc
