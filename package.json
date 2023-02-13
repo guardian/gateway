@@ -120,8 +120,8 @@
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
-    "@guardian/ab-core": "^2.0.1",
-    "@guardian/ab-react": "^2.0.1",
+    "@guardian/ab-core": "^3.1.0",
+    "@guardian/ab-react": "^3.0.0",
     "@guardian/consent-management-platform": "^11.0.0",
     "@guardian/libs": "^13.1.0",
     "@guardian/source-foundations": "^9.0.0",
