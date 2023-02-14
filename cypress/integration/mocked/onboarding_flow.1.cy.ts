@@ -594,9 +594,9 @@ describe('Onboarding flow', () => {
 
       cy.visit(NewslettersPage.URL, { headers });
 
-      NewslettersPage.checkboxWithTitle(
-        NEWSLETTERS.MORNING_BRIEFING_AUS,
-      ).should('not.be.checked');
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.MORNING_MAIL_AU).should(
+        'not.be.checked',
+      );
       NewslettersPage.checkboxWithTitle(NEWSLETTERS.LONG_READ).should(
         'not.be.checked',
       );
@@ -606,6 +606,32 @@ describe('Onboarding flow', () => {
       NewslettersPage.checkboxWithTitle(
         NewslettersPage.CONTENT.Consents.EVENTS,
       ).should('not.be.checked');
+
+      CommunicationsPage.backButton().should('exist');
+      CommunicationsPage.saveAndContinueButton().should('exist');
+    });
+
+    it('correct localised newsletters shown for permissioned Australian browser, none checked by default', () => {
+      const headers = getGeoLocationHeaders(GEOLOCATION_CODES.AUSTRALIA);
+
+      cy.setEncryptedStateCookie({
+        isCmpConsented: true,
+      });
+      cy.visit(NewslettersPage.URL, { headers });
+
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.MORNING_MAIL_AU).should(
+        'not.be.checked',
+      );
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.AFTERNOON_UPDATE_AU).should(
+        'not.be.checked',
+      );
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.FIVE_GREAT_READS_AU).should(
+        'not.be.checked',
+      );
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.SAVED_FOR_LATER_AU).should(
+        'not.be.checked',
+      );
+      cy.contains(NewslettersPage.CONTENT.Consents.EVENTS).should('not.exist');
 
       CommunicationsPage.backButton().should('exist');
       CommunicationsPage.saveAndContinueButton().should('exist');

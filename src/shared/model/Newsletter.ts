@@ -15,9 +15,14 @@ export interface NewsletterPatch {
 export enum Newsletters {
   DOWN_TO_EARTH = '4147',
   FIRST_EDITION_UK = '4156',
-  MORNING_BRIEFING_AU = '4148',
-  MORNING_BRIEFING_US = '4300',
   THE_LONG_READ = '4165',
+  // US newsletters
+  MORNING_BRIEFING_US = '4300',
+  // AUS newsletters
+  MORNING_MAIL_AU = '4148',
+  AFTERNOON_UPDATE_AU = '6023',
+  FIVE_GREAT_READS_AU = '6019',
+  SAVED_FOR_LATER_AU = '6003',
   // @AB_TEST: Default Weekly Newsletter Test:
   SATURDAY_ROUNDUP_TRIAL = '6028',
 }

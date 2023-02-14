@@ -16,6 +16,30 @@ export const allNewsletters = [
     exactTargetListId: 4148,
   },
   {
+    id: 'afternoon-update',
+    name: "Guardian Australia's Afternoon Update",
+    description:
+      'Our Australian afternoon update email breaks down the key national and international stories of the day and why they matter',
+    frequency: 'Every weekday',
+    exactTargetListId: 6023,
+  },
+  {
+    id: 'five-great-reads',
+    name: 'Five Great Reads',
+    description:
+      'Each week our editors select five of the most interesting, entertaining and thoughtful reads published by Guardian Australia and our international colleagues. Sign up to receive it in your inbox every Saturday morning',
+    frequency: 'Weekly',
+    exactTargetListId: 6019,
+  },
+  {
+    id: 'saved-for-later',
+    name: 'Saved for Later',
+    description:
+      "Catch up on the fun stuff with Guardian Australia's culture and lifestyle rundown of pop culture, trends and tips",
+    frequency: 'Weekly',
+    exactTargetListId: 6003,
+  },
+  {
     id: 'morning-briefing',
     name: 'First Edition',
     description:
