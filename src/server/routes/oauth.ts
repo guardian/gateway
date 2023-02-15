@@ -13,7 +13,10 @@ import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { exchangeAccessTokenForCookies } from '@/server/lib/idapi/auth';
-import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
+import {
+  clearSignOutCookie,
+  setIDAPICookies,
+} from '@/server/lib/idapi/IDAPICookies';
 import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import postSignInController from '@/server/lib/postSignInController';
@@ -225,6 +228,9 @@ router.get(
           request_id: res.locals.requestId,
         });
       }
+
+      // clear the sign out cookie if it exists
+      clearSignOutCookie(res);
 
       // track the success metric
       trackMetric('OAuthAuthorization::Success');
