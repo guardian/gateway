@@ -7,7 +7,7 @@ import { logger } from '@/server/lib/serverSideLogger';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import {
   clearIDAPICookies,
-  setIDAPICookies,
+  setSignOutCookie,
 } from '@/server/lib/idapi/IDAPICookies';
 import { deleteAuthorizationStateCookie } from '@/server/lib/okta/openid-connect';
 import { clearEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
@@ -63,16 +63,21 @@ router.get(
 
     // We try the logout sequentially, as we need to log users out from Okta first,
     await signOutFromOkta(req, res);
+
     // if the user has no Okta sid cookie, we will then try and log them out from IDAPI
     // the user will be in this state if they previously had their Okta cookie removed and got
     // redirected back to the /signout endpoint
     await signOutFromIDAPI(req, res);
+
     // clear dotcom cookies
     clearDotComCookies(res);
 
     // clear gateway specific cookies
     deleteAuthorizationStateCookie(res);
     clearEncryptedStateCookie(res);
+
+    // set the GU_SO (sign out) cookie
+    setSignOutCookie(res);
 
     return res.redirect(303, returnUrl || defaultReturnUri);
   }),
@@ -88,17 +93,8 @@ const signOutFromIDAPI = async (
 
     // attempt log out from Identity if we have a SC_GU_U cookie
     if (sc_gu_u) {
-      // perform the logout and get back the GU_SO cookie
-      const cookies = await logoutFromIDAPI(
-        sc_gu_u,
-        req.ip,
-        res.locals.requestId,
-      );
-
-      // set the GU_SO cookie
-      if (cookies) {
-        setIDAPICookies(res, cookies);
-      }
+      // perform the logout from IDAPI
+      await logoutFromIDAPI(sc_gu_u, req.ip, res.locals.requestId);
     }
 
     trackMetric('SignOut::Success');

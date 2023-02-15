@@ -6,7 +6,10 @@ import { renderer } from '@/server/lib/renderer';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
+import {
+  clearSignOutCookie,
+  setIDAPICookies,
+} from '@/server/lib/idapi/IDAPICookies';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { decrypt } from '@/server/lib/idapi/decryptToken';
 import {
@@ -294,6 +297,7 @@ const idapiSignInController = async (
     // cookies to keep the sessions in sync
     clearOktaCookies(res);
     setIDAPICookies(res, cookies);
+    clearSignOutCookie(res);
 
     trackMetric('SignIn::Success');
 

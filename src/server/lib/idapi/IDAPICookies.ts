@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Response, CookieOptions } from 'express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 
 interface IdapiCookie {
@@ -14,6 +14,16 @@ export interface IdapiCookies {
 
 const { baseUri, isHttps } = getConfiguration();
 
+const sharedCookieOptions = (key: string): CookieOptions => ({
+  // the baseUri is profile.theguardian.com so we strip the 'profile' as the cookie domain should be .theguardian.com
+  // we also remove the port after the ':' to make it work in localhost for development and testing
+  domain: `${baseUri.replace('profile.', '').split(':')[0]}`,
+  httpOnly: !['GU_U', 'GU_SO'].includes(key), // unless GU_U/GU_SO cookie, set to true
+  secure: isHttps && key !== 'GU_U', // unless GU_U cookie, set to isHttps (set to true, except in local dev)
+  sameSite: 'lax',
+  path: '/',
+});
+
 export const setIDAPICookies = (
   res: Response,
   cookies: IdapiCookies,
@@ -23,10 +33,6 @@ export const setIDAPICookies = (
   doNotSetLastAccessCookie?: boolean,
 ) => {
   const { values, expiresAt } = cookies;
-  // the baseUri is profile.theguardian.com so we strip the 'profile' as the cookie domain should be .theguardian.com
-  // we also remove the port after the ':' to make it work in localhost for development and testing
-  const domain = `${baseUri.replace('profile.', '').split(':')[0]}`;
-
   values
     .filter(({ key }) => {
       // filter out last access cookie when doNotSetLastAccessCookie is true
@@ -51,12 +57,8 @@ export const setIDAPICookies = (
       })();
 
       res.cookie(key, value, {
-        domain,
         expires,
-        httpOnly: !['GU_U', 'GU_SO'].includes(key), // unless GU_U/GU_SO cookie, set to true
-        secure: isHttps && key !== 'GU_U', // unless GU_U cookie, set to isHttps (set to true, except in local dev)
-        sameSite: 'lax',
-        path: '/',
+        ...sharedCookieOptions(key),
       });
     });
 };
@@ -71,17 +73,23 @@ const IDAPICookieList: string[] = [
 ];
 
 export const clearIDAPICookies = (res: Response) => {
-  // the baseUri is profile.theguardian.com so we strip the 'profile' as the cookie domain should be .theguardian.com
-  // we also remove the port after the ':' to make it work in localhost for development and testing
-  const domain = `${baseUri.replace('profile.', '').split(':')[0]}`;
   IDAPICookieList.forEach((key) => {
     // Web browsers and other compliant clients will only clear the cookie if the given options is identical to those given to res.cookie(), excluding expires and maxAge, so match to options in setIDAPICookies method.
-    res.clearCookie(key, {
-      domain,
-      httpOnly: !['GU_U', 'GU_SO'].includes(key), // unless GU_U/GU_SO cookie, set to true
-      secure: isHttps && key !== 'GU_U', // unless GU_U cookie, set to isHttps (set to true, except in local dev)
-      sameSite: 'lax',
-      path: '/',
-    });
+    res.clearCookie(key, sharedCookieOptions(key));
   });
+};
+
+export const setSignOutCookie = (res: Response) => {
+  res.cookie(
+    'GU_SO',
+    Math.floor(Date.now() / 1000), // unix epoch in seconds
+    {
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // expires in 1 day
+      ...sharedCookieOptions('GU_SO'),
+    },
+  );
+};
+
+export const clearSignOutCookie = (res: Response) => {
+  res.clearCookie('GU_SO', sharedCookieOptions('GU_SO'));
 };
