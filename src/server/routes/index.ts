@@ -16,6 +16,7 @@ import { default as maintenance } from './maintenance';
 import { default as oauth } from './oauth';
 import { default as emailTemplates } from './emailTemplates';
 import { default as agree } from './agree';
+import { default as changeEmail } from './changeEmail';
 
 const { okta } = getConfiguration();
 
@@ -61,6 +62,9 @@ uncachedRoutes.use(welcome);
 
 // terms and conditions routes
 uncachedRoutes.use(agree);
+
+// change email routes
+uncachedRoutes.use(changeEmail);
 
 // oauth callback routes
 if (okta.enabled) {

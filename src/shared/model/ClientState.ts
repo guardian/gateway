@@ -34,6 +34,7 @@ export interface PageData {
   formError?: string;
   browserName?: string;
   isNativeApp?: IsNativeApp;
+  accountManagementUrl?: string;
 
   // token
   token?: string;

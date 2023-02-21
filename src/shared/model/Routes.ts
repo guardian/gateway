@@ -6,6 +6,9 @@ export type ConsentPath = 'communication' | 'newsletters' | 'data' | 'review';
  */
 export const ValidRoutePathsArray = [
   '/404',
+  '/change-email/:token',
+  '/change-email/complete',
+  '/change-email/error',
   '/consents',
   '/consents/:page',
   '/consents/communication',
@@ -70,6 +73,7 @@ export type ApiRoutePaths =
   | '/pwd-reset/user-for-token'
   | '/signin-token/token/:token'
   | '/unauth'
+  | '/user/change-email'
   | '/user/me'
   | '/user/me/consents'
   | '/user/me/group/:groupCode'
