@@ -18,6 +18,7 @@ import { default as emailTemplates } from './emailTemplates';
 import { default as agree } from './agree';
 import { default as changeEmail } from './changeEmail';
 import { default as unsubscribe } from './unsubscribe';
+import { default as consentToken } from './consentToken';
 
 const { okta } = getConfiguration();
 
@@ -74,6 +75,9 @@ uncachedRoutes.use(unsubscribe);
 if (okta.enabled) {
   uncachedRoutes.use(oauth);
 }
+
+// consent token routes
+uncachedRoutes.use(consentToken);
 
 // email template routes
 router.use(emailTemplates);

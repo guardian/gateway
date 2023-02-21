@@ -61,3 +61,10 @@ export const WithRecaptchaError = () => (
 WithRecaptchaError.story = {
   name: 'with reCAPTCHA error',
 };
+
+export const WithHelpText = () => (
+  <EmailSent changeEmailPage="/reset-password" showHelp={true} />
+);
+WithHelpText.story = {
+  name: 'with help text',
+};

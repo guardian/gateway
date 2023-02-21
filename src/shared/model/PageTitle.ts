@@ -15,6 +15,7 @@ export type PageTitle =
   | 'Change Password'
   | 'Resend Change Password Email'
   | 'Password Changed'
+  | 'Resend Consent Email'
   | 'Verify Email'
   | 'Welcome'
   | 'Resend Welcome Email'
