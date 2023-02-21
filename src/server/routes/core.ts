@@ -30,4 +30,12 @@ router.get('/healthcheck', (_, res: Response) => {
   res.status(200).send('200 OK');
 });
 
+router.use('/robots.txt', (_, res: Response) => {
+  res.type('text/plain');
+  res.send(`User-agent: *
+Disallow: /user/
+Disallow: /signin?*returnUrl=https://discussion.theguardian.com/comment-permalink/
+`);
+});
+
 export default router;
