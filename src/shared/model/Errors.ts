@@ -90,3 +90,7 @@ export enum CaptchaErrors {
 export enum RateLimitErrors {
   GENERIC = 'Rate limit exceeded. This request has been rate limited, please try again shortly.',
 }
+
+export enum UnsubscribeErrors {
+  GENERIC = 'There was a problem unsubscribing, please try again.',
+}

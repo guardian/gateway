@@ -33,6 +33,8 @@ import {
   updateOktaTestUserProfile,
   getCurrentOktaSession,
   closeCurrentOktaSession,
+  subscribeToNewsletter,
+  subscribeToMarketingConsent,
 } from './commands/testUser';
 
 Cypress.Commands.add('mockNext', mockNext);
@@ -68,3 +70,8 @@ Cypress.Commands.add('addToGRS', addToGRS);
 Cypress.Commands.add('updateOktaTestUserProfile', updateOktaTestUserProfile);
 Cypress.Commands.add('getCurrentOktaSession', getCurrentOktaSession);
 Cypress.Commands.add('closeCurrentOktaSession', closeCurrentOktaSession);
+Cypress.Commands.add('subscribeToNewsletter', subscribeToNewsletter);
+Cypress.Commands.add(
+  'subscribeToMarketingConsent',
+  subscribeToMarketingConsent,
+);

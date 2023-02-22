@@ -9,12 +9,14 @@ export const ValidRoutePathsArray = [
   '/change-email/:token',
   '/change-email/complete',
   '/change-email/error',
+  '/agree/GRS',
   '/consents',
   '/consents/:page',
   '/consents/communication',
   '/consents/newsletters',
   '/consents/data',
   '/consents/review',
+  '/email/:template',
   '/error',
   '/magic-link', //this is not being used until MVP4
   '/magic-link/email-sent', //this is not being used until MVP4
@@ -44,6 +46,9 @@ export const ValidRoutePathsArray = [
   '/signin/email-sent/resend',
   '/reauthenticate',
   '/signout',
+  '/unsubscribe/:emailType/:data/:token',
+  '/unsubscribe/success',
+  '/unsubscribe/error',
   '/verify-email', //this can be removed once Jobs has been migrated
   '/welcome',
   '/welcome/:token',
@@ -51,8 +56,6 @@ export const ValidRoutePathsArray = [
   '/welcome/email-sent',
   '/welcome/expired',
   '/welcome/resend',
-  '/agree/GRS',
-  '/email/:template',
 ] as const;
 
 export type RoutePaths = (typeof ValidRoutePathsArray)[number];
@@ -74,6 +77,7 @@ export type ApiRoutePaths =
   | '/signin-token/token/:token'
   | '/unauth'
   | '/user/change-email'
+  | '/unsubscribe'
   | '/user/me'
   | '/user/me/consents'
   | '/user/me/group/:groupCode'
