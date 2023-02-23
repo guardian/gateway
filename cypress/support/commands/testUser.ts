@@ -25,6 +25,8 @@ declare global {
       updateOktaTestUserProfile: typeof updateOktaTestUserProfile;
       getCurrentOktaSession: typeof getCurrentOktaSession;
       closeCurrentOktaSession: typeof closeCurrentOktaSession;
+      subscribeToNewsletter: typeof subscribeToNewsletter;
+      subscribeToMarketingConsent: typeof subscribeToMarketingConsent;
     }
   }
 }
@@ -48,6 +50,7 @@ type IDAPITestUserOptions = {
 /* More fields exist in the user profile, but we only care about the ones we define in the interfaces below. */
 
 interface IDAPIUserProfile {
+  id: string;
   privateFields: {
     firstName?: string;
     secondName?: string;
@@ -154,6 +157,59 @@ export const addToGRS = () =>
         });
       }),
   );
+
+export const subscribeToNewsletter = (newsletterListId: string) =>
+  cy.getCookie('SC_GU_U').then((cookie) => {
+    try {
+      return cy.request({
+        url: Cypress.env('IDAPI_BASE_URL') + '/users/me/newsletters',
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-GU-ID-Client-Access-Token': `Bearer ${Cypress.env(
+            'IDAPI_CLIENT_ACCESS_TOKEN',
+          )}`,
+          'X-GU-ID-FOWARDED-SC-GU-U': cookie?.value,
+        },
+        body: JSON.stringify([
+          {
+            id: newsletterListId,
+            subscribed: true,
+          },
+        ]),
+        retryOnStatusCodeFailure: true,
+      });
+    } catch (error) {
+      throw new Error('Failed to subscribe user to newsletter: ' + error);
+    }
+  });
+
+export const subscribeToMarketingConsent = (marketingId: string) =>
+  cy.getCookie('SC_GU_U').then((cookie) => {
+    try {
+      return cy.request({
+        url: Cypress.env('IDAPI_BASE_URL') + '/users/me/consents',
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-GU-ID-Client-Access-Token': `Bearer ${Cypress.env(
+            'IDAPI_CLIENT_ACCESS_TOKEN',
+          )}`,
+          'X-GU-ID-FOWARDED-SC-GU-U': cookie?.value,
+        },
+        body: JSON.stringify([
+          {
+            id: marketingId,
+            consented: true,
+          },
+        ]),
+      });
+    } catch (error) {
+      throw new Error(
+        'Failed to subscribe user to marketing consent: ' + error,
+      );
+    }
+  });
 
 export const createTestUser = ({
   primaryEmailAddress,

@@ -34,6 +34,8 @@ import { JobsTermsPage } from '@/client/pages/JobsTermsAcceptPage';
 import { SignedInAsPage } from '@/client/pages/SignedInAsPage';
 import { ChangeEmailCompletePage } from '@/client/pages/ChangeEmailCompletePage';
 import { ChangeEmailErrorPage } from '@/client/pages/ChangeEmailErrorPage';
+import { UnsubscribeSuccessPage } from '@/client/pages/UnsubscribeSuccessPage';
+import { UnsubscribeErrorPage } from '@/client/pages/UnsubscribeErrorPage';
 
 export type RoutingConfig = {
   clientState: ClientState;
@@ -171,6 +173,14 @@ const routes: Array<{
   {
     path: '/change-email/error',
     element: <ChangeEmailErrorPage />,
+  },
+  {
+    path: '/unsubscribe/success',
+    element: <UnsubscribeSuccessPage />,
+  },
+  {
+    path: '/unsubscribe/error',
+    element: <UnsubscribeErrorPage />,
   },
   {
     path: '/magic-link',

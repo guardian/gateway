@@ -25,7 +25,9 @@ export type PageTitle =
   | 'Review'
   | 'Maintenance'
   | 'Jobs'
-  | 'Change Email';
+  | 'Change Email'
+  | 'Unsubscribe Error'
+  | 'Unsubscribe Confirmation';
 
 export type PasswordPageTitle = Extract<
   'Welcome' | 'Create Password' | 'Change Password',
