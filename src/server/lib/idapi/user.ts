@@ -407,3 +407,24 @@ export const sendCreatePasswordEmail = async (
     return handleError(error as IDAPIError);
   }
 };
+
+export const changeEmail = async (
+  token: string,
+  ip: string,
+  request_id?: string,
+) => {
+  const options = APIPostOptions({
+    token,
+  });
+  try {
+    await idapiFetch({
+      path: '/user/change-email',
+      options: APIAddClientAccessToken(options, ip),
+    });
+  } catch (error) {
+    logger.error(`IDAPI Error change email '/user/change-email'`, error, {
+      request_id,
+    });
+    return handleError(error as IDAPIError);
+  }
+};

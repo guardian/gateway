@@ -30,8 +30,10 @@ import { SetPasswordResendPage } from '@/client/pages/SetPasswordResendPage';
 import { SetPasswordSessionExpiredPage } from '@/client/pages/SetPasswordSessionExpiredPage';
 import { SetPasswordCompletePage } from '@/client/pages/SetPasswordCompletePage';
 import { MaintenancePage } from '@/client/pages/MaintenancePage';
-import { JobsTermsPage } from './pages/JobsTermsAcceptPage';
-import { SignedInAsPage } from './pages/SignedInAsPage';
+import { JobsTermsPage } from '@/client/pages/JobsTermsAcceptPage';
+import { SignedInAsPage } from '@/client/pages/SignedInAsPage';
+import { ChangeEmailCompletePage } from '@/client/pages/ChangeEmailCompletePage';
+import { ChangeEmailErrorPage } from '@/client/pages/ChangeEmailErrorPage';
 
 export type RoutingConfig = {
   clientState: ClientState;
@@ -161,6 +163,14 @@ const routes: Array<{
   {
     path: '/verify-email',
     element: <ResendEmailVerificationPage />,
+  },
+  {
+    path: '/change-email/complete',
+    element: <ChangeEmailCompletePage />,
+  },
+  {
+    path: '/change-email/error',
+    element: <ChangeEmailErrorPage />,
   },
   {
     path: '/magic-link',
