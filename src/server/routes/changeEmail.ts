@@ -7,6 +7,7 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { changeEmail } from '@/server/lib/idapi/user';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { logger } from '@/server/lib/serverSideLogger';
+import { trackMetric } from '@/server/lib/trackMetric';
 
 const { accountManagementUrl } = getConfiguration();
 
@@ -32,11 +33,17 @@ router.get(
 
     try {
       await changeEmail(token, req.ip, res.locals.requestId);
+
+      trackMetric('ChangeEmail::Success');
+
       return res.redirect(303, '/change-email/complete');
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
         request_id: res.locals.requestId,
       });
+
+      trackMetric('ChangeEmail::Failure');
+
       const html = renderer('/change-email/error', {
         pageTitle: 'Change Email',
         requestState: mergeRequestState(res.locals, {
