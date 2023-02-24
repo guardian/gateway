@@ -11,6 +11,7 @@ import { renderer } from '@/server/lib/renderer';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/serverSideLogger';
+import { trackMetric } from '@/server/lib/trackMetric';
 
 const { accountManagementUrl } = getConfiguration();
 
@@ -34,6 +35,8 @@ router.get(
         res.locals.requestId,
       );
 
+      trackMetric('Unsubscribe::Success');
+
       const html = renderer('/unsubscribe/success', {
         requestState: mergeRequestState(res.locals, {
           pageData: {
@@ -48,6 +51,8 @@ router.get(
       logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
         request_id: res.locals.requestId,
       });
+
+      trackMetric('Unsubscribe::Failure');
 
       const html = renderer('/unsubscribe/error', {
         requestState: mergeRequestState(res.locals, {

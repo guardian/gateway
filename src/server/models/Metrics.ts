@@ -19,9 +19,13 @@ type RateLimitMetrics = BucketType;
 type ConditionalMetrics =
   | 'AccountVerification'
   | 'BreachedPasswordCheck'
+  | 'ChangeEmail'
+  | 'ConsentToken'
+  | 'ConsentTokenResend'
   | `${EmailMetrics}EmailSend`
   | 'EmailValidated'
   | `${'Get' | 'Post'}ConsentsPage-${string}`
+  | 'JobsGRSGroupAgree'
   | 'LoginMiddleware'
   | 'OAuthAuthorization'
   | 'OktaRegistration'
@@ -40,10 +44,10 @@ type ConditionalMetrics =
   | 'SendValidationEmail'
   | 'SignIn'
   | 'SignOut'
+  | 'Unsubscribe'
   | 'UpdatePassword'
   | 'RecaptchaMiddleware'
-  | 'ValidatePasswordToken'
-  | 'JobsGRSGroupAgree';
+  | 'ValidatePasswordToken';
 
 // Unconditional metrics that we want to track directly
 type UnconditionalMetrics =
