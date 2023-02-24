@@ -23,6 +23,7 @@ type Props = {
   recaptchaSiteKey?: string;
   formTrackingName?: string;
   formError?: string;
+  showHelp?: boolean;
 };
 
 export const EmailSent = ({
@@ -37,10 +38,12 @@ export const EmailSent = ({
   formTrackingName,
   children,
   formError,
+  showHelp,
 }: PropsWithChildren<Props>) => {
   const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
   const [recaptchaErrorContext, setRecaptchaErrorContext] =
     useState<ReactNode>(null);
+  const showHelpBox = showHelp || (email && resendEmailAction);
   return (
     <MainLayout
       pageHeader="Check your email inbox"
@@ -110,20 +113,21 @@ export const EmailSent = ({
           >
             <EmailInput defaultValue={email} hidden hideLabel />
           </MainForm>
-          <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
-            If you are still having trouble, contact our customer service team
-            at{' '}
-            <ExternalLink
-              cssOverrides={css`
-                font-weight: 700;
-              `}
-              href="mailto:userhelp@theguardian.com"
-            >
-              userhelp@guardian.com
-            </ExternalLink>
-            .
-          </MainBodyText>
         </>
+      )}
+      {showHelpBox && (
+        <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
+          If you are still having trouble, contact our customer service team at{' '}
+          <ExternalLink
+            cssOverrides={css`
+              font-weight: 700;
+            `}
+            href="mailto:userhelp@theguardian.com"
+          >
+            userhelp@guardian.com
+          </ExternalLink>
+          .
+        </MainBodyText>
       )}
     </MainLayout>
   );

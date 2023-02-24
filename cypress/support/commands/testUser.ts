@@ -27,6 +27,7 @@ declare global {
       closeCurrentOktaSession: typeof closeCurrentOktaSession;
       subscribeToNewsletter: typeof subscribeToNewsletter;
       subscribeToMarketingConsent: typeof subscribeToMarketingConsent;
+      sendConsentEmail: typeof sendConsentEmail;
     }
   }
 }
@@ -253,6 +254,42 @@ export const createTestUser = ({
   } catch (error) {
     throw new Error('Failed to create IDAPI test user: ' + error);
   }
+};
+
+export const sendConsentEmail = ({
+  emailAddress,
+  consents,
+  newsletters,
+}: {
+  emailAddress: string;
+  consents?: string[];
+  newsletters?: string[];
+}) => {
+  return cy.getCookie('SC_GU_U').then((cookie) => {
+    try {
+      return cy.request({
+        url: Cypress.env('IDAPI_BASE_URL') + '/consent-email',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-GU-ID-Client-Access-Token': `Bearer ${Cypress.env(
+            'IDAPI_CLIENT_ACCESS_TOKEN',
+          )}`,
+          'X-GU-ID-FOWARDED-SC-GU-U': cookie?.value,
+        },
+        body: JSON.stringify([
+          {
+            email: emailAddress,
+            'set-consents': consents,
+            'set-lists': newsletters,
+          },
+        ]),
+        retryOnStatusCodeFailure: true,
+      });
+    } catch (error) {
+      throw new Error('Failed to send consents email: ' + error);
+    }
+  });
 };
 
 export const getTestOktaUser = (id: string) => {

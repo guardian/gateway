@@ -35,6 +35,7 @@ import {
   closeCurrentOktaSession,
   subscribeToNewsletter,
   subscribeToMarketingConsent,
+  sendConsentEmail,
 } from './commands/testUser';
 
 Cypress.Commands.add('mockNext', mockNext);
@@ -75,3 +76,4 @@ Cypress.Commands.add(
   'subscribeToMarketingConsent',
   subscribeToMarketingConsent,
 );
+Cypress.Commands.add('sendConsentEmail', sendConsentEmail);

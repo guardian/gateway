@@ -17,6 +17,10 @@ export const ValidRoutePathsArray = [
   '/consents/data',
   '/consents/review',
   '/email/:template',
+  '/consent-token/:token/accept',
+  '/consent-token/error',
+  '/consent-token/resend',
+  '/consent-token/email-sent',
   '/error',
   '/magic-link', //this is not being used until MVP4
   '/magic-link/email-sent', //this is not being used until MVP4
@@ -69,6 +73,8 @@ export type ApiRoutePaths =
   | '/auth/oauth-token'
   | '/auth/redirect'
   | '/consents'
+  | '/consent-email/:token'
+  | '/consent-email/resend/:token'
   | '/guest'
   | '/newsletters'
   | '/pwd-reset/reset-pwd-for-user'

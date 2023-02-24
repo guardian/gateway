@@ -36,6 +36,7 @@ import { ChangeEmailCompletePage } from '@/client/pages/ChangeEmailCompletePage'
 import { ChangeEmailErrorPage } from '@/client/pages/ChangeEmailErrorPage';
 import { UnsubscribeSuccessPage } from '@/client/pages/UnsubscribeSuccessPage';
 import { UnsubscribeErrorPage } from '@/client/pages/UnsubscribeErrorPage';
+import { ResendConsentEmailPage } from './pages/ResendConsentEmailPage';
 
 export type RoutingConfig = {
   clientState: ClientState;
@@ -201,6 +202,16 @@ const routes: Array<{
   {
     path: '/maintenance',
     element: <MaintenancePage />,
+  },
+  {
+    path: '/consent-token/error',
+    element: <ResendConsentEmailPage />,
+  },
+  {
+    path: '/consent-token/email-sent',
+    element: (
+      <EmailSentPage formTrackingName="consent-resend" showHelp={true} />
+    ),
   },
 ];
 
