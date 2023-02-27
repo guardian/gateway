@@ -7,7 +7,8 @@ const nodeExternals = require('webpack-node-externals');
 const Dotenv = require('dotenv-webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin =
+  require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const webpack = require('webpack');
 const deepmerge = require('deepmerge');
 const sharedLoader = require('./.swcrc.config');
@@ -15,8 +16,8 @@ const sharedLoader = require('./.swcrc.config');
 const mode =
   process.env.ENVIRONMENT === 'production' ? 'production' : 'development';
 
-process.stdout.write(`Building in ${mode} mode.\n`)
-  
+process.stdout.write(`Building in ${mode} mode.\n`);
+
 const analyzeBundle = process.env.WEBPACK_ANALYZE_BUNDLE === 'true';
 
 const extensions = ['.ts', '.tsx', '.js'];
@@ -34,7 +35,7 @@ const imageLoader = (path) => {
         options: {
           name: '[hash].[ext]',
           outputPath: path,
-          publicPath: '/gateway-static/',
+          publicPath: '/static/',
         },
       },
       {
@@ -98,7 +99,7 @@ const server = () => ({
                   node: process.versions.node,
                 },
               },
-            }
+            },
           }),
         ],
       },
@@ -150,9 +151,9 @@ const browser = ({ isLegacy }) => {
           chrome: '66',
           edge: '79',
           firefox: '67',
-          safari: '13'
-        }
-      }
+          safari: '13',
+        },
+      },
     },
   });
 
@@ -161,14 +162,14 @@ const browser = ({ isLegacy }) => {
       env: {
         targets: {
           // min browser versions
-          ie: '11'
-        }
-      }
+          ie: '11',
+        },
+      },
     },
   });
 
   const filename = `[name]${isLegacy ? '.legacy' : ''}.[chunkhash].js`;
-  
+
   const plugins = [
     new AssetsPlugin({
       path: path.resolve(__dirname, 'build'),
@@ -179,14 +180,18 @@ const browser = ({ isLegacy }) => {
       __SENTRY_DEBUG__: false,
       __SENTRY_TRACING__: false,
     }),
-  ]
-  
+  ];
+
   if (analyzeBundle) {
-    plugins.push(new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      openAnalyzer: true,
-      reportFilename: `../webpack-report-${isLegacy ? 'legacy' : 'modern'}.html`
-    }));
+    plugins.push(
+      new BundleAnalyzerPlugin({
+        analyzerMode: 'static',
+        openAnalyzer: true,
+        reportFilename: `../webpack-report-${
+          isLegacy ? 'legacy' : 'modern'
+        }.html`,
+      }),
+    );
   }
 
   return {
@@ -196,9 +201,7 @@ const browser = ({ isLegacy }) => {
       rules: [
         {
           test: /\.(m?)(j|t)s(x?)/,
-          use: [
-            isLegacy ? legacyLoader : modernLoader
-          ]
+          use: [isLegacy ? legacyLoader : modernLoader],
         },
         imageLoader('./'),
       ],
@@ -231,7 +234,7 @@ const browser = ({ isLegacy }) => {
       filename,
       chunkFilename: filename,
       path: path.resolve(__dirname, 'build/static/'),
-      publicPath: 'gateway-static/',
+      publicPath: 'static/',
     },
     plugins,
     target,
