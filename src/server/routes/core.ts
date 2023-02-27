@@ -9,7 +9,7 @@ router.use('/server-error', (_, res: Response) => {
 });
 
 router.use(
-  '/gateway-static',
+  '/static',
   express.static(path.resolve(__dirname, 'static'), {
     cacheControl: true,
     maxAge: ms('1y'),
