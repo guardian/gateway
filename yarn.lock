@@ -1775,10 +1775,10 @@
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.2.tgz#30aa825f11d438671d585bd44e7fd564535fc210"
   integrity sha512-82cpyJyKRoQoRi+14ibCeGPu0CwypgtBAdBhq1WfvagpCZNKqwXbKwXllYSMG91DhmG4jt9gN8eP6lGOtozuaw==
 
-"@guardian/ab-core@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@guardian/ab-core/-/ab-core-2.0.1.tgz#acff2ddf887fdba792f6dafa1acfc10149e0946a"
-  integrity sha512-5P1aOrKSvo6sde7+c+IiD+Mh2a9p33zaTMJl6n/I0s8gtVS16cOi9NH3fNjfMjTqUkbo8/o0RcSy91xwsauCow==
+"@guardian/ab-core@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@guardian/ab-core/-/ab-core-3.1.0.tgz#8974bc0a0a25f6f47d946252cc410657801372b2"
+  integrity sha512-DGyDH1NrQEkyudUN2HlIb+BuEQNL4ftSG4DvDd+SPhcqCKH/41k2JMnchVM4KTO6ctHTw7D3AD9POhr+3Xm/YA==
 
 "@guardian/ab-react@^2.0.1":
   version "2.0.1"
