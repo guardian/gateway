@@ -158,6 +158,27 @@ Resources:
               - Effect: Allow
                 Action: ses:SendEmail
                 Resource: '*'
+        - PolicyName: SSMTunnel
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ec2messages:AcknowledgeMessage
+                  - ec2messages:DeleteMessage
+                  - ec2messages:FailMessage
+                  - ec2messages:GetEndpoint
+                  - ec2messages:GetMessages
+                  - ec2messages:SendReply
+                  - ssm:UpdateInstanceInformation
+                  - ssm:ListInstanceAssociations
+                  - ssm:DescribeInstanceProperties
+                  - ssm:DescribeDocumentParameters
+                  - ssmmessages:CreateControlChannel
+                  - ssmmessages:CreateDataChannel
+                  - ssmmessages:OpenControlChannel
+                  - ssmmessages:OpenDataChannel
+                Resource: '*'
   GithubActionsSESSendEmailsRole:
     Type: AWS::IAM::Role
     Condition: NotIsProd
