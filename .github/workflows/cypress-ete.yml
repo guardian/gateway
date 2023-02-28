@@ -49,7 +49,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
-          cache: 'yarn'
+          cache: 'pnpm'
       - name: Cypress run
         uses: cypress-io/github-action@v5
         env:
@@ -102,8 +102,8 @@ jobs:
           # Used to tell Gateway server we're running in Cypress
           RUNNING_IN_CYPRESS: true
         with:
-          install: yarn install --frozen-lockfile --immutable
-          start: yarn start
+          install: pnpm install --frozen-lockfile
+          start: pnpm start
           wait-on: 'https://profile.thegulocal.com/healthcheck'
           wait-on-timeout: 60
           browser: chrome

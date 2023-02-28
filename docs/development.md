@@ -164,7 +164,7 @@ and with query Params
 You can run Storybook by
 
 ```sh
-$ yarn storybook
+$ make storybook
 ```
 
 Which will compile the project and start storybook. Any changes you make will be automatically reloaded in Storybook too.
@@ -509,15 +509,7 @@ Environment variables appear in a lot of places, so it's likely you'll need to u
    - Example file for `.env` without populated values
    - Should be committed, but make sure not to include any values that should be secret.
    - e.g. `ENV_KEY=`
-3. `docker-compose.yml`
-   - Since docker can also be used for development, the environment variables must also be defined in this file
-   - By default it picks up values from the `.env` file, but they need to be registered under `environment` first.
-   - Use the `${...}` syntax to populate the value from the name.
-   ```yml
-   environment:
-     - ENV_KEY=${ENV_KEY}
-   ```
-4. Configuration and Tests
+3. Configuration and Tests
 
    - Environment Variables should only be accessible on the server, as not to possibly leak them.
    - To register them with the server, first add it to the [`Configuration`](../src/server/models/Configuration.ts) interface.
@@ -532,7 +524,7 @@ Environment variables appear in a lot of places, so it's likely you'll need to u
    thisMethodNeedsTheKey(envKey);
    ```
 
-5. [Github Actions](../.github/workflows)
+4. [Github Actions](../.github/workflows)
    - For GitHub Actions CI
    - Add development values to allow tests to pass
    - For secret values depending on the use case either
@@ -546,7 +538,7 @@ Environment variables appear in a lot of places, so it's likely you'll need to u
      env:
        ENV_KEY: ${{ secrets.ENV_KEY }}
      ```
-6. S3 Config
+5. S3 Config
    - If an environment variable has been changed/added/deleted, it might be useful to update the default S3 private DEV config for the project to help other developers
    - AWS `identity` account, in the `s3://identity-private-config/DEV/identity-gateway/` folder.
 

@@ -72,18 +72,18 @@ fi
 
 if [[ "$DEV_MODE" == "false" ]]; then
   echo "building gateway"
-  yarn build
+  corepack pnpm run build
   echo "starting gateway server, and waiting for https://profile.thegulocal.com/healthcheck"
-  yarn start &
-  yarn wait-on:server
+  corepack pnpm run start &
+  corepack pnpm run wait-on:server
 else
   echo "starting gateway server in watch and dev mode, and waiting for https://profile.thegulocal.com/healthcheck"
-  yarn watch:server & yarn watch & yarn wait-on:server
+  corepack pnpm run watch:server & corepack pnpm run watch & corepack pnpm run wait-on:server
 fi
 
 echo "opening cypress"
 if [[ "$USE_OKTA" == "true" ]]; then
-  yarn cypress open --env $CI_ENV --config '{"e2e":{"specPattern":["**/ete-okta/**/*.cy.ts"]}}' --e2e --browser chrome
+  corepack pnpm run cypress open --env $CI_ENV --config '{"e2e":{"specPattern":["**/ete-okta/**/*.cy.ts"]}}' --e2e --browser chrome
 else
-  yarn cypress open --env $CI_ENV --config '{"e2e":{"specPattern":["**/ete/**/*.cy.ts"]}}' --e2e --browser chrome
+  corepack pnpm run cypress open --env $CI_ENV --config '{"e2e":{"specPattern":["**/ete/**/*.cy.ts"]}}' --e2e --browser chrome
 fi

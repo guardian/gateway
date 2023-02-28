@@ -17,11 +17,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
-          cache: 'yarn'
+          cache: 'pnpm'
       - name: Install dependencies
-        run: yarn install --frozen-lockfile --immutable
+        run: pnpm install --frozen-lockfile
       - name: Build project
-        run: yarn build
+        run: pnpm run build
       - name: 'Zip build'
         run: zip -r -q build.zip ./build
       - name: 'Upload build'
