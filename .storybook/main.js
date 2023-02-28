@@ -27,6 +27,10 @@ module.exports = {
     config.resolve.alias = {
       ...config.resolve.alias,
       '@': path.join(__dirname, '../src'),
+      react: 'preact/compat',
+      'react-dom/test-utils': 'preact/test-utils',
+      'react-dom': 'preact/compat', // Must be below test-utils
+      'react/jsx-runtime': 'preact/jsx-runtime',
       mjml: 'mjml-browser',
       // We stub these libraries required by mjml because Storybook cannot run these on the client side.
       'uglify-js': false,
