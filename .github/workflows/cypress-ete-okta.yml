@@ -1,8 +1,6 @@
 name: Cypress E2E tests with Okta
 on:
   workflow_call:
-permissions:
-  id-token: write
 
 jobs:
   cypress-nginx-okta:
@@ -25,6 +23,10 @@ jobs:
         ports:
           # Maps Redis port 6379 on service container to the host
           - 6379:6379
+    permissions:
+      # required by aws-actions/configure-aws-credentials
+      id-token: write
+      contents: read
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3

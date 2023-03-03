@@ -119,6 +119,11 @@
     "zod-to-json-schema": "^3.20.4"
   },
   "dependencies": {
+    "@aws-sdk/client-cloudwatch": "^3.282.0",
+    "@aws-sdk/client-kinesis": "^3.282.0",
+    "@aws-sdk/client-sesv2": "^3.282.0",
+    "@aws-sdk/credential-providers": "^3.282.0",
+    "@aws-sdk/node-http-handler": "^3.282.0",
     "@emotion/react": "^11.10.6",
     "@guardian/ab-core": "^2.0.1",
     "@guardian/ab-react": "^2.0.1",
@@ -131,7 +136,6 @@
     "@sentry/tracing": "^7.38.0",
     "@types/supertest": "^2.0.12",
     "awesome-debounce-promise": "^2.1.0",
-    "aws-sdk": "2.1323.0",
     "bowser": "^2.11.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
