@@ -20,7 +20,8 @@ deployments:
     dependencies:
       - gateway-cloudformation
     parameters:
-      bucket: identity-artifacts
+      bucketSsmLookup: true
+      bucketSsmKey: /account/services/identity.artifact.bucket
       prefixStack: false
   update-ami:
     type: ami-cloudformation-parameter
