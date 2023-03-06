@@ -1,23 +1,30 @@
-import {
-  ConfigurationOptions,
-  CredentialProviderChain,
-  SharedIniFileCredentials,
-} from 'aws-sdk';
+import { fromNodeProviderChain } from '@aws-sdk/credential-providers';
+import { NodeHttpHandler } from '@aws-sdk/node-http-handler';
+import { KinesisClientConfig } from '@aws-sdk/client-kinesis';
 
 const AWS_REGION = 'eu-west-1';
-const PROFILE = 'identity';
 
-const CREDENTIAL_PROVIDER = new CredentialProviderChain([
-  () => new SharedIniFileCredentials({ profile: PROFILE }),
-  ...CredentialProviderChain.defaultProviders,
-]);
+// in github actions, we use the default credentials provider chain profile
+// while on a server/local dev, we use the `identity` profile
+const PROFILE = !process.env.GITHUB_ACTION ? 'identity' : undefined;
 
-export const awsConfig: ConfigurationOptions = {
+const CREDENTIAL_PROVIDER = fromNodeProviderChain({
+  profile: PROFILE,
+});
+
+// shared config for all aws clients, using the KinesisClientConfig type as
+// the base type for the shared config
+type SharedAwsConfig = Pick<
+  KinesisClientConfig,
+  'region' | 'credentials' | 'maxAttempts' | 'requestHandler'
+>;
+
+export const awsConfig: SharedAwsConfig = {
   region: AWS_REGION,
-  credentialProvider: CREDENTIAL_PROVIDER,
-  maxRetries: 0,
-  httpOptions: {
-    connectTimeout: 500,
-    timeout: 250,
-  },
+  credentials: CREDENTIAL_PROVIDER,
+  maxAttempts: 0,
+  requestHandler: new NodeHttpHandler({
+    connectionTimeout: 500,
+    socketTimeout: 250,
+  }),
 };

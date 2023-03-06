@@ -1,19 +1,19 @@
-import { SESV2 } from 'aws-sdk';
+import {
+  SendEmailCommand,
+  SendEmailCommandInput,
+  SESv2Client,
+} from '@aws-sdk/client-sesv2';
 import { awsConfig } from '@/server/lib/awsConfig';
+import { NodeHttpHandler } from '@aws-sdk/node-http-handler';
 
-// We need to adjust the SES timeouts to be longer than the standard AWS
-// timeouts
-const sesConfig = {
+const ses = new SESv2Client({
   ...awsConfig,
-  maxRetries: 3,
-  httpOptions: {
-    ...awsConfig.httpOptions,
-    connectTimeout: 1000,
-    timeout: 1000,
-  },
-};
-
-const ses = new SESV2(sesConfig);
+  maxAttempts: 3,
+  requestHandler: new NodeHttpHandler({
+    connectionTimeout: 1000,
+    socketTimeout: 1000,
+  }),
+});
 
 type Props = {
   html: string;
@@ -33,7 +33,7 @@ export const send = async ({
     return true;
   }
 
-  const params: SESV2.SendEmailRequest = {
+  const params: SendEmailCommandInput = {
     Content: {
       Simple: {
         Body: {
@@ -55,7 +55,7 @@ export const send = async ({
     FromEmailAddress: 'The Guardian <registration-reply@theguardian.com>',
   };
 
-  const result = await ses.sendEmail(params).promise();
+  const result = await ses.send(new SendEmailCommand(params));
   if (!result?.MessageId) {
     return false;
   }

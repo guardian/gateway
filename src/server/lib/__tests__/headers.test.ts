@@ -27,7 +27,11 @@ jest.mock('@/server/lib/serverSideLogger', () => ({
     error: jest.fn(),
   },
 }));
-jest.mock('aws-sdk');
+jest.mock('@aws-sdk/credential-providers');
+jest.mock('@aws-sdk/node-http-handler');
+jest.mock('@aws-sdk/client-kinesis');
+jest.mock('@aws-sdk/client-sesv2');
+jest.mock('@aws-sdk/client-cloudwatch');
 jest.mock('@/server/lib/getAssets', () => ({
   getAssets: () => ({
     main: { js: 'mocked' },
