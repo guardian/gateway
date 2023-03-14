@@ -274,13 +274,6 @@ export const redirectsCorrectlyForSocialSignIn = (isIdapi = false) => {
           isIdapi ? '&useIdapi=true' : ''
         }`,
       );
-      cy.get('[data-cy="facebook-sign-in-button"]').should(
-        'have.attr',
-        'href',
-        `/signin/facebook?returnUrl=${encodeURIComponent(returnUrl)}${
-          isIdapi ? '&useIdapi=true' : ''
-        }`,
-      );
       cy.get('[data-cy="apple-sign-in-button"]').should(
         'have.attr',
         'href',
@@ -394,7 +387,6 @@ export const doesNotDisplaySocialButtonsWhenAccountLinkingRequiredErrorParameter
           : '/signin?error=accountLinkingRequired';
         cy.visit(visitUrl);
         cy.get('[data-cy="google-sign-in-button"]').should('not.exist');
-        cy.get('[data-cy="facebook-sign-in-button"]').should('not.exist');
         cy.get('[data-cy="apple-sign-in-button"]').should('not.exist');
       },
     ] as const;

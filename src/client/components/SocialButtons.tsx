@@ -5,11 +5,13 @@ import {
   LinkButton,
   SvgGoogleBrand,
   SvgAppleBrand,
-  SvgFacebookBrand,
+  Link,
 } from '@guardian/source-react-components';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { IsNativeApp } from '@/shared/model/ClientState';
+import { MainBodyText } from './MainBodyText';
+import { sendOphanInteractionEvent } from '../lib/ophan';
 
 type SocialButtonsProps = {
   queryParams: QueryParams;
@@ -38,6 +40,7 @@ const containerStyles = (marginTop = false, isNativeApp: IsNativeApp) => css`
   ${from.mobileMedium} {
     margin-top: ${marginTop ? space[6] : 0}px;
   }
+  margin-bottom: ${space[4]}px;
   width: 100%;
 `;
 
@@ -119,8 +122,6 @@ const socialButtonIcon = (socialProvider: string): React.ReactElement => {
       return <SvgGoogleBrand />;
     case 'apple':
       return <SvgAppleBrand />;
-    case 'facebook':
-      return <SvgFacebookBrand />;
     default:
       // null is the officially recommended way to return nothing from a React component,
       // but LinkButton doesn't accept it, so we return an empty JSX element instead
@@ -132,11 +133,11 @@ const socialButtonIcon = (socialProvider: string): React.ReactElement => {
 const getButtonOrder = (isNativeApp?: IsNativeApp): string[] => {
   switch (isNativeApp) {
     case 'ios':
-      return ['apple', 'google', 'facebook'];
+      return ['apple', 'google'];
     case 'android':
-      return ['google', 'apple', 'facebook'];
+      return ['google', 'apple'];
     default:
-      return ['google', 'apple', 'facebook'];
+      return ['google', 'apple'];
   }
 };
 
@@ -147,18 +148,37 @@ export const SocialButtons = ({
 }: SocialButtonsProps) => {
   const buttonOrder = getButtonOrder(isNativeApp);
   return (
-    <div css={containerStyles(marginTop, isNativeApp)}>
-      {buttonOrder.map((socialProvider, index) => (
-        <SocialButton
-          key={socialProvider}
-          label={socialProvider}
-          icon={socialButtonIcon(socialProvider)}
-          socialProvider={socialProvider}
-          queryParams={queryParams}
-          showGap={index < buttonOrder.length - 1}
-          isNativeApp={isNativeApp}
-        />
-      ))}
-    </div>
+    <>
+      <div css={containerStyles(marginTop, isNativeApp)}>
+        {buttonOrder.map((socialProvider, index) => (
+          <SocialButton
+            key={socialProvider}
+            label={socialProvider}
+            icon={socialButtonIcon(socialProvider)}
+            socialProvider={socialProvider}
+            queryParams={queryParams}
+            showGap={index < buttonOrder.length - 1}
+            isNativeApp={isNativeApp}
+          />
+        ))}
+      </div>
+      <MainBodyText noMargin>
+        <b>We no longer support authentication with Facebook.</b> Please sign in
+        below using your Facebook email. If you don&apos;t have or don&apos;t
+        know your password, please{' '}
+        <Link
+          href={buildUrlWithQueryParams('/reset-password', {}, queryParams)}
+          onClick={() => {
+            sendOphanInteractionEvent({
+              component: 'facebook-password-reset-link',
+              value: 'click',
+            });
+          }}
+        >
+          reset your password
+        </Link>
+        .
+      </MainBodyText>
+    </>
   );
 };
