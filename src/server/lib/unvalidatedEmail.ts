@@ -8,6 +8,7 @@ type Props = {
   email: string;
   appClientId?: string;
   request_id?: string;
+  ip: string;
 };
 
 /**
@@ -24,8 +25,9 @@ export const sendEmailToUnvalidatedUser = async ({
   email,
   appClientId,
   request_id,
+  ip,
 }: Props): Promise<void> => {
-  const token = await forgotPassword(id);
+  const token = await forgotPassword(id, ip);
   if (!token) {
     throw new OktaError({
       message: `Unvalidated email sign-in failed: missing reset password token`,
@@ -33,11 +35,12 @@ export const sendEmailToUnvalidatedUser = async ({
   }
   const emailIsSent = await sendUnvalidatedEmailResetPasswordEmail({
     to: email,
-    resetPasswordToken: await addAppPrefixToOktaRecoveryToken(
+    resetPasswordToken: await addAppPrefixToOktaRecoveryToken({
       token,
       appClientId,
       request_id,
-    ),
+      ip,
+    }),
   });
   if (!emailIsSent) {
     throw new OktaError({

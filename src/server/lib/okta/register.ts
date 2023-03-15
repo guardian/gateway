@@ -46,14 +46,16 @@ const { okta } = getConfiguration();
  */
 export const sendRegistrationEmailByUserState = async ({
   email,
+  ip,
   appClientId,
   request_id,
 }: {
   email: string;
+  ip: string;
   appClientId?: string;
   request_id?: string;
 }): Promise<UserResponse> => {
-  const user = await getUser(email);
+  const user = await getUser(email, ip);
   const { id, status } = user;
 
   switch (status) {
@@ -65,7 +67,10 @@ export const sendRegistrationEmailByUserState = async ({
        *    token through Gateway
        *    And my status should become PROVISIONED
        */
-      const tokenResponse = await activateUser(user.id);
+      const tokenResponse = await activateUser({
+        id: user.id,
+        ip,
+      });
       if (!tokenResponse?.token.length) {
         throw new OktaError({
           message: `Okta user activation failed: missing activation token`,
@@ -73,11 +78,12 @@ export const sendRegistrationEmailByUserState = async ({
       }
       const emailIsSent = await sendAccountWithoutPasswordExistsEmail({
         to: user.profile.email,
-        activationToken: await addAppPrefixToOktaRecoveryToken(
-          tokenResponse.token,
+        activationToken: await addAppPrefixToOktaRecoveryToken({
+          token: tokenResponse.token,
+          ip,
           appClientId,
           request_id,
-        ),
+        }),
       });
       if (!emailIsSent) {
         throw new OktaError({
@@ -94,7 +100,10 @@ export const sendRegistrationEmailByUserState = async ({
        *    token through Gateway
        *    And my status should remain PROVISIONED
        */
-      const tokenResponse = await reactivateUser(user.id);
+      const tokenResponse = await reactivateUser({
+        id: user.id,
+        ip,
+      });
       if (!tokenResponse?.token.length) {
         throw new OktaError({
           message: `Okta user reactivation failed: missing re-activation token`,
@@ -102,11 +111,12 @@ export const sendRegistrationEmailByUserState = async ({
       }
       const emailIsSent = await sendAccountWithoutPasswordExistsEmail({
         to: user.profile.email,
-        activationToken: await addAppPrefixToOktaRecoveryToken(
-          tokenResponse.token,
+        activationToken: await addAppPrefixToOktaRecoveryToken({
+          token: tokenResponse.token,
+          ip,
           appClientId,
           request_id,
-        ),
+        }),
       });
       if (!emailIsSent) {
         throw new OktaError({
@@ -135,7 +145,7 @@ export const sendRegistrationEmailByUserState = async ({
 
       const doesNotHavePassword = !user.credentials.password;
 
-      const groups = await getUserGroups(id);
+      const groups = await getUserGroups(id, ip);
       // check if the user has their email validated based on group membership
       const emailValidated = groups.some(
         (group) => group.profile.name === 'GuardianUser-EmailValidated',
@@ -144,7 +154,7 @@ export const sendRegistrationEmailByUserState = async ({
       if (doesNotHavePassword) {
         // The user does not have a password set, so we set a placeholder
         // password first, then proceed with the rest of the operation.
-        await dangerouslySetPlaceholderPassword(user.id);
+        await dangerouslySetPlaceholderPassword(user.id, ip);
       }
       // Now the user has a password set, so we can get a reset password token
       // and send them an email which contains it, allowing them to immediately
@@ -158,6 +168,7 @@ export const sendRegistrationEmailByUserState = async ({
           email: user.profile.email,
           appClientId,
           request_id,
+          ip,
         });
         trackMetric('OktaUnvalidatedUserResendEmail::Success');
       } else {
@@ -167,14 +178,15 @@ export const sendRegistrationEmailByUserState = async ({
         // their password, they will still be able to log in and can disregard
         // the token in the email).
         try {
-          const activationToken = await forgotPassword(id);
+          const activationToken = await forgotPassword(id, ip);
           await sendAccountExistsEmail({
             to: user.profile.email,
-            activationToken: await addAppPrefixToOktaRecoveryToken(
-              activationToken,
+            activationToken: await addAppPrefixToOktaRecoveryToken({
+              token: activationToken,
+              ip,
               appClientId,
               request_id,
-            ),
+            }),
           });
         } catch (error) {
           // If the forgot password operation failed for whatever reason, we catch and
@@ -203,7 +215,7 @@ export const sendRegistrationEmailByUserState = async ({
        *    token through Gateway
        *    And my status should become RECOVERY
        */
-      const token = await dangerouslyResetPassword(user.id);
+      const token = await dangerouslyResetPassword(user.id, ip);
       if (!token) {
         throw new OktaError({
           message: `Okta user reset password failed: missing reset password token`,
@@ -211,11 +223,12 @@ export const sendRegistrationEmailByUserState = async ({
       }
       const emailIsSent = await sendResetPasswordEmail({
         to: user.profile.email,
-        resetPasswordToken: await addAppPrefixToOktaRecoveryToken(
+        resetPasswordToken: await addAppPrefixToOktaRecoveryToken({
           token,
+          ip,
           appClientId,
           request_id,
-        ),
+        }),
       });
       if (!emailIsSent) {
         throw new OktaError({
@@ -244,11 +257,13 @@ export const sendRegistrationEmailByUserState = async ({
  */
 export const register = async ({
   email,
+  ip,
   registrationLocation,
   appClientId,
   request_id,
 }: {
   email: string;
+  ip: string;
   registrationLocation?: RegistrationLocation;
   appClientId?: string;
   request_id?: string;
@@ -256,16 +271,19 @@ export const register = async ({
   try {
     // Create the user in Okta, but do not send the activation email
     // because we send the email ourselves through Gateway.
-    const userResponse = await createUser({
-      profile: {
-        email,
-        login: email,
-        isGuardianUser: true,
-        registrationPlatform: 'identity-gateway',
-        registrationLocation: registrationLocation,
+    const userResponse = await createUser(
+      {
+        profile: {
+          email,
+          login: email,
+          isGuardianUser: true,
+          registrationPlatform: 'identity-gateway',
+          registrationLocation: registrationLocation,
+        },
+        groupIds: [okta.groupIds.GuardianUserAll],
       },
-      groupIds: [okta.groupIds.GuardianUserAll],
-    });
+      ip,
+    );
     if (!userResponse) {
       throw new OktaError({
         message: `Okta user creation failed: missing user response`,
@@ -276,7 +294,7 @@ export const register = async ({
       profile: { email: emailAddress },
     } = userResponse;
     // Generate an activation token for the new user...
-    const tokenResponse = await activateUser(id);
+    const tokenResponse = await activateUser({ id, ip });
     if (!tokenResponse?.token.length) {
       throw new OktaError({
         message: `Okta user creation failed: missing activation token`,
@@ -285,11 +303,12 @@ export const register = async ({
     // ...and send the activation email.
     const emailIsSent = await sendCompleteRegistration({
       to: emailAddress,
-      activationToken: await addAppPrefixToOktaRecoveryToken(
-        tokenResponse.token,
+      activationToken: await addAppPrefixToOktaRecoveryToken({
+        token: tokenResponse.token,
+        ip,
         appClientId,
         request_id,
-      ),
+      }),
     });
     if (!emailIsSent) {
       throw new OktaError({
@@ -304,6 +323,7 @@ export const register = async ({
       causesInclude(error.causes, 'already exists')
     ) {
       return sendRegistrationEmailByUserState({
+        ip,
         email,
         appClientId,
         request_id,

@@ -46,7 +46,7 @@ export const performAuthorizationCodeFlow = async (
     const oktaSessionCookieId: string | undefined = req.cookies.sid;
     // clear existing okta session cookie if it exists
     if (oktaSessionCookieId) {
-      await closeSession(oktaSessionCookieId);
+      await closeSession(oktaSessionCookieId, req.ip);
     }
   }
 

@@ -66,7 +66,7 @@ describe('okta#createUser', () => {
       Promise.resolve({ ok: true, json } as Response),
     );
 
-    const response = await createUser(userCreationRequest(email));
+    const response = await createUser(userCreationRequest(email), '127.0.0.1');
     expect(response).toEqual(user);
   });
 
@@ -89,7 +89,9 @@ describe('okta#createUser', () => {
       Promise.resolve({ ok: false, status: 400, json } as Response),
     );
 
-    await expect(createUser(userCreationRequest(userId))).rejects.toThrowError(
+    await expect(
+      createUser(userCreationRequest(userId), '127.0.0.1'),
+    ).rejects.toThrowError(
       new OktaError({ message: 'Api validation failed: login' }),
     );
   });
@@ -117,7 +119,9 @@ describe('okta#createUser', () => {
       Promise.resolve({ ok: false, status: 400, json } as Response),
     );
 
-    await expect(createUser(userCreationRequest(userId))).rejects.toThrowError(
+    await expect(
+      createUser(userCreationRequest(userId), '127.0.0.1'),
+    ).rejects.toThrowError(
       new OktaError({ message: 'Api validation failed: login', causes }),
     );
   });
@@ -141,7 +145,9 @@ describe('okta#createUser', () => {
       Promise.resolve({ ok: false, status: 400, json } as Response),
     );
 
-    await expect(createUser(userCreationRequest(userId))).rejects.toThrowError(
+    await expect(
+      createUser(userCreationRequest(userId), '127.0.0.1'),
+    ).rejects.toThrowError(
       new OktaError({ message: 'Api validation failed: login', causes }),
     );
   });
@@ -165,7 +171,7 @@ describe('okta#fetchUser', () => {
       Promise.resolve({ ok: true, json } as Response),
     );
 
-    const response = await getUser(userId);
+    const response = await getUser(userId, '127.0.0.1');
     expect(response).toEqual(user);
   });
 
@@ -182,7 +188,7 @@ describe('okta#fetchUser', () => {
       Promise.resolve({ ok: false, status: 404, json } as Response),
     );
 
-    await expect(getUser(userId)).rejects.toThrowError(
+    await expect(getUser(userId, '127.0.0.1')).rejects.toThrowError(
       new OktaError({ message: 'Not found: Resource not found: 12345 (User)' }),
     );
   });
@@ -209,7 +215,7 @@ describe('okta#getUserGroups', () => {
       Promise.resolve({ ok: true, json } as Response),
     );
 
-    const response = await getUserGroups(userId);
+    const response = await getUserGroups(userId, '127.0.0.1');
     expect(response).toEqual(groups);
   });
 
@@ -226,7 +232,7 @@ describe('okta#getUserGroups', () => {
       Promise.resolve({ ok: false, status: 404, json } as Response),
     );
 
-    await expect(getUserGroups(userId)).rejects.toThrowError(
+    await expect(getUserGroups(userId, '127.0.0.1')).rejects.toThrowError(
       new OktaError({ message: 'Not found: Resource not found: 12345 (User)' }),
     );
   });
@@ -242,7 +248,9 @@ describe('okta#activateUser', () => {
       Promise.resolve({ ok: true, json } as Response),
     );
 
-    await expect(activateUser(userId, true)).resolves.toEqual(undefined);
+    await expect(
+      activateUser({ id: userId, sendEmail: true, ip: '127.0.0.1' }),
+    ).resolves.toEqual(undefined);
   });
 
   test('should throw an error when a user is already activated', async () => {
@@ -259,7 +267,9 @@ describe('okta#activateUser', () => {
       Promise.resolve({ ok: false, status: 403, json } as Response),
     );
 
-    await expect(activateUser(userId)).rejects.toThrowError(
+    await expect(
+      activateUser({ id: userId, ip: '127.0.0.1' }),
+    ).rejects.toThrowError(
       new OktaError({
         message: 'Activation failed because the user is already active',
       }),
@@ -277,7 +287,9 @@ describe('okta#reactivateUser', () => {
       Promise.resolve({ ok: true, json } as Response),
     );
 
-    await expect(reactivateUser(userId, true)).resolves.toEqual(undefined);
+    await expect(
+      reactivateUser({ id: userId, sendEmail: true, ip: '127.0.0.1' }),
+    ).resolves.toEqual(undefined);
   });
 
   test('throw a an error when a user cannot be reactivated', async () => {
@@ -295,7 +307,9 @@ describe('okta#reactivateUser', () => {
       Promise.resolve({ ok: false, status: 403, json } as Response),
     );
 
-    await expect(reactivateUser(userId)).rejects.toThrow(
+    await expect(
+      reactivateUser({ id: userId, ip: '127.0.0.1' }),
+    ).rejects.toThrow(
       new OktaError({
         message: "This operation is not allowed in the user's current status.",
       }),
@@ -311,7 +325,9 @@ describe('okta#clearUserSessions', () => {
   test('should clear user sessions', async () => {
     mockedFetch.mockReturnValueOnce(Promise.resolve({ ok: true } as Response));
 
-    await expect(clearUserSessions(userId)).resolves.toEqual(undefined);
+    await expect(
+      clearUserSessions({ id: userId, ip: '127.0.0.1' }),
+    ).resolves.toEqual(undefined);
   });
 
   test('should throw an error when a user session cannot be cleared', async () => {
@@ -328,7 +344,9 @@ describe('okta#clearUserSessions', () => {
       Promise.resolve({ ok: false, status: 404, json } as Response),
     );
 
-    await expect(clearUserSessions(userId)).rejects.toThrow(
+    await expect(
+      clearUserSessions({ id: userId, ip: '127.0.0.1' }),
+    ).rejects.toThrow(
       new OktaError({
         message: 'Not found: Resource not found: <userId> (User)',
       }),
@@ -351,7 +369,9 @@ describe('okta#dangerouslyResetPassword', () => {
       Promise.resolve({ ok: true, json } as Response),
     );
 
-    await expect(dangerouslyResetPassword(userId)).resolves.toEqual(token);
+    await expect(
+      dangerouslyResetPassword(userId, '127.0.0.1'),
+    ).resolves.toEqual(token);
   });
 
   test('handle unable to parse response', async () => {
@@ -365,7 +385,7 @@ describe('okta#dangerouslyResetPassword', () => {
       Promise.resolve({ ok: true, json } as Response),
     );
 
-    await expect(dangerouslyResetPassword(userId)).rejects.toThrow(
+    await expect(dangerouslyResetPassword(userId, '127.0.0.1')).rejects.toThrow(
       new OktaError({
         message: 'Could not parse Okta reset password url response',
       }),
@@ -386,7 +406,7 @@ describe('okta#dangerouslyResetPassword', () => {
       Promise.resolve({ ok: false, status: 404, json } as Response),
     );
 
-    await expect(dangerouslyResetPassword(userId)).rejects.toThrow(
+    await expect(dangerouslyResetPassword(userId, '127.0.0.1')).rejects.toThrow(
       new OktaError({
         message: 'Not found: Resource not found: <userId> (User)',
       }),
@@ -409,7 +429,7 @@ describe('okta#forgotPassword', () => {
       Promise.resolve({ ok: true, json } as Response),
     );
 
-    await expect(forgotPassword(userId)).resolves.toEqual(token);
+    await expect(forgotPassword(userId, '127.0.0.1')).resolves.toEqual(token);
   });
 
   test('handle unable to parse response', async () => {
@@ -423,7 +443,7 @@ describe('okta#forgotPassword', () => {
       Promise.resolve({ ok: true, json } as Response),
     );
 
-    await expect(forgotPassword(userId)).rejects.toThrow(
+    await expect(forgotPassword(userId, '127.0.0.1')).rejects.toThrow(
       new OktaError({
         message: 'Could not parse Okta reset password url response',
       }),
@@ -444,7 +464,7 @@ describe('okta#forgotPassword', () => {
       Promise.resolve({ ok: false, status: 404, json } as Response),
     );
 
-    await expect(forgotPassword(userId)).rejects.toThrow(
+    await expect(forgotPassword(userId, '127.0.0.1')).rejects.toThrow(
       new OktaError({
         message: 'Not found: Resource not found: <userId> (User)',
       }),
@@ -470,7 +490,7 @@ describe('okta#forgotPassword', () => {
       Promise.resolve({ ok: false, status: 403, json } as Response),
     );
 
-    await expect(forgotPassword(userId)).rejects.toThrow(
+    await expect(forgotPassword(userId, '127.0.0.1')).rejects.toThrow(
       new OktaError({
         message: 'Password reset failed',
       }),

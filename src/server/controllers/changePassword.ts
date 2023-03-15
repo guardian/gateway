@@ -204,17 +204,21 @@ const changePasswordInOkta = async (
     // is invalid, we will show the user the link expired page.
     const { stateToken } = await validateTokenInOkta({
       recoveryToken,
+      ip: req.ip,
     });
 
     if (stateToken) {
-      const { sessionToken, _embedded } = await resetPasswordInOkta({
-        stateToken,
-        newPassword: password,
-      });
+      const { sessionToken, _embedded } = await resetPasswordInOkta(
+        {
+          stateToken,
+          newPassword: password,
+        },
+        req.ip,
+      );
 
       const { id } = _embedded?.user ?? {};
       if (id) {
-        await validateEmailAndPasswordSetSecurely(id);
+        await validateEmailAndPasswordSetSecurely(id, req.ip);
       } else {
         logger.error(
           'Failed to set validation flags in Okta as there was no id',
@@ -228,7 +232,7 @@ const changePasswordInOkta = async (
       // When a jobs user is registering, we add them to the GRS group and set their name
       if (clientId === 'jobs' && path === '/welcome') {
         if (id) {
-          await setupJobsUserInOkta(firstName, secondName, id);
+          await setupJobsUserInOkta(firstName, secondName, id, req.ip);
           trackMetric('JobsGRSGroupAgree::Success');
         } else {
           logger.error(

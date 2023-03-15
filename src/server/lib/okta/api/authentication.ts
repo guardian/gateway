@@ -45,12 +45,13 @@ const { okta } = getConfiguration();
  */
 export const authenticate = async (
   body: AuthenticationRequestParameters,
+  ip: string,
 ): Promise<AuthenticationTransaction> => {
   const path = buildUrl('/api/v1/authn');
   return await fetch(joinUrl(okta.orgUrl, path), {
     method: 'POST',
     body: JSON.stringify(body),
-    headers: defaultHeaders,
+    headers: defaultHeaders(ip),
   }).then(handleAuthenticationResponse);
 };
 
@@ -74,6 +75,7 @@ export const authenticate = async (
  */
 export const sendForgotPasswordEmail = async (
   username: string,
+  ip: string,
 ): Promise<void> => {
   const path = buildUrl('/api/v1/authn/recovery/password');
   const body = {
@@ -85,7 +87,7 @@ export const sendForgotPasswordEmail = async (
     body: JSON.stringify(body),
     // do not add authorization headers here as this turns the operation
     // into an administrator action and locks the user out of their account
-    headers: defaultHeaders,
+    headers: defaultHeaders(ip),
   }).then(handleVoidResponse);
 };
 
@@ -107,8 +109,10 @@ export const sendForgotPasswordEmail = async (
  */
 export const validateRecoveryToken = async ({
   recoveryToken,
+  ip,
 }: {
   recoveryToken: string;
+  ip: string;
 }): Promise<AuthenticationTransaction> => {
   const path = buildUrl('/api/v1/authn/recovery/token');
 
@@ -119,7 +123,7 @@ export const validateRecoveryToken = async ({
   return await fetch(joinUrl(okta.orgUrl, path), {
     method: 'POST',
     body: JSON.stringify(body),
-    headers: defaultHeaders,
+    headers: defaultHeaders(ip),
   }).then(handleAuthenticationResponse);
 };
 
@@ -142,10 +146,13 @@ export const validateRecoveryToken = async ({
  *
  * @returns Promise<AuthenticationTransaction>
  */
-export const resetPassword = async (body: {
-  stateToken: string;
-  newPassword: string;
-}): Promise<AuthenticationTransaction> => {
+export const resetPassword = async (
+  body: {
+    stateToken: string;
+    newPassword: string;
+  },
+  ip: string,
+): Promise<AuthenticationTransaction> => {
   const path = buildUrl('/api/v1/authn/credentials/reset_password');
 
   if (await isBreachedPassword(body.newPassword)) {
@@ -158,7 +165,7 @@ export const resetPassword = async (body: {
   return await fetch(joinUrl(okta.orgUrl, path), {
     method: 'POST',
     body: JSON.stringify(body),
-    headers: { ...defaultHeaders, ...authorizationHeader() },
+    headers: { ...defaultHeaders(ip), ...authorizationHeader() },
   }).then(handleAuthenticationResponse);
 };
 

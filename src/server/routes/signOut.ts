@@ -122,8 +122,8 @@ const signOutFromOkta = async (
     const oktaSessionCookieId: string | undefined = req.cookies.sid;
 
     if (oktaSessionCookieId) {
-      const { userId } = await getSession(oktaSessionCookieId);
-      await clearUserSessions(userId);
+      const { userId } = await getSession(oktaSessionCookieId, req.ip);
+      await clearUserSessions({ id: userId, ip: req.ip });
       trackMetric('OktaSignOut::Success');
     }
   } catch (error) {

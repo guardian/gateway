@@ -186,7 +186,7 @@ router.get(
           user_groups?.some((group) => group === 'GuardianUser-EmailValidated')
         ) {
           // updated the user profile emailValidated to true
-          await updateUser(sub, { profile: { emailValidated: true } });
+          await updateUser(sub, { profile: { emailValidated: true } }, req.ip);
 
           // since this is a new social user, we want to show the onboarding flow too
           // we use the `confirmationPage` flag to redirect the user to the onboarding page
@@ -263,7 +263,10 @@ router.get(
       if (authState.queryParams.appClientId) {
         try {
           // attempt to find the native app by the client id
-          const nativeApp = await getApp(authState.queryParams.appClientId);
+          const nativeApp = await getApp(
+            authState.queryParams.appClientId,
+            req.ip,
+          );
 
           // Check for fallback link if found
           if (nativeApp) {

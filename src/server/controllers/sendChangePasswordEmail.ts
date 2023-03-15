@@ -131,13 +131,13 @@ export const sendEmailInOkta = async (
 
   try {
     // get the user object to check user status
-    const user = await getUser(email);
+    const user = await getUser(email, req.ip);
 
     switch (user.status) {
       case Status.ACTIVE:
         // inner try-catch block to handle specific errors from sendForgotPasswordEmail
         try {
-          const token = await forgotPassword(user.id);
+          const token = await forgotPassword(user.id, req.ip);
           if (!token) {
             throw new OktaError({
               message: `Okta user reset password failed: missing reset password token`,
@@ -145,11 +145,12 @@ export const sendEmailInOkta = async (
           }
           const emailIsSent = await sendResetPasswordEmail({
             to: user.profile.email,
-            resetPasswordToken: await addAppPrefixToOktaRecoveryToken(
+            resetPasswordToken: await addAppPrefixToOktaRecoveryToken({
               token,
               appClientId,
               request_id,
-            ),
+              ip: req.ip,
+            }),
           });
           if (!emailIsSent) {
             throw new OktaError({
@@ -175,7 +176,7 @@ export const sendEmailInOkta = async (
             // check for user does not have a password set
             // (to make sure we don't override any existing password)
             if (!user.credentials.password) {
-              await dangerouslySetPlaceholderPassword(user.id);
+              await dangerouslySetPlaceholderPassword(user.id, req.ip);
               // now that the placeholder password has been set, the user behaves like a
               // normal user (provider = OKTA) and we can send the email by calling this method again
               return sendEmailInOkta(req, res);
@@ -192,7 +193,10 @@ export const sendEmailInOkta = async (
           // if the user is STAGED, we need to activate them before we can send them an email
           // this will put them into the PROVISIONED state
           // we will send them a create password email
-          const tokenResponse = await activateUser(user.id);
+          const tokenResponse = await activateUser({
+            id: user.id,
+            ip: req.ip,
+          });
           if (!tokenResponse?.token.length) {
             throw new OktaError({
               message: `Okta user activation failed: missing activation token`,
@@ -200,11 +204,12 @@ export const sendEmailInOkta = async (
           }
           const emailIsSent = await sendCreatePasswordEmail({
             to: user.profile.email,
-            setPasswordToken: await addAppPrefixToOktaRecoveryToken(
-              tokenResponse.token,
+            setPasswordToken: await addAppPrefixToOktaRecoveryToken({
+              token: tokenResponse.token,
               appClientId,
               request_id,
-            ),
+              ip: req.ip,
+            }),
           });
           if (!emailIsSent) {
             throw new OktaError({
@@ -218,7 +223,10 @@ export const sendEmailInOkta = async (
           // if the user is PROVISIONED, we need to reactivate them before we can send them an email
           // this will keep them in the PROVISIONED state
           // we will send them a create password email
-          const tokenResponse = await reactivateUser(user.id);
+          const tokenResponse = await reactivateUser({
+            id: user.id,
+            ip: req.ip,
+          });
           if (!tokenResponse?.token.length) {
             throw new OktaError({
               message: `Okta user reactivation failed: missing re-activation token`,
@@ -226,11 +234,12 @@ export const sendEmailInOkta = async (
           }
           const emailIsSent = await sendCreatePasswordEmail({
             to: user.profile.email,
-            setPasswordToken: await addAppPrefixToOktaRecoveryToken(
-              tokenResponse.token,
+            setPasswordToken: await addAppPrefixToOktaRecoveryToken({
+              token: tokenResponse.token,
               appClientId,
               request_id,
-            ),
+              ip: req.ip,
+            }),
           });
           if (!emailIsSent) {
             throw new OktaError({
@@ -245,7 +254,7 @@ export const sendEmailInOkta = async (
           // if the user is RECOVERY or PASSWORD_EXPIRED, we use the
           // dangerouslyResetPassword method to put them into the RECOVERY state
           // and send them a reset password email
-          const token = await dangerouslyResetPassword(user.id);
+          const token = await dangerouslyResetPassword(user.id, req.ip);
           if (!token) {
             throw new OktaError({
               message: `Okta user reset password failed: missing reset password token`,
@@ -253,11 +262,12 @@ export const sendEmailInOkta = async (
           }
           const emailIsSent = await sendResetPasswordEmail({
             to: user.profile.email,
-            resetPasswordToken: await addAppPrefixToOktaRecoveryToken(
+            resetPasswordToken: await addAppPrefixToOktaRecoveryToken({
               token,
               appClientId,
               request_id,
-            ),
+              ip: req.ip,
+            }),
           });
           if (!emailIsSent) {
             throw new OktaError({

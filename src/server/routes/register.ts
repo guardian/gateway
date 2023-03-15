@@ -129,6 +129,7 @@ const OktaRegistration = async (
       registrationLocation,
       appClientId,
       request_id,
+      ip: req.ip,
     });
     // fire ophan component event if applicable
     if (res.locals.queryParams.componentEventParams) {
@@ -204,6 +205,8 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
       const user = await registerWithOkta({
         email,
         appClientId: queryParams?.appClientId,
+        ip: req.ip,
+        request_id: res.locals.requestId,
       });
       trackMetric('OktaRegistrationResendEmail::Success');
       setEncryptedStateCookieForOktaRegistration(res, user);

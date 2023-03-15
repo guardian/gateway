@@ -154,6 +154,7 @@ export const checkTokenInOkta = async (
     // return an error and we will show the link expired page.
     const { _embedded } = await validateTokenInOkta({
       recoveryToken: token,
+      ip: req.ip,
     });
     const email = _embedded?.user.profile.login;
 

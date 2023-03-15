@@ -24,10 +24,11 @@ const { okta } = getConfiguration();
  */
 export const getSession = async (
   sessionId: string,
+  ip: string,
 ): Promise<SessionResponse> => {
   const path = buildUrl('/api/v1/sessions/:sessionId', { sessionId });
   return fetch(joinUrl(okta.orgUrl, path), {
-    headers: { ...defaultHeaders, ...authorizationHeader() },
+    headers: { ...defaultHeaders(ip), ...authorizationHeader() },
   }).then(handleSessionResponse);
 };
 
@@ -42,11 +43,14 @@ export const getSession = async (
  * @param sessionId Okta session ID
  * @returns Promise<boolean>
  */
-export const closeSession = async (sessionId: string): Promise<undefined> => {
+export const closeSession = async (
+  sessionId: string,
+  ip: string,
+): Promise<undefined> => {
   const path = buildUrl('/api/v1/sessions/:sessionId', { sessionId });
   const response = await fetch(joinUrl(okta.orgUrl, path), {
     method: 'DELETE',
-    headers: { ...defaultHeaders, ...authorizationHeader() },
+    headers: { ...defaultHeaders(ip), ...authorizationHeader() },
   });
 
   if (!(response.ok || response.status === 404)) {

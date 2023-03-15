@@ -24,7 +24,7 @@ const { okta } = getConfiguration();
  * @returns {Promise<AppResponse>}
  */
 const AppCache = new Map<string, AppResponse>();
-export const getApp = async (id: string): Promise<AppResponse> => {
+export const getApp = async (id: string, ip: string): Promise<AppResponse> => {
   if (AppCache.has(id)) {
     return Promise.resolve(AppCache.get(id) as AppResponse);
   }
@@ -32,7 +32,7 @@ export const getApp = async (id: string): Promise<AppResponse> => {
   const path = buildUrl(`/api/v1/apps/:id`, { id });
 
   const app = await fetch(joinUrl(okta.orgUrl, path), {
-    headers: { ...defaultHeaders, ...authorizationHeader() },
+    headers: { ...defaultHeaders(ip), ...authorizationHeader() },
   }).then(handleAppResponse);
 
   AppCache.set(id, app);

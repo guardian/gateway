@@ -6,6 +6,7 @@ export const setupJobsUserInOkta = (
   firstName: string,
   lastName: string,
   id: string,
+  ip: string,
 ) => {
   if (firstName === '' || lastName === '') {
     throw new Error('Empty values not permitted for first or last name.');
@@ -19,13 +20,17 @@ export const setupJobsUserInOkta = (
   // When `isJobsUser` is set to true, Madgex will see that the user belongs to the GRS group
   // because we have made the `isJobsUser` flag the source of truth for this group membership
   // when IDAPI returns the user's groups, overriding the value stored in Postgres.
-  return updateUser(id, {
-    profile: {
-      isJobsUser: true,
-      firstName,
-      lastName,
+  return updateUser(
+    id,
+    {
+      profile: {
+        isJobsUser: true,
+        firstName,
+        lastName,
+      },
     },
-  });
+    ip,
+  );
 };
 
 export const setupJobsUserInIDAPI = async (

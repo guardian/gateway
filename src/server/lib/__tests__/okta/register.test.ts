@@ -64,32 +64,47 @@ jest.mock('@/email/templates/CompleteRegistration/sendCompleteRegistration');
 jest.mock('@/server/lib/unvalidatedEmail');
 
 const mockedCreateOktaUser =
-  mocked<(body: UserCreationRequest) => Promise<UserResponse>>(createUser);
+  mocked<(body: UserCreationRequest, ip: string) => Promise<UserResponse>>(
+    createUser,
+  );
 const mockedFetchOktaUser =
-  mocked<(id: string) => Promise<UserResponse>>(getUser);
+  mocked<(id: string, ip: string) => Promise<UserResponse>>(getUser);
 const mockedActivateOktaUser =
-  mocked<(id: string, sendEmail: boolean) => Promise<TokenResponse | void>>(
-    activateUser,
-  );
+  mocked<
+    (params: {
+      id: string;
+      sendEmail: boolean;
+      ip: string;
+    }) => Promise<TokenResponse | void>
+  >(activateUser);
 const mockedReactivateOktaUser =
-  mocked<(id: string, sendEmail: boolean) => Promise<TokenResponse | void>>(
-    reactivateUser,
-  );
+  mocked<
+    (params: {
+      id: string;
+      sendEmail: boolean;
+      ip: string;
+    }) => Promise<TokenResponse | void>
+  >(reactivateUser);
 const mockedDangerouslyResetPassword = mocked<
-  (id: string, sendEmail: boolean) => Promise<string | void>
+  (id: string, ip: string) => Promise<string | void>
 >(dangerouslyResetPassword);
 const mockedGetUserGroups =
-  mocked<(id: string) => Promise<Group[]>>(getUserGroups);
+  mocked<(id: string, ip: string) => Promise<Group[]>>(getUserGroups);
 const mockedValidateRecoveryToken = mocked<
-  (body: { recoveryToken: string }) => Promise<AuthenticationTransaction>
+  (body: {
+    recoveryToken: string;
+    ip: string;
+  }) => Promise<AuthenticationTransaction>
 >(validateRecoveryToken);
-const mockedResetPassword =
-  mocked<
-    (body: {
+const mockedResetPassword = mocked<
+  (
+    body: {
       stateToken: string;
       newPassword: string;
-    }) => Promise<AuthenticationTransaction>
-  >(resetPassword);
+    },
+    ip: string,
+  ) => Promise<AuthenticationTransaction>
+>(resetPassword);
 const mockedSendAccountExistsEmail = mocked<
   (params: { to: string; activationToken: string }) => Promise<boolean>
 >(sendAccountExistsEmail);
@@ -105,6 +120,7 @@ const mockedSendEmailToUnvalidatedUser = mocked<
     email: string;
     appClientId: string;
     request_id: string;
+    ip: string;
   }) => Promise<void>
 >(sendEmailToUnvalidatedUser);
 const mockedSendCompleteRegistration = mocked<
@@ -185,7 +201,7 @@ describe('okta#register', () => {
       Promise.resolve({ token: 'sometoken' } as TokenResponse),
     );
     mockedSendCompleteRegistration.mockReturnValueOnce(Promise.resolve(true));
-    const result = await register({ email });
+    const result = await register({ email, ip: '127.0.0.1' });
     expect(result).toEqual(user);
   });
 
@@ -200,6 +216,7 @@ describe('okta#register', () => {
     const result = await register({
       email,
       registrationLocation: 'United Kingdom',
+      ip: '127.0.0.1',
     });
     expect(result).toEqual(user);
   });
@@ -223,7 +240,7 @@ describe('okta#register', () => {
       Promise.resolve(true),
     );
 
-    await expect(register({ email })).resolves.toEqual(user);
+    await expect(register({ email, ip: '127.0.0.1' })).resolves.toEqual(user);
     expect(mockedActivateOktaUser).toHaveBeenCalled();
     expect(mockedSendAccountWithoutPasswordExistsEmail).toHaveBeenCalled();
     // Make sure the function from the other branch of the switch isn't called
@@ -249,7 +266,7 @@ describe('okta#register', () => {
       Promise.resolve(true),
     );
 
-    await expect(register({ email })).resolves.toEqual(user);
+    await expect(register({ email, ip: '127.0.0.1' })).resolves.toEqual(user);
     expect(mockedReactivateOktaUser).toHaveBeenCalled();
     expect(mockedSendAccountWithoutPasswordExistsEmail).toHaveBeenCalled();
     // Make sure the function from the other branch of the switch isn't called
@@ -272,7 +289,7 @@ describe('okta#register', () => {
     mockedFetchOktaUser.mockReturnValueOnce(Promise.resolve(user));
     mockedSendAccountExistsEmail.mockReturnValueOnce(Promise.resolve(true));
 
-    await expect(register({ email })).resolves.toEqual(user);
+    await expect(register({ email, ip: '127.0.0.1' })).resolves.toEqual(user);
     expect(mockedSendAccountExistsEmail).toHaveBeenCalled();
     // Make sure the function from the other branch of the switch isn't called
     expect(mockedActivateOktaUser).not.toHaveBeenCalled();
@@ -296,7 +313,7 @@ describe('okta#register', () => {
     );
     mockedSendResetPasswordEmail.mockReturnValueOnce(Promise.resolve(true));
 
-    await expect(register({ email })).resolves.toEqual(user);
+    await expect(register({ email, ip: '127.0.0.1' })).resolves.toEqual(user);
     expect(mockedDangerouslyResetPassword).toHaveBeenCalled();
     expect(mockedSendResetPasswordEmail).toHaveBeenCalled();
     // Make sure the function from the other branch of the switch isn't called
@@ -321,7 +338,7 @@ describe('okta#register', () => {
     );
     mockedSendResetPasswordEmail.mockReturnValueOnce(Promise.resolve(true));
 
-    await expect(register({ email })).resolves.toEqual(user);
+    await expect(register({ email, ip: '127.0.0.1' })).resolves.toEqual(user);
     expect(mockedDangerouslyResetPassword).toHaveBeenCalled();
     expect(mockedSendResetPasswordEmail).toHaveBeenCalled();
     // Make sure the function from the other branch of the switch isn't called
@@ -335,7 +352,9 @@ describe('okta#register', () => {
     mockedCreateOktaUser.mockRejectedValueOnce(new OktaError(userExistsError));
     mockedFetchOktaUser.mockReturnValueOnce(Promise.resolve(user));
 
-    await expect(register({ email })).rejects.toThrow(OktaError);
+    await expect(register({ email, ip: '127.0.0.1' })).rejects.toThrow(
+      OktaError,
+    );
     expect(mockedActivateOktaUser).not.toHaveBeenCalled();
     expect(mockedReactivateOktaUser).not.toHaveBeenCalled();
   });
@@ -349,7 +368,7 @@ describe('okta#register', () => {
     mockedFetchOktaUser.mockReturnValueOnce(Promise.resolve(user));
     mockedSendEmailToUnvalidatedUser.mockReturnValueOnce(Promise.resolve());
 
-    await expect(register({ email })).resolves.toEqual(user);
+    await expect(register({ email, ip: '127.0.0.1' })).resolves.toEqual(user);
     expect(mockedResetPassword).not.toHaveBeenCalled();
     expect(mockedSendEmailToUnvalidatedUser).toHaveBeenCalled();
   });
@@ -368,7 +387,7 @@ describe('okta#register', () => {
       Promise.resolve({ stateToken: 'sometoken' }),
     );
 
-    await expect(register({ email })).resolves.toEqual(user);
+    await expect(register({ email, ip: '127.0.0.1' })).resolves.toEqual(user);
     expect(dangerouslyResetPassword).toHaveBeenCalled();
     expect(mockedResetPassword).toHaveBeenCalled();
     expect(mockedSendEmailToUnvalidatedUser).toHaveBeenCalled();

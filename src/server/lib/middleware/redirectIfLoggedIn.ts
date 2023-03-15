@@ -33,7 +33,7 @@ export const redirectIfLoggedIn = async (
   if (okta.enabled && !useIdapi && oktaSessionCookieId) {
     try {
       // If they do and it's valid, get the session info
-      const session = await getSession(oktaSessionCookieId);
+      const session = await getSession(oktaSessionCookieId, req.ip);
 
       // pull the user email from the session, which we need to display
       const email = session.login;

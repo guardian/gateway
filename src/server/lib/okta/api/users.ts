@@ -42,6 +42,7 @@ const { okta } = getConfiguration();
  */
 export const createUser = async (
   body: UserCreationRequest,
+  ip: string,
 ): Promise<UserResponse> => {
   // If 'activate' is true, Okta will peform the activation lifecycle operation
   // on the user, which in the case of a user without a password will send them
@@ -57,7 +58,7 @@ export const createUser = async (
   return await fetch(joinUrl(okta.orgUrl, path), {
     method: 'POST',
     body: JSON.stringify(body),
-    headers: { ...defaultHeaders, ...authorizationHeader() },
+    headers: { ...defaultHeaders(ip), ...authorizationHeader() },
   }).then(handleUserResponse);
 };
 
@@ -76,12 +77,13 @@ export const createUser = async (
 export const updateUser = async (
   id: string,
   body: UserUpdateRequest,
+  ip: string,
 ): Promise<UserResponse> => {
   const path = buildUrl('/api/v1/users/:id', { id });
   return await fetch(joinUrl(okta.orgUrl, path), {
     method: 'POST',
     body: JSON.stringify(body),
-    headers: { ...defaultHeaders, ...authorizationHeader() },
+    headers: { ...defaultHeaders(ip), ...authorizationHeader() },
   }).then(handleUserResponse);
 };
 
@@ -96,10 +98,13 @@ export const updateUser = async (
  * @returns Promise<UserResponse>
  */
 
-export const getUser = async (id: string): Promise<UserResponse> => {
+export const getUser = async (
+  id: string,
+  ip: string,
+): Promise<UserResponse> => {
   const path = buildUrl('/api/v1/users/:id', { id });
   return fetch(joinUrl(okta.orgUrl, path), {
-    headers: { ...defaultHeaders, ...authorizationHeader() },
+    headers: { ...defaultHeaders(ip), ...authorizationHeader() },
   }).then(handleUserResponse);
 };
 
@@ -114,10 +119,13 @@ export const getUser = async (id: string): Promise<UserResponse> => {
  * @returns Promise<Group[]>
  */
 
-export const getUserGroups = async (id: string): Promise<Group[]> => {
+export const getUserGroups = async (
+  id: string,
+  ip: string,
+): Promise<Group[]> => {
   const path = buildUrl('/api/v1/users/:id/groups', { id });
   return fetch(joinUrl(okta.orgUrl, path), {
-    headers: { ...defaultHeaders, ...authorizationHeader() },
+    headers: { ...defaultHeaders(ip), ...authorizationHeader() },
   }).then(handleGroupsResponse);
 };
 
@@ -145,10 +153,15 @@ export const getUserGroups = async (id: string): Promise<Group[]> => {
  *
  * @returns Promise<TokenResponse | void>
  */
-export const activateUser = async (
-  id: string,
+export const activateUser = async ({
+  id,
   sendEmail = false,
-): Promise<TokenResponse | void> => {
+  ip,
+}: {
+  id: string;
+  sendEmail?: boolean;
+  ip: string;
+}): Promise<TokenResponse | void> => {
   const path = buildApiUrlWithQueryParams(
     '/api/v1/users/:id/lifecycle/activate',
     { id },
@@ -156,7 +169,7 @@ export const activateUser = async (
   );
   return await fetch(joinUrl(okta.orgUrl, path), {
     method: 'POST',
-    headers: { ...defaultHeaders, ...authorizationHeader() },
+    headers: { ...defaultHeaders(ip), ...authorizationHeader() },
   }).then(async (response) => {
     return sendEmail
       ? await handleVoidResponse(response)
@@ -186,10 +199,16 @@ export const activateUser = async (
  *
  * @returns Promise<TokenResponse | void>
  */
-export const reactivateUser = async (
-  id: string,
+export const reactivateUser = async ({
+  id,
   sendEmail = false,
-): Promise<TokenResponse | void> => {
+  ip,
+}: {
+  id: string;
+
+  sendEmail?: boolean;
+  ip: string;
+}): Promise<TokenResponse | void> => {
   const path = buildApiUrlWithQueryParams(
     '/api/v1/users/:id/lifecycle/reactivate',
     { id },
@@ -197,7 +216,7 @@ export const reactivateUser = async (
   );
   return await fetch(joinUrl(okta.orgUrl, path), {
     method: 'POST',
-    headers: { ...defaultHeaders, ...authorizationHeader() },
+    headers: { ...defaultHeaders(ip), ...authorizationHeader() },
   }).then(async (response) => {
     return sendEmail
       ? await handleVoidResponse(response)
@@ -232,7 +251,10 @@ export const reactivateUser = async (
  * @param id Okta user Id
  * @returns Promise<string>
  */
-export const dangerouslyResetPassword = async (id: string): Promise<string> => {
+export const dangerouslyResetPassword = async (
+  id: string,
+  ip: string,
+): Promise<string> => {
   const path = buildApiUrlWithQueryParams(
     '/api/v1/users/:id/lifecycle/reset_password',
     { id },
@@ -240,7 +262,7 @@ export const dangerouslyResetPassword = async (id: string): Promise<string> => {
   );
   return await fetch(joinUrl(okta.orgUrl, path), {
     method: 'POST',
-    headers: { ...defaultHeaders, ...authorizationHeader() },
+    headers: { ...defaultHeaders(ip), ...authorizationHeader() },
   }).then(handleResetPasswordUrlResponse);
 };
 
@@ -256,10 +278,15 @@ export const dangerouslyResetPassword = async (id: string): Promise<string> => {
  * @param oauthTokens (optional, default: `true`) Revoke issued OpenID Connect and OAuth refresh and access tokens
  * @returns Promise<void>
  */
-export const clearUserSessions = async (
-  id: string,
+export const clearUserSessions = async ({
+  id,
   oauthTokens = true,
-): Promise<void> => {
+  ip,
+}: {
+  id: string;
+  oauthTokens?: boolean;
+  ip: string;
+}): Promise<void> => {
   const path = buildApiUrlWithQueryParams(
     '/api/v1/users/:id/sessions',
     { id },
@@ -269,7 +296,7 @@ export const clearUserSessions = async (
   );
   return await fetch(joinUrl(okta.orgUrl, path), {
     method: 'DELETE',
-    headers: { ...defaultHeaders, ...authorizationHeader() },
+    headers: { ...defaultHeaders(ip), ...authorizationHeader() },
   }).then(handleVoidResponse);
 };
 
@@ -285,7 +312,10 @@ export const clearUserSessions = async (
  * @param id Okta user Id
  * @returns Promise<string>
  */
-export const forgotPassword = async (id: string): Promise<string> => {
+export const forgotPassword = async (
+  id: string,
+  ip: string,
+): Promise<string> => {
   const path = buildApiUrlWithQueryParams(
     '/api/v1/users/:id/credentials/forgot_password',
     { id },
@@ -293,7 +323,7 @@ export const forgotPassword = async (id: string): Promise<string> => {
   );
   return await fetch(joinUrl(okta.orgUrl, path), {
     method: 'POST',
-    headers: { ...defaultHeaders, ...authorizationHeader() },
+    headers: { ...defaultHeaders(ip), ...authorizationHeader() },
   }).then(handleResetPasswordUrlResponse);
 };
 

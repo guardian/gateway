@@ -140,6 +140,7 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
         email,
         appClientId: state.queryParams.appClientId,
         request_id: state.requestId,
+        ip: req.ip,
       });
 
       trackMetric('OktaWelcomeResendEmail::Success');

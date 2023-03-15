@@ -1,9 +1,10 @@
 import { getConfiguration } from '@/server/lib/getConfiguration';
 
-export const defaultHeaders = {
+export const defaultHeaders = (ip: string) => ({
   Accept: 'application/json',
   'Content-Type': 'application/json',
-};
+  'X-Forwarded-For': ip,
+});
 
 /**
  * AuthorizationHeader

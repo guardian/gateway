@@ -104,8 +104,8 @@ const OktaAgreeGetController = async (
   }
 
   try {
-    const { userId } = await getSession(oktaSessionCookieId);
-    const { profile } = await getUser(userId);
+    const { userId } = await getSession(oktaSessionCookieId, req.ip);
+    const { profile } = await getUser(userId, req.ip);
     const { isJobsUser, firstName, lastName, email } = profile;
 
     const userFullNameSet = !!firstName && !!lastName;
@@ -180,8 +180,8 @@ router.post(
     try {
       if (okta.enabled && !useIdapi && oktaSessionCookieId) {
         // Get the id from Okta
-        const { userId } = await getSession(oktaSessionCookieId);
-        await setupJobsUserInOkta(firstName, secondName, userId);
+        const { userId } = await getSession(oktaSessionCookieId, req.ip);
+        await setupJobsUserInOkta(firstName, secondName, userId, req.ip);
         trackMetric('JobsGRSGroupAgree::Success');
       } else {
         await setupJobsUserInIDAPI(

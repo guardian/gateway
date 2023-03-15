@@ -51,7 +51,7 @@ const getRequestState = async (
 
   try {
     if (!!queryParams.appClientId) {
-      const app = await getApp(queryParams.appClientId);
+      const app = await getApp(queryParams.appClientId, req.ip);
 
       const label = app.label.toLowerCase();
 

@@ -57,17 +57,23 @@ export const extractOktaRecoveryToken = (token: string): string => {
  * @returns string representing the recovery token with the app prefix
  *
  */
-export const addAppPrefixToOktaRecoveryToken = async (
-  token: string,
-  appClientId?: string,
-  request_id?: string,
-): Promise<string> => {
+export const addAppPrefixToOktaRecoveryToken = async ({
+  token,
+  ip,
+  appClientId,
+  request_id,
+}: {
+  token: string;
+  ip: string;
+  appClientId?: string;
+  request_id?: string;
+}): Promise<string> => {
   if (!appClientId) {
     return token;
   }
 
   try {
-    const app = await getApp(appClientId);
+    const app = await getApp(appClientId, ip);
 
     const label = app.label.toLowerCase();
 

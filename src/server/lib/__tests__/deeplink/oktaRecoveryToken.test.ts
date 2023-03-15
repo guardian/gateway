@@ -34,7 +34,8 @@ jest.mock('@/server/lib/serverSideLogger', () => ({
 }));
 
 jest.mock('@/server/lib/okta/api/apps');
-const mockedGetApp = mocked<(id: string) => Promise<AppResponse>>(getApp);
+const mockedGetApp =
+  mocked<(id: string, ip: string) => Promise<AppResponse>>(getApp);
 
 describe('extractOktaRecoveryToken', () => {
   it('should return the token when there is no prefix', () => {
@@ -72,9 +73,13 @@ describe('addAppPrefixToOktaRecoveryToken', () => {
     const token = 'token';
     const appClientId = undefined;
 
-    expect(await addAppPrefixToOktaRecoveryToken(token, appClientId)).toEqual(
-      token,
-    );
+    expect(
+      await addAppPrefixToOktaRecoveryToken({
+        token,
+        appClientId,
+        ip: '127.0.0.1',
+      }),
+    ).toEqual(token);
   });
 
   it('should return the token when there is no app prefix', async () => {
@@ -92,9 +97,13 @@ describe('addAppPrefixToOktaRecoveryToken', () => {
 
     mockedGetApp.mockResolvedValueOnce(app);
 
-    expect(await addAppPrefixToOktaRecoveryToken(token, appClientId)).toEqual(
-      token,
-    );
+    expect(
+      await addAppPrefixToOktaRecoveryToken({
+        token,
+        appClientId,
+        ip: '127.0.0.1',
+      }),
+    ).toEqual(token);
   });
 
   it('should return the token when there is an app prefix android live', async () => {
@@ -112,9 +121,13 @@ describe('addAppPrefixToOktaRecoveryToken', () => {
 
     mockedGetApp.mockResolvedValueOnce(app);
 
-    expect(await addAppPrefixToOktaRecoveryToken(token, appClientId)).toEqual(
-      `al_${token}`,
-    );
+    expect(
+      await addAppPrefixToOktaRecoveryToken({
+        token,
+        appClientId,
+        ip: '127.0.0.1',
+      }),
+    ).toEqual(`al_${token}`);
   });
 
   it('should return the token when there is an app prefix ios live', async () => {
@@ -132,9 +145,13 @@ describe('addAppPrefixToOktaRecoveryToken', () => {
 
     mockedGetApp.mockResolvedValueOnce(app);
 
-    expect(await addAppPrefixToOktaRecoveryToken(token, appClientId)).toEqual(
-      `il_${token}`,
-    );
+    expect(
+      await addAppPrefixToOktaRecoveryToken({
+        token,
+        appClientId,
+        ip: '127.0.0.1',
+      }),
+    ).toEqual(`il_${token}`);
   });
 
   it('should return the token if the appClientId is not found', async () => {
@@ -143,8 +160,12 @@ describe('addAppPrefixToOktaRecoveryToken', () => {
 
     mockedGetApp.mockRejectedValueOnce(new Error('App not found'));
 
-    expect(await addAppPrefixToOktaRecoveryToken(token, appClientId)).toEqual(
-      token,
-    );
+    expect(
+      await addAppPrefixToOktaRecoveryToken({
+        token,
+        appClientId,
+        ip: '127.0.0.1',
+      }),
+    ).toEqual(token);
   });
 });
