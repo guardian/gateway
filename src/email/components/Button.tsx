@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { MjmlSection, MjmlButton, MjmlColumn } from 'mjml-react';
+import { MjmlSection, MjmlButton, MjmlColumn } from '@faire/mjml-react';
 import {
   background,
   brandBackground,
@@ -20,7 +20,7 @@ export const Button = ({ children, href }: Props) => (
         align="left"
         padding="22px 0 32px 0"
         fontFamily="Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif"
-        fontWeight={700}
+        fontWeight="700"
         fontSize="17px"
         cssClass="guardian-email-button"
       >

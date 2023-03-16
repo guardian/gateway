@@ -1,4 +1,8 @@
-import React, { createContext, FunctionComponent } from 'react';
+import React, {
+  createContext,
+  FunctionComponent,
+  PropsWithChildren,
+} from 'react';
 
 import { ClientState } from '@/shared/model/ClientState';
 
@@ -18,9 +22,9 @@ type ClientStateProps = {
   clientState: ClientState;
 };
 
-export const ClientStateProvider: FunctionComponent<ClientStateProps> = (
-  props,
-) => {
+export const ClientStateProvider: FunctionComponent<
+  PropsWithChildren<ClientStateProps>
+> = (props) => {
   return (
     <ClientStateContext.Provider value={props.clientState}>
       {props.children}

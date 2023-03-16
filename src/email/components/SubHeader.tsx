@@ -1,6 +1,11 @@
 import React from 'react';
 
-import { MjmlSection, MjmlColumn, MjmlText, MjmlDivider } from 'mjml-react';
+import {
+  MjmlSection,
+  MjmlColumn,
+  MjmlText,
+  MjmlDivider,
+} from '@faire/mjml-react';
 import { background, text } from '@guardian/source-foundations';
 
 type Props = { children: React.ReactNode };
@@ -25,7 +30,7 @@ export const SubHeader = ({ children }: Props) => (
           fontSize="20px"
           lineHeight="1.15"
           letterSpacing="-0.02px"
-          fontWeight={700}
+          fontWeight="700"
           fontFamily="Georgia, serif"
           color={text.primary}
         >

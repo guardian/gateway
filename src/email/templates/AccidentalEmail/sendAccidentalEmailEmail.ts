@@ -1,4 +1,4 @@
-import { render } from 'mjml-react';
+import { render } from '@faire/mjml-react/utils/render';
 import { send } from '@/email/lib/send';
 
 import { AccidentalEmail } from './AccidentalEmail';
