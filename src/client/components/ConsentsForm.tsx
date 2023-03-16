@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { SerializedStyles } from '@emotion/react';
 
 import useClientState from '@/client/lib/hooks/useClientState';
@@ -13,7 +13,7 @@ interface ConsentsFormProps {
   action?: string;
 }
 
-export const ConsentsForm: React.FC<ConsentsFormProps> = ({
+export const ConsentsForm: React.FC<PropsWithChildren<ConsentsFormProps>> = ({
   children,
   cssOverrides,
 }) => {

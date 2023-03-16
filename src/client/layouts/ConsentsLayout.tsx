@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, PropsWithChildren } from 'react';
 import { css } from '@emotion/react';
 import { Footer } from '@/client/components/Footer';
 import useClientState from '@/client/lib/hooks/useClientState';
@@ -30,13 +30,9 @@ const spacer = css`
   flex-grow: 1;
 `;
 
-export const ConsentsLayout: FunctionComponent<ConsentsLayoutProps> = ({
-  children,
-  current,
-  title,
-  errorMessage,
-  errorContext,
-}) => {
+export const ConsentsLayout: FunctionComponent<
+  PropsWithChildren<ConsentsLayoutProps>
+> = ({ children, current, title, errorMessage, errorContext }) => {
   const autoRow = getAutoRow(1, gridItemColumnConsents);
   const clientState = useClientState();
   const {

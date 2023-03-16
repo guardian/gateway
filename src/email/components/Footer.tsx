@@ -1,5 +1,5 @@
 import React from 'react';
-import { MjmlSection, MjmlColumn, MjmlText } from 'mjml-react';
+import { MjmlSection, MjmlColumn, MjmlText } from '@faire/mjml-react';
 
 import { background, text } from '@guardian/source-foundations';
 import { Link } from '@/email/components/Link';

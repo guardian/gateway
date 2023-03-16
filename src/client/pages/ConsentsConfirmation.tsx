@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, PropsWithChildren } from 'react';
 import { css } from '@emotion/react';
 import {
   space,
@@ -56,10 +56,9 @@ const reviewTableTextBold = css`
   padding-bottom: ${space[2]}px;
 `;
 
-const ReviewTableRow: FunctionComponent<{ title: string }> = ({
-  title,
-  children,
-}) => (
+const ReviewTableRow: FunctionComponent<
+  PropsWithChildren<{ title: string }>
+> = ({ title, children }) => (
   <div css={reviewTableRow}>
     <p css={reviewTableTextBold}>{title}</p>
     {children}
