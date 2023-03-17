@@ -35,14 +35,13 @@ export const startGlobalBucketCapacityLogger = (
   }, interval);
 
 const logValues = (keys: string[], values: (string | null)[]) => {
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i];
-    const value = values[i];
+  keys.forEach((key, index) => {
+    const value = values[index];
     if (value) {
       const tokensLeft = JSON.parse(value)?.tokens;
       logger.log(LogLevel.INFO, `Bucket(${key})`, undefined, {
         bucket_capacity: tokensLeft,
       });
     }
-  }
+  });
 };

@@ -71,18 +71,17 @@ export const addAppPrefixToOktaRecoveryToken = async (
 
     const label = app.label.toLowerCase();
 
-    let appPrefix: AppPrefix;
+    const appPrefix: AppPrefix = (() => {
+      switch (label) {
+        case 'android_live_app':
+          return 'al_';
+        case 'ios_live_app':
+          return 'il_';
+        default:
+          return '';
+      }
+    })();
 
-    switch (label) {
-      case 'android_live_app':
-        appPrefix = 'al_';
-        break;
-      case 'ios_live_app':
-        appPrefix = 'il_';
-        break;
-      default:
-        appPrefix = '';
-    }
     return `${appPrefix}${token}`;
   } catch (error) {
     logger.error(

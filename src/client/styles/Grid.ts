@@ -263,6 +263,7 @@ export const getAutoRow = (
   offset = 0,
   spanDefinition?: SpanDefinition,
 ): AutoRow => {
+  // eslint-disable-next-line functional/no-let
   let row = offset;
   return (customSpanDefinition = spanDefinition) => css`
     ${gridItem(customSpanDefinition)}

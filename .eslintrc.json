@@ -22,7 +22,6 @@
     "react/prop-types": 0,
     "@typescript-eslint/explicit-function-return-type": 0,
     "@typescript-eslint/explicit-module-boundary-types": 0,
-    "functional/no-let": 0,
     "functional/prefer-readonly-type": 0,
     "functional/no-method-signature": 0,
     "functional/immutable-data": [
@@ -31,6 +30,8 @@
         "ignoreImmediateMutation": true
       }
     ],
+    "functional/prefer-immutable-types": 0,
+    "functional/type-declaration-immutability": 0,
     "no-var": "error",
     "no-param-reassign": "error",
     "prefer-const": "error",

@@ -1,3 +1,4 @@
+/* eslint-disable functional/no-let */
 import Redis from 'ioredis-mock';
 import rateLimit, { BucketValues } from '@/server/lib/rate-limit';
 import { Pipeline, Command } from 'ioredis';

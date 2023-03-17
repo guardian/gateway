@@ -1,3 +1,6 @@
+/* eslint-disable functional/immutable-data */
+/* eslint-disable no-console */
+/* eslint-disable functional/no-let */
 // Very simple mocking server for mimicking IDAPI
 
 /* eslint-env node */
@@ -93,6 +96,7 @@ app.all('*', (req, res) => {
 
   const patternResponse = findPattern(req.path);
   if (patternResponse) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { status, body, pattern } = patternResponse;
     res.status(status).json(body);
     // console.log(

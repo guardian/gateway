@@ -63,7 +63,7 @@ const checkTokenInIDAPI = async (
   req: Request,
   res: ResponseWithRequestState,
 ) => {
-  let requestState = res.locals;
+  const requestState = res.locals;
   const { token } = req.params;
 
   try {
@@ -73,15 +73,6 @@ const checkTokenInIDAPI = async (
       res.locals.requestId,
     );
 
-    requestState = mergeRequestState(requestState, {
-      pageData: {
-        browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
-        email,
-        timeUntilTokenExpiry,
-        token,
-      },
-    });
-
     // add email to encrypted state, so we can display it on the confirmation page
     setEncryptedStateCookie(res, { email });
 
@@ -89,7 +80,17 @@ const checkTokenInIDAPI = async (
 
     const html = renderer(
       `${path}/:token`,
-      { requestState, pageTitle },
+      {
+        requestState: mergeRequestState(requestState, {
+          pageData: {
+            browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
+            email,
+            timeUntilTokenExpiry,
+            token,
+          },
+        }),
+        pageTitle,
+      },
       { token },
     );
     return res.type('html').send(html);

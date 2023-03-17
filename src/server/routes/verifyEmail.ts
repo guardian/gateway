@@ -30,6 +30,7 @@ const profileUrl = getProfileUrl();
 router.get(
   '/verify-email',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    // eslint-disable-next-line functional/no-let
     let state = res.locals;
 
     state = mergeRequestState(state, {
@@ -40,6 +41,7 @@ router.get(
       },
     });
 
+    // eslint-disable-next-line functional/no-let
     let status = 200;
 
     try {
@@ -93,7 +95,9 @@ router.post(
   '/verify-email',
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    // eslint-disable-next-line functional/no-let
     let state = res.locals;
+    // eslint-disable-next-line functional/no-let
     let status = 200;
 
     try {

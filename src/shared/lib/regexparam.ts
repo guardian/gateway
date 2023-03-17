@@ -45,6 +45,7 @@
  * @returns `{ pattern }` object, where pattern is always a RegExp instance.
  */
 export function parse(str: string, loose?: boolean) {
+  // eslint-disable-next-line functional/no-let
   let tmp,
     pattern = '';
   const arr = str.split('/');

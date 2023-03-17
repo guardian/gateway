@@ -23,7 +23,7 @@ router.post(
   '/magic-link',
   handleRecaptcha,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    let state = res.locals;
+    const state = res.locals;
 
     const { email = '' } = req.body;
 
@@ -40,14 +40,12 @@ router.post(
 
       trackMetric('SendMagicLink::Failure');
 
-      state = mergeRequestState(state, {
-        pageData: {
-          formError: message,
-        },
-      });
-
       const html = renderer('/magic-link', {
-        requestState: state,
+        requestState: mergeRequestState(state, {
+          pageData: {
+            formError: message,
+          },
+        }),
         pageTitle: 'Sign in',
       });
       return res.status(status).type('html').send(html);

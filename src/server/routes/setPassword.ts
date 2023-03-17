@@ -127,21 +127,19 @@ router.post(
 router.get(
   '/set-password/email-sent',
   (req: Request, res: ResponseWithRequestState) => {
-    let state = res.locals;
+    const state = res.locals;
 
     const email = readEmailCookie(req);
 
-    state = mergeRequestState(state, {
-      pageData: {
-        email,
-        resendEmailAction: '/set-password/resend',
-        changeEmailPage: '/set-password/resend',
-      },
-    });
-
     const html = renderer('/set-password/email-sent', {
       pageTitle: 'Check Your Inbox',
-      requestState: state,
+      requestState: mergeRequestState(state, {
+        pageData: {
+          email,
+          resendEmailAction: '/set-password/resend',
+          changeEmailPage: '/set-password/resend',
+        },
+      }),
     });
     res.type('html').send(html);
   },

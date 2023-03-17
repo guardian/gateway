@@ -98,21 +98,19 @@ router.post(
 router.get(
   '/welcome/email-sent',
   (req: Request, res: ResponseWithRequestState) => {
-    let state = res.locals;
+    const state = res.locals;
 
     const email = readEmailCookie(req);
 
-    state = mergeRequestState(state, {
-      pageData: {
-        email,
-        resendEmailAction: '/welcome/resend',
-        changeEmailPage: '/welcome/resend',
-      },
-    });
-
     const html = renderer('/welcome/email-sent', {
       pageTitle: 'Check Your Inbox',
-      requestState: state,
+      requestState: mergeRequestState(state, {
+        pageData: {
+          email,
+          resendEmailAction: '/welcome/resend',
+          changeEmailPage: '/welcome/resend',
+        },
+      }),
     });
     res.type('html').send(html);
   },

@@ -1,3 +1,4 @@
+/* eslint-disable functional/no-let */
 import { Request, Response } from 'express';
 
 import { renderer } from '@/server/lib/renderer';

@@ -685,7 +685,7 @@ describe('Registration flow', () => {
 
             cy.visit('/register');
 
-            let timeRequestWasMade = new Date();
+            const timeRequestWasMade = new Date();
 
             cy.get('input[name=email]').type(emailAddress);
             cy.get('[data-cy="main-form-submit-button"]').click();
@@ -701,7 +701,7 @@ describe('Registration flow', () => {
               timeRequestWasMade,
               /\/set-password\/([^"]*)/,
             ).then(() => {
-              timeRequestWasMade = new Date();
+              const timeRequestWasMade = new Date();
 
               cy.get('[data-cy="main-form-submit-button"]').click();
 
@@ -740,7 +740,7 @@ describe('Registration flow', () => {
 
               cy.visit('/register');
 
-              let timeRequestWasMade = new Date();
+              const timeRequestWasMade = new Date();
 
               cy.get('input[name=email]').type(emailAddress);
               cy.get('[data-cy="main-form-submit-button"]').click();
@@ -755,7 +755,7 @@ describe('Registration flow', () => {
                 timeRequestWasMade,
                 /\/set-password\/([^"]*)/,
               ).then(() => {
-                timeRequestWasMade = new Date();
+                const timeRequestWasMade = new Date();
                 cy.get('[data-cy="main-form-submit-button"]').click();
 
                 cy.checkForEmailAndGetDetails(
@@ -790,7 +790,7 @@ describe('Registration flow', () => {
             expect(oktaUser.status).to.eq(Status.ACTIVE);
 
             cy.visit('/register');
-            let timeRequestWasMade = new Date();
+            const timeRequestWasMade = new Date();
 
             cy.get('input[name=email]').type(emailAddress);
             cy.get('[data-cy="main-form-submit-button"]').click();
@@ -804,7 +804,7 @@ describe('Registration flow', () => {
               emailAddress,
               timeRequestWasMade,
             ).then(() => {
-              timeRequestWasMade = new Date();
+              const timeRequestWasMade = new Date();
               cy.get('[data-cy="main-form-submit-button"]').click();
 
               cy.checkForEmailAndGetDetails(
@@ -840,7 +840,7 @@ describe('Registration flow', () => {
               expect(oktaUser.status).to.eq(Status.RECOVERY);
 
               cy.visit('/register');
-              let timeRequestWasMade = new Date();
+              const timeRequestWasMade = new Date();
 
               cy.get('input[name=email]').type(emailAddress);
               cy.get('[data-cy="main-form-submit-button"]').click();
@@ -855,7 +855,7 @@ describe('Registration flow', () => {
                 timeRequestWasMade,
                 /reset-password\/([^"]*)/,
               ).then(() => {
-                timeRequestWasMade = new Date();
+                const timeRequestWasMade = new Date();
                 cy.get('[data-cy="main-form-submit-button"]').click();
 
                 cy.checkForEmailAndGetDetails(
@@ -891,7 +891,7 @@ describe('Registration flow', () => {
               expect(oktaUser.status).to.eq(Status.PASSWORD_EXPIRED);
 
               cy.visit('/register');
-              let timeRequestWasMade = new Date();
+              const timeRequestWasMade = new Date();
 
               cy.get('input[name=email]').type(emailAddress);
               cy.get('[data-cy="main-form-submit-button"]').click();
@@ -906,7 +906,7 @@ describe('Registration flow', () => {
                 timeRequestWasMade,
                 /reset-password\/([^"]*)/,
               ).then(() => {
-                timeRequestWasMade = new Date();
+                const timeRequestWasMade = new Date();
                 cy.get('[data-cy="main-form-submit-button"]').click();
 
                 cy.checkForEmailAndGetDetails(
@@ -984,7 +984,7 @@ describe('Registration flow', () => {
 
           cy.visit('/welcome/resend');
 
-          let timeRequestWasMade = new Date();
+          const timeRequestWasMade = new Date();
 
           cy.get('input[name=email]').type(emailAddress);
           cy.get('[data-cy="main-form-submit-button"]').click();
@@ -1000,7 +1000,7 @@ describe('Registration flow', () => {
             timeRequestWasMade,
             /\/set-password\/([^"]*)/,
           ).then(() => {
-            timeRequestWasMade = new Date();
+            const timeRequestWasMade = new Date();
 
             cy.get('[data-cy="main-form-submit-button"]').click();
 
@@ -1038,7 +1038,7 @@ describe('Registration flow', () => {
 
             cy.visit('/welcome/resend');
 
-            let timeRequestWasMade = new Date();
+            const timeRequestWasMade = new Date();
 
             cy.get('input[name=email]').type(emailAddress);
             cy.get('[data-cy="main-form-submit-button"]').click();
@@ -1053,7 +1053,7 @@ describe('Registration flow', () => {
               timeRequestWasMade,
               /\/set-password\/([^"]*)/,
             ).then(() => {
-              timeRequestWasMade = new Date();
+              const timeRequestWasMade = new Date();
               cy.get('[data-cy="main-form-submit-button"]').click();
 
               cy.checkForEmailAndGetDetails(
@@ -1088,7 +1088,7 @@ describe('Registration flow', () => {
           expect(oktaUser.status).to.eq(Status.ACTIVE);
 
           cy.visit('/welcome/resend');
-          let timeRequestWasMade = new Date();
+          const timeRequestWasMade = new Date();
 
           cy.get('input[name=email]').type(emailAddress);
           cy.get('[data-cy="main-form-submit-button"]').click();
@@ -1100,7 +1100,7 @@ describe('Registration flow', () => {
 
           cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
             () => {
-              timeRequestWasMade = new Date();
+              const timeRequestWasMade = new Date();
               cy.get('[data-cy="main-form-submit-button"]').click();
 
               cy.checkForEmailAndGetDetails(
@@ -1137,7 +1137,7 @@ describe('Registration flow', () => {
             expect(oktaUser.status).to.eq(Status.RECOVERY);
 
             cy.visit('/welcome/resend');
-            let timeRequestWasMade = new Date();
+            const timeRequestWasMade = new Date();
 
             cy.get('input[name=email]').type(emailAddress);
             cy.get('[data-cy="main-form-submit-button"]').click();
@@ -1152,7 +1152,7 @@ describe('Registration flow', () => {
               timeRequestWasMade,
               /reset-password\/([^"]*)/,
             ).then(() => {
-              timeRequestWasMade = new Date();
+              const timeRequestWasMade = new Date();
               cy.get('[data-cy="main-form-submit-button"]').click();
 
               cy.checkForEmailAndGetDetails(
@@ -1188,7 +1188,7 @@ describe('Registration flow', () => {
             expect(oktaUser.status).to.eq(Status.PASSWORD_EXPIRED);
 
             cy.visit('/welcome/resend');
-            let timeRequestWasMade = new Date();
+            const timeRequestWasMade = new Date();
 
             cy.get('input[name=email]').type(emailAddress);
             cy.get('[data-cy="main-form-submit-button"]').click();
@@ -1203,7 +1203,7 @@ describe('Registration flow', () => {
               timeRequestWasMade,
               /reset-password\/([^"]*)/,
             ).then(() => {
-              timeRequestWasMade = new Date();
+              const timeRequestWasMade = new Date();
               cy.get('[data-cy="main-form-submit-button"]').click();
 
               cy.checkForEmailAndGetDetails(

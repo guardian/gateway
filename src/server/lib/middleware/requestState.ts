@@ -47,6 +47,7 @@ const getRequestState = async (
 
   // we also need to know if the flow was initiated by a native app, hence we get the app info from the api
   // and determine this based on the label, whether it contains "android" or "ios"
+  // eslint-disable-next-line functional/no-let
   let isNativeApp: IsNativeApp;
 
   try {
