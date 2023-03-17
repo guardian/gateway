@@ -460,6 +460,7 @@ export const PasswordFormMainLayout = ({
       formAction={submitUrl}
       submitButtonText={submitButtonText}
       onSubmit={(e) => {
+        // eslint-disable-next-line functional/no-let
         let errorOccurred = false;
 
         if (isTooShort) {

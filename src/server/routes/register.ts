@@ -337,7 +337,7 @@ const IdapiRegistration = async (
   req: Request,
   res: ResponseWithRequestState,
 ) => {
-  let state = res.locals;
+  const state = res.locals;
 
   const { email = '' } = req.body;
 
@@ -418,15 +418,13 @@ const IdapiRegistration = async (
 
     trackMetric('Register::Failure');
 
-    state = mergeRequestState(state, {
-      pageData: {
-        email,
-        formError: message,
-      },
-    });
-
     const html = renderer('/register', {
-      requestState: state,
+      requestState: mergeRequestState(state, {
+        pageData: {
+          email,
+          formError: message,
+        },
+      }),
       pageTitle: 'Register',
     });
     return res.status(status).type('html').send(html);

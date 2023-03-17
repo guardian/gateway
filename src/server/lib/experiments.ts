@@ -27,6 +27,7 @@ export const setExperimentRan = (
   ran: boolean,
 ) => {
   const ranExperiments = getRanExperiments(req);
+  // eslint-disable-next-line functional/no-let
   let newExperiments = {};
 
   if (ran) {

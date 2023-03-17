@@ -44,13 +44,12 @@ const changePasswordInIDAPI = async (
   res: ResponseWithRequestState,
   successRedirectPath: RoutePaths,
 ) => {
-  let requestState = res.locals;
-
   const { token } = req.params;
   const { clientId } = req.query;
   const { password, firstName, secondName } = req.body;
 
-  requestState = mergeRequestState(requestState, {
+  // eslint-disable-next-line functional/no-let
+  let requestState = mergeRequestState(res.locals, {
     pageData: {
       browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
       token,

@@ -28,6 +28,7 @@ export interface IDAPIError {
 const handleResponseFailure = async (
   response: Response,
 ): Promise<IDAPIError> => {
+  // eslint-disable-next-line functional/no-let
   let err;
   const raw = await response.text();
 

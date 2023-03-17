@@ -35,6 +35,7 @@ export const setEncryptedStateCookie = (
 };
 
 const getEncryptedStateCookie = (req: Request): string | undefined => {
+  // eslint-disable-next-line functional/no-let
   let cookieSource: CookieSource;
   if (process.env.RUNNING_IN_CYPRESS === 'true') {
     // If we're in testing, first try reading from signedCookies,

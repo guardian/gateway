@@ -61,6 +61,7 @@ const getEmailDetails = (email: Message, tokenMatcher?: RegExp) => {
   if (id === undefined || body === undefined || links === undefined) {
     throw new Error('Email details not found');
   }
+  // eslint-disable-next-line functional/no-let
   let token = undefined;
   if (tokenMatcher) {
     const match = body.match(tokenMatcher);

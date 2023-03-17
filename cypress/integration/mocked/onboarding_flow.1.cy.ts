@@ -69,6 +69,7 @@ describe('Onboarding flow', () => {
       ];
 
       const consent = defaultUserConsent.map(({ id }) => {
+        // eslint-disable-next-line functional/no-let
         let consented = true;
         if (id.includes('_optout')) {
           consented = false;
