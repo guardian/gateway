@@ -15,7 +15,7 @@ Parameters:
     Description: Sign in page URL used as a fallback if auth redirect retrieval fails.
     Type: AWS::SSM::Parameter::Value<String>
   OauthBaseUrl:
-    Description: The base url for social sign-in with facebook, google or apple
+    Description: The base url for social sign-in with google or apple
     Type: AWS::SSM::Parameter::Value<String>
   OktaOrgUrl:
     Description: The org url for interacting with okta APIs
@@ -286,7 +286,6 @@ Resources:
                   OKTA_CLIENT_ID=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaClientId' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text") && \
                   OKTA_CLIENT_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaClientSecret' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   OKTA_IDP_APPLE=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaIdpApple' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
-                  OKTA_IDP_FACEBOOK=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaIdpFacebook' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   OKTA_IDP_GOOGLE=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaIdpGoogle' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
                   OKTA_GUARDIAN_USERS_ALL_GROUP_ID=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaGuardianUsersAllGroupId' --with-decryption --region eu-west-1 --query="Parameter.Value" --output="text")
 
@@ -327,7 +326,6 @@ Resources:
             Environment=OKTA_CLIENT_ID=$OKTA_CLIENT_ID
             Environment=OKTA_CLIENT_SECRET=$OKTA_CLIENT_SECRET
             Environment=OKTA_IDP_APPLE=$OKTA_IDP_APPLE
-            Environment=OKTA_IDP_FACEBOOK=$OKTA_IDP_FACEBOOK
             Environment=OKTA_IDP_GOOGLE=$OKTA_IDP_GOOGLE
             Environment=OKTA_GUARDIAN_USERS_ALL_GROUP_ID=$OKTA_GUARDIAN_USERS_ALL_GROUP_ID            
             Environment=LOGGING_KINESIS_STREAM=${KinesisStream}

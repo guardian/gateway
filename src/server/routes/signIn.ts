@@ -614,10 +614,10 @@ router.get(
   }),
 );
 
-type SocialProvider = 'google' | 'facebook' | 'apple';
+type SocialProvider = 'google' | 'apple';
 
 const isValidSocialProvider = (provider: string): boolean =>
-  ['facebook', 'google', 'apple'].includes(provider);
+  ['google', 'apple'].includes(provider);
 
 router.get(
   '/signin/:social',
