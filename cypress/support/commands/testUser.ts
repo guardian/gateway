@@ -32,7 +32,7 @@ declare global {
   }
 }
 
-type Networks = 'facebook' | 'apple' | 'google';
+type Networks = 'apple' | 'google';
 
 type SocialLink = {
   socialId: number;
