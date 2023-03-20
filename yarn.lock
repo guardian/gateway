@@ -2774,10 +2774,10 @@
   resolved "https://registry.yarnpkg.com/@guardian/ab-core/-/ab-core-2.0.1.tgz#acff2ddf887fdba792f6dafa1acfc10149e0946a"
   integrity sha512-5P1aOrKSvo6sde7+c+IiD+Mh2a9p33zaTMJl6n/I0s8gtVS16cOi9NH3fNjfMjTqUkbo8/o0RcSy91xwsauCow==
 
-"@guardian/ab-react@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@guardian/ab-react/-/ab-react-2.0.1.tgz#f018898de584c8e70a48e69ec9e499e08f512cc5"
-  integrity sha512-iOKbIxoLwRMv2eHddxL5l9mNBy/B9QaOOJgA3VUdo/jH5cUVzbF6W8yYDGcZJTolIVhSu5GPR8fitsOoup6Vww==
+"@guardian/ab-react@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@guardian/ab-react/-/ab-react-4.0.0.tgz#901249299c8a7ce822c255e57cf19f3ccd3bad9b"
+  integrity sha512-j3s4oe6eWaGrx5oOPFv0qmquaFBHWM8xKBQjC7fJO7mBHaputK10Wh7B2cVTBUrMFlmKfK1YJOisPB0pJvIWXw==
 
 "@guardian/consent-management-platform@^11.0.0":
   version "11.0.0"
