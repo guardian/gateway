@@ -14,7 +14,12 @@ import { Link } from '@guardian/source-react-components';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { SocialButtons } from '@/client/components/SocialButtons';
 import { socialButtonDivider } from '@/client/styles/Shared';
-import { GuardianTerms, JobsTerms, termsContainer } from '../components/Terms';
+import {
+  GuardianTerms,
+  JobsTerms,
+  termsContainer,
+} from '@/client/components/Terms';
+import { NoFacebookSupport } from '@/client/components/NoFacebookSupport';
 
 export type SignInProps = {
   queryParams: QueryParams;
@@ -149,6 +154,7 @@ export const SignIn = ({
           </Link>
         </Links>
       </MainForm>
+      <NoFacebookSupport queryParams={queryParams} />
     </MainLayout>
   );
 };

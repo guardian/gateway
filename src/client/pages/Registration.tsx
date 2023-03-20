@@ -9,9 +9,14 @@ import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { SocialButtons } from '@/client/components/SocialButtons';
 import { socialButtonDivider } from '@/client/styles/Shared';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
-import { GuardianTerms, JobsTerms, termsContainer } from '../components/Terms';
-import { CmpConsentedStateHiddenInput } from '../components/CmpConsentStateHiddenInput';
-import { useCmpConsent } from '../lib/hooks/useCmpConsent';
+import {
+  GuardianTerms,
+  JobsTerms,
+  termsContainer,
+} from '@/client/components/Terms';
+import { CmpConsentedStateHiddenInput } from '@/client/components/CmpConsentStateHiddenInput';
+import { useCmpConsent } from '@/client/lib/hooks/useCmpConsent';
+import { NoFacebookSupport } from '@/client/components/NoFacebookSupport';
 
 export type RegistrationProps = {
   email?: string;
@@ -66,6 +71,7 @@ export const Registration = ({
         <EmailInput defaultValue={email} autoComplete="off" />
         <CmpConsentedStateHiddenInput cmpConsentedState={hasCmpConsent} />
       </MainForm>
+      <NoFacebookSupport queryParams={queryParams} />
     </MainLayout>
   );
 };
