@@ -7,7 +7,6 @@ Need help? Contact the Identity team on [Digital/Identity](https://chat.google.c
 - [Node.js](https://nodejs.org) - Version is specified by [.nvmrc](../.nvmrc), run [`$ nvm use`](https://github.com/creationix/nvm#nvmrc) to use it.
 
   - We use [`yarn`](https://classic.yarnpkg.com/en/) for dependency management, so if using Node, make sure to get yarn too.
-  - Node and Yarn are not required if running everything through docker.
 
 ## Configuration
 
@@ -142,48 +141,6 @@ If your build folder is getting quite large, use `make clean-build` to remove th
 
 You can see the [`makefile`](../makefile) for the full list of commands.
 
-### Docker (optional)
-
-You only need to do this if you prefer docker.
-
-Development mode can be handled using `docker-compose` using the service name `gateway` if you prefer this way.
-
-To start the development server, navigate to the root project folder with the `docker-compose.yml` file and run:
-
-```sh
-$ docker-compose up
-```
-
-This spins up a container, builds the project with dependencies, and starts the development server on the port defined in the `.env` file. It also automatically restarts the development server on file changes too.
-
-You can run this in the background using:
-
-```sh
-$ docker-compose up -d
-```
-
-If running the container in the background, you can access logs using:
-
-```sh
-$ docker-compose logs -f
-```
-
-You can easily run any commands on the container using:
-
-```sh
-$ docker-compose run gateway <COMMAND>
-# example
-$ docker-compose run gateway make test
-# or multiple commands
-$ docker-compose run gateway sh -c "yarn && yarn build && yarn test"
-```
-
-Finally, to directly access the container shell to run commands use
-
-```sh
-$ docker-compose exec gateway /bin/sh
-```
-
 ## Debugging
 
 ### Client side
@@ -217,15 +174,7 @@ $ yarn test
 $ yarn test:unit
 ```
 
-#### Running tests with Docker
-
-To run all the unit tests:
-
-```sh
-$ docker-compose run gateway make test
-```
-
-#### Running tests without Docker
+#### Running tests
 
 To run all the unit tests:
 
