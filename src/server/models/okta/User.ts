@@ -1,6 +1,8 @@
 import { z } from 'zod';
 
 // social registration identity provider type
+// we've removed facebook as an authentication option, but we still need to support existing users
+// who initially registered with facebook
 const RegistrationIdp = z.enum(['google', 'apple', 'facebook']);
 
 const RegistrationLocation = z.enum([

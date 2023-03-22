@@ -45,7 +45,6 @@ describe('getConfiguration', () => {
     process.env.REDIS_HOST = 'localhost:1234';
     process.env.REDIS_SSL_ON = 'false';
     process.env.OKTA_IDP_APPLE = 'okta-idp-apple';
-    process.env.OKTA_IDP_FACEBOOK = 'okta-idp-facebook';
     process.env.OKTA_IDP_GOOGLE = 'okta-idp-google';
     process.env.OKTA_GUARDIAN_USERS_ALL_GROUP_ID =
       'okta-guardian-users-group-id';
@@ -108,7 +107,6 @@ describe('getConfiguration', () => {
         clientSecret: 'oktaclientsecret',
         social: {
           apple: 'okta-idp-apple',
-          facebook: 'okta-idp-facebook',
           google: 'okta-idp-google',
         },
         groupIds: {

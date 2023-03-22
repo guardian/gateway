@@ -39,7 +39,6 @@ export const defaultEnv = {
   OKTA_CLIENT_SECRET: 'oktaclientsecret',
   OKTA_IDP_APPLE: 'okta-idp-apple',
   OKTA_IDP_GOOGLE: 'okta-idp-google',
-  OKTA_IDP_FACEBOOK: 'okta-idp-facebook',
   OKTA_GUARDIAN_USERS_ALL_GROUP_ID: 'okta-guardian-users-group-id',
   SENTRY_DSN: 'sentry-dsn',
   GITHUB_RUN_NUMBER: '5',

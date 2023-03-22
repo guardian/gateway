@@ -200,10 +200,6 @@ export const getConfiguration = (): Configuration => {
         process.env.OKTA_IDP_APPLE,
         'OKTA Apple IDP id missing',
       ),
-      facebook: getOrThrow(
-        process.env.OKTA_IDP_FACEBOOK,
-        'OKTA Facebook IDP id missing',
-      ),
       google: getOrThrow(
         process.env.OKTA_IDP_GOOGLE,
         'OKTA Google IDP id missing',
