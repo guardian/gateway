@@ -10,4 +10,3 @@ export GITHUB_RUN_NUMBER=$(( $GITHUB_RUN_NUMBER + $LAST_TEAMCITY_BUILD ))
 yarn install --frozen-lockfile
 yarn test
 yarn build
-yarn riffraff
