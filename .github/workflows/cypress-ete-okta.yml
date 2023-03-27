@@ -97,7 +97,6 @@ jobs:
           OKTA_CLIENT_SECRET: ${{ secrets.OKTA_CLIENT_SECRET }}
           OKTA_IDP_APPLE: ${{ secrets.OKTA_IDP_APPLE }}
           OKTA_IDP_GOOGLE: ${{ secrets.OKTA_IDP_GOOGLE }}
-          OKTA_IDP_FACEBOOK: ${{ secrets.OKTA_IDP_FACEBOOK }}
           OKTA_GUARDIAN_USERS_ALL_GROUP_ID: ${{ secrets.OKTA_GUARDIAN_USERS_ALL_GROUP_ID }}
           LOGGING_KINESIS_STREAM: ''
           EC2_INSTANCE_ID: ''

@@ -50,7 +50,6 @@ export interface Okta {
   };
   social: {
     apple: string;
-    facebook: string;
     google: string;
   };
 }
