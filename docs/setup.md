@@ -6,7 +6,8 @@ Need help? Contact the Identity team on [Digital/Identity](https://chat.google.c
 
 - [Node.js](https://nodejs.org) - Version is specified by [.nvmrc](../.nvmrc), run [`$ nvm use`](https://github.com/creationix/nvm#nvmrc) to use it.
 
-  - We use [`yarn`](https://classic.yarnpkg.com/en/) for dependency management, so if using Node, make sure to get yarn too.
+- We use [`pnpm`](https://pnpm.io/) for dependency management, so if using Node, make sure to get pnpm too.
+- Running `make setup` will enable `pnpm` for this project.
 
 ## Configuration
 
@@ -168,18 +169,14 @@ We run unit tests using [`jest`](https://jestjs.io/). Our unit tests are defined
 ```sh
 # for a full ci test (Build, Lint, Unit Tests)
 $ make ci
-# or for lint and unit tests
-$ yarn test
-# or unit tests only
-$ yarn test:unit
-```
-
-#### Running tests
-
-To run all the unit tests:
-
-```sh
+# or for typechecking, lint, and unit tests
 $ make test
+# or using pnpm
+$ pnpm run test
+# or unit tests only
+$ make test-unit
+# or using pnpm
+$ pnpm run test:unit
 ```
 
 ### Integration Tests
@@ -250,7 +247,7 @@ You can use [Storybook](https://storybook.js.org/)to build UI components and pag
 Simply run the following command to start Storybook locally
 
 ```sh
-$ yarn storybook
+$ make storybook
 ```
 
 There's more documentation on setting up a story in the [development documentation](development.md).

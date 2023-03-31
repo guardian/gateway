@@ -164,7 +164,7 @@ and with query Params
 You can run Storybook by
 
 ```sh
-$ yarn storybook
+$ make storybook
 ```
 
 Which will compile the project and start storybook. Any changes you make will be automatically reloaded in Storybook too.

@@ -43,23 +43,23 @@ fi
 # In CI we build from the production config
 if [[ "$DEV_MODE" == "false" ]]; then
   echo "building gateway"
-  yarn build
+  pnpm run build
 fi
 
 echo "starting mock server"
-yarn mock-server &
-yarn wait-on:mock-server
+pnpm run mock-server &
+pnpm run wait-on:mock-server
 echo "starting gateway server, and waiting for https://profile.thegulocal.com/healthcheck"
 
 # In CI we build from the start the production server
 if [[ "$DEV_MODE" == "false" ]]; then
-  yarn start &
-  yarn wait-on:server
+  pnpm run start &
+  pnpm run wait-on:server
 else
   # In DEV we want to watch and reload the server 
-  yarn watch:server & yarn watch & yarn wait-on:server
+  pnpm run watch:server & pnpm run watch & pnpm run wait-on:server
 fi
 
 echo "opening cypress"
-yarn cypress open --env $CI_ENV --config '{"e2e":{"specPattern":["**/mocked/**/*.cy.ts"]}}' --e2e --browser chrome
+pnpm run cypress open --env $CI_ENV --config '{"e2e":{"specPattern":["**/mocked/**/*.cy.ts"]}}' --e2e --browser chrome
 
