@@ -6,13 +6,13 @@ To hand control back to the App Native layer from the In-App Browser Tab we reco
 
 However the below should be enough to implement the flows.
 
-## Authentication (Sign in and Registration)
+## Authentication (Sign in, Registration, Reset Password, Set Password)
 
 The approach for both sign in and registration in native apps uses the Okta SDK methods to launch the authentication flow and handle the OAuth2/OIDC flow. From the Identity side, the call to the Okta own login page is intercepted and we redirect to our own login page with the parameters provided from the Okta hosted sign in page.
 
 The SDKs we're using are the [Okta OIDC iOS SDK](https://github.com/okta/okta-oidc-ios) and [Okta OIDC Android SDK](https://github.com/okta/okta-oidc-android).
 
-To initiate login or registration the app with use the SDK to call the relevant method. In Android this is done by calling `.signIn(...)` and in iOS by calling `.signInWithBrowser(...)`, without any additional parameters. The SDK uses this method to launch the Authorization Code Flow with PKCE. It will launch an in-app browser tab (iOS: `ASWebAuthenticationSession`, Android: `CustomTabsService` (Custom Tab)) to check if a user session exists in Okta.
+To initiate login or registration the app with use the SDK to call the relevant method. In Android this is done by calling `.signIn(...)` and in iOS by calling `.signInWithBrowser(...)`, without any additional parameters. The SDK uses this method to launch the Authorization Code Flow with PKCE. It will launch an in-app browser tab (iOS: `ASWebAuthenticationSession`, Android: `CustomTabsService` (Custom Tab)) to check if a user session exists in Okta. In most cases you will want to pass the `prompt=login` parameter to the SDK to ensure that the user is shown the sign in page regardless of if they have an existing session or not.
 
 If a user session exists, Okta will redirect back to the app with an authorization code. The app will then use the SDK to exchange the authorization code for any tokens, usually the `id_token`, `access_token` and `refresh_token`. These tokens are stored in the SDK and can be used to authenticate the user, and authorize the app to access other resources. Once the tokens are received, checking the validity of these tokens is enough to check if the use is signed in, instead of having to perform the full login flow again.
 
@@ -20,7 +20,39 @@ If no user session exists, Okta will attempt to show it's own login page. When t
 
 If the user signs in successfully, a session cookie will be set in the browser, and we complete sign in by redirecting the user back to the `fromURI` parameter. This will redirect the user to Okta, which will then redirect the user back to the app with the authorization code, and as above this is exchanged for tokens.
 
-Registration works a bit differently. The user will navigate to the registration page, enter their email, and be sent a registration email. The user will then have to navigate to their inbox, and click the link in the email. The app should intercept this link using the [claimed "https" scheme URIs](https://datatracker.ietf.org/doc/html/rfc8252#section-7.2) (known as "Universal Links"). The token should be extracted from this link, and passed to the SDK `.signIn(...)`/`.signInWithBrowser(...)` method as an additional parameter called `activation_token`. This will again launch the in-app browser to the Okta login page, on that page we check for this `activation_token` parameter and then redirect to our own set password/welcome page. The user will then set their password, get a session set, and we complete sign in by redirecting the user back to the `fromURI` parameter. Again, This will redirect the user to Okta, which will then redirect the user back to the app with the authorization code, and as above this is exchanged for tokens.
+Registration works a bit differently. After launching the `.signIn(...)`/`.signInWithBrowser(...)` method the user will navigate to the registration page, enter their email, and be sent a registration email. The user will then have to navigate to their inbox, and click the link in the email. The app should intercept this link using the [claimed "https" scheme URIs](https://datatracker.ietf.org/doc/html/rfc8252#section-7.2) (known as "Universal Links"). The token should be extracted from this link, and passed to the SDK `.signIn(...)`/`.signInWithBrowser(...)` method as an additional parameter called `activation_token`. This will again launch the in-app browser to the Okta login page, on that page we check for this `activation_token` parameter and then redirect to our own set password/welcome page. The user will then set their password, get a session set, and we complete sign in by redirecting the user back to the `fromURI` parameter. Again, This will redirect the user to Okta, which will then redirect the user back to the app with the authorization code, and as above this is exchanged for tokens.
+
+The link we send to the user will have a format like this:
+
+```text
+https://profile.theguardian.com/welcome/<app_prefix>_<token>
+
+e.g. for the iOS live app (prefix is `il_`) a token could look like this:
+
+https://profile.theguardian.com/welcome/il_nF2_qsKfDdPQlGFsEbYn
+
+where everything after the prefix `il_` is the token.
+```
+
+A similar flow to registration is also required for reset password and set password flows. After launching the `.signIn(...)`/`.signInWithBrowser(...)` method the user will navigate to the reset password page, enter their email, and be sent a reset password or set password email depending on the state of their account. The difference to registration would be the link and the parameter required. The link we send to the user will have a format like this:
+
+```text
+# Reset password
+https://profile.theguardian.com/reset-password/<app_prefix>_<token>
+
+# Set password
+https://profile.theguardian.com/set-password/<app_prefix>_<token>
+
+e.g. for the android live app (prefix is `al_`) a token could look like this:
+
+https://profile.theguardian.com/reset-password/al_nF2_qsKfDdPQlGFsEbYn
+
+https://profile.theguardian.com/set-password/al_nF2_qsKfDdPQlGFsEbYn
+
+where everything after the prefix `al_` is the token.
+```
+
+After intercepting these endpoints, like the registration method, the token should be extracted from this link and passed to the SDK `.signIn(...)`/`.signInWithBrowser(...)` method as an additional parameter called `reset_password_token` for reset password and `set_password_token` for set password. This will again launch the in-app browser to the Okta login page, on that page we check for this `reset_password_token`/`set_password_token` parameter and then redirect to our own reset password/set password page. The user will then set their password, get a session set, and we complete sign in by redirecting the user back to the `fromURI` parameter. Again, This will redirect the user to Okta, which will then redirect the user back to the app with the authorization code, and as above this is exchanged for tokens.
 
 ### How the interception works
 
@@ -91,7 +123,7 @@ To setup a native app, we will need to register the application as an client wit
    - This is used by the Okta SDK to redirect back to after calling the logout method in the SDK.
    - Similar to above we suggest a custom URL scheme for this URI, which we can identify (`your-app:/logout/callback`).
    - e.g. `com.theguardian.app.oauth:/logout/callback`
-3. A redirect URI for handling generic redirects from identity to app as a fallback
+3. _Deprecated_ A redirect URI for handling generic redirects from identity to app as a fallback
    - Due to the possibility that Okta may change how things work with their login page, we need a fallback to allow users to sign in should the interception fail
    - This endpoint will ONLY be called if the interception fails
    - See [fallback](#fallback) section below for more details about this
@@ -115,6 +147,10 @@ Once the app is set up within Okta and this project. The Identity team will give
 | Logout Redirect URI | `end_session_redirect_uri`/`logoutRedirectUri` | The post-logout redirect URI from the app integration that was created                                                                                                                                            | `com.theguardian.app.oauth:/logout/callback`                                      |
 | Redirect URI        | `redirect_uri`/`redirectUri`                   | The Redirect URI from the app integration that was created                                                                                                                                                        | `com.theguardian.app.oauth:/authorization/callback`                               |
 | Scopes              | `scopes`                                       | Default permissions for the OAuth tokens, you'll want `openid profile offline_access` at the minimum. Information about the scopes can be seen [here](https://developer.okta.com/docs/reference/api/oidc/#scopes) | `openid profile offline_access` or json `["openid", "profile", "offline_access"]` |
+
+The relevant `.well-known` files to be able to handle these redirects within the app.
+
+See [apple-app-site-association](../../src/client/.well-known/apple-app-site-association) for iOS and [assetlinks.json](../../src/client/.well-known/assetlinks.json) for Android to be able to do this.
 
 ## Diagrams
 
@@ -163,9 +199,9 @@ Okta ->> NativeLayer: Return tokens to SDK
 note over NativeLayer: the SDK manages the tokens, which can now be used to<br/>authenticate requests, and for checking the user's<br/>session
 ```
 
-## Registration
+## Registration (and (Re)set Password)
 
-Similar to sign in, much of the following is adopted from [registration.md](registration.md), with changes to fit the native apps implementation. Apps should only need to be aware of what's happening in the native layer, but the full flow is useful for understanding the interaction between the native layer and the identity system. User interaction is implied.
+Similar to sign in, but with changes around registration to fit the native apps implementation. Apps should only need to be aware of what's happening in the native layer, but the full flow is useful for understanding the interaction between the native layer and the identity system. User interaction is implied. This flow is very similar for reset and set password.
 
 The start of this flow is very similar to the sign in journey.
 
@@ -205,10 +241,10 @@ alt
   InAppBrowserTab ->> Gateway: Request /register/email-sent
   Gateway ->> InAppBrowserTab: Return /register/email-sent
   note over InAppBrowserTab: At this point the user<br>has to navigate to the email inbox<br/>and click the activation<br>link to activate their account.<br>The app should intercept this link<br>and handle the activation<br>process.
-  EmailInbox ->> InAppBrowserTab: Click link in email /welcome/{activationToken}
+  EmailInbox ->> InAppBrowserTab: Click link in email /welcome/{prefix}_{activationToken}
   InAppBrowserTab ->> NativeLayer: Intercept activation link<br/>in-app browser tab to app
   note over NativeLayer: Extract token from link<br/>and use SDK methods
-  NativeLayer ->> InAppBrowserTab: Call `signin`/`signInWithBrowser`<br/>to perform<br />Authorization Code Flow with PKCE<br>pass `activation_token` as additional parameter
+  NativeLayer ->> InAppBrowserTab: Call `signin`/`signInWithBrowser`<br/>to perform<br />Authorization Code Flow with PKCE<br>pass `activation_token` as additional parameter<br>or `reset_password_token` for reset password<br>or `set_password_token` for set password
   note over InAppBrowserTab: SDK will launch another in-app browser<br/>tab to handle the session check
   InAppBrowserTab ->> Okta: call OAuth /authorize
   note over Okta: Existing session check
@@ -237,7 +273,9 @@ Okta ->> NativeLayer: Return tokens to SDK
 note over NativeLayer: the SDK manages the tokens, which can now be used to<br/>authenticate requests, and for checking the user's<br/>session
 ```
 
-## Fallback
+## Fallback (Deprecated)
+
+### This fallback option is no longer required as Okta have changed how they support their sign in page, but is kept here for reference
 
 While we are confident that the above approach is robust enough to work, we will also include a fallback option in case something does go wrong with the above approach.
 
