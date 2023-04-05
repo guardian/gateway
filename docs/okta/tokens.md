@@ -138,7 +138,7 @@ However, public clients such as browser-based applications have a much higher ri
 
 Refresh tokens are valid for 90 days by default, but can be configured to be longer or shorter, from 5 mins to unlimited, we also recommend that you rotate the refresh token after each use.
 
-Refresh tokens provide an additional "session" layer on top of the in browser `sid` cookie (which is set after login in browser). Meaning these two sessions are independent of each other, and can be used to manage the user's session in different ways.
+Refresh tokens provide an additional "session" layer on top of the in browser `sid` cookie (which is set after login in browser). Meaning these two sessions are independent of each other, and can be used to manage the user's session in different ways. You can see the [Sessions](sessions.md) documentation for more information on how we use these sessions.
 
 ### Token management
 
