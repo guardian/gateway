@@ -207,8 +207,8 @@ export const ConsentsData = ({ profiling, advertising }: ConsentsDataProps) => {
         <div css={[marketingText, gridRow, subGridOverrides]}>
           <p css={[autoSwitchRow()]}>
             You can change your settings under&nbsp;
-            <ExternalLink href={locations.MMA_EMAIL_PREFERENCES}>
-              Emails &amp; marketing
+            <ExternalLink href={locations.MMA_DATA_PRIVACY}>
+              Data Privacy
             </ExternalLink>
             &nbsp;on your Guardian account at any time.
           </p>

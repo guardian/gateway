@@ -6,4 +6,5 @@ export default {
   COOKIE_POLICY: 'https://www.theguardian.com/info/cookies',
   REPORT_ISSUE: 'https://manage.theguardian.com/help-centre/contact-us',
   MMA_EMAIL_PREFERENCES: 'https://manage.theguardian.com/email-prefs',
+  MMA_DATA_PRIVACY: 'https://manage.theguardian.com/data-privacy',
 };

@@ -207,8 +207,8 @@ export const ConsentsConfirmation = ({
       {anyConsents && (
         <p css={[marketingText, paddingTop, autoRow()]}>
           You can change these anytime in your account under&nbsp;
-          <ExternalLink href={locations.MMA_EMAIL_PREFERENCES}>
-            Emails &amp; marketing
+          <ExternalLink href={locations.MMA_DATA_PRIVACY}>
+            Data Privacy
           </ExternalLink>
           .
         </p>
