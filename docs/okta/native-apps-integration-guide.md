@@ -199,7 +199,7 @@ Okta ->> NativeLayer: Return tokens to SDK
 note over NativeLayer: the SDK manages the tokens, which can now be used to<br/>authenticate requests, and for checking the user's<br/>session
 ```
 
-## Registration (and (Re)set Password)
+### Registration (and (Re)set Password)
 
 Similar to sign in, but with changes around registration to fit the native apps implementation. Apps should only need to be aware of what's happening in the native layer, but the full flow is useful for understanding the interaction between the native layer and the identity system. User interaction is implied. This flow is very similar for reset and set password.
 
@@ -273,7 +273,7 @@ Okta ->> NativeLayer: Return tokens to SDK
 note over NativeLayer: the SDK manages the tokens, which can now be used to<br/>authenticate requests, and for checking the user's<br/>session
 ```
 
-## Fallback (Deprecated)
+### Fallback (Deprecated)
 
 ### This fallback option is no longer required as Okta have changed how they support their sign in page, but is kept here for reference
 
