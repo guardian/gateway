@@ -126,7 +126,7 @@
     "@emotion/react": "^11.10.6",
     "@faire/mjml-react": "^3.2.0",
     "@guardian/ab-core": "4.0.0",
-    "@guardian/ab-react": "4.0.1",
+    "@guardian/ab-react": "4.0.2",
     "@guardian/consent-management-platform": "^13.0.0",
     "@guardian/libs": "^14.0.0",
     "@guardian/source-foundations": "^10.0.1",
