@@ -101,7 +101,7 @@
     "nodemon": "^2.0.22",
     "prettier": "^2.8.8",
     "require-from-string": "^2.0.2",
-    "snyk": "^1.1143.0",
+    "snyk": "^1.1150.0",
     "stmux": "^1.8.5",
     "swc-loader": "^0.2.3",
     "terser-webpack-plugin": "^5.3.7",
