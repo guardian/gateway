@@ -38,7 +38,7 @@
     "postinstall": "yarn gen:ratelimit:schema"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.4",
+    "@babel/core": "^7.21.5",
     "@emotion/babel-preset-css-prop": "^11.10.0",
     "@guardian/eslint-plugin-source-foundations": "^11.0.0",
     "@guardian/eslint-plugin-source-react-components": "^14.0.0",
