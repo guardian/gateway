@@ -19898,10 +19898,10 @@ zip-stream@^2.1.2:
     compress-commons "^2.1.1"
     readable-stream "^3.4.0"
 
-zod-to-json-schema@^3.20.4:
-  version "3.20.4"
-  resolved "https://registry.yarnpkg.com/zod-to-json-schema/-/zod-to-json-schema-3.20.4.tgz#155f687c5a059fdc0f1bb3ff32d6e9200036b6f4"
-  integrity sha512-Un9+kInJ2Zt63n6Z7mLqBifzzPcOyX+b+Exuzf7L1+xqck9Q2EPByyTRduV3kmSPaXaRer1JCsucubpgL1fipg==
+zod-to-json-schema@^3.21.0:
+  version "3.21.0"
+  resolved "https://registry.yarnpkg.com/zod-to-json-schema/-/zod-to-json-schema-3.21.0.tgz#b6f2fc4284c44c0d0b7ed121620f2a0107609d1e"
+  integrity sha512-+KyFCzqKwE6CxMSZxEUBaGmdXzB09BoFebO+xef/ISE4cTfReQlyThYbS8aqd3uWkdt9fz5BGHsY0CbY+Ra9oA==
 
 zod@^3.21.4:
   version "3.21.4"
