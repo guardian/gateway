@@ -40,7 +40,7 @@ export const acceptCMP = () => {
 };
 
 export const declineCMP = () => {
-  cmpIframe().find("[title='Manage my cookies']").click();
+  cmpIframe().find("[title='Manage or reject cookies']").click();
   privacySettingsIframe().contains('Privacy settings');
   privacySettingsIframe()
     .find("[title='Reject all']", { timeout: 2000 })

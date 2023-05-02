@@ -22,10 +22,6 @@ export const disableAutofillBackground = css`
   }
 `;
 
-export const noBorderRadius = css`
-  border-radius: 0;
-`;
-
 export const socialButtonDivider = css`
   /* Undoes the negative margin */
   margin-bottom: 0;

@@ -7,10 +7,7 @@ import {
 import React, { useState } from 'react';
 import { css } from '@emotion/react';
 import { neutral, height, focusHalo } from '@guardian/source-foundations';
-import {
-  disableAutofillBackground,
-  noBorderRadius,
-} from '@/client/styles/Shared';
+import { disableAutofillBackground } from '@/client/styles/Shared';
 
 export type PasswordAutoComplete = 'new-password' | 'current-password';
 
@@ -27,6 +24,14 @@ export type PasswordInputProps = {
 const paddingRight = (isEyeDisplayedOnBrowser: boolean) => css`
   padding-right: ${isEyeDisplayedOnBrowser ? 28 : 0}px;
 `;
+
+// fix password input border radius to hide right side of the radius
+const borderFix = (isEyeDisplayedOnBrowser: boolean) =>
+  isEyeDisplayedOnBrowser
+    ? css`
+        border-radius: 4px 0 0 4px;
+      `
+    : css();
 
 // we cut off the right hand side of the border when the eye symbol is displayed.
 const noBorder = (isEyeDisplayedOnBrowser: boolean) =>
@@ -95,9 +100,10 @@ const EyeSymbol = ({
 }) => {
   const buttonStyles = css`
     border: ${error
-      ? `4px solid ${textInputThemeDefault.textInput.borderError}`
-      : `2px solid ${textInputThemeDefault.textInput.border}`};
+      ? `2px solid ${textInputThemeDefault.textInput.borderError}`
+      : `1px solid ${textInputThemeDefault.textInput.border}`};
     border-left: none;
+    border-radius: 0 4px 4px 0;
     background-color: transparent;
     cursor: pointer;
     height: ${height.inputMedium}px;
@@ -158,7 +164,7 @@ export const PasswordInput = ({
           autoComplete={autoComplete}
           cssOverrides={[
             noBorder(displayEye),
-            noBorderRadius,
+            borderFix(displayEye),
             paddingRight(displayEye),
             disableAutofillBackground,
             hideMsReveal(displayEye),

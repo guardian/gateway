@@ -1,9 +1,6 @@
 import { TextInput, TextInputProps } from '@guardian/source-react-components';
 import React from 'react';
-import {
-  disableAutofillBackground,
-  noBorderRadius,
-} from '@/client/styles/Shared';
+import { disableAutofillBackground } from '@/client/styles/Shared';
 import {
   InputFieldState,
   useInputValidityState,
@@ -45,7 +42,7 @@ export const EmailInput: React.FC<EmailInputProps> = ({
       type="email"
       autoComplete="email"
       error={errorMessage}
-      cssOverrides={[disableAutofillBackground, noBorderRadius]}
+      cssOverrides={[disableAutofillBackground]}
       onBlur={onBlur}
       onInput={onInput}
       onInvalid={onInvalid}
