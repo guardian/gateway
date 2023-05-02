@@ -18,9 +18,9 @@ export const CompleteRegistration = () => {
       <Footer
         mistakeParagraphComponent={
           <>
-            If you received this email by mistake, please delete it. You
-            won&apos;t be registered if you don&apos;t click the &lsquo;Complete
-            registration&rsquo; button above.
+            If you received this email by mistake, please delete it. Your
+            registration won&apos;t be complete if you don&apos;t click the
+            &lsquo;Complete registration&rsquo; button above.
           </>
         }
       />

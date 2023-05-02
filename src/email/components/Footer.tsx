@@ -39,8 +39,8 @@ export const Footer = ({ mistakeParagraphComponent }: Props) => (
       <FooterText>
         If you have any queries about why you are receiving this email, please
         contact our customer service team at{' '}
-        <Link href="mailto:userhelp@theguardian.com">
-          userhelp@theguardian.com
+        <Link href="mailto:customer.help@theguardian.com">
+          customer.help@theguardian.com
         </Link>
         .
       </FooterText>
