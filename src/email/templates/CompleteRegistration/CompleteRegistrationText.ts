@@ -9,7 +9,7 @@ $activateLink
 
 The Guardian
 
-If you received this email by mistake, please delete it. You won’t be registered if you don't click the link above.
+If you received this email by mistake, please delete it. Your registration won't be complete if you don't click the link above.
 
 If you have any queries about this email please contact our customer services team at userhelp@theguardian.com
 
