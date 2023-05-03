@@ -75,9 +75,9 @@ export const performAuthorizationCodeFlow = async (
     // we send the generated stateParam as the state parameter
     state: authState.stateParam,
     // any scopes, by default the 'openid' scope is required
-    // the idapi_token_cookie_exchange scope is checked on IDAPI to return
+    // the `guardian.identity-api.cookies.create.self.secure scope` is checked on IDAPI to return
     // idapi cookies on authentication
-    scope: 'openid idapi_token_cookie_exchange',
+    scope: 'openid guardian.identity-api.cookies.create.self.secure',
     // the redirect_uri is the url that we'll redirect the user to after
     redirect_uri: ProfileOpenIdClientRedirectUris.WEB,
     // the identity provider if doing social login
