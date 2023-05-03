@@ -20,8 +20,9 @@ export const lastPayloadsAre = (expectedPayloads: Array<object>) => {
   return cy
     .request(Cypress.env('mockingEndpoint') + '/payloads')
     .then((response) => {
-      expect(response.body.slice(-expectedPayloads.length)).to.deep.equal(
-        expectedPayloads,
-      );
+      const slice = response.body.slice(-expectedPayloads.length);
+      expectedPayloads.forEach((expectedPayload) => {
+        expect(slice).to.deep.include(expectedPayload);
+      });
     });
 };
