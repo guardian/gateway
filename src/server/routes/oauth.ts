@@ -139,7 +139,7 @@ router.get(
       // to prevent CSRF attacks
       const tokenSet = await OpenIdClient.callback(
         // the redirectUri is the callback location (this route)
-        ProfileOpenIdClientRedirectUris.WEB,
+        ProfileOpenIdClientRedirectUris.AUTHENTICATION,
         // the params sent to the callback
         callbackParams,
         // checks to make sure that everything is valid

@@ -34,6 +34,7 @@ import { setupJobsUserInIDAPI, setupJobsUserInOkta } from '../lib/jobs';
 import { sendOphanComponentEventFromQueryParamsServer } from '../lib/ophan';
 import { clearOktaCookies } from '../routes/signOut';
 import { mergeRequestState } from '@/server/lib/requestState';
+import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
 
 const { okta } = getConfiguration();
 
@@ -264,6 +265,9 @@ const changePasswordInOkta = async (
         sessionToken,
         confirmationPagePath: successRedirectPath,
         closeExistingSession: true,
+        prompt: 'none',
+        scopes: ['openid', 'guardian.identity-api.cookies.create.self.secure'],
+        redirectUri: ProfileOpenIdClientRedirectUris.AUTHENTICATION,
       });
     } else {
       throw new OktaError({ message: 'Okta state token missing' });
