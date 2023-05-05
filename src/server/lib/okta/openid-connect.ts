@@ -21,7 +21,7 @@ import { RoutePaths } from '@/shared/model/Routes';
  * - `queryParams` - Query params that were used to start the flow,
  *   for example the returnUrl, tracking (ref, refViewId), clientId, etc.
  */
-interface AuthorizationState {
+export interface AuthorizationState {
   stateParam: string;
   queryParams: PersistableQueryParams;
   confirmationPage?: RoutePaths;
@@ -51,7 +51,14 @@ type OpenIdClient = Pick<
  * Object of redirect URIs used by OAuth apps (clients)
  */
 interface OpenIdClientRedirectUris {
-  WEB: `${string}${Extract<'/oauth/authorization-code/callback', RoutePaths>}`;
+  AUTHENTICATION: `${string}${Extract<
+    '/oauth/authorization-code/callback',
+    RoutePaths
+  >}`;
+  APPLICATION: `${string}${Extract<
+    '/oauth/authorization-code/application-callback',
+    RoutePaths
+  >}`;
 }
 
 const { okta, baseUri, stage } = getConfiguration();
@@ -83,11 +90,13 @@ const OIDCIssuer = new Issuer(OIDC_METADATA);
 
 /**
  * Redirect uris used by the "profile" OAuth app in Okta
- * Currently only has the WEB redirect for profile
- * Native apps will likely have different redirect URIs
+ * @property `AUTHENTICATION` - Used to redirect for authentication related flows (e.g. sign in, register, reset password etc.)
+ * @property `APPLICATION` - Used to get tokens for use within the gateway application (e.g. onboarding flow)
  */
 export const ProfileOpenIdClientRedirectUris: OpenIdClientRedirectUris = {
-  WEB: `${getProfileUrl()}/oauth/authorization-code/callback`,
+  AUTHENTICATION: `${getProfileUrl()}/oauth/authorization-code/callback`,
+  // TODO: set up the correct redirect route for the application
+  APPLICATION: `${getProfileUrl()}/oauth/authorization-code/application-callback`,
 };
 
 /**

@@ -44,6 +44,7 @@ import {
   setEncryptedStateCookie,
 } from '../lib/encryptedStateCookie';
 import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
+import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
 
 const { okta, accountManagementUrl, oauthBaseUrl, defaultReturnUri } =
   getConfiguration();
@@ -462,6 +463,9 @@ const oktaSignInController = async ({
     return await performAuthorizationCodeFlow(req, res, {
       sessionToken: response.sessionToken,
       closeExistingSession: true,
+      prompt: 'none',
+      scopes: ['openid', 'guardian.identity-api.cookies.create.self.secure'],
+      redirectUri: ProfileOpenIdClientRedirectUris.AUTHENTICATION,
     });
   } catch (error) {
     trackMetric('OktaSignIn::Failure');
@@ -595,6 +599,12 @@ router.get(
         await getSession(oktaSessionCookieId);
         return performAuthorizationCodeFlow(req, res, {
           doNotSetLastAccessCookie: true,
+          prompt: 'none',
+          scopes: [
+            'openid',
+            'guardian.identity-api.cookies.create.self.secure',
+          ],
+          redirectUri: ProfileOpenIdClientRedirectUris.AUTHENTICATION,
         });
       } catch {
         //if the cookie exists, but the session is invalid, we remove the cookie
@@ -648,6 +658,8 @@ router.get(
       return await performAuthorizationCodeFlow(req, res, {
         idp,
         closeExistingSession: true,
+        scopes: ['openid', 'guardian.identity-api.cookies.create.self.secure'],
+        redirectUri: ProfileOpenIdClientRedirectUris.AUTHENTICATION,
       });
     } else {
       // if okta feature switch disabled, redirect to identity-federation-api
