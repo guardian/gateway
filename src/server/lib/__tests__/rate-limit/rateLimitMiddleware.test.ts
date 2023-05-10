@@ -65,6 +65,10 @@ describe('rate limiter middleware', () => {
     jest.mock('@/server/lib/redis/redisClient', () => new Redis());
 
     jest.mock('@okta/jwt-verifier');
+
+    jest.mock('@/server/lib/experiments', () => ({
+      hasExperimentRun: () => true,
+    }));
   });
 
   afterEach((done) => {

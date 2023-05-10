@@ -52,14 +52,14 @@ export type UserAttributesResponse = z.infer<
 
 /**
  * @name getUserAttributes
- * @description Call members-data-api to get user product information using an SC_GU_U cookie
+ * @description Call members-data-api to get user product information using an OAuth access token
  *
- * @param sc_gu_u SC_GU_U cookie
+ * @param accessToken OAuth Access Token
  * @param request_id optional request id for logging
  * @returns UserAttributesResponse | undefined
  */
 export const getUserAttributes = async (
-  sc_gu_u: string,
+  accessToken: string,
   request_id?: string,
 ): Promise<UserAttributesResponse | undefined> => {
   try {
@@ -68,7 +68,7 @@ export const getUserAttributes = async (
     const response = await fetch(joinUrl(membersDataApiUrl, path), {
       method: 'GET',
       headers: {
-        cookie: `SC_GU_U=${sc_gu_u}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
 

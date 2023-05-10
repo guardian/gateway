@@ -109,12 +109,12 @@ export const consentPages: ConsentPage[] = [
     path: '/consents/communication',
     pageTitle: CONSENTS_PAGES.CONTACT,
     read: async (ip, sc_gu_u, _, request_id) => ({
-      consents: await getUserConsentsForPage(
-        CONSENTS_COMMUNICATION_PAGE,
+      consents: await getUserConsentsForPage({
+        pageConsents: CONSENTS_COMMUNICATION_PAGE,
         ip,
         sc_gu_u,
         request_id,
-      ),
+      }),
       page: 'communication',
     }),
     update: async (ip, sc_gu_u, body, _, request_id) => {
@@ -123,7 +123,7 @@ export const consentPages: ConsentPage[] = [
         consented: getConsentValueFromRequestBody(id, body),
       }));
 
-      await patchConsents(ip, sc_gu_u, consents, request_id);
+      await patchConsents({ ip, sc_gu_u, payload: consents, request_id });
     },
   },
   {
@@ -133,12 +133,12 @@ export const consentPages: ConsentPage[] = [
     read: async (ip, sc_gu_u, geo, request_id) => {
       return {
         page: 'newsletters',
-        consents: await getUserConsentsForPage(
-          ConsentsOnNewslettersPageMap.get(geo) as string[],
+        consents: await getUserConsentsForPage({
+          pageConsents: ConsentsOnNewslettersPageMap.get(geo) as string[],
           ip,
           sc_gu_u,
           request_id,
-        ),
+        }),
         newsletters: await getUserNewsletterSubscriptions(
           NewsletterMap.get(geo) as string[],
           ip,
@@ -197,7 +197,7 @@ export const consentPages: ConsentPage[] = [
         }),
       );
 
-      await patchConsents(ip, sc_gu_u, consents, request_id);
+      await patchConsents({ ip, sc_gu_u, payload: consents, request_id });
     },
   },
   {
@@ -205,12 +205,12 @@ export const consentPages: ConsentPage[] = [
     path: '/consents/data',
     pageTitle: CONSENTS_PAGES.YOUR_DATA,
     read: async (ip, sc_gu_u, _, request_id) => ({
-      consents: await getUserConsentsForPage(
-        CONSENTS_DATA_PAGE,
+      consents: await getUserConsentsForPage({
+        pageConsents: CONSENTS_DATA_PAGE,
         ip,
         sc_gu_u,
         request_id,
-      ),
+      }),
       page: 'data',
       previousPage: 'newsletters',
     }),
@@ -220,7 +220,7 @@ export const consentPages: ConsentPage[] = [
         consented: getConsentValueFromRequestBody(id, body),
       }));
 
-      await patchConsents(ip, sc_gu_u, consents, request_id);
+      await patchConsents({ ip, sc_gu_u, payload: consents, request_id });
     },
   },
   {
@@ -236,12 +236,12 @@ export const consentPages: ConsentPage[] = [
 
       return {
         page: 'review',
-        consents: await getUserConsentsForPage(
-          ALL_CONSENT,
+        consents: await getUserConsentsForPage({
+          pageConsents: ALL_CONSENT,
           ip,
           sc_gu_u,
           request_id,
-        ),
+        }),
         newsletters: await getUserNewsletterSubscriptions(
           NewsletterMap.get(geo) as string[],
           ip,

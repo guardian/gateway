@@ -8,17 +8,27 @@ import { hasExperimentRun, setExperimentRan } from '@/server/lib/experiments';
 import { IdapiCookies } from '@/shared/model/IDAPIAuth';
 import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
+import { TokenSet } from 'openid-client';
 
 const OPT_IN_PROMPT_TEST_ID = 'OptInPromptPostSignIn';
 
 const { defaultReturnUri } = getConfiguration();
 
-const postSignInController = async (
-  req: Request,
-  res: ResponseWithRequestState,
-  idapiCookies?: IdapiCookies,
-  returnUrl?: string,
-) => {
+interface PostSignInControllerParams {
+  req: Request;
+  res: ResponseWithRequestState;
+  idapiCookies?: IdapiCookies;
+  oauthTokens?: TokenSet;
+  returnUrl?: string;
+}
+
+const postSignInController = async ({
+  req,
+  res,
+  idapiCookies,
+  oauthTokens,
+  returnUrl,
+}: PostSignInControllerParams) => {
   const redirectUrl = returnUrl || defaultReturnUri;
 
   const optInPromptActive = await (async () => {
@@ -38,17 +48,16 @@ const postSignInController = async (
       ({ key }) => key === 'SC_GU_U',
     )?.value;
 
-    if (!sc_gu_u) {
-      return false;
-    }
+    const accessToken = oauthTokens?.access_token;
 
     try {
-      const consents = await getUserConsentsForPage(
-        CONSENTS_POST_SIGN_IN_PAGE,
-        req.ip,
+      const consents = await getUserConsentsForPage({
+        pageConsents: CONSENTS_POST_SIGN_IN_PAGE,
+        ip: req.ip,
         sc_gu_u,
-        res.locals.requestId,
-      );
+        accessToken,
+        request_id: res.locals.requestId,
+      });
 
       return !consents.find(({ id }) => id === Consents.SUPPORTER)?.consented;
     } catch (error) {

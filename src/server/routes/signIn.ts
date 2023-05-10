@@ -28,9 +28,12 @@ import {
   getConsentValueFromRequestBody,
   update as patchConsents,
 } from '@/server/lib/idapi/consents';
-import { loginMiddleware } from '@/server/lib/middleware/login';
+import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
 import postSignInController from '@/server/lib/postSignInController';
-import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
+import {
+  performAuthorizationCodeFlow,
+  scopesForAuthentication,
+} from '@/server/lib/okta/oauth';
 import { getSession } from '../lib/okta/api/sessions';
 import { redirectIfLoggedIn } from '../lib/middleware/redirectIfLoggedIn';
 import { getUser, getUserGroups } from '../lib/okta/api/users';
@@ -302,7 +305,7 @@ const idapiSignInController = async (
 
     trackMetric('SignIn::Success');
 
-    return postSignInController(req, res, cookies, returnUrl);
+    return postSignInController({ req, res, idapiCookies: cookies, returnUrl });
   } catch (error) {
     logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
       request_id: res.locals.requestId,
@@ -464,7 +467,7 @@ const oktaSignInController = async ({
       sessionToken: response.sessionToken,
       closeExistingSession: true,
       prompt: 'none',
-      scopes: ['openid', 'guardian.identity-api.cookies.create.self.secure'],
+      scopes: scopesForAuthentication,
       redirectUri: ProfileOpenIdClientRedirectUris.AUTHENTICATION,
     });
   } catch (error) {
@@ -501,12 +504,12 @@ const optInPromptController = async (
   const redirectUrl = returnUrl || defaultReturnUri;
 
   try {
-    const consents = await getUserConsentsForPage(
-      CONSENTS_POST_SIGN_IN_PAGE,
-      req.ip,
-      req.cookies.SC_GU_U,
-      res.locals.requestId,
-    );
+    const consents = await getUserConsentsForPage({
+      pageConsents: CONSENTS_POST_SIGN_IN_PAGE,
+      ip: req.ip,
+      sc_gu_u: req.cookies.SC_GU_U,
+      request_id: res.locals.requestId,
+    });
     const html = renderer('/signin/success', {
       requestState: mergeRequestState(state, {
         pageData: {
@@ -531,7 +534,7 @@ const optInPromptController = async (
 
 router.get(
   '/signin/success',
-  loginMiddleware,
+  loginMiddlewareOAuth,
   handleAsyncErrors((req: Request, res: ResponseWithRequestState) =>
     optInPromptController(req, res),
   ),
@@ -539,7 +542,7 @@ router.get(
 
 router.post(
   '/signin/success',
-  loginMiddleware,
+  loginMiddlewareOAuth,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
     const { returnUrl } = state.pageData;
@@ -554,7 +557,13 @@ router.post(
     const consented = consents.some((consent) => consent.consented);
 
     try {
-      await patchConsents(req.ip, sc_gu_u, consents);
+      await patchConsents({
+        ip: req.ip,
+        sc_gu_u,
+        payload: consents,
+        request_id: state.requestId,
+        accessToken: state.oauthState.accessToken?.toString(),
+      });
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
         request_id: res.locals.requestId,
@@ -600,10 +609,7 @@ router.get(
         return performAuthorizationCodeFlow(req, res, {
           doNotSetLastAccessCookie: true,
           prompt: 'none',
-          scopes: [
-            'openid',
-            'guardian.identity-api.cookies.create.self.secure',
-          ],
+          scopes: scopesForAuthentication,
           redirectUri: ProfileOpenIdClientRedirectUris.AUTHENTICATION,
         });
       } catch {
@@ -658,7 +664,7 @@ router.get(
       return await performAuthorizationCodeFlow(req, res, {
         idp,
         closeExistingSession: true,
-        scopes: ['openid', 'guardian.identity-api.cookies.create.self.secure'],
+        scopes: scopesForAuthentication,
         redirectUri: ProfileOpenIdClientRedirectUris.AUTHENTICATION,
       });
     } else {
