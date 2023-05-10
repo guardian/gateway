@@ -157,6 +157,7 @@ export const updateName = async (
  * so we need to add reg location via idapi (which updates Okta immediately). When Okta sessions are available, this should be refactored
  * to use okta directly (Which is the source of truth for the user field)
  */
+// TODO: WE CAN DO THIS NOW
 export const addRegistrationLocation = async (
   registrationLocation: RegistrationLocation,
   ip: string,
