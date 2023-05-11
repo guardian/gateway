@@ -11,9 +11,10 @@ import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { getAutoRow, passwordFormSpanDef } from '@/client/styles/Grid';
 import { controls, text, greyBorderTop } from '@/client/styles/Consents';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
-import { buildUrl } from '@/shared/lib/routeUtils';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import NameInputField from '@/client/components/NameInputField';
 import { useNameInputFieldError } from '@/client/lib/hooks/useNameFieldInputError';
+import { QueryParams } from '@/shared/model/QueryParams';
 
 type Props = {
   submitUrl: string;
@@ -22,6 +23,7 @@ type Props = {
   passwordSet?: boolean;
   isJobs?: boolean;
   browserName?: string;
+  queryParams: QueryParams;
 };
 
 const linkButton = css`
@@ -49,6 +51,7 @@ export const Welcome = ({
   passwordSet = false,
   isJobs = false,
   browserName,
+  queryParams,
 }: Props) => {
   const autoRow = getAutoRow(1, passwordFormSpanDef);
   const {
@@ -76,7 +79,7 @@ export const Welcome = ({
         <div css={[controls, autoRow()]}>
           <LinkButton
             css={linkButton}
-            href={buildUrl('/consents')}
+            href={buildUrlWithQueryParams('/consents', {}, queryParams)}
             priority="primary"
             icon={<SvgArrowRightStraight />}
             iconSide="right"

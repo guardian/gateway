@@ -199,6 +199,7 @@ router.get(
       303,
       addQueryParamsToPath(`${consentPages[0].path}`, res.locals.queryParams, {
         emailVerified: true,
+        useIdapi: true,
       }),
     );
   }),

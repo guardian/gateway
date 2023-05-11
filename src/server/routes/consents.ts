@@ -47,7 +47,10 @@ import { ApiError } from '@/server/models/Error';
 import { ConsentPath, RoutePaths } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { mergeRequestState } from '@/server/lib/requestState';
-import { updateRegistrationLocationViaOkta } from '../lib/updateRegistrationLocation';
+import {
+  updateRegistrationLocationViaIDAPI,
+  updateRegistrationLocationViaOkta,
+} from '../lib/updateRegistrationLocation';
 import {
   readEncryptedStateCookie,
   updateEncryptedStateCookie,
@@ -427,10 +430,14 @@ router.post(
 
       // If on the first page, attempt to update location for consented users.
       if (pageIndex === 0) {
-        updateRegistrationLocationViaOkta(
-          req,
-          res.locals.oauthState.accessToken,
-        );
+        if (res.locals.oauthState.accessToken) {
+          await updateRegistrationLocationViaOkta(
+            req,
+            res.locals.oauthState.accessToken,
+          );
+        } else {
+          await updateRegistrationLocationViaIDAPI(req.ip, sc_gu_u, req);
+        }
       }
 
       // we need this in the Post update so consents are not unintentionally unsubscribed in Permissioned views without consents

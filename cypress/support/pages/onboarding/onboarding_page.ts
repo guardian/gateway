@@ -24,8 +24,12 @@ class Onboarding {
     return cy.contains(Onboarding.CONTENT.REPORT_ERROR_LINK).parent();
   }
 
-  static goto() {
-    cy.visit(this.URL, { failOnStatusCode: false });
+  static goto({ query = {} } = {}) {
+    const querystring = new URLSearchParams(query).toString();
+
+    cy.visit(`${this.URL}${querystring ? `?${querystring}` : ''}`, {
+      failOnStatusCode: false,
+    });
   }
 
   static gotoFlowStart({ failOnStatusCode = true, query = {} } = {}) {

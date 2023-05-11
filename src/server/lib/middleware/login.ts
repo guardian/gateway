@@ -30,6 +30,10 @@ export const loginMiddlewareOAuth = async (
   res: ResponseWithRequestState,
   next: NextFunction,
 ) => {
+  if (res.locals.queryParams.useIdapi) {
+    return loginMiddleware(req, res, next);
+  }
+
   // if a user has the GU_SO cookie, they have recently signed out
   // so we need to clear any existing tokens
   // and perform the auth code flow to get new tokens to

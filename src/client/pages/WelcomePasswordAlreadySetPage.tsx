@@ -4,7 +4,8 @@ import { Welcome } from '@/client/pages/Welcome';
 
 export const WelcomePasswordAlreadySetPage = () => {
   const clientState = useClientState();
-  const { pageData: { email, fieldErrors = [] } = {} } = clientState;
+  const { pageData: { email, fieldErrors = [] } = {}, queryParams } =
+    clientState;
 
   return (
     <Welcome
@@ -12,6 +13,7 @@ export const WelcomePasswordAlreadySetPage = () => {
       email={email}
       fieldErrors={fieldErrors}
       passwordSet={true}
+      queryParams={queryParams}
     />
   );
 };

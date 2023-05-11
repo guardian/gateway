@@ -52,6 +52,7 @@ export const WelcomePage = () => {
       fieldErrors={fieldErrors}
       isJobs={isJobs}
       browserName={browserName}
+      queryParams={queryParams}
     />
   );
 };

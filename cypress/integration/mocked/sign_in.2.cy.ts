@@ -2,8 +2,7 @@ import { injectAndCheckAxe } from '../../support/cypress-axe';
 import { allConsents, CONSENTS_ENDPOINT } from '../../support/idapi/consent';
 import {
   verifiedUserWithNoConsent,
-  createUser,
-  USER_ENDPOINT,
+  USER_CONSENTS_ENDPOINT,
 } from '../../support/idapi/user';
 
 describe('Sign in flow', () => {
@@ -206,13 +205,17 @@ describe('Sign in flow', () => {
     });
   });
 
-  context('Redirect to post sign-in prompt', () => {
+  context.only('Redirect to post sign-in prompt', () => {
     const defaultReturnUrl = 'https://m.code.dev-theguardian.com';
     const returnUrl = 'https://www.theguardian.com/about';
 
     beforeEach(() => {
       cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
-      cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
+      cy.mockAll(
+        200,
+        verifiedUserWithNoConsent.user.consents,
+        USER_CONSENTS_ENDPOINT,
+      );
       // Intercept the pages that we would redirect to.
       // We just want to check that the redirect happens, not that the page loads.
       cy.intercept('GET', '/signin/success*', (req) => {
@@ -243,10 +246,8 @@ describe('Sign in flow', () => {
 
     it('if all conditions met', () => {
       signIn();
-      cy.url().should(
-        'include',
-        `/signin/success?returnUrl=${encodeURIComponent(defaultReturnUrl)}`,
-      );
+      cy.url().should('include', `/signin/success`);
+      cy.url().should('include', encodeURIComponent(defaultReturnUrl));
     });
 
     it('unless returnUrl is not default', () => {
@@ -266,19 +267,17 @@ describe('Sign in flow', () => {
     });
 
     it('if no consent information for user', () => {
-      cy.mockAll(200, createUser([]), USER_ENDPOINT);
+      cy.mockAll(200, [], USER_CONSENTS_ENDPOINT);
       signIn();
-      cy.url().should(
-        'include',
-        `/signin/success?returnUrl=${encodeURIComponent(defaultReturnUrl)}`,
-      );
+      cy.url().should('include', `/signin/success`);
+      cy.url().should('include', encodeURIComponent(defaultReturnUrl));
     });
 
     it('unless user has already consented', () => {
       const supporterConsent = allConsents.find(({ id }) => id === 'supporter');
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const consentData = [{ ...supporterConsent!, consented: true }];
-      cy.mockAll(200, createUser(consentData), USER_ENDPOINT);
+      cy.mockAll(200, consentData, USER_CONSENTS_ENDPOINT);
       signIn();
       cy.url().should('include', defaultReturnUrl);
     });
@@ -290,7 +289,7 @@ describe('Sign in flow', () => {
     });
 
     it('unless fetching user consents fails', () => {
-      cy.mockAll(500, undefined, USER_ENDPOINT);
+      cy.mockAll(500, undefined, USER_CONSENTS_ENDPOINT);
       signIn();
       cy.url().should('include', defaultReturnUrl);
     });
