@@ -65,14 +65,15 @@ export const verifyIdToken = async (token: string) => {
 
 /**
  * Token cookie options
- * No expiry/max-age, so cookie is deleted when browser session closes
+ * Expiry is set to 1 hour by default, which matches the token expiry
  */
-const OAuthTokenCookieOptions: CookieOptions = {
+const OAuthTokenCookieOptions = (): CookieOptions => ({
   httpOnly: true,
   secure: true,
   signed: true,
   sameSite: 'lax',
-};
+  maxAge: 3600000,
+});
 
 /**
  * @name setOAuthTokenCookie
@@ -98,7 +99,7 @@ export const setOAuthTokenCookie = (
   name: OAuthCookieNames,
   value: string,
 ): void => {
-  res.cookie(name, value, OAuthTokenCookieOptions);
+  res.cookie(name, value, OAuthTokenCookieOptions());
 };
 
 /**
@@ -132,5 +133,5 @@ export const deleteOAuthTokenCookie = (
   res: ResponseWithRequestState,
   name: OAuthCookieNames,
 ): void => {
-  res.clearCookie(name, OAuthTokenCookieOptions);
+  res.clearCookie(name, OAuthTokenCookieOptions());
 };
