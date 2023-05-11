@@ -133,5 +133,10 @@ export const deleteOAuthTokenCookie = (
   res: ResponseWithRequestState,
   name: OAuthCookieNames,
 ): void => {
-  res.clearCookie(name, OAuthTokenCookieOptions());
+  // clear the cookie by setting the maxAge to 0, which
+  // effectively tells the browser to remove the cookie
+  res.cookie(name, '', {
+    ...OAuthTokenCookieOptions(),
+    maxAge: 0,
+  });
 };
