@@ -70,48 +70,17 @@ describe('Content Security Policy headers', () => {
         response.header['content-security-policy'].split(';');
       // Does the CSP header match what we expect it to be? If the CSP settings
       // in Helmet are updated, we expect to need to update these tests.
-      expect(splitCSPHeader).toContain("base-uri 'none'");
+      expect(splitCSPHeader).toContain(`${baseUri} 'none'`);
       expect(splitCSPHeader).toContain("default-src 'none'");
       expect(splitCSPHeader).toContain(
-        [
-          'script-src',
-          baseUri,
-          "'sha256-411aj9j2RJj78RLGlCL/KDMK0fe6OEh8Vp6NzyYIkP4='",
-          'www.google-analytics.com',
-          'sourcepoint.theguardian.com',
-          'gdpr-tcfv2.sp-prod.net',
-          'ccpa.sp-prod.net',
-          'ccpa-service.sp-prod.net',
-          'ccpa-notice.sp-prod.net',
-          'cdn.privacy-mgmt.com',
-          'www.google.com',
-          'www.gstatic.com',
-          'assets.guim.co.uk',
-          "'unsafe-eval'",
-        ].join(' '),
+        `script-src ${baseUri} sourcepoint.theguardian.com gdpr-tcfv2.sp-prod.net ccpa.sp-prod.net ccpa-service.sp-prod.net ccpa-notice.sp-prod.net cdn.privacy-mgmt.com www.google.com www.gstatic.com assets.guim.co.uk 'unsafe-eval'`,
       );
       expect(splitCSPHeader).toContain(
-        `img-src ${baseUri} static.guim.co.uk ophan.theguardian.com www.google-analytics.com www.google.com`,
+        `img-src ${baseUri} static.guim.co.uk ophan.theguardian.com www.google.com`,
       );
       expect(splitCSPHeader).toContain('font-src assets.guim.co.uk');
       expect(splitCSPHeader).toContain(
-        [
-          'connect-src',
-          'www.google-analytics.com',
-          'vendorlist.consensu.org',
-          `consent-logs.${apiDomain}`,
-          'sourcepoint.theguardian.com',
-          'gdpr-tcfv2.sp-prod.net',
-          'ccpa.sp-prod.net',
-          'ccpa-service.sp-prod.net',
-          'ccpa-notice.sp-prod.net',
-          'cdn.privacy-mgmt.com',
-          'api.nextgen.guardianapps.co.uk',
-          'https://api.pwnedpasswords.com',
-          'localhost:1234',
-          'www.google.com',
-          'o14302.ingest.sentry.io',
-        ].join(' '),
+        `connect-src vendorlist.consensu.org consent-logs.${apiDomain} sourcepoint.theguardian.com gdpr-tcfv2.sp-prod.net ccpa.sp-prod.net ccpa-service.sp-prod.net ccpa-notice.sp-prod.net cdn.privacy-mgmt.com api.nextgen.guardianapps.co.uk https://api.pwnedpasswords.com localhost:1234 www.google.com o14302.ingest.sentry.io`,
       );
       expect(splitCSPHeader).toContain("object-src 'none'");
       expect(splitCSPHeader).toContain("script-src-attr 'none'");

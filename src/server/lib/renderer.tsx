@@ -2,7 +2,6 @@ import { ClientState } from '@/shared/model/ClientState';
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
 import { App } from '@/client/app';
-import { getConfiguration } from '@/server/lib/getConfiguration';
 import { RoutingConfig } from '@/client/routes';
 import { getAssets } from '@/server/lib/getAssets';
 import { RequestState } from '@/server/models/Express';
@@ -31,8 +30,6 @@ interface RendererOpts {
   pageTitle: PageTitle;
   requestState: RequestState;
 }
-
-const { gaUID } = getConfiguration();
 
 // for safari 10 and 11 although they support modules, we want then to use the legacy bundle
 // as the modern bundle is not compatible with these browser versions
@@ -147,7 +144,6 @@ export const renderer: <P extends RoutePaths>(
         <meta name="theme-color" content="${brandBackground.primary}" />
         <link rel="icon" href="https://static.guim.co.uk/images/${favicon}">
         <title>${pageTitle} | The Guardian</title>
-        <script>window.gaUID = "${gaUID.id}"</script>
 
         <script src="https://assets.guim.co.uk/polyfill.io/v3/polyfill.min.js?features=es2015%2Ces2016%2Ces2017%2Ces2018%2Ces2019%2Ces2020%2Ces2021%2Ces2022%2Cfetch%2CglobalThis%2CURLSearchParams" defer></script>
         ${scriptTags}

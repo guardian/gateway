@@ -1,8 +1,6 @@
 import {
   AWSConfiguration,
   Configuration,
-  GA_UID,
-  GA_UID_HASH,
   GU_API_DOMAIN,
   GU_DOMAIN,
   RedisConfiguration,
@@ -48,8 +46,6 @@ const getStage = (value: string | undefined): Stage => {
 };
 
 interface StageVariables {
-  gaId: string;
-  gaIdHash: string;
   guardianDotcomDomain: string;
   apiDomain: string;
   oktaEnabled: boolean;
@@ -60,8 +56,6 @@ const getStageVariables = (stage: Stage): StageVariables => {
   switch (stage) {
     case 'PROD':
       return {
-        gaId: GA_UID.PROD,
-        gaIdHash: GA_UID_HASH.PROD,
         guardianDotcomDomain: GU_DOMAIN.PROD,
         apiDomain: GU_API_DOMAIN.PROD,
         oktaEnabled: featureSwitches.oktaEnabled.PROD,
@@ -69,8 +63,6 @@ const getStageVariables = (stage: Stage): StageVariables => {
       };
     case 'CODE':
       return {
-        gaId: GA_UID.CODE,
-        gaIdHash: GA_UID_HASH.CODE,
         guardianDotcomDomain: GU_DOMAIN.CODE,
         apiDomain: GU_API_DOMAIN.CODE,
         oktaEnabled: featureSwitches.oktaEnabled.CODE,
@@ -78,8 +70,6 @@ const getStageVariables = (stage: Stage): StageVariables => {
       };
     default:
       return {
-        gaId: GA_UID.DEV,
-        gaIdHash: GA_UID_HASH.DEV,
         guardianDotcomDomain: GU_DOMAIN.DEV,
         apiDomain: GU_API_DOMAIN.DEV,
         oktaEnabled: featureSwitches.oktaEnabled.DEV,
@@ -133,14 +123,8 @@ export const getConfiguration = (): Configuration => {
 
   const stage = getStage(process.env.STAGE);
 
-  const {
-    gaId,
-    gaIdHash,
-    guardianDotcomDomain,
-    apiDomain,
-    oktaEnabled,
-    accountManagementUrl,
-  } = getStageVariables(stage);
+  const { guardianDotcomDomain, apiDomain, oktaEnabled, accountManagementUrl } =
+    getStageVariables(stage);
 
   const isHttps: boolean = JSON.parse(
     getOrThrow(process.env.IS_HTTPS, 'IS_HTTPS config missing.'),
@@ -243,10 +227,6 @@ export const getConfiguration = (): Configuration => {
     baseUri,
     defaultReturnUri,
     stage,
-    gaUID: {
-      id: gaId,
-      hash: gaIdHash,
-    },
     guardianDotcomDomain,
     apiDomain,
     isHttps,
