@@ -31,6 +31,9 @@ const postSignInController = async ({
 }: PostSignInControllerParams) => {
   const redirectUrl = returnUrl || defaultReturnUri;
 
+  // check if we should use IDAPI instead of Okta for legacy flow
+  const useIdapi = res.locals.queryParams.useIdapi;
+
   const optInPromptActive = await (async () => {
     // Treating paths that only differ due to trailing slash as equivalent
     const noTrailingSlash = (str: string) => str.replace(/\/$/, '');
@@ -72,7 +75,10 @@ const postSignInController = async ({
   if (optInPromptActive) {
     return res.redirect(
       303,
-      addReturnUrlToPath('/signin/success', redirectUrl),
+      addReturnUrlToPath(
+        `/signin/success${useIdapi ? '?useIdapi=true' : ''}`,
+        redirectUrl,
+      ),
     );
   }
 
