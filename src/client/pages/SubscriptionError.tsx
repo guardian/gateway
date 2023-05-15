@@ -2,17 +2,23 @@ import React from 'react';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
+import {
+  SubscriptionAction,
+  subscriptionActionName,
+} from '@/shared/lib/subscriptions';
 
-type UnsubscribeErrorProps = {
+type SubscriptionErrorProps = {
   accountManagementUrl?: string;
+  action: SubscriptionAction;
 };
 
-export const UnsubscribeError = ({
+export const SubscriptionError = ({
   accountManagementUrl = 'https://manage.theguardian.com',
-}: UnsubscribeErrorProps) => {
+  action,
+}: SubscriptionErrorProps) => {
   return (
-    <MainLayout pageHeader="Unsubscribe Error">
-      <MainBodyText>Unable to unsubscribe. Please try again.</MainBodyText>
+    <MainLayout pageHeader={`${subscriptionActionName(action)} Error`}>
+      <MainBodyText>Unable to {action}. Please try again.</MainBodyText>
       <MainBodyText>
         If the problem persists, please{' '}
         <ExternalLink

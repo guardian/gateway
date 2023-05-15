@@ -53,6 +53,9 @@ export const ValidRoutePathsArray = [
   '/unsubscribe/:emailType/:data/:token',
   '/unsubscribe/success',
   '/unsubscribe/error',
+  '/subscribe/:emailType/:data/:token',
+  '/subscribe/success',
+  '/subscribe/error',
   '/verify-email', //this can be removed once Jobs has been migrated
   '/welcome',
   '/welcome/:token',
@@ -84,6 +87,7 @@ export type ApiRoutePaths =
   | '/unauth'
   | '/user/change-email'
   | '/unsubscribe'
+  | '/subscribe'
   | '/user/me'
   | '/user/me/consents'
   | '/user/me/group/:groupCode'

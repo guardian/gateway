@@ -2,16 +2,20 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { UnsubscribeSuccess } from './UnsubscribeSuccess';
+import { SubscriptionSuccess } from './SubscriptionSuccess';
 
 export default {
-  title: 'Pages/UnsubscribeSuccess',
-  component: UnsubscribeSuccess,
+  title: 'Pages/SubscriptionSuccess',
+  component: SubscriptionSuccess,
   parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => (
-  <UnsubscribeSuccess accountManagementUrl="#" returnUrl="#" />
+  <SubscriptionSuccess
+    accountManagementUrl="#"
+    returnUrl="#"
+    action={'unsubscribe'}
+  />
 );
 Default.story = {
   name: 'with defaults',
