@@ -1,7 +1,7 @@
 import helmet, { HelmetOptions } from 'helmet';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 
-const { baseUri, gaUID, apiDomain, idapiBaseUrl, stage } = getConfiguration();
+const { baseUri, apiDomain, idapiBaseUrl, stage } = getConfiguration();
 
 enum HELMET_OPTIONS {
   SELF = "'self'",
@@ -13,7 +13,6 @@ enum HELMET_OPTIONS {
 enum CSP_VALID_URI {
   GSTATIC_RECAPTCHA = 'www.gstatic.com',
   GOOGLE_RECAPTCHA = 'www.google.com',
-  GOOGLE_ANALYTICS = 'www.google-analytics.com',
   GUARDIAN_STATIC = 'static.guim.co.uk',
   GUARDIAN_ASSETS = 'assets.guim.co.uk',
   GUARDIAN_API = 'api.nextgen.guardianapps.co.uk',
@@ -29,8 +28,6 @@ const idapiOrigin = idapiBaseUrl.replace(/https?:\/\/|\/identity-api/g, '');
 
 const scriptSrc = [
   `${baseUri}`,
-  gaUID.hash, // google analytics id
-  CSP_VALID_URI.GOOGLE_ANALYTICS,
   CSP_VALID_URI.CMP,
   CSP_VALID_URI.GOOGLE_RECAPTCHA,
   CSP_VALID_URI.GSTATIC_RECAPTCHA,
@@ -51,12 +48,10 @@ const helmetConfig: HelmetOptions = {
         `${baseUri}`,
         CSP_VALID_URI.GUARDIAN_STATIC,
         CSP_VALID_URI.OPHAN,
-        CSP_VALID_URI.GOOGLE_ANALYTICS,
         CSP_VALID_URI.GOOGLE_RECAPTCHA,
       ],
       fontSrc: [CSP_VALID_URI.GUARDIAN_ASSETS],
       connectSrc: [
-        CSP_VALID_URI.GOOGLE_ANALYTICS,
         CSP_VALID_URI.VENDORLIST_CMP,
         `${CSP_VALID_URI.GUARDIAN_CONSENTS_LOGS}${apiDomain}`,
         CSP_VALID_URI.CMP,

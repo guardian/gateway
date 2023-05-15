@@ -1,4 +1,8 @@
 name: Cypress Tests
+permissions:
+  # required by aws-actions/configure-aws-credentials
+  id-token: write
+  contents: read
 on:
   push:
     branches:

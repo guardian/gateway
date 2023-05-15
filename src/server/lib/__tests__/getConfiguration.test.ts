@@ -1,12 +1,7 @@
 /* eslint-disable functional/immutable-data */
 /* Linting rule disable as unit test needs to mutate env */
 import type { Configuration } from '@/server/models/Configuration';
-import {
-  GA_UID,
-  GA_UID_HASH,
-  GU_DOMAIN,
-  GU_API_DOMAIN,
-} from '@/server/models/Configuration';
+import { GU_DOMAIN, GU_API_DOMAIN } from '@/server/models/Configuration';
 
 describe('getConfiguration', () => {
   const ORIGINAL_ENVIRONMENT_VARIABLES = process.env;
@@ -83,10 +78,6 @@ describe('getConfiguration', () => {
       signInPageUrl: 'sign-in-page-url',
       defaultReturnUri: 'default-return-uri',
       stage: 'DEV',
-      gaUID: {
-        id: GA_UID.DEV,
-        hash: GA_UID_HASH.DEV,
-      },
       guardianDotcomDomain: GU_DOMAIN.DEV,
       apiDomain: GU_API_DOMAIN.DEV,
       isHttps: true,
