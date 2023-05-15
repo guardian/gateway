@@ -63,12 +63,20 @@ router.get(
     const { returnUrl } = res.locals.queryParams;
 
     // We try the logout sequentially, as we need to log users out from Okta first,
-    await signOutFromOkta(req, res);
+    try {
+      await signOutFromOkta(req, res);
+    } catch (e) {
+      logger.error('Error signing out from Okta', e);
+    }
 
     // if the user has no Okta sid cookie, we will then try and log them out from IDAPI
     // the user will be in this state if they previously had their Okta cookie removed and got
     // redirected back to the /signout endpoint
-    await signOutFromIDAPI(req, res);
+    try {
+      await signOutFromIDAPI(req, res);
+    } catch (e) {
+      logger.error('Error signing out from IDAPI', e);
+    }
 
     // clear dotcom cookies
     clearDotComCookies(res);

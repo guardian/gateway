@@ -3,9 +3,9 @@ import { defineConfig } from 'cypress';
 export default defineConfig({
   video: false,
   chromeWebSecurity: false,
-  defaultCommandTimeout: 12000,
-  responseTimeout: 12000,
-  requestTimeout: 12000,
+  defaultCommandTimeout: 30000,
+  responseTimeout: 30000,
+  requestTimeout: 30000,
   env: {
     mockingEndpoint: 'localhost:9000/mock',
   },

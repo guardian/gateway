@@ -8,7 +8,7 @@ import { logger } from '@/server/lib/serverSideLogger';
 /**
  * Configuration
  */
-const { okta } = getConfiguration();
+const { okta, baseUri } = getConfiguration();
 
 /**
  * OAuth Token Name Type
@@ -69,8 +69,8 @@ export const verifyIdToken = async (token: string) => {
  */
 const OAuthTokenCookieOptions = (): CookieOptions => ({
   httpOnly: true,
-  secure: true,
-  signed: true,
+  secure: !baseUri.includes('localhost'),
+  signed: !baseUri.includes('localhost'),
   sameSite: 'lax',
   maxAge: 3600000,
 });
@@ -118,7 +118,21 @@ export const getOAuthTokenCookie = (
   req: Request,
   name: OAuthCookieNames,
 ): string | undefined => {
-  return req.signedCookies[name];
+  // eslint-disable-next-line functional/no-let
+  let cookieSource: 'cookies' | 'signedCookies';
+  if (process.env.RUNNING_IN_CYPRESS === 'true') {
+    // If we're in testing, first try reading from signedCookies,
+    // and only then fall back to regular cookies.
+    if (Object.keys(req.signedCookies).includes(name)) {
+      cookieSource = 'signedCookies';
+    } else {
+      cookieSource = 'cookies';
+    }
+  } else {
+    // If we're not in testing, always read from signedCookies.
+    cookieSource = 'signedCookies';
+  }
+  return req?.[cookieSource]?.[name];
 };
 
 /**

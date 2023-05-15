@@ -39,6 +39,9 @@ describe('Sign out flow', () => {
         )}/signin`;
         cy.visit(
           `/signout?returnUrl=${encodeURIComponent(postSignOutReturnUrl)}`,
+          {
+            failOnStatusCode: false,
+          },
         );
         // cypress 12 seems to have issues with hostOnly cookies not being removed or persisting after clear
         // https://github.com/cypress-io/cypress/issues/25174

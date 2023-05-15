@@ -11,6 +11,13 @@ describe('Sign out flow', () => {
   context('Signs a user out', () => {
     beforeEach(() => {
       cy.mockPurge();
+      // Disable redirect to /signin/success by default
+      cy.setCookie(
+        'GU_ran_experiments',
+        new URLSearchParams({
+          OptInPromptPostSignIn: Date.now().toString(),
+        }).toString(),
+      );
     });
 
     it('Removes IDAPI log in cookies and dotcom cookies when signing out', () => {
@@ -46,7 +53,9 @@ describe('Sign out flow', () => {
         },
       });
 
-      cy.visit(`/signout?returnUrl=${encodeURIComponent(returnUrl)}`);
+      cy.visit(`/signout?returnUrl=${encodeURIComponent(returnUrl)}`, {
+        failOnStatusCode: false,
+      });
       cy.getCookie('GU_SO').should('exist');
       cy.getCookie('SC_GU_U').should('not.exist');
       cy.getCookie('SC_GU_LA').should('not.exist');

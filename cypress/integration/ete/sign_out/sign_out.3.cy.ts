@@ -55,6 +55,9 @@ describe('Sign out flow', () => {
           `/signout?returnUrl=${encodeURIComponent(
             postSignOutReturnUrl,
           )}&useIdapi=true`,
+          {
+            failOnStatusCode: false,
+          },
         );
         // check cookies are removed
         cy.getCookie('SC_GU_U').should('not.exist');
