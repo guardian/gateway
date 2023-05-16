@@ -9,10 +9,44 @@ import {
 } from '@/server/lib/okta/openid-connect';
 import { closeSession } from './api/sessions';
 
+/**
+ * List of individual scopes that can be requested by gateway
+ *
+ * However use one of the following lists instead of selecting individually:
+ * scopesForAuthentication or scopesForApplication
+ */
 type Scopes =
   | 'openid'
-  // the `guardian.identity-api.cookies.create.self.secure scope` is checked on IDAPI to return legacy identity cookies on authentication
-  | 'guardian.identity-api.cookies.create.self.secure';
+  | 'profile'
+  | 'email'
+  | 'guardian.identity-api.cookies.create.self.secure'
+  | 'guardian.members-data-api.read.self'
+  | 'guardian.identity-api.newsletters.read.self'
+  | 'guardian.identity-api.newsletters.update.self';
+
+/**
+ * @name scopesForAuthentication
+ * @description Scopes to use when performing authentication (e.g sign in, set password)
+ */
+export const scopesForAuthentication: Scopes[] = [
+  'openid',
+  'profile',
+  'guardian.identity-api.cookies.create.self.secure',
+  'guardian.members-data-api.read.self',
+  'guardian.identity-api.newsletters.read.self',
+];
+
+/**
+ * @name scopesForApplication
+ * @description Scopes to use when performing application actions (e.g. onboarding flow, post sign in prompt)
+ */
+export const scopesForApplication: Scopes[] = [
+  'openid',
+  'profile',
+  'email',
+  'guardian.identity-api.newsletters.read.self',
+  'guardian.identity-api.newsletters.update.self',
+];
 
 /**
  * @param closeExistingSession (optional) - if true, we'll close any existing okta session before calling the authorization code flow
@@ -31,7 +65,7 @@ interface PerformAuthorizationCodeFlowOptions {
   idp?: string;
   prompt?: 'login' | 'none';
   redirectUri: string;
-  scopes?: Scopes[];
+  scopes: Scopes[];
   sessionToken?: string | null;
 }
 

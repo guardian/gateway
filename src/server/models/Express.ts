@@ -10,11 +10,17 @@ import {
 import { Participations, ABTestAPI } from '@guardian/ab-core';
 import { OphanConfig } from '@/server/lib/ophan';
 import Bowser from 'bowser';
+import { Jwt } from '@okta/jwt-verifier';
 
 export interface ABTesting {
   mvtId: number;
   participations: Participations;
   forcedTestVariants: Participations;
+}
+
+export interface OAuthState {
+  accessToken?: Jwt;
+  idToken?: Jwt;
 }
 
 export interface RequestState {
@@ -32,6 +38,7 @@ export interface RequestState {
   ophanConfig: OphanConfig;
   sentryConfig: SentryConfig;
   browser: Bowser.Parser.Details;
+  oauthState: OAuthState;
   requestId?: string;
 }
 

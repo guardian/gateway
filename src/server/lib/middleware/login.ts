@@ -10,8 +10,77 @@ import { logger } from '@/server/lib/serverSideLogger';
 import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { buildUrl } from '@/shared/lib/routeUtils';
+import {
+  performAuthorizationCodeFlow,
+  scopesForApplication,
+} from '@/server/lib/okta/oauth';
+import { RoutePaths } from '@/shared/model/Routes';
+import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
+import {
+  deleteOAuthTokenCookie,
+  getOAuthTokenCookie,
+  verifyAccessToken,
+  verifyIdToken,
+} from '@/server/lib/okta/tokens';
 
 const profileUrl = getProfileUrl();
+
+export const loginMiddlewareOAuth = async (
+  req: Request,
+  res: ResponseWithRequestState,
+  next: NextFunction,
+) => {
+  if (res.locals.queryParams.useIdapi) {
+    return loginMiddleware(req, res, next);
+  }
+
+  // if a user has the GU_SO cookie, they have recently signed out
+  // so we need to clear any existing tokens
+  // and perform the auth code flow to get new tokens to
+  // get new tokens and log the user in if necessary
+  if (req.cookies.GU_SO) {
+    // clear existing tokens
+    deleteOAuthTokenCookie(res, 'GU_ACCESS_TOKEN');
+    deleteOAuthTokenCookie(res, 'GU_ID_TOKEN');
+
+    // perform the auth code flow
+    return performAuthorizationCodeFlow(req, res, {
+      redirectUri: ProfileOpenIdClientRedirectUris.APPLICATION,
+      scopes: scopesForApplication,
+      confirmationPagePath: req.path as RoutePaths, //req.path will always be a RoutePaths
+    });
+  }
+
+  // no
+  // 2. has valid oauth access and id tokens
+  const accessTokenCookie = getOAuthTokenCookie(req, 'GU_ACCESS_TOKEN');
+  const idTokenCookie = getOAuthTokenCookie(req, 'GU_ID_TOKEN');
+
+  if (accessTokenCookie && idTokenCookie) {
+    const accessToken = await verifyAccessToken(accessTokenCookie);
+    const idToken = await verifyIdToken(idTokenCookie);
+
+    // yes: isLoggedIn = true, no need to get new tokens
+    if (accessToken && idToken && !accessToken.isExpired()) {
+      // store the oauth state in res.locals state
+      // eslint-disable-next-line functional/immutable-data
+      res.locals.oauthState = {
+        accessToken,
+        idToken,
+      };
+
+      return next();
+    }
+  }
+
+  // no: attempt to do auth code flow to get new tokens
+  // perform the auth code flow
+  return performAuthorizationCodeFlow(req, res, {
+    redirectUri: ProfileOpenIdClientRedirectUris.APPLICATION,
+    scopes: scopesForApplication,
+    confirmationPagePath: req.path as RoutePaths, //req.path will always be a RoutePaths
+  });
+};
 
 export const loginMiddleware = async (
   req: Request,

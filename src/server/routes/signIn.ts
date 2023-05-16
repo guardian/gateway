@@ -30,7 +30,10 @@ import {
 } from '@/server/lib/idapi/consents';
 import { loginMiddleware } from '@/server/lib/middleware/login';
 import postSignInController from '@/server/lib/postSignInController';
-import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
+import {
+  performAuthorizationCodeFlow,
+  scopesForAuthentication,
+} from '@/server/lib/okta/oauth';
 import { getSession } from '../lib/okta/api/sessions';
 import { redirectIfLoggedIn } from '../lib/middleware/redirectIfLoggedIn';
 import { getUser, getUserGroups } from '../lib/okta/api/users';
@@ -464,7 +467,7 @@ const oktaSignInController = async ({
       sessionToken: response.sessionToken,
       closeExistingSession: true,
       prompt: 'none',
-      scopes: ['openid', 'guardian.identity-api.cookies.create.self.secure'],
+      scopes: scopesForAuthentication,
       redirectUri: ProfileOpenIdClientRedirectUris.AUTHENTICATION,
     });
   } catch (error) {
@@ -600,10 +603,7 @@ router.get(
         return performAuthorizationCodeFlow(req, res, {
           doNotSetLastAccessCookie: true,
           prompt: 'none',
-          scopes: [
-            'openid',
-            'guardian.identity-api.cookies.create.self.secure',
-          ],
+          scopes: scopesForAuthentication,
           redirectUri: ProfileOpenIdClientRedirectUris.AUTHENTICATION,
         });
       } catch {
@@ -658,7 +658,7 @@ router.get(
       return await performAuthorizationCodeFlow(req, res, {
         idp,
         closeExistingSession: true,
-        scopes: ['openid', 'guardian.identity-api.cookies.create.self.secure'],
+        scopes: scopesForAuthentication,
         redirectUri: ProfileOpenIdClientRedirectUris.AUTHENTICATION,
       });
     } else {
