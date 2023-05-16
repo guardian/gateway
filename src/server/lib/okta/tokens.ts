@@ -4,6 +4,7 @@ import OktaJwtVerifier from '@okta/jwt-verifier';
 import { joinUrl } from '@guardian/libs';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/serverSideLogger';
+import ms from 'ms';
 
 /**
  * Configuration
@@ -65,15 +66,13 @@ export const verifyIdToken = async (token: string) => {
 
 /**
  * Token cookie options
- * Expiry is set to 1 hour by default, which matches the token expiry
  */
-const OAuthTokenCookieOptions = (): CookieOptions => ({
+const OAuthTokenCookieOptions: CookieOptions = {
   httpOnly: true,
   secure: !baseUri.includes('localhost'),
   signed: !baseUri.includes('localhost'),
   sameSite: 'lax',
-  maxAge: 3600000,
-});
+};
 
 /**
  * @name setOAuthTokenCookie
@@ -99,7 +98,10 @@ export const setOAuthTokenCookie = (
   name: OAuthCookieNames,
   value: string,
 ): void => {
-  res.cookie(name, value, OAuthTokenCookieOptions());
+  res.cookie(name, value, {
+    ...OAuthTokenCookieOptions,
+    maxAge: ms('1h'), // Expiry is set to 1 hour, which matches the token expiry
+  });
 };
 
 /**
@@ -147,10 +149,28 @@ export const deleteOAuthTokenCookie = (
   res: ResponseWithRequestState,
   name: OAuthCookieNames,
 ): void => {
-  // clear the cookie by setting the maxAge to 0, which
-  // effectively tells the browser to remove the cookie
-  res.cookie(name, '', {
-    ...OAuthTokenCookieOptions(),
-    maxAge: 0,
-  });
+  res.clearCookie(name, OAuthTokenCookieOptions);
+};
+
+/**
+ * @name checkAndDeleteOAuthTokenCookies
+ * @description Check if the OAuth token cookies exist and delete them if they do
+ *
+ * @param req - Express request
+ * @param res - Express response
+ */
+export const checkAndDeleteOAuthTokenCookies = (
+  req: Request,
+  res: ResponseWithRequestState,
+): void => {
+  const accessToken = getOAuthTokenCookie(req, OAuthAccessTokenCookieName);
+  const idToken = getOAuthTokenCookie(req, OAuthIdTokenCookieName);
+
+  if (accessToken) {
+    deleteOAuthTokenCookie(res, OAuthAccessTokenCookieName);
+  }
+
+  if (idToken) {
+    deleteOAuthTokenCookie(res, OAuthIdTokenCookieName);
+  }
 };

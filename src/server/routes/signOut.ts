@@ -14,6 +14,7 @@ import { clearEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { clearUserSessions } from '@/server/lib/okta/api/users';
 import { getSession } from '@/server/lib/okta/api/sessions';
+import { checkAndDeleteOAuthTokenCookies } from '@/server/lib/okta/tokens';
 
 const { defaultReturnUri, baseUri } = getConfiguration();
 
@@ -75,6 +76,9 @@ router.get(
     // clear gateway specific cookies
     deleteAuthorizationStateCookie(res);
     clearEncryptedStateCookie(res);
+
+    // clear oauth application cookies
+    checkAndDeleteOAuthTokenCookies(req, res);
 
     // set the GU_SO (sign out) cookie
     setSignOutCookie(res);
