@@ -28,7 +28,7 @@ import {
   getConsentValueFromRequestBody,
   update as patchConsents,
 } from '@/server/lib/idapi/consents';
-import { loginMiddleware } from '@/server/lib/middleware/login';
+import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
 import postSignInController from '@/server/lib/postSignInController';
 import {
   performAuthorizationCodeFlow,
@@ -540,7 +540,7 @@ const optInPromptController = async (
 
 router.get(
   '/signin/success',
-  loginMiddleware,
+  loginMiddlewareOAuth,
   handleAsyncErrors((req: Request, res: ResponseWithRequestState) =>
     optInPromptController(req, res),
   ),
@@ -548,7 +548,7 @@ router.get(
 
 router.post(
   '/signin/success',
-  loginMiddleware,
+  loginMiddlewareOAuth,
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const state = res.locals;
     const { returnUrl } = state.pageData;
