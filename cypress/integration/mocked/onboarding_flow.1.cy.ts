@@ -16,8 +16,8 @@ import {
 import {
   verifiedUserWithNoConsent,
   createUser,
-  USER_ERRORS,
   USER_ENDPOINT,
+  USER_CONSENTS_ENDPOINT,
 } from '../../support/idapi/user';
 import { setAuthCookies } from '../../support/idapi/cookie';
 import CommunicationsPage from '../../support/pages/onboarding/communications_page';
@@ -39,12 +39,16 @@ import {
   getGeoLocationHeaders,
   GEOLOCATION_CODES,
 } from '../../support/geolocation';
+import { setMvtId } from '../../support/commands/setMvtId';
 
 const { NEWSLETTERS } = NewslettersPage.CONTENT;
 
+// TODO: remove this once we have migrated fully to OAuth as we're unable to mock the OAuth flow to get Tokens
+// TODO: best thing to do will move as much as possible to the ete tests
 describe('Onboarding flow', () => {
   beforeEach(() => {
     cy.mockPurge();
+    setMvtId('0');
   });
 
   context('Full flow', () => {
@@ -58,6 +62,11 @@ describe('Onboarding flow', () => {
       cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
       cy.mockAll(200, allNewsletters, NEWSLETTER_ENDPOINT);
       cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
+      cy.mockAll(
+        200,
+        verifiedUserWithNoConsent.user.consents,
+        USER_CONSENTS_ENDPOINT,
+      );
       cy.mockAll(200, userNewsletters(), NEWSLETTER_SUBSCRIPTION_ENDPOINT);
     });
 
@@ -91,6 +100,7 @@ describe('Onboarding flow', () => {
       CommunicationsPage.gotoFlowStart({
         query: {
           returnUrl,
+          useIdapi: 'true',
         },
       });
       cy.acceptCMP();
@@ -153,6 +163,7 @@ describe('Onboarding flow', () => {
 
       // user consents mock response for review of consents flow
       cy.mockAll(200, createUser(consent), USER_ENDPOINT);
+      cy.mockAll(200, consent, USER_CONSENTS_ENDPOINT);
 
       // mock load user newsletters
       cy.mockAll(
@@ -200,6 +211,7 @@ describe('Onboarding flow', () => {
       CommunicationsPage.gotoFlowStart({
         query: {
           returnUrl,
+          useIdapi: 'true',
         },
       });
 
@@ -251,6 +263,7 @@ describe('Onboarding flow', () => {
       cy.mockNext(200);
 
       cy.mockAll(200, createUser(optedOutUserConsent), USER_ENDPOINT);
+      cy.mockAll(200, optedOutUserConsent, USER_CONSENTS_ENDPOINT);
 
       YourDataPage.saveAndContinueButton().click();
       // Explicity check '_optin' consents are in inverted back to '_optouts' when posted
@@ -288,7 +301,11 @@ describe('Onboarding flow', () => {
     it('uses a default returnUrl if none provided', () => {
       const returnUrl = encodeURIComponent(Cypress.env('DEFAULT_RETURN_URI'));
 
-      CommunicationsPage.gotoFlowStart();
+      CommunicationsPage.gotoFlowStart({
+        query: {
+          useIdapi: 'true',
+        },
+      });
 
       cy.url().should('include', CommunicationsPage.URL);
       cy.url().should('include', `returnUrl=${returnUrl}`);
@@ -331,7 +348,7 @@ describe('Onboarding flow', () => {
       cy.setCookie('SC_GU_LA', 'FAKE_SC_GU_LA');
 
       cy.request({
-        url: Onboarding.URL,
+        url: `${Onboarding.URL}?useIdapi=true`,
         followRedirect: false,
       }).then((res) => {
         expect(res.status).to.eq(303);
@@ -345,7 +362,7 @@ describe('Onboarding flow', () => {
       cy.setCookie('SC_GU_U', 'FAKE_SC_GU_U');
 
       cy.request({
-        url: Onboarding.URL,
+        url: `${Onboarding.URL}?useIdapi=true`,
         followRedirect: false,
       }).then((res) => {
         expect(res.status).to.eq(303);
@@ -363,7 +380,7 @@ describe('Onboarding flow', () => {
       cy.mockAll(200, emailNotValidatedResponse, AUTH_REDIRECT_ENDPOINT);
 
       cy.request({
-        url: Onboarding.URL,
+        url: `${Onboarding.URL}?useIdapi=true`,
         followRedirect: false,
       }).then((res) => {
         expect(res.status).to.eq(303);
@@ -379,7 +396,7 @@ describe('Onboarding flow', () => {
         AUTH_REDIRECT_ENDPOINT,
       );
       cy.request({
-        url: Onboarding.URL,
+        url: `${Onboarding.URL}?useIdapi=true`,
         followRedirect: false,
       }).then((res) => {
         expect(res.status).to.eq(303);
@@ -399,7 +416,7 @@ describe('Onboarding flow', () => {
       cy.mockAll(200, emailNotValidatedResponse, AUTH_REDIRECT_ENDPOINT);
 
       cy.request({
-        url: Onboarding.URL,
+        url: `${Onboarding.URL}?useIdapi=true`,
         followRedirect: false,
       }).then((res) => {
         expect(res.status).to.eq(303);
@@ -421,7 +438,7 @@ describe('Onboarding flow', () => {
       cy.mockAll(200, emailNotValidatedResponse, AUTH_REDIRECT_ENDPOINT);
 
       cy.request({
-        url: Onboarding.URL,
+        url: `${Onboarding.URL}?useIdapi=true`,
         followRedirect: false,
       }).then((res) => {
         expect(res.status).to.eq(303);
@@ -433,7 +450,7 @@ describe('Onboarding flow', () => {
       setAuthCookies();
       cy.mockAll(502, 'gateway error', AUTH_REDIRECT_ENDPOINT);
       cy.request({
-        url: Onboarding.URL,
+        url: `${Onboarding.URL}?useIdapi=true`,
         followRedirect: false,
       }).then((res) => {
         expect(res.status).to.eq(303);
@@ -456,35 +473,63 @@ describe('Onboarding flow', () => {
     });
 
     it('has no detectable a11y violations', () => {
-      cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
-      CommunicationsPage.goto();
+      cy.mockAll(
+        200,
+        verifiedUserWithNoConsent.user.consents,
+        USER_CONSENTS_ENDPOINT,
+      );
+      CommunicationsPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       injectAndCheckAxe();
     });
 
     it('had no detectable a11y voilations if previously selected consents', () => {
       const consented = getUserConsents(['jobs', 'offers']);
-      cy.mockAll(200, createUser(consented), USER_ENDPOINT);
-      CommunicationsPage.goto();
+      cy.mockAll(200, consented, USER_CONSENTS_ENDPOINT);
+      CommunicationsPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       injectAndCheckAxe();
     });
 
     it('has no detectable a11y violations on with an error', () => {
       cy.mockAll(500, {}, USER_ENDPOINT);
-      CommunicationsPage.goto();
+      CommunicationsPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       injectAndCheckAxe();
     });
 
     it('shows correct contact options, none checked by default', () => {
-      cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
-      CommunicationsPage.goto();
+      cy.mockAll(
+        200,
+        verifiedUserWithNoConsent.user.consents,
+        USER_CONSENTS_ENDPOINT,
+      );
+      CommunicationsPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       CommunicationsPage.backButton().should('not.exist');
       CommunicationsPage.allCheckboxes().should('not.be.checked');
     });
 
     it('shows any previously selected consents', () => {
       const consented = getUserConsents(['supporter']);
-      cy.mockAll(200, createUser(consented), USER_ENDPOINT);
-      CommunicationsPage.goto();
+      cy.mockAll(200, consented, USER_CONSENTS_ENDPOINT);
+      CommunicationsPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       CommunicationsPage.backButton().should('not.exist');
       CommunicationsPage.consentCheckboxWithTitle(
         'Supporting the Guardian',
@@ -492,16 +537,24 @@ describe('Onboarding flow', () => {
     });
 
     it('displays a relevant error message on user end point failure', () => {
-      cy.mockAll(500, {}, USER_ENDPOINT);
-      CommunicationsPage.goto();
-      CommunicationsPage.errorBanner().contains(USER_ERRORS.GENERIC);
+      cy.mockAll(500, {}, USER_CONSENTS_ENDPOINT);
+      CommunicationsPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
+      CommunicationsPage.errorBanner().contains(CONSENT_ERRORS.GENERIC);
       CommunicationsPage.backButton().should('not.exist');
       CommunicationsPage.saveAndContinueButton().should('not.exist');
     });
 
     it('displays a relevant error on consents endpoint failure', () => {
       cy.mockAll(500, {}, CONSENTS_ENDPOINT);
-      CommunicationsPage.goto();
+      CommunicationsPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       CommunicationsPage.errorBanner().contains(CONSENT_ERRORS.GENERIC);
       CommunicationsPage.backButton().should('not.exist');
       CommunicationsPage.saveAndContinueButton().should('not.exist');
@@ -519,13 +572,17 @@ describe('Onboarding flow', () => {
       cy.mockAll(200, allNewsletters, NEWSLETTER_ENDPOINT);
       cy.mockAll(200, userNewsletters(), NEWSLETTER_SUBSCRIPTION_ENDPOINT);
       cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
-      cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
+      cy.mockAll(
+        200,
+        verifiedUserWithNoConsent.user.consents,
+        USER_CONSENTS_ENDPOINT,
+      );
     });
 
     it('has no detectable a11y violations', () => {
       const headers = getGeoLocationHeaders(GEOLOCATION_CODES.GB);
 
-      cy.visit(NewslettersPage.URL, { headers });
+      cy.visit(NewslettersPage.URL, { headers, qs: { useIdapi: 'true' } });
       injectAndCheckAxe();
     });
 
@@ -536,20 +593,28 @@ describe('Onboarding flow', () => {
         userNewsletters(newslettersToSubscribe),
         NEWSLETTER_SUBSCRIPTION_ENDPOINT,
       );
-      NewslettersPage.goto();
+      NewslettersPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       injectAndCheckAxe();
     });
 
     it('has no detectable a11y violations on with an error', () => {
       cy.mockAll(500, {}, NEWSLETTER_ENDPOINT);
-      NewslettersPage.goto();
+      NewslettersPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       injectAndCheckAxe();
     });
 
     it('correct newsletters shown for uk, none checked by default', () => {
       const headers = getGeoLocationHeaders(GEOLOCATION_CODES.GB);
 
-      cy.visit(NewslettersPage.URL, { headers });
+      cy.visit(NewslettersPage.URL, { headers, qs: { useIdapi: 'true' } });
 
       NewslettersPage.checkboxWithTitle(NEWSLETTERS.FIRST_EDITION_UK).should(
         'not.be.checked',
@@ -571,7 +636,7 @@ describe('Onboarding flow', () => {
     it('correct newsletters shown for United States of America, none checked by default', () => {
       const headers = getGeoLocationHeaders(GEOLOCATION_CODES.AMERICA);
 
-      cy.visit(NewslettersPage.URL, { headers });
+      cy.visit(NewslettersPage.URL, { headers, qs: { useIdapi: 'true' } });
 
       NewslettersPage.checkboxWithTitle(NEWSLETTERS.MORNING_BRIEFING_US).should(
         'not.be.checked',
@@ -593,7 +658,7 @@ describe('Onboarding flow', () => {
     it('correct newsletters shown for Australia, none checked by default', () => {
       const headers = getGeoLocationHeaders(GEOLOCATION_CODES.AUSTRALIA);
 
-      cy.visit(NewslettersPage.URL, { headers });
+      cy.visit(NewslettersPage.URL, { headers, qs: { useIdapi: 'true' } });
 
       NewslettersPage.checkboxWithTitle(NEWSLETTERS.MORNING_MAIL_AU).should(
         'not.be.checked',
@@ -618,7 +683,7 @@ describe('Onboarding flow', () => {
       cy.setEncryptedStateCookie({
         isCmpConsented: true,
       });
-      cy.visit(NewslettersPage.URL, { headers });
+      cy.visit(NewslettersPage.URL, { headers, qs: { useIdapi: 'true' } });
 
       NewslettersPage.checkboxWithTitle(NEWSLETTERS.MORNING_MAIL_AU).should(
         'not.be.checked',
@@ -641,7 +706,7 @@ describe('Onboarding flow', () => {
     it('correct newsletters shown for rest of the world, none checked by default', () => {
       const headers = getGeoLocationHeaders(GEOLOCATION_CODES.OTHERS);
 
-      cy.visit(NewslettersPage.URL, { headers });
+      cy.visit(NewslettersPage.URL, { headers, qs: { useIdapi: 'true' } });
 
       NewslettersPage.checkboxWithTitle(NEWSLETTERS.FIRST_EDITION_UK).should(
         'not.be.checked',
@@ -668,8 +733,12 @@ describe('Onboarding flow', () => {
         NEWSLETTER_SUBSCRIPTION_ENDPOINT,
       );
       const consented = getUserConsents(['events']);
-      cy.mockAll(200, createUser(consented), USER_ENDPOINT);
-      NewslettersPage.goto();
+      cy.mockAll(200, consented, USER_CONSENTS_ENDPOINT);
+      NewslettersPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
 
       NewslettersPage.checkboxWithTitle(NEWSLETTERS.FIRST_EDITION_UK).should(
         'not.be.checked',
@@ -687,7 +756,11 @@ describe('Onboarding flow', () => {
 
     it('displays a relevant error on newsletters endpoint failure', () => {
       cy.mockAll(500, {}, NEWSLETTER_ENDPOINT);
-      NewslettersPage.goto();
+      NewslettersPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       NewslettersPage.errorBanner().contains(NEWSLETTER_ERRORS.GENERIC);
       NewslettersPage.backButton().should('not.exist');
       NewslettersPage.saveAndContinueButton().should('not.exist');
@@ -695,7 +768,11 @@ describe('Onboarding flow', () => {
 
     it('displays a relevant error on newsletters subscription endpoint failure', () => {
       cy.mockAll(500, {}, NEWSLETTER_SUBSCRIPTION_ENDPOINT);
-      NewslettersPage.goto();
+      NewslettersPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       NewslettersPage.errorBanner().contains(NEWSLETTER_ERRORS.GENERIC);
       NewslettersPage.backButton().should('not.exist');
       NewslettersPage.saveAndContinueButton().should('not.exist');
@@ -711,40 +788,68 @@ describe('Onboarding flow', () => {
         AUTH_REDIRECT_ENDPOINT,
       );
       cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
-      cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
+      cy.mockAll(
+        200,
+        verifiedUserWithNoConsent.user.consents,
+        USER_CONSENTS_ENDPOINT,
+      );
     });
 
     it('has no detectable a11y violations', () => {
-      YourDataPage.goto();
+      YourDataPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       injectAndCheckAxe();
     });
 
     it('had no detectable a11y voilations if previously selected consent', () => {
-      cy.mockAll(200, createUser(optedOutUserConsent), USER_ENDPOINT);
-      YourDataPage.goto();
+      cy.mockAll(200, optedOutUserConsent, USER_CONSENTS_ENDPOINT);
+      YourDataPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       injectAndCheckAxe();
     });
 
     it('has no detectable a11y violations on with an error', () => {
       cy.mockAll(500, {}, CONSENTS_ENDPOINT);
-      YourDataPage.goto();
+      YourDataPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       injectAndCheckAxe();
     });
 
     it('displays the marketing profile opt in switch, toggled ON by default', () => {
-      YourDataPage.goto();
+      YourDataPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       YourDataPage.marketingOptInSwitch().should('be.checked');
     });
 
     it('displays the marketing profile opt in switch, toggled OFF if the user has previously opted out', () => {
-      cy.mockAll(200, createUser(optedOutUserConsent), USER_ENDPOINT);
-      YourDataPage.goto();
+      cy.mockAll(200, optedOutUserConsent, USER_CONSENTS_ENDPOINT);
+      YourDataPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       YourDataPage.marketingOptInSwitch().should('not.be.checked');
     });
 
     it('displays the personalised advertising permission if user has all CMP consents, toggled OFF by default', () => {
       cy.enableCMP();
-      YourDataPage.goto();
+      YourDataPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       cy.acceptCMP();
 
       YourDataPage.marketingOptInSwitch().should('be.checked');
@@ -755,10 +860,14 @@ describe('Onboarding flow', () => {
       cy.enableCMP();
       cy.mockAll(
         200,
-        createUser(optedIntoPersonalisedAdvertisingUserConsent),
-        USER_ENDPOINT,
+        optedIntoPersonalisedAdvertisingUserConsent,
+        USER_CONSENTS_ENDPOINT,
       );
-      YourDataPage.goto();
+      YourDataPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       cy.acceptCMP();
 
       YourDataPage.marketingOptInSwitch().should('be.checked');
@@ -766,13 +875,21 @@ describe('Onboarding flow', () => {
     });
 
     it('does not display the personalised advertising permission if user does not have CMP consents set', () => {
-      YourDataPage.goto();
+      YourDataPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       YourDataPage.personalisedAdvertisingOptIn().should('not.exist');
     });
 
     it('does not display the personalised advertising permission if user has not accepted CMP consents', () => {
       cy.enableCMP();
-      YourDataPage.goto();
+      YourDataPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       cy.declineCMP();
 
       YourDataPage.personalisedAdvertisingOptIn().should('not.exist');
@@ -781,23 +898,35 @@ describe('Onboarding flow', () => {
     it('does not display the personalised advertising permission if user has all CMP consents, but has an ad free gu cookie', () => {
       cy.enableCMP();
       cy.setAdFreeCookie();
-      YourDataPage.goto();
+      YourDataPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       cy.acceptCMP();
 
       YourDataPage.personalisedAdvertisingOptIn().should('not.exist');
     });
 
     it('display a relevant error message on user end point failure', () => {
-      cy.mockAll(500, {}, USER_ENDPOINT);
-      YourDataPage.goto();
-      YourDataPage.errorBanner().contains(USER_ERRORS.GENERIC);
+      cy.mockAll(500, {}, USER_CONSENTS_ENDPOINT);
+      YourDataPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
+      YourDataPage.errorBanner().contains(CONSENT_ERRORS.GENERIC);
       YourDataPage.backButton().should('not.exist');
       YourDataPage.saveAndContinueButton().should('not.exist');
     });
 
     it('displays a relevant error on consents endpoint failure', () => {
       cy.mockAll(500, {}, CONSENTS_ENDPOINT);
-      YourDataPage.goto();
+      YourDataPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       YourDataPage.errorBanner().contains(CONSENT_ERRORS.GENERIC);
       YourDataPage.backButton().should('not.exist');
       YourDataPage.saveAndContinueButton().should('not.exist');
@@ -813,43 +942,71 @@ describe('Onboarding flow', () => {
         AUTH_REDIRECT_ENDPOINT,
       );
       cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
-      cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
+      cy.mockAll(
+        200,
+        verifiedUserWithNoConsent.user.consents,
+        USER_CONSENTS_ENDPOINT,
+      );
       cy.mockAll(200, allNewsletters, NEWSLETTER_ENDPOINT);
       cy.mockAll(200, userNewsletters(), NEWSLETTER_SUBSCRIPTION_ENDPOINT);
     });
 
     it('has no detectable a11y violations', () => {
-      ReviewPage.goto();
+      ReviewPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       injectAndCheckAxe();
     });
 
     it('has no detectable a11y violations on with an error', () => {
       cy.mockAll(500, {}, CONSENTS_ENDPOINT);
-      ReviewPage.goto();
+      ReviewPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       injectAndCheckAxe();
     });
 
     it('displays a relevant error if on consents endpoint failure', () => {
       cy.mockAll(500, {}, CONSENTS_ENDPOINT);
-      ReviewPage.goto();
+      ReviewPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       ReviewPage.errorBanner().contains(CONSENT_ERRORS.GENERIC);
     });
 
     it('display a relevant error message on user end point failure', () => {
-      cy.mockAll(500, {}, USER_ENDPOINT);
-      ReviewPage.goto();
-      ReviewPage.errorBanner().contains(USER_ERRORS.GENERIC);
+      cy.mockAll(500, {}, USER_CONSENTS_ENDPOINT);
+      ReviewPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
+      ReviewPage.errorBanner().contains(CONSENT_ERRORS.GENERIC);
     });
 
     it('displays a relevant error on newsletters endpoint failure', () => {
       cy.mockAll(500, {}, NEWSLETTER_ENDPOINT);
-      ReviewPage.goto();
+      ReviewPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       ReviewPage.errorBanner().contains(NEWSLETTER_ERRORS.GENERIC);
     });
 
     it('displays a relevant error on newsletters subscription endpoint failure', () => {
       cy.mockAll(500, {}, NEWSLETTER_SUBSCRIPTION_ENDPOINT);
-      ReviewPage.goto();
+      ReviewPage.goto({
+        query: {
+          useIdapi: true,
+        },
+      });
       ReviewPage.errorBanner().contains(NEWSLETTER_ERRORS.GENERIC);
     });
   });
@@ -865,7 +1022,10 @@ describe('Onboarding flow', () => {
     });
 
     it('shows 404 page if onboarding page is not found', () => {
-      cy.visit('/consents/unknown', { failOnStatusCode: false });
+      cy.visit('/consents/unknown', {
+        failOnStatusCode: false,
+        qs: { useIdapi: true },
+      });
       cy.contains('the page does not exist');
     });
   });

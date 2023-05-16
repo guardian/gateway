@@ -43,12 +43,12 @@ const postSignInController = async (
     }
 
     try {
-      const consents = await getUserConsentsForPage(
-        CONSENTS_POST_SIGN_IN_PAGE,
-        req.ip,
+      const consents = await getUserConsentsForPage({
+        pageConsents: CONSENTS_POST_SIGN_IN_PAGE,
+        ip: req.ip,
         sc_gu_u,
-        res.locals.requestId,
-      );
+        request_id: res.locals.requestId,
+      });
 
       return !consents.find(({ id }) => id === Consents.SUPPORTER)?.consented;
     } catch (error) {
