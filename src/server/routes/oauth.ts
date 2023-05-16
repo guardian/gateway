@@ -26,7 +26,10 @@ import { updateUser } from '@/server/lib/okta/api/users';
 import { getApp } from '@/server/lib/okta/api/apps';
 import { setUserFeatureCookies } from '@/server/lib/user-features';
 import { consentPages } from './consents';
-import { setOAuthTokenCookie } from '@/server/lib/okta/tokens';
+import {
+  checkAndDeleteOAuthTokenCookies,
+  setOAuthTokenCookie,
+} from '@/server/lib/okta/tokens';
 
 interface OAuthError {
   error: string;
@@ -265,6 +268,9 @@ router.get(
 
       // clear the sign out cookie if it exists
       clearSignOutCookie(res);
+
+      // clear any existing oauth application cookies if they exist
+      checkAndDeleteOAuthTokenCookies(req, res);
 
       // track the success metric
       trackMetric('OAuthAuthorization::Success');

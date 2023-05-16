@@ -17,7 +17,7 @@ import {
 import { RoutePaths } from '@/shared/model/Routes';
 import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
 import {
-  deleteOAuthTokenCookie,
+  checkAndDeleteOAuthTokenCookies,
   getOAuthTokenCookie,
   verifyAccessToken,
   verifyIdToken,
@@ -40,8 +40,7 @@ export const loginMiddlewareOAuth = async (
   // and log the user in if necessary
   if (req.cookies.GU_SO) {
     // clear existing tokens
-    deleteOAuthTokenCookie(res, 'GU_ACCESS_TOKEN');
-    deleteOAuthTokenCookie(res, 'GU_ID_TOKEN');
+    checkAndDeleteOAuthTokenCookies(req, res);
 
     // perform the auth code flow
     return performAuthorizationCodeFlow(req, res, {
