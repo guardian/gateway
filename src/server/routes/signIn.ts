@@ -504,12 +504,12 @@ const optInPromptController = async (
   const redirectUrl = returnUrl || defaultReturnUri;
 
   try {
-    const consents = await getUserConsentsForPage(
-      CONSENTS_POST_SIGN_IN_PAGE,
-      req.ip,
-      req.cookies.SC_GU_U,
-      res.locals.requestId,
-    );
+    const consents = await getUserConsentsForPage({
+      pageConsents: CONSENTS_POST_SIGN_IN_PAGE,
+      ip: req.ip,
+      sc_gu_u: req.cookies.SC_GU_U,
+      request_id: res.locals.requestId,
+    });
     const html = renderer('/signin/success', {
       requestState: mergeRequestState(state, {
         pageData: {
@@ -557,7 +557,12 @@ router.post(
     const consented = consents.some((consent) => consent.consented);
 
     try {
-      await patchConsents(req.ip, sc_gu_u, consents);
+      await patchConsents({
+        ip: req.ip,
+        sc_gu_u,
+        payload: consents,
+        request_id: state.requestId,
+      });
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
         request_id: res.locals.requestId,

@@ -8,6 +8,7 @@ import { setAuthCookies } from '../../support/idapi/cookie';
 import {
   verifiedUserWithNoConsent,
   USER_ENDPOINT,
+  USER_CONSENTS_ENDPOINT,
 } from '../../support/idapi/user';
 import CommunicationsPage from '../../support/pages/onboarding/communications_page';
 
@@ -62,7 +63,12 @@ describe('Welcome and set password page', () => {
       AUTH_REDIRECT_ENDPOINT,
     );
     cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
-    cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
+    // cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
+    cy.mockAll(
+      200,
+      verifiedUserWithNoConsent.user.consents,
+      USER_CONSENTS_ENDPOINT,
+    );
     cy.visit(`/welcome/fake_token?useIdapi=true`);
     cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
     cy.wait('@breachCheck');

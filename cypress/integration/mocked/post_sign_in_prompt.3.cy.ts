@@ -7,11 +7,12 @@ import {
   verifiedUserWithNoConsent,
   createUser,
   USER_ENDPOINT,
-  USER_CONSENTS_ENDPOINT,
 } from '../../support/idapi/user';
 import { setAuthCookies } from '../../support/idapi/cookie';
 import { injectAndCheckAxe } from '../../support/cypress-axe';
 
+// TODO: remove this once we have migrated fully to OAuth as we're unable to mock the OAuth flow to get Tokens
+// TODO: best thing to do will move as much as possible to the ete tests
 describe('Post sign-in prompt', () => {
   const defaultReturnUrl = 'https://m.code.dev-theguardian.com';
   const returnUrl = 'https://www.theguardian.com/about';
@@ -25,7 +26,6 @@ describe('Post sign-in prompt', () => {
       AUTH_REDIRECT_ENDPOINT,
     );
     cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
-    cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
     cy.intercept('GET', defaultReturnUrl, (req) => {
       req.reply(200);
     });
@@ -35,18 +35,20 @@ describe('Post sign-in prompt', () => {
   });
 
   it('has no detectable a11y violations on prompt page', () => {
+    cy.mockNext(200, verifiedUserWithNoConsent.user.consents);
     cy.visit('/signin/success?useIdapi=true');
     injectAndCheckAxe();
   });
 
   it('allows user to opt in and continue', () => {
+    cy.mockNext(200, verifiedUserWithNoConsent.user.consents);
     cy.visit('/signin/success?useIdapi=true');
     const checkbox = cy.findByLabelText('Yes, sign me up');
     checkbox.should('not.be.checked');
     checkbox.click();
 
     // mock form save success
-    cy.mockAll(200, {}, USER_CONSENTS_ENDPOINT);
+    cy.mockNext(200, {});
 
     cy.findByText('Continue to the Guardian').click();
     cy.lastPayloadIs([{ id: 'supporter', consented: true }]);
@@ -58,13 +60,14 @@ describe('Post sign-in prompt', () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const consentData = [{ ...supporterConsent!, consented: true }];
     cy.mockAll(200, createUser(consentData), USER_ENDPOINT);
+    cy.mockNext(200, consentData);
     cy.visit('/signin/success?useIdapi=true');
     const checkbox = cy.findByLabelText('Yes, sign me up');
     checkbox.should('be.checked');
     checkbox.click();
 
     // mock form save success
-    cy.mockAll(200, {}, USER_CONSENTS_ENDPOINT);
+    cy.mockNext(200, {});
 
     cy.findByText('Continue to the Guardian').click();
     cy.lastPayloadIs([{ id: 'supporter', consented: false }]);
@@ -72,6 +75,7 @@ describe('Post sign-in prompt', () => {
   });
 
   it('allows user to continue to different returnUrl', () => {
+    cy.mockNext(200, verifiedUserWithNoConsent.user.consents);
     cy.visit(
       `/signin/success?returnUrl=${encodeURIComponent(
         returnUrl,
@@ -79,7 +83,7 @@ describe('Post sign-in prompt', () => {
     );
 
     // mock form save success
-    cy.mockAll(200, {}, USER_CONSENTS_ENDPOINT);
+    cy.mockNext(200, {});
 
     cy.findByText('Continue to the Guardian').click();
     cy.lastPayloadIs([{ id: 'supporter', consented: false }]);
@@ -87,7 +91,8 @@ describe('Post sign-in prompt', () => {
   });
 
   it('fails silently if submit fails, but user did not consent', () => {
-    cy.mockAll(500, {}, USER_CONSENTS_ENDPOINT);
+    cy.mockNext(200, verifiedUserWithNoConsent.user.consents);
+    cy.mockNext(500, {});
     cy.visit('/signin/success?useIdapi=true');
 
     cy.findByText('Continue to the Guardian').click();
@@ -96,10 +101,12 @@ describe('Post sign-in prompt', () => {
   });
 
   it('shows error if submit fails and user did consent', () => {
-    cy.mockAll(500, {}, USER_CONSENTS_ENDPOINT);
+    cy.mockNext(200, verifiedUserWithNoConsent.user.consents);
     cy.visit('/signin/success?useIdapi=true');
     cy.findByLabelText('Yes, sign me up').click();
 
+    cy.mockNext(500, undefined);
+    cy.mockNext(200, verifiedUserWithNoConsent.user.consents);
     cy.findByText('Continue to the Guardian').click();
     cy.lastPayloadIs([{ id: 'supporter', consented: true }]);
     cy.url().should('include', '/signin/success');
@@ -109,13 +116,13 @@ describe('Post sign-in prompt', () => {
   });
 
   it('redirects to returnUrl if fetching consents fails', () => {
-    cy.mockAll(500, {}, CONSENTS_ENDPOINT);
+    cy.mockNext(500, {});
     /**
      * Using cy.request instead of cy.visit as we only need to test the redirect
      * and cy.intercept does not seem to work here
      */
     cy.request({
-      url: '/signin/success',
+      url: '/signin/success?useIdapi=true',
       followRedirect: false,
     }).then((response) =>
       expect(response.redirectedToUrl).to.contain(defaultReturnUrl),
@@ -123,10 +130,10 @@ describe('Post sign-in prompt', () => {
   });
 
   it('redirects to returnUrl if fetching user consents fails', () => {
-    cy.mockAll(500, undefined, USER_ENDPOINT);
+    cy.mockNext(500, undefined);
     // Using cy.request instead of cy.visit, see above for reasoning.
     cy.request({
-      url: '/signin/success',
+      url: '/signin/success?useIdapi=true',
       followRedirect: false,
     }).then((response) =>
       expect(response.redirectedToUrl).to.contain(defaultReturnUrl),

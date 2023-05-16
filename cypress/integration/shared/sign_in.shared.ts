@@ -464,9 +464,10 @@ export const redirectsToOptInPrompt = (isIdapi = false) => {
         cy.get('input[name=email]').type(emailAddress);
         cy.get('input[name=password]').type(finalPassword);
         cy.get('[data-cy="main-form-submit-button"]').click();
+        cy.url().should('include', `/signin/success`);
         cy.url().should(
           'include',
-          `/signin/success?returnUrl=${encodeURIComponent(
+          `returnUrl=${encodeURIComponent(
             'https://m.code.dev-theguardian.com/',
           )}`,
         );
