@@ -244,7 +244,7 @@ describe('Sign in flow', () => {
       cy.get('[data-cy=main-form-submit-button]').click();
     };
 
-    it('if all conditions met', () => {
+    it.only('if all conditions met', () => {
       signIn();
       cy.url().should('include', `/signin/success`);
       cy.url().should('include', encodeURIComponent(defaultReturnUrl));

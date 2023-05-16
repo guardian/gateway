@@ -1,24 +1,34 @@
 import { Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { addReturnUrlToPath } from '@/server/lib/queryParams';
 import { CONSENTS_POST_SIGN_IN_PAGE, Consents } from '@/shared/model/Consent';
 import { getUserConsentsForPage } from '@/server/lib/idapi/consents';
 import { hasExperimentRun, setExperimentRan } from '@/server/lib/experiments';
 import { IdapiCookies } from '@/shared/model/IDAPIAuth';
 import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
+import { TokenSet } from 'openid-client';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 const OPT_IN_PROMPT_TEST_ID = 'OptInPromptPostSignIn';
 
 const { defaultReturnUri } = getConfiguration();
 
-const postSignInController = async (
-  req: Request,
-  res: ResponseWithRequestState,
-  idapiCookies?: IdapiCookies,
-  returnUrl?: string,
-) => {
+interface PostSignInControllerParams {
+  req: Request;
+  res: ResponseWithRequestState;
+  idapiCookies?: IdapiCookies;
+  oauthTokens?: TokenSet;
+  returnUrl?: string;
+}
+
+const postSignInController = async ({
+  req,
+  res,
+  idapiCookies,
+  oauthTokens,
+  returnUrl,
+}: PostSignInControllerParams) => {
   const redirectUrl = returnUrl || defaultReturnUri;
 
   const optInPromptActive = await (async () => {
@@ -38,7 +48,13 @@ const postSignInController = async (
       ({ key }) => key === 'SC_GU_U',
     )?.value;
 
-    if (!sc_gu_u) {
+    const noScGuU = !sc_gu_u;
+    const noAccessToken = !oauthTokens?.access_token;
+
+    // if there is no sc_gu_u or oauth access token,
+    // we can't check the user's consents,
+    // so we can't show the prompt
+    if (noScGuU && noAccessToken) {
       return false;
     }
 
@@ -47,6 +63,7 @@ const postSignInController = async (
         pageConsents: CONSENTS_POST_SIGN_IN_PAGE,
         ip: req.ip,
         sc_gu_u,
+        accessToken: oauthTokens?.access_token,
         request_id: res.locals.requestId,
       });
 
@@ -63,7 +80,9 @@ const postSignInController = async (
   if (optInPromptActive) {
     return res.redirect(
       303,
-      addReturnUrlToPath('/signin/success', redirectUrl),
+      addQueryParamsToPath(`/signin/success`, res.locals.queryParams, {
+        returnUrl: redirectUrl,
+      }),
     );
   }
 
