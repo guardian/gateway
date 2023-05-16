@@ -80,11 +80,11 @@ const getUserNewsletterSubscriptions = async (
   request_id?: string,
 ): Promise<NewsLetter[]> => {
   const allNewsletters = await getNewsletters(request_id);
-  const userNewsletterSubscriptions = await readUserNewsletters(
+  const userNewsletterSubscriptions = await readUserNewsletters({
     ip,
     sc_gu_u,
     request_id,
-  );
+  });
 
   return newslettersOnPage
     .map((id) => allNewsletters.find((newsletter) => newsletter.id === id))
@@ -188,12 +188,12 @@ export const consentPages: ConsentPage[] = [
           return false;
         });
 
-      await patchNewsletters(
+      await patchNewsletters({
         ip,
         sc_gu_u,
-        newsletterSubscriptionsToUpdate,
+        payload: newsletterSubscriptionsToUpdate,
         request_id,
-      );
+      });
 
       const consents = (ConsentsOnNewslettersPageMap.get(geo) as string[]).map(
         (id) => ({
