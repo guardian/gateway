@@ -183,6 +183,9 @@ router.get(
           addQueryParamsToPath(
             `${consentPages[0].path}`,
             res.locals.queryParams,
+            {
+              useIdapi: true,
+            },
           ),
         );
       }
@@ -191,7 +194,9 @@ router.get(
 
       return res.redirect(
         303,
-        addQueryParamsToPath('/verify-email', res.locals.queryParams),
+        addQueryParamsToPath('/verify-email', res.locals.queryParams, {
+          useIdapi: true,
+        }),
       );
     }
 
@@ -199,6 +204,7 @@ router.get(
       303,
       addQueryParamsToPath(`${consentPages[0].path}`, res.locals.queryParams, {
         emailVerified: true,
+        useIdapi: true,
       }),
     );
   }),
