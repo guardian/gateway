@@ -31,6 +31,7 @@ export const loginMiddlewareOAuth = async (
   next: NextFunction,
 ) => {
   if (res.locals.queryParams.useIdapi) {
+    trackMetric('LoginMiddlewareOAuth::UseIdapi');
     return loginMiddleware(req, res, next);
   }
 
@@ -39,6 +40,8 @@ export const loginMiddlewareOAuth = async (
   // and perform the auth code flow to get new tokens
   // and log the user in if necessary
   if (req.cookies.GU_SO) {
+    trackMetric('LoginMiddlewareOAuth::SignedOutCookie');
+
     // clear existing tokens
     checkAndDeleteOAuthTokenCookies(req, res);
 
@@ -56,11 +59,14 @@ export const loginMiddlewareOAuth = async (
   const idTokenCookie = getOAuthTokenCookie(req, 'GU_ID_TOKEN');
 
   if (accessTokenCookie && idTokenCookie) {
+    trackMetric('LoginMiddlewareOAuth::HasOAuthTokens');
     const accessToken = await verifyAccessToken(accessTokenCookie);
     const idToken = await verifyIdToken(idTokenCookie);
 
     // yes: isLoggedIn = true, no need to get new tokens
     if (accessToken && idToken && !accessToken.isExpired()) {
+      trackMetric('LoginMiddlewareOAuth::OAuthTokensValid');
+
       // store the oauth state in res.locals state
       // eslint-disable-next-line functional/immutable-data
       res.locals.oauthState = {
@@ -69,7 +75,11 @@ export const loginMiddlewareOAuth = async (
       };
 
       return next();
+    } else {
+      trackMetric('LoginMiddlewareOAuth::OAuthTokensInvalid');
     }
+  } else {
+    trackMetric('LoginMiddlewareOAuth::NoOAuthTokens');
   }
 
   // no: attempt to do auth code flow to get new tokens
