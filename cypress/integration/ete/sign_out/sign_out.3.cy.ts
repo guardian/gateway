@@ -21,7 +21,7 @@ describe('Sign out flow', () => {
         // load the consents page as its on the same domain
         const postSignInReturnUrl = `https://${Cypress.env(
           'BASE_URI',
-        )}/consents/data`;
+        )}/consents/data?useIdapi=true`;
         const visitUrl = `/signin?returnUrl=${encodeURIComponent(
           postSignInReturnUrl,
         )}&useIdapi=true`;
