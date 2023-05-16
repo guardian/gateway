@@ -12,9 +12,15 @@ export default {
 const Template: ComponentStory<typeof Welcome> = ({
   submitUrl = '',
   fieldErrors = [],
+  queryParams = { returnUrl: '#' },
   ...otherProps
 }) => (
-  <Welcome submitUrl={submitUrl} fieldErrors={fieldErrors} {...otherProps} />
+  <Welcome
+    submitUrl={submitUrl}
+    fieldErrors={fieldErrors}
+    queryParams={queryParams}
+    {...otherProps}
+  />
 );
 
 export const Default = Template.bind({});
