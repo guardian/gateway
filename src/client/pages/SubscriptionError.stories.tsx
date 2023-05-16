@@ -10,9 +10,16 @@ export default {
   parameters: { layout: 'fullscreen' },
 } as Meta;
 
-export const Default = () => (
+export const Unsubscribe = () => (
   <SubscriptionError accountManagementUrl="#" action={'unsubscribe'} />
 );
-Default.story = {
-  name: 'with defaults',
+Unsubscribe.story = {
+  name: 'unsubscribe error',
+};
+
+export const Subscribe = () => (
+  <SubscriptionError accountManagementUrl="#" action={'subscribe'} />
+);
+Subscribe.story = {
+  name: 'subscribe error',
 };

@@ -10,13 +10,24 @@ export default {
   parameters: { layout: 'fullscreen' },
 } as Meta;
 
-export const Default = () => (
+export const Unsubscribe = () => (
   <SubscriptionSuccess
     accountManagementUrl="#"
     returnUrl="#"
     action={'unsubscribe'}
   />
 );
-Default.story = {
-  name: 'with defaults',
+Unsubscribe.story = {
+  name: 'unsubscribe success',
+};
+
+export const Subscribe = () => (
+  <SubscriptionSuccess
+    accountManagementUrl="#"
+    returnUrl="#"
+    action={'subscribe'}
+  />
+);
+Subscribe.story = {
+  name: 'subscribe success',
 };
