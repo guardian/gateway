@@ -48,6 +48,7 @@ jest.mock('@/server/lib/serverSideLogger', () => ({
 jest.mock('@/server/lib/redis/redisClient', () => new Redis());
 jest.mock('@/server/lib/middleware/login', () => ({
   loginMiddleware: jest.fn((req, res, next) => next()),
+  loginMiddlewareOAuth: jest.fn((req, res, next) => next()),
 }));
 jest.mock('@/server/lib/IDAPIFetch');
 jest.mock('@/server/lib/okta/api/authentication');
