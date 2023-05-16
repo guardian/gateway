@@ -254,11 +254,11 @@ router.get(
         );
         if (scGuUCookie) {
           // set feature cookies should a user have a product
-          await setUserFeatureCookies(
-            scGuUCookie.value,
+          await setUserFeatureCookies({
+            sc_gu_u: scGuUCookie.value,
             res,
-            res.locals.requestId,
-          );
+            requestId: res.locals.requestId,
+          });
         }
       } else {
         logger.error('No cookies returned from IDAPI', undefined, {

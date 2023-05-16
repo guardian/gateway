@@ -58,18 +58,37 @@ export type UserAttributesResponse = z.infer<
  * @param request_id optional request id for logging
  * @returns UserAttributesResponse | undefined
  */
-export const getUserAttributes = async (
-  sc_gu_u: string,
-  request_id?: string,
-): Promise<UserAttributesResponse | undefined> => {
+export const getUserAttributes = async ({
+  sc_gu_u,
+  accessToken,
+  request_id,
+}: {
+  sc_gu_u?: string;
+  accessToken?: string;
+  request_id?: string;
+}): Promise<UserAttributesResponse | undefined> => {
   try {
     const path = buildUrl('/user-attributes/me');
 
+    // choose the correct auth header, Authorization if using OAuth, Cookie if using SC_GU_U
+    const headers: Headers = (() => {
+      const headers = new Headers();
+
+      if (accessToken) {
+        headers.append('Authorization', `Bearer ${accessToken}`);
+        return headers;
+      }
+      if (sc_gu_u) {
+        headers.append('Cookie', `SC_GU_U=${sc_gu_u}`);
+        return headers;
+      }
+
+      return headers;
+    })();
+
     const response = await fetch(joinUrl(membersDataApiUrl, path), {
       method: 'GET',
-      headers: {
-        cookie: `SC_GU_U=${sc_gu_u}`,
-      },
+      headers,
     });
 
     if (!response.ok) {
