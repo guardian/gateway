@@ -514,6 +514,7 @@ const optInPromptController = async (
       ip: req.ip,
       sc_gu_u: req.cookies.SC_GU_U,
       request_id: res.locals.requestId,
+      accessToken: state.oauthState.accessToken?.toString(),
     });
     const html = renderer('/signin/success', {
       requestState: mergeRequestState(state, {
@@ -567,6 +568,7 @@ router.post(
         sc_gu_u,
         payload: consents,
         request_id: state.requestId,
+        accessToken: state.oauthState.accessToken?.toString(),
       });
     } catch (error) {
       logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
