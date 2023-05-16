@@ -305,7 +305,12 @@ const idapiSignInController = async (
 
     trackMetric('SignIn::Success');
 
-    return postSignInController(req, res, cookies, returnUrl);
+    return postSignInController({
+      req,
+      res,
+      idapiCookies: cookies,
+      returnUrl,
+    });
   } catch (error) {
     logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
       request_id: res.locals.requestId,

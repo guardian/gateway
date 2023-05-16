@@ -336,7 +336,12 @@ router.get(
           )
         : authState.queryParams.returnUrl;
 
-      return postSignInController(req, res, cookies, returnUrl);
+      return postSignInController({
+        req,
+        res,
+        idapiCookies: cookies,
+        returnUrl,
+      });
     } catch (error) {
       // check if it's an oauth/oidc error
       if (isOAuthError(error)) {
