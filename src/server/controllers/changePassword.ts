@@ -28,7 +28,10 @@ import {
 } from '@/server/lib/okta/api/authentication';
 import { OktaError } from '@/server/models/okta/Error';
 import { checkTokenInOkta } from '@/server/controllers/checkPasswordToken';
-import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
+import {
+  performAuthorizationCodeFlow,
+  scopesForAuthentication,
+} from '@/server/lib/okta/oauth';
 import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
 import { setupJobsUserInIDAPI, setupJobsUserInOkta } from '../lib/jobs';
 import { sendOphanComponentEventFromQueryParamsServer } from '../lib/ophan';
@@ -266,7 +269,7 @@ const changePasswordInOkta = async (
         confirmationPagePath: successRedirectPath,
         closeExistingSession: true,
         prompt: 'none',
-        scopes: ['openid', 'guardian.identity-api.cookies.create.self.secure'],
+        scopes: scopesForAuthentication,
         redirectUri: ProfileOpenIdClientRedirectUris.AUTHENTICATION,
       });
     } else {

@@ -95,7 +95,6 @@ const OIDCIssuer = new Issuer(OIDC_METADATA);
  */
 export const ProfileOpenIdClientRedirectUris: OpenIdClientRedirectUris = {
   AUTHENTICATION: `${getProfileUrl()}/oauth/authorization-code/callback`,
-  // TODO: set up the correct redirect route for the application
   APPLICATION: `${getProfileUrl()}/oauth/authorization-code/application-callback`,
 };
 

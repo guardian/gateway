@@ -2,6 +2,7 @@ import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import {
+  AuthorizationState,
   deleteAuthorizationStateCookie,
   getAuthorizationStateCookie,
   getOpenIdClient,
@@ -20,11 +21,12 @@ import {
 import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import postSignInController from '@/server/lib/postSignInController';
-import { IdTokenClaims } from 'openid-client';
+import { IdTokenClaims, TokenSet } from 'openid-client';
 import { updateUser } from '@/server/lib/okta/api/users';
 import { getApp } from '@/server/lib/okta/api/apps';
 import { setUserFeatureCookies } from '@/server/lib/user-features';
 import { consentPages } from './consents';
+import { setOAuthTokenCookie } from '@/server/lib/okta/tokens';
 
 interface OAuthError {
   error: string;
@@ -54,10 +56,7 @@ const isOAuthError = (
  * a generic error message if we don't want to expose the error
  * back to the client. Be sure to log the error though!
  */
-const redirectForGenericError = (
-  req: Request,
-  res: ResponseWithRequestState,
-) => {
+const redirectForGenericError = (_: Request, res: ResponseWithRequestState) => {
   return res.redirect(
     addQueryParamsToPath('/signin', res.locals.queryParams, {
       error_description: SignInErrors.GENERIC,
@@ -65,91 +64,126 @@ const redirectForGenericError = (
   );
 };
 
+const sharedCallbackHandler = async (
+  req: Request,
+  res: ResponseWithRequestState,
+  redirect_uri: string,
+): Promise<[TokenSet, AuthorizationState] | undefined> => {
+  // Determine which OpenIdClient to use, in DEV we use the DevProfileIdClient, otherwise we use the ProfileOpenIdClient
+  const OpenIdClient = getOpenIdClient(req);
+
+  // params returned from the /authorize endpoint
+  // for auth code flow they will be "code" and "state"
+  // "code" is the authorization code to exchange for access token
+  // "state" will be the "stateParam" value set in the oidc_auth_state cookie
+  // if there were any errors, then an "error", and "error_description" params
+  // will be returned instead
+  const callbackParams = OpenIdClient.callbackParams(req);
+
+  // get the oidc_auth_state cookie which contains the "stateParam" value
+  // and "returnUrl" so we can get the user back to the page they
+  // initially landed on sign in from
+  const authState = getAuthorizationStateCookie(req);
+
+  // check if the state cookie exists, this should be set at the start of the OAuth flow
+  // e.g. at sign in
+  if (!authState) {
+    // If this doesn't exist, that would mean that either
+    // a) the state isn't being set correctly, or
+    // b) someone is trying to attack the oauth flow
+    // for example with an invalid state cookie, or without the state cookie
+    // the state cookie is used to prevent CSRF attacks
+    logger.error('Missing auth state cookie on OAuth Callback!', undefined, {
+      request_id: res.locals.requestId,
+    });
+    trackMetric('OAuthAuthorization::Failure');
+    redirectForGenericError(req, res);
+    return;
+  }
+
+  // we have the Authorization State now, so the cookie is
+  // no longer required, so mark cookie for deletion in the response
+  deleteAuthorizationStateCookie(res);
+
+  // check for specific oauth errors and handle them as required
+  if (isOAuthError(callbackParams)) {
+    // check if the callback params contain an login_required error
+    // used to check if a session existed before the user is shown a sign in page
+    if (callbackParams.error === OpenIdErrors.LOGIN_REQUIRED) {
+      res.redirect(addQueryParamsToPath('/signin', authState.queryParams));
+      return;
+    }
+
+    // check for social account linking errors
+    // and redirect to the sign in page with the social sign in blocked error
+    if (
+      callbackParams.error === OpenIdErrors.ACCESS_DENIED &&
+      callbackParams.error_description ===
+        OpenIdErrorDescriptions.ACCOUNT_LINKING_DENIED_GROUPS
+    ) {
+      res.redirect(
+        addQueryParamsToPath('/signin', authState.queryParams, {
+          error: FederationErrors.SOCIAL_SIGNIN_BLOCKED,
+        }),
+      );
+      return;
+    }
+  }
+
+  // exchange the auth code for access token + id token
+  // and check the "state" we got back from the callback
+  // to the "stateParam" that was set in the AuthorizationState
+  // to prevent CSRF attacks
+  const tokenSet = await OpenIdClient.callback(
+    // the redirectUri is the callback location (this route)
+    redirect_uri,
+    // the params sent to the callback
+    callbackParams,
+    // checks to make sure that everything is valid
+    {
+      // we're doing the auth code flow, so check for the correct type
+      response_type: 'code',
+      // check that the stateParam is the same
+      state: authState.stateParam,
+    },
+  );
+
+  return [tokenSet, authState];
+};
+
+/**
+ * @route GET /oauth/authorization-code/callback
+ *
+ * Route to use after Authorization Code flow for Authentication related requests
+ * e.g sign in, register, reset password, etc
+ *
+ * Has a bunch of logic related to that, e.g. checking user groups, getting idapi cookies,
+ * setting ad-free cookie, etc. and the token it gets back is the short lived,
+ * one which we don't want to store anywhere.
+ */
 router.get(
   '/oauth/authorization-code/callback',
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     try {
-      // Determine which OpenIdClient to use, in DEV we use the DevProfileIdClient, otherwise we use the ProfileOpenIdClient
-      const OpenIdClient = getOpenIdClient(req);
+      const result = await sharedCallbackHandler(
+        req,
+        res,
+        ProfileOpenIdClientRedirectUris.AUTHENTICATION,
+      );
 
-      // params returned from the /authorize endpoint
-      // for auth code flow they will be "code" and "state"
-      // "code" is the authorization code to exchange for access token
-      // "state" will be the "stateParam" value set in the oidc_auth_state cookie
-      // if there were any errors, then an "error", and "error_description" params
-      // will be returned instead
-      const callbackParams = OpenIdClient.callbackParams(req);
+      if (res.headersSent) {
+        return;
+      }
 
-      // get the oidc_auth_state cookie which contains the "stateParam" value
-      // and "returnUrl" so we can get the user back to the page they
-      // initially landed on sign in from
-      const authState = getAuthorizationStateCookie(req);
-
-      // check if the state cookie exists, this should be set at the start of the OAuth flow
-      // e.g. at sign in
-      if (!authState) {
-        // If this doesn't exist, that would mean that either
-        // a) the state isn't being set correctly, or
-        // b) someone is trying to attack the oauth flow
-        // for example with an invalid state cookie, or without the state cookie
-        // the state cookie is used to prevent CSRF attacks
-        logger.error(
-          'Missing auth state cookie on OAuth Callback!',
-          undefined,
-          {
-            request_id: res.locals.requestId,
-          },
-        );
+      if (!result) {
+        logger.error('Missing result from OAuth Callback', undefined, {
+          request_id: res.locals.requestId,
+        });
         trackMetric('OAuthAuthorization::Failure');
         return redirectForGenericError(req, res);
       }
 
-      // we have the Authorization State now, so the cookie is
-      // no longer required, so mark cookie for deletion in the response
-      deleteAuthorizationStateCookie(res);
-
-      // check for specific oauth errors and handle them as required
-      if (isOAuthError(callbackParams)) {
-        // check if the callback params contain an login_required error
-        // used to check if a session existed before the user is shown a sign in page
-        if (callbackParams.error === OpenIdErrors.LOGIN_REQUIRED) {
-          return res.redirect(
-            addQueryParamsToPath('/signin', authState.queryParams),
-          );
-        }
-
-        // check for social account linking errors
-        // and redirect to the sign in page with the social sign in blocked error
-        if (
-          callbackParams.error === OpenIdErrors.ACCESS_DENIED &&
-          callbackParams.error_description ===
-            OpenIdErrorDescriptions.ACCOUNT_LINKING_DENIED_GROUPS
-        ) {
-          return res.redirect(
-            addQueryParamsToPath('/signin', authState.queryParams, {
-              error: FederationErrors.SOCIAL_SIGNIN_BLOCKED,
-            }),
-          );
-        }
-      }
-
-      // exchange the auth code for access token + id token
-      // and check the "state" we got back from the callback
-      // to the "stateParam" that was set in the AuthorizationState
-      // to prevent CSRF attacks
-      const tokenSet = await OpenIdClient.callback(
-        // the redirectUri is the callback location (this route)
-        ProfileOpenIdClientRedirectUris.AUTHENTICATION,
-        // the params sent to the callback
-        callbackParams,
-        // checks to make sure that everything is valid
-        {
-          // we're doing the auth code flow, so check for the correct type
-          response_type: 'code',
-          // check that the stateParam is the same
-          state: authState.stateParam,
-        },
-      );
+      const [tokenSet, authState] = result;
 
       // this is just to handle potential errors where we don't get back an access token
       if (!tokenSet.access_token) {
@@ -296,14 +330,101 @@ router.get(
           )
         : authState.queryParams.returnUrl;
 
-      postSignInController(req, res, cookies, returnUrl);
+      return postSignInController(req, res, cookies, returnUrl);
     } catch (error) {
       // check if it's an oauth/oidc error
       if (isOAuthError(error)) {
         // log the specific error
-        logger.error('OAuth/OIDC Error:', error, {
+        logger.error(
+          `${req.method} ${req.originalUrl} OAuth/OIDC Error:`,
+          error,
+          {
+            request_id: res.locals.requestId,
+          },
+        );
+      }
+
+      // log and track the error
+      logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+        request_id: res.locals.requestId,
+      });
+      trackMetric('OAuthAuthorization::Failure');
+
+      // fallthrough redirect to sign in with generic error
+      return redirectForGenericError(req, res);
+    }
+  }),
+);
+
+/**
+ * @route GET /oauth/authorization-code/application-callback
+ *
+ * Route to use after Authorization Code flow for getting application OAuth tokens
+ * for use within the Gateway app, e.g. for the onboarding flow, etc.
+ */
+router.get(
+  '/oauth/authorization-code/application-callback',
+  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+    try {
+      const result = await sharedCallbackHandler(
+        req,
+        res,
+        ProfileOpenIdClientRedirectUris.APPLICATION,
+      );
+
+      if (res.headersSent) {
+        return;
+      }
+
+      if (!result) {
+        logger.error('Missing result from OAuth Callback', undefined, {
           request_id: res.locals.requestId,
         });
+        trackMetric('OAuthAuthorization::Failure');
+        return redirectForGenericError(req, res);
+      }
+
+      const [tokenSet, authState] = result;
+
+      // this is just to handle potential errors where we don't get back an access token
+      if (!(tokenSet.access_token && tokenSet.id_token)) {
+        logger.error(
+          'Missing access_token or id_token from /token endpoint in OAuth Callback',
+          undefined,
+          {
+            request_id: res.locals.requestId,
+          },
+        );
+        trackMetric('OAuthAuthorization::Failure');
+        return redirectForGenericError(req, res);
+      }
+
+      // set the access token and id token cookies
+      setOAuthTokenCookie(res, 'GU_ACCESS_TOKEN', tokenSet.access_token);
+      setOAuthTokenCookie(res, 'GU_ID_TOKEN', tokenSet.id_token);
+
+      // track the success metric
+      trackMetric('OAuthAuthorization::Success');
+
+      const returnUrl = authState.confirmationPage
+        ? addQueryParamsToPath(
+            authState.confirmationPage,
+            authState.queryParams,
+          )
+        : authState.queryParams.returnUrl;
+
+      return res.redirect(303, returnUrl);
+    } catch (error) {
+      // check if it's an oauth/oidc error
+      if (isOAuthError(error)) {
+        // log the specific error
+        logger.error(
+          `${req.method} ${req.originalUrl} OAuth/OIDC Error:`,
+          error,
+          {
+            request_id: res.locals.requestId,
+          },
+        );
       }
 
       // log and track the error
