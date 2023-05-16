@@ -47,7 +47,10 @@ import { ApiError } from '@/server/models/Error';
 import { ConsentPath, RoutePaths } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
 import { mergeRequestState } from '@/server/lib/requestState';
-import { updateRegistrationLocationViaIDAPI } from '../lib/updateRegistrationLocation';
+import {
+  updateRegistrationLocationViaIDAPI,
+  updateRegistrationLocationViaOkta,
+} from '../lib/updateRegistrationLocation';
 import {
   readEncryptedStateCookie,
   updateEncryptedStateCookie,
@@ -57,33 +60,55 @@ import { isStringBoolean } from '../lib/isStringBoolean';
 interface ConsentPage {
   page: ConsentPath;
   path: RoutePaths;
-  read: (
-    ip: string,
-    sc_gu_u: string,
-    geo?: GeoLocation | PermissionedGeolocation,
-    request_id?: string,
-  ) => Promise<PageData>;
+  read: ({
+    ip,
+    sc_gu_u,
+    geo,
+    request_id,
+    accessToken,
+  }: {
+    ip?: string;
+    sc_gu_u?: string;
+    geo?: GeoLocation | PermissionedGeolocation;
+    request_id?: string;
+    accessToken?: string;
+  }) => Promise<PageData>;
   pageTitle: PageTitle;
-  update?: (
-    ip: string,
-    sc_gu_u: string,
-    body: { [key: string]: string },
-    geo?: GeoLocation | PermissionedGeolocation,
-    request_id?: string,
-  ) => Promise<void>;
+  update?: ({
+    ip,
+    sc_gu_u,
+    body,
+    geo,
+    request_id,
+  }: {
+    ip?: string;
+    sc_gu_u?: string;
+    accessToken?: string;
+    body: { [key: string]: string };
+    geo?: GeoLocation | PermissionedGeolocation;
+    request_id?: string;
+  }) => Promise<void>;
 }
 
-const getUserNewsletterSubscriptions = async (
-  newslettersOnPage: string[],
-  ip: string,
-  sc_gu_u: string,
-  request_id?: string,
-): Promise<NewsLetter[]> => {
+const getUserNewsletterSubscriptions = async ({
+  ip,
+  sc_gu_u,
+  newslettersOnPage,
+  request_id,
+  accessToken,
+}: {
+  newslettersOnPage: string[];
+  ip?: string;
+  sc_gu_u?: string;
+  request_id?: string;
+  accessToken?: string;
+}): Promise<NewsLetter[]> => {
   const allNewsletters = await getNewsletters(request_id);
   const userNewsletterSubscriptions = await readUserNewsletters({
     ip,
     sc_gu_u,
     request_id,
+    accessToken,
   });
 
   return newslettersOnPage
@@ -108,16 +133,17 @@ export const consentPages: ConsentPage[] = [
     page: 'communication',
     path: '/consents/communication',
     pageTitle: CONSENTS_PAGES.CONTACT,
-    read: async (ip, sc_gu_u, _, request_id) => ({
+    read: async ({ ip, sc_gu_u, request_id, accessToken }) => ({
       consents: await getUserConsentsForPage({
         pageConsents: CONSENTS_COMMUNICATION_PAGE,
         ip,
         sc_gu_u,
         request_id,
+        accessToken,
       }),
       page: 'communication',
     }),
-    update: async (ip, sc_gu_u, body, _, request_id) => {
+    update: async ({ ip, sc_gu_u, body, accessToken, request_id }) => {
       const consents = CONSENTS_COMMUNICATION_PAGE.map((id) => ({
         id,
         consented: getConsentValueFromRequestBody(id, body),
@@ -128,6 +154,7 @@ export const consentPages: ConsentPage[] = [
         sc_gu_u,
         payload: consents,
         request_id,
+        accessToken,
       });
     },
   },
@@ -135,7 +162,7 @@ export const consentPages: ConsentPage[] = [
     page: 'newsletters',
     path: '/consents/newsletters',
     pageTitle: CONSENTS_PAGES.NEWSLETTERS,
-    read: async (ip, sc_gu_u, geo, request_id) => {
+    read: async ({ ip, sc_gu_u, geo, request_id, accessToken }) => {
       return {
         page: 'newsletters',
         consents: await getUserConsentsForPage({
@@ -143,23 +170,26 @@ export const consentPages: ConsentPage[] = [
           ip,
           sc_gu_u,
           request_id,
+          accessToken,
         }),
-        newsletters: await getUserNewsletterSubscriptions(
-          NewsletterMap.get(geo) as string[],
+        newsletters: await getUserNewsletterSubscriptions({
+          newslettersOnPage: NewsletterMap.get(geo) as string[],
           ip,
           sc_gu_u,
           request_id,
-        ),
+          accessToken,
+        }),
         previousPage: 'communication',
       };
     },
-    update: async (ip, sc_gu_u, body, geo, request_id) => {
-      const userNewsletterSubscriptions = await getUserNewsletterSubscriptions(
-        ALL_NEWSLETTER_IDS,
+    update: async ({ ip, sc_gu_u, accessToken, body, geo, request_id }) => {
+      const userNewsletterSubscriptions = await getUserNewsletterSubscriptions({
+        newslettersOnPage: ALL_NEWSLETTER_IDS,
         ip,
         sc_gu_u,
+        accessToken,
         request_id,
-      );
+      });
 
       // get a list of newsletters to update that have changed from the users current subscription
       // if they have changed then set them to subscribe/unsubscribe
@@ -191,6 +221,7 @@ export const consentPages: ConsentPage[] = [
       await patchNewsletters({
         ip,
         sc_gu_u,
+        accessToken,
         payload: newsletterSubscriptionsToUpdate,
         request_id,
       });
@@ -202,37 +233,50 @@ export const consentPages: ConsentPage[] = [
         }),
       );
 
-      await patchConsents({ ip, sc_gu_u, payload: consents, request_id });
+      await patchConsents({
+        ip,
+        sc_gu_u,
+        accessToken,
+        payload: consents,
+        request_id,
+      });
     },
   },
   {
     page: 'data',
     path: '/consents/data',
     pageTitle: CONSENTS_PAGES.YOUR_DATA,
-    read: async (ip, sc_gu_u, _, request_id) => ({
+    read: async ({ ip, sc_gu_u, request_id, accessToken }) => ({
       consents: await getUserConsentsForPage({
         pageConsents: CONSENTS_DATA_PAGE,
         ip,
         sc_gu_u,
         request_id,
+        accessToken,
       }),
       page: 'data',
       previousPage: 'newsletters',
     }),
-    update: async (ip, sc_gu_u, body, _, request_id) => {
+    update: async ({ ip, sc_gu_u, body, accessToken, request_id }) => {
       const consents = CONSENTS_DATA_PAGE.map((id) => ({
         id,
         consented: getConsentValueFromRequestBody(id, body),
       }));
 
-      await patchConsents({ ip, sc_gu_u, payload: consents, request_id });
+      await patchConsents({
+        ip,
+        sc_gu_u,
+        accessToken,
+        payload: consents,
+        request_id,
+      });
     },
   },
   {
     page: 'review',
     path: '/consents/review',
     pageTitle: CONSENTS_PAGES.REVIEW,
-    read: async (ip, sc_gu_u, geo, request_id) => {
+    read: async ({ ip, sc_gu_u, geo, request_id, accessToken }) => {
       const ALL_CONSENT = [
         ...CONSENTS_DATA_PAGE,
         ...(ConsentsOnNewslettersPageMap.get(geo) as string[]),
@@ -246,13 +290,15 @@ export const consentPages: ConsentPage[] = [
           ip,
           sc_gu_u,
           request_id,
+          accessToken,
         }),
-        newsletters: await getUserNewsletterSubscriptions(
-          NewsletterMap.get(geo) as string[],
+        newsletters: await getUserNewsletterSubscriptions({
+          newslettersOnPage: NewsletterMap.get(geo) as string[],
           ip,
           sc_gu_u,
           request_id,
-        ),
+          accessToken,
+        }),
       };
     },
   },
@@ -312,12 +358,13 @@ router.get(
 
       state = mergeRequestState(state, {
         pageData: {
-          ...(await read(
-            req.ip,
+          ...(await read({
+            ip: req.ip,
             sc_gu_u,
-            permissionedGeolocation,
-            res.locals.requestId,
-          )),
+            geo: permissionedGeolocation,
+            request_id: res.locals.requestId,
+            accessToken: res.locals.oauthState.accessToken?.toString(),
+          })),
         },
       } as RequestState);
     } catch (error) {
@@ -383,7 +430,14 @@ router.post(
 
       // If on the first page, attempt to update location for consented users.
       if (pageIndex === 0) {
-        updateRegistrationLocationViaIDAPI(req.ip, sc_gu_u, req);
+        if (res.locals.oauthState.accessToken) {
+          await updateRegistrationLocationViaOkta(
+            req,
+            res.locals.oauthState.accessToken,
+          );
+        } else {
+          await updateRegistrationLocationViaIDAPI(req.ip, sc_gu_u, req);
+        }
       }
 
       // we need this in the Post update so consents are not unintentionally unsubscribed in Permissioned views without consents
@@ -396,13 +450,14 @@ router.post(
       );
 
       if (update) {
-        await update(
-          req.ip,
+        await update({
+          ip: req.ip,
           sc_gu_u,
-          req.body,
-          permissionedGeolocation,
-          res.locals.requestId,
-        );
+          accessToken: res.locals.oauthState.accessToken?.toString(),
+          body: req.body,
+          geo: permissionedGeolocation,
+          request_id: res.locals.requestId,
+        });
       }
 
       trackMetric(consentsPageMetric(page, 'Post', 'Success'));
