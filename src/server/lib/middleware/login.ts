@@ -12,6 +12,7 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { buildUrl } from '@/shared/lib/routeUtils';
 import {
   performAuthorizationCodeFlow,
+  Scopes,
   scopesForApplication,
 } from '@/server/lib/okta/oauth';
 import { RoutePaths } from '@/shared/model/Routes';
@@ -64,7 +65,18 @@ export const loginMiddlewareOAuth = async (
     const idToken = await verifyIdToken(idTokenCookie);
 
     // yes: isLoggedIn = true, no need to get new tokens
-    if (accessToken && idToken && !accessToken.isExpired()) {
+    if (
+      // check access token is valid
+      accessToken &&
+      // check that the id token is valid
+      idToken &&
+      // check that the access token is not expired
+      !accessToken.isExpired() &&
+      // check that the scopes are all the ones we expect
+      accessToken.claims.scp?.every((scope) =>
+        scopesForApplication.includes(scope as Scopes),
+      )
+    ) {
       trackMetric('LoginMiddlewareOAuth::OAuthTokensValid');
 
       // store the oauth state in res.locals state
