@@ -4,7 +4,7 @@ describe('Jobs terms and conditions flow', () => {
       // load the consents page as its on the same domain
       const termsAcceptPageUrl = `https://${Cypress.env(
         'BASE_URI',
-      )}/agree/GRS?returnUrl=https://profile.thegulocal.com/signin?returnUrl=https%3A%2F%2Fm.code.dev-theguardian.com%2F`;
+      )}/agree/GRS?returnUrl=https://profile.thegulocal.com/signin?returnUrl=https%3A%2F%2Fm.code.dev-theguardian.com%2F&useIdapi=true`;
 
       cy.setCookie('SC_GU_U', 'invalid-cookie');
 
