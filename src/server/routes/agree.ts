@@ -2,16 +2,16 @@ import { Request } from 'express';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { renderer } from '@/server/lib/renderer';
 import { ResponseWithRequestState } from '@/server/models/Express';
-import { read } from '../lib/idapi/user';
-import { logger } from '../lib/serverSideLogger';
-import { getConfiguration } from '../lib/getConfiguration';
-import { trackMetric } from '../lib/trackMetric';
+import { read } from '@/server/lib/idapi/user';
+import { logger } from '@/server/lib/serverSideLogger';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { trackMetric } from '@/server/lib/trackMetric';
 import deepmerge from 'deepmerge';
 import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
-import { setupJobsUserInIDAPI, setupJobsUserInOkta } from '../lib/jobs';
-import { getSession } from '../lib/okta/api/sessions';
-import { getUser } from '../lib/okta/api/users';
+import { setupJobsUserInIDAPI, setupJobsUserInOkta } from '@/server/lib/jobs';
 import { mergeRequestState } from '@/server/lib/requestState';
+import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
+import { deleteOAuthTokenCookie } from '@/server/lib/okta/tokens';
 
 const { defaultReturnUri, signInPageUrl, okta } = getConfiguration();
 
@@ -90,13 +90,14 @@ const OktaAgreeGetController = async (
   req: Request,
   res: ResponseWithRequestState,
 ) => {
-  const oktaSessionCookieId: string | undefined = req.cookies.sid;
+  const { oauthState } = res.locals;
 
   const state = res.locals;
   const { returnUrl, fromURI } = state.queryParams;
 
-  // Redirect to /signin if no session cookie.
-  if (!oktaSessionCookieId) {
+  // Redirect to /signin if tokens for some reason, this shouldn't be the case
+  // thanks to the loginMiddlewareOAuth middleware, but this is to get typescript to comply
+  if (!oauthState.idToken) {
     return res.redirect(
       303,
       addQueryParamsToUntypedPath(signInPageUrl, res.locals.queryParams),
@@ -104,9 +105,13 @@ const OktaAgreeGetController = async (
   }
 
   try {
-    const { userId } = await getSession(oktaSessionCookieId);
-    const { profile } = await getUser(userId);
-    const { isJobsUser, firstName, lastName, email } = profile;
+    // extract the users profile from the id token
+    const {
+      is_jobs_user: isJobsUser,
+      first_name: firstName,
+      last_name: lastName,
+      email,
+    } = oauthState.idToken.claims;
 
     const userFullNameSet = !!firstName && !!lastName;
 
@@ -159,29 +164,50 @@ const OktaAgreeGetController = async (
   }
 };
 
-router.get('/agree/GRS', (req: Request, res: ResponseWithRequestState) => {
-  const { useIdapi } = res.locals.queryParams;
+router.get(
+  '/agree/GRS',
+  loginMiddlewareOAuth,
+  (req: Request, res: ResponseWithRequestState) => {
+    const { useIdapi } = res.locals.queryParams;
 
-  if (okta.enabled && !useIdapi) {
-    return OktaAgreeGetController(req, res);
-  } else {
-    return IDAPIAgreeGetController(req, res);
-  }
-});
+    if (okta.enabled && !useIdapi) {
+      return OktaAgreeGetController(req, res);
+    } else {
+      return IDAPIAgreeGetController(req, res);
+    }
+  },
+);
 
 router.post(
   '/agree/GRS',
+  loginMiddlewareOAuth,
   async (req: Request, res: ResponseWithRequestState) => {
     const { useIdapi, returnUrl, fromURI } = res.locals.queryParams;
-    const oktaSessionCookieId: string | undefined = req.cookies.sid;
+    const { oauthState } = res.locals;
 
     const { firstName, secondName } = req.body;
 
     try {
-      if (okta.enabled && !useIdapi && oktaSessionCookieId) {
-        // Get the id from Okta
-        const { userId } = await getSession(oktaSessionCookieId);
-        await setupJobsUserInOkta(firstName, secondName, userId);
+      if (okta.enabled && !useIdapi) {
+        // Redirect to /signin if tokens for some reason, this shouldn't be the case
+        // thanks to the loginMiddlewareOAuth middleware, but this is to get typescript to comply
+        if (!oauthState.idToken) {
+          return res.redirect(
+            303,
+            addQueryParamsToUntypedPath(signInPageUrl, res.locals.queryParams),
+          );
+        }
+
+        await setupJobsUserInOkta(
+          firstName,
+          secondName,
+          oauthState.idToken.claims.sub,
+        );
+
+        // delete the ID token cookie, as we've updated the user model,
+        // so a new token will be issued on the next request if needed
+        deleteOAuthTokenCookie(res, 'GU_ID_TOKEN');
+
         trackMetric('JobsGRSGroupAgree::Success');
       } else {
         await setupJobsUserInIDAPI(

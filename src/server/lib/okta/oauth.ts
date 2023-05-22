@@ -15,14 +15,15 @@ import { closeSession } from './api/sessions';
  * However use one of the following lists instead of selecting individually:
  * scopesForAuthentication or scopesForApplication
  */
-type Scopes =
+export type Scopes =
   | 'openid'
   | 'profile'
   | 'email'
   | 'guardian.identity-api.cookies.create.self.secure'
   | 'guardian.members-data-api.read.self'
   | 'guardian.identity-api.newsletters.read.self'
-  | 'guardian.identity-api.newsletters.update.self';
+  | 'guardian.identity-api.newsletters.update.self'
+  | 'id_token.profile.profile';
 
 /**
  * @name scopesForAuthentication
@@ -46,6 +47,7 @@ export const scopesForApplication: Scopes[] = [
   'email',
   'guardian.identity-api.newsletters.read.self',
   'guardian.identity-api.newsletters.update.self',
+  'id_token.profile.profile',
 ];
 
 /**
