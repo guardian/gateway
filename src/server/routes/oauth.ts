@@ -246,25 +246,18 @@ router.get(
       if (cookies) {
         // adds set cookie headers
         setIDAPICookies(res, cookies, authState.doNotSetLastAccessCookie);
-
-        // get the SC_GU_U cookie so we can use it to get the user's attributes
-        // and set any required feature cookies
-        const scGuUCookie = cookies.values.find(
-          (cookie) => cookie.key === 'SC_GU_U',
-        );
-        if (scGuUCookie) {
-          // set feature cookies should a user have a product
-          await setUserFeatureCookies({
-            sc_gu_u: scGuUCookie.value,
-            res,
-            requestId: res.locals.requestId,
-          });
-        }
       } else {
         logger.error('No cookies returned from IDAPI', undefined, {
           request_id: res.locals.requestId,
         });
       }
+
+      // set the ad-free cookie if the user has the digital-pack product
+      await setUserFeatureCookies({
+        accessToken: tokenSet.access_token,
+        res,
+        requestId: res.locals.requestId,
+      });
 
       // clear the sign out cookie if it exists
       clearSignOutCookie(res);
