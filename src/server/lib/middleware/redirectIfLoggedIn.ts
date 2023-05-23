@@ -10,6 +10,7 @@ import { IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
 import { clearIDAPICookies } from '../idapi/IDAPICookies';
 import { renderer } from '@/server/lib/renderer';
 import { mergeRequestState } from '../requestState';
+import { getErrorMessageFromQueryParams } from '@/server/routes/signIn';
 
 const { okta, defaultReturnUri, baseUri } = getConfiguration();
 
@@ -22,7 +23,7 @@ export const redirectIfLoggedIn = async (
   next: NextFunction,
 ) => {
   const state = res.locals;
-  const { useIdapi } = state.queryParams;
+  const { useIdapi, error, error_description } = state.queryParams;
 
   const oktaSessionCookieId: string | undefined = req.cookies.sid;
 
@@ -68,6 +69,9 @@ export const redirectIfLoggedIn = async (
             email,
             continueLink,
             signOutLink,
+          },
+          globalMessage: {
+            error: getErrorMessageFromQueryParams(error, error_description),
           },
         }),
         pageTitle: 'Sign in',

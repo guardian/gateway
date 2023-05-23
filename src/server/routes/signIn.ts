@@ -60,7 +60,7 @@ const { okta, accountManagementUrl, oauthBaseUrl, defaultReturnUri } =
  * @param error_description - error_description query parameter
  * @returns string | undefined - user facing error message
  */
-const getErrorMessageFromQueryParams = (
+export const getErrorMessageFromQueryParams = (
   error?: string,
   error_description?: string,
 ) => {

@@ -9,6 +9,7 @@ interface Props {
   continueLink: string;
   signOutLink: string;
   isNativeApp?: IsNativeApp;
+  pageError?: string;
 }
 
 export const SignedInAs = ({
@@ -16,9 +17,12 @@ export const SignedInAs = ({
   continueLink,
   signOutLink,
   isNativeApp,
+  pageError,
 }: Props) => (
   <MainLayout
     pageHeader={`Sign in to the Guardian${!!isNativeApp ? ' app' : ''}`}
+    errorOverride={pageError}
+    errorSmallMarginBottom={!!pageError}
   >
     <MainBodyText noMargin>
       You are signed in with <br />
