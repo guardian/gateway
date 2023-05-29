@@ -120,7 +120,7 @@
   "dependencies": {
     "@aws-sdk/client-cloudwatch": "^3.335.0",
     "@aws-sdk/client-kinesis": "^3.335.0",
-    "@aws-sdk/client-sesv2": "^3.336.0",
+    "@aws-sdk/client-sesv2": "^3.341.0",
     "@aws-sdk/credential-providers": "^3.335.0",
     "@aws-sdk/node-http-handler": "^3.329.0",
     "@emotion/react": "^11.11.0",
