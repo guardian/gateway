@@ -153,7 +153,7 @@ export const updateName = async (
 };
 
 /**
- * Until Gateway/Onboarding journey is migrated to Okta sessions, we don't have access to Okta User ID, only sg_gu_u cookie,
+ * Until Gateway/Onboarding journey is migrated to Okta sessions, we don't have access to Okta User ID, only sc_gu_u cookie,
  * so we need to add reg location via idapi (which updates Okta immediately). When Okta sessions are available, this should be refactored
  * to use okta directly (Which is the source of truth for the user field)
  */
