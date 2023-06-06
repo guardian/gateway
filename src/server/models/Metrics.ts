@@ -45,6 +45,7 @@ type ConditionalMetrics =
   | 'SignIn'
   | 'SignOut'
   | 'Unsubscribe'
+  | 'Subscribe'
   | 'UpdatePassword'
   | 'RecaptchaMiddleware'
   | 'ValidatePasswordToken';

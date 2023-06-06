@@ -34,8 +34,8 @@ import { JobsTermsPage } from '@/client/pages/JobsTermsAcceptPage';
 import { SignedInAsPage } from '@/client/pages/SignedInAsPage';
 import { ChangeEmailCompletePage } from '@/client/pages/ChangeEmailCompletePage';
 import { ChangeEmailErrorPage } from '@/client/pages/ChangeEmailErrorPage';
-import { UnsubscribeSuccessPage } from '@/client/pages/UnsubscribeSuccessPage';
-import { UnsubscribeErrorPage } from '@/client/pages/UnsubscribeErrorPage';
+import { SubscriptionSuccessPage } from '@/client/pages/SubscriptionSuccessPage';
+import { SubscriptionErrorPage } from '@/client/pages/SubscriptionErrorPage';
 import { ResendConsentEmailPage } from './pages/ResendConsentEmailPage';
 
 export type RoutingConfig = {
@@ -177,11 +177,19 @@ const routes: Array<{
   },
   {
     path: '/unsubscribe/success',
-    element: <UnsubscribeSuccessPage />,
+    element: <SubscriptionSuccessPage action={'unsubscribe'} />,
   },
   {
     path: '/unsubscribe/error',
-    element: <UnsubscribeErrorPage />,
+    element: <SubscriptionErrorPage action={'unsubscribe'} />,
+  },
+  {
+    path: '/subscribe/success',
+    element: <SubscriptionSuccessPage action={'subscribe'} />,
+  },
+  {
+    path: '/subscribe/error',
+    element: <SubscriptionErrorPage action={'subscribe'} />,
   },
   {
     path: '/magic-link',

@@ -6,11 +6,12 @@ import {
 } from '@/server/lib/IDAPIFetch';
 import { logger } from '@/server/lib/serverSideLogger';
 import { IdapiError } from '@/server/models/Error';
-import { UnsubscribeErrors } from '@/shared/model/Errors';
+import { SubscribeErrors, UnsubscribeErrors } from '@/shared/model/Errors';
+import { SubscriptionAction } from '@/shared/lib/subscriptions';
 
 type EmailType = 'newsletter' | 'marketing';
 
-interface UnsubscribeData {
+interface SubscriptionData {
   emailId: string;
   userId: string;
   timestamp: number;
@@ -20,11 +21,11 @@ export const isValidEmailType = (emailType: string): emailType is EmailType => {
   return ['newsletter', 'marketing'].includes(emailType);
 };
 
-export const parseUnsubscribeData = (data: string): UnsubscribeData => {
+export const parseSubscriptionData = (data: string): SubscriptionData => {
   const [emailId, userId, timestamp] = data.split(':');
 
   if (!emailId || !userId || !timestamp) {
-    throw new Error('Invalid unsubscribe data');
+    throw new Error('Invalid subscription data');
   }
 
   return {
@@ -34,13 +35,19 @@ export const parseUnsubscribeData = (data: string): UnsubscribeData => {
   };
 };
 
-const handleError = ({ status = 500 }: IDAPIError) => {
-  throw new IdapiError({ message: UnsubscribeErrors.GENERIC, status });
+const handleError = (
+  subscriptionAction: SubscriptionAction,
+  { status = 500 }: IDAPIError,
+) => {
+  const errors =
+    subscriptionAction === 'unsubscribe' ? UnsubscribeErrors : SubscribeErrors;
+  throw new IdapiError({ message: errors.GENERIC, status });
 };
 
-export const unsubscribe = async (
+export const makeSubscriptionRequest = async (
+  subscriptionAction: SubscriptionAction,
   emailType: EmailType,
-  unsubscribeData: UnsubscribeData,
+  unsubscribeData: SubscriptionData,
   token: string,
   ip: string,
   request_id?: string,
@@ -55,13 +62,17 @@ export const unsubscribe = async (
 
   try {
     await idapiFetch({
-      path: `/unsubscribe`,
+      path: `/${subscriptionAction}`,
       options,
     });
   } catch (error) {
-    logger.error(`IDAPI Error unsubscribe '/unsubscribe'`, error, {
-      request_id,
-    });
-    return handleError(error as IDAPIError);
+    logger.error(
+      `IDAPI Error ${subscriptionAction} '/${subscriptionAction}'`,
+      error,
+      {
+        request_id,
+      },
+    );
+    return handleError(subscriptionAction, error as IDAPIError);
   }
 };

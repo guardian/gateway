@@ -1,15 +1,21 @@
 import React from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
-import { UnsubscribeSuccess } from '@/client/pages/UnsubscribeSuccess';
+import { SubscriptionSuccess } from '@/client/pages/SubscriptionSuccess';
+import { SubscriptionAction } from '@/shared/lib/subscriptions';
 
-export const UnsubscribeSuccessPage = () => {
+interface Props {
+  action: SubscriptionAction;
+}
+
+export const SubscriptionSuccessPage = ({ action }: Props) => {
   const clientState = useClientState();
   const { pageData = {} } = clientState;
   const { returnUrl, accountManagementUrl } = pageData;
   return (
-    <UnsubscribeSuccess
+    <SubscriptionSuccess
       returnUrl={returnUrl}
       accountManagementUrl={accountManagementUrl}
+      action={action}
     />
   );
 };

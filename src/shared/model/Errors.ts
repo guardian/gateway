@@ -94,3 +94,7 @@ export enum RateLimitErrors {
 export enum UnsubscribeErrors {
   GENERIC = 'There was a problem unsubscribing, please try again.',
 }
+
+export enum SubscribeErrors {
+  GENERIC = 'There was a problem subscribing, please try again.',
+}

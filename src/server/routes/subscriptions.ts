@@ -4,19 +4,22 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import {
   isValidEmailType,
-  parseUnsubscribeData,
-  unsubscribe,
-} from '@/server/lib/idapi/unsubscribe';
+  parseSubscriptionData,
+  makeSubscriptionRequest,
+} from '@/server/lib/idapi/subscriptions';
 import { renderer } from '@/server/lib/renderer';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
+import {
+  SubscriptionAction,
+  subscriptionActionName,
+} from '@/shared/lib/subscriptions';
 
 const { accountManagementUrl } = getConfiguration();
 
-router.get(
-  '/unsubscribe/:emailType/:data/:token',
+const handler = (action: SubscriptionAction) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
     const { emailType, data, token } = req.params;
 
@@ -25,25 +28,26 @@ router.get(
         throw new Error('Invalid email type');
       }
 
-      const unsubscribeData = parseUnsubscribeData(data);
+      const subscriptionData = parseSubscriptionData(data);
 
-      await unsubscribe(
+      await makeSubscriptionRequest(
+        action,
         emailType,
-        unsubscribeData,
+        subscriptionData,
         token,
         req.ip,
         res.locals.requestId,
       );
 
-      trackMetric('Unsubscribe::Success');
+      trackMetric(`${subscriptionActionName(action)}::Success`);
 
-      const html = renderer('/unsubscribe/success', {
+      const html = renderer(`/${action}/success`, {
         requestState: mergeRequestState(res.locals, {
           pageData: {
             accountManagementUrl,
           },
         }),
-        pageTitle: 'Unsubscribe Confirmation',
+        pageTitle: `${subscriptionActionName(action)} Confirmation`,
       });
 
       return res.type('html').send(html);
@@ -52,20 +56,22 @@ router.get(
         request_id: res.locals.requestId,
       });
 
-      trackMetric('Unsubscribe::Failure');
+      trackMetric(`${subscriptionActionName(action)}::Failure`);
 
-      const html = renderer('/unsubscribe/error', {
+      const html = renderer(`/${action}/error`, {
         requestState: mergeRequestState(res.locals, {
           pageData: {
             accountManagementUrl,
           },
         }),
-        pageTitle: 'Unsubscribe Error',
+        pageTitle: `${subscriptionActionName(action)} Error`,
       });
 
       return res.type('html').send(html);
     }
-  }),
-);
+  });
+
+router.get('/unsubscribe/:emailType/:data/:token', handler('unsubscribe'));
+router.get('/subscribe/:emailType/:data/:token', handler('subscribe'));
 
 export default router.router;

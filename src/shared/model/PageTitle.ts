@@ -27,6 +27,8 @@ export type PageTitle =
   | 'Maintenance'
   | 'Jobs'
   | 'Change Email'
+  | 'Subscribe Error'
+  | 'Subscribe Confirmation'
   | 'Unsubscribe Error'
   | 'Unsubscribe Confirmation';
 
