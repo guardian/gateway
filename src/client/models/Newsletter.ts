@@ -1,5 +1,7 @@
 import { Newsletters } from '@/shared/model/Newsletter';
-import { brand, lifestyle, news } from '@guardian/source-foundations';
+import { palette } from '@guardian/source-foundations';
+
+const { brand, news, lifestyle } = palette;
 
 import {
   DOWN_TO_EARTH_IMAGE,

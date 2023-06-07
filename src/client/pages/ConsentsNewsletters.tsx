@@ -1,6 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { brand, from, space, neutral } from '@guardian/source-foundations';
+import { palette, from, space } from '@guardian/source-foundations';
 import {
   gridItem,
   gridItemColumnConsents,
@@ -36,7 +36,8 @@ type ConsentsNewslettersProps = {
   consents: NewsletterPageConsent[];
 };
 
-const getPillarColorById = (id: string) => NEWSLETTER_COLOURS[id] || brand[400];
+const getPillarColorById = (id: string) =>
+  NEWSLETTER_COLOURS[id] || palette.brand[400];
 
 const getNewsletterCardCss = (index: number) => {
   const ITEMS_PER_ROW = 2;
@@ -93,7 +94,7 @@ export const ConsentsNewsletters = ({ consents }: ConsentsNewslettersProps) => {
               ? {
                   id: consent.id,
                   defaultChecked: !!consent.consented,
-                  highlightColor: neutral[46],
+                  highlightColor: palette.neutral[46],
                   imagePath: CONSENT_IMAGES[consent.id],
                 }
               : {

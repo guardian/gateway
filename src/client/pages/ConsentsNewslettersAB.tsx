@@ -1,13 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import {
-  brand,
-  from,
-  lifestyle,
-  news,
-  space,
-  neutral,
-} from '@guardian/source-foundations';
+import { from, palette, space } from '@guardian/source-foundations';
 import {
   gridItem,
   gridItemColumnConsents,
@@ -23,6 +16,7 @@ import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { Consent } from '@/shared/model/Consent';
 import { NewsLetter } from '@/shared/model/Newsletter';
 import {
+  NEWSLETTER_COLOURS,
   NEWSLETTER_IMAGES,
   NEWSLETTER_IMAGE_POSITIONS,
 } from '@/client/models/Newsletter';
@@ -45,21 +39,8 @@ type ConsentsNewslettersProps = {
   defaultOnboardingEmailConsentState: boolean;
 };
 
-const idColor = (id: string) => {
-  if (/morning/.test(id)) {
-    return news[400];
-  }
-  if (id === 'the-long-read') {
-    return brand[400];
-  }
-  if (id === 'green-light') {
-    return news[400];
-  }
-  if (id === 'the-guide-staying-in') {
-    return lifestyle[400];
-  }
-  return brand[400];
-};
+const getPillarColorById = (id: string) =>
+  NEWSLETTER_COLOURS[id] || palette.brand[400];
 
 const getNewsletterCardCss = (index: number) => {
   const ITEMS_PER_ROW = 2;
@@ -110,7 +91,7 @@ export const ConsentsNewslettersAB = ({
               ? {
                   id: consent.id,
                   defaultChecked: !!consent.consented,
-                  highlightColor: neutral[46],
+                  highlightColor: palette.neutral[46],
                   imagePath: CONSENT_IMAGES[consent.id],
                 }
               : {
@@ -118,7 +99,7 @@ export const ConsentsNewslettersAB = ({
                   defaultChecked: consent.subscribed,
                   imagePath: NEWSLETTER_IMAGES[consent.id],
                   imagePosition: NEWSLETTER_IMAGE_POSITIONS[consent.id],
-                  highlightColor: idColor(consent.nameId),
+                  highlightColor: getPillarColorById(consent.id),
                   frequency: consent.frequency,
                   hiddenInput: true,
                 };
