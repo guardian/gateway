@@ -13,6 +13,11 @@ interface FeatureSwitches {
     CODE: boolean;
     PROD: boolean;
   };
+  gatewayOAuthEnabled: {
+    DEV: boolean;
+    CODE: boolean;
+    PROD: boolean;
+  };
 }
 
 export const featureSwitches: FeatureSwitches = {
@@ -21,5 +26,10 @@ export const featureSwitches: FeatureSwitches = {
     DEV: true,
     CODE: true,
     PROD: true,
+  },
+  gatewayOAuthEnabled: {
+    DEV: true,
+    CODE: true,
+    PROD: false,
   },
 };

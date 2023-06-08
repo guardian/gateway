@@ -26,12 +26,16 @@ import {
 
 const profileUrl = getProfileUrl();
 
+const { signInPageUrl: LOGIN_REDIRECT_URL, gatewayOAuthEnabled } =
+  getConfiguration();
+
 export const loginMiddlewareOAuth = async (
   req: Request,
   res: ResponseWithRequestState,
   next: NextFunction,
 ) => {
-  if (res.locals.queryParams.useIdapi) {
+  // if the useIdapi query parameter, or gatewayOAuthEnabled feature flag is falsey, use the old login middleware
+  if (res.locals.queryParams.useIdapi || !gatewayOAuthEnabled) {
     trackMetric('LoginMiddlewareOAuth::UseIdapi');
     return loginMiddleware(req, res, next);
   }
@@ -108,8 +112,6 @@ export const loginMiddleware = async (
   res: ResponseWithRequestState,
   next: NextFunction,
 ) => {
-  const { signInPageUrl: LOGIN_REDIRECT_URL } = getConfiguration();
-
   const redirectAuth = (auth: IDAPIAuthRedirect) => {
     if (auth.redirect) {
       const redirect = addQueryParamsToUntypedPath(auth.redirect.url, {
