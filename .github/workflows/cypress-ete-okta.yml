@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: [1, 2, 3, 4]
+        group: [1, 2, 3, 4, 5]
     timeout-minutes: 15
     services:
       redis:
@@ -88,6 +88,7 @@ jobs:
           GOOGLE_RECAPTCHA_SITE_KEY: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
           GOOGLE_RECAPTCHA_SECRET_KEY: 6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
           ENCRYPTION_SECRET_KEY: ${{ secrets.ENCRYPTION_SECRET_KEY }}
+          GU_OKTA_ENV_COOKIE: 'CODE'
           OKTA_ORG_URL: https://profile.thegulocal.com
           CYPRESS_OKTA_ORG_URL: https://profile.thegulocal.com
           OKTA_API_TOKEN: ${{ secrets.OKTA_API_TOKEN }}
@@ -106,7 +107,7 @@ jobs:
           REDIS_HOST: localhost
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
           REDIS_SSL_ON: false
-          RATE_LIMITER_CONFIG: '{"enabled":true,"defaultBuckets":{"globalBucket":{"capacity":500,"addTokenMs":50},"ipBucket":{"capacity":100,"addTokenMs":50},"emailBucket":{"capacity":100,"addTokenMs":50},"oktaIdentifierBucket":{"capacity":100,"addTokenMs":50},"accessTokenBucket":{"capacity":4,"addTokenMs":5000}},"routeBuckets":{}}'
+          RATE_LIMITER_CONFIG: '{"enabled":true,"defaultBuckets":{"globalBucket":{"capacity":500,"addTokenMs":50},"ipBucket":{"capacity":100,"addTokenMs":50},"emailBucket":{"capacity":100,"addTokenMs":50},"oktaIdentifierBucket":{"capacity":100,"addTokenMs":50},"accessTokenBucket":{"capacity":4,"addTokenMs":5000}},"routeBuckets":{"/consents/:page":{"globalBucket":{"capacity":500,"addTokenMs":50},"accessTokenBucket":{"capacity":100,"addTokenMs":50}}}}'
           # Required for the Cypress tests to run as we're unable to verify the created certs
           NODE_TLS_REJECT_UNAUTHORIZED: 0
           # Used to tell Gateway server we're running in Cypress

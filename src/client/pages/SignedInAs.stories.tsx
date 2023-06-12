@@ -21,3 +21,12 @@ export const NativeApp = () => (
     isNativeApp="android"
   />
 );
+
+export const Error = () => (
+  <SignedInAs
+    email="test@example.com"
+    continueLink="#"
+    signOutLink="#"
+    pageError={'Something went wrong'}
+  />
+);

@@ -43,7 +43,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
       cy.visit(termsAcceptPageUrl);
       cy.url().should(
         'include',
-        'https://profile.thegulocal.com/signin?returnUrl=https%3A%2F%2Fprofile.thegulocal.com%2Fhealthcheck',
+        'https://profile.thegulocal.com/signin?fromURI=',
       );
     });
 
@@ -69,6 +69,12 @@ describe('Jobs terms and conditions flow in Okta', () => {
           lastName: '',
           isJobsUser: true,
         }).then(() => {
+          // clear oauth token cookies to simulate the user profile update
+          cy.clearCookie('GU_ID_TOKEN', { domain: Cypress.env('BASE_URI') });
+          cy.clearCookie('GU_ACCESS_TOKEN', {
+            domain: Cypress.env('BASE_URI'),
+          });
+
           cy.visit(termsAcceptPageUrl);
           cy.contains('Please complete your details for');
           cy.contains(emailAddress);

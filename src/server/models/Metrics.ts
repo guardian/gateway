@@ -55,6 +55,12 @@ type UnconditionalMetrics =
   | 'LoginMiddlewareNotRecent'
   | 'LoginMiddlewareNotSignedIn'
   | 'LoginMiddlewareUnverified'
+  | 'LoginMiddlewareOAuth::HasOAuthTokens'
+  | 'LoginMiddlewareOAuth::NoOAuthTokens'
+  | 'LoginMiddlewareOAuth::OAuthTokensInvalid'
+  | 'LoginMiddlewareOAuth::OAuthTokensValid'
+  | 'LoginMiddlewareOAuth::SignedOutCookie'
+  | 'LoginMiddlewareOAuth::UseIdapi'
   | `${RateLimitMetrics}GatewayRateLimitHit`
   | `User-${'EmailValidated' | 'EmailNotValidated'}-${
       | 'WeakPassword'

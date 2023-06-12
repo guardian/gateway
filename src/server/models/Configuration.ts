@@ -27,6 +27,7 @@ export interface Configuration {
   accountManagementUrl: string;
   rateLimiter: RateLimiterConfiguration;
   membersDataApiUrl: string;
+  gatewayOAuthEnabled: boolean;
 }
 
 export interface AWSConfiguration {

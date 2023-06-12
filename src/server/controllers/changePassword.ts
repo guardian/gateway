@@ -28,12 +28,16 @@ import {
 } from '@/server/lib/okta/api/authentication';
 import { OktaError } from '@/server/models/okta/Error';
 import { checkTokenInOkta } from '@/server/controllers/checkPasswordToken';
-import { performAuthorizationCodeFlow } from '@/server/lib/okta/oauth';
+import {
+  performAuthorizationCodeFlow,
+  scopesForAuthentication,
+} from '@/server/lib/okta/oauth';
 import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
 import { setupJobsUserInIDAPI, setupJobsUserInOkta } from '../lib/jobs';
 import { sendOphanComponentEventFromQueryParamsServer } from '../lib/ophan';
 import { clearOktaCookies } from '../routes/signOut';
 import { mergeRequestState } from '@/server/lib/requestState';
+import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
 
 const { okta } = getConfiguration();
 
@@ -264,6 +268,9 @@ const changePasswordInOkta = async (
         sessionToken,
         confirmationPagePath: successRedirectPath,
         closeExistingSession: true,
+        prompt: 'none',
+        scopes: scopesForAuthentication,
+        redirectUri: ProfileOpenIdClientRedirectUris.AUTHENTICATION,
       });
     } else {
       throw new OktaError({ message: 'Okta state token missing' });

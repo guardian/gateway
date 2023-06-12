@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-
 import { injectAndCheckAxe } from '../../support/cypress-axe';
 import { authRedirectSignInRecentlyEmailValidated } from '../../support/idapi/auth';
 import { allConsents } from '../../support/idapi/consent';
@@ -75,10 +74,10 @@ describe('Verify email flow', () => {
       cy.mockNext(200, allConsents);
 
       // user newsletters mock response for first page of consents flow
-      cy.mockNext(200, verifiedUserWithNoConsent);
+      cy.mockNext(200, verifiedUserWithNoConsent.user.consents);
 
       // go to verify email endpoint
-      verifyEmailFlow.goto('avalidtoken');
+      verifyEmailFlow.goto('avalidtoken', { query: { useIdapi: 'true' } });
 
       // check if verified email text exists
       cy.contains(VerifyEmail.CONTENT.EMAIL_VERIFIED);
@@ -102,7 +101,7 @@ describe('Verify email flow', () => {
       cy.mockNext(200, allConsents);
 
       // user newsletters mock response for first page of consents flow
-      cy.mockNext(200, verifiedUserWithNoConsent);
+      cy.mockNext(200, verifiedUserWithNoConsent.user.consents);
 
       const returnUrl = encodeURIComponent(
         `https://www.theguardian.com/science/grrlscientist/2012/aug/07/3`,
@@ -112,6 +111,7 @@ describe('Verify email flow', () => {
       verifyEmailFlow.goto('avalidtoken', {
         query: {
           returnUrl,
+          useIdapi: 'true',
         },
       });
 
@@ -140,7 +140,7 @@ describe('Verify email flow', () => {
       cy.mockNext(200, allConsents);
 
       // user newsletters mock response for first page of consents flow
-      cy.mockNext(200, verifiedUserWithNoConsent);
+      cy.mockNext(200, verifiedUserWithNoConsent.user.consents);
 
       const returnUrl = `https://www.theguardian.com/science/grrlscientist/2012/aug/07/3`;
 
@@ -148,6 +148,7 @@ describe('Verify email flow', () => {
       verifyEmailFlow.goto('avalidtoken', {
         query: {
           returnUrl,
+          useIdapi: 'true',
         },
       });
 
@@ -167,7 +168,10 @@ describe('Verify email flow', () => {
       cy.mockNext(403, validationTokenExpired);
 
       // go to verify email endpont
-      verifyEmailFlow.goto('expiredtoken', { failOnStatusCode: false });
+      verifyEmailFlow.goto('expiredtoken', {
+        failOnStatusCode: false,
+        query: { useIdapi: 'true' },
+      });
 
       cy.contains(VerifyEmail.CONTENT.LINK_EXPIRED);
       cy.contains(VerifyEmail.CONTENT.TOKEN_EXPIRED);
@@ -189,7 +193,10 @@ describe('Verify email flow', () => {
       cy.mockNext(403, validationTokenInvalid);
 
       // go to verify email endpont
-      verifyEmailFlow.goto('aninvalidtoken', { failOnStatusCode: false });
+      verifyEmailFlow.goto('aninvalidtoken', {
+        failOnStatusCode: false,
+        query: { useIdapi: 'true' },
+      });
 
       cy.contains(VerifyEmail.CONTENT.LINK_EXPIRED);
       cy.contains(VerifyEmail.CONTENT.TOKEN_EXPIRED);
@@ -222,7 +229,10 @@ describe('Verify email flow', () => {
       cy.mockNext(200);
 
       // go to verify email endpont
-      verifyEmailFlow.goto('expiredtoken', { failOnStatusCode: false });
+      verifyEmailFlow.goto('expiredtoken', {
+        failOnStatusCode: false,
+        query: { useIdapi: 'true' },
+      });
 
       cy.contains(VerifyEmail.CONTENT.VERIFY_EMAIL);
       cy.contains(VerifyEmail.CONTENT.CONFIRM_EMAIL);
@@ -252,7 +262,10 @@ describe('Verify email flow', () => {
       cy.mockNext(200);
 
       // go to verify email endpont
-      verifyEmailFlow.goto('expiredtoken', { failOnStatusCode: false });
+      verifyEmailFlow.goto('expiredtoken', {
+        failOnStatusCode: false,
+        query: { useIdapi: 'true' },
+      });
 
       cy.contains(VerifyEmail.CONTENT.VERIFY_EMAIL);
       cy.contains(VerifyEmail.CONTENT.CONFIRM_EMAIL);
@@ -282,7 +295,10 @@ describe('Verify email flow', () => {
       cy.mockNext(200);
 
       // go to verify email endpont
-      verifyEmailFlow.goto('expiredtoken', { failOnStatusCode: false });
+      verifyEmailFlow.goto('expiredtoken', {
+        failOnStatusCode: false,
+        query: { useIdapi: 'true' },
+      });
 
       cy.contains(VerifyEmail.CONTENT.VERIFY_EMAIL);
       cy.contains(VerifyEmail.CONTENT.CONFIRM_EMAIL);

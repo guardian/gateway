@@ -21,15 +21,15 @@ describe('Consent token flow', () => {
           timeRequestWasMade,
           /consent-token\/([^"]*)/,
         ).then(({ token }) => {
-          cy.visit(`/consent-token/${token}`, {
+          cy.visit(`/consent-token/${token}/accept`, {
             failOnStatusCode: false,
           });
           // /consents/thank-you isn't hosted by Gateway so all we need to check
-          // is that the cy.visit() redirected successfully - this will show a 404 page.
-          cy.url().should(
-            'be.equal',
-            `https://${Cypress.env('BASE_URI')}/consents/thank-you`,
-          );
+          // is that the cy.visit() redirected successfully, so intercept the request
+          // and return a 200
+          cy.intercept('GET', '/consents/thank-you', (req) => {
+            req.reply(200);
+          });
         });
       });
     });

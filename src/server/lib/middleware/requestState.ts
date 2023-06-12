@@ -98,6 +98,7 @@ const getRequestState = async (
     },
     browser: browser.getBrowser(),
     requestId: req.get('x-request-id'),
+    oauthState: {},
   };
 };
 

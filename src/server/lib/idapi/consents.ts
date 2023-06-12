@@ -1,16 +1,14 @@
 import {
   idapiFetch,
   APIPatchOptions,
-  APIAddClientAccessToken,
-  APIForwardSessionIdentifier,
   APIGetOptions,
+  APIOptionSelect,
 } from '@/server/lib/IDAPIFetch';
 import { logger } from '@/server/lib/serverSideLogger';
 import { ConsentsErrors } from '@/shared/model/Errors';
 import { Consent } from '@/shared/model/Consent';
 import { UserConsent } from '@/shared/model/User';
 import { IdapiError } from '@/server/models/Error';
-import { read as getUser } from './user';
 import {
   invertOptInConsents,
   invertOptOutConsents,
@@ -54,19 +52,59 @@ const read = async (request_id?: string): Promise<Consent[]> => {
   }
 };
 
-export const update = async (
-  ip: string,
-  sc_gu_u: string,
-  payload: UserConsent[],
-  request_id?: string,
-) => {
+export const readUserConsents = async ({
+  ip,
+  sc_gu_u,
+  accessToken,
+  request_id,
+}: {
+  ip?: string;
+  sc_gu_u?: string;
+  accessToken?: string;
+  request_id?: string;
+}): Promise<UserConsent[]> => {
+  const options = APIOptionSelect({
+    sc_gu_u,
+    ip,
+    options: APIGetOptions(),
+    accessToken,
+  });
+  try {
+    return (await idapiFetch({
+      path: '/users/me/consents',
+      options,
+    })) as UserConsent[];
+  } catch (error) {
+    logger.error(`IDAPI Error consents read '/users/me/consents'`, error, {
+      request_id,
+    });
+    return handleError();
+  }
+};
+
+export const update = async ({
+  payload,
+  accessToken,
+  request_id,
+  ip,
+  sc_gu_u,
+}: {
+  ip?: string;
+  sc_gu_u?: string;
+  payload: UserConsent[];
+  accessToken?: string;
+  request_id?: string;
+}) => {
   // Inversion required of four legitimate interest consents that are modelled as opt OUTS in the backend data model
   // but which are presented as opt INs on the client UI/UX
   const invertedPayload = invertOptInConsents(payload) as UserConsent[];
-  const options = APIForwardSessionIdentifier(
-    APIAddClientAccessToken(APIPatchOptions(invertedPayload), ip),
+  const options = APIOptionSelect({
     sc_gu_u,
-  );
+    ip,
+    accessToken,
+    options: APIPatchOptions(invertedPayload),
+  });
+
   try {
     await idapiFetch({
       path: '/users/me/consents',
@@ -81,17 +119,24 @@ export const update = async (
   }
 };
 
-export const getUserConsentsForPage = async (
-  pageConsents: string[],
-  ip: string,
-  sc_gu_u: string,
-  request_id?: string,
-): Promise<Consent[]> => {
+export const getUserConsentsForPage = async ({
+  pageConsents,
+  ip,
+  sc_gu_u,
+  accessToken,
+  request_id,
+}: {
+  pageConsents: string[];
+  request_id?: string;
+  ip?: string;
+  sc_gu_u?: string;
+  accessToken?: string;
+}): Promise<Consent[]> => {
   // Inversion required of four legitimate interest consents that are modelled as opt OUTS in the backend data model
   // but which are presented as opt INs on the client UI/UX
   const allConsents = invertOptOutConsents(await read(request_id));
   const userConsents = invertOptOutConsents(
-    (await getUser(ip, sc_gu_u, request_id)).consents,
+    await readUserConsents({ ip, sc_gu_u, accessToken, request_id }),
   );
 
   return pageConsents

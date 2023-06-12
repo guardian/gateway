@@ -49,6 +49,7 @@ interface StageVariables {
   guardianDotcomDomain: string;
   apiDomain: string;
   oktaEnabled: boolean;
+  gatewayOAuthEnabled: boolean;
   accountManagementUrl: string;
 }
 
@@ -59,6 +60,7 @@ const getStageVariables = (stage: Stage): StageVariables => {
         guardianDotcomDomain: GU_DOMAIN.PROD,
         apiDomain: GU_API_DOMAIN.PROD,
         oktaEnabled: featureSwitches.oktaEnabled.PROD,
+        gatewayOAuthEnabled: featureSwitches.gatewayOAuthEnabled.PROD,
         accountManagementUrl: GU_MANAGE_URL.PROD,
       };
     case 'CODE':
@@ -66,6 +68,7 @@ const getStageVariables = (stage: Stage): StageVariables => {
         guardianDotcomDomain: GU_DOMAIN.CODE,
         apiDomain: GU_API_DOMAIN.CODE,
         oktaEnabled: featureSwitches.oktaEnabled.CODE,
+        gatewayOAuthEnabled: featureSwitches.gatewayOAuthEnabled.CODE,
         accountManagementUrl: GU_MANAGE_URL.CODE,
       };
     default:
@@ -73,6 +76,7 @@ const getStageVariables = (stage: Stage): StageVariables => {
         guardianDotcomDomain: GU_DOMAIN.DEV,
         apiDomain: GU_API_DOMAIN.DEV,
         oktaEnabled: featureSwitches.oktaEnabled.DEV,
+        gatewayOAuthEnabled: featureSwitches.gatewayOAuthEnabled.DEV,
         accountManagementUrl: GU_MANAGE_URL.DEV,
       };
   }
@@ -123,8 +127,13 @@ export const getConfiguration = (): Configuration => {
 
   const stage = getStage(process.env.STAGE);
 
-  const { guardianDotcomDomain, apiDomain, oktaEnabled, accountManagementUrl } =
-    getStageVariables(stage);
+  const {
+    guardianDotcomDomain,
+    apiDomain,
+    oktaEnabled,
+    accountManagementUrl,
+    gatewayOAuthEnabled,
+  } = getStageVariables(stage);
 
   const isHttps: boolean = JSON.parse(
     getOrThrow(process.env.IS_HTTPS, 'IS_HTTPS config missing.'),
@@ -245,5 +254,6 @@ export const getConfiguration = (): Configuration => {
     accountManagementUrl,
     rateLimiter,
     membersDataApiUrl,
+    gatewayOAuthEnabled,
   };
 };

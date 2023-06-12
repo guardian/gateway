@@ -136,6 +136,7 @@ describe('getConfiguration', () => {
         },
       },
       membersDataApiUrl: 'members-data-api-url',
+      gatewayOAuthEnabled: true,
     } as Configuration;
 
     expect(output).toEqual(expected);

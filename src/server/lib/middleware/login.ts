@@ -10,16 +10,108 @@ import { logger } from '@/server/lib/serverSideLogger';
 import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { buildUrl } from '@/shared/lib/routeUtils';
+import {
+  performAuthorizationCodeFlow,
+  Scopes,
+  scopesForApplication,
+} from '@/server/lib/okta/oauth';
+import { RoutePaths } from '@/shared/model/Routes';
+import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
+import {
+  checkAndDeleteOAuthTokenCookies,
+  getOAuthTokenCookie,
+  verifyAccessToken,
+  verifyIdToken,
+} from '@/server/lib/okta/tokens';
 
 const profileUrl = getProfileUrl();
+
+const { signInPageUrl: LOGIN_REDIRECT_URL, gatewayOAuthEnabled } =
+  getConfiguration();
+
+export const loginMiddlewareOAuth = async (
+  req: Request,
+  res: ResponseWithRequestState,
+  next: NextFunction,
+) => {
+  // if the useIdapi query parameter, or gatewayOAuthEnabled feature flag is falsey, use the old login middleware
+  if (res.locals.queryParams.useIdapi || !gatewayOAuthEnabled) {
+    trackMetric('LoginMiddlewareOAuth::UseIdapi');
+    return loginMiddleware(req, res, next);
+  }
+
+  // if a user has the GU_SO cookie, they have recently signed out
+  // so we need to clear any existing tokens
+  // and perform the auth code flow to get new tokens
+  // and log the user in if necessary
+  if (req.cookies.GU_SO) {
+    trackMetric('LoginMiddlewareOAuth::SignedOutCookie');
+
+    // clear existing tokens
+    checkAndDeleteOAuthTokenCookies(req, res);
+
+    // perform the auth code flow
+    return performAuthorizationCodeFlow(req, res, {
+      redirectUri: ProfileOpenIdClientRedirectUris.APPLICATION,
+      scopes: scopesForApplication,
+      confirmationPagePath: req.path as RoutePaths, //req.path will always be a RoutePaths
+    });
+  }
+
+  // no
+  // 2. has valid oauth access and id tokens
+  const accessTokenCookie = getOAuthTokenCookie(req, 'GU_ACCESS_TOKEN');
+  const idTokenCookie = getOAuthTokenCookie(req, 'GU_ID_TOKEN');
+
+  if (accessTokenCookie && idTokenCookie) {
+    trackMetric('LoginMiddlewareOAuth::HasOAuthTokens');
+    const accessToken = await verifyAccessToken(accessTokenCookie);
+    const idToken = await verifyIdToken(idTokenCookie);
+
+    // yes: isLoggedIn = true, no need to get new tokens
+    if (
+      // check access token is valid
+      accessToken &&
+      // check that the id token is valid
+      idToken &&
+      // check that the access token is not expired
+      !accessToken.isExpired() &&
+      // check that the scopes are all the ones we expect
+      accessToken.claims.scp?.every((scope) =>
+        scopesForApplication.includes(scope as Scopes),
+      )
+    ) {
+      trackMetric('LoginMiddlewareOAuth::OAuthTokensValid');
+
+      // store the oauth state in res.locals state
+      // eslint-disable-next-line functional/immutable-data
+      res.locals.oauthState = {
+        accessToken,
+        idToken,
+      };
+
+      return next();
+    } else {
+      trackMetric('LoginMiddlewareOAuth::OAuthTokensInvalid');
+    }
+  } else {
+    trackMetric('LoginMiddlewareOAuth::NoOAuthTokens');
+  }
+
+  // no: attempt to do auth code flow to get new tokens
+  // perform the auth code flow
+  return performAuthorizationCodeFlow(req, res, {
+    redirectUri: ProfileOpenIdClientRedirectUris.APPLICATION,
+    scopes: scopesForApplication,
+    confirmationPagePath: req.path as RoutePaths, //req.path will always be a RoutePaths
+  });
+};
 
 export const loginMiddleware = async (
   req: Request,
   res: ResponseWithRequestState,
   next: NextFunction,
 ) => {
-  const { signInPageUrl: LOGIN_REDIRECT_URL } = getConfiguration();
-
   const redirectAuth = (auth: IDAPIAuthRedirect) => {
     if (auth.redirect) {
       const redirect = addQueryParamsToUntypedPath(auth.redirect.url, {

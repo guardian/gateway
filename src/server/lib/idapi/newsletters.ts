@@ -2,8 +2,7 @@ import {
   idapiFetch,
   APIGetOptions,
   APIPatchOptions,
-  APIAddClientAccessToken,
-  APIForwardSessionIdentifier,
+  APIOptionSelect,
 } from '@/server/lib/IDAPIFetch';
 import { NewslettersErrors } from '@/shared/model/Errors';
 import { NewsLetter, NewsletterPatch } from '@/shared/model/Newsletter';
@@ -52,16 +51,25 @@ export const read = async (request_id?: string): Promise<NewsLetter[]> => {
   }
 };
 
-export const update = async (
-  ip: string,
-  sc_gu_u: string,
-  payload: NewsletterPatch[],
-  request_id?: string,
-) => {
-  const options = APIForwardSessionIdentifier(
-    APIAddClientAccessToken(APIPatchOptions(payload), ip),
+export const update = async ({
+  ip,
+  sc_gu_u,
+  accessToken,
+  payload,
+  request_id,
+}: {
+  ip?: string;
+  sc_gu_u?: string;
+  accessToken?: string;
+  payload: NewsletterPatch[];
+  request_id?: string;
+}) => {
+  const options = APIOptionSelect({
+    ip,
     sc_gu_u,
-  );
+    accessToken,
+    options: APIPatchOptions(payload),
+  });
 
   try {
     await idapiFetch({
@@ -85,15 +93,23 @@ interface Subscription {
   listId: number;
 }
 
-export const readUserNewsletters = async (
-  ip: string,
-  sc_gu_u: string,
-  request_id?: string,
-) => {
-  const options = APIForwardSessionIdentifier(
-    APIAddClientAccessToken(APIGetOptions(), ip),
+export const readUserNewsletters = async ({
+  ip,
+  sc_gu_u,
+  accessToken,
+  request_id,
+}: {
+  ip?: string;
+  sc_gu_u?: string;
+  accessToken?: string;
+  request_id?: string;
+}) => {
+  const options = APIOptionSelect({
+    ip,
     sc_gu_u,
-  );
+    accessToken,
+    options: APIGetOptions(),
+  });
 
   try {
     return (
