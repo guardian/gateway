@@ -68,4 +68,7 @@ module.exports = {
       target: ['web'],
     };
   },
+  typescript: {
+    reactDocgen: 'react-docgen-typescript-plugin',
+  },
 };
