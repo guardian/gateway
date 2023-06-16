@@ -2,13 +2,13 @@ const path = require('path');
 const { neutral } = require('@guardian/source-foundations');
 const deepmerge = require('deepmerge');
 const sharedLoader = require('../.swcrc.config');
-
-module.exports = {
+const config = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
-  addons: ['@storybook/addon-links', '@storybook/addon-essentials'],
-  core: {
-    builder: 'webpack5',
-  },
+  addons: [
+    '@storybook/addon-links',
+    '@storybook/addon-essentials',
+    '@storybook/addon-styling',
+  ],
   babel: async (options) => {
     options.presets.push('@emotion/babel-preset-css-prop');
     return options;
@@ -29,7 +29,8 @@ module.exports = {
       '@': path.join(__dirname, '../src'),
       react: 'preact/compat',
       'react-dom/test-utils': 'preact/test-utils',
-      'react-dom': 'preact/compat', // Must be below test-utils
+      'react-dom': 'preact/compat',
+      // Must be below test-utils
       'react/jsx-runtime': 'preact/jsx-runtime',
       mjml: 'mjml-browser',
       // We stub these libraries required by mjml because Storybook cannot run these on the client side.
@@ -46,11 +47,7 @@ module.exports = {
           options: {
             env: {
               targets: {
-                // browsers that support type="module" and dynamic import
-                chrome: '66',
-                edge: '79',
-                firefox: '67',
-                safari: '13',
+                chrome: '100',
               },
             },
           },
@@ -71,4 +68,12 @@ module.exports = {
   typescript: {
     reactDocgen: 'react-docgen-typescript-plugin',
   },
+  framework: {
+    name: '@storybook/react-webpack5',
+    options: {},
+  },
+  docs: {
+    autodocs: false,
+  },
 };
+export default config;

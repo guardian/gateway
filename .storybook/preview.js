@@ -1,14 +1,46 @@
-import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 import React from 'react';
+import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
+import { withThemeFromJSXProvider } from '@storybook/addon-styling';
+import { Global, css } from '@emotion/react';
 import { FocusStyleManager } from '@guardian/source-foundations';
-
+import { fontFaces } from '@/client/lib/fonts';
 import { Breakpoints } from '@/client/models/Style';
 import clientStateDecorator from './clientStateDecorator';
+import { neutral } from '@guardian/source-foundations';
+
+const GlobalStyles = () => (
+  <Global
+    styles={css`
+      ${fontFaces}
+      html {
+        height: 100%;
+        box-sizing: border-box;
+      }
+      body {
+        height: 100%;
+        color: ${neutral[7]};
+      }
+      #storybook-root {
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+      *,
+      *:before,
+      *:after {
+        box-sizing: inherit;
+      }
+      .grecaptcha-badge {
+        visibility: hidden;
+      }
+    `}
+  />
+);
 
 /* Source provides a global utility that manages the appearance of focus styles. When enabled,
  * focus styles will be hidden while the user interacts using the mouse.
  * They will appear when the tab key is pressed to begin keyboard navigation. */
-export const FocusManagerDecorator = (storyFn) => {
+const FocusManagerDecorator = (storyFn) => {
   React.useEffect(() => {
     FocusStyleManager.onlyShowFocusOnTabs();
   }, []);
@@ -30,9 +62,15 @@ for (let breakpoint in Breakpoints) {
   }
 }
 
-export const decorators = [FocusManagerDecorator, clientStateDecorator];
+const decorators = [
+  withThemeFromJSXProvider({
+    GlobalStyles,
+  }),
+  FocusManagerDecorator,
+  clientStateDecorator,
+];
 
-export const parameters = {
+const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
   controls: {
     matchers: {
@@ -48,3 +86,10 @@ export const parameters = {
     defaultViewport: 'MOBILE',
   },
 };
+
+const preview = {
+  decorators,
+  parameters,
+};
+
+export default preview;
