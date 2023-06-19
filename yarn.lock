@@ -17780,10 +17780,10 @@ snyk-nodejs-lockfile-parser@^1.49.0:
     tslib "^1.9.3"
     uuid "^8.3.0"
 
-snyk@^1.1177.0:
-  version "1.1177.0"
-  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.1177.0.tgz#794d9964573a31976c596298546aa11d81d82311"
-  integrity sha512-6IMJCEqfJv9E1Ebt7XAAEb+l5F6vqw+jJ5AYX5S9JqtnwH4MiFDZO8DFshvSXtT/ghJq1UEVM9lwxwDhxpdQ/g==
+snyk@^1.1183.0:
+  version "1.1183.0"
+  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.1183.0.tgz#85852bb117870f98cc064e0b2b15e47a8c40b2c7"
+  integrity sha512-teV1xPziM+2zYzOkMfOMhfgjXs+QaJLWyIuccosO40suKrNlcU+Gj9Cnj8SdRvsV+tRH9TGZBLRpmbneBxUqEw==
   dependencies:
     "@sentry/node" "^7.36.0"
     global-agent "^3.0.0"
