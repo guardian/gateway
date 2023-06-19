@@ -115,7 +115,7 @@
     "webpack-cli": "^5.1.4",
     "webpack-merge": "^5.9.0",
     "webpack-node-externals": "^3.0.0",
-    "zod-to-json-schema": "^3.21.1"
+    "zod-to-json-schema": "^3.21.2"
   },
   "dependencies": {
     "@aws-sdk/client-cloudwatch": "^3.350.0",
