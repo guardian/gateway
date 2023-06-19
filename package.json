@@ -81,7 +81,7 @@
     "cypress-axe": "^1.4.0",
     "cypress-mailosaur": "2.13.0",
     "dotenv-webpack": "^8.0.1",
-    "eslint": "^8.42.0",
+    "eslint": "^8.43.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-functional": "^5.0.8",
     "eslint-plugin-jsx-a11y": "^6.7.1",
