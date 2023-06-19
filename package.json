@@ -121,7 +121,7 @@
     "@aws-sdk/client-cloudwatch": "^3.350.0",
     "@aws-sdk/client-kinesis": "^3.350.0",
     "@aws-sdk/client-sesv2": "^3.350.0",
-    "@aws-sdk/credential-providers": "^3.350.0",
+    "@aws-sdk/credential-providers": "^3.354.0",
     "@aws-sdk/node-http-handler": "^3.350.0",
     "@emotion/react": "^11.11.1",
     "@faire/mjml-react": "^3.3.0",
