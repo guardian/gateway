@@ -63,3 +63,6 @@ cypress/screenshots
 
 # swc
 .swc
+
+# storybook
+storybook-static
