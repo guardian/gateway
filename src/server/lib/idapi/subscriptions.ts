@@ -9,7 +9,7 @@ import { IdapiError } from '@/server/models/Error';
 import { SubscribeErrors, UnsubscribeErrors } from '@/shared/model/Errors';
 import { SubscriptionAction } from '@/shared/lib/subscriptions';
 
-type EmailType = 'newsletter' | 'marketing';
+export type EmailType = 'newsletter' | 'marketing';
 
 interface SubscriptionData {
   emailId: string;

@@ -61,6 +61,9 @@ export interface PageData {
   // signed in as page specific
   continueLink?: string;
   signOutLink?: string;
+
+  // subscription specific
+  newsletterId?: string;
 }
 
 export interface RecaptchaConfig {
