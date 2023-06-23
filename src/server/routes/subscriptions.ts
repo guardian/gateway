@@ -17,11 +17,10 @@ import {
   SubscriptionAction,
   subscriptionActionName,
 } from '@/shared/lib/subscriptions';
-import { PageData } from '@/shared/model/ClientState';
 
 const { accountManagementUrl } = getConfiguration();
 
-const buildPageData = (emailType: EmailType, emailId: string): PageData => {
+const buildPageData = (emailType: EmailType, emailId: string) => {
   if (emailType === 'newsletter') {
     return {
       accountManagementUrl,
