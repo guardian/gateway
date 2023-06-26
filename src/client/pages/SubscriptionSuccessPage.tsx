@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { SubscriptionSuccess } from '@/client/pages/SubscriptionSuccess';
 import { SubscriptionAction } from '@/shared/lib/subscriptions';
+import { sendOphanComponentEvent } from '@/client/lib/ophan';
 
 interface Props {
   action: SubscriptionAction;
@@ -10,7 +11,20 @@ interface Props {
 export const SubscriptionSuccessPage = ({ action }: Props) => {
   const clientState = useClientState();
   const { pageData = {} } = clientState;
-  const { returnUrl, accountManagementUrl } = pageData;
+  const { returnUrl, accountManagementUrl, newsletterId } = pageData;
+
+  useEffect(() => {
+    if (newsletterId) {
+      sendOphanComponentEvent({
+        action: 'SUBSCRIBE',
+        component: {
+          componentType: 'NEWSLETTER_SUBSCRIPTION',
+          id: newsletterId,
+        },
+      });
+    }
+  }, [newsletterId]);
+
   return (
     <SubscriptionSuccess
       returnUrl={returnUrl}

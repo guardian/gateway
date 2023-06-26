@@ -225,6 +225,6 @@ export const sendOphanComponentEventFromQueryParamsServer = async (
       { request_id },
     );
 
-    record(componentEvent, config);
+    record({ componentEvent }, config);
   }
 };

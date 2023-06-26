@@ -6,6 +6,7 @@ import {
   isValidEmailType,
   parseSubscriptionData,
   makeSubscriptionRequest,
+  EmailType,
 } from '@/server/lib/idapi/subscriptions';
 import { renderer } from '@/server/lib/renderer';
 import { mergeRequestState } from '@/server/lib/requestState';
@@ -18,6 +19,18 @@ import {
 } from '@/shared/lib/subscriptions';
 
 const { accountManagementUrl } = getConfiguration();
+
+const buildPageData = (emailType: EmailType, emailId: string) => {
+  if (emailType === 'newsletter') {
+    return {
+      accountManagementUrl,
+      newsletterId: emailId,
+    };
+  }
+  return {
+    accountManagementUrl,
+  };
+};
 
 const handler = (action: SubscriptionAction) =>
   handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
@@ -43,9 +56,7 @@ const handler = (action: SubscriptionAction) =>
 
       const html = renderer(`/${action}/success`, {
         requestState: mergeRequestState(res.locals, {
-          pageData: {
-            accountManagementUrl,
-          },
+          pageData: buildPageData(emailType, subscriptionData.emailId),
         }),
         pageTitle: `${subscriptionActionName(action)} Confirmation`,
       });
