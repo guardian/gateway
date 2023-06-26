@@ -11,4 +11,7 @@ export interface OphanBase {
   abTestRegister?: { [testId: string]: OphanABEvent };
 }
 
-export type OphanEvent = OphanBase | OphanInteraction | OphanComponentEvent;
+export type OphanEvent =
+  | OphanBase
+  | OphanInteraction
+  | { componentEvent: OphanComponentEvent };

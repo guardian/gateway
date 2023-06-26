@@ -36,6 +36,4 @@ export const trackFormFocusBlur = (
 
 export const sendOphanComponentEvent = (
   componentEvent: OphanComponentEvent,
-): void => {
-  record(componentEvent);
-};
+): void => record({ componentEvent });
