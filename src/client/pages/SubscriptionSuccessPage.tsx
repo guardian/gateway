@@ -14,7 +14,7 @@ export const SubscriptionSuccessPage = ({ action }: Props) => {
   const { returnUrl, accountManagementUrl, newsletterId } = pageData;
 
   useEffect(() => {
-    if (newsletterId) {
+    if (action === 'subscribe' && newsletterId) {
       sendOphanComponentEvent({
         action: 'SUBSCRIBE',
         component: {
@@ -23,7 +23,7 @@ export const SubscriptionSuccessPage = ({ action }: Props) => {
         },
       });
     }
-  }, [newsletterId]);
+  }, [action, newsletterId]);
 
   return (
     <SubscriptionSuccess
