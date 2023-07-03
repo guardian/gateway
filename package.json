@@ -52,7 +52,7 @@
     "@storybook/addon-styling": "^1.3.0",
     "@storybook/react": "^7.0.23",
     "@storybook/react-webpack5": "^7.0.23",
-    "@swc/core": "^1.3.66",
+    "@swc/core": "^1.3.67",
     "@swc/plugin-emotion": "^2.5.68",
     "@testing-library/cypress": "^9.0.0",
     "@testing-library/jest-dom": "^5.16.5",
