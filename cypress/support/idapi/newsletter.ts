@@ -56,6 +56,22 @@ export const allNewsletters = [
     exactTargetListId: 4300,
   },
   {
+    id: 'today-us',
+    name: 'The Guardian Headlines US',
+    description:
+      'For US readers, we offer a regional edition of our daily email, delivering the most important headlines every morning',
+    frequency: 'Every day',
+    exactTargetListId: 4152,
+  },
+  {
+    id: 'best-of-opinion-us',
+    name: 'The Best of Guardian Opinion: US Edition',
+    description:
+      "Join the debate on America's most pressing issues with the US edition of our daily op-ed selection",
+    frequency: 'Every weekday',
+    exactTargetListId: 4162,
+  },
+  {
     id: 'green-light',
     name: 'Green Light',
     description:

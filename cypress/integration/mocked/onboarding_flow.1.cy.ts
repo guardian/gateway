@@ -1,45 +1,45 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
+import { injectAndCheckAxe } from '../../support/cypress-axe';
 import {
-  authRedirectSignInRecentlyEmailValidated,
   AUTH_REDIRECT_ENDPOINT,
+  authRedirectSignInRecentlyEmailValidated,
 } from '../../support/idapi/auth';
 import {
-  allConsents,
-  defaultUserConsent,
-  optedOutUserConsent,
-  optedIntoPersonalisedAdvertisingUserConsent,
-  getUserConsents,
   CONSENTS_ENDPOINT,
   CONSENT_ERRORS,
+  allConsents,
+  defaultUserConsent,
+  getUserConsents,
+  optedIntoPersonalisedAdvertisingUserConsent,
+  optedOutUserConsent,
 } from '../../support/idapi/consent';
-import {
-  verifiedUserWithNoConsent,
-  createUser,
-  USER_ENDPOINT,
-  USER_CONSENTS_ENDPOINT,
-} from '../../support/idapi/user';
 import { setAuthCookies } from '../../support/idapi/cookie';
+import {
+  USER_CONSENTS_ENDPOINT,
+  USER_ENDPOINT,
+  createUser,
+  verifiedUserWithNoConsent,
+} from '../../support/idapi/user';
 import CommunicationsPage from '../../support/pages/onboarding/communications_page';
 import NewslettersPage from '../../support/pages/onboarding/newsletters_page';
-import YourDataPage from '../../support/pages/onboarding/your_data_page';
 import ReviewPage from '../../support/pages/onboarding/review_page';
-import { injectAndCheckAxe } from '../../support/cypress-axe';
+import YourDataPage from '../../support/pages/onboarding/your_data_page';
 
+import { setMvtId } from '../../support/commands/setMvtId';
 import {
+  GEOLOCATION_CODES,
+  getGeoLocationHeaders,
+} from '../../support/geolocation';
+import {
+  NEWSLETTER_ENDPOINT,
+  NEWSLETTER_ERRORS,
+  NEWSLETTER_SUBSCRIPTION_ENDPOINT,
   allNewsletters,
   userNewsletters,
-  NEWSLETTER_ENDPOINT,
-  NEWSLETTER_SUBSCRIPTION_ENDPOINT,
-  NEWSLETTER_ERRORS,
 } from '../../support/idapi/newsletter';
 import Onboarding from '../../support/pages/onboarding/onboarding_page';
 import VerifyEmail from '../../support/pages/verify_email';
-import {
-  getGeoLocationHeaders,
-  GEOLOCATION_CODES,
-} from '../../support/geolocation';
-import { setMvtId } from '../../support/commands/setMvtId';
 
 const { NEWSLETTERS } = NewslettersPage.CONTENT;
 
@@ -638,7 +638,7 @@ describe('Onboarding flow', () => {
 
       cy.visit(NewslettersPage.URL, { headers, qs: { useIdapi: 'true' } });
 
-      NewslettersPage.checkboxWithTitle(NEWSLETTERS.MORNING_BRIEFING_US).should(
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.FIRST_THING_US).should(
         'not.be.checked',
       );
       NewslettersPage.checkboxWithTitle(NEWSLETTERS.LONG_READ).should(
@@ -650,6 +650,33 @@ describe('Onboarding flow', () => {
       NewslettersPage.checkboxWithTitle(
         NewslettersPage.CONTENT.Consents.EVENTS,
       ).should('not.be.checked');
+
+      CommunicationsPage.backButton().should('exist');
+      CommunicationsPage.saveAndContinueButton().should('exist');
+    });
+
+    it('correct newsletters shown for permissioned United States browser, none checked by default', () => {
+      const headers = getGeoLocationHeaders(GEOLOCATION_CODES.AMERICA);
+      cy.setEncryptedStateCookie({
+        isCmpConsented: true,
+      });
+
+      cy.visit(NewslettersPage.URL, { headers, qs: { useIdapi: 'true' } });
+
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.FIRST_THING_US).should(
+        'not.be.checked',
+      );
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.HEADLINES_US).should(
+        'not.be.checked',
+      );
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.GREEN_LIGHT).should(
+        'not.be.checked',
+      );
+      NewslettersPage.checkboxWithTitle(NEWSLETTERS.OPINION_US).should(
+        'not.be.checked',
+      );
+
+      cy.contains(NewslettersPage.CONTENT.Consents.EVENTS).should('not.exist');
 
       CommunicationsPage.backButton().should('exist');
       CommunicationsPage.saveAndContinueButton().should('exist');
