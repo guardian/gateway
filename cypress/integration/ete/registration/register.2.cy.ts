@@ -143,121 +143,127 @@ describe('Registration flow', () => {
   });
 
   it('sends user an account exists email for user with existing account with password trying to register, clicks sign in, taken to /signin', () => {
-    cy.createTestUser({
-      isUserEmailValidated: true,
-    })?.then(({ emailAddress }) => {
-      cy.visit('/register?useIdapi=true');
-      const timeRequestWasMade = new Date();
+    cy
+      .createTestUser({
+        isUserEmailValidated: true,
+      })
+      ?.then(({ emailAddress }) => {
+        cy.visit('/register?useIdapi=true');
+        const timeRequestWasMade = new Date();
 
-      cy.get('input[name=email]').type(emailAddress);
-      cy.get('[data-cy="main-form-submit-button"]').click();
+        cy.get('input[name=email]').type(emailAddress);
+        cy.get('[data-cy="main-form-submit-button"]').click();
 
-      cy.contains('Check your email inbox');
-      cy.contains(emailAddress);
-      cy.contains('Resend email');
-      cy.contains('Change email address');
+        cy.contains('Check your email inbox');
+        cy.contains(emailAddress);
+        cy.contains('Resend email');
+        cy.contains('Change email address');
 
-      cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
-        ({ links, body }) => {
-          expect(body).to.have.string('This account already exists');
-          expect(body).to.have.string('Sign in');
-          expect(body).to.have.string('Reset password');
+        cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
+          ({ links, body }) => {
+            expect(body).to.have.string('This account already exists');
+            expect(body).to.have.string('Sign in');
+            expect(body).to.have.string('Reset password');
 
-          expect(links.length).to.eq(3);
+            expect(links.length).to.eq(3);
 
-          const signInLink = links.find((link) => link.text === 'Sign in');
+            const signInLink = links.find((link) => link.text === 'Sign in');
 
-          expect(signInLink).not.to.be.undefined;
-          expect(signInLink?.href ?? '').to.include('/signin');
+            expect(signInLink).not.to.be.undefined;
+            expect(signInLink?.href ?? '').to.include('/signin');
 
-          const signInUrl = new URL(signInLink?.href ?? '');
+            const signInUrl = new URL(signInLink?.href ?? '');
 
-          cy.visit(signInUrl.pathname);
-          cy.url().should('include', '/signin');
-        },
-      );
-    });
+            cy.visit(signInUrl.pathname);
+            cy.url().should('include', '/signin');
+          },
+        );
+      });
   });
 
   it('sends user an account exists email for user with existing account with password trying to register, clicks reset password on email', () => {
-    cy.createTestUser({
-      isUserEmailValidated: true,
-    })?.then(({ emailAddress }) => {
-      cy.visit('/register?useIdapi=true');
-      const timeRequestWasMade = new Date();
+    cy
+      .createTestUser({
+        isUserEmailValidated: true,
+      })
+      ?.then(({ emailAddress }) => {
+        cy.visit('/register?useIdapi=true');
+        const timeRequestWasMade = new Date();
 
-      cy.get('input[name=email]').type(emailAddress);
-      cy.get('[data-cy="main-form-submit-button"]').click();
+        cy.get('input[name=email]').type(emailAddress);
+        cy.get('[data-cy="main-form-submit-button"]').click();
 
-      cy.contains('Check your email inbox');
-      cy.contains(emailAddress);
-      cy.contains('Resend email');
-      cy.contains('Change email address');
+        cy.contains('Check your email inbox');
+        cy.contains(emailAddress);
+        cy.contains('Resend email');
+        cy.contains('Change email address');
 
-      cy.checkForEmailAndGetDetails(
-        emailAddress,
-        timeRequestWasMade,
-        /\/reset-password\/([^"]*)/,
-      ).then(({ links, body, token }) => {
-        expect(body).to.have.string('This account already exists');
-        expect(body).to.have.string('Sign in');
-        expect(body).to.have.string('Reset password');
-        expect(body).to.have.string('This link is valid for 60 minutes.');
+        cy.checkForEmailAndGetDetails(
+          emailAddress,
+          timeRequestWasMade,
+          /\/reset-password\/([^"]*)/,
+        ).then(({ links, body, token }) => {
+          expect(body).to.have.string('This account already exists');
+          expect(body).to.have.string('Sign in');
+          expect(body).to.have.string('Reset password');
+          expect(body).to.have.string('This link is valid for 60 minutes.');
 
-        expect(links.length).to.eq(3);
+          expect(links.length).to.eq(3);
 
-        const passwordResetLink = links.find(
-          (link) => link.text === 'Reset password',
-        );
+          const passwordResetLink = links.find(
+            (link) => link.text === 'Reset password',
+          );
 
-        expect(passwordResetLink).not.to.be.undefined;
+          expect(passwordResetLink).not.to.be.undefined;
 
-        cy.visit(`/reset-password/${token}`);
-        cy.contains('Reset password');
+          cy.visit(`/reset-password/${token}`);
+          cy.contains('Reset password');
+        });
       });
-    });
   });
 
   it('sends user an account exists without password email for user with existing account without password trying to register, clicks create password on email', () => {
-    cy.createTestUser({
-      isUserEmailValidated: false,
-      isGuestUser: true,
-    })?.then(({ emailAddress }) => {
-      cy.visit('/register?useIdapi=true');
-      const timeRequestWasMade = new Date();
+    cy
+      .createTestUser({
+        isUserEmailValidated: false,
+        isGuestUser: true,
+      })
+      ?.then(({ emailAddress }) => {
+        cy.visit('/register?useIdapi=true');
+        const timeRequestWasMade = new Date();
 
-      cy.get('input[name=email]').type(emailAddress);
-      cy.get('[data-cy="main-form-submit-button"]').click();
+        cy.get('input[name=email]').type(emailAddress);
+        cy.get('[data-cy="main-form-submit-button"]').click();
 
-      cy.contains('Check your email inbox');
-      cy.contains(emailAddress);
-      cy.contains('Resend email');
-      cy.contains('Change email address');
+        cy.contains('Check your email inbox');
+        cy.contains(emailAddress);
+        cy.contains('Resend email');
+        cy.contains('Change email address');
 
-      cy.checkForEmailAndGetDetails(
-        emailAddress,
-        timeRequestWasMade,
-        /\/set-password\/([^"]*)/,
-      ).then(({ links, body, token }) => {
-        expect(body).to.have.string('This account already exists');
-        expect(body).to.have.string(
-          'To continue to your account please click below to create a password.',
-        );
-        expect(body).to.have.string('This link is valid for 60 minutes.');
-        expect(body).to.have.string('Create password');
+        cy.checkForEmailAndGetDetails(
+          emailAddress,
+          timeRequestWasMade,
+          /\/set-password\/([^"]*)/,
+        ).then(({ links, body, token }) => {
+          expect(body).to.have.string('This account already exists');
+          expect(body).to.have.string(
+            'To continue to your account please click below to create a password.',
+          );
+          expect(body).to.have.string('This link is valid for 60 minutes.');
+          expect(body).to.have.string('Create password');
 
-        expect(links.length).to.eq(2);
+          expect(links.length).to.eq(2);
 
-        const createPasswordLink = links.find(
-          (link) => link.text === 'Create password',
-        );
+          const createPasswordLink = links.find(
+            (link) => link.text === 'Create password',
+          );
 
-        expect(createPasswordLink).not.to.be.undefined;
+          expect(createPasswordLink).not.to.be.undefined;
 
-        cy.visit(`/set-password/${token}`);
-        cy.contains('Create password');
+          cy.visit(`/set-password/${token}`);
+          cy.contains('Create password');
+        });
       });
-    });
   });
 
   it('shows reCAPTCHA errors when the user tries to register offline and allows registration when back online', () => {
