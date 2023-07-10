@@ -44,9 +44,8 @@ const postSignInController = async ({
       setExperimentRan(req, res, OPT_IN_PROMPT_TEST_ID, true);
     }
 
-    const sc_gu_u = idapiCookies?.values.find(
-      ({ key }) => key === 'SC_GU_U',
-    )?.value;
+    const sc_gu_u = idapiCookies?.values.find(({ key }) => key === 'SC_GU_U')
+      ?.value;
 
     const noScGuU = !sc_gu_u;
     const noAccessToken = !oauthTokens?.access_token;

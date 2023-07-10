@@ -196,16 +196,18 @@ export const correctlySignsInAnExistingUser = (isIdapi = false) => {
       cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
         req.reply(200);
       });
-      cy.createTestUser({
-        isUserEmailValidated: true,
-      })?.then(({ emailAddress, finalPassword }) => {
-        const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
-        cy.visit(visitUrl);
-        cy.get('input[name=email]').type(emailAddress);
-        cy.get('input[name=password]').type(finalPassword);
-        cy.get('[data-cy="main-form-submit-button"]').click();
-        cy.url().should('include', 'https://m.code.dev-theguardian.com/');
-      });
+      cy
+        .createTestUser({
+          isUserEmailValidated: true,
+        })
+        ?.then(({ emailAddress, finalPassword }) => {
+          const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
+          cy.visit(visitUrl);
+          cy.get('input[name=email]').type(emailAddress);
+          cy.get('input[name=password]').type(finalPassword);
+          cy.get('[data-cy="main-form-submit-button"]').click();
+          cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+        });
     },
   ] as const;
 };
@@ -243,18 +245,20 @@ export const respectsTheReturnUrlQueryParam = (isIdapi = false) => {
       cy.intercept('GET', returnUrl, (req) => {
         req.reply(200);
       });
-      cy.createTestUser({
-        isUserEmailValidated: true,
-      })?.then(({ emailAddress, finalPassword }) => {
-        const visitUrl = isIdapi
-          ? `/signin?returnUrl=${encodeURIComponent(returnUrl)}&useIdapi=true`
-          : `/signin?returnUrl=${encodeURIComponent(returnUrl)}`;
-        cy.visit(visitUrl);
-        cy.get('input[name=email]').type(emailAddress);
-        cy.get('input[name=password]').type(finalPassword);
-        cy.get('[data-cy="main-form-submit-button"]').click();
-        cy.url().should('eq', returnUrl);
-      });
+      cy
+        .createTestUser({
+          isUserEmailValidated: true,
+        })
+        ?.then(({ emailAddress, finalPassword }) => {
+          const visitUrl = isIdapi
+            ? `/signin?returnUrl=${encodeURIComponent(returnUrl)}&useIdapi=true`
+            : `/signin?returnUrl=${encodeURIComponent(returnUrl)}`;
+          cy.visit(visitUrl);
+          cy.get('input[name=email]').type(emailAddress);
+          cy.get('input[name=password]').type(finalPassword);
+          cy.get('[data-cy="main-form-submit-button"]').click();
+          cy.url().should('eq', returnUrl);
+        });
     },
   ] as const;
 };
@@ -335,27 +339,29 @@ export const hitsAccessTokenRateLimitAndRecoversTokenAfterTimeout = (
       cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
         req.reply(200);
       });
-      cy.createTestUser({
-        isUserEmailValidated: true,
-      })?.then(({ emailAddress, finalPassword }) => {
-        const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
-        cy.visit(visitUrl);
-        cy.get('input[name=email]').type(emailAddress);
-        cy.get('input[name=password]').type(finalPassword);
-        cy.get('[data-cy="main-form-submit-button"]').click();
-        cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+      cy
+        .createTestUser({
+          isUserEmailValidated: true,
+        })
+        ?.then(({ emailAddress, finalPassword }) => {
+          const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
+          cy.visit(visitUrl);
+          cy.get('input[name=email]').type(emailAddress);
+          cy.get('input[name=password]').type(finalPassword);
+          cy.get('[data-cy="main-form-submit-button"]').click();
+          cy.url().should('include', 'https://m.code.dev-theguardian.com/');
 
-        // We visit reauthenticate here because if we visit /signin or
-        // /register, the logged in user guard will redirect us away before
-        // the ratelimiter has a chance to work
-        const reauthUrl = isIdapi
-          ? '/reauthenticate?useIdapi=true'
-          : '/reauthenticate';
-        cy.visit(reauthUrl);
-        cy.contains('Sign');
-        Cypress._.times(6, () => cy.reload());
-        cy.contains('Rate limit exceeded');
-      });
+          // We visit reauthenticate here because if we visit /signin or
+          // /register, the logged in user guard will redirect us away before
+          // the ratelimiter has a chance to work
+          const reauthUrl = isIdapi
+            ? '/reauthenticate?useIdapi=true'
+            : '/reauthenticate';
+          cy.visit(reauthUrl);
+          cy.contains('Sign');
+          Cypress._.times(6, () => cy.reload());
+          cy.contains('Rate limit exceeded');
+        });
     },
   ] as const;
 };
@@ -402,45 +408,47 @@ export const showsRecaptchaErrorsWhenTheUserTriesToSignInOfflineAndAllowsSignInW
         cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
           req.reply(200);
         });
-        cy.createTestUser({
-          isUserEmailValidated: true,
-        })?.then(({ emailAddress, finalPassword }) => {
-          const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
-          cy.visit(visitUrl);
+        cy
+          .createTestUser({
+            isUserEmailValidated: true,
+          })
+          ?.then(({ emailAddress, finalPassword }) => {
+            const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
+            cy.visit(visitUrl);
 
-          // Simulate going offline by failing to reCAPTCHA POST request.
-          cy.intercept({
-            method: 'POST',
-            url: 'https://www.google.com/recaptcha/api2/**',
-            times: 1,
+            // Simulate going offline by failing to reCAPTCHA POST request.
+            cy.intercept({
+              method: 'POST',
+              url: 'https://www.google.com/recaptcha/api2/**',
+              times: 1,
+            });
+
+            cy.get('input[name=email]').type(emailAddress);
+            cy.get('input[name=password]').type(finalPassword);
+            cy.get('[data-cy="main-form-submit-button"]').click();
+            cy.contains(
+              'Google reCAPTCHA verification failed. Please try again.',
+            );
+
+            // On second click, an expanded error is shown.
+            cy.get('[data-cy="main-form-submit-button"]').click();
+
+            cy.contains('Google reCAPTCHA verification failed.');
+            cy.contains('Report this error').should(
+              'have.attr',
+              'href',
+              'https://manage.theguardian.com/help-centre/contact-us',
+            );
+            cy.contains('If the problem persists please try the following:');
+
+            cy.get('[data-cy="main-form-submit-button"]').click();
+
+            cy.contains(
+              'Google reCAPTCHA verification failed. Please try again.',
+            ).should('not.exist');
+
+            cy.url().should('include', 'https://m.code.dev-theguardian.com/');
           });
-
-          cy.get('input[name=email]').type(emailAddress);
-          cy.get('input[name=password]').type(finalPassword);
-          cy.get('[data-cy="main-form-submit-button"]').click();
-          cy.contains(
-            'Google reCAPTCHA verification failed. Please try again.',
-          );
-
-          // On second click, an expanded error is shown.
-          cy.get('[data-cy="main-form-submit-button"]').click();
-
-          cy.contains('Google reCAPTCHA verification failed.');
-          cy.contains('Report this error').should(
-            'have.attr',
-            'href',
-            'https://manage.theguardian.com/help-centre/contact-us',
-          );
-          cy.contains('If the problem persists please try the following:');
-
-          cy.get('[data-cy="main-form-submit-button"]').click();
-
-          cy.contains(
-            'Google reCAPTCHA verification failed. Please try again.',
-          ).should('not.exist');
-
-          cy.url().should('include', 'https://m.code.dev-theguardian.com/');
-        });
       },
     ] as const;
   };
@@ -456,22 +464,24 @@ export const redirectsToOptInPrompt = (isIdapi = false) => {
       });
       // Enable the opt in prompt "experiment"
       cy.clearCookie('GU_ran_experiments');
-      cy.createTestUser({
-        isUserEmailValidated: true,
-      })?.then(({ emailAddress, finalPassword }) => {
-        const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
-        cy.visit(visitUrl);
-        cy.get('input[name=email]').type(emailAddress);
-        cy.get('input[name=password]').type(finalPassword);
-        cy.get('[data-cy="main-form-submit-button"]').click();
-        cy.url().should('include', `/signin/success`);
-        cy.url().should(
-          'include',
-          `returnUrl=${encodeURIComponent(
-            'https://m.code.dev-theguardian.com/',
-          )}`,
-        );
-      });
+      cy
+        .createTestUser({
+          isUserEmailValidated: true,
+        })
+        ?.then(({ emailAddress, finalPassword }) => {
+          const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
+          cy.visit(visitUrl);
+          cy.get('input[name=email]').type(emailAddress);
+          cy.get('input[name=password]').type(finalPassword);
+          cy.get('[data-cy="main-form-submit-button"]').click();
+          cy.url().should('include', `/signin/success`);
+          cy.url().should(
+            'include',
+            `returnUrl=${encodeURIComponent(
+              'https://m.code.dev-theguardian.com/',
+            )}`,
+          );
+        });
     },
   ] as const;
 };

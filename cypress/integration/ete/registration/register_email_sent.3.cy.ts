@@ -46,89 +46,93 @@ describe('Registration email sent page', () => {
   });
 
   it('should resend account exists without password email when an existing user without password registers which is same as initial email sent', () => {
-    cy.createTestUser({
-      isUserEmailValidated: false,
-      isGuestUser: true,
-    })?.then(({ emailAddress }) => {
-      cy.visit('/register?useIdapi=true');
-      cy.get('input[name=email]').type(emailAddress);
-      const timeRequestWasMadeInitialEmail = new Date();
-      cy.get('[data-cy="main-form-submit-button"]').click();
+    cy
+      .createTestUser({
+        isUserEmailValidated: false,
+        isGuestUser: true,
+      })
+      ?.then(({ emailAddress }) => {
+        cy.visit('/register?useIdapi=true');
+        cy.get('input[name=email]').type(emailAddress);
+        const timeRequestWasMadeInitialEmail = new Date();
+        cy.get('[data-cy="main-form-submit-button"]').click();
 
-      cy.contains('Check your email inbox');
-      cy.contains(emailAddress);
-      cy.contains('Resend email');
-      cy.contains('Change email address');
+        cy.contains('Check your email inbox');
+        cy.contains(emailAddress);
+        cy.contains('Resend email');
+        cy.contains('Change email address');
 
-      // test and delete initial email
-      cy.checkForEmailAndGetDetails(
-        emailAddress,
-        timeRequestWasMadeInitialEmail,
-      ).then(({ body }) => {
-        expect(body).to.have.string('This account already exists');
-        expect(body).to.have.string(
-          'To continue to your account please click below to create a password.',
-        );
-        expect(body).to.have.string('This link is valid for 60 minutes.');
-        expect(body).to.have.string('Create password');
-      });
-
-      const timeRequestWasMade = new Date();
-      cy.contains('Resend email').click();
-      cy.contains('Check your email inbox');
-      cy.contains(emailAddress);
-
-      // test and delete resent email
-      cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
-        ({ body }) => {
+        // test and delete initial email
+        cy.checkForEmailAndGetDetails(
+          emailAddress,
+          timeRequestWasMadeInitialEmail,
+        ).then(({ body }) => {
           expect(body).to.have.string('This account already exists');
           expect(body).to.have.string(
             'To continue to your account please click below to create a password.',
           );
           expect(body).to.have.string('This link is valid for 60 minutes.');
           expect(body).to.have.string('Create password');
-        },
-      );
-    });
+        });
+
+        const timeRequestWasMade = new Date();
+        cy.contains('Resend email').click();
+        cy.contains('Check your email inbox');
+        cy.contains(emailAddress);
+
+        // test and delete resent email
+        cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
+          ({ body }) => {
+            expect(body).to.have.string('This account already exists');
+            expect(body).to.have.string(
+              'To continue to your account please click below to create a password.',
+            );
+            expect(body).to.have.string('This link is valid for 60 minutes.');
+            expect(body).to.have.string('Create password');
+          },
+        );
+      });
   });
 
   it('should resend "Account Exists" email when an existing user with password registers which is same as initial email sent', () => {
-    cy.createTestUser({
-      isUserEmailValidated: false,
-    })?.then(({ emailAddress }) => {
-      cy.visit('/register?useIdapi=true');
-      cy.get('input[name=email]').type(emailAddress);
-      const timeRequestWasMadeInitialEmail = new Date();
-      cy.get('[data-cy="main-form-submit-button"]').click();
+    cy
+      .createTestUser({
+        isUserEmailValidated: false,
+      })
+      ?.then(({ emailAddress }) => {
+        cy.visit('/register?useIdapi=true');
+        cy.get('input[name=email]').type(emailAddress);
+        const timeRequestWasMadeInitialEmail = new Date();
+        cy.get('[data-cy="main-form-submit-button"]').click();
 
-      cy.contains('Check your email inbox');
-      cy.contains(emailAddress);
-      cy.contains('Resend email');
-      cy.contains('Change email address');
+        cy.contains('Check your email inbox');
+        cy.contains(emailAddress);
+        cy.contains('Resend email');
+        cy.contains('Change email address');
 
-      cy.checkForEmailAndGetDetails(
-        emailAddress,
-        timeRequestWasMadeInitialEmail,
-      ).then(({ body }) => {
-        expect(body).to.have.string(
-          'You are already registered with the Guardian.',
-        );
-      });
-
-      const timeRequestWasMade = new Date();
-      cy.contains('Resend email').click();
-      cy.contains('Check your email inbox');
-      cy.contains(emailAddress);
-
-      // test and delete resent email
-      cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
-        ({ body }) => {
+        cy.checkForEmailAndGetDetails(
+          emailAddress,
+          timeRequestWasMadeInitialEmail,
+        ).then(({ body }) => {
           expect(body).to.have.string(
             'You are already registered with the Guardian.',
           );
-        },
-      );
-    });
+        });
+
+        const timeRequestWasMade = new Date();
+        cy.contains('Resend email').click();
+        cy.contains('Check your email inbox');
+        cy.contains(emailAddress);
+
+        // test and delete resent email
+        cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
+          ({ body }) => {
+            expect(body).to.have.string(
+              'You are already registered with the Guardian.',
+            );
+          },
+        );
+      });
   });
 
   it('should navigate back to the correct page when change email is clicked', () => {
@@ -145,53 +149,55 @@ describe('Registration email sent page', () => {
   });
 
   it('shows reCAPTCHA errors when the request fails', () => {
-    cy.createTestUser({
-      isUserEmailValidated: false,
-    })?.then(({ emailAddress }) => {
-      cy.visit('/register?useIdapi=true');
-      cy.get('input[name=email]').type(emailAddress);
+    cy
+      .createTestUser({
+        isUserEmailValidated: false,
+      })
+      ?.then(({ emailAddress }) => {
+        cy.visit('/register?useIdapi=true');
+        cy.get('input[name=email]').type(emailAddress);
 
-      const timeRequestWasMadeInitialEmail = new Date();
+        const timeRequestWasMadeInitialEmail = new Date();
 
-      cy.get('[data-cy="main-form-submit-button"]').click();
+        cy.get('[data-cy="main-form-submit-button"]').click();
 
-      cy.contains('Check your email inbox');
-      cy.contains(emailAddress);
-      cy.contains('Resend email');
-      cy.contains('Change email address');
+        cy.contains('Check your email inbox');
+        cy.contains(emailAddress);
+        cy.contains('Resend email');
+        cy.contains('Change email address');
 
-      cy.checkForEmailAndGetDetails(
-        emailAddress,
-        timeRequestWasMadeInitialEmail,
-      );
+        cy.checkForEmailAndGetDetails(
+          emailAddress,
+          timeRequestWasMadeInitialEmail,
+        );
 
-      // Simulate going offline by failing the reCAPTCHA POST request.
-      cy.intercept({
-        method: 'POST',
-        url: 'https://www.google.com/recaptcha/api2/**',
-        times: 1,
+        // Simulate going offline by failing the reCAPTCHA POST request.
+        cy.intercept({
+          method: 'POST',
+          url: 'https://www.google.com/recaptcha/api2/**',
+          times: 1,
+        });
+        cy.contains('Resend email').click();
+        cy.contains('Google reCAPTCHA verification failed. Please try again.');
+
+        // On second click, an expanded error is shown.
+        cy.contains('Resend email').click();
+
+        cy.contains('Google reCAPTCHA verification failed.');
+        cy.contains('If the problem persists please try the following:');
+        cy.contains('userhelp@');
+
+        const timeRequestWasMade = new Date();
+        cy.contains('Resend email').click();
+
+        cy.contains(
+          'Google reCAPTCHA verification failed. Please try again.',
+        ).should('not.exist');
+
+        cy.contains('Check your email inbox');
+        cy.contains(emailAddress);
+
+        cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade);
       });
-      cy.contains('Resend email').click();
-      cy.contains('Google reCAPTCHA verification failed. Please try again.');
-
-      // On second click, an expanded error is shown.
-      cy.contains('Resend email').click();
-
-      cy.contains('Google reCAPTCHA verification failed.');
-      cy.contains('If the problem persists please try the following:');
-      cy.contains('userhelp@');
-
-      const timeRequestWasMade = new Date();
-      cy.contains('Resend email').click();
-
-      cy.contains(
-        'Google reCAPTCHA verification failed. Please try again.',
-      ).should('not.exist');
-
-      cy.contains('Check your email inbox');
-      cy.contains(emailAddress);
-
-      cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade);
-    });
   });
 });

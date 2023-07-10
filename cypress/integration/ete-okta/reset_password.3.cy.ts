@@ -24,57 +24,59 @@ describe('Password reset flow in Okta', () => {
       const fromURI = 'fromURI1';
 
       breachCheck();
-      cy.createTestUser({
-        isUserEmailValidated: true,
-      })?.then(({ emailAddress }) => {
-        cy.visit(
-          `/reset-password?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&appClientId=${appClientId}&fromURI=${fromURI}`,
-        );
-        const timeRequestWasMade = new Date();
+      cy
+        .createTestUser({
+          isUserEmailValidated: true,
+        })
+        ?.then(({ emailAddress }) => {
+          cy.visit(
+            `/reset-password?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&appClientId=${appClientId}&fromURI=${fromURI}`,
+          );
+          const timeRequestWasMade = new Date();
 
-        cy.contains('Forgot password');
-        cy.get('input[name=email]').type(emailAddress);
+          cy.contains('Forgot password');
+          cy.get('input[name=email]').type(emailAddress);
 
-        // Continue checking the password reset flow after reCAPTCHA assertions above.
-        cy.get('[data-cy="main-form-submit-button"]').click();
-        cy.contains('Check your email inbox');
-        cy.checkForEmailAndGetDetails(
-          emailAddress,
-          timeRequestWasMade,
-          /reset-password\/([^"]*)/,
-        ).then(({ token }) => {
-          cy.visit(`/reset-password/${token}`);
+          // Continue checking the password reset flow after reCAPTCHA assertions above.
+          cy.get('[data-cy="main-form-submit-button"]').click();
+          cy.contains('Check your email inbox');
+          cy.checkForEmailAndGetDetails(
+            emailAddress,
+            timeRequestWasMade,
+            /reset-password\/([^"]*)/,
+          ).then(({ token }) => {
+            cy.visit(`/reset-password/${token}`);
 
-          cy.get('form')
-            .should('have.attr', 'action')
-            .and('match', new RegExp(encodedReturnUrl))
-            .and('match', new RegExp(refViewId))
-            .and('match', new RegExp(encodedRef))
-            .and('match', new RegExp(clientId))
-            .and('not.match', new RegExp(appClientId))
-            .and('not.match', new RegExp(fromURI));
+            cy.get('form')
+              .should('have.attr', 'action')
+              .and('match', new RegExp(encodedReturnUrl))
+              .and('match', new RegExp(refViewId))
+              .and('match', new RegExp(encodedRef))
+              .and('match', new RegExp(clientId))
+              .and('not.match', new RegExp(appClientId))
+              .and('not.match', new RegExp(fromURI));
 
-          //we are reloading here to make sure the params are persisted even on page refresh
-          cy.reload();
+            //we are reloading here to make sure the params are persisted even on page refresh
+            cy.reload();
 
-          cy.get('input[name=password]').type(randomPassword());
+            cy.get('input[name=password]').type(randomPassword());
 
-          cy.wait('@breachCheck');
-          cy.get('[data-cy="main-form-submit-button"]')
-            .click()
-            .should('be.disabled');
-          cy.contains('Password updated');
-          cy.contains(emailAddress.toLowerCase());
+            cy.wait('@breachCheck');
+            cy.get('[data-cy="main-form-submit-button"]')
+              .click()
+              .should('be.disabled');
+            cy.contains('Password updated');
+            cy.contains(emailAddress.toLowerCase());
 
-          cy.url().should('contain', encodedReturnUrl);
-          cy.url().should('contain', refViewId);
-          cy.url().should('contain', encodedRef);
-          cy.url().should('contain', clientId);
-          cy.url().should('not.contain', 'useOkta=true');
-          cy.url().should('not.contain', appClientId);
-          cy.url().should('not.contain', fromURI);
+            cy.url().should('contain', encodedReturnUrl);
+            cy.url().should('contain', refViewId);
+            cy.url().should('contain', encodedRef);
+            cy.url().should('contain', clientId);
+            cy.url().should('not.contain', 'useOkta=true');
+            cy.url().should('not.contain', appClientId);
+            cy.url().should('not.contain', fromURI);
+          });
         });
-      });
     });
 
     it("changes the reader's password, and has a prefixed recovery token when using a native app", () => {
@@ -91,58 +93,60 @@ describe('Password reset flow in Okta', () => {
       const fromURI = 'fromURI1';
 
       breachCheck();
-      cy.createTestUser({
-        isUserEmailValidated: true,
-      })?.then(({ emailAddress }) => {
-        cy.visit(
-          `/reset-password?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&appClientId=${appClientId}&fromURI=${fromURI}`,
-        );
-        const timeRequestWasMade = new Date();
+      cy
+        .createTestUser({
+          isUserEmailValidated: true,
+        })
+        ?.then(({ emailAddress }) => {
+          cy.visit(
+            `/reset-password?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&appClientId=${appClientId}&fromURI=${fromURI}`,
+          );
+          const timeRequestWasMade = new Date();
 
-        cy.contains('Forgot password');
-        cy.get('input[name=email]').type(emailAddress);
+          cy.contains('Forgot password');
+          cy.get('input[name=email]').type(emailAddress);
 
-        // Continue checking the password reset flow after reCAPTCHA assertions above.
-        cy.get('[data-cy="main-form-submit-button"]').click();
-        cy.contains('Check your email inbox');
-        cy.checkForEmailAndGetDetails(
-          emailAddress,
-          timeRequestWasMade,
-          /reset-password\/([^"]*)/,
-        ).then(({ token }) => {
-          expect(token).to.have.string('al_');
-          cy.visit(`/reset-password/${token}`);
+          // Continue checking the password reset flow after reCAPTCHA assertions above.
+          cy.get('[data-cy="main-form-submit-button"]').click();
+          cy.contains('Check your email inbox');
+          cy.checkForEmailAndGetDetails(
+            emailAddress,
+            timeRequestWasMade,
+            /reset-password\/([^"]*)/,
+          ).then(({ token }) => {
+            expect(token).to.have.string('al_');
+            cy.visit(`/reset-password/${token}`);
 
-          cy.get('form')
-            .should('have.attr', 'action')
-            .and('match', new RegExp(encodedReturnUrl))
-            .and('match', new RegExp(refViewId))
-            .and('match', new RegExp(encodedRef))
-            .and('match', new RegExp(clientId))
-            .and('not.match', new RegExp(appClientId))
-            .and('not.match', new RegExp(fromURI));
+            cy.get('form')
+              .should('have.attr', 'action')
+              .and('match', new RegExp(encodedReturnUrl))
+              .and('match', new RegExp(refViewId))
+              .and('match', new RegExp(encodedRef))
+              .and('match', new RegExp(clientId))
+              .and('not.match', new RegExp(appClientId))
+              .and('not.match', new RegExp(fromURI));
 
-          //we are reloading here to make sure the params are persisted even on page refresh
-          cy.reload();
+            //we are reloading here to make sure the params are persisted even on page refresh
+            cy.reload();
 
-          cy.get('input[name=password]').type(randomPassword());
+            cy.get('input[name=password]').type(randomPassword());
 
-          cy.wait('@breachCheck');
-          cy.get('[data-cy="main-form-submit-button"]')
-            .click()
-            .should('be.disabled');
-          cy.contains('Password updated');
-          cy.contains(emailAddress.toLowerCase());
+            cy.wait('@breachCheck');
+            cy.get('[data-cy="main-form-submit-button"]')
+              .click()
+              .should('be.disabled');
+            cy.contains('Password updated');
+            cy.contains(emailAddress.toLowerCase());
 
-          cy.url().should('contain', encodedReturnUrl);
-          cy.url().should('contain', refViewId);
-          cy.url().should('contain', encodedRef);
-          cy.url().should('contain', clientId);
-          cy.url().should('not.contain', 'useOkta=true');
-          cy.url().should('not.contain', appClientId);
-          cy.url().should('not.contain', fromURI);
+            cy.url().should('contain', encodedReturnUrl);
+            cy.url().should('contain', refViewId);
+            cy.url().should('contain', encodedRef);
+            cy.url().should('contain', clientId);
+            cy.url().should('not.contain', 'useOkta=true');
+            cy.url().should('not.contain', appClientId);
+            cy.url().should('not.contain', fromURI);
+          });
         });
-      });
     });
 
     it("changes the reader's password  and overrides returnUrl from encryptedStateCookie if one set on reset password page url", () => {
@@ -150,55 +154,57 @@ describe('Password reset flow in Okta', () => {
         'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
 
       breachCheck();
-      cy.createTestUser({
-        isUserEmailValidated: true,
-      })?.then(({ emailAddress }) => {
-        cy.visit(`/reset-password?returnUrl=${encodedReturnUrl}`);
-        const timeRequestWasMade = new Date();
+      cy
+        .createTestUser({
+          isUserEmailValidated: true,
+        })
+        ?.then(({ emailAddress }) => {
+          cy.visit(`/reset-password?returnUrl=${encodedReturnUrl}`);
+          const timeRequestWasMade = new Date();
 
-        cy.contains('Forgot password');
-        cy.get('input[name=email]').type(emailAddress);
+          cy.contains('Forgot password');
+          cy.get('input[name=email]').type(emailAddress);
 
-        // Continue checking the password reset flow after reCAPTCHA assertions above.
-        cy.get('[data-cy="main-form-submit-button"]').click();
-        cy.contains('Check your email inbox');
-        cy.checkForEmailAndGetDetails(
-          emailAddress,
-          timeRequestWasMade,
-          /reset-password\/([^"]*)/,
-        ).then(({ token }) => {
-          const newReturnUrl = encodeURIComponent(
-            'https://www.theguardian.com/technology/2017/may/04/nier-automata-sci-fi-game-sleeper-hit-designer-yoko-taro',
-          );
-          cy.visit(`/reset-password/${token}?returnUrl=${newReturnUrl}`);
+          // Continue checking the password reset flow after reCAPTCHA assertions above.
+          cy.get('[data-cy="main-form-submit-button"]').click();
+          cy.contains('Check your email inbox');
+          cy.checkForEmailAndGetDetails(
+            emailAddress,
+            timeRequestWasMade,
+            /reset-password\/([^"]*)/,
+          ).then(({ token }) => {
+            const newReturnUrl = encodeURIComponent(
+              'https://www.theguardian.com/technology/2017/may/04/nier-automata-sci-fi-game-sleeper-hit-designer-yoko-taro',
+            );
+            cy.visit(`/reset-password/${token}?returnUrl=${newReturnUrl}`);
 
-          cy.url()
-            .should('contain', newReturnUrl)
-            .and('not.contain', encodedReturnUrl);
+            cy.url()
+              .should('contain', newReturnUrl)
+              .and('not.contain', encodedReturnUrl);
 
-          cy.get('form')
-            .should('have.attr', 'action')
-            .and('match', new RegExp(newReturnUrl))
-            .and('not.match', new RegExp(encodedReturnUrl));
+            cy.get('form')
+              .should('have.attr', 'action')
+              .and('match', new RegExp(newReturnUrl))
+              .and('not.match', new RegExp(encodedReturnUrl));
 
-          //we are reloading here to make sure the params are persisted even on page refresh
-          cy.reload();
+            //we are reloading here to make sure the params are persisted even on page refresh
+            cy.reload();
 
-          cy.get('input[name=password]').type(randomPassword());
+            cy.get('input[name=password]').type(randomPassword());
 
-          cy.wait('@breachCheck');
-          cy.get('[data-cy="main-form-submit-button"]')
-            .click()
-            .should('be.disabled');
-          cy.contains('Password updated');
-          cy.contains(emailAddress.toLowerCase());
+            cy.wait('@breachCheck');
+            cy.get('[data-cy="main-form-submit-button"]')
+              .click()
+              .should('be.disabled');
+            cy.contains('Password updated');
+            cy.contains(emailAddress.toLowerCase());
 
-          cy.url()
-            .should('contain', newReturnUrl)
-            .and('not.contain', encodedReturnUrl)
-            .and('not.contain', 'useOkta=true');
+            cy.url()
+              .should('contain', newReturnUrl)
+              .and('not.contain', encodedReturnUrl)
+              .and('not.contain', 'useOkta=true');
+          });
         });
-      });
     });
 
     it('overrides appClientId and fromURI if set on reset password page url', () => {
@@ -212,46 +218,48 @@ describe('Password reset flow in Okta', () => {
       const fromURI1 = 'fromURI1';
 
       breachCheck();
-      cy.createTestUser({
-        isUserEmailValidated: true,
-      })?.then(({ emailAddress }) => {
-        cy.visit(
-          `/reset-password?returnUrl=${encodedReturnUrl}&appClientId=${appClientId1}&fromURI=${fromURI1}`,
-        );
-        const timeRequestWasMade = new Date();
-
-        cy.contains('Forgot password');
-        cy.get('input[name=email]').type(emailAddress);
-
-        // Continue checking the password reset flow after reCAPTCHA assertions above.
-        cy.get('[data-cy="main-form-submit-button"]').click();
-        cy.contains('Check your email inbox');
-        cy.checkForEmailAndGetDetails(
-          emailAddress,
-          timeRequestWasMade,
-          /reset-password\/([^"]*)/,
-        ).then(({ token }) => {
-          // should contain these params instead
-          const appClientId2 = 'appClientId2';
-          const fromURI2 = 'fromURI2';
+      cy
+        .createTestUser({
+          isUserEmailValidated: true,
+        })
+        ?.then(({ emailAddress }) => {
           cy.visit(
-            `/reset-password/${token}?appClientId=${appClientId2}&fromURI=${fromURI2}`,
+            `/reset-password?returnUrl=${encodedReturnUrl}&appClientId=${appClientId1}&fromURI=${fromURI1}`,
           );
+          const timeRequestWasMade = new Date();
 
-          cy.url()
-            .should('contain', appClientId2)
-            .and('contain', fromURI2)
-            .and('not.contain', appClientId1)
-            .and('not.contain', fromURI1);
+          cy.contains('Forgot password');
+          cy.get('input[name=email]').type(emailAddress);
 
-          cy.get('form')
-            .should('have.attr', 'action')
-            .and('match', new RegExp(appClientId2))
-            .and('match', new RegExp(fromURI2))
-            .and('not.match', new RegExp(appClientId1))
-            .and('not.match', new RegExp(fromURI1));
+          // Continue checking the password reset flow after reCAPTCHA assertions above.
+          cy.get('[data-cy="main-form-submit-button"]').click();
+          cy.contains('Check your email inbox');
+          cy.checkForEmailAndGetDetails(
+            emailAddress,
+            timeRequestWasMade,
+            /reset-password\/([^"]*)/,
+          ).then(({ token }) => {
+            // should contain these params instead
+            const appClientId2 = 'appClientId2';
+            const fromURI2 = 'fromURI2';
+            cy.visit(
+              `/reset-password/${token}?appClientId=${appClientId2}&fromURI=${fromURI2}`,
+            );
+
+            cy.url()
+              .should('contain', appClientId2)
+              .and('contain', fromURI2)
+              .and('not.contain', appClientId1)
+              .and('not.contain', fromURI1);
+
+            cy.get('form')
+              .should('have.attr', 'action')
+              .and('match', new RegExp(appClientId2))
+              .and('match', new RegExp(fromURI2))
+              .and('not.match', new RegExp(appClientId1))
+              .and('not.match', new RegExp(fromURI1));
+          });
         });
-      });
     });
   });
 
@@ -282,8 +290,8 @@ describe('Password reset flow in Okta', () => {
 
             expect(body).to.have.string('Create password');
             expect(links.length).to.eq(2);
-            const setPasswordLink = links.find((s) =>
-              s.text?.includes('Create password'),
+            const setPasswordLink = links.find(
+              (s) => s.text?.includes('Create password'),
             );
             expect(setPasswordLink?.href ?? '').not.to.have.string(
               'useOkta=true',
@@ -336,8 +344,8 @@ describe('Password reset flow in Okta', () => {
 
             expect(body).to.have.string('Create password');
             expect(links.length).to.eq(2);
-            const setPasswordLink = links.find((s) =>
-              s.text?.includes('Create password'),
+            const setPasswordLink = links.find(
+              (s) => s.text?.includes('Create password'),
             );
             expect(setPasswordLink?.href ?? '')
               .to.have.string('al_')
@@ -388,8 +396,8 @@ describe('Password reset flow in Okta', () => {
 
               expect(body).to.have.string('Create password');
               expect(links.length).to.eq(2);
-              const setPasswordLink = links.find((s) =>
-                s.text?.includes('Create password'),
+              const setPasswordLink = links.find(
+                (s) => s.text?.includes('Create password'),
               );
               expect(setPasswordLink?.href ?? '').not.to.have.string(
                 'useOkta=true',
@@ -440,8 +448,8 @@ describe('Password reset flow in Okta', () => {
               expect(body).to.have.string('Password reset');
               expect(body).to.have.string('Reset password');
               expect(links.length).to.eq(2);
-              const resetPasswordLink = links.find((s) =>
-                s.text?.includes('Reset password'),
+              const resetPasswordLink = links.find(
+                (s) => s.text?.includes('Reset password'),
               );
               expect(resetPasswordLink?.href ?? '').not.to.have.string(
                 'useOkta=true',
@@ -492,8 +500,8 @@ describe('Password reset flow in Okta', () => {
               expect(body).to.have.string('Password reset');
               expect(body).to.have.string('Reset password');
               expect(links.length).to.eq(2);
-              const resetPasswordLink = links.find((s) =>
-                s.text?.includes('Reset password'),
+              const resetPasswordLink = links.find(
+                (s) => s.text?.includes('Reset password'),
               );
               expect(resetPasswordLink?.href ?? '').not.to.have.string(
                 'useOkta=true',

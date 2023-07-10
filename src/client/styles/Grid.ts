@@ -100,8 +100,8 @@ const generateGridRowCss = (
   maxWidth?: number,
 ) => `
     -ms-grid-columns: (${columnWidth} 20px\)[${
-  columnNumber - 1
-}] ${columnWidth};
+      columnNumber - 1
+    }] ${columnWidth};
     grid-template-columns: repeat(${columnNumber}, ${columnWidth});
     padding-left: ${px(padding)};
     padding-right: ${px(padding)};
