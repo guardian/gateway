@@ -152,7 +152,7 @@
     "mjml": "^4.14.1",
     "mjml-browser": "^4.14.1",
     "ms": "^2.1.3",
-    "openid-client": "^5.4.2",
+    "openid-client": "^5.4.3",
     "ophan-tracker-js": "^1.4.0",
     "preact": "^10.15.1",
     "preact-render-to-string": "^6.1.0",
