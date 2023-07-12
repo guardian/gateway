@@ -11,6 +11,7 @@ export const getPermissionedGeolocation = (
   geolocation: GeoLocation | undefined,
 ): GeoLocation | PermissionedGeolocation | undefined => {
   if (!!cmpConsentState && geolocation === 'AU') return 'AU_permissioned';
+  if (!!cmpConsentState && geolocation === 'US') return 'US_permissioned';
   return geolocation;
 };
 
@@ -72,9 +73,18 @@ export const NewsletterMap = new Map<
     [
       Newsletters.DOWN_TO_EARTH,
       Newsletters.THE_LONG_READ,
-      Newsletters.MORNING_BRIEFING_US,
+      Newsletters.FIRST_THING_US,
       // @AB_TEST: Default Weekly Newsletter Test:
       Newsletters.SATURDAY_ROUNDUP_TRIAL,
+    ],
+  ],
+  [
+    'US_permissioned',
+    [
+      Newsletters.FIRST_THING_US,
+      Newsletters.HEADLINES_US,
+      Newsletters.DOWN_TO_EARTH,
+      Newsletters.OPINION_US,
     ],
   ],
 ]);
@@ -91,4 +101,5 @@ export const ConsentsOnNewslettersPageMap = new Map<
   ['AU', CONSENTS_NEWSLETTERS_PAGE],
   ['AU_permissioned', []],
   ['US', CONSENTS_NEWSLETTERS_PAGE],
+  ['US_permissioned', []],
 ]);
