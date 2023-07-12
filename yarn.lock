@@ -2580,10 +2580,10 @@
   resolved "https://registry.yarnpkg.com/@guardian/ab-react/-/ab-react-4.0.1.tgz#31bb0bf1bfcb0bbd637394356118b1d178c54961"
   integrity sha512-AOP3l/+JnnVCWHgHZhDVkVIAzQQ4yy7Abq+9CdYWS1MsJcgoASxILr9jnZB3KYxl4uHK/3h2lrS4pHfCK2vN3g==
 
-"@guardian/consent-management-platform@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-13.5.0.tgz#61a97c823f6b18f62a6517a3374f6e7bdfca121d"
-  integrity sha512-9iz04lyonWAbUeZ7B+fNp0KbgAervsWDO3A4CE/3e+d876AQj0I3TwU7W4jpWxI4tthcA6UVk7Y6faaS8l+lFw==
+"@guardian/consent-management-platform@^13.6.0":
+  version "13.6.0"
+  resolved "https://registry.yarnpkg.com/@guardian/consent-management-platform/-/consent-management-platform-13.6.0.tgz#c0c1a601ca8af0568b0c1dcb7f190b9875387dbf"
+  integrity sha512-GjAO4R6+Pl/zwt1EJtOUi5HwXmtqkg0+P+Eh3GtH0Kup+vZU7g5A0d5GITttGKsWQBPvSYIkGMbCJFVqD/DB2w==
 
 "@guardian/eslint-plugin-source-foundations@^13.0.0":
   version "13.0.0"
