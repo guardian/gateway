@@ -30,6 +30,6 @@ export const featureSwitches: FeatureSwitches = {
   gatewayOAuthEnabled: {
     DEV: true,
     CODE: true,
-    PROD: false,
+    PROD: true,
   },
 };
