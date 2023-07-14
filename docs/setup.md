@@ -5,10 +5,19 @@ Need help? Contact the Identity team on [Digital/Identity](https://chat.google.c
 ## Requirements
 
 - [Node.js](https://nodejs.org) - Version is specified by [.nvmrc](../.nvmrc), run [`$ nvm use`](https://github.com/creationix/nvm#nvmrc) to use it.
-
   - We use [`yarn`](https://classic.yarnpkg.com/en/) for dependency management, so if using Node, make sure to get yarn too.
 
 ## Configuration
+
+## `git` setup
+
+Make sure to set up your git config to ignore certain revisions in `git blame` by running:
+
+```sh
+$ git config blame.ignoreRevsFile .git-blame-ignore-revs
+```
+
+This will ignore specific revision in `git blame` defined in `.git-blame-ignore-revs` file. This is useful for ignoring large commits that are not relevant to the codebase, e.g. prettier rewrites.
 
 ### Nginx
 
