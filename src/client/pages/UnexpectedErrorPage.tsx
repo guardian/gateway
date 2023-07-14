@@ -5,10 +5,10 @@ import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 
 export const UnexpectedErrorPage = () => (
-  <MainLayout pageHeader="Sorry – an unexpected error occurred">
-    <MainBodyText>
-      An error occurred, please try again or{' '}
-      <ExternalLink href={locations.REPORT_ISSUE}>report it</ExternalLink>.
-    </MainBodyText>
-  </MainLayout>
+	<MainLayout pageHeader="Sorry – an unexpected error occurred">
+		<MainBodyText>
+			An error occurred, please try again or{' '}
+			<ExternalLink href={locations.REPORT_ISSUE}>report it</ExternalLink>.
+		</MainBodyText>
+	</MainLayout>
 );

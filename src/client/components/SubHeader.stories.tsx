@@ -4,9 +4,9 @@ import { Meta } from '@storybook/react';
 import { SubHeader } from './SubHeader';
 
 export default {
-  title: 'Components/SubHeader',
-  component: SubHeader,
-  parameters: { layout: 'fullscreen' },
+	title: 'Components/SubHeader',
+	component: SubHeader,
+	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => <SubHeader title="Sub Header Title" />;

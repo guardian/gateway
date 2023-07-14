@@ -17,7 +17,7 @@ const banner = `
 `.split('\n');
 
 banner.forEach((row) => {
-  console.log(chalkRainbow('    ' + row.replace('$msg', messages)));
+	console.log(chalkRainbow('    ' + row.replace('$msg', messages)));
 });
 
 //source -> http://www.asciiartfarts.com/

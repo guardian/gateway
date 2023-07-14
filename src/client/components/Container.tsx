@@ -4,59 +4,59 @@ import { Container as SourceContainer } from '@guardian/source-react-components'
 import { brandLine, neutral, from } from '@guardian/source-foundations';
 
 type Props = {
-  children: React.ReactNode; // Children are inserted inside the nested div of the section
-  sidePadding?: boolean; // Should side padding be added to the content inside the container (nested div)
-  topBorder?: boolean; // Show top border
-  sideBorders?: boolean; // Show left and right borders
-  borderColor?: string; // Set the colour for borders
-  backgroundColor?: string; // Sets the background colour of the section (root) element
+	children: React.ReactNode; // Children are inserted inside the nested div of the section
+	sidePadding?: boolean; // Should side padding be added to the content inside the container (nested div)
+	topBorder?: boolean; // Show top border
+	sideBorders?: boolean; // Show left and right borders
+	borderColor?: string; // Set the colour for borders
+	backgroundColor?: string; // Sets the background colour of the section (root) element
 };
 
 const sidePaddingStyles = css`
-  > div {
-    padding-left: 10px;
-    padding-right: 10px;
-    ${from.mobileLandscape} {
-      padding-left: 20px;
-      padding-right: 20px;
-    }
-  }
+	> div {
+		padding-left: 10px;
+		padding-right: 10px;
+		${from.mobileLandscape} {
+			padding-left: 20px;
+			padding-right: 20px;
+		}
+	}
 `;
 
 const noPaddingStyles = css`
-  > div {
-    padding: 0;
-  }
+	> div {
+		padding: 0;
+	}
 `;
 
 const sideBorderStyles = (color: string = neutral[86]) => css`
-  > div {
-    ${from.tablet} {
-      border-left: 1px solid ${color};
-      border-right: 1px solid ${color};
-    }
-  }
+	> div {
+		${from.tablet} {
+			border-left: 1px solid ${color};
+			border-right: 1px solid ${color};
+		}
+	}
 `;
 
 export const Container = ({
-  children,
-  sidePadding = true,
-  topBorder,
-  sideBorders,
-  borderColor = brandLine.primary,
-  backgroundColor,
+	children,
+	sidePadding = true,
+	topBorder,
+	sideBorders,
+	borderColor = brandLine.primary,
+	backgroundColor,
 }: Props) => {
-  return (
-    <SourceContainer
-      topBorder={topBorder}
-      borderColor={borderColor}
-      backgroundColor={backgroundColor}
-      cssOverrides={[
-        sidePadding ? sidePaddingStyles : noPaddingStyles,
-        sideBorders ? sideBorderStyles(borderColor) : css``,
-      ]}
-    >
-      {children}
-    </SourceContainer>
-  );
+	return (
+		<SourceContainer
+			topBorder={topBorder}
+			borderColor={borderColor}
+			backgroundColor={backgroundColor}
+			cssOverrides={[
+				sidePadding ? sidePaddingStyles : noPaddingStyles,
+				sideBorders ? sideBorderStyles(borderColor) : css``,
+			]}
+		>
+			{children}
+		</SourceContainer>
+	);
 };

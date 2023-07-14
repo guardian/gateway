@@ -5,12 +5,12 @@ import { UnvalidatedEmailResetPassword } from './UnvalidatedEmailResetPassword';
 import { renderMJML } from '../../testUtils';
 
 export default {
-  title: 'Email/Templates/UnvalidatedEmailResetPassword',
-  component: UnvalidatedEmailResetPassword,
-  parameters: { layout: 'fullscreen' },
+	title: 'Email/Templates/UnvalidatedEmailResetPassword',
+	component: UnvalidatedEmailResetPassword,
+	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => {
-  return renderMJML(<UnvalidatedEmailResetPassword />);
+	return renderMJML(<UnvalidatedEmailResetPassword />);
 };
 Default.storyName = 'with defaults';

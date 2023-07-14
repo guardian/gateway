@@ -7,29 +7,29 @@
  * @interface FeatureSwitches
  */
 interface FeatureSwitches {
-  demoSwitch: boolean;
-  oktaEnabled: {
-    DEV: boolean;
-    CODE: boolean;
-    PROD: boolean;
-  };
-  gatewayOAuthEnabled: {
-    DEV: boolean;
-    CODE: boolean;
-    PROD: boolean;
-  };
+	demoSwitch: boolean;
+	oktaEnabled: {
+		DEV: boolean;
+		CODE: boolean;
+		PROD: boolean;
+	};
+	gatewayOAuthEnabled: {
+		DEV: boolean;
+		CODE: boolean;
+		PROD: boolean;
+	};
 }
 
 export const featureSwitches: FeatureSwitches = {
-  demoSwitch: false,
-  oktaEnabled: {
-    DEV: true,
-    CODE: true,
-    PROD: true,
-  },
-  gatewayOAuthEnabled: {
-    DEV: true,
-    CODE: true,
-    PROD: true,
-  },
+	demoSwitch: false,
+	oktaEnabled: {
+		DEV: true,
+		CODE: true,
+		PROD: true,
+	},
+	gatewayOAuthEnabled: {
+		DEV: true,
+		CODE: true,
+		PROD: true,
+	},
 };

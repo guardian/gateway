@@ -4,8 +4,8 @@ import { Meta } from '@storybook/react';
 import { DetailedRecaptchaError } from './DetailedRecaptchaError';
 
 export default {
-  title: 'Components/DetailedRecaptchaError',
-  component: DetailedRecaptchaError,
+	title: 'Components/DetailedRecaptchaError',
+	component: DetailedRecaptchaError,
 } as Meta;
 
 export const Default = () => <DetailedRecaptchaError />;

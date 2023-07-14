@@ -23,9 +23,9 @@ Knowing this time delta and the rate at which new tokens are added, we can deriv
  * @param {number} maximumTimeBeforeTokenExpiry The maximum duration in seconds before the bucket is removed from Redis.
  */
 export interface BucketConfiguration {
-  capacity: number;
-  addTokenMs: number;
-  maximumTimeBeforeTokenExpiry?: number;
+	capacity: number;
+	addTokenMs: number;
+	maximumTimeBeforeTokenExpiry?: number;
 }
 ```
 
@@ -107,15 +107,15 @@ Example:
 
 ```typescript
 await rateLimit({
-  name: '/signin',
-  redisClient,
-  bucketConfiguration: {
-    globalBucket: { addTokenMs: 500, capacity: 5 },
-    ipBucket: { addTokenMs: 500, capacity: 2 },
-  },
-  bucketValues: {
-    ip: '127.0.0.1',
-  },
+	name: '/signin',
+	redisClient,
+	bucketConfiguration: {
+		globalBucket: { addTokenMs: 500, capacity: 5 },
+		ipBucket: { addTokenMs: 500, capacity: 2 },
+	},
+	bucketValues: {
+		ip: '127.0.0.1',
+	},
 });
 ```
 

@@ -15,77 +15,77 @@ const OPT_IN_PROMPT_TEST_ID = 'OptInPromptPostSignIn';
 const { defaultReturnUri } = getConfiguration();
 
 interface PostSignInControllerParams {
-  req: Request;
-  res: ResponseWithRequestState;
-  idapiCookies?: IdapiCookies;
-  oauthTokens?: TokenSet;
-  returnUrl?: string;
+	req: Request;
+	res: ResponseWithRequestState;
+	idapiCookies?: IdapiCookies;
+	oauthTokens?: TokenSet;
+	returnUrl?: string;
 }
 
 const postSignInController = async ({
-  req,
-  res,
-  idapiCookies,
-  oauthTokens,
-  returnUrl,
+	req,
+	res,
+	idapiCookies,
+	oauthTokens,
+	returnUrl,
 }: PostSignInControllerParams) => {
-  const redirectUrl = returnUrl || defaultReturnUri;
+	const redirectUrl = returnUrl || defaultReturnUri;
 
-  const optInPromptActive = await (async () => {
-    // Treating paths that only differ due to trailing slash as equivalent
-    const noTrailingSlash = (str: string) => str.replace(/\/$/, '');
-    if (noTrailingSlash(redirectUrl) !== noTrailingSlash(defaultReturnUri)) {
-      return false;
-    }
+	const optInPromptActive = await (async () => {
+		// Treating paths that only differ due to trailing slash as equivalent
+		const noTrailingSlash = (str: string) => str.replace(/\/$/, '');
+		if (noTrailingSlash(redirectUrl) !== noTrailingSlash(defaultReturnUri)) {
+			return false;
+		}
 
-    if (hasExperimentRun(req, OPT_IN_PROMPT_TEST_ID)) {
-      return false;
-    } else {
-      setExperimentRan(req, res, OPT_IN_PROMPT_TEST_ID, true);
-    }
+		if (hasExperimentRun(req, OPT_IN_PROMPT_TEST_ID)) {
+			return false;
+		} else {
+			setExperimentRan(req, res, OPT_IN_PROMPT_TEST_ID, true);
+		}
 
-    const sc_gu_u = idapiCookies?.values.find(({ key }) => key === 'SC_GU_U')
-      ?.value;
+		const sc_gu_u = idapiCookies?.values.find(({ key }) => key === 'SC_GU_U')
+			?.value;
 
-    const noScGuU = !sc_gu_u;
-    const noAccessToken = !oauthTokens?.access_token;
+		const noScGuU = !sc_gu_u;
+		const noAccessToken = !oauthTokens?.access_token;
 
-    // if there is no sc_gu_u or oauth access token,
-    // we can't check the user's consents,
-    // so we can't show the prompt
-    if (noScGuU && noAccessToken) {
-      return false;
-    }
+		// if there is no sc_gu_u or oauth access token,
+		// we can't check the user's consents,
+		// so we can't show the prompt
+		if (noScGuU && noAccessToken) {
+			return false;
+		}
 
-    try {
-      const consents = await getUserConsentsForPage({
-        pageConsents: CONSENTS_POST_SIGN_IN_PAGE,
-        ip: req.ip,
-        sc_gu_u,
-        accessToken: oauthTokens?.access_token,
-        request_id: res.locals.requestId,
-      });
+		try {
+			const consents = await getUserConsentsForPage({
+				pageConsents: CONSENTS_POST_SIGN_IN_PAGE,
+				ip: req.ip,
+				sc_gu_u,
+				accessToken: oauthTokens?.access_token,
+				request_id: res.locals.requestId,
+			});
 
-      return !consents.find(({ id }) => id === Consents.SUPPORTER)?.consented;
-    } catch (error) {
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-        request_id: res.locals.requestId,
-      });
-      trackMetric('PostSignInPromptRedirect::Failure');
-      return false;
-    }
-  })();
+			return !consents.find(({ id }) => id === Consents.SUPPORTER)?.consented;
+		} catch (error) {
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+				request_id: res.locals.requestId,
+			});
+			trackMetric('PostSignInPromptRedirect::Failure');
+			return false;
+		}
+	})();
 
-  if (optInPromptActive) {
-    return res.redirect(
-      303,
-      addQueryParamsToPath(`/signin/success`, res.locals.queryParams, {
-        returnUrl: redirectUrl,
-      }),
-    );
-  }
+	if (optInPromptActive) {
+		return res.redirect(
+			303,
+			addQueryParamsToPath(`/signin/success`, res.locals.queryParams, {
+				returnUrl: redirectUrl,
+			}),
+		);
+	}
 
-  return res.redirect(303, redirectUrl);
+	return res.redirect(303, redirectUrl);
 };
 
 export default postSignInController;

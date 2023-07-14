@@ -12,49 +12,49 @@ import { trackMetric } from '@/server/lib/trackMetric';
 const { accountManagementUrl } = getConfiguration();
 
 router.get(
-  '/change-email/complete',
-  (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer('/change-email/complete', {
-      pageTitle: 'Change Email',
-      requestState: mergeRequestState(res.locals, {
-        pageData: {
-          accountManagementUrl,
-        },
-      }),
-    });
-    return res.type('html').send(html);
-  },
+	'/change-email/complete',
+	(_: Request, res: ResponseWithRequestState) => {
+		const html = renderer('/change-email/complete', {
+			pageTitle: 'Change Email',
+			requestState: mergeRequestState(res.locals, {
+				pageData: {
+					accountManagementUrl,
+				},
+			}),
+		});
+		return res.type('html').send(html);
+	},
 );
 
 router.get(
-  '/change-email/:token',
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { token } = req.params;
+	'/change-email/:token',
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		const { token } = req.params;
 
-    try {
-      await changeEmail(token, req.ip, res.locals.requestId);
+		try {
+			await changeEmail(token, req.ip, res.locals.requestId);
 
-      trackMetric('ChangeEmail::Success');
+			trackMetric('ChangeEmail::Success');
 
-      return res.redirect(303, '/change-email/complete');
-    } catch (error) {
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-        request_id: res.locals.requestId,
-      });
+			return res.redirect(303, '/change-email/complete');
+		} catch (error) {
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+				request_id: res.locals.requestId,
+			});
 
-      trackMetric('ChangeEmail::Failure');
+			trackMetric('ChangeEmail::Failure');
 
-      const html = renderer('/change-email/error', {
-        pageTitle: 'Change Email',
-        requestState: mergeRequestState(res.locals, {
-          pageData: {
-            accountManagementUrl,
-          },
-        }),
-      });
-      return res.type('html').send(html);
-    }
-  }),
+			const html = renderer('/change-email/error', {
+				pageTitle: 'Change Email',
+				requestState: mergeRequestState(res.locals, {
+					pageData: {
+						accountManagementUrl,
+					},
+				}),
+			});
+			return res.type('html').send(html);
+		}
+	}),
 );
 
 export default router.router;

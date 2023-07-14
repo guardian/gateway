@@ -11,8 +11,8 @@ import { RequestState } from '@/server/models/Express';
  * @returns A full RequestState object.
  */
 export const mergeRequestState = (
-  initialRequestState: RequestState,
-  partialRequestState: Partial<RequestState>,
+	initialRequestState: RequestState,
+	partialRequestState: Partial<RequestState>,
 ): RequestState => {
-  return deepmerge<RequestState>(initialRequestState, partialRequestState);
+	return deepmerge<RequestState>(initialRequestState, partialRequestState);
 };

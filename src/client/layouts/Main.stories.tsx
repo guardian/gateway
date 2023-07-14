@@ -3,116 +3,116 @@ import { Meta } from '@storybook/react';
 
 import { MainLayout } from './Main';
 import {
-  BasicForm,
-  FormWithError,
-  FormWithRecaptcha,
-  MultipleInputFields,
+	BasicForm,
+	FormWithError,
+	FormWithRecaptcha,
+	MultipleInputFields,
 } from '../components/MainForm.stories';
 import { Paragraphs } from '../components/MainBodyText.stories';
 import { DetailedRecaptchaError } from '../components/DetailedRecaptchaError';
 
 export default {
-  title: 'Layout/Main',
-  component: MainLayout,
-  parameters: { layout: 'fullscreen' },
+	title: 'Layout/Main',
+	component: MainLayout,
+	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => (
-  <MainLayout>
-    <Paragraphs />
-  </MainLayout>
+	<MainLayout>
+		<Paragraphs />
+	</MainLayout>
 );
 Default.storyName = 'with defaults';
 
 export const WithPageHeader = () => (
-  <MainLayout pageHeader="Some page header">
-    <Paragraphs />
-  </MainLayout>
+	<MainLayout pageHeader="Some page header">
+		<Paragraphs />
+	</MainLayout>
 );
 WithPageHeader.storyName = 'with pageTitle';
 
 export const WithErrorPageHeader = () => (
-  <MainLayout pageHeader="Some page header" errorOverride="Error message">
-    <Paragraphs />
-  </MainLayout>
+	<MainLayout pageHeader="Some page header" errorOverride="Error message">
+		<Paragraphs />
+	</MainLayout>
 );
 WithErrorPageHeader.storyName = 'with Error and PageTitle';
 
 export const WithSuccessPageHeader = () => (
-  <MainLayout pageHeader="Some page header" successOverride="Success message">
-    <Paragraphs />
-  </MainLayout>
+	<MainLayout pageHeader="Some page header" successOverride="Success message">
+		<Paragraphs />
+	</MainLayout>
 );
 WithSuccessPageHeader.storyName = 'with Success and PageTitle';
 
 export const WithError = () => (
-  <MainLayout errorOverride="Error message">
-    <Paragraphs />
-  </MainLayout>
+	<MainLayout errorOverride="Error message">
+		<Paragraphs />
+	</MainLayout>
 );
 WithError.storyName = 'with Error';
 
 export const WithErrorContext = () => (
-  <MainLayout
-    errorOverride="Error message"
-    errorContext={<DetailedRecaptchaError />}
-  >
-    <Paragraphs />
-  </MainLayout>
+	<MainLayout
+		errorOverride="Error message"
+		errorContext={<DetailedRecaptchaError />}
+	>
+		<Paragraphs />
+	</MainLayout>
 );
 
 export const WithSuccess = () => (
-  <MainLayout successOverride="Success message">
-    <Paragraphs />
-  </MainLayout>
+	<MainLayout successOverride="Success message">
+		<Paragraphs />
+	</MainLayout>
 );
 WithSuccess.storyName = 'with Success';
 
 export const WithForm = () => (
-  <MainLayout pageHeader="Some page header">
-    <Paragraphs />
-    <BasicForm />
-  </MainLayout>
+	<MainLayout pageHeader="Some page header">
+		<Paragraphs />
+		<BasicForm />
+	</MainLayout>
 );
 WithForm.storyName = 'with Form';
 
 export const WithFormAndRecaptcha = () => (
-  <MainLayout pageHeader="Some page header">
-    <Paragraphs />
-    <FormWithRecaptcha />
-  </MainLayout>
+	<MainLayout pageHeader="Some page header">
+		<Paragraphs />
+		<FormWithRecaptcha />
+	</MainLayout>
 );
 WithFormAndRecaptcha.storyName = 'with Form and reCAPTCHA';
 
 export const WithFormWithFormLevelError = () => (
-  <MainLayout pageHeader="Some page header">
-    <Paragraphs />
-    <FormWithError />
-  </MainLayout>
+	<MainLayout pageHeader="Some page header">
+		<Paragraphs />
+		<FormWithError />
+	</MainLayout>
 );
 WithFormWithFormLevelError.storyName = 'with Form with form-level error';
 
 export const WithErrorAndFormWithFormLevelError = () => (
-  <MainLayout pageHeader="Some page header" errorOverride="Error message">
-    <Paragraphs />
-    <FormWithError />
-  </MainLayout>
+	<MainLayout pageHeader="Some page header" errorOverride="Error message">
+		<Paragraphs />
+		<FormWithError />
+	</MainLayout>
 );
 WithErrorAndFormWithFormLevelError.storyName =
-  'with Error and Form with form-level error';
+	'with Error and Form with form-level error';
 
 export const WithMultipleInputs = () => (
-  <MainLayout pageHeader="Some page header">
-    <Paragraphs />
-    <MultipleInputFields />
-  </MainLayout>
+	<MainLayout pageHeader="Some page header">
+		<Paragraphs />
+		<MultipleInputFields />
+	</MainLayout>
 );
 WithMultipleInputs.storyName = 'with multiple inputs';
 
 export const OnNativeApp = () => (
-  <MainLayout pageHeader="Some page header">
-    <Paragraphs />
-    <MultipleInputFields />
-  </MainLayout>
+	<MainLayout pageHeader="Some page header">
+		<Paragraphs />
+		<MultipleInputFields />
+	</MainLayout>
 );
 OnNativeApp.storyName = 'on native app';

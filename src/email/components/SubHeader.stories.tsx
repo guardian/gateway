@@ -5,11 +5,11 @@ import { SubHeader } from './SubHeader';
 import { renderMJMLComponent } from '../testUtils';
 
 export default {
-  title: 'Email/Components/SubHeader',
-  component: SubHeader,
+	title: 'Email/Components/SubHeader',
+	component: SubHeader,
 } as Meta;
 
 export const Default = () => {
-  return renderMJMLComponent(<SubHeader>My subheader text</SubHeader>);
+	return renderMJMLComponent(<SubHeader>My subheader text</SubHeader>);
 };
 Default.storyName = 'Default sub header';

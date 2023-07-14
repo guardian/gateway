@@ -7,9 +7,9 @@ import { handleErrorResponse } from '@/server/lib/okta/api/errors';
  * @returns Promise<void>
  */
 export const handleVoidResponse = async (response: Response): Promise<void> => {
-  if (response.ok) {
-    return Promise.resolve();
-  } else {
-    return await handleErrorResponse(response);
-  }
+	if (response.ok) {
+		return Promise.resolve();
+	} else {
+		return await handleErrorResponse(response);
+	}
 };

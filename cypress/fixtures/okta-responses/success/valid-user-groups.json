@@ -1,12 +1,12 @@
 {
-  "code": 200,
-  "response": [
-    {
-      "id": "123",
-      "profile": {
-        "name": "GuardianUser-EmailValidated",
-        "description": "User has validated their email"
-      }
-    }
-  ]
+	"code": 200,
+	"response": [
+		{
+			"id": "123",
+			"profile": {
+				"name": "GuardianUser-EmailValidated",
+				"description": "User has validated their email"
+			}
+		}
+	]
 }

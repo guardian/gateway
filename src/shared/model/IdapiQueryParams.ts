@@ -5,5 +5,5 @@ import { PersistableQueryParams } from './QueryParams';
  * that are expected when sending requests to IdApi
  */
 export interface IdApiQueryParams extends Partial<PersistableQueryParams> {
-  format?: string;
+	format?: string;
 }

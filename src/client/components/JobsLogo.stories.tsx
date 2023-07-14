@@ -3,31 +3,31 @@ import { Meta } from '@storybook/react';
 import { JobsLogo } from './JobsLogo';
 
 export default {
-  title: 'Components/JobsLogo',
-  component: JobsLogo,
-  parameters: { layout: 'fullscreen' },
+	title: 'Components/JobsLogo',
+	component: JobsLogo,
+	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Desktop = () => <JobsLogo />;
 Desktop.storyName = 'At desktop';
 Desktop.parameters = {
-  viewport: {
-    defaultViewport: 'DESKTOP',
-  },
+	viewport: {
+		defaultViewport: 'DESKTOP',
+	},
 };
 
 export const Tablet = () => <JobsLogo />;
 Tablet.storyName = 'At tablet';
 Tablet.parameters = {
-  viewport: {
-    defaultViewport: 'TABLET',
-  },
+	viewport: {
+		defaultViewport: 'TABLET',
+	},
 };
 
 export const Mobile = () => <JobsLogo />;
 Mobile.storyName = 'At mobile';
 Mobile.parameters = {
-  viewport: {
-    defaultViewport: 'MOBILE',
-  },
+	viewport: {
+		defaultViewport: 'MOBILE',
+	},
 };

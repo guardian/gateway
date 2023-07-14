@@ -5,11 +5,11 @@ import { Header } from './Header';
 import { renderMJMLComponent } from '../testUtils';
 
 export default {
-  title: 'Email/Components/Header',
-  component: Header,
+	title: 'Email/Components/Header',
+	component: Header,
 } as Meta;
 
 export const Default = () => {
-  return renderMJMLComponent(<Header />);
+	return renderMJMLComponent(<Header />);
 };
 Default.storyName = 'Default header';

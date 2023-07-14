@@ -5,14 +5,14 @@ import { Meta } from '@storybook/react';
 import { ChangeEmailComplete } from './ChangeEmailComplete';
 
 export default {
-  title: 'Pages/ChangeEmailComplete',
-  component: ChangeEmailComplete,
-  parameters: { layout: 'fullscreen' },
+	title: 'Pages/ChangeEmailComplete',
+	component: ChangeEmailComplete,
+	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => (
-  <ChangeEmailComplete accountManagementUrl="#" returnUrl="#" />
+	<ChangeEmailComplete accountManagementUrl="#" returnUrl="#" />
 );
 Default.story = {
-  name: 'with defaults',
+	name: 'with defaults',
 };

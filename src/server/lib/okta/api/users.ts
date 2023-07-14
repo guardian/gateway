@@ -2,17 +2,17 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { buildApiUrlWithQueryParams, buildUrl } from '@/shared/lib/routeUtils';
 import { joinUrl } from '@guardian/libs';
 import {
-  authorizationHeader,
-  defaultHeaders,
+	authorizationHeader,
+	defaultHeaders,
 } from '@/server/lib/okta/api/headers';
 import {
-  UserCreationRequest,
-  UserResponse,
-  UserUpdateRequest,
-  TokenResponse,
-  userResponseSchema,
-  activationTokenResponseSchema,
-  resetPasswordUrlResponseSchema,
+	UserCreationRequest,
+	UserResponse,
+	UserUpdateRequest,
+	TokenResponse,
+	userResponseSchema,
+	activationTokenResponseSchema,
+	resetPasswordUrlResponseSchema,
 } from '@/server/models/okta/User';
 import { handleVoidResponse } from '@/server/lib/okta/api/responses';
 import { OktaError } from '@/server/models/okta/Error';
@@ -41,24 +41,24 @@ const { okta } = getConfiguration();
  * @returns Promise<UserResponse>
  */
 export const createUser = async (
-  body: UserCreationRequest,
+	body: UserCreationRequest,
 ): Promise<UserResponse> => {
-  // If 'activate' is true, Okta will peform the activation lifecycle operation
-  // on the user, which in the case of a user without a password will send them
-  // an activation email but not transition their state from 'STAGED' to 'ACTIVE'.
-  // If 'activate' is false, Okta will only create the user, and neither
-  // send an email nor transition their state.
-  // We always set 'activate' to false.
-  const path = buildApiUrlWithQueryParams(
-    '/api/v1/users',
-    {},
-    { activate: false },
-  );
-  return await fetch(joinUrl(okta.orgUrl, path), {
-    method: 'POST',
-    body: JSON.stringify(body),
-    headers: { ...defaultHeaders, ...authorizationHeader() },
-  }).then(handleUserResponse);
+	// If 'activate' is true, Okta will peform the activation lifecycle operation
+	// on the user, which in the case of a user without a password will send them
+	// an activation email but not transition their state from 'STAGED' to 'ACTIVE'.
+	// If 'activate' is false, Okta will only create the user, and neither
+	// send an email nor transition their state.
+	// We always set 'activate' to false.
+	const path = buildApiUrlWithQueryParams(
+		'/api/v1/users',
+		{},
+		{ activate: false },
+	);
+	return await fetch(joinUrl(okta.orgUrl, path), {
+		method: 'POST',
+		body: JSON.stringify(body),
+		headers: { ...defaultHeaders, ...authorizationHeader() },
+	}).then(handleUserResponse);
 };
 
 /**
@@ -74,15 +74,15 @@ export const createUser = async (
  * @returns Promise<UserResponse>
  */
 export const updateUser = async (
-  id: string,
-  body: UserUpdateRequest,
+	id: string,
+	body: UserUpdateRequest,
 ): Promise<UserResponse> => {
-  const path = buildUrl('/api/v1/users/:id', { id });
-  return await fetch(joinUrl(okta.orgUrl, path), {
-    method: 'POST',
-    body: JSON.stringify(body),
-    headers: { ...defaultHeaders, ...authorizationHeader() },
-  }).then(handleUserResponse);
+	const path = buildUrl('/api/v1/users/:id', { id });
+	return await fetch(joinUrl(okta.orgUrl, path), {
+		method: 'POST',
+		body: JSON.stringify(body),
+		headers: { ...defaultHeaders, ...authorizationHeader() },
+	}).then(handleUserResponse);
 };
 
 /**
@@ -97,10 +97,10 @@ export const updateUser = async (
  */
 
 export const getUser = async (id: string): Promise<UserResponse> => {
-  const path = buildUrl('/api/v1/users/:id', { id });
-  return fetch(joinUrl(okta.orgUrl, path), {
-    headers: { ...defaultHeaders, ...authorizationHeader() },
-  }).then(handleUserResponse);
+	const path = buildUrl('/api/v1/users/:id', { id });
+	return fetch(joinUrl(okta.orgUrl, path), {
+		headers: { ...defaultHeaders, ...authorizationHeader() },
+	}).then(handleUserResponse);
 };
 
 /**
@@ -115,10 +115,10 @@ export const getUser = async (id: string): Promise<UserResponse> => {
  */
 
 export const getUserGroups = async (id: string): Promise<Group[]> => {
-  const path = buildUrl('/api/v1/users/:id/groups', { id });
-  return fetch(joinUrl(okta.orgUrl, path), {
-    headers: { ...defaultHeaders, ...authorizationHeader() },
-  }).then(handleGroupsResponse);
+	const path = buildUrl('/api/v1/users/:id/groups', { id });
+	return fetch(joinUrl(okta.orgUrl, path), {
+		headers: { ...defaultHeaders, ...authorizationHeader() },
+	}).then(handleGroupsResponse);
 };
 
 /**
@@ -146,22 +146,22 @@ export const getUserGroups = async (id: string): Promise<Group[]> => {
  * @returns Promise<TokenResponse | void>
  */
 export const activateUser = async (
-  id: string,
-  sendEmail = false,
+	id: string,
+	sendEmail = false,
 ): Promise<TokenResponse | void> => {
-  const path = buildApiUrlWithQueryParams(
-    '/api/v1/users/:id/lifecycle/activate',
-    { id },
-    { sendEmail },
-  );
-  return await fetch(joinUrl(okta.orgUrl, path), {
-    method: 'POST',
-    headers: { ...defaultHeaders, ...authorizationHeader() },
-  }).then(async (response) => {
-    return sendEmail
-      ? await handleVoidResponse(response)
-      : await handleActivationTokenResponse(response);
-  });
+	const path = buildApiUrlWithQueryParams(
+		'/api/v1/users/:id/lifecycle/activate',
+		{ id },
+		{ sendEmail },
+	);
+	return await fetch(joinUrl(okta.orgUrl, path), {
+		method: 'POST',
+		headers: { ...defaultHeaders, ...authorizationHeader() },
+	}).then(async (response) => {
+		return sendEmail
+			? await handleVoidResponse(response)
+			: await handleActivationTokenResponse(response);
+	});
 };
 
 /**
@@ -187,22 +187,22 @@ export const activateUser = async (
  * @returns Promise<TokenResponse | void>
  */
 export const reactivateUser = async (
-  id: string,
-  sendEmail = false,
+	id: string,
+	sendEmail = false,
 ): Promise<TokenResponse | void> => {
-  const path = buildApiUrlWithQueryParams(
-    '/api/v1/users/:id/lifecycle/reactivate',
-    { id },
-    { sendEmail },
-  );
-  return await fetch(joinUrl(okta.orgUrl, path), {
-    method: 'POST',
-    headers: { ...defaultHeaders, ...authorizationHeader() },
-  }).then(async (response) => {
-    return sendEmail
-      ? await handleVoidResponse(response)
-      : await handleActivationTokenResponse(response);
-  });
+	const path = buildApiUrlWithQueryParams(
+		'/api/v1/users/:id/lifecycle/reactivate',
+		{ id },
+		{ sendEmail },
+	);
+	return await fetch(joinUrl(okta.orgUrl, path), {
+		method: 'POST',
+		headers: { ...defaultHeaders, ...authorizationHeader() },
+	}).then(async (response) => {
+		return sendEmail
+			? await handleVoidResponse(response)
+			: await handleActivationTokenResponse(response);
+	});
 };
 
 /**
@@ -233,15 +233,15 @@ export const reactivateUser = async (
  * @returns Promise<string>
  */
 export const dangerouslyResetPassword = async (id: string): Promise<string> => {
-  const path = buildApiUrlWithQueryParams(
-    '/api/v1/users/:id/lifecycle/reset_password',
-    { id },
-    { sendEmail: false },
-  );
-  return await fetch(joinUrl(okta.orgUrl, path), {
-    method: 'POST',
-    headers: { ...defaultHeaders, ...authorizationHeader() },
-  }).then(handleResetPasswordUrlResponse);
+	const path = buildApiUrlWithQueryParams(
+		'/api/v1/users/:id/lifecycle/reset_password',
+		{ id },
+		{ sendEmail: false },
+	);
+	return await fetch(joinUrl(okta.orgUrl, path), {
+		method: 'POST',
+		headers: { ...defaultHeaders, ...authorizationHeader() },
+	}).then(handleResetPasswordUrlResponse);
 };
 
 /**
@@ -257,20 +257,20 @@ export const dangerouslyResetPassword = async (id: string): Promise<string> => {
  * @returns Promise<void>
  */
 export const clearUserSessions = async (
-  id: string,
-  oauthTokens = true,
+	id: string,
+	oauthTokens = true,
 ): Promise<void> => {
-  const path = buildApiUrlWithQueryParams(
-    '/api/v1/users/:id/sessions',
-    { id },
-    {
-      oauthTokens,
-    },
-  );
-  return await fetch(joinUrl(okta.orgUrl, path), {
-    method: 'DELETE',
-    headers: { ...defaultHeaders, ...authorizationHeader() },
-  }).then(handleVoidResponse);
+	const path = buildApiUrlWithQueryParams(
+		'/api/v1/users/:id/sessions',
+		{ id },
+		{
+			oauthTokens,
+		},
+	);
+	return await fetch(joinUrl(okta.orgUrl, path), {
+		method: 'DELETE',
+		headers: { ...defaultHeaders, ...authorizationHeader() },
+	}).then(handleVoidResponse);
 };
 
 /**
@@ -286,15 +286,15 @@ export const clearUserSessions = async (
  * @returns Promise<string>
  */
 export const forgotPassword = async (id: string): Promise<string> => {
-  const path = buildApiUrlWithQueryParams(
-    '/api/v1/users/:id/credentials/forgot_password',
-    { id },
-    { sendEmail: false },
-  );
-  return await fetch(joinUrl(okta.orgUrl, path), {
-    method: 'POST',
-    headers: { ...defaultHeaders, ...authorizationHeader() },
-  }).then(handleResetPasswordUrlResponse);
+	const path = buildApiUrlWithQueryParams(
+		'/api/v1/users/:id/credentials/forgot_password',
+		{ id },
+		{ sendEmail: false },
+	);
+	return await fetch(joinUrl(okta.orgUrl, path), {
+		method: 'POST',
+		headers: { ...defaultHeaders, ...authorizationHeader() },
+	}).then(handleResetPasswordUrlResponse);
 };
 
 /**
@@ -305,19 +305,19 @@ export const forgotPassword = async (id: string): Promise<string> => {
  * @returns Promise<UserResponse>
  */
 const handleUserResponse = async (
-  response: Response,
+	response: Response,
 ): Promise<UserResponse> => {
-  if (response.ok) {
-    try {
-      return userResponseSchema.parse(await response.json());
-    } catch (error) {
-      throw new OktaError({
-        message: 'Could not parse Okta user response',
-      });
-    }
-  } else {
-    return await handleErrorResponse(response);
-  }
+	if (response.ok) {
+		try {
+			return userResponseSchema.parse(await response.json());
+		} catch (error) {
+			throw new OktaError({
+				message: 'Could not parse Okta user response',
+			});
+		}
+	} else {
+		return await handleErrorResponse(response);
+	}
 };
 
 /**
@@ -328,17 +328,17 @@ const handleUserResponse = async (
  * @returns Promise<Group[]>
  */
 const handleGroupsResponse = async (response: Response): Promise<Group[]> => {
-  if (response.ok) {
-    try {
-      return z.array(groupSchema).parse(await response.json());
-    } catch (error) {
-      throw new OktaError({
-        message: 'Could not parse Okta user group response',
-      });
-    }
-  } else {
-    return await handleErrorResponse(response);
-  }
+	if (response.ok) {
+		try {
+			return z.array(groupSchema).parse(await response.json());
+		} catch (error) {
+			throw new OktaError({
+				message: 'Could not parse Okta user group response',
+			});
+		}
+	} else {
+		return await handleErrorResponse(response);
+	}
 };
 
 /**
@@ -350,25 +350,25 @@ const handleGroupsResponse = async (response: Response): Promise<Group[]> => {
  * @returns Promise<TokenResponse>
  */
 const handleActivationTokenResponse = async (
-  response: Response,
+	response: Response,
 ): Promise<TokenResponse> => {
-  if (response.ok) {
-    try {
-      const activationTokenResponse = activationTokenResponseSchema.parse(
-        await response.json(),
-      );
+	if (response.ok) {
+		try {
+			const activationTokenResponse = activationTokenResponseSchema.parse(
+				await response.json(),
+			);
 
-      return {
-        token: activationTokenResponse.activationToken,
-      };
-    } catch (error) {
-      throw new OktaError({
-        message: 'Could not parse Okta activation token response',
-      });
-    }
-  } else {
-    return await handleErrorResponse(response);
-  }
+			return {
+				token: activationTokenResponse.activationToken,
+			};
+		} catch (error) {
+			throw new OktaError({
+				message: 'Could not parse Okta activation token response',
+			});
+		}
+	} else {
+		return await handleErrorResponse(response);
+	}
 };
 
 /**
@@ -379,34 +379,34 @@ const handleActivationTokenResponse = async (
  * @returns Promise<string>
  */
 const handleResetPasswordUrlResponse = async (
-  response: Response,
+	response: Response,
 ): Promise<string> => {
-  if (response.ok) {
-    try {
-      const { resetPasswordUrl } = resetPasswordUrlResponseSchema.parse(
-        await response.json(),
-      );
+	if (response.ok) {
+		try {
+			const { resetPasswordUrl } = resetPasswordUrlResponseSchema.parse(
+				await response.json(),
+			);
 
-      const url = new URL(resetPasswordUrl);
-      const token = url.pathname.split('/').at(-1);
+			const url = new URL(resetPasswordUrl);
+			const token = url.pathname.split('/').at(-1);
 
-      // validate should exist, be length 20, and not equal to "signin" or "reset-password"
-      if (
-        token &&
-        token.length === 20 &&
-        token !== 'signin' &&
-        token !== 'reset-password'
-      ) {
-        return token;
-      } else {
-        throw new Error('Could not parse OTT from resetPasswordUrl');
-      }
-    } catch (error) {
-      throw new OktaError({
-        message: 'Could not parse Okta reset password url response',
-      });
-    }
-  } else {
-    return await handleErrorResponse(response);
-  }
+			// validate should exist, be length 20, and not equal to "signin" or "reset-password"
+			if (
+				token &&
+				token.length === 20 &&
+				token !== 'signin' &&
+				token !== 'reset-password'
+			) {
+				return token;
+			} else {
+				throw new Error('Could not parse OTT from resetPasswordUrl');
+			}
+		} catch (error) {
+			throw new OktaError({
+				message: 'Could not parse Okta reset password url response',
+			});
+		}
+	} else {
+		return await handleErrorResponse(response);
+	}
 };

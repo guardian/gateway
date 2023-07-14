@@ -6,17 +6,17 @@ import { brand } from '@guardian/source-foundations';
 import { BackToTop } from './BackToTop';
 
 export default {
-  title: 'Components/BackToTop',
-  component: BackToTop,
+	title: 'Components/BackToTop',
+	component: BackToTop,
 } as Meta;
 
 export const Desktop = () => (
-  <div
-    css={css`
-      background-color: ${brand[400]};
-    `}
-  >
-    <BackToTop />
-  </div>
+	<div
+		css={css`
+			background-color: ${brand[400]};
+		`}
+	>
+		<BackToTop />
+	</div>
 );
 Desktop.storyName = 'At Default';

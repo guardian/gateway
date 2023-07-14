@@ -6,12 +6,12 @@ import { randomUUID } from 'crypto';
  * This is used to identify requests in the logs.
  */
 export const requestIdMiddleware = (
-  req: Request,
-  _: Response,
-  next: NextFunction,
+	req: Request,
+	_: Response,
+	next: NextFunction,
 ) => {
-  // eslint-disable-next-line functional/immutable-data
-  req.headers['x-request-id'] = randomUUID();
+	// eslint-disable-next-line functional/immutable-data
+	req.headers['x-request-id'] = randomUUID();
 
-  next();
+	next();
 };

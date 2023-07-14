@@ -9,22 +9,22 @@ const AWS_REGION = 'eu-west-1';
 const PROFILE = !process.env.GITHUB_ACTION ? 'identity' : undefined;
 
 const CREDENTIAL_PROVIDER = fromNodeProviderChain({
-  profile: PROFILE,
+	profile: PROFILE,
 });
 
 // shared config for all aws clients, using the KinesisClientConfig type as
 // the base type for the shared config
 type SharedAwsConfig = Pick<
-  KinesisClientConfig,
-  'region' | 'credentials' | 'maxAttempts' | 'requestHandler'
+	KinesisClientConfig,
+	'region' | 'credentials' | 'maxAttempts' | 'requestHandler'
 >;
 
 export const awsConfig: SharedAwsConfig = {
-  region: AWS_REGION,
-  credentials: CREDENTIAL_PROVIDER,
-  maxAttempts: 0,
-  requestHandler: new NodeHttpHandler({
-    connectionTimeout: 500,
-    socketTimeout: 250,
-  }),
+	region: AWS_REGION,
+	credentials: CREDENTIAL_PROVIDER,
+	maxAttempts: 0,
+	requestHandler: new NodeHttpHandler({
+		connectionTimeout: 500,
+		socketTimeout: 250,
+	}),
 };

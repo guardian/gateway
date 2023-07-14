@@ -4,8 +4,8 @@ import { Meta } from '@storybook/react';
 import { EnvelopeImage } from './EnvelopeImage';
 
 export default {
-  title: 'Components/EnvelopeImage',
-  component: EnvelopeImage,
+	title: 'Components/EnvelopeImage',
+	component: EnvelopeImage,
 } as Meta;
 
 export const Default = () => <EnvelopeImage />;

@@ -1,8 +1,8 @@
 {
-  "json.schemas": [
-    {
-      "fileMatch": [".ratelimit.json", ".ratelimit.example.json"],
-      "url": "./.ratelimit.schema.json"
-    }
-  ]
+	"json.schemas": [
+		{
+			"fileMatch": [".ratelimit.json", ".ratelimit.example.json"],
+			"url": "./.ratelimit.schema.json"
+		}
+	]
 }

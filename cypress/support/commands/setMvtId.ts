@@ -1,10 +1,10 @@
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace Cypress {
-    interface Chainable {
-      setMvtId: typeof setMvtId;
-    }
-  }
+	// eslint-disable-next-line @typescript-eslint/no-namespace
+	namespace Cypress {
+		interface Chainable {
+			setMvtId: typeof setMvtId;
+		}
+	}
 }
 
 /**
@@ -12,7 +12,7 @@ declare global {
  * @param str Value to set the mvtId cookie to
  */
 export const setMvtId = (str: string) => {
-  return cy.setCookie('GU_mvt_id', str, {
-    log: true,
-  });
+	return cy.setCookie('GU_mvt_id', str, {
+		log: true,
+	});
 };

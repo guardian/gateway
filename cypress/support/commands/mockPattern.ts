@@ -1,10 +1,10 @@
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace Cypress {
-    interface Chainable {
-      mockPattern: typeof mockPattern;
-    }
-  }
+	// eslint-disable-next-line @typescript-eslint/no-namespace
+	namespace Cypress {
+		interface Chainable {
+			mockPattern: typeof mockPattern;
+		}
+	}
 }
 
 /**
@@ -14,22 +14,22 @@ declare global {
  * @param pattern Pattern to match against
  */
 export const mockPattern = (status: number, body = {}, pattern = '') => {
-  const getMockOptions = (status: number, body: object) => {
-    const payload = {
-      body,
-      pattern,
-      status,
-    };
-    return {
-      headers: {
-        'Content-Type': 'application/json',
-        'x-status': status,
-      },
-      method: 'POST',
-      body: JSON.stringify(payload),
-      url: Cypress.env('mockingEndpoint') + '/permanent-pattern',
-    };
-  };
+	const getMockOptions = (status: number, body: object) => {
+		const payload = {
+			body,
+			pattern,
+			status,
+		};
+		return {
+			headers: {
+				'Content-Type': 'application/json',
+				'x-status': status,
+			},
+			method: 'POST',
+			body: JSON.stringify(payload),
+			url: Cypress.env('mockingEndpoint') + '/permanent-pattern',
+		};
+	};
 
-  return cy.request(getMockOptions(status, body));
+	return cy.request(getMockOptions(status, body));
 };

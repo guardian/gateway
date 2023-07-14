@@ -1,16 +1,16 @@
 {
-  "projectName": "identity:identity-gateway",
-  "vcsURL": "https://github.com/guardian/gateway",
-  "actions": [
-    {
-      "action": "identity-gateway",
-      "path": "build",
-      "compress": "zip"
-    },
-    {
-      "action": "gateway-cloudformation",
-      "path": "cloudformation.yaml",
-      "compress": false
-    }
-  ]
+	"projectName": "identity:identity-gateway",
+	"vcsURL": "https://github.com/guardian/gateway",
+	"actions": [
+		{
+			"action": "identity-gateway",
+			"path": "build",
+			"compress": "zip"
+		},
+		{
+			"action": "gateway-cloudformation",
+			"path": "cloudformation.yaml",
+			"compress": false
+		}
+	]
 }

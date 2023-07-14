@@ -12,30 +12,30 @@ import { lastPayloadIs } from './commands/lastPayloadIs';
 import { lastPayloadsAre } from './commands/lastPayloadsAre';
 import { checkForEmailAndGetDetails } from './commands/getEmailDetails';
 import {
-  disableCMP,
-  enableCMP,
-  acceptCMP,
-  declineCMP,
+	disableCMP,
+	enableCMP,
+	acceptCMP,
+	declineCMP,
 } from './commands/manageCmp';
 import {
-  getTestOktaUser,
-  activateTestOktaUser,
-  createTestUser,
-  resetOktaUserPassword,
-  expireOktaUserPassword,
-  suspendOktaUser,
-  addOktaUserToGroup,
-  findEmailValidatedOktaGroupId,
-  getOktaUserGroups,
-  getTestUserDetails,
-  addToGRS,
-  updateTestUser,
-  updateOktaTestUserProfile,
-  getCurrentOktaSession,
-  closeCurrentOktaSession,
-  subscribeToNewsletter,
-  subscribeToMarketingConsent,
-  sendConsentEmail,
+	getTestOktaUser,
+	activateTestOktaUser,
+	createTestUser,
+	resetOktaUserPassword,
+	expireOktaUserPassword,
+	suspendOktaUser,
+	addOktaUserToGroup,
+	findEmailValidatedOktaGroupId,
+	getOktaUserGroups,
+	getTestUserDetails,
+	addToGRS,
+	updateTestUser,
+	updateOktaTestUserProfile,
+	getCurrentOktaSession,
+	closeCurrentOktaSession,
+	subscribeToNewsletter,
+	subscribeToMarketingConsent,
+	sendConsentEmail,
 } from './commands/testUser';
 
 Cypress.Commands.add('mockNext', mockNext);
@@ -61,8 +61,8 @@ Cypress.Commands.add('expireOktaUserPassword', expireOktaUserPassword);
 Cypress.Commands.add('suspendOktaUser', suspendOktaUser);
 Cypress.Commands.add('addOktaUserToGroup', addOktaUserToGroup);
 Cypress.Commands.add(
-  'findEmailValidatedOktaGroupId',
-  findEmailValidatedOktaGroupId,
+	'findEmailValidatedOktaGroupId',
+	findEmailValidatedOktaGroupId,
 );
 Cypress.Commands.add('getOktaUserGroups', getOktaUserGroups);
 Cypress.Commands.add('getTestUserDetails', getTestUserDetails);
@@ -73,7 +73,7 @@ Cypress.Commands.add('getCurrentOktaSession', getCurrentOktaSession);
 Cypress.Commands.add('closeCurrentOktaSession', closeCurrentOktaSession);
 Cypress.Commands.add('subscribeToNewsletter', subscribeToNewsletter);
 Cypress.Commands.add(
-  'subscribeToMarketingConsent',
-  subscribeToMarketingConsent,
+	'subscribeToMarketingConsent',
+	subscribeToMarketingConsent,
 );
 Cypress.Commands.add('sendConsentEmail', sendConsentEmail);

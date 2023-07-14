@@ -1,8 +1,8 @@
 import { getConfiguration } from '@/server/lib/getConfiguration';
 
 export const defaultHeaders = {
-  Accept: 'application/json',
-  'Content-Type': 'application/json',
+	Accept: 'application/json',
+	'Content-Type': 'application/json',
 };
 
 /**
@@ -11,8 +11,8 @@ export const defaultHeaders = {
  * @returns Authorization header with API token
  */
 export const authorizationHeader = () => {
-  const { okta } = getConfiguration();
-  return {
-    Authorization: `SSWS ${okta.token}`,
-  };
+	const { okta } = getConfiguration();
+	return {
+		Authorization: `SSWS ${okta.token}`,
+	};
 };

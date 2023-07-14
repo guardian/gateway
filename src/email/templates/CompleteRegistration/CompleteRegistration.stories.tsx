@@ -5,12 +5,12 @@ import { CompleteRegistration } from './CompleteRegistration';
 import { renderMJML } from '../../testUtils';
 
 export default {
-  title: 'Email/Templates/CompleteRegistration',
-  component: CompleteRegistration,
-  parameters: { layout: 'fullscreen' },
+	title: 'Email/Templates/CompleteRegistration',
+	component: CompleteRegistration,
+	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => {
-  return renderMJML(<CompleteRegistration />);
+	return renderMJML(<CompleteRegistration />);
 };
 Default.storyName = 'with defaults';

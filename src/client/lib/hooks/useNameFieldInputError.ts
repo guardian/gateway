@@ -12,31 +12,31 @@ import { useState, useEffect } from 'react';
  * this is so the global error will not show again until the next submit attempt.
  */
 export const useNameInputFieldError = () => {
-  const [groupError, setGroupError] = useState(false);
-  const [formSubmitAttempted, setFormSubmitAttempted] = useState(false);
+	const [groupError, setGroupError] = useState(false);
+	const [formSubmitAttempted, setFormSubmitAttempted] = useState(false);
 
-  // We show a global name field error above the fold on submit if the form is submitted without one — or both — of the name fields
-  // When the user corrects the global error, this effect resets the flag so it does not show again until the next submit attempt.
-  useEffect(() => {
-    if (groupError === false) {
-      setFormSubmitAttempted(false);
-    }
-  }, [groupError, setFormSubmitAttempted]);
+	// We show a global name field error above the fold on submit if the form is submitted without one — or both — of the name fields
+	// When the user corrects the global error, this effect resets the flag so it does not show again until the next submit attempt.
+	useEffect(() => {
+		if (groupError === false) {
+			setFormSubmitAttempted(false);
+		}
+	}, [groupError, setFormSubmitAttempted]);
 
-  const showNameFieldError = formSubmitAttempted && groupError;
+	const showNameFieldError = formSubmitAttempted && groupError;
 
-  const nameFieldError = showNameFieldError
-    ? NameFieldErrors.INFORMATION_MISSING
-    : undefined;
+	const nameFieldError = showNameFieldError
+		? NameFieldErrors.INFORMATION_MISSING
+		: undefined;
 
-  const nameFieldErrorContext = showNameFieldError
-    ? 'Please enter your First name and Last name'
-    : undefined;
+	const nameFieldErrorContext = showNameFieldError
+		? 'Please enter your First name and Last name'
+		: undefined;
 
-  return {
-    nameFieldError,
-    nameFieldErrorContext,
-    setGroupError,
-    setFormSubmitAttempted,
-  };
+	return {
+		nameFieldError,
+		nameFieldErrorContext,
+		setGroupError,
+		setFormSubmitAttempted,
+	};
 };

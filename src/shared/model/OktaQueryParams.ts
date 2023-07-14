@@ -5,5 +5,5 @@ import { StringifiableRecord } from './QueryParams';
  * that are expected when sending requests to Okta
  */
 export interface OktaQueryParams extends StringifiableRecord {
-  sendEmail?: boolean;
+	sendEmail?: boolean;
 }

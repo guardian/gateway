@@ -22,30 +22,30 @@ const legacyAssets = getAssets(true);
 
 // favicon shamefully stolen from dcr
 const favicon =
-  process.env.NODE_ENV === 'production'
-    ? 'favicon-32x32.ico'
-    : 'favicon-32x32-dev-yellow.ico';
+	process.env.NODE_ENV === 'production'
+		? 'favicon-32x32.ico'
+		: 'favicon-32x32-dev-yellow.ico';
 
 interface RendererOpts {
-  pageTitle: PageTitle;
-  requestState: RequestState;
+	pageTitle: PageTitle;
+	requestState: RequestState;
 }
 
 // for safari 10 and 11 although they support modules, we want then to use the legacy bundle
 // as the modern bundle is not compatible with these browser versions
 const isSafari10Or11 = (browser: Bowser.Parser.Details): boolean =>
-  browser.name === 'Safari' &&
-  (!!browser.version?.includes('10.') || !!browser.version?.includes('11.'));
+	browser.name === 'Safari' &&
+	(!!browser.version?.includes('10.') || !!browser.version?.includes('11.'));
 
 const getScriptTags = (isSafari10Or11: boolean): string => {
-  if (isSafari10Or11) {
-    return `
+	if (isSafari10Or11) {
+		return `
       <script src="/${legacyAssets.runtime}" defer></script>
       <script src="/${legacyAssets.vendors}" defer></script>
       <script src="/${legacyAssets.main}" defer></script>
     `;
-  }
-  return `
+	}
+	return `
     <script type="module" src="/${assets.runtime}" defer></script>
     <script type="module" src="/${assets.vendors}" defer></script>
     <script type="module" src="/${assets.main}" defer></script>
@@ -57,85 +57,85 @@ const getScriptTags = (isSafari10Or11: boolean): string => {
 };
 
 const clientStateFromRequestStateLocals = ({
-  csrf,
-  globalMessage,
-  pageData,
-  queryParams,
-  abTesting,
-  clientHosts,
-  recaptchaConfig,
-  sentryConfig,
+	csrf,
+	globalMessage,
+	pageData,
+	queryParams,
+	abTesting,
+	clientHosts,
+	recaptchaConfig,
+	sentryConfig,
 }: RequestState): ClientState => {
-  const clientState: ClientState = {
-    csrf,
-    globalMessage,
-    pageData,
-    abTesting,
-    clientHosts,
-    recaptchaConfig,
-    queryParams,
-    sentryConfig,
-  };
+	const clientState: ClientState = {
+		csrf,
+		globalMessage,
+		pageData,
+		abTesting,
+		clientHosts,
+		recaptchaConfig,
+		queryParams,
+		sentryConfig,
+	};
 
-  // checking if csrf error exists in query params, and attaching it to the
-  // forms field errors
-  if (queryParams.csrfError) {
-    return {
-      ...clientState,
-      pageData: {
-        ...clientState.pageData,
-        formError: CsrfErrors.CSRF_ERROR,
-      },
-    };
-  }
+	// checking if csrf error exists in query params, and attaching it to the
+	// forms field errors
+	if (queryParams.csrfError) {
+		return {
+			...clientState,
+			pageData: {
+				...clientState.pageData,
+				formError: CsrfErrors.CSRF_ERROR,
+			},
+		};
+	}
 
-  // checking if recaptcha error exists in query params, and attaching it to the
-  // forms field errors
-  if (queryParams.recaptchaError) {
-    return deepmerge<ClientState>(clientState, {
-      pageData: {
-        formError: CaptchaErrors.GENERIC,
-      },
-    });
-  }
+	// checking if recaptcha error exists in query params, and attaching it to the
+	// forms field errors
+	if (queryParams.recaptchaError) {
+		return deepmerge<ClientState>(clientState, {
+			pageData: {
+				formError: CaptchaErrors.GENERIC,
+			},
+		});
+	}
 
-  return clientState;
+	return clientState;
 };
 
 export const renderer: <P extends RoutePaths>(
-  url: P,
-  opts: RendererOpts,
-  tokenisationParams?: PathParams<P>,
+	url: P,
+	opts: RendererOpts,
+	tokenisationParams?: PathParams<P>,
 ) => string = (url, { requestState, pageTitle }, tokenisationParams) => {
-  const clientState = clientStateFromRequestStateLocals(requestState);
+	const clientState = clientStateFromRequestStateLocals(requestState);
 
-  const location = buildUrl(url, tokenisationParams);
+	const location = buildUrl(url, tokenisationParams);
 
-  const { abTesting: { mvtId = 0, forcedTestVariants = {} } = {} } =
-    clientState;
+	const { abTesting: { mvtId = 0, forcedTestVariants = {} } = {} } =
+		clientState;
 
-  // Any changes made here must also be made to the hydration in the static webpack bundle
-  const react = ReactDOMServer.renderToString(
-    <ABProvider
-      arrayOfTestObjects={tests}
-      abTestSwitches={abSwitches}
-      pageIsSensitive={false}
-      mvtMaxValue={1000000}
-      mvtId={mvtId}
-      forcedTestVariants={forcedTestVariants}
-    >
-      <App {...clientState} location={location}></App>
-    </ABProvider>,
-  );
+	// Any changes made here must also be made to the hydration in the static webpack bundle
+	const react = ReactDOMServer.renderToString(
+		<ABProvider
+			arrayOfTestObjects={tests}
+			abTestSwitches={abSwitches}
+			pageIsSensitive={false}
+			mvtMaxValue={1000000}
+			mvtId={mvtId}
+			forcedTestVariants={forcedTestVariants}
+		>
+			<App {...clientState} location={location}></App>
+		</ABProvider>,
+	);
 
-  const routingConfig: RoutingConfig = {
-    clientState,
-    location,
-  };
+	const routingConfig: RoutingConfig = {
+		clientState,
+		location,
+	};
 
-  const scriptTags = getScriptTags(isSafari10Or11(requestState.browser));
+	const scriptTags = getScriptTags(isSafari10Or11(requestState.browser));
 
-  return `
+	return `
     <!DOCTYPE html>
     <html lang="en">
       <head>
@@ -149,9 +149,9 @@ export const renderer: <P extends RoutePaths>(
         ${scriptTags}
 
         <script id="routingConfig" type="application/json">${serialize(
-          routingConfig,
-          { isJSON: true },
-        )}</script>
+					routingConfig,
+					{ isJSON: true },
+				)}</script>
         <style>${resets.defaults}</style>
       </head>
       <body style="margin:0">

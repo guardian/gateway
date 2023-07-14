@@ -1,15 +1,15 @@
 {
-  "code": 200,
-  "response": {
-    "id": "mocked-id",
-    "status": "$STATUS",
-    "profile": {
-      "firstName": null,
-      "lastName": null,
-      "email": "example@example.com",
-      "login": "example@example.com",
-      "isGuardianUser": true
-    },
-    "credentials": { "provider": { "type": "OKTA", "name": "OKTA" } }
-  }
+	"code": 200,
+	"response": {
+		"id": "mocked-id",
+		"status": "$STATUS",
+		"profile": {
+			"firstName": null,
+			"lastName": null,
+			"email": "example@example.com",
+			"login": "example@example.com",
+			"isGuardianUser": true
+		},
+		"credentials": { "provider": { "type": "OKTA", "name": "OKTA" } }
+	}
 }

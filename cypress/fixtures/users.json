@@ -1,8 +1,8 @@
 {
-  "validEmail": {
-    "email": "mrtest@theguardian.com"
-  },
-  "emailNotRegistered": {
-    "email": "mxunregistered@theguardian.com"
-  }
+	"validEmail": {
+		"email": "mrtest@theguardian.com"
+	},
+	"emailNotRegistered": {
+		"email": "mxunregistered@theguardian.com"
+	}
 }

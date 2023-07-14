@@ -5,12 +5,12 @@ import { AccountExists } from './AccountExists';
 import { renderMJML } from '../../testUtils';
 
 export default {
-  title: 'Email/Templates/AccountExists',
-  component: AccountExists,
-  parameters: { layout: 'fullscreen' },
+	title: 'Email/Templates/AccountExists',
+	component: AccountExists,
+	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => {
-  return renderMJML(<AccountExists />);
+	return renderMJML(<AccountExists />);
 };
 Default.storyName = 'with defaults';

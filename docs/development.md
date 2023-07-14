@@ -12,8 +12,8 @@ The [`renderer`](../src/server/lib/renderer.ts) method abstracts the rendering a
 // example of rendering a route
 // the url and pageTitle are both typed so new values must be added to the model before they will be accepted
 const html: string = renderer('/reset-password/email-sent', {
-  pageTitle: 'Check your inbox',
-  requestState: res.locals,
+	pageTitle: 'Check your inbox',
+	requestState: res.locals,
 });
 
 // do stuff with the html markup
@@ -182,14 +182,14 @@ import { ErrorSummary } from './ErrorSummary';
 
 // export metadata about the component
 export default {
-  title: 'Components/ErrorSummary',
-  component: ErrorSummary,
+	title: 'Components/ErrorSummary',
+	component: ErrorSummary,
 } as ComponentMeta<typeof ErrorSummary>;
 
 // Define a template (optional)
 const Template: ComponentStory<typeof ErrorSummary> = ({
-  error = 'There has been an error',
-  ...otherProps
+	error = 'There has been an error',
+	...otherProps
 }) => <ErrorSummary error={error} {...otherProps} />;
 
 // export a story (using template)
@@ -203,7 +203,7 @@ Default.storyName = 'default';
 // export another story
 export const WithErrorContext = Template.bind({});
 WithErrorContext.args = {
-  context: "Here's some more information about this error",
+	context: "Here's some more information about this error",
 };
 WithErrorContext.storyName = 'with errror context';
 ```
@@ -212,8 +212,8 @@ Each story has to export a default metadata object with information on the title
 
 ```tsx
 export default {
-  title: 'Components/ErrorSummary',
-  component: ErrorSummary,
+	title: 'Components/ErrorSummary',
+	component: ErrorSummary,
 } as ComponentMeta<typeof ErrorSummary>;
 
 /**
@@ -309,14 +309,14 @@ import useClientState from '@/client/lib/hooks/useClientState';
 
 // export some react component
 export const TestComponent = () => {
-  // get the client state from the context
-  const clientState = useClientState();
-  // extract the data we need from the state
-  const { test } = clientState;
+	// get the client state from the context
+	const clientState = useClientState();
+	// extract the data we need from the state
+	const { test } = clientState;
 
-  // use the test state
-  return <h1>{test}</h1>;
-  // renders <h1>This is some test string!</h1>
+	// use the test state
+	return <h1>{test}</h1>;
+	// renders <h1>This is some test string!</h1>
 };
 ```
 
@@ -330,24 +330,24 @@ import useClientState from '@/client/lib/hooks/useClientState';
 
 // export some react component
 export const TestContainer = () => {
-  // get the client state from the context
-  const clientState = useClientState();
-  // extract the data we need from the state
-  const { test } = clientState;
+	// get the client state from the context
+	const clientState = useClientState();
+	// extract the data we need from the state
+	const { test } = clientState;
 
-  // use the test state
-  return <TestComponent foo={test} />;
+	// use the test state
+	return <TestComponent foo={test} />;
 };
 
 // presentation component
 import React from 'react';
 
 interface Props {
-  foo: string;
+	foo: string;
 }
 
 export const TestComponent = ({ foo }: Props) => {
-  return <h1>{foo}</h1>;
+	return <h1>{foo}</h1>;
 };
 ```
 
@@ -429,24 +429,24 @@ import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 
 // export some react component
 export const TestContainer = () => {
-  // get the client state from the context
-  const clientState = useClientState();
-  // extract the queryParams we need from the state
-  const { queryParams } = clientState;
-  // extract the values we need from the queryParam
-  const { clientId, error } = queryParams;
+	// get the client state from the context
+	const clientState = useClientState();
+	// extract the queryParams we need from the state
+	const { queryParams } = clientState;
+	// extract the values we need from the queryParam
+	const { clientId, error } = queryParams;
 
-  // turn all the query params into a query string (only PersistableQueryParams by default)
-  const queryString = addQueryParamsToPath('', queryParams);
+	// turn all the query params into a query string (only PersistableQueryParams by default)
+	const queryString = addQueryParamsToPath('', queryParams);
 
-  // pass these to our presentation components
-  return (
-    <TestComponent
-      queryString={queryString}
-      clientId={clientId}
-      error={error}
-    />
-  );
+	// pass these to our presentation components
+	return (
+		<TestComponent
+			queryString={queryString}
+			clientId={clientId}
+			error={error}
+		/>
+	);
 };
 ```
 
@@ -482,9 +482,9 @@ import { textSans, neutral } from '@guardian/source-foundations';
 
 // style the tag using the css string literal
 const p = css`
-  color: ${neutral[100]};
-  margin: 0;
-  ${textSans.small()};
+	color: ${neutral[100]};
+	margin: 0;
+	${textSans.small()};
 `;
 
 // example component with the css attribute to add the styling

@@ -1,19 +1,19 @@
 import React from 'react';
 
 type CmpConsentedStateProps = {
-  cmpConsentedState: boolean;
+	cmpConsentedState: boolean;
 };
 
 export const CmpConsentedStateHiddenInput = ({
-  cmpConsentedState,
+	cmpConsentedState,
 }: CmpConsentedStateProps) => {
-  return (
-    <>
-      <input
-        type="hidden"
-        name="_cmpConsentedState"
-        value={`${cmpConsentedState}`}
-      />
-    </>
-  );
+	return (
+		<>
+			<input
+				type="hidden"
+				name="_cmpConsentedState"
+				value={`${cmpConsentedState}`}
+			/>
+		</>
+	);
 };

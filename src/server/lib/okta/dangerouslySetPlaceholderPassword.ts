@@ -15,32 +15,32 @@ import { dangerouslyResetPassword } from './api/users';
  * @param id The Okta user ID
  */
 const dangerouslySetPlaceholderPassword = async (id: string): Promise<void> => {
-  try {
-    // Generate an recoveryToken OTT and put user into RECOVERY state
-    const recoveryToken = await dangerouslyResetPassword(id);
-    // Validate the token
-    const { stateToken } = await validateRecoveryToken({
-      recoveryToken,
-    });
-    // Check if state token is defined
-    if (!stateToken) {
-      throw new OktaError({
-        message:
-          'dangerouslySetPlaceholderPassword failed: state token is undefined',
-      });
-    }
-    // Set the placeholder password as a cryptographically secure UUID
-    await resetPassword({
-      stateToken,
-      newPassword: crypto.randomUUID(),
-    });
-  } catch (error) {
-    logger.error(
-      `dangerouslySetPlaceholderPassword failed: Error setting placeholder password for user ${id}`,
-      error,
-    );
-    throw error;
-  }
+	try {
+		// Generate an recoveryToken OTT and put user into RECOVERY state
+		const recoveryToken = await dangerouslyResetPassword(id);
+		// Validate the token
+		const { stateToken } = await validateRecoveryToken({
+			recoveryToken,
+		});
+		// Check if state token is defined
+		if (!stateToken) {
+			throw new OktaError({
+				message:
+					'dangerouslySetPlaceholderPassword failed: state token is undefined',
+			});
+		}
+		// Set the placeholder password as a cryptographically secure UUID
+		await resetPassword({
+			stateToken,
+			newPassword: crypto.randomUUID(),
+		});
+	} catch (error) {
+		logger.error(
+			`dangerouslySetPlaceholderPassword failed: Error setting placeholder password for user ${id}`,
+			error,
+		);
+		throw error;
+	}
 };
 
 export default dangerouslySetPlaceholderPassword;

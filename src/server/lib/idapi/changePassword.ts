@@ -1,107 +1,107 @@
 import {
-  idapiFetch,
-  APIAddClientAccessToken,
-  APIGetOptions,
-  APIPostOptions,
-  IDAPIError,
+	idapiFetch,
+	APIAddClientAccessToken,
+	APIGetOptions,
+	APIPostOptions,
+	IDAPIError,
 } from '@/server/lib/IDAPIFetch';
 import {
-  IdapiErrorMessages,
-  ChangePasswordErrors,
-  PasswordFieldErrors,
+	IdapiErrorMessages,
+	ChangePasswordErrors,
+	PasswordFieldErrors,
 } from '@/shared/model/Errors';
 import { logger } from '@/server/lib/serverSideLogger';
 import { IdapiError } from '@/server/models/Error';
 import { IdapiCookies } from '@/server/lib/idapi/IDAPICookies';
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
-  if (error.status === 'error' && error.errors?.length) {
-    const err = error.errors[0];
-    const { message } = err;
+	if (error.status === 'error' && error.errors?.length) {
+		const err = error.errors[0];
+		const { message } = err;
 
-    switch (message) {
-      case IdapiErrorMessages.BREACHED_PASSWORD:
-        throw new IdapiError({
-          message: PasswordFieldErrors.COMMON_PASSWORD,
-          status,
-          field: 'password',
-        });
-      default:
-        break;
-    }
-  }
+		switch (message) {
+			case IdapiErrorMessages.BREACHED_PASSWORD:
+				throw new IdapiError({
+					message: PasswordFieldErrors.COMMON_PASSWORD,
+					status,
+					field: 'password',
+				});
+			default:
+				break;
+		}
+	}
 
-  throw new IdapiError({
-    message: ChangePasswordErrors.GENERIC,
-    status,
-  });
+	throw new IdapiError({
+		message: ChangePasswordErrors.GENERIC,
+		status,
+	});
 };
 
 export async function validate(
-  token: string,
-  ip: string,
-  request_id?: string,
+	token: string,
+	ip: string,
+	request_id?: string,
 ): Promise<{
-  email?: string;
-  tokenExpiryTimestamp?: number;
-  timeUntilTokenExpiry?: number;
+	email?: string;
+	tokenExpiryTimestamp?: number;
+	timeUntilTokenExpiry?: number;
 }> {
-  const options = APIGetOptions();
+	const options = APIGetOptions();
 
-  const params = {
-    token,
-  };
+	const params = {
+		token,
+	};
 
-  try {
-    const result = await idapiFetch({
-      path: '/pwd-reset/user-for-token',
-      options: APIAddClientAccessToken(options, ip),
-      queryParams: params,
-    });
+	try {
+		const result = await idapiFetch({
+			path: '/pwd-reset/user-for-token',
+			options: APIAddClientAccessToken(options, ip),
+			queryParams: params,
+		});
 
-    return {
-      email: result.user?.primaryEmailAddress,
-      tokenExpiryTimestamp: result.expiryTimestamp,
-      timeUntilTokenExpiry: result.timeUntilExpiry,
-    };
-  } catch (error) {
-    logger.error(
-      `IDAPI Error changePassword validate '/pwd-reset/user-for-token'`,
-      error,
-      {
-        request_id,
-      },
-    );
-    return handleError(error as IDAPIError);
-  }
+		return {
+			email: result.user?.primaryEmailAddress,
+			tokenExpiryTimestamp: result.expiryTimestamp,
+			timeUntilTokenExpiry: result.timeUntilExpiry,
+		};
+	} catch (error) {
+		logger.error(
+			`IDAPI Error changePassword validate '/pwd-reset/user-for-token'`,
+			error,
+			{
+				request_id,
+			},
+		);
+		return handleError(error as IDAPIError);
+	}
 }
 
 export async function change(
-  password: string,
-  token: string,
-  ip: string,
-  request_id?: string,
+	password: string,
+	token: string,
+	ip: string,
+	request_id?: string,
 ): Promise<IdapiCookies | undefined> {
-  const options = APIPostOptions({
-    password,
-    token,
-    validateBreached: true,
-  });
+	const options = APIPostOptions({
+		password,
+		token,
+		validateBreached: true,
+	});
 
-  try {
-    const result = await idapiFetch({
-      path: '/pwd-reset/reset-pwd-for-user',
-      options: APIAddClientAccessToken(options, ip),
-    });
-    return result.cookies;
-  } catch (error) {
-    logger.error(
-      `IDAPI Error changePassword change '/pwd-reset/reset-pwd-for-user'`,
-      error,
-      {
-        request_id,
-      },
-    );
-    handleError(error as IDAPIError);
-  }
+	try {
+		const result = await idapiFetch({
+			path: '/pwd-reset/reset-pwd-for-user',
+			options: APIAddClientAccessToken(options, ip),
+		});
+		return result.cookies;
+	} catch (error) {
+		logger.error(
+			`IDAPI Error changePassword change '/pwd-reset/reset-pwd-for-user'`,
+			error,
+			{
+				request_id,
+			},
+		);
+		handleError(error as IDAPIError);
+	}
 }

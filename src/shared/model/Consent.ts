@@ -1,25 +1,25 @@
 export interface Consent {
-  id: string;
-  name: string;
-  description?: string;
-  consented?: boolean;
+	id: string;
+	name: string;
+	description?: string;
+	consented?: boolean;
 }
 
 export enum Consents {
-  ADVERTISING = 'personalised_advertising',
-  // OPT OUT API CONSENTS (modeled as opt ins in Gateway)
-  PROFILING = 'profiling_optin',
-  // PRODUCT CONSENTS
-  SUPPORTER = 'supporter',
-  JOBS = 'jobs',
-  HOLIDAYS = 'holidays',
-  EVENTS = 'events',
-  OFFERS = 'offers',
+	ADVERTISING = 'personalised_advertising',
+	// OPT OUT API CONSENTS (modeled as opt ins in Gateway)
+	PROFILING = 'profiling_optin',
+	// PRODUCT CONSENTS
+	SUPPORTER = 'supporter',
+	JOBS = 'jobs',
+	HOLIDAYS = 'holidays',
+	EVENTS = 'events',
+	OFFERS = 'offers',
 }
 
 export const CONSENTS_DATA_PAGE: string[] = [
-  Consents.PROFILING, // modelled as an opt in in Gateway
-  Consents.ADVERTISING,
+	Consents.PROFILING, // modelled as an opt in in Gateway
+	Consents.ADVERTISING,
 ];
 
 export const CONSENTS_COMMUNICATION_PAGE: string[] = [Consents.SUPPORTER];

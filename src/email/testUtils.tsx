@@ -11,11 +11,11 @@ import mjml2html from 'mjml';
  */
 
 const render = (component: any) => ({
-  __html: mjml2html(renderToStaticMarkup(component)).html,
+	__html: mjml2html(renderToStaticMarkup(component)).html,
 });
 
 const renderComponent = (component: any) => ({
-  __html: mjml2html(`
+	__html: mjml2html(`
     <mjml>
       <mj-body>
           <mj-container>
@@ -27,9 +27,9 @@ const renderComponent = (component: any) => ({
 });
 
 export const renderMJMLComponent = (component: any) => (
-  <div dangerouslySetInnerHTML={renderComponent(component)} />
+	<div dangerouslySetInnerHTML={renderComponent(component)} />
 );
 
 export const renderMJML = (component: any) => (
-  <div dangerouslySetInnerHTML={render(component)} />
+	<div dangerouslySetInnerHTML={render(component)} />
 );

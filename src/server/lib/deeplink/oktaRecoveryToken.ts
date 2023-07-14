@@ -19,8 +19,8 @@ import { logger } from '../serverSideLogger';
  * e.g. `/reset-password/email-sent`
  */
 const appPrefixes = [
-  'al_', // Android live app
-  'il_', // iOS live app
+	'al_', // Android live app
+	'il_', // iOS live app
 ];
 type AppPrefix = (typeof appPrefixes)[number];
 
@@ -32,13 +32,13 @@ type AppPrefix = (typeof appPrefixes)[number];
  * @returns string representing the recovery token
  */
 export const extractOktaRecoveryToken = (token: string): string => {
-  const prefix = appPrefixes.find((prefix) => token.startsWith(prefix));
+	const prefix = appPrefixes.find((prefix) => token.startsWith(prefix));
 
-  if (!prefix) {
-    return token;
-  }
+	if (!prefix) {
+		return token;
+	}
 
-  return token.replace(prefix, '');
+	return token.replace(prefix, '');
 };
 
 /**
@@ -58,39 +58,39 @@ export const extractOktaRecoveryToken = (token: string): string => {
  *
  */
 export const addAppPrefixToOktaRecoveryToken = async (
-  token: string,
-  appClientId?: string,
-  request_id?: string,
+	token: string,
+	appClientId?: string,
+	request_id?: string,
 ): Promise<string> => {
-  if (!appClientId) {
-    return token;
-  }
+	if (!appClientId) {
+		return token;
+	}
 
-  try {
-    const app = await getApp(appClientId);
+	try {
+		const app = await getApp(appClientId);
 
-    const label = app.label.toLowerCase();
+		const label = app.label.toLowerCase();
 
-    const appPrefix: AppPrefix = (() => {
-      switch (label) {
-        case 'android_live_app':
-          return 'al_';
-        case 'ios_live_app':
-          return 'il_';
-        default:
-          return '';
-      }
-    })();
+		const appPrefix: AppPrefix = (() => {
+			switch (label) {
+				case 'android_live_app':
+					return 'al_';
+				case 'ios_live_app':
+					return 'il_';
+				default:
+					return '';
+			}
+		})();
 
-    return `${appPrefix}${token}`;
-  } catch (error) {
-    logger.error(
-      'Error getting app info in addAppPrefixToOktaRecoveryToken',
-      error,
-      {
-        request_id,
-      },
-    );
-    return token;
-  }
+		return `${appPrefix}${token}`;
+	} catch (error) {
+		logger.error(
+			'Error getting app info in addAppPrefixToOktaRecoveryToken',
+			error,
+			{
+				request_id,
+			},
+		);
+		return token;
+	}
 };

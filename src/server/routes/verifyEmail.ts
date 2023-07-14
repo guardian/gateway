@@ -3,8 +3,8 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { getProfileUrl } from '@/server/lib/getProfileUrl';
 import { read as getUser } from '@/server/lib/idapi/user';
 import {
-  send as sendVerificationEmail,
-  verifyEmail,
+	send as sendVerificationEmail,
+	verifyEmail,
 } from '@/server/lib/idapi/verifyEmail';
 import { logger } from '@/server/lib/serverSideLogger';
 import { renderer } from '@/server/lib/renderer';
@@ -28,186 +28,186 @@ const { signInPageUrl } = getConfiguration();
 const profileUrl = getProfileUrl();
 
 router.get(
-  '/verify-email',
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    // eslint-disable-next-line functional/no-let
-    let state = res.locals;
+	'/verify-email',
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		// eslint-disable-next-line functional/no-let
+		let state = res.locals;
 
-    state = mergeRequestState(state, {
-      pageData: {
-        signInPageUrl: `${signInPageUrl}?returnUrl=${encodeURIComponent(
-          `${profileUrl}${buildUrl('/verify-email')}`,
-        )}`,
-      },
-    });
+		state = mergeRequestState(state, {
+			pageData: {
+				signInPageUrl: `${signInPageUrl}?returnUrl=${encodeURIComponent(
+					`${profileUrl}${buildUrl('/verify-email')}`,
+				)}`,
+			},
+		});
 
-    // eslint-disable-next-line functional/no-let
-    let status = 200;
+		// eslint-disable-next-line functional/no-let
+		let status = 200;
 
-    try {
-      const sc_gu_u = req.cookies.SC_GU_U;
+		try {
+			const sc_gu_u = req.cookies.SC_GU_U;
 
-      if (!sc_gu_u) {
-        throw new ApiError({
-          status: 403,
-          message: ConsentsErrors.ACCESS_DENIED,
-        });
-      }
+			if (!sc_gu_u) {
+				throw new ApiError({
+					status: 403,
+					message: ConsentsErrors.ACCESS_DENIED,
+				});
+			}
 
-      const { primaryEmailAddress } = await getUser(
-        req.ip,
-        sc_gu_u,
-        state.requestId,
-      );
-      state = mergeRequestState(state, {
-        pageData: {
-          email: primaryEmailAddress,
-        },
-      });
-    } catch (error) {
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-        request_id: state.requestId,
-      });
-      const { message, status: errorStatus } =
-        error instanceof ApiError ? error : new ApiError();
+			const { primaryEmailAddress } = await getUser(
+				req.ip,
+				sc_gu_u,
+				state.requestId,
+			);
+			state = mergeRequestState(state, {
+				pageData: {
+					email: primaryEmailAddress,
+				},
+			});
+		} catch (error) {
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+				request_id: state.requestId,
+			});
+			const { message, status: errorStatus } =
+				error instanceof ApiError ? error : new ApiError();
 
-      status = errorStatus;
+			status = errorStatus;
 
-      if (status === 500) {
-        state = mergeRequestState(state, {
-          globalMessage: {
-            error: message,
-          },
-        });
-      }
-    }
+			if (status === 500) {
+				state = mergeRequestState(state, {
+					globalMessage: {
+						error: message,
+					},
+				});
+			}
+		}
 
-    const html = renderer('/verify-email', {
-      pageTitle: 'Verify Email',
-      requestState: state,
-    });
+		const html = renderer('/verify-email', {
+			pageTitle: 'Verify Email',
+			requestState: state,
+		});
 
-    return res.status(status).type('html').send(html);
-  }),
+		return res.status(status).type('html').send(html);
+	}),
 );
 
 router.post(
-  '/verify-email',
-  handleRecaptcha,
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    // eslint-disable-next-line functional/no-let
-    let state = res.locals;
-    // eslint-disable-next-line functional/no-let
-    let status = 200;
+	'/verify-email',
+	handleRecaptcha,
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		// eslint-disable-next-line functional/no-let
+		let state = res.locals;
+		// eslint-disable-next-line functional/no-let
+		let status = 200;
 
-    try {
-      const sc_gu_u = req.cookies.SC_GU_U;
+		try {
+			const sc_gu_u = req.cookies.SC_GU_U;
 
-      if (!sc_gu_u) {
-        throw new ApiError({
-          status: 403,
-          message: ConsentsErrors.ACCESS_DENIED,
-        });
-      }
+			if (!sc_gu_u) {
+				throw new ApiError({
+					status: 403,
+					message: ConsentsErrors.ACCESS_DENIED,
+				});
+			}
 
-      const {
-        email = (await getUser(req.ip, sc_gu_u, state.requestId))
-          .primaryEmailAddress,
-      } = req.body;
+			const {
+				email = (await getUser(req.ip, sc_gu_u, state.requestId))
+					.primaryEmailAddress,
+			} = req.body;
 
-      state = mergeRequestState(state, {
-        pageData: {
-          email,
-        },
-      });
+			state = mergeRequestState(state, {
+				pageData: {
+					email,
+				},
+			});
 
-      await sendVerificationEmail(req.ip, sc_gu_u, state.requestId);
-      trackMetric('SendValidationEmail::Success');
+			await sendVerificationEmail(req.ip, sc_gu_u, state.requestId);
+			trackMetric('SendValidationEmail::Success');
 
-      state = mergeRequestState(state, {
-        globalMessage: {
-          success: EMAIL_SENT.SUCCESS,
-        },
-      });
-    } catch (error) {
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-        request_id: state.requestId,
-      });
+			state = mergeRequestState(state, {
+				globalMessage: {
+					success: EMAIL_SENT.SUCCESS,
+				},
+			});
+		} catch (error) {
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+				request_id: state.requestId,
+			});
 
-      trackMetric('SendValidationEmail::Failure');
+			trackMetric('SendValidationEmail::Failure');
 
-      const { message, status: errorStatus } =
-        error instanceof ApiError ? error : new ApiError();
+			const { message, status: errorStatus } =
+				error instanceof ApiError ? error : new ApiError();
 
-      status = errorStatus;
+			status = errorStatus;
 
-      state = mergeRequestState(state, {
-        globalMessage: {
-          error: message,
-        },
-      });
-    }
+			state = mergeRequestState(state, {
+				globalMessage: {
+					error: message,
+				},
+			});
+		}
 
-    const html = renderer('/verify-email', {
-      pageTitle: 'Verify Email',
-      requestState: state,
-    });
+		const html = renderer('/verify-email', {
+			pageTitle: 'Verify Email',
+			requestState: state,
+		});
 
-    return res.status(status).type('html').send(html);
-  }),
+		return res.status(status).type('html').send(html);
+	}),
 );
 
 router.get(
-  '/verify-email/:token',
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { token } = req.params;
+	'/verify-email/:token',
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		const { token } = req.params;
 
-    try {
-      const cookies = await verifyEmail(token, req.ip, res.locals.requestId);
-      trackMetric('EmailValidated::Success');
-      // because we are verifying the email using idapi, and a new okta
-      // session will not be created, so we will need to clear the okta
-      // cookies to keep the sessions in sync
-      clearOktaCookies(res);
-      setIDAPICookies(res, cookies);
-    } catch (error) {
-      logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-        request_id: res.locals.requestId,
-      });
+		try {
+			const cookies = await verifyEmail(token, req.ip, res.locals.requestId);
+			trackMetric('EmailValidated::Success');
+			// because we are verifying the email using idapi, and a new okta
+			// session will not be created, so we will need to clear the okta
+			// cookies to keep the sessions in sync
+			clearOktaCookies(res);
+			setIDAPICookies(res, cookies);
+		} catch (error) {
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+				request_id: res.locals.requestId,
+			});
 
-      const { message } = error instanceof ApiError ? error : new ApiError();
+			const { message } = error instanceof ApiError ? error : new ApiError();
 
-      if (message === VerifyEmailErrors.USER_ALREADY_VALIDATED) {
-        return res.redirect(
-          303,
-          addQueryParamsToPath(
-            `${consentPages[0].path}`,
-            res.locals.queryParams,
-            {
-              useIdapi: true,
-            },
-          ),
-        );
-      }
+			if (message === VerifyEmailErrors.USER_ALREADY_VALIDATED) {
+				return res.redirect(
+					303,
+					addQueryParamsToPath(
+						`${consentPages[0].path}`,
+						res.locals.queryParams,
+						{
+							useIdapi: true,
+						},
+					),
+				);
+			}
 
-      trackMetric('EmailValidated::Failure');
+			trackMetric('EmailValidated::Failure');
 
-      return res.redirect(
-        303,
-        addQueryParamsToPath('/verify-email', res.locals.queryParams, {
-          useIdapi: true,
-        }),
-      );
-    }
+			return res.redirect(
+				303,
+				addQueryParamsToPath('/verify-email', res.locals.queryParams, {
+					useIdapi: true,
+				}),
+			);
+		}
 
-    return res.redirect(
-      303,
-      addQueryParamsToPath(`${consentPages[0].path}`, res.locals.queryParams, {
-        emailVerified: true,
-        useIdapi: true,
-      }),
-    );
-  }),
+		return res.redirect(
+			303,
+			addQueryParamsToPath(`${consentPages[0].path}`, res.locals.queryParams, {
+				emailVerified: true,
+				useIdapi: true,
+			}),
+		);
+	}),
 );
 
 export default router;

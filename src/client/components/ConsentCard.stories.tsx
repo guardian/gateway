@@ -6,24 +6,24 @@ import { DOWN_TO_EARTH_IMAGE } from '@/client/assets/newsletters';
 import { ConsentCard } from './ConsentCard';
 
 export default {
-  title: 'Components/ConsentCard',
-  component: ConsentCard,
+	title: 'Components/ConsentCard',
+	component: ConsentCard,
 } as ComponentMeta<typeof ConsentCard>;
 
 const Template: ComponentStory<typeof ConsentCard> = ({
-  title = 'Consent Name',
-  description = 'Consent description',
-  id = '4147',
-  imagePath = DOWN_TO_EARTH_IMAGE,
-  ...otherProps
+	title = 'Consent Name',
+	description = 'Consent description',
+	id = '4147',
+	imagePath = DOWN_TO_EARTH_IMAGE,
+	...otherProps
 }) => (
-  <ConsentCard
-    title={title}
-    description={description}
-    id={id}
-    imagePath={imagePath}
-    {...otherProps}
-  />
+	<ConsentCard
+		title={title}
+		description={description}
+		id={id}
+		imagePath={imagePath}
+		{...otherProps}
+	/>
 );
 
 export const Default = Template.bind({});

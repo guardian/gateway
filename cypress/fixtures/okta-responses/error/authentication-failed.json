@@ -1,10 +1,10 @@
 {
-  "code": 401,
-  "response": {
-    "errorCode": "E0000004",
-    "errorSummary": "Authentication failed",
-    "errorLink": "E0000004",
-    "errorId": "mocked-error-id",
-    "errorCauses": []
-  }
+	"code": 401,
+	"response": {
+		"errorCode": "E0000004",
+		"errorSummary": "Authentication failed",
+		"errorLink": "E0000004",
+		"errorId": "mocked-error-id",
+		"errorCauses": []
+	}
 }

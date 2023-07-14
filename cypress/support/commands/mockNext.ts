@@ -1,10 +1,10 @@
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace Cypress {
-    interface Chainable {
-      mockNext: typeof mockNext;
-    }
-  }
+	// eslint-disable-next-line @typescript-eslint/no-namespace
+	namespace Cypress {
+		interface Chainable {
+			mockNext: typeof mockNext;
+		}
+	}
 }
 
 /**
@@ -13,15 +13,15 @@ declare global {
  * @param body Mocked Request Body
  */
 export const mockNext = (status: number, body = {}) => {
-  const getMockOptions = (status: number, body: object) => ({
-    headers: {
-      'Content-Type': 'application/json',
-      'x-status': status,
-    },
-    method: 'POST',
-    body: JSON.stringify(body),
-    url: Cypress.env('mockingEndpoint'),
-  });
+	const getMockOptions = (status: number, body: object) => ({
+		headers: {
+			'Content-Type': 'application/json',
+			'x-status': status,
+		},
+		method: 'POST',
+		body: JSON.stringify(body),
+		url: Cypress.env('mockingEndpoint'),
+	});
 
-  cy.request(getMockOptions(status, body));
+	cy.request(getMockOptions(status, body));
 };

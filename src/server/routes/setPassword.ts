@@ -22,144 +22,144 @@ const { okta } = getConfiguration();
 
 // set password complete page
 router.get(
-  '/set-password/complete',
-  (req: Request, res: ResponseWithRequestState) => {
-    const email = readEmailCookie(req);
+	'/set-password/complete',
+	(req: Request, res: ResponseWithRequestState) => {
+		const email = readEmailCookie(req);
 
-    const html = renderer('/set-password/complete', {
-      requestState: mergeRequestState(res.locals, {
-        pageData: {
-          email,
-        },
-      }),
-      pageTitle: 'Password Set',
-    });
-    return res.type('html').send(html);
-  },
+		const html = renderer('/set-password/complete', {
+			requestState: mergeRequestState(res.locals, {
+				pageData: {
+					email,
+				},
+			}),
+			pageTitle: 'Password Set',
+		});
+		return res.type('html').send(html);
+	},
 );
 
 // resend "create (set) password" email page
 router.get(
-  '/set-password/resend',
-  (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer('/set-password/resend', {
-      pageTitle: 'Resend Create Password Email',
-      requestState: res.locals,
-    });
-    res.type('html').send(html);
-  },
+	'/set-password/resend',
+	(_: Request, res: ResponseWithRequestState) => {
+		const html = renderer('/set-password/resend', {
+			pageTitle: 'Resend Create Password Email',
+			requestState: res.locals,
+		});
+		res.type('html').send(html);
+	},
 );
 
 // set password page session expired
 router.get(
-  '/set-password/expired',
-  (_: Request, res: ResponseWithRequestState) => {
-    const html = renderer('/set-password/expired', {
-      pageTitle: 'Resend Create Password Email',
-      requestState: res.locals,
-    });
-    res.type('html').send(html);
-  },
+	'/set-password/expired',
+	(_: Request, res: ResponseWithRequestState) => {
+		const html = renderer('/set-password/expired', {
+			pageTitle: 'Resend Create Password Email',
+			requestState: res.locals,
+		});
+		res.type('html').send(html);
+	},
 );
 
 // POST handler for resending "create (set) password" email
 router.post(
-  '/set-password/resend',
-  handleRecaptcha,
-  handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-    const { useIdapi } = res.locals.queryParams;
-    if (okta.enabled && !useIdapi) {
-      return await sendResetPasswordEmailInOktaController(req, res);
-    } else {
-      const { email } = req.body;
-      const state = res.locals;
-      const { emailSentSuccess } = state.queryParams;
+	'/set-password/resend',
+	handleRecaptcha,
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		const { useIdapi } = res.locals.queryParams;
+		if (okta.enabled && !useIdapi) {
+			return await sendResetPasswordEmailInOktaController(req, res);
+		} else {
+			const { email } = req.body;
+			const state = res.locals;
+			const { emailSentSuccess } = state.queryParams;
 
-      try {
-        await sendCreatePasswordEmail(
-          email,
-          req.ip,
-          state.queryParams,
-          state.ophanConfig,
-          state.requestId,
-        );
+			try {
+				await sendCreatePasswordEmail(
+					email,
+					req.ip,
+					state.queryParams,
+					state.ophanConfig,
+					state.requestId,
+				);
 
-        setEncryptedStateCookie(res, {
-          email,
-          emailType: EmailType.CREATE_PASSWORD,
-        });
+				setEncryptedStateCookie(res, {
+					email,
+					emailType: EmailType.CREATE_PASSWORD,
+				});
 
-        return res.redirect(
-          303,
-          addQueryParamsToPath(
-            '/set-password/email-sent',
-            res.locals.queryParams,
-            {
-              emailSentSuccess,
-            },
-          ),
-        );
-      } catch (error) {
-        const { message, status } =
-          error instanceof ApiError
-            ? error
-            : new ApiError({ message: ResetPasswordErrors.GENERIC });
+				return res.redirect(
+					303,
+					addQueryParamsToPath(
+						'/set-password/email-sent',
+						res.locals.queryParams,
+						{
+							emailSentSuccess,
+						},
+					),
+				);
+			} catch (error) {
+				const { message, status } =
+					error instanceof ApiError
+						? error
+						: new ApiError({ message: ResetPasswordErrors.GENERIC });
 
-        logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-          request_id: state.requestId,
-        });
+				logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+					request_id: state.requestId,
+				});
 
-        const html = renderer('/set-password/resend', {
-          pageTitle: 'Resend Create Password Email',
-          requestState: mergeRequestState(res.locals, {
-            pageData: {
-              formError: message,
-            },
-          }),
-        });
-        return res.status(status).type('html').send(html);
-      }
-    }
-  }),
+				const html = renderer('/set-password/resend', {
+					pageTitle: 'Resend Create Password Email',
+					requestState: mergeRequestState(res.locals, {
+						pageData: {
+							formError: message,
+						},
+					}),
+				});
+				return res.status(status).type('html').send(html);
+			}
+		}
+	}),
 );
 
 // email sent page
 router.get(
-  '/set-password/email-sent',
-  (req: Request, res: ResponseWithRequestState) => {
-    const state = res.locals;
+	'/set-password/email-sent',
+	(req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
 
-    const email = readEmailCookie(req);
+		const email = readEmailCookie(req);
 
-    const html = renderer('/set-password/email-sent', {
-      pageTitle: 'Check Your Inbox',
-      requestState: mergeRequestState(state, {
-        pageData: {
-          email,
-          resendEmailAction: '/set-password/resend',
-          changeEmailPage: '/set-password/resend',
-        },
-      }),
-    });
-    res.type('html').send(html);
-  },
+		const html = renderer('/set-password/email-sent', {
+			pageTitle: 'Check Your Inbox',
+			requestState: mergeRequestState(state, {
+				pageData: {
+					email,
+					resendEmailAction: '/set-password/resend',
+					changeEmailPage: '/set-password/resend',
+				},
+			}),
+		});
+		res.type('html').send(html);
+	},
 );
 
 // set password page with token check
 // The below route must be defined below the other GET /set-password/* routes otherwise the other routes will fail
 router.get(
-  '/set-password/:token',
-  checkPasswordTokenController('/set-password', 'Create Password'),
+	'/set-password/:token',
+	checkPasswordTokenController('/set-password', 'Create Password'),
 );
 
 // POST handler for set password page to set password
 router.post(
-  '/set-password/:token',
-  setPasswordController(
-    '/set-password',
-    'Create Password',
-    '/set-password/complete',
-  ),
+	'/set-password/:token',
+	setPasswordController(
+		'/set-password',
+		'Create Password',
+		'/set-password/complete',
+	),
 );
 
 export default router.router;

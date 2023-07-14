@@ -39,199 +39,199 @@ import { SubscriptionErrorPage } from '@/client/pages/SubscriptionErrorPage';
 import { ResendConsentEmailPage } from './pages/ResendConsentEmailPage';
 
 export type RoutingConfig = {
-  clientState: ClientState;
-  location: string;
+	clientState: ClientState;
+	location: string;
 };
 
 const routes: Array<{
-  path: RoutePaths;
-  element: React.ReactElement;
+	path: RoutePaths;
+	element: React.ReactElement;
 }> = [
-  {
-    path: '/signed-in-as',
-    element: <SignedInAsPage />,
-  },
-  {
-    path: '/signin',
-    element: <SignInPage />,
-  },
-  {
-    path: '/signin/success',
-    element: <SignInSuccessPage />,
-  },
-  {
-    path: '/signin/email-sent',
-    element: (
-      <UnvalidatedEmailEmailSentPage formTrackingName="unvalidated-email-resend" />
-    ),
-  },
-  {
-    path: '/reauthenticate',
-    element: <SignInPage isReauthenticate />,
-  },
-  {
-    path: '/register',
-    element: <RegistrationPage />,
-  },
-  {
-    path: '/register/email-sent',
-    element: <RegistrationEmailSentPage />,
-  },
-  {
-    path: '/reset-password',
-    element: <ResetPasswordPage />,
-  },
-  {
-    path: '/reset-password/email-sent',
-    element: (
-      <EmailSentPage formTrackingName="forgot-password-resend" noAccountInfo />
-    ),
-  },
-  {
-    path: '/reset-password/complete',
-    element: <ChangePasswordCompletePage />,
-  },
-  {
-    path: '/reset-password/resend',
-    element: <ResendPasswordPage />,
-  },
-  {
-    path: '/reset-password/expired',
-    element: <ResetPasswordSessionExpiredPage />,
-  },
-  {
-    path: '/reset-password/:token',
-    element: <ChangePasswordPage />,
-  },
-  {
-    path: '/set-password/resend',
-    element: <SetPasswordResendPage />,
-  },
-  {
-    path: '/set-password/expired',
-    element: <SetPasswordSessionExpiredPage />,
-  },
-  {
-    path: '/set-password/complete',
-    element: <SetPasswordCompletePage />,
-  },
-  {
-    path: '/set-password/email-sent',
-    element: <EmailSentPage formTrackingName="set-password-resend" />,
-  },
-  {
-    path: '/set-password/:token',
-    element: <SetPasswordPage />,
-  },
-  {
-    path: '/consents/data',
-    element: <ConsentsDataPage />,
-  },
-  {
-    path: '/consents/communication',
-    element: <ConsentsCommunicationPage />,
-  },
-  {
-    path: '/consents/newsletters',
-    element: <ConsentsNewslettersPage />,
-  },
-  {
-    path: '/consents/review',
-    element: <ConsentsConfirmationPage />,
-  },
-  {
-    path: '/welcome/resend',
-    element: <WelcomeResendPage />,
-  },
-  {
-    path: '/welcome/expired',
-    element: <WelcomeSessionExpiredPage />,
-  },
-  {
-    path: '/welcome/email-sent',
-    element: <EmailSentPage formTrackingName="welcome-resend" />,
-  },
-  {
-    path: '/welcome/complete',
-    element: <WelcomePasswordAlreadySetPage />,
-  },
-  {
-    path: '/agree/GRS',
-    element: <JobsTermsPage />,
-  },
-  {
-    path: '/welcome/:token',
-    element: <WelcomePage />,
-  },
-  {
-    path: '/verify-email',
-    element: <ResendEmailVerificationPage />,
-  },
-  {
-    path: '/change-email/complete',
-    element: <ChangeEmailCompletePage />,
-  },
-  {
-    path: '/change-email/error',
-    element: <ChangeEmailErrorPage />,
-  },
-  {
-    path: '/unsubscribe/success',
-    element: <SubscriptionSuccessPage action={'unsubscribe'} />,
-  },
-  {
-    path: '/unsubscribe/error',
-    element: <SubscriptionErrorPage action={'unsubscribe'} />,
-  },
-  {
-    path: '/subscribe/success',
-    element: <SubscriptionSuccessPage action={'subscribe'} />,
-  },
-  {
-    path: '/subscribe/error',
-    element: <SubscriptionErrorPage action={'subscribe'} />,
-  },
-  {
-    path: '/magic-link',
-    element: <MagicLinkPage />,
-  },
-  {
-    path: '/magic-link/email-sent',
-    element: <EmailSentPage noAccountInfo />,
-  },
-  {
-    path: '/error',
-    element: <UnexpectedErrorPage />,
-  },
-  {
-    path: '/404',
-    element: <NotFoundPage />,
-  },
-  {
-    path: '/maintenance',
-    element: <MaintenancePage />,
-  },
-  {
-    path: '/consent-token/error',
-    element: <ResendConsentEmailPage />,
-  },
-  {
-    path: '/consent-token/email-sent',
-    element: (
-      <EmailSentPage formTrackingName="consent-resend" showHelp={true} />
-    ),
-  },
+	{
+		path: '/signed-in-as',
+		element: <SignedInAsPage />,
+	},
+	{
+		path: '/signin',
+		element: <SignInPage />,
+	},
+	{
+		path: '/signin/success',
+		element: <SignInSuccessPage />,
+	},
+	{
+		path: '/signin/email-sent',
+		element: (
+			<UnvalidatedEmailEmailSentPage formTrackingName="unvalidated-email-resend" />
+		),
+	},
+	{
+		path: '/reauthenticate',
+		element: <SignInPage isReauthenticate />,
+	},
+	{
+		path: '/register',
+		element: <RegistrationPage />,
+	},
+	{
+		path: '/register/email-sent',
+		element: <RegistrationEmailSentPage />,
+	},
+	{
+		path: '/reset-password',
+		element: <ResetPasswordPage />,
+	},
+	{
+		path: '/reset-password/email-sent',
+		element: (
+			<EmailSentPage formTrackingName="forgot-password-resend" noAccountInfo />
+		),
+	},
+	{
+		path: '/reset-password/complete',
+		element: <ChangePasswordCompletePage />,
+	},
+	{
+		path: '/reset-password/resend',
+		element: <ResendPasswordPage />,
+	},
+	{
+		path: '/reset-password/expired',
+		element: <ResetPasswordSessionExpiredPage />,
+	},
+	{
+		path: '/reset-password/:token',
+		element: <ChangePasswordPage />,
+	},
+	{
+		path: '/set-password/resend',
+		element: <SetPasswordResendPage />,
+	},
+	{
+		path: '/set-password/expired',
+		element: <SetPasswordSessionExpiredPage />,
+	},
+	{
+		path: '/set-password/complete',
+		element: <SetPasswordCompletePage />,
+	},
+	{
+		path: '/set-password/email-sent',
+		element: <EmailSentPage formTrackingName="set-password-resend" />,
+	},
+	{
+		path: '/set-password/:token',
+		element: <SetPasswordPage />,
+	},
+	{
+		path: '/consents/data',
+		element: <ConsentsDataPage />,
+	},
+	{
+		path: '/consents/communication',
+		element: <ConsentsCommunicationPage />,
+	},
+	{
+		path: '/consents/newsletters',
+		element: <ConsentsNewslettersPage />,
+	},
+	{
+		path: '/consents/review',
+		element: <ConsentsConfirmationPage />,
+	},
+	{
+		path: '/welcome/resend',
+		element: <WelcomeResendPage />,
+	},
+	{
+		path: '/welcome/expired',
+		element: <WelcomeSessionExpiredPage />,
+	},
+	{
+		path: '/welcome/email-sent',
+		element: <EmailSentPage formTrackingName="welcome-resend" />,
+	},
+	{
+		path: '/welcome/complete',
+		element: <WelcomePasswordAlreadySetPage />,
+	},
+	{
+		path: '/agree/GRS',
+		element: <JobsTermsPage />,
+	},
+	{
+		path: '/welcome/:token',
+		element: <WelcomePage />,
+	},
+	{
+		path: '/verify-email',
+		element: <ResendEmailVerificationPage />,
+	},
+	{
+		path: '/change-email/complete',
+		element: <ChangeEmailCompletePage />,
+	},
+	{
+		path: '/change-email/error',
+		element: <ChangeEmailErrorPage />,
+	},
+	{
+		path: '/unsubscribe/success',
+		element: <SubscriptionSuccessPage action={'unsubscribe'} />,
+	},
+	{
+		path: '/unsubscribe/error',
+		element: <SubscriptionErrorPage action={'unsubscribe'} />,
+	},
+	{
+		path: '/subscribe/success',
+		element: <SubscriptionSuccessPage action={'subscribe'} />,
+	},
+	{
+		path: '/subscribe/error',
+		element: <SubscriptionErrorPage action={'subscribe'} />,
+	},
+	{
+		path: '/magic-link',
+		element: <MagicLinkPage />,
+	},
+	{
+		path: '/magic-link/email-sent',
+		element: <EmailSentPage noAccountInfo />,
+	},
+	{
+		path: '/error',
+		element: <UnexpectedErrorPage />,
+	},
+	{
+		path: '/404',
+		element: <NotFoundPage />,
+	},
+	{
+		path: '/maintenance',
+		element: <MaintenancePage />,
+	},
+	{
+		path: '/consent-token/error',
+		element: <ResendConsentEmailPage />,
+	},
+	{
+		path: '/consent-token/email-sent',
+		element: (
+			<EmailSentPage formTrackingName="consent-resend" showHelp={true} />
+		),
+	},
 ];
 
 interface Props {
-  location: string;
+	location: string;
 }
 
 export const GatewayRoutes = ({ location }: Props) => {
-  for (const route of routes) {
-    if (parse(route.path).pattern.test(location)) {
-      return route.element;
-    }
-  }
-  return <NotFoundPage />;
+	for (const route of routes) {
+		if (parse(route.path).pattern.test(location)) {
+			return route.element;
+		}
+	}
+	return <NotFoundPage />;
 };

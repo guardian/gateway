@@ -10,68 +10,68 @@ import { SocialButtons } from '@/client/components/SocialButtons';
 import { socialButtonDivider } from '@/client/styles/Shared';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import {
-  GuardianTerms,
-  JobsTerms,
-  termsContainer,
+	GuardianTerms,
+	JobsTerms,
+	termsContainer,
 } from '@/client/components/Terms';
 import { CmpConsentedStateHiddenInput } from '@/client/components/CmpConsentStateHiddenInput';
 import { useCmpConsent } from '@/client/lib/hooks/useCmpConsent';
 import { NoFacebookSupport } from '@/client/components/NoFacebookSupport';
 
 export type RegistrationProps = {
-  email?: string;
-  recaptchaSiteKey: string;
-  queryParams: QueryParams;
-  formError?: string;
+	email?: string;
+	recaptchaSiteKey: string;
+	queryParams: QueryParams;
+	formError?: string;
 };
 
 const RegistrationTerms = ({ isJobs }: { isJobs: boolean }) => (
-  <div css={termsContainer}>
-    {!isJobs && <GuardianTerms />}
-    {isJobs && <JobsTerms />}
-  </div>
+	<div css={termsContainer}>
+		{!isJobs && <GuardianTerms />}
+		{isJobs && <JobsTerms />}
+	</div>
 );
 
 export const Registration = ({
-  email,
-  recaptchaSiteKey,
-  queryParams,
-  formError,
+	email,
+	recaptchaSiteKey,
+	queryParams,
+	formError,
 }: RegistrationProps) => {
-  const formTrackingName = 'register';
+	const formTrackingName = 'register';
 
-  const { clientId } = queryParams;
-  const isJobs = clientId === 'jobs';
+	const { clientId } = queryParams;
+	const isJobs = clientId === 'jobs';
 
-  usePageLoadOphanInteraction(formTrackingName);
-  const hasCmpConsent = useCmpConsent();
+	usePageLoadOphanInteraction(formTrackingName);
+	const hasCmpConsent = useCmpConsent();
 
-  const tabs = generateSignInRegisterTabs({
-    queryParams,
-    isActive: 'register',
-  });
+	const tabs = generateSignInRegisterTabs({
+		queryParams,
+		isActive: 'register',
+	});
 
-  return (
-    <MainLayout tabs={tabs}>
-      <RegistrationTerms isJobs={isJobs} />
-      <SocialButtons queryParams={queryParams} marginTop={true} />
-      <Divider
-        spaceAbove="loose"
-        displayText="or continue with"
-        cssOverrides={socialButtonDivider}
-      />
-      <MainForm
-        formAction={buildUrlWithQueryParams('/register', {}, queryParams)}
-        submitButtonText="Register"
-        recaptchaSiteKey={recaptchaSiteKey}
-        formTrackingName={formTrackingName}
-        disableOnSubmit
-        formErrorMessageFromParent={formError}
-      >
-        <EmailInput defaultValue={email} autoComplete="off" />
-        <CmpConsentedStateHiddenInput cmpConsentedState={hasCmpConsent} />
-      </MainForm>
-      <NoFacebookSupport queryParams={queryParams} />
-    </MainLayout>
-  );
+	return (
+		<MainLayout tabs={tabs}>
+			<RegistrationTerms isJobs={isJobs} />
+			<SocialButtons queryParams={queryParams} marginTop={true} />
+			<Divider
+				spaceAbove="loose"
+				displayText="or continue with"
+				cssOverrides={socialButtonDivider}
+			/>
+			<MainForm
+				formAction={buildUrlWithQueryParams('/register', {}, queryParams)}
+				submitButtonText="Register"
+				recaptchaSiteKey={recaptchaSiteKey}
+				formTrackingName={formTrackingName}
+				disableOnSubmit
+				formErrorMessageFromParent={formError}
+			>
+				<EmailInput defaultValue={email} autoComplete="off" />
+				<CmpConsentedStateHiddenInput cmpConsentedState={hasCmpConsent} />
+			</MainForm>
+			<NoFacebookSupport queryParams={queryParams} />
+		</MainLayout>
+	);
 };

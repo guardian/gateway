@@ -4,10 +4,10 @@ import { forgotPassword } from '@/server/lib/okta/api/users';
 import { addAppPrefixToOktaRecoveryToken } from './deeplink/oktaRecoveryToken';
 
 type Props = {
-  id: string;
-  email: string;
-  appClientId?: string;
-  request_id?: string;
+	id: string;
+	email: string;
+	appClientId?: string;
+	request_id?: string;
 };
 
 /**
@@ -20,28 +20,28 @@ type Props = {
  * @param email Okta user email address
  */
 export const sendEmailToUnvalidatedUser = async ({
-  id,
-  email,
-  appClientId,
-  request_id,
+	id,
+	email,
+	appClientId,
+	request_id,
 }: Props): Promise<void> => {
-  const token = await forgotPassword(id);
-  if (!token) {
-    throw new OktaError({
-      message: `Unvalidated email sign-in failed: missing reset password token`,
-    });
-  }
-  const emailIsSent = await sendUnvalidatedEmailResetPasswordEmail({
-    to: email,
-    resetPasswordToken: await addAppPrefixToOktaRecoveryToken(
-      token,
-      appClientId,
-      request_id,
-    ),
-  });
-  if (!emailIsSent) {
-    throw new OktaError({
-      message: `Unvalidated email sign-in failed: failed to send email`,
-    });
-  }
+	const token = await forgotPassword(id);
+	if (!token) {
+		throw new OktaError({
+			message: `Unvalidated email sign-in failed: missing reset password token`,
+		});
+	}
+	const emailIsSent = await sendUnvalidatedEmailResetPasswordEmail({
+		to: email,
+		resetPasswordToken: await addAppPrefixToOktaRecoveryToken(
+			token,
+			appClientId,
+			request_id,
+		),
+	});
+	if (!emailIsSent) {
+		throw new OktaError({
+			message: `Unvalidated email sign-in failed: failed to send email`,
+		});
+	}
 };
