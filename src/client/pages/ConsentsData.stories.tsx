@@ -5,28 +5,28 @@ import { Consent } from '@/shared/model/Consent';
 import { ConsentsData } from './ConsentsData';
 
 export default {
-  title: 'Pages/ConsentsData',
-  component: ConsentsData,
-  parameters: {
-    layout: 'fullscreen',
-    clientState: { pageData: { previousPage: 'fake_page' } },
-  },
+	title: 'Pages/ConsentsData',
+	component: ConsentsData,
+	parameters: {
+		layout: 'fullscreen',
+		clientState: { pageData: { previousPage: 'fake_page' } },
+	},
 } as ComponentMeta<typeof ConsentsData>;
 
 const Template: ComponentStory<typeof ConsentsData> = (props) => (
-  <ConsentsData {...props} />
+	<ConsentsData {...props} />
 );
 
 const advertising: Consent = {
-  id: 'personalised_advertising',
-  name: 'Allow personalised advertising using this data - this supports the Guardian',
-  consented: false,
+	id: 'personalised_advertising',
+	name: 'Allow personalised advertising using this data - this supports the Guardian',
+	consented: false,
 };
 
 const profiling: Consent = {
-  id: 'profiling_optin',
-  name: 'Allow the Guardian to analyse this data to improve marketing content',
-  consented: true,
+	id: 'profiling_optin',
+	name: 'Allow the Guardian to analyse this data to improve marketing content',
+	consented: true,
 };
 
 export const NoDescription = Template.bind({});
@@ -34,13 +34,13 @@ NoDescription.storyName = 'with no description';
 
 export const OnlyProfilingConsent = Template.bind({});
 OnlyProfilingConsent.args = {
-  profiling: profiling,
+	profiling: profiling,
 };
 OnlyProfilingConsent.storyName = 'with profiling consent only';
 
 export const BothConsents = Template.bind({});
 BothConsents.args = {
-  profiling: profiling,
-  advertising: advertising,
+	profiling: profiling,
+	advertising: advertising,
 };
 BothConsents.storyName = 'with both consents';

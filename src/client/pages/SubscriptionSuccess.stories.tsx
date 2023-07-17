@@ -5,29 +5,29 @@ import { Meta } from '@storybook/react';
 import { SubscriptionSuccess } from './SubscriptionSuccess';
 
 export default {
-  title: 'Pages/SubscriptionSuccess',
-  component: SubscriptionSuccess,
-  parameters: { layout: 'fullscreen' },
+	title: 'Pages/SubscriptionSuccess',
+	component: SubscriptionSuccess,
+	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Unsubscribe = () => (
-  <SubscriptionSuccess
-    accountManagementUrl="#"
-    returnUrl="#"
-    action={'unsubscribe'}
-  />
+	<SubscriptionSuccess
+		accountManagementUrl="#"
+		returnUrl="#"
+		action={'unsubscribe'}
+	/>
 );
 Unsubscribe.story = {
-  name: 'unsubscribe success',
+	name: 'unsubscribe success',
 };
 
 export const Subscribe = () => (
-  <SubscriptionSuccess
-    accountManagementUrl="#"
-    returnUrl="#"
-    action={'subscribe'}
-  />
+	<SubscriptionSuccess
+		accountManagementUrl="#"
+		returnUrl="#"
+		action={'subscribe'}
+	/>
 );
 Subscribe.story = {
-  name: 'subscribe success',
+	name: 'subscribe success',
 };

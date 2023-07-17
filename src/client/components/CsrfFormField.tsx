@@ -4,30 +4,30 @@ import { css } from '@emotion/react';
 import { error, space, textSans } from '@guardian/source-foundations';
 
 const csrfErrorStyle = css`
-  margin-bottom: ${space[4]}px;
-  ${textSans.medium({ lineHeight: 'regular' })}
-  color: ${error[400]};
-  text-align: center;
+	margin-bottom: ${space[4]}px;
+	${textSans.medium({ lineHeight: 'regular' })}
+	color: ${error[400]};
+	text-align: center;
 `;
 
 export const CsrfFormField = () => {
-  const clientState = useClientState();
+	const clientState = useClientState();
 
-  const { pageData: { fieldErrors } = {} } = clientState;
+	const { pageData: { fieldErrors } = {} } = clientState;
 
-  const csrfError = fieldErrors?.find(
-    (fieldError) => fieldError.field === 'csrf',
-  )?.message;
+	const csrfError = fieldErrors?.find(
+		(fieldError) => fieldError.field === 'csrf',
+	)?.message;
 
-  return (
-    <>
-      {csrfError ? <div css={csrfErrorStyle}>{csrfError}</div> : null}
-      <input type="hidden" name="_csrf" value={clientState.csrf?.token} />
-      <input
-        type="hidden"
-        name="_csrfPageUrl"
-        value={clientState.csrf?.pageUrl}
-      />
-    </>
-  );
+	return (
+		<>
+			{csrfError ? <div css={csrfErrorStyle}>{csrfError}</div> : null}
+			<input type="hidden" name="_csrf" value={clientState.csrf?.token} />
+			<input
+				type="hidden"
+				name="_csrfPageUrl"
+				value={clientState.csrf?.pageUrl}
+			/>
+		</>
+	);
 };

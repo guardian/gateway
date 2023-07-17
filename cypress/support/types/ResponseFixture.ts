@@ -1,6 +1,6 @@
 type ResponseFixture = {
-  code: number;
-  response: object;
+	code: number;
+	response: object;
 };
 
 export default ResponseFixture;

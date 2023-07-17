@@ -5,9 +5,9 @@ import { Meta } from '@storybook/react';
 import { UnexpectedErrorPage } from './UnexpectedErrorPage';
 
 export default {
-  title: 'Pages/UnexpectedErrorPage',
-  component: UnexpectedErrorPage,
-  parameters: { layout: 'fullscreen' },
+	title: 'Pages/UnexpectedErrorPage',
+	component: UnexpectedErrorPage,
+	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => <UnexpectedErrorPage />;

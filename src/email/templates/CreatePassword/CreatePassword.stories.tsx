@@ -5,12 +5,12 @@ import { CreatePassword } from './CreatePassword';
 import { renderMJML } from '../../testUtils';
 
 export default {
-  title: 'Email/Templates/CreatePassword',
-  component: CreatePassword,
-  parameters: { layout: 'fullscreen' },
+	title: 'Email/Templates/CreatePassword',
+	component: CreatePassword,
+	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => {
-  return renderMJML(<CreatePassword />);
+	return renderMJML(<CreatePassword />);
 };
 Default.storyName = 'with defaults';

@@ -8,20 +8,20 @@ const emailTemplateTypes = ['accidental-email'] as const;
 type EmailTemplateType = (typeof emailTemplateTypes)[number];
 
 type EmailRenderResult = {
-  plain: string;
-  html: string;
+	plain: string;
+	html: string;
 };
 
 const renderEmailTemplate = (
-  template: EmailTemplateType,
+	template: EmailTemplateType,
 ): EmailRenderResult | undefined => {
-  switch (template) {
-    case 'accidental-email':
-      return renderedAccidentalEmail;
-    default:
-      // We don't want to do anything for invalid template names
-      return undefined;
-  }
+	switch (template) {
+		case 'accidental-email':
+			return renderedAccidentalEmail;
+		default:
+			// We don't want to do anything for invalid template names
+			return undefined;
+	}
 };
 
 /* GET a valid email template name.
@@ -29,15 +29,15 @@ const renderEmailTemplate = (
  * plain-text and HTML versions of the requested email template.
  * Returns 404 for invalid template names. */
 router.get(
-  '/email/:template',
-  (req: Request, res: ResponseWithRequestState) => {
-    const template = req.params.template as EmailTemplateType;
-    const templateIsValid = emailTemplateTypes.includes(template);
+	'/email/:template',
+	(req: Request, res: ResponseWithRequestState) => {
+		const template = req.params.template as EmailTemplateType;
+		const templateIsValid = emailTemplateTypes.includes(template);
 
-    return templateIsValid
-      ? res.json(renderEmailTemplate(template))
-      : res.sendStatus(404);
-  },
+		return templateIsValid
+			? res.json(renderEmailTemplate(template))
+			: res.sendStatus(404);
+	},
 );
 
 export default router.router;

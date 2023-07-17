@@ -2,8 +2,8 @@ import React, { PropsWithChildren, ReactNode, useState } from 'react';
 
 import { MainLayout } from '@/client/layouts/Main';
 import {
-  belowFormMarginTopSpacingStyle,
-  MainForm,
+	belowFormMarginTopSpacingStyle,
+	MainForm,
 } from '@/client/components/MainForm';
 import { EmailInput } from '@/client/components/EmailInput';
 import { MainBodyText } from '@/client/components/MainBodyText';
@@ -16,86 +16,86 @@ import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
 import { usePageLoadOphanInteraction } from '../lib/hooks/usePageLoadOphanInteraction';
 
 interface ResetPasswordProps {
-  email?: string;
-  headerText: string;
-  buttonText: string;
-  queryString: QueryParams;
-  formActionOverride?: string;
-  emailInputLabel?: string;
-  showNoAccessEmail?: boolean;
-  showRecentEmailSummary?: boolean;
-  recaptchaSiteKey?: string;
-  formPageTrackingName?: string;
-  formError?: string;
+	email?: string;
+	headerText: string;
+	buttonText: string;
+	queryString: QueryParams;
+	formActionOverride?: string;
+	emailInputLabel?: string;
+	showNoAccessEmail?: boolean;
+	showRecentEmailSummary?: boolean;
+	recaptchaSiteKey?: string;
+	formPageTrackingName?: string;
+	formError?: string;
 }
 
 export const ResetPassword = ({
-  email = '',
-  headerText,
-  buttonText,
-  queryString,
-  formActionOverride,
-  emailInputLabel,
-  showNoAccessEmail,
-  showRecentEmailSummary,
-  children,
-  recaptchaSiteKey,
-  formPageTrackingName,
-  formError,
+	email = '',
+	headerText,
+	buttonText,
+	queryString,
+	formActionOverride,
+	emailInputLabel,
+	showNoAccessEmail,
+	showRecentEmailSummary,
+	children,
+	recaptchaSiteKey,
+	formPageTrackingName,
+	formError,
 }: PropsWithChildren<ResetPasswordProps>) => {
-  // track page/form load
-  usePageLoadOphanInteraction(formPageTrackingName);
+	// track page/form load
+	usePageLoadOphanInteraction(formPageTrackingName);
 
-  const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
-  const [recaptchaErrorContext, setRecaptchaErrorContext] =
-    useState<ReactNode>(null);
+	const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
+	const [recaptchaErrorContext, setRecaptchaErrorContext] =
+		useState<ReactNode>(null);
 
-  return (
-    <MainLayout
-      pageHeader={headerText}
-      errorContext={recaptchaErrorContext}
-      errorOverride={recaptchaErrorMessage}
-    >
-      {children}
-      <MainForm
-        formAction={
-          formActionOverride
-            ? addQueryParamsToUntypedPath(formActionOverride, queryString)
-            : buildUrlWithQueryParams('/reset-password', {}, queryString)
-        }
-        submitButtonText={buttonText}
-        recaptchaSiteKey={recaptchaSiteKey}
-        setRecaptchaErrorMessage={setRecaptchaErrorMessage}
-        setRecaptchaErrorContext={setRecaptchaErrorContext}
-        formTrackingName={formPageTrackingName}
-        disableOnSubmit
-        formErrorMessageFromParent={formError}
-      >
-        <EmailInput label={emailInputLabel} defaultValue={email} />
-      </MainForm>
-      {showNoAccessEmail && (
-        <MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
-          If you no longer have access to this email account please{' '}
-          <ExternalLink href={locations.REPORT_ISSUE}>
-            contact our help department
-          </ExternalLink>
-        </MainBodyText>
-      )}
-      {showRecentEmailSummary && (
-        <InfoSummary
-          cssOverrides={belowFormMarginTopSpacingStyle}
-          message="Please make sure that you are opening the most recent email we sent."
-          context={
-            <>
-              If you are having trouble, please contact our customer service
-              team at{' '}
-              <ExternalLink href={locations.REPORT_ISSUE}>
-                userhelp@guardian.com
-              </ExternalLink>
-            </>
-          }
-        />
-      )}
-    </MainLayout>
-  );
+	return (
+		<MainLayout
+			pageHeader={headerText}
+			errorContext={recaptchaErrorContext}
+			errorOverride={recaptchaErrorMessage}
+		>
+			{children}
+			<MainForm
+				formAction={
+					formActionOverride
+						? addQueryParamsToUntypedPath(formActionOverride, queryString)
+						: buildUrlWithQueryParams('/reset-password', {}, queryString)
+				}
+				submitButtonText={buttonText}
+				recaptchaSiteKey={recaptchaSiteKey}
+				setRecaptchaErrorMessage={setRecaptchaErrorMessage}
+				setRecaptchaErrorContext={setRecaptchaErrorContext}
+				formTrackingName={formPageTrackingName}
+				disableOnSubmit
+				formErrorMessageFromParent={formError}
+			>
+				<EmailInput label={emailInputLabel} defaultValue={email} />
+			</MainForm>
+			{showNoAccessEmail && (
+				<MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
+					If you no longer have access to this email account please{' '}
+					<ExternalLink href={locations.REPORT_ISSUE}>
+						contact our help department
+					</ExternalLink>
+				</MainBodyText>
+			)}
+			{showRecentEmailSummary && (
+				<InfoSummary
+					cssOverrides={belowFormMarginTopSpacingStyle}
+					message="Please make sure that you are opening the most recent email we sent."
+					context={
+						<>
+							If you are having trouble, please contact our customer service
+							team at{' '}
+							<ExternalLink href={locations.REPORT_ISSUE}>
+								userhelp@guardian.com
+							</ExternalLink>
+						</>
+					}
+				/>
+			)}
+		</MainLayout>
+	);
 };

@@ -4,27 +4,27 @@ import { Meta } from '@storybook/react';
 import { JobsTermsAccept } from './JobsTermsAccept';
 
 export default {
-  title: 'Pages/JobsTermsAccept',
-  component: JobsTermsAccept,
-  parameters: { layout: 'fullscreen' },
+	title: 'Pages/JobsTermsAccept',
+	component: JobsTermsAccept,
+	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => (
-  <JobsTermsAccept
-    firstName="First name"
-    secondName="Second name"
-    submitUrl="/"
-  />
+	<JobsTermsAccept
+		firstName="First name"
+		secondName="Second name"
+		submitUrl="/"
+	/>
 );
 Default.story = {
-  name: 'with defaults',
+	name: 'with defaults',
 };
 
 export const NameOnly = () => (
-  <JobsTermsAccept
-    submitUrl="/"
-    email="test@email.com"
-    secondName="I'm the only name set!"
-    userBelongsToGRS={true}
-  />
+	<JobsTermsAccept
+		submitUrl="/"
+		email="test@email.com"
+		secondName="I'm the only name set!"
+		userBelongsToGRS={true}
+	/>
 );

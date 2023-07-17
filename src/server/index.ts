@@ -12,9 +12,9 @@ server.listen(port);
 logger.info(`server running on port ${port}`);
 
 if (
-  rateLimiter.enabled &&
-  typeof redisClient !== 'undefined' &&
-  rateLimiter.settings?.trackBucketCapacity === true
+	rateLimiter.enabled &&
+	typeof redisClient !== 'undefined' &&
+	rateLimiter.settings?.trackBucketCapacity === true
 ) {
-  startGlobalBucketCapacityLogger(redisClient, 5000);
+	startGlobalBucketCapacityLogger(redisClient, 5000);
 }

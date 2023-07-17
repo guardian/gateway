@@ -1,20 +1,20 @@
 import {
-  errorResponseSchema,
-  ErrorResponse,
-  OktaError,
-  ErrorCause,
+	errorResponseSchema,
+	ErrorResponse,
+	OktaError,
+	ErrorCause,
 } from '@/server/models/okta/Error';
 
 const extractErrorResponse = async (
-  response: Response,
+	response: Response,
 ): Promise<ErrorResponse> => {
-  try {
-    return errorResponseSchema.parse(await response.json());
-  } catch (error) {
-    throw new OktaError({
-      message: 'Could not parse Okta error response',
-    });
-  }
+	try {
+		return errorResponseSchema.parse(await response.json());
+	} catch (error) {
+		throw new OktaError({
+			message: 'Could not parse Okta error response',
+		});
+	}
 };
 
 /**
@@ -25,14 +25,14 @@ const extractErrorResponse = async (
  * @returns Promise<ErrorResponse>
  */
 export const handleErrorResponse = async (response: Response) => {
-  const error = await extractErrorResponse(response);
+	const error = await extractErrorResponse(response);
 
-  throw new OktaError({
-    message: error.errorSummary,
-    status: response.status,
-    code: error.errorCode,
-    causes: error.errorCauses,
-  });
+	throw new OktaError({
+		message: error.errorSummary,
+		status: response.status,
+		code: error.errorCode,
+		causes: error.errorCauses,
+	});
 };
 
 /**
@@ -43,10 +43,10 @@ export const handleErrorResponse = async (response: Response) => {
  * @returns boolean
  */
 export const causesInclude = (
-  causes: Array<ErrorCause>,
-  substring: string,
+	causes: Array<ErrorCause>,
+	substring: string,
 ): boolean => {
-  return causes.some((cause) => cause.errorSummary.includes(substring));
+	return causes.some((cause) => cause.errorSummary.includes(substring));
 };
 
 /**
@@ -55,5 +55,5 @@ export const causesInclude = (
  * @returns boolean
  */
 export const isOktaError = (error: unknown): error is OktaError => {
-  return error instanceof OktaError;
+	return error instanceof OktaError;
 };

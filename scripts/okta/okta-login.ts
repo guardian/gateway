@@ -31,10 +31,10 @@ import { getRedirectUrl } from './lib/helper';
 // each will have a different query string and different config objects which are handled as appropriate in helper.ts.
 
 const redirectUrl = getRedirectUrl(
-  window.location.search,
-  window.location.origin,
-  window.location.pathname,
-  window.OktaUtil,
+	window.location.search,
+	window.location.origin,
+	window.location.pathname,
+	window.OktaUtil,
 );
 
 window.location.replace(redirectUrl);

@@ -5,15 +5,15 @@ import { Meta } from '@storybook/react';
 import { ResendConsentEmail } from './ResendConsentEmail';
 
 export default {
-  title: 'Pages/ResendConsentEmail',
-  component: ResendConsentEmail,
-  parameters: { layout: 'fullscreen' },
+	title: 'Pages/ResendConsentEmail',
+	component: ResendConsentEmail,
+	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => (
-  <ResendConsentEmail
-    queryParams={{ returnUrl: 'https://theguardian.com' }}
-    token="sometoken"
-  />
+	<ResendConsentEmail
+		queryParams={{ returnUrl: 'https://theguardian.com' }}
+		token="sometoken"
+	/>
 );
 Default.story = { name: 'with defaults' };

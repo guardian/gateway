@@ -1,0 +1,7 @@
+# File used to ignore revisions in `git blame`
+
+# Make sure you have run `git config blame.ignoreRevsFile .git-blame-ignore-revs`
+# to set up your git config to always ignore these revisions.
+
+# Rewrite files after adding `@guardian/prettier` config
+940e33d41e0921fd96db9370f195a93ef1787858

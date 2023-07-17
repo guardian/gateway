@@ -11,7 +11,7 @@ import { init as ophanInit } from './analytics/ophan';
 import './sourceAccessibility';
 
 const routingConfig: RoutingConfig = JSON.parse(
-  document.getElementById('routingConfig')?.innerHTML ?? '{}',
+	document.getElementById('routingConfig')?.innerHTML ?? '{}',
 );
 
 hydrateApp({ routingConfig });
@@ -21,15 +21,15 @@ ophanInit();
 
 // load CMP
 if (!routingConfig.clientState.pageData?.isNativeApp) {
-  if (window.Cypress) {
-    cmp.init({ country: 'GB' }); // CI hosted on GithubActions runs in US by default
-  } else {
-    (async () => {
-      const country = await getLocale();
+	if (window.Cypress) {
+		cmp.init({ country: 'GB' }); // CI hosted on GithubActions runs in US by default
+	} else {
+		(async () => {
+			const country = await getLocale();
 
-      if (country) {
-        cmp.init({ country });
-      }
-    })();
-  }
+			if (country) {
+				cmp.init({ country });
+			}
+		})();
+	}
 }

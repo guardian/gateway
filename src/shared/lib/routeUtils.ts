@@ -5,8 +5,8 @@ import { IdApiQueryParams } from '../model/IdapiQueryParams';
 import { QueryParams } from '../model/QueryParams';
 import { AllRoutes } from '../model/Routes';
 import {
-  addApiQueryParamsToPath,
-  addQueryParamsToUntypedPath,
+	addApiQueryParamsToPath,
+	addQueryParamsToUntypedPath,
 } from './queryParams';
 import { OktaQueryParams } from '@/shared/model/OktaQueryParams';
 
@@ -19,12 +19,12 @@ import { OktaQueryParams } from '@/shared/model/OktaQueryParams';
  */
 
 export type ExtractRouteParams<T> = string extends T
-  ? Record<string, string>
-  : T extends `${infer _Start}:${infer Param}/${infer Rest}`
-  ? { [k in Param | keyof ExtractRouteParams<Rest>]?: string }
-  : T extends `${infer _Start}:${infer Param}`
-  ? { [k in Param]?: string }
-  : {};
+	? Record<string, string>
+	: T extends `${infer _Start}:${infer Param}/${infer Rest}`
+	? { [k in Param | keyof ExtractRouteParams<Rest>]?: string }
+	: T extends `${infer _Start}:${infer Param}`
+	? { [k in Param]?: string }
+	: {};
 
 /**
  * Object which has matching parameter keys for a path.
@@ -36,8 +36,8 @@ export type ExtractRouteParams<T> = string extends T
 export type PathParams<P extends AllRoutes> = ExtractRouteParams<P>;
 
 export type BuildUrl = <P extends AllRoutes>(
-  path: P,
-  params?: ExtractRouteParams<P>,
+	path: P,
+	params?: ExtractRouteParams<P>,
 ) => string;
 /**
  * Build an url with a path and its parameters.
@@ -50,15 +50,15 @@ export type BuildUrl = <P extends AllRoutes>(
  * @param params parameters.
  */
 export const buildUrl: BuildUrl = <P extends AllRoutes>(
-  path: P,
-  params: PathParams<P> = <PathParams<P>>{},
+	path: P,
+	params: PathParams<P> = <PathParams<P>>{},
 ): string => {
-  // //Upcast `params` to be used in string replacement.
-  const paramObj: { [i: string]: string } = params;
+	// //Upcast `params` to be used in string replacement.
+	const paramObj: { [i: string]: string } = params;
 
-  return Object.keys(paramObj).reduce((fullPath, key) => {
-    return fullPath.replace(`:${key}`, paramObj[key]);
-  }, path);
+	return Object.keys(paramObj).reduce((fullPath, key) => {
+		return fullPath.replace(`:${key}`, paramObj[key]);
+	}, path);
 };
 
 /**
@@ -68,12 +68,12 @@ export const buildUrl: BuildUrl = <P extends AllRoutes>(
  * @param queryParams QueryParams
  */
 export const buildUrlWithQueryParams = <P extends AllRoutes>(
-  path: P,
-  params: PathParams<P> = <PathParams<P>>{},
-  queryParams: QueryParams,
+	path: P,
+	params: PathParams<P> = <PathParams<P>>{},
+	queryParams: QueryParams,
 ): string => {
-  const url = buildUrl(path, params);
-  return addQueryParamsToUntypedPath(url, queryParams);
+	const url = buildUrl(path, params);
+	return addQueryParamsToUntypedPath(url, queryParams);
 };
 
 /**
@@ -83,10 +83,10 @@ export const buildUrlWithQueryParams = <P extends AllRoutes>(
  * @param queryParams IdApiQueryParams
  */
 export const buildApiUrlWithQueryParams = <P extends AllRoutes>(
-  path: P,
-  params: PathParams<P> = <PathParams<P>>{},
-  queryParams: IdApiQueryParams | OktaQueryParams,
+	path: P,
+	params: PathParams<P> = <PathParams<P>>{},
+	queryParams: IdApiQueryParams | OktaQueryParams,
 ): string => {
-  const url = buildUrl(path, params);
-  return addApiQueryParamsToPath(url, queryParams);
+	const url = buildUrl(path, params);
+	return addApiQueryParamsToPath(url, queryParams);
 };

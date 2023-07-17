@@ -73,7 +73,7 @@ uncachedRoutes.use(subscriptions);
 
 // oauth callback routes
 if (okta.enabled) {
-  uncachedRoutes.use(oauth);
+	uncachedRoutes.use(oauth);
 }
 
 // consent token routes

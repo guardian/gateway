@@ -1,10 +1,10 @@
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace Cypress {
-    interface Chainable {
-      mockPurge: typeof mockPurge;
-    }
-  }
+	// eslint-disable-next-line @typescript-eslint/no-namespace
+	namespace Cypress {
+		interface Chainable {
+			mockPurge: typeof mockPurge;
+		}
+	}
 }
 
 /**
@@ -12,5 +12,5 @@ declare global {
  * @return {Chainable<Element>}
  */
 export const mockPurge = () => {
-  return cy.request(Cypress.env('mockingEndpoint') + '/purge');
+	return cy.request(Cypress.env('mockingEndpoint') + '/purge');
 };

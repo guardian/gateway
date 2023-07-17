@@ -1,11 +1,11 @@
 export const isStringBoolean = (maybeBoolean?: string): boolean | undefined => {
-  if (!maybeBoolean) {
-    return undefined;
-  }
+	if (!maybeBoolean) {
+		return undefined;
+	}
 
-  if (maybeBoolean === 'true') {
-    return true;
-  }
+	if (maybeBoolean === 'true') {
+		return true;
+	}
 
-  return false;
+	return false;
 };

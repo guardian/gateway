@@ -16,8 +16,8 @@ const { okta, baseUri, stage } = getConfiguration();
  * OAuth Token Name Type
  */
 type OAuthCookieNames =
-  | typeof OAuthAccessTokenCookieName
-  | typeof OAuthIdTokenCookieName;
+	| typeof OAuthAccessTokenCookieName
+	| typeof OAuthIdTokenCookieName;
 
 /**
  * Name of the OAuth Access Token cookie to set
@@ -32,17 +32,17 @@ const OAuthAccessTokenCookieName = 'GU_ACCESS_TOKEN';
 const OAuthIdTokenCookieName = 'GU_ID_TOKEN';
 
 const issuerDomain = () => {
-  // if we're in cypress mocked, we need to add https to the issuer domain, just to get it
-  // to validate, even if we never actually use the verifier in cypress mocked tests
-  if (process.env.RUNNING_IN_CYPRESS_MOCKED === 'true') {
-    return okta.orgUrl.replace('http://', 'https://');
-  }
-  // If we're in DEV, but we're developing against okta CODE environment, the issuer domain
-  // should be the okta CODE domain, hence we need this check to get the issuer right
-  if (stage === 'DEV' && process.env.GU_OKTA_ENV_COOKIE === 'CODE') {
-    return `https://profile.${GU_DOMAIN.CODE}/`;
-  }
-  return joinUrl(okta.orgUrl, '/');
+	// if we're in cypress mocked, we need to add https to the issuer domain, just to get it
+	// to validate, even if we never actually use the verifier in cypress mocked tests
+	if (process.env.RUNNING_IN_CYPRESS_MOCKED === 'true') {
+		return okta.orgUrl.replace('http://', 'https://');
+	}
+	// If we're in DEV, but we're developing against okta CODE environment, the issuer domain
+	// should be the okta CODE domain, hence we need this check to get the issuer right
+	if (stage === 'DEV' && process.env.GU_OKTA_ENV_COOKIE === 'CODE') {
+		return `https://profile.${GU_DOMAIN.CODE}/`;
+	}
+	return joinUrl(okta.orgUrl, '/');
 };
 
 /**
@@ -51,38 +51,38 @@ const issuerDomain = () => {
  * @description Okta JWT Verifier
  */
 const oauthTokenVerifier = new OktaJwtVerifier({
-  issuer: joinUrl(issuerDomain(), '/oauth2/', okta.authServerId),
+	issuer: joinUrl(issuerDomain(), '/oauth2/', okta.authServerId),
 });
 
 export const verifyAccessToken = async (token: string) => {
-  try {
-    const jwt = await oauthTokenVerifier.verifyAccessToken(
-      token,
-      issuerDomain(),
-    );
-    return jwt;
-  } catch (error) {
-    logger.error('Okta | Access Token | Verification Error', error);
-  }
+	try {
+		const jwt = await oauthTokenVerifier.verifyAccessToken(
+			token,
+			issuerDomain(),
+		);
+		return jwt;
+	} catch (error) {
+		logger.error('Okta | Access Token | Verification Error', error);
+	}
 };
 
 export const verifyIdToken = async (token: string) => {
-  try {
-    const jwt = await oauthTokenVerifier.verifyIdToken(token, okta.clientId);
-    return jwt;
-  } catch (error) {
-    logger.error('Okta | ID Token | Verification Error', error);
-  }
+	try {
+		const jwt = await oauthTokenVerifier.verifyIdToken(token, okta.clientId);
+		return jwt;
+	} catch (error) {
+		logger.error('Okta | ID Token | Verification Error', error);
+	}
 };
 
 /**
  * Token cookie options
  */
 const OAuthTokenCookieOptions: CookieOptions = {
-  httpOnly: true,
-  secure: !baseUri.includes('localhost'),
-  signed: !baseUri.includes('localhost'),
-  sameSite: 'lax',
+	httpOnly: true,
+	secure: !baseUri.includes('localhost'),
+	signed: !baseUri.includes('localhost'),
+	sameSite: 'lax',
 };
 
 /**
@@ -105,14 +105,14 @@ const OAuthTokenCookieOptions: CookieOptions = {
  * @param {string} value
  */
 export const setOAuthTokenCookie = (
-  res: ResponseWithRequestState,
-  name: OAuthCookieNames,
-  value: string,
+	res: ResponseWithRequestState,
+	name: OAuthCookieNames,
+	value: string,
 ): void => {
-  res.cookie(name, value, {
-    ...OAuthTokenCookieOptions,
-    maxAge: ms('1h'), // Expiry is set to 1 hour, which matches the token expiry
-  });
+	res.cookie(name, value, {
+		...OAuthTokenCookieOptions,
+		maxAge: ms('1h'), // Expiry is set to 1 hour, which matches the token expiry
+	});
 };
 
 /**
@@ -128,24 +128,24 @@ export const setOAuthTokenCookie = (
  * @return {string | undefined}
  */
 export const getOAuthTokenCookie = (
-  req: Request,
-  name: OAuthCookieNames,
+	req: Request,
+	name: OAuthCookieNames,
 ): string | undefined => {
-  // eslint-disable-next-line functional/no-let
-  let cookieSource: 'cookies' | 'signedCookies';
-  if (process.env.RUNNING_IN_CYPRESS === 'true') {
-    // If we're in testing, first try reading from signedCookies,
-    // and only then fall back to regular cookies.
-    if (Object.keys(req.signedCookies).includes(name)) {
-      cookieSource = 'signedCookies';
-    } else {
-      cookieSource = 'cookies';
-    }
-  } else {
-    // If we're not in testing, always read from signedCookies.
-    cookieSource = 'signedCookies';
-  }
-  return req?.[cookieSource]?.[name];
+	// eslint-disable-next-line functional/no-let
+	let cookieSource: 'cookies' | 'signedCookies';
+	if (process.env.RUNNING_IN_CYPRESS === 'true') {
+		// If we're in testing, first try reading from signedCookies,
+		// and only then fall back to regular cookies.
+		if (Object.keys(req.signedCookies).includes(name)) {
+			cookieSource = 'signedCookies';
+		} else {
+			cookieSource = 'cookies';
+		}
+	} else {
+		// If we're not in testing, always read from signedCookies.
+		cookieSource = 'signedCookies';
+	}
+	return req?.[cookieSource]?.[name];
 };
 
 /**
@@ -157,10 +157,10 @@ export const getOAuthTokenCookie = (
  * @param {OAuthCookieNames} name
  */
 export const deleteOAuthTokenCookie = (
-  res: ResponseWithRequestState,
-  name: OAuthCookieNames,
+	res: ResponseWithRequestState,
+	name: OAuthCookieNames,
 ): void => {
-  res.clearCookie(name, OAuthTokenCookieOptions);
+	res.clearCookie(name, OAuthTokenCookieOptions);
 };
 
 /**
@@ -171,17 +171,17 @@ export const deleteOAuthTokenCookie = (
  * @param res - Express response
  */
 export const checkAndDeleteOAuthTokenCookies = (
-  req: Request,
-  res: ResponseWithRequestState,
+	req: Request,
+	res: ResponseWithRequestState,
 ): void => {
-  const accessToken = getOAuthTokenCookie(req, OAuthAccessTokenCookieName);
-  const idToken = getOAuthTokenCookie(req, OAuthIdTokenCookieName);
+	const accessToken = getOAuthTokenCookie(req, OAuthAccessTokenCookieName);
+	const idToken = getOAuthTokenCookie(req, OAuthIdTokenCookieName);
 
-  if (accessToken) {
-    deleteOAuthTokenCookie(res, OAuthAccessTokenCookieName);
-  }
+	if (accessToken) {
+		deleteOAuthTokenCookie(res, OAuthAccessTokenCookieName);
+	}
 
-  if (idToken) {
-    deleteOAuthTokenCookie(res, OAuthIdTokenCookieName);
-  }
+	if (idToken) {
+		deleteOAuthTokenCookie(res, OAuthIdTokenCookieName);
+	}
 };

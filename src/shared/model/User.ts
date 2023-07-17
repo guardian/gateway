@@ -1,30 +1,30 @@
 import { RegistrationLocation } from '@/server/models/okta/User';
 
 export default interface User {
-  consents: UserConsent[];
-  primaryEmailAddress: string;
-  statusFields: UserStatusFields;
-  privateFields: PrivateFields;
-  userGroups: Group[];
+	consents: UserConsent[];
+	primaryEmailAddress: string;
+	statusFields: UserStatusFields;
+	privateFields: PrivateFields;
+	userGroups: Group[];
 }
 
 interface Group {
-  path: string;
-  packageCode: string;
-  joinedDate: string;
+	path: string;
+	packageCode: string;
+	joinedDate: string;
 }
 
 export interface UserConsent {
-  id: string;
-  consented: boolean;
+	id: string;
+	consented: boolean;
 }
 
 interface UserStatusFields {
-  userEmailValidated: boolean;
+	userEmailValidated: boolean;
 }
 
 interface PrivateFields {
-  firstName?: string;
-  secondName?: string;
-  registrationLocation?: RegistrationLocation;
+	firstName?: string;
+	secondName?: string;
+	registrationLocation?: RegistrationLocation;
 }

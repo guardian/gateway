@@ -1,16 +1,16 @@
 import { buildUrl } from '@/shared/lib/routeUtils';
 import { joinUrl } from '@guardian/libs';
 import {
-  authorizationHeader,
-  defaultHeaders,
+	authorizationHeader,
+	defaultHeaders,
 } from '@/server/lib/okta/api/headers';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { handleErrorResponse } from '@/server/lib/okta/api/errors';
 import { OktaError } from '@/server/models/okta/Error';
 import {
-  AuthenticationRequestParameters,
-  AuthenticationTransaction,
-  authenticationTransactionSchema,
+	AuthenticationRequestParameters,
+	AuthenticationTransaction,
+	authenticationTransactionSchema,
 } from '@/server/models/okta/Authentication';
 import { handleVoidResponse } from '@/server/lib/okta/api/responses';
 import { isBreachedPassword } from '@/server/lib/breachedPasswordCheck';
@@ -44,14 +44,14 @@ const { okta } = getConfiguration();
  * @returns Promise<AuthenticationTransaction>
  */
 export const authenticate = async (
-  body: AuthenticationRequestParameters,
+	body: AuthenticationRequestParameters,
 ): Promise<AuthenticationTransaction> => {
-  const path = buildUrl('/api/v1/authn');
-  return await fetch(joinUrl(okta.orgUrl, path), {
-    method: 'POST',
-    body: JSON.stringify(body),
-    headers: defaultHeaders,
-  }).then(handleAuthenticationResponse);
+	const path = buildUrl('/api/v1/authn');
+	return await fetch(joinUrl(okta.orgUrl, path), {
+		method: 'POST',
+		body: JSON.stringify(body),
+		headers: defaultHeaders,
+	}).then(handleAuthenticationResponse);
 };
 
 /**
@@ -73,20 +73,20 @@ export const authenticate = async (
  * @returns Promise<void>
  */
 export const sendForgotPasswordEmail = async (
-  username: string,
+	username: string,
 ): Promise<void> => {
-  const path = buildUrl('/api/v1/authn/recovery/password');
-  const body = {
-    username,
-    factorType: 'EMAIL',
-  };
-  return await fetch(joinUrl(okta.orgUrl, path), {
-    method: 'POST',
-    body: JSON.stringify(body),
-    // do not add authorization headers here as this turns the operation
-    // into an administrator action and locks the user out of their account
-    headers: defaultHeaders,
-  }).then(handleVoidResponse);
+	const path = buildUrl('/api/v1/authn/recovery/password');
+	const body = {
+		username,
+		factorType: 'EMAIL',
+	};
+	return await fetch(joinUrl(okta.orgUrl, path), {
+		method: 'POST',
+		body: JSON.stringify(body),
+		// do not add authorization headers here as this turns the operation
+		// into an administrator action and locks the user out of their account
+		headers: defaultHeaders,
+	}).then(handleVoidResponse);
 };
 
 /**
@@ -106,21 +106,21 @@ export const sendForgotPasswordEmail = async (
  * @returns Promise<AuthenticationTransaction>
  */
 export const validateRecoveryToken = async ({
-  recoveryToken,
+	recoveryToken,
 }: {
-  recoveryToken: string;
+	recoveryToken: string;
 }): Promise<AuthenticationTransaction> => {
-  const path = buildUrl('/api/v1/authn/recovery/token');
+	const path = buildUrl('/api/v1/authn/recovery/token');
 
-  const body = {
-    recoveryToken: extractOktaRecoveryToken(recoveryToken),
-  };
+	const body = {
+		recoveryToken: extractOktaRecoveryToken(recoveryToken),
+	};
 
-  return await fetch(joinUrl(okta.orgUrl, path), {
-    method: 'POST',
-    body: JSON.stringify(body),
-    headers: defaultHeaders,
-  }).then(handleAuthenticationResponse);
+	return await fetch(joinUrl(okta.orgUrl, path), {
+		method: 'POST',
+		body: JSON.stringify(body),
+		headers: defaultHeaders,
+	}).then(handleAuthenticationResponse);
 };
 
 /**
@@ -143,23 +143,23 @@ export const validateRecoveryToken = async ({
  * @returns Promise<AuthenticationTransaction>
  */
 export const resetPassword = async (body: {
-  stateToken: string;
-  newPassword: string;
+	stateToken: string;
+	newPassword: string;
 }): Promise<AuthenticationTransaction> => {
-  const path = buildUrl('/api/v1/authn/credentials/reset_password');
+	const path = buildUrl('/api/v1/authn/credentials/reset_password');
 
-  if (await isBreachedPassword(body.newPassword)) {
-    throw new ApiError({
-      field: 'password',
-      message: PasswordFieldErrors.COMMON_PASSWORD,
-    });
-  }
+	if (await isBreachedPassword(body.newPassword)) {
+		throw new ApiError({
+			field: 'password',
+			message: PasswordFieldErrors.COMMON_PASSWORD,
+		});
+	}
 
-  return await fetch(joinUrl(okta.orgUrl, path), {
-    method: 'POST',
-    body: JSON.stringify(body),
-    headers: { ...defaultHeaders, ...authorizationHeader() },
-  }).then(handleAuthenticationResponse);
+	return await fetch(joinUrl(okta.orgUrl, path), {
+		method: 'POST',
+		body: JSON.stringify(body),
+		headers: { ...defaultHeaders, ...authorizationHeader() },
+	}).then(handleAuthenticationResponse);
 };
 
 /**
@@ -170,17 +170,17 @@ export const resetPassword = async (body: {
  * @returns Promise<AuthenticationTransaction>
  */
 const handleAuthenticationResponse = async (
-  response: Response,
+	response: Response,
 ): Promise<AuthenticationTransaction> => {
-  if (response.ok) {
-    try {
-      return authenticationTransactionSchema.parse(await response.json());
-    } catch (error) {
-      throw new OktaError({
-        message: 'Could not parse Okta authentication transaction response',
-      });
-    }
-  } else {
-    return await handleErrorResponse(response);
-  }
+	if (response.ok) {
+		try {
+			return authenticationTransactionSchema.parse(await response.json());
+		} catch (error) {
+			throw new OktaError({
+				message: 'Could not parse Okta authentication transaction response',
+			});
+		}
+	} else {
+		return await handleErrorResponse(response);
+	}
 };

@@ -1,4 +1,4 @@
 export const abSwitches = {
-  abExampleTest: false,
-  abDefaultWeeklyNewsletterTest: false,
+	abExampleTest: false,
+	abDefaultWeeklyNewsletterTest: false,
 };

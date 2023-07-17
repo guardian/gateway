@@ -23,12 +23,12 @@ const { okta } = getConfiguration();
  * @returns Promise<SessionResponse>
  */
 export const getSession = async (
-  sessionId: string,
+	sessionId: string,
 ): Promise<SessionResponse> => {
-  const path = buildUrl('/api/v1/sessions/:sessionId', { sessionId });
-  return fetch(joinUrl(okta.orgUrl, path), {
-    headers: { ...defaultHeaders, ...authorizationHeader() },
-  }).then(handleSessionResponse);
+	const path = buildUrl('/api/v1/sessions/:sessionId', { sessionId });
+	return fetch(joinUrl(okta.orgUrl, path), {
+		headers: { ...defaultHeaders, ...authorizationHeader() },
+	}).then(handleSessionResponse);
 };
 
 /**
@@ -43,29 +43,29 @@ export const getSession = async (
  * @returns Promise<boolean>
  */
 export const closeSession = async (sessionId: string): Promise<undefined> => {
-  const path = buildUrl('/api/v1/sessions/:sessionId', { sessionId });
-  const response = await fetch(joinUrl(okta.orgUrl, path), {
-    method: 'DELETE',
-    headers: { ...defaultHeaders, ...authorizationHeader() },
-  });
+	const path = buildUrl('/api/v1/sessions/:sessionId', { sessionId });
+	const response = await fetch(joinUrl(okta.orgUrl, path), {
+		method: 'DELETE',
+		headers: { ...defaultHeaders, ...authorizationHeader() },
+	});
 
-  if (!(response.ok || response.status === 404)) {
-    return handleErrorResponse(response);
-  }
+	if (!(response.ok || response.status === 404)) {
+		return handleErrorResponse(response);
+	}
 };
 
 export const handleSessionResponse = async (
-  response: Response,
+	response: Response,
 ): Promise<SessionResponse> => {
-  if (response.ok) {
-    try {
-      return sessionSchema.parse(await response.json());
-    } catch (error) {
-      throw new OktaError({
-        message: 'Could not parse Okta session response',
-      });
-    }
-  } else {
-    return await handleErrorResponse(response);
-  }
+	if (response.ok) {
+		try {
+			return sessionSchema.parse(await response.json());
+		} catch (error) {
+			throw new OktaError({
+				message: 'Could not parse Okta session response',
+			});
+		}
+	} else {
+		return await handleErrorResponse(response);
+	}
 };

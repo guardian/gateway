@@ -15,23 +15,23 @@ import { UserConsent } from '@/shared/model/User';
 type ConversionString = '_optout' | '_optin';
 
 const invertConsents = <ConsentType extends UserConsent | Consent>(
-  input: ConversionString,
-  output: ConversionString,
+	input: ConversionString,
+	output: ConversionString,
 ) => {
-  return (pageConsents: ConsentType[]) => {
-    return pageConsents.map((consent) => {
-      if (!consent.id.includes(input)) {
-        return consent;
-      }
+	return (pageConsents: ConsentType[]) => {
+		return pageConsents.map((consent) => {
+			if (!consent.id.includes(input)) {
+				return consent;
+			}
 
-      return {
-        id: consent.id.replace(input, output),
-        ...('name' in consent && { name: consent.name }),
-        ...('description' in consent && { description: consent.description }),
-        ...('consented' in consent && { consented: !consent.consented }),
-      };
-    });
-  };
+			return {
+				id: consent.id.replace(input, output),
+				...('name' in consent && { name: consent.name }),
+				...('description' in consent && { description: consent.description }),
+				...('consented' in consent && { consented: !consent.consented }),
+			};
+		});
+	};
 };
 
 export const invertOptOutConsents = invertConsents('_optout', '_optin');

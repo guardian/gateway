@@ -16,7 +16,7 @@
  * @returns AbortSignal
  */
 export const timeoutSignal = (timeout: number): AbortSignal => {
-  const controller = new AbortController();
-  setTimeout(() => controller.abort(), timeout);
-  return controller.signal;
+	const controller = new AbortController();
+	setTimeout(() => controller.abort(), timeout);
+	return controller.signal;
 };

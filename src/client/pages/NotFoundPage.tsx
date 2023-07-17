@@ -5,11 +5,11 @@ import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 
 export const NotFoundPage = () => (
-  <MainLayout pageHeader="Sorry – the page does not exist">
-    <MainBodyText>
-      You may have followed an outdated link, or have mistyped a URL. If you
-      believe this to be an error, please{' '}
-      <ExternalLink href={locations.REPORT_ISSUE}>report it</ExternalLink>.
-    </MainBodyText>
-  </MainLayout>
+	<MainLayout pageHeader="Sorry – the page does not exist">
+		<MainBodyText>
+			You may have followed an outdated link, or have mistyped a URL. If you
+			believe this to be an error, please{' '}
+			<ExternalLink href={locations.REPORT_ISSUE}>report it</ExternalLink>.
+		</MainBodyText>
+	</MainLayout>
 );

@@ -1,17 +1,17 @@
 import { OphanABEvent, OphanComponentEvent } from '@guardian/libs';
 
 export interface OphanInteraction {
-  component: string;
-  value?: string;
-  atomId?: string;
+	component: string;
+	value?: string;
+	atomId?: string;
 }
 
 export interface OphanBase {
-  experiences?: string;
-  abTestRegister?: { [testId: string]: OphanABEvent };
+	experiences?: string;
+	abTestRegister?: { [testId: string]: OphanABEvent };
 }
 
 export type OphanEvent =
-  | OphanBase
-  | OphanInteraction
-  | { componentEvent: OphanComponentEvent };
+	| OphanBase
+	| OphanInteraction
+	| { componentEvent: OphanComponentEvent };

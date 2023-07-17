@@ -2,51 +2,51 @@ import { TextInput, TextInputProps } from '@guardian/source-react-components';
 import React from 'react';
 import { disableAutofillBackground } from '@/client/styles/Shared';
 import {
-  InputFieldState,
-  useInputValidityState,
+	InputFieldState,
+	useInputValidityState,
 } from '@/client/lib/hooks/useInputValidityState';
 
 interface EmailInputProps extends Omit<TextInputProps, 'label'> {
-  label?: string;
-  defaultValue?: string;
-  initialState?: InputFieldState;
+	label?: string;
+	defaultValue?: string;
+	initialState?: InputFieldState;
 }
 
 enum EmailInputFieldErrorMessages {
-  INVALID = 'Please enter a valid email format.',
-  EMPTY = 'Please enter your email.',
+	INVALID = 'Please enter a valid email format.',
+	EMPTY = 'Please enter your email.',
 }
 
 export const EmailInput: React.FC<EmailInputProps> = ({
-  label = 'Email',
-  initialState = InputFieldState.VALID,
-  ...rest
+	label = 'Email',
+	initialState = InputFieldState.VALID,
+	...rest
 }) => {
-  const { onBlur, onInput, onInvalid, inputFieldState } =
-    useInputValidityState(initialState);
+	const { onBlur, onInput, onInvalid, inputFieldState } =
+		useInputValidityState(initialState);
 
-  // Set the error message based on the current state.
-  const errorMessage = React.useMemo(() => {
-    switch (inputFieldState) {
-      case InputFieldState.INVALID:
-        return EmailInputFieldErrorMessages.INVALID;
-      case InputFieldState.EMPTY:
-        return EmailInputFieldErrorMessages.EMPTY;
-    }
-  }, [inputFieldState]);
+	// Set the error message based on the current state.
+	const errorMessage = React.useMemo(() => {
+		switch (inputFieldState) {
+			case InputFieldState.INVALID:
+				return EmailInputFieldErrorMessages.INVALID;
+			case InputFieldState.EMPTY:
+				return EmailInputFieldErrorMessages.EMPTY;
+		}
+	}, [inputFieldState]);
 
-  return (
-    <TextInput
-      label={label}
-      name="email"
-      type="email"
-      autoComplete="email"
-      error={errorMessage}
-      cssOverrides={[disableAutofillBackground]}
-      onBlur={onBlur}
-      onInput={onInput}
-      onInvalid={onInvalid}
-      {...rest}
-    />
-  );
+	return (
+		<TextInput
+			label={label}
+			name="email"
+			type="email"
+			autoComplete="email"
+			error={errorMessage}
+			cssOverrides={[disableAutofillBackground]}
+			onBlur={onBlur}
+			onInput={onInput}
+			onInvalid={onInvalid}
+			{...rest}
+		/>
+	);
 };

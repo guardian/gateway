@@ -1,10 +1,10 @@
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace Cypress {
-    interface Chainable {
-      setAdFreeCookie: typeof setAdFreeCookie;
-    }
-  }
+	// eslint-disable-next-line @typescript-eslint/no-namespace
+	namespace Cypress {
+		interface Chainable {
+			setAdFreeCookie: typeof setAdFreeCookie;
+		}
+	}
 }
 
 /**
@@ -14,8 +14,8 @@ declare global {
  * @param expiryInDays when the cookie should expire (can also be in the past eg. -1)
  */
 export const setAdFreeCookie = (expiryInDays = 1) => {
-  const tz = Date.now() + 1000 * 60 * 60 * 24 * expiryInDays;
-  return cy.setCookie('GU_AF1', tz.toString(), {
-    log: true,
-  });
+	const tz = Date.now() + 1000 * 60 * 60 * 24 * expiryInDays;
+	return cy.setCookie('GU_AF1', tz.toString(), {
+		log: true,
+	});
 };

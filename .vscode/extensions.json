@@ -1,9 +1,9 @@
 {
-  "recommendations": [
-    "editorconfig.editorconfig",
-    "dbaeumer.vscode-eslint",
-    "esbenp.prettier-vscode",
-    "visualstudioexptteam.vscodeintellicode",
-    "ms-vsliveshare.vsliveshare"
-  ]
+	"recommendations": [
+		"editorconfig.editorconfig",
+		"dbaeumer.vscode-eslint",
+		"esbenp.prettier-vscode",
+		"visualstudioexptteam.vscodeintellicode",
+		"ms-vsliveshare.vsliveshare"
+	]
 }

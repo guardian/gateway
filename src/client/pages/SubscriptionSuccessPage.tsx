@@ -5,31 +5,31 @@ import { SubscriptionAction } from '@/shared/lib/subscriptions';
 import { sendOphanComponentEvent } from '@/client/lib/ophan';
 
 interface Props {
-  action: SubscriptionAction;
+	action: SubscriptionAction;
 }
 
 export const SubscriptionSuccessPage = ({ action }: Props) => {
-  const clientState = useClientState();
-  const { pageData = {} } = clientState;
-  const { returnUrl, accountManagementUrl, newsletterId } = pageData;
+	const clientState = useClientState();
+	const { pageData = {} } = clientState;
+	const { returnUrl, accountManagementUrl, newsletterId } = pageData;
 
-  useEffect(() => {
-    if (action === 'subscribe' && newsletterId) {
-      sendOphanComponentEvent({
-        action: 'SUBSCRIBE',
-        component: {
-          componentType: 'NEWSLETTER_SUBSCRIPTION',
-          id: newsletterId,
-        },
-      });
-    }
-  }, [action, newsletterId]);
+	useEffect(() => {
+		if (action === 'subscribe' && newsletterId) {
+			sendOphanComponentEvent({
+				action: 'SUBSCRIBE',
+				component: {
+					componentType: 'NEWSLETTER_SUBSCRIPTION',
+					id: newsletterId,
+				},
+			});
+		}
+	}, [action, newsletterId]);
 
-  return (
-    <SubscriptionSuccess
-      returnUrl={returnUrl}
-      accountManagementUrl={accountManagementUrl}
-      action={action}
-    />
-  );
+	return (
+		<SubscriptionSuccess
+			returnUrl={returnUrl}
+			accountManagementUrl={accountManagementUrl}
+			action={action}
+		/>
+	);
 };

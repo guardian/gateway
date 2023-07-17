@@ -7,14 +7,14 @@ import { onConsent } from '@guardian/consent-management-platform';
  * https://github.com/guardian/consent-management-platform
  */
 export const useCmpConsent: () => boolean = () => {
-  const [hasCmpConsent, setCmpConsent] = useState(false);
-  useEffect(() => {
-    const checkCmpConsent = async () => {
-      const consentState: ConsentState = await onConsent();
-      setCmpConsent(consentState.canTarget); // canTarget if user has consented to all consents
-    };
-    checkCmpConsent();
-  }, []);
+	const [hasCmpConsent, setCmpConsent] = useState(false);
+	useEffect(() => {
+		const checkCmpConsent = async () => {
+			const consentState: ConsentState = await onConsent();
+			setCmpConsent(consentState.canTarget); // canTarget if user has consented to all consents
+		};
+		checkCmpConsent();
+	}, []);
 
-  return hasCmpConsent;
+	return hasCmpConsent;
 };

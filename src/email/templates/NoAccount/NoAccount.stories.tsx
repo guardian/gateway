@@ -5,12 +5,12 @@ import { NoAccount } from './NoAccount';
 import { renderMJML } from '../../testUtils';
 
 export default {
-  title: 'Email/Templates/NoAccount',
-  component: NoAccount,
-  parameters: { layout: 'fullscreen' },
+	title: 'Email/Templates/NoAccount',
+	component: NoAccount,
+	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => {
-  return renderMJML(<NoAccount />);
+	return renderMJML(<NoAccount />);
 };
 Default.storyName = 'with defaults';

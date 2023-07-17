@@ -15,23 +15,23 @@ import { requestIdMiddleware } from './requestId';
 const { appSecret, stage } = getConfiguration();
 
 export const applyMiddleware = (server: Express): void => {
-  // add request id middleware
-  server.use(requestIdMiddleware);
-  // apply helmet before anything else
-  server.use(helmetMiddleware as RequestHandler);
-  server.use(urlencoded({ extended: true }) as RequestHandler);
-  server.use(cookieParser(appSecret) as RequestHandler);
-  server.use(compression() as RequestHandler);
+	// add request id middleware
+	server.use(requestIdMiddleware);
+	// apply helmet before anything else
+	server.use(helmetMiddleware as RequestHandler);
+	server.use(urlencoded({ extended: true }) as RequestHandler);
+	server.use(cookieParser(appSecret) as RequestHandler);
+	server.use(compression() as RequestHandler);
 
-  // add the DEV okta middleware if state === DEV
-  if (stage === 'DEV') {
-    server.use(oktaDevMiddleware);
-  }
+	// add the DEV okta middleware if state === DEV
+	if (stage === 'DEV') {
+		server.use(oktaDevMiddleware);
+	}
 
-  server.use(loggerMiddleware);
-  server.use(csrfMiddleware as RequestHandler);
-  server.use(requestStateMiddleware);
-  server.use(routes);
-  server.use(fourZeroFourMiddleware);
-  server.use(routeErrorHandler);
+	server.use(loggerMiddleware);
+	server.use(csrfMiddleware as RequestHandler);
+	server.use(requestStateMiddleware);
+	server.use(routes);
+	server.use(fourZeroFourMiddleware);
+	server.use(routeErrorHandler);
 };

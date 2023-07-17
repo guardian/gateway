@@ -1,21 +1,21 @@
 {
-  "code": 200,
-  "response": {
-    "expiresAt": "2022-08-11T11:54:13.000Z",
-    "status": "SUCCESS",
-    "sessionToken": "session-token",
-    "_embedded": {
-      "user": {
-        "id": "user-id",
-        "passwordChanged": "2022-08-11T11:24:42.000Z",
-        "profile": {
-          "login": "example@example.com",
-          "firstName": null,
-          "lastName": null,
-          "locale": "en_US",
-          "timeZone": "America/Los_Angeles"
-        }
-      }
-    }
-  }
+	"code": 200,
+	"response": {
+		"expiresAt": "2022-08-11T11:54:13.000Z",
+		"status": "SUCCESS",
+		"sessionToken": "session-token",
+		"_embedded": {
+			"user": {
+				"id": "user-id",
+				"passwordChanged": "2022-08-11T11:24:42.000Z",
+				"profile": {
+					"login": "example@example.com",
+					"firstName": null,
+					"lastName": null,
+					"locale": "en_US",
+					"timeZone": "America/Los_Angeles"
+				}
+			}
+		}
+	}
 }

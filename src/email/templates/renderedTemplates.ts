@@ -18,46 +18,46 @@ import { CompleteRegistrationText } from './CompleteRegistration/CompleteRegistr
 import { render } from '@faire/mjml-react/utils/render';
 
 type EmailRenderResult = {
-  plain: string;
-  html: string;
+	plain: string;
+	html: string;
 };
 
 export const renderedAccidentalEmail = {
-  plain: AccidentalEmailText(),
-  html: render(AccidentalEmail()).html,
+	plain: AccidentalEmailText(),
+	html: render(AccidentalEmail()).html,
 } as EmailRenderResult;
 
 export const renderedAccountExists = {
-  plain: AccountExistsText(),
-  html: render(AccountExists()).html,
+	plain: AccountExistsText(),
+	html: render(AccountExists()).html,
 } as EmailRenderResult;
 
 export const renderedAccountWithoutPasswordExists = {
-  plain: AccountWithoutPasswordExistsText(),
-  html: render(AccountWithoutPasswordExists()).html,
+	plain: AccountWithoutPasswordExistsText(),
+	html: render(AccountWithoutPasswordExists()).html,
 } as EmailRenderResult;
 
 export const renderedCreatePassword = {
-  plain: CreatePasswordText(),
-  html: render(CreatePassword()).html,
+	plain: CreatePasswordText(),
+	html: render(CreatePassword()).html,
 } as EmailRenderResult;
 
 export const renderedNoAccount = {
-  plain: NoAccountText(),
-  html: render(NoAccount()).html,
+	plain: NoAccountText(),
+	html: render(NoAccount()).html,
 } as EmailRenderResult;
 
 export const renderedResetPassword = {
-  plain: ResetPasswordText(),
-  html: render(ResetPassword()).html,
+	plain: ResetPasswordText(),
+	html: render(ResetPassword()).html,
 } as EmailRenderResult;
 
 export const renderedUnvalidatedEmailResetPassword = {
-  plain: UnvalidatedEmailResetPasswordText(),
-  html: render(UnvalidatedEmailResetPassword()).html,
+	plain: UnvalidatedEmailResetPasswordText(),
+	html: render(UnvalidatedEmailResetPassword()).html,
 } as EmailRenderResult;
 
 export const renderedCompleteRegistration = {
-  plain: CompleteRegistrationText(),
-  html: render(CompleteRegistration()).html,
+	plain: CompleteRegistrationText(),
+	html: render(CompleteRegistration()).html,
 } as EmailRenderResult;

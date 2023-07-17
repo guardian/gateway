@@ -3,12 +3,12 @@
  */
 
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace Cypress {
-    interface Chainable {
-      lastPayloadsAre: typeof lastPayloadsAre;
-    }
-  }
+	// eslint-disable-next-line @typescript-eslint/no-namespace
+	namespace Cypress {
+		interface Chainable {
+			lastPayloadsAre: typeof lastPayloadsAre;
+		}
+	}
 }
 
 /**
@@ -17,12 +17,12 @@ declare global {
  * @returns A chainable cypress command.
  */
 export const lastPayloadsAre = (expectedPayloads: Array<object>) => {
-  return cy
-    .request(Cypress.env('mockingEndpoint') + '/payloads')
-    .then((response) => {
-      const slice = response.body.slice(-expectedPayloads.length);
-      expectedPayloads.forEach((expectedPayload) => {
-        expect(slice).to.deep.include(expectedPayload);
-      });
-    });
+	return cy
+		.request(Cypress.env('mockingEndpoint') + '/payloads')
+		.then((response) => {
+			const slice = response.body.slice(-expectedPayloads.length);
+			expectedPayloads.forEach((expectedPayload) => {
+				expect(slice).to.deep.include(expectedPayload);
+			});
+		});
 };

@@ -22,10 +22,10 @@ import { RoutePaths } from '@/shared/model/Routes';
  *   for example the returnUrl, tracking (ref, refViewId), clientId, etc.
  */
 export interface AuthorizationState {
-  stateParam: string;
-  queryParams: PersistableQueryParams;
-  confirmationPage?: RoutePaths;
-  doNotSetLastAccessCookie?: boolean;
+	stateParam: string;
+	queryParams: PersistableQueryParams;
+	confirmationPage?: RoutePaths;
+	doNotSetLastAccessCookie?: boolean;
 }
 
 /**
@@ -41,8 +41,8 @@ export interface AuthorizationState {
  */
 
 type OpenIdClient = Pick<
-  Client,
-  'authorizationUrl' | 'callbackParams' | 'callback'
+	Client,
+	'authorizationUrl' | 'callbackParams' | 'callback'
 >;
 
 /**
@@ -51,14 +51,14 @@ type OpenIdClient = Pick<
  * Object of redirect URIs used by OAuth apps (clients)
  */
 interface OpenIdClientRedirectUris {
-  AUTHENTICATION: `${string}${Extract<
-    '/oauth/authorization-code/callback',
-    RoutePaths
-  >}`;
-  APPLICATION: `${string}${Extract<
-    '/oauth/authorization-code/application-callback',
-    RoutePaths
-  >}`;
+	AUTHENTICATION: `${string}${Extract<
+		'/oauth/authorization-code/callback',
+		RoutePaths
+	>}`;
+	APPLICATION: `${string}${Extract<
+		'/oauth/authorization-code/application-callback',
+		RoutePaths
+	>}`;
 }
 
 const { okta, baseUri, stage } = getConfiguration();
@@ -71,15 +71,15 @@ const { okta, baseUri, stage } = getConfiguration();
  */
 const issuer = joinUrl(okta.orgUrl, '/oauth2/', okta.authServerId);
 const OIDC_METADATA: IssuerMetadata = {
-  issuer,
-  authorization_endpoint: joinUrl(issuer, '/v1/authorize'),
-  token_endpoint: joinUrl(issuer, '/v1/token'),
-  jwks_uri: joinUrl(issuer, '/v1/keys'),
-  userinfo_endpoint: joinUrl(issuer, '/v1/userinfo'),
-  registration_endpoint: joinUrl(issuer, '/oauth2/v1/clients'),
-  introspection_endpoint: joinUrl(issuer, '/v1/introspect'),
-  revocation_endpoint: joinUrl(issuer, '/v1/revoke'),
-  end_session_endpoint: joinUrl(issuer, '/v1/logout'),
+	issuer,
+	authorization_endpoint: joinUrl(issuer, '/v1/authorize'),
+	token_endpoint: joinUrl(issuer, '/v1/token'),
+	jwks_uri: joinUrl(issuer, '/v1/keys'),
+	userinfo_endpoint: joinUrl(issuer, '/v1/userinfo'),
+	registration_endpoint: joinUrl(issuer, '/oauth2/v1/clients'),
+	introspection_endpoint: joinUrl(issuer, '/v1/introspect'),
+	revocation_endpoint: joinUrl(issuer, '/v1/revoke'),
+	end_session_endpoint: joinUrl(issuer, '/v1/logout'),
 };
 
 /**
@@ -94,8 +94,8 @@ const OIDCIssuer = new Issuer(OIDC_METADATA);
  * @property `APPLICATION` - Used to get tokens for use within the gateway application (e.g. onboarding flow)
  */
 export const ProfileOpenIdClientRedirectUris: OpenIdClientRedirectUris = {
-  AUTHENTICATION: `${getProfileUrl()}/oauth/authorization-code/callback`,
-  APPLICATION: `${getProfileUrl()}/oauth/authorization-code/application-callback`,
+	AUTHENTICATION: `${getProfileUrl()}/oauth/authorization-code/callback`,
+	APPLICATION: `${getProfileUrl()}/oauth/authorization-code/application-callback`,
 };
 
 /**
@@ -109,9 +109,9 @@ export const ProfileOpenIdClientRedirectUris: OpenIdClientRedirectUris = {
  * @property `oauthCallback` - Method used in the callback (redirect_uri) endpoint to get OAuth tokens
  */
 export const ProfileOpenIdClient = new OIDCIssuer.Client({
-  client_id: okta.clientId,
-  client_secret: okta.clientSecret,
-  redirect_uris: Object.values(ProfileOpenIdClientRedirectUris),
+	client_id: okta.clientId,
+	client_secret: okta.clientSecret,
+	redirect_uris: Object.values(ProfileOpenIdClientRedirectUris),
 }) as OpenIdClient;
 
 /**
@@ -127,16 +127,16 @@ export const ProfileOpenIdClient = new OIDCIssuer.Client({
  * @param devIssuer - The okta domain issuer url to use for development
  */
 const DevProfileIdClient = (devIssuer: string) => {
-  const devOidcIssuer = new Issuer({
-    ...OIDC_METADATA,
-    issuer: issuer.replace(okta.orgUrl.replace('https://', ''), devIssuer),
-  });
+	const devOidcIssuer = new Issuer({
+		...OIDC_METADATA,
+		issuer: issuer.replace(okta.orgUrl.replace('https://', ''), devIssuer),
+	});
 
-  return new devOidcIssuer.Client({
-    client_id: okta.clientId,
-    client_secret: okta.clientSecret,
-    redirect_uris: Object.values(ProfileOpenIdClientRedirectUris),
-  }) as OpenIdClient;
+	return new devOidcIssuer.Client({
+		client_id: okta.clientId,
+		client_secret: okta.clientSecret,
+		redirect_uris: Object.values(ProfileOpenIdClientRedirectUris),
+	}) as OpenIdClient;
 };
 
 /**
@@ -151,10 +151,10 @@ const DevProfileIdClient = (devIssuer: string) => {
  * @returns OpenIdClient
  */
 export const getOpenIdClient = (req: Request): OpenIdClient => {
-  if (stage === 'DEV' && req.get('X-GU-Okta-Env')) {
-    return DevProfileIdClient(req.get('X-GU-Okta-Env') as string);
-  }
-  return ProfileOpenIdClient;
+	if (stage === 'DEV' && req.get('X-GU-Okta-Env')) {
+		return DevProfileIdClient(req.get('X-GU-Okta-Env') as string);
+	}
+	return ProfileOpenIdClient;
 };
 
 /**
@@ -162,20 +162,20 @@ export const getOpenIdClient = (req: Request): OpenIdClient => {
  * Sourced from https://developer.okta.com/docs/reference/error-codes/#example-errors-for-openid-connect-and-social-login
  */
 export enum OpenIdErrors {
-  UNAUTHORIZED_CLIENT = 'unauthorized_client',
-  ACCESS_DENIED = 'access_denied',
-  UNSUPPORTED_RESPONSE_TYPE = 'unsupported_response_type',
-  INVALID_SCOPE = 'invalid_scope',
-  SERVER_ERROR = 'server_error',
-  TEMPORARILY_UNAVAILABLE = 'temporarily_unavailable',
-  INVALID_CLIENT = 'invalid_client',
-  LOGIN_REQUIRED = 'login_required',
-  INVALID_REQUEST = 'invalid_request',
-  USER_CANCELED_REQUEST = 'user_canceled_request',
+	UNAUTHORIZED_CLIENT = 'unauthorized_client',
+	ACCESS_DENIED = 'access_denied',
+	UNSUPPORTED_RESPONSE_TYPE = 'unsupported_response_type',
+	INVALID_SCOPE = 'invalid_scope',
+	SERVER_ERROR = 'server_error',
+	TEMPORARILY_UNAVAILABLE = 'temporarily_unavailable',
+	INVALID_CLIENT = 'invalid_client',
+	LOGIN_REQUIRED = 'login_required',
+	INVALID_REQUEST = 'invalid_request',
+	USER_CANCELED_REQUEST = 'user_canceled_request',
 }
 
 export enum OpenIdErrorDescriptions {
-  ACCOUNT_LINKING_DENIED_GROUPS = 'User linking was denied because the user is not in any of the specified groups.',
+	ACCOUNT_LINKING_DENIED_GROUPS = 'User linking was denied because the user is not in any of the specified groups.',
 }
 
 /**
@@ -188,7 +188,7 @@ export enum OpenIdErrorDescriptions {
  * @return {string}
  */
 const generateRandomString = (bytes = 16): string =>
-  randomBytes(bytes).toString('hex');
+	randomBytes(bytes).toString('hex');
 
 /**
  * @function isAuthorizationState
@@ -200,8 +200,8 @@ const generateRandomString = (bytes = 16): string =>
  * @return {boolean}
  */
 const isAuthorizationState = (obj: unknown): obj is AuthorizationState => {
-  const objAsAuthState = obj as AuthorizationState;
-  return !!(objAsAuthState.stateParam && objAsAuthState.queryParams);
+	const objAsAuthState = obj as AuthorizationState;
+	return !!(objAsAuthState.stateParam && objAsAuthState.queryParams);
 };
 
 /**
@@ -216,14 +216,14 @@ const isAuthorizationState = (obj: unknown): obj is AuthorizationState => {
  * @return {*} `AuthorizationState`
  */
 export const generateAuthorizationState = (
-  queryParams: PersistableQueryParams,
-  confirmationPage?: RoutePaths,
-  doNotSetLastAccessCookie?: boolean,
+	queryParams: PersistableQueryParams,
+	confirmationPage?: RoutePaths,
+	doNotSetLastAccessCookie?: boolean,
 ): AuthorizationState => ({
-  stateParam: generateRandomString(),
-  queryParams,
-  confirmationPage,
-  doNotSetLastAccessCookie,
+	stateParam: generateRandomString(),
+	queryParams,
+	confirmationPage,
+	doNotSetLastAccessCookie,
 });
 
 /**
@@ -237,10 +237,10 @@ const AuthorizationStateCookieName = 'GU_oidc_auth_state';
  * No expiry/max-age, so cookie is deleted when browser session closes
  */
 const AuthorizationStateCookieOptions: CookieOptions = {
-  httpOnly: true,
-  secure: !baseUri.includes('localhost'),
-  signed: !baseUri.includes('localhost'),
-  sameSite: 'lax',
+	httpOnly: true,
+	secure: !baseUri.includes('localhost'),
+	signed: !baseUri.includes('localhost'),
+	sameSite: 'lax',
 };
 
 /**
@@ -259,20 +259,20 @@ const AuthorizationStateCookieOptions: CookieOptions = {
  * @param {ResponseWithRequestState} res
  */
 export const setAuthorizationStateCookie = (
-  state: AuthorizationState,
-  res: ResponseWithRequestState,
+	state: AuthorizationState,
+	res: ResponseWithRequestState,
 ) => {
-  try {
-    res.cookie(
-      AuthorizationStateCookieName,
-      Buffer.from(JSON.stringify(state)).toString('base64'),
-      AuthorizationStateCookieOptions,
-    );
-  } catch (error) {
-    logger.error('setAuthorizationStateCookie Error', error, {
-      request_id: res.locals.requestId,
-    });
-  }
+	try {
+		res.cookie(
+			AuthorizationStateCookieName,
+			Buffer.from(JSON.stringify(state)).toString('base64'),
+			AuthorizationStateCookieOptions,
+		);
+	} catch (error) {
+		logger.error('setAuthorizationStateCookie Error', error, {
+			request_id: res.locals.requestId,
+		});
+	}
 };
 
 /**
@@ -286,31 +286,31 @@ export const setAuthorizationStateCookie = (
  * @return {*}  {(AuthorizationState | null)}
  */
 export const getAuthorizationStateCookie = (
-  req: Request,
+	req: Request,
 ): AuthorizationState | null => {
-  const stateCookie = baseUri.includes('localhost')
-    ? req.cookies[AuthorizationStateCookieName]
-    : req.signedCookies[AuthorizationStateCookieName];
-  if (!stateCookie) {
-    return null;
-  }
+	const stateCookie = baseUri.includes('localhost')
+		? req.cookies[AuthorizationStateCookieName]
+		: req.signedCookies[AuthorizationStateCookieName];
+	if (!stateCookie) {
+		return null;
+	}
 
-  try {
-    const parsed = JSON.parse(
-      Buffer.from(stateCookie, 'base64').toString('utf-8'),
-    );
+	try {
+		const parsed = JSON.parse(
+			Buffer.from(stateCookie, 'base64').toString('utf-8'),
+		);
 
-    if (isAuthorizationState(parsed)) {
-      return parsed;
-    }
+		if (isAuthorizationState(parsed)) {
+			return parsed;
+		}
 
-    return null;
-  } catch (error) {
-    logger.error('getAuthorizationStateCookie Error', error, {
-      request_id: req.get('x-request-id'),
-    });
-    return null;
-  }
+		return null;
+	} catch (error) {
+		logger.error('getAuthorizationStateCookie Error', error, {
+			request_id: req.get('x-request-id'),
+		});
+		return null;
+	}
 };
 
 /**
@@ -322,13 +322,13 @@ export const getAuthorizationStateCookie = (
  * @param {ResponseWithRequestState} res
  */
 export const deleteAuthorizationStateCookie = (
-  res: ResponseWithRequestState,
+	res: ResponseWithRequestState,
 ) => {
-  // Web browsers and other compliant clients will only clear the cookie
-  // if the given options is identical to those given to res.cookie()
-  // excluding expires and maxAge.
-  res.clearCookie(
-    AuthorizationStateCookieName,
-    AuthorizationStateCookieOptions,
-  );
+	// Web browsers and other compliant clients will only clear the cookie
+	// if the given options is identical to those given to res.cookie()
+	// excluding expires and maxAge.
+	res.clearCookie(
+		AuthorizationStateCookieName,
+		AuthorizationStateCookieOptions,
+	);
 };

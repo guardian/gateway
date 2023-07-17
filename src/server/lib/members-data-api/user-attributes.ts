@@ -18,36 +18,36 @@ const { membersDataApiUrl } = getConfiguration();
  * https://github.com/guardian/members-data-api/blob/main/membership-attribute-service/app/models/Attributes.scala
  */
 const userAttributesResponseSchema = z
-  .object({
-    userId: z.string(),
+	.object({
+		userId: z.string(),
 
-    tier: z.string().optional(),
-    recurringContributionPaymentPlan: z.string().optional(),
-    oneOffContributionDate: z.string().optional(),
-    membershipJoinDate: z.string().optional(),
-    digitalSubscriptionExpiryDate: z.string().optional(),
-    paperSubscriptionExpiryDate: z.string().optional(),
-    guardianWeeklyExpiryDate: z.string().optional(),
-    liveAppSubscriptionExpiryDate: z.string().optional(),
-    guardianPatronExpiryDate: z.string().optional(),
-    alertAvailableFor: z.string().optional(),
+		tier: z.string().optional(),
+		recurringContributionPaymentPlan: z.string().optional(),
+		oneOffContributionDate: z.string().optional(),
+		membershipJoinDate: z.string().optional(),
+		digitalSubscriptionExpiryDate: z.string().optional(),
+		paperSubscriptionExpiryDate: z.string().optional(),
+		guardianWeeklyExpiryDate: z.string().optional(),
+		liveAppSubscriptionExpiryDate: z.string().optional(),
+		guardianPatronExpiryDate: z.string().optional(),
+		alertAvailableFor: z.string().optional(),
 
-    showSupportMessaging: z.boolean(),
+		showSupportMessaging: z.boolean(),
 
-    contentAccess: z.object({
-      member: z.boolean(),
-      paidMember: z.boolean(),
-      recurringContributor: z.boolean(),
-      supporterPlus: z.boolean(),
-      digitalPack: z.boolean(),
-      paperSubscriber: z.boolean(),
-      guardianWeeklySubscriber: z.boolean(),
-      guardianPatron: z.boolean(),
-    }),
-  })
-  .strict();
+		contentAccess: z.object({
+			member: z.boolean(),
+			paidMember: z.boolean(),
+			recurringContributor: z.boolean(),
+			supporterPlus: z.boolean(),
+			digitalPack: z.boolean(),
+			paperSubscriber: z.boolean(),
+			guardianWeeklySubscriber: z.boolean(),
+			guardianPatron: z.boolean(),
+		}),
+	})
+	.strict();
 export type UserAttributesResponse = z.infer<
-  typeof userAttributesResponseSchema
+	typeof userAttributesResponseSchema
 >;
 
 /**
@@ -59,48 +59,48 @@ export type UserAttributesResponse = z.infer<
  * @returns UserAttributesResponse | undefined
  */
 export const getUserAttributes = async ({
-  sc_gu_u,
-  accessToken,
-  request_id,
+	sc_gu_u,
+	accessToken,
+	request_id,
 }: {
-  sc_gu_u?: string;
-  accessToken?: string;
-  request_id?: string;
+	sc_gu_u?: string;
+	accessToken?: string;
+	request_id?: string;
 }): Promise<UserAttributesResponse | undefined> => {
-  try {
-    const path = buildUrl('/user-attributes/me');
+	try {
+		const path = buildUrl('/user-attributes/me');
 
-    // choose the correct auth header, Authorization if using OAuth, Cookie if using SC_GU_U
-    const headers: Headers = (() => {
-      const headers = new Headers();
+		// choose the correct auth header, Authorization if using OAuth, Cookie if using SC_GU_U
+		const headers: Headers = (() => {
+			const headers = new Headers();
 
-      if (accessToken) {
-        headers.append('Authorization', `Bearer ${accessToken}`);
-        return headers;
-      }
-      if (sc_gu_u) {
-        headers.append('Cookie', `SC_GU_U=${sc_gu_u}`);
-        return headers;
-      }
+			if (accessToken) {
+				headers.append('Authorization', `Bearer ${accessToken}`);
+				return headers;
+			}
+			if (sc_gu_u) {
+				headers.append('Cookie', `SC_GU_U=${sc_gu_u}`);
+				return headers;
+			}
 
-      return headers;
-    })();
+			return headers;
+		})();
 
-    const response = await fetch(joinUrl(membersDataApiUrl, path), {
-      method: 'GET',
-      headers,
-    });
+		const response = await fetch(joinUrl(membersDataApiUrl, path), {
+			method: 'GET',
+			headers,
+		});
 
-    if (!response.ok) {
-      throw new Error(
-        `MDAPI returned ${response.status} ${response.statusText}`,
-      );
-    }
+		if (!response.ok) {
+			throw new Error(
+				`MDAPI returned ${response.status} ${response.statusText}`,
+			);
+		}
 
-    return userAttributesResponseSchema.parse(await response.json());
-  } catch (error) {
-    logger.error(`MDAPI Error getUserAttributes '/user-attributes/me'`, error, {
-      request_id,
-    });
-  }
+		return userAttributesResponseSchema.parse(await response.json());
+	} catch (error) {
+		logger.error(`MDAPI Error getUserAttributes '/user-attributes/me'`, error, {
+			request_id,
+		});
+	}
 };

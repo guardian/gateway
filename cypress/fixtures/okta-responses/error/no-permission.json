@@ -1,10 +1,10 @@
 {
-  "code": 403,
-  "response": {
-    "errorCode": "E0000006",
-    "errorSummary": "You do not have permission to perform the requested action",
-    "errorLink": "E0000006",
-    "errorId": "mocked-error-id",
-    "errorCauses": []
-  }
+	"code": 403,
+	"response": {
+		"errorCode": "E0000006",
+		"errorSummary": "You do not have permission to perform the requested action",
+		"errorLink": "E0000006",
+		"errorId": "mocked-error-id",
+		"errorCauses": []
+	}
 }

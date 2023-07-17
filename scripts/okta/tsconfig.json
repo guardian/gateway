@@ -1,17 +1,17 @@
 {
-  "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "module": "AMD",
-    "noUnusedLocals": true,
-    "outDir": ".",
-    "strict": true,
-    "target": "ES5",
-    "lib": ["ES2022", "DOM"],
-    "skipLibCheck": true,
-    "noEmit": true,
-    "removeComments": true,
-    "outFile": "./okta.js"
-  },
-  "files": ["okta-login.ts"]
+	"compilerOptions": {
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"module": "AMD",
+		"noUnusedLocals": true,
+		"outDir": ".",
+		"strict": true,
+		"target": "ES5",
+		"lib": ["ES2022", "DOM"],
+		"skipLibCheck": true,
+		"noEmit": true,
+		"removeComments": true,
+		"outFile": "./okta.js"
+	},
+	"files": ["okta-login.ts"]
 }

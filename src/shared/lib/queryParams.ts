@@ -1,6 +1,6 @@
 import {
-  QueryParams,
-  PersistableQueryParams,
+	QueryParams,
+	PersistableQueryParams,
 } from '@/shared/model/QueryParams';
 import { IdApiQueryParams } from '../model/IdapiQueryParams';
 import { AllRoutes } from '../model/Routes';
@@ -13,17 +13,17 @@ import { AllRoutes } from '../model/Routes';
  * @returns Object with empty keys removed and values converted to strings
  */
 export const removeEmptyKeysFromObjectAndConvertValuesToString = (
-  obj: Record<string, unknown>,
+	obj: Record<string, unknown>,
 ) => {
-  const newObj: Record<string, string> = {};
-  Object.keys(obj).forEach((key) => {
-    const asStr = obj[key]?.toString();
-    if (asStr) {
-      // eslint-disable-next-line functional/immutable-data
-      newObj[key] = asStr;
-    }
-  });
-  return newObj;
+	const newObj: Record<string, string> = {};
+	Object.keys(obj).forEach((key) => {
+		const asStr = obj[key]?.toString();
+		if (asStr) {
+			// eslint-disable-next-line functional/immutable-data
+			newObj[key] = asStr;
+		}
+	});
+	return newObj;
 };
 
 /**
@@ -31,16 +31,16 @@ export const removeEmptyKeysFromObjectAndConvertValuesToString = (
  * @returns PersistableQueryParams - object with query parameters to persist between requests
  */
 export const getPersistableQueryParams = (
-  params: QueryParams,
+	params: QueryParams,
 ): PersistableQueryParams => ({
-  returnUrl: params.returnUrl,
-  clientId: params.clientId,
-  ref: params.ref,
-  refViewId: params.refViewId,
-  useIdapi: params.useIdapi,
-  componentEventParams: params.componentEventParams,
-  fromURI: params.fromURI,
-  appClientId: params.appClientId,
+	returnUrl: params.returnUrl,
+	clientId: params.clientId,
+	ref: params.ref,
+	refViewId: params.refViewId,
+	useIdapi: params.useIdapi,
+	componentEventParams: params.componentEventParams,
+	fromURI: params.fromURI,
+	appClientId: params.appClientId,
 });
 
 /**
@@ -48,14 +48,14 @@ export const getPersistableQueryParams = (
  * @returns PersistableQueryParams - object with query parameters to persist between requests but without the appClientId and fromURI params which are Okta specific
  */
 export const getPersistableQueryParamsWithoutOktaParams = (
-  params: QueryParams,
+	params: QueryParams,
 ): PersistableQueryParams => {
-  const persistableQueryParams = getPersistableQueryParams(params);
-  // eslint-disable-next-line functional/immutable-data
-  delete persistableQueryParams.appClientId;
-  // eslint-disable-next-line functional/immutable-data
-  delete persistableQueryParams.fromURI;
-  return persistableQueryParams;
+	const persistableQueryParams = getPersistableQueryParams(params);
+	// eslint-disable-next-line functional/immutable-data
+	delete persistableQueryParams.appClientId;
+	// eslint-disable-next-line functional/immutable-data
+	delete persistableQueryParams.fromURI;
+	return persistableQueryParams;
 };
 
 /**
@@ -70,11 +70,11 @@ export const getPersistableQueryParamsWithoutOktaParams = (
  */
 
 export const addQueryParamsToPath = (
-  path: AllRoutes,
-  params: QueryParams,
-  overrides?: Partial<QueryParams>,
+	path: AllRoutes,
+	params: QueryParams,
+	overrides?: Partial<QueryParams>,
 ): string => {
-  return addQueryParamsToUntypedPath(path, params, overrides);
+	return addQueryParamsToUntypedPath(path, params, overrides);
 };
 
 /**
@@ -89,22 +89,22 @@ export const addQueryParamsToPath = (
  */
 
 export const addQueryParamsToUntypedPath = (
-  path: string,
-  params: QueryParams,
-  overrides?: Partial<QueryParams>,
+	path: string,
+	params: QueryParams,
+	overrides?: Partial<QueryParams>,
 ): string => {
-  const divider = path.includes('?') ? '&' : '?';
-  const searchParams = new URLSearchParams(
-    removeEmptyKeysFromObjectAndConvertValuesToString({
-      ...getPersistableQueryParams(params),
-      ...overrides,
-    }),
-  );
+	const divider = path.includes('?') ? '&' : '?';
+	const searchParams = new URLSearchParams(
+		removeEmptyKeysFromObjectAndConvertValuesToString({
+			...getPersistableQueryParams(params),
+			...overrides,
+		}),
+	);
 
-  // eslint-disable-next-line functional/immutable-data
-  searchParams.sort();
+	// eslint-disable-next-line functional/immutable-data
+	searchParams.sort();
 
-  return `${path}${divider}${searchParams.toString()}`;
+	return `${path}${divider}${searchParams.toString()}`;
 };
 
 /**
@@ -118,21 +118,21 @@ export const addQueryParamsToUntypedPath = (
  */
 
 export const addApiQueryParamsToPath = (
-  path: string,
-  params: IdApiQueryParams,
-  overrides?: Partial<QueryParams>,
+	path: string,
+	params: IdApiQueryParams,
+	overrides?: Partial<QueryParams>,
 ): string => {
-  const divider = path.includes('?') ? '&' : '?';
-  const searchParams = new URLSearchParams(
-    removeEmptyKeysFromObjectAndConvertValuesToString({
-      ...params,
-      ...overrides,
-    }),
-  );
-  // eslint-disable-next-line functional/immutable-data
-  searchParams.sort();
+	const divider = path.includes('?') ? '&' : '?';
+	const searchParams = new URLSearchParams(
+		removeEmptyKeysFromObjectAndConvertValuesToString({
+			...params,
+			...overrides,
+		}),
+	);
+	// eslint-disable-next-line functional/immutable-data
+	searchParams.sort();
 
-  return `${path}${divider}${searchParams.toString()}`;
+	return `${path}${divider}${searchParams.toString()}`;
 };
 
 /**
@@ -145,18 +145,18 @@ export const addApiQueryParamsToPath = (
  */
 
 export const buildQueryParamsString = (
-  params: QueryParams,
-  overrides?: Partial<QueryParams>,
+	params: QueryParams,
+	overrides?: Partial<QueryParams>,
 ): string => {
-  const searchParams = new URLSearchParams(
-    removeEmptyKeysFromObjectAndConvertValuesToString({
-      ...getPersistableQueryParams(params),
-      ...overrides,
-    }),
-  );
+	const searchParams = new URLSearchParams(
+		removeEmptyKeysFromObjectAndConvertValuesToString({
+			...getPersistableQueryParams(params),
+			...overrides,
+		}),
+	);
 
-  // eslint-disable-next-line functional/immutable-data
-  searchParams.sort();
+	// eslint-disable-next-line functional/immutable-data
+	searchParams.sort();
 
-  return `?${searchParams.toString()}`;
+	return `?${searchParams.toString()}`;
 };

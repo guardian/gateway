@@ -20,33 +20,33 @@ const domain = `${baseUri.replace('profile.', '').split(':')[0]}`;
  * @param requestId - loggable identifier for the request
  */
 export const setUserFeatureCookies = async ({
-  sc_gu_u,
-  accessToken,
-  res,
-  requestId,
+	sc_gu_u,
+	accessToken,
+	res,
+	requestId,
 }: {
-  sc_gu_u?: string;
-  accessToken?: string;
-  res: Response;
-  requestId?: string;
+	sc_gu_u?: string;
+	accessToken?: string;
+	res: Response;
+	requestId?: string;
 }): Promise<void> => {
-  // call the members-data-api to get the user's attributes/products if any
-  const userAttributes = await getUserAttributes({
-    sc_gu_u,
-    accessToken,
-    request_id: requestId,
-  });
+	// call the members-data-api to get the user's attributes/products if any
+	const userAttributes = await getUserAttributes({
+		sc_gu_u,
+		accessToken,
+		request_id: requestId,
+	});
 
-  // set the GU_AF1 cookie if the user has the ad-free product
-  if (userAttributes?.contentAccess.digitalPack) {
-    // for some reason the value is set to 6 months time,
-    // but the expiry is set to 2 days if the user has a product
-    // https://github.com/guardian/frontend/blob/f17fe93c542fbd448392a0687d0b92f35796097a/static/src/javascripts/projects/common/modules/commercial/user-features.ts#L128
-    const value = new Date();
-    value.setMonth(value.getMonth() + 6);
-    res.cookie('GU_AF1', value.getTime().toString(), {
-      domain,
-      expires: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-    });
-  }
+	// set the GU_AF1 cookie if the user has the ad-free product
+	if (userAttributes?.contentAccess.digitalPack) {
+		// for some reason the value is set to 6 months time,
+		// but the expiry is set to 2 days if the user has a product
+		// https://github.com/guardian/frontend/blob/f17fe93c542fbd448392a0687d0b92f35796097a/static/src/javascripts/projects/common/modules/commercial/user-features.ts#L128
+		const value = new Date();
+		value.setMonth(value.getMonth() + 6);
+		res.cookie('GU_AF1', value.getTime().toString(), {
+			domain,
+			expires: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+		});
+	}
 };

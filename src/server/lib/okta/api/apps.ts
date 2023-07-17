@@ -25,31 +25,31 @@ const { okta } = getConfiguration();
  */
 const AppCache = new Map<string, AppResponse>();
 export const getApp = async (id: string): Promise<AppResponse> => {
-  if (AppCache.has(id)) {
-    return Promise.resolve(AppCache.get(id) as AppResponse);
-  }
+	if (AppCache.has(id)) {
+		return Promise.resolve(AppCache.get(id) as AppResponse);
+	}
 
-  const path = buildUrl(`/api/v1/apps/:id`, { id });
+	const path = buildUrl(`/api/v1/apps/:id`, { id });
 
-  const app = await fetch(joinUrl(okta.orgUrl, path), {
-    headers: { ...defaultHeaders, ...authorizationHeader() },
-  }).then(handleAppResponse);
+	const app = await fetch(joinUrl(okta.orgUrl, path), {
+		headers: { ...defaultHeaders, ...authorizationHeader() },
+	}).then(handleAppResponse);
 
-  AppCache.set(id, app);
+	AppCache.set(id, app);
 
-  return app;
+	return app;
 };
 
 const handleAppResponse = async (response: Response): Promise<AppResponse> => {
-  if (response.ok) {
-    try {
-      return appResponseSchema.parse(await response.json());
-    } catch (error) {
-      throw new OktaError({
-        message: 'Could not parse Okta app response',
-      });
-    }
-  } else {
-    return await handleErrorResponse(response);
-  }
+	if (response.ok) {
+		try {
+			return appResponseSchema.parse(await response.json());
+		} catch (error) {
+			throw new OktaError({
+				message: 'Could not parse Okta app response',
+			});
+		}
+	} else {
+		return await handleErrorResponse(response);
+	}
 };

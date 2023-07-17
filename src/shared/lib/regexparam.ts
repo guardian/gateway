@@ -45,28 +45,28 @@
  * @returns `{ pattern }` object, where pattern is always a RegExp instance.
  */
 export function parse(str: string, loose?: boolean) {
-  // eslint-disable-next-line functional/no-let
-  let tmp,
-    pattern = '';
-  const arr = str.split('/');
-  arr[0] || arr.shift();
+	// eslint-disable-next-line functional/no-let
+	let tmp,
+		pattern = '';
+	const arr = str.split('/');
+	arr[0] || arr.shift();
 
-  while ((tmp = arr.shift())) {
-    const current = tmp[0];
-    if (current === '*') {
-      pattern += '/(.*)';
-    } else if (current === ':') {
-      const optional = tmp.indexOf('?', 1);
-      const ext = tmp.indexOf('.', 1);
-      pattern += !!~optional && !~ext ? '(?:/([^/]+?))?' : '/([^/]+?)';
-      if (!!~ext)
-        pattern += (!!~optional ? '?' : '') + '\\' + tmp.substring(ext);
-    } else {
-      pattern += '/' + tmp;
-    }
-  }
+	while ((tmp = arr.shift())) {
+		const current = tmp[0];
+		if (current === '*') {
+			pattern += '/(.*)';
+		} else if (current === ':') {
+			const optional = tmp.indexOf('?', 1);
+			const ext = tmp.indexOf('.', 1);
+			pattern += !!~optional && !~ext ? '(?:/([^/]+?))?' : '/([^/]+?)';
+			if (!!~ext)
+				pattern += (!!~optional ? '?' : '') + '\\' + tmp.substring(ext);
+		} else {
+			pattern += '/' + tmp;
+		}
+	}
 
-  return {
-    pattern: new RegExp('^' + pattern + (loose ? '(?=$|/)' : '/?$'), 'i'),
-  };
+	return {
+		pattern: new RegExp('^' + pattern + (loose ? '(?=$|/)' : '/?$'), 'i'),
+	};
 }

@@ -4,24 +4,24 @@ import { Meta } from '@storybook/react';
 import { GuardianTerms, JobsTerms, RecaptchaTerms } from './Terms';
 
 export default {
-  title: 'Components/Terms',
-  component: GuardianTerms,
+	title: 'Components/Terms',
+	component: GuardianTerms,
 } as Meta;
 
 export const Default = () => (
-  <>
-    <GuardianTerms />
-    <RecaptchaTerms />
-  </>
+	<>
+		<GuardianTerms />
+		<RecaptchaTerms />
+	</>
 );
 
 Default.storyName = 'Terms';
 
 export const Jobs = () => (
-  <>
-    <JobsTerms />
-    <RecaptchaTerms />
-  </>
+	<>
+		<JobsTerms />
+		<RecaptchaTerms />
+	</>
 );
 
 Jobs.storyName = 'Jobs terms';

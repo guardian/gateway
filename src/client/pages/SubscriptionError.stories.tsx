@@ -5,21 +5,21 @@ import { Meta } from '@storybook/react';
 import { SubscriptionError } from './SubscriptionError';
 
 export default {
-  title: 'Pages/SubscriptionError',
-  component: SubscriptionError,
-  parameters: { layout: 'fullscreen' },
+	title: 'Pages/SubscriptionError',
+	component: SubscriptionError,
+	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Unsubscribe = () => (
-  <SubscriptionError accountManagementUrl="#" action={'unsubscribe'} />
+	<SubscriptionError accountManagementUrl="#" action={'unsubscribe'} />
 );
 Unsubscribe.story = {
-  name: 'unsubscribe error',
+	name: 'unsubscribe error',
 };
 
 export const Subscribe = () => (
-  <SubscriptionError accountManagementUrl="#" action={'subscribe'} />
+	<SubscriptionError accountManagementUrl="#" action={'subscribe'} />
 );
 Subscribe.story = {
-  name: 'subscribe error',
+	name: 'subscribe error',
 };

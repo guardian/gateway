@@ -17,7 +17,7 @@
  * You can view more options by console logging the `window.OktaUtil.getSignInWidgetConfig()` object if needed on the Okta hosted sign in page.
  */
 interface SignInWidgetConfig {
-  relayState?: string;
+	relayState?: string;
 }
 
 /**
@@ -34,10 +34,10 @@ interface SignInWidgetConfig {
  * You can view more options by console logging the `window.OktaUtil.getRequestContext()` object if needed on the Okta hosted sign in page.
  */
 interface RequestContext {
-  target?: {
-    clientId?: string;
-    label?: string;
-  };
+	target?: {
+		clientId?: string;
+		label?: string;
+	};
 }
 
 /**
@@ -51,8 +51,8 @@ interface RequestContext {
  * You can view more options by console logging the `window.OktaUtil` object if needed on the Okta hosted sign in page.
  */
 export interface OktaUtil {
-  getSignInWidgetConfig?: () => SignInWidgetConfig;
-  getRequestContext?: () => RequestContext;
+	getSignInWidgetConfig?: () => SignInWidgetConfig;
+	getRequestContext?: () => RequestContext;
 }
 
 /**
@@ -63,9 +63,9 @@ export interface OktaUtil {
  * @returns string | undefined
  */
 export const getRelayState = (
-  signInWidgetConfig?: SignInWidgetConfig,
+	signInWidgetConfig?: SignInWidgetConfig,
 ): string | undefined => {
-  return signInWidgetConfig?.relayState;
+	return signInWidgetConfig?.relayState;
 };
 
 /**
@@ -76,9 +76,9 @@ export const getRelayState = (
  * @returns string | undefined
  */
 export const getClientId = (
-  requestContext?: RequestContext,
+	requestContext?: RequestContext,
 ): string | undefined => {
-  return requestContext?.target?.clientId;
+	return requestContext?.target?.clientId;
 };
 
 /**
@@ -89,14 +89,14 @@ export const getClientId = (
  * @returns string | undefined
  */
 export const getThirdPartyClientId = (
-  requestContext?: RequestContext,
+	requestContext?: RequestContext,
 ): string | undefined => {
-  if (requestContext?.target?.label) {
-    switch (requestContext?.target?.label) {
-      case 'jobs_site':
-        return 'jobs';
-    }
-  }
+	if (requestContext?.target?.label) {
+		switch (requestContext?.target?.label) {
+			case 'jobs_site':
+				return 'jobs';
+		}
+	}
 };
 
 /**
@@ -107,15 +107,15 @@ export const getThirdPartyClientId = (
  * @returns string | undefined
  */
 export const getThirdPartyReturnUrl = (
-  locationOrigin: string,
-  requestContext?: RequestContext,
+	locationOrigin: string,
+	requestContext?: RequestContext,
 ): string | undefined => {
-  if (requestContext?.target?.label) {
-    switch (requestContext?.target?.label) {
-      case 'jobs_site':
-        return encodeURIComponent(locationOrigin.replace('profile', 'jobs'));
-    }
-  }
+	if (requestContext?.target?.label) {
+		switch (requestContext?.target?.label) {
+			case 'jobs_site':
+				return encodeURIComponent(locationOrigin.replace('profile', 'jobs'));
+		}
+	}
 };
 
 /**
@@ -133,107 +133,107 @@ export const getThirdPartyReturnUrl = (
  * @returns string
  */
 export const getRedirectUrl = (
-  locationSearch: string,
-  locationOrigin: string,
-  locationPathname: string,
-  oktaUtil?: OktaUtil,
+	locationSearch: string,
+	locationOrigin: string,
+	locationPathname: string,
+	oktaUtil?: OktaUtil,
 ): string => {
-  // set up params class to hold the parameters we'll be passing to our own login page
-  const params = new URLSearchParams();
+	// set up params class to hold the parameters we'll be passing to our own login page
+	const params = new URLSearchParams();
 
-  // parse the current search params on the page
-  const searchParams = new URLSearchParams(locationSearch);
+	// parse the current search params on the page
+	const searchParams = new URLSearchParams(locationSearch);
 
-  // force fallback flag, used to test fallback behaviour
-  const forceFallback = searchParams.get('force_fallback');
+	// force fallback flag, used to test fallback behaviour
+	const forceFallback = searchParams.get('force_fallback');
 
-  // Variable holders for the Okta params we want to pass to our own login page
-  // This is the URI to redirect to after the user has logged in and has a session set to complete the Authorization Code Flow from the SDK.
-  let fromURI: string | undefined;
+	// Variable holders for the Okta params we want to pass to our own login page
+	// This is the URI to redirect to after the user has logged in and has a session set to complete the Authorization Code Flow from the SDK.
+	let fromURI: string | undefined;
 
-  // This is the client ID of the application that is calling the SDK and in turn performing the Authorization Code Flow. This parameter can be used to customise the experience our pages. We attempt to get it from the OktaUtil object, with the existing search parameters as a fallback option
-  let clientId: string | undefined;
+	// This is the client ID of the application that is calling the SDK and in turn performing the Authorization Code Flow. This parameter can be used to customise the experience our pages. We attempt to get it from the OktaUtil object, with the existing search parameters as a fallback option
+	let clientId: string | undefined;
 
-  // third party `clientId` query param in Identity, used for `jobs` (Guardian Jobs)
-  // where we need to add this to the query params we send to gateway
-  let thirdPartyClientId: string | undefined;
+	// third party `clientId` query param in Identity, used for `jobs` (Guardian Jobs)
+	// where we need to add this to the query params we send to gateway
+	let thirdPartyClientId: string | undefined;
 
-  // third party `returnUrl` query param in Identity, used for `jobs` (Guardian Jobs)
-  // where we need to add this to the query params we send to gateway
-  let thirdPartyReturnUrl: string | undefined;
+	// third party `returnUrl` query param in Identity, used for `jobs` (Guardian Jobs)
+	// where we need to add this to the query params we send to gateway
+	let thirdPartyReturnUrl: string | undefined;
 
-  // attempt to get the parameters we need from the Okta hosted login page OktaUtil object
-  if (oktaUtil && !forceFallback) {
-    // try getting fromURI from OktaUtil signInWidgetConfig (property is called called relayState)
-    const signInWidgetConfig = oktaUtil?.getSignInWidgetConfig?.();
-    fromURI = getRelayState(signInWidgetConfig);
+	// attempt to get the parameters we need from the Okta hosted login page OktaUtil object
+	if (oktaUtil && !forceFallback) {
+		// try getting fromURI from OktaUtil signInWidgetConfig (property is called called relayState)
+		const signInWidgetConfig = oktaUtil?.getSignInWidgetConfig?.();
+		fromURI = getRelayState(signInWidgetConfig);
 
-    // try getting clientId from OktaUtil requestContext
-    const requestContext = oktaUtil?.getRequestContext?.();
-    clientId = getClientId(requestContext);
+		// try getting clientId from OktaUtil requestContext
+		const requestContext = oktaUtil?.getRequestContext?.();
+		clientId = getClientId(requestContext);
 
-    // determine if this is a third party client e.g. jobs and set the thirdPartyClientId and thirdPartyReturnUrl
-    thirdPartyClientId = getThirdPartyClientId(requestContext);
-    thirdPartyReturnUrl = getThirdPartyReturnUrl(
-      locationOrigin,
-      requestContext,
-    );
-  }
+		// determine if this is a third party client e.g. jobs and set the thirdPartyClientId and thirdPartyReturnUrl
+		thirdPartyClientId = getThirdPartyClientId(requestContext);
+		thirdPartyReturnUrl = getThirdPartyReturnUrl(
+			locationOrigin,
+			requestContext,
+		);
+	}
 
-  // if we're unable to get clientId from OktaUtil, try to get it from the search params where it will exist
-  if (!clientId || forceFallback) {
-    clientId = searchParams.get('client_id') || undefined;
-  }
+	// if we're unable to get clientId from OktaUtil, try to get it from the search params where it will exist
+	if (!clientId || forceFallback) {
+		clientId = searchParams.get('client_id') || undefined;
+	}
 
-  // if fromURI doesn't exist, which is the case when prompt="login" is set and the user is already logged in
-  // we pass the current url as the fromURI so that the user completes the OAuth flow after login
-  // as all the parameters we need are in the url
-  // however this works only in the case when the pathname starts with /oauth2/
-  if (!fromURI && locationPathname.startsWith('/oauth2/')) {
-    // delete the prompt parameter so that the user doesn't get stuck in a login loop
-    searchParams.delete('prompt');
-    // set the fromURI parameter
-    params.set('fromURI', locationPathname + '?' + searchParams.toString());
-  }
+	// if fromURI doesn't exist, which is the case when prompt="login" is set and the user is already logged in
+	// we pass the current url as the fromURI so that the user completes the OAuth flow after login
+	// as all the parameters we need are in the url
+	// however this works only in the case when the pathname starts with /oauth2/
+	if (!fromURI && locationPathname.startsWith('/oauth2/')) {
+		// delete the prompt parameter so that the user doesn't get stuck in a login loop
+		searchParams.delete('prompt');
+		// set the fromURI parameter
+		params.set('fromURI', locationPathname + '?' + searchParams.toString());
+	}
 
-  // add the parameters to the params class
-  if (fromURI) {
-    params.set('fromURI', fromURI);
-  }
-  if (clientId) {
-    params.set('appClientId', clientId);
-  }
-  if (thirdPartyClientId) {
-    params.set('clientId', thirdPartyClientId);
-  }
-  if (thirdPartyReturnUrl) {
-    params.set('returnUrl', thirdPartyReturnUrl);
-  }
+	// add the parameters to the params class
+	if (fromURI) {
+		params.set('fromURI', fromURI);
+	}
+	if (clientId) {
+		params.set('appClientId', clientId);
+	}
+	if (thirdPartyClientId) {
+		params.set('clientId', thirdPartyClientId);
+	}
+	if (thirdPartyReturnUrl) {
+		params.set('returnUrl', thirdPartyReturnUrl);
+	}
 
-  // check the Okta hosted login page query params for an activation token for welcome page
-  const activationToken = searchParams.get('activation_token');
+	// check the Okta hosted login page query params for an activation token for welcome page
+	const activationToken = searchParams.get('activation_token');
 
-  // check for reset password token
-  const resetPasswordToken = searchParams.get('reset_password_token');
+	// check for reset password token
+	const resetPasswordToken = searchParams.get('reset_password_token');
 
-  // check for set password token
-  const setPasswordToken = searchParams.get('set_password_token');
+	// check for set password token
+	const setPasswordToken = searchParams.get('set_password_token');
 
-  // if we have an activation token, we know we need to go to the create password/welcome page
-  if (activationToken) {
-    return `/welcome/${activationToken}?${params.toString()}`;
-  }
+	// if we have an activation token, we know we need to go to the create password/welcome page
+	if (activationToken) {
+		return `/welcome/${activationToken}?${params.toString()}`;
+	}
 
-  // if we have a reset password token, we know we need to go to the reset password page
-  if (resetPasswordToken) {
-    return `/reset-password/${resetPasswordToken}?${params.toString()}`;
-  }
+	// if we have a reset password token, we know we need to go to the reset password page
+	if (resetPasswordToken) {
+		return `/reset-password/${resetPasswordToken}?${params.toString()}`;
+	}
 
-  // if we have a set password token, we know we need to go to the set password page
-  if (setPasswordToken) {
-    return `/set-password/${setPasswordToken}?${params.toString()}`;
-  }
+	// if we have a set password token, we know we need to go to the set password page
+	if (setPasswordToken) {
+		return `/set-password/${setPasswordToken}?${params.toString()}`;
+	}
 
-  // if we don't have any tokens, we need to go to the sign in page
-  return `/signin?${params.toString()}`;
+	// if we don't have any tokens, we need to go to the sign in page
+	return `/signin?${params.toString()}`;
 };

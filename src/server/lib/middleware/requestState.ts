@@ -14,109 +14,109 @@ import { getApp } from '@/server/lib/okta/api/apps';
 import { IsNativeApp } from '@/shared/model/ClientState';
 
 const {
-  idapiBaseUrl,
-  oauthBaseUrl,
-  googleRecaptcha,
-  stage,
-  githubRunNumber,
-  sentryDsn,
+	idapiBaseUrl,
+	oauthBaseUrl,
+	googleRecaptcha,
+	stage,
+	githubRunNumber,
+	sentryDsn,
 } = getConfiguration();
 
 const getRequestState = async (
-  req: RequestWithTypedQuery,
+	req: RequestWithTypedQuery,
 ): Promise<RequestState> => {
-  const [abTesting, abTestAPI] = getABTesting(req, tests);
+	const [abTesting, abTestAPI] = getABTesting(req, tests);
 
-  // tracking parameters might be from body too
-  const { ref, refViewId } = req.body;
+	// tracking parameters might be from body too
+	const { ref, refViewId } = req.body;
 
-  const queryParams = parseExpressQueryParams(
-    req.method,
-    {
-      ...req.query,
-      // returnUrl may be a query parameter or referrer header
-      returnUrl: req.query.returnUrl || req.get('Referrer'),
-    },
-    {
-      ref,
-      refViewId,
-    },
-  );
+	const queryParams = parseExpressQueryParams(
+		req.method,
+		{
+			...req.query,
+			// returnUrl may be a query parameter or referrer header
+			returnUrl: req.query.returnUrl || req.get('Referrer'),
+		},
+		{
+			ref,
+			refViewId,
+		},
+	);
 
-  const browser = Bowser.getParser(req.header('user-agent') || 'unknown');
+	const browser = Bowser.getParser(req.header('user-agent') || 'unknown');
 
-  // we also need to know if the flow was initiated by a native app, hence we get the app info from the api
-  // and determine this based on the label, whether it contains "android" or "ios"
-  // eslint-disable-next-line functional/no-let
-  let isNativeApp: IsNativeApp;
+	// we also need to know if the flow was initiated by a native app, hence we get the app info from the api
+	// and determine this based on the label, whether it contains "android" or "ios"
+	// eslint-disable-next-line functional/no-let
+	let isNativeApp: IsNativeApp;
 
-  try {
-    if (!!queryParams.appClientId) {
-      const app = await getApp(queryParams.appClientId);
+	try {
+		if (!!queryParams.appClientId) {
+			const app = await getApp(queryParams.appClientId);
 
-      const label = app.label.toLowerCase();
+			const label = app.label.toLowerCase();
 
-      if (label.startsWith('android_')) {
-        isNativeApp = 'android';
-      } else if (label.startsWith('ios_')) {
-        isNativeApp = 'ios';
-      }
-    }
-  } catch (error) {
-    logger.error('Error getting app info in request state', error, {
-      request_id: req.get('x-request-id'),
-    });
-  }
+			if (label.startsWith('android_')) {
+				isNativeApp = 'android';
+			} else if (label.startsWith('ios_')) {
+				isNativeApp = 'ios';
+			}
+		}
+	} catch (error) {
+		logger.error('Error getting app info in request state', error, {
+			request_id: req.get('x-request-id'),
+		});
+	}
 
-  return {
-    queryParams,
-    pageData: {
-      geolocation: getGeolocationRegion(req),
-      returnUrl: queryParams.returnUrl,
-      isNativeApp,
-    },
-    globalMessage: {},
-    csrf: {
-      token: req.csrfToken(),
-    },
-    abTesting: abTesting,
-    abTestAPI: abTestAPI,
-    clientHosts: {
-      idapiBaseUrl,
-      oauthBaseUrl,
-    },
-    recaptchaConfig: { recaptchaSiteKey: googleRecaptcha.siteKey },
-    ophanConfig: {
-      bwid: req.cookies.bwid,
-      consentUUID: req.cookies.consentUUID,
-      viewId: queryParams.refViewId,
-    },
-    sentryConfig: {
-      build: githubRunNumber,
-      stage,
-      dsn: sentryDsn,
-    },
-    browser: browser.getBrowser(),
-    requestId: req.get('x-request-id'),
-    oauthState: {},
-  };
+	return {
+		queryParams,
+		pageData: {
+			geolocation: getGeolocationRegion(req),
+			returnUrl: queryParams.returnUrl,
+			isNativeApp,
+		},
+		globalMessage: {},
+		csrf: {
+			token: req.csrfToken(),
+		},
+		abTesting: abTesting,
+		abTestAPI: abTestAPI,
+		clientHosts: {
+			idapiBaseUrl,
+			oauthBaseUrl,
+		},
+		recaptchaConfig: { recaptchaSiteKey: googleRecaptcha.siteKey },
+		ophanConfig: {
+			bwid: req.cookies.bwid,
+			consentUUID: req.cookies.consentUUID,
+			viewId: queryParams.refViewId,
+		},
+		sentryConfig: {
+			build: githubRunNumber,
+			stage,
+			dsn: sentryDsn,
+		},
+		browser: browser.getBrowser(),
+		requestId: req.get('x-request-id'),
+		oauthState: {},
+	};
 };
 
 export const requestStateMiddleware = async (
-  req: RequestWithTypedQuery,
-  res: Response,
-  next: NextFunction,
+	req: RequestWithTypedQuery,
+	res: Response,
+	next: NextFunction,
 ) => {
-  try {
-    const state = await getRequestState(req);
+	try {
+		const state = await getRequestState(req);
 
-    /* This is the only place mutation of res.locals should occur */
-    /* eslint-disable-next-line functional/immutable-data */
-    res.locals = state;
+		/* This is the only place mutation of res.locals should occur */
+		/* eslint-disable-next-line functional/immutable-data */
+		res.locals = state;
 
-    return next();
-  } catch (error) {
-    logger.error('Error in requestStateMiddleware', error);
-    return next(error);
-  }
+		return next();
+	} catch (error) {
+		logger.error('Error in requestStateMiddleware', error);
+		return next(error);
+	}
 };

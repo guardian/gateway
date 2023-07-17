@@ -6,86 +6,86 @@ import { EmailInput } from './EmailInput';
 import { PasswordInput } from './PasswordInput';
 
 export default {
-  title: 'Components/MainForm',
-  component: MainForm,
+	title: 'Components/MainForm',
+	component: MainForm,
 } as Meta;
 
 export const BasicForm = () => (
-  <MainForm formAction="" submitButtonText="Send me a link">
-    <EmailInput />
-  </MainForm>
+	<MainForm formAction="" submitButtonText="Send me a link">
+		<EmailInput />
+	</MainForm>
 );
 BasicForm.storyName = 'BasicForm';
 
 export const MultipleInputFields = () => (
-  <MainForm formAction="" submitButtonText="Send me a link">
-    <EmailInput cssOverrides={inputMarginBottomSpacingStyle} />
-    <PasswordInput label="Password" />
-  </MainForm>
+	<MainForm formAction="" submitButtonText="Send me a link">
+		<EmailInput cssOverrides={inputMarginBottomSpacingStyle} />
+		<PasswordInput label="Password" />
+	</MainForm>
 );
 MultipleInputFields.storyName = 'MultipleInputFields';
 
 export const FormWithRecaptcha = () => (
-  <MainForm
-    formAction=""
-    submitButtonText="Send me a link"
-    recaptchaSiteKey="test"
-  >
-    <EmailInput />
-  </MainForm>
+	<MainForm
+		formAction=""
+		submitButtonText="Send me a link"
+		recaptchaSiteKey="test"
+	>
+		<EmailInput />
+	</MainForm>
 );
 FormWithRecaptcha.storyName = 'FormWithRecaptcha';
 
 export const FormWithGuardianTerms = () => (
-  <MainForm formAction="" submitButtonText="Send me a link" hasGuardianTerms>
-    <EmailInput />
-  </MainForm>
+	<MainForm formAction="" submitButtonText="Send me a link" hasGuardianTerms>
+		<EmailInput />
+	</MainForm>
 );
 FormWithGuardianTerms.storyName = 'FormWithGuardianTerms';
 
 export const FormWithRecaptchaGuardianTerms = () => (
-  <MainForm
-    formAction=""
-    submitButtonText="Send me a link"
-    recaptchaSiteKey="test"
-    hasGuardianTerms
-  >
-    <EmailInput />
-  </MainForm>
+	<MainForm
+		formAction=""
+		submitButtonText="Send me a link"
+		recaptchaSiteKey="test"
+		hasGuardianTerms
+	>
+		<EmailInput />
+	</MainForm>
 );
 FormWithRecaptchaGuardianTerms.storyName = 'FormWithRecaptchaGuardianTerms';
 
 export const FormWithRecaptchaJobsTerms = () => (
-  <MainForm
-    formAction=""
-    submitButtonText="Send me a link"
-    recaptchaSiteKey="test"
-    hasJobsTerms
-  >
-    <EmailInput />
-  </MainForm>
+	<MainForm
+		formAction=""
+		submitButtonText="Send me a link"
+		recaptchaSiteKey="test"
+		hasJobsTerms
+	>
+		<EmailInput />
+	</MainForm>
 );
 FormWithRecaptchaJobsTerms.storyName = 'FormWithRecaptchaJobsTerms';
 
 export const TertiarySubmitButton = () => (
-  <MainForm
-    formAction=""
-    submitButtonText="Send me a link"
-    submitButtonPriority="tertiary"
-  >
-    <EmailInput />
-  </MainForm>
+	<MainForm
+		formAction=""
+		submitButtonText="Send me a link"
+		submitButtonPriority="tertiary"
+	>
+		<EmailInput />
+	</MainForm>
 );
 TertiarySubmitButton.storyName = 'TertiarySubmitButton';
 
 export const FormWithError = () => (
-  <MainForm
-    formAction=""
-    submitButtonText="Send me a link"
-    formErrorMessageFromParent="This is an error"
-    formErrorContextFromParent={<>This is additional error context</>}
-  >
-    <EmailInput />
-  </MainForm>
+	<MainForm
+		formAction=""
+		submitButtonText="Send me a link"
+		formErrorMessageFromParent="This is an error"
+		formErrorContextFromParent={<>This is additional error context</>}
+	>
+		<EmailInput />
+	</MainForm>
 );
 FormWithError.storyName = 'FormWithError';

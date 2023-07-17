@@ -2,9 +2,9 @@ import { RoutePaths } from '@/shared/model/Routes';
 import type Redis from 'ioredis';
 import { z } from 'zod';
 import {
-  bucketSchema,
-  rateLimiterConfigurationSchema,
-  routeBucketsConfigurationSchema,
+	bucketSchema,
+	rateLimiterConfigurationSchema,
+	routeBucketsConfigurationSchema,
 } from './configurationValidator';
 
 /**
@@ -27,9 +27,9 @@ import {
  * @param timeLeftUntilExpiry The time left in ms before the bucket contents are deleted. This is stored and managed by Redis and read using the pttl command.
  */
 export interface ParsedRateLimitBucket {
-  redisKey: string;
-  tokenData?: RateLimitBucketContents;
-  timeLeftUntilExpiry?: number;
+	redisKey: string;
+	tokenData?: RateLimitBucketContents;
+	timeLeftUntilExpiry?: number;
 }
 
 /**
@@ -41,19 +41,19 @@ export interface ParsedRateLimitBucket {
  * @param maximumTimeBeforeExpiry The maximum time in seconds after creation before the bucket records are deleted.
  */
 export interface RateLimitBucketContents {
-  tokens: number;
-  maximumTimeBeforeExpiry: number;
+	tokens: number;
+	maximumTimeBeforeExpiry: number;
 }
 
 /**
  * Represents the result of reading and subsequently parsing the buckets stored in Redis.
  */
 export interface ParsedRateLimitBuckets {
-  accessToken: ParsedRateLimitBucket | undefined;
-  oktaIdentifier: ParsedRateLimitBucket | undefined;
-  email: ParsedRateLimitBucket | undefined;
-  ip: ParsedRateLimitBucket | undefined;
-  global: ParsedRateLimitBucket;
+	accessToken: ParsedRateLimitBucket | undefined;
+	oktaIdentifier: ParsedRateLimitBucket | undefined;
+	email: ParsedRateLimitBucket | undefined;
+	ip: ParsedRateLimitBucket | undefined;
+	global: ParsedRateLimitBucket;
 }
 
 /**
@@ -62,7 +62,7 @@ export interface ParsedRateLimitBuckets {
  * Types generated using the zod config validation schema.
  */
 export type RateLimiterConfiguration = z.infer<
-  typeof rateLimiterConfigurationSchema
+	typeof rateLimiterConfigurationSchema
 >;
 
 /**
@@ -73,7 +73,7 @@ export type RateLimiterConfiguration = z.infer<
  * Types generated using the zod config validation schema.
  */
 export type RateLimiterBucketsConfiguration = z.infer<
-  typeof routeBucketsConfigurationSchema
+	typeof routeBucketsConfigurationSchema
 >;
 
 /**
@@ -97,10 +97,10 @@ export type RateLimiterBucketConfiguration = z.infer<typeof bucketSchema>;
  * @param oktaIdentifier An okta id to rate limit against.
  */
 export interface BucketValues {
-  ip?: string;
-  email?: string;
-  accessToken?: string;
-  oktaIdentifier?: string;
+	ip?: string;
+	email?: string;
+	accessToken?: string;
+	oktaIdentifier?: string;
 }
 
 /**
@@ -112,45 +112,45 @@ export interface BucketValues {
  * @param bucketValues Optional values for each bucket to deduct tokens against.
  */
 export interface RateLimitParameters {
-  route: RoutePaths;
-  redisClient: Redis;
-  bucketConfiguration: RateLimiterBucketsConfiguration;
-  bucketValues?: BucketValues;
+	route: RoutePaths;
+	redisClient: Redis;
+	bucketConfiguration: RateLimiterBucketsConfiguration;
+	bucketValues?: BucketValues;
 }
 
 export interface BucketKeys {
-  accessTokenKey?: string;
-  oktaIdentifierKey?: string;
-  emailKey?: string;
-  ipKey?: string;
-  globalKey: string;
+	accessTokenKey?: string;
+	oktaIdentifierKey?: string;
+	emailKey?: string;
+	ipKey?: string;
+	globalKey: string;
 }
 
 /**
  * Union type representing all buckets available for rate limiting.
  */
 export type BucketType =
-  | 'email'
-  | 'global'
-  | 'ip'
-  | 'accessToken'
-  | 'oktaIdentifier';
+	| 'email'
+	| 'global'
+	| 'ip'
+	| 'accessToken'
+	| 'oktaIdentifier';
 
 /**
  * Container for two promises holding the state of the pipelined read request sent to Redis.
  */
 export type PipelinedBucketData = {
-  redisKey: string;
-  tokenData: RedisTokenDataPromise;
-  timeLeftUntilExpiry: RedisTimeUntilExpiryPromise;
+	redisKey: string;
+	tokenData: RedisTokenDataPromise;
+	timeLeftUntilExpiry: RedisTimeUntilExpiryPromise;
 };
 
 type RedisTokenDataPromise = Promise<{
-  error: Error | null;
-  data: string | null;
+	error: Error | null;
+	data: string | null;
 }>;
 
 type RedisTimeUntilExpiryPromise = Promise<{
-  error: Error | null;
-  data: number | null;
+	error: Error | null;
+	data: number | null;
 }>;

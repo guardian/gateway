@@ -4,83 +4,83 @@ import { space, error, neutral, textSans } from '@guardian/source-foundations';
 import { SvgAlertTriangle } from '@guardian/source-react-components';
 import { ErrorLink } from '@/client/lib/ErrorLink';
 import {
-  gridItem,
-  gridItemColumnConsents,
-  gridRow,
-  COLUMNS,
+	gridItem,
+	gridItemColumnConsents,
+	gridRow,
+	COLUMNS,
 } from '@/client/styles/Grid';
 import { ExternalLink } from '@/client/components/ExternalLink';
 
 interface GlobalErrorProps {
-  error: string;
-  link: ErrorLink;
-  left?: boolean;
+	error: string;
+	link: ErrorLink;
+	left?: boolean;
 }
 
 const textColour = css`
-  color: ${neutral[100]};
+	color: ${neutral[100]};
 `;
 
 const errorDiv = (addSidePadding: boolean) => css`
-  padding: ${space[2]}px ${addSidePadding ? space[3] : 0}px;
-  background-color: ${error[400]};
-  width: 100%;
-  text-align: center;
+	padding: ${space[2]}px ${addSidePadding ? space[3] : 0}px;
+	background-color: ${error[400]};
+	width: 100%;
+	text-align: center;
 `;
 
 const errorP = (left = false) => css`
-  display: flex;
-  justify-content: ${left ? 'left' : 'center'};
-  text-align: left;
-  margin: 0;
-  ${textColour}
-  ${textSans.medium()}
+	display: flex;
+	justify-content: ${left ? 'left' : 'center'};
+	text-align: left;
+	margin: 0;
+	${textColour}
+	${textSans.medium()}
 
   svg {
-    flex: 0 0 auto;
-    width: 30px;
-    height: 30px;
-    fill: currentColor;
-    vertical-align: middle;
-    margin-right: ${space[1]}px;
-  }
+		flex: 0 0 auto;
+		width: 30px;
+		height: 30px;
+		fill: currentColor;
+		vertical-align: middle;
+		margin-right: ${space[1]}px;
+	}
 `;
 
 const errorLink = css`
-  ${textColour}
+	${textColour}
 
-  :hover {
-    ${textColour}
-  }
+	:hover {
+		${textColour}
+	}
 `;
 
 export const GlobalError = ({ error, link, left }: GlobalErrorProps) => {
-  const row = left
-    ? css`
-        ${gridRow}
-        margin: 0 auto;
-      `
-    : null;
-  const item = left
-    ? gridItem({
-        ...gridItemColumnConsents,
-        ...{ WIDE: { start: 1, span: COLUMNS.WIDE } },
-      })
-    : null;
-  return (
-    <div css={errorDiv(!left)} role="complementary">
-      <div css={row}>
-        <div css={[errorP(left), item]}>
-          <SvgAlertTriangle />
-          <div>
-            {error}
-            &nbsp;
-            <ExternalLink href={link.link} css={errorLink} target="_blank">
-              {link.linkText}
-            </ExternalLink>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+	const row = left
+		? css`
+				${gridRow}
+				margin: 0 auto;
+		  `
+		: null;
+	const item = left
+		? gridItem({
+				...gridItemColumnConsents,
+				...{ WIDE: { start: 1, span: COLUMNS.WIDE } },
+		  })
+		: null;
+	return (
+		<div css={errorDiv(!left)} role="complementary">
+			<div css={row}>
+				<div css={[errorP(left), item]}>
+					<SvgAlertTriangle />
+					<div>
+						{error}
+						&nbsp;
+						<ExternalLink href={link.link} css={errorLink} target="_blank">
+							{link.linkText}
+						</ExternalLink>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 };

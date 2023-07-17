@@ -1,11 +1,11 @@
 import { Link, Message } from 'cypress-mailosaur';
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace Cypress {
-    interface Chainable {
-      checkForEmailAndGetDetails: typeof checkForEmailAndGetDetails;
-    }
-  }
+	// eslint-disable-next-line @typescript-eslint/no-namespace
+	namespace Cypress {
+		interface Chainable {
+			checkForEmailAndGetDetails: typeof checkForEmailAndGetDetails;
+		}
+	}
 }
 
 /**
@@ -18,34 +18,34 @@ declare global {
  * @returns The email details.
  */
 export const checkForEmailAndGetDetails = (
-  sentTo: string,
-  receivedAfter?: Date,
-  tokenMatcher?: RegExp,
-  deleteAfter = true,
+	sentTo: string,
+	receivedAfter?: Date,
+	tokenMatcher?: RegExp,
+	deleteAfter = true,
 ) => {
-  return cy
-    .mailosaurGetMessage(
-      Cypress.env('MAILOSAUR_SERVER_ID'),
-      { sentTo },
-      {
-        receivedAfter,
-      },
-    )
-    .then((message: Message) => {
-      return getEmailDetails(message, tokenMatcher).then((details) => {
-        if (deleteAfter) {
-          cy.mailosaurDeleteMessage(details.id);
-        }
-        return cy.wrap(details);
-      });
-    });
+	return cy
+		.mailosaurGetMessage(
+			Cypress.env('MAILOSAUR_SERVER_ID'),
+			{ sentTo },
+			{
+				receivedAfter,
+			},
+		)
+		.then((message: Message) => {
+			return getEmailDetails(message, tokenMatcher).then((details) => {
+				if (deleteAfter) {
+					cy.mailosaurDeleteMessage(details.id);
+				}
+				return cy.wrap(details);
+			});
+		});
 };
 
 type EmailDetails = {
-  id: string;
-  body: string;
-  token?: string;
-  links: Link[];
+	id: string;
+	body: string;
+	token?: string;
+	links: Link[];
 };
 
 /**
@@ -56,22 +56,22 @@ type EmailDetails = {
  * @returns The email details.
  */
 const getEmailDetails = (email: Message, tokenMatcher?: RegExp) => {
-  const { id, html } = email;
-  const { body, links } = html || {};
-  if (id === undefined || body === undefined || links === undefined) {
-    throw new Error('Email details not found');
-  }
-  // eslint-disable-next-line functional/no-let
-  let token = undefined;
-  if (tokenMatcher) {
-    const match = body.match(tokenMatcher);
-    if (match === null) {
-      throw new Error(
-        'Unable to find token in the email body with the given regex',
-      );
-    }
-    token = match[1];
-  }
+	const { id, html } = email;
+	const { body, links } = html || {};
+	if (id === undefined || body === undefined || links === undefined) {
+		throw new Error('Email details not found');
+	}
+	// eslint-disable-next-line functional/no-let
+	let token = undefined;
+	if (tokenMatcher) {
+		const match = body.match(tokenMatcher);
+		if (match === null) {
+			throw new Error(
+				'Unable to find token in the email body with the given regex',
+			);
+		}
+		token = match[1];
+	}
 
-  return cy.wrap<EmailDetails>({ id, body, token, links });
+	return cy.wrap<EmailDetails>({ id, body, token, links });
 };

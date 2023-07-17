@@ -1,10 +1,10 @@
 {
-  "code": 404,
-  "response": {
-    "errorCode": "E0000007",
-    "errorSummary": "Not found: Resource not found: example@example.com (User)",
-    "errorLink": "E0000007",
-    "errorId": "mocked-error-id",
-    "errorCauses": []
-  }
+	"code": 404,
+	"response": {
+		"errorCode": "E0000007",
+		"errorSummary": "Not found: Resource not found: example@example.com (User)",
+		"errorLink": "E0000007",
+		"errorId": "mocked-error-id",
+		"errorCauses": []
+	}
 }
