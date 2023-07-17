@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-duplicate-enum-values */
 import type { RateLimiterConfiguration } from '@/server/lib/rate-limit';
 
 export type Stage = 'DEV' | 'CODE' | 'PROD';
