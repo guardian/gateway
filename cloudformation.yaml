@@ -554,7 +554,7 @@ Resources:
       InsufficientDataActions:
         - !Ref 'TopicSendEmail'
       ComparisonOperator: GreaterThanOrEqualToThreshold
-      Threshold: 3
+      Threshold: 15
       EvaluationPeriods: 5
       TreatMissingData: notBreaching
       Metrics:
