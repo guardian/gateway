@@ -15,8 +15,8 @@ describe('routeUtils', () => {
 			expect(output).toEqual('/reset-password/tokenValue');
 		});
 		test('a non-parameterised path requires no object', () => {
-			const output = buildUrl('/consents/communication');
-			expect(output).toEqual('/consents/communication');
+			const output = buildUrl('/consents/our_content');
+			expect(output).toEqual('/consents/our_content');
 		});
 	});
 });

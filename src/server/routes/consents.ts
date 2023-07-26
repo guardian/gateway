@@ -20,7 +20,7 @@ import {
 	CONSENTS_COMMUNICATION_PAGE,
 	CONSENTS_DATA_PAGE,
 } from '@/shared/model/Consent';
-import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
+// import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
 import {
 	RequestState,
 	ResponseWithRequestState,
@@ -56,6 +56,8 @@ import {
 	updateEncryptedStateCookie,
 } from '../lib/encryptedStateCookie';
 import { isStringBoolean } from '../lib/isStringBoolean';
+import { abTestApiForMvtId } from '@/shared/model/experiments/abTests';
+import { abSimplifyRegistrationFlowTest } from '@/shared/model/experiments/tests/abSimplifyRegistrationFlowTest';
 
 interface ConsentPage {
 	page: ConsentPath;
@@ -127,7 +129,7 @@ const getUserNewsletterSubscriptions = async ({
 		})
 		.filter(Boolean) as NewsLetter[];
 };
-
+// TODO - manage this duplication
 export const consentPages: ConsentPage[] = [
 	{
 		page: 'communication',
@@ -304,21 +306,186 @@ export const consentPages: ConsentPage[] = [
 	},
 ];
 
-router.get('/consents', loginMiddlewareOAuth, (_: Request, res: Response) => {
-	const url = addQueryParamsToPath(
-		`${consentPages[0].path}`,
-		res.locals.queryParams,
-	);
+export const consentPagesAbTest: ConsentPage[] = [
+	{
+		page: 'our_content',
+		path: '/consents/our_content',
+		pageTitle: CONSENTS_PAGES.OUR_CONTENT,
+		read: async ({ ip, sc_gu_u, geo, request_id, accessToken }) => ({
+			consents: await getUserConsentsForPage({
+				pageConsents: [
+					...CONSENTS_COMMUNICATION_PAGE,
+					...(ConsentsOnNewslettersPageMap.get(geo) as string[]),
+				],
+				ip,
+				sc_gu_u,
+				request_id,
+				accessToken,
+			}),
+			newsletters: await getUserNewsletterSubscriptions({
+				newslettersOnPage: NewsletterMap.get(geo) as string[],
+				ip,
+				sc_gu_u,
+				request_id,
+				accessToken,
+			}),
+			page: 'our_content',
+		}),
+		update: async ({ ip, sc_gu_u, geo, body, accessToken, request_id }) => {
+			const consents = [
+				...CONSENTS_COMMUNICATION_PAGE.map((id) => ({
+					id,
+					consented: getConsentValueFromRequestBody(id, body),
+				})),
+				...(ConsentsOnNewslettersPageMap.get(geo) as string[]).map((id) => ({
+					id,
+					consented: getConsentValueFromRequestBody(id, body),
+				})),
+			];
 
-	res.redirect(303, url);
-});
+			await patchConsents({
+				ip,
+				sc_gu_u,
+				payload: consents,
+				request_id,
+				accessToken,
+			});
+
+			const userNewsletterSubscriptions = await getUserNewsletterSubscriptions({
+				newslettersOnPage: ALL_NEWSLETTER_IDS,
+				ip,
+				sc_gu_u,
+				accessToken,
+				request_id,
+			});
+
+			// get a list of newsletters to update that have changed from the users current subscription
+			// if they have changed then set them to subscribe/unsubscribe
+			const newsletterSubscriptionsToUpdate =
+				newslettersSubscriptionsFromFormBody(body).filter((newSubscription) => {
+					// find current user subscription status for a newsletter
+					const currentSubscription = userNewsletterSubscriptions.find(
+						({ id: userNewsletterId }) =>
+							userNewsletterId === newSubscription.id,
+					);
+
+					// check if a subscription exists
+					if (currentSubscription) {
+						if (
+							// previously subscribed AND now wants to unsubscribe
+							(currentSubscription.subscribed && !newSubscription.subscribed) ||
+							// OR previously not subscribed AND wants to subscribe
+							(!currentSubscription.subscribed && newSubscription.subscribed)
+						) {
+							// then include in newsletterSubscriptionsToUpdate
+							return true;
+						}
+					}
+
+					// otherwise don't include in the update
+					return false;
+				});
+
+			await patchNewsletters({
+				ip,
+				sc_gu_u,
+				accessToken,
+				payload: newsletterSubscriptionsToUpdate,
+				request_id,
+			});
+		},
+	},
+	{
+		page: 'data',
+		path: '/consents/data',
+		pageTitle: CONSENTS_PAGES.YOUR_DATA,
+		read: async ({ ip, sc_gu_u, request_id, accessToken }) => ({
+			consents: await getUserConsentsForPage({
+				pageConsents: CONSENTS_DATA_PAGE,
+				ip,
+				sc_gu_u,
+				request_id,
+				accessToken,
+			}),
+			page: 'data',
+			previousPage: 'our_content',
+		}),
+		update: async ({ ip, sc_gu_u, body, accessToken, request_id }) => {
+			const consents = CONSENTS_DATA_PAGE.map((id) => ({
+				id,
+				consented: getConsentValueFromRequestBody(id, body),
+			}));
+
+			await patchConsents({
+				ip,
+				sc_gu_u,
+				accessToken,
+				payload: consents,
+				request_id,
+			});
+		},
+	},
+	{
+		page: 'review',
+		path: '/consents/review',
+		pageTitle: CONSENTS_PAGES.REVIEW,
+		read: async ({ ip, sc_gu_u, geo, request_id, accessToken }) => {
+			const ALL_CONSENT = [
+				...CONSENTS_DATA_PAGE,
+				...(ConsentsOnNewslettersPageMap.get(geo) as string[]),
+				...CONSENTS_COMMUNICATION_PAGE,
+			];
+
+			return {
+				page: 'review',
+				consents: await getUserConsentsForPage({
+					pageConsents: ALL_CONSENT,
+					ip,
+					sc_gu_u,
+					request_id,
+					accessToken,
+				}),
+				newsletters: await getUserNewsletterSubscriptions({
+					newslettersOnPage: NewsletterMap.get(geo) as string[],
+					ip,
+					sc_gu_u,
+					request_id,
+					accessToken,
+				}),
+			};
+		},
+	},
+];
+
+const getConsentPages: (mvt: number) => ConsentPage[] = (mvt) => {
+	const ab = abTestApiForMvtId(mvt);
+
+	const isInABTestVariant = ab.isUserInVariant(
+		abSimplifyRegistrationFlowTest.id,
+		abSimplifyRegistrationFlowTest.variants[0].id,
+	);
+	if (isInABTestVariant) return consentPagesAbTest;
+	else return consentPages;
+};
+router.get(
+	'/consents',
+	// loginMiddlewareOAuth,
+	(req: Request, res: Response) => {
+		const url = addQueryParamsToPath(
+			`${getConsentPages(1)[0].path}`,
+			res.locals.queryParams,
+		);
+		res.redirect(303, url);
+	},
+);
 
 router.get(
 	'/consents/:page',
-	loginMiddlewareOAuth,
+	// loginMiddlewareOAuth,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		let state = res.locals;
 		const sc_gu_u = req.cookies.SC_GU_U;
+		const consentPages = getConsentPages(1);
 
 		const { emailVerified } = state.queryParams;
 
@@ -391,7 +558,6 @@ router.get(
 			},
 			{ page },
 		);
-
 		trackMetric(
 			consentsPageMetric(page, 'Get', status === 200 ? 'Success' : 'Failure'),
 		);
@@ -406,7 +572,7 @@ router.get(
 // On the first page ("Stay in touch") this POST will also post a registration_location update
 router.post(
 	'/consents/:page',
-	loginMiddlewareOAuth,
+	// loginMiddlewareOAuth,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		let state = res.locals;
 

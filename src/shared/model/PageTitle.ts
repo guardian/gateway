@@ -21,6 +21,7 @@ export type PageTitle =
 	| 'Resend Welcome Email'
 	| 'Onboarding'
 	| 'Your data'
+	| 'Our content'
 	| 'Stay in touch'
 	| 'Newsletters'
 	| 'Review'
