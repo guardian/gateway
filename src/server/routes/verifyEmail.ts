@@ -12,7 +12,6 @@ import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { ApiError } from '@/server/models/Error';
 import { ResponseWithRequestState } from '@/server/models/Express';
-import { consentPages } from '@/server/routes/consents';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { ConsentsErrors, VerifyEmailErrors } from '@/shared/model/Errors';
 import { EMAIL_SENT } from '@/shared/model/Success';
@@ -21,6 +20,7 @@ import { Request, Router } from 'express';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { clearOktaCookies } from './signOut';
 import { mergeRequestState } from '@/server/lib/requestState';
+import { ConsentPages } from './consents';
 
 const router = Router();
 
@@ -161,7 +161,7 @@ router.get(
 	'/verify-email/:token',
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const { token } = req.params;
-
+		const consentPages = new ConsentPages(res.locals.abTesting).pages;
 		try {
 			const cookies = await verifyEmail(token, req.ip, res.locals.requestId);
 			trackMetric('EmailValidated::Success');

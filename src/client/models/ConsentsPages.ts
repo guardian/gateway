@@ -1,7 +1,7 @@
 import { abTestApiForMvtId } from '@/shared/model/experiments/abTests';
 import { abSimplifyRegistrationFlowTest } from '@/shared/model/experiments/tests/abSimplifyRegistrationFlowTest';
 
-const ab = abTestApiForMvtId(1);
+const ab = abTestApiForMvtId(0);
 
 const isInABTestVariant = ab.isUserInVariant(
 	abSimplifyRegistrationFlowTest.id,
