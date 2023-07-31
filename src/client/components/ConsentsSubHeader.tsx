@@ -15,9 +15,11 @@ import {
 	h1,
 	h1ResponsiveText,
 } from '@/client/styles/Consents';
-import { CONSENTS_PAGES_ARR } from '@/client/models/ConsentsPages';
+import { getConsentsPageArr } from '@/client/models/ConsentsPages';
 import { ErrorSummary } from '@guardian/source-react-components-development-kitchen';
 import { IsNativeApp } from '@/shared/model/ClientState';
+import { useAB } from '@guardian/ab-react';
+import { abSimplifyRegistrationFlowTest } from '@/shared/model/experiments/tests/abSimplifyRegistrationFlowTest';
 
 type Props = {
 	autoRow: AutoRow;
@@ -30,7 +32,7 @@ type Props = {
 
 type PageStatus = 'active' | 'complete' | 'pending';
 
-const CONSENTS_PAGES_COUNT = CONSENTS_PAGES_ARR.length;
+
 const COMPLETED_BORDER_SIZE = 2;
 const COMPLETED_COLOR = brand[400];
 const PENDING_BORDER_SIZE = 1;
@@ -38,8 +40,8 @@ const PENDING_COLOR = neutral[60];
 const CIRCLE_DIAMETER = 12;
 const CIRCLE_RADIUS = CIRCLE_DIAMETER / 2;
 
-const ol = (active: number) => {
-	const progressSections = CONSENTS_PAGES_COUNT - 1;
+const ol = (active: number, consentsPagesCount: number) => {
+	const progressSections = consentsPagesCount - 1;
 	const progressPercentage = Math.min((active / progressSections) * 100, 100);
 	const remainingPercentage = 100 - progressPercentage;
 
@@ -82,8 +84,8 @@ const ol = (active: number) => {
 	`;
 };
 
-const li = (index: number, status: PageStatus) => {
-	const progressSections = CONSENTS_PAGES_COUNT - 1;
+const li = (index: number, status: PageStatus, consentsPagesCount: number) => {
+	const progressSections = consentsPagesCount - 1;
 	const position = index / progressSections;
 
 	return css`
@@ -170,13 +172,21 @@ export const ConsentsSubHeader = ({
 	errorMessage,
 	isNativeApp,
 }: Props) => {
+	const ABTestAPI = useAB();
+	const isInABTestVariant = ABTestAPI.isUserInVariant(
+		abSimplifyRegistrationFlowTest.id,
+		abSimplifyRegistrationFlowTest.variants[0].id,
+	);
+	const CONSENTS_PAGES_ARR = getConsentsPageArr(isInABTestVariant);
+	const CONSENTS_PAGES_COUNT = CONSENTS_PAGES_ARR.length;
+
 	const active = current
 		? (CONSENTS_PAGES_ARR as string[]).indexOf(current)
 		: 0;
 
 	const pageProgression = current && (
 		<div css={[progressWrapper, autoRow()]}>
-			<ol css={ol(active)}>
+			<ol css={ol(active, CONSENTS_PAGES_COUNT)}>
 				{CONSENTS_PAGES_ARR.map((page, index) => {
 					const status: PageStatus = (() => {
 						if (index === active) {
@@ -192,7 +202,7 @@ export const ConsentsSubHeader = ({
 						complete: 'Completed: ',
 					}[status as string];
 					return (
-						<li key={page} css={li(index, status)}>
+						<li key={page} css={li(index, status, CONSENTS_PAGES_COUNT)}>
 							<span>
 								{screenReaderText && (
 									<span css={screenReaderTextStyles}>{screenReaderText}</span>

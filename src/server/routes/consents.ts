@@ -20,7 +20,7 @@ import {
 	CONSENTS_COMMUNICATION_PAGE,
 	CONSENTS_DATA_PAGE,
 } from '@/shared/model/Consent';
-// import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
+import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
 import {
 	ABTesting,
 	RequestState,
@@ -498,22 +498,18 @@ export class ConsentPages {
 	}
 }
 
-router.get(
-	'/consents',
-	// loginMiddlewareOAuth,
-	(req: Request, res: Response) => {
-		const consentPages = new ConsentPages(res.locals.abTesting).pages;
-		const url = addQueryParamsToPath(
-			`${consentPages[0].path}`,
-			res.locals.queryParams,
-		);
-		res.redirect(303, url);
-	},
-);
+router.get('/consents', loginMiddlewareOAuth, (req: Request, res: Response) => {
+	const consentPages = new ConsentPages(res.locals.abTesting).pages;
+	const url = addQueryParamsToPath(
+		`${consentPages[0].path}`,
+		res.locals.queryParams,
+	);
+	res.redirect(303, url);
+});
 
 router.get(
 	'/consents/:page',
-	// loginMiddlewareOAuth,
+	loginMiddlewareOAuth,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		let state = res.locals;
 		const sc_gu_u = req.cookies.SC_GU_U;
@@ -604,7 +600,7 @@ router.get(
 // On the first page ("Stay in touch") this POST will also post a registration_location update
 router.post(
 	'/consents/:page',
-	// loginMiddlewareOAuth,
+	loginMiddlewareOAuth,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		let state = res.locals;
 

@@ -298,7 +298,7 @@ describe('Onboarding flow', () => {
 				.should('have.attr', 'href')
 				.and('include', decodeURIComponent(returnUrl));
 		});
-		describe.only('AB Test 3 stage registration flow', () => {
+		describe('AB Test 3 stage registration flow', () => {
 			beforeEach(() => {
 				setMvtId('1');
 			});

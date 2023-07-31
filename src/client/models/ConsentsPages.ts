@@ -1,13 +1,3 @@
-import { abTestApiForMvtId } from '@/shared/model/experiments/abTests';
-import { abSimplifyRegistrationFlowTest } from '@/shared/model/experiments/tests/abSimplifyRegistrationFlowTest';
-
-const ab = abTestApiForMvtId(0);
-
-const isInABTestVariant = ab.isUserInVariant(
-	abSimplifyRegistrationFlowTest.id,
-	abSimplifyRegistrationFlowTest.variants[0].id,
-);
-
 export enum CONSENTS_PAGES {
 	DETAILS = 'Your details',
 	YOUR_DATA = 'Your data',
@@ -17,7 +7,7 @@ export enum CONSENTS_PAGES {
 	REVIEW = 'Review',
 }
 
-const getConsentsPageArr = () => {
+export const getConsentsPageArr = (isInABTestVariant: boolean) => {
 	if (isInABTestVariant)
 		return [
 			CONSENTS_PAGES.DETAILS,
@@ -32,5 +22,3 @@ const getConsentsPageArr = () => {
 			CONSENTS_PAGES.YOUR_DATA,
 		];
 };
-
-export const CONSENTS_PAGES_ARR = getConsentsPageArr();
