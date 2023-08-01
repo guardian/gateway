@@ -15,10 +15,10 @@ export const ChangeEmailComplete = ({
 }: ChangeEmailCompleteProps) => {
 	return (
 		<MainLayout pageHeader="Email changed">
-			<MainBodyText noMargin>
+			<MainBodyText noMarginBottom>
 				Success! Your email address has been updated.
 			</MainBodyText>
-			<MainBodyText noMargin>
+			<MainBodyText noMarginBottom>
 				<ExternalLinkButton
 					css={buttonStyles({ halfWidth: true })}
 					href={`${accountManagementUrl}/account-settings`}
@@ -28,7 +28,7 @@ export const ChangeEmailComplete = ({
 					Back to account details
 				</ExternalLinkButton>
 			</MainBodyText>
-			<MainBodyText noMargin>
+			<MainBodyText noMarginBottom>
 				<ExternalLinkButton
 					priority="tertiary"
 					css={buttonStyles({ halfWidth: true })}

@@ -18,7 +18,7 @@ type ResendEmailVerificationProps = {
 const LoggedOut = ({ signInPageUrl }: { signInPageUrl?: string }) => (
 	<MainLayout pageHeader="Link Expired">
 		<MainBodyText>Your email confirmation link has expired</MainBodyText>
-		<MainBodyText noMargin>
+		<MainBodyText noMarginBottom>
 			The link we sent you was valid for 60 minutes. Please sign in again and we
 			will resend a verification email.
 		</MainBodyText>

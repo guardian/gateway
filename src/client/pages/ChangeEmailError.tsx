@@ -13,11 +13,11 @@ export const ChangeEmailError = ({
 }: ChangeEmailErrorProps) => {
 	return (
 		<MainLayout pageHeader="Email change failed">
-			<MainBodyText noMargin>
+			<MainBodyText noMarginBottom>
 				The email change link you followed has expired or was invalid. Please
 				return to your account details to try again.
 			</MainBodyText>
-			<MainBodyText noMargin>
+			<MainBodyText noMarginBottom>
 				<ExternalLinkButton
 					css={buttonStyles({ halfWidth: true })}
 					href={`${accountManagementUrl}/account-settings`}

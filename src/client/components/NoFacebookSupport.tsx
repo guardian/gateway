@@ -25,7 +25,7 @@ export const NoFacebookSupport = ({ queryParams }: Props) => (
 			${fontStyles};
 			${styles};
 		`}
-		noMargin
+		noMarginBottom
 	>
 		<b>We no longer support authentication with Facebook.</b> Please sign in
 		above using the same email address as your Facebook account. If you

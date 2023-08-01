@@ -14,7 +14,7 @@ export const Default = () => (
 Default.storyName = 'with Default';
 
 export const NoMargin = () => (
-	<MainBodyText noMargin>
+	<MainBodyText noMarginBottom>
 		Here is some body text to use in the MainLayout, with no margin bottom.
 	</MainBodyText>
 );
@@ -33,7 +33,7 @@ export const Paragraphs = () => (
 			Here is some body text to use in the MainLayout.
 		</MainBodyText>
 		<MainBodyText marginTop>Here is some text with a margin top.</MainBodyText>
-		<MainBodyText noMargin>
+		<MainBodyText noMarginBottom>
 			Here is some text with no margin bottom.
 		</MainBodyText>
 		<MainBodyText>
