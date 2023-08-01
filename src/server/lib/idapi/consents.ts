@@ -37,7 +37,6 @@ const responseToEntity = (consent: ConsentAPIResponse): Consent => {
 
 const read = async (request_id?: string): Promise<Consent[]> => {
 	const options = APIGetOptions();
-
 	try {
 		return (
 			(await idapiFetch({

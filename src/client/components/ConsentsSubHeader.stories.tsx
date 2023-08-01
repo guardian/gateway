@@ -39,15 +39,31 @@ export const Password = () => (
 	/>
 );
 Password.storyName = 'With Password as current';
-
 export const Contact = () => (
+	<ConsentsSubHeader
+		autoRow={autoRow}
+		title="My Title"
+		current={CONSENTS_PAGES.CONTACT}
+	/>
+);
+Contact.storyName = 'With Contact as current';
+
+export const Newsletters = () => (
+	<ConsentsSubHeader
+		autoRow={autoRow}
+		title="My Title"
+		current={CONSENTS_PAGES.NEWSLETTERS}
+	/>
+);
+Newsletters.storyName = 'With Newsletters as current';
+export const OurContent = () => (
 	<ConsentsSubHeader
 		autoRow={autoRow}
 		title="My Title"
 		current={CONSENTS_PAGES.OUR_CONTENT}
 	/>
 );
-Contact.storyName = 'With Our content as current';
+OurContent.storyName = 'With Our content as current';
 
 export const YourData = () => (
 	<ConsentsSubHeader
