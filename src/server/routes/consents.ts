@@ -22,7 +22,6 @@ import {
 } from '@/shared/model/Consent';
 import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
 import {
-	ABTesting,
 	RequestState,
 	ResponseWithRequestState,
 } from '@/server/models/Express';
@@ -57,8 +56,8 @@ import {
 	updateEncryptedStateCookie,
 } from '../lib/encryptedStateCookie';
 import { isStringBoolean } from '../lib/isStringBoolean';
-import { abTestApiForMvtId } from '@/shared/model/experiments/abTests';
 import { abSimplifyRegistrationFlowTest } from '@/shared/model/experiments/tests/abSimplifyRegistrationFlowTest';
+import { ABTestAPI } from '@guardian/ab-core';
 
 interface ConsentPage {
 	page: ConsentPath;
@@ -394,17 +393,16 @@ const NEWSLETTERS: ConsentPage = {
 };
 export class ConsentPages {
 	pages: ConsentPage[];
-	inSimplifiyRegistrationFlowTest = (abTesting: ABTesting) => {
-		const ab = abTestApiForMvtId(abTesting.mvtId, abTesting.forcedTestVariants);
-		const isInABTestVariant = ab.isUserInVariant(
+	inSimplifyRegistrationFlowTest = () => {
+		const isInABTestVariant = this.ab.isUserInVariant(
 			abSimplifyRegistrationFlowTest.id,
 			abSimplifyRegistrationFlowTest.variants[0].id,
 		);
 		return isInABTestVariant;
 	};
 
-	constructor(abTesting: ABTesting) {
-		if (this.inSimplifiyRegistrationFlowTest(abTesting)) {
+	constructor(readonly ab: ABTestAPI) {
+		if (this.inSimplifyRegistrationFlowTest()) {
 			this.pages = [OUR_CONTENT, YOUR_DATA(OUR_CONTENT.page), REVIEW];
 		} else
 			this.pages = [
@@ -431,7 +429,7 @@ router.get(
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		let state = res.locals;
 		const sc_gu_u = req.cookies.SC_GU_U;
-		const consentPages = new ConsentPages(state.abTesting).pages;
+		const consentPages = new ConsentPages(state.abTestAPI).pages;
 
 		const { emailVerified } = state.queryParams;
 
@@ -527,7 +525,7 @@ router.post(
 
 		const { page } = req.params;
 		let status = 200;
-		const consentPages = new ConsentPages(state.abTesting).pages;
+		const consentPages = new ConsentPages(state.abTestAPI).pages;
 
 		const pageIndex = consentPages.findIndex((elem) => elem.page === page);
 		if (pageIndex === -1) {

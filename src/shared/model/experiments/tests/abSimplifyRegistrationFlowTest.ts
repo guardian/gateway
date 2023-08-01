@@ -21,5 +21,11 @@ export const abSimplifyRegistrationFlowTest: ABTest = {
 				return 'variant';
 			},
 		},
+		{
+			id: 'control', // toggle is on
+			test: (): string => {
+				return 'control';
+			},
+		},
 	],
 };

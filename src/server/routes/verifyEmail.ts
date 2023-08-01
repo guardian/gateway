@@ -161,7 +161,7 @@ router.get(
 	'/verify-email/:token',
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const { token } = req.params;
-		const consentPages = new ConsentPages(res.locals.abTesting).pages;
+		const consentPages = new ConsentPages(res.locals.abTestAPI).pages;
 		try {
 			const cookies = await verifyEmail(token, req.ip, res.locals.requestId);
 			trackMetric('EmailValidated::Success');

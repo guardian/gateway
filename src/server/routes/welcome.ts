@@ -124,7 +124,7 @@ router.get(
 
 // POST form handler to set password on welcome page
 router.post('/welcome/:token', (_: Request, res: ResponseWithRequestState) => {
-	const consentPages = new ConsentPages(res.locals.abTesting).pages;
+	const consentPages = new ConsentPages(res.locals.abTestAPI).pages;
 	setPasswordController('/welcome', 'Welcome', consentPages[0].path);
 });
 
