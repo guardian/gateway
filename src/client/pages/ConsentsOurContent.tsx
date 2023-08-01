@@ -79,7 +79,8 @@ export const ConsentsOurContent = ({ consents }: ConsentsNewslettersProps) => {
 				Thank you for registering
 			</h2>
 			<p css={[text, p, autoRow()]}>
-				Sign up to our emails to discover more about the things that matter most to you
+				Sign up to our emails to discover more about the things that matter most
+				to you
 			</p>
 			<ConsentsForm cssOverrides={autoRow()}>
 				{consents.map(({ type, consent }, i) => {

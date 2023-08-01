@@ -32,7 +32,6 @@ type Props = {
 
 type PageStatus = 'active' | 'complete' | 'pending';
 
-
 const COMPLETED_BORDER_SIZE = 2;
 const COMPLETED_COLOR = brand[400];
 const PENDING_BORDER_SIZE = 1;
