@@ -415,7 +415,7 @@ export class ConsentPages {
 }
 
 router.get('/consents', loginMiddlewareOAuth, (req: Request, res: Response) => {
-	const consentPages = new ConsentPages(res.locals.abTesting).pages;
+	const consentPages = new ConsentPages(res.locals.abTestAPI).pages;
 	const url = addQueryParamsToPath(
 		`${consentPages[0].path}`,
 		res.locals.queryParams,

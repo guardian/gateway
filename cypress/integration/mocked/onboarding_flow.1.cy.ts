@@ -300,7 +300,7 @@ describe('Onboarding flow', () => {
 		});
 		describe('AB Test 3 stage registration flow', () => {
 			beforeEach(() => {
-				setMvtId('1');
+				setMvtId('2');
 			});
 			it('full 3 stage flow, opt in to marketing and newsletters, preserve url', () => {
 				const newslettersToSubscribe = [
