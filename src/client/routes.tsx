@@ -221,6 +221,16 @@ const routes: Array<{
 			<EmailSentPage formTrackingName="consent-resend" showHelp={true} />
 		),
 	},
+	{
+		path: '/delete',
+		// TODO
+		element: <MaintenancePage />,
+	},
+	{
+		path: '/delete/complete',
+		// TODO
+		element: <MaintenancePage />,
+	},
 ];
 
 interface Props {

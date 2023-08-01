@@ -19,6 +19,7 @@ import { default as agree } from './agree';
 import { default as changeEmail } from './changeEmail';
 import { default as subscriptions } from './subscriptions';
 import { default as consentToken } from './consentToken';
+import { default as deleteAccount } from './delete';
 
 const { okta } = getConfiguration();
 
@@ -78,6 +79,9 @@ if (okta.enabled) {
 
 // consent token routes
 uncachedRoutes.use(consentToken);
+
+// delete account routes
+uncachedRoutes.use(deleteAccount);
 
 // email template routes
 router.use(emailTemplates);

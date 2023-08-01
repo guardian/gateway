@@ -21,6 +21,8 @@ export const ValidRoutePathsArray = [
 	'/consent-token/error',
 	'/consent-token/resend',
 	'/consent-token/email-sent',
+	'/delete',
+	'/delete/complete',
 	'/error',
 	'/magic-link', //this is not being used until MVP4
 	'/magic-link/email-sent', //this is not being used until MVP4
