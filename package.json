@@ -132,7 +132,7 @@
     "@faire/mjml-react": "^3.3.0",
     "@guardian/ab-core": "5.0.0",
     "@guardian/ab-react": "4.0.1",
-    "@guardian/consent-management-platform": "^13.6.0",
+    "@guardian/consent-management-platform": "^13.6.1",
     "@guardian/libs": "^15.1.0",
     "@guardian/source-foundations": "^12.0.0",
     "@guardian/source-react-components": "^15.0.1",
