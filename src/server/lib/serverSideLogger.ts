@@ -59,7 +59,10 @@ class KinesisTransport extends Transport {
 					})
 					.catch((error: unknown) => {
 						if (error instanceof Error) {
-							if (error.name === 'ExpiredTokenException' && stage === 'DEV') {
+							if (
+								error.name === 'CredentialsProviderError' &&
+								stage === 'DEV'
+							) {
 								console.log(error.message);
 								console.warn(
 									'AWS Credentials Expired. Have you added `Identity` Janus credentials?',
