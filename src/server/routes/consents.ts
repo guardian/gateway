@@ -1,5 +1,5 @@
 /* eslint-disable functional/no-let */
-import { Request, Response } from 'express';
+import { Request } from 'express';
 
 import { renderer } from '@/server/lib/renderer';
 
@@ -401,27 +401,36 @@ export class ConsentPages {
 		return isInABTestVariant;
 	};
 
+	threeStageAbTestPages = [OUR_CONTENT, YOUR_DATA(OUR_CONTENT.page), REVIEW];
+	originalPages = [
+		COMMUNICATION,
+		NEWSLETTERS,
+		YOUR_DATA(NEWSLETTERS.page),
+		REVIEW,
+	];
 	constructor(readonly ab: ABTestAPI) {
+		/***
+		  If user is in the AB test bucket, show them the 3 step flow,
+		  otherwise show the original 4 step flow
+		***/
 		if (this.inSimplifyRegistrationFlowTest()) {
-			this.pages = [OUR_CONTENT, YOUR_DATA(OUR_CONTENT.page), REVIEW];
-		} else
-			this.pages = [
-				COMMUNICATION,
-				NEWSLETTERS,
-				YOUR_DATA(NEWSLETTERS.page),
-				REVIEW,
-			];
+			this.pages = this.threeStageAbTestPages;
+		} else this.pages = this.originalPages;
 	}
 }
 
-router.get('/consents', loginMiddlewareOAuth, (req: Request, res: Response) => {
-	const consentPages = new ConsentPages(res.locals.abTestAPI).pages;
-	const url = addQueryParamsToPath(
-		`${consentPages[0].path}`,
-		res.locals.queryParams,
-	);
-	res.redirect(303, url);
-});
+router.get(
+	'/consents',
+	loginMiddlewareOAuth,
+	(req: Request, res: ResponseWithRequestState) => {
+		const consentPages = new ConsentPages(res.locals.abTestAPI).pages;
+		const url = addQueryParamsToPath(
+			`${consentPages[0].path}`,
+			res.locals.queryParams,
+		);
+		res.redirect(303, url);
+	},
+);
 
 router.get(
 	'/consents/:page',
