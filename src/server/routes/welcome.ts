@@ -123,10 +123,14 @@ router.get(
 );
 
 // POST form handler to set password on welcome page
-router.post('/welcome/:token', (_: Request, res: ResponseWithRequestState) => {
-	const consentPages = new ConsentPages(res.locals.abTestAPI).pages;
-	setPasswordController('/welcome', 'Welcome', consentPages[0].path);
-});
+router.post(
+	'/welcome/:token',
+	setPasswordController(
+		'/welcome',
+		'Welcome',
+		(res) => new ConsentPages(res.locals.abTestAPI).pages[0].path,
+	),
+);
 
 const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 	const { email } = req.body;

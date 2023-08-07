@@ -158,7 +158,7 @@ router.post(
 	setPasswordController(
 		'/set-password',
 		'Create Password',
-		'/set-password/complete',
+		() => '/set-password/complete',
 	),
 );
 
