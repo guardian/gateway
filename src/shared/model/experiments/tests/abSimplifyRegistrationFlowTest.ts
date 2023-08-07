@@ -6,7 +6,7 @@ export const abSimplifyRegistrationFlowTest: ABTest = {
 	expiry: '2023-09-30', // Remember that the server side test expiry can be different
 	author: 'Personalisation',
 	description: '',
-	audience: 0.5,
+	audience: 1.0,
 	audienceOffset: 0,
 	successMeasure:
 		'We believe that shortening the onboarding flow by having 3 steps rather than 4 will increase the completion rate of registration by X%',
