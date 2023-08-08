@@ -1,5 +1,4 @@
 import { PageData } from '@/shared/model/ClientState';
-import { Newsletters } from '@/shared/model/Newsletter';
 import { sendOphanInteractionEvent } from './ophan';
 
 const trackInputElementInteraction = (
@@ -64,19 +63,6 @@ const newslettersFormSubmitOphanTracking = (
 			}
 		});
 	}
-
-	// @AB_TEST: Default Weekly Newsletter Test: required for tracking
-	inputElems.forEach((elem) => {
-		const defaultWeeklyNewsletter =
-			elem.name === Newsletters.SATURDAY_ROUNDUP_TRIAL;
-		if (defaultWeeklyNewsletter) {
-			trackInputElementInteraction(
-				elem,
-				'newsletter',
-				'saturday-roundup-trial',
-			);
-		}
-	});
 };
 
 // handle generic form (direct to one of the two below based on page)
