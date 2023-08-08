@@ -22,7 +22,7 @@ const confirmationSpanDefinition = {
 const autoRow = getAutoRow(1, confirmationSpanDefinition);
 
 export default {
-	title: 'Components/ConsentsSubHeader',
+	title: 'Components/ConsentsSubHeaderAbRegistrationFlowTest',
 	component: ConsentsSubHeader,
 } as Meta;
 
@@ -30,7 +30,7 @@ export const Default = () => (
 	<ConsentsSubHeader
 		autoRow={autoRow}
 		title="My Title"
-		isInAbSimplifyRegistrationFlowTest={false}
+		isInAbSimplifyRegistrationFlowTest={true}
 	/>
 );
 Default.storyName = 'With defaults';
@@ -40,36 +40,27 @@ export const Password = () => (
 		autoRow={autoRow}
 		title="My Title"
 		current={CONSENTS_PAGES.DETAILS}
-		isInAbSimplifyRegistrationFlowTest={false}
+		isInAbSimplifyRegistrationFlowTest={true}
 	/>
 );
 Password.storyName = 'With Password as current';
-export const Contact = () => (
-	<ConsentsSubHeader
-		autoRow={autoRow}
-		title="My Title"
-		current={CONSENTS_PAGES.CONTACT}
-		isInAbSimplifyRegistrationFlowTest={false}
-	/>
-);
-Contact.storyName = 'With Contact as current';
 
-export const Newsletters = () => (
+export const OurContent = () => (
 	<ConsentsSubHeader
 		autoRow={autoRow}
 		title="My Title"
-		current={CONSENTS_PAGES.NEWSLETTERS}
-		isInAbSimplifyRegistrationFlowTest={false}
+		current={CONSENTS_PAGES.OUR_CONTENT}
+		isInAbSimplifyRegistrationFlowTest={true}
 	/>
 );
-Newsletters.storyName = 'With Newsletters as current';
+OurContent.storyName = 'With Our content as current';
 
 export const YourData = () => (
 	<ConsentsSubHeader
 		autoRow={autoRow}
 		title="My Title"
 		current={CONSENTS_PAGES.YOUR_DATA}
-		isInAbSimplifyRegistrationFlowTest={false}
+		isInAbSimplifyRegistrationFlowTest={true}
 	/>
 );
 YourData.storyName = 'With Your Data as current';

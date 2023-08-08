@@ -18,8 +18,6 @@ import {
 import { getConsentsPageArr } from '@/client/models/ConsentsPages';
 import { ErrorSummary } from '@guardian/source-react-components-development-kitchen';
 import { IsNativeApp } from '@/shared/model/ClientState';
-import { useAB } from '@guardian/ab-react';
-import { abSimplifyRegistrationFlowTest } from '@/shared/model/experiments/tests/abSimplifyRegistrationFlowTest';
 
 type Props = {
 	autoRow: AutoRow;
@@ -28,6 +26,7 @@ type Props = {
 	errorMessage?: string;
 	errorContext?: React.ReactNode;
 	isNativeApp?: IsNativeApp;
+	isInAbSimplifyRegistrationFlowTest: boolean;
 };
 
 type PageStatus = 'active' | 'complete' | 'pending';
@@ -170,13 +169,11 @@ export const ConsentsSubHeader = ({
 	errorContext,
 	errorMessage,
 	isNativeApp,
+	isInAbSimplifyRegistrationFlowTest,
 }: Props) => {
-	const ABTestAPI = useAB();
-	const isInABTestVariant = ABTestAPI.isUserInVariant(
-		abSimplifyRegistrationFlowTest.id,
-		abSimplifyRegistrationFlowTest.variants[0].id,
+	const CONSENTS_PAGES_ARR = getConsentsPageArr(
+		isInAbSimplifyRegistrationFlowTest,
 	);
-	const CONSENTS_PAGES_ARR = getConsentsPageArr(isInABTestVariant);
 	const CONSENTS_PAGES_COUNT = CONSENTS_PAGES_ARR.length;
 
 	const active = current

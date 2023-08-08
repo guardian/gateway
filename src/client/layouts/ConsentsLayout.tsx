@@ -10,6 +10,8 @@ import {
 import { greyBorderSides } from '@/client/styles/Consents';
 import { ConsentsSubHeader } from '@/client/components/ConsentsSubHeader';
 import { ConsentsHeader } from '@/client/components/ConsentsHeader';
+import { useAB } from '@guardian/ab-react';
+import { abSimplifyRegistrationFlowTest } from '@/shared/model/experiments/tests/abSimplifyRegistrationFlowTest';
 
 interface ConsentsLayoutProps {
 	current?: string;
@@ -39,7 +41,11 @@ export const ConsentsLayout: FunctionComponent<
 		globalMessage: { error: globalError, success: globalSuccess } = {},
 		pageData: { isNativeApp } = {},
 	} = clientState;
-
+	const ABTestAPI = useAB();
+	const isInAbSimplifyRegistrationFlowTest = ABTestAPI.isUserInVariant(
+		abSimplifyRegistrationFlowTest.id,
+		abSimplifyRegistrationFlowTest.variants[0].id,
+	);
 	return (
 		<>
 			<ConsentsHeader
@@ -55,6 +61,9 @@ export const ConsentsLayout: FunctionComponent<
 					errorMessage={errorMessage}
 					errorContext={errorContext}
 					isNativeApp={isNativeApp}
+					isInAbSimplifyRegistrationFlowTest={
+						isInAbSimplifyRegistrationFlowTest
+					}
 				/>
 				{children && (
 					<section css={[gridRow, greyBorderSides]}>{children}</section>
