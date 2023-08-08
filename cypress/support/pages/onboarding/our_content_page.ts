@@ -1,7 +1,7 @@
 import OnboardingPage from './onboarding_page';
 
 class OurContentPage extends OnboardingPage {
-	static URL = '/consents/our_content';
+	static URL = '/consents/our-content';
 	static CONTENT = {
 		...OnboardingPage.CONTENT,
 		NEWSLETTERS: {

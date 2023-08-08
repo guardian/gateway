@@ -1,7 +1,7 @@
 export type ConsentPath =
 	| 'communication'
 	| 'newsletters'
-	| 'our_content'
+	| 'our-content'
 	| 'data'
 	| 'review';
 
@@ -17,7 +17,7 @@ export const ValidRoutePathsArray = [
 	'/agree/GRS',
 	'/consents',
 	'/consents/:page',
-	'/consents/our_content',
+	'/consents/our-content',
 	'/consents/communication',
 	'/consents/newsletters',
 	'/consents/data',

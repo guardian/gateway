@@ -131,8 +131,8 @@ const getUserNewsletterSubscriptions = async ({
 };
 
 const OUR_CONTENT: ConsentPage = {
-	page: 'our_content',
-	path: '/consents/our_content',
+	page: 'our-content',
+	path: '/consents/our-content',
 	pageTitle: CONSENTS_PAGES.OUR_CONTENT,
 	read: async ({ ip, sc_gu_u, geo, request_id, accessToken }) => ({
 		consents: await getUserConsentsForPage({
@@ -152,7 +152,7 @@ const OUR_CONTENT: ConsentPage = {
 			request_id,
 			accessToken,
 		}),
-		page: 'our_content',
+		page: 'our-content',
 	}),
 	update: async ({ ip, sc_gu_u, geo, body, accessToken, request_id }) => {
 		const consents = [

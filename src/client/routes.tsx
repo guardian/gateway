@@ -129,7 +129,7 @@ const routes: Array<{
 		element: <ConsentsDataPage />,
 	},
 	{
-		path: '/consents/our_content',
+		path: '/consents/our-content',
 		element: <ConsentsOurContentPage />,
 	},
 	{
