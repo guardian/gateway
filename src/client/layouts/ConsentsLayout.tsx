@@ -10,7 +10,6 @@ import {
 import { greyBorderSides } from '@/client/styles/Consents';
 import { ConsentsSubHeader } from '@/client/components/ConsentsSubHeader';
 import { ConsentsHeader } from '@/client/components/ConsentsHeader';
-import { useAB } from '@guardian/ab-react';
 import { abSimplifyRegistrationFlowTest } from '@/shared/model/experiments/tests/abSimplifyRegistrationFlowTest';
 
 interface ConsentsLayoutProps {
@@ -41,11 +40,10 @@ export const ConsentsLayout: FunctionComponent<
 		globalMessage: { error: globalError, success: globalSuccess } = {},
 		pageData: { isNativeApp } = {},
 	} = clientState;
-	const ABTestAPI = useAB();
-	const isInAbSimplifyRegistrationFlowTest = ABTestAPI.isUserInVariant(
-		abSimplifyRegistrationFlowTest.id,
-		abSimplifyRegistrationFlowTest.variants[0].id,
-	);
+	const { abTesting: { participations = {} } = {} } = clientState;
+	const isInAbSimplifyRegFlowTest =
+		participations[abSimplifyRegistrationFlowTest.id]?.variant ===
+		abSimplifyRegistrationFlowTest.variants[0].id;
 	return (
 		<>
 			<ConsentsHeader

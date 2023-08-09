@@ -70,7 +70,9 @@ const getNewsletterCardCss = (index: number) => {
 const p = css`
 	margin-bottom: ${space[6]}px;
 `;
-export const ConsentsOurContent = ({ consents }: ConsentsNewslettersProps) => {
+export const ConsentsOurContentAB = ({
+	consents,
+}: ConsentsNewslettersProps) => {
 	const autoRow = getAutoRow(1, gridItemColumnConsents);
 
 	return (

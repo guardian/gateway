@@ -36,7 +36,7 @@ import { ChangeEmailErrorPage } from '@/client/pages/ChangeEmailErrorPage';
 import { SubscriptionSuccessPage } from '@/client/pages/SubscriptionSuccessPage';
 import { SubscriptionErrorPage } from '@/client/pages/SubscriptionErrorPage';
 import { ResendConsentEmailPage } from './pages/ResendConsentEmailPage';
-import { ConsentsOurContentPage } from './pages/ConsentsOurContentPage';
+import { ConsentsOurContentABPage } from './pages/ConsentsOurContentABPage';
 import { ConsentsNewslettersPage } from './pages/ConsentsNewslettersPage';
 
 export type RoutingConfig = {
@@ -130,7 +130,7 @@ const routes: Array<{
 	},
 	{
 		path: '/consents/our-content',
-		element: <ConsentsOurContentPage />,
+		element: <ConsentsOurContentABPage />,
 	},
 	{
 		path: '/consents/communication',

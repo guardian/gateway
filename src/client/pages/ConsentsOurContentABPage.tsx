@@ -1,8 +1,8 @@
 import React from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
-import { ConsentsOurContent } from '@/client/pages/ConsentsOurContent';
+import { ConsentsOurContentAB } from '@/client/pages/ConsentsOurContentAB';
 
-export const ConsentsOurContentPage = () => {
+export const ConsentsOurContentABPage = () => {
 	const clientState = useClientState();
 
 	const { pageData = {} } = clientState;
@@ -26,5 +26,5 @@ export const ConsentsOurContentPage = () => {
 		),
 	];
 
-	return <ConsentsOurContent consents={consents} />;
+	return <ConsentsOurContentAB consents={consents} />;
 };
