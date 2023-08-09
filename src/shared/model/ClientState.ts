@@ -6,6 +6,7 @@ import { QueryParams } from '@/shared/model/QueryParams';
 import { Participations } from '@guardian/ab-core';
 import { Stage } from '@/server/models/Configuration';
 import { ConsentPath, RoutePaths } from '@/shared/model/Routes';
+import { UserAttributesResponse } from '@/shared/lib/members-data-api';
 
 export interface FieldError {
 	field: string;
@@ -64,6 +65,9 @@ export interface PageData {
 
 	// subscription specific
 	newsletterId?: string;
+
+	// delete specific
+	contentAccess?: UserAttributesResponse['contentAccess'];
 }
 
 export interface RecaptchaConfig {

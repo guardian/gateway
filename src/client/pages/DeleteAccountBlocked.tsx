@@ -7,10 +7,10 @@ import { DeleteAccountReturnLink } from '@/client/components/DeleteAccountReturn
 import { UserAttributesResponse } from '@/shared/lib/members-data-api';
 
 interface Props {
-	contentAccess: UserAttributesResponse['contentAccess'];
+	contentAccess?: Partial<UserAttributesResponse['contentAccess']>;
 }
 
-export const DeleteAccountBlocked = ({ contentAccess }: Props) => {
+export const DeleteAccountBlocked = ({ contentAccess = {} }: Props) => {
 	const hasSubscription =
 		contentAccess.digitalPack ||
 		contentAccess.paperSubscriber ||

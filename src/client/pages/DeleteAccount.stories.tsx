@@ -9,7 +9,13 @@ export default {
 	parameters: { layout: 'fullscreen' },
 } as Meta;
 
-export const Default = () => <DeleteAccount />;
+export const Default = () => (
+	<DeleteAccount
+		queryParams={{
+			returnUrl: '#',
+		}}
+	/>
+);
 Default.story = {
 	name: 'with defaults',
 };

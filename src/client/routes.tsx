@@ -37,6 +37,8 @@ import { ChangeEmailErrorPage } from '@/client/pages/ChangeEmailErrorPage';
 import { SubscriptionSuccessPage } from '@/client/pages/SubscriptionSuccessPage';
 import { SubscriptionErrorPage } from '@/client/pages/SubscriptionErrorPage';
 import { ResendConsentEmailPage } from './pages/ResendConsentEmailPage';
+import { DeleteAccountBlockedPage } from '@/client/pages/DeleteAccountBlockedPage';
+import { DeleteAccountPage } from '@/client/pages/DeleteAccountPage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -223,11 +225,29 @@ const routes: Array<{
 	},
 	{
 		path: '/delete',
+		element: <DeleteAccountPage />,
+	},
+	{
+		path: '/delete/complete',
 		// TODO
 		element: <MaintenancePage />,
 	},
 	{
-		path: '/delete/complete',
+		path: '/delete-blocked',
+		element: <DeleteAccountBlockedPage />,
+	},
+	{
+		path: '/delete-email-validation',
+		// TODO
+		element: <MaintenancePage />,
+	},
+	{
+		path: '/delete-set-password',
+		// TODO
+		element: <MaintenancePage />,
+	},
+	{
+		path: '/delete/email-sent',
 		// TODO
 		element: <MaintenancePage />,
 	},

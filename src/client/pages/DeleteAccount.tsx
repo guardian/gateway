@@ -8,8 +8,14 @@ import locations from '@/shared/lib/locations';
 import { PasswordInput } from '@/client/components/PasswordInput';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { DeleteAccountReturnLink } from '@/client/components/DeleteAccountReturnLink';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import { QueryParams } from '@/shared/model/QueryParams';
 
-export const DeleteAccount = () => {
+interface Props {
+	queryParams: QueryParams;
+}
+
+export const DeleteAccount = ({ queryParams }: Props) => {
 	return (
 		<MainLayout pageHeader="Delete your Guardian account">
 			{/* Help Text */}
@@ -130,7 +136,10 @@ export const DeleteAccount = () => {
 			<Divider spaceAbove="tight" size="full" />
 
 			{/* delete form */}
-			<MainForm formAction="" submitButtonText="Delete your account">
+			<MainForm
+				formAction={buildUrlWithQueryParams('/delete', {}, queryParams)}
+				submitButtonText="Delete your account"
+			>
 				{/* reason select */}
 				<RadioGroup
 					label="Please take a moment to tell us why you wish to delete your account:"
