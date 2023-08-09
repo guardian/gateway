@@ -24,6 +24,7 @@ type Props = {
 	isJobs?: boolean;
 	browserName?: string;
 	queryParams: QueryParams;
+	isInAbSimplifyRegFlowTest: boolean;
 };
 
 const linkButton = css`
@@ -52,6 +53,7 @@ export const Welcome = ({
 	isJobs = false,
 	browserName,
 	queryParams,
+	isInAbSimplifyRegFlowTest,
 }: Props) => {
 	const autoRow = getAutoRow(1, passwordFormSpanDef);
 	const {
@@ -68,6 +70,7 @@ export const Welcome = ({
 			showContinueButton={false}
 			errorMessage={nameFieldError}
 			errorContext={nameFieldErrorContext}
+			isInAbSimplifyRegFlowTest={isInAbSimplifyRegFlowTest}
 		>
 			<p css={[text, greyBorderTop, autoRow()]}>
 				{passwordSet

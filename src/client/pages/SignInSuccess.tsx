@@ -28,15 +28,22 @@ const continueButton = css`
 type SignInSuccessProps = {
 	geolocation?: GeoLocation;
 	consents: Consent[];
+	isInAbSimplifyRegFlowTest: boolean;
 };
 
-export const SignInSuccess = ({ consents }: SignInSuccessProps) => {
+export const SignInSuccess = ({
+	consents,
+	isInAbSimplifyRegFlowTest,
+}: SignInSuccessProps) => {
 	const autoRow = getAutoRow(1, gridItemColumnConsents);
 	const clientState = useClientState();
 	const { pageData = {}, queryParams } = clientState;
 
 	return (
-		<ConsentsLayout title="Get the latest offers sent to your inbox">
+		<ConsentsLayout
+			title="Get the latest offers sent to your inbox"
+			isInAbSimplifyRegFlowTest={isInAbSimplifyRegFlowTest}
+		>
 			<form
 				css={autoRow()}
 				action={buildUrlWithQueryParams('/signin/success', {}, queryParams)}

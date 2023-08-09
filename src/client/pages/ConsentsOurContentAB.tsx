@@ -1,6 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { from, palette, space } from '@guardian/source-foundations';
+import { palette, from, space } from '@guardian/source-foundations';
 import {
 	gridItem,
 	gridItemColumnConsents,
@@ -8,10 +8,10 @@ import {
 	SpanDefinition,
 } from '@/client/styles/Grid';
 import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
-import { ConsentCardOnboarding } from '@/client/components/ConsentCardOnboardingEmails';
 import { ConsentCard } from '@/client/components/ConsentCard';
 import { ConsentsForm } from '@/client/components/ConsentsForm';
 import { ConsentsNavigation } from '@/client/components/ConsentsNavigation';
+import { greyBorderTop, heading, text } from '@/client/styles/Consents';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { Consent } from '@/shared/model/Consent';
 import { NewsLetter } from '@/shared/model/Newsletter';
@@ -21,7 +21,6 @@ import {
 	NEWSLETTER_IMAGE_POSITIONS,
 } from '@/client/models/Newsletter';
 import { CONSENT_IMAGES } from '@/client/models/ConsentImages';
-import { h1, h1ResponsiveText } from '../styles/Consents';
 
 interface ConsentOption {
 	type: 'consent';
@@ -35,8 +34,6 @@ type NewsletterPageConsent = ConsentOption | NewsletterOption;
 
 type ConsentsNewslettersProps = {
 	consents: NewsletterPageConsent[];
-	defaultOnboardingEmailId: string;
-	defaultOnboardingEmailConsentState: boolean;
 	isInAbSimplifyRegFlowTest: boolean;
 };
 
@@ -71,26 +68,29 @@ const getNewsletterCardCss = (index: number) => {
 	`;
 };
 
-export const ConsentsNewslettersAB = ({
+const p = css`
+	margin-bottom: ${space[6]}px;
+`;
+export const ConsentsOurContentAB = ({
 	consents,
-	defaultOnboardingEmailId,
-	defaultOnboardingEmailConsentState,
 	isInAbSimplifyRegFlowTest,
 }: ConsentsNewslettersProps) => {
 	const autoRow = getAutoRow(1, gridItemColumnConsents);
 
 	return (
 		<ConsentsLayout
-			title="Newsletters"
-			current={CONSENTS_PAGES.NEWSLETTERS}
+			title="Our Content"
+			current={CONSENTS_PAGES.OUR_CONTENT}
 			isInAbSimplifyRegFlowTest={isInAbSimplifyRegFlowTest}
 		>
+			<h2 css={[heading, greyBorderTop, autoRow()]}>
+				Thank you for registering
+			</h2>
+			<p css={[text, p, autoRow()]}>
+				Sign up to our emails to discover more about the things that matter most
+				to you
+			</p>
 			<ConsentsForm cssOverrides={autoRow()}>
-				<ConsentCardOnboarding
-					id={defaultOnboardingEmailId}
-					defaultChecked={defaultOnboardingEmailConsentState}
-				/>
-				<h1 css={[h1, h1ResponsiveText, autoRow()]}>You might also like...</h1>
 				{consents.map(({ type, consent }, i) => {
 					const extraProps =
 						type === 'consent'

@@ -53,6 +53,7 @@ export const None = () => (
 		subscribedNewsletters={[]}
 		optedIntoProfiling={false}
 		optedIntoPersonalisedAdvertising={false}
+		isInAbSimplifyRegFlowTest={false}
 	/>
 );
 None.story = {
@@ -66,6 +67,7 @@ export const Profiling = () => (
 		subscribedNewsletters={[]}
 		optedIntoProfiling={true}
 		optedIntoPersonalisedAdvertising={false}
+		isInAbSimplifyRegFlowTest={false}
 	/>
 );
 Profiling.story = {
@@ -80,6 +82,7 @@ export const Advertising = () => (
 		subscribedNewsletters={[]}
 		optedIntoProfiling={false}
 		optedIntoPersonalisedAdvertising={true}
+		isInAbSimplifyRegFlowTest={false}
 	/>
 );
 Advertising.story = {
@@ -93,6 +96,7 @@ export const Data = () => (
 		subscribedNewsletters={[]}
 		optedIntoProfiling={true}
 		optedIntoPersonalisedAdvertising={true}
+		isInAbSimplifyRegFlowTest={false}
 	/>
 );
 Data.story = {
@@ -106,6 +110,7 @@ export const Newsletters = () => (
 		subscribedNewsletters={subscribedNewsletters}
 		optedIntoProfiling={false}
 		optedIntoPersonalisedAdvertising={false}
+		isInAbSimplifyRegFlowTest={false}
 	/>
 );
 Newsletters.story = {
@@ -119,6 +124,7 @@ export const Products = () => (
 		subscribedNewsletters={[]}
 		optedIntoProfiling={false}
 		optedIntoPersonalisedAdvertising={false}
+		isInAbSimplifyRegFlowTest={false}
 	/>
 );
 Products.story = {
@@ -132,6 +138,7 @@ export const Everything = () => (
 		subscribedNewsletters={subscribedNewsletters}
 		optedIntoProfiling={true}
 		optedIntoPersonalisedAdvertising={true}
+		isInAbSimplifyRegFlowTest={false}
 	/>
 );
 Everything.story = {

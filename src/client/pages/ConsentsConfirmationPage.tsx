@@ -4,11 +4,17 @@ import { ConsentsConfirmation } from '@/client/pages/ConsentsConfirmation';
 import { Consents } from '@/shared/model/Consent';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
 import { Newsletters } from '@/shared/model/Newsletter';
+import { useAB } from '@guardian/ab-react';
+import { abSimplifyRegistrationFlowTest } from '@/shared/model/experiments/tests/abSimplifyRegistrationFlowTest';
 
 export const ConsentsConfirmationPage = () => {
 	const clientState = useClientState();
 	const { pageData = {}, globalMessage: { error, success } = {} } = clientState;
-
+	const ABTestAPI = useAB();
+	const isInAbSimplifyRegFlowTest = ABTestAPI.isUserInVariant(
+		abSimplifyRegistrationFlowTest.id,
+		abSimplifyRegistrationFlowTest.variants[0].id,
+	);
 	const {
 		consents = [],
 		newsletters = [],
@@ -52,6 +58,7 @@ export const ConsentsConfirmationPage = () => {
 			optedIntoPersonalisedAdvertising={optedIntoPersonalisedAdvertising}
 			productConsents={productConsents}
 			subscribedNewsletters={filteredSubscribedNewsletters}
+			isInAbSimplifyRegFlowTest={isInAbSimplifyRegFlowTest}
 		/>
 	);
 };

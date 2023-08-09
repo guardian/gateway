@@ -6,6 +6,7 @@ import { ConsentsNewslettersAB } from '@/client/pages/ConsentsNewslettersAB';
 import { useAB } from '@guardian/ab-react';
 import { abDefaultWeeklyNewsletterTest } from '@/shared/model/experiments/tests/abDefaultWeeklyNewsletterTest';
 import { Newsletters } from '@/shared/model/Newsletter';
+import { abSimplifyRegistrationFlowTest } from '@/shared/model/experiments/tests/abSimplifyRegistrationFlowTest';
 
 export const ConsentsNewslettersPage = () => {
 	const clientState = useClientState();
@@ -28,6 +29,10 @@ export const ConsentsNewslettersPage = () => {
 	);
 
 	const ABTestAPI = useAB();
+	const isInAbSimplifyRegFlowTest = ABTestAPI.isUserInVariant(
+		abSimplifyRegistrationFlowTest.id,
+		abSimplifyRegistrationFlowTest.variants[0].id,
+	);
 	const isInABTestVariant = ABTestAPI.isUserInVariant(
 		abDefaultWeeklyNewsletterTest.id,
 		abDefaultWeeklyNewsletterTest.variants[0].id,
@@ -43,10 +48,16 @@ export const ConsentsNewslettersPage = () => {
 				consents={filteredConsents}
 				defaultOnboardingEmailId={Newsletters.SATURDAY_ROUNDUP_TRIAL}
 				defaultOnboardingEmailConsentState={true}
+				isInAbSimplifyRegFlowTest={isInAbSimplifyRegFlowTest}
 			/>
 		);
 	}
 	// @AB_TEST: Default Weekly Newsletter Test: END
 
-	return <ConsentsNewsletters consents={filteredConsents} />; // @AB_TEST: filtering out the Default Weekly Newsletter
+	return (
+		<ConsentsNewsletters
+			consents={filteredConsents}
+			isInAbSimplifyRegFlowTest={isInAbSimplifyRegFlowTest}
+		/>
+	); // @AB_TEST: filtering out the Default Weekly Newsletter
 };

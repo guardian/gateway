@@ -34,6 +34,7 @@ import { ConsentsNavigation } from '@/client/components/ConsentsNavigation';
 type ConsentsDataProps = {
 	profiling?: Consent;
 	advertising?: Consent;
+	isInAbSimplifyRegFlowTest: boolean;
 };
 
 const topMargin = css`
@@ -126,7 +127,11 @@ const marketingText = css`
 	}
 `;
 
-export const ConsentsData = ({ profiling, advertising }: ConsentsDataProps) => {
+export const ConsentsData = ({
+	profiling,
+	advertising,
+	isInAbSimplifyRegFlowTest,
+}: ConsentsDataProps) => {
 	const autoRow = getAutoRow(1, gridItemColumnConsents);
 	const autoYourDataRow = getAutoRow(1, gridItemYourData);
 	const autoSwitchRow = getAutoRow(1, subGridItemToggleSwitch);
@@ -135,7 +140,10 @@ export const ConsentsData = ({ profiling, advertising }: ConsentsDataProps) => {
 
 	if (!profiling && !advertising) {
 		return (
-			<ConsentsLayout {...layoutProps}>
+			<ConsentsLayout
+				{...layoutProps}
+				isInAbSimplifyRegFlowTest={isInAbSimplifyRegFlowTest}
+			>
 				<ConsentsForm cssOverrides={autoRow()}>
 					<ConsentsNavigation />
 				</ConsentsForm>
@@ -144,7 +152,10 @@ export const ConsentsData = ({ profiling, advertising }: ConsentsDataProps) => {
 	}
 
 	return (
-		<ConsentsLayout {...layoutProps}>
+		<ConsentsLayout
+			{...layoutProps}
+			isInAbSimplifyRegFlowTest={isInAbSimplifyRegFlowTest}
+		>
 			<h2 css={[heading, greyBorderTop, autoRow(), removeMargin]}>
 				What we mean by your data
 			</h2>

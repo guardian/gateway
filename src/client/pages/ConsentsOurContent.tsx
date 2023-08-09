@@ -34,6 +34,7 @@ type NewsletterPageConsent = ConsentOption | NewsletterOption;
 
 type ConsentsNewslettersProps = {
 	consents: NewsletterPageConsent[];
+	isInAbSimplifyRegFlowTest: boolean;
 };
 
 const getPillarColorById = (id: string) =>
@@ -70,11 +71,18 @@ const getNewsletterCardCss = (index: number) => {
 const p = css`
 	margin-bottom: ${space[6]}px;
 `;
-export const ConsentsOurContent = ({ consents }: ConsentsNewslettersProps) => {
+export const ConsentsOurContent = ({
+	consents,
+	isInAbSimplifyRegFlowTest,
+}: ConsentsNewslettersProps) => {
 	const autoRow = getAutoRow(1, gridItemColumnConsents);
 
 	return (
-		<ConsentsLayout title="Our Content" current={CONSENTS_PAGES.OUR_CONTENT}>
+		<ConsentsLayout
+			title="Our Content"
+			current={CONSENTS_PAGES.OUR_CONTENT}
+			isInAbSimplifyRegFlowTest={isInAbSimplifyRegFlowTest}
+		>
 			<h2 css={[heading, greyBorderTop, autoRow()]}>
 				Thank you for registering
 			</h2>

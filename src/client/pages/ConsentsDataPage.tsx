@@ -6,6 +6,9 @@ import { ConsentsData } from '@/client/pages/ConsentsData';
 import { useCmpConsent } from '../lib/hooks/useCmpConsent';
 import { useAdFreeCookie } from '../lib/hooks/useAdFreeCookie';
 
+import { useAB } from '@guardian/ab-react';
+import { abSimplifyRegistrationFlowTest } from '@/shared/model/experiments/tests/abSimplifyRegistrationFlowTest';
+
 export const ConsentsDataPage = () => {
 	const clientState = useClientState();
 
@@ -24,10 +27,16 @@ export const ConsentsDataPage = () => {
 	const isDigitalSubscriber = useAdFreeCookie();
 	const shouldPersonalisedAdvertisingPermissionRender =
 		hasCmpConsent && !isDigitalSubscriber;
+	const ABTestAPI = useAB();
+	const isInAbSimplifyRegFlowTest = ABTestAPI.isUserInVariant(
+		abSimplifyRegistrationFlowTest.id,
+		abSimplifyRegistrationFlowTest.variants[0].id,
+	);
 
 	return (
 		<ConsentsData
 			profiling={profiling}
+			isInAbSimplifyRegFlowTest={isInAbSimplifyRegFlowTest}
 			{...(shouldPersonalisedAdvertisingPermissionRender && { advertising })}
 		/>
 	);

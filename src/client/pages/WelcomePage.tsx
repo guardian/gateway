@@ -4,6 +4,8 @@ import useClientState from '@/client/lib/hooks/useClientState';
 import { Welcome } from '@/client/pages/Welcome';
 import { buildUrl, buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { logger } from '@/client/lib/clientSideLogger';
+import { useAB } from '@guardian/ab-react';
+import { abSimplifyRegistrationFlowTest } from '@/shared/model/experiments/tests/abSimplifyRegistrationFlowTest';
 
 export const WelcomePage = () => {
 	const clientState = useClientState();
@@ -19,6 +21,12 @@ export const WelcomePage = () => {
 	} = clientState;
 	const { clientId } = queryParams;
 	const isJobs = clientId === 'jobs';
+
+	const ABTestAPI = useAB();
+	const isInAbSimplifyRegFlowTest = ABTestAPI.isUserInVariant(
+		abSimplifyRegistrationFlowTest.id,
+		abSimplifyRegistrationFlowTest.variants[0].id,
+	);
 
 	useEffect(() => {
 		// we only want this to run in the browser as window is not
@@ -53,6 +61,7 @@ export const WelcomePage = () => {
 			isJobs={isJobs}
 			browserName={browserName}
 			queryParams={queryParams}
+			isInAbSimplifyRegFlowTest={isInAbSimplifyRegFlowTest}
 		/>
 	);
 };

@@ -12,6 +12,7 @@ import { ConsentsNavigation } from '@/client/components/ConsentsNavigation';
 
 type ConsentsCommunicationProps = {
 	consents: Consent[];
+	isInAbSimplifyRegFlowTest: boolean;
 };
 
 const p = css`
@@ -20,11 +21,16 @@ const p = css`
 
 export const ConsentsCommunication = ({
 	consents,
+	isInAbSimplifyRegFlowTest,
 }: ConsentsCommunicationProps) => {
 	const autoRow = getAutoRow(1, gridItemColumnConsents);
 
 	return (
-		<ConsentsLayout title="Stay in touch" current={CONSENTS_PAGES.CONTACT}>
+		<ConsentsLayout
+			title="Stay in touch"
+			current={CONSENTS_PAGES.CONTACT}
+			isInAbSimplifyRegFlowTest={isInAbSimplifyRegFlowTest}
+		>
 			<h2 css={[heading, greyBorderTop, autoRow()]}>
 				Thank you for registering
 			</h2>

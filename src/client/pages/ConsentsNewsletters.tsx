@@ -34,6 +34,7 @@ type NewsletterPageConsent = ConsentOption | NewsletterOption;
 
 type ConsentsNewslettersProps = {
 	consents: NewsletterPageConsent[];
+	isInAbSimplifyRegFlowTest: boolean;
 };
 
 const getPillarColorById = (id: string) =>
@@ -71,11 +72,18 @@ const paragraphSpacing = css`
 	margin-bottom: ${space[6]}px;
 `;
 
-export const ConsentsNewsletters = ({ consents }: ConsentsNewslettersProps) => {
+export const ConsentsNewsletters = ({
+	consents,
+	isInAbSimplifyRegFlowTest,
+}: ConsentsNewslettersProps) => {
 	const autoRow = getAutoRow(1, gridItemColumnConsents);
 
 	return (
-		<ConsentsLayout title="Newsletters" current={CONSENTS_PAGES.NEWSLETTERS}>
+		<ConsentsLayout
+			title="Newsletters"
+			current={CONSENTS_PAGES.NEWSLETTERS}
+			isInAbSimplifyRegFlowTest={isInAbSimplifyRegFlowTest}
+		>
 			<h2 css={[heading, greyBorderTop, autoRow()]}>
 				Free newsletters from the Guardian
 			</h2>

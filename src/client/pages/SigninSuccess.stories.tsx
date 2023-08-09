@@ -18,5 +18,7 @@ const consents = [
 	},
 ];
 
-export const Default = () => <SignInSuccess consents={consents} />;
+export const Default = () => (
+	<SignInSuccess consents={consents} isInAbSimplifyRegFlowTest={false} />
+);
 Default.storyName = 'default';

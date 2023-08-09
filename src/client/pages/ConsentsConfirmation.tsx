@@ -38,6 +38,7 @@ type ConsentsConfirmationProps = {
 	productConsents: Consent[];
 	subscribedNewsletters: NewsLetter[];
 	geolocation?: GeoLocation;
+	isInAbSimplifyRegFlowTest: boolean;
 };
 
 const reviewTableRow = css`
@@ -123,6 +124,7 @@ export const ConsentsConfirmation = ({
 	optedIntoProfiling,
 	optedIntoPersonalisedAdvertising,
 	subscribedNewsletters,
+	isInAbSimplifyRegFlowTest,
 }: ConsentsConfirmationProps) => {
 	const autoRow = getAutoRow(1, gridItemColumnConsents);
 	const anyConsents =
@@ -132,7 +134,10 @@ export const ConsentsConfirmation = ({
 		!!subscribedNewsletters.length;
 
 	return (
-		<ConsentsLayout title="Your registration is complete">
+		<ConsentsLayout
+			title="Your registration is complete"
+			isInAbSimplifyRegFlowTest={isInAbSimplifyRegFlowTest}
+		>
 			<h2 css={[heading, autoRow(), greyBorderTop]}>
 				Thank you for completing your registration
 			</h2>
