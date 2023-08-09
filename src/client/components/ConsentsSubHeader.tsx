@@ -26,7 +26,7 @@ type Props = {
 	errorMessage?: string;
 	errorContext?: React.ReactNode;
 	isNativeApp?: IsNativeApp;
-	isInAbSimplifyRegistrationFlowTest: boolean;
+	isInAbSimplifyRegFlowTest: boolean;
 };
 
 type PageStatus = 'active' | 'complete' | 'pending';
@@ -169,11 +169,9 @@ export const ConsentsSubHeader = ({
 	errorContext,
 	errorMessage,
 	isNativeApp,
-	isInAbSimplifyRegistrationFlowTest,
+	isInAbSimplifyRegFlowTest,
 }: Props) => {
-	const CONSENTS_PAGES_ARR = getConsentsPageArr(
-		isInAbSimplifyRegistrationFlowTest,
-	);
+	const CONSENTS_PAGES_ARR = getConsentsPageArr(isInAbSimplifyRegFlowTest);
 	const CONSENTS_PAGES_COUNT = CONSENTS_PAGES_ARR.length;
 
 	const active = current

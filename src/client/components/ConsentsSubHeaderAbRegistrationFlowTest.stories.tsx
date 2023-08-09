@@ -30,7 +30,7 @@ export const Default = () => (
 	<ConsentsSubHeader
 		autoRow={autoRow}
 		title="My Title"
-		isInAbSimplifyRegistrationFlowTest={true}
+		isInAbSimplifyRegFlowTest={true}
 	/>
 );
 Default.storyName = 'With defaults';
@@ -40,7 +40,7 @@ export const Password = () => (
 		autoRow={autoRow}
 		title="My Title"
 		current={CONSENTS_PAGES.DETAILS}
-		isInAbSimplifyRegistrationFlowTest={true}
+		isInAbSimplifyRegFlowTest={true}
 	/>
 );
 Password.storyName = 'With Password as current';
@@ -50,7 +50,7 @@ export const OurContent = () => (
 		autoRow={autoRow}
 		title="My Title"
 		current={CONSENTS_PAGES.OUR_CONTENT}
-		isInAbSimplifyRegistrationFlowTest={true}
+		isInAbSimplifyRegFlowTest={true}
 	/>
 );
 OurContent.storyName = 'With Our content as current';
@@ -60,7 +60,7 @@ export const YourData = () => (
 		autoRow={autoRow}
 		title="My Title"
 		current={CONSENTS_PAGES.YOUR_DATA}
-		isInAbSimplifyRegistrationFlowTest={true}
+		isInAbSimplifyRegFlowTest={true}
 	/>
 );
 YourData.storyName = 'With Your Data as current';

@@ -61,9 +61,7 @@ export const ConsentsLayout: FunctionComponent<
 					errorMessage={errorMessage}
 					errorContext={errorContext}
 					isNativeApp={isNativeApp}
-					isInAbSimplifyRegistrationFlowTest={
-						isInAbSimplifyRegistrationFlowTest
-					}
+					isInAbSimplifyRegFlowTest={isInAbSimplifyRegFlowTest}
 				/>
 				{children && (
 					<section css={[gridRow, greyBorderSides]}>{children}</section>
