@@ -3,10 +3,11 @@ export enum CONSENTS_PAGES {
 	YOUR_DATA = 'Your data',
 	CONTACT = 'Stay in touch',
 	NEWSLETTERS = 'Newsletters',
+	//@AB_TEST: 3 Stage Registration Flow Test
 	OUR_CONTENT = 'Our content',
 	REVIEW = 'Review',
 }
-
+//@AB_TEST: 3 Stage Registration Flow Test
 export const getConsentsPageArr = (isInABTestVariant: boolean) => {
 	if (isInABTestVariant)
 		return [

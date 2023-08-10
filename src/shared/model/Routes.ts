@@ -1,6 +1,7 @@
 export type ConsentPath =
 	| 'communication'
 	| 'newsletters'
+	//@AB_TEST: 3 Stage Registration Flow Test
 	| 'our-content'
 	| 'data'
 	| 'review';
@@ -17,6 +18,7 @@ export const ValidRoutePathsArray = [
 	'/agree/GRS',
 	'/consents',
 	'/consents/:page',
+	//@AB_TEST: 3 Stage Registration Flow Test
 	'/consents/our-content',
 	'/consents/communication',
 	'/consents/newsletters',

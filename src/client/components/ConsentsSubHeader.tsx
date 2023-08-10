@@ -169,8 +169,10 @@ export const ConsentsSubHeader = ({
 	errorContext,
 	errorMessage,
 	isNativeApp,
+	//@AB_TEST: 3 Stage Registration Flow Test
 	isInAbSimplifyRegFlowTest = false,
 }: Props) => {
+	//@AB_TEST: 3 Stage Registration Flow Test
 	const CONSENTS_PAGES_ARR = getConsentsPageArr(isInAbSimplifyRegFlowTest);
 	const CONSENTS_PAGES_COUNT = CONSENTS_PAGES_ARR.length;
 

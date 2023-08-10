@@ -21,6 +21,7 @@ export type PageTitle =
 	| 'Resend Welcome Email'
 	| 'Onboarding'
 	| 'Your data'
+	//@AB_TEST: 3 Stage Registration Flow Test
 	| 'Our content'
 	| 'Stay in touch'
 	| 'Newsletters'

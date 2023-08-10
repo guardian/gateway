@@ -39,8 +39,10 @@ export const ConsentsLayout: FunctionComponent<
 	const {
 		globalMessage: { error: globalError, success: globalSuccess } = {},
 		pageData: { isNativeApp } = {},
+		//@AB_TEST: 3 Stage Registration Flow Test
+		abTesting: { participations = {} } = {},
 	} = clientState;
-	const { abTesting: { participations = {} } = {} } = clientState;
+	//@AB_TEST: 3 Stage Registration Flow Test
 	const isInAbSimplifyRegFlowTest =
 		participations[abSimplifyRegistrationFlowTest.id]?.variant ===
 		abSimplifyRegistrationFlowTest.variants[0].id;
@@ -59,6 +61,7 @@ export const ConsentsLayout: FunctionComponent<
 					errorMessage={errorMessage}
 					errorContext={errorContext}
 					isNativeApp={isNativeApp}
+					//@AB_TEST: 3 Stage Registration Flow Test
 					isInAbSimplifyRegFlowTest={isInAbSimplifyRegFlowTest}
 				/>
 				{children && (

@@ -129,7 +129,7 @@ const getUserNewsletterSubscriptions = async ({
 		})
 		.filter(Boolean) as NewsLetter[];
 };
-
+//@AB_TEST: 3 Stage Registration Flow Test
 const OUR_CONTENT: ConsentPage = {
 	page: 'our-content',
 	path: '/consents/our-content',
@@ -393,6 +393,7 @@ const NEWSLETTERS: ConsentPage = {
 };
 export class ConsentPages {
 	pages: ConsentPage[];
+	//@AB_TEST: 3 Stage Registration Flow Test
 	inSimplifyRegistrationFlowTest = () => {
 		const isInABTestVariant = this.ab.isUserInVariant(
 			abSimplifyRegistrationFlowTest.id,

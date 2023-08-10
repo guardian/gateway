@@ -128,6 +128,7 @@ const routes: Array<{
 		path: '/consents/data',
 		element: <ConsentsDataPage />,
 	},
+	//@AB_TEST: 3 Stage Registration Flow Test
 	{
 		path: '/consents/our-content',
 		element: <ConsentsOurContentABPage />,

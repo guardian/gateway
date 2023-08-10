@@ -298,6 +298,7 @@ describe('Onboarding flow', () => {
 				.should('have.attr', 'href')
 				.and('include', decodeURIComponent(returnUrl));
 		});
+		//@AB_TEST: 3 Stage Registration Flow Test START
 		describe('AB Test 3 stage registration flow', () => {
 			beforeEach(() => {
 				setMvtId('2');
@@ -509,6 +510,7 @@ describe('Onboarding flow', () => {
 					.and('include', decodeURIComponent(returnUrl));
 			});
 		});
+		//@AB_TEST: 3 Stage Registration Flow Test END
 
 		it('uses a default returnUrl if none provided', () => {
 			const returnUrl = encodeURIComponent(Cypress.env('DEFAULT_RETURN_URI'));

@@ -1,3 +1,4 @@
+//@AB_TEST: 3 Stage Registration Flow Test
 import React from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { ConsentsOurContentAB } from '@/client/pages/ConsentsOurContentAB';

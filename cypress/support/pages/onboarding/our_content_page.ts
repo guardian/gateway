@@ -1,5 +1,5 @@
 import OnboardingPage from './onboarding_page';
-
+//@AB_TEST: 3 Stage Registration Flow Test
 class OurContentPage extends OnboardingPage {
 	static URL = '/consents/our-content';
 	static CONTENT = {

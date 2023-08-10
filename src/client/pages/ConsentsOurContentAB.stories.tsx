@@ -1,3 +1,4 @@
+//@AB_TEST: 3 Stage Registration Flow Test
 import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 

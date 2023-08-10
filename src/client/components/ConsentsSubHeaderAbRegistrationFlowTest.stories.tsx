@@ -1,3 +1,4 @@
+//@AB_TEST: 3 Stage Registration Flow Test
 import React from 'react';
 import { Meta } from '@storybook/react';
 import { getAutoRow } from '@/client/styles/Grid';
