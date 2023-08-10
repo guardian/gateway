@@ -47,6 +47,7 @@ export const scopesForApplication: Scopes[] = [
 	'email',
 	'guardian.identity-api.newsletters.read.self',
 	'guardian.identity-api.newsletters.update.self',
+	'guardian.members-data-api.read.self',
 	'id_token.profile.profile',
 ];
 

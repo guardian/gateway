@@ -9,13 +9,14 @@ import { ApiError } from '@/server/models/Error';
 import { logger } from '@/server/lib/serverSideLogger';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { getUser } from '@/server/lib/okta/api/users';
+import { authenticate } from '@/server/lib/okta/api/authentication';
+import { OktaError } from '../models/okta/Error';
 
 router.get(
 	'/delete',
 	loginMiddlewareOAuth,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
-
 		try {
 			// get the current user profile
 			const user = await getUser(state.oauthState.idToken!.claims.sub);
@@ -98,9 +99,54 @@ router.get(
 	}),
 );
 
+router.post(
+	'/delete',
+	loginMiddlewareOAuth,
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+		const { password = '' } = req.body;
+
+		try {
+			const { email } = state.oauthState.idToken!.claims;
+
+			// attempt to authenticate with okta
+			// if authentication fails, it will fall through to the catch
+			const response = await authenticate({
+				username: email as string,
+				password,
+			});
+
+			// we only support the SUCCESS status for Okta authentication in gateway
+			// Other statuses could be supported in the future https://developer.okta.com/docs/reference/api/authn/#transaction-state
+			if (response.status !== 'SUCCESS') {
+				throw new ApiError({
+					message:
+						'User authenticating was blocked due to unsupported Okta Authentication status property',
+					status: 403,
+				});
+			}
+
+			// TODO: delete the user's account
+		} catch (error) {
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+				request_id: res.locals.requestId,
+			});
+			if (
+				error instanceof OktaError &&
+				error.name === 'AuthenticationFailedError'
+			) {
+				// TODO: handle this error in the UI
+			}
+
+			// TODO: handle other errors
+		}
+
+		return res.redirect(303, `/delete`);
+	}),
+);
+
 router.get(
 	'/delete/complete',
-	loginMiddlewareOAuth,
 	(req: Request, res: ResponseWithRequestState) => {
 		const html = renderer('/delete/complete', {
 			requestState: res.locals,
