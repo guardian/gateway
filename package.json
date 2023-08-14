@@ -108,7 +108,7 @@
 		"require-from-string": "^2.0.2",
 		"snyk": "^1.1200.0",
 		"stmux": "^1.8.7",
-		"storybook": "^7.2.1",
+		"storybook": "^7.2.3",
 		"swc-loader": "^0.2.3",
 		"terser-webpack-plugin": "^5.3.9",
 		"ts-jest": "^29.1.1",
