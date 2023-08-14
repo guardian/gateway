@@ -391,40 +391,28 @@ const NEWSLETTERS: ConsentPage = {
 		});
 	},
 };
-export class ConsentPages {
-	pages: ConsentPage[];
-	//@AB_TEST: 3 Stage Registration Flow Test
-	inSimplifyRegistrationFlowTest = () => {
-		const isInABTestVariant = this.ab.isUserInVariant(
-			abSimplifyRegistrationFlowTest.id,
-			abSimplifyRegistrationFlowTest.variants[0].id,
-		);
-		return isInABTestVariant;
-	};
 
-	threeStageAbTestPages = [OUR_CONTENT, YOUR_DATA(OUR_CONTENT.page), REVIEW];
-	originalPages = [
-		COMMUNICATION,
-		NEWSLETTERS,
-		YOUR_DATA(NEWSLETTERS.page),
-		REVIEW,
-	];
-	constructor(readonly ab: ABTestAPI) {
-		/***
-		  If user is in the AB test bucket, show them the 3 step flow,
-		  otherwise show the original 4 step flow
-		***/
-		if (this.inSimplifyRegistrationFlowTest()) {
-			this.pages = this.threeStageAbTestPages;
-		} else this.pages = this.originalPages;
+export const getConsentPages = (abTestApi: ABTestAPI): ConsentPage[] => {
+	const isInABTestVariant = abTestApi.isUserInVariant(
+		abSimplifyRegistrationFlowTest.id,
+		abSimplifyRegistrationFlowTest.variants[0].id,
+	);
+	/*
+		If we're in the test, return a condensed 3 stage registration flow.
+		Otherwise, return 
+	*/
+	if (isInABTestVariant) {
+		return [OUR_CONTENT, YOUR_DATA(OUR_CONTENT.page), REVIEW];
+	} else {
+		return [COMMUNICATION, NEWSLETTERS, YOUR_DATA(NEWSLETTERS.page), REVIEW];
 	}
-}
+};
 
 router.get(
 	'/consents',
 	loginMiddlewareOAuth,
 	(req: Request, res: ResponseWithRequestState) => {
-		const consentPages = new ConsentPages(res.locals.abTestAPI).pages;
+		const consentPages = getConsentPages(res.locals.abTestAPI);
 		const url = addQueryParamsToPath(
 			`${consentPages[0].path}`,
 			res.locals.queryParams,
@@ -439,7 +427,7 @@ router.get(
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		let state = res.locals;
 		const sc_gu_u = req.cookies.SC_GU_U;
-		const consentPages = new ConsentPages(state.abTestAPI).pages;
+		const consentPages = getConsentPages(state.abTestAPI);
 
 		const { emailVerified } = state.queryParams;
 
@@ -535,7 +523,7 @@ router.post(
 
 		const { page } = req.params;
 		let status = 200;
-		const consentPages = new ConsentPages(state.abTestAPI).pages;
+		const consentPages = getConsentPages(state.abTestAPI);
 
 		const pageIndex = consentPages.findIndex((elem) => elem.page === page);
 		if (pageIndex === -1) {

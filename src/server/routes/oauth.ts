@@ -29,7 +29,7 @@ import {
 	checkAndDeleteOAuthTokenCookies,
 	setOAuthTokenCookie,
 } from '@/server/lib/okta/tokens';
-import { ConsentPages } from './consents';
+import { getConsentPages } from './consents';
 
 interface OAuthError {
 	error: string;
@@ -121,7 +121,7 @@ const authenticationHandler = async (
 				// updated the user profile emailValidated to true
 				await updateUser(sub, { profile: { emailValidated: true } });
 
-				const consentPages = new ConsentPages(res.locals.abTestAPI).pages;
+				const consentPages = getConsentPages(res.locals.abTestAPI);
 				// since this is a new social user, we want to show the onboarding flow too
 				// we use the `confirmationPage` flag to redirect the user to the onboarding page
 				// eslint-disable-next-line functional/immutable-data

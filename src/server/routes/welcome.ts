@@ -19,7 +19,7 @@ import { GenericErrors } from '@/shared/model/Errors';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { setEncryptedStateCookieForOktaRegistration } from './register';
 import { mergeRequestState } from '@/server/lib/requestState';
-import { ConsentPages } from './consents';
+import { getConsentPages } from './consents';
 
 const { okta } = getConfiguration();
 
@@ -128,7 +128,7 @@ router.post(
 	setPasswordController(
 		'/welcome',
 		'Welcome',
-		(res) => new ConsentPages(res.locals.abTestAPI).pages[0].path,
+		(res) => getConsentPages(res.locals.abTestAPI)[0].path,
 	),
 );
 

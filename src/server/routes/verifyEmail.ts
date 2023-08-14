@@ -20,7 +20,7 @@ import { Request, Router } from 'express';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { clearOktaCookies } from './signOut';
 import { mergeRequestState } from '@/server/lib/requestState';
-import { ConsentPages } from './consents';
+import { getConsentPages } from './consents';
 
 const router = Router();
 
@@ -161,7 +161,7 @@ router.get(
 	'/verify-email/:token',
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const { token } = req.params;
-		const consentPages = new ConsentPages(res.locals.abTestAPI).pages;
+		const consentPages = getConsentPages(res.locals.abTestAPI);
 		try {
 			const cookies = await verifyEmail(token, req.ip, res.locals.requestId);
 			trackMetric('EmailValidated::Success');
