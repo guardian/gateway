@@ -5,7 +5,7 @@
 
 import { jsx } from '@emotion/react';
 import { render, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom/jest-globals';
 import { Registration, RegistrationProps } from '../pages/Registration';
 
 const setup = (extraProps?: Partial<RegistrationProps>) =>
