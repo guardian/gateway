@@ -156,7 +156,7 @@
 		"openid-client": "^5.4.3",
 		"ophan-tracker-js": "^1.4.0",
 		"preact": "^10.16.0",
-		"preact-render-to-string": "^6.2.0",
+		"preact-render-to-string": "^6.2.1",
 		"react": "npm:@preact/compat",
 		"react-dom": "npm:@preact/compat",
 		"serialize-javascript": "^6.0.1",
