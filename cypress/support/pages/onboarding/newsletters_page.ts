@@ -7,7 +7,7 @@ class NewslettersPage extends OnboardingPage {
 			FIRST_EDITION_UK: 'First Edition',
 			FIRST_THING_US: 'First Thing: the US morning briefing',
 			HEADLINES_US: 'The Guardian Headlines US',
-			OPINION_US: 'The Best of Guardian Opinion: US Edition',
+			SOCCER_US: 'Soccer with Jonathan Wilson',
 			LONG_READ: 'The Long Read',
 			GREEN_LIGHT: 'Green Light',
 			MORNING_MAIL_AU: "Guardian Australia's Morning Mail",

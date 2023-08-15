@@ -672,7 +672,7 @@ describe('Onboarding flow', () => {
 			NewslettersPage.checkboxWithTitle(NEWSLETTERS.GREEN_LIGHT).should(
 				'not.be.checked',
 			);
-			NewslettersPage.checkboxWithTitle(NEWSLETTERS.OPINION_US).should(
+			NewslettersPage.checkboxWithTitle(NEWSLETTERS.SOCCER_US).should(
 				'not.be.checked',
 			);
 
