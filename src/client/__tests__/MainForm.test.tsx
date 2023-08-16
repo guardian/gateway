@@ -5,7 +5,7 @@
 
 import { jsx } from '@emotion/react';
 import { act, fireEvent, render, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom/jest-globals';
 import { MainForm, MainFormProps } from '../components/MainForm';
 
 import { RenderOptions } from '@/client/lib/hooks/useRecaptcha';
