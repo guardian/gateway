@@ -39,6 +39,7 @@ export const Password = () => (
 	/>
 );
 Password.storyName = 'With Password as current';
+
 export const Contact = () => (
 	<ConsentsSubHeader
 		autoRow={autoRow}
