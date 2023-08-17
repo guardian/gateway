@@ -43,8 +43,6 @@ export const NewsletterMap = new Map<
 			Newsletters.DOWN_TO_EARTH,
 			Newsletters.THE_LONG_READ,
 			Newsletters.FIRST_EDITION_UK,
-			// @AB_TEST: Default Weekly Newsletter Test:
-			Newsletters.SATURDAY_ROUNDUP_TRIAL,
 		],
 	],
 	[
@@ -53,8 +51,6 @@ export const NewsletterMap = new Map<
 			Newsletters.DOWN_TO_EARTH,
 			Newsletters.THE_LONG_READ,
 			Newsletters.MORNING_MAIL_AU,
-			// @AB_TEST: Default Weekly Newsletter Test:
-			Newsletters.SATURDAY_ROUNDUP_TRIAL,
 		],
 	],
 	[
@@ -64,8 +60,6 @@ export const NewsletterMap = new Map<
 			Newsletters.AFTERNOON_UPDATE_AU,
 			Newsletters.FIVE_GREAT_READS_AU,
 			Newsletters.SAVED_FOR_LATER_AU,
-			// @AB_TEST: Default Weekly Newsletter Test:
-			Newsletters.SATURDAY_ROUNDUP_TRIAL,
 		],
 	],
 	[
@@ -74,8 +68,6 @@ export const NewsletterMap = new Map<
 			Newsletters.DOWN_TO_EARTH,
 			Newsletters.THE_LONG_READ,
 			Newsletters.FIRST_THING_US,
-			// @AB_TEST: Default Weekly Newsletter Test:
-			Newsletters.SATURDAY_ROUNDUP_TRIAL,
 		],
 	],
 	[
