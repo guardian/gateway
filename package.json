@@ -81,7 +81,7 @@
 		"chalk-rainbow": "^1.0.0",
 		"chromatic": "^6.21.0",
 		"copy-webpack-plugin": "^11.0.0",
-		"cypress": "12.17.3",
+		"cypress": "12.17.4",
 		"cypress-axe": "^1.4.0",
 		"cypress-mailosaur": "2.13.0",
 		"dotenv-webpack": "^8.0.1",
