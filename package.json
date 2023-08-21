@@ -44,7 +44,7 @@
 		"@babel/preset-typescript": "^7.22.5",
 		"@emotion/babel-preset-css-prop": "^11.11.0",
 		"@guardian/eslint-plugin-source-foundations": "^14.0.0",
-		"@guardian/eslint-plugin-source-react-components": "^18.0.0",
+		"@guardian/eslint-plugin-source-react-components": "^19.0.0",
 		"@guardian/node-riffraff-artifact": "^0.3.2",
 		"@guardian/prettier": "^5.0.0",
 		"@storybook/addon-actions": "^7.2.3",
