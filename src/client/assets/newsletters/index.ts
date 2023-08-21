@@ -1,8 +1,8 @@
-export { default as DOWN_TO_EARTH_IMAGE } from './down-to-earth.png';
+export { default as DOWN_TO_EARTH_IMAGE } from './down-to-earth.avif';
 export { default as FIRST_EDITION_UK_IMAGE } from './first-edition.png';
 export { default as THE_LONG_READ_IMAGE } from './the-long-read.jpg';
 export { default as HEADLINES_US_IMAGE } from './us-headlines.png';
-export { default as SOCCER_US_IMAGE } from './us-soccer.jpg';
+export { default as SOCCER_US_IMAGE } from './us-soccer.avif';
 export { default as FIRST_THING_US_IMAGE } from './us-first-thing.png';
 export { default as MORNING_MAIL_AU_IMAGE } from './au-morning-mail.png';
 export { default as AFTERNOON_UPDATE_AU_IMAGE } from './au-afternoon-update.png';
