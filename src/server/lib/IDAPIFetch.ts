@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { joinUrl } from '@guardian/libs';
+import { addApiQueryParamsToPath } from '@/shared/lib/queryParams';
 import { buildUrl, ExtractRouteParams } from '@/shared/lib/routeUtils';
 import { IdApiQueryParams } from '@/shared/model/IdapiQueryParams';
-import { addApiQueryParamsToPath } from '@/shared/lib/queryParams';
 import { ApiRoutePaths } from '@/shared/model/Routes';
+import { joinUrl } from '@guardian/libs';
 
 const { idapiBaseUrl, idapiClientAccessToken, stage, baseUri } =
 	getConfiguration();
@@ -156,3 +156,5 @@ export const APIOptionSelect = ({
 };
 
 export const idapiFetch = APIFetch(idapiBaseUrl);
+export const idapiFetchWithBaseUrlOverride = (idapiBaseUrlOverride?: string) =>
+	APIFetch(idapiBaseUrlOverride ?? idapiBaseUrl);

@@ -1,13 +1,14 @@
 import {
-	idapiFetch,
 	APIGetOptions,
-	APIPatchOptions,
 	APIOptionSelect,
+	APIPatchOptions,
+	idapiFetch,
+	idapiFetchWithBaseUrlOverride,
 } from '@/server/lib/IDAPIFetch';
-import { NewslettersErrors } from '@/shared/model/Errors';
-import { NewsLetter, NewsletterPatch } from '@/shared/model/Newsletter';
 import { logger } from '@/server/lib/serverSideLogger';
 import { IdapiError } from '@/server/models/Error';
+import { NewslettersErrors } from '@/shared/model/Errors';
+import { NewsLetter, NewsletterPatch } from '@/shared/model/Newsletter';
 
 interface NewsletterAPIResponse {
 	id: string;
@@ -38,11 +39,15 @@ export const read = async (request_id?: string): Promise<NewsLetter[]> => {
 	const options = APIGetOptions();
 	try {
 		return (
-			(await idapiFetch({
-				path: '/newsletters',
-				options,
-			})) as NewsletterAPIResponse[]
-		).map(responseToEntity);
+			// NOTE: All newsletters are not consistently available in CODE, so for testing purposes
+			// you can override the base URL here to point to PROD, eg. await idapiFetchWithBaseUrlOverride('https://idapi.theguardian.com')({...
+			(
+				(await idapiFetchWithBaseUrlOverride()({
+					path: '/newsletters',
+					options,
+				})) as NewsletterAPIResponse[]
+			).map(responseToEntity)
+		);
 	} catch (error) {
 		logger.error(`IDAPI Error newsletters read '/newsletters'`, error, {
 			request_id,
