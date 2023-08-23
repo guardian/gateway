@@ -33,7 +33,6 @@ export const NEWSLETTER_IMAGE_POSITIONS: Record<string, string> = {
 	[Newsletters.FIRST_EDITION_UK]: 'bottom left',
 	[Newsletters.DOWN_TO_EARTH]: 'bottom left',
 	[Newsletters.FIRST_THING_US]: 'bottom left',
-	[Newsletters.SOCCER_US]: 'bottom right',
 	[Newsletters.HEADLINES_US]: 'bottom left',
 	[Newsletters.MORNING_MAIL_AU]: 'bottom left',
 	[Newsletters.AFTERNOON_UPDATE_AU]: 'bottom left',

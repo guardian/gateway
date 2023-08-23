@@ -1,20 +1,30 @@
-import React, { FunctionComponent } from 'react';
 import { SerializedStyles, css } from '@emotion/react';
 import {
-	CheckboxGroup,
+	between,
+	body,
+	brand,
+	from,
+	headline,
+	neutral,
+	space,
+	textSans,
+} from '@guardian/source-foundations';
+import {
 	Checkbox,
+	CheckboxGroup,
 	SvgEnvelope,
 } from '@guardian/source-react-components';
-import {
-	brand,
-	space,
-	headline,
-	textSans,
-	body,
-	neutral,
-	from,
-	between,
-} from '@guardian/source-foundations';
+import React, { FunctionComponent } from 'react';
+
+// DELETE THIS IF THE US SOCCER NEWSLETTER IMAGE IS NO LONGER USED
+const usSoccerImageCssOverrides = (id: string) => {
+	if (id === '6030') {
+		return css`
+			background-size: contain;
+			background-color: black;
+		`;
+	}
+};
 
 const image = (imagePath?: string, imagePosition?: string) => {
 	const base = css`
@@ -233,7 +243,14 @@ export const ConsentCard: FunctionComponent<ConsentCardProps> = ({
 			]}
 		>
 			<div css={descriptionBlock(noTopBorderMobile)}>
-				{!noImage && <div css={image(imagePath, imagePosition)} />}
+				{!noImage && (
+					<div
+						css={[
+							image(imagePath, imagePosition),
+							usSoccerImageCssOverrides(id),
+						]}
+					/>
+				)}
 				<div css={[infoGroup(noImage), ieFlexOverflowFix]}>
 					<TitleHeadingTag
 						css={[titleHeading(noImage), `color: ${highlightColor}`]}
