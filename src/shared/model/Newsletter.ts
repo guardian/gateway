@@ -25,8 +25,6 @@ export enum Newsletters {
 	AFTERNOON_UPDATE_AU = '6023',
 	FIVE_GREAT_READS_AU = '6019',
 	SAVED_FOR_LATER_AU = '6003',
-	// @AB_TEST: Default Weekly Newsletter Test:
-	SATURDAY_ROUNDUP_TRIAL = '6028',
 }
 
 export const ALL_NEWSLETTER_IDS = Object.values(Newsletters);
