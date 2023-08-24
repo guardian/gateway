@@ -6,5 +6,6 @@ export const GEOLOCATION_CODES = {
 	GB: 'GB',
 	AMERICA: 'US',
 	AUSTRALIA: 'AU',
+	EUROPE: 'EU',
 	OTHERS: 'ROW',
 };

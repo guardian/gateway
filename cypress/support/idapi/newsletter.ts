@@ -87,6 +87,21 @@ export const allNewsletters = [
 		frequency: 'Every Saturday',
 		exactTargetListId: 4165,
 	},
+	{
+		id: '6013',
+		description: "Alex Hern's looks at how technology is shaping our lives",
+		name: 'TechScape',
+		frequency: 'Weekly',
+		nameId: 'tech-scape',
+	},
+	{
+		id: '4234',
+		description:
+			'The most pivotal stories and debates for Europeans – from identity to economics to the environment',
+		name: 'This is Europe',
+		frequency: 'Weekly',
+		nameId: 'this-is-europe',
+	},
 ];
 
 export const userNewsletters = (

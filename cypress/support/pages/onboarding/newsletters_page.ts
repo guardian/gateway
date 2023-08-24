@@ -14,6 +14,8 @@ class NewslettersPage extends OnboardingPage {
 			AFTERNOON_UPDATE_AU: "Guardian Australia's Afternoon Update",
 			FIVE_GREAT_READS_AU: 'Five Great Reads',
 			SAVED_FOR_LATER_AU: 'Saved for Later',
+			TECHSCAPE: 'TechScape',
+			THIS_IS_EUROPE: 'This is Europe',
 		},
 		Consents: {
 			EVENTS: 'Events & Masterclasses',
