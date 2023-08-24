@@ -185,7 +185,7 @@ describe('Registration email sent page', () => {
 
 				cy.contains('Google reCAPTCHA verification failed.');
 				cy.contains('If the problem persists please try the following:');
-				cy.contains('userhelp@');
+				cy.contains('customer.help@');
 
 				const timeRequestWasMade = new Date();
 				cy.contains('Resend email').click();
