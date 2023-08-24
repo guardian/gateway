@@ -309,7 +309,7 @@ describe('Welcome and set password page', () => {
 			cy.get('button[type="submit"]').click();
 			cy.contains('Google reCAPTCHA verification failed.');
 			cy.contains('If the problem persists please try the following:');
-			cy.contains('userhelp@');
+			cy.contains('customer.help@');
 		});
 
 		it('takes user back to link expired page if "Change email address" clicked', () => {
