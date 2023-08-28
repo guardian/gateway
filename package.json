@@ -134,7 +134,7 @@
 		"@guardian/ab-core": "5.0.0",
 		"@guardian/ab-react": "4.0.1",
 		"@guardian/consent-management-platform": "^13.6.1",
-		"@guardian/libs": "^15.6.4",
+		"@guardian/libs": "^15.7.0",
 		"@guardian/source-foundations": "^13.0.0",
 		"@guardian/source-react-components": "^16.0.0",
 		"@guardian/source-react-components-development-kitchen": "^14.0.0",
