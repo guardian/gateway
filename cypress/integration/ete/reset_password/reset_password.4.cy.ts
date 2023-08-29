@@ -35,7 +35,7 @@ describe('Password reset flow', () => {
 					cy.get('[data-cy="main-form-submit-button"]').click();
 					cy.contains('Google reCAPTCHA verification failed.');
 					cy.contains('If the problem persists please try the following:');
-					cy.contains('userhelp@');
+					cy.contains('customer.help@');
 
 					// Continue checking the password reset flow after reCAPTCHA assertions above.
 					cy.get('[data-cy="main-form-submit-button"]').click();
@@ -92,7 +92,7 @@ describe('Password reset flow', () => {
 					cy.get('[data-cy="main-form-submit-button"]').click();
 					cy.contains('Google reCAPTCHA verification failed.');
 					cy.contains('If the problem persists please try the following:');
-					cy.contains('userhelp@');
+					cy.contains('customer.help@');
 
 					// Continue checking the password reset flow after reCAPTCHA assertions above.
 					cy.get('[data-cy="main-form-submit-button"]').click();
@@ -156,7 +156,7 @@ describe('Password set flow', () => {
 					cy.contains('Send me a link').click();
 					cy.contains('Google reCAPTCHA verification failed.');
 					cy.contains('If the problem persists please try the following:');
-					cy.contains('userhelp@');
+					cy.contains('customer.help@');
 
 					// Continue checking the password reset flow after reCAPTCHA assertions above.
 					cy.contains('Send me a link').click();
