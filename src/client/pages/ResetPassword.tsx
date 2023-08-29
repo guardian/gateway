@@ -90,7 +90,7 @@ export const ResetPassword = ({
 							If you are having trouble, please contact our customer service
 							team at{' '}
 							<ExternalLink href={locations.REPORT_ISSUE}>
-								userhelp@guardian.com
+								customer.help@theguardian.com
 							</ExternalLink>
 						</>
 					}

@@ -122,9 +122,9 @@ export const EmailSent = ({
 						cssOverrides={css`
 							font-weight: 700;
 						`}
-						href="mailto:userhelp@theguardian.com"
+						href="mailto:customer.help@theguardian.com"
 					>
-						userhelp@guardian.com
+						customer.help@theguardian.com
 					</ExternalLink>
 					.
 				</MainBodyText>
