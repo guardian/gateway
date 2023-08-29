@@ -70,9 +70,8 @@ describe('Onboarding flow', () => {
 					.should('have.attr', 'href')
 					.and('include', CommunicationsPage.URL);
 
-				NewslettersPage.allCheckboxes()
-					.should('not.be.checked')
-					.click({ multiple: true });
+				NewslettersPage.allCheckboxes().should('not.be.checked');
+				NewslettersPage.allCheckboxes().click({ multiple: true });
 
 				NewslettersPage.saveAndContinueButton().click();
 
