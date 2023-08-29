@@ -2,8 +2,8 @@ import { ABTest } from '@guardian/ab-core';
 
 export const abSimplifyRegistrationFlowTest: ABTest = {
 	id: 'SimplifyRegistrationFlowTest', // This ID must match the Server Side AB Test
-	start: '2023-08-01',
-	expiry: '2023-09-30', // Remember that the server side test expiry can be different
+	start: '2023-08-30',
+	expiry: '2023-09-08', // Remember that the server side test expiry can be different
 	author: 'Personalisation',
 	description: '',
 	audience: 1.0,
