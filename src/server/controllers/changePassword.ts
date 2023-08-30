@@ -300,7 +300,7 @@ const changePasswordInOkta = async (
 export const setPasswordController = (
 	path: PasswordRoutePath,
 	pageTitle: PasswordPageTitle,
-	successRedirectPath: RoutePaths,
+	successRedirectPath: (r: ResponseWithRequestState) => RoutePaths,
 ) =>
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const { useIdapi } = res.locals.queryParams;
@@ -310,7 +310,7 @@ export const setPasswordController = (
 				pageTitle,
 				req,
 				res,
-				successRedirectPath,
+				successRedirectPath(res),
 			);
 		} else {
 			await changePasswordInIDAPI(
@@ -318,7 +318,7 @@ export const setPasswordController = (
 				pageTitle,
 				req,
 				res,
-				successRedirectPath,
+				successRedirectPath(res),
 			);
 		}
 	});
