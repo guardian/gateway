@@ -11,6 +11,8 @@ SSR localisation relies on country code being sent from the client in the `x-gu-
 
 ---
 
+## Updates
+
 - Newsletter model: `src/shared/model/Newsletter.ts`
 - Assets are saved here: `src/client/assets/newsletters/index.ts`
 - Clientside rendering is managed here: `src/client/models/Newsletter.ts`
@@ -28,7 +30,7 @@ _Notes_:
 
 ## Testing localisation and updates
 
-Localisation can be tested locally by updating the geolocation header set in the Nginx server configuration, eg. add `proxy_set_header "X-GU-GeoLocation" "US";` to Identity Frontends>server>location / config section and restart nginx.
+Localisation can be tested locally by updating the geolocation header set in the Nginx server configuration, eg. add `proxy_set_header "X-GU-GeoLocation" "US";` to Identity Frontends>server>location / config section and restart nginx. _Note_: this works for localhost but will cause Cypress tests to fail locally.
 
 **Potentially impacted Cypress tests:**
 
