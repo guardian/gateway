@@ -103,7 +103,7 @@ router.post(
 	setPasswordController(
 		'/reset-password',
 		'Change Password',
-		'/reset-password/complete',
+		() => '/reset-password/complete',
 	),
 );
 

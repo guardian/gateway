@@ -19,7 +19,9 @@ export const DetailedRecaptchaError = () => (
 		</ul>
 		<p css={[errorContextSpacing, { marginBottom: `${space[3]}px` }]}>
 			For further help please contact our customer service team at{' '}
-			<a href="email:userhelp@theguardian.com">userhelp@theguardian.com</a>
+			<a href="email:customer.help@theguardian.com">
+				customer.help@theguardian.com
+			</a>
 		</p>
 	</>
 );

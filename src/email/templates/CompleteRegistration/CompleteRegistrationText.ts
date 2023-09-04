@@ -11,7 +11,7 @@ The Guardian
 
 If you received this email by mistake, please delete it. Your registration won't be complete if you don't click the link above.
 
-If you have any queries about this email please contact our customer services team at userhelp@theguardian.com
+If you have any queries about this email please contact our customer services team at customer.help@theguardian.com
 
 Guardian News and Media Limited, Kings Place, 90 York Way, London, N1 9GU, United Kingdom
 `;

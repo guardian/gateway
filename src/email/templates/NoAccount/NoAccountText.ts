@@ -13,7 +13,7 @@ https://profile.theguardian.com${buildUrl('/register')}
 
 The Guardian
 
-If you have any queries about this email please contact our customer services team at userhelp@theguardian.com
+If you have any queries about this email please contact our customer services team at customer.help@theguardian.com
 
 Your Data: To find out what personal data we collect and how we use it, please visit our privacy policy at https://www.theguardian.com/help/privacy-policy
 
