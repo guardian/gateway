@@ -78,6 +78,7 @@ router.get(
 				requestState: state,
 				pageTitle: 'Account Deletion',
 			});
+
 			return res.type('html').send(html);
 		} catch (error) {
 			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
