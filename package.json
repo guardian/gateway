@@ -106,7 +106,7 @@
 		"prettier": "^3.0.3",
 		"react-docgen-typescript-plugin": "^1.0.5",
 		"require-from-string": "^2.0.2",
-		"snyk": "^1.1209.0",
+		"snyk": "^1.1210.0",
 		"stmux": "^1.8.7",
 		"storybook": "^7.4.0",
 		"swc-loader": "^0.2.3",
