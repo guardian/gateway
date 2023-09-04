@@ -45,6 +45,8 @@ export const defaultEnv = {
 	REDIS_PASSWORD: 'redispassword',
 	REDIS_HOST: 'localhost:1234',
 	REDIS_SSL: 'false',
+	DELETE_ACCOUNT_STEP_FUNCTION_URL: 'delete-account-step-function-url',
+	DELETE_ACCOUNT_STEP_FUNCTION_API_KEY: 'delete-account-api-key',
 };
 
 export const getServerInstance = async (

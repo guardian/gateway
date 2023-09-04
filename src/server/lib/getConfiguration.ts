@@ -228,6 +228,18 @@ export const getConfiguration = (): Configuration => {
 		sslOn: JSON.parse(getOrDefault(process.env.REDIS_SSL_ON, 'false')),
 	};
 
+	const deleteAccountStepFunction: Configuration['deleteAccountStepFunction'] =
+		{
+			url: getOrThrow(
+				process.env.DELETE_ACCOUNT_STEP_FUNCTION_URL,
+				'DELETE_ACCOUNT_STEP_FUNCTION_URL missing',
+			),
+			apiKey: getOrThrow(
+				process.env.DELETE_ACCOUNT_STEP_FUNCTION_API_KEY,
+				'DELETE_ACCOUNT_STEP_FUNCTION_API_KEY missing',
+			),
+		};
+
 	return {
 		port: +port,
 		idapiBaseUrl,
@@ -255,5 +267,6 @@ export const getConfiguration = (): Configuration => {
 		rateLimiter,
 		membersDataApiUrl,
 		gatewayOAuthEnabled,
+		deleteAccountStepFunction,
 	};
 };
