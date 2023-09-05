@@ -40,6 +40,7 @@ import { ResendConsentEmailPage } from './pages/ResendConsentEmailPage';
 import { DeleteAccountBlockedPage } from '@/client/pages/DeleteAccountBlockedPage';
 import { DeleteAccountPage } from '@/client/pages/DeleteAccountPage';
 import { DeleteAccountEmailPasswordValidationPage } from './pages/DeleteAccountEmailPasswordValidationPage';
+import { DeleteAccountCompletePage } from '@/client/pages/DeleteAccountCompletePage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -230,8 +231,7 @@ const routes: Array<{
 	},
 	{
 		path: '/delete/complete',
-		// TODO
-		element: <MaintenancePage />,
+		element: <DeleteAccountCompletePage />,
 	},
 	{
 		path: '/delete-blocked',
