@@ -348,7 +348,7 @@ const deleteHandler = async (
 			},
 			body: JSON.stringify({
 				identityId: claims.legacy_identity_id,
-				reason: 'accident',
+				reason: authState.data?.deleteReason,
 				email: claims.email,
 			}),
 		});

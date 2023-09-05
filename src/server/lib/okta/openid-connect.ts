@@ -20,12 +20,18 @@ import { RoutePaths } from '@/shared/model/Routes';
  *   - https://developer.okta.com/docs/reference/api/oidc/#parameter-details
  * - `queryParams` - Query params that were used to start the flow,
  *   for example the returnUrl, tracking (ref, refViewId), clientId, etc.
+ * - `data` - any extra data that needs to be persisted between the start and
+ *   end of the authorization code flow, only use for small, non-sensitive data.
+ *   For sensitive data, see the EncryptedStateCookie.
  */
 export interface AuthorizationState {
 	stateParam: string;
 	queryParams: PersistableQueryParams;
 	confirmationPage?: RoutePaths;
 	doNotSetLastAccessCookie?: boolean;
+	data?: {
+		deleteReason?: string; // used to track the reason for self service deletion
+	};
 }
 
 /**
@@ -224,11 +230,13 @@ export const generateAuthorizationState = (
 	queryParams: PersistableQueryParams,
 	confirmationPage?: RoutePaths,
 	doNotSetLastAccessCookie?: boolean,
+	data?: AuthorizationState['data'],
 ): AuthorizationState => ({
 	stateParam: generateRandomString(),
 	queryParams,
 	confirmationPage,
 	doNotSetLastAccessCookie,
+	data,
 });
 
 /**

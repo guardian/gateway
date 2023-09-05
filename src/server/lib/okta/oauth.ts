@@ -6,6 +6,7 @@ import {
 	generateAuthorizationState,
 	setAuthorizationStateCookie,
 	getOpenIdClient,
+	AuthorizationState,
 } from '@/server/lib/okta/openid-connect';
 import { closeSession } from './api/sessions';
 
@@ -69,6 +70,7 @@ export const scopesForSelfServiceDeletion: Scopes[] = [
  * @param closeExistingSession (optional) - if true, we'll close any existing okta session before calling the authorization code flow
  * @param confirmationPagePath (optional) - page to redirect the user to after authentication
  * @param doNotSetLastAccessCookie (optional) - if true, does not update the SC_GU_LA cookie during update of Idapi cookies.  Default false.
+ * @param extraData (optional) - any extra data to store in the authorization state to persist across the auth code flow, use for small amounts of non-sensitive data and things that are not already in the query params
  * @param idp (optional) - okta id of the social identity provider to use
  * @param prompt (optional) - if provided, we'll use this to set the prompt parameter, see https://developer.okta.com/docs/reference/api/oidc/#parameter-details for prompt parameter details, N.B `undefined` has a different meaning to `none`
  * @param redirectUri - the redirect uri to use for the /authorize endpoint
@@ -79,6 +81,7 @@ interface PerformAuthorizationCodeFlowOptions {
 	closeExistingSession?: boolean;
 	confirmationPagePath?: RoutePaths;
 	doNotSetLastAccessCookie?: boolean;
+	extraData?: AuthorizationState['data'];
 	idp?: string;
 	prompt?: 'login' | 'none';
 	redirectUri: string;
@@ -109,6 +112,7 @@ export const performAuthorizationCodeFlow = async (
 		prompt,
 		scopes = ['openid'],
 		redirectUri,
+		extraData,
 	}: PerformAuthorizationCodeFlowOptions,
 ) => {
 	if (closeExistingSession) {
@@ -130,6 +134,7 @@ export const performAuthorizationCodeFlow = async (
 		getPersistableQueryParams(res.locals.queryParams),
 		confirmationPagePath,
 		doNotSetLastAccessCookie,
+		extraData,
 	);
 	setAuthorizationStateCookie(authState, res);
 
