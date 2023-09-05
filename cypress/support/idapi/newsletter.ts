@@ -64,12 +64,12 @@ export const allNewsletters = [
 		exactTargetListId: 4152,
 	},
 	{
-		id: 'best-of-opinion-us',
-		name: 'The Best of Guardian Opinion: US Edition',
+		id: 'soccer-with-jonathan-wilson',
+		name: 'Soccer with Jonathan Wilson',
 		description:
-			"Join the debate on America's most pressing issues with the US edition of our daily op-ed selection",
-		frequency: 'Every weekday',
-		exactTargetListId: 4162,
+			'Jonathan Wilson brings expert analysis on the biggest stories from European soccer',
+		frequency: 'Weekly',
+		exactTargetListId: 6030,
 	},
 	{
 		id: 'green-light',

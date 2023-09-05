@@ -19,7 +19,7 @@ export enum Newsletters {
 	// US newsletters
 	HEADLINES_US = '4152',
 	FIRST_THING_US = '4300',
-	OPINION_US = '4162',
+	SOCCER_US = '6030',
 	// AUS newsletters
 	MORNING_MAIL_AU = '4148',
 	AFTERNOON_UPDATE_AU = '6023',

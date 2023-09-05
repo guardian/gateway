@@ -94,7 +94,7 @@ export const NewsletterMap = new Map<
 			Newsletters.FIRST_THING_US,
 			Newsletters.HEADLINES_US,
 			Newsletters.DOWN_TO_EARTH,
-			Newsletters.OPINION_US,
+			Newsletters.SOCCER_US,
 		],
 	],
 ]);
