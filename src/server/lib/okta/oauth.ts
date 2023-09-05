@@ -23,6 +23,7 @@ export type Scopes =
 	| 'guardian.members-data-api.read.self'
 	| 'guardian.identity-api.newsletters.read.self'
 	| 'guardian.identity-api.newsletters.update.self'
+	| 'guardian.identity-api.user.delete.self.secure'
 	| 'id_token.profile.profile';
 
 /**
@@ -49,6 +50,19 @@ export const scopesForApplication: Scopes[] = [
 	'guardian.identity-api.newsletters.update.self',
 	'guardian.members-data-api.read.self',
 	'id_token.profile.profile',
+];
+
+/**
+ * @name scopesForSelfServiceDeletion
+ * @description Scopes to use when performing self service deletion through the /delete url
+ */
+export const scopesForSelfServiceDeletion: Scopes[] = [
+	'openid',
+	'profile',
+	'email',
+	'guardian.identity-api.user.delete.self.secure',
+	'guardian.identity-api.newsletters.update.self',
+	'guardian.members-data-api.read.self',
 ];
 
 /**

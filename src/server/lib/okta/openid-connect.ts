@@ -59,6 +59,10 @@ interface OpenIdClientRedirectUris {
 		'/oauth/authorization-code/application-callback',
 		RoutePaths
 	>}`;
+	DELETE: `${string}${Extract<
+		'/oauth/authorization-code/delete-callback',
+		RoutePaths
+	>}`;
 }
 
 const { okta, baseUri, stage } = getConfiguration();
@@ -96,6 +100,7 @@ const OIDCIssuer = new Issuer(OIDC_METADATA);
 export const ProfileOpenIdClientRedirectUris: OpenIdClientRedirectUris = {
 	AUTHENTICATION: `${getProfileUrl()}/oauth/authorization-code/callback`,
 	APPLICATION: `${getProfileUrl()}/oauth/authorization-code/application-callback`,
+	DELETE: `${getProfileUrl()}/oauth/authorization-code/delete-callback`,
 };
 
 /**

@@ -10,7 +10,12 @@ import { logger } from '@/server/lib/serverSideLogger';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { getUser } from '@/server/lib/okta/api/users';
 import { authenticate } from '@/server/lib/okta/api/authentication';
-import { OktaError } from '../models/okta/Error';
+import { OktaError } from '@/server/models/okta/Error';
+import {
+	performAuthorizationCodeFlow,
+	scopesForSelfServiceDeletion,
+} from '@/server/lib/okta/oauth';
+import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
 
 router.get(
 	'/delete',
@@ -127,7 +132,12 @@ router.post(
 				});
 			}
 
-			// TODO: delete the user's account
+			// perform the authorization code flow to get an access token specifically for deleting the user
+			return performAuthorizationCodeFlow(req, res, {
+				redirectUri: ProfileOpenIdClientRedirectUris.DELETE,
+				scopes: scopesForSelfServiceDeletion,
+				confirmationPagePath: '/delete/complete',
+			});
 		} catch (error) {
 			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
 				request_id: res.locals.requestId,
