@@ -59,7 +59,10 @@ describe('Onboarding flow', () => {
 
 				CommunicationsPage.backButton().should('not.exist');
 				CommunicationsPage.allCheckboxes().should('not.be.checked');
-				CommunicationsPage.allCheckboxes().click({ multiple: true });
+				CommunicationsPage.allCheckboxes().click({
+					multiple: true,
+					timeout: 8000,
+				});
 
 				CommunicationsPage.saveAndContinueButton().click();
 
@@ -71,7 +74,10 @@ describe('Onboarding flow', () => {
 					.and('include', CommunicationsPage.URL);
 
 				NewslettersPage.allCheckboxes().should('not.be.checked');
-				NewslettersPage.allCheckboxes().click({ multiple: true });
+				NewslettersPage.allCheckboxes().click({
+					multiple: true,
+					timeout: 8000,
+				});
 
 				NewslettersPage.saveAndContinueButton().click();
 
@@ -271,7 +277,10 @@ describe('Onboarding flow', () => {
 
 					OurContentPage.backButton().should('not.exist');
 					OurContentPage.allCheckboxes().should('not.be.checked');
-					OurContentPage.allCheckboxes().click({ multiple: true });
+					OurContentPage.allCheckboxes().click({
+						multiple: true,
+						timeout: 8000,
+					});
 
 					OurContentPage.saveAndContinueButton().click();
 

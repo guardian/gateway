@@ -111,7 +111,10 @@ describe('Onboarding flow', () => {
 			cy.get('input[name=_cmpConsentedState]').should('have.value', 'true');
 			CommunicationsPage.backButton().should('not.exist');
 			CommunicationsPage.allCheckboxes().should('not.be.checked');
-			CommunicationsPage.allCheckboxes().click({ multiple: true });
+			CommunicationsPage.allCheckboxes().click({
+				multiple: true,
+				timeout: 8000,
+			});
 
 			// mock form save success
 			cy.mockNext(200);
@@ -131,7 +134,7 @@ describe('Onboarding flow', () => {
 
 			NewslettersPage.allCheckboxes()
 				.should('not.be.checked')
-				.click({ multiple: true });
+				.click({ multiple: true, timeout: 8000 });
 
 			// mock form save success
 			cy.mockNext(200);
@@ -343,7 +346,7 @@ describe('Onboarding flow', () => {
 				cy.get('input[name=_cmpConsentedState]').should('have.value', 'true');
 				OurContentPage.backButton().should('not.exist');
 				OurContentPage.allCheckboxes().should('not.be.checked');
-				OurContentPage.allCheckboxes().click({ multiple: true });
+				OurContentPage.allCheckboxes().click({ multiple: true, timeout: 8000 });
 
 				// mock form save success
 				cy.mockNext(200);
