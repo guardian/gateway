@@ -39,8 +39,8 @@ import {
 	userNewsletters,
 } from '../../support/idapi/newsletter';
 import Onboarding from '../../support/pages/onboarding/onboarding_page';
-import VerifyEmail from '../../support/pages/verify_email';
 import OurContentPage from '../../support/pages/onboarding/our_content_page';
+import VerifyEmail from '../../support/pages/verify_email';
 
 const { NEWSLETTERS } = NewslettersPage.CONTENT;
 
@@ -936,6 +936,32 @@ describe('Onboarding flow', () => {
 				'not.be.checked',
 			);
 			NewslettersPage.checkboxWithTitle(NEWSLETTERS.SAVED_FOR_LATER_AU).should(
+				'not.be.checked',
+			);
+			cy.contains(NewslettersPage.CONTENT.Consents.EVENTS).should('not.exist');
+
+			CommunicationsPage.backButton().should('exist');
+			CommunicationsPage.saveAndContinueButton().should('exist');
+		});
+
+		it('correct localised newsletters shown for permissioned EU browser, none checked by default', () => {
+			const headers = getGeoLocationHeaders(GEOLOCATION_CODES.EUROPE);
+
+			cy.setEncryptedStateCookie({
+				isCmpConsented: true,
+			});
+			cy.visit(NewslettersPage.URL, { headers, qs: { useIdapi: 'true' } });
+
+			NewslettersPage.checkboxWithTitle(NEWSLETTERS.THIS_IS_EUROPE).should(
+				'not.be.checked',
+			);
+			NewslettersPage.checkboxWithTitle(NEWSLETTERS.FIRST_EDITION_UK).should(
+				'not.be.checked',
+			);
+			NewslettersPage.checkboxWithTitle(NEWSLETTERS.GREEN_LIGHT).should(
+				'not.be.checked',
+			);
+			NewslettersPage.checkboxWithTitle(NEWSLETTERS.TECHSCAPE).should(
 				'not.be.checked',
 			);
 			cy.contains(NewslettersPage.CONTENT.Consents.EVENTS).should('not.exist');

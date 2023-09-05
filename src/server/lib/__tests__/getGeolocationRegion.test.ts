@@ -12,7 +12,7 @@ describe('getGeolocationRegion', () => {
 		{ input: 'GB', output: 'GB' },
 		{ input: 'US', output: 'US' },
 		{ input: 'AU', output: 'AU' },
-		{ input: 'FR', output: 'ROW' },
+		{ input: 'FR', output: 'EU' },
 		{ input: '', output: 'ROW' },
 		{ input: undefined, output: 'ROW' },
 	].forEach(({ input, output }) => {

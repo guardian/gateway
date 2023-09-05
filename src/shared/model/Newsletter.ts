@@ -25,6 +25,9 @@ export enum Newsletters {
 	AFTERNOON_UPDATE_AU = '6023',
 	FIVE_GREAT_READS_AU = '6019',
 	SAVED_FOR_LATER_AU = '6003',
+	// EU newsletters
+	TECHSCAPE = '6013',
+	THIS_IS_EUROPE = '4234',
 }
 
 export const ALL_NEWSLETTER_IDS = Object.values(Newsletters);
