@@ -30,7 +30,19 @@ _Notes_:
 
 ## Testing localisation and updates
 
-Localisation can be tested locally by updating the geolocation header set in the Nginx server configuration, eg. add `proxy_set_header "X-GU-GeoLocation" "US";` to Identity Frontends>server>location / config section and restart nginx. _Note_: this works for localhost but will cause Cypress tests to fail locally.
+Localisation can be tested locally by updating the geolocation header set in the Nginx server configuration, eg. add `proxy_set_header "X-GU-GeoLocation" "US";` to Identity Frontends config section here:
+
+```
+server {
+   location / {
+      proxy_set_header "X-GU-GeoLocation" "FR";
+   }
+}
+```
+
+Restart nginx to apply changes.
+
+_Note_: this works for localhost but will cause Cypress tests to fail locally.
 
 **Potentially impacted Cypress tests:**
 

@@ -944,7 +944,7 @@ describe('Onboarding flow', () => {
 			CommunicationsPage.saveAndContinueButton().should('exist');
 		});
 
-		it.only('correct localised newsletters shown for permissioned EU browser, none checked by default', () => {
+		it('correct localised newsletters shown for permissioned EU browser, none checked by default', () => {
 			const headers = getGeoLocationHeaders(GEOLOCATION_CODES.EUROPE);
 
 			cy.setEncryptedStateCookie({
