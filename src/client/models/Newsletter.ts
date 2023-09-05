@@ -6,14 +6,16 @@ const { brand, news, lifestyle, sport } = palette;
 import {
 	DOWN_TO_EARTH_IMAGE,
 	FIRST_EDITION_UK_IMAGE,
-	THE_LONG_READ_IMAGE,
 	FIRST_THING_US_IMAGE,
-	SOCCER_US_IMAGE,
 	HEADLINES_US_IMAGE,
-	MORNING_MAIL_AU_IMAGE,
+	SOCCER_US_IMAGE,
 	AFTERNOON_UPDATE_AU_IMAGE,
 	FIVE_GREAT_READS_AU_IMAGE,
+	MORNING_MAIL_AU_IMAGE,
 	SAVED_FOR_LATER_AU_IMAGE,
+	TECHSCAPE_IMAGE,
+	THE_LONG_READ_IMAGE,
+	THIS_IS_EUROPE_IMAGE,
 } from '@/client/assets/newsletters';
 
 export const NEWSLETTER_IMAGES: Record<string, string> = {
@@ -27,6 +29,8 @@ export const NEWSLETTER_IMAGES: Record<string, string> = {
 	[Newsletters.AFTERNOON_UPDATE_AU]: AFTERNOON_UPDATE_AU_IMAGE,
 	[Newsletters.FIVE_GREAT_READS_AU]: FIVE_GREAT_READS_AU_IMAGE,
 	[Newsletters.SAVED_FOR_LATER_AU]: SAVED_FOR_LATER_AU_IMAGE,
+	[Newsletters.TECHSCAPE]: TECHSCAPE_IMAGE,
+	[Newsletters.THIS_IS_EUROPE]: THIS_IS_EUROPE_IMAGE,
 };
 
 export const NEWSLETTER_IMAGE_POSITIONS: Record<string, string> = {
@@ -49,4 +53,6 @@ export const NEWSLETTER_COLOURS: Record<string, string> = {
 	[Newsletters.AFTERNOON_UPDATE_AU]: news[400],
 	[Newsletters.FIVE_GREAT_READS_AU]: brand[400],
 	[Newsletters.SAVED_FOR_LATER_AU]: lifestyle[400],
+	[Newsletters.TECHSCAPE]: news[400],
+	[Newsletters.THIS_IS_EUROPE]: news[400],
 };

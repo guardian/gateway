@@ -8,3 +8,5 @@ export { default as MORNING_MAIL_AU_IMAGE } from './au-morning-mail.png';
 export { default as AFTERNOON_UPDATE_AU_IMAGE } from './au-afternoon-update.png';
 export { default as FIVE_GREAT_READS_AU_IMAGE } from './au-five-great-reads.png';
 export { default as SAVED_FOR_LATER_AU_IMAGE } from './au-saved-for-later.png';
+export { default as TECHSCAPE_IMAGE } from './techscape.jpg';
+export { default as THIS_IS_EUROPE_IMAGE } from './this-is-europe.jpg';

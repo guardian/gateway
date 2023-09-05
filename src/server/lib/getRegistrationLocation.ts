@@ -31,7 +31,9 @@ export const getRegistrationLocation = (
 
 const Us: (CountryCode | undefined)[] = ['US', 'AS', 'GU', 'MP', 'PR', 'VI'];
 
-const Europe: (CountryCode | undefined)[] = [
+// This is a list of all the countries in Europe, as defined by the Data Design team.
+// This is also used by getGeoLocationRegion.ts to determine if a user is in Europe.
+export const Europe: (CountryCode | undefined)[] = [
 	'AX',
 	'AL',
 	'AD',
