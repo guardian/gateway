@@ -1,5 +1,6 @@
 import { AB, ABTest, Participations } from '@guardian/ab-core';
 import { abSwitches } from './abSwitches';
+import { abSimplifyRegistrationFlowTest } from './tests/abSimplifyRegistrationFlowTest';
 
 interface ABTestConfiguration {
 	abTestSwitches: Record<string, boolean>;
@@ -9,7 +10,7 @@ interface ABTestConfiguration {
 }
 
 // Add AB tests to run in this array
-export const tests: ABTest[] = [];
+export const tests: ABTest[] = [abSimplifyRegistrationFlowTest];
 
 const getDefaultABTestConfiguration = (): ABTestConfiguration => ({
 	abTestSwitches: abSwitches,
