@@ -3,18 +3,30 @@ import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { MainForm } from '@/client/components/MainForm';
 import { DeleteAccountReturnLink } from '@/client/components/DeleteAccountReturnLink';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import { QueryParams } from '@/shared/model/QueryParams';
 
 export type DeleteAccountEmailPasswordVerificationProps = {
 	validationType: 'email' | 'password';
+	queryParams: QueryParams;
 };
 
 export const DeleteAccountEmailPasswordValidation = ({
 	validationType,
+	queryParams,
 }: DeleteAccountEmailPasswordVerificationProps) => {
 	return (
 		<MainLayout pageHeader="Delete your Guardian account">
 			{validationType === 'email' && (
-				<MainForm formAction="" submitButtonText="Send validation email">
+				<MainForm
+					formAction={buildUrlWithQueryParams(
+						'/delete-email-validation',
+						{},
+						queryParams,
+					)}
+					submitButtonText="Send validation email"
+					disableOnSubmit
+				>
 					<MainBodyText noMarginBottom>
 						Before you can delete your account you need to validate your email
 						address. Once you have validated, please reload this page and you
@@ -23,7 +35,15 @@ export const DeleteAccountEmailPasswordValidation = ({
 				</MainForm>
 			)}
 			{validationType === 'password' && (
-				<MainForm formAction="" submitButtonText="Set password">
+				<MainForm
+					formAction={buildUrlWithQueryParams(
+						'/delete-email-validation',
+						{},
+						queryParams,
+					)}
+					submitButtonText="Set password"
+					disableOnSubmit
+				>
 					<MainBodyText noMarginBottom>
 						Before you can delete your account you need to set a password for
 						your account. Once you have done so, please reload this page and you

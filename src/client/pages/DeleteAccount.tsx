@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { RadioGroup, Radio } from '@guardian/source-react-components';
 import { MainLayout } from '@/client/layouts/Main';
 import { MainForm } from '@/client/components/MainForm';
@@ -10,14 +10,27 @@ import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { DeleteAccountReturnLink } from '@/client/components/DeleteAccountReturnLink';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
+import { FieldError } from '@/shared/model/ClientState';
 
 interface Props {
 	queryParams: QueryParams;
+	fieldErrors?: FieldError[];
+	formError?: string;
+	error?: string;
 }
 
-export const DeleteAccount = ({ queryParams }: Props) => {
+export const DeleteAccount = ({
+	queryParams,
+	fieldErrors = [],
+	formError,
+	error,
+}: Props) => {
+	const [passwordError] = useState<string | undefined>(
+		fieldErrors.find((fieldError) => fieldError.field === 'password')?.message,
+	);
+
 	return (
-		<MainLayout pageHeader="Delete your Guardian account">
+		<MainLayout pageHeader="Delete your Guardian account" errorOverride={error}>
 			{/* Help Text */}
 			<MainBodyText>
 				Please read the following paragraphs carefully to understand how account
@@ -139,6 +152,8 @@ export const DeleteAccount = ({ queryParams }: Props) => {
 			<MainForm
 				formAction={buildUrlWithQueryParams('/delete', {}, queryParams)}
 				submitButtonText="Delete your account"
+				formErrorMessageFromParent={formError}
+				disableOnSubmit
 			>
 				{/* reason select */}
 				<RadioGroup
@@ -179,7 +194,11 @@ export const DeleteAccount = ({ queryParams }: Props) => {
 					conditions and would like to proceed with account deletion.
 				</MainBodyText>
 				{/* password input */}
-				<PasswordInput label="Password" autoComplete="current-password" />
+				<PasswordInput
+					error={passwordError}
+					label="Password"
+					autoComplete="current-password"
+				/>
 			</MainForm>
 			<DeleteAccountReturnLink />
 		</MainLayout>

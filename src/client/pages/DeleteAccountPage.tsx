@@ -4,7 +4,18 @@ import useClientState from '@/client/lib/hooks/useClientState';
 
 export const DeleteAccountPage = () => {
 	const clientState = useClientState();
-	const { queryParams } = clientState;
+	const {
+		queryParams,
+		pageData: { formError, fieldErrors } = {},
+		globalMessage: { error } = {},
+	} = clientState;
 
-	return <DeleteAccount queryParams={queryParams} />;
+	return (
+		<DeleteAccount
+			queryParams={queryParams}
+			formError={formError}
+			fieldErrors={fieldErrors}
+			error={error}
+		/>
+	);
 };

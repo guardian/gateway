@@ -18,7 +18,11 @@ import {
 	clearSignOutCookie,
 	setIDAPICookies,
 } from '@/server/lib/idapi/IDAPICookies';
-import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
+import {
+	FederationErrors,
+	GenericErrors,
+	SignInErrors,
+} from '@/shared/model/Errors';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import postSignInController from '@/server/lib/postSignInController';
 import { IdTokenClaims, TokenSet } from 'openid-client';
@@ -381,7 +385,12 @@ const deleteHandler = async (
 		});
 		trackMetric('OAuthAuthorization::Failure');
 
-		// TODO: redirect to delete page with error
+		return res.redirect(
+			303,
+			addQueryParamsToPath('/delete', res.locals.queryParams, {
+				error_description: GenericErrors.DEFAULT,
+			}),
+		);
 	}
 };
 

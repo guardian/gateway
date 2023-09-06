@@ -251,8 +251,7 @@ const routes: Array<{
 	},
 	{
 		path: '/delete/email-sent',
-		// TODO
-		element: <MaintenancePage />,
+		element: <EmailSentPage />,
 	},
 ];
 

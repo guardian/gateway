@@ -16,6 +16,9 @@ import {
 	scopesForSelfServiceDeletion,
 } from '@/server/lib/okta/oauth';
 import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
+import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
+import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import { GenericErrors } from '@/shared/model/Errors';
 
 router.get(
 	'/delete',
@@ -72,6 +75,9 @@ router.get(
 							pageData: {
 								contentAccess,
 							},
+							globalMessage: {
+								error: state.queryParams.error_description,
+							},
 						}),
 					});
 					return res.type('html').send(html);
@@ -80,7 +86,11 @@ router.get(
 
 			// if everything is ok, show the delete page
 			const html = renderer('/delete', {
-				requestState: state,
+				requestState: mergeRequestState(state, {
+					globalMessage: {
+						error: state.queryParams.error_description,
+					},
+				}),
 				pageTitle: 'Account Deletion',
 			});
 
@@ -96,6 +106,9 @@ router.get(
 				requestState: mergeRequestState(state, {
 					pageData: {
 						formError: message,
+					},
+					globalMessage: {
+						error: state.queryParams.error_description,
 					},
 				}),
 				pageTitle: 'Account Deletion',
@@ -146,14 +159,89 @@ router.post(
 				error instanceof OktaError &&
 				error.name === 'AuthenticationFailedError'
 			) {
-				// TODO: handle this error in the UI
+				const html = renderer('/delete', {
+					requestState: mergeRequestState(state, {
+						pageData: {
+							fieldErrors: [
+								{
+									field: 'password',
+									message: 'Password is incorrect',
+								},
+							],
+						},
+					}),
+					pageTitle: 'Account Deletion',
+				});
+				return res.status(error.status).type('html').send(html);
 			}
 
-			// TODO: handle other errors
+			const html = renderer('/delete', {
+				requestState: mergeRequestState(state, {
+					pageData: {
+						formError: GenericErrors.DEFAULT,
+					},
+				}),
+				pageTitle: 'Account Deletion',
+			});
+			return res.status(500).type('html').send(html);
 		}
-
-		return res.redirect(303, `/delete`);
 	}),
+);
+
+router.post(
+	'/delete-email-validation',
+	loginMiddlewareOAuth,
+	async (req: Request, res: ResponseWithRequestState) => {
+		try {
+			const { sub, email } = res.locals.oauthState.idToken!.claims;
+
+			if (typeof sub !== 'string' || typeof email !== 'string') {
+				throw new Error('uid and email must be strings');
+			}
+
+			await sendEmailToUnvalidatedUser({
+				id: sub,
+				email,
+				request_id: res.locals.requestId,
+			});
+
+			return res.redirect(
+				303,
+				addQueryParamsToPath('/delete/email-sent', res.locals.queryParams, {
+					emailSentSuccess: true,
+				}),
+			);
+		} catch (error) {
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+				request_id: res.locals.requestId,
+			});
+			return res.redirect(
+				303,
+				addQueryParamsToPath('/delete', res.locals.queryParams, {
+					error_description: GenericErrors.DEFAULT,
+				}),
+			);
+		}
+	},
+);
+
+router.get(
+	'/delete/email-sent',
+	loginMiddlewareOAuth,
+	(req: Request, res: ResponseWithRequestState) => {
+		const { email } = res.locals.oauthState.idToken!.claims;
+
+		const state = res.locals;
+		const html = renderer('/delete/email-sent', {
+			requestState: mergeRequestState(state, {
+				pageData: {
+					email: typeof email === 'string' ? email : undefined,
+				},
+			}),
+			pageTitle: 'Check Your Inbox',
+		});
+		return res.type('html').send(html);
+	},
 );
 
 router.get(

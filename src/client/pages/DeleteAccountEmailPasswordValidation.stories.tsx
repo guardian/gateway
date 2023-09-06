@@ -10,14 +10,20 @@ export default {
 } as Meta;
 
 export const Email = () => (
-	<DeleteAccountEmailPasswordValidation validationType="email" />
+	<DeleteAccountEmailPasswordValidation
+		validationType="email"
+		queryParams={{ returnUrl: '#' }}
+	/>
 );
 Email.story = {
 	name: 'with validationType email',
 };
 
 export const Password = () => (
-	<DeleteAccountEmailPasswordValidation validationType="password" />
+	<DeleteAccountEmailPasswordValidation
+		validationType="password"
+		queryParams={{ returnUrl: '#' }}
+	/>
 );
 Password.story = {
 	name: 'with validationType password',
