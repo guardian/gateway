@@ -19,6 +19,7 @@ import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connec
 import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { GenericErrors } from '@/shared/model/Errors';
+import { UserAttributesResponse } from '@/shared/lib/members-data-api';
 
 router.get(
 	'/delete',
@@ -26,11 +27,31 @@ router.get(
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
 		try {
+			/**
+			 * Cypress Test START
+			 *
+			 * This code checks if we're running in Cypress
+			 */
+			const runningInCypress = process.env.RUNNING_IN_CYPRESS === 'true';
+			const cypressMockStateCookie = req.cookies['cypress-mock-state'];
+			/**
+			 * Cypress Test END
+			 */
+
 			// get the current user profile
 			const user = await getUser(state.oauthState.idToken!.claims.sub);
 
 			// check if the user has validated their email address
-			if (!user.profile.emailValidated) {
+			if (
+				!user.profile.emailValidated ||
+				/**
+				 * Cypress Test
+				 *
+				 * This code checks if we're running in Cypress to
+				 * mock the user's email validation status
+				 */
+				(runningInCypress && cypressMockStateCookie === 'unvalidatedEmail')
+			) {
 				// if not, ask them to validate their email address
 				const html = renderer('/delete-email-validation', {
 					pageTitle: 'Verify Email',
@@ -40,7 +61,16 @@ router.get(
 			}
 
 			// check if the user has a password set
-			if (!user.credentials.password) {
+			if (
+				!user.credentials.password ||
+				/**
+				 * Cypress Test
+				 *
+				 * This code checks if we're running in Cypress to
+				 * mock the user's password
+				 */
+				(runningInCypress && cypressMockStateCookie === 'noPassword')
+			) {
 				// if not, ask them to set a password
 				const html = renderer('/delete-set-password', {
 					pageTitle: 'Create Password',
@@ -57,7 +87,63 @@ router.get(
 
 			// check if the user has a paid product
 			if (userAttributes) {
-				const { contentAccess } = userAttributes;
+				const contentAccess: UserAttributesResponse['contentAccess'] = (() => {
+					/**
+					 * Cypress Test START
+					 *
+					 * This code is only used in Cypress tests to mock the user's content access
+					 */
+					if (runningInCypress && cypressMockStateCookie) {
+						const cypressContentAccess: UserAttributesResponse['contentAccess'] =
+							{
+								digitalPack: false,
+								guardianWeeklySubscriber: false,
+								member: false,
+								paidMember: false,
+								paperSubscriber: false,
+								recurringContributor: false,
+								guardianPatron: false,
+								supporterPlus: false,
+							};
+
+						switch (cypressMockStateCookie) {
+							case 'digitalPack':
+								// eslint-disable-next-line functional/immutable-data
+								cypressContentAccess.digitalPack = true;
+								break;
+							case 'guardianWeeklySubscriber':
+								// eslint-disable-next-line functional/immutable-data
+								cypressContentAccess.guardianWeeklySubscriber = true;
+								break;
+							case 'member':
+								// eslint-disable-next-line functional/immutable-data
+								cypressContentAccess.member = true;
+								break;
+							case 'paidMember':
+								// eslint-disable-next-line functional/immutable-data
+								cypressContentAccess.paidMember = true;
+								break;
+							case 'paperSubscriber':
+								// eslint-disable-next-line functional/immutable-data
+								cypressContentAccess.paperSubscriber = true;
+								break;
+							case 'recurringContributor':
+								// eslint-disable-next-line functional/immutable-data
+								cypressContentAccess.recurringContributor = true;
+								break;
+							default:
+								break;
+						}
+
+						return cypressContentAccess;
+					}
+					/**
+					 * Cypress Test END
+					 */
+
+					// default to the user's content access from the members data api if not in Cypress
+					return userAttributes.contentAccess;
+				})();
 
 				const hasPaidProduct =
 					contentAccess.digitalPack ||
