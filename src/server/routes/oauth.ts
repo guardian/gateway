@@ -36,7 +36,7 @@ import {
 } from '@/server/lib/okta/tokens';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 
-const { deleteAccountStepFunction } = getConfiguration();
+const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
 interface OAuthError {
 	error: string;
@@ -361,11 +361,20 @@ const deleteHandler = async (
 			throw new Error(await response.text());
 		}
 
-		const returnUrl = authState.confirmationPage
-			? addQueryParamsToPath(authState.confirmationPage, authState.queryParams)
-			: authState.queryParams.returnUrl;
+		// the confirmation page is the page we want to go to after sign out
+		const confirmationPage = encodeURIComponent(
+			`https://${baseUri}${addQueryParamsToPath(
+				authState.confirmationPage || '/delete/complete',
+				authState.queryParams,
+			)}`,
+		);
 
-		return res.redirect(303, returnUrl);
+		// sign out link is used to clear any cookies the user has and set the GU_SO cookie post deletion
+		const signOutLink = addQueryParamsToPath('/signout', {
+			returnUrl: confirmationPage,
+		});
+
+		return res.redirect(303, signOutLink);
 	} catch (error) {
 		// check if it's an oauth/oidc error
 		if (isOAuthError(error)) {
