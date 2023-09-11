@@ -10,7 +10,6 @@ import {
 import { greyBorderSides } from '@/client/styles/Consents';
 import { ConsentsSubHeader } from '@/client/components/ConsentsSubHeader';
 import { ConsentsHeader } from '@/client/components/ConsentsHeader';
-import { abSimplifyRegistrationFlowTest } from '@/shared/model/experiments/tests/abSimplifyRegistrationFlowTest';
 
 interface ConsentsLayoutProps {
 	current?: string;
@@ -39,13 +38,8 @@ export const ConsentsLayout: FunctionComponent<
 	const {
 		globalMessage: { error: globalError, success: globalSuccess } = {},
 		pageData: { isNativeApp } = {},
-		//@AB_TEST: 3 Stage Registration Flow Test
-		abTesting: { participations = {} } = {},
 	} = clientState;
-	//@AB_TEST: 3 Stage Registration Flow Test
-	const isInAbSimplifyRegFlowTest =
-		participations[abSimplifyRegistrationFlowTest.id]?.variant ===
-		abSimplifyRegistrationFlowTest.variants[0].id;
+
 	return (
 		<>
 			<ConsentsHeader
@@ -61,8 +55,6 @@ export const ConsentsLayout: FunctionComponent<
 					errorMessage={errorMessage}
 					errorContext={errorContext}
 					isNativeApp={isNativeApp}
-					//@AB_TEST: 3 Stage Registration Flow Test
-					isInAbSimplifyRegFlowTest={isInAbSimplifyRegFlowTest}
 				/>
 				{children && (
 					<section css={[gridRow, greyBorderSides]}>{children}</section>
