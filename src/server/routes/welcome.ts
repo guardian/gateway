@@ -8,6 +8,7 @@ import handleRecaptcha from '@/server/lib/recaptcha';
 import { renderer } from '@/server/lib/renderer';
 import { ApiError } from '@/server/models/Error';
 import { ResponseWithRequestState } from '@/server/models/Express';
+import { consentPages } from '@/server/routes/consents';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import deepmerge from 'deepmerge';
 import { Request, Router } from 'express';
@@ -19,7 +20,6 @@ import { GenericErrors } from '@/shared/model/Errors';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { setEncryptedStateCookieForOktaRegistration } from './register';
 import { mergeRequestState } from '@/server/lib/requestState';
-import { getConsentPages } from './consents';
 
 const { okta } = getConfiguration();
 
@@ -125,11 +125,7 @@ router.get(
 // POST form handler to set password on welcome page
 router.post(
 	'/welcome/:token',
-	setPasswordController(
-		'/welcome',
-		'Welcome',
-		(res) => getConsentPages(res.locals.abTestAPI)[0].path,
-	),
+	setPasswordController('/welcome', 'Welcome', consentPages[0].path),
 );
 
 const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {

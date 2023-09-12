@@ -11,6 +11,7 @@ import { ChangePasswordCompletePage } from '@/client/pages/ChangePasswordComplet
 import { ResendPasswordPage } from '@/client/pages/ResendPasswordPage';
 import { ConsentsDataPage } from '@/client/pages/ConsentsDataPage';
 import { ConsentsCommunicationPage } from '@/client/pages/ConsentsCommunicationPage';
+import { ConsentsNewslettersPage } from '@/client/pages/ConsentsNewslettersPage';
 import { ConsentsConfirmationPage } from '@/client/pages/ConsentsConfirmationPage';
 import { ResendEmailVerificationPage } from '@/client/pages/ResendEmailVerificationPage';
 import { UnexpectedErrorPage } from '@/client/pages/UnexpectedErrorPage';
@@ -36,8 +37,6 @@ import { ChangeEmailErrorPage } from '@/client/pages/ChangeEmailErrorPage';
 import { SubscriptionSuccessPage } from '@/client/pages/SubscriptionSuccessPage';
 import { SubscriptionErrorPage } from '@/client/pages/SubscriptionErrorPage';
 import { ResendConsentEmailPage } from './pages/ResendConsentEmailPage';
-import { ConsentsOurContentABPage } from './pages/ConsentsOurContentABPage';
-import { ConsentsNewslettersPage } from './pages/ConsentsNewslettersPage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -127,11 +126,6 @@ const routes: Array<{
 	{
 		path: '/consents/data',
 		element: <ConsentsDataPage />,
-	},
-	//@AB_TEST: 3 Stage Registration Flow Test
-	{
-		path: '/consents/our-content',
-		element: <ConsentsOurContentABPage />,
 	},
 	{
 		path: '/consents/communication',
