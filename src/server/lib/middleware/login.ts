@@ -23,6 +23,7 @@ import {
 	verifyAccessToken,
 	verifyIdToken,
 } from '@/server/lib/okta/tokens';
+import { getSession } from '@/server/lib/okta/api/sessions';
 
 const profileUrl = getProfileUrl();
 
@@ -38,6 +39,34 @@ export const loginMiddlewareOAuth = async (
 	if (res.locals.queryParams.useIdapi || !gatewayOAuthEnabled) {
 		trackMetric('LoginMiddlewareOAuth::UseIdapi');
 		return loginMiddleware(req, res, next);
+	}
+
+	// check if the user has an existing Okta session cookie
+	// if they don't have a valid session, redirect them to the login page, and clear any existing tokens
+	try {
+		const oktaSessionCookieId: string | undefined = req.cookies.sid;
+
+		// if there is no okta session cookie, go to the catch block
+		if (!oktaSessionCookieId) {
+			throw new Error('No Okta session cookie');
+		}
+
+		// if there is an okta session cookie, check if it is valid, if not `getSession` will throw an error
+		await getSession(oktaSessionCookieId);
+	} catch (error) {
+		trackMetric('LoginMiddlewareOAuth::NoOktaSession');
+
+		// clear existing tokens
+		checkAndDeleteOAuthTokenCookies(req, res);
+
+		// redirect to the login page, with the returnUrl set to the current page
+		return res.redirect(
+			303,
+			addQueryParamsToUntypedPath(LOGIN_REDIRECT_URL, {
+				...res.locals.queryParams,
+				returnUrl: joinUrl(profileUrl, req.path),
+			}),
+		);
 	}
 
 	// if a user has the GU_SO cookie, they have recently signed out
@@ -97,6 +126,9 @@ export const loginMiddlewareOAuth = async (
 	} else {
 		trackMetric('LoginMiddlewareOAuth::NoOAuthTokens');
 	}
+
+	// no: check if the user has a `sid` cookie which is the Okta session cookie
+	// we can use this to check if the user is probably logged in
 
 	// no: attempt to do auth code flow to get new tokens
 	// perform the auth code flow

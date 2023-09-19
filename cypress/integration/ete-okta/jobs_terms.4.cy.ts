@@ -45,7 +45,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
 			cy.visit(termsAcceptPageUrl);
 			cy.url().should(
 				'include',
-				'https://profile.thegulocal.com/signin?fromURI=',
+				'https://profile.thegulocal.com/signin?returnUrl=',
 			);
 		});
 
