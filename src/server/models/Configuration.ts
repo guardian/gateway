@@ -29,6 +29,10 @@ export interface Configuration {
 	rateLimiter: RateLimiterConfiguration;
 	membersDataApiUrl: string;
 	gatewayOAuthEnabled: boolean;
+	deleteAccountStepFunction: {
+		url: string;
+		apiKey: string;
+	};
 }
 
 export interface AWSConfiguration {

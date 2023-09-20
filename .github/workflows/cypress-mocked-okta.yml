@@ -98,6 +98,8 @@ jobs:
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
           REDIS_SSL_ON: false
           RATE_LIMITER_CONFIG: '{"enabled":true,"defaultBuckets":{"globalBucket":{"capacity":500,"addTokenMs":50}}}'
+          DELETE_ACCOUNT_STEP_FUNCTION_URL: delete-account-step-function-url
+          DELETE_ACCOUNT_STEP_FUNCTION_API_KEY: delete-account-step-function-api-key
           # Required for the Cypress tests to run as we're unable to verify the created certs
           NODE_TLS_REJECT_UNAUTHORIZED: 0
           # Used to tell Gateway server we're running in Cypress

@@ -20,12 +20,18 @@ import { RoutePaths } from '@/shared/model/Routes';
  *   - https://developer.okta.com/docs/reference/api/oidc/#parameter-details
  * - `queryParams` - Query params that were used to start the flow,
  *   for example the returnUrl, tracking (ref, refViewId), clientId, etc.
+ * - `data` - any extra data that needs to be persisted between the start and
+ *   end of the authorization code flow, only use for small, non-sensitive data.
+ *   For sensitive data, see the EncryptedStateCookie.
  */
 export interface AuthorizationState {
 	stateParam: string;
 	queryParams: PersistableQueryParams;
 	confirmationPage?: RoutePaths;
 	doNotSetLastAccessCookie?: boolean;
+	data?: {
+		deleteReason?: string; // used to track the reason for self service deletion
+	};
 }
 
 /**
@@ -57,6 +63,10 @@ interface OpenIdClientRedirectUris {
 	>}`;
 	APPLICATION: `${string}${Extract<
 		'/oauth/authorization-code/application-callback',
+		RoutePaths
+	>}`;
+	DELETE: `${string}${Extract<
+		'/oauth/authorization-code/delete-callback',
 		RoutePaths
 	>}`;
 }
@@ -96,6 +106,7 @@ const OIDCIssuer = new Issuer(OIDC_METADATA);
 export const ProfileOpenIdClientRedirectUris: OpenIdClientRedirectUris = {
 	AUTHENTICATION: `${getProfileUrl()}/oauth/authorization-code/callback`,
 	APPLICATION: `${getProfileUrl()}/oauth/authorization-code/application-callback`,
+	DELETE: `${getProfileUrl()}/oauth/authorization-code/delete-callback`,
 };
 
 /**
@@ -219,11 +230,13 @@ export const generateAuthorizationState = (
 	queryParams: PersistableQueryParams,
 	confirmationPage?: RoutePaths,
 	doNotSetLastAccessCookie?: boolean,
+	data?: AuthorizationState['data'],
 ): AuthorizationState => ({
 	stateParam: generateRandomString(),
 	queryParams,
 	confirmationPage,
 	doNotSetLastAccessCookie,
+	data,
 });
 
 /**

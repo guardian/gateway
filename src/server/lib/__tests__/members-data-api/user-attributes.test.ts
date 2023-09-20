@@ -1,7 +1,5 @@
-import {
-	getUserAttributes,
-	UserAttributesResponse,
-} from '../../members-data-api/user-attributes';
+import { getUserAttributes } from '../../members-data-api/user-attributes';
+import { UserAttributesResponse } from '@/shared/lib/members-data-api';
 
 jest.mock('@/server/lib/getConfiguration', () => ({
 	getConfiguration: () => ({

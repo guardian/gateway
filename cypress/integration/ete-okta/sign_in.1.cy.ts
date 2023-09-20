@@ -163,10 +163,10 @@ describe('Sign in flow, Okta enabled', () => {
 							// Refresh our user session
 							cy.visit(
 								`/signin/refresh?returnUrl=${encodeURIComponent(
-									`https://${Cypress.env('BASE_URI')}/consents`,
+									`https://${Cypress.env('BASE_URI')}/reset-password`,
 								)}`,
 							);
-							cy.url().should('include', '/consents');
+							cy.url().should('include', '/reset-password');
 						});
 					});
 				},
@@ -203,10 +203,10 @@ describe('Sign in flow, Okta enabled', () => {
 					// Visit the refresh endpoint
 					cy.visit(
 						`/signin/refresh?returnUrl=${encodeURIComponent(
-							`https://${Cypress.env('BASE_URI')}/consents`,
+							`https://${Cypress.env('BASE_URI')}/reset-password`,
 						)}`,
 					);
-					cy.url().should('include', '/consents');
+					cy.url().should('include', '/reset-password');
 
 					cy.getCookie('sid').should('not.exist');
 				},

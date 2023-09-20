@@ -24,7 +24,7 @@ export const SignedInAs = ({
 		errorOverride={pageError}
 		errorSmallMarginBottom={!!pageError}
 	>
-		<MainBodyText noMargin>
+		<MainBodyText noMarginBottom>
 			You are signed in with <br />
 			<b>{email}</b>.
 		</MainBodyText>
@@ -38,7 +38,7 @@ export const SignedInAs = ({
 		>
 			Continue
 		</LinkButton>
-		<MainBodyText noMargin>
+		<MainBodyText noMarginBottom>
 			<Link href={signOutLink}>Sign in</Link> with a different email.
 		</MainBodyText>
 	</MainLayout>

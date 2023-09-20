@@ -37,6 +37,10 @@ import { ChangeEmailErrorPage } from '@/client/pages/ChangeEmailErrorPage';
 import { SubscriptionSuccessPage } from '@/client/pages/SubscriptionSuccessPage';
 import { SubscriptionErrorPage } from '@/client/pages/SubscriptionErrorPage';
 import { ResendConsentEmailPage } from './pages/ResendConsentEmailPage';
+import { DeleteAccountBlockedPage } from '@/client/pages/DeleteAccountBlockedPage';
+import { DeleteAccountPage } from '@/client/pages/DeleteAccountPage';
+import { DeleteAccountEmailPasswordValidationPage } from './pages/DeleteAccountEmailPasswordValidationPage';
+import { DeleteAccountCompletePage } from '@/client/pages/DeleteAccountCompletePage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -220,6 +224,34 @@ const routes: Array<{
 		element: (
 			<EmailSentPage formTrackingName="consent-resend" showHelp={true} />
 		),
+	},
+	{
+		path: '/delete',
+		element: <DeleteAccountPage />,
+	},
+	{
+		path: '/delete/complete',
+		element: <DeleteAccountCompletePage />,
+	},
+	{
+		path: '/delete-blocked',
+		element: <DeleteAccountBlockedPage />,
+	},
+	{
+		path: '/delete-email-validation',
+		element: (
+			<DeleteAccountEmailPasswordValidationPage validationType="email" />
+		),
+	},
+	{
+		path: '/delete-set-password',
+		element: (
+			<DeleteAccountEmailPasswordValidationPage validationType="password" />
+		),
+	},
+	{
+		path: '/delete/email-sent',
+		element: <EmailSentPage />,
 	},
 ];
 

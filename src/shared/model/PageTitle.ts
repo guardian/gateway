@@ -30,7 +30,10 @@ export type PageTitle =
 	| 'Subscribe Error'
 	| 'Subscribe Confirmation'
 	| 'Unsubscribe Error'
-	| 'Unsubscribe Confirmation';
+	| 'Unsubscribe Confirmation'
+	| 'Account Deletion'
+	| 'Account Deletion Complete'
+	| 'Account Deletion Blocked';
 
 export type PasswordPageTitle = Extract<
 	'Welcome' | 'Create Password' | 'Change Password',

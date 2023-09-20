@@ -21,6 +21,12 @@ export const ValidRoutePathsArray = [
 	'/consent-token/error',
 	'/consent-token/resend',
 	'/consent-token/email-sent',
+	'/delete',
+	'/delete/complete',
+	'/delete/email-sent',
+	'/delete-blocked',
+	'/delete-email-validation',
+	'/delete-set-password',
 	'/error',
 	'/magic-link', //this is not being used until MVP4
 	'/magic-link/email-sent', //this is not being used until MVP4
@@ -28,6 +34,7 @@ export const ValidRoutePathsArray = [
 	'/oauth/authorization-code/:callbackParam',
 	'/oauth/authorization-code/application-callback',
 	'/oauth/authorization-code/callback',
+	'/oauth/authorization-code/delete-callback',
 	'/register',
 	'/register/email-sent',
 	'/register/email-sent/resend',

@@ -19,11 +19,11 @@ export const ChangePasswordComplete = ({
 	return (
 		<MainLayout pageHeader={headerText}>
 			{email ? (
-				<MainBodyText noMargin>
+				<MainBodyText noMarginBottom>
 					The password for <b>{email}</b> was successfully {action}.
 				</MainBodyText>
 			) : (
-				<MainBodyText noMargin>
+				<MainBodyText noMarginBottom>
 					The password for your account was successfully {action}.
 				</MainBodyText>
 			)}

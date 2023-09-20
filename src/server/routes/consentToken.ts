@@ -27,7 +27,7 @@ router.get(
 
 			// Redirect to /consents/thank-you (a page managed by Frontend). This is
 			// to retain the legacy behaviour of the route from identity-frontend.
-			return res.redirect(303, '/consents/thank-you');
+			return res.redirect(303, '/consents/thank-you?useIdapi=true');
 		} catch (error) {
 			logger.error(`${req.method} ${req.originalUrl} Error`, error, {
 				request_id: res.locals.requestId,

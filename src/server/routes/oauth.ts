@@ -18,7 +18,11 @@ import {
 	clearSignOutCookie,
 	setIDAPICookies,
 } from '@/server/lib/idapi/IDAPICookies';
-import { FederationErrors, SignInErrors } from '@/shared/model/Errors';
+import {
+	FederationErrors,
+	GenericErrors,
+	SignInErrors,
+} from '@/shared/model/Errors';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import postSignInController from '@/server/lib/postSignInController';
 import { IdTokenClaims, TokenSet } from 'openid-client';
@@ -30,6 +34,9 @@ import {
 	checkAndDeleteOAuthTokenCookies,
 	setOAuthTokenCookie,
 } from '@/server/lib/okta/tokens';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+
+const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
 interface OAuthError {
 	error: string;
@@ -314,6 +321,88 @@ const applicationHandler = (
 	}
 };
 
+const deleteHandler = async (
+	req: Request,
+	res: ResponseWithRequestState,
+	tokenSet: TokenSet,
+	authState: AuthorizationState,
+) => {
+	try {
+		// this is just to handle potential errors where we don't get back an access token
+		if (!tokenSet.access_token) {
+			logger.error(
+				'Missing access_token from /token endpoint in OAuth Callback',
+				undefined,
+				{
+					request_id: res.locals.requestId,
+				},
+			);
+			trackMetric('OAuthAuthorization::Failure');
+			return redirectForGenericError(req, res);
+		}
+
+		const claims = tokenSet.claims();
+
+		const response = await fetch(deleteAccountStepFunction.url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'x-api-key': deleteAccountStepFunction.apiKey,
+				Authorization: `Bearer ${tokenSet.access_token}`,
+			},
+			body: JSON.stringify({
+				identityId: claims.legacy_identity_id,
+				reason: authState.data?.deleteReason,
+				email: claims.email,
+			}),
+		});
+
+		if (!response.ok) {
+			throw new Error(await response.text());
+		}
+
+		// the confirmation page is the page we want to go to after sign out
+		const confirmationPage = encodeURIComponent(
+			`https://${baseUri}${addQueryParamsToPath(
+				authState.confirmationPage || '/delete/complete',
+				authState.queryParams,
+			)}`,
+		);
+
+		// sign out link is used to clear any cookies the user has and set the GU_SO cookie post deletion
+		const signOutLink = addQueryParamsToPath('/signout', {
+			returnUrl: confirmationPage,
+		});
+
+		return res.redirect(303, signOutLink);
+	} catch (error) {
+		// check if it's an oauth/oidc error
+		if (isOAuthError(error)) {
+			// log the specific error
+			logger.error(
+				`${req.method} ${req.originalUrl} OAuth/OIDC Error:`,
+				error,
+				{
+					request_id: res.locals.requestId,
+				},
+			);
+		}
+
+		// log and track the error
+		logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+			request_id: res.locals.requestId,
+		});
+		trackMetric('OAuthAuthorization::Failure');
+
+		return res.redirect(
+			303,
+			addQueryParamsToPath('/delete', res.locals.queryParams, {
+				error_description: GenericErrors.DEFAULT,
+			}),
+		);
+	}
+};
+
 /**
  * Shared route handler for the /oauth/authorization-code/:callbackParam routes
  * Performs the callback for the authorization code flow and does the required
@@ -332,6 +421,8 @@ router.get(
 					return ProfileOpenIdClientRedirectUris.APPLICATION;
 				case 'callback':
 					return ProfileOpenIdClientRedirectUris.AUTHENTICATION;
+				case 'delete-callback':
+					return ProfileOpenIdClientRedirectUris.DELETE;
 				default:
 					return undefined;
 			}
@@ -426,6 +517,8 @@ router.get(
 				return applicationHandler(req, res, tokenSet, authState);
 			case 'callback':
 				return authenticationHandler(req, res, tokenSet, authState);
+			case 'delete-callback':
+				return deleteHandler(req, res, tokenSet, authState);
 			default:
 				return redirectForGenericError(req, res);
 		}

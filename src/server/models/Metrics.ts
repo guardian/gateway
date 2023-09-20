@@ -57,6 +57,7 @@ type UnconditionalMetrics =
 	| 'LoginMiddlewareUnverified'
 	| 'LoginMiddlewareOAuth::HasOAuthTokens'
 	| 'LoginMiddlewareOAuth::NoOAuthTokens'
+	| 'LoginMiddlewareOAuth::NoOktaSession'
 	| 'LoginMiddlewareOAuth::OAuthTokensInvalid'
 	| 'LoginMiddlewareOAuth::OAuthTokensValid'
 	| 'LoginMiddlewareOAuth::SignedOutCookie'

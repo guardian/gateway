@@ -2,17 +2,22 @@ import React, { PropsWithChildren } from 'react';
 import { css, SerializedStyles } from '@emotion/react';
 import { space, text, textSans } from '@guardian/source-foundations';
 interface Props {
-	noMargin?: boolean;
+	noMarginBottom?: boolean;
+	marginTop?: boolean;
 	cssOverrides?: SerializedStyles;
 }
 
-const mainBodyTextStyles = (noMargin = false) => css`
+const mainBodyTextStyles = (noMarginBottom = false, marginTop = false) => css`
 	${textSans.medium({ lineHeight: 'regular' })}
 	font-size: 17px;
 	color: ${text.primary};
-	margin-top: 0;
+	${marginTop
+		? ''
+		: css`
+				margin-top: 0;
+		  `}
 
-	${noMargin
+	${noMarginBottom
 		? css`
 				margin-bottom: 0;
 		  `
@@ -24,7 +29,10 @@ const mainBodyTextStyles = (noMargin = false) => css`
 export const MainBodyText = ({
 	children,
 	cssOverrides,
-	noMargin,
+	noMarginBottom,
+	marginTop,
 }: PropsWithChildren<Props>) => (
-	<p css={[mainBodyTextStyles(noMargin), cssOverrides]}>{children}</p>
+	<p css={[mainBodyTextStyles(noMarginBottom, marginTop), cssOverrides]}>
+		{children}
+	</p>
 );
