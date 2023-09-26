@@ -19,7 +19,6 @@ import {
 	JobsTerms,
 	termsContainer,
 } from '@/client/components/Terms';
-import { NoFacebookSupport } from '@/client/components/NoFacebookSupport';
 
 export type SignInProps = {
 	queryParams: QueryParams;
@@ -154,7 +153,6 @@ export const SignIn = ({
 					</Link>
 				</Links>
 			</MainForm>
-			<NoFacebookSupport queryParams={queryParams} />
 		</MainLayout>
 	);
 };
