@@ -16,7 +16,6 @@ import {
 } from '@/client/components/Terms';
 import { CmpConsentedStateHiddenInput } from '@/client/components/CmpConsentStateHiddenInput';
 import { useCmpConsent } from '@/client/lib/hooks/useCmpConsent';
-import { NoFacebookSupport } from '@/client/components/NoFacebookSupport';
 
 export type RegistrationProps = {
 	email?: string;
@@ -71,7 +70,6 @@ export const Registration = ({
 				<EmailInput defaultValue={email} autoComplete="off" />
 				<CmpConsentedStateHiddenInput cmpConsentedState={hasCmpConsent} />
 			</MainForm>
-			<NoFacebookSupport queryParams={queryParams} />
 		</MainLayout>
 	);
 };
