@@ -496,14 +496,21 @@ export const findEmailValidatedOktaGroupId = () => {
 	}
 };
 
-export const getCurrentOktaSession = (sid: string) => {
+export const getCurrentOktaSession = ({
+	sid,
+	idx,
+}: {
+	sid?: string;
+	idx?: string;
+}) => {
 	try {
+		const Cookie = `${sid ? `sid=${sid};` : ''}${idx ? `idx=${idx};` : ''}`;
 		return cy
 			.request({
-				url: `${Cypress.env('OKTA_ORG_URL')}/api/v1/sessions/${sid}`,
+				url: `${Cypress.env('OKTA_ORG_URL')}/api/v1/sessions/me`,
 				method: 'GET',
 				headers: {
-					Authorization: `SSWS ${Cypress.env('OKTA_API_TOKEN')}`,
+					Cookie,
 				},
 				retryOnStatusCodeFailure: true,
 			})
@@ -516,14 +523,21 @@ export const getCurrentOktaSession = (sid: string) => {
 	}
 };
 
-export const closeCurrentOktaSession = (sid: string | undefined) => {
+export const closeCurrentOktaSession = ({
+	sid,
+	idx,
+}: {
+	sid?: string;
+	idx?: string;
+}) => {
 	try {
+		const Cookie = `${sid ? `sid=${sid};` : ''}${idx ? `idx=${idx};` : ''}`;
 		return cy
 			.request({
-				url: `${Cypress.env('OKTA_ORG_URL')}/api/v1/sessions/${sid}`,
+				url: `${Cypress.env('OKTA_ORG_URL')}/api/v1/sessions/me`,
 				method: 'DELETE',
 				headers: {
-					Authorization: `SSWS ${Cypress.env('OKTA_API_TOKEN')}`,
+					Cookie,
 				},
 				retryOnStatusCodeFailure: true,
 			})

@@ -20,9 +20,8 @@ describe('Sign in flow', () => {
 						id: '01a2bcdef3GHIJKLMNOP',
 						type: 'OKTA',
 					},
-					mfaActive: true,
 				},
-				'/api/v1/sessions/the_sid_cookie',
+				'/api/v1/sessions/me',
 			);
 
 			cy.mockPattern(204, {}, '/api/v1/users/userId/sessions');
@@ -66,9 +65,8 @@ describe('Sign in flow', () => {
 						id: '01a2bcdef3GHIJKLMNOP',
 						type: 'OKTA',
 					},
-					mfaActive: true,
 				},
-				'/api/v1/sessions/the_sid_cookie',
+				'/api/v1/sessions/me',
 			);
 
 			cy.mockPattern(204, {}, '/api/v1/users/userId/sessions');

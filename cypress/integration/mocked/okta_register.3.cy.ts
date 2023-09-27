@@ -30,9 +30,8 @@ describe('Okta Register flow', () => {
 						id: '01a2bcdef3GHIJKLMNOP',
 						type: 'OKTA',
 					},
-					mfaActive: true,
 				},
-				'/api/v1/sessions/the_sid_cookie',
+				'/api/v1/sessions/me',
 			);
 
 			cy.mockPattern(204, {}, '/api/v1/users/userId/sessions');
@@ -73,7 +72,7 @@ describe('Okta Register flow', () => {
 		});
 
 		it('should redirect to /reauthenticate if the sid Okta session cookie is set, but invalid', () => {
-			cy.mockPattern(404, '/api/v1/sessions/the_sid_cookie');
+			cy.mockPattern(404, '/api/v1/sessions/me');
 
 			cy.mockPattern(204, {}, '/api/v1/users/userId/sessions');
 
@@ -110,9 +109,8 @@ describe('Okta Register flow', () => {
 						id: '01a2bcdef3GHIJKLMNOP',
 						type: 'OKTA',
 					},
-					mfaActive: true,
 				},
-				'/api/v1/sessions/the_sid_cookie',
+				'/api/v1/sessions/me',
 			);
 
 			cy.mockPattern(204, {}, '/api/v1/users/userId/sessions');
@@ -141,7 +139,7 @@ describe('Okta Register flow', () => {
 		});
 
 		it('should redirect to /reauthenticate if the sid Okta session cookie is set but invalid', () => {
-			cy.mockPattern(404, '/api/v1/sessions/the_sid_cookie');
+			cy.mockPattern(404, '/api/v1/sessions/me');
 
 			cy.mockPattern(204, {}, '/api/v1/users/userId/sessions');
 

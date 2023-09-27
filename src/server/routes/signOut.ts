@@ -13,7 +13,7 @@ import { deleteAuthorizationStateCookie } from '@/server/lib/okta/openid-connect
 import { clearEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { clearUserSessions } from '@/server/lib/okta/api/users';
-import { getSession } from '@/server/lib/okta/api/sessions';
+import { getCurrentSession } from '@/server/lib/okta/api/sessions';
 import { checkAndDeleteOAuthTokenCookies } from '@/server/lib/okta/tokens';
 
 const { defaultReturnUri, baseUri } = getConfiguration();
@@ -31,7 +31,8 @@ const DotComCookies = [
 	'gu_one_off_contribution_date',
 ];
 
-const OKTA_COOKIE_NAME = 'sid';
+const OKTA_IDENTITY_CLASSIC_SESSION_COOKIE_NAME = 'sid';
+const OKTA_IDENTITY_ENGINE_SESSION_COOKIE_NAME = 'idx';
 
 const clearDotComCookies = (res: ResponseWithRequestState) => {
 	// the baseUri is profile.theguardian.com so we strip the 'profile' as the cookie domain should be .theguardian.com
@@ -52,7 +53,10 @@ export const clearOktaCookies = (res: ResponseWithRequestState) => {
 	// and when the cookie is set by Okta, they do not specify a domain in the set-cookie header,
 	// so the Okta sid cookie is consider hostOnly=true
 	// https://www.appsecmonkey.com/blog/cookie-security#hostonly-property
-	res.cookie(OKTA_COOKIE_NAME, '', {
+	res.cookie(OKTA_IDENTITY_CLASSIC_SESSION_COOKIE_NAME, '', {
+		maxAge: 0,
+	});
+	res.cookie(OKTA_IDENTITY_ENGINE_SESSION_COOKIE_NAME, '', {
 		maxAge: 0,
 	});
 };
@@ -123,10 +127,17 @@ const signOutFromOkta = async (
 ): Promise<void> => {
 	try {
 		// attempt to log out from Okta if we have Okta session cookie
-		const oktaSessionCookieId: string | undefined = req.cookies.sid;
+		// Okta Identity Engine session cookie is called `idx`
+		const oktaIdentityEngineSessionCookieId: string | undefined =
+			req.cookies.idx;
+		// Okta Classic session cookie is called `sid`
+		const oktaClassicSessionCookieId: string | undefined = req.cookies.sid;
 
-		if (oktaSessionCookieId) {
-			const { userId } = await getSession(oktaSessionCookieId);
+		if (oktaIdentityEngineSessionCookieId || oktaClassicSessionCookieId) {
+			const { userId } = await getCurrentSession({
+				idx: oktaIdentityEngineSessionCookieId,
+				sid: oktaClassicSessionCookieId,
+			});
 			await clearUserSessions(userId);
 			trackMetric('OktaSignOut::Success');
 		}

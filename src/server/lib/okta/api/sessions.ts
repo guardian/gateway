@@ -4,14 +4,17 @@ import { buildUrl } from '@/shared/lib/routeUtils';
 import { joinUrl } from '@guardian/libs';
 import { getConfiguration } from '../../getConfiguration';
 import { handleErrorResponse } from './errors';
-import { defaultHeaders, authorizationHeader } from './headers';
+import { defaultHeaders } from './headers';
 
 const { okta } = getConfiguration();
 
 /**
- * Get a User session by session Id
+ * Get a User session by session cookie
  *
- * https://developer.okta.com/docs/reference/api/sessions/#get-session
+ * For Identity Classic the cookie is called `sid`
+ * For Identity Engine the cookie is called `idx`
+ *
+ * https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Session/#tag/Session/operation/getCurrentSession
  *
  * The Okta API returns the users session details on success or
  * returns a 404 on error.
@@ -22,31 +25,65 @@ const { okta } = getConfiguration();
  * @param sessionId Okta session ID
  * @returns Promise<SessionResponse>
  */
-export const getSession = async (
-	sessionId: string,
-): Promise<SessionResponse> => {
-	const path = buildUrl('/api/v1/sessions/:sessionId', { sessionId });
-	return fetch(joinUrl(okta.orgUrl, path), {
-		headers: { ...defaultHeaders, ...authorizationHeader() },
-	}).then(handleSessionResponse);
+export const getCurrentSession = async ({
+	sid,
+	idx,
+}: {
+	sid?: string;
+	idx?: string;
+}): Promise<SessionResponse> => {
+	const path = buildUrl('/api/v1/sessions/me');
+
+	const Cookie = `${sid ? `sid=${sid};` : ''}${idx ? `idx=${idx};` : ''}`;
+
+	const response = await fetch(joinUrl(okta.orgUrl, path), {
+		headers: { ...defaultHeaders, Cookie },
+		credentials: 'include',
+	});
+
+	if (response.ok) {
+		try {
+			return sessionSchema.parse(await response.json());
+		} catch (error) {
+			throw new OktaError({
+				message: 'Could not parse Okta session response',
+			});
+		}
+	} else {
+		return await handleErrorResponse(response);
+	}
 };
 
 /**
- * Close a User session by session Id
+ * Close a User session by session cookie
  *
- * https://developer.okta.com/docs/reference/api/sessions/#close-session
+ * For Identity Classic the cookie is called `sid`
+ * For Identity Engine the cookie is called `idx`
+ *
+ * https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Session/#tag/Session/operation/closeCurrentSession
  *
  * The Okta API closes the users session on success or
  * returns a 404 on invalid.
  *
- * @param sessionId Okta session ID
- * @returns Promise<boolean>
+ * @param sid Okta Identity Classic session cookie
+ * @param idx Okta Identity Engine session cookie
+ * @returns Promise<void>
  */
-export const closeSession = async (sessionId: string): Promise<undefined> => {
-	const path = buildUrl('/api/v1/sessions/:sessionId', { sessionId });
+export const closeCurrentSession = async ({
+	sid,
+	idx,
+}: {
+	sid?: string;
+	idx?: string;
+}): Promise<undefined> => {
+	const path = buildUrl('/api/v1/sessions/me');
+
+	const Cookie = `${sid ? `sid=${sid};` : ''}${idx ? `idx=${idx};` : ''}`;
+
 	const response = await fetch(joinUrl(okta.orgUrl, path), {
 		method: 'DELETE',
-		headers: { ...defaultHeaders, ...authorizationHeader() },
+		headers: { ...defaultHeaders, Cookie },
+		credentials: 'include',
 	});
 
 	if (!(response.ok || response.status === 404)) {

@@ -1,5 +1,5 @@
 import { NextFunction, Request } from 'express';
-import { getSession } from '../okta/api/sessions';
+import { getCurrentSession } from '@/server/lib/okta/api/sessions';
 import { clearOktaCookies } from '@/server/routes/signOut';
 import { logger } from '../serverSideLogger';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
@@ -25,16 +25,26 @@ export const redirectIfLoggedIn = async (
 	const state = res.locals;
 	const { useIdapi, error, error_description } = state.queryParams;
 
-	const oktaSessionCookieId: string | undefined = req.cookies.sid;
+	// Okta Identity Engine session cookie is called `idx`
+	const oktaIdentityEngineSessionCookieId: string | undefined = req.cookies.idx;
+	// Okta Classic session cookie is called `sid`
+	const oktaClassicSessionCookieId: string | undefined = req.cookies.sid;
 
 	const identitySessionCookie = req.cookies.SC_GU_U;
 	const identityLastAccessCookie = req.cookies.SC_GU_LA;
 
 	// Check if the user has an existing Okta session.
-	if (okta.enabled && !useIdapi && oktaSessionCookieId) {
+	if (
+		okta.enabled &&
+		!useIdapi &&
+		(oktaIdentityEngineSessionCookieId || oktaClassicSessionCookieId)
+	) {
 		try {
 			// If they do and it's valid, get the session info
-			const session = await getSession(oktaSessionCookieId);
+			const session = await getCurrentSession({
+				idx: oktaIdentityEngineSessionCookieId,
+				sid: oktaClassicSessionCookieId,
+			});
 
 			// pull the user email from the session, which we need to display
 			const email = session.login;

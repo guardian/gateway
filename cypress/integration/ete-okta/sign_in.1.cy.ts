@@ -159,7 +159,9 @@ describe('Sign in flow, Okta enabled', () => {
 					// Get the current session data
 					cy.getCookie('sid').then((sidCookie) => {
 						// Close the user's current session in Okta
-						cy.closeCurrentOktaSession(sidCookie?.value).then(() => {
+						cy.closeCurrentOktaSession({
+							sid: sidCookie?.value,
+						}).then(() => {
 							// Refresh our user session
 							cy.visit(
 								`/signin/refresh?returnUrl=${encodeURIComponent(

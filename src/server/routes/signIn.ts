@@ -34,7 +34,7 @@ import {
 	performAuthorizationCodeFlow,
 	scopesForAuthentication,
 } from '@/server/lib/okta/oauth';
-import { getSession } from '../lib/okta/api/sessions';
+import { getCurrentSession } from '@/server/lib/okta/api/sessions';
 import { redirectIfLoggedIn } from '../lib/middleware/redirectIfLoggedIn';
 import { getUser, getUserGroups } from '../lib/okta/api/users';
 import { clearOktaCookies } from '@/server/routes/signOut';
@@ -365,13 +365,20 @@ const oktaSignInController = async ({
 }) => {
 	// get the email and password from the request body
 	const { email = '', password = '' } = req.body;
-	const oktaSessionCookieId: string | undefined = req.cookies.sid;
+
+	// Okta Identity Engine session cookie is called `idx`
+	const oktaIdentityEngineSessionCookieId: string | undefined = req.cookies.idx;
+	// Okta Classic session cookie is called `sid`
+	const oktaClassicSessionCookieId: string | undefined = req.cookies.sid;
 
 	if (!isReauthenticate) {
 		try {
-			if (oktaSessionCookieId) {
+			if (oktaIdentityEngineSessionCookieId || oktaClassicSessionCookieId) {
 				// if a session already exists then we redirect back to the returnUrl for apps, and the dotcom homepage for web
-				await getSession(oktaSessionCookieId);
+				await getCurrentSession({
+					idx: oktaIdentityEngineSessionCookieId,
+					sid: oktaClassicSessionCookieId,
+				});
 				return res.redirect(accountManagementUrl);
 			}
 		} catch {
@@ -601,17 +608,27 @@ router.get(
 	'/signin/refresh',
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const { returnUrl } = res.locals.queryParams;
-		const oktaSessionCookieId: string | undefined = req.cookies.sid;
+		// Okta Identity Engine session cookie is called `idx`
+		const oktaIdentityEngineSessionCookieId: string | undefined =
+			req.cookies.idx;
+		// Okta Classic session cookie is called `sid`
+		const oktaClassicSessionCookieId: string | undefined = req.cookies.sid;
 		const identitySessionCookie = req.cookies.SC_GU_U;
 
 		const redirectUrl = returnUrl || defaultReturnUri;
 
 		// Check if the user has an existing Okta session.
-		if (okta.enabled && oktaSessionCookieId) {
+		if (
+			okta.enabled &&
+			(oktaIdentityEngineSessionCookieId || oktaClassicSessionCookieId)
+		) {
 			try {
 				// If the user session is valid, we re-authenticate them, supplying
 				// the SID cookie value to Okta.
-				await getSession(oktaSessionCookieId);
+				await getCurrentSession({
+					idx: oktaIdentityEngineSessionCookieId,
+					sid: oktaClassicSessionCookieId,
+				});
 				return performAuthorizationCodeFlow(req, res, {
 					doNotSetLastAccessCookie: true,
 					prompt: 'none',

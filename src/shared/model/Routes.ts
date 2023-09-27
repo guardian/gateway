@@ -116,6 +116,7 @@ export type OktaApiRoutePaths =
 	| '/api/v1/authn/credentials/reset_password'
 	| '/api/v1/authn/recovery/password'
 	| '/api/v1/authn/recovery/token'
+	| '/api/v1/sessions/me'
 	| '/api/v1/sessions/:sessionId'
 	| '/api/v1/users'
 	| '/api/v1/users/:id'
