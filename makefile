@@ -36,16 +36,6 @@ dev-cypress: clean-build clear install
 	$(call log, "starting tsc watch")
 	@(yarn watch:cypress & wait)
 
-dev-tile-v: clean-build clear install
-	$(call banner, "gateway is starting")
-	$(call log, "starting development server")
-	@(stmux -M -e ERROR -m beep -- [ [ "yarn watch" : "yarn watch:server" ] ])
-
-dev-tile-h: clean-build clear install
-	$(call banner, "gateway is starting")
-	$(call log, "starting development server")
-	@(stmux -M -e ERROR -m beep -- [ [ "yarn watch" .. "yarn watch:server" ] ])
-
 # QA
 tsc: clear install
 	$(call log, "checking for type errors")
