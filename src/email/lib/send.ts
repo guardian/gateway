@@ -4,7 +4,7 @@ import {
 	SESv2Client,
 } from '@aws-sdk/client-sesv2';
 import { awsConfig } from '@/server/lib/awsConfig';
-import { NodeHttpHandler } from '@aws-sdk/node-http-handler';
+import { NodeHttpHandler } from '@smithy/node-http-handler';
 
 const ses = new SESv2Client({
 	...awsConfig,
