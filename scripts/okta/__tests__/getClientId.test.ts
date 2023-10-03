@@ -9,11 +9,20 @@ describe('getClientId', () => {
 		expect(getClientId({})).toBeUndefined();
 	});
 
-	it('should return undefined if no clientId is passed', () => {
+	it('should return undefined if no clientId is passed - okta identity classic', () => {
 		expect(getClientId({ target: {} })).toBeUndefined();
 	});
 
-	it('should return the clientId if it is passed', () => {
+	it('should return the clientId if it is passed - okta identity classic', () => {
 		expect(getClientId({ target: { clientId: 'test' } })).toEqual('test');
+	});
+
+	it('should return undefined if no clientId is passed - okta identity engine', () => {
+		expect(getClientId({ app: {} })).toBeUndefined();
+		expect(getClientId({ app: { value: {} } })).toBeUndefined();
+	});
+
+	it('should return the clientId if it is passed - okta identity engine', () => {
+		expect(getClientId({ app: { value: { id: 'test' } } })).toEqual('test');
 	});
 });

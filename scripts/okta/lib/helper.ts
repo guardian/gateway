@@ -38,6 +38,12 @@ interface RequestContext {
 		clientId?: string;
 		label?: string;
 	};
+	app?: {
+		value?: {
+			id?: string;
+			label?: string;
+		};
+	};
 }
 
 /**
@@ -78,7 +84,9 @@ export const getRelayState = (
 export const getClientId = (
 	requestContext?: RequestContext,
 ): string | undefined => {
-	return requestContext?.target?.clientId;
+	// requestContext.target.clientId is for Okta Identity Classic
+	// requestContext.app.value.id is for Okta Identity Engine
+	return requestContext?.target?.clientId || requestContext?.app?.value?.id;
 };
 
 /**
@@ -91,11 +99,13 @@ export const getClientId = (
 export const getThirdPartyClientId = (
 	requestContext?: RequestContext,
 ): string | undefined => {
-	if (requestContext?.target?.label) {
-		switch (requestContext?.target?.label) {
-			case 'jobs_site':
-				return 'jobs';
-		}
+	// requestContext?.target?.label is for Okta Identity Classic
+	// requestContext?.app?.value?.label is for Okta Identity Engine
+	const label =
+		requestContext?.target?.label || requestContext?.app?.value?.label;
+	switch (label) {
+		case 'jobs_site':
+			return 'jobs';
 	}
 };
 
@@ -110,11 +120,13 @@ export const getThirdPartyReturnUrl = (
 	locationOrigin: string,
 	requestContext?: RequestContext,
 ): string | undefined => {
-	if (requestContext?.target?.label) {
-		switch (requestContext?.target?.label) {
-			case 'jobs_site':
-				return encodeURIComponent(locationOrigin.replace('profile', 'jobs'));
-		}
+	// requestContext?.target?.label is for Okta Identity Classic
+	// requestContext?.app?.value?.label is for Okta Identity Engine
+	const label =
+		requestContext?.target?.label || requestContext?.app?.value?.label;
+	switch (label) {
+		case 'jobs_site':
+			return encodeURIComponent(locationOrigin.replace('profile', 'jobs'));
 	}
 };
 
