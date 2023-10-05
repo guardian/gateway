@@ -8,7 +8,7 @@ import {
 	getOpenIdClient,
 	AuthorizationState,
 } from '@/server/lib/okta/openid-connect';
-import { closeSession } from './api/sessions';
+import { closeCurrentSession } from './api/sessions';
 
 /**
  * List of individual scopes that can be requested by gateway
@@ -116,10 +116,16 @@ export const performAuthorizationCodeFlow = async (
 	}: PerformAuthorizationCodeFlowOptions,
 ) => {
 	if (closeExistingSession) {
-		const oktaSessionCookieId: string | undefined = req.cookies.sid;
-		// clear existing okta session cookie if it exists
-		if (oktaSessionCookieId) {
-			await closeSession(oktaSessionCookieId);
+		// Okta Identity Engine session cookie is called `idx`
+		const oktaIdentityEngineSessionCookieId: string | undefined =
+			req.cookies.idx;
+		// Okta Classic session cookie is called `sid`
+		const oktaClassicSessionCookieId: string | undefined = req.cookies.sid; // clear existing okta session cookie if it exists
+		if (oktaIdentityEngineSessionCookieId || oktaClassicSessionCookieId) {
+			await closeCurrentSession({
+				idx: oktaIdentityEngineSessionCookieId,
+				sid: oktaClassicSessionCookieId,
+			});
 		}
 	}
 

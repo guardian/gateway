@@ -23,7 +23,7 @@ import {
 	verifyAccessToken,
 	verifyIdToken,
 } from '@/server/lib/okta/tokens';
-import { getSession } from '@/server/lib/okta/api/sessions';
+import { getCurrentSession } from '@/server/lib/okta/api/sessions';
 
 const profileUrl = getProfileUrl();
 
@@ -44,15 +44,22 @@ export const loginMiddlewareOAuth = async (
 	// check if the user has an existing Okta session cookie
 	// if they don't have a valid session, redirect them to the login page, and clear any existing tokens
 	try {
-		const oktaSessionCookieId: string | undefined = req.cookies.sid;
+		// Okta Identity Engine session cookie is called `idx`
+		const oktaIdentityEngineSessionCookieId: string | undefined =
+			req.cookies.idx;
+		// Okta Classic session cookie is called `sid`
+		const oktaClassicSessionCookieId: string | undefined = req.cookies.sid;
 
-		// if there is no okta session cookie, go to the catch block
-		if (!oktaSessionCookieId) {
+		if (!oktaIdentityEngineSessionCookieId && !oktaClassicSessionCookieId) {
+			// if there is no okta session cookie, go to the catch block
 			throw new Error('No Okta session cookie');
 		}
 
 		// if there is an okta session cookie, check if it is valid, if not `getSession` will throw an error
-		await getSession(oktaSessionCookieId);
+		await getCurrentSession({
+			idx: oktaIdentityEngineSessionCookieId,
+			sid: oktaClassicSessionCookieId,
+		});
 	} catch (error) {
 		trackMetric('LoginMiddlewareOAuth::NoOktaSession');
 

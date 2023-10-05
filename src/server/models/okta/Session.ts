@@ -10,6 +10,5 @@ export const sessionSchema = z.object({
 	lastFactorVerification: z.string().nullable().optional(),
 	// amr: z.string(),
 	// idp: z.string(),
-	mfaActive: z.boolean(),
 });
 export type SessionResponse = z.infer<typeof sessionSchema>;

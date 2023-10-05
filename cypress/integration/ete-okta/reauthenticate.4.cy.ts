@@ -39,7 +39,7 @@ describe('Reauthenticate flow, Okta enabled', () => {
 					const sid = sidCookie?.value;
 					expect(sid).to.exist;
 					if (sid) {
-						cy.getCurrentOktaSession(sid).then((session) => {
+						cy.getCurrentOktaSession({ sid }).then((session) => {
 							expect(session.login).to.equal(emailAddress);
 						});
 					}
@@ -87,7 +87,7 @@ describe('Reauthenticate flow, Okta enabled', () => {
 									const sid = sidCookie?.value;
 									expect(sid).to.exist;
 									if (sid) {
-										cy.getCurrentOktaSession(sid).then((session) => {
+										cy.getCurrentOktaSession({ sid }).then((session) => {
 											expect(session.login).to.equal(emailAddressB);
 										});
 									}
