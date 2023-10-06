@@ -46,17 +46,55 @@ const issuerDomain = () => {
 };
 
 /**
- * @name oauthTokenVerifier
- * @type {OktaJwtVerifier}
- * @description Okta JWT Verifier
+ * @name verifierSharedOptions
+ * @type {OktaJwtVerifier.VerifierOptions}
+ * @description Okta JWT Verifier - Shared Options between the access token and ID token verifiers
  */
-const oauthTokenVerifier = new OktaJwtVerifier({
+const verifierSharedOptions: OktaJwtVerifier.VerifierOptions = {
 	issuer: joinUrl(issuerDomain(), '/oauth2/', okta.authServerId),
-});
+	clientId: okta.clientId,
+};
+
+/**
+ * @name oauthAccessTokenVerifier
+ * @type {OktaJwtVerifier}
+ * @description Okta JWT Verifier - Access Token
+ *
+ * This verifier is used to verify the access token, as Okta JWT Verifier doesn't verify
+ * the clientId claim access, we need to assert it manually for the access token (`cid` claim) which is different
+ * from the ID token (`aud` claim) where Okta verifies it through the `expectedClientId` parameter in `verifyIdToken`.
+ *
+ * This is because in Gateway we want to make sure the access token is for this application, and not for any other before
+ * we send it to other APIs.
+ */
+const oauthAccessTokenVerifier: Pick<OktaJwtVerifier, 'verifyAccessToken'> =
+	new OktaJwtVerifier({
+		...verifierSharedOptions,
+		assertClaims: {
+			cid: okta.clientId,
+		},
+	});
+
+/**
+ * @name oauthIDTokenVerifier
+ * @type {OktaJwtVerifier}
+ * @description Okta JWT Verifier - ID Token
+ *
+ * This verifier is used to verify the ID token, as Okta JWT Verifier doesn't verify
+ * the clientId claim access, we need to assert it manually for the access token (`cid` claim) which is different
+ * from the ID token (`aud` claim) where Okta verifies it through the `expectedClientId` parameter in `verifyIdToken`.
+ *
+ * This is because in Gateway we want to make sure the access token is for this application, and not for any other before
+ * we send it to other APIs.
+ */
+const oauthIDTokenVerifier: Pick<OktaJwtVerifier, 'verifyIdToken'> =
+	new OktaJwtVerifier({
+		...verifierSharedOptions,
+	});
 
 export const verifyAccessToken = async (token: string) => {
 	try {
-		const jwt = await oauthTokenVerifier.verifyAccessToken(
+		const jwt = await oauthAccessTokenVerifier.verifyAccessToken(
 			token,
 			issuerDomain(),
 		);
@@ -68,7 +106,7 @@ export const verifyAccessToken = async (token: string) => {
 
 export const verifyIdToken = async (token: string) => {
 	try {
-		const jwt = await oauthTokenVerifier.verifyIdToken(token, okta.clientId);
+		const jwt = await oauthIDTokenVerifier.verifyIdToken(token, okta.clientId);
 		return jwt;
 	} catch (error) {
 		logger.error('Okta | ID Token | Verification Error', error);
