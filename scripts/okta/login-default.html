@@ -11,12 +11,15 @@
 
 		<title>{{pageTitle}}</title>
 		{{{SignInWidgetResources}}}
+
+		<style nonce="{{nonceValue}}">
+			#login-bg-image-id {
+			    background-image: {{bgImageUrl}}
+			}
+		</style>
 	</head>
 	<body>
-		<div
-			class="login-bg-image tb--background"
-			style="background-image: {{bgImageUrl}}"
-		></div>
+		<div id="login-bg-image-id" class="login-bg-image tb--background"></div>
 		<div id="okta-login-container"></div>
 
 		<!--
@@ -25,7 +28,7 @@
      -->
 		{{{OktaUtil}}}
 
-		<script type="text/javascript">
+		<script type="text/javascript" nonce="{{nonceValue}}">
 			// "config" object contains default widget configuration
 			// with any custom overrides defined in your admin settings.
 			var config = OktaUtil.getSignInWidgetConfig();
