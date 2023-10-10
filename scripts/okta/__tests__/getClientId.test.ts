@@ -1,10 +1,6 @@
 import { getClientId } from '../lib/helper';
 
 describe('getClientId', () => {
-	it('should return undefined if no context is passed', () => {
-		expect(getClientId()).toBeUndefined();
-	});
-
 	it('should return undefined if no target is passed', () => {
 		expect(getClientId({})).toBeUndefined();
 	});

@@ -1,9 +1,10 @@
-import { OktaUtil } from './lib/helper';
+import { OktaSignIn, OktaUtil } from './lib/helper';
 
 export {};
 
 declare global {
 	interface Window {
-		OktaUtil?: OktaUtil;
+		OktaUtil: OktaUtil;
+		OktaSignIn: OktaSignIn;
 	}
 }

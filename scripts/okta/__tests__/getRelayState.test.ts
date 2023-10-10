@@ -1,10 +1,6 @@
 import { getRelayState } from '../lib/helper';
 
 describe('getRelayState', () => {
-	it('should return undefined if no config is passed', () => {
-		expect(getRelayState()).toBeUndefined();
-	});
-
 	it('should return undefined if no relayState is passed', () => {
 		expect(getRelayState({})).toBeUndefined();
 	});

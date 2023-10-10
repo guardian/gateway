@@ -30,11 +30,41 @@ import { getRedirectUrl } from './lib/helper';
 // - /oauth2/<authorization server id>/v1/authorize
 // each will have a different query string and different config objects which are handled as appropriate in helper.ts.
 
-const redirectUrl = getRedirectUrl(
-	window.location.search,
-	window.location.origin,
-	window.location.pathname,
-	window.OktaUtil,
-);
+const locationSearch = window.location.search;
+const searchParams = new URLSearchParams(locationSearch);
 
-window.location.replace(redirectUrl);
+// Okta Identity Engine now uses JS redirects instead of HTTP redirects.
+// This has the consequence that Social Sign In requires the SDK and widget to be loaded on the page in order to authenticate.
+// However we only want to do this in the case of Social Sign In, as we want to use our own custom login page for other flows.
+// So we check for the `idp` query param, which is only present in the case of Social Sign In or the callback path for Social Sign In.
+// If present, we load the SDK and widget to handle social sign in, otherwise we redirect to our custom login page.
+if (
+	searchParams.has('idp') ||
+	window.location.pathname === '/oauth2/v1/authorize/callback'
+) {
+	const loginContainerId = 'okta-login-container';
+	const config = window.OktaUtil.getSignInWidgetConfig();
+	const oktaSignIn = new window.OktaSignIn(config);
+	const loginContainer = document.getElementById('okta-login-container');
+	oktaSignIn.renderEl(
+		{ el: `#${loginContainerId}` },
+		window.OktaUtil.completeLogin,
+		(error) => {
+			// eslint-disable-next-line no-console
+			console.log(error.message, error);
+			if (loginContainer) {
+				// eslint-disable-next-line functional/immutable-data
+				loginContainer.style.visibility = 'visible';
+			}
+		},
+	);
+} else {
+	const redirectUrl = getRedirectUrl(
+		searchParams,
+		window.location.origin,
+		window.location.pathname,
+		window.OktaUtil,
+	);
+
+	window.location.replace(redirectUrl);
+}

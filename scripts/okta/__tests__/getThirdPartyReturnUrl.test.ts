@@ -1,18 +1,6 @@
 import { getThirdPartyReturnUrl } from '../lib/helper';
 
 describe('getThirdPartyReturnUrl', () => {
-	it('should return undefined if no context is passed', () => {
-		expect(
-			getThirdPartyReturnUrl('https://profile.theguardian.com'),
-		).toBeUndefined();
-	});
-
-	it('should return undefined if no target is passed', () => {
-		expect(
-			getThirdPartyReturnUrl('https://profile.theguardian.com', {}),
-		).toBeUndefined();
-	});
-
 	it('should return undefined if no label is passed - identity classic', () => {
 		expect(
 			getThirdPartyReturnUrl('https://profile.theguardian.com', { target: {} }),
