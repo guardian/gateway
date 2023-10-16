@@ -106,7 +106,7 @@
 		"prettier": "^3.0.3",
 		"react-docgen-typescript-plugin": "^1.0.5",
 		"require-from-string": "^2.0.2",
-		"snyk": "^1.1232.0",
+		"snyk": "^1.1234.0",
 		"storybook": "^7.4.6",
 		"swc-loader": "^0.2.3",
 		"terser-webpack-plugin": "^5.3.9",
