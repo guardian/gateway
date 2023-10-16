@@ -6,6 +6,7 @@ const { merge } = require('webpack-merge');
 const nodeExternals = require('webpack-node-externals');
 const Dotenv = require('dotenv-webpack');
 const TerserPlugin = require('terser-webpack-plugin');
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const BundleAnalyzerPlugin =
 	require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
@@ -28,7 +29,7 @@ const watchOptions = {
 
 const imageLoader = (path) => {
 	return {
-		test: /\.(jpe?g|png|gif)$/i,
+		test: /\.(jpe?g|png|gif|avif)$/i,
 		use: [
 			{
 				loader: 'file-loader',
@@ -39,21 +40,29 @@ const imageLoader = (path) => {
 				},
 			},
 			{
-				loader: 'image-webpack-loader',
+				loader: ImageMinimizerPlugin.loader,
 				options: {
-					mozjpeg: {
-						progressive: true,
-						quality: 65,
-					},
-					optipng: {
-						enabled: true,
-					},
-					pngquant: {
-						quality: [0.65, 0.9],
-						speed: 4,
-					},
-					gifsicle: {
-						interlaced: false,
+					minimizer: {
+						implementation: ImageMinimizerPlugin.sharpMinify,
+						options: {
+							encodeOptions: {
+								jpeg: {
+									progressive: true,
+									quality: 65,
+								},
+								avif: {
+									lossless: true,
+								},
+								png: {
+									palette: true,
+									effort: 4,
+									quality: 65,
+								},
+								gif: {
+									progressive: false,
+								},
+							},
+						},
 					},
 				},
 			},
