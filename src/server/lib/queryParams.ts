@@ -15,6 +15,22 @@ const validateGetOnlyError = (
 	}
 };
 
+const stringToNumber = (
+	maybeNumber: string | undefined,
+): number | undefined => {
+	if (!maybeNumber) {
+		return undefined;
+	}
+
+	const parsedNumber = Number(maybeNumber);
+
+	if (isNaN(parsedNumber)) {
+		return undefined;
+	}
+
+	return parsedNumber;
+};
+
 export const parseExpressQueryParams = (
 	method: string,
 	{
@@ -33,6 +49,7 @@ export const parseExpressQueryParams = (
 		componentEventParams,
 		fromURI,
 		appClientId,
+		maxAge,
 	}: Record<keyof QueryParams, string | undefined>, // parameters from req.query
 	// some parameters may be manually passed in req.body too,
 	// generally for tracking purposes
@@ -55,6 +72,7 @@ export const parseExpressQueryParams = (
 		useIdapi: isStringBoolean(useIdapi),
 		fromURI,
 		appClientId,
+		maxAge: stringToNumber(maxAge),
 	};
 };
 
