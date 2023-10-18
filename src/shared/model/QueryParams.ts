@@ -65,4 +65,5 @@ export interface QueryParams
 	encryptedEmail?: string;
 	error?: string;
 	error_description?: string;
+	maxAge?: number;
 }

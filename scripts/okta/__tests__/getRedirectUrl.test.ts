@@ -19,12 +19,17 @@ describe('getRedirectUrl', () => {
 						clientId: 'test123',
 						label: 'testabc',
 					},
+					authentication: {
+						request: {
+							max_age: 100,
+						},
+					},
 				}),
 				getSignInWidgetConfig: () => ({
 					relayState: '/testFromURI',
 				}),
 			}),
-		).toBe('/signin?fromURI=%2FtestFromURI&appClientId=test123');
+		).toBe('/signin?fromURI=%2FtestFromURI&appClientId=test123&maxAge=100');
 	});
 
 	it('should return /signin with valid query params - identity engine', () => {
@@ -37,12 +42,17 @@ describe('getRedirectUrl', () => {
 							label: 'testabc',
 						},
 					},
+					authentication: {
+						request: {
+							max_age: 100,
+						},
+					},
 				}),
 				getSignInWidgetConfig: () => ({
 					relayState: '/testFromURI',
 				}),
 			}),
-		).toBe('/signin?fromURI=%2FtestFromURI&appClientId=test123');
+		).toBe('/signin?fromURI=%2FtestFromURI&appClientId=test123&maxAge=100');
 	});
 
 	it('should return /welcome/:token with valid query params and activation_token - identity classic', () => {
@@ -53,12 +63,19 @@ describe('getRedirectUrl', () => {
 						clientId: 'test123',
 						label: 'testabc',
 					},
+					authentication: {
+						request: {
+							max_age: 100,
+						},
+					},
 				}),
 				getSignInWidgetConfig: () => ({
 					relayState: '/testFromURI',
 				}),
 			}),
-		).toBe('/welcome/123?fromURI=%2FtestFromURI&appClientId=test123');
+		).toBe(
+			'/welcome/123?fromURI=%2FtestFromURI&appClientId=test123&maxAge=100',
+		);
 	});
 
 	it('should return /welcome/:token with valid query params and activation_token - identity engine', () => {
@@ -71,12 +88,19 @@ describe('getRedirectUrl', () => {
 							label: 'testabc',
 						},
 					},
+					authentication: {
+						request: {
+							max_age: 100,
+						},
+					},
 				}),
 				getSignInWidgetConfig: () => ({
 					relayState: '/testFromURI',
 				}),
 			}),
-		).toBe('/welcome/123?fromURI=%2FtestFromURI&appClientId=test123');
+		).toBe(
+			'/welcome/123?fromURI=%2FtestFromURI&appClientId=test123&maxAge=100',
+		);
 	});
 
 	it('should return /signin with valid query params and third party return url and third party client id - identity classic', () => {
@@ -87,13 +111,18 @@ describe('getRedirectUrl', () => {
 						clientId: 'test123',
 						label: 'jobs_site',
 					},
+					authentication: {
+						request: {
+							max_age: 100,
+						},
+					},
 				}),
 				getSignInWidgetConfig: () => ({
 					relayState: '/testFromURI',
 				}),
 			}),
 		).toBe(
-			'/signin?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com',
+			'/signin?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
 		);
 	});
 
@@ -107,13 +136,18 @@ describe('getRedirectUrl', () => {
 							label: 'jobs_site',
 						},
 					},
+					authentication: {
+						request: {
+							max_age: 100,
+						},
+					},
 				}),
 				getSignInWidgetConfig: () => ({
 					relayState: '/testFromURI',
 				}),
 			}),
 		).toBe(
-			'/signin?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com',
+			'/signin?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
 		);
 	});
 
@@ -129,6 +163,11 @@ describe('getRedirectUrl', () => {
 							clientId: 'test123',
 							label: 'jobs_site',
 						},
+						authentication: {
+							request: {
+								max_age: 100,
+							},
+						},
 					}),
 					getSignInWidgetConfig: () => ({
 						relayState: '/testFromURI',
@@ -136,7 +175,7 @@ describe('getRedirectUrl', () => {
 				},
 			),
 		).toBe(
-			'/welcome/123?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com',
+			'/welcome/123?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
 		);
 	});
 
@@ -154,6 +193,11 @@ describe('getRedirectUrl', () => {
 								label: 'jobs_site',
 							},
 						},
+						authentication: {
+							request: {
+								max_age: 100,
+							},
+						},
 					}),
 					getSignInWidgetConfig: () => ({
 						relayState: '/testFromURI',
@@ -161,7 +205,7 @@ describe('getRedirectUrl', () => {
 				},
 			),
 		).toBe(
-			'/welcome/123?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com',
+			'/welcome/123?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
 		);
 	});
 
@@ -177,6 +221,11 @@ describe('getRedirectUrl', () => {
 							clientId: 'test123',
 							label: 'jobs_site',
 						},
+						authentication: {
+							request: {
+								max_age: 100,
+							},
+						},
 					}),
 					getSignInWidgetConfig: () => ({
 						relayState: '/testFromURI',
@@ -184,7 +233,7 @@ describe('getRedirectUrl', () => {
 				},
 			),
 		).toBe(
-			'/reset-password/123?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com',
+			'/reset-password/123?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
 		);
 	});
 
@@ -202,6 +251,11 @@ describe('getRedirectUrl', () => {
 								label: 'jobs_site',
 							},
 						},
+						authentication: {
+							request: {
+								max_age: 100,
+							},
+						},
 					}),
 					getSignInWidgetConfig: () => ({
 						relayState: '/testFromURI',
@@ -209,7 +263,7 @@ describe('getRedirectUrl', () => {
 				},
 			),
 		).toBe(
-			'/reset-password/123?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com',
+			'/reset-password/123?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
 		);
 	});
 
@@ -225,6 +279,11 @@ describe('getRedirectUrl', () => {
 							clientId: 'test123',
 							label: 'jobs_site',
 						},
+						authentication: {
+							request: {
+								max_age: 100,
+							},
+						},
 					}),
 					getSignInWidgetConfig: () => ({
 						relayState: '/testFromURI',
@@ -232,7 +291,7 @@ describe('getRedirectUrl', () => {
 				},
 			),
 		).toBe(
-			'/set-password/123?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com',
+			'/set-password/123?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
 		);
 	});
 
@@ -250,6 +309,11 @@ describe('getRedirectUrl', () => {
 								label: 'jobs_site',
 							},
 						},
+						authentication: {
+							request: {
+								max_age: 100,
+							},
+						},
 					}),
 					getSignInWidgetConfig: () => ({
 						relayState: '/testFromURI',
@@ -257,7 +321,7 @@ describe('getRedirectUrl', () => {
 				},
 			),
 		).toBe(
-			'/set-password/123?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com',
+			'/set-password/123?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
 		);
 	});
 
@@ -272,6 +336,11 @@ describe('getRedirectUrl', () => {
 						target: {
 							clientId: 'test123',
 							label: 'jobs_site',
+						},
+						authentication: {
+							request: {
+								max_age: 100,
+							},
 						},
 					}),
 					getSignInWidgetConfig: () => ({
@@ -296,6 +365,11 @@ describe('getRedirectUrl', () => {
 								label: 'jobs_site',
 							},
 						},
+						authentication: {
+							request: {
+								max_age: 100,
+							},
+						},
 					}),
 					getSignInWidgetConfig: () => ({
 						relayState: '/testFromURI',
@@ -316,6 +390,11 @@ describe('getRedirectUrl', () => {
 						target: {
 							clientId: 'test123',
 							label: 'jobs_site',
+						},
+						authentication: {
+							request: {
+								max_age: 100,
+							},
 						},
 					}),
 					getSignInWidgetConfig: () => ({
@@ -340,6 +419,11 @@ describe('getRedirectUrl', () => {
 								label: 'jobs_site',
 							},
 						},
+						authentication: {
+							request: {
+								max_age: 100,
+							},
+						},
 					}),
 					getSignInWidgetConfig: () => ({
 						relayState: '/testFromURI',
@@ -361,12 +445,17 @@ describe('getRedirectUrl', () => {
 							clientId: 'test123',
 							label: 'jobs_site',
 						},
+						authentication: {
+							request: {
+								max_age: 100,
+							},
+						},
 					}),
 					getSignInWidgetConfig: () => ({}),
 				},
 			),
 		).toBe(
-			'/signin?fromURI=%2Foauth2%2Fv1%2Fauthorize%3Fclient_id%3Dtest123&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com',
+			'/signin?fromURI=%2Foauth2%2Fv1%2Fauthorize%3Fclient_id%3Dtest123&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
 		);
 	});
 
@@ -384,12 +473,33 @@ describe('getRedirectUrl', () => {
 								label: 'jobs_site',
 							},
 						},
+						authentication: {
+							request: {
+								max_age: 100,
+							},
+						},
 					}),
 					getSignInWidgetConfig: () => ({}),
 				},
 			),
 		).toBe(
-			'/signin?fromURI=%2Foauth2%2Fv1%2Fauthorize%3Fclient_id%3Dtest123&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com',
+			'/signin?fromURI=%2Foauth2%2Fv1%2Fauthorize%3Fclient_id%3Dtest123&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
+		);
+	});
+
+	it('should get clientId and maxAge from query params if not in requestContext', () => {
+		expect(
+			getRedirectUrl(
+				'?client_id=test123&prompt=login&max_age=100',
+				'https://profile.theguardian.com',
+				'/oauth2/v1/authorize',
+				{
+					getRequestContext: () => ({}),
+					getSignInWidgetConfig: () => ({}),
+				},
+			),
+		).toBe(
+			'/signin?fromURI=%2Foauth2%2Fv1%2Fauthorize%3Fclient_id%3Dtest123%26max_age%3D100&appClientId=test123&maxAge=100',
 		);
 	});
 });

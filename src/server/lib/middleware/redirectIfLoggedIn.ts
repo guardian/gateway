@@ -40,7 +40,20 @@ export const redirectIfLoggedIn = async (
 		(oktaIdentityEngineSessionCookieId || oktaClassicSessionCookieId)
 	) {
 		try {
-			// If they do and it's valid, get the session info
+			// check if maxAge is set. If it is, the user last authenticated more than maxAge ago.
+			// This is automatically checked by Okta during the authorization code flow so we don't
+			// need to check it again. But we only set maxAge in flows where we want to re-authenticate
+			// the user after a specific time, i.e. MMA. If we don't make this check here, the 'signed in as'
+			// page will be shown, which will allow a user to get new OAuth tokens without re-authenticating.
+			if (state.queryParams?.maxAge) {
+				return res.redirect(
+					303,
+					addQueryParamsToPath('/reauthenticate', res.locals.queryParams),
+				);
+			}
+
+			// If they do have an existing Okta session, get the session info to check that it's valid
+			// (this throws if the session is invalid)
 			const session = await getCurrentSession({
 				idx: oktaIdentityEngineSessionCookieId,
 				sid: oktaClassicSessionCookieId,
@@ -102,6 +115,7 @@ export const redirectIfLoggedIn = async (
 			);
 			//we redirect to /reauthenticate to make sure the cookies has been removed
 			return res.redirect(
+				303,
 				addQueryParamsToPath('/reauthenticate', res.locals.queryParams),
 			);
 		}
@@ -134,6 +148,7 @@ export const redirectIfLoggedIn = async (
 					// /reauthenticate and delete the Identity cookies
 					clearIDAPICookies(res);
 					return res.redirect(
+						303,
 						addQueryParamsToPath('/reauthenticate', res.locals.queryParams),
 					);
 				}

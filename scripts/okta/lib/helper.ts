@@ -44,6 +44,11 @@ interface RequestContext {
 			label?: string;
 		};
 	};
+	authentication?: {
+		request?: {
+			max_age?: number;
+		};
+	};
 }
 
 /**
@@ -131,6 +136,19 @@ export const getThirdPartyReturnUrl = (
 };
 
 /**
+ * @name getMaxAge
+ * @description Get the max_age from the Okta Sign-In Widget request context.
+ *
+ * @param requestContext
+ * @returns number | undefined
+ */
+export const getMaxAge = (
+	requestContext?: RequestContext,
+): number | undefined => {
+	return requestContext?.authentication?.request?.max_age;
+};
+
+/**
  * @name getRedirectUrl
  * @description Get the url to redirect users to when the land on the Okta hosted sign in page.
  *
@@ -174,6 +192,11 @@ export const getRedirectUrl = (
 	// where we need to add this to the query params we send to gateway
 	let thirdPartyReturnUrl: string | undefined;
 
+	// This is the max permitted time since a user last authenticated. If the user last authenticated
+	// more than this number of seconds ago, they will be prompted to re-authenticate. We attempt to get it
+	// from the OktaUtil object, with the existing search parameters as a fallback option.
+	let maxAge: number | undefined;
+
 	// attempt to get the parameters we need from the Okta hosted login page OktaUtil object
 	if (oktaUtil && !forceFallback) {
 		// try getting fromURI from OktaUtil signInWidgetConfig (property is called called relayState)
@@ -190,11 +213,20 @@ export const getRedirectUrl = (
 			locationOrigin,
 			requestContext,
 		);
+
+		// try getting maxAge from OktaUtil requestContext
+		maxAge = getMaxAge(requestContext);
 	}
 
 	// if we're unable to get clientId from OktaUtil, try to get it from the search params where it will exist
 	if (!clientId || forceFallback) {
 		clientId = searchParams.get('client_id') || undefined;
+	}
+
+	// Try and get maxAge from the search params where it may exist
+	if (!maxAge && searchParams.has('max_age')) {
+		// We know max_age exists here so we can use the non-null assertion operator (!)
+		maxAge = parseInt(searchParams.get('max_age')!, 10);
 	}
 
 	// if fromURI doesn't exist, which is the case when prompt="login" is set and the user is already logged in
@@ -220,6 +252,10 @@ export const getRedirectUrl = (
 	}
 	if (thirdPartyReturnUrl) {
 		params.set('returnUrl', thirdPartyReturnUrl);
+	}
+	// Set maxAge if it exists and isn't -1 (which Okta sets it to by default)
+	if (maxAge !== undefined && maxAge >= 0) {
+		params.set('maxAge', maxAge.toString());
 	}
 
 	// check the Okta hosted login page query params for an activation token for welcome page
