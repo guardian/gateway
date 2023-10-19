@@ -2,18 +2,28 @@ import { getRedirectUrl } from '../lib/helper';
 
 describe('getRedirectUrl', () => {
 	it('should return /signin if no valid params passed', () => {
-		expect(getRedirectUrl('', '', '', {})).toBe(`/signin?`);
+		expect(
+			getRedirectUrl(new URLSearchParams(), '', '', {
+				getRequestContext: () => ({}),
+				getSignInWidgetConfig: () => ({}),
+				completeLogin: () => {},
+			}),
+		).toBe(`/signin?`);
 	});
 
 	it('should return /welcome/:token if no valid params passed but the activation_token', () => {
-		expect(getRedirectUrl('?activation_token=123', '', '', {})).toBe(
-			`/welcome/123?`,
-		);
+		expect(
+			getRedirectUrl(new URLSearchParams('?activation_token=123'), '', '', {
+				getRequestContext: () => ({}),
+				getSignInWidgetConfig: () => ({}),
+				completeLogin: () => {},
+			}),
+		).toBe(`/welcome/123?`);
 	});
 
 	it('should return /signin with valid query params - identity classic', () => {
 		expect(
-			getRedirectUrl('', '', '', {
+			getRedirectUrl(new URLSearchParams(), '', '', {
 				getRequestContext: () => ({
 					target: {
 						clientId: 'test123',
@@ -28,13 +38,14 @@ describe('getRedirectUrl', () => {
 				getSignInWidgetConfig: () => ({
 					relayState: '/testFromURI',
 				}),
+				completeLogin: () => {},
 			}),
 		).toBe('/signin?fromURI=%2FtestFromURI&appClientId=test123&maxAge=100');
 	});
 
 	it('should return /signin with valid query params - identity engine', () => {
 		expect(
-			getRedirectUrl('', '', '', {
+			getRedirectUrl(new URLSearchParams(), '', '', {
 				getRequestContext: () => ({
 					app: {
 						value: {
@@ -51,13 +62,14 @@ describe('getRedirectUrl', () => {
 				getSignInWidgetConfig: () => ({
 					relayState: '/testFromURI',
 				}),
+				completeLogin: () => {},
 			}),
 		).toBe('/signin?fromURI=%2FtestFromURI&appClientId=test123&maxAge=100');
 	});
 
 	it('should return /welcome/:token with valid query params and activation_token - identity classic', () => {
 		expect(
-			getRedirectUrl('?activation_token=123', '', '', {
+			getRedirectUrl(new URLSearchParams('?activation_token=123'), '', '', {
 				getRequestContext: () => ({
 					target: {
 						clientId: 'test123',
@@ -72,6 +84,7 @@ describe('getRedirectUrl', () => {
 				getSignInWidgetConfig: () => ({
 					relayState: '/testFromURI',
 				}),
+				completeLogin: () => {},
 			}),
 		).toBe(
 			'/welcome/123?fromURI=%2FtestFromURI&appClientId=test123&maxAge=100',
@@ -80,7 +93,7 @@ describe('getRedirectUrl', () => {
 
 	it('should return /welcome/:token with valid query params and activation_token - identity engine', () => {
 		expect(
-			getRedirectUrl('?activation_token=123', '', '', {
+			getRedirectUrl(new URLSearchParams('?activation_token=123'), '', '', {
 				getRequestContext: () => ({
 					app: {
 						value: {
@@ -97,6 +110,7 @@ describe('getRedirectUrl', () => {
 				getSignInWidgetConfig: () => ({
 					relayState: '/testFromURI',
 				}),
+				completeLogin: () => {},
 			}),
 		).toBe(
 			'/welcome/123?fromURI=%2FtestFromURI&appClientId=test123&maxAge=100',
@@ -105,56 +119,8 @@ describe('getRedirectUrl', () => {
 
 	it('should return /signin with valid query params and third party return url and third party client id - identity classic', () => {
 		expect(
-			getRedirectUrl('', 'https://profile.theguardian.com', '', {
-				getRequestContext: () => ({
-					target: {
-						clientId: 'test123',
-						label: 'jobs_site',
-					},
-					authentication: {
-						request: {
-							max_age: 100,
-						},
-					},
-				}),
-				getSignInWidgetConfig: () => ({
-					relayState: '/testFromURI',
-				}),
-			}),
-		).toBe(
-			'/signin?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
-		);
-	});
-
-	it('should return /signin with valid query params and third party return url and third party client id - identity engine', () => {
-		expect(
-			getRedirectUrl('', 'https://profile.theguardian.com', '', {
-				getRequestContext: () => ({
-					app: {
-						value: {
-							id: 'test123',
-							label: 'jobs_site',
-						},
-					},
-					authentication: {
-						request: {
-							max_age: 100,
-						},
-					},
-				}),
-				getSignInWidgetConfig: () => ({
-					relayState: '/testFromURI',
-				}),
-			}),
-		).toBe(
-			'/signin?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
-		);
-	});
-
-	it('should return /welcome/:token with valid query params and third party return url and third party client id - identity classic', () => {
-		expect(
 			getRedirectUrl(
-				'?activation_token=123',
+				new URLSearchParams(),
 				'https://profile.theguardian.com',
 				'',
 				{
@@ -172,6 +138,93 @@ describe('getRedirectUrl', () => {
 					getSignInWidgetConfig: () => ({
 						relayState: '/testFromURI',
 					}),
+					completeLogin: () => {},
+				},
+			),
+		).toBe(
+			'/signin?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
+		);
+	});
+
+	it('should return /signin with valid query params and third party return url and third party client id - identity engine', () => {
+		expect(
+			getRedirectUrl(
+				new URLSearchParams(),
+				'https://profile.theguardian.com',
+				'',
+				{
+					getRequestContext: () => ({
+						app: {
+							value: {
+								id: 'test123',
+								label: 'jobs_site',
+							},
+						},
+						authentication: {
+							request: {
+								max_age: 100,
+							},
+						},
+					}),
+					getSignInWidgetConfig: () => ({
+						relayState: '/testFromURI',
+					}),
+					completeLogin: () => {},
+				},
+			),
+		).toBe(
+			'/signin?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
+		);
+	});
+
+	it('should return /signin with valid query params and third party return url and third party client id - identity engine', () => {
+		expect(
+			getRedirectUrl(
+				new URLSearchParams(),
+				'https://profile.theguardian.com',
+				'',
+				{
+					getRequestContext: () => ({
+						app: {
+							value: {
+								id: 'test123',
+								label: 'jobs_site',
+							},
+						},
+					}),
+					getSignInWidgetConfig: () => ({
+						relayState: '/testFromURI',
+					}),
+					completeLogin: () => {},
+				},
+			),
+		).toBe(
+			'/signin?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com',
+		);
+	});
+
+	it('should return /welcome/:token with valid query params and third party return url and third party client id - identity classic', () => {
+		expect(
+			getRedirectUrl(
+				new URLSearchParams('?activation_token=123'),
+				'https://profile.theguardian.com',
+				'',
+				{
+					getRequestContext: () => ({
+						target: {
+							clientId: 'test123',
+							label: 'jobs_site',
+						},
+						authentication: {
+							request: {
+								max_age: 100,
+							},
+						},
+					}),
+					getSignInWidgetConfig: () => ({
+						relayState: '/testFromURI',
+					}),
+					completeLogin: () => {},
 				},
 			),
 		).toBe(
@@ -182,7 +235,7 @@ describe('getRedirectUrl', () => {
 	it('should return /welcome/:token with valid query params and third party return url and third party client id - identity engine', () => {
 		expect(
 			getRedirectUrl(
-				'?activation_token=123',
+				new URLSearchParams('?activation_token=123'),
 				'https://profile.theguardian.com',
 				'',
 				{
@@ -202,6 +255,7 @@ describe('getRedirectUrl', () => {
 					getSignInWidgetConfig: () => ({
 						relayState: '/testFromURI',
 					}),
+					completeLogin: () => {},
 				},
 			),
 		).toBe(
@@ -212,7 +266,7 @@ describe('getRedirectUrl', () => {
 	it('should return /reset-password/:token with valid query params and third party return url and third party client id - identity classic', () => {
 		expect(
 			getRedirectUrl(
-				'?reset_password_token=123',
+				new URLSearchParams('?reset_password_token=123'),
 				'https://profile.theguardian.com',
 				'',
 				{
@@ -230,6 +284,7 @@ describe('getRedirectUrl', () => {
 					getSignInWidgetConfig: () => ({
 						relayState: '/testFromURI',
 					}),
+					completeLogin: () => {},
 				},
 			),
 		).toBe(
@@ -240,7 +295,7 @@ describe('getRedirectUrl', () => {
 	it('should return /reset-password/:token with valid query params and third party return url and third party client id - identity engine', () => {
 		expect(
 			getRedirectUrl(
-				'?reset_password_token=123',
+				new URLSearchParams('?reset_password_token=123'),
 				'https://profile.theguardian.com',
 				'',
 				{
@@ -260,6 +315,7 @@ describe('getRedirectUrl', () => {
 					getSignInWidgetConfig: () => ({
 						relayState: '/testFromURI',
 					}),
+					completeLogin: () => {},
 				},
 			),
 		).toBe(
@@ -270,7 +326,7 @@ describe('getRedirectUrl', () => {
 	it('should return /set-password/:token with valid query params and third party return url and third party client id - identity classic', () => {
 		expect(
 			getRedirectUrl(
-				'?set_password_token=123',
+				new URLSearchParams('?set_password_token=123'),
 				'https://profile.theguardian.com',
 				'',
 				{
@@ -288,6 +344,7 @@ describe('getRedirectUrl', () => {
 					getSignInWidgetConfig: () => ({
 						relayState: '/testFromURI',
 					}),
+					completeLogin: () => {},
 				},
 			),
 		).toBe(
@@ -298,7 +355,7 @@ describe('getRedirectUrl', () => {
 	it('should return /set-password/:token with valid query params and third party return url and third party client id - identity engine', () => {
 		expect(
 			getRedirectUrl(
-				'?set_password_token=123',
+				new URLSearchParams('?set_password_token=123'),
 				'https://profile.theguardian.com',
 				'',
 				{
@@ -318,6 +375,7 @@ describe('getRedirectUrl', () => {
 					getSignInWidgetConfig: () => ({
 						relayState: '/testFromURI',
 					}),
+					completeLogin: () => {},
 				},
 			),
 		).toBe(
@@ -328,7 +386,7 @@ describe('getRedirectUrl', () => {
 	it('should return /signin only with clientId if force_fallback is set - identity classic', () => {
 		expect(
 			getRedirectUrl(
-				'?force_fallback=true&client_id=test123',
+				new URLSearchParams('?force_fallback=true&client_id=test123'),
 				'https://profile.theguardian.com',
 				'',
 				{
@@ -346,6 +404,7 @@ describe('getRedirectUrl', () => {
 					getSignInWidgetConfig: () => ({
 						relayState: '/testFromURI',
 					}),
+					completeLogin: () => {},
 				},
 			),
 		).toBe('/signin?appClientId=test123');
@@ -354,7 +413,7 @@ describe('getRedirectUrl', () => {
 	it('should return /signin only with clientId if force_fallback is set - identity engine', () => {
 		expect(
 			getRedirectUrl(
-				'?force_fallback=true&client_id=test123',
+				new URLSearchParams('?force_fallback=true&client_id=test123'),
 				'https://profile.theguardian.com',
 				'',
 				{
@@ -374,6 +433,7 @@ describe('getRedirectUrl', () => {
 					getSignInWidgetConfig: () => ({
 						relayState: '/testFromURI',
 					}),
+					completeLogin: () => {},
 				},
 			),
 		).toBe('/signin?appClientId=test123');
@@ -382,7 +442,9 @@ describe('getRedirectUrl', () => {
 	it('should return /welcome/:token only with clientId if force_fallback is set - identity classic', () => {
 		expect(
 			getRedirectUrl(
-				'?force_fallback=true&client_id=test123&activation_token=123',
+				new URLSearchParams(
+					'?force_fallback=true&client_id=test123&activation_token=123',
+				),
 				'https://profile.theguardian.com',
 				'',
 				{
@@ -400,6 +462,7 @@ describe('getRedirectUrl', () => {
 					getSignInWidgetConfig: () => ({
 						relayState: '/testFromURI',
 					}),
+					completeLogin: () => {},
 				},
 			),
 		).toBe('/welcome/123?appClientId=test123');
@@ -408,7 +471,9 @@ describe('getRedirectUrl', () => {
 	it('should return /welcome/:token only with clientId if force_fallback is set - identity engine', () => {
 		expect(
 			getRedirectUrl(
-				'?force_fallback=true&client_id=test123&activation_token=123',
+				new URLSearchParams(
+					'?force_fallback=true&client_id=test123&activation_token=123',
+				),
 				'https://profile.theguardian.com',
 				'',
 				{
@@ -428,6 +493,7 @@ describe('getRedirectUrl', () => {
 					getSignInWidgetConfig: () => ({
 						relayState: '/testFromURI',
 					}),
+					completeLogin: () => {},
 				},
 			),
 		).toBe('/welcome/123?appClientId=test123');
@@ -436,7 +502,7 @@ describe('getRedirectUrl', () => {
 	it('should get fromURI from location and queryparams if path starts with /oauth2/ and fromURI is not in the okta config - identity classic', () => {
 		expect(
 			getRedirectUrl(
-				'?client_id=test123&prompt=login',
+				new URLSearchParams('?client_id=test123&prompt=login'),
 				'https://profile.theguardian.com',
 				'/oauth2/v1/authorize',
 				{
@@ -452,6 +518,7 @@ describe('getRedirectUrl', () => {
 						},
 					}),
 					getSignInWidgetConfig: () => ({}),
+					completeLogin: () => {},
 				},
 			),
 		).toBe(
@@ -462,7 +529,7 @@ describe('getRedirectUrl', () => {
 	it('should get fromURI from location and queryparams if path starts with /oauth2/ and fromURI is not in the okta config - identity engine', () => {
 		expect(
 			getRedirectUrl(
-				'?client_id=test123&prompt=login',
+				new URLSearchParams('?client_id=test123&prompt=login'),
 				'https://profile.theguardian.com',
 				'/oauth2/v1/authorize',
 				{
@@ -480,6 +547,7 @@ describe('getRedirectUrl', () => {
 						},
 					}),
 					getSignInWidgetConfig: () => ({}),
+					completeLogin: () => {},
 				},
 			),
 		).toBe(
@@ -490,12 +558,13 @@ describe('getRedirectUrl', () => {
 	it('should get clientId and maxAge from query params if not in requestContext', () => {
 		expect(
 			getRedirectUrl(
-				'?client_id=test123&prompt=login&max_age=100',
+				new URLSearchParams('?client_id=test123&prompt=login&max_age=100'),
 				'https://profile.theguardian.com',
 				'/oauth2/v1/authorize',
 				{
 					getRequestContext: () => ({}),
 					getSignInWidgetConfig: () => ({}),
+					completeLogin: () => {},
 				},
 			),
 		).toBe(

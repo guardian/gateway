@@ -1,10 +1,6 @@
 import { getThirdPartyClientId } from '../lib/helper';
 
 describe('getThirdPartyClientId', () => {
-	it('should return undefined if no context is passed', () => {
-		expect(getThirdPartyClientId()).toBeUndefined();
-	});
-
 	it('should return undefined if no target is passed', () => {
 		expect(getThirdPartyClientId({})).toBeUndefined();
 	});

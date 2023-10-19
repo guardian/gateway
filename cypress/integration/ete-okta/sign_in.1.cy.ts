@@ -100,8 +100,7 @@ describe('Sign in flow, Okta enabled', () => {
 		});
 	});
 	context('Okta session refresh', () => {
-		// TODO: temporarily skipped due to OIE being on CODE, which causes this test to fail
-		it.skip('refreshes a valid Okta session', () => {
+		it('refreshes a valid Okta session', () => {
 			// Create a validated test user
 			cy.createTestUser({ isUserEmailValidated: true }).then(
 				({ emailAddress, finalPassword }) => {
@@ -117,8 +116,10 @@ describe('Sign in flow, Okta enabled', () => {
 					cy.url().should('include', '/consents');
 
 					// Get the current session data
-					cy.getCookie('sid').then((originalSidCookie) => {
-						expect(originalSidCookie).to.exist;
+					cy.getCookie('idx').then((orignalIdxCookie) => {
+						expect(orignalIdxCookie).to.exist;
+						// we want to check the cookie is being set as a persistent cookie and not a session cookie, hence the expiry check
+						expect(orignalIdxCookie?.expiry).to.exist;
 
 						// Refresh our user session
 						cy.visit(
@@ -129,12 +130,15 @@ describe('Sign in flow, Okta enabled', () => {
 						cy.url().should('include', '/consents');
 
 						// Get the refreshed session data
-						cy.getCookie('sid').then((newSidCookie) => {
-							expect(newSidCookie).to.exist;
-							expect(newSidCookie?.value).to.equal(originalSidCookie?.value);
-							if (newSidCookie?.expiry && originalSidCookie?.expiry) {
-								expect(newSidCookie?.expiry).to.be.greaterThan(
-									originalSidCookie?.expiry,
+						cy.getCookie('idx').then((newIdxCookie) => {
+							expect(newIdxCookie).to.exist;
+							// `idx` cookie doesn't have same value as original when refreshed, which is different to the Okta Classic `sid` cookie
+							expect(newIdxCookie?.value).to.not.equal(orignalIdxCookie?.value);
+							// we want to check the cookie is being set as a persistent cookie and not a session cookie, hence the expiry check
+							expect(newIdxCookie?.expiry).to.exist;
+							if (newIdxCookie?.expiry && orignalIdxCookie?.expiry) {
+								expect(newIdxCookie?.expiry).to.be.greaterThan(
+									orignalIdxCookie?.expiry,
 								);
 							}
 						});

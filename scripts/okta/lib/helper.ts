@@ -62,9 +62,21 @@ interface RequestContext {
  * You can view more options by console logging the `window.OktaUtil` object if needed on the Okta hosted sign in page.
  */
 export interface OktaUtil {
-	getSignInWidgetConfig?: () => SignInWidgetConfig;
-	getRequestContext?: () => RequestContext;
+	getSignInWidgetConfig: () => SignInWidgetConfig;
+	getRequestContext: () => RequestContext;
+	completeLogin: () => void;
 }
+
+export type OktaSignIn = {
+	new (config: SignInWidgetConfig): OktaSignIn;
+	renderEl(
+		options: {
+			el: string;
+		},
+		callback: OktaUtil['completeLogin'],
+		error: (err: Error) => void,
+	): void;
+};
 
 /**
  * @name getRelayState
@@ -74,9 +86,9 @@ export interface OktaUtil {
  * @returns string | undefined
  */
 export const getRelayState = (
-	signInWidgetConfig?: SignInWidgetConfig,
+	signInWidgetConfig: SignInWidgetConfig,
 ): string | undefined => {
-	return signInWidgetConfig?.relayState;
+	return signInWidgetConfig.relayState;
 };
 
 /**
@@ -87,11 +99,11 @@ export const getRelayState = (
  * @returns string | undefined
  */
 export const getClientId = (
-	requestContext?: RequestContext,
+	requestContext: RequestContext,
 ): string | undefined => {
 	// requestContext.target.clientId is for Okta Identity Classic
 	// requestContext.app.value.id is for Okta Identity Engine
-	return requestContext?.target?.clientId || requestContext?.app?.value?.id;
+	return requestContext.target?.clientId || requestContext.app?.value?.id;
 };
 
 /**
@@ -102,12 +114,12 @@ export const getClientId = (
  * @returns string | undefined
  */
 export const getThirdPartyClientId = (
-	requestContext?: RequestContext,
+	requestContext: RequestContext,
 ): string | undefined => {
 	// requestContext?.target?.label is for Okta Identity Classic
 	// requestContext?.app?.value?.label is for Okta Identity Engine
 	const label =
-		requestContext?.target?.label || requestContext?.app?.value?.label;
+		requestContext.target?.label || requestContext.app?.value?.label;
 	switch (label) {
 		case 'jobs_site':
 			return 'jobs';
@@ -123,12 +135,12 @@ export const getThirdPartyClientId = (
  */
 export const getThirdPartyReturnUrl = (
 	locationOrigin: string,
-	requestContext?: RequestContext,
+	requestContext: RequestContext,
 ): string | undefined => {
 	// requestContext?.target?.label is for Okta Identity Classic
 	// requestContext?.app?.value?.label is for Okta Identity Engine
 	const label =
-		requestContext?.target?.label || requestContext?.app?.value?.label;
+		requestContext.target?.label || requestContext.app?.value?.label;
 	switch (label) {
 		case 'jobs_site':
 			return encodeURIComponent(locationOrigin.replace('profile', 'jobs'));
@@ -163,16 +175,13 @@ export const getMaxAge = (
  * @returns string
  */
 export const getRedirectUrl = (
-	locationSearch: string,
+	searchParams: URLSearchParams,
 	locationOrigin: string,
 	locationPathname: string,
 	oktaUtil?: OktaUtil,
 ): string => {
 	// set up params class to hold the parameters we'll be passing to our own login page
 	const params = new URLSearchParams();
-
-	// parse the current search params on the page
-	const searchParams = new URLSearchParams(locationSearch);
 
 	// force fallback flag, used to test fallback behaviour
 	const forceFallback = searchParams.get('force_fallback');
@@ -200,11 +209,11 @@ export const getRedirectUrl = (
 	// attempt to get the parameters we need from the Okta hosted login page OktaUtil object
 	if (oktaUtil && !forceFallback) {
 		// try getting fromURI from OktaUtil signInWidgetConfig (property is called called relayState)
-		const signInWidgetConfig = oktaUtil?.getSignInWidgetConfig?.();
+		const signInWidgetConfig = oktaUtil.getSignInWidgetConfig();
 		fromURI = getRelayState(signInWidgetConfig);
 
 		// try getting clientId from OktaUtil requestContext
-		const requestContext = oktaUtil?.getRequestContext?.();
+		const requestContext = oktaUtil.getRequestContext();
 		clientId = getClientId(requestContext);
 
 		// determine if this is a third party client e.g. jobs and set the thirdPartyClientId and thirdPartyReturnUrl

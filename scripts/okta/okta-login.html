@@ -10,8 +10,16 @@
 		/>
 		<title>The Guardian | Login</title>
 		<script src="https://assets.guim.co.uk/polyfill.io/v3/polyfill.min.js?features=es2015%2Ces2016%2Ces2017%2Ces2018%2Ces2019%2Ces2020%2Ces2021%2Ces2022%2Cfetch%2CglobalThis%2CURLSearchParams"></script>
+		{{{SignInWidgetResources}}}
+		<style>
+			/* hiding the container by default, so it's not shown during social sign in */
+			#okta-login-container {
+				visibility: hidden;
+			}
+		</style>
 	</head>
 	<body>
+		<div id="okta-login-container"></div>
 		{{{OktaUtil}}}
 		<script src="https://cdn.jsdelivr.net/gh/guardian/gateway@main/scripts/okta/okta-login.min.js"></script>
 	</body>
