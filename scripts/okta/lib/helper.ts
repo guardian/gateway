@@ -183,9 +183,6 @@ export const getRedirectUrl = (
 	// set up params class to hold the parameters we'll be passing to our own login page
 	const params = new URLSearchParams();
 
-	// force fallback flag, used to test fallback behaviour
-	const forceFallback = searchParams.get('force_fallback');
-
 	// Variable holders for the Okta params we want to pass to our own login page
 	// This is the URI to redirect to after the user has logged in and has a session set to complete the Authorization Code Flow from the SDK.
 	let fromURI: string | undefined;
@@ -207,7 +204,7 @@ export const getRedirectUrl = (
 	let maxAge: number | undefined;
 
 	// attempt to get the parameters we need from the Okta hosted login page OktaUtil object
-	if (oktaUtil && !forceFallback) {
+	if (oktaUtil) {
 		// try getting fromURI from OktaUtil signInWidgetConfig (property is called called relayState)
 		const signInWidgetConfig = oktaUtil.getSignInWidgetConfig();
 		fromURI = getRelayState(signInWidgetConfig);
@@ -228,7 +225,7 @@ export const getRedirectUrl = (
 	}
 
 	// if we're unable to get clientId from OktaUtil, try to get it from the search params where it will exist
-	if (!clientId || forceFallback) {
+	if (!clientId) {
 		clientId = searchParams.get('client_id') || undefined;
 	}
 
