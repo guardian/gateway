@@ -132,7 +132,7 @@ describe('Sign in flow, Okta enabled', () => {
 						// Get the refreshed session data
 						cy.getCookie('idx').then((newIdxCookie) => {
 							expect(newIdxCookie).to.exist;
-							// `idx` cookie doesn't have same value as original when refreshed, which is different to the Okta Classic `sid` cookie
+							// `idx` cookie doesn't have same value as original when refreshed, which is different to the Okta Classic `idx` cookie
 							expect(newIdxCookie?.value).to.not.equal(orignalIdxCookie?.value);
 							// we want to check the cookie is being set as a persistent cookie and not a session cookie, hence the expiry check
 							expect(newIdxCookie?.expiry).to.exist;
@@ -162,10 +162,10 @@ describe('Sign in flow, Okta enabled', () => {
 					cy.url().should('include', '/consents');
 
 					// Get the current session data
-					cy.getCookie('sid').then((sidCookie) => {
+					cy.getCookie('idx').then((idxCookie) => {
 						// Close the user's current session in Okta
 						cy.closeCurrentOktaSession({
-							sid: sidCookie?.value,
+							idx: idxCookie?.value,
 						}).then(() => {
 							// Refresh our user session
 							cy.visit(
@@ -194,7 +194,7 @@ describe('Sign in flow, Okta enabled', () => {
 					cy.get('[data-cy="main-form-submit-button"]').click();
 					cy.url().should('include', '/consents');
 
-					// Delete the Okta sid cookie
+					// Delete the Okta sid/idx cookie
 					// strange behaviour form Cypress 12
 					// where we need to delete cookie from both domains
 					// to get the test to pass
@@ -204,6 +204,12 @@ describe('Sign in flow, Okta enabled', () => {
 						domain: Cypress.env('BASE_URI'),
 					});
 					cy.clearCookie('sid', {
+						domain: `.${Cypress.env('BASE_URI')}`,
+					});
+					cy.clearCookie('idx', {
+						domain: Cypress.env('BASE_URI'),
+					});
+					cy.clearCookie('idx', {
 						domain: `.${Cypress.env('BASE_URI')}`,
 					});
 
@@ -216,6 +222,7 @@ describe('Sign in flow, Okta enabled', () => {
 					cy.url().should('include', '/reset-password');
 
 					cy.getCookie('sid').should('not.exist');
+					cy.getCookie('idx').should('not.exist');
 				},
 			);
 		});
@@ -334,8 +341,8 @@ describe('Sign in flow, Okta enabled', () => {
 					cy.contains('Change email address');
 
 					// Ensure the user's authentication cookies are not set
-					cy.getCookie('sid').then((sidCookie) => {
-						expect(sidCookie).to.not.exist;
+					cy.getCookie('idx').then((idxCookie) => {
+						expect(idxCookie).to.not.exist;
 
 						cy.checkForEmailAndGetDetails(
 							emailAddress,
@@ -387,8 +394,8 @@ describe('Sign in flow, Okta enabled', () => {
 					cy.url().should('include', '/consents');
 
 					// Get the current session data
-					cy.getCookie('sid').then((originalSidCookie) => {
-						expect(originalSidCookie).to.exist;
+					cy.getCookie('idx').then((originalIdxCookie) => {
+						expect(originalIdxCookie).to.exist;
 
 						// Visit sign in again
 						cy.visit(

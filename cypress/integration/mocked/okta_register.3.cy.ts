@@ -1,6 +1,6 @@
 describe('Okta Register flow', () => {
-	const setSidCookie = () => {
-		cy.setCookie('sid', `the_sid_cookie`, {
+	const setIdxCookie = () => {
+		cy.setCookie('idx', `the_idx_cookie`, {
 			domain: Cypress.env('BASE_URI'),
 		});
 	};
@@ -14,7 +14,7 @@ describe('Okta Register flow', () => {
 			cy.disableCMP();
 		});
 
-		it('should redirect to homepage if the sid Okta session cookie is valid', () => {
+		it('should redirect to homepage if the idx Okta session cookie is valid', () => {
 			cy.mockPattern(
 				200,
 				{
@@ -40,7 +40,7 @@ describe('Okta Register flow', () => {
 
 			cy.visit('/register');
 
-			setSidCookie();
+			setIdxCookie();
 
 			cy.get('input[name="email"]').type('example@example.com');
 			cy.mockNext(200, {
@@ -71,12 +71,12 @@ describe('Okta Register flow', () => {
 			cy.contains('Sign in with a different email');
 		});
 
-		it('should redirect to /reauthenticate if the sid Okta session cookie is set, but invalid', () => {
+		it('should redirect to /reauthenticate if the idx Okta session cookie is set, but invalid', () => {
 			cy.mockPattern(404, '/api/v1/sessions/me');
 
 			cy.mockPattern(204, {}, '/api/v1/users/userId/sessions');
 
-			setSidCookie();
+			setIdxCookie();
 
 			// visit healthcheck to set the cookie
 			cy.visit('/healthcheck');
@@ -85,7 +85,7 @@ describe('Okta Register flow', () => {
 
 			cy.location('pathname').should('eq', '/reauthenticate');
 
-			cy.getCookie('sid').should('not.exist');
+			cy.getCookie('idx').should('not.exist');
 		});
 	});
 
@@ -93,7 +93,7 @@ describe('Okta Register flow', () => {
 		beforeEach(() => {
 			cy.mockPurge();
 		});
-		it('should redirect to homepage if the sid Okta session cookie is valid', () => {
+		it('should redirect to homepage if the idx Okta session cookie is valid', () => {
 			cy.mockPattern(
 				200,
 				{
@@ -115,7 +115,7 @@ describe('Okta Register flow', () => {
 
 			cy.mockPattern(204, {}, '/api/v1/users/userId/sessions');
 
-			setSidCookie();
+			setIdxCookie();
 
 			// disable the cmp on the redirect
 			cy.disableCMP();
@@ -138,12 +138,12 @@ describe('Okta Register flow', () => {
 			cy.contains('Sign in with a different email');
 		});
 
-		it('should redirect to /reauthenticate if the sid Okta session cookie is set but invalid', () => {
+		it('should redirect to /reauthenticate if the idx Okta session cookie is set but invalid', () => {
 			cy.mockPattern(404, '/api/v1/sessions/me');
 
 			cy.mockPattern(204, {}, '/api/v1/users/userId/sessions');
 
-			setSidCookie();
+			setIdxCookie();
 
 			// visit healthcheck to set the cookie
 			cy.visit('/healthcheck');
@@ -152,7 +152,7 @@ describe('Okta Register flow', () => {
 
 			cy.location('pathname').should('eq', '/reauthenticate');
 
-			cy.getCookie('sid').should('not.exist');
+			cy.getCookie('idx').should('not.exist');
 		});
 	});
 });

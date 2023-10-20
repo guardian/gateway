@@ -1,7 +1,5 @@
 # Sign Out with Okta
 
-Status: RFC
-
 This document describes how we've implemented the sign out flow with Okta in Gateway.
 
 In old (current) Identity land, when a user clicks the "sign out" button on the website, or visit the sign out link directly, if they have a valid session, determined using the `SC_GU_U` cookie, Identity API will invalidate all existing user sessions on all devices and browsers, and clear all Identity and related dotcom cookies on the current browser.
@@ -12,15 +10,17 @@ Okta provides an administrative API endpoint within the Users API to clear all u
 
 https://developer.okta.com/docs/reference/api/users/#clear-user-sessions
 
-This endpoint requires the okta `userId`, which we get from the okta sessions api using the current okta session id cookie `sid`
+This endpoint requires the okta `userId`, which we get from the okta sessions api using the current okta session id cookie `idx`
 
 We then use this user id to clear all Okta sessions for that user.
 
-In the sceario where the okta call to remove the fails (and we have a orphaned session), we delete the sid cookie anyway and we plan to allow the users to see their active sessions in manage my account section of the site where they can remove them manually.
+In the scenario where the okta call to remove the session fails (and we have a orphaned session), we delete the `idx` cookie anyway, and we plan in the future to allow the users to see their active sessions in manage my account section of the site where they can remove them manually.
 
 If there is no existing session then we'll render the sign in page.
 
-During the dual running of the system we also need to clear the Identity session too. We can use this access token or the SC_GU_U cookie to call Identity API (TBD which option) to do this.
+During the dual running of the system we also need to clear the Identity session too, we do this by calling the `/unauth` endpoint on the Identity API, which will clear the IDAPI session using the`SC_GU_U` cookie.
+
+We then set the `GU_SO` which identifies that the user has signed out recently.
 
 ### User has existing session
 
@@ -36,7 +36,7 @@ sequenceDiagram
   Gateway->>Okta: Clear user sessions<br/>using userId<br/>DELETE /api/v1/users/${userId}/sessions?oauthTokens=true
   Okta->>Gateway: Return 204 No Content
   opt Clear Identity Session (dual running)
-    Gateway->>Identity API: POST /unauth with SC_GU_U cookie
+    Gateway->>Identity API: POST /unauth with `SC_GU_U` cookie
     Identity API->>Gateway: Return GU_SO cookie
   end
   Gateway->>Browser: Redirect to returnUrl<br/>clear identity cookies
@@ -50,7 +50,7 @@ sequenceDiagram
   participant Gateway
   participant Okta
   Browser->>Gateway: GET /signout?returnUrl=...
-  note over Gateway: Check the presence of the SC_GU_U cookie and sid cookie, <br/>if neither are present they are not logged in
+  note over Gateway: Check the presence of the `SC_GU_U` cookie and `idx` cookie, <br/>if neither are present they are not logged in
   Gateway->>Browser: Redirect request to gateway `/signin`
   Browser->>Gateway: Request gateway /signin
   note over Gateway: Sign in session is checked<br/>(encryptedState.signInRedirect == true)<br>remove/set to false from the encryptedState

@@ -26,7 +26,7 @@ describe('Sign in flow', () => {
 
 			cy.mockPattern(204, {}, '/api/v1/users/userId/sessions');
 
-			cy.setCookie('sid', `the_sid_cookie`);
+			cy.setCookie('idx', `the_idx_cookie`);
 
 			// disable the cmp  on the redirect
 			cy.disableCMP();
@@ -85,7 +85,7 @@ describe('Sign in flow', () => {
 				'/api/v1/apps/123',
 			);
 
-			cy.setCookie('sid', `the_sid_cookie`);
+			cy.setCookie('idx', `the_idx_cookie`);
 
 			// disable the cmp  on the redirect
 			cy.disableCMP();

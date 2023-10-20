@@ -30,6 +30,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
 				'BASE_URI',
 			)}/agree/GRS?returnUrl=https://profile.thegulocal.com/signin?returnUrl=https%3A%2F%2Fm.code.dev-theguardian.com%2F`;
 			cy.setCookie('sid', 'invalid-cookie');
+			cy.setCookie('idx', 'invalid-cookie');
 			cy.visit(termsAcceptPageUrl);
 			cy.url().should(
 				'include',
@@ -175,6 +176,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
 					cy.url().should('include', `/agree/GRS`);
 					// check session cookie is set
 					cy.getCookie('sid').should('exist');
+					cy.getCookie('idx').should('exist');
 					// check idapi cookies are set
 					cy.getCookie('SC_GU_U').should('exist');
 					cy.getCookie('SC_GU_LA').should('exist');
