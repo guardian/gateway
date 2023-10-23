@@ -35,11 +35,11 @@ describe('Reauthenticate flow, Okta enabled', () => {
 				cy.url().should('include', '/consents/data');
 
 				// Get the current session data
-				cy.getCookie('sid').then((sidCookie) => {
-					const sid = sidCookie?.value;
-					expect(sid).to.exist;
-					if (sid) {
-						cy.getCurrentOktaSession({ sid }).then((session) => {
+				cy.getCookie('idx').then((idxCookie) => {
+					const idx = idxCookie?.value;
+					expect(idx).to.exist;
+					if (idx) {
+						cy.getCurrentOktaSession({ idx }).then((session) => {
 							expect(session.login).to.equal(emailAddress);
 						});
 					}
@@ -83,11 +83,11 @@ describe('Reauthenticate flow, Okta enabled', () => {
 								cy.url().should('include', '/consents/data');
 
 								// Get the current session data
-								cy.getCookie('sid').then((sidCookie) => {
-									const sid = sidCookie?.value;
-									expect(sid).to.exist;
-									if (sid) {
-										cy.getCurrentOktaSession({ sid }).then((session) => {
+								cy.getCookie('idx').then((idxCookie) => {
+									const idx = idxCookie?.value;
+									expect(idx).to.exist;
+									if (idx) {
+										cy.getCurrentOktaSession({ idx }).then((session) => {
 											expect(session.login).to.equal(emailAddressB);
 										});
 									}

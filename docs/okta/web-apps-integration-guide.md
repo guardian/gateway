@@ -171,7 +171,7 @@ In general the following rules apply:
 2. If the access token and id token are expired, but the reader has a valid `GU_U` cookie, they might be signed in (`maybeLoggedIn`).
 
    - We can't be definitely sure if they are signed in until they attempt to go through the Authorization Code flow to attempt to get a new access token and id token.
-   - This is where the Global session cookie will be checked as part of the Authorization Code flow, which is the `sid` cookie which is only valid on `profile` subdomain and managed by Okta.
+   - This is where the Global session cookie will be checked as part of the Authorization Code flow, which is the `idx` cookie which is only valid on `profile` subdomain and managed by Okta.
 
 3. If the reader has neither a valid access token and id token, nor a valid `GU_U` cookie, they are signed out.
 4. If the reader has a valid GU_SO cookie, they have recently signed out. Any existing access token and id token should be cleared when the page loads.
@@ -180,21 +180,21 @@ By using this `isLoggedIn`/`maybeLoggedIn` and `isSignedOut` states, we can avoi
 
 We already set a `GU_U` cookie which is valid across all Guardian domains, but is not used to take any actions on behalf of the reader (this is performed by the secure, httpOnly, `SC_GU_U` cookie). We can keep using this cookie to determine if the reader is `maybeLoggedIn`.
 
-The `GU_U` cookie and the `sid` cookie will lead to the following scenarios:
+The `GU_U` cookie and the `idx` cookie will lead to the following scenarios:
 
-- `GU_U` && `sid`
+- `GU_U` && `idx`
   - Signed in fully state, can complete authorization flow and get tokens
-- `GU_U` && !`sid`
+- `GU_U` && !`idx`
 
-  - `sid` cookie expired or deleted
+  - `idx` cookie expired or deleted
   - Error when attempting to get new tokens, can delete `GU_U` cookie to get to signed out state
 
-- !`GU_U` && `sid`
+- !`GU_U` && `idx`
 
   - `GU_U` cookie expired or deleted, similar to signed out state
   - When a user goes to log in they will see “signed in as” screen, or be silently logged in if not using “prompt=login” parameter
 
-- !`GU_U` && !`sid`
+- !`GU_U` && !`idx`
 
   - Signed out state
 
@@ -212,7 +212,7 @@ We can also refresh tokens anytime when the reader has valid access token and id
 
 In Okta land "Sign In" can mean two different things. More information about this can be seen in the [Sessions](sessions.md) document. But in general there are two sign in states:
 
-1. The global Okta session (where the `sid` cookie is set)
+1. The global Okta session (where the `idx` cookie is set)
 2. The application session (where OAuth tokens come into play)
 
 It's possible to sign into each one individually, but in most cases we want to sign into the application session only when the global Okta session is valid.
@@ -225,7 +225,7 @@ This gives us two options on how to do "sign in":
 
 1. Sign the user into the global session first, and then the application.
    - Sign in links use `profile.theguardian.com/signin?returnUrl=<app url>` to sign the user in.
-   - Once the user authenticates and the global session is set (namely the `sid` cookie, and the `GU_U` cookie), the user is redirected back to the application, and the application can then go through the Authorization Code flow to get the tokens, whether through redirect method or the iframe method.
+   - Once the user authenticates and the global session is set (namely the `idx` cookie, and the `GU_U` cookie), the user is redirected back to the application, and the application can then go through the Authorization Code flow to get the tokens, whether through redirect method or the iframe method.
    - This provides a separation of concerns between the global session and the application session.
    - The same logic from the 2nd bullet point can be used to get and refresh access/id tokens.
    - Two step process may cause complications if this isn't set up correctly, e.g. lots of redirects, or the user is signed in to the global session but not the application session, etc.
@@ -251,7 +251,7 @@ participant Okta
 
 note over Browser: A user clicks "sign in"
 Browser->>Gateway: GET profile.theguardian.com/signin?returnUrl=<app url>
-note over Gateway: global okta<br/>session check<br/>"sid" cookie
+note over Gateway: global okta<br/>session check<br/>"idx" cookie
 alt no existing session
   Gateway->>Browser: Load sign in/register page
   note over Browser: User sign in with<br>email+password/social/set password<br>session set in browser<br>redirect to returnUrl
@@ -284,7 +284,7 @@ participant Okta
 Browser->>SDK: A user clicks "sign in"
 SDK->>Browser: Setup /authorize url with required<br/>parameters to start the<br/>Authorization Code flow (with PKCE)
 Browser->>Okta: Request OAuth /authorize
-note over Okta: global okta<br/>session check<br/>"sid" cookie
+note over Okta: global okta<br/>session check<br/>"idx" cookie
 opt no existing session
   Okta->>Browser: Return /login/login.html
   note over Browser: Load html, run JS redirect<br> to /signin with fromURI and clientId params

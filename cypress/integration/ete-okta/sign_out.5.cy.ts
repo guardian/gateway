@@ -29,6 +29,7 @@ describe('Sign out flow', () => {
 					cy.url().should('include', `/consents/data`);
 					// check session cookie is set
 					cy.getCookie('sid').should('exist');
+					cy.getCookie('idx').should('exist');
 					// check idapi cookies are set
 					cy.getCookie('SC_GU_U').should('exist');
 					cy.getCookie('SC_GU_LA').should('exist');

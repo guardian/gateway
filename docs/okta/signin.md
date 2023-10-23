@@ -19,7 +19,7 @@ Throughout the implementation of the sign in code, there are many in line commen
 In general the steps of sign in with email and password are summarised as follows, assuming okta is enabled, this does not detail all technical requirements, just the main high level:
 
 - User navigates to `/signin`
-  - Check `sid` cookie for existing Okta session, if this is present it checks if the session is still valid.
+  - Check `idx` cookie for existing Okta session, if this is present it checks if the session is still valid.
   - If the current session does not exist, or is invalid, sign in page shown
     - user enters email and password, makes request to gateway `POST /signin`
     - Use okta authenticate endpoint with the email and password `/api/v1/authn`
@@ -41,7 +41,7 @@ sequenceDiagram
   participant Okta
   participant Identity API
   Browser->>Gateway: Request gateway /signin
-  note over Gateway: Sign in session is checked by inspecting the `sid` cookie
+  note over Gateway: Sign in session is checked by inspecting the `idx` cookie
   Gateway->>Okta: GET /api/v1/sessions/:sessionId
   Okta->>Gateway: return invalid session response
   Gateway->>Browser: render sign in page
@@ -74,7 +74,7 @@ sequenceDiagram
   participant Okta
   participant Identity API
   Browser->>Gateway: Request gateway /signin
-  note over Gateway: Sign in session is checked by inspecting the `sid` cookie and validating the session against the Okta session API
+  note over Gateway: Sign in session is checked by inspecting the `idx` cookie and validating the session against the Okta session API
   note over Okta: check for existing session<br>in this case a session exists
   Gateway->>Okta: GET /api/v1/sessions/:sessionId
   Okta->>Gateway: return valid session response
@@ -103,7 +103,7 @@ participant Social
 participant Identity API
 
 Browser ->> Gateway: Request /signin (or /register),<br>will just be referred to as /signin or sign in for<br>simplicity, as the same thing happens<br>in either case
-note over Gateway: Sign in session is checked by inspecting the `sid` cookie
+note over Gateway: Sign in session is checked by inspecting the `idx` cookie
 Gateway ->> Okta: GET /api/v1/sessions/:sessionId
 Okta ->> Gateway: Return invalid session response
 Gateway ->> Browser: Render sign in page
@@ -156,7 +156,7 @@ participant Social
 participant Identity API
 
 Browser ->> Gateway: Request /signin (or /register),<br>will just be referred to as /signin or sign in for<br>simplicity, as the same thing happens<br>in either case
-note over Gateway: Sign in session is checked by inspecting the `sid` cookie
+note over Gateway: Sign in session is checked by inspecting the `idx` cookie
 Gateway ->> Okta: GET /api/v1/sessions/:sessionId
 Okta ->> Gateway: Return invalid session response
 Gateway ->> Browser: Render sign in page

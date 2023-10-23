@@ -617,8 +617,8 @@ describe('Registration flow - Split 2/2', () => {
 					cy.url().should('include', '/consents');
 
 					// Get the current session data
-					cy.getCookie('sid').then((originalSidCookie) => {
-						expect(originalSidCookie).to.exist;
+					cy.getCookie('idx').then((originalIdxCookie) => {
+						expect(originalIdxCookie).to.exist;
 
 						// Visit register again
 						cy.visit(
