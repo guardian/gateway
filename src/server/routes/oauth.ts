@@ -27,7 +27,6 @@ import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import postSignInController from '@/server/lib/postSignInController';
 import { IdTokenClaims, TokenSet } from 'openid-client';
 import { updateUser } from '@/server/lib/okta/api/users';
-import { getApp } from '@/server/lib/okta/api/apps';
 import { setUserFeatureCookies } from '@/server/lib/user-features';
 import { consentPages } from './consents';
 import {
@@ -189,39 +188,6 @@ const authenticationHandler = async (
 		// rejoin the authorization code flow after we have set a session cookie on our own platform
 		if (authState.queryParams.fromURI) {
 			return res.redirect(303, authState.queryParams.fromURI);
-		}
-
-		// fallback option for apps
-		// if we can't get the fromURI from Okta, we can still use the client id to redirect
-		// back to the application, where they can use the session cookie to complete the flow
-		// by calling the signin/signinwithbrowser sdk method with the prompt=none parameter
-		// firstly check if we have the client id parameter
-		if (authState.queryParams.appClientId) {
-			try {
-				// attempt to find the native app by the client id
-				const nativeApp = await getApp(authState.queryParams.appClientId);
-
-				// Check for fallback link if found
-				if (nativeApp) {
-					// check if the fallback link is set
-					const fallbackUrl = nativeApp.settings.oauthClient.redirect_uris.find(
-						(url) => url.includes('://identity/fallback'),
-					);
-					// if the fallback link is set, redirect to it
-					if (fallbackUrl) {
-						return res.redirect(303, fallbackUrl);
-					}
-				}
-			} catch (error) {
-				// catch if the getApp call fails, we log error, but fall through to prevent runtime errors
-				logger.error(
-					`Failed to get app config for app ${authState.queryParams.appClientId}`,
-					error,
-					{
-						request_id: res.locals.requestId,
-					},
-				);
-			}
 		}
 
 		const returnUrl = authState.confirmationPage

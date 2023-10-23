@@ -1,31 +1,27 @@
 {
-  "applinks": {
-    "details": [
-      {
-        "appIDs": [
-          "U9LTYR56M6.uk.co.guardian.iphone2",
-          "998P9U5NGJ.uk.co.guardian.iphone2.debug",
-          "998P9U5NGJ.uk.co.guardian.iphone2.debugqa"
-        ],
-        "components": [
-          {
-            "/": "/welcome/il_*",
-            "comment": "Matches any URL whose path starts with /welcome/il_<randomString> where <randomString> is a token"
-          },
-          {
-            "/": "/reset-password/il_*",
-            "comment": "Matches any URL whose path starts with /reset-password/il_<randomString> where <randomString> is a token"
-          },
-          {
-            "/": "/set-password/il_*",
-            "comment": "Matches any URL whose path starts with /set-password/il_<randomString> where <randomString> is a token"
-          },
-          {
-             "/": "/identity/fallback/*",
-             "comment": "Matches any URL whose path starts with /identity/fallback/"
-          }
-        ]
-      }
-    ]
-  }
+	"applinks": {
+		"details": [
+			{
+				"appIDs": [
+					"U9LTYR56M6.uk.co.guardian.iphone2",
+					"998P9U5NGJ.uk.co.guardian.iphone2.debug",
+					"998P9U5NGJ.uk.co.guardian.iphone2.debugqa"
+				],
+				"components": [
+					{
+						"/": "/welcome/il_*",
+						"comment": "Matches any URL whose path starts with /welcome/il_<randomString> where <randomString> is a token"
+					},
+					{
+						"/": "/reset-password/il_*",
+						"comment": "Matches any URL whose path starts with /reset-password/il_<randomString> where <randomString> is a token"
+					},
+					{
+						"/": "/set-password/il_*",
+						"comment": "Matches any URL whose path starts with /set-password/il_<randomString> where <randomString> is a token"
+					}
+				]
+			}
+		]
+	}
 }
