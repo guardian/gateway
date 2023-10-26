@@ -8,6 +8,8 @@ However the below should be enough to implement the flows.
 
 ## Authentication (Sign in, Registration, Reset Password, Set Password)
 
+### Sign In
+
 The approach for both sign in and registration in native apps uses the Okta SDK methods to launch the authentication flow and handle the OAuth2/OIDC flow. From the Identity side, the call to the Okta own login page is intercepted and we redirect to our own login page with the parameters provided from the Okta hosted sign in page.
 
 The SDKs we're using are the [Okta OIDC iOS SDK](https://github.com/okta/okta-oidc-ios) and [Okta OIDC Android SDK](https://github.com/okta/okta-oidc-android).
@@ -20,7 +22,11 @@ If no user session exists, Okta will attempt to show it's own login page. When t
 
 If the user signs in successfully, a session cookie will be set in the browser, and we complete sign in by redirecting the user back to the `fromURI` parameter. This will redirect the user to Okta, which will then redirect the user back to the app with the authorization code, and as above this is exchanged for tokens.
 
-Registration works a bit differently. After launching the `.signIn(...)`/`.signInWithBrowser(...)` method the user will navigate to the registration page, enter their email, and be sent a registration email. The user will then have to navigate to their inbox, and click the link in the email. The app should intercept this link using the [claimed "https" scheme URIs](https://datatracker.ietf.org/doc/html/rfc8252#section-7.2) (known as "Universal Links"). The token should be extracted from this link, and passed to the SDK `.signIn(...)`/`.signInWithBrowser(...)` method as an additional parameter called `activation_token`. This will again launch the in-app browser to the Okta login page, on that page we check for this `activation_token` parameter and then redirect to our own set password/welcome page. The user will then set their password, get a session set, and we complete sign in by redirecting the user back to the `fromURI` parameter. Again, This will redirect the user to Okta, which will then redirect the user back to the app with the authorization code, and as above this is exchanged for tokens.
+### Registration / Reset Password / Set Password
+
+Registration works a bit differently. You may not need to implement this in your application as this can all be handled from within a browser, however the user would be asked to sign in again after registering if this approach was taken.
+
+After launching the `.signIn(...)`/`.signInWithBrowser(...)` method the user will navigate to the registration page, enter their email, and be sent a registration email. The user will then have to navigate to their inbox, and click the link in the email. The app should intercept this link using the [claimed "https" scheme URIs](https://datatracker.ietf.org/doc/html/rfc8252#section-7.2) (known as "Universal Links"). The token should be extracted from this link, and passed to the SDK `.signIn(...)`/`.signInWithBrowser(...)` method as an additional parameter called `activation_token`. This will again launch the in-app browser to the Okta login page, on that page we check for this `activation_token` parameter and then redirect to our own set password/welcome page. The user will then set their password, get a session set, and we complete sign in by redirecting the user back to the `fromURI` parameter. Again, This will redirect the user to Okta, which will then redirect the user back to the app with the authorization code, and as above this is exchanged for tokens.
 
 The link we send to the user will have a format like this:
 
@@ -53,63 +59,6 @@ where everything after the prefix `al_` is the token.
 ```
 
 After intercepting these endpoints, like the registration method, the token should be extracted from this link and passed to the SDK `.signIn(...)`/`.signInWithBrowser(...)` method as an additional parameter called `reset_password_token` for reset password and `set_password_token` for set password. This will again launch the in-app browser to the Okta login page, on that page we check for this `reset_password_token`/`set_password_token` parameter and then redirect to our own reset password/set password page. The user will then set their password, get a session set, and we complete sign in by redirecting the user back to the `fromURI` parameter. Again, This will redirect the user to Okta, which will then redirect the user back to the app with the authorization code, and as above this is exchanged for tokens.
-
-### How the interception works
-
-This is not necessary to know for the apps implementation, but useful for context.
-
-We customise the Okta hosted login page to not load the sign in widget, but instead redirect the user to our own login page. Luckily through the Okta dashboard we're able to customise the HTML, and in turn the JavaScript that is loaded.
-
-From the Okta hosted login page we need to pass the following parameters to our own login page:
-
-- **`fromURI`**: This is the URI to redirect to after the user has logged in and has a session set to complete the Authorization Code Flow from the SDK.
-- **`clientId`**: This is the client ID of the application that is calling the SDK and in turn performing the Authorization Code Flow. This parameter can be used to customise the experience our pages.
-
-In the SDK we're also able to pass additional parameters, which we can use to pass the `activation_token` from the user's email link. This can then be used to direct the user to the create password/welcome page instead of the login page, and complete the authorization code flow from there.
-
-The custom javascript for this can be seen in [`scripts/okta/okta-login.js`](../../scripts/okta/okta-login.js). And the custom HTML can be seen in [`scripts/okta/okta-login.html`](../../scripts/okta/okta-login.html).
-
-The code is rendered in the Okta hosted sign in page at `/login/login.htm`
-
-We get the `fromURI` and `clientId` from the javascript in the hosted sign in page, which are passed in by Okta using parameters from the SDK.
-
-If these exist, then we can redirect the user to the sign in page which will persist the `fromURI` through the login process, and redirect the user back to the callback uri supplied to the app with the `authorization_code` the Okta SDK should then finish as normal.
-
-To initiate sign-in from the app, you can call this via the Okta SDK using `.signInWithBrowser(from: self)` in iOS or `.signIn(this, null)` in Android.
-
-We also support the scenario where we want to log the user in once they have exchanged the activation_token from their email inbox and set their password, this is the 2nd step of the registration flow.
-
-To initiate 2nd step of the registration flow from the app, you can call this via the Okta SDK using `.signInWithBrowser(additionalParameters: [activation_token: {activationToken}])` or `.signIn(this, payload)` in Android, where `payload` can be seen [here](https://github.com/okta/okta-oidc-android#sign-in-with-a-browser), with an `.addParameter("activation_token", activationToken)`.
-
-The general steps for native apps integration are shown in this high level diagram:
-
-```mermaid
-sequenceDiagram
-autonumber
-
-participant NativeLayer
-participant InAppBrowserTab
-participant Gateway
-participant Okta
-
-NativeLayer->>InAppBrowserTab: Call `signin`/`signInWithBrowser`<br/>to perform<br />Authorization Code Flow with PKCE
-note over InAppBrowserTab: SDK will launch another in-app browser<br/>tab to handle the session check,<br/> and redirect back to the app with auth code
-InAppBrowserTab->>Okta: call OAuth /authorize
-note over Okta: session check
-opt no existing session
-  Okta->>InAppBrowserTab: Return /login/login.html
-  note over InAppBrowserTab: Load html, run JS redirect<br> to /signin or /welcome/:token<br> with fromURI and clientId params
-  InAppBrowserTab->>Gateway: Request /signin or /welcome/:token with params
-  Gateway->>InAppBrowserTab: Load /signin or /welcome/:token
-  note over InAppBrowserTab: User sign in with<br>email+password/social/set password<br>session set in browser<br>redirect to fromURI
-  InAppBrowserTab->>Okta: Request fromUri
-end
-Okta->>InAppBrowserTab: Redirect request to app with the `auth_code` parameter<br/>oauth redirect_uri
-InAppBrowserTab->>NativeLayer: Handle redirect request<br/>in-app browser tab to app<br/>oauth redirect_uri?auth_code={code}
-NativeLayer->>Okta: SDK uses auth_code to call OAuth /token to get OAuth tokens
-Okta->>NativeLayer: Return tokens to SDK
-note over NativeLayer: the SDK manages the tokens, which can now be used to<br/>authenticate requests, and for checking the user's<br/>session
-```
 
 ## Setup
 
@@ -149,6 +98,8 @@ See [apple-app-site-association](../../src/client/.well-known/apple-app-site-ass
 ### Sign In
 
 Much of the following is adopted from [signin.md](signin.md), with changes to fit the native apps implementation. Apps should only need to be aware of what's happening in the native layer, but the full flow is useful for understanding the interaction between the native layer and the identity system. User interaction is implied.
+
+To initiate sign-in from the app, you can call this via the Okta SDK using `.signInWithBrowser(from: self)` in iOS or `.signIn(this, null)` in Android.
 
 ```mermaid
 sequenceDiagram
@@ -194,6 +145,12 @@ note over NativeLayer: the SDK manages the tokens, which can now be used to<br/>
 ### Registration (and (Re)set Password)
 
 Similar to sign in, but with changes around registration to fit the native apps implementation. Apps should only need to be aware of what's happening in the native layer, but the full flow is useful for understanding the interaction between the native layer and the identity system. User interaction is implied. This flow is very similar for reset and set password.
+
+On certain applications you might not need to implement the Registration and Reset Password flows, especially as this adds development overhead. It's always possible to register the user on an in-app browser tab and then have the user sign in again. However this is an extra step for the user.
+
+We also support the scenario where we want to log the user in once they have exchanged the activation_token from their email inbox and set their password, this is the 2nd step of the registration flow.
+
+To initiate 2nd step of the registration flow from the app, you can call this via the Okta SDK using `.signInWithBrowser(additionalParameters: [activation_token: {activationToken}])` or `.signIn(this, payload)` in Android, where `payload` can be seen [here](https://github.com/okta/okta-oidc-android#sign-in-with-a-browser), with an `.addParameter("activation_token", activationToken)`.
 
 The start of this flow is very similar to the sign in journey.
 

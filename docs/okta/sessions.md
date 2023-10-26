@@ -27,6 +27,8 @@ This cookie is helpful for SSO (Single Sign-On) as it allows us to identify the 
 
 We use a session length of 90 days for this, and will be automatically refreshed when a user goes though an OAuth flow, for example the Authorization Code flow.
 
+Since other domains cannot read this cookie, we set a proxy cookie (the existing `GU_U`) cookie, which can be used to identify whether the user _might_ have an Okta session set.
+
 ### Application Session
 
 We generally call this the OAuth Session, Local Session, or App Session internally, but is known in the Okta documentation as the Application Session.
