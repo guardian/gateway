@@ -41,6 +41,7 @@ import { DeleteAccountBlockedPage } from '@/client/pages/DeleteAccountBlockedPag
 import { DeleteAccountPage } from '@/client/pages/DeleteAccountPage';
 import { DeleteAccountEmailPasswordValidationPage } from './pages/DeleteAccountEmailPasswordValidationPage';
 import { DeleteAccountCompletePage } from '@/client/pages/DeleteAccountCompletePage';
+import { RegisterWithEmailPage } from './pages/RegisterWithEmailPage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -76,6 +77,10 @@ const routes: Array<{
 	{
 		path: '/register',
 		element: <RegistrationPage />,
+	},
+	{
+		path: '/register/email',
+		element: <RegisterWithEmailPage />,
 	},
 	{
 		path: '/register/email-sent',

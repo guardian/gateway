@@ -24,10 +24,11 @@ export const disableAutofillBackground = css`
 
 export const socialButtonDivider = css`
 	/* Undoes the negative margin */
-	margin-bottom: 0;
+	margin-bottom: ${space[4]}px;
 	margin-top: ${space[4]}px;
 	${from.mobileMedium} {
 		margin-top: ${space[6]}px;
+		margin-bottom: ${space[6]}px;
 	}
 	:before,
 	:after {

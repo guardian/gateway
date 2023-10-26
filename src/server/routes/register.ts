@@ -34,8 +34,8 @@ import { redirectIfLoggedIn } from '@/server/lib/middleware/redirectIfLoggedIn';
 import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { RegistrationLocation, UserResponse } from '@/server/models/okta/User';
-import { getRegistrationLocation } from '../lib/getRegistrationLocation';
-import { isStringBoolean } from '../lib/isStringBoolean';
+import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
+import { isStringBoolean } from '@/server/lib/isStringBoolean';
 
 const { okta } = getConfiguration();
 
@@ -46,6 +46,18 @@ router.get(
 		const html = renderer('/register', {
 			requestState: res.locals,
 			pageTitle: 'Register',
+		});
+		res.type('html').send(html);
+	},
+);
+
+router.get(
+	'/register/email',
+	redirectIfLoggedIn,
+	(req: Request, res: ResponseWithRequestState) => {
+		const html = renderer('/register/email', {
+			requestState: res.locals,
+			pageTitle: 'Register With Email',
 		});
 		res.type('html').send(html);
 	},
@@ -113,7 +125,10 @@ const OktaRegistration = async (
 	req: Request,
 	res: ResponseWithRequestState,
 ) => {
-	const { email = '', _cmpConsentedState = false } = req.body;
+	const { email = '', _cmpConsentedState = false, marketing } = req.body;
+
+	// 'marketing' consent value will be either 'true' or 'false' as a string
+	const marketingConsent = isStringBoolean(marketing);
 
 	const {
 		queryParams: { appClientId },
@@ -139,6 +154,12 @@ const OktaRegistration = async (
 				res.locals.ophanConfig.consentUUID,
 				res.locals.requestId,
 			);
+		}
+
+		if (marketingConsent) {
+			// TODO: Patch user consent for marketing. We need to do this via an
+			// admin API endpoint in IDAPI, presumbly, as the user hasn't signed
+			// in and doesn't have an SC_GU_U cookie or access token.
 		}
 
 		setEncryptedStateCookie(res, {
