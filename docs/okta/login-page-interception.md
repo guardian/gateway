@@ -2,9 +2,9 @@
 
 When performing the OAuth Authorization Code flow with Okta, while navigating to the `/authorize` endpoint Okta will check if the user has an existing session.
 
-If they do, then the user will be redirected back to the app with the `authorization_code` parameter, and the SDK will then exchange this for the OAuth tokens.
+If they do, then the user will be redirected back to the client app with the `authorization_code` parameter, and the SDK will then exchange this for the OAuth tokens.
 
-If they don't then the user will be prompted to login/authenticate. However this is done by Okta showing their own hosted login page, which has a lack of customisation options, and it doesn't provide us full control over the user experience, or doesn't allow us to do specific things during the process.
+If they don't then the user will be prompted to sign in/authenticate. However this is done by Okta showing their own hosted login page, which has a lack of customisation options, and it doesn't provide us full control over the user experience, or doesn't allow us to do specific things during the process.
 
 Examples of things we currently do that we can't do with the Okta hosted login page:
 
@@ -28,7 +28,7 @@ In the SDK we're also able to pass additional parameters, which we can use to pa
 
 The custom javascript for this can be seen in [`scripts/okta/okta-login.ts`](../../scripts/okta/okta-login.ts). And the custom HTML can be seen in [`scripts/okta/okta-login.html`](../../scripts/okta/okta-login.html).
 
-The code is rendered in the Okta hosted sign in page at `/login/login.htm` or even at
+The code is rendered in the Okta hosted sign in page at `/login/login.htm` or even at `/oauth2/<authorization server id>/v1/authorize` depending on what Okta feels like on the day (essentially we don't know when Okta decides to use, but it seems the latter is becoming more common in Okta Identity Engine).
 
 We get the `fromURI` and `clientId` from the javascript in the hosted sign in page, which are passed in by Okta using parameters from the SDK.
 

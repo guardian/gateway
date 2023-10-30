@@ -29,6 +29,19 @@ We use a session length of 90 days for this, and will be automatically refreshed
 
 Since other domains cannot read this cookie, we set a proxy cookie (the existing `GU_U`) cookie, which can be used to identify whether the user _might_ have an Okta session set.
 
+The `GU_U` cookie and the `idx` cookie will lead to the following scenarios:
+
+- `GU_U` && `idx`
+  - Signed in fully state, can complete authorization flow and get tokens
+- `GU_U` && !`idx`
+  - `idx` cookie expired or deleted
+  - Error when attempting to get new tokens, can delete `GU_U` cookie to get to signed out state
+- !`GU_U` && `idx`
+  - `GU_U` cookie expired or deleted, similar to signed out state
+  - When a user goes to log in they will see “signed in as” screen, or be silently logged in if not using “prompt=login” parameter
+- !`GU_U` && !`idx`
+  - Signed out state
+
 ### Application Session
 
 We generally call this the OAuth Session, Local Session, or App Session internally, but is known in the Okta documentation as the Application Session.

@@ -53,8 +53,8 @@ To setup a web application app, we will need to register the application as an c
 2. A list of scopes required for the application
    - This is the permissions that the application will have when using the OAuth tokens.
    - e.g. `openid profile email`
-   - More information about scopes can be found in the [Tokens](tokens.md) document which we recommend reading.
-   - Access tokens should only have the minimum scopes required for your application to access the APIs it needs to access on behalf of the reader, e.g. members-data-api, discussion-api, etc. The Identity team can provide a list of scopes that you'll need for that. A scope looks like the following: `guardian.members-data-api.complete.read.self.secure`
+   - More information about scopes can be found in the [Tokens](tokens.md#scopes) document which we recommend reading.
+   - Access tokens should only have the minimum scopes required for your application to authorise the APIs it needs to access on behalf of the reader, e.g. members-data-api, discussion-api, etc. The Identity team can provide a list of scopes that you'll need for that. A scope looks like the following: `guardian.members-data-api.complete.read.self.secure`
    - ID tokens are used to read the reader's profile information, and should have the `openid` and `profile` scopes at the minimum, and we can add in additional fields (called `claims`) specific to the application if required with a specific application scope e.g. `id_token.profile.ios_live_app`
 
 We will need a set for the PROD, CODE, and possibly DEV environments.
