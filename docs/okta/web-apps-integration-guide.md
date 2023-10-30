@@ -42,13 +42,20 @@ There is a third type of token, which is optional, and we don't recommend for we
 
 ## Setup
 
-To setup a native app, we will need to register the application as an client within Okta. The identity team will be able to do this for you. We will need to know one thing, all to do with redirects.
+To setup a web application app, we will need to register the application as an client within Okta. The identity team will be able to do this for you. Depending on if the application is primarily client side or server side, the setup may be slightly different, but in general the following things will be required:
 
 1. A redirect callback URI for OAuth authorization callback
    - This is endpoint the reader is redirected back to after the reader authenticates with Okta as part of the OAuth Authorization Code Flow.
    - This endpoint should handle the authorization code and exchange it for an access token and id token.
    - This could be set to a wildcard, but this isn't recommended as it could be used for phishing attacks.
    - e.g. `https://profile.theguardian.com/oauth/authorization-code/callback`
+   - When using the iframe method (only client side, using `response_type=okta_post_message` parameter) for getting/refreshing tokens, this redirect URI must match the base domain of the application, e.g. `https://profile.theguardian.com`
+2. A list of scopes required for the application
+   - This is the permissions that the application will have when using the OAuth tokens.
+   - e.g. `openid profile email`
+   - More information about scopes can be found in the [Tokens](tokens.md#scopes) document which we recommend reading.
+   - Access tokens should only have the minimum scopes required for your application to authorise the APIs it needs to access on behalf of the reader, e.g. members-data-api, discussion-api, etc. The Identity team can provide a list of scopes that you'll need for that. A scope looks like the following: `guardian.members-data-api.complete.read.self.secure`
+   - ID tokens are used to read the reader's profile information, and should have the `openid` and `profile` scopes at the minimum, and we can add in additional fields (called `claims`) specific to the application if required with a specific application scope e.g. `id_token.profile.ios_live_app`
 
 We will need a set for the PROD, CODE, and possibly DEV environments.
 
@@ -63,26 +70,24 @@ Once the app is set up within Okta and this project. The Identity team will give
 
 ### Client Side
 
-_Note: this will change following the spike work in web application migration._
-
 #### Library Options
 
-Can’t use the Okta SDK directly as its super huge even when gzipped (72.7 kB minified + gzipped)
+~~Can’t use the Okta SDK directly as its super huge even when gzipped (72.7 kB minified + gzipped)~~
 
-https://bundlephobia.com/package/@okta/okta-auth-js@7.2.0
+~~https://bundlephobia.com/package/@okta/okta-auth-js@7.2.0~~
 
-We’ll have to use a smaller OAuth library, or implement our own with a subset of the functionality required. Also investigate if tree shaking is possible with the Okta SDK.
+~~We’ll have to use a smaller OAuth library, or implement our own with a subset of the functionality required. Also investigate if tree shaking is possible with the Okta SDK.~~
 
-https://bundlephobia.com/package/oidc-client-ts@2.2.1 (17 kB minified + gzipped)
-Open ID compliant, ESM + CommonJS + Browser. Also included is support for reader session and access token management.
+~~https://bundlephobia.com/package/oidc-client-ts@2.2.1 (17 kB minified + gzipped)
+Open ID compliant, ESM + CommonJS + Browser. Also included is support for reader session and access token management.~~
 
-https://bundlephobia.com/package/oauth4webapi@2.0.6 (8.1 kB minified + gzipped)
-Open ID compliant, ESM only, uses Web APIs. No support for reader session/token management.
+~~https://bundlephobia.com/package/oauth4webapi@2.0.6 (8.1 kB minified + gzipped)
+Open ID compliant, ESM only, uses Web APIs. No support for reader session/token management.~~
 
 In general a library should provide the following features:
 
 - “Sign in” the reader to the app
-  - i.e performing the Authorization Code Flow to retrieve access and id tokens
+- i.e performing the Authorization Code Flow to retrieve access and id tokens
 - Token management
   - Storage
   - Retrieval
@@ -91,7 +96,9 @@ In general a library should provide the following features:
   - “isSignedIn” method
   - Reading user claims from ID token
 
-A compelling option is to create our own library, which would be a subset of the Okta SDK. This would be a good option if we want to minimise the size of the library, and also have more control over the OAuth flow. We could also make a wrapper around the Okta SDK, which would be a good option if we want to minimise the amount of work required to implement the OAuth flow, and only make available the features we need.
+~~A compelling option is to create our own library, which would be a subset of the Okta SDK. This would be a good option if we want to minimise the size of the library, and also have more control over the OAuth flow. We could also make a wrapper around the Okta SDK, which would be a good option if we want to minimise the amount of work required to implement the OAuth flow, and only make available the features we need.~~
+
+We've now created our own library which implements a sub-set of the features that the Okta library provides. It is available in [`@guardian/csnx`](https://github.com/guardian/csnx) repo, specifically the [`@guardian/identity-auth`](https://github.com/guardian/csnx/tree/main/libs/%40guardian/identity-auth) library ([npm](https://www.npmjs.com/package/@guardian/identity-auth)). Our library only uses some of the same classes and methods as the official SDK, but the implementation of them is our own. Currently it only supports the `okta_post_message` `response_mode` parameter, which means that it only gets Access and ID tokens through performing the Authorization Code Flow from within an iframe on the page, this avoids any redirects.
 
 #### OAuth Considerations
 
@@ -115,8 +122,6 @@ Expiry should be set to the minimum required, and refreshed when required, ideal
 
 ### Server Side
 
-_Note: this will change following the spike work in web application migration._
-
 #### Library Options
 
 On the server side we have options for multiple libraries and standards for authentication. Since we don’t have to worry about bundle sizes we can use any OAuth/OpenID Connect compliant library.
@@ -124,6 +129,8 @@ On the server side we have options for multiple libraries and standards for auth
 In this project (Gateway) we already use https://github.com/panva/node-openid-client to generate oauth tokens, which are only used to authenticate with identity API to create the existing cookies for the readers.
 
 There are other options available https://openid.net/developers/certified/ and https://developer.okta.com/code/
+
+We also use [`@okta/jwt-verifier`](https://github.com/okta/okta-jwt-verifier-js) in order to verify the JWT access and id tokens on the server side.
 
 #### OAuth Considerations
 
@@ -146,8 +153,6 @@ Expiry should be set to the minimum required to avoid unnecessary refreshes.
 Refresh should be attempted by going through the Authorization Code flow again, if the access token/id token is expired, and the “maybeLoggedIn” cookie is valid.
 
 ## Integration guide
-
-_Note: this will change following the spike work in web application migration._
 
 ### How to know if a reader is signed in?
 
@@ -199,6 +204,8 @@ The `GU_U` cookie and the `idx` cookie will lead to the following scenarios:
   - Signed out state
 
 This will also help Ophan, which currently uses the `GU_U` cookie to extract the user id from the cookie to join data. This approach also works on both the server and client side, where the `GU_U` cookie can be read by the application before attempting to perform the authorization code flow.
+
+From the `maybeLoggedIn` state, you can attempt to get the access token and id token by going through the Authorization Code flow. If the reader is signed in with a global Okta session, the flow will complete and the tokens will be returned. If the reader is signed out, the flow will fail you can choose what should happen next.
 
 ### When to refresh tokens?
 
@@ -331,7 +338,3 @@ We want to change this behaviour to only affect the current browser/device, and 
 Carry on using the existing identity id for now, as this is too ingrained to remove easily. We will revisit the identity id after migration.
 
 This will be available as the `legacy_identity_id` claim in the ID token.
-
-## Spike details
-
-This document should be finalised after the internal spike is complete.
