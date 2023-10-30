@@ -56,7 +56,7 @@ jobs:
           name: build
       - name: Unzip build
         run: unzip -q build.zip
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
           cache: 'yarn'
