@@ -37,3 +37,8 @@ export const socialButtonDivider = css`
 		margin: 8px;
 	}
 `;
+
+export const errorContextSpacing = css`
+	margin: 0;
+	margin-top: ${space[2]}px;
+`;

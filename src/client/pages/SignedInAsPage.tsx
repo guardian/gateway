@@ -4,7 +4,7 @@ import { SignedInAs } from '@/client/pages/SignedInAs';
 
 export const SignedInAsPage = () => {
 	const clientState = useClientState();
-	const { pageData = {}, globalMessage = {} } = clientState;
+	const { pageData = {}, globalMessage = {}, queryParams } = clientState;
 	const {
 		email = '',
 		continueLink = '',
@@ -20,6 +20,7 @@ export const SignedInAsPage = () => {
 			signOutLink={signOutLink}
 			isNativeApp={isNativeApp}
 			pageError={pageError}
+			queryParams={queryParams}
 		/>
 	);
 };

@@ -6,8 +6,6 @@ import {
 	deleteAuthorizationStateCookie,
 	getAuthorizationStateCookie,
 	getOpenIdClient,
-	OpenIdErrorDescriptions,
-	OpenIdErrors,
 	ProfileOpenIdClientRedirectUris,
 } from '@/server/lib/okta/openid-connect';
 import { logger } from '@/server/lib/serverSideLogger';
@@ -34,6 +32,10 @@ import {
 	setOAuthTokenCookie,
 } from '@/server/lib/okta/tokens';
 import { getConfiguration } from '@/server/lib/getConfiguration';
+import {
+	OpenIdErrors,
+	OpenIdErrorDescriptions,
+} from '@/shared/model/OpenIdErrors';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
@@ -440,7 +442,10 @@ router.get(
 			// used to check if a session existed before the user is shown a sign in page
 			if (callbackParams.error === OpenIdErrors.LOGIN_REQUIRED) {
 				return res.redirect(
-					addQueryParamsToPath('/signin', authState.queryParams),
+					addQueryParamsToPath('/signin', authState.queryParams, {
+						error: callbackParams.error,
+						error_description: callbackParams.error_description,
+					}),
 				);
 			}
 

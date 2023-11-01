@@ -2,6 +2,7 @@ import React from 'react';
 import { Meta } from '@storybook/react';
 
 import { SignedInAs } from './SignedInAs';
+import { SignInErrors } from '../../shared/model/Errors';
 
 export default {
 	title: 'Pages/SignedInAs',
@@ -28,5 +29,15 @@ export const Error = () => (
 		continueLink="#"
 		signOutLink="#"
 		pageError={'Something went wrong'}
+	/>
+);
+
+export const LoginRequiredError = () => (
+	<SignedInAs
+		email="test@example.com"
+		continueLink="#"
+		signOutLink="#"
+		pageError={SignInErrors.GENERIC}
+		queryParams={{ returnUrl: '#', error: 'login_required' }}
 	/>
 );
