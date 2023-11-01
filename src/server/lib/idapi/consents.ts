@@ -40,14 +40,20 @@ const responseToEntity = (consent: ConsentAPIResponse): Consent => {
 
 export const urlParamToConsents = (urlParam?: string): RegistrationConsents => {
 	if (!urlParam) {
+		logger.warn('Registration consents | No URL param provided to decrypt');
 		return {};
 	}
-	const decodedConsents = urlSafeStringToBase64(urlParam);
-	const decryptedConsents = decrypt(
-		decodedConsents,
-		getConfiguration().encryptionSecretKey,
-	);
-	return JSON.parse(decryptedConsents);
+	try {
+		const decodedConsents = urlSafeStringToBase64(urlParam);
+		const decryptedConsents = decrypt(
+			decodedConsents,
+			getConfiguration().encryptionSecretKey,
+		);
+		return JSON.parse(decryptedConsents);
+	} catch (error) {
+		logger.error('Registration consents | Error decrypting URL param', error);
+		return {};
+	}
 };
 
 const read = async (request_id?: string): Promise<Consent[]> => {
