@@ -10,6 +10,7 @@ export default {
 
 export const Desktop = () => (
 	<SocialButtons
+		context="Sign in"
 		queryParams={{ returnUrl: 'https://www.theguardian.com/uk/' }}
 	/>
 );
@@ -23,6 +24,7 @@ Desktop.parameters = {
 
 export const Mobile = () => (
 	<SocialButtons
+		context="Sign in"
 		queryParams={{ returnUrl: 'https://www.theguardian.com/uk/' }}
 	/>
 );
@@ -36,6 +38,7 @@ Mobile.parameters = {
 
 export const NativeAppAndroid = () => (
 	<SocialButtons
+		context="Sign in"
 		queryParams={{ returnUrl: 'https://www.theguardian.com/uk/' }}
 		isNativeApp="android"
 	/>
@@ -44,6 +47,7 @@ NativeAppAndroid.storyName = 'Android native app';
 
 export const NativeAppIos = () => (
 	<SocialButtons
+		context="Sign in"
 		queryParams={{ returnUrl: 'https://www.theguardian.com/uk/' }}
 		isNativeApp="ios"
 	/>

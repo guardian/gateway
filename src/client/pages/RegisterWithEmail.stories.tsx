@@ -47,12 +47,3 @@ export const InvalidRecaptcha = (args: RegistrationProps) => (
 InvalidRecaptcha.story = {
 	name: 'with reCAPTCHA error',
 };
-
-export const WithJobs = (args: RegistrationProps) => (
-	<RegisterWithEmail
-		{...{ ...args, queryParams: { ...args.queryParams, clientId: 'jobs' } }}
-	/>
-);
-WithJobs.story = {
-	name: 'with Jobs terms',
-};

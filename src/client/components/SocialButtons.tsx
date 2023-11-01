@@ -10,7 +10,10 @@ import { QueryParams } from '@/shared/model/QueryParams';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { IsNativeApp } from '@/shared/model/ClientState';
 
+type SocialButtonContext = 'Sign in' | 'Sign up';
+
 type SocialButtonsProps = {
+	context: SocialButtonContext;
 	queryParams: QueryParams;
 	marginTop?: boolean;
 	isNativeApp?: IsNativeApp;
@@ -20,19 +23,16 @@ type SocialButtonProps = {
 	label: string;
 	icon: React.ReactElement;
 	socialProvider: string;
+	context: SocialButtonContext;
 	queryParams: QueryParams;
-	showGap: boolean;
 	isNativeApp?: IsNativeApp;
 };
 
-const containerStyles = (marginTop = false, isNativeApp: IsNativeApp) => css`
+const containerStyles = (marginTop = false) => css`
 	display: flex;
 	flex-direction: column;
-	${!isNativeApp &&
-	`${from.tablet} {
-      flex-direction: row;
-  }`}
 	justify-content: center;
+	gap: ${space[3]}px;
 	margin-top: ${marginTop ? space[5] : 0}px;
 	${from.mobileMedium} {
 		margin-top: ${marginTop ? space[6] : 0}px;
@@ -58,26 +58,12 @@ const iconOverrides = css`
 	}
 `;
 
-const Gap = ({ isNativeApp }: { isNativeApp: IsNativeApp }) => (
-	<span
-		css={css`
-			width: 0;
-			height: ${space[3]}px;
-			${!isNativeApp &&
-			`${from.tablet} {
-        width: ${space[3]}px;
-        height: 0;
-      }`}
-		`}
-	></span>
-);
-
 const SocialButton = ({
 	label,
 	icon,
 	socialProvider,
+	context,
 	queryParams,
-	showGap,
 	isNativeApp,
 }: SocialButtonProps) => {
 	return (
@@ -96,19 +82,22 @@ const SocialButton = ({
 				data-cy={`${socialProvider}-sign-in-button`}
 				data-link-name={`${socialProvider}-social-button`}
 			>
-				{socialButtonLabel(label, isNativeApp)}
+				{socialButtonLabel(label, context, isNativeApp)}
 			</LinkButton>
-			{showGap && <Gap isNativeApp={isNativeApp} />}
 		</>
 	);
 };
 
-const socialButtonLabel = (label: string, isNativeApp?: IsNativeApp) => {
+const socialButtonLabel = (
+	label: string,
+	context: string,
+	isNativeApp?: IsNativeApp,
+) => {
 	const capitalisedLabel = label.charAt(0).toUpperCase() + label.slice(1);
 	if (isNativeApp) {
 		return `Continue with ${capitalisedLabel}`;
 	} else {
-		return capitalisedLabel;
+		return `${context} with ${capitalisedLabel}`;
 	}
 };
 
@@ -138,21 +127,22 @@ const getButtonOrder = (isNativeApp?: IsNativeApp): string[] => {
 };
 
 export const SocialButtons = ({
+	context,
 	queryParams,
 	marginTop,
 	isNativeApp,
 }: SocialButtonsProps) => {
 	const buttonOrder = getButtonOrder(isNativeApp);
 	return (
-		<div css={containerStyles(marginTop, isNativeApp)}>
-			{buttonOrder.map((socialProvider, index) => (
+		<div css={containerStyles(marginTop)}>
+			{buttonOrder.map((socialProvider) => (
 				<SocialButton
 					key={socialProvider}
 					label={socialProvider}
 					icon={socialButtonIcon(socialProvider)}
 					socialProvider={socialProvider}
+					context={context}
 					queryParams={queryParams}
-					showGap={index < buttonOrder.length - 1}
 					isNativeApp={isNativeApp}
 				/>
 			))}

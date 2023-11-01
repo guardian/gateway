@@ -3,21 +3,27 @@ import { QueryParams } from '@/shared/model/QueryParams';
 import { MainLayout } from '@/client/layouts/Main';
 import { generateSignInRegisterTabs } from '@/client/components/Nav';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { SocialButtons } from '@/client/components/SocialButtons';
-import { socialButtonDivider } from '@/client/styles/Shared';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import {
 	GuardianTerms,
 	JobsTerms,
 	termsContainer,
 } from '@/client/components/Terms';
-import { LinkButton } from '@guardian/source-react-components';
+import { LinkButton, SvgEnvelope } from '@guardian/source-react-components';
 import { css } from '@emotion/react';
+import { space } from '@guardian/source-foundations';
 
 const emailButton = css`
 	width: 100%;
 	justify-content: center;
+`;
+
+const registrationButtons = css`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: ${space[3]}px;
 `;
 
 export type RegistrationProps = {
@@ -50,18 +56,21 @@ export const Registration = ({ queryParams }: RegistrationProps) => {
 	return (
 		<MainLayout tabs={tabs}>
 			<RegistrationTerms isJobs={isJobs} />
-			<SocialButtons queryParams={queryParams} marginTop={true} />
-			<Divider
-				spaceAbove="tight"
-				displayText="or"
-				cssOverrides={socialButtonDivider}
-			/>
-			<LinkButton
-				cssOverrides={emailButton}
-				href={buildUrlWithQueryParams('/register/email', {}, queryParams)}
-			>
-				Register with email
-			</LinkButton>
+			<div css={registrationButtons}>
+				<SocialButtons
+					queryParams={queryParams}
+					marginTop={true}
+					context="Sign up"
+				/>
+				<LinkButton
+					icon={<SvgEnvelope />}
+					cssOverrides={emailButton}
+					priority="tertiary"
+					href={buildUrlWithQueryParams('/register/email', {}, queryParams)}
+				>
+					Sign up with email
+				</LinkButton>
+			</div>
 		</MainLayout>
 	);
 };

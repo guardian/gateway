@@ -23,20 +23,24 @@ export const MarketingToggle: FC<MarketingToggleProps> = (props) => {
 				props.divCss ??
 					css`
 						margin-top: ${space[3]}px;
+						margin-bottom: ${space[3]}px;
+						border-bottom: 1px solid ${palette.neutral[86]};
 						position: relative;
 						${textSans.small()}
 					`,
 			]}
 		>
-			<div css={{ left: 0 }}>
+			<div
+				css={css`
+					left: 0;
+				`}
+			>
 				<ToggleSwitch
 					cssOverrides={css`
 						display: flex;
 						button {
 							align-self: flex-start;
 						}
-						border-top: 1px solid ${palette.neutral[86]};
-						padding-top: ${space[2]}px;
 					`}
 					label={title}
 					labelPosition="left"
