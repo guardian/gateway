@@ -1,11 +1,6 @@
 import React from 'react';
 import { space } from '@guardian/source-foundations';
-import { css } from '@emotion/react';
-
-const errorContextSpacing = css`
-	margin: 0;
-	margin-top: ${space[2]}px;
-`;
+import { errorContextSpacing } from '@/client/styles/Shared';
 
 export const DetailedRecaptchaError = () => (
 	<>
