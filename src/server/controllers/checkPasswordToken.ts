@@ -24,6 +24,7 @@ import { FieldError } from '@/shared/model/ClientState';
 import { PersistableQueryParams } from '@/shared/model/QueryParams';
 import { validateReturnUrl } from '../lib/validateUrl';
 import { mergeRequestState } from '@/server/lib/requestState';
+import { urlParamToConsents } from '../lib/idapi/consents';
 
 const { okta, defaultReturnUri } = getConfiguration();
 
@@ -148,7 +149,9 @@ export const checkTokenInOkta = async (
 	error?: ChangePasswordErrors,
 	fieldErrors?: Array<FieldError>,
 ) => {
-	const { token } = req.params;
+	const { token, consents } = req.params;
+
+	const registrationConsents = urlParamToConsents(consents);
 
 	try {
 		// Verify that the recovery token is still valid. If invalid, this will
@@ -158,7 +161,9 @@ export const checkTokenInOkta = async (
 		});
 		const email = _embedded?.user.profile.login;
 
-		updateEncryptedStateCookie(req, res, { email });
+		// Add the user's email and the decrypted set of consents
+		// set at registration to the encrypted state cookie
+		updateEncryptedStateCookie(req, res, { email, registrationConsents });
 
 		trackMetric('OktaValidatePasswordToken::Success');
 

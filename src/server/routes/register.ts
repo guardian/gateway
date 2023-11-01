@@ -36,6 +36,7 @@ import { mergeRequestState } from '@/server/lib/requestState';
 import { RegistrationLocation, UserResponse } from '@/server/models/okta/User';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
 import { isStringBoolean } from '@/server/lib/isStringBoolean';
+import { RegistrationConsents } from '@/shared/model/Consent';
 
 const { okta } = getConfiguration();
 
@@ -127,8 +128,14 @@ const OktaRegistration = async (
 ) => {
 	const { email = '', _cmpConsentedState = false, marketing } = req.body;
 
-	// 'marketing' consent value will be either 'true' or 'false' as a string
-	const marketingConsent = isStringBoolean(marketing);
+	const consents: RegistrationConsents = {
+		consents: [
+			{
+				id: 'similar_guardian_products',
+				consented: isStringBoolean(marketing),
+			},
+		],
+	};
 
 	const {
 		queryParams: { appClientId },
@@ -144,6 +151,7 @@ const OktaRegistration = async (
 			registrationLocation,
 			appClientId,
 			request_id,
+			consents,
 		});
 		// fire ophan component event if applicable
 		if (res.locals.queryParams.componentEventParams) {
@@ -154,12 +162,6 @@ const OktaRegistration = async (
 				res.locals.ophanConfig.consentUUID,
 				res.locals.requestId,
 			);
-		}
-
-		if (marketingConsent) {
-			// TODO: Patch user consent for marketing. We need to do this via an
-			// admin API endpoint in IDAPI, presumbly, as the user hasn't signed
-			// in and doesn't have an SC_GU_U cookie or access token.
 		}
 
 		setEncryptedStateCookie(res, {
@@ -204,9 +206,9 @@ const OktaRegistration = async (
 		});
 
 		return res.type('html').send(
-			renderer('/register', {
+			renderer('/register/email', {
 				requestState,
-				pageTitle: 'Register',
+				pageTitle: 'Register With Email',
 			}),
 		);
 	}

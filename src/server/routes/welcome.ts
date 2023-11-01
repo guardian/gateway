@@ -118,7 +118,7 @@ router.get(
 
 // welcome page, check token and display set password page
 router.get(
-	'/welcome/:token',
+	'/welcome/:token/:consents?',
 	checkPasswordTokenController('/welcome', 'Welcome'),
 );
 

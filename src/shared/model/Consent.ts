@@ -27,3 +27,8 @@ export const CONSENTS_COMMUNICATION_PAGE: string[] = [Consents.SUPPORTER];
 export const CONSENTS_POST_SIGN_IN_PAGE: string[] = [Consents.SUPPORTER];
 
 export const CONSENTS_NEWSLETTERS_PAGE: string[] = [Consents.EVENTS];
+
+export interface RegistrationConsents {
+	consents?: Pick<Consent, 'id' | 'consented'>[];
+	newsletters?: Pick<Consent, 'id' | 'consented'>[];
+}
