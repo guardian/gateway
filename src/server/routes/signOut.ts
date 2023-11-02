@@ -1,7 +1,6 @@
 import { Request } from 'express';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { ResponseWithRequestState } from '@/server/models/Express';
-import { logoutFromIDAPI } from '@/server/lib/idapi/unauth';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { logger } from '@/server/lib/serverSideLogger';
 import { getConfiguration } from '@/server/lib/getConfiguration';
@@ -12,8 +11,7 @@ import {
 import { deleteAuthorizationStateCookie } from '@/server/lib/okta/openid-connect';
 import { clearEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { clearUserSessions } from '@/server/lib/okta/api/users';
-import { getCurrentSession } from '@/server/lib/okta/api/sessions';
+import { closeCurrentSession } from '@/server/lib/okta/api/sessions';
 import { checkAndDeleteOAuthTokenCookies } from '@/server/lib/okta/tokens';
 
 const { defaultReturnUri, baseUri } = getConfiguration();
@@ -95,30 +93,12 @@ const signOutFromIDAPI = async (
 	req: Request,
 	res: ResponseWithRequestState,
 ): Promise<void> => {
-	try {
-		// get the SC_GU_U cookie here
-		const sc_gu_u: string | undefined = req.cookies.SC_GU_U;
+	// sign out from idapi will invalidate ALL IDAPI sessions for the user no matter the device/browser
+	// so we've changed from using the IDAPI sign out endpoint to just clearing the IDAPI cookies
+	// so that the user is only signed out from the current device/browser
+	clearIDAPICookies(res);
 
-		// attempt log out from Identity if we have a SC_GU_U cookie
-		if (sc_gu_u) {
-			// perform the logout from IDAPI
-			await logoutFromIDAPI(sc_gu_u, req.ip, res.locals.requestId);
-		}
-
-		trackMetric('SignOut::Success');
-	} catch (error) {
-		logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-			request_id: res.locals.requestId,
-		});
-		trackMetric('SignOut::Failure');
-	} finally {
-		// we want to clear the IDAPI cookies anyway even if there was an
-		// idapi error so that we don't prevent users from logging out on their
-		// browser at least
-
-		// clear the IDAPI cookies
-		clearIDAPICookies(res);
-	}
+	trackMetric('SignOut::Success');
 };
 
 const signOutFromOkta = async (
@@ -130,15 +110,11 @@ const signOutFromOkta = async (
 		// Okta Identity Engine session cookie is called `idx`
 		const oktaIdentityEngineSessionCookieId: string | undefined =
 			req.cookies.idx;
-		// Okta Classic session cookie is called `sid`
-		const oktaClassicSessionCookieId: string | undefined = req.cookies.sid;
 
-		if (oktaIdentityEngineSessionCookieId || oktaClassicSessionCookieId) {
-			const { userId } = await getCurrentSession({
+		if (oktaIdentityEngineSessionCookieId) {
+			await closeCurrentSession({
 				idx: oktaIdentityEngineSessionCookieId,
-				sid: oktaClassicSessionCookieId,
 			});
-			await clearUserSessions(userId);
 			trackMetric('OktaSignOut::Success');
 		}
 	} catch (error) {
