@@ -27,18 +27,12 @@ export const redirectIfLoggedIn = async (
 
 	// Okta Identity Engine session cookie is called `idx`
 	const oktaIdentityEngineSessionCookieId: string | undefined = req.cookies.idx;
-	// Okta Classic session cookie is called `sid`
-	const oktaClassicSessionCookieId: string | undefined = req.cookies.sid;
 
 	const identitySessionCookie = req.cookies.SC_GU_U;
 	const identityLastAccessCookie = req.cookies.SC_GU_LA;
 
 	// Check if the user has an existing Okta session.
-	if (
-		okta.enabled &&
-		!useIdapi &&
-		(oktaIdentityEngineSessionCookieId || oktaClassicSessionCookieId)
-	) {
+	if (okta.enabled && !useIdapi && oktaIdentityEngineSessionCookieId) {
 		try {
 			// check if maxAge is set. If it is, the user last authenticated more than maxAge ago.
 			// This is automatically checked by Okta during the authorization code flow so we don't
@@ -56,7 +50,6 @@ export const redirectIfLoggedIn = async (
 			// (this throws if the session is invalid)
 			const session = await getCurrentSession({
 				idx: oktaIdentityEngineSessionCookieId,
-				sid: oktaClassicSessionCookieId,
 			});
 
 			// pull the user email from the session, which we need to display

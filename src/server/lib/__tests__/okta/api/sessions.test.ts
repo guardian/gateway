@@ -27,31 +27,12 @@ describe('okta#signOutUser', () => {
 		jest.clearAllMocks();
 	});
 
-	test('should sign out a user given a current valid session - Okta Identity Classic (`sid` cookie)', async () => {
-		const sessionData = {
-			id: '123',
-			login: 'email@example.com',
-			userId: '123',
-			expiresAt: '2016-01-03T09:13:17.000Z',
-			status: 'ACTIVE',
-			lastPasswordVerification: '2016-01-03T07:02:00.000Z',
-		};
-
-		json.mockResolvedValueOnce(sessionData);
-		mockedFetch.mockReturnValueOnce(
-			Promise.resolve({ ok: true, status: 200, json } as Response),
-		);
-
-		const sessionResponse = await getCurrentSession({ sid: sessionId });
-		expect(sessionResponse).toEqual(sessionData);
-	});
-
-	test('should throw an error after invalid session response from Okta', async () => {
+	test('should throw an error after invalid session response from Okta - Okta Identity Engine (`idx` cookie)', async () => {
 		mockedFetch.mockReturnValueOnce(
 			Promise.resolve({ ok: false, status: 404 } as Response),
 		);
 
-		await expect(getCurrentSession({ sid: sessionId })).rejects.toThrowError(
+		await expect(getCurrentSession({ idx: sessionId })).rejects.toThrowError(
 			new OktaError({ message: 'Could not parse Okta error response' }),
 		);
 	});
@@ -71,49 +52,7 @@ describe('okta#signOutUser', () => {
 			Promise.resolve({ ok: true, status: 200, json } as Response),
 		);
 
-		const sessionResponse = await getCurrentSession({ sid: sessionId });
+		const sessionResponse = await getCurrentSession({ idx: sessionId });
 		expect(sessionResponse).toEqual(sessionData);
-	});
-
-	test('should throw an error after invalid session response from Okta', async () => {
-		mockedFetch.mockReturnValueOnce(
-			Promise.resolve({ ok: false, status: 404 } as Response),
-		);
-
-		await expect(getCurrentSession({ sid: sessionId })).rejects.toThrowError(
-			new OktaError({ message: 'Could not parse Okta error response' }),
-		);
-	});
-
-	test('should sign out a user given a current valid session - `idx` cookie & `sid` cookie', async () => {
-		const sessionData = {
-			id: '123',
-			login: 'email@example.com',
-			userId: '123',
-			expiresAt: '2016-01-03T09:13:17.000Z',
-			status: 'ACTIVE',
-			lastPasswordVerification: '2016-01-03T07:02:00.000Z',
-		};
-
-		json.mockResolvedValueOnce(sessionData);
-		mockedFetch.mockReturnValueOnce(
-			Promise.resolve({ ok: true, status: 200, json } as Response),
-		);
-
-		const sessionResponse = await getCurrentSession({
-			sid: sessionId,
-			idx: sessionId,
-		});
-		expect(sessionResponse).toEqual(sessionData);
-	});
-
-	test('should throw an error after invalid session response from Okta', async () => {
-		mockedFetch.mockReturnValueOnce(
-			Promise.resolve({ ok: false, status: 404 } as Response),
-		);
-
-		await expect(getCurrentSession({ sid: sessionId })).rejects.toThrowError(
-			new OktaError({ message: 'Could not parse Okta error response' }),
-		);
 	});
 });
