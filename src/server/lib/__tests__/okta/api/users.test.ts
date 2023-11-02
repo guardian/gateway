@@ -1,6 +1,5 @@
 import {
 	activateUser,
-	clearUserSessions,
 	createUser,
 	forgotPassword,
 	getUser,
@@ -298,39 +297,6 @@ describe('okta#reactivateUser', () => {
 		await expect(reactivateUser(userId)).rejects.toThrow(
 			new OktaError({
 				message: "This operation is not allowed in the user's current status.",
-			}),
-		);
-	});
-});
-
-describe('okta#clearUserSessions', () => {
-	beforeEach(() => {
-		jest.clearAllMocks();
-	});
-
-	test('should clear user sessions', async () => {
-		mockedFetch.mockReturnValueOnce(Promise.resolve({ ok: true } as Response));
-
-		await expect(clearUserSessions(userId)).resolves.toEqual(undefined);
-	});
-
-	test('should throw an error when a user session cannot be cleared', async () => {
-		const errorResponse = {
-			errorCode: 'E0000007',
-			errorSummary: 'Not found: Resource not found: <userId> (User)',
-			errorLink: 'E0000007',
-			errorId: 'oaeZm9ypzgqQOq0n4PYgiFlZQ',
-			errorCauses: [],
-		};
-
-		json.mockResolvedValueOnce(errorResponse);
-		mockedFetch.mockReturnValueOnce(
-			Promise.resolve({ ok: false, status: 404, json } as Response),
-		);
-
-		await expect(clearUserSessions(userId)).rejects.toThrow(
-			new OktaError({
-				message: 'Not found: Resource not found: <userId> (User)',
 			}),
 		);
 	});
