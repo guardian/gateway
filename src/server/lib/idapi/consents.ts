@@ -52,7 +52,7 @@ const read = async (request_id?: string): Promise<Consent[]> => {
 	}
 };
 
-export const readUserConsents = async ({
+const readUserConsents = async ({
 	ip,
 	sc_gu_u,
 	accessToken,

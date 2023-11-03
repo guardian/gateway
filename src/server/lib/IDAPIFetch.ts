@@ -117,10 +117,7 @@ export const APIForwardSessionIdentifier = (
 	};
 };
 
-export const APIAddOAuthAuthorization = (
-	options: RequestInit,
-	token: string,
-) => {
+const APIAddOAuthAuthorization = (options: RequestInit, token: string) => {
 	const headers = {
 		...options.headers,
 		Authorization: `Bearer ${token}`,

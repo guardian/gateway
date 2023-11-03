@@ -90,19 +90,3 @@ export const closeCurrentSession = async ({
 		return handleErrorResponse(response);
 	}
 };
-
-export const handleSessionResponse = async (
-	response: Response,
-): Promise<SessionResponse> => {
-	if (response.ok) {
-		try {
-			return sessionSchema.parse(await response.json());
-		} catch (error) {
-			throw new OktaError({
-				message: 'Could not parse Okta session response',
-			});
-		}
-	} else {
-		return await handleErrorResponse(response);
-	}
-};

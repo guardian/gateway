@@ -213,7 +213,7 @@ export const RecaptchaWrapper: React.FC<{
 /**
  * Provides a standardised way to bind Recaptcha to your page.
  */
-export const RecaptchaElement = React.forwardRef<
+const RecaptchaElement = React.forwardRef<
 	HTMLDivElement,
 	React.HTMLProps<HTMLDivElement>
 >(function RecaptchaElement(props, ref) {

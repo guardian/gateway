@@ -146,7 +146,7 @@ export const loginMiddlewareOAuth = async (
 	});
 };
 
-export const loginMiddleware = async (
+const loginMiddleware = async (
 	req: Request,
 	res: ResponseWithRequestState,
 	next: NextFunction,
