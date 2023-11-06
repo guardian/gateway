@@ -6,7 +6,7 @@ export interface OphanInteraction {
 	atomId?: string;
 }
 
-export interface OphanBase {
+interface OphanBase {
 	experiences?: string;
 	abTestRegister?: { [testId: string]: OphanABEvent };
 }

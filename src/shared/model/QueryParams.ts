@@ -1,6 +1,6 @@
 import { ValidClientId } from '../lib/clientId';
 
-export type Stringifiable = string | boolean | number | null | undefined;
+type Stringifiable = string | boolean | number | null | undefined;
 
 export type StringifiableRecord = Record<
 	string,

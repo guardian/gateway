@@ -18,7 +18,7 @@ export interface ABTesting {
 	forcedTestVariants: Participations;
 }
 
-export interface OAuthState {
+interface OAuthState {
 	accessToken?: Jwt;
 	idToken?: Jwt;
 }

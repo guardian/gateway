@@ -13,6 +13,8 @@ import {
 	userResponseSchema,
 	activationTokenResponseSchema,
 	resetPasswordUrlResponseSchema,
+	ActivationTokenResponse,
+	ResetPasswordUrlResponse,
 } from '@/server/models/okta/User';
 import { handleVoidResponse } from '@/server/lib/okta/api/responses';
 import { OktaError } from '@/server/models/okta/Error';
@@ -325,9 +327,8 @@ const handleActivationTokenResponse = async (
 ): Promise<TokenResponse> => {
 	if (response.ok) {
 		try {
-			const activationTokenResponse = activationTokenResponseSchema.parse(
-				await response.json(),
-			);
+			const activationTokenResponse: ActivationTokenResponse =
+				activationTokenResponseSchema.parse(await response.json());
 
 			return {
 				token: activationTokenResponse.activationToken,
@@ -354,9 +355,8 @@ const handleResetPasswordUrlResponse = async (
 ): Promise<string> => {
 	if (response.ok) {
 		try {
-			const { resetPasswordUrl } = resetPasswordUrlResponseSchema.parse(
-				await response.json(),
-			);
+			const { resetPasswordUrl }: ResetPasswordUrlResponse =
+				resetPasswordUrlResponseSchema.parse(await response.json());
 
 			const url = new URL(resetPasswordUrl);
 			const token = url.pathname.split('/').at(-1);

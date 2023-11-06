@@ -119,7 +119,7 @@ export const ProfileOpenIdClientRedirectUris: OpenIdClientRedirectUris = {
  * @property `callbackParams` - Get OpenID Connect query parameters returned to the callback (redirect_uri)
  * @property `oauthCallback` - Method used in the callback (redirect_uri) endpoint to get OAuth tokens
  */
-export const ProfileOpenIdClient = new OIDCIssuer.Client({
+const ProfileOpenIdClient = new OIDCIssuer.Client({
 	client_id: okta.clientId,
 	client_secret: okta.clientSecret,
 	redirect_uris: Object.values(ProfileOpenIdClientRedirectUris),
