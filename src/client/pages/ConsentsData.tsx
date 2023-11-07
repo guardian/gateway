@@ -54,10 +54,6 @@ const switchRow = css`
 
 const toggleSwitchAlignment = css`
 	justify-content: space-between;
-	span {
-		align-self: flex-start;
-		margin-top: 4px;
-	}
 `;
 
 const listBullets = css`

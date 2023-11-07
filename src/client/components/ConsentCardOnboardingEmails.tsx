@@ -37,7 +37,7 @@ const labelStyles = css`
 	${textSans.small()}
 	font-weight: bold;
 	span {
-		margin-top: 2px !important;
+		margin-top: 0px !important;
 	}
 `;
 

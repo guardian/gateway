@@ -10,10 +10,11 @@ import {
 	visuallyHidden,
 	descriptionId,
 	generateSourceId,
+	space,
 } from '@guardian/source-foundations';
 
 const inputStyles = css`
-	${visuallyHidden}
+	${visuallyHidden};
 `;
 
 const labelStyles = css`
@@ -27,7 +28,12 @@ const labelStyles = css`
 
 const siblingStyles = css`
 	input + span {
-		background-color: rgba(153, 153, 153, 0.5);
+		background-color: ${neutral[46]};
+		border: 1px solid ${neutral[46]};
+	}
+
+	input + span:before {
+		transition-delay: 0;
 	}
 
 	input:focus + span {
@@ -35,38 +41,47 @@ const siblingStyles = css`
 	}
 
 	input:checked + span {
-		background: ${success[500]};
+		background: ${success[400]};
+		border: 1px solid ${success[400]};
 	}
 
 	input:checked + span:before {
 		opacity: 1;
 		z-index: 1;
+		transition-delay: 0.2s;
 	}
 
 	input:checked + span:after {
-		left: 1.375rem;
+		left: 22px;
 		background: ${neutral[100]};
 	}
 `;
 
 const switchStyles = css`
-	flex: none;
+	flex: 0 0 auto;
 	border: none;
-	margin: 0px 0px 0px 8px;
-	padding: 0;
+	margin: 0px 0px 0px ${space[2]}px;
+	padding: 0px;
 	display: inline-block;
 	text-align: center;
 	position: relative;
 	transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 	cursor: pointer;
-	width: 2.75rem;
-	height: 1.5rem;
-	border-radius: 15.5px;
+	width: 44px;
+	height: 22px;
+	border-radius: 16px;
+	box-sizing: unset;
+
+	/* this will go away when resets have been standardised */
+	&:before,
+	&:after {
+		box-sizing: border-box;
+	}
 
 	&:before {
 		content: '';
 		position: absolute;
-		top: 6px;
+		top: 5px;
 		height: 11px;
 		width: 6px;
 		right: 10px;
@@ -74,20 +89,21 @@ const switchStyles = css`
 		border-bottom: 2px solid ${success[400]};
 		border-right: 2px solid ${success[400]};
 		transform: rotate(45deg);
-		transition: opacity 0.1s ease-in;
+		transition-property: opacity;
+		transition-duration: 0.2s;
 	}
 
 	&:after {
+		height: 18px;
+		width: 18px;
+		top: 2px;
+		left: 2px;
 		content: '';
 		position: absolute;
 		border-radius: 50%;
 		background: #fff;
 		will-change: left;
 		transition: left 0.15s ease-in-out;
-		height: 18px;
-		width: 18px;
-		top: 3px;
-		left: 4px;
 	}
 `;
 
