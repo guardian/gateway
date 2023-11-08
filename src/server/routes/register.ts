@@ -36,7 +36,7 @@ import { mergeRequestState } from '@/server/lib/requestState';
 import { RegistrationLocation, UserResponse } from '@/server/models/okta/User';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
 import { isStringBoolean } from '@/server/lib/isStringBoolean';
-import { RegistrationConsents } from '@/shared/model/Consent';
+import { Consents, RegistrationConsents } from '@/shared/model/Consent';
 
 const { okta } = getConfiguration();
 
@@ -128,11 +128,14 @@ const OktaRegistration = async (
 ) => {
 	const { email = '', _cmpConsentedState = false, marketing } = req.body;
 
+	// marketing consent is a string with value `'on'` if checked, or `undefined` if not checked
+	// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox#value
+	// so we can check the truthiness of the value to determine if the user has consented
 	const consents: RegistrationConsents = {
 		consents: [
 			{
-				id: 'similar_guardian_products',
-				consented: isStringBoolean(marketing),
+				id: Consents.SIMILAR_GUARDIAN_PRODUCTS,
+				consented: !!marketing,
 			},
 		],
 	};
@@ -153,6 +156,7 @@ const OktaRegistration = async (
 			request_id,
 			consents,
 		});
+
 		// fire ophan component event if applicable
 		if (res.locals.queryParams.componentEventParams) {
 			sendOphanComponentEventFromQueryParamsServer(

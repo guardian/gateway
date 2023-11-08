@@ -1,3 +1,7 @@
+import { z } from 'zod';
+import { userConsentSchema } from './User';
+import { newsletterPatchSchema } from './Newsletter';
+
 export interface Consent {
 	id: string;
 	name: string;
@@ -15,6 +19,7 @@ export enum Consents {
 	HOLIDAYS = 'holidays',
 	EVENTS = 'events',
 	OFFERS = 'offers',
+	SIMILAR_GUARDIAN_PRODUCTS = 'similar_guardian_products',
 }
 
 export const CONSENTS_DATA_PAGE: string[] = [
@@ -28,7 +33,11 @@ export const CONSENTS_POST_SIGN_IN_PAGE: string[] = [Consents.SUPPORTER];
 
 export const CONSENTS_NEWSLETTERS_PAGE: string[] = [Consents.EVENTS];
 
-export interface RegistrationConsents {
-	consents?: Pick<Consent, 'id' | 'consented'>[];
-	newsletters?: Pick<Consent, 'id' | 'consented'>[];
-}
+export const registrationConsentsSchema = z
+	.object({
+		consents: userConsentSchema.array().optional(),
+		newsletters: newsletterPatchSchema.array().optional(),
+	})
+	.strict();
+
+export type RegistrationConsents = z.infer<typeof registrationConsentsSchema>;

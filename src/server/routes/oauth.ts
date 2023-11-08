@@ -36,9 +36,7 @@ import {
 	OpenIdErrors,
 	OpenIdErrorDescriptions,
 } from '@/shared/model/OpenIdErrors';
-import { readEncryptedStateCookie } from '../lib/encryptedStateCookie';
 import { update as updateConsents } from '../lib/idapi/consents';
-import { UserConsent } from '@/shared/model/User';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
@@ -107,7 +105,6 @@ const authenticationHandler = async (
 			trackMetric('OAuthAuthorization::Failure');
 			return redirectForGenericError(req, res);
 		}
-		const gatewayState = readEncryptedStateCookie(req);
 
 		// We're unable to set the user.emailValidated field in the Okta user profile
 		// for social users when they are created, but we are able to put them in the
@@ -161,13 +158,11 @@ const authenticationHandler = async (
 		}
 
 		// Apply the registration consents (if IDAPI cookies have been set)
-		if (cookies && gatewayState?.registrationConsents?.consents?.length) {
-			const sc_gu_u = cookies.values.find(({ key }) => key === 'SC_GU_U')
-				?.value;
+		if (authState.data?.registrationConsents?.consents?.length) {
 			await updateConsents({
 				ip: req.ip,
-				sc_gu_u,
-				payload: gatewayState.registrationConsents.consents as UserConsent[],
+				accessToken: tokenSet.access_token,
+				payload: authState.data.registrationConsents.consents,
 				request_id: res.locals.requestId,
 			});
 		}

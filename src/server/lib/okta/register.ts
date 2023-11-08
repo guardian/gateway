@@ -25,8 +25,7 @@ import dangerouslySetPlaceholderPassword from './dangerouslySetPlaceholderPasswo
 import { sendCompleteRegistration } from '@/email/templates/CompleteRegistration/sendCompleteRegistration';
 import { addAppPrefixToOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 import { RegistrationConsents } from '@/shared/model/Consent';
-import { encrypt } from '../crypto';
-import { base64ToUrlSafeString } from '../base64';
+import { encryptRegistrationConsents } from '@/server/lib/registrationConsents';
 
 const { okta } = getConfiguration();
 
@@ -282,14 +281,8 @@ export const register = async ({
 			profile: { email: emailAddress },
 		} = userResponse;
 
-		// Encode the registration consents payload into an encrypted base64 string
-		// This is sent through as a URL segment in the 'verify email address' email
-		// sent to the user to ensure this state is not lost if moving between devices.
-		const encryptedConsents = encrypt(
-			JSON.stringify(consents),
-			getConfiguration().encryptionSecretKey, // prevent the key from lingering in memory by only calling when needed
-		);
-		const urlEncodedConsents = base64ToUrlSafeString(encryptedConsents);
+		// Encrypt any consents we need to send in the activation email
+		const encryptedConsents = consents && encryptRegistrationConsents(consents);
 
 		// Generate an activation token for the new user...
 		const tokenResponse = await activateUser(id);
@@ -306,7 +299,7 @@ export const register = async ({
 				appClientId,
 				request_id,
 			),
-			consents: urlEncodedConsents,
+			consents: encryptedConsents,
 		});
 		if (!emailIsSent) {
 			throw new OktaError({

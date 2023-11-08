@@ -11,7 +11,10 @@ import {
 } from '@/server/lib/idapi/changePassword';
 import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { updateEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
+import {
+	readEncryptedStateCookie,
+	updateEncryptedStateCookie,
+} from '@/server/lib/encryptedStateCookie';
 import { ApiError } from '@/server/models/Error';
 import { PasswordRoutePath, RoutePaths } from '@/shared/model/Routes';
 import { PasswordPageTitle } from '@/shared/model/PageTitle';
@@ -228,6 +231,17 @@ const changePasswordInOkta = async (
 				);
 			}
 
+			// get the user's registration consent by reading the encrypted state cookie
+			const encryptedState = readEncryptedStateCookie(req);
+			const registrationConsents = (() => {
+				if (encryptedState) {
+					const { registrationConsents } = encryptedState;
+					if (registrationConsents) {
+						return registrationConsents;
+					}
+				}
+			})();
+
 			// When a jobs user is registering, we add them to the GRS group and set their name
 			if (clientId === 'jobs' && path === '/welcome') {
 				if (id) {
@@ -251,6 +265,8 @@ const changePasswordInOkta = async (
 				...(path === '/welcome' && { passwordSetOnWelcomePage: true }),
 				// We want to remove all query params from the cookie after the password is set,
 				queryParams: undefined,
+				// We want to remove the registration consents from the cookie after the password is set
+				registrationConsents: undefined,
 			});
 
 			// fire ophan component event if applicable
@@ -271,6 +287,9 @@ const changePasswordInOkta = async (
 				prompt: 'none',
 				scopes: scopesForAuthentication,
 				redirectUri: ProfileOpenIdClientRedirectUris.AUTHENTICATION,
+				extraData: {
+					registrationConsents,
+				},
 			});
 		} else {
 			throw new OktaError({ message: 'Okta state token missing' });

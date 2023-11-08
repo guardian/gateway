@@ -22,9 +22,10 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
 import { FieldError } from '@/shared/model/ClientState';
 import { PersistableQueryParams } from '@/shared/model/QueryParams';
-import { validateReturnUrl } from '../lib/validateUrl';
+import { validateReturnUrl } from '@/server/lib/validateUrl';
 import { mergeRequestState } from '@/server/lib/requestState';
-import { urlParamToConsents } from '../lib/idapi/consents';
+import { decryptRegistrationConsents } from '../lib/registrationConsents';
+import { RegistrationConsents } from '@/shared/model/Consent';
 
 const { okta, defaultReturnUri } = getConfiguration();
 
@@ -151,7 +152,9 @@ export const checkTokenInOkta = async (
 ) => {
 	const { token, consents } = req.params;
 
-	const registrationConsents = urlParamToConsents(consents);
+	const registrationConsents: RegistrationConsents | undefined = consents
+		? decryptRegistrationConsents(consents)
+		: undefined;
 
 	try {
 		// Verify that the recovery token is still valid. If invalid, this will

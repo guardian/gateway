@@ -6,16 +6,13 @@ import {
 } from '@/server/lib/IDAPIFetch';
 import { logger } from '@/server/lib/serverSideLogger';
 import { ConsentsErrors } from '@/shared/model/Errors';
-import { Consent, RegistrationConsents } from '@/shared/model/Consent';
+import { Consent } from '@/shared/model/Consent';
 import { UserConsent } from '@/shared/model/User';
 import { IdapiError } from '@/server/models/Error';
 import {
 	invertOptInConsents,
 	invertOptOutConsents,
 } from './invertOptOutConsents';
-import { urlSafeStringToBase64 } from '@/server/lib/base64';
-import { decrypt } from '@/server/lib/crypto';
-import { getConfiguration } from '@/server/lib/getConfiguration';
 
 const handleError = (): never => {
 	throw new IdapiError({ message: ConsentsErrors.GENERIC, status: 500 });
@@ -36,24 +33,6 @@ const responseToEntity = (consent: ConsentAPIResponse): Consent => {
 		description,
 		name,
 	};
-};
-
-export const urlParamToConsents = (urlParam?: string): RegistrationConsents => {
-	if (!urlParam) {
-		logger.warn('Registration consents | No URL param provided to decrypt');
-		return {};
-	}
-	try {
-		const decodedConsents = urlSafeStringToBase64(urlParam);
-		const decryptedConsents = decrypt(
-			decodedConsents,
-			getConfiguration().encryptionSecretKey,
-		);
-		return JSON.parse(decryptedConsents);
-	} catch (error) {
-		logger.error('Registration consents | Error decrypting URL param', error);
-		return {};
-	}
 };
 
 const read = async (request_id?: string): Promise<Consent[]> => {
