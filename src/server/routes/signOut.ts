@@ -11,8 +11,13 @@ import {
 import { deleteAuthorizationStateCookie } from '@/server/lib/okta/openid-connect';
 import { clearEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { closeCurrentSession } from '@/server/lib/okta/api/sessions';
+import {
+	closeCurrentSession,
+	getCurrentSession,
+} from '@/server/lib/okta/api/sessions';
 import { checkAndDeleteOAuthTokenCookies } from '@/server/lib/okta/tokens';
+import { clearUserSessions } from '@/server/lib/okta/api/users';
+import { logoutFromIDAPI } from '@/server/lib/idapi/unauth';
 
 const { defaultReturnUri, baseUri } = getConfiguration();
 
@@ -32,6 +37,10 @@ const DotComCookies = [
 const OKTA_IDENTITY_CLASSIC_SESSION_COOKIE_NAME = 'sid';
 const OKTA_IDENTITY_ENGINE_SESSION_COOKIE_NAME = 'idx';
 
+/**
+ * @name clearDotComCookies
+ * @description Clear specific product related cookies valid for all guardian domains
+ */
 const clearDotComCookies = (res: ResponseWithRequestState) => {
 	// the baseUri is profile.theguardian.com so we strip the 'profile' as the cookie domain should be .theguardian.com
 	// we also remove the port after the ':' to make it work in localhost for development and testing
@@ -46,6 +55,10 @@ const clearDotComCookies = (res: ResponseWithRequestState) => {
 	});
 };
 
+/**
+ * @name clearOktaCookies
+ * @description Mark the `sid` and `idx` cookies as expired in order to clear them
+ */
 export const clearOktaCookies = (res: ResponseWithRequestState) => {
 	// We do not set a domain attribute as doing this makes the hostOnly=false
 	// and when the cookie is set by Okta, they do not specify a domain in the set-cookie header,
@@ -59,38 +72,34 @@ export const clearOktaCookies = (res: ResponseWithRequestState) => {
 	});
 };
 
-router.get(
-	'/signout',
-	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		const { returnUrl } = res.locals.queryParams;
-
-		// We try the logout sequentially, as we need to log users out from Okta first,
-		await signOutFromOkta(req, res);
-
-		// if the user has no Okta sid cookie, we will then try and log them out from IDAPI
-		// the user will be in this state if they previously had their Okta cookie removed and got
-		// redirected back to the /signout endpoint
-		await signOutFromIDAPI(req, res);
-
-		// clear dotcom cookies
-		clearDotComCookies(res);
-
-		// clear gateway specific cookies
-		deleteAuthorizationStateCookie(res);
-		clearEncryptedStateCookie(res);
-
-		// clear oauth application cookies
-		checkAndDeleteOAuthTokenCookies(req, res);
-
-		// set the GU_SO (sign out) cookie
-		setSignOutCookie(res);
-
-		return res.redirect(303, returnUrl || defaultReturnUri);
-	}),
-);
-
-const signOutFromIDAPI = async (
+/**
+ * @name sharedSignOutHandler
+ * @description Clear/Set other session related things that are not specific to Okta or IDAPI
+ */
+export const sharedSignOutHandler = (
 	req: Request,
+	res: ResponseWithRequestState,
+): void => {
+	// clear dotcom cookies
+	clearDotComCookies(res);
+
+	// clear gateway specific cookies
+	deleteAuthorizationStateCookie(res);
+	clearEncryptedStateCookie(res);
+
+	// clear oauth application cookies
+	checkAndDeleteOAuthTokenCookies(req, res);
+
+	// set the GU_SO (sign out) cookie
+	setSignOutCookie(res);
+};
+
+/**
+ * @name signOutFromIDAPILocal
+ * @description Clear identity session and cookies from the current device/browser the user used to call this endpoint
+ */
+const signOutFromIDAPILocal = async (
+	_: Request,
 	res: ResponseWithRequestState,
 ): Promise<void> => {
 	// sign out from idapi will invalidate ALL IDAPI sessions for the user no matter the device/browser
@@ -101,7 +110,11 @@ const signOutFromIDAPI = async (
 	trackMetric('SignOut::Success');
 };
 
-const signOutFromOkta = async (
+/**
+ * @name signOutFromOktaLocal
+ * @description Clear Okta session and cookies from the current device/browser the user used to call this endpoint
+ */
+const signOutFromOktaLocal = async (
 	req: Request,
 	res: ResponseWithRequestState,
 ): Promise<void> => {
@@ -127,5 +140,119 @@ const signOutFromOkta = async (
 		clearOktaCookies(res);
 	}
 };
+
+/**
+ * @name signOutFromIDAPIGlobal
+ * @description Clear all identity sessions from ALL devices/browser the user is logged in to
+ */
+const signOutFromIDAPIGlobal = async (
+	req: Request,
+	res: ResponseWithRequestState,
+): Promise<void> => {
+	try {
+		// get the SC_GU_U cookie here
+		const sc_gu_u: string | undefined = req.cookies.SC_GU_U;
+
+		// attempt log out from Identity if we have a SC_GU_U cookie
+		if (sc_gu_u) {
+			// perform the logout from IDAPI
+			await logoutFromIDAPI(sc_gu_u, req.ip, res.locals.requestId);
+		}
+
+		trackMetric('SignOut::Success');
+	} catch (error) {
+		logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+			request_id: res.locals.requestId,
+		});
+		trackMetric('SignOut::Failure');
+	} finally {
+		// we want to clear the IDAPI cookies anyway even if there was an
+		// idapi error so that we don't prevent users from logging out on their
+		// browser at least
+
+		// clear the IDAPI cookies
+		clearIDAPICookies(res);
+	}
+};
+
+/**
+ * @name signOutFromOktaLocal
+ * @description Clear all Okta sessions and tokens from ALL devices/browser the user is logged in to
+ */
+const signOutFromOktaGlobal = async (
+	req: Request,
+	res: ResponseWithRequestState,
+): Promise<void> => {
+	try {
+		// attempt to log out from Okta if we have Okta session cookie
+		// Okta Identity Engine session cookie is called `idx`
+		const oktaIdentityEngineSessionCookieId: string | undefined =
+			req.cookies.idx;
+
+		if (oktaIdentityEngineSessionCookieId) {
+			const { userId } = await getCurrentSession({
+				idx: oktaIdentityEngineSessionCookieId,
+			});
+			await clearUserSessions(userId);
+			trackMetric('OktaSignOut::Success');
+		}
+	} catch (error) {
+		logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+			request_id: res.locals.requestId,
+		});
+		trackMetric('OktaSignOut::Failure');
+	} finally {
+		//clear okta cookie
+		clearOktaCookies(res);
+	}
+};
+
+/**
+ * @name /signout
+ * @description Clear session and cookies from the current device/browser the user used to call this endpoint, and redirect to returnUrl
+ */
+router.get(
+	'/signout',
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		const { returnUrl } = res.locals.queryParams;
+
+		// We try the logout sequentially, as we need to log users out from Okta first,
+		await signOutFromOktaLocal(req, res);
+
+		// if the user has no Okta sid cookie, we will then try and log them out from IDAPI
+		// the user will be in this state if they previously had their Okta cookie removed and got
+		// redirected back to the /signout endpoint
+		await signOutFromIDAPILocal(req, res);
+
+		// clear other cookies
+		sharedSignOutHandler(req, res);
+
+		return res.redirect(303, returnUrl || defaultReturnUri);
+	}),
+);
+
+/**
+ * @name /signout/all
+ * @description Clear all sessions and cookies from ALL devices/browser the user is logged in to, and redirect to returnUrl
+ */
+router.get(
+	'/signout/all',
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		const { returnUrl } = res.locals.queryParams;
+
+		// We try the logout sequentially, as we need to log users out from Okta first,
+		await signOutFromOktaGlobal(req, res);
+
+		// if the user has no Okta sid cookie, we will then try and log them out from IDAPI
+		// the user will be in this state if they previously had their Okta cookie removed and got
+		// redirected back to the /signout endpoint
+		await signOutFromIDAPIGlobal(req, res);
+
+		// clear other cookies
+		sharedSignOutHandler(req, res);
+
+		return res.redirect(303, returnUrl || defaultReturnUri);
+	}),
+);
 
 export default router.router;

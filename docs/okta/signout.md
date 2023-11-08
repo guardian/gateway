@@ -51,3 +51,21 @@ sequenceDiagram
   note over Gateway: Set `GU_SO` cookie
   Gateway->>Browser: Redirect request `returnUrl`<br/>which tells the browser to clear any cookies
 ```
+
+# Global sign out
+
+User help sometimes sends users to a global sign out endpoint which will sign them out of all devices and browsers which is helpful for specific user scenarios. This was previously done by sending users to the `/signout` endpoint which would sign them out of all devices and browsers in Okta and Identity.
+
+This new endpoint is `GET /signout/all` which does this behaviour.
+
+Okta provides an administrative API endpoint within the Users API to clear all user sessions, and we can use this to invalidate all sessions for a user, as well as revoke all access and refresh tokens that are currently valid.
+
+https://developer.okta.com/docs/reference/api/users/#clear-user-sessions
+
+This endpoint requires the okta `userId`, which we get from the okta sessions api using the current okta session id cookie `idx`
+
+We then use this user id to clear all Okta sessions for that user.
+
+We also need to clear the Identity session too, we do this by calling the `/unauth` endpoint on the Identity API, which will clear the IDAPI session using the`SC_GU_U` cookie.
+
+We then set the `GU_SO` which identifies that the user has signed out recently.

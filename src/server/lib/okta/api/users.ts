@@ -247,6 +247,35 @@ export const dangerouslyResetPassword = async (id: string): Promise<string> => {
 };
 
 /**
+ * Clear User sessions
+ *
+ * Removes all active identity provider sessions. This forces the user to authenticate on the next operation.
+ * Optionally revokes OpenID Connect and OAuth refresh and access tokens issued to the user.
+ *
+ * https://developer.okta.com/docs/reference/api/users/#clear-user-sessions
+ *
+ * @param id Okta user ID
+ * @param oauthTokens (optional, default: `true`) Revoke issued OpenID Connect and OAuth refresh and access tokens
+ * @returns Promise<void>
+ */
+export const clearUserSessions = async (
+	id: string,
+	oauthTokens = true,
+): Promise<void> => {
+	const path = buildApiUrlWithQueryParams(
+		'/api/v1/users/:id/sessions',
+		{ id },
+		{
+			oauthTokens,
+		},
+	);
+	return await fetch(joinUrl(okta.orgUrl, path), {
+		method: 'DELETE',
+		headers: { ...defaultHeaders, ...authorizationHeader() },
+	}).then(handleVoidResponse);
+};
+
+/**
  * Credential operations - Forgot Password
  *
  * Generates a one-time token (OTT) that can be used to reset a user's password
