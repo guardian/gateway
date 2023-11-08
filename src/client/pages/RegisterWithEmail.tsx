@@ -6,8 +6,38 @@ import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import { CmpConsentedStateHiddenInput } from '@/client/components/CmpConsentStateHiddenInput';
 import { useCmpConsent } from '@/client/lib/hooks/useCmpConsent';
-import { MarketingToggle } from '@/client/components/MarketingToggle';
 import { RegistrationProps } from './Registration';
+import { css } from '@emotion/react';
+import { palette, space, textSans } from '@guardian/source-foundations';
+import { ToggleSwitchInput } from '@/client/components/ToggleSwitchInput';
+import { MainBodyText } from '@/client/components/MainBodyText';
+import { Divider } from '@guardian/source-react-components-development-kitchen';
+import { divider } from '@/client/styles/Shared';
+
+const { neutral } = palette;
+
+const switchRow = css`
+	border: 0;
+	padding: 0;
+	margin: ${space[2]}px 0 0 0;
+	${textSans.medium()}
+`;
+
+const labelStyles = css`
+	font-weight: bold;
+	justify-content: space-between;
+`;
+
+const bottomDividerStyles = css`
+	margin-top: ${space[4]}px;
+	margin-bottom: ${space[6]}px;
+`;
+
+const supportingText = css`
+	font-size: 15px;
+	color: ${neutral[46]};
+	margin-right: 54px;
+`;
 
 export const RegisterWithEmail = ({
 	email,
@@ -16,8 +46,6 @@ export const RegisterWithEmail = ({
 	formError,
 }: RegistrationProps) => {
 	const formTrackingName = 'register';
-	// Marketing is opt-out, so we default to true
-	const [marketing, setMarketing] = React.useState(true);
 
 	usePageLoadOphanInteraction(formTrackingName);
 	const hasCmpConsent = useCmpConsent();
@@ -35,19 +63,22 @@ export const RegisterWithEmail = ({
 				<EmailInput defaultValue={email} autoComplete="off" />
 				<CmpConsentedStateHiddenInput cmpConsentedState={hasCmpConsent} />
 
-				{/* Hidden input to store the marketing preference, as the Toggle component is a <button> */}
-				<input
-					type="hidden"
-					name="marketing"
-					value={marketing ? 'true' : 'false'}
-				/>
-
-				<MarketingToggle
-					id="marketing"
-					title="Stay up-to-date"
-					description="Receive information on further ways to read and support our journalism"
-					selected={marketing}
-					onClick={() => setMarketing(!marketing)}
+				<Divider spaceAbove="tight" cssOverrides={divider} />
+				<fieldset css={switchRow}>
+					<ToggleSwitchInput
+						id="marketing"
+						label="Stay up-to-date"
+						defaultChecked={true}
+						cssOverrides={labelStyles}
+					/>
+				</fieldset>
+				<MainBodyText noMarginBottom cssOverrides={supportingText}>
+					Supporting the Guardian Information on our products and ways to enjoy
+					and support our independent journalism
+				</MainBodyText>
+				<Divider
+					spaceAbove="tight"
+					cssOverrides={[divider, bottomDividerStyles]}
 				/>
 			</MainForm>
 		</MainLayout>

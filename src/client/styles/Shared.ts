@@ -39,6 +39,12 @@ export const socialButtonDivider = css`
 	}
 `;
 
+// fixed source divider expanding off the side of the container
+export const divider = css`
+	margin-left: 0;
+	width: 100%;
+`;
+
 export const errorContextSpacing = css`
 	margin: 0;
 	margin-top: ${space[2]}px;
