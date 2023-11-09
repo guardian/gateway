@@ -73,6 +73,9 @@ export const ValidRoutePathsArray = [
 	'/welcome/email-sent',
 	'/welcome/expired',
 	'/welcome/resend',
+	'/welcome/google',
+	'/welcome/apple',
+	'/welcome/social',
 ] as const;
 
 export type RoutePaths = (typeof ValidRoutePathsArray)[number];

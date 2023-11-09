@@ -20,10 +20,83 @@ import { GenericErrors } from '@/shared/model/Errors';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { setEncryptedStateCookieForOktaRegistration } from './register';
 import { mergeRequestState } from '@/server/lib/requestState';
+import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
+import { Consents, RegistrationConsents } from '@/shared/model/Consent';
+import { update as updateConsents } from '@/server/lib/idapi/consents';
 
 const { okta } = getConfiguration();
 
 const router = Router();
+
+// consent page for post social registration - google
+router.get(
+	'/welcome/google',
+	loginMiddlewareOAuth,
+	(_: Request, res: ResponseWithRequestState) => {
+		const html = renderer('/welcome/google', {
+			pageTitle: 'Welcome',
+			requestState: res.locals,
+		});
+		res.type('html').send(html);
+	},
+);
+
+// consent page for post social registration - apple
+router.get(
+	'/welcome/apple',
+	loginMiddlewareOAuth,
+	(_: Request, res: ResponseWithRequestState) => {
+		const html = renderer('/welcome/apple', {
+			pageTitle: 'Welcome',
+			requestState: res.locals,
+		});
+		res.type('html').send(html);
+	},
+);
+
+// form handler for consent page for social registration
+router.post(
+	'/welcome/social',
+	loginMiddlewareOAuth,
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+		try {
+			const { marketing } = req.body;
+
+			// marketing consent is a string with value `'on'` if checked, or `undefined` if not checked
+			// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox#value
+			// so we can check the truthiness of the value to determine if the user has consented
+			const consents: RegistrationConsents = {
+				consents: [
+					{
+						id: Consents.SIMILAR_GUARDIAN_PRODUCTS,
+						consented: !!marketing,
+					},
+				],
+			};
+
+			// update the consents and go to the finally block
+			await updateConsents({
+				ip: req.ip,
+				accessToken: state.oauthState.accessToken?.toString(),
+				payload: consents.consents!,
+				request_id: res.locals.requestId,
+			});
+		} catch (error) {
+			// we don't want to block the user at this point, so we'll just log the error, and go to the finally block
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+				request_id: res.locals.requestId,
+			});
+		} finally {
+			// redirect the user to the first page of the onboarding flow
+			return res.redirect(
+				303,
+				addQueryParamsToPath(consentPages[0].path, state.queryParams),
+			);
+		}
+	}),
+);
+
 // resend account verification page
 router.get('/welcome/resend', (_: Request, res: ResponseWithRequestState) => {
 	const html = renderer('/welcome/resend', {

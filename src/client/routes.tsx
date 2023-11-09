@@ -41,6 +41,7 @@ import { DeleteAccountPage } from '@/client/pages/DeleteAccountPage';
 import { DeleteAccountEmailPasswordValidationPage } from './pages/DeleteAccountEmailPasswordValidationPage';
 import { DeleteAccountCompletePage } from '@/client/pages/DeleteAccountCompletePage';
 import { RegisterWithEmailPage } from './pages/RegisterWithEmailPage';
+import { WelcomeSocialPage } from './pages/WelcomeSocialPage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -158,6 +159,14 @@ const routes: Array<{
 	{
 		path: '/welcome/complete',
 		element: <WelcomePasswordAlreadySetPage />,
+	},
+	{
+		path: '/welcome/google',
+		element: <WelcomeSocialPage socialProvider="google" />,
+	},
+	{
+		path: '/welcome/apple',
+		element: <WelcomeSocialPage socialProvider="apple" />,
 	},
 	{
 		path: '/agree/GRS',

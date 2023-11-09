@@ -48,6 +48,7 @@ import {
 } from '../lib/encryptedStateCookie';
 import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
 import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
+import { SocialProvider, isValidSocialProvider } from '@/shared/model/Social';
 
 const { okta, accountManagementUrl, oauthBaseUrl, defaultReturnUri } =
 	getConfiguration();
@@ -653,11 +654,6 @@ router.get(
 	}),
 );
 
-type SocialProvider = 'google' | 'apple';
-
-const isValidSocialProvider = (provider: string): boolean =>
-	['google', 'apple'].includes(provider);
-
 router.get(
 	'/signin/:social',
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
@@ -689,6 +685,9 @@ router.get(
 				closeExistingSession: true,
 				scopes: scopesForAuthentication,
 				redirectUri: ProfileOpenIdClientRedirectUris.AUTHENTICATION,
+				extraData: {
+					socialProvider: socialIdp,
+				},
 			});
 		} else {
 			// if okta feature switch disabled, redirect to identity-federation-api

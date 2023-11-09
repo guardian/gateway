@@ -36,7 +36,7 @@ import {
 	OpenIdErrors,
 	OpenIdErrorDescriptions,
 } from '@/shared/model/OpenIdErrors';
-import { update as updateConsents } from '../lib/idapi/consents';
+import { update as updateConsents } from '@/server/lib/idapi/consents';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
@@ -131,9 +131,16 @@ const authenticationHandler = async (
 				await updateUser(sub, { profile: { emailValidated: true } });
 
 				// since this is a new social user, we want to show the onboarding flow too
-				// we use the `confirmationPage` flag to redirect the user to the onboarding page
-				// eslint-disable-next-line functional/immutable-data
-				authState.confirmationPage = consentPages[0].path;
+				// we use the `confirmationPage` flag to redirect the user to the onboarding/consents page
+				if (authState.data?.socialProvider) {
+					// if there is a social provider in the response (which there should be), then show the social consents page
+					// eslint-disable-next-line functional/immutable-data
+					authState.confirmationPage = `/welcome/${authState.data.socialProvider}`;
+				} else {
+					// otherwise fall back to the default consents page
+					// eslint-disable-next-line functional/immutable-data
+					authState.confirmationPage = consentPages[0].path;
+				}
 			}
 		}
 
