@@ -13,6 +13,7 @@ import { ToggleSwitchInput } from '@/client/components/ToggleSwitchInput';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { divider } from '@/client/styles/Shared';
+import { generateSignInRegisterTabs } from '@/client/components/Nav';
 
 const { neutral } = palette;
 
@@ -48,10 +49,16 @@ export const RegisterWithEmail = ({
 	const formTrackingName = 'register';
 
 	usePageLoadOphanInteraction(formTrackingName);
+
 	const hasCmpConsent = useCmpConsent();
 
+	const tabs = generateSignInRegisterTabs({
+		queryParams,
+		isActive: 'register',
+	});
+
 	return (
-		<MainLayout>
+		<MainLayout tabs={tabs}>
 			<MainForm
 				formAction={buildUrlWithQueryParams('/register', {}, queryParams)}
 				submitButtonText="Register"
