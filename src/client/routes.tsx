@@ -10,7 +10,6 @@ import { ChangePasswordPage } from '@/client/pages/ChangePasswordPage';
 import { ChangePasswordCompletePage } from '@/client/pages/ChangePasswordCompletePage';
 import { ResendPasswordPage } from '@/client/pages/ResendPasswordPage';
 import { ConsentsDataPage } from '@/client/pages/ConsentsDataPage';
-import { ConsentsCommunicationPage } from '@/client/pages/ConsentsCommunicationPage';
 import { ConsentsNewslettersPage } from '@/client/pages/ConsentsNewslettersPage';
 import { ConsentsConfirmationPage } from '@/client/pages/ConsentsConfirmationPage';
 import { ResendEmailVerificationPage } from '@/client/pages/ResendEmailVerificationPage';
@@ -135,10 +134,6 @@ const routes: Array<{
 	{
 		path: '/consents/data',
 		element: <ConsentsDataPage />,
-	},
-	{
-		path: '/consents/communication',
-		element: <ConsentsCommunicationPage />,
 	},
 	{
 		path: '/consents/newsletters',

@@ -21,7 +21,7 @@ export const text = css`
 
 export const subText = css`
 	margin: 0;
-	${textSans.small()}
+	${textSans.medium()}
 `;
 
 export const textBold = css`

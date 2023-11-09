@@ -1,4 +1,4 @@
-export type ConsentPath = 'communication' | 'newsletters' | 'data' | 'review';
+export type ConsentPath = 'newsletters' | 'data' | 'review';
 
 /**
  * These are all the accepted url routes for this application
@@ -12,7 +12,6 @@ export const ValidRoutePathsArray = [
 	'/agree/GRS',
 	'/consents',
 	'/consents/:page',
-	'/consents/communication',
 	'/consents/newsletters',
 	'/consents/data',
 	'/consents/review',

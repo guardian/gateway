@@ -27,11 +27,13 @@ export const CONSENTS_DATA_PAGE: string[] = [
 	Consents.ADVERTISING,
 ];
 
-export const CONSENTS_COMMUNICATION_PAGE: string[] = [Consents.SUPPORTER];
-
 export const CONSENTS_POST_SIGN_IN_PAGE: string[] = [Consents.SUPPORTER];
 
 export const CONSENTS_NEWSLETTERS_PAGE: string[] = [Consents.EVENTS];
+
+export const REGISTRATION_CONSENTS: string[] = [
+	Consents.SIMILAR_GUARDIAN_PRODUCTS,
+];
 
 export const registrationConsentsSchema = z
 	.object({

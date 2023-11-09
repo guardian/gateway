@@ -75,12 +75,13 @@ export const onboardingFormSubmitOphanTracking = (
 
 	// we add a starting slash to the page, to match the route enums
 	switch (`/${page}`) {
-		case '/communication':
 		case '/data':
 		case '/signin/success':
 			return consentsFormSubmitOphanTracking(inputElems, pageData);
 		case '/newsletters':
-			return newslettersFormSubmitOphanTracking(inputElems, pageData);
+			consentsFormSubmitOphanTracking(inputElems, pageData);
+			newslettersFormSubmitOphanTracking(inputElems, pageData);
+			return;
 		default:
 			return;
 	}
