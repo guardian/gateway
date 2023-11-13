@@ -61,7 +61,7 @@
 		"@testing-library/preact-hooks": "^1.1.0",
 		"@testing-library/react": "npm:@testing-library/preact",
 		"@testing-library/react-hooks": "npm:@testing-library/preact-hooks",
-		"@types/compression": "^1.7.4",
+		"@types/compression": "^1.7.5",
 		"@types/cookie-parser": "^1.4.5",
 		"@types/csurf": "^1.11.4",
 		"@types/express": "^4.17.20",
