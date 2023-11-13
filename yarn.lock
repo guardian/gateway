@@ -5686,10 +5686,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/csurf@^1.11.4":
-  version "1.11.4"
-  resolved "https://registry.yarnpkg.com/@types/csurf/-/csurf-1.11.4.tgz#a8c2a63a1c1fe0299dbedf8078f660f269c3cfa0"
-  integrity sha512-AN4kWHIIrkphg/yWplRD66MSLLpbEnQD8Iikm/gY8NmSwDzzUgZVgkBr4oNEHOW4jsKPgF+x48UndWH01hquBQ==
+"@types/csurf@^1.11.5":
+  version "1.11.5"
+  resolved "https://registry.yarnpkg.com/@types/csurf/-/csurf-1.11.5.tgz#16c3502fb534004a04d9cb8a48f031577528573b"
+  integrity sha512-5rw87+5YGixyL2W8wblSUl5DSZi5YOlXE6Awwn2ofLvqKr/1LruKffrQipeJKUX44VaxKj8m5es3vfhltJTOoA==
   dependencies:
     "@types/express-serve-static-core" "*"
 
