@@ -116,17 +116,20 @@ const authenticationHandler = async (
 		// the emailValidated field set to true in their Okta user profile.
 		// So we can use this functionality to show the onboarding flow for new social users, as
 		// there is no other trivial way to do this.
+		// eslint-disable-next-line functional/no-let
+		let isSocialRegistration = false;
 		if (tokenSet.id_token) {
 			// extracting the custom claims from the id_token and the sub (user id)
 			const { user_groups, email_validated, sub } =
 				tokenSet.claims() as CustomClaims;
-
 			// if the user is in the GuardianUser-EmailValidated group, but the emailValidated field is falsy
 			// then we set the emailValidated field to true in the Okta user profile by manually updating the user
 			if (
 				!email_validated &&
 				user_groups?.some((group) => group === 'GuardianUser-EmailValidated')
 			) {
+				isSocialRegistration = true;
+
 				// updated the user profile emailValidated to true
 				await updateUser(sub, { profile: { emailValidated: true } });
 
@@ -199,6 +202,22 @@ const authenticationHandler = async (
 		) {
 			return res.redirect(
 				addQueryParamsToPath('/agree/GRS', authState.queryParams),
+			);
+		}
+
+		// this will only be hit if the user is a new social user coming through an oauth flow initiated by an app
+		// in this scenario we want to show the user a consent page, before redirecting them to the end of the oauth flow
+		if (
+			isSocialRegistration &&
+			authState.queryParams.fromURI &&
+			authState.data?.socialProvider
+		) {
+			return res.redirect(
+				303,
+				addQueryParamsToPath(
+					`/welcome/${authState.data?.socialProvider}`,
+					authState.queryParams,
+				),
 			);
 		}
 

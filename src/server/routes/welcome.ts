@@ -88,7 +88,12 @@ router.post(
 				request_id: res.locals.requestId,
 			});
 		} finally {
-			// redirect the user to the first page of the onboarding flow
+			// if there is a fromURI, we need to complete the oauth flow, so redirect to the fromURI
+			if (state.queryParams.fromURI) {
+				return res.redirect(303, state.queryParams.fromURI);
+			}
+
+			// otherwise redirect the user to the first page of the onboarding flow
 			return res.redirect(
 				303,
 				addQueryParamsToPath(consentPages[0].path, state.queryParams),
