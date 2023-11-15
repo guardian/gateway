@@ -37,14 +37,15 @@ export const RegistrationMarketingConsentFormField = () => {
 			<fieldset css={switchRow}>
 				<ToggleSwitchInput
 					id="marketing"
-					label="Stay up-to-date"
+					label="Supporting the Guardian"
 					defaultChecked={true}
 					cssOverrides={labelStyles}
 				/>
 			</fieldset>
 			<MainBodyText noMarginBottom cssOverrides={supportingText}>
-				Supporting the Guardian Information on our products and ways to enjoy
-				and support our independent journalism
+				Information on our products and ways to enjoy and support our
+				independent journalism. You can opt out now or in your email settings
+				later.
 			</MainBodyText>
 			<Divider
 				spaceAbove="tight"
