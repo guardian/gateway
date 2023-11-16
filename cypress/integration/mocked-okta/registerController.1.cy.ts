@@ -18,7 +18,7 @@ userStatuses.forEach((status) => {
 	context(`Given I am a ${status || 'nonexistent'} user`, () => {
 		context('When I submit the form on /register', () => {
 			beforeEach(() => {
-				cy.visit(`/register`);
+				cy.visit(`/register/email`);
 				cy.get('input[name="email"]').type('example@example.com');
 			});
 			switch (status) {

@@ -32,7 +32,7 @@ describe('POST requests return a user-facing error message when encountering a r
 	});
 
 	specify('Submit /register', () => {
-		cy.visit('/register');
+		cy.visit('/register/email');
 		cy.get('input[name="email"]').type('example@example.com');
 
 		cy.mockNext(429, {
