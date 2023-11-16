@@ -445,7 +445,7 @@ const IdapiRegistration = async (
 
 		trackMetric('Register::Failure');
 
-		const html = renderer('/register', {
+		const html = renderer('/register/email', {
 			requestState: mergeRequestState(state, {
 				pageData: {
 					email,

@@ -38,7 +38,7 @@ describe('Okta Register flow', () => {
 
 			cy.intercept('POST', '/register**').as('registerPost');
 
-			cy.visit('/register');
+			cy.visit('/register/email');
 
 			setIdxCookie();
 

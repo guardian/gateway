@@ -145,6 +145,10 @@ export const ConsentsConfirmation = ({
 					preferences and options at anytime under&nbsp;
 					<ExternalLink href={locations.MMA_EMAIL_PREFERENCES}>
 						Emails &amp; marketing
+					</ExternalLink>{' '}
+					and{' '}
+					<ExternalLink href={locations.MMA_DATA_PRIVACY}>
+						Data Privacy
 					</ExternalLink>
 					.
 				</p>
