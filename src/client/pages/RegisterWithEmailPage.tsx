@@ -5,7 +5,7 @@ import { RegisterWithEmail } from './RegisterWithEmail';
 export const RegisterWithEmailPage = () => {
 	const clientState = useClientState();
 	const { pageData = {}, recaptchaConfig, queryParams } = clientState;
-	const { email, formError } = pageData;
+	const { email, formError, isNativeApp } = pageData;
 	const { recaptchaSiteKey } = recaptchaConfig;
 
 	return (
@@ -14,6 +14,7 @@ export const RegisterWithEmailPage = () => {
 			email={email}
 			recaptchaSiteKey={recaptchaSiteKey}
 			queryParams={queryParams}
+			isNativeApp={isNativeApp}
 		/>
 	);
 };

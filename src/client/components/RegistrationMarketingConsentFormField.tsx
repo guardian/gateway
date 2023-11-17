@@ -5,6 +5,7 @@ import React from 'react';
 import { divider } from '@/client/styles/Shared';
 import { MainBodyText } from './MainBodyText';
 import { ToggleSwitchInput } from './ToggleSwitchInput';
+import { IsNativeApp } from '@/shared/model/ClientState';
 
 const { neutral } = palette;
 
@@ -24,13 +25,25 @@ const bottomDividerStyles = css`
 	margin-top: ${space[4]}px;
 `;
 
-const supportingText = css`
-	font-size: 15px;
+const supportingText = (isNativeApp: IsNativeApp) => css`
+	${isNativeApp
+		? css`
+				font-size: 14px;
+		  `
+		: css`
+				font-size: 15px;
+		  `}
 	color: ${neutral[46]};
 	margin-right: 54px;
 `;
 
-export const RegistrationMarketingConsentFormField = () => {
+type Props = {
+	isNativeApp?: IsNativeApp;
+};
+
+export const RegistrationMarketingConsentFormField = ({
+	isNativeApp,
+}: Props) => {
 	return (
 		<>
 			<Divider spaceAbove="tight" cssOverrides={divider} />
@@ -42,7 +55,7 @@ export const RegistrationMarketingConsentFormField = () => {
 					cssOverrides={labelStyles}
 				/>
 			</fieldset>
-			<MainBodyText noMarginBottom cssOverrides={supportingText}>
+			<MainBodyText noMarginBottom cssOverrides={supportingText(isNativeApp)}>
 				Information on our products and ways to enjoy and support our
 				independent journalism. You can opt out now or in your email settings
 				later.

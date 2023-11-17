@@ -20,6 +20,7 @@ import {
 } from '@guardian/source-react-components';
 import { RegistrationMarketingConsentFormField } from '../components/RegistrationMarketingConsentFormField';
 import { SocialProvider } from '@/shared/model/Social';
+import { IsNativeApp } from '@/shared/model/ClientState';
 
 const inlineMessage = css`
 	display: flex;
@@ -43,12 +44,14 @@ const inlineMessage = css`
 
 export type WelcomeSocialProps = RegistrationProps & {
 	socialProvider: SocialProvider;
+	isNativeApp?: IsNativeApp;
 };
 
 export const WelcomeSocial = ({
 	queryParams,
 	formError,
 	socialProvider,
+	isNativeApp,
 }: WelcomeSocialProps) => {
 	const formTrackingName = 'register';
 
@@ -79,7 +82,7 @@ export const WelcomeSocial = ({
 					</MainBodyText>
 				)}
 
-				<RegistrationMarketingConsentFormField />
+				<RegistrationMarketingConsentFormField isNativeApp={isNativeApp} />
 			</MainForm>
 		</MainLayout>
 	);

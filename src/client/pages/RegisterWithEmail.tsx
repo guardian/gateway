@@ -9,13 +9,19 @@ import { useCmpConsent } from '@/client/lib/hooks/useCmpConsent';
 import { RegistrationProps } from './Registration';
 import { generateSignInRegisterTabs } from '@/client/components/Nav';
 import { RegistrationMarketingConsentFormField } from '../components/RegistrationMarketingConsentFormField';
+import { IsNativeApp } from '@/shared/model/ClientState';
+
+export type RegisterWithEmailProps = RegistrationProps & {
+	isNativeApp?: IsNativeApp;
+};
 
 export const RegisterWithEmail = ({
 	email,
 	recaptchaSiteKey,
 	queryParams,
 	formError,
-}: RegistrationProps) => {
+	isNativeApp,
+}: RegisterWithEmailProps) => {
 	const formTrackingName = 'register';
 
 	usePageLoadOphanInteraction(formTrackingName);
@@ -40,7 +46,7 @@ export const RegisterWithEmail = ({
 				<EmailInput defaultValue={email} autoComplete="off" />
 				<CmpConsentedStateHiddenInput cmpConsentedState={hasCmpConsent} />
 
-				<RegistrationMarketingConsentFormField />
+				<RegistrationMarketingConsentFormField isNativeApp={isNativeApp} />
 			</MainForm>
 		</MainLayout>
 	);
