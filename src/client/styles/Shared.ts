@@ -1,16 +1,6 @@
 import { css } from '@emotion/react';
 import { border, from, space } from '@guardian/source-foundations';
 
-export const topMargin = css`
-	margin-top: ${space[2]}px;
-	${from.mobileMedium} {
-		margin-top: ${space[4]}px;
-	}
-	${from.tablet} {
-		margin-top: ${space[6]}px;
-	}
-`;
-
 export const disableAutofillBackground = css`
 	:-webkit-autofill {
 		background-color: transparent !important;
