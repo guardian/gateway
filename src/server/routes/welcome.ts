@@ -11,7 +11,7 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { consentPages } from '@/server/routes/consents';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import deepmerge from 'deepmerge';
-import { Request, Router } from 'express';
+import { Request } from 'express';
 import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { register } from '@/server/lib/okta/register';
 import { trackMetric } from '@/server/lib/trackMetric';
@@ -23,10 +23,9 @@ import { mergeRequestState } from '@/server/lib/requestState';
 import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
 import { Consents, RegistrationConsents } from '@/shared/model/Consent';
 import { update as updateConsents } from '@/server/lib/idapi/consents';
+import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 
 const { okta } = getConfiguration();
-
-const router = Router();
 
 // consent page for post social registration - google
 router.get(
@@ -202,7 +201,7 @@ router.get(
 
 // POST form handler to set password on welcome page
 router.post(
-	'/welcome/:token',
+	'/welcome/:token/:consents?',
 	setPasswordController('/welcome', 'Welcome', consentPages[0].path),
 );
 
@@ -257,4 +256,4 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 	}
 };
 
-export default router;
+export default router.router;

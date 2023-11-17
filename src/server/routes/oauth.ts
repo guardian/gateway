@@ -37,6 +37,7 @@ import {
 	OpenIdErrorDescriptions,
 } from '@/shared/model/OpenIdErrors';
 import { update as updateConsents } from '@/server/lib/idapi/consents';
+import { decryptRegistrationConsents } from '@/server/lib/registrationConsents';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
@@ -167,14 +168,19 @@ const authenticationHandler = async (
 			});
 		}
 
-		// Apply the registration consents (if IDAPI cookies have been set)
-		if (authState.data?.registrationConsents?.consents?.length) {
-			await updateConsents({
-				ip: req.ip,
-				accessToken: tokenSet.access_token,
-				payload: authState.data.registrationConsents.consents,
-				request_id: res.locals.requestId,
-			});
+		// Apply the registration consents if they exist
+		if (authState.data?.encryptedRegistrationConsents) {
+			const decryptedConsents = await decryptRegistrationConsents(
+				authState.data.encryptedRegistrationConsents,
+			);
+			if (decryptedConsents && decryptedConsents.consents) {
+				await updateConsents({
+					ip: req.ip,
+					accessToken: tokenSet.access_token,
+					payload: decryptedConsents.consents,
+					request_id: res.locals.requestId,
+				});
+			}
 		}
 
 		// set the ad-free cookie if the user has the digital-pack product

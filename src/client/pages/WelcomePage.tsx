@@ -14,6 +14,7 @@ export const WelcomePage = () => {
 			timeUntilTokenExpiry,
 			token,
 			browserName,
+			encryptedRegistrationConsent,
 		} = {},
 		queryParams,
 	} = clientState;
@@ -43,11 +44,15 @@ export const WelcomePage = () => {
 
 	return (
 		<Welcome
-			submitUrl={buildUrlWithQueryParams(
-				'/welcome/:token',
-				{ token },
-				queryParams,
-			)}
+			submitUrl={
+				encryptedRegistrationConsent
+					? buildUrlWithQueryParams(
+							'/welcome/:token/:consents?',
+							{ token, 'consents?': encryptedRegistrationConsent },
+							queryParams,
+					  )
+					: buildUrlWithQueryParams('/welcome/:token', { token }, queryParams)
+			}
 			email={email}
 			fieldErrors={fieldErrors}
 			isJobs={isJobs}

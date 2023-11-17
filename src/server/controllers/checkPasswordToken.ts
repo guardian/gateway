@@ -24,8 +24,6 @@ import { FieldError } from '@/shared/model/ClientState';
 import { PersistableQueryParams } from '@/shared/model/QueryParams';
 import { validateReturnUrl } from '@/server/lib/validateUrl';
 import { mergeRequestState } from '@/server/lib/requestState';
-import { decryptRegistrationConsents } from '../lib/registrationConsents';
-import { RegistrationConsents } from '@/shared/model/Consent';
 
 const { okta, defaultReturnUri } = getConfiguration();
 
@@ -152,10 +150,6 @@ export const checkTokenInOkta = async (
 ) => {
 	const { token, consents } = req.params;
 
-	const registrationConsents: RegistrationConsents | undefined = consents
-		? decryptRegistrationConsents(consents)
-		: undefined;
-
 	try {
 		// Verify that the recovery token is still valid. If invalid, this will
 		// return an error and we will show the link expired page.
@@ -164,9 +158,9 @@ export const checkTokenInOkta = async (
 		});
 		const email = _embedded?.user.profile.login;
 
-		// Add the user's email and the decrypted set of consents
+		// Add the user's email
 		// set at registration to the encrypted state cookie
-		updateEncryptedStateCookie(req, res, { email, registrationConsents });
+		updateEncryptedStateCookie(req, res, { email });
 
 		trackMetric('OktaValidatePasswordToken::Success');
 
@@ -209,6 +203,7 @@ export const checkTokenInOkta = async (
 						fieldErrors,
 						formError: error,
 						token,
+						encryptedRegistrationConsent: consents,
 					},
 				}),
 			},

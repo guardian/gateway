@@ -11,10 +11,7 @@ import {
 } from '@/server/lib/idapi/changePassword';
 import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import { trackMetric } from '@/server/lib/trackMetric';
-import {
-	readEncryptedStateCookie,
-	updateEncryptedStateCookie,
-} from '@/server/lib/encryptedStateCookie';
+import { updateEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { ApiError } from '@/server/models/Error';
 import { PasswordRoutePath, RoutePaths } from '@/shared/model/Routes';
 import { PasswordPageTitle } from '@/shared/model/PageTitle';
@@ -36,9 +33,9 @@ import {
 	scopesForAuthentication,
 } from '@/server/lib/okta/oauth';
 import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
-import { setupJobsUserInIDAPI, setupJobsUserInOkta } from '../lib/jobs';
-import { sendOphanComponentEventFromQueryParamsServer } from '../lib/ophan';
-import { clearOktaCookies } from '../routes/signOut';
+import { setupJobsUserInIDAPI, setupJobsUserInOkta } from '@/server/lib/jobs';
+import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
+import { clearOktaCookies } from '@/server/routes/signOut';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
 
@@ -194,7 +191,8 @@ const changePasswordInOkta = async (
 	res: ResponseWithRequestState,
 	successRedirectPath: RoutePaths,
 ) => {
-	const recoveryToken = req.params?.token;
+	const { token: recoveryToken, consents: encryptedRegistrationConsents } =
+		req.params;
 	const { password, firstName, secondName } = req.body;
 	const { clientId } = req.query;
 
@@ -231,17 +229,6 @@ const changePasswordInOkta = async (
 				);
 			}
 
-			// get the user's registration consent by reading the encrypted state cookie
-			const encryptedState = readEncryptedStateCookie(req);
-			const registrationConsents = (() => {
-				if (encryptedState) {
-					const { registrationConsents } = encryptedState;
-					if (registrationConsents) {
-						return registrationConsents;
-					}
-				}
-			})();
-
 			// When a jobs user is registering, we add them to the GRS group and set their name
 			if (clientId === 'jobs' && path === '/welcome') {
 				if (id) {
@@ -265,8 +252,6 @@ const changePasswordInOkta = async (
 				...(path === '/welcome' && { passwordSetOnWelcomePage: true }),
 				// We want to remove all query params from the cookie after the password is set,
 				queryParams: undefined,
-				// We want to remove the registration consents from the cookie after the password is set
-				registrationConsents: undefined,
 			});
 
 			// fire ophan component event if applicable
@@ -288,7 +273,7 @@ const changePasswordInOkta = async (
 				scopes: scopesForAuthentication,
 				redirectUri: ProfileOpenIdClientRedirectUris.AUTHENTICATION,
 				extraData: {
-					registrationConsents,
+					encryptedRegistrationConsents,
 				},
 			});
 		} else {

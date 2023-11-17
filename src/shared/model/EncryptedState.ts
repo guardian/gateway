@@ -1,6 +1,5 @@
 import { EmailType } from '@/shared/model/EmailType';
 import { PersistableQueryParams } from './QueryParams';
-import { RegistrationConsents } from './Consent';
 
 export interface EncryptedState {
 	email?: string;
@@ -10,5 +9,4 @@ export interface EncryptedState {
 	signInRedirect?: boolean; // TODO: possibly rename for clarity
 	isCmpConsented?: boolean;
 	queryParams?: PersistableQueryParams;
-	registrationConsents?: RegistrationConsents;
 }
