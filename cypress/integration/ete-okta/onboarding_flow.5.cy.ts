@@ -3,7 +3,6 @@ import {
 	randomMailosaurEmail,
 	randomPassword,
 } from '../../support/commands/testUser';
-import CommunicationsPage from '../../support/pages/onboarding/communications_page';
 import NewslettersPage from '../../support/pages/onboarding/newsletters_page';
 import ReviewPage from '../../support/pages/onboarding/review_page';
 import YourDataPage from '../../support/pages/onboarding/your_data_page';
@@ -24,7 +23,10 @@ describe('Onboarding flow', () => {
 				'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
 			const unregisteredEmail = randomMailosaurEmail();
 
+			cy.enableCMP();
 			cy.visit(`/register?returnUrl=${returnUrl}`);
+			cy.acceptCMP();
+			cy.contains('Sign up with email').click();
 
 			const timeRequestWasMade = new Date();
 			cy.get('input[name=email]').type(unregisteredEmail);
@@ -41,11 +43,9 @@ describe('Onboarding flow', () => {
 				/welcome\/([^"]*)/,
 			).then(({ body, token }) => {
 				expect(body).to.have.string('Complete registration');
-				cy.enableCMP();
 				cy.setCookie('GU_geo_country', 'FR');
 
 				cy.visit(`/welcome/${token}`);
-				cy.acceptCMP();
 
 				cy.contains('Save and continue');
 
@@ -53,24 +53,10 @@ describe('Onboarding flow', () => {
 
 				cy.get('[data-cy="change-password-button"]').click();
 
-				cy.url().should('include', CommunicationsPage.URL);
-				cy.url().should('include', `returnUrl=${returnUrl}`);
-
-				CommunicationsPage.backButton().should('not.exist');
-				CommunicationsPage.allCheckboxes().should('not.be.checked');
-				CommunicationsPage.allCheckboxes().click({
-					multiple: true,
-					timeout: 8000,
-				});
-
-				CommunicationsPage.saveAndContinueButton().click();
-
 				cy.url().should('include', NewslettersPage.URL);
 				cy.url().should('include', `returnUrl=${returnUrl}`);
 
-				NewslettersPage.backButton()
-					.should('have.attr', 'href')
-					.and('include', CommunicationsPage.URL);
+				NewslettersPage.backButton().should('not.exist');
 
 				NewslettersPage.allCheckboxes().should('not.be.checked');
 				NewslettersPage.allCheckboxes().click({
@@ -137,6 +123,10 @@ describe('Onboarding flow', () => {
 
 			cy.visit(`/register?returnUrl=${returnUrl}`);
 
+			cy.contains('Sign up with email').click();
+			// opt out of supporter consent
+			cy.contains(ReviewPage.CONTENT.SUPPORTER_CONSENT).click();
+
 			const timeRequestWasMade = new Date();
 			cy.get('input[name=email]').type(unregisteredEmail);
 			cy.get('[data-cy="main-form-submit-button"]').click();
@@ -164,20 +154,10 @@ describe('Onboarding flow', () => {
 
 				cy.get('[data-cy="change-password-button"]').click();
 
-				cy.url().should('include', CommunicationsPage.URL);
-				cy.url().should('include', `returnUrl=${returnUrl}`);
-
-				CommunicationsPage.backButton().should('not.exist');
-				CommunicationsPage.allCheckboxes().should('not.be.checked');
-
-				CommunicationsPage.saveAndContinueButton().click();
-
 				cy.url().should('include', NewslettersPage.URL);
 				cy.url().should('include', `returnUrl=${returnUrl}`);
 
-				NewslettersPage.backButton()
-					.should('have.attr', 'href')
-					.and('include', CommunicationsPage.URL);
+				NewslettersPage.backButton().should('not.exist');
 
 				NewslettersPage.allCheckboxes().should('not.be.checked');
 

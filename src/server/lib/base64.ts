@@ -2,12 +2,8 @@
 // + -> -
 // / -> _
 // = -> %3D
-export const base64ToUrlSafeString = (base64: string) => {
-	return encodeURIComponent(base64.replace(/\+/g, '-').replace(/\//g, '_'));
-};
+export const base64ToUrlSafeString = (base64: string) =>
+	base64.replace(/\+/g, '-').replace(/\//g, '_');
 
-export const urlSafeStringToBase64 = (urlSafeString: string) => {
-	return decodeURIComponent(
-		urlSafeString.replace(/-/g, '+').replace(/_/g, '/'),
-	);
-};
+export const urlSafeStringToBase64 = (urlSafeString: string) =>
+	urlSafeString.replace(/-/g, '+').replace(/_/g, '/');
