@@ -196,12 +196,24 @@ const authenticationHandler = async (
 				authState.data.encryptedRegistrationConsents,
 			);
 			if (decryptedConsents && decryptedConsents.consents) {
-				await updateConsents({
-					ip: req.ip,
-					accessToken: tokenSet.access_token,
-					payload: decryptedConsents.consents,
-					request_id: res.locals.requestId,
-				});
+				try {
+					await updateConsents({
+						ip: req.ip,
+						accessToken: tokenSet.access_token,
+						payload: decryptedConsents.consents,
+						request_id: res.locals.requestId,
+					});
+				} catch (error) {
+					logger.error(
+						'Error updating registration consents on oauth callback',
+						{
+							error,
+						},
+						{
+							request_id: res.locals.requestId,
+						},
+					);
+				}
 			}
 		}
 
