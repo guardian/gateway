@@ -38,6 +38,7 @@ import {
 } from '@/shared/model/OpenIdErrors';
 import { update as updateConsents } from '@/server/lib/idapi/consents';
 import { decryptRegistrationConsents } from '@/server/lib/registrationConsents';
+import { SocialProvider } from '@/shared/model/Social';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
@@ -94,6 +95,17 @@ const authenticationHandler = async (
 	authState: AuthorizationState,
 ) => {
 	try {
+		/**
+		 * Cypress Test START
+		 *
+		 * This code checks if we're running in Cypress
+		 */
+		const runningInCypress = process.env.RUNNING_IN_CYPRESS === 'true';
+		const cypressMockStateCookie = req.cookies['cypress-mock-state'];
+		/**
+		 * Cypress Test END
+		 */
+
 		// this is just to handle potential errors where we don't get back an access token
 		if (!tokenSet.access_token) {
 			logger.error(
@@ -136,10 +148,20 @@ const authenticationHandler = async (
 
 				// since this is a new social user, we want to show the onboarding flow too
 				// we use the `confirmationPage` flag to redirect the user to the onboarding/consents page
-				if (authState.data?.socialProvider) {
+				if (
+					authState.data?.socialProvider ||
+					// Cypress Test START
+					// this is a special case for the cypress tests, where we want to be able to mock the social provider
+					(runningInCypress &&
+						(cypressMockStateCookie === 'google' ||
+							cypressMockStateCookie === 'apple'))
+				) {
+					const path =
+						authState.data?.socialProvider ||
+						(cypressMockStateCookie as SocialProvider);
 					// if there is a social provider in the response (which there should be), then show the social consents page
 					// eslint-disable-next-line functional/immutable-data
-					authState.confirmationPage = `/welcome/${authState.data.socialProvider}`;
+					authState.confirmationPage = `/welcome/${path}`;
 				} else {
 					// otherwise fall back to the default consents page
 					// eslint-disable-next-line functional/immutable-data
@@ -216,14 +238,22 @@ const authenticationHandler = async (
 		if (
 			isSocialRegistration &&
 			authState.queryParams.fromURI &&
-			authState.data?.socialProvider
+			(authState.data?.socialProvider ||
+				// Cypress Test START
+				// this is a special case for the cypress tests, where we want to be able to mock the social provider
+				(runningInCypress &&
+					(cypressMockStateCookie === 'google' ||
+						cypressMockStateCookie === 'apple')))
 		) {
+			// get the social provider from the authState.data.socialProvider
+			// or from the cypress mock state cookie if we're running in cypress
+			const path =
+				authState.data?.socialProvider ||
+				(cypressMockStateCookie as SocialProvider);
+
 			return res.redirect(
 				303,
-				addQueryParamsToPath(
-					`/welcome/${authState.data?.socialProvider}`,
-					authState.queryParams,
-				),
+				addQueryParamsToPath(`/welcome/${path}`, authState.queryParams),
 			);
 		}
 
