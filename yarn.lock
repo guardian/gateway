@@ -15288,10 +15288,10 @@ slick@^1.12.2:
   resolved "https://registry.yarnpkg.com/slick/-/slick-1.12.2.tgz#bd048ddb74de7d1ca6915faa4a57570b3550c2d7"
   integrity sha512-4qdtOGcBjral6YIBCWJ0ljFSKNLz9KkhbWtuGvUyRowl1kxfuE1x/Z/aJcaiilpb3do9bl5K7/1h9XC5wWpY/A==
 
-snyk@^1.1248.0:
-  version "1.1248.0"
-  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.1248.0.tgz#094adb4cc436a9663cdd6cf5079110ed5b935a05"
-  integrity sha512-bQ7I1JeKX5RllIGUxPzMOVg1kTzgY7QCbbxSp/4Alkkg0zBCEb6/XCgrVS++PbnfkpiUaE7qzDhrgT0xrEG4aA==
+snyk@^1.1249.0:
+  version "1.1249.0"
+  resolved "https://registry.yarnpkg.com/snyk/-/snyk-1.1249.0.tgz#ada83e9b10543e5a2217b01faefbf5127bb03157"
+  integrity sha512-RydKPGXVoF9K4Z+tI2IRQVUOkDrvH6pOn+77v10QW6fWPV6PkK+ns9Ip9nfGPtYw07u9p+FtQaQaIFaoWLtv5A==
   dependencies:
     "@sentry/node" "^7.36.0"
     global-agent "^3.0.0"
