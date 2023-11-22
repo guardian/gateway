@@ -22,21 +22,41 @@ import { RegistrationMarketingConsentFormField } from '../components/Registratio
 import { SocialProvider } from '@/shared/model/Social';
 import { IsNativeApp } from '@/shared/model/ClientState';
 
-const inlineMessage = css`
+const inlineMessage = (socialProvider: SocialProvider) => css`
 	display: flex;
 	align-items: flex-start;
 	${textSans.large()};
+
+	span {
+		${socialProvider === 'google' &&
+		css`
+			margin-left: -4px;
+		`}
+		${socialProvider === 'apple' &&
+		css`
+			margin-left: -6px;
+		`}
+	}
 
 	svg {
 		fill: currentColor;
 		flex: none;
 		width: ${remWidth.iconMedium}rem;
 		height: ${remHeight.iconMedium}rem;
-		color: ${palette.success[400]};
-		/* a visual kick to vertically align the icons with the top row of text */
-		transform: translate(0px, -2px);
+		/* a visual kick to vertically/horizontally align the social icons with the column and row of text */
+		${socialProvider === 'google' &&
+		css`
+			transform: translate(-4px, -2px);
+		`}
+		${socialProvider === 'apple' &&
+		css`
+			transform: translate(-6px, -2px);
+		`}
 
 		&:last-of-type {
+			/* a visual kick to vertically align the check icon with and row of text */
+			transform: translate(0px, -2px);
+			color: ${palette.success[400]};
 			margin-left: ${space[1]}px;
 		}
 	}
@@ -68,16 +88,16 @@ export const WelcomeSocial = ({
 				largeFormMarginTop
 			>
 				{socialProvider === 'google' && (
-					<MainBodyText cssOverrides={inlineMessage}>
+					<MainBodyText cssOverrides={inlineMessage(socialProvider)}>
 						<SvgGoogleBrand />
-						Google account verified
+						<span>Google account verified</span>
 						<SvgTickRound />
 					</MainBodyText>
 				)}
 				{socialProvider === 'apple' && (
-					<MainBodyText cssOverrides={inlineMessage}>
+					<MainBodyText cssOverrides={inlineMessage(socialProvider)}>
 						<SvgAppleBrand />
-						Apple account verified
+						<span>Apple account verified</span>
 						<SvgTickRound />
 					</MainBodyText>
 				)}

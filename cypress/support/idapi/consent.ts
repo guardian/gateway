@@ -89,9 +89,9 @@ export const allConsents = [
 		id: 'similar_guardian_products',
 		isOptOut: false,
 		isChannel: false,
-		name: 'Supporting the Guardian',
+		name: 'Guardian products and support',
 		description:
-			'Information on our products and ways to enjoy and support our independent journalism',
+			'Information on our products and ways to support and enjoy our independent journalism.',
 	},
 ];
 

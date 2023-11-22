@@ -60,7 +60,7 @@ const siblingStyles = css`
 const switchStyles = css`
 	flex: 0 0 auto;
 	border: none;
-	margin: 0px 0px 0px ${space[2]}px;
+	margin: 0px 0px 0px ${space[3]}px;
 	padding: 0px;
 	display: inline-block;
 	text-align: center;
@@ -71,6 +71,7 @@ const switchStyles = css`
 	height: 22px;
 	border-radius: 16px;
 	box-sizing: unset;
+	align-self: start;
 
 	/* this will go away when resets have been standardised */
 	&:before,

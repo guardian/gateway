@@ -173,7 +173,7 @@ describe('Onboarding flow', () => {
 			);
 
 			// contains consents
-			cy.contains(ReviewPage.CONTENT.SUPPORTER_CONSENT);
+			cy.contains(ReviewPage.CONTENT.SUPPORTING_THE_GUARDIAN_CONSENT);
 			cy.contains(ReviewPage.CONTENT.PROFILING_CONSENT);
 			cy.contains(ReviewPage.CONTENT.PERSONALISED_ADVERTISING_CONSENT);
 
@@ -248,7 +248,9 @@ describe('Onboarding flow', () => {
 			);
 
 			// contains no consents
-			cy.contains(ReviewPage.CONTENT.SUPPORTER_CONSENT).should('not.exist');
+			cy.contains(ReviewPage.CONTENT.SUPPORTING_THE_GUARDIAN_CONSENT).should(
+				'not.exist',
+			);
 			cy.contains(ReviewPage.CONTENT.PROFILING_CONSENT).should('not.exist');
 			cy.contains(ReviewPage.CONTENT.PERSONALISED_ADVERTISING_CONSENT).should(
 				'not.exist',

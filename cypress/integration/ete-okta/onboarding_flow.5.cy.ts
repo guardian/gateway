@@ -96,7 +96,7 @@ describe('Onboarding flow', () => {
 				// cy.contains('First Edition');
 
 				// contains consents
-				cy.contains(ReviewPage.CONTENT.SUPPORTER_CONSENT);
+				cy.contains(ReviewPage.CONTENT.SUPPORTING_THE_GUARDIAN_CONSENT);
 				cy.contains(ReviewPage.CONTENT.PROFILING_CONSENT);
 				cy.contains(ReviewPage.CONTENT.PERSONALISED_ADVERTISING_CONSENT);
 
@@ -125,7 +125,7 @@ describe('Onboarding flow', () => {
 
 			cy.contains('Sign up with email').click();
 			// opt out of supporter consent
-			cy.contains(ReviewPage.CONTENT.SUPPORTER_CONSENT).click();
+			cy.contains('Toggle to opt out.').click();
 
 			const timeRequestWasMade = new Date();
 			cy.get('input[name=email]').type(unregisteredEmail);
@@ -196,7 +196,9 @@ describe('Onboarding flow', () => {
 				cy.contains('First Edition').should('not.exist');
 
 				// contains consents
-				cy.contains(ReviewPage.CONTENT.SUPPORTER_CONSENT).should('not.exist');
+				cy.contains(ReviewPage.CONTENT.SUPPORTING_THE_GUARDIAN_CONSENT).should(
+					'not.exist',
+				);
 				cy.contains(ReviewPage.CONTENT.PROFILING_CONSENT).should('not.exist');
 				cy.contains(ReviewPage.CONTENT.PERSONALISED_ADVERTISING_CONSENT).should(
 					'not.exist',
@@ -286,7 +288,7 @@ describe('Social Registration - Consents Page', () => {
 
 						cy.url().should('include', ReviewPage.URL);
 
-						cy.contains(ReviewPage.CONTENT.SUPPORTER_CONSENT);
+						cy.contains(ReviewPage.CONTENT.SUPPORTING_THE_GUARDIAN_CONSENT);
 					});
 				});
 			});
@@ -339,7 +341,7 @@ describe('Social Registration - Consents Page', () => {
 						});
 
 						// opt out of supporter consent
-						cy.contains(ReviewPage.CONTENT.SUPPORTER_CONSENT).click();
+						cy.contains('Toggle to opt out.').click();
 
 						// finally we check the consents is saved by going through onboarding
 						cy.get('[data-cy="main-form-submit-button"]').click();
@@ -354,9 +356,9 @@ describe('Social Registration - Consents Page', () => {
 
 						cy.url().should('include', ReviewPage.URL);
 
-						cy.contains(ReviewPage.CONTENT.SUPPORTER_CONSENT).should(
-							'not.exist',
-						);
+						cy.contains(
+							ReviewPage.CONTENT.SUPPORTING_THE_GUARDIAN_CONSENT,
+						).should('not.exist');
 					});
 				});
 			});
