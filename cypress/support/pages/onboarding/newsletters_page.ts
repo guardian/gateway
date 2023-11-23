@@ -13,7 +13,7 @@ class NewslettersPage extends OnboardingPage {
 			MORNING_MAIL_AU: "Guardian Australia's Morning Mail",
 			AFTERNOON_UPDATE_AU: "Guardian Australia's Afternoon Update",
 			FIVE_GREAT_READS_AU: 'Five Great Reads',
-			SAVED_FOR_LATER_AU: 'Saved for Later',
+			THE_CRUNCH_AU: 'The Crunch',
 			TECHSCAPE: 'TechScape',
 			THIS_IS_EUROPE: 'This is Europe',
 		},

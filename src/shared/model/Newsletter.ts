@@ -27,7 +27,7 @@ export enum Newsletters {
 	MORNING_MAIL_AU = '4148',
 	AFTERNOON_UPDATE_AU = '6023',
 	FIVE_GREAT_READS_AU = '6019',
-	SAVED_FOR_LATER_AU = '6003',
+	THE_CRUNCH_AU = '6034',
 	// EU newsletters
 	TECHSCAPE = '6013',
 	THIS_IS_EUROPE = '4234',

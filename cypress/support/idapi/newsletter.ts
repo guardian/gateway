@@ -40,6 +40,13 @@ export const allNewsletters = [
 		exactTargetListId: 6003,
 	},
 	{
+		id: 'the-crunch',
+		name: 'The Crunch',
+		description: 'Lorem Ipsum',
+		frequency: 'Fortnightly',
+		exactTargetListId: 6034,
+	},
+	{
 		id: 'morning-briefing',
 		name: 'First Edition',
 		description:
