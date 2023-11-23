@@ -9,6 +9,7 @@ import { getProfileUrl } from '@/server/lib/getProfileUrl';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { logger } from '@/server/lib/serverSideLogger';
 import { RoutePaths } from '@/shared/model/Routes';
+import { SocialProvider } from '@/shared/model/Social';
 
 /**
  * @interface AuthorizationState
@@ -31,6 +32,8 @@ export interface AuthorizationState {
 	doNotSetLastAccessCookie?: boolean;
 	data?: {
 		deleteReason?: string; // used to track the reason for self service deletion
+		encryptedRegistrationConsents?: string; // used to set the consents given during registration on the authentication callback when we have oauth access tokens which can update the user's consents in idapi, should be encrypted, and decrypted on the callback
+		socialProvider?: SocialProvider; // used to track the social provider used to sign in/register
 	};
 }
 

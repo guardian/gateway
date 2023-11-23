@@ -1,4 +1,4 @@
-export type ConsentPath = 'communication' | 'newsletters' | 'data' | 'review';
+export type ConsentPath = 'newsletters' | 'data' | 'review';
 
 /**
  * These are all the accepted url routes for this application
@@ -12,7 +12,6 @@ export const ValidRoutePathsArray = [
 	'/agree/GRS',
 	'/consents',
 	'/consents/:page',
-	'/consents/communication',
 	'/consents/newsletters',
 	'/consents/data',
 	'/consents/review',
@@ -37,6 +36,7 @@ export const ValidRoutePathsArray = [
 	'/oauth/authorization-code/delete-callback',
 	'/reauthenticate',
 	'/register',
+	'/register/email',
 	'/register/email-sent',
 	'/register/email-sent/resend',
 	'/reset-password',
@@ -69,10 +69,14 @@ export const ValidRoutePathsArray = [
 	'/verify-email', //this can be removed once Jobs has been migrated
 	'/welcome',
 	'/welcome/:token',
+	'/welcome/:token/:consents?',
 	'/welcome/complete',
 	'/welcome/email-sent',
 	'/welcome/expired',
 	'/welcome/resend',
+	'/welcome/google',
+	'/welcome/apple',
+	'/welcome/social',
 ] as const;
 
 export type RoutePaths = (typeof ValidRoutePathsArray)[number];

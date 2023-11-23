@@ -6,4 +6,5 @@ import { PersistableQueryParams } from './QueryParams';
  */
 export interface IdApiQueryParams extends Partial<PersistableQueryParams> {
 	format?: string;
+	filter?: 'all' | 'product';
 }

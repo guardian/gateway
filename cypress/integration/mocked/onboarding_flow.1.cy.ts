@@ -21,7 +21,6 @@ import {
 	createUser,
 	verifiedUserWithNoConsent,
 } from '../../support/idapi/user';
-import CommunicationsPage from '../../support/pages/onboarding/communications_page';
 import NewslettersPage from '../../support/pages/onboarding/newsletters_page';
 import ReviewPage from '../../support/pages/onboarding/review_page';
 import YourDataPage from '../../support/pages/onboarding/your_data_page';
@@ -97,7 +96,7 @@ describe('Onboarding flow', () => {
 			);
 
 			cy.enableCMP();
-			CommunicationsPage.gotoFlowStart({
+			NewslettersPage.gotoFlowStart({
 				query: {
 					returnUrl,
 					useIdapi: 'true',
@@ -105,31 +104,11 @@ describe('Onboarding flow', () => {
 			});
 			cy.acceptCMP();
 			cy.setCookie('GU_geo_country', 'FR');
-			cy.url().should('include', CommunicationsPage.URL);
-			cy.url().should('include', `returnUrl=${returnUrl}`);
-			cy.get('input[name=_cmpConsentedState]').should('have.value', 'true');
-			CommunicationsPage.backButton().should('not.exist');
-			CommunicationsPage.allCheckboxes().should('not.be.checked');
-			CommunicationsPage.allCheckboxes().click({
-				multiple: true,
-				timeout: 8000,
-			});
-
-			// mock form save success
-			cy.mockNext(200);
-
-			CommunicationsPage.saveAndContinueButton().click();
-			cy.lastPayloadsAre([
-				[{ id: 'supporter', consented: true }],
-				{ privateFields: { registrationLocation: 'Europe' } },
-			]);
 
 			cy.url().should('include', NewslettersPage.URL);
 			cy.url().should('include', `returnUrl=${returnUrl}`);
 
-			NewslettersPage.backButton()
-				.should('have.attr', 'href')
-				.and('include', CommunicationsPage.URL);
+			NewslettersPage.backButton().should('not.exist');
 
 			NewslettersPage.allCheckboxes()
 				.should('not.be.checked')
@@ -194,7 +173,7 @@ describe('Onboarding flow', () => {
 			);
 
 			// contains consents
-			cy.contains(ReviewPage.CONTENT.SUPPORTER_CONSENT);
+			cy.contains(ReviewPage.CONTENT.SUPPORTING_THE_GUARDIAN_CONSENT);
 			cy.contains(ReviewPage.CONTENT.PROFILING_CONSENT);
 			cy.contains(ReviewPage.CONTENT.PERSONALISED_ADVERTISING_CONSENT);
 
@@ -211,35 +190,17 @@ describe('Onboarding flow', () => {
 				`https://www.theguardian.com/science/grrlscientist/2012/aug/07/3`,
 			);
 
-			CommunicationsPage.gotoFlowStart({
+			NewslettersPage.gotoFlowStart({
 				query: {
 					returnUrl,
 					useIdapi: 'true',
 				},
 			});
 
-			cy.url().should('include', CommunicationsPage.URL);
-			cy.url().should('include', `returnUrl=${returnUrl}`);
-
-			CommunicationsPage.backButton().should('not.exist');
-
-			CommunicationsPage.allCheckboxes().should('not.be.checked');
-			cy.get('input[name=_cmpConsentedState]').should('have.value', 'false');
-
-			// mock form save success
-			cy.mockNext(200);
-
-			CommunicationsPage.saveAndContinueButton().click();
-
-			// Use .lastPayloadsAre to ensure the IDAPI registrationLocation update is NOT posted
-			cy.lastPayloadsAre([[{ id: 'supporter', consented: false }]]);
-
 			cy.url().should('include', NewslettersPage.URL);
 			cy.url().should('include', `returnUrl=${returnUrl}`);
 
-			NewslettersPage.backButton()
-				.should('have.attr', 'href')
-				.and('include', CommunicationsPage.URL);
+			NewslettersPage.backButton().should('not.exist');
 
 			// mock form save success
 			cy.mockNext(200);
@@ -287,7 +248,9 @@ describe('Onboarding flow', () => {
 			);
 
 			// contains no consents
-			cy.contains(ReviewPage.CONTENT.SUPPORTER_CONSENT).should('not.exist');
+			cy.contains(ReviewPage.CONTENT.SUPPORTING_THE_GUARDIAN_CONSENT).should(
+				'not.exist',
+			);
 			cy.contains(ReviewPage.CONTENT.PROFILING_CONSENT).should('not.exist');
 			cy.contains(ReviewPage.CONTENT.PERSONALISED_ADVERTISING_CONSENT).should(
 				'not.exist',
@@ -304,19 +267,11 @@ describe('Onboarding flow', () => {
 		it('uses a default returnUrl if none provided', () => {
 			const returnUrl = encodeURIComponent(Cypress.env('DEFAULT_RETURN_URI'));
 
-			CommunicationsPage.gotoFlowStart({
+			NewslettersPage.gotoFlowStart({
 				query: {
 					useIdapi: 'true',
 				},
 			});
-
-			cy.url().should('include', CommunicationsPage.URL);
-			cy.url().should('include', `returnUrl=${returnUrl}`);
-
-			// mock form save success
-			cy.mockNext(200);
-
-			CommunicationsPage.saveAndContinueButton().click();
 
 			cy.url().should('include', NewslettersPage.URL);
 			cy.url().should('include', `returnUrl=${returnUrl}`);
@@ -403,7 +358,7 @@ describe('Onboarding flow', () => {
 				followRedirect: false,
 			}).then((res) => {
 				expect(res.status).to.eq(303);
-				expect(res.redirectedToUrl).to.include(CommunicationsPage.URL);
+				expect(res.redirectedToUrl).to.include(NewslettersPage.URL);
 			});
 		});
 
@@ -461,106 +416,6 @@ describe('Onboarding flow', () => {
 					`error=signin-error-bad-request`,
 				);
 			});
-		});
-	});
-
-	context('Contact options page', () => {
-		beforeEach(() => {
-			setAuthCookies();
-			cy.mockAll(
-				200,
-				authRedirectSignInRecentlyEmailValidated,
-				AUTH_REDIRECT_ENDPOINT,
-			);
-			cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
-		});
-
-		it('has no detectable a11y violations', () => {
-			cy.mockAll(
-				200,
-				verifiedUserWithNoConsent.user.consents,
-				USER_CONSENTS_ENDPOINT,
-			);
-			CommunicationsPage.goto({
-				query: {
-					useIdapi: true,
-				},
-			});
-			injectAndCheckAxe();
-		});
-
-		it('had no detectable a11y voilations if previously selected consents', () => {
-			const consented = getUserConsents(['jobs', 'offers']);
-			cy.mockAll(200, consented, USER_CONSENTS_ENDPOINT);
-			CommunicationsPage.goto({
-				query: {
-					useIdapi: true,
-				},
-			});
-			injectAndCheckAxe();
-		});
-
-		it('has no detectable a11y violations on with an error', () => {
-			cy.mockAll(500, {}, USER_ENDPOINT);
-			CommunicationsPage.goto({
-				query: {
-					useIdapi: true,
-				},
-			});
-			injectAndCheckAxe();
-		});
-
-		it('shows correct contact options, none checked by default', () => {
-			cy.mockAll(
-				200,
-				verifiedUserWithNoConsent.user.consents,
-				USER_CONSENTS_ENDPOINT,
-			);
-			CommunicationsPage.goto({
-				query: {
-					useIdapi: true,
-				},
-			});
-			CommunicationsPage.backButton().should('not.exist');
-			CommunicationsPage.allCheckboxes().should('not.be.checked');
-		});
-
-		it('shows any previously selected consents', () => {
-			const consented = getUserConsents(['supporter']);
-			cy.mockAll(200, consented, USER_CONSENTS_ENDPOINT);
-			CommunicationsPage.goto({
-				query: {
-					useIdapi: true,
-				},
-			});
-			CommunicationsPage.backButton().should('not.exist');
-			CommunicationsPage.consentCheckboxWithTitle(
-				'Supporting the Guardian',
-			).should('be.checked');
-		});
-
-		it('displays a relevant error message on user end point failure', () => {
-			cy.mockAll(500, {}, USER_CONSENTS_ENDPOINT);
-			CommunicationsPage.goto({
-				query: {
-					useIdapi: true,
-				},
-			});
-			CommunicationsPage.errorBanner().contains(CONSENT_ERRORS.GENERIC);
-			CommunicationsPage.backButton().should('not.exist');
-			CommunicationsPage.saveAndContinueButton().should('not.exist');
-		});
-
-		it('displays a relevant error on consents endpoint failure', () => {
-			cy.mockAll(500, {}, CONSENTS_ENDPOINT);
-			CommunicationsPage.goto({
-				query: {
-					useIdapi: true,
-				},
-			});
-			CommunicationsPage.errorBanner().contains(CONSENT_ERRORS.GENERIC);
-			CommunicationsPage.backButton().should('not.exist');
-			CommunicationsPage.saveAndContinueButton().should('not.exist');
 		});
 	});
 
@@ -632,8 +487,8 @@ describe('Onboarding flow', () => {
 				NewslettersPage.CONTENT.Consents.EVENTS,
 			).should('not.be.checked');
 
-			CommunicationsPage.backButton().should('exist');
-			CommunicationsPage.saveAndContinueButton().should('exist');
+			NewslettersPage.backButton().should('not.exist');
+			NewslettersPage.saveAndContinueButton().should('exist');
 		});
 
 		it('correct newsletters shown for United States of America, none checked by default', () => {
@@ -654,8 +509,8 @@ describe('Onboarding flow', () => {
 				NewslettersPage.CONTENT.Consents.EVENTS,
 			).should('not.be.checked');
 
-			CommunicationsPage.backButton().should('exist');
-			CommunicationsPage.saveAndContinueButton().should('exist');
+			NewslettersPage.backButton().should('not.exist');
+			NewslettersPage.saveAndContinueButton().should('exist');
 		});
 
 		it('correct newsletters shown for permissioned United States browser, none checked by default', () => {
@@ -681,8 +536,8 @@ describe('Onboarding flow', () => {
 
 			cy.contains(NewslettersPage.CONTENT.Consents.EVENTS).should('not.exist');
 
-			CommunicationsPage.backButton().should('exist');
-			CommunicationsPage.saveAndContinueButton().should('exist');
+			NewslettersPage.backButton().should('not.exist');
+			NewslettersPage.saveAndContinueButton().should('exist');
 		});
 
 		it('correct newsletters shown for Australia, none checked by default', () => {
@@ -703,8 +558,8 @@ describe('Onboarding flow', () => {
 				NewslettersPage.CONTENT.Consents.EVENTS,
 			).should('not.be.checked');
 
-			CommunicationsPage.backButton().should('exist');
-			CommunicationsPage.saveAndContinueButton().should('exist');
+			NewslettersPage.backButton().should('not.exist');
+			NewslettersPage.saveAndContinueButton().should('exist');
 		});
 
 		it('correct localised newsletters shown for permissioned Australian browser, none checked by default', () => {
@@ -729,8 +584,8 @@ describe('Onboarding flow', () => {
 			);
 			cy.contains(NewslettersPage.CONTENT.Consents.EVENTS).should('not.exist');
 
-			CommunicationsPage.backButton().should('exist');
-			CommunicationsPage.saveAndContinueButton().should('exist');
+			NewslettersPage.backButton().should('not.exist');
+			NewslettersPage.saveAndContinueButton().should('exist');
 		});
 
 		it('correct localised newsletters shown for permissioned EU browser, none checked by default', () => {
@@ -755,8 +610,8 @@ describe('Onboarding flow', () => {
 			);
 			cy.contains(NewslettersPage.CONTENT.Consents.EVENTS).should('not.exist');
 
-			CommunicationsPage.backButton().should('exist');
-			CommunicationsPage.saveAndContinueButton().should('exist');
+			NewslettersPage.backButton().should('not.exist');
+			NewslettersPage.saveAndContinueButton().should('exist');
 		});
 
 		it('correct newsletters shown for rest of the world, none checked by default', () => {
@@ -777,8 +632,8 @@ describe('Onboarding flow', () => {
 				NewslettersPage.CONTENT.Consents.EVENTS,
 			).should('not.be.checked');
 
-			CommunicationsPage.backButton().should('exist');
-			CommunicationsPage.saveAndContinueButton().should('exist');
+			NewslettersPage.backButton().should('not.exist');
+			NewslettersPage.saveAndContinueButton().should('exist');
 		});
 
 		it('show already selected newsletters / consents', () => {

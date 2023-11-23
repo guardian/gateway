@@ -5,6 +5,7 @@ export type PageTitle =
 	| 'Not Found'
 	| 'Unexpected Error'
 	| 'Register'
+	| 'Register With Email'
 	| 'Reset Password'
 	| 'Sign in'
 	| 'Signed in'

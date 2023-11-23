@@ -10,7 +10,6 @@ import { ChangePasswordPage } from '@/client/pages/ChangePasswordPage';
 import { ChangePasswordCompletePage } from '@/client/pages/ChangePasswordCompletePage';
 import { ResendPasswordPage } from '@/client/pages/ResendPasswordPage';
 import { ConsentsDataPage } from '@/client/pages/ConsentsDataPage';
-import { ConsentsCommunicationPage } from '@/client/pages/ConsentsCommunicationPage';
 import { ConsentsNewslettersPage } from '@/client/pages/ConsentsNewslettersPage';
 import { ConsentsConfirmationPage } from '@/client/pages/ConsentsConfirmationPage';
 import { ResendEmailVerificationPage } from '@/client/pages/ResendEmailVerificationPage';
@@ -41,6 +40,8 @@ import { DeleteAccountBlockedPage } from '@/client/pages/DeleteAccountBlockedPag
 import { DeleteAccountPage } from '@/client/pages/DeleteAccountPage';
 import { DeleteAccountEmailPasswordValidationPage } from './pages/DeleteAccountEmailPasswordValidationPage';
 import { DeleteAccountCompletePage } from '@/client/pages/DeleteAccountCompletePage';
+import { RegisterWithEmailPage } from './pages/RegisterWithEmailPage';
+import { WelcomeSocialPage } from './pages/WelcomeSocialPage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -76,6 +77,10 @@ const routes: Array<{
 	{
 		path: '/register',
 		element: <RegistrationPage />,
+	},
+	{
+		path: '/register/email',
+		element: <RegisterWithEmailPage />,
 	},
 	{
 		path: '/register/email-sent',
@@ -132,10 +137,6 @@ const routes: Array<{
 		element: <ConsentsDataPage />,
 	},
 	{
-		path: '/consents/communication',
-		element: <ConsentsCommunicationPage />,
-	},
-	{
 		path: '/consents/newsletters',
 		element: <ConsentsNewslettersPage />,
 	},
@@ -158,6 +159,14 @@ const routes: Array<{
 	{
 		path: '/welcome/complete',
 		element: <WelcomePasswordAlreadySetPage />,
+	},
+	{
+		path: '/welcome/google',
+		element: <WelcomeSocialPage socialProvider="google" />,
+	},
+	{
+		path: '/welcome/apple',
+		element: <WelcomeSocialPage socialProvider="apple" />,
 	},
 	{
 		path: '/agree/GRS',

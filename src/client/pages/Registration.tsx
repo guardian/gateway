@@ -1,25 +1,34 @@
 import React from 'react';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { MainLayout } from '@/client/layouts/Main';
-import { MainForm } from '@/client/components/MainForm';
-import { EmailInput } from '@/client/components/EmailInput';
 import { generateSignInRegisterTabs } from '@/client/components/Nav';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { SocialButtons } from '@/client/components/SocialButtons';
-import { socialButtonDivider } from '@/client/styles/Shared';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import {
 	GuardianTerms,
 	JobsTerms,
 	termsContainer,
 } from '@/client/components/Terms';
-import { CmpConsentedStateHiddenInput } from '@/client/components/CmpConsentStateHiddenInput';
-import { useCmpConsent } from '@/client/lib/hooks/useCmpConsent';
+import { LinkButton, SvgEnvelope } from '@guardian/source-react-components';
+import { css } from '@emotion/react';
+import { space } from '@guardian/source-foundations';
+
+const emailButton = css`
+	width: 100%;
+	justify-content: center;
+`;
+
+const registrationButtons = css`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: ${space[3]}px;
+`;
 
 export type RegistrationProps = {
 	email?: string;
-	recaptchaSiteKey: string;
+	recaptchaSiteKey?: string;
 	queryParams: QueryParams;
 	formError?: string;
 };
@@ -31,19 +40,13 @@ const RegistrationTerms = ({ isJobs }: { isJobs: boolean }) => (
 	</div>
 );
 
-export const Registration = ({
-	email,
-	recaptchaSiteKey,
-	queryParams,
-	formError,
-}: RegistrationProps) => {
+export const Registration = ({ queryParams }: RegistrationProps) => {
 	const formTrackingName = 'register';
 
 	const { clientId } = queryParams;
 	const isJobs = clientId === 'jobs';
 
 	usePageLoadOphanInteraction(formTrackingName);
-	const hasCmpConsent = useCmpConsent();
 
 	const tabs = generateSignInRegisterTabs({
 		queryParams,
@@ -53,23 +56,21 @@ export const Registration = ({
 	return (
 		<MainLayout tabs={tabs}>
 			<RegistrationTerms isJobs={isJobs} />
-			<SocialButtons queryParams={queryParams} marginTop={true} />
-			<Divider
-				spaceAbove="loose"
-				displayText="or continue with"
-				cssOverrides={socialButtonDivider}
-			/>
-			<MainForm
-				formAction={buildUrlWithQueryParams('/register', {}, queryParams)}
-				submitButtonText="Register"
-				recaptchaSiteKey={recaptchaSiteKey}
-				formTrackingName={formTrackingName}
-				disableOnSubmit
-				formErrorMessageFromParent={formError}
-			>
-				<EmailInput defaultValue={email} autoComplete="off" />
-				<CmpConsentedStateHiddenInput cmpConsentedState={hasCmpConsent} />
-			</MainForm>
+			<div css={registrationButtons}>
+				<SocialButtons
+					queryParams={queryParams}
+					marginTop={true}
+					context="Sign up"
+				/>
+				<LinkButton
+					icon={<SvgEnvelope />}
+					cssOverrides={emailButton}
+					priority="tertiary"
+					href={buildUrlWithQueryParams('/register/email', {}, queryParams)}
+				>
+					Sign up with email
+				</LinkButton>
+			</div>
 		</MainLayout>
 	);
 };

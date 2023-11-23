@@ -17,8 +17,8 @@ import {
 import { PageData } from '@/shared/model/ClientState';
 import { ALL_NEWSLETTER_IDS, NewsLetter } from '@/shared/model/Newsletter';
 import {
-	CONSENTS_COMMUNICATION_PAGE,
 	CONSENTS_DATA_PAGE,
+	REGISTRATION_CONSENTS,
 } from '@/shared/model/Consent';
 import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
 import {
@@ -130,35 +130,6 @@ const getUserNewsletterSubscriptions = async ({
 
 export const consentPages: ConsentPage[] = [
 	{
-		page: 'communication',
-		path: '/consents/communication',
-		pageTitle: CONSENTS_PAGES.CONTACT,
-		read: async ({ ip, sc_gu_u, request_id, accessToken }) => ({
-			consents: await getUserConsentsForPage({
-				pageConsents: CONSENTS_COMMUNICATION_PAGE,
-				ip,
-				sc_gu_u,
-				request_id,
-				accessToken,
-			}),
-			page: 'communication',
-		}),
-		update: async ({ ip, sc_gu_u, body, accessToken, request_id }) => {
-			const consents = CONSENTS_COMMUNICATION_PAGE.map((id) => ({
-				id,
-				consented: getConsentValueFromRequestBody(id, body),
-			}));
-
-			await patchConsents({
-				ip,
-				sc_gu_u,
-				payload: consents,
-				request_id,
-				accessToken,
-			});
-		},
-	},
-	{
 		page: 'newsletters',
 		path: '/consents/newsletters',
 		pageTitle: CONSENTS_PAGES.NEWSLETTERS,
@@ -179,7 +150,6 @@ export const consentPages: ConsentPage[] = [
 					request_id,
 					accessToken,
 				}),
-				previousPage: 'communication',
 			};
 		},
 		update: async ({ ip, sc_gu_u, accessToken, body, geo, request_id }) => {
@@ -280,7 +250,7 @@ export const consentPages: ConsentPage[] = [
 			const ALL_CONSENT = [
 				...CONSENTS_DATA_PAGE,
 				...(ConsentsOnNewslettersPageMap.get(geo) as string[]),
-				...CONSENTS_COMMUNICATION_PAGE,
+				...REGISTRATION_CONSENTS,
 			];
 
 			return {

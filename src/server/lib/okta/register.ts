@@ -24,6 +24,8 @@ import { logger } from '../serverSideLogger';
 import dangerouslySetPlaceholderPassword from './dangerouslySetPlaceholderPassword';
 import { sendCompleteRegistration } from '@/email/templates/CompleteRegistration/sendCompleteRegistration';
 import { addAppPrefixToOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
+import { RegistrationConsents } from '@/shared/model/Consent';
+import { encryptRegistrationConsents } from '@/server/lib/registrationConsents';
 
 const { okta } = getConfiguration();
 
@@ -240,6 +242,7 @@ const sendRegistrationEmailByUserState = async ({
  *
  * @param {string} email
  * @param {RegistrationLocation} registrationLocation
+ * @param {RegistrationConsents} consents - list of consents set during registration
  * @returns {Promise<UserResponse>} Promise that resolves to the user object
  */
 export const register = async ({
@@ -247,11 +250,13 @@ export const register = async ({
 	registrationLocation,
 	appClientId,
 	request_id,
+	consents,
 }: {
 	email: string;
 	registrationLocation?: RegistrationLocation;
 	appClientId?: string;
 	request_id?: string;
+	consents?: RegistrationConsents;
 }): Promise<UserResponse> => {
 	try {
 		// Create the user in Okta, but do not send the activation email
@@ -275,6 +280,10 @@ export const register = async ({
 			id,
 			profile: { email: emailAddress },
 		} = userResponse;
+
+		// Encrypt any consents we need to send in the activation email
+		const encryptedConsents = consents && encryptRegistrationConsents(consents);
+
 		// Generate an activation token for the new user...
 		const tokenResponse = await activateUser(id);
 		if (!tokenResponse?.token.length) {
@@ -290,6 +299,7 @@ export const register = async ({
 				appClientId,
 				request_id,
 			),
+			consents: encryptedConsents,
 		});
 		if (!emailIsSent) {
 			throw new OktaError({

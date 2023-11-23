@@ -13,7 +13,7 @@ describe('Registration email sent page', () => {
 		const unregisteredEmail = randomMailosaurEmail();
 
 		const clientId = 'jobs';
-		cy.visit(`/register?clientId=${clientId}&useIdapi=true`);
+		cy.visit(`/register/email?clientId=${clientId}&useIdapi=true`);
 		cy.get('input[name=email]').type(unregisteredEmail);
 		const timeRequestWasMadeInitialEmail = new Date();
 		cy.get('[data-cy="main-form-submit-button"]').click();
@@ -52,7 +52,7 @@ describe('Registration email sent page', () => {
 				isGuestUser: true,
 			})
 			?.then(({ emailAddress }) => {
-				cy.visit('/register?useIdapi=true');
+				cy.visit('/register/email?useIdapi=true');
 				cy.get('input[name=email]').type(emailAddress);
 				const timeRequestWasMadeInitialEmail = new Date();
 				cy.get('[data-cy="main-form-submit-button"]').click();
@@ -100,7 +100,7 @@ describe('Registration email sent page', () => {
 				isUserEmailValidated: false,
 			})
 			?.then(({ emailAddress }) => {
-				cy.visit('/register?useIdapi=true');
+				cy.visit('/register/email?useIdapi=true');
 				cy.get('input[name=email]').type(emailAddress);
 				const timeRequestWasMadeInitialEmail = new Date();
 				cy.get('[data-cy="main-form-submit-button"]').click();
@@ -154,7 +154,7 @@ describe('Registration email sent page', () => {
 				isUserEmailValidated: false,
 			})
 			?.then(({ emailAddress }) => {
-				cy.visit('/register?useIdapi=true');
+				cy.visit('/register/email?useIdapi=true');
 				cy.get('input[name=email]').type(emailAddress);
 
 				const timeRequestWasMadeInitialEmail = new Date();

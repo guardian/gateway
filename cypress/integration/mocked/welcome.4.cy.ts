@@ -6,11 +6,17 @@ import {
 import { allConsents, CONSENTS_ENDPOINT } from '../../support/idapi/consent';
 import { setAuthCookies } from '../../support/idapi/cookie';
 import {
+	allNewsletters,
+	NEWSLETTER_ENDPOINT,
+	userNewsletters,
+	NEWSLETTER_SUBSCRIPTION_ENDPOINT,
+} from '../../support/idapi/newsletter';
+import {
 	verifiedUserWithNoConsent,
 	USER_ENDPOINT,
 	USER_CONSENTS_ENDPOINT,
 } from '../../support/idapi/user';
-import CommunicationsPage from '../../support/pages/onboarding/communications_page';
+import NewslettersPage from '../../support/pages/onboarding/newsletters_page';
 
 describe('Welcome and set password page', () => {
 	const defaultEmail = 'someone@theguardian.com';
@@ -63,12 +69,14 @@ describe('Welcome and set password page', () => {
 			AUTH_REDIRECT_ENDPOINT,
 		);
 		cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
+		cy.mockAll(200, allNewsletters, NEWSLETTER_ENDPOINT);
 		// cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
 		cy.mockAll(
 			200,
 			verifiedUserWithNoConsent.user.consents,
 			USER_CONSENTS_ENDPOINT,
 		);
+		cy.mockAll(200, userNewsletters(), NEWSLETTER_SUBSCRIPTION_ENDPOINT);
 		cy.visit(`/welcome/fake_token?useIdapi=true`);
 		cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
 		cy.wait('@breachCheck');
@@ -132,7 +140,7 @@ describe('Welcome and set password page', () => {
 	context('A valid token is used and set password page is displayed', () => {
 		it('redirects to onboarding flow if a valid password is set', () => {
 			setPasswordAndSignIn();
-			cy.contains('Thank you for registering');
+			cy.contains('Free newsletters from the Guardian');
 		});
 
 		it('shows a different message if the user has set a password and then clicked the back button', () => {
@@ -140,7 +148,7 @@ describe('Welcome and set password page', () => {
 			cy.go('back');
 			cy.contains(`Password already set for ${defaultEmail}`);
 			cy.contains('Continue').click();
-			cy.contains('Thank you for registering');
+			cy.contains('Free newsletters from the Guardian');
 		});
 
 		it('redirects to onboarding flow if valid password is set and preserves returnUrl', () => {
@@ -168,8 +176,8 @@ describe('Welcome and set password page', () => {
 			cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
 			cy.wait('@breachCheck');
 			cy.get('button[type="submit"]').click();
-			cy.contains('Thank you for registering');
-			cy.url().should('include', CommunicationsPage.URL);
+			cy.contains('Free newsletters from the Guardian');
+			cy.url().should('include', NewslettersPage.URL);
 			cy.url().should('include', `returnUrl=${returnUrl}`);
 		});
 
@@ -202,8 +210,8 @@ describe('Welcome and set password page', () => {
 			cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
 			cy.wait('@breachCheck');
 			cy.get('button[type="submit"]').click();
-			cy.contains('Thank you for registering');
-			cy.url().should('include', CommunicationsPage.URL);
+			cy.contains('Free newsletters from the Guardian');
+			cy.url().should('include', NewslettersPage.URL);
 			cy.url().should('include', `returnUrl=${returnUrl}`);
 			cy.url().should('include', `clientId=${clientId}`);
 		});

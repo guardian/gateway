@@ -33,9 +33,9 @@ import {
 	scopesForAuthentication,
 } from '@/server/lib/okta/oauth';
 import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
-import { setupJobsUserInIDAPI, setupJobsUserInOkta } from '../lib/jobs';
-import { sendOphanComponentEventFromQueryParamsServer } from '../lib/ophan';
-import { clearOktaCookies } from '../routes/signOut';
+import { setupJobsUserInIDAPI, setupJobsUserInOkta } from '@/server/lib/jobs';
+import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
+import { clearOktaCookies } from '@/server/routes/signOut';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
 
@@ -191,7 +191,8 @@ const changePasswordInOkta = async (
 	res: ResponseWithRequestState,
 	successRedirectPath: RoutePaths,
 ) => {
-	const recoveryToken = req.params?.token;
+	const { token: recoveryToken, consents: encryptedRegistrationConsents } =
+		req.params;
 	const { password, firstName, secondName } = req.body;
 	const { clientId } = req.query;
 
@@ -271,6 +272,9 @@ const changePasswordInOkta = async (
 				prompt: 'none',
 				scopes: scopesForAuthentication,
 				redirectUri: ProfileOpenIdClientRedirectUris.AUTHENTICATION,
+				extraData: {
+					encryptedRegistrationConsents,
+				},
 			});
 		} else {
 			throw new OktaError({ message: 'Okta state token missing' });

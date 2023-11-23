@@ -37,6 +37,7 @@ export const scopesForAuthentication: Scopes[] = [
 	'guardian.identity-api.cookies.create.self.secure',
 	'guardian.members-data-api.read.self',
 	'guardian.identity-api.newsletters.read.self',
+	'guardian.identity-api.newsletters.update.self',
 ];
 
 /**

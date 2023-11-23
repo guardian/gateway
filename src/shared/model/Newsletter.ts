@@ -1,3 +1,11 @@
+import { z } from 'zod';
+
+export const newsletterPatchSchema = z.object({
+	id: z.string(),
+	subscribed: z.boolean(),
+});
+export type NewsletterPatch = z.infer<typeof newsletterPatchSchema>;
+
 export interface NewsLetter {
 	id: string;
 	nameId: string;
@@ -5,11 +13,6 @@ export interface NewsLetter {
 	frequency?: string;
 	name: string;
 	subscribed?: boolean;
-}
-
-export interface NewsletterPatch {
-	id: string;
-	subscribed: boolean;
 }
 
 export enum Newsletters {

@@ -85,6 +85,14 @@ export const allConsents = [
 		isChannel: false,
 		name: 'Allow personalised advertising using this data - this supports the Guardian',
 	},
+	{
+		id: 'similar_guardian_products',
+		isOptOut: false,
+		isChannel: false,
+		name: 'Guardian products and support',
+		description:
+			'Information on our products and ways to support and enjoy our independent journalism.',
+	},
 ];
 
 export const defaultUserConsent = allConsents.map(({ id }) => ({

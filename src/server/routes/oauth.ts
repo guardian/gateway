@@ -36,6 +36,9 @@ import {
 	OpenIdErrors,
 	OpenIdErrorDescriptions,
 } from '@/shared/model/OpenIdErrors';
+import { update as updateConsents } from '@/server/lib/idapi/consents';
+import { decryptRegistrationConsents } from '@/server/lib/registrationConsents';
+import { SocialProvider } from '@/shared/model/Social';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
@@ -92,6 +95,17 @@ const authenticationHandler = async (
 	authState: AuthorizationState,
 ) => {
 	try {
+		/**
+		 * Cypress Test START
+		 *
+		 * This code checks if we're running in Cypress
+		 */
+		const runningInCypress = process.env.RUNNING_IN_CYPRESS === 'true';
+		const cypressMockStateCookie = req.cookies['cypress-mock-state'];
+		/**
+		 * Cypress Test END
+		 */
+
 		// this is just to handle potential errors where we don't get back an access token
 		if (!tokenSet.access_token) {
 			logger.error(
@@ -115,24 +129,44 @@ const authenticationHandler = async (
 		// the emailValidated field set to true in their Okta user profile.
 		// So we can use this functionality to show the onboarding flow for new social users, as
 		// there is no other trivial way to do this.
+		// eslint-disable-next-line functional/no-let
+		let isSocialRegistration = false;
 		if (tokenSet.id_token) {
 			// extracting the custom claims from the id_token and the sub (user id)
 			const { user_groups, email_validated, sub } =
 				tokenSet.claims() as CustomClaims;
-
 			// if the user is in the GuardianUser-EmailValidated group, but the emailValidated field is falsy
 			// then we set the emailValidated field to true in the Okta user profile by manually updating the user
 			if (
 				!email_validated &&
 				user_groups?.some((group) => group === 'GuardianUser-EmailValidated')
 			) {
+				isSocialRegistration = true;
+
 				// updated the user profile emailValidated to true
 				await updateUser(sub, { profile: { emailValidated: true } });
 
 				// since this is a new social user, we want to show the onboarding flow too
-				// we use the `confirmationPage` flag to redirect the user to the onboarding page
-				// eslint-disable-next-line functional/immutable-data
-				authState.confirmationPage = consentPages[0].path;
+				// we use the `confirmationPage` flag to redirect the user to the onboarding/consents page
+				if (
+					authState.data?.socialProvider ||
+					// Cypress Test START
+					// this is a special case for the cypress tests, where we want to be able to mock the social provider
+					(runningInCypress &&
+						(cypressMockStateCookie === 'google' ||
+							cypressMockStateCookie === 'apple'))
+				) {
+					const path =
+						authState.data?.socialProvider ||
+						(cypressMockStateCookie as SocialProvider);
+					// if there is a social provider in the response (which there should be), then show the social consents page
+					// eslint-disable-next-line functional/immutable-data
+					authState.confirmationPage = `/welcome/${path}`;
+				} else {
+					// otherwise fall back to the default consents page
+					// eslint-disable-next-line functional/immutable-data
+					authState.confirmationPage = consentPages[0].path;
+				}
 			}
 		}
 
@@ -154,6 +188,33 @@ const authenticationHandler = async (
 			logger.error('No cookies returned from IDAPI', undefined, {
 				request_id: res.locals.requestId,
 			});
+		}
+
+		// Apply the registration consents if they exist
+		if (authState.data?.encryptedRegistrationConsents) {
+			const decryptedConsents = await decryptRegistrationConsents(
+				authState.data.encryptedRegistrationConsents,
+			);
+			if (decryptedConsents && decryptedConsents.consents) {
+				try {
+					await updateConsents({
+						ip: req.ip,
+						accessToken: tokenSet.access_token,
+						payload: decryptedConsents.consents,
+						request_id: res.locals.requestId,
+					});
+				} catch (error) {
+					logger.error(
+						'Error updating registration consents on oauth callback',
+						{
+							error,
+						},
+						{
+							request_id: res.locals.requestId,
+						},
+					);
+				}
+			}
 		}
 
 		// set the ad-free cookie if the user has the digital-pack product
@@ -181,6 +242,30 @@ const authenticationHandler = async (
 		) {
 			return res.redirect(
 				addQueryParamsToPath('/agree/GRS', authState.queryParams),
+			);
+		}
+
+		// this will only be hit if the user is a new social user coming through an oauth flow initiated by an app
+		// in this scenario we want to show the user a consent page, before redirecting them to the end of the oauth flow
+		if (
+			isSocialRegistration &&
+			authState.queryParams.fromURI &&
+			(authState.data?.socialProvider ||
+				// Cypress Test START
+				// this is a special case for the cypress tests, where we want to be able to mock the social provider
+				(runningInCypress &&
+					(cypressMockStateCookie === 'google' ||
+						cypressMockStateCookie === 'apple')))
+		) {
+			// get the social provider from the authState.data.socialProvider
+			// or from the cypress mock state cookie if we're running in cypress
+			const path =
+				authState.data?.socialProvider ||
+				(cypressMockStateCookie as SocialProvider);
+
+			return res.redirect(
+				303,
+				addQueryParamsToPath(`/welcome/${path}`, authState.queryParams),
 			);
 		}
 

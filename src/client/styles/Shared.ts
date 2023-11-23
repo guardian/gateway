@@ -1,16 +1,6 @@
 import { css } from '@emotion/react';
 import { border, from, space } from '@guardian/source-foundations';
 
-export const topMargin = css`
-	margin-top: ${space[2]}px;
-	${from.mobileMedium} {
-		margin-top: ${space[4]}px;
-	}
-	${from.tablet} {
-		margin-top: ${space[6]}px;
-	}
-`;
-
 export const disableAutofillBackground = css`
 	:-webkit-autofill {
 		background-color: transparent !important;
@@ -24,10 +14,11 @@ export const disableAutofillBackground = css`
 
 export const socialButtonDivider = css`
 	/* Undoes the negative margin */
-	margin-bottom: 0;
+	margin-bottom: ${space[4]}px;
 	margin-top: ${space[4]}px;
 	${from.mobileMedium} {
 		margin-top: ${space[6]}px;
+		margin-bottom: ${space[6]}px;
 	}
 	:before,
 	:after {
@@ -36,6 +27,12 @@ export const socialButtonDivider = css`
 		border-bottom: 1px solid ${border.secondary};
 		margin: 8px;
 	}
+`;
+
+// fixed source divider expanding off the side of the container
+export const divider = css`
+	margin-left: 0;
+	width: 100%;
 `;
 
 export const errorContextSpacing = css`

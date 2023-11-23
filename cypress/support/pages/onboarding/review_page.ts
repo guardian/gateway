@@ -9,7 +9,7 @@ class ReviewPage extends OnboardingPage {
 			LONG_READ: 'The Long Read',
 			FIRST_EDITION_UK: 'First Edition',
 		},
-		SUPPORTER_CONSENT: 'Supporting the Guardian',
+		SUPPORTING_THE_GUARDIAN_CONSENT: 'Guardian products and support',
 		PROFILING_CONSENT: 'Allow analysis of my data for marketing',
 		PERSONALISED_ADVERTISING_CONSENT:
 			'Allow personalised advertising using my data - this supports the Guardian',

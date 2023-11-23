@@ -11,6 +11,7 @@ import { DeleteAccountReturnLink } from '@/client/components/DeleteAccountReturn
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { FieldError } from '@/shared/model/ClientState';
+import { divider } from '@/client/styles/Shared';
 
 interface Props {
 	queryParams: QueryParams;
@@ -146,7 +147,7 @@ export const DeleteAccount = ({
 			</MainBodyText>
 
 			{/* divider */}
-			<Divider spaceAbove="tight" size="full" />
+			<Divider spaceAbove="tight" size="full" cssOverrides={divider} />
 
 			{/* delete form */}
 			<MainForm

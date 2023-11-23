@@ -54,10 +54,6 @@ const switchRow = css`
 
 const toggleSwitchAlignment = css`
 	justify-content: space-between;
-	span {
-		align-self: flex-start;
-		margin-top: 4px;
-	}
 `;
 
 const listBullets = css`
@@ -90,7 +86,8 @@ const labelStyles = css`
 `;
 
 const adConsentText = css`
-	${subText}
+	${textSans.small()}
+	margin: 0;
 	line-height: ${remSpace[5]};
 	color: ${neutral[46]};
 	p {
@@ -102,7 +99,6 @@ const adConsentText = css`
 		margin-left: 18px; /* second line indentation */
 	}
 	&& li {
-		${textSans.small()}
 		line-height: ${remSpace[5]};
 	}
 	&& li::before {
@@ -118,8 +114,8 @@ const marketingText = css`
 	}
 	a,
 	p {
-		${textSans.small()}
 		line-height: ${remSpace[5]};
+		${textSans.small()}
 	}
 	p:last-of-type {
 		margin-top: 6px;

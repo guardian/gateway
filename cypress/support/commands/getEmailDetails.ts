@@ -23,6 +23,8 @@ export const checkForEmailAndGetDetails = (
 	tokenMatcher?: RegExp,
 	deleteAfter = true,
 ) => {
+	// adds a small delay in case email is not yet received
+	cy.wait(3000);
 	return cy
 		.mailosaurGetMessage(
 			Cypress.env('MAILOSAUR_SERVER_ID'),

@@ -13,6 +13,7 @@ import {
 	invertOptInConsents,
 	invertOptOutConsents,
 } from './invertOptOutConsents';
+import { IdApiQueryParams } from '@/shared/model/IdapiQueryParams';
 
 const handleError = (): never => {
 	throw new IdapiError({ message: ConsentsErrors.GENERIC, status: 500 });
@@ -35,12 +36,21 @@ const responseToEntity = (consent: ConsentAPIResponse): Consent => {
 	};
 };
 
-const read = async (request_id?: string): Promise<Consent[]> => {
+const read = async ({
+	filter,
+	request_id,
+}: {
+	filter: IdApiQueryParams['filter'];
+	request_id?: string;
+}): Promise<Consent[]> => {
 	const options = APIGetOptions();
 	try {
 		return (
 			(await idapiFetch({
 				path: '/consents',
+				queryParams: {
+					filter,
+				},
 				options,
 			})) as ConsentAPIResponse[]
 		).map(responseToEntity);
@@ -134,7 +144,9 @@ export const getUserConsentsForPage = async ({
 }): Promise<Consent[]> => {
 	// Inversion required of four legitimate interest consents that are modelled as opt OUTS in the backend data model
 	// but which are presented as opt INs on the client UI/UX
-	const allConsents = invertOptOutConsents(await read(request_id));
+	const allConsents = invertOptOutConsents(
+		await read({ filter: 'all', request_id }),
+	);
 	const userConsents = invertOptOutConsents(
 		await readUserConsents({ ip, sc_gu_u, accessToken, request_id }),
 	);

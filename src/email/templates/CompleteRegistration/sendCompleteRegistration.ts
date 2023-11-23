@@ -6,16 +6,19 @@ type Props = {
 	to: string;
 	subject?: string;
 	activationToken: string;
+	consents?: string;
 };
 
 export const sendCompleteRegistration = ({
 	to,
 	subject = 'Complete your Guardian account',
 	activationToken,
+	consents,
 }: Props) => {
 	const activateUrl = generateUrl({
 		path: 'welcome',
 		token: activationToken,
+		consents,
 	});
 	return send({
 		html: renderedCompleteRegistration.html.replace(

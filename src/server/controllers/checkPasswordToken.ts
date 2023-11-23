@@ -22,7 +22,7 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
 import { FieldError } from '@/shared/model/ClientState';
 import { PersistableQueryParams } from '@/shared/model/QueryParams';
-import { validateReturnUrl } from '../lib/validateUrl';
+import { validateReturnUrl } from '@/server/lib/validateUrl';
 import { mergeRequestState } from '@/server/lib/requestState';
 
 const { okta, defaultReturnUri } = getConfiguration();
@@ -148,7 +148,7 @@ export const checkTokenInOkta = async (
 	error?: ChangePasswordErrors,
 	fieldErrors?: Array<FieldError>,
 ) => {
-	const { token } = req.params;
+	const { token, consents } = req.params;
 
 	try {
 		// Verify that the recovery token is still valid. If invalid, this will
@@ -158,6 +158,8 @@ export const checkTokenInOkta = async (
 		});
 		const email = _embedded?.user.profile.login;
 
+		// Add the user's email
+		// set at registration to the encrypted state cookie
 		updateEncryptedStateCookie(req, res, { email });
 
 		trackMetric('OktaValidatePasswordToken::Success');
@@ -201,6 +203,7 @@ export const checkTokenInOkta = async (
 						fieldErrors,
 						formError: error,
 						token,
+						encryptedRegistrationConsent: consents,
 					},
 				}),
 			},

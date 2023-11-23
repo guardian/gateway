@@ -21,7 +21,7 @@ describe('Registration flow - Split 1/2', () => {
 			const fromURI = 'fromURI1';
 
 			cy.visit(
-				`/register?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&appClientId=${appClientId}&fromURI=${fromURI}`,
+				`/register/email?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&appClientId=${appClientId}&fromURI=${fromURI}`,
 			);
 
 			const timeRequestWasMade = new Date();
@@ -82,7 +82,7 @@ describe('Registration flow - Split 1/2', () => {
 			const fromURI = 'fromURI1';
 
 			cy.visit(
-				`/register?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&appClientId=${appClientId}&fromURI=${fromURI}`,
+				`/register/email?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&appClientId=${appClientId}&fromURI=${fromURI}`,
 			);
 
 			const timeRequestWasMade = new Date();
@@ -132,7 +132,7 @@ describe('Registration flow - Split 1/2', () => {
 		it('does not register registrationLocation for email with no existing account if cmp is not consented', () => {
 			const unregisteredEmail = randomMailosaurEmail();
 			cy.enableCMP();
-			cy.visit(`/register`);
+			cy.visit(`/register/email`);
 			cy.setCookie('GU_geo_country', 'FR');
 			cy.declineCMP();
 
@@ -149,7 +149,7 @@ describe('Registration flow - Split 1/2', () => {
 		it('successfully registers registrationLocation for email with no existing account if cmp consented', () => {
 			const unregisteredEmail = randomMailosaurEmail();
 			cy.enableCMP();
-			cy.visit(`/register`);
+			cy.visit(`/register/email`);
 			cy.setCookie('GU_geo_country', 'FR');
 			cy.acceptCMP();
 
@@ -165,7 +165,7 @@ describe('Registration flow - Split 1/2', () => {
 
 		it('successfully blocks the password set page /welcome if a password has already been set', () => {
 			const unregisteredEmail = randomMailosaurEmail();
-			cy.visit(`/register`);
+			cy.visit(`/register/email`);
 
 			const timeRequestWasMade = new Date();
 			cy.get('input[name=email]').type(unregisteredEmail);
@@ -199,7 +199,7 @@ describe('Registration flow - Split 1/2', () => {
 				'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
 			const unregisteredEmail = randomMailosaurEmail();
 
-			cy.visit(`/register?returnUrl=${encodedReturnUrl}`);
+			cy.visit(`/register/email?returnUrl=${encodedReturnUrl}`);
 
 			const timeRequestWasMade = new Date();
 			cy.get('input[name=email]').type(unregisteredEmail);
@@ -253,7 +253,7 @@ describe('Registration flow - Split 1/2', () => {
 			const fromURI1 = 'fromURI1';
 
 			cy.visit(
-				`/register?returnUrl=${encodedReturnUrl}&appClientId=${appClientId1}&fromURI=${fromURI1}`,
+				`/register/email?returnUrl=${encodedReturnUrl}&appClientId=${appClientId1}&fromURI=${fromURI1}`,
 			);
 
 			const timeRequestWasMade = new Date();
@@ -314,7 +314,7 @@ describe('Registration flow - Split 1/2', () => {
 					cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 						expect(oktaUser.status).to.eq(Status.STAGED);
 
-						cy.visit('/register');
+						cy.visit('/register/email');
 						const timeRequestWasMade = new Date();
 
 						cy.get('input[name=email]').type(emailAddress);
@@ -369,7 +369,9 @@ describe('Registration flow - Split 1/2', () => {
 						const appClientId = Cypress.env('OKTA_ANDROID_CLIENT_ID');
 						const fromURI = 'fromURI1';
 
-						cy.visit(`/register?appClientId=${appClientId}&fromURI=${fromURI}`);
+						cy.visit(
+							`/register/email?appClientId=${appClientId}&fromURI=${fromURI}`,
+						);
 						const timeRequestWasMade = new Date();
 
 						cy.get('input[name=email]').type(emailAddress);
@@ -414,7 +416,7 @@ describe('Registration flow - Split 1/2', () => {
 						cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 							expect(oktaUser.status).to.eq(Status.PROVISIONED);
 
-							cy.visit('/register');
+							cy.visit('/register/email');
 							const timeRequestWasMade = new Date();
 
 							cy.get('input[name=email]').type(emailAddress);
@@ -457,7 +459,7 @@ describe('Registration flow - Split 1/2', () => {
 					cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 						expect(oktaUser.status).to.eq(Status.ACTIVE);
 
-						cy.visit('/register');
+						cy.visit('/register/email');
 						const timeRequestWasMade = new Date();
 
 						cy.get('input[name=email]').type(emailAddress);
@@ -502,7 +504,7 @@ describe('Registration flow - Split 1/2', () => {
 					cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 						expect(oktaUser.status).to.eq(Status.ACTIVE);
 
-						cy.visit('/register');
+						cy.visit('/register/email');
 						const timeRequestWasMade = new Date();
 
 						cy.get('input[name=email]').type(emailAddress);
@@ -548,7 +550,9 @@ describe('Registration flow - Split 1/2', () => {
 						const appClientId = Cypress.env('OKTA_ANDROID_CLIENT_ID');
 						const fromURI = 'fromURI1';
 
-						cy.visit(`/register?appClientId=${appClientId}&fromURI=${fromURI}`);
+						cy.visit(
+							`/register/email?appClientId=${appClientId}&fromURI=${fromURI}`,
+						);
 						const timeRequestWasMade = new Date();
 
 						cy.get('input[name=email]').type(emailAddress);
@@ -592,7 +596,7 @@ describe('Registration flow - Split 1/2', () => {
 						cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 							expect(oktaUser.status).to.eq(Status.RECOVERY);
 
-							cy.visit('/register');
+							cy.visit('/register/email');
 							const timeRequestWasMade = new Date();
 
 							cy.get('input[name=email]').type(emailAddress);
@@ -636,7 +640,7 @@ describe('Registration flow - Split 1/2', () => {
 						cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 							expect(oktaUser.status).to.eq(Status.PASSWORD_EXPIRED);
 
-							cy.visit('/register');
+							cy.visit('/register/email');
 							const timeRequestWasMade = new Date();
 
 							cy.get('input[name=email]').type(emailAddress);
@@ -680,7 +684,7 @@ describe('Registration flow - Split 1/2', () => {
 						cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 							expect(oktaUser.status).to.eq(Status.SUSPENDED);
 
-							cy.visit('/register');
+							cy.visit('/register/email');
 
 							cy.get('input[name=email]').type(emailAddress);
 							cy.get('[data-cy="main-form-submit-button"]').click();

@@ -6,7 +6,6 @@ import {
 	success,
 	neutral,
 	until,
-	textSans,
 } from '@guardian/source-foundations';
 
 import { getAutoRow, gridItemColumnConsents } from '@/client/styles/Grid';
@@ -110,7 +109,6 @@ const marketingText = css`
 	}
 	a,
 	p {
-		${textSans.small()}
 		line-height: ${remSpace[5]};
 	}
 `;
@@ -147,6 +145,10 @@ export const ConsentsConfirmation = ({
 					preferences and options at anytime under&nbsp;
 					<ExternalLink href={locations.MMA_EMAIL_PREFERENCES}>
 						Emails &amp; marketing
+					</ExternalLink>{' '}
+					and{' '}
+					<ExternalLink href={locations.MMA_DATA_PRIVACY}>
+						Data Privacy
 					</ExternalLink>
 					.
 				</p>
@@ -206,7 +208,11 @@ export const ConsentsConfirmation = ({
 
 			{anyConsents && (
 				<p css={[marketingText, paddingTop, autoRow()]}>
-					You can change these anytime in your account under&nbsp;
+					You can change these anytime in your account under{' '}
+					<ExternalLink href={locations.MMA_EMAIL_PREFERENCES}>
+						Emails & marketing
+					</ExternalLink>{' '}
+					and{' '}
 					<ExternalLink href={locations.MMA_DATA_PRIVACY}>
 						Data Privacy
 					</ExternalLink>

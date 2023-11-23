@@ -18,7 +18,7 @@ describe('Registration flow - Split 2/2', () => {
 						cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 							expect(oktaUser.status).to.eq(Status.STAGED);
 
-							cy.visit('/register');
+							cy.visit('/register/email');
 
 							const timeRequestWasMade = new Date();
 
@@ -75,7 +75,7 @@ describe('Registration flow - Split 2/2', () => {
 							cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 								expect(oktaUser.status).to.eq(Status.PROVISIONED);
 
-								cy.visit('/register');
+								cy.visit('/register/email');
 
 								const timeRequestWasMade = new Date();
 
@@ -128,7 +128,7 @@ describe('Registration flow - Split 2/2', () => {
 						cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 							expect(oktaUser.status).to.eq(Status.ACTIVE);
 
-							cy.visit('/register');
+							cy.visit('/register/email');
 							const timeRequestWasMade = new Date();
 
 							cy.get('input[name=email]').type(emailAddress);
@@ -180,7 +180,7 @@ describe('Registration flow - Split 2/2', () => {
 							cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 								expect(oktaUser.status).to.eq(Status.RECOVERY);
 
-								cy.visit('/register');
+								cy.visit('/register/email');
 								const timeRequestWasMade = new Date();
 
 								cy.get('input[name=email]').type(emailAddress);
@@ -233,7 +233,7 @@ describe('Registration flow - Split 2/2', () => {
 							cy.getTestOktaUser(emailAddress).then((oktaUser) => {
 								expect(oktaUser.status).to.eq(Status.PASSWORD_EXPIRED);
 
-								cy.visit('/register');
+								cy.visit('/register/email');
 								const timeRequestWasMade = new Date();
 
 								cy.get('input[name=email]').type(emailAddress);
@@ -622,7 +622,7 @@ describe('Registration flow - Split 2/2', () => {
 
 						// Visit register again
 						cy.visit(
-							`/register?returnUrl=${encodeURIComponent(
+							`/register/email?returnUrl=${encodeURIComponent(
 								`https://${Cypress.env('BASE_URI')}/consents`,
 							)}`,
 						);

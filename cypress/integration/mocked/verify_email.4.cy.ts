@@ -1,9 +1,19 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { injectAndCheckAxe } from '../../support/cypress-axe';
 import { authRedirectSignInRecentlyEmailValidated } from '../../support/idapi/auth';
-import { allConsents } from '../../support/idapi/consent';
+import { CONSENTS_ENDPOINT, allConsents } from '../../support/idapi/consent';
 import { authCookieResponse, setAuthCookies } from '../../support/idapi/cookie';
-import { verifiedUserWithNoConsent } from '../../support/idapi/user';
+import {
+	NEWSLETTER_ENDPOINT,
+	NEWSLETTER_SUBSCRIPTION_ENDPOINT,
+	allNewsletters,
+	userNewsletters,
+} from '../../support/idapi/newsletter';
+import {
+	USER_CONSENTS_ENDPOINT,
+	USER_ENDPOINT,
+	verifiedUserWithNoConsent,
+} from '../../support/idapi/user';
 import {
 	validationTokenExpired,
 	validationTokenInvalid,
@@ -59,6 +69,18 @@ describe('Verify email flow', () => {
 	});
 
 	context('Verify email', () => {
+		beforeEach(() => {
+			cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
+			cy.mockAll(200, allNewsletters, NEWSLETTER_ENDPOINT);
+			cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
+			cy.mockAll(
+				200,
+				verifiedUserWithNoConsent.user.consents,
+				USER_CONSENTS_ENDPOINT,
+			);
+			cy.mockAll(200, userNewsletters(), NEWSLETTER_SUBSCRIPTION_ENDPOINT);
+		});
+
 		it('successfully verifies the email using a token and sets auth cookies', () => {
 			// mock validation success response (200 with auth cookies)
 			cy.mockNext(200, authCookieResponse);
@@ -69,12 +91,6 @@ describe('Verify email flow', () => {
 
 			// set successful auth using login middleware
 			cy.mockNext(200, authRedirectSignInRecentlyEmailValidated);
-
-			// all newsletters mock response for first page of consents flow
-			cy.mockNext(200, allConsents);
-
-			// user newsletters mock response for first page of consents flow
-			cy.mockNext(200, verifiedUserWithNoConsent.user.consents);
 
 			// go to verify email endpoint
 			verifyEmailFlow.goto('avalidtoken', { query: { useIdapi: 'true' } });
@@ -96,12 +112,6 @@ describe('Verify email flow', () => {
 
 			// set successful auth using login middleware
 			cy.mockNext(200, authRedirectSignInRecentlyEmailValidated);
-
-			// all newsletters mock response for first page of consents flow
-			cy.mockNext(200, allConsents);
-
-			// user newsletters mock response for first page of consents flow
-			cy.mockNext(200, verifiedUserWithNoConsent.user.consents);
 
 			const returnUrl = encodeURIComponent(
 				`https://www.theguardian.com/science/grrlscientist/2012/aug/07/3`,
@@ -135,12 +145,6 @@ describe('Verify email flow', () => {
 
 			// set successful auth using login middleware
 			cy.mockNext(200, authRedirectSignInRecentlyEmailValidated);
-
-			// all newsletters mock response for first page of consents flow
-			cy.mockNext(200, allConsents);
-
-			// user newsletters mock response for first page of consents flow
-			cy.mockNext(200, verifiedUserWithNoConsent.user.consents);
 
 			const returnUrl = `https://www.theguardian.com/science/grrlscientist/2012/aug/07/3`;
 

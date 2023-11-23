@@ -34,8 +34,9 @@ import { redirectIfLoggedIn } from '@/server/lib/middleware/redirectIfLoggedIn';
 import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { RegistrationLocation, UserResponse } from '@/server/models/okta/User';
-import { getRegistrationLocation } from '../lib/getRegistrationLocation';
-import { isStringBoolean } from '../lib/isStringBoolean';
+import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
+import { isStringBoolean } from '@/server/lib/isStringBoolean';
+import { Consents, RegistrationConsents } from '@/shared/model/Consent';
 
 const { okta } = getConfiguration();
 
@@ -46,6 +47,18 @@ router.get(
 		const html = renderer('/register', {
 			requestState: res.locals,
 			pageTitle: 'Register',
+		});
+		res.type('html').send(html);
+	},
+);
+
+router.get(
+	'/register/email',
+	redirectIfLoggedIn,
+	(req: Request, res: ResponseWithRequestState) => {
+		const html = renderer('/register/email', {
+			requestState: res.locals,
+			pageTitle: 'Register With Email',
 		});
 		res.type('html').send(html);
 	},
@@ -113,7 +126,19 @@ const OktaRegistration = async (
 	req: Request,
 	res: ResponseWithRequestState,
 ) => {
-	const { email = '', _cmpConsentedState = false } = req.body;
+	const { email = '', _cmpConsentedState = false, marketing } = req.body;
+
+	// marketing consent is a string with value `'on'` if checked, or `undefined` if not checked
+	// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox#value
+	// so we can check the truthiness of the value to determine if the user has consented
+	const consents: RegistrationConsents = {
+		consents: [
+			{
+				id: Consents.SIMILAR_GUARDIAN_PRODUCTS,
+				consented: !!marketing,
+			},
+		],
+	};
 
 	const {
 		queryParams: { appClientId },
@@ -129,7 +154,9 @@ const OktaRegistration = async (
 			registrationLocation,
 			appClientId,
 			request_id,
+			consents,
 		});
+
 		// fire ophan component event if applicable
 		if (res.locals.queryParams.componentEventParams) {
 			sendOphanComponentEventFromQueryParamsServer(
@@ -183,9 +210,9 @@ const OktaRegistration = async (
 		});
 
 		return res.type('html').send(
-			renderer('/register', {
+			renderer('/register/email', {
 				requestState,
-				pageTitle: 'Register',
+				pageTitle: 'Register With Email',
 			}),
 		);
 	}
@@ -418,7 +445,7 @@ const IdapiRegistration = async (
 
 		trackMetric('Register::Failure');
 
-		const html = renderer('/register', {
+		const html = renderer('/register/email', {
 			requestState: mergeRequestState(state, {
 				pageData: {
 					email,

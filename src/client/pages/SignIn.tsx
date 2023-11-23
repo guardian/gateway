@@ -79,7 +79,11 @@ const showSocialButtons = (
 					{!isJobs && <GuardianTerms />}
 					{isJobs && <JobsTerms />}
 				</div>
-				<SocialButtons queryParams={queryParams} marginTop={true} />
+				<SocialButtons
+					queryParams={queryParams}
+					marginTop={true}
+					context="Sign in"
+				/>
 				<Divider
 					spaceAbove="loose"
 					displayText="or continue with"
