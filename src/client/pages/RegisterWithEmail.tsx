@@ -46,7 +46,9 @@ export const RegisterWithEmail = ({
 				<EmailInput defaultValue={email} autoComplete="off" />
 				<CmpConsentedStateHiddenInput cmpConsentedState={hasCmpConsent} />
 
-				<RegistrationMarketingConsentFormField isNativeApp={isNativeApp} />
+				{!queryParams.useIdapi && (
+					<RegistrationMarketingConsentFormField isNativeApp={isNativeApp} />
+				)}
 			</MainForm>
 		</MainLayout>
 	);
