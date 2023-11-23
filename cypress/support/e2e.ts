@@ -26,8 +26,6 @@ import 'cypress-mailosaur';
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
-export const MOCKING_ENDPOINT = 'localhost:9000/mock';
-
 import './commands';
 
 beforeEach(function () {

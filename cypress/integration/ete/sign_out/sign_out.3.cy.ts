@@ -13,13 +13,6 @@ describe('Sign out flow', () => {
 					isUserEmailValidated: true,
 				})
 				?.then(({ emailAddress, finalPassword }) => {
-					// Disable redirect to /signin/success by default
-					cy.setCookie(
-						'GU_ran_experiments',
-						new URLSearchParams({
-							OptInPromptPostSignIn: Date.now().toString(),
-						}).toString(),
-					);
 					// load the consents page as its on the same domain
 					const postSignInReturnUrl = `https://${Cypress.env(
 						'BASE_URI',

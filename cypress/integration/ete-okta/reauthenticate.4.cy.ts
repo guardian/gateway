@@ -1,13 +1,4 @@
 describe('Reauthenticate flow, Okta enabled', () => {
-	beforeEach(() => {
-		// Disable redirect to /signin/success by default
-		cy.setCookie(
-			'GU_ran_experiments',
-			new URLSearchParams({
-				OptInPromptPostSignIn: Date.now().toString(),
-			}).toString(),
-		);
-	});
 	it('keeps User A signed in when User A attempts to reauthenticate', () => {
 		cy
 			.createTestUser({ isUserEmailValidated: true })

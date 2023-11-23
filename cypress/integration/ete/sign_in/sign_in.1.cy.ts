@@ -1,10 +1,6 @@
 import * as SignIn from '../../shared/sign_in.shared';
 
 describe('Sign in flow, Okta disabled', () => {
-	beforeEach(() => {
-		SignIn.beforeEach();
-	});
-
 	context('Terms and Conditions links', () => {
 		it(...SignIn.linksToTheGoogleTermsOfServicePage(true));
 		it(...SignIn.linksToTheGooglePrivacyPolicyPage(true));
@@ -50,6 +46,5 @@ describe('Sign in flow, Okta disabled', () => {
 			true,
 		),
 	);
-	it(...SignIn.redirectsToOptInPrompt(true));
 	it(...SignIn.hitsAccessTokenRateLimitAndRecoversTokenAfterTimeout(true));
 });

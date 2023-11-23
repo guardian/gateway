@@ -11,13 +11,6 @@ describe('Sign out flow', () => {
 	context('Signs a user out', () => {
 		beforeEach(() => {
 			cy.mockPurge();
-			// Disable redirect to /signin/success by default
-			cy.setCookie(
-				'GU_ran_experiments',
-				new URLSearchParams({
-					OptInPromptPostSignIn: Date.now().toString(),
-				}).toString(),
-			);
 		});
 
 		it('Removes IDAPI log in cookies and dotcom cookies when signing out', () => {
