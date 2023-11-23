@@ -1,5 +1,5 @@
+import { UserConsent } from '@/shared/model/UserConsents';
 import { Consent } from '@/shared/model/Consent';
-import { UserConsent } from '@/shared/model/User';
 
 /**
  * See PR https://github.com/guardian/identity/pull/2079 for more details.

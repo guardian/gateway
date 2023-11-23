@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import { CountryCode } from '@guardian/libs';
-import { RegistrationLocation } from '../models/okta/User';
+import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 
 /**
  * The registrationLocation regions are derived from the first column (region_code)

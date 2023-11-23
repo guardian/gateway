@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-duplicate-enum-values */
 import type { RateLimiterConfiguration } from '@/server/lib/rate-limit';
+import { Stage } from '@/shared/model/Configuration';
 
-export type Stage = 'DEV' | 'CODE' | 'PROD';
 export interface Configuration {
 	port: number;
 	idapiClientAccessToken: string;

@@ -1,6 +1,5 @@
 import { Request } from 'express';
 import { logger } from '@/server/lib/serverSideLogger';
-import { RegistrationLocation } from '@/server/models/okta/User';
 import { isStringBoolean } from '@/server/lib/isStringBoolean';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
 import {
@@ -9,6 +8,7 @@ import {
 } from '@/server/lib/idapi/user';
 import { Jwt } from '@okta/jwt-verifier';
 import { getUser, updateUser } from '@/server/lib/okta/api/users';
+import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 
 export const updateRegistrationLocationViaIDAPI = async (
 	ip: string,

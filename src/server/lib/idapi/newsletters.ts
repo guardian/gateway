@@ -5,9 +5,10 @@ import {
 	APIOptionSelect,
 } from '@/server/lib/IDAPIFetch';
 import { NewslettersErrors } from '@/shared/model/Errors';
-import { NewsLetter, NewsletterPatch } from '@/shared/model/Newsletter';
+import { NewsLetter } from '@/shared/model/Newsletter';
 import { logger } from '@/server/lib/serverSideLogger';
 import { IdapiError } from '@/server/models/Error';
+import { NewsletterPatch } from '@/shared/model/NewsletterPatch';
 
 interface NewsletterAPIResponse {
 	id: string;

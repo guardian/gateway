@@ -7,13 +7,13 @@ import {
 import { logger } from '@/server/lib/serverSideLogger';
 import { ConsentsErrors } from '@/shared/model/Errors';
 import { Consent } from '@/shared/model/Consent';
-import { UserConsent } from '@/shared/model/User';
 import { IdapiError } from '@/server/models/Error';
 import {
 	invertOptInConsents,
 	invertOptOutConsents,
 } from './invertOptOutConsents';
 import { IdApiQueryParams } from '@/shared/model/IdapiQueryParams';
+import { UserConsent } from '@/shared/model/UserConsents';
 
 const handleError = (): never => {
 	throw new IdapiError({ message: ConsentsErrors.GENERIC, status: 500 });

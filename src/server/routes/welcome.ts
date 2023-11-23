@@ -21,9 +21,10 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { setEncryptedStateCookieForOktaRegistration } from './register';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
-import { Consents, RegistrationConsents } from '@/shared/model/Consent';
+import { Consents } from '@/shared/model/Consent';
 import { update as updateConsents } from '@/server/lib/idapi/consents';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
+import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 
 const { okta } = getConfiguration();
 

@@ -4,13 +4,13 @@ import {
 	GU_API_DOMAIN,
 	GU_DOMAIN,
 	RedisConfiguration,
-	Stage,
 	GU_MANAGE_URL,
 	Okta,
 } from '@/server/models/Configuration';
 import { featureSwitches } from '@/shared/lib/featureSwitches';
 import validatedRateLimiterConfiguration from '@/server/lib/rateLimiterConfiguration';
 import { format } from 'util';
+import { Stage } from '@/shared/model/Configuration';
 
 const getOrThrow = (
 	value: string | undefined,

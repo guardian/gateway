@@ -1,21 +1,10 @@
 import { z } from 'zod';
+import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 
 // social registration identity provider type
 // we've removed facebook as an authentication option, but we still need to support existing users
 // who initially registered with facebook
 const RegistrationIdp = z.enum(['google', 'apple', 'facebook']);
-
-const RegistrationLocation = z.enum([
-	'Prefer not to say',
-	'United Kingdom',
-	'Europe',
-	'United States',
-	'Canada',
-	'Australia',
-	'New Zealand',
-	'Other',
-]);
-export type RegistrationLocation = z.infer<typeof RegistrationLocation>;
 
 // https://developer.okta.com/docs/reference/api/users/#profile-object
 const userProfileSchema = z.object({

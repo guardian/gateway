@@ -1,9 +1,9 @@
 import { Consent } from '@/shared/model/Consent';
-import { UserConsent } from '@/shared/model/User';
 import {
 	invertOptOutConsents,
 	invertOptInConsents,
 } from '../../idapi/invertOptOutConsents';
+import { UserConsent } from '@/shared/model/UserConsents';
 
 describe('invertConsents', () => {
 	const consentOptouts: Consent[] = [
