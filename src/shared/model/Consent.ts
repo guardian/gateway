@@ -14,11 +14,7 @@ export enum Consents {
 	// OPT OUT API CONSENTS (modeled as opt ins in Gateway)
 	PROFILING = 'profiling_optin',
 	// PRODUCT CONSENTS
-	SUPPORTER = 'supporter',
-	JOBS = 'jobs',
-	HOLIDAYS = 'holidays',
 	EVENTS = 'events',
-	OFFERS = 'offers',
 	SIMILAR_GUARDIAN_PRODUCTS = 'similar_guardian_products',
 }
 
@@ -26,8 +22,6 @@ export const CONSENTS_DATA_PAGE: string[] = [
 	Consents.PROFILING, // modelled as an opt in in Gateway
 	Consents.ADVERTISING,
 ];
-
-export const CONSENTS_POST_SIGN_IN_PAGE: string[] = [Consents.SUPPORTER];
 
 export const CONSENTS_NEWSLETTERS_PAGE: string[] = [Consents.EVENTS];
 

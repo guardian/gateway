@@ -1,16 +1,6 @@
 const returnUrl =
 	'https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance';
 
-export const beforeEach = () => {
-	// Disable redirect to /signin/success by default
-	cy.setCookie(
-		'GU_ran_experiments',
-		new URLSearchParams({
-			OptInPromptPostSignIn: Date.now().toString(),
-		}).toString(),
-	);
-};
-
 export const linksToTheGoogleTermsOfServicePage = (isIdapi = false) => {
 	return [
 		'links to the Google terms of service page',
@@ -454,36 +444,3 @@ export const showsRecaptchaErrorsWhenTheUserTriesToSignInOfflineAndAllowsSignInW
 			},
 		] as const;
 	};
-
-export const redirectsToOptInPrompt = (isIdapi = false) => {
-	return [
-		'redirects user to prompt if they are not a supporter',
-		() => {
-			// Intercept the prompt page
-			// We just want to check that the redirect happens, not that the page loads.
-			cy.intercept('GET', '/signin/success*', (req) => {
-				req.reply(200);
-			});
-			// Enable the opt in prompt "experiment"
-			cy.clearCookie('GU_ran_experiments');
-			cy
-				.createTestUser({
-					isUserEmailValidated: true,
-				})
-				?.then(({ emailAddress, finalPassword }) => {
-					const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
-					cy.visit(visitUrl);
-					cy.get('input[name=email]').type(emailAddress);
-					cy.get('input[name=password]').type(finalPassword);
-					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.url().should('include', `/signin/success`);
-					cy.url().should(
-						'include',
-						`returnUrl=${encodeURIComponent(
-							'https://m.code.dev-theguardian.com/',
-						)}`,
-					);
-				});
-		},
-	] as const;
-};
