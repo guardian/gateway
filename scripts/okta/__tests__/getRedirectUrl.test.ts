@@ -383,6 +383,186 @@ describe('getRedirectUrl', () => {
 		);
 	});
 
+	it('should return /register when page=register with valid query params and third party return url and third party client id - identity classic', () => {
+		expect(
+			getRedirectUrl(
+				new URLSearchParams('?page=register'),
+				'https://profile.theguardian.com',
+				'',
+				{
+					getRequestContext: () => ({
+						target: {
+							clientId: 'test123',
+							label: 'jobs_site',
+						},
+						authentication: {
+							request: {
+								max_age: 100,
+							},
+						},
+					}),
+					getSignInWidgetConfig: () => ({
+						relayState: '/testFromURI',
+					}),
+					completeLogin: () => {},
+				},
+			),
+		).toBe(
+			'/register?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
+		);
+	});
+
+	it('should return /register when page=register with valid query params and third party return url and third party client id - identity engine', () => {
+		expect(
+			getRedirectUrl(
+				new URLSearchParams('?page=register'),
+				'https://profile.theguardian.com',
+				'',
+				{
+					getRequestContext: () => ({
+						app: {
+							value: {
+								id: 'test123',
+								label: 'jobs_site',
+							},
+						},
+						authentication: {
+							request: {
+								max_age: 100,
+							},
+						},
+					}),
+					getSignInWidgetConfig: () => ({
+						relayState: '/testFromURI',
+					}),
+					completeLogin: () => {},
+				},
+			),
+		).toBe(
+			'/register?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
+		);
+	});
+
+	it('should return /signin/google when page=google with valid query params and third party return url and third party client id - identity classic', () => {
+		expect(
+			getRedirectUrl(
+				new URLSearchParams('?page=google'),
+				'https://profile.theguardian.com',
+				'',
+				{
+					getRequestContext: () => ({
+						target: {
+							clientId: 'test123',
+							label: 'jobs_site',
+						},
+						authentication: {
+							request: {
+								max_age: 100,
+							},
+						},
+					}),
+					getSignInWidgetConfig: () => ({
+						relayState: '/testFromURI',
+					}),
+					completeLogin: () => {},
+				},
+			),
+		).toBe(
+			'/signin/google?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
+		);
+	});
+
+	it('should return /signin/google when page=google with valid query params and third party return url and third party client id - identity engine', () => {
+		expect(
+			getRedirectUrl(
+				new URLSearchParams('?page=google'),
+				'https://profile.theguardian.com',
+				'',
+				{
+					getRequestContext: () => ({
+						app: {
+							value: {
+								id: 'test123',
+								label: 'jobs_site',
+							},
+						},
+						authentication: {
+							request: {
+								max_age: 100,
+							},
+						},
+					}),
+					getSignInWidgetConfig: () => ({
+						relayState: '/testFromURI',
+					}),
+					completeLogin: () => {},
+				},
+			),
+		).toBe(
+			'/signin/google?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
+		);
+	});
+
+	it('should return /signin/apple when page=apple with valid query params and third party return url and third party client id - identity classic', () => {
+		expect(
+			getRedirectUrl(
+				new URLSearchParams('?page=apple'),
+				'https://profile.theguardian.com',
+				'',
+				{
+					getRequestContext: () => ({
+						target: {
+							clientId: 'test123',
+							label: 'jobs_site',
+						},
+						authentication: {
+							request: {
+								max_age: 100,
+							},
+						},
+					}),
+					getSignInWidgetConfig: () => ({
+						relayState: '/testFromURI',
+					}),
+					completeLogin: () => {},
+				},
+			),
+		).toBe(
+			'/signin/apple?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
+		);
+	});
+
+	it('should return /signin/apple when page=apple with valid query params and third party return url and third party client id - identity engine', () => {
+		expect(
+			getRedirectUrl(
+				new URLSearchParams('?page=apple'),
+				'https://profile.theguardian.com',
+				'',
+				{
+					getRequestContext: () => ({
+						app: {
+							value: {
+								id: 'test123',
+								label: 'jobs_site',
+							},
+						},
+						authentication: {
+							request: {
+								max_age: 100,
+							},
+						},
+					}),
+					getSignInWidgetConfig: () => ({
+						relayState: '/testFromURI',
+					}),
+					completeLogin: () => {},
+				},
+			),
+		).toBe(
+			'/signin/apple?fromURI=%2FtestFromURI&appClientId=test123&clientId=jobs&returnUrl=https%253A%252F%252Fjobs.theguardian.com&maxAge=100',
+		);
+	});
+
 	it('should get fromURI from location and queryparams if path starts with /oauth2/ and fromURI is not in the okta config - identity classic', () => {
 		expect(
 			getRedirectUrl(

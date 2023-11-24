@@ -273,6 +273,9 @@ export const getRedirectUrl = (
 	// check for set password token
 	const setPasswordToken = searchParams.get('set_password_token');
 
+	// check for page parameter, used to show a particular page on gateway
+	const page = searchParams.get('page');
+
 	// if we have an activation token, we know we need to go to the create password/welcome page
 	if (activationToken) {
 		return `/welcome/${activationToken}?${params.toString()}`;
@@ -286,6 +289,23 @@ export const getRedirectUrl = (
 	// if we have a set password token, we know we need to go to the set password page
 	if (setPasswordToken) {
 		return `/set-password/${setPasswordToken}?${params.toString()}`;
+	}
+
+	// if we have a page parameter, we need to go to that page on gateway
+	if (page) {
+		// only allow certain pages
+		switch (page) {
+			// show a specific page on gateway
+			case 'register':
+				return `/${page}?${params.toString()}`;
+			// instantly start google or apple authentication through gateway
+			case 'google':
+			case 'apple':
+				return `/signin/${page}?${params.toString()}`;
+			default:
+				// if the page parameter is not one of the allowed pages, then break
+				break;
+		}
 	}
 
 	// if we don't have any tokens, we need to go to the sign in page
