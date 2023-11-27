@@ -37,8 +37,6 @@ type ConditionalMetrics =
 	| 'OktaWelcomeResendEmail'
 	| 'OktaUnvalidatedUserSendEmail'
 	| 'OktaUnvalidatedUserResendEmail'
-	| 'PostSignInPrompt'
-	| 'PostSignInPromptRedirect'
 	| 'Register'
 	| 'SendMagicLink'
 	| 'SendValidationEmail'

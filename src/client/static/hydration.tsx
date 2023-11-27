@@ -1,6 +1,5 @@
 import React from 'react';
 import { record } from '@/client/lib/ophan';
-import { ABProvider } from '@guardian/ab-react';
 import { hydrate } from 'react-dom';
 import { RoutingConfig } from '@/client/routes';
 import { App } from '@/client/app';
@@ -16,6 +15,7 @@ import {
 	makeFetchTransport,
 	HttpContext,
 } from '@sentry/browser';
+import { ABProvider } from '@/client/components/ABReact';
 
 type Props = {
 	routingConfig: RoutingConfig;
@@ -60,6 +60,8 @@ export const hydrateApp = ({ routingConfig }: Props) => {
 			mvtId={mvtId}
 			ophanRecord={record}
 			forcedTestVariants={forcedTestVariants}
+			serverSideTests={{}}
+			errorReporter={() => {}}
 		>
 			<App {...clientState} location={`${routingConfig.location}`} />
 		</ABProvider>,

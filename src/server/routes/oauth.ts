@@ -22,7 +22,6 @@ import {
 	SignInErrors,
 } from '@/shared/model/Errors';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import postSignInController from '@/server/lib/postSignInController';
 import { IdTokenClaims, TokenSet } from 'openid-client';
 import { updateUser } from '@/server/lib/okta/api/users';
 import { setUserFeatureCookies } from '@/server/lib/user-features';
@@ -281,13 +280,7 @@ const authenticationHandler = async (
 			? addQueryParamsToPath(authState.confirmationPage, authState.queryParams)
 			: authState.queryParams.returnUrl;
 
-		return postSignInController({
-			req,
-			res,
-			oauthTokens: tokenSet,
-			idapiCookies: cookies,
-			returnUrl,
-		});
+		return res.redirect(303, returnUrl);
 	} catch (error) {
 		// check if it's an oauth/oidc error
 		if (isOAuthError(error)) {

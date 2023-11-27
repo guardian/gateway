@@ -587,13 +587,6 @@ describe('Registration flow - Split 2/2', () => {
 
 	context('Okta session exists on /signin', () => {
 		beforeEach(() => {
-			// Disable redirect to /signin/success by default
-			cy.setCookie(
-				'GU_ran_experiments',
-				new URLSearchParams({
-					OptInPromptPostSignIn: Date.now().toString(),
-				}).toString(),
-			);
 			// Intercept the external redirect page.
 			// We just want to check that the redirect happens, not that the page loads.
 			cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {

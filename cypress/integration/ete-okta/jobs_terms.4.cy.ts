@@ -56,13 +56,20 @@ describe('Jobs terms and conditions flow in Okta', () => {
 					isUserEmailValidated: true,
 				})
 				?.then(({ emailAddress, finalPassword }) => {
-					cy.visit('/signin');
+					// load the consents page as its on the same domain
+					const postSignInReturnUrl = `https://${Cypress.env(
+						'BASE_URI',
+					)}/consents/data`;
+					const visitUrl = `/signin?returnUrl=${encodeURIComponent(
+						postSignInReturnUrl,
+					)}`;
+					cy.visit(visitUrl);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
 
 					cy.get('[data-cy="main-form-submit-button"]').click();
 
-					cy.url().should('include', '/signin/success');
+					cy.url().should('include', '/consents/data');
 
 					const termsAcceptPageUrl = `https://${Cypress.env(
 						'BASE_URI',
@@ -111,18 +118,24 @@ describe('Jobs terms and conditions flow in Okta', () => {
 					isUserEmailValidated: true,
 				})
 				?.then(({ emailAddress, finalPassword }) => {
-					// load the consents page as its on the same domain
 					const termsAcceptPageUrl = `https://${Cypress.env(
 						'BASE_URI',
 					)}/agree/GRS?returnUrl=https://profile.thegulocal.com/healthcheck`;
 
-					cy.visit('/signin');
+					// load the consents page as its on the same domain
+					const postSignInReturnUrl = `https://${Cypress.env(
+						'BASE_URI',
+					)}/consents/data`;
+					const visitUrl = `/signin?returnUrl=${encodeURIComponent(
+						postSignInReturnUrl,
+					)}`;
+					cy.visit(visitUrl);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
 
 					cy.get('[data-cy="main-form-submit-button"]').click();
 
-					cy.url().should('include', '/signin/success');
+					cy.url().should('include', '/consents/data');
 
 					cy.updateOktaTestUserProfile(emailAddress, {
 						firstName: 'Test',
@@ -157,18 +170,24 @@ describe('Jobs terms and conditions flow in Okta', () => {
 					isUserEmailValidated: true,
 				})
 				?.then(({ emailAddress, finalPassword }) => {
-					// load the consents page as its on the same domain
 					const termsAcceptPageUrl = `https://${Cypress.env(
 						'BASE_URI',
 					)}/agree/GRS?returnUrl=https://jobs.theguardian.com/`;
 
-					cy.visit('/signin');
+					// load the consents page as its on the same domain
+					const postSignInReturnUrl = `https://${Cypress.env(
+						'BASE_URI',
+					)}/consents/data`;
+					const visitUrl = `/signin?returnUrl=${encodeURIComponent(
+						postSignInReturnUrl,
+					)}`;
+					cy.visit(visitUrl);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
 
 					cy.get('[data-cy="main-form-submit-button"]').click();
 
-					cy.url().should('include', '/signin/success');
+					cy.url().should('include', '/consents/data');
 
 					cy.visit(termsAcceptPageUrl);
 

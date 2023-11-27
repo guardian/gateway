@@ -22,14 +22,6 @@ import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { OktaError } from '@/server/models/okta/Error';
-import { CONSENTS_POST_SIGN_IN_PAGE } from '@/shared/model/Consent';
-import {
-	getUserConsentsForPage,
-	getConsentValueFromRequestBody,
-	update as patchConsents,
-} from '@/server/lib/idapi/consents';
-import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
-import postSignInController from '@/server/lib/postSignInController';
 import {
 	performAuthorizationCodeFlow,
 	scopesForAuthentication,
@@ -285,8 +277,8 @@ const idapiSignInController = async (
 	res: ResponseWithRequestState,
 ) => {
 	const { email = '', password = '' } = req.body;
-	const { pageData } = res.locals;
-	const { returnUrl } = pageData;
+	const { queryParams } = res.locals;
+	const { returnUrl } = queryParams;
 
 	try {
 		const cookies = await authenticateWithIdapi(
@@ -306,12 +298,7 @@ const idapiSignInController = async (
 
 		trackMetric('SignIn::Success');
 
-		return postSignInController({
-			req,
-			res,
-			idapiCookies: cookies,
-			returnUrl,
-		});
+		return res.redirect(303, returnUrl);
 	} catch (error) {
 		logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
 			request_id: res.locals.requestId,
@@ -505,99 +492,6 @@ const oktaSignInController = async ({
 		return res.status(status).type('html').send(html);
 	}
 };
-
-const optInPromptController = async (
-	req: Request,
-	res: ResponseWithRequestState,
-	errorMessage?: string,
-) => {
-	const state = res.locals;
-	const { returnUrl } = state.pageData;
-	const { defaultReturnUri } = getConfiguration();
-	const redirectUrl = returnUrl || defaultReturnUri;
-
-	try {
-		const consents = await getUserConsentsForPage({
-			pageConsents: CONSENTS_POST_SIGN_IN_PAGE,
-			ip: req.ip,
-			sc_gu_u: req.cookies.SC_GU_U,
-			request_id: res.locals.requestId,
-			accessToken: state.oauthState.accessToken?.toString(),
-		});
-		const html = renderer('/signin/success', {
-			requestState: mergeRequestState(state, {
-				pageData: {
-					consents,
-				},
-				...(errorMessage && {
-					globalMessage: {
-						error: errorMessage,
-					},
-				}),
-			}),
-			pageTitle: 'Signed in',
-		});
-		res.type('html').send(html);
-	} catch (error) {
-		logger.error(`${req.method} ${req.originalUrl} Error`, error, {
-			request_id: res.locals.requestId,
-		});
-		return res.redirect(303, redirectUrl);
-	}
-};
-
-router.get(
-	'/signin/success',
-	loginMiddlewareOAuth,
-	handleAsyncErrors((req: Request, res: ResponseWithRequestState) =>
-		optInPromptController(req, res),
-	),
-);
-
-router.post(
-	'/signin/success',
-	loginMiddlewareOAuth,
-	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		const state = res.locals;
-		const { returnUrl } = state.pageData;
-		const { defaultReturnUri } = getConfiguration();
-		const redirectUrl = returnUrl || defaultReturnUri;
-		const sc_gu_u = req.cookies.SC_GU_U;
-
-		const consents = CONSENTS_POST_SIGN_IN_PAGE.map((id) => ({
-			id,
-			consented: getConsentValueFromRequestBody(id, req.body),
-		}));
-		const consented = consents.some((consent) => consent.consented);
-
-		try {
-			await patchConsents({
-				ip: req.ip,
-				sc_gu_u,
-				payload: consents,
-				request_id: state.requestId,
-				accessToken: state.oauthState.accessToken?.toString(),
-			});
-		} catch (error) {
-			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-				request_id: res.locals.requestId,
-			});
-			trackMetric('PostSignInPrompt::Failure');
-
-			/**
-			 * If user has consented, show them their preference failed to save
-			 * Otherwise, send them on their way as they are already opted out
-			 * (only opted out users are shown the prompt)
-			 */
-			if (consented) {
-				const { message } = error instanceof ApiError ? error : new ApiError();
-				return optInPromptController(req, res, message);
-			}
-		}
-
-		return res.redirect(303, redirectUrl);
-	}),
-);
 
 /**
  * If an Okta session exists, this route will re-authenticate the Okta session

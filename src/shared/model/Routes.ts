@@ -53,7 +53,6 @@ export const ValidRoutePathsArray = [
 	'/set-password/resend',
 	'/signed-in-as',
 	'/signin',
-	'/signin/success',
 	'/signin/refresh',
 	'/signin/:social',
 	'/signin/email-sent',

@@ -30,13 +30,20 @@ describe('Jobs terms and conditions flow', () => {
 					isUserEmailValidated: true,
 				})
 				?.then(({ emailAddress, finalPassword }) => {
-					cy.visit('/signin?useIdapi=true');
+					// load the consents page as its on the same domain
+					const postSignInReturnUrl = `https://${Cypress.env(
+						'BASE_URI',
+					)}/consents/data?useIdapi=true`;
+					const visitUrl = `/signin?returnUrl=${encodeURIComponent(
+						postSignInReturnUrl,
+					)}&useIdapi=true`;
+					cy.visit(visitUrl);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
 
 					cy.get('[data-cy="main-form-submit-button"]').click();
 
-					cy.url().should('include', '/signin/success');
+					cy.url().should('include', '/consents/data');
 
 					const termsAcceptPageUrl = `https://${Cypress.env(
 						'BASE_URI',
@@ -89,13 +96,20 @@ describe('Jobs terms and conditions flow', () => {
 						'BASE_URI',
 					)}/agree/GRS?returnUrl=https://profile.thegulocal.com/healthcheck&useIdapi=true`;
 
-					cy.visit('/signin?useIdapi=true');
+					// load the consents page as its on the same domain
+					const postSignInReturnUrl = `https://${Cypress.env(
+						'BASE_URI',
+					)}/consents/data?useIdapi=true`;
+					const visitUrl = `/signin?returnUrl=${encodeURIComponent(
+						postSignInReturnUrl,
+					)}&useIdapi=true`;
+					cy.visit(visitUrl);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
 
 					cy.get('[data-cy="main-form-submit-button"]').click();
 
-					cy.url().should('include', '/signin/success');
+					cy.url().should('include', '/consents/data');
 
 					cy.visit(termsAcceptPageUrl);
 
@@ -175,13 +189,20 @@ describe('Jobs terms and conditions flow', () => {
 						'BASE_URI',
 					)}/agree/GRS?returnUrl=https://jobs.thegulocal.com/&useIdapi=true`;
 
-					cy.visit('/signin?useIdapi=true');
+					// load the consents page as its on the same domain
+					const postSignInReturnUrl = `https://${Cypress.env(
+						'BASE_URI',
+					)}/consents/data?useIdapi=true`;
+					const visitUrl = `/signin?returnUrl=${encodeURIComponent(
+						postSignInReturnUrl,
+					)}&useIdapi=true`;
+					cy.visit(visitUrl);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
 
 					cy.get('[data-cy="main-form-submit-button"]').click();
 
-					cy.url().should('include', '/signin/success');
+					cy.url().should('include', '/consents/data');
 
 					cy.visit(termsAcceptPageUrl);
 

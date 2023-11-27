@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
 import React from 'react';
 
-import { useAB } from '@guardian/ab-react';
 import { tests } from '@/shared/model/experiments/abTests';
 import { exampleTest } from '@/shared/model/experiments/tests/example-test';
 import useClientState from '@/client/lib/hooks/useClientState';
+import { useAB } from '@/client/components/ABReact';
 
 export const ABTestDemo = () => {
 	// load the AB Hook

@@ -1,10 +1,6 @@
 import * as SignIn from '../shared/sign_in.shared';
 
 describe('Sign in flow, Okta enabled', () => {
-	beforeEach(() => {
-		SignIn.beforeEach();
-	});
-
 	context('Terms and Conditions links', () => {
 		it(...SignIn.linksToTheGoogleTermsOfServicePage());
 		it(...SignIn.linksToTheGooglePrivacyPolicyPage());
@@ -30,7 +26,6 @@ describe('Sign in flow, Okta enabled', () => {
 	it(
 		...SignIn.showsRecaptchaErrorsWhenTheUserTriesToSignInOfflineAndAllowsSignInWhenBackOnline(),
 	);
-	it(...SignIn.redirectsToOptInPrompt());
 	it(...SignIn.hitsAccessTokenRateLimitAndRecoversTokenAfterTimeout());
 
 	it(...SignIn.redirectsCorrectlyForSocialSignIn());
