@@ -32,5 +32,8 @@ export const abTestApiForMvtId = (
 		mvtMaxValue,
 		mvtId,
 		forcedTestVariants,
+		serverSideTests: {},
+		errorReporter: () => {},
+		ophanRecord: () => {},
 	});
 };

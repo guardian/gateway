@@ -6,7 +6,6 @@ import { RoutingConfig } from '@/client/routes';
 import { getAssets } from '@/server/lib/getAssets';
 import { RequestState } from '@/server/models/Express';
 import { CaptchaErrors, CsrfErrors } from '@/shared/model/Errors';
-import { ABProvider } from '@guardian/ab-react';
 import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
 import { buildUrl, PathParams } from '@/shared/lib/routeUtils';
@@ -16,6 +15,7 @@ import { RoutePaths } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
 import serialize from 'serialize-javascript';
 import Bowser from 'bowser';
+import { ABProvider } from '@/client/components/ABReact';
 
 const assets = getAssets();
 const legacyAssets = getAssets(true);
@@ -123,6 +123,9 @@ export const renderer: <P extends RoutePaths>(
 			mvtMaxValue={1000000}
 			mvtId={mvtId}
 			forcedTestVariants={forcedTestVariants}
+			serverSideTests={{}}
+			errorReporter={() => {}}
+			ophanRecord={() => {}}
 		>
 			<App {...clientState} location={location}></App>
 		</ABProvider>,
