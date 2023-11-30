@@ -161,6 +161,31 @@ export const getMaxAge = (
 };
 
 /**
+ * @name removePrefixFromToken
+ * @description Remove the prefix from the token.
+ *
+ * If the token is prefixed with an appPrefix, remove it, otherwise redirect loops may occur.
+ *
+ * @param token
+ * @returns string | undefined
+ */
+export const removePrefixFromToken = (
+	token?: string | null,
+): string | undefined => {
+	if (!token) {
+		return undefined;
+	}
+
+	const prefix = ['al_', 'il_'].find((prefix) => token.startsWith(prefix));
+
+	if (!prefix) {
+		return token;
+	}
+
+	return token.replace(prefix, '');
+};
+
+/**
  * @name getRedirectUrl
  * @description Get the url to redirect users to when the land on the Okta hosted sign in page.
  *
@@ -203,6 +228,24 @@ export const getRedirectUrl = (
 	// from the OktaUtil object, with the existing search parameters as a fallback option.
 	let maxAge: number | undefined;
 
+	// check the Okta hosted login page query params for an activation token for welcome page
+	const activationToken = removePrefixFromToken(
+		searchParams.get('activation_token'),
+	);
+
+	// check for reset password token
+	const resetPasswordToken = removePrefixFromToken(
+		searchParams.get('reset_password_token'),
+	);
+
+	// check for set password token
+	const setPasswordToken = removePrefixFromToken(
+		searchParams.get('set_password_token'),
+	);
+
+	// check for page parameter, used to show a particular page on gateway
+	const page = searchParams.get('page');
+
 	// attempt to get the parameters we need from the Okta hosted login page OktaUtil object
 	if (oktaUtil) {
 		// try getting fromURI from OktaUtil signInWidgetConfig (property is called called relayState)
@@ -242,6 +285,11 @@ export const getRedirectUrl = (
 	if (!fromURI && locationPathname.startsWith('/oauth2/')) {
 		// delete the prompt parameter so that the user doesn't get stuck in a login loop
 		searchParams.delete('prompt');
+		// delete any custom parameters oauth doesn't use
+		searchParams.delete('activation_token');
+		searchParams.delete('reset_password_token');
+		searchParams.delete('set_password_token');
+		searchParams.delete('page');
 		// set the fromURI parameter
 		params.set('fromURI', locationPathname + '?' + searchParams.toString());
 	}
@@ -263,18 +311,6 @@ export const getRedirectUrl = (
 	if (maxAge !== undefined && maxAge >= 0) {
 		params.set('maxAge', maxAge.toString());
 	}
-
-	// check the Okta hosted login page query params for an activation token for welcome page
-	const activationToken = searchParams.get('activation_token');
-
-	// check for reset password token
-	const resetPasswordToken = searchParams.get('reset_password_token');
-
-	// check for set password token
-	const setPasswordToken = searchParams.get('set_password_token');
-
-	// check for page parameter, used to show a particular page on gateway
-	const page = searchParams.get('page');
 
 	// if we have an activation token, we know we need to go to the create password/welcome page
 	if (activationToken) {
