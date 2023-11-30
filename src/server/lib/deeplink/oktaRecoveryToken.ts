@@ -1,5 +1,11 @@
 import { getApp } from '@/server/lib/okta/api/apps';
-import { logger } from '../serverSideLogger';
+import { logger } from '@/server/lib/serverSideLogger';
+import { decrypt, encrypt } from '@/server/lib/crypto';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import {
+	base64ToUrlSafeString,
+	urlSafeStringToBase64,
+} from '@/server/lib/base64';
 
 /**
  * list of app prefixes that is used by native apps to determine
@@ -92,5 +98,85 @@ export const addAppPrefixToOktaRecoveryToken = async (
 			},
 		);
 		return token;
+	}
+};
+
+/**
+ * @name encryptOktaRecoveryToken
+ * @description Encrypts an okta recovery token, and optionally encrypted registration consents to be used as part of a link we send to the user. It can also call addAppPrefixToOktaRecoveryToken to add a prefix representing an native application to the recovery token. See addAppPrefixToOktaRecoveryToken for more details.
+ * @param token string representing the recovery token
+ * @param encryptedRegistrationConsents string representing the encrypted registration consents
+ * @param appClientId string representing the app client id
+ * @param request_id string representing the request id
+ * @returns string representing the encrypted recovery token
+ */
+export const encryptOktaRecoveryToken = async ({
+	token,
+	encryptedRegistrationConsents,
+	appClientId,
+	request_id,
+}: {
+	token: string;
+	encryptedRegistrationConsents?: string;
+	appClientId?: string;
+	request_id?: string;
+}): Promise<string> => {
+	try {
+		const encrypted = encrypt(
+			`${token}${
+				encryptedRegistrationConsents ? `|${encryptedRegistrationConsents}` : ''
+			}`,
+			getConfiguration().encryptionSecretKey,
+		);
+
+		return addAppPrefixToOktaRecoveryToken(
+			base64ToUrlSafeString(encrypted),
+			appClientId,
+			request_id,
+		);
+	} catch (error) {
+		logger.error('Error encrypting token in encryptOktaRecoveryToken', error, {
+			request_id,
+		});
+		// if the token cannot be encrypted use token as is
+		return Promise.resolve(
+			addAppPrefixToOktaRecoveryToken(token, appClientId, request_id),
+		);
+	}
+};
+
+/**
+ * @name decryptOktaRecoveryToken
+ * @description Decrypts an okta recovery token, and optionally also get the encrypted registration consents that are part of a link we send to the user. It can also call extractOktaRecoveryToken to remove a prefix representing an native application from the recovery token. See extractOktaRecoveryToken for more details.
+ * @param encryptedToken string representing the encrypted recovery token
+ * @param request_id string representing the request id
+ * @returns [string] representing the decrypted recovery token
+ */
+export const decryptOktaRecoveryToken = async ({
+	encryptedToken,
+	request_id,
+}: {
+	encryptedToken: string;
+	request_id?: string;
+}): Promise<
+	[recoveryToken: string, encryptedRegistrationConsents?: string]
+> => {
+	try {
+		const token = extractOktaRecoveryToken(encryptedToken);
+
+		const decrypted = decrypt(
+			urlSafeStringToBase64(token),
+			getConfiguration().encryptionSecretKey,
+		);
+
+		const [recoveryToken, encryptedRegistrationConsents] = decrypted.split('|');
+
+		return [recoveryToken, encryptedRegistrationConsents];
+	} catch (error) {
+		logger.error('Error decrypting token in decryptOktaRecoveryToken', error, {
+			request_id,
+		});
+		// if the token cannot be decrypted, it is likely that it is not encrypted
+		return [extractOktaRecoveryToken(encryptedToken)];
 	}
 };

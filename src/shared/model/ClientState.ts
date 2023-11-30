@@ -68,9 +68,6 @@ export interface PageData {
 
 	// delete specific
 	contentAccess?: UserAttributesResponse['contentAccess'];
-
-	// consent specific
-	encryptedRegistrationConsent?: string;
 }
 
 export interface RecaptchaConfig {

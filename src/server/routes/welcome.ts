@@ -195,13 +195,13 @@ router.get(
 
 // welcome page, check token and display set password page
 router.get(
-	'/welcome/:token/:consents?',
+	'/welcome/:token',
 	checkPasswordTokenController('/welcome', 'Welcome'),
 );
 
 // POST form handler to set password on welcome page
 router.post(
-	'/welcome/:token/:consents?',
+	'/welcome/:token',
 	setPasswordController('/welcome', 'Welcome', consentPages[0].path),
 );
 

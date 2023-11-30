@@ -33,7 +33,7 @@ import { sendResetPasswordEmail } from '@/email/templates/ResetPassword/sendRese
 import { PasswordRoutePath } from '@/shared/model/Routes';
 import { mergeRequestState } from '@/server/lib/requestState';
 import dangerouslySetPlaceholderPassword from '@/server/lib/okta/dangerouslySetPlaceholderPassword';
-import { addAppPrefixToOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
+import { encryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 
 const { okta } = getConfiguration();
 
@@ -145,11 +145,11 @@ export const sendEmailInOkta = async (
 					}
 					const emailIsSent = await sendResetPasswordEmail({
 						to: user.profile.email,
-						resetPasswordToken: await addAppPrefixToOktaRecoveryToken(
+						resetPasswordToken: await encryptOktaRecoveryToken({
 							token,
 							appClientId,
 							request_id,
-						),
+						}),
 					});
 					if (!emailIsSent) {
 						throw new OktaError({
@@ -200,11 +200,11 @@ export const sendEmailInOkta = async (
 					}
 					const emailIsSent = await sendCreatePasswordEmail({
 						to: user.profile.email,
-						setPasswordToken: await addAppPrefixToOktaRecoveryToken(
-							tokenResponse.token,
+						setPasswordToken: await encryptOktaRecoveryToken({
+							token: tokenResponse.token,
 							appClientId,
 							request_id,
-						),
+						}),
 					});
 					if (!emailIsSent) {
 						throw new OktaError({
@@ -226,11 +226,11 @@ export const sendEmailInOkta = async (
 					}
 					const emailIsSent = await sendCreatePasswordEmail({
 						to: user.profile.email,
-						setPasswordToken: await addAppPrefixToOktaRecoveryToken(
-							tokenResponse.token,
+						setPasswordToken: await encryptOktaRecoveryToken({
+							token: tokenResponse.token,
 							appClientId,
 							request_id,
-						),
+						}),
 					});
 					if (!emailIsSent) {
 						throw new OktaError({
@@ -253,11 +253,11 @@ export const sendEmailInOkta = async (
 					}
 					const emailIsSent = await sendResetPasswordEmail({
 						to: user.profile.email,
-						resetPasswordToken: await addAppPrefixToOktaRecoveryToken(
+						resetPasswordToken: await encryptOktaRecoveryToken({
 							token,
 							appClientId,
 							request_id,
-						),
+						}),
 					});
 					if (!emailIsSent) {
 						throw new OktaError({

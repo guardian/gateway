@@ -24,6 +24,7 @@ import { FieldError } from '@/shared/model/ClientState';
 import { PersistableQueryParams } from '@/shared/model/QueryParams';
 import { validateReturnUrl } from '@/server/lib/validateUrl';
 import { mergeRequestState } from '@/server/lib/requestState';
+import { decryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 
 const { okta, defaultReturnUri } = getConfiguration();
 
@@ -148,13 +149,20 @@ export const checkTokenInOkta = async (
 	error?: ChangePasswordErrors,
 	fieldErrors?: Array<FieldError>,
 ) => {
-	const { token, consents } = req.params;
+	const { token } = req.params;
 
 	try {
+		// decrypt the recovery token
+		const decryptedRecoveryToken = await decryptOktaRecoveryToken({
+			encryptedToken: token,
+			request_id: res.locals.requestId,
+		});
+		const [recoveryToken] = decryptedRecoveryToken;
+
 		// Verify that the recovery token is still valid. If invalid, this will
 		// return an error and we will show the link expired page.
 		const { _embedded } = await validateTokenInOkta({
-			recoveryToken: token,
+			recoveryToken,
 		});
 		const email = _embedded?.user.profile.login;
 
@@ -203,7 +211,6 @@ export const checkTokenInOkta = async (
 						fieldErrors,
 						formError: error,
 						token,
-						encryptedRegistrationConsent: consents,
 					},
 				}),
 			},
