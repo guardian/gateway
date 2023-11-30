@@ -579,7 +579,7 @@ describe('Onboarding flow', () => {
 			NewslettersPage.checkboxWithTitle(NEWSLETTERS.FIVE_GREAT_READS_AU).should(
 				'not.be.checked',
 			);
-			NewslettersPage.checkboxWithTitle(NEWSLETTERS.SAVED_FOR_LATER_AU).should(
+			NewslettersPage.checkboxWithTitle(NEWSLETTERS.THE_CRUNCH_AU).should(
 				'not.be.checked',
 			);
 			cy.contains(NewslettersPage.CONTENT.Consents.EVENTS).should('not.exist');

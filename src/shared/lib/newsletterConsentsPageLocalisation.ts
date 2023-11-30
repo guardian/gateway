@@ -60,7 +60,7 @@ export const NewsletterMap = new Map<
 			Newsletters.MORNING_MAIL_AU,
 			Newsletters.AFTERNOON_UPDATE_AU,
 			Newsletters.FIVE_GREAT_READS_AU,
-			Newsletters.SAVED_FOR_LATER_AU,
+			Newsletters.THE_CRUNCH_AU,
 		],
 	],
 	[
