@@ -38,6 +38,7 @@ import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan
 import { clearOktaCookies } from '@/server/routes/signOut';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
+import { decryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 
 const { okta } = getConfiguration();
 
@@ -191,17 +192,24 @@ const changePasswordInOkta = async (
 	res: ResponseWithRequestState,
 	successRedirectPath: RoutePaths,
 ) => {
-	const { token: recoveryToken, consents: encryptedRegistrationConsents } =
-		req.params;
+	const { token: encryptedRecoveryToken } = req.params;
 	const { password, firstName, secondName } = req.body;
 	const { clientId } = req.query;
 
 	try {
-		if (!recoveryToken) {
+		if (!encryptedRecoveryToken) {
 			throw new OktaError({ message: 'Okta recovery token missing' });
 		}
 
 		validatePasswordFieldForOkta(password);
+
+		// decrypt the recovery token
+		const decryptedRecoveryToken = await decryptOktaRecoveryToken({
+			encryptedToken: encryptedRecoveryToken,
+			request_id: res.locals.requestId,
+		});
+		const [recoveryToken, encryptedRegistrationConsents] =
+			decryptedRecoveryToken;
 
 		// We exhange the Okta recovery token for a freshly minted short-lived state
 		// token, to complete this change password operation. If the recovery token

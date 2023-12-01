@@ -23,7 +23,7 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { logger } from '../serverSideLogger';
 import dangerouslySetPlaceholderPassword from './dangerouslySetPlaceholderPassword';
 import { sendCompleteRegistration } from '@/email/templates/CompleteRegistration/sendCompleteRegistration';
-import { addAppPrefixToOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
+import { encryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 import { RegistrationConsents } from '@/shared/model/Consent';
 import { encryptRegistrationConsents } from '@/server/lib/registrationConsents';
 
@@ -75,11 +75,11 @@ const sendRegistrationEmailByUserState = async ({
 			}
 			const emailIsSent = await sendAccountWithoutPasswordExistsEmail({
 				to: user.profile.email,
-				activationToken: await addAppPrefixToOktaRecoveryToken(
-					tokenResponse.token,
+				activationToken: await encryptOktaRecoveryToken({
+					token: tokenResponse.token,
 					appClientId,
 					request_id,
-				),
+				}),
 			});
 			if (!emailIsSent) {
 				throw new OktaError({
@@ -104,11 +104,11 @@ const sendRegistrationEmailByUserState = async ({
 			}
 			const emailIsSent = await sendAccountWithoutPasswordExistsEmail({
 				to: user.profile.email,
-				activationToken: await addAppPrefixToOktaRecoveryToken(
-					tokenResponse.token,
+				activationToken: await encryptOktaRecoveryToken({
+					token: tokenResponse.token,
 					appClientId,
 					request_id,
-				),
+				}),
 			});
 			if (!emailIsSent) {
 				throw new OktaError({
@@ -172,11 +172,11 @@ const sendRegistrationEmailByUserState = async ({
 					const activationToken = await forgotPassword(id);
 					await sendAccountExistsEmail({
 						to: user.profile.email,
-						activationToken: await addAppPrefixToOktaRecoveryToken(
-							activationToken,
+						activationToken: await encryptOktaRecoveryToken({
+							token: activationToken,
 							appClientId,
 							request_id,
-						),
+						}),
 					});
 				} catch (error) {
 					// If the forgot password operation failed for whatever reason, we catch and
@@ -213,11 +213,11 @@ const sendRegistrationEmailByUserState = async ({
 			}
 			const emailIsSent = await sendResetPasswordEmail({
 				to: user.profile.email,
-				resetPasswordToken: await addAppPrefixToOktaRecoveryToken(
+				resetPasswordToken: await encryptOktaRecoveryToken({
 					token,
 					appClientId,
 					request_id,
-				),
+				}),
 			});
 			if (!emailIsSent) {
 				throw new OktaError({
@@ -294,12 +294,12 @@ export const register = async ({
 		// ...and send the activation email.
 		const emailIsSent = await sendCompleteRegistration({
 			to: emailAddress,
-			activationToken: await addAppPrefixToOktaRecoveryToken(
-				tokenResponse.token,
+			activationToken: await encryptOktaRecoveryToken({
+				token: tokenResponse.token,
+				encryptedRegistrationConsents: encryptedConsents,
 				appClientId,
 				request_id,
-			),
-			consents: encryptedConsents,
+			}),
 		});
 		if (!emailIsSent) {
 			throw new OktaError({
