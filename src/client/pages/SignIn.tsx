@@ -12,7 +12,7 @@ import { css } from '@emotion/react';
 import { from, space, textSans } from '@guardian/source-foundations';
 import { Link } from '@guardian/source-react-components';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
-import { SocialButtons } from '@/client/components/SocialButtons';
+import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
 import { socialButtonDivider } from '@/client/styles/Shared';
 import {
 	GuardianTerms,
@@ -67,7 +67,7 @@ const getErrorContext = (error: string | undefined) => {
 	}
 };
 
-const showSocialButtons = (
+const showAuthProviderButtons = (
 	socialSigninBlocked: boolean,
 	queryParams: QueryParams,
 	isJobs: boolean,
@@ -79,10 +79,11 @@ const showSocialButtons = (
 					{!isJobs && <GuardianTerms />}
 					{isJobs && <JobsTerms />}
 				</div>
-				<SocialButtons
+				<AuthProviderButtons
 					queryParams={queryParams}
 					marginTop={true}
 					context="Sign in"
+					providers={['social']}
 				/>
 				<Divider
 					spaceAbove="loose"
@@ -125,8 +126,8 @@ export const SignIn = ({
 			tabs={tabs}
 			errorSmallMarginBottom={!!pageError}
 		>
-			{/* SocialButtons component with show boolean */}
-			{showSocialButtons(socialSigninBlocked, queryParams, isJobs)}
+			{/* AuthProviderButtons component with show boolean */}
+			{showAuthProviderButtons(socialSigninBlocked, queryParams, isJobs)}
 			<MainForm
 				formErrorMessageFromParent={formError}
 				formErrorContextFromParent={getErrorContext(formError)}
@@ -140,7 +141,7 @@ export const SignIn = ({
 				formTrackingName={formTrackingName}
 				disableOnSubmit
 				// If social signin is blocked, terms and conditions appear inside MainForm
-				// instead of being handled by showSocialButtons(), above.
+				// instead of being handled by showAuthProviderButtons(), above.
 				hasGuardianTerms={!isJobs && socialSigninBlocked}
 				hasJobsTerms={isJobs && socialSigninBlocked}
 			>

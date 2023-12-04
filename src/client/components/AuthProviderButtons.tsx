@@ -5,25 +5,28 @@ import {
 	LinkButton,
 	SvgGoogleBrand,
 	SvgAppleBrand,
+	SvgEnvelope,
 } from '@guardian/source-react-components';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { IsNativeApp } from '@/shared/model/ClientState';
 
-type SocialButtonContext = 'Sign in' | 'Sign up';
+type AuthProviderButtonContext = 'Sign in' | 'Sign up';
+type AuthButtonProvider = 'social' | 'email';
 
-type SocialButtonsProps = {
-	context: SocialButtonContext;
+type AuthProviderButtonsProps = {
+	context: AuthProviderButtonContext;
 	queryParams: QueryParams;
 	marginTop?: boolean;
 	isNativeApp?: IsNativeApp;
+	providers: AuthButtonProvider[];
 };
 
-type SocialButtonProps = {
+type AuthProviderButtonProps = {
 	label: string;
 	icon: React.ReactElement;
 	socialProvider: string;
-	context: SocialButtonContext;
+	context: AuthProviderButtonContext;
 	queryParams: QueryParams;
 	isNativeApp?: IsNativeApp;
 };
@@ -49,6 +52,11 @@ const buttonOverrides = css`
 	}
 `;
 
+const emailButton = css`
+	width: 100%;
+	justify-content: center;
+`;
+
 // TODO: If the issue below is fixed and a new version of Source published with that fix in it, then
 // you should remove this iconOverrides css
 // https://github.com/guardian/source/issues/835
@@ -65,7 +73,7 @@ const SocialButton = ({
 	context,
 	queryParams,
 	isNativeApp,
-}: SocialButtonProps) => {
+}: AuthProviderButtonProps) => {
 	return (
 		<>
 			<LinkButton
@@ -82,18 +90,20 @@ const SocialButton = ({
 				data-cy={`${socialProvider}-sign-in-button`}
 				data-link-name={`${socialProvider}-social-button`}
 			>
-				{socialButtonLabel(label, context, isNativeApp)}
+				{authProviderButtonLabel(label, context, isNativeApp)}
 			</LinkButton>
 		</>
 	);
 };
 
-const socialButtonLabel = (
+const authProviderButtonLabel = (
 	label: string,
 	context: string,
 	isNativeApp?: IsNativeApp,
 ) => {
-	const capitalisedLabel = label.charAt(0).toUpperCase() + label.slice(1);
+	// We don't capitalize 'email', but we do capitalize 'google' and 'apple'
+	const capitalisedLabel =
+		label === 'email' ? label : label.charAt(0).toUpperCase() + label.slice(1);
 	if (isNativeApp) {
 		return `Continue with ${capitalisedLabel}`;
 	} else {
@@ -126,26 +136,38 @@ const getButtonOrder = (isNativeApp?: IsNativeApp): string[] => {
 	}
 };
 
-export const SocialButtons = ({
+export const AuthProviderButtons = ({
 	context,
 	queryParams,
 	marginTop,
 	isNativeApp,
-}: SocialButtonsProps) => {
+	providers,
+}: AuthProviderButtonsProps) => {
 	const buttonOrder = getButtonOrder(isNativeApp);
 	return (
 		<div css={containerStyles(marginTop)}>
-			{buttonOrder.map((socialProvider) => (
-				<SocialButton
-					key={socialProvider}
-					label={socialProvider}
-					icon={socialButtonIcon(socialProvider)}
-					socialProvider={socialProvider}
-					context={context}
-					queryParams={queryParams}
-					isNativeApp={isNativeApp}
-				/>
-			))}
+			{providers.includes('social') &&
+				buttonOrder.map((socialProvider) => (
+					<SocialButton
+						key={socialProvider}
+						label={socialProvider}
+						icon={socialButtonIcon(socialProvider)}
+						socialProvider={socialProvider}
+						context={context}
+						queryParams={queryParams}
+						isNativeApp={isNativeApp}
+					/>
+				))}
+			{providers.includes('email') && (
+				<LinkButton
+					icon={<SvgEnvelope />}
+					cssOverrides={emailButton}
+					priority="tertiary"
+					href={buildUrlWithQueryParams('/register/email', {}, queryParams)}
+				>
+					{authProviderButtonLabel('email', context, isNativeApp)}
+				</LinkButton>
+			)}
 		</div>
 	);
 };
