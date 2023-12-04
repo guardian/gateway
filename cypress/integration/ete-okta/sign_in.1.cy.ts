@@ -189,18 +189,12 @@ describe('Sign in flow, Okta enabled', () => {
 					cy.get('[data-cy="main-form-submit-button"]').click();
 					cy.url().should('include', '/consents');
 
-					// Delete the Okta sid/idx cookie
+					// Delete the Okta idx cookie
 					// strange behaviour form Cypress 12
 					// where we need to delete cookie from both domains
 					// to get the test to pass
 					// cypress 12 seems to have issues with hostOnly cookies not being removed or persisting after clear
 					// https://github.com/cypress-io/cypress/issues/25174
-					cy.clearCookie('sid', {
-						domain: Cypress.env('BASE_URI'),
-					});
-					cy.clearCookie('sid', {
-						domain: `.${Cypress.env('BASE_URI')}`,
-					});
 					cy.clearCookie('idx', {
 						domain: Cypress.env('BASE_URI'),
 					});
@@ -216,7 +210,6 @@ describe('Sign in flow, Okta enabled', () => {
 					);
 					cy.url().should('include', '/reset-password');
 
-					cy.getCookie('sid').should('not.exist');
 					cy.getCookie('idx').should('not.exist');
 				},
 			);
@@ -247,7 +240,7 @@ describe('Sign in flow, Okta enabled', () => {
 					);
 					cy.url().should('include', '/signin');
 
-					cy.getCookie('sid').should('not.exist');
+					cy.getCookie('idx').should('not.exist');
 					cy.getCookie('sc_gu_u').should('not.exist');
 					cy.getCookie('sc_gu_la').should('not.exist');
 				},

@@ -57,7 +57,7 @@ export const rateLimiterMiddleware = async (
 
 	// If Okta is enabled, rate limit based on the Okta identifier.
 	const { useIdapi } = res.locals.queryParams;
-	const oktaSessionCookieId: string | undefined = req.cookies.sid;
+	const oktaSessionCookieId: string | undefined = req.cookies.idx;
 	const isOktaInUse = okta.enabled && !useIdapi && oktaSessionCookieId;
 
 	const rateLimitData = {

@@ -17,7 +17,7 @@ There are two layers of session in Okta in the following hierarchy.
 
 We generally call this the Global Session or Okta session internally, but is known in the Okta documentation as the IdP Session.
 
-The IdP session is the session that is created when a user logs in to or authenticates with Okta with their credentials and any various MFA options. This session is created by Okta and is identified by a cookie named `idx` in the browser, and `sid` cookie may also be set, but this is a legacy Okta identification cookie.
+The IdP session is the session that is created when a user logs in to or authenticates with Okta with their credentials and any various MFA options. This session is created by Okta and is identified by a cookie named `idx` in the browser, and `sid` cookie may also be set, but this is a legacy Okta identification cookie, which we no longer use.
 
 This cookie is only valid on the Okta/login domain (at the Guardian this is the `profile` subdomain, e.g. https://profile.theguardian.com), and the value is the session id. This same session id which can be used by the [Okta Sessions API](https://developer.okta.com/docs/reference/api/sessions/). This is an opaque value, and only authenticates the user, it does not contain any information about the user, and should not be used to authenticate the user on any API.
 

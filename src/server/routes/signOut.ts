@@ -62,7 +62,7 @@ const clearDotComCookies = (res: ResponseWithRequestState) => {
 export const clearOktaCookies = (res: ResponseWithRequestState) => {
 	// We do not set a domain attribute as doing this makes the hostOnly=false
 	// and when the cookie is set by Okta, they do not specify a domain in the set-cookie header,
-	// so the Okta sid cookie is consider hostOnly=true
+	// so the Okta /idx cookie is considered hostOnly=true
 	// https://www.appsecmonkey.com/blog/cookie-security#hostonly-property
 	res.cookie(OKTA_IDENTITY_CLASSIC_SESSION_COOKIE_NAME, '', {
 		maxAge: 0,

@@ -496,15 +496,9 @@ export const findEmailValidatedOktaGroupId = () => {
 	}
 };
 
-export const getCurrentOktaSession = ({
-	sid,
-	idx,
-}: {
-	sid?: string;
-	idx?: string;
-}) => {
+export const getCurrentOktaSession = ({ idx }: { idx?: string }) => {
 	try {
-		const Cookie = `${sid ? `sid=${sid};` : ''}${idx ? `idx=${idx};` : ''}`;
+		const Cookie = `${idx ? `idx=${idx};` : ''}`;
 		return cy
 			.request({
 				url: `${Cypress.env('OKTA_ORG_URL')}/api/v1/sessions/me`,
@@ -523,15 +517,9 @@ export const getCurrentOktaSession = ({
 	}
 };
 
-export const closeCurrentOktaSession = ({
-	sid,
-	idx,
-}: {
-	sid?: string;
-	idx?: string;
-}) => {
+export const closeCurrentOktaSession = ({ idx }: { idx?: string }) => {
 	try {
-		const Cookie = `${sid ? `sid=${sid};` : ''}${idx ? `idx=${idx};` : ''}`;
+		const Cookie = `${idx ? `idx=${idx};` : ''}`;
 		return cy
 			.request({
 				url: `${Cypress.env('OKTA_ORG_URL')}/api/v1/sessions/me`,

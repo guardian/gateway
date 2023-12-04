@@ -120,12 +120,9 @@ export const performAuthorizationCodeFlow = async (
 		// Okta Identity Engine session cookie is called `idx`
 		const oktaIdentityEngineSessionCookieId: string | undefined =
 			req.cookies.idx;
-		// Okta Classic session cookie is called `sid`
-		const oktaClassicSessionCookieId: string | undefined = req.cookies.sid; // clear existing okta session cookie if it exists
-		if (oktaIdentityEngineSessionCookieId || oktaClassicSessionCookieId) {
+		if (oktaIdentityEngineSessionCookieId) {
 			await closeCurrentSession({
 				idx: oktaIdentityEngineSessionCookieId,
-				sid: oktaClassicSessionCookieId,
 			});
 		}
 	}

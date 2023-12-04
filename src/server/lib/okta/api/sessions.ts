@@ -11,7 +11,6 @@ const { okta } = getConfiguration();
 /**
  * Get a User session by session cookie
  *
- * For Identity Classic the cookie is called `sid`
  * For Identity Engine the cookie is called `idx`
  *
  * https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Session/#tag/Session/operation/getCurrentSession
@@ -22,19 +21,17 @@ const { okta } = getConfiguration();
  * We convert a successful API response to a Session response,
  * or throw an error on a failed response.
  *
- * @param sessionId Okta session ID
+ * @param idx Okta Identity Engine session cookie
  * @returns Promise<SessionResponse>
  */
 export const getCurrentSession = async ({
-	sid,
 	idx,
 }: {
-	sid?: string;
 	idx?: string;
 }): Promise<SessionResponse> => {
 	const path = buildUrl('/api/v1/sessions/me');
 
-	const Cookie = `${sid ? `sid=${sid};` : ''}${idx ? `idx=${idx};` : ''}`;
+	const Cookie = `${idx ? `idx=${idx};` : ''}`;
 
 	const response = await fetch(joinUrl(okta.orgUrl, path), {
 		headers: { ...defaultHeaders, Cookie },
@@ -57,7 +54,6 @@ export const getCurrentSession = async ({
 /**
  * Close a User session by session cookie
  *
- * For Identity Classic the cookie is called `sid`
  * For Identity Engine the cookie is called `idx`
  *
  * https://developer.okta.com/docs/api/openapi/okta-management/management/tag/Session/#tag/Session/operation/closeCurrentSession
@@ -65,20 +61,17 @@ export const getCurrentSession = async ({
  * The Okta API closes the users session on success or
  * returns a 404 on invalid.
  *
- * @param sid Okta Identity Classic session cookie
  * @param idx Okta Identity Engine session cookie
  * @returns Promise<void>
  */
 export const closeCurrentSession = async ({
-	sid,
 	idx,
 }: {
-	sid?: string;
 	idx?: string;
 }): Promise<undefined> => {
 	const path = buildUrl('/api/v1/sessions/me');
 
-	const Cookie = `${sid ? `sid=${sid};` : ''}${idx ? `idx=${idx};` : ''}`;
+	const Cookie = `${idx ? `idx=${idx};` : ''}`;
 
 	const response = await fetch(joinUrl(okta.orgUrl, path), {
 		method: 'DELETE',

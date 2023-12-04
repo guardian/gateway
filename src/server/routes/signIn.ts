@@ -356,23 +356,20 @@ const oktaSignInController = async ({
 
 	// Okta Identity Engine session cookie is called `idx`
 	const oktaIdentityEngineSessionCookieId: string | undefined = req.cookies.idx;
-	// Okta Classic session cookie is called `sid`
-	const oktaClassicSessionCookieId: string | undefined = req.cookies.sid;
 
 	if (!isReauthenticate) {
 		try {
-			if (oktaIdentityEngineSessionCookieId || oktaClassicSessionCookieId) {
+			if (oktaIdentityEngineSessionCookieId) {
 				// if a session already exists then we redirect back to the returnUrl for apps, and the dotcom homepage for web
 				await getCurrentSession({
 					idx: oktaIdentityEngineSessionCookieId,
-					sid: oktaClassicSessionCookieId,
 				});
 				return res.redirect(accountManagementUrl);
 			}
 		} catch {
 			// We log this scenario as it is quite unlikely, but we continue to sign the user in.
 			logger.info(
-				'User POSTed to /signin with an invalid `sid` session cookie',
+				'User POSTed to /signin with an invalid `idx` session cookie',
 				undefined,
 				{ request_id: res.locals.requestId },
 			);
@@ -506,23 +503,17 @@ router.get(
 		// Okta Identity Engine session cookie is called `idx`
 		const oktaIdentityEngineSessionCookieId: string | undefined =
 			req.cookies.idx;
-		// Okta Classic session cookie is called `sid`
-		const oktaClassicSessionCookieId: string | undefined = req.cookies.sid;
 		const identitySessionCookie = req.cookies.SC_GU_U;
 
 		const redirectUrl = returnUrl || defaultReturnUri;
 
 		// Check if the user has an existing Okta session.
-		if (
-			okta.enabled &&
-			(oktaIdentityEngineSessionCookieId || oktaClassicSessionCookieId)
-		) {
+		if (okta.enabled && oktaIdentityEngineSessionCookieId) {
 			try {
 				// If the user session is valid, we re-authenticate them, supplying
-				// the SID cookie value to Okta.
+				// the idx cookie value to Okta.
 				await getCurrentSession({
 					idx: oktaIdentityEngineSessionCookieId,
-					sid: oktaClassicSessionCookieId,
 				});
 				return performAuthorizationCodeFlow(req, res, {
 					doNotSetLastAccessCookie: true,

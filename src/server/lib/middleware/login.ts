@@ -47,10 +47,8 @@ export const loginMiddlewareOAuth = async (
 		// Okta Identity Engine session cookie is called `idx`
 		const oktaIdentityEngineSessionCookieId: string | undefined =
 			req.cookies.idx;
-		// Okta Classic session cookie is called `sid`
-		const oktaClassicSessionCookieId: string | undefined = req.cookies.sid;
 
-		if (!oktaIdentityEngineSessionCookieId && !oktaClassicSessionCookieId) {
+		if (!oktaIdentityEngineSessionCookieId) {
 			// if there is no okta session cookie, go to the catch block
 			throw new Error('No Okta session cookie');
 		}
@@ -58,7 +56,6 @@ export const loginMiddlewareOAuth = async (
 		// if there is an okta session cookie, check if it is valid, if not `getSession` will throw an error
 		await getCurrentSession({
 			idx: oktaIdentityEngineSessionCookieId,
-			sid: oktaClassicSessionCookieId,
 		});
 	} catch (error) {
 		trackMetric('LoginMiddlewareOAuth::NoOktaSession');
@@ -133,9 +130,6 @@ export const loginMiddlewareOAuth = async (
 	} else {
 		trackMetric('LoginMiddlewareOAuth::NoOAuthTokens');
 	}
-
-	// no: check if the user has a `sid` cookie which is the Okta session cookie
-	// we can use this to check if the user is probably logged in
 
 	// no: attempt to do auth code flow to get new tokens
 	// perform the auth code flow
