@@ -243,6 +243,13 @@ export const getRedirectUrl = (
 		searchParams.get('set_password_token'),
 	);
 
+	// check for referral tracking parameters
+	// refViewId is the page view id of the referring page whether on app or web
+	const refViewId = searchParams.get('refViewId');
+
+	// ref is the referring page url whether on app or web
+	const ref = searchParams.get('ref');
+
 	// check for page parameter, used to show a particular page on gateway
 	const page = searchParams.get('page');
 
@@ -290,6 +297,8 @@ export const getRedirectUrl = (
 		searchParams.delete('reset_password_token');
 		searchParams.delete('set_password_token');
 		searchParams.delete('page');
+		searchParams.delete('refViewId');
+		searchParams.delete('ref');
 		// set the fromURI parameter
 		params.set('fromURI', locationPathname + '?' + searchParams.toString());
 	}
@@ -310,6 +319,16 @@ export const getRedirectUrl = (
 	// Set maxAge if it exists and isn't -1 (which Okta sets it to by default)
 	if (maxAge !== undefined && maxAge >= 0) {
 		params.set('maxAge', maxAge.toString());
+	}
+	// set tracking parameters
+	if (refViewId) {
+		params.set('refViewId', refViewId);
+		// for tracking both ref and refViewId are required, but ref might not be available on app so we use a fallback of the current url
+		if (ref) {
+			params.set('ref', ref);
+		} else {
+			params.set('ref', `${locationOrigin}${locationPathname}`);
+		}
 	}
 
 	// if we have an activation token, we know we need to go to the create password/welcome page
