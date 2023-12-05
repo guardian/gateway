@@ -36,7 +36,8 @@ import { mergeRequestState } from '@/server/lib/requestState';
 import { RegistrationLocation, UserResponse } from '@/server/models/okta/User';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
 import { isStringBoolean } from '@/server/lib/isStringBoolean';
-import { Consents, RegistrationConsents } from '@/shared/model/Consent';
+import { Consents } from '@/shared/model/Consent';
+import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 
 const { okta } = getConfiguration();
 

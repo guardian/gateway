@@ -1,7 +1,3 @@
-import { z } from 'zod';
-import { userConsentSchema } from './User';
-import { newsletterPatchSchema } from './Newsletter';
-
 export interface Consent {
 	id: string;
 	name: string;
@@ -28,12 +24,3 @@ export const CONSENTS_NEWSLETTERS_PAGE: string[] = [Consents.EVENTS];
 export const REGISTRATION_CONSENTS: string[] = [
 	Consents.SIMILAR_GUARDIAN_PRODUCTS,
 ];
-
-export const registrationConsentsSchema = z
-	.object({
-		consents: userConsentSchema.array().optional(),
-		newsletters: newsletterPatchSchema.array().optional(),
-	})
-	.strict();
-
-export type RegistrationConsents = z.infer<typeof registrationConsentsSchema>;

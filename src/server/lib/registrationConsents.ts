@@ -1,11 +1,11 @@
-import {
-	RegistrationConsents,
-	registrationConsentsSchema,
-} from '@/shared/model/Consent';
 import { decrypt, encrypt } from './crypto';
 import { getConfiguration } from './getConfiguration';
 import { base64ToUrlSafeString, urlSafeStringToBase64 } from './base64';
 import { logger } from './serverSideLogger';
+import {
+	RegistrationConsents,
+	registrationConsentsSchema,
+} from '@/shared/model/RegistrationConsents';
 
 // convert the registration consents into a string that has the following format:
 // consent1=true,consent2=false|newsletter1=true,newsletter2=false

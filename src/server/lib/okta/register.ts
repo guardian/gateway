@@ -24,8 +24,8 @@ import { logger } from '../serverSideLogger';
 import dangerouslySetPlaceholderPassword from './dangerouslySetPlaceholderPassword';
 import { sendCompleteRegistration } from '@/email/templates/CompleteRegistration/sendCompleteRegistration';
 import { encryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
-import { RegistrationConsents } from '@/shared/model/Consent';
 import { encryptRegistrationConsents } from '@/server/lib/registrationConsents';
+import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 
 const { okta } = getConfiguration();
 
