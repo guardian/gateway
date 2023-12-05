@@ -6,13 +6,10 @@ import {
 } from '../updateRegistrationLocation';
 import { read, addRegistrationLocation } from '@/server/lib/idapi/user';
 import User from '@/shared/model/User';
-import {
-	RegistrationLocation,
-	UserResponse,
-	UserUpdateRequest,
-} from '@/server/models/okta/User';
+import { UserResponse, UserUpdateRequest } from '@/server/models/okta/User';
 import { Jwt } from '@okta/jwt-verifier';
 import { getUser, updateUser } from '../okta/api/users';
+import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 
 // mocked configuration
 jest.mock('@/server/lib/getConfiguration', () => ({

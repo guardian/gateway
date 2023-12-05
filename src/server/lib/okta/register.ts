@@ -1,8 +1,4 @@
-import {
-	RegistrationLocation,
-	Status,
-	UserResponse,
-} from '@/server/models/okta/User';
+import { Status, UserResponse } from '@/server/models/okta/User';
 import {
 	createUser,
 	getUser,
@@ -26,6 +22,7 @@ import { sendCompleteRegistration } from '@/email/templates/CompleteRegistration
 import { encryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 import { encryptRegistrationConsents } from '@/server/lib/registrationConsents';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
+import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 
 const { okta } = getConfiguration();
 

@@ -1,4 +1,4 @@
-import { RegistrationLocation } from '@/server/models/okta/User';
+import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 import { UserConsent } from '@/shared/model/UserConsents';
 
 export default interface User {

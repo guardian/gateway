@@ -1,21 +1,11 @@
+// for some reason, we can't use @/shared/model/RegisterLocation here, as this breaks cypress, so use relative path instead ¯\_(ツ)_/¯
+import { RegistrationLocationSchema } from '../../../shared/model/RegistrationLocation';
 import { z } from 'zod';
 
 // social registration identity provider type
 // we've removed facebook as an authentication option, but we still need to support existing users
 // who initially registered with facebook
 const RegistrationIdp = z.enum(['google', 'apple', 'facebook']);
-
-const RegistrationLocation = z.enum([
-	'Prefer not to say',
-	'United Kingdom',
-	'Europe',
-	'United States',
-	'Canada',
-	'Australia',
-	'New Zealand',
-	'Other',
-]);
-export type RegistrationLocation = z.infer<typeof RegistrationLocation>;
 
 // https://developer.okta.com/docs/reference/api/users/#profile-object
 const userProfileSchema = z.object({
@@ -28,7 +18,7 @@ const userProfileSchema = z.object({
 	passwordSetSecurely: z.boolean().nullable().optional(),
 	lastPasswordSetSecurelyTimestamp: z.string().nullable().optional(),
 	registrationIdp: RegistrationIdp.nullable().optional(),
-	registrationLocation: RegistrationLocation.nullable().optional(),
+	registrationLocation: RegistrationLocationSchema.nullable().optional(),
 	googleExternalId: z.string().nullable().optional(),
 	appleExternalId: z.string().nullable().optional(),
 	facebookExternalId: z.string().nullable().optional(),
