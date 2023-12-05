@@ -125,7 +125,7 @@ export const sendEmailInOkta = async (
 	const { email = '' } = req.body;
 	const path = getPath(req);
 	const {
-		queryParams: { appClientId },
+		queryParams: { appClientId, ref, refViewId },
 		requestId: request_id,
 	} = state;
 
@@ -150,6 +150,8 @@ export const sendEmailInOkta = async (
 							appClientId,
 							request_id,
 						}),
+						ref,
+						refViewId,
 					});
 					if (!emailIsSent) {
 						throw new OktaError({
@@ -205,6 +207,8 @@ export const sendEmailInOkta = async (
 							appClientId,
 							request_id,
 						}),
+						ref,
+						refViewId,
 					});
 					if (!emailIsSent) {
 						throw new OktaError({
@@ -231,6 +235,8 @@ export const sendEmailInOkta = async (
 							appClientId,
 							request_id,
 						}),
+						ref,
+						refViewId,
 					});
 					if (!emailIsSent) {
 						throw new OktaError({
@@ -258,6 +264,8 @@ export const sendEmailInOkta = async (
 							appClientId,
 							request_id,
 						}),
+						ref,
+						refViewId,
 					});
 					if (!emailIsSent) {
 						throw new OktaError({
