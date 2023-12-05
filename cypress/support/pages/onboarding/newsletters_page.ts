@@ -18,7 +18,7 @@ class NewslettersPage extends OnboardingPage {
 			THIS_IS_EUROPE: 'This is Europe',
 		},
 		Consents: {
-			EVENTS: 'Events & Masterclasses',
+			EVENTS: 'Guardian Live events',
 		},
 	};
 	static checkboxWithTitle(title: string) {

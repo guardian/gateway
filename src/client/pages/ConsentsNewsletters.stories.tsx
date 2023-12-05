@@ -83,9 +83,9 @@ NewslettersAndEvents.args = {
 			type: 'consent' as const,
 			consent: {
 				id: 'events',
-				name: 'Events & Masterclasses',
+				name: 'Guardian Live events',
 				description:
-					'Receive weekly newsletters about our upcoming Live events and Masterclasses. Interact with leading minds and nourish your curiosity in our immersive online events, available worldwide.',
+					'Receive weekly newsletters about our new livestreamed and interactive events that you can access from wherever you are in the world.',
 			},
 		},
 	],
