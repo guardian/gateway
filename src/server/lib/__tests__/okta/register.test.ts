@@ -13,7 +13,6 @@ import {
 	Status,
 	UserCreationRequest,
 	TokenResponse,
-	RegistrationLocation,
 } from '@/server/models/okta/User';
 import {
 	validateRecoveryToken,
@@ -27,6 +26,7 @@ import { ErrorCause, OktaError } from '@/server/models/okta/Error';
 import { Group } from '@/server/models/okta/Group';
 import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
 import { AuthenticationTransaction } from '@/server/models/okta/Authentication';
+import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 
 // mocked configuration
 jest.mock('@/server/lib/getConfiguration', () => ({

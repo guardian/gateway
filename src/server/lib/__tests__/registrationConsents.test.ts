@@ -2,7 +2,7 @@ import {
 	minifyRegistrationConsents,
 	expandRegistrationConsents,
 } from '@/server/lib/registrationConsents';
-import { RegistrationConsents } from '@/shared/model/Consent';
+import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 
 jest.mock('@/server/lib/serverSideLogger', () => ({
 	logger: {

@@ -33,10 +33,12 @@ import { causesInclude } from '@/server/lib/okta/api/errors';
 import { redirectIfLoggedIn } from '@/server/lib/middleware/redirectIfLoggedIn';
 import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
 import { mergeRequestState } from '@/server/lib/requestState';
-import { RegistrationLocation, UserResponse } from '@/server/models/okta/User';
+import { UserResponse } from '@/server/models/okta/User';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
 import { isStringBoolean } from '@/server/lib/isStringBoolean';
-import { Consents, RegistrationConsents } from '@/shared/model/Consent';
+import { Consents } from '@/shared/model/Consent';
+import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
+import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 
 const { okta } = getConfiguration();
 

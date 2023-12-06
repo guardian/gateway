@@ -22,7 +22,7 @@ import {
 	sendOphanInteractionEventServer,
 } from '@/server/lib/ophan';
 import { IdApiQueryParams } from '@/shared/model/IdapiQueryParams';
-import { RegistrationLocation } from '@/server/models/okta/User';
+import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 
 interface APIResponse {
 	user: User;

@@ -4,9 +4,9 @@ import { GeoLocation } from '@/shared/model/Geolocation';
 import { EmailType } from '@/shared/model/EmailType';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { Participations } from '@guardian/ab-core';
-import { Stage } from '@/server/models/Configuration';
 import { ConsentPath, RoutePaths } from '@/shared/model/Routes';
 import { UserAttributesResponse } from '@/shared/lib/members-data-api';
+import { Stage } from '@/shared/model/Configuration';
 
 export interface FieldError {
 	field: string;

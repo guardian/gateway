@@ -1,11 +1,5 @@
-import { z } from 'zod';
-import { RegistrationLocation } from '@/server/models/okta/User';
-
-export const userConsentSchema = z.object({
-	id: z.string(),
-	consented: z.boolean().optional(),
-});
-export type UserConsent = z.infer<typeof userConsentSchema>;
+import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
+import { UserConsent } from '@/shared/model/UserConsents';
 
 export default interface User {
 	consents: UserConsent[];
