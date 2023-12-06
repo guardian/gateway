@@ -75,9 +75,9 @@ export const allConsents = [
 		id: 'events',
 		isOptOut: false,
 		isChannel: false,
-		name: 'Events & Masterclasses',
+		name: 'Guardian Live events',
 		description:
-			'Learn from leading minds at our Guardian live events, including discussions and debates, short courses and bespoke training. Available in the UK, Aus and US.',
+			'Receive weekly newsletters about our new livestreamed and interactive events that you can access from wherever you are in the world.',
 	},
 	{
 		id: 'personalised_advertising',
