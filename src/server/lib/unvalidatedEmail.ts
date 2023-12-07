@@ -2,13 +2,14 @@ import { sendUnvalidatedEmailResetPasswordEmail } from '@/email/templates/Unvali
 import { OktaError } from '@/server/models/okta/Error';
 import { forgotPassword } from '@/server/lib/okta/api/users';
 import { encryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
+import { TrackingQueryParams } from '@/shared/model/QueryParams';
 
 type Props = {
 	id: string;
 	email: string;
 	appClientId?: string;
 	request_id?: string;
-};
+} & TrackingQueryParams;
 
 /**
  * @name sendEmailToUnvalidatedUser
@@ -24,6 +25,8 @@ export const sendEmailToUnvalidatedUser = async ({
 	email,
 	appClientId,
 	request_id,
+	ref,
+	refViewId,
 }: Props): Promise<void> => {
 	const token = await forgotPassword(id);
 	if (!token) {
@@ -38,6 +41,8 @@ export const sendEmailToUnvalidatedUser = async ({
 			appClientId,
 			request_id,
 		}),
+		ref,
+		refViewId,
 	});
 	if (!emailIsSent) {
 		throw new OktaError({

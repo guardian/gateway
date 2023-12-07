@@ -23,6 +23,7 @@ import { encryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToke
 import { encryptRegistrationConsents } from '@/server/lib/registrationConsents';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
+import { TrackingQueryParams } from '@/shared/model/QueryParams';
 
 const { okta } = getConfiguration();
 
@@ -47,11 +48,13 @@ const sendRegistrationEmailByUserState = async ({
 	email,
 	appClientId,
 	request_id,
+	ref,
+	refViewId,
 }: {
 	email: string;
 	appClientId?: string;
 	request_id?: string;
-}): Promise<UserResponse> => {
+} & TrackingQueryParams): Promise<UserResponse> => {
 	const user = await getUser(email);
 	const { id, status } = user;
 
@@ -77,6 +80,8 @@ const sendRegistrationEmailByUserState = async ({
 					appClientId,
 					request_id,
 				}),
+				ref,
+				refViewId,
 			});
 			if (!emailIsSent) {
 				throw new OktaError({
@@ -106,6 +111,8 @@ const sendRegistrationEmailByUserState = async ({
 					appClientId,
 					request_id,
 				}),
+				ref,
+				refViewId,
 			});
 			if (!emailIsSent) {
 				throw new OktaError({
@@ -157,6 +164,8 @@ const sendRegistrationEmailByUserState = async ({
 					email: user.profile.email,
 					appClientId,
 					request_id,
+					ref,
+					refViewId,
 				});
 				trackMetric('OktaUnvalidatedUserResendEmail::Success');
 			} else {
@@ -174,6 +183,8 @@ const sendRegistrationEmailByUserState = async ({
 							appClientId,
 							request_id,
 						}),
+						ref,
+						refViewId,
 					});
 				} catch (error) {
 					// If the forgot password operation failed for whatever reason, we catch and
@@ -188,6 +199,8 @@ const sendRegistrationEmailByUserState = async ({
 					}
 					await sendAccountExistsEmail({
 						to: user.profile.email,
+						ref,
+						refViewId,
 					});
 				}
 			}
@@ -215,6 +228,8 @@ const sendRegistrationEmailByUserState = async ({
 					appClientId,
 					request_id,
 				}),
+				ref,
+				refViewId,
 			});
 			if (!emailIsSent) {
 				throw new OktaError({
@@ -248,13 +263,15 @@ export const register = async ({
 	appClientId,
 	request_id,
 	consents,
+	ref,
+	refViewId,
 }: {
 	email: string;
 	registrationLocation?: RegistrationLocation;
 	appClientId?: string;
 	request_id?: string;
 	consents?: RegistrationConsents;
-}): Promise<UserResponse> => {
+} & TrackingQueryParams): Promise<UserResponse> => {
 	try {
 		// Create the user in Okta, but do not send the activation email
 		// because we send the email ourselves through Gateway.
@@ -297,6 +314,8 @@ export const register = async ({
 				appClientId,
 				request_id,
 			}),
+			ref,
+			refViewId,
 		});
 		if (!emailIsSent) {
 			throw new OktaError({

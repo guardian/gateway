@@ -635,4 +635,85 @@ describe('getRedirectUrl', () => {
 			'/signin?fromURI=%2Foauth2%2Fv1%2Fauthorize%3Fclient_id%3Dtest123%26max_age%3D100&appClientId=test123&maxAge=100',
 		);
 	});
+
+	it('should add ref and refViewId to the redirect url if they are in the query params', () => {
+		expect(
+			getRedirectUrl(new URLSearchParams(`?ref=refUri&refViewId=123`), '', '', {
+				getRequestContext: () => ({
+					app: {
+						value: {
+							id: 'test123',
+							label: 'testabc',
+						},
+					},
+					authentication: {
+						request: {
+							max_age: 100,
+						},
+					},
+				}),
+				getSignInWidgetConfig: () => ({
+					relayState: '/testFromURI',
+				}),
+				completeLogin: () => {},
+			}),
+		).toBe(
+			'/signin?fromURI=%2FtestFromURI&appClientId=test123&maxAge=100&refViewId=123&ref=refUri',
+		);
+	});
+
+	it('should not add ref or refViewId to the redirect url if refViewId is not in the query params', () => {
+		expect(
+			getRedirectUrl(new URLSearchParams(`?ref=refUri`), '', '', {
+				getRequestContext: () => ({
+					app: {
+						value: {
+							id: 'test123',
+							label: 'testabc',
+						},
+					},
+					authentication: {
+						request: {
+							max_age: 100,
+						},
+					},
+				}),
+				getSignInWidgetConfig: () => ({
+					relayState: '/testFromURI',
+				}),
+				completeLogin: () => {},
+			}),
+		).toBe('/signin?fromURI=%2FtestFromURI&appClientId=test123&maxAge=100');
+	});
+
+	it('should use default ref which is locationOrigin + locationPathname if ref is not in the query params', () => {
+		expect(
+			getRedirectUrl(
+				new URLSearchParams(`?refViewId=123`),
+				'https://profile.thegulocal.com',
+				'/test',
+				{
+					getRequestContext: () => ({
+						app: {
+							value: {
+								id: 'test123',
+								label: 'testabc',
+							},
+						},
+						authentication: {
+							request: {
+								max_age: 100,
+							},
+						},
+					}),
+					getSignInWidgetConfig: () => ({
+						relayState: '/testFromURI',
+					}),
+					completeLogin: () => {},
+				},
+			),
+		).toBe(
+			'/signin?fromURI=%2FtestFromURI&appClientId=test123&maxAge=100&refViewId=123&ref=https%3A%2F%2Fprofile.thegulocal.com%2Ftest',
+		);
+	});
 });
