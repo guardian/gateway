@@ -5,3 +5,7 @@
 
 # Rewrite files after adding `@guardian/prettier` config
 940e33d41e0921fd96db9370f195a93ef1787858
+
+# Rewrite files after dependecy updates 2023-12-11
+# https://github.com/guardian/gateway/pull/2499
+6fe497c82e6ffe2510a0247e20544f8a6df82a27
