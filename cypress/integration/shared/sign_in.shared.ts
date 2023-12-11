@@ -307,10 +307,10 @@ export const removesEncryptedEmailParameterAndPreservesAllOtherValidParameters =
 				const visitUrl = isIdapi
 					? `/signin?returnUrl=${encodeURIComponent(
 							returnUrl,
-					  )}&${encryptedEmailParam}&refViewId=12345&useIdapi=true`
+						)}&${encryptedEmailParam}&refViewId=12345&useIdapi=true`
 					: `/signin?returnUrl=${encodeURIComponent(
 							returnUrl,
-					  )}&${encryptedEmailParam}&refViewId=12345`;
+						)}&${encryptedEmailParam}&refViewId=12345`;
 				cy.visit(visitUrl);
 
 				cy.location('search').should('not.contain', encryptedEmailParam);

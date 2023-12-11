@@ -15,15 +15,15 @@ const mainBodyTextStyles = (noMarginBottom = false, marginTop = false) => css`
 		? ''
 		: css`
 				margin-top: 0;
-		  `}
+			`}
 
 	${noMarginBottom
 		? css`
 				margin-bottom: 0;
-		  `
+			`
 		: css`
 				margin-bottom: ${space[3]}px;
-		  `}
+			`}
 `;
 
 export const MainBodyText = ({

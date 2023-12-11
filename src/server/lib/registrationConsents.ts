@@ -36,14 +36,14 @@ export const expandRegistrationConsents = (
 		? consents.split(',').map((consent) => {
 				const [id, consented] = consent.split('=');
 				return { id, consented: consented === 'true' };
-		  })
+			})
 		: [];
 
 	const newsletterArray = newsletters.includes('=')
 		? newsletters.split(',').map((newsletter) => {
 				const [id, subscribed] = newsletter.split('=');
 				return { id, subscribed: subscribed === 'true' };
-		  })
+			})
 		: [];
 
 	return {

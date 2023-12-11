@@ -59,13 +59,13 @@ export const GlobalError = ({ error, link, left }: GlobalErrorProps) => {
 		? css`
 				${gridRow}
 				margin: 0 auto;
-		  `
+			`
 		: null;
 	const item = left
 		? gridItem({
 				...gridItemColumnConsents,
 				...{ WIDE: { start: 1, span: COLUMNS.WIDE } },
-		  })
+			})
 		: null;
 	return (
 		<div css={errorDiv(!left)} role="complementary">

@@ -70,10 +70,10 @@ const headerStyles = (hasSummary: boolean) => css`
 		${hasSummary
 			? css`
 					padding-top: 0;
-			  `
+				`
 			: css`
 					padding-top: ${space[9]}px;
-			  `}
+				`}
 	}
 
 	/* margin */
@@ -130,20 +130,20 @@ export const buttonStyles = ({
 		${halfWidthAtMobile
 			? css`
 					width: 50%;
-			  `
+				`
 			: css`
 					width: 100%;
-			  `}
+				`}
 	}
 
 	${from.tablet} {
 		${halfWidth
 			? css`
 					width: 50%;
-			  `
+				`
 			: css`
 					width: 100%;
-			  `}
+				`}
 	}
 
 	${hasTerms &&

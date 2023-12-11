@@ -8,5 +8,5 @@ export default rateLimiter.enabled
 			host: redis.host,
 			password: redis.password,
 			tls: redis.sslOn ? {} : undefined,
-	  })
+		})
 	: undefined;
