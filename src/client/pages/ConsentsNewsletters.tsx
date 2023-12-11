@@ -96,7 +96,7 @@ export const ConsentsNewsletters = ({ consents }: ConsentsNewslettersProps) => {
 									defaultChecked: !!consent.consented,
 									highlightColor: palette.neutral[46],
 									imagePath: CONSENT_IMAGES[consent.id],
-							  }
+								}
 							: {
 									id: consent.id,
 									defaultChecked: consent.subscribed,
@@ -105,7 +105,7 @@ export const ConsentsNewsletters = ({ consents }: ConsentsNewslettersProps) => {
 									highlightColor: getPillarColorById(consent.id),
 									frequency: consent.frequency,
 									hiddenInput: true,
-							  };
+								};
 
 					return (
 						<ConsentCard

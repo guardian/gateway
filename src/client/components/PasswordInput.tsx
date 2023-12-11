@@ -30,7 +30,7 @@ const borderFix = (isEyeDisplayedOnBrowser: boolean) =>
 	isEyeDisplayedOnBrowser
 		? css`
 				border-radius: 4px 0 0 4px;
-		  `
+			`
 		: css();
 
 // we cut off the right hand side of the border when the eye symbol is displayed.
@@ -41,7 +41,7 @@ const noBorder = (isEyeDisplayedOnBrowser: boolean) =>
 				:active {
 					border-right: none;
 				}
-		  `
+			`
 		: css();
 
 // hide the microsoft password reveal eye if we're using

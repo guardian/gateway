@@ -211,7 +211,7 @@ export const getConfiguration = (): Configuration => {
 						process.env.LOGGING_KINESIS_STREAM,
 						'LOGGING_KINESIS_STREAM missing',
 						false,
-				  ),
+					),
 		instanceId:
 			stage === 'DEV'
 				? ''
@@ -219,7 +219,7 @@ export const getConfiguration = (): Configuration => {
 						process.env.EC2_INSTANCE_ID,
 						'EC2_INSTANCE_ID missing',
 						false,
-				  ),
+					),
 	};
 
 	const redis: RedisConfiguration = {

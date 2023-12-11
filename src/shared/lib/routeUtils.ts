@@ -21,10 +21,10 @@ import { OktaQueryParams } from '@/shared/model/OktaQueryParams';
 export type ExtractRouteParams<T> = string extends T
 	? Record<string, string>
 	: T extends `${infer _Start}:${infer Param}/${infer Rest}`
-	  ? { [k in Param | keyof ExtractRouteParams<Rest>]?: string }
-	  : T extends `${infer _Start}:${infer Param}`
-	    ? { [k in Param]?: string }
-	    : {};
+		? { [k in Param | keyof ExtractRouteParams<Rest>]?: string }
+		: T extends `${infer _Start}:${infer Param}`
+			? { [k in Param]?: string }
+			: {};
 
 /**
  * Object which has matching parameter keys for a path.

@@ -116,7 +116,7 @@ export const generateOphanComponentEvent = (
 			? {
 					name: componentEventParams.abTestName,
 					variant: componentEventParams.abTestVariant,
-			  }
+				}
 			: undefined;
 
 	return {
