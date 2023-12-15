@@ -16,7 +16,10 @@ export const DeleteAccountEmailPasswordValidation = ({
 	queryParams,
 }: DeleteAccountEmailPasswordVerificationProps) => {
 	return (
-		<MainLayout pageHeader="Delete your Guardian account">
+		<MainLayout
+			pageHeader="Delete your Guardian account"
+			errorOverride={queryParams.error_description}
+		>
 			{validationType === 'email' && (
 				<MainForm
 					formAction={buildUrlWithQueryParams(
