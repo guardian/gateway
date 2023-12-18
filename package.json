@@ -135,7 +135,7 @@
 		"@guardian/ab-core": "6.0.0",
 		"@guardian/consent-management-platform": "^13.7.3",
 		"@guardian/libs": "^15.9.1",
-		"@guardian/source-foundations": "^13.2.0",
+		"@guardian/source-foundations": "^13.2.1",
 		"@guardian/source-react-components": "^17.0.1",
 		"@guardian/source-react-components-development-kitchen": "^15.0.0",
 		"@okta/jwt-verifier": "^3.0.1",
