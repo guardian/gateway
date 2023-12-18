@@ -110,7 +110,7 @@ jobs:
           browser: chrome
           spec: cypress/integration/ete/**/*.cy.ts
           config: '{"chromeWebSecurity": false,"baseUrl":"https://profile.thegulocal.com","numTestsKeptInMemory":"1","e2e":{"specPattern": ["cypress/integration/ete/**/*.${{ matrix.group }}.cy.ts"]}}'
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: cypress-screenshots
