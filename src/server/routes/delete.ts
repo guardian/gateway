@@ -20,6 +20,7 @@ import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { GenericErrors } from '@/shared/model/Errors';
 import { UserAttributesResponse } from '@/shared/lib/members-data-api';
+import dangerouslySetPlaceholderPassword from '@/server/lib/okta/dangerouslySetPlaceholderPassword';
 
 router.get(
 	'/delete',
@@ -274,23 +275,37 @@ router.post(
 	}),
 );
 
+// this is used by the delete page to send an email to the user to validate their email address
+// or set a password if they don't have one
 router.post(
 	'/delete-email-validation',
 	loginMiddlewareOAuth,
 	async (req: Request, res: ResponseWithRequestState) => {
 		try {
-			const { sub, email } = res.locals.oauthState.idToken!.claims;
+			// get the user's id from the id token
+			const { sub } = res.locals.oauthState.idToken!.claims;
 
-			if (typeof sub !== 'string' || typeof email !== 'string') {
-				throw new Error('uid and email must be strings');
+			// check that the user id is a string
+			if (typeof sub !== 'string') {
+				throw new Error('uid must be a string');
 			}
 
+			// get the user's profile from okta
+			const user = await getUser(sub);
+
+			// if the user doesn't have a password set, set a placeholder password
+			if (!user.credentials.password) {
+				await dangerouslySetPlaceholderPassword(user.id);
+			}
+
+			// attempt to send the email
 			await sendEmailToUnvalidatedUser({
 				id: sub,
-				email,
+				email: user.profile.email,
 				request_id: res.locals.requestId,
 			});
 
+			// redirect to the email sent page
 			return res.redirect(
 				303,
 				addQueryParamsToPath('/delete/email-sent', res.locals.queryParams, {
