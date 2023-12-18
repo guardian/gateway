@@ -41,7 +41,7 @@ jobs:
           sudo cp ./scripts/nginx.conf /etc/nginx/nginx.conf
           sudo dev-nginx restart-nginx
       - name: Download build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
       - name: Unzip build
