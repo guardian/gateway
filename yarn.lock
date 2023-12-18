@@ -2789,10 +2789,10 @@
   resolved "https://registry.yarnpkg.com/@guardian/prettier/-/prettier-6.0.0.tgz#968adcd80311caf31f24b9aeddc1c9265dec048e"
   integrity sha512-dZdoxUVcm/+cs+Noj/t6IW8a8sz8/JWkNfwawaZzMWzae8QDK1BYwRrPwkJ3pLPQQn1qm+FmR4m7QkQhiuof7A==
 
-"@guardian/source-foundations@^13.2.0":
-  version "13.2.0"
-  resolved "https://registry.yarnpkg.com/@guardian/source-foundations/-/source-foundations-13.2.0.tgz#ef2da59a089f83606b9afd333d5f02c77cd882b5"
-  integrity sha512-HKgpuzk00+JiqLB2cMln5gJXvu1lQ2OcfqX8s7w0kPdnC3cSBw/emziM3bx4ib3GXs5CMjQb6g3rhGy/DCjLKg==
+"@guardian/source-foundations@^13.2.1":
+  version "13.2.1"
+  resolved "https://registry.yarnpkg.com/@guardian/source-foundations/-/source-foundations-13.2.1.tgz#4600c1934361078d6eb834def5573b05f820953d"
+  integrity sha512-co7Vm0gEmKgiyuiki6b7gMkM8bpEJfyGdJSHYELBRDSbA1yAO2K/qs0n7cEg1M/fqzSP00xDPeDZ+bofeXb1rA==
   dependencies:
     mini-svg-data-uri "1.4.4"
 
