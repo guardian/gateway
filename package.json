@@ -46,7 +46,7 @@
 		"@guardian/eslint-plugin-source-foundations": "^16.0.0",
 		"@guardian/eslint-plugin-source-react-components": "^20.0.0",
 		"@guardian/node-riffraff-artifact": "^0.3.2",
-		"@guardian/prettier": "^5.0.0",
+		"@guardian/prettier": "^6.0.0",
 		"@storybook/addon-actions": "^7.6.5",
 		"@storybook/addon-essentials": "^7.6.5",
 		"@storybook/addon-links": "^7.6.5",

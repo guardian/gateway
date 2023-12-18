@@ -2784,10 +2784,10 @@
     yaml "^1.7.2"
     yargs "^15.4.1"
 
-"@guardian/prettier@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@guardian/prettier/-/prettier-5.0.0.tgz#0cd36b105512510192ea9fd18da3d3df2d7b3b72"
-  integrity sha512-gJSQuuP7JVDOWQj4EUrwyJTnMt+frLkw0D2sLg70nHn76L3LmH2xTQtYMPUsqyqn37qocDPzgdvBdmATi50zRQ==
+"@guardian/prettier@^6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@guardian/prettier/-/prettier-6.0.0.tgz#968adcd80311caf31f24b9aeddc1c9265dec048e"
+  integrity sha512-dZdoxUVcm/+cs+Noj/t6IW8a8sz8/JWkNfwawaZzMWzae8QDK1BYwRrPwkJ3pLPQQn1qm+FmR4m7QkQhiuof7A==
 
 "@guardian/source-foundations@^13.2.0":
   version "13.2.0"
