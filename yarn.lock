@@ -2754,10 +2754,10 @@
   resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.1.1.tgz#1a5b1959a528e374e8037c4396c3e825d6cf4a83"
   integrity sha512-m0G6wlnhm/AX0H12IOWtK8gASEMffnX08RtKkCgTdHb9JpHKGloI7icFfLg9ZmQeavcvR0PKmzxClyuFPSjKWw==
 
-"@guardian/ab-core@6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@guardian/ab-core/-/ab-core-6.0.0.tgz#251c26760804f55a84f006bcdc48859b529fad46"
-  integrity sha512-tDhISq26CMjqYlNHqXLNc69zDTcY5goEMPEDq1FgvBy+D4pkWcQsIqBDr7Qq7NIfRnGfA3J1HiZ+DXxc852SIw==
+"@guardian/ab-core@7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@guardian/ab-core/-/ab-core-7.0.0.tgz#787adabf7895672fb7b65bea0457d761763a9ed5"
+  integrity sha512-TrkixEsgVLRkJO6Vj2r3IIVedMIQQU9vvnpiYIXLMTzWQ9t8x0fAyX/41HmVH9py7o261zASMH5hea/iyZIkBg==
 
 "@guardian/consent-management-platform@^13.7.3":
   version "13.7.3"
