@@ -15,7 +15,7 @@ const switchRow = css`
 
 const labelStyles = (isNativeApp: IsNativeApp) => css`
 	justify-content: space-between;
-	color: ${palette.neutral[38]};
+	color: ${palette.neutral[46]};
 	${isNativeApp ? textSans.xsmall() : textSans.small()};
 `;
 
