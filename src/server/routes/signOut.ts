@@ -156,12 +156,12 @@ const signOutFromIDAPIGlobal = async (
 			await logoutFromIDAPI(sc_gu_u, req.ip, res.locals.requestId);
 		}
 
-		trackMetric('SignOut::Success');
+		trackMetric('SignOutGlobal::Success');
 	} catch (error) {
 		logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
 			request_id: res.locals.requestId,
 		});
-		trackMetric('SignOut::Failure');
+		trackMetric('SignOutGlobal::Failure');
 	} finally {
 		// we want to clear the IDAPI cookies anyway even if there was an
 		// idapi error so that we don't prevent users from logging out on their
@@ -173,7 +173,7 @@ const signOutFromIDAPIGlobal = async (
 };
 
 /**
- * @name signOutFromOktaLocal
+ * @name signOutFromOktaGlobal
  * @description Clear all Okta sessions and tokens from ALL devices/browser the user is logged in to
  */
 const signOutFromOktaGlobal = async (
@@ -191,13 +191,13 @@ const signOutFromOktaGlobal = async (
 				idx: oktaIdentityEngineSessionCookieId,
 			});
 			await clearUserSessions(userId);
-			trackMetric('OktaSignOut::Success');
+			trackMetric('OktaSignOutGlobal::Success');
 		}
 	} catch (error) {
 		logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
 			request_id: res.locals.requestId,
 		});
-		trackMetric('OktaSignOut::Failure');
+		trackMetric('OktaSignOutGlobal::Failure');
 	} finally {
 		//clear okta cookie
 		clearOktaCookies(res);
