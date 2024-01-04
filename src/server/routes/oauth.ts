@@ -114,7 +114,7 @@ const authenticationHandler = async (
 					request_id: res.locals.requestId,
 				},
 			);
-			trackMetric('OAuthAuthorization::Failure');
+			trackMetric('OAuthAuthenticationCallback::Failure');
 			return redirectForGenericError(req, res);
 		}
 
@@ -230,7 +230,7 @@ const authenticationHandler = async (
 		checkAndDeleteOAuthTokenCookies(req, res);
 
 		// track the success metric
-		trackMetric('OAuthAuthorization::Success');
+		trackMetric('OAuthAuthenticationCallback::Success');
 
 		// redirect for jobs to show the jobs t&c page
 		// but not if confirmationPage is set (so that we can still show onboarding flow first)
@@ -298,7 +298,7 @@ const authenticationHandler = async (
 		logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
 			request_id: res.locals.requestId,
 		});
-		trackMetric('OAuthAuthorization::Failure');
+		trackMetric('OAuthAuthenticationCallback::Failure');
 
 		// fallthrough redirect to sign in with generic error
 		return redirectForGenericError(req, res);
@@ -327,7 +327,7 @@ const applicationHandler = (
 					request_id: res.locals.requestId,
 				},
 			);
-			trackMetric('OAuthAuthorization::Failure');
+			trackMetric('OAuthApplicationCallback::Failure');
 			return redirectForGenericError(req, res);
 		}
 
@@ -336,7 +336,7 @@ const applicationHandler = (
 		setOAuthTokenCookie(res, 'GU_ID_TOKEN', tokenSet.id_token);
 
 		// track the success metric
-		trackMetric('OAuthAuthorization::Success');
+		trackMetric('OAuthApplicationCallback::Success');
 
 		const returnUrl = authState.confirmationPage
 			? addQueryParamsToPath(authState.confirmationPage, authState.queryParams)
@@ -360,7 +360,7 @@ const applicationHandler = (
 		logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
 			request_id: res.locals.requestId,
 		});
-		trackMetric('OAuthAuthorization::Failure');
+		trackMetric('OAuthApplicationCallback::Failure');
 
 		// fallthrough redirect to sign in with generic error
 		return redirectForGenericError(req, res);
@@ -383,7 +383,7 @@ const deleteHandler = async (
 					request_id: res.locals.requestId,
 				},
 			);
-			trackMetric('OAuthAuthorization::Failure');
+			trackMetric('OAuthDeleteCallback::Failure');
 			return redirectForGenericError(req, res);
 		}
 
@@ -406,6 +406,8 @@ const deleteHandler = async (
 		if (!response.ok) {
 			throw new Error(await response.text());
 		}
+
+		trackMetric('OAuthDeleteCallback::Success');
 
 		// the confirmation page is the page we want to go to after sign out
 		const confirmationPage = encodeURIComponent(
@@ -438,7 +440,7 @@ const deleteHandler = async (
 		logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
 			request_id: res.locals.requestId,
 		});
-		trackMetric('OAuthAuthorization::Failure');
+		trackMetric('OAuthDeleteCallback::Failure');
 
 		return res.redirect(
 			303,
@@ -519,6 +521,7 @@ router.get(
 			// check if the callback params contain an login_required error
 			// used to check if a session existed before the user is shown a sign in page
 			if (callbackParams.error === OpenIdErrors.LOGIN_REQUIRED) {
+				trackMetric('OAuthAuthorization::Failure');
 				return res.redirect(
 					addQueryParamsToPath('/signin', authState.queryParams, {
 						error: callbackParams.error,
@@ -534,6 +537,7 @@ router.get(
 				callbackParams.error_description ===
 					OpenIdErrorDescriptions.ACCOUNT_LINKING_DENIED_GROUPS
 			) {
+				trackMetric('OAuthAuthorization::Failure');
 				return res.redirect(
 					addQueryParamsToPath('/signin', authState.queryParams, {
 						error: FederationErrors.SOCIAL_SIGNIN_BLOCKED,
@@ -560,6 +564,8 @@ router.get(
 			},
 		);
 
+		trackMetric('OAuthAuthorization::Success');
+
 		// call the appropriate handler depending on the callbackParam
 		switch (req.params.callbackParam) {
 			case 'application-callback':
@@ -569,6 +575,7 @@ router.get(
 			case 'delete-callback':
 				return deleteHandler(req, res, tokenSet, authState);
 			default:
+				trackMetric('OAuthAuthorization::Failure');
 				return redirectForGenericError(req, res);
 		}
 	}),
