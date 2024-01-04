@@ -98,7 +98,7 @@ export const updateUser = async (
  * @returns Promise<UserResponse>
  */
 
-export const getUser = async (id: string): Promise<UserResponse> => {
+export const getUser = (id: string): Promise<UserResponse> => {
 	const path = buildUrl('/api/v1/users/:id', { id });
 	return fetch(joinUrl(okta.orgUrl, path), {
 		headers: { ...defaultHeaders, ...authorizationHeader() },
@@ -116,7 +116,7 @@ export const getUser = async (id: string): Promise<UserResponse> => {
  * @returns Promise<Group[]>
  */
 
-export const getUserGroups = async (id: string): Promise<Group[]> => {
+export const getUserGroups = (id: string): Promise<Group[]> => {
 	const path = buildUrl('/api/v1/users/:id/groups', { id });
 	return fetch(joinUrl(okta.orgUrl, path), {
 		headers: { ...defaultHeaders, ...authorizationHeader() },

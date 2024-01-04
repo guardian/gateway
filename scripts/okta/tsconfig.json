@@ -10,8 +10,8 @@
 		"lib": ["ES2022", "DOM"],
 		"skipLibCheck": true,
 		"noEmit": true,
-		"removeComments": true,
-		"outFile": "./okta.js"
+		"removeComments": true
 	},
-	"files": ["okta-login.ts"]
+	"include": ["**/*"],
+	"exclude": []
 }

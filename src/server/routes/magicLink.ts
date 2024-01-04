@@ -6,7 +6,6 @@ import { logger } from '@/server/lib/serverSideLogger';
 import { renderer } from '@/server/lib/renderer';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { ResponseWithRequestState } from '@/server/models/Express';
-import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { ApiError } from '@/server/models/Error';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { mergeRequestState } from '@/server/lib/requestState';
@@ -22,7 +21,7 @@ router.get('/magic-link', (req: Request, res: ResponseWithRequestState) => {
 router.post(
 	'/magic-link',
 	handleRecaptcha,
-	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+	(req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
 
 		const { email = '' } = req.body;
@@ -54,7 +53,7 @@ router.post(
 		trackMetric('SendMagicLink::Success');
 
 		return res.redirect(303, buildUrl('/magic-link/email-sent'));
-	}),
+	},
 );
 
 router.get(

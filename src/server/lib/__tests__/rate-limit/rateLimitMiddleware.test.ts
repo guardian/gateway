@@ -32,7 +32,7 @@ describe('rate limiter middleware', () => {
 		jest.mock('@/server/lib/idapi/guest');
 		jest.mock('@/server/lib/idapi/decryptToken');
 		jest.mock('@/server/lib/idapi/auth', () => ({
-			authenticate: async () => ({
+			authenticate: () => ({
 				values: [],
 			}),
 		}));

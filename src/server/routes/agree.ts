@@ -86,7 +86,7 @@ const IDAPIAgreeGetController = async (
 	}
 };
 
-const OktaAgreeGetController = async (
+const OktaAgreeGetController = (
 	req: Request,
 	res: ResponseWithRequestState,
 ) => {

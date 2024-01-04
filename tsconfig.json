@@ -18,5 +18,5 @@
 		"lib": ["ES2022", "DOM"],
 		"importHelpers": true
 	},
-	"include": ["src"]
+	"include": ["src", "scripts/generate-rate-limit-schema.ts"]
 }

@@ -325,7 +325,7 @@ test('should expect an error state when the Google reCAPTCHA script fails to loa
 	windowSpy.mockRestore();
 });
 
-test('should expect an error state when no siteToken is provided', async () => {
+test('should expect an error state when no siteToken is provided', () => {
 	renderHook(() =>
 		expect(() =>
 			useRecaptcha('', 'element-id'),
@@ -335,7 +335,7 @@ test('should expect an error state when no siteToken is provided', async () => {
 	);
 });
 
-test('should expect an error state when no renderElement is provided', async () => {
+test('should expect an error state when no renderElement is provided', () => {
 	renderHook(() =>
 		expect(() =>
 			useRecaptcha('valid-site-key', ''),
