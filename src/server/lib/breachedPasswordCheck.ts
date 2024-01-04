@@ -53,9 +53,11 @@ export const isBreachedPassword = async (
 			// if it is, then the password has been in a data breach
 			// if it isn't, then the password has not been in a data breach
 			if (text.includes(remaining.toUpperCase())) {
+				trackMetric('PasswordCheck::Breached');
 				// the password has been in a data breach, so return true
 				return true;
 			}
+			trackMetric('PasswordCheck::NotBreached');
 		} else {
 			// something went wrong with the Pwned Passwords API, so we log the error
 			trackMetric('BreachedPasswordCheck::Failure');

@@ -53,6 +53,8 @@ type ConditionalMetrics =
 
 // Unconditional metrics that we want to track directly
 type UnconditionalMetrics =
+	| 'PasswordCheck::Breached'
+	| 'PasswordCheck::NotBreached'
 	| 'LoginMiddlewareNotRecent'
 	| 'LoginMiddlewareNotSignedIn'
 	| 'LoginMiddlewareUnverified'
