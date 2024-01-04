@@ -9,7 +9,12 @@ type EmailMetrics =
 	| 'AccountVerification'
 	| 'CreatePassword'
 	| 'ResetPassword'
-	| 'OktaResetPassword';
+	| 'OktaAccountExists'
+	| 'OktaAccountExistsWithoutPassword'
+	| 'OktaCompleteRegistration'
+	| 'OktaCreatePassword'
+	| 'OktaResetPassword'
+	| 'OktaUnvalidatedEmailResetPassword';
 
 // Rate limit buckets to track
 type RateLimitMetrics = BucketType;
@@ -35,8 +40,6 @@ type ConditionalMetrics =
 	| 'OktaUpdatePassword'
 	| 'OktaValidatePasswordToken'
 	| 'OktaWelcomeResendEmail'
-	| 'OktaUnvalidatedUserSendEmail'
-	| 'OktaUnvalidatedUserResendEmail'
 	| 'Register'
 	| 'SendMagicLink'
 	| 'SendValidationEmail'

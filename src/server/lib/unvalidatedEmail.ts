@@ -3,6 +3,8 @@ import { OktaError } from '@/server/models/okta/Error';
 import { forgotPassword } from '@/server/lib/okta/api/users';
 import { encryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 import { TrackingQueryParams } from '@/shared/model/QueryParams';
+import { trackMetric } from './trackMetric';
+import { emailSendMetric } from '../models/Metrics';
 
 type Props = {
 	id: string;
@@ -45,8 +47,12 @@ export const sendEmailToUnvalidatedUser = async ({
 		refViewId,
 	});
 	if (!emailIsSent) {
+		trackMetric(
+			emailSendMetric('OktaUnvalidatedEmailResetPassword', 'Failure'),
+		);
 		throw new OktaError({
 			message: `Unvalidated email sign-in failed: failed to send email`,
 		});
 	}
+	trackMetric(emailSendMetric('OktaUnvalidatedEmailResetPassword', 'Success'));
 };

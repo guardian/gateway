@@ -24,6 +24,7 @@ import { encryptRegistrationConsents } from '@/server/lib/registrationConsents';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 import { TrackingQueryParams } from '@/shared/model/QueryParams';
+import { emailSendMetric } from '@/server/models/Metrics';
 
 const { okta } = getConfiguration();
 
@@ -84,10 +85,16 @@ const sendRegistrationEmailByUserState = async ({
 				refViewId,
 			});
 			if (!emailIsSent) {
+				trackMetric(
+					emailSendMetric('OktaAccountExistsWithoutPassword', 'Failure'),
+				);
 				throw new OktaError({
 					message: `Okta user activation failed: Failed to send email`,
 				});
 			}
+			trackMetric(
+				emailSendMetric('OktaAccountExistsWithoutPassword', 'Success'),
+			);
 			return user;
 		}
 		case Status.PROVISIONED: {
@@ -115,10 +122,16 @@ const sendRegistrationEmailByUserState = async ({
 				refViewId,
 			});
 			if (!emailIsSent) {
+				trackMetric(
+					emailSendMetric('OktaAccountExistsWithoutPassword', 'Failure'),
+				);
 				throw new OktaError({
 					message: `Okta user reactivation failed: Failed to send email`,
 				});
 			}
+			trackMetric(
+				emailSendMetric('OktaAccountExistsWithoutPassword', 'Success'),
+			);
 			return user;
 		}
 		case Status.ACTIVE: {
@@ -167,7 +180,6 @@ const sendRegistrationEmailByUserState = async ({
 					ref,
 					refViewId,
 				});
-				trackMetric('OktaUnvalidatedUserResendEmail::Success');
 			} else {
 				// The user has a validated email and a password set, so we can send
 				// them an email with a reset password token. This ensures that their
@@ -186,6 +198,7 @@ const sendRegistrationEmailByUserState = async ({
 						ref,
 						refViewId,
 					});
+					trackMetric(emailSendMetric('OktaAccountExists', 'Success'));
 				} catch (error) {
 					// If the forgot password operation failed for whatever reason, we catch and
 					// log it but continue by sending the user a generic email.
@@ -202,6 +215,7 @@ const sendRegistrationEmailByUserState = async ({
 						ref,
 						refViewId,
 					});
+					trackMetric(emailSendMetric('OktaAccountExists', 'Success'));
 				}
 			}
 			return user;
@@ -232,10 +246,12 @@ const sendRegistrationEmailByUserState = async ({
 				refViewId,
 			});
 			if (!emailIsSent) {
+				trackMetric(emailSendMetric('OktaResetPassword', 'Failure'));
 				throw new OktaError({
 					message: `Okta user reset password failed: Failed to send email`,
 				});
 			}
+			trackMetric(emailSendMetric('OktaResetPassword', 'Success'));
 			return user;
 		}
 		default:
@@ -318,10 +334,12 @@ export const register = async ({
 			refViewId,
 		});
 		if (!emailIsSent) {
+			trackMetric(emailSendMetric('OktaCompleteRegistration', 'Failure'));
 			throw new OktaError({
 				message: `Okta user creation failed: failed to send email`,
 			});
 		}
+		trackMetric(emailSendMetric('OktaCompleteRegistration', 'Success'));
 		return userResponse;
 	} catch (error) {
 		if (
