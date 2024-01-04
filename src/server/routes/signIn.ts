@@ -398,7 +398,7 @@ const oktaSignInController = async ({
 
 		// fire ophan component event if applicable when a session is set
 		if (res.locals.queryParams.componentEventParams) {
-			sendOphanComponentEventFromQueryParamsServer(
+			void sendOphanComponentEventFromQueryParamsServer(
 				res.locals.queryParams.componentEventParams,
 				'SIGN_IN',
 				'web',
@@ -555,7 +555,7 @@ router.get(
 
 			// fire ophan component event if applicable when a session is set
 			if (res.locals.queryParams.componentEventParams) {
-				sendOphanComponentEventFromQueryParamsServer(
+				void sendOphanComponentEventFromQueryParamsServer(
 					res.locals.queryParams.componentEventParams,
 					'SIGN_IN',
 					req.params.social,

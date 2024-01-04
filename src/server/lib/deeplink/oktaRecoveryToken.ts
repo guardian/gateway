@@ -158,9 +158,7 @@ export const decryptOktaRecoveryToken = ({
 }: {
 	encryptedToken: string;
 	request_id?: string;
-}): Promise<
-	[recoveryToken: string, encryptedRegistrationConsents?: string]
-> => {
+}): [recoveryToken: string, encryptedRegistrationConsents?: string] => {
 	try {
 		const token = extractOktaRecoveryToken(encryptedToken);
 

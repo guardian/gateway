@@ -191,7 +191,7 @@ const authenticationHandler = async (
 
 		// Apply the registration consents if they exist
 		if (authState.data?.encryptedRegistrationConsents) {
-			const decryptedConsents = await decryptRegistrationConsents(
+			const decryptedConsents = decryptRegistrationConsents(
 				authState.data.encryptedRegistrationConsents,
 			);
 			if (decryptedConsents && decryptedConsents.consents) {

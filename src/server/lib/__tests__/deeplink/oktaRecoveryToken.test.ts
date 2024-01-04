@@ -162,7 +162,7 @@ describe('encryptOktaRecoveryToken', () => {
 		});
 
 		const [decryptedToken, decryptedEncryptedRegistrationConsents] =
-			await decryptOktaRecoveryToken({ encryptedToken: output });
+			decryptOktaRecoveryToken({ encryptedToken: output });
 
 		expect(output).not.toBe(token);
 		expect(decryptedToken).toBe(token);
@@ -178,7 +178,7 @@ describe('encryptOktaRecoveryToken', () => {
 		});
 
 		const [decryptedToken, decryptedEncryptedRegistrationConsents] =
-			await decryptOktaRecoveryToken({ encryptedToken: output });
+			decryptOktaRecoveryToken({ encryptedToken: output });
 
 		expect(output).not.toBe(token);
 		expect(output).not.toBe(encryptedRegistrationConsents);
@@ -210,7 +210,7 @@ describe('encryptOktaRecoveryToken', () => {
 		});
 
 		const [decryptedToken, decryptedEncryptedRegistrationConsents] =
-			await decryptOktaRecoveryToken({ encryptedToken: output });
+			decryptOktaRecoveryToken({ encryptedToken: output });
 
 		expect(output.startsWith('al_')).toBe(true);
 		expect(output).not.toBe(token);
@@ -230,7 +230,7 @@ describe('decryptOktaRecoveryToken', () => {
 		});
 
 		const [decryptedToken, decryptedEncryptedRegistrationConsents] =
-			await decryptOktaRecoveryToken({ encryptedToken });
+			decryptOktaRecoveryToken({ encryptedToken });
 
 		expect(decryptedToken).toBe(token);
 		expect(decryptedEncryptedRegistrationConsents).toBeUndefined();
@@ -245,7 +245,7 @@ describe('decryptOktaRecoveryToken', () => {
 		});
 
 		const [decryptedToken, decryptedEncryptedRegistrationConsents] =
-			await decryptOktaRecoveryToken({ encryptedToken });
+			decryptOktaRecoveryToken({ encryptedToken });
 
 		expect(decryptedToken).toBe(token);
 		expect(decryptedEncryptedRegistrationConsents).toBe(
@@ -277,7 +277,7 @@ describe('decryptOktaRecoveryToken', () => {
 		expect(encryptedToken.startsWith('al_')).toBe(true);
 
 		const [decryptedToken, decryptedEncryptedRegistrationConsents] =
-			await decryptOktaRecoveryToken({ encryptedToken });
+			decryptOktaRecoveryToken({ encryptedToken });
 
 		expect(decryptedToken).toBe(token);
 		expect(decryptedEncryptedRegistrationConsents).toBe(
@@ -285,11 +285,11 @@ describe('decryptOktaRecoveryToken', () => {
 		);
 	});
 
-	it('should return token if decryption fails', async () => {
+	it('should return token if decryption fails', () => {
 		const token = 'token';
 
 		const [decryptedToken, decryptedEncryptedRegistrationConsents] =
-			await decryptOktaRecoveryToken({ encryptedToken: token });
+			decryptOktaRecoveryToken({ encryptedToken: token });
 
 		expect(decryptedToken).toBe(token);
 		expect(decryptedEncryptedRegistrationConsents).toBeUndefined();

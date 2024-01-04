@@ -163,7 +163,7 @@ const OktaRegistration = async (
 
 		// fire ophan component event if applicable
 		if (res.locals.queryParams.componentEventParams) {
-			sendOphanComponentEventFromQueryParamsServer(
+			void sendOphanComponentEventFromQueryParamsServer(
 				res.locals.queryParams.componentEventParams,
 				'CREATE_ACCOUNT',
 				'web',

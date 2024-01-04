@@ -16,11 +16,11 @@ declare global {
  * @param options Option to toggle the offline state.
  */
 export const network = (options: { offline: boolean }) => {
-	Cypress.automation('remote:debugger:protocol', {
+	void Cypress.automation('remote:debugger:protocol', {
 		command: 'Network.enable',
 	});
 
-	Cypress.automation('remote:debugger:protocol', {
+	void Cypress.automation('remote:debugger:protocol', {
 		command: 'Network.emulateNetworkConditions',
 		params: {
 			offline: options.offline,

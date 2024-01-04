@@ -24,7 +24,7 @@ if (!routingConfig.clientState.pageData?.isNativeApp) {
 	if (window.Cypress) {
 		cmp.init({ country: 'GB' }); // CI hosted on GithubActions runs in US by default
 	} else {
-		(async () => {
+		void (async () => {
 			const country = await getLocale();
 
 			if (country) {
