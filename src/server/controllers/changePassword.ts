@@ -39,6 +39,7 @@ import { clearOktaCookies } from '@/server/routes/signOut';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
 import { decryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
+import { changePasswordMetric } from '@/server/models/Metrics';
 
 const { okta } = getConfiguration();
 
@@ -253,8 +254,6 @@ const changePasswordInOkta = async (
 				}
 			}
 
-			trackMetric('OktaUpdatePassword::Success');
-
 			updateEncryptedStateCookie(req, res, {
 				// Update the passwordSetOnWelcomePage only when we are on the welcome page
 				...(path === '/welcome' && { passwordSetOnWelcomePage: true }),
@@ -272,6 +271,8 @@ const changePasswordInOkta = async (
 					res.locals.requestId,
 				);
 			}
+
+			changePasswordMetric(path, 'Success');
 
 			return await performAuthorizationCodeFlow(req, res, {
 				sessionToken,
@@ -292,12 +293,12 @@ const changePasswordInOkta = async (
 			request_id: res.locals.requestId,
 		});
 
+		changePasswordMetric(path, 'Failure');
+
 		// see the comment above around the success metrics
 		if (clientId === 'jobs' && path === '/welcome') {
 			trackMetric('JobsGRSGroupAgree::Failure');
 		}
-
-		trackMetric('OktaUpdatePassword::Failure');
 
 		const { globalError, fieldErrors } = getErrorMessage(error);
 

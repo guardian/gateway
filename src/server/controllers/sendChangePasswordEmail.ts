@@ -154,10 +154,12 @@ export const sendEmailInOkta = async (
 						refViewId,
 					});
 					if (!emailIsSent) {
+						trackMetric(emailSendMetric('OktaResetPassword', 'Failure'));
 						throw new OktaError({
 							message: `Okta user reset password failed: Failed to send email`,
 						});
 					}
+					trackMetric(emailSendMetric('OktaResetPassword', 'Success'));
 				} catch (error) {
 					// we need to catch an error here to check if the user
 					// does not have a password set, for example for social users
@@ -211,10 +213,12 @@ export const sendEmailInOkta = async (
 						refViewId,
 					});
 					if (!emailIsSent) {
+						trackMetric(emailSendMetric('OktaCreatePassword', 'Failure'));
 						throw new OktaError({
 							message: `Okta user activation failed: Failed to send email`,
 						});
 					}
+					trackMetric(emailSendMetric('OktaCreatePassword', 'Success'));
 				}
 				break;
 			case Status.PROVISIONED:
@@ -239,10 +243,12 @@ export const sendEmailInOkta = async (
 						refViewId,
 					});
 					if (!emailIsSent) {
+						trackMetric(emailSendMetric('OktaCreatePassword', 'Failure'));
 						throw new OktaError({
 							message: `Okta user reactivation failed: Failed to send email`,
 						});
 					}
+					trackMetric(emailSendMetric('OktaCreatePassword', 'Success'));
 				}
 				break;
 			case Status.RECOVERY:
@@ -268,10 +274,12 @@ export const sendEmailInOkta = async (
 						refViewId,
 					});
 					if (!emailIsSent) {
+						trackMetric(emailSendMetric('OktaResetPassword', 'Failure'));
 						throw new OktaError({
 							message: `Okta user reset password failed: Failed to send email`,
 						});
 					}
+					trackMetric(emailSendMetric('OktaResetPassword', 'Success'));
 				}
 				break;
 			default:
@@ -283,8 +291,6 @@ export const sendEmailInOkta = async (
 		setEncryptedCookieOkta(res, email);
 
 		sendOphanEvent(state.ophanConfig);
-
-		trackMetric(emailSendMetric('OktaResetPassword', 'Success'));
 
 		return res.redirect(
 			303,
@@ -315,8 +321,6 @@ export const sendEmailInOkta = async (
 		logger.error('Okta send reset password email failed', error, {
 			request_id: res.locals.requestId,
 		});
-
-		trackMetric(emailSendMetric('OktaResetPassword', 'Failure'));
 
 		const html = renderer('/reset-password', {
 			pageTitle: 'Reset Password',

@@ -1,5 +1,7 @@
 import { updateUser } from '@/server/lib/okta/api/users';
 import { UserResponse } from '@/server/models/okta/User';
+import { logger } from '../serverSideLogger';
+import { trackMetric } from '../trackMetric';
 
 /**
  * @method validateEmailAndPasswordSetSecurely
@@ -12,13 +14,29 @@ import { UserResponse } from '@/server/models/okta/User';
 export const validateEmailAndPasswordSetSecurely = async (
 	id: string,
 ): Promise<UserResponse> => {
-	const timestamp = new Date().toISOString();
-	return await updateUser(id, {
-		profile: {
-			emailValidated: true,
-			lastEmailValidatedTimestamp: timestamp,
-			passwordSetSecurely: true,
-			lastPasswordSetSecurelyTimestamp: timestamp,
-		},
-	});
+	try {
+		const timestamp = new Date().toISOString();
+
+		const user = await updateUser(id, {
+			profile: {
+				emailValidated: true,
+				lastEmailValidatedTimestamp: timestamp,
+				passwordSetSecurely: true,
+				lastPasswordSetSecurelyTimestamp: timestamp,
+			},
+		});
+
+		trackMetric('OktaAccountVerification::Success');
+		trackMetric('OktaUpdatePassword::Success');
+
+		return user;
+	} catch (error) {
+		logger.error(
+			`validateEmailAndPasswordSetSecurely failed: Error updating user ${id}`,
+			error,
+		);
+		trackMetric('OktaAccountVerification::Failure');
+		trackMetric('OktaUpdatePassword::Failure');
+		throw error;
+	}
 };

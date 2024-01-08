@@ -162,7 +162,6 @@ router.post(
 			setEncryptedStateCookie(res, {
 				email: user.profile.email,
 			});
-			trackMetric('OktaUnvalidatedUserResendEmail::Success');
 
 			return res.redirect(
 				303,
@@ -174,7 +173,6 @@ router.post(
 			logger.error('Okta unvalidated user resend email failure', error, {
 				request_id: res.locals.requestId,
 			});
-			trackMetric('OktaUnvalidatedUserResendEmail::Failure');
 			return res.type('html').send(
 				renderer('/signin/email-sent', {
 					pageTitle: 'Check Your Inbox',

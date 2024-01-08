@@ -1,6 +1,7 @@
 // This file defines the metrics that we would like to track in cloudwatch
 
 import { BucketType } from '@/server/lib/rate-limit';
+import { PasswordRoutePath } from '@/shared/model/Routes';
 
 // Specific emails to track
 type EmailMetrics =
@@ -9,7 +10,12 @@ type EmailMetrics =
 	| 'AccountVerification'
 	| 'CreatePassword'
 	| 'ResetPassword'
-	| 'OktaResetPassword';
+	| 'OktaAccountExists'
+	| 'OktaAccountExistsWithoutPassword'
+	| 'OktaCompleteRegistration'
+	| 'OktaCreatePassword'
+	| 'OktaResetPassword'
+	| 'OktaUnvalidatedEmailResetPassword';
 
 // Rate limit buckets to track
 type RateLimitMetrics = BucketType;
@@ -28,20 +34,27 @@ type ConditionalMetrics =
 	| 'JobsGRSGroupAgree'
 	| 'LoginMiddleware'
 	| 'OAuthAuthorization'
+	| 'OAuthApplicationCallback'
+	| 'OAuthAuthenticationCallback'
+	| 'OAuthDeleteCallback'
+	| 'OktaAccountVerification'
 	| 'OktaRegistration'
 	| 'OktaRegistrationResendEmail'
+	| 'OktaResetPassword'
+	| 'OktaSetPassword'
 	| 'OktaSignIn'
 	| 'OktaSignOut'
+	| 'OktaSignOutGlobal'
 	| 'OktaUpdatePassword'
 	| 'OktaValidatePasswordToken'
+	| 'OktaWelcome'
 	| 'OktaWelcomeResendEmail'
-	| 'OktaUnvalidatedUserSendEmail'
-	| 'OktaUnvalidatedUserResendEmail'
 	| 'Register'
 	| 'SendMagicLink'
 	| 'SendValidationEmail'
 	| 'SignIn'
 	| 'SignOut'
+	| 'SignOutGlobal'
 	| 'Unsubscribe'
 	| 'Subscribe'
 	| 'UpdatePassword'
@@ -50,6 +63,8 @@ type ConditionalMetrics =
 
 // Unconditional metrics that we want to track directly
 type UnconditionalMetrics =
+	| 'PasswordCheck::Breached'
+	| 'PasswordCheck::NotBreached'
 	| 'LoginMiddlewareNotRecent'
 	| 'LoginMiddlewareNotSignedIn'
 	| 'LoginMiddlewareUnverified'
@@ -85,3 +100,17 @@ export const emailSendMetric = (
 
 export const rateLimitHitMetric = (bucketType: RateLimitMetrics): Metrics =>
 	`${bucketType}GatewayRateLimitHit`;
+
+export const changePasswordMetric = (
+	path: PasswordRoutePath,
+	type: 'Success' | 'Failure',
+): Metrics => {
+	switch (path) {
+		case '/set-password':
+			return `OktaSetPassword::${type}`;
+		case '/reset-password':
+			return `OktaResetPassword::${type}`;
+		case '/welcome':
+			return `OktaWelcome::${type}`;
+	}
+};
