@@ -253,8 +253,6 @@ const changePasswordInOkta = async (
 				}
 			}
 
-			trackMetric('OktaUpdatePassword::Success');
-
 			updateEncryptedStateCookie(req, res, {
 				// Update the passwordSetOnWelcomePage only when we are on the welcome page
 				...(path === '/welcome' && { passwordSetOnWelcomePage: true }),
@@ -296,8 +294,6 @@ const changePasswordInOkta = async (
 		if (clientId === 'jobs' && path === '/welcome') {
 			trackMetric('JobsGRSGroupAgree::Failure');
 		}
-
-		trackMetric('OktaUpdatePassword::Failure');
 
 		const { globalError, fieldErrors } = getErrorMessage(error);
 

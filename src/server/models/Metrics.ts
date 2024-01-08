@@ -36,6 +36,7 @@ type ConditionalMetrics =
 	| 'OAuthApplicationCallback'
 	| 'OAuthAuthenticationCallback'
 	| 'OAuthDeleteCallback'
+	| 'OktaAccountVerification'
 	| 'OktaRegistration'
 	| 'OktaRegistrationResendEmail'
 	| 'OktaSignIn'
