@@ -1,6 +1,7 @@
 // This file defines the metrics that we would like to track in cloudwatch
 
 import { BucketType } from '@/server/lib/rate-limit';
+import { PasswordRoutePath } from '@/shared/model/Routes';
 
 // Specific emails to track
 type EmailMetrics =
@@ -39,11 +40,14 @@ type ConditionalMetrics =
 	| 'OktaAccountVerification'
 	| 'OktaRegistration'
 	| 'OktaRegistrationResendEmail'
+	| 'OktaResetPassword'
+	| 'OktaSetPassword'
 	| 'OktaSignIn'
 	| 'OktaSignOut'
 	| 'OktaSignOutGlobal'
 	| 'OktaUpdatePassword'
 	| 'OktaValidatePasswordToken'
+	| 'OktaWelcome'
 	| 'OktaWelcomeResendEmail'
 	| 'Register'
 	| 'SendMagicLink'
@@ -96,3 +100,17 @@ export const emailSendMetric = (
 
 export const rateLimitHitMetric = (bucketType: RateLimitMetrics): Metrics =>
 	`${bucketType}GatewayRateLimitHit`;
+
+export const changePasswordMetric = (
+	path: PasswordRoutePath,
+	type: 'Success' | 'Failure',
+): Metrics => {
+	switch (path) {
+		case '/set-password':
+			return `OktaSetPassword::${type}`;
+		case '/reset-password':
+			return `OktaResetPassword::${type}`;
+		case '/welcome':
+			return `OktaWelcome::${type}`;
+	}
+};

@@ -39,6 +39,7 @@ import { clearOktaCookies } from '@/server/routes/signOut';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
 import { decryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
+import { changePasswordMetric } from '@/server/models/Metrics';
 
 const { okta } = getConfiguration();
 
@@ -271,6 +272,8 @@ const changePasswordInOkta = async (
 				);
 			}
 
+			changePasswordMetric(path, 'Success');
+
 			return await performAuthorizationCodeFlow(req, res, {
 				sessionToken,
 				confirmationPagePath: successRedirectPath,
@@ -289,6 +292,8 @@ const changePasswordInOkta = async (
 		logger.error('Okta change password failure', error, {
 			request_id: res.locals.requestId,
 		});
+
+		changePasswordMetric(path, 'Failure');
 
 		// see the comment above around the success metrics
 		if (clientId === 'jobs' && path === '/welcome') {
