@@ -100,6 +100,8 @@ const checkTokenInIDAPI = async (
 			request_id: res.locals.requestId,
 		});
 
+		trackMetric('ValidatePasswordToken::Failure');
+
 		if (path === '/welcome') {
 			handleBackButtonEventOnWelcomePage(path, pageTitle, req, res);
 		} else {
