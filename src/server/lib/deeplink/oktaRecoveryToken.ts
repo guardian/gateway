@@ -110,7 +110,7 @@ export const addAppPrefixToOktaRecoveryToken = async (
  * @param request_id string representing the request id
  * @returns string representing the encrypted recovery token
  */
-export const encryptOktaRecoveryToken = async ({
+export const encryptOktaRecoveryToken = ({
 	token,
 	encryptedRegistrationConsents,
 	appClientId,
@@ -152,15 +152,13 @@ export const encryptOktaRecoveryToken = async ({
  * @param request_id string representing the request id
  * @returns [string] representing the decrypted recovery token
  */
-export const decryptOktaRecoveryToken = async ({
+export const decryptOktaRecoveryToken = ({
 	encryptedToken,
 	request_id,
 }: {
 	encryptedToken: string;
 	request_id?: string;
-}): Promise<
-	[recoveryToken: string, encryptedRegistrationConsents?: string]
-> => {
+}): [recoveryToken: string, encryptedRegistrationConsents?: string] => {
 	try {
 		const token = extractOktaRecoveryToken(encryptedToken);
 

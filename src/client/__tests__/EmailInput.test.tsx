@@ -19,7 +19,7 @@ const setup = () => {
 	};
 };
 
-test('errors with nothing submitted', async () => {
+test('errors with nothing submitted', () => {
 	const { emailInput, queryByText } = setup();
 	// Input empty text to trigger error
 	fireEvent.input(emailInput, { target: { value: '' } });
@@ -33,7 +33,7 @@ test('errors with nothing submitted', async () => {
 // test doesn't seem to work with @testing-library/preact
 // despite the fact that it works in the browser, cypress, and storybook
 // and used to work with @testing-library/react
-test.skip('errors with an invalid email', async () => {
+test.skip('errors with an invalid email', () => {
 	const { emailInput, queryByText } = setup();
 	// Input text and blur to trigger error
 	fireEvent.change(emailInput, { target: { value: 'invalid.email.com' } });
@@ -45,7 +45,7 @@ test.skip('errors with an invalid email', async () => {
 	expect(error).toBeInTheDocument();
 });
 
-test('does not error with a valid email', async () => {
+test('does not error with a valid email', () => {
 	const { emailInput, queryByText } = setup();
 	// Input text and blur to trigger error
 	fireEvent.change(emailInput, { target: { value: 'valid@email.com' } });
@@ -63,7 +63,7 @@ test('does not error with a valid email', async () => {
 // test doesn't seem to work with @testing-library/preact
 // despite the fact that it works in the browser, cypress, and storybook
 // and used to work with @testing-library/react
-test.skip('error is corrected once a valid email is submitted', async () => {
+test.skip('error is corrected once a valid email is submitted', () => {
 	const { emailInput, queryByText } = setup();
 	// Input text and blur to trigger error
 	fireEvent.change(emailInput, { target: { value: 'invalid.email.com' } });

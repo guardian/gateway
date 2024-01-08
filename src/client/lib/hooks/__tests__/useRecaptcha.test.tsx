@@ -120,7 +120,7 @@ test('should receive a valid token back when the reCAPTCHA check is successful',
 	);
 
 	// Request a token from recaptcha.
-	act(() => {
+	void act(() => {
 		const captchaExecutionResult = result.current?.executeCaptcha();
 		expect(captchaExecutionResult).toBe(true);
 	});
@@ -138,9 +138,9 @@ test('should receive a valid token back when the reCAPTCHA check is successful',
 	windowSpy.mockRestore();
 });
 
-test('should not be able to execute a call to reCAPTCHA if the script has not loaded yet', async () => {
+test('should not be able to execute a call to reCAPTCHA if the script has not loaded yet', () => {
 	// Begin test.
-	await act(async () => {
+	void act(async () => {
 		const { result, waitFor } = renderHook(() =>
 			useRecaptcha('public-recaptcha-token', 'render-element'),
 		);
@@ -201,7 +201,7 @@ test('should receive an error back when the reCAPTCHA check is unsuccessful', as
 	);
 
 	// Request a token from recaptcha.
-	act(() => {
+	void act(() => {
 		result.current?.executeCaptcha();
 	});
 
@@ -325,7 +325,7 @@ test('should expect an error state when the Google reCAPTCHA script fails to loa
 	windowSpy.mockRestore();
 });
 
-test('should expect an error state when no siteToken is provided', async () => {
+test('should expect an error state when no siteToken is provided', () => {
 	renderHook(() =>
 		expect(() =>
 			useRecaptcha('', 'element-id'),
@@ -335,7 +335,7 @@ test('should expect an error state when no siteToken is provided', async () => {
 	);
 });
 
-test('should expect an error state when no renderElement is provided', async () => {
+test('should expect an error state when no renderElement is provided', () => {
 	renderHook(() =>
 		expect(() =>
 			useRecaptcha('valid-site-key', ''),
@@ -394,7 +394,7 @@ test('should try again successfully after an unsuccessful reCAPTCHA check and re
 	);
 
 	// Request a token from recaptcha.
-	act(() => {
+	void act(() => {
 		result.current?.executeCaptcha();
 	});
 
@@ -423,7 +423,7 @@ test('should try again successfully after an unsuccessful reCAPTCHA check and re
 	}));
 
 	// Request a token from recaptcha.
-	act(() => {
+	void act(() => {
 		result.current?.executeCaptcha();
 	});
 

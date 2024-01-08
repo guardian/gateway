@@ -32,7 +32,7 @@ describe('rate limiter middleware', () => {
 		jest.mock('@/server/lib/idapi/guest');
 		jest.mock('@/server/lib/idapi/decryptToken');
 		jest.mock('@/server/lib/idapi/auth', () => ({
-			authenticate: async () => ({
+			authenticate: () => ({
 				values: [],
 			}),
 		}));
@@ -70,7 +70,7 @@ describe('rate limiter middleware', () => {
 	afterEach((done) => {
 		// in-memory redis store is persisted after each run
 		// make sure to clear the store after each test
-		new Redis().flushall().then(() => done());
+		void new Redis().flushall().then(() => done());
 	});
 
 	afterAll(() => {

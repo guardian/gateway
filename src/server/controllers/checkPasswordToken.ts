@@ -153,7 +153,7 @@ export const checkTokenInOkta = async (
 
 	try {
 		// decrypt the recovery token
-		const decryptedRecoveryToken = await decryptOktaRecoveryToken({
+		const decryptedRecoveryToken = decryptOktaRecoveryToken({
 			encryptedToken: token,
 			request_id: res.locals.requestId,
 		});

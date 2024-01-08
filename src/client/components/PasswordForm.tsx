@@ -305,7 +305,7 @@ export const PasswordForm = ({
 			// Only make api calls to check if breached when length rules are not broken
 			setIsChecking(true);
 			if (cryptoSubtleFeatureTest(browserName)) {
-				isBreached(password).then((breached) => {
+				void isBreached(password).then((breached) => {
 					if (breached) {
 						// Password is breached ❌
 						setIsWeak(true);
@@ -433,7 +433,7 @@ export const PasswordFormMainLayout = ({
 			// Only make api calls to check if breached when length rules are not broken
 			setIsChecking(true);
 			if (cryptoSubtleFeatureTest(browserName)) {
-				isBreached(password).then((breached) => {
+				void isBreached(password).then((breached) => {
 					if (breached) {
 						// Password is breached ❌
 						setIsWeak(true);

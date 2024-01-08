@@ -98,7 +98,7 @@ test('calls the form submit override method if defined', async () => {
 		expect(mockedSubmitOverride).toBeCalledTimes(0);
 	});
 
-	act(() => {
+	void act(() => {
 		fireEvent.click(submitButton);
 	});
 
@@ -120,7 +120,7 @@ test('disables the form submit button when disableOnSubmit is set', async () => 
 
 	expect(submitButton).not.toBeDisabled();
 
-	act(() => {
+	void act(() => {
 		fireEvent.click(submitButton);
 	});
 
@@ -142,7 +142,7 @@ test('enables the form submit button when onSubmit returns an error state', asyn
 
 	expect(submitButton).not.toBeDisabled();
 
-	act(() => {
+	void act(() => {
 		fireEvent.click(submitButton);
 	});
 
@@ -206,7 +206,7 @@ test('sets error message and context and prevents form submission when the reCAP
 
 	expect(submitButton).not.toBeDisabled();
 
-	act(() => {
+	void act(() => {
 		fireEvent.click(submitButton);
 	});
 
@@ -232,7 +232,7 @@ test('sets error message and context and prevents form submission when the reCAP
 		expect(setRecaptchaErrorContext).not.toBeCalled();
 	});
 
-	act(() => {
+	void act(() => {
 		fireEvent.click(submitButton);
 	});
 
@@ -304,7 +304,7 @@ test('submits the form when the reCAPTCHA validation check is successful', async
 
 	const submitButton = await findByText('Submit');
 
-	act(() => {
+	void act(() => {
 		fireEvent.click(submitButton);
 	});
 

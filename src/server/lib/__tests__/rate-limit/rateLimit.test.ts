@@ -27,7 +27,7 @@ describe('rateLimit', () => {
 	afterEach((done) => {
 		// in-memory redis store is persisted after each run
 		// make sure to clear the store after each test
-		new Redis().flushall().then(() => done());
+		void new Redis().flushall().then(() => done());
 	});
 
 	afterAll(() => {

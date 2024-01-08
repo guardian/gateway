@@ -13,7 +13,7 @@ export const useCmpConsent: () => boolean = () => {
 			const consentState: ConsentState = await onConsent();
 			setCmpConsent(consentState.canTarget); // canTarget if user has consented to all consents
 		};
-		checkCmpConsent();
+		void checkCmpConsent();
 	}, []);
 
 	return hasCmpConsent;

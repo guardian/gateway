@@ -204,7 +204,7 @@ const changePasswordInOkta = async (
 		validatePasswordFieldForOkta(password);
 
 		// decrypt the recovery token
-		const decryptedRecoveryToken = await decryptOktaRecoveryToken({
+		const decryptedRecoveryToken = decryptOktaRecoveryToken({
 			encryptedToken: encryptedRecoveryToken,
 			request_id: res.locals.requestId,
 		});
@@ -264,7 +264,7 @@ const changePasswordInOkta = async (
 
 			// fire ophan component event if applicable
 			if (res.locals.queryParams.componentEventParams) {
-				sendOphanComponentEventFromQueryParamsServer(
+				void sendOphanComponentEventFromQueryParamsServer(
 					res.locals.queryParams.componentEventParams,
 					'SIGN_IN',
 					'web',

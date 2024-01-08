@@ -98,10 +98,7 @@ export const sharedSignOutHandler = (
  * @name signOutFromIDAPILocal
  * @description Clear identity session and cookies from the current device/browser the user used to call this endpoint
  */
-const signOutFromIDAPILocal = async (
-	_: Request,
-	res: ResponseWithRequestState,
-): Promise<void> => {
+const signOutFromIDAPILocal = (_: Request, res: ResponseWithRequestState) => {
 	// sign out from idapi will invalidate ALL IDAPI sessions for the user no matter the device/browser
 	// so we've changed from using the IDAPI sign out endpoint to just clearing the IDAPI cookies
 	// so that the user is only signed out from the current device/browser
@@ -222,7 +219,7 @@ router.get(
 		// if the user has no Okta sid cookie, we will then try and log them out from IDAPI
 		// the user will be in this state if they previously had their Okta cookie removed and got
 		// redirected back to the /signout endpoint
-		await signOutFromIDAPILocal(req, res);
+		signOutFromIDAPILocal(req, res);
 
 		// clear other cookies
 		sharedSignOutHandler(req, res);
