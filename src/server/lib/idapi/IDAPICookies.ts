@@ -89,7 +89,3 @@ export const setSignOutCookie = (res: Response) => {
 		},
 	);
 };
-
-export const clearSignOutCookie = (res: Response) => {
-	res.clearCookie('GU_SO', sharedCookieOptions('GU_SO'));
-};
