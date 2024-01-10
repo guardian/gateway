@@ -159,27 +159,30 @@ Refresh should be attempted by going through the Authorization Code flow again, 
 ```mermaid
 flowchart TD
 
-A[Has GU_SO cookie?]
-A -- Yes --> E[Clear tokens] --> SO[isSignedOut]
-A -- No --> B[Has access/id token and valid?]
-B -- Yes --> SI[isLoggedIn/maybeLoggedIn]
-B -- No --> C[has `GU_U` cookie?]
+A[Has access/id token and valid?]
+A -- Yes --> B[Has `GU_SO` cookie?]
+A -- No --> C[has `GU_U` cookie?]
+B -- Yes --> D[is `GU_SO` value > `iat` claim on access/id token?]
+B -- No --> SI[isLoggedIn/maybeLoggedIn]
 C -- Yes --> SI
 C -- No --> SO[isSignedOut]
+D -- Yes --> E[Clear tokens] --> SO
+D -- No --> SI
 ```
 
 Since we're moving away from using a single cookie valid across all Guardian domains to authenticate and authorise the readers, we will need to have a different way to know if a reader is signed in.
 
 In general the following rules apply:
 
-1. If the reader has a valid access token and id token, they are signed in.
-2. If the access token and id token are expired, but the reader has a valid `GU_U` cookie, they might be signed in (`maybeLoggedIn`).
-
+1. Check if the reader has a valid access token and id token. This does not mean that the current reader is definitely signed in, so we have to perform additional checks.
+2. If the reader has valid access token and id token, check if the reader has a valid `GU_SO` cookie. If the reader has a valid `GU_SO` cookie, that means a reader has recently signed out, so we need to check whether we should clear the tokens. This is done by checking the `iat` claim on the access and id tokens, and comparing it to the `GU_SO` cookie value.
+   - If the `GU_SO` cookie value is greater than the `iat` claim in the access/id tokens (a reader signed out after the tokens were issued), then the tokens should be cleared, and the reader is not signed in to the current application.
+   - If the `GU_SO` cookie value is less than the `iat` claim in the access/id tokens (a reader signed out before the tokens were issued), then the tokens should not be cleared, and the reader is signed in to the current application.
+   - If there is no `GU_SO` cookie, then the reader is signed in to the current application.
+3. If the access token and id token are expired/do not exist, but the reader has a valid `GU_U` cookie, they might be signed in (`maybeLoggedIn`).
    - We can't be definitely sure if they are signed in until they attempt to go through the Authorization Code flow to attempt to get a new access token and id token.
    - This is where the Global session cookie will be checked as part of the Authorization Code flow, which is the `idx` cookie which is only valid on `profile` subdomain and managed by Okta.
-
-3. If the reader has neither a valid access token and id token, nor a valid `GU_U` cookie, they are signed out.
-4. If the reader has a valid GU_SO cookie, they have recently signed out. Any existing access token and id token should be cleared when the page loads.
+4. If the reader has neither a valid access token and id token, nor a valid `GU_U` cookie, they are signed out.
 
 By using this `isLoggedIn`/`maybeLoggedIn` and `isSignedOut` states, we can avoid making unnecessary API calls to Okta to check if the reader is signed in, and not lower our security by making the global session cookie available to all Guardian domains.
 
@@ -190,17 +193,12 @@ The `GU_U` cookie and the `idx` cookie will lead to the following scenarios:
 - `GU_U` && `idx`
   - Signed in fully state, can complete authorization flow and get tokens
 - `GU_U` && !`idx`
-
   - `idx` cookie expired or deleted
   - Error when attempting to get new tokens, can delete `GU_U` cookie to get to signed out state
-
 - !`GU_U` && `idx`
-
   - `GU_U` cookie expired or deleted, similar to signed out state
   - When a user goes to log in they will see “signed in as” screen, or be silently logged in if not using “prompt=login” parameter
-
 - !`GU_U` && !`idx`
-
   - Signed out state
 
 This will also help Ophan, which currently uses the `GU_U` cookie to extract the user id from the cookie to join data. This approach also works on both the server and client side, where the `GU_U` cookie can be read by the application before attempting to perform the authorization code flow.
