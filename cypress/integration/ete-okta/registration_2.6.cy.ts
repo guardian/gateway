@@ -49,8 +49,8 @@ describe('Registration flow - Split 2/2', () => {
 									expect(body).to.have.string('This account already exists');
 									expect(body).to.have.string('Create password');
 									expect(links.length).to.eq(2);
-									const setPasswordLink = links.find(
-										(s) => s.text?.includes('Create password'),
+									const setPasswordLink = links.find((s) =>
+										s.text?.includes('Create password'),
 									);
 									expect(setPasswordLink?.href ?? '').not.to.have.string(
 										'useOkta=true',
@@ -103,8 +103,8 @@ describe('Registration flow - Split 2/2', () => {
 										expect(body).to.have.string('This account already exists');
 										expect(body).to.have.string('Create password');
 										expect(links.length).to.eq(2);
-										const setPasswordLink = links.find(
-											(s) => s.text?.includes('Create password'),
+										const setPasswordLink = links.find((s) =>
+											s.text?.includes('Create password'),
 										);
 										expect(setPasswordLink?.href ?? '').not.to.have.string(
 											'useOkta=true',
@@ -155,8 +155,8 @@ describe('Registration flow - Split 2/2', () => {
 									expect(body).to.have.string('Sign in');
 									expect(body).to.have.string('Reset password');
 									expect(links.length).to.eq(3);
-									const resetPasswordLink = links.find(
-										(s) => s.text?.includes('Reset password'),
+									const resetPasswordLink = links.find((s) =>
+										s.text?.includes('Reset password'),
 									);
 									expect(resetPasswordLink?.href ?? '').not.to.have.string(
 										'useOkta=true',
@@ -207,8 +207,8 @@ describe('Registration flow - Split 2/2', () => {
 										expect(body).to.have.string('Password reset');
 										expect(body).to.have.string('Reset password');
 										expect(links.length).to.eq(2);
-										const resetPasswordLink = links.find(
-											(s) => s.text?.includes('Reset password'),
+										const resetPasswordLink = links.find((s) =>
+											s.text?.includes('Reset password'),
 										);
 										expect(resetPasswordLink?.href ?? '').not.to.have.string(
 											'useOkta=true',
@@ -260,8 +260,8 @@ describe('Registration flow - Split 2/2', () => {
 										expect(body).to.have.string('Password reset');
 										expect(body).to.have.string('Reset password');
 										expect(links.length).to.eq(2);
-										const resetPasswordLink = links.find(
-											(s) => s.text?.includes('Reset password'),
+										const resetPasswordLink = links.find((s) =>
+											s.text?.includes('Reset password'),
 										);
 										expect(resetPasswordLink?.href ?? '').not.to.have.string(
 											'useOkta=true',
@@ -358,8 +358,8 @@ describe('Registration flow - Split 2/2', () => {
 								expect(body).to.have.string('This account already exists');
 								expect(body).to.have.string('Create password');
 								expect(links.length).to.eq(2);
-								const setPasswordLink = links.find(
-									(s) => s.text?.includes('Create password'),
+								const setPasswordLink = links.find((s) =>
+									s.text?.includes('Create password'),
 								);
 								expect(setPasswordLink?.href ?? '').not.to.have.string(
 									'useOkta=true',
@@ -411,8 +411,8 @@ describe('Registration flow - Split 2/2', () => {
 									expect(body).to.have.string('This account already exists');
 									expect(body).to.have.string('Create password');
 									expect(links.length).to.eq(2);
-									const setPasswordLink = links.find(
-										(s) => s.text?.includes('Create password'),
+									const setPasswordLink = links.find((s) =>
+										s.text?.includes('Create password'),
 									);
 									expect(setPasswordLink?.href ?? '').not.to.have.string(
 										'useOkta=true',
@@ -463,8 +463,8 @@ describe('Registration flow - Split 2/2', () => {
 								expect(body).to.have.string('Sign in');
 								expect(body).to.have.string('Reset password');
 								expect(links.length).to.eq(3);
-								const resetPasswordLink = links.find(
-									(s) => s.text?.includes('Reset password'),
+								const resetPasswordLink = links.find((s) =>
+									s.text?.includes('Reset password'),
 								);
 								expect(resetPasswordLink?.href ?? '').not.to.have.string(
 									'useOkta=true',
@@ -515,8 +515,8 @@ describe('Registration flow - Split 2/2', () => {
 									expect(body).to.have.string('Password reset');
 									expect(body).to.have.string('Reset password');
 									expect(links.length).to.eq(2);
-									const resetPasswordLink = links.find(
-										(s) => s.text?.includes('Reset password'),
+									const resetPasswordLink = links.find((s) =>
+										s.text?.includes('Reset password'),
 									);
 									expect(resetPasswordLink?.href ?? '').not.to.have.string(
 										'useOkta=true',
@@ -568,8 +568,8 @@ describe('Registration flow - Split 2/2', () => {
 									expect(body).to.have.string('Password reset');
 									expect(body).to.have.string('Reset password');
 									expect(links.length).to.eq(2);
-									const resetPasswordLink = links.find(
-										(s) => s.text?.includes('Reset password'),
+									const resetPasswordLink = links.find((s) =>
+										s.text?.includes('Reset password'),
 									);
 									expect(resetPasswordLink?.href ?? '').not.to.have.string(
 										'useOkta=true',

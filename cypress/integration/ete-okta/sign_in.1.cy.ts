@@ -342,8 +342,8 @@ describe('Sign in flow, Okta enabled', () => {
 							);
 							expect(body).to.have.string('Reset password');
 							expect(links.length).to.eq(2);
-							const resetPasswordLink = links.find(
-								(s) => s.text?.includes('Reset password'),
+							const resetPasswordLink = links.find((s) =>
+								s.text?.includes('Reset password'),
 							);
 							expect(resetPasswordLink?.href ?? '').to.have.string(
 								'reset-password',
