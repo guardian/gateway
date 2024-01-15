@@ -51,7 +51,7 @@ jobs:
           role-to-assume: ${{ secrets.AWS_SES_SEND_EMAIL_ROLE_ARN }}
           aws-region: eu-west-1
       - name: Download build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
       - name: Unzip build
@@ -122,7 +122,7 @@ jobs:
           browser: chrome
           spec: cypress/integration/ete-okta/**/*.cy.ts
           config: '{"chromeWebSecurity": false,"baseUrl":"https://profile.thegulocal.com","numTestsKeptInMemory":"1","e2e":{"specPattern": ["cypress/integration/ete-okta/**/*.${{ matrix.group }}.cy.ts"]}}'
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: cypress-screenshots
