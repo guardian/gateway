@@ -12,10 +12,7 @@ import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { exchangeAccessTokenForCookies } from '@/server/lib/idapi/auth';
-import {
-	clearSignOutCookie,
-	setIDAPICookies,
-} from '@/server/lib/idapi/IDAPICookies';
+import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import {
 	FederationErrors,
 	GenericErrors,
@@ -222,9 +219,6 @@ const authenticationHandler = async (
 			res,
 			requestId: res.locals.requestId,
 		});
-
-		// clear the sign out cookie if it exists
-		clearSignOutCookie(res);
 
 		// clear any existing oauth application cookies if they exist
 		checkAndDeleteOAuthTokenCookies(req, res);
