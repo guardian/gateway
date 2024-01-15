@@ -9,3 +9,7 @@
 # Rewrite files after dependecy updates 2023-12-11
 # https://github.com/guardian/gateway/pull/2499
 1291ad2baf45f3e47414b07d22e4647b43836b8a
+
+# Rewrite files after dependecy updates 2024-01-15
+# https://github.com/guardian/gateway/pull/2533
+31c5de989a04d81412f80976443698812bae4509
