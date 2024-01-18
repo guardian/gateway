@@ -641,4 +641,43 @@ describe('Registration flow - Split 2/2', () => {
 			);
 		});
 	});
+
+	context('Temp Fix: Registration when token is prefixed with app', () => {
+		beforeEach(() => {
+			// Intercept the external redirect page.
+			// We just want to check that the redirect happens, not that the page loads.
+			cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
+				req.reply(200);
+			});
+		});
+
+		it('should redirect to the guardian homepage when registering with a token prefixed with app prefix and it did not get intercepted by app', () => {
+			const unregisteredEmail = randomMailosaurEmail();
+			cy.visit(`/register/email`);
+			const timeRequestWasMade = new Date();
+			cy.get('input[name=email]').type(unregisteredEmail);
+			cy.get('[data-cy="main-form-submit-button"]').click();
+
+			cy.contains('Check your email inbox');
+			cy.contains(unregisteredEmail);
+			cy.contains('Resend email');
+			cy.contains('Change email address');
+
+			cy.checkForEmailAndGetDetails(
+				unregisteredEmail,
+				timeRequestWasMade,
+				/welcome\/([^"]*)/,
+			).then(({ body, token }) => {
+				expect(body).to.have.string('Complete registration');
+				// manually adding the app prefix to the token
+				cy.visit(`/welcome/al_${token}`);
+				cy.contains('Save and continue');
+
+				cy.get('input[name="password"]').type(randomPassword());
+				cy.get('button[type="submit"]').click();
+
+				cy.url().should('contain', 'https://m.code.dev-theguardian.com/');
+			});
+		});
+	});
 });

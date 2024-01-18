@@ -31,6 +31,16 @@ const appPrefixes = [
 type AppPrefix = (typeof appPrefixes)[number];
 
 /**
+ * @name hasAppPrefix
+ * @description To check if a string has a prefix representing an native application.
+ *
+ * @param token	- string that may or may not have a prefix representing an native application
+ * @returns	- boolean representing if the string has a prefix representing an native application
+ */
+export const hasAppPrefix = (token: string): boolean =>
+	appPrefixes.some((prefix) => token.startsWith(prefix));
+
+/**
  * @name extractOktaRecoveryToken
  * @description To extract a recovery token from a larger string that may or may not have a prefix representing an native application.
  *
