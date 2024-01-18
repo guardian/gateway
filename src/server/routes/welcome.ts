@@ -25,6 +25,7 @@ import { Consents } from '@/shared/model/Consent';
 import { update as updateConsents } from '@/server/lib/idapi/consents';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
+import { Newsletters } from '@/shared/model/Newsletter';
 
 const { okta } = getConfiguration();
 
@@ -61,7 +62,7 @@ router.post(
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
 		try {
-			const { marketing } = req.body;
+			const { marketing, saturdayEdition } = req.body;
 
 			// marketing consent is a string with value `'on'` if checked, or `undefined` if not checked
 			// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox#value
@@ -71,6 +72,12 @@ router.post(
 					{
 						id: Consents.SIMILAR_GUARDIAN_PRODUCTS,
 						consented: !!marketing,
+					},
+				],
+				newsletters: [
+					{
+						id: Newsletters.SATURDAY_EDITION,
+						subscribed: !!saturdayEdition,
 					},
 				],
 			};

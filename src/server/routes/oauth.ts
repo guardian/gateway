@@ -35,6 +35,7 @@ import {
 import { update as updateConsents } from '@/server/lib/idapi/consents';
 import { decryptRegistrationConsents } from '@/server/lib/registrationConsents';
 import { SocialProvider } from '@/shared/model/Social';
+import { update as updateNewsletters } from '@/server/lib/idapi/newsletters';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
@@ -191,24 +192,46 @@ const authenticationHandler = async (
 			const decryptedConsents = decryptRegistrationConsents(
 				authState.data.encryptedRegistrationConsents,
 			);
-			if (decryptedConsents && decryptedConsents.consents) {
-				try {
-					await updateConsents({
-						ip: req.ip,
-						accessToken: tokenSet.access_token,
-						payload: decryptedConsents.consents,
-						request_id: res.locals.requestId,
-					});
-				} catch (error) {
-					logger.error(
-						'Error updating registration consents on oauth callback',
-						{
-							error,
-						},
-						{
+			if (decryptedConsents) {
+				if (decryptedConsents.consents) {
+					try {
+						await updateConsents({
+							ip: req.ip,
+							accessToken: tokenSet.access_token,
+							payload: decryptedConsents.consents,
 							request_id: res.locals.requestId,
-						},
-					);
+						});
+					} catch (error) {
+						logger.error(
+							'Error updating registration consents on oauth callback',
+							{
+								error,
+							},
+							{
+								request_id: res.locals.requestId,
+							},
+						);
+					}
+				}
+				if (decryptedConsents.newsletters) {
+					try {
+						await updateNewsletters({
+							ip: req.ip,
+							accessToken: tokenSet.access_token,
+							payload: decryptedConsents.newsletters,
+							request_id: res.locals.requestId,
+						});
+					} catch (error) {
+						logger.error(
+							'Error updating registration newsletters on oauth callback',
+							{
+								error,
+							},
+							{
+								request_id: res.locals.requestId,
+							},
+						);
+					}
 				}
 			}
 		}

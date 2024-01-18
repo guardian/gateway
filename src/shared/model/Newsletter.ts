@@ -23,6 +23,8 @@ export enum Newsletters {
 	// EU newsletters
 	TECHSCAPE = '6013',
 	THIS_IS_EUROPE = '4234',
+	// Registration Newsletter
+	SATURDAY_EDITION = '6031',
 }
 
 export const ALL_NEWSLETTER_IDS = Object.values(Newsletters);

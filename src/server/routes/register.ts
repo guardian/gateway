@@ -39,6 +39,7 @@ import { isStringBoolean } from '@/server/lib/isStringBoolean';
 import { Consents } from '@/shared/model/Consent';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
+import { Newsletters } from '@/shared/model/Newsletter';
 
 const { okta } = getConfiguration();
 
@@ -128,7 +129,12 @@ const OktaRegistration = async (
 	req: Request,
 	res: ResponseWithRequestState,
 ) => {
-	const { email = '', _cmpConsentedState = false, marketing } = req.body;
+	const {
+		email = '',
+		_cmpConsentedState = false,
+		marketing,
+		saturdayEdition,
+	} = req.body;
 
 	// marketing consent is a string with value `'on'` if checked, or `undefined` if not checked
 	// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox#value
@@ -138,6 +144,12 @@ const OktaRegistration = async (
 			{
 				id: Consents.SIMILAR_GUARDIAN_PRODUCTS,
 				consented: !!marketing,
+			},
+		],
+		newsletters: [
+			{
+				id: Newsletters.SATURDAY_EDITION,
+				subscribed: !!saturdayEdition,
 			},
 		],
 	};
