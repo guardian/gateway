@@ -1,5 +1,5 @@
 describe('Consent token flow', () => {
-	it('redirects to the success route when supplied a valid token by a logged in user', () => {
+	it('shows the success page when supplied a valid token by a logged in user', () => {
 		cy.createTestUser({
 			isUserEmailValidated: true,
 		}).then(({ emailAddress, cookies }) => {
@@ -24,12 +24,8 @@ describe('Consent token flow', () => {
 					cy.visit(`/consent-token/${token}/accept`, {
 						failOnStatusCode: false,
 					});
-					// /consents/thank-you isn't hosted by Gateway so all we need to check
-					// is that the cy.visit() redirected successfully, so intercept the request
-					// and return a 200
-					cy.intercept('GET', '/consents/thank-you', (req) => {
-						req.reply(200);
-					});
+					cy.contains('Subscribe Confirmation');
+					cy.url().should('include', '/subscribe/success');
 				});
 			});
 		});
