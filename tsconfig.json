@@ -13,10 +13,10 @@
 		"paths": {
 			"@/*": ["*"],
 			"react": ["./node_modules/preact/compat/"],
-			"react-dom": ["./node_modules/preact/compat/"]
+			"react-dom": ["./node_modules/preact/compat/"],
 		},
 		"lib": ["ES2022", "DOM"],
-		"importHelpers": true
+		"importHelpers": true,
 	},
-	"include": ["src", "scripts/generate-rate-limit-schema.ts"]
+	"include": ["src", "scripts/generate-rate-limit-schema.ts"],
 }
