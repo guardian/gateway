@@ -10,6 +10,7 @@ import {
 import { mergeRequestState } from '@/server/lib/requestState';
 import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
+import { buildUrl } from '@/shared/lib/routeUtils';
 
 // This route is of this specific form because it's a direct copy of the legacy
 // route in identity-frontend, and emails sent by IDAPI contain this URL.
@@ -25,9 +26,7 @@ router.get(
 
 			trackMetric('ConsentToken::Success');
 
-			// Redirect to /consents/thank-you (a page managed by Frontend). This is
-			// to retain the legacy behaviour of the route from identity-frontend.
-			return res.redirect(303, '/consents/thank-you?useIdapi=true');
+			return res.redirect(303, buildUrl('/subscribe/success'));
 		} catch (error) {
 			logger.error(`${req.method} ${req.originalUrl} Error`, error, {
 				request_id: res.locals.requestId,

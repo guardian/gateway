@@ -85,4 +85,21 @@ const handler = (action: SubscriptionAction) =>
 router.get('/unsubscribe/:emailType/:data/:token', handler('unsubscribe'));
 router.get('/subscribe/:emailType/:data/:token', handler('subscribe'));
 
+router.get(
+	'/subscribe/success',
+	(_: Request, res: ResponseWithRequestState) => {
+		// show the subscribe confirmation page
+		const html = renderer(`/subscribe/success`, {
+			requestState: mergeRequestState(res.locals, {
+				pageData: {
+					accountManagementUrl,
+				},
+			}),
+			pageTitle: `Subscribe Confirmation`,
+		});
+
+		return res.type('html').send(html);
+	},
+);
+
 export default router.router;
