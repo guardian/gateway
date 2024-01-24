@@ -270,6 +270,21 @@ const authenticationHandler = async (
 			return res.redirect(303, authState.queryParams.fromURI);
 		}
 
+		// temporary fix: if the user registered on the app (the token will be prefixed),
+		// and instead of ending up back in the app but in a mobile browser instead,
+		//  where we don't want to show the onboarding,
+		// for now we simply redirect them to the default return url when app prefix is set,
+		// and the confirmation page is one of the consent pages, then we redirect to the default return url,
+		// which is normally the guardian home page, by setting authState.confirmationPage to undefined
+		// this will be fixed when we either use a deep link with a custom scheme, or passwordless OTP flow
+		if (
+			authState.data?.hasAppPrefix &&
+			consentPages.some((page) => page.path === authState.confirmationPage)
+		) {
+			// eslint-disable-next-line functional/immutable-data
+			authState.confirmationPage = undefined;
+		}
+
 		const returnUrl = authState.confirmationPage
 			? addQueryParamsToPath(authState.confirmationPage, authState.queryParams)
 			: authState.queryParams.returnUrl;

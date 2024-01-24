@@ -68,6 +68,9 @@ describe('Registration flow - Split 1/2', () => {
 		});
 
 		it('successfully registers using an email with no existing account, and has a prefixed activation token when using a native app', () => {
+			cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
+				req.reply(200);
+			});
 			const encodedReturnUrl =
 				'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
 			const unregisteredEmail = randomMailosaurEmail();
@@ -116,16 +119,20 @@ describe('Registration flow - Split 1/2', () => {
 				//we are reloading here to make sure the params are persisted even on page refresh
 				cy.reload();
 
+				cy.get('form')
+					.should('have.attr', 'action')
+					.and('match', new RegExp(encodedReturnUrl))
+					.and('match', new RegExp(refViewId))
+					.and('match', new RegExp(encodedRef))
+					.and('match', new RegExp(clientId))
+					.and('not.match', new RegExp(appClientId))
+					.and('not.match', new RegExp(fromURI));
+
 				cy.get('input[name="firstName"]').type('First Name');
 				cy.get('input[name="secondName"]').type('Last Name');
 				cy.get('input[name="password"]').type(randomPassword());
 				cy.get('button[type="submit"]').click();
-				cy.url().should('contain', encodedReturnUrl);
-				cy.url().should('contain', refViewId);
-				cy.url().should('contain', encodedRef);
-				cy.url().should('contain', clientId);
-				cy.url().should('not.contain', appClientId);
-				cy.url().should('not.contain', fromURI);
+				cy.url().should('contain', 'https://m.code.dev-theguardian.com/');
 			});
 		});
 
