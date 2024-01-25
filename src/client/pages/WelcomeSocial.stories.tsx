@@ -36,3 +36,17 @@ export const ReturnUrl = (args: WelcomeSocialProps) => (
 ReturnUrl.story = {
 	name: 'with returnUrl',
 };
+
+export const GBGeolocation = (args: WelcomeSocialProps) => (
+	<WelcomeSocial {...args} geolocation="GB" />
+);
+GBGeolocation.story = {
+	name: 'with GB geolocation',
+};
+
+export const USGeolocation = (args: WelcomeSocialProps) => (
+	<WelcomeSocial {...args} geolocation="US" />
+);
+USGeolocation.story = {
+	name: 'with US geolocation',
+};

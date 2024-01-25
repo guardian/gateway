@@ -22,6 +22,7 @@ import { RegistrationMarketingConsentFormField } from '../components/Registratio
 import { SocialProvider } from '@/shared/model/Social';
 import { IsNativeApp } from '@/shared/model/ClientState';
 import { RegistrationNewsletterFormField } from '@/client/components/RegistrationNewsletterFormField';
+import { GeoLocation } from '@/shared/model/Geolocation';
 
 const inlineMessage = (socialProvider: SocialProvider) => css`
 	display: flex;
@@ -66,6 +67,7 @@ const inlineMessage = (socialProvider: SocialProvider) => css`
 export type WelcomeSocialProps = RegistrationProps & {
 	socialProvider: SocialProvider;
 	isNativeApp?: IsNativeApp;
+	geolocation?: GeoLocation;
 };
 
 export const WelcomeSocial = ({
@@ -73,10 +75,16 @@ export const WelcomeSocial = ({
 	formError,
 	socialProvider,
 	isNativeApp,
+	geolocation,
 }: WelcomeSocialProps) => {
 	const formTrackingName = 'register';
 
 	usePageLoadOphanInteraction(formTrackingName);
+
+	// don't show the Saturday Edition newsletter option for US and AUS
+	const showSaturdayEdition = !(['US', 'AUS'] as GeoLocation[]).some(
+		(location: GeoLocation) => location === geolocation,
+	);
 
 	return (
 		<MainLayout>
@@ -103,7 +111,9 @@ export const WelcomeSocial = ({
 					</MainBodyText>
 				)}
 				<>
-					<RegistrationNewsletterFormField isNativeApp={isNativeApp} />
+					{showSaturdayEdition && (
+						<RegistrationNewsletterFormField isNativeApp={isNativeApp} />
+					)}
 					<RegistrationMarketingConsentFormField isNativeApp={isNativeApp} />
 				</>
 			</MainForm>

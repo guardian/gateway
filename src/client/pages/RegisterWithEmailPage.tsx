@@ -15,6 +15,7 @@ export const RegisterWithEmailPage = () => {
 			recaptchaSiteKey={recaptchaSiteKey}
 			queryParams={queryParams}
 			isNativeApp={isNativeApp}
+			geolocation={pageData.geolocation}
 		/>
 	);
 };

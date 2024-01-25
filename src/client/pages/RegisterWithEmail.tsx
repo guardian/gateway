@@ -11,9 +11,11 @@ import { generateSignInRegisterTabs } from '@/client/components/Nav';
 import { RegistrationMarketingConsentFormField } from '../components/RegistrationMarketingConsentFormField';
 import { IsNativeApp } from '@/shared/model/ClientState';
 import { RegistrationNewsletterFormField } from '@/client/components/RegistrationNewsletterFormField';
+import { GeoLocation } from '@/shared/model/Geolocation';
 
 export type RegisterWithEmailProps = RegistrationProps & {
 	isNativeApp?: IsNativeApp;
+	geolocation?: GeoLocation;
 };
 
 export const RegisterWithEmail = ({
@@ -22,6 +24,7 @@ export const RegisterWithEmail = ({
 	queryParams,
 	formError,
 	isNativeApp,
+	geolocation,
 }: RegisterWithEmailProps) => {
 	const formTrackingName = 'register';
 
@@ -35,6 +38,11 @@ export const RegisterWithEmail = ({
 	});
 
 	const useIdapi = queryParams.useIdapi;
+
+	// don't show the Saturday Edition newsletter option for US and AUS
+	const showSaturdayEdition = !(['US', 'AUS'] as GeoLocation[]).some(
+		(location: GeoLocation) => location === geolocation,
+	);
 
 	return (
 		<MainLayout tabs={tabs}>
@@ -51,7 +59,9 @@ export const RegisterWithEmail = ({
 
 				{!useIdapi && (
 					<>
-						<RegistrationNewsletterFormField isNativeApp={isNativeApp} />
+						{showSaturdayEdition && (
+							<RegistrationNewsletterFormField isNativeApp={isNativeApp} />
+						)}
 						<RegistrationMarketingConsentFormField isNativeApp={isNativeApp} />
 					</>
 				)}
