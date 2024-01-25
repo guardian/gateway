@@ -10,3 +10,4 @@ export { default as FIVE_GREAT_READS_AU_IMAGE } from './au-five-great-reads.png'
 export { default as THE_CRUNCH_AU_IMAGE } from './au-the-crunch.jpg';
 export { default as TECHSCAPE_IMAGE } from './techscape.jpg';
 export { default as THIS_IS_EUROPE_IMAGE } from './this-is-europe.jpg';
+export { default as SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from './saturday-edition-small-square.jpg';
