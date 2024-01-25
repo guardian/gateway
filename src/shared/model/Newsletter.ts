@@ -28,3 +28,12 @@ export enum Newsletters {
 }
 
 export const ALL_NEWSLETTER_IDS = Object.values(Newsletters);
+
+export const RegistrationNewslettersFormFields = {
+	saturdayEdition: {
+		id: Newsletters.SATURDAY_EDITION,
+		label: 'Saturday Edition',
+		context:
+			'An exclusive email highlighting the week’s best Guardian journalism from the editor-in-chief, Katharine Viner.',
+	},
+};

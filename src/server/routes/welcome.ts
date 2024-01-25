@@ -21,11 +21,11 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { setEncryptedStateCookieForOktaRegistration } from './register';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
-import { Consents } from '@/shared/model/Consent';
+import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
 import { update as updateConsents } from '@/server/lib/idapi/consents';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
-import { Newsletters } from '@/shared/model/Newsletter';
+import { RegistrationNewslettersFormFields } from '@/shared/model/Newsletter';
 
 const { okta } = getConfiguration();
 
@@ -62,24 +62,23 @@ router.post(
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
 		try {
-			const { marketing, saturdayEdition } = req.body;
-
-			// marketing consent is a string with value `'on'` if checked, or `undefined` if not checked
+			// consents/newsletters is a string with value `'on'` if checked, or `undefined` if not checked
 			// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox#value
 			// so we can check the truthiness of the value to determine if the user has consented
+			// and we filter out any consents that are not consented
 			const consents: RegistrationConsents = {
-				consents: [
-					{
-						id: Consents.SIMILAR_GUARDIAN_PRODUCTS,
-						consented: !!marketing,
-					},
-				],
-				newsletters: [
-					{
-						id: Newsletters.SATURDAY_EDITION,
-						subscribed: !!saturdayEdition,
-					},
-				],
+				consents: Object.values(RegistrationConsentsFormFields)
+					.map((field) => ({
+						id: field.id,
+						consented: !!req.body[field.id],
+					}))
+					.filter((newsletter) => newsletter.consented),
+				newsletters: Object.values(RegistrationNewslettersFormFields)
+					.map((field) => ({
+						id: field.id,
+						subscribed: !!req.body[field.id],
+					}))
+					.filter((newsletter) => newsletter.subscribed),
 			};
 
 			// update the consents and go to the finally block

@@ -24,3 +24,11 @@ export const CONSENTS_NEWSLETTERS_PAGE: string[] = [Consents.EVENTS];
 export const REGISTRATION_CONSENTS: string[] = [
 	Consents.SIMILAR_GUARDIAN_PRODUCTS,
 ];
+
+export const RegistrationConsentsFormFields = {
+	similarGuardianProducts: {
+		id: Consents.SIMILAR_GUARDIAN_PRODUCTS,
+		label:
+			'Receive information on our products and ways to support and enjoy our journalism. Toggle to opt out.',
+	},
+};

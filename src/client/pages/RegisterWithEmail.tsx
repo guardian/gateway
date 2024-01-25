@@ -6,12 +6,15 @@ import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import { CmpConsentedStateHiddenInput } from '@/client/components/CmpConsentStateHiddenInput';
 import { useCmpConsent } from '@/client/lib/hooks/useCmpConsent';
-import { RegistrationProps } from './Registration';
+import { RegistrationProps } from '@/client/pages/Registration';
 import { generateSignInRegisterTabs } from '@/client/components/Nav';
-import { RegistrationMarketingConsentFormField } from '../components/RegistrationMarketingConsentFormField';
+import { RegistrationMarketingConsentFormField } from '@/client/components/RegistrationMarketingConsentFormField';
 import { IsNativeApp } from '@/shared/model/ClientState';
 import { RegistrationNewsletterFormField } from '@/client/components/RegistrationNewsletterFormField';
 import { GeoLocation } from '@/shared/model/Geolocation';
+import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '@/client/assets/newsletters';
+import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
+import { RegistrationNewslettersFormFields } from '@/shared/model/Newsletter';
 
 export type RegisterWithEmailProps = RegistrationProps & {
 	isNativeApp?: IsNativeApp;
@@ -60,9 +63,23 @@ export const RegisterWithEmail = ({
 				{!useIdapi && (
 					<>
 						{showSaturdayEdition && (
-							<RegistrationNewsletterFormField isNativeApp={isNativeApp} />
+							<RegistrationNewsletterFormField
+								id={RegistrationNewslettersFormFields.saturdayEdition.id}
+								label={RegistrationNewslettersFormFields.saturdayEdition.label}
+								context={
+									RegistrationNewslettersFormFields.saturdayEdition.context
+								}
+								isNativeApp={isNativeApp}
+								imagePath={SATURDAY_EDITION_SMALL_SQUARE_IMAGE}
+							/>
 						)}
-						<RegistrationMarketingConsentFormField isNativeApp={isNativeApp} />
+						<RegistrationMarketingConsentFormField
+							id={RegistrationConsentsFormFields.similarGuardianProducts.id}
+							label={
+								RegistrationConsentsFormFields.similarGuardianProducts.label
+							}
+							isNativeApp={isNativeApp}
+						/>
 					</>
 				)}
 			</MainForm>

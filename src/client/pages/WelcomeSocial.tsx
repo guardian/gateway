@@ -3,7 +3,7 @@ import { MainLayout } from '@/client/layouts/Main';
 import { MainForm } from '@/client/components/MainForm';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
-import { RegistrationProps } from './Registration';
+import { RegistrationProps } from '@/client/pages/Registration';
 import { css } from '@emotion/react';
 import {
 	palette,
@@ -18,11 +18,14 @@ import {
 	SvgGoogleBrand,
 	SvgTickRound,
 } from '@guardian/source-react-components';
-import { RegistrationMarketingConsentFormField } from '../components/RegistrationMarketingConsentFormField';
+import { RegistrationMarketingConsentFormField } from '@/client/components/RegistrationMarketingConsentFormField';
 import { SocialProvider } from '@/shared/model/Social';
 import { IsNativeApp } from '@/shared/model/ClientState';
 import { RegistrationNewsletterFormField } from '@/client/components/RegistrationNewsletterFormField';
 import { GeoLocation } from '@/shared/model/Geolocation';
+import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '@/client/assets/newsletters';
+import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
+import { RegistrationNewslettersFormFields } from '@/shared/model/Newsletter';
 
 const inlineMessage = (socialProvider: SocialProvider) => css`
 	display: flex;
@@ -112,9 +115,21 @@ export const WelcomeSocial = ({
 				)}
 				<>
 					{showSaturdayEdition && (
-						<RegistrationNewsletterFormField isNativeApp={isNativeApp} />
+						<RegistrationNewsletterFormField
+							id={RegistrationNewslettersFormFields.saturdayEdition.id}
+							label={RegistrationNewslettersFormFields.saturdayEdition.label}
+							context={
+								RegistrationNewslettersFormFields.saturdayEdition.context
+							}
+							imagePath={SATURDAY_EDITION_SMALL_SQUARE_IMAGE}
+							isNativeApp={isNativeApp}
+						/>
 					)}
-					<RegistrationMarketingConsentFormField isNativeApp={isNativeApp} />
+					<RegistrationMarketingConsentFormField
+						id={RegistrationConsentsFormFields.similarGuardianProducts.id}
+						label={RegistrationConsentsFormFields.similarGuardianProducts.label}
+						isNativeApp={isNativeApp}
+					/>
 				</>
 			</MainForm>
 		</MainLayout>

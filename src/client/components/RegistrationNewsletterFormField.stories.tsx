@@ -2,6 +2,8 @@ import React from 'react';
 import { Meta } from '@storybook/react';
 
 import { RegistrationNewsletterFormField } from './RegistrationNewsletterFormField';
+import { RegistrationNewslettersFormFields } from '@/shared/model/Newsletter';
+import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '../assets/newsletters';
 
 export default {
 	title: 'Components/RegistrationNewsletterFormField',
@@ -9,11 +11,26 @@ export default {
 } as Meta;
 
 export const Default = () => {
-	return <RegistrationNewsletterFormField />;
+	return (
+		<RegistrationNewsletterFormField
+			id={RegistrationNewslettersFormFields.saturdayEdition.id}
+			label={RegistrationNewslettersFormFields.saturdayEdition.label}
+			context={RegistrationNewslettersFormFields.saturdayEdition.context}
+			imagePath={SATURDAY_EDITION_SMALL_SQUARE_IMAGE}
+		/>
+	);
 };
 Default.storyName = 'default';
 
 export const NativeApp = () => {
-	return <RegistrationNewsletterFormField isNativeApp="android" />;
+	return (
+		<RegistrationNewsletterFormField
+			id={RegistrationNewslettersFormFields.saturdayEdition.id}
+			label={RegistrationNewslettersFormFields.saturdayEdition.label}
+			context={RegistrationNewslettersFormFields.saturdayEdition.context}
+			imagePath={SATURDAY_EDITION_SMALL_SQUARE_IMAGE}
+			isNativeApp="android"
+		/>
+	);
 };
 NativeApp.storyName = 'NativeApp';

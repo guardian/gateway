@@ -24,18 +24,22 @@ const bottomDividerStyles = css`
 `;
 
 type Props = {
+	id: string;
+	label: string;
 	isNativeApp?: IsNativeApp;
 };
 
 export const RegistrationMarketingConsentFormField = ({
+	id,
+	label,
 	isNativeApp,
 }: Props) => {
 	return (
 		<>
 			<fieldset css={switchRow}>
 				<ToggleSwitchInput
-					id="marketing"
-					label="Receive information on our products and ways to support and enjoy our journalism. Toggle to opt out."
+					id={id}
+					label={label}
 					defaultChecked={true}
 					cssOverrides={labelStyles(isNativeApp)}
 				/>

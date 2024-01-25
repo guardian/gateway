@@ -36,10 +36,10 @@ import { mergeRequestState } from '@/server/lib/requestState';
 import { UserResponse } from '@/server/models/okta/User';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
 import { isStringBoolean } from '@/server/lib/isStringBoolean';
-import { Consents } from '@/shared/model/Consent';
+import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
-import { Newsletters } from '@/shared/model/Newsletter';
+import { RegistrationNewslettersFormFields } from '@/shared/model/Newsletter';
 
 const { okta } = getConfiguration();
 
@@ -129,29 +129,25 @@ const OktaRegistration = async (
 	req: Request,
 	res: ResponseWithRequestState,
 ) => {
-	const {
-		email = '',
-		_cmpConsentedState = false,
-		marketing,
-		saturdayEdition,
-	} = req.body;
+	const { email = '', _cmpConsentedState = false } = req.body;
 
-	// marketing consent is a string with value `'on'` if checked, or `undefined` if not checked
+	// consents/newsletters are a string with value `'on'` if checked, or `undefined` if not checked
 	// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox#value
 	// so we can check the truthiness of the value to determine if the user has consented
+	// and we filter out any consents that are not consented
 	const consents: RegistrationConsents = {
-		consents: [
-			{
-				id: Consents.SIMILAR_GUARDIAN_PRODUCTS,
-				consented: !!marketing,
-			},
-		],
-		newsletters: [
-			{
-				id: Newsletters.SATURDAY_EDITION,
-				subscribed: !!saturdayEdition,
-			},
-		],
+		consents: Object.values(RegistrationConsentsFormFields)
+			.map((field) => ({
+				id: field.id,
+				consented: !!req.body[field.id],
+			}))
+			.filter((newsletter) => newsletter.consented),
+		newsletters: Object.values(RegistrationNewslettersFormFields)
+			.map((field) => ({
+				id: field.id,
+				subscribed: !!req.body[field.id],
+			}))
+			.filter((newsletter) => newsletter.subscribed),
 	};
 
 	const {

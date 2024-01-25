@@ -3,8 +3,6 @@ import { palette, space, textSans } from '@guardian/source-foundations';
 import React from 'react';
 import { ToggleSwitchInput } from '@/client/components/ToggleSwitchInput';
 import { IsNativeApp } from '@/shared/model/ClientState';
-import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '@/client/assets/newsletters';
-import { Newsletters } from '@/shared/model/Newsletter';
 
 const switchRow = css`
 	border: 0;
@@ -31,21 +29,32 @@ const labelStyles = (isNativeApp: IsNativeApp) => css`
 `;
 
 type Props = {
+	id: string;
+	label: string;
+	context?: string;
+	imagePath?: string;
 	isNativeApp?: IsNativeApp;
+	defaultChecked?: boolean;
 };
 
-export const RegistrationNewsletterFormField = ({ isNativeApp }: Props) => {
+export const RegistrationNewsletterFormField = ({
+	id,
+	label,
+	context,
+	imagePath,
+	isNativeApp,
+	defaultChecked = true,
+}: Props) => {
 	return (
 		<>
 			<fieldset css={switchRow}>
 				<ToggleSwitchInput
-					id={Newsletters.SATURDAY_EDITION}
-					label="Saturday Edition"
-					defaultChecked={true}
+					id={id}
+					label={label}
+					defaultChecked={defaultChecked}
 					cssOverrides={labelStyles(isNativeApp)}
-					context="An exclusive email highlighting the week&lsquo;s best Guardian
-					journalism from the editor-in-chief, Katharine Viner."
-					imagePath={SATURDAY_EDITION_SMALL_SQUARE_IMAGE}
+					context={context}
+					imagePath={imagePath}
 				/>
 			</fieldset>
 		</>
