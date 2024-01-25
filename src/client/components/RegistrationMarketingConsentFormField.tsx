@@ -9,7 +9,7 @@ import { IsNativeApp } from '@/shared/model/ClientState';
 const switchRow = css`
 	border: 0;
 	padding: 0;
-	margin: ${space[6]}px 0 0 0;
+	margin: ${space[6]}px ${space[2]}px 0 ${space[2]}px;
 	${textSans.medium()}
 `;
 

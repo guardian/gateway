@@ -10,6 +10,7 @@ import { RegistrationProps } from './Registration';
 import { generateSignInRegisterTabs } from '@/client/components/Nav';
 import { RegistrationMarketingConsentFormField } from '../components/RegistrationMarketingConsentFormField';
 import { IsNativeApp } from '@/shared/model/ClientState';
+import { RegistrationNewsletterFormField } from '@/client/components/RegistrationNewsletterFormField';
 
 export type RegisterWithEmailProps = RegistrationProps & {
 	isNativeApp?: IsNativeApp;
@@ -49,7 +50,10 @@ export const RegisterWithEmail = ({
 				<CmpConsentedStateHiddenInput cmpConsentedState={hasCmpConsent} />
 
 				{!useIdapi && (
-					<RegistrationMarketingConsentFormField isNativeApp={isNativeApp} />
+					<>
+						<RegistrationNewsletterFormField isNativeApp={isNativeApp} />
+						<RegistrationMarketingConsentFormField isNativeApp={isNativeApp} />
+					</>
 				)}
 			</MainForm>
 		</MainLayout>

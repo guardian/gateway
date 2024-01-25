@@ -21,6 +21,7 @@ import {
 import { RegistrationMarketingConsentFormField } from '../components/RegistrationMarketingConsentFormField';
 import { SocialProvider } from '@/shared/model/Social';
 import { IsNativeApp } from '@/shared/model/ClientState';
+import { RegistrationNewsletterFormField } from '@/client/components/RegistrationNewsletterFormField';
 
 const inlineMessage = (socialProvider: SocialProvider) => css`
 	display: flex;
@@ -101,8 +102,10 @@ export const WelcomeSocial = ({
 						<SvgTickRound />
 					</MainBodyText>
 				)}
-
-				<RegistrationMarketingConsentFormField isNativeApp={isNativeApp} />
+				<>
+					<RegistrationNewsletterFormField isNativeApp={isNativeApp} />
+					<RegistrationMarketingConsentFormField isNativeApp={isNativeApp} />
+				</>
 			</MainForm>
 		</MainLayout>
 	);
