@@ -394,6 +394,8 @@ describe('Social Registration - Consents Page', () => {
 							expect(group).to.exist;
 						});
 
+						// opt out of newsletter
+						cy.contains('Saturday Edition').click();
 						// opt out of supporter consent
 						cy.contains('Toggle to opt out.').click();
 

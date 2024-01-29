@@ -23,6 +23,7 @@ import { mergeRequestState } from '@/server/lib/requestState';
 import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
 import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
 import { update as updateConsents } from '@/server/lib/idapi/consents';
+import { update as updateNewsletters } from '@/server/lib/idapi/newsletters';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { RegistrationNewslettersFormFields } from '@/shared/model/Newsletter';
@@ -66,7 +67,7 @@ router.post(
 			// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox#value
 			// so we can check the truthiness of the value to determine if the user has consented
 			// and we filter out any consents that are not consented
-			const consents: RegistrationConsents = {
+			const registrationConsents: RegistrationConsents = {
 				consents: Object.values(RegistrationConsentsFormFields)
 					.map((field) => ({
 						id: field.id,
@@ -81,13 +82,71 @@ router.post(
 					.filter((newsletter) => newsletter.subscribed),
 			};
 
+			const runningInCypress = process.env.RUNNING_IN_CYPRESS === 'true';
+
 			// update the consents and go to the finally block
-			await updateConsents({
-				ip: req.ip,
-				accessToken: state.oauthState.accessToken?.toString(),
-				payload: consents.consents!,
-				request_id: res.locals.requestId,
-			});
+			if (registrationConsents.consents?.length) {
+				try {
+					await updateConsents({
+						ip: req.ip,
+						accessToken: state.oauthState.accessToken?.toString(),
+						payload: registrationConsents.consents,
+						request_id: res.locals.requestId,
+					});
+
+					// since the CODE newsletters API isn't up to date with PROD newsletters API the
+					// review page will not show the correct newsletters on CODE.
+					// so when running in cypress we set a cookie to return the decrypted consents to cypress
+					// so we can check we at least got to the correct code path
+					if (runningInCypress) {
+						res.cookie(
+							'cypress-consent-response',
+							JSON.stringify(registrationConsents.consents),
+						);
+					}
+				} catch (error) {
+					logger.error(
+						'Error updating registration consents on welcome social',
+						{
+							error,
+						},
+						{
+							request_id: res.locals.requestId,
+						},
+					);
+				}
+			}
+
+			if (registrationConsents.newsletters?.length) {
+				try {
+					await updateNewsletters({
+						ip: req.ip,
+						accessToken: state.oauthState.accessToken?.toString(),
+						payload: registrationConsents.newsletters,
+						request_id: res.locals.requestId,
+					});
+					// since the CODE newsletters API isn't up to date with PROD newsletters API the
+					// review page will not show the correct newsletters on CODE.
+					// so when running in cypress we set a cookie to return the decrypted consents to cypress
+					// so we can check we at least got to the correct code path
+					if (runningInCypress) {
+						res.cookie(
+							'cypress-newsletter-response',
+							JSON.stringify(registrationConsents.newsletters),
+						);
+					}
+				} catch (error) {
+					logger.error(
+						'Error updating registration newsletters on welcome social',
+						{
+							error,
+						},
+						{
+							request_id: res.locals.requestId,
+						},
+					);
+				}
+			}
 		} catch (error) {
 			// we don't want to block the user at this point, so we'll just log the error, and go to the finally block
 			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
