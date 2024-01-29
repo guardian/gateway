@@ -84,8 +84,8 @@ export const WelcomeSocial = ({
 
 	usePageLoadOphanInteraction(formTrackingName);
 
-	// don't show the Saturday Edition newsletter option for US and AUS
-	const showSaturdayEdition = !(['US', 'AUS'] as GeoLocation[]).some(
+	// don't show the Saturday Edition newsletter option for US and AU
+	const showSaturdayEdition = !(['US', 'AU'] as GeoLocation[]).some(
 		(location: GeoLocation) => location === geolocation,
 	);
 

@@ -43,7 +43,7 @@ export const RegisterWithEmail = ({
 	const useIdapi = queryParams.useIdapi;
 
 	// don't show the Saturday Edition newsletter option for US and AUS
-	const showSaturdayEdition = !(['US', 'AUS'] as GeoLocation[]).some(
+	const showSaturdayEdition = !(['US', 'AU'] as GeoLocation[]).some(
 		(location: GeoLocation) => location === geolocation,
 	);
 

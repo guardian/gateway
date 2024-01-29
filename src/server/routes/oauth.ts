@@ -192,8 +192,9 @@ const authenticationHandler = async (
 			const decryptedConsents = decryptRegistrationConsents(
 				authState.data.encryptedRegistrationConsents,
 			);
+
 			if (decryptedConsents) {
-				if (decryptedConsents.consents) {
+				if (decryptedConsents.consents?.length) {
 					try {
 						await updateConsents({
 							ip: req.ip,
@@ -201,6 +202,17 @@ const authenticationHandler = async (
 							payload: decryptedConsents.consents,
 							request_id: res.locals.requestId,
 						});
+
+						// since the CODE newsletters API isn't up to date with PROD newsletters API the
+						// review page will not show the correct newsletters on CODE.
+						// so when running in cypress we set a cookie to return the decrypted consents to cypress
+						// so we can check we at least got to the correct code path
+						if (runningInCypress) {
+							res.cookie(
+								'cypress-consent-response',
+								JSON.stringify(decryptedConsents.consents),
+							);
+						}
 					} catch (error) {
 						logger.error(
 							'Error updating registration consents on oauth callback',
@@ -213,7 +225,7 @@ const authenticationHandler = async (
 						);
 					}
 				}
-				if (decryptedConsents.newsletters) {
+				if (decryptedConsents.newsletters?.length) {
 					try {
 						await updateNewsletters({
 							ip: req.ip,
@@ -221,6 +233,16 @@ const authenticationHandler = async (
 							payload: decryptedConsents.newsletters,
 							request_id: res.locals.requestId,
 						});
+						// since the CODE newsletters API isn't up to date with PROD newsletters API the
+						// review page will not show the correct newsletters on CODE.
+						// so when running in cypress we set a cookie to return the decrypted consents to cypress
+						// so we can check we at least got to the correct code path
+						if (runningInCypress) {
+							res.cookie(
+								'cypress-newsletter-response',
+								JSON.stringify(decryptedConsents.newsletters),
+							);
+						}
 					} catch (error) {
 						logger.error(
 							'Error updating registration newsletters on oauth callback',
