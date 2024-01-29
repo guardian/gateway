@@ -27,6 +27,10 @@ export enum Newsletters {
 	SATURDAY_EDITION = '6031',
 }
 
+export const REGISTRATION_NEWSLETTERS: string[] = [
+	Newsletters.SATURDAY_EDITION,
+];
+
 export const ALL_NEWSLETTER_IDS = Object.values(Newsletters);
 
 export const RegistrationNewslettersFormFields = {
