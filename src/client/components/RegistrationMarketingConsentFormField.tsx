@@ -4,7 +4,6 @@ import { Divider } from '@guardian/source-react-components-development-kitchen';
 import React from 'react';
 import { divider } from '@/client/styles/Shared';
 import { ToggleSwitchInput } from './ToggleSwitchInput';
-import { IsNativeApp } from '@/shared/model/ClientState';
 
 const switchRow = css`
 	border: 0;
@@ -13,10 +12,10 @@ const switchRow = css`
 	${textSans.medium()}
 `;
 
-const labelStyles = (isNativeApp: IsNativeApp) => css`
+const labelStyles = css`
 	justify-content: space-between;
 	color: ${palette.neutral[46]};
-	${isNativeApp ? textSans.xsmall() : textSans.small()};
+	${textSans.xsmall()}
 `;
 
 const bottomDividerStyles = css`
@@ -26,14 +25,9 @@ const bottomDividerStyles = css`
 type Props = {
 	id: string;
 	label: string;
-	isNativeApp?: IsNativeApp;
 };
 
-export const RegistrationMarketingConsentFormField = ({
-	id,
-	label,
-	isNativeApp,
-}: Props) => {
+export const RegistrationMarketingConsentFormField = ({ id, label }: Props) => {
 	return (
 		<>
 			<fieldset css={switchRow}>
@@ -41,7 +35,7 @@ export const RegistrationMarketingConsentFormField = ({
 					id={id}
 					label={label}
 					defaultChecked={true}
-					cssOverrides={labelStyles(isNativeApp)}
+					cssOverrides={labelStyles}
 				/>
 			</fieldset>
 			<Divider

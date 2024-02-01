@@ -21,16 +21,3 @@ export const Default = () => {
 	);
 };
 Default.storyName = 'default';
-
-export const NativeApp = () => {
-	return (
-		<RegistrationNewsletterFormField
-			id={RegistrationNewslettersFormFields.saturdayEdition.id}
-			label={RegistrationNewslettersFormFields.saturdayEdition.label}
-			context={RegistrationNewslettersFormFields.saturdayEdition.context}
-			imagePath={SATURDAY_EDITION_SMALL_SQUARE_IMAGE}
-			isNativeApp="android"
-		/>
-	);
-};
-NativeApp.storyName = 'NativeApp';

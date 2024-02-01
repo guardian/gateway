@@ -9,7 +9,6 @@ import { useCmpConsent } from '@/client/lib/hooks/useCmpConsent';
 import { RegistrationProps } from '@/client/pages/Registration';
 import { generateSignInRegisterTabs } from '@/client/components/Nav';
 import { RegistrationMarketingConsentFormField } from '@/client/components/RegistrationMarketingConsentFormField';
-import { IsNativeApp } from '@/shared/model/ClientState';
 import { RegistrationNewsletterFormField } from '@/client/components/RegistrationNewsletterFormField';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '@/client/assets/newsletters';
@@ -17,7 +16,6 @@ import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
 import { RegistrationNewslettersFormFields } from '@/shared/model/Newsletter';
 
 export type RegisterWithEmailProps = RegistrationProps & {
-	isNativeApp?: IsNativeApp;
 	geolocation?: GeoLocation;
 };
 
@@ -26,7 +24,6 @@ export const RegisterWithEmail = ({
 	recaptchaSiteKey,
 	queryParams,
 	formError,
-	isNativeApp,
 	geolocation,
 }: RegisterWithEmailProps) => {
 	const formTrackingName = 'register';
@@ -69,7 +66,6 @@ export const RegisterWithEmail = ({
 								context={
 									RegistrationNewslettersFormFields.saturdayEdition.context
 								}
-								isNativeApp={isNativeApp}
 								imagePath={SATURDAY_EDITION_SMALL_SQUARE_IMAGE}
 							/>
 						)}
@@ -78,7 +74,6 @@ export const RegisterWithEmail = ({
 							label={
 								RegistrationConsentsFormFields.similarGuardianProducts.label
 							}
-							isNativeApp={isNativeApp}
 						/>
 					</>
 				)}

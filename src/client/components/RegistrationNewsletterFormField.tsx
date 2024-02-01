@@ -2,7 +2,6 @@ import { css } from '@emotion/react';
 import { palette, space, textSans } from '@guardian/source-foundations';
 import React from 'react';
 import { ToggleSwitchInput } from '@/client/components/ToggleSwitchInput';
-import { IsNativeApp } from '@/shared/model/ClientState';
 
 const switchRow = css`
 	border: 0;
@@ -14,17 +13,15 @@ const switchRow = css`
 	padding: ${space[2]}px;
 `;
 
-const labelStyles = (isNativeApp: IsNativeApp) => css`
+const labelStyles = css`
 	justify-content: space-between;
 	& > span:first-of-type {
 		color: ${palette.neutral[20]};
-		${isNativeApp
-			? textSans.xsmall({ fontWeight: 'bold' })
-			: textSans.small({ fontWeight: 'bold' })};
+		${textSans.xsmall({ fontWeight: 'bold' })}
 	}
 	& > span:last-of-type {
 		color: ${palette.neutral[46]};
-		${isNativeApp ? textSans.xsmall() : textSans.small()};
+		${textSans.xsmall()}
 	}
 `;
 
@@ -33,7 +30,6 @@ type Props = {
 	label: string;
 	context?: string;
 	imagePath?: string;
-	isNativeApp?: IsNativeApp;
 	defaultChecked?: boolean;
 };
 
@@ -42,7 +38,6 @@ export const RegistrationNewsletterFormField = ({
 	label,
 	context,
 	imagePath,
-	isNativeApp,
 	defaultChecked = true,
 }: Props) => {
 	return (
@@ -52,7 +47,7 @@ export const RegistrationNewsletterFormField = ({
 					id={id}
 					label={label}
 					defaultChecked={defaultChecked}
-					cssOverrides={labelStyles(isNativeApp)}
+					cssOverrides={labelStyles}
 					context={context}
 					imagePath={imagePath}
 				/>

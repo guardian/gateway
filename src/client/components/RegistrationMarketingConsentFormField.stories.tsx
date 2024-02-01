@@ -18,14 +18,3 @@ export const Default = () => {
 	);
 };
 Default.storyName = 'default';
-
-export const NativeApp = () => {
-	return (
-		<RegistrationMarketingConsentFormField
-			id={RegistrationConsentsFormFields.similarGuardianProducts.id}
-			label={RegistrationConsentsFormFields.similarGuardianProducts.label}
-			isNativeApp="android"
-		/>
-	);
-};
-NativeApp.storyName = 'NativeApp';

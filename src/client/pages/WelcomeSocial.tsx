@@ -20,7 +20,6 @@ import {
 } from '@guardian/source-react-components';
 import { RegistrationMarketingConsentFormField } from '@/client/components/RegistrationMarketingConsentFormField';
 import { SocialProvider } from '@/shared/model/Social';
-import { IsNativeApp } from '@/shared/model/ClientState';
 import { RegistrationNewsletterFormField } from '@/client/components/RegistrationNewsletterFormField';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '@/client/assets/newsletters';
@@ -69,7 +68,6 @@ const inlineMessage = (socialProvider: SocialProvider) => css`
 
 export type WelcomeSocialProps = RegistrationProps & {
 	socialProvider: SocialProvider;
-	isNativeApp?: IsNativeApp;
 	geolocation?: GeoLocation;
 };
 
@@ -77,7 +75,6 @@ export const WelcomeSocial = ({
 	queryParams,
 	formError,
 	socialProvider,
-	isNativeApp,
 	geolocation,
 }: WelcomeSocialProps) => {
 	const formTrackingName = 'register';
@@ -122,13 +119,11 @@ export const WelcomeSocial = ({
 								RegistrationNewslettersFormFields.saturdayEdition.context
 							}
 							imagePath={SATURDAY_EDITION_SMALL_SQUARE_IMAGE}
-							isNativeApp={isNativeApp}
 						/>
 					)}
 					<RegistrationMarketingConsentFormField
 						id={RegistrationConsentsFormFields.similarGuardianProducts.id}
 						label={RegistrationConsentsFormFields.similarGuardianProducts.label}
-						isNativeApp={isNativeApp}
 					/>
 				</>
 			</MainForm>
