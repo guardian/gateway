@@ -164,7 +164,7 @@
 		"supertest": "^6.3.4",
 		"tslib": "^2.6.2",
 		"winston": "^3.11.0",
-		"winston-transport": "^4.6.0",
+		"winston-transport": "^4.7.0",
 		"zod": "^3.22.4"
 	}
 }
