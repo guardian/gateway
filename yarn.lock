@@ -5280,10 +5280,10 @@
   resolved "https://registry.yarnpkg.com/@swc/counter/-/counter-0.1.1.tgz#e8d066c653883238c291d8fdd8b36ed932e87920"
   integrity sha512-xVRaR4u9hcYjFvcSg71Lz5Bo4//CyjAAfMxa7UsaDSYxAshflUkVJWiyVWrfxC59z2kP1IzI4/1BEpnhI9o3Mw==
 
-"@swc/plugin-emotion@^2.5.115":
-  version "2.5.115"
-  resolved "https://registry.yarnpkg.com/@swc/plugin-emotion/-/plugin-emotion-2.5.115.tgz#27666e9ab318f8aefe3a0d81732ea10bcfb99dcc"
-  integrity sha512-3SuO6RbJESgVdmey0hwB5HR+ZU9sgLINTGdhRI+Uhr/KAhbZVvLxjf+g9/8g9RngECqljmd/xc0lZyNols8DVw==
+"@swc/plugin-emotion@^2.5.117":
+  version "2.5.117"
+  resolved "https://registry.yarnpkg.com/@swc/plugin-emotion/-/plugin-emotion-2.5.117.tgz#fd37246eaa8ce4fa06be59e1a9b5c7db81d05a3d"
+  integrity sha512-/J39w/ikivUP/5B3WnErXnc30gSvgQ6Pye80SjkI+7FSPAeNszDpj1GFarWc3vw5LWYHxPEVNuQNR+K3NHeCuA==
 
 "@swc/types@^0.1.5":
   version "0.1.5"
