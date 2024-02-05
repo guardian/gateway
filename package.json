@@ -111,7 +111,7 @@
 		"sharp": "^0.32.6",
 		"snyk": "^1.1275.0",
 		"storybook": "^7.6.10",
-		"swc-loader": "^0.2.3",
+		"swc-loader": "^0.2.6",
 		"terser-webpack-plugin": "^5.3.10",
 		"ts-jest": "^29.1.2",
 		"ts-node": "^10.9.2",
