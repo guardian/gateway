@@ -14,6 +14,7 @@ import { GeoLocation } from '@/shared/model/Geolocation';
 import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '@/client/assets/newsletters';
 import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
 import { RegistrationNewslettersFormFields } from '@/shared/model/Newsletter';
+import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 
 export type RegisterWithEmailProps = RegistrationProps & {
 	geolocation?: GeoLocation;
@@ -53,6 +54,10 @@ export const RegisterWithEmail = ({
 				formTrackingName={formTrackingName}
 				disableOnSubmit
 				formErrorMessageFromParent={formError}
+				onSubmit={(e) => {
+					registrationFormSubmitOphanTracking(e.target as HTMLFormElement);
+					return undefined;
+				}}
 			>
 				<EmailInput defaultValue={email} autoComplete="off" />
 				<CmpConsentedStateHiddenInput cmpConsentedState={hasCmpConsent} />
