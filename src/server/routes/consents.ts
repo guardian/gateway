@@ -15,7 +15,11 @@ import {
 	read as getNewsletters,
 } from '@/server/lib/idapi/newsletters';
 import { PageData } from '@/shared/model/ClientState';
-import { ALL_NEWSLETTER_IDS, NewsLetter } from '@/shared/model/Newsletter';
+import {
+	ALL_NEWSLETTER_IDS,
+	NewsLetter,
+	REGISTRATION_NEWSLETTERS,
+} from '@/shared/model/Newsletter';
 import {
 	CONSENTS_DATA_PAGE,
 	REGISTRATION_CONSENTS,
@@ -263,7 +267,10 @@ export const consentPages: ConsentPage[] = [
 					accessToken,
 				}),
 				newsletters: await getUserNewsletterSubscriptions({
-					newslettersOnPage: NewsletterMap.get(geo) as string[],
+					newslettersOnPage: [
+						...(NewsletterMap.get(geo) as string[]),
+						...REGISTRATION_NEWSLETTERS,
+					],
 					ip,
 					sc_gu_u,
 					request_id,

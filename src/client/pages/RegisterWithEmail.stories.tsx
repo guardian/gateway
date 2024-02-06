@@ -47,3 +47,17 @@ export const InvalidRecaptcha = (args: RegistrationProps) => (
 InvalidRecaptcha.story = {
 	name: 'with reCAPTCHA error',
 };
+
+export const GBGeolocation = (args: RegistrationProps) => (
+	<RegisterWithEmail {...args} geolocation="GB" />
+);
+GBGeolocation.story = {
+	name: 'with GB geolocation',
+};
+
+export const USGeolocation = (args: RegistrationProps) => (
+	<RegisterWithEmail {...args} geolocation="US" />
+);
+USGeolocation.story = {
+	name: 'with US geolocation',
+};

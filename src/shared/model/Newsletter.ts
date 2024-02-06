@@ -23,6 +23,21 @@ export enum Newsletters {
 	// EU newsletters
 	TECHSCAPE = '6013',
 	THIS_IS_EUROPE = '4234',
+	// Registration Newsletter
+	SATURDAY_EDITION = '6031',
 }
 
+export const REGISTRATION_NEWSLETTERS: string[] = [
+	Newsletters.SATURDAY_EDITION,
+];
+
 export const ALL_NEWSLETTER_IDS = Object.values(Newsletters);
+
+export const RegistrationNewslettersFormFields = {
+	saturdayEdition: {
+		id: Newsletters.SATURDAY_EDITION,
+		label: 'Saturday Edition',
+		context:
+			'An exclusive email highlighting the week’s best Guardian journalism from the editor-in-chief, Katharine Viner. Newsletters may contain info about charities, online ads, and content funded by outside parties.',
+	},
+};

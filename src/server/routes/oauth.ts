@@ -35,6 +35,7 @@ import {
 import { update as updateConsents } from '@/server/lib/idapi/consents';
 import { decryptRegistrationConsents } from '@/server/lib/registrationConsents';
 import { SocialProvider } from '@/shared/model/Social';
+import { update as updateNewsletters } from '@/server/lib/idapi/newsletters';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
@@ -191,24 +192,68 @@ const authenticationHandler = async (
 			const decryptedConsents = decryptRegistrationConsents(
 				authState.data.encryptedRegistrationConsents,
 			);
-			if (decryptedConsents && decryptedConsents.consents) {
-				try {
-					await updateConsents({
-						ip: req.ip,
-						accessToken: tokenSet.access_token,
-						payload: decryptedConsents.consents,
-						request_id: res.locals.requestId,
-					});
-				} catch (error) {
-					logger.error(
-						'Error updating registration consents on oauth callback',
-						{
-							error,
-						},
-						{
+
+			if (decryptedConsents) {
+				if (decryptedConsents.consents?.length) {
+					try {
+						await updateConsents({
+							ip: req.ip,
+							accessToken: tokenSet.access_token,
+							payload: decryptedConsents.consents,
 							request_id: res.locals.requestId,
-						},
-					);
+						});
+
+						// since the CODE newsletters API isn't up to date with PROD newsletters API the
+						// review page will not show the correct newsletters on CODE.
+						// so when running in cypress we set a cookie to return the decrypted consents to cypress
+						// so we can check we at least got to the correct code path
+						if (runningInCypress) {
+							res.cookie(
+								'cypress-consent-response',
+								JSON.stringify(decryptedConsents.consents),
+							);
+						}
+					} catch (error) {
+						logger.error(
+							'Error updating registration consents on oauth callback',
+							{
+								error,
+							},
+							{
+								request_id: res.locals.requestId,
+							},
+						);
+					}
+				}
+				if (decryptedConsents.newsletters?.length) {
+					try {
+						await updateNewsletters({
+							ip: req.ip,
+							accessToken: tokenSet.access_token,
+							payload: decryptedConsents.newsletters,
+							request_id: res.locals.requestId,
+						});
+						// since the CODE newsletters API isn't up to date with PROD newsletters API the
+						// review page will not show the correct newsletters on CODE.
+						// so when running in cypress we set a cookie to return the decrypted consents to cypress
+						// so we can check we at least got to the correct code path
+						if (runningInCypress) {
+							res.cookie(
+								'cypress-newsletter-response',
+								JSON.stringify(decryptedConsents.newsletters),
+							);
+						}
+					} catch (error) {
+						logger.error(
+							'Error updating registration newsletters on oauth callback',
+							{
+								error,
+							},
+							{
+								request_id: res.locals.requestId,
+							},
+						);
+					}
 				}
 			}
 		}

@@ -12,14 +12,14 @@ export const WelcomeSocialPage = ({
 }: WelcomeSocialPageProps) => {
 	const clientState = useClientState();
 	const { pageData = {}, queryParams } = clientState;
-	const { formError, isNativeApp } = pageData;
+	const { formError } = pageData;
 
 	return (
 		<WelcomeSocial
 			formError={formError}
 			queryParams={queryParams}
 			socialProvider={socialProvider}
-			isNativeApp={isNativeApp}
+			geolocation={pageData.geolocation}
 		/>
 	);
 };

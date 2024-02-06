@@ -4,19 +4,18 @@ import { Divider } from '@guardian/source-react-components-development-kitchen';
 import React from 'react';
 import { divider } from '@/client/styles/Shared';
 import { ToggleSwitchInput } from './ToggleSwitchInput';
-import { IsNativeApp } from '@/shared/model/ClientState';
 
 const switchRow = css`
 	border: 0;
 	padding: 0;
-	margin: ${space[6]}px 0 0 0;
+	margin: ${space[6]}px ${space[2]}px 0 ${space[2]}px;
 	${textSans.medium()}
 `;
 
-const labelStyles = (isNativeApp: IsNativeApp) => css`
+const labelStyles = css`
 	justify-content: space-between;
 	color: ${palette.neutral[46]};
-	${isNativeApp ? textSans.xsmall() : textSans.small()};
+	${textSans.xsmall()}
 `;
 
 const bottomDividerStyles = css`
@@ -24,20 +23,19 @@ const bottomDividerStyles = css`
 `;
 
 type Props = {
-	isNativeApp?: IsNativeApp;
+	id: string;
+	label: string;
 };
 
-export const RegistrationMarketingConsentFormField = ({
-	isNativeApp,
-}: Props) => {
+export const RegistrationMarketingConsentFormField = ({ id, label }: Props) => {
 	return (
 		<>
 			<fieldset css={switchRow}>
 				<ToggleSwitchInput
-					id="marketing"
-					label="Receive information on our products and ways to support and enjoy our journalism. Toggle to opt out."
+					id={id}
+					label={label}
 					defaultChecked={true}
-					cssOverrides={labelStyles(isNativeApp)}
+					cssOverrides={labelStyles}
 				/>
 			</fieldset>
 			<Divider

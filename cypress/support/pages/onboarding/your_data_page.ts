@@ -28,7 +28,7 @@ class YourDataPage extends OnboardingPage {
 	}
 	// use to "click" because the checkbok input has no css visibility
 	static personalisedAdvertisingOptInSwitch() {
-		return cy.contains(this.CONTENT.ADVERTISING_MESSAGE).find('span');
+		return cy.contains(this.CONTENT.ADVERTISING_MESSAGE);
 	}
 }
 

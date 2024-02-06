@@ -3,6 +3,7 @@ import {
 	randomMailosaurEmail,
 	randomPassword,
 } from '../../support/commands/testUser';
+import { GEOLOCATION_CODES } from '../../support/geolocation';
 import NewslettersPage from '../../support/pages/onboarding/newsletters_page';
 import ReviewPage from '../../support/pages/onboarding/review_page';
 import YourDataPage from '../../support/pages/onboarding/your_data_page';
@@ -19,6 +20,12 @@ describe('Onboarding flow', () => {
 
 	context('Full flow', () => {
 		it('goes through the full flow, opt in all consents/marketing, preserve returnUrl', () => {
+			// Intercept the geolocation header and set it to GB to show Saturday Edition.
+			cy.intercept(`https://${Cypress.env('BASE_URI')}/**/*`, (req) => {
+				// eslint-disable-next-line functional/immutable-data
+				req.headers['x-gu-geolocation'] = GEOLOCATION_CODES.GB;
+			});
+
 			const returnUrl =
 				'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
 			const unregisteredEmail = randomMailosaurEmail();
@@ -110,6 +117,19 @@ describe('Onboarding flow', () => {
 					.should('have.attr', 'href')
 					.and('include', decodeURIComponent(returnUrl));
 
+				cy.getCookie('cypress-consent-response')
+					.should('exist')
+					.should('have.property', 'value')
+					.should(
+						'contain',
+						'similar_guardian_products%22%2C%22consented%22%3Atrue',
+					);
+
+				cy.getCookie('cypress-newsletter-response')
+					.should('exist')
+					.should('have.property', 'value')
+					.should('contain', '6031%22%2C%22subscribed%22%3Atrue');
+
 				ReviewPage.returnButton().click();
 
 				cy.url().should('include', decodeURIComponent(returnUrl));
@@ -117,6 +137,11 @@ describe('Onboarding flow', () => {
 		});
 
 		it('goes through full fow, opt out of all consents/newsletters, preserve returnUrl', () => {
+			// Intercept the geolocation header and set it to GB to show Saturday Edition.
+			cy.intercept(`https://${Cypress.env('BASE_URI')}/**/*`, (req) => {
+				// eslint-disable-next-line functional/immutable-data
+				req.headers['x-gu-geolocation'] = GEOLOCATION_CODES.GB;
+			});
 			const returnUrl =
 				'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
 			const unregisteredEmail = randomMailosaurEmail();
@@ -124,6 +149,8 @@ describe('Onboarding flow', () => {
 			cy.visit(`/register?returnUrl=${returnUrl}`);
 
 			cy.contains('Sign up with email').click();
+			// opt out of newsletter
+			cy.contains('Saturday Edition').click();
 			// opt out of supporter consent
 			cy.contains('Toggle to opt out.').click();
 
@@ -211,6 +238,10 @@ describe('Onboarding flow', () => {
 					.should('have.attr', 'href')
 					.and('include', decodeURIComponent(returnUrl));
 
+				cy.getCookie('cypress-consent-response').should('not.exist');
+
+				cy.getCookie('cypress-newsletter-response').should('not.exist');
+
 				ReviewPage.returnButton().click();
 
 				cy.url().should('include', decodeURIComponent(returnUrl));
@@ -231,6 +262,11 @@ describe('Onboarding flow', () => {
 // i.e user.profile.emailValidated = false, and user groups has GuardianUser-EmailValidated
 describe('Social Registration - Consents Page', () => {
 	it('shows the consents page for social registration using google - opts in', () => {
+		// Intercept the geolocation header and set it to GB to show Saturday Edition.
+		cy.intercept(`https://${Cypress.env('BASE_URI')}/**/*`, (req) => {
+			// eslint-disable-next-line functional/immutable-data
+			req.headers['x-gu-geolocation'] = GEOLOCATION_CODES.GB;
+		});
 		// first we have to get the id of the GuardianUser-EmailValidated group
 		cy.findEmailValidatedOktaGroupId().then((groupId) => {
 			// next we create a test user
@@ -289,6 +325,19 @@ describe('Social Registration - Consents Page', () => {
 						cy.url().should('include', ReviewPage.URL);
 
 						cy.contains(ReviewPage.CONTENT.SUPPORTING_THE_GUARDIAN_CONSENT);
+
+						cy.getCookie('cypress-consent-response')
+							.should('exist')
+							.should('have.property', 'value')
+							.should(
+								'contain',
+								'similar_guardian_products%22%2C%22consented%22%3Atrue',
+							);
+
+						cy.getCookie('cypress-newsletter-response')
+							.should('exist')
+							.should('have.property', 'value')
+							.should('contain', '6031%22%2C%22subscribed%22%3Atrue');
 					});
 				});
 			});
@@ -296,6 +345,11 @@ describe('Social Registration - Consents Page', () => {
 	});
 
 	it('shows the consents page for social registration using apple - opts out', () => {
+		// Intercept the geolocation header and set it to GB to show Saturday Edition.
+		cy.intercept(`https://${Cypress.env('BASE_URI')}/**/*`, (req) => {
+			// eslint-disable-next-line functional/immutable-data
+			req.headers['x-gu-geolocation'] = GEOLOCATION_CODES.GB;
+		});
 		// first we have to get the id of the GuardianUser-EmailValidated group
 		cy.findEmailValidatedOktaGroupId().then((groupId) => {
 			// next we create a test user
@@ -340,6 +394,8 @@ describe('Social Registration - Consents Page', () => {
 							expect(group).to.exist;
 						});
 
+						// opt out of newsletter
+						cy.contains('Saturday Edition').click();
 						// opt out of supporter consent
 						cy.contains('Toggle to opt out.').click();
 
@@ -359,6 +415,10 @@ describe('Social Registration - Consents Page', () => {
 						cy.contains(
 							ReviewPage.CONTENT.SUPPORTING_THE_GUARDIAN_CONSENT,
 						).should('not.exist');
+
+						cy.getCookie('cypress-consent-response').should('not.exist');
+
+						cy.getCookie('cypress-newsletter-response').should('not.exist');
 					});
 				});
 			});
