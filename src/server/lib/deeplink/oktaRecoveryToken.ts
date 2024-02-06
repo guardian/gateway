@@ -27,6 +27,7 @@ import {
 const appPrefixes = [
 	'al_', // Android live app
 	'il_', // iOS live app
+	'if_', // iOS feast app
 ];
 type AppPrefix = (typeof appPrefixes)[number];
 
@@ -93,6 +94,8 @@ export const addAppPrefixToOktaRecoveryToken = async (
 					return 'al_';
 				case 'ios_live_app':
 					return 'il_';
+				case 'ios_feast_app':
+					return 'if_';
 				default:
 					return '';
 			}

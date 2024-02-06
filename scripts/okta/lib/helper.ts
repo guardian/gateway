@@ -176,7 +176,9 @@ export const removePrefixFromToken = (
 		return undefined;
 	}
 
-	const prefix = ['al_', 'il_'].find((prefix) => token.startsWith(prefix));
+	const prefix = ['al_', 'il_', 'if_'].find((prefix) =>
+		token.startsWith(prefix),
+	);
 
 	if (!prefix) {
 		return token;
