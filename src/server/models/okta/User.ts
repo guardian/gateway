@@ -56,6 +56,7 @@ export const userResponseSchema = z.object({
 		lastName: true,
 		isJobsUser: true,
 		registrationLocation: true,
+		registrationPlatform: true,
 	}),
 	credentials: userCredentialsSchema,
 });
