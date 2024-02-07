@@ -25,6 +25,7 @@ import { GeoLocation } from '@/shared/model/Geolocation';
 import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '@/client/assets/newsletters';
 import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
 import { RegistrationNewslettersFormFields } from '@/shared/model/Newsletter';
+import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 
 const inlineMessage = (socialProvider: SocialProvider) => css`
 	display: flex;
@@ -95,6 +96,10 @@ export const WelcomeSocial = ({
 				disableOnSubmit
 				formErrorMessageFromParent={formError}
 				largeFormMarginTop
+				onSubmit={(e) => {
+					registrationFormSubmitOphanTracking(e.target as HTMLFormElement);
+					return undefined;
+				}}
 			>
 				{socialProvider === 'google' && (
 					<MainBodyText cssOverrides={inlineMessage(socialProvider)}>

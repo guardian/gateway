@@ -1,5 +1,7 @@
 import { PageData } from '@/shared/model/ClientState';
 import { sendOphanInteractionEvent } from './ophan';
+import { Consents } from '@/shared/model/Consent';
+import { Newsletters } from '@/shared/model/Newsletter';
 
 const trackInputElementInteraction = (
 	inputElem: HTMLInputElement,
@@ -84,4 +86,30 @@ export const onboardingFormSubmitOphanTracking = (
 		default:
 			return;
 	}
+};
+
+// handle registration form submit event on /register/email page and welcome/:social page
+// we have to manually track the consents and newsletters here, and manually set the values
+// for any new consents or newsletters added in the future
+export const registrationFormSubmitOphanTracking = (
+	target: HTMLFormElement,
+): void => {
+	const inputElems = target.querySelectorAll('input');
+
+	inputElems.forEach((elem) => {
+		if (elem.type === 'checkbox') {
+			switch (elem.name) {
+				case Newsletters.SATURDAY_EDITION:
+					trackInputElementInteraction(elem, 'newsletter', 'saturday-edition');
+					break;
+				case Consents.SIMILAR_GUARDIAN_PRODUCTS:
+					trackInputElementInteraction(
+						elem,
+						'consent',
+						'similar-guardian-products',
+					);
+					break;
+			}
+		}
+	});
 };
