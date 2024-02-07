@@ -64,6 +64,12 @@ describe('Registration flow - Split 1/2', () => {
 				cy.url().should('contain', clientId);
 				cy.url().should('not.contain', appClientId);
 				cy.url().should('not.contain', fromURI);
+
+				// test the registration platform is set correctly
+				cy.getTestOktaUser(unregisteredEmail).then((oktaUser) => {
+					expect(oktaUser.status).to.eq(Status.ACTIVE);
+					expect(oktaUser.profile.registrationPlatform).to.eq('profile');
+				});
 			});
 		});
 
@@ -133,6 +139,14 @@ describe('Registration flow - Split 1/2', () => {
 				cy.get('input[name="password"]').type(randomPassword());
 				cy.get('button[type="submit"]').click();
 				cy.url().should('contain', 'https://m.code.dev-theguardian.com/');
+
+				// test the registration platform is set correctly
+				cy.getTestOktaUser(unregisteredEmail).then((oktaUser) => {
+					expect(oktaUser.status).to.eq(Status.ACTIVE);
+					expect(oktaUser.profile.registrationPlatform).to.eq(
+						'android_live_app',
+					);
+				});
 			});
 		});
 
