@@ -21,6 +21,25 @@
 						"comment": "Matches any URL whose path starts with /set-password/il_<randomString> where <randomString> is a token"
 					}
 				]
+			},
+			{
+				"appIDs": [
+					"998P9U5NGJ.uk.co.guardian.Feast"
+				],
+				"components": [
+					{
+						"/": "/welcome/if_*",
+						"comment": "Matches any URL whose path starts with /welcome/if_<randomString> where <randomString> is a token"
+					},
+					{
+						"/": "/reset-password/if_*",
+						"comment": "Matches any URL whose path starts with /reset-password/if_<randomString> where <randomString> is a token"
+					},
+					{
+						"/": "/set-password/if_*",
+						"comment": "Matches any URL whose path starts with /set-password/if_<randomString> where <randomString> is a token"
+					}
+				]
 			}
 		]
 	}
