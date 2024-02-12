@@ -17,12 +17,7 @@ describe('Password reset flow', () => {
 					const timeRequestWasMade = new Date();
 					cy.contains('Reset password').click();
 
-					// Simulate going offline by failing the reCAPTCHA POST request.
-					cy.intercept({
-						method: 'POST',
-						url: 'https://www.google.com/recaptcha/api2/**',
-						times: 1,
-					});
+					cy.interceptRecaptcha();
 
 					cy.contains('Forgot password');
 					cy.get('input[name=email]').type(emailAddress);
@@ -74,12 +69,7 @@ describe('Password reset flow', () => {
 					const timeRequestWasMade = new Date();
 					cy.contains('Reset password').click();
 
-					// Simulate going offline by failing the reCAPTCHA POST request.
-					cy.intercept({
-						method: 'POST',
-						url: 'https://www.google.com/recaptcha/api2/**',
-						times: 1,
-					});
+					cy.interceptRecaptcha();
 
 					cy.contains('Forgot password');
 					cy.get('input[name=email]').type(emailAddress);
@@ -136,12 +126,7 @@ describe('Password set flow', () => {
 				?.then(({ emailAddress }) => {
 					cy.visit('/set-password/expired?useIdapi=true');
 
-					// Simulate going offline by failing the reCAPTCHA POST request.
-					cy.intercept({
-						method: 'POST',
-						url: 'https://www.google.com/recaptcha/api2/**',
-						times: 1,
-					});
+					cy.interceptRecaptcha();
 
 					// link expired
 					const timeRequestWasMadeLinkExpired = new Date();

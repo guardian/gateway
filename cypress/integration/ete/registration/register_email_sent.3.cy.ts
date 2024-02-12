@@ -171,12 +171,8 @@ describe('Registration email sent page', () => {
 					timeRequestWasMadeInitialEmail,
 				);
 
-				// Simulate going offline by failing the reCAPTCHA POST request.
-				cy.intercept({
-					method: 'POST',
-					url: 'https://www.google.com/recaptcha/api2/**',
-					times: 1,
-				});
+				cy.interceptRecaptcha();
+
 				cy.contains('Resend email').click();
 				cy.contains('Google reCAPTCHA verification failed. Please try again.');
 

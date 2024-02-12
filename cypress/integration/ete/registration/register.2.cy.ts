@@ -271,12 +271,7 @@ describe('Registration flow', () => {
 
 		cy.visit('/register/email?useIdapi=true');
 
-		// Simulate going offline by failing to reCAPTCHA POST request.
-		cy.intercept({
-			method: 'POST',
-			url: 'https://www.google.com/recaptcha/api2/**',
-			times: 1,
-		});
+		cy.interceptRecaptcha();
 
 		cy.get('input[name=email').type(unregisteredEmail);
 		cy.get('[data-cy="main-form-submit-button"]').click();

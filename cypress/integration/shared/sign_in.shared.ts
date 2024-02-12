@@ -408,12 +408,7 @@ export const showsRecaptchaErrorsWhenTheUserTriesToSignInOfflineAndAllowsSignInW
 						const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
 						cy.visit(visitUrl);
 
-						// Simulate going offline by failing to reCAPTCHA POST request.
-						cy.intercept({
-							method: 'POST',
-							url: 'https://www.google.com/recaptcha/api2/**',
-							times: 1,
-						});
+						cy.interceptRecaptcha();
 
 						cy.get('input[name=email]').type(emailAddress);
 						cy.get('input[name=password]').type(finalPassword);
