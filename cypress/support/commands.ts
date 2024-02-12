@@ -37,6 +37,7 @@ import {
 	subscribeToMarketingConsent,
 	sendConsentEmail,
 } from './commands/testUser';
+import { interceptRecaptcha } from './commands/recaptcha';
 
 Cypress.Commands.add('mockNext', mockNext);
 Cypress.Commands.add('mockPattern', mockPattern); // unused, candidate for removal
@@ -77,3 +78,4 @@ Cypress.Commands.add(
 	subscribeToMarketingConsent,
 );
 Cypress.Commands.add('sendConsentEmail', sendConsentEmail);
+Cypress.Commands.add('interceptRecaptcha', interceptRecaptcha);
