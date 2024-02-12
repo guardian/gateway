@@ -1,6 +1,8 @@
+/* eslint-disable no-console */
 import { Request } from 'express';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import {
+	clearEncryptedStateCookie,
 	readEncryptedStateCookie,
 	setEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
@@ -22,6 +24,7 @@ import { ApiError } from '@/server/models/Error';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import {
 	addQueryParamsToPath,
+	getPersistableQueryParams,
 	getPersistableQueryParamsWithoutOktaParams,
 } from '@/shared/lib/queryParams';
 import { EmailType } from '@/shared/model/EmailType';
@@ -40,6 +43,16 @@ import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 import { RegistrationNewslettersFormFields } from '@/shared/model/Newsletter';
+import { interact } from '../lib/okta/idx/interact';
+import { introspect } from '../lib/okta/idx/introspect';
+import { enroll, enrollWithEmail } from '../lib/okta/idx/enroll';
+import { challengeAnswerPasscode } from '../lib/okta/idx/challenge';
+import { skip } from '../lib/okta/idx/skip';
+import {
+	generateAuthorizationState,
+	setAuthorizationStateCookie,
+} from '../lib/okta/openid-connect';
+import { generators } from 'openid-client';
 
 const { okta } = getConfiguration();
 
@@ -101,12 +114,156 @@ router.post(
 	handleRecaptcha,
 	redirectIfLoggedIn,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		const { email } = req.body;
+
+		if (!email) {
+			return res.status(400).send('Email is required');
+		}
+
+		console.log('email', email);
+
+		const codeVerifier = generators.codeVerifier(43);
+
+		console.log('codeVerifier', codeVerifier);
+
+		const authState = generateAuthorizationState(
+			getPersistableQueryParams(res.locals.queryParams),
+			undefined,
+			undefined,
+			{
+				codeVerifier,
+			},
+		);
+		setAuthorizationStateCookie(authState, res);
+
+		console.log('authState', authState);
+
+		const interactResponse = await interact(codeVerifier, authState.stateParam);
+
+		console.log('interactResponse', interactResponse);
+
+		const introspectResponse = await introspect(
+			interactResponse.interaction_handle,
+		);
+
+		console.log('introspectResponse', introspectResponse);
+
+		const enrollResponse = await enroll(introspectResponse.stateHandle);
+
+		console.log('enrollResponse', enrollResponse);
+
+		const enrollWithEmailResponse = await enrollWithEmail(
+			enrollResponse.stateHandle,
+			email,
+		);
+
+		console.log('enrollWithEmailResponse', enrollWithEmailResponse);
+
+		setEncryptedStateCookie(res, {
+			email,
+			queryParams: getPersistableQueryParams(res.locals.queryParams),
+			stateHandle: enrollWithEmailResponse.stateHandle,
+		});
+
+		trackMetric('OktaRegistration::Success');
+
+		return res.redirect(
+			303,
+			addQueryParamsToPath('/register/email-sent', res.locals.queryParams),
+		);
+
 		const { useIdapi } = res.locals.queryParams;
 		if (!okta.enabled || useIdapi) {
 			await IdapiRegistration(req, res);
 		} else {
 			await OktaRegistration(req, res);
 		}
+	}),
+);
+
+router.post(
+	'/register/passwordless',
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		const { passcode } = req.body;
+
+		console.log(req.body);
+
+		const encryptedState = readEncryptedStateCookie(req);
+
+		console.log(encryptedState);
+
+		if (encryptedState && encryptedState.stateHandle && passcode) {
+			const challengeAnswerPasscodeResponse = await challengeAnswerPasscode(
+				encryptedState.stateHandle,
+				passcode,
+			);
+
+			console.log(
+				'challengeAnswerPasscodeResponse',
+				challengeAnswerPasscodeResponse,
+			);
+
+			setEncryptedStateCookie(res, {
+				stateHandle: challengeAnswerPasscodeResponse.stateHandle,
+			});
+
+			return res.redirect(
+				303,
+				addQueryParamsToPath(
+					'/register/passwordless/complete',
+					res.locals.queryParams,
+				),
+			);
+		}
+
+		return res.sendStatus(400);
+	}),
+);
+
+router.get(
+	'/register/passwordless/complete',
+	(req: Request, res: ResponseWithRequestState) => {
+		console.log(res.locals.queryParams);
+		const html = renderer('/register/passwordless/complete', {
+			requestState: res.locals,
+			pageTitle: 'Welcome',
+		});
+		return res.type('html').send(html);
+	},
+);
+
+router.get(
+	'/register/passwordless/skip',
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+		const encryptedState = readEncryptedStateCookie(req);
+
+		console.log(encryptedState);
+
+		if (encryptedState && encryptedState.stateHandle) {
+			const idxCookie = await skip(encryptedState.stateHandle);
+
+			clearEncryptedStateCookie(res);
+
+			console.log('idxCookie', idxCookie);
+
+			// const keepMeSignedInResponse = await keepMeSignedIn(
+			// 	idxCookie,
+			// 	encryptedState.stateHandle,
+			// );
+
+			res.cookie('idx', idxCookie, {
+				httpOnly: true,
+				secure: true,
+				sameSite: 'none',
+			});
+
+			return res.redirect(
+				`/login/token/redirect?stateToken=${encryptedState.stateHandle.split('~')[0]}`,
+			);
+		}
+
+		return res.redirect(303, state.queryParams.returnUrl);
 	}),
 );
 

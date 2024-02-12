@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, ReactNode, useState } from 'react';
-import { Link } from '@guardian/source-react-components';
+import { Link, TextInput } from '@guardian/source-react-components';
 import { InfoSummary } from '@guardian/source-react-components-development-kitchen';
 import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
@@ -76,6 +76,21 @@ export const EmailSent = ({
 					.
 				</MainBodyText>
 			)}
+			<MainForm
+				formAction={`/register/passwordless${queryString}`}
+				submitButtonText="Submit passcode"
+			>
+				<TextInput
+					label="Enter passcode"
+					type="text"
+					width={4}
+					pattern="\d{6}"
+					name="passcode"
+					autoComplete="one-time-code"
+					inputMode="numeric"
+					maxLength={6}
+				/>
+			</MainForm>
 			{email && resendEmailAction && (
 				<>
 					<InfoSummary

@@ -3,7 +3,7 @@ import { Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import {
 	AuthorizationState,
-	deleteAuthorizationStateCookie,
+	// deleteAuthorizationStateCookie,
 	getAuthorizationStateCookie,
 	getOpenIdClient,
 	ProfileOpenIdClientRedirectUris,
@@ -568,7 +568,7 @@ router.get(
 
 		// we have the Authorization State now, so the cookie is
 		// no longer required, so mark cookie for deletion in the response
-		deleteAuthorizationStateCookie(res);
+		// deleteAuthorizationStateCookie(res);
 
 		// check for specific oauth errors and handle them as required
 		if (isOAuthError(callbackParams)) {
@@ -615,6 +615,7 @@ router.get(
 				response_type: 'code',
 				// check that the stateParam is the same
 				state: authState.stateParam,
+				code_verifier: authState.data?.codeVerifier,
 			},
 		);
 

@@ -9,4 +9,5 @@ export interface EncryptedState {
 	signInRedirect?: boolean; // TODO: possibly rename for clarity
 	isCmpConsented?: boolean;
 	queryParams?: PersistableQueryParams;
+	stateHandle?: string;
 }
