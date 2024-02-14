@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+import { SUPPORT_EMAIL } from '../../../src/shared/model/Configuration';
 import { injectAndCheckAxe } from '../../support/cypress-axe';
 import { authRedirectSignInRecentlyEmailValidated } from '../../support/idapi/auth';
 import { CONSENTS_ENDPOINT, allConsents } from '../../support/idapi/consent';
@@ -319,7 +320,7 @@ describe('Verify email flow', () => {
 			cy.contains(VerifyEmail.CONTENT.SEND_LINK).click();
 			cy.contains('Google reCAPTCHA verification failed.');
 			cy.contains('If the problem persists please try the following:');
-			cy.contains('customer.help@');
+			cy.contains(SUPPORT_EMAIL);
 		});
 	});
 });

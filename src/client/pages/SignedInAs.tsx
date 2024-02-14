@@ -7,6 +7,8 @@ import { QueryParams } from '@/shared/model/QueryParams';
 import { OpenIdErrors } from '@/shared/model/OpenIdErrors';
 import { errorContextSpacing } from '@/client/styles/Shared';
 import { space } from '@guardian/source-foundations';
+import locations from '@/shared/lib/locations';
+import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 
 interface Props {
 	email: string;
@@ -34,10 +36,7 @@ const DetailedLoginRequiredError = ({
 		</ul>
 		<p css={[errorContextSpacing, { marginBottom: `${space[3]}px` }]}>
 			For further help please contact our customer service team at{' '}
-			<Link href="email:customer.help@theguardian.com">
-				customer.help@theguardian.com
-			</Link>
-			.
+			<Link href={locations.SUPPORT_EMAIL_MAILTO}>{SUPPORT_EMAIL}</Link>.
 		</p>
 	</>
 );

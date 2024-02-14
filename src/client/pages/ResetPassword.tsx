@@ -75,10 +75,11 @@ export const ResetPassword = ({
 			</MainForm>
 			{showNoAccessEmail && (
 				<MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
-					If you no longer have access to this email account please{' '}
-					<ExternalLink href={locations.REPORT_ISSUE}>
-						contact our help department
+					Having trouble resetting your password? Please visit our{' '}
+					<ExternalLink href={locations.SIGN_IN_HELP_CENTRE}>
+						Help Centre
 					</ExternalLink>
+					.
 				</MainBodyText>
 			)}
 			{showRecentEmailSummary && (
@@ -88,10 +89,11 @@ export const ResetPassword = ({
 					context={
 						<>
 							If you are having trouble, please contact our customer service
-							team at{' '}
+							team using our{' '}
 							<ExternalLink href={locations.REPORT_ISSUE}>
-								customer.help@theguardian.com
+								Help Centre
 							</ExternalLink>
+							.
 						</>
 					}
 				/>

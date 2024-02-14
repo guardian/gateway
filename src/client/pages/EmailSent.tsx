@@ -11,6 +11,8 @@ import { EmailInput } from '@/client/components/EmailInput';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import { css } from '@emotion/react';
 import { buildUrl } from '@/shared/lib/routeUtils';
+import locations from '@/shared/lib/locations';
+import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 
 type Props = {
 	email?: string;
@@ -122,9 +124,9 @@ export const EmailSent = ({
 						cssOverrides={css`
 							font-weight: 700;
 						`}
-						href="mailto:customer.help@theguardian.com"
+						href={locations.SUPPORT_EMAIL_MAILTO}
 					>
-						customer.help@theguardian.com
+						{SUPPORT_EMAIL}
 					</ExternalLink>
 					.
 				</MainBodyText>
