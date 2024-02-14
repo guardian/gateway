@@ -3,6 +3,8 @@ import { MjmlSection, MjmlColumn, MjmlText } from '@faire/mjml-react';
 
 import { background, text } from '@guardian/source-foundations';
 import { Link } from '@/email/components/Link';
+import locations from '@/shared/lib/locations';
+import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 
 type Props = {
 	mistakeParagraphComponent?: React.ReactNode;
@@ -39,10 +41,7 @@ export const Footer = ({ mistakeParagraphComponent }: Props) => (
 			<FooterText>
 				If you have any queries about why you are receiving this email, please
 				contact our customer service team at{' '}
-				<Link href="mailto:customer.help@theguardian.com">
-					customer.help@theguardian.com
-				</Link>
-				.
+				<Link href={locations.SUPPORT_EMAIL_MAILTO}>{SUPPORT_EMAIL}</Link>.
 			</FooterText>
 			<FooterText noPaddingBottom>
 				Guardian News and Media Limited, Kings Place, 90 York Way, London, N1

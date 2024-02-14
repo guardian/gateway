@@ -1,3 +1,5 @@
+import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
+
 export const AccidentalEmailText = () => `
 Hello,
 
@@ -5,7 +7,7 @@ We're doing some housekeeping and will be moving your contact details over to a 
 
 This email has been triggered accidentally. You don't have to do anything in response and you haven't been added onto any mailing list. We're very sorry for bothering you.
 
-If you're concerned or have questions, please contact our customer service team at customer.help@theguardian.com.
+If you're concerned or have questions, please contact our customer service team at ${SUPPORT_EMAIL}.
 
 The Guardian
 

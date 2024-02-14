@@ -1,5 +1,6 @@
 import { injectAndCheckAxe } from '../../../support/cypress-axe';
 import { randomMailosaurEmail } from '../../../support/commands/testUser';
+import { SUPPORT_EMAIL } from '../../../../src/shared/model/Configuration';
 
 describe('Registration email sent page', () => {
 	context('A11y checks', () => {
@@ -181,7 +182,7 @@ describe('Registration email sent page', () => {
 
 				cy.contains('Google reCAPTCHA verification failed.');
 				cy.contains('If the problem persists please try the following:');
-				cy.contains('customer.help@');
+				cy.contains(SUPPORT_EMAIL);
 
 				const timeRequestWasMade = new Date();
 				cy.contains('Resend email').click();

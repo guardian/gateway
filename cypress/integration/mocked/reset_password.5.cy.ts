@@ -1,3 +1,4 @@
+import { SUPPORT_EMAIL } from '../../../src/shared/model/Configuration';
 import { injectAndCheckAxe } from '../../support/cypress-axe';
 import PageResetPassword from '../../support/pages/reset_password_page';
 
@@ -86,7 +87,7 @@ describe('Password reset flow', () => {
 			page.submitEmailAddress(email);
 			cy.contains('Google reCAPTCHA verification failed.');
 			cy.contains('If the problem persists please try the following:');
-			cy.contains('customer.help@');
+			cy.contains(SUPPORT_EMAIL);
 		});
 	});
 });

@@ -5,6 +5,7 @@ import { ExternalLink } from '@/client/components/ExternalLink';
 import locations from '@/shared/lib/locations';
 import { DeleteAccountReturnLink } from '@/client/components/DeleteAccountReturnLink';
 import { UserAttributesResponse } from '@/shared/lib/members-data-api';
+import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 
 interface Props {
 	contentAccess?: Partial<UserAttributesResponse['contentAccess']>;
@@ -89,8 +90,8 @@ export const DeleteAccountBlocked = ({ contentAccess = {} }: Props) => {
 						You cannot delete your account while you have an active
 						subscription. If you would like to cancel your subscription, please
 						email the Subscriptions Team at{' '}
-						<ExternalLink href="mailto:customer.help@theguardian.com">
-							customer.help@theguardian.com
+						<ExternalLink href={locations.SUPPORT_EMAIL_MAILTO}>
+							{SUPPORT_EMAIL}
 						</ExternalLink>
 						.
 					</MainBodyText>

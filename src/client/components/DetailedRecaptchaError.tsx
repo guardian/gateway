@@ -1,6 +1,8 @@
 import React from 'react';
 import { space } from '@guardian/source-foundations';
 import { errorContextSpacing } from '@/client/styles/Shared';
+import locations from '@/shared/lib/locations';
+import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 
 export const DetailedRecaptchaError = () => (
 	<>
@@ -14,9 +16,7 @@ export const DetailedRecaptchaError = () => (
 		</ul>
 		<p css={[errorContextSpacing, { marginBottom: `${space[3]}px` }]}>
 			For further help please contact our customer service team at{' '}
-			<a href="email:customer.help@theguardian.com">
-				customer.help@theguardian.com
-			</a>
+			<a href={locations.SUPPORT_EMAIL_MAILTO}>{SUPPORT_EMAIL}</a>
 		</p>
 	</>
 );
