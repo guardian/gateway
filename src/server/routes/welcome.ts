@@ -27,6 +27,7 @@ import { update as updateNewsletters } from '@/server/lib/idapi/newsletters';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { RegistrationNewslettersFormFields } from '@/shared/model/Newsletter';
+import { updateRegistrationPlatform } from '../lib/registrationPlatform';
 
 const { okta } = getConfiguration();
 
@@ -81,6 +82,14 @@ router.post(
 					}))
 					.filter((newsletter) => newsletter.subscribed),
 			};
+
+			// update the registration platform for social users, as we're not able to do this
+			// at the time of registration, as that happens in Okta
+			await updateRegistrationPlatform(
+				state.oauthState.accessToken!,
+				state.queryParams.appClientId,
+				state.requestId,
+			);
 
 			const runningInCypress = process.env.RUNNING_IN_CYPRESS === 'true';
 
