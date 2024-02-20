@@ -41,6 +41,7 @@ import { DeleteAccountEmailPasswordValidationPage } from './pages/DeleteAccountE
 import { DeleteAccountCompletePage } from '@/client/pages/DeleteAccountCompletePage';
 import { RegisterWithEmailPage } from './pages/RegisterWithEmailPage';
 import { WelcomeSocialPage } from './pages/WelcomeSocialPage';
+import { ReturnToAppPage } from './pages/ReturnToAppPage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -256,6 +257,10 @@ const routes: Array<{
 	{
 		path: '/delete/email-sent',
 		element: <EmailSentPage />,
+	},
+	{
+		path: '/welcome/app/complete',
+		element: <ReturnToAppPage />,
 	},
 ];
 

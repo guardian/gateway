@@ -31,6 +31,24 @@ import { updateRegistrationPlatform } from '../lib/registrationPlatform';
 
 const { okta } = getConfiguration();
 
+// temp return to app page for app users who get stuck in browser
+router.get(
+	'/welcome/app/complete',
+	loginMiddlewareOAuth,
+	(req: Request, res: ResponseWithRequestState) => {
+		const html = renderer('/welcome/app/complete', {
+			pageTitle: 'Welcome',
+			requestState: mergeRequestState(res.locals, {
+				pageData: {
+					// email is type unknown, but we know it's a string
+					email: res.locals.oauthState.idToken?.claims.email as string,
+				},
+			}),
+		});
+		return res.type('html').send(html);
+	},
+);
+
 // consent page for post social registration - google
 router.get(
 	'/welcome/google',

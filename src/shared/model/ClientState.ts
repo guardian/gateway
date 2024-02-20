@@ -36,6 +36,7 @@ export interface PageData {
 	browserName?: string;
 	isNativeApp?: IsNativeApp;
 	accountManagementUrl?: string;
+	appName?: string;
 
 	// token
 	token?: string;

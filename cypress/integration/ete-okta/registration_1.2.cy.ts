@@ -138,7 +138,9 @@ describe('Registration flow - Split 1/2', () => {
 				cy.get('input[name="secondName"]').type('Last Name');
 				cy.get('input[name="password"]').type(randomPassword());
 				cy.get('button[type="submit"]').click();
-				cy.url().should('contain', 'https://m.code.dev-theguardian.com/');
+				cy.url().should('contain', '/welcome/app/complete');
+				cy.contains(unregisteredEmail);
+				cy.contains('Guardian app');
 
 				// test the registration platform is set correctly
 				cy.getTestOktaUser(unregisteredEmail).then((oktaUser) => {
