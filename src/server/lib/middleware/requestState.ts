@@ -50,6 +50,10 @@ const getRequestState = async (
 	// eslint-disable-next-line functional/no-let
 	let isNativeApp: IsNativeApp;
 
+	// it is also useful to know the app name
+	// eslint-disable-next-line functional/no-let
+	let appName;
+
 	try {
 		if (!!queryParams.appClientId) {
 			const app = await getApp(queryParams.appClientId);
@@ -60,6 +64,17 @@ const getRequestState = async (
 				isNativeApp = 'android';
 			} else if (label.startsWith('ios_')) {
 				isNativeApp = 'ios';
+			}
+
+			switch (label) {
+				case 'android_live_app':
+				case 'ios_live_app':
+					appName = 'Guardian';
+					appName = 'Guardian';
+					break;
+				case 'ios_feast_app':
+					appName = 'Guardian Feast';
+					break;
 			}
 		}
 	} catch (error) {
@@ -74,6 +89,7 @@ const getRequestState = async (
 			geolocation: getGeolocationRegion(req),
 			returnUrl: queryParams.returnUrl,
 			isNativeApp,
+			appName,
 		},
 		globalMessage: {},
 		csrf: {
