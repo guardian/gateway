@@ -8,13 +8,9 @@ import { CmpConsentedStateHiddenInput } from '@/client/components/CmpConsentStat
 import { useCmpConsent } from '@/client/lib/hooks/useCmpConsent';
 import { RegistrationProps } from '@/client/pages/Registration';
 import { generateSignInRegisterTabs } from '@/client/components/Nav';
-import { RegistrationMarketingConsentFormField } from '@/client/components/RegistrationMarketingConsentFormField';
-import { RegistrationNewsletterFormField } from '@/client/components/RegistrationNewsletterFormField';
 import { GeoLocation } from '@/shared/model/Geolocation';
-import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '@/client/assets/newsletters';
-import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
-import { RegistrationNewslettersFormFields } from '@/shared/model/Newsletter';
 import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
+import { RegistrationConsents } from '@/client/components/RegistrationConsents';
 
 export type RegisterWithEmailProps = RegistrationProps & {
 	geolocation?: GeoLocation;
@@ -40,11 +36,6 @@ export const RegisterWithEmail = ({
 
 	const useIdapi = queryParams.useIdapi;
 
-	// don't show the Saturday Edition newsletter option for US and AUS
-	const showSaturdayEdition = !(['US', 'AU'] as GeoLocation[]).some(
-		(location: GeoLocation) => location === geolocation,
-	);
-
 	return (
 		<MainLayout tabs={tabs} pageHeader="Enter your email">
 			<MainForm
@@ -62,26 +53,7 @@ export const RegisterWithEmail = ({
 				<EmailInput defaultValue={email} autoComplete="off" />
 				<CmpConsentedStateHiddenInput cmpConsentedState={hasCmpConsent} />
 
-				{!useIdapi && (
-					<>
-						{showSaturdayEdition && (
-							<RegistrationNewsletterFormField
-								id={RegistrationNewslettersFormFields.saturdayEdition.id}
-								label={RegistrationNewslettersFormFields.saturdayEdition.label}
-								context={
-									RegistrationNewslettersFormFields.saturdayEdition.context
-								}
-								imagePath={SATURDAY_EDITION_SMALL_SQUARE_IMAGE}
-							/>
-						)}
-						<RegistrationMarketingConsentFormField
-							id={RegistrationConsentsFormFields.similarGuardianProducts.id}
-							label={
-								RegistrationConsentsFormFields.similarGuardianProducts.label
-							}
-						/>
-					</>
-				)}
+				<RegistrationConsents useIdapi={useIdapi} geolocation={geolocation} />
 			</MainForm>
 		</MainLayout>
 	);

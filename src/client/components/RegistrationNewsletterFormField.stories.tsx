@@ -14,10 +14,20 @@ export const Default = () => {
 	return (
 		<RegistrationNewsletterFormField
 			id={RegistrationNewslettersFormFields.saturdayEdition.id}
-			label={RegistrationNewslettersFormFields.saturdayEdition.label}
+			label={`${RegistrationNewslettersFormFields.saturdayEdition.label} newsletter`}
 			context={RegistrationNewslettersFormFields.saturdayEdition.context}
 			imagePath={SATURDAY_EDITION_SMALL_SQUARE_IMAGE}
 		/>
 	);
 };
 Default.storyName = 'default';
+
+export const WithoutImage = () => {
+	return (
+		<RegistrationNewsletterFormField
+			id={RegistrationNewslettersFormFields.saturdayEdition.id}
+			label={`${RegistrationNewslettersFormFields.saturdayEdition.label} newsletter`}
+			context={RegistrationNewslettersFormFields.saturdayEdition.context}
+		/>
+	);
+};

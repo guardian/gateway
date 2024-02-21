@@ -18,14 +18,10 @@ import {
 	SvgGoogleBrand,
 	SvgTickRound,
 } from '@guardian/source-react-components';
-import { RegistrationMarketingConsentFormField } from '@/client/components/RegistrationMarketingConsentFormField';
 import { SocialProvider } from '@/shared/model/Social';
-import { RegistrationNewsletterFormField } from '@/client/components/RegistrationNewsletterFormField';
 import { GeoLocation } from '@/shared/model/Geolocation';
-import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '@/client/assets/newsletters';
-import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
-import { RegistrationNewslettersFormFields } from '@/shared/model/Newsletter';
 import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
+import { RegistrationConsents } from '@/client/components/RegistrationConsents';
 
 const inlineMessage = (socialProvider: SocialProvider) => css`
 	display: flex;
@@ -82,11 +78,6 @@ export const WelcomeSocial = ({
 
 	usePageLoadOphanInteraction(formTrackingName);
 
-	// don't show the Saturday Edition newsletter option for US and AU
-	const showSaturdayEdition = !(['US', 'AU'] as GeoLocation[]).some(
-		(location: GeoLocation) => location === geolocation,
-	);
-
 	return (
 		<MainLayout>
 			<MainForm
@@ -115,22 +106,7 @@ export const WelcomeSocial = ({
 						<SvgTickRound />
 					</MainBodyText>
 				)}
-				<>
-					{showSaturdayEdition && (
-						<RegistrationNewsletterFormField
-							id={RegistrationNewslettersFormFields.saturdayEdition.id}
-							label={RegistrationNewslettersFormFields.saturdayEdition.label}
-							context={
-								RegistrationNewslettersFormFields.saturdayEdition.context
-							}
-							imagePath={SATURDAY_EDITION_SMALL_SQUARE_IMAGE}
-						/>
-					)}
-					<RegistrationMarketingConsentFormField
-						id={RegistrationConsentsFormFields.similarGuardianProducts.id}
-						label={RegistrationConsentsFormFields.similarGuardianProducts.label}
-					/>
-				</>
+				<RegistrationConsents geolocation={geolocation} noMarginBottom />
 			</MainForm>
 		</MainLayout>
 	);

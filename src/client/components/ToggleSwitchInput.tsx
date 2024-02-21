@@ -122,7 +122,7 @@ const switchStyles = css`
 `;
 
 const mainLabelStyles = css`
-	align-self: flex-start;
+	align-self: center;
 	width: calc(100% - ${switchComputedWidth}px);
 `;
 
