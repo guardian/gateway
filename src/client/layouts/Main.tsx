@@ -116,7 +116,7 @@ export const buttonStyles = ({
 	halfWidthAtMobile = false,
 	hasMarginBottom = false,
 }) => css`
-	margin-top: 22px;
+	margin-top: ${space[4]}px;
 	justify-content: center;
 	width: 100%;
 
@@ -150,7 +150,7 @@ export const buttonStyles = ({
 
 	${hasTerms &&
 	css`
-		margin-top: ${space[4]}px;
+		margin-top: ${space[3]}px;
 	`}
 
 	${hasMarginBottom &&

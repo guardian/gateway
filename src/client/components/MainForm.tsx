@@ -80,7 +80,7 @@ export const inputMarginBottomSpacingStyle = css`
 `;
 
 export const belowFormMarginTopSpacingStyle = css`
-	margin-top: ${space[6]}px;
+	margin-top: ${space[5]}px;
 `;
 
 export const MainForm = ({

@@ -74,7 +74,7 @@ export const ResetPassword = ({
 				<EmailInput label={emailInputLabel} defaultValue={email} />
 			</MainForm>
 			{showNoAccessEmail && (
-				<MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
+				<MainBodyText cssOverrides={belowFormMarginTopSpacingStyle} smallText>
 					Having trouble resetting your password? Please visit our{' '}
 					<ExternalLink href={locations.SIGN_IN_HELP_CENTRE}>
 						Help Centre
