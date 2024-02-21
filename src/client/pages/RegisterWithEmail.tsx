@@ -46,7 +46,7 @@ export const RegisterWithEmail = ({
 	);
 
 	return (
-		<MainLayout tabs={tabs}>
+		<MainLayout tabs={tabs} pageHeader="Enter your email">
 			<MainForm
 				formAction={buildUrlWithQueryParams('/register', {}, queryParams)}
 				submitButtonText="Register"

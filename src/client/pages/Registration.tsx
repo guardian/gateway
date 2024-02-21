@@ -38,7 +38,11 @@ export const Registration = ({ queryParams }: RegistrationProps) => {
 	});
 
 	return (
-		<MainLayout tabs={tabs}>
+		<MainLayout
+			tabs={tabs}
+			pageHeader="Register an account"
+			pageSubText="One account to access all Guardian products."
+		>
 			<RegistrationTerms isJobs={isJobs} />
 			<AuthProviderButtons
 				queryParams={queryParams}

@@ -125,6 +125,8 @@ export const SignIn = ({
 			errorContext={getErrorContext(pageError)}
 			tabs={tabs}
 			errorSmallMarginBottom={!!pageError}
+			pageHeader="Sign in"
+			pageSubText="One account to access all Guardian products."
 		>
 			{/* AuthProviderButtons component with show boolean */}
 			{showAuthProviderButtons(socialSigninBlocked, queryParams, isJobs)}
