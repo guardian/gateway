@@ -14,11 +14,7 @@ import { Link } from '@guardian/source-react-components';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
 import { socialButtonDivider } from '@/client/styles/Shared';
-import {
-	GuardianTerms,
-	JobsTerms,
-	termsContainer,
-} from '@/client/components/Terms';
+import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
 
 export type SignInProps = {
 	queryParams: QueryParams;
@@ -75,10 +71,8 @@ const showAuthProviderButtons = (
 	if (socialSigninBlocked === false) {
 		return (
 			<>
-				<div css={termsContainer}>
-					{!isJobs && <GuardianTerms />}
-					{isJobs && <JobsTerms />}
-				</div>
+				{!isJobs && <GuardianTerms withMarginTop />}
+				{isJobs && <JobsTerms withMarginTop />}
 				<AuthProviderButtons
 					queryParams={queryParams}
 					marginTop={true}

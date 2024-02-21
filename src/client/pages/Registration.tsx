@@ -4,11 +4,7 @@ import { MainLayout } from '@/client/layouts/Main';
 import { generateSignInRegisterTabs } from '@/client/components/Nav';
 import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
-import {
-	GuardianTerms,
-	JobsTerms,
-	termsContainer,
-} from '@/client/components/Terms';
+import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
 
 export type RegistrationProps = {
 	email?: string;
@@ -18,10 +14,10 @@ export type RegistrationProps = {
 };
 
 const RegistrationTerms = ({ isJobs }: { isJobs: boolean }) => (
-	<div css={termsContainer}>
-		{!isJobs && <GuardianTerms />}
-		{isJobs && <JobsTerms />}
-	</div>
+	<>
+		{!isJobs && <GuardianTerms withMarginTop />}
+		{isJobs && <JobsTerms withMarginTop />}
+	</>
 );
 
 export const Registration = ({ queryParams }: RegistrationProps) => {
