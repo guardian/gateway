@@ -27,21 +27,25 @@ import { update as updateNewsletters } from '@/server/lib/idapi/newsletters';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { RegistrationNewslettersFormFields } from '@/shared/model/Newsletter';
-import { updateRegistrationPlatform } from '../lib/registrationPlatform';
+import { updateRegistrationPlatform } from '@/server/lib/registrationPlatform';
+import { getAppName, isAppPrefix } from '@/shared/lib/appNameUtils';
 
 const { okta } = getConfiguration();
 
 // temp return to app page for app users who get stuck in browser
 router.get(
-	'/welcome/app/complete',
+	'/welcome/:app/complete',
 	loginMiddlewareOAuth,
 	(req: Request, res: ResponseWithRequestState) => {
-		const html = renderer('/welcome/app/complete', {
+		const { app } = req.params;
+
+		const html = renderer('/welcome/:app/complete', {
 			pageTitle: 'Welcome',
 			requestState: mergeRequestState(res.locals, {
 				pageData: {
 					// email is type unknown, but we know it's a string
 					email: res.locals.oauthState.idToken?.claims.email as string,
+					appName: isAppPrefix(app) ? getAppName(app) : undefined,
 				},
 			}),
 		});

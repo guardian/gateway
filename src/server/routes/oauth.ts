@@ -36,6 +36,7 @@ import { update as updateConsents } from '@/server/lib/idapi/consents';
 import { decryptRegistrationConsents } from '@/server/lib/registrationConsents';
 import { SocialProvider } from '@/shared/model/Social';
 import { update as updateNewsletters } from '@/server/lib/idapi/newsletters';
+import { RoutePaths } from '@/shared/model/Routes';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
@@ -321,11 +322,12 @@ const authenticationHandler = async (
 		// We simply redirect them to a page telling them to return to app, when app prefix is set.
 		// This will be fixed when we either use the passcode registration flow.
 		if (
-			authState.data?.hasAppPrefix &&
+			authState.data?.appPrefix &&
 			consentPages.some((page) => page.path === authState.confirmationPage)
 		) {
 			// eslint-disable-next-line functional/immutable-data
-			authState.confirmationPage = '/welcome/app/complete';
+			authState.confirmationPage =
+				`/welcome/${authState.data.appPrefix}/complete` as RoutePaths;
 		}
 
 		const returnUrl = authState.confirmationPage

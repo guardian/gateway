@@ -68,7 +68,7 @@ export const ValidRoutePathsArray = [
 	'/verify-email', //this can be removed once Jobs has been migrated
 	'/welcome',
 	'/welcome/:token',
-	'/welcome/app/complete',
+	'/welcome/:app/complete',
 	'/welcome/complete',
 	'/welcome/email-sent',
 	'/welcome/expired',
