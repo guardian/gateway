@@ -19,7 +19,16 @@ export const NativeApp = () => (
 		email="test@example.com"
 		continueLink="#"
 		signOutLink="#"
-		isNativeApp="android"
+		appName="Guardian"
+	/>
+);
+
+export const FeastApp = () => (
+	<SignedInAs
+		email="test@example.com"
+		continueLink="#"
+		signOutLink="#"
+		appName="Feast"
 	/>
 );
 

@@ -58,7 +58,6 @@ const getRequestState = async (
 	try {
 		if (!!queryParams.appClientId) {
 			const app = await getApp(queryParams.appClientId);
-
 			const label = app.label.toLowerCase();
 
 			if (isAppLabel(label)) {

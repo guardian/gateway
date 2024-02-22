@@ -2,7 +2,6 @@ import React, { ReactNode, useEffect } from 'react';
 import { buttonStyles, MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { Link, LinkButton } from '@guardian/source-react-components';
-import { IsNativeApp } from '@/shared/model/ClientState';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { OpenIdErrors } from '@/shared/model/OpenIdErrors';
 import { errorContextSpacing } from '@/client/styles/Shared';
@@ -14,7 +13,7 @@ interface Props {
 	email: string;
 	continueLink: string;
 	signOutLink: string;
-	isNativeApp?: IsNativeApp;
+	appName?: string;
 	pageError?: string;
 	queryParams?: QueryParams;
 }
@@ -45,7 +44,7 @@ export const SignedInAs = ({
 	email,
 	continueLink,
 	signOutLink,
-	isNativeApp,
+	appName,
 	pageError,
 	queryParams,
 }: Props) => {
@@ -62,7 +61,7 @@ export const SignedInAs = ({
 
 	return (
 		<MainLayout
-			pageHeader={`Sign in to the Guardian${!!isNativeApp ? ' app' : ''}`}
+			pageHeader={`Sign in to the ${appName ? `${appName} app` : 'Guardian'}`}
 			errorOverride={pageError}
 			errorSmallMarginBottom={!!pageError}
 			errorContext={errorContext}
