@@ -12,6 +12,7 @@ import Bowser from 'bowser';
 import { logger } from '@/server/lib/serverSideLogger';
 import { getApp } from '@/server/lib/okta/api/apps';
 import { IsNativeApp } from '@/shared/model/ClientState';
+import { getAppName, isAppLabel } from '@/shared/lib/appNameUtils';
 
 const {
 	idapiBaseUrl,
@@ -57,24 +58,16 @@ const getRequestState = async (
 	try {
 		if (!!queryParams.appClientId) {
 			const app = await getApp(queryParams.appClientId);
-
 			const label = app.label.toLowerCase();
 
-			if (label.startsWith('android_')) {
-				isNativeApp = 'android';
-			} else if (label.startsWith('ios_')) {
-				isNativeApp = 'ios';
-			}
+			if (isAppLabel(label)) {
+				if (label.startsWith('android_')) {
+					isNativeApp = 'android';
+				} else if (label.startsWith('ios_')) {
+					isNativeApp = 'ios';
+				}
 
-			switch (label) {
-				case 'android_live_app':
-				case 'ios_live_app':
-					appName = 'Guardian';
-					appName = 'Guardian';
-					break;
-				case 'ios_feast_app':
-					appName = 'Guardian Feast';
-					break;
+				appName = getAppName(label);
 			}
 		}
 	} catch (error) {

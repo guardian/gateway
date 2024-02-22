@@ -38,11 +38,9 @@ import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan
 import { clearOktaCookies } from '@/server/routes/signOut';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
-import {
-	decryptOktaRecoveryToken,
-	hasAppPrefix,
-} from '@/server/lib/deeplink/oktaRecoveryToken';
+import { decryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 import { changePasswordMetric } from '@/server/models/Metrics';
+import { getAppPrefix } from '@/shared/lib/appNameUtils';
 
 const { okta } = getConfiguration();
 
@@ -286,7 +284,7 @@ const changePasswordInOkta = async (
 				redirectUri: ProfileOpenIdClientRedirectUris.AUTHENTICATION,
 				extraData: {
 					encryptedRegistrationConsents,
-					hasAppPrefix: hasAppPrefix(encryptedRecoveryToken),
+					appPrefix: getAppPrefix(encryptedRecoveryToken),
 				},
 			});
 		} else {

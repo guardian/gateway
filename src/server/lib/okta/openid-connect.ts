@@ -34,7 +34,7 @@ export interface AuthorizationState {
 		deleteReason?: string; // used to track the reason for self service deletion
 		encryptedRegistrationConsents?: string; // used to set the consents given during registration on the authentication callback when we have oauth access tokens which can update the user's consents in idapi, should be encrypted, and decrypted on the callback
 		socialProvider?: SocialProvider; // used to track the social provider used to sign in/register
-		hasAppPrefix?: boolean; // used to track if the recovery token has a native app prefix
+		appPrefix?: string; // used to track if the recovery token has a native app prefix
 	};
 }
 

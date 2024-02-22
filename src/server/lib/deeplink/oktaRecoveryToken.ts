@@ -6,40 +6,7 @@ import {
 	base64ToUrlSafeString,
 	urlSafeStringToBase64,
 } from '@/server/lib/base64';
-
-/**
- * list of app prefixes that is used by native apps to determine
- * the links that should be opened in the app via deep linking
- * for example, the android live app uses the prefix 'al_'
- * therefore the deeplink path for reset password would be
- * `/reset-password/al_<token>`
- * where <token> is the okta recovery token, and the android live app
- * will intercept the deeplink on the
- * `/reset-password/al_*` path
- *
- * The reason we do this is that this allows apps to distinguish between
- * each other's deeplinks, for example between the android live app and
- * the android puzzles app (which will have a different prefix)
- * and also allows us to have multiple paths under
- * the same path which should not be intercepted by the app
- * e.g. `/reset-password/email-sent`
- */
-const appPrefixes = [
-	'al_', // Android live app
-	'il_', // iOS live app
-	'if_', // iOS feast app
-];
-type AppPrefix = (typeof appPrefixes)[number];
-
-/**
- * @name hasAppPrefix
- * @description To check if a string has a prefix representing an native application.
- *
- * @param token	- string that may or may not have a prefix representing an native application
- * @returns	- boolean representing if the string has a prefix representing an native application
- */
-export const hasAppPrefix = (token: string): boolean =>
-	appPrefixes.some((prefix) => token.startsWith(prefix));
+import { appPrefixes, apps } from '@/shared/lib/appNameUtils';
 
 /**
  * @name extractOktaRecoveryToken
@@ -88,18 +55,7 @@ export const addAppPrefixToOktaRecoveryToken = async (
 
 		const label = app.label.toLowerCase();
 
-		const appPrefix: AppPrefix = (() => {
-			switch (label) {
-				case 'android_live_app':
-					return 'al_';
-				case 'ios_live_app':
-					return 'il_';
-				case 'ios_feast_app':
-					return 'if_';
-				default:
-					return '';
-			}
-		})();
+		const appPrefix = Object.fromEntries(apps)[label] || '';
 
 		return `${appPrefix}${token}`;
 	} catch (error) {

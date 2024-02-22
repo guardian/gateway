@@ -677,7 +677,7 @@ describe('Registration flow - Split 2/2', () => {
 				cy.get('input[name="password"]').type(randomPassword());
 				cy.get('button[type="submit"]').click();
 
-				cy.url().should('contain', '/welcome/app/complete');
+				cy.url().should('contain', '/welcome/al_/complete');
 				cy.contains(unregisteredEmail);
 				cy.contains('Guardian app');
 			});

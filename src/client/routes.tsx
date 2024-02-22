@@ -259,7 +259,7 @@ const routes: Array<{
 		element: <EmailSentPage />,
 	},
 	{
-		path: '/welcome/app/complete',
+		path: '/welcome/:app/complete',
 		element: <ReturnToAppPage />,
 	},
 ];
