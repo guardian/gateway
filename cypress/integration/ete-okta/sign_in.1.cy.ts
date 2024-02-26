@@ -325,8 +325,8 @@ describe('Sign in flow, Okta enabled', () => {
 						'For security reasons we need you to change your password.',
 					);
 					cy.contains(emailAddress);
-					cy.contains('Resend email');
-					cy.contains('Change email address');
+					cy.contains('send again');
+					cy.contains('try another address');
 
 					// Ensure the user's authentication cookies are not set
 					cy.getCookie('idx').then((idxCookie) => {

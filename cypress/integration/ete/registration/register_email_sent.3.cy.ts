@@ -21,8 +21,8 @@ describe('Registration email sent page', () => {
 
 		cy.contains('Check your email inbox');
 		cy.contains(unregisteredEmail);
-		cy.contains('Resend email');
-		cy.contains('Change email address');
+		cy.contains('send again');
+		cy.contains('try another address');
 
 		// test and delete initial email
 		cy.checkForEmailAndGetDetails(
@@ -33,7 +33,7 @@ describe('Registration email sent page', () => {
 		});
 
 		const timeRequestWasMade = new Date();
-		cy.contains('Resend email').click();
+		cy.contains('send again').click();
 		cy.contains('Check your email inbox');
 		cy.contains(unregisteredEmail);
 
@@ -60,8 +60,8 @@ describe('Registration email sent page', () => {
 
 				cy.contains('Check your email inbox');
 				cy.contains(emailAddress);
-				cy.contains('Resend email');
-				cy.contains('Change email address');
+				cy.contains('send again');
+				cy.contains('try another address');
 
 				// test and delete initial email
 				cy.checkForEmailAndGetDetails(
@@ -77,7 +77,7 @@ describe('Registration email sent page', () => {
 				});
 
 				const timeRequestWasMade = new Date();
-				cy.contains('Resend email').click();
+				cy.contains('send again').click();
 				cy.contains('Check your email inbox');
 				cy.contains(emailAddress);
 
@@ -108,8 +108,8 @@ describe('Registration email sent page', () => {
 
 				cy.contains('Check your email inbox');
 				cy.contains(emailAddress);
-				cy.contains('Resend email');
-				cy.contains('Change email address');
+				cy.contains('send again');
+				cy.contains('try another address');
 
 				cy.checkForEmailAndGetDetails(
 					emailAddress,
@@ -121,7 +121,7 @@ describe('Registration email sent page', () => {
 				});
 
 				const timeRequestWasMade = new Date();
-				cy.contains('Resend email').click();
+				cy.contains('send again').click();
 				cy.contains('Check your email inbox');
 				cy.contains(emailAddress);
 
@@ -138,14 +138,14 @@ describe('Registration email sent page', () => {
 
 	it('should navigate back to the correct page when change email is clicked', () => {
 		cy.visit('/register/email-sent?useIdapi=true');
-		cy.contains('Change email address').click();
+		cy.contains('try another address').click();
 		cy.contains('Register');
 		cy.title().should('eq', 'Register | The Guardian');
 	});
 
 	it('should render properly if the encrypted email cookie is not set', () => {
 		cy.visit('/register/email-sent?useIdapi=true');
-		cy.contains('Change email address');
+		cy.contains('try another address');
 		cy.contains('Check your email inbox');
 	});
 
@@ -164,8 +164,8 @@ describe('Registration email sent page', () => {
 
 				cy.contains('Check your email inbox');
 				cy.contains(emailAddress);
-				cy.contains('Resend email');
-				cy.contains('Change email address');
+				cy.contains('send again');
+				cy.contains('try another address');
 
 				cy.checkForEmailAndGetDetails(
 					emailAddress,
@@ -174,18 +174,18 @@ describe('Registration email sent page', () => {
 
 				cy.interceptRecaptcha();
 
-				cy.contains('Resend email').click();
+				cy.contains('send again').click();
 				cy.contains('Google reCAPTCHA verification failed. Please try again.');
 
 				// On second click, an expanded error is shown.
-				cy.contains('Resend email').click();
+				cy.contains('send again').click();
 
 				cy.contains('Google reCAPTCHA verification failed.');
 				cy.contains('If the problem persists please try the following:');
 				cy.contains(SUPPORT_EMAIL);
 
 				const timeRequestWasMade = new Date();
-				cy.contains('Resend email').click();
+				cy.contains('send again').click();
 
 				cy.contains(
 					'Google reCAPTCHA verification failed. Please try again.',

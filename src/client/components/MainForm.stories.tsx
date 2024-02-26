@@ -78,6 +78,13 @@ export const TertiarySubmitButton = () => (
 );
 TertiarySubmitButton.storyName = 'TertiarySubmitButton';
 
+export const ButtonLinkSubmit = () => (
+	<MainForm formAction="" submitButtonText="Send me a link" submitButtonLink>
+		<EmailInput hidden />
+	</MainForm>
+);
+ButtonLinkSubmit.storyName = 'ButtonLinkSubmit';
+
 export const FormWithError = () => (
 	<MainForm
 		formAction=""

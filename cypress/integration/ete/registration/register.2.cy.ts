@@ -124,8 +124,8 @@ describe('Registration flow', () => {
 
 		cy.contains('Check your email inbox');
 		cy.contains(unregisteredEmail);
-		cy.contains('Resend email');
-		cy.contains('Change email address');
+		cy.contains('send again');
+		cy.contains('try another address');
 
 		cy.checkForEmailAndGetDetails(
 			unregisteredEmail,
@@ -156,8 +156,8 @@ describe('Registration flow', () => {
 
 				cy.contains('Check your email inbox');
 				cy.contains(emailAddress);
-				cy.contains('Resend email');
-				cy.contains('Change email address');
+				cy.contains('send again');
+				cy.contains('try another address');
 
 				cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade).then(
 					({ links, body }) => {
@@ -195,8 +195,8 @@ describe('Registration flow', () => {
 
 				cy.contains('Check your email inbox');
 				cy.contains(emailAddress);
-				cy.contains('Resend email');
-				cy.contains('Change email address');
+				cy.contains('send again');
+				cy.contains('try another address');
 
 				cy.checkForEmailAndGetDetails(
 					emailAddress,
@@ -237,8 +237,8 @@ describe('Registration flow', () => {
 
 				cy.contains('Check your email inbox');
 				cy.contains(emailAddress);
-				cy.contains('Resend email');
-				cy.contains('Change email address');
+				cy.contains('send again');
+				cy.contains('try another address');
 
 				cy.checkForEmailAndGetDetails(
 					emailAddress,

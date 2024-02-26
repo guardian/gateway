@@ -30,8 +30,8 @@ describe('Registration flow - Split 1/2', () => {
 
 			cy.contains('Check your email inbox');
 			cy.contains(unregisteredEmail);
-			cy.contains('Resend email');
-			cy.contains('Change email address');
+			cy.contains('send again');
+			cy.contains('try another address');
 
 			cy.checkForEmailAndGetDetails(
 				unregisteredEmail,
@@ -100,8 +100,8 @@ describe('Registration flow - Split 1/2', () => {
 
 			cy.contains('Check your email inbox');
 			cy.contains(unregisteredEmail);
-			cy.contains('Resend email');
-			cy.contains('Change email address');
+			cy.contains('send again');
+			cy.contains('try another address');
 
 			cy.checkForEmailAndGetDetails(
 				unregisteredEmail,
@@ -196,8 +196,8 @@ describe('Registration flow - Split 1/2', () => {
 
 			cy.contains('Check your email inbox');
 			cy.contains(unregisteredEmail);
-			cy.contains('Resend email');
-			cy.contains('Change email address');
+			cy.contains('send again');
+			cy.contains('try another address');
 
 			cy.checkForEmailAndGetDetails(
 				unregisteredEmail,
@@ -230,8 +230,8 @@ describe('Registration flow - Split 1/2', () => {
 
 			cy.contains('Check your email inbox');
 			cy.contains(unregisteredEmail);
-			cy.contains('Resend email');
-			cy.contains('Change email address');
+			cy.contains('send again');
+			cy.contains('try another address');
 
 			cy.checkForEmailAndGetDetails(
 				unregisteredEmail,
@@ -285,8 +285,8 @@ describe('Registration flow - Split 1/2', () => {
 
 			cy.contains('Check your email inbox');
 			cy.contains(unregisteredEmail);
-			cy.contains('Resend email');
-			cy.contains('Change email address');
+			cy.contains('send again');
+			cy.contains('try another address');
 
 			cy.checkForEmailAndGetDetails(
 				unregisteredEmail,
@@ -345,8 +345,8 @@ describe('Registration flow - Split 1/2', () => {
 
 						cy.contains('Check your email inbox');
 						cy.contains(emailAddress);
-						cy.contains('Resend email');
-						cy.contains('Change email address');
+						cy.contains('send again');
+						cy.contains('try another address');
 
 						cy.checkForEmailAndGetDetails(
 							emailAddress,
@@ -402,8 +402,8 @@ describe('Registration flow - Split 1/2', () => {
 
 						cy.contains('Check your email inbox');
 						cy.contains(emailAddress);
-						cy.contains('Resend email');
-						cy.contains('Change email address');
+						cy.contains('send again');
+						cy.contains('try another address');
 
 						cy.checkForEmailAndGetDetails(
 							emailAddress,
@@ -447,8 +447,8 @@ describe('Registration flow - Split 1/2', () => {
 
 							cy.contains('Check your email inbox');
 							cy.contains(emailAddress);
-							cy.contains('Resend email');
-							cy.contains('Change email address');
+							cy.contains('send again');
+							cy.contains('try another address');
 
 							cy.checkForEmailAndGetDetails(
 								emailAddress,
@@ -494,8 +494,8 @@ describe('Registration flow - Split 1/2', () => {
 							'For security reasons we need you to change your password.',
 						).should('not.exist');
 						cy.contains(emailAddress);
-						cy.contains('Resend email');
-						cy.contains('Change email address');
+						cy.contains('send again');
+						cy.contains('try another address');
 
 						cy.checkForEmailAndGetDetails(
 							emailAddress,
@@ -535,8 +535,8 @@ describe('Registration flow - Split 1/2', () => {
 
 						cy.contains('Check your email inbox');
 						cy.contains(emailAddress);
-						cy.contains('Resend email');
-						cy.contains('Change email address');
+						cy.contains('send again');
+						cy.contains('try another address');
 
 						cy.checkForEmailAndGetDetails(
 							emailAddress,
@@ -583,8 +583,8 @@ describe('Registration flow - Split 1/2', () => {
 
 						cy.contains('Check your email inbox');
 						cy.contains(emailAddress);
-						cy.contains('Resend email');
-						cy.contains('Change email address');
+						cy.contains('send again');
+						cy.contains('try another address');
 
 						cy.checkForEmailAndGetDetails(
 							emailAddress,
@@ -627,8 +627,8 @@ describe('Registration flow - Split 1/2', () => {
 
 							cy.contains('Check your email inbox');
 							cy.contains(emailAddress);
-							cy.contains('Resend email');
-							cy.contains('Change email address');
+							cy.contains('send again');
+							cy.contains('try another address');
 
 							cy.checkForEmailAndGetDetails(
 								emailAddress,
@@ -671,8 +671,8 @@ describe('Registration flow - Split 1/2', () => {
 
 							cy.contains('Check your email inbox');
 							cy.contains(emailAddress);
-							cy.contains('Resend email');
-							cy.contains('Change email address');
+							cy.contains('send again');
+							cy.contains('try another address');
 
 							cy.checkForEmailAndGetDetails(
 								emailAddress,

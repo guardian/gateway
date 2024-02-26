@@ -278,8 +278,8 @@ describe('Password reset flow in Okta', () => {
 
 					cy.contains('Check your email inbox');
 					cy.contains(emailAddress);
-					cy.contains('Resend email');
-					cy.contains('Change email address');
+					cy.contains('send again');
+					cy.contains('try another address');
 
 					cy.checkForEmailAndGetDetails(
 						emailAddress,
@@ -332,8 +332,8 @@ describe('Password reset flow in Okta', () => {
 
 					cy.contains('Check your email inbox');
 					cy.contains(emailAddress);
-					cy.contains('Resend email');
-					cy.contains('Change email address');
+					cy.contains('send again');
+					cy.contains('try another address');
 
 					cy.checkForEmailAndGetDetails(
 						emailAddress,
@@ -384,8 +384,8 @@ describe('Password reset flow in Okta', () => {
 
 						cy.contains('Check your email inbox');
 						cy.contains(emailAddress);
-						cy.contains('Resend email');
-						cy.contains('Change email address');
+						cy.contains('send again');
+						cy.contains('try another address');
 
 						cy.checkForEmailAndGetDetails(
 							emailAddress,
@@ -437,8 +437,8 @@ describe('Password reset flow in Okta', () => {
 
 						cy.contains('Check your email inbox');
 						cy.contains(emailAddress);
-						cy.contains('Resend email');
-						cy.contains('Change email address');
+						cy.contains('send again');
+						cy.contains('try another address');
 
 						cy.checkForEmailAndGetDetails(
 							emailAddress,
@@ -489,8 +489,8 @@ describe('Password reset flow in Okta', () => {
 
 						cy.contains('Check your email inbox');
 						cy.contains(emailAddress);
-						cy.contains('Resend email');
-						cy.contains('Change email address');
+						cy.contains('send again');
+						cy.contains('try another address');
 
 						cy.checkForEmailAndGetDetails(
 							emailAddress,

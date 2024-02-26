@@ -41,8 +41,8 @@ describe('Onboarding flow', () => {
 
 			cy.contains('Check your email inbox');
 			cy.contains(unregisteredEmail);
-			cy.contains('Resend email');
-			cy.contains('Change email address');
+			cy.contains('send again');
+			cy.contains('try another address');
 
 			cy.checkForEmailAndGetDetails(
 				unregisteredEmail,
@@ -160,8 +160,8 @@ describe('Onboarding flow', () => {
 
 			cy.contains('Check your email inbox');
 			cy.contains(unregisteredEmail);
-			cy.contains('Resend email');
-			cy.contains('Change email address');
+			cy.contains('send again');
+			cy.contains('try another address');
 
 			cy.checkForEmailAndGetDetails(
 				unregisteredEmail,

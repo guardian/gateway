@@ -7,7 +7,7 @@ import React, {
 	useState,
 } from 'react';
 import { css } from '@emotion/react';
-import { Button } from '@guardian/source-react-components';
+import { Button, ButtonLink } from '@guardian/source-react-components';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import {
 	GuardianTerms,
@@ -57,14 +57,28 @@ export interface MainFormProps {
 	formTrackingName?: string;
 	disableOnSubmit?: boolean;
 	largeFormMarginTop?: boolean;
+	submitButtonLink?: boolean;
+	hideRecaptchaMessage?: boolean;
 }
 
-const formStyles = (largeFormMarginTop = false) => css`
-	margin-top: ${largeFormMarginTop ? space[6] : space[4]}px;
+const formStyles = (
+	largeFormMarginTop = false,
+	submitButtonLink = false,
+) => css`
+	${!submitButtonLink &&
+	css`
+		margin-top: ${largeFormMarginTop ? space[6] : space[4]}px;
+	`}
+
+	${submitButtonLink &&
+	css`
+		display: inline-block;
+	`}
 `;
 
-const inputStyles = (hasTerms = false) => css`
+const inputStyles = (hasTerms = false, submitButtonLink = false) => css`
 	${hasTerms &&
+	!submitButtonLink &&
 	css`
 		margin-bottom: ${space[2]}px;
 	`}
@@ -80,7 +94,7 @@ export const inputMarginBottomSpacingStyle = css`
 `;
 
 export const belowFormMarginTopSpacingStyle = css`
-	margin-top: ${space[5]}px;
+	margin-top: ${space[3]}px;
 `;
 
 export const MainForm = ({
@@ -101,6 +115,8 @@ export const MainForm = ({
 	largeFormMarginTop = false,
 	formErrorMessageFromParent,
 	formErrorContextFromParent,
+	submitButtonLink,
+	hideRecaptchaMessage,
 }: PropsWithChildren<MainFormProps>) => {
 	const recaptchaEnabled = !!recaptchaSiteKey;
 	const hasTerms = recaptchaEnabled || hasGuardianTerms || hasJobsTerms;
@@ -259,7 +275,7 @@ export const MainForm = ({
 
 	return (
 		<form
-			css={formStyles(largeFormMarginTop)}
+			css={formStyles(largeFormMarginTop, submitButtonLink)}
 			method="post"
 			action={formAction}
 			onSubmit={handleSubmit}
@@ -291,25 +307,36 @@ export const MainForm = ({
 			)}
 			<CsrfFormField />
 			<RefTrackingFormFields />
-			<div css={inputStyles(hasTerms)}>{children}</div>
+			<div css={inputStyles(hasTerms, submitButtonLink)}>{children}</div>
 			{hasGuardianTerms && <GuardianTerms />}
 			{hasJobsTerms && <JobsTerms />}
-			{recaptchaEnabled && <RecaptchaTerms />}
-			<Button
-				css={buttonStyles({
-					hasTerms,
-					halfWidth: submitButtonHalfWidth,
-				})}
-				type="submit"
-				priority={submitButtonPriority}
-				data-cy="main-form-submit-button"
-				isLoading={isFormDisabled}
-				disabled={isFormDisabled}
-				aria-disabled={isFormDisabled}
-				iconSide="right"
-			>
-				{submitButtonText}
-			</Button>
+			{recaptchaEnabled && !hideRecaptchaMessage && <RecaptchaTerms />}
+			{submitButtonLink ? (
+				<ButtonLink
+					type="submit"
+					data-cy="main-form-submit-button"
+					disabled={isFormDisabled}
+					aria-disabled={isFormDisabled}
+				>
+					{submitButtonText}
+				</ButtonLink>
+			) : (
+				<Button
+					css={buttonStyles({
+						hasTerms,
+						halfWidth: submitButtonHalfWidth,
+					})}
+					type="submit"
+					priority={submitButtonPriority}
+					data-cy="main-form-submit-button"
+					isLoading={isFormDisabled}
+					disabled={isFormDisabled}
+					aria-disabled={isFormDisabled}
+					iconSide="right"
+				>
+					{submitButtonText}
+				</Button>
+			)}
 		</form>
 	);
 };

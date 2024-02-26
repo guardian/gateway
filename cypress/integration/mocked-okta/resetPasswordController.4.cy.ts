@@ -13,13 +13,13 @@ beforeEach(() => {
 
 const verifyIn2MinutesEmailSentPage = () => {
 	cy.contains('Check your email inbox');
-	cy.contains('Resend email');
+	cy.contains('send again');
 	cy.contains('Email sent');
 	cy.contains('within 2 minutes');
 };
 const verifyInRegularEmailSentPage = () => {
 	cy.contains('Check your email inbox');
-	cy.contains('Resend email');
+	cy.contains('send again');
 	cy.contains('Email sent');
 	cy.contains('within 2 minutes').should('not.exist');
 };

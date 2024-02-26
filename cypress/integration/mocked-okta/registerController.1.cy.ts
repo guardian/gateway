@@ -11,7 +11,7 @@ beforeEach(() => {
 });
 const verifyInRegularEmailSentPage = () => {
 	cy.contains('Check your email inbox');
-	cy.contains('Resend email');
+	cy.contains('send again');
 };
 
 userStatuses.forEach((status) => {

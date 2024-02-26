@@ -28,6 +28,7 @@ export const RegistrationEmailSentPage = () => {
 			queryString={queryString}
 			changeEmailPage={buildUrlWithQueryParams('/register', {}, queryParams)}
 			resendEmailAction={buildUrl('/register/email-sent/resend')}
+			instructionContext="verify and complete creating your account"
 			showSuccess={emailSentSuccess}
 			errorMessage={error}
 			recaptchaSiteKey={recaptchaSiteKey}
