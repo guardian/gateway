@@ -5,6 +5,11 @@ import { generateSignInRegisterTabs } from '@/client/components/Nav';
 import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
+import { Link } from '@guardian/source-react-components';
+import { Divider } from '@guardian/source-react-components-development-kitchen';
+import { MainBodyText } from '@/client/components/MainBodyText';
+import { divider } from '@/client/styles/Shared';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 
 export type RegistrationProps = {
 	email?: string;
@@ -46,6 +51,14 @@ export const Registration = ({ queryParams }: RegistrationProps) => {
 				context="Sign up"
 				providers={['social', 'email']}
 			/>
+			{/* divider */}
+			<Divider spaceAbove="tight" size="full" cssOverrides={divider} />
+			<MainBodyText smallText>
+				Already have an account?{' '}
+				<Link href={buildUrlWithQueryParams('/signin', {}, queryParams)}>
+					Sign in
+				</Link>
+			</MainBodyText>
 		</MainLayout>
 	);
 };

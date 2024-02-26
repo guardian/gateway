@@ -13,8 +13,9 @@ import { from, space, textSans } from '@guardian/source-foundations';
 import { Link } from '@guardian/source-react-components';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
-import { socialButtonDivider } from '@/client/styles/Shared';
+import { divider, socialButtonDivider } from '@/client/styles/Shared';
 import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
+import { MainBodyText } from '@/client/components/MainBodyText';
 
 export type SignInProps = {
 	queryParams: QueryParams;
@@ -154,6 +155,14 @@ export const SignIn = ({
 					</Link>
 				</Links>
 			</MainForm>
+			{/* divider */}
+			<Divider spaceAbove="tight" size="full" cssOverrides={divider} />
+			<MainBodyText smallText>
+				Not signed in before?{' '}
+				<Link href={buildUrlWithQueryParams('/register', {}, queryParams)}>
+					Register for free
+				</Link>
+			</MainBodyText>
 		</MainLayout>
 	);
 };
