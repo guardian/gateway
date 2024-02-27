@@ -4,7 +4,7 @@ import { MainLayout } from '@/client/layouts/Main';
 import { generateSignInRegisterTabs } from '@/client/components/Nav';
 import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
-import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
+import { GuardianTerms, JobsTerms, TermsBox } from '@/client/components/Terms';
 import { Link } from '@guardian/source-react-components';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { MainBodyText } from '@/client/components/MainBodyText';
@@ -19,10 +19,10 @@ export type RegistrationProps = {
 };
 
 const RegistrationTerms = ({ isJobs }: { isJobs: boolean }) => (
-	<>
-		{!isJobs && <GuardianTerms withMarginTop />}
-		{isJobs && <JobsTerms withMarginTop />}
-	</>
+	<TermsBox withMarginTop>
+		{!isJobs && <GuardianTerms />}
+		{isJobs && <JobsTerms />}
+	</TermsBox>
 );
 
 export const Registration = ({ queryParams }: RegistrationProps) => {

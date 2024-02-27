@@ -49,6 +49,7 @@ export const RegisterWithEmail = ({
 					registrationFormSubmitOphanTracking(e.target as HTMLFormElement);
 					return undefined;
 				}}
+				additionalTerms="Newsletters may contain info about charities, online ads, and content funded by outside parties."
 			>
 				<EmailInput defaultValue={email} autoComplete="off" />
 				<CmpConsentedStateHiddenInput cmpConsentedState={hasCmpConsent} />

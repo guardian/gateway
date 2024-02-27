@@ -96,3 +96,14 @@ export const FormWithError = () => (
 	</MainForm>
 );
 FormWithError.storyName = 'FormWithError';
+
+export const WithAdditionalTerms = () => (
+	<MainForm
+		formAction=""
+		submitButtonText="Send me a link"
+		additionalTerms="These are some additional terms"
+	>
+		<EmailInput />
+	</MainForm>
+);
+WithAdditionalTerms.storyName = 'WithAdditionalTerms';

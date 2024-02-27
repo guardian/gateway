@@ -13,6 +13,8 @@ import {
 	GuardianTerms,
 	JobsTerms,
 	RecaptchaTerms,
+	TermsBox,
+	TermsText,
 } from '@/client/components/Terms';
 import { space } from '@guardian/source-foundations';
 import { buttonStyles } from '@/client/layouts/Main';
@@ -59,6 +61,7 @@ export interface MainFormProps {
 	largeFormMarginTop?: boolean;
 	submitButtonLink?: boolean;
 	hideRecaptchaMessage?: boolean;
+	additionalTerms?: string;
 }
 
 const formStyles = (
@@ -117,9 +120,11 @@ export const MainForm = ({
 	formErrorContextFromParent,
 	submitButtonLink,
 	hideRecaptchaMessage,
+	additionalTerms,
 }: PropsWithChildren<MainFormProps>) => {
 	const recaptchaEnabled = !!recaptchaSiteKey;
-	const hasTerms = recaptchaEnabled || hasGuardianTerms || hasJobsTerms;
+	const hasTerms =
+		recaptchaEnabled || hasGuardianTerms || hasJobsTerms || !!additionalTerms;
 
 	// These setters are used to set the error message locally, in this component.
 	// We want to use these when we want to display errors at the level of the form.
@@ -308,9 +313,18 @@ export const MainForm = ({
 			<CsrfFormField />
 			<RefTrackingFormFields />
 			<div css={inputStyles(hasTerms, submitButtonLink)}>{children}</div>
-			{hasGuardianTerms && <GuardianTerms />}
-			{hasJobsTerms && <JobsTerms />}
-			{recaptchaEnabled && !hideRecaptchaMessage && <RecaptchaTerms />}
+			{(additionalTerms ||
+				hasGuardianTerms ||
+				hasJobsTerms ||
+				(recaptchaEnabled && !hideRecaptchaMessage)) && (
+				<TermsBox>
+					{hasGuardianTerms && <GuardianTerms />}
+					{hasJobsTerms && <JobsTerms />}
+					{additionalTerms && <TermsText>{additionalTerms}</TermsText>}
+					{recaptchaEnabled && !hideRecaptchaMessage && <RecaptchaTerms />}
+				</TermsBox>
+			)}
+
 			{submitButtonLink ? (
 				<ButtonLink
 					type="submit"
