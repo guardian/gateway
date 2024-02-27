@@ -41,7 +41,7 @@ export const Footer = ({ mistakeParagraphComponent }: Props) => (
 			<FooterText>
 				If you have any queries about why you are receiving this email, please
 				contact our customer service team at{' '}
-				<Link href={locations.SUPPORT_EMAIL_MAILTO}>{SUPPORT_EMAIL}</Link>.
+				<Link href={locations.SUPPORT_EMAIL_MAILTO}>{SUPPORT_EMAIL}</Link>
 			</FooterText>
 			<FooterText noPaddingBottom>
 				Guardian News and Media Limited, Kings Place, 90 York Way, London, N1

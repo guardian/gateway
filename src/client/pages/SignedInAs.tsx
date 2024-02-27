@@ -35,7 +35,7 @@ const DetailedLoginRequiredError = ({
 		</ul>
 		<p css={[errorContextSpacing, { marginBottom: `${space[3]}px` }]}>
 			For further help please contact our customer service team at{' '}
-			<Link href={locations.SUPPORT_EMAIL_MAILTO}>{SUPPORT_EMAIL}</Link>.
+			<Link href={locations.SUPPORT_EMAIL_MAILTO}>{SUPPORT_EMAIL}</Link>
 		</p>
 	</>
 );
@@ -68,7 +68,7 @@ export const SignedInAs = ({
 		>
 			<MainBodyText noMarginBottom>
 				You are signed in with <br />
-				<b>{email}</b>.
+				<b>{email}</b>
 			</MainBodyText>
 			<LinkButton
 				css={buttonStyles({

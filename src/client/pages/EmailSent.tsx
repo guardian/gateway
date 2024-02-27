@@ -64,7 +64,7 @@ export const EmailSent = ({
 			{children}
 			{email ? (
 				<MainBodyText>
-					We’ve sent an email to <b>{email}</b>.
+					We’ve sent an email to <b>{email}</b>
 				</MainBodyText>
 			) : (
 				<MainBodyText>We’ve sent you an email.</MainBodyText>
@@ -134,7 +134,6 @@ export const EmailSent = ({
 						<ExternalLink href={locations.SUPPORT_EMAIL_MAILTO}>
 							{SUPPORT_EMAIL}
 						</ExternalLink>
-						.
 					</MainBodyText>
 				</div>
 			</div>
