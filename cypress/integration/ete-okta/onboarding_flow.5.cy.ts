@@ -33,7 +33,7 @@ describe('Onboarding flow', () => {
 			cy.enableCMP();
 			cy.visit(`/register?returnUrl=${returnUrl}`);
 			cy.acceptCMP();
-			cy.contains('Sign up with email').click();
+			cy.contains('Continue with email').click();
 
 			const timeRequestWasMade = new Date();
 			cy.get('input[name=email]').type(unregisteredEmail);
@@ -148,7 +148,7 @@ describe('Onboarding flow', () => {
 
 			cy.visit(`/register?returnUrl=${returnUrl}`);
 
-			cy.contains('Sign up with email').click();
+			cy.contains('Continue with email').click();
 			// opt out of newsletter
 			cy.contains('Saturday Edition').click();
 			// opt out of supporter consent

@@ -77,7 +77,6 @@ const showAuthProviderButtons = (
 				<AuthProviderButtons
 					queryParams={queryParams}
 					marginTop={true}
-					context="Sign in"
 					providers={['social']}
 				/>
 				<Divider

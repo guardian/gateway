@@ -10,7 +10,6 @@ export default {
 
 export const Desktop = () => (
 	<AuthProviderButtons
-		context="Sign in"
 		queryParams={{ returnUrl: 'https://www.theguardian.com/uk/' }}
 		providers={['social']}
 	/>
@@ -25,7 +24,6 @@ Desktop.parameters = {
 
 export const Mobile = () => (
 	<AuthProviderButtons
-		context="Sign in"
 		queryParams={{ returnUrl: 'https://www.theguardian.com/uk/' }}
 		providers={['social']}
 	/>
@@ -40,7 +38,6 @@ Mobile.parameters = {
 
 export const NativeAppAndroid = () => (
 	<AuthProviderButtons
-		context="Sign in"
 		queryParams={{ returnUrl: 'https://www.theguardian.com/uk/' }}
 		isNativeApp="android"
 		providers={['social']}
@@ -50,7 +47,6 @@ NativeAppAndroid.storyName = 'Android native app';
 
 export const NativeAppIos = () => (
 	<AuthProviderButtons
-		context="Sign in"
 		queryParams={{ returnUrl: 'https://www.theguardian.com/uk/' }}
 		isNativeApp="ios"
 		providers={['social']}
@@ -60,7 +56,6 @@ NativeAppIos.storyName = 'iOS native app';
 
 export const DesktopWithEmail = () => (
 	<AuthProviderButtons
-		context="Sign in"
 		queryParams={{ returnUrl: 'https://www.theguardian.com/uk/' }}
 		providers={['social', 'email']}
 	/>
@@ -75,7 +70,6 @@ DesktopWithEmail.parameters = {
 
 export const MobileWithEmail = () => (
 	<AuthProviderButtons
-		context="Sign in"
 		queryParams={{ returnUrl: 'https://www.theguardian.com/uk/' }}
 		providers={['social', 'email']}
 	/>
@@ -90,7 +84,6 @@ MobileWithEmail.parameters = {
 
 export const NativeAppAndroidWithEmail = () => (
 	<AuthProviderButtons
-		context="Sign in"
 		queryParams={{ returnUrl: 'https://www.theguardian.com/uk/' }}
 		isNativeApp="android"
 		providers={['social', 'email']}
@@ -100,7 +93,6 @@ NativeAppAndroidWithEmail.storyName = 'Android native app (with email)';
 
 export const NativeAppIosWithEmail = () => (
 	<AuthProviderButtons
-		context="Sign in"
 		queryParams={{ returnUrl: 'https://www.theguardian.com/uk/' }}
 		isNativeApp="ios"
 		providers={['social', 'email']}

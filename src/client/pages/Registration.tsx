@@ -48,7 +48,6 @@ export const Registration = ({ queryParams }: RegistrationProps) => {
 			<AuthProviderButtons
 				queryParams={queryParams}
 				marginTop={true}
-				context="Sign up"
 				providers={['social', 'email']}
 			/>
 			{/* divider */}

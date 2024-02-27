@@ -304,23 +304,23 @@ describe('Registration flow', () => {
 		);
 	});
 
-	it('Sign up with Google button links to /signin/google', () => {
+	it('Continue with Google button links to /signin/google', () => {
 		cy.visit('/register?useIdapi=true');
-		cy.contains('Sign up with Google')
+		cy.contains('Continue with Google')
 			.should('have.attr', 'href')
 			.and('include', '/signin/google');
 	});
 
-	it('Sign up with Apple button links to /signin/apple', () => {
+	it('Continue with Apple button links to /signin/apple', () => {
 		cy.visit('/register?useIdapi=true');
-		cy.contains('Sign up with Apple')
+		cy.contains('Continue with Apple')
 			.should('have.attr', 'href')
 			.and('include', '/signin/apple');
 	});
 
-	it('Sign up with Email button links to /register/email', () => {
+	it('Continue with Email button links to /register/email', () => {
 		cy.visit('/register?useIdapi=true');
-		cy.contains('Sign up with email')
+		cy.contains('Continue with email')
 			.should('have.attr', 'href')
 			.and('include', '/register/email');
 	});
