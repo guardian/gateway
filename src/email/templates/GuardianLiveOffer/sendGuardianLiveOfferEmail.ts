@@ -12,7 +12,7 @@ type Props = {
 const plainText = GuardianLiveOfferText();
 const { html } = render(GuardianLiveOffer());
 
-export const sendAccidentalEmail = ({
+export const sendGuardianLiveOfferEmail = ({
 	to,
 	subject = 'Your Guardian account and discount code',
 }: Props) => {
