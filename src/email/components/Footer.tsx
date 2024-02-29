@@ -32,7 +32,7 @@ const FooterText = ({
 export const Footer = ({ mistakeParagraphComponent }: Props) => (
 	<MjmlSection padding="0 12px">
 		<MjmlColumn
-			padding="12px 12px 24px 12px"
+			padding="12px 12px 12px 12px"
 			background-color={background.secondary}
 		>
 			{mistakeParagraphComponent && (
