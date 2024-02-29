@@ -5,11 +5,13 @@ import { MainBodyText } from '@/client/components/MainBodyText';
 import { MainForm } from '@/client/components/MainForm';
 import { EmailInput } from '@/client/components/EmailInput';
 import { ExternalLink } from '@/client/components/ExternalLink';
-import { css } from '@emotion/react';
 import { buildUrl } from '@/shared/lib/routeUtils';
 import locations from '@/shared/lib/locations';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
-import { palette, space, textSans } from '@guardian/source-foundations';
+import {
+	InformationBox,
+	InformationBoxText,
+} from '@/client/components/InformationBox';
 
 type Props = {
 	email?: string;
@@ -24,16 +26,6 @@ type Props = {
 	formError?: string;
 	instructionContext?: string;
 };
-
-const helpBoxStyles = () => css`
-	background-color: ${palette.neutral[93]};
-	border-radius: 4px;
-	padding: ${space[3]}px ${space[3]}px;
-
-	& button {
-		${textSans.small()};
-	}
-`;
 
 export const EmailSent = ({
 	email,
@@ -83,8 +75,8 @@ export const EmailSent = ({
 					For your security, the link in the email will expire in 60 minutes.
 				</b>
 			</MainBodyText>
-			<div css={helpBoxStyles}>
-				<MainBodyText smallText>
+			<InformationBox>
+				<InformationBoxText>
 					Didn’t get the email? Check your spam
 					{email && resendEmailAction && (
 						<>
@@ -115,28 +107,24 @@ export const EmailSent = ({
 						</>
 					)}
 					.
-				</MainBodyText>
+				</InformationBoxText>
 				{noAccountInfo && (
-					<div>
-						<MainBodyText smallText>
-							If you don’t receive an email within 2 minutes you may not have an
-							account. Don’t have an account?{' '}
-							<Link href={`${buildUrl('/register')}${queryString}`}>
-								Register for free
-							</Link>
-							.
-						</MainBodyText>
-					</div>
+					<InformationBoxText>
+						If you don’t receive an email within 2 minutes you may not have an
+						account. Don’t have an account?{' '}
+						<Link href={`${buildUrl('/register')}${queryString}`}>
+							Register for free
+						</Link>
+						.
+					</InformationBoxText>
 				)}
-				<div>
-					<MainBodyText smallText noMarginBottom>
-						For further assistance, email our customer service team at{' '}
-						<ExternalLink href={locations.SUPPORT_EMAIL_MAILTO}>
-							{SUPPORT_EMAIL}
-						</ExternalLink>
-					</MainBodyText>
-				</div>
-			</div>
+				<InformationBoxText>
+					For further assistance, email our customer service team at{' '}
+					<ExternalLink href={locations.SUPPORT_EMAIL_MAILTO}>
+						{SUPPORT_EMAIL}
+					</ExternalLink>
+				</InformationBoxText>
+			</InformationBox>
 		</MainLayout>
 	);
 };

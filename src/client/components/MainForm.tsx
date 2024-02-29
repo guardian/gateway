@@ -13,8 +13,6 @@ import {
 	GuardianTerms,
 	JobsTerms,
 	RecaptchaTerms,
-	TermsBox,
-	TermsText,
 } from '@/client/components/Terms';
 import { space } from '@guardian/source-foundations';
 import { buttonStyles } from '@/client/layouts/Main';
@@ -29,6 +27,7 @@ import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 import { logger } from '@/client/lib/clientSideLogger';
 import { ErrorSummary } from '@guardian/source-react-components-development-kitchen';
 import locations from '@/shared/lib/locations';
+import { InformationBox, InformationBoxText } from './InformationBox';
 
 export interface MainFormProps {
 	formAction: string;
@@ -61,7 +60,7 @@ export interface MainFormProps {
 	largeFormMarginTop?: boolean;
 	submitButtonLink?: boolean;
 	hideRecaptchaMessage?: boolean;
-	additionalTerms?: string;
+	additionalTerms?: ReactNode;
 }
 
 const formStyles = (
@@ -317,12 +316,14 @@ export const MainForm = ({
 				hasGuardianTerms ||
 				hasJobsTerms ||
 				(recaptchaEnabled && !hideRecaptchaMessage)) && (
-				<TermsBox>
+				<InformationBox>
 					{hasGuardianTerms && <GuardianTerms />}
 					{hasJobsTerms && <JobsTerms />}
-					{additionalTerms && <TermsText>{additionalTerms}</TermsText>}
+					{additionalTerms && (
+						<InformationBoxText>{additionalTerms}</InformationBoxText>
+					)}
 					{recaptchaEnabled && !hideRecaptchaMessage && <RecaptchaTerms />}
-				</TermsBox>
+				</InformationBox>
 			)}
 
 			{submitButtonLink ? (

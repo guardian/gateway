@@ -1,7 +1,8 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { GuardianTerms, JobsTerms, RecaptchaTerms, TermsBox } from './Terms';
+import { GuardianTerms, JobsTerms, RecaptchaTerms } from './Terms';
+import { InformationBox } from './InformationBox';
 
 export default {
 	title: 'Components/Terms',
@@ -9,19 +10,19 @@ export default {
 } as Meta;
 
 export const Default = () => (
-	<TermsBox>
+	<InformationBox>
 		<GuardianTerms />
 		<RecaptchaTerms />
-	</TermsBox>
+	</InformationBox>
 );
 
 Default.storyName = 'Terms';
 
 export const Jobs = () => (
-	<TermsBox>
+	<InformationBox>
 		<JobsTerms />
 		<RecaptchaTerms />
-	</TermsBox>
+	</InformationBox>
 );
 
 Jobs.storyName = 'Jobs terms';
