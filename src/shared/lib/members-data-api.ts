@@ -20,6 +20,7 @@ export const userAttributesResponseSchema = z
 		alertAvailableFor: z.string().optional(),
 
 		showSupportMessaging: z.boolean(),
+		feastIosSubscriptionGroup: z.string().optional(),
 
 		contentAccess: z.object({
 			member: z.boolean(),
@@ -30,6 +31,7 @@ export const userAttributesResponseSchema = z
 			paperSubscriber: z.boolean(),
 			guardianWeeklySubscriber: z.boolean(),
 			guardianPatron: z.boolean(),
+			feast: z.boolean().optional(),
 		}),
 	})
 	.strict();
