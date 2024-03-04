@@ -9,6 +9,12 @@ jest.mock('@/server/lib/getConfiguration', () => ({
 	getConfiguration: () => ({ defaultReturnUri: 'default-uri' }),
 }));
 
+jest.mock('@/server/lib/serverSideLogger', () => ({
+	logger: {
+		error: jest.fn(),
+	},
+}));
+
 describe('parseExpressQueryParams', () => {
 	const { defaultReturnUri } = getConfiguration();
 

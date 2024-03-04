@@ -34,6 +34,7 @@ describe('getPersistableQueryParams', () => {
 			refViewId: 'refViewId',
 			componentEventParams: 'componentEventParams',
 			useIdapi: undefined,
+			signInGateId: undefined,
 			fromURI: 'fromURI',
 			appClientId: 'appClientId',
 		};
