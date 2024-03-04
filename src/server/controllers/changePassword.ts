@@ -45,6 +45,7 @@ import { decryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToke
 import { changePasswordMetric } from '@/server/models/Metrics';
 import { getAppPrefix } from '@/shared/lib/appNameUtils';
 import { sendGuardianLiveOfferEmail } from '@/email/templates/GuardianLiveOffer/sendGuardianLiveOfferEmail';
+import { sendMyGuardianOfferEmail } from '@/email/templates/MyGuardianOffer/sendMyGuardianOfferEmail';
 
 const { okta } = getConfiguration();
 
@@ -294,9 +295,9 @@ const changePasswordInOkta = async (
 								to: encryptedState.email,
 							});
 							break;
-						case 'alternative-wording-personalization':
+						case 'alternative-wording-personalise':
 							// TODO: Change this email once created
-							await sendGuardianLiveOfferEmail({
+							await sendMyGuardianOfferEmail({
 								to: encryptedState.email,
 							});
 							break;

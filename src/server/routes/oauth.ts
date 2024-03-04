@@ -38,6 +38,7 @@ import { SocialProvider } from '@/shared/model/Social';
 import { update as updateNewsletters } from '@/server/lib/idapi/newsletters';
 import { RoutePaths } from '@/shared/model/Routes';
 import { sendGuardianLiveOfferEmail } from '@/email/templates/GuardianLiveOffer/sendGuardianLiveOfferEmail';
+import { sendMyGuardianOfferEmail } from '@/email/templates/MyGuardianOffer/sendMyGuardianOfferEmail';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
@@ -160,8 +161,8 @@ const authenticationHandler = async (
 									to: email,
 								});
 								break;
-							case 'alternative-wording-personalization':
-								await sendGuardianLiveOfferEmail({
+							case 'alternative-wording-personalise':
+								await sendMyGuardianOfferEmail({
 									to: email,
 								});
 								break;

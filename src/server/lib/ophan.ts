@@ -17,7 +17,7 @@ const ophanUrl = 'https://ophan.theguardian.com/img/2';
 /* AB TEST START */
 export const signInGateIdsForOfferEmails = [
 	'alternative-wording-guardian-live',
-	'alternative-wording-personalization',
+	'alternative-wording-personalise',
 ] as const;
 export type SignInGateIdsForOfferEmails =
 	(typeof signInGateIdsForOfferEmails)[number];
