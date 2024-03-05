@@ -275,7 +275,7 @@ describe('Welcome and set password page', () => {
 			cy.get('button[type="submit"]').click();
 			cy.contains('Check your email inbox');
 			cy.contains(checkTokenSuccessResponse().user.primaryEmailAddress);
-			cy.contains('Resend email');
+			cy.contains('send again');
 		});
 
 		it('shows the session time out page if the token expires while on the set password page', () => {
@@ -301,7 +301,7 @@ describe('Welcome and set password page', () => {
 			cy.contains('Check your email inbox');
 		});
 
-		it('fails to resend email if reCAPTCHA check is unsuccessful', () => {
+		it('fails to send again if reCAPTCHA check is unsuccessful', () => {
 			cy.visit(`/welcome/resend?useIdapi=true`);
 
 			cy.mockNext(200);
@@ -321,7 +321,7 @@ describe('Welcome and set password page', () => {
 			cy.contains(SUPPORT_EMAIL);
 		});
 
-		it('takes user back to link expired page if "Change email address" clicked', () => {
+		it('takes user back to link expired page if "try another address" clicked', () => {
 			cy.visit(`/welcome/resend?useIdapi=true`);
 
 			cy.mockNext(200);
@@ -330,7 +330,7 @@ describe('Welcome and set password page', () => {
 			);
 			cy.get('button[type="submit"]').click();
 
-			cy.contains('Change email address').click();
+			cy.contains('try another address').click();
 
 			cy.contains('Link expired');
 		});

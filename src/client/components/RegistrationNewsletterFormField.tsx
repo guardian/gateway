@@ -6,10 +6,10 @@ import { ToggleSwitchInput } from '@/client/components/ToggleSwitchInput';
 const switchRow = css`
 	border: 0;
 	padding: 0;
-	margin: ${space[6]}px 0 0 0;
+	margin: 0;
 	${textSans.medium()}
 	border-radius: 4px;
-	border: 1px dashed ${palette.neutral[38]};
+	border: 1px solid ${palette.neutral[38]};
 	padding: ${space[2]}px;
 `;
 
@@ -20,6 +20,7 @@ const labelStyles = css`
 		${textSans.xsmall({ fontWeight: 'bold' })}
 	}
 	& > span:last-of-type {
+		align-self: flex-start;
 		color: ${palette.neutral[46]};
 		${textSans.xsmall()}
 	}

@@ -221,9 +221,9 @@ export const navigatesToRegistration = (isIdapi = false) => {
 			const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
 			cy.visit(visitUrl);
 			cy.contains('Register').click();
-			cy.contains('Sign up with Google');
-			cy.contains('Sign up with Apple');
-			cy.contains('Sign up with email');
+			cy.contains('Continue with Google');
+			cy.contains('Continue with Apple');
+			cy.contains('Continue with email');
 		},
 	] as const;
 };

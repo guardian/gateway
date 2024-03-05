@@ -16,9 +16,8 @@ export const ReturnToApp = ({ email, appName: app }: ReturnToAppProps) => (
 					: <b>{email}</b>
 				</>
 			) : (
-				''
+				'.'
 			)}
-			.
 		</MainBodyText>
 		<MainBodyText>
 			Open the <b>{app ? app : 'Guardian'}</b> app and sign in with your new

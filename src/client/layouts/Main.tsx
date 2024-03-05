@@ -17,9 +17,11 @@ import { Footer } from '@/client/components/Footer';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { Nav, TabType } from '@/client/components/Nav';
 import locations from '@/shared/lib/locations';
+import { MainBodyText } from '../components/MainBodyText';
 
 interface MainLayoutProps {
 	pageHeader?: string;
+	pageSubText?: string;
 	successOverride?: string;
 	errorOverride?: string;
 	errorContext?: React.ReactNode;
@@ -114,7 +116,7 @@ export const buttonStyles = ({
 	halfWidthAtMobile = false,
 	hasMarginBottom = false,
 }) => css`
-	margin-top: 22px;
+	margin-top: ${space[4]}px;
 	justify-content: center;
 	width: 100%;
 
@@ -148,7 +150,7 @@ export const buttonStyles = ({
 
 	${hasTerms &&
 	css`
-		margin-top: ${space[4]}px;
+		margin-top: ${space[3]}px;
 	`}
 
 	${hasMarginBottom &&
@@ -157,9 +159,14 @@ export const buttonStyles = ({
 	`}
 `;
 
+const subTextStyles = css`
+	padding-top: ${space[4]}px;
+`;
+
 export const MainLayout = ({
 	children,
 	pageHeader,
+	pageSubText,
 	successOverride,
 	errorOverride,
 	errorContext,
@@ -205,6 +212,11 @@ export const MainLayout = ({
 					{pageHeader && (
 						<header css={headerStyles(hasSummary)}>
 							<h1 css={[pageTitleStyles]}>{pageHeader}</h1>
+							{pageSubText && (
+								<MainBodyText cssOverrides={subTextStyles} noMarginBottom>
+									{pageSubText}
+								</MainBodyText>
+							)}
 						</header>
 					)}
 					<div css={bodyStyles(hasTitleOrSummary)}>{children}</div>

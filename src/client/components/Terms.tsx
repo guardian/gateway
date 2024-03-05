@@ -1,89 +1,45 @@
 import React from 'react';
-import { css } from '@emotion/react';
-import { space, textSans } from '@guardian/source-foundations';
-import { ExternalLink } from '@/client/components/ExternalLink';
-
-export const termsContainer = css`
-	margin-top: ${space[5]}px;
-`;
-
-const Text = ({ children }: { children: React.ReactNode }) => (
-	<p
-		css={css`
-			${textSans.xxsmall()}
-			margin-top: 0;
-			margin-bottom: 6px;
-		`}
-	>
-		{children}
-	</p>
-);
-
-const TermsLink = ({
-	children,
-	href,
-}: {
-	children: React.ReactNode;
-	href: string;
-}) => (
-	<ExternalLink
-		cssOverrides={css`
-			${textSans.xxsmall()}
-		`}
-		href={href}
-	>
-		{children}
-	</ExternalLink>
-);
+import { InformationBoxText } from './InformationBox';
+import { ExternalLink } from './ExternalLink';
 
 export const GuardianTerms = () => (
-	<>
-		<Text>
-			By proceeding, you agree to our{' '}
-			<TermsLink href="https://www.theguardian.com/help/terms-of-service">
-				terms &amp; conditions
-			</TermsLink>
-			.
-		</Text>
-		<Text>
-			For information about how we use your data, see our{' '}
-			<TermsLink href="https://www.theguardian.com/help/privacy-policy">
-				privacy policy
-			</TermsLink>
-			.
-		</Text>
-	</>
+	<InformationBoxText>
+		By proceeding, you agree to our{' '}
+		<ExternalLink href="https://www.theguardian.com/help/terms-of-service">
+			terms &amp; conditions
+		</ExternalLink>
+		. For information about how we use your data, see our{' '}
+		<ExternalLink href="https://www.theguardian.com/help/privacy-policy">
+			privacy policy
+		</ExternalLink>
+		.
+	</InformationBoxText>
 );
 
 export const JobsTerms = () => (
-	<>
-		<Text>
-			By proceeding, you agree to our{' '}
-			<TermsLink href="https://jobs.theguardian.com/terms-and-conditions/">
-				Guardian Jobs terms &amp; conditions
-			</TermsLink>
-			.
-		</Text>
-		<Text>
-			For information about how we use your data, see our{' '}
-			<TermsLink href="https://jobs.theguardian.com/privacy-policy/">
-				Guardian Jobs privacy policy
-			</TermsLink>
-			.
-		</Text>
-	</>
+	<InformationBoxText>
+		By proceeding, you agree to our{' '}
+		<ExternalLink href="https://jobs.theguardian.com/terms-and-conditions/">
+			Guardian Jobs terms &amp; conditions
+		</ExternalLink>
+		. For information about how we use your data, see our{' '}
+		<ExternalLink href="https://jobs.theguardian.com/privacy-policy/">
+			Guardian Jobs privacy policy
+		</ExternalLink>
+		.
+	</InformationBoxText>
 );
 
 export const RecaptchaTerms = () => (
-	<Text>
+	<InformationBoxText>
 		This service is protected by reCAPTCHA and the Google{' '}
-		<TermsLink href="https://policies.google.com/privacy">
+		<ExternalLink href="https://policies.google.com/privacy">
 			privacy policy
-		</TermsLink>{' '}
+		</ExternalLink>{' '}
 		and{' '}
-		<TermsLink href="https://policies.google.com/terms">
+		<ExternalLink href="https://policies.google.com/terms">
 			terms of service
-		</TermsLink>{' '}
+		</ExternalLink>{' '}
 		apply.
-	</Text>
+	</InformationBoxText>
 );

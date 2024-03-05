@@ -10,9 +10,16 @@ export default {
 	parameters: { layout: 'fullscreen' },
 } as Meta;
 
-export const Defaults = () => <EmailSent changeEmailPage="/reset-password" />;
+export const Defaults = () => <EmailSent />;
 Defaults.story = {
 	name: 'with defaults',
+};
+
+export const ChangeEmail = () => (
+	<EmailSent changeEmailPage="/reset-password" />
+);
+ChangeEmail.story = {
+	name: 'with changeEmailPage',
 };
 
 export const WithEmail = () => (
@@ -62,9 +69,25 @@ WithRecaptchaError.story = {
 	name: 'with reCAPTCHA error',
 };
 
-export const WithHelpText = () => (
-	<EmailSent changeEmailPage="/reset-password" showHelp={true} />
+export const WithInstructionContext = () => (
+	<EmailSent
+		changeEmailPage="/reset-password"
+		email="test@example.com"
+		instructionContext="verify and complete creating your account"
+	/>
 );
-WithHelpText.story = {
-	name: 'with help text',
+WithInstructionContext.story = {
+	name: 'with instruction context',
+};
+
+export const NoChangeEmailPage = () => (
+	<EmailSent
+		email="example@theguardian.com"
+		resendEmailAction="#"
+		noAccountInfo
+		recaptchaSiteKey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+	/>
+);
+NoChangeEmailPage.story = {
+	name: 'with no change email',
 };

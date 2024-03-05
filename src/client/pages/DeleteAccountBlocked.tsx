@@ -93,7 +93,6 @@ export const DeleteAccountBlocked = ({ contentAccess = {} }: Props) => {
 						<ExternalLink href={locations.SUPPORT_EMAIL_MAILTO}>
 							{SUPPORT_EMAIL}
 						</ExternalLink>
-						.
 					</MainBodyText>
 				</>
 			)}

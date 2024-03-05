@@ -4,11 +4,13 @@ import { MainLayout } from '@/client/layouts/Main';
 import { generateSignInRegisterTabs } from '@/client/components/Nav';
 import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
-import {
-	GuardianTerms,
-	JobsTerms,
-	termsContainer,
-} from '@/client/components/Terms';
+import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
+import { Link } from '@guardian/source-react-components';
+import { Divider } from '@guardian/source-react-components-development-kitchen';
+import { MainBodyText } from '@/client/components/MainBodyText';
+import { divider } from '@/client/styles/Shared';
+import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import { InformationBox } from '@/client/components/InformationBox';
 
 export type RegistrationProps = {
 	email?: string;
@@ -18,10 +20,10 @@ export type RegistrationProps = {
 };
 
 const RegistrationTerms = ({ isJobs }: { isJobs: boolean }) => (
-	<div css={termsContainer}>
+	<InformationBox withMarginTop>
 		{!isJobs && <GuardianTerms />}
 		{isJobs && <JobsTerms />}
-	</div>
+	</InformationBox>
 );
 
 export const Registration = ({ queryParams }: RegistrationProps) => {
@@ -38,14 +40,25 @@ export const Registration = ({ queryParams }: RegistrationProps) => {
 	});
 
 	return (
-		<MainLayout tabs={tabs}>
+		<MainLayout
+			tabs={tabs}
+			pageHeader="Register an account"
+			pageSubText="One account to access all Guardian products."
+		>
 			<RegistrationTerms isJobs={isJobs} />
 			<AuthProviderButtons
 				queryParams={queryParams}
 				marginTop={true}
-				context="Sign up"
 				providers={['social', 'email']}
 			/>
+			{/* divider */}
+			<Divider spaceAbove="tight" size="full" cssOverrides={divider} />
+			<MainBodyText smallText>
+				Already have an account?{' '}
+				<Link href={buildUrlWithQueryParams('/signin', {}, queryParams)}>
+					Sign in
+				</Link>
+			</MainBodyText>
 		</MainLayout>
 	);
 };

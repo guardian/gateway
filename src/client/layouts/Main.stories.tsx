@@ -31,6 +31,13 @@ export const WithPageHeader = () => (
 );
 WithPageHeader.storyName = 'with pageTitle';
 
+export const WithPageHeaderSubText = () => (
+	<MainLayout pageHeader="Some page header" pageSubText="Some sub text too">
+		<Paragraphs />
+	</MainLayout>
+);
+WithPageHeader.storyName = 'with pageTitle and subtext';
+
 export const WithErrorPageHeader = () => (
 	<MainLayout pageHeader="Some page header" errorOverride="Error message">
 		<Paragraphs />
@@ -38,12 +45,34 @@ export const WithErrorPageHeader = () => (
 );
 WithErrorPageHeader.storyName = 'with Error and PageTitle';
 
+export const WithErrorPageHeaderSubText = () => (
+	<MainLayout
+		pageHeader="Some page header"
+		errorOverride="Error message"
+		pageSubText="Some sub text too"
+	>
+		<Paragraphs />
+	</MainLayout>
+);
+WithErrorPageHeaderSubText.storyName = 'with Error, PageTitle and subtext';
+
 export const WithSuccessPageHeader = () => (
 	<MainLayout pageHeader="Some page header" successOverride="Success message">
 		<Paragraphs />
 	</MainLayout>
 );
 WithSuccessPageHeader.storyName = 'with Success and PageTitle';
+
+export const WithSuccessPageHeaderSubText = () => (
+	<MainLayout
+		pageHeader="Some page header"
+		successOverride="Success message"
+		pageSubText="Some sub text too"
+	>
+		<Paragraphs />
+	</MainLayout>
+);
+WithSuccessPageHeaderSubText.storyName = 'with Success, PageTitle, and subtext';
 
 export const WithError = () => (
 	<MainLayout errorOverride="Error message">
@@ -76,6 +105,14 @@ export const WithForm = () => (
 );
 WithForm.storyName = 'with Form';
 
+export const WithFormSubText = () => (
+	<MainLayout pageHeader="Some page header" pageSubText="Some sub text too">
+		<Paragraphs />
+		<BasicForm />
+	</MainLayout>
+);
+WithFormSubText.storyName = 'with Form & header sub text';
+
 export const WithFormAndRecaptcha = () => (
 	<MainLayout pageHeader="Some page header">
 		<Paragraphs />
@@ -100,6 +137,19 @@ export const WithErrorAndFormWithFormLevelError = () => (
 );
 WithErrorAndFormWithFormLevelError.storyName =
 	'with Error and Form with form-level error';
+
+export const WithErrorAndFormWithFormLevelErrorSubText = () => (
+	<MainLayout
+		pageHeader="Some page header"
+		errorOverride="Error message"
+		pageSubText="Some sub text too"
+	>
+		<Paragraphs />
+		<FormWithError />
+	</MainLayout>
+);
+WithErrorAndFormWithFormLevelErrorSubText.storyName =
+	'with Error, Form with form-level error, and header sub text';
 
 export const WithMultipleInputs = () => (
 	<MainLayout pageHeader="Some page header">

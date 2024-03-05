@@ -13,12 +13,10 @@ import { from, space, textSans } from '@guardian/source-foundations';
 import { Link } from '@guardian/source-react-components';
 import { Divider } from '@guardian/source-react-components-development-kitchen';
 import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
-import { socialButtonDivider } from '@/client/styles/Shared';
-import {
-	GuardianTerms,
-	JobsTerms,
-	termsContainer,
-} from '@/client/components/Terms';
+import { divider, socialButtonDivider } from '@/client/styles/Shared';
+import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
+import { MainBodyText } from '@/client/components/MainBodyText';
+import { InformationBox } from '@/client/components/InformationBox';
 
 export type SignInProps = {
 	queryParams: QueryParams;
@@ -75,14 +73,13 @@ const showAuthProviderButtons = (
 	if (socialSigninBlocked === false) {
 		return (
 			<>
-				<div css={termsContainer}>
+				<InformationBox withMarginTop>
 					{!isJobs && <GuardianTerms />}
 					{isJobs && <JobsTerms />}
-				</div>
+				</InformationBox>
 				<AuthProviderButtons
 					queryParams={queryParams}
 					marginTop={true}
-					context="Sign in"
 					providers={['social']}
 				/>
 				<Divider
@@ -125,6 +122,8 @@ export const SignIn = ({
 			errorContext={getErrorContext(pageError)}
 			tabs={tabs}
 			errorSmallMarginBottom={!!pageError}
+			pageHeader="Sign in"
+			pageSubText="One account to access all Guardian products."
 		>
 			{/* AuthProviderButtons component with show boolean */}
 			{showAuthProviderButtons(socialSigninBlocked, queryParams, isJobs)}
@@ -158,6 +157,14 @@ export const SignIn = ({
 					</Link>
 				</Links>
 			</MainForm>
+			{/* divider */}
+			<Divider spaceAbove="tight" size="full" cssOverrides={divider} />
+			<MainBodyText smallText>
+				Not signed in before?{' '}
+				<Link href={buildUrlWithQueryParams('/register', {}, queryParams)}>
+					Register for free
+				</Link>
+			</MainBodyText>
 		</MainLayout>
 	);
 };

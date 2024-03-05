@@ -5,12 +5,20 @@ interface Props {
 	noMarginBottom?: boolean;
 	marginTop?: boolean;
 	cssOverrides?: SerializedStyles;
+	smallText?: boolean;
 }
 
-const mainBodyTextStyles = (noMarginBottom = false, marginTop = false) => css`
-	${textSans.medium({ lineHeight: 'regular' })}
-	font-size: 17px;
+const mainBodyTextStyles = (
+	noMarginBottom = false,
+	marginTop = false,
+	smallText = false,
+) => css`
+	${smallText
+		? textSans.small({ lineHeight: 'regular' })
+		: textSans.medium({ lineHeight: 'regular' })}
+
 	color: ${text.primary};
+
 	${marginTop
 		? ''
 		: css`
@@ -24,6 +32,12 @@ const mainBodyTextStyles = (noMarginBottom = false, marginTop = false) => css`
 		: css`
 				margin-bottom: ${space[3]}px;
 			`}
+			
+	& a {
+		${smallText
+			? textSans.small({ lineHeight: 'regular' })
+			: textSans.medium({ lineHeight: 'regular' })}
+	}
 `;
 
 export const MainBodyText = ({
@@ -31,8 +45,14 @@ export const MainBodyText = ({
 	cssOverrides,
 	noMarginBottom,
 	marginTop,
+	smallText,
 }: PropsWithChildren<Props>) => (
-	<p css={[mainBodyTextStyles(noMarginBottom, marginTop), cssOverrides]}>
+	<p
+		css={[
+			mainBodyTextStyles(noMarginBottom, marginTop, smallText),
+			cssOverrides,
+		]}
+	>
 		{children}
 	</p>
 );

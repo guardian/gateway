@@ -226,9 +226,7 @@ const routes: Array<{
 	},
 	{
 		path: '/consent-token/email-sent',
-		element: (
-			<EmailSentPage formTrackingName="consent-resend" showHelp={true} />
-		),
+		element: <EmailSentPage formTrackingName="consent-resend" />,
 	},
 	{
 		path: '/delete',

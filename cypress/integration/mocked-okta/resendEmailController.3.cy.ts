@@ -11,7 +11,7 @@ beforeEach(() => {
 });
 const verifyInRegularEmailSentPage = () => {
 	cy.contains('Check your email inbox');
-	cy.contains('Resend email');
+	cy.contains('send again');
 	cy.contains('Email sent');
 	cy.contains('within 2 minutes').should('not.exist');
 };
@@ -204,7 +204,7 @@ userStatuses.forEach((status) => {
 							cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
 							cy.get('[data-cy="main-form-submit-button"]').click();
 							cy.contains('Check your email inbox');
-							cy.contains('Resend email');
+							cy.contains('send again');
 							cy.contains('Email sent');
 						},
 					);
@@ -234,7 +234,7 @@ userStatuses.forEach((status) => {
 							});
 							cy.get('[data-cy="main-form-submit-button"]').click();
 							cy.contains('Check your email inbox');
-							cy.contains('Resend email');
+							cy.contains('send again');
 							cy.contains('Email sent');
 						},
 					);
@@ -473,7 +473,7 @@ userStatuses.forEach((status) => {
 							);
 							cy.get('[data-cy="main-form-submit-button"]').click();
 							cy.contains('Check your email inbox');
-							cy.contains('Resend email');
+							cy.contains('send again');
 							cy.contains('Email sent');
 						},
 					);

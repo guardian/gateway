@@ -11,11 +11,9 @@ import { QueryParams } from '@/shared/model/QueryParams';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { IsNativeApp } from '@/shared/model/ClientState';
 
-type AuthProviderButtonContext = 'Sign in' | 'Sign up';
 type AuthButtonProvider = 'social' | 'email';
 
 type AuthProviderButtonsProps = {
-	context: AuthProviderButtonContext;
 	queryParams: QueryParams;
 	marginTop?: boolean;
 	isNativeApp?: IsNativeApp;
@@ -26,9 +24,7 @@ type AuthProviderButtonProps = {
 	label: string;
 	icon: React.ReactElement;
 	socialProvider: string;
-	context: AuthProviderButtonContext;
 	queryParams: QueryParams;
-	isNativeApp?: IsNativeApp;
 };
 
 const containerStyles = (marginTop = false) => css`
@@ -70,9 +66,7 @@ const SocialButton = ({
 	label,
 	icon,
 	socialProvider,
-	context,
 	queryParams,
-	isNativeApp,
 }: AuthProviderButtonProps) => {
 	return (
 		<>
@@ -90,25 +84,18 @@ const SocialButton = ({
 				data-cy={`${socialProvider}-sign-in-button`}
 				data-link-name={`${socialProvider}-social-button`}
 			>
-				{authProviderButtonLabel(label, context, isNativeApp)}
+				{authProviderButtonLabel(label)}
 			</LinkButton>
 		</>
 	);
 };
 
-const authProviderButtonLabel = (
-	label: string,
-	context: string,
-	isNativeApp?: IsNativeApp,
-) => {
+const authProviderButtonLabel = (label: string) => {
 	// We don't capitalize 'email', but we do capitalize 'google' and 'apple'
 	const capitalisedLabel =
 		label === 'email' ? label : label.charAt(0).toUpperCase() + label.slice(1);
-	if (isNativeApp) {
-		return `Continue with ${capitalisedLabel}`;
-	} else {
-		return `${context} with ${capitalisedLabel}`;
-	}
+
+	return `Continue with ${capitalisedLabel}`;
 };
 
 const socialButtonIcon = (socialProvider: string): React.ReactElement => {
@@ -137,7 +124,6 @@ const getButtonOrder = (isNativeApp?: IsNativeApp): string[] => {
 };
 
 export const AuthProviderButtons = ({
-	context,
 	queryParams,
 	marginTop,
 	isNativeApp,
@@ -153,9 +139,7 @@ export const AuthProviderButtons = ({
 						label={socialProvider}
 						icon={socialButtonIcon(socialProvider)}
 						socialProvider={socialProvider}
-						context={context}
 						queryParams={queryParams}
-						isNativeApp={isNativeApp}
 					/>
 				))}
 			{providers.includes('email') && (
@@ -165,7 +149,7 @@ export const AuthProviderButtons = ({
 					priority="tertiary"
 					href={buildUrlWithQueryParams('/register/email', {}, queryParams)}
 				>
-					{authProviderButtonLabel('email', context, isNativeApp)}
+					{authProviderButtonLabel('email')}
 				</LinkButton>
 			)}
 		</div>

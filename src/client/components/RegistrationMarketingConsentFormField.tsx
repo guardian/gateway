@@ -1,25 +1,22 @@
 import { css } from '@emotion/react';
 import { palette, space, textSans } from '@guardian/source-foundations';
-import { Divider } from '@guardian/source-react-components-development-kitchen';
 import React from 'react';
-import { divider } from '@/client/styles/Shared';
 import { ToggleSwitchInput } from './ToggleSwitchInput';
 
 const switchRow = css`
 	border: 0;
 	padding: 0;
-	margin: ${space[6]}px ${space[2]}px 0 ${space[2]}px;
+	margin: 0;
 	${textSans.medium()}
+	border-radius: 4px;
+	border: 1px solid ${palette.neutral[38]};
+	padding: ${space[2]}px;
 `;
 
 const labelStyles = css`
 	justify-content: space-between;
 	color: ${palette.neutral[46]};
 	${textSans.xsmall()}
-`;
-
-const bottomDividerStyles = css`
-	margin-top: ${space[4]}px;
 `;
 
 type Props = {
@@ -38,10 +35,6 @@ export const RegistrationMarketingConsentFormField = ({ id, label }: Props) => {
 					cssOverrides={labelStyles}
 				/>
 			</fieldset>
-			<Divider
-				spaceAbove="tight"
-				cssOverrides={[divider, bottomDividerStyles]}
-			/>
 		</>
 	);
 };

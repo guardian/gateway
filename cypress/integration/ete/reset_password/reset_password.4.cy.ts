@@ -148,8 +148,8 @@ describe('Password set flow', () => {
 					cy.contains('Send me a link').click();
 					cy.contains('Check your email inbox');
 					cy.contains(emailAddress);
-					cy.contains('Resend email');
-					cy.contains('Change email address');
+					cy.contains('send again');
+					cy.contains('try another address');
 					cy.checkForEmailAndGetDetails(
 						emailAddress,
 						timeRequestWasMadeLinkExpired,
@@ -162,9 +162,9 @@ describe('Password set flow', () => {
 						expect(body).to.have.string('Create password');
 					});
 
-					// resend email
+					// send again
 					const timeRequestWasMadeResend = new Date();
-					cy.contains('Resend email').click();
+					cy.contains('send again').click();
 					cy.contains('Check your email inbox');
 					cy.contains(emailAddress);
 					cy.checkForEmailAndGetDetails(
