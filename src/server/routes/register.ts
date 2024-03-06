@@ -41,7 +41,7 @@ import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 import { RegistrationNewslettersFormFields } from '@/shared/model/Newsletter';
 
-const { okta } = getConfiguration();
+const { okta, registrationPasscodesEnabled } = getConfiguration();
 
 router.get(
 	'/register',
@@ -129,6 +129,14 @@ const OktaRegistration = async (
 	req: Request,
 	res: ResponseWithRequestState,
 ) => {
+	if (
+		registrationPasscodesEnabled &&
+		res.locals.queryParams.usePasscodeRegistration
+	) {
+		// to implement
+		return res.sendStatus(418);
+	}
+
 	const { email = '', _cmpConsentedState = false } = req.body;
 
 	// consents/newsletters are a string with value `'on'` if checked, or `undefined` if not checked
