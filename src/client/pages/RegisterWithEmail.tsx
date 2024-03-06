@@ -12,7 +12,7 @@ import { GeoLocation } from '@/shared/model/Geolocation';
 import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { RegistrationConsents } from '@/client/components/RegistrationConsents';
 
-export type RegisterWithEmailProps = RegistrationProps & {
+type RegisterWithEmailProps = RegistrationProps & {
 	geolocation?: GeoLocation;
 };
 
