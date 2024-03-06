@@ -37,6 +37,8 @@ import { decryptRegistrationConsents } from '@/server/lib/registrationConsents';
 import { SocialProvider } from '@/shared/model/Social';
 import { update as updateNewsletters } from '@/server/lib/idapi/newsletters';
 import { RoutePaths } from '@/shared/model/Routes';
+import { sendGuardianLiveOfferEmail } from '@/email/templates/GuardianLiveOffer/sendGuardianLiveOfferEmail';
+import { sendMyGuardianOfferEmail } from '@/email/templates/MyGuardianOffer/sendMyGuardianOfferEmail';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
@@ -131,7 +133,7 @@ const authenticationHandler = async (
 		let isSocialRegistration = false;
 		if (tokenSet.id_token) {
 			// extracting the custom claims from the id_token and the sub (user id)
-			const { user_groups, email_validated, sub } =
+			const { user_groups, email_validated, sub, email } =
 				tokenSet.claims() as CustomClaims;
 			// if the user is in the GuardianUser-EmailValidated group, but the emailValidated field is falsy
 			// then we set the emailValidated field to true in the Okta user profile by manually updating the user
@@ -141,8 +143,39 @@ const authenticationHandler = async (
 			) {
 				isSocialRegistration = true;
 
+				// We now know this user is registering a new Guardian account with social
+
 				// updated the user profile emailValidated to true
 				await updateUser(sub, { profile: { emailValidated: true } });
+
+				/* AB TEST START */
+
+				// If the user signed up from one of the sign in gates we're AB testing, we want to send them
+				// the appropriate email
+				try {
+					const signInGateId = authState.data?.signInGateId;
+					if (signInGateId && email) {
+						switch (signInGateId) {
+							case 'alternative-wording-guardian-live':
+								await sendGuardianLiveOfferEmail({
+									to: email,
+								});
+								break;
+							case 'alternative-wording-personalise':
+								await sendMyGuardianOfferEmail({
+									to: email,
+								});
+								break;
+							default:
+								break;
+						}
+					}
+				} catch (error) {
+					logger.error('Error sending offer email', error, {
+						request_id: res.locals.requestId,
+					});
+				}
+				/* AB TEST END */
 
 				// since this is a new social user, we want to show the onboarding flow too
 				// we use the `confirmationPage` flag to redirect the user to the onboarding/consents page

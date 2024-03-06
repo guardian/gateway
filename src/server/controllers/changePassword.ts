@@ -11,7 +11,10 @@ import {
 } from '@/server/lib/idapi/changePassword';
 import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { updateEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
+import {
+	readEncryptedStateCookie,
+	updateEncryptedStateCookie,
+} from '@/server/lib/encryptedStateCookie';
 import { ApiError } from '@/server/models/Error';
 import { PasswordRoutePath, RoutePaths } from '@/shared/model/Routes';
 import { PasswordPageTitle } from '@/shared/model/PageTitle';
@@ -41,6 +44,8 @@ import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connec
 import { decryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 import { changePasswordMetric } from '@/server/models/Metrics';
 import { getAppPrefix } from '@/shared/lib/appNameUtils';
+import { sendGuardianLiveOfferEmail } from '@/email/templates/GuardianLiveOffer/sendGuardianLiveOfferEmail';
+import { sendMyGuardianOfferEmail } from '@/email/templates/MyGuardianOffer/sendMyGuardianOfferEmail';
 
 const { okta } = getConfiguration();
 
@@ -52,7 +57,7 @@ const changePasswordInIDAPI = async (
 	successRedirectPath: RoutePaths,
 ) => {
 	const { token } = req.params;
-	const { clientId } = req.query;
+	const { clientId } = res.locals.queryParams;
 	const { password, firstName, secondName } = req.body;
 
 	// eslint-disable-next-line functional/no-let
@@ -196,7 +201,7 @@ const changePasswordInOkta = async (
 ) => {
 	const { token: encryptedRecoveryToken } = req.params;
 	const { password, firstName, secondName } = req.body;
-	const { clientId } = req.query;
+	const { clientId, signInGateId } = res.locals.queryParams;
 
 	try {
 		if (!encryptedRecoveryToken) {
@@ -274,6 +279,38 @@ const changePasswordInOkta = async (
 			}
 
 			changePasswordMetric(path, 'Success');
+
+			/* AB TEST START */
+			const encryptedState = readEncryptedStateCookie(req);
+
+			// If the user signed up from one of the sign in gates we're AB testing, we want to send them
+			// the appropriate email
+			// This is for the case where they're signing up with an email and password - for social registration
+			// we handle the email sending directly in the auth code callback.
+			try {
+				if (signInGateId && encryptedState?.email) {
+					switch (signInGateId) {
+						case 'alternative-wording-guardian-live':
+							await sendGuardianLiveOfferEmail({
+								to: encryptedState.email,
+							});
+							break;
+						case 'alternative-wording-personalise':
+							// TODO: Change this email once created
+							await sendMyGuardianOfferEmail({
+								to: encryptedState.email,
+							});
+							break;
+						default:
+							break;
+					}
+				}
+			} catch (error) {
+				logger.error('Error sending offer email', error, {
+					request_id: res.locals.requestId,
+				});
+			}
+			/* AB TEST END */
 
 			return await performAuthorizationCodeFlow(req, res, {
 				sessionToken,

@@ -31,7 +31,10 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { OktaError } from '@/server/models/okta/Error';
 import { causesInclude } from '@/server/lib/okta/api/errors';
 import { redirectIfLoggedIn } from '@/server/lib/middleware/redirectIfLoggedIn';
-import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
+import {
+	getMatchingSignInGateIdFromComponentEventParamsQuery,
+	sendOphanComponentEventFromQueryParamsServer,
+} from '@/server/lib/ophan';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { UserResponse } from '@/server/models/okta/User';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
@@ -139,6 +142,24 @@ const OktaRegistration = async (
 
 	const { email = '', _cmpConsentedState = false } = req.body;
 
+	const {
+		queryParams: { appClientId, ref, refViewId, componentEventParams },
+		requestId: request_id,
+	} = res.locals;
+
+	/* AB TEST LOGIC START */
+
+	// The componentEventParams query parameter stores Ophan tracking data, but we want to
+	// parse it to check if this registration is coming via specific sign-in gates we're AB testing,
+	// so we can send an offer email after registration is complete.
+	const signInGateId =
+		await getMatchingSignInGateIdFromComponentEventParamsQuery({
+			componentEventParamsQuery: componentEventParams,
+			request_id,
+		});
+
+	/* AB TEST LOGIC END */
+
 	// consents/newsletters are a string with value `'on'` if checked, or `undefined` if not checked
 	// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox#value
 	// so we can check the truthiness of the value to determine if the user has consented
@@ -158,11 +179,6 @@ const OktaRegistration = async (
 			.filter((newsletter) => newsletter.subscribed),
 	};
 
-	const {
-		queryParams: { appClientId, ref, refViewId },
-		requestId: request_id,
-	} = res.locals;
-
 	const registrationLocation: RegistrationLocation | undefined =
 		getRegistrationLocation(req, isStringBoolean(_cmpConsentedState));
 
@@ -175,6 +191,7 @@ const OktaRegistration = async (
 			consents,
 			ref,
 			refViewId,
+			signInGateId,
 		});
 
 		// fire ophan component event if applicable

@@ -27,7 +27,10 @@ import { getCurrentSession } from '@/server/lib/okta/api/sessions';
 import { redirectIfLoggedIn } from '../lib/middleware/redirectIfLoggedIn';
 import { getUser, getUserGroups } from '../lib/okta/api/users';
 import { clearOktaCookies } from '@/server/routes/signOut';
-import { sendOphanComponentEventFromQueryParamsServer } from '../lib/ophan';
+import {
+	getMatchingSignInGateIdFromComponentEventParamsQuery,
+	sendOphanComponentEventFromQueryParamsServer,
+} from '../lib/ophan';
 import { isBreachedPassword } from '../lib/breachedPasswordCheck';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
@@ -558,6 +561,20 @@ router.get(
 				);
 			}
 
+			/* AB TEST LOGIC START */
+
+			// The componentEventParams query parameter stores Ophan tracking data, but we want to
+			// parse it to check if this registration is coming via specific sign-in gates we're AB testing,
+			// so we can send an offer email after registration is complete.
+			const signInGateId =
+				await getMatchingSignInGateIdFromComponentEventParamsQuery({
+					componentEventParamsQuery:
+						res.locals.queryParams.componentEventParams,
+					request_id: res.locals.requestId,
+				});
+
+			/* AB TEST LOGIC END */
+
 			// if okta feature switch enabled, perform authorization code flow with idp
 			return await performAuthorizationCodeFlow(req, res, {
 				idp,
@@ -566,6 +583,7 @@ router.get(
 				redirectUri: ProfileOpenIdClientRedirectUris.AUTHENTICATION,
 				extraData: {
 					socialProvider: socialIdp,
+					signInGateId,
 				},
 			});
 		} else {

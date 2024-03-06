@@ -282,12 +282,14 @@ export const register = async ({
 	consents,
 	ref,
 	refViewId,
+	signInGateId,
 }: {
 	email: string;
 	registrationLocation?: RegistrationLocation;
 	appClientId?: string;
 	request_id?: string;
 	consents?: RegistrationConsents;
+	signInGateId?: string;
 } & TrackingQueryParams): Promise<UserResponse> => {
 	try {
 		// Create the user in Okta, but do not send the activation email
@@ -333,6 +335,7 @@ export const register = async ({
 			}),
 			ref,
 			refViewId,
+			signInGateId,
 		});
 		if (!emailIsSent) {
 			trackMetric(emailSendMetric('OktaCompleteRegistration', 'Failure'));

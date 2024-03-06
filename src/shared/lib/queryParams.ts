@@ -41,6 +41,7 @@ export const getPersistableQueryParams = (
 	componentEventParams: params.componentEventParams,
 	fromURI: params.fromURI,
 	appClientId: params.appClientId,
+	signInGateId: params.signInGateId,
 });
 
 /**

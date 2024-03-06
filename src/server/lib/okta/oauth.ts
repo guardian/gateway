@@ -34,6 +34,7 @@ export type Scopes =
 export const scopesForAuthentication: Scopes[] = [
 	'openid',
 	'profile',
+	'email',
 	'guardian.identity-api.cookies.create.self.secure',
 	'guardian.members-data-api.read.self',
 	'guardian.identity-api.newsletters.read.self',

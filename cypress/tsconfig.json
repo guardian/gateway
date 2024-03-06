@@ -2,8 +2,8 @@
 	"compilerOptions": {
 		"resolveJsonModule": true,
 		"module": "commonjs",
-		"target": "ES2019",
-		"lib": ["ES2019", "DOM"],
+		"target": "ES2022",
+		"lib": ["ES2022", "DOM"],
 		"noEmit": true,
 		// be explicit about types included
 		// to avoid clashing with Jest types
