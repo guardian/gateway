@@ -50,6 +50,7 @@ export const parseExpressQueryParams = (
 		fromURI,
 		appClientId,
 		maxAge,
+		usePasscodeRegistration,
 	}: Record<keyof QueryParams, string | undefined>, // parameters from req.query
 	// some parameters may be manually passed in req.body too,
 	// generally for tracking purposes
@@ -73,6 +74,7 @@ export const parseExpressQueryParams = (
 		fromURI,
 		appClientId,
 		maxAge: stringToNumber(maxAge),
+		usePasscodeRegistration: isStringBoolean(usePasscodeRegistration),
 	};
 };
 
