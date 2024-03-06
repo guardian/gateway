@@ -27,8 +27,6 @@ export const ValidRoutePathsArray = [
 	'/delete-email-validation',
 	'/delete-set-password',
 	'/error',
-	'/magic-link', //this is not being used until MVP4
-	'/magic-link/email-sent', //this is not being used until MVP4
 	'/maintenance',
 	'/oauth/authorization-code/:callbackParam',
 	'/oauth/authorization-code/application-callback',

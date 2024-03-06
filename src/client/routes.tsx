@@ -16,7 +16,6 @@ import { ResendEmailVerificationPage } from '@/client/pages/ResendEmailVerificat
 import { UnexpectedErrorPage } from '@/client/pages/UnexpectedErrorPage';
 import { ClientState } from '@/shared/model/ClientState';
 import { SignInPage } from '@/client/pages/SignInPage';
-import { MagicLinkPage } from '@/client/pages/MagicLinkPage';
 import { WelcomePage } from '@/client/pages/WelcomePage';
 import { WelcomeResendPage } from '@/client/pages/WelcomeResendPage';
 import { WelcomePasswordAlreadySetPage } from '@/client/pages/WelcomePasswordAlreadySetPage';
@@ -199,14 +198,6 @@ const routes: Array<{
 	{
 		path: '/subscribe/error',
 		element: <SubscriptionErrorPage action={'subscribe'} />,
-	},
-	{
-		path: '/magic-link',
-		element: <MagicLinkPage />,
-	},
-	{
-		path: '/magic-link/email-sent',
-		element: <EmailSentPage noAccountInfo />,
 	},
 	{
 		path: '/error',
