@@ -208,8 +208,8 @@ Browser ->> Gateway: GET /reset-password
 Gateway ->> Browser: Render reset password page
 note over Browser: User adds email to form
 Browser ->> Gateway: POST /reset-password
-Gateway ->> Okta: POST /api/v1/authn/recovery/password
-note over Okta: Okta attempts to send reset password link to user's email<br>but fails as user does not have credentials.
+Gateway ->> Okta: POST /api/v1/users/:id/credentials/forgot_password
+note over Okta: Attempt to get recovery token to send to user's email<br>but fails as user does not have credentials.
 Okta ->> Gateway: Return {status: 403, code: "E0000006"}
 note over Gateway: Gateway has to make sure user does not have credentials<br>to make sure this isn't another unrelated error
 Gateway ->> Okta: GET /api/v1/users/:email
@@ -226,6 +226,6 @@ Gateway ->> Okta: POST /api/v1/authn/credentials/reset_password with recoveryTok
 note over Okta: Okta sets placeholder password and<br>forces user into the `ACTIVE` state
 Okta ->> Gateway: Return { status: 200, ... }
 note over Gateway: User is now in the `ACTIVE` state,<br>so we can send them an email to reset their password
-Gateway ->> Okta: POST /api/v1/authn/recovery/password
-note over Okta: Okta attempts to send reset password link to user's email<br>and succeeds as user now has credentials.
+Gateway ->> Okta: POST /api/v1/users/:id/credentials/forgot_password
+note over Okta: Get recovery token to send to user's email<br>and succeeds as user now has credentials.
 ```

@@ -76,7 +76,7 @@ export const clearOktaCookies = (res: ResponseWithRequestState) => {
  * @name sharedSignOutHandler
  * @description Clear/Set other session related things that are not specific to Okta or IDAPI
  */
-export const sharedSignOutHandler = (
+const sharedSignOutHandler = (
 	req: Request,
 	res: ResponseWithRequestState,
 ): void => {

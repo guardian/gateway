@@ -50,7 +50,6 @@ type ConditionalMetrics =
 	| 'OktaWelcome'
 	| 'OktaWelcomeResendEmail'
 	| 'Register'
-	| 'SendMagicLink'
 	| 'SendValidationEmail'
 	| 'SignIn'
 	| 'SignOut'

@@ -27,8 +27,6 @@ export const ValidRoutePathsArray = [
 	'/delete-email-validation',
 	'/delete-set-password',
 	'/error',
-	'/magic-link', //this is not being used until MVP4
-	'/magic-link/email-sent', //this is not being used until MVP4
 	'/maintenance',
 	'/oauth/authorization-code/:callbackParam',
 	'/oauth/authorization-code/application-callback',
@@ -118,7 +116,6 @@ type OktaApiRoutePaths =
 	| '/api/v1/apps/:id'
 	| '/api/v1/authn'
 	| '/api/v1/authn/credentials/reset_password'
-	| '/api/v1/authn/recovery/password'
 	| '/api/v1/authn/recovery/token'
 	| '/api/v1/sessions/me'
 	| '/api/v1/sessions/:sessionId'

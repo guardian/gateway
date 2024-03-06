@@ -9,7 +9,6 @@ import { default as register } from './register';
 import { default as resetPassword } from './resetPassword';
 import { default as consents } from './consents';
 import { default as verifyEmail } from './verifyEmail';
-import { default as magicLink } from './magicLink';
 import { default as welcome } from './welcome';
 import { default as setPassword } from './setPassword';
 import { default as maintenance } from './maintenance';
@@ -56,9 +55,6 @@ uncachedRoutes.use(consents);
 
 // verify email routes
 uncachedRoutes.use(verifyEmail);
-
-// magic link routes
-uncachedRoutes.use(magicLink);
 
 // welcome routes
 uncachedRoutes.use(welcome);
