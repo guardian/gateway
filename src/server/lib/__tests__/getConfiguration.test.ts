@@ -140,6 +140,7 @@ describe('getConfiguration', () => {
 			},
 			membersDataApiUrl: 'members-data-api-url',
 			gatewayOAuthEnabled: true,
+			registrationPasscodesEnabled: true,
 			deleteAccountStepFunction: {
 				url: 'delete-account-step-function-url',
 				apiKey: 'delete-account-api-key',

@@ -50,6 +50,7 @@ interface StageVariables {
 	apiDomain: string;
 	oktaEnabled: boolean;
 	gatewayOAuthEnabled: boolean;
+	registrationPasscodesEnabled: boolean;
 	accountManagementUrl: string;
 }
 
@@ -61,6 +62,8 @@ const getStageVariables = (stage: Stage): StageVariables => {
 				apiDomain: GU_API_DOMAIN.PROD,
 				oktaEnabled: featureSwitches.oktaEnabled.PROD,
 				gatewayOAuthEnabled: featureSwitches.gatewayOAuthEnabled.PROD,
+				registrationPasscodesEnabled:
+					featureSwitches.registrationPasscodesEnabled.PROD,
 				accountManagementUrl: GU_MANAGE_URL.PROD,
 			};
 		case 'CODE':
@@ -69,6 +72,8 @@ const getStageVariables = (stage: Stage): StageVariables => {
 				apiDomain: GU_API_DOMAIN.CODE,
 				oktaEnabled: featureSwitches.oktaEnabled.CODE,
 				gatewayOAuthEnabled: featureSwitches.gatewayOAuthEnabled.CODE,
+				registrationPasscodesEnabled:
+					featureSwitches.registrationPasscodesEnabled.CODE,
 				accountManagementUrl: GU_MANAGE_URL.CODE,
 			};
 		default:
@@ -77,6 +82,8 @@ const getStageVariables = (stage: Stage): StageVariables => {
 				apiDomain: GU_API_DOMAIN.DEV,
 				oktaEnabled: featureSwitches.oktaEnabled.DEV,
 				gatewayOAuthEnabled: featureSwitches.gatewayOAuthEnabled.DEV,
+				registrationPasscodesEnabled:
+					featureSwitches.registrationPasscodesEnabled.DEV,
 				accountManagementUrl: GU_MANAGE_URL.DEV,
 			};
 	}
@@ -133,6 +140,7 @@ export const getConfiguration = (): Configuration => {
 		oktaEnabled,
 		accountManagementUrl,
 		gatewayOAuthEnabled,
+		registrationPasscodesEnabled,
 	} = getStageVariables(stage);
 
 	const isHttps: boolean = JSON.parse(
@@ -267,6 +275,7 @@ export const getConfiguration = (): Configuration => {
 		rateLimiter,
 		membersDataApiUrl,
 		gatewayOAuthEnabled,
+		registrationPasscodesEnabled,
 		deleteAccountStepFunction,
 	};
 };
