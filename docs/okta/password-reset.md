@@ -31,7 +31,7 @@ flowchart TD
     start[Start generating<br>reset password token] -->
     customEmail{Need to send custom<br>email in Gateway?}
     customEmail --Yes--> recoveryState{Want to put user<br>into RECOVERY state?}
-    customEmail --No--> sendForgotPasswordEmail
+    customEmail --No--> forgotPassword
     recoveryState --No--> inActiveState{User in ACTIVE<br>state?}
     recoveryState --Yes--> dangerouslyResetPassword
     inActiveState --Yes-->forgotPassword
