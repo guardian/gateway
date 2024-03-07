@@ -15,7 +15,9 @@ type EmailMetrics =
 	| 'OktaCompleteRegistration'
 	| 'OktaCreatePassword'
 	| 'OktaResetPassword'
-	| 'OktaUnvalidatedEmailResetPassword';
+	| 'OktaUnvalidatedEmailResetPassword'
+	| 'GuardianLiveOffer'
+	| 'MyGuardianOffer';
 
 // Rate limit buckets to track
 type RateLimitMetrics = BucketType;

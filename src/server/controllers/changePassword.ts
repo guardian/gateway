@@ -42,7 +42,7 @@ import { clearOktaCookies } from '@/server/routes/signOut';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
 import { decryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
-import { changePasswordMetric } from '@/server/models/Metrics';
+import { changePasswordMetric, emailSendMetric } from '@/server/models/Metrics';
 import { getAppPrefix } from '@/shared/lib/appNameUtils';
 import { sendGuardianLiveOfferEmail } from '@/email/templates/GuardianLiveOffer/sendGuardianLiveOfferEmail';
 import { sendMyGuardianOfferEmail } from '@/email/templates/MyGuardianOffer/sendMyGuardianOfferEmail';
@@ -287,28 +287,35 @@ const changePasswordInOkta = async (
 			// the appropriate email
 			// This is for the case where they're signing up with an email and password - for social registration
 			// we handle the email sending directly in the auth code callback.
-			try {
-				if (signInGateId && encryptedState?.email) {
-					switch (signInGateId) {
-						case 'alternative-wording-guardian-live':
-							await sendGuardianLiveOfferEmail({
-								to: encryptedState.email,
-							});
-							break;
-						case 'alternative-wording-personalise':
-							// TODO: Change this email once created
-							await sendMyGuardianOfferEmail({
-								to: encryptedState.email,
-							});
-							break;
-						default:
-							break;
+			if (signInGateId && encryptedState?.email) {
+				switch (signInGateId) {
+					case 'alternative-wording-guardian-live': {
+						const emailIsSent = await sendGuardianLiveOfferEmail({
+							to: encryptedState.email,
+						});
+						trackMetric(
+							emailSendMetric(
+								'GuardianLiveOffer',
+								emailIsSent ? 'Success' : 'Failure',
+							),
+						);
+						break;
 					}
+					case 'alternative-wording-personalise': {
+						const emailIsSent = await sendMyGuardianOfferEmail({
+							to: encryptedState.email,
+						});
+						trackMetric(
+							emailSendMetric(
+								'MyGuardianOffer',
+								emailIsSent ? 'Success' : 'Failure',
+							),
+						);
+						break;
+					}
+					default:
+						break;
 				}
-			} catch (error) {
-				logger.error('Error sending offer email', error, {
-					request_id: res.locals.requestId,
-				});
 			}
 			/* AB TEST END */
 

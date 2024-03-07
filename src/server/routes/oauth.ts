@@ -39,6 +39,7 @@ import { update as updateNewsletters } from '@/server/lib/idapi/newsletters';
 import { RoutePaths } from '@/shared/model/Routes';
 import { sendGuardianLiveOfferEmail } from '@/email/templates/GuardianLiveOffer/sendGuardianLiveOfferEmail';
 import { sendMyGuardianOfferEmail } from '@/email/templates/MyGuardianOffer/sendMyGuardianOfferEmail';
+import { emailSendMetric } from '../models/Metrics';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
@@ -152,28 +153,36 @@ const authenticationHandler = async (
 
 				// If the user signed up from one of the sign in gates we're AB testing, we want to send them
 				// the appropriate email
-				try {
-					const signInGateId = authState.data?.signInGateId;
-					if (signInGateId && email) {
-						switch (signInGateId) {
-							case 'alternative-wording-guardian-live':
-								await sendGuardianLiveOfferEmail({
-									to: email,
-								});
-								break;
-							case 'alternative-wording-personalise':
-								await sendMyGuardianOfferEmail({
-									to: email,
-								});
-								break;
-							default:
-								break;
+				const signInGateId = authState.data?.signInGateId;
+				if (signInGateId && email) {
+					switch (signInGateId) {
+						case 'alternative-wording-guardian-live': {
+							const emailIsSent = await sendGuardianLiveOfferEmail({
+								to: email,
+							});
+							trackMetric(
+								emailSendMetric(
+									'GuardianLiveOffer',
+									emailIsSent ? 'Success' : 'Failure',
+								),
+							);
+							break;
 						}
+						case 'alternative-wording-personalise': {
+							const emailIsSent = await sendMyGuardianOfferEmail({
+								to: email,
+							});
+							trackMetric(
+								emailSendMetric(
+									'MyGuardianOffer',
+									emailIsSent ? 'Success' : 'Failure',
+								),
+							);
+							break;
+						}
+						default:
+							break;
 					}
-				} catch (error) {
-					logger.error('Error sending offer email', error, {
-						request_id: res.locals.requestId,
-					});
 				}
 				/* AB TEST END */
 
