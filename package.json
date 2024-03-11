@@ -80,7 +80,7 @@
 		"assets-webpack-plugin": "^7.1.1",
 		"axe-core": "^4.8.4",
 		"chalk-rainbow": "^1.0.0",
-		"chromatic": "^11.0.0",
+		"chromatic": "^11.0.7",
 		"copy-webpack-plugin": "^12.0.2",
 		"cypress": "13.6.6",
 		"cypress-axe": "^1.5.0",
