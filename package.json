@@ -109,7 +109,7 @@
 		"react-docgen-typescript-plugin": "^1.0.5",
 		"require-from-string": "^2.0.2",
 		"sharp": "^0.32.6",
-		"snyk": "^1.1281.0",
+		"snyk": "^1.1283.0",
 		"storybook": "^7.6.17",
 		"swc-loader": "^0.2.6",
 		"terser-webpack-plugin": "^5.3.10",
