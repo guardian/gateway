@@ -259,6 +259,7 @@ router.get(
 			});
 
 			return res.redirect(
+				303,
 				`/login/token/redirect?stateToken=${encryptedState.stateHandle.split('~')[0]}`,
 			);
 		}

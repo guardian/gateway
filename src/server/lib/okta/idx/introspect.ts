@@ -8,6 +8,17 @@ const { okta } = getConfiguration();
 
 const introspectResponseSchema = z.object({
 	stateHandle: z.string(),
+	remediation: z.object({
+		type: z.string(),
+		value: z.array(
+			z.object({
+				name: z.string().optional(),
+				type: z.string().optional(),
+				href: z.string().optional(),
+				method: z.string().optional(),
+			}),
+		),
+	}),
 });
 export type IntrospectResponse = z.infer<typeof introspectResponseSchema>;
 

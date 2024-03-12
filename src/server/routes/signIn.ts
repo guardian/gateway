@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Request } from 'express';
 import { authenticate as authenticateWithIdapi } from '@/server/lib/idapi/auth';
 import { authenticate as authenticateWithOkta } from '@/server/lib/okta/api/authentication';
@@ -30,14 +31,25 @@ import { clearOktaCookies } from '@/server/routes/signOut';
 import { sendOphanComponentEventFromQueryParamsServer } from '../lib/ophan';
 import { isBreachedPassword } from '../lib/breachedPasswordCheck';
 import { mergeRequestState } from '@/server/lib/requestState';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import {
+	addQueryParamsToPath,
+	getPersistableQueryParams,
+} from '@/shared/lib/queryParams';
 import {
 	readEncryptedStateCookie,
 	setEncryptedStateCookie,
 } from '../lib/encryptedStateCookie';
 import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
-import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
+import {
+	ProfileOpenIdClientRedirectUris,
+	generateAuthorizationState,
+	setAuthorizationStateCookie,
+	updateAuthorizationStateData,
+} from '@/server/lib/okta/openid-connect';
 import { SocialProvider, isValidSocialProvider } from '@/shared/model/Social';
+import { generators } from 'openid-client';
+import { interact } from '../lib/okta/idx/interact';
+import { introspect } from '../lib/okta/idx/introspect';
 
 const { okta, accountManagementUrl, oauthBaseUrl, defaultReturnUri } =
 	getConfiguration();
@@ -543,19 +555,62 @@ router.get(
 			return res.redirect(303, '/signin');
 		}
 
+		const codeVerifier = generators.codeVerifier(43);
+
+		console.log('codeVerifier', codeVerifier);
+
+		const authState = generateAuthorizationState(
+			getPersistableQueryParams(res.locals.queryParams),
+			undefined,
+			undefined,
+			{
+				codeVerifier,
+			},
+		);
+
+		console.log('authState', authState);
+
+		const interactResponse = await interact(codeVerifier, authState.stateParam);
+
+		console.log('interactResponse', interactResponse);
+
+		const introspectResponse = await introspect(
+			interactResponse.interaction_handle,
+		);
+
+		setAuthorizationStateCookie(
+			updateAuthorizationStateData(authState, {
+				stateHandle: introspectResponse.stateHandle.split('~')[0],
+			}),
+			res,
+		);
+
+		console.log('introspectResponse', introspectResponse);
+
+		const idp = introspectResponse.remediation.value.find(
+			(val) =>
+				val.name === 'redirect-idp' && val.type === socialIdp.toUpperCase(),
+		);
+
+		console.log('idp', idp);
+
+		if (idp && idp.href) {
+			return res.redirect(303, idp.href);
+		}
+
 		if (okta.enabled) {
 			// get the IDP id from the config
 			const idp = okta.social[socialIdp];
 
 			// fire ophan component event if applicable when a session is set
 			if (res.locals.queryParams.componentEventParams) {
-				void sendOphanComponentEventFromQueryParamsServer(
-					res.locals.queryParams.componentEventParams,
-					'SIGN_IN',
-					req.params.social,
-					res.locals.ophanConfig.consentUUID,
-					res.locals.requestId,
-				);
+				// void sendOphanComponentEventFromQueryParamsServer(
+				// 	// res.locals.queryParams.componentEventParams,
+				// 	// 'SIGN_IN',
+				// 	// req.params.social,
+				// 	// res.locals.ophanConfig.consentUUID,
+				// 	// res.locals.requestId,
+				// );
 			}
 
 			// if okta feature switch enabled, perform authorization code flow with idp

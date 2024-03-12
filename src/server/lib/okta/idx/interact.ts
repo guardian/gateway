@@ -32,7 +32,7 @@ export const interact = async (
 		authorizationParams.set('code_challenge_method', 'S256');
 		authorizationParams.set(
 			'redirect_uri',
-			ProfileOpenIdClientRedirectUris.AUTHENTICATION,
+			ProfileOpenIdClientRedirectUris.INTERACTION_CODE,
 		);
 		authorizationParams.set('state', state);
 		authorizationParams.set('scope', scopesForAuthentication.join(' '));

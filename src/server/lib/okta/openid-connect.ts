@@ -36,6 +36,7 @@ export interface AuthorizationState {
 		socialProvider?: SocialProvider; // used to track the social provider used to sign in/register
 		hasAppPrefix?: boolean; // used to track if the recovery token has a native app prefix
 		codeVerifier?: string; // used to track the code verifier used in the PKCE flow
+		stateHandle?: string; // used to track the state handle returned from the introspect endpoint
 	};
 }
 
@@ -72,6 +73,10 @@ interface OpenIdClientRedirectUris {
 	>}`;
 	DELETE: `${string}${Extract<
 		'/oauth/authorization-code/delete-callback',
+		RoutePaths
+	>}`;
+	INTERACTION_CODE: `${string}${Extract<
+		'/oauth/authorization-code/interaction-code-callback',
 		RoutePaths
 	>}`;
 }
@@ -112,6 +117,7 @@ export const ProfileOpenIdClientRedirectUris: OpenIdClientRedirectUris = {
 	AUTHENTICATION: `${getProfileUrl()}/oauth/authorization-code/callback`,
 	APPLICATION: `${getProfileUrl()}/oauth/authorization-code/application-callback`,
 	DELETE: `${getProfileUrl()}/oauth/authorization-code/delete-callback`,
+	INTERACTION_CODE: `${getProfileUrl()}/oauth/authorization-code/interaction-code-callback`,
 };
 
 /**
@@ -221,6 +227,17 @@ export const generateAuthorizationState = (
 	confirmationPage,
 	doNotSetLastAccessCookie,
 	data,
+});
+
+export const updateAuthorizationStateData = (
+	state: AuthorizationState,
+	data: AuthorizationState['data'],
+): AuthorizationState => ({
+	...state,
+	data: {
+		...state.data,
+		...data,
+	},
 });
 
 /**

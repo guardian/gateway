@@ -525,6 +525,8 @@ router.get(
 					return ProfileOpenIdClientRedirectUris.AUTHENTICATION;
 				case 'delete-callback':
 					return ProfileOpenIdClientRedirectUris.DELETE;
+				case 'interaction-code-callback':
+					return ProfileOpenIdClientRedirectUris.INTERACTION_CODE;
 				default:
 					return undefined;
 			}
@@ -534,17 +536,6 @@ router.get(
 		if (!redirectUri) {
 			return redirectForGenericError(req, res);
 		}
-
-		// Determine which OpenIdClient to use, in DEV we use the DevProfileIdClient, otherwise we use the ProfileOpenIdClient
-		const OpenIdClient = getOpenIdClient(req);
-
-		// params returned from the /authorize endpoint
-		// for auth code flow they will be "code" and "state"
-		// "code" is the authorization code to exchange for access token
-		// "state" will be the "stateParam" value set in the oidc_auth_state cookie
-		// if there were any errors, then an "error", and "error_description" params
-		// will be returned instead
-		const callbackParams = OpenIdClient.callbackParams(req);
 
 		// get the oidc_auth_state cookie which contains the "stateParam" value
 		// and "returnUrl" so we can get the user back to the page they
@@ -565,6 +556,32 @@ router.get(
 			trackMetric('OAuthAuthorization::Failure');
 			return redirectForGenericError(req, res);
 		}
+
+		// this is only for users coming from social sign in using the
+		// interaction code flow
+		// where we need to redirect them to the endpoint that will
+		// set a global session cookie, i.e the idx cookie
+		if (
+			req.params.callbackParam === 'interaction-code-callback' &&
+			req.query.interaction_code &&
+			req.query.state
+		) {
+			return res.redirect(
+				303,
+				`/login/token/redirect?stateToken=${authState.data?.stateHandle}`,
+			);
+		}
+
+		// Determine which OpenIdClient to use, in DEV we use the DevProfileIdClient, otherwise we use the ProfileOpenIdClient
+		const OpenIdClient = getOpenIdClient(req);
+
+		// params returned from the /authorize endpoint
+		// for auth code flow they will be "code" and "state"
+		// "code" is the authorization code to exchange for access token
+		// "state" will be the "stateParam" value set in the oidc_auth_state cookie
+		// if there were any errors, then an "error", and "error_description" params
+		// will be returned instead
+		const callbackParams = OpenIdClient.callbackParams(req);
 
 		// we have the Authorization State now, so the cookie is
 		// no longer required, so mark cookie for deletion in the response
@@ -626,6 +643,7 @@ router.get(
 			case 'application-callback':
 				return applicationHandler(req, res, tokenSet, authState);
 			case 'callback':
+			case 'interaction-code-callback':
 				return authenticationHandler(req, res, tokenSet, authState);
 			case 'delete-callback':
 				return deleteHandler(req, res, tokenSet, authState);
