@@ -58,3 +58,26 @@ export class OktaError extends Error {
 		this.code = error.code;
 	}
 }
+
+const oauthErrorSchema = z.object({
+	error: z.string(),
+	error_description: z.string(),
+});
+type OAuthErrorType = z.infer<typeof oauthErrorSchema>;
+
+export class OAuthError extends Error {
+	name: string;
+	status: number;
+	code: string;
+	constructor(error: OAuthErrorType, status = 400) {
+		super(error.error_description);
+		this.name = error.error;
+		this.code = error.error;
+		this.status = status;
+		this.message = error.error_description;
+	}
+}
+
+export const isOAuthError = (error: unknown): error is OAuthErrorType => {
+	return oauthErrorSchema.safeParse(error).success;
+};
