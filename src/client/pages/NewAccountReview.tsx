@@ -1,5 +1,4 @@
 import React from 'react';
-import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { Consent } from '@/shared/model/Consent';
 import { ToggleSwitchInput } from '@/client/components/ToggleSwitchInput';
@@ -9,55 +8,25 @@ import {
 } from '@/client/components/InformationBox';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import locations from '@/shared/lib/locations';
-import { palette, space, textSans } from '@guardian/source/foundations';
+import { remSpace, textSans } from '@guardian/source/foundations';
 import { css } from '@emotion/react';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { consentsFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
+import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { ToggleSwitchList } from '@/client/components/ToggleSwitchList';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import { trackFormSubmit } from '@/client/lib/ophan';
-import { MainForm } from '../components/MainForm';
-
-const consentToggleCss = css`
-	display: flex;
-	margin-top: ${space[6]}px;
-	margin-bottom: ${space[4]}px;
-	flex-direction: column;
-	gap: ${space[3]}px;
-`;
-
-const switchRow = css`
-	border: 0;
-	padding: 0;
-	margin: 0;
-	${textSans.medium()}
-	border-radius: 4px;
-	border: 1px solid ${palette.neutral[38]};
-	padding: ${space[2]}px;
-`;
-
-const labelStyles = css`
-	justify-content: space-between;
-	& > span:first-of-type {
-		color: ${palette.neutral[20]};
-		${textSans.xsmall({ fontWeight: 'bold' })}
-	}
-	& > span:last-of-type {
-		align-self: flex-start;
-		color: ${palette.neutral[46]};
-		${textSans.xsmall()}
-	}
-`;
+import { MainForm } from '@/client/components/MainForm';
 
 const subheadingStyles = css`
-	margin-top: ${space[6]}px;
-	margin-bottom: ${space[1]}px;
 	${textSans.medium({ fontWeight: 'bold' })};
 `;
 
 const listStyles = css`
 	margin-top: 0;
-	padding-left: 1rem;
+	margin-bottom: 0;
+	padding-left: ${remSpace[8]};
 `;
 
 export interface NewAccountReviewProps {
@@ -76,7 +45,10 @@ export const NewAccountReview = ({
 
 	if (!profiling && !advertising) {
 		return (
-			<MainLayout pageHeader="You're signed in! Welcome to the Guardian.">
+			<MinimalLayout
+				pageHeader="You're signed in! Welcome to the Guardian."
+				imageId="welcome"
+			>
 				<MainForm
 					formAction={buildUrlWithQueryParams(
 						'/welcome/review',
@@ -84,16 +56,19 @@ export const NewAccountReview = ({
 						queryParams,
 					)}
 					submitButtonText="Continue to the Guardian"
-				></MainForm>
-			</MainLayout>
+				/>
+			</MinimalLayout>
 		);
 	}
 	return (
-		<MainLayout pageHeader="You're signed in! Welcome to the Guardian.">
-			<MainBodyText>
+		<MinimalLayout
+			pageHeader="You're signed in! Welcome to the Guardian."
+			imageId="welcome"
+			leadText="
 				Before you start, confirm how you’d like the Guardian to use your
 				signed-in data.
-			</MainBodyText>
+			"
+		>
 			<MainForm
 				formAction={buildUrlWithQueryParams('/welcome/review', {}, queryParams)}
 				onSubmit={({ target: form }) => {
@@ -106,28 +81,22 @@ export const NewAccountReview = ({
 				}}
 				submitButtonText="Save and continue"
 			>
-				<div css={consentToggleCss}>
+				<ToggleSwitchList>
 					{!!advertising && (
-						<fieldset css={switchRow}>
-							<ToggleSwitchInput
-								id={advertising.id}
-								label="Allow personalised advertising with my signed-in data"
-								defaultChecked={advertising.consented ?? false}
-								cssOverrides={labelStyles}
-							/>
-						</fieldset>
+						<ToggleSwitchInput
+							id={advertising.id}
+							description="Allow personalised advertising with my signed-in data"
+							defaultChecked={advertising.consented ?? false}
+						/>
 					)}
 					{!!profiling && (
-						<fieldset css={switchRow}>
-							<ToggleSwitchInput
-								id={profiling.id}
-								label="Allow the Guardian to analyse my signed-in data to improve marketing content"
-								defaultChecked={profiling.consented ?? true} // legitimate interests so defaults to true
-								cssOverrides={labelStyles}
-							/>
-						</fieldset>
+						<ToggleSwitchInput
+							id={profiling.id}
+							description="Allow the Guardian to analyse my signed-in data to improve marketing content"
+							defaultChecked={profiling.consented ?? true} // legitimate interests so defaults to true
+						/>
 					)}
-				</div>
+				</ToggleSwitchList>
 				{!!advertising && (
 					<>
 						<MainBodyText cssOverrides={subheadingStyles}>
@@ -164,6 +133,6 @@ export const NewAccountReview = ({
 					</InformationBoxText>
 				</InformationBox>
 			</MainForm>
-		</MainLayout>
+		</MinimalLayout>
 	);
 };

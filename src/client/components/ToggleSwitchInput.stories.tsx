@@ -5,56 +5,49 @@ import {
 	ToggleSwitchInput,
 	ToggleSwitchInputProps,
 } from '@/client/components/ToggleSwitchInput';
-import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '@/client/assets/newsletters';
 
 export default {
 	title: 'Components/ToggleSwitchInput',
 	component: ToggleSwitchInput,
+	parameters: {
+		layout: 'padded',
+	},
 	args: {},
 } as Meta<ToggleSwitchInputProps>;
 
 // *****************************************************************************
 
-export const NoLabel = (props: Partial<ToggleSwitchInputProps>) => (
-	<ToggleSwitchInput {...props} />
-);
-NoLabel.storyName = 'Default form switch';
-
-// *****************************************************************************
-
 export const WithLabel = (props: Partial<ToggleSwitchInputProps>) => (
-	<ToggleSwitchInput label={'I am a label'} {...props} />
+	<ToggleSwitchInput description={'I am a label'} {...props} />
 );
 
 WithLabel.storyName = 'Form switch with label';
 
 export const Checked = (props: Partial<ToggleSwitchInputProps>) => (
-	<ToggleSwitchInput label={'I am a label'} defaultChecked {...props} />
+	<ToggleSwitchInput description={'I am a label'} defaultChecked {...props} />
 );
 
 Checked.storyName = 'Checked by default';
 
-export const WithContextAndLabel = (props: Partial<ToggleSwitchInputProps>) => (
+export const WithLongLabel = (props: Partial<ToggleSwitchInputProps>) => (
 	<ToggleSwitchInput
-		label={'I am a label'}
-		context="I am some additional context beneath the toggle switch and the label. I should wrap if I get too long."
-		defaultChecked
+		description={
+			"I am a label that is very long. This switch doesn't have a title. I should wrap if I get too long. How long can I get before I"
+		}
 		{...props}
 	/>
 );
+WithLongLabel.storyName = 'With long label';
 
-WithContextAndLabel.storyName = 'With label and context';
-
-export const WithContextLabelImage = (
+export const WithTitleAndDescription = (
 	props: Partial<ToggleSwitchInputProps>,
 ) => (
 	<ToggleSwitchInput
-		label={'I am a label'}
-		context="I am some additional context beneath the toggle switch and the label. I should wrap if I get too long."
-		imagePath={SATURDAY_EDITION_SMALL_SQUARE_IMAGE}
+		title="To switch or not to switch, that is the question. Whether 'tis switchier in the mind to suffer the switch and switch of switchy switching."
+		description="I am some additional context beneath the toggle switch and the label. I should wrap if I get too long."
 		defaultChecked
 		{...props}
 	/>
 );
 
-WithContextLabelImage.storyName = 'With label, context, image';
+WithTitleAndDescription.storyName = 'With title and description';

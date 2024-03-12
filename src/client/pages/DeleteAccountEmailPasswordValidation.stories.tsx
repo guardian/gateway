@@ -6,7 +6,6 @@ import { DeleteAccountEmailPasswordValidation } from '@/client/pages/DeleteAccou
 export default {
 	title: 'Pages/DeleteAccountEmailPasswordValidation',
 	component: DeleteAccountEmailPasswordValidation,
-	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Email = () => (

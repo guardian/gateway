@@ -6,7 +6,6 @@ import { DeleteAccountBlocked } from '@/client/pages/DeleteAccountBlocked';
 export default {
 	title: 'Pages/DeleteAccountBlocked',
 	component: DeleteAccountBlocked,
-	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Member = () => (

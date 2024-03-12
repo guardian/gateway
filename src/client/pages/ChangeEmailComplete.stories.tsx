@@ -7,7 +7,6 @@ import { ChangeEmailComplete } from '@/client/pages/ChangeEmailComplete';
 export default {
 	title: 'Pages/ChangeEmailComplete',
 	component: ChangeEmailComplete,
-	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => (

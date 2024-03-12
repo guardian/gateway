@@ -34,12 +34,12 @@ describe('Password reset flow in Okta', () => {
 					);
 					const timeRequestWasMade = new Date();
 
-					cy.contains('Forgot password');
+					cy.contains('Reset password');
 					cy.get('input[name=email]').type(emailAddress);
 
 					// Continue checking the password reset flow after reCAPTCHA assertions above.
 					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.contains('Check your email inbox');
+					cy.contains('Check your inbox');
 					cy.checkForEmailAndGetDetails(
 						emailAddress,
 						timeRequestWasMade,
@@ -103,12 +103,12 @@ describe('Password reset flow in Okta', () => {
 					);
 					const timeRequestWasMade = new Date();
 
-					cy.contains('Forgot password');
+					cy.contains('Reset password');
 					cy.get('input[name=email]').type(emailAddress);
 
 					// Continue checking the password reset flow after reCAPTCHA assertions above.
 					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.contains('Check your email inbox');
+					cy.contains('Check your inbox');
 					cy.checkForEmailAndGetDetails(
 						emailAddress,
 						timeRequestWasMade,
@@ -162,12 +162,12 @@ describe('Password reset flow in Okta', () => {
 					cy.visit(`/reset-password?returnUrl=${encodedReturnUrl}`);
 					const timeRequestWasMade = new Date();
 
-					cy.contains('Forgot password');
+					cy.contains('Reset password');
 					cy.get('input[name=email]').type(emailAddress);
 
 					// Continue checking the password reset flow after reCAPTCHA assertions above.
 					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.contains('Check your email inbox');
+					cy.contains('Check your inbox');
 					cy.checkForEmailAndGetDetails(
 						emailAddress,
 						timeRequestWasMade,
@@ -228,12 +228,12 @@ describe('Password reset flow in Okta', () => {
 					);
 					const timeRequestWasMade = new Date();
 
-					cy.contains('Forgot password');
+					cy.contains('Reset password');
 					cy.get('input[name=email]').type(emailAddress);
 
 					// Continue checking the password reset flow after reCAPTCHA assertions above.
 					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.contains('Check your email inbox');
+					cy.contains('Check your inbox');
 					cy.checkForEmailAndGetDetails(
 						emailAddress,
 						timeRequestWasMade,
@@ -276,7 +276,7 @@ describe('Password reset flow in Okta', () => {
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('button[type="submit"]').click();
 
-					cy.contains('Check your email inbox');
+					cy.contains('Check your inbox');
 					cy.contains(emailAddress);
 					cy.contains('send again');
 					cy.contains('try another address');
@@ -330,7 +330,7 @@ describe('Password reset flow in Okta', () => {
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('button[type="submit"]').click();
 
-					cy.contains('Check your email inbox');
+					cy.contains('Check your inbox');
 					cy.contains(emailAddress);
 					cy.contains('send again');
 					cy.contains('try another address');
@@ -382,7 +382,7 @@ describe('Password reset flow in Okta', () => {
 						cy.get('input[name=email]').type(emailAddress);
 						cy.get('button[type="submit"]').click();
 
-						cy.contains('Check your email inbox');
+						cy.contains('Check your inbox');
 						cy.contains(emailAddress);
 						cy.contains('send again');
 						cy.contains('try another address');
@@ -435,7 +435,7 @@ describe('Password reset flow in Okta', () => {
 						cy.get('input[name=email]').type(emailAddress);
 						cy.get('button[type="submit"]').click();
 
-						cy.contains('Check your email inbox');
+						cy.contains('Check your inbox');
 						cy.contains(emailAddress);
 						cy.contains('send again');
 						cy.contains('try another address');
@@ -455,7 +455,7 @@ describe('Password reset flow in Okta', () => {
 								'useOkta=true',
 							);
 							cy.visit(resetPasswordLink?.href as string);
-							cy.contains('Reset password');
+							cy.contains('Create new password');
 							cy.contains(emailAddress);
 
 							cy.get('input[name=password]').type(randomPassword());
@@ -487,7 +487,7 @@ describe('Password reset flow in Okta', () => {
 						cy.get('input[name=email]').type(emailAddress);
 						cy.get('button[type="submit"]').click();
 
-						cy.contains('Check your email inbox');
+						cy.contains('Check your inbox');
 						cy.contains(emailAddress);
 						cy.contains('send again');
 						cy.contains('try another address');
@@ -507,7 +507,7 @@ describe('Password reset flow in Okta', () => {
 								'useOkta=true',
 							);
 							cy.visit(resetPasswordLink?.href as string);
-							cy.contains('Reset password');
+							cy.contains('Create new password');
 							cy.contains(emailAddress);
 
 							cy.get('input[name=password]').type(randomPassword());

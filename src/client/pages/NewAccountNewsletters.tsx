@@ -1,7 +1,7 @@
 import React from 'react';
-import { MainLayout } from '@/client/layouts/Main';
+import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import { NewsLetter, NewslettersWithImages } from '@/shared/model/Newsletter';
-import { palette, space, textSans } from '@guardian/source/foundations';
+import { palette, textSans } from '@guardian/source/foundations';
 import { css } from '@emotion/react';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { CheckboxInput } from '@/client/components/CheckboxInput';
@@ -12,25 +12,12 @@ import {
 	InformationBox,
 	InformationBoxText,
 } from '@/client/components/InformationBox';
-import { Link } from '@guardian/source/react-components';
+import ThemedLink from '@/client/components/ThemedLink';
 import { NEWSLETTER_IMAGES } from '@/client/models/Newsletter';
 import { newslettersFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
+import { ToggleSwitchList } from '@/client/components/ToggleSwitchList';
 
-const consentToggleCss = css`
-	display: flex;
-	margin-top: ${space[6]}px;
-	margin-bottom: ${space[4]}px;
-	flex-direction: column;
-	gap: ${space[3]}px;
-`;
-
-const switchRow = css`
-	border: 0;
-	padding: 0;
-	margin: 0;
-	${textSans.medium()}
-`;
 const labelStyles = css`
 	justify-content: space-between;
 	& > span:first-of-type {
@@ -72,13 +59,24 @@ export const NewAccountNewsletters = ({
 	};
 
 	return (
-		<MainLayout pageHeader="One last thing...">
-			<MainBodyText>
-				Our newsletters help you get closer to our quality, independent
-				journalism. Newsletters may contain information about Guardian products,
-				services and chosen charities or online advertisements.
-			</MainBodyText>
+		<MinimalLayout
+			pageHeader="One last thing..."
+			wide={true}
+			leadText={
+				<>
+					<MainBodyText>
+						Our newsletters help you get closer to our quality, independent
+						journalism.
+					</MainBodyText>
+					<MainBodyText>
+						Newsletters may contain information about Guardian products,
+						services and chosen charities or online advertisements.
+					</MainBodyText>
+				</>
+			}
+		>
 			<MainForm
+				wideLayout={true}
 				formAction={buildUrlWithQueryParams(
 					'/welcome/newsletters',
 					{},
@@ -98,36 +96,35 @@ export const NewAccountNewsletters = ({
 				formTrackingName={formTrackingName}
 			>
 				{newsletters?.length ? (
-					newsletters.map((newsletter: NewsLetter) => (
-						<div key={newsletter.id} css={consentToggleCss}>
-							<fieldset css={switchRow}>
-								<CheckboxInput
-									id={newsletter.id}
-									label={newsletter.name}
-									subLabel={newsletter.frequency}
-									context={newsletter.description}
-									cssOverrides={labelStyles}
-									imagePath={
-										NEWSLETTER_IMAGES[newsletter.id as NewslettersWithImages]
-									}
-									onToggle={handleCheckboxChange}
-								/>
-							</fieldset>
-						</div>
-					))
+					<ToggleSwitchList columns={2}>
+						{newsletters.map((newsletter: NewsLetter) => (
+							<CheckboxInput
+								key={newsletter.id}
+								id={newsletter.id}
+								label={newsletter.name}
+								subLabel={newsletter.frequency}
+								context={newsletter.description}
+								cssOverrides={labelStyles}
+								imagePath={
+									NEWSLETTER_IMAGES[newsletter.id as NewslettersWithImages]
+								}
+								onToggle={handleCheckboxChange}
+							/>
+						))}
+					</ToggleSwitchList>
 				) : (
 					<InformationBox>
 						<InformationBoxText>
 							We&lsquo;re having difficulty retrieving our newsletters at the
 							moment. You can subscribe to newsletters later in your{' '}
-							<Link href={`${accountManagementUrl}/email-prefs`}>
+							<ThemedLink href={`${accountManagementUrl}/email-prefs`}>
 								Emails & marketing settings
-							</Link>
+							</ThemedLink>
 							.
 						</InformationBoxText>
 					</InformationBox>
 				)}
 			</MainForm>
-		</MainLayout>
+		</MinimalLayout>
 	);
 };

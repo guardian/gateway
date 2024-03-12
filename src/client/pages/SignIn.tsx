@@ -1,24 +1,23 @@
 import React from 'react';
 import { RegistrationErrors, SignInErrors } from '@/shared/model/Errors';
 import { QueryParams } from '@/shared/model/QueryParams';
-import { generateSignInRegisterTabs } from '@/client/components/Nav';
-import { MainLayout } from '@/client/layouts/Main';
 import { MainForm } from '@/client/components/MainForm';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import { EmailInput } from '@/client/components/EmailInput';
 import { PasswordInput } from '@/client/components/PasswordInput';
 import { css } from '@emotion/react';
-import { from, space, textSans } from '@guardian/source/foundations';
-import { Link } from '@guardian/source/react-components';
 import { Divider } from '@guardian/source-development-kitchen/react-components';
+import { remSpace, textSans } from '@guardian/source/foundations';
 import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
-import { divider, socialButtonDivider } from '@/client/styles/Shared';
+import { divider } from '@/client/styles/Shared';
 import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { InformationBox } from '@/client/components/InformationBox';
 import locations from '@/shared/lib/locations';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
+import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import ThemedLink from '@/client/components/ThemedLink';
 
 export type SignInProps = {
 	queryParams: QueryParams;
@@ -31,30 +30,22 @@ export type SignInProps = {
 	isReauthenticate?: boolean;
 };
 
-const passwordInput = css`
-	margin-top: ${space[2]}px;
-
-	${from.mobileMedium} {
-		margin-top: ${space[3]}px;
-	}
-`;
-
 const resetPassword = css`
 	${textSans.small()}
 `;
 
-const Links = ({ children }: { children: React.ReactNode }) => (
-	<div
-		css={css`
-			margin-top: ${space[2]}px;
-			${from.tablet} {
-				margin-top: 6px;
-			}
-		`}
-	>
-		{children}
-	</div>
-);
+const socialButtonDivider = css`
+	margin-top: ${remSpace[2]};
+	margin-bottom: 0;
+	color: var(--color-divider);
+	:before,
+	:after {
+		content: '';
+		flex: 1 1;
+		border-bottom: 1px solid var(--color-divider);
+		margin: 8px;
+	}
+`;
 
 const getErrorContext = (
 	error: string | undefined,
@@ -67,18 +58,21 @@ const getErrorContext = (
 					We could not sign you in with your social account credentials. Please
 					sign in with your email below. If you do not know your password, you
 					can{' '}
-					<Link
+					<ThemedLink
 						href={buildUrlWithQueryParams('/reset-password', {}, queryParams)}
 					>
 						reset it here
-					</Link>
+					</ThemedLink>
 					.
 				</div>
 				<br />
 				<div>
 					If you are still having trouble, please contact our customer service
 					team at{' '}
-					<Link href={locations.SUPPORT_EMAIL_MAILTO}>{SUPPORT_EMAIL}</Link>.
+					<ThemedLink href={locations.SUPPORT_EMAIL_MAILTO}>
+						{SUPPORT_EMAIL}
+					</ThemedLink>
+					.
 				</div>
 			</>
 		);
@@ -101,15 +95,11 @@ const showAuthProviderButtons = (
 	if (socialSigninBlocked === false) {
 		return (
 			<>
-				<InformationBox withMarginTop>
+				<InformationBox>
 					{!isJobs && <GuardianTerms />}
 					{isJobs && <JobsTerms />}
 				</InformationBox>
-				<AuthProviderButtons
-					queryParams={queryParams}
-					marginTop={true}
-					providers={['social']}
-				/>
+				<AuthProviderButtons queryParams={queryParams} providers={['social']} />
 				<Divider
 					spaceAbove="loose"
 					displayText="or continue with"
@@ -138,20 +128,12 @@ export const SignIn = ({
 
 	usePageLoadOphanInteraction(formTrackingName);
 
-	const tabs = generateSignInRegisterTabs({
-		isActive: 'signin',
-		isReauthenticate,
-		queryParams,
-	});
-
 	return (
-		<MainLayout
+		<MinimalLayout
 			errorOverride={pageError}
 			errorContext={getErrorContext(pageError, queryParams)}
-			tabs={tabs}
-			errorSmallMarginBottom={!!pageError}
 			pageHeader="Sign in"
-			pageSubText="One account to access all Guardian products."
+			leadText="One account to access all Guardian products."
 		>
 			{/* AuthProviderButtons component with show boolean */}
 			{showAuthProviderButtons(socialSigninBlocked, queryParams, isJobs)}
@@ -173,26 +155,27 @@ export const SignIn = ({
 				hasJobsTerms={isJobs && socialSigninBlocked}
 			>
 				<EmailInput defaultValue={email} />
-				<div css={passwordInput}>
-					<PasswordInput label="Password" autoComplete="current-password" />
-				</div>
-				<Links>
-					<Link
-						href={buildUrlWithQueryParams('/reset-password', {}, queryParams)}
-						cssOverrides={resetPassword}
-					>
-						Reset password
-					</Link>
-				</Links>
+				<PasswordInput label="Password" autoComplete="current-password" />
+				<ThemedLink
+					href={buildUrlWithQueryParams('/reset-password', {}, queryParams)}
+					cssOverrides={resetPassword}
+				>
+					Reset password
+				</ThemedLink>
 			</MainForm>
-			{/* divider */}
-			<Divider spaceAbove="tight" size="full" cssOverrides={divider} />
-			<MainBodyText smallText>
-				Not signed in before?{' '}
-				<Link href={buildUrlWithQueryParams('/register', {}, queryParams)}>
-					Register for free
-				</Link>
-			</MainBodyText>
-		</MainLayout>
+			{!isReauthenticate && (
+				<>
+					<Divider size="full" cssOverrides={divider} />
+					<MainBodyText>
+						Not signed in before?{' '}
+						<ThemedLink
+							href={buildUrlWithQueryParams('/register', {}, queryParams)}
+						>
+							Create a free account
+						</ThemedLink>
+					</MainBodyText>
+				</>
+			)}
+		</MinimalLayout>
 	);
 };

@@ -124,9 +124,8 @@ describe('Password change flow', () => {
 			cy.visit(`/reset-password/fake_token?useIdapi=true`);
 			cy.get('input[name="password"]').type('password');
 			cy.wait('@breachCheck');
-			cy.contains('use a password that is hard to guess');
+			cy.contains('avoid passwords that are easy to guess');
 			cy.get('button[type="submit"]').click().should('not.be.disabled');
-			cy.contains('Please use a password that is hard to guess.');
 		});
 	});
 
@@ -176,7 +175,7 @@ describe('Password change flow', () => {
 			cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
 			cy.wait('@breachCheck');
 			// Submit the button
-			cy.contains('Valid password');
+			cy.contains('Strong password required');
 			cy.get('button[type="submit"]').click();
 			cy.contains('Sign in');
 			cy.url().should(
@@ -269,7 +268,7 @@ describe('Password change flow', () => {
 			}).as('breachCheck');
 			cy.get('input[name="password"]').type('iamaveryuniqueandlongstring');
 			cy.wait('@breachCheck');
-			cy.contains('Valid password');
+			cy.contains('Strong password required');
 		});
 	});
 
@@ -297,7 +296,7 @@ describe('Password change flow', () => {
 				'{selectall}{backspace}iamaveryuniqueandlongstring',
 			);
 			cy.wait('@breachCheck');
-			cy.contains('Valid password');
+			cy.contains('Strong password required');
 		});
 	});
 

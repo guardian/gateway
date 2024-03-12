@@ -123,7 +123,7 @@ describe('Welcome and set password page', () => {
 				checkTokenSuccessResponse().user.primaryEmailAddress,
 			);
 			cy.get('button[type="submit"]').click();
-			cy.contains('Check your email inbox');
+			cy.contains('Check your inbox');
 			cy.contains(checkTokenSuccessResponse().user.primaryEmailAddress);
 			cy.contains('send again');
 		});
@@ -146,9 +146,9 @@ describe('Welcome and set password page', () => {
 			cy.get('button[type="submit"]').click();
 
 			cy.mockNext(200);
-			cy.contains('Check your email inbox');
+			cy.contains('Check your inbox');
 			cy.get('button[type="submit"]').click();
-			cy.contains('Check your email inbox');
+			cy.contains('Check your inbox');
 		});
 
 		it('fails to send again if reCAPTCHA check is unsuccessful', () => {

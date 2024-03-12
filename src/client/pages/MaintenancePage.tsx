@@ -1,12 +1,9 @@
 import React from 'react';
-import { MainLayout } from '@/client/layouts/Main';
-import { MainBodyText } from '@/client/components/MainBodyText';
+import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 
 export const MaintenancePage = () => (
-	<MainLayout pageHeader="We’ll be back soon">
-		<MainBodyText>
-			Sorry for the inconvenience. We are currently performing some essential
-			maintenance. Please try again later.
-		</MainBodyText>
-	</MainLayout>
+	<MinimalLayout
+		pageHeader="We’ll be back soon"
+		leadText="Sorry for the inconvenience. We are currently performing some essential maintenance. Please try again later."
+	/>
 );

@@ -22,7 +22,7 @@ export const WelcomeResendPage = () => {
 			formActionOverride={buildUrl('/welcome/resend')}
 			queryString={queryParams}
 			emailInputLabel="Email address"
-			showRecentEmailSummary
+			showRecentEmailInformationBox
 			recaptchaSiteKey={recaptchaSiteKey}
 			formPageTrackingName="welcome-link-expired"
 			formError={formError}

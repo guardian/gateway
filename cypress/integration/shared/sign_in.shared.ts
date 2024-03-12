@@ -135,7 +135,7 @@ export const persistsTheClientIdWhenNavigatingAway = (isIdapi = false) => {
 				? '/signin?clientId=jobs&useIdapi=true'
 				: '/signin?clientId=jobs';
 			cy.visit(visitUrl);
-			cy.contains('Register').click();
+			cy.contains('Create a free account').click();
 			cy.url().should('contain', 'clientId=jobs');
 		},
 	] as const;
@@ -209,7 +209,7 @@ export const navigatesToResetPassword = (isIdapi = false) => {
 			const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
 			cy.visit(visitUrl);
 			cy.contains('Reset password').click();
-			cy.contains('Forgot password');
+			cy.contains('Reset password');
 		},
 	] as const;
 };
@@ -220,7 +220,7 @@ export const navigatesToRegistration = (isIdapi = false) => {
 		() => {
 			const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
 			cy.visit(visitUrl);
-			cy.contains('Register').click();
+			cy.contains('Create a free account').click();
 			cy.contains('Continue with Google');
 			cy.contains('Continue with Apple');
 			cy.contains('Continue with email');

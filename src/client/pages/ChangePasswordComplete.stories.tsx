@@ -7,7 +7,6 @@ import { ChangePasswordComplete } from '@/client/pages/ChangePasswordComplete';
 export default {
 	title: 'Pages/ChangePasswordComplete',
 	component: ChangePasswordComplete,
-	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => (
@@ -38,15 +37,4 @@ export const ReturnUrl = () => (
 );
 ReturnUrl.story = {
 	name: 'with email and return url',
-};
-
-export const SetPassword = () => (
-	<ChangePasswordComplete
-		headerText="Password created"
-		email="example@theguardian.com"
-		action="created"
-	/>
-);
-SetPassword.story = {
-	name: 'set password complete page',
 };

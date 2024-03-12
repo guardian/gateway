@@ -25,7 +25,7 @@ export const ResetPasswordSessionExpiredPage = () => {
 		<ResetPassword
 			email={email}
 			headerText="Session timed out"
-			buttonText="Send me a link"
+			buttonText="Resend link"
 			queryString={queryParams}
 			emailInputLabel="Email address"
 			recaptchaSiteKey={recaptchaSiteKey}

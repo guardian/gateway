@@ -4,27 +4,16 @@ import {
 	RegistrationNewsletterFormFields,
 	RegistrationNewslettersFormFieldsMap,
 } from '@/shared/model/Newsletter';
-import { css } from '@emotion/react';
-import { space } from '@guardian/source/foundations';
-import { RegistrationMarketingConsentFormField } from '@/client/components/RegistrationMarketingConsentFormField';
-import { RegistrationNewsletterFormField } from '@/client/components/RegistrationNewsletterFormField';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { AppName } from '@/shared/lib/appNameUtils';
+import { ToggleSwitchList } from '@/client/components/ToggleSwitchList';
+import { ToggleSwitchInput } from '@/client/components/ToggleSwitchInput';
 
 interface RegistrationConsentsProps {
 	geolocation?: GeoLocation;
 	useIdapi?: boolean;
-	noMarginBottom?: boolean;
 	appName?: AppName;
 }
-
-const consentToggleCss = (noMarginBottom = false) => css`
-	display: flex;
-	margin-top: ${space[6]}px;
-	${noMarginBottom ? 'margin-bottom: 0;' : `margin-bottom: ${space[4]}px;`}
-	flex-direction: column;
-	gap: ${space[3]}px;
-`;
 
 const chooseNewsletter = (
 	geolocation: GeoLocation | undefined,
@@ -53,7 +42,6 @@ const chooseNewsletter = (
 export const RegistrationConsents = ({
 	geolocation,
 	useIdapi,
-	noMarginBottom,
 	appName,
 }: RegistrationConsentsProps) => {
 	const registrationNewsletter = chooseNewsletter(geolocation, appName);
@@ -70,20 +58,24 @@ export const RegistrationConsents = ({
 	}
 
 	return (
-		<div css={consentToggleCss(noMarginBottom)}>
+		<ToggleSwitchList>
 			{registrationNewsletter && (
-				<RegistrationNewsletterFormField
+				<ToggleSwitchInput
 					id={registrationNewsletter.id}
-					label={registrationNewsletter.label}
-					context={registrationNewsletter.context}
+					title={registrationNewsletter.label}
+					description={registrationNewsletter.context}
+					defaultChecked={true}
 				/>
 			)}
 			{showMarketingConsent && (
-				<RegistrationMarketingConsentFormField
+				<ToggleSwitchInput
 					id={RegistrationConsentsFormFields.similarGuardianProducts.id}
-					label={RegistrationConsentsFormFields.similarGuardianProducts.label}
+					description={
+						RegistrationConsentsFormFields.similarGuardianProducts.label
+					}
+					defaultChecked={true}
 				/>
 			)}
-		</div>
+		</ToggleSwitchList>
 	);
 };

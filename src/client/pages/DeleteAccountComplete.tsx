@@ -1,7 +1,8 @@
 import React from 'react';
-import { MainLayout, buttonStyles } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { ExternalLinkButton } from '@/client/components/ExternalLink';
+import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { primaryButtonStyles } from '@/client/styles/Shared';
 
 type Props = {
 	returnUrl: string;
@@ -9,17 +10,18 @@ type Props = {
 
 export const DeleteAccountComplete = ({ returnUrl }: Props) => {
 	return (
-		<MainLayout pageHeader="Account deleted">
-			<MainBodyText>
-				Your Guardian account has been successfully deleted and you have also
-				been signed out. Click the button below to return to the Guardian.
-			</MainBodyText>
-			<ExternalLinkButton
-				css={buttonStyles({ halfWidth: true })}
-				href={returnUrl}
-			>
+		<MinimalLayout
+			pageHeader="Account deleted"
+			leadText={
+				<MainBodyText>
+					Your Guardian account has been successfully deleted and you have also
+					been signed out. Click the button below to return to the Guardian.
+				</MainBodyText>
+			}
+		>
+			<ExternalLinkButton css={primaryButtonStyles()} href={returnUrl}>
 				Return to the Guardian
 			</ExternalLinkButton>
-		</MainLayout>
+		</MinimalLayout>
 	);
 };

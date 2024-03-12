@@ -6,7 +6,6 @@ import { Registration, RegistrationProps } from '@/client/pages/Registration';
 export default {
 	title: 'Pages/Registration',
 	component: Registration,
-	parameters: { layout: 'fullscreen' },
 	args: {
 		queryParams: {
 			returnUrl: 'https://www.theguardian.com/uk',

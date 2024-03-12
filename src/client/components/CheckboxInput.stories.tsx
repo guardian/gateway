@@ -1,12 +1,15 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
-import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '../assets/newsletters';
+import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '@/client/assets/newsletters';
 
 import { CheckboxInput } from '@/client/components/CheckboxInput';
 
 export default {
 	title: 'Components/CheckboxInput',
 	component: CheckboxInput,
+	parameters: {
+		layout: 'padded',
+	},
 } as Meta;
 
 export const Default = () => <CheckboxInput label="A checkbox input field" />;

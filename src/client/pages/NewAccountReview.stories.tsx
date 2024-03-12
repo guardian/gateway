@@ -2,14 +2,14 @@ import React from 'react';
 import { Meta } from '@storybook/react';
 
 import { Consent } from '@/shared/model/Consent';
-import { NewAccountReview, NewAccountReviewProps } from './NewAccountReview';
+import {
+	NewAccountReview,
+	NewAccountReviewProps,
+} from '@/client/pages/NewAccountReview';
 
 export default {
 	title: 'Pages/NewAccountReview',
 	component: NewAccountReview,
-	parameters: {
-		layout: 'fullscreen',
-	},
 	args: {
 		queryParams: {
 			returnUrl: 'https://www.theguardian.com/uk',

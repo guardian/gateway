@@ -1,10 +1,10 @@
 import React from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { css } from '@emotion/react';
-import { error, space, textSans } from '@guardian/source/foundations';
+import { error, remSpace, textSans } from '@guardian/source/foundations';
 
 const csrfErrorStyle = css`
-	margin-bottom: ${space[4]}px;
+	margin-bottom: ${remSpace[4]};
 	${textSans.medium({ lineHeight: 'regular' })}
 	color: ${error[400]};
 	text-align: center;

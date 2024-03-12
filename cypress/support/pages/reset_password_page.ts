@@ -27,7 +27,7 @@ class ResetPasswordPage {
 	}
 
 	clickResetPassword() {
-		cy.contains('Reset password').click();
+		cy.contains('Request password reset').click();
 	}
 }
 

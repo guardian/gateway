@@ -342,7 +342,7 @@ describe('Sign in flow, Okta enabled', () => {
 							);
 							cy.visit(`/reset-password/${token}`);
 							cy.contains(emailAddress);
-							cy.contains('Reset password');
+							cy.contains('Create new password');
 						});
 					});
 				});

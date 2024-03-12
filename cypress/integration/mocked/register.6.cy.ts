@@ -83,7 +83,7 @@ describe('Registration flow', () => {
 				errors: [],
 			});
 			cy.get('[data-cy=main-form-submit-button]').click();
-			cy.contains('Check your email inbox');
+			cy.contains('Check your inbox');
 			cy.contains('example@example.com');
 		});
 
@@ -97,7 +97,7 @@ describe('Registration flow', () => {
 			});
 			cy.mockNext(200);
 			cy.get('[data-cy=main-form-submit-button]').click();
-			cy.contains('Check your email inbox');
+			cy.contains('Check your inbox');
 			cy.contains('example@example.com');
 		});
 
@@ -111,7 +111,7 @@ describe('Registration flow', () => {
 			});
 			cy.mockNext(200);
 			cy.get('[data-cy=main-form-submit-button]').click();
-			cy.contains('Check your email inbox');
+			cy.contains('Check your inbox');
 			cy.contains('example@example.com');
 		});
 

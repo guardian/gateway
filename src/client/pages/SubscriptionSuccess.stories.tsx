@@ -7,7 +7,6 @@ import { SubscriptionSuccess } from '@/client/pages/SubscriptionSuccess';
 export default {
 	title: 'Pages/SubscriptionSuccess',
 	component: SubscriptionSuccess,
-	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Unsubscribe = () => (

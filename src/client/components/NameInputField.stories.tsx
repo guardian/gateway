@@ -6,6 +6,9 @@ import NameInputField from '@/client/components/NameInputField';
 export default {
 	title: 'Components/NameInputField',
 	component: NameInputField,
+	parameters: {
+		layout: 'padded',
+	},
 } as Meta;
 
 export const Default = () => {

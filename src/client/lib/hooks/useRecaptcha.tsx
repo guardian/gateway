@@ -1,3 +1,4 @@
+import { SECTION_GAP } from '@/client/models/Style';
 import { loadScript } from '@guardian/libs';
 import React from 'react';
 
@@ -217,5 +218,16 @@ const RecaptchaElement = React.forwardRef<
 	HTMLDivElement,
 	React.HTMLProps<HTMLDivElement>
 >(function RecaptchaElement(props, ref) {
-	return <div ref={ref} className="g-recaptcha" {...props}></div>;
+	return (
+		<div
+			ref={ref}
+			className="g-recaptcha"
+			{...props}
+			// TODO: This is a fix for when the reCAPTCHA badge is not visible in the DOM.
+			// In these cases, the wrapper is still visible, which means it gets affected
+			// by the `gap` spacing applied to its parent flex container in `MainForm`.
+			// We set a negative margin here to counteract what looks like an overly large gap.
+			css={{ marginTop: `-${SECTION_GAP}` }}
+		></div>
+	);
 });

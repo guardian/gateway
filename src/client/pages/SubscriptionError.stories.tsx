@@ -7,7 +7,6 @@ import { SubscriptionError } from '@/client/pages/SubscriptionError';
 export default {
 	title: 'Pages/SubscriptionError',
 	component: SubscriptionError,
-	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Unsubscribe = () => (

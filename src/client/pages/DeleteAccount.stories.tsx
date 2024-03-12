@@ -6,7 +6,6 @@ import { DeleteAccount } from '@/client/pages/DeleteAccount';
 export default {
 	title: 'Pages/DeleteAccount',
 	component: DeleteAccount,
-	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => (

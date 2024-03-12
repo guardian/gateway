@@ -24,6 +24,7 @@ export const RegistrationEmailSentPage = () => {
 
 	return (
 		<EmailSent
+			pageHeader="Check your inbox to verify your email"
 			email={email}
 			queryString={queryString}
 			changeEmailPage={buildUrlWithQueryParams(

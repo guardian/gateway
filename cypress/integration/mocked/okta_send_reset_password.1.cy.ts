@@ -108,7 +108,7 @@ describe('Send password reset email in Okta', () => {
 					'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
 			});
 			cy.get('button[type="submit"]').click();
-			cy.contains('Check your email inbox');
+			cy.contains('Check your inbox');
 			cy.contains('email within 2 minutes');
 			cy.contains('send again');
 		});
@@ -172,7 +172,7 @@ describe('Send password reset email in Okta', () => {
 					'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
 			});
 			cy.get('button[type="submit"]').click();
-			cy.contains('Check your email inbox');
+			cy.contains('Check your inbox');
 			cy.contains('email within 2 minutes');
 			cy.contains('send again');
 		});
@@ -188,7 +188,7 @@ describe('Send password reset email in Okta', () => {
 				activationToken: `token_token_token_to`,
 			});
 			cy.get('button[type="submit"]').click();
-			cy.contains('Check your email inbox');
+			cy.contains('Check your inbox');
 			cy.contains('email within 2 minutes');
 			cy.contains('send again');
 		});
@@ -204,7 +204,7 @@ describe('Send password reset email in Okta', () => {
 				activationToken: `token_token_token_to`,
 			});
 			cy.get('button[type="submit"]').click();
-			cy.contains('Check your email inbox');
+			cy.contains('Check your inbox');
 			cy.contains('email within 2 minutes');
 			cy.contains('send again');
 		});
@@ -221,7 +221,7 @@ describe('Send password reset email in Okta', () => {
 				)}/reset_password/token_token_token_to`,
 			});
 			cy.get('button[type="submit"]').click();
-			cy.contains('Check your email inbox');
+			cy.contains('Check your inbox');
 			cy.contains('email within 2 minutes');
 			cy.contains('send again');
 		});
@@ -238,7 +238,7 @@ describe('Send password reset email in Okta', () => {
 				)}/reset_password/token_token_token_to`,
 			});
 			cy.get('button[type="submit"]').click();
-			cy.contains('Check your email inbox');
+			cy.contains('Check your inbox');
 			cy.contains('email within 2 minutes');
 			cy.contains('send again');
 		});
@@ -256,7 +256,7 @@ describe('Send password reset email in Okta', () => {
 				errorCauses: [],
 			});
 			cy.get('button[type="submit"]').click();
-			cy.contains('Check your email inbox');
+			cy.contains('Check your inbox');
 			cy.contains('email within 2 minutes');
 			cy.contains('send again');
 		});

@@ -1,19 +1,16 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { space, until } from '@guardian/source/foundations';
-import {
-	LinkButton,
-	SvgArrowRightStraight,
-} from '@guardian/source/react-components';
+import { until } from '@guardian/source/foundations';
+import { LinkButton } from '@guardian/source/react-components';
 import { PasswordForm } from '@/client/components/PasswordForm';
 import { FieldError } from '@/shared/model/ClientState';
-import { getAutoRow, passwordFormSpanDef } from '@/client/styles/Grid';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import NameInputField from '@/client/components/NameInputField';
 import { useNameInputFieldError } from '@/client/lib/hooks/useNameFieldInputError';
 import { QueryParams } from '@/shared/model/QueryParams';
-import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
+import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { primaryButtonStyles } from '@/client/styles/Shared';
 
 type Props = {
 	submitUrl: string;
@@ -24,10 +21,6 @@ type Props = {
 	browserName?: string;
 	queryParams: QueryParams;
 };
-
-const linkButton = css`
-	margin-top: ${space[3]}px;
-`;
 
 const emailSpan = css`
 	font-weight: bold;
@@ -51,7 +44,6 @@ export const Welcome = ({
 	browserName,
 	queryParams,
 }: Props) => {
-	const autoRow = getAutoRow(1, passwordFormSpanDef);
 	const {
 		nameFieldError,
 		nameFieldErrorContext,
@@ -63,30 +55,30 @@ export const Welcome = ({
 	const messageContext = isJobs ? 'Details' : 'Password';
 
 	return (
-		<MainLayout
+		<MinimalLayout
 			pageHeader={isJobs ? 'Complete your account' : 'Create your password'}
 			errorOverride={nameFieldError}
 			errorContext={nameFieldErrorContext}
+			leadText={
+				<MainBodyText>
+					{passwordSet
+						? `${messageContext} already set for `
+						: `${messageAction} for `}
+					{email ? (
+						<>
+							Guardian account: <strong css={emailSpan}>{email}</strong>
+						</>
+					) : (
+						'your new account.'
+					)}
+				</MainBodyText>
+			}
 		>
-			<MainBodyText>
-				{passwordSet
-					? `${messageContext} already set for `
-					: `${messageAction} for `}
-				{email ? (
-					<>
-						Guardian account: <span css={emailSpan}>{email}</span>
-					</>
-				) : (
-					'your new account.'
-				)}
-			</MainBodyText>
 			{passwordSet ? (
 				<LinkButton
-					css={linkButton}
+					css={primaryButtonStyles()}
 					href={buildUrlWithQueryParams('/welcome/review', {}, queryParams)}
 					priority="primary"
-					icon={<SvgArrowRightStraight />}
-					iconSide="right"
 				>
 					Complete creating account
 				</LinkButton>
@@ -96,7 +88,6 @@ export const Welcome = ({
 					fieldErrors={fieldErrors}
 					labelText="Password"
 					submitButtonText="Complete creating account"
-					gridAutoRow={autoRow}
 					autoComplete="new-password"
 					formTrackingName="welcome"
 					onInvalid={() => setFormSubmitAttempted(true)}
@@ -105,6 +96,6 @@ export const Welcome = ({
 					{isJobs && <NameInputField onGroupError={setGroupError} />}
 				</PasswordForm>
 			)}
-		</MainLayout>
+		</MinimalLayout>
 	);
 };

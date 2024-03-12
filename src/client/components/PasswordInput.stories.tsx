@@ -9,6 +9,9 @@ import {
 export default {
 	title: 'Components/PasswordInput',
 	component: PasswordInput,
+	parameters: {
+		layout: 'padded',
+	},
 } as Meta<PasswordInputProps>;
 
 export const Default = (props: Partial<PasswordInputProps>) => (

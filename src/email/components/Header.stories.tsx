@@ -7,6 +7,14 @@ import { renderMJMLComponent } from '../testUtils';
 export default {
 	title: 'Email/Components/Header',
 	component: Header,
+	parameters: {
+		chromatic: {
+			modes: {
+				'dark desktop': { disable: true },
+				'dark mobile': { disable: true },
+			},
+		},
+	},
 } as Meta;
 
 export const Default = () => {

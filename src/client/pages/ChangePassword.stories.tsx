@@ -6,7 +6,6 @@ import { ChangePassword } from '@/client/pages/ChangePassword';
 export default {
 	title: 'Pages/ChangePassword',
 	component: ChangePassword,
-	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => (
@@ -38,17 +37,4 @@ export const FieldErrorPW = () => (
 );
 FieldErrorPW.story = {
 	name: 'with error on password',
-};
-
-export const SetPassword = () => (
-	<ChangePassword
-		headerText="Create password"
-		buttonText="Save password"
-		submitUrl=""
-		email="example@theguardian.com"
-		fieldErrors={[]}
-	/>
-);
-SetPassword.story = {
-	name: 'set password page',
 };

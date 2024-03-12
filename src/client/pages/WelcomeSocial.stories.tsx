@@ -9,7 +9,6 @@ import {
 export default {
 	title: 'Pages/WelcomeSocial',
 	component: WelcomeSocial,
-	parameters: { layout: 'fullscreen' },
 	args: {
 		queryParams: {
 			returnUrl: 'https://www.theguardian.com/uk',

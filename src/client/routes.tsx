@@ -39,7 +39,7 @@ import { RegisterWithEmailPage } from '@/client/pages/RegisterWithEmailPage';
 import { WelcomeSocialPage } from '@/client/pages/WelcomeSocialPage';
 import { ReturnToAppPage } from '@/client/pages/ReturnToAppPage';
 import { NewAccountReviewPage } from '@/client/pages/NewAccountReviewPage';
-import { NewAccountNewslettersPage } from './pages/NewAccountNewslettersPage';
+import { NewAccountNewslettersPage } from '@/client/pages/NewAccountNewslettersPage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
