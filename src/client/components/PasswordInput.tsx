@@ -6,7 +6,12 @@ import {
 } from '@guardian/source-react-components';
 import React, { useState } from 'react';
 import { css } from '@emotion/react';
-import { neutral, height, focusHalo } from '@guardian/source-foundations';
+import {
+	neutral,
+	height,
+	focusHalo,
+	palette,
+} from '@guardian/source-foundations';
 import { disableAutofillBackground } from '@/client/styles/Shared';
 
 export type PasswordAutoComplete = 'new-password' | 'current-password';
@@ -169,6 +174,9 @@ export const PasswordInput = ({
 						disableAutofillBackground,
 						hideMsReveal(displayEye),
 					]}
+					theme={{
+						textLabel: palette.brand[400],
+					}}
 				/>
 			</div>
 

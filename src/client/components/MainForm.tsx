@@ -14,7 +14,7 @@ import {
 	JobsTerms,
 	RecaptchaTerms,
 } from '@/client/components/Terms';
-import { space } from '@guardian/source-foundations';
+import { space, textSans } from '@guardian/source-foundations';
 import { buttonStyles } from '@/client/layouts/Main';
 import {
 	RecaptchaWrapper,
@@ -76,6 +76,10 @@ const formStyles = (
 	css`
 		display: inline-block;
 	`}
+
+	a {
+		${textSans.small({ fontWeight: 'bold' })};
+	}
 `;
 
 const inputStyles = (hasTerms = false, submitButtonLink = false) => css`
@@ -84,6 +88,14 @@ const inputStyles = (hasTerms = false, submitButtonLink = false) => css`
 	css`
 		margin-bottom: ${space[2]}px;
 	`}
+`;
+
+const buttonLinkStyles = css`
+	font-weight: bold;
+	text-decoration: none;
+	&:hover {
+		text-decoration: underline;
+	}
 `;
 
 const summaryStyles = (smallMarginBottom = false) => css`
@@ -316,7 +328,7 @@ export const MainForm = ({
 				hasGuardianTerms ||
 				hasJobsTerms ||
 				(recaptchaEnabled && !hideRecaptchaMessage)) && (
-				<InformationBox>
+				<InformationBox withMarginTop>
 					{hasGuardianTerms && <GuardianTerms />}
 					{hasJobsTerms && <JobsTerms />}
 					{additionalTerms && (
@@ -332,6 +344,7 @@ export const MainForm = ({
 					data-cy="main-form-submit-button"
 					disabled={isFormDisabled}
 					aria-disabled={isFormDisabled}
+					cssOverrides={buttonLinkStyles}
 				>
 					{submitButtonText}
 				</ButtonLink>

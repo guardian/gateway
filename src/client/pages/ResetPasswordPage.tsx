@@ -16,16 +16,16 @@ export const ResetPasswordPage = () => {
 		<ResetPassword
 			formError={formError}
 			email={email}
-			headerText="Forgot password"
-			buttonText="Reset password"
+			headerText="Reset password"
+			buttonText="Request password reset"
 			queryString={queryParams}
-			showNoAccessEmail
+			// showNoAccessEmail
 			recaptchaSiteKey={recaptchaSiteKey}
 			formPageTrackingName="forgot-password"
 		>
 			<MainBodyText>
-				Forgot your password? Enter your email address and we’ll send you a link
-				to create a new one.
+				Enter your email address and we’ll send you instructions to reset your
+				password.
 			</MainBodyText>
 		</ResetPassword>
 	);

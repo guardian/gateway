@@ -53,7 +53,7 @@ export const Registration = ({ queryParams }: RegistrationProps) => {
 			/>
 			{/* divider */}
 			<Divider spaceAbove="tight" size="full" cssOverrides={divider} />
-			<MainBodyText smallText>
+			<MainBodyText>
 				Already have an account?{' '}
 				<Link href={buildUrlWithQueryParams('/signin', {}, queryParams)}>
 					Sign in

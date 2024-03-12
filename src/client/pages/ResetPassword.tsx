@@ -1,12 +1,11 @@
 import React, { PropsWithChildren, ReactNode, useState } from 'react';
 
-import { MainLayout } from '@/client/layouts/Main';
+import { MinimalLayout } from '../layouts/MinimalLayout';
 import {
 	belowFormMarginTopSpacingStyle,
 	MainForm,
 } from '@/client/components/MainForm';
 import { EmailInput } from '@/client/components/EmailInput';
-import { MainBodyText } from '@/client/components/MainBodyText';
 import { InfoSummary } from '@guardian/source-react-components-development-kitchen';
 import locations from '@/shared/lib/locations';
 import { ExternalLink } from '@/client/components/ExternalLink';
@@ -22,7 +21,6 @@ interface ResetPasswordProps {
 	queryString: QueryParams;
 	formActionOverride?: string;
 	emailInputLabel?: string;
-	showNoAccessEmail?: boolean;
 	showRecentEmailSummary?: boolean;
 	recaptchaSiteKey?: string;
 	formPageTrackingName?: string;
@@ -36,7 +34,6 @@ export const ResetPassword = ({
 	queryString,
 	formActionOverride,
 	emailInputLabel,
-	showNoAccessEmail,
 	showRecentEmailSummary,
 	children,
 	recaptchaSiteKey,
@@ -51,7 +48,7 @@ export const ResetPassword = ({
 		useState<ReactNode>(null);
 
 	return (
-		<MainLayout
+		<MinimalLayout
 			pageHeader={headerText}
 			errorContext={recaptchaErrorContext}
 			errorOverride={recaptchaErrorMessage}
@@ -73,15 +70,6 @@ export const ResetPassword = ({
 			>
 				<EmailInput label={emailInputLabel} defaultValue={email} />
 			</MainForm>
-			{showNoAccessEmail && (
-				<MainBodyText cssOverrides={belowFormMarginTopSpacingStyle} smallText>
-					Having trouble resetting your password? Please visit our{' '}
-					<ExternalLink href={locations.SIGN_IN_HELP_CENTRE}>
-						Help Centre
-					</ExternalLink>
-					.
-				</MainBodyText>
-			)}
 			{showRecentEmailSummary && (
 				<InfoSummary
 					cssOverrides={belowFormMarginTopSpacingStyle}
@@ -98,6 +86,6 @@ export const ResetPassword = ({
 					}
 				/>
 			)}
-		</MainLayout>
+		</MinimalLayout>
 	);
 };

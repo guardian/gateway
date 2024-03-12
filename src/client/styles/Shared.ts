@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { border, from, space } from '@guardian/source-foundations';
+import { palette, space, textSans } from '@guardian/source-foundations';
 
 export const disableAutofillBackground = css`
 	:-webkit-autofill {
@@ -14,17 +14,14 @@ export const disableAutofillBackground = css`
 
 export const socialButtonDivider = css`
 	/* Undoes the negative margin */
-	margin-bottom: ${space[4]}px;
-	margin-top: ${space[4]}px;
-	${from.mobileMedium} {
-		margin-top: ${space[6]}px;
-		margin-bottom: ${space[6]}px;
-	}
+	margin-bottom: ${space[5]}px;
+	margin-top: ${space[5]}px;
+	color: ${palette.neutral[10]};
 	:before,
 	:after {
 		content: '';
 		flex: 1 1;
-		border-bottom: 1px solid ${border.secondary};
+		border-bottom: 1px solid ${palette.neutral[10]};
 		margin: 8px;
 	}
 `;
@@ -38,4 +35,8 @@ export const divider = css`
 export const errorContextSpacing = css`
 	margin: 0;
 	margin-top: ${space[2]}px;
+`;
+
+export const mainTextStyles = css`
+	${textSans.small()};
 `;

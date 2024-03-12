@@ -1,23 +1,16 @@
 import React, { PropsWithChildren } from 'react';
 import { css, SerializedStyles } from '@emotion/react';
-import { space, text, textSans } from '@guardian/source-foundations';
+import { palette, space, textSans } from '@guardian/source-foundations';
+import { mainTextStyles } from '../styles/Shared';
 interface Props {
 	noMarginBottom?: boolean;
 	marginTop?: boolean;
 	cssOverrides?: SerializedStyles;
-	smallText?: boolean;
 }
 
-const mainBodyTextStyles = (
-	noMarginBottom = false,
-	marginTop = false,
-	smallText = false,
-) => css`
-	${smallText
-		? textSans.small({ lineHeight: 'regular' })
-		: textSans.medium({ lineHeight: 'regular' })}
-
-	color: ${text.primary};
+const mainBodyTextStyles = (noMarginBottom = false, marginTop = false) => css`
+	${mainTextStyles};
+	color: ${palette.neutral[7]};
 
 	${marginTop
 		? ''
@@ -34,9 +27,12 @@ const mainBodyTextStyles = (
 			`}
 			
 	& a {
-		${smallText
-			? textSans.small({ lineHeight: 'regular' })
-			: textSans.medium({ lineHeight: 'regular' })}
+		${textSans.small({ lineHeight: 'regular', fontWeight: 'bold' })};
+	}
+
+	strong {
+		${textSans.small({ lineHeight: 'regular', fontWeight: 'bold' })};
+		color: ${palette.brand[400]};
 	}
 `;
 
@@ -45,14 +41,8 @@ export const MainBodyText = ({
 	cssOverrides,
 	noMarginBottom,
 	marginTop,
-	smallText,
 }: PropsWithChildren<Props>) => (
-	<p
-		css={[
-			mainBodyTextStyles(noMarginBottom, marginTop, smallText),
-			cssOverrides,
-		]}
-	>
+	<p css={[mainBodyTextStyles(noMarginBottom, marginTop), cssOverrides]}>
 		{children}
 	</p>
 );

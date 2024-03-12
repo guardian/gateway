@@ -1,6 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { space, brand, from } from '@guardian/source-foundations';
+import { space, brand, from, palette } from '@guardian/source-foundations';
 import {
 	LinkButton,
 	SvgGoogleBrand,
@@ -40,11 +40,18 @@ const containerStyles = (marginTop = false) => css`
 `;
 
 const buttonOverrides = css`
-	border-color: ${brand[400]};
+	border-color: ${palette.brand[400]};
 	justify-content: center;
 	${from.tablet} {
 		min-width: 145px;
 		flex-grow: 1;
+	}
+	@media (prefers-color-scheme: dark) {
+		border-color: ${palette.neutral[100]};
+		color: ${palette.neutral[100]};
+		&:hover {
+			background-color: ${palette.neutral[20]};
+		}
 	}
 `;
 

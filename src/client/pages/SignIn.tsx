@@ -1,8 +1,6 @@
 import React from 'react';
 import { SignInErrors } from '@/shared/model/Errors';
 import { QueryParams } from '@/shared/model/QueryParams';
-import { generateSignInRegisterTabs } from '@/client/components/Nav';
-import { MainLayout } from '@/client/layouts/Main';
 import { MainForm } from '@/client/components/MainForm';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
@@ -17,6 +15,7 @@ import { divider, socialButtonDivider } from '@/client/styles/Shared';
 import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { InformationBox } from '@/client/components/InformationBox';
+import { MinimalLayout } from '../layouts/MinimalLayout';
 
 export type SignInProps = {
 	queryParams: QueryParams;
@@ -110,18 +109,11 @@ export const SignIn = ({
 
 	usePageLoadOphanInteraction(formTrackingName);
 
-	const tabs = generateSignInRegisterTabs({
-		isActive: 'signin',
-		isReauthenticate,
-		queryParams,
-	});
-
 	return (
-		<MainLayout
+		<MinimalLayout
 			errorOverride={pageError}
 			errorContext={getErrorContext(pageError)}
-			tabs={tabs}
-			errorSmallMarginBottom={!!pageError}
+			// errorSmallMarginBottom={!!pageError}
 			pageHeader="Sign in"
 			pageSubText="One account to access all Guardian products."
 		>
@@ -159,12 +151,12 @@ export const SignIn = ({
 			</MainForm>
 			{/* divider */}
 			<Divider spaceAbove="tight" size="full" cssOverrides={divider} />
-			<MainBodyText smallText>
+			<MainBodyText>
 				Not signed in before?{' '}
 				<Link href={buildUrlWithQueryParams('/register', {}, queryParams)}>
-					Register for free
+					Create a free account
 				</Link>
 			</MainBodyText>
-		</MainLayout>
+		</MinimalLayout>
 	);
 };

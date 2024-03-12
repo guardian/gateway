@@ -15,7 +15,7 @@ export const Default = () => (
 		headerText="Forgot password"
 		buttonText="Reset password"
 		queryString={{ returnUrl: 'http://theguardian.com' }}
-		showNoAccessEmail
+		// showNoAccessEmail
 	>
 		<MainBodyText>
 			Forgot your password? Enter your email address and we’ll send you a link
@@ -33,7 +33,7 @@ export const Email = () => (
 		headerText="Forgot password"
 		buttonText="Reset password"
 		queryString={{ returnUrl: 'https://theguardian.com' }}
-		showNoAccessEmail
+		// showNoAccessEmail
 	>
 		<MainBodyText>
 			Forgot your password? Enter your email address and we’ll send you a link
@@ -90,7 +90,7 @@ export const RecaptchaError = () => (
 		headerText="Forgot password"
 		buttonText="Reset password"
 		queryString={{ returnUrl: 'https://theguardian.com' }}
-		showNoAccessEmail
+		// showNoAccessEmail
 		recaptchaSiteKey="invalid-key"
 	>
 		<MainBodyText>
