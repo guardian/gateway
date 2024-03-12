@@ -37,7 +37,7 @@ export const EmailSent = ({
 	changeEmailPage,
 	resendEmailAction,
 	queryString,
-	showSuccess,
+	// showSuccess,
 	errorMessage,
 	noAccountInfo,
 	recaptchaSiteKey,

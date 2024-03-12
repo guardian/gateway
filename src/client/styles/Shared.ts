@@ -24,6 +24,9 @@ export const socialButtonDivider = css`
 		border-bottom: 1px solid ${palette.neutral[10]};
 		margin: 8px;
 	}
+	@media (prefers-color-scheme: dark) {
+		color: ${palette.neutral[46]};
+	}
 `;
 
 // fixed source divider expanding off the side of the container

@@ -1,6 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { space, brand, from, palette } from '@guardian/source-foundations';
+import { space, from, palette } from '@guardian/source-foundations';
 import {
 	LinkButton,
 	SvgGoogleBrand,
