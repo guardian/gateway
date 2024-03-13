@@ -1,23 +1,24 @@
 import { Request } from 'express';
 import { getRegistrationLocation } from '../getRegistrationLocation';
 
-const getFakeRequest = (country: string | undefined) => ({
-	cookies: {
-		GU_geo_country: country,
-	},
-});
+const getFakeRequest = (country: string | undefined): Request =>
+	({
+		cookies: {
+			GU_geo_country: country,
+		},
+	}) as unknown as Request;
 
 describe('getRegistrationLocation', () => {
 	test(`returns undefined if cmp consent state is false `, () => {
-		expect(
-			getRegistrationLocation(getFakeRequest('GB') as Request, false),
-		).toBe(undefined);
+		expect(getRegistrationLocation(getFakeRequest('GB'), false)).toBe(
+			undefined,
+		);
 	});
 
 	test(`returns undefined if cmp consent state is undefined `, () => {
-		expect(
-			getRegistrationLocation(getFakeRequest('GB') as Request, undefined),
-		).toBe(undefined);
+		expect(getRegistrationLocation(getFakeRequest('GB'), undefined)).toBe(
+			undefined,
+		);
 	});
 
 	[
@@ -33,9 +34,7 @@ describe('getRegistrationLocation', () => {
 		{ input: 'foobar', output: undefined },
 	].forEach(({ input, output }) => {
 		test(`given ${input} , and the cmp consent state is true, it returns ${output}`, () => {
-			expect(
-				getRegistrationLocation(getFakeRequest(input) as Request, true),
-			).toBe(output);
+			expect(getRegistrationLocation(getFakeRequest(input), true)).toBe(output);
 		});
 	});
 });

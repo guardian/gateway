@@ -1,7 +1,7 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-yarn prettier
-yarn lint
-yarn tsc
-yarn tsc:cypress
+pnpm run prettier
+pnpm run lint
+pnpm run tsc
+pnpm run tsc:cypress

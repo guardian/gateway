@@ -7,7 +7,7 @@ set -ae
 LAST_TEAMCITY_BUILD=5000
 export GITHUB_RUN_NUMBER=$(( $GITHUB_RUN_NUMBER + $LAST_TEAMCITY_BUILD ))
 
-yarn install --frozen-lockfile
-yarn test
-yarn build
-yarn riffraff
+pnpm install --frozen-lockfile
+pnpm run test
+pnpm run build
+pnpm run riffraff

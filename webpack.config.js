@@ -137,6 +137,11 @@ const server = () => ({
 					from: 'src/client/.well-known',
 					to: '.well-known',
 				},
+				// package.json is required for the server to start
+				{
+					from: 'package.json',
+					to: 'package.json',
+				},
 			],
 		}),
 	],

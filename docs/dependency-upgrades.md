@@ -20,13 +20,13 @@ and reveal security vulnerabilities. Here is a general workflow for so doing:
 2. Create a new branch: `git checkout -b initials/deps-y-m-d`.
 3. Find the previous dependencies PR, which will have a list of packages which
    have been held back for various reasons.
-4. Run `yarn upgrade-interactive --latest` to see a list of all packages which
+4. Run `make upgrade` to see a list of all packages which
    _can_ be upgraded. Navigate the view with the arrow keys and select packages
    with Space. Confirm your upgrade changes with Enter.
 5. Upgrade the packages in batches. First perform the semver patch and minor
    updates, followed by individual major updates, unless any of these updates
    are being held back.
-6. After every batch, test the app by running commands such as `make dev`, `yarn jest`, `yarn run cypress`, and `yarn tsc`. Various packages will of course be best tested by various commands and sanity checks.
+6. After every batch, test the app by running commands such as `make dev`, `make build`, `make test`, `make cypress-{mocked|ete}{|-okta}`. Various packages will of course be best tested by various commands and sanity checks.
 7. Once it looks like the update is working, commit that batch of changes.
 8. Once all your changes are in, make sure to run GitHub CI and have your PR
    reviewed.
