@@ -18,7 +18,7 @@ import { ApiError } from '@/server/models/Error';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import handleRecaptcha from '@/server/lib/recaptcha';
-import { OktaError } from '@/server/models/okta/Error';
+import { OAuthError, OktaError } from '@/server/models/okta/Error';
 import {
 	performAuthorizationCodeFlow,
 	scopesForAuthentication,
@@ -610,9 +610,20 @@ router.get(
 				) {
 					const redirectIdp = redirectIdpSchema.parse(introspectIdp);
 
+					trackMetric('OktaIDXSocialSignIn::Redirect');
+
 					return res.redirect(303, redirectIdp.href);
+				} else {
+					throw new OAuthError(
+						{
+							error: 'invalid_response',
+							error_description: 'Invalid or missing redirect-idp remediation',
+						},
+						404,
+					);
 				}
 			} catch (error) {
+				trackMetric('OktaIDXSocialSignIn::Failure');
 				logger.error('IDX API - Social sign in error:', error, {
 					request_id: res.locals.requestId,
 				});

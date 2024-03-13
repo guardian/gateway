@@ -4,8 +4,20 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { logger } from '@/server/lib/serverSideLogger';
 import { z } from 'zod';
 import { OAuthError } from '@/server/models/okta/Error';
+import { trackMetric } from '../../trackMetric';
 
 const { okta } = getConfiguration();
+
+const idxVersionSchema = z.string().refine((val) => {
+	// warn if the version is not 1.0.0
+	if (val !== '1.0.0') {
+		logger.warn('Okta IDX - unexpected version:', val);
+		trackMetric('OktaIDX::UnexpectedVersion');
+	}
+
+	// but pass validation regardless
+	return true;
+});
 
 // Schema for the 'redirect-idp' object inside the introspect response remediation object
 export const redirectIdpSchema = z.object({
@@ -17,6 +29,7 @@ export const redirectIdpSchema = z.object({
 
 // Schema for the introspect response
 const introspectResponseSchema = z.object({
+	version: idxVersionSchema,
 	stateHandle: z.string(),
 	expiresAt: z.coerce.date(),
 	remediation: z.object({
@@ -39,7 +52,7 @@ const introspectResponseSchema = z.object({
 export type IntrospectResponse = z.infer<typeof introspectResponseSchema>;
 
 const introspectResponseErrorSchema = z.object({
-	version: z.literal('1.0.0'),
+	version: idxVersionSchema,
 	messages: z.object({
 		type: z.literal('array'),
 		value: z.array(
@@ -84,10 +97,15 @@ export const introspect = async (
 			await handleError(response);
 		}
 
-		const data = await response.json();
+		const introspectResponse = introspectResponseSchema.parse(
+			await response.json(),
+		);
 
-		return introspectResponseSchema.parse(data);
+		trackMetric('OktaIDXIntrospect::Success');
+
+		return introspectResponse;
 	} catch (error) {
+		trackMetric('OktaIDXIntrospect::Failure');
 		logger.error('Error - Okta IDX introspect:', error, {
 			request_id,
 		});

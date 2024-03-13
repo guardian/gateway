@@ -18,6 +18,7 @@ import { z } from 'zod';
 import { closeCurrentSession } from '@/server/lib/okta/api/sessions';
 import { getPersistableQueryParams } from '@/shared/lib/queryParams';
 import { OAuthError, isOAuthError } from '@/server/models/okta/Error';
+import { trackMetric } from '../../trackMetric';
 
 const { okta } = getConfiguration();
 
@@ -157,8 +158,15 @@ export const interact = async (
 			}
 		}
 
-		return [interactResponseSchema.parse(await response.json()), authState];
+		const interactResponse = interactResponseSchema.parse(
+			await response.json(),
+		);
+
+		trackMetric('OktaIDXInteract::Success');
+
+		return [interactResponse, authState];
 	} catch (error) {
+		trackMetric('OktaIDXInteract::Failure');
 		logger.error('Error - Okta IDX interact:', error, {
 			request_id: res.locals.requestId,
 		});
