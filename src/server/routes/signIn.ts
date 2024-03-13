@@ -24,23 +24,32 @@ import {
 	scopesForAuthentication,
 } from '@/server/lib/okta/oauth';
 import { getCurrentSession } from '@/server/lib/okta/api/sessions';
-import { redirectIfLoggedIn } from '../lib/middleware/redirectIfLoggedIn';
-import { getUser, getUserGroups } from '../lib/okta/api/users';
+import { redirectIfLoggedIn } from '@/server/lib/middleware/redirectIfLoggedIn';
+import { getUser, getUserGroups } from '@/server/lib/okta/api/users';
 import { clearOktaCookies } from '@/server/routes/signOut';
 import {
 	getMatchingSignInGateIdFromComponentEventParamsQuery,
 	sendOphanComponentEventFromQueryParamsServer,
-} from '../lib/ophan';
-import { isBreachedPassword } from '../lib/breachedPasswordCheck';
+} from '@/server/lib/ophan';
+import { isBreachedPassword } from '@/server/lib/breachedPasswordCheck';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import {
 	readEncryptedStateCookie,
 	setEncryptedStateCookie,
-} from '../lib/encryptedStateCookie';
+} from '@/server/lib/encryptedStateCookie';
 import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
-import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
+import {
+	ProfileOpenIdClientRedirectUris,
+	setAuthorizationStateCookie,
+	updateAuthorizationStateData,
+} from '@/server/lib/okta/openid-connect';
 import { SocialProvider, isValidSocialProvider } from '@/shared/model/Social';
+import { interact } from '@/server/lib/okta/idx/interact';
+import {
+	introspect,
+	redirectIdpSchema,
+} from '@/server/lib/okta/idx/introspect';
 
 const { okta, accountManagementUrl, oauthBaseUrl, defaultReturnUri } =
 	getConfiguration();
@@ -562,7 +571,6 @@ router.get(
 			}
 
 			/* AB TEST LOGIC START */
-
 			// The componentEventParams query parameter stores Ophan tracking data, but we want to
 			// parse it to check if this registration is coming via specific sign-in gates we're AB testing,
 			// so we can send an offer email after registration is complete.
@@ -572,9 +580,45 @@ router.get(
 						res.locals.queryParams.componentEventParams,
 					request_id: res.locals.requestId,
 				});
-
 			/* AB TEST LOGIC END */
 
+			// OKTA IDX API FLOW
+			// attempt to authenticate social using the idx api/interaction code flow
+			// if this fails with any error, we fall back to okta hosted flow
+			try {
+				const [{ interaction_handle }, authState] = await interact(req, res, {
+					closeExistingSession: true,
+				});
+
+				const introspectResponse = await introspect(interaction_handle);
+
+				const updatedAuthState = updateAuthorizationStateData(authState, {
+					socialProvider: socialIdp,
+					stateToken: introspectResponse.stateHandle.split('~')[0],
+				});
+
+				setAuthorizationStateCookie(updatedAuthState, res);
+
+				const introspectIdp = introspectResponse.remediation.value.find(
+					(o) =>
+						o.name === 'redirect-idp' && o.type === socialIdp.toUpperCase(),
+				);
+
+				if (
+					introspectIdp &&
+					redirectIdpSchema.safeParse(introspectIdp).success
+				) {
+					const redirectIdp = redirectIdpSchema.parse(introspectIdp);
+
+					return res.redirect(303, redirectIdp.href);
+				}
+			} catch (error) {
+				logger.error('IDX API - Social sign in error:', error, {
+					request_id: res.locals.requestId,
+				});
+			}
+
+			// OKTA LEGACY SOCIAL FLOW
 			// if okta feature switch enabled, perform authorization code flow with idp
 			return await performAuthorizationCodeFlow(req, res, {
 				idp,

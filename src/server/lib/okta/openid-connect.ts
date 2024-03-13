@@ -232,6 +232,27 @@ export const generateAuthorizationState = (
 });
 
 /**
+ * @function updateAuthorizationStateData
+ *
+ * Update the `AuthorizationState` data with the provided data, useful for adding extra data
+ * after the initial state has been generated.
+ *
+ * @param {AuthorizationState} state
+ * @param {AuthorizationState['data']} data
+ * @return {*}  {AuthorizationState}
+ */
+export const updateAuthorizationStateData = (
+	state: AuthorizationState,
+	data: Partial<AuthorizationState['data']>,
+): AuthorizationState => ({
+	...state,
+	data: {
+		...state.data,
+		...data,
+	},
+});
+
+/**
  * Name of the Authorization State cookie to set
  * @type {string}
  */
