@@ -124,8 +124,8 @@ export const renderer: <P extends RoutePaths>(
 			mvtId={mvtId}
 			forcedTestVariants={forcedTestVariants}
 			serverSideTests={{}}
-			errorReporter={() => { }}
-			ophanRecord={() => { }}
+			errorReporter={() => {}}
+			ophanRecord={() => {}}
 		>
 			<App {...clientState} location={location}></App>
 		</ABProvider>,
@@ -151,10 +151,7 @@ export const renderer: <P extends RoutePaths>(
         <script src="https://assets.guim.co.uk/polyfill.io/v3/polyfill.min.js?features=es2015%2Ces2016%2Ces2017%2Ces2018%2Ces2019%2Ces2020%2Ces2021%2Ces2022%2Cfetch%2CglobalThis%2CURLSearchParams" defer></script>
         ${scriptTags}
 
-        <script id="routingConfig" type="application/json">${serialize(
-		routingConfig,
-		{ isJSON: true },
-	)}</script>
+        <script id="routingConfig" type="application/json">${serialize(routingConfig, { isJSON: true })}</script>
         <style>${resets.defaults}</style>
       </head>
       <body style="margin:0">

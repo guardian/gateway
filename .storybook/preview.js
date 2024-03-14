@@ -13,29 +13,29 @@ const GlobalStyles = () => (
 	<>
 		<Global
 			styles={css`
-			${fontFaces}
-			html {
-				height: 100%;
-				box-sizing: border-box;
-			}
-			body {
-				height: 100%;
-				color: ${neutral[7]};
-			}
-			#storybook-root {
-				min-height: 100%;
-				display: flex;
-				flex-direction: column;
-			}
-			*,
-			*:before,
-			*:after {
-				box-sizing: inherit;
-			}
-			.grecaptcha-badge {
-				visibility: hidden;
-			}
-		`}
+				${fontFaces}
+				html {
+					height: 100%;
+					box-sizing: border-box;
+				}
+				body {
+					height: 100%;
+					color: ${neutral[7]};
+				}
+				#storybook-root {
+					min-height: 100%;
+					display: flex;
+					flex-direction: column;
+				}
+				*,
+				*:before,
+				*:after {
+					box-sizing: inherit;
+				}
+				.grecaptcha-badge {
+					visibility: hidden;
+				}
+			`}
 		/>
 		<Theme />
 	</>
