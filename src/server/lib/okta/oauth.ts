@@ -79,7 +79,7 @@ export const scopesForSelfServiceDeletion: Scopes[] = [
  * @param scopes (optional) - any scopes to use for the /authorize endpoint, defaults to ['openid']
  * @param sessionToken (optional) - if provided, we'll use this to set the session cookie
  */
-interface PerformAuthorizationCodeFlowOptions {
+export interface PerformAuthorizationCodeFlowOptions {
 	closeExistingSession?: boolean;
 	confirmationPagePath?: RoutePaths;
 	doNotSetLastAccessCookie?: boolean;

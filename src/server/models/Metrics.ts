@@ -40,6 +40,8 @@ type ConditionalMetrics =
 	| 'OAuthAuthenticationCallback'
 	| 'OAuthDeleteCallback'
 	| 'OktaAccountVerification'
+	| 'OktaIDXInteract'
+	| 'OktaIDXIntrospect'
 	| 'OktaRegistration'
 	| 'OktaRegistrationResendEmail'
 	| 'OktaResetPassword'
@@ -76,6 +78,9 @@ type UnconditionalMetrics =
 	| 'LoginMiddlewareOAuth::OAuthTokensValid'
 	| 'LoginMiddlewareOAuth::SignedOutCookie'
 	| 'LoginMiddlewareOAuth::UseIdapi'
+	| 'OktaIDX::UnexpectedVersion'
+	| 'OktaIDXSocialSignIn::Redirect'
+	| 'OktaIDXSocialSignIn::Failure'
 	| `${RateLimitMetrics}GatewayRateLimitHit`
 	| `User-${'EmailValidated' | 'EmailNotValidated'}-${
 			| 'WeakPassword'
