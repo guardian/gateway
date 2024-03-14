@@ -35,7 +35,10 @@ import {
 import { update as updateConsents } from '@/server/lib/idapi/consents';
 import { decryptRegistrationConsents } from '@/server/lib/registrationConsents';
 import { SocialProvider } from '@/shared/model/Social';
-import { update as updateNewsletters } from '@/server/lib/idapi/newsletters';
+import {
+	touchBraze,
+	update as updateNewsletters,
+} from '@/server/lib/idapi/newsletters';
 import { RoutePaths } from '@/shared/model/Routes';
 import { sendGuardianLiveOfferEmail } from '@/email/templates/GuardianLiveOffer/sendGuardianLiveOfferEmail';
 import { sendMyGuardianOfferEmail } from '@/email/templates/MyGuardianOffer/sendMyGuardianOfferEmail';
@@ -207,6 +210,25 @@ const authenticationHandler = async (
 					// eslint-disable-next-line functional/immutable-data
 					authState.confirmationPage = consentPages[0].path;
 				}
+
+				// also for new social users, we want to make sure they are added to braze
+				try {
+					await touchBraze({
+						ip: req.ip,
+						accessToken: tokenSet.access_token,
+						request_id: res.locals.requestId,
+					});
+				} catch (error) {
+					logger.error(
+						'Error touching braze on oauth callback',
+						{
+							error,
+						},
+						{
+							request_id: res.locals.requestId,
+						},
+					);
+				}
 			}
 		}
 
@@ -289,6 +311,27 @@ const authenticationHandler = async (
 					} catch (error) {
 						logger.error(
 							'Error updating registration newsletters on oauth callback',
+							{
+								error,
+							},
+							{
+								request_id: res.locals.requestId,
+							},
+						);
+					}
+				} else {
+					// we want to create a new user in braze if the user didn't subscribe to any newsletters
+					// as otherwise they won't get added to braze until the overnight job runs or they subscribe
+					// to a newsletter
+					try {
+						await touchBraze({
+							ip: req.ip,
+							accessToken: tokenSet.access_token,
+							request_id: res.locals.requestId,
+						});
+					} catch (error) {
+						logger.error(
+							'Error touching braze on oauth callback',
 							{
 								error,
 							},
