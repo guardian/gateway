@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ConsentState } from '@guardian/consent-management-platform/dist/types';
-import { onConsent } from '@guardian/consent-management-platform';
+import { ConsentState, onConsent } from '@guardian/libs';
 
 /**
  * More info on CMP:

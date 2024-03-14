@@ -1,8 +1,7 @@
 import { hydrateApp } from '@/client/static/hydration';
 
 // method to check if the cmp should show
-import { cmp } from '@guardian/consent-management-platform';
-import { getLocale } from '@guardian/libs';
+import { cmp, getLocale } from '@guardian/libs';
 import { RoutingConfig } from '@/client/routes';
 
 import { init as ophanInit } from './analytics/ophan';
