@@ -14,11 +14,8 @@ const logoStyles = css`
 	height: 2rem;
 	display: flex;
 	svg {
-		fill: ${palette.brand[400]};
+		fill: var(--color-logo);
 		height: 100%;
-		@media (prefers-color-scheme: dark) {
-			fill: ${palette.neutral[86]};
-		}
 	}
 `;
 

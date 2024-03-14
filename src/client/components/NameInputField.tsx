@@ -52,6 +52,12 @@ const FirstNameInput = (props: NameInputProps) => {
 			onInvalid={onInvalid}
 			error={errorMessage}
 			defaultValue={props.defaultValue}
+			theme={{
+				textLabel: 'var(--color-input-label)',
+				textUserInput: 'var(--color-input-text)',
+				border: 'var(--color-input-border)',
+				backgroundInput: 'var(--color-input-background)',
+			}}
 		/>
 	);
 };
@@ -83,6 +89,12 @@ const SecondNameInput = (props: NameInputProps) => {
 			onInvalid={onInvalid}
 			error={errorMessage}
 			defaultValue={props.defaultValue}
+			theme={{
+				textLabel: 'var(--color-input-label)',
+				textUserInput: 'var(--color-input-text)',
+				border: 'var(--color-input-border)',
+				backgroundInput: 'var(--color-input-background)',
+			}}
 		/>
 	);
 };

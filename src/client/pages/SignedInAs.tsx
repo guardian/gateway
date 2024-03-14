@@ -1,13 +1,14 @@
 import React, { ReactNode, useEffect } from 'react';
-import { buttonStyles, MainLayout } from '@/client/layouts/Main';
+import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
-import { Link, LinkButton } from '@guardian/source-react-components';
+import { LinkButton } from '@guardian/source-react-components';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { OpenIdErrors } from '@/shared/model/OpenIdErrors';
 import { errorContextSpacing } from '@/client/styles/Shared';
 import { space } from '@guardian/source-foundations';
 import locations from '@/shared/lib/locations';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
+import Link from '../components/Link';
 
 interface Props {
 	email: string;
@@ -66,7 +67,7 @@ export const SignedInAs = ({
 			errorSmallMarginBottom={!!pageError}
 			errorContext={errorContext}
 		>
-			<MainBodyText noMarginBottom>
+			<MainBodyText>
 				You are signed in with <br />
 				<b>{email}</b>
 			</MainBodyText>

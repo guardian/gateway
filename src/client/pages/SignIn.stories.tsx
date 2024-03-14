@@ -88,13 +88,6 @@ InvalidRecaptcha.story = {
 	name: 'with reCAPTCHA error',
 };
 
-export const WithoutRegisterButton = (args: SignInProps) => (
-	<SignIn {...args} isReauthenticate />
-);
-WithoutRegisterButton.story = {
-	name: 'without register button',
-};
-
 export const WithJobs = (args: SignInProps) => (
 	<SignIn
 		{...{ ...args, queryParams: { ...args.queryParams, clientId: 'jobs' } }}

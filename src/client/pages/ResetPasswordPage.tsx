@@ -19,7 +19,6 @@ export const ResetPasswordPage = () => {
 			headerText="Reset password"
 			buttonText="Request password reset"
 			queryString={queryParams}
-			// showNoAccessEmail
 			recaptchaSiteKey={recaptchaSiteKey}
 			formPageTrackingName="forgot-password"
 		>

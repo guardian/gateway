@@ -207,7 +207,7 @@ export const RecaptchaWrapper: React.FC<{
 		token,
 		widgetId,
 	]);
-	return <RecaptchaElement id="recaptcha" />;
+	return <RecaptchaElement id="recaptcha" css={{ marginTop: '-12px' }} />;
 };
 
 /**

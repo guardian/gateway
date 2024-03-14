@@ -5,7 +5,6 @@ import {
 	InputFieldState,
 	useInputValidityState,
 } from '@/client/lib/hooks/useInputValidityState';
-import { palette } from '@guardian/source-foundations';
 
 interface EmailInputProps extends Omit<TextInputProps, 'label'> {
 	label?: string;
@@ -37,20 +36,25 @@ export const EmailInput: React.FC<EmailInputProps> = ({
 	}, [inputFieldState]);
 
 	return (
-		<TextInput
-			label={label}
-			name="email"
-			type="email"
-			autoComplete="email"
-			error={errorMessage}
-			cssOverrides={[disableAutofillBackground]}
-			onBlur={onBlur}
-			onInput={onInput}
-			onInvalid={onInvalid}
-			theme={{
-				textLabel: palette.brand[400],
-			}}
-			{...rest}
-		/>
+		<div>
+			<TextInput
+				label={label}
+				name="email"
+				type="email"
+				autoComplete="email"
+				error={errorMessage}
+				cssOverrides={[disableAutofillBackground]}
+				onBlur={onBlur}
+				onInput={onInput}
+				onInvalid={onInvalid}
+				theme={{
+					textLabel: 'var(--color-input-label)',
+					textUserInput: 'var(--color-input-text)',
+					border: 'var(--color-input-border)',
+					backgroundInput: 'var(--color-input-background)',
+				}}
+				{...rest}
+			/>
+		</div>
 	);
 };

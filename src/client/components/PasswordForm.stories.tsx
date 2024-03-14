@@ -12,8 +12,8 @@ export const Default = () => (
 	<PasswordForm
 		submitUrl=""
 		fieldErrors={[]}
-		submitButtonText="Save password"
-		labelText="New Password"
+		submitButtonText="Confirm new password"
+		labelText="New password"
 	/>
 );
 Default.storyName = 'default';
@@ -27,8 +27,8 @@ export const FieldError = () => (
 				message: 'This is a field error',
 			},
 		]}
-		submitButtonText="Save password"
-		labelText="New Password"
+		submitButtonText="Confirm new password"
+		labelText="New password"
 	/>
 );
 FieldError.storyName = 'With field error';

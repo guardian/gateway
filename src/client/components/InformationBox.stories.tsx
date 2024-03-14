@@ -2,8 +2,9 @@ import React from 'react';
 import { Meta } from '@storybook/react';
 
 import { InformationBoxText, InformationBox } from './InformationBox';
-import { ButtonLink, Link } from '@guardian/source-react-components';
+import { ButtonLink } from '@guardian/source-react-components';
 import { ExternalLink } from './ExternalLink';
+import Link from './Link';
 
 export default {
 	title: 'Components/InformationBox',
@@ -28,7 +29,7 @@ export const Default = () => (
 Default.storyName = 'default';
 
 export const WithMarginTop = () => (
-	<InformationBox withMarginTop>
+	<InformationBox>
 		<InformationBoxText>
 			This is some useful stuff in the information box, with a margin top!
 		</InformationBoxText>

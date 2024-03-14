@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { inputMarginBottomSpacingStyle, MainForm } from './MainForm';
+import { MainForm } from './MainForm';
 import { EmailInput } from './EmailInput';
 import { PasswordInput } from './PasswordInput';
 
@@ -19,7 +19,7 @@ BasicForm.storyName = 'BasicForm';
 
 export const MultipleInputFields = () => (
 	<MainForm formAction="" submitButtonText="Send me a link">
-		<EmailInput cssOverrides={inputMarginBottomSpacingStyle} />
+		<EmailInput />
 		<PasswordInput label="Password" />
 	</MainForm>
 );
@@ -79,8 +79,13 @@ export const TertiarySubmitButton = () => (
 TertiarySubmitButton.storyName = 'TertiarySubmitButton';
 
 export const ButtonLinkSubmit = () => (
-	<MainForm formAction="" submitButtonText="Send me a link" submitButtonLink>
-		<EmailInput hidden />
+	<MainForm
+		formAction=""
+		submitButtonText="Send me a link"
+		submitButtonLink
+		displayInline
+	>
+		<EmailInput hidden hideLabel />
 	</MainForm>
 );
 ButtonLinkSubmit.storyName = 'ButtonLinkSubmit';

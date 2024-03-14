@@ -45,8 +45,8 @@ export const ChangePasswordPage = () => {
 	return (
 		<ChangePassword
 			formError={formError}
-			headerText="Reset password"
-			buttonText="Confirm new password"
+			headerText="Create new password"
+			buttonText="Confirm password"
 			submitUrl={buildUrlWithQueryParams(
 				'/reset-password/:token',
 				{ token },

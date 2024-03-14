@@ -1,7 +1,8 @@
 import React from 'react';
 import { ExternalLinkButton } from '@/client/components/ExternalLink';
-import { buttonStyles, MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
+import { primaryButtonStyles } from '../styles/Shared';
+import { MinimalLayout } from '../layouts/MinimalLayout';
 
 type ChangePasswordCompleteProps = {
 	headerText: string;
@@ -17,22 +18,14 @@ export const ChangePasswordComplete = ({
 	action,
 }: ChangePasswordCompleteProps) => {
 	return (
-		<MainLayout pageHeader={headerText}>
-			{email ? (
-				<MainBodyText noMarginBottom>
-					The password for <b>{email}</b> was successfully {action}.
-				</MainBodyText>
-			) : (
-				<MainBodyText noMarginBottom>
-					The password for your account was successfully {action}.
-				</MainBodyText>
-			)}
-			<ExternalLinkButton
-				css={buttonStyles({ halfWidth: true })}
-				href={returnUrl}
-			>
+		<MinimalLayout pageHeader={headerText}>
+			<MainBodyText>
+				The password for {email ? <strong>{email}</strong> : <>your account</>}{' '}
+				was successfully {action}.
+			</MainBodyText>
+			<ExternalLinkButton css={primaryButtonStyles} href={returnUrl}>
 				Continue to the Guardian
 			</ExternalLinkButton>
-		</MainLayout>
+		</MinimalLayout>
 	);
 };

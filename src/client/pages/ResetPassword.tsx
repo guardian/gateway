@@ -13,6 +13,10 @@ import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
 import { usePageLoadOphanInteraction } from '../lib/hooks/usePageLoadOphanInteraction';
+import {
+	InformationBox,
+	InformationBoxText,
+} from '../components/InformationBox';
 
 interface ResetPasswordProps {
 	email?: string;
@@ -21,7 +25,7 @@ interface ResetPasswordProps {
 	queryString: QueryParams;
 	formActionOverride?: string;
 	emailInputLabel?: string;
-	showRecentEmailSummary?: boolean;
+	showRecentEmailInformationBox?: boolean;
 	recaptchaSiteKey?: string;
 	formPageTrackingName?: string;
 	formError?: string;
@@ -34,7 +38,7 @@ export const ResetPassword = ({
 	queryString,
 	formActionOverride,
 	emailInputLabel,
-	showRecentEmailSummary,
+	showRecentEmailInformationBox,
 	children,
 	recaptchaSiteKey,
 	formPageTrackingName,
@@ -69,23 +73,23 @@ export const ResetPassword = ({
 				formErrorMessageFromParent={formError}
 			>
 				<EmailInput label={emailInputLabel} defaultValue={email} />
-			</MainForm>
-			{showRecentEmailSummary && (
-				<InfoSummary
-					cssOverrides={belowFormMarginTopSpacingStyle}
-					message="Please make sure that you are opening the most recent email we sent."
-					context={
-						<>
+				{showRecentEmailInformationBox && (
+					<InformationBox>
+						<InformationBoxText>
+							Please make sure that you are opening the most recent email we
+							sent.
+						</InformationBoxText>
+						<InformationBoxText>
 							If you are having trouble, please contact our customer service
 							team using our{' '}
 							<ExternalLink href={locations.REPORT_ISSUE}>
 								Help Centre
 							</ExternalLink>
 							.
-						</>
-					}
-				/>
-			)}
+						</InformationBoxText>
+					</InformationBox>
+				)}
+			</MainForm>
 		</MinimalLayout>
 	);
 };

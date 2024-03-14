@@ -1,23 +1,22 @@
 import React from 'react';
 
-import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { css } from '@emotion/react';
 import { neutral, space, textSans, until } from '@guardian/source-foundations';
 import { getAutoRow, gridItemYourData } from '../styles/Grid';
-import { Link } from '@guardian/source-react-components';
+import Link from '@/client/components/Link';
 import { MainForm } from '@/client/components/MainForm';
 import NameInputField from '@/client/components/NameInputField';
 import { useNameInputFieldError } from '@/client/lib/hooks/useNameFieldInputError';
+import { MinimalLayout } from '../layouts/MinimalLayout';
 
 const listBullets = css`
 	list-style: none;
 	padding-left: 0;
-	text-indent: -${space[5]}px; /* second line indentation */
-	margin-left: ${space[5]}px; /* second line indentation */
+	text-indent: -${space[4]}px; /* second line indentation */
+	margin-left: ${space[4]}px; /* second line indentation */
 	li {
-		font-size: 17px;
-		margin-top: 6px;
+		margin-top: 8px;
 	}
 	/* ::marker is not supported in IE11 */
 	li::before {
@@ -26,25 +25,22 @@ const listBullets = css`
 		margin-top: ${space[2]}px;
 		background-color: ${neutral[86]};
 		display: inline-block;
-		width: 12px;
-		height: 12px;
+		width: 8px;
+		height: 8px;
 		border-radius: 50%;
+		top: -1px;
+		position: relative;
 	}
 `;
 
 const text = css`
 	margin: 0;
-	${textSans.medium()}
+	${textSans.small()}
+	color: var(--color-text);
 `;
 
-const belowFormMarginTopSpacingStyle = css`
-	margin-top: ${space[4]}px;
-`;
-
-const heading = css`
-	color: ${neutral[0]};
-	margin: 0 0 ${space[2]}px;
-	font-weight: bold;
+const leadText = css`
+	${textSans.small({ fontWeight: 'bold' })}
 `;
 
 const textSpacing = css`
@@ -100,8 +96,7 @@ export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
 	const showOnlyNameFields = userBelongsToGRS && !isNameSet;
 
 	return (
-		<MainLayout
-			useJobsHeader={true}
+		<MinimalLayout
 			pageHeader="Welcome to Guardian&nbsp;Jobs"
 			errorOverride={nameFieldError}
 			errorContext={nameFieldErrorContext}
@@ -138,11 +133,11 @@ export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
 				</>
 			) : (
 				<>
-					<MainBodyText cssOverrides={heading}>
+					<MainBodyText cssOverrides={leadText}>
 						Click &lsquo;continue&rsquo; to automatically use your existing
 						Guardian account to sign in with Guardian&nbsp;Jobs.
 					</MainBodyText>
-					<MainBodyText cssOverrides={textSpacing}>
+					<MainBodyText>
 						By activating your Guardian&nbsp;Jobs account you will receive a
 						welcome email detailing the range of career-enhancing features that
 						can be set up on our jobs site. These include:
@@ -172,11 +167,11 @@ export const JobsTermsAccept: React.FC<JobsTermsAcceptProps> = ({
 							secondName={secondName}
 						/>
 					</MainForm>
-					<MainBodyText cssOverrides={belowFormMarginTopSpacingStyle}>
+					<MainBodyText>
 						Or <Link href={'/signout'}>sign out and continue</Link>
 					</MainBodyText>
 				</>
 			)}
-		</MainLayout>
+		</MinimalLayout>
 	);
 };

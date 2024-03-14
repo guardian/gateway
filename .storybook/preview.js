@@ -7,10 +7,12 @@ import { fontFaces } from '@/client/lib/fonts';
 import { Breakpoints } from '@/client/models/Style';
 import clientStateDecorator from './clientStateDecorator';
 import { neutral } from '@guardian/source-foundations';
+import { Theme } from '@/client/styles/Theme';
 
 const GlobalStyles = () => (
-	<Global
-		styles={css`
+	<>
+		<Global
+			styles={css`
 			${fontFaces}
 			html {
 				height: 100%;
@@ -34,7 +36,9 @@ const GlobalStyles = () => (
 				visibility: hidden;
 			}
 		`}
-	/>
+		/>
+		<Theme />
+	</>
 );
 
 /* Source provides a global utility that manages the appearance of focus styles. When enabled,

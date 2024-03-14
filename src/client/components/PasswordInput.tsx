@@ -2,16 +2,10 @@ import {
 	SvgEye,
 	SvgEyeStrike,
 	TextInput,
-	textInputThemeDefault,
 } from '@guardian/source-react-components';
 import React, { useState } from 'react';
 import { css } from '@emotion/react';
-import {
-	neutral,
-	height,
-	focusHalo,
-	palette,
-} from '@guardian/source-foundations';
+import { height, focusHalo } from '@guardian/source-foundations';
 import { disableAutofillBackground } from '@/client/styles/Shared';
 
 export type PasswordAutoComplete = 'new-password' | 'current-password';
@@ -68,7 +62,11 @@ const EyeIcon = ({ isOpen }: { isOpen: boolean }) => {
 		svg {
 			width: 30px;
 			height: 30px;
-			fill: ${neutral[60]};
+			fill: var(--color-input-border);
+			// The slash through the eye
+			rect {
+				fill: var(--color-input-border);
+			}
 		}
 	`;
 
@@ -105,8 +103,8 @@ const EyeSymbol = ({
 }) => {
 	const buttonStyles = css`
 		border: ${error
-			? `2px solid ${textInputThemeDefault.textInput.borderError}`
-			: `1px solid ${textInputThemeDefault.textInput.border}`};
+			? `2px solid var(--color-alert-error)`
+			: `1px solid var(--color-input-border)`};
 		border-left: none;
 		border-radius: 0 4px 4px 0;
 		background-color: transparent;
@@ -175,7 +173,10 @@ export const PasswordInput = ({
 						hideMsReveal(displayEye),
 					]}
 					theme={{
-						textLabel: palette.brand[400],
+						textLabel: 'var(--color-input-label)',
+						textUserInput: 'var(--color-input-text)',
+						border: 'var(--color-input-border)',
+						backgroundInput: 'var(--color-input-background)',
 					}}
 				/>
 			</div>

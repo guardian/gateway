@@ -1,14 +1,15 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import { MinimalHeader } from '../components/MinimalHeader';
-import { headline, palette, remSpace } from '@guardian/source-foundations';
-import { mainTextStyles } from '../styles/Shared';
+import { headline, remSpace, textSans } from '@guardian/source-foundations';
 import useClientState from '../lib/hooks/useClientState';
 import {
 	ErrorSummary,
 	SuccessSummary,
 } from '@guardian/source-react-components-development-kitchen';
 import locations from '@/shared/lib/locations';
+import { Theme } from '../styles/Theme';
+import { mainSectionStyles } from '../styles/Shared';
 
 export interface MinimalLayoutProps {
 	children: React.ReactNode;
@@ -25,23 +26,21 @@ const mainStyles = css`
 	max-width: 392px;
 	width: 100%;
 	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	gap: ${remSpace[5]};
 `;
 
 const pageHeaderStyles = css`
-	color: ${palette.brand[400]};
+	color: var(--color-heading);
 	${headline.small({ fontWeight: 'bold' })};
-	margin: 0 0 ${remSpace[5]} 0;
-	@media (prefers-color-scheme: dark) {
-		color: ${palette.neutral[86]};
-	}
+	margin: 0;
 `;
 
 const pageSubTextStyles = css`
-	${mainTextStyles};
-	margin: 0 0 ${remSpace[5]} 0;
-	@media (prefers-color-scheme: dark) {
-		color: ${palette.neutral[86]};
-	}
+	${textSans.small()};
+	margin: 0;
+	color: var(--color-text);
 `;
 
 export const MinimalLayout = ({
@@ -67,10 +66,13 @@ export const MinimalLayout = ({
 
 	return (
 		<>
+			<Theme />
 			<MinimalHeader />
 			<main css={mainStyles}>
 				<header>
 					<h1 css={pageHeaderStyles}>{pageHeader}</h1>
+				</header>
+				<section css={mainSectionStyles}>
 					{pageSubText && <p css={pageSubTextStyles}>{pageSubText}</p>}
 					{errorMessage && (
 						<ErrorSummary
@@ -89,7 +91,7 @@ export const MinimalLayout = ({
 						/>
 					)}
 					{children}
-				</header>
+				</section>
 			</main>
 		</>
 	);

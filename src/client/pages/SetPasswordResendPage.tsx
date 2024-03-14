@@ -17,17 +17,16 @@ export const SetPasswordResendPage = () => {
 	return (
 		<ResetPassword
 			email={email}
-			headerText="Link expired"
-			buttonText="Send me a link"
+			headerText="This link has expired"
+			buttonText="Resend link"
 			formActionOverride={buildUrl('/set-password/resend')}
 			queryString={queryParams}
 			emailInputLabel="Email address"
-			showRecentEmailSummary
+			showRecentEmailInformationBox
 			recaptchaSiteKey={recaptchaSiteKey}
 			formPageTrackingName="set-password-link-expired"
 			formError={formError}
 		>
-			<MainBodyText>This link has expired.</MainBodyText>
 			<MainBodyText>
 				To receive a new link, please enter your email address below.
 			</MainBodyText>

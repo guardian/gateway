@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { palette, space, textSans } from '@guardian/source-foundations';
+import { remSpace, space } from '@guardian/source-foundations';
 
 export const disableAutofillBackground = css`
 	:-webkit-autofill {
@@ -12,27 +12,10 @@ export const disableAutofillBackground = css`
 	}
 `;
 
-export const socialButtonDivider = css`
-	/* Undoes the negative margin */
-	margin-bottom: ${space[5]}px;
-	margin-top: ${space[5]}px;
-	color: ${palette.neutral[10]};
-	:before,
-	:after {
-		content: '';
-		flex: 1 1;
-		border-bottom: 1px solid ${palette.neutral[10]};
-		margin: 8px;
-	}
-	@media (prefers-color-scheme: dark) {
-		color: ${palette.neutral[46]};
-	}
-`;
-
 // fixed source divider expanding off the side of the container
 export const divider = css`
-	margin-left: 0;
 	width: 100%;
+	margin: ${remSpace[2]} 0 0 0;
 `;
 
 export const errorContextSpacing = css`
@@ -40,6 +23,31 @@ export const errorContextSpacing = css`
 	margin-top: ${space[2]}px;
 `;
 
-export const mainTextStyles = css`
-	${textSans.small()};
+export const mainSectionStyles = css`
+	display: flex;
+	flex-direction: column;
+	gap: ${remSpace[3]};
+`;
+
+export const primaryButtonStyles = css`
+	justify-content: center;
+	:disabled {
+		cursor: not-allowed;
+	}
+	background-color: var(--color-button-primary-background);
+	border-color: var(--color-button-primary-border);
+	color: var(--color-button-primary-text);
+	&:hover {
+		background-color: var(--color-button-primary-background-hover);
+	}
+`;
+
+export const secondaryButtonStyles = css`
+	justify-content: center;
+	background-color: var(--color-button-secondary-background);
+	border-color: var(--color-button-secondary-border);
+	color: var(--color-button-secondary-text);
+	&:hover {
+		background-color: var(--color-button-secondary-background-hover);
+	}
 `;

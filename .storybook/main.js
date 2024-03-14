@@ -8,6 +8,7 @@ const config = {
 		'@storybook/addon-links',
 		'@storybook/addon-essentials',
 		'@storybook/addon-styling',
+		'storybook-addon-css-user-preferences',
 	],
 	babel: async (options) => {
 		options.presets.push('@emotion/babel-preset-css-prop');

@@ -9,7 +9,7 @@ import { CaptchaErrors, CsrfErrors } from '@/shared/model/Errors';
 import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
 import { buildUrl, PathParams } from '@/shared/lib/routeUtils';
-import { brandBackground, palette, resets } from '@guardian/source-foundations';
+import { brandBackground, resets } from '@guardian/source-foundations';
 import deepmerge from 'deepmerge';
 import { RoutePaths } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';
@@ -124,8 +124,8 @@ export const renderer: <P extends RoutePaths>(
 			mvtId={mvtId}
 			forcedTestVariants={forcedTestVariants}
 			serverSideTests={{}}
-			errorReporter={() => {}}
-			ophanRecord={() => {}}
+			errorReporter={() => { }}
+			ophanRecord={() => { }}
 		>
 			<App {...clientState} location={location}></App>
 		</ABProvider>,
@@ -152,17 +152,10 @@ export const renderer: <P extends RoutePaths>(
         ${scriptTags}
 
         <script id="routingConfig" type="application/json">${serialize(
-					routingConfig,
-					{ isJSON: true },
-				)}</script>
+		routingConfig,
+		{ isJSON: true },
+	)}</script>
         <style>${resets.defaults}</style>
-		<style>
-		@media (prefers-color-scheme: dark) {
-			body {
-				background: ${palette.neutral[7]};
-			}
-		}
-		</style>
       </head>
       <body style="margin:0">
         <div id="app">${react}</div>

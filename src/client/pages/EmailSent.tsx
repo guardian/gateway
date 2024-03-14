@@ -1,5 +1,4 @@
 import React, { PropsWithChildren, ReactNode, useState } from 'react';
-import { Link } from '@guardian/source-react-components';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { MainForm } from '@/client/components/MainForm';
 import { EmailInput } from '@/client/components/EmailInput';
@@ -13,6 +12,7 @@ import {
 } from '@/client/components/InformationBox';
 import { MinimalLayout } from '../layouts/MinimalLayout';
 import { css } from '@emotion/react';
+import Link from '../components/Link';
 
 type Props = {
 	email?: string;
@@ -37,7 +37,6 @@ export const EmailSent = ({
 	changeEmailPage,
 	resendEmailAction,
 	queryString,
-	// showSuccess,
 	errorMessage,
 	noAccountInfo,
 	recaptchaSiteKey,
@@ -92,6 +91,7 @@ export const EmailSent = ({
 								formTrackingName={formTrackingName}
 								disableOnSubmit
 								formErrorMessageFromParent={formError}
+								displayInline
 								submitButtonLink
 								hideRecaptchaMessage
 							>

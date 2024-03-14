@@ -1,8 +1,8 @@
 import React from 'react';
-import { PasswordFormMainLayout } from '@/client/components/PasswordForm';
+import { PasswordForm } from '@/client/components/PasswordForm';
 import { FieldError } from '@/shared/model/ClientState';
-import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
+import { MinimalLayout } from '../layouts/MinimalLayout';
 
 type Props = {
 	headerText: string;
@@ -23,11 +23,11 @@ export const ChangePassword = ({
 	formError,
 	browserName,
 }: Props) => (
-	<MainLayout pageHeader={headerText}>
+	<MinimalLayout pageHeader={headerText}>
 		<MainBodyText>
-			Please enter your new password for <b>{email}</b>
+			You’ve requested to create a new password for <strong>{email}</strong>
 		</MainBodyText>
-		<PasswordFormMainLayout
+		<PasswordForm
 			submitUrl={submitUrl}
 			submitButtonText={buttonText}
 			fieldErrors={fieldErrors}
@@ -36,6 +36,7 @@ export const ChangePassword = ({
 			formTrackingName="new-password"
 			formError={formError}
 			browserName={browserName}
+			largeFormMarginTop
 		/>
-	</MainLayout>
+	</MinimalLayout>
 );

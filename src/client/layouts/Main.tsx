@@ -110,55 +110,6 @@ const bodyStyles = (hasTitleOrSummary: boolean) => css`
 	`}
 `;
 
-export const buttonStyles = ({
-	hasTerms = false,
-	halfWidth = false,
-	halfWidthAtMobile = false,
-	hasMarginBottom = false,
-}) => css`
-	margin-top: ${space[4]}px;
-	justify-content: center;
-	width: 100%;
-
-	/* Set the cursor when disabled temporarily so we have a visual indication
-   * until we have a loading spinner.
-   * PR for loading spinner in Source: https://github.com/guardian/source/pull/1275
-   */
-	:disabled {
-		cursor: not-allowed;
-	}
-
-	${from.mobile} {
-		${halfWidthAtMobile
-			? css`
-					width: 50%;
-				`
-			: css`
-					width: 100%;
-				`}
-	}
-
-	${from.tablet} {
-		${halfWidth
-			? css`
-					width: 50%;
-				`
-			: css`
-					width: 100%;
-				`}
-	}
-
-	${hasTerms &&
-	css`
-		margin-top: ${space[3]}px;
-	`}
-
-	${hasMarginBottom &&
-	css`
-		margin-bottom: ${space[6]}px;
-	`}
-`;
-
 const subTextStyles = css`
 	padding-top: ${space[4]}px;
 `;

@@ -15250,6 +15250,11 @@ store2@^2.14.2:
   resolved "https://registry.yarnpkg.com/store2/-/store2-2.14.2.tgz#56138d200f9fe5f582ad63bc2704dbc0e4a45068"
   integrity sha512-siT1RiqlfQnGqgT/YzXVUNsom9S0H1OX+dpdGN1xkyYATo4I6sep5NmsRD/40s3IIOvlCq6akxkqG82urIZW1w==
 
+storybook-addon-css-user-preferences@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/storybook-addon-css-user-preferences/-/storybook-addon-css-user-preferences-0.0.3.tgz#0dc378e9ee05e2c864838d4997fe87d97719c26d"
+  integrity sha512-Pd4krIZPQTYItkVq6pgT4ytDg0Bop5xZseu73QZzdShQWURt7DAS69QbyR1TIzcALjJ8JzUwC9bBsliVQ1Dewg==
+
 storybook@^7.6.17:
   version "7.6.17"
   resolved "https://registry.yarnpkg.com/storybook/-/storybook-7.6.17.tgz#d7fdbbf57d61d386b3ccc6721285bc914f54269b"

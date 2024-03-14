@@ -1,20 +1,12 @@
 import React, { PropsWithChildren } from 'react';
 import { css } from '@emotion/react';
-import { palette, space, textSans } from '@guardian/source-foundations';
+import { space, textSans } from '@guardian/source-foundations';
 
-interface InformationBoxProps {
-	withMarginTop?: boolean;
-}
-
-const informationBoxStyles = ({ withMarginTop }: InformationBoxProps) => css`
-	background-color: ${palette.neutral[93]};
+const informationBoxStyles = css`
+	background-color: var(--color-info-box-background);
+	color: var(--color-info-box-text);
 	border-radius: 4px;
 	padding: ${space[3]}px ${space[3]}px;
-	${withMarginTop && `margin-top: ${space[5]}px;`}
-	@media (prefers-color-scheme: dark) {
-		background-color: ${palette.neutral[20]};
-		color: ${palette.neutral[86]};
-	}
 `;
 
 const informationBoxTextStyle = css`
@@ -24,21 +16,9 @@ const informationBoxTextStyle = css`
 		margin: 0;
 	}
 
-	a {
-		${textSans.xsmall({ fontWeight: 'bold' })};
-		@media (prefers-color-scheme: dark) {
-			color: ${palette.neutral[86]};
-		}
-	}
-
-	a:hover {
-		@media (prefers-color-scheme: dark) {
-			color: ${palette.neutral[86]};
-		}
-	}
-
+	a,
 	button {
-		${textSans.xsmall({ fontWeight: 'bold' })}
+		${textSans.xsmall({ fontWeight: 'bold' })};
 	}
 `;
 export const InformationBoxText = ({
@@ -47,9 +27,6 @@ export const InformationBoxText = ({
 	children: React.ReactNode;
 }) => <div css={informationBoxTextStyle}>{children}</div>;
 
-export const InformationBox = ({
-	children,
-	withMarginTop,
-}: PropsWithChildren<InformationBoxProps>) => (
-	<div css={informationBoxStyles({ withMarginTop })}>{children}</div>
+export const InformationBox = ({ children }: PropsWithChildren) => (
+	<div css={informationBoxStyles}>{children}</div>
 );

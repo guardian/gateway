@@ -1,6 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { space, from, palette } from '@guardian/source-foundations';
+import { from } from '@guardian/source-foundations';
 import {
 	LinkButton,
 	SvgGoogleBrand,
@@ -10,12 +10,12 @@ import {
 import { QueryParams } from '@/shared/model/QueryParams';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { IsNativeApp } from '@/shared/model/ClientState';
+import { mainSectionStyles } from '../styles/Shared';
 
 type AuthButtonProvider = 'social' | 'email';
 
 type AuthProviderButtonsProps = {
 	queryParams: QueryParams;
-	marginTop?: boolean;
 	isNativeApp?: IsNativeApp;
 	providers: AuthButtonProvider[];
 };
@@ -27,45 +27,23 @@ type AuthProviderButtonProps = {
 	queryParams: QueryParams;
 };
 
-const containerStyles = (marginTop = false) => css`
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	gap: ${space[3]}px;
-	margin-top: ${marginTop ? space[5] : 0}px;
-	${from.mobileMedium} {
-		margin-top: ${marginTop ? space[6] : 0}px;
-	}
-	width: 100%;
-`;
-
 const buttonOverrides = css`
-	border-color: ${palette.brand[400]};
+	border-color: var(--color-button-secondary-border);
+	color: var(--color-button-secondary-text);
+	background-color: var(--color-button-secondary-background);
 	justify-content: center;
 	${from.tablet} {
 		min-width: 145px;
 		flex-grow: 1;
 	}
-	@media (prefers-color-scheme: dark) {
-		border-color: ${palette.neutral[100]};
-		color: ${palette.neutral[100]};
-		&:hover {
-			background-color: ${palette.neutral[20]};
-		}
+	&:hover {
+		background-color: var(--color-button-secondary-background-hover);
 	}
 `;
 
-const emailButton = css`
-	width: 100%;
-	justify-content: center;
-`;
-
-// TODO: If the issue below is fixed and a new version of Source published with that fix in it, then
-// you should remove this iconOverrides css
-// https://github.com/guardian/source/issues/835
-const iconOverrides = css`
-	svg {
-		margin-top: 3px;
+const appleIconOverrides = css`
+	svg path {
+		fill: var(--color-button-secondary-text) !important;
 	}
 `;
 
@@ -79,7 +57,7 @@ const SocialButton = ({
 		<>
 			<LinkButton
 				priority="tertiary"
-				cssOverrides={[buttonOverrides, iconOverrides]}
+				cssOverrides={[buttonOverrides]}
 				icon={icon}
 				href={buildUrlWithQueryParams(
 					'/signin/:social',
@@ -110,7 +88,11 @@ const socialButtonIcon = (socialProvider: string): React.ReactElement => {
 		case 'google':
 			return <SvgGoogleBrand />;
 		case 'apple':
-			return <SvgAppleBrand />;
+			return (
+				<div css={appleIconOverrides}>
+					<SvgAppleBrand />
+				</div>
+			);
 		default:
 			// null is the officially recommended way to return nothing from a React component,
 			// but LinkButton doesn't accept it, so we return an empty JSX element instead
@@ -132,13 +114,12 @@ const getButtonOrder = (isNativeApp?: IsNativeApp): string[] => {
 
 export const AuthProviderButtons = ({
 	queryParams,
-	marginTop,
 	isNativeApp,
 	providers,
 }: AuthProviderButtonsProps) => {
 	const buttonOrder = getButtonOrder(isNativeApp);
 	return (
-		<div css={containerStyles(marginTop)}>
+		<div css={mainSectionStyles}>
 			{providers.includes('social') &&
 				buttonOrder.map((socialProvider) => (
 					<SocialButton
@@ -152,7 +133,7 @@ export const AuthProviderButtons = ({
 			{providers.includes('email') && (
 				<LinkButton
 					icon={<SvgEnvelope />}
-					cssOverrides={emailButton}
+					cssOverrides={buttonOverrides}
 					priority="tertiary"
 					href={buildUrlWithQueryParams('/register/email', {}, queryParams)}
 				>
