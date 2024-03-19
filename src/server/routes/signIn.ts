@@ -600,8 +600,8 @@ router.get(
 				setAuthorizationStateCookie(updatedAuthState, res);
 
 				const introspectIdp = introspectResponse.remediation.value.find(
-					(o) =>
-						o.name === 'redirect-idp' && o.type === socialIdp.toUpperCase(),
+					({ name, type }) =>
+						name === 'redirect-idp' && type === socialIdp.toUpperCase(),
 				);
 
 				if (
