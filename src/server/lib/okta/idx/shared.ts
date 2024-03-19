@@ -39,18 +39,17 @@ export type IdxStateHandleBody<T = object> = T & {
 	stateHandle: IdxBaseResponse['stateHandle'];
 };
 
-const idxErrorSchema = z.object({
-	version: idxVersionSchema,
-	messages: z.object({
-		type: z.literal('array'),
-		value: z.array(
-			z.object({
-				message: z.string(),
-				i18n: z.object({ key: z.string() }).optional(),
-			}),
-		),
-	}),
+const idxErrorObjectSchema = z.object({
+	type: z.literal('array'),
+	value: z.array(
+		z.object({
+			message: z.string(),
+			i18n: z.object({ key: z.string() }).optional(),
+			class: z.literal('ERROR'),
+		}),
+	),
 });
+type IdxErrorObject = z.infer<typeof idxErrorObjectSchema>;
 
 export const idxFetch = async <ResponseType, BodyType>({
 	path,
@@ -91,7 +90,36 @@ export const idxFetch = async <ResponseType, BodyType>({
 	}
 };
 
-export const handleError = async (response: Response) => {
+// Okta IDX API puts the error message in a nested object, so we need to recursively search for it
+// the key is 'messages' and the value has a specific schema
+// if the schema doesn't match, we'll just return the whole object as a string
+const findErrorMessage = (obj: object): IdxErrorObject | string | undefined => {
+	const findErrorRecursive = (
+		obj: object,
+	): IdxErrorObject | string | undefined => {
+		for (const [key, value] of Object.entries(obj)) {
+			if (key === 'messages') {
+				const parsed = idxErrorObjectSchema.safeParse(value);
+
+				if (parsed.success) {
+					return parsed.data;
+				} else {
+					return JSON.stringify(value);
+				}
+			}
+			if (typeof value === 'object') {
+				return findErrorRecursive(value);
+			}
+		}
+	};
+
+	return findErrorRecursive(obj);
+};
+
+// handle any errors from the IDX API
+// these will be thrown as OAuthError objects
+// the consumer can catch and handle specific messages if they need to
+const handleError = async (response: Response) => {
 	// Check if the body is likely json using the content-type header
 	const contentType = response.headers.get('content-type');
 	if (
@@ -109,17 +137,34 @@ export const handleError = async (response: Response) => {
 				response.status,
 			);
 		});
-		const error = idxErrorSchema.safeParse(json);
 
-		if (error.success) {
-			throw new OAuthError(
-				{
-					error: error.data.messages.value[0].i18n?.key || 'idx_error',
-					error_description: error.data.messages.value[0].message,
-				},
-				response.status,
-			);
+		// find the error message in the json
+		const error = findErrorMessage(json);
+
+		// if we found and error message
+		if (error) {
+			// check if it's unparsed (string)
+			if (typeof error === 'string') {
+				throw new OAuthError(
+					{
+						error: 'idx_error',
+						error_description: error,
+					},
+					response.status,
+				);
+			} else {
+				// or it it's parsed (object)
+				// most errors should be this case and have an i18n key and message
+				throw new OAuthError(
+					{
+						error: error.value[0].i18n?.key || 'idx_error',
+						error_description: error.value[0].message,
+					},
+					response.status,
+				);
+			}
 		} else {
+			// or if we didn't find an error message, just throw the whole json
 			throw new OAuthError(
 				{
 					error: 'idx_error',
@@ -130,6 +175,7 @@ export const handleError = async (response: Response) => {
 		}
 	}
 
+	// or if the body is not json, just throw the whole body as a string
 	throw new OAuthError(
 		{
 			error: 'idx_error',

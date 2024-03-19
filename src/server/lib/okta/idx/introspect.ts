@@ -16,6 +16,13 @@ export const redirectIdpSchema = baseRemediationValueSchema.merge(
 	}),
 );
 
+// Base schema for the 'select-enroll-profile' object inside the introspect response remediation object
+export const selectEnrollProfileSchema = baseRemediationValueSchema.merge(
+	z.object({
+		name: z.literal('select-enroll-profile'),
+	}),
+);
+
 // Schema for the introspect response
 const introspectResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
@@ -23,7 +30,11 @@ const introspectResponseSchema = idxBaseResponseSchema.merge(
 			type: z.string(),
 			value: z.array(
 				// social idp object
-				z.union([redirectIdpSchema, baseRemediationValueSchema]),
+				z.union([
+					redirectIdpSchema,
+					selectEnrollProfileSchema,
+					baseRemediationValueSchema,
+				]),
 			),
 		}),
 	}),
