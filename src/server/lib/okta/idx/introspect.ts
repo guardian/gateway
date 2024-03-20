@@ -41,6 +41,14 @@ const introspectResponseSchema = idxBaseResponseSchema.merge(
 );
 export type IntrospectResponse = z.infer<typeof introspectResponseSchema>;
 
+type IntrospectBody =
+	| {
+			interactionHandle: InteractResponse['interaction_handle'];
+	  }
+	| {
+			stateHandle: IntrospectResponse['stateHandle'];
+	  };
+
 /**
  * @name introspect
  * @description Okta IDX API/Interaction Code flow - Step 2: Use the interaction handle generated from the `interact` step to start the authentication process.
@@ -55,17 +63,12 @@ export type IntrospectResponse = z.infer<typeof introspectResponseSchema>;
  * @returns Promise<IntrospectResponse> - The introspect response
  */
 export const introspect = (
-	interactionHandle: InteractResponse['interaction_handle'],
+	body: IntrospectBody,
 	request_id?: string,
 ): Promise<IntrospectResponse> => {
-	return idxFetch<
-		IntrospectResponse,
-		{ interactionHandle: InteractResponse['interaction_handle'] }
-	>({
+	return idxFetch<IntrospectResponse, IntrospectBody>({
 		path: 'introspect',
-		body: {
-			interactionHandle,
-		},
+		body,
 		schema: introspectResponseSchema,
 		request_id,
 	});

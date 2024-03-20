@@ -48,7 +48,7 @@ type EnrollNewWithEmailBody = IdxStateHandleBody<{
 	};
 }>;
 
-const enrollAuthenticatorSchema = baseRemediationValueSchema.merge(
+export const enrollAuthenticatorSchema = baseRemediationValueSchema.merge(
 	z.object({
 		name: z.literal('enroll-authenticator'),
 		value: z.array(
