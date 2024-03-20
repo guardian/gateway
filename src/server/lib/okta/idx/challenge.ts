@@ -5,12 +5,15 @@ import {
 	baseRemediationValueSchema,
 	idxBaseResponseSchema,
 	idxFetch,
+	idxFetchCompletion,
 } from './shared';
 import { selectAuthenticationEnrollSchema } from './enroll';
+import { ResponseWithRequestState } from '@/server/models/Express';
 
-const skipSchema = baseRemediationValueSchema.merge(
+export const skipSchema = baseRemediationValueSchema.merge(
 	z.object({
 		name: z.literal('skip'),
+		href: z.string().url(),
 	}),
 );
 
@@ -36,7 +39,7 @@ type ChallengeAnswerPasswordBody = IdxStateHandleBody<{
 	};
 }>;
 
-export const challengeAnswer = (
+export const challengeAnswerPasscode = (
 	stateHandle: IdxBaseResponse['stateHandle'],
 	body: ChallengeAnswerPasswordBody['credentials'],
 	request_id?: string,
@@ -48,6 +51,23 @@ export const challengeAnswer = (
 			credentials: body,
 		},
 		schema: challengeAnswerResponseSchema,
+		request_id,
+	});
+};
+
+export const setPasswordAndRedirect = async (
+	stateHandle: IdxBaseResponse['stateHandle'],
+	body: ChallengeAnswerPasswordBody['credentials'],
+	expressRes: ResponseWithRequestState,
+	request_id?: string,
+): Promise<void> => {
+	return await idxFetchCompletion<ChallengeAnswerPasswordBody>({
+		path: 'challenge/answer',
+		body: {
+			stateHandle,
+			credentials: body,
+		},
+		expressRes,
 		request_id,
 	});
 };
