@@ -590,7 +590,9 @@ router.get(
 					closeExistingSession: true,
 				});
 
-				const introspectResponse = await introspect(interaction_handle);
+				const introspectResponse = await introspect({
+					interactionHandle: interaction_handle,
+				});
 
 				const updatedAuthState = updateAuthorizationStateData(authState, {
 					socialProvider: socialIdp,
