@@ -111,7 +111,8 @@ export type ApiRoutePaths =
 	| '/user/type/:email'
 	| '/user/validate-email/:token'
 	| '/users/me/consents'
-	| '/users/me/newsletters';
+	| '/users/me/newsletters'
+	| '/users/me/touch-braze';
 
 type OktaApiRoutePaths =
 	| '/api/v1/apps/:id'

@@ -3,6 +3,7 @@ import {
 	APIGetOptions,
 	APIPatchOptions,
 	APIOptionSelect,
+	APIPostOptions,
 } from '@/server/lib/IDAPIFetch';
 import { NewslettersErrors } from '@/shared/model/Errors';
 import { NewsLetter } from '@/shared/model/Newsletter';
@@ -127,6 +128,38 @@ export const readUserNewsletters = async ({
 				request_id,
 			},
 		);
+		return handleError();
+	}
+};
+
+export const touchBraze = async ({
+	ip,
+	sc_gu_u,
+	accessToken,
+	request_id,
+}: {
+	ip?: string;
+	sc_gu_u?: string;
+	accessToken?: string;
+	request_id?: string;
+}) => {
+	const options = APIOptionSelect({
+		ip,
+		sc_gu_u,
+		accessToken,
+		options: APIPostOptions(),
+	});
+
+	try {
+		await idapiFetch({
+			path: '/users/me/touch-braze',
+			options,
+		});
+		return;
+	} catch (error) {
+		logger.error(`IDAPI Error touchBraze '/users/me/touch-braze'`, error, {
+			request_id,
+		});
 		return handleError();
 	}
 };
