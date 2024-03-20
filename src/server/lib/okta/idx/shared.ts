@@ -7,7 +7,12 @@ import { joinUrl } from '@guardian/libs';
 
 const { okta } = getConfiguration();
 
-const idxPaths = ['introspect', 'enroll', 'enroll/new'] as const;
+const idxPaths = [
+	'challenge/answer',
+	'enroll',
+	'enroll/new',
+	'introspect',
+] as const;
 export type IDXPath = (typeof idxPaths)[number];
 
 const idxVersionSchema = z.string().refine((val) => {
@@ -33,6 +38,7 @@ export const baseRemediationValueSchema = z.object({
 	type: z.string().optional(),
 	href: z.string().optional(),
 	method: z.string().optional(),
+	value: z.unknown().optional(),
 });
 
 export type IdxStateHandleBody<T = object> = T & {

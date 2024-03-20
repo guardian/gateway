@@ -67,13 +67,42 @@ const enrollAuthenticatorSchema = baseRemediationValueSchema.merge(
 	}),
 );
 
-const selectAuthenticationEnrollSchema = baseRemediationValueSchema.merge(
-	z.object({
-		name: z.literal('select-authenticator-enroll'),
-	}),
+export const selectAuthenticationEnrollValueSchema = z.array(
+	z.union([
+		z.object({
+			name: z.literal('authenticator'),
+			type: z.string(),
+			options: z.array(
+				z.object({
+					label: z.string(),
+					value: z.object({
+						form: z.object({
+							value: z.array(
+								z.object({
+									name: z.enum(['id', 'methodType']),
+									value: z.string(),
+								}),
+							),
+						}),
+					}),
+				}),
+			),
+		}),
+		z.object({
+			name: z.literal('stateHandle'),
+		}),
+	]),
 );
 
-const enrollNewSchema = idxBaseResponseSchema.merge(
+export const selectAuthenticationEnrollSchema =
+	baseRemediationValueSchema.merge(
+		z.object({
+			name: z.literal('select-authenticator-enroll'),
+			value: selectAuthenticationEnrollValueSchema,
+		}),
+	);
+
+const enrollNewResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
 		remediation: z.object({
 			type: z.literal('array'),
@@ -96,7 +125,7 @@ const enrollNewSchema = idxBaseResponseSchema.merge(
 		}),
 	}),
 );
-type EnrollNewResponse = z.infer<typeof enrollNewSchema>;
+type EnrollNewResponse = z.infer<typeof enrollNewResponseSchema>;
 
 export const enrollNewWithEmail = (
 	stateHandle: IdxBaseResponse['stateHandle'],
@@ -109,7 +138,7 @@ export const enrollNewWithEmail = (
 			stateHandle,
 			userProfile: body,
 		},
-		schema: enrollNewSchema,
+		schema: enrollNewResponseSchema,
 		request_id,
 	});
 };
