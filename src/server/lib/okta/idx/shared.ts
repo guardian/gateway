@@ -4,11 +4,13 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { OAuthError } from '@/server/models/okta/Error';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { joinUrl } from '@guardian/libs';
+import { ResponseWithRequestState } from '@/server/models/Express';
 
 const { okta } = getConfiguration();
 
 const idxPaths = [
 	'challenge/answer',
+	'credential/enroll',
 	'enroll',
 	'enroll/new',
 	'introspect',
@@ -57,26 +59,64 @@ const idxErrorObjectSchema = z.object({
 });
 type IdxErrorObject = z.infer<typeof idxErrorObjectSchema>;
 
+export const completeLoginResponseSchema = idxBaseResponseSchema.merge(
+	z.object({
+		user: z.object({
+			type: z.literal('object'),
+			value: z.object({
+				id: z.string(),
+				identifier: z.string().email(),
+				profile: z.object({
+					firstName: z.string().nullable().optional(),
+					lastName: z.string().nullable().optional(),
+				}),
+			}),
+		}),
+	}),
+);
+
+type IDXFetchParams<ResponseType, BodyType> = {
+	path: IDXPath;
+	body: BodyType;
+	schema: z.Schema<ResponseType>;
+	expressRes: ResponseWithRequestState;
+	request_id?: string;
+};
+type IdxCookie = string;
+
+const idxFetchBase = async ({
+	path,
+	body,
+}: Pick<IDXFetchParams<unknown, unknown>, 'path' | 'body'>): Promise<
+	[Response, IdxCookie | undefined]
+> => {
+	const response = await fetch(joinUrl(okta.orgUrl, `/idp/idx/${path}`), {
+		method: 'POST',
+		headers: {
+			Accept: 'application/ion+json; okta-version=1.0.0',
+			'Content-Type': 'application/ion+json; okta-version=1.0.0',
+		},
+		body: JSON.stringify(body),
+	});
+
+	const cookies = response.headers.getSetCookie();
+
+	const idxCookie = cookies.find((cookie) => cookie.startsWith('idx='));
+
+	return [response, idxCookie];
+};
+
 export const idxFetch = async <ResponseType, BodyType>({
 	path,
 	body,
 	schema,
 	request_id,
-}: {
-	path: IDXPath;
-	body: BodyType;
-	schema: z.Schema<ResponseType>;
-	request_id?: string;
-}): Promise<ResponseType> => {
+}: Omit<
+	IDXFetchParams<ResponseType, BodyType>,
+	'expressRes'
+>): Promise<ResponseType> => {
 	try {
-		const response = await fetch(joinUrl(okta.orgUrl, `/idp/idx/${path}`), {
-			method: 'POST',
-			headers: {
-				Accept: 'application/ion+json; okta-version=1.0.0',
-				'Content-Type': 'application/ion+json; okta-version=1.0.0',
-			},
-			body: JSON.stringify(body),
-		});
+		const [response] = await idxFetchBase({ path, body });
 
 		if (!response.ok) {
 			await handleError(response);
@@ -87,6 +127,64 @@ export const idxFetch = async <ResponseType, BodyType>({
 		trackMetric(`OktaIDX::${path}::Success`);
 
 		return parsed;
+	} catch (error) {
+		trackMetric(`OktaIDX::${path}::Failure`);
+		logger.error(`Okta IDX ${path}`, error, {
+			request_id,
+		});
+		throw error;
+	}
+};
+
+export const idxFetchCompletion = async <BodyType>({
+	path,
+	body,
+	expressRes,
+	request_id,
+}: Omit<IDXFetchParams<never, BodyType>, 'schema'>): Promise<void> => {
+	try {
+		const [response, idxCookie] = await idxFetchBase({ path, body });
+
+		if (!response.ok) {
+			await handleError(response);
+		}
+
+		if (!idxCookie) {
+			throw new OAuthError(
+				{
+					error: 'idx_error',
+					error_description: 'No IDX cookie returned',
+				},
+				403,
+			);
+		}
+
+		const completeLoginResponse = completeLoginResponseSchema.safeParse(
+			await response.json(),
+		);
+
+		if (!completeLoginResponse.success) {
+			throw new OAuthError(
+				{
+					error: 'idx_error',
+					error_description: 'Schema does not match response',
+				},
+				400,
+			);
+		}
+
+		trackMetric(`OktaIDX::${path}::Success`);
+
+		expressRes.cookie('idx', idxCookie.replace('idx=', ''), {
+			httpOnly: true,
+			secure: true,
+			sameSite: 'none',
+		});
+
+		return expressRes.redirect(
+			303,
+			`/login/token/redirect?stateToken=${completeLoginResponse.data.stateHandle.split('~')[0]}`,
+		);
 	} catch (error) {
 		trackMetric(`OktaIDX::${path}::Failure`);
 		logger.error(`Okta IDX ${path}`, error, {
