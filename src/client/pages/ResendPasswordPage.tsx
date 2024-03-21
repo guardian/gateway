@@ -35,7 +35,7 @@ export const ResendPasswordPage = () => {
 			buttonText="Send me a link"
 			queryString={queryParams}
 			emailInputLabel="Email address"
-			showRecentEmailSummary
+			showRecentEmailInformationBox
 			recaptchaSiteKey={recaptchaSiteKey}
 			formPageTrackingName="reset-password-link-expired"
 			formError={formError}

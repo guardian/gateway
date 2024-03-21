@@ -1,11 +1,11 @@
 import React from 'react';
-import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import locations from '@/shared/lib/locations';
 import { DeleteAccountReturnLink } from '@/client/components/DeleteAccountReturnLink';
 import { UserAttributesResponse } from '@/shared/lib/members-data-api';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
+import { MinimalLayout } from '../layouts/MinimalLayout';
 
 interface Props {
 	contentAccess?: Partial<UserAttributesResponse['contentAccess']>;

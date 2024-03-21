@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { RadioGroup, Radio } from '@guardian/source-react-components';
-import { MainLayout } from '@/client/layouts/Main';
 import { MainForm } from '@/client/components/MainForm';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { ExternalLink } from '@/client/components/ExternalLink';

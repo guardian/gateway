@@ -13,7 +13,7 @@ export const Default = () => {
 	return (
 		<RegistrationMarketingConsentFormField
 			id={RegistrationConsentsFormFields.similarGuardianProducts.id}
-			label={RegistrationConsentsFormFields.similarGuardianProducts.label}
+			description={RegistrationConsentsFormFields.similarGuardianProducts.label}
 		/>
 	);
 };

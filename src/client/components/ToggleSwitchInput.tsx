@@ -149,6 +149,8 @@ const titleStyles = css`
 const descriptionStyles = css`
 	flex: 1;
 	color: var(--color-toggle-text);
+	display: flex;
+	align-items: center;
 `;
 
 export interface ToggleSwitchInputProps extends Props {

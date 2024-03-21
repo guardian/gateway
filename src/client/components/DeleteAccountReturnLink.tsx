@@ -8,7 +8,7 @@ import { divider } from '@/client/styles/Shared';
 export const DeleteAccountReturnLink = () => (
 	<>
 		<Divider spaceAbove="tight" size="full" cssOverrides={divider} />
-		<MainBodyText noMarginBottom marginTop>
+		<MainBodyText>
 			<ExternalLink href={locations.MANAGE_SETTINGS}>
 				Return to account settings
 			</ExternalLink>

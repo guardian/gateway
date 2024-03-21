@@ -14,8 +14,8 @@ export const Default = () => {
 	return (
 		<RegistrationNewsletterFormField
 			id={RegistrationNewslettersFormFields.saturdayEdition.id}
-			label={`${RegistrationNewslettersFormFields.saturdayEdition.label} newsletter`}
-			context={RegistrationNewslettersFormFields.saturdayEdition.context}
+			title={`${RegistrationNewslettersFormFields.saturdayEdition.label} newsletter`}
+			description={RegistrationNewslettersFormFields.saturdayEdition.context}
 			imagePath={SATURDAY_EDITION_SMALL_SQUARE_IMAGE}
 		/>
 	);
@@ -26,8 +26,8 @@ export const WithoutImage = () => {
 	return (
 		<RegistrationNewsletterFormField
 			id={RegistrationNewslettersFormFields.saturdayEdition.id}
-			label={`${RegistrationNewslettersFormFields.saturdayEdition.label} newsletter`}
-			context={RegistrationNewslettersFormFields.saturdayEdition.context}
+			title={`${RegistrationNewslettersFormFields.saturdayEdition.label} newsletter`}
+			description={RegistrationNewslettersFormFields.saturdayEdition.context}
 		/>
 	);
 };
