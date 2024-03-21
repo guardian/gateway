@@ -15,11 +15,11 @@ import { css } from '@emotion/react';
 import Link from '../components/Link';
 
 type Props = {
+	pageHeader?: string;
 	email?: string;
 	changeEmailPage?: string;
 	resendEmailAction?: string;
 	queryString?: string;
-	showSuccess?: boolean;
 	errorMessage?: string;
 	noAccountInfo?: boolean;
 	recaptchaSiteKey?: string;
@@ -33,6 +33,7 @@ const sendAgainFormWrapperStyles = css`
 `;
 
 export const EmailSent = ({
+	pageHeader = 'Check your inbox',
 	email,
 	changeEmailPage,
 	resendEmailAction,
@@ -50,7 +51,7 @@ export const EmailSent = ({
 		useState<ReactNode>(null);
 	return (
 		<MinimalLayout
-			pageHeader="Password reset email sent"
+			pageHeader={pageHeader}
 			errorOverride={
 				recaptchaErrorMessage ? recaptchaErrorMessage : errorMessage
 			}

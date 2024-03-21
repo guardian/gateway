@@ -5,7 +5,7 @@ import { MainBodyText } from '@/client/components/MainBodyText';
 import { MinimalLayout } from '../layouts/MinimalLayout';
 
 export const NotFoundPage = () => (
-	<MinimalLayout pageHeader="Sorry – the page does not exist">
+	<MinimalLayout pageHeader="Sorry – this page does not exist">
 		<MainBodyText>
 			You may have followed an outdated link, or have mistyped a URL. If you
 			believe this to be an error, please{' '}

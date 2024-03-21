@@ -1,11 +1,11 @@
 import React from 'react';
 import { ExternalLink } from '@/client/components/ExternalLink';
-import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import {
 	SubscriptionAction,
 	subscriptionActionName,
 } from '@/shared/lib/subscriptions';
+import { MinimalLayout } from '../layouts/MinimalLayout';
 
 type SubscriptionErrorProps = {
 	accountManagementUrl?: string;
@@ -17,7 +17,7 @@ export const SubscriptionError = ({
 	action,
 }: SubscriptionErrorProps) => {
 	return (
-		<MainLayout pageHeader={`${subscriptionActionName(action)} Error`}>
+		<MinimalLayout pageHeader={`${subscriptionActionName(action)} Error`}>
 			<MainBodyText>Unable to {action}. Please try again.</MainBodyText>
 			<MainBodyText>
 				If the problem persists, please{' '}
@@ -35,6 +35,6 @@ export const SubscriptionError = ({
 				</ExternalLink>{' '}
 				at any time.
 			</MainBodyText>
-		</MainLayout>
+		</MinimalLayout>
 	);
 };

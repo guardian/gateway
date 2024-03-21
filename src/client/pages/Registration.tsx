@@ -1,7 +1,5 @@
 import React from 'react';
 import { QueryParams } from '@/shared/model/QueryParams';
-import { MainLayout } from '@/client/layouts/Main';
-import { generateSignInRegisterTabs } from '@/client/components/Nav';
 import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
@@ -11,6 +9,7 @@ import { divider } from '@/client/styles/Shared';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { InformationBox } from '@/client/components/InformationBox';
 import Link from '../components/Link';
+import { MinimalLayout } from '../layouts/MinimalLayout';
 
 export type RegistrationProps = {
 	email?: string;
@@ -34,15 +33,9 @@ export const Registration = ({ queryParams }: RegistrationProps) => {
 
 	usePageLoadOphanInteraction(formTrackingName);
 
-	const tabs = generateSignInRegisterTabs({
-		queryParams,
-		isActive: 'register',
-	});
-
 	return (
-		<MainLayout
-			tabs={tabs}
-			pageHeader="Register an account"
+		<MinimalLayout
+			pageHeader="Create a free account"
 			pageSubText="One account to access all Guardian products."
 		>
 			<RegistrationTerms isJobs={isJobs} />
@@ -57,6 +50,6 @@ export const Registration = ({ queryParams }: RegistrationProps) => {
 					Sign in
 				</Link>
 			</MainBodyText>
-		</MainLayout>
+		</MinimalLayout>
 	);
 };

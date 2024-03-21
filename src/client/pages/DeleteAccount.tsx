@@ -12,6 +12,9 @@ import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { FieldError } from '@/shared/model/ClientState';
 import { divider } from '@/client/styles/Shared';
+import { MinimalLayout } from '../layouts/MinimalLayout';
+import { textSans } from '@guardian/source-foundations';
+import { css } from '@emotion/react';
 
 interface Props {
 	queryParams: QueryParams;
@@ -19,6 +22,15 @@ interface Props {
 	formError?: string;
 	error?: string;
 }
+
+const radioGroupStyles = css`
+	label div {
+		${textSans.small()}
+	}
+	legend div {
+		${textSans.small({ fontWeight: 'bold' })}
+	}
+`;
 
 export const DeleteAccount = ({
 	queryParams,
@@ -31,7 +43,10 @@ export const DeleteAccount = ({
 	);
 
 	return (
-		<MainLayout pageHeader="Delete your Guardian account" errorOverride={error}>
+		<MinimalLayout
+			pageHeader="Delete your Guardian account"
+			errorOverride={error}
+		>
 			{/* Help Text */}
 			<MainBodyText>
 				Please read the following paragraphs carefully to understand how account
@@ -41,9 +56,9 @@ export const DeleteAccount = ({
 			</MainBodyText>
 
 			{/* Identity Account */}
-			<MainBodyText noMarginBottom>
+			<MainBodyText>
 				<ExternalLink href={locations.HELP}>
-					<b>Account</b>
+					<strong>Account</strong>
 				</ExternalLink>
 			</MainBodyText>
 			<MainBodyText>
@@ -52,9 +67,9 @@ export const DeleteAccount = ({
 			</MainBodyText>
 
 			{/* Comments */}
-			<MainBodyText noMarginBottom>
+			<MainBodyText>
 				<ExternalLink href={locations.COMMENTS_HELP}>
-					<b>Comments</b>
+					<strong>Comments</strong>
 				</ExternalLink>
 			</MainBodyText>
 			<MainBodyText>
@@ -75,9 +90,9 @@ export const DeleteAccount = ({
 			</MainBodyText>
 
 			{/* Membership */}
-			<MainBodyText noMarginBottom>
+			<MainBodyText>
 				<ExternalLink href={locations.MEMBERSHIP_HELP}>
-					<b>Membership</b>
+					<strong>Membership</strong>
 				</ExternalLink>
 			</MainBodyText>
 			<MainBodyText>
@@ -89,9 +104,9 @@ export const DeleteAccount = ({
 			</MainBodyText>
 
 			{/* Subscriptions */}
-			<MainBodyText noMarginBottom>
+			<MainBodyText>
 				<ExternalLink href={locations.SUBSCRIPTION_HELP}>
-					<b>Digital/Paper Subscriptions</b>
+					<strong>Digital/Paper Subscriptions</strong>
 				</ExternalLink>
 			</MainBodyText>
 			<MainBodyText>
@@ -103,9 +118,9 @@ export const DeleteAccount = ({
 			</MainBodyText>
 
 			{/* In-App Purchases */}
-			<MainBodyText noMarginBottom>
+			<MainBodyText>
 				<ExternalLink href={locations.IN_APP_PURCHASES_HELP}>
-					<b>Guardian in-app purchases via App Stores</b>
+					<strong>Guardian in-app purchases via App Stores</strong>
 				</ExternalLink>
 			</MainBodyText>
 			<MainBodyText>
@@ -115,9 +130,9 @@ export const DeleteAccount = ({
 			</MainBodyText>
 
 			{/* Jobs */}
-			<MainBodyText noMarginBottom>
+			<MainBodyText>
 				<ExternalLink href={locations.JOBS_HELP}>
-					<b>Guardian Jobs</b>
+					<strong>Guardian Jobs</strong>
 				</ExternalLink>
 			</MainBodyText>
 			<MainBodyText>
@@ -126,9 +141,9 @@ export const DeleteAccount = ({
 			</MainBodyText>
 
 			{/* Email Subscriptions */}
-			<MainBodyText noMarginBottom>
+			<MainBodyText>
 				<ExternalLink href={locations.EMAIL_SUBSCRIPTIONS_HELP}>
-					<b>Email Subscriptions</b>
+					<strong>Email Subscriptions</strong>
 				</ExternalLink>
 			</MainBodyText>
 			<MainBodyText>
@@ -137,9 +152,9 @@ export const DeleteAccount = ({
 			</MainBodyText>
 
 			{/* Saved for Later */}
-			<MainBodyText noMarginBottom>
+			<MainBodyText>
 				<ExternalLink href={locations.SAVED_FOR_LATER_HELP}>
-					<b>Saved for Later Articles</b>
+					<strong>Saved for Later Articles</strong>
 				</ExternalLink>
 			</MainBodyText>
 			<MainBodyText>
@@ -161,6 +176,7 @@ export const DeleteAccount = ({
 					label="Please take a moment to tell us why you wish to delete your account:"
 					name="reason"
 					orientation="vertical"
+					cssOverrides={radioGroupStyles}
 				>
 					<Radio
 						label="I have created an account by accident"
@@ -184,11 +200,11 @@ export const DeleteAccount = ({
 				</RadioGroup>
 
 				{/* divider */}
-				<Divider spaceAbove="tight" size="full" />
+				<Divider spaceAbove="tight" size="full" cssOverrides={divider} />
 
 				{/* password confirmation */}
-				<MainBodyText noMarginBottom marginTop>
-					<b>Confirm account deletion</b>
+				<MainBodyText>
+					<strong>Confirm account deletion</strong>
 				</MainBodyText>
 				<MainBodyText>
 					Please re-enter password to confirm the you have understood the
@@ -202,6 +218,6 @@ export const DeleteAccount = ({
 				/>
 			</MainForm>
 			<DeleteAccountReturnLink />
-		</MainLayout>
+		</MinimalLayout>
 	);
 };

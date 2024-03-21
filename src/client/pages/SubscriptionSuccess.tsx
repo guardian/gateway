@@ -1,11 +1,11 @@
 import React from 'react';
 import { ExternalLink } from '@/client/components/ExternalLink';
-import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import {
 	SubscriptionAction,
 	subscriptionActionName,
 } from '@/shared/lib/subscriptions';
+import { MinimalLayout } from '../layouts/MinimalLayout';
 
 type UnsubscribeSuccessProps = {
 	action: SubscriptionAction;
@@ -19,7 +19,9 @@ export const SubscriptionSuccess = ({
 	accountManagementUrl = 'https://manage.theguardian.com',
 }: UnsubscribeSuccessProps) => {
 	return (
-		<MainLayout pageHeader={`${subscriptionActionName(action)} Confirmation`}>
+		<MinimalLayout
+			pageHeader={`${subscriptionActionName(action)} Confirmation`}
+		>
 			<MainBodyText>
 				You have been {action}d. These changes can take up to 24 hours to take
 				effect.
@@ -32,6 +34,6 @@ export const SubscriptionSuccess = ({
 			<MainBodyText>
 				<ExternalLink href={returnUrl}>Continue to the Guardian</ExternalLink>
 			</MainBodyText>
-		</MainLayout>
+		</MinimalLayout>
 	);
 };

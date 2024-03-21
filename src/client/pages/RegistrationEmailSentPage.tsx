@@ -14,22 +14,19 @@ export const RegistrationEmailSentPage = () => {
 		recaptchaConfig,
 	} = clientState;
 	const { email } = pageData;
-	const { emailSentSuccess } = queryParams;
 	const { error } = globalMessage;
 	const { recaptchaSiteKey } = recaptchaConfig;
 
-	const queryString = buildQueryParamsString(queryParams, {
-		emailSentSuccess: true,
-	});
+	const queryString = buildQueryParamsString(queryParams);
 
 	return (
 		<EmailSent
+			pageHeader="Check your inbox to verify your email"
 			email={email}
 			queryString={queryString}
 			changeEmailPage={buildUrlWithQueryParams('/register', {}, queryParams)}
 			resendEmailAction={buildUrl('/register/email-sent/resend')}
 			instructionContext="verify and complete creating your account"
-			showSuccess={emailSentSuccess}
 			errorMessage={error}
 			recaptchaSiteKey={recaptchaSiteKey}
 			formTrackingName="register-resend"

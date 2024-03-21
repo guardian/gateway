@@ -11,6 +11,7 @@ export const Theme = () => {
 					--color-logo: ${palette.brand[400]};
 					--color-heading: ${palette.brand[400]};
 					--color-text: ${palette.neutral[10]};
+					--color-strong-text: ${palette.brand[400]};
 					--color-info-box-background: ${palette.neutral[93]};
 					--color-info-box-text: ${palette.neutral[10]};
 					--color-link: ${palette.brand[500]};
@@ -31,6 +32,7 @@ export const Theme = () => {
 					--color-toggle-inactive-switch: ${palette.neutral[100]};
 					--color-toggle-active-background: ${palette.success[400]};
 					--color-toggle-active-switch: ${palette.neutral[100]};
+					--color-toggle-text: ${palette.neutral[10]};
 					--color-alert-info: ${palette.neutral[46]};
 					--color-alert-error: ${palette.error[400]};
 					--color-alert-success: ${palette.success[400]};
@@ -40,6 +42,7 @@ export const Theme = () => {
 						--color-logo: ${palette.neutral[86]};
 						--color-heading: ${palette.neutral[86]};
 						--color-text: ${palette.neutral[86]};
+						--color-strong-text: ${palette.neutral[86]};
 						--color-info-box-background: ${palette.neutral[20]};
 						--color-info-box-text: ${palette.neutral[86]};
 						--color-link: ${palette.neutral[86]};
@@ -60,6 +63,7 @@ export const Theme = () => {
 						--color-toggle-inactive-switch: ${palette.neutral[0]};
 						--color-toggle-active-background: ${palette.success[400]};
 						--color-toggle-active-switch: ${palette.neutral[0]};
+						--color-toggle-text: ${palette.neutral[86]};
 						--color-alert-info: ${palette.neutral[60]};
 						--color-alert-error: ${palette.error[500]};
 						--color-alert-success: ${palette.success[500]};

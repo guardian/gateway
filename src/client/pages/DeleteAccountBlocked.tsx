@@ -18,7 +18,7 @@ export const DeleteAccountBlocked = ({ contentAccess = {} }: Props) => {
 		contentAccess.guardianWeeklySubscriber;
 
 	return (
-		<MainLayout pageHeader="Delete your Guardian account">
+		<MinimalLayout pageHeader="Delete your Guardian account">
 			<MainBodyText>
 				We&apos;ve noticed you have an active membership, recurring contribution
 				or subscription with the Guardian, so you won&apos;t be able to
@@ -28,8 +28,8 @@ export const DeleteAccountBlocked = ({ contentAccess = {} }: Props) => {
 
 			{(contentAccess.member || contentAccess.paidMember) && (
 				<>
-					<MainBodyText noMarginBottom>
-						<b>You have an active membership</b>
+					<MainBodyText>
+						<strong>You have an active membership</strong>
 					</MainBodyText>
 					<MainBodyText>
 						You must first cancel your membership before you can delete your
@@ -44,8 +44,8 @@ export const DeleteAccountBlocked = ({ contentAccess = {} }: Props) => {
 
 			{contentAccess.recurringContributor && (
 				<>
-					<MainBodyText noMarginBottom>
-						<b>You have a recurring contribution</b>
+					<MainBodyText>
+						<strong>You have a recurring contribution</strong>
 					</MainBodyText>
 					<MainBodyText>
 						You must first cancel your recurring contribution before you can
@@ -62,27 +62,27 @@ export const DeleteAccountBlocked = ({ contentAccess = {} }: Props) => {
 				<>
 					{contentAccess.digitalPack && (
 						<>
-							<MainBodyText noMarginBottom>
-								<b>You have an active Digital Pack subscription</b>
+							<MainBodyText>
+								<strong>You have an active Digital Pack subscription</strong>
 							</MainBodyText>
 						</>
 					)}
 
 					{contentAccess.paperSubscriber && (
 						<>
-							<MainBodyText noMarginBottom>
-								<b>
+							<MainBodyText>
+								<strong>
 									You have an active print subscription to one of our newspapers
-								</b>
+								</strong>
 							</MainBodyText>
 						</>
 					)}
 					{contentAccess.guardianWeeklySubscriber && (
 						<>
-							<MainBodyText noMarginBottom>
-								<b>
+							<MainBodyText>
+								<strong>
 									You have an active print subscription to the Guardian Weekly
-								</b>
+								</strong>
 							</MainBodyText>
 						</>
 					)}
@@ -97,6 +97,6 @@ export const DeleteAccountBlocked = ({ contentAccess = {} }: Props) => {
 				</>
 			)}
 			<DeleteAccountReturnLink />
-		</MainLayout>
+		</MinimalLayout>
 	);
 };

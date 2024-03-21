@@ -6,7 +6,7 @@ const informationBoxStyles = css`
 	background-color: var(--color-info-box-background);
 	color: var(--color-info-box-text);
 	border-radius: 4px;
-	padding: ${space[3]}px ${space[3]}px;
+	padding: ${space[3]}px ${space[3]}px ${space[4]}px ${space[3]}px;
 `;
 
 const informationBoxTextStyle = css`

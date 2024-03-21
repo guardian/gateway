@@ -18,13 +18,10 @@ export const UnvalidatedEmailEmailSentPage = ({ formTrackingName }: Props) => {
 		recaptchaConfig,
 	} = clientState;
 	const { email } = pageData;
-	const { emailSentSuccess } = queryParams;
 	const { error } = globalMessage;
 	const { recaptchaSiteKey } = recaptchaConfig;
 
-	const queryString = buildQueryParamsString(queryParams, {
-		emailSentSuccess: true,
-	});
+	const queryString = buildQueryParamsString(queryParams);
 
 	return (
 		<EmailSent
@@ -32,7 +29,6 @@ export const UnvalidatedEmailEmailSentPage = ({ formTrackingName }: Props) => {
 			changeEmailPage={buildUrl('/signin')}
 			resendEmailAction={buildUrl('/signin/email-sent/resend')}
 			queryString={queryString}
-			showSuccess={emailSentSuccess}
 			errorMessage={error}
 			recaptchaSiteKey={recaptchaSiteKey}
 			formTrackingName={formTrackingName}

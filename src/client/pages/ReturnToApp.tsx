@@ -1,6 +1,6 @@
 import React from 'react';
-import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
+import { MinimalLayout } from '../layouts/MinimalLayout';
 
 type ReturnToAppProps = {
 	email?: string;
@@ -8,20 +8,20 @@ type ReturnToAppProps = {
 };
 
 export const ReturnToApp = ({ email, appName: app }: ReturnToAppProps) => (
-	<MainLayout pageHeader="Account Created">
+	<MinimalLayout pageHeader="Account Created">
 		<MainBodyText>
 			You have finished creating your Guardian account
 			{email ? (
 				<>
-					: <b>{email}</b>
+					: <strong>{email}</strong>
 				</>
 			) : (
 				'.'
 			)}
 		</MainBodyText>
 		<MainBodyText>
-			Open the <b>{app ? app : 'Guardian'}</b> app and sign in with your new
-			account.
+			Open the <strong>{app ? app : 'Guardian'}</strong> app and sign in with
+			your new account.
 		</MainBodyText>
-	</MainLayout>
+	</MinimalLayout>
 );

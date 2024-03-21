@@ -1,6 +1,5 @@
 import React from 'react';
 import { MainBodyText } from '@/client/components/MainBodyText';
-import { MainLayout } from '@/client/layouts/Main';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import {
@@ -8,6 +7,8 @@ import {
 	SvgArrowRightStraight,
 } from '@guardian/source-react-components';
 import { QueryParams } from '@/shared/model/QueryParams';
+import { MinimalLayout } from '../layouts/MinimalLayout';
+import { primaryButtonStyles } from '../styles/Shared';
 
 interface Props {
 	token: string;
@@ -16,7 +17,7 @@ interface Props {
 
 export const ResendConsentEmail = ({ token, queryParams }: Props) => {
 	return (
-		<MainLayout pageHeader="Link expired">
+		<MinimalLayout pageHeader="Link expired">
 			<MainBodyText>This link has expired.</MainBodyText>
 			<MainBodyText>To receive a new link, please click below.</MainBodyText>
 			<form
@@ -29,10 +30,15 @@ export const ResendConsentEmail = ({ token, queryParams }: Props) => {
 			>
 				<CsrfFormField />
 				<input type="hidden" name="token" value={token} />
-				<Button type="submit" icon={<SvgArrowRightStraight />} iconSide="right">
+				<Button
+					type="submit"
+					icon={<SvgArrowRightStraight />}
+					iconSide="right"
+					cssOverrides={primaryButtonStyles}
+				>
 					Resend link
 				</Button>
 			</form>
-		</MainLayout>
+		</MinimalLayout>
 	);
 };

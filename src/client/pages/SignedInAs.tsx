@@ -1,14 +1,17 @@
 import React, { ReactNode, useEffect } from 'react';
-import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { LinkButton } from '@guardian/source-react-components';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { OpenIdErrors } from '@/shared/model/OpenIdErrors';
-import { errorContextSpacing } from '@/client/styles/Shared';
+import {
+	errorContextSpacing,
+	primaryButtonStyles,
+} from '@/client/styles/Shared';
 import { space } from '@guardian/source-foundations';
 import locations from '@/shared/lib/locations';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 import Link from '../components/Link';
+import { MinimalLayout } from '../layouts/MinimalLayout';
 
 interface Props {
 	email: string;
@@ -61,29 +64,21 @@ export const SignedInAs = ({
 	}, [errorFromQueryParams, signOutLink]);
 
 	return (
-		<MainLayout
+		<MinimalLayout
 			pageHeader={`Sign in to the ${appName ? `${appName} app` : 'Guardian'}`}
 			errorOverride={pageError}
-			errorSmallMarginBottom={!!pageError}
 			errorContext={errorContext}
 		>
 			<MainBodyText>
 				You are signed in with <br />
-				<b>{email}</b>
+				<strong>{email}</strong>
 			</MainBodyText>
-			<LinkButton
-				css={buttonStyles({
-					halfWidth: true,
-					halfWidthAtMobile: true,
-					hasMarginBottom: true,
-				})}
-				href={continueLink}
-			>
+			<LinkButton css={primaryButtonStyles} href={continueLink}>
 				Continue
 			</LinkButton>
-			<MainBodyText noMarginBottom>
+			<MainBodyText>
 				<Link href={signOutLink}>Sign in</Link> with a different email.
 			</MainBodyText>
-		</MainLayout>
+		</MinimalLayout>
 	);
 };

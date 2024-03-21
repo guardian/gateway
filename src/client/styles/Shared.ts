@@ -12,10 +12,11 @@ export const disableAutofillBackground = css`
 	}
 `;
 
-// fixed source divider expanding off the side of the container
 export const divider = css`
+	// fixed source divider expanding off the side of the container
 	width: 100%;
 	margin: ${remSpace[2]} 0 0 0;
+	background-color: var(--color-divider);
 `;
 
 export const errorContextSpacing = css`
@@ -30,6 +31,7 @@ export const mainSectionStyles = css`
 `;
 
 export const primaryButtonStyles = css`
+	width: 100%;
 	justify-content: center;
 	:disabled {
 		cursor: not-allowed;
@@ -43,6 +45,7 @@ export const primaryButtonStyles = css`
 `;
 
 export const secondaryButtonStyles = css`
+	width: 100%;
 	justify-content: center;
 	background-color: var(--color-button-secondary-background);
 	border-color: var(--color-button-secondary-border);

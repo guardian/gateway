@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 import { css, SerializedStyles } from '@emotion/react';
-import { palette, textSans } from '@guardian/source-foundations';
+import { textSans } from '@guardian/source-foundations';
 interface Props {
 	cssOverrides?: SerializedStyles;
 }
@@ -16,7 +16,7 @@ const mainBodyTextStyles = css`
 
 	strong {
 		${textSans.small({ lineHeight: 'regular', fontWeight: 'bold' })};
-		color: ${palette.brand[400]};
+		color: var(--color-strong-text);
 	}
 `;
 

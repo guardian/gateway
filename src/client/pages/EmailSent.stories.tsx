@@ -91,3 +91,18 @@ export const NoChangeEmailPage = () => (
 NoChangeEmailPage.story = {
 	name: 'with no change email',
 };
+
+export const RegistrationEmailSent = () => (
+	<EmailSent
+		pageHeader="Check your inbox to verify your email"
+		email="example@theguardian.com"
+		changeEmailPage="/register"
+		resendEmailAction="/register/email-sent/resend"
+		instructionContext="verify and complete creating your account"
+		recaptchaSiteKey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+		formTrackingName="register-resend"
+	/>
+);
+RegistrationEmailSent.story = {
+	name: 'Registration email sent page',
+};
