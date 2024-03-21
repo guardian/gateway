@@ -1,5 +1,5 @@
 import React from 'react';
-import { palette, remSpace } from '@guardian/source-foundations';
+import { from, palette, remSpace } from '@guardian/source-foundations';
 import { css } from '@emotion/react';
 import { SvgGuardianLogo } from '@guardian/source-react-components';
 
@@ -16,6 +16,9 @@ const logoStyles = css`
 	svg {
 		fill: var(--color-logo);
 		height: 100%;
+	}
+	${from.desktop} {
+		height: 3.5rem;
 	}
 `;
 

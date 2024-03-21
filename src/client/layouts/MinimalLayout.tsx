@@ -1,7 +1,12 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import { MinimalHeader } from '../components/MinimalHeader';
-import { headline, remSpace, textSans } from '@guardian/source-foundations';
+import {
+	from,
+	headline,
+	remSpace,
+	textSans,
+} from '@guardian/source-foundations';
 import useClientState from '../lib/hooks/useClientState';
 import {
 	ErrorSummary,
@@ -29,6 +34,9 @@ const mainStyles = css`
 	display: flex;
 	flex-direction: column;
 	gap: ${remSpace[5]};
+	${from.desktop} {
+		padding: ${remSpace[16]} ${remSpace[4]} ${remSpace[4]} ${remSpace[4]};
+	}
 `;
 
 const pageHeaderStyles = css`

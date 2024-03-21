@@ -1,12 +1,8 @@
 import React, { PropsWithChildren, ReactNode, useState } from 'react';
 
 import { MinimalLayout } from '../layouts/MinimalLayout';
-import {
-	belowFormMarginTopSpacingStyle,
-	MainForm,
-} from '@/client/components/MainForm';
+import { MainForm } from '@/client/components/MainForm';
 import { EmailInput } from '@/client/components/EmailInput';
-import { InfoSummary } from '@guardian/source-react-components-development-kitchen';
 import locations from '@/shared/lib/locations';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
