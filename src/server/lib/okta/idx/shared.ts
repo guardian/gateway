@@ -8,6 +8,7 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 
 const { okta } = getConfiguration();
 
+// Okta IDX API paths
 const idxPaths = [
 	'challenge/answer',
 	'credential/enroll',
@@ -17,6 +18,7 @@ const idxPaths = [
 ] as const;
 export type IDXPath = (typeof idxPaths)[number];
 
+// Schema to check the version of the IDX API, and warn if it's not 1.0.0
 const idxVersionSchema = z.string().refine((val) => {
 	// warn if the version is not 1.0.0
 	if (val !== '1.0.0') {
@@ -28,6 +30,7 @@ const idxVersionSchema = z.string().refine((val) => {
 	return true;
 });
 
+// Base schema for the IDX API response, everything should inherit from this (using .merge)
 export const idxBaseResponseSchema = z.object({
 	version: idxVersionSchema,
 	stateHandle: z.string(),
@@ -35,30 +38,23 @@ export const idxBaseResponseSchema = z.object({
 });
 export type IdxBaseResponse = z.infer<typeof idxBaseResponseSchema>;
 
+// Base schema for the remediation object in the IDX API response
+// Used in cases where the Okta IDX API during the authentication process
 export const baseRemediationValueSchema = z.object({
 	name: z.string(),
 	type: z.string().optional(),
-	href: z.string().optional(),
+	href: z.string().url().optional(),
 	method: z.string().optional(),
 	value: z.unknown().optional(),
 });
 
+// Base type for the body of a request to the IDX API
+// Which should include the stateHandle, and any other data needed using the generic type
 export type IdxStateHandleBody<T = object> = T & {
 	stateHandle: IdxBaseResponse['stateHandle'];
 };
 
-const idxErrorObjectSchema = z.object({
-	type: z.literal('array'),
-	value: z.array(
-		z.object({
-			message: z.string(),
-			i18n: z.object({ key: z.string() }).optional(),
-			class: z.literal('ERROR'),
-		}),
-	),
-});
-type IdxErrorObject = z.infer<typeof idxErrorObjectSchema>;
-
+// Schema for when the authentication process is completed, and we return a base user object
 export const completeLoginResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
 		user: z.object({
@@ -75,6 +71,20 @@ export const completeLoginResponseSchema = idxBaseResponseSchema.merge(
 	}),
 );
 
+// Schema for the error object in the IDX API response
+const idxErrorObjectSchema = z.object({
+	type: z.literal('array'),
+	value: z.array(
+		z.object({
+			message: z.string(),
+			i18n: z.object({ key: z.string() }).optional(),
+			class: z.literal('ERROR'),
+		}),
+	),
+});
+type IdxErrorObject = z.infer<typeof idxErrorObjectSchema>;
+
+// Type for the fetch parameters for the IDX API
 type IDXFetchParams<ResponseType, BodyType> = {
 	path: IDXPath;
 	body: BodyType;
@@ -82,8 +92,17 @@ type IDXFetchParams<ResponseType, BodyType> = {
 	expressRes: ResponseWithRequestState;
 	request_id?: string;
 };
+// type for the idx cookie which is string, but named for clarity
 type IdxCookie = string;
 
+/**
+ * @name idxFetchBase
+ * @description Base function for fetching data from the Okta IDX API, should not be used directly
+ *
+ * @param path - The path to the IDX API endpoint
+ * @param body - The body of the request
+ * @returns Promise<[Response, IdxCookie | undefined]> - The response from the IDX API, and the IDX cookie if it exists
+ */
 const idxFetchBase = async ({
 	path,
 	body,
@@ -106,6 +125,16 @@ const idxFetchBase = async ({
 	return [response, idxCookie];
 };
 
+/**
+ * @name idxFetch
+ * @description Fetch data from the Okta IDX API, used during the authentication process (remediation), make sure to pass the correct schema, ResponseType, and BodyType to have the response validated and typed correctly
+ *
+ * @param path - The path to the IDX API endpoint
+ * @param body - The body of the request
+ * @param schema - The zod schema to validate the response
+ * @param request_id - The request id
+ * @returns Promise<ResponseType> - The response from the IDX API
+ */
 export const idxFetch = async <ResponseType, BodyType>({
 	path,
 	body,
@@ -136,6 +165,16 @@ export const idxFetch = async <ResponseType, BodyType>({
 	}
 };
 
+/**
+ * @name idxFetchCompletion
+ * @description Fetch data from the Okta IDX API, used when the authentication process is completed, and we need to redirect the user to complete the login process. Should be used as the final step in the IDX process. Make sure to pass the BodyType to have the request body typed correctly.
+ *
+ * @param path - The path to the IDX API endpoint
+ * @param body - The body of the request
+ * @param expressRes - The express response object
+ * @param request_id - The request id
+ * @returns Promise<void>
+ */
 export const idxFetchCompletion = async <BodyType>({
 	path,
 	body,
@@ -194,9 +233,16 @@ export const idxFetchCompletion = async <BodyType>({
 	}
 };
 
-// Okta IDX API puts the error message in a nested object, so we need to recursively search for it
-// the key is 'messages' and the value has a specific schema
-// if the schema doesn't match, we'll just return the whole object as a string
+/**
+ * @name findErrorMessage
+ * @description Recursively search for the error message in the IDX API response
+ *
+ * Okta IDX API puts the error message in a nested object, so we need to recursively search for it.
+ * The key is 'messages' and the value has a specific schema.
+ * If the schema doesn't match, we'll just return the whole object as a string.
+ * @param obj - The object to search for the error message
+ * @returns IdxErrorObject | string | undefined - The error message object, or the whole object as a string, or undefined if no error message is found
+ */
 const findErrorMessage = (obj: object): IdxErrorObject | string | undefined => {
 	const findErrorRecursive = (
 		obj: object,
@@ -220,9 +266,11 @@ const findErrorMessage = (obj: object): IdxErrorObject | string | undefined => {
 	return findErrorRecursive(obj);
 };
 
-// handle any errors from the IDX API
-// these will be thrown as OAuthError objects
-// the consumer can catch and handle specific messages if they need to
+/**
+ * @name handleError
+ * @description Handle errors from the IDX API response, and throw them as OAuthError objects. This function should be used in a try/catch block when calling the IDX API, and the consumer can catch and handle specific messages if they need to.
+ * @param response
+ */
 const handleError = async (response: Response) => {
 	// Check if the body is likely json using the content-type header
 	const contentType = response.headers.get('content-type');
