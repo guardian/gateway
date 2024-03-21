@@ -25,10 +25,12 @@ export enum Newsletters {
 	THIS_IS_EUROPE = '4234',
 	// Registration Newsletter
 	SATURDAY_EDITION = '6031',
+	FEAST = '6002',
 }
 
 export const REGISTRATION_NEWSLETTERS: string[] = [
 	Newsletters.SATURDAY_EDITION,
+	Newsletters.FEAST,
 ];
 
 export const ALL_NEWSLETTER_IDS = Object.values(Newsletters);
@@ -39,5 +41,11 @@ export const RegistrationNewslettersFormFields = {
 		label: 'Saturday Edition',
 		context:
 			'An exclusive email highlighting the week’s best Guardian journalism from the editor-in-chief, Katharine Viner.',
+	},
+	feast: {
+		id: Newsletters.FEAST,
+		label: 'Feast',
+		context:
+			'A weekly email from Yotam Ottolenghi, Ravinder Bhogal, Felicity Cloake and Rachel Roddy, featuring the latest recipes and seasonal eating ideas',
 	},
 };

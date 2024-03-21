@@ -11,9 +11,11 @@ import { generateSignInRegisterTabs } from '@/client/components/Nav';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { RegistrationConsents } from '@/client/components/RegistrationConsents';
+import { AppName } from '@/shared/lib/appNameUtils';
 
 type RegisterWithEmailProps = RegistrationProps & {
 	geolocation?: GeoLocation;
+	appName?: AppName;
 };
 
 export const RegisterWithEmail = ({
@@ -22,6 +24,7 @@ export const RegisterWithEmail = ({
 	queryParams,
 	formError,
 	geolocation,
+	appName,
 }: RegisterWithEmailProps) => {
 	const formTrackingName = 'register';
 
@@ -54,7 +57,11 @@ export const RegisterWithEmail = ({
 				<EmailInput defaultValue={email} autoComplete="off" />
 				<CmpConsentedStateHiddenInput cmpConsentedState={hasCmpConsent} />
 
-				<RegistrationConsents useIdapi={useIdapi} geolocation={geolocation} />
+				<RegistrationConsents
+					useIdapi={useIdapi}
+					geolocation={geolocation}
+					appName={appName}
+				/>
 			</MainForm>
 		</MainLayout>
 	);

@@ -50,3 +50,10 @@ export const USGeolocation = (args: WelcomeSocialProps) => (
 USGeolocation.story = {
 	name: 'with US geolocation',
 };
+
+export const FeastApp = (args: WelcomeSocialProps) => (
+	<WelcomeSocial {...args} appName="Feast" />
+);
+FeastApp.story = {
+	name: 'with Feast app',
+};

@@ -20,6 +20,7 @@ export const WelcomeSocialPage = ({
 			queryParams={queryParams}
 			socialProvider={socialProvider}
 			geolocation={pageData.geolocation}
+			appName={pageData.appName}
 		/>
 	);
 };

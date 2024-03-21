@@ -33,6 +33,8 @@ export const isAppPrefix = isOneOf(appPrefixes);
 const appLabels = apps.map(([label]) => label);
 export const isAppLabel = isOneOf(appLabels);
 
+export type AppName = 'Guardian' | 'Feast';
+
 /**
  * @name getAppPrefix
  * @description To check and get a string has a prefix representing an native application.
@@ -45,7 +47,7 @@ export const getAppPrefix = (token: string): string | undefined =>
 
 export const getAppName = (
 	labelOrPrefix: AppLabel | AppPrefix,
-): string | undefined => {
+): AppName | undefined => {
 	switch (labelOrPrefix) {
 		case 'al_':
 		case 'android_live_app':
