@@ -10,6 +10,7 @@ import {
 import { selectAuthenticationEnrollSchema } from './enroll';
 import { ResponseWithRequestState } from '@/server/models/Express';
 
+// Schema for the 'skip' object inside the challenge response remediation object
 export const skipSchema = baseRemediationValueSchema.merge(
 	z.object({
 		name: z.literal('skip'),
@@ -17,6 +18,7 @@ export const skipSchema = baseRemediationValueSchema.merge(
 	}),
 );
 
+// Schema for the challenge/answer response
 const challengeAnswerResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
 		remediation: z.object({
@@ -33,12 +35,22 @@ const challengeAnswerResponseSchema = idxBaseResponseSchema.merge(
 );
 type ChallengeAnswerResponse = z.infer<typeof challengeAnswerResponseSchema>;
 
+// Body type for the challenge/answer request - passcode can refer to a OTP code or a password
 type ChallengeAnswerPasswordBody = IdxStateHandleBody<{
 	credentials: {
 		passcode: string;
 	};
 }>;
 
+/**
+ * @name challengeAnswerPasscode
+ * @description Okta IDX API/Interaction Code flow - Answer a challenge with a passcode (OTP code or password).
+ *
+ * @param stateHandle - The state handle from the previous step
+ * @param body - The passcode object, containing the passcode
+ * @param request_id - The request id
+ * @returns Promise<ChallengeAnswerResponse> - The challenge answer response
+ */
 export const challengeAnswerPasscode = (
 	stateHandle: IdxBaseResponse['stateHandle'],
 	body: ChallengeAnswerPasswordBody['credentials'],
@@ -55,6 +67,15 @@ export const challengeAnswerPasscode = (
 	});
 };
 
+/**
+ * @name setPasswordAndRedirect
+ * @description Okta IDX API/Interaction Code flow - Answer a challenge with a password, and redirect the user to set a global session and then back to the app. This could be one the final possible steps in the authentication process.
+ * @param stateHandle - The state handle from the previous step
+ * @param body - The password object, containing the password
+ * @param expressRes - The express response object
+ * @param request_id - The request id
+ * @returns Promise<void> - Performs a express redirect
+ */
 export const setPasswordAndRedirect = async (
 	stateHandle: IdxBaseResponse['stateHandle'],
 	body: ChallengeAnswerPasswordBody['credentials'],

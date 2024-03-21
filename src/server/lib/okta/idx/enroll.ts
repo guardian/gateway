@@ -7,12 +7,14 @@ import {
 	idxFetch,
 } from './shared';
 
+// schema for the enroll-profile object inside the enroll response remediation object
 const enrollProfileSchema = baseRemediationValueSchema.merge(
 	z.object({
 		name: z.literal('enroll-profile'),
 	}),
 );
 
+// schema for the enroll response
 const enrollResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
 		remediation: z.object({
@@ -25,6 +27,14 @@ const enrollResponseSchema = idxBaseResponseSchema.merge(
 );
 type EnrollResponse = z.infer<typeof enrollResponseSchema>;
 
+/**
+ * @name enroll
+ * @description Okta IDX API/Interaction Code flow - Use the stateHandle from the `introspect` step to start the enrollment process. This is used when registration a new user. Has to be called before `enrollNewWithEmail`.
+ *
+ * @param stateHandle - The state handle from the `introspect` step
+ * @param request_id - The request id
+ * @returns Promise<EnrollResponse> - The enroll response
+ */
 export const enroll = (
 	stateHandle: IdxBaseResponse['stateHandle'],
 	request_id?: string,
@@ -39,6 +49,7 @@ export const enroll = (
 	});
 };
 
+// Request body type for the enroll/new endpoint
 type EnrollNewWithEmailBody = IdxStateHandleBody<{
 	userProfile: {
 		email: string;
@@ -48,6 +59,7 @@ type EnrollNewWithEmailBody = IdxStateHandleBody<{
 	};
 }>;
 
+// schema for the enroll-authenticator object inside the enroll new response remediation object
 export const enrollAuthenticatorSchema = baseRemediationValueSchema.merge(
 	z.object({
 		name: z.literal('enroll-authenticator'),
@@ -67,7 +79,8 @@ export const enrollAuthenticatorSchema = baseRemediationValueSchema.merge(
 	}),
 );
 
-export const selectAuthenticationEnrollValueSchema = z.array(
+// schema for the select-authenticator-enroll value object inside selectAuthenticationEnrollSchema
+const selectAuthenticationEnrollValueSchema = z.array(
 	z.union([
 		z.object({
 			name: z.literal('authenticator'),
@@ -94,6 +107,7 @@ export const selectAuthenticationEnrollValueSchema = z.array(
 	]),
 );
 
+// schema for the select-authenticator-enroll object inside the enroll new response remediation object
 export const selectAuthenticationEnrollSchema =
 	baseRemediationValueSchema.merge(
 		z.object({
@@ -102,6 +116,7 @@ export const selectAuthenticationEnrollSchema =
 		}),
 	);
 
+// schema for the enroll/new response
 const enrollNewResponseSchema = idxBaseResponseSchema.merge(
 	z.object({
 		remediation: z.object({
@@ -127,6 +142,15 @@ const enrollNewResponseSchema = idxBaseResponseSchema.merge(
 );
 type EnrollNewResponse = z.infer<typeof enrollNewResponseSchema>;
 
+/**
+ * @name enrollNewWithEmail
+ * @description Okta IDX API/Interaction Code flow - Enroll a new user with an email address. This is used when registering a new user. Should be called after `enroll`.
+ *
+ * @param stateHandle - The state handle from the `enroll`/`introspect` step
+ * @param body - The user profile object, containing the email address
+ * @param request_id - The request id
+ * @returns Promise<EnrollNewResponse> - The enroll new response
+ */
 export const enrollNewWithEmail = (
 	stateHandle: IdxBaseResponse['stateHandle'],
 	body: EnrollNewWithEmailBody['userProfile'],
