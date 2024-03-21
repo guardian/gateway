@@ -16,11 +16,11 @@ import { getRedirectUrl } from './lib/helper';
 // or commit
 // <script src="https://cdn.jsdelivr.net/gh/guardian/gateway@df4557838d25ab7991130acc4cbe92e6ab063e6d/scripts/okta/okta-login.min.js"></script>
 
-// If you make changes to these files, be sure to run `yarn gen:okta-login` to compile the TypeScript and generate the Javascript file, `okta-login.js`.
+// If you make changes to these files, be sure to run `pnpm run gen:okta-login` to compile the TypeScript and generate the Javascript file, `okta-login.js`.
 // Then be sure to commit the updated Javascript file in order to use it with jsdelivr.
 
 // By writing these files in TypeScript, we can use modern syntax and features, and have the code compiled to ES5 JavaScript.
-// It also allows us to use Jest to test this code, which will run as part of the CI pipeline, or manually using `yarn test` or `yarn test:unit`.
+// It also allows us to use Jest to test this code, which will run as part of the CI pipeline, or manually using `make test` or `make test:unit`.
 
 // When modifying these files, be sure to code defensively, as we want to handle any errors or unexpected flows that may occur.
 

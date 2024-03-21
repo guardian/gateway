@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 import {
 	TokenResponse,
 	UserResponse,
@@ -86,10 +85,15 @@ type IDAPITestUserResponse = [
 ];
 
 export const randomMailosaurEmail = () => {
-	return uuidv4() + '@' + Cypress.env('MAILOSAUR_SERVER_ID') + '.mailosaur.net';
+	return (
+		crypto.randomUUID() +
+		'@' +
+		Cypress.env('MAILOSAUR_SERVER_ID') +
+		'.mailosaur.net'
+	);
 };
 
-export const randomPassword = () => uuidv4();
+export const randomPassword = () => crypto.randomUUID();
 
 export const getTestUserDetails = () =>
 	cy.getCookie('SC_GU_U').then((cookie) =>
@@ -223,7 +227,7 @@ export const createTestUser = ({
 	// Generate a random email address if none is provided.
 	const finalEmail = primaryEmailAddress || randomMailosaurEmail();
 	// Generate a random password if none is provided.
-	const finalPassword = password || uuidv4();
+	const finalPassword = password || crypto.randomUUID();
 	try {
 		return cy
 			.request({
