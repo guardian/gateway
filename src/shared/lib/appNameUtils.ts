@@ -42,7 +42,7 @@ export type AppName = 'Guardian' | 'Feast';
  * @param token	- string that may or may not have a prefix representing an native application
  * @returns	- boolean representing if the string has a prefix representing an native application
  */
-export const getAppPrefix = (token: string): string | undefined =>
+export const getAppPrefix = (token: string): AppPrefix | undefined =>
 	appPrefixes.find((prefix) => token.startsWith(prefix));
 
 export const getAppName = (
