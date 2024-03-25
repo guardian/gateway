@@ -102,8 +102,8 @@ dependencies:
     specifier: ^10.19.7
     version: 10.19.7
   preact-render-to-string:
-    specifier: ^6.4.0
-    version: 6.4.0(preact@10.19.7)
+    specifier: ^6.4.1
+    version: 6.4.1(preact@10.19.7)
   react:
     specifier: npm:@preact/compat
     version: /@preact/compat@17.1.2(preact@10.19.7)
@@ -13404,8 +13404,8 @@ packages:
       source-map-js: 1.0.2
     dev: true
 
-  /preact-render-to-string@6.4.0(preact@10.19.7):
-    resolution: {integrity: sha512-pzDwezZaLbK371OiJjXDsZJwVOALzFX5M1wEh2Kr0pEApq5AV6bRH/DFbA/zNA7Lck/duyREPQLLvzu2G6hEQQ==}
+  /preact-render-to-string@6.4.1(preact@10.19.7):
+    resolution: {integrity: sha512-oHKIFIv+/N0i3fNRF4ANMr2I93maycuXK78ERJ0vUW+nz6MXXMO6mTOFxp3itvSVBS/GXtLAy2jio3ZPeD8lZQ==}
     peerDependencies:
       preact: '>=10'
     dependencies:
