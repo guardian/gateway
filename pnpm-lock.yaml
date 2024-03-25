@@ -30,8 +30,8 @@ dependencies:
     specifier: 7.0.1
     version: 7.0.1(tslib@2.6.2)(typescript@5.4.2)
   '@guardian/consent-management-platform':
-    specifier: ^13.12.0
-    version: 13.12.0(@guardian/libs@16.0.2)
+    specifier: ^13.12.1
+    version: 13.12.1(@guardian/libs@16.0.2)
   '@guardian/libs':
     specifier: ^16.0.2
     version: 16.0.2(tslib@2.6.2)(typescript@5.4.2)
@@ -2877,8 +2877,8 @@ packages:
       typescript: 5.4.2
     dev: false
 
-  /@guardian/consent-management-platform@13.12.0(@guardian/libs@16.0.2):
-    resolution: {integrity: sha512-weLk3tR1ZtMvn5tfTFItvbIT84JFaXMdP5zcbu1Aynt+eTKZD8oVKTtuvdg6ZmTuxsEOIfsel0fFirjDUo5ccQ==}
+  /@guardian/consent-management-platform@13.12.1(@guardian/libs@16.0.2):
+    resolution: {integrity: sha512-ng6Pl760icPXobdm3qBhV82ATipW/o0nlnBTQTMuYvKVWFEebqFJ5su77/DSaCXyqJkXIKn3UeDTU8JyFQnBtQ==}
     peerDependencies:
       '@guardian/libs': ^15.0.0 || ^16.0.0
     dependencies:
