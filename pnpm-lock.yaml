@@ -183,7 +183,7 @@ devDependencies:
     version: 2.5.121
   '@testing-library/cypress':
     specifier: ^10.0.1
-    version: 10.0.1(cypress@13.7.0)
+    version: 10.0.1(cypress@13.7.1)
   '@testing-library/jest-dom':
     specifier: ^6.4.2
     version: 6.4.2(@types/jest@29.5.12)(jest@29.7.0)
@@ -263,14 +263,14 @@ devDependencies:
     specifier: ^12.0.2
     version: 12.0.2(webpack@5.90.3)
   cypress:
-    specifier: 13.7.0
-    version: 13.7.0
+    specifier: 13.7.1
+    version: 13.7.1
   cypress-axe:
     specifier: ^1.5.0
-    version: 1.5.0(axe-core@4.8.4)(cypress@13.7.0)
+    version: 1.5.0(axe-core@4.8.4)(cypress@13.7.1)
   cypress-mailosaur:
     specifier: 2.14.0
-    version: 2.14.0(cypress@13.7.0)
+    version: 2.14.0(cypress@13.7.1)
   dotenv-webpack:
     specifier: ^8.0.1
     version: 8.0.1(webpack@5.90.3)
@@ -5748,7 +5748,7 @@ packages:
     resolution: {integrity: sha512-myfUej5naTBWnqOCc/MdVOLVjXUXtIA+NpDrDBKJtLLg2shUjBu3cZmB/85RyitKc55+lUUyl7oRfLOvkr2hsw==}
     dev: true
 
-  /@testing-library/cypress@10.0.1(cypress@13.7.0):
+  /@testing-library/cypress@10.0.1(cypress@13.7.1):
     resolution: {integrity: sha512-e8uswjTZIBhaIXjzEcrQQ8nHRWHgZH7XBxKuIWxZ/T7FxfWhCR48nFhUX5nfPizjVOKSThEfOSv67jquc1ASkw==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
@@ -5756,7 +5756,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.23.9
       '@testing-library/dom': 9.3.3
-      cypress: 13.7.0
+      cypress: 13.7.1
     dev: true
 
   /@testing-library/dom@8.20.0:
@@ -8307,7 +8307,7 @@ packages:
       http-errors: 1.7.3
     dev: false
 
-  /cypress-axe@1.5.0(axe-core@4.8.4)(cypress@13.7.0):
+  /cypress-axe@1.5.0(axe-core@4.8.4)(cypress@13.7.1):
     resolution: {integrity: sha512-Hy/owCjfj+25KMsecvDgo4fC/781ccL+e8p+UUYoadGVM2ogZF9XIKbiM6KI8Y3cEaSreymdD6ZzccbI2bY0lQ==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -8315,20 +8315,20 @@ packages:
       cypress: ^10 || ^11 || ^12 || ^13
     dependencies:
       axe-core: 4.8.4
-      cypress: 13.7.0
+      cypress: 13.7.1
     dev: true
 
-  /cypress-mailosaur@2.14.0(cypress@13.7.0):
+  /cypress-mailosaur@2.14.0(cypress@13.7.1):
     resolution: {integrity: sha512-pevHXmSJPaaiulfeEV7LV5nYnPhxNc8ukEAOm1/XpFG8nIDoc6rilJ+xWkNEDO8TWqJH/N3/c0QBxiS6xw38ng==}
     engines: {node: '>= v10.0.0'}
     peerDependencies:
       cypress: '>= 2.1.0'
     dependencies:
-      cypress: 13.7.0
+      cypress: 13.7.1
     dev: true
 
-  /cypress@13.7.0:
-    resolution: {integrity: sha512-UimjRSJJYdTlvkChcdcfywKJ6tUYuwYuk/n1uMMglrvi+ZthNhoRYcxnWgTqUtkl17fXrPAsD5XT2rcQYN1xKA==}
+  /cypress@13.7.1:
+    resolution: {integrity: sha512-4u/rpFNxOFCoFX/Z5h+uwlkBO4mWzAjveURi3vqdSu56HPvVdyGTxGw4XKGWt399Y1JwIn9E1L9uMXQpc0o55w==}
     engines: {node: ^16.0.0 || ^18.0.0 || >=20.0.0}
     hasBin: true
     requiresBuild: true
