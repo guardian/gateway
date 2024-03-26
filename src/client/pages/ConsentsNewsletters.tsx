@@ -14,7 +14,10 @@ import { ConsentsNavigation } from '@/client/components/ConsentsNavigation';
 import { greyBorderTop, heading, text } from '@/client/styles/Consents';
 import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { Consent } from '@/shared/model/Consent';
-import { NewsLetter } from '@/shared/model/Newsletter';
+import {
+	NewsLetter,
+	newsletterAdditionalTerms,
+} from '@/shared/model/Newsletter';
 import {
 	NEWSLETTER_COLOURS,
 	NEWSLETTER_IMAGES,
@@ -84,8 +87,7 @@ export const ConsentsNewsletters = ({ consents }: ConsentsNewslettersProps) => {
 				journalism.
 			</p>
 			<p css={[text, paragraphSpacing, autoRow()]}>
-				Newsletters may contain information about Guardian products, services
-				and chosen charities or online advertisements.
+				{newsletterAdditionalTerms}
 			</p>
 			<ConsentsForm cssOverrides={autoRow()}>
 				{consents.map(({ type, consent }, i) => {

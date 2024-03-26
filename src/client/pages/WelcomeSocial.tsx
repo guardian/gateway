@@ -23,6 +23,7 @@ import { GeoLocation } from '@/shared/model/Geolocation';
 import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { RegistrationConsents } from '@/client/components/RegistrationConsents';
 import { AppName } from '@/shared/lib/appNameUtils';
+import { newsletterAdditionalTerms } from '@/shared/model/Newsletter';
 
 const inlineMessage = (socialProvider: SocialProvider) => css`
 	display: flex;
@@ -94,7 +95,7 @@ export const WelcomeSocial = ({
 					registrationFormSubmitOphanTracking(e.target as HTMLFormElement);
 					return undefined;
 				}}
-				additionalTerms="Newsletters may contain info about charities, online ads, and content funded by outside parties."
+				additionalTerms={newsletterAdditionalTerms}
 			>
 				{socialProvider === 'google' && (
 					<MainBodyText cssOverrides={inlineMessage(socialProvider)}>

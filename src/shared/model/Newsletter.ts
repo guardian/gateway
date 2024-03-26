@@ -49,3 +49,6 @@ export const RegistrationNewslettersFormFields = {
 			'A weekly email from Yotam Ottolenghi, Ravinder Bhogal, Felicity Cloake and Rachel Roddy, featuring the latest recipes and seasonal eating ideas',
 	},
 };
+
+export const newsletterAdditionalTerms =
+	'Newsletters may contain information about Guardian products, services and chosen charities or online advertisements.';
