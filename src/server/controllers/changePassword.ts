@@ -328,6 +328,8 @@ const changePasswordInOkta = async (
 				scopes: scopesForAuthentication,
 				redirectUri: ProfileOpenIdClientRedirectUris.AUTHENTICATION,
 				extraData: {
+					// We only set this when we're setting the password on a welcome flow (i.e. when it's a new user)
+					isEmailRegistration: path === '/welcome',
 					encryptedRegistrationConsents,
 					appPrefix: getAppPrefix(encryptedRecoveryToken),
 				},

@@ -302,7 +302,7 @@ describe('Registration flow - Split 2/2', () => {
 			).then(({ body, token }) => {
 				expect(body).to.have.string('Complete registration');
 				cy.visit(`/welcome/${token}`);
-				cy.contains('Save and continue');
+				cy.contains('Complete creating account');
 
 				cy.get('form')
 					.should('have.attr', 'action')
@@ -601,13 +601,13 @@ describe('Registration flow - Split 2/2', () => {
 					// Sign our new user in
 					cy.visit(
 						`/signin?returnUrl=${encodeURIComponent(
-							`https://${Cypress.env('BASE_URI')}/consents`,
+							`https://${Cypress.env('BASE_URI')}/welcome/review`,
 						)}`,
 					);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
 					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.url().should('include', '/consents');
+					cy.url().should('include', '/welcome/review');
 
 					// Get the current session data
 					cy.getCookie('idx').then((originalIdxCookie) => {
@@ -616,7 +616,7 @@ describe('Registration flow - Split 2/2', () => {
 						// Visit register again
 						cy.visit(
 							`/register/email?returnUrl=${encodeURIComponent(
-								`https://${Cypress.env('BASE_URI')}/consents`,
+								`https://${Cypress.env('BASE_URI')}/welcome/review`,
 							)}`,
 						);
 						cy.url().should('include', '/register');
@@ -630,7 +630,7 @@ describe('Registration flow - Split 2/2', () => {
 								'include',
 								`https://${Cypress.env(
 									'BASE_URI',
-								)}/signin/refresh?returnUrl=https%3A%2F%2Fprofile.thegulocal.com%2Fconsents`,
+								)}/signin/refresh?returnUrl=https%3A%2F%2Fprofile.thegulocal.com%2Fwelcome%2Freview`,
 							);
 						cy.contains('a', 'Sign in')
 							.should('have.attr', 'href')
@@ -672,7 +672,7 @@ describe('Registration flow - Split 2/2', () => {
 				const appClientId = Cypress.env('OKTA_ANDROID_CLIENT_ID');
 				// manually adding the app prefix to the token
 				cy.visit(`/welcome/al_${token}&appClientId=${appClientId}`);
-				cy.contains('Save and continue');
+				cy.contains('Complete creating account');
 
 				cy.get('input[name="password"]').type(randomPassword());
 				cy.get('button[type="submit"]').click();

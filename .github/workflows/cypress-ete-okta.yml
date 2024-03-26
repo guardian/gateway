@@ -125,7 +125,7 @@ jobs:
           REDIS_HOST: localhost
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
           REDIS_SSL_ON: false
-          RATE_LIMITER_CONFIG: '{"enabled":true,"defaultBuckets":{"globalBucket":{"capacity":500,"addTokenMs":50},"ipBucket":{"capacity":100,"addTokenMs":50},"emailBucket":{"capacity":100,"addTokenMs":50},"oktaIdentifierBucket":{"capacity":100,"addTokenMs":50},"accessTokenBucket":{"capacity":4,"addTokenMs":5000}},"routeBuckets":{"/consents/:page":{"globalBucket":{"capacity":500,"addTokenMs":50},"accessTokenBucket":{"capacity":100,"addTokenMs":50}}}}'
+          RATE_LIMITER_CONFIG: '{"enabled":true,"defaultBuckets":{"globalBucket":{"capacity":500,"addTokenMs":50},"ipBucket":{"capacity":100,"addTokenMs":50},"emailBucket":{"capacity":100,"addTokenMs":50},"oktaIdentifierBucket":{"capacity":100,"addTokenMs":50},"accessTokenBucket":{"capacity":4,"addTokenMs":5000}}}'
           DELETE_ACCOUNT_STEP_FUNCTION_URL: ${{ secrets.DELETE_ACCOUNT_STEP_FUNCTION_URL }}
           DELETE_ACCOUNT_STEP_FUNCTION_API_KEY: ${{ secrets.DELETE_ACCOUNT_STEP_FUNCTION_API_KEY }}
           # Required for the Cypress tests to run as we're unable to verify the created certs

@@ -33,7 +33,7 @@ describe('Jobs terms and conditions flow', () => {
 					// load the consents page as its on the same domain
 					const postSignInReturnUrl = `https://${Cypress.env(
 						'BASE_URI',
-					)}/consents/data?useIdapi=true`;
+					)}/welcome/review?useIdapi=true`;
 					const visitUrl = `/signin?returnUrl=${encodeURIComponent(
 						postSignInReturnUrl,
 					)}&useIdapi=true`;
@@ -43,7 +43,7 @@ describe('Jobs terms and conditions flow', () => {
 
 					cy.get('[data-cy="main-form-submit-button"]').click();
 
-					cy.url().should('include', '/consents/data');
+					cy.url().should('include', '/welcome/review');
 
 					const termsAcceptPageUrl = `https://${Cypress.env(
 						'BASE_URI',
@@ -99,7 +99,7 @@ describe('Jobs terms and conditions flow', () => {
 					// load the consents page as its on the same domain
 					const postSignInReturnUrl = `https://${Cypress.env(
 						'BASE_URI',
-					)}/consents/data?useIdapi=true`;
+					)}/welcome/review?useIdapi=true`;
 					const visitUrl = `/signin?returnUrl=${encodeURIComponent(
 						postSignInReturnUrl,
 					)}&useIdapi=true`;
@@ -109,7 +109,7 @@ describe('Jobs terms and conditions flow', () => {
 
 					cy.get('[data-cy="main-form-submit-button"]').click();
 
-					cy.url().should('include', '/consents/data');
+					cy.url().should('include', '/welcome/review');
 
 					cy.visit(termsAcceptPageUrl);
 
@@ -163,14 +163,14 @@ describe('Jobs terms and conditions flow', () => {
 
 					const finalTermsAcceptPageUrl = `https://${Cypress.env(
 						'BASE_URI',
-					)}/agree/GRS?returnUrl=https://profile.thegulocal.com/maintenance&useIdapi=true`;
+					)}/agree/GRS?returnUrl=https://profile.thegulocal.com/welcome/review&useIdapi=true`;
 
 					cy.visit(finalTermsAcceptPageUrl, { failOnStatusCode: false });
 
 					// Make sure the returnURL is respected.
 					cy.url().should(
 						'include',
-						'https://profile.thegulocal.com/maintenance',
+						'https://profile.thegulocal.com/welcome/review',
 					);
 				});
 		});
@@ -192,7 +192,7 @@ describe('Jobs terms and conditions flow', () => {
 					// load the consents page as its on the same domain
 					const postSignInReturnUrl = `https://${Cypress.env(
 						'BASE_URI',
-					)}/consents/data?useIdapi=true`;
+					)}/welcome/review?useIdapi=true`;
 					const visitUrl = `/signin?returnUrl=${encodeURIComponent(
 						postSignInReturnUrl,
 					)}&useIdapi=true`;
@@ -202,7 +202,7 @@ describe('Jobs terms and conditions flow', () => {
 
 					cy.get('[data-cy="main-form-submit-button"]').click();
 
-					cy.url().should('include', '/consents/data');
+					cy.url().should('include', '/welcome/review');
 
 					cy.visit(termsAcceptPageUrl);
 

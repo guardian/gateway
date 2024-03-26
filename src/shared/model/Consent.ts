@@ -19,12 +19,6 @@ export const CONSENTS_DATA_PAGE: string[] = [
 	Consents.ADVERTISING,
 ];
 
-export const CONSENTS_NEWSLETTERS_PAGE: string[] = [Consents.EVENTS];
-
-export const REGISTRATION_CONSENTS: string[] = [
-	Consents.SIMILAR_GUARDIAN_PRODUCTS,
-];
-
 export const RegistrationConsentsFormFields = {
 	similarGuardianProducts: {
 		id: Consents.SIMILAR_GUARDIAN_PRODUCTS,

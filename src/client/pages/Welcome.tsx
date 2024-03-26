@@ -7,14 +7,13 @@ import {
 } from '@guardian/source-react-components';
 import { PasswordForm } from '@/client/components/PasswordForm';
 import { FieldError } from '@/shared/model/ClientState';
-import { ConsentsLayout } from '@/client/layouts/ConsentsLayout';
 import { getAutoRow, passwordFormSpanDef } from '@/client/styles/Grid';
-import { controls, text, greyBorderTop } from '@/client/styles/Consents';
-import { CONSENTS_PAGES } from '@/client/models/ConsentsPages';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import NameInputField from '@/client/components/NameInputField';
 import { useNameInputFieldError } from '@/client/lib/hooks/useNameFieldInputError';
 import { QueryParams } from '@/shared/model/QueryParams';
+import { MainLayout } from '../layouts/Main';
+import { MainBodyText } from '../components/MainBodyText';
 
 type Props = {
 	submitUrl: string;
@@ -27,7 +26,6 @@ type Props = {
 };
 
 const linkButton = css`
-	width: 150px;
 	margin-top: ${space[3]}px;
 `;
 
@@ -61,38 +59,43 @@ export const Welcome = ({
 		setFormSubmitAttempted,
 	} = useNameInputFieldError();
 
+	const messageAction = isJobs ? 'Fill in your details' : 'Set a password';
+	const messageContext = isJobs ? 'Details' : 'Password';
+
 	return (
-		<ConsentsLayout
-			title="Welcome to the Guardian"
-			current={CONSENTS_PAGES.DETAILS}
-			showContinueButton={false}
-			errorMessage={nameFieldError}
+		<MainLayout
+			pageHeader={isJobs ? 'Complete your account' : 'Create your password'}
+			errorOverride={nameFieldError}
 			errorContext={nameFieldErrorContext}
 		>
-			<p css={[text, greyBorderTop, autoRow()]}>
+			<MainBodyText>
 				{passwordSet
-					? 'Password already set for '
-					: 'Please complete your details for '}
-				{email ? <span css={emailSpan}>{email}</span> : 'your new account'}
-			</p>
+					? `${messageContext} already set for `
+					: `${messageAction} for `}
+				{email ? (
+					<>
+						Guardian account: <span css={emailSpan}>{email}</span>
+					</>
+				) : (
+					'your new account.'
+				)}
+			</MainBodyText>
 			{passwordSet ? (
-				<div css={[controls, autoRow()]}>
-					<LinkButton
-						css={linkButton}
-						href={buildUrlWithQueryParams('/consents', {}, queryParams)}
-						priority="primary"
-						icon={<SvgArrowRightStraight />}
-						iconSide="right"
-					>
-						Continue
-					</LinkButton>
-				</div>
+				<LinkButton
+					css={linkButton}
+					href={buildUrlWithQueryParams('/welcome/review', {}, queryParams)}
+					priority="primary"
+					icon={<SvgArrowRightStraight />}
+					iconSide="right"
+				>
+					Complete creating account
+				</LinkButton>
 			) : (
 				<PasswordForm
 					submitUrl={submitUrl}
 					fieldErrors={fieldErrors}
 					labelText="Password"
-					submitButtonText="Save and continue"
+					submitButtonText="Complete creating account"
 					gridAutoRow={autoRow}
 					autoComplete="new-password"
 					formTrackingName="welcome"
@@ -102,6 +105,6 @@ export const Welcome = ({
 					{isJobs && <NameInputField onGroupError={setGroupError} />}
 				</PasswordForm>
 			)}
-		</ConsentsLayout>
+		</MainLayout>
 	);
 };
