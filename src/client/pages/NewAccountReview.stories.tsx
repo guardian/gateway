@@ -2,19 +2,18 @@ import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 import { Consent } from '@/shared/model/Consent';
-import { ConsentsData } from './ConsentsData';
+import { NewAccountReview } from './NewAccountReview';
 
 export default {
-	title: 'Pages/ConsentsData',
-	component: ConsentsData,
+	title: 'Pages/NewAccountReview',
+	component: NewAccountReview,
 	parameters: {
 		layout: 'fullscreen',
-		clientState: { pageData: { previousPage: 'fake_page' } },
 	},
-} as ComponentMeta<typeof ConsentsData>;
+} as ComponentMeta<typeof NewAccountReview>;
 
-const Template: ComponentStory<typeof ConsentsData> = (props) => (
-	<ConsentsData {...props} />
+const Template: ComponentStory<typeof NewAccountReview> = (props) => (
+	<NewAccountReview {...props} />
 );
 
 const advertising: Consent = {

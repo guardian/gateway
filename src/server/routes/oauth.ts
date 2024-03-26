@@ -22,7 +22,6 @@ import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { IdTokenClaims, TokenSet } from 'openid-client';
 import { updateUser } from '@/server/lib/okta/api/users';
 import { setUserFeatureCookies } from '@/server/lib/user-features';
-import { consentPages } from './consents';
 import {
 	checkAndDeleteOAuthTokenCookies,
 	setOAuthTokenCookie,
@@ -410,7 +409,7 @@ const authenticationHandler = async (
 		// This will be fixed when we either use the passcode registration flow.
 		if (
 			authState.data?.appPrefix &&
-			consentPages.some((page) => page.path === authState.confirmationPage)
+			authState.confirmationPage === '/welcome/review'
 		) {
 			// eslint-disable-next-line functional/immutable-data
 			authState.confirmationPage =

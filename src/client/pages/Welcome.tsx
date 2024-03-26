@@ -79,7 +79,7 @@ export const Welcome = ({
 			{passwordSet ? (
 				<LinkButton
 					css={linkButton}
-					href={buildUrlWithQueryParams('/consents', {}, queryParams)}
+					href={buildUrlWithQueryParams('/welcome/review', {}, queryParams)}
 					priority="primary"
 					icon={<SvgArrowRightStraight />}
 					iconSide="right"
