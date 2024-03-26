@@ -22,6 +22,8 @@ import { SocialProvider } from '@/shared/model/Social';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { RegistrationConsents } from '@/client/components/RegistrationConsents';
+import { AppName } from '@/shared/lib/appNameUtils';
+import { newsletterAdditionalTerms } from '@/shared/model/Newsletter';
 
 const inlineMessage = (socialProvider: SocialProvider) => css`
 	display: flex;
@@ -66,6 +68,7 @@ const inlineMessage = (socialProvider: SocialProvider) => css`
 export type WelcomeSocialProps = RegistrationProps & {
 	socialProvider: SocialProvider;
 	geolocation?: GeoLocation;
+	appName?: AppName;
 };
 
 export const WelcomeSocial = ({
@@ -73,6 +76,7 @@ export const WelcomeSocial = ({
 	formError,
 	socialProvider,
 	geolocation,
+	appName,
 }: WelcomeSocialProps) => {
 	const formTrackingName = 'register';
 
@@ -91,6 +95,7 @@ export const WelcomeSocial = ({
 					registrationFormSubmitOphanTracking(e.target as HTMLFormElement);
 					return undefined;
 				}}
+				additionalTerms={newsletterAdditionalTerms}
 			>
 				{socialProvider === 'google' && (
 					<MainBodyText cssOverrides={inlineMessage(socialProvider)}>
@@ -106,7 +111,11 @@ export const WelcomeSocial = ({
 						<SvgTickRound />
 					</MainBodyText>
 				)}
-				<RegistrationConsents geolocation={geolocation} noMarginBottom />
+				<RegistrationConsents
+					geolocation={geolocation}
+					noMarginBottom
+					appName={appName}
+				/>
 			</MainForm>
 		</MainLayout>
 	);

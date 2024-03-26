@@ -15,6 +15,7 @@ export const RegisterWithEmailPage = () => {
 			recaptchaSiteKey={recaptchaSiteKey}
 			queryParams={queryParams}
 			geolocation={pageData.geolocation}
+			appName={pageData.appName}
 		/>
 	);
 };

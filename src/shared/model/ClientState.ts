@@ -7,6 +7,7 @@ import { Participations } from '@guardian/ab-core';
 import { ConsentPath, RoutePaths } from '@/shared/model/Routes';
 import { UserAttributesResponse } from '@/shared/lib/members-data-api';
 import { Stage } from '@/shared/model/Configuration';
+import { AppName } from '@/shared/lib/appNameUtils';
 
 export interface FieldError {
 	field: string;
@@ -36,7 +37,7 @@ export interface PageData {
 	browserName?: string;
 	isNativeApp?: IsNativeApp;
 	accountManagementUrl?: string;
-	appName?: string;
+	appName?: AppName;
 
 	// token
 	token?: string;

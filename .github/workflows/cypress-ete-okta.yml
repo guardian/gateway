@@ -56,10 +56,28 @@ jobs:
           name: build
       - name: Unzip build
         run: unzip -q build.zip
+      - uses: pnpm/action-setup@v3
+        with:
+          version: latest
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
-          cache: 'yarn'
+      - name: Get pnpm cache directory path
+        id: pnpm-cache-dir
+        run: echo "PNPM_STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+      - name: Get cypress cache directory path
+        id: cypress-cache-dir
+        run: echo "CYPRESS_BIN_PATH=$(pnpm dlx cypress cache path)" >> $GITHUB_OUTPUT
+      - name: Cache pnpm modules and cypress binary
+        uses: actions/cache@v4
+        id: pnpm-cache
+        with:
+          path: |
+            ${{ steps.pnpm-cache-dir.outputs.PNPM_STORE_PATH }}
+            ${{ steps.cypress-cache-dir.outputs.CYPRESS_BIN_PATH }}
+          key: ${{ runner.os }}-pnpm-cypress-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-cypress-
       - name: Cypress run
         uses: cypress-io/github-action@v6
         env:
@@ -115,8 +133,7 @@ jobs:
           # Used to tell Gateway server we're running in Cypress
           RUNNING_IN_CYPRESS: true
         with:
-          install: yarn install --frozen-lockfile --immutable
-          start: yarn start
+          start: pnpm start
           wait-on: 'https://profile.thegulocal.com/healthcheck'
           wait-on-timeout: 60
           browser: chrome

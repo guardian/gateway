@@ -61,3 +61,10 @@ export const USGeolocation = (args: RegistrationProps) => (
 USGeolocation.story = {
 	name: 'with US geolocation',
 };
+
+export const FeastApp = (args: RegistrationProps) => (
+	<RegisterWithEmail {...args} appName="Feast" />
+);
+FeastApp.story = {
+	name: 'with Feast app',
+};

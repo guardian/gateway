@@ -19,7 +19,7 @@ Implement [eslint-plugin-jsx-a11y](https://www.npmjs.com/package/eslint-plugin-j
 
 The rules that are checked are listed on the project link.
 
-To test run `yarn lint` or using the ESLint VSCode plugin will highlight issues directly in the editor.
+To test run `pnpm lint` or using the ESLint VSCode plugin will highlight issues directly in the editor.
 
 CI builds will fail unless all linting error are dealt with.
 

@@ -25,6 +25,7 @@ import { PersistableQueryParams } from '@/shared/model/QueryParams';
 import { validateReturnUrl } from '@/server/lib/validateUrl';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { decryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
+import { getAppName, getAppPrefix } from '@/shared/lib/appNameUtils';
 
 const { okta, defaultReturnUri } = getConfiguration();
 
@@ -154,6 +155,9 @@ export const checkTokenInOkta = async (
 	const { token } = req.params;
 
 	try {
+		// check if the token is prefixed with an app prefix
+		const prefix = getAppPrefix(token);
+
 		// decrypt the recovery token
 		const decryptedRecoveryToken = decryptOktaRecoveryToken({
 			encryptedToken: token,
@@ -213,6 +217,12 @@ export const checkTokenInOkta = async (
 						fieldErrors,
 						formError: error,
 						token,
+						isNativeApp: prefix
+							? prefix.startsWith('a')
+								? 'android'
+								: 'ios'
+							: undefined,
+						appName: prefix ? getAppName(prefix) : undefined,
 					},
 				}),
 			},

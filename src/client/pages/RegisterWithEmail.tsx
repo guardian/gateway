@@ -11,9 +11,12 @@ import { generateSignInRegisterTabs } from '@/client/components/Nav';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { RegistrationConsents } from '@/client/components/RegistrationConsents';
+import { AppName } from '@/shared/lib/appNameUtils';
+import { newsletterAdditionalTerms } from '@/shared/model/Newsletter';
 
 type RegisterWithEmailProps = RegistrationProps & {
 	geolocation?: GeoLocation;
+	appName?: AppName;
 };
 
 export const RegisterWithEmail = ({
@@ -22,6 +25,7 @@ export const RegisterWithEmail = ({
 	queryParams,
 	formError,
 	geolocation,
+	appName,
 }: RegisterWithEmailProps) => {
 	const formTrackingName = 'register';
 
@@ -49,12 +53,16 @@ export const RegisterWithEmail = ({
 					registrationFormSubmitOphanTracking(e.target as HTMLFormElement);
 					return undefined;
 				}}
-				additionalTerms="Newsletters may contain info about charities, online ads, and content funded by outside parties."
+				additionalTerms={newsletterAdditionalTerms}
 			>
 				<EmailInput defaultValue={email} autoComplete="off" />
 				<CmpConsentedStateHiddenInput cmpConsentedState={hasCmpConsent} />
 
-				<RegistrationConsents useIdapi={useIdapi} geolocation={geolocation} />
+				<RegistrationConsents
+					useIdapi={useIdapi}
+					geolocation={geolocation}
+					appName={appName}
+				/>
 			</MainForm>
 		</MainLayout>
 	);
