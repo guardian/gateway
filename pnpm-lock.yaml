@@ -29,12 +29,9 @@ dependencies:
   '@guardian/ab-core':
     specifier: 7.0.1
     version: 7.0.1(tslib@2.6.2)(typescript@5.4.3)
-  '@guardian/consent-management-platform':
-    specifier: ^13.12.1
-    version: 13.12.1(@guardian/libs@16.0.2)
   '@guardian/libs':
-    specifier: ^16.0.2
-    version: 16.0.2(tslib@2.6.2)(typescript@5.4.3)
+    specifier: 0.0.0-canary-20240325210020
+    version: 0.0.0-canary-20240325210020(tslib@2.6.2)(typescript@5.4.3)
   '@guardian/source-foundations':
     specifier: ^14.1.4
     version: 14.1.4(tslib@2.6.2)(typescript@5.4.3)
@@ -43,7 +40,7 @@ dependencies:
     version: 22.0.2(@emotion/react@11.11.4)(@guardian/source-foundations@14.1.4)(@preact/compat@17.1.2)(tslib@2.6.2)(typescript@5.4.3)
   '@guardian/source-react-components-development-kitchen':
     specifier: ^19.0.0
-    version: 19.0.0(@emotion/react@11.11.4)(@guardian/libs@16.0.2)(@guardian/source-foundations@14.1.4)(@guardian/source-react-components@22.0.2)(@preact/compat@17.1.2)(tslib@2.6.2)(typescript@5.4.3)
+    version: 19.0.0(@emotion/react@11.11.4)(@guardian/libs@0.0.0-canary-20240325210020)(@guardian/source-foundations@14.1.4)(@guardian/source-react-components@22.0.2)(@preact/compat@17.1.2)(tslib@2.6.2)(typescript@5.4.3)
   '@okta/jwt-verifier':
     specifier: ^3.0.1
     version: 3.0.1
@@ -147,10 +144,10 @@ devDependencies:
     version: 11.11.0(@babel/core@7.24.3)
   '@guardian/eslint-plugin-source-foundations':
     specifier: ^18.0.0
-    version: 18.0.0(@guardian/libs@16.0.2)(@guardian/source-foundations@14.1.4)(eslint@8.57.0)(tslib@2.6.2)(typescript@5.4.3)
+    version: 18.0.0(@guardian/libs@0.0.0-canary-20240325210020)(@guardian/source-foundations@14.1.4)(eslint@8.57.0)(tslib@2.6.2)(typescript@5.4.3)
   '@guardian/eslint-plugin-source-react-components':
     specifier: ^24.0.0
-    version: 24.0.0(@guardian/libs@16.0.2)(@guardian/source-react-components@22.0.2)(@preact/compat@17.1.2)(eslint@8.57.0)(tslib@2.6.2)(typescript@5.4.3)
+    version: 24.0.0(@guardian/libs@0.0.0-canary-20240325210020)(@guardian/source-react-components@22.0.2)(@preact/compat@17.1.2)(eslint@8.57.0)(tslib@2.6.2)(typescript@5.4.3)
   '@guardian/node-riffraff-artifact':
     specifier: ^0.3.2
     version: 0.3.2
@@ -2922,15 +2919,7 @@ packages:
       typescript: 5.4.3
     dev: false
 
-  /@guardian/consent-management-platform@13.12.1(@guardian/libs@16.0.2):
-    resolution: {integrity: sha512-ng6Pl760icPXobdm3qBhV82ATipW/o0nlnBTQTMuYvKVWFEebqFJ5su77/DSaCXyqJkXIKn3UeDTU8JyFQnBtQ==}
-    peerDependencies:
-      '@guardian/libs': ^15.0.0 || ^16.0.0
-    dependencies:
-      '@guardian/libs': 16.0.2(tslib@2.6.2)(typescript@5.4.3)
-    dev: false
-
-  /@guardian/eslint-plugin-source-foundations@18.0.0(@guardian/libs@16.0.2)(@guardian/source-foundations@14.1.4)(eslint@8.57.0)(tslib@2.6.2)(typescript@5.4.3):
+  /@guardian/eslint-plugin-source-foundations@18.0.0(@guardian/libs@0.0.0-canary-20240325210020)(@guardian/source-foundations@14.1.4)(eslint@8.57.0)(tslib@2.6.2)(typescript@5.4.3):
     resolution: {integrity: sha512-YquJH0v7i5pcbu748eIdXJYptrw4igqI2xpyFdOjB0+r/lXdPLSVehHeiRwE+bQ9+0J9A+aPOEfGO+3qUnACmw==}
     peerDependencies:
       '@guardian/libs': ^16.0.0
@@ -2942,7 +2931,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@guardian/libs': 16.0.2(tslib@2.6.2)(typescript@5.4.3)
+      '@guardian/libs': 0.0.0-canary-20240325210020(tslib@2.6.2)(typescript@5.4.3)
       '@guardian/source-foundations': 14.1.4(tslib@2.6.2)(typescript@5.4.3)
       '@typescript-eslint/eslint-plugin': 6.21.0(@typescript-eslint/parser@6.21.0)(eslint@8.57.0)(typescript@5.4.3)
       '@typescript-eslint/parser': 6.21.0(eslint@8.57.0)(typescript@5.4.3)
@@ -2956,7 +2945,7 @@ packages:
       - supports-color
     dev: true
 
-  /@guardian/eslint-plugin-source-react-components@24.0.0(@guardian/libs@16.0.2)(@guardian/source-react-components@22.0.2)(@preact/compat@17.1.2)(eslint@8.57.0)(tslib@2.6.2)(typescript@5.4.3):
+  /@guardian/eslint-plugin-source-react-components@24.0.0(@guardian/libs@0.0.0-canary-20240325210020)(@guardian/source-react-components@22.0.2)(@preact/compat@17.1.2)(eslint@8.57.0)(tslib@2.6.2)(typescript@5.4.3):
     resolution: {integrity: sha512-CQpKTWgDsrRhzQcHEI62EQD36W9jQ/TDfMqF6umkNXyCby/WFs80YrgkkJreQmJJFUc5vXCzVdUXpPfB4mMong==}
     peerDependencies:
       '@guardian/libs': ^16.0.0
@@ -2969,7 +2958,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@guardian/libs': 16.0.2(tslib@2.6.2)(typescript@5.4.3)
+      '@guardian/libs': 0.0.0-canary-20240325210020(tslib@2.6.2)(typescript@5.4.3)
       '@guardian/source-react-components': 22.0.2(@emotion/react@11.11.4)(@guardian/source-foundations@14.1.4)(@preact/compat@17.1.2)(tslib@2.6.2)(typescript@5.4.3)
       '@typescript-eslint/eslint-plugin': 6.21.0(@typescript-eslint/parser@6.21.0)(eslint@8.57.0)(typescript@5.4.3)
       '@typescript-eslint/parser': 6.21.0(eslint@8.57.0)(typescript@5.4.3)
@@ -2981,8 +2970,8 @@ packages:
       - supports-color
     dev: true
 
-  /@guardian/libs@16.0.2(tslib@2.6.2)(typescript@5.4.3):
-    resolution: {integrity: sha512-GC3DTyRAWMYNOheSnQES24CA2k9WKZiv+WnZbe3hPu6MsZwjeSeRvylJ+VXk7d2ndX5uDW1OdwkWBX45fVXqsA==}
+  /@guardian/libs@0.0.0-canary-20240325210020(tslib@2.6.2)(typescript@5.4.3):
+    resolution: {integrity: sha512-hmPR5dnKNn/Gdbr9g6vEcfhYWdGEnVzBcF5tiZrwxBvZimCT+qXtUIJezOIkqobiNKUP7X7Ih5UN33Hrk/CifQ==}
     peerDependencies:
       tslib: ^2.6.2
       typescript: ~5.3.3
@@ -3031,7 +3020,7 @@ packages:
       tslib: 2.6.2
       typescript: 5.4.3
 
-  /@guardian/source-react-components-development-kitchen@19.0.0(@emotion/react@11.11.4)(@guardian/libs@16.0.2)(@guardian/source-foundations@14.1.4)(@guardian/source-react-components@22.0.2)(@preact/compat@17.1.2)(tslib@2.6.2)(typescript@5.4.3):
+  /@guardian/source-react-components-development-kitchen@19.0.0(@emotion/react@11.11.4)(@guardian/libs@0.0.0-canary-20240325210020)(@guardian/source-foundations@14.1.4)(@guardian/source-react-components@22.0.2)(@preact/compat@17.1.2)(tslib@2.6.2)(typescript@5.4.3):
     resolution: {integrity: sha512-YPqsLlwbuXNcD6dkUuzCCp/ytkwY7HH8ZozuuxlLhdwMFywFuvLRuCAp0q36gEBzcmuEU3eGjSIE823AKK9pfA==}
     peerDependencies:
       '@emotion/react': ^11.11.1
@@ -3046,7 +3035,7 @@ packages:
         optional: true
     dependencies:
       '@emotion/react': 11.11.4(@preact/compat@17.1.2)(@types/react@18.2.71)
-      '@guardian/libs': 16.0.2(tslib@2.6.2)(typescript@5.4.3)
+      '@guardian/libs': 0.0.0-canary-20240325210020(tslib@2.6.2)(typescript@5.4.3)
       '@guardian/source-foundations': 14.1.4(tslib@2.6.2)(typescript@5.4.3)
       '@guardian/source-react-components': 22.0.2(@emotion/react@11.11.4)(@guardian/source-foundations@14.1.4)(@preact/compat@17.1.2)(tslib@2.6.2)(typescript@5.4.3)
       react: /@preact/compat@17.1.2(preact@10.20.1)
