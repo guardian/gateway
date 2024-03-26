@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import { Welcome } from './Welcome';
 
@@ -7,9 +7,9 @@ export default {
 	title: 'Pages/Welcome',
 	component: Welcome,
 	parameters: { layout: 'fullscreen' },
-} as ComponentMeta<typeof Welcome>;
+} as Meta<typeof Welcome>;
 
-const Template: ComponentStory<typeof Welcome> = ({
+const Template: StoryFn<typeof Welcome> = ({
 	submitUrl = '',
 	fieldErrors = [],
 	queryParams = { returnUrl: '#' },

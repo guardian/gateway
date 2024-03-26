@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import { ConsentsNewsletters } from './ConsentsNewsletters';
 
@@ -10,9 +10,9 @@ export default {
 		layout: 'fullscreen',
 		clientState: { pageData: { previousPage: 'fake_page' } },
 	},
-} as ComponentMeta<typeof ConsentsNewsletters>;
+} as Meta<typeof ConsentsNewsletters>;
 
-const Template: ComponentStory<typeof ConsentsNewsletters> = (props) => (
+const Template: StoryFn<typeof ConsentsNewsletters> = (props) => (
 	<ConsentsNewsletters {...props} />
 );
 

@@ -3,16 +3,14 @@ const { neutral } = require('@guardian/source-foundations');
 const deepmerge = require('deepmerge');
 const sharedLoader = require('../.swcrc.config');
 const config = {
-	stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
+	stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
 	addons: [
 		'@storybook/addon-links',
 		'@storybook/addon-essentials',
-		'@storybook/addon-styling',
+		'@storybook/addon-webpack5-compiler-babel',
+		'@storybook/addon-styling-webpack',
+		'@storybook/addon-themes',
 	],
-	babel: async (options) => {
-		options.presets.push('@emotion/babel-preset-css-prop');
-		return options;
-	},
 	previewHead: (head) => `
     ${head}
     <style>

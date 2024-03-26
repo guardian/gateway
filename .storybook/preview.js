@@ -1,6 +1,6 @@
 import React from 'react';
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
-import { withThemeFromJSXProvider } from '@storybook/addon-styling';
+import { withThemeFromJSXProvider } from '@storybook/addon-themes';
 import { Global, css } from '@emotion/react';
 import { FocusStyleManager } from '@guardian/source-foundations';
 import { fontFaces } from '@/client/lib/fonts';
@@ -71,7 +71,6 @@ const decorators = [
 ];
 
 const parameters = {
-	actions: { argTypesRegex: '^on[A-Z].*' },
 	controls: {
 		matchers: {
 			color: /(background|color)$/i,
