@@ -1,8 +1,8 @@
 import React from 'react';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta } from '@storybook/react';
 
 import { Consent } from '@/shared/model/Consent';
-import { NewAccountReview } from './NewAccountReview';
+import { NewAccountReview, NewAccountReviewProps } from './NewAccountReview';
 
 export default {
 	title: 'Pages/NewAccountReview',
@@ -10,11 +10,12 @@ export default {
 	parameters: {
 		layout: 'fullscreen',
 	},
-} as ComponentMeta<typeof NewAccountReview>;
-
-const Template: ComponentStory<typeof NewAccountReview> = (props) => (
-	<NewAccountReview {...props} />
-);
+	args: {
+		queryParams: {
+			returnUrl: 'https://www.theguardian.com/uk',
+		},
+	},
+} as Meta<NewAccountReviewProps>;
 
 const advertising: Consent = {
 	id: 'personalised_advertising',
@@ -28,18 +29,35 @@ const profiling: Consent = {
 	consented: true,
 };
 
-export const NoDescription = Template.bind({});
-NoDescription.storyName = 'with no description';
-
-export const OnlyProfilingConsent = Template.bind({});
-OnlyProfilingConsent.args = {
-	profiling: profiling,
+export const NoConsents = (args: NewAccountReviewProps) => (
+	<NewAccountReview {...args} hasCmpConsent={true} />
+);
+NoConsents.story = {
+	name: 'without consents',
 };
-OnlyProfilingConsent.storyName = 'with profiling consent only';
 
-export const BothConsents = Template.bind({});
-BothConsents.args = {
-	profiling: profiling,
-	advertising: advertising,
+export const WithProfiling = (args: NewAccountReviewProps) => (
+	<NewAccountReview {...args} profiling={profiling} hasCmpConsent={true} />
+);
+WithProfiling.story = {
+	name: 'with profiling consent',
 };
-BothConsents.storyName = 'with both consents';
+
+export const WithAdvertising = (args: NewAccountReviewProps) => (
+	<NewAccountReview {...args} advertising={advertising} hasCmpConsent={true} />
+);
+WithAdvertising.story = {
+	name: 'with advertising consent',
+};
+
+export const WithBothConsents = (args: NewAccountReviewProps) => (
+	<NewAccountReview
+		{...args}
+		profiling={profiling}
+		advertising={advertising}
+		hasCmpConsent={true}
+	/>
+);
+WithBothConsents.story = {
+	name: 'with both consents',
+};

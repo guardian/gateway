@@ -59,7 +59,7 @@ const listStyles = css`
 	padding-left: 1rem;
 `;
 
-interface NewAccountReviewProps {
+export interface NewAccountReviewProps {
 	profiling?: Consent;
 	advertising?: Consent;
 	queryParams: QueryParams;
@@ -72,6 +72,22 @@ export const NewAccountReview = ({
 	queryParams,
 	hasCmpConsent,
 }: NewAccountReviewProps) => {
+	if (!profiling && !advertising) {
+		return (
+			<MainLayout pageHeader="You're signed in! Welcome to the Guardian.">
+				<form
+					action={buildUrlWithQueryParams('/welcome/review', {}, queryParams)}
+					method="post"
+				>
+					<CmpConsentedStateHiddenInput cmpConsentedState={hasCmpConsent} />
+					<CsrfFormField />
+					<Button css={buttonStyles({})} type="submit" priority="primary">
+						Continue to the Guardian
+					</Button>
+				</form>
+			</MainLayout>
+		);
+	}
 	return (
 		<MainLayout pageHeader="You're signed in! Welcome to the Guardian.">
 			<MainBodyText>
