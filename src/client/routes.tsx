@@ -9,9 +9,6 @@ import { NotFoundPage } from '@/client/pages/NotFoundPage';
 import { ChangePasswordPage } from '@/client/pages/ChangePasswordPage';
 import { ChangePasswordCompletePage } from '@/client/pages/ChangePasswordCompletePage';
 import { ResendPasswordPage } from '@/client/pages/ResendPasswordPage';
-import { ConsentsDataPage } from '@/client/pages/ConsentsDataPage';
-import { ConsentsNewslettersPage } from '@/client/pages/ConsentsNewslettersPage';
-import { ConsentsConfirmationPage } from '@/client/pages/ConsentsConfirmationPage';
 import { ResendEmailVerificationPage } from '@/client/pages/ResendEmailVerificationPage';
 import { UnexpectedErrorPage } from '@/client/pages/UnexpectedErrorPage';
 import { ClientState } from '@/shared/model/ClientState';
@@ -41,6 +38,7 @@ import { DeleteAccountCompletePage } from '@/client/pages/DeleteAccountCompleteP
 import { RegisterWithEmailPage } from './pages/RegisterWithEmailPage';
 import { WelcomeSocialPage } from './pages/WelcomeSocialPage';
 import { ReturnToAppPage } from './pages/ReturnToAppPage';
+import { NewAccountReviewPage } from './pages/NewAccountReviewPage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -128,18 +126,6 @@ const routes: Array<{
 		element: <SetPasswordPage />,
 	},
 	{
-		path: '/consents/data',
-		element: <ConsentsDataPage />,
-	},
-	{
-		path: '/consents/newsletters',
-		element: <ConsentsNewslettersPage />,
-	},
-	{
-		path: '/consents/review',
-		element: <ConsentsConfirmationPage />,
-	},
-	{
 		path: '/welcome/resend',
 		element: <WelcomeResendPage />,
 	},
@@ -164,12 +150,20 @@ const routes: Array<{
 		element: <WelcomeSocialPage socialProvider="apple" />,
 	},
 	{
-		path: '/agree/GRS',
-		element: <JobsTermsPage />,
+		path: '/welcome/review',
+		element: <NewAccountReviewPage />,
 	},
 	{
 		path: '/welcome/:token',
 		element: <WelcomePage />,
+	},
+	{
+		path: '/welcome/:app/complete',
+		element: <ReturnToAppPage />,
+	},
+	{
+		path: '/agree/GRS',
+		element: <JobsTermsPage />,
 	},
 	{
 		path: '/verify-email',
@@ -246,10 +240,6 @@ const routes: Array<{
 	{
 		path: '/delete/email-sent',
 		element: <EmailSentPage />,
-	},
-	{
-		path: '/welcome/:app/complete',
-		element: <ReturnToAppPage />,
 	},
 ];
 

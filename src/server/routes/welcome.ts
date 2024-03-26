@@ -7,12 +7,17 @@ import { logger } from '@/server/lib/serverSideLogger';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { renderer } from '@/server/lib/renderer';
 import { ApiError } from '@/server/models/Error';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import { consentPages } from '@/server/routes/consents';
+import {
+	RequestState,
+	ResponseWithRequestState,
+} from '@/server/models/Express';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import deepmerge from 'deepmerge';
 import { Request } from 'express';
-import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
+import {
+	setEncryptedStateCookie,
+	updateEncryptedStateCookie,
+} from '@/server/lib/encryptedStateCookie';
 import { register } from '@/server/lib/okta/register';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { OktaError } from '@/server/models/okta/Error';
@@ -21,14 +26,28 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { setEncryptedStateCookieForOktaRegistration } from './register';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
-import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
-import { update as updateConsents } from '@/server/lib/idapi/consents';
+import {
+	CONSENTS_DATA_PAGE,
+	RegistrationConsentsFormFields,
+} from '@/shared/model/Consent';
+import {
+	update as patchConsents,
+	getConsentValueFromRequestBody,
+	getUserConsentsForPage,
+	update as updateConsents,
+} from '@/server/lib/idapi/consents';
 import { update as updateNewsletters } from '@/server/lib/idapi/newsletters';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { RegistrationNewslettersFormFields } from '@/shared/model/Newsletter';
 import { updateRegistrationPlatform } from '@/server/lib/registrationPlatform';
 import { getAppName, isAppPrefix } from '@/shared/lib/appNameUtils';
+import { VERIFY_EMAIL } from '@/shared/model/Success';
+import { isStringBoolean } from '../lib/isStringBoolean';
+import {
+	updateRegistrationLocationViaIDAPI,
+	updateRegistrationLocationViaOkta,
+} from '../lib/updateRegistrationLocation';
 
 const { okta } = getConfiguration();
 
@@ -189,10 +208,10 @@ router.post(
 				return res.redirect(303, state.queryParams.fromURI);
 			}
 
-			// otherwise redirect the user to the first page of the onboarding flow
+			// otherwise redirect the user to the review page
 			return res.redirect(
 				303,
-				addQueryParamsToPath(consentPages[0].path, state.queryParams),
+				addQueryParamsToPath('/welcome/review', state.queryParams),
 			);
 		}
 	}),
@@ -290,6 +309,130 @@ router.get(
 	},
 );
 
+router.get(
+	'/welcome/review',
+	loginMiddlewareOAuth,
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		// eslint-disable-next-line functional/no-let
+		let state = res.locals;
+		const sc_gu_u = req.cookies.SC_GU_U;
+
+		const { emailVerified } = state.queryParams;
+
+		if (emailVerified) {
+			state = mergeRequestState(state, {
+				globalMessage: {
+					success: VERIFY_EMAIL.SUCCESS,
+				},
+			});
+		}
+
+		try {
+			const consentsData = {
+				consents: await getUserConsentsForPage({
+					pageConsents: CONSENTS_DATA_PAGE,
+					ip: req.ip,
+					sc_gu_u,
+					request_id: res.locals.requestId,
+					accessToken: res.locals.oauthState.accessToken?.toString(),
+				}),
+			};
+
+			state = mergeRequestState(state, {
+				pageData: {
+					...consentsData,
+				},
+			} as RequestState);
+		} catch (error) {
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+				request_id: res.locals.requestId,
+			});
+
+			const { message } = error instanceof ApiError ? error : new ApiError();
+
+			state = mergeRequestState(state, {
+				globalMessage: {
+					error: message,
+				},
+			});
+		}
+
+		// trackMetric(
+		// 	consentsPageMetric(page, 'Get', status === 200 ? 'Success' : 'Failure'),
+		// );
+
+		const html = renderer('/welcome/review', {
+			pageTitle: 'Your data',
+			requestState: state,
+		});
+		return res.type('html').send(html);
+	}),
+);
+
+router.post(
+	'/welcome/review',
+	loginMiddlewareOAuth,
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		// eslint-disable-next-line functional/no-let
+		let state = res.locals;
+		const { returnUrl } = state.queryParams;
+
+		const sc_gu_u = req.cookies.SC_GU_U;
+		const _cmpConsentedState = isStringBoolean(req.body._cmpConsentedState);
+
+		try {
+			// Attempt to update location for consented users.
+			if (res.locals.oauthState.accessToken) {
+				await updateRegistrationLocationViaOkta(
+					req,
+					res.locals.oauthState.accessToken,
+				);
+			} else {
+				await updateRegistrationLocationViaIDAPI(req.ip, sc_gu_u, req);
+			}
+
+			const consents = CONSENTS_DATA_PAGE.map((id) => ({
+				id,
+				consented: getConsentValueFromRequestBody(id, req.body),
+			}));
+
+			await patchConsents({
+				ip: req.ip,
+				sc_gu_u,
+				accessToken: res.locals.oauthState.accessToken?.toString(),
+				payload: consents,
+				request_id: res.locals.requestId,
+			});
+
+			// trackMetric(consentsPageMetric(page, 'Post', 'Success'));
+
+			updateEncryptedStateCookie(req, res, {
+				isCmpConsented: _cmpConsentedState,
+			});
+
+			return res.redirect(303, returnUrl);
+		} catch (error) {
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+				request_id: res.locals.requestId,
+			});
+
+			const { message } = error instanceof ApiError ? error : new ApiError();
+
+			state = mergeRequestState(state, {
+				globalMessage: {
+					error: message,
+				},
+			});
+
+			const html = renderer('/welcome/review', {
+				pageTitle: 'Your data',
+				requestState: state,
+			});
+			return res.type('html').send(html);
+		}
+	}),
+);
+
 // welcome page, check token and display set password page
 router.get(
 	'/welcome/:token',
@@ -299,7 +442,7 @@ router.get(
 // POST form handler to set password on welcome page
 router.post(
 	'/welcome/:token',
-	setPasswordController('/welcome', 'Welcome', consentPages[0].path),
+	setPasswordController('/welcome', 'Welcome', '/welcome/review'),
 );
 
 const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {

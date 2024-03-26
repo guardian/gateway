@@ -75,6 +75,7 @@ export const ValidRoutePathsArray = [
 	'/welcome/google',
 	'/welcome/apple',
 	'/welcome/social',
+	'/welcome/review',
 ] as const;
 
 export type RoutePaths = (typeof ValidRoutePathsArray)[number];

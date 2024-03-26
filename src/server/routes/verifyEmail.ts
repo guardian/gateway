@@ -12,7 +12,6 @@ import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { ApiError } from '@/server/models/Error';
 import { ResponseWithRequestState } from '@/server/models/Express';
-import { consentPages } from '@/server/routes/consents';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { ConsentsErrors, VerifyEmailErrors } from '@/shared/model/Errors';
 import { EMAIL_SENT } from '@/shared/model/Success';
@@ -180,13 +179,9 @@ router.get(
 			if (message === VerifyEmailErrors.USER_ALREADY_VALIDATED) {
 				return res.redirect(
 					303,
-					addQueryParamsToPath(
-						`${consentPages[0].path}`,
-						res.locals.queryParams,
-						{
-							useIdapi: true,
-						},
-					),
+					addQueryParamsToPath(`/welcome/review`, res.locals.queryParams, {
+						useIdapi: true,
+					}),
 				);
 			}
 
@@ -202,7 +197,7 @@ router.get(
 
 		return res.redirect(
 			303,
-			addQueryParamsToPath(`${consentPages[0].path}`, res.locals.queryParams, {
+			addQueryParamsToPath('/welcome/review', res.locals.queryParams, {
 				emailVerified: true,
 				useIdapi: true,
 			}),
