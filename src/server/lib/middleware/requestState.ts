@@ -12,7 +12,7 @@ import Bowser from 'bowser';
 import { logger } from '@/server/lib/serverSideLogger';
 import { getApp } from '@/server/lib/okta/api/apps';
 import { IsNativeApp } from '@/shared/model/ClientState';
-import { getAppName, isAppLabel } from '@/shared/lib/appNameUtils';
+import { AppName, getAppName, isAppLabel } from '@/shared/lib/appNameUtils';
 
 const {
 	idapiBaseUrl,
@@ -53,7 +53,7 @@ const getRequestState = async (
 
 	// it is also useful to know the app name
 	// eslint-disable-next-line functional/no-let
-	let appName;
+	let appName: AppName | undefined;
 
 	try {
 		if (!!queryParams.appClientId) {
