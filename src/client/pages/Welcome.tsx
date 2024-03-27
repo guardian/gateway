@@ -26,7 +26,6 @@ type Props = {
 };
 
 const linkButton = css`
-	width: 150px;
 	margin-top: ${space[3]}px;
 `;
 
@@ -67,13 +66,13 @@ export const Welcome = ({
 			errorContext={nameFieldErrorContext}
 		>
 			<MainBodyText>
-				{passwordSet ? 'Password already set for ' : ''}
+				{passwordSet ? 'Password already set for ' : 'Set a password for '}
 				{email ? (
 					<>
 						Guardian account: <span css={emailSpan}>{email}</span>
 					</>
 				) : (
-					'your new account'
+					'your new account.'
 				)}
 			</MainBodyText>
 			{passwordSet ? (

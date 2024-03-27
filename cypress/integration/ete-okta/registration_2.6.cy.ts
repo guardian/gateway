@@ -302,7 +302,7 @@ describe('Registration flow - Split 2/2', () => {
 			).then(({ body, token }) => {
 				expect(body).to.have.string('Complete registration');
 				cy.visit(`/welcome/${token}`);
-				cy.contains('Save and continue');
+				cy.contains('Complete creating account');
 
 				cy.get('form')
 					.should('have.attr', 'action')
@@ -672,7 +672,7 @@ describe('Registration flow - Split 2/2', () => {
 				const appClientId = Cypress.env('OKTA_ANDROID_CLIENT_ID');
 				// manually adding the app prefix to the token
 				cy.visit(`/welcome/al_${token}&appClientId=${appClientId}`);
-				cy.contains('Save and continue');
+				cy.contains('Complete creating account');
 
 				cy.get('input[name="password"]').type(randomPassword());
 				cy.get('button[type="submit"]').click();
