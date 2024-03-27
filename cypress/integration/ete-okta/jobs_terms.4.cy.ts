@@ -150,14 +150,14 @@ describe('Jobs terms and conditions flow in Okta', () => {
 
 						const finalTermsAcceptPageUrl = `https://${Cypress.env(
 							'BASE_URI',
-						)}/agree/GRS?returnUrl=https://profile.thegulocal.com/maintenance`;
+						)}/agree/GRS?returnUrl=https://profile.thegulocal.com/welcome/review`;
 
 						cy.visit(finalTermsAcceptPageUrl, { failOnStatusCode: false });
 
 						// Make sure the returnURL is respected.
 						cy.url().should(
 							'include',
-							'https://profile.thegulocal.com/maintenance',
+							'https://profile.thegulocal.com/welcome/review',
 						);
 					});
 				});
