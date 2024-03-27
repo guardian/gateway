@@ -28,11 +28,6 @@ export enum Newsletters {
 	FEAST = '6002',
 }
 
-export const REGISTRATION_NEWSLETTERS: string[] = [
-	Newsletters.SATURDAY_EDITION,
-	Newsletters.FEAST,
-];
-
 export const ALL_NEWSLETTER_IDS = Object.values(Newsletters);
 
 export const RegistrationNewslettersFormFields = {
