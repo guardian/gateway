@@ -59,14 +59,19 @@ export const Welcome = ({
 		setFormSubmitAttempted,
 	} = useNameInputFieldError();
 
+	const messageAction = isJobs ? 'Fill in your details' : 'Set a password';
+	const messageContext = isJobs ? 'Details' : 'Password';
+
 	return (
 		<MainLayout
-			pageHeader="Create your password"
+			pageHeader={isJobs ? 'Complete your account' : 'Create your password'}
 			errorOverride={nameFieldError}
 			errorContext={nameFieldErrorContext}
 		>
 			<MainBodyText>
-				{passwordSet ? 'Password already set for ' : 'Set a password for '}
+				{passwordSet
+					? `${messageContext} already set for `
+					: `${messageAction} for `}
 				{email ? (
 					<>
 						Guardian account: <span css={emailSpan}>{email}</span>
