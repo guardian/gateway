@@ -22,7 +22,6 @@ import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { IdTokenClaims, TokenSet } from 'openid-client';
 import { updateUser } from '@/server/lib/okta/api/users';
 import { setUserFeatureCookies } from '@/server/lib/user-features';
-import { consentPages } from './consents';
 import {
 	checkAndDeleteOAuthTokenCookies,
 	setOAuthTokenCookie,
@@ -206,9 +205,9 @@ const authenticationHandler = async (
 					// eslint-disable-next-line functional/immutable-data
 					authState.confirmationPage = `/welcome/${path}`;
 				} else {
-					// otherwise fall back to the default consents page
+					// otherwise fall back to the default consents review page
 					// eslint-disable-next-line functional/immutable-data
-					authState.confirmationPage = consentPages[0].path;
+					authState.confirmationPage = '/welcome/review';
 				}
 
 				// also for new social users, we want to make sure they are added to braze
@@ -401,6 +400,8 @@ const authenticationHandler = async (
 			return res.redirect(303, authState.queryParams.fromURI);
 		}
 
+		// TODO: WHAT HAPPENS NOW THAT WE DON'T HAVE THE ONBOARDING FLOW?
+
 		// temporary fix: if the user registered on the app (the token will be prefixed),
 		// and instead of ending up back in the app but in a mobile browser instead,
 		// where we don't want to show the onboarding flow.
@@ -408,7 +409,7 @@ const authenticationHandler = async (
 		// This will be fixed when we either use the passcode registration flow.
 		if (
 			authState.data?.appPrefix &&
-			consentPages.some((page) => page.path === authState.confirmationPage)
+			authState.confirmationPage === '/welcome/review'
 		) {
 			// eslint-disable-next-line functional/immutable-data
 			authState.confirmationPage =

@@ -58,7 +58,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
 					// load the consents page as its on the same domain
 					const postSignInReturnUrl = `https://${Cypress.env(
 						'BASE_URI',
-					)}/consents/data`;
+					)}/welcome/review`;
 					const visitUrl = `/signin?returnUrl=${encodeURIComponent(
 						postSignInReturnUrl,
 					)}`;
@@ -68,7 +68,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
 
 					cy.get('[data-cy="main-form-submit-button"]').click();
 
-					cy.url().should('include', '/consents/data');
+					cy.url().should('include', '/welcome/review');
 
 					const termsAcceptPageUrl = `https://${Cypress.env(
 						'BASE_URI',
@@ -124,7 +124,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
 					// load the consents page as its on the same domain
 					const postSignInReturnUrl = `https://${Cypress.env(
 						'BASE_URI',
-					)}/consents/data`;
+					)}/welcome/review`;
 					const visitUrl = `/signin?returnUrl=${encodeURIComponent(
 						postSignInReturnUrl,
 					)}`;
@@ -134,7 +134,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
 
 					cy.get('[data-cy="main-form-submit-button"]').click();
 
-					cy.url().should('include', '/consents/data');
+					cy.url().should('include', '/welcome/review');
 
 					cy.updateOktaTestUserProfile(emailAddress, {
 						firstName: 'Test',
@@ -150,14 +150,14 @@ describe('Jobs terms and conditions flow in Okta', () => {
 
 						const finalTermsAcceptPageUrl = `https://${Cypress.env(
 							'BASE_URI',
-						)}/agree/GRS?returnUrl=https://profile.thegulocal.com/maintenance`;
+						)}/agree/GRS?returnUrl=https://profile.thegulocal.com/welcome/review`;
 
 						cy.visit(finalTermsAcceptPageUrl, { failOnStatusCode: false });
 
 						// Make sure the returnURL is respected.
 						cy.url().should(
 							'include',
-							'https://profile.thegulocal.com/maintenance',
+							'https://profile.thegulocal.com/welcome/review',
 						);
 					});
 				});
@@ -176,7 +176,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
 					// load the consents page as its on the same domain
 					const postSignInReturnUrl = `https://${Cypress.env(
 						'BASE_URI',
-					)}/consents/data`;
+					)}/welcome/review`;
 					const visitUrl = `/signin?returnUrl=${encodeURIComponent(
 						postSignInReturnUrl,
 					)}`;
@@ -186,7 +186,7 @@ describe('Jobs terms and conditions flow in Okta', () => {
 
 					cy.get('[data-cy="main-form-submit-button"]').click();
 
-					cy.url().should('include', '/consents/data');
+					cy.url().should('include', '/welcome/review');
 
 					cy.visit(termsAcceptPageUrl);
 

@@ -40,7 +40,7 @@ describe('Registration flow - Split 1/2', () => {
 			).then(({ body, token }) => {
 				expect(body).to.have.string('Complete registration');
 				cy.visit(`/welcome/${token}`);
-				cy.contains('Save and continue');
+				cy.contains('Complete creating account');
 
 				cy.get('form')
 					.should('have.attr', 'action')
@@ -111,7 +111,7 @@ describe('Registration flow - Split 1/2', () => {
 				expect(body).to.have.string('Complete registration');
 				expect(token).to.have.string('al_');
 				cy.visit(`/welcome/${token}`);
-				cy.contains('Save and continue');
+				cy.contains('Complete creating account');
 
 				cy.get('form')
 					.should('have.attr', 'action')
@@ -206,11 +206,11 @@ describe('Registration flow - Split 1/2', () => {
 			).then(({ body, token }) => {
 				expect(body).to.have.string('Complete registration');
 				cy.visit(`/welcome/${token}`);
-				cy.contains('Save and continue');
+				cy.contains('Complete creating account');
 
 				cy.get('input[name="password"]').type(randomPassword());
 				cy.get('button[type="submit"]').click();
-				cy.url().should('contain', '/consents/');
+				cy.url().should('contain', '/welcome/review');
 				cy.go('back');
 				cy.url().should('contain', '/welcome/');
 				cy.contains('Password already set for');
@@ -243,7 +243,7 @@ describe('Registration flow - Split 1/2', () => {
 					'https://www.theguardian.com/technology/2017/may/04/nier-automata-sci-fi-game-sleeper-hit-designer-yoko-taro',
 				);
 				cy.visit(`/welcome/${token}&returnUrl=${newReturnUrl}`);
-				cy.contains('Save and continue');
+				cy.contains('Complete creating account');
 				cy.url()
 					.should('contain', newReturnUrl)
 					.and('not.contain', encodedReturnUrl);
@@ -300,7 +300,7 @@ describe('Registration flow - Split 1/2', () => {
 				cy.visit(
 					`/welcome/${token}&appClientId=${appClientId2}&fromURI=${fromURI2}`,
 				);
-				cy.contains('Save and continue');
+				cy.contains('Complete creating account');
 				cy.url()
 					.should('contain', appClientId2)
 					.and('contain', fromURI2)

@@ -3,13 +3,13 @@ describe('Delete my account flow in Okta', () => {
 		// First, sign in
 		cy.visit(
 			`/signin?returnUrl=${encodeURIComponent(
-				`https://${Cypress.env('BASE_URI')}/consents/data`,
+				`https://${Cypress.env('BASE_URI')}/welcome/review`,
 			)}`,
 		);
 		cy.get('input[name=email]').type(email);
 		cy.get('input[name=password]').type(password);
 		cy.get('[data-cy="main-form-submit-button"]').click();
-		cy.url().should('include', '/consents/data');
+		cy.url().should('include', '/welcome/review');
 
 		// Then, try to visit the delete page
 		cy.visit(`/delete`);

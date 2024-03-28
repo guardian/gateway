@@ -10,11 +10,6 @@ export const ValidRoutePathsArray = [
 	'/change-email/complete',
 	'/change-email/error',
 	'/agree/GRS',
-	'/consents',
-	'/consents/:page',
-	'/consents/newsletters',
-	'/consents/data',
-	'/consents/review',
 	'/email/:template',
 	'/consent-token/:token/accept',
 	'/consent-token/error',
@@ -75,6 +70,7 @@ export const ValidRoutePathsArray = [
 	'/welcome/google',
 	'/welcome/apple',
 	'/welcome/social',
+	'/welcome/review',
 ] as const;
 
 export type RoutePaths = (typeof ValidRoutePathsArray)[number];

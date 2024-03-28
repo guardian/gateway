@@ -9,7 +9,7 @@ describe('Sign out flow', () => {
 					// load the consents page as its on the same domain
 					const postSignInReturnUrl = `https://${Cypress.env(
 						'BASE_URI',
-					)}/consents/data`;
+					)}/welcome/review`;
 					const visitUrl = `/signin?returnUrl=${encodeURIComponent(
 						postSignInReturnUrl,
 					)}`;
@@ -18,7 +18,7 @@ describe('Sign out flow', () => {
 					cy.get('input[name=password]').type(finalPassword);
 					cy.get('[data-cy="main-form-submit-button"]').click();
 					// check sign in has worked first
-					cy.url().should('include', `/consents/data`);
+					cy.url().should('include', `/`);
 					// check session cookie is set
 					cy.getCookie('idx').should('exist');
 					// check idapi cookies are set
