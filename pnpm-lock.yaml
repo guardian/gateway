@@ -164,8 +164,8 @@ devDependencies:
     specifier: ^8.0.4
     version: 8.0.4(@preact/compat@17.1.2)(@preact/compat@17.1.2)(@types/react@18.2.71)
   '@storybook/addon-links':
-    specifier: ^8.0.4
-    version: 8.0.4(@preact/compat@17.1.2)
+    specifier: ^8.0.5
+    version: 8.0.5(@preact/compat@17.1.2)
   '@storybook/addon-styling-webpack':
     specifier: ^1.0.0
     version: 1.0.0(webpack@5.91.0)
@@ -4391,8 +4391,8 @@ packages:
       '@storybook/global': 5.0.0
     dev: true
 
-  /@storybook/addon-links@8.0.4(@preact/compat@17.1.2):
-    resolution: {integrity: sha512-SzE+JPZ4mxjprZqbLHf8Hx7UA2fXfMajFjeY9c3JREKQrDoOF1e4r28nAoVsZYF+frWxQB51U4+hOqjlx06wEA==}
+  /@storybook/addon-links@8.0.5(@preact/compat@17.1.2):
+    resolution: {integrity: sha512-B5EAs0+LxgYH59GSVVAfgW8rAzGUmzdAAR3XJKbTXp3/d9e27uXwpLVYhi/VQHKLIsshDQRbc0s109APHs/SjQ==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     peerDependenciesMeta:
