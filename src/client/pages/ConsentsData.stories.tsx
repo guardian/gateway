@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import { Consent } from '@/shared/model/Consent';
 import { ConsentsData } from './ConsentsData';
@@ -11,9 +11,9 @@ export default {
 		layout: 'fullscreen',
 		clientState: { pageData: { previousPage: 'fake_page' } },
 	},
-} as ComponentMeta<typeof ConsentsData>;
+} as Meta<typeof ConsentsData>;
 
-const Template: ComponentStory<typeof ConsentsData> = (props) => (
+const Template: StoryFn<typeof ConsentsData> = (props) => (
 	<ConsentsData {...props} />
 );
 

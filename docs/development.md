@@ -175,7 +175,7 @@ To make a new story, simply make a new `*.stories.tsx` file in the same folder a
 // ErrorSummary.stories.tsx
 
 import React from 'react';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 // import the react component
 import { ErrorSummary } from './ErrorSummary';
@@ -184,10 +184,10 @@ import { ErrorSummary } from './ErrorSummary';
 export default {
 	title: 'Components/ErrorSummary',
 	component: ErrorSummary,
-} as ComponentMeta<typeof ErrorSummary>;
+} as Meta<typeof ErrorSummary>;
 
 // Define a template (optional)
-const Template: ComponentStory<typeof ErrorSummary> = ({
+const Template: StoryFn<typeof ErrorSummary> = ({
 	error = 'There has been an error',
 	...otherProps
 }) => <ErrorSummary error={error} {...otherProps} />;
@@ -214,7 +214,7 @@ Each story has to export a default metadata object with information on the title
 export default {
 	title: 'Components/ErrorSummary',
 	component: ErrorSummary,
-} as ComponentMeta<typeof ErrorSummary>;
+} as Meta<typeof ErrorSummary>;
 
 /**
  * Title Format:
