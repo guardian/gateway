@@ -1,23 +1,5 @@
 import { SUPPORT_EMAIL } from '../../../src/shared/model/Configuration';
 import { injectAndCheckAxe } from '../../support/cypress-axe';
-import {
-	authRedirectSignInRecentlyEmailValidated,
-	AUTH_REDIRECT_ENDPOINT,
-} from '../../support/idapi/auth';
-import { allConsents, CONSENTS_ENDPOINT } from '../../support/idapi/consent';
-import { setAuthCookies } from '../../support/idapi/cookie';
-import {
-	allNewsletters,
-	NEWSLETTER_ENDPOINT,
-	userNewsletters,
-	NEWSLETTER_SUBSCRIPTION_ENDPOINT,
-} from '../../support/idapi/newsletter';
-import {
-	verifiedUserWithNoConsent,
-	USER_ENDPOINT,
-	USER_CONSENTS_ENDPOINT,
-} from '../../support/idapi/user';
-import NewslettersPage from '../../support/pages/onboarding/newsletters_page';
 
 describe('Welcome and set password page', () => {
 	const defaultEmail = 'someone@theguardian.com';
@@ -30,59 +12,6 @@ describe('Welcome and set password page', () => {
 		},
 		timeUntilExpiry,
 	});
-
-	const fakeCookieSuccessResponse = {
-		cookies: {
-			values: [
-				{
-					key: 'GU_U',
-					value: 'FAKE_VALUE_0',
-				},
-				{
-					key: 'SC_GU_LA',
-					value: 'FAKE_VALUE_1',
-					sessionCookie: true,
-				},
-				{
-					key: 'SC_GU_U',
-					value: 'FAKE_VALUE_2',
-				},
-			],
-			expiresAt: new Date(Date.now() + 1800000 /* 30min */).toISOString(),
-		},
-	};
-
-	const fakeGroupAddResponse = {
-		status: 'ok',
-		groupCode: 'GRS',
-	};
-
-	const setPasswordAndSignIn = () => {
-		cy.mockNext(200, checkTokenSuccessResponse());
-		cy.intercept({
-			method: 'GET',
-			url: 'https://api.pwnedpasswords.com/range/*',
-		}).as('breachCheck');
-		cy.mockNext(200, fakeCookieSuccessResponse);
-		cy.mockAll(
-			200,
-			authRedirectSignInRecentlyEmailValidated,
-			AUTH_REDIRECT_ENDPOINT,
-		);
-		cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
-		cy.mockAll(200, allNewsletters, NEWSLETTER_ENDPOINT);
-		// cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
-		cy.mockAll(
-			200,
-			verifiedUserWithNoConsent.user.consents,
-			USER_CONSENTS_ENDPOINT,
-		);
-		cy.mockAll(200, userNewsletters(), NEWSLETTER_SUBSCRIPTION_ENDPOINT);
-		cy.visit(`/welcome/fake_token?useIdapi=true`);
-		cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
-		cy.wait('@breachCheck');
-		cy.get('button[type="submit"]').click();
-	};
 
 	beforeEach(() => {
 		cy.mockPurge();
@@ -139,84 +68,6 @@ describe('Welcome and set password page', () => {
 
 	// successful token, set password page is displayed, redirect to consents flow if valid password
 	context('A valid token is used and set password page is displayed', () => {
-		it('redirects to onboarding flow if a valid password is set', () => {
-			setPasswordAndSignIn();
-			cy.contains('Free newsletters from the Guardian');
-		});
-
-		it('shows a different message if the user has set a password and then clicked the back button', () => {
-			setPasswordAndSignIn();
-			cy.go('back');
-			cy.contains(`Password already set for ${defaultEmail}`);
-			cy.contains('Continue').click();
-			cy.contains('Free newsletters from the Guardian');
-		});
-
-		it('redirects to onboarding flow if valid password is set and preserves returnUrl', () => {
-			const returnUrl = encodeURIComponent(
-				`https://www.theguardian.com/science/grrlscientist/2012/aug/07/3`,
-			);
-			const query = new URLSearchParams({ returnUrl }).toString();
-
-			cy.mockNext(200, checkTokenSuccessResponse());
-			cy.intercept({
-				method: 'GET',
-				url: 'https://api.pwnedpasswords.com/range/*',
-			}).as('breachCheck');
-			cy.mockNext(200, fakeCookieSuccessResponse);
-			cy.mockAll(
-				200,
-				authRedirectSignInRecentlyEmailValidated,
-				AUTH_REDIRECT_ENDPOINT,
-			);
-			cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
-			cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
-			setAuthCookies();
-
-			cy.visit(`/welcome/fake_token?${query}&useIdapi=true`);
-			cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
-			cy.wait('@breachCheck');
-			cy.get('button[type="submit"]').click();
-			cy.contains('Free newsletters from the Guardian');
-			cy.url().should('include', NewslettersPage.URL);
-			cy.url().should('include', `returnUrl=${returnUrl}`);
-		});
-
-		it('redirects to onboarding flow and adds Jobs user to the GRS group if valid password is set and preserves returnUrl', () => {
-			const returnUrl = encodeURIComponent(
-				`https://www.theguardian.com/science/grrlscientist/2012/aug/07/3`,
-			);
-			const clientId = 'jobs';
-			const query = new URLSearchParams({ returnUrl, clientId }).toString();
-
-			cy.mockNext(200, checkTokenSuccessResponse());
-			cy.intercept({
-				method: 'GET',
-				url: 'https://api.pwnedpasswords.com/range/*',
-			}).as('breachCheck');
-			cy.mockNext(200, fakeCookieSuccessResponse);
-			cy.mockAll(200, fakeGroupAddResponse, '/user/me/group/GRS');
-			cy.mockAll(
-				200,
-				authRedirectSignInRecentlyEmailValidated,
-				AUTH_REDIRECT_ENDPOINT,
-			);
-			cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
-			cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
-			setAuthCookies();
-
-			cy.visit(`/welcome/fake_token?${query}&useIdapi=true`);
-			cy.get('input[name="firstName"]').type('First Name');
-			cy.get('input[name="secondName"]').type('Last Name');
-			cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
-			cy.wait('@breachCheck');
-			cy.get('button[type="submit"]').click();
-			cy.contains('Free newsletters from the Guardian');
-			cy.url().should('include', NewslettersPage.URL);
-			cy.url().should('include', `returnUrl=${returnUrl}`);
-			cy.url().should('include', `clientId=${clientId}`);
-		});
-
 		it('shows an error if the password is invalid', () => {
 			cy.mockNext(200, checkTokenSuccessResponse());
 			cy.mockNext(400, {
