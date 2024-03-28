@@ -9,7 +9,7 @@ import {
 	validate as validateToken,
 	change as changePassword,
 } from '@/server/lib/idapi/changePassword';
-import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
+import { clearIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import { trackMetric } from '@/server/lib/trackMetric';
 import {
 	readEncryptedStateCookie,
@@ -54,7 +54,6 @@ const changePasswordInIDAPI = async (
 	pageTitle: PasswordPageTitle,
 	req: Request,
 	res: ResponseWithRequestState,
-	successRedirectPath: RoutePaths,
 ) => {
 	const { token } = req.params;
 	const { clientId } = res.locals.queryParams;
@@ -71,6 +70,9 @@ const changePasswordInIDAPI = async (
 	try {
 		validatePasswordField(password);
 
+		// change the password in IDAPI
+		// we discard the cookies, as we want the user to log in again
+		// so that they authenticate with Okta and get an Okta session
 		const cookies = await changePassword(
 			password,
 			token,
@@ -78,13 +80,9 @@ const changePasswordInIDAPI = async (
 			res.locals.requestId,
 		);
 
-		if (cookies) {
-			// because we are changing the password using idapi, and a new okta
-			// session will not be created, so we will need to clear the okta
-			// cookies to keep the sessions in sync
-			clearOktaCookies(res);
-			setIDAPICookies(res, cookies);
-		}
+		// clear all cookies the user might have at this point
+		clearOktaCookies(res);
+		clearIDAPICookies(res);
 
 		// if the user navigates back to the welcome page after they have set a password, this
 		// ensures we show them a custom error page rather than the link expired page
@@ -119,9 +117,12 @@ const changePasswordInIDAPI = async (
 		trackMetric('AccountVerification::Success');
 		trackMetric('UpdatePassword::Success');
 
+		// redirect the user to the sign in page, so that we'll have then reauthenticate with Okta
 		return res.redirect(
 			303,
-			addQueryParamsToPath(successRedirectPath, requestState.queryParams),
+			addQueryParamsToPath('/signin', requestState.queryParams, {
+				useIdapi: false,
+			}),
 		);
 	} catch (error) {
 		const { message, status, field } =
@@ -372,12 +373,6 @@ export const setPasswordController = (
 				successRedirectPath,
 			);
 		} else {
-			await changePasswordInIDAPI(
-				path,
-				pageTitle,
-				req,
-				res,
-				successRedirectPath,
-			);
+			await changePasswordInIDAPI(path, pageTitle, req, res);
 		}
 	});

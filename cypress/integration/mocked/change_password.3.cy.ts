@@ -164,7 +164,7 @@ describe('Password change flow', () => {
 	});
 
 	context('Valid password entered', () => {
-		it('shows password change success screen, with a default redirect button.', () => {
+		it('shows password change success screen, with a default return url', () => {
 			cy.mockNext(200);
 			cy.mockNext(200, fakeSuccessResponse);
 			cy.intercept({
@@ -178,40 +178,18 @@ describe('Password change flow', () => {
 			// Submit the button
 			cy.contains('Valid password');
 			cy.get('button[type="submit"]').click();
-			cy.contains('Password updated');
-			cy.contains('Continue to the Guardian').should(
-				'have.attr',
-				'href',
-				`${Cypress.env('DEFAULT_RETURN_URI')}/`,
+			cy.contains('Sign in');
+			cy.url().should(
+				'include',
+				`returnUrl=https%3A%2F%2Fm.code.dev-theguardian.com`,
 			);
+			cy.url().should('not.include', 'useIdapi=true');
 
 			// Not currently possible to test login cookie,
 			// Cookie is not set to domain we can access, even in cypress.
 			// e.g.
 			// cy.getCookie('GU_U')
 			//  .should('have.property', 'value', 'FAKE_VALUE_0');
-		});
-
-		it('shows password change success screen, with default redirect button, and users email', () => {
-			cy.mockNext(200, fakeValidationResponse());
-			cy.mockNext(200, fakeSuccessResponse);
-			cy.intercept({
-				method: 'GET',
-				url: 'https://api.pwnedpasswords.com/range/*',
-			}).as('breachCheck');
-			cy.visit(`/reset-password/fake_token?useIdapi=true`);
-			cy.contains(fakeValidationResponse().user.primaryEmailAddress);
-
-			cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
-			cy.wait('@breachCheck');
-			cy.get('button[type="submit"]').click();
-			cy.contains('Password updated');
-			cy.contains('Continue to the Guardian').should(
-				'have.attr',
-				'href',
-				`${Cypress.env('DEFAULT_RETURN_URI')}/`,
-			);
-			cy.contains(fakeValidationResponse().user.primaryEmailAddress);
 		});
 	});
 
@@ -233,12 +211,12 @@ describe('Password change flow', () => {
 				);
 				cy.wait('@breachCheck');
 				cy.get('button[type="submit"]').click();
-				cy.contains('Password updated');
-				cy.contains('Continue to the Guardian').should(
-					'have.attr',
-					'href',
-					'https://news.theguardian.com/',
+				cy.contains('Sign in');
+				cy.url().should(
+					'include',
+					`returnUrl=${encodeURIComponent('https://news.theguardian.com')}`,
 				);
+				cy.url().should('not.include', 'useIdapi=true');
 			});
 		},
 	);
@@ -261,12 +239,12 @@ describe('Password change flow', () => {
 				);
 				cy.wait('@breachCheck');
 				cy.get('button[type="submit"]').click();
-				cy.contains('Password updated');
-				cy.contains('Continue to the Guardian').should(
-					'have.attr',
-					'href',
-					`${Cypress.env('DEFAULT_RETURN_URI')}/`,
+				cy.contains('Sign in');
+				cy.url().should(
+					'include',
+					`returnUrl=https%3A%2F%2Fm.code.dev-theguardian.com`,
 				);
+				cy.url().should('not.include', 'useIdapi=true');
 			});
 		},
 	);

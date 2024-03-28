@@ -47,8 +47,7 @@ describe('Password reset flow', () => {
 						cy.get('[data-cy="main-form-submit-button"]')
 							.click()
 							.should('be.disabled');
-						cy.contains('Password updated');
-						cy.contains(emailAddress.toLowerCase());
+						cy.contains('Sign in');
 					});
 				});
 		});
@@ -97,8 +96,7 @@ describe('Password reset flow', () => {
 						cy.get('input[name=password]').type(randomPassword());
 						cy.wait('@breachCheck');
 						cy.get('[data-cy="main-form-submit-button"]').click();
-						cy.contains('Password updated');
-						cy.contains(emailAddress.toLowerCase());
+						cy.contains('Sign in');
 					});
 				});
 		});

@@ -158,34 +158,12 @@ describe('Password set/create flow', () => {
 			cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
 			cy.wait('@breachCheck');
 			cy.get('button[type="submit"]').click();
-			cy.contains('Password created');
-			cy.contains('Continue to the Guardian').should(
-				'have.attr',
-				'href',
-				`${Cypress.env('DEFAULT_RETURN_URI')}/`,
+			cy.contains('Sign in');
+			cy.url().should(
+				'include',
+				`returnUrl=https%3A%2F%2Fm.code.dev-theguardian.com`,
 			);
-		});
-
-		it('shows password change success screen, with default redirect button, and users email', () => {
-			cy.mockNext(200, fakeValidationRespone());
-			cy.mockNext(200, fakeSuccessResponse);
-			cy.intercept({
-				method: 'GET',
-				url: 'https://api.pwnedpasswords.com/range/*',
-			}).as('breachCheck');
-			cy.visit('/set-password/fake_token?useIdapi=true');
-			cy.contains(fakeValidationRespone().user.primaryEmailAddress);
-
-			cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
-			cy.wait('@breachCheck');
-			cy.get('button[type="submit"]').click();
-			cy.contains('Password created');
-			cy.contains('Continue to the Guardian').should(
-				'have.attr',
-				'href',
-				`${Cypress.env('DEFAULT_RETURN_URI')}/`,
-			);
-			cy.contains(fakeValidationRespone().user.primaryEmailAddress);
+			cy.url().should('not.include', 'useIdapi=true');
 		});
 	});
 
@@ -207,12 +185,12 @@ describe('Password set/create flow', () => {
 				);
 				cy.wait('@breachCheck');
 				cy.get('button[type="submit"]').click();
-				cy.contains('Password created');
-				cy.contains('Continue to the Guardian').should(
-					'have.attr',
-					'href',
-					'https://news.theguardian.com/',
+				cy.contains('Sign in');
+				cy.url().should(
+					'include',
+					`returnUrl=${encodeURIComponent('https://news.theguardian.com')}`,
 				);
+				cy.url().should('not.include', 'useIdapi=true');
 			});
 		},
 	);
@@ -235,12 +213,12 @@ describe('Password set/create flow', () => {
 				);
 				cy.wait('@breachCheck');
 				cy.get('button[type="submit"]').click();
-				cy.contains('Password created');
-				cy.contains('Continue to the Guardian').should(
-					'have.attr',
-					'href',
-					`${Cypress.env('DEFAULT_RETURN_URI')}/`,
+				cy.contains('Sign in');
+				cy.url().should(
+					'include',
+					`returnUrl=https%3A%2F%2Fm.code.dev-theguardian.com`,
 				);
+				cy.url().should('not.include', 'useIdapi=true');
 			});
 		},
 	);
