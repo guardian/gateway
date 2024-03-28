@@ -10,11 +10,13 @@ describe('New account review page', () => {
 			'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
 		const unregisteredEmail = randomMailosaurEmail();
 
+		// Set the country cookie so we can check that it's set correctly on the user
+		cy.setCookie('GU_geo_country', 'US');
+
 		// Consent to CMP so we are shown the personalised advertising checkbox
 		cy.enableCMP();
 		cy.visit(`/register/email?returnUrl=${encodedReturnUrl}`);
 		cy.acceptCMP();
-		cy.setCookie('GU_geo_country', 'FR');
 
 		const timeRequestWasMade = new Date();
 		cy.get('input[name=email]').type(unregisteredEmail);
@@ -77,6 +79,9 @@ describe('New account review page', () => {
 						expect(consent.consented).to.be.true;
 					}
 				});
+				cy.getTestOktaUser(unregisteredEmail).then((user) => {
+					expect(user.profile.registrationLocation).to.equal('United States');
+				});
 			});
 		});
 	});
@@ -122,6 +127,19 @@ describe('New account review page', () => {
 				'not.contain',
 				'Advertising is a crucial source of our funding',
 			);
+
+			cy.get('button[type="submit"]').click();
+
+			cy.url().should('contain', decodeURIComponent(encodedReturnUrl));
+
+			// Return to Gateway so we can access the user cookie
+			cy.visit('/signin');
+
+			// Check that the user does not have their registration location set
+			cy.getTestOktaUser(unregisteredEmail).then((user) => {
+				cy.log(JSON.stringify(user));
+				expect(user.profile.registrationLocation).to.be.undefined;
+			});
 		});
 	});
 });
