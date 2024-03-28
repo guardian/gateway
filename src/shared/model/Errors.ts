@@ -34,6 +34,7 @@ export enum SignInErrors {
 export enum RegistrationErrors {
 	GENERIC = 'There was a problem registering, please try again.',
 	EMAIL_INVALID = 'Please enter a valid email address.',
+	PASSCODE_INVALID = 'Incorrect code',
 }
 
 // shown at the top of the change password page when something goes wrong

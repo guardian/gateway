@@ -70,6 +70,8 @@ export interface PageData {
 
 	// delete specific
 	contentAccess?: UserAttributesResponse['contentAccess'];
+	// okta idx api specific
+	hasStateHandle?: boolean; // determines if the state handle is present in the encrypted state
 }
 
 export interface RecaptchaConfig {

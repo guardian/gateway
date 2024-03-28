@@ -26,8 +26,11 @@ import { validateReturnUrl } from '@/server/lib/validateUrl';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { decryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 import { getAppName, getAppPrefix } from '@/shared/lib/appNameUtils';
+import { introspect } from '@/server/lib/okta/idx/introspect';
+import { OAuthError } from '@/server/models/okta/Error';
 
-const { okta, defaultReturnUri } = getConfiguration();
+const { okta, defaultReturnUri, registrationPasscodesEnabled } =
+	getConfiguration();
 
 const handleBackButtonEventOnWelcomePage = (
 	path: PasswordRoutePath,
@@ -153,6 +156,73 @@ export const checkTokenInOkta = async (
 	fieldErrors?: Array<FieldError>,
 ) => {
 	const { token } = req.params;
+
+	// Okta IDX API Flow for checking a password token
+	if (
+		registrationPasscodesEnabled &&
+		res.locals.queryParams.usePasscodeRegistration
+	) {
+		try {
+			const encryptedState = readEncryptedStateCookie(req);
+
+			if (
+				encryptedState &&
+				encryptedState.email &&
+				encryptedState.stateHandle
+			) {
+				// introspect the stateHandle to make sure it's valid
+				const introspectResponse = await introspect(
+					{
+						stateHandle: encryptedState.stateHandle,
+					},
+					res.locals.requestId,
+				);
+
+				// check if the remediation array contains a "enroll-authenticator"	object
+				// if it does, then we know the stateHandle is valid
+				const hasEnrollAuthenticator =
+					introspectResponse.remediation.value.some(
+						(remediation) => remediation.name === 'enroll-authenticator',
+					);
+
+				if (!hasEnrollAuthenticator) {
+					throw new OAuthError({
+						error: 'idx_error',
+						error_description: 'Invalid state handle',
+					});
+				}
+
+				const html = renderer(
+					`${path}/:token`,
+					{
+						pageTitle,
+						requestState: mergeRequestState(res.locals, {
+							pageData: {
+								browserName: getBrowserNameFromUserAgent(
+									req.header('User-Agent'),
+								),
+								email: encryptedState.email,
+								fieldErrors,
+								formError: error,
+								token,
+							},
+						}),
+					},
+					{ token },
+				);
+
+				return res.type('html').send(html);
+			}
+		} catch (error) {
+			logger.error(
+				'IDX API - check state handle token - checkPasswordToken',
+				error,
+				{
+					request_id: res.locals.requestId,
+				},
+			);
+		}
+	}
 
 	try {
 		// check if the token is prefixed with an app prefix

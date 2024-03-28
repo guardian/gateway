@@ -13,6 +13,7 @@ import { logger } from '@/server/lib/serverSideLogger';
 import { getApp } from '@/server/lib/okta/api/apps';
 import { IsNativeApp } from '@/shared/model/ClientState';
 import { AppName, getAppName, isAppLabel } from '@/shared/lib/appNameUtils';
+import { readEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 
 const {
 	idapiBaseUrl,
@@ -76,6 +77,8 @@ const getRequestState = async (
 		});
 	}
 
+	const encryptedState = readEncryptedStateCookie(req);
+
 	return {
 		queryParams,
 		pageData: {
@@ -83,6 +86,7 @@ const getRequestState = async (
 			returnUrl: queryParams.returnUrl,
 			isNativeApp,
 			appName,
+			hasStateHandle: !!encryptedState?.stateHandle,
 		},
 		globalMessage: {},
 		csrf: {

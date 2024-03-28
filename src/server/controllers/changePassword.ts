@@ -29,7 +29,7 @@ import {
 	resetPassword as resetPasswordInOkta,
 	validateRecoveryToken as validateTokenInOkta,
 } from '@/server/lib/okta/api/authentication';
-import { OktaError } from '@/server/models/okta/Error';
+import { OAuthError, OktaError } from '@/server/models/okta/Error';
 import { checkTokenInOkta } from '@/server/controllers/checkPasswordToken';
 import {
 	performAuthorizationCodeFlow,
@@ -46,8 +46,10 @@ import { changePasswordMetric, emailSendMetric } from '@/server/models/Metrics';
 import { getAppPrefix } from '@/shared/lib/appNameUtils';
 import { sendGuardianLiveOfferEmail } from '@/email/templates/GuardianLiveOffer/sendGuardianLiveOfferEmail';
 import { sendMyGuardianOfferEmail } from '@/email/templates/MyGuardianOffer/sendMyGuardianOfferEmail';
+import { introspect } from '@/server/lib/okta/idx/introspect';
+import { setPasswordAndRedirect } from '@/server/lib/okta/idx/challenge';
 
-const { okta } = getConfiguration();
+const { okta, registrationPasscodesEnabled } = getConfiguration();
 
 const changePasswordInIDAPI = async (
 	path: PasswordRoutePath,
@@ -203,6 +205,59 @@ const changePasswordInOkta = async (
 	const { token: encryptedRecoveryToken } = req.params;
 	const { password, firstName, secondName } = req.body;
 	const { clientId, signInGateId } = res.locals.queryParams;
+
+	// Okta IDX API Flow for setting a password
+	if (
+		registrationPasscodesEnabled &&
+		res.locals.queryParams.usePasscodeRegistration
+	) {
+		try {
+			const encryptedState = readEncryptedStateCookie(req);
+
+			if (
+				encryptedState &&
+				encryptedState.email &&
+				encryptedState.stateHandle
+			) {
+				// introspect the stateHandle to make sure it's valid
+				const introspectResponse = await introspect(
+					{
+						stateHandle: encryptedState.stateHandle,
+					},
+					res.locals.requestId,
+				);
+
+				// check if the remediation array contains a "enroll-authenticator"	object
+				// if it does, then we know the stateHandle is valid
+				const hasEnrollAuthenticator =
+					introspectResponse.remediation.value.some(
+						(remediation) => remediation.name === 'enroll-authenticator',
+					);
+
+				if (!hasEnrollAuthenticator) {
+					throw new OAuthError({
+						error: 'idx_error',
+						error_description: 'Invalid state handle',
+					});
+				}
+
+				validatePasswordFieldForOkta(password);
+
+				return await setPasswordAndRedirect(
+					encryptedState.stateHandle,
+					{
+						passcode: password,
+					},
+					res,
+					res.locals.requestId,
+				);
+			}
+		} catch (error) {
+			logger.error('Okta IDX setPassword failure', error, {
+				request_id: res.locals.requestId,
+			});
+		}
+	}
 
 	try {
 		if (!encryptedRecoveryToken) {

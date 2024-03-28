@@ -42,6 +42,7 @@ type ConditionalMetrics =
 	| 'OAuthDeleteCallback'
 	| 'OktaAccountVerification'
 	| 'OktaIDXInteract'
+	| 'OktaIDXRegister'
 	| `OktaIDX::${IDXPath}`
 	| 'OktaRegistration'
 	| 'OktaRegistrationResendEmail'

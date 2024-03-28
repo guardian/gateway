@@ -91,3 +91,17 @@ export const NoChangeEmailPage = () => (
 NoChangeEmailPage.story = {
 	name: 'with no change email',
 };
+
+export const WithStateHandle = () => (
+	<EmailSent
+		changeEmailPage="#"
+		email="example@theguardian.com"
+		resendEmailAction="#"
+		recaptchaSiteKey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+		hasStateHandle
+		passcodeAction="#"
+	/>
+);
+WithEmailResend.story = {
+	name: 'with stateHandle',
+};
