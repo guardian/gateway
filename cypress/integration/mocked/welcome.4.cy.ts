@@ -67,12 +67,16 @@ describe('Welcome and set password page', () => {
 	});
 
 	// successful token, set password page is displayed, redirect to consents flow if valid password
-	context.only(
-		'A valid token is used and set password page is displayed',
-		() => {
-			it.only('redirects to new account review page if a valid password is set', () => {
-				setPasswordAndSignIn();
-				cy.contains('You’re signed in');
+	context('A valid token is used and set password page is displayed', () => {
+		it('shows an error if the password is invalid', () => {
+			cy.mockNext(200, checkTokenSuccessResponse());
+			cy.mockNext(400, {
+				status: 'error',
+				errors: [
+					{
+						message: 'Breached password',
+					},
+				],
 			});
 			cy.mockNext(200, checkTokenSuccessResponse());
 			cy.visit(`/welcome/fake_token?useIdapi=true`);
