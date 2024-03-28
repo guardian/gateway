@@ -243,27 +243,63 @@ export const idxFetchCompletion = async <BodyType>({
  * @param obj - The object to search for the error message
  * @returns IdxErrorObject | string | undefined - The error message object, or the whole object as a string, or undefined if no error message is found
  */
-const findErrorMessage = (obj: object): IdxErrorObject | string | undefined => {
-	const findErrorRecursive = (
-		obj: object,
-	): IdxErrorObject | string | undefined => {
-		for (const [key, value] of Object.entries(obj)) {
-			if (key === 'messages') {
-				const parsed = idxErrorObjectSchema.safeParse(value);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- This function is designed to handle any object
+const findErrorMessage = (obj: any): IdxErrorObject | string | undefined => {
+	function findErrorMessageRecursive(
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any -- This function is designed to handle any object
+		obj: any,
+	): IdxErrorObject | string | undefined {
+		// Check if obj is an object
+		if (typeof obj === 'object' && obj !== null) {
+			// If obj is an array
+			if (Array.isArray(obj)) {
+				// Iterate through each element of the array
+				for (const item of obj) {
+					// Recursively search each element
+					const result = findErrorMessageRecursive(item);
+					// If key is found, return the value
+					if (result !== undefined) {
+						return result;
+					}
+				}
+			} else {
+				// Iterate through each key-value pair in the object
+				for (const prop in obj) {
+					if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+						// If key is found, return the value
+						if (prop === 'messages') {
+							const parsed = idxErrorObjectSchema.safeParse(obj[prop]);
 
-				if (parsed.success) {
-					return parsed.data;
-				} else {
-					return JSON.stringify(value);
+							if (parsed.success) {
+								return parsed.data;
+							} else {
+								return JSON.stringify(obj[prop]);
+							}
+						}
+						// Recursively search the value
+						const result = findErrorMessageRecursive(obj[prop]);
+						// If key is found in the nested object, return the value
+						if (result !== undefined) {
+							return result;
+						}
+					}
 				}
 			}
-			if (typeof value === 'object') {
-				return findErrorRecursive(value);
-			}
 		}
-	};
 
-	return findErrorRecursive(obj);
+		// Key not found, return undefined
+		return undefined;
+	}
+
+	const result = findErrorMessageRecursive(obj);
+
+	if (!result) {
+		logger.warn('Error message not found in IDX response:', obj);
+
+		return JSON.stringify(obj);
+	}
+
+	return result;
 };
 
 /**
