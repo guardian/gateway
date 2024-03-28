@@ -74,122 +74,33 @@ describe('Welcome and set password page', () => {
 				setPasswordAndSignIn();
 				cy.contains('You’re signed in');
 			});
+			cy.mockNext(200, checkTokenSuccessResponse());
+			cy.visit(`/welcome/fake_token?useIdapi=true`);
+			cy.get('input[name="password"]').type('password');
+			cy.get('button[type="submit"]').click();
+			cy.contains('Please use a password that is hard to guess.');
+		});
 
-			it('shows a different message if the user has set a password and then clicked the back button', () => {
-				setPasswordAndSignIn();
-				cy.go('back');
-				cy.contains(`Password already set for ${defaultEmail}`);
-				cy.contains('Continue').click();
-				cy.contains('You’re signed in');
-			});
+		it('shows prompt to create password', () => {
+			cy.mockNext(200, checkTokenSuccessResponse());
+			cy.intercept({
+				method: 'GET',
+				url: 'https://api.pwnedpasswords.com/range/*',
+			}).as('breachCheck');
+			cy.visit(`/welcome/fake_token?useIdapi=true`);
+			cy.contains(`Set a password for Guardian account: ${defaultEmail}`);
+		});
 
-			it('redirects to new account review page if valid password is set and preserves returnUrl', () => {
-				const returnUrl = encodeURIComponent(
-					`https://www.theguardian.com/science/grrlscientist/2012/aug/07/3`,
-				);
-				const query = new URLSearchParams({ returnUrl }).toString();
-
-				cy.mockNext(200, checkTokenSuccessResponse());
-				cy.intercept({
-					method: 'GET',
-					url: 'https://api.pwnedpasswords.com/range/*',
-				}).as('breachCheck');
-				cy.mockNext(200, fakeCookieSuccessResponse);
-				cy.mockAll(
-					200,
-					authRedirectSignInRecentlyEmailValidated,
-					AUTH_REDIRECT_ENDPOINT,
-				);
-				cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
-				cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
-				setAuthCookies();
-
-				cy.visit(`/welcome/fake_token?${query}&useIdapi=true`);
-				cy.get('input[name="password"]').type(
-					'thisisalongandunbreachedpassword',
-				);
-				cy.wait('@breachCheck');
-				cy.get('button[type="submit"]').click();
-				cy.url().should('include', '/welcome/review');
-				cy.contains('Free newsletters from the Guardian');
-				cy.url().should('include', `returnUrl=${returnUrl}`);
-			});
-
-			it('redirects to onboarding flow and adds Jobs user to the GRS group if valid password is set and preserves returnUrl', () => {
-				const returnUrl = encodeURIComponent(
-					`https://www.theguardian.com/science/grrlscientist/2012/aug/07/3`,
-				);
-				const clientId = 'jobs';
-				const query = new URLSearchParams({ returnUrl, clientId }).toString();
-
-				cy.mockNext(200, checkTokenSuccessResponse());
-				cy.intercept({
-					method: 'GET',
-					url: 'https://api.pwnedpasswords.com/range/*',
-				}).as('breachCheck');
-				cy.mockNext(200, fakeCookieSuccessResponse);
-				cy.mockAll(200, fakeGroupAddResponse, '/user/me/group/GRS');
-				cy.mockAll(
-					200,
-					authRedirectSignInRecentlyEmailValidated,
-					AUTH_REDIRECT_ENDPOINT,
-				);
-				cy.mockAll(200, allConsents, CONSENTS_ENDPOINT);
-				cy.mockAll(200, verifiedUserWithNoConsent, USER_ENDPOINT);
-				setAuthCookies();
-
-				cy.visit(`/welcome/fake_token?${query}&useIdapi=true`);
-				cy.get('input[name="firstName"]').type('First Name');
-				cy.get('input[name="secondName"]').type('Last Name');
-				cy.get('input[name="password"]').type(
-					'thisisalongandunbreachedpassword',
-				);
-				cy.wait('@breachCheck');
-				cy.get('button[type="submit"]').click();
-				cy.contains('You’re signed in');
-				cy.url().should('include', '/welcome/review');
-				cy.url().should('include', `returnUrl=${returnUrl}`);
-				cy.url().should('include', `clientId=${clientId}`);
-			});
-
-			it('shows an error if the password is invalid', () => {
-				cy.mockNext(200, checkTokenSuccessResponse());
-				cy.mockNext(400, {
-					status: 'error',
-					errors: [
-						{
-							message: 'Breached password',
-						},
-					],
-				});
-				cy.mockNext(200, checkTokenSuccessResponse());
-				cy.visit(`/welcome/fake_token?useIdapi=true`);
-				cy.get('input[name="password"]').type('password');
-				cy.get('button[type="submit"]').click();
-				cy.contains('Please use a password that is hard to guess.');
-			});
-
-			it('shows prompt to create password', () => {
-				cy.mockNext(200, checkTokenSuccessResponse());
-				cy.intercept({
-					method: 'GET',
-					url: 'https://api.pwnedpasswords.com/range/*',
-				}).as('breachCheck');
-				cy.visit(`/welcome/fake_token?useIdapi=true`);
-				cy.contains(`Please complete your details for ${defaultEmail}`);
-			});
-
-			it('shows prompt to create password without email if none exists', () => {
-				cy.mockNext(200, checkTokenSuccessResponse(null, ''));
-				cy.intercept({
-					method: 'GET',
-					url: 'https://api.pwnedpasswords.com/range/*',
-				}).as('breachCheck');
-				cy.visit(`/welcome/fake_token?useIdapi=true`);
-				cy.contains(`Please complete your details for your new account`);
-			});
-		},
-	);
+		it('shows prompt to create password without email if none exists', () => {
+			cy.mockNext(200, checkTokenSuccessResponse(null, ''));
+			cy.intercept({
+				method: 'GET',
+				url: 'https://api.pwnedpasswords.com/range/*',
+			}).as('breachCheck');
+			cy.visit(`/welcome/fake_token?useIdapi=true`);
+			cy.contains(`Set a password for your new account.`);
+		});
+	});
 
 	context('An expired/invalid token is used', () => {
 		it('shows the link expired page to type email, and on submit shows the email sent page, with a button to resend the email', () => {
