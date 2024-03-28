@@ -14,5 +14,6 @@ jobs:
       ORG: guardian-identity
       SKIP_NODE: false
       SKIP_SBT: true
+      NODE_PACKAGE_JSON_FILES_MISSING_LOCK: ./package.json
     secrets:
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
