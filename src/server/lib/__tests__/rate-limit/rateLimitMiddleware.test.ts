@@ -24,7 +24,7 @@ describe('rate limiter middleware', () => {
 		}));
 
 		jest.mock('@aws-sdk/credential-providers');
-		jest.mock('@aws-sdk/node-http-handler');
+		jest.mock('@smithy/node-http-handler');
 		jest.mock('@aws-sdk/client-kinesis');
 		jest.mock('@aws-sdk/client-sesv2');
 		jest.mock('@aws-sdk/client-cloudwatch');
