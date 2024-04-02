@@ -20,12 +20,12 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { validateRecoveryToken as validateTokenInOkta } from '@/server/lib/okta/api/authentication';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { ChangePasswordErrors } from '@/shared/model/Errors';
-import { FieldError } from '@/shared/model/ClientState';
+import { FieldError, IsNativeApp } from '@/shared/model/ClientState';
 import { PersistableQueryParams } from '@/shared/model/QueryParams';
 import { validateReturnUrl } from '@/server/lib/validateUrl';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { decryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
-import { getAppName, getAppPrefix } from '@/shared/lib/appNameUtils';
+import { AppName, getAppName, getAppPrefix } from '@/shared/lib/appNameUtils';
 
 const { okta, defaultReturnUri } = getConfiguration();
 
@@ -152,6 +152,7 @@ export const checkTokenInOkta = async (
 	error?: ChangePasswordErrors,
 	fieldErrors?: Array<FieldError>,
 ) => {
+	const state = res.locals;
 	const { token } = req.params;
 
 	try {
@@ -161,7 +162,7 @@ export const checkTokenInOkta = async (
 		// decrypt the recovery token
 		const decryptedRecoveryToken = decryptOktaRecoveryToken({
 			encryptedToken: token,
-			request_id: res.locals.requestId,
+			request_id: state.requestId,
 		});
 		const [recoveryToken] = decryptedRecoveryToken;
 
@@ -188,11 +189,11 @@ export const checkTokenInOkta = async (
 			encryptedState?.queryParams ?? ({} as PersistableQueryParams);
 
 		// get the returnUrl
-		const returnUrl = getReturnUrl(res.locals, encryptedStateQueryParams);
+		const returnUrl = getReturnUrl(state, encryptedStateQueryParams);
 
 		// get fromURI and appClientId, which are parameters from the Okta SDK
 		// and unique to this request
-		const { fromURI, appClientId } = res.locals.queryParams;
+		const { fromURI, appClientId } = state.queryParams;
 
 		// finally generate the queryParams object to merge in with the requestState
 		// with the correct returnUrl for this request
@@ -205,11 +206,35 @@ export const checkTokenInOkta = async (
 			},
 		);
 
+		// attempt to determine if the user is using a native app
+		// first checking the pageData, then the prefix, otherwise undefined
+		const isNativeApp: IsNativeApp | undefined = (() => {
+			if (state.pageData.isNativeApp) {
+				return state.pageData.isNativeApp;
+			}
+
+			if (prefix) {
+				return prefix.startsWith('a') ? 'android' : 'ios';
+			}
+		})();
+
+		// attempt to determine the app name
+		// first checking the pageData, then the prefix, otherwise undefined
+		const appName: AppName | undefined = (() => {
+			if (state.pageData.appName) {
+				return state.pageData.appName;
+			}
+
+			if (prefix) {
+				return getAppName(prefix);
+			}
+		})();
+
 		const html = renderer(
 			`${path}/:token`,
 			{
 				pageTitle,
-				requestState: mergeRequestState(res.locals, {
+				requestState: mergeRequestState(state, {
 					queryParams,
 					pageData: {
 						browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
@@ -217,12 +242,8 @@ export const checkTokenInOkta = async (
 						fieldErrors,
 						formError: error,
 						token,
-						isNativeApp: prefix
-							? prefix.startsWith('a')
-								? 'android'
-								: 'ios'
-							: undefined,
-						appName: prefix ? getAppName(prefix) : undefined,
+						isNativeApp,
+						appName,
 					},
 				}),
 			},
