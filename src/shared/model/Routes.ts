@@ -30,6 +30,9 @@ export const ValidRoutePathsArray = [
 	'/oauth/authorization-code/interaction-code-callback',
 	'/reauthenticate',
 	'/register',
+	'/register/code',
+	'/register/code/expired',
+	'/register/code/resend',
 	'/register/email',
 	'/register/email-sent',
 	'/register/email-sent/resend',
@@ -73,6 +76,7 @@ export const ValidRoutePathsArray = [
 	'/welcome/social',
 	'/welcome/review',
 	'/welcome/newsletters',
+	'/welcome/password',
 ] as const;
 
 export type RoutePaths = (typeof ValidRoutePathsArray)[number];
