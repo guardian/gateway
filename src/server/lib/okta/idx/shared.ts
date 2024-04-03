@@ -11,6 +11,7 @@ const { okta } = getConfiguration();
 // Okta IDX API paths
 const idxPaths = [
 	'challenge/answer',
+	'challenge/resend',
 	'credential/enroll',
 	'enroll',
 	'enroll/new',

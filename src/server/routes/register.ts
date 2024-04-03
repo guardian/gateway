@@ -39,7 +39,10 @@ import { mergeRequestState } from '@/server/lib/requestState';
 import { UserResponse } from '@/server/models/okta/User';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
 import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
-import { challengeAnswerPasscode } from '@/server/lib/okta/idx/challenge';
+import {
+	challengeAnswerPasscode,
+	challengeResend,
+} from '@/server/lib/okta/idx/challenge';
 import {
 	enroll,
 	enrollNewWithEmail,
@@ -292,6 +295,62 @@ router.post(
 				logger.error('IDX API - register/code error:', error, {
 					request_id: requestId,
 				});
+			}
+		}
+
+		// if we reach this point, redirect back to the email registration page, as something has gone wrong
+		return res.redirect(
+			303,
+			addQueryParamsToPath('/register/email', res.locals.queryParams),
+		);
+	}),
+);
+
+router.post(
+	'/register/code/resend',
+	redirectIfLoggedIn,
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		const { requestId } = res.locals;
+
+		const encryptedState = readEncryptedStateCookie(req);
+
+		if (encryptedState && encryptedState.stateHandle) {
+			const { stateHandle } = encryptedState;
+
+			try {
+				// check the state handle is valid
+				await introspect(
+					{
+						stateHandle,
+					},
+					requestId,
+				);
+
+				// attempt to resend the email
+				await challengeResend(stateHandle, requestId);
+
+				// redirect to the email sent page
+				return res.redirect(
+					303,
+					addQueryParamsToPath('/register/email-sent', res.locals.queryParams),
+				);
+			} catch (error) {
+				// track and log the failure, and fall back to the legacy Okta registration flow if there is an error
+				logger.error('IDX API - register/code/resend error:', error, {
+					request_id: requestId,
+				});
+
+				if (error instanceof OAuthError) {
+					if (error.name === 'idx.session.expired') {
+						return res.redirect(
+							303,
+							addQueryParamsToPath(
+								'/register/code/expired',
+								res.locals.queryParams,
+							),
+						);
+					}
+				}
 			}
 		}
 

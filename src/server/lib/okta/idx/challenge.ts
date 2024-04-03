@@ -70,6 +70,28 @@ export const challengeAnswerPasscode = (
 };
 
 /**
+ * @name challengeResend
+ * @description Okta IDX API/Interaction Code flow - Resend a challenge.
+ *
+ * @param stateHandle - The state handle from the previous step
+ * @param request_id - The request id
+ * @returns Promise<ChallengeAnswerResponse> - The challenge answer response
+ */
+export const challengeResend = (
+	stateHandle: IdxBaseResponse['stateHandle'],
+	request_id?: string,
+): Promise<ChallengeAnswerResponse> => {
+	return idxFetch<ChallengeAnswerResponse, IdxStateHandleBody>({
+		path: 'challenge/resend',
+		body: {
+			stateHandle,
+		},
+		schema: challengeAnswerResponseSchema,
+		request_id,
+	});
+};
+
+/**
  * @name setPasswordAndRedirect
  * @description Okta IDX API/Interaction Code flow - Answer a challenge with a password, and redirect the user to set a global session and then back to the app. This could be one the final possible steps in the authentication process.
  * @param stateHandle - The state handle from the previous step
