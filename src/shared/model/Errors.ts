@@ -35,6 +35,7 @@ export enum RegistrationErrors {
 	GENERIC = 'There was a problem registering, please try again.',
 	EMAIL_INVALID = 'Please enter a valid email address.',
 	PROVISIONING_FAILURE = 'Your account has been created but there was a problem signing you in.',
+	PASSCODE_INVALID = 'Incorrect code',
 }
 
 // shown at the top of the change password page when something goes wrong
