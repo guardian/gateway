@@ -34,7 +34,7 @@ const idxVersionSchema = z.string().refine((val) => {
 export const idxBaseResponseSchema = z.object({
 	version: idxVersionSchema,
 	stateHandle: z.string(),
-	expiresAt: z.coerce.date(),
+	expiresAt: z.string(),
 });
 export type IdxBaseResponse = z.infer<typeof idxBaseResponseSchema>;
 
