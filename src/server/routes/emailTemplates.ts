@@ -2,9 +2,15 @@ import { Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 
-import { renderedAccidentalEmail } from '@/email/templates/renderedTemplates';
+import {
+	renderedAccidentalEmail,
+	renderedRegistrationPasscode,
+} from '@/email/templates/renderedTemplates';
 
-const emailTemplateTypes = ['accidental-email'] as const;
+const emailTemplateTypes = [
+	'accidental-email',
+	'registration-passcode',
+] as const;
 type EmailTemplateType = (typeof emailTemplateTypes)[number];
 
 type EmailRenderResult = {
@@ -18,6 +24,8 @@ const renderEmailTemplate = (
 	switch (template) {
 		case 'accidental-email':
 			return renderedAccidentalEmail;
+		case 'registration-passcode':
+			return renderedRegistrationPasscode;
 		default:
 			// We don't want to do anything for invalid template names
 			return undefined;

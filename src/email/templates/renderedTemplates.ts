@@ -16,6 +16,8 @@ import { CompleteRegistration } from './CompleteRegistration/CompleteRegistratio
 import { CompleteRegistrationText } from './CompleteRegistration/CompleteRegistrationText';
 
 import { render } from '@faire/mjml-react/utils/render';
+import { RegistrationPasscode } from './RegistrationPasscode/RegistrationPasscode';
+import { RegistrationPasscodeText } from './RegistrationPasscode/RegistrationPasscodeText';
 
 type EmailRenderResult = {
 	plain: string;
@@ -60,4 +62,9 @@ export const renderedUnvalidatedEmailResetPassword = {
 export const renderedCompleteRegistration = {
 	plain: CompleteRegistrationText(),
 	html: render(CompleteRegistration()).html,
+} as EmailRenderResult;
+
+export const renderedRegistrationPasscode = {
+	plain: RegistrationPasscodeText(),
+	html: render(RegistrationPasscode()).html,
 } as EmailRenderResult;
