@@ -9,6 +9,8 @@ import {
 } from './shared';
 import { selectAuthenticationEnrollSchema } from './enroll';
 import { ResponseWithRequestState } from '@/server/models/Express';
+import { validateEmailAndPasswordSetSecurely } from '@/server/lib/okta/validateEmail';
+import { logger } from '@/server/lib/serverSideLogger';
 
 // Schema for the 'skip' object inside the challenge response remediation object
 export const skipSchema = baseRemediationValueSchema.merge(
@@ -82,13 +84,31 @@ export const setPasswordAndRedirect = async (
 	expressRes: ResponseWithRequestState,
 	request_id?: string,
 ): Promise<void> => {
-	return await idxFetchCompletion<ChallengeAnswerPasswordBody>({
-		path: 'challenge/answer',
-		body: {
-			stateHandle,
-			credentials: body,
-		},
-		expressRes,
-		request_id,
-	});
+	const [completionResponse, redirectUrl] =
+		await idxFetchCompletion<ChallengeAnswerPasswordBody>({
+			path: 'challenge/answer',
+			body: {
+				stateHandle,
+				credentials: body,
+			},
+			expressRes,
+			request_id,
+		});
+
+	// set the validation flags in Okta
+	const { id } = completionResponse.user.value;
+	if (id) {
+		await validateEmailAndPasswordSetSecurely(id);
+	} else {
+		logger.error(
+			'Failed to set validation flags in Okta as there was no id',
+			undefined,
+			{
+				request_id,
+			},
+		);
+	}
+
+	// redirect the user to set a global session and then back to completing the authorization flow
+	return expressRes.redirect(303, redirectUrl);
 };
