@@ -18,7 +18,7 @@ import { z } from 'zod';
 import { closeCurrentSession } from '@/server/lib/okta/api/sessions';
 import { getPersistableQueryParams } from '@/shared/lib/queryParams';
 import { OAuthError, isOAuthError } from '@/server/models/okta/Error';
-import { trackMetric } from '../../trackMetric';
+import { trackMetric } from '@/server/lib/trackMetric';
 
 const { okta } = getConfiguration();
 

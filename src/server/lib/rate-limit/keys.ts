@@ -1,5 +1,5 @@
 import { RoutePaths } from '@/shared/model/Routes';
-import { sha256 } from '../crypto';
+import { sha256 } from '@/server/lib/crypto';
 import {
 	RateLimiterBucketsConfiguration,
 	BucketValues,

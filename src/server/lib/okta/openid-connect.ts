@@ -10,7 +10,7 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { logger } from '@/server/lib/serverSideLogger';
 import { RoutePaths } from '@/shared/model/Routes';
 import { SocialProvider } from '@/shared/model/Social';
-import { SignInGateIdsForOfferEmails } from '../ophan';
+import { SignInGateIdsForOfferEmails } from '@/server/lib/ophan';
 
 /**
  * @interface AuthorizationState

@@ -1,15 +1,15 @@
 import { NextFunction, Request } from 'express';
 import { getCurrentSession } from '@/server/lib/okta/api/sessions';
 import { clearOktaCookies } from '@/server/routes/signOut';
-import { logger } from '../serverSideLogger';
+import { logger } from '@/server/lib/serverSideLogger';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { ResponseWithRequestState } from '@/server/models/Express';
-import { getConfiguration } from '../getConfiguration';
-import { read } from '../idapi/auth';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { read } from '@/server/lib/idapi/auth';
 import { IDAPIAuthStatus } from '@/shared/model/IDAPIAuth';
-import { clearIDAPICookies } from '../idapi/IDAPICookies';
+import { clearIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import { renderer } from '@/server/lib/renderer';
-import { mergeRequestState } from '../requestState';
+import { mergeRequestState } from '@/server/lib/requestState';
 import { getErrorMessageFromQueryParams } from '@/server/routes/signIn';
 
 const { okta, defaultReturnUri, baseUri } = getConfiguration();

@@ -44,7 +44,7 @@ import {
 import { RoutePaths } from '@/shared/model/Routes';
 import { sendGuardianLiveOfferEmail } from '@/email/templates/GuardianLiveOffer/sendGuardianLiveOfferEmail';
 import { sendMyGuardianOfferEmail } from '@/email/templates/MyGuardianOffer/sendMyGuardianOfferEmail';
-import { emailSendMetric } from '../models/Metrics';
+import { emailSendMetric } from '@/server/models/Metrics';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 

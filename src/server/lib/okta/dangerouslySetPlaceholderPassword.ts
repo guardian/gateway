@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { OktaError } from '@/server/models/okta/Error';
-import { logger } from '../serverSideLogger';
+import { logger } from '@/server/lib/serverSideLogger';
 import { validateRecoveryToken, resetPassword } from './api/authentication';
 import { dangerouslyResetPassword } from './api/users';
 
