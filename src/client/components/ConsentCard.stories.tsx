@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import { news } from '@guardian/source-foundations';
 
 import { DOWN_TO_EARTH_IMAGE } from '@/client/assets/newsletters';
@@ -8,9 +8,9 @@ import { ConsentCard } from './ConsentCard';
 export default {
 	title: 'Components/ConsentCard',
 	component: ConsentCard,
-} as ComponentMeta<typeof ConsentCard>;
+} as Meta<typeof ConsentCard>;
 
-const Template: ComponentStory<typeof ConsentCard> = ({
+const Template: StoryFn<typeof ConsentCard> = ({
 	title = 'Consent Name',
 	description = 'Consent description',
 	id = '4147',

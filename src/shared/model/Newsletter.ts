@@ -46,7 +46,7 @@ export const RegistrationNewslettersFormFields = {
 		id: Newsletters.FEAST,
 		label: 'Feast',
 		context:
-			'A weekly email from Yotam Ottolenghi, Ravinder Bhogal, Felicity Cloake and Rachel Roddy, featuring the latest recipes and seasonal eating ideas',
+			'A weekly email from Yotam Ottolenghi, Meera Sodha, Felicity Cloake and Rachel Roddy, featuring the latest recipes and seasonal eating ideas.',
 	},
 };
 
