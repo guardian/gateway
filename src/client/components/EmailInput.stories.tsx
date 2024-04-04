@@ -1,8 +1,8 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { EmailInput } from './EmailInput';
-import { InputFieldState } from '../lib/hooks/useInputValidityState';
+import { EmailInput } from '@/client/components/EmailInput';
+import { InputFieldState } from '@/client/lib/hooks/useInputValidityState';
 
 export default {
 	title: 'Components/EmailInput',

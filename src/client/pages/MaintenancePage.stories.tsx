@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { MaintenancePage } from './MaintenancePage';
+import { MaintenancePage } from '@/client/pages/MaintenancePage';
 
 export default {
 	title: 'Pages/MaintenancePage',

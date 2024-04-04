@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { palette, space, textSans } from '@guardian/source-foundations';
 import React from 'react';
-import { ToggleSwitchInput } from './ToggleSwitchInput';
+import { ToggleSwitchInput } from '@/client/components/ToggleSwitchInput';
 
 const switchRow = css`
 	border: 0;

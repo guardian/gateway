@@ -2,7 +2,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { ChangeEmailComplete } from './ChangeEmailComplete';
+import { ChangeEmailComplete } from '@/client/pages/ChangeEmailComplete';
 
 export default {
 	title: 'Pages/ChangeEmailComplete',

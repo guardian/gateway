@@ -3,8 +3,8 @@ import useClientState from '@/client/lib/hooks/useClientState';
 import { Consents } from '@/shared/model/Consent';
 import { ConsentsData } from '@/client/pages/ConsentsData';
 
-import { useCmpConsent } from '../lib/hooks/useCmpConsent';
-import { useAdFreeCookie } from '../lib/hooks/useAdFreeCookie';
+import { useCmpConsent } from '@/client/lib/hooks/useCmpConsent';
+import { useAdFreeCookie } from '@/client/lib/hooks/useAdFreeCookie';
 
 export const ConsentsDataPage = () => {
 	const clientState = useClientState();

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { EnvelopeImage } from './EnvelopeImage';
+import { EnvelopeImage } from '@/client/components/EnvelopeImage';
 
 export default {
 	title: 'Components/EnvelopeImage',

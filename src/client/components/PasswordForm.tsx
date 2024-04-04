@@ -31,9 +31,9 @@ import {
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
 import { AutoRow } from '@/client/styles/Grid';
 import { MainForm } from '@/client/components/MainForm';
-import { passwordButton, controls } from '../styles/Consents';
+import { passwordButton, controls } from '@/client/styles/Consents';
 import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
-import { logger } from '../lib/clientSideLogger';
+import { logger } from '@/client/lib/clientSideLogger';
 
 type Props = {
 	submitUrl: string;

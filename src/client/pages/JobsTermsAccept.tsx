@@ -4,7 +4,7 @@ import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { css } from '@emotion/react';
 import { neutral, space, textSans, until } from '@guardian/source-foundations';
-import { getAutoRow, gridItemYourData } from '../styles/Grid';
+import { getAutoRow, gridItemYourData } from '@/client/styles/Grid';
 import { Link } from '@guardian/source-react-components';
 import { MainForm } from '@/client/components/MainForm';
 import NameInputField from '@/client/components/NameInputField';

@@ -1,1 +1,1 @@
-export { default as EVENTS_IMAGE } from './events.jpg';
+export { default as EVENTS_IMAGE } from '@/client/assets/consents/events.jpg';

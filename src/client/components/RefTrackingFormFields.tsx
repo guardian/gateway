@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRefTracking } from '../lib/hooks/useRefTracking';
+import { useRefTracking } from '@/client/lib/hooks/useRefTracking';
 
 export const RefTrackingFormFields = () => {
 	const { ref, refViewId } = useRefTracking();

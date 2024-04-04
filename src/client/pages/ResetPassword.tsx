@@ -13,7 +13,7 @@ import { ExternalLink } from '@/client/components/ExternalLink';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
-import { usePageLoadOphanInteraction } from '../lib/hooks/usePageLoadOphanInteraction';
+import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 
 interface ResetPasswordProps {
 	email?: string;

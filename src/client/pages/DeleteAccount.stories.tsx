@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { DeleteAccount } from './DeleteAccount';
+import { DeleteAccount } from '@/client/pages/DeleteAccount';
 
 export default {
 	title: 'Pages/DeleteAccount',

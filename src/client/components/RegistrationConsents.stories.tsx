@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { RegistrationConsents } from './RegistrationConsents';
+import { RegistrationConsents } from '@/client/components/RegistrationConsents';
 
 export default {
 	title: 'Components/RegistrationConsents',

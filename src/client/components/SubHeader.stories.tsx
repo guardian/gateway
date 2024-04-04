@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { SubHeader } from './SubHeader';
+import { SubHeader } from '@/client/components/SubHeader';
 
 export default {
 	title: 'Components/SubHeader',

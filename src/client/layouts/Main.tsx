@@ -17,7 +17,7 @@ import { Footer } from '@/client/components/Footer';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { Nav, TabType } from '@/client/components/Nav';
 import locations from '@/shared/lib/locations';
-import { MainBodyText } from '../components/MainBodyText';
+import { MainBodyText } from '@/client/components/MainBodyText';
 
 interface MainLayoutProps {
 	pageHeader?: string;

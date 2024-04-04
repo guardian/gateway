@@ -1,15 +1,15 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { MainLayout } from './Main';
+import { MainLayout } from '@/client/layouts/Main';
 import {
 	BasicForm,
 	FormWithError,
 	FormWithRecaptcha,
 	MultipleInputFields,
-} from '../components/MainForm.stories';
-import { Paragraphs } from '../components/MainBodyText.stories';
-import { DetailedRecaptchaError } from '../components/DetailedRecaptchaError';
+} from '@/client/components/MainForm.stories';
+import { Paragraphs } from '@/client/components/MainBodyText.stories';
+import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
 
 export default {
 	title: 'Layout/Main',

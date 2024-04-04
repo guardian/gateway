@@ -2,7 +2,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { SubscriptionSuccess } from './SubscriptionSuccess';
+import { SubscriptionSuccess } from '@/client/pages/SubscriptionSuccess';
 
 export default {
 	title: 'Pages/SubscriptionSuccess',

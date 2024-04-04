@@ -2,8 +2,8 @@ import React from 'react';
 import { css } from '@emotion/react';
 import { Meta } from '@storybook/react';
 
-import { Header } from './Header';
-import { Container } from './Container';
+import { Header } from '@/client/components/Header';
+import { Container } from '@/client/components/Container';
 
 export default {
 	title: 'Components/Container',

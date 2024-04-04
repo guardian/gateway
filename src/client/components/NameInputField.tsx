@@ -6,7 +6,7 @@ import React, { FieldsetHTMLAttributes, useState, useEffect } from 'react';
 import {
 	InputFieldState,
 	useInputValidityState,
-} from '../lib/hooks/useInputValidityState';
+} from '@/client/lib/hooks/useInputValidityState';
 
 const fieldSpacing = css`
 	margin-bottom: ${space[2]}px;

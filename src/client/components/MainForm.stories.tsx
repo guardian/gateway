@@ -1,9 +1,12 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { inputMarginBottomSpacingStyle, MainForm } from './MainForm';
-import { EmailInput } from './EmailInput';
-import { PasswordInput } from './PasswordInput';
+import {
+	inputMarginBottomSpacingStyle,
+	MainForm,
+} from '@/client/components/MainForm';
+import { EmailInput } from '@/client/components/EmailInput';
+import { PasswordInput } from '@/client/components/PasswordInput';
 
 export default {
 	title: 'Components/MainForm',

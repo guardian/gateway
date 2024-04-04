@@ -4,7 +4,7 @@ import { neutral } from '@guardian/source-foundations';
 import { fontFaces } from '@/client/lib/fonts';
 import { ClientStateProvider } from '@/client/components/ClientState';
 import { ClientState } from '@/shared/model/ClientState';
-import { GatewayRoutes } from './routes';
+import { GatewayRoutes } from '@/client/routes';
 import { tests } from '@/shared/model/experiments/abTests';
 import { useAB } from '@/client/components/ABReact';
 

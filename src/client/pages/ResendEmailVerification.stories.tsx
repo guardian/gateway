@@ -2,7 +2,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { ResendEmailVerification } from './ResendEmailVerification';
+import { ResendEmailVerification } from '@/client/pages/ResendEmailVerification';
 
 export default {
 	title: 'Pages/ResendEmailVerification',

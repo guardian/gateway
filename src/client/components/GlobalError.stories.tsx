@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { GlobalError } from './GlobalError';
+import { GlobalError } from '@/client/components/GlobalError';
 
 export default {
 	title: 'Components/GlobalError',

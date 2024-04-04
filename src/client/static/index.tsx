@@ -4,10 +4,10 @@ import { hydrateApp } from '@/client/static/hydration';
 import { cmp, getLocale } from '@guardian/libs';
 import { RoutingConfig } from '@/client/routes';
 
-import { init as ophanInit } from './analytics/ophan';
+import { init as ophanInit } from '@/client/static/analytics/ophan';
 
 // initialise source accessibility
-import './sourceAccessibility';
+import '@/client/static/sourceAccessibility';
 
 const routingConfig: RoutingConfig = JSON.parse(
 	document.getElementById('routingConfig')?.innerHTML ?? '{}',

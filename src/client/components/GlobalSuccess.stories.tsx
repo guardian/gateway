@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { GlobalSuccess } from './GlobalSuccess';
+import { GlobalSuccess } from '@/client/components/GlobalSuccess';
 
 export default {
 	title: 'Components/GlobalSuccess',

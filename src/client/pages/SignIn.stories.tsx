@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { SignIn, SignInProps } from './SignIn';
+import { SignIn, SignInProps } from '@/client/pages/SignIn';
 import { SignInErrors } from '@/shared/model/Errors';
 
 export default {
