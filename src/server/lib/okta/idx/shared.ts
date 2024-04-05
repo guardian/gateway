@@ -329,7 +329,7 @@ const handleError = async (response: Response) => {
 		// find the error message in the json
 		const error = findErrorMessage(json);
 
-		// if we found and error message
+		// if we found an error message
 		if (error) {
 			// check if it's unparsed (string)
 			if (typeof error === 'string') {
@@ -341,7 +341,7 @@ const handleError = async (response: Response) => {
 					response.status,
 				);
 			} else {
-				// or it it's parsed (object)
+				// or if it's parsed (object)
 				// most errors should be this case and have an i18n key and message
 				throw new OAuthError(
 					{
