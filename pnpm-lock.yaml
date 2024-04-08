@@ -347,8 +347,8 @@ devDependencies:
     specifier: ^0.33.3
     version: 0.33.3
   snyk:
-    specifier: ^1.1286.2
-    version: 1.1286.2
+    specifier: ^1.1287.0
+    version: 1.1287.0
   storybook:
     specifier: ^8.0.5
     version: 8.0.5(@babel/preset-env@7.24.3)(@preact/compat@17.1.2)(@preact/compat@17.1.2)
@@ -6132,7 +6132,7 @@ packages:
       '@typescript-eslint/typescript-estree': 5.62.0(typescript@5.4.3)
       eslint: 8.57.0
       eslint-scope: 5.1.1
-      semver: 7.5.4
+      semver: 7.6.0
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -9267,7 +9267,7 @@ packages:
     resolution: {integrity: sha512-6ujqUuiIYmcgkGz8MGAdERU57EIluGGPSUgGPTsco657EHa+srq0S3/YUl/r9kx1+D+d4rGfYObd+m8K22gB1g==}
     dependencies:
       readline-sync: 1.4.10
-      sprintf-js: 1.1.2
+      sprintf-js: 1.1.3
       tmp: 0.0.33
     dev: true
 
@@ -11691,15 +11691,9 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /lru-cache@10.0.0:
-    resolution: {integrity: sha512-svTf/fzsKHffP42sujkO/Rjs37BCIsQVRCeNYIm9WN8rgT7ffoUnRtZCqU+6BqcSBdv8gwJeTz8knJpgACeQMw==}
-    engines: {node: 14 || >=16.14}
-    dev: false
-
   /lru-cache@10.2.0:
     resolution: {integrity: sha512-2bIM8x+VAf6JT4bKAljS1qUWgMsqZRPGJS6FSahIMPVvctcNhyVp7AJu7quxOW9jwkryBReKZY5tY5JYv2n/7Q==}
     engines: {node: 14 || >=16.14}
-    dev: true
 
   /lru-cache@4.0.2:
     resolution: {integrity: sha512-uQw9OqphAGiZhkuPlpFGmdTU2tEuhxTourM/19qGJrxBPHAr/f8BT1a0i/lOclESnGatdJG/UCkP9kZB/Lh1iw==}
@@ -12443,7 +12437,7 @@ packages:
     dependencies:
       growly: 1.3.0
       is-wsl: 2.2.0
-      semver: 7.5.4
+      semver: 7.6.0
       shellwords: 0.1.1
       uuid: 8.3.2
       which: 2.0.2
@@ -12908,7 +12902,7 @@ packages:
     resolution: {integrity: sha512-MkhCqzzBEpPvxxQ71Md0b1Kk51W01lrYvlMzSUaIzNsODdd7mqhiimSZlr+VegAz5Z6Vzt9Xg2ttE//XBhH3EQ==}
     engines: {node: '>=16 || 14 >=14.17'}
     dependencies:
-      lru-cache: 10.0.0
+      lru-cache: 10.2.0
       minipass: 7.0.2
     dev: false
 
@@ -14015,7 +14009,7 @@ packages:
     resolution: {integrity: sha512-a2B9Y0KlNXl9u/vsW6sTIu9vGEpfKu2wRV6l1H3XEas/0gUIzGzBoP/IouTcUQbm9JWZLH3COxyn03TYlFax6w==}
     engines: {node: '>=10'}
     dependencies:
-      semver: 7.5.4
+      semver: 7.6.0
     dev: true
 
   /sirv@2.0.3:
@@ -14068,8 +14062,8 @@ packages:
     resolution: {integrity: sha512-4qdtOGcBjral6YIBCWJ0ljFSKNLz9KkhbWtuGvUyRowl1kxfuE1x/Z/aJcaiilpb3do9bl5K7/1h9XC5wWpY/A==}
     dev: false
 
-  /snyk@1.1286.2:
-    resolution: {integrity: sha512-gb7PfujO1uJY7iDkmxq1d32bth/e2CZ1Yw28E620punYyf7rcwzO06BnRB65lbbxqnhfpb8L+pnbH4ZYkyNs5g==}
+  /snyk@1.1287.0:
+    resolution: {integrity: sha512-ZpsMjXLy5NPoMk0HbylsSDbhA6S8wSMqWO2DupIlJ7Q1URiv4+dOiL4wUYPViMFFNi9HdoYF00cxJyM1Y5I4QQ==}
     engines: {node: '>=12'}
     hasBin: true
     requiresBuild: true
@@ -14133,10 +14127,6 @@ packages:
 
   /sprintf-js@1.0.3:
     resolution: {integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==}
-    dev: true
-
-  /sprintf-js@1.1.2:
-    resolution: {integrity: sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==}
     dev: true
 
   /sprintf-js@1.1.3:
