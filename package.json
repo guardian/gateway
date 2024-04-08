@@ -135,7 +135,7 @@
 		"@emotion/react": "^11.11.4",
 		"@faire/mjml-react": "^3.3.0",
 		"@guardian/ab-core": "7.0.1",
-		"@guardian/libs": "0.0.0-canary-20240325210020",
+		"@guardian/libs": "^16.1.0",
 		"@guardian/source-foundations": "^14.1.4",
 		"@guardian/source-react-components": "^22.1.0",
 		"@guardian/source-react-components-development-kitchen": "^19.0.0",
