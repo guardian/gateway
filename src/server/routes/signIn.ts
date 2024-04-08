@@ -590,7 +590,9 @@ router.get(
 					closeExistingSession: true,
 				});
 
-				const introspectResponse = await introspect(interaction_handle);
+				const introspectResponse = await introspect({
+					interactionHandle: interaction_handle,
+				});
 
 				const updatedAuthState = updateAuthorizationStateData(authState, {
 					socialProvider: socialIdp,
@@ -600,8 +602,8 @@ router.get(
 				setAuthorizationStateCookie(updatedAuthState, res);
 
 				const introspectIdp = introspectResponse.remediation.value.find(
-					(o) =>
-						o.name === 'redirect-idp' && o.type === socialIdp.toUpperCase(),
+					({ name, type }) =>
+						name === 'redirect-idp' && type === socialIdp.toUpperCase(),
 				);
 
 				if (
