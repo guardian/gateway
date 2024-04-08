@@ -1,68 +1,54 @@
-import { joinUrl } from '@guardian/libs';
-import { InteractResponse } from './interact';
-import { getConfiguration } from '@/server/lib/getConfiguration';
-import { logger } from '@/server/lib/serverSideLogger';
 import { z } from 'zod';
-import { OAuthError } from '@/server/models/okta/Error';
-import { trackMetric } from '../../trackMetric';
-
-const { okta } = getConfiguration();
-
-const idxVersionSchema = z.string().refine((val) => {
-	// warn if the version is not 1.0.0
-	if (val !== '1.0.0') {
-		logger.warn('Okta IDX - unexpected version:', val);
-		trackMetric('OktaIDX::UnexpectedVersion');
-	}
-
-	// but pass validation regardless
-	return true;
-});
+import { InteractResponse } from './interact';
+import {
+	baseRemediationValueSchema,
+	idxBaseResponseSchema,
+	idxFetch,
+} from './shared';
 
 // Schema for the 'redirect-idp' object inside the introspect response remediation object
-export const redirectIdpSchema = z.object({
-	name: z.literal('redirect-idp'),
-	type: z.enum(['APPLE', 'GOOGLE']),
-	href: z.string().url(),
-	method: z.literal('GET'),
-});
+export const redirectIdpSchema = baseRemediationValueSchema.merge(
+	z.object({
+		name: z.literal('redirect-idp'),
+		type: z.enum(['APPLE', 'GOOGLE']),
+		href: z.string().url(),
+		method: z.literal('GET'),
+	}),
+);
+
+// Base schema for the 'select-enroll-profile' object inside the introspect response remediation object
+export const selectEnrollProfileSchema = baseRemediationValueSchema.merge(
+	z.object({
+		name: z.literal('select-enroll-profile'),
+	}),
+);
 
 // Schema for the introspect response
-const introspectResponseSchema = z.object({
-	version: idxVersionSchema,
-	stateHandle: z.string(),
-	expiresAt: z.coerce.date(),
-	remediation: z.object({
-		type: z.string(),
-		value: z.array(
-			// social idp object
-			z.union([
-				redirectIdpSchema,
-				z.object({
-					// any other name thats not one of the above
-					name: z.string(),
-					type: z.string().optional(),
-					href: z.string().optional(),
-					method: z.string().optional(),
-				}),
-			]),
-		),
+const introspectResponseSchema = idxBaseResponseSchema.merge(
+	z.object({
+		remediation: z.object({
+			type: z.string(),
+			value: z.array(
+				// social idp object
+				z.union([
+					redirectIdpSchema,
+					selectEnrollProfileSchema,
+					baseRemediationValueSchema,
+				]),
+			),
+		}),
 	}),
-});
+);
 export type IntrospectResponse = z.infer<typeof introspectResponseSchema>;
 
-const introspectResponseErrorSchema = z.object({
-	version: idxVersionSchema,
-	messages: z.object({
-		type: z.literal('array'),
-		value: z.array(
-			z.object({
-				message: z.string(),
-				i18n: z.object({ key: z.string() }),
-			}),
-		),
-	}),
-});
+// Introspect body type - can use either interactionHandle or stateHandle
+type IntrospectBody =
+	| {
+			interactionHandle: InteractResponse['interaction_handle'];
+	  }
+	| {
+			stateHandle: IntrospectResponse['stateHandle'];
+	  };
 
 /**
  * @name introspect
@@ -77,87 +63,14 @@ const introspectResponseErrorSchema = z.object({
  * @param request_id - The request id
  * @returns Promise<IntrospectResponse> - The introspect response
  */
-export const introspect = async (
-	interactionHandle: InteractResponse['interaction_handle'],
+export const introspect = (
+	body: IntrospectBody,
 	request_id?: string,
 ): Promise<IntrospectResponse> => {
-	try {
-		const response = await fetch(joinUrl(okta.orgUrl, '/idp/idx/introspect'), {
-			method: 'POST',
-			headers: {
-				Accept: 'application/ion+json; okta-version=1.0.0',
-				'Content-Type': 'application/ion+json; okta-version=1.0.0',
-			},
-			body: JSON.stringify({
-				interactionHandle,
-			}),
-		});
-
-		if (!response.ok) {
-			await handleError(response);
-		}
-
-		const introspectResponse = introspectResponseSchema.parse(
-			await response.json(),
-		);
-
-		trackMetric('OktaIDXIntrospect::Success');
-
-		return introspectResponse;
-	} catch (error) {
-		trackMetric('OktaIDXIntrospect::Failure');
-		logger.error('Error - Okta IDX introspect:', error, {
-			request_id,
-		});
-
-		throw error;
-	}
-};
-
-const handleError = async (response: Response) => {
-	// Check if the body is likely json using the content-type header
-	const contentType = response.headers.get('content-type');
-	if (
-		contentType &&
-		(contentType.includes('application/json') ||
-			contentType.includes('application/ion+json'))
-	) {
-		// if so, parse the body as json and see if it matches the schema
-		const json = await response.json().catch((e) => {
-			throw new OAuthError(
-				{
-					error: 'invalid_json',
-					error_description: e.message,
-				},
-				response.status,
-			);
-		});
-		const error = introspectResponseErrorSchema.safeParse(json);
-
-		if (error.success) {
-			throw new OAuthError(
-				{
-					error: error.data.messages.value[0].i18n.key,
-					error_description: error.data.messages.value[0].message,
-				},
-				response.status,
-			);
-		} else {
-			throw new OAuthError(
-				{
-					error: 'unknown_error',
-					error_description: JSON.stringify(json),
-				},
-				response.status,
-			);
-		}
-	}
-
-	throw new OAuthError(
-		{
-			error: 'unknown_error',
-			error_description: await response.text(),
-		},
-		response.status,
-	);
+	return idxFetch<IntrospectResponse, IntrospectBody>({
+		path: 'introspect',
+		body,
+		schema: introspectResponseSchema,
+		request_id,
+	});
 };
