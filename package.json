@@ -73,7 +73,7 @@
 		"@types/ms": "^0.7.34",
 		"@types/node": "^20.12.2",
 		"@types/react": "^18.2.73",
-		"@types/react-dom": "^18.2.23",
+		"@types/react-dom": "^18.2.24",
 		"@types/serialize-javascript": "^5.0.4",
 		"@types/supertest": "^6.0.2",
 		"@types/uuid": "^9.0.8",
