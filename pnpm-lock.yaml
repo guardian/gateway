@@ -26,9 +26,6 @@ dependencies:
   '@guardian/ab-core':
     specifier: 7.0.1
     version: 7.0.1(tslib@2.6.2)(typescript@5.4.4)
-  '@guardian/consent-management-platform':
-    specifier: ^13.12.1
-    version: 13.12.1(@guardian/libs@16.1.0)
   '@guardian/libs':
     specifier: ^16.1.0
     version: 16.1.0(tslib@2.6.2)(typescript@5.4.4)
@@ -2939,14 +2936,6 @@ packages:
     dependencies:
       tslib: 2.6.2
       typescript: 5.4.4
-    dev: false
-
-  /@guardian/consent-management-platform@13.12.1(@guardian/libs@16.1.0):
-    resolution: {integrity: sha512-ng6Pl760icPXobdm3qBhV82ATipW/o0nlnBTQTMuYvKVWFEebqFJ5su77/DSaCXyqJkXIKn3UeDTU8JyFQnBtQ==}
-    peerDependencies:
-      '@guardian/libs': ^15.0.0 || ^16.0.0
-    dependencies:
-      '@guardian/libs': 16.1.0(tslib@2.6.2)(typescript@5.4.4)
     dev: false
 
   /@guardian/eslint-plugin-source-foundations@18.0.0(@guardian/libs@16.1.0)(@guardian/source-foundations@14.1.4)(eslint@8.57.0)(tslib@2.6.2)(typescript@5.4.4):
