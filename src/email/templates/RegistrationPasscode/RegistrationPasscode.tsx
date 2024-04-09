@@ -17,7 +17,7 @@ export const RegistrationPasscode = () => {
 				<SubHeader>Your verification code</SubHeader>
 				<Text>
 					Thank you for creating an account with the Guardian. Use the following
-					code to verify your email.{' '}
+					code to verify your email.
 				</Text>
 				<Text largeText>
 					<strong>{`\${oneTimePassword}`}</strong>
@@ -30,12 +30,12 @@ export const RegistrationPasscode = () => {
 				</Text>
 				<Text>
 					<strong>
-						If your code has expired, create your Guardian again.{' '}
+						If your code has expired, create your Guardian account again.
 					</strong>
 				</Text>
 				<Footer
 					mistakeParagraphComponent={
-						'If you received this email by mistake, please delete it. You won’t be registered if you don’t do anything'
+						'If you received this email by mistake, please delete it. You won’t be registered if you don’t do anything.'
 					}
 				/>
 			</MjmlBody>
