@@ -7,12 +7,14 @@ type Props = {
 	children: React.ReactNode;
 	noPaddingBottom?: boolean;
 	cssClass?: string;
+	largeText?: boolean;
 };
 
 export const Text = ({
 	children,
 	noPaddingBottom = false,
 	cssClass,
+	largeText = false,
 }: Props) => (
 	<MjmlSection
 		background-color={background.primary}
@@ -22,7 +24,7 @@ export const Text = ({
 		<MjmlColumn>
 			<MjmlText
 				padding="0"
-				fontSize="17px"
+				fontSize={largeText ? '20px' : '17px'}
 				lineHeight="1.35"
 				letterSpacing="-0.02px"
 				fontFamily="Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif"
