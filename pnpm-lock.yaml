@@ -281,8 +281,8 @@ devDependencies:
     specifier: ^9.1.0
     version: 9.1.0(eslint@8.57.0)
   eslint-plugin-functional:
-    specifier: ^6.4.0
-    version: 6.4.0(eslint@8.57.0)(typescript@5.4.4)
+    specifier: ^6.5.1
+    version: 6.5.1(eslint@8.57.0)(typescript@5.4.4)
   eslint-plugin-jsx-a11y:
     specifier: ^6.8.0
     version: 6.8.0(eslint@8.57.0)
@@ -5742,10 +5742,6 @@ packages:
       parse5: 7.1.2
     dev: true
 
-  /@types/json-schema@7.0.12:
-    resolution: {integrity: sha512-Hr5Jfhc9eYOQNPYO5WLDq/n4jqijdHNlDXjuAQkkt+mWdQR+XJToOHrsD4cPaMXpn6KO7y2+wM8AZEs8VpBLVA==}
-    dev: true
-
   /@types/json-schema@7.0.15:
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
     dev: true
@@ -5845,10 +5841,6 @@ packages:
 
   /@types/resolve@1.20.6:
     resolution: {integrity: sha512-A4STmOXPhMUtHH+S6ymgE2GiBSMqf4oTvcQZMcHzokuTLVYzXTB8ttjcgxOVaAp2lGwEdzZ0J+cRbbeevQj1UQ==}
-    dev: true
-
-  /@types/semver@7.5.0:
-    resolution: {integrity: sha512-G8hZ6XJiHnuhQKR7ZmysCeJWE08o8T0AXtk5darsCaTVsYZhhgUrq53jizaR2FvsoeCwJhlmwTjkXBY5Pn/ZHw==}
     dev: true
 
   /@types/semver@7.5.8:
@@ -6193,14 +6185,14 @@ packages:
       eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@8.57.0)
-      '@types/json-schema': 7.0.12
-      '@types/semver': 7.5.0
+      '@types/json-schema': 7.0.15
+      '@types/semver': 7.5.8
       '@typescript-eslint/scope-manager': 5.62.0
       '@typescript-eslint/types': 5.62.0
       '@typescript-eslint/typescript-estree': 5.62.0(typescript@5.4.4)
       eslint: 8.57.0
       eslint-scope: 5.1.1
-      semver: 7.5.4
+      semver: 7.6.0
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -8840,8 +8832,8 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-functional@6.4.0(eslint@8.57.0)(typescript@5.4.4):
-    resolution: {integrity: sha512-dw3MXkMgHciKyHM/2BIrai0Q0+1sXJMuyPvrS4ehcVMm4/AXxhpZcL/kip1869/Ssefoj6PYfIF/HDTNLAgnyA==}
+  /eslint-plugin-functional@6.5.1(eslint@8.57.0)(typescript@5.4.4):
+    resolution: {integrity: sha512-8FbXylC/kptJ1drux4fyopVWmDkNTHGj/p7DKFt6G8hVXUhkC1eHCcNb5bnUOrpYEycIXXi0MrE3Nt0oEOkrQA==}
     engines: {node: '>=16.10.0'}
     peerDependencies:
       eslint: ^8.0.0
@@ -8854,7 +8846,7 @@ packages:
       deepmerge-ts: 5.1.0
       escape-string-regexp: 4.0.0
       eslint: 8.57.0
-      is-immutable-type: 2.0.4(eslint@8.57.0)(typescript@5.4.4)
+      is-immutable-type: 3.1.0(eslint@8.57.0)(typescript@5.4.4)
       semver: 7.6.0
       ts-api-utils: 1.3.0(typescript@5.4.4)
       typescript: 5.4.4
@@ -9822,7 +9814,7 @@ packages:
     dependencies:
       foreground-child: 3.1.1
       jackspeak: 2.3.6
-      minimatch: 9.0.3
+      minimatch: 9.0.4
       minipass: 7.0.2
       path-scurry: 1.10.1
     dev: false
@@ -10553,8 +10545,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /is-immutable-type@2.0.4(eslint@8.57.0)(typescript@5.4.4):
-    resolution: {integrity: sha512-kjNGSmAQdEj7NJ/Cim9u6OUB/efEsuoUU3fCygl+o0DBwNS0blVjRHumRBX9cBwpZQEQaYVpVLO635HqWvdZRw==}
+  /is-immutable-type@3.1.0(eslint@8.57.0)(typescript@5.4.4):
+    resolution: {integrity: sha512-EIAsgCk/4tEohdqKa5iGf1+IwoRYV/81Fe1awSspgobMxOmmxTZslvkH/PAtSKtR2NDFXGVkZZNqiLQA37GKBQ==}
     peerDependencies:
       eslint: '*'
       typescript: '>=4.7.4'
@@ -10562,6 +10554,7 @@ packages:
       '@typescript-eslint/type-utils': 7.5.0(eslint@8.57.0)(typescript@5.4.4)
       eslint: 8.57.0
       ts-api-utils: 1.3.0(typescript@5.4.4)
+      ts-declaration-location: 1.0.0(typescript@5.4.4)
       typescript: 5.4.4
     transitivePeerDependencies:
       - supports-color
@@ -11972,13 +11965,13 @@ packages:
     engines: {node: '>=16 || 14 >=14.17'}
     dependencies:
       brace-expansion: 2.0.1
+    dev: true
 
   /minimatch@9.0.4:
     resolution: {integrity: sha512-KqWh+VchfxcMNRAJjj2tnsSJdNbHsVgnkBhTNrW7AjVo6OvLtxw8zfT9oLw1JSohlFzJ8jCoTgaoXvJ+kHt6fw==}
     engines: {node: '>=16 || 14 >=14.17'}
     dependencies:
       brace-expansion: 2.0.1
-    dev: true
 
   /minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
@@ -12068,7 +12061,7 @@ packages:
       html-minifier: 4.0.0
       js-beautify: 1.14.8
       lodash: 4.17.21
-      minimatch: 9.0.3
+      minimatch: 9.0.4
       mjml-core: 4.15.3
       mjml-migrate: 4.15.3
       mjml-parser-xml: 4.15.3
@@ -12505,7 +12498,7 @@ packages:
     dependencies:
       growly: 1.3.0
       is-wsl: 2.2.0
-      semver: 7.5.4
+      semver: 7.6.0
       shellwords: 0.1.1
       uuid: 8.3.2
       which: 2.0.2
@@ -13866,7 +13859,7 @@ packages:
     resolution: {integrity: sha512-pN/yOAvcC+5rQ5nERGuwrjLlYvLTbCibnZ1I7B1LaiAz9BRBlE9GMgE/eqV30P7aJQUf7Ddimy/RsbYO/GrVGg==}
     engines: {node: '>= 10.13.0'}
     dependencies:
-      '@types/json-schema': 7.0.12
+      '@types/json-schema': 7.0.15
       ajv: 6.12.6
       ajv-keywords: 3.5.2(ajv@6.12.6)
     dev: true
@@ -13875,7 +13868,7 @@ packages:
     resolution: {integrity: sha512-L0jRsrPpjdckP3oPug3/VxNKt2trR8TcabrM6FOAAlvC/9Phcmm+cuAgTlxBqdBR1WJx7Naj9WHw+aOmheSVbw==}
     engines: {node: '>= 12.13.0'}
     dependencies:
-      '@types/json-schema': 7.0.12
+      '@types/json-schema': 7.0.15
       ajv: 8.12.0
       ajv-formats: 2.1.1(ajv@8.12.0)
       ajv-keywords: 5.1.0(ajv@8.12.0)
@@ -14077,7 +14070,7 @@ packages:
     resolution: {integrity: sha512-a2B9Y0KlNXl9u/vsW6sTIu9vGEpfKu2wRV6l1H3XEas/0gUIzGzBoP/IouTcUQbm9JWZLH3COxyn03TYlFax6w==}
     engines: {node: '>=10'}
     dependencies:
-      semver: 7.5.4
+      semver: 7.6.0
     dev: true
 
   /sirv@2.0.3:
@@ -14767,6 +14760,15 @@ packages:
     peerDependencies:
       typescript: '>=4.2.0'
     dependencies:
+      typescript: 5.4.4
+    dev: true
+
+  /ts-declaration-location@1.0.0(typescript@5.4.4):
+    resolution: {integrity: sha512-/C+R0e1CLF1KtwbE59IFhCg4jLwfU7Puob+uVIl4iUVQhepN/bHmWXy3Gt3mAgvdLQybEZ4yb4qhnJQbphnEgA==}
+    peerDependencies:
+      typescript: '>=4.0.0'
+    dependencies:
+      fast-glob: 3.3.2
       typescript: 5.4.4
     dev: true
 
