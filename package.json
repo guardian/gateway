@@ -48,7 +48,7 @@
 		"@guardian/node-riffraff-artifact": "^0.3.2",
 		"@guardian/prettier": "^8.0.0",
 		"@storybook/addon-actions": "^8.0.6",
-		"@storybook/addon-essentials": "^8.0.6",
+		"@storybook/addon-essentials": "^8.0.8",
 		"@storybook/addon-links": "^8.0.6",
 		"@storybook/addon-styling-webpack": "^1.0.0",
 		"@storybook/addon-themes": "^8.0.6",
