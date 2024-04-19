@@ -27,23 +27,10 @@ const cmpIframe = () => {
 		.then(cy.wrap);
 };
 
-const privacySettingsIframe = () => {
-	return cy
-		.get('[src*="https://cdn.privacy-mgmt.com/privacy-manager"]')
-		.its('0.contentDocument.body')
-		.should('not.be.empty')
-		.then(cy.wrap);
-};
-
 export const acceptCMP = () => {
 	cmpIframe().find("[title='Yes, I’m happy']").click().wait(2000);
 };
 
 export const declineCMP = () => {
-	cmpIframe().find("[title='Manage or reject cookies']").click();
-	privacySettingsIframe().contains('Privacy settings');
-	privacySettingsIframe()
-		.find("[title='Reject all']", { timeout: 2000 })
-		.click()
-		.wait(2000);
+	cmpIframe().find("[title='No, thank you']").click().wait(2000);
 };
