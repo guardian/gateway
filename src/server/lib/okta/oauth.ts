@@ -25,7 +25,8 @@ export type Scopes =
 	| 'guardian.identity-api.newsletters.read.self'
 	| 'guardian.identity-api.newsletters.update.self'
 	| 'guardian.identity-api.user.delete.self.secure'
-	| 'id_token.profile.profile';
+	| 'id_token.profile.profile'
+	| 'offline_access';
 
 /**
  * @name scopesForAuthentication
@@ -39,6 +40,8 @@ export const scopesForAuthentication: Scopes[] = [
 	'guardian.members-data-api.read.self',
 	'guardian.identity-api.newsletters.read.self',
 	'guardian.identity-api.newsletters.update.self',
+	// Required to obtain refresh tokens for the 'wait for Identity ID' loop
+	'offline_access',
 ];
 
 /**

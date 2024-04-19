@@ -7,6 +7,7 @@ import {
 	getAuthorizationStateCookie,
 	getOpenIdClient,
 	ProfileOpenIdClientRedirectUris,
+	OpenIdClient,
 } from '@/server/lib/okta/openid-connect';
 import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
@@ -16,6 +17,7 @@ import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import {
 	FederationErrors,
 	GenericErrors,
+	RegistrationErrors,
 	SignInErrors,
 } from '@/shared/model/Errors';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
@@ -80,6 +82,55 @@ const redirectForGenericError = (_: Request, res: ResponseWithRequestState) => {
 			error_description: SignInErrors.GENERIC,
 		}),
 	);
+};
+
+/**
+ * A recursive function which waits for the legacy_identity_id claim
+ * to be present in the access token during a succession of token
+ * refreshes.
+ */
+const waitForLegacyIdentityId = async (
+	openIdClient: OpenIdClient,
+	tokenSet: TokenSet,
+	refreshToken: string,
+	maximumWaitTime = 30000,
+	waitTime = 500,
+): Promise<TokenSet | null> => {
+	const { legacy_identity_id } = tokenSet.claims();
+
+	if (legacy_identity_id) {
+		// The legacy_identity_id claim is present, we can return the token set
+		return tokenSet;
+	}
+
+	if (maximumWaitTime <= 0) {
+		// We've timed out waiting for the claim to be present
+		return null;
+	}
+
+	const start = Date.now();
+	const refreshedTokenSet = await openIdClient.refresh(refreshToken);
+	const newRefreshToken = refreshedTokenSet?.refresh_token;
+	if (!newRefreshToken) {
+		// There's no refresh token in this token set, so we can't continue
+		return null;
+	}
+
+	// Non-blocking wait for the next iteration
+	return new Promise((resolve) => {
+		setTimeout(async () => {
+			const remainingTime = maximumWaitTime - (Date.now() - start);
+			resolve(
+				await waitForLegacyIdentityId(
+					openIdClient,
+					refreshedTokenSet,
+					newRefreshToken,
+					remainingTime,
+					waitTime,
+				),
+			);
+		}, waitTime);
+	});
 };
 
 /**
@@ -220,12 +271,13 @@ const authenticationHandler = async (
 					});
 				} catch (error) {
 					logger.error(
-						'Error touching braze on oauth callback',
+						'Error touching braze on oauth callback - new social user',
 						{
 							error,
 						},
 						{
 							request_id: res.locals.requestId,
+							socialProvider: authState.data?.socialProvider,
 						},
 					);
 				}
@@ -331,7 +383,7 @@ const authenticationHandler = async (
 						});
 					} catch (error) {
 						logger.error(
-							'Error touching braze on oauth callback',
+							'Error touching braze on oauth callback - new user no newsletters',
 							{
 								error,
 							},
@@ -709,7 +761,8 @@ router.get(
 		// and check the "state" we got back from the callback
 		// to the "stateParam" that was set in the AuthorizationState
 		// to prevent CSRF attacks
-		const tokenSet = await OpenIdClient.callback(
+		// eslint-disable-next-line functional/no-let -- We need to be able to reassign tokenSet if we have to refresh the token
+		let tokenSet: TokenSet | null = await OpenIdClient.callback(
 			// the redirectUri is the callback location (this route)
 			redirectUri,
 			// the params sent to the callback
@@ -725,7 +778,57 @@ router.get(
 			},
 		);
 
-		trackMetric('OAuthAuthorization::Success');
+		// We need the access token to include the legacy_identity_id claim.
+		// Especially in the case of social registration, IDAPI can take longer
+		// to create an IDAPI user and update with the new ID than it takes
+		// for Okta to return the browser to this callback endpoint. For this
+		// reason, we need to wait until the IDAPI operation completes and the
+		// Okta user is updated before we can proceed.
+		// 1. Check if the original access token is missing the legacy_identity_id claim.
+		// 2. If it is, use the refresh token we got from the callback to get
+		//    a new access token, and check that.
+		// 3. Once the claim is present, proceed with the rest of the callback logic.
+		// 4. If the claim is not present after a timeout, return an error to the user.
+		const refreshToken = tokenSet.refresh_token;
+		const { legacy_identity_id } = tokenSet.claims();
+		if (!refreshToken && !legacy_identity_id) {
+			// We can't do this step without the refresh token, so if it's missing, just continue
+			// to the callback function - we may encounter errors there.
+			trackMetric('OAuthAuthorization::ProvisioningFailure');
+			logger.error(
+				'Access token missing legacy_identity_id and no refresh token available',
+				undefined,
+				{
+					request_id: res.locals.requestId,
+				},
+			);
+		} else if (refreshToken && !legacy_identity_id) {
+			tokenSet = await waitForLegacyIdentityId(
+				OpenIdClient,
+				tokenSet,
+				refreshToken,
+			);
+			if (!tokenSet) {
+				trackMetric('OAuthAuthorization::ProvisioningFailure');
+				logger.error(
+					'Gave up waiting for Okta to return access token with legacy_identity_id',
+					undefined,
+					{
+						request_id: res.locals.requestId,
+					},
+				);
+				return res.redirect(
+					addQueryParamsToPath('/reauthenticate', authState.queryParams, {
+						error: RegistrationErrors.PROVISIONING_FAILURE,
+					}),
+				);
+			}
+			// After waiting, the tokenSet contains an access token with the legacy_identity_id claim.
+			trackMetric('OAuthAuthorization::Success');
+		} else {
+			// We already have the legacy_identity_id claim so we can proceed.
+			trackMetric('OAuthAuthorization::Success');
+		}
 
 		// call the appropriate handler depending on the callbackParam
 		switch (req.params.callbackParam) {

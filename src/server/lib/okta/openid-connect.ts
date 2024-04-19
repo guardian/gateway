@@ -51,12 +51,13 @@ export interface AuthorizationState {
  * @property `authorizationUrl` - Generate the `/authorize` url for the Authorization Code Flow (w or w/o PKCE)
  * @property `callbackParams` - Get OpenID Connect query parameters returned to the callback (redirect_uri)
  * @property `callback` - Method used in the callback (redirect_uri) endpoint to get OAuth tokens
+ * @property `refresh` - Method used to refresh the OAuth tokens using a refresh token
  *
  */
 
-type OpenIdClient = Pick<
+export type OpenIdClient = Pick<
 	Client,
-	'authorizationUrl' | 'callbackParams' | 'callback'
+	'authorizationUrl' | 'callbackParams' | 'callback' | 'refresh'
 >;
 
 /**

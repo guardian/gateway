@@ -25,6 +25,7 @@ const userProfileSchema = z.object({
 	isJobsUser: z.boolean().nullable().optional(),
 	firstName: z.string().nullable().optional(),
 	lastName: z.string().nullable().optional(),
+	legacyIdentityId: z.string().nullable().optional(),
 });
 
 // https://developer.okta.com/docs/reference/api/users/#password-object
@@ -57,6 +58,7 @@ export const userResponseSchema = z.object({
 		isJobsUser: true,
 		registrationLocation: true,
 		registrationPlatform: true,
+		legacyIdentityId: true,
 	}),
 	credentials: userCredentialsSchema,
 });
