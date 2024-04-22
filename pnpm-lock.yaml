@@ -120,8 +120,8 @@ dependencies:
     specifier: ^4.7.0
     version: 4.7.0
   zod:
-    specifier: ^3.22.4
-    version: 3.22.4
+    specifier: ^3.23.0
+    version: 3.23.0
 
 devDependencies:
   '@babel/core':
@@ -387,7 +387,7 @@ devDependencies:
     version: 3.0.0
   zod-to-json-schema:
     specifier: ^3.22.5
-    version: 3.22.5(zod@3.22.4)
+    version: 3.22.5(zod@3.23.0)
 
 packages:
 
@@ -15829,13 +15829,13 @@ packages:
       readable-stream: 3.6.2
     dev: true
 
-  /zod-to-json-schema@3.22.5(zod@3.22.4):
+  /zod-to-json-schema@3.22.5(zod@3.23.0):
     resolution: {integrity: sha512-+akaPo6a0zpVCCseDed504KBJUQpEW5QZw7RMneNmKw+fGaML1Z9tUNLnHHAC8x6dzVRO1eB2oEMyZRnuBZg7Q==}
     peerDependencies:
       zod: ^3.22.4
     dependencies:
-      zod: 3.22.4
+      zod: 3.23.0
     dev: true
 
-  /zod@3.22.4:
-    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
+  /zod@3.23.0:
+    resolution: {integrity: sha512-OFLT+LTocvabn6q76BTwVB0hExEBS0IduTr3cqZyMqEDbOnYmcU+y0tUAYbND4uwclpBGi4I4UUBGzylWpjLGA==}
