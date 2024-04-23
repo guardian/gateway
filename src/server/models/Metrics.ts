@@ -79,6 +79,7 @@ type UnconditionalMetrics =
 	| 'LoginMiddlewareOAuth::OAuthTokensValid'
 	| 'LoginMiddlewareOAuth::SignedOutCookie'
 	| 'LoginMiddlewareOAuth::UseIdapi'
+	| 'OAuthAuthorization::ProvisioningFailure'
 	| 'OktaIDX::UnexpectedVersion'
 	| 'OktaIDXSocialSignIn::Redirect'
 	| 'OktaIDXSocialSignIn::Failure'

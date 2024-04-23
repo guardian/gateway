@@ -1,5 +1,5 @@
 import React from 'react';
-import { SignInErrors } from '@/shared/model/Errors';
+import { RegistrationErrors, SignInErrors } from '@/shared/model/Errors';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { generateSignInRegisterTabs } from '@/client/components/Nav';
 import { MainLayout } from '@/client/layouts/Main';
@@ -17,6 +17,8 @@ import { divider, socialButtonDivider } from '@/client/styles/Shared';
 import { GuardianTerms, JobsTerms } from '@/client/components/Terms';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { InformationBox } from '@/client/components/InformationBox';
+import locations from '@/shared/lib/locations';
+import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
 
 export type SignInProps = {
 	queryParams: QueryParams;
@@ -60,6 +62,14 @@ const getErrorContext = (error: string | undefined) => {
 			<>
 				We cannot sign you in with your social account credentials. Please enter
 				your account password below to sign in.
+			</>
+		);
+	} else if (error === RegistrationErrors.PROVISIONING_FAILURE) {
+		return (
+			<>
+				Please try signing in with your new account. If you are still having
+				trouble, please contact our customer service team at{' '}
+				<a href={locations.SUPPORT_EMAIL_MAILTO}>{SUPPORT_EMAIL}</a>
 			</>
 		);
 	}

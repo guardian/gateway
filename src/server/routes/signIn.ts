@@ -12,6 +12,7 @@ import { decrypt } from '@/server/lib/idapi/decryptToken';
 import {
 	FederationErrors,
 	GenericErrors,
+	RegistrationErrors,
 	SignInErrors,
 } from '@/shared/model/Errors';
 import { ApiError } from '@/server/models/Error';
@@ -69,6 +70,10 @@ export const getErrorMessageFromQueryParams = (
 	// show error if account linking required
 	if (error === FederationErrors.SOCIAL_SIGNIN_BLOCKED) {
 		return SignInErrors.ACCOUNT_ALREADY_EXISTS;
+	}
+	// Show error if provisioning failed
+	if (error === RegistrationErrors.PROVISIONING_FAILURE) {
+		return error;
 	}
 	// TODO: we're propagating a generic error message for now until we know what we're doing with the error_description parameter
 	if (error_description) {
