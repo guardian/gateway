@@ -3,7 +3,7 @@ import { Meta, StoryFn } from '@storybook/react';
 import { news } from '@guardian/source-foundations';
 
 import { DOWN_TO_EARTH_IMAGE } from '@/client/assets/newsletters';
-import { ConsentCard } from './ConsentCard';
+import { ConsentCard } from '@/client/components/ConsentCard';
 
 export default {
 	title: 'Components/ConsentCard',

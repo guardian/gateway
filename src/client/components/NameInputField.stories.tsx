@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import NameInputField from './NameInputField';
+import NameInputField from '@/client/components/NameInputField';
 
 export default {
 	title: 'Components/NameInputField',

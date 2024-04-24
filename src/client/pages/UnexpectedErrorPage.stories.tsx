@@ -2,7 +2,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { UnexpectedErrorPage } from './UnexpectedErrorPage';
+import { UnexpectedErrorPage } from '@/client/pages/UnexpectedErrorPage';
 
 export default {
 	title: 'Pages/UnexpectedErrorPage',

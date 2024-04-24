@@ -1,9 +1,9 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { Header } from './Header';
-import { Nav } from './Nav';
-import { getAutoRow, gridRow } from '../styles/Grid';
+import { Header } from '@/client/components/Header';
+import { Nav } from '@/client/components/Nav';
+import { getAutoRow, gridRow } from '@/client/styles/Grid';
 import { css } from '@emotion/react';
 
 export default {

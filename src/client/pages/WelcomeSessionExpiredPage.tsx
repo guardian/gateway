@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { ResetPassword } from '@/client/pages/ResetPassword';
 
-import { MainBodyText } from '../components/MainBodyText';
+import { MainBodyText } from '@/client/components/MainBodyText';
 import { buildUrl } from '@/shared/lib/routeUtils';
 import { logger } from '@/client/lib/clientSideLogger';
 

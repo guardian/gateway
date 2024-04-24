@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { DetailedRecaptchaError } from './DetailedRecaptchaError';
+import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaError';
 
 export default {
 	title: 'Components/DetailedRecaptchaError',

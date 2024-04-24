@@ -2,7 +2,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { ResendConsentEmail } from './ResendConsentEmail';
+import { ResendConsentEmail } from '@/client/pages/ResendConsentEmail';
 
 export default {
 	title: 'Pages/ResendConsentEmail',

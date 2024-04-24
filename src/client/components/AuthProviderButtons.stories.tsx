@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { AuthProviderButtons } from './AuthProviderButtons';
+import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
 
 export default {
 	title: 'Components/AuthProviderButtons',

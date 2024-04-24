@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { PasswordForm } from './PasswordForm';
+import { PasswordForm } from '@/client/components/PasswordForm';
 
 export default {
 	title: 'Components/PasswordForm',

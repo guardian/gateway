@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { MainBodyText } from './MainBodyText';
+import { MainBodyText } from '@/client/components/MainBodyText';
 
 export default {
 	title: 'Components/MainBodyText',

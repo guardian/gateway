@@ -1,8 +1,8 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { RegisterWithEmail } from './RegisterWithEmail';
-import { RegistrationProps } from './Registration';
+import { RegisterWithEmail } from '@/client/pages/RegisterWithEmail';
+import { RegistrationProps } from '@/client/pages/Registration';
 
 export default {
 	title: 'Pages/RegisterWithEmail',

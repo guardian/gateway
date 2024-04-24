@@ -1,8 +1,8 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { SignedInAs } from './SignedInAs';
-import { SignInErrors } from '../../shared/model/Errors';
+import { SignedInAs } from '@/client/pages/SignedInAs';
+import { SignInErrors } from '@/shared/model/Errors';
 
 export default {
 	title: 'Pages/SignedInAs',

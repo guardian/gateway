@@ -1,9 +1,9 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { RegistrationNewsletterFormField } from './RegistrationNewsletterFormField';
+import { RegistrationNewsletterFormField } from '@/client/components/RegistrationNewsletterFormField';
 import { RegistrationNewslettersFormFields } from '@/shared/model/Newsletter';
-import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '../assets/newsletters';
+import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '@/client/assets/newsletters';
 
 export default {
 	title: 'Components/RegistrationNewsletterFormField',

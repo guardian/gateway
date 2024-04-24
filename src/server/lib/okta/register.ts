@@ -16,7 +16,7 @@ import { sendAccountWithoutPasswordExistsEmail } from '@/email/templates/Account
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
 import { trackMetric } from '@/server/lib/trackMetric';
-import { logger } from '../serverSideLogger';
+import { logger } from '@/server/lib/serverSideLogger';
 import dangerouslySetPlaceholderPassword from './dangerouslySetPlaceholderPassword';
 import { sendCompleteRegistration } from '@/email/templates/CompleteRegistration/sendCompleteRegistration';
 import { encryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
@@ -25,7 +25,7 @@ import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 import { TrackingQueryParams } from '@/shared/model/QueryParams';
 import { emailSendMetric } from '@/server/models/Metrics';
-import { getRegistrationPlatform } from '../registrationPlatform';
+import { getRegistrationPlatform } from '@/server/lib/registrationPlatform';
 
 const { okta } = getConfiguration();
 

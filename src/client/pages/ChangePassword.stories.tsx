@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { ChangePassword } from './ChangePassword';
+import { ChangePassword } from '@/client/pages/ChangePassword';
 
 export default {
 	title: 'Pages/ChangePassword',

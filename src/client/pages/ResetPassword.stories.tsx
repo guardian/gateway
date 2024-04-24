@@ -1,8 +1,8 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { ResetPassword } from './ResetPassword';
-import { MainBodyText } from '../components/MainBodyText';
+import { ResetPassword } from '@/client/pages/ResetPassword';
+import { MainBodyText } from '@/client/components/MainBodyText';
 
 export default {
 	title: 'Pages/ResetPassword',

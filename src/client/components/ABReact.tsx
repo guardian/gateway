@@ -14,7 +14,7 @@ const ABContext = createContext<ABTestAPI | undefined>(undefined);
  * Each instance of AB has its own config.
  *
  * @example
- * import { ABProvider, useAB } from './ab';
+ * import { ABProvider, useAB } from '@/client/components/ab';
  *
  * const Example = () => {
  *   const AB = useAB();

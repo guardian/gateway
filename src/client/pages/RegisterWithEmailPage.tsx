@@ -1,6 +1,6 @@
 import React from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
-import { RegisterWithEmail } from './RegisterWithEmail';
+import { RegisterWithEmail } from '@/client/pages/RegisterWithEmail';
 
 export const RegisterWithEmailPage = () => {
 	const clientState = useClientState();

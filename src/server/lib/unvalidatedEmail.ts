@@ -4,7 +4,7 @@ import { forgotPassword } from '@/server/lib/okta/api/users';
 import { encryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 import { TrackingQueryParams } from '@/shared/model/QueryParams';
 import { trackMetric } from './trackMetric';
-import { emailSendMetric } from '../models/Metrics';
+import { emailSendMetric } from '@/server/models/Metrics';
 
 type Props = {
 	id: string;

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { SubscriptionError } from './SubscriptionError';
+import { SubscriptionError } from '@/client/pages/SubscriptionError';
 
 export default {
 	title: 'Pages/SubscriptionError',

@@ -1,7 +1,10 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { ToggleSwitchInput, ToggleSwitchInputProps } from './ToggleSwitchInput';
+import {
+	ToggleSwitchInput,
+	ToggleSwitchInputProps,
+} from '@/client/components/ToggleSwitchInput';
 import { SATURDAY_EDITION_SMALL_SQUARE_IMAGE } from '@/client/assets/newsletters';
 
 export default {

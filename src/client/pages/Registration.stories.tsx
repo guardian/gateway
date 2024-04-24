@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { Registration, RegistrationProps } from './Registration';
+import { Registration, RegistrationProps } from '@/client/pages/Registration';
 
 export default {
 	title: 'Pages/Registration',

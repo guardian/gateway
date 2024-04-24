@@ -1,6 +1,6 @@
 import React from 'react';
-import { InformationBoxText } from './InformationBox';
-import { ExternalLink } from './ExternalLink';
+import { InformationBoxText } from '@/client/components/InformationBox';
+import { ExternalLink } from '@/client/components/ExternalLink';
 
 export const GuardianTerms = () => (
 	<InformationBoxText>

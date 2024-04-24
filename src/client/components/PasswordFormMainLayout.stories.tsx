@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { PasswordFormMainLayout } from './PasswordForm';
+import { PasswordFormMainLayout } from '@/client/components/PasswordForm';
 
 export default {
 	title: 'Components/PasswordFormMainLayout',

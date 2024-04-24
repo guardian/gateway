@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { ReturnToApp } from './ReturnToApp';
+import { ReturnToApp } from '@/client/pages/ReturnToApp';
 
 export default {
 	title: 'Pages/ReturnToApp',

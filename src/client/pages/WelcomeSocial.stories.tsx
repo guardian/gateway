@@ -1,7 +1,10 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { WelcomeSocial, WelcomeSocialProps } from './WelcomeSocial';
+import {
+	WelcomeSocial,
+	WelcomeSocialProps,
+} from '@/client/pages/WelcomeSocial';
 
 export default {
 	title: 'Pages/WelcomeSocial',

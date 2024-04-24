@@ -1,7 +1,7 @@
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import React from 'react';
-import useClientState from '../lib/hooks/useClientState';
-import { JobsTermsAccept } from './JobsTermsAccept';
+import useClientState from '@/client/lib/hooks/useClientState';
+import { JobsTermsAccept } from '@/client/pages/JobsTermsAccept';
 
 export const JobsTermsPage = () => {
 	const clientState = useClientState();

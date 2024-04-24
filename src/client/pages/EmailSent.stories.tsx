@@ -2,7 +2,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { EmailSent } from './EmailSent';
+import { EmailSent } from '@/client/pages/EmailSent';
 
 export default {
 	title: 'Pages/EmailSent',

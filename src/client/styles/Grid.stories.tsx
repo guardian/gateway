@@ -1,6 +1,11 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
-import { getAutoRow, gridRow, manualRow, SpanDefinition } from './Grid';
+import {
+	getAutoRow,
+	gridRow,
+	manualRow,
+	SpanDefinition,
+} from '@/client/styles/Grid';
 
 export default {
 	title: 'Styles/Grid',

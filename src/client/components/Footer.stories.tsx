@@ -2,8 +2,8 @@ import React from 'react';
 import { Meta } from '@storybook/react';
 import { css } from '@emotion/react';
 
-import { Footer } from './Footer';
-import { getAutoRow, gridRow } from '../styles/Grid';
+import { Footer } from '@/client/components/Footer';
+import { getAutoRow, gridRow } from '@/client/styles/Grid';
 
 export default {
 	title: 'Components/Footer',

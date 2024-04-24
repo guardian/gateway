@@ -2,7 +2,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { ChangeEmailError } from './ChangeEmailError';
+import { ChangeEmailError } from '@/client/pages/ChangeEmailError';
 
 export default {
 	title: 'Pages/ChangeEmailError',

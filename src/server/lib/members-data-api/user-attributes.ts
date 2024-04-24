@@ -1,7 +1,7 @@
 import { buildUrl } from '@/shared/lib/routeUtils';
 import { joinUrl } from '@guardian/libs';
-import { getConfiguration } from '../getConfiguration';
-import { logger } from '../serverSideLogger';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { logger } from '@/server/lib/serverSideLogger';
 import {
 	UserAttributesResponse,
 	userAttributesResponseSchema,

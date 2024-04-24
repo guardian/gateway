@@ -2,8 +2,8 @@ import React from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { buildQueryParamsString } from '@/shared/lib/queryParams';
 import { buildUrl } from '@/shared/lib/routeUtils';
-import { MainBodyText } from '../components/MainBodyText';
-import { EmailSent } from './EmailSent';
+import { MainBodyText } from '@/client/components/MainBodyText';
+import { EmailSent } from '@/client/pages/EmailSent';
 
 interface Props {
 	formTrackingName?: string;

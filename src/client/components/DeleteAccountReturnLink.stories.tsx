@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { DeleteAccountReturnLink } from './DeleteAccountReturnLink';
+import { DeleteAccountReturnLink } from '@/client/components/DeleteAccountReturnLink';
 
 export default {
 	title: 'Components/DeleteAccountReturnLink',

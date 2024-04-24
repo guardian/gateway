@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { RegistrationMarketingConsentFormField } from './RegistrationMarketingConsentFormField';
+import { RegistrationMarketingConsentFormField } from '@/client/components/RegistrationMarketingConsentFormField';
 import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
 
 export default {

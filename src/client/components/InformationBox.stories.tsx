@@ -1,9 +1,12 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { InformationBoxText, InformationBox } from './InformationBox';
+import {
+	InformationBoxText,
+	InformationBox,
+} from '@/client/components/InformationBox';
 import { ButtonLink, Link } from '@guardian/source-react-components';
-import { ExternalLink } from './ExternalLink';
+import { ExternalLink } from '@/client/components/ExternalLink';
 
 export default {
 	title: 'Components/InformationBox',

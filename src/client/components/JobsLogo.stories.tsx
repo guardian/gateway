@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
-import { JobsLogo } from './JobsLogo';
+import { JobsLogo } from '@/client/components/JobsLogo';
 
 export default {
 	title: 'Components/JobsLogo',

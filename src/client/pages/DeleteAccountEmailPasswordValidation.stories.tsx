@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta } from '@storybook/react';
 
-import { DeleteAccountEmailPasswordValidation } from './DeleteAccountEmailPasswordValidation';
+import { DeleteAccountEmailPasswordValidation } from '@/client/pages/DeleteAccountEmailPasswordValidation';
 
 export default {
 	title: 'Pages/DeleteAccountEmailPasswordValidation',

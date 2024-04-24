@@ -27,7 +27,10 @@ import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 import { logger } from '@/client/lib/clientSideLogger';
 import { ErrorSummary } from '@guardian/source-react-components-development-kitchen';
 import locations from '@/shared/lib/locations';
-import { InformationBox, InformationBoxText } from './InformationBox';
+import {
+	InformationBox,
+	InformationBoxText,
+} from '@/client/components/InformationBox';
 
 export interface MainFormProps {
 	formAction: string;
