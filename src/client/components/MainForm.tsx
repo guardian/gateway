@@ -26,7 +26,6 @@ import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields
 import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 import { logger } from '@/client/lib/clientSideLogger';
 import { ErrorSummary } from '@guardian/source-react-components-development-kitchen';
-import locations from '@/shared/lib/locations';
 import {
 	InformationBox,
 	InformationBoxText,
@@ -147,7 +146,6 @@ export const MainForm = ({
 	const [isFormDisabled, setIsFormDisabled] = useState(false);
 
 	const formLevelErrorMargin = !!formLevelErrorMessage;
-	const showFormLevelReportUrl = !!formLevelErrorContext;
 
 	/**
 	 * Executes the reCAPTCHA check and form submit tracking.
@@ -230,20 +228,14 @@ export const MainForm = ({
 				logger.info('reCAPTCHA check failed');
 			}
 
-			// Used to show a more detailed reCAPTCHA error if
-			// the user has requested a check more than once.
-			const showErrorContext =
-				recaptchaCheckFailed && recaptchaState?.requestCount > 1;
+			// Used to show a more detailed reCAPTCHA error
+			const showErrorContext = recaptchaCheckFailed;
 
 			// Default to generic reCAPTCHA error message.
 			// Show the retry message if the user has requested a check more than once.
-			const recaptchaErrorMessage = showErrorContext
-				? CaptchaErrors.RETRY
-				: CaptchaErrors.GENERIC;
+			const recaptchaErrorMessage = CaptchaErrors.GENERIC;
 
-			const recaptchaErrorContext = showErrorContext ? (
-				<DetailedRecaptchaError />
-			) : undefined;
+			const recaptchaErrorContext = <DetailedRecaptchaError />;
 
 			// Don't show the reCAPTCHA error if the key is set to 'test'
 			const isTestKey = recaptchaSiteKey === 'test';
@@ -301,9 +293,6 @@ export const MainForm = ({
 					cssOverrides={summaryStyles(formLevelErrorMargin)}
 					message={errorMessage}
 					context={errorContext}
-					errorReportUrl={
-						showFormLevelReportUrl ? locations.REPORT_ISSUE : undefined
-					}
 				/>
 			)}
 			{recaptchaEnabled && (

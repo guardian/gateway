@@ -1,4 +1,3 @@
-import { SUPPORT_EMAIL } from '../../../../src/shared/model/Configuration';
 import { randomPassword } from '../../../support/commands/testUser';
 
 describe('Password reset flow', () => {
@@ -25,13 +24,8 @@ describe('Password reset flow', () => {
 
 					// Check that both reCAPTCHA errors are shown.
 					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.contains(
-						'Google reCAPTCHA verification failed. Please try again.',
-					);
-					cy.get('[data-cy="main-form-submit-button"]').click();
 					cy.contains('Google reCAPTCHA verification failed.');
 					cy.contains('If the problem persists please try the following:');
-					cy.contains(SUPPORT_EMAIL);
 
 					// Continue checking the password reset flow after reCAPTCHA assertions above.
 					cy.get('[data-cy="main-form-submit-button"]').click();
@@ -76,13 +70,8 @@ describe('Password reset flow', () => {
 
 					// Check that both reCAPTCHA errors are shown.
 					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.contains(
-						'Google reCAPTCHA verification failed. Please try again.',
-					);
-					cy.get('[data-cy="main-form-submit-button"]').click();
 					cy.contains('Google reCAPTCHA verification failed.');
 					cy.contains('If the problem persists please try the following:');
-					cy.contains(SUPPORT_EMAIL);
 
 					// Continue checking the password reset flow after reCAPTCHA assertions above.
 					cy.get('[data-cy="main-form-submit-button"]').click();
@@ -133,14 +122,8 @@ describe('Password set flow', () => {
 
 					// Check that both reCAPTCHA errors are shown.
 					cy.contains('Send me a link').click();
-					cy.contains(
-						'Google reCAPTCHA verification failed. Please try again.',
-					);
-
-					cy.contains('Send me a link').click();
 					cy.contains('Google reCAPTCHA verification failed.');
 					cy.contains('If the problem persists please try the following:');
-					cy.contains(SUPPORT_EMAIL);
 
 					// Continue checking the password reset flow after reCAPTCHA assertions above.
 					cy.contains('Send me a link').click();

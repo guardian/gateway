@@ -80,7 +80,7 @@ test('calls method to set an error message when reCAPTCHA does not load correctl
 	});
 	await waitFor(() => {
 		expect(setRecaptchaErrorMessage).toHaveBeenCalledWith(
-			'Google reCAPTCHA verification failed. Please try again.',
+			'Google reCAPTCHA verification failed.',
 		);
 	});
 });
@@ -227,9 +227,12 @@ test('sets error message and context and prevents form submission when the reCAP
 
 		expect(setRecaptchaErrorMessage).toBeCalledTimes(1);
 		expect(setRecaptchaErrorMessage).toHaveBeenCalledWith(
-			'Google reCAPTCHA verification failed. Please try again.',
+			'Google reCAPTCHA verification failed.',
 		);
-		expect(setRecaptchaErrorContext).not.toBeCalled();
+		expect(setRecaptchaErrorContext).toBeCalledTimes(1);
+		expect(setRecaptchaErrorContext).toHaveBeenCalledWith(
+			expect.objectContaining({ type: DetailedRecaptchaError }),
+		);
 	});
 
 	void act(() => {
@@ -248,7 +251,7 @@ test('sets error message and context and prevents form submission when the reCAP
 		expect(setRecaptchaErrorMessage).toHaveBeenCalledWith(
 			'Google reCAPTCHA verification failed.',
 		);
-		expect(setRecaptchaErrorContext).toBeCalledTimes(1);
+		expect(setRecaptchaErrorContext).toBeCalledTimes(2);
 		expect(setRecaptchaErrorContext).toHaveBeenCalledWith(
 			expect.objectContaining({ type: DetailedRecaptchaError }),
 		);

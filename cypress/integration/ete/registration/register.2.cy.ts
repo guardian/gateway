@@ -274,26 +274,11 @@ describe('Registration flow', () => {
 		cy.interceptRecaptcha();
 
 		cy.get('input[name=email').type(unregisteredEmail);
-		cy.get('[data-cy="main-form-submit-button"]').click();
-		cy.contains('Google reCAPTCHA verification failed. Please try again.');
-
-		// On second click, an expanded error is shown.
-		cy.get('[data-cy="main-form-submit-button"]').click();
-
-		cy.contains('Google reCAPTCHA verification failed.');
-		cy.contains('Report this error').should(
-			'have.attr',
-			'href',
-			'https://manage.theguardian.com/help-centre/contact-us',
-		);
-		cy.contains('If the problem persists please try the following:');
 
 		const timeRequestWasMade = new Date();
 		cy.get('[data-cy="main-form-submit-button"]').click();
 
-		cy.contains(
-			'Google reCAPTCHA verification failed. Please try again.',
-		).should('not.exist');
+		cy.contains('Google reCAPTCHA verification failed.').should('not.exist');
 
 		cy.contains('Check your email inbox');
 		cy.contains(unregisteredEmail);

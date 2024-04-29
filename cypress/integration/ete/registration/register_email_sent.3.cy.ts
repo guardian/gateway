@@ -1,6 +1,5 @@
 import { injectAndCheckAxe } from '../../../support/cypress-axe';
 import { randomMailosaurEmail } from '../../../support/commands/testUser';
-import { SUPPORT_EMAIL } from '../../../../src/shared/model/Configuration';
 
 describe('Registration email sent page', () => {
 	context('A11y checks', () => {
@@ -175,21 +174,15 @@ describe('Registration email sent page', () => {
 				cy.interceptRecaptcha();
 
 				cy.contains('send again').click();
-				cy.contains('Google reCAPTCHA verification failed. Please try again.');
-
-				// On second click, an expanded error is shown.
-				cy.contains('send again').click();
-
 				cy.contains('Google reCAPTCHA verification failed.');
 				cy.contains('If the problem persists please try the following:');
-				cy.contains(SUPPORT_EMAIL);
 
 				const timeRequestWasMade = new Date();
 				cy.contains('send again').click();
 
-				cy.contains(
-					'Google reCAPTCHA verification failed. Please try again.',
-				).should('not.exist');
+				cy.contains('Google reCAPTCHA verification failed.').should(
+					'not.exist',
+				);
 
 				cy.contains('Check your email inbox');
 				cy.contains(emailAddress);
