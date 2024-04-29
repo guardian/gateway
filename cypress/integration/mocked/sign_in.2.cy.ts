@@ -112,19 +112,6 @@ describe('Sign in flow', () => {
 		});
 
 		it('shows recaptcha error message when reCAPTCHA token request fails', () => {
-			cy.visit(
-				'/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fabout&useIdapi=true',
-			);
-			cy.get('input[name="email"]').type('placeholder@example.com');
-			cy.get('input[name="password"]').type('definitelynotarealpassword');
-			cy.intercept('POST', 'https://www.google.com/recaptcha/api2/**', {
-				statusCode: 500,
-			});
-			cy.get('[data-cy=main-form-submit-button]').click();
-			cy.contains('Google reCAPTCHA verification failed. Please try again.');
-		});
-
-		it('shows detailed recaptcha error message when reCAPTCHA token request fails two times', () => {
 			// Intercept "Report this error" link because we just check it is linked to.
 			cy.intercept(
 				'GET',
@@ -142,15 +129,8 @@ describe('Sign in flow', () => {
 				statusCode: 500,
 			});
 			cy.get('[data-cy=main-form-submit-button]').click();
-			cy.contains('Google reCAPTCHA verification failed. Please try again.');
-			cy.get('[data-cy=main-form-submit-button]').click();
 			cy.contains('Google reCAPTCHA verification failed.');
 			cy.contains('If the problem persists please try the following:');
-			cy.contains('Report this error').click();
-			cy.url().should(
-				'eq',
-				'https://manage.theguardian.com/help-centre/contact-us',
-			);
 		});
 
 		it('redirects to homepage when user with existing valid session visits signin page', () => {

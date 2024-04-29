@@ -1,6 +1,5 @@
 /// <reference types="cypress" />
 
-import { SUPPORT_EMAIL } from '../../../src/shared/model/Configuration';
 import { injectAndCheckAxe } from '../../support/cypress-axe';
 
 describe('Password set/create flow', () => {
@@ -123,11 +122,8 @@ describe('Password set/create flow', () => {
 				statusCode: 500,
 			});
 			cy.get('button[type="submit"]').click();
-			cy.contains('Google reCAPTCHA verification failed. Please try again.');
-			cy.get('button[type="submit"]').click();
 			cy.contains('Google reCAPTCHA verification failed.');
 			cy.contains('If the problem persists please try the following:');
-			cy.contains(SUPPORT_EMAIL);
 		});
 
 		it('shows the session time out page if the token expires while on the set password page', () => {

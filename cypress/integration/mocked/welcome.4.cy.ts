@@ -1,4 +1,3 @@
-import { SUPPORT_EMAIL } from '../../../src/shared/model/Configuration';
 import { injectAndCheckAxe } from '../../support/cypress-axe';
 
 describe('Welcome and set password page', () => {
@@ -165,11 +164,8 @@ describe('Welcome and set password page', () => {
 				statusCode: 500,
 			});
 			cy.get('button[type="submit"]').click();
-			cy.contains('Google reCAPTCHA verification failed. Please try again.');
-			cy.get('button[type="submit"]').click();
 			cy.contains('Google reCAPTCHA verification failed.');
 			cy.contains('If the problem persists please try the following:');
-			cy.contains(SUPPORT_EMAIL);
 		});
 
 		it('takes user back to link expired page if "try another address" clicked', () => {

@@ -10,8 +10,9 @@ export const DetailedRecaptchaError = () => (
 			If the problem persists please try the following:
 		</p>
 		<ul css={errorContextSpacing}>
-			<li>Disable your browser plugins</li>
 			<li>Ensure that JavaScript is enabled</li>
+			<li>Temporarily disable VPNs and content blockers</li>
+			<li>Disable your browser plugins</li>
 			<li>Update your browser</li>
 		</ul>
 		<p css={[errorContextSpacing, { marginBottom: `${space[3]}px` }]}>
