@@ -135,8 +135,30 @@ describe('Saturday Edition Geolocation', () => {
 });
 
 describe('Feast newsletter for Feast app', () => {
-	it('should show the Feast newsletter if coming from feast', () => {
+	it('should show the Feast newsletter if coming from feast ios', () => {
 		cy.oktaGetApps('ios_feast_app').then(([app]) => {
+			cy.visit(`/register/email?appClientId=${app.id}`);
+			cy.contains('Feast newsletter').should('exist');
+
+			cy.createTestUser({
+				isUserEmailValidated: true,
+			}).then(({ emailAddress, finalPassword }) => {
+				cy.visit(
+					`/signin?returnUrl=${encodeURIComponent(
+						`https://${Cypress.env('BASE_URI')}/welcome/google?appClientId=${app.id}`,
+					)}`,
+				);
+				cy.get('input[name=email]').type(emailAddress);
+				cy.get('input[name=password]').type(finalPassword);
+				cy.get('[data-cy="main-form-submit-button"]').click();
+				cy.url().should('include', '/welcome/google');
+				cy.contains('Feast newsletter').should('exist');
+			});
+		});
+	});
+
+	it('should show the Feast newsletter if coming from feast android', () => {
+		cy.oktaGetApps('android_feast_app').then(([app]) => {
 			cy.visit(`/register/email?appClientId=${app.id}`);
 			cy.contains('Feast newsletter').should('exist');
 
