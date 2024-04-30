@@ -17,6 +17,10 @@ describe('removePrefixFromToken', () => {
 		expect(removePrefixFromToken('if_test')).toEqual('test');
 	});
 
+	it('should return token without prefix if prefix is passed - af_', () => {
+		expect(removePrefixFromToken('af_test')).toEqual('test');
+	});
+
 	it('should return undefined if no token is passed', () => {
 		expect(removePrefixFromToken('')).toBeUndefined();
 		expect(removePrefixFromToken(undefined)).toBeUndefined();

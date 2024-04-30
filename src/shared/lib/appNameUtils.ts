@@ -20,6 +20,7 @@ import { isOneOf } from '@guardian/libs';
 export const apps = [
 	['android_live_app', 'al_'],
 	['ios_live_app', 'il_'],
+	['android_feast_app', 'af_'],
 	['ios_feast_app', 'if_'],
 ] as const;
 
@@ -54,6 +55,8 @@ export const getAppName = (
 		case 'il_':
 		case 'ios_live_app':
 			return 'Guardian';
+		case 'af_':
+		case 'android_feast_app':
 		case 'if_':
 		case 'ios_feast_app':
 			return 'Feast';
