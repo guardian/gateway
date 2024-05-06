@@ -112,7 +112,7 @@
 		"require-from-string": "^2.0.2",
 		"sharp": "^0.33.3",
 		"snyk": "^1.1290.0",
-		"storybook": "^8.0.9",
+		"storybook": "^8.0.10",
 		"swc-loader": "^0.2.6",
 		"terser-webpack-plugin": "^5.3.10",
 		"ts-jest": "^29.1.2",
