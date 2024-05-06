@@ -139,7 +139,7 @@
 		"@guardian/source-foundations": "^14.2.2",
 		"@guardian/source-react-components": "^22.1.0",
 		"@guardian/source-react-components-development-kitchen": "^19.0.0",
-		"@okta/jwt-verifier": "^3.1.0",
+		"@okta/jwt-verifier": "^3.2.0",
 		"@sentry/browser": "^7.112.2",
 		"@smithy/node-http-handler": "^2.5.0",
 		"awesome-debounce-promise": "^2.1.0",
