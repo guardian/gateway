@@ -28,9 +28,9 @@ const cmpIframe = () => {
 };
 
 export const acceptCMP = () => {
-	cmpIframe().find("[title='Yes, I’m happy']").click().wait(2000);
+	cmpIframe().find('.sp_choice_type_11').click().wait(2000);
 };
 
 export const declineCMP = () => {
-	cmpIframe().find("[title='No, thank you']").click().wait(2000);
+	cmpIframe().find('.sp_choice_type_13').click().wait(2000);
 };
