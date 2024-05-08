@@ -11,7 +11,7 @@ describe('New account review page', () => {
 		const unregisteredEmail = randomMailosaurEmail();
 
 		// Set the country cookie so we can check that it's set correctly on the user
-		cy.setCookie('GU_geo_country', 'US');
+		cy.setCookie('cypress-mock-state', 'GB');
 
 		// Consent to CMP so we are shown the personalised advertising checkbox
 		cy.enableCMP();
@@ -80,7 +80,7 @@ describe('New account review page', () => {
 					}
 				});
 				cy.getTestOktaUser(unregisteredEmail).then((user) => {
-					expect(user.profile.registrationLocation).to.equal('United States');
+					expect(user.profile.registrationLocation).to.equal('United Kingdom');
 				});
 			});
 		});
@@ -139,6 +139,127 @@ describe('New account review page', () => {
 			cy.getTestOktaUser(unregisteredEmail).then((user) => {
 				expect(user.profile.registrationLocation).to.be.undefined;
 			});
+		});
+	});
+});
+
+describe('New account newsletters page', () => {
+	it('should not redirect to the newsletters page if the geolocation is UK/EU', () => {
+		// We test that the GB geolocation flow works as expected in the tests above
+		// because they set the geolocation mock cookie to GB, and don't expect a redirect
+		// to the newsletters page, so here we just check an EU geolocation.
+		const encodedReturnUrl =
+			'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
+		const unregisteredEmail = randomMailosaurEmail();
+
+		cy.setCookie('cypress-mock-state', 'FR');
+
+		cy.visit(`/register/email?returnUrl=${encodedReturnUrl}`);
+
+		const timeRequestWasMade = new Date();
+		cy.get('input[name=email]').type(unregisteredEmail);
+		cy.get('[data-cy="main-form-submit-button"]').click();
+
+		cy.contains('Check your email inbox');
+		cy.contains(unregisteredEmail);
+		cy.contains('send again');
+		cy.contains('try another address');
+
+		cy.checkForEmailAndGetDetails(
+			unregisteredEmail,
+			timeRequestWasMade,
+			/welcome\/([^"]*)/,
+		).then(({ body, token }) => {
+			expect(body).to.have.string('Complete registration');
+			cy.visit(`/welcome/${token}`);
+			cy.contains('Complete creating account');
+			cy.get('input[name="password"]').type(randomPassword());
+			cy.get('button[type="submit"]').click();
+
+			cy.url().should('contain', '/welcome/review');
+			cy.get('button[type="submit"]').click();
+			cy.contains(
+				'Our newsletters help you get closer to our quality, independent journalism.',
+			).should('not.exist');
+			cy.url().should('contain', decodeURIComponent(encodedReturnUrl));
+		});
+	});
+	it('should redirect to the newsletters page if the geolocation is AU', () => {
+		const encodedReturnUrl =
+			'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
+		const unregisteredEmail = randomMailosaurEmail();
+
+		cy.setCookie('cypress-mock-state', 'AU');
+
+		cy.visit(`/register/email?returnUrl=${encodedReturnUrl}`);
+
+		const timeRequestWasMade = new Date();
+		cy.get('input[name=email]').type(unregisteredEmail);
+		cy.get('[data-cy="main-form-submit-button"]').click();
+
+		cy.contains('Check your email inbox');
+		cy.contains(unregisteredEmail);
+		cy.contains('send again');
+		cy.contains('try another address');
+
+		cy.checkForEmailAndGetDetails(
+			unregisteredEmail,
+			timeRequestWasMade,
+			/welcome\/([^"]*)/,
+		).then(({ body, token }) => {
+			expect(body).to.have.string('Complete registration');
+			cy.visit(`/welcome/${token}`);
+			cy.contains('Complete creating account');
+			cy.get('input[name="password"]').type(randomPassword());
+			cy.get('button[type="submit"]').click();
+
+			cy.url().should('contain', '/welcome/review');
+			cy.get('button[type="submit"]').click();
+			cy.url().should('contain', '/welcome/newsletters');
+			cy.contains(
+				'Our newsletters help you get closer to our quality, independent journalism.',
+			);
+			cy.get('button[type="submit"]').click();
+			cy.url().should('contain', decodeURIComponent(encodedReturnUrl));
+		});
+	});
+	it('should redirect to the newsletters page if the geolocation is US', () => {
+		const encodedReturnUrl =
+			'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
+		const unregisteredEmail = randomMailosaurEmail();
+
+		cy.setCookie('cypress-mock-state', 'US');
+
+		cy.visit(`/register/email?returnUrl=${encodedReturnUrl}`);
+
+		const timeRequestWasMade = new Date();
+		cy.get('input[name=email]').type(unregisteredEmail);
+		cy.get('[data-cy="main-form-submit-button"]').click();
+
+		cy.contains('Check your email inbox');
+		cy.contains(unregisteredEmail);
+		cy.contains('send again');
+		cy.contains('try another address');
+
+		cy.checkForEmailAndGetDetails(
+			unregisteredEmail,
+			timeRequestWasMade,
+			/welcome\/([^"]*)/,
+		).then(({ body, token }) => {
+			expect(body).to.have.string('Complete registration');
+			cy.visit(`/welcome/${token}`);
+			cy.contains('Complete creating account');
+			cy.get('input[name="password"]').type(randomPassword());
+			cy.get('button[type="submit"]').click();
+
+			cy.url().should('contain', '/welcome/review');
+			cy.get('button[type="submit"]').click();
+			cy.url().should('contain', '/welcome/newsletters');
+			cy.contains(
+				'Our newsletters help you get closer to our quality, independent journalism.',
+			);
+			cy.get('button[type="submit"]').click();
+			cy.url().should('contain', decodeURIComponent(encodedReturnUrl));
 		});
 	});
 });

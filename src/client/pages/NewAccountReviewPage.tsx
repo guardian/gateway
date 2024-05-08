@@ -29,7 +29,6 @@ export const NewAccountReviewPage = () => {
 				shouldPersonalisedAdvertisingPermissionRender ? advertising : undefined
 			}
 			queryParams={queryParams}
-			hasCmpConsent={hasCmpConsent}
 		/>
 	);
 };

@@ -26,15 +26,12 @@ export const getRegistrationLocation = (
 		const cypressMockStateCookie = req.cookies['cypress-mock-state'];
 
 		// check if the cookie value is an expected value
-		const validCode = ['FR', 'GB', 'US'].some(
-			(code) => code === cypressMockStateCookie,
-		);
+		const validCode = ['FR', 'GB', 'US', 'AU'].includes(cypressMockStateCookie);
 
 		// if it is then return the code
 		if (validCode) {
 			return countryCodeToRegistrationLocation(cypressMockStateCookie);
 		}
-
 		// otherwise let it fall through to the default check below
 	}
 	/**

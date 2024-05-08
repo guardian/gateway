@@ -39,6 +39,7 @@ import { RegisterWithEmailPage } from '@/client/pages/RegisterWithEmailPage';
 import { WelcomeSocialPage } from '@/client/pages/WelcomeSocialPage';
 import { ReturnToAppPage } from '@/client/pages/ReturnToAppPage';
 import { NewAccountReviewPage } from '@/client/pages/NewAccountReviewPage';
+import { NewAccountNewslettersPage } from './pages/NewAccountNewslettersPage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -152,6 +153,10 @@ const routes: Array<{
 	{
 		path: '/welcome/review',
 		element: <NewAccountReviewPage />,
+	},
+	{
+		path: '/welcome/newsletters',
+		element: <NewAccountNewslettersPage />,
 	},
 	{
 		path: '/welcome/:token',

@@ -35,6 +35,7 @@ type ConditionalMetrics =
 	| 'EmailValidated'
 	| 'NewAccountReview'
 	| 'NewAccountReviewSubmit'
+	| 'NewAccountNewslettersSubmit'
 	| 'JobsGRSGroupAgree'
 	| 'LoginMiddleware'
 	| 'OAuthAuthorization'

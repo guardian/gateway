@@ -14,16 +14,13 @@ import {
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import deepmerge from 'deepmerge';
 import { Request } from 'express';
-import {
-	setEncryptedStateCookie,
-	updateEncryptedStateCookie,
-} from '@/server/lib/encryptedStateCookie';
+import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { register } from '@/server/lib/okta/register';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { OktaError } from '@/server/models/okta/Error';
 import { GenericErrors } from '@/shared/model/Errors';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { setEncryptedStateCookieForOktaRegistration } from './register';
+import { setEncryptedStateCookieForOktaRegistration } from '@/server/routes/register';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
 import { CONSENTS_DATA_PAGE } from '@/shared/model/Consent';
@@ -38,11 +35,18 @@ import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { updateRegistrationPlatform } from '@/server/lib/registrationPlatform';
 import { getAppName, isAppPrefix } from '@/shared/lib/appNameUtils';
 import { bodyFormFieldsToRegistrationConsents } from '@/server/lib/registrationConsents';
-import { isStringBoolean } from '@/server/lib/isStringBoolean';
+import { ALL_NEWSLETTER_IDS } from '@/shared/model/Newsletter';
+
 import {
 	updateRegistrationLocationViaIDAPI,
 	updateRegistrationLocationViaOkta,
-} from '../lib/updateRegistrationLocation';
+} from '@/server/lib/updateRegistrationLocation';
+import {
+	NewsletterMap,
+	getUserNewsletterSubscriptions,
+} from '@/server/lib/newsletters';
+import { getNextWelcomeFlowPage } from '@/server/lib/welcome';
+import { newslettersSubscriptionsFromFormBody } from '@/shared/lib/newsletter';
 
 const { okta } = getConfiguration();
 
@@ -334,6 +338,32 @@ router.get(
 	}),
 );
 
+router.get(
+	'/welcome/newsletters',
+	loginMiddlewareOAuth,
+	async (req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+		const geolocation = state.pageData.geolocation;
+		const newsletters = await getUserNewsletterSubscriptions({
+			newslettersOnPage: NewsletterMap.get(geolocation) as string[],
+			ip: req.ip,
+			sc_gu_u: req.cookies.SC_GU_U,
+			request_id: state.requestId,
+			accessToken: state.oauthState.accessToken?.toString(),
+		});
+
+		const html = renderer('/welcome/newsletters', {
+			pageTitle: 'Choose Newsletters',
+			requestState: mergeRequestState(state, {
+				pageData: {
+					newsletters,
+				},
+			}),
+		});
+		res.type('html').send(html);
+	},
+);
+
 router.post(
 	'/welcome/review',
 	loginMiddlewareOAuth,
@@ -342,7 +372,6 @@ router.post(
 		const { returnUrl, fromURI } = state.queryParams;
 
 		const sc_gu_u = req.cookies.SC_GU_U;
-		const _cmpConsentedState = isStringBoolean(req.body._cmpConsentedState);
 
 		try {
 			// Attempt to update location for consented users.
@@ -369,10 +398,6 @@ router.post(
 			});
 
 			trackMetric('NewAccountReviewSubmit::Success');
-
-			updateEncryptedStateCookie(req, res, {
-				isCmpConsented: _cmpConsentedState,
-			});
 		} catch (error) {
 			// Never block the user at this point, so we'll just log the error
 			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
@@ -381,15 +406,81 @@ router.post(
 
 			trackMetric('NewAccountReviewSubmit::Failure');
 		} finally {
-			// if there is a fromURI, we need to complete the oauth flow, so redirect to the fromURI
-			if (fromURI) {
-				return res.redirect(303, fromURI);
-			}
-
-			// In all other cases, finish the welcome flow and redirect to the returnUrl
-			return res.redirect(303, returnUrl);
+			const nextPage = getNextWelcomeFlowPage({
+				geolocation: state.pageData.geolocation,
+				fromURI,
+				returnUrl,
+				queryParams: state.queryParams,
+			});
+			return res.redirect(303, nextPage);
 		}
 	}),
+);
+
+router.post(
+	'/welcome/newsletters',
+	async (req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+		const { returnUrl } = state.queryParams;
+
+		try {
+			const userNewsletterSubscriptions = await getUserNewsletterSubscriptions({
+				newslettersOnPage: ALL_NEWSLETTER_IDS,
+				ip: req.ip,
+				sc_gu_u: req.cookies.SC_GU_U,
+				request_id: state.requestId,
+				accessToken: state.oauthState.accessToken?.toString(),
+			});
+
+			// get a list of newsletters to update that have changed from the users current subscription
+			// if they have changed then set them to subscribe/unsubscribe
+			const newsletterSubscriptionsToUpdate =
+				newslettersSubscriptionsFromFormBody(req.body).filter(
+					(newSubscription) => {
+						// find current user subscription status for a newsletter
+						const currentSubscription = userNewsletterSubscriptions.find(
+							({ id: userNewsletterId }) =>
+								userNewsletterId === newSubscription.id,
+						);
+
+						// check if a subscription exists
+						if (currentSubscription) {
+							if (
+								// previously subscribed AND now wants to unsubscribe
+								(currentSubscription.subscribed &&
+									!newSubscription.subscribed) ||
+								// OR previously not subscribed AND wants to subscribe
+								(!currentSubscription.subscribed && newSubscription.subscribed)
+							) {
+								// then include in newsletterSubscriptionsToUpdate
+								return true;
+							}
+						}
+
+						// otherwise don't include in the update
+						return false;
+					},
+				);
+
+			await updateNewsletters({
+				ip: req.ip,
+				sc_gu_u: req.cookies.SC_GU_U,
+				request_id: state.requestId,
+				accessToken: state.oauthState.accessToken?.toString(),
+				payload: newsletterSubscriptionsToUpdate,
+			});
+
+			trackMetric('NewAccountNewslettersSubmit::Success');
+		} catch (error) {
+			// Never block the user at this point, so we'll just log the error
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+				request_id: res.locals.requestId,
+			});
+			trackMetric('NewAccountNewslettersSubmit::Failure');
+		} finally {
+			return res.redirect(303, returnUrl);
+		}
+	},
 );
 
 // welcome page, check token and display set password page

@@ -13,7 +13,6 @@ import { palette, space, textSans } from '@guardian/source-foundations';
 import { css } from '@emotion/react';
 import { Button } from '@guardian/source-react-components';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-import { CmpConsentedStateHiddenInput } from '../components/CmpConsentStateHiddenInput';
 import { CsrfFormField } from '../components/CsrfFormField';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { consentsFormSubmitOphanTracking } from '../lib/consentsTracking';
@@ -64,14 +63,12 @@ export interface NewAccountReviewProps {
 	profiling?: Consent;
 	advertising?: Consent;
 	queryParams: QueryParams;
-	hasCmpConsent: boolean;
 }
 
 export const NewAccountReview = ({
 	profiling,
 	advertising,
 	queryParams,
-	hasCmpConsent,
 }: NewAccountReviewProps) => {
 	if (!profiling && !advertising) {
 		return (
@@ -80,7 +77,6 @@ export const NewAccountReview = ({
 					action={buildUrlWithQueryParams('/welcome/review', {}, queryParams)}
 					method="post"
 				>
-					<CmpConsentedStateHiddenInput cmpConsentedState={hasCmpConsent} />
 					<CsrfFormField />
 					<Button css={buttonStyles({})} type="submit" priority="primary">
 						Continue to the Guardian
@@ -105,7 +101,6 @@ export const NewAccountReview = ({
 					);
 				}}
 			>
-				<CmpConsentedStateHiddenInput cmpConsentedState={hasCmpConsent} />
 				<CsrfFormField />
 				<div css={consentToggleCss}>
 					{!!advertising && (
