@@ -4,6 +4,7 @@ import { UserConsent } from '@/shared/model/UserConsents';
 export default interface User {
 	consents: UserConsent[];
 	primaryEmailAddress: string;
+	id: string;
 	statusFields: UserStatusFields;
 	privateFields: PrivateFields;
 	userGroups: Group[];

@@ -100,6 +100,7 @@ export type ApiRoutePaths =
 	| '/user/change-email'
 	| '/unsubscribe'
 	| '/subscribe'
+	| '/user'
 	| '/user/me'
 	| '/user/me/consents'
 	| '/user/me/group/:groupCode'
