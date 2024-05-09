@@ -26,6 +26,7 @@ const userProfileSchema = z.object({
 	firstName: z.string().nullable().optional(),
 	lastName: z.string().nullable().optional(),
 	legacyIdentityId: z.string().nullable().optional(),
+	searchPartitionKey: z.string().nullable().optional(),
 });
 
 // https://developer.okta.com/docs/reference/api/users/#password-object
