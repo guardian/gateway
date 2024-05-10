@@ -66,6 +66,7 @@ interface OktaUserProfile {
 	isJobsUser?: boolean;
 	firstName?: string;
 	lastName?: string;
+	legacyIdentityId?: string | null;
 }
 
 type IDAPITestUserResponse = [

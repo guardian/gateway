@@ -23,6 +23,8 @@ import {
 } from '@/server/lib/ophan';
 import { IdApiQueryParams } from '@/shared/model/IdapiQueryParams';
 import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
+import { addApiQueryParamsToPath } from '@/shared/lib/queryParams';
+import { ApiRoutePaths } from '@/shared/model/Routes';
 
 interface APIResponse {
 	user: User;
@@ -79,13 +81,14 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
 };
 
 const responseToEntity = (response: APIResponse): User => {
-	const consents = response.user.consents.map(({ id, consented }) => ({
+	const consents = response.user.consents?.map(({ id, consented }) => ({
 		id,
 		consented,
 	}));
 	return {
 		consents,
 		primaryEmailAddress: response.user.primaryEmailAddress,
+		id: response.user.id,
 		statusFields: response.user.statusFields,
 		userGroups: response.user.userGroups,
 		privateFields: {
@@ -423,6 +426,28 @@ export const changeEmail = async (
 		});
 	} catch (error) {
 		logger.error(`IDAPI Error change email '/user/change-email'`, error, {
+			request_id,
+		});
+		return handleError(error as IDAPIError);
+	}
+};
+
+export const getUserByEmailAddress = async (
+	email: string,
+	ip: string,
+	request_id?: string,
+): Promise<User> => {
+	const options = APIAddClientAccessToken(APIGetOptions(), ip);
+	try {
+		const response = (await idapiFetch({
+			path: addApiQueryParamsToPath('/user', {
+				emailAddress: email,
+			}) as ApiRoutePaths,
+			options,
+		})) as APIResponse;
+		return responseToEntity(response);
+	} catch (error) {
+		logger.warn(`IDAPI Error user get '/user?emailAddress'`, error, {
 			request_id,
 		});
 		return handleError(error as IDAPIError);

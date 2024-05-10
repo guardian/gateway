@@ -413,4 +413,43 @@ describe('Sign in flow, Okta enabled', () => {
 			);
 		});
 	});
+
+	context('Okta missing legacyIdentityId', () => {
+		it('Adds the missing legacyIdentityId to the user on authentication', () => {
+			cy
+				.createTestUser({
+					isUserEmailValidated: true,
+				})
+				?.then(({ emailAddress, finalPassword }) => {
+					cy.getTestOktaUser(emailAddress).then((user) => {
+						const originalLegacyIdentityId = user.profile.legacyIdentityId;
+						expect(originalLegacyIdentityId).to.not.be.undefined;
+						// Remove the legacyIdentityId from the user
+						cy.updateOktaTestUserProfile(emailAddress, {
+							legacyIdentityId: null,
+						}).then(() => {
+							cy.getTestOktaUser(emailAddress).then((user) => {
+								expect(user.profile.legacyIdentityId).to.be.undefined;
+								const postSignInReturnUrl = `https://${Cypress.env(
+									'BASE_URI',
+								)}/consents/data`;
+								const visitUrl = `/signin?returnUrl=${encodeURIComponent(
+									postSignInReturnUrl,
+								)}`;
+								cy.visit(visitUrl);
+								cy.get('input[name=email]').type(emailAddress);
+								cy.get('input[name=password]').type(finalPassword);
+								cy.get('[data-cy="main-form-submit-button"]').click();
+								cy.url().should('include', '/consents/data');
+								cy.getTestOktaUser(emailAddress).then((user) => {
+									expect(user.profile.legacyIdentityId).to.eq(
+										originalLegacyIdentityId,
+									);
+								});
+							});
+						});
+					});
+				});
+		});
+	});
 });

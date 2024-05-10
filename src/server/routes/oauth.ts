@@ -45,6 +45,7 @@ import { RoutePaths } from '@/shared/model/Routes';
 import { sendGuardianLiveOfferEmail } from '@/email/templates/GuardianLiveOffer/sendGuardianLiveOfferEmail';
 import { sendMyGuardianOfferEmail } from '@/email/templates/MyGuardianOffer/sendMyGuardianOfferEmail';
 import { emailSendMetric } from '@/server/models/Metrics';
+import { fixOktaProfile } from '@/server/lib/okta/fixProfile';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
 
@@ -85,52 +86,112 @@ const redirectForGenericError = (_: Request, res: ResponseWithRequestState) => {
 };
 
 /**
- * A recursive function which waits for the legacy_identity_id claim
- * to be present in the access token during a succession of token
+ * A recursive function which attempts to update the Okta profile
+ * with the legacy identity ID and then waits for the legacy_identity_id
+ * claim to be present in the access token during a succession of token
  * refreshes.
  */
-const waitForLegacyIdentityId = async (
-	openIdClient: OpenIdClient,
-	tokenSet: TokenSet,
-	refreshToken: string,
-	maximumWaitTime = 30000,
-	waitTime = 500,
-): Promise<TokenSet | null> => {
-	const { legacy_identity_id } = tokenSet.claims();
+interface FetchValidTokenSetProps {
+	oktaId: string;
+	email?: string;
+	openIdClient: OpenIdClient;
+	tokenSet: TokenSet;
+	refreshToken: string;
+	ip: string;
+	request_id?: string;
+	maximumWaitTime?: number;
+	waitTime?: number;
+}
+const fetchValidTokenSet = async ({
+	oktaId,
+	email,
+	openIdClient,
+	tokenSet,
+	refreshToken,
+	ip,
+	request_id,
+	maximumWaitTime = 15000,
+	waitTime = 1000,
+}: FetchValidTokenSetProps): Promise<TokenSet | null> => {
+	const nonBlockingWait = async (
+		start: number,
+		maximumWaitTime: number,
+		waitTime: number,
+		refreshedTokenSet: TokenSet,
+		newRefreshToken: string,
+	): Promise<TokenSet | null> =>
+		// Non-blocking wait for the next iteration
+		await new Promise((resolve) => {
+			setTimeout(async () => {
+				const remainingTime = maximumWaitTime - (Date.now() - start);
+				return resolve(
+					await fetchValidTokenSet({
+						oktaId,
+						email,
+						openIdClient,
+						tokenSet: refreshedTokenSet,
+						refreshToken: newRefreshToken,
+						ip,
+						request_id,
+						maximumWaitTime: remainingTime,
+						waitTime,
+					}),
+				);
+			}, waitTime);
+		});
 
-	if (legacy_identity_id) {
-		// The legacy_identity_id claim is present, we can return the token set
-		return tokenSet;
-	}
+	try {
+		const { legacy_identity_id } = tokenSet.claims();
+		if (legacy_identity_id) {
+			// The legacy_identity_id claim is present, we can return the token set
+			return tokenSet;
+		}
 
-	if (maximumWaitTime <= 0) {
-		// We've timed out waiting for the claim to be present
-		return null;
-	}
+		if (maximumWaitTime <= 0) {
+			// We've timed out waiting for the claim to be present
+			return null;
+		}
 
-	const start = Date.now();
-	const refreshedTokenSet = await openIdClient.refresh(refreshToken);
-	const newRefreshToken = refreshedTokenSet?.refresh_token;
-	if (!newRefreshToken) {
-		// There's no refresh token in this token set, so we can't continue
-		return null;
-	}
-
-	// Non-blocking wait for the next iteration
-	return new Promise((resolve) => {
-		setTimeout(async () => {
-			const remainingTime = maximumWaitTime - (Date.now() - start);
-			resolve(
-				await waitForLegacyIdentityId(
-					openIdClient,
-					refreshedTokenSet,
-					newRefreshToken,
-					remainingTime,
-					waitTime,
-				),
+		const start = Date.now();
+		// Attempt to fix the user profile.
+		const isOktaProfileFixed = await fixOktaProfile({
+			oktaId,
+			email,
+			ip,
+			request_id,
+		});
+		if (isOktaProfileFixed) {
+			const refreshedTokenSet = await openIdClient.refresh(refreshToken);
+			const newRefreshToken = refreshedTokenSet?.refresh_token;
+			if (!newRefreshToken) {
+				// There's no refresh token in this token set, so we can't continue
+				return null;
+			}
+			// Try again with the refreshed token set
+			return nonBlockingWait(
+				start,
+				maximumWaitTime,
+				waitTime,
+				refreshedTokenSet,
+				newRefreshToken,
 			);
-		}, waitTime);
-	});
+		}
+
+		// Try again but using the existing refresh token
+		return nonBlockingWait(
+			start,
+			maximumWaitTime,
+			waitTime,
+			tokenSet,
+			refreshToken,
+		);
+	} catch (error) {
+		logger.error('Failed to fix Okta profile', error, {
+			request_id,
+			oktaId,
+		});
+		return null;
+	}
 };
 
 /**
@@ -148,7 +209,8 @@ const authenticationHandler = async (
 	res: ResponseWithRequestState,
 	tokenSet: TokenSet,
 	authState: AuthorizationState,
-) => {
+	openIdClient: OpenIdClient,
+): Promise<void> => {
 	try {
 		/**
 		 * Cypress Test START
@@ -174,6 +236,73 @@ const authenticationHandler = async (
 			return redirectForGenericError(req, res);
 		}
 
+		const { user_groups, email_validated, sub, email } =
+			tokenSet.claims() as CustomClaims;
+
+		// We want to ensure that the user has a legacyIdentityId set in their
+		// Okta profile before carrying on. This is surfaced via the legacy_identity_id
+		// claim in the access token.
+		const refreshToken = tokenSet.refresh_token;
+		const { legacy_identity_id } = tokenSet.claims();
+		if (!refreshToken && !legacy_identity_id) {
+			// We can't do this step without the refresh token, so if it's missing, just continue
+			// to the callback function - we may encounter errors there.
+			trackMetric('OAuthAuthorization::ProvisioningFailure');
+			logger.error(
+				'Access token missing legacy_identity_id and no refresh token available',
+				undefined,
+				{
+					request_id: res.locals.requestId,
+				},
+			);
+		} else if (refreshToken && !legacy_identity_id) {
+			try {
+				// We have a refresh token and no legacy IDAPI ID, so we can try to fix this user.
+				const validTokenSet = await fetchValidTokenSet({
+					oktaId: sub,
+					email,
+					openIdClient,
+					tokenSet,
+					refreshToken,
+					ip: req.ip,
+					request_id: res.locals.requestId,
+				});
+				if (!validTokenSet) {
+					throw new Error('Failed to get a valid token set');
+				}
+				return authenticationHandler(
+					req,
+					res,
+					validTokenSet,
+					authState,
+					openIdClient,
+				);
+			} catch (error) {
+				// Something went wrong, so send the user to /reauthenticate with an error.
+				trackMetric('OAuthAuthorization::ProvisioningFailure');
+				trackMetric('OAuthAuthenticationCallback::Failure');
+				logger.error(`Failed to fix Okta profile for ${sub}`, error, {
+					request_id: res.locals.requestId,
+					oktaId: sub,
+				});
+				return res.redirect(
+					addQueryParamsToPath('/reauthenticate', authState.queryParams, {
+						error: RegistrationErrors.PROVISIONING_FAILURE,
+					}),
+				);
+			}
+		}
+
+		// The only straightforward way to find out if this is a new social user registration
+		// is by checking if the user's email has NOT been validated, but that they ARE in the
+		// GuardianUser-EmailValidated group. This is because the user is added to the group
+		// at creation, but the flag on the profile needs to be set manually by us.
+		// (This is because the flag controls the group membership, but the group membership does not
+		// control the flag.)
+		const isSocialRegistration =
+			!email_validated &&
+			user_groups?.some((group) => group === 'GuardianUser-EmailValidated');
+
 		// We're unable to set the user.emailValidated field in the Okta user profile
 		// for social users when they are created, but we are able to put them in the
 		// GuardianUser-EmailValidated group.
@@ -184,22 +313,10 @@ const authenticationHandler = async (
 		// the emailValidated field set to true in their Okta user profile.
 		// So we can use this functionality to show the onboarding flow for new social users, as
 		// there is no other trivial way to do this.
-		// eslint-disable-next-line functional/no-let
-		let isSocialRegistration = false;
 		if (tokenSet.id_token) {
-			// extracting the custom claims from the id_token and the sub (user id)
-			const { user_groups, email_validated, sub, email } =
-				tokenSet.claims() as CustomClaims;
-			// if the user is in the GuardianUser-EmailValidated group, but the emailValidated field is falsy
-			// then we set the emailValidated field to true in the Okta user profile by manually updating the user
-			if (
-				!email_validated &&
-				user_groups?.some((group) => group === 'GuardianUser-EmailValidated')
-			) {
-				isSocialRegistration = true;
-
-				// We now know this user is registering a new Guardian account with social
-
+			if (isSocialRegistration) {
+				// if the user is in the GuardianUser-EmailValidated group, but the emailValidated field is falsy
+				// then we set the emailValidated field to true in the Okta user profile by manually updating the user
 				// updated the user profile emailValidated to true
 				await updateUser(sub, { profile: { emailValidated: true } });
 
@@ -289,19 +406,20 @@ const authenticationHandler = async (
 		// the idapi introspects the access token and if valid
 		// will generate and sign cookies for the user the
 		// token belonged to
-		const cookies = await exchangeAccessTokenForCookies(
-			tokenSet.access_token,
-			req.ip,
-			res.locals.requestId,
-		);
-
-		if (cookies) {
-			// adds set cookie headers
-			setIDAPICookies(res, cookies, authState.doNotSetLastAccessCookie);
-		} else {
-			logger.error('No cookies returned from IDAPI', undefined, {
-				request_id: res.locals.requestId,
-			});
+		if (tokenSet.access_token) {
+			const cookies = await exchangeAccessTokenForCookies(
+				tokenSet.access_token,
+				req.ip,
+				res.locals.requestId,
+			);
+			if (cookies) {
+				// adds set cookie headers
+				setIDAPICookies(res, cookies, authState.doNotSetLastAccessCookie);
+			} else {
+				logger.error('No cookies returned from IDAPI', undefined, {
+					request_id: res.locals.requestId,
+				});
+			}
 		}
 
 		// Apply the registration consents if they exist
@@ -713,7 +831,7 @@ router.get(
 		}
 
 		// Determine which OpenIdClient to use, in DEV we use the DevProfileIdClient, otherwise we use the ProfileOpenIdClient
-		const OpenIdClient = getOpenIdClient(req);
+		const openIdClient = getOpenIdClient(req);
 
 		// params returned from the /authorize endpoint
 		// for auth code flow they will be "code" and "state"
@@ -721,7 +839,7 @@ router.get(
 		// "state" will be the "stateParam" value set in the oidc_auth_state cookie
 		// if there were any errors, then an "error", and "error_description" params
 		// will be returned instead
-		const callbackParams = OpenIdClient.callbackParams(req);
+		const callbackParams = openIdClient.callbackParams(req);
 
 		// we have the Authorization State now, so the cookie is
 		// no longer required, so mark cookie for deletion in the response
@@ -761,8 +879,7 @@ router.get(
 		// and check the "state" we got back from the callback
 		// to the "stateParam" that was set in the AuthorizationState
 		// to prevent CSRF attacks
-		// eslint-disable-next-line functional/no-let -- We need to be able to reassign tokenSet if we have to refresh the token
-		let tokenSet: TokenSet | null = await OpenIdClient.callback(
+		const tokenSet = await openIdClient.callback(
 			// the redirectUri is the callback location (this route)
 			redirectUri,
 			// the params sent to the callback
@@ -778,58 +895,6 @@ router.get(
 			},
 		);
 
-		// We need the access token to include the legacy_identity_id claim.
-		// Especially in the case of social registration, IDAPI can take longer
-		// to create an IDAPI user and update with the new ID than it takes
-		// for Okta to return the browser to this callback endpoint. For this
-		// reason, we need to wait until the IDAPI operation completes and the
-		// Okta user is updated before we can proceed.
-		// 1. Check if the original access token is missing the legacy_identity_id claim.
-		// 2. If it is, use the refresh token we got from the callback to get
-		//    a new access token, and check that.
-		// 3. Once the claim is present, proceed with the rest of the callback logic.
-		// 4. If the claim is not present after a timeout, return an error to the user.
-		const refreshToken = tokenSet.refresh_token;
-		const { legacy_identity_id } = tokenSet.claims();
-		if (!refreshToken && !legacy_identity_id) {
-			// We can't do this step without the refresh token, so if it's missing, just continue
-			// to the callback function - we may encounter errors there.
-			trackMetric('OAuthAuthorization::ProvisioningFailure');
-			logger.error(
-				'Access token missing legacy_identity_id and no refresh token available',
-				undefined,
-				{
-					request_id: res.locals.requestId,
-				},
-			);
-		} else if (refreshToken && !legacy_identity_id) {
-			tokenSet = await waitForLegacyIdentityId(
-				OpenIdClient,
-				tokenSet,
-				refreshToken,
-			);
-			if (!tokenSet) {
-				trackMetric('OAuthAuthorization::ProvisioningFailure');
-				logger.error(
-					'Gave up waiting for Okta to return access token with legacy_identity_id',
-					undefined,
-					{
-						request_id: res.locals.requestId,
-					},
-				);
-				return res.redirect(
-					addQueryParamsToPath('/reauthenticate', authState.queryParams, {
-						error: RegistrationErrors.PROVISIONING_FAILURE,
-					}),
-				);
-			}
-			// After waiting, the tokenSet contains an access token with the legacy_identity_id claim.
-			trackMetric('OAuthAuthorization::Success');
-		} else {
-			// We already have the legacy_identity_id claim so we can proceed.
-			trackMetric('OAuthAuthorization::Success');
-		}
-
 		// call the appropriate handler depending on the callbackParam
 		switch (req.params.callbackParam) {
 			case 'application-callback':
@@ -838,7 +903,13 @@ router.get(
 			// this is only used when we get back a standard auth `code` from the interaction code flow
 			// where we want to do the standard authentication callback
 			case 'interaction-code-callback':
-				return authenticationHandler(req, res, tokenSet, authState);
+				return authenticationHandler(
+					req,
+					res,
+					tokenSet,
+					authState,
+					openIdClient,
+				);
 			case 'delete-callback':
 				return deleteHandler(req, res, tokenSet, authState);
 			default:
