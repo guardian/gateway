@@ -1,7 +1,7 @@
 import { logger } from '@/server/lib/serverSideLogger';
 import { getUserByEmailAddress } from '@/server/lib/idapi/user';
 import { getUser, updateUser } from '@/server/lib/okta/api/users';
-import { sha256 } from '@/server/lib/crypto';
+import { sha256Hex } from '@/server/lib/crypto';
 
 export const fixOktaProfile = async ({
 	oktaId,
@@ -31,7 +31,7 @@ export const fixOktaProfile = async ({
 		await updateUser(oktaId, {
 			profile: {
 				legacyIdentityId: idapiUser.id,
-				searchPartitionKey: sha256(idapiUser.id),
+				searchPartitionKey: sha256Hex(idapiUser.id),
 			},
 		});
 		return true;
