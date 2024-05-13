@@ -17,7 +17,6 @@ import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import {
 	FederationErrors,
 	GenericErrors,
-	RegistrationErrors,
 	SignInErrors,
 } from '@/shared/model/Errors';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
@@ -278,18 +277,14 @@ const authenticationHandler = async (
 					openIdClient,
 				);
 			} catch (error) {
-				// Something went wrong, so send the user to /reauthenticate with an error.
+				// Something went wrong, so long an error and continue to the rest of the callback function
+				// This may result in Gateway errors but won't prevent the user from signing in.
 				trackMetric('OAuthAuthorization::ProvisioningFailure');
 				trackMetric('OAuthAuthenticationCallback::Failure');
 				logger.error(`Failed to fix Okta profile for ${sub}`, error, {
 					request_id: res.locals.requestId,
 					oktaId: sub,
 				});
-				return res.redirect(
-					addQueryParamsToPath('/reauthenticate', authState.queryParams, {
-						error: RegistrationErrors.PROVISIONING_FAILURE,
-					}),
-				);
 			}
 		}
 
