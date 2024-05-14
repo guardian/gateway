@@ -50,7 +50,7 @@ describe('Onboarding flow', () => {
 				/welcome\/([^"]*)/,
 			).then(({ body, token }) => {
 				expect(body).to.have.string('Complete registration');
-				cy.setCookie('GU_geo_country', 'FR');
+				cy.setCookie('cypress-mock-state', 'FR');
 
 				cy.visit(`/welcome/${token}`);
 
@@ -170,7 +170,7 @@ describe('Onboarding flow', () => {
 			).then(({ body, token }) => {
 				expect(body).to.have.string('Complete registration');
 				cy.enableCMP();
-				cy.setCookie('GU_geo_country', 'FR');
+				cy.setCookie('cypress-mock-state', 'FR');
 
 				cy.visit(`/welcome/${token}`);
 				cy.acceptCMP();

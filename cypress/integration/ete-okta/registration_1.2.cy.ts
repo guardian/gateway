@@ -152,37 +152,33 @@ describe('Registration flow - Split 1/2', () => {
 			});
 		});
 
-		it('does not register registrationLocation for email with no existing account if cmp is not consented', () => {
+		it('registers registrationLocation for email with no existing account if cmp is NOT consented', () => {
 			const unregisteredEmail = randomMailosaurEmail();
 			cy.enableCMP();
 			cy.visit(`/register/email`);
-			cy.setCookie('GU_geo_country', 'FR');
+			cy.setCookie('cypress-mock-state', 'FR');
 			cy.declineCMP();
 
 			cy.get('input[name=email]').type(unregisteredEmail);
-			cy.get('input[name=_cmpConsentedState]').should('have.value', 'false');
 
 			cy.get('[data-cy="main-form-submit-button"]').click();
-			cy.intercept('POST', '/register**', (req) => {
-				expect(req.body).to.include('_cmpConsentedState=false');
-				expect(req.headers.cookie).to.include('GU_geo_country=FR');
+			cy.getTestOktaUser(unregisteredEmail).then((oktaUser) => {
+				expect(oktaUser.profile.registrationLocation).to.eq('Europe');
 			});
 		});
 
-		it('successfully registers registrationLocation for email with no existing account if cmp consented', () => {
+		it('registers registrationLocation for email with no existing account if cmp IS consented', () => {
 			const unregisteredEmail = randomMailosaurEmail();
 			cy.enableCMP();
 			cy.visit(`/register/email`);
-			cy.setCookie('GU_geo_country', 'FR');
+			cy.setCookie('cypress-mock-state', 'FR');
 			cy.acceptCMP();
 
 			cy.get('input[name=email]').type(unregisteredEmail);
-			cy.get('input[name=_cmpConsentedState]').should('have.value', 'true');
 
 			cy.get('[data-cy="main-form-submit-button"]').click();
-			cy.intercept('POST', '/register**', (req) => {
-				expect(req.body).to.include('_cmpConsentedState=true');
-				expect(req.headers.cookie).to.include('GU_geo_country=FR');
+			cy.getTestOktaUser(unregisteredEmail).then((oktaUser) => {
+				expect(oktaUser.profile.registrationLocation).to.eq('Europe');
 			});
 		});
 

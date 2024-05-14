@@ -103,7 +103,7 @@ describe('Onboarding flow', () => {
 				},
 			});
 			cy.acceptCMP();
-			cy.setCookie('GU_geo_country', 'FR');
+			cy.setCookie('cypress-mock-state', 'FR');
 
 			cy.url().should('include', NewslettersPage.URL);
 			cy.url().should('include', `returnUrl=${returnUrl}`);
@@ -499,31 +499,6 @@ describe('Onboarding flow', () => {
 			NewslettersPage.checkboxWithTitle(NEWSLETTERS.FIRST_THING_US).should(
 				'not.be.checked',
 			);
-			NewslettersPage.checkboxWithTitle(NEWSLETTERS.LONG_READ).should(
-				'not.be.checked',
-			);
-			NewslettersPage.checkboxWithTitle(NEWSLETTERS.GREEN_LIGHT).should(
-				'not.be.checked',
-			);
-			NewslettersPage.checkboxWithTitle(
-				NewslettersPage.CONTENT.Consents.EVENTS,
-			).should('not.be.checked');
-
-			NewslettersPage.backButton().should('not.exist');
-			NewslettersPage.saveAndContinueButton().should('exist');
-		});
-
-		it('correct newsletters shown for permissioned United States browser, none checked by default', () => {
-			const headers = getGeoLocationHeaders(GEOLOCATION_CODES.AMERICA);
-			cy.setEncryptedStateCookie({
-				isCmpConsented: true,
-			});
-
-			cy.visit(NewslettersPage.URL, { headers, qs: { useIdapi: 'true' } });
-
-			NewslettersPage.checkboxWithTitle(NEWSLETTERS.FIRST_THING_US).should(
-				'not.be.checked',
-			);
 			NewslettersPage.checkboxWithTitle(NEWSLETTERS.HEADLINES_US).should(
 				'not.be.checked',
 			);
@@ -533,7 +508,6 @@ describe('Onboarding flow', () => {
 			NewslettersPage.checkboxWithTitle(NEWSLETTERS.SOCCER_US).should(
 				'not.be.checked',
 			);
-
 			cy.contains(NewslettersPage.CONTENT.Consents.EVENTS).should('not.exist');
 
 			NewslettersPage.backButton().should('not.exist');
@@ -543,31 +517,6 @@ describe('Onboarding flow', () => {
 		it('correct newsletters shown for Australia, none checked by default', () => {
 			const headers = getGeoLocationHeaders(GEOLOCATION_CODES.AUSTRALIA);
 
-			cy.visit(NewslettersPage.URL, { headers, qs: { useIdapi: 'true' } });
-
-			NewslettersPage.checkboxWithTitle(NEWSLETTERS.MORNING_MAIL_AU).should(
-				'not.be.checked',
-			);
-			NewslettersPage.checkboxWithTitle(NEWSLETTERS.LONG_READ).should(
-				'not.be.checked',
-			);
-			NewslettersPage.checkboxWithTitle(NEWSLETTERS.GREEN_LIGHT).should(
-				'not.be.checked',
-			);
-			NewslettersPage.checkboxWithTitle(
-				NewslettersPage.CONTENT.Consents.EVENTS,
-			).should('not.be.checked');
-
-			NewslettersPage.backButton().should('not.exist');
-			NewslettersPage.saveAndContinueButton().should('exist');
-		});
-
-		it('correct localised newsletters shown for permissioned Australian browser, none checked by default', () => {
-			const headers = getGeoLocationHeaders(GEOLOCATION_CODES.AUSTRALIA);
-
-			cy.setEncryptedStateCookie({
-				isCmpConsented: true,
-			});
 			cy.visit(NewslettersPage.URL, { headers, qs: { useIdapi: 'true' } });
 
 			NewslettersPage.checkboxWithTitle(NEWSLETTERS.MORNING_MAIL_AU).should(
@@ -588,12 +537,9 @@ describe('Onboarding flow', () => {
 			NewslettersPage.saveAndContinueButton().should('exist');
 		});
 
-		it('correct localised newsletters shown for permissioned EU browser, none checked by default', () => {
+		it('correct newsletters shown for EU, none checked by default', () => {
 			const headers = getGeoLocationHeaders(GEOLOCATION_CODES.EUROPE);
 
-			cy.setEncryptedStateCookie({
-				isCmpConsented: true,
-			});
 			cy.visit(NewslettersPage.URL, { headers, qs: { useIdapi: 'true' } });
 
 			NewslettersPage.checkboxWithTitle(NEWSLETTERS.THIS_IS_EUROPE).should(

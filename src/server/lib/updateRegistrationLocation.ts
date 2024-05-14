@@ -1,6 +1,5 @@
 import { Request } from 'express';
 import { logger } from '@/server/lib/serverSideLogger';
-import { isStringBoolean } from '@/server/lib/isStringBoolean';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
 import {
 	read as readIdapiUser,
@@ -15,10 +14,8 @@ export const updateRegistrationLocationViaIDAPI = async (
 	sc_gu_u: string,
 	req: Request,
 ) => {
-	const { _cmpConsentedState = false } = req.body;
-
 	const registrationLocation: RegistrationLocation | undefined =
-		getRegistrationLocation(req, isStringBoolean(_cmpConsentedState));
+		getRegistrationLocation(req);
 
 	// don't update users if we can't derive location from request
 	if (!registrationLocation) {
@@ -50,11 +47,8 @@ export const updateRegistrationLocationViaOkta = async (
 	if (!accessToken) {
 		throw new Error('No access token provided');
 	}
-
-	const { _cmpConsentedState = false } = req.body;
-
 	const registrationLocation: RegistrationLocation | undefined =
-		getRegistrationLocation(req, isStringBoolean(_cmpConsentedState));
+		getRegistrationLocation(req);
 
 	// don't update users if we can't derive location from request
 	if (!registrationLocation) {
