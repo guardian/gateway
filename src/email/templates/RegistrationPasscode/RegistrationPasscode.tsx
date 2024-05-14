@@ -20,7 +20,7 @@ export const RegistrationPasscode = () => {
 					code to verify your email.
 				</Text>
 				<Text largeText>
-					<strong>{`\${oneTimePassword}`}</strong>
+					<strong>{`$\${oneTimePassword}`}</strong>
 				</Text>
 				<Text>
 					<strong>
