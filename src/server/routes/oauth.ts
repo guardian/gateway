@@ -85,115 +85,6 @@ const redirectForGenericError = (_: Request, res: ResponseWithRequestState) => {
 };
 
 /**
- * A recursive function which attempts to update the Okta profile
- * with the legacy identity ID and then waits for the legacy_identity_id
- * claim to be present in the access token during a succession of token
- * refreshes.
- */
-interface FetchValidTokenSetProps {
-	oktaId: string;
-	email?: string;
-	openIdClient: OpenIdClient;
-	tokenSet: TokenSet;
-	refreshToken: string;
-	ip: string;
-	request_id?: string;
-	maximumWaitTime?: number;
-	waitTime?: number;
-}
-const fetchValidTokenSet = async ({
-	oktaId,
-	email,
-	openIdClient,
-	tokenSet,
-	refreshToken,
-	ip,
-	request_id,
-	maximumWaitTime = 15000,
-	waitTime = 1000,
-}: FetchValidTokenSetProps): Promise<TokenSet | null> => {
-	const nonBlockingWait = async (
-		start: number,
-		maximumWaitTime: number,
-		waitTime: number,
-		refreshedTokenSet: TokenSet,
-		newRefreshToken: string,
-	): Promise<TokenSet | null> =>
-		// Non-blocking wait for the next iteration
-		await new Promise((resolve) => {
-			setTimeout(async () => {
-				const remainingTime = maximumWaitTime - (Date.now() - start);
-				return resolve(
-					await fetchValidTokenSet({
-						oktaId,
-						email,
-						openIdClient,
-						tokenSet: refreshedTokenSet,
-						refreshToken: newRefreshToken,
-						ip,
-						request_id,
-						maximumWaitTime: remainingTime,
-						waitTime,
-					}),
-				);
-			}, waitTime);
-		});
-
-	try {
-		const { legacy_identity_id } = tokenSet.claims();
-		if (legacy_identity_id) {
-			// The legacy_identity_id claim is present, we can return the token set
-			return tokenSet;
-		}
-
-		if (maximumWaitTime <= 0) {
-			// We've timed out waiting for the claim to be present
-			return null;
-		}
-
-		const start = Date.now();
-		// Attempt to fix the user profile.
-		const isOktaProfileFixed = await fixOktaProfile({
-			oktaId,
-			email,
-			ip,
-			request_id,
-		});
-		if (isOktaProfileFixed) {
-			const refreshedTokenSet = await openIdClient.refresh(refreshToken);
-			const newRefreshToken = refreshedTokenSet?.refresh_token;
-			if (!newRefreshToken) {
-				// There's no refresh token in this token set, so we can't continue
-				return null;
-			}
-			// Try again with the refreshed token set
-			return nonBlockingWait(
-				start,
-				maximumWaitTime,
-				waitTime,
-				refreshedTokenSet,
-				newRefreshToken,
-			);
-		}
-
-		// Try again but using the existing refresh token
-		return nonBlockingWait(
-			start,
-			maximumWaitTime,
-			waitTime,
-			tokenSet,
-			refreshToken,
-		);
-	} catch (error) {
-		logger.error('Failed to fix Okta profile', error, {
-			request_id,
-			oktaId,
-		});
-		return null;
-	}
-};
-
-/**
  * @route GET /oauth/authorization-code/callback
  *
  * Route to use after Authorization Code flow for Authentication related requests
@@ -238,6 +129,40 @@ const authenticationHandler = async (
 		const { user_groups, email_validated, sub, email } =
 			tokenSet.claims() as CustomClaims;
 
+		/** ========================================================================
+		 *  ACCOUNT VALIDATION AND LINKING/REPAIR
+		 *  =========================================================================
+		 */
+
+		// Call the IDAPI /auth/oauth-token endpoint
+		// to exchange the access token for identity cookies.
+		//  ======= PLEASE READ: ========
+		// - If the user exists in both, IDAPI introspects the access token
+		//   and if valid will generate and sign cookies for the user the
+		//   token belonged to.
+		// - If the user doesn't exist in IDAPI, IDAPI will first create a
+		//   user record, which updates the Okta user profile with the
+		//   legacyIdentityId as a side effect, and then generates and signs cookies.
+		// - If the user exists in both but they aren't linked, IDAPI will return
+		//   cookies but not link the two accounts.
+		// - If the user doesn't exist in Okta, there's no way for them to get here
+		//   because this is happening after a successful OAuth code flow exchange!
+		// TODO: We probably don't want to keep doing this fix profile thing
+		// in IDAPI as a side effect of this particular endpoint call!
+		const cookies = await exchangeAccessTokenForCookies(
+			tokenSet.access_token,
+			req.ip,
+			res.locals.requestId,
+		);
+		if (cookies) {
+			// adds set cookie headers
+			setIDAPICookies(res, cookies, authState.doNotSetLastAccessCookie);
+		} else {
+			logger.error('No cookies returned from IDAPI', undefined, {
+				request_id: res.locals.requestId,
+			});
+		}
+
 		// We want to ensure that the user has a legacyIdentityId set in their
 		// Okta profile before carrying on. This is surfaced via the legacy_identity_id
 		// claim in the access token.
@@ -256,37 +181,50 @@ const authenticationHandler = async (
 			);
 		} else if (refreshToken && !legacy_identity_id) {
 			try {
-				// We have a refresh token and no legacy IDAPI ID, so we can try to fix this user.
-				const validTokenSet = await fetchValidTokenSet({
+				// We have a refresh token and no legacy IDAPI ID, which means the user is
+				// in one of two states:
+				// 1. They exist in Okta _AND_ IDAPI, but the two accounts aren't linked (i.e.
+				//    the legacyIdentityId field is missing from the Okta user profile).
+				// 2. They existed in Okta but _NOT_ in IDAPI - which will have been fixed
+				//    in the exchangeAccessTokenForCookies call above.
+
+				// Run the fix function to link the two accounts. This won't be needed
+				// in case (2) above, but it's cheaper to just run it than to check first.
+				const isOktaProfileFixed = await fixOktaProfile({
 					oktaId: sub,
 					email,
-					openIdClient,
-					tokenSet,
-					refreshToken,
 					ip: req.ip,
 					request_id: res.locals.requestId,
 				});
-				if (!validTokenSet) {
-					throw new Error('Failed to get a valid token set');
+				if (!isOktaProfileFixed) {
+					throw new Error('Failed to fix Okta profile');
 				}
+				// Now we have two profiles which are almost definitely linked and exist,
+				// we can get new tokens and run this whole shebang again.
+				const refreshedTokenSet = await openIdClient.refresh(refreshToken);
 				return authenticationHandler(
 					req,
 					res,
-					validTokenSet,
+					refreshedTokenSet,
 					authState,
 					openIdClient,
 				);
 			} catch (error) {
 				// Something went wrong, so long an error and continue to the rest of the callback function
-				// This may result in Gateway errors but won't prevent the user from signing in.
+				// This may result in Gateway errors but won't prevent the user from continuing.
 				trackMetric('OAuthAuthorization::ProvisioningFailure');
 				trackMetric('OAuthAuthenticationCallback::Failure');
-				logger.error(`Failed to fix Okta profile for ${sub}`, error, {
+				logger.error('Okta or IDAPI profile broken', error, {
 					request_id: res.locals.requestId,
 					oktaId: sub,
 				});
 			}
 		}
+
+		/** ========================================================================
+		 *  NEW SOCIAL USER HANDLING
+		 *  =========================================================================
+		 */
 
 		// The only straightforward way to find out if this is a new social user registration
 		// is by checking if the user's email has NOT been validated, but that they ARE in the
@@ -396,26 +334,10 @@ const authenticationHandler = async (
 			}
 		}
 
-		// call the IDAPI /auth/oauth-token endpoint
-		// to exchange the access token for identity cookies
-		// the idapi introspects the access token and if valid
-		// will generate and sign cookies for the user the
-		// token belonged to
-		if (tokenSet.access_token) {
-			const cookies = await exchangeAccessTokenForCookies(
-				tokenSet.access_token,
-				req.ip,
-				res.locals.requestId,
-			);
-			if (cookies) {
-				// adds set cookie headers
-				setIDAPICookies(res, cookies, authState.doNotSetLastAccessCookie);
-			} else {
-				logger.error('No cookies returned from IDAPI', undefined, {
-					request_id: res.locals.requestId,
-				});
-			}
-		}
+		/** ========================================================================
+		 *  REGISTRATION CONSENTS AND NEWSLETTERS
+		 *  =========================================================================
+		 */
 
 		// Apply the registration consents if they exist
 		if (authState.data?.encryptedRegistrationConsents) {
@@ -509,6 +431,11 @@ const authenticationHandler = async (
 			}
 		}
 
+		/** ========================================================================
+		 *  MISCELLANEOUS AUTHENTICATION TASKS
+		 *  =========================================================================
+		 */
+
 		// set the ad-free cookie if the user has the digital-pack product
 		await setUserFeatureCookies({
 			accessToken: tokenSet.access_token,
@@ -521,6 +448,11 @@ const authenticationHandler = async (
 
 		// track the success metric
 		trackMetric('OAuthAuthenticationCallback::Success');
+
+		/** ========================================================================
+		 *  ONWARD REDIRECT HANDLING
+		 *  =========================================================================
+		 */
 
 		// redirect for jobs to show the jobs t&c page
 		// but not if confirmationPage is set (so that we can still show onboarding flow first)
@@ -586,6 +518,10 @@ const authenticationHandler = async (
 
 		return res.redirect(303, returnUrl);
 	} catch (error) {
+		/** ========================================================================
+		 *  GLOBAL ERROR HANDLING
+		 *  =========================================================================
+		 */
 		// check if it's an oauth/oidc error
 		if (isOAuthError(error)) {
 			// log the specific error
