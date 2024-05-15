@@ -38,7 +38,6 @@ import {
 import { mergeRequestState } from '@/server/lib/requestState';
 import { UserResponse } from '@/server/models/okta/User';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
-import { isStringBoolean } from '@/server/lib/isStringBoolean';
 import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
@@ -140,7 +139,7 @@ const OktaRegistration = async (
 		return res.sendStatus(418);
 	}
 
-	const { email = '', _cmpConsentedState = false } = req.body;
+	const { email = '' } = req.body;
 
 	const {
 		queryParams: { appClientId, ref, refViewId, componentEventParams },
@@ -180,7 +179,7 @@ const OktaRegistration = async (
 	};
 
 	const registrationLocation: RegistrationLocation | undefined =
-		getRegistrationLocation(req, isStringBoolean(_cmpConsentedState));
+		getRegistrationLocation(req);
 
 	try {
 		const user = await registerWithOkta({

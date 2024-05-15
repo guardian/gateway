@@ -2,6 +2,10 @@ import { Request } from 'express';
 import { CountryCode } from '@guardian/libs';
 import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 
+const headerValueIsCountryCode = (
+	header: string | string[] | undefined,
+): header is CountryCode => typeof header === 'string' && header.length === 2;
+
 /**
  * The registrationLocation regions are derived from the first column (region_code)
  * of the Data Design team regional classifications here:
@@ -11,20 +15,46 @@ import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
  */
 export const getRegistrationLocation = (
 	req: Request,
-	cmpConsentedAll = false,
 ): RegistrationLocation | undefined => {
-	const country: CountryCode | undefined = req.cookies['GU_geo_country'];
+	/**
+	 * Cypress Test START
+	 *
+	 * This code checks if we're running in Cypress
+	 */
+	const runningInCypress = process.env.RUNNING_IN_CYPRESS === 'true';
+	if (runningInCypress) {
+		const cypressMockStateCookie = req.cookies['cypress-mock-state'];
 
-	// registrationLocation must never be captured without full cmp consent
-	if (!cmpConsentedAll) return undefined;
+		// check if the cookie value is an expected value
+		const validCode = ['FR', 'GB', 'US'].some(
+			(code) => code === cypressMockStateCookie,
+		);
 
-	if (country === 'GB') return 'United Kingdom';
-	if (Us.includes(country)) return 'United States';
-	if (country === 'AU') return 'Australia';
-	if (country === 'NZ') return 'New Zealand';
-	if (country === 'CA') return 'Canada';
-	if (Europe.includes(country)) return 'Europe';
-	if (Row.includes(country)) return 'Other';
+		// if it is then return the code
+		if (validCode) {
+			return countryCodeToRegistrationLocation(cypressMockStateCookie);
+		}
+
+		// otherwise let it fall through to the default check below
+	}
+	/**
+	 * Cypress Test END
+	 */
+	const header = req.headers['x-gu-geolocation'];
+	if (!headerValueIsCountryCode(header)) return undefined;
+	return countryCodeToRegistrationLocation(header);
+};
+
+const countryCodeToRegistrationLocation = (
+	countryCode: CountryCode,
+): RegistrationLocation | undefined => {
+	if (countryCode === 'GB') return 'United Kingdom';
+	if (Us.includes(countryCode)) return 'United States';
+	if (countryCode === 'AU') return 'Australia';
+	if (countryCode === 'NZ') return 'New Zealand';
+	if (countryCode === 'CA') return 'Canada';
+	if (Europe.includes(countryCode)) return 'Europe';
+	if (Row.includes(countryCode)) return 'Other';
 
 	return undefined;
 };

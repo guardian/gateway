@@ -23,16 +23,10 @@ jest.mock('@/server/lib/serverSideLogger', () => ({
 	},
 }));
 
-const getFakeRequest = (
-	country: string | undefined,
-	consent: string | undefined,
-): Request =>
+const getFakeRequest = (country: string | undefined): Request =>
 	({
-		cookies: {
-			GU_geo_country: country,
-		},
-		body: {
-			_cmpConsentedState: consent,
+		headers: {
+			'x-gu-geolocation': country,
 		},
 	}) as unknown as Request;
 
@@ -81,7 +75,7 @@ describe('updateRegistrationLocationViaIDAPI', () => {
 		await updateRegistrationLocationViaIDAPI(
 			'ip',
 			'cookie',
-			getFakeRequest(undefined, 'true'),
+			getFakeRequest(undefined),
 		);
 		expect(mockedReadUser).not.toBeCalled();
 		expect(mockedAddRegistrationLocation).not.toBeCalled();
@@ -92,7 +86,7 @@ describe('updateRegistrationLocationViaIDAPI', () => {
 		await updateRegistrationLocationViaIDAPI(
 			'ip',
 			'cookie',
-			getFakeRequest('FR', 'true'),
+			getFakeRequest('FR'),
 		);
 
 		expect(mockedReadUser).toBeCalled();
@@ -104,7 +98,7 @@ describe('updateRegistrationLocationViaIDAPI', () => {
 		await updateRegistrationLocationViaIDAPI(
 			'ip',
 			'cookie',
-			getFakeRequest('FR', 'true'),
+			getFakeRequest('FR'),
 		);
 		expect(mockedReadUser).toBeCalled();
 		expect(mockedAddRegistrationLocation).toBeCalled();
@@ -115,7 +109,7 @@ describe('updateRegistrationLocationViaOkta', () => {
 	afterEach(() => jest.resetAllMocks());
 
 	test(`makes no okta calls if registrationLocation undefined `, async () => {
-		await updateRegistrationLocationViaOkta(getFakeRequest(undefined, 'true'), {
+		await updateRegistrationLocationViaOkta(getFakeRequest(undefined), {
 			claims: { sub: '123' },
 		} as Jwt);
 		expect(mockedGetUser).not.toBeCalled();
@@ -124,7 +118,7 @@ describe('updateRegistrationLocationViaOkta', () => {
 
 	test(`does not update location if user response already has location set `, async () => {
 		mockedGetUser.mockResolvedValue(oktaUser('Canada'));
-		await updateRegistrationLocationViaOkta(getFakeRequest('FR', 'true'), {
+		await updateRegistrationLocationViaOkta(getFakeRequest('FR'), {
 			claims: { sub: '123' },
 		} as Jwt);
 
@@ -135,7 +129,7 @@ describe('updateRegistrationLocationViaOkta', () => {
 	test(`updates location if user response does not have location set `, async () => {
 		mockedGetUser.mockResolvedValueOnce(oktaUser(''));
 		await updateRegistrationLocationViaOkta(
-			getFakeRequest('FR', 'true') as Request,
+			getFakeRequest('FR') as Request,
 			{ claims: { sub: '123' } } as Jwt,
 		);
 		expect(mockedGetUser).toBeCalled();
