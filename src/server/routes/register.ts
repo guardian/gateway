@@ -41,7 +41,11 @@ import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
 import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
-import { RegistrationNewslettersFormFields } from '@/shared/model/Newsletter';
+import {
+	RegistrationNewslettersFormFieldsMap,
+	newsletterBundleToIndividualNewsletters,
+} from '@/shared/model/Newsletter';
+import { NewsletterPatch } from '@/shared/model/NewsletterPatch';
 
 const { okta, registrationPasscodesEnabled } = getConfiguration();
 
@@ -170,12 +174,25 @@ const OktaRegistration = async (
 				consented: !!req.body[field.id],
 			}))
 			.filter((newsletter) => newsletter.consented),
-		newsletters: Object.values(RegistrationNewslettersFormFields)
+		newsletters: Object.values(RegistrationNewslettersFormFieldsMap)
 			.map((field) => ({
 				id: field.id,
 				subscribed: !!req.body[field.id],
 			}))
-			.filter((newsletter) => newsletter.subscribed),
+			.filter((newsletter) => newsletter.subscribed)
+			// Registration newsletter consents might be a 'bundle' of consents, which have
+			// specific IDs. We need to replace the bundle consent with a list of the individual
+			// consents that are part of the bundle.
+			.reduce<NewsletterPatch[]>((acc, curr) => {
+				if (curr.id === 'auBundle' || curr.id === 'usBundle') {
+					return newsletterBundleToIndividualNewsletters(curr.id).map((id) => ({
+						id,
+						subscribed: true,
+					}));
+				}
+				return [...acc, curr];
+			}, [])
+			.flat(),
 	};
 
 	const registrationLocation: RegistrationLocation | undefined =

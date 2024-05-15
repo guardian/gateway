@@ -26,9 +26,13 @@ import { update as updateConsents } from '@/server/lib/idapi/consents';
 import { update as updateNewsletters } from '@/server/lib/idapi/newsletters';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
-import { RegistrationNewslettersFormFields } from '@/shared/model/Newsletter';
+import {
+	RegistrationNewslettersFormFieldsMap,
+	newsletterBundleToIndividualNewsletters,
+} from '@/shared/model/Newsletter';
 import { updateRegistrationPlatform } from '@/server/lib/registrationPlatform';
 import { getAppName, isAppPrefix } from '@/shared/lib/appNameUtils';
+import { NewsletterPatch } from '@/shared/model/NewsletterPatch';
 
 const { okta } = getConfiguration();
 
@@ -97,12 +101,27 @@ router.post(
 						consented: !!req.body[field.id],
 					}))
 					.filter((newsletter) => newsletter.consented),
-				newsletters: Object.values(RegistrationNewslettersFormFields)
+				newsletters: Object.values(RegistrationNewslettersFormFieldsMap)
 					.map((field) => ({
 						id: field.id,
 						subscribed: !!req.body[field.id],
 					}))
-					.filter((newsletter) => newsletter.subscribed),
+					.filter((newsletter) => newsletter.subscribed)
+					// Registration newsletter consents might be a 'bundle' of consents, which have
+					// specific IDs. We need to replace the bundle consent with a list of the individual
+					// consents that are part of the bundle.
+					.reduce<NewsletterPatch[]>((acc, curr) => {
+						if (curr.id === 'auBundle' || curr.id === 'usBundle') {
+							return newsletterBundleToIndividualNewsletters(curr.id).map(
+								(id) => ({
+									id,
+									subscribed: true,
+								}),
+							);
+						}
+						return [...acc, curr];
+					}, [])
+					.flat(),
 			};
 
 			// update the registration platform for social users, as we're not able to do this

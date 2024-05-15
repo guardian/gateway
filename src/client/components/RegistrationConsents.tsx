@@ -1,6 +1,9 @@
 import React from 'react';
 import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
-import { RegistrationNewslettersFormFields } from '@/shared/model/Newsletter';
+import {
+	RegistrationNewsletterFormFields,
+	RegistrationNewslettersFormFieldsMap,
+} from '@/shared/model/Newsletter';
 import { css } from '@emotion/react';
 import { space } from '@guardian/source-foundations';
 import { RegistrationMarketingConsentFormField } from '@/client/components/RegistrationMarketingConsentFormField';
@@ -9,7 +12,7 @@ import { GeoLocation } from '@/shared/model/Geolocation';
 import { AppName } from '@/shared/lib/appNameUtils';
 
 interface RegistrationConsentsProps {
-	geolocation?: string;
+	geolocation?: GeoLocation;
 	useIdapi?: boolean;
 	noMarginBottom?: boolean;
 	appName?: AppName;
@@ -23,29 +26,42 @@ const consentToggleCss = (noMarginBottom = false) => css`
 	gap: ${space[3]}px;
 `;
 
+const chooseNewsletter = (
+	geolocation: GeoLocation | undefined,
+	appName: AppName | undefined,
+): RegistrationNewsletterFormFields | undefined => {
+	const isFeast = appName === 'Feast';
+
+	if (isFeast) {
+		return RegistrationNewslettersFormFieldsMap.feast;
+	}
+
+	switch (geolocation) {
+		case 'GB':
+		case 'EU':
+		case 'ROW':
+			return RegistrationNewslettersFormFieldsMap.saturdayEdition;
+		case 'US':
+			return RegistrationNewslettersFormFieldsMap.usBundle;
+		case 'AU':
+			return RegistrationNewslettersFormFieldsMap.auBundle;
+		default:
+			// We want to show Saturday Edition even for an undefined location
+			return RegistrationNewslettersFormFieldsMap.saturdayEdition;
+	}
+};
+
 export const RegistrationConsents = ({
 	geolocation,
 	useIdapi,
 	noMarginBottom,
 	appName,
 }: RegistrationConsentsProps) => {
-	// check if the app is Feast or not
-	const isFeast = appName === 'Feast';
-
-	// don't show the Saturday Edition newsletter option for US and AUS or if using Feast app
-	const showSaturdayEdition = (() => {
-		const isValidLocation = !(['US', 'AU'] satisfies GeoLocation[]).some(
-			(location: GeoLocation) => location === geolocation,
-		);
-
-		return isValidLocation && !isFeast;
-	})();
-
-	// show the Feast newsletter option if the app is Feast and Saturday Edition is not shown
-	const showFeast = isFeast && !showSaturdayEdition;
-
+	const registrationNewsletter = chooseNewsletter(geolocation, appName);
 	// Show marketing consent if not showing Feast
-	const showMarketingConsent = !showFeast;
+	const showMarketingConsent =
+		!registrationNewsletter ||
+		registrationNewsletter !== RegistrationNewslettersFormFieldsMap.feast;
 
 	if (useIdapi) {
 		return <></>;
@@ -53,18 +69,11 @@ export const RegistrationConsents = ({
 
 	return (
 		<div css={consentToggleCss(noMarginBottom)}>
-			{showSaturdayEdition && (
+			{registrationNewsletter && (
 				<RegistrationNewsletterFormField
-					id={RegistrationNewslettersFormFields.saturdayEdition.id}
-					label={`${RegistrationNewslettersFormFields.saturdayEdition.label} newsletter`}
-					context={RegistrationNewslettersFormFields.saturdayEdition.context}
-				/>
-			)}
-			{showFeast && (
-				<RegistrationNewsletterFormField
-					id={RegistrationNewslettersFormFields.feast.id}
-					label={`${RegistrationNewslettersFormFields.feast.label} newsletter`}
-					context={RegistrationNewslettersFormFields.feast.context}
+					id={registrationNewsletter.id}
+					label={registrationNewsletter.label}
+					context={registrationNewsletter.context}
 				/>
 			)}
 			{showMarketingConsent && (
