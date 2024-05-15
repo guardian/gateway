@@ -1,4 +1,5 @@
 import { GEOLOCATION_CODES } from '../../support/geolocation';
+import { RegistrationNewsletterDescriptions } from '../../support/newsletters';
 
 // saturday edition geolocation tests
 describe('Saturday Edition Geolocation', () => {
@@ -12,6 +13,9 @@ describe('Saturday Edition Geolocation', () => {
 		cy.visit(`/register/email`);
 		cy.acceptCMP();
 		cy.contains('Saturday Edition').should('exist');
+		cy.contains(RegistrationNewsletterDescriptions.saturdayEdition).should(
+			'exist',
+		);
 
 		cy.createTestUser({
 			isUserEmailValidated: true,
@@ -26,6 +30,9 @@ describe('Saturday Edition Geolocation', () => {
 			cy.get('[data-cy="main-form-submit-button"]').click();
 			cy.url().should('include', '/welcome/google');
 			cy.contains('Saturday Edition').should('exist');
+			cy.contains(RegistrationNewsletterDescriptions.saturdayEdition).should(
+				'exist',
+			);
 		});
 	});
 	it('should show the Saturday Edition newsletter for EU', () => {
@@ -38,6 +45,9 @@ describe('Saturday Edition Geolocation', () => {
 		cy.visit(`/register/email`);
 		cy.acceptCMP();
 		cy.contains('Saturday Edition').should('exist');
+		cy.contains(RegistrationNewsletterDescriptions.saturdayEdition).should(
+			'exist',
+		);
 
 		cy.createTestUser({
 			isUserEmailValidated: true,
@@ -52,6 +62,9 @@ describe('Saturday Edition Geolocation', () => {
 			cy.get('[data-cy="main-form-submit-button"]').click();
 			cy.url().should('include', '/welcome/google');
 			cy.contains('Saturday Edition').should('exist');
+			cy.contains(RegistrationNewsletterDescriptions.saturdayEdition).should(
+				'exist',
+			);
 		});
 	});
 	it('should show the Saturday Edition newsletter for ROW', () => {
@@ -64,6 +77,9 @@ describe('Saturday Edition Geolocation', () => {
 		cy.visit(`/register/email`);
 		cy.acceptCMP();
 		cy.contains('Saturday Edition').should('exist');
+		cy.contains(RegistrationNewsletterDescriptions.saturdayEdition).should(
+			'exist',
+		);
 
 		cy.createTestUser({
 			isUserEmailValidated: true,
@@ -78,9 +94,12 @@ describe('Saturday Edition Geolocation', () => {
 			cy.get('[data-cy="main-form-submit-button"]').click();
 			cy.url().should('include', '/welcome/google');
 			cy.contains('Saturday Edition').should('exist');
+			cy.contains(RegistrationNewsletterDescriptions.saturdayEdition).should(
+				'exist',
+			);
 		});
 	});
-	it('should not show the Saturday Edition newsletter for US', () => {
+	it('should show the US bundle for US', () => {
 		// Intercept the geolocation header and set it to US to show Saturday Edition.
 		cy.intercept(`https://${Cypress.env('BASE_URI')}/**/*`, (req) => {
 			// eslint-disable-next-line functional/immutable-data
@@ -90,6 +109,8 @@ describe('Saturday Edition Geolocation', () => {
 		cy.visit(`/register/email`);
 		cy.acceptCMP();
 		cy.contains('Saturday Edition').should('not.exist');
+		cy.contains('Weekend newsletters').should('exist');
+		cy.contains(RegistrationNewsletterDescriptions.usBundle).should('exist');
 
 		cy.createTestUser({
 			isUserEmailValidated: true,
@@ -104,9 +125,11 @@ describe('Saturday Edition Geolocation', () => {
 			cy.get('[data-cy="main-form-submit-button"]').click();
 			cy.url().should('include', '/welcome/google');
 			cy.contains('Saturday Edition').should('not.exist');
+			cy.contains('Weekend newsletters').should('exist');
+			cy.contains(RegistrationNewsletterDescriptions.usBundle).should('exist');
 		});
 	});
-	it('should not show the Saturday Edition newsletter for AU', () => {
+	it('should show the AU bundle for AU', () => {
 		// Intercept the geolocation header and set it to US to show Saturday Edition.
 		cy.intercept(`https://${Cypress.env('BASE_URI')}/**/*`, (req) => {
 			// eslint-disable-next-line functional/immutable-data
@@ -116,6 +139,8 @@ describe('Saturday Edition Geolocation', () => {
 		cy.visit(`/register/email`);
 		cy.acceptCMP();
 		cy.contains('Saturday Edition').should('not.exist');
+		cy.contains('Saturday newsletters').should('exist');
+		cy.contains(RegistrationNewsletterDescriptions.auBundle).should('exist');
 
 		cy.createTestUser({
 			isUserEmailValidated: true,
@@ -130,6 +155,8 @@ describe('Saturday Edition Geolocation', () => {
 			cy.get('[data-cy="main-form-submit-button"]').click();
 			cy.url().should('include', '/welcome/google');
 			cy.contains('Saturday Edition').should('not.exist');
+			cy.contains('Saturday newsletters').should('exist');
+			cy.contains(RegistrationNewsletterDescriptions.auBundle).should('exist');
 		});
 	});
 });
@@ -139,6 +166,9 @@ describe('Feast newsletter for Feast app', () => {
 		cy.oktaGetApps('ios_feast_app').then(([app]) => {
 			cy.visit(`/register/email?appClientId=${app.id}`);
 			cy.contains('Feast newsletter').should('exist');
+			cy.contains('Saturday Edition').should('not.exist');
+			cy.contains('Weekend newsletters').should('not.exist');
+			cy.contains('Saturday newsletters').should('not.exist');
 
 			cy.createTestUser({
 				isUserEmailValidated: true,
@@ -153,6 +183,9 @@ describe('Feast newsletter for Feast app', () => {
 				cy.get('[data-cy="main-form-submit-button"]').click();
 				cy.url().should('include', '/welcome/google');
 				cy.contains('Feast newsletter').should('exist');
+				cy.contains('Saturday Edition').should('not.exist');
+				cy.contains('Weekend newsletters').should('not.exist');
+				cy.contains('Saturday newsletters').should('not.exist');
 			});
 		});
 	});
@@ -161,6 +194,9 @@ describe('Feast newsletter for Feast app', () => {
 		cy.oktaGetApps('android_feast_app').then(([app]) => {
 			cy.visit(`/register/email?appClientId=${app.id}`);
 			cy.contains('Feast newsletter').should('exist');
+			cy.contains('Saturday Edition').should('not.exist');
+			cy.contains('Weekend newsletters').should('not.exist');
+			cy.contains('Saturday newsletters').should('not.exist');
 
 			cy.createTestUser({
 				isUserEmailValidated: true,
@@ -175,6 +211,9 @@ describe('Feast newsletter for Feast app', () => {
 				cy.get('[data-cy="main-form-submit-button"]').click();
 				cy.url().should('include', '/welcome/google');
 				cy.contains('Feast newsletter').should('exist');
+				cy.contains('Saturday Edition').should('not.exist');
+				cy.contains('Weekend newsletters').should('not.exist');
+				cy.contains('Saturday newsletters').should('not.exist');
 			});
 		});
 	});
