@@ -37,14 +37,13 @@ const chooseNewsletter = (
 	}
 
 	switch (geolocation) {
-		case 'GB':
-		case 'EU':
-		case 'ROW':
-			return RegistrationNewslettersFormFieldsMap.saturdayEdition;
 		case 'US':
 			return RegistrationNewslettersFormFieldsMap.usBundle;
 		case 'AU':
 			return RegistrationNewslettersFormFieldsMap.auBundle;
+		case 'GB':
+		case 'EU':
+		case 'ROW':
 		default:
 			// We want to show Saturday Edition even for an undefined location
 			return RegistrationNewslettersFormFieldsMap.saturdayEdition;
