@@ -38,14 +38,8 @@ import {
 import { mergeRequestState } from '@/server/lib/requestState';
 import { UserResponse } from '@/server/models/okta/User';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
-import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
-import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
-import {
-	RegistrationNewslettersFormFieldsMap,
-	newsletterBundleToIndividualNewsletters,
-} from '@/shared/model/Newsletter';
-import { NewsletterPatch } from '@/shared/model/NewsletterPatch';
+import { bodyFormFieldsToRegistrationConsents } from '../lib/registrationConsents';
 
 const { okta, registrationPasscodesEnabled } = getConfiguration();
 
@@ -163,37 +157,7 @@ const OktaRegistration = async (
 
 	/* AB TEST LOGIC END */
 
-	// consents/newsletters are a string with value `'on'` if checked, or `undefined` if not checked
-	// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox#value
-	// so we can check the truthiness of the value to determine if the user has consented
-	// and we filter out any consents that are not consented
-	const consents: RegistrationConsents = {
-		consents: Object.values(RegistrationConsentsFormFields)
-			.map((field) => ({
-				id: field.id,
-				consented: !!req.body[field.id],
-			}))
-			.filter((newsletter) => newsletter.consented),
-		newsletters: Object.values(RegistrationNewslettersFormFieldsMap)
-			.map((field) => ({
-				id: field.id,
-				subscribed: !!req.body[field.id],
-			}))
-			.filter((newsletter) => newsletter.subscribed)
-			// Registration newsletter consents might be a 'bundle' of consents, which have
-			// specific IDs. We need to replace the bundle consent with a list of the individual
-			// consents that are part of the bundle.
-			.reduce<NewsletterPatch[]>((acc, curr) => {
-				if (curr.id === 'auBundle' || curr.id === 'usBundle') {
-					return newsletterBundleToIndividualNewsletters(curr.id).map((id) => ({
-						id,
-						subscribed: true,
-					}));
-				}
-				return [...acc, curr];
-			}, [])
-			.flat(),
-	};
+	const consents = bodyFormFieldsToRegistrationConsents(req.body);
 
 	const registrationLocation: RegistrationLocation | undefined =
 		getRegistrationLocation(req);

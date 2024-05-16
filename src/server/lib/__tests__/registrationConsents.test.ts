@@ -1,7 +1,9 @@
 import {
 	minifyRegistrationConsents,
 	expandRegistrationConsents,
+	bodyFormFieldsToRegistrationConsents,
 } from '@/server/lib/registrationConsents';
+import { Newsletters } from '@/shared/model/Newsletter';
 import { RegistrationConsents } from '@/shared/model/RegistrationConsents';
 
 jest.mock('@/server/lib/serverSideLogger', () => ({
@@ -9,6 +11,46 @@ jest.mock('@/server/lib/serverSideLogger', () => ({
 		error: jest.fn(),
 	},
 }));
+
+describe.only('registrationConsents#bodyFormFieldsToRegistrationConsents', () => {
+	it('returns expected consents and newsletters for specific IDs', () => {
+		const body = {
+			similar_guardian_products: 'on',
+			[Newsletters.SATURDAY_EDITION]: 'on',
+			[Newsletters.FEAST]: undefined,
+		};
+
+		const expected: RegistrationConsents = {
+			consents: [{ id: 'similar_guardian_products', consented: true }],
+			newsletters: [{ id: Newsletters.SATURDAY_EDITION, subscribed: true }],
+		};
+
+		expect(bodyFormFieldsToRegistrationConsents(body)).toEqual(expected);
+	});
+	it('returns expected consents and newsletters for bundle IDs', () => {
+		const body = {
+			similar_guardian_products: 'on',
+			[Newsletters.AU_BUNDLE]: 'on',
+			[Newsletters.US_BUNDLE]: undefined,
+		};
+
+		const expected: RegistrationConsents = {
+			consents: [{ id: 'similar_guardian_products', consented: true }],
+			newsletters: [
+				{
+					id: Newsletters.SATURDAY_EDITION,
+					subscribed: true,
+				},
+				{
+					id: Newsletters.WEEKEND_MAIL_AU,
+					subscribed: true,
+				},
+			],
+		};
+
+		expect(bodyFormFieldsToRegistrationConsents(body)).toEqual(expected);
+	});
+});
 
 describe('registrationConsents#minifyRegistrationConsents', () => {
 	it('minifies registration consents', () => {

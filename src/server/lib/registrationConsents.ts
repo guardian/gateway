@@ -1,3 +1,4 @@
+import { Request } from 'express';
 import { decrypt, encrypt } from './crypto';
 import { getConfiguration } from './getConfiguration';
 import { base64ToUrlSafeString, urlSafeStringToBase64 } from './base64';
@@ -6,6 +7,52 @@ import {
 	RegistrationConsents,
 	registrationConsentsSchema,
 } from '@/shared/model/RegistrationConsents';
+import { RegistrationConsentsFormFields } from '@/shared/model/Consent';
+import {
+	RegistrationNewslettersFormFieldsMap,
+	newsletterBundleToIndividualNewsletters,
+} from '@/shared/model/Newsletter';
+
+// consents/newsletters are a string with value `'on'` if checked, or `undefined` if not checked
+// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox#value
+// so we can check the truthiness of the value to determine if the user has consented
+// and we filter out any consents that are not consented
+export const bodyFormFieldsToRegistrationConsents = (
+	body: Request['body'],
+): RegistrationConsents => ({
+	consents: Object.values(RegistrationConsentsFormFields)
+		.map((field) => ({
+			id: field.id,
+			consented: !!body[field.id],
+		}))
+		.filter((newsletter) => newsletter.consented),
+	newsletters: Object.values(RegistrationNewslettersFormFieldsMap)
+		.map((field) => ({
+			id: field.id,
+			subscribed: !!body[field.id],
+		}))
+		// Registration newsletter consents might be a 'bundle' of consents, which have
+		// specific IDs. We need to replace the bundle consent with a list of the individual
+		// consents that are part of the bundle.
+		.flatMap((newsletter) => {
+			// First, filter out all those newsletters which are not being subscribed to
+			if (!newsletter.subscribed) {
+				return [];
+			}
+			switch (newsletter.id) {
+				case 'auBundle':
+				case 'usBundle':
+					return newsletterBundleToIndividualNewsletters(newsletter.id).map(
+						(id) => ({
+							id,
+							subscribed: true,
+						}),
+					);
+				default:
+					return [newsletter];
+			}
+		}),
+});
 
 // convert the registration consents into a string that has the following format:
 // consent1=true,consent2=false|newsletter1=true,newsletter2=false
