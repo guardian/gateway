@@ -58,9 +58,12 @@ export const RegistrationConsents = ({
 }: RegistrationConsentsProps) => {
 	const registrationNewsletter = chooseNewsletter(geolocation, appName);
 	// Show marketing consent if not showing Feast
-	const showMarketingConsent =
-		!registrationNewsletter ||
-		registrationNewsletter !== RegistrationNewslettersFormFieldsMap.feast;
+	const showMarketingConsent = (() => {
+		if (registrationNewsletter === RegistrationNewslettersFormFieldsMap.feast) {
+			return false;
+		}
+		return true;
+	})();
 
 	if (useIdapi) {
 		return <></>;
