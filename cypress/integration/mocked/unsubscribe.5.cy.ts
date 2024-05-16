@@ -32,7 +32,7 @@ describe('Unsubscribe newsletter/marketing email', () => {
 			cy.contains('You have been unsubscribed.');
 		});
 
-		it('should be able to unsubscribe from a newsletter', () => {
+		it('should be able to unsubscribe from all marketing consents and newsletters', () => {
 			cy.mockNext(200);
 			cy.request('POST', '/unsubscribe-all/1000000%3A1677075570/token').then(
 				(response) => {
