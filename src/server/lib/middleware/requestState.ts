@@ -86,7 +86,7 @@ const getRequestState = async (
 		},
 		globalMessage: {},
 		csrf: {
-			token: req.csrfToken(),
+			token: req.csrfToken?.(),
 		},
 		abTesting: abTesting,
 		abTestAPI: abTestAPI,
