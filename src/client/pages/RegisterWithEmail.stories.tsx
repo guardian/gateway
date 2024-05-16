@@ -62,9 +62,38 @@ USGeolocation.story = {
 	name: 'with US geolocation',
 };
 
+export const AUGeolocation = (args: RegistrationProps) => (
+	<RegisterWithEmail {...args} geolocation="AU" />
+);
+AUGeolocation.story = {
+	name: 'with AU geolocation',
+};
+
+export const EUGeolocation = (args: RegistrationProps) => (
+	<RegisterWithEmail {...args} geolocation="EU" />
+);
+EUGeolocation.story = {
+	name: 'with EU geolocation',
+};
+
+export const ROWGeolocation = (args: RegistrationProps) => (
+	<RegisterWithEmail {...args} geolocation="ROW" />
+);
+ROWGeolocation.story = {
+	name: 'with ROW geolocation',
+};
+
+export const UndefinedGeolocation = (args: RegistrationProps) => (
+	<RegisterWithEmail {...args} geolocation={undefined} />
+);
+UndefinedGeolocation.story = {
+	name: 'with undefined geolocation',
+};
+
 export const FeastApp = (args: RegistrationProps) => (
 	<RegisterWithEmail {...args} appName="Feast" />
 );
+
 FeastApp.story = {
 	name: 'with Feast app',
 };
