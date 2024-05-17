@@ -62,7 +62,7 @@ describe('Unsubscribe newsletter/marketing email', () => {
 		});
 	});
 
-	it.only('should be able to unsubscribe from all emails', () => {
+	it('should be able to unsubscribe from all emails', () => {
 		cy.createTestUser({
 			isUserEmailValidated: true,
 		}).then(({ cookies }) => {
