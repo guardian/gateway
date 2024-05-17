@@ -102,15 +102,7 @@ router.post(
 				res.locals.requestId,
 			);
 
-			// TODO: metrics?
-			// trackMetric(`${subscriptionActionName(action)}::Success`);
-
-			// const html = renderer(`/${action}/success`, {
-			// 	requestState: mergeRequestState(res.locals, {
-			// 		pageData: buildPageData(emailType, subscriptionData.emailId),
-			// 	}),
-			// 	pageTitle: `${subscriptionActionName(action)} Confirmation`,
-			// });
+			trackMetric(`UnsubscribeAll::Success`);
 
 			return res.status(200).send();
 		} catch (error) {
@@ -118,16 +110,7 @@ router.post(
 				request_id: res.locals.requestId,
 			});
 
-			// trackMetric(`${subscriptionActionName(action)}::Failure`);
-
-			// const html = renderer(`/${action}/error`, {
-			// 	requestState: mergeRequestState(res.locals, {
-			// 		pageData: {
-			// 			accountManagementUrl,
-			// 		},
-			// 	}),
-			// 	pageTitle: `${subscriptionActionName(action)} Error`,
-			// });
+			trackMetric(`UnsubscribeAll::Failure`);
 
 			return res.status(500).send();
 		}
