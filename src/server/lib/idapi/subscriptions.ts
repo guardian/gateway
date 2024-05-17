@@ -119,7 +119,6 @@ export const makeUnsubscribeAllRequest = async (
 			request_id,
 		});
 
-		// Maybe we don't return an error message here? There's nothing user facing
 		throw new IdapiError({ message: 'Unsubscribe all failed', status: 500 });
 	}
 };
