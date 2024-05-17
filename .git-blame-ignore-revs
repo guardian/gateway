@@ -17,3 +17,7 @@
 # Rewrite files after dependecy updates 2024-01-23
 # https://github.com/guardian/gateway/pull/2547
 b95a92786d88d57946ef6edfd269f86536f615d6
+
+# Change relative to @-aliased absolute imports (2 commits)
+f9faff6e255ae523604b0d659d8870db29f85407
+2d9af37dd224bd901bec5b9235aef0eb6b0107b9
