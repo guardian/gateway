@@ -86,6 +86,9 @@ const getRequestState = async (
 		},
 		globalMessage: {},
 		csrf: {
+			// This isn't guaranteed to exist as there are some endpoints where
+			// we do not have CSRF protection e.g. /unsubscribe-all which is a
+			// POST but called by external clients.
 			token: req.csrfToken?.(),
 		},
 		abTesting: abTesting,
