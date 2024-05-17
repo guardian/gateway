@@ -1,7 +1,7 @@
 import csrf from 'csurf';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { ResponseWithRequestState } from '@/server/models/Express';
-import { NextFunction, Request } from 'express';
+import type { ResponseWithRequestState } from '@/server/models/Express';
+import type { NextFunction, Request } from 'express';
 
 const { isHttps } = getConfiguration();
 
