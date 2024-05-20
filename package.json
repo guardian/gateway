@@ -140,7 +140,7 @@
 		"@guardian/source-react-components": "^25.0.0",
 		"@guardian/source-react-components-development-kitchen": "^21.0.0",
 		"@okta/jwt-verifier": "^3.2.0",
-		"@sentry/browser": "^7.113.0",
+		"@sentry/browser": "^8.2.1",
 		"@smithy/node-http-handler": "^3.0.0",
 		"awesome-debounce-promise": "^2.1.0",
 		"body-parser": "^1.20.2",
