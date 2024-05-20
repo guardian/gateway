@@ -12,7 +12,7 @@ jest.mock('@/server/lib/serverSideLogger', () => ({
 	},
 }));
 
-describe.only('registrationConsents#bodyFormFieldsToRegistrationConsents', () => {
+describe('registrationConsents#bodyFormFieldsToRegistrationConsents', () => {
 	it('returns expected consents and newsletters for specific IDs', () => {
 		const body = {
 			similar_guardian_products: 'on',
