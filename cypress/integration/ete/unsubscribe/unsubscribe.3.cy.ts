@@ -62,6 +62,28 @@ describe('Unsubscribe newsletter/marketing email', () => {
 		});
 	});
 
+	it('should be able to unsubscribe from all emails', () => {
+		cy.createTestUser({
+			isUserEmailValidated: true,
+		}).then(({ cookies }) => {
+			// SC_GU_U is required for the cy.getTestUserDetails
+			const scGuU = cookies.find((cookie) => cookie.key === 'SC_GU_U');
+			if (!scGuU) throw new Error('SC_GU_U cookie not found');
+			cy.setCookie('SC_GU_U', scGuU?.value);
+
+			cy.getTestUserDetails().then(({ user }) => {
+				const userId = user.id;
+				const data = `${userId}:${Math.floor(Date.now() / 1000)}`;
+				cy.request(
+					'POST',
+					`/unsubscribe-all/${encodeURIComponent(data)}/${createToken(data)}`,
+				).then((response) => {
+					expect(response.status).to.eq(200);
+				});
+			});
+		});
+	});
+
 	it('should be able to handle a unsubscribe error if emailType is not newsletter/marketing', () => {
 		cy.createTestUser({
 			isUserEmailValidated: true,

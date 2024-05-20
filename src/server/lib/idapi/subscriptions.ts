@@ -17,6 +17,11 @@ interface SubscriptionData {
 	timestamp: number;
 }
 
+interface UnsubscribeAllData {
+	userId: string;
+	timestamp: number;
+}
+
 export const isValidEmailType = (emailType: string): emailType is EmailType => {
 	return ['newsletter', 'marketing'].includes(emailType);
 };
@@ -30,6 +35,19 @@ export const parseSubscriptionData = (data: string): SubscriptionData => {
 
 	return {
 		emailId,
+		userId,
+		timestamp: +timestamp,
+	};
+};
+
+export const parseUnsubscribeAllData = (data: string): UnsubscribeAllData => {
+	const [userId, timestamp] = data.split(':');
+
+	if (!userId || !timestamp) {
+		throw new Error('Invalid unsubscribe-all data');
+	}
+
+	return {
 		userId,
 		timestamp: +timestamp,
 	};
@@ -74,5 +92,33 @@ export const makeSubscriptionRequest = async (
 			},
 		);
 		return handleError(subscriptionAction, error as IDAPIError);
+	}
+};
+
+const unsubscribeAllPath = '/unsubscribe-all';
+export const makeUnsubscribeAllRequest = async (
+	unsubscribeData: UnsubscribeAllData,
+	token: string,
+	ip: string,
+	request_id?: string,
+) => {
+	const body = {
+		...unsubscribeData,
+		token,
+	};
+
+	const options = APIAddClientAccessToken(APIPostOptions(body), ip);
+
+	try {
+		await idapiFetch({
+			path: unsubscribeAllPath,
+			options,
+		});
+	} catch (error) {
+		logger.error(`IDAPI Error '${unsubscribeAllPath}'`, error, {
+			request_id,
+		});
+
+		throw new IdapiError({ message: 'Unsubscribe all failed', status: 500 });
 	}
 };
