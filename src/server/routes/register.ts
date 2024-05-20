@@ -381,14 +381,6 @@ const OktaRegistration = async (
 	req: Request,
 	res: ResponseWithRequestState,
 ) => {
-	if (
-		registrationPasscodesEnabled &&
-		res.locals.queryParams.usePasscodeRegistration
-	) {
-		// to implement
-		return res.sendStatus(418);
-	}
-
 	const { email = '' } = req.body;
 
 	const {
