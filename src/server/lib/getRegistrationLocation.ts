@@ -1,6 +1,7 @@
 import { Request } from 'express';
 import { CountryCode } from '@guardian/libs';
 import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
+import { maybeGetCountryCodeFromCypressMockStateCookie } from '@/server/lib/cypress';
 
 const headerValueIsCountryCode = (
 	header: string | string[] | undefined,
@@ -18,22 +19,11 @@ export const getRegistrationLocation = (
 ): RegistrationLocation | undefined => {
 	/**
 	 * Cypress Test START
-	 *
-	 * This code checks if we're running in Cypress
 	 */
-	const runningInCypress = process.env.RUNNING_IN_CYPRESS === 'true';
-	if (runningInCypress) {
-		const cypressMockStateCookie = req.cookies['cypress-mock-state'];
-
-		// check if the cookie value is an expected value
-		const validCode = ['FR', 'GB', 'US', 'AU'].includes(cypressMockStateCookie);
-
-		// if it is then return the code
-		if (validCode) {
-			return countryCodeToRegistrationLocation(cypressMockStateCookie);
-		}
-		// otherwise let it fall through to the default check below
-	}
+	const maybeMockedCountryCode =
+		maybeGetCountryCodeFromCypressMockStateCookie(req);
+	if (maybeMockedCountryCode)
+		return countryCodeToRegistrationLocation(maybeMockedCountryCode);
 	/**
 	 * Cypress Test END
 	 */
