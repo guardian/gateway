@@ -1,6 +1,6 @@
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { Request } from 'express';
-import { Europe } from './getRegistrationLocation';
+import { Europe } from '@/server/lib/getRegistrationLocation';
 import { CountryCode } from '@guardian/libs';
 
 export const getGeolocationRegion = (req: Request): GeoLocation => {

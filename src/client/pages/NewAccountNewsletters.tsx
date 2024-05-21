@@ -11,7 +11,7 @@ import { QueryParams } from '@/shared/model/QueryParams';
 import {
 	InformationBox,
 	InformationBoxText,
-} from '../components/InformationBox';
+} from '@/client/components/InformationBox';
 import { Link } from '@guardian/source-react-components';
 import { NEWSLETTER_IMAGES } from '@/client/models/Newsletter';
 

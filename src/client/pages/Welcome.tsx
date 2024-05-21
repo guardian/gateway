@@ -12,8 +12,8 @@ import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import NameInputField from '@/client/components/NameInputField';
 import { useNameInputFieldError } from '@/client/lib/hooks/useNameFieldInputError';
 import { QueryParams } from '@/shared/model/QueryParams';
-import { MainLayout } from '../layouts/Main';
-import { MainBodyText } from '../components/MainBodyText';
+import { MainLayout } from '@/client/layouts/Main';
+import { MainBodyText } from '@/client/components/MainBodyText';
 
 type Props = {
 	submitUrl: string;

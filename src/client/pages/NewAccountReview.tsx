@@ -1,21 +1,21 @@
 import React from 'react';
-import { MainLayout, buttonStyles } from '../layouts/Main';
-import { MainBodyText } from '../components/MainBodyText';
+import { MainLayout, buttonStyles } from '@/client/layouts/Main';
+import { MainBodyText } from '@/client/components/MainBodyText';
 import { Consent } from '@/shared/model/Consent';
-import { ToggleSwitchInput } from '../components/ToggleSwitchInput';
+import { ToggleSwitchInput } from '@/client/components/ToggleSwitchInput';
 import {
 	InformationBox,
 	InformationBoxText,
-} from '../components/InformationBox';
-import { ExternalLink } from '../components/ExternalLink';
+} from '@/client/components/InformationBox';
+import { ExternalLink } from '@/client/components/ExternalLink';
 import locations from '@/shared/lib/locations';
 import { palette, space, textSans } from '@guardian/source-foundations';
 import { css } from '@emotion/react';
 import { Button } from '@guardian/source-react-components';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-import { CsrfFormField } from '../components/CsrfFormField';
+import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { QueryParams } from '@/shared/model/QueryParams';
-import { consentsFormSubmitOphanTracking } from '../lib/consentsTracking';
+import { consentsFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 
 const consentToggleCss = css`
 	display: flex;
