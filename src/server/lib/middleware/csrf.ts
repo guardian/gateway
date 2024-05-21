@@ -1,9 +1,11 @@
 import csrf from 'csurf';
 import { getConfiguration } from '@/server/lib/getConfiguration';
+import type { ResponseWithRequestState } from '@/server/models/Express';
+import type { NextFunction, Request } from 'express';
 
 const { isHttps } = getConfiguration();
 
-export const csrfMiddleware = csrf({
+const baseCsrfMiddleware = csrf({
 	cookie: {
 		key: '_csrf',
 		sameSite: true,
@@ -12,3 +14,17 @@ export const csrfMiddleware = csrf({
 		signed: true,
 	},
 });
+
+const SKIP_CSRF_ROUTE_PREFIXES = ['/unsubscribe-all/'];
+
+export const csrfMiddleware = (
+	req: Request,
+	res: ResponseWithRequestState,
+	next: NextFunction,
+) => {
+	if (SKIP_CSRF_ROUTE_PREFIXES.find((path) => req.path.startsWith(path))) {
+		next();
+	} else {
+		baseCsrfMiddleware(req, res, next);
+	}
+};

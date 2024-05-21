@@ -7,6 +7,8 @@ import {
 	parseSubscriptionData,
 	makeSubscriptionRequest,
 	EmailType,
+	makeUnsubscribeAllRequest,
+	parseUnsubscribeAllData,
 } from '@/server/lib/idapi/subscriptions';
 import { renderer } from '@/server/lib/renderer';
 import { mergeRequestState } from '@/server/lib/requestState';
@@ -84,6 +86,36 @@ const handler = (action: SubscriptionAction) =>
 
 router.get('/unsubscribe/:emailType/:data/:token', handler('unsubscribe'));
 router.get('/subscribe/:emailType/:data/:token', handler('subscribe'));
+
+router.post(
+	'/unsubscribe-all/:data/:token',
+	async (req: Request, res: ResponseWithRequestState) => {
+		const { data, token } = req.params;
+
+		try {
+			const subscriptionData = parseUnsubscribeAllData(data);
+
+			await makeUnsubscribeAllRequest(
+				subscriptionData,
+				token,
+				req.ip,
+				res.locals.requestId,
+			);
+
+			trackMetric(`UnsubscribeAll::Success`);
+
+			return res.status(200).send();
+		} catch (error) {
+			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
+				request_id: res.locals.requestId,
+			});
+
+			trackMetric(`UnsubscribeAll::Failure`);
+
+			return res.status(500).send();
+		}
+	},
+);
 
 router.get(
 	'/subscribe/success',

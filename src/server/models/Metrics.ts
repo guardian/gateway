@@ -62,6 +62,7 @@ type ConditionalMetrics =
 	| 'SignOut'
 	| 'SignOutGlobal'
 	| 'Unsubscribe'
+	| 'UnsubscribeAll'
 	| 'Subscribe'
 	| 'UpdatePassword'
 	| 'RecaptchaMiddleware'

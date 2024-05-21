@@ -56,6 +56,7 @@ export const ValidRoutePathsArray = [
 	'/unsubscribe/:emailType/:data/:token',
 	'/unsubscribe/success',
 	'/unsubscribe/error',
+	'/unsubscribe-all/:data/:token',
 	'/subscribe/:emailType/:data/:token',
 	'/subscribe/success',
 	'/subscribe/error',
@@ -97,6 +98,7 @@ export type ApiRoutePaths =
 	| '/user/change-email'
 	| '/unsubscribe'
 	| '/subscribe'
+	| '/unsubscribe-all'
 	| '/user'
 	| '/user/me'
 	| '/user/me/consents'
