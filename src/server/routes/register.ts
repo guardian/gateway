@@ -49,7 +49,10 @@ import {
 	selectAuthenticationEnrollSchema,
 } from '@/server/lib/okta/idx/enroll';
 import { interact } from '@/server/lib/okta/idx/interact';
-import { introspect } from '@/server/lib/okta/idx/introspect';
+import {
+	introspect,
+	validateIntrospectRemediation,
+} from '@/server/lib/okta/idx/introspect';
 import {
 	updateAuthorizationStateData,
 	setAuthorizationStateCookie,
@@ -174,12 +177,18 @@ router.post(
 
 			try {
 				// check the state handle is valid and we can proceed with the registration
-				// TODO: possibly check if we can look for a particular remediation property
-				await introspect(
+				const introspectResponse = await introspect(
 					{
 						stateHandle,
 					},
 					requestId,
+				);
+
+				// check if the remediation array contains a "enroll-authenticator"	object
+				// if it does, then we know the stateHandle is valid and we're in the correct state
+				validateIntrospectRemediation(
+					introspectResponse,
+					'enroll-authenticator',
 				);
 
 				// attempt to answer the passcode challenge, if this fails, it falls through to the catch block where we handle the error
@@ -331,12 +340,18 @@ router.post(
 
 			try {
 				// check the state handle is valid
-				// TODO: possibly check if we can look for a particular remediation property
-				await introspect(
+				const introspectResponse = await introspect(
 					{
 						stateHandle,
 					},
 					requestId,
+				);
+
+				// check if the remediation array contains a "enroll-authenticator"	object
+				// if it does, then we know the stateHandle is valid and we're in the correct state
+				validateIntrospectRemediation(
+					introspectResponse,
+					'enroll-authenticator',
 				);
 
 				// attempt to resend the email

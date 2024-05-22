@@ -5,6 +5,7 @@ import {
 	idxBaseResponseSchema,
 	idxFetch,
 } from './shared';
+import { OAuthError } from '@/server/models/okta/Error';
 
 // Schema for the 'redirect-idp' object inside the introspect response remediation object
 export const redirectIdpSchema = baseRemediationValueSchema.merge(
@@ -73,4 +74,31 @@ export const introspect = (
 		schema: introspectResponseSchema,
 		request_id,
 	});
+};
+
+/**
+ * @name validateIntrospectRemediation
+ * @description Validates that the introspect response contains a remediation with the given name, throwing an error if it does not. This is useful for ensuring that the remediation we want to perform is available in the introspect response, and the state is correct.
+ * @param introspectResponse - The introspect response
+ * @param remediationName - The name of the remediation to validate
+ * @throws OAuthError - If the remediation is not found in the introspect response
+ * @returns void
+ */
+export const validateIntrospectRemediation = (
+	introspectResponse: IntrospectResponse,
+	remediationName: string,
+) => {
+	const hasRemediation = introspectResponse.remediation.value.some(
+		({ name }) => name === remediationName,
+	);
+
+	if (!hasRemediation) {
+		throw new OAuthError(
+			{
+				error: 'invalid_request',
+				error_description: `Remediation ${remediationName} not found in introspect response`,
+			},
+			400,
+		);
+	}
 };

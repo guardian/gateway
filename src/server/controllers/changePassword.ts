@@ -46,7 +46,10 @@ import { changePasswordMetric, emailSendMetric } from '@/server/models/Metrics';
 import { getAppPrefix } from '@/shared/lib/appNameUtils';
 import { sendGuardianLiveOfferEmail } from '@/email/templates/GuardianLiveOffer/sendGuardianLiveOfferEmail';
 import { sendMyGuardianOfferEmail } from '@/email/templates/MyGuardianOffer/sendMyGuardianOfferEmail';
-import { introspect } from '@/server/lib/okta/idx/introspect';
+import {
+	introspect,
+	validateIntrospectRemediation,
+} from '@/server/lib/okta/idx/introspect';
 import { setPasswordAndRedirect } from '@/server/lib/okta/idx/challenge';
 import { PasswordFieldErrors } from '@/shared/model/Errors';
 import { isBreachedPassword } from '@/server/lib/breachedPasswordCheck';
@@ -233,17 +236,10 @@ const changePasswordInOkta = async (
 
 				// check if the remediation array contains a "enroll-authenticator"	object
 				// if it does, then we know the stateHandle is valid and we're in the correct state
-				const hasEnrollAuthenticator =
-					introspectResponse.remediation.value.some(
-						(remediation) => remediation.name === 'enroll-authenticator',
-					);
-
-				if (!hasEnrollAuthenticator) {
-					throw new OAuthError({
-						error: 'idx_error',
-						error_description: 'Invalid state handle',
-					});
-				}
+				validateIntrospectRemediation(
+					introspectResponse,
+					'enroll-authenticator',
+				);
 
 				// validate the password field
 				validatePasswordFieldForOkta(password);

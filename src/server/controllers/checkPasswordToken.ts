@@ -26,8 +26,10 @@ import { validateReturnUrl } from '@/server/lib/validateUrl';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { decryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 import { AppName, getAppName, getAppPrefix } from '@/shared/lib/appNameUtils';
-import { introspect } from '@/server/lib/okta/idx/introspect';
-import { OAuthError } from '@/server/models/okta/Error';
+import {
+	introspect,
+	validateIntrospectRemediation,
+} from '@/server/lib/okta/idx/introspect';
 
 const { okta, defaultReturnUri, registrationPasscodesEnabled } =
 	getConfiguration();
@@ -185,17 +187,10 @@ export const checkTokenInOkta = async (
 
 				// check if the remediation array contains a "enroll-authenticator"	object
 				// if it does, then we know the stateHandle is valid and we're in the correct state
-				const hasEnrollAuthenticator =
-					introspectResponse.remediation.value.some(
-						(remediation) => remediation.name === 'enroll-authenticator',
-					);
-
-				if (!hasEnrollAuthenticator) {
-					throw new OAuthError({
-						error: 'idx_error',
-						error_description: 'Invalid state handle',
-					});
-				}
+				validateIntrospectRemediation(
+					introspectResponse,
+					'enroll-authenticator',
+				);
 
 				// show the set password page
 				const html = renderer(
