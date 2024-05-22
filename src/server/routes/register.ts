@@ -63,7 +63,6 @@ import {
 	bodyFormFieldsToRegistrationConsents,
 	encryptRegistrationConsents,
 } from '@/server/lib/registrationConsents';
-import { consentPages } from './consents';
 
 const { okta, registrationPasscodesEnabled } = getConfiguration();
 
@@ -445,7 +444,7 @@ const OktaRegistration = async (
 		try {
 			// start the interaction code flow, and get the interaction handle + authState
 			const [{ interaction_handle }, authState] = await interact(req, res, {
-				confirmationPagePath: consentPages[0].path,
+				confirmationPagePath: '/welcome/review',
 				closeExistingSession: true,
 			});
 

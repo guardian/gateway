@@ -424,7 +424,7 @@ describe('Sign in flow, Okta enabled', () => {
 								expect(user.profile.legacyIdentityId).to.be.undefined;
 								const postSignInReturnUrl = `https://${Cypress.env(
 									'BASE_URI',
-								)}/consents/data`;
+								)}/welcome/review`;
 								const visitUrl = `/signin?returnUrl=${encodeURIComponent(
 									postSignInReturnUrl,
 								)}`;
@@ -432,7 +432,7 @@ describe('Sign in flow, Okta enabled', () => {
 								cy.get('input[name=email]').type(emailAddress);
 								cy.get('input[name=password]').type(finalPassword);
 								cy.get('[data-cy="main-form-submit-button"]').click();
-								cy.url().should('include', '/consents/data');
+								cy.url().should('include', '/welcome/review');
 								cy.getTestOktaUser(emailAddress).then((user) => {
 									expect(user.profile.legacyIdentityId).to.eq(
 										originalLegacyIdentityId,

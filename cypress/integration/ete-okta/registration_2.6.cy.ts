@@ -748,7 +748,7 @@ describe('Registration flow - Split 2/2', () => {
 						expect(oktaUser.profile.registrationPlatform).to.eq('profile');
 					});
 
-					cy.url().should('contain', '/consents/newsletters');
+					cy.url().should('contain', '/welcome/review');
 				},
 			);
 		});
