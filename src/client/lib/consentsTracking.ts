@@ -1,6 +1,6 @@
 import { sendOphanInteractionEvent } from './ophan';
 import { Consent, Consents } from '@/shared/model/Consent';
-import { Newsletters } from '@/shared/model/Newsletter';
+import { NewsLetter, Newsletters } from '@/shared/model/Newsletter';
 
 const trackInputElementInteraction = (
 	inputElem: HTMLInputElement,
@@ -22,11 +22,12 @@ const trackInputElementInteraction = (
 	}
 };
 
+// handle consents form submit event
 export const consentsFormSubmitOphanTracking = (
 	target: HTMLFormElement,
-	consents: Consent[],
-): void => {
-	if (!consents.length) {
+	consents?: Consent[],
+) => {
+	if (!consents?.length) {
 		return;
 	}
 
@@ -36,6 +37,33 @@ export const consentsFormSubmitOphanTracking = (
 
 		if (consent) {
 			trackInputElementInteraction(elem, 'consent', consent.name);
+		}
+	});
+};
+
+// handle newsletter form submit event
+export const newslettersFormSubmitOphanTracking = (
+	target: HTMLFormElement,
+	newsletters?: NewsLetter[],
+): void => {
+	if (!newsletters?.length) {
+		return;
+	}
+
+	const inputElems = target.querySelectorAll('input');
+	inputElems.forEach((elem) => {
+		const newsletter = newsletters.find(({ id }) => id === elem.name);
+
+		if (newsletter) {
+			// if previously subscribed AND now wants to unsubscribe
+			// OR if previously not subscribed AND wants to subscribe
+			// then do the trackInputElementInteraction
+			if (
+				(newsletter.subscribed && !elem.checked) ||
+				(!newsletter.subscribed && elem.checked)
+			) {
+				trackInputElementInteraction(elem, 'newsletter', newsletter.nameId);
+			}
 		}
 	});
 };
@@ -53,6 +81,12 @@ export const registrationFormSubmitOphanTracking = (
 			switch (elem.name) {
 				case Newsletters.SATURDAY_EDITION:
 					trackInputElementInteraction(elem, 'newsletter', 'saturday-edition');
+					break;
+				case Newsletters.AU_BUNDLE:
+					trackInputElementInteraction(elem, 'newsletter', 'au-bundle');
+					break;
+				case Newsletters.US_BUNDLE:
+					trackInputElementInteraction(elem, 'newsletter', 'us-bundle');
 					break;
 				case Consents.SIMILAR_GUARDIAN_PRODUCTS:
 					trackInputElementInteraction(
