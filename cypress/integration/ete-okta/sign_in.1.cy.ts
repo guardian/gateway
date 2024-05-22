@@ -70,13 +70,13 @@ describe('Sign in flow, Okta enabled', () => {
 						// so we attempt to sign them in
 						cy.visit(
 							`/signin?returnUrl=${encodeURIComponent(
-								`https://${Cypress.env('BASE_URI')}/consents`,
+								`https://${Cypress.env('BASE_URI')}/welcome/review`,
 							)}`,
 						);
 						cy.get('input[name=email]').type(emailAddress);
 						cy.get('input[name=password]').type(finalPassword);
 						cy.get('[data-cy="main-form-submit-button"]').click();
-						cy.url().should('include', '/consents');
+						cy.url().should('include', '/welcome/review');
 
 						// at this point the oauth callback route will have run, so we can recheck the user profile to see if the emailValidated flag has been set
 						cy.getTestOktaUser(id).then((user) => {
@@ -102,13 +102,13 @@ describe('Sign in flow, Okta enabled', () => {
 					// Sign our new user in
 					cy.visit(
 						`/signin?returnUrl=${encodeURIComponent(
-							`https://${Cypress.env('BASE_URI')}/consents`,
+							`https://${Cypress.env('BASE_URI')}/welcome/review`,
 						)}`,
 					);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
 					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.url().should('include', '/consents');
+					cy.url().should('include', '/welcome/review');
 
 					// Get the current session data
 					cy.getCookie('idx').then((orignalIdxCookie) => {
@@ -119,10 +119,10 @@ describe('Sign in flow, Okta enabled', () => {
 						// Refresh our user session
 						cy.visit(
 							`/signin/refresh?returnUrl=${encodeURIComponent(
-								`https://${Cypress.env('BASE_URI')}/consents`,
+								`https://${Cypress.env('BASE_URI')}/welcome/review`,
 							)}`,
 						);
-						cy.url().should('include', '/consents');
+						cy.url().should('include', '/welcome/review');
 
 						// Get the refreshed session data
 						cy.getCookie('idx').then((newIdxCookie) => {
@@ -148,13 +148,13 @@ describe('Sign in flow, Okta enabled', () => {
 					// Sign our new user in
 					cy.visit(
 						`/signin?returnUrl=${encodeURIComponent(
-							`https://${Cypress.env('BASE_URI')}/consents`,
+							`https://${Cypress.env('BASE_URI')}/welcome/review`,
 						)}`,
 					);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
 					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.url().should('include', '/consents');
+					cy.url().should('include', '/welcome/review');
 
 					// Get the current session data
 					cy.getCookie('idx').then((idxCookie) => {
@@ -181,25 +181,17 @@ describe('Sign in flow, Okta enabled', () => {
 					// Sign our new user in
 					cy.visit(
 						`/signin?returnUrl=${encodeURIComponent(
-							`https://${Cypress.env('BASE_URI')}/consents`,
+							`https://${Cypress.env('BASE_URI')}/welcome/review`,
 						)}`,
 					);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
 					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.url().should('include', '/consents');
+					cy.url().should('include', '/welcome/review');
 
 					// Delete the Okta idx cookie
-					// strange behaviour form Cypress 12
-					// where we need to delete cookie from both domains
-					// to get the test to pass
-					// cypress 12 seems to have issues with hostOnly cookies not being removed or persisting after clear
-					// https://github.com/cypress-io/cypress/issues/25174
 					cy.clearCookie('idx', {
 						domain: Cypress.env('BASE_URI'),
-					});
-					cy.clearCookie('idx', {
-						domain: `.${Cypress.env('BASE_URI')}`,
 					});
 
 					// Visit the refresh endpoint
@@ -221,13 +213,13 @@ describe('Sign in flow, Okta enabled', () => {
 					// Sign our new user in
 					cy.visit(
 						`/signin?returnUrl=${encodeURIComponent(
-							`https://${Cypress.env('BASE_URI')}/consents`,
+							`https://${Cypress.env('BASE_URI')}/welcome/review`,
 						)}`,
 					);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
 					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.url().should('include', '/consents');
+					cy.url().should('include', '/welcome/review');
 
 					// Delete all cookies (Okta and IDAPI)
 					cy.clearCookies();
@@ -235,7 +227,7 @@ describe('Sign in flow, Okta enabled', () => {
 					// Visit the refresh endpoint
 					cy.visit(
 						`/signin/refresh?returnUrl=${encodeURIComponent(
-							`https://${Cypress.env('BASE_URI')}/consents`,
+							`https://${Cypress.env('BASE_URI')}/welcome/review`,
 						)}`,
 					);
 					cy.url().should('include', '/signin');
@@ -253,13 +245,13 @@ describe('Sign in flow, Okta enabled', () => {
 					// Sign our new user in
 					cy.visit(
 						`/signin?returnUrl=${encodeURIComponent(
-							`https://${Cypress.env('BASE_URI')}/consents`,
+							`https://${Cypress.env('BASE_URI')}/welcome/review`,
 						)}`,
 					);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
 					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.url().should('include', '/consents');
+					cy.url().should('include', '/welcome/review');
 
 					// Get the current session data
 					cy.getCookie('SC_GU_LA').then((originalLastAccessCookie) => {
@@ -270,10 +262,10 @@ describe('Sign in flow, Okta enabled', () => {
 							// Refresh our user session
 							cy.visit(
 								`/signin/refresh?returnUrl=${encodeURIComponent(
-									`https://${Cypress.env('BASE_URI')}/consents`,
+									`https://${Cypress.env('BASE_URI')}/welcome/review`,
 								)}`,
 							);
-							cy.url().should('include', '/consents');
+							cy.url().should('include', '/welcome/review');
 
 							// Expect the last access cookie to be unchanged
 							cy.getCookie('SC_GU_LA').then((lastAccessCookie) => {
@@ -373,13 +365,13 @@ describe('Sign in flow, Okta enabled', () => {
 					// Sign our new user in
 					cy.visit(
 						`/signin?returnUrl=${encodeURIComponent(
-							`https://${Cypress.env('BASE_URI')}/consents`,
+							`https://${Cypress.env('BASE_URI')}/welcome/review`,
 						)}`,
 					);
 					cy.get('input[name=email]').type(emailAddress);
 					cy.get('input[name=password]').type(finalPassword);
 					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.url().should('include', '/consents');
+					cy.url().should('include', '/welcome/review');
 
 					// Get the current session data
 					cy.getCookie('idx').then((originalIdxCookie) => {
@@ -388,7 +380,7 @@ describe('Sign in flow, Okta enabled', () => {
 						// Visit sign in again
 						cy.visit(
 							`/signin?returnUrl=${encodeURIComponent(
-								`https://${Cypress.env('BASE_URI')}/consents`,
+								`https://${Cypress.env('BASE_URI')}/welcome/review`,
 							)}`,
 						);
 						cy.url().should('include', '/signin');
@@ -402,7 +394,7 @@ describe('Sign in flow, Okta enabled', () => {
 								'include',
 								`https://${Cypress.env(
 									'BASE_URI',
-								)}/signin/refresh?returnUrl=https%3A%2F%2Fprofile.thegulocal.com%2Fconsents`,
+								)}/signin/refresh?returnUrl=https%3A%2F%2Fprofile.thegulocal.com%2Fwelcome%2Freview`,
 							);
 						cy.contains('a', 'Sign in')
 							.should('have.attr', 'href')

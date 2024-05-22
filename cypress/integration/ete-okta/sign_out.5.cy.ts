@@ -6,10 +6,10 @@ describe('Sign out flow', () => {
 					isUserEmailValidated: true,
 				})
 				?.then(({ emailAddress, finalPassword }) => {
-					// load the consents page as its on the same domain
+					// load the new account review page as it's on the same domain
 					const postSignInReturnUrl = `https://${Cypress.env(
 						'BASE_URI',
-					)}/consents/data`;
+					)}/welcome/review`;
 					const visitUrl = `/signin?returnUrl=${encodeURIComponent(
 						postSignInReturnUrl,
 					)}`;
@@ -18,7 +18,7 @@ describe('Sign out flow', () => {
 					cy.get('input[name=password]').type(finalPassword);
 					cy.get('[data-cy="main-form-submit-button"]').click();
 					// check sign in has worked first
-					cy.url().should('include', `/consents/data`);
+					cy.url().should('include', `/welcome/review`);
 					// check session cookie is set
 					cy.getCookie('idx').should('exist');
 					// check idapi cookies are set
@@ -34,12 +34,10 @@ describe('Sign out flow', () => {
 					cy.visit(
 						`/signout?returnUrl=${encodeURIComponent(postSignOutReturnUrl)}`,
 					);
-					// cypress 12 seems to have issues with hostOnly cookies not being removed or persisting after clear
-					// https://github.com/cypress-io/cypress/issues/25174
-					// so for now I've changed this check to make sure the "Signed in as" page isn't visible
-					// cy.getCookie('sid').should('not.exist');
-					cy.contains('You are signed in with').should('not.exist');
+
 					// check cookies are removed
+					cy.getCookie('sid').should('not.exist');
+					cy.getCookie('idx').should('not.exist');
 					cy.getCookie('SC_GU_U').should('not.exist');
 					cy.getCookie('SC_GU_LA').should('not.exist');
 					cy.getCookie('GU_U').should('not.exist');

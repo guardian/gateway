@@ -8,22 +8,18 @@ export interface NewsLetter {
 }
 
 export enum Newsletters {
-	DOWN_TO_EARTH = '4147',
-	FIRST_EDITION_UK = '4156',
-	THE_LONG_READ = '4165',
+	// General newsletters
+	WELL_ACTUALLY = '6039',
 	// US newsletters
 	HEADLINES_US = '4152',
-	FIRST_THING_US = '4300',
-	SOCCER_US = '6030',
+	THE_STAKES_US = '6042',
+	TRUMP_ON_TRIAL_US = '6032',
 	// AUS newsletters
 	MORNING_MAIL_AU = '4148',
 	AFTERNOON_UPDATE_AU = '6023',
-	FIVE_GREAT_READS_AU = '6019',
 	THE_CRUNCH_AU = '6034',
-	// EU newsletters
-	TECHSCAPE = '6013',
-	THIS_IS_EUROPE = '4234',
-	// Registration Newsletter
+	SAVED_FOR_LATER_AU = '6003',
+	// Registration newsletters
 	SATURDAY_EDITION = '6031',
 	FEAST = '6002',
 	WEEKEND_MAIL_AU = '6043',
@@ -39,6 +35,15 @@ export const REGISTRATION_NEWSLETTERS: string[] = [
 	Newsletters.WEEKEND_MAIL_AU,
 	Newsletters.WEEKEND_US,
 ];
+export type NewslettersWithImages =
+	| Newsletters.MORNING_MAIL_AU
+	| Newsletters.AFTERNOON_UPDATE_AU
+	| Newsletters.SAVED_FOR_LATER_AU
+	| Newsletters.THE_CRUNCH_AU
+	| Newsletters.HEADLINES_US
+	| Newsletters.THE_STAKES_US
+	| Newsletters.WELL_ACTUALLY
+	| Newsletters.TRUMP_ON_TRIAL_US;
 
 export const ALL_NEWSLETTER_IDS = Object.values(Newsletters);
 

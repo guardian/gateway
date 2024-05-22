@@ -33,7 +33,9 @@ type ConditionalMetrics =
 	| 'ConsentTokenResend'
 	| `${EmailMetrics}EmailSend`
 	| 'EmailValidated'
-	| `${'Get' | 'Post'}ConsentsPage-${string}`
+	| 'NewAccountReview'
+	| 'NewAccountReviewSubmit'
+	| 'NewAccountNewslettersSubmit'
 	| 'JobsGRSGroupAgree'
 	| 'LoginMiddleware'
 	| 'OAuthAuthorization'
@@ -93,13 +95,6 @@ type UnconditionalMetrics =
 export type Metrics =
 	| `${ConditionalMetrics}::${'Success' | 'Failure'}`
 	| UnconditionalMetrics;
-
-// type safe helper method for consent page tracking
-export const consentsPageMetric = (
-	page: string,
-	getOrPost: 'Get' | 'Post',
-	type: 'Success' | 'Failure',
-): Metrics => `${getOrPost}ConsentsPage-${page}::${type}`;
 
 // type safe helper method for email sending metrics
 export const emailSendMetric = (

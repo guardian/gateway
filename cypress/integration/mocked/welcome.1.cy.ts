@@ -91,7 +91,7 @@ describe('Welcome and set password page', () => {
 				url: 'https://api.pwnedpasswords.com/range/*',
 			}).as('breachCheck');
 			cy.visit(`/welcome/fake_token?useIdapi=true`);
-			cy.contains(`Please complete your details for ${defaultEmail}`);
+			cy.contains(`Set a password for Guardian account: ${defaultEmail}`);
 		});
 
 		it('shows prompt to create password without email if none exists', () => {
@@ -101,7 +101,7 @@ describe('Welcome and set password page', () => {
 				url: 'https://api.pwnedpasswords.com/range/*',
 			}).as('breachCheck');
 			cy.visit(`/welcome/fake_token?useIdapi=true`);
-			cy.contains(`Please complete your details for your new account`);
+			cy.contains(`Set a password for your new account.`);
 		});
 	});
 

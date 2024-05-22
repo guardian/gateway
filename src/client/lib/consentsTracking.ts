@@ -1,6 +1,5 @@
-import { PageData } from '@/shared/model/ClientState';
 import { sendOphanInteractionEvent } from './ophan';
-import { Consents } from '@/shared/model/Consent';
+import { Consent, Consents } from '@/shared/model/Consent';
 import { Newsletters } from '@/shared/model/Newsletter';
 
 const trackInputElementInteraction = (
@@ -23,69 +22,22 @@ const trackInputElementInteraction = (
 	}
 };
 
-// handle consents form submit event
-const consentsFormSubmitOphanTracking = (
-	inputElems: NodeListOf<HTMLInputElement>,
-	pageData: PageData,
-): void => {
-	const consents = pageData.consents;
-
-	if (consents) {
-		inputElems.forEach((elem) => {
-			const consent = consents.find(({ id }) => id === elem.name);
-
-			if (consent) {
-				trackInputElementInteraction(elem, 'consent', consent.name);
-			}
-		});
-	}
-};
-
-// handle newsletter form submit event
-const newslettersFormSubmitOphanTracking = (
-	inputElems: NodeListOf<HTMLInputElement>,
-	pageData: PageData,
-): void => {
-	const newsletters = pageData.newsletters;
-
-	if (newsletters) {
-		inputElems.forEach((elem) => {
-			const newsletter = newsletters.find(({ id }) => id === elem.name);
-
-			if (newsletter) {
-				// if previously subscribed AND now wants to unsubscribe
-				// OR if previously not subscribed AND wants to subscribe
-				// then do the trackInputElementInteraction
-				if (
-					(newsletter.subscribed && !elem.checked) ||
-					(!newsletter.subscribed && elem.checked)
-				) {
-					trackInputElementInteraction(elem, 'newsletter', newsletter.nameId);
-				}
-			}
-		});
-	}
-};
-
-// handle generic form (direct to one of the two below based on page)
-export const onboardingFormSubmitOphanTracking = (
-	page: string,
-	pageData: PageData,
+export const consentsFormSubmitOphanTracking = (
 	target: HTMLFormElement,
+	consents: Consent[],
 ): void => {
-	const inputElems = target.querySelectorAll('input');
-
-	// we add a starting slash to the page, to match the route enums
-	switch (`/${page}`) {
-		case '/data':
-			return consentsFormSubmitOphanTracking(inputElems, pageData);
-		case '/newsletters':
-			consentsFormSubmitOphanTracking(inputElems, pageData);
-			newslettersFormSubmitOphanTracking(inputElems, pageData);
-			return;
-		default:
-			return;
+	if (!consents.length) {
+		return;
 	}
+
+	const inputElems = target.querySelectorAll('input');
+	inputElems.forEach((elem) => {
+		const consent = consents.find(({ id }) => id === elem.name);
+
+		if (consent) {
+			trackInputElementInteraction(elem, 'consent', consent.name);
+		}
+	});
 };
 
 // handle registration form submit event on /register/email page and welcome/:social page

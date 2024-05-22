@@ -1,16 +1,14 @@
 import React from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { Consents } from '@/shared/model/Consent';
-import { ConsentsData } from '@/client/pages/ConsentsData';
 
 import { useCmpConsent } from '@/client/lib/hooks/useCmpConsent';
 import { useAdFreeCookie } from '@/client/lib/hooks/useAdFreeCookie';
+import { NewAccountReview } from '@/client/pages/NewAccountReview';
 
-export const ConsentsDataPage = () => {
+export const NewAccountReviewPage = () => {
 	const clientState = useClientState();
-
-	const { pageData = {} } = clientState;
-	const { consents = [] } = pageData;
+	const { pageData: { consents = [] } = {}, queryParams } = clientState;
 
 	// Note: profiling_optout is modelled as profiling_optin for Gateway
 	const profiling = consents.find(
@@ -19,16 +17,18 @@ export const ConsentsDataPage = () => {
 	const advertising = consents.find(
 		(consent) => consent.id === Consents.ADVERTISING,
 	);
-
 	const hasCmpConsent = useCmpConsent();
 	const isDigitalSubscriber = useAdFreeCookie();
 	const shouldPersonalisedAdvertisingPermissionRender =
 		hasCmpConsent && !isDigitalSubscriber;
 
 	return (
-		<ConsentsData
+		<NewAccountReview
 			profiling={profiling}
-			{...(shouldPersonalisedAdvertisingPermissionRender && { advertising })}
+			advertising={
+				shouldPersonalisedAdvertisingPermissionRender ? advertising : undefined
+			}
+			queryParams={queryParams}
 		/>
 	);
 };

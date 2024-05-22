@@ -53,6 +53,8 @@ jest.mock('@/server/lib/middleware/login', () => ({
 jest.mock('@/server/lib/IDAPIFetch');
 jest.mock('@/server/lib/okta/api/authentication');
 jest.mock('@okta/jwt-verifier');
+jest.mock('@/server/lib/idapi/newsletters');
+jest.mock('@/server/lib/newsletters');
 
 describe('Content Security Policy headers', () => {
 	test.each(ValidRoutePathsArray)(

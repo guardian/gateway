@@ -53,3 +53,13 @@ PasswordAlreadySet.args = {
 	passwordSet: true,
 };
 PasswordAlreadySet.storyName = 'with password already set';
+
+export const PasswordAlreadySetJobs = Template.bind({});
+PasswordAlreadySetJobs.args = {
+	email: 'example@theguardian.com',
+	submitUrl: '',
+	passwordSet: true,
+	isJobs: true,
+};
+PasswordAlreadySetJobs.storyName =
+	'with password already set and clientId=jobs';

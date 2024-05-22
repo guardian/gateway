@@ -23,7 +23,6 @@ import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import { IdTokenClaims, TokenSet } from 'openid-client';
 import { updateUser } from '@/server/lib/okta/api/users';
 import { setUserFeatureCookies } from '@/server/lib/user-features';
-import { consentPages } from './consents';
 import {
 	checkAndDeleteOAuthTokenCookies,
 	setOAuthTokenCookie,
@@ -307,9 +306,9 @@ const authenticationHandler = async (
 					// eslint-disable-next-line functional/immutable-data
 					authState.confirmationPage = `/welcome/${path}`;
 				} else {
-					// otherwise fall back to the default consents page
+					// otherwise fall back to the default consents review page
 					// eslint-disable-next-line functional/immutable-data
-					authState.confirmationPage = consentPages[0].path;
+					authState.confirmationPage = '/welcome/review';
 				}
 
 				// also for new social users, we want to make sure they are added to braze
@@ -495,7 +494,15 @@ const authenticationHandler = async (
 		// the fromURI parameter is an undocumented feature from Okta that allows us to
 		// rejoin the authorization code flow after we have set a session cookie on our own platform
 		if (authState.queryParams.fromURI) {
-			return res.redirect(303, authState.queryParams.fromURI);
+			if (authState.data?.isEmailRegistration) {
+				// For email registration users, we want to show the new account review page, but in the app browser
+				// eslint-disable-next-line functional/immutable-data
+				authState.confirmationPage = '/welcome/review';
+			} else {
+				// In this case, they're signing in, rather than registering so take them straight back to the app
+				// without showing any other pages
+				return res.redirect(303, authState.queryParams.fromURI);
+			}
 		}
 
 		// temporary fix: if the user registered on the app (the token will be prefixed),
@@ -505,7 +512,7 @@ const authenticationHandler = async (
 		// This will be fixed when we either use the passcode registration flow.
 		if (
 			authState.data?.appPrefix &&
-			consentPages.some((page) => page.path === authState.confirmationPage)
+			authState.confirmationPage === '/welcome/review'
 		) {
 			// eslint-disable-next-line functional/immutable-data
 			authState.confirmationPage =

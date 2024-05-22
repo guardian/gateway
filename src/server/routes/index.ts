@@ -7,7 +7,6 @@ import { default as signIn } from './signIn';
 import { default as signOut } from './signOut';
 import { default as register } from './register';
 import { default as resetPassword } from './resetPassword';
-import { default as consents } from './consents';
 import { default as verifyEmail } from './verifyEmail';
 import { default as welcome } from './welcome';
 import { default as setPassword } from './setPassword';
@@ -49,9 +48,6 @@ uncachedRoutes.use(resetPassword);
 
 // set password routes
 uncachedRoutes.use(setPassword);
-
-// consents routes
-uncachedRoutes.use(consents);
 
 // verify email routes
 uncachedRoutes.use(verifyEmail);

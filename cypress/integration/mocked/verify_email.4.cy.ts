@@ -95,11 +95,11 @@ describe('Verify email flow', () => {
 			// go to verify email endpoint
 			verifyEmailFlow.goto('avalidtoken', { query: { useIdapi: 'true' } });
 
-			// check if verified email text exists
-			cy.contains(VerifyEmail.CONTENT.EMAIL_VERIFIED);
+			// check if signed in success text exists
+			cy.contains("You're signed in! Welcome to the Guardian.");
 
-			// check if we're on the consents flow
-			cy.url().should('include', '/consents');
+			// check if we're on the new account review page
+			cy.url().should('include', '/welcome/review');
 		});
 
 		it('successfully verifies the email using a token and sets auth cookies, and preserves encoded return url', () => {
@@ -125,11 +125,11 @@ describe('Verify email flow', () => {
 				},
 			});
 
-			// check if verified email text exists
-			cy.contains(VerifyEmail.CONTENT.EMAIL_VERIFIED);
+			// check if signed in success text exists
+			cy.contains("You're signed in! Welcome to the Guardian.");
 
-			// check if we're on the consents flow
-			cy.url().should('include', '/consents');
+			// check if we're on the new account review page
+			cy.url().should('include', '/welcome/review');
 
 			// check return url exists
 			cy.url().should('include', `returnUrl=${returnUrl}`);
@@ -156,11 +156,11 @@ describe('Verify email flow', () => {
 				},
 			});
 
-			// check if verified email text exists
-			cy.contains(VerifyEmail.CONTENT.EMAIL_VERIFIED);
+			// check if signed in success text exists
+			cy.contains("You're signed in! Welcome to the Guardian.");
 
-			// check if we're on the consents flow
-			cy.url().should('include', '/consents');
+			// check if we're on the new account review page
+			cy.url().should('include', '/welcome/review');
 
 			// check return url exists
 			cy.url().should('include', `returnUrl=${encodeURIComponent(returnUrl)}`);

@@ -4,6 +4,7 @@ import {
 	SessionResponse,
 } from '@/server/models/okta/User';
 import { Group } from '@/server/models/okta/Group';
+import { Consent } from '@/shared/model/Consent';
 
 declare global {
 	// eslint-disable-next-line @typescript-eslint/no-namespace
@@ -60,6 +61,7 @@ interface IDAPIUserProfile {
 		packageCode: string;
 		joinedDate: string;
 	}[];
+	consents: Consent[];
 }
 
 interface OktaUserProfile {
