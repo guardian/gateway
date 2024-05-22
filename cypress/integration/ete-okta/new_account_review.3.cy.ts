@@ -5,7 +5,14 @@ import {
 } from '../../support/commands/testUser';
 
 describe('New account review page', () => {
-	it('should show the profiling and personalised advertising checkboxes if CMP accepted', () => {
+	beforeEach(() => {
+		// Intercept the external redirect page.
+		// We just want to check that the redirect happens, not that the page loads.
+		cy.intercept('GET', 'https://m.code.dev-theguardian.com/**', (req) => {
+			req.reply(200);
+		});
+	});
+	it.only('should show the profiling and personalised advertising checkboxes if CMP accepted', () => {
 		const encodedReturnUrl =
 			'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
 		const unregisteredEmail = randomMailosaurEmail();
