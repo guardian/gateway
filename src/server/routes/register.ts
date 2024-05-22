@@ -131,6 +131,7 @@ router.post(
 	}),
 );
 
+// Essentially the email-sent page, but for passcode registration
 router.get('/register/code', (req: Request, res: ResponseWithRequestState) => {
 	const state = res.locals;
 
@@ -157,6 +158,7 @@ router.get('/register/code', (req: Request, res: ResponseWithRequestState) => {
 	);
 });
 
+// Handler for the passcode input form
 router.post(
 	'/register/code',
 	redirectIfLoggedIn,
@@ -166,11 +168,13 @@ router.post(
 
 		const encryptedState = readEncryptedStateCookie(req);
 
+		// make sure we have the encrypted state cookie and the code otherwise redirect to the email registration page
 		if (encryptedState && encryptedState.stateHandle && code) {
 			const { stateHandle } = encryptedState;
 
 			try {
-				// check the state handle is valid
+				// check the state handle is valid and we can proceed with the registration
+				// TODO: possibly check if we can look for a particular remediation property
 				await introspect(
 					{
 						stateHandle,
@@ -178,12 +182,16 @@ router.post(
 					requestId,
 				);
 
+				// attempt to answer the passcode challenge, if this fails, it falls through to the catch block where we handle the error
 				const challengeAnswerResponse = await challengeAnswerPasscode(
 					stateHandle,
 					{ passcode: code },
 					requestId,
 				);
 
+				// if passcode challenge is successful, we can proceed to the next step
+				// which is to enroll a password authenticator, as we still need users to set a password for the time being
+				// we first look for the password authenticator id deep in the response
 				const passwordAuthenticatorId =
 					challengeAnswerResponse.remediation.value
 						.flatMap((remediation) => {
@@ -222,18 +230,20 @@ router.post(
 					throw new OAuthError(
 						{
 							error: 'idx_error',
-							error_description: 'Password authenticator id',
+							error_description: 'Password authenticator id not found',
 						},
 						400,
 					);
 				}
 
+				// start the credential enroll flow
 				await credentialEnroll(
 					stateHandle,
 					{ id: passwordAuthenticatorId[0], methodType: 'password' },
 					requestId,
 				);
 
+				// redirect to the password page to set a password
 				return res.redirect(
 					303,
 					addQueryParamsToPath('/welcome/password', res.locals.queryParams),
@@ -306,6 +316,7 @@ router.post(
 	}),
 );
 
+// Route to resend the email for passcode registration
 router.post(
 	'/register/code/resend',
 	redirectIfLoggedIn,
@@ -314,11 +325,13 @@ router.post(
 
 		const encryptedState = readEncryptedStateCookie(req);
 
+		// make sure we have the state handle
 		if (encryptedState && encryptedState.stateHandle) {
 			const { stateHandle } = encryptedState;
 
 			try {
 				// check the state handle is valid
+				// TODO: possibly check if we can look for a particular remediation property
 				await introspect(
 					{
 						stateHandle,
@@ -408,8 +421,8 @@ const OktaRegistration = async (
 
 	// OKTA IDX API FLOW
 	// Attempt to register the user with Okta using the IDX API
-	// and specifically using passcodes
-	// if there is specific failures, we fall back to the legacy Okta registration flow
+	// and specifically using passcodes.
+	// If there are specific failures, we fall back to the legacy Okta registration flow
 	if (
 		registrationPasscodesEnabled &&
 		res.locals.queryParams.usePasscodeRegistration

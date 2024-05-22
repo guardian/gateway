@@ -208,14 +208,16 @@ const changePasswordInOkta = async (
 	const { password, firstName, secondName } = req.body;
 	const { clientId, signInGateId } = res.locals.queryParams;
 
-	// Okta IDX API Flow for setting a password
+	// OKTA IDX API FLOW
+	// If the user is using the passcode registration flow, we need to handle the password change/creation.
+	// If there are specific failures, we fall back to the legacy Okta change password flow.
 	if (
 		registrationPasscodesEnabled &&
 		res.locals.queryParams.usePasscodeRegistration
 	) {
 		try {
+			// Read the encrypted state cookie to get the state handle and email
 			const encryptedState = readEncryptedStateCookie(req);
-
 			if (
 				encryptedState &&
 				encryptedState.email &&
@@ -230,7 +232,7 @@ const changePasswordInOkta = async (
 				);
 
 				// check if the remediation array contains a "enroll-authenticator"	object
-				// if it does, then we know the stateHandle is valid
+				// if it does, then we know the stateHandle is valid and we're in the correct state
 				const hasEnrollAuthenticator =
 					introspectResponse.remediation.value.some(
 						(remediation) => remediation.name === 'enroll-authenticator',
@@ -243,10 +245,11 @@ const changePasswordInOkta = async (
 					});
 				}
 
+				// validate the password field
 				validatePasswordFieldForOkta(password);
 
+				// check if the password is breached
 				const isBreached = await isBreachedPassword(password);
-
 				if (isBreached) {
 					throw new OAuthError({
 						error: 'password.common',
@@ -254,6 +257,8 @@ const changePasswordInOkta = async (
 					});
 				}
 
+				// Set the password in Okta, redirect the user to set a global session, and then complete
+				// the interaction code flow, eventually redirecting the user back to where they need to go.
 				return await setPasswordAndRedirect(
 					encryptedState.stateHandle,
 					{

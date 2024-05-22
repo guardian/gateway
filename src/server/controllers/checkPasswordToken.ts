@@ -158,15 +158,18 @@ export const checkTokenInOkta = async (
 	const state = res.locals;
 	const { token } = req.params;
 
-	// Okta IDX API Flow for checking a password token
+	// OKTA IDX API FLOW
+	// If the user is using the passcode registration flow, we need to check if the user is
+	// in the correct state to be able to change their password.
+	// If there are specific failures, we fall back to the legacy Okta change password flow.
 	if (
 		registrationPasscodesEnabled &&
 		res.locals.queryParams.usePasscodeRegistration &&
 		path === '/welcome' // only check the state handle for registration passcode flow on the welcome page
 	) {
 		try {
+			// Read the encrypted state cookie to get the state handle and email
 			const encryptedState = readEncryptedStateCookie(req);
-
 			if (
 				encryptedState &&
 				encryptedState.email &&
@@ -181,7 +184,7 @@ export const checkTokenInOkta = async (
 				);
 
 				// check if the remediation array contains a "enroll-authenticator"	object
-				// if it does, then we know the stateHandle is valid
+				// if it does, then we know the stateHandle is valid and we're in the correct state
 				const hasEnrollAuthenticator =
 					introspectResponse.remediation.value.some(
 						(remediation) => remediation.name === 'enroll-authenticator',
@@ -194,6 +197,7 @@ export const checkTokenInOkta = async (
 					});
 				}
 
+				// show the set password page
 				const html = renderer(
 					`${path}/:token`,
 					{
@@ -218,6 +222,7 @@ export const checkTokenInOkta = async (
 				return res.type('html').send(html);
 			}
 		} catch (error) {
+			// if there's an error, log it and fall back to the legacy change password flow
 			logger.error(
 				'IDX API - check state handle token - checkPasswordToken',
 				error,

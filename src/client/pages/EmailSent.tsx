@@ -85,6 +85,7 @@ export const EmailSent = ({
 		}
 	}, [timeUntilTokenExpiry]);
 
+	// autofocus the code input field when the page loads
 	useEffect(() => {
 		if (typeof window !== 'undefined') {
 			const codeInput: HTMLInputElement | null =
