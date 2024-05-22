@@ -14,7 +14,7 @@ import {
 } from '@/client/components/InformationBox';
 import { Link } from '@guardian/source-react-components';
 import { NEWSLETTER_IMAGES } from '@/client/models/Newsletter';
-import { newslettersFormSubmitOphanTracking } from '../lib/consentsTracking';
+import { newslettersFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 
 const consentToggleCss = css`
