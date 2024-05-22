@@ -140,6 +140,7 @@ export const CheckboxInput = ({
 			<div css={inputWrapperStyles}>
 				<Checkbox
 					id={switchName}
+					name={switchName}
 					aria-label={label}
 					checked={defaultChecked}
 					onChange={onToggle}
