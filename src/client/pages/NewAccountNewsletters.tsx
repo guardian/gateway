@@ -14,6 +14,8 @@ import {
 } from '@/client/components/InformationBox';
 import { Link } from '@guardian/source-react-components';
 import { NEWSLETTER_IMAGES } from '@/client/models/Newsletter';
+import { newslettersFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
+import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 
 const consentToggleCss = css`
 	display: flex;
@@ -53,6 +55,9 @@ export const NewAccountNewsletters = ({
 	queryParams,
 	accountManagementUrl = 'https://manage.theguardian.com',
 }: NewAccountNewslettersProps) => {
+	const formTrackingName = 'new-account-newsletters';
+	usePageLoadOphanInteraction(formTrackingName);
+
 	const [checkboxesChecked, setCheckboxesChecked] = React.useState<string[]>(
 		[],
 	);
@@ -82,6 +87,15 @@ export const NewAccountNewsletters = ({
 				submitButtonText={
 					checkboxesChecked.length ? 'Subscribe and continue' : 'Maybe later'
 				}
+				onSubmit={({ target: form }) => {
+					newslettersFormSubmitOphanTracking(
+						form as HTMLFormElement,
+						newsletters,
+					);
+					// onSubmit expects an error object or undefined
+					return undefined;
+				}}
+				formTrackingName={formTrackingName}
 			>
 				{newsletters?.length ? (
 					newsletters.map((newsletter: NewsLetter) => (

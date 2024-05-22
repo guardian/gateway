@@ -1,6 +1,6 @@
 import React from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
-import { NewAccountNewsletters } from './NewAccountNewsletters';
+import { NewAccountNewsletters } from '@/client/pages/NewAccountNewsletters';
 
 export const NewAccountNewslettersPage = () => {
 	const clientState = useClientState();

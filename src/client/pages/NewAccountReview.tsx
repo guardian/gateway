@@ -16,6 +16,8 @@ import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { consentsFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
+import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
+import { trackFormSubmit } from '@/client/lib/ophan';
 
 const consentToggleCss = css`
 	display: flex;
@@ -70,6 +72,9 @@ export const NewAccountReview = ({
 	advertising,
 	queryParams,
 }: NewAccountReviewProps) => {
+	const formTrackingName = 'new-account-review';
+	usePageLoadOphanInteraction(formTrackingName);
+
 	if (!profiling && !advertising) {
 		return (
 			<MainLayout pageHeader="You're signed in! Welcome to the Guardian.">
@@ -95,6 +100,7 @@ export const NewAccountReview = ({
 				action={buildUrlWithQueryParams('/welcome/review', {}, queryParams)}
 				method="post"
 				onSubmit={({ target: form }) => {
+					trackFormSubmit(formTrackingName);
 					consentsFormSubmitOphanTracking(
 						form as HTMLFormElement,
 						[profiling, advertising].filter(Boolean) as Consent[],
