@@ -69,7 +69,7 @@ export const getErrorMessageFromQueryParams = (
 ) => {
 	// show error if account linking required
 	if (error === FederationErrors.SOCIAL_SIGNIN_BLOCKED) {
-		return SignInErrors.ACCOUNT_ALREADY_EXISTS;
+		return SignInErrors.SOCIAL_SIGNIN_ERROR;
 	}
 	// Show error if provisioning failed
 	if (error === RegistrationErrors.PROVISIONING_FAILURE) {

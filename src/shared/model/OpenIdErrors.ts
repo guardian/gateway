@@ -17,4 +17,5 @@ export enum OpenIdErrors {
 
 export enum OpenIdErrorDescriptions {
 	ACCOUNT_LINKING_DENIED_GROUPS = 'User linking was denied because the user is not in any of the specified groups.',
+	USER_STATUS_INVALID = 'User status is invalid.',
 }
