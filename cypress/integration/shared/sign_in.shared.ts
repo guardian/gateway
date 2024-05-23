@@ -368,9 +368,9 @@ export const showsAnErrorMessageAndInformationParagraphWhenAccountLinkingRequire
 					: '/signin?error=accountLinkingRequired';
 				cy.visit(visitUrl);
 				cy.contains(
-					'We cannot sign you in with your social account credentials. Please enter your account password below to sign in.',
+					'We could not sign you in with your social account credentials. Please sign in with your email below.',
 				);
-				cy.contains('Account already exists');
+				cy.contains('Social sign-in unsuccessful');
 			},
 		] as const;
 	};

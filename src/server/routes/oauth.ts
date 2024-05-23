@@ -801,8 +801,9 @@ router.get(
 			// and redirect to the sign in page with the social sign in blocked error
 			if (
 				callbackParams.error === OpenIdErrors.ACCESS_DENIED &&
-				callbackParams.error_description ===
-					OpenIdErrorDescriptions.ACCOUNT_LINKING_DENIED_GROUPS
+				(callbackParams.error_description ===
+					OpenIdErrorDescriptions.ACCOUNT_LINKING_DENIED_GROUPS ||
+					OpenIdErrorDescriptions.USER_STATUS_INVALID)
 			) {
 				trackMetric('OAuthAuthorization::Failure');
 				return res.redirect(
@@ -811,6 +812,9 @@ router.get(
 					}),
 				);
 			}
+
+			// handle the rest of the errors generically
+			return redirectForGenericError(req, res);
 		}
 
 		// exchange the auth code for access token + id token

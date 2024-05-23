@@ -56,12 +56,30 @@ const Links = ({ children }: { children: React.ReactNode }) => (
 	</div>
 );
 
-const getErrorContext = (error: string | undefined) => {
-	if (error === SignInErrors.ACCOUNT_ALREADY_EXISTS) {
+const getErrorContext = (
+	error: string | undefined,
+	queryParams: QueryParams,
+) => {
+	if (error === SignInErrors.SOCIAL_SIGNIN_ERROR) {
 		return (
 			<>
-				We cannot sign you in with your social account credentials. Please enter
-				your account password below to sign in.
+				<div>
+					We could not sign you in with your social account credentials. Please
+					sign in with your email below. If you do not know your password, you
+					can{' '}
+					<Link
+						href={buildUrlWithQueryParams('/reset-password', {}, queryParams)}
+					>
+						reset it here
+					</Link>
+					.
+				</div>
+				<br />
+				<div>
+					If you are still having trouble, please contact our customer service
+					team at{' '}
+					<Link href={locations.SUPPORT_EMAIL_MAILTO}>{SUPPORT_EMAIL}</Link>.
+				</div>
 			</>
 		);
 	} else if (error === RegistrationErrors.PROVISIONING_FAILURE) {
@@ -113,7 +131,7 @@ export const SignIn = ({
 	const formTrackingName = 'sign-in';
 
 	// The page level error is equivalent to this enum if social signin has been blocked.
-	const socialSigninBlocked = pageError === SignInErrors.ACCOUNT_ALREADY_EXISTS;
+	const socialSigninBlocked = pageError === SignInErrors.SOCIAL_SIGNIN_ERROR;
 
 	const { clientId } = queryParams;
 	const isJobs = clientId === 'jobs';
@@ -129,7 +147,7 @@ export const SignIn = ({
 	return (
 		<MainLayout
 			errorOverride={pageError}
-			errorContext={getErrorContext(pageError)}
+			errorContext={getErrorContext(pageError, queryParams)}
 			tabs={tabs}
 			errorSmallMarginBottom={!!pageError}
 			pageHeader="Sign in"
@@ -139,7 +157,7 @@ export const SignIn = ({
 			{showAuthProviderButtons(socialSigninBlocked, queryParams, isJobs)}
 			<MainForm
 				formErrorMessageFromParent={formError}
-				formErrorContextFromParent={getErrorContext(formError)}
+				formErrorContextFromParent={getErrorContext(formError, queryParams)}
 				formAction={buildUrlWithQueryParams(
 					isReauthenticate ? '/reauthenticate' : '/signin',
 					{},

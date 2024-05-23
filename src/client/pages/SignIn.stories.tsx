@@ -47,7 +47,7 @@ WithPageLevelErrorAndEmail.story = {
 export const SocialSigninBlocked = (args: SignInProps) => (
 	<SignIn
 		{...args}
-		pageError={SignInErrors.ACCOUNT_ALREADY_EXISTS}
+		pageError={SignInErrors.SOCIAL_SIGNIN_ERROR}
 		email="someone@theguardian.com"
 	/>
 );
@@ -72,7 +72,7 @@ WithFormLevelErrorAndEmail.story = {
 export const WithFormLevelErrorAndSocialSigninBlocked = (args: SignInProps) => (
 	<SignIn
 		{...args}
-		pageError={SignInErrors.ACCOUNT_ALREADY_EXISTS}
+		pageError={SignInErrors.SOCIAL_SIGNIN_ERROR}
 		formError="This is an error"
 		email="someone@theguardian.com"
 	/>
@@ -107,7 +107,7 @@ WithJobs.story = {
 export const WithJobsAndSocialSigninBlocked = (args: SignInProps) => (
 	<SignIn
 		{...{ ...args, queryParams: { ...args.queryParams, clientId: 'jobs' } }}
-		pageError={SignInErrors.ACCOUNT_ALREADY_EXISTS}
+		pageError={SignInErrors.SOCIAL_SIGNIN_ERROR}
 		email="someone@theguardian.com"
 	/>
 );
