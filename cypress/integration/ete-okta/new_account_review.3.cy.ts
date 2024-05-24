@@ -12,7 +12,7 @@ describe('New account review page', () => {
 			req.reply(200);
 		});
 	});
-	it.only('should show the profiling and personalised advertising checkboxes if CMP accepted', () => {
+	it('should show the profiling and personalised advertising checkboxes if CMP accepted', () => {
 		const encodedReturnUrl =
 			'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
 		const unregisteredEmail = randomMailosaurEmail();
@@ -191,6 +191,7 @@ describe('New account newsletters page', () => {
 			cy.url().should('contain', decodeURIComponent(encodedReturnUrl));
 		});
 	});
+
 	it('should redirect to the newsletters page if the geolocation is AU', () => {
 		const encodedReturnUrl =
 			'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
@@ -230,6 +231,7 @@ describe('New account newsletters page', () => {
 			cy.url().should('contain', decodeURIComponent(encodedReturnUrl));
 		});
 	});
+
 	it('should redirect to the newsletters page if the geolocation is US', () => {
 		const encodedReturnUrl =
 			'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';

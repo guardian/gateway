@@ -343,6 +343,7 @@ router.get(
 	loginMiddlewareOAuth,
 	async (req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
+		const { returnUrl } = state.queryParams;
 		const geolocation = state.pageData.geolocation;
 		const newsletters = await getUserNewsletterSubscriptions({
 			newslettersOnPage: NewsletterMap.get(geolocation) as string[],
@@ -351,6 +352,10 @@ router.get(
 			request_id: state.requestId,
 			accessToken: state.oauthState.accessToken?.toString(),
 		});
+
+		if (newsletters?.length === 0) {
+			return res.redirect(303, returnUrl);
+		}
 
 		const html = renderer('/welcome/newsletters', {
 			pageTitle: 'Choose Newsletters',
