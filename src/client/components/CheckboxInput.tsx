@@ -125,7 +125,8 @@ export const CheckboxInput = ({
 	cssOverrides,
 	onToggle,
 }: CheckboxInputProps): EmotionJSX.Element => {
-	const switchName = id ?? useId();
+	const defaultId = useId();
+	const switchName = id ?? defaultId;
 	const labelId = descriptionId(switchName);
 
 	return (

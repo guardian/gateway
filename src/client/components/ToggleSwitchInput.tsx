@@ -173,7 +173,8 @@ export const ToggleSwitchInput = ({
 	imagePath,
 	cssOverrides,
 }: ToggleSwitchInputProps): EmotionJSX.Element => {
-	const switchName = id ?? useId();
+	const defaultId = useId();
+	const switchName = id ?? defaultId;
 	const labelId = descriptionId(switchName);
 
 	return (
