@@ -504,10 +504,7 @@ router.post(
 const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 	// if registration passcodes are enabled, we need to handle this differently
 	// by using the passcode registration flow
-	if (
-		registrationPasscodesEnabled &&
-		res.locals.queryParams.usePasscodeRegistration
-	) {
+	if (registrationPasscodesEnabled) {
 		return OktaRegistration(req, res);
 	}
 
