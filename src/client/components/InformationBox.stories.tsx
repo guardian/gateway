@@ -5,7 +5,7 @@ import {
 	InformationBoxText,
 	InformationBox,
 } from '@/client/components/InformationBox';
-import { ButtonLink, Link } from '@guardian/source-react-components';
+import { ButtonLink, Link } from '@guardian/source/react-components';
 import { ExternalLink } from '@/client/components/ExternalLink';
 
 export default {

@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
-import { space, textSans } from '@guardian/source-foundations';
-import { TextInput } from '@guardian/source-react-components';
+import { space, textSans } from '@guardian/source/foundations';
+import { TextInput } from '@guardian/source/react-components';
 
 import React, { FieldsetHTMLAttributes, useState, useEffect } from 'react';
 import {

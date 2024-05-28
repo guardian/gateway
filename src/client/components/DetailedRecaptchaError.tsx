@@ -1,5 +1,5 @@
 import React from 'react';
-import { space } from '@guardian/source-foundations';
+import { space } from '@guardian/source/foundations';
 import { errorContextSpacing } from '@/client/styles/Shared';
 import locations from '@/shared/lib/locations';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';

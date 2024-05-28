@@ -1,7 +1,7 @@
 import React from 'react';
 import { MjmlSection, MjmlColumn, MjmlText } from '@faire/mjml-react';
 
-import { background, text } from '@guardian/source-foundations';
+import { background, text } from '@guardian/source/foundations';
 import { Link } from '@/email/components/Link';
 import locations from '@/shared/lib/locations';
 import { SUPPORT_EMAIL } from '@/shared/model/Configuration';

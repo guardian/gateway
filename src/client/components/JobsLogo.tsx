@@ -1,7 +1,7 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { LogoProps } from '@guardian/source-react-components-development-kitchen';
-import { from, visuallyHidden } from '@guardian/source-foundations';
+import { LogoProps } from '@guardian/source-development-kitchen/react-components';
+import { from, visuallyHidden } from '@guardian/source/foundations';
 import jobsLogo from '@/client/assets/jobs/jobs-logo.png';
 
 const imgSize = css`

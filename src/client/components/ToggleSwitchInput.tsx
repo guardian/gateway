@@ -1,6 +1,6 @@
 import React from 'react';
 import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import type { Props } from '@guardian/source-react-components';
+import type { Props } from '@guardian/source/react-components';
 import { css } from '@emotion/react';
 import {
 	neutral,
@@ -11,7 +11,7 @@ import {
 	descriptionId,
 	generateSourceId,
 	space,
-} from '@guardian/source-foundations';
+} from '@guardian/source/foundations';
 
 const switchVariables = {
 	width: 44,

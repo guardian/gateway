@@ -1,5 +1,5 @@
 import React, { ReactNode, useState } from 'react';
-import { LinkButton } from '@guardian/source-react-components';
+import { LinkButton } from '@guardian/source/react-components';
 
 import { buttonStyles, MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';

@@ -7,10 +7,10 @@ import {
 	brandLine,
 	headline,
 	from,
-} from '@guardian/source-foundations';
+} from '@guardian/source/foundations';
 import { Container } from '@/client/components/Container';
 import { RoutePaths } from '@/shared/model/Routes';
-import { Link } from '@guardian/source-react-components';
+import { Link } from '@guardian/source/react-components';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 

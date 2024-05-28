@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { css, Global } from '@emotion/react';
-import { neutral } from '@guardian/source-foundations';
+import { neutral } from '@guardian/source/foundations';
 import { fontFaces } from '@/client/lib/fonts';
 import { ClientStateProvider } from '@/client/components/ClientState';
 import { ClientState } from '@/shared/model/ClientState';

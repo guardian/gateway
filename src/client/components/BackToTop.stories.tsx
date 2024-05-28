@@ -1,7 +1,7 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import { Meta } from '@storybook/react';
-import { brand } from '@guardian/source-foundations';
+import { brand } from '@guardian/source/foundations';
 
 import { BackToTop } from '@/client/components/BackToTop';
 

@@ -6,11 +6,11 @@ import {
 	neutral,
 	space,
 	text,
-} from '@guardian/source-foundations';
+} from '@guardian/source/foundations';
 import {
 	ErrorSummary,
 	SuccessSummary,
-} from '@guardian/source-react-components-development-kitchen';
+} from '@guardian/source-development-kitchen/react-components';
 import { gridRow, gridItem, SpanDefinition } from '@/client/styles/Grid';
 import { Header } from '@/client/components/Header';
 import { Footer } from '@/client/components/Footer';

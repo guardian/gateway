@@ -2,7 +2,7 @@ import React from 'react';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import locations from '@/shared/lib/locations';
-import { Divider } from '@guardian/source-react-components-development-kitchen';
+import { Divider } from '@guardian/source-development-kitchen/react-components';
 import { divider } from '@/client/styles/Shared';
 
 export const DeleteAccountReturnLink = () => (

@@ -1,5 +1,5 @@
 const path = require('path');
-const { neutral } = require('@guardian/source-foundations');
+const { neutral } = require('@guardian/source/foundations');
 const deepmerge = require('deepmerge');
 const sharedLoader = require('../.swcrc.config');
 const config = {

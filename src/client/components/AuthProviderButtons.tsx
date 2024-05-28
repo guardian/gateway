@@ -1,12 +1,12 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { space, brand, from } from '@guardian/source-foundations';
+import { space, brand, from } from '@guardian/source/foundations';
 import {
 	LinkButton,
 	SvgGoogleBrand,
 	SvgAppleBrand,
 	SvgEnvelope,
-} from '@guardian/source-react-components';
+} from '@guardian/source/react-components';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { IsNativeApp } from '@/shared/model/ClientState';

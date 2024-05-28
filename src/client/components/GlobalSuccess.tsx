@@ -5,8 +5,8 @@ import {
 	success,
 	neutral,
 	textSans,
-} from '@guardian/source-foundations';
-import { SvgTickRound } from '@guardian/source-react-components';
+} from '@guardian/source/foundations';
+import { SvgTickRound } from '@guardian/source/react-components';
 import {
 	COLUMNS,
 	gridItem,

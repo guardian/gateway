@@ -2,11 +2,11 @@ import React from 'react';
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 import { withThemeFromJSXProvider } from '@storybook/addon-themes';
 import { Global, css } from '@emotion/react';
-import { FocusStyleManager } from '@guardian/source-foundations';
+import { FocusStyleManager } from '@guardian/source/foundations';
 import { fontFaces } from '@/client/lib/fonts';
 import { Breakpoints } from '@/client/models/Style';
 import clientStateDecorator from './clientStateDecorator';
-import { neutral } from '@guardian/source-foundations';
+import { neutral } from '@guardian/source/foundations';
 
 const GlobalStyles = () => (
 	<Global

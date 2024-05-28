@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { border, from, space } from '@guardian/source-foundations';
+import { border, from, space } from '@guardian/source/foundations';
 
 export const disableAutofillBackground = css`
 	:-webkit-autofill {

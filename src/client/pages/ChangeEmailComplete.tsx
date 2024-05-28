@@ -2,7 +2,7 @@ import React from 'react';
 import { ExternalLinkButton } from '@/client/components/ExternalLink';
 import { buttonStyles, MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
-import { SvgArrowRightStraight } from '@guardian/source-react-components';
+import { SvgArrowRightStraight } from '@guardian/source/react-components';
 
 type ChangeEmailCompleteProps = {
 	returnUrl?: string;

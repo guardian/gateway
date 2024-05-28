@@ -8,8 +8,8 @@ import {
 	space,
 	textSans,
 	from,
-} from '@guardian/source-foundations';
-import { Hide } from '@guardian/source-react-components';
+} from '@guardian/source/foundations';
+import { Hide } from '@guardian/source/react-components';
 import locations from '@/shared/lib/locations';
 import { BackToTop } from '@/client/components/BackToTop';
 import { Container } from '@/client/components/Container';

@@ -9,14 +9,14 @@ import {
 	SvgInfo,
 	SvgAlertTriangle,
 	SvgCheckmark,
-} from '@guardian/source-react-components';
+} from '@guardian/source/react-components';
 import {
 	success,
 	error,
 	neutral,
 	textSans,
 	space,
-} from '@guardian/source-foundations';
+} from '@guardian/source/foundations';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { css } from '@emotion/react';
 import {
