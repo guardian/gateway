@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, ReactNode, useState } from 'react';
-import { Link } from '@guardian/source-react-components';
+import { Link } from '@guardian/source/react-components';
 import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { MainForm } from '@/client/components/MainForm';

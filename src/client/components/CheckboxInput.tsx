@@ -1,6 +1,6 @@
 import React from 'react';
 import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
-import { Checkbox } from '@guardian/source-react-components';
+import { Checkbox } from '@guardian/source/react-components';
 import { SerializedStyles, css } from '@emotion/react';
 import {
 	textSans,
@@ -10,7 +10,7 @@ import {
 	space,
 	palette,
 	textSans12,
-} from '@guardian/source-foundations';
+} from '@guardian/source/foundations';
 
 const switchVariables = {
 	width: 44,

@@ -1,4 +1,4 @@
-import { TextInput, TextInputProps } from '@guardian/source-react-components';
+import { TextInput, TextInputProps } from '@guardian/source/react-components';
 import React from 'react';
 import { disableAutofillBackground } from '@/client/styles/Shared';
 import {

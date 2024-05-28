@@ -3,7 +3,7 @@ import {
 	LinkButtonProps,
 	Link,
 	LinkProps,
-} from '@guardian/source-react-components';
+} from '@guardian/source/react-components';
 import React from 'react';
 
 export const ExternalLink = (props: LinkProps) => (

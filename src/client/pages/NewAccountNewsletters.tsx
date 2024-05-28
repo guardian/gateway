@@ -1,7 +1,7 @@
 import React from 'react';
 import { MainLayout } from '@/client/layouts/Main';
 import { NewsLetter, NewslettersWithImages } from '@/shared/model/Newsletter';
-import { palette, space, textSans } from '@guardian/source-foundations';
+import { palette, space, textSans } from '@guardian/source/foundations';
 import { css } from '@emotion/react';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { CheckboxInput } from '@/client/components/CheckboxInput';
@@ -12,7 +12,7 @@ import {
 	InformationBox,
 	InformationBoxText,
 } from '@/client/components/InformationBox';
-import { Link } from '@guardian/source-react-components';
+import { Link } from '@guardian/source/react-components';
 import { NEWSLETTER_IMAGES } from '@/client/models/Newsletter';
 import { newslettersFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';

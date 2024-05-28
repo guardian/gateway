@@ -478,7 +478,7 @@ Example of styling and adding it to a `p` tag using Emotion and Source:
 ```tsx
 import React from 'react';
 import { css } from '@emotion/react';
-import { textSans, neutral } from '@guardian/source-foundations';
+import { textSans, neutral } from '@guardian/source/foundations';
 
 // style the tag using the css string literal
 const p = css`

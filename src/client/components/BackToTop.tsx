@@ -6,8 +6,8 @@ import {
 	brandAlt,
 	textSans,
 	space,
-} from '@guardian/source-foundations';
-import { Link } from '@guardian/source-react-components';
+} from '@guardian/source/foundations';
+import { Link } from '@guardian/source/react-components';
 
 const iconContainer = css`
 	position: relative;

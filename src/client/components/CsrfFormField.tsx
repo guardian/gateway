@@ -1,7 +1,7 @@
 import React from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { css } from '@emotion/react';
-import { error, space, textSans } from '@guardian/source-foundations';
+import { error, space, textSans } from '@guardian/source/foundations';
 
 const csrfErrorStyle = css`
 	margin-bottom: ${space[4]}px;

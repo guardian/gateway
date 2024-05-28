@@ -6,7 +6,7 @@ import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import {
 	Button,
 	SvgArrowRightStraight,
-} from '@guardian/source-react-components';
+} from '@guardian/source/react-components';
 import { QueryParams } from '@/shared/model/QueryParams';
 
 interface Props {

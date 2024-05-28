@@ -6,7 +6,7 @@ import {
 	space,
 	headline,
 	from,
-} from '@guardian/source-foundations';
+} from '@guardian/source/foundations';
 import { Container } from '@/client/components/Container';
 
 type Props = {

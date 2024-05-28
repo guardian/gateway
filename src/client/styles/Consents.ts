@@ -5,7 +5,7 @@ import {
 	textSans,
 	neutral,
 	from,
-} from '@guardian/source-foundations';
+} from '@guardian/source/foundations';
 
 export const heading = css`
 	color: ${neutral[0]};

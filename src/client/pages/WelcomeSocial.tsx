@@ -11,13 +11,13 @@ import {
 	remWidth,
 	space,
 	textSans,
-} from '@guardian/source-foundations';
+} from '@guardian/source/foundations';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import {
 	SvgAppleBrand,
 	SvgGoogleBrand,
 	SvgTickRound,
-} from '@guardian/source-react-components';
+} from '@guardian/source/react-components';
 import { SocialProvider } from '@/shared/model/Social';
 import { GeoLocation } from '@/shared/model/Geolocation';
 import { registrationFormSubmitOphanTracking } from '@/client/lib/consentsTracking';

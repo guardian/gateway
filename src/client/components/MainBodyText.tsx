@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 import { css, SerializedStyles } from '@emotion/react';
-import { space, text, textSans } from '@guardian/source-foundations';
+import { space, text, textSans } from '@guardian/source/foundations';
 interface Props {
 	noMarginBottom?: boolean;
 	marginTop?: boolean;

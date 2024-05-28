@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-duplicate-enum-values */
 import { SerializedStyles, css } from '@emotion/react';
-import { from, space } from '@guardian/source-foundations';
+import { from, space } from '@guardian/source/foundations';
 
 export enum COLUMNS {
 	MOBILE = 4,

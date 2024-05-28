@@ -1,7 +1,7 @@
 import React from 'react';
 import { css, SerializedStyles } from '@emotion/react';
-import { brand, from, space, neutral } from '@guardian/source-foundations';
-import { Logo } from '@guardian/source-react-components-development-kitchen';
+import { brand, from, space, neutral } from '@guardian/source/foundations';
+import { Logo } from '@guardian/source-development-kitchen/react-components';
 import { JobsLogo } from '@/client/components/JobsLogo';
 import { gridRow, manualRow, SpanDefinition } from '@/client/styles/Grid';
 import { IsNativeApp } from '@/shared/model/ClientState';

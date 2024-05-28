@@ -7,14 +7,14 @@ import React, {
 	useState,
 } from 'react';
 import { css } from '@emotion/react';
-import { Button, ButtonLink } from '@guardian/source-react-components';
+import { Button, ButtonLink } from '@guardian/source/react-components';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import {
 	GuardianTerms,
 	JobsTerms,
 	RecaptchaTerms,
 } from '@/client/components/Terms';
-import { space } from '@guardian/source-foundations';
+import { space } from '@guardian/source/foundations';
 import { buttonStyles } from '@/client/layouts/Main';
 import {
 	RecaptchaWrapper,
@@ -25,7 +25,7 @@ import { DetailedRecaptchaError } from '@/client/components/DetailedRecaptchaErr
 import { RefTrackingFormFields } from '@/client/components/RefTrackingFormFields';
 import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 import { logger } from '@/client/lib/clientSideLogger';
-import { ErrorSummary } from '@guardian/source-react-components-development-kitchen';
+import { ErrorSummary } from '@guardian/source-development-kitchen/react-components';
 import {
 	InformationBox,
 	InformationBoxText,

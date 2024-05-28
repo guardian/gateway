@@ -9,7 +9,7 @@ import { CaptchaErrors, CsrfErrors } from '@/shared/model/Errors';
 import { tests } from '@/shared/model/experiments/abTests';
 import { abSwitches } from '@/shared/model/experiments/abSwitches';
 import { buildUrl, PathParams } from '@/shared/lib/routeUtils';
-import { brandBackground, resets } from '@guardian/source-foundations';
+import { brandBackground, resets } from '@guardian/source/foundations';
 import deepmerge from 'deepmerge';
 import { RoutePaths } from '@/shared/model/Routes';
 import { PageTitle } from '@/shared/model/PageTitle';

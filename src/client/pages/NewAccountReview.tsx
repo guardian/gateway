@@ -9,9 +9,9 @@ import {
 } from '@/client/components/InformationBox';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import locations from '@/shared/lib/locations';
-import { palette, space, textSans } from '@guardian/source-foundations';
+import { palette, space, textSans } from '@guardian/source/foundations';
 import { css } from '@emotion/react';
-import { Button } from '@guardian/source-react-components';
+import { Button } from '@guardian/source/react-components';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { QueryParams } from '@/shared/model/QueryParams';

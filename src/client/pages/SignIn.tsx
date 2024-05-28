@@ -9,9 +9,9 @@ import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphan
 import { EmailInput } from '@/client/components/EmailInput';
 import { PasswordInput } from '@/client/components/PasswordInput';
 import { css } from '@emotion/react';
-import { from, space, textSans } from '@guardian/source-foundations';
-import { Link } from '@guardian/source-react-components';
-import { Divider } from '@guardian/source-react-components-development-kitchen';
+import { from, space, textSans } from '@guardian/source/foundations';
+import { Link } from '@guardian/source/react-components';
+import { Divider } from '@guardian/source-development-kitchen/react-components';
 import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
 import { divider, socialButtonDivider } from '@/client/styles/Shared';
 import { GuardianTerms, JobsTerms } from '@/client/components/Terms';

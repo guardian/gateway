@@ -1,10 +1,10 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { space, until } from '@guardian/source-foundations';
+import { space, until } from '@guardian/source/foundations';
 import {
 	LinkButton,
 	SvgArrowRightStraight,
-} from '@guardian/source-react-components';
+} from '@guardian/source/react-components';
 import { PasswordForm } from '@/client/components/PasswordForm';
 import { FieldError } from '@/shared/model/ClientState';
 import { getAutoRow, passwordFormSpanDef } from '@/client/styles/Grid';

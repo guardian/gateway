@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 import { css } from '@emotion/react';
-import { palette, space, textSans } from '@guardian/source-foundations';
+import { palette, space, textSans } from '@guardian/source/foundations';
 
 interface InformationBoxProps {
 	withMarginTop?: boolean;

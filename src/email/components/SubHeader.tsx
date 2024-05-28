@@ -6,7 +6,7 @@ import {
 	MjmlText,
 	MjmlDivider,
 } from '@faire/mjml-react';
-import { background, text } from '@guardian/source-foundations';
+import { background, text } from '@guardian/source/foundations';
 
 type Props = { children: React.ReactNode };
 

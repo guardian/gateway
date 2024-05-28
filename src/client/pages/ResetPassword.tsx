@@ -7,7 +7,7 @@ import {
 } from '@/client/components/MainForm';
 import { EmailInput } from '@/client/components/EmailInput';
 import { MainBodyText } from '@/client/components/MainBodyText';
-import { InfoSummary } from '@guardian/source-react-components-development-kitchen';
+import { InfoSummary } from '@guardian/source-development-kitchen/react-components';
 import locations from '@/shared/lib/locations';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
