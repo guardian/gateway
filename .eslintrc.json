@@ -8,8 +8,6 @@
 		"plugin:jsx-a11y/recommended",
 		"plugin:functional/no-mutations",
 		"plugin:react-hooks/recommended",
-		"plugin:@guardian/source-foundations/recommended",
-		"plugin:@guardian/source-react-components/recommended",
 		"plugin:storybook/recommended"
 	],
 	"parserOptions": {
