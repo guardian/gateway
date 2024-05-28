@@ -214,10 +214,7 @@ const changePasswordInOkta = async (
 	// OKTA IDX API FLOW
 	// If the user is using the passcode registration flow, we need to handle the password change/creation.
 	// If there are specific failures, we fall back to the legacy Okta change password flow.
-	if (
-		registrationPasscodesEnabled &&
-		res.locals.queryParams.usePasscodeRegistration
-	) {
+	if (registrationPasscodesEnabled) {
 		try {
 			// Read the encrypted state cookie to get the state handle and email
 			const encryptedState = readEncryptedStateCookie(req);

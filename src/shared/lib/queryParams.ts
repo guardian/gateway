@@ -42,7 +42,6 @@ export const getPersistableQueryParams = (
 	fromURI: params.fromURI,
 	appClientId: params.appClientId,
 	signInGateId: params.signInGateId,
-	usePasscodeRegistration: params.usePasscodeRegistration,
 });
 
 /**

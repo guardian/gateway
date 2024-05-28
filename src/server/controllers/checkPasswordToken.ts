@@ -166,7 +166,6 @@ export const checkTokenInOkta = async (
 	// If there are specific failures, we fall back to the legacy Okta change password flow.
 	if (
 		registrationPasscodesEnabled &&
-		res.locals.queryParams.usePasscodeRegistration &&
 		path === '/welcome' // only check the state handle for registration passcode flow on the welcome page
 	) {
 		try {

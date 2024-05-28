@@ -49,8 +49,6 @@ export interface PersistableQueryParams
 	fromURI?: string;
 	// This is the client Id of a calling application in Okta (ie iOS app etc)
 	appClientId?: string;
-	// temporary flag to enable passcode registration
-	usePasscodeRegistration?: boolean;
 }
 
 /**
