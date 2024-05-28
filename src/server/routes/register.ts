@@ -63,6 +63,7 @@ import {
 	bodyFormFieldsToRegistrationConsents,
 	encryptRegistrationConsents,
 } from '@/server/lib/registrationConsents';
+import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared';
 
 const { okta, registrationPasscodesEnabled } = getConfiguration();
 
@@ -144,10 +145,9 @@ router.get('/register/code', (req: Request, res: ResponseWithRequestState) => {
 			requestState: mergeRequestState(state, {
 				pageData: {
 					email: readEncryptedStateCookie(req)?.email,
-					timeUntilTokenExpiry: encryptedState.stateHandleExpiresAt
-						? new Date(encryptedState.stateHandleExpiresAt).getTime() -
-							Date.now()
-						: undefined,
+					timeUntilTokenExpiry: convertExpiresAtToExpiryTimeInMs(
+						encryptedState.stateHandleExpiresAt,
+					),
 				},
 			}),
 			pageTitle: 'Check Your Inbox',
@@ -268,10 +268,9 @@ router.post(
 								},
 								pageData: {
 									email: readEncryptedStateCookie(req)?.email,
-									timeUntilTokenExpiry: encryptedState.stateHandleExpiresAt
-										? new Date(encryptedState.stateHandleExpiresAt).getTime() -
-											Date.now()
-										: undefined,
+									timeUntilTokenExpiry: convertExpiresAtToExpiryTimeInMs(
+										encryptedState.stateHandleExpiresAt,
+									),
 									fieldErrors: [
 										{
 											field: 'code',
