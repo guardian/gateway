@@ -1,0 +1,94 @@
+{
+	"code": 200,
+	"response": {
+		"version": "1.0.0",
+		"stateHandle": "02.id.state~c.handle",
+		"expiresAt": "2099-12-31T23:59:59.000Z",
+		"remediation": {
+			"type": "array",
+			"value": [
+				{
+					"rel": ["create-form"],
+					"name": "identify",
+					"href": "https://profile.thegulocal.com/idp/idx/identify",
+					"method": "POST",
+					"produces": "application/ion+json; okta-version=1.0.0",
+					"value": [
+						{
+							"name": "identifier",
+							"label": "Username",
+							"required": true
+						},
+						{
+							"name": "rememberMe",
+							"type": "boolean",
+							"label": "Remember this device"
+						},
+						{
+							"name": "stateHandle",
+							"required": true,
+							"value": "02.id.state~c.handle",
+							"visible": false,
+							"mutable": false
+						}
+					],
+					"accepts": "application/json; okta-version=1.0.0"
+				},
+				{
+					"rel": ["create-form"],
+					"name": "select-enroll-profile",
+					"href": "https://profile.thegulocal.com/idp/idx/enroll",
+					"method": "POST",
+					"produces": "application/ion+json; okta-version=1.0.0",
+					"value": [
+						{
+							"name": "stateHandle",
+							"required": true,
+							"value": "02.id.state~c.handle",
+							"visible": false,
+							"mutable": false
+						}
+					],
+					"accepts": "application/json; okta-version=1.0.0"
+				},
+				{
+					"rel": ["create-form"],
+					"name": "unlock-account",
+					"href": "https://profile.thegulocal.com/idp/idx/unlock-account",
+					"method": "POST",
+					"produces": "application/ion+json; okta-version=1.0.0",
+					"value": [
+						{
+							"name": "stateHandle",
+							"required": true,
+							"value": "02.id.state~c.handle",
+							"visible": false,
+							"mutable": false
+						}
+					],
+					"accepts": "application/json; okta-version=1.0.0"
+				},
+				{
+					"name": "redirect-idp",
+					"type": "APPLE",
+					"idp": {
+						"id": "apple",
+						"name": "Apple Auth"
+					},
+					"href": "https://profile.thegulocal.com/oauth2/aus3v9gla95Toj0EE0x7/v1/authorize?client_id=0oa4iyjx692Aj8SlZ0x7&request_uri=urn:okta:VHpUbjZjSUtKLVBQaUs2M0pXaWFhTFM2Tm5feVA0eWRiTm9QLVV3U2gzSTowb2ExcXc3MjRmZ3JMSjQ2YjB4Nw",
+					"method": "GET"
+				},
+				{
+					"name": "redirect-idp",
+					"type": "GOOGLE",
+					"idp": {
+						"id": "google",
+						"name": "Google Auth"
+					},
+					"href": "https://profile.thegulocal.com/oauth2/aus3v9gla95Toj0EE0x7/v1/authorize?client_id=0oa4iyjx692Aj8SlZ0x7&request_uri=urn:okta:VHpUbjZjSUtKLVBQaUs2M0pXaWFhTFM2Tm5feVA0eWRiTm9QLVV3U2gzSTowb2ExcXdhZGJtd3BGZXhvUTB4Nw",
+					"method": "GET"
+				}
+			]
+		}
+	}
+}

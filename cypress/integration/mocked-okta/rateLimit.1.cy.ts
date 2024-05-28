@@ -73,7 +73,7 @@ describe('POST requests return a user-facing error message when encountering a r
 			errorCauses: [],
 		});
 		cy.get('button[type=submit]').click();
-		cy.contains('Sorry, something went wrong. Please try again.');
+		cy.contains('There was a problem registering, please try again.');
 	});
 
 	specify('Submit /welcome/expired', () => {
@@ -88,7 +88,7 @@ describe('POST requests return a user-facing error message when encountering a r
 			errorCauses: [],
 		});
 		cy.get('button[type=submit]').click();
-		cy.contains('Sorry, something went wrong. Please try again.');
+		cy.contains('There was a problem registering, please try again.');
 	});
 
 	specify('Submit /reset-password/resend', () => {
