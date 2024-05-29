@@ -255,14 +255,17 @@ const changePasswordInOkta = async (
 
 				// Set the password in Okta, redirect the user to set a global session, and then complete
 				// the interaction code flow, eventually redirecting the user back to where they need to go.
-				return await setPasswordAndRedirect(
-					encryptedState.stateHandle,
-					{
+				return await setPasswordAndRedirect({
+					stateHandle: encryptedState.stateHandle,
+
+					body: {
 						passcode: password,
 					},
-					res,
-					res.locals.requestId,
-				);
+					expressReq: req,
+					expressRes: res,
+					path,
+					request_id: res.locals.requestId,
+				});
 			}
 		} catch (error) {
 			logger.error('Okta IDX setPassword failure', error, {
