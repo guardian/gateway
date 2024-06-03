@@ -105,7 +105,7 @@
 		"jest-environment-jsdom": "^29.7.0",
 		"jest-mock": "^29.7.0",
 		"nodemon": "^3.1.1",
-		"prettier": "^3.2.5",
+		"prettier": "^3.3.0",
 		"react-docgen-typescript-plugin": "^1.0.6",
 		"require-from-string": "^2.0.2",
 		"sharp": "^0.33.4",
