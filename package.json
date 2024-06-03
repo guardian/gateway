@@ -126,7 +126,7 @@
 		"zod-to-json-schema": "^3.23.0"
 	},
 	"dependencies": {
-		"@aws-sdk/client-cloudwatch": "^3.583.0",
+		"@aws-sdk/client-cloudwatch": "^3.588.0",
 		"@aws-sdk/client-kinesis": "^3.583.0",
 		"@aws-sdk/client-sesv2": "^3.583.0",
 		"@aws-sdk/credential-providers": "^3.583.0",
