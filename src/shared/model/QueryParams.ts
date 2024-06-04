@@ -49,6 +49,8 @@ export interface PersistableQueryParams
 	fromURI?: string;
 	// This is the client Id of a calling application in Okta (ie iOS app etc)
 	appClientId?: string;
+	// Temporary flag to enable full passwordless flow
+	usePasswordlessFlow?: boolean;
 }
 
 /**

@@ -23,6 +23,11 @@ interface FeatureSwitches {
 		CODE: boolean;
 		PROD: boolean;
 	};
+	fullPasswordlessEnabled: {
+		DEV: boolean;
+		CODE: boolean;
+		PROD: boolean;
+	};
 }
 
 export const featureSwitches: FeatureSwitches = {
@@ -38,6 +43,11 @@ export const featureSwitches: FeatureSwitches = {
 		PROD: true,
 	},
 	registrationPasscodesEnabled: {
+		DEV: true,
+		CODE: true,
+		PROD: false,
+	},
+	fullPasswordlessEnabled: {
 		DEV: true,
 		CODE: true,
 		PROD: false,
