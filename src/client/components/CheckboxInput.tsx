@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useId } from 'react';
 import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import { Checkbox } from '@guardian/source/react-components';
 import { SerializedStyles, css } from '@emotion/react';
@@ -6,7 +6,6 @@ import {
 	textSans,
 	focusHalo,
 	descriptionId,
-	generateSourceId,
 	space,
 	palette,
 	textSans12,
@@ -126,7 +125,8 @@ export const CheckboxInput = ({
 	cssOverrides,
 	onToggle,
 }: CheckboxInputProps): EmotionJSX.Element => {
-	const switchName = id ?? generateSourceId();
+	const defaultId = useId();
+	const switchName = id ?? defaultId;
 	const labelId = descriptionId(switchName);
 
 	return (

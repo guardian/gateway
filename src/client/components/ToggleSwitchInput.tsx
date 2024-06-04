@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useId } from 'react';
 import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import type { Props } from '@guardian/source/react-components';
 import { css } from '@emotion/react';
@@ -9,7 +9,6 @@ import {
 	focusHalo,
 	visuallyHidden,
 	descriptionId,
-	generateSourceId,
 	space,
 } from '@guardian/source/foundations';
 
@@ -174,7 +173,8 @@ export const ToggleSwitchInput = ({
 	imagePath,
 	cssOverrides,
 }: ToggleSwitchInputProps): EmotionJSX.Element => {
-	const switchName = id ?? generateSourceId();
+	const defaultId = useId();
+	const switchName = id ?? defaultId;
 	const labelId = descriptionId(switchName);
 
 	return (
