@@ -26,8 +26,13 @@ import { validateReturnUrl } from '@/server/lib/validateUrl';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { decryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
 import { AppName, getAppName, getAppPrefix } from '@/shared/lib/appNameUtils';
+import {
+	introspect,
+	validateIntrospectRemediation,
+} from '@/server/lib/okta/idx/introspect';
 
-const { okta, defaultReturnUri } = getConfiguration();
+const { okta, defaultReturnUri, registrationPasscodesEnabled } =
+	getConfiguration();
 
 const handleBackButtonEventOnWelcomePage = (
 	path: PasswordRoutePath,
@@ -154,6 +159,74 @@ export const checkTokenInOkta = async (
 ) => {
 	const state = res.locals;
 	const { token } = req.params;
+
+	// OKTA IDX API FLOW
+	// If the user is using the passcode registration flow, we need to check if the user is
+	// in the correct state to be able to change their password.
+	// If there are specific failures, we fall back to the legacy Okta change password flow.
+	if (
+		registrationPasscodesEnabled &&
+		res.locals.queryParams.usePasscodeRegistration &&
+		path === '/welcome' // only check the state handle for registration passcode flow on the welcome page
+	) {
+		try {
+			// Read the encrypted state cookie to get the state handle and email
+			const encryptedState = readEncryptedStateCookie(req);
+			if (
+				encryptedState &&
+				encryptedState.email &&
+				encryptedState.stateHandle
+			) {
+				// introspect the stateHandle to make sure it's valid
+				const introspectResponse = await introspect(
+					{
+						stateHandle: encryptedState.stateHandle,
+					},
+					res.locals.requestId,
+				);
+
+				// check if the remediation array contains a "enroll-authenticator"	object
+				// if it does, then we know the stateHandle is valid and we're in the correct state
+				validateIntrospectRemediation(
+					introspectResponse,
+					'enroll-authenticator',
+				);
+
+				// show the set password page
+				const html = renderer(
+					`${path}/:token`,
+					{
+						pageTitle,
+						requestState: mergeRequestState(res.locals, {
+							pageData: {
+								browserName: getBrowserNameFromUserAgent(
+									req.header('User-Agent'),
+								),
+								email: encryptedState.email,
+								fieldErrors,
+								formError: error,
+								token,
+								isNativeApp: state.pageData.isNativeApp,
+								appName: state.pageData.appName,
+							},
+						}),
+					},
+					{ token },
+				);
+
+				return res.type('html').send(html);
+			}
+		} catch (error) {
+			// if there's an error, log it and fall back to the legacy change password flow
+			logger.error(
+				'IDX API - check state handle token - checkPasswordToken',
+				error,
+				{
+					request_id: res.locals.requestId,
+				},
+			);
+		}
+	}
 
 	try {
 		// check if the token is prefixed with an app prefix

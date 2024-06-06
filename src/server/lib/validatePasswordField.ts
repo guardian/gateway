@@ -3,7 +3,7 @@ import {
 	PasswordFieldErrors,
 } from '@/shared/model/Errors';
 import { ApiError } from '@/server/models/Error';
-import { ErrorCause, OktaError } from '@/server/models/okta/Error';
+import { ErrorCause, OAuthError, OktaError } from '@/server/models/okta/Error';
 import { causesInclude } from '@/server/lib/okta/api/errors';
 
 export const validatePasswordField = (password: string): void => {
@@ -76,6 +76,15 @@ export const getErrorMessage = (error: unknown) => {
 			],
 		};
 	} else if (error instanceof ApiError && error.field === 'password') {
+		return {
+			fieldErrors: [
+				{
+					field: 'password',
+					message: error.message,
+				},
+			],
+		};
+	} else if (error instanceof OAuthError) {
 		return {
 			fieldErrors: [
 				{

@@ -13,7 +13,7 @@ export const RegistrationEmailSentPage = () => {
 		globalMessage = {},
 		recaptchaConfig,
 	} = clientState;
-	const { email } = pageData;
+	const { email, hasStateHandle, fieldErrors, token } = pageData;
 	const { emailSentSuccess } = queryParams;
 	const { error } = globalMessage;
 	const { recaptchaSiteKey } = recaptchaConfig;
@@ -26,13 +26,21 @@ export const RegistrationEmailSentPage = () => {
 		<EmailSent
 			email={email}
 			queryString={queryString}
-			changeEmailPage={buildUrlWithQueryParams('/register', {}, queryParams)}
+			changeEmailPage={buildUrlWithQueryParams(
+				'/register/email',
+				{},
+				queryParams,
+			)}
 			resendEmailAction={buildUrl('/register/email-sent/resend')}
+			passcodeAction={buildUrl('/register/code')}
 			instructionContext="verify and complete creating your account"
 			showSuccess={emailSentSuccess}
 			errorMessage={error}
 			recaptchaSiteKey={recaptchaSiteKey}
 			formTrackingName="register-resend"
+			hasStateHandle={hasStateHandle}
+			fieldErrors={fieldErrors}
+			passcode={token}
 		/>
 	);
 };

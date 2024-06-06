@@ -683,4 +683,320 @@ describe('Registration flow - Split 2/2', () => {
 			});
 		});
 	});
+
+	// TODO: These tests should be merged into the existing registration tests when the passcode registration feature flag is removed
+	context('Passcode registration temporary tests', () => {
+		it('successfully registers using an email with no existing account using a passcode', () => {
+			const encodedReturnUrl =
+				'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
+			const unregisteredEmail = randomMailosaurEmail();
+			const encodedRef = 'https%3A%2F%2Fm.theguardian.com';
+			const refViewId = 'testRefViewId';
+			const clientId = 'jobs';
+
+			cy.visit(
+				`/register/email?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&clientId=${clientId}&usePasscodeRegistration=true`,
+			);
+
+			const timeRequestWasMade = new Date();
+			cy.get('input[name=email]').type(unregisteredEmail);
+			cy.get('[data-cy="main-form-submit-button"]').click();
+
+			cy.contains('Enter your code');
+			cy.contains(unregisteredEmail);
+			cy.contains('send again');
+			cy.contains('try another address');
+
+			cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(
+				({ body, codes }) => {
+					// email
+					expect(body).to.have.string('Your verification code');
+					expect(codes?.length).to.eq(1);
+					const code = codes?.[0].value;
+					expect(code).to.match(/^\d{6}$/);
+
+					// passcode page
+					cy.url().should('include', '/register/email-sent');
+					cy.get('input[name=code]').type(code!);
+
+					cy.get('form')
+						.should('have.attr', 'action')
+						.and('match', new RegExp(encodedReturnUrl))
+						.and('match', new RegExp(refViewId))
+						.and('match', new RegExp(encodedRef))
+						.and('match', new RegExp(clientId));
+
+					cy.contains('Submit passcode').click();
+
+					// password page
+					cy.url().should('include', '/welcome/password');
+					cy.get('form')
+						.should('have.attr', 'action')
+						.and('match', new RegExp(encodedReturnUrl))
+						.and('match', new RegExp(refViewId))
+						.and('match', new RegExp(encodedRef))
+						.and('match', new RegExp(clientId));
+
+					cy.get('input[name="firstName"]').type('First Name');
+					cy.get('input[name="secondName"]').type('Last Name');
+					cy.get('input[name="password"]').type(randomPassword());
+					cy.get('button[type="submit"]').click();
+
+					// test the registration platform is set correctly
+					cy.getTestOktaUser(unregisteredEmail).then((oktaUser) => {
+						expect(oktaUser.status).to.eq(Status.ACTIVE);
+						expect(oktaUser.profile.registrationPlatform).to.eq('profile');
+					});
+
+					cy.url().should('contain', '/welcome/review');
+				},
+			);
+		});
+
+		it('successfully registers using an email with no existing account using a passcode and redirects to fromURI', () => {
+			const appClientId = 'appClientId1';
+			const fromURI = '%2FfromURI1';
+
+			// Intercept the external redirect page.
+			// We just want to check that the redirect happens, not that the page loads.
+			cy.intercept(
+				'GET',
+				`https://${Cypress.env('BASE_URI')}${decodeURIComponent(fromURI)}`,
+				(req) => {
+					req.reply(200);
+				},
+			);
+
+			const encodedReturnUrl =
+				'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
+			const unregisteredEmail = randomMailosaurEmail();
+			const encodedRef = 'https%3A%2F%2Fm.theguardian.com';
+			const refViewId = 'testRefViewId';
+
+			cy.visit(
+				`/register/email?returnUrl=${encodedReturnUrl}&ref=${encodedRef}&refViewId=${refViewId}&appClientId=${appClientId}&fromURI=${fromURI}&usePasscodeRegistration=true`,
+			);
+
+			const timeRequestWasMade = new Date();
+			cy.get('input[name=email]').type(unregisteredEmail);
+			cy.get('[data-cy="main-form-submit-button"]').click();
+
+			cy.contains('Enter your code');
+			cy.contains(unregisteredEmail);
+			cy.contains('send again');
+			cy.contains('try another address');
+
+			cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(
+				({ body, codes }) => {
+					// email
+					expect(body).to.have.string('Your verification code');
+					expect(codes?.length).to.eq(1);
+					const code = codes?.[0].value;
+					expect(code).to.match(/^\d{6}$/);
+
+					// passcode page
+					cy.url().should('include', '/register/email-sent');
+					cy.get('input[name=code]').type(code!);
+
+					cy.get('form')
+						.should('have.attr', 'action')
+						.and('match', new RegExp(encodedReturnUrl))
+						.and('match', new RegExp(refViewId))
+						.and('match', new RegExp(encodedRef))
+						.and('match', new RegExp(appClientId))
+						.and('match', new RegExp(fromURI));
+
+					cy.contains('Submit passcode').click();
+
+					// password page
+					cy.url().should('include', '/welcome/password');
+					cy.get('form')
+						.should('have.attr', 'action')
+						.and('match', new RegExp(encodedReturnUrl))
+						.and('match', new RegExp(refViewId))
+						.and('match', new RegExp(encodedRef))
+						.and('match', new RegExp(appClientId))
+						.and('match', new RegExp(fromURI));
+
+					cy.get('input[name="password"]').type(randomPassword());
+					cy.get('button[type="submit"]').click();
+
+					// test the registration platform is set correctly
+					cy.getTestOktaUser(unregisteredEmail).then((oktaUser) => {
+						expect(oktaUser.status).to.eq(Status.ACTIVE);
+						expect(oktaUser.profile.registrationPlatform).to.eq('profile');
+					});
+
+					cy.url().should('contain', decodeURIComponent(fromURI));
+				},
+			);
+		});
+
+		it('passcode incorrect functionality', () => {
+			const unregisteredEmail = randomMailosaurEmail();
+			cy.visit(`/register/email?usePasscodeRegistration=true`);
+
+			const timeRequestWasMade = new Date();
+			cy.get('input[name=email]').type(unregisteredEmail);
+			cy.get('[data-cy="main-form-submit-button"]').click();
+
+			cy.contains('Enter your code');
+			cy.contains(unregisteredEmail);
+			cy.contains('send again');
+			cy.contains('try another address');
+
+			cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(
+				({ body, codes }) => {
+					// email
+					expect(body).to.have.string('Your verification code');
+					expect(codes?.length).to.eq(1);
+					const code = codes?.[0].value;
+					expect(code).to.match(/^\d{6}$/);
+
+					// passcode page
+					cy.url().should('include', '/register/email-sent');
+					cy.get('input[name=code]').type(`${+code! + 1}`);
+
+					cy.contains('Submit passcode').click();
+
+					cy.url().should('include', '/register/code');
+
+					cy.contains('Incorrect code');
+
+					cy.get('input[name=code]').clear().type(code!);
+					cy.contains('Submit passcode').click();
+
+					cy.url().should('contain', '/welcome/password');
+				},
+			);
+		});
+
+		it('resend email functionality', () => {
+			const unregisteredEmail = randomMailosaurEmail();
+			cy.visit(`/register/email?usePasscodeRegistration=true`);
+
+			const timeRequestWasMade1 = new Date();
+			cy.get('input[name=email]').type(unregisteredEmail);
+			cy.get('[data-cy="main-form-submit-button"]').click();
+
+			cy.contains('Enter your code');
+			cy.contains(unregisteredEmail);
+			cy.contains('send again');
+			cy.contains('try another address');
+
+			cy.checkForEmailAndGetDetails(
+				unregisteredEmail,
+				timeRequestWasMade1,
+			).then(({ body, codes }) => {
+				// email
+				expect(body).to.have.string('Your verification code');
+				expect(codes?.length).to.eq(1);
+				const code = codes?.[0].value;
+				expect(code).to.match(/^\d{6}$/);
+
+				// passcode page
+				cy.url().should('include', '/register/email-sent');
+				const timeRequestWasMade2 = new Date();
+				cy.contains('send again').click();
+				cy.checkForEmailAndGetDetails(
+					unregisteredEmail,
+					timeRequestWasMade2,
+				).then(({ body, codes }) => {
+					// email
+					expect(body).to.have.string('Your verification code');
+					expect(codes?.length).to.eq(1);
+					const code = codes?.[0].value;
+					expect(code).to.match(/^\d{6}$/);
+
+					// passcode page
+					cy.url().should('include', '/register/email-sent');
+
+					cy.get('input[name=code]').type(code!);
+					cy.contains('Submit passcode').click();
+
+					cy.url().should('contain', '/welcome/password');
+				});
+			});
+		});
+
+		it('change email functionality', () => {
+			const unregisteredEmail = randomMailosaurEmail();
+			cy.visit(`/register/email?usePasscodeRegistration=true`);
+
+			const timeRequestWasMade = new Date();
+			cy.get('input[name=email]').type(unregisteredEmail);
+			cy.get('[data-cy="main-form-submit-button"]').click();
+
+			cy.contains('Enter your code');
+			cy.contains(unregisteredEmail);
+			cy.contains('send again');
+			cy.contains('try another address');
+
+			cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(
+				({ body, codes }) => {
+					// email
+					expect(body).to.have.string('Your verification code');
+					expect(codes?.length).to.eq(1);
+					const code = codes?.[0].value;
+					expect(code).to.match(/^\d{6}$/);
+
+					// passcode page
+					cy.url().should('include', '/register/email-sent');
+					cy.contains('try another address').click();
+
+					cy.url().should('include', '/register/email');
+				},
+			);
+		});
+
+		it('existing users should fallback to the standard registration flow without passcodes', () => {
+			// Set up an existing user using the test user endpoint
+			cy
+				.createTestUser({
+					isGuestUser: true,
+					isUserEmailValidated: true,
+				})
+				?.then(({ emailAddress }) => {
+					cy.getTestOktaUser(emailAddress).then((oktaUser) => {
+						expect(oktaUser.status).to.eq(Status.STAGED);
+
+						const appClientId = Cypress.env('OKTA_ANDROID_CLIENT_ID');
+						const fromURI = 'fromURI1';
+
+						cy.visit(
+							`/register/email?appClientId=${appClientId}&fromURI=${fromURI}&usePasscodeRegistration=true`,
+						);
+						const timeRequestWasMade = new Date();
+
+						cy.get('input[name=email]').type(emailAddress);
+						cy.get('[data-cy="main-form-submit-button"]').click();
+
+						cy.contains('Check your email inbox');
+						cy.contains(emailAddress);
+						cy.contains('send again');
+						cy.contains('try another address');
+
+						cy.checkForEmailAndGetDetails(
+							emailAddress,
+							timeRequestWasMade,
+							/\/set-password\/([^"]*)/,
+						).then(({ links, body }) => {
+							expect(body).to.have.string('This account already exists');
+
+							expect(body).to.have.string('Create password');
+							expect(links.length).to.eq(2);
+							const setPasswordLink = links.find((s) =>
+								s.text?.includes('Create password'),
+							);
+							expect(setPasswordLink?.href ?? '')
+								.to.have.string('al_')
+								.and.not.to.have.string('useOkta=true');
+							cy.visit(setPasswordLink?.href as string);
+							cy.contains('Create password');
+							cy.contains(emailAddress);
+						});
+					});
+				});
+		});
+	});
 });

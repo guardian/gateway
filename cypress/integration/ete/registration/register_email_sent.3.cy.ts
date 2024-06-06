@@ -139,7 +139,8 @@ describe('Registration email sent page', () => {
 		cy.visit('/register/email-sent?useIdapi=true');
 		cy.contains('try another address').click();
 		cy.contains('Register');
-		cy.title().should('eq', 'Register | The Guardian');
+		cy.contains('Enter your email');
+		cy.title().should('eq', 'Register With Email | The Guardian');
 	});
 
 	it('should render properly if the encrypted email cookie is not set', () => {

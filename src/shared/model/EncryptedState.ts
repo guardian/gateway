@@ -8,4 +8,6 @@ export interface EncryptedState {
 	status?: string;
 	signInRedirect?: boolean; // TODO: possibly rename for clarity
 	queryParams?: PersistableQueryParams;
+	stateHandle?: string; // part of the Okta IDX flow
+	stateHandleExpiresAt?: string; // part of the Okta IDX flow
 }

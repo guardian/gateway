@@ -1,4 +1,4 @@
-import { Link, Message } from 'cypress-mailosaur';
+import { Code, Link, Message } from 'cypress-mailosaur';
 declare global {
 	// eslint-disable-next-line @typescript-eslint/no-namespace
 	namespace Cypress {
@@ -48,6 +48,7 @@ type EmailDetails = {
 	body: string;
 	token?: string;
 	links: Link[];
+	codes?: Code[];
 };
 
 /**
@@ -60,6 +61,8 @@ type EmailDetails = {
 const getEmailDetails = (email: Message, tokenMatcher?: RegExp) => {
 	const { id, html } = email;
 	const { body, links } = html || {};
+	// eslint-disable-next-line functional/no-let
+	let { codes } = html || {};
 	if (id === undefined || body === undefined || links === undefined) {
 		throw new Error('Email details not found');
 	}
@@ -75,5 +78,9 @@ const getEmailDetails = (email: Message, tokenMatcher?: RegExp) => {
 		token = match[1];
 	}
 
-	return cy.wrap<EmailDetails>({ id, body, token, links });
+	if (codes) {
+		codes = codes.filter((code) => code.value?.match(/\d{6}/));
+	}
+
+	return cy.wrap<EmailDetails>({ id, body, token, links, codes });
 };

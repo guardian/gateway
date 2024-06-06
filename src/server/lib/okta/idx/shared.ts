@@ -11,6 +11,7 @@ const { okta } = getConfiguration();
 // Okta IDX API paths
 const idxPaths = [
 	'challenge/answer',
+	'challenge/resend',
 	'credential/enroll',
 	'enroll',
 	'enroll/new',
@@ -34,7 +35,7 @@ const idxVersionSchema = z.string().refine((val) => {
 export const idxBaseResponseSchema = z.object({
 	version: idxVersionSchema,
 	stateHandle: z.string(),
-	expiresAt: z.coerce.date(),
+	expiresAt: z.string(),
 });
 export type IdxBaseResponse = z.infer<typeof idxBaseResponseSchema>;
 
@@ -70,6 +71,7 @@ export const completeLoginResponseSchema = idxBaseResponseSchema.merge(
 		}),
 	}),
 );
+type CompleteLoginResponse = z.infer<typeof completeLoginResponseSchema>;
 
 // Schema for the error object in the IDX API response
 const idxErrorObjectSchema = z.object({
@@ -167,20 +169,22 @@ export const idxFetch = async <ResponseType, BodyType>({
 
 /**
  * @name idxFetchCompletion
- * @description Fetch data from the Okta IDX API, used when the authentication process is completed, and we need to redirect the user to complete the login process. Should be used as the final step in the IDX process. Make sure to pass the BodyType to have the request body typed correctly.
+ * @description Fetch data from the Okta IDX API, used when the authentication process is completed. This returns the IDX cookie, which we set on the response object, and we return the CompleteLoginResponse, along with the redirect URL which the user should be sent to in order to complete the login process.
  *
  * @param path - The path to the IDX API endpoint
  * @param body - The body of the request
  * @param expressRes - The express response object
  * @param request_id - The request id
- * @returns Promise<void>
+ * @returns Promise<[CompleteLoginResponse, Redirect String]>
  */
 export const idxFetchCompletion = async <BodyType>({
 	path,
 	body,
 	expressRes,
 	request_id,
-}: Omit<IDXFetchParams<never, BodyType>, 'schema'>): Promise<void> => {
+}: Omit<IDXFetchParams<never, BodyType>, 'schema'>): Promise<
+	[CompleteLoginResponse, string]
+> => {
 	try {
 		const [response, idxCookie] = await idxFetchBase({ path, body });
 
@@ -220,10 +224,10 @@ export const idxFetchCompletion = async <BodyType>({
 			sameSite: 'none',
 		});
 
-		return expressRes.redirect(
-			303,
+		return [
+			completeLoginResponse.data,
 			`/login/token/redirect?stateToken=${completeLoginResponse.data.stateHandle.split('~')[0]}`,
-		);
+		];
 	} catch (error) {
 		trackMetric(`OktaIDX::${path}::Failure`);
 		logger.error(`Okta IDX ${path}`, error, {
@@ -371,4 +375,16 @@ const handleError = async (response: Response) => {
 		},
 		response.status,
 	);
+};
+
+/**
+ * @name convertExpiresAtToExpiryTimeInMs
+ * @description Convert the expiresAt string from the IDX API response to a number representing the time until expiry in ms
+ * @param expiresAt - The expiresAt string from the IDX API response
+ * @returns	number | undefined - The time until expiry in ms, or undefined if expiresAt is not provided
+ */
+export const convertExpiresAtToExpiryTimeInMs = (
+	expiresAt?: string,
+): number | undefined => {
+	return expiresAt ? new Date(expiresAt).getTime() - Date.now() : undefined;
 };
