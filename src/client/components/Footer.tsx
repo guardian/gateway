@@ -167,7 +167,7 @@ export const Footer = () => (
 						</li>
 						<li>
 							<ExternalLink cssOverrides={linkStyles} href={locations.TERMS}>
-								Terms &amp; conditions
+								Terms and conditions
 							</ExternalLink>
 						</li>
 					</ul>
@@ -208,7 +208,7 @@ export const Footer = () => (
 					<ul css={[ulStyles, columnStyles, leftBorderStyles]}>
 						<li>
 							<ExternalLink cssOverrides={linkStyles} href={locations.TERMS}>
-								Terms &amp; conditions
+								Terms and conditions
 							</ExternalLink>
 						</li>
 					</ul>

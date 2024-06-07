@@ -52,7 +52,7 @@ export const linksToTheGuardianTermsAndConditionsPage = (isIdapi = false) => {
 			});
 			const visitUrl = isIdapi ? '/signin?useIdapi=true' : '/signin';
 			cy.visit(visitUrl);
-			cy.contains('terms & conditions').click();
+			cy.contains('terms and conditions').click();
 			cy.url().should('eq', guardianTermsOfServiceUrl);
 		},
 	] as const;
@@ -96,7 +96,7 @@ export const linksToTheGuardianJobsTermsAndConditionsPageWhenJobsClientIdSet = (
 				? '/signin?clientId=jobs&useIdapi=true'
 				: '/signin?clientId=jobs';
 			cy.visit(visitUrl);
-			cy.contains('Guardian Jobs terms & conditions').click();
+			cy.contains('Guardian Jobs terms and conditions').click();
 			cy.url().should('eq', guardianJobsTermsOfServiceUrl);
 		},
 	] as const;
