@@ -54,10 +54,10 @@ test('Default terms and conditions in document when clientId not set', async () 
 	};
 
 	const defaultTerms = queryByTextContent(
-		'By proceeding, you agree to our terms & conditions. For information about how we use your data, see our privacy policy.',
+		'By proceeding, you agree to our terms and conditions. For information about how we use your data, see our privacy policy.',
 	);
 	const jobsTerms = queryByTextContent(
-		'By proceeding, you agree to our Guardian Jobs terms & conditions.',
+		'By proceeding, you agree to our Guardian Jobs terms and conditions.',
 	);
 	await waitFor(() => {
 		expect(defaultTerms).toBeInTheDocument();
@@ -91,10 +91,10 @@ test('Jobs terms and conditions in document when clientId equals "jobs"', async 
 	};
 
 	const defaultTerms = queryByTextContent(
-		'By proceeding, you agree to our terms & conditions',
+		'By proceeding, you agree to our terms and conditions',
 	);
 	const jobsTerms = queryByTextContent(
-		'By proceeding, you agree to our Guardian Jobs terms & conditions. For information about how we use your data, see our Guardian Jobs privacy policy.',
+		'By proceeding, you agree to our Guardian Jobs terms and conditions. For information about how we use your data, see our Guardian Jobs privacy policy.',
 	);
 	await waitFor(() => {
 		expect(defaultTerms).not.toBeInTheDocument();

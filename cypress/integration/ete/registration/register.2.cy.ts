@@ -37,7 +37,7 @@ describe('Registration flow', () => {
 				req.reply(200);
 			});
 			cy.visit('/register?useIdapi=true');
-			cy.contains('terms & conditions').click();
+			cy.contains('terms and conditions').click();
 			cy.url().should('eq', guardianTermsOfServiceUrl);
 		});
 
@@ -65,7 +65,7 @@ describe('Registration flow', () => {
 				req.reply(200);
 			});
 			cy.visit('/register?clientId=jobs&useIdapi=true');
-			cy.contains('Guardian Jobs terms & conditions').click();
+			cy.contains('Guardian Jobs terms and conditions').click();
 			cy.url().should('eq', guardianJobsTermsOfServiceUrl);
 		});
 
