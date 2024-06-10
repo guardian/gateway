@@ -1,5 +1,5 @@
 import React from 'react';
-import { MainLayout, buttonStyles } from '@/client/layouts/Main';
+import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { Consent } from '@/shared/model/Consent';
 import { ToggleSwitchInput } from '@/client/components/ToggleSwitchInput';
@@ -11,13 +11,12 @@ import { ExternalLink } from '@/client/components/ExternalLink';
 import locations from '@/shared/lib/locations';
 import { palette, space, textSans } from '@guardian/source/foundations';
 import { css } from '@emotion/react';
-import { Button } from '@guardian/source/react-components';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
-import { CsrfFormField } from '@/client/components/CsrfFormField';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { consentsFormSubmitOphanTracking } from '@/client/lib/consentsTracking';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
 import { trackFormSubmit } from '@/client/lib/ophan';
+import { MainForm } from '../components/MainForm';
 
 const consentToggleCss = css`
 	display: flex;
@@ -78,15 +77,14 @@ export const NewAccountReview = ({
 	if (!profiling && !advertising) {
 		return (
 			<MainLayout pageHeader="You're signed in! Welcome to the Guardian.">
-				<form
-					action={buildUrlWithQueryParams('/welcome/review', {}, queryParams)}
-					method="post"
-				>
-					<CsrfFormField />
-					<Button css={buttonStyles({})} type="submit" priority="primary">
-						Continue to the Guardian
-					</Button>
-				</form>
+				<MainForm
+					formAction={buildUrlWithQueryParams(
+						'/welcome/review',
+						{},
+						queryParams,
+					)}
+					submitButtonText="Continue to the Guardian"
+				></MainForm>
 			</MainLayout>
 		);
 	}
@@ -96,18 +94,18 @@ export const NewAccountReview = ({
 				Before you start, confirm how you’d like the Guardian to use your
 				signed-in data.
 			</MainBodyText>
-			<form
-				action={buildUrlWithQueryParams('/welcome/review', {}, queryParams)}
-				method="post"
+			<MainForm
+				formAction={buildUrlWithQueryParams('/welcome/review', {}, queryParams)}
 				onSubmit={({ target: form }) => {
 					trackFormSubmit(formTrackingName);
 					consentsFormSubmitOphanTracking(
 						form as HTMLFormElement,
 						[profiling, advertising].filter(Boolean) as Consent[],
 					);
+					return undefined;
 				}}
+				submitButtonText="Save and continue"
 			>
-				<CsrfFormField />
 				<div css={consentToggleCss}>
 					{!!advertising && (
 						<fieldset css={switchRow}>
@@ -165,10 +163,7 @@ export const NewAccountReview = ({
 						on your Guardian account at any time.
 					</InformationBoxText>
 				</InformationBox>
-				<Button css={buttonStyles({})} type="submit" priority="primary">
-					Save and continue
-				</Button>
-			</form>
+			</MainForm>
 		</MainLayout>
 	);
 };
