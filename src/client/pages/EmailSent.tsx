@@ -135,22 +135,27 @@ export const EmailSent = ({
 				<>
 					{email ? (
 						<MainBodyText>
-							We’ve sent an email to <b>{email}</b> with verification
-							instructions and a verification code.
+							We’ve sent a temporary verification code to <b>{email}</b>. Please
+							check your inbox.
 						</MainBodyText>
 					) : (
 						<MainBodyText>
-							We’ve sent you an email with verification instructions and a
-							verification code.
+							We’ve sent you a temporary verification code. Please check your
+							inbox.
 						</MainBodyText>
 					)}
 				</>
 			)}
 			<MainBodyText>
-				<b>
-					For your security, the link in the email will expire in{' '}
-					{hasStateHandle && passcodeAction ? '30' : '60'} minutes.
-				</b>
+				{hasStateHandle && passcodeAction ? (
+					<b>
+						For your security, the verification code will expire in 30 minutes.
+					</b>
+				) : (
+					<b>
+						For your security, the link in the email will expire in 60 minutes.
+					</b>
+				)}
 			</MainBodyText>
 			{hasStateHandle && passcodeAction && (
 				<div
@@ -160,7 +165,7 @@ export const EmailSent = ({
 				>
 					<MainForm
 						formAction={`${passcodeAction}${queryString}`}
-						submitButtonText="Submit passcode"
+						submitButtonText="Submit verification code"
 						disableOnSubmit
 					>
 						<TextInput

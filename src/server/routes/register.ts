@@ -358,7 +358,9 @@ router.post(
 				// redirect to the email sent page
 				return res.redirect(
 					303,
-					addQueryParamsToPath('/register/email-sent', res.locals.queryParams),
+					addQueryParamsToPath('/register/email-sent', res.locals.queryParams, {
+						emailSentSuccess: true,
+					}),
 				);
 			} catch (error) {
 				// track and log the failure, and fall back to the legacy Okta registration flow if there is an error
@@ -403,7 +405,7 @@ export const setEncryptedStateCookieForOktaRegistration = (
 	});
 };
 
-const OktaRegistration = async (
+export const OktaRegistration = async (
 	req: Request,
 	res: ResponseWithRequestState,
 ) => {

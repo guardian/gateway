@@ -726,7 +726,7 @@ describe('Registration flow - Split 2/2', () => {
 						.and('match', new RegExp(encodedRef))
 						.and('match', new RegExp(clientId));
 
-					cy.contains('Submit passcode').click();
+					cy.contains('Submit verification code').click();
 
 					// password page
 					cy.url().should('include', '/welcome/password');
@@ -806,7 +806,7 @@ describe('Registration flow - Split 2/2', () => {
 						.and('match', new RegExp(appClientId))
 						.and('match', new RegExp(fromURI));
 
-					cy.contains('Submit passcode').click();
+					cy.contains('Submit verification code').click();
 
 					// password page
 					cy.url().should('include', '/welcome/password');
@@ -857,14 +857,14 @@ describe('Registration flow - Split 2/2', () => {
 					cy.url().should('include', '/register/email-sent');
 					cy.get('input[name=code]').type(`${+code! + 1}`);
 
-					cy.contains('Submit passcode').click();
+					cy.contains('Submit verification code').click();
 
 					cy.url().should('include', '/register/code');
 
 					cy.contains('Incorrect code');
 
 					cy.get('input[name=code]').clear().type(code!);
-					cy.contains('Submit passcode').click();
+					cy.contains('Submit verification code').click();
 
 					cy.url().should('contain', '/welcome/password');
 				},
@@ -910,9 +910,10 @@ describe('Registration flow - Split 2/2', () => {
 
 					// passcode page
 					cy.url().should('include', '/register/email-sent');
+					cy.contains('Email sent');
 
 					cy.get('input[name=code]').type(code!);
-					cy.contains('Submit passcode').click();
+					cy.contains('Submit verification code').click();
 
 					cy.url().should('contain', '/welcome/password');
 				});

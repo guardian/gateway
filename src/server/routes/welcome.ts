@@ -20,7 +20,10 @@ import { trackMetric } from '@/server/lib/trackMetric';
 import { OktaError } from '@/server/models/okta/Error';
 import { GenericErrors } from '@/shared/model/Errors';
 import { getConfiguration } from '@/server/lib/getConfiguration';
-import { setEncryptedStateCookieForOktaRegistration } from '@/server/routes/register';
+import {
+	OktaRegistration,
+	setEncryptedStateCookieForOktaRegistration,
+} from '@/server/routes/register';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
 import { CONSENTS_DATA_PAGE } from '@/shared/model/Consent';
@@ -48,7 +51,7 @@ import {
 import { getNextWelcomeFlowPage } from '@/server/lib/welcome';
 import { newslettersSubscriptionsFromFormBody } from '@/shared/lib/newsletter';
 
-const { okta } = getConfiguration();
+const { okta, registrationPasscodesEnabled } = getConfiguration();
 
 // temp return to app page for app users who get stuck in browser
 router.get(
@@ -501,7 +504,17 @@ router.post(
 );
 
 const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
+	// if registration passcodes are enabled, we need to handle this differently
+	// by using the passcode registration flow
+	if (
+		registrationPasscodesEnabled &&
+		res.locals.queryParams.usePasscodeRegistration
+	) {
+		return OktaRegistration(req, res);
+	}
+
 	const { email } = req.body;
+
 	try {
 		const state = res.locals;
 
