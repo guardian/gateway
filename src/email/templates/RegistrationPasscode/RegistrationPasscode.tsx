@@ -35,7 +35,7 @@ export const RegistrationPasscode = () => {
 				</Text>
 				<Footer
 					mistakeParagraphComponent={
-						'If you received this email by mistake, please delete it. You won’t be registered if you don’t do anything.'
+						'If you didn’t try to create a Guardian account, please disregard this email.'
 					}
 				/>
 			</MjmlBody>
