@@ -405,7 +405,7 @@ export const setEncryptedStateCookieForOktaRegistration = (
 	});
 };
 
-const OktaRegistration = async (
+export const OktaRegistration = async (
 	req: Request,
 	res: ResponseWithRequestState,
 ) => {
