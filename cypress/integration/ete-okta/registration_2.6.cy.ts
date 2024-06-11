@@ -910,6 +910,7 @@ describe('Registration flow - Split 2/2', () => {
 
 					// passcode page
 					cy.url().should('include', '/register/email-sent');
+					cy.contains('Email sent');
 
 					cy.get('input[name=code]').type(code!);
 					cy.contains('Submit passcode').click();
