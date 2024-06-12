@@ -142,6 +142,12 @@ const server = () => ({
 					from: 'package.json',
 					to: 'package.json',
 				},
+				// pnpm-lock.yaml is required pinning dependencies when
+				// installing prod dependencies inside the build folder
+				{
+					from: 'pnpm-lock.yaml',
+					to: 'pnpm-lock.yaml',
+				},
 			],
 		}),
 	],
