@@ -40,6 +40,6 @@ export const featureSwitches: FeatureSwitches = {
 	registrationPasscodesEnabled: {
 		DEV: true,
 		CODE: true,
-		PROD: false,
+		PROD: true,
 	},
 };
