@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
-const baseConfig = require('./webpack.config');
+const baseConfig = require('./rspack.config');
 const { mergeWithRules } = require('webpack-merge');
 
 /**
@@ -11,10 +11,6 @@ const { mergeWithRules } = require('webpack-merge');
  */
 const common = {
 	mode: 'development',
-	cache: {
-		type: 'filesystem',
-		managedPaths: [], // ensures that we cache all of the node_modules packages too.
-	},
 };
 
 const serverConfig = {
@@ -24,7 +20,7 @@ const serverConfig = {
 				test: /\.ts(x?)$/,
 				use: [
 					{
-						loader: 'swc-loader',
+						loader: 'builtin:swc-loader',
 						options: {
 							cacheCompression: false,
 							cacheDirectory: true,
@@ -43,7 +39,7 @@ const browserConfig = (isLegacy = false) => ({
 				test: /\.(m?)(j|t)s(x?)/,
 				use: [
 					{
-						loader: 'swc-loader',
+						loader: 'builtin:swc-loader',
 						options: {
 							cacheCompression: false,
 							cacheDirectory: true,
@@ -57,10 +53,10 @@ const browserConfig = (isLegacy = false) => ({
 		...(isLegacy
 			? []
 			: [
-				new ForkTsCheckerWebpackPlugin({
-					async: true,
-				}),
-			]),
+					new ForkTsCheckerWebpackPlugin({
+						async: true,
+					}),
+				]),
 		new ForkTsCheckerNotifierWebpackPlugin({
 			excludeWarnings: true,
 			skipFirstNotification: true,
