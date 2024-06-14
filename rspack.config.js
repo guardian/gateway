@@ -1,16 +1,12 @@
-/* eslint-disable functional/immutable-data */
-/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const AssetsPlugin = require('assets-webpack-plugin');
 const { merge } = require('webpack-merge');
 const nodeExternals = require('webpack-node-externals');
 const Dotenv = require('dotenv-webpack');
-const TerserPlugin = require('terser-webpack-plugin');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const BundleAnalyzerPlugin =
 	require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const webpack = require('webpack');
+const rspack = require('@rspack/core');
 const deepmerge = require('deepmerge');
 const sharedLoader = require('./.swcrc.config');
 
@@ -69,17 +65,16 @@ const imageLoader = (path) => {
 		],
 	};
 };
-
 const common = ({ platform }) => ({
 	name: platform,
 	resolve: {
 		extensions,
 		alias: {
 			'@': path.join(__dirname, 'src'),
-			'react': 'preact/compat',
+			react: 'preact/compat',
 			'react-dom/test-utils': 'preact/test-utils',
-			'react-dom': 'preact/compat',     // Must be below test-utils
-			'react/jsx-runtime': 'preact/jsx-runtime'
+			'react-dom': 'preact/compat', // Must be below test-utils
+			'react/jsx-runtime': 'preact/jsx-runtime',
 		},
 	},
 	watchOptions,
@@ -127,11 +122,10 @@ const server = () => ({
 		filename: 'server.js',
 		chunkFilename: '[name].js',
 		path: path.resolve(__dirname, 'build'),
-		libraryTarget: 'commonjs2',
 	},
 	target: 'node',
 	plugins: [
-		new CopyWebpackPlugin({
+		new rspack.CopyRspackPlugin({
 			patterns: [
 				{
 					from: 'src/client/.well-known',
@@ -152,11 +146,8 @@ const server = () => ({
 		}),
 	],
 	optimization: {
-		minimizer: [
-			new TerserPlugin({
-				minify: TerserPlugin.swcMinify,
-			}),
-		],
+		minimize: mode === 'production',
+		minimizer: [new rspack.SwcJsMinimizerRspackPlugin()],
 	},
 });
 
@@ -200,7 +191,7 @@ const browser = ({ isLegacy }) => {
 			filename: `${isLegacy ? 'legacy.' : ''}webpack-assets.json`,
 		}),
 		// Reduce Sentry bundle size
-		new webpack.DefinePlugin({
+		new rspack.DefinePlugin({
 			__SENTRY_DEBUG__: false,
 			__SENTRY_TRACING__: false,
 		}),
@@ -211,8 +202,9 @@ const browser = ({ isLegacy }) => {
 			new BundleAnalyzerPlugin({
 				analyzerMode: 'static',
 				openAnalyzer: true,
-				reportFilename: `../webpack-report-${isLegacy ? 'legacy' : 'modern'
-					}.html`,
+				reportFilename: `../webpack-report-${
+					isLegacy ? 'legacy' : 'modern'
+				}.html`,
 			}),
 		);
 	}
@@ -230,16 +222,8 @@ const browser = ({ isLegacy }) => {
 			],
 		},
 		optimization: {
-			minimizer: [
-				new TerserPlugin({
-					minify: TerserPlugin.swcMinify,
-					terserOptions: {
-						mangle: {
-							safari10: true,
-						},
-					},
-				}),
-			],
+			minimize: mode === 'production',
+			minimizer: [new rspack.SwcJsMinimizerRspackPlugin()],
 			splitChunks: {
 				cacheGroups: {
 					commons: {

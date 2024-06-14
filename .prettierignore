@@ -1,5 +1,3 @@
-webpack.config.js
-webpack.development.js
 build
 .ratelimit.schema.json
 scripts/okta/okta-login.js
