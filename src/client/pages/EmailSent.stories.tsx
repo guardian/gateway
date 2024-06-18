@@ -7,7 +7,6 @@ import { EmailSent } from '@/client/pages/EmailSent';
 export default {
 	title: 'Pages/EmailSent',
 	component: EmailSent,
-	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Defaults = () => <EmailSent />;
@@ -102,6 +101,28 @@ export const WithStateHandle = () => (
 		passcodeAction="#"
 	/>
 );
-WithEmailResend.story = {
+WithStateHandle.story = {
 	name: 'with stateHandle',
 };
+
+export const RegistrationEmailSent = () => (
+	<EmailSent
+		pageHeader="Check your inbox to verify your email"
+		email="example@theguardian.com"
+		changeEmailPage="/register"
+		resendEmailAction="/register/email-sent/resend"
+		instructionContext="verify and complete creating your account"
+		recaptchaSiteKey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+		formTrackingName="register-resend"
+	/>
+);
+RegistrationEmailSent.story = {
+	name: 'Registration email sent page',
+};
+
+export const WithSuccessMessage = () => <EmailSent showSuccess={true} />;
+WithSuccessMessage.story = {
+	name: 'with success message',
+};
+
+export const WithErrorMessage = () => <EmailSent errorMessage="•⩊• UwU" />;

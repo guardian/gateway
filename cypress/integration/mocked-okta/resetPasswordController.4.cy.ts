@@ -12,15 +12,15 @@ beforeEach(() => {
 });
 
 const verifyIn2MinutesEmailSentPage = () => {
-	cy.contains('Check your email inbox');
+	cy.contains('Check your inbox');
 	cy.contains('send again');
-	cy.contains('Email sent');
+	cy.contains('We’ve sent an email');
 	cy.contains('within 2 minutes');
 };
 const verifyInRegularEmailSentPage = () => {
-	cy.contains('Check your email inbox');
+	cy.contains('Check your inbox');
 	cy.contains('send again');
-	cy.contains('Email sent');
+	cy.contains('We’ve sent an email');
 	cy.contains('within 2 minutes').should('not.exist');
 };
 
@@ -61,33 +61,27 @@ userStatuses.forEach((status) => {
 			});
 			switch (status) {
 				case false:
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							cy.mockNext(userNotFoundError.code, userNotFoundError.response);
-							cy.get('button[type=submit]').click();
-							verifyIn2MinutesEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						cy.mockNext(userNotFoundError.code, userNotFoundError.response);
+						cy.get('button[type=submit]').click();
+						verifyIn2MinutesEmailSentPage();
+					});
 					break;
 				case 'ACTIVE':
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						// forgotPassword()
+						cy.mockNext(200, {
+							resetPasswordUrl:
+								'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
+						});
+						cy.get('button[type=submit]').click();
+						verifyIn2MinutesEmailSentPage();
+					});
 					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							// forgotPassword()
-							cy.mockNext(200, {
-								resetPasswordUrl:
-									'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
-							});
-							cy.get('button[type=submit]').click();
-							verifyIn2MinutesEmailSentPage();
-						},
-					);
-					specify(
-						"Then I should be shown the 'Check your email inbox' page for social user",
+						"Then I should be shown the 'Check your inbox' page for social user",
 						() => {
 							setupMocksForSocialUserPasswordReset();
 							cy.get('button[type=submit]').click();
@@ -96,47 +90,38 @@ userStatuses.forEach((status) => {
 					);
 					break;
 				case 'PROVISIONED':
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(tokenResponse.code, tokenResponse.response);
-							cy.get('button[type=submit]').click();
-							verifyIn2MinutesEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(tokenResponse.code, tokenResponse.response);
+						cy.get('button[type=submit]').click();
+						verifyIn2MinutesEmailSentPage();
+					});
 					break;
 				case 'STAGED':
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(tokenResponse.code, tokenResponse.response);
-							cy.get('button[type=submit]').click();
-							verifyIn2MinutesEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(tokenResponse.code, tokenResponse.response);
+						cy.get('button[type=submit]').click();
+						verifyIn2MinutesEmailSentPage();
+					});
 					break;
 				case 'RECOVERY':
 				case 'PASSWORD_EXPIRED':
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(
-								resetPasswordResponse.code,
-								resetPasswordResponse.response,
-							);
-							cy.get('button[type=submit]').click();
-							verifyIn2MinutesEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(
+							resetPasswordResponse.code,
+							resetPasswordResponse.response,
+						);
+						cy.get('button[type=submit]').click();
+						verifyIn2MinutesEmailSentPage();
+					});
 					break;
 			}
 		});
@@ -154,33 +139,27 @@ userStatuses.forEach((status) => {
 			});
 			switch (status) {
 				case false:
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							cy.mockNext(userNotFoundError.code, userNotFoundError.response);
-							cy.get('button[type=submit]').click();
-							verifyIn2MinutesEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						cy.mockNext(userNotFoundError.code, userNotFoundError.response);
+						cy.get('button[type=submit]').click();
+						verifyIn2MinutesEmailSentPage();
+					});
 					break;
 				case 'ACTIVE':
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						// forgotPassword()
+						cy.mockNext(200, {
+							resetPasswordUrl:
+								'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
+						});
+						cy.get('button[type=submit]').click();
+						verifyIn2MinutesEmailSentPage();
+					});
 					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							// forgotPassword()
-							cy.mockNext(200, {
-								resetPasswordUrl:
-									'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
-							});
-							cy.get('button[type=submit]').click();
-							verifyIn2MinutesEmailSentPage();
-						},
-					);
-					specify(
-						"Then I should be shown the 'Check your email inbox' page for social user",
+						"Then I should be shown the 'Check your inbox' page for social user",
 						() => {
 							setupMocksForSocialUserPasswordReset();
 							cy.get('button[type=submit]').click();
@@ -189,47 +168,38 @@ userStatuses.forEach((status) => {
 					);
 					break;
 				case 'PROVISIONED':
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(tokenResponse.code, tokenResponse.response);
-							cy.get('button[type=submit]').click();
-							verifyIn2MinutesEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(tokenResponse.code, tokenResponse.response);
+						cy.get('button[type=submit]').click();
+						verifyIn2MinutesEmailSentPage();
+					});
 					break;
 				case 'STAGED':
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(tokenResponse.code, tokenResponse.response);
-							cy.get('button[type=submit]').click();
-							verifyIn2MinutesEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(tokenResponse.code, tokenResponse.response);
+						cy.get('button[type=submit]').click();
+						verifyIn2MinutesEmailSentPage();
+					});
 					break;
 				case 'RECOVERY':
 				case 'PASSWORD_EXPIRED':
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(
-								resetPasswordResponse.code,
-								resetPasswordResponse.response,
-							);
-							cy.get('button[type=submit]').click();
-							verifyIn2MinutesEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(
+							resetPasswordResponse.code,
+							resetPasswordResponse.response,
+						);
+						cy.get('button[type=submit]').click();
+						verifyIn2MinutesEmailSentPage();
+					});
 					break;
 			}
 		});
@@ -240,33 +210,27 @@ userStatuses.forEach((status) => {
 			});
 			switch (status) {
 				case false:
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							cy.mockNext(userNotFoundError.code, userNotFoundError.response);
-							cy.get('button[type=submit]').click();
-							verifyIn2MinutesEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						cy.mockNext(userNotFoundError.code, userNotFoundError.response);
+						cy.get('button[type=submit]').click();
+						verifyIn2MinutesEmailSentPage();
+					});
 					break;
 				case 'ACTIVE':
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						// forgotPassword()
+						cy.mockNext(200, {
+							resetPasswordUrl:
+								'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
+						});
+						cy.get('button[type=submit]').click();
+						verifyIn2MinutesEmailSentPage();
+					});
 					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							// forgotPassword()
-							cy.mockNext(200, {
-								resetPasswordUrl:
-									'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
-							});
-							cy.get('button[type=submit]').click();
-							verifyIn2MinutesEmailSentPage();
-						},
-					);
-					specify(
-						"Then I should be shown the 'Check your email inbox' page for social user",
+						"Then I should be shown the 'Check your inbox' page for social user",
 						() => {
 							setupMocksForSocialUserPasswordReset();
 							cy.get('button[type=submit]').click();
@@ -275,47 +239,38 @@ userStatuses.forEach((status) => {
 					);
 					break;
 				case 'PROVISIONED':
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(tokenResponse.code, tokenResponse.response);
-							cy.get('button[type=submit]').click();
-							verifyIn2MinutesEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(tokenResponse.code, tokenResponse.response);
+						cy.get('button[type=submit]').click();
+						verifyIn2MinutesEmailSentPage();
+					});
 					break;
 				case 'STAGED':
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(tokenResponse.code, tokenResponse.response);
-							cy.get('button[type=submit]').click();
-							verifyIn2MinutesEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(tokenResponse.code, tokenResponse.response);
+						cy.get('button[type=submit]').click();
+						verifyIn2MinutesEmailSentPage();
+					});
 					break;
 				case 'RECOVERY':
 				case 'PASSWORD_EXPIRED':
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(
-								resetPasswordResponse.code,
-								resetPasswordResponse.response,
-							);
-							cy.get('button[type=submit]').click();
-							verifyIn2MinutesEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(
+							resetPasswordResponse.code,
+							resetPasswordResponse.response,
+						);
+						cy.get('button[type=submit]').click();
+						verifyIn2MinutesEmailSentPage();
+					});
 					break;
 			}
 		});
@@ -326,33 +281,27 @@ userStatuses.forEach((status) => {
 			});
 			switch (status) {
 				case false:
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							cy.mockNext(userNotFoundError.code, userNotFoundError.response);
-							cy.get('button[type=submit]').click();
-							verifyIn2MinutesEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						cy.mockNext(userNotFoundError.code, userNotFoundError.response);
+						cy.get('button[type=submit]').click();
+						verifyIn2MinutesEmailSentPage();
+					});
 					break;
 				case 'ACTIVE':
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						// forgotPassword()
+						cy.mockNext(200, {
+							resetPasswordUrl:
+								'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
+						});
+						cy.get('button[type=submit]').click();
+						verifyIn2MinutesEmailSentPage();
+					});
 					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							// forgotPassword()
-							cy.mockNext(200, {
-								resetPasswordUrl:
-									'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
-							});
-							cy.get('button[type=submit]').click();
-							verifyIn2MinutesEmailSentPage();
-						},
-					);
-					specify(
-						"Then I should be shown the 'Check your email inbox' page for social user",
+						"Then I should be shown the 'Check your inbox' page for social user",
 						() => {
 							setupMocksForSocialUserPasswordReset();
 							cy.get('button[type=submit]').click();
@@ -361,47 +310,38 @@ userStatuses.forEach((status) => {
 					);
 					break;
 				case 'PROVISIONED':
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(tokenResponse.code, tokenResponse.response);
-							cy.get('button[type=submit]').click();
-							verifyIn2MinutesEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(tokenResponse.code, tokenResponse.response);
+						cy.get('button[type=submit]').click();
+						verifyIn2MinutesEmailSentPage();
+					});
 					break;
 				case 'STAGED':
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(tokenResponse.code, tokenResponse.response);
-							cy.get('button[type=submit]').click();
-							verifyIn2MinutesEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(tokenResponse.code, tokenResponse.response);
+						cy.get('button[type=submit]').click();
+						verifyIn2MinutesEmailSentPage();
+					});
 					break;
 				case 'RECOVERY':
 				case 'PASSWORD_EXPIRED':
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(
-								resetPasswordResponse.code,
-								resetPasswordResponse.response,
-							);
-							cy.get('button[type=submit]').click();
-							verifyIn2MinutesEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(
+							resetPasswordResponse.code,
+							resetPasswordResponse.response,
+						);
+						cy.get('button[type=submit]').click();
+						verifyIn2MinutesEmailSentPage();
+					});
 					break;
 			}
 		});
@@ -419,33 +359,27 @@ userStatuses.forEach((status) => {
 			});
 			switch (status) {
 				case false:
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							cy.mockNext(userNotFoundError.code, userNotFoundError.response);
-							cy.get('button[type=submit]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						cy.mockNext(userNotFoundError.code, userNotFoundError.response);
+						cy.get('button[type=submit]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 				case 'ACTIVE':
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						// forgotPassword()
+						cy.mockNext(200, {
+							resetPasswordUrl:
+								'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
+						});
+						cy.get('button[type=submit]').click();
+						verifyInRegularEmailSentPage();
+					});
 					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							// forgotPassword()
-							cy.mockNext(200, {
-								resetPasswordUrl:
-									'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
-							});
-							cy.get('button[type=submit]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
-					specify(
-						"Then I should be shown the 'Check your email inbox' page for social user",
+						"Then I should be shown the 'Check your inbox' page for social user",
 						() => {
 							setupMocksForSocialUserPasswordReset();
 							cy.get('button[type=submit]').click();
@@ -454,47 +388,38 @@ userStatuses.forEach((status) => {
 					);
 					break;
 				case 'PROVISIONED':
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(tokenResponse.code, tokenResponse.response);
-							cy.get('button[type=submit]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(tokenResponse.code, tokenResponse.response);
+						cy.get('button[type=submit]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 				case 'STAGED':
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(tokenResponse.code, tokenResponse.response);
-							cy.get('button[type=submit]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(tokenResponse.code, tokenResponse.response);
+						cy.get('button[type=submit]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 				case 'RECOVERY':
 				case 'PASSWORD_EXPIRED':
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(
-								resetPasswordResponse.code,
-								resetPasswordResponse.response,
-							);
-							cy.get('button[type=submit]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(
+							resetPasswordResponse.code,
+							resetPasswordResponse.response,
+						);
+						cy.get('button[type=submit]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 			}
 		});
@@ -505,33 +430,27 @@ userStatuses.forEach((status) => {
 			});
 			switch (status) {
 				case false:
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							cy.mockNext(userNotFoundError.code, userNotFoundError.response);
-							cy.get('button[type=submit]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						cy.mockNext(userNotFoundError.code, userNotFoundError.response);
+						cy.get('button[type=submit]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 				case 'ACTIVE':
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						// forgotPassword()
+						cy.mockNext(200, {
+							resetPasswordUrl:
+								'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
+						});
+						cy.get('button[type=submit]').click();
+						verifyInRegularEmailSentPage();
+					});
 					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							// forgotPassword()
-							cy.mockNext(200, {
-								resetPasswordUrl:
-									'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
-							});
-							cy.get('button[type=submit]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
-					specify(
-						"Then I should be shown the 'Check your email inbox' page for social user",
+						"Then I should be shown the 'Check your inbox' page for social user",
 						() => {
 							setupMocksForSocialUserPasswordReset();
 							cy.get('button[type=submit]').click();
@@ -540,47 +459,38 @@ userStatuses.forEach((status) => {
 					);
 					break;
 				case 'PROVISIONED':
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(tokenResponse.code, tokenResponse.response);
-							cy.get('button[type=submit]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(tokenResponse.code, tokenResponse.response);
+						cy.get('button[type=submit]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 				case 'STAGED':
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(tokenResponse.code, tokenResponse.response);
-							cy.get('button[type=submit]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(tokenResponse.code, tokenResponse.response);
+						cy.get('button[type=submit]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 				case 'RECOVERY':
 				case 'PASSWORD_EXPIRED':
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(
-								resetPasswordResponse.code,
-								resetPasswordResponse.response,
-							);
-							cy.get('button[type=submit]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(
+							resetPasswordResponse.code,
+							resetPasswordResponse.response,
+						);
+						cy.get('button[type=submit]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 			}
 		});
@@ -592,33 +502,27 @@ userStatuses.forEach((status) => {
 			});
 			switch (status) {
 				case false:
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							cy.mockNext(userNotFoundError.code, userNotFoundError.response);
-							cy.get('button[type=submit]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						cy.mockNext(userNotFoundError.code, userNotFoundError.response);
+						cy.get('button[type=submit]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 				case 'ACTIVE':
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						// forgotPassword()
+						cy.mockNext(200, {
+							resetPasswordUrl:
+								'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
+						});
+						cy.get('button[type=submit]').click();
+						verifyInRegularEmailSentPage();
+					});
 					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							// forgotPassword()
-							cy.mockNext(200, {
-								resetPasswordUrl:
-									'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
-							});
-							cy.get('button[type=submit]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
-					specify(
-						"Then I should be shown the 'Check your email inbox' page for social user",
+						"Then I should be shown the 'Check your inbox' page for social user",
 						() => {
 							setupMocksForSocialUserPasswordReset();
 							cy.get('button[type=submit]').click();
@@ -627,47 +531,38 @@ userStatuses.forEach((status) => {
 					);
 					break;
 				case 'PROVISIONED':
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(tokenResponse.code, tokenResponse.response);
-							cy.get('button[type=submit]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(tokenResponse.code, tokenResponse.response);
+						cy.get('button[type=submit]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 				case 'STAGED':
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(tokenResponse.code, tokenResponse.response);
-							cy.get('button[type=submit]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(tokenResponse.code, tokenResponse.response);
+						cy.get('button[type=submit]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 				case 'RECOVERY':
 				case 'PASSWORD_EXPIRED':
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(
-								resetPasswordResponse.code,
-								resetPasswordResponse.response,
-							);
-							cy.get('button[type=submit]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(
+							resetPasswordResponse.code,
+							resetPasswordResponse.response,
+						);
+						cy.get('button[type=submit]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 			}
 		});

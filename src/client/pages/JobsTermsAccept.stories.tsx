@@ -6,7 +6,6 @@ import { JobsTermsAccept } from '@/client/pages/JobsTermsAccept';
 export default {
 	title: 'Pages/JobsTermsAccept',
 	component: JobsTermsAccept,
-	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => (

@@ -1,22 +1,21 @@
 import { css } from '@emotion/react';
-import { space, textSans } from '@guardian/source/foundations';
-import { TextInput } from '@guardian/source/react-components';
+import { remSpace } from '@guardian/source/foundations';
 
 import React, { FieldsetHTMLAttributes, useState, useEffect } from 'react';
 import {
 	InputFieldState,
 	useInputValidityState,
 } from '@/client/lib/hooks/useInputValidityState';
+import ThemedTextInput from '@/client/components/ThemedTextInput';
 
 const fieldSpacing = css`
-	margin-bottom: ${space[2]}px;
+	margin-bottom: ${remSpace[2]};
 `;
 
 const fieldset = css`
-	border: 0;
+	border: none;
+	margin: 0;
 	padding: 0;
-	margin: ${space[2]}px 0 ${space[2]}px 0;
-	${textSans.medium()}
 `;
 
 interface NameInputProps {
@@ -40,7 +39,7 @@ const FirstNameInput = (props: NameInputProps) => {
 	}, [isEmpty, props]);
 
 	return (
-		<TextInput
+		<ThemedTextInput
 			required
 			label={'First Name'}
 			name="firstName"
@@ -72,7 +71,7 @@ const SecondNameInput = (props: NameInputProps) => {
 	}, [isEmpty, props]);
 
 	return (
-		<TextInput
+		<ThemedTextInput
 			required
 			label={'Last Name'}
 			name="secondName"

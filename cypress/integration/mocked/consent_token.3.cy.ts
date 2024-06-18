@@ -38,7 +38,7 @@ describe('Consent token accept flow', () => {
 			cy.contains('This link has expired.');
 			cy.get('button[type=submit]').click();
 			cy.url().should('include', '/consent-token/email-sent');
-			cy.contains('Check your email inbox');
+			cy.contains('Check your inbox');
 		});
 	});
 });

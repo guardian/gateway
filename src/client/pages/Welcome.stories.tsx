@@ -6,7 +6,6 @@ import { Welcome } from '@/client/pages/Welcome';
 export default {
 	title: 'Pages/Welcome',
 	component: Welcome,
-	parameters: { layout: 'fullscreen' },
 } as Meta<typeof Welcome>;
 
 const Template: StoryFn<typeof Welcome> = ({

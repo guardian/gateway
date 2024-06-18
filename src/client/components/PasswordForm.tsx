@@ -4,20 +4,7 @@ import React, {
 	useEffect,
 	useState,
 } from 'react';
-import {
-	Button,
-	SvgInfo,
-	SvgAlertTriangle,
-	SvgCheckmark,
-} from '@guardian/source/react-components';
-import {
-	success,
-	error,
-	neutral,
-	textSans,
-	space,
-} from '@guardian/source/foundations';
-import { CsrfFormField } from '@/client/components/CsrfFormField';
+import { textSans } from '@guardian/source/foundations';
 import { css } from '@emotion/react';
 import {
 	PasswordAutoComplete,
@@ -29,19 +16,19 @@ import {
 	ShortPasswordFieldErrors,
 } from '@/shared/model/Errors';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
-import { AutoRow } from '@/client/styles/Grid';
 import { MainForm } from '@/client/components/MainForm';
-import { passwordButton, controls } from '@/client/styles/Consents';
-import { trackFormFocusBlur, trackFormSubmit } from '@/client/lib/ophan';
 import { logger } from '@/client/lib/clientSideLogger';
+import {
+	SvgAlertRound,
+	SvgInfoRound,
+	SvgTickRound,
+} from '@guardian/source/react-components';
 
 type Props = {
 	submitUrl: string;
 	fieldErrors: FieldError[];
 	submitButtonText: string;
 	labelText: string;
-	// for grid layout on consents page
-	gridAutoRow?: AutoRow;
 	recaptchaSiteKey?: string;
 	setRecaptchaErrorMessage?: React.Dispatch<React.SetStateAction<string>>;
 	setRecaptchaErrorContext?: React.Dispatch<React.SetStateAction<ReactNode>>;
@@ -50,170 +37,140 @@ type Props = {
 	onInvalid?: React.FormEventHandler<HTMLFormElement> | undefined;
 	formError?: string;
 	browserName?: string;
+	largeFormMarginTop?: boolean;
 };
-
-const feedbackMessageStyles = css`
-	display: flex;
-	align-items: flex-start;
-	min-height: ${space[6]}px;
-	div:first-of-type {
-		width: ${space[6]}px;
-	}
-`;
-
-const feedbackMessageIconStyles = css`
-	display: flex;
-	position: relative;
-	top: 3px;
-	svg {
-		color: ${neutral[46]};
-	}
-`;
-
-const smallIconStyles = css`
-	svg {
-		height: 18px;
-		width: 18px;
-		position: relative;
-	}
-`;
 
 const baseMessageStyles = css`
 	${textSans.small()};
-	color: ${neutral[46]};
+	display: flex;
+	align-items: center;
 `;
 
-const errorIconStyles = css`
-	position: static;
-	svg {
-		fill: ${error['400']};
-		height: 24px;
-		width: 24px;
-	}
-`;
-
-const redText = css`
-	color: ${error[400]};
-`;
-
-const form = css`
-	padding-top: ${space[3]}px;
-`;
-
-const passwordInput = css`
-	margin-bottom: ${space[2]}px;
-`;
-
-const TooLong = () => {
+const InfoMessage = ({ children }: { children: ReactNode }) => {
+	const infoMessageStyles = css`
+		${baseMessageStyles};
+		color: var(--color-alert-info);
+		svg {
+			fill: var(--color-alert-info);
+		}
+	`;
 	return (
-		<div css={feedbackMessageStyles}>
-			<div css={[feedbackMessageIconStyles, errorIconStyles]}>
-				<SvgAlertTriangle />
-			</div>
-			<div css={[baseMessageStyles, redText]}>
-				{ShortPasswordFieldErrors.MAXIMUM_72}
-			</div>
+		<div css={infoMessageStyles}>
+			<SvgInfoRound size="small" />
+			{children}
 		</div>
 	);
 };
 
-const TooShort = () => {
-	const infoIconStyles = css`
+const AlertMessage = ({ children }: { children: ReactNode }) => {
+	const alertMessageStyles = css`
+		${baseMessageStyles};
+		color: var(--color-alert-error);
 		svg {
-			fill: ${neutral[46]};
-			border-radius: 50%;
-			/* Bit of a hack - the SVG for the tick icon is positioned more fully
-       inside its viewBox than the SVG for the info icon, so this forces the
-       info icon to take up the same amount of pixel space. */
-			transform: scale(1.355);
+			fill: var(--color-alert-error);
 		}
 	`;
 
 	return (
-		<div css={feedbackMessageStyles}>
-			<div css={[feedbackMessageIconStyles, smallIconStyles, infoIconStyles]}>
-				<SvgInfo />
-			</div>
-			<div css={baseMessageStyles}>{ShortPasswordFieldErrors.AT_LEAST_8}</div>
+		<div css={alertMessageStyles}>
+			<SvgAlertRound size="small" />
+			{children}
 		</div>
 	);
 };
 
-const Valid = () => {
-	const successIconStyles = css`
+const SuccessMessage = ({ children }: { children: ReactNode }) => {
+	const successMessageStyles = css`
+		${baseMessageStyles};
+		color: var(--color-alert-success);
 		svg {
-			background: ${success[400]};
-			fill: ${neutral[100]};
-			border-radius: 50%;
+			fill: var(--color-alert-success);
 		}
 	`;
 
 	return (
-		<div css={feedbackMessageStyles}>
-			<div
-				css={[feedbackMessageIconStyles, smallIconStyles, successIconStyles]}
-			>
-				<SvgCheckmark />
-			</div>
-			<div
-				css={[
-					baseMessageStyles,
-					css`
-						font-weight: bold;
-						color: ${success[400]};
-					`,
-				]}
-			>
-				Valid password
-			</div>
+		<div css={successMessageStyles}>
+			<SvgTickRound size="small" />
+			{children}
 		</div>
 	);
 };
 
-const Checking = () => {
-	return (
-		<div css={feedbackMessageStyles}>
-			<div css={baseMessageStyles}>Checking...</div>
-		</div>
-	);
-};
+const TooLong = () => (
+	<AlertMessage>{ShortPasswordFieldErrors.MAXIMUM_72}</AlertMessage>
+);
 
-const Weak = () => {
-	return (
-		<div css={feedbackMessageStyles}>
-			<div css={[feedbackMessageIconStyles, errorIconStyles]}>
-				<SvgAlertTriangle />
-			</div>
-			<div css={[baseMessageStyles, redText]}>
-				<strong>Weak password:</strong>{' '}
-				{ShortPasswordFieldErrors.COMMON_PASSWORD}
-			</div>
-		</div>
-	);
-};
+const TooShort = () => (
+	<AlertMessage>{ShortPasswordFieldErrors.AT_LEAST_8}</AlertMessage>
+);
+
+const ValidLength = () => (
+	<SuccessMessage>{ShortPasswordFieldErrors.AT_LEAST_8}</SuccessMessage>
+);
+
+const LengthRequired = () => (
+	<InfoMessage>{ShortPasswordFieldErrors.AT_LEAST_8}</InfoMessage>
+);
+
+const Checking = () => <InfoMessage>Checking...</InfoMessage>;
+
+const Weak = () => (
+	<AlertMessage>{ShortPasswordFieldErrors.WEAK_PASSWORD}</AlertMessage>
+);
+
+const StrongPasswordRequired = () => (
+	<InfoMessage>{ShortPasswordFieldErrors.STRONG_PASSWORD_REQUIRED}</InfoMessage>
+);
+
+const StrongPassword = () => (
+	<SuccessMessage>
+		{ShortPasswordFieldErrors.STRONG_PASSWORD_REQUIRED}
+	</SuccessMessage>
+);
 
 const ValidationMessage = ({
+	isDirty,
 	isWeak,
 	isTooShort,
 	isTooLong,
 	isChecking,
 }: {
+	isDirty: boolean;
 	isWeak: boolean;
 	isTooShort: boolean;
 	isTooLong: boolean;
 	isChecking: boolean;
 }) => {
-	if (isTooShort) {
-		return <TooShort />;
-	} else if (isTooLong) {
-		return <TooLong />;
-	} else if (isChecking) {
-		return <Checking />;
-	} else if (isWeak) {
-		return <Weak />;
-	} else {
-		return <Valid />;
+	// eslint-disable-next-line functional/no-let
+	let lengthMessage, complexityMessage;
+	if (!isDirty) {
+		return (
+			<div>
+				<LengthRequired />
+				<StrongPasswordRequired />
+			</div>
+		);
 	}
+	if (isTooShort) {
+		lengthMessage = <TooShort />;
+	} else if (isTooLong) {
+		lengthMessage = <TooLong />;
+	} else {
+		lengthMessage = <ValidLength />;
+	}
+	if (isChecking) {
+		complexityMessage = <Checking />;
+	} else if (isWeak) {
+		complexityMessage = <Weak />;
+	} else {
+		complexityMessage = <StrongPassword />;
+	}
+	return (
+		<div>
+			{lengthMessage}
+			{complexityMessage}
+		</div>
+	);
 };
 
 const cryptoSubtleFeatureTest = (browserName?: string): boolean => {
@@ -274,134 +231,7 @@ const isBreached = AwesomeDebouncePromise(
 );
 
 export const PasswordForm = ({
-	submitUrl,
-	fieldErrors,
-	submitButtonText,
-	labelText,
-	gridAutoRow,
-	autoComplete,
-	formTrackingName,
-	onInvalid,
 	children,
-	browserName,
-}: PropsWithChildren<Props>) => {
-	const [password, setPassword] = useState<string>('');
-	const [error, setError] = useState<string | undefined>(
-		fieldErrors.find((fieldError) => fieldError.field === 'password')?.message,
-	);
-	const [isWeak, setIsWeak] = useState<boolean>(false);
-	const [isTooShort, setIsTooShort] = useState<boolean>(true);
-	const [isTooLong, setIsTooLong] = useState<boolean>(false);
-	const [isChecking, setIsChecking] = useState<boolean>(false);
-	const [isFormDisabled, setIsFormDisabled] = useState<boolean>(false);
-
-	useEffect(() => {
-		// Typing anything clears the big red error, falling back to the dynamic validation message
-		if (password.length > 0) setError(undefined);
-		setIsTooShort(password.length < 8);
-		setIsTooLong(password.length > 72);
-
-		if (password.length >= 8 && password.length <= 72) {
-			// Only make api calls to check if breached when length rules are not broken
-			setIsChecking(true);
-			if (cryptoSubtleFeatureTest(browserName)) {
-				void isBreached(password).then((breached) => {
-					if (breached) {
-						// Password is breached ❌
-						setIsWeak(true);
-					} else {
-						// Password is valid ✔
-						setIsWeak(false);
-					}
-					setIsChecking(false);
-				});
-			} else {
-				// Assume password is valid if crypto.subtle is not supported
-				// will be checked on the server side anyway for breached passwords
-				setIsWeak(false);
-				setIsChecking(false);
-			}
-		} else {
-			// Password is not an acceptable length ❌
-			setIsWeak(false);
-		}
-	}, [browserName, password]);
-
-	return (
-		<form
-			css={[form, gridAutoRow && gridAutoRow()]}
-			method="post"
-			action={submitUrl}
-			onSubmit={(e) => {
-				if (formTrackingName) {
-					trackFormSubmit(formTrackingName);
-				}
-				if (isTooShort) {
-					setError(PasswordFieldErrors.AT_LEAST_8);
-				} else if (isTooLong) {
-					setError(PasswordFieldErrors.MAXIMUM_72);
-				} else if (isWeak) {
-					setError(PasswordFieldErrors.COMMON_PASSWORD);
-				}
-				// If there are errors, don't submit the form and return here
-				if (isTooShort || isTooLong || isWeak) {
-					e.preventDefault();
-					return;
-				}
-				// If there are no errors, disable the form and submit it
-				setIsFormDisabled(true);
-			}}
-			onFocus={(e) =>
-				formTrackingName && trackFormFocusBlur(formTrackingName, e, 'focus')
-			}
-			onBlur={(e) =>
-				formTrackingName && trackFormFocusBlur(formTrackingName, e, 'blur')
-			}
-			onInvalid={onInvalid}
-		>
-			<CsrfFormField />
-			{children}
-			<div css={passwordInput}>
-				<PasswordInput
-					displayEye={true}
-					error={error}
-					label={labelText}
-					onChange={(e) => {
-						setPassword(e.target.value);
-					}}
-					autoComplete={autoComplete}
-				/>
-			</div>
-			{!error && (
-				<ValidationMessage
-					isWeak={isWeak}
-					isTooShort={isTooShort}
-					isTooLong={isTooLong}
-					isChecking={isChecking}
-				/>
-			)}
-
-			<div css={controls}>
-				<Button
-					css={passwordButton}
-					type="submit"
-					iconSide="right"
-					data-cy="change-password-button"
-					isLoading={isFormDisabled}
-					disabled={isFormDisabled}
-					aria-disabled={isFormDisabled}
-				>
-					{submitButtonText}
-				</Button>
-			</div>
-		</form>
-	);
-};
-
-// this is mostly duplicated from the form above, as the above form is still
-// being used on the welcome/onboarding page until that is redesigned
-// so we created this new component to use with the `MainLayout` for the time being
-export const PasswordFormMainLayout = ({
 	submitUrl,
 	fieldErrors,
 	submitButtonText,
@@ -413,7 +243,7 @@ export const PasswordFormMainLayout = ({
 	formTrackingName,
 	formError,
 	browserName,
-}: Props) => {
+}: PropsWithChildren<Props>) => {
 	const [password, setPassword] = useState<string>('');
 	const [error, setError] = useState<string | undefined>(
 		fieldErrors.find((fieldError) => fieldError.field === 'password')?.message,
@@ -422,6 +252,12 @@ export const PasswordFormMainLayout = ({
 	const [isTooShort, setIsTooShort] = useState<boolean>(true);
 	const [isTooLong, setIsTooLong] = useState<boolean>(false);
 	const [isChecking, setIsChecking] = useState<boolean>(false);
+	const [isDirty, setIsDirty] = useState<boolean>(false);
+
+	const handleSetPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setPassword(e.target.value);
+		setIsDirty(e.target.value.length > 0);
+	};
 
 	useEffect(() => {
 		// Typing anything clears the big red error, falling back to the dynamic validation message
@@ -488,19 +324,17 @@ export const PasswordFormMainLayout = ({
 			disableOnSubmit={true}
 			formErrorMessageFromParent={formError}
 		>
-			<div css={error ? undefined : passwordInput}>
-				<PasswordInput
-					error={error}
-					label={labelText}
-					onChange={(e) => {
-						setPassword(e.target.value);
-					}}
-					displayEye={true}
-					autoComplete={autoComplete}
-				/>
-			</div>
+			{children}
+			<PasswordInput
+				error={error}
+				label={labelText}
+				onChange={handleSetPassword}
+				displayEye={true}
+				autoComplete={autoComplete}
+			/>
 			{!error && (
 				<ValidationMessage
+					isDirty={isDirty}
 					isWeak={isWeak}
 					isTooShort={isTooShort}
 					isTooLong={isTooLong}

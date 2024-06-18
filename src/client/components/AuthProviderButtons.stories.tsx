@@ -6,35 +6,17 @@ import { AuthProviderButtons } from '@/client/components/AuthProviderButtons';
 export default {
 	title: 'Components/AuthProviderButtons',
 	component: AuthProviderButtons,
+	parameters: {
+		layout: 'padded',
+	},
 } as Meta;
 
-export const Desktop = () => (
+export const Default = () => (
 	<AuthProviderButtons
 		queryParams={{ returnUrl: 'https://www.theguardian.com/uk/' }}
 		providers={['social']}
 	/>
 );
-Desktop.storyName = 'At desktop';
-Desktop.parameters = {
-	viewport: {
-		defaultViewport: 'DESKTOP',
-	},
-	chromatic: { viewports: [1300] },
-};
-
-export const Mobile = () => (
-	<AuthProviderButtons
-		queryParams={{ returnUrl: 'https://www.theguardian.com/uk/' }}
-		providers={['social']}
-	/>
-);
-Mobile.storyName = 'At mobile 320';
-Mobile.parameters = {
-	viewport: {
-		defaultViewport: 'MOBILE_320',
-	},
-	chromatic: { viewports: [320] },
-};
 
 export const NativeAppAndroid = () => (
 	<AuthProviderButtons
@@ -54,33 +36,13 @@ export const NativeAppIos = () => (
 );
 NativeAppIos.storyName = 'iOS native app';
 
-export const DesktopWithEmail = () => (
+export const WithEmail = () => (
 	<AuthProviderButtons
 		queryParams={{ returnUrl: 'https://www.theguardian.com/uk/' }}
 		providers={['social', 'email']}
 	/>
 );
-DesktopWithEmail.storyName = 'At desktop (with email)';
-DesktopWithEmail.parameters = {
-	viewport: {
-		defaultViewport: 'DESKTOP',
-	},
-	chromatic: { viewports: [1300] },
-};
-
-export const MobileWithEmail = () => (
-	<AuthProviderButtons
-		queryParams={{ returnUrl: 'https://www.theguardian.com/uk/' }}
-		providers={['social', 'email']}
-	/>
-);
-MobileWithEmail.storyName = 'At mobile 320 (with email)';
-MobileWithEmail.parameters = {
-	viewport: {
-		defaultViewport: 'MOBILE_320',
-	},
-	chromatic: { viewports: [320] },
-};
+WithEmail.storyName = 'Default (with email)';
 
 export const NativeAppAndroidWithEmail = () => (
 	<AuthProviderButtons

@@ -4,11 +4,16 @@ import { EmailSent } from '@/client/pages/EmailSent';
 import { buildQueryParamsString } from '@/shared/lib/queryParams';
 
 interface Props {
+	pageHeader?: string;
 	noAccountInfo?: boolean;
 	formTrackingName?: string;
 }
 
-export const EmailSentPage = ({ noAccountInfo, formTrackingName }: Props) => {
+export const EmailSentPage = ({
+	noAccountInfo,
+	formTrackingName,
+	pageHeader,
+}: Props) => {
 	const clientState = useClientState();
 	const {
 		pageData = {},
@@ -27,6 +32,7 @@ export const EmailSentPage = ({ noAccountInfo, formTrackingName }: Props) => {
 
 	return (
 		<EmailSent
+			pageHeader={pageHeader}
 			formError={formError}
 			email={email}
 			changeEmailPage={changeEmailPage}

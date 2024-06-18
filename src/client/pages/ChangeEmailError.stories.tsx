@@ -7,7 +7,6 @@ import { ChangeEmailError } from '@/client/pages/ChangeEmailError';
 export default {
 	title: 'Pages/ChangeEmailError',
 	component: ChangeEmailError,
-	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => <ChangeEmailError accountManagementUrl="#" />;

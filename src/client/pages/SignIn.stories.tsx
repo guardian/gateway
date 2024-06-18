@@ -7,7 +7,6 @@ import { SignInErrors } from '@/shared/model/Errors';
 export default {
 	title: 'Pages/SignIn',
 	component: SignIn,
-	parameters: { layout: 'fullscreen' },
 	args: {
 		recaptchaSiteKey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
 		oauthBaseUrl: 'https://oauth.theguardian.com/',
@@ -88,13 +87,6 @@ InvalidRecaptcha.story = {
 	name: 'with reCAPTCHA error',
 };
 
-export const WithoutRegisterButton = (args: SignInProps) => (
-	<SignIn {...args} isReauthenticate />
-);
-WithoutRegisterButton.story = {
-	name: 'without register button',
-};
-
 export const WithJobs = (args: SignInProps) => (
 	<SignIn
 		{...{ ...args, queryParams: { ...args.queryParams, clientId: 'jobs' } }}
@@ -113,4 +105,11 @@ export const WithJobsAndSocialSigninBlocked = (args: SignInProps) => (
 );
 WithJobsAndSocialSigninBlocked.story = {
 	name: 'with Jobs terms and social sign-in blocked',
+};
+
+export const IsReauthenticate = (args: SignInProps) => (
+	<SignIn {...{ ...args, isReauthenticate: true }} />
+);
+IsReauthenticate.story = {
+	name: 'showing /reauthenticate page',
 };

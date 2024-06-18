@@ -5,13 +5,25 @@ import {
 	InformationBoxText,
 	InformationBox,
 } from '@/client/components/InformationBox';
-import { ButtonLink, Link } from '@guardian/source/react-components';
+import { ButtonLink } from '@guardian/source/react-components';
 import { ExternalLink } from '@/client/components/ExternalLink';
+import ThemedLink from '@/client/components/ThemedLink';
+import { css } from '@emotion/react';
 
 export default {
 	title: 'Components/InformationBox',
 	component: InformationBox,
+	parameters: {
+		layout: 'padded',
+	},
 } as Meta;
+
+const buttonLinkStyles = css`
+	color: var(--color-link);
+	:hover {
+		color: var(--color-link);
+	}
+`;
 
 export const Default = () => (
 	<InformationBox>
@@ -20,29 +32,16 @@ export const Default = () => (
 		</InformationBoxText>
 		<InformationBoxText>
 			And some more useful stuff in the information box but this one is a{' '}
-			<Link href="#">link</Link>.
+			<ThemedLink href="#">link</ThemedLink>.
 		</InformationBoxText>
 		<InformationBoxText>
 			This also works with <ExternalLink href="#">external links</ExternalLink>{' '}
-			too. As well as <ButtonLink>buttons that look like links</ButtonLink>.
+			too. As well as{' '}
+			<ButtonLink css={buttonLinkStyles}>
+				buttons that look like links
+			</ButtonLink>
+			.
 		</InformationBoxText>
 	</InformationBox>
 );
 Default.storyName = 'default';
-
-export const WithMarginTop = () => (
-	<InformationBox withMarginTop>
-		<InformationBoxText>
-			This is some useful stuff in the information box, with a margin top!
-		</InformationBoxText>
-		<InformationBoxText>
-			And some more useful stuff in the information box but this one is a{' '}
-			<Link href="#">link</Link>.
-		</InformationBoxText>
-		<InformationBoxText>
-			This also works with <ExternalLink href="#">external links</ExternalLink>{' '}
-			too. As well as <ButtonLink>buttons that look like links</ButtonLink>.
-		</InformationBoxText>
-	</InformationBox>
-);
-WithMarginTop.storyName = 'withMarginTop';

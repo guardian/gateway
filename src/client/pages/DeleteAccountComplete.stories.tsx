@@ -6,7 +6,6 @@ import { DeleteAccountComplete } from '@/client/pages/DeleteAccountComplete';
 export default {
 	title: 'Pages/DeleteAccountComplete',
 	component: DeleteAccountComplete,
-	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => <DeleteAccountComplete returnUrl="#" />;

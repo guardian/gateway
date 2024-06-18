@@ -155,8 +155,8 @@ describe('Change password in Okta', () => {
 			cy.get('input[name="password"]').type(randomPassword());
 			cy.get('button[type="submit"]').click();
 
-			cy.contains('Reset password');
-			cy.contains(`Please enter your new password for ${email}`);
+			cy.contains('Create new password');
+			cy.contains(`You’ve requested to create a new password for ${email}`);
 			cy.contains(
 				'There was a problem changing your password, please try again.',
 			);
@@ -195,8 +195,8 @@ describe('Change password in Okta', () => {
 			cy.get('input[name="password"]').type(randomPassword());
 			cy.get('button[type="submit"]').click();
 
-			cy.contains('Reset password');
-			cy.contains(`Please enter your new password for ${email}`);
+			cy.contains('Create new password');
+			cy.contains(`You’ve requested to create a new password for ${email}`);
 			cy.contains(
 				'There was a problem changing your password, please try again.',
 			);
@@ -218,7 +218,7 @@ describe('Change password in Okta', () => {
 			cy.get('input[name="password"]').type(randomPassword());
 			cy.get('button[type="submit"]').click();
 
-			cy.contains('Reset password');
+			cy.contains('Create new password');
 			cy.contains(
 				'Please make sure your password is at least 8 characters long.',
 			);
@@ -238,7 +238,7 @@ describe('Change password in Okta', () => {
 			cy.get('input[name="password"]').type(randomPassword());
 			cy.get('button[type="submit"]').click();
 
-			cy.contains('Reset password');
+			cy.contains('Create new password');
 			cy.contains(
 				'Please make sure your password is not longer than 72 characters.',
 			);
@@ -256,7 +256,7 @@ describe('Change password in Okta', () => {
 			cy.get('input[name="password"]').type(randomPassword());
 			cy.get('button[type="submit"]').click();
 
-			cy.contains('Reset password');
+			cy.contains('Create new password');
 			cy.contains(
 				'Please use a password that is different to your current password.',
 			);
@@ -276,7 +276,7 @@ describe('Change password in Okta', () => {
 			cy.get('input[name="password"]').type(randomPassword());
 			cy.get('button[type="submit"]').click();
 
-			cy.contains('Reset password');
+			cy.contains('Create new password');
 			cy.contains('Please use a password that is hard to guess.');
 		});
 

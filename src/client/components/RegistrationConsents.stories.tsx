@@ -6,19 +6,22 @@ import { RegistrationConsents } from '@/client/components/RegistrationConsents';
 export default {
 	title: 'Components/RegistrationConsents',
 	component: RegistrationConsents,
+	parameters: {
+		layout: 'padded',
+	},
 } as Meta;
 
-export const Default = () => {
+export const GB = () => {
 	return <RegistrationConsents geolocation="GB" />;
 };
-Default.storyName = 'default';
+GB.storyName = 'GB/EU geolocation';
 
 export const US = () => {
 	return <RegistrationConsents geolocation="US" />;
 };
 US.storyName = 'US geolocation';
 
-export const NoMarginBottom = () => {
-	return <RegistrationConsents geolocation="GB" noMarginBottom />;
+export const AU = () => {
+	return <RegistrationConsents geolocation="AU" />;
 };
-NoMarginBottom.storyName = 'NoMarginBottom';
+AU.storyName = 'AU geolocation';

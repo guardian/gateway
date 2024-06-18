@@ -7,7 +7,6 @@ import { SignInErrors } from '@/shared/model/Errors';
 export default {
 	title: 'Pages/SignedInAs',
 	component: SignedInAs,
-	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => (

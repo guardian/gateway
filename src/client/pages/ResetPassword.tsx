@@ -1,19 +1,21 @@
 import React, { PropsWithChildren, ReactNode, useState } from 'react';
 
-import { MainLayout } from '@/client/layouts/Main';
-import {
-	belowFormMarginTopSpacingStyle,
-	MainForm,
-} from '@/client/components/MainForm';
+import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { MainForm } from '@/client/components/MainForm';
 import { EmailInput } from '@/client/components/EmailInput';
-import { MainBodyText } from '@/client/components/MainBodyText';
-import { InfoSummary } from '@guardian/source-development-kitchen/react-components';
 import locations from '@/shared/lib/locations';
 import { ExternalLink } from '@/client/components/ExternalLink';
 import { buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
 import { QueryParams } from '@/shared/model/QueryParams';
 import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
 import { usePageLoadOphanInteraction } from '@/client/lib/hooks/usePageLoadOphanInteraction';
+import {
+	InformationBox,
+	InformationBoxText,
+} from '@/client/components/InformationBox';
+import { MainBodyText } from '@/client/components/MainBodyText';
+import { divider } from '@/client/styles/Shared';
+import { Divider } from '@guardian/source-development-kitchen/react-components';
 
 interface ResetPasswordProps {
 	email?: string;
@@ -22,8 +24,8 @@ interface ResetPasswordProps {
 	queryString: QueryParams;
 	formActionOverride?: string;
 	emailInputLabel?: string;
-	showNoAccessEmail?: boolean;
-	showRecentEmailSummary?: boolean;
+	showRecentEmailInformationBox?: boolean;
+	showHelpCentreMessage?: boolean;
 	recaptchaSiteKey?: string;
 	formPageTrackingName?: string;
 	formError?: string;
@@ -36,8 +38,8 @@ export const ResetPassword = ({
 	queryString,
 	formActionOverride,
 	emailInputLabel,
-	showNoAccessEmail,
-	showRecentEmailSummary,
+	showRecentEmailInformationBox,
+	showHelpCentreMessage,
 	children,
 	recaptchaSiteKey,
 	formPageTrackingName,
@@ -51,7 +53,7 @@ export const ResetPassword = ({
 		useState<ReactNode>(null);
 
 	return (
-		<MainLayout
+		<MinimalLayout
 			pageHeader={headerText}
 			errorContext={recaptchaErrorContext}
 			errorOverride={recaptchaErrorMessage}
@@ -72,32 +74,35 @@ export const ResetPassword = ({
 				formErrorMessageFromParent={formError}
 			>
 				<EmailInput label={emailInputLabel} defaultValue={email} />
-			</MainForm>
-			{showNoAccessEmail && (
-				<MainBodyText cssOverrides={belowFormMarginTopSpacingStyle} smallText>
-					Having trouble resetting your password? Please visit our{' '}
-					<ExternalLink href={locations.SIGN_IN_HELP_CENTRE}>
-						Help Centre
-					</ExternalLink>
-					.
-				</MainBodyText>
-			)}
-			{showRecentEmailSummary && (
-				<InfoSummary
-					cssOverrides={belowFormMarginTopSpacingStyle}
-					message="Please make sure that you are opening the most recent email we sent."
-					context={
-						<>
+				{showRecentEmailInformationBox && (
+					<InformationBox>
+						<InformationBoxText>
+							Please make sure that you are opening the most recent email we
+							sent.
+						</InformationBoxText>
+						<InformationBoxText>
 							If you are having trouble, please contact our customer service
 							team using our{' '}
 							<ExternalLink href={locations.REPORT_ISSUE}>
 								Help Centre
 							</ExternalLink>
 							.
-						</>
-					}
-				/>
+						</InformationBoxText>
+					</InformationBox>
+				)}
+			</MainForm>
+			{showHelpCentreMessage && (
+				<>
+					<Divider spaceAbove="tight" size="full" cssOverrides={divider} />
+					<MainBodyText>
+						Having trouble resetting your password? Please visit our{' '}
+						<ExternalLink href={locations.SIGN_IN_HELP_CENTRE}>
+							Help Centre
+						</ExternalLink>
+						.
+					</MainBodyText>
+				</>
 			)}
-		</MainLayout>
+		</MinimalLayout>
 	);
 };

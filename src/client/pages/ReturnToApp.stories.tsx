@@ -6,7 +6,6 @@ import { ReturnToApp } from '@/client/pages/ReturnToApp';
 export default {
 	title: 'Pages/ReturnToApp',
 	component: ReturnToApp,
-	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => (

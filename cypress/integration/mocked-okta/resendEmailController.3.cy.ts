@@ -10,9 +10,9 @@ beforeEach(() => {
 	cy.mockPurge();
 });
 const verifyInRegularEmailSentPage = () => {
-	cy.contains('Check your email inbox');
+	cy.contains('Check your inbox');
 	cy.contains('send again');
-	cy.contains('Email sent');
+	cy.contains('We’ve sent an email');
 	cy.contains('within 2 minutes').should('not.exist');
 };
 userStatuses.forEach((status) => {
@@ -31,32 +31,26 @@ userStatuses.forEach((status) => {
 			});
 			switch (status) {
 				case false:
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status: 'STAGED' };
-							cy.mockNext(userResponse.code, response);
-							cy.get('[data-cy="main-form-submit-button"]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status: 'STAGED' };
+						cy.mockNext(userResponse.code, response);
+						cy.get('[data-cy="main-form-submit-button"]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 				case 'ACTIVE':
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userExistsError.code, userExistsError.response);
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
+						cy.get('[data-cy="main-form-submit-button"]').click();
+						verifyInRegularEmailSentPage();
+					});
 					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userExistsError.code, userExistsError.response);
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
-							cy.get('[data-cy="main-form-submit-button"]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
-					specify(
-						"Then I should be shown the 'Check your email inbox' page for social users ",
+						"Then I should be shown the 'Check your inbox' page for social users ",
 						() => {
 							cy.mockNext(userExistsError.code, userExistsError.response);
 							cy.mockNext(socialUserResponse.code, socialUserResponse.response);
@@ -66,7 +60,7 @@ userStatuses.forEach((status) => {
 						},
 					);
 					specify(
-						"Then I should be shown the 'Check your email inbox' page if I don't have a validated email and don't have a password set",
+						"Then I should be shown the 'Check your inbox' page if I don't have a validated email and don't have a password set",
 						() => {
 							// Set the correct user status on the response
 							const response = { ...userResponse.response, status };
@@ -103,7 +97,7 @@ userStatuses.forEach((status) => {
 						},
 					);
 					specify(
-						"Then I should be shown the 'Check your email inbox' page if I don't have a validated email and do have a password set",
+						"Then I should be shown the 'Check your inbox' page if I don't have a validated email and do have a password set",
 						() => {
 							// Set the correct user status on the response
 							const response = { ...userResponse.response, status };
@@ -120,40 +114,34 @@ userStatuses.forEach((status) => {
 				case 'PROVISIONED':
 				case 'STAGED':
 					// Then Gateway should generate an activation token
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userExistsError.code, userExistsError.response);
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(
-								successTokenResponse.code,
-								successTokenResponse.response,
-							);
-							cy.get('[data-cy="main-form-submit-button"]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userExistsError.code, userExistsError.response);
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(
+							successTokenResponse.code,
+							successTokenResponse.response,
+						);
+						cy.get('[data-cy="main-form-submit-button"]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 				case 'RECOVERY':
 				case 'PASSWORD_EXPIRED':
 					// Then Gateway should generate a reset password token
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userExistsError.code, userExistsError.response);
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(
-								resetPasswordResponse.code,
-								resetPasswordResponse.response,
-							);
-							cy.get('[data-cy="main-form-submit-button"]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userExistsError.code, userExistsError.response);
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(
+							resetPasswordResponse.code,
+							resetPasswordResponse.response,
+						);
+						cy.get('[data-cy="main-form-submit-button"]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 			}
 		});
@@ -171,45 +159,39 @@ userStatuses.forEach((status) => {
 			});
 			switch (status) {
 				case false:
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status: 'STAGED' };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(
-								successTokenResponse.code,
-								successTokenResponse.response,
-							);
-							cy.get('[data-cy="main-form-submit-button"]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status: 'STAGED' };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(
+							successTokenResponse.code,
+							successTokenResponse.response,
+						);
+						cy.get('[data-cy="main-form-submit-button"]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 				case 'ACTIVE':
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						const responseWithPassword = {
+							...response,
+							credentials: {
+								...response.credentials,
+								password: {},
+							},
+						};
+						cy.mockNext(userExistsError.code, userExistsError.response);
+						cy.mockNext(userResponse.code, responseWithPassword);
+						cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
+						cy.get('[data-cy="main-form-submit-button"]').click();
+						cy.contains('Check your inbox');
+						cy.contains('send again');
+						cy.contains('We’ve sent an email');
+					});
 					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							const responseWithPassword = {
-								...response,
-								credentials: {
-									...response.credentials,
-									password: {},
-								},
-							};
-							cy.mockNext(userExistsError.code, userExistsError.response);
-							cy.mockNext(userResponse.code, responseWithPassword);
-							cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
-							cy.get('[data-cy="main-form-submit-button"]').click();
-							cy.contains('Check your email inbox');
-							cy.contains('send again');
-							cy.contains('Email sent');
-						},
-					);
-					specify(
-						"Then I should be shown the 'Check your email inbox' page for social user",
+						"Then I should be shown the 'Check your inbox' page for social user",
 						() => {
 							cy.mockNext(userExistsError.code, userExistsError.response);
 							// This user response doesn't have a password, which is what we want
@@ -233,49 +215,43 @@ userStatuses.forEach((status) => {
 									'https://example.com/signin/reset-password/XE6wE17zmphl3KqAPFxO',
 							});
 							cy.get('[data-cy="main-form-submit-button"]').click();
-							cy.contains('Check your email inbox');
+							cy.contains('Check your inbox');
 							cy.contains('send again');
-							cy.contains('Email sent');
+							cy.contains('We’ve sent an email');
 						},
 					);
 					break;
 				case 'PROVISIONED':
 				case 'STAGED':
 					// Then Gateway should generate an activation token
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userExistsError.code, userExistsError.response);
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(
-								successTokenResponse.code,
-								successTokenResponse.response,
-							);
-							cy.get('[data-cy="main-form-submit-button"]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userExistsError.code, userExistsError.response);
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(
+							successTokenResponse.code,
+							successTokenResponse.response,
+						);
+						cy.get('[data-cy="main-form-submit-button"]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 				case 'RECOVERY':
 				case 'PASSWORD_EXPIRED':
 					// Then Gateway should generate a reset password token
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userExistsError.code, userExistsError.response);
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(
-								resetPasswordResponse.code,
-								resetPasswordResponse.response,
-							);
-							cy.get('[data-cy="main-form-submit-button"]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userExistsError.code, userExistsError.response);
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(
+							resetPasswordResponse.code,
+							resetPasswordResponse.response,
+						);
+						cy.get('[data-cy="main-form-submit-button"]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 			}
 		});
@@ -286,43 +262,37 @@ userStatuses.forEach((status) => {
 			});
 			switch (status) {
 				case false:
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status: 'STAGED' };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(
-								successTokenResponse.code,
-								successTokenResponse.response,
-							);
-							cy.get('[data-cy="main-form-submit-button"]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status: 'STAGED' };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(
+							successTokenResponse.code,
+							successTokenResponse.response,
+						);
+						cy.get('[data-cy="main-form-submit-button"]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 				case 'ACTIVE':
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						const responseWithPassword = {
+							...response,
+							credentials: {
+								...response.credentials,
+								password: {},
+							},
+						};
+						cy.mockNext(userExistsError.code, userExistsError.response);
+						cy.mockNext(userResponse.code, responseWithPassword);
+						cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
+						cy.get('[data-cy="main-form-submit-button"]').click();
+						verifyInRegularEmailSentPage();
+					});
 					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							const responseWithPassword = {
-								...response,
-								credentials: {
-									...response.credentials,
-									password: {},
-								},
-							};
-							cy.mockNext(userExistsError.code, userExistsError.response);
-							cy.mockNext(userResponse.code, responseWithPassword);
-							cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
-							cy.get('[data-cy="main-form-submit-button"]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
-					specify(
-						"Then I should be shown the 'Check your email inbox' page for social user",
+						"Then I should be shown the 'Check your inbox' page for social user",
 						() => {
 							cy.mockNext(userExistsError.code, userExistsError.response);
 							cy.mockNext(socialUserResponse.code, socialUserResponse.response);
@@ -351,40 +321,34 @@ userStatuses.forEach((status) => {
 				case 'PROVISIONED':
 				case 'STAGED':
 					// Then Gateway should generate an activation token
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userExistsError.code, userExistsError.response);
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(
-								successTokenResponse.code,
-								successTokenResponse.response,
-							);
-							cy.get('[data-cy="main-form-submit-button"]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userExistsError.code, userExistsError.response);
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(
+							successTokenResponse.code,
+							successTokenResponse.response,
+						);
+						cy.get('[data-cy="main-form-submit-button"]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 				case 'RECOVERY':
 				case 'PASSWORD_EXPIRED':
 					// Then Gateway should generate a reset password token
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userExistsError.code, userExistsError.response);
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(
-								resetPasswordResponse.code,
-								resetPasswordResponse.response,
-							);
-							cy.get('[data-cy="main-form-submit-button"]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userExistsError.code, userExistsError.response);
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(
+							resetPasswordResponse.code,
+							resetPasswordResponse.response,
+						);
+						cy.get('[data-cy="main-form-submit-button"]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 			}
 		});
@@ -395,43 +359,37 @@ userStatuses.forEach((status) => {
 			});
 			switch (status) {
 				case false:
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status: 'STAGED' };
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(
-								successTokenResponse.code,
-								successTokenResponse.response,
-							);
-							cy.get('[data-cy="main-form-submit-button"]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status: 'STAGED' };
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(
+							successTokenResponse.code,
+							successTokenResponse.response,
+						);
+						cy.get('[data-cy="main-form-submit-button"]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 				case 'ACTIVE':
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						const responseWithPassword = {
+							...response,
+							credentials: {
+								...response.credentials,
+								password: {},
+							},
+						};
+						cy.mockNext(userExistsError.code, userExistsError.response);
+						cy.mockNext(userResponse.code, responseWithPassword);
+						cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
+						cy.get('[data-cy="main-form-submit-button"]').click();
+						verifyInRegularEmailSentPage();
+					});
 					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							const responseWithPassword = {
-								...response,
-								credentials: {
-									...response.credentials,
-									password: {},
-								},
-							};
-							cy.mockNext(userExistsError.code, userExistsError.response);
-							cy.mockNext(userResponse.code, responseWithPassword);
-							cy.mockNext(userGroupsResponse.code, userGroupsResponse.response);
-							cy.get('[data-cy="main-form-submit-button"]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
-					specify(
-						"Then I should be shown the 'Check your email inbox' page for social users",
+						"Then I should be shown the 'Check your inbox' page for social users",
 						() => {
 							cy.mockNext(userExistsError.code, userExistsError.response);
 							cy.mockNext(socialUserResponse.code, socialUserResponse.response);
@@ -460,42 +418,36 @@ userStatuses.forEach((status) => {
 				case 'PROVISIONED':
 				case 'STAGED':
 					// Then Gateway should generate an activation token
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userExistsError.code, userExistsError.response);
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(
-								successTokenResponse.code,
-								successTokenResponse.response,
-							);
-							cy.get('[data-cy="main-form-submit-button"]').click();
-							cy.contains('Check your email inbox');
-							cy.contains('send again');
-							cy.contains('Email sent');
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userExistsError.code, userExistsError.response);
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(
+							successTokenResponse.code,
+							successTokenResponse.response,
+						);
+						cy.get('[data-cy="main-form-submit-button"]').click();
+						cy.contains('Check your inbox');
+						cy.contains('send again');
+						cy.contains('We’ve sent an email');
+					});
 					break;
 				case 'RECOVERY':
 				case 'PASSWORD_EXPIRED':
 					// Then Gateway should generate a reset password token
-					specify(
-						"Then I should be shown the 'Check your email inbox' page",
-						() => {
-							// Set the correct user status on the response
-							const response = { ...userResponse.response, status };
-							cy.mockNext(userExistsError.code, userExistsError.response);
-							cy.mockNext(userResponse.code, response);
-							cy.mockNext(
-								resetPasswordResponse.code,
-								resetPasswordResponse.response,
-							);
-							cy.get('[data-cy="main-form-submit-button"]').click();
-							verifyInRegularEmailSentPage();
-						},
-					);
+					specify("Then I should be shown the 'Check your inbox' page", () => {
+						// Set the correct user status on the response
+						const response = { ...userResponse.response, status };
+						cy.mockNext(userExistsError.code, userExistsError.response);
+						cy.mockNext(userResponse.code, response);
+						cy.mockNext(
+							resetPasswordResponse.code,
+							resetPasswordResponse.response,
+						);
+						cy.get('[data-cy="main-form-submit-button"]').click();
+						verifyInRegularEmailSentPage();
+					});
 					break;
 			}
 		});

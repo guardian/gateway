@@ -7,7 +7,6 @@ import { RegistrationProps } from '@/client/pages/Registration';
 export default {
 	title: 'Pages/RegisterWithEmail',
 	component: RegisterWithEmail,
-	parameters: { layout: 'fullscreen' },
 	args: {
 		recaptchaSiteKey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
 		oauthBaseUrl: 'https://oauth.theguardian.com/',

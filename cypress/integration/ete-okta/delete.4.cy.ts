@@ -180,7 +180,7 @@ describe('Delete my account flow in Okta', () => {
 					);
 					cy.visit(`/reset-password/${token}`);
 					cy.contains(emailAddress);
-					cy.contains('Reset password');
+					cy.contains('Create new password');
 				});
 			},
 		);
@@ -222,7 +222,7 @@ describe('Delete my account flow in Okta', () => {
 					);
 					cy.visit(`/reset-password/${token}`);
 					cy.contains(emailAddress);
-					cy.contains('Reset password');
+					cy.contains('Create new password');
 				});
 			},
 		);

@@ -7,12 +7,20 @@ import { InputFieldState } from '@/client/lib/hooks/useInputValidityState';
 export default {
 	title: 'Components/EmailInput',
 	component: EmailInput,
+	parameters: {
+		layout: 'padded',
+	},
 } as Meta;
 
 export const Default = () => {
-	return <EmailInput defaultValue="email@email.com" />;
+	return <EmailInput />;
 };
 Default.storyName = 'default';
+
+export const WithEmail = () => {
+	return <EmailInput defaultValue="email@email.com" />;
+};
+WithEmail.storyName = 'with email';
 
 export const WithEmptyError = () => (
 	<EmailInput defaultValue="" initialState={InputFieldState.EMPTY} />

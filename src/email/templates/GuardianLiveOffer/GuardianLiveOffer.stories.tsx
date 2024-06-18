@@ -7,7 +7,14 @@ import { renderMJML } from '../../testUtils';
 export default {
 	title: 'Email/Templates/GuardianLiveOffer',
 	component: GuardianLiveOffer,
-	parameters: { layout: 'fullscreen' },
+	parameters: {
+		chromatic: {
+			modes: {
+				'dark desktop': { disable: true },
+				'dark mobile': { disable: true },
+			},
+		},
+	},
 } as Meta;
 
 export const Default = () => {

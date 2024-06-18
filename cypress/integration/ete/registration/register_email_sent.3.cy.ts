@@ -18,7 +18,7 @@ describe('Registration email sent page', () => {
 		const timeRequestWasMadeInitialEmail = new Date();
 		cy.get('[data-cy="main-form-submit-button"]').click();
 
-		cy.contains('Check your email inbox');
+		cy.contains('Check your inbox');
 		cy.contains(unregisteredEmail);
 		cy.contains('send again');
 		cy.contains('try another address');
@@ -33,7 +33,7 @@ describe('Registration email sent page', () => {
 
 		const timeRequestWasMade = new Date();
 		cy.contains('send again').click();
-		cy.contains('Check your email inbox');
+		cy.contains('Check your inbox');
 		cy.contains(unregisteredEmail);
 
 		// test and delete resent email
@@ -57,7 +57,7 @@ describe('Registration email sent page', () => {
 				const timeRequestWasMadeInitialEmail = new Date();
 				cy.get('[data-cy="main-form-submit-button"]').click();
 
-				cy.contains('Check your email inbox');
+				cy.contains('Check your inbox');
 				cy.contains(emailAddress);
 				cy.contains('send again');
 				cy.contains('try another address');
@@ -77,7 +77,7 @@ describe('Registration email sent page', () => {
 
 				const timeRequestWasMade = new Date();
 				cy.contains('send again').click();
-				cy.contains('Check your email inbox');
+				cy.contains('Check your inbox');
 				cy.contains(emailAddress);
 
 				// test and delete resent email
@@ -105,7 +105,7 @@ describe('Registration email sent page', () => {
 				const timeRequestWasMadeInitialEmail = new Date();
 				cy.get('[data-cy="main-form-submit-button"]').click();
 
-				cy.contains('Check your email inbox');
+				cy.contains('Check your inbox');
 				cy.contains(emailAddress);
 				cy.contains('send again');
 				cy.contains('try another address');
@@ -121,7 +121,7 @@ describe('Registration email sent page', () => {
 
 				const timeRequestWasMade = new Date();
 				cy.contains('send again').click();
-				cy.contains('Check your email inbox');
+				cy.contains('Check your inbox');
 				cy.contains(emailAddress);
 
 				// test and delete resent email
@@ -138,15 +138,14 @@ describe('Registration email sent page', () => {
 	it('should navigate back to the correct page when change email is clicked', () => {
 		cy.visit('/register/email-sent?useIdapi=true');
 		cy.contains('try another address').click();
-		cy.contains('Register');
-		cy.contains('Enter your email');
+		cy.contains('Create your account');
 		cy.title().should('eq', 'Register With Email | The Guardian');
 	});
 
 	it('should render properly if the encrypted email cookie is not set', () => {
 		cy.visit('/register/email-sent?useIdapi=true');
 		cy.contains('try another address');
-		cy.contains('Check your email inbox');
+		cy.contains('Check your inbox');
 	});
 
 	it('shows reCAPTCHA errors when the request fails', () => {
@@ -162,7 +161,7 @@ describe('Registration email sent page', () => {
 
 				cy.get('[data-cy="main-form-submit-button"]').click();
 
-				cy.contains('Check your email inbox');
+				cy.contains('Check your inbox');
 				cy.contains(emailAddress);
 				cy.contains('send again');
 				cy.contains('try another address');
@@ -185,7 +184,7 @@ describe('Registration email sent page', () => {
 					'not.exist',
 				);
 
-				cy.contains('Check your email inbox');
+				cy.contains('Check your inbox');
 				cy.contains(emailAddress);
 
 				cy.checkForEmailAndGetDetails(emailAddress, timeRequestWasMade);

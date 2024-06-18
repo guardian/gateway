@@ -4,8 +4,6 @@ import React, {
 	useState,
 	useEffect,
 } from 'react';
-import { Link, TextInput } from '@guardian/source/react-components';
-import { MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { MainForm } from '@/client/components/MainForm';
 import { EmailInput } from '@/client/components/EmailInput';
@@ -21,8 +19,12 @@ import { css } from '@emotion/react';
 import { FieldError } from '@/shared/model/ClientState';
 import { logger } from '@/client/lib/clientSideLogger';
 import { space } from '@guardian/source/foundations';
+import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import ThemedLink from '@/client/components/ThemedLink';
+import { PasscodeInput } from '@/client/components/PasscodeInput';
 
 type Props = {
+	pageHeader?: string;
 	email?: string;
 	changeEmailPage?: string;
 	resendEmailAction?: string;
@@ -40,6 +42,10 @@ type Props = {
 	passcode?: string;
 	timeUntilTokenExpiry?: number;
 };
+
+const sendAgainFormWrapperStyles = css`
+	white-space: nowrap;
+`;
 
 export const EmailSent = ({
 	email,
@@ -97,25 +103,24 @@ export const EmailSent = ({
 		}
 	}, []);
 
-	const pageHeader = hasStateHandle
-		? 'Enter your code'
-		: 'Check your email inbox';
+	const pageHeader = hasStateHandle ? 'Enter your code' : 'Check your inbox';
 
 	return (
-		<MainLayout
+		<MinimalLayout
 			pageHeader={pageHeader}
 			successOverride={showSuccess ? 'Email sent' : undefined}
 			errorOverride={
 				recaptchaErrorMessage ? recaptchaErrorMessage : errorMessage
 			}
 			errorContext={recaptchaErrorContext}
+			imageId="email"
 		>
 			{children}
 			{!hasStateHandle && (
 				<>
 					{email ? (
 						<MainBodyText>
-							We’ve sent an email to <b>{email}</b>
+							We’ve sent an email to <strong>{email}</strong>
 						</MainBodyText>
 					) : (
 						<MainBodyText>We’ve sent you an email.</MainBodyText>
@@ -135,8 +140,8 @@ export const EmailSent = ({
 				<>
 					{email ? (
 						<MainBodyText>
-							We’ve sent a temporary verification code to <b>{email}</b>. Please
-							check your inbox.
+							We’ve sent a temporary verification code to{' '}
+							<strong>{email}</strong>. Please check your inbox.
 						</MainBodyText>
 					) : (
 						<MainBodyText>
@@ -147,15 +152,9 @@ export const EmailSent = ({
 				</>
 			)}
 			<MainBodyText>
-				{hasStateHandle && passcodeAction ? (
-					<b>
-						For your security, the verification code will expire in 30 minutes.
-					</b>
-				) : (
-					<b>
-						For your security, the link in the email will expire in 60 minutes.
-					</b>
-				)}
+				{hasStateHandle && passcodeAction
+					? 'For your security, the verification code will expire in 30 minutes.'
+					: 'For your security, the link in the email will expire in 60 minutes.'}
 			</MainBodyText>
 			{hasStateHandle && passcodeAction && (
 				<div
@@ -168,28 +167,15 @@ export const EmailSent = ({
 						submitButtonText="Submit verification code"
 						disableOnSubmit
 					>
-						<TextInput
-							label="Verification code"
-							type="text"
-							width={4}
-							pattern="\d{6}"
-							name="code"
-							autoComplete="one-time-code"
-							inputMode="numeric"
-							maxLength={6}
-							error={
-								fieldErrors?.find((error) => error.field === 'code')?.message
-							}
-							defaultValue={passcode}
-						/>
+						<PasscodeInput passcode={passcode} fieldErrors={fieldErrors} />
 					</MainForm>
 				</div>
 			)}
 			<InformationBox>
 				<InformationBoxText>
-					Didn’t get the email? Check your spam
+					Didn’t get the email? Check your spam&#8288;
 					{email && resendEmailAction && (
-						<>
+						<span css={sendAgainFormWrapperStyles}>
 							,{!changeEmailPage ? <> or </> : <> </>}
 							<MainForm
 								formAction={
@@ -204,20 +190,20 @@ export const EmailSent = ({
 								formTrackingName={formTrackingName}
 								disableOnSubmit
 								formErrorMessageFromParent={formError}
+								displayInline
 								submitButtonLink
 								hideRecaptchaMessage
 							>
 								<EmailInput defaultValue={email} hidden hideLabel />
 							</MainForm>
-						</>
+						</span>
 					)}
-					{changeEmailPage && <>, or</>}
 					{changeEmailPage && (
 						<>
-							{' '}
-							<Link href={`${changeEmailPage}${queryString}`}>
+							, or{' '}
+							<ThemedLink href={`${changeEmailPage}${queryString}`}>
 								try another address
-							</Link>
+							</ThemedLink>
 						</>
 					)}
 					.
@@ -226,9 +212,9 @@ export const EmailSent = ({
 					<InformationBoxText>
 						If you don’t receive an email within 2 minutes you may not have an
 						account. Don’t have an account?{' '}
-						<Link href={`${buildUrl('/register')}${queryString}`}>
-							Register for free
-						</Link>
+						<ThemedLink href={`${buildUrl('/register')}${queryString}`}>
+							Create an account for free
+						</ThemedLink>
 						.
 					</InformationBoxText>
 				)}
@@ -239,6 +225,6 @@ export const EmailSent = ({
 					</ExternalLink>
 				</InformationBoxText>
 			</InformationBox>
-		</MainLayout>
+		</MinimalLayout>
 	);
 };

@@ -11,6 +11,9 @@ import { InformationBox } from '@/client/components/InformationBox';
 export default {
 	title: 'Components/Terms',
 	component: GuardianTerms,
+	parameters: {
+		layout: 'padded',
+	},
 } as Meta;
 
 export const Default = () => (

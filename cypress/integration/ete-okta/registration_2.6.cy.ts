@@ -25,7 +25,7 @@ describe('Registration flow - Split 2/2', () => {
 							cy.get('input[name=email]').type(emailAddress);
 							cy.get('[data-cy="main-form-submit-button"]').click();
 
-							cy.contains('Check your email inbox');
+							cy.contains('Check your inbox');
 							cy.contains(emailAddress);
 							cy.contains('send again');
 							cy.contains('try another address');
@@ -82,7 +82,7 @@ describe('Registration flow - Split 2/2', () => {
 								cy.get('input[name=email]').type(emailAddress);
 								cy.get('[data-cy="main-form-submit-button"]').click();
 
-								cy.contains('Check your email inbox');
+								cy.contains('Check your inbox');
 								cy.contains(emailAddress);
 								cy.contains('send again');
 								cy.contains('try another address');
@@ -134,7 +134,7 @@ describe('Registration flow - Split 2/2', () => {
 							cy.get('input[name=email]').type(emailAddress);
 							cy.get('[data-cy="main-form-submit-button"]').click();
 
-							cy.contains('Check your email inbox');
+							cy.contains('Check your inbox');
 							cy.contains(emailAddress);
 							cy.contains('send again');
 							cy.contains('try another address');
@@ -162,7 +162,7 @@ describe('Registration flow - Split 2/2', () => {
 										'useOkta=true',
 									);
 									cy.visit(resetPasswordLink?.href as string);
-									cy.contains('Reset password');
+									cy.contains('Create new password');
 									cy.contains(emailAddress);
 								});
 							});
@@ -186,7 +186,7 @@ describe('Registration flow - Split 2/2', () => {
 								cy.get('input[name=email]').type(emailAddress);
 								cy.get('[data-cy="main-form-submit-button"]').click();
 
-								cy.contains('Check your email inbox');
+								cy.contains('Check your inbox');
 								cy.contains(emailAddress);
 								cy.contains('send again');
 								cy.contains('try another address');
@@ -214,7 +214,7 @@ describe('Registration flow - Split 2/2', () => {
 											'useOkta=true',
 										);
 										cy.visit(resetPasswordLink?.href as string);
-										cy.contains('Reset password');
+										cy.contains('Create new password');
 										cy.contains(emailAddress);
 									});
 								});
@@ -239,7 +239,7 @@ describe('Registration flow - Split 2/2', () => {
 								cy.get('input[name=email]').type(emailAddress);
 								cy.get('[data-cy="main-form-submit-button"]').click();
 
-								cy.contains('Check your email inbox');
+								cy.contains('Check your inbox');
 								cy.contains(emailAddress);
 								cy.contains('send again');
 								cy.contains('try another address');
@@ -267,7 +267,7 @@ describe('Registration flow - Split 2/2', () => {
 											'useOkta=true',
 										);
 										cy.visit(resetPasswordLink?.href as string);
-										cy.contains('Reset password');
+										cy.contains('Create new password');
 										cy.contains(emailAddress);
 									});
 								});
@@ -290,7 +290,7 @@ describe('Registration flow - Split 2/2', () => {
 			cy.get('input[name=email]').type(unregisteredEmail);
 			cy.get('[data-cy="main-form-submit-button"]').click();
 
-			cy.contains('Check your email inbox');
+			cy.contains('Check your inbox');
 			cy.contains(unregisteredEmail);
 			cy.contains('send again');
 			cy.contains('try another address');
@@ -334,7 +334,7 @@ describe('Registration flow - Split 2/2', () => {
 						cy.get('input[name=email]').type(emailAddress);
 						cy.get('[data-cy="main-form-submit-button"]').click();
 
-						cy.contains('Check your email inbox');
+						cy.contains('Check your inbox');
 						cy.contains(emailAddress);
 						cy.contains('send again');
 						cy.contains('try another address');
@@ -390,7 +390,7 @@ describe('Registration flow - Split 2/2', () => {
 							cy.get('input[name=email]').type(emailAddress);
 							cy.get('[data-cy="main-form-submit-button"]').click();
 
-							cy.contains('Check your email inbox');
+							cy.contains('Check your inbox');
 							cy.contains(emailAddress);
 							cy.contains('send again');
 							cy.contains('try another address');
@@ -442,7 +442,7 @@ describe('Registration flow - Split 2/2', () => {
 						cy.get('input[name=email]').type(emailAddress);
 						cy.get('[data-cy="main-form-submit-button"]').click();
 
-						cy.contains('Check your email inbox');
+						cy.contains('Check your inbox');
 						cy.contains(emailAddress);
 						cy.contains('send again');
 						cy.contains('try another address');
@@ -470,7 +470,7 @@ describe('Registration flow - Split 2/2', () => {
 									'useOkta=true',
 								);
 								cy.visit(resetPasswordLink?.href as string);
-								cy.contains('Reset password');
+								cy.contains('Create new password');
 								cy.contains(emailAddress);
 							});
 						});
@@ -494,7 +494,7 @@ describe('Registration flow - Split 2/2', () => {
 							cy.get('input[name=email]').type(emailAddress);
 							cy.get('[data-cy="main-form-submit-button"]').click();
 
-							cy.contains('Check your email inbox');
+							cy.contains('Check your inbox');
 							cy.contains(emailAddress);
 							cy.contains('send again');
 							cy.contains('try another address');
@@ -522,7 +522,7 @@ describe('Registration flow - Split 2/2', () => {
 										'useOkta=true',
 									);
 									cy.visit(resetPasswordLink?.href as string);
-									cy.contains('Reset password');
+									cy.contains('Create new password');
 									cy.contains(emailAddress);
 								});
 							});
@@ -547,7 +547,7 @@ describe('Registration flow - Split 2/2', () => {
 							cy.get('input[name=email]').type(emailAddress);
 							cy.get('[data-cy="main-form-submit-button"]').click();
 
-							cy.contains('Check your email inbox');
+							cy.contains('Check your inbox');
 							cy.contains(emailAddress);
 							cy.contains('send again');
 							cy.contains('try another address');
@@ -575,7 +575,7 @@ describe('Registration flow - Split 2/2', () => {
 										'useOkta=true',
 									);
 									cy.visit(resetPasswordLink?.href as string);
-									cy.contains('Reset password');
+									cy.contains('Create new password');
 									cy.contains(emailAddress);
 								});
 							});
@@ -658,7 +658,7 @@ describe('Registration flow - Split 2/2', () => {
 			cy.get('input[name=email]').type(unregisteredEmail);
 			cy.get('[data-cy="main-form-submit-button"]').click();
 
-			cy.contains('Check your email inbox');
+			cy.contains('Check your inbox');
 			cy.contains(unregisteredEmail);
 			cy.contains('send again');
 			cy.contains('try another address');
@@ -972,7 +972,7 @@ describe('Registration flow - Split 2/2', () => {
 						cy.get('input[name=email]').type(emailAddress);
 						cy.get('[data-cy="main-form-submit-button"]').click();
 
-						cy.contains('Check your email inbox');
+						cy.contains('Check your inbox');
 						cy.contains(emailAddress);
 						cy.contains('send again');
 						cy.contains('try another address');

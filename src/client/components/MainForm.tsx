@@ -14,8 +14,7 @@ import {
 	JobsTerms,
 	RecaptchaTerms,
 } from '@/client/components/Terms';
-import { space } from '@guardian/source/foundations';
-import { buttonStyles } from '@/client/layouts/Main';
+import { textSans } from '@guardian/source/foundations';
 import {
 	RecaptchaWrapper,
 	UseRecaptchaReturnValue,
@@ -30,12 +29,19 @@ import {
 	InformationBox,
 	InformationBoxText,
 } from '@/client/components/InformationBox';
+import {
+	mainSectionStyles,
+	primaryButtonStyles,
+	secondaryButtonStyles,
+} from '@/client/styles/Shared';
+import locations from '@/shared/lib/locations';
+import { errorMessageStyles } from '@/client/styles/Shared';
 
 export interface MainFormProps {
+	wideLayout?: boolean;
 	formAction: string;
 	submitButtonText: string;
 	submitButtonPriority?: 'primary' | 'tertiary';
-	submitButtonHalfWidth?: boolean;
 	recaptchaSiteKey?: string;
 	// These two props are used to pass a setter callback from the parent component
 	// to MainForm, in instances when we want the error message to appear somewhere in the
@@ -60,53 +66,34 @@ export interface MainFormProps {
 	formTrackingName?: string;
 	disableOnSubmit?: boolean;
 	largeFormMarginTop?: boolean;
+	displayInline?: boolean;
 	submitButtonLink?: boolean;
 	hideRecaptchaMessage?: boolean;
 	additionalTerms?: ReactNode;
 }
 
-const formStyles = (
-	largeFormMarginTop = false,
-	submitButtonLink = false,
-) => css`
-	${!submitButtonLink &&
-	css`
-		margin-top: ${largeFormMarginTop ? space[6] : space[4]}px;
-	`}
-
-	${submitButtonLink &&
-	css`
-		display: inline-block;
-	`}
+const formStyles = (displayInline: boolean) => css`
+	${mainSectionStyles};
+	a {
+		${textSans.small({ fontWeight: 'bold' })};
+	}
+	${displayInline && 'display: inline-block;'}
 `;
 
-const inputStyles = (hasTerms = false, submitButtonLink = false) => css`
-	${hasTerms &&
-	!submitButtonLink &&
-	css`
-		margin-bottom: ${space[2]}px;
-	`}
-`;
-
-const summaryStyles = (smallMarginBottom = false) => css`
-	margin-top: ${space[6]}px;
-	margin-bottom: ${smallMarginBottom ? space[4] : space[6]}px;
-`;
-
-export const inputMarginBottomSpacingStyle = css`
-	margin-bottom: ${space[3]}px;
-`;
-
-export const belowFormMarginTopSpacingStyle = css`
-	margin-top: ${space[3]}px;
+const buttonLinkStyles = css`
+	${textSans.small({ fontWeight: 'bold' })};
+	color: var(--color-link);
+	:hover {
+		color: var(--color-link);
+	}
 `;
 
 export const MainForm = ({
 	children,
+	wideLayout = false,
 	formAction,
 	submitButtonText,
 	submitButtonPriority = 'primary',
-	submitButtonHalfWidth,
 	recaptchaSiteKey,
 	setRecaptchaErrorMessage,
 	setRecaptchaErrorContext,
@@ -116,16 +103,14 @@ export const MainForm = ({
 	onInvalid,
 	formTrackingName,
 	disableOnSubmit = false,
-	largeFormMarginTop = false,
 	formErrorMessageFromParent,
 	formErrorContextFromParent,
+	displayInline = false,
 	submitButtonLink,
 	hideRecaptchaMessage,
 	additionalTerms,
 }: PropsWithChildren<MainFormProps>) => {
 	const recaptchaEnabled = !!recaptchaSiteKey;
-	const hasTerms =
-		recaptchaEnabled || hasGuardianTerms || hasJobsTerms || !!additionalTerms;
 
 	// These setters are used to set the error message locally, in this component.
 	// We want to use these when we want to display errors at the level of the form.
@@ -145,7 +130,7 @@ export const MainForm = ({
 
 	const [isFormDisabled, setIsFormDisabled] = useState(false);
 
-	const formLevelErrorMargin = !!formLevelErrorMessage;
+	const showFormLevelReportUrl = !!formLevelErrorContext;
 
 	/**
 	 * Executes the reCAPTCHA check and form submit tracking.
@@ -274,7 +259,7 @@ export const MainForm = ({
 
 	return (
 		<form
-			css={formStyles(largeFormMarginTop, submitButtonLink)}
+			css={formStyles(displayInline)}
 			method="post"
 			action={formAction}
 			onSubmit={handleSubmit}
@@ -290,9 +275,12 @@ export const MainForm = ({
 		>
 			{errorMessage && (
 				<ErrorSummary
-					cssOverrides={summaryStyles(formLevelErrorMargin)}
 					message={errorMessage}
 					context={errorContext}
+					errorReportUrl={
+						showFormLevelReportUrl ? locations.REPORT_ISSUE : undefined
+					}
+					css={errorMessageStyles}
 				/>
 			)}
 			{recaptchaEnabled && (
@@ -303,7 +291,7 @@ export const MainForm = ({
 			)}
 			<CsrfFormField />
 			<RefTrackingFormFields />
-			<div css={inputStyles(hasTerms, submitButtonLink)}>{children}</div>
+			{children}
 			{(additionalTerms ||
 				hasGuardianTerms ||
 				hasJobsTerms ||
@@ -324,15 +312,17 @@ export const MainForm = ({
 					data-cy="main-form-submit-button"
 					disabled={isFormDisabled}
 					aria-disabled={isFormDisabled}
+					cssOverrides={buttonLinkStyles}
 				>
 					{submitButtonText}
 				</ButtonLink>
 			) : (
 				<Button
-					css={buttonStyles({
-						hasTerms,
-						halfWidth: submitButtonHalfWidth,
-					})}
+					css={
+						submitButtonPriority === 'primary'
+							? primaryButtonStyles(wideLayout ? 'half' : 'full')
+							: secondaryButtonStyles(wideLayout ? 'half' : 'full')
+					}
 					type="submit"
 					priority={submitButtonPriority}
 					data-cy="main-form-submit-button"

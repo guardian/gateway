@@ -7,7 +7,6 @@ import { ResendConsentEmail } from '@/client/pages/ResendConsentEmail';
 export default {
 	title: 'Pages/ResendConsentEmail',
 	component: ResendConsentEmail,
-	parameters: { layout: 'fullscreen' },
 } as Meta;
 
 export const Default = () => (

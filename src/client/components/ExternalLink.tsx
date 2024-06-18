@@ -1,13 +1,13 @@
 import {
 	LinkButton,
 	LinkButtonProps,
-	Link,
 	LinkProps,
 } from '@guardian/source/react-components';
 import React from 'react';
+import ThemedLink from '@/client/components/ThemedLink';
 
 export const ExternalLink = (props: LinkProps) => (
-	<Link {...props} rel="noopener noreferrer" />
+	<ThemedLink {...props} rel="noopener noreferrer" />
 );
 
 export const ExternalLinkButton = (props: LinkButtonProps) => (

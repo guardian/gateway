@@ -1,11 +1,11 @@
 import React, { ReactNode, useState } from 'react';
 import { LinkButton } from '@guardian/source/react-components';
-
-import { buttonStyles, MainLayout } from '@/client/layouts/Main';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { MainForm } from '@/client/components/MainForm';
 import { EmailInput } from '@/client/components/EmailInput';
 import { buildUrl } from '@/shared/lib/routeUtils';
+import { MinimalLayout } from '@/client/layouts/MinimalLayout';
+import { primaryButtonStyles } from '@/client/styles/Shared';
 
 type ResendEmailVerificationProps = {
 	email?: string;
@@ -16,16 +16,18 @@ type ResendEmailVerificationProps = {
 };
 
 const LoggedOut = ({ signInPageUrl }: { signInPageUrl?: string }) => (
-	<MainLayout pageHeader="Link Expired">
-		<MainBodyText>Your email confirmation link has expired</MainBodyText>
-		<MainBodyText noMarginBottom>
+	<MinimalLayout
+		pageHeader="Link Expired"
+		leadText="Your email confirmation link has expired."
+	>
+		<MainBodyText>
 			The link we sent you was valid for 60 minutes. Please sign in again and we
 			will resend a verification email.
 		</MainBodyText>
-		<LinkButton css={buttonStyles({ halfWidth: true })} href={signInPageUrl}>
+		<LinkButton css={primaryButtonStyles()} href={signInPageUrl}>
 			Sign in
 		</LinkButton>
-	</MainLayout>
+	</MinimalLayout>
 );
 
 const LoggedIn = ({
@@ -43,17 +45,17 @@ const LoggedIn = ({
 	const [recaptchaErrorContext, setRecaptchaErrorContext] =
 		useState<ReactNode>(null);
 	return (
-		<MainLayout
+		<MinimalLayout
 			pageHeader="Verify Email"
 			errorOverride={recaptchaErrorMessage}
 			errorContext={recaptchaErrorContext}
+			leadText={
+				<MainBodyText>
+					You need to confirm your email address to continue securely:{' '}
+					<strong>{email}</strong>
+				</MainBodyText>
+			}
 		>
-			<MainBodyText>
-				You need to confirm your email address to continue securely:
-			</MainBodyText>
-			<MainBodyText>
-				<b>{email}</b>
-			</MainBodyText>
 			<MainBodyText>
 				We will send you a verification link to your email to ensure that it’s
 				you. Please note that the link will expire in 60 minutes.
@@ -76,7 +78,7 @@ const LoggedIn = ({
 					<EmailInput defaultValue={email} hidden hideLabel />
 				</MainForm>
 			)}
-		</MainLayout>
+		</MinimalLayout>
 	);
 };
 
