@@ -137,7 +137,7 @@
 		"@guardian/source": "^3.0.0",
 		"@guardian/source-development-kitchen": "^2.0.0",
 		"@okta/jwt-verifier": "^3.2.2",
-		"@sentry/browser": "^7.113.0",
+		"@sentry/browser": "^7.117.0",
 		"@smithy/node-http-handler": "^3.0.1",
 		"awesome-debounce-promise": "^2.1.0",
 		"body-parser": "^1.20.2",
