@@ -289,10 +289,7 @@ router.post(
 					if (error.name === 'oie.tooManyRequests') {
 						return res.redirect(
 							303,
-							addQueryParamsToPath(
-								'/register/code/expired',
-								res.locals.queryParams,
-							),
+							addQueryParamsToPath('/welcome/expired', res.locals.queryParams),
 						);
 					}
 
@@ -300,10 +297,7 @@ router.post(
 					if (error.name === 'idx.session.expired') {
 						return res.redirect(
 							303,
-							addQueryParamsToPath(
-								'/register/code/expired',
-								res.locals.queryParams,
-							),
+							addQueryParamsToPath('/welcome/expired', res.locals.queryParams),
 						);
 					}
 				}
@@ -372,10 +366,7 @@ router.post(
 					if (error.name === 'idx.session.expired') {
 						return res.redirect(
 							303,
-							addQueryParamsToPath(
-								'/register/code/expired',
-								res.locals.queryParams,
-							),
+							addQueryParamsToPath('/welcome/expired', res.locals.queryParams),
 						);
 					}
 				}

@@ -277,10 +277,7 @@ const changePasswordInOkta = async (
 				if (error.name === 'idx.session.expired') {
 					return res.redirect(
 						303,
-						addQueryParamsToPath(
-							'/register/code/expired',
-							res.locals.queryParams,
-						),
+						addQueryParamsToPath('/welcome/expired', res.locals.queryParams),
 					);
 				}
 			}

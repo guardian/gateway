@@ -86,7 +86,7 @@ export const EmailSent = ({
 					undefined,
 					{ timeUntilTokenExpiry },
 				);
-				window.location.replace(buildUrl('/register/code/expired'));
+				window.location.replace(buildUrl('/welcome/expired'));
 			}, timeUntilTokenExpiry);
 		}
 	}, [timeUntilTokenExpiry]);
