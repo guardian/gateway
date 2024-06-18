@@ -93,7 +93,6 @@ NoChangeEmailPage.story = {
 
 export const RegistrationEmailSent = () => (
 	<EmailSent
-		pageHeader="Check your inbox to verify your email"
 		email="example@theguardian.com"
 		changeEmailPage="/register"
 		resendEmailAction="/register/email-sent/resend"

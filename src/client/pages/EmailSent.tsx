@@ -20,7 +20,6 @@ import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import ThemedLink from '@/client/components/ThemedLink';
 
 type Props = {
-	pageHeader?: string;
 	email?: string;
 	changeEmailPage?: string;
 	resendEmailAction?: string;
