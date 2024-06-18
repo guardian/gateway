@@ -37,6 +37,7 @@ describe('getPersistableQueryParams', () => {
 			signInGateId: undefined,
 			fromURI: 'fromURI',
 			appClientId: 'appClientId',
+			useOktaClassic: undefined,
 		};
 
 		expect(output).toStrictEqual(expected);

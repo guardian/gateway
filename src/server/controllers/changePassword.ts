@@ -209,12 +209,12 @@ const changePasswordInOkta = async (
 ) => {
 	const { token: encryptedRecoveryToken } = req.params;
 	const { password, firstName, secondName } = req.body;
-	const { clientId, signInGateId } = res.locals.queryParams;
+	const { clientId, signInGateId, useOktaClassic } = res.locals.queryParams;
 
 	// OKTA IDX API FLOW
 	// If the user is using the passcode registration flow, we need to handle the password change/creation.
 	// If there are specific failures, we fall back to the legacy Okta change password flow.
-	if (registrationPasscodesEnabled) {
+	if (registrationPasscodesEnabled && !useOktaClassic) {
 		try {
 			// Read the encrypted state cookie to get the state handle and email
 			const encryptedState = readEncryptedStateCookie(req);

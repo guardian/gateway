@@ -652,7 +652,7 @@ describe('Registration flow - Split 2/2', () => {
 
 	// a few tests to check if the Okta Classic flow is still working using the useOktaClassic flag
 	context('Okta Classic Flow', () => {
-		it('successfully registers using an email with no existing account', () => {
+		it('create account - successfully registers using an email with no existing account', () => {
 			const encodedReturnUrl =
 				'https%3A%2F%2Fm.code.dev-theguardian.com%2Ftravel%2F2019%2Fdec%2F18%2Ffood-culture-tour-bethlehem-palestine-east-jerusalem-photo-essay';
 			const unregisteredEmail = randomMailosaurEmail();
