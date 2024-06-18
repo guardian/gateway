@@ -91,20 +91,6 @@ NoChangeEmailPage.story = {
 	name: 'with no change email',
 };
 
-export const WithStateHandle = () => (
-	<EmailSent
-		changeEmailPage="#"
-		email="example@theguardian.com"
-		resendEmailAction="#"
-		recaptchaSiteKey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-		hasStateHandle
-		passcodeAction="#"
-	/>
-);
-WithStateHandle.story = {
-	name: 'with stateHandle',
-};
-
 export const RegistrationEmailSent = () => (
 	<EmailSent
 		pageHeader="Check your inbox to verify your email"

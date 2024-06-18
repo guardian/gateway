@@ -1,6 +1,7 @@
 import React from 'react';
 import useClientState from '@/client/lib/hooks/useClientState';
 import { EmailSent } from '@/client/pages/EmailSent';
+import { PasscodeEmailSent } from '@/client/pages/PasscodeEmailSent';
 import { buildQueryParamsString } from '@/shared/lib/queryParams';
 
 import { buildUrl, buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
@@ -22,6 +23,29 @@ export const RegistrationEmailSentPage = () => {
 		emailSentSuccess: true,
 	});
 
+	// show passcode email sent page if we have a state handle
+	if (hasStateHandle) {
+		return (
+			<PasscodeEmailSent
+				email={email}
+				queryString={queryString}
+				changeEmailPage={buildUrlWithQueryParams(
+					'/register/email',
+					{},
+					queryParams,
+				)}
+				passcodeAction={buildUrl('/register/code')}
+				showSuccess={emailSentSuccess}
+				errorMessage={error}
+				recaptchaSiteKey={recaptchaSiteKey}
+				formTrackingName="register-resend"
+				fieldErrors={fieldErrors}
+				passcode={token}
+			/>
+		);
+	}
+
+	// otherwise show original email sent page
 	return (
 		<EmailSent
 			pageHeader="Check your inbox to verify your email"
@@ -33,15 +57,11 @@ export const RegistrationEmailSentPage = () => {
 				queryParams,
 			)}
 			resendEmailAction={buildUrl('/register/email-sent/resend')}
-			passcodeAction={buildUrl('/register/code')}
 			instructionContext="verify and complete creating your account"
 			showSuccess={emailSentSuccess}
 			errorMessage={error}
 			recaptchaSiteKey={recaptchaSiteKey}
 			formTrackingName="register-resend"
-			hasStateHandle={hasStateHandle}
-			fieldErrors={fieldErrors}
-			passcode={token}
 		/>
 	);
 };

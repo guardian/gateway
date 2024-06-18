@@ -16,45 +16,70 @@ import {
 	InformationBoxText,
 } from '@/client/components/InformationBox';
 import { css } from '@emotion/react';
+import { FieldError } from '@/shared/model/ClientState';
+import { logger } from '@/client/lib/clientSideLogger';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
 import ThemedLink from '@/client/components/ThemedLink';
+import { PasscodeInput } from '@/client/components/PasscodeInput';
 
 type Props = {
-	pageHeader?: string;
-	email?: string;
+	passcodeAction: string;
 	changeEmailPage?: string;
-	resendEmailAction?: string;
-	queryString?: string;
-	showSuccess?: boolean;
+	email?: string;
 	errorMessage?: string;
-	noAccountInfo?: boolean;
-	recaptchaSiteKey?: string;
-	formTrackingName?: string;
+	fieldErrors?: FieldError[];
 	formError?: string;
-	instructionContext?: string;
+	formTrackingName?: string;
+	passcode?: string;
+	queryString?: string;
+	recaptchaSiteKey?: string;
+	showSuccess?: boolean;
+	timeUntilTokenExpiry?: number;
 };
 
 const sendAgainFormWrapperStyles = css`
 	white-space: nowrap;
 `;
 
-export const EmailSent = ({
-	email,
+export const PasscodeEmailSent = ({
 	changeEmailPage,
-	resendEmailAction,
-	queryString,
-	showSuccess,
-	errorMessage,
-	noAccountInfo,
-	recaptchaSiteKey,
-	formTrackingName,
 	children,
+	email,
+	errorMessage,
+	fieldErrors,
 	formError,
-	instructionContext,
+	formTrackingName,
+	passcode,
+	passcodeAction,
+	queryString,
+	recaptchaSiteKey,
+	showSuccess,
+	timeUntilTokenExpiry,
 }: PropsWithChildren<Props>) => {
 	const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
 	const [recaptchaErrorContext, setRecaptchaErrorContext] =
 		useState<ReactNode>(null);
+
+	useEffect(() => {
+		// we only want this to run in the browser as window is not
+		// defined on the server
+		// and we also check that the expiry time exists so that
+		// we redirect to the session expired page
+		// if the token expires while the user is on the current page
+		if (typeof window !== 'undefined' && timeUntilTokenExpiry) {
+			logger.info(`Welcome page: loaded successfully`, undefined, {
+				timeUntilTokenExpiry,
+			});
+			setTimeout(() => {
+				logger.info(
+					`Welcome page: redirecting to token expired page`,
+					undefined,
+					{ timeUntilTokenExpiry },
+				);
+				window.location.replace(buildUrl('/welcome/expired'));
+			}, timeUntilTokenExpiry);
+		}
+	}, [timeUntilTokenExpiry]);
 
 	// autofocus the code input field when the page loads
 	useEffect(() => {
@@ -70,7 +95,7 @@ export const EmailSent = ({
 
 	return (
 		<MinimalLayout
-			pageHeader="Check your inbox"
+			pageHeader="Enter your code"
 			successOverride={showSuccess ? 'Email sent' : undefined}
 			errorOverride={
 				recaptchaErrorMessage ? recaptchaErrorMessage : errorMessage
@@ -82,32 +107,32 @@ export const EmailSent = ({
 
 			{email ? (
 				<MainBodyText>
-					We’ve sent an email to <strong>{email}</strong>
-				</MainBodyText>
-			) : (
-				<MainBodyText>We’ve sent you an email.</MainBodyText>
-			)}
-			{instructionContext ? (
-				<MainBodyText>
-					Please follow the link in the email to {instructionContext}.
+					We’ve sent a temporary verification code to <strong>{email}</strong>.
+					Please check your inbox.
 				</MainBodyText>
 			) : (
 				<MainBodyText>
-					Please follow the instructions in this email.
+					We’ve sent you a temporary verification code. Please check your inbox.
 				</MainBodyText>
 			)}
-
 			<MainBodyText>
-				For your security, the link in the email will expire in 60 minutes.
+				For your security, the verification code will expire in 30 minutes.
 			</MainBodyText>
+			<MainForm
+				formAction={`${passcodeAction}${queryString}`}
+				submitButtonText="Submit verification code"
+				disableOnSubmit
+			>
+				<PasscodeInput passcode={passcode} fieldErrors={fieldErrors} />
+			</MainForm>
 			<InformationBox>
 				<InformationBoxText>
 					Didn’t get the email? Check your spam&#8288;
-					{email && resendEmailAction && (
+					{email && (
 						<span css={sendAgainFormWrapperStyles}>
 							,{!changeEmailPage ? <> or </> : <> </>}
 							<MainForm
-								formAction={`${resendEmailAction}${queryString}`}
+								formAction={`${passcodeAction}/resend${queryString}`}
 								submitButtonText={'send again'}
 								recaptchaSiteKey={recaptchaSiteKey}
 								setRecaptchaErrorContext={setRecaptchaErrorContext}
@@ -133,16 +158,6 @@ export const EmailSent = ({
 					)}
 					.
 				</InformationBoxText>
-				{noAccountInfo && (
-					<InformationBoxText>
-						If you don’t receive an email within 2 minutes you may not have an
-						account. Don’t have an account?{' '}
-						<ThemedLink href={`${buildUrl('/register')}${queryString}`}>
-							Create an account for free
-						</ThemedLink>
-						.
-					</InformationBoxText>
-				)}
 				<InformationBoxText>
 					For further assistance, email our customer service team at{' '}
 					<ExternalLink href={locations.SUPPORT_EMAIL_MAILTO}>
