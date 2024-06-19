@@ -351,7 +351,6 @@ router.get(
 		const newsletters = await getUserNewsletterSubscriptions({
 			newslettersOnPage: NewsletterMap.get(geolocation) as string[],
 			ip: req.ip,
-			sc_gu_u: req.cookies.SC_GU_U,
 			request_id: state.requestId,
 			accessToken: state.oauthState.accessToken?.toString(),
 		});
@@ -427,6 +426,7 @@ router.post(
 
 router.post(
 	'/welcome/newsletters',
+	loginMiddlewareOAuth,
 	async (req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
 		const { returnUrl } = state.queryParams;
@@ -435,7 +435,6 @@ router.post(
 			const userNewsletterSubscriptions = await getUserNewsletterSubscriptions({
 				newslettersOnPage: ALL_NEWSLETTER_IDS,
 				ip: req.ip,
-				sc_gu_u: req.cookies.SC_GU_U,
 				request_id: state.requestId,
 				accessToken: state.oauthState.accessToken?.toString(),
 			});
@@ -472,7 +471,6 @@ router.post(
 
 			await updateNewsletters({
 				ip: req.ip,
-				sc_gu_u: req.cookies.SC_GU_U,
 				request_id: state.requestId,
 				accessToken: state.oauthState.accessToken?.toString(),
 				payload: newsletterSubscriptionsToUpdate,
