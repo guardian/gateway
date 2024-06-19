@@ -30,6 +30,7 @@ import {
 	introspect,
 	validateIntrospectRemediation,
 } from '@/server/lib/okta/idx/introspect';
+import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared';
 
 const { okta, defaultReturnUri, registrationPasscodesEnabled } =
 	getConfiguration();
@@ -208,6 +209,9 @@ export const checkTokenInOkta = async (
 								token,
 								isNativeApp: state.pageData.isNativeApp,
 								appName: state.pageData.appName,
+								timeUntilTokenExpiry: convertExpiresAtToExpiryTimeInMs(
+									introspectResponse.expiresAt,
+								),
 							},
 						}),
 					},
