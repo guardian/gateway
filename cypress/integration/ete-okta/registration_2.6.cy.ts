@@ -832,6 +832,48 @@ describe('Registration flow - Split 2/2', () => {
 			);
 		});
 
+		it('passcode used functionality', () => {
+			const unregisteredEmail = randomMailosaurEmail();
+			cy.visit(`/register/email?usePasscodeRegistration=true`);
+
+			const timeRequestWasMade = new Date();
+			cy.get('input[name=email]').type(unregisteredEmail);
+			cy.get('[data-cy="main-form-submit-button"]').click();
+
+			cy.contains('Enter your code');
+			cy.contains(unregisteredEmail);
+			cy.contains('send again');
+			cy.contains('try another address');
+
+			cy.checkForEmailAndGetDetails(unregisteredEmail, timeRequestWasMade).then(
+				({ body, codes }) => {
+					// email
+					expect(body).to.have.string('Your verification code');
+					expect(codes?.length).to.eq(1);
+					const code = codes?.[0].value;
+					expect(code).to.match(/^\d{6}$/);
+
+					// passcode page
+					cy.get('input[name=code]').clear().type(code!);
+					cy.contains('Submit verification code').click();
+
+					cy.url().should('contain', '/welcome/password');
+
+					cy.go('back');
+					cy.url().should('contain', '/register/email');
+					cy.contains('Email verified');
+					cy.contains('Complete creating account').click();
+
+					cy.url().should('contain', '/welcome/password');
+
+					cy.get('input[name="password"]').type(randomPassword());
+					cy.get('button[type="submit"]').click();
+
+					cy.url().should('contain', '/welcome/review');
+				},
+			);
+		});
+
 		it('passcode incorrect functionality', () => {
 			const unregisteredEmail = randomMailosaurEmail();
 			cy.visit(`/register/email?usePasscodeRegistration=true`);

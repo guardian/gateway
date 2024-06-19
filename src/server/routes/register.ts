@@ -3,6 +3,7 @@ import handleRecaptcha from '@/server/lib/recaptcha';
 import {
 	readEncryptedStateCookie,
 	setEncryptedStateCookie,
+	updateEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { guest } from '@/server/lib/idapi/guest';
@@ -250,6 +251,10 @@ router.post(
 					{ id: passwordAuthenticatorId[0], methodType: 'password' },
 					requestId,
 				);
+
+				updateEncryptedStateCookie(req, res, {
+					passcodeUsed: true,
+				});
 
 				// redirect to the password page to set a password
 				return res.redirect(

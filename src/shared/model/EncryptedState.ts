@@ -10,4 +10,5 @@ export interface EncryptedState {
 	queryParams?: PersistableQueryParams;
 	stateHandle?: string; // part of the Okta IDX flow
 	stateHandleExpiresAt?: string; // part of the Okta IDX flow
+	passcodeUsed?: boolean; // part of the Okta IDX flow, determines if the passcode has been used
 }

@@ -5,6 +5,7 @@ import { PasscodeEmailSent } from '@/client/pages/PasscodeEmailSent';
 import { buildQueryParamsString } from '@/shared/lib/queryParams';
 
 import { buildUrl, buildUrlWithQueryParams } from '@/shared/lib/routeUtils';
+import { PasscodeUsed } from './PasscodeUsed';
 
 export const RegistrationEmailSentPage = () => {
 	const clientState = useClientState();
@@ -14,7 +15,7 @@ export const RegistrationEmailSentPage = () => {
 		globalMessage = {},
 		recaptchaConfig,
 	} = clientState;
-	const { email, hasStateHandle, fieldErrors, token } = pageData;
+	const { email, hasStateHandle, fieldErrors, token, passcodeUsed } = pageData;
 	const { emailSentSuccess } = queryParams;
 	const { error } = globalMessage;
 	const { recaptchaSiteKey } = recaptchaConfig;
@@ -25,6 +26,10 @@ export const RegistrationEmailSentPage = () => {
 
 	// show passcode email sent page if we have a state handle
 	if (hasStateHandle) {
+		if (passcodeUsed) {
+			return <PasscodeUsed queryParams={queryParams} />;
+		}
+
 		return (
 			<PasscodeEmailSent
 				email={email}
