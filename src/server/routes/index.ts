@@ -76,7 +76,7 @@ uncachedRoutes.use(consentToken);
 uncachedRoutes.use(deleteAccount);
 
 // email template routes
-router.use(emailTemplates);
+uncachedRoutes.use(emailTemplates);
 
 router.use(uncachedRoutes);
 
