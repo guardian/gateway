@@ -28,4 +28,3 @@ jobs:
           contentDirectories: |
             identity-gateway:
               - identity-gateway.zip
-          dryRun: true
