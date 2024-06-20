@@ -44,7 +44,6 @@
 		"@babel/preset-typescript": "^7.24.7",
 		"@chromatic-com/storybook": "^1.5.0",
 		"@emotion/babel-preset-css-prop": "^11.11.0",
-		"@guardian/node-riffraff-artifact": "^0.3.2",
 		"@guardian/prettier": "^8.0.1",
 		"@storybook/addon-actions": "^8.1.9",
 		"@storybook/addon-essentials": "^8.1.9",
