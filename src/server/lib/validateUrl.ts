@@ -7,6 +7,10 @@ const validHostnames = [
 	'.thegulocal.com',
 ];
 
+// valid subdomains
+const validSubdomains = ['profile.', 'support.'];
+
+// invalid paths for profile subdomain
 const invalidPaths = ['/signout'];
 
 const { defaultReturnUri } = getConfiguration();
@@ -27,15 +31,18 @@ export const validateReturnUrl = (returnUrl = ''): string => {
 			throw 'Invalid hostname';
 		}
 
-		// if the hostname is on the profile subdomain, we also want to check the pathname is valid
-		// and keep any query params
-		if (url.hostname.startsWith('profile.')) {
-			// then check the pathname is valid
-			if (invalidPaths.some((path) => url.pathname.startsWith(path))) {
-				throw 'Invalid pathname';
+		// if valid subdomains are present, we can return the url with the query params
+		if (
+			validSubdomains.some((subdomain) => url.hostname.startsWith(subdomain))
+		) {
+			// check the pathname is valid, only if on profile subdomain
+			if (
+				url.hostname.startsWith('profile.') &&
+				invalidPaths.some((path) => url.pathname.startsWith(path))
+			) {
+				throw 'Invalid path';
 			}
 
-			// and return the url if so, which will have the query params
 			return url.href;
 		}
 
