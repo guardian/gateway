@@ -1,49 +1,26 @@
-import React, {
-	PropsWithChildren,
-	ReactNode,
-	useState,
-	useEffect,
-} from 'react';
+import React, { ReactNode, useState, useEffect } from 'react';
 import { MainBodyText } from '@/client/components/MainBodyText';
 import { MainForm } from '@/client/components/MainForm';
-import { EmailInput } from '@/client/components/EmailInput';
-import { ExternalLink } from '@/client/components/ExternalLink';
 import { buildUrl } from '@/shared/lib/routeUtils';
-import locations from '@/shared/lib/locations';
-import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
-import {
-	InformationBox,
-	InformationBoxText,
-} from '@/client/components/InformationBox';
-import { css } from '@emotion/react';
 import { FieldError } from '@/shared/model/ClientState';
 import { logger } from '@/client/lib/clientSideLogger';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
-import ThemedLink from '@/client/components/ThemedLink';
 import { PasscodeInput } from '@/client/components/PasscodeInput';
+import { EmailSentInformationBox } from '@/client/components/EmailSentInformationBox';
+import { EmailSentProps } from '@/client/pages/EmailSent';
 
 type Props = {
 	passcodeAction: string;
-	changeEmailPage?: string;
-	email?: string;
-	errorMessage?: string;
 	fieldErrors?: FieldError[];
-	formError?: string;
-	formTrackingName?: string;
 	passcode?: string;
-	queryString?: string;
 	recaptchaSiteKey?: string;
-	showSuccess?: boolean;
 	timeUntilTokenExpiry?: number;
 };
 
-const sendAgainFormWrapperStyles = css`
-	white-space: nowrap;
-`;
+type PasscodeEmailSentProps = EmailSentProps & Props;
 
 export const PasscodeEmailSent = ({
 	changeEmailPage,
-	children,
 	email,
 	errorMessage,
 	fieldErrors,
@@ -55,7 +32,7 @@ export const PasscodeEmailSent = ({
 	recaptchaSiteKey,
 	showSuccess,
 	timeUntilTokenExpiry,
-}: PropsWithChildren<Props>) => {
+}: PasscodeEmailSentProps) => {
 	const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
 	const [recaptchaErrorContext, setRecaptchaErrorContext] =
 		useState<ReactNode>(null);
@@ -96,15 +73,15 @@ export const PasscodeEmailSent = ({
 	return (
 		<MinimalLayout
 			pageHeader="Enter your code"
-			successOverride={showSuccess ? 'Email sent' : undefined}
+			successOverride={
+				showSuccess ? 'Email with verification code sent' : undefined
+			}
 			errorOverride={
 				recaptchaErrorMessage ? recaptchaErrorMessage : errorMessage
 			}
 			errorContext={recaptchaErrorContext}
 			imageId="email"
 		>
-			{children}
-
 			{email ? (
 				<MainBodyText>
 					We’ve sent a temporary verification code to <strong>{email}</strong>.
@@ -125,46 +102,17 @@ export const PasscodeEmailSent = ({
 			>
 				<PasscodeInput passcode={passcode} fieldErrors={fieldErrors} />
 			</MainForm>
-			<InformationBox>
-				<InformationBoxText>
-					Didn’t get the email? Check your spam&#8288;
-					{email && (
-						<span css={sendAgainFormWrapperStyles}>
-							,{!changeEmailPage ? <> or </> : <> </>}
-							<MainForm
-								formAction={`${passcodeAction}/resend${queryString}`}
-								submitButtonText={'send again'}
-								recaptchaSiteKey={recaptchaSiteKey}
-								setRecaptchaErrorContext={setRecaptchaErrorContext}
-								setRecaptchaErrorMessage={setRecaptchaErrorMessage}
-								formTrackingName={formTrackingName}
-								disableOnSubmit
-								formErrorMessageFromParent={formError}
-								displayInline
-								submitButtonLink
-								hideRecaptchaMessage
-							>
-								<EmailInput defaultValue={email} hidden hideLabel />
-							</MainForm>
-						</span>
-					)}
-					{changeEmailPage && (
-						<>
-							, or{' '}
-							<ThemedLink href={`${changeEmailPage}${queryString}`}>
-								try another address
-							</ThemedLink>
-						</>
-					)}
-					.
-				</InformationBoxText>
-				<InformationBoxText>
-					For further assistance, email our customer service team at{' '}
-					<ExternalLink href={locations.SUPPORT_EMAIL_MAILTO}>
-						{SUPPORT_EMAIL}
-					</ExternalLink>
-				</InformationBoxText>
-			</InformationBox>
+			<EmailSentInformationBox
+				setRecaptchaErrorContext={setRecaptchaErrorContext}
+				setRecaptchaErrorMessage={setRecaptchaErrorMessage}
+				email={email}
+				resendEmailAction={`${passcodeAction}/resend`}
+				changeEmailPage={changeEmailPage}
+				recaptchaSiteKey={recaptchaSiteKey}
+				formTrackingName={formTrackingName}
+				formError={formError}
+				queryString={queryString}
+			/>
 		</MinimalLayout>
 	);
 };

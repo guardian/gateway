@@ -5,21 +5,10 @@ import React, {
 	useEffect,
 } from 'react';
 import { MainBodyText } from '@/client/components/MainBodyText';
-import { MainForm } from '@/client/components/MainForm';
-import { EmailInput } from '@/client/components/EmailInput';
-import { ExternalLink } from '@/client/components/ExternalLink';
-import { buildUrl } from '@/shared/lib/routeUtils';
-import locations from '@/shared/lib/locations';
-import { SUPPORT_EMAIL } from '@/shared/model/Configuration';
-import {
-	InformationBox,
-	InformationBoxText,
-} from '@/client/components/InformationBox';
-import { css } from '@emotion/react';
 import { MinimalLayout } from '@/client/layouts/MinimalLayout';
-import ThemedLink from '@/client/components/ThemedLink';
+import { EmailSentInformationBox } from '@/client/components/EmailSentInformationBox';
 
-type Props = {
+export type EmailSentProps = {
 	email?: string;
 	changeEmailPage?: string;
 	resendEmailAction?: string;
@@ -32,10 +21,6 @@ type Props = {
 	formError?: string;
 	instructionContext?: string;
 };
-
-const sendAgainFormWrapperStyles = css`
-	white-space: nowrap;
-`;
 
 export const EmailSent = ({
 	email,
@@ -50,7 +35,7 @@ export const EmailSent = ({
 	children,
 	formError,
 	instructionContext,
-}: PropsWithChildren<Props>) => {
+}: PropsWithChildren<EmailSentProps>) => {
 	const [recaptchaErrorMessage, setRecaptchaErrorMessage] = useState('');
 	const [recaptchaErrorContext, setRecaptchaErrorContext] =
 		useState<ReactNode>(null);
@@ -99,56 +84,18 @@ export const EmailSent = ({
 			<MainBodyText>
 				For your security, the link in the email will expire in 60 minutes.
 			</MainBodyText>
-			<InformationBox>
-				<InformationBoxText>
-					Didn’t get the email? Check your spam&#8288;
-					{email && resendEmailAction && (
-						<span css={sendAgainFormWrapperStyles}>
-							,{!changeEmailPage ? <> or </> : <> </>}
-							<MainForm
-								formAction={`${resendEmailAction}${queryString}`}
-								submitButtonText={'send again'}
-								recaptchaSiteKey={recaptchaSiteKey}
-								setRecaptchaErrorContext={setRecaptchaErrorContext}
-								setRecaptchaErrorMessage={setRecaptchaErrorMessage}
-								formTrackingName={formTrackingName}
-								disableOnSubmit
-								formErrorMessageFromParent={formError}
-								displayInline
-								submitButtonLink
-								hideRecaptchaMessage
-							>
-								<EmailInput defaultValue={email} hidden hideLabel />
-							</MainForm>
-						</span>
-					)}
-					{changeEmailPage && (
-						<>
-							, or{' '}
-							<ThemedLink href={`${changeEmailPage}${queryString}`}>
-								try another address
-							</ThemedLink>
-						</>
-					)}
-					.
-				</InformationBoxText>
-				{noAccountInfo && (
-					<InformationBoxText>
-						If you don’t receive an email within 2 minutes you may not have an
-						account. Don’t have an account?{' '}
-						<ThemedLink href={`${buildUrl('/register')}${queryString}`}>
-							Create an account for free
-						</ThemedLink>
-						.
-					</InformationBoxText>
-				)}
-				<InformationBoxText>
-					For further assistance, email our customer service team at{' '}
-					<ExternalLink href={locations.SUPPORT_EMAIL_MAILTO}>
-						{SUPPORT_EMAIL}
-					</ExternalLink>
-				</InformationBoxText>
-			</InformationBox>
+			<EmailSentInformationBox
+				setRecaptchaErrorContext={setRecaptchaErrorContext}
+				setRecaptchaErrorMessage={setRecaptchaErrorMessage}
+				email={email}
+				resendEmailAction={resendEmailAction}
+				noAccountInfo={noAccountInfo}
+				changeEmailPage={changeEmailPage}
+				recaptchaSiteKey={recaptchaSiteKey}
+				formTrackingName={formTrackingName}
+				formError={formError}
+				queryString={queryString}
+			/>
 		</MinimalLayout>
 	);
 };
