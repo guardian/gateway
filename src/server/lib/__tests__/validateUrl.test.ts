@@ -46,6 +46,22 @@ describe('validateReturnUrl', () => {
 
 		expect(output).toEqual(input);
 	});
+
+	test('it should return returnUrl with query parameters if on support subdomain', () => {
+		const input = 'https://support.theguardian.com/signin?foo=bar';
+
+		const output = validateReturnUrl(input);
+
+		expect(output).toEqual(input);
+	});
+
+	test('it should not return url with query parameters if on main domain', () => {
+		const input = 'https://www.theguardian.com?foo=bar';
+
+		const output = validateReturnUrl(input);
+
+		expect(output).toEqual('https://www.theguardian.com/');
+	});
 });
 
 describe('validateRefUrl', () => {
