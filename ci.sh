@@ -10,4 +10,5 @@ export GITHUB_RUN_NUMBER=$(( $GITHUB_RUN_NUMBER + $LAST_TEAMCITY_BUILD ))
 pnpm install --frozen-lockfile
 pnpm run test
 pnpm run build
+zip -r identity-gateway.zip build
 # pnpm run riffraff
