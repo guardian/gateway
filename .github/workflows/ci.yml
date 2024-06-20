@@ -27,5 +27,5 @@ jobs:
           configPath: ./riff-raff.yaml
           contentDirectories: |
             identity-gateway:
-              - build
+              - identity-gateway.zip
           dryRun: true
