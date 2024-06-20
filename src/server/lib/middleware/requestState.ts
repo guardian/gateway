@@ -87,6 +87,7 @@ const getRequestState = async (
 			isNativeApp,
 			appName,
 			hasStateHandle: !!encryptedState?.stateHandle,
+			passcodeUsed: !!encryptedState?.passcodeUsed,
 		},
 		globalMessage: {},
 		csrf: {

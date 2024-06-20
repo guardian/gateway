@@ -72,6 +72,7 @@ export interface PageData {
 	contentAccess?: UserAttributesResponse['contentAccess'];
 	// okta idx api specific
 	hasStateHandle?: boolean; // determines if the state handle is present in the encrypted state, so we know if we're in an Okta IDX flow
+	passcodeUsed?: boolean; // determines if the passcode has been used in the Okta IDX flow, so don't show the passcode page again
 }
 
 export interface RecaptchaConfig {

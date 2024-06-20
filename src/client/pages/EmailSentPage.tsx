@@ -9,11 +9,7 @@ interface Props {
 	formTrackingName?: string;
 }
 
-export const EmailSentPage = ({
-	noAccountInfo,
-	formTrackingName,
-	pageHeader,
-}: Props) => {
+export const EmailSentPage = ({ noAccountInfo, formTrackingName }: Props) => {
 	const clientState = useClientState();
 	const {
 		pageData = {},
@@ -32,7 +28,6 @@ export const EmailSentPage = ({
 
 	return (
 		<EmailSent
-			pageHeader={pageHeader}
 			formError={formError}
 			email={email}
 			changeEmailPage={changeEmailPage}

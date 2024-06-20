@@ -3,6 +3,7 @@ import handleRecaptcha from '@/server/lib/recaptcha';
 import {
 	readEncryptedStateCookie,
 	setEncryptedStateCookie,
+	updateEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { guest } from '@/server/lib/idapi/guest';
@@ -251,6 +252,10 @@ router.post(
 					requestId,
 				);
 
+				updateEncryptedStateCookie(req, res, {
+					passcodeUsed: true,
+				});
+
 				// redirect to the password page to set a password
 				return res.redirect(
 					303,
@@ -289,10 +294,7 @@ router.post(
 					if (error.name === 'oie.tooManyRequests') {
 						return res.redirect(
 							303,
-							addQueryParamsToPath(
-								'/register/code/expired',
-								res.locals.queryParams,
-							),
+							addQueryParamsToPath('/welcome/expired', res.locals.queryParams),
 						);
 					}
 
@@ -300,10 +302,7 @@ router.post(
 					if (error.name === 'idx.session.expired') {
 						return res.redirect(
 							303,
-							addQueryParamsToPath(
-								'/register/code/expired',
-								res.locals.queryParams,
-							),
+							addQueryParamsToPath('/welcome/expired', res.locals.queryParams),
 						);
 					}
 				}
@@ -372,10 +371,7 @@ router.post(
 					if (error.name === 'idx.session.expired') {
 						return res.redirect(
 							303,
-							addQueryParamsToPath(
-								'/register/code/expired',
-								res.locals.queryParams,
-							),
+							addQueryParamsToPath('/welcome/expired', res.locals.queryParams),
 						);
 					}
 				}
