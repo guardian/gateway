@@ -10,4 +10,4 @@ export GITHUB_RUN_NUMBER=$(( $GITHUB_RUN_NUMBER + $LAST_TEAMCITY_BUILD ))
 pnpm install --frozen-lockfile
 pnpm run test
 pnpm run build
-pnpm run riffraff
+# pnpm run riffraff

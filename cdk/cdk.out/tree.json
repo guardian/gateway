@@ -1,0 +1,3311 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "IdentityGateway-CODE": {
+        "id": "IdentityGateway-CODE",
+        "path": "IdentityGateway-CODE",
+        "children": {
+          "YamlTemplate": {
+            "id": "YamlTemplate",
+            "path": "IdentityGateway-CODE/YamlTemplate",
+            "children": {
+              "$Mappings": {
+                "id": "$Mappings",
+                "path": "IdentityGateway-CODE/YamlTemplate/$Mappings",
+                "children": {
+                  "StageVariables": {
+                    "id": "StageVariables",
+                    "path": "IdentityGateway-CODE/YamlTemplate/$Mappings/StageVariables",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnMapping",
+                      "version": "2.145.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.3.0"
+                }
+              },
+              "AMI": {
+                "id": "AMI",
+                "path": "IdentityGateway-CODE/YamlTemplate/AMI",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "App": {
+                "id": "App",
+                "path": "IdentityGateway-CODE/YamlTemplate/App",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "IdapiBaseUrl": {
+                "id": "IdapiBaseUrl",
+                "path": "IdentityGateway-CODE/YamlTemplate/IdapiBaseUrl",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "SignInPageUrl": {
+                "id": "SignInPageUrl",
+                "path": "IdentityGateway-CODE/YamlTemplate/SignInPageUrl",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "OauthBaseUrl": {
+                "id": "OauthBaseUrl",
+                "path": "IdentityGateway-CODE/YamlTemplate/OauthBaseUrl",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "OktaOrgUrl": {
+                "id": "OktaOrgUrl",
+                "path": "IdentityGateway-CODE/YamlTemplate/OktaOrgUrl",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "MembersDataApiUrl": {
+                "id": "MembersDataApiUrl",
+                "path": "IdentityGateway-CODE/YamlTemplate/MembersDataApiUrl",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "RedisHost": {
+                "id": "RedisHost",
+                "path": "IdentityGateway-CODE/YamlTemplate/RedisHost",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "SentryDsn": {
+                "id": "SentryDsn",
+                "path": "IdentityGateway-CODE/YamlTemplate/SentryDsn",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "CertificateArn": {
+                "id": "CertificateArn",
+                "path": "IdentityGateway-CODE/YamlTemplate/CertificateArn",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "KeyName": {
+                "id": "KeyName",
+                "path": "IdentityGateway-CODE/YamlTemplate/KeyName",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "AlarmEmailAddress": {
+                "id": "AlarmEmailAddress",
+                "path": "IdentityGateway-CODE/YamlTemplate/AlarmEmailAddress",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "PrivateVpcSubnets": {
+                "id": "PrivateVpcSubnets",
+                "path": "IdentityGateway-CODE/YamlTemplate/PrivateVpcSubnets",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "PublicVpcSubnets": {
+                "id": "PublicVpcSubnets",
+                "path": "IdentityGateway-CODE/YamlTemplate/PublicVpcSubnets",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "Stack": {
+                "id": "Stack",
+                "path": "IdentityGateway-CODE/YamlTemplate/Stack",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "Stage": {
+                "id": "Stage",
+                "path": "IdentityGateway-CODE/YamlTemplate/Stage",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "SshAccessSecurityGroup": {
+                "id": "SshAccessSecurityGroup",
+                "path": "IdentityGateway-CODE/YamlTemplate/SshAccessSecurityGroup",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "SsmManagedPolicyArn": {
+                "id": "SsmManagedPolicyArn",
+                "path": "IdentityGateway-CODE/YamlTemplate/SsmManagedPolicyArn",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "VpcId": {
+                "id": "VpcId",
+                "path": "IdentityGateway-CODE/YamlTemplate/VpcId",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "KinesisStream": {
+                "id": "KinesisStream",
+                "path": "IdentityGateway-CODE/YamlTemplate/KinesisStream",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "LoadBalancerLogsS3Bucket": {
+                "id": "LoadBalancerLogsS3Bucket",
+                "path": "IdentityGateway-CODE/YamlTemplate/LoadBalancerLogsS3Bucket",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "IdentityArtifactBucket": {
+                "id": "IdentityArtifactBucket",
+                "path": "IdentityGateway-CODE/YamlTemplate/IdentityArtifactBucket",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "IdentityConfigBucket": {
+                "id": "IdentityConfigBucket",
+                "path": "IdentityGateway-CODE/YamlTemplate/IdentityConfigBucket",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "$Conditions": {
+                "id": "$Conditions",
+                "path": "IdentityGateway-CODE/YamlTemplate/$Conditions",
+                "children": {
+                  "IsProd": {
+                    "id": "IsProd",
+                    "path": "IdentityGateway-CODE/YamlTemplate/$Conditions/IsProd",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnCondition",
+                      "version": "2.145.0"
+                    }
+                  },
+                  "NotIsProd": {
+                    "id": "NotIsProd",
+                    "path": "IdentityGateway-CODE/YamlTemplate/$Conditions/NotIsProd",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnCondition",
+                      "version": "2.145.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.3.0"
+                }
+              },
+              "$Rules": {
+                "id": "$Rules",
+                "path": "IdentityGateway-CODE/YamlTemplate/$Rules",
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.3.0"
+                }
+              },
+              "AppRole": {
+                "id": "AppRole",
+                "path": "IdentityGateway-CODE/YamlTemplate/AppRole",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                  "aws:cdk:cloudformation:props": {
+                    "assumeRolePolicyDocument": {
+                      "Statement": [
+                        {
+                          "Effect": "Allow",
+                          "Principal": {
+                            "Service": [
+                              "ec2.amazonaws.com"
+                            ]
+                          },
+                          "Action": "sts:AssumeRole"
+                        }
+                      ]
+                    },
+                    "managedPolicyArns": [
+                      {
+                        "Ref": "SsmManagedPolicyArn"
+                      }
+                    ],
+                    "path": "/",
+                    "policies": [
+                      {
+                        "policyDocument": {
+                          "Version": "2012-10-17",
+                          "Statement": [
+                            {
+                              "Effect": "Allow",
+                              "Action": "s3:GetObject",
+                              "Resource": [
+                                {
+                                  "Fn::Sub": "arn:aws:s3:::${IdentityArtifactBucket}/${Stage}/${App}/*"
+                                }
+                              ]
+                            },
+                            {
+                              "Effect": "Allow",
+                              "Action": "s3:GetObject",
+                              "Resource": [
+                                {
+                                  "Fn::Sub": "arn:aws:s3:::${IdentityConfigBucket}/${Stage}/${App}/*"
+                                }
+                              ]
+                            },
+                            {
+                              "Effect": "Allow",
+                              "Action": [
+                                "kinesis:Describe*",
+                                "kinesis:Put*"
+                              ],
+                              "Resource": [
+                                {
+                                  "Fn::Sub": "arn:aws:kinesis:${AWS::Region}:${AWS::AccountId}:stream/${KinesisStream}"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "policyName": "root"
+                      },
+                      {
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Effect": "Allow",
+                              "Action": [
+                                "ssm:GetParameter"
+                              ],
+                              "Resource": [
+                                {
+                                  "Fn::Sub": "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${Stack}/${App}/${Stage}/*"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "policyName": "GetParameters"
+                      },
+                      {
+                        "policyDocument": {
+                          "Version": "2012-10-17",
+                          "Statement": [
+                            {
+                              "Effect": "Allow",
+                              "Action": "cloudwatch:PutMetricData",
+                              "Resource": "*"
+                            }
+                          ]
+                        },
+                        "policyName": "PushMetrics"
+                      },
+                      {
+                        "policyDocument": {
+                          "Version": "2012-10-17",
+                          "Statement": [
+                            {
+                              "Effect": "Allow",
+                              "Action": [
+                                "autoscaling:DescribeAutoScalingGroups",
+                                "autoscaling:DescribeAutoScalingInstances"
+                              ],
+                              "Resource": "*"
+                            }
+                          ]
+                        },
+                        "policyName": "DescribeASG"
+                      },
+                      {
+                        "policyDocument": {
+                          "Version": "2012-10-17",
+                          "Statement": [
+                            {
+                              "Effect": "Allow",
+                              "Action": "ses:SendEmail",
+                              "Resource": "*"
+                            }
+                          ]
+                        },
+                        "policyName": "SendEmailSES"
+                      },
+                      {
+                        "policyDocument": {
+                          "Version": "2012-10-17",
+                          "Statement": [
+                            {
+                              "Effect": "Allow",
+                              "Action": [
+                                "ec2messages:AcknowledgeMessage",
+                                "ec2messages:DeleteMessage",
+                                "ec2messages:FailMessage",
+                                "ec2messages:GetEndpoint",
+                                "ec2messages:GetMessages",
+                                "ec2messages:SendReply",
+                                "ssm:UpdateInstanceInformation",
+                                "ssm:ListInstanceAssociations",
+                                "ssm:DescribeInstanceProperties",
+                                "ssm:DescribeDocumentParameters",
+                                "ssmmessages:CreateControlChannel",
+                                "ssmmessages:CreateDataChannel",
+                                "ssmmessages:OpenControlChannel",
+                                "ssmmessages:OpenDataChannel"
+                              ],
+                              "Resource": "*"
+                            }
+                          ]
+                        },
+                        "policyName": "SSMTunnel"
+                      }
+                    ],
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "CODE"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                  "version": "2.145.0"
+                }
+              },
+              "GithubActionsSESSendEmailsRole": {
+                "id": "GithubActionsSESSendEmailsRole",
+                "path": "IdentityGateway-CODE/YamlTemplate/GithubActionsSESSendEmailsRole",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                  "aws:cdk:cloudformation:props": {
+                    "assumeRolePolicyDocument": {
+                      "Statement": [
+                        {
+                          "Effect": "Allow",
+                          "Action": "sts:AssumeRoleWithWebIdentity",
+                          "Principal": {
+                            "Federated": {
+                              "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:oidc-provider/token.actions.githubusercontent.com"
+                            }
+                          },
+                          "Condition": {
+                            "StringLike": {
+                              "token.actions.githubusercontent.com:sub": {
+                                "Fn::Sub": "repo:guardian/gateway:*"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "policies": [
+                      {
+                        "policyDocument": {
+                          "Version": "2012-10-17",
+                          "Statement": [
+                            {
+                              "Effect": "Allow",
+                              "Action": "ses:SendEmail",
+                              "Resource": "*"
+                            }
+                          ]
+                        },
+                        "policyName": "SendEmailSES"
+                      }
+                    ],
+                    "roleName": "GithubActionsSESSendEmailsRole",
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "CODE"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                  "version": "2.145.0"
+                }
+              },
+              "InstanceProfile": {
+                "id": "InstanceProfile",
+                "path": "IdentityGateway-CODE/YamlTemplate/InstanceProfile",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::InstanceProfile",
+                  "aws:cdk:cloudformation:props": {
+                    "path": "/",
+                    "roles": [
+                      {
+                        "Ref": "AppRole"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnInstanceProfile",
+                  "version": "2.145.0"
+                }
+              },
+              "LoadBalancerSecurityGroup": {
+                "id": "LoadBalancerSecurityGroup",
+                "path": "IdentityGateway-CODE/YamlTemplate/LoadBalancerSecurityGroup",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "groupDescription": "Allow HTTPS traffic and egress to 9233",
+                    "securityGroupEgress": [
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "fromPort": 9233,
+                        "ipProtocol": "tcp",
+                        "toPort": 9233
+                      }
+                    ],
+                    "securityGroupIngress": [
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "fromPort": 443,
+                        "ipProtocol": "tcp",
+                        "toPort": 443
+                      }
+                    ],
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "CODE"
+                      }
+                    ],
+                    "vpcId": {
+                      "Ref": "VpcId"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                  "version": "2.145.0"
+                }
+              },
+              "InstanceSecurityGroup": {
+                "id": "InstanceSecurityGroup",
+                "path": "IdentityGateway-CODE/YamlTemplate/InstanceSecurityGroup",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "groupDescription": "Allow SSH and HTTPS access",
+                    "securityGroupEgress": [
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "fromPort": 443,
+                        "ipProtocol": "tcp",
+                        "toPort": 443
+                      }
+                    ],
+                    "securityGroupIngress": [
+                      {
+                        "fromPort": 9233,
+                        "ipProtocol": "tcp",
+                        "sourceSecurityGroupId": {
+                          "Ref": "LoadBalancerSecurityGroup"
+                        },
+                        "toPort": 9233
+                      }
+                    ],
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "CODE"
+                      }
+                    ],
+                    "vpcId": {
+                      "Ref": "VpcId"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                  "version": "2.145.0"
+                }
+              },
+              "LaunchTemplate": {
+                "id": "LaunchTemplate",
+                "path": "IdentityGateway-CODE/YamlTemplate/LaunchTemplate",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::LaunchTemplate",
+                  "aws:cdk:cloudformation:props": {
+                    "launchTemplateData": {
+                      "iamInstanceProfile": {
+                        "arn": {
+                          "Fn::GetAtt": "InstanceProfile.Arn"
+                        }
+                      },
+                      "imageId": {
+                        "Ref": "AMI"
+                      },
+                      "instanceType": "t4g.small",
+                      "keyName": {
+                        "Ref": "KeyName"
+                      },
+                      "securityGroupIds": [
+                        {
+                          "Ref": "InstanceSecurityGroup"
+                        },
+                        {
+                          "Ref": "SshAccessSecurityGroup"
+                        }
+                      ],
+                      "userData": {
+                        "Fn::Base64": {
+                          "Fn::Sub": [
+                            "#!/bin/bash -ev\n\nmkdir /etc/gu\n\n# Get Riff Raff deployed artefact S3\naws s3 cp s3://${IdentityArtifactBucket}/${Stage}/${App}/${App}.zip /etc/gu\nunzip -o /etc/gu/${App}.zip -d /etc/gu\n\n# Get Rate Limiter configuration file\n# Try multiple times to the config file. The s3 cp command can fail when called immediately on instance startup.\nwhile true; do\n  if \\\n    aws s3 cp s3://${IdentityConfigBucket}/${Stage}/${App}/.ratelimit.json /etc/gu/.ratelimit.json\n    then break\n  fi\n  sleep 1\ndone\n\n# Setup user\ngroupadd identity-gateway\nuseradd -r -s /usr/bin/nologin -g identity-gateway identity-gateway\nchown -R identity-gateway:identity-gateway /etc/gu\n\n# Setup logs\ntouch /var/log/identity-gateway.log\nchown identity-gateway:identity-gateway /var/log/identity-gateway.log\n\n# Try multiple times to get parameter store values. The SSM command can fail when called immediately on instance startup.\nwhile true; do\n  if \\\n    IDAPI_CLIENT_ACCESS_TOKEN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/idapi-client-access-token' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\") && \\\n    APP_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/appSecret' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\") && \\\n    GOOGLE_RECAPTCHA_SITE_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/recaptcha-site-key' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\") && \\\n    GOOGLE_RECAPTCHA_SECRET_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/recaptcha-secret-key' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\") && \\\n    REDIS_PASSWORD=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/redis-password' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\") && \\\n    ENCRYPTION_SECRET_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/encryption-secret-key' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\") && \\\n    OKTA_API_TOKEN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/okta-api-token' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\") && \\\n    OKTA_CUSTOM_OAUTH_SERVER=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaCustomOAuthServer' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\") && \\\n    OKTA_CLIENT_ID=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaClientId' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\") && \\\n    OKTA_CLIENT_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaClientSecret' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\")\n    OKTA_IDP_APPLE=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaIdpApple' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\")\n    OKTA_IDP_GOOGLE=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaIdpGoogle' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\")\n    OKTA_GUARDIAN_USERS_ALL_GROUP_ID=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaGuardianUsersAllGroupId' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\")\n    DELETE_ACCOUNT_STEP_FUNCTION_URL=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/deleteAccountStepFunctionUrl' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\")\n    DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/deleteAccountStepFunctionApiKey' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\")\n    then break\n  fi\n\n  sleep 1\ndone\n\n# systemd setup\ncat > /etc/systemd/system/identity-gateway.service <<EOL\n[Service]\nExecStart=/bin/sh -ec '/usr/bin/node /etc/gu/server.js > /var/log/identity-gateway.log 2>&1'\nRestart=always\nStandardOutput=syslog\nStandardError=syslog\nSyslogIdentifier=identity-gateway\nUser=identity-gateway\nGroup=identity-gateway\nEnvironment=NODE_ENV=production\nEnvironment=PORT=9233\nEnvironment=IDAPI_CLIENT_ACCESS_TOKEN=$IDAPI_CLIENT_ACCESS_TOKEN\nEnvironment=IDAPI_BASE_URL=${IdapiBaseUrl}\nEnvironment=SIGN_IN_PAGE_URL=${SignInPageUrl}\nEnvironment=OAUTH_BASE_URL=${OauthBaseUrl}\nEnvironment=BASE_URI=${BaseUri}\nEnvironment=DEFAULT_RETURN_URI=${DefaultReturnUri}\nEnvironment=STAGE=${Stage}\nEnvironment=IS_HTTPS=true\nEnvironment=APP_SECRET=$APP_SECRET\nEnvironment=GOOGLE_RECAPTCHA_SITE_KEY=$GOOGLE_RECAPTCHA_SITE_KEY\nEnvironment=GOOGLE_RECAPTCHA_SECRET_KEY=$GOOGLE_RECAPTCHA_SECRET_KEY\nEnvironment=ENCRYPTION_SECRET_KEY=$ENCRYPTION_SECRET_KEY\nEnvironment=OKTA_ORG_URL=${OktaOrgUrl}\nEnvironment=OKTA_API_TOKEN=$OKTA_API_TOKEN\nEnvironment=OKTA_CUSTOM_OAUTH_SERVER=$OKTA_CUSTOM_OAUTH_SERVER\nEnvironment=OKTA_CLIENT_ID=$OKTA_CLIENT_ID\nEnvironment=OKTA_CLIENT_SECRET=$OKTA_CLIENT_SECRET\nEnvironment=OKTA_IDP_APPLE=$OKTA_IDP_APPLE\nEnvironment=OKTA_IDP_GOOGLE=$OKTA_IDP_GOOGLE\nEnvironment=OKTA_GUARDIAN_USERS_ALL_GROUP_ID=$OKTA_GUARDIAN_USERS_ALL_GROUP_ID            \nEnvironment=LOGGING_KINESIS_STREAM=${KinesisStream}\nEnvironment=EC2_INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)\nEnvironment=SENTRY_DSN=${SentryDsn}\nEnvironment=REDIS_PASSWORD=$REDIS_PASSWORD\nEnvironment=REDIS_HOST=${RedisHost}\nEnvironment=REDIS_SSL_ON=true\nEnvironment=MEMBERS_DATA_API_URL=${MembersDataApiUrl}\nEnvironment=DELETE_ACCOUNT_STEP_FUNCTION_URL=$DELETE_ACCOUNT_STEP_FUNCTION_URL\nEnvironment=DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$DELETE_ACCOUNT_STEP_FUNCTION_API_KEY\n\n[Install]\nWantedBy=multi-user.target\nEOL\n\nsystemctl enable identity-gateway\nsystemctl start identity-gateway\n\n",
+                            {
+                              "BaseUri": {
+                                "Fn::FindInMap": [
+                                  "StageVariables",
+                                  {
+                                    "Ref": "Stage"
+                                  },
+                                  "BaseUri"
+                                ]
+                              },
+                              "DefaultReturnUri": {
+                                "Fn::FindInMap": [
+                                  "StageVariables",
+                                  {
+                                    "Ref": "Stage"
+                                  },
+                                  "DefaultReturnUri"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "launchTemplateName": {
+                      "Fn::Sub": "${Stage}-${Stack}-${App}"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnLaunchTemplate",
+                  "version": "2.145.0"
+                }
+              },
+              "TargetGroup": {
+                "id": "TargetGroup",
+                "path": "IdentityGateway-CODE/YamlTemplate/TargetGroup",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "healthCheckIntervalSeconds": 10,
+                    "healthCheckPath": "/healthcheck",
+                    "healthCheckPort": "9233",
+                    "healthCheckProtocol": "HTTP",
+                    "healthCheckTimeoutSeconds": 5,
+                    "healthyThresholdCount": 2,
+                    "matcher": {
+                      "httpCode": "200"
+                    },
+                    "name": {
+                      "Fn::Sub": "${Stage}-${Stack}-${App}"
+                    },
+                    "port": 9233,
+                    "protocol": "HTTP",
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "CODE"
+                      }
+                    ],
+                    "targetGroupAttributes": [
+                      {
+                        "key": "deregistration_delay.timeout_seconds",
+                        "value": "45"
+                      }
+                    ],
+                    "unhealthyThresholdCount": 2,
+                    "vpcId": {
+                      "Ref": "VpcId"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnTargetGroup",
+                  "version": "2.145.0"
+                }
+              },
+              "LoadBalancer": {
+                "id": "LoadBalancer",
+                "path": "IdentityGateway-CODE/YamlTemplate/LoadBalancer",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+                  "aws:cdk:cloudformation:props": {
+                    "loadBalancerAttributes": [
+                      {
+                        "key": "access_logs.s3.enabled",
+                        "value": "true"
+                      },
+                      {
+                        "key": "access_logs.s3.bucket",
+                        "value": {
+                          "Ref": "LoadBalancerLogsS3Bucket"
+                        }
+                      },
+                      {
+                        "key": "access_logs.s3.prefix",
+                        "value": {
+                          "Fn::Sub": "ELBLogs/${Stack}/${App}/${Stage}"
+                        }
+                      }
+                    ],
+                    "name": {
+                      "Fn::Sub": "${Stack}-${App}-${Stage}"
+                    },
+                    "securityGroups": [
+                      {
+                        "Ref": "LoadBalancerSecurityGroup"
+                      }
+                    ],
+                    "subnets": {
+                      "Ref": "PublicVpcSubnets"
+                    },
+                    "tags": [
+                      {
+                        "key": "App",
+                        "value": {
+                          "Ref": "App"
+                        }
+                      },
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "CODE"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnLoadBalancer",
+                  "version": "2.145.0"
+                }
+              },
+              "AutoScalingGroup": {
+                "id": "AutoScalingGroup",
+                "path": "IdentityGateway-CODE/YamlTemplate/AutoScalingGroup",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AutoScaling::AutoScalingGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "healthCheckGracePeriod": 300,
+                    "healthCheckType": "ELB",
+                    "launchTemplate": {
+                      "launchTemplateId": {
+                        "Ref": "LaunchTemplate"
+                      },
+                      "version": {
+                        "Fn::GetAtt": "LaunchTemplate.LatestVersionNumber"
+                      }
+                    },
+                    "maxSize": {
+                      "Fn::FindInMap": [
+                        "StageVariables",
+                        {
+                          "Ref": "Stage"
+                        },
+                        "MaxInstances"
+                      ]
+                    },
+                    "minSize": {
+                      "Fn::FindInMap": [
+                        "StageVariables",
+                        {
+                          "Ref": "Stage"
+                        },
+                        "MinInstances"
+                      ]
+                    },
+                    "tags": [
+                      {
+                        "key": "App",
+                        "value": {
+                          "Ref": "App"
+                        },
+                        "propagateAtLaunch": true
+                      },
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2",
+                        "propagateAtLaunch": true
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway",
+                        "propagateAtLaunch": true
+                      },
+                      {
+                        "key": "Name",
+                        "value": {
+                          "Fn::Sub": "${Stage}:${App}"
+                        },
+                        "propagateAtLaunch": true
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity",
+                        "propagateAtLaunch": true
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "CODE",
+                        "propagateAtLaunch": true
+                      }
+                    ],
+                    "targetGroupArns": [
+                      {
+                        "Ref": "TargetGroup"
+                      }
+                    ],
+                    "vpcZoneIdentifier": {
+                      "Ref": "PrivateVpcSubnets"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_autoscaling.CfnAutoScalingGroup",
+                  "version": "2.145.0"
+                }
+              },
+              "LoadBalancerListener": {
+                "id": "LoadBalancerListener",
+                "path": "IdentityGateway-CODE/YamlTemplate/LoadBalancerListener",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::Listener",
+                  "aws:cdk:cloudformation:props": {
+                    "certificates": [
+                      {
+                        "certificateArn": {
+                          "Ref": "CertificateArn"
+                        }
+                      }
+                    ],
+                    "defaultActions": [
+                      {
+                        "targetGroupArn": {
+                          "Ref": "TargetGroup"
+                        },
+                        "type": "forward"
+                      }
+                    ],
+                    "loadBalancerArn": {
+                      "Ref": "LoadBalancer"
+                    },
+                    "port": 443,
+                    "protocol": "HTTPS",
+                    "sslPolicy": "ELBSecurityPolicy-TLS-1-2-2017-01"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnListener",
+                  "version": "2.145.0"
+                }
+              },
+              "TopicSendEmail": {
+                "id": "TopicSendEmail",
+                "path": "IdentityGateway-CODE/YamlTemplate/TopicSendEmail",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SNS::Topic",
+                  "aws:cdk:cloudformation:props": {
+                    "displayName": "SendEmailToIdentityDev",
+                    "subscription": [
+                      {
+                        "endpoint": {
+                          "Ref": "AlarmEmailAddress"
+                        },
+                        "protocol": "email"
+                      }
+                    ],
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "CODE"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_sns.CfnTopic",
+                  "version": "2.145.0"
+                }
+              },
+              "ScaleUpPolicy": {
+                "id": "ScaleUpPolicy",
+                "path": "IdentityGateway-CODE/YamlTemplate/ScaleUpPolicy",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AutoScaling::ScalingPolicy",
+                  "aws:cdk:cloudformation:props": {
+                    "adjustmentType": "ChangeInCapacity",
+                    "autoScalingGroupName": {
+                      "Ref": "AutoScalingGroup"
+                    },
+                    "cooldown": "300",
+                    "scalingAdjustment": 1
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_autoscaling.CfnScalingPolicy",
+                  "version": "2.145.0"
+                }
+              },
+              "ScaleDownPolicy": {
+                "id": "ScaleDownPolicy",
+                "path": "IdentityGateway-CODE/YamlTemplate/ScaleDownPolicy",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AutoScaling::ScalingPolicy",
+                  "aws:cdk:cloudformation:props": {
+                    "adjustmentType": "ChangeInCapacity",
+                    "autoScalingGroupName": {
+                      "Ref": "AutoScalingGroup"
+                    },
+                    "cooldown": "1800",
+                    "scalingAdjustment": -1
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_autoscaling.CfnScalingPolicy",
+                  "version": "2.145.0"
+                }
+              },
+              "HighLatencyScalingAlarm": {
+                "id": "HighLatencyScalingAlarm",
+                "path": "IdentityGateway-CODE/YamlTemplate/HighLatencyScalingAlarm",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CloudWatch::Alarm",
+                  "aws:cdk:cloudformation:props": {
+                    "alarmActions": [
+                      {
+                        "Ref": "ScaleUpPolicy"
+                      }
+                    ],
+                    "alarmDescription": {
+                      "Fn::Sub": [
+                        "Scale-Up if latency is greater than ${Threshold} seconds over last ${Period} seconds",
+                        {
+                          "Period": {
+                            "Fn::FindInMap": [
+                              "StageVariables",
+                              {
+                                "Ref": "Stage"
+                              },
+                              "LatencyAlarmPeriod"
+                            ]
+                          },
+                          "Threshold": {
+                            "Fn::FindInMap": [
+                              "StageVariables",
+                              {
+                                "Ref": "Stage"
+                              },
+                              "LatencyAlarmThreshold"
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    "alarmName": {
+                      "Fn::Sub": "${App}-${Stage} high load balancer latency scaling"
+                    },
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "CODE"
+                      }
+                    ],
+                    "comparisonOperator": "GreaterThanOrEqualToThreshold",
+                    "dimensions": [
+                      {
+                        "name": "LoadBalancer",
+                        "value": {
+                          "Fn::GetAtt": "LoadBalancer.LoadBalancerFullName"
+                        }
+                      }
+                    ],
+                    "evaluationPeriods": 1,
+                    "metricName": "TargetResponseTime",
+                    "namespace": "AWS/ApplicationELB",
+                    "okActions": [
+                      {
+                        "Ref": "ScaleDownPolicy"
+                      }
+                    ],
+                    "period": {
+                      "Fn::FindInMap": [
+                        "StageVariables",
+                        {
+                          "Ref": "Stage"
+                        },
+                        "LatencyAlarmPeriod"
+                      ]
+                    },
+                    "statistic": "Average",
+                    "threshold": {
+                      "Fn::FindInMap": [
+                        "StageVariables",
+                        {
+                          "Ref": "Stage"
+                        },
+                        "LatencyAlarmThreshold"
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cloudwatch.CfnAlarm",
+                  "version": "2.145.0"
+                }
+              },
+              "AlarmHighLatency": {
+                "id": "AlarmHighLatency",
+                "path": "IdentityGateway-CODE/YamlTemplate/AlarmHighLatency",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CloudWatch::Alarm",
+                  "aws:cdk:cloudformation:props": {
+                    "alarmActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "alarmDescription": {
+                      "Fn::Sub": [
+                        "Latency is greater than ${Threshold} seconds over ${Period} seconds for last 5 periods",
+                        {
+                          "Period": {
+                            "Fn::FindInMap": [
+                              "StageVariables",
+                              {
+                                "Ref": "Stage"
+                              },
+                              "LatencyAlarmPeriod"
+                            ]
+                          },
+                          "Threshold": {
+                            "Fn::FindInMap": [
+                              "StageVariables",
+                              {
+                                "Ref": "Stage"
+                              },
+                              "LatencyAlarmThreshold"
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    "alarmName": {
+                      "Fn::Sub": "${App}-${Stage} high load balancer latency"
+                    },
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "CODE"
+                      }
+                    ],
+                    "comparisonOperator": "GreaterThanOrEqualToThreshold",
+                    "dimensions": [
+                      {
+                        "name": "LoadBalancer",
+                        "value": {
+                          "Fn::GetAtt": "LoadBalancer.LoadBalancerFullName"
+                        }
+                      }
+                    ],
+                    "evaluationPeriods": 5,
+                    "insufficientDataActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "metricName": "TargetResponseTime",
+                    "namespace": "AWS/ApplicationELB",
+                    "period": {
+                      "Fn::FindInMap": [
+                        "StageVariables",
+                        {
+                          "Ref": "Stage"
+                        },
+                        "LatencyAlarmPeriod"
+                      ]
+                    },
+                    "statistic": "Average",
+                    "threshold": {
+                      "Fn::FindInMap": [
+                        "StageVariables",
+                        {
+                          "Ref": "Stage"
+                        },
+                        "LatencyAlarmThreshold"
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cloudwatch.CfnAlarm",
+                  "version": "2.145.0"
+                }
+              },
+              "AlarmNoHealthyHosts": {
+                "id": "AlarmNoHealthyHosts",
+                "path": "IdentityGateway-CODE/YamlTemplate/AlarmNoHealthyHosts",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CloudWatch::Alarm",
+                  "aws:cdk:cloudformation:props": {
+                    "actionsEnabled": true,
+                    "alarmActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "alarmDescription": "There are insufficient healthy hosts",
+                    "alarmName": {
+                      "Fn::Sub": "${App}-${Stage} insufficient healthy hosts"
+                    },
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "CODE"
+                      }
+                    ],
+                    "comparisonOperator": "LessThanThreshold",
+                    "dimensions": [
+                      {
+                        "name": "LoadBalancer",
+                        "value": {
+                          "Fn::GetAtt": "LoadBalancer.LoadBalancerFullName"
+                        }
+                      },
+                      {
+                        "name": "TargetGroup",
+                        "value": {
+                          "Fn::GetAtt": "TargetGroup.TargetGroupFullName"
+                        }
+                      }
+                    ],
+                    "evaluationPeriods": 1,
+                    "insufficientDataActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "metricName": "HealthyHostCount",
+                    "namespace": "AWS/ApplicationELB",
+                    "okActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "period": 60,
+                    "statistic": "Average",
+                    "threshold": {
+                      "Fn::FindInMap": [
+                        "StageVariables",
+                        {
+                          "Ref": "Stage"
+                        },
+                        "MinInstances"
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cloudwatch.CfnAlarm",
+                  "version": "2.145.0"
+                }
+              },
+              "Alarm5XXSustained": {
+                "id": "Alarm5XXSustained",
+                "path": "IdentityGateway-CODE/YamlTemplate/Alarm5XXSustained",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CloudWatch::Alarm",
+                  "aws:cdk:cloudformation:props": {
+                    "actionsEnabled": true,
+                    "alarmActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "alarmDescription": "Sustained server errors detected",
+                    "alarmName": {
+                      "Fn::Sub": "${App}-${Stage} sustained 5xx errors"
+                    },
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "CODE"
+                      }
+                    ],
+                    "comparisonOperator": "GreaterThanOrEqualToThreshold",
+                    "evaluationPeriods": 5,
+                    "insufficientDataActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "metrics": [
+                      {
+                        "expression": "backend5XXCount + elb5XXCount",
+                        "id": "total5XXCount",
+                        "label": "Count of Backend AND ELB 5XX"
+                      },
+                      {
+                        "id": "backend5XXCount",
+                        "metricStat": {
+                          "metric": {
+                            "dimensions": [
+                              {
+                                "name": "LoadBalancer",
+                                "value": {
+                                  "Fn::GetAtt": "LoadBalancer.LoadBalancerFullName"
+                                }
+                              },
+                              {
+                                "name": "TargetGroup",
+                                "value": {
+                                  "Fn::GetAtt": "TargetGroup.TargetGroupFullName"
+                                }
+                              }
+                            ],
+                            "metricName": "HTTPCode_Target_5XX_Count",
+                            "namespace": "AWS/ApplicationELB"
+                          },
+                          "period": 60,
+                          "stat": "Sum",
+                          "unit": "Count"
+                        },
+                        "returnData": false
+                      },
+                      {
+                        "id": "elb5XXCount",
+                        "metricStat": {
+                          "metric": {
+                            "dimensions": [
+                              {
+                                "name": "LoadBalancer",
+                                "value": {
+                                  "Fn::GetAtt": "LoadBalancer.LoadBalancerFullName"
+                                }
+                              }
+                            ],
+                            "metricName": "HTTPCode_ELB_5XX_Count",
+                            "namespace": "AWS/ApplicationELB"
+                          },
+                          "period": 60,
+                          "stat": "Sum",
+                          "unit": "Count"
+                        },
+                        "returnData": false
+                      }
+                    ],
+                    "okActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "threshold": 15,
+                    "treatMissingData": "notBreaching"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cloudwatch.CfnAlarm",
+                  "version": "2.145.0"
+                }
+              },
+              "SigninInactivityAlarm": {
+                "id": "SigninInactivityAlarm",
+                "path": "IdentityGateway-CODE/YamlTemplate/SigninInactivityAlarm",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CloudWatch::Alarm",
+                  "aws:cdk:cloudformation:props": {
+                    "alarmActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "alarmDescription": "No one has successfully signed ins in the last 20 minutes.",
+                    "alarmName": {
+                      "Fn::Sub": [
+                        "${Priority} - ${App} ${Stage} has had no new sign-ins in the last 20 minutes",
+                        {
+                          "Priority": {
+                            "Fn::FindInMap": [
+                              "StageVariables",
+                              "AlarmPriorities",
+                              "P1"
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "CODE"
+                      }
+                    ],
+                    "comparisonOperator": "LessThanThreshold",
+                    "evaluationPeriods": 1,
+                    "insufficientDataActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "metrics": [
+                      {
+                        "expression": "idapiSignInCount + oktaSignInCount",
+                        "id": "totalSignInCount",
+                        "label": "Total sign-ins between IDAPI and Okta"
+                      },
+                      {
+                        "id": "idapiSignInCount",
+                        "metricStat": {
+                          "metric": {
+                            "dimensions": [
+                              {
+                                "name": "Stage",
+                                "value": {
+                                  "Ref": "Stage"
+                                }
+                              },
+                              {
+                                "name": "ApiMode",
+                                "value": "identity-gateway"
+                              }
+                            ],
+                            "metricName": "SignIn::Success",
+                            "namespace": "Gateway"
+                          },
+                          "period": 1200,
+                          "stat": "Sum",
+                          "unit": "Count"
+                        },
+                        "returnData": false
+                      },
+                      {
+                        "id": "oktaSignInCount",
+                        "metricStat": {
+                          "metric": {
+                            "dimensions": [
+                              {
+                                "name": "Stage",
+                                "value": {
+                                  "Ref": "Stage"
+                                }
+                              },
+                              {
+                                "name": "ApiMode",
+                                "value": "identity-gateway"
+                              }
+                            ],
+                            "metricName": "OktaSignIn::Success",
+                            "namespace": "Gateway"
+                          },
+                          "period": 1200,
+                          "stat": "Sum",
+                          "unit": "Count"
+                        },
+                        "returnData": false
+                      }
+                    ],
+                    "threshold": 1
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cloudwatch.CfnAlarm",
+                  "version": "2.145.0"
+                }
+              },
+              "RegisterInactivityAlarm": {
+                "id": "RegisterInactivityAlarm",
+                "path": "IdentityGateway-CODE/YamlTemplate/RegisterInactivityAlarm",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CloudWatch::Alarm",
+                  "aws:cdk:cloudformation:props": {
+                    "alarmActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "alarmDescription": "No one has successfully registered in the last hour.",
+                    "alarmName": {
+                      "Fn::Sub": [
+                        "${Priority} - ${App} ${Stage} has had no new registrations in the last hour",
+                        {
+                          "Priority": {
+                            "Fn::FindInMap": [
+                              "StageVariables",
+                              "AlarmPriorities",
+                              "P1"
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "CODE"
+                      }
+                    ],
+                    "comparisonOperator": "LessThanThreshold",
+                    "evaluationPeriods": 1,
+                    "insufficientDataActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "metrics": [
+                      {
+                        "expression": "idapiRegistrationCount + oktaRegistrationCount",
+                        "id": "totalRegistrationCount",
+                        "label": "Total registrations between IDAPI and Okta"
+                      },
+                      {
+                        "id": "idapiRegistrationCount",
+                        "metricStat": {
+                          "metric": {
+                            "dimensions": [
+                              {
+                                "name": "Stage",
+                                "value": {
+                                  "Ref": "Stage"
+                                }
+                              },
+                              {
+                                "name": "ApiMode",
+                                "value": "identity-gateway"
+                              }
+                            ],
+                            "metricName": "Register::Success",
+                            "namespace": "Gateway"
+                          },
+                          "period": 3600,
+                          "stat": "Sum",
+                          "unit": "Count"
+                        },
+                        "returnData": false
+                      },
+                      {
+                        "id": "oktaRegistrationCount",
+                        "metricStat": {
+                          "metric": {
+                            "dimensions": [
+                              {
+                                "name": "Stage",
+                                "value": {
+                                  "Ref": "Stage"
+                                }
+                              },
+                              {
+                                "name": "ApiMode",
+                                "value": "identity-gateway"
+                              }
+                            ],
+                            "metricName": "OktaRegistration::Success",
+                            "namespace": "Gateway"
+                          },
+                          "period": 3600,
+                          "stat": "Sum",
+                          "unit": "Count"
+                        },
+                        "returnData": false
+                      }
+                    ],
+                    "threshold": 1
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cloudwatch.CfnAlarm",
+                  "version": "2.145.0"
+                }
+              },
+              "$Hooks": {
+                "id": "$Hooks",
+                "path": "IdentityGateway-CODE/YamlTemplate/$Hooks",
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.3.0"
+                }
+              },
+              "$Outputs": {
+                "id": "$Outputs",
+                "path": "IdentityGateway-CODE/YamlTemplate/$Outputs",
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.3.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.cloudformation_include.CfnInclude",
+              "version": "2.145.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.145.0"
+        }
+      },
+      "IdentityGateway-PROD": {
+        "id": "IdentityGateway-PROD",
+        "path": "IdentityGateway-PROD",
+        "children": {
+          "YamlTemplate": {
+            "id": "YamlTemplate",
+            "path": "IdentityGateway-PROD/YamlTemplate",
+            "children": {
+              "$Mappings": {
+                "id": "$Mappings",
+                "path": "IdentityGateway-PROD/YamlTemplate/$Mappings",
+                "children": {
+                  "StageVariables": {
+                    "id": "StageVariables",
+                    "path": "IdentityGateway-PROD/YamlTemplate/$Mappings/StageVariables",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnMapping",
+                      "version": "2.145.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.3.0"
+                }
+              },
+              "AMI": {
+                "id": "AMI",
+                "path": "IdentityGateway-PROD/YamlTemplate/AMI",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "App": {
+                "id": "App",
+                "path": "IdentityGateway-PROD/YamlTemplate/App",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "IdapiBaseUrl": {
+                "id": "IdapiBaseUrl",
+                "path": "IdentityGateway-PROD/YamlTemplate/IdapiBaseUrl",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "SignInPageUrl": {
+                "id": "SignInPageUrl",
+                "path": "IdentityGateway-PROD/YamlTemplate/SignInPageUrl",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "OauthBaseUrl": {
+                "id": "OauthBaseUrl",
+                "path": "IdentityGateway-PROD/YamlTemplate/OauthBaseUrl",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "OktaOrgUrl": {
+                "id": "OktaOrgUrl",
+                "path": "IdentityGateway-PROD/YamlTemplate/OktaOrgUrl",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "MembersDataApiUrl": {
+                "id": "MembersDataApiUrl",
+                "path": "IdentityGateway-PROD/YamlTemplate/MembersDataApiUrl",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "RedisHost": {
+                "id": "RedisHost",
+                "path": "IdentityGateway-PROD/YamlTemplate/RedisHost",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "SentryDsn": {
+                "id": "SentryDsn",
+                "path": "IdentityGateway-PROD/YamlTemplate/SentryDsn",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "CertificateArn": {
+                "id": "CertificateArn",
+                "path": "IdentityGateway-PROD/YamlTemplate/CertificateArn",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "KeyName": {
+                "id": "KeyName",
+                "path": "IdentityGateway-PROD/YamlTemplate/KeyName",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "AlarmEmailAddress": {
+                "id": "AlarmEmailAddress",
+                "path": "IdentityGateway-PROD/YamlTemplate/AlarmEmailAddress",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "PrivateVpcSubnets": {
+                "id": "PrivateVpcSubnets",
+                "path": "IdentityGateway-PROD/YamlTemplate/PrivateVpcSubnets",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "PublicVpcSubnets": {
+                "id": "PublicVpcSubnets",
+                "path": "IdentityGateway-PROD/YamlTemplate/PublicVpcSubnets",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "Stack": {
+                "id": "Stack",
+                "path": "IdentityGateway-PROD/YamlTemplate/Stack",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "Stage": {
+                "id": "Stage",
+                "path": "IdentityGateway-PROD/YamlTemplate/Stage",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "SshAccessSecurityGroup": {
+                "id": "SshAccessSecurityGroup",
+                "path": "IdentityGateway-PROD/YamlTemplate/SshAccessSecurityGroup",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "SsmManagedPolicyArn": {
+                "id": "SsmManagedPolicyArn",
+                "path": "IdentityGateway-PROD/YamlTemplate/SsmManagedPolicyArn",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "VpcId": {
+                "id": "VpcId",
+                "path": "IdentityGateway-PROD/YamlTemplate/VpcId",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "KinesisStream": {
+                "id": "KinesisStream",
+                "path": "IdentityGateway-PROD/YamlTemplate/KinesisStream",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "LoadBalancerLogsS3Bucket": {
+                "id": "LoadBalancerLogsS3Bucket",
+                "path": "IdentityGateway-PROD/YamlTemplate/LoadBalancerLogsS3Bucket",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "IdentityArtifactBucket": {
+                "id": "IdentityArtifactBucket",
+                "path": "IdentityGateway-PROD/YamlTemplate/IdentityArtifactBucket",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "IdentityConfigBucket": {
+                "id": "IdentityConfigBucket",
+                "path": "IdentityGateway-PROD/YamlTemplate/IdentityConfigBucket",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnParameter",
+                  "version": "2.145.0"
+                }
+              },
+              "$Conditions": {
+                "id": "$Conditions",
+                "path": "IdentityGateway-PROD/YamlTemplate/$Conditions",
+                "children": {
+                  "IsProd": {
+                    "id": "IsProd",
+                    "path": "IdentityGateway-PROD/YamlTemplate/$Conditions/IsProd",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnCondition",
+                      "version": "2.145.0"
+                    }
+                  },
+                  "NotIsProd": {
+                    "id": "NotIsProd",
+                    "path": "IdentityGateway-PROD/YamlTemplate/$Conditions/NotIsProd",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnCondition",
+                      "version": "2.145.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.3.0"
+                }
+              },
+              "$Rules": {
+                "id": "$Rules",
+                "path": "IdentityGateway-PROD/YamlTemplate/$Rules",
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.3.0"
+                }
+              },
+              "AppRole": {
+                "id": "AppRole",
+                "path": "IdentityGateway-PROD/YamlTemplate/AppRole",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                  "aws:cdk:cloudformation:props": {
+                    "assumeRolePolicyDocument": {
+                      "Statement": [
+                        {
+                          "Effect": "Allow",
+                          "Principal": {
+                            "Service": [
+                              "ec2.amazonaws.com"
+                            ]
+                          },
+                          "Action": "sts:AssumeRole"
+                        }
+                      ]
+                    },
+                    "managedPolicyArns": [
+                      {
+                        "Ref": "SsmManagedPolicyArn"
+                      }
+                    ],
+                    "path": "/",
+                    "policies": [
+                      {
+                        "policyDocument": {
+                          "Version": "2012-10-17",
+                          "Statement": [
+                            {
+                              "Effect": "Allow",
+                              "Action": "s3:GetObject",
+                              "Resource": [
+                                {
+                                  "Fn::Sub": "arn:aws:s3:::${IdentityArtifactBucket}/${Stage}/${App}/*"
+                                }
+                              ]
+                            },
+                            {
+                              "Effect": "Allow",
+                              "Action": "s3:GetObject",
+                              "Resource": [
+                                {
+                                  "Fn::Sub": "arn:aws:s3:::${IdentityConfigBucket}/${Stage}/${App}/*"
+                                }
+                              ]
+                            },
+                            {
+                              "Effect": "Allow",
+                              "Action": [
+                                "kinesis:Describe*",
+                                "kinesis:Put*"
+                              ],
+                              "Resource": [
+                                {
+                                  "Fn::Sub": "arn:aws:kinesis:${AWS::Region}:${AWS::AccountId}:stream/${KinesisStream}"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "policyName": "root"
+                      },
+                      {
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Effect": "Allow",
+                              "Action": [
+                                "ssm:GetParameter"
+                              ],
+                              "Resource": [
+                                {
+                                  "Fn::Sub": "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${Stack}/${App}/${Stage}/*"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "policyName": "GetParameters"
+                      },
+                      {
+                        "policyDocument": {
+                          "Version": "2012-10-17",
+                          "Statement": [
+                            {
+                              "Effect": "Allow",
+                              "Action": "cloudwatch:PutMetricData",
+                              "Resource": "*"
+                            }
+                          ]
+                        },
+                        "policyName": "PushMetrics"
+                      },
+                      {
+                        "policyDocument": {
+                          "Version": "2012-10-17",
+                          "Statement": [
+                            {
+                              "Effect": "Allow",
+                              "Action": [
+                                "autoscaling:DescribeAutoScalingGroups",
+                                "autoscaling:DescribeAutoScalingInstances"
+                              ],
+                              "Resource": "*"
+                            }
+                          ]
+                        },
+                        "policyName": "DescribeASG"
+                      },
+                      {
+                        "policyDocument": {
+                          "Version": "2012-10-17",
+                          "Statement": [
+                            {
+                              "Effect": "Allow",
+                              "Action": "ses:SendEmail",
+                              "Resource": "*"
+                            }
+                          ]
+                        },
+                        "policyName": "SendEmailSES"
+                      },
+                      {
+                        "policyDocument": {
+                          "Version": "2012-10-17",
+                          "Statement": [
+                            {
+                              "Effect": "Allow",
+                              "Action": [
+                                "ec2messages:AcknowledgeMessage",
+                                "ec2messages:DeleteMessage",
+                                "ec2messages:FailMessage",
+                                "ec2messages:GetEndpoint",
+                                "ec2messages:GetMessages",
+                                "ec2messages:SendReply",
+                                "ssm:UpdateInstanceInformation",
+                                "ssm:ListInstanceAssociations",
+                                "ssm:DescribeInstanceProperties",
+                                "ssm:DescribeDocumentParameters",
+                                "ssmmessages:CreateControlChannel",
+                                "ssmmessages:CreateDataChannel",
+                                "ssmmessages:OpenControlChannel",
+                                "ssmmessages:OpenDataChannel"
+                              ],
+                              "Resource": "*"
+                            }
+                          ]
+                        },
+                        "policyName": "SSMTunnel"
+                      }
+                    ],
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "PROD"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                  "version": "2.145.0"
+                }
+              },
+              "GithubActionsSESSendEmailsRole": {
+                "id": "GithubActionsSESSendEmailsRole",
+                "path": "IdentityGateway-PROD/YamlTemplate/GithubActionsSESSendEmailsRole",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                  "aws:cdk:cloudformation:props": {
+                    "assumeRolePolicyDocument": {
+                      "Statement": [
+                        {
+                          "Effect": "Allow",
+                          "Action": "sts:AssumeRoleWithWebIdentity",
+                          "Principal": {
+                            "Federated": {
+                              "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:oidc-provider/token.actions.githubusercontent.com"
+                            }
+                          },
+                          "Condition": {
+                            "StringLike": {
+                              "token.actions.githubusercontent.com:sub": {
+                                "Fn::Sub": "repo:guardian/gateway:*"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "policies": [
+                      {
+                        "policyDocument": {
+                          "Version": "2012-10-17",
+                          "Statement": [
+                            {
+                              "Effect": "Allow",
+                              "Action": "ses:SendEmail",
+                              "Resource": "*"
+                            }
+                          ]
+                        },
+                        "policyName": "SendEmailSES"
+                      }
+                    ],
+                    "roleName": "GithubActionsSESSendEmailsRole",
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "PROD"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                  "version": "2.145.0"
+                }
+              },
+              "InstanceProfile": {
+                "id": "InstanceProfile",
+                "path": "IdentityGateway-PROD/YamlTemplate/InstanceProfile",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::InstanceProfile",
+                  "aws:cdk:cloudformation:props": {
+                    "path": "/",
+                    "roles": [
+                      {
+                        "Ref": "AppRole"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnInstanceProfile",
+                  "version": "2.145.0"
+                }
+              },
+              "LoadBalancerSecurityGroup": {
+                "id": "LoadBalancerSecurityGroup",
+                "path": "IdentityGateway-PROD/YamlTemplate/LoadBalancerSecurityGroup",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "groupDescription": "Allow HTTPS traffic and egress to 9233",
+                    "securityGroupEgress": [
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "fromPort": 9233,
+                        "ipProtocol": "tcp",
+                        "toPort": 9233
+                      }
+                    ],
+                    "securityGroupIngress": [
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "fromPort": 443,
+                        "ipProtocol": "tcp",
+                        "toPort": 443
+                      }
+                    ],
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "PROD"
+                      }
+                    ],
+                    "vpcId": {
+                      "Ref": "VpcId"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                  "version": "2.145.0"
+                }
+              },
+              "InstanceSecurityGroup": {
+                "id": "InstanceSecurityGroup",
+                "path": "IdentityGateway-PROD/YamlTemplate/InstanceSecurityGroup",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "groupDescription": "Allow SSH and HTTPS access",
+                    "securityGroupEgress": [
+                      {
+                        "cidrIp": "0.0.0.0/0",
+                        "fromPort": 443,
+                        "ipProtocol": "tcp",
+                        "toPort": 443
+                      }
+                    ],
+                    "securityGroupIngress": [
+                      {
+                        "fromPort": 9233,
+                        "ipProtocol": "tcp",
+                        "sourceSecurityGroupId": {
+                          "Ref": "LoadBalancerSecurityGroup"
+                        },
+                        "toPort": 9233
+                      }
+                    ],
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "PROD"
+                      }
+                    ],
+                    "vpcId": {
+                      "Ref": "VpcId"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                  "version": "2.145.0"
+                }
+              },
+              "LaunchTemplate": {
+                "id": "LaunchTemplate",
+                "path": "IdentityGateway-PROD/YamlTemplate/LaunchTemplate",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::EC2::LaunchTemplate",
+                  "aws:cdk:cloudformation:props": {
+                    "launchTemplateData": {
+                      "iamInstanceProfile": {
+                        "arn": {
+                          "Fn::GetAtt": "InstanceProfile.Arn"
+                        }
+                      },
+                      "imageId": {
+                        "Ref": "AMI"
+                      },
+                      "instanceType": "t4g.small",
+                      "keyName": {
+                        "Ref": "KeyName"
+                      },
+                      "securityGroupIds": [
+                        {
+                          "Ref": "InstanceSecurityGroup"
+                        },
+                        {
+                          "Ref": "SshAccessSecurityGroup"
+                        }
+                      ],
+                      "userData": {
+                        "Fn::Base64": {
+                          "Fn::Sub": [
+                            "#!/bin/bash -ev\n\nmkdir /etc/gu\n\n# Get Riff Raff deployed artefact S3\naws s3 cp s3://${IdentityArtifactBucket}/${Stage}/${App}/${App}.zip /etc/gu\nunzip -o /etc/gu/${App}.zip -d /etc/gu\n\n# Get Rate Limiter configuration file\n# Try multiple times to the config file. The s3 cp command can fail when called immediately on instance startup.\nwhile true; do\n  if \\\n    aws s3 cp s3://${IdentityConfigBucket}/${Stage}/${App}/.ratelimit.json /etc/gu/.ratelimit.json\n    then break\n  fi\n  sleep 1\ndone\n\n# Setup user\ngroupadd identity-gateway\nuseradd -r -s /usr/bin/nologin -g identity-gateway identity-gateway\nchown -R identity-gateway:identity-gateway /etc/gu\n\n# Setup logs\ntouch /var/log/identity-gateway.log\nchown identity-gateway:identity-gateway /var/log/identity-gateway.log\n\n# Try multiple times to get parameter store values. The SSM command can fail when called immediately on instance startup.\nwhile true; do\n  if \\\n    IDAPI_CLIENT_ACCESS_TOKEN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/idapi-client-access-token' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\") && \\\n    APP_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/appSecret' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\") && \\\n    GOOGLE_RECAPTCHA_SITE_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/recaptcha-site-key' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\") && \\\n    GOOGLE_RECAPTCHA_SECRET_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/recaptcha-secret-key' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\") && \\\n    REDIS_PASSWORD=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/redis-password' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\") && \\\n    ENCRYPTION_SECRET_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/encryption-secret-key' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\") && \\\n    OKTA_API_TOKEN=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/okta-api-token' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\") && \\\n    OKTA_CUSTOM_OAUTH_SERVER=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaCustomOAuthServer' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\") && \\\n    OKTA_CLIENT_ID=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaClientId' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\") && \\\n    OKTA_CLIENT_SECRET=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaClientSecret' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\")\n    OKTA_IDP_APPLE=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaIdpApple' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\")\n    OKTA_IDP_GOOGLE=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaIdpGoogle' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\")\n    OKTA_GUARDIAN_USERS_ALL_GROUP_ID=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/oktaGuardianUsersAllGroupId' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\")\n    DELETE_ACCOUNT_STEP_FUNCTION_URL=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/deleteAccountStepFunctionUrl' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\")\n    DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$(aws ssm get-parameter --name '/${Stack}/${App}/${Stage}/deleteAccountStepFunctionApiKey' --with-decryption --region eu-west-1 --query=\"Parameter.Value\" --output=\"text\")\n    then break\n  fi\n\n  sleep 1\ndone\n\n# systemd setup\ncat > /etc/systemd/system/identity-gateway.service <<EOL\n[Service]\nExecStart=/bin/sh -ec '/usr/bin/node /etc/gu/server.js > /var/log/identity-gateway.log 2>&1'\nRestart=always\nStandardOutput=syslog\nStandardError=syslog\nSyslogIdentifier=identity-gateway\nUser=identity-gateway\nGroup=identity-gateway\nEnvironment=NODE_ENV=production\nEnvironment=PORT=9233\nEnvironment=IDAPI_CLIENT_ACCESS_TOKEN=$IDAPI_CLIENT_ACCESS_TOKEN\nEnvironment=IDAPI_BASE_URL=${IdapiBaseUrl}\nEnvironment=SIGN_IN_PAGE_URL=${SignInPageUrl}\nEnvironment=OAUTH_BASE_URL=${OauthBaseUrl}\nEnvironment=BASE_URI=${BaseUri}\nEnvironment=DEFAULT_RETURN_URI=${DefaultReturnUri}\nEnvironment=STAGE=${Stage}\nEnvironment=IS_HTTPS=true\nEnvironment=APP_SECRET=$APP_SECRET\nEnvironment=GOOGLE_RECAPTCHA_SITE_KEY=$GOOGLE_RECAPTCHA_SITE_KEY\nEnvironment=GOOGLE_RECAPTCHA_SECRET_KEY=$GOOGLE_RECAPTCHA_SECRET_KEY\nEnvironment=ENCRYPTION_SECRET_KEY=$ENCRYPTION_SECRET_KEY\nEnvironment=OKTA_ORG_URL=${OktaOrgUrl}\nEnvironment=OKTA_API_TOKEN=$OKTA_API_TOKEN\nEnvironment=OKTA_CUSTOM_OAUTH_SERVER=$OKTA_CUSTOM_OAUTH_SERVER\nEnvironment=OKTA_CLIENT_ID=$OKTA_CLIENT_ID\nEnvironment=OKTA_CLIENT_SECRET=$OKTA_CLIENT_SECRET\nEnvironment=OKTA_IDP_APPLE=$OKTA_IDP_APPLE\nEnvironment=OKTA_IDP_GOOGLE=$OKTA_IDP_GOOGLE\nEnvironment=OKTA_GUARDIAN_USERS_ALL_GROUP_ID=$OKTA_GUARDIAN_USERS_ALL_GROUP_ID            \nEnvironment=LOGGING_KINESIS_STREAM=${KinesisStream}\nEnvironment=EC2_INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)\nEnvironment=SENTRY_DSN=${SentryDsn}\nEnvironment=REDIS_PASSWORD=$REDIS_PASSWORD\nEnvironment=REDIS_HOST=${RedisHost}\nEnvironment=REDIS_SSL_ON=true\nEnvironment=MEMBERS_DATA_API_URL=${MembersDataApiUrl}\nEnvironment=DELETE_ACCOUNT_STEP_FUNCTION_URL=$DELETE_ACCOUNT_STEP_FUNCTION_URL\nEnvironment=DELETE_ACCOUNT_STEP_FUNCTION_API_KEY=$DELETE_ACCOUNT_STEP_FUNCTION_API_KEY\n\n[Install]\nWantedBy=multi-user.target\nEOL\n\nsystemctl enable identity-gateway\nsystemctl start identity-gateway\n\n",
+                            {
+                              "BaseUri": {
+                                "Fn::FindInMap": [
+                                  "StageVariables",
+                                  {
+                                    "Ref": "Stage"
+                                  },
+                                  "BaseUri"
+                                ]
+                              },
+                              "DefaultReturnUri": {
+                                "Fn::FindInMap": [
+                                  "StageVariables",
+                                  {
+                                    "Ref": "Stage"
+                                  },
+                                  "DefaultReturnUri"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "launchTemplateName": {
+                      "Fn::Sub": "${Stage}-${Stack}-${App}"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.CfnLaunchTemplate",
+                  "version": "2.145.0"
+                }
+              },
+              "TargetGroup": {
+                "id": "TargetGroup",
+                "path": "IdentityGateway-PROD/YamlTemplate/TargetGroup",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "healthCheckIntervalSeconds": 10,
+                    "healthCheckPath": "/healthcheck",
+                    "healthCheckPort": "9233",
+                    "healthCheckProtocol": "HTTP",
+                    "healthCheckTimeoutSeconds": 5,
+                    "healthyThresholdCount": 2,
+                    "matcher": {
+                      "httpCode": "200"
+                    },
+                    "name": {
+                      "Fn::Sub": "${Stage}-${Stack}-${App}"
+                    },
+                    "port": 9233,
+                    "protocol": "HTTP",
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "PROD"
+                      }
+                    ],
+                    "targetGroupAttributes": [
+                      {
+                        "key": "deregistration_delay.timeout_seconds",
+                        "value": "45"
+                      }
+                    ],
+                    "unhealthyThresholdCount": 2,
+                    "vpcId": {
+                      "Ref": "VpcId"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnTargetGroup",
+                  "version": "2.145.0"
+                }
+              },
+              "LoadBalancer": {
+                "id": "LoadBalancer",
+                "path": "IdentityGateway-PROD/YamlTemplate/LoadBalancer",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+                  "aws:cdk:cloudformation:props": {
+                    "loadBalancerAttributes": [
+                      {
+                        "key": "access_logs.s3.enabled",
+                        "value": "true"
+                      },
+                      {
+                        "key": "access_logs.s3.bucket",
+                        "value": {
+                          "Ref": "LoadBalancerLogsS3Bucket"
+                        }
+                      },
+                      {
+                        "key": "access_logs.s3.prefix",
+                        "value": {
+                          "Fn::Sub": "ELBLogs/${Stack}/${App}/${Stage}"
+                        }
+                      }
+                    ],
+                    "name": {
+                      "Fn::Sub": "${Stack}-${App}-${Stage}"
+                    },
+                    "securityGroups": [
+                      {
+                        "Ref": "LoadBalancerSecurityGroup"
+                      }
+                    ],
+                    "subnets": {
+                      "Ref": "PublicVpcSubnets"
+                    },
+                    "tags": [
+                      {
+                        "key": "App",
+                        "value": {
+                          "Ref": "App"
+                        }
+                      },
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "PROD"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnLoadBalancer",
+                  "version": "2.145.0"
+                }
+              },
+              "AutoScalingGroup": {
+                "id": "AutoScalingGroup",
+                "path": "IdentityGateway-PROD/YamlTemplate/AutoScalingGroup",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AutoScaling::AutoScalingGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "healthCheckGracePeriod": 300,
+                    "healthCheckType": "ELB",
+                    "launchTemplate": {
+                      "launchTemplateId": {
+                        "Ref": "LaunchTemplate"
+                      },
+                      "version": {
+                        "Fn::GetAtt": "LaunchTemplate.LatestVersionNumber"
+                      }
+                    },
+                    "maxSize": {
+                      "Fn::FindInMap": [
+                        "StageVariables",
+                        {
+                          "Ref": "Stage"
+                        },
+                        "MaxInstances"
+                      ]
+                    },
+                    "minSize": {
+                      "Fn::FindInMap": [
+                        "StageVariables",
+                        {
+                          "Ref": "Stage"
+                        },
+                        "MinInstances"
+                      ]
+                    },
+                    "tags": [
+                      {
+                        "key": "App",
+                        "value": {
+                          "Ref": "App"
+                        },
+                        "propagateAtLaunch": true
+                      },
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2",
+                        "propagateAtLaunch": true
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway",
+                        "propagateAtLaunch": true
+                      },
+                      {
+                        "key": "Name",
+                        "value": {
+                          "Fn::Sub": "${Stage}:${App}"
+                        },
+                        "propagateAtLaunch": true
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity",
+                        "propagateAtLaunch": true
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "PROD",
+                        "propagateAtLaunch": true
+                      }
+                    ],
+                    "targetGroupArns": [
+                      {
+                        "Ref": "TargetGroup"
+                      }
+                    ],
+                    "vpcZoneIdentifier": {
+                      "Ref": "PrivateVpcSubnets"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_autoscaling.CfnAutoScalingGroup",
+                  "version": "2.145.0"
+                }
+              },
+              "LoadBalancerListener": {
+                "id": "LoadBalancerListener",
+                "path": "IdentityGateway-PROD/YamlTemplate/LoadBalancerListener",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::Listener",
+                  "aws:cdk:cloudformation:props": {
+                    "certificates": [
+                      {
+                        "certificateArn": {
+                          "Ref": "CertificateArn"
+                        }
+                      }
+                    ],
+                    "defaultActions": [
+                      {
+                        "targetGroupArn": {
+                          "Ref": "TargetGroup"
+                        },
+                        "type": "forward"
+                      }
+                    ],
+                    "loadBalancerArn": {
+                      "Ref": "LoadBalancer"
+                    },
+                    "port": 443,
+                    "protocol": "HTTPS",
+                    "sslPolicy": "ELBSecurityPolicy-TLS-1-2-2017-01"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnListener",
+                  "version": "2.145.0"
+                }
+              },
+              "TopicSendEmail": {
+                "id": "TopicSendEmail",
+                "path": "IdentityGateway-PROD/YamlTemplate/TopicSendEmail",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::SNS::Topic",
+                  "aws:cdk:cloudformation:props": {
+                    "displayName": "SendEmailToIdentityDev",
+                    "subscription": [
+                      {
+                        "endpoint": {
+                          "Ref": "AlarmEmailAddress"
+                        },
+                        "protocol": "email"
+                      }
+                    ],
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "PROD"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_sns.CfnTopic",
+                  "version": "2.145.0"
+                }
+              },
+              "ScaleUpPolicy": {
+                "id": "ScaleUpPolicy",
+                "path": "IdentityGateway-PROD/YamlTemplate/ScaleUpPolicy",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AutoScaling::ScalingPolicy",
+                  "aws:cdk:cloudformation:props": {
+                    "adjustmentType": "ChangeInCapacity",
+                    "autoScalingGroupName": {
+                      "Ref": "AutoScalingGroup"
+                    },
+                    "cooldown": "300",
+                    "scalingAdjustment": 1
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_autoscaling.CfnScalingPolicy",
+                  "version": "2.145.0"
+                }
+              },
+              "ScaleDownPolicy": {
+                "id": "ScaleDownPolicy",
+                "path": "IdentityGateway-PROD/YamlTemplate/ScaleDownPolicy",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AutoScaling::ScalingPolicy",
+                  "aws:cdk:cloudformation:props": {
+                    "adjustmentType": "ChangeInCapacity",
+                    "autoScalingGroupName": {
+                      "Ref": "AutoScalingGroup"
+                    },
+                    "cooldown": "1800",
+                    "scalingAdjustment": -1
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_autoscaling.CfnScalingPolicy",
+                  "version": "2.145.0"
+                }
+              },
+              "HighLatencyScalingAlarm": {
+                "id": "HighLatencyScalingAlarm",
+                "path": "IdentityGateway-PROD/YamlTemplate/HighLatencyScalingAlarm",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CloudWatch::Alarm",
+                  "aws:cdk:cloudformation:props": {
+                    "alarmActions": [
+                      {
+                        "Ref": "ScaleUpPolicy"
+                      }
+                    ],
+                    "alarmDescription": {
+                      "Fn::Sub": [
+                        "Scale-Up if latency is greater than ${Threshold} seconds over last ${Period} seconds",
+                        {
+                          "Period": {
+                            "Fn::FindInMap": [
+                              "StageVariables",
+                              {
+                                "Ref": "Stage"
+                              },
+                              "LatencyAlarmPeriod"
+                            ]
+                          },
+                          "Threshold": {
+                            "Fn::FindInMap": [
+                              "StageVariables",
+                              {
+                                "Ref": "Stage"
+                              },
+                              "LatencyAlarmThreshold"
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    "alarmName": {
+                      "Fn::Sub": "${App}-${Stage} high load balancer latency scaling"
+                    },
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "PROD"
+                      }
+                    ],
+                    "comparisonOperator": "GreaterThanOrEqualToThreshold",
+                    "dimensions": [
+                      {
+                        "name": "LoadBalancer",
+                        "value": {
+                          "Fn::GetAtt": "LoadBalancer.LoadBalancerFullName"
+                        }
+                      }
+                    ],
+                    "evaluationPeriods": 1,
+                    "metricName": "TargetResponseTime",
+                    "namespace": "AWS/ApplicationELB",
+                    "okActions": [
+                      {
+                        "Ref": "ScaleDownPolicy"
+                      }
+                    ],
+                    "period": {
+                      "Fn::FindInMap": [
+                        "StageVariables",
+                        {
+                          "Ref": "Stage"
+                        },
+                        "LatencyAlarmPeriod"
+                      ]
+                    },
+                    "statistic": "Average",
+                    "threshold": {
+                      "Fn::FindInMap": [
+                        "StageVariables",
+                        {
+                          "Ref": "Stage"
+                        },
+                        "LatencyAlarmThreshold"
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cloudwatch.CfnAlarm",
+                  "version": "2.145.0"
+                }
+              },
+              "AlarmHighLatency": {
+                "id": "AlarmHighLatency",
+                "path": "IdentityGateway-PROD/YamlTemplate/AlarmHighLatency",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CloudWatch::Alarm",
+                  "aws:cdk:cloudformation:props": {
+                    "alarmActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "alarmDescription": {
+                      "Fn::Sub": [
+                        "Latency is greater than ${Threshold} seconds over ${Period} seconds for last 5 periods",
+                        {
+                          "Period": {
+                            "Fn::FindInMap": [
+                              "StageVariables",
+                              {
+                                "Ref": "Stage"
+                              },
+                              "LatencyAlarmPeriod"
+                            ]
+                          },
+                          "Threshold": {
+                            "Fn::FindInMap": [
+                              "StageVariables",
+                              {
+                                "Ref": "Stage"
+                              },
+                              "LatencyAlarmThreshold"
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    "alarmName": {
+                      "Fn::Sub": "${App}-${Stage} high load balancer latency"
+                    },
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "PROD"
+                      }
+                    ],
+                    "comparisonOperator": "GreaterThanOrEqualToThreshold",
+                    "dimensions": [
+                      {
+                        "name": "LoadBalancer",
+                        "value": {
+                          "Fn::GetAtt": "LoadBalancer.LoadBalancerFullName"
+                        }
+                      }
+                    ],
+                    "evaluationPeriods": 5,
+                    "insufficientDataActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "metricName": "TargetResponseTime",
+                    "namespace": "AWS/ApplicationELB",
+                    "period": {
+                      "Fn::FindInMap": [
+                        "StageVariables",
+                        {
+                          "Ref": "Stage"
+                        },
+                        "LatencyAlarmPeriod"
+                      ]
+                    },
+                    "statistic": "Average",
+                    "threshold": {
+                      "Fn::FindInMap": [
+                        "StageVariables",
+                        {
+                          "Ref": "Stage"
+                        },
+                        "LatencyAlarmThreshold"
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cloudwatch.CfnAlarm",
+                  "version": "2.145.0"
+                }
+              },
+              "AlarmNoHealthyHosts": {
+                "id": "AlarmNoHealthyHosts",
+                "path": "IdentityGateway-PROD/YamlTemplate/AlarmNoHealthyHosts",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CloudWatch::Alarm",
+                  "aws:cdk:cloudformation:props": {
+                    "actionsEnabled": true,
+                    "alarmActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "alarmDescription": "There are insufficient healthy hosts",
+                    "alarmName": {
+                      "Fn::Sub": "${App}-${Stage} insufficient healthy hosts"
+                    },
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "PROD"
+                      }
+                    ],
+                    "comparisonOperator": "LessThanThreshold",
+                    "dimensions": [
+                      {
+                        "name": "LoadBalancer",
+                        "value": {
+                          "Fn::GetAtt": "LoadBalancer.LoadBalancerFullName"
+                        }
+                      },
+                      {
+                        "name": "TargetGroup",
+                        "value": {
+                          "Fn::GetAtt": "TargetGroup.TargetGroupFullName"
+                        }
+                      }
+                    ],
+                    "evaluationPeriods": 1,
+                    "insufficientDataActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "metricName": "HealthyHostCount",
+                    "namespace": "AWS/ApplicationELB",
+                    "okActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "period": 60,
+                    "statistic": "Average",
+                    "threshold": {
+                      "Fn::FindInMap": [
+                        "StageVariables",
+                        {
+                          "Ref": "Stage"
+                        },
+                        "MinInstances"
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cloudwatch.CfnAlarm",
+                  "version": "2.145.0"
+                }
+              },
+              "Alarm5XXSustained": {
+                "id": "Alarm5XXSustained",
+                "path": "IdentityGateway-PROD/YamlTemplate/Alarm5XXSustained",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CloudWatch::Alarm",
+                  "aws:cdk:cloudformation:props": {
+                    "actionsEnabled": true,
+                    "alarmActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "alarmDescription": "Sustained server errors detected",
+                    "alarmName": {
+                      "Fn::Sub": "${App}-${Stage} sustained 5xx errors"
+                    },
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "PROD"
+                      }
+                    ],
+                    "comparisonOperator": "GreaterThanOrEqualToThreshold",
+                    "evaluationPeriods": 5,
+                    "insufficientDataActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "metrics": [
+                      {
+                        "expression": "backend5XXCount + elb5XXCount",
+                        "id": "total5XXCount",
+                        "label": "Count of Backend AND ELB 5XX"
+                      },
+                      {
+                        "id": "backend5XXCount",
+                        "metricStat": {
+                          "metric": {
+                            "dimensions": [
+                              {
+                                "name": "LoadBalancer",
+                                "value": {
+                                  "Fn::GetAtt": "LoadBalancer.LoadBalancerFullName"
+                                }
+                              },
+                              {
+                                "name": "TargetGroup",
+                                "value": {
+                                  "Fn::GetAtt": "TargetGroup.TargetGroupFullName"
+                                }
+                              }
+                            ],
+                            "metricName": "HTTPCode_Target_5XX_Count",
+                            "namespace": "AWS/ApplicationELB"
+                          },
+                          "period": 60,
+                          "stat": "Sum",
+                          "unit": "Count"
+                        },
+                        "returnData": false
+                      },
+                      {
+                        "id": "elb5XXCount",
+                        "metricStat": {
+                          "metric": {
+                            "dimensions": [
+                              {
+                                "name": "LoadBalancer",
+                                "value": {
+                                  "Fn::GetAtt": "LoadBalancer.LoadBalancerFullName"
+                                }
+                              }
+                            ],
+                            "metricName": "HTTPCode_ELB_5XX_Count",
+                            "namespace": "AWS/ApplicationELB"
+                          },
+                          "period": 60,
+                          "stat": "Sum",
+                          "unit": "Count"
+                        },
+                        "returnData": false
+                      }
+                    ],
+                    "okActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "threshold": 15,
+                    "treatMissingData": "notBreaching"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cloudwatch.CfnAlarm",
+                  "version": "2.145.0"
+                }
+              },
+              "SigninInactivityAlarm": {
+                "id": "SigninInactivityAlarm",
+                "path": "IdentityGateway-PROD/YamlTemplate/SigninInactivityAlarm",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CloudWatch::Alarm",
+                  "aws:cdk:cloudformation:props": {
+                    "alarmActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "alarmDescription": "No one has successfully signed ins in the last 20 minutes.",
+                    "alarmName": {
+                      "Fn::Sub": [
+                        "${Priority} - ${App} ${Stage} has had no new sign-ins in the last 20 minutes",
+                        {
+                          "Priority": {
+                            "Fn::FindInMap": [
+                              "StageVariables",
+                              "AlarmPriorities",
+                              "P1"
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "PROD"
+                      }
+                    ],
+                    "comparisonOperator": "LessThanThreshold",
+                    "evaluationPeriods": 1,
+                    "insufficientDataActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "metrics": [
+                      {
+                        "expression": "idapiSignInCount + oktaSignInCount",
+                        "id": "totalSignInCount",
+                        "label": "Total sign-ins between IDAPI and Okta"
+                      },
+                      {
+                        "id": "idapiSignInCount",
+                        "metricStat": {
+                          "metric": {
+                            "dimensions": [
+                              {
+                                "name": "Stage",
+                                "value": {
+                                  "Ref": "Stage"
+                                }
+                              },
+                              {
+                                "name": "ApiMode",
+                                "value": "identity-gateway"
+                              }
+                            ],
+                            "metricName": "SignIn::Success",
+                            "namespace": "Gateway"
+                          },
+                          "period": 1200,
+                          "stat": "Sum",
+                          "unit": "Count"
+                        },
+                        "returnData": false
+                      },
+                      {
+                        "id": "oktaSignInCount",
+                        "metricStat": {
+                          "metric": {
+                            "dimensions": [
+                              {
+                                "name": "Stage",
+                                "value": {
+                                  "Ref": "Stage"
+                                }
+                              },
+                              {
+                                "name": "ApiMode",
+                                "value": "identity-gateway"
+                              }
+                            ],
+                            "metricName": "OktaSignIn::Success",
+                            "namespace": "Gateway"
+                          },
+                          "period": 1200,
+                          "stat": "Sum",
+                          "unit": "Count"
+                        },
+                        "returnData": false
+                      }
+                    ],
+                    "threshold": 1
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cloudwatch.CfnAlarm",
+                  "version": "2.145.0"
+                }
+              },
+              "RegisterInactivityAlarm": {
+                "id": "RegisterInactivityAlarm",
+                "path": "IdentityGateway-PROD/YamlTemplate/RegisterInactivityAlarm",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CloudWatch::Alarm",
+                  "aws:cdk:cloudformation:props": {
+                    "alarmActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "alarmDescription": "No one has successfully registered in the last hour.",
+                    "alarmName": {
+                      "Fn::Sub": [
+                        "${Priority} - ${App} ${Stage} has had no new registrations in the last hour",
+                        {
+                          "Priority": {
+                            "Fn::FindInMap": [
+                              "StageVariables",
+                              "AlarmPriorities",
+                              "P1"
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    "tags": [
+                      {
+                        "key": "gu:cdk:version",
+                        "value": "58.1.2"
+                      },
+                      {
+                        "key": "gu:repo",
+                        "value": "guardian/gateway"
+                      },
+                      {
+                        "key": "Stack",
+                        "value": "identity"
+                      },
+                      {
+                        "key": "Stage",
+                        "value": "PROD"
+                      }
+                    ],
+                    "comparisonOperator": "LessThanThreshold",
+                    "evaluationPeriods": 1,
+                    "insufficientDataActions": [
+                      {
+                        "Ref": "TopicSendEmail"
+                      }
+                    ],
+                    "metrics": [
+                      {
+                        "expression": "idapiRegistrationCount + oktaRegistrationCount",
+                        "id": "totalRegistrationCount",
+                        "label": "Total registrations between IDAPI and Okta"
+                      },
+                      {
+                        "id": "idapiRegistrationCount",
+                        "metricStat": {
+                          "metric": {
+                            "dimensions": [
+                              {
+                                "name": "Stage",
+                                "value": {
+                                  "Ref": "Stage"
+                                }
+                              },
+                              {
+                                "name": "ApiMode",
+                                "value": "identity-gateway"
+                              }
+                            ],
+                            "metricName": "Register::Success",
+                            "namespace": "Gateway"
+                          },
+                          "period": 3600,
+                          "stat": "Sum",
+                          "unit": "Count"
+                        },
+                        "returnData": false
+                      },
+                      {
+                        "id": "oktaRegistrationCount",
+                        "metricStat": {
+                          "metric": {
+                            "dimensions": [
+                              {
+                                "name": "Stage",
+                                "value": {
+                                  "Ref": "Stage"
+                                }
+                              },
+                              {
+                                "name": "ApiMode",
+                                "value": "identity-gateway"
+                              }
+                            ],
+                            "metricName": "OktaRegistration::Success",
+                            "namespace": "Gateway"
+                          },
+                          "period": 3600,
+                          "stat": "Sum",
+                          "unit": "Count"
+                        },
+                        "returnData": false
+                      }
+                    ],
+                    "threshold": 1
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_cloudwatch.CfnAlarm",
+                  "version": "2.145.0"
+                }
+              },
+              "$Hooks": {
+                "id": "$Hooks",
+                "path": "IdentityGateway-PROD/YamlTemplate/$Hooks",
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.3.0"
+                }
+              },
+              "$Outputs": {
+                "id": "$Outputs",
+                "path": "IdentityGateway-PROD/YamlTemplate/$Outputs",
+                "constructInfo": {
+                  "fqn": "constructs.Construct",
+                  "version": "10.3.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.cloudformation_include.CfnInclude",
+              "version": "2.145.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.145.0"
+        }
+      },
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.3.0"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "aws-cdk-lib.App",
+      "version": "2.145.0"
+    }
+  }
+}

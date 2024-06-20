@@ -10,10 +10,6 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-      - uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
-          aws-region: eu-west-1
       - uses: pnpm/action-setup@v4
         with:
           version: latest
@@ -21,4 +17,15 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'pnpm'
-      - run: ./ci.sh
+      # - run: ./ci.sh
+      - uses: guardian/actions-riff-raff@v4
+        with:
+          app: gateway
+          roleArn: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          buildNumberOffset: 5000
+          configPath: ./riff-raff.yaml
+          contentDirectories: |
+            identity-gateway:
+              - build
+          dryRun: true
