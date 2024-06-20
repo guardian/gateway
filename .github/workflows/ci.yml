@@ -17,7 +17,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
           cache: 'pnpm'
-      # - run: ./ci.sh
+      - run: ./ci.sh
       - uses: guardian/actions-riff-raff@v4
         with:
           app: gateway
