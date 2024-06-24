@@ -3,6 +3,7 @@ import { FieldError } from '@/shared/model/ClientState';
 import { TextInputProps } from '@guardian/source/react-components';
 import { css } from '@emotion/react';
 import ThemedTextInput from '@/client/components/ThemedTextInput';
+import { remSpace } from '@guardian/source/foundations';
 
 interface PasscodeInputProps extends Omit<TextInputProps, 'label'> {
 	passcode?: string;
@@ -11,6 +12,7 @@ interface PasscodeInputProps extends Omit<TextInputProps, 'label'> {
 
 const passcodeInputStyles = css`
 	text-align: center;
+	letter-spacing: ${remSpace[0]};
 `;
 
 export const PasscodeInput = ({
