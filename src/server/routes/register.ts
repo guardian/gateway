@@ -176,6 +176,18 @@ router.post(
 			const { stateHandle } = encryptedState;
 
 			try {
+				// validate the code contains only numbers and is 6 characters long
+				// The okta api will validate the input fully, but validating here will prevent unnecessary requests
+				if (!/^\d{6}$/.test(code)) {
+					throw new OAuthError(
+						{
+							error: 'api.authn.error.PASSCODE_INVALID',
+							error_description: 'Passcode invalid', // this is ignored, and a error based on the `error` key is shown
+						},
+						400,
+					);
+				}
+
 				// check the state handle is valid and we can proceed with the registration
 				const introspectResponse = await introspect(
 					{
