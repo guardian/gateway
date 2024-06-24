@@ -408,7 +408,13 @@ export const OktaRegistration = async (
 	const { email = '' } = req.body;
 
 	const {
-		queryParams: { appClientId, ref, refViewId, componentEventParams },
+		queryParams: {
+			appClientId,
+			ref,
+			refViewId,
+			componentEventParams,
+			useOktaClassic,
+		},
 		requestId: request_id,
 	} = res.locals;
 
@@ -434,10 +440,7 @@ export const OktaRegistration = async (
 	// Attempt to register the user with Okta using the IDX API
 	// and specifically using passcodes.
 	// If there are specific failures, we fall back to the legacy Okta registration flow
-	if (
-		registrationPasscodesEnabled &&
-		res.locals.queryParams.usePasscodeRegistration
-	) {
+	if (registrationPasscodesEnabled && !useOktaClassic) {
 		try {
 			// start the interaction code flow, and get the interaction handle + authState
 			const [{ interaction_handle }, authState] = await interact(req, res, {

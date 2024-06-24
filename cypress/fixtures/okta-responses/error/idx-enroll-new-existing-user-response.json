@@ -1,0 +1,94 @@
+{
+	"code": 400,
+	"response": {
+		"version": "1.0.0",
+		"stateHandle": "02.id.state~c.handle",
+		"expiresAt": "2099-12-31T23:59:59.000Z",
+		"remediation": {
+			"type": "array",
+			"value": [
+				{
+					"rel": ["create-form"],
+					"name": "enroll-profile",
+					"href": "https://profile.code.dev-theguardian.com/idp/idx/enroll/new",
+					"method": "POST",
+					"produces": "application/ion+json; okta-version=1.0.0",
+					"value": [
+						{
+							"name": "userProfile",
+							"form": {
+								"value": [
+									{
+										"name": "email",
+										"type": "string",
+										"label": "Primary email",
+										"required": true,
+										"messages": {
+											"type": "array",
+											"value": [
+												{
+													"message": "A user with this Primary email already exists",
+													"i18n": {
+														"key": "registration.error.notUniqueWithinOrg",
+														"params": ["Primary email"]
+													},
+													"class": "ERROR"
+												}
+											]
+										},
+										"maxLength": 100
+									},
+									{
+										"name": "isGuardianUser",
+										"type": "boolean",
+										"label": "isGuardianUser",
+										"required": true
+									},
+									{
+										"name": "registrationPlatform",
+										"type": "string",
+										"label": "registrationPlatform",
+										"required": false,
+										"maxLength": 50
+									},
+									{
+										"name": "registrationLocation",
+										"type": "string",
+										"label": "registrationLocation",
+										"required": false,
+										"maxLength": 50
+									}
+								]
+							}
+						},
+						{
+							"name": "stateHandle",
+							"required": true,
+							"value": "02.id.state~c.handle",
+							"visible": false,
+							"mutable": false
+						}
+					],
+					"accepts": "application/json; okta-version=1.0.0"
+				},
+				{
+					"rel": ["create-form"],
+					"name": "select-identify",
+					"href": "https://profile.code.dev-theguardian.com/idp/idx/identify/select",
+					"method": "POST",
+					"produces": "application/ion+json; okta-version=1.0.0",
+					"value": [
+						{
+							"name": "stateHandle",
+							"required": true,
+							"value": "02.id.state~c.handle",
+							"visible": false,
+							"mutable": false
+						}
+					],
+					"accepts": "application/json; okta-version=1.0.0"
+				}
+			]
+		}
+	}
+}
