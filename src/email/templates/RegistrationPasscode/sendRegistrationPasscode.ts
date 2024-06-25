@@ -10,7 +10,7 @@ type Props = {
 };
 
 const plainText = RegistrationPasscodeText();
-const { html } = render(RegistrationPasscode());
+const { html } = render(RegistrationPasscode({}));
 
 export const sendRegistrationPasscodeEmail = ({
 	to,

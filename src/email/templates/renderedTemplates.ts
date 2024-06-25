@@ -66,5 +66,5 @@ export const renderedCompleteRegistration = {
 
 export const renderedRegistrationPasscode = {
 	plain: RegistrationPasscodeText(),
-	html: render(RegistrationPasscode()).html,
+	html: render(RegistrationPasscode({})).html,
 } as EmailRenderResult;

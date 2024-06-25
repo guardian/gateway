@@ -5,8 +5,13 @@ import { Header } from '@/email/components/Header';
 import { SubHeader } from '@/email/components/SubHeader';
 import { Text } from '@/email/components/Text';
 import { Footer } from '@/email/components/Footer';
+import { space } from '@guardian/source/foundations';
 
-export const RegistrationPasscode = () => {
+type Props = {
+	storybookPasscode?: string;
+};
+
+export const RegistrationPasscode = ({ storybookPasscode }: Props) => {
 	return (
 		<Mjml>
 			<MjmlHead>
@@ -19,19 +24,15 @@ export const RegistrationPasscode = () => {
 					Thank you for creating an account with the Guardian. Use the following
 					code to verify your email.
 				</Text>
-				<Text largeText>
-					<strong>{`{{CTA}}`}</strong>
+				<Text largeText letterSpacing={`${space[0]}px`}>
+					<strong>{`${storybookPasscode ? storybookPasscode : '{{CTA}}'}`}</strong>
 				</Text>
 				<Text>
-					<strong>
-						Do not share this code with anyone. This code will expire in 30
-						minutes.
-					</strong>
+					Do not share this code with anyone. This code will expire in 30
+					minutes.
 				</Text>
 				<Text>
-					<strong>
-						If your code has expired, create your Guardian account again.
-					</strong>
+					If your code has expired, create your Guardian account again.
 				</Text>
 				<Footer
 					mistakeParagraphComponent={

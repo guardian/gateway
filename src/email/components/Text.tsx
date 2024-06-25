@@ -8,6 +8,7 @@ type Props = {
 	noPaddingBottom?: boolean;
 	cssClass?: string;
 	largeText?: boolean;
+	letterSpacing?: string;
 };
 
 export const Text = ({
@@ -15,6 +16,7 @@ export const Text = ({
 	noPaddingBottom = false,
 	cssClass,
 	largeText = false,
+	letterSpacing,
 }: Props) => (
 	<MjmlSection
 		background-color={background.primary}
@@ -26,7 +28,7 @@ export const Text = ({
 				padding="0"
 				fontSize={largeText ? '20px' : '17px'}
 				lineHeight="1.35"
-				letterSpacing="-0.02px"
+				letterSpacing={letterSpacing ? letterSpacing : '-0.02px'}
 				fontFamily="Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif"
 				color={text.primary}
 			>

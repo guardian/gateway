@@ -21,3 +21,8 @@ export const Default = () => {
 	return renderMJML(<RegistrationPasscode />);
 };
 Default.storyName = 'with defaults';
+
+export const Passcode = () => {
+	return renderMJML(<RegistrationPasscode storybookPasscode="123456" />);
+};
+Passcode.storyName = 'with passcode';
