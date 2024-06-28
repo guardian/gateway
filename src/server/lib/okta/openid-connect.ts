@@ -10,7 +10,6 @@ import { ResponseWithRequestState } from '@/server/models/Express';
 import { logger } from '@/server/lib/serverSideLogger';
 import { RoutePaths } from '@/shared/model/Routes';
 import { SocialProvider } from '@/shared/model/Social';
-import { SignInGateIdsForOfferEmails } from '@/server/lib/ophan';
 
 /**
  * @interface AuthorizationState
@@ -37,7 +36,6 @@ export interface AuthorizationState {
 		encryptedRegistrationConsents?: string; // used to set the consents given during registration on the authentication callback when we have oauth access tokens which can update the user's consents in idapi, should be encrypted, and decrypted on the callback
 		socialProvider?: SocialProvider; // used to track the social provider used to sign in/register
 		appPrefix?: string; // used to track if the recovery token has a native app prefix
-		signInGateId?: SignInGateIdsForOfferEmails; // used to track the sign in gate id
 		codeVerifier?: string; // used to track the code verifier used in the PKCE flow
 		stateToken?: string; // state handle from Okta IDX /introspect response but only everything before the first tilde (`stateHandle.split('~')[0]`), used to redirect user to login redirect endpoint to set global session (`/login/token/redirect?stateToken=${stateToken}`)
 	};

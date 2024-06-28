@@ -6,22 +6,12 @@ import {
 	OphanComponent,
 	OphanComponentEvent,
 	OphanComponentType,
-	isOneOf,
 } from '@guardian/libs';
 import serialize from 'serialize-javascript';
 import { timeoutSignal } from './timeoutSignal';
 import { removeEmptyKeysFromObjectAndConvertValuesToString } from '@/shared/lib/queryParams';
 
 const ophanUrl = 'https://ophan.theguardian.com/img/2';
-
-/* AB TEST START */
-export const signInGateIdsForOfferEmails = [
-	'alternative-wording-guardian-live',
-	'alternative-wording-personalise',
-] as const;
-export type SignInGateIdsForOfferEmails =
-	(typeof signInGateIdsForOfferEmails)[number];
-/* AB TEST END */
 
 // Component event params is the decoded version of the componentEventParams query parameter
 // defined in the TrackingQueryParams interface from src/shared/model/QueryParams.ts
@@ -80,43 +70,6 @@ export const parseComponentEventParams = async (
 		request_id,
 	});
 };
-/* AB TEST START */
-
-export const getMatchingSignInGateId = (
-	maybeSignInGateId: string | undefined,
-): SignInGateIdsForOfferEmails | undefined => {
-	if (!maybeSignInGateId) {
-		return;
-	}
-	const isOneOfSignInGateIds = isOneOf(signInGateIdsForOfferEmails);
-	if (!isOneOfSignInGateIds(maybeSignInGateId)) {
-		return;
-	}
-	return maybeSignInGateId;
-};
-
-export const getMatchingSignInGateIdFromComponentEventParamsQuery = async ({
-	componentEventParamsQuery,
-	request_id,
-}: {
-	componentEventParamsQuery?: string;
-	request_id?: string;
-}): Promise<SignInGateIdsForOfferEmails | undefined> => {
-	// The query string may be missing entirely
-	if (!componentEventParamsQuery) {
-		return;
-	}
-	const componentEventParams = await parseComponentEventParams(
-		componentEventParamsQuery,
-		request_id,
-	);
-	if (!componentEventParams?.abTestVariant) {
-		return;
-	}
-	return getMatchingSignInGateId(componentEventParams.abTestVariant);
-};
-
-/* AB TEST END */
 
 /**
  * In some cases in DCR and Frontend we send the component type

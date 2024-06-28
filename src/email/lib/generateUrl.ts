@@ -1,4 +1,3 @@
-import { SignInGateIdsForOfferEmails } from '@/server/lib/ophan';
 import { TrackingQueryParams } from '@/shared/model/QueryParams';
 
 type Props = {
@@ -6,7 +5,6 @@ type Props = {
 	path: string;
 	token?: string;
 	isIdapiUrl?: boolean;
-	signInGateId?: SignInGateIdsForOfferEmails;
 } & TrackingQueryParams;
 
 export const generateUrl = ({
@@ -16,7 +14,6 @@ export const generateUrl = ({
 	isIdapiUrl = false,
 	ref,
 	refViewId,
-	signInGateId,
 }: Props) => {
 	const params = new URLSearchParams();
 
@@ -30,10 +27,6 @@ export const generateUrl = ({
 
 	if (refViewId) {
 		params.append('refViewId', refViewId);
-	}
-
-	if (signInGateId) {
-		params.append('signInGateId', signInGateId);
 	}
 
 	const urlParts = [

@@ -32,10 +32,7 @@ import { getConfiguration } from '@/server/lib/getConfiguration';
 import { OAuthError, OktaError } from '@/server/models/okta/Error';
 import { causesInclude } from '@/server/lib/okta/api/errors';
 import { redirectIfLoggedIn } from '@/server/lib/middleware/redirectIfLoggedIn';
-import {
-	getMatchingSignInGateIdFromComponentEventParamsQuery,
-	sendOphanComponentEventFromQueryParamsServer,
-} from '@/server/lib/ophan';
+import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { UserResponse } from '@/server/models/okta/User';
 import { getRegistrationLocation } from '@/server/lib/getRegistrationLocation';
@@ -420,28 +417,9 @@ export const OktaRegistration = async (
 	const { email = '' } = req.body;
 
 	const {
-		queryParams: {
-			appClientId,
-			ref,
-			refViewId,
-			componentEventParams,
-			useOktaClassic,
-		},
+		queryParams: { appClientId, ref, refViewId, useOktaClassic },
 		requestId: request_id,
 	} = res.locals;
-
-	/* AB TEST LOGIC START */
-
-	// The componentEventParams query parameter stores Ophan tracking data, but we want to
-	// parse it to check if this registration is coming via specific sign-in gates we're AB testing,
-	// so we can send an offer email after registration is complete.
-	const signInGateId =
-		await getMatchingSignInGateIdFromComponentEventParamsQuery({
-			componentEventParamsQuery: componentEventParams,
-			request_id,
-		});
-
-	/* AB TEST LOGIC END */
 
 	const consents = bodyFormFieldsToRegistrationConsents(req.body);
 
@@ -583,7 +561,6 @@ export const OktaRegistration = async (
 			consents,
 			ref,
 			refViewId,
-			signInGateId,
 		});
 
 		// fire ophan component event if applicable

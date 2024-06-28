@@ -1,4 +1,3 @@
-import { SignInGateIdsForOfferEmails } from '@/server/lib/ophan';
 import { ValidClientId } from '../lib/clientId';
 
 type Stringifiable = string | boolean | number | null | undefined;
@@ -26,9 +25,6 @@ export interface TrackingQueryParams {
 	// we URL encode the value of componentEventParams due to the number of keys available
 	// as well as getting confused with other parameters, so we thought it best to pass it as a URL encoded string, and then do the decoding once it gets to IDAPI
 	componentEventParams?: string;
-	// Only used for AB testing sign in gates which need to send an offer email after successful registration.
-	// Extracted from componentEventParams and whitelisted against a list of IDs we're interested in.
-	signInGateId?: SignInGateIdsForOfferEmails;
 }
 
 /**
