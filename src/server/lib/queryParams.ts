@@ -2,7 +2,6 @@ import { QueryParams, TrackingQueryParams } from '@/shared/model/QueryParams';
 import { validateReturnUrl, validateRefUrl } from '@/server/lib/validateUrl';
 import { validateClientId } from '@/server/lib/validateClientId';
 import { isStringBoolean } from './isStringBoolean';
-import { getMatchingSignInGateId } from './ophan';
 
 const validateGetOnlyError = (
 	method: string,
@@ -51,7 +50,6 @@ export const parseExpressQueryParams = (
 		fromURI,
 		appClientId,
 		maxAge,
-		signInGateId,
 		useOktaClassic,
 	}: Record<keyof QueryParams, string | undefined>, // parameters from req.query
 	// some parameters may be manually passed in req.body too,
@@ -76,7 +74,6 @@ export const parseExpressQueryParams = (
 		fromURI,
 		appClientId,
 		maxAge: stringToNumber(maxAge),
-		signInGateId: getMatchingSignInGateId(signInGateId),
 		useOktaClassic: isStringBoolean(useOktaClassic),
 	};
 };

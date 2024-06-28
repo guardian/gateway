@@ -40,9 +40,6 @@ import {
 	update as updateNewsletters,
 } from '@/server/lib/idapi/newsletters';
 import { RoutePaths } from '@/shared/model/Routes';
-import { sendGuardianLiveOfferEmail } from '@/email/templates/GuardianLiveOffer/sendGuardianLiveOfferEmail';
-import { sendMyGuardianOfferEmail } from '@/email/templates/MyGuardianOffer/sendMyGuardianOfferEmail';
-import { emailSendMetric } from '@/server/models/Metrics';
 import { fixOktaProfile } from '@/server/lib/okta/fixProfile';
 
 const { baseUri, deleteAccountStepFunction } = getConfiguration();
@@ -251,43 +248,6 @@ const authenticationHandler = async (
 				// then we set the emailValidated field to true in the Okta user profile by manually updating the user
 				// updated the user profile emailValidated to true
 				await updateUser(sub, { profile: { emailValidated: true } });
-
-				/* AB TEST START */
-
-				// If the user signed up from one of the sign in gates we're AB testing, we want to send them
-				// the appropriate email
-				const signInGateId = authState.data?.signInGateId;
-				if (signInGateId && email) {
-					switch (signInGateId) {
-						case 'alternative-wording-guardian-live': {
-							const emailIsSent = await sendGuardianLiveOfferEmail({
-								to: email,
-							});
-							trackMetric(
-								emailSendMetric(
-									'GuardianLiveOffer',
-									emailIsSent ? 'Success' : 'Failure',
-								),
-							);
-							break;
-						}
-						case 'alternative-wording-personalise': {
-							const emailIsSent = await sendMyGuardianOfferEmail({
-								to: email,
-							});
-							trackMetric(
-								emailSendMetric(
-									'MyGuardianOffer',
-									emailIsSent ? 'Success' : 'Failure',
-								),
-							);
-							break;
-						}
-						default:
-							break;
-					}
-				}
-				/* AB TEST END */
 
 				// since this is a new social user, we want to show the onboarding flow too
 				// we use the `confirmationPage` flag to redirect the user to the onboarding/consents page

@@ -42,10 +42,8 @@ import { clearOktaCookies } from '@/server/routes/signOut';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
 import { decryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
-import { changePasswordMetric, emailSendMetric } from '@/server/models/Metrics';
+import { changePasswordMetric } from '@/server/models/Metrics';
 import { getAppPrefix } from '@/shared/lib/appNameUtils';
-import { sendGuardianLiveOfferEmail } from '@/email/templates/GuardianLiveOffer/sendGuardianLiveOfferEmail';
-import { sendMyGuardianOfferEmail } from '@/email/templates/MyGuardianOffer/sendMyGuardianOfferEmail';
 import {
 	introspect,
 	validateIntrospectRemediation,
@@ -209,7 +207,7 @@ const changePasswordInOkta = async (
 ) => {
 	const { token: encryptedRecoveryToken } = req.params;
 	const { password, firstName, secondName } = req.body;
-	const { clientId, signInGateId, useOktaClassic } = res.locals.queryParams;
+	const { clientId, useOktaClassic } = res.locals.queryParams;
 
 	// OKTA IDX API FLOW
 	// If the user is using the passcode registration flow, we need to handle the password change/creation.
@@ -372,45 +370,6 @@ const changePasswordInOkta = async (
 			}
 
 			changePasswordMetric(path, 'Success');
-
-			/* AB TEST START */
-			const encryptedState = readEncryptedStateCookie(req);
-
-			// If the user signed up from one of the sign in gates we're AB testing, we want to send them
-			// the appropriate email
-			// This is for the case where they're signing up with an email and password - for social registration
-			// we handle the email sending directly in the auth code callback.
-			if (signInGateId && encryptedState?.email) {
-				switch (signInGateId) {
-					case 'alternative-wording-guardian-live': {
-						const emailIsSent = await sendGuardianLiveOfferEmail({
-							to: encryptedState.email,
-						});
-						trackMetric(
-							emailSendMetric(
-								'GuardianLiveOffer',
-								emailIsSent ? 'Success' : 'Failure',
-							),
-						);
-						break;
-					}
-					case 'alternative-wording-personalise': {
-						const emailIsSent = await sendMyGuardianOfferEmail({
-							to: encryptedState.email,
-						});
-						trackMetric(
-							emailSendMetric(
-								'MyGuardianOffer',
-								emailIsSent ? 'Success' : 'Failure',
-							),
-						);
-						break;
-					}
-					default:
-						break;
-				}
-			}
-			/* AB TEST END */
 
 			return await performAuthorizationCodeFlow(req, res, {
 				sessionToken,

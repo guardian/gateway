@@ -28,10 +28,7 @@ import { getCurrentSession } from '@/server/lib/okta/api/sessions';
 import { redirectIfLoggedIn } from '@/server/lib/middleware/redirectIfLoggedIn';
 import { getUser, getUserGroups } from '@/server/lib/okta/api/users';
 import { clearOktaCookies } from '@/server/routes/signOut';
-import {
-	getMatchingSignInGateIdFromComponentEventParamsQuery,
-	sendOphanComponentEventFromQueryParamsServer,
-} from '@/server/lib/ophan';
+import { sendOphanComponentEventFromQueryParamsServer } from '@/server/lib/ophan';
 import { isBreachedPassword } from '@/server/lib/breachedPasswordCheck';
 import { mergeRequestState } from '@/server/lib/requestState';
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
@@ -575,18 +572,6 @@ router.get(
 				);
 			}
 
-			/* AB TEST LOGIC START */
-			// The componentEventParams query parameter stores Ophan tracking data, but we want to
-			// parse it to check if this registration is coming via specific sign-in gates we're AB testing,
-			// so we can send an offer email after registration is complete.
-			const signInGateId =
-				await getMatchingSignInGateIdFromComponentEventParamsQuery({
-					componentEventParamsQuery:
-						res.locals.queryParams.componentEventParams,
-					request_id: res.locals.requestId,
-				});
-			/* AB TEST LOGIC END */
-
 			// OKTA IDX API FLOW
 			// attempt to authenticate social using the idx api/interaction code flow
 			// if this fails with any error, we fall back to okta hosted flow
@@ -648,7 +633,6 @@ router.get(
 				redirectUri: ProfileOpenIdClientRedirectUris.AUTHENTICATION,
 				extraData: {
 					socialProvider: socialIdp,
-					signInGateId,
 				},
 			});
 		} else {
