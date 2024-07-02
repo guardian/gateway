@@ -55,9 +55,6 @@ Parameters:
     AllowedValues:
       - CODE
       - PROD
-  SshAccessSecurityGroup:
-    Description: Security group that is allowed SSH access to the instances
-    Type: AWS::EC2::SecurityGroup::Id
   SsmManagedPolicyArn:
     Description: The ARN for the ssm iam role
     Type: String
@@ -246,7 +243,6 @@ Resources:
         KeyName: !Ref KeyName
         SecurityGroupIds:
           - !Ref InstanceSecurityGroup
-          - !Ref SshAccessSecurityGroup
         UserData:
           Fn::Base64: !Sub
             - |+
