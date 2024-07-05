@@ -101,6 +101,22 @@ describe('Delete my account flow in Okta', () => {
 		);
 	});
 
+	it('should block user from deleting account if they have a feast subscription', () => {
+		cy.createTestUser({ isUserEmailValidated: true }).then(
+			({ emailAddress, finalPassword }) => {
+				// set the mock state cookie
+				cy.setCookie('cypress-mock-state', 'feast');
+
+				signInAndVisitDeletePage(emailAddress, finalPassword);
+
+				// Then, try to delete the account, but blocked
+				cy.contains(
+					'You have an active subscription to the Guardian Feast app',
+				);
+			},
+		);
+	});
+
 	it('should block user from deleting account if they are a recurring contributor', () => {
 		cy.createTestUser({ isUserEmailValidated: true }).then(
 			({ emailAddress, finalPassword }) => {

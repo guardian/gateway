@@ -132,6 +132,9 @@ router.get(
 								// eslint-disable-next-line functional/immutable-data
 								cypressContentAccess.recurringContributor = true;
 								break;
+							case 'feast':
+								// eslint-disable-next-line functional/immutable-data
+								cypressContentAccess.feast = true;
 							default:
 								break;
 						}
@@ -152,7 +155,8 @@ router.get(
 					contentAccess.member ||
 					contentAccess.paidMember ||
 					contentAccess.paperSubscriber ||
-					contentAccess.recurringContributor;
+					contentAccess.recurringContributor ||
+					contentAccess.feast;
 
 				if (hasPaidProduct) {
 					// if so, show the delete blocked page
