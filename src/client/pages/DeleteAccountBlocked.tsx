@@ -15,7 +15,8 @@ export const DeleteAccountBlocked = ({ contentAccess = {} }: Props) => {
 	const hasSubscription =
 		contentAccess.digitalPack ||
 		contentAccess.paperSubscriber ||
-		contentAccess.guardianWeeklySubscriber;
+		contentAccess.guardianWeeklySubscriber ||
+		contentAccess.feast;
 
 	return (
 		<MinimalLayout
@@ -90,6 +91,15 @@ export const DeleteAccountBlocked = ({ contentAccess = {} }: Props) => {
 							<MainBodyText>
 								<strong>
 									You have an active print subscription to the Guardian Weekly
+								</strong>
+							</MainBodyText>
+						</>
+					)}
+					{contentAccess.feast && (
+						<>
+							<MainBodyText>
+								<strong>
+									You have an active subscription to the Guardian Feast app
 								</strong>
 							</MainBodyText>
 						</>
