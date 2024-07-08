@@ -28,7 +28,6 @@ export interface Configuration {
 	accountManagementUrl: string;
 	rateLimiter: RateLimiterConfiguration;
 	membersDataApiUrl: string;
-	gatewayOAuthEnabled: boolean;
 	registrationPasscodesEnabled: boolean;
 	deleteAccountStepFunction: {
 		url: string;

@@ -8,16 +8,6 @@
  */
 interface FeatureSwitches {
 	demoSwitch: boolean;
-	oktaEnabled: {
-		DEV: boolean;
-		CODE: boolean;
-		PROD: boolean;
-	};
-	gatewayOAuthEnabled: {
-		DEV: boolean;
-		CODE: boolean;
-		PROD: boolean;
-	};
 	registrationPasscodesEnabled: {
 		DEV: boolean;
 		CODE: boolean;
@@ -27,16 +17,6 @@ interface FeatureSwitches {
 
 export const featureSwitches: FeatureSwitches = {
 	demoSwitch: false,
-	oktaEnabled: {
-		DEV: true,
-		CODE: true,
-		PROD: true,
-	},
-	gatewayOAuthEnabled: {
-		DEV: true,
-		CODE: true,
-		PROD: true,
-	},
 	registrationPasscodesEnabled: {
 		DEV: true,
 		CODE: true,

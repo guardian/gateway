@@ -27,16 +27,15 @@ import { getCurrentSession } from '@/server/lib/okta/api/sessions';
 
 const profileUrl = getProfileUrl();
 
-const { signInPageUrl: LOGIN_REDIRECT_URL, gatewayOAuthEnabled } =
-	getConfiguration();
+const { signInPageUrl: LOGIN_REDIRECT_URL } = getConfiguration();
 
 export const loginMiddlewareOAuth = async (
 	req: Request,
 	res: ResponseWithRequestState,
 	next: NextFunction,
 ) => {
-	// if the useIdapi query parameter, or gatewayOAuthEnabled feature flag is falsey, use the old login middleware
-	if (res.locals.queryParams.useIdapi || !gatewayOAuthEnabled) {
+	// if the useIdapi query parameter is truthy, use the old login middleware
+	if (res.locals.queryParams.useIdapi) {
 		trackMetric('LoginMiddlewareOAuth::UseIdapi');
 		return loginMiddleware(req, res, next);
 	}
