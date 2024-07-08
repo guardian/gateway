@@ -11,7 +11,6 @@ import { ToggleSwitchInput } from '@/client/components/ToggleSwitchInput';
 
 interface RegistrationConsentsProps {
 	geolocation?: GeoLocation;
-	useIdapi?: boolean;
 	appName?: AppName;
 }
 
@@ -41,7 +40,6 @@ const chooseNewsletter = (
 
 export const RegistrationConsents = ({
 	geolocation,
-	useIdapi,
 	appName,
 }: RegistrationConsentsProps) => {
 	const registrationNewsletter = chooseNewsletter(geolocation, appName);
@@ -52,10 +50,6 @@ export const RegistrationConsents = ({
 		}
 		return true;
 	})();
-
-	if (useIdapi) {
-		return <></>;
-	}
 
 	return (
 		<ToggleSwitchList>

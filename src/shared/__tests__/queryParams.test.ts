@@ -33,7 +33,6 @@ describe('getPersistableQueryParams', () => {
 			ref: 'ref',
 			refViewId: 'refViewId',
 			componentEventParams: 'componentEventParams',
-			useIdapi: undefined,
 			fromURI: 'fromURI',
 			appClientId: 'appClientId',
 			useOktaClassic: undefined,
@@ -104,7 +103,6 @@ describe('addQueryParamsToPath', () => {
 			ref: undefined,
 			refViewId: '',
 			componentEventParams: 'componentEventParams',
-			useIdapi: undefined,
 		};
 
 		const output = addQueryParamsToPath('/newsletters', input);
@@ -128,7 +126,6 @@ describe('removeEmptyKeysFromObjectAndConvertValuesToString', () => {
 			ref: undefined,
 			refViewId: '',
 			componentEventParams: 'componentEventParams',
-			useIdapi: undefined,
 		};
 
 		const output = removeEmptyKeysFromObjectAndConvertValuesToString(input);

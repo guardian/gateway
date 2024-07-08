@@ -25,7 +25,7 @@ describe('Verify email flow', () => {
 
 	beforeEach(() => {
 		cy.mockPurge();
-		cy.visit('/signin?useIdapi=true');
+		cy.visit('/signin');
 	});
 
 	context('A11y checks', () => {
@@ -93,7 +93,7 @@ describe('Verify email flow', () => {
 			cy.mockNext(200, authRedirectSignInRecentlyEmailValidated);
 
 			// go to verify email endpoint
-			verifyEmailFlow.goto('avalidtoken', { query: { useIdapi: 'true' } });
+			verifyEmailFlow.goto('avalidtoken');
 
 			// check if signed in success text exists
 			cy.contains("You're signed in! Welcome to the Guardian.");
@@ -121,7 +121,6 @@ describe('Verify email flow', () => {
 			verifyEmailFlow.goto('avalidtoken', {
 				query: {
 					returnUrl,
-					useIdapi: 'true',
 				},
 			});
 
@@ -152,7 +151,6 @@ describe('Verify email flow', () => {
 			verifyEmailFlow.goto('avalidtoken', {
 				query: {
 					returnUrl,
-					useIdapi: 'true',
 				},
 			});
 
@@ -174,7 +172,6 @@ describe('Verify email flow', () => {
 			// go to verify email endpont
 			verifyEmailFlow.goto('expiredtoken', {
 				failOnStatusCode: false,
-				query: { useIdapi: 'true' },
 			});
 
 			cy.contains(VerifyEmail.CONTENT.LINK_EXPIRED);
@@ -199,7 +196,6 @@ describe('Verify email flow', () => {
 			// go to verify email endpont
 			verifyEmailFlow.goto('aninvalidtoken', {
 				failOnStatusCode: false,
-				query: { useIdapi: 'true' },
 			});
 
 			cy.contains(VerifyEmail.CONTENT.LINK_EXPIRED);
@@ -235,7 +231,6 @@ describe('Verify email flow', () => {
 			// go to verify email endpont
 			verifyEmailFlow.goto('expiredtoken', {
 				failOnStatusCode: false,
-				query: { useIdapi: 'true' },
 			});
 
 			cy.contains(VerifyEmail.CONTENT.VERIFY_EMAIL);
@@ -268,7 +263,6 @@ describe('Verify email flow', () => {
 			// go to verify email endpont
 			verifyEmailFlow.goto('expiredtoken', {
 				failOnStatusCode: false,
-				query: { useIdapi: 'true' },
 			});
 
 			cy.contains(VerifyEmail.CONTENT.VERIFY_EMAIL);
@@ -301,7 +295,6 @@ describe('Verify email flow', () => {
 			// go to verify email endpont
 			verifyEmailFlow.goto('expiredtoken', {
 				failOnStatusCode: false,
-				query: { useIdapi: 'true' },
 			});
 
 			cy.contains(VerifyEmail.CONTENT.VERIFY_EMAIL);

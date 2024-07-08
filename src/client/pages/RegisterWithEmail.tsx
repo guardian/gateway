@@ -32,8 +32,6 @@ export const RegisterWithEmail = ({
 
 	usePageLoadOphanInteraction(formTrackingName);
 
-	const useIdapi = queryParams.useIdapi;
-
 	return (
 		<MinimalLayout pageHeader="Create your account">
 			<MainForm
@@ -50,11 +48,7 @@ export const RegisterWithEmail = ({
 				additionalTerms={newsletterAdditionalTerms}
 			>
 				<EmailInput defaultValue={email} autoComplete="off" />
-				<RegistrationConsents
-					useIdapi={useIdapi}
-					geolocation={geolocation}
-					appName={appName}
-				/>
+				<RegistrationConsents geolocation={geolocation} appName={appName} />
 			</MainForm>
 			<Divider spaceAbove="tight" size="full" cssOverrides={divider} />
 			<MainBodyText>
