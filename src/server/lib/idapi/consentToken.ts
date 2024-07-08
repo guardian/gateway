@@ -16,7 +16,7 @@ const handleError = (): never => {
 };
 
 export const validateConsentToken = async (
-	ip: string,
+	ip: string | undefined,
 	sc_gu_u: string,
 	token: string,
 	request_id?: string,
@@ -44,7 +44,7 @@ export const validateConsentToken = async (
 };
 
 export const resendConsentEmail = async (
-	ip: string,
+	ip: string | undefined,
 	sc_gu_u: string,
 	token: string,
 	request_id?: string,

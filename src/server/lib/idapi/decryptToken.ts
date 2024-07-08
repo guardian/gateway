@@ -7,7 +7,7 @@ import { logger } from '@/server/lib/serverSideLogger';
 
 export const decrypt = async (
 	token: string,
-	ip: string,
+	ip: string | undefined,
 	request_id?: string,
 ): Promise<string | undefined> => {
 	const options = APIGetOptions();

@@ -39,7 +39,7 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
 
 export async function validate(
 	token: string,
-	ip: string,
+	ip: string | undefined,
 	request_id?: string,
 ): Promise<{
 	email?: string;
@@ -79,7 +79,7 @@ export async function validate(
 export async function change(
 	password: string,
 	token: string,
-	ip: string,
+	ip: string | undefined,
 	request_id?: string,
 ): Promise<IdapiCookies | undefined> {
 	const options = APIPostOptions({

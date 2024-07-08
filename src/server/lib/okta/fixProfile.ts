@@ -11,7 +11,7 @@ export const fixOktaProfile = async ({
 }: {
 	oktaId: string;
 	email?: string;
-	ip: string;
+	ip: string | undefined;
 	request_id?: string;
 }): Promise<boolean> => {
 	try {

@@ -90,12 +90,12 @@ export const APIPostOptions = getAPIOptionsForMethod('POST');
 
 export const APIAddClientAccessToken = (
 	options: RequestInit,
-	ip: string,
+	ip: string | undefined,
 ): RequestInit => {
 	const headers = {
 		...options.headers,
 		'X-GU-ID-Client-Access-Token': `Bearer ${idapiClientAccessToken}`,
-		'X-Forwarded-For': ip,
+		...(ip ? { 'X-Forwarded-For': ip } : {}),
 	};
 	return {
 		...options,

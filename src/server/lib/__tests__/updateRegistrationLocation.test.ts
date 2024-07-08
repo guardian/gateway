@@ -51,11 +51,11 @@ const oktaUser = (location: string | undefined) => {
 
 jest.mock('@/server/lib/idapi/user');
 const mockedReadUser =
-	mocked<(ip: string, sc_gu_u: string) => Promise<User>>(read);
+	mocked<(ip: string | undefined, sc_gu_u: string) => Promise<User>>(read);
 const mockedAddRegistrationLocation = mocked<
 	(
 		registrationLocation: RegistrationLocation,
-		ip: string,
+		ip: string | undefined,
 		sc_gu_u: string,
 		request_id?: string,
 	) => Promise<User>

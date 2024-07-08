@@ -40,7 +40,7 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
 
 export const guest = async (
 	email: string,
-	ip: string,
+	ip: string | undefined,
 	trackingParams: IdApiQueryParams,
 	ophanTrackingConfig?: OphanConfig,
 	request_id?: string,

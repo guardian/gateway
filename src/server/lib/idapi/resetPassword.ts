@@ -25,7 +25,7 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
 
 export const sendResetPasswordEmail = (
 	email: string,
-	ip: string,
+	ip: string | undefined,
 	returnUrl: string,
 	ref?: string,
 	refViewId?: string,

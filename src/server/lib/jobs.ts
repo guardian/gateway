@@ -31,7 +31,7 @@ export const setupJobsUserInOkta = (
 export const setupJobsUserInIDAPI = async (
 	firstName: string,
 	secondName: string,
-	ip: string,
+	ip: string | undefined,
 	sc_gu_u: string,
 	request_id?: string,
 ) => {
