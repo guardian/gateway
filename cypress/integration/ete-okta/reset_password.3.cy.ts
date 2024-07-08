@@ -524,4 +524,23 @@ describe('Password reset flow in Okta', () => {
 			});
 		});
 	});
+
+	// /verify-email is just a reskinned reset password page
+	context('/verify-email page', () => {
+		it('redirects to /verify-email if a token is in the URL', () => {
+			cy.visit('/verify-email/123');
+			cy.url().should('contain', '/verify-email');
+		});
+
+		it('shows the reset passsword success page when the form is submitted', () => {
+			cy.visit('/verify-email');
+			cy.contains('Verify your email');
+			cy.contains(
+				'As a security measure, to verify your email, you will need to reset your password.',
+			);
+			cy.get('input[name=email]').type('test@email.com');
+			cy.get('button[type="submit"]').click();
+			cy.contains('Check your inbox');
+		});
+	});
 });

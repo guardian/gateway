@@ -87,6 +87,7 @@ type UnconditionalMetrics =
 	| 'OktaIDX::UnexpectedVersion'
 	| 'OktaIDXSocialSignIn::Redirect'
 	| 'OktaIDXSocialSignIn::Failure'
+	| 'VerifyEmailPage::Accessed'
 	| `${RateLimitMetrics}GatewayRateLimitHit`
 	| `User-${'EmailValidated' | 'EmailNotValidated'}-${
 			| 'WeakPassword'

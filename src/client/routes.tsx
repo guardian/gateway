@@ -9,7 +9,6 @@ import { NotFoundPage } from '@/client/pages/NotFoundPage';
 import { ChangePasswordPage } from '@/client/pages/ChangePasswordPage';
 import { ChangePasswordCompletePage } from '@/client/pages/ChangePasswordCompletePage';
 import { ResendPasswordPage } from '@/client/pages/ResendPasswordPage';
-import { ResendEmailVerificationPage } from '@/client/pages/ResendEmailVerificationPage';
 import { UnexpectedErrorPage } from '@/client/pages/UnexpectedErrorPage';
 import { ClientState } from '@/shared/model/ClientState';
 import { SignInPage } from '@/client/pages/SignInPage';
@@ -40,6 +39,7 @@ import { WelcomeSocialPage } from '@/client/pages/WelcomeSocialPage';
 import { ReturnToAppPage } from '@/client/pages/ReturnToAppPage';
 import { NewAccountReviewPage } from '@/client/pages/NewAccountReviewPage';
 import { NewAccountNewslettersPage } from '@/client/pages/NewAccountNewslettersPage';
+import { VerifyEmailResetPasswordPage } from './pages/VerifyEmailResetPasswordPage';
 
 export type RoutingConfig = {
 	clientState: ClientState;
@@ -172,7 +172,7 @@ const routes: Array<{
 	},
 	{
 		path: '/verify-email',
-		element: <ResendEmailVerificationPage />,
+		element: <VerifyEmailResetPasswordPage />,
 	},
 	{
 		path: '/change-email/complete',
