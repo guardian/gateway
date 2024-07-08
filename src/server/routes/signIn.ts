@@ -1,12 +1,10 @@
 import { Request } from 'express';
-import { authenticate as authenticateWithIdapi } from '@/server/lib/idapi/auth';
 import { authenticate as authenticateWithOkta } from '@/server/lib/okta/api/authentication';
 import { logger } from '@/server/lib/serverSideLogger';
 import { renderer } from '@/server/lib/renderer';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { decrypt } from '@/server/lib/idapi/decryptToken';
 import {
@@ -136,8 +134,6 @@ router.post(
 			requestId: request_id,
 		} = res.locals;
 
-		// We don't need to check the useIdapi flag as a user can only
-		// get into this flow after an attempt to login with Okta
 		try {
 			const encryptedState = readEncryptedStateCookie(req);
 			const { email } = encryptedState ?? {};
@@ -234,24 +230,18 @@ router.post(
 	'/reauthenticate',
 	handleRecaptcha,
 	handleAsyncErrors((req: Request, res: ResponseWithRequestState) => {
-		const { useIdapi } = res.locals.queryParams;
 		const {
 			queryParams: { appClientId },
 			requestId: request_id,
 		} = res.locals;
-		if (okta.enabled && !useIdapi) {
-			// if okta feature switch enabled, use okta authentication
-			return oktaSignInController({
-				req,
-				res,
-				isReauthenticate: true,
-				appClientId,
-				request_id,
-			});
-		} else {
-			// if okta feature switch disabled, use identity authentication
-			return idapiSignInController(req, res);
-		}
+		// if okta feature switch enabled, use okta authentication
+		return oktaSignInController({
+			req,
+			res,
+			isReauthenticate: true,
+			appClientId,
+			request_id,
+		});
 	}),
 );
 
@@ -259,76 +249,20 @@ router.post(
 	'/signin',
 	handleRecaptcha,
 	handleAsyncErrors((req: Request, res: ResponseWithRequestState) => {
-		const { useIdapi } = res.locals.queryParams;
 		const {
 			queryParams: { appClientId },
 			requestId: request_id,
 		} = res.locals;
-		if (okta.enabled && !useIdapi) {
-			// if okta feature switch enabled, use okta authentication
-			return oktaSignInController({
-				req,
-				res,
-				isReauthenticate: false,
-				appClientId,
-				request_id,
-			});
-		} else {
-			// if okta feature switch disabled, use identity authentication
-			return idapiSignInController(req, res);
-		}
+		// if okta feature switch enabled, use okta authentication
+		return oktaSignInController({
+			req,
+			res,
+			isReauthenticate: false,
+			appClientId,
+			request_id,
+		});
 	}),
 );
-
-const idapiSignInController = async (
-	req: Request,
-	res: ResponseWithRequestState,
-) => {
-	const { email = '', password = '' } = req.body;
-	const { queryParams } = res.locals;
-	const { returnUrl } = queryParams;
-
-	try {
-		const cookies = await authenticateWithIdapi(
-			email,
-			password,
-			req.ip,
-			res.locals.queryParams,
-			res.locals.requestId,
-		);
-
-		// because we are signing in using idapi, and a new okta
-		// session will not be created, so we will need to clear the okta
-		// cookies to keep the sessions in sync
-		clearOktaCookies(res);
-		setIDAPICookies(res, cookies);
-
-		trackMetric('SignIn::Success');
-
-		return res.redirect(303, returnUrl);
-	} catch (error) {
-		logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-			request_id: res.locals.requestId,
-		});
-		const { message, status } =
-			error instanceof ApiError ? error : new ApiError();
-
-		trackMetric('SignIn::Failure');
-
-		// re-render the sign in page on error, with pre-filled email
-		const html = renderer('/signin', {
-			requestState: mergeRequestState(res.locals, {
-				pageData: {
-					email,
-					formError: message,
-				},
-			}),
-			pageTitle: 'Sign in',
-		});
-
-		return res.status(status).type('html').send(html);
-	}
-};
 
 // handles errors in the catch block to return a error to display to the user
 const oktaSignInControllerErrorHandler = (error: unknown) => {

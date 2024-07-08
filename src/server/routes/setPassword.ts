@@ -2,23 +2,13 @@ import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import { checkPasswordTokenController } from '@/server/controllers/checkPasswordToken';
 import { setPasswordController } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
-import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { sendCreatePasswordEmail } from '@/server/lib/idapi/user';
-import { logger } from '@/server/lib/serverSideLogger';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { renderer } from '@/server/lib/renderer';
 import { ResponseWithRequestState } from '@/server/models/Express';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
-import { EmailType } from '@/shared/model/EmailType';
-import { ResetPasswordErrors } from '@/shared/model/Errors';
 import { Request } from 'express';
-import { ApiError } from '@/server/models/Error';
-import { getConfiguration } from '@/server/lib/getConfiguration';
 import { sendEmailInOkta as sendResetPasswordEmailInOktaController } from '@/server/controllers/sendChangePasswordEmail';
 import { mergeRequestState } from '@/server/lib/requestState';
-
-const { okta } = getConfiguration();
 
 // set password complete page
 router.get(
@@ -67,59 +57,7 @@ router.post(
 	'/set-password/resend',
 	handleRecaptcha,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		const { useIdapi } = res.locals.queryParams;
-		if (okta.enabled && !useIdapi) {
-			return await sendResetPasswordEmailInOktaController(req, res);
-		} else {
-			const { email } = req.body;
-			const state = res.locals;
-			const { emailSentSuccess } = state.queryParams;
-
-			try {
-				await sendCreatePasswordEmail(
-					email,
-					req.ip,
-					state.queryParams,
-					state.ophanConfig,
-					state.requestId,
-				);
-
-				setEncryptedStateCookie(res, {
-					email,
-					emailType: EmailType.CREATE_PASSWORD,
-				});
-
-				return res.redirect(
-					303,
-					addQueryParamsToPath(
-						'/set-password/email-sent',
-						res.locals.queryParams,
-						{
-							emailSentSuccess,
-						},
-					),
-				);
-			} catch (error) {
-				const { message, status } =
-					error instanceof ApiError
-						? error
-						: new ApiError({ message: ResetPasswordErrors.GENERIC });
-
-				logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-					request_id: state.requestId,
-				});
-
-				const html = renderer('/set-password/resend', {
-					pageTitle: 'Resend Create Password Email',
-					requestState: mergeRequestState(res.locals, {
-						pageData: {
-							formError: message,
-						},
-					}),
-				});
-				return res.status(status).type('html').send(html);
-			}
-		}
+		return await sendResetPasswordEmailInOktaController(req, res);
 	}),
 );
 

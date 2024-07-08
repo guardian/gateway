@@ -1,7 +1,6 @@
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
-import { sendResetPasswordEmail as sendResetPasswordEmailIDAPI } from '@/server/lib/idapi/resetPassword';
 import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import {
 	OphanConfig,
@@ -14,10 +13,8 @@ import {
 	getPersistableQueryParamsWithoutOktaParams,
 } from '@/shared/lib/queryParams';
 import { logger } from '@/server/lib/serverSideLogger';
-import { ApiError } from '@/server/models/Error';
 import { GenericErrors } from '@/shared/model/Errors';
 import { renderer } from '@/server/lib/renderer';
-import { getConfiguration } from '@/server/lib/getConfiguration';
 import { isOktaError } from '@/server/lib/okta/api/errors';
 import {
 	getUser,
@@ -34,8 +31,6 @@ import { PasswordRoutePath } from '@/shared/model/Routes';
 import { mergeRequestState } from '@/server/lib/requestState';
 import dangerouslySetPlaceholderPassword from '@/server/lib/okta/dangerouslySetPlaceholderPassword';
 import { encryptOktaRecoveryToken } from '@/server/lib/deeplink/oktaRecoveryToken';
-
-const { okta } = getConfiguration();
 
 const getPath = (req: Request): PasswordRoutePath => {
 	const path = req.path;
@@ -54,53 +49,6 @@ const sendOphanEvent = (ophanConfig: OphanConfig) => {
 		},
 		ophanConfig,
 	);
-};
-
-const sendEmailInIDAPI = async (
-	req: Request,
-	res: ResponseWithRequestState,
-) => {
-	const state = res.locals;
-	const { email = '' } = req.body;
-
-	const { returnUrl, emailSentSuccess, ref, refViewId } = state.queryParams;
-
-	try {
-		await sendResetPasswordEmailIDAPI(email, req.ip, returnUrl, ref, refViewId);
-
-		setEncryptedStateCookie(res, { email });
-
-		sendOphanEvent(state.ophanConfig);
-
-		trackMetric(emailSendMetric('ResetPassword', 'Success'));
-
-		return res.redirect(
-			303,
-			addQueryParamsToPath('/reset-password/email-sent', state.queryParams, {
-				emailSentSuccess,
-			}),
-		);
-	} catch (error) {
-		logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-			request_id: res.locals.requestId,
-		});
-
-		const { message, status } =
-			error instanceof ApiError ? error : new ApiError();
-
-		trackMetric(emailSendMetric('ResetPassword', 'Failure'));
-
-		const html = renderer('/reset-password', {
-			pageTitle: 'Reset Password',
-			requestState: mergeRequestState(state, {
-				pageData: {
-					formError: message,
-				},
-			}),
-		});
-
-		return res.status(status).type('html').send(html);
-	}
 };
 
 const setEncryptedCookieOkta = (
@@ -337,10 +285,5 @@ export const sendEmailInOkta = async (
 
 export const sendChangePasswordEmailController = () =>
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		const { useIdapi } = res.locals.queryParams;
-		if (okta.enabled && !useIdapi) {
-			await sendEmailInOkta(req, res);
-		} else {
-			await sendEmailInIDAPI(req, res);
-		}
+		await sendEmailInOkta(req, res);
 	});

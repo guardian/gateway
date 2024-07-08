@@ -2,7 +2,6 @@ import { checkPasswordTokenController } from '@/server/controllers/checkPassword
 import { setPasswordController } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { sendAccountVerificationEmail } from '@/server/lib/idapi/user';
 import { logger } from '@/server/lib/serverSideLogger';
 import handleRecaptcha from '@/server/lib/recaptcha';
 import { renderer } from '@/server/lib/renderer';
@@ -14,7 +13,6 @@ import {
 import { addQueryParamsToPath } from '@/shared/lib/queryParams';
 import deepmerge from 'deepmerge';
 import { Request } from 'express';
-import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
 import { register } from '@/server/lib/okta/register';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { OktaError } from '@/server/models/okta/Error';
@@ -51,7 +49,7 @@ import {
 import { getNextWelcomeFlowPage } from '@/server/lib/welcome';
 import { newslettersSubscriptionsFromFormBody } from '@/shared/lib/newsletter';
 
-const { okta, registrationPasscodesEnabled } = getConfiguration();
+const { registrationPasscodesEnabled } = getConfiguration();
 
 // temp return to app page for app users who get stuck in browser
 router.get(
@@ -222,50 +220,7 @@ router.post(
 	'/welcome/resend',
 	handleRecaptcha,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		const { useIdapi } = res.locals.queryParams;
-		if (okta.enabled && !useIdapi) {
-			await OktaResendEmail(req, res);
-		} else {
-			const { email } = req.body;
-			const state = res.locals;
-			const { emailSentSuccess } = state.queryParams;
-
-			try {
-				await sendAccountVerificationEmail(
-					email,
-					req.ip,
-					state.queryParams,
-					state.ophanConfig,
-					state.requestId,
-				);
-
-				setEncryptedStateCookie(res, { email });
-
-				return res.redirect(
-					303,
-					addQueryParamsToPath('/welcome/email-sent', res.locals.queryParams, {
-						emailSentSuccess,
-					}),
-				);
-			} catch (error) {
-				const { message, status } =
-					error instanceof ApiError ? error : new ApiError();
-
-				logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-					request_id: state.requestId,
-				});
-
-				const html = renderer('/welcome/resend', {
-					pageTitle: 'Resend Welcome Email',
-					requestState: mergeRequestState(res.locals, {
-						globalMessage: {
-							error: message,
-						},
-					}),
-				});
-				return res.status(status).type('html').send(html);
-			}
-		}
+		await OktaResendEmail(req, res);
 	}),
 );
 
