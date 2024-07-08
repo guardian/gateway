@@ -87,7 +87,7 @@ export const read = async (
 export const authenticate = async (
 	email: string,
 	password: string,
-	ip: string,
+	ip: string | undefined,
 	trackingData: IdApiQueryParams = {},
 	request_id?: string,
 ) => {
@@ -118,7 +118,7 @@ export const authenticate = async (
 
 export const exchangeAccessTokenForCookies = async (
 	token: string,
-	ip: string,
+	ip: string | undefined,
 	request_id?: string,
 ) => {
 	const options = APIPostOptions({

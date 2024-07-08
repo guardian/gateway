@@ -100,7 +100,7 @@ const responseToEntity = (response: APIResponse): User => {
 };
 
 export const read = async (
-	ip: string,
+	ip: string | undefined,
 	sc_gu_u: string,
 	request_id?: string,
 ): Promise<User> => {
@@ -125,7 +125,7 @@ export const read = async (
 export const updateName = async (
 	firstName: string,
 	secondName: string,
-	ip: string,
+	ip: string | undefined,
 	sc_gu_u: string,
 	request_id?: string,
 ): Promise<User> => {
@@ -162,7 +162,7 @@ export const updateName = async (
  */
 export const addRegistrationLocation = async (
 	registrationLocation: RegistrationLocation,
-	ip: string,
+	ip: string | undefined,
 	sc_gu_u: string,
 	request_id?: string,
 ): Promise<User> => {
@@ -198,7 +198,7 @@ export const addRegistrationLocation = async (
 
 export const addToGroup = async (
 	groupCode: GroupCode,
-	ip: string,
+	ip: string | undefined,
 	sc_gu_u: string,
 	request_id?: string,
 ) => {
@@ -223,7 +223,7 @@ export const addToGroup = async (
 
 export const readUserType = async (
 	email: string,
-	ip: string,
+	ip: string | undefined,
 	request_id?: string,
 ): Promise<UserType> => {
 	const options = APIAddClientAccessToken(APIGetOptions(), ip);
@@ -260,7 +260,7 @@ export const readUserType = async (
 
 export const sendAccountVerificationEmail = async (
 	email: string,
-	ip: string,
+	ip: string | undefined,
 	trackingParams: IdApiQueryParams,
 	ophanTrackingConfig?: OphanConfig,
 	request_id?: string,
@@ -303,7 +303,7 @@ export const sendAccountVerificationEmail = async (
 
 export const sendAccountExistsEmail = async (
 	email: string,
-	ip: string,
+	ip: string | undefined,
 	trackingParams: IdApiQueryParams,
 	ophanTrackingConfig?: OphanConfig,
 	request_id?: string,
@@ -339,7 +339,7 @@ export const sendAccountExistsEmail = async (
 
 export const sendAccountWithoutPasswordExistsEmail = async (
 	email: string,
-	ip: string,
+	ip: string | undefined,
 	trackingParams: IdApiQueryParams,
 	ophanTrackingConfig?: OphanConfig,
 	request_id?: string,
@@ -377,7 +377,7 @@ export const sendAccountWithoutPasswordExistsEmail = async (
 
 export const sendCreatePasswordEmail = async (
 	email: string,
-	ip: string,
+	ip: string | undefined,
 	trackingParams: IdApiQueryParams,
 	ophanTrackingConfig?: OphanConfig,
 	request_id?: string,
@@ -413,7 +413,7 @@ export const sendCreatePasswordEmail = async (
 
 export const changeEmail = async (
 	token: string,
-	ip: string,
+	ip: string | undefined,
 	request_id?: string,
 ) => {
 	const options = APIPostOptions({
@@ -434,7 +434,7 @@ export const changeEmail = async (
 
 export const getUserByEmailAddress = async (
 	email: string,
-	ip: string,
+	ip: string | undefined,
 	request_id?: string,
 ): Promise<User> => {
 	const options = APIAddClientAccessToken(APIGetOptions(), ip);

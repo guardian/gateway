@@ -40,7 +40,7 @@ const handleError = ({ error, status = 500 }: IDAPIError) => {
 
 export async function verifyEmail(
 	token: string,
-	ip: string,
+	ip: string | undefined,
 	request_id?: string,
 ) {
 	const options = APIPostOptions();
@@ -62,7 +62,11 @@ export async function verifyEmail(
 	}
 }
 
-export async function send(ip: string, sc_gu_u: string, request_id?: string) {
+export async function send(
+	ip: string | undefined,
+	sc_gu_u: string,
+	request_id?: string,
+) {
 	const options = APIForwardSessionIdentifier(
 		APIAddClientAccessToken(APIPostOptions(), ip),
 		sc_gu_u,

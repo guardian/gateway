@@ -16,7 +16,7 @@ const handleError = ({ status = 500 }: IDAPIError) => {
 
 export const logoutFromIDAPI = async (
 	sc_gu_u: string,
-	ip: string,
+	ip: string | undefined,
 	request_id?: string,
 ): Promise<IdapiCookies | undefined> => {
 	const options = APIAddClientAccessToken(

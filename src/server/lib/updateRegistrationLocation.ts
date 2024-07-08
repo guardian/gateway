@@ -10,7 +10,7 @@ import { getUser, updateUser } from '@/server/lib/okta/api/users';
 import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 
 export const updateRegistrationLocationViaIDAPI = async (
-	ip: string,
+	ip: string | undefined,
 	sc_gu_u: string,
 	req: Request,
 ) => {

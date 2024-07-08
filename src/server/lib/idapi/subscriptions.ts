@@ -67,7 +67,7 @@ export const makeSubscriptionRequest = async (
 	emailType: EmailType,
 	unsubscribeData: SubscriptionData,
 	token: string,
-	ip: string,
+	ip: string | undefined,
 	request_id?: string,
 ): Promise<unknown> => {
 	const body = {
@@ -99,7 +99,7 @@ const unsubscribeAllPath = '/unsubscribe-all';
 export const makeUnsubscribeAllRequest = async (
 	unsubscribeData: UnsubscribeAllData,
 	token: string,
-	ip: string,
+	ip: string | undefined,
 	request_id?: string,
 ) => {
 	const body = {
