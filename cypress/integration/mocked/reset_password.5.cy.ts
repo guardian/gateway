@@ -33,15 +33,6 @@ describe('Password reset flow', () => {
 		});
 	});
 
-	context('Valid email already exits', () => {
-		it('successfully submits the request', function () {
-			const { email } = this.users.validEmail;
-			cy.mockNext(200);
-			page.submitEmailAddress(email);
-			cy.contains('Check your inbox');
-		});
-	});
-
 	context('Email field is left blank', () => {
 		it('displays the standard HTML validation', () => {
 			page.clickResetPassword();

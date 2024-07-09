@@ -195,8 +195,6 @@ describe('Jobs terms and conditions flow in Okta', () => {
 					// check session cookie is set
 					cy.getCookie('idx').should('exist');
 					// check idapi cookies are set
-					cy.getCookie('SC_GU_U').should('exist');
-					cy.getCookie('SC_GU_LA').should('exist');
 					cy.getCookie('GU_U').should('exist');
 
 					cy.contains('Welcome to Guardian Jobs');

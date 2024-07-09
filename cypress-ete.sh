@@ -11,15 +11,7 @@ else
   echo "Running with production build..."
 fi
 
-# Set USE_OKTA=true to run the okta e2e tests.
-# We default to false here.
-: "${USE_OKTA:=false}"
-
-if [[ "$USE_OKTA" == "true" ]]; then
-  echo "Opening Cypress okta e2e tests..."
-else
-  echo "Opening Cypress e2e tests..."
-fi
+echo "Opening Cypress e2e tests..."
 
 if pgrep "nginx" >/dev/null 
 then
@@ -82,8 +74,4 @@ else
 fi
 
 echo "opening cypress"
-if [[ "$USE_OKTA" == "true" ]]; then
-  pnpm run cypress open --env $CI_ENV --config '{"e2e":{"specPattern":["**/ete-okta/**/*.cy.ts"]}}' --e2e --browser chrome
-else
-  pnpm run cypress open --env $CI_ENV --config '{"e2e":{"specPattern":["**/ete/**/*.cy.ts"]}}' --e2e --browser chrome
-fi
+pnpm run cypress open --env $CI_ENV --config '{"e2e":{"specPattern":["**/ete/**/*.cy.ts"]}}' --e2e --browser chrome

@@ -3,34 +3,6 @@
 import { injectAndCheckAxe } from '../../support/cypress-axe';
 
 describe('Password set/create flow', () => {
-	const fakeValidationRespone = (timeUntilExpiry?: number) => ({
-		user: {
-			primaryEmailAddress: 'name@example.com',
-		},
-		timeUntilExpiry,
-	});
-
-	const fakeSuccessResponse = {
-		cookies: {
-			values: [
-				{
-					key: 'GU_U',
-					value: 'FAKE_VALUE_0',
-				},
-				{
-					key: 'SC_GU_LA',
-					value: 'FAKE_VALUE_1',
-					sessionCookie: true,
-				},
-				{
-					key: 'SC_GU_U',
-					value: 'FAKE_VALUE_2',
-				},
-			],
-			expiresAt: 1,
-		},
-	};
-
 	beforeEach(() => {
 		cy.mockPurge();
 	});
@@ -51,7 +23,7 @@ describe('Password set/create flow', () => {
 
 		it('Has no detectable a11y violations on create/set password page', () => {
 			cy.mockNext(200);
-			cy.mockNext(200, fakeSuccessResponse);
+			cy.mockNext(200);
 			cy.visit('/set-password/fake_token');
 			injectAndCheckAxe();
 		});
@@ -66,7 +38,7 @@ describe('Password set/create flow', () => {
 
 		it('Has no detectable a11y violations on create/set password complete page', () => {
 			cy.mockNext(200);
-			cy.mockNext(200, fakeSuccessResponse);
+			cy.mockNext(200);
 			cy.intercept({
 				method: 'GET',
 				url: 'https://api.pwnedpasswords.com/range/*',
@@ -125,94 +97,7 @@ describe('Password set/create flow', () => {
 			cy.contains('Google reCAPTCHA verification failed.');
 			cy.contains('If the problem persists please try the following:');
 		});
-
-		it('shows the session time out page if the token expires while on the set password page', () => {
-			cy.mockNext(200, fakeValidationRespone(1000));
-			cy.visit('/set-password/fake_token');
-			cy.contains('Session timed out');
-		});
 	});
-
-	context('Email shown on page', () => {
-		it('shows the users email address on the page', () => {
-			cy.mockNext(200, fakeValidationRespone());
-			cy.visit('/set-password/fake_token');
-			cy.contains(fakeValidationRespone().user.primaryEmailAddress);
-		});
-	});
-
-	context('Valid password entered', () => {
-		it('shows password set success screen, with a default redirect button.', () => {
-			cy.mockNext(200);
-			cy.mockNext(200, fakeSuccessResponse);
-			cy.intercept({
-				method: 'GET',
-				url: 'https://api.pwnedpasswords.com/range/*',
-			}).as('breachCheck');
-			cy.visit('/set-password/fake_token');
-
-			cy.get('input[name="password"]').type('thisisalongandunbreachedpassword');
-			cy.wait('@breachCheck');
-			cy.get('button[type="submit"]').click();
-			cy.contains('Sign in');
-			cy.url().should(
-				'include',
-				`returnUrl=https%3A%2F%2Fm.code.dev-theguardian.com`,
-			);
-		});
-	});
-
-	context(
-		'Valid password entered and a return url with a Guardian domain is specified.',
-		() => {
-			it('shows password created success screen, with a redirect button linking to the return url.', () => {
-				cy.mockNext(200);
-				cy.mockNext(200, fakeSuccessResponse);
-				cy.intercept({
-					method: 'GET',
-					url: 'https://api.pwnedpasswords.com/range/*',
-				}).as('breachCheck');
-				cy.visit(
-					'/set-password/fake_token?returnUrl=https://news.theguardian.com',
-				);
-				cy.get('input[name="password"]').type(
-					'thisisalongandunbreachedpassword',
-				);
-				cy.wait('@breachCheck');
-				cy.get('button[type="submit"]').click();
-				cy.contains('Sign in');
-				cy.url().should(
-					'include',
-					`returnUrl=${encodeURIComponent('https://news.theguardian.com')}`,
-				);
-			});
-		},
-	);
-
-	context(
-		'Valid password entered and an return url from a non-Guardian domain is specified.',
-		() => {
-			it('shows password created success screen, with a default redirect button.', () => {
-				cy.mockNext(200);
-				cy.mockNext(200, fakeSuccessResponse);
-				cy.intercept({
-					method: 'GET',
-					url: 'https://api.pwnedpasswords.com/range/*',
-				}).as('breachCheck');
-				cy.visit('/set-password/fake_token?returnUrl=https://news.badsite.com');
-				cy.get('input[name="password"]').type(
-					'thisisalongandunbreachedpassword',
-				);
-				cy.wait('@breachCheck');
-				cy.get('button[type="submit"]').click();
-				cy.contains('Sign in');
-				cy.url().should(
-					'include',
-					`returnUrl=https%3A%2F%2Fm.code.dev-theguardian.com`,
-				);
-			});
-		},
-	);
 
 	context('General IDAPI failure on token read', () => {
 		it('displays the password resend page', () => {

@@ -10,7 +10,6 @@
 		"cypress": "cypress",
 		"cypress:ci": "cypress run",
 		"cypress:ete": "./cypress-ete.sh",
-		"cypress:ete:okta": "./cypress-ete-okta.sh",
 		"lint": "eslint . --ext .ts,.tsx",
 		"lint:fix": "pnpm lint --fix",
 		"mock-server": "node util/mock-server.js",

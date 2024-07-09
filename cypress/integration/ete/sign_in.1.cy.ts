@@ -1,40 +1,260 @@
-import * as SignIn from '../shared/sign_in.shared';
+const returnUrl =
+	'https://www.theguardian.com/world/2013/jun/09/edward-snowden-nsa-whistleblower-surveillance';
 
 describe('Sign in flow, Okta enabled', () => {
 	context('Terms and Conditions links', () => {
-		it(...SignIn.linksToTheGoogleTermsOfServicePage());
-		it(...SignIn.linksToTheGooglePrivacyPolicyPage());
-		it(...SignIn.linksToTheGuardianTermsAndConditionsPage());
-		it(...SignIn.linksToTheGuardianPrivacyPolicyPage());
-		it(
-			...SignIn.linksToTheGuardianJobsTermsAndConditionsPageWhenJobsClientIdSet(),
-		);
-		it(...SignIn.linksToTheGuardianJobsPrivacyPolicyPageWhenJobsClientIdSet());
+		it('links to the Google terms of service page', () => {
+			const googleTermsUrl = 'https://policies.google.com/terms';
+			// Intercept the external redirect page.
+			// We just want to check that the redirect happens, not that the page loads.
+			cy.intercept('GET', googleTermsUrl, (req) => {
+				req.reply(200);
+			});
+			cy.visit('/signin');
+			cy.contains('terms of service').click();
+			cy.url().should('eq', googleTermsUrl);
+		});
+		it('links to the Google privacy policy page', () => {
+			const googlePrivacyPolicyUrl = 'https://policies.google.com/privacy';
+			// Intercept the external redirect page.
+			// We just want to check that the redirect happens, not that the page loads.
+			cy.intercept('GET', googlePrivacyPolicyUrl, (req) => {
+				req.reply(200);
+			});
+			cy.visit('/signin');
+			cy.contains('This service is protected by reCAPTCHA and the Google')
+				.contains('privacy policy')
+				.click();
+			cy.url().should('eq', googlePrivacyPolicyUrl);
+		});
+		it('links to the Guardian terms and conditions page', () => {
+			const guardianTermsOfServiceUrl =
+				'https://www.theguardian.com/help/terms-of-service';
+			// Intercept the external redirect page.
+			// We just want to check that the redirect happens, not that the page loads.
+			cy.intercept('GET', guardianTermsOfServiceUrl, (req) => {
+				req.reply(200);
+			});
+			cy.visit('/signin');
+			cy.contains('terms and conditions').click();
+			cy.url().should('eq', guardianTermsOfServiceUrl);
+		});
+		it('links to the Guardian privacy policy page', () => {
+			const guardianPrivacyPolicyUrl =
+				'https://www.theguardian.com/help/privacy-policy';
+			// Intercept the external redirect page.
+			// We just want to check that the redirect happens, not that the page loads.
+			cy.intercept('GET', guardianPrivacyPolicyUrl, (req) => {
+				req.reply(200);
+			});
+			cy.visit('/signin');
+			cy.contains('For information about how we use your data')
+				.contains('privacy policy')
+				.click();
+			cy.url().should('eq', guardianPrivacyPolicyUrl);
+		});
+		it('links to the Guardian jobs terms and conditions page when jobs clientId set', () => {
+			const guardianJobsTermsOfServiceUrl =
+				'https://jobs.theguardian.com/terms-and-conditions/';
+			// Intercept the external redirect page.
+			// We just want to check that the redirect happens, not that the page loads.
+			cy.intercept('GET', guardianJobsTermsOfServiceUrl, (req) => {
+				req.reply(200);
+			});
+			cy.visit('/signin?clientId=jobs');
+			cy.contains('Guardian Jobs terms and conditions').click();
+			cy.url().should('eq', guardianJobsTermsOfServiceUrl);
+		});
+		it('links to the Guardian jobs privacy policy page when jobs clientId set', () => {
+			const guardianJobsPrivacyPolicyUrl =
+				'https://jobs.theguardian.com/privacy-policy/';
+			// Intercept the external redirect page.
+			// We just want to check that the redirect happens, not that the page loads.
+			cy.intercept('GET', guardianJobsPrivacyPolicyUrl, (req) => {
+				req.reply(200);
+			});
+			cy.visit('/signin?clientId=jobs');
+			cy.contains('For information about how we use your data')
+				.contains('Guardian Jobs privacy policy')
+				.click();
+			cy.url().should('eq', guardianJobsPrivacyPolicyUrl);
+		});
 	});
 
-	it(...SignIn.persistsTheClientIdWhenNavigatingAway());
-	it(...SignIn.appliesFormValidationToEmailAndPasswordInputFields());
-	it(...SignIn.showsAMessageWhenCredentialsAreInvalid());
-	it(...SignIn.correctlySignsInAnExistingUser());
-	it(...SignIn.navigatesToResetPassword());
-	it(...SignIn.navigatesToRegistration());
-	it(...SignIn.respectsTheReturnUrlQueryParam());
-	it(...SignIn.removesEncryptedEmailParameterFromQueryString());
-	it(
-		...SignIn.removesEncryptedEmailParameterAndPreservesAllOtherValidParameters(),
-	);
-	it(
-		...SignIn.showsRecaptchaErrorsWhenTheUserTriesToSignInOfflineAndAllowsSignInWhenBackOnline(),
-	);
-	it(...SignIn.hitsAccessTokenRateLimitAndRecoversTokenAfterTimeout());
+	it('persists the clientId when navigating away', () => {
+		cy.visit('/signin?clientId=jobs');
+		cy.contains('Create a free account').click();
+		cy.url().should('contain', 'clientId=jobs');
+	});
+	it('applies form validation to email and password input fields', () => {
+		cy.visit('/signin');
 
-	it(...SignIn.redirectsCorrectlyForSocialSignIn());
-	it(
-		...SignIn.showsAnErrorMessageAndInformationParagraphWhenAccountLinkingRequiredErrorParameterIsPresent(),
-	);
-	it(
-		...SignIn.doesNotDisplaySocialButtonsWhenAccountLinkingRequiredErrorParameterIsPresent(),
-	);
+		cy.get('form').within(() => {
+			cy.get('input:invalid').should('have.length', 2);
+			cy.get('input[name=email]').type('not an email');
+			cy.get('input:invalid').should('have.length', 2);
+			cy.get('input[name=email]').type('emailaddress@inavalidformat.com');
+			cy.get('input:invalid').should('have.length', 1);
+			cy.get('input[name=password]').type('password');
+			cy.get('input:invalid').should('have.length', 0);
+		});
+	});
+	it('shows a message when credentials are invalid', () => {
+		cy.visit('/signin');
+		cy.get('input[name=email]').type('invalid@doesnotexist.com');
+		cy.get('input[name=password]').type('password');
+		cy.get('[data-cy="main-form-submit-button"]').click();
+		cy.contains("Email and password don't match");
+	});
+	it('correctly signs in an existing user', () => {
+		// Intercept the external redirect page.
+		// We just want to check that the redirect happens, not that the page loads.
+		cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
+			req.reply(200);
+		});
+		cy
+			.createTestUser({
+				isUserEmailValidated: true,
+			})
+			?.then(({ emailAddress, finalPassword }) => {
+				cy.visit('/signin');
+				cy.get('input[name=email]').type(emailAddress);
+				cy.get('input[name=password]').type(finalPassword);
+				cy.get('[data-cy="main-form-submit-button"]').click();
+				cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+			});
+	});
+	it('navigates to reset password', () => {
+		cy.visit('/signin');
+		cy.contains('Reset password').click();
+		cy.contains('Reset password');
+	});
+	it('navigates to registration', () => {
+		cy.visit('/signin');
+		cy.contains('Create a free account').click();
+		cy.contains('Continue with Google');
+		cy.contains('Continue with Apple');
+		cy.contains('Continue with email');
+	});
+	it('respects the returnUrl query param', () => {
+		// Intercept the external redirect page.
+		// We just want to check that the redirect happens, not that the page loads.
+		cy.intercept('GET', returnUrl, (req) => {
+			req.reply(200);
+		});
+		cy
+			.createTestUser({
+				isUserEmailValidated: true,
+			})
+			?.then(({ emailAddress, finalPassword }) => {
+				cy.visit(`/signin?returnUrl=${encodeURIComponent(returnUrl)}`);
+				cy.get('input[name=email]').type(emailAddress);
+				cy.get('input[name=password]').type(finalPassword);
+				cy.get('[data-cy="main-form-submit-button"]').click();
+				cy.url().should('eq', returnUrl);
+			});
+	});
+	it('removes encryptedEmail parameter from query string', () => {
+		const encryptedEmailParam = 'encryptedEmail=bhvlabgflbgyil';
+		cy.visit(`/signin?${encryptedEmailParam}`);
+
+		cy.location('search').should('not.contain', encryptedEmailParam);
+	});
+	it('removes encryptedEmail parameter and preserves all other valid parameters', () => {
+		const encryptedEmailParam = 'encryptedEmail=bhvlabgflbgyil';
+		cy.visit(
+			`/signin?returnUrl=${encodeURIComponent(
+				returnUrl,
+			)}&${encryptedEmailParam}&refViewId=12345`,
+		);
+
+		cy.location('search').should('not.contain', encryptedEmailParam);
+		cy.location('search').should('contain', 'refViewId=12345');
+		cy.location('search').should('contain', encodeURIComponent(returnUrl));
+	});
+	it('shows reCAPTCHA errors when the user tries to sign in offline and allows sign in when back online', () => {
+		// Intercept the external redirect page.
+		// We just want to check that the redirect happens, not that the page loads.
+		cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
+			req.reply(200);
+		});
+		cy
+			.createTestUser({
+				isUserEmailValidated: true,
+			})
+			?.then(({ emailAddress, finalPassword }) => {
+				cy.visit('/signin');
+
+				cy.interceptRecaptcha();
+
+				cy.get('input[name=email]').type(emailAddress);
+				cy.get('input[name=password]').type(finalPassword);
+				cy.get('[data-cy="main-form-submit-button"]').click();
+
+				cy.contains('Google reCAPTCHA verification failed.');
+				cy.contains('If the problem persists please try the following:');
+
+				cy.get('[data-cy="main-form-submit-button"]').click();
+
+				cy.contains('Google reCAPTCHA verification failed.').should(
+					'not.exist',
+				);
+
+				cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+			});
+	});
+	it('hits access token rate limit and recovers token after timeout', () => {
+		// Intercept the external redirect page.
+		// We just want to check that the redirect happens, not that the page loads.
+		cy.intercept('GET', 'https://m.code.dev-theguardian.com/', (req) => {
+			req.reply(200);
+		});
+		cy
+			.createTestUser({
+				isUserEmailValidated: true,
+			})
+			?.then(({ emailAddress, finalPassword }) => {
+				cy.visit('/signin');
+				cy.get('input[name=email]').type(emailAddress);
+				cy.get('input[name=password]').type(finalPassword);
+				cy.get('[data-cy="main-form-submit-button"]').click();
+				cy.url().should('include', 'https://m.code.dev-theguardian.com/');
+
+				// We visit reauthenticate here because if we visit /signin or
+				// /register, the logged in user guard will redirect us away before
+				// the ratelimiter has a chance to work
+				cy.visit('/reauthenticate');
+				cy.contains('Sign');
+				Cypress._.times(6, () => cy.reload());
+				cy.contains('Rate limit exceeded');
+			});
+	});
+
+	it('redirects correctly for social sign in', () => {
+		cy.visit(`/signin?returnUrl=${encodeURIComponent(returnUrl)}`);
+		cy.get('[data-cy="google-sign-in-button"]').should(
+			'have.attr',
+			'href',
+			`/signin/google?returnUrl=${encodeURIComponent(returnUrl)}`,
+		);
+		cy.get('[data-cy="apple-sign-in-button"]').should(
+			'have.attr',
+			'href',
+			`/signin/apple?returnUrl=${encodeURIComponent(returnUrl)}`,
+		);
+	});
+	it('shows an error message and information paragraph when accountLinkingRequired error parameter is present', () => {
+		cy.visit('/signin?error=accountLinkingRequired');
+		cy.contains(
+			'We could not sign you in with your social account credentials. Please sign in with your email below.',
+		);
+		cy.contains('Social sign-in unsuccessful');
+	});
+	it('does not display social buttons when accountLinkingRequired error parameter is present', () => {
+		cy.visit('/signin?error=accountLinkingRequired');
+		cy.get('[data-cy="google-sign-in-button"]').should('not.exist');
+		cy.get('[data-cy="apple-sign-in-button"]').should('not.exist');
+	});
 
 	it('sets emailValidated flag on oauth callback', () => {
 		// this is a specific test case for new user registrations in Okta
@@ -162,6 +382,19 @@ describe('Sign in flow, Okta enabled', () => {
 						cy.closeCurrentOktaSession({
 							idx: idxCookie?.value,
 						}).then(() => {
+							// closeCurrentOktaSession blanked the IDX cookie, so we
+							// need to set it back to the old value
+							if (idxCookie) {
+								cy.setCookie('idx', idxCookie.value, {
+									domain: Cypress.env('BASE_URI'),
+									hostOnly: true,
+									httpOnly: true,
+									sameSite: 'no_restriction',
+									secure: true,
+								});
+							} else {
+								throw new Error('idx cookie not found');
+							}
 							// Refresh our user session
 							cy.visit(
 								`/signin/refresh?returnUrl=${encodeURIComponent(
@@ -174,39 +407,7 @@ describe('Sign in flow, Okta enabled', () => {
 				},
 			);
 		});
-		it('sends a client without the Okta cookie to the redirectUrl', () => {
-			// Create a validated test user
-			cy.createTestUser({ isUserEmailValidated: true }).then(
-				({ emailAddress, finalPassword }) => {
-					// Sign our new user in
-					cy.visit(
-						`/signin?returnUrl=${encodeURIComponent(
-							`https://${Cypress.env('BASE_URI')}/welcome/review`,
-						)}`,
-					);
-					cy.get('input[name=email]').type(emailAddress);
-					cy.get('input[name=password]').type(finalPassword);
-					cy.get('[data-cy="main-form-submit-button"]').click();
-					cy.url().should('include', '/welcome/review');
-
-					// Delete the Okta idx cookie
-					cy.clearCookie('idx', {
-						domain: Cypress.env('BASE_URI'),
-					});
-
-					// Visit the refresh endpoint
-					cy.visit(
-						`/signin/refresh?returnUrl=${encodeURIComponent(
-							`https://${Cypress.env('BASE_URI')}/reset-password`,
-						)}`,
-					);
-					cy.url().should('include', '/reset-password');
-
-					cy.getCookie('idx').should('not.exist');
-				},
-			);
-		});
-		it('sends a client with neither Okta nor Identity cookies to /signin', () => {
+		it('sends a client without Okta cookies to /signin', () => {
 			// Create a validated test user
 			cy.createTestUser({ isUserEmailValidated: true }).then(
 				({ emailAddress, finalPassword }) => {

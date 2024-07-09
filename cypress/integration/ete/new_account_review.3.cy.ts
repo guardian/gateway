@@ -76,28 +76,27 @@ describe('New account review page', () => {
 
 				// Return to Gateway so we can access the user cookie
 				cy.visit('/signin');
-
-				cy.getTestUserDetails().then((response) => {
-					const consentIds = response.user.consents.filter(
-						(consent) =>
-							consent.id === 'profiling_optout' ||
-							consent.id === 'personalised_advertising',
+				cy.getTestOktaUser(unregisteredEmail).then((user) => {
+					cy.getTestUserDetails(user.profile.legacyIdentityId).then(
+						(response) => {
+							const consentIds = response.user.consents.filter(
+								(consent) =>
+									consent.id === 'profiling_optout' ||
+									consent.id === 'personalised_advertising',
+							);
+							expect(consentIds).to.have.length(2);
+							response.user.consents.map((consent) => {
+								if (consent.id === 'profiling_optout') {
+									// Profiling is modelled as an optout so we now expect it to be true
+									expect(consent.consented).to.be.true;
+								}
+								if (consent.id === 'personalised_advertising') {
+									expect(consent.consented).to.be.true;
+								}
+							});
+						},
 					);
-					expect(consentIds).to.have.length(2);
-					response.user.consents.map((consent) => {
-						if (consent.id === 'profiling_optout') {
-							// Profiling is modelled as an optout so we now expect it to be true
-							expect(consent.consented).to.be.true;
-						}
-						if (consent.id === 'personalised_advertising') {
-							expect(consent.consented).to.be.true;
-						}
-					});
-					cy.getTestOktaUser(unregisteredEmail).then((user) => {
-						expect(user.profile.registrationLocation).to.equal(
-							'United Kingdom',
-						);
-					});
+					expect(user.profile.registrationLocation).to.equal('United Kingdom');
 				});
 			},
 		);

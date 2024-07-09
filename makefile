@@ -82,26 +82,6 @@ cypress-ete-dev: clear
 	$(call log, "opening cypress 🌲")
 	@(./cypress-ete.sh)
 
-cypress-ete-okta: export USE_OKTA = true
-cypress-ete-okta: clear
-	$(call log, "opening cypress using okta tests 🌲")
-	@(./cypress-ete.sh)
-
-cypress-ete-okta-dev: export USE_OKTA = true
-cypress-ete-okta-dev: export DEV_MODE = true
-cypress-ete-okta-dev: clear
-	$(call log, "opening cypress in dev mode using okta tests 🌲")
-	@(./cypress-ete.sh)
-
-cypress-mocked-okta: clear
-	$(call log, "opening cypress using Okta mocked tests 🌲")
-	@(./cypress-mocked-okta.sh)
-
-cypress-mocked-okta-dev: export DEV_MODE = true
-cypress-mocked-okta-dev: clear
-	$(call log, "opening cypress in dev mode using Okta mocked tests 🌲")
-	@(./cypress-mocked-okta.sh)
-
 storybook: clear
 	$(call log, "opening storybook 📖")
 	@pnpm run storybook
