@@ -23,7 +23,7 @@ export interface ABTesting {
 // but they're also valid, so we can safely assume that they're
 // always present in this interface. This prevents unnecessary
 // hedging about the validity of this object elsewhere.
-interface OAuthState {
+export interface OAuthState {
 	accessToken: Jwt;
 	idToken: Jwt;
 }

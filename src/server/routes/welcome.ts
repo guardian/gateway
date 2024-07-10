@@ -41,10 +41,7 @@ import { getAppName, isAppPrefix } from '@/shared/lib/appNameUtils';
 import { bodyFormFieldsToRegistrationConsents } from '@/server/lib/registrationConsents';
 import { ALL_NEWSLETTER_IDS } from '@/shared/model/Newsletter';
 
-import {
-	updateRegistrationLocationViaIDAPI,
-	updateRegistrationLocationViaOkta,
-} from '@/server/lib/updateRegistrationLocation';
+import { updateRegistrationLocationViaOkta } from '@/server/lib/updateRegistrationLocation';
 import {
 	NewsletterMap,
 	getUserNewsletterSubscriptions,
@@ -141,7 +138,6 @@ router.post(
 			if (registrationConsents.consents?.length) {
 				try {
 					await updateConsents({
-						ip: req.ip,
 						accessToken: state.oauthState.accessToken.toString(),
 						payload: registrationConsents.consents,
 						request_id: state.requestId,
@@ -173,7 +169,6 @@ router.post(
 			if (registrationConsents.newsletters?.length) {
 				try {
 					await updateNewsletters({
-						ip: req.ip,
 						accessToken: state.oauthState.accessToken.toString(),
 						payload: registrationConsents.newsletters,
 						request_id: state.requestId,
@@ -333,7 +328,6 @@ router.get(
 		const geolocation = state.pageData.geolocation;
 		const newsletters = await getUserNewsletterSubscriptions({
 			newslettersOnPage: NewsletterMap.get(geolocation) as string[],
-			ip: req.ip,
 			request_id: state.requestId,
 			accessToken: state.oauthState.accessToken.toString(),
 		});
@@ -366,8 +360,6 @@ router.post(
 				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
 			);
 		}
-
-		const sc_gu_u = req.cookies.SC_GU_U;
 
 		try {
 			// Attempt to update location for consented users.
@@ -423,7 +415,6 @@ router.post(
 		try {
 			const userNewsletterSubscriptions = await getUserNewsletterSubscriptions({
 				newslettersOnPage: ALL_NEWSLETTER_IDS,
-				ip: req.ip,
 				request_id: state.requestId,
 				accessToken: state.oauthState.accessToken.toString(),
 			});
@@ -459,7 +450,6 @@ router.post(
 				);
 
 			await updateNewsletters({
-				ip: req.ip,
 				request_id: state.requestId,
 				accessToken: state.oauthState.accessToken.toString(),
 				payload: newsletterSubscriptionsToUpdate,

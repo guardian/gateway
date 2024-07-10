@@ -55,14 +55,14 @@ export const rateLimiterMiddleware = async (
 	const { email: formEmail = '' } = req.body;
 	const encryptedStateEmail = readEmailCookie(req);
 
-	// If Okta session cookie is set, rate limit based on that
-	const oktaSessionCookieId: string | undefined = req.cookies.idx;
-
 	const rateLimitData = {
 		email: formEmail || encryptedStateEmail,
 		ip: req.ip,
-		accessToken: req.cookies.SC_GU_U,
-		oktaIdentifier: oktaSessionCookieId,
+		accessToken:
+			process.env.NODE_ENV === 'production'
+				? req.signedCookies.GU_ACCESS_TOKEN
+				: req.cookies.GU_ACCESS_TOKEN,
+		oktaIdentifier: req.cookies.idx,
 	} as BucketValues;
 
 	const bucketConfiguration = getBucketConfigForRoute(

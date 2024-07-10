@@ -2,8 +2,8 @@ import {
 	idapiFetch,
 	APIGetOptions,
 	APIPatchOptions,
-	APIOptionSelect,
 	APIPostOptions,
+	APIAddOAuthAuthorization,
 } from '@/server/lib/IDAPIFetch';
 import { NewslettersErrors } from '@/shared/model/Errors';
 import { NewsLetter } from '@/shared/model/Newsletter';
@@ -54,24 +54,18 @@ export const read = async (request_id?: string): Promise<NewsLetter[]> => {
 };
 
 export const update = async ({
-	ip,
-	sc_gu_u,
 	accessToken,
 	payload,
 	request_id,
 }: {
-	ip?: string;
-	sc_gu_u?: string;
-	accessToken?: string;
+	accessToken: string;
 	payload: NewsletterPatch[];
 	request_id?: string;
 }) => {
-	const options = APIOptionSelect({
-		ip,
-		sc_gu_u,
+	const options = APIAddOAuthAuthorization(
+		APIPatchOptions(payload),
 		accessToken,
-		options: APIPatchOptions(payload),
-	});
+	);
 
 	try {
 		await idapiFetch({
@@ -96,22 +90,14 @@ interface Subscription {
 }
 
 export const readUserNewsletters = async ({
-	ip,
-	sc_gu_u,
 	accessToken,
 	request_id,
 }: {
 	ip?: string;
-	sc_gu_u?: string;
-	accessToken?: string;
+	accessToken: string;
 	request_id?: string;
 }) => {
-	const options = APIOptionSelect({
-		ip,
-		sc_gu_u,
-		accessToken,
-		options: APIGetOptions(),
-	});
+	const options = APIAddOAuthAuthorization(APIGetOptions(), accessToken);
 
 	try {
 		return (
@@ -133,22 +119,13 @@ export const readUserNewsletters = async ({
 };
 
 export const touchBraze = async ({
-	ip,
-	sc_gu_u,
 	accessToken,
 	request_id,
 }: {
-	ip?: string;
-	sc_gu_u?: string;
-	accessToken?: string;
+	accessToken: string;
 	request_id?: string;
 }) => {
-	const options = APIOptionSelect({
-		ip,
-		sc_gu_u,
-		accessToken,
-		options: APIPostOptions(),
-	});
+	const options = APIAddOAuthAuthorization(APIPostOptions(), accessToken);
 
 	try {
 		await idapiFetch({

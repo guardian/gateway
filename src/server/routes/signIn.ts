@@ -444,7 +444,6 @@ router.get(
 		// Okta Identity Engine session cookie is called `idx`
 		const oktaIdentityEngineSessionCookieId: string | undefined =
 			req.cookies.idx;
-		const identitySessionCookie = req.cookies.SC_GU_U;
 
 		const redirectUrl = returnUrl || defaultReturnUri;
 
@@ -468,12 +467,8 @@ router.get(
 				clearOktaCookies(res);
 				return res.redirect(redirectUrl);
 			}
-		} else if (identitySessionCookie) {
-			// If there isn't an Okta session, there's nothing to synchronise the
-			// IDAPI session with, so we bail here and return to the URL they came from
-			return res.redirect(redirectUrl);
 		} else {
-			// If there are no Okta or IDAPI cookies, why are you here? We bail and
+			// If there are no Okta cookies, why are you here? We bail and
 			// send the client to the /signin page.
 			return res.redirect('/signin');
 		}

@@ -25,7 +25,7 @@ const userProfileSchema = z.object({
 	isJobsUser: z.boolean().nullable().optional(),
 	firstName: z.string().nullable().optional(),
 	lastName: z.string().nullable().optional(),
-	legacyIdentityId: z.string().nullable().optional(),
+	legacyIdentityId: z.string().optional(),
 	searchPartitionKey: z.string().nullable().optional(),
 });
 

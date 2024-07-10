@@ -7,7 +7,11 @@ import { NextFunction, Response } from 'express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { tests } from '@/shared/model/experiments/abTests';
 import { getABTesting } from '@/server/lib/getABTesting';
-import { RequestState, RequestWithTypedQuery } from '@/server/models/Express';
+import {
+	OAuthState,
+	RequestState,
+	RequestWithTypedQuery,
+} from '@/server/models/Express';
 import Bowser from 'bowser';
 import { logger } from '@/server/lib/serverSideLogger';
 import { getApp } from '@/server/lib/okta/api/apps';

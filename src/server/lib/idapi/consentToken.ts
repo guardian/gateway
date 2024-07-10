@@ -1,6 +1,5 @@
 import {
 	APIAddClientAccessToken,
-	APIForwardSessionIdentifier,
 	APIPostOptions,
 	idapiFetch,
 } from '@/server/lib/IDAPIFetch';
@@ -17,14 +16,10 @@ const handleError = (): never => {
 
 export const validateConsentToken = async (
 	ip: string | undefined,
-	sc_gu_u: string,
 	token: string,
 	request_id?: string,
 ) => {
-	const options = APIForwardSessionIdentifier(
-		APIAddClientAccessToken(APIPostOptions(), ip),
-		sc_gu_u,
-	);
+	const options = APIAddClientAccessToken(APIPostOptions(), ip);
 	try {
 		await idapiFetch({
 			path: '/consent-email/:token',
@@ -45,14 +40,10 @@ export const validateConsentToken = async (
 
 export const resendConsentEmail = async (
 	ip: string | undefined,
-	sc_gu_u: string,
 	token: string,
 	request_id?: string,
 ) => {
-	const options = APIForwardSessionIdentifier(
-		APIAddClientAccessToken(APIPostOptions(), ip),
-		sc_gu_u,
-	);
+	const options = APIAddClientAccessToken(APIPostOptions(), ip);
 	try {
 		await idapiFetch({
 			path: '/consent-email/resend/:token',

@@ -3,7 +3,6 @@ import {
 	APIGetOptions,
 	APIPostOptions,
 	APIAddClientAccessToken,
-	APIForwardSessionIdentifier,
 	IDAPIError,
 } from '@/server/lib/IDAPIFetch';
 import { logger } from '@/server/lib/serverSideLogger';
@@ -15,37 +14,11 @@ import {
 } from '@/shared/model/Errors';
 import User from '@/shared/model/User';
 import { IdapiError } from '@/server/models/Error';
-import { RegistrationLocation } from '@/shared/model/RegistrationLocation';
 import { addApiQueryParamsToPath } from '@/shared/lib/queryParams';
 import { ApiRoutePaths } from '@/shared/model/Routes';
 
 interface APIResponse {
 	user: User;
-}
-
-interface APIGroupResponse {
-	status: string;
-	groupCode: string;
-}
-
-/**
- * This enum maps to the type of user as defined in,
- * and returned by Identity API.
- * So these terms are specific to our existing system, and may
- * need to change when we move to Okta to better reflect that model
- *
- * `new` - New user that doesn't exist in Identity DB
- * `current` - Existing user, with a password set
- * `guest` - Existing user, with no password set
- */
-export enum UserType {
-	NEW = 'new',
-	CURRENT = 'current',
-	GUEST = 'guest',
-}
-
-export enum GroupCode {
-	GRS = 'GRS',
 }
 
 const handleError = ({ error, status = 500 }: IDAPIError) => {
@@ -90,128 +63,6 @@ const responseToEntity = (response: APIResponse): User => {
 			registrationLocation: response.user.privateFields?.registrationLocation,
 		},
 	};
-};
-
-export const read = async (
-	ip: string | undefined,
-	sc_gu_u: string,
-	request_id?: string,
-): Promise<User> => {
-	const options = APIForwardSessionIdentifier(
-		APIAddClientAccessToken(APIGetOptions(), ip),
-		sc_gu_u,
-	);
-	try {
-		const response = (await idapiFetch({
-			path: '/user/me',
-			options,
-		})) as APIResponse;
-		return responseToEntity(response);
-	} catch (error) {
-		logger.error(`IDAPI Error user read '/user/me'`, error, {
-			request_id,
-		});
-		return handleError(error as IDAPIError);
-	}
-};
-
-export const updateName = async (
-	firstName: string,
-	secondName: string,
-	ip: string | undefined,
-	sc_gu_u: string,
-	request_id?: string,
-): Promise<User> => {
-	const options = APIForwardSessionIdentifier(
-		APIAddClientAccessToken(
-			APIPostOptions({
-				privateFields: {
-					firstName,
-					secondName,
-				},
-			}),
-			ip,
-		),
-		sc_gu_u,
-	);
-	try {
-		const response = (await idapiFetch({
-			path: '/user/me',
-			options,
-		})) as APIResponse;
-		return responseToEntity(response);
-	} catch (error) {
-		logger.error(`IDAPI error updating name for ${ip}`, error, {
-			request_id,
-		});
-		return handleError(error as IDAPIError);
-	}
-};
-
-/**
- * Until Gateway/Onboarding journey is migrated to Okta sessions, we don't have access to Okta User ID, only sc_gu_u cookie,
- * so we need to add reg location via idapi (which updates Okta immediately). When Okta sessions are available, this should be refactored
- * to use okta directly (Which is the source of truth for the user field)
- */
-export const addRegistrationLocation = async (
-	registrationLocation: RegistrationLocation,
-	ip: string | undefined,
-	sc_gu_u: string,
-	request_id?: string,
-): Promise<User> => {
-	const options = APIForwardSessionIdentifier(
-		APIAddClientAccessToken(
-			APIPostOptions({
-				privateFields: {
-					registrationLocation,
-				},
-			}),
-			ip,
-		),
-		sc_gu_u,
-	);
-
-	try {
-		const response = (await idapiFetch({
-			path: '/user/me',
-			options,
-		})) as APIResponse;
-		return responseToEntity(response);
-	} catch (error) {
-		logger.error(
-			`IDAPI error updating registration location for ${ip}`,
-			error,
-			{
-				request_id,
-			},
-		);
-		return handleError(error as IDAPIError);
-	}
-};
-
-export const addToGroup = async (
-	groupCode: GroupCode,
-	ip: string | undefined,
-	sc_gu_u: string,
-	request_id?: string,
-) => {
-	const options = APIForwardSessionIdentifier(
-		APIAddClientAccessToken(APIPostOptions(), ip),
-		sc_gu_u,
-	);
-	try {
-		const response = (await idapiFetch({
-			path: '/user/me/group/:groupCode',
-			options,
-			tokenisationParam: { groupCode },
-		})) as APIGroupResponse;
-		return response;
-	} catch (error) {
-		logger.error(`IDAPI error assigning user to group: ${groupCode}`, error, {
-			request_id,
-		});
-		return handleError(error as IDAPIError);
-	}
 };
 
 export const changeEmail = async (

@@ -76,10 +76,10 @@ Rate limit buckets are given a precedence. If a lower bucket rate limit is hit, 
 
 Buckets are resolved in the following priority order:
 
-1. oktaIdentifier - Rate limits based on Okta Id
+1. oktaIdentifier - Rate limits based on Okta IDX cookie
 2. email - Rate limits based on email
 3. ip - Rate limits based on ip
-4. accessToken - Rate limits based on SC_GU_U token
+4. accessToken - Rate limits based on GU_ACCESS_TOKEN cookie
 5. global - Rate limits all requests to the endpoint
 
 As the buckets are resolved, we reduce the number of tokens in each sequentially and restore any tokens that have been added since the time it was last accessed.

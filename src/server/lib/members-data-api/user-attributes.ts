@@ -18,39 +18,23 @@ const { membersDataApiUrl } = getConfiguration();
 
 /**
  * @name getUserAttributes
- * @description Call members-data-api to get user product information using an SC_GU_U cookie
+ * @description Call members-data-api to get user product information
  *
- * @param sc_gu_u SC_GU_U cookie
  * @param request_id optional request id for logging
  * @returns UserAttributesResponse | undefined
  */
 export const getUserAttributes = async ({
-	sc_gu_u,
 	accessToken,
 	request_id,
 }: {
-	sc_gu_u?: string;
-	accessToken?: string;
+	accessToken: string;
 	request_id?: string;
 }): Promise<UserAttributesResponse | undefined> => {
 	try {
 		const path = buildUrl('/user-attributes/me');
 
-		// choose the correct auth header, Authorization if using OAuth, Cookie if using SC_GU_U
-		const headers: Headers = (() => {
-			const headers = new Headers();
-
-			if (accessToken) {
-				headers.append('Authorization', `Bearer ${accessToken}`);
-				return headers;
-			}
-			if (sc_gu_u) {
-				headers.append('Cookie', `SC_GU_U=${sc_gu_u}`);
-				return headers;
-			}
-
-			return headers;
-		})();
+		const headers = new Headers();
+		headers.append('Authorization', `Bearer ${accessToken}`);
 
 		const response = await fetch(joinUrl(membersDataApiUrl, path), {
 			method: 'GET',

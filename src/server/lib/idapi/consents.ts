@@ -2,7 +2,7 @@ import {
 	idapiFetch,
 	APIPatchOptions,
 	APIGetOptions,
-	APIOptionSelect,
+	APIAddOAuthAuthorization,
 } from '@/server/lib/IDAPIFetch';
 import { logger } from '@/server/lib/serverSideLogger';
 import { ConsentsErrors } from '@/shared/model/Errors';
@@ -63,22 +63,13 @@ const read = async ({
 };
 
 const readUserConsents = async ({
-	ip,
-	sc_gu_u,
 	accessToken,
 	request_id,
 }: {
-	ip?: string;
-	sc_gu_u?: string;
-	accessToken?: string;
+	accessToken: string;
 	request_id?: string;
 }): Promise<UserConsent[]> => {
-	const options = APIOptionSelect({
-		sc_gu_u,
-		ip,
-		options: APIGetOptions(),
-		accessToken,
-	});
+	const options = APIAddOAuthAuthorization(APIGetOptions(), accessToken);
 	try {
 		return (await idapiFetch({
 			path: '/users/me/consents',
@@ -96,24 +87,18 @@ export const update = async ({
 	payload,
 	accessToken,
 	request_id,
-	ip,
-	sc_gu_u,
 }: {
-	ip?: string;
-	sc_gu_u?: string;
 	payload: UserConsent[];
-	accessToken?: string;
+	accessToken: string;
 	request_id?: string;
 }) => {
 	// Inversion required of four legitimate interest consents that are modelled as opt OUTS in the backend data model
 	// but which are presented as opt INs on the client UI/UX
 	const invertedPayload = invertOptInConsents(payload) as UserConsent[];
-	const options = APIOptionSelect({
-		sc_gu_u,
-		ip,
+	const options = APIAddOAuthAuthorization(
+		APIPatchOptions(invertedPayload),
 		accessToken,
-		options: APIPatchOptions(invertedPayload),
-	});
+	);
 
 	try {
 		await idapiFetch({
@@ -131,16 +116,12 @@ export const update = async ({
 
 export const getUserConsentsForPage = async ({
 	pageConsents,
-	ip,
-	sc_gu_u,
 	accessToken,
 	request_id,
 }: {
 	pageConsents: string[];
 	request_id?: string;
-	ip?: string;
-	sc_gu_u?: string;
-	accessToken?: string;
+	accessToken: string;
 }): Promise<Consent[]> => {
 	// Inversion required of four legitimate interest consents that are modelled as opt OUTS in the backend data model
 	// but which are presented as opt INs on the client UI/UX
@@ -148,7 +129,7 @@ export const getUserConsentsForPage = async ({
 		await read({ filter: 'all', request_id }),
 	);
 	const userConsents = invertOptOutConsents(
-		await readUserConsents({ ip, sc_gu_u, accessToken, request_id }),
+		await readUserConsents({ accessToken, request_id }),
 	);
 
 	return pageConsents

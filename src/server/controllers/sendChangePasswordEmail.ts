@@ -1,4 +1,3 @@
-import { handleAsyncErrors } from '@/server/lib/expressWrappers';
 import { Request } from 'express';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { setEncryptedStateCookie } from '@/server/lib/encryptedStateCookie';
@@ -282,8 +281,3 @@ export const sendEmailInOkta = async (
 		return res.type('html').send(html);
 	}
 };
-
-export const sendChangePasswordEmailController = () =>
-	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		await sendEmailInOkta(req, res);
-	});
