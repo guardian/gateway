@@ -17,16 +17,30 @@ import {
 } from '@/server/lib/okta/oauth';
 import { ProfileOpenIdClientRedirectUris } from '@/server/lib/okta/openid-connect';
 import { sendEmailToUnvalidatedUser } from '@/server/lib/unvalidatedEmail';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import {
+	addQueryParamsToPath,
+	addQueryParamsToUntypedPath,
+} from '@/shared/lib/queryParams';
 import { GenericErrors } from '@/shared/model/Errors';
 import { UserAttributesResponse } from '@/shared/lib/members-data-api';
 import dangerouslySetPlaceholderPassword from '@/server/lib/okta/dangerouslySetPlaceholderPassword';
+import { getConfiguration } from '@/server/lib/getConfiguration';
+import { requestStateHasOAuthTokens } from '@/server/lib/middleware/requestState';
+
+const { signInPageUrl } = getConfiguration();
 
 router.get(
 	'/delete',
 	loginMiddlewareOAuth,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
+		if (!requestStateHasOAuthTokens(state)) {
+			return res.redirect(
+				303,
+				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
+			);
+		}
+
 		try {
 			/**
 			 * Cypress Test START
@@ -40,7 +54,7 @@ router.get(
 			 */
 
 			// get the current user profile
-			const user = await getUser(state.oauthState.idToken!.claims.sub);
+			const user = await getUser(state.oauthState.idToken.claims.sub);
 
 			// check if the user has validated their email address
 			if (
@@ -82,7 +96,7 @@ router.get(
 
 			// get the user's attributes from the members data api
 			const userAttributes = await getUserAttributes({
-				accessToken: state.oauthState.accessToken!.toString(),
+				accessToken: state.oauthState.accessToken.toString(),
 				request_id: state.requestId,
 			});
 
@@ -214,10 +228,17 @@ router.post(
 	loginMiddlewareOAuth,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
+		if (!requestStateHasOAuthTokens(state)) {
+			return res.redirect(
+				303,
+				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
+			);
+		}
+
 		const { password = '' } = req.body;
 
 		try {
-			const { email } = state.oauthState.idToken!.claims;
+			const { email } = state.oauthState.idToken.claims;
 
 			// attempt to authenticate with okta
 			// if authentication fails, it will fall through to the catch
@@ -244,7 +265,7 @@ router.post(
 			});
 		} catch (error) {
 			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-				request_id: res.locals.requestId,
+				request_id: state.requestId,
 			});
 			if (
 				error instanceof OktaError &&
@@ -285,9 +306,17 @@ router.post(
 	'/delete-email-validation',
 	loginMiddlewareOAuth,
 	async (req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
+		if (!requestStateHasOAuthTokens(state)) {
+			return res.redirect(
+				303,
+				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
+			);
+		}
+
 		try {
 			// get the user's id from the id token
-			const { sub } = res.locals.oauthState.idToken!.claims;
+			const { sub } = state.oauthState.idToken.claims;
 
 			// check that the user id is a string
 			if (typeof sub !== 'string') {
@@ -306,23 +335,23 @@ router.post(
 			await sendEmailToUnvalidatedUser({
 				id: sub,
 				email: user.profile.email,
-				request_id: res.locals.requestId,
+				request_id: state.requestId,
 			});
 
 			// redirect to the email sent page
 			return res.redirect(
 				303,
-				addQueryParamsToPath('/delete/email-sent', res.locals.queryParams, {
+				addQueryParamsToPath('/delete/email-sent', state.queryParams, {
 					emailSentSuccess: true,
 				}),
 			);
 		} catch (error) {
 			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-				request_id: res.locals.requestId,
+				request_id: state.requestId,
 			});
 			return res.redirect(
 				303,
-				addQueryParamsToPath('/delete', res.locals.queryParams, {
+				addQueryParamsToPath('/delete', state.queryParams, {
 					error_description: GenericErrors.DEFAULT,
 				}),
 			);
@@ -334,9 +363,16 @@ router.get(
 	'/delete/email-sent',
 	loginMiddlewareOAuth,
 	(req: Request, res: ResponseWithRequestState) => {
-		const { email } = res.locals.oauthState.idToken!.claims;
-
 		const state = res.locals;
+		if (!requestStateHasOAuthTokens(state)) {
+			return res.redirect(
+				303,
+				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
+			);
+		}
+
+		const { email } = state.oauthState.idToken.claims;
+
 		const html = renderer('/delete/email-sent', {
 			requestState: mergeRequestState(state, {
 				pageData: {

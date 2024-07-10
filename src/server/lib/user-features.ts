@@ -25,8 +25,7 @@ export const setUserFeatureCookies = async ({
 	res,
 	requestId,
 }: {
-	sc_gu_u?: string;
-	accessToken?: string;
+	accessToken: string;
 	res: Response;
 	requestId?: string;
 }): Promise<void> => {

@@ -24,6 +24,15 @@ const {
 	sentryDsn,
 } = getConfiguration();
 
+export const requestStateHasOAuthTokens = (
+	requestState: RequestState,
+): requestState is RequestState & { oauthState: OAuthState } =>
+	Boolean(
+		requestState.oauthState &&
+			requestState.oauthState.accessToken &&
+			requestState.oauthState.idToken,
+	);
+
 const getRequestState = async (
 	req: RequestWithTypedQuery,
 ): Promise<RequestState> => {
@@ -115,7 +124,6 @@ const getRequestState = async (
 		},
 		browser: browser.getBrowser(),
 		requestId: req.get('x-request-id'),
-		oauthState: {},
 	};
 };
 

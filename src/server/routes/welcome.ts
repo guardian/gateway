@@ -10,7 +10,10 @@ import {
 	RequestState,
 	ResponseWithRequestState,
 } from '@/server/models/Express';
-import { addQueryParamsToPath } from '@/shared/lib/queryParams';
+import {
+	addQueryParamsToPath,
+	addQueryParamsToUntypedPath,
+} from '@/shared/lib/queryParams';
 import deepmerge from 'deepmerge';
 import { Request } from 'express';
 import { register } from '@/server/lib/okta/register';
@@ -48,22 +51,30 @@ import {
 } from '@/server/lib/newsletters';
 import { getNextWelcomeFlowPage } from '@/server/lib/welcome';
 import { newslettersSubscriptionsFromFormBody } from '@/shared/lib/newsletter';
+import { requestStateHasOAuthTokens } from '../lib/middleware/requestState';
 
-const { registrationPasscodesEnabled } = getConfiguration();
+const { registrationPasscodesEnabled, signInPageUrl } = getConfiguration();
 
 // temp return to app page for app users who get stuck in browser
 router.get(
 	'/welcome/:app/complete',
 	loginMiddlewareOAuth,
 	(req: Request, res: ResponseWithRequestState) => {
+		const state = res.locals;
 		const { app } = req.params;
+		if (!requestStateHasOAuthTokens(state)) {
+			return res.redirect(
+				303,
+				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
+			);
+		}
 
 		const html = renderer('/welcome/:app/complete', {
 			pageTitle: 'Welcome',
-			requestState: mergeRequestState(res.locals, {
+			requestState: mergeRequestState(state, {
 				pageData: {
 					// email is type unknown, but we know it's a string
-					email: res.locals.oauthState.idToken?.claims.email as string,
+					email: state.oauthState.idToken.claims.email as string,
 					appName: isAppPrefix(app) ? getAppName(app) : undefined,
 				},
 			}),
@@ -104,6 +115,13 @@ router.post(
 	loginMiddlewareOAuth,
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
+		if (!requestStateHasOAuthTokens(state)) {
+			return res.redirect(
+				303,
+				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
+			);
+		}
+
 		try {
 			const registrationConsents = bodyFormFieldsToRegistrationConsents(
 				req.body,
@@ -112,7 +130,7 @@ router.post(
 			// update the registration platform for social users, as we're not able to do this
 			// at the time of registration, as that happens in Okta
 			await updateRegistrationPlatform(
-				state.oauthState.accessToken!,
+				state.oauthState.accessToken,
 				state.queryParams.appClientId,
 				state.requestId,
 			);
@@ -124,9 +142,9 @@ router.post(
 				try {
 					await updateConsents({
 						ip: req.ip,
-						accessToken: state.oauthState.accessToken?.toString(),
+						accessToken: state.oauthState.accessToken.toString(),
 						payload: registrationConsents.consents,
-						request_id: res.locals.requestId,
+						request_id: state.requestId,
 					});
 
 					// since the CODE newsletters API isn't up to date with PROD newsletters API the
@@ -146,7 +164,7 @@ router.post(
 							error,
 						},
 						{
-							request_id: res.locals.requestId,
+							request_id: state.requestId,
 						},
 					);
 				}
@@ -156,9 +174,9 @@ router.post(
 				try {
 					await updateNewsletters({
 						ip: req.ip,
-						accessToken: state.oauthState.accessToken?.toString(),
+						accessToken: state.oauthState.accessToken.toString(),
 						payload: registrationConsents.newsletters,
-						request_id: res.locals.requestId,
+						request_id: state.requestId,
 					});
 					// since the CODE newsletters API isn't up to date with PROD newsletters API the
 					// review page will not show the correct newsletters on CODE.
@@ -177,7 +195,7 @@ router.post(
 							error,
 						},
 						{
-							request_id: res.locals.requestId,
+							request_id: state.requestId,
 						},
 					);
 				}
@@ -185,7 +203,7 @@ router.post(
 		} catch (error) {
 			// we don't want to block the user at this point, so we'll just log the error, and go to the finally block
 			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-				request_id: res.locals.requestId,
+				request_id: state.requestId,
 			});
 		} finally {
 			// otherwise redirect the user to the review page
@@ -252,16 +270,19 @@ router.get(
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		// eslint-disable-next-line functional/no-let
 		let state = res.locals;
-		const sc_gu_u = req.cookies.SC_GU_U;
+		if (!requestStateHasOAuthTokens(state)) {
+			return res.redirect(
+				303,
+				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
+			);
+		}
 
 		try {
 			const consentsData = {
 				consents: await getUserConsentsForPage({
 					pageConsents: CONSENTS_DATA_PAGE,
-					ip: req.ip,
-					sc_gu_u,
-					request_id: res.locals.requestId,
-					accessToken: res.locals.oauthState.accessToken?.toString(),
+					request_id: state.requestId,
+					accessToken: state.oauthState.accessToken.toString(),
 				}),
 			};
 
@@ -274,7 +295,7 @@ router.get(
 			trackMetric('NewAccountReview::Success');
 		} catch (error) {
 			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-				request_id: res.locals.requestId,
+				request_id: state.requestId,
 			});
 
 			const { message } = error instanceof ApiError ? error : new ApiError();
@@ -301,13 +322,20 @@ router.get(
 	loginMiddlewareOAuth,
 	async (req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
+		if (!requestStateHasOAuthTokens(state)) {
+			return res.redirect(
+				303,
+				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
+			);
+		}
+
 		const { returnUrl } = state.queryParams;
 		const geolocation = state.pageData.geolocation;
 		const newsletters = await getUserNewsletterSubscriptions({
 			newslettersOnPage: NewsletterMap.get(geolocation) as string[],
 			ip: req.ip,
 			request_id: state.requestId,
-			accessToken: state.oauthState.accessToken?.toString(),
+			accessToken: state.oauthState.accessToken.toString(),
 		});
 
 		if (newsletters?.length === 0) {
@@ -332,19 +360,21 @@ router.post(
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
 		const { returnUrl, fromURI } = state.queryParams;
+		if (!requestStateHasOAuthTokens(state)) {
+			return res.redirect(
+				303,
+				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
+			);
+		}
 
 		const sc_gu_u = req.cookies.SC_GU_U;
 
 		try {
 			// Attempt to update location for consented users.
-			if (res.locals.oauthState.accessToken) {
-				await updateRegistrationLocationViaOkta(
-					req,
-					res.locals.oauthState.accessToken,
-				);
-			} else {
-				await updateRegistrationLocationViaIDAPI(req.ip, sc_gu_u, req);
-			}
+			await updateRegistrationLocationViaOkta(
+				req,
+				state.oauthState.accessToken,
+			);
 
 			const consents = CONSENTS_DATA_PAGE.map((id) => ({
 				id,
@@ -352,18 +382,16 @@ router.post(
 			}));
 
 			await patchConsents({
-				ip: req.ip,
-				sc_gu_u,
-				accessToken: res.locals.oauthState.accessToken?.toString(),
+				accessToken: state.oauthState.accessToken.toString(),
 				payload: consents,
-				request_id: res.locals.requestId,
+				request_id: state.requestId,
 			});
 
 			trackMetric('NewAccountReviewSubmit::Success');
 		} catch (error) {
 			// Never block the user at this point, so we'll just log the error
 			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-				request_id: res.locals.requestId,
+				request_id: state.requestId,
 			});
 
 			trackMetric('NewAccountReviewSubmit::Failure');
@@ -384,6 +412,12 @@ router.post(
 	loginMiddlewareOAuth,
 	async (req: Request, res: ResponseWithRequestState) => {
 		const state = res.locals;
+		if (!requestStateHasOAuthTokens(state)) {
+			return res.redirect(
+				303,
+				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
+			);
+		}
 		const { returnUrl } = state.queryParams;
 
 		try {
@@ -391,7 +425,7 @@ router.post(
 				newslettersOnPage: ALL_NEWSLETTER_IDS,
 				ip: req.ip,
 				request_id: state.requestId,
-				accessToken: state.oauthState.accessToken?.toString(),
+				accessToken: state.oauthState.accessToken.toString(),
 			});
 
 			// get a list of newsletters to update that have changed from the users current subscription
@@ -427,7 +461,7 @@ router.post(
 			await updateNewsletters({
 				ip: req.ip,
 				request_id: state.requestId,
-				accessToken: state.oauthState.accessToken?.toString(),
+				accessToken: state.oauthState.accessToken.toString(),
 				payload: newsletterSubscriptionsToUpdate,
 			});
 
@@ -435,7 +469,7 @@ router.post(
 		} catch (error) {
 			// Never block the user at this point, so we'll just log the error
 			logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-				request_id: res.locals.requestId,
+				request_id: state.requestId,
 			});
 			trackMetric('NewAccountNewslettersSubmit::Failure');
 		} finally {
@@ -457,17 +491,16 @@ router.post(
 );
 
 const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
+	const state = res.locals;
 	// if registration passcodes are enabled, we need to handle this differently
 	// by using the passcode registration flow
-	if (registrationPasscodesEnabled && !res.locals.queryParams.useOktaClassic) {
+	if (registrationPasscodesEnabled && !state.queryParams.useOktaClassic) {
 		return OktaRegistration(req, res);
 	}
 
 	const { email } = req.body;
 
 	try {
-		const state = res.locals;
-
 		if (typeof email !== 'undefined') {
 			const user = await register({
 				email,
@@ -481,7 +514,7 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 
 			return res.redirect(
 				303,
-				addQueryParamsToPath('/welcome/email-sent', res.locals.queryParams, {
+				addQueryParamsToPath('/welcome/email-sent', state.queryParams, {
 					emailSentSuccess: true,
 				}),
 			);
@@ -491,14 +524,14 @@ const OktaResendEmail = async (req: Request, res: ResponseWithRequestState) => {
 			});
 	} catch (error) {
 		logger.error('Okta Registration resend email failure', error, {
-			request_id: res.locals.requestId,
+			request_id: state.requestId,
 		});
 
 		trackMetric('OktaWelcomeResendEmail::Failure');
 
 		const html = renderer('/welcome/email-sent', {
 			pageTitle: 'Check Your Inbox',
-			requestState: deepmerge(res.locals, {
+			requestState: deepmerge(state, {
 				globalMessage: {
 					error: GenericErrors.DEFAULT,
 				},

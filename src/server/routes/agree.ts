@@ -10,6 +10,7 @@ import { addQueryParamsToUntypedPath } from '@/shared/lib/queryParams';
 import { setupJobsUserInOkta } from '@/server/lib/jobs';
 import { loginMiddlewareOAuth } from '@/server/lib/middleware/login';
 import { deleteOAuthTokenCookie } from '@/server/lib/okta/tokens';
+import { requestStateHasOAuthTokens } from '../lib/middleware/requestState';
 
 const { defaultReturnUri, signInPageUrl } = getConfiguration();
 
@@ -17,19 +18,15 @@ router.get(
 	'/agree/GRS',
 	loginMiddlewareOAuth,
 	(req: Request, res: ResponseWithRequestState) => {
-		const { oauthState } = res.locals;
-
 		const state = res.locals;
-		const { returnUrl, fromURI } = state.queryParams;
-
-		// Redirect to /signin if tokens for some reason, this shouldn't be the case
-		// thanks to the loginMiddlewareOAuth middleware, but this is to get typescript to comply
-		if (!oauthState.idToken) {
+		if (!requestStateHasOAuthTokens(state)) {
 			return res.redirect(
 				303,
-				addQueryParamsToUntypedPath(signInPageUrl, res.locals.queryParams),
+				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
 			);
 		}
+
+		const { returnUrl, fromURI } = state.queryParams;
 
 		try {
 			// extract the users profile from the id token
@@ -38,7 +35,7 @@ router.get(
 				first_name: firstName,
 				last_name: lastName,
 				email,
-			} = oauthState.idToken.claims;
+			} = state.oauthState.idToken.claims;
 
 			const userFullNameSet = !!firstName && !!lastName;
 
@@ -56,14 +53,14 @@ router.get(
 				return res.redirect(
 					303,
 					addQueryParamsToUntypedPath(redirectUrl, {
-						...res.locals.queryParams,
+						...state.queryParams,
 						returnUrl: '', // unset returnUrl so redirect won't point to itself.
 					}),
 				);
 			}
 
 			const html = renderer('/agree/GRS', {
-				requestState: deepmerge(res.locals, {
+				requestState: deepmerge(state, {
 					pageData: {
 						firstName,
 						secondName: lastName,
@@ -80,13 +77,13 @@ router.get(
 				`${req.method} ${req.originalUrl} Error fetching Jobs user in Okta`,
 				error,
 				{
-					request_id: res.locals.requestId,
+					request_id: state.requestId,
 				},
 			);
 			// Redirect to /signin if an error occurs when fetching the users' data.
 			return res.redirect(
 				303,
-				addQueryParamsToUntypedPath(signInPageUrl, res.locals.queryParams),
+				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
 			);
 		}
 	},
@@ -96,25 +93,22 @@ router.post(
 	'/agree/GRS',
 	loginMiddlewareOAuth,
 	async (req: Request, res: ResponseWithRequestState) => {
-		const { returnUrl, fromURI } = res.locals.queryParams;
-		const { oauthState } = res.locals;
+		const state = res.locals;
+		if (!requestStateHasOAuthTokens(state)) {
+			return res.redirect(
+				303,
+				addQueryParamsToUntypedPath(signInPageUrl, state.queryParams),
+			);
+		}
 
+		const { returnUrl, fromURI } = state.queryParams;
 		const { firstName, secondName } = req.body;
 
 		try {
-			// Redirect to /signin if tokens for some reason, this shouldn't be the case
-			// thanks to the loginMiddlewareOAuth middleware, but this is to get typescript to comply
-			if (!oauthState.idToken) {
-				return res.redirect(
-					303,
-					addQueryParamsToUntypedPath(signInPageUrl, res.locals.queryParams),
-				);
-			}
-
 			await setupJobsUserInOkta(
 				firstName,
 				secondName,
-				oauthState.idToken.claims.sub,
+				state.oauthState.idToken.claims.sub,
 			);
 
 			// delete the ID token cookie, as we've updated the user model,
@@ -127,7 +121,7 @@ router.post(
 				`${req.method} ${req.originalUrl} Error updating Jobs user information`,
 				error,
 				{
-					request_id: res.locals.requestId,
+					request_id: state.requestId,
 				},
 			);
 			trackMetric('JobsGRSGroupAgree::Failure');
