@@ -20,9 +20,14 @@ const chooseNewsletter = (
 	appName: AppName | undefined,
 ): RegistrationNewsletterFormFields | undefined => {
 	const isFeast = appName === 'Feast';
+	const isJobs = appName === 'Jobs';
 
 	if (isFeast) {
 		return RegistrationNewslettersFormFieldsMap.feast;
+	}
+
+	if (isJobs) {
+		return RegistrationNewslettersFormFieldsMap.jobsBundle;
 	}
 
 	switch (geolocation) {

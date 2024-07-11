@@ -41,6 +41,7 @@ export const bodyFormFieldsToRegistrationConsents = (
 			}
 			switch (newsletter.id) {
 				case 'auBundle':
+				case 'jobsBundle':
 				case 'usBundle':
 					return newsletterBundleToIndividualNewsletters(newsletter.id).map(
 						(id) => ({

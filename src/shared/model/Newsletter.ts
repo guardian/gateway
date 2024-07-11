@@ -21,6 +21,8 @@ export enum Newsletters {
 	SAVED_FOR_LATER_AU = '6003',
 	// Registration newsletters
 	SATURDAY_EDITION = '6031',
+	JOBS_BUNDLE = 'jobsBundle', //TODO: Check if this is correct
+	JOBS = '6037', //TODO: Check if this is correct
 	FEAST = '6002',
 	WEEKEND_MAIL_AU = '6043',
 	WEEKEND_US = '6044',
@@ -50,6 +52,7 @@ export const ALL_NEWSLETTER_IDS = Object.values(Newsletters);
 type RegistrationNewsletterFormIds =
 	| 'saturdayEdition'
 	| 'feast'
+	| 'jobsBundle'
 	| 'auBundle'
 	| 'usBundle';
 
@@ -75,6 +78,12 @@ export const RegistrationNewslettersFormFieldsMap: Record<
 		context:
 			'A weekly email from Yotam Ottolenghi, Meera Sodha, Felicity Cloake and Rachel Roddy, featuring the latest recipes and seasonal eating ideas.',
 	},
+	jobsBundle: {
+		id: Newsletters.JOBS_BUNDLE,
+		label: 'Jobs newsletter',
+		context:
+			'Find your next job with the Guardian Jobs weekly email. Get the latest job listings, as well as tips and advice on taking your next career step. Toggle to opt out.',
+	},
 	auBundle: {
 		id: Newsletters.AU_BUNDLE,
 		label: 'Saturday newsletters',
@@ -90,13 +99,18 @@ export const RegistrationNewslettersFormFieldsMap: Record<
 };
 
 export const newsletterBundleToIndividualNewsletters = (
-	bundleId: Newsletters.US_BUNDLE | Newsletters.AU_BUNDLE,
+	bundleId:
+		| Newsletters.US_BUNDLE
+		| Newsletters.AU_BUNDLE
+		| Newsletters.JOBS_BUNDLE,
 ): Newsletters[] => {
 	switch (bundleId) {
 		case Newsletters.US_BUNDLE:
 			return [Newsletters.SATURDAY_EDITION, Newsletters.WEEKEND_US];
 		case Newsletters.AU_BUNDLE:
 			return [Newsletters.SATURDAY_EDITION, Newsletters.WEEKEND_MAIL_AU];
+		case Newsletters.JOBS_BUNDLE:
+			return [Newsletters.SATURDAY_EDITION, Newsletters.JOBS];
 		default:
 			return [];
 	}

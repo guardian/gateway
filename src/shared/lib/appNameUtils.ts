@@ -34,7 +34,7 @@ export const isAppPrefix = isOneOf(appPrefixes);
 const appLabels = apps.map(([label]) => label);
 export const isAppLabel = isOneOf(appLabels);
 
-export type AppName = 'Guardian' | 'Feast';
+export type AppName = 'Guardian' | 'Feast' | 'Jobs';
 
 /**
  * @name getAppPrefix
