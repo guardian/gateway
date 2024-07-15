@@ -12,6 +12,7 @@ export enum Consents {
 	// PRODUCT CONSENTS
 	EVENTS = 'events',
 	SIMILAR_GUARDIAN_PRODUCTS = 'similar_guardian_products',
+	JOBS = 'jobs',
 }
 
 export const CONSENTS_DATA_PAGE: string[] = [
@@ -24,5 +25,11 @@ export const RegistrationConsentsFormFields = {
 		id: Consents.SIMILAR_GUARDIAN_PRODUCTS,
 		label:
 			'Receive information on our products and ways to support and enjoy our journalism. Toggle to opt out.',
+	},
+	jobs: {
+		title: 'Jobs newsletter', //TODO: Ask Nick if we need title for JOBS
+		id: Consents.JOBS,
+		label:
+			'Find your next job with the Guardian Jobs weekly email. Get the latest job listings, as well as tips and advice on taking your next career step. Toggle to opt out.',
 	},
 };

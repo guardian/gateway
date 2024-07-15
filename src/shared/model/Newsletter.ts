@@ -52,7 +52,7 @@ export const ALL_NEWSLETTER_IDS = Object.values(Newsletters);
 type RegistrationNewsletterFormIds =
 	| 'saturdayEdition'
 	| 'feast'
-	| 'jobsBundle'
+	| 'jobs'
 	| 'auBundle'
 	| 'usBundle';
 
@@ -78,11 +78,11 @@ export const RegistrationNewslettersFormFieldsMap: Record<
 		context:
 			'A weekly email from Yotam Ottolenghi, Meera Sodha, Felicity Cloake and Rachel Roddy, featuring the latest recipes and seasonal eating ideas.',
 	},
-	jobsBundle: {
-		id: Newsletters.JOBS_BUNDLE,
-		label: 'Jobs newsletter',
+	jobs: {
+		id: Newsletters.SATURDAY_EDITION,
+		label: 'Saturday Edition newsletter',
 		context:
-			'Find your next job with the Guardian Jobs weekly email. Get the latest job listings, as well as tips and advice on taking your next career step. Toggle to opt out.',
+			'You may be interested in this exclusive email highlighting the week’s best Guardian journalism from the editor-in-chief, Katharine Viner. Toggle to opt out.',
 	},
 	auBundle: {
 		id: Newsletters.AU_BUNDLE,
