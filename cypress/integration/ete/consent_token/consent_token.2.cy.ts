@@ -19,8 +19,9 @@ describe('Consent token flow', () => {
 				cy.checkForEmailAndGetDetails(
 					emailAddress,
 					timeRequestWasMade,
-					/consent-token\/([^"]*)/,
+					/consent-token\/([^"]*)\//,
 				).then(({ token }) => {
+					// the token has the /accept suffix already appended to it
 					cy.visit(`/consent-token/${token}/accept`, {
 						failOnStatusCode: false,
 					});
