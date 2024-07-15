@@ -38,6 +38,8 @@ export const WelcomeSocial = ({
 
 	usePageLoadOphanInteraction(formTrackingName);
 
+	const isJobs = queryParams.clientId === 'jobs';
+
 	return (
 		<MinimalLayout pageHeader={headerMessage(socialProvider)}>
 			<MainForm
@@ -53,7 +55,11 @@ export const WelcomeSocial = ({
 				}}
 				additionalTerms={newsletterAdditionalTerms}
 			>
-				<RegistrationConsents geolocation={geolocation} appName={appName} />
+				<RegistrationConsents
+					geolocation={geolocation}
+					appName={appName}
+					isJobs={isJobs}
+				/>
 			</MainForm>
 		</MinimalLayout>
 	);

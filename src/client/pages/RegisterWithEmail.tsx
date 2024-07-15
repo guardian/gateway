@@ -34,6 +34,8 @@ export const RegisterWithEmail = ({
 
 	const useIdapi = queryParams.useIdapi;
 
+	const isJobs = queryParams.clientId === 'jobs';
+
 	return (
 		<MinimalLayout pageHeader="Create your account">
 			<MainForm
@@ -54,6 +56,7 @@ export const RegisterWithEmail = ({
 					useIdapi={useIdapi}
 					geolocation={geolocation}
 					appName={appName}
+					isJobs={isJobs}
 				/>
 			</MainForm>
 			<Divider spaceAbove="tight" size="full" cssOverrides={divider} />

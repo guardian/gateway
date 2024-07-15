@@ -12,22 +12,27 @@ import { ToggleSwitchInput } from '@/client/components/ToggleSwitchInput';
 interface RegistrationConsentsProps {
 	geolocation?: GeoLocation;
 	useIdapi?: boolean;
+	isJobs?: boolean;
 	appName?: AppName;
 }
 
-const chooseNewsletter = (
-	geolocation: GeoLocation | undefined,
-	appName: AppName | undefined,
-): RegistrationNewsletterFormFields | undefined => {
+const chooseNewsletter = ({
+	geolocation,
+	appName,
+	isJobs,
+}: {
+	geolocation: GeoLocation | undefined;
+	appName: AppName | undefined;
+	isJobs?: boolean;
+}): RegistrationNewsletterFormFields | undefined => {
 	const isFeast = appName === 'Feast';
-	const isJobs = appName === 'Jobs';
 
 	if (isFeast) {
 		return RegistrationNewslettersFormFieldsMap.feast;
 	}
 
 	if (isJobs) {
-		return RegistrationNewslettersFormFieldsMap.jobsBundle;
+		return RegistrationNewslettersFormFieldsMap.jobs;
 	}
 
 	switch (geolocation) {
@@ -48,13 +53,23 @@ export const RegistrationConsents = ({
 	geolocation,
 	useIdapi,
 	appName,
+	isJobs,
 }: RegistrationConsentsProps) => {
-	const registrationNewsletter = chooseNewsletter(geolocation, appName);
+	const registrationNewsletter = chooseNewsletter({
+		geolocation,
+		appName,
+		isJobs,
+	});
 	// Show marketing consent if not showing Feast
 	const showMarketingConsent = (() => {
 		if (registrationNewsletter === RegistrationNewslettersFormFieldsMap.feast) {
 			return false;
 		}
+
+		if (isJobs) {
+			return false;
+		}
+
 		return true;
 	})();
 
@@ -64,6 +79,14 @@ export const RegistrationConsents = ({
 
 	return (
 		<ToggleSwitchList>
+			{isJobs && (
+				<ToggleSwitchInput
+					id={RegistrationConsentsFormFields.jobs.id}
+					title={RegistrationConsentsFormFields.jobs.title} //TODO: Ask Nick if we need title for JOBS
+					description={RegistrationConsentsFormFields.jobs.label}
+					defaultChecked={true}
+				/>
+			)}
 			{registrationNewsletter && (
 				<ToggleSwitchInput
 					id={registrationNewsletter.id}
@@ -72,6 +95,7 @@ export const RegistrationConsents = ({
 					defaultChecked={true}
 				/>
 			)}
+
 			{showMarketingConsent && (
 				<ToggleSwitchInput
 					id={RegistrationConsentsFormFields.similarGuardianProducts.id}
