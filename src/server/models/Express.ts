@@ -18,9 +18,14 @@ export interface ABTesting {
 	forcedTestVariants: Participations;
 }
 
-interface OAuthState {
-	accessToken?: Jwt;
-	idToken?: Jwt;
+// We only set oauthState in the loginMiddlewareOAuth middleware
+// when we're absolutely sure that not only do the tokens exist,
+// but they're also valid, so we can safely assume that they're
+// always present in this interface. This prevents unnecessary
+// hedging about the validity of this object elsewhere.
+export interface OAuthState {
+	accessToken: Jwt;
+	idToken: Jwt;
 }
 
 export interface RequestState {
@@ -38,7 +43,7 @@ export interface RequestState {
 	ophanConfig: OphanConfig;
 	sentryConfig: SentryConfig;
 	browser: Bowser.Parser.Details;
-	oauthState: OAuthState;
+	oauthState?: OAuthState;
 	requestId?: string;
 }
 

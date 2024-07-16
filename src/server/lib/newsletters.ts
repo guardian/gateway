@@ -33,22 +33,16 @@ export const NewsletterMap = new Map<GeoLocation | undefined, Newsletters[]>([
 ]);
 
 export const getUserNewsletterSubscriptions = async ({
-	ip,
-	sc_gu_u,
 	newslettersOnPage,
 	request_id,
 	accessToken,
 }: {
 	newslettersOnPage: string[];
-	ip?: string;
-	sc_gu_u?: string;
 	request_id?: string;
-	accessToken?: string;
+	accessToken: string;
 }): Promise<NewsLetter[]> => {
 	const allNewsletters = await getNewsletters(request_id);
 	const userNewsletterSubscriptions = await readUserNewsletters({
-		ip,
-		sc_gu_u,
 		request_id,
 		accessToken,
 	});

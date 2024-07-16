@@ -1,8 +1,9 @@
 import Redis from 'ioredis-mock';
 import request from 'supertest';
-import { RequestHandler } from 'express';
+import { Request, RequestHandler } from 'express';
 import { RateLimiterConfiguration } from '@/server/lib/rate-limit';
 import { getServerInstance } from '../sharedConfig';
+import { ResponseWithRequestState } from '@/server/models/Express';
 
 // Override the default 5s max timeout for these tests because Supertest takes some time to run.
 jest.setTimeout(20000);
@@ -29,13 +30,7 @@ describe('rate limiter middleware', () => {
 		jest.mock('@aws-sdk/client-sesv2');
 		jest.mock('@aws-sdk/client-cloudwatch');
 		jest.mock('@/server/lib/idapi/user');
-		jest.mock('@/server/lib/idapi/guest');
 		jest.mock('@/server/lib/idapi/decryptToken');
-		jest.mock('@/server/lib/idapi/auth', () => ({
-			authenticate: () => ({
-				values: [],
-			}),
-		}));
 		jest.mock('@/server/lib/idapi/IDAPICookies');
 		jest.mock('@/server/lib/trackMetric');
 
@@ -43,6 +38,10 @@ describe('rate limiter middleware', () => {
 			logger: {
 				info: loggerInfoMock,
 			},
+		}));
+		jest.mock('@/server/controllers/sendChangePasswordEmail', () => ({
+			sendEmailInOkta: (req: Request, res: ResponseWithRequestState) =>
+				res.redirect(303, '/reset-password/email-sent'),
 		}));
 
 		jest.mock(
@@ -172,18 +171,18 @@ describe('rate limiter middleware', () => {
 		// Start the application server.
 		const server = await getServerInstance(rateLimiterConfig);
 
-		// After two requests, SC_GU_U=test should hit the rate limit.
+		// After two requests, GU_ACCESS_TOKEN=test should hit the rate limit.
 		await request(server)
 			.get('/register')
-			.set('Cookie', 'SC_GU_U=verylongaccesstoken')
+			.set('Cookie', 'GU_ACCESS_TOKEN=verylongaccesstoken')
 			.expect(200);
 		await request(server)
 			.get('/register')
-			.set('Cookie', 'SC_GU_U=verylongaccesstoken')
+			.set('Cookie', 'GU_ACCESS_TOKEN=verylongaccesstoken')
 			.expect(200);
 		await request(server)
 			.get('/register')
-			.set('Cookie', 'SC_GU_U=verylongaccesstoken')
+			.set('Cookie', 'GU_ACCESS_TOKEN=verylongaccesstoken')
 			.expect(429);
 
 		// Expect the access token to be truncated so we don't exceed the maximum message size for message.keywords in Kibana.
@@ -195,18 +194,18 @@ describe('rate limiter middleware', () => {
 			},
 		);
 
-		// SC_GU_U=other should be allowed to make a request
+		// GU_ACCESS_TOKEN=other should be allowed to make a request
 		await request(server)
 			.get('/register')
-			.set('Cookie', 'SC_GU_U=other')
+			.set('Cookie', 'GU_ACCESS_TOKEN=other')
 			.expect(200);
 
 		jest.advanceTimersByTime(500);
 
-		// After waiting, SC_GU_U=test can make a request again.
+		// After waiting, GU_ACCESS_TOKEN=test can make a request again.
 		await request(server)
 			.get('/register')
-			.set('Cookie', 'SC_GU_U=verylongaccesstoken')
+			.set('Cookie', 'GU_ACCESS_TOKEN=verylongaccesstoken')
 			.expect(200);
 	});
 
@@ -324,12 +323,12 @@ describe('rate limiter middleware', () => {
 				globalBucket: { capacity: 1, addTokenMs: 500 },
 			},
 			routeBuckets: {
-				'/signin': {
+				'/reset-password': {
 					enabled: true,
 					globalBucket: { capacity: 500, addTokenMs: 50 },
 					emailBucket: { capacity: 1, addTokenMs: 500 },
 				},
-				'/reset-password': {
+				'/signin': {
 					enabled: true,
 					globalBucket: { capacity: 1, addTokenMs: 50 },
 				},
@@ -343,44 +342,39 @@ describe('rate limiter middleware', () => {
 
 		// Consume the only token available for this email
 		await request(server)
-			.post(
-				'/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fuk&useIdapi=true',
-			)
+			.post('/reset-password?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fuk')
 			.type('application/x-www-form-urlencoded')
 			.send({
 				email: 'test@test.com',
-				password: '',
 			})
-			.expect(303)
-			.expect('Location', 'https://www.theguardian.com/uk');
+			.expect(303);
 
 		// No more tokens left for this email, check that rate limiter kicks in
 		await request(server)
-			.post('/signin?useIdapi=true')
+			.post('/reset-password')
 			.type('application/x-www-form-urlencoded')
 			.send({
 				email: 'test@test.com',
-				password: '',
 			})
 			.expect(429);
 
 		expect(loggerInfoMock).toHaveBeenLastCalledWith(
-			`RateLimit-Gateway emailBucket email=test@test.com ip=::ffff:127.0.0.1 accessToken= identity-gateway POST /signin`,
+			`RateLimit-Gateway emailBucket email=test@test.com ip=::ffff:127.0.0.1 accessToken= identity-gateway POST /reset-password`,
 			undefined,
 			{
 				request_id: expect.any(String),
 			},
 		);
 
-		await request(server).get('/reset-password').expect(200);
-		await request(server).get('/reset-password').expect(429);
+		await request(server).get('/signin').expect(200);
+		await request(server).get('/signin').expect(429);
 
 		// Confirm that /register (disabled by the default config) is never rate limited.
 		await request(server).get('/register').expect(200);
 		await request(server).get('/register').expect(200);
 	});
 
-	it('should rate limit /signin form when the email bucket is empty', async () => {
+	it('should rate limit /reset-password form when the email bucket is empty', async () => {
 		const rateLimiterConfig: RateLimiterConfiguration = {
 			enabled: true,
 			settings: {
@@ -391,7 +385,7 @@ describe('rate limiter middleware', () => {
 				globalBucket: { capacity: 500, addTokenMs: 500 },
 			},
 			routeBuckets: {
-				'/signin': {
+				'/reset-password': {
 					globalBucket: { capacity: 500, addTokenMs: 50 },
 					emailBucket: { capacity: 1, addTokenMs: 500 },
 				},
@@ -403,59 +397,48 @@ describe('rate limiter middleware', () => {
 
 		// Consume the only token available for this email
 		await request(server)
-			.post(
-				'/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fuk&useIdapi=true',
-			)
+			.post('/reset-password?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fuk')
 			.type('application/x-www-form-urlencoded')
 			.send({
 				email: 'test@test.com',
-				password: '',
 			})
-			.expect(303)
-			.expect('Location', 'https://www.theguardian.com/uk');
+			.expect(303);
 
 		// No more tokens left for this email, check that rate limiter kicks in
 		await request(server)
-			.post('/signin?useIdapi=true')
+			.post('/reset-password')
 			.type('application/x-www-form-urlencoded')
 			.send({
 				email: 'test@test.com',
-				password: '',
 			})
 			.expect(429);
 
 		// Make sure that the email can't be let through with an email alias
 		await request(server)
-			.post('/signin?useIdapi=true')
+			.post('/reset-password')
 			.type('application/x-www-form-urlencoded')
 			.send({
 				email: 'test+maliciousalias@test.com',
-				password: '',
 			})
 			.expect(429);
 
 		// Make sure that other emails are still allowed through the rate limiter
 		await request(server)
-			.post(
-				'/signin?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fuk&useIdapi=true',
-			)
+			.post('/reset-password?returnUrl=https%3A%2F%2Fwww.theguardian.com%2Fuk')
 			.type('application/x-www-form-urlencoded')
 			.send({
 				email: 'newTest@test.com',
-				password: '',
 			})
-			.expect(303)
-			.expect('Location', 'https://www.theguardian.com/uk');
+			.expect(303);
 
 		jest.advanceTimersByTime(500);
 
 		// Check that a new request goes through successfully
 		await request(server)
-			.post('/signin?useIdapi=true')
+			.post('/reset-password')
 			.type('application/x-www-form-urlencoded')
 			.send({
 				email: 'test@test.com',
-				password: 'tests',
 			})
 			.expect(303);
 	});

@@ -274,7 +274,6 @@ const authenticationHandler = async (
 				// also for new social users, we want to make sure they are added to braze
 				try {
 					await touchBraze({
-						ip: req.ip,
 						accessToken: tokenSet.access_token,
 						request_id: res.locals.requestId,
 					});
@@ -308,7 +307,6 @@ const authenticationHandler = async (
 				if (decryptedConsents.consents?.length) {
 					try {
 						await updateConsents({
-							ip: req.ip,
 							accessToken: tokenSet.access_token,
 							payload: decryptedConsents.consents,
 							request_id: res.locals.requestId,
@@ -339,7 +337,6 @@ const authenticationHandler = async (
 				if (decryptedConsents.newsletters?.length) {
 					try {
 						await updateNewsletters({
-							ip: req.ip,
 							accessToken: tokenSet.access_token,
 							payload: decryptedConsents.newsletters,
 							request_id: res.locals.requestId,
@@ -371,7 +368,6 @@ const authenticationHandler = async (
 					// to a newsletter
 					try {
 						await touchBraze({
-							ip: req.ip,
 							accessToken: tokenSet.access_token,
 							request_id: res.locals.requestId,
 						});

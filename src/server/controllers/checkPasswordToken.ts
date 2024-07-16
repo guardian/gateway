@@ -4,12 +4,10 @@ import {
 	RequestState,
 	ResponseWithRequestState,
 } from '@/server/models/Express';
-import { validate as validateTokenInIDAPI } from '@/server/lib/idapi/changePassword';
 import deepmerge from 'deepmerge';
 import { getBrowserNameFromUserAgent } from '@/server/lib/getBrowserName';
 import {
 	readEncryptedStateCookie,
-	setEncryptedStateCookie,
 	updateEncryptedStateCookie,
 } from '@/server/lib/encryptedStateCookie';
 import { renderer } from '@/server/lib/renderer';
@@ -32,8 +30,7 @@ import {
 } from '@/server/lib/okta/idx/introspect';
 import { convertExpiresAtToExpiryTimeInMs } from '@/server/lib/okta/idx/shared';
 
-const { okta, defaultReturnUri, registrationPasscodesEnabled } =
-	getConfiguration();
+const { defaultReturnUri, registrationPasscodesEnabled } = getConfiguration();
 
 const handleBackButtonEventOnWelcomePage = (
 	path: PasswordRoutePath,
@@ -62,63 +59,6 @@ const handleBackButtonEventOnWelcomePage = (
 				pageTitle: `Resend ${pageTitle} Email`,
 			}),
 		);
-	}
-};
-
-const checkTokenInIDAPI = async (
-	path: PasswordRoutePath,
-	pageTitle: PasswordPageTitle,
-	req: Request,
-	res: ResponseWithRequestState,
-) => {
-	const requestState = res.locals;
-	const { token } = req.params;
-
-	try {
-		const { email, timeUntilTokenExpiry } = await validateTokenInIDAPI(
-			token,
-			req.ip,
-			res.locals.requestId,
-		);
-
-		// add email to encrypted state, so we can display it on the confirmation page
-		setEncryptedStateCookie(res, { email });
-
-		trackMetric('ValidatePasswordToken::Success');
-
-		const html = renderer(
-			`${path}/:token`,
-			{
-				requestState: mergeRequestState(requestState, {
-					pageData: {
-						browserName: getBrowserNameFromUserAgent(req.header('User-Agent')),
-						email,
-						timeUntilTokenExpiry,
-						token,
-					},
-				}),
-				pageTitle,
-			},
-			{ token },
-		);
-		return res.type('html').send(html);
-	} catch (error) {
-		logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-			request_id: res.locals.requestId,
-		});
-
-		trackMetric('ValidatePasswordToken::Failure');
-
-		if (path === '/welcome') {
-			handleBackButtonEventOnWelcomePage(path, pageTitle, req, res);
-		} else {
-			return res.type('html').send(
-				renderer(`${path}/resend`, {
-					requestState,
-					pageTitle: `Resend ${pageTitle} Email`,
-				}),
-			);
-		}
 	}
 };
 
@@ -352,10 +292,5 @@ export const checkPasswordTokenController = (
 	pageTitle: PasswordPageTitle,
 ) =>
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		const { useIdapi } = res.locals.queryParams;
-		if (okta.enabled && !useIdapi) {
-			await checkTokenInOkta(path, pageTitle, req, res);
-		} else {
-			await checkTokenInIDAPI(path, pageTitle, req, res);
-		}
+		await checkTokenInOkta(path, pageTitle, req, res);
 	});

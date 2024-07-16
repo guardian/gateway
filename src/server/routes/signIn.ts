@@ -1,12 +1,10 @@
 import { Request } from 'express';
-import { authenticate as authenticateWithIdapi } from '@/server/lib/idapi/auth';
 import { authenticate as authenticateWithOkta } from '@/server/lib/okta/api/authentication';
 import { logger } from '@/server/lib/serverSideLogger';
 import { renderer } from '@/server/lib/renderer';
 import { ResponseWithRequestState } from '@/server/models/Express';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { handleAsyncErrors } from '@/server/lib/expressWrappers';
-import { setIDAPICookies } from '@/server/lib/idapi/IDAPICookies';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { decrypt } from '@/server/lib/idapi/decryptToken';
 import {
@@ -49,8 +47,7 @@ import {
 	redirectIdpSchema,
 } from '@/server/lib/okta/idx/introspect';
 
-const { okta, accountManagementUrl, oauthBaseUrl, defaultReturnUri } =
-	getConfiguration();
+const { okta, accountManagementUrl, defaultReturnUri } = getConfiguration();
 
 /**
  * Helper method to determine if a global error should show on the sign in page
@@ -137,8 +134,6 @@ router.post(
 			requestId: request_id,
 		} = res.locals;
 
-		// We don't need to check the useIdapi flag as a user can only
-		// get into this flow after an attempt to login with Okta
 		try {
 			const encryptedState = readEncryptedStateCookie(req);
 			const { email } = encryptedState ?? {};
@@ -235,24 +230,18 @@ router.post(
 	'/reauthenticate',
 	handleRecaptcha,
 	handleAsyncErrors((req: Request, res: ResponseWithRequestState) => {
-		const { useIdapi } = res.locals.queryParams;
 		const {
 			queryParams: { appClientId },
 			requestId: request_id,
 		} = res.locals;
-		if (okta.enabled && !useIdapi) {
-			// if okta feature switch enabled, use okta authentication
-			return oktaSignInController({
-				req,
-				res,
-				isReauthenticate: true,
-				appClientId,
-				request_id,
-			});
-		} else {
-			// if okta feature switch disabled, use identity authentication
-			return idapiSignInController(req, res);
-		}
+		// if okta feature switch enabled, use okta authentication
+		return oktaSignInController({
+			req,
+			res,
+			isReauthenticate: true,
+			appClientId,
+			request_id,
+		});
 	}),
 );
 
@@ -260,76 +249,20 @@ router.post(
 	'/signin',
 	handleRecaptcha,
 	handleAsyncErrors((req: Request, res: ResponseWithRequestState) => {
-		const { useIdapi } = res.locals.queryParams;
 		const {
 			queryParams: { appClientId },
 			requestId: request_id,
 		} = res.locals;
-		if (okta.enabled && !useIdapi) {
-			// if okta feature switch enabled, use okta authentication
-			return oktaSignInController({
-				req,
-				res,
-				isReauthenticate: false,
-				appClientId,
-				request_id,
-			});
-		} else {
-			// if okta feature switch disabled, use identity authentication
-			return idapiSignInController(req, res);
-		}
+		// if okta feature switch enabled, use okta authentication
+		return oktaSignInController({
+			req,
+			res,
+			isReauthenticate: false,
+			appClientId,
+			request_id,
+		});
 	}),
 );
-
-const idapiSignInController = async (
-	req: Request,
-	res: ResponseWithRequestState,
-) => {
-	const { email = '', password = '' } = req.body;
-	const { queryParams } = res.locals;
-	const { returnUrl } = queryParams;
-
-	try {
-		const cookies = await authenticateWithIdapi(
-			email,
-			password,
-			req.ip,
-			res.locals.queryParams,
-			res.locals.requestId,
-		);
-
-		// because we are signing in using idapi, and a new okta
-		// session will not be created, so we will need to clear the okta
-		// cookies to keep the sessions in sync
-		clearOktaCookies(res);
-		setIDAPICookies(res, cookies);
-
-		trackMetric('SignIn::Success');
-
-		return res.redirect(303, returnUrl);
-	} catch (error) {
-		logger.error(`${req.method} ${req.originalUrl}  Error`, error, {
-			request_id: res.locals.requestId,
-		});
-		const { message, status } =
-			error instanceof ApiError ? error : new ApiError();
-
-		trackMetric('SignIn::Failure');
-
-		// re-render the sign in page on error, with pre-filled email
-		const html = renderer('/signin', {
-			requestState: mergeRequestState(res.locals, {
-				pageData: {
-					email,
-					formError: message,
-				},
-			}),
-			pageTitle: 'Sign in',
-		});
-
-		return res.status(status).type('html').send(html);
-	}
-};
 
 // handles errors in the catch block to return a error to display to the user
 const oktaSignInControllerErrorHandler = (error: unknown) => {
@@ -511,12 +444,11 @@ router.get(
 		// Okta Identity Engine session cookie is called `idx`
 		const oktaIdentityEngineSessionCookieId: string | undefined =
 			req.cookies.idx;
-		const identitySessionCookie = req.cookies.SC_GU_U;
 
 		const redirectUrl = returnUrl || defaultReturnUri;
 
 		// Check if the user has an existing Okta session.
-		if (okta.enabled && oktaIdentityEngineSessionCookieId) {
+		if (oktaIdentityEngineSessionCookieId) {
 			try {
 				// If the user session is valid, we re-authenticate them, supplying
 				// the idx cookie value to Okta.
@@ -535,12 +467,8 @@ router.get(
 				clearOktaCookies(res);
 				return res.redirect(redirectUrl);
 			}
-		} else if (identitySessionCookie) {
-			// If there isn't an Okta session, there's nothing to synchronise the
-			// IDAPI session with, so we bail here and return to the URL they came from
-			return res.redirect(redirectUrl);
 		} else {
-			// If there are no Okta or IDAPI cookies, why are you here? We bail and
+			// If there are no Okta cookies, why are you here? We bail and
 			// send the client to the /signin page.
 			return res.redirect('/signin');
 		}
@@ -550,98 +478,86 @@ router.get(
 router.get(
 	'/signin/:social',
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
-		const { returnUrl } = res.locals.queryParams;
 		const socialIdp = req.params.social as SocialProvider;
 
 		if (!isValidSocialProvider(socialIdp)) {
 			return res.redirect(303, '/signin');
 		}
 
-		if (okta.enabled) {
-			// get the IDP id from the config
-			const idp = okta.social[socialIdp];
+		// get the IDP id from the config
+		const idp = okta.social[socialIdp];
 
-			// fire ophan component event if applicable when a session is set
-			if (res.locals.queryParams.componentEventParams) {
-				void sendOphanComponentEventFromQueryParamsServer(
-					res.locals.queryParams.componentEventParams,
-					'SIGN_IN',
-					req.params.social,
-					res.locals.ophanConfig.consentUUID,
-					res.locals.requestId,
-				);
-			}
-
-			// OKTA IDX API FLOW
-			// attempt to authenticate social using the idx api/interaction code flow
-			// if this fails with any error, we fall back to okta hosted flow
-			try {
-				const [{ interaction_handle }, authState] = await interact(req, res, {
-					closeExistingSession: true,
-				});
-
-				const introspectResponse = await introspect(
-					{
-						interactionHandle: interaction_handle,
-					},
-					res.locals.requestId,
-				);
-
-				const updatedAuthState = updateAuthorizationStateData(authState, {
-					socialProvider: socialIdp,
-					stateToken: introspectResponse.stateHandle.split('~')[0],
-				});
-
-				setAuthorizationStateCookie(updatedAuthState, res);
-
-				const introspectIdp = introspectResponse.remediation.value.find(
-					({ name, type }) =>
-						name === 'redirect-idp' && type === socialIdp.toUpperCase(),
-				);
-
-				if (
-					introspectIdp &&
-					redirectIdpSchema.safeParse(introspectIdp).success
-				) {
-					const redirectIdp = redirectIdpSchema.parse(introspectIdp);
-
-					trackMetric('OktaIDXSocialSignIn::Redirect');
-
-					return res.redirect(303, redirectIdp.href);
-				} else {
-					throw new OAuthError(
-						{
-							error: 'invalid_response',
-							error_description: 'Invalid or missing redirect-idp remediation',
-						},
-						404,
-					);
-				}
-			} catch (error) {
-				trackMetric('OktaIDXSocialSignIn::Failure');
-				logger.error('IDX API - Social sign in error:', error, {
-					request_id: res.locals.requestId,
-				});
-			}
-
-			// OKTA LEGACY SOCIAL FLOW
-			// if okta feature switch enabled, perform authorization code flow with idp
-			return await performAuthorizationCodeFlow(req, res, {
-				idp,
-				closeExistingSession: true,
-				scopes: scopesForAuthentication,
-				redirectUri: ProfileOpenIdClientRedirectUris.AUTHENTICATION,
-				extraData: {
-					socialProvider: socialIdp,
-				},
-			});
-		} else {
-			// if okta feature switch disabled, redirect to identity-federation-api
-			const socialUrl = new URL(`${oauthBaseUrl}/${socialIdp}/signin`);
-			socialUrl.searchParams.append('returnUrl', returnUrl);
-
-			return res.redirect(303, socialUrl.toString());
+		// fire ophan component event if applicable when a session is set
+		if (res.locals.queryParams.componentEventParams) {
+			void sendOphanComponentEventFromQueryParamsServer(
+				res.locals.queryParams.componentEventParams,
+				'SIGN_IN',
+				req.params.social,
+				res.locals.ophanConfig.consentUUID,
+				res.locals.requestId,
+			);
 		}
+
+		// OKTA IDX API FLOW
+		// attempt to authenticate social using the idx api/interaction code flow
+		// if this fails with any error, we fall back to okta hosted flow
+		try {
+			const [{ interaction_handle }, authState] = await interact(req, res, {
+				closeExistingSession: true,
+			});
+
+			const introspectResponse = await introspect(
+				{
+					interactionHandle: interaction_handle,
+				},
+				res.locals.requestId,
+			);
+
+			const updatedAuthState = updateAuthorizationStateData(authState, {
+				socialProvider: socialIdp,
+				stateToken: introspectResponse.stateHandle.split('~')[0],
+			});
+
+			setAuthorizationStateCookie(updatedAuthState, res);
+
+			const introspectIdp = introspectResponse.remediation.value.find(
+				({ name, type }) =>
+					name === 'redirect-idp' && type === socialIdp.toUpperCase(),
+			);
+
+			if (introspectIdp && redirectIdpSchema.safeParse(introspectIdp).success) {
+				const redirectIdp = redirectIdpSchema.parse(introspectIdp);
+
+				trackMetric('OktaIDXSocialSignIn::Redirect');
+
+				return res.redirect(303, redirectIdp.href);
+			} else {
+				throw new OAuthError(
+					{
+						error: 'invalid_response',
+						error_description: 'Invalid or missing redirect-idp remediation',
+					},
+					404,
+				);
+			}
+		} catch (error) {
+			trackMetric('OktaIDXSocialSignIn::Failure');
+			logger.error('IDX API - Social sign in error:', error, {
+				request_id: res.locals.requestId,
+			});
+		}
+
+		// OKTA LEGACY SOCIAL FLOW
+		// if okta feature switch enabled, perform authorization code flow with idp
+		return await performAuthorizationCodeFlow(req, res, {
+			idp,
+			closeExistingSession: true,
+			scopes: scopesForAuthentication,
+			redirectUri: ProfileOpenIdClientRedirectUris.AUTHENTICATION,
+			extraData: {
+				socialProvider: socialIdp,
+			},
+		});
 	}),
 );
 

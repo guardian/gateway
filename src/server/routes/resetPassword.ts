@@ -6,8 +6,9 @@ import { setPasswordController } from '@/server/controllers/changePassword';
 import { readEmailCookie } from '@/server/lib/emailCookie';
 import { rateLimitedTypedRouter as router } from '@/server/lib/typedRoutes';
 import handleRecaptcha from '@/server/lib/recaptcha';
-import { sendChangePasswordEmailController } from '@/server/controllers/sendChangePasswordEmail';
+import { sendEmailInOkta } from '@/server/controllers/sendChangePasswordEmail';
 import { mergeRequestState } from '@/server/lib/requestState';
+import { handleAsyncErrors } from '../lib/expressWrappers';
 
 // reset password email form
 router.get('/reset-password', (req: Request, res: ResponseWithRequestState) => {
@@ -26,7 +27,9 @@ router.get('/reset-password', (req: Request, res: ResponseWithRequestState) => {
 router.post(
 	'/reset-password',
 	handleRecaptcha,
-	sendChangePasswordEmailController(),
+	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
+		await sendEmailInOkta(req, res);
+	}),
 );
 
 // reset password email sent page

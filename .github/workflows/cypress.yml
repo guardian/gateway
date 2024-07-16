@@ -57,15 +57,7 @@ jobs:
     needs: build
     uses: ./.github/workflows/cypress-mocked.yml
     secrets: inherit
-  cypress-mocked-okta:
-    needs: build
-    uses: ./.github/workflows/cypress-mocked-okta.yml
-    secrets: inherit
   cypress-ete:
     needs: build
     uses: ./.github/workflows/cypress-ete.yml
-    secrets: inherit
-  cypress-ete-okta:
-    needs: build
-    uses: ./.github/workflows/cypress-ete-okta.yml
     secrets: inherit

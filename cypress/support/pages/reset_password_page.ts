@@ -1,8 +1,8 @@
 class ResetPasswordPage {
-	static URL = '/reset-password?useIdapi=true';
+	static URL = '/reset-password';
 	static CONTENT = {
 		ERRORS: {
-			GENERIC: 'There was a problem setting your password, please try again.',
+			GENERIC: 'Sorry, something went wrong. Please try again.',
 			NO_ACCOUNT:
 				'There is no account for that email address, please check for typos or create an account',
 			NO_EMAIL: 'Email field must not be blank.',

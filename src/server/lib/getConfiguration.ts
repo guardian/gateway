@@ -48,8 +48,6 @@ const getStage = (value: string | undefined): Stage => {
 interface StageVariables {
 	guardianDotcomDomain: string;
 	apiDomain: string;
-	oktaEnabled: boolean;
-	gatewayOAuthEnabled: boolean;
 	registrationPasscodesEnabled: boolean;
 	accountManagementUrl: string;
 }
@@ -60,8 +58,6 @@ const getStageVariables = (stage: Stage): StageVariables => {
 			return {
 				guardianDotcomDomain: GU_DOMAIN.PROD,
 				apiDomain: GU_API_DOMAIN.PROD,
-				oktaEnabled: featureSwitches.oktaEnabled.PROD,
-				gatewayOAuthEnabled: featureSwitches.gatewayOAuthEnabled.PROD,
 				registrationPasscodesEnabled:
 					featureSwitches.registrationPasscodesEnabled.PROD,
 				accountManagementUrl: GU_MANAGE_URL.PROD,
@@ -70,8 +66,6 @@ const getStageVariables = (stage: Stage): StageVariables => {
 			return {
 				guardianDotcomDomain: GU_DOMAIN.CODE,
 				apiDomain: GU_API_DOMAIN.CODE,
-				oktaEnabled: featureSwitches.oktaEnabled.CODE,
-				gatewayOAuthEnabled: featureSwitches.gatewayOAuthEnabled.CODE,
 				registrationPasscodesEnabled:
 					featureSwitches.registrationPasscodesEnabled.CODE,
 				accountManagementUrl: GU_MANAGE_URL.CODE,
@@ -80,8 +74,6 @@ const getStageVariables = (stage: Stage): StageVariables => {
 			return {
 				guardianDotcomDomain: GU_DOMAIN.DEV,
 				apiDomain: GU_API_DOMAIN.DEV,
-				oktaEnabled: featureSwitches.oktaEnabled.DEV,
-				gatewayOAuthEnabled: featureSwitches.gatewayOAuthEnabled.DEV,
 				registrationPasscodesEnabled:
 					featureSwitches.registrationPasscodesEnabled.DEV,
 				accountManagementUrl: GU_MANAGE_URL.DEV,
@@ -137,9 +129,7 @@ export const getConfiguration = (): Configuration => {
 	const {
 		guardianDotcomDomain,
 		apiDomain,
-		oktaEnabled,
 		accountManagementUrl,
-		gatewayOAuthEnabled,
 		registrationPasscodesEnabled,
 	} = getStageVariables(stage);
 
@@ -178,7 +168,7 @@ export const getConfiguration = (): Configuration => {
 	);
 
 	const okta: Okta = {
-		enabled: oktaEnabled,
+		enabled: true,
 		orgUrl: getOrThrow(process.env.OKTA_ORG_URL, 'OKTA org URL missing'),
 		token: getOrThrow(process.env.OKTA_API_TOKEN, 'OKTA API token missing'),
 		authServerId: getOrThrow(
@@ -274,7 +264,6 @@ export const getConfiguration = (): Configuration => {
 		accountManagementUrl,
 		rateLimiter,
 		membersDataApiUrl,
-		gatewayOAuthEnabled,
 		registrationPasscodesEnabled,
 		deleteAccountStepFunction,
 	};

@@ -14,25 +14,21 @@ const domain = `${baseUri.replace('profile.', '').split(':')[0]}`;
  *
  * Currently only used to set the AdFree cookie (GU_AF1) but could be extended to set other cookies.
  *
- * @param sc_gu_u - the value of the sc_gu_u cookie if using IDAPI
  * @param accessToken - the value of the oauth access token if using Okta
  * @param res - the express response object
  * @param requestId - loggable identifier for the request
  */
 export const setUserFeatureCookies = async ({
-	sc_gu_u,
 	accessToken,
 	res,
 	requestId,
 }: {
-	sc_gu_u?: string;
-	accessToken?: string;
+	accessToken: string;
 	res: Response;
 	requestId?: string;
 }): Promise<void> => {
 	// call the members-data-api to get the user's attributes/products if any
 	const userAttributes = await getUserAttributes({
-		sc_gu_u,
 		accessToken,
 		request_id: requestId,
 	});

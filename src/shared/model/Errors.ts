@@ -2,13 +2,9 @@ export enum IdapiErrorMessages {
 	NOT_FOUND = 'Not found',
 	MISSING_FIELD = 'Required field missing',
 	INVALID_TOKEN = 'Invalid token',
-	TOKEN_EXPIRED = 'Token expired',
 	ACCESS_DENIED = 'Access Denied',
 	INVALID_EMAIL_PASSWORD = 'Invalid email or password',
-	USER_ALREADY_VALIDATED = 'User Already Validated',
-	BREACHED_PASSWORD = 'Breached password',
 	EMAIL_IN_USE = 'Email in use',
-	INVALID_EMAIL_ADDRESS = 'Invalid emailAddress:',
 }
 
 export enum FederationErrors {
@@ -62,13 +58,6 @@ export enum ShortPasswordFieldErrors {
 	MAXIMUM_72 = 'Maximum of 72 characters',
 	WEAK_PASSWORD = 'Weak password: avoid passwords that are easy to guess',
 	STRONG_PASSWORD_REQUIRED = 'Strong password required',
-}
-
-export enum VerifyEmailErrors {
-	GENERIC = 'There was problem verifying your email, please try again.',
-	TOKEN_EXPIRED = 'The activation token is no longer valid.',
-	INVALID_TOKEN = 'The token you supplied could not be parsed.',
-	USER_ALREADY_VALIDATED = 'This user account has already been validated',
 }
 
 export enum NewslettersErrors {

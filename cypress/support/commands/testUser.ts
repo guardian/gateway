@@ -20,13 +20,10 @@ declare global {
 			findEmailValidatedOktaGroupId: typeof findEmailValidatedOktaGroupId;
 			getOktaUserGroups: typeof getOktaUserGroups;
 			getTestUserDetails: typeof getTestUserDetails;
-			addToGRS: typeof addToGRS;
 			updateTestUser: typeof updateTestUser;
 			updateOktaTestUserProfile: typeof updateOktaTestUserProfile;
 			getCurrentOktaSession: typeof getCurrentOktaSession;
 			closeCurrentOktaSession: typeof closeCurrentOktaSession;
-			subscribeToNewsletter: typeof subscribeToNewsletter;
-			subscribeToMarketingConsent: typeof subscribeToMarketingConsent;
 			sendConsentEmail: typeof sendConsentEmail;
 		}
 	}
@@ -98,126 +95,45 @@ export const randomMailosaurEmail = () => {
 
 export const randomPassword = () => crypto.randomUUID();
 
-export const getTestUserDetails = () =>
-	cy.getCookie('SC_GU_U').then((cookie) =>
-		cy
-			.request({
-				url: Cypress.env('IDAPI_BASE_URL') + '/user/me',
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					'X-GU-ID-Client-Access-Token': `Bearer ${Cypress.env(
-						'IDAPI_CLIENT_ACCESS_TOKEN',
-					)}`,
-					'X-GU-ID-FOWARDED-SC-GU-U': cookie?.value,
-				},
-				retryOnStatusCodeFailure: true,
-			})
-			.then((res) =>
-				cy.wrap({
-					status: res.body.status,
-					user: res.body.user as IDAPIUserProfile,
-				}),
-			),
-	);
-
-export const updateTestUser = (body: object) =>
-	cy.getCookie('SC_GU_U').then((cookie) =>
-		cy
-			.request({
-				url: Cypress.env('IDAPI_BASE_URL') + '/user/me',
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'X-GU-ID-Client-Access-Token': `Bearer ${Cypress.env(
-						'IDAPI_CLIENT_ACCESS_TOKEN',
-					)}`,
-					'X-GU-ID-FOWARDED-SC-GU-U': cookie?.value,
-				},
-				body: JSON.stringify(body) || undefined,
-				retryOnStatusCodeFailure: true,
-			})
-			.then((res) => {
-				cy.wrap({
-					status: res.body.status,
-				});
+export const getTestUserDetails = (idapiUserId?: string) =>
+	cy
+		.request({
+			url: `${Cypress.env('IDAPI_BASE_URL')}/user/${idapiUserId}`,
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-GU-ID-Client-Access-Token': `Bearer ${Cypress.env(
+					'IDAPI_CLIENT_ACCESS_TOKEN',
+				)}`,
+			},
+			retryOnStatusCodeFailure: true,
+		})
+		.then((res) =>
+			cy.wrap({
+				status: res.body.status,
+				user: res.body.user as IDAPIUserProfile,
 			}),
-	);
+		);
 
-export const addToGRS = () =>
-	cy.getCookie('SC_GU_U').then((cookie) =>
-		cy
-			.request({
-				url: Cypress.env('IDAPI_BASE_URL') + '/user/me/group/GRS',
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'X-GU-ID-Client-Access-Token': `Bearer ${Cypress.env(
-						'IDAPI_CLIENT_ACCESS_TOKEN',
-					)}`,
-					'X-GU-ID-FOWARDED-SC-GU-U': cookie?.value,
-				},
-				retryOnStatusCodeFailure: true,
-			})
-			.then((res) => {
-				cy.wrap({
-					status: res.body.status,
-				});
-			}),
-	);
-
-export const subscribeToNewsletter = (newsletterListId: string) =>
-	cy.getCookie('SC_GU_U').then((cookie) => {
-		try {
-			return cy.request({
-				url: Cypress.env('IDAPI_BASE_URL') + '/users/me/newsletters',
-				method: 'PATCH',
-				headers: {
-					'Content-Type': 'application/json',
-					'X-GU-ID-Client-Access-Token': `Bearer ${Cypress.env(
-						'IDAPI_CLIENT_ACCESS_TOKEN',
-					)}`,
-					'X-GU-ID-FOWARDED-SC-GU-U': cookie?.value,
-				},
-				body: JSON.stringify([
-					{
-						id: newsletterListId,
-						subscribed: true,
-					},
-				]),
-				retryOnStatusCodeFailure: true,
+export const updateTestUser = (idapiUserId: string, body: object) =>
+	cy
+		.request({
+			url: `${Cypress.env('IDAPI_BASE_URL')}/user/${idapiUserId}`,
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-GU-ID-Client-Access-Token': `Bearer ${Cypress.env(
+					'IDAPI_CLIENT_ACCESS_TOKEN',
+				)}`,
+			},
+			body: JSON.stringify(body) || undefined,
+			retryOnStatusCodeFailure: true,
+		})
+		.then((res) => {
+			cy.wrap({
+				status: res.body.status,
 			});
-		} catch (error) {
-			throw new Error('Failed to subscribe user to newsletter: ' + error);
-		}
-	});
-
-export const subscribeToMarketingConsent = (marketingId: string) =>
-	cy.getCookie('SC_GU_U').then((cookie) => {
-		try {
-			return cy.request({
-				url: Cypress.env('IDAPI_BASE_URL') + '/users/me/consents',
-				method: 'PATCH',
-				headers: {
-					'Content-Type': 'application/json',
-					'X-GU-ID-Client-Access-Token': `Bearer ${Cypress.env(
-						'IDAPI_CLIENT_ACCESS_TOKEN',
-					)}`,
-					'X-GU-ID-FOWARDED-SC-GU-U': cookie?.value,
-				},
-				body: JSON.stringify([
-					{
-						id: marketingId,
-						consented: true,
-					},
-				]),
-			});
-		} catch (error) {
-			throw new Error(
-				'Failed to subscribe user to marketing consent: ' + error,
-			);
-		}
-	});
+		});
 
 export const createTestUser = ({
 	primaryEmailAddress,
@@ -252,10 +168,17 @@ export const createTestUser = ({
 				retryOnStatusCodeFailure: true,
 			})
 			.then((res) => {
+				const cookies = res.body.values as IDAPITestUserResponse;
+				const guUCookie = cookies.find((cookie) => cookie.key === 'GU_U');
+				if (!guUCookie) {
+					throw new Error('Failed to create IDAPI test user');
+				}
+				const idapiUserId = JSON.parse(atob(guUCookie.value.split('.')[0]))[0];
 				return cy.wrap({
 					emailAddress: finalEmail,
 					cookies: res.body.values as IDAPITestUserResponse,
 					finalPassword,
+					idapiUserId,
 				});
 			});
 	} catch (error) {
@@ -272,31 +195,28 @@ export const sendConsentEmail = ({
 	consents?: string[];
 	newsletters?: string[];
 }) => {
-	return cy.getCookie('SC_GU_U').then((cookie) => {
-		try {
-			return cy.request({
-				url: Cypress.env('IDAPI_BASE_URL') + '/consent-email',
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'X-GU-ID-Client-Access-Token': `Bearer ${Cypress.env(
-						'IDAPI_CLIENT_ACCESS_TOKEN',
-					)}`,
-					'X-GU-ID-FOWARDED-SC-GU-U': cookie?.value,
+	try {
+		return cy.request({
+			url: Cypress.env('IDAPI_BASE_URL') + '/consent-email',
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-GU-ID-Client-Access-Token': `Bearer ${Cypress.env(
+					'IDAPI_CLIENT_ACCESS_TOKEN',
+				)}`,
+			},
+			body: JSON.stringify([
+				{
+					email: emailAddress,
+					'set-consents': consents,
+					'set-lists': newsletters,
 				},
-				body: JSON.stringify([
-					{
-						email: emailAddress,
-						'set-consents': consents,
-						'set-lists': newsletters,
-					},
-				]),
-				retryOnStatusCodeFailure: true,
-			});
-		} catch (error) {
-			throw new Error('Failed to send consents email: ' + error);
-		}
-	});
+			]),
+			retryOnStatusCodeFailure: true,
+		});
+	} catch (error) {
+		throw new Error('Failed to send consents email: ' + error);
+	}
 };
 
 export const getTestOktaUser = (id: string) => {

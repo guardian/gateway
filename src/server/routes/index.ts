@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { getConfiguration } from '@/server/lib/getConfiguration';
 import { noCache } from '@/server/lib/middleware/cache';
 
 import { default as core } from './core';
@@ -18,8 +17,6 @@ import { default as changeEmail } from './changeEmail';
 import { default as subscriptions } from './subscriptions';
 import { default as consentToken } from './consentToken';
 import { default as deleteAccount } from './delete';
-
-const { okta } = getConfiguration();
 
 const router = Router();
 const uncachedRoutes = Router();
@@ -64,10 +61,7 @@ uncachedRoutes.use(changeEmail);
 // unsubscribe routes
 uncachedRoutes.use(subscriptions);
 
-// oauth callback routes
-if (okta.enabled) {
-	uncachedRoutes.use(oauth);
-}
+uncachedRoutes.use(oauth);
 
 // consent token routes
 uncachedRoutes.use(consentToken);

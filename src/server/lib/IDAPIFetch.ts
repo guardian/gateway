@@ -103,21 +103,10 @@ export const APIAddClientAccessToken = (
 	};
 };
 
-export const APIForwardSessionIdentifier = (
+export const APIAddOAuthAuthorization = (
 	options: RequestInit,
-	id: string,
+	token: string,
 ) => {
-	const headers = {
-		...options.headers,
-		'X-GU-ID-FOWARDED-SC-GU-U': id,
-	};
-	return {
-		...options,
-		headers,
-	};
-};
-
-const APIAddOAuthAuthorization = (options: RequestInit, token: string) => {
 	const headers = {
 		...options.headers,
 		Authorization: `Bearer ${token}`,
@@ -127,29 +116,6 @@ const APIAddOAuthAuthorization = (options: RequestInit, token: string) => {
 		...options,
 		headers,
 	};
-};
-
-export const APIOptionSelect = ({
-	sc_gu_u,
-	ip,
-	accessToken,
-	options,
-}: {
-	sc_gu_u?: string;
-	ip?: string;
-	accessToken?: string;
-	options: RequestInit;
-}): RequestInit => {
-	if (accessToken) {
-		return APIAddOAuthAuthorization(options, accessToken);
-	}
-	if (sc_gu_u && ip) {
-		return APIAddClientAccessToken(
-			APIForwardSessionIdentifier(options, sc_gu_u),
-			ip,
-		);
-	}
-	return options;
 };
 
 export const idapiFetch = APIFetch(idapiBaseUrl);

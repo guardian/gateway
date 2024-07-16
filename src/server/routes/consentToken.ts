@@ -12,17 +12,17 @@ import { logger } from '@/server/lib/serverSideLogger';
 import { trackMetric } from '@/server/lib/trackMetric';
 import { buildUrl } from '@/shared/lib/routeUtils';
 
-// This route is of this specific form because it's a direct copy of the legacy
-// route in identity-frontend, and emails sent by IDAPI contain this URL.
-// We can change the route after we've migrated the emails from IDAPI.
+// When a user attempts to sign up for newsletters, rather than immediately signing them up,
+// we may instead call the IDAPI endpoint /consent-email to send them an email with a link
+// which, when clicked, will validate their acceptance and sign them up. This link goes to
+// this endpoint, /consent-token/:token/accept.
 router.get(
 	'/consent-token/:token/accept',
 	handleAsyncErrors(async (req: Request, res: ResponseWithRequestState) => {
 		const ip = req.ip;
-		const sc_gu_u = req.cookies.SC_GU_U;
 		const token = req.params.token;
 		try {
-			await validateConsentToken(ip, sc_gu_u, token, res.locals.requestId);
+			await validateConsentToken(ip, token, res.locals.requestId);
 
 			trackMetric('ConsentToken::Success');
 
@@ -66,11 +66,10 @@ router.post(
 		// This is a pass-through route to IDAPI, which will send a new consent
 		// email to the user if the token matches. We don't need to do anything
 		// with the response here.
-		const { token } = req.body;
 		const ip = req.ip;
-		const sc_gu_u = req.cookies.SC_GU_U;
+		const { token } = req.body;
 		try {
-			await resendConsentEmail(ip, sc_gu_u, token, res.locals.requestId);
+			await resendConsentEmail(ip, token, res.locals.requestId);
 
 			trackMetric('ConsentTokenResend::Success');
 		} catch (error) {

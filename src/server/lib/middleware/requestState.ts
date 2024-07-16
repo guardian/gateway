@@ -7,7 +7,11 @@ import { NextFunction, Response } from 'express';
 import { getConfiguration } from '@/server/lib/getConfiguration';
 import { tests } from '@/shared/model/experiments/abTests';
 import { getABTesting } from '@/server/lib/getABTesting';
-import { RequestState, RequestWithTypedQuery } from '@/server/models/Express';
+import {
+	OAuthState,
+	RequestState,
+	RequestWithTypedQuery,
+} from '@/server/models/Express';
 import Bowser from 'bowser';
 import { logger } from '@/server/lib/serverSideLogger';
 import { getApp } from '@/server/lib/okta/api/apps';
@@ -23,6 +27,15 @@ const {
 	githubRunNumber,
 	sentryDsn,
 } = getConfiguration();
+
+export const requestStateHasOAuthTokens = (
+	requestState: RequestState,
+): requestState is RequestState & { oauthState: OAuthState } =>
+	Boolean(
+		requestState.oauthState &&
+			requestState.oauthState.accessToken &&
+			requestState.oauthState.idToken,
+	);
 
 const getRequestState = async (
 	req: RequestWithTypedQuery,
@@ -115,7 +128,6 @@ const getRequestState = async (
 		},
 		browser: browser.getBrowser(),
 		requestId: req.get('x-request-id'),
-		oauthState: {},
 	};
 };
 

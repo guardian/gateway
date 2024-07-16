@@ -3,7 +3,7 @@ on:
   workflow_call:
 jobs:
   cypress-mocked:
-    name: Cypress (mocked)
+    name: Cypress mocked tests
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -72,6 +72,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         env:
+          DEBUG: '@cypress/github-action'
           PORT: 8861
           ENVIRONMENT: production
           STAGE: DEV

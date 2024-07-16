@@ -2,15 +2,7 @@ describe('Consent token flow', () => {
 	it('shows the success page when supplied a valid token by a logged in user', () => {
 		cy.createTestUser({
 			isUserEmailValidated: true,
-		}).then(({ emailAddress, cookies }) => {
-			// SC_GU_U is required for the cy.getTestUserDetails
-			const scGuU = cookies.find((cookie) => cookie.key === 'SC_GU_U');
-			if (!scGuU) throw new Error('SC_GU_U cookie not found');
-			cy.setCookie('SC_GU_U', scGuU?.value);
-			// SC_GU_LA is required for the cy.getTestUserDetails
-			const scGuLa = cookies.find((cookie) => cookie.key === 'SC_GU_LA');
-			if (!scGuLa) throw new Error('SC_GU_LA cookie not found');
-			cy.setCookie('SC_GU_LA', scGuLa?.value);
+		}).then(({ emailAddress }) => {
 			cy.sendConsentEmail({
 				emailAddress,
 				consents: ['jobs'],
@@ -26,6 +18,8 @@ describe('Consent token flow', () => {
 						failOnStatusCode: false,
 					});
 					cy.contains('Subscribe Confirmation');
+					// TODO: Would be nice to check that the user is actually
+					// subscribed to the newsletters here
 					cy.url().should('include', '/subscribe/success');
 				});
 			});

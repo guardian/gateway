@@ -28,13 +28,10 @@ import {
 	findEmailValidatedOktaGroupId,
 	getOktaUserGroups,
 	getTestUserDetails,
-	addToGRS,
 	updateTestUser,
 	updateOktaTestUserProfile,
 	getCurrentOktaSession,
 	closeCurrentOktaSession,
-	subscribeToNewsletter,
-	subscribeToMarketingConsent,
 	sendConsentEmail,
 } from './commands/testUser';
 import { interceptRecaptcha } from './commands/recaptcha';
@@ -69,15 +66,9 @@ Cypress.Commands.add(
 Cypress.Commands.add('getOktaUserGroups', getOktaUserGroups);
 Cypress.Commands.add('getTestUserDetails', getTestUserDetails);
 Cypress.Commands.add('updateTestUser', updateTestUser);
-Cypress.Commands.add('addToGRS', addToGRS);
 Cypress.Commands.add('updateOktaTestUserProfile', updateOktaTestUserProfile);
 Cypress.Commands.add('getCurrentOktaSession', getCurrentOktaSession);
 Cypress.Commands.add('closeCurrentOktaSession', closeCurrentOktaSession);
-Cypress.Commands.add('subscribeToNewsletter', subscribeToNewsletter);
-Cypress.Commands.add(
-	'subscribeToMarketingConsent',
-	subscribeToMarketingConsent,
-);
 Cypress.Commands.add('sendConsentEmail', sendConsentEmail);
 Cypress.Commands.add('interceptRecaptcha', interceptRecaptcha);
 Cypress.Commands.add('oktaGetApps', oktaGetApps);

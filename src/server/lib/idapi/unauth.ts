@@ -1,6 +1,5 @@
 import {
 	APIAddClientAccessToken,
-	APIForwardSessionIdentifier,
 	APIPostOptions,
 	idapiFetch,
 	IDAPIError,
@@ -19,10 +18,12 @@ export const logoutFromIDAPI = async (
 	ip: string | undefined,
 	request_id?: string,
 ): Promise<IdapiCookies | undefined> => {
-	const options = APIAddClientAccessToken(
-		APIForwardSessionIdentifier(APIPostOptions(), sc_gu_u),
-		ip,
-	);
+	const options = APIAddClientAccessToken(APIPostOptions(), ip);
+	// eslint-disable-next-line functional/immutable-data
+	options.headers = {
+		...options.headers,
+		'X-GU-ID-FOWARDED-SC-GU-U': sc_gu_u,
+	};
 	try {
 		const response = await idapiFetch({
 			path: '/unauth',
