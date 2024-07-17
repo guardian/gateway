@@ -206,7 +206,7 @@ describe('Registration flow - Split 2/2', () => {
 									).then(({ links, body }) => {
 										expect(body).to.have.string('Password reset');
 										expect(body).to.have.string('Reset password');
-										expect(links.length).to.eq(2);
+										expect(links.length).to.eq(3);
 										const resetPasswordLink = links.find((s) =>
 											s.text?.includes('Reset password'),
 										);
@@ -259,7 +259,7 @@ describe('Registration flow - Split 2/2', () => {
 									).then(({ links, body }) => {
 										expect(body).to.have.string('Password reset');
 										expect(body).to.have.string('Reset password');
-										expect(links.length).to.eq(2);
+										expect(links.length).to.eq(3);
 										const resetPasswordLink = links.find((s) =>
 											s.text?.includes('Reset password'),
 										);
@@ -522,7 +522,7 @@ describe('Registration flow - Split 2/2', () => {
 								).then(({ links, body }) => {
 									expect(body).to.have.string('Password reset');
 									expect(body).to.have.string('Reset password');
-									expect(links.length).to.eq(2);
+									expect(links.length).to.eq(3);
 									const resetPasswordLink = links.find((s) =>
 										s.text?.includes('Reset password'),
 									);
@@ -575,7 +575,7 @@ describe('Registration flow - Split 2/2', () => {
 								).then(({ links, body }) => {
 									expect(body).to.have.string('Password reset');
 									expect(body).to.have.string('Reset password');
-									expect(links.length).to.eq(2);
+									expect(links.length).to.eq(3);
 									const resetPasswordLink = links.find((s) =>
 										s.text?.includes('Reset password'),
 									);

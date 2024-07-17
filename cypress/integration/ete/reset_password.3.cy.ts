@@ -447,7 +447,7 @@ describe('Password reset flow in Okta', () => {
 						).then(({ links, body }) => {
 							expect(body).to.have.string('Password reset');
 							expect(body).to.have.string('Reset password');
-							expect(links.length).to.eq(2);
+							expect(links.length).to.eq(3);
 							const resetPasswordLink = links.find((s) =>
 								s.text?.includes('Reset password'),
 							);
@@ -499,7 +499,7 @@ describe('Password reset flow in Okta', () => {
 						).then(({ links, body }) => {
 							expect(body).to.have.string('Password reset');
 							expect(body).to.have.string('Reset password');
-							expect(links.length).to.eq(2);
+							expect(links.length).to.eq(3);
 							const resetPasswordLink = links.find((s) =>
 								s.text?.includes('Reset password'),
 							);
