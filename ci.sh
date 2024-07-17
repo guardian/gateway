@@ -10,4 +10,9 @@ export GITHUB_RUN_NUMBER=$(( $GITHUB_RUN_NUMBER + $LAST_TEAMCITY_BUILD ))
 pnpm install --frozen-lockfile
 pnpm run test
 pnpm run build
-pnpm run riffraff
+
+# Archive the contents of the build/ directory into a zip file
+# ready for Riff-Raff - this replicates the behaviour of the old
+# @guardian/node-riffraff-artifact.
+cd build
+zip -r ../identity-gateway.zip *
