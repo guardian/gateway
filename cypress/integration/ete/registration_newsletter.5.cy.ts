@@ -218,3 +218,32 @@ describe('Feast newsletter for Feast app', () => {
 		});
 	});
 });
+
+describe('Jobs newsletter for Jobs Site', () => {
+	it('should show the Jobs newsletter and Saturday Edition newsletter if coming from Jobs site', () => {
+		const clientId = 'jobs';
+		cy.visit(`/register/email?clientId=${clientId}`);
+		cy.contains('Guardian jobs newsletter').should('exist');
+		cy.contains('Saturday Edition newsletter').should('exist');
+		cy.contains('Weekend newsletters').should('not.exist');
+		cy.contains('Saturday newsletters').should('not.exist');
+
+		cy.createTestUser({
+			isUserEmailValidated: true,
+		}).then(({ emailAddress, finalPassword }) => {
+			cy.visit(
+				`/signin?returnUrl=${encodeURIComponent(
+					`https://${Cypress.env('BASE_URI')}/welcome/google?clientId=${clientId}`,
+				)}`,
+			);
+			cy.get('input[name=email]').type(emailAddress);
+			cy.get('input[name=password]').type(finalPassword);
+			cy.get('[data-cy="main-form-submit-button"]').click();
+			cy.url().should('include', '/welcome/google');
+			cy.contains('Guardian jobs newsletter').should('exist');
+			cy.contains('Saturday Edition newsletter').should('exist');
+			cy.contains('Weekend newsletters').should('not.exist');
+			cy.contains('Saturday newsletters').should('not.exist');
+		});
+	});
+});
