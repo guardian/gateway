@@ -25,3 +25,13 @@ export const AU = () => {
 	return <RegistrationConsents geolocation="AU" />;
 };
 AU.storyName = 'AU geolocation';
+
+export const Feast = () => {
+	return <RegistrationConsents appName="Feast" />;
+};
+Feast.storyName = 'Feast app';
+
+export const Jobs = () => {
+	return <RegistrationConsents isJobs />;
+};
+Jobs.storyName = 'Jobs site';
