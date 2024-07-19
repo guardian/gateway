@@ -63,6 +63,11 @@ export const RegistrationConsents = ({
 		if (registrationNewsletter === RegistrationNewslettersFormFieldsMap.feast) {
 			return false;
 		}
+
+		if (isJobs) {
+			return false;
+		}
+
 		return true;
 	})();
 
