@@ -96,3 +96,14 @@ export const FeastApp = (args: RegistrationProps) => (
 FeastApp.story = {
 	name: 'with Feast app',
 };
+
+export const JobsSite = (args: RegistrationProps) => (
+	<RegisterWithEmail
+		{...args}
+		queryParams={{ clientId: 'jobs', returnUrl: '#' }}
+	/>
+);
+
+JobsSite.story = {
+	name: 'with Jobs site',
+};

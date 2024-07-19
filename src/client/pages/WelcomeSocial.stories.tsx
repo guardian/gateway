@@ -59,3 +59,11 @@ export const FeastApp = (args: WelcomeSocialProps) => (
 FeastApp.story = {
 	name: 'with Feast app',
 };
+
+export const JobsSite = (args: WelcomeSocialProps) => (
+	<WelcomeSocial {...args} queryParams={{ clientId: 'jobs', returnUrl: '#' }} />
+);
+
+JobsSite.story = {
+	name: 'with Jobs site',
+};
