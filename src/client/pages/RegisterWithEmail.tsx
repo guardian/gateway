@@ -32,6 +32,8 @@ export const RegisterWithEmail = ({
 
 	usePageLoadOphanInteraction(formTrackingName);
 
+	const isJobs = queryParams.clientId === 'jobs';
+
 	return (
 		<MinimalLayout pageHeader="Create your account">
 			<MainForm
@@ -48,7 +50,11 @@ export const RegisterWithEmail = ({
 				additionalTerms={newsletterAdditionalTerms}
 			>
 				<EmailInput defaultValue={email} autoComplete="off" />
-				<RegistrationConsents geolocation={geolocation} appName={appName} />
+				<RegistrationConsents
+					geolocation={geolocation}
+					appName={appName}
+					isJobs={isJobs}
+				/>
 			</MainForm>
 			<Divider spaceAbove="tight" size="full" cssOverrides={divider} />
 			<MainBodyText>

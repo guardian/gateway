@@ -51,6 +51,10 @@ export const bodyFormFieldsToRegistrationConsents = (
 				default:
 					return [newsletter];
 			}
+		})
+		.filter((newsletter, index, array) => {
+			// Filter out duplicates based on the ID
+			return array.findIndex((n) => n.id === newsletter.id) === index;
 		}),
 });
 

@@ -50,6 +50,7 @@ export const ALL_NEWSLETTER_IDS = Object.values(Newsletters);
 type RegistrationNewsletterFormIds =
 	| 'saturdayEdition'
 	| 'feast'
+	| 'jobs'
 	| 'auBundle'
 	| 'usBundle';
 
@@ -74,6 +75,12 @@ export const RegistrationNewslettersFormFieldsMap: Record<
 		label: 'Feast newsletter',
 		context:
 			'A weekly email from Yotam Ottolenghi, Meera Sodha, Felicity Cloake and Rachel Roddy, featuring the latest recipes and seasonal eating ideas.',
+	},
+	jobs: {
+		id: Newsletters.SATURDAY_EDITION,
+		label: 'Saturday Edition newsletter',
+		context:
+			'You may be interested in this exclusive email highlighting the week’s best Guardian journalism from the editor-in-chief, Katharine Viner. Toggle to opt out.',
 	},
 	auBundle: {
 		id: Newsletters.AU_BUNDLE,
