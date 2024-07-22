@@ -17,18 +17,16 @@ export const ResetPassword = () => {
 			<Text>
 				You&apos;ve asked us to send you a link to reset your password.
 			</Text>
-			<Text noPaddingBottom>
-				This link is valid for 60 minutes. If your link has expired, please try{' '}
-				<Link href="https://profile.theguardian.com/reset-password">
-					resetting your password again
-				</Link>
-				.
-			</Text>
+			<Text noPaddingBottom>This link is valid for 60 minutes.</Text>
 			<Button href={'$passwordResetLink'}>Reset password</Button>
 			<Footer
 				mistakeParagraphComponent={
 					<>
-						If you didn&apos;t request to reset your password, please ignore
+						If your link has expired, please try{' '}
+						<Link href="https://profile.theguardian.com/reset-password">
+							resetting your password again
+						</Link>
+						. If you didn&apos;t request to reset your password, please ignore
 						this email. Your details won&apos;t be changed and no one has
 						accessed your account.
 					</>
