@@ -130,6 +130,8 @@ export const loginMiddlewareOAuth = async (
 		} else {
 			trackMetric('LoginMiddlewareOAuth::OAuthTokensInvalid');
 		}
+	} else {
+		trackMetric('LoginMiddlewareOAuth::NoOAuthTokens');
 	}
 
 	// no: attempt to do auth code flow to get new tokens
