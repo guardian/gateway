@@ -21,7 +21,6 @@ export interface Configuration {
 	encryptionSecretKey: string;
 	oauthBaseUrl: string;
 	okta: Okta;
-	aws: AWSConfiguration;
 	githubRunNumber: string;
 	sentryDsn: string;
 	redis: RedisConfiguration;
@@ -33,11 +32,6 @@ export interface Configuration {
 		url: string;
 		apiKey: string;
 	};
-}
-
-export interface AWSConfiguration {
-	kinesisStreamName: string;
-	instanceId: string;
 }
 
 export interface Okta {

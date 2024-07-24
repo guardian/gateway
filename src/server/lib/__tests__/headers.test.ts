@@ -29,7 +29,6 @@ jest.mock('@/server/lib/serverSideLogger', () => ({
 }));
 jest.mock('@aws-sdk/credential-providers');
 jest.mock('@smithy/node-http-handler');
-jest.mock('@aws-sdk/client-kinesis');
 jest.mock('@aws-sdk/client-sesv2');
 jest.mock('@aws-sdk/client-cloudwatch');
 jest.mock('@/server/lib/getAssets', () => ({

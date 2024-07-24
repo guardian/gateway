@@ -107,10 +107,6 @@ describe('getConfiguration', () => {
 					GuardianUserAll: 'okta-guardian-users-group-id',
 				},
 			},
-			aws: {
-				kinesisStreamName: '',
-				instanceId: '',
-			},
 			githubRunNumber: '5',
 			sentryDsn: 'sentry-dsn',
 			redis: {

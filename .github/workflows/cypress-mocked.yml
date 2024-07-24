@@ -107,7 +107,6 @@ jobs:
           OKTA_IDP_APPLE: oktaappleidp
           OKTA_IDP_GOOGLE: oktagoogleidp
           OKTA_GUARDIAN_USERS_ALL_GROUP_ID: oktaGuardianUserGroupId
-          LOGGING_KINESIS_STREAM: ''
           EC2_INSTANCE_ID: ''
           # This is a public URL+key sent to Sentry on the client side
           # We disable Sentry for our tests

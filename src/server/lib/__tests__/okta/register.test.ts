@@ -42,10 +42,6 @@ jest.mock('@/server/lib/getConfiguration', () => ({
 				GuardianUserAll: 'okta-guardian-users-group-id',
 			},
 		},
-		aws: {
-			instanceId: 'instanceId',
-			kinesisStreamName: 'kinesisStreamName',
-		},
 	}),
 }));
 

@@ -1,5 +1,4 @@
 import {
-	AWSConfiguration,
 	Configuration,
 	GU_API_DOMAIN,
 	GU_DOMAIN,
@@ -201,25 +200,6 @@ export const getConfiguration = (): Configuration => {
 	const sentryDsn = getOrDefault(process.env.SENTRY_DSN, '');
 	const githubRunNumber = getOrDefault(process.env.GITHUB_RUN_NUMBER, '0');
 
-	const aws: AWSConfiguration = {
-		kinesisStreamName:
-			stage === 'DEV'
-				? process.env.LOGGING_KINESIS_STREAM || ''
-				: getOrThrow(
-						process.env.LOGGING_KINESIS_STREAM,
-						'LOGGING_KINESIS_STREAM missing',
-						false,
-					),
-		instanceId:
-			stage === 'DEV'
-				? ''
-				: getOrThrow(
-						process.env.EC2_INSTANCE_ID,
-						'EC2_INSTANCE_ID missing',
-						false,
-					),
-	};
-
 	const redis: RedisConfiguration = {
 		password: getOrThrow(process.env.REDIS_PASSWORD, 'Redis Password Missing'),
 		host: getOrThrow(process.env.REDIS_HOST, 'Redis Host missing'),
@@ -257,7 +237,6 @@ export const getConfiguration = (): Configuration => {
 		encryptionSecretKey,
 		oauthBaseUrl,
 		okta,
-		aws,
 		githubRunNumber,
 		sentryDsn,
 		redis,

@@ -68,19 +68,19 @@ export const trackMetric = (
 
 				if (error.name === 'TimeoutError') {
 					logger.warn(error.message);
-					logger.warn('Timeout when attempting to log to kinesis stream.');
+					logger.warn('Timeout when attempting to record to cloudwatch.');
 				}
 
 				if (
 					error.name !== 'TimeoutError' &&
 					error.name !== 'ExpiredTokenException'
 				) {
-					logger.warn('Error when attempting to log to kinesis stream.');
+					logger.warn('Error when attempting to record to cloudwatch.');
 					logger.warn(error.name);
 					logger.warn(error.message);
 				}
 			} else {
-				logger.warn('Unknown error when attempting to log to kinesis stream.');
+				logger.warn('Unknown error when attempting to record to cloudwatch.');
 				// eslint-disable-next-line no-console
 				console.warn(error);
 			}
