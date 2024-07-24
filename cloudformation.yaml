@@ -455,7 +455,9 @@ Resources:
     Type: AWS::CloudWatch::Alarm
     Condition: IsProd
     Properties:
-      AlarmName: !Sub '${App}-${Stage} high load balancer latency scaling'
+      AlarmName: !Sub
+        - '${Priority} - ${App}-${Stage} high load balancer latency scaling'
+        - Priority: !FindInMap [StageVariables, AlarmPriorities, P3]
       AlarmDescription: !Sub
         - 'Scale-Up if latency is greater than ${Threshold} seconds over last ${Period} seconds'
         - Period: !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmPeriod]
@@ -494,7 +496,9 @@ Resources:
     Type: AWS::CloudWatch::Alarm
     Condition: IsProd
     Properties:
-      AlarmName: !Sub '${App}-${Stage} high load balancer latency'
+      AlarmName: !Sub
+        - '${Priority} - ${App}-${Stage} high load balancer latency'
+        - Priority: !FindInMap [StageVariables, AlarmPriorities, P3]
       AlarmDescription: !Sub
         - 'Latency is greater than ${Threshold} seconds over ${Period} seconds for last 5 periods'
         - Period: !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmPeriod]
@@ -520,7 +524,9 @@ Resources:
     Condition: IsProd
     Properties:
       ActionsEnabled: 'true'
-      AlarmName: !Sub '${App}-${Stage} insufficient healthy hosts'
+      AlarmName: !Sub
+        - '${Priority} - ${App}-${Stage} insufficient healthy hosts'
+        - Priority: !FindInMap [StageVariables, AlarmPriorities, P3]
       AlarmDescription: There are insufficient healthy hosts
       ComparisonOperator: LessThanThreshold
       EvaluationPeriods: 1
@@ -548,7 +554,9 @@ Resources:
     Condition: IsProd
     Properties:
       ActionsEnabled: 'true'
-      AlarmName: !Sub '${App}-${Stage} sustained 5xx errors'
+      AlarmName: !Sub
+        - '${Priority} - ${App}-${Stage} sustained 5xx errors'
+        - Priority: !FindInMap [StageVariables, AlarmPriorities, P2]
       AlarmDescription: 'Sustained server errors detected'
       AlarmActions:
         - !Ref 'TopicSendEmail'
