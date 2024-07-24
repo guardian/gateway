@@ -455,7 +455,9 @@ Resources:
     Type: AWS::CloudWatch::Alarm
     Condition: IsProd
     Properties:
-      AlarmName: !Sub '${App}-${Stage} high load balancer latency scaling'
+      AlarmName: !Sub
+        - '${Priority} - ${App}-${Stage} high load balancer latency scaling'
+        - Priority: !FindInMap [StageVariables, AlarmPriorities, P3]
       AlarmDescription: !Sub
         - 'Scale-Up if latency is greater than ${Threshold} seconds over last ${Period} seconds'
         - Period: !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmPeriod]
@@ -494,7 +496,9 @@ Resources:
     Type: AWS::CloudWatch::Alarm
     Condition: IsProd
     Properties:
-      AlarmName: !Sub '${App}-${Stage} high load balancer latency'
+      AlarmName: !Sub
+        - '${Priority} - ${App}-${Stage} high load balancer latency'
+        - Priority: !FindInMap [StageVariables, AlarmPriorities, P3]
       AlarmDescription: !Sub
         - 'Latency is greater than ${Threshold} seconds over ${Period} seconds for last 5 periods'
         - Period: !FindInMap [StageVariables, !Ref 'Stage', LatencyAlarmPeriod]
@@ -520,7 +524,9 @@ Resources:
     Condition: IsProd
     Properties:
       ActionsEnabled: 'true'
-      AlarmName: !Sub '${App}-${Stage} insufficient healthy hosts'
+      AlarmName: !Sub
+        - '${Priority} - ${App}-${Stage} insufficient healthy hosts'
+        - Priority: !FindInMap [StageVariables, AlarmPriorities, P3]
       AlarmDescription: There are insufficient healthy hosts
       ComparisonOperator: LessThanThreshold
       EvaluationPeriods: 1
@@ -548,7 +554,9 @@ Resources:
     Condition: IsProd
     Properties:
       ActionsEnabled: 'true'
-      AlarmName: !Sub '${App}-${Stage} sustained 5xx errors'
+      AlarmName: !Sub
+        - '${Priority} - ${App}-${Stage} sustained 5xx errors'
+        - Priority: !FindInMap [StageVariables, AlarmPriorities, P2]
       AlarmDescription: 'Sustained server errors detected'
       AlarmActions:
         - !Ref 'TopicSendEmail'
@@ -598,38 +606,9 @@ Resources:
         - '${Priority} - ${App} ${Stage} has had no new sign-ins in the last 20 minutes'
         - Priority: !FindInMap [StageVariables, AlarmPriorities, P1]
       AlarmDescription: No one has successfully signed ins in the last 20 minutes.
-      Metrics:
-        - Id: totalSignInCount
-          Expression: idapiSignInCount + oktaSignInCount
-          Label: 'Total sign-ins between IDAPI and Okta'
-        - Id: idapiSignInCount
-          MetricStat:
-            Metric:
-              Namespace: Gateway
-              MetricName: 'SignIn::Success'
-              Dimensions:
-                - Name: Stage
-                  Value: !Ref 'Stage'
-                - Name: ApiMode
-                  Value: identity-gateway
-            Period: 1200
-            Stat: Sum
-            Unit: Count
-          ReturnData: false
-        - Id: oktaSignInCount
-          MetricStat:
-            Metric:
-              Namespace: Gateway
-              MetricName: 'OktaSignIn::Success'
-              Dimensions:
-                - Name: Stage
-                  Value: !Ref 'Stage'
-                - Name: ApiMode
-                  Value: identity-gateway
-            Period: 1200
-            Stat: Sum
-            Unit: Count
-          ReturnData: false
+      Namespace: Gateway
+      MetricName: 'OktaSignIn::Success'
+      Statistic: Sum
       ComparisonOperator: LessThanThreshold
       Threshold: 1
       EvaluationPeriods: 1
@@ -645,38 +624,9 @@ Resources:
         - '${Priority} - ${App} ${Stage} has had no new registrations in the last hour'
         - Priority: !FindInMap [StageVariables, AlarmPriorities, P1]
       AlarmDescription: No one has successfully registered in the last hour.
-      Metrics:
-        - Id: totalRegistrationCount
-          Expression: idapiRegistrationCount + oktaRegistrationCount
-          Label: 'Total registrations between IDAPI and Okta'
-        - Id: idapiRegistrationCount
-          MetricStat:
-            Metric:
-              Namespace: Gateway
-              MetricName: 'Register::Success'
-              Dimensions:
-                - Name: Stage
-                  Value: !Ref 'Stage'
-                - Name: ApiMode
-                  Value: identity-gateway
-            Period: 3600
-            Stat: Sum
-            Unit: Count
-          ReturnData: false
-        - Id: oktaRegistrationCount
-          MetricStat:
-            Metric:
-              Namespace: Gateway
-              MetricName: 'OktaRegistration::Success'
-              Dimensions:
-                - Name: Stage
-                  Value: !Ref 'Stage'
-                - Name: ApiMode
-                  Value: identity-gateway
-            Period: 3600
-            Stat: Sum
-            Unit: Count
-          ReturnData: false
+      Namespace: Gateway
+      MetricName: 'OktaRegistration::Success'
+      Statistic: Sum
       ComparisonOperator: LessThanThreshold
       Threshold: 1
       EvaluationPeriods: 1

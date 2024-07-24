@@ -6,19 +6,12 @@ import { IDXPath } from '@/server/lib/okta/idx/shared';
 
 // Specific emails to track
 type EmailMetrics =
-	| 'AccountExists'
-	| 'AccountExistsWithoutPassword'
-	| 'AccountVerification'
-	| 'CreatePassword'
-	| 'ResetPassword'
 	| 'OktaAccountExists'
 	| 'OktaAccountExistsWithoutPassword'
 	| 'OktaCompleteRegistration'
 	| 'OktaCreatePassword'
 	| 'OktaResetPassword'
-	| 'OktaUnvalidatedEmailResetPassword'
-	| 'GuardianLiveOffer'
-	| 'MyGuardianOffer';
+	| 'OktaUnvalidatedEmailResetPassword';
 
 // Rate limit buckets to track
 type RateLimitMetrics = BucketType;
@@ -26,18 +19,15 @@ type RateLimitMetrics = BucketType;
 // Any metrics with conditions to append to the end
 // i.e ::Success or ::Failure
 type ConditionalMetrics =
-	| 'AccountVerification'
 	| 'BreachedPasswordCheck'
 	| 'ChangeEmail'
 	| 'ConsentToken'
 	| 'ConsentTokenResend'
 	| `${EmailMetrics}EmailSend`
-	| 'EmailValidated'
+	| 'JobsGRSGroupAgree'
 	| 'NewAccountReview'
 	| 'NewAccountReviewSubmit'
 	| 'NewAccountNewslettersSubmit'
-	| 'JobsGRSGroupAgree'
-	| 'LoginMiddleware'
 	| 'OAuthAuthorization'
 	| 'OAuthApplicationCallback'
 	| 'OAuthAuthenticationCallback'
@@ -57,25 +47,17 @@ type ConditionalMetrics =
 	| 'OktaValidatePasswordToken'
 	| 'OktaWelcome'
 	| 'OktaWelcomeResendEmail'
-	| 'Register'
-	| 'SendValidationEmail'
-	| 'SignIn'
+	| 'RecaptchaMiddleware'
 	| 'SignOut'
 	| 'SignOutGlobal'
-	| 'Unsubscribe'
-	| 'UnsubscribeAll'
 	| 'Subscribe'
-	| 'UpdatePassword'
-	| 'RecaptchaMiddleware'
-	| 'ValidatePasswordToken';
+	| 'Unsubscribe'
+	| 'UnsubscribeAll';
 
 // Unconditional metrics that we want to track directly
 type UnconditionalMetrics =
 	| 'PasswordCheck::Breached'
 	| 'PasswordCheck::NotBreached'
-	| 'LoginMiddlewareNotRecent'
-	| 'LoginMiddlewareNotSignedIn'
-	| 'LoginMiddlewareUnverified'
 	| 'LoginMiddlewareOAuth::HasOAuthTokens'
 	| 'LoginMiddlewareOAuth::NoOAuthTokens'
 	| 'LoginMiddlewareOAuth::NoOktaSession'
