@@ -1,6 +1,6 @@
 import { fromNodeProviderChain } from '@aws-sdk/credential-providers';
 import { NodeHttpHandler } from '@smithy/node-http-handler';
-import { KinesisClientConfig } from '@aws-sdk/client-kinesis';
+import { CloudWatchClientConfig } from '@aws-sdk/client-cloudwatch';
 
 const AWS_REGION = 'eu-west-1';
 
@@ -12,10 +12,10 @@ const CREDENTIAL_PROVIDER = fromNodeProviderChain({
 	profile: PROFILE,
 });
 
-// shared config for all aws clients, using the KinesisClientConfig type as
+// shared config for all aws clients, using the CloudwatchClientConfig type as
 // the base type for the shared config
 type SharedAwsConfig = Pick<
-	KinesisClientConfig,
+	CloudWatchClientConfig,
 	'region' | 'credentials' | 'maxAttempts' | 'requestHandler'
 >;
 

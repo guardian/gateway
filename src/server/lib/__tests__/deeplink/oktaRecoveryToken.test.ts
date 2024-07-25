@@ -22,10 +22,6 @@ jest.mock('@/server/lib/getConfiguration', () => ({
 				GuardianUserAll: 'okta-guardian-users-group-id',
 			},
 		},
-		aws: {
-			instanceId: 'instanceId',
-			kinesisStreamName: 'kinesisStreamName',
-		},
 		// valid encryption key, only used for testing, hence safe to hardcode
 		encryptionSecretKey:
 			'f3d87b231ddd6f50d99e227c5bc9b7cbb649387b321008df412fd73805ac2e32',

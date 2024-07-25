@@ -124,10 +124,19 @@ Resources:
                 Action: s3:GetObject
                 Resource:
                   - !Sub arn:aws:s3:::${IdentityConfigBucket}/${Stage}/${App}/*
+        - PolicyName: DevxLogs
+          PolicyDocument:
+            Statement:
               - Effect: Allow
                 Action:
-                  - kinesis:Describe*
-                  - kinesis:Put*
+                  - ec2:DescribeTags
+                  - ec2:DescribeInstances
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - kinesis:DescribeStream
+                  - kinesis:PutRecord
+                  - kinesis:PutRecords
                 Resource:
                   - !Sub arn:aws:kinesis:${AWS::Region}:${AWS::AccountId}:stream/${KinesisStream}
         - PolicyName: GetParameters
@@ -231,6 +240,12 @@ Resources:
         - Key: Stage
           Value: !Ref Stage
           PropagateAtLaunch: true
+        - Key: LogKinesisStreamName
+          Value: !Ref KinesisStream
+          PropagateAtLaunch: true
+        - Key: SystemdUnit
+          Value: identity-gateway.service
+          PropagateAtLaunch: true
   LaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
     Properties:
@@ -300,10 +315,10 @@ Resources:
               # systemd setup
               cat > /etc/systemd/system/identity-gateway.service <<EOL
               [Service]
-              ExecStart=/bin/sh -ec '/usr/bin/node /etc/gu/server.js > /var/log/identity-gateway.log 2>&1'
+              ExecStart=/bin/sh -ec '/usr/bin/node /etc/gu/server.js 2>&1'
               Restart=always
-              StandardOutput=syslog
-              StandardError=syslog
+              StandardOutput=journal
+              StandardError=journal
               SyslogIdentifier=identity-gateway
               User=identity-gateway
               Group=identity-gateway
@@ -329,8 +344,6 @@ Resources:
               Environment=OKTA_IDP_APPLE=$OKTA_IDP_APPLE
               Environment=OKTA_IDP_GOOGLE=$OKTA_IDP_GOOGLE
               Environment=OKTA_GUARDIAN_USERS_ALL_GROUP_ID=$OKTA_GUARDIAN_USERS_ALL_GROUP_ID            
-              Environment=LOGGING_KINESIS_STREAM=${KinesisStream}
-              Environment=EC2_INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
               Environment=SENTRY_DSN=${SentryDsn}
               Environment=REDIS_PASSWORD=$REDIS_PASSWORD
               Environment=REDIS_HOST=${RedisHost}
