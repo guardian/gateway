@@ -165,7 +165,18 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
         ],
         "AlarmDescription": "Sustained server errors detected",
         "AlarmName": {
-          "Fn::Sub": "\${App}-\${Stage} sustained 5xx errors",
+          "Fn::Sub": [
+            "\${Priority} - \${App}-\${Stage} sustained 5xx errors",
+            {
+              "Priority": {
+                "Fn::FindInMap": [
+                  "StageVariables",
+                  "AlarmPriorities",
+                  "P2",
+                ],
+              },
+            },
+          ],
         },
         "ComparisonOperator": "GreaterThanOrEqualToThreshold",
         "EvaluationPeriods": 5,
@@ -291,7 +302,18 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
           ],
         },
         "AlarmName": {
-          "Fn::Sub": "\${App}-\${Stage} high load balancer latency",
+          "Fn::Sub": [
+            "\${Priority} - \${App}-\${Stage} high load balancer latency",
+            {
+              "Priority": {
+                "Fn::FindInMap": [
+                  "StageVariables",
+                  "AlarmPriorities",
+                  "P3",
+                ],
+              },
+            },
+          ],
         },
         "ComparisonOperator": "GreaterThanOrEqualToThreshold",
         "Dimensions": [
@@ -365,7 +387,18 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
         ],
         "AlarmDescription": "There are insufficient healthy hosts",
         "AlarmName": {
-          "Fn::Sub": "\${App}-\${Stage} insufficient healthy hosts",
+          "Fn::Sub": [
+            "\${Priority} - \${App}-\${Stage} insufficient healthy hosts",
+            {
+              "Priority": {
+                "Fn::FindInMap": [
+                  "StageVariables",
+                  "AlarmPriorities",
+                  "P3",
+                ],
+              },
+            },
+          ],
         },
         "ComparisonOperator": "LessThanThreshold",
         "Dimensions": [
@@ -470,10 +503,27 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
                     },
                   ],
                 },
+              ],
+              "Version": "2012-10-17",
+            },
+            "PolicyName": "root",
+          },
+          {
+            "PolicyDocument": {
+              "Statement": [
                 {
                   "Action": [
-                    "kinesis:Describe*",
-                    "kinesis:Put*",
+                    "ec2:DescribeTags",
+                    "ec2:DescribeInstances",
+                  ],
+                  "Effect": "Allow",
+                  "Resource": "*",
+                },
+                {
+                  "Action": [
+                    "kinesis:DescribeStream",
+                    "kinesis:PutRecord",
+                    "kinesis:PutRecords",
                   ],
                   "Effect": "Allow",
                   "Resource": [
@@ -483,9 +533,8 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
                   ],
                 },
               ],
-              "Version": "2012-10-17",
             },
-            "PolicyName": "root",
+            "PolicyName": "DevxLogs",
           },
           {
             "PolicyDocument": {
@@ -646,6 +695,13 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
             "Value": "guardian/gateway",
           },
           {
+            "Key": "LogKinesisStreamName",
+            "PropagateAtLaunch": true,
+            "Value": {
+              "Ref": "KinesisStream",
+            },
+          },
+          {
             "Key": "Name",
             "PropagateAtLaunch": true,
             "Value": {
@@ -661,6 +717,11 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
             "Key": "Stage",
             "PropagateAtLaunch": true,
             "Value": "TEST",
+          },
+          {
+            "Key": "SystemdUnit",
+            "PropagateAtLaunch": true,
+            "Value": "identity-gateway.service",
           },
         ],
         "TargetGroupARNs": [
@@ -768,7 +829,18 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
           ],
         },
         "AlarmName": {
-          "Fn::Sub": "\${App}-\${Stage} high load balancer latency scaling",
+          "Fn::Sub": [
+            "\${Priority} - \${App}-\${Stage} high load balancer latency scaling",
+            {
+              "Priority": {
+                "Fn::FindInMap": [
+                  "StageVariables",
+                  "AlarmPriorities",
+                  "P3",
+                ],
+              },
+            },
+          ],
         },
         "ComparisonOperator": "GreaterThanOrEqualToThreshold",
         "Dimensions": [
@@ -960,10 +1032,10 @@ done
 # systemd setup
 cat > /etc/systemd/system/identity-gateway.service <<EOL
 [Service]
-ExecStart=/bin/sh -ec '/usr/bin/node /etc/gu/server.js > /var/log/identity-gateway.log 2>&1'
+ExecStart=/bin/sh -ec '/usr/bin/node /etc/gu/server.js 2>&1'
 Restart=always
-StandardOutput=syslog
-StandardError=syslog
+StandardOutput=journal
+StandardError=journal
 SyslogIdentifier=identity-gateway
 User=identity-gateway
 Group=identity-gateway
@@ -989,8 +1061,6 @@ Environment=OKTA_CLIENT_SECRET=$OKTA_CLIENT_SECRET
 Environment=OKTA_IDP_APPLE=$OKTA_IDP_APPLE
 Environment=OKTA_IDP_GOOGLE=$OKTA_IDP_GOOGLE
 Environment=OKTA_GUARDIAN_USERS_ALL_GROUP_ID=$OKTA_GUARDIAN_USERS_ALL_GROUP_ID            
-Environment=LOGGING_KINESIS_STREAM=\${KinesisStream}
-Environment=EC2_INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
 Environment=SENTRY_DSN=\${SentryDsn}
 Environment=REDIS_PASSWORD=$REDIS_PASSWORD
 Environment=REDIS_HOST=\${RedisHost}
@@ -1196,12 +1266,12 @@ systemctl start identity-gateway
         ],
         "Metrics": [
           {
-            "Expression": "idapiRegistrationCount + oktaRegistrationCount",
+            "Expression": "oktaIdxRegistrationCount + oktaRegistrationCount",
             "Id": "totalRegistrationCount",
-            "Label": "Total registrations between IDAPI and Okta",
+            "Label": "Total registrations in Okta Classic and Okta IDX",
           },
           {
-            "Id": "idapiRegistrationCount",
+            "Id": "oktaIdxRegistrationCount",
             "MetricStat": {
               "Metric": {
                 "Dimensions": [
@@ -1216,7 +1286,7 @@ systemctl start identity-gateway
                     "Value": "identity-gateway",
                   },
                 ],
-                "MetricName": "Register::Success",
+                "MetricName": "OktaIDXRegister::Success",
                 "Namespace": "Gateway",
               },
               "Period": 3600,
@@ -1327,34 +1397,9 @@ systemctl start identity-gateway
         ],
         "Metrics": [
           {
-            "Expression": "idapiSignInCount + oktaSignInCount",
+            "Expression": "oktaSignInCount",
             "Id": "totalSignInCount",
-            "Label": "Total sign-ins between IDAPI and Okta",
-          },
-          {
-            "Id": "idapiSignInCount",
-            "MetricStat": {
-              "Metric": {
-                "Dimensions": [
-                  {
-                    "Name": "Stage",
-                    "Value": {
-                      "Ref": "Stage",
-                    },
-                  },
-                  {
-                    "Name": "ApiMode",
-                    "Value": "identity-gateway",
-                  },
-                ],
-                "MetricName": "SignIn::Success",
-                "Namespace": "Gateway",
-              },
-              "Period": 1200,
-              "Stat": "Sum",
-              "Unit": "Count",
-            },
-            "ReturnData": false,
+            "Label": "Total sign-ins in Okta",
           },
           {
             "Id": "oktaSignInCount",
