@@ -11,6 +11,14 @@ pnpm install --frozen-lockfile
 pnpm run test
 pnpm run build
 
+(
+    cd ./cdk
+    pnpm install --frozen-lockfile
+    pnpm run test
+    pnpm run lint
+    pnpm run synth
+)
+
 # Archive the contents of the build/ directory into a zip file
 # ready for Riff-Raff - this replicates the behaviour of the old
 # @guardian/node-riffraff-artifact.
