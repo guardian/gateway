@@ -11,7 +11,9 @@ deployments:
       amiTags:
         Recipe: gateway-arm64
         AmigoStage: PROD
-      templatePath: cloudformation.yaml
+      templateStagePaths:
+        CODE: IdentityGateway-euwest-1-CODE.template.json
+        PROD: IdentityGateway-euwest-1-PROD.template.json
       amiEncrypted: true
     dependencies:
       - update-ami
