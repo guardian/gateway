@@ -19,6 +19,8 @@ module.exports = {
 		'<rootDir>/node_modules/',
 		'utils',
 		'<rootDir>/src/server/lib/__tests__/sharedConfig.ts',
+		// TODO: Shared Jest config between Gateway and CDK? Monorepo?
+		'cdk',
 	],
 	transform: {
 		'<regex_match_files>': [
