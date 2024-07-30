@@ -95,7 +95,7 @@
 		"fork-ts-checker-notifier-webpack-plugin": "^9.0.0",
 		"fork-ts-checker-webpack-plugin": "^9.0.2",
 		"husky": "^9.1.1",
-		"image-minimizer-webpack-plugin": "^4.0.2",
+		"image-minimizer-webpack-plugin": "^4.1.0",
 		"imagemin": "^9.0.0",
 		"ioredis-mock": "^8.9.0",
 		"jest": "^29.7.0",

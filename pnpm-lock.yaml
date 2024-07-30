@@ -298,8 +298,8 @@ importers:
         specifier: ^9.1.1
         version: 9.1.1
       image-minimizer-webpack-plugin:
-        specifier: ^4.0.2
-        version: 4.0.2(imagemin@9.0.0)(sharp@0.33.4)(webpack@5.93.0(@swc/core@1.7.3)(esbuild@0.21.5)(webpack-cli@5.1.4))
+        specifier: ^4.1.0
+        version: 4.1.0(imagemin@9.0.0)(sharp@0.33.4)(webpack@5.93.0(@swc/core@1.7.3)(esbuild@0.21.5)(webpack-cli@5.1.4))
       imagemin:
         specifier: ^9.0.0
         version: 9.0.0
@@ -4657,8 +4657,8 @@ packages:
     resolution: {integrity: sha512-5Fytz/IraMjqpwfd34ke28PTVMjZjJG2MPn5t7OE4eUCUNf8BAa7b5WUS9/Qvr6mwOQS7Mk6vdsMno5he+T8Xw==}
     engines: {node: '>= 4'}
 
-  image-minimizer-webpack-plugin@4.0.2:
-    resolution: {integrity: sha512-/A7yc5r/6wQBF/AvVPO8eEroV2XwBFg36+7staL2M88E4VrcjSSjkNJn4dUizw3FAZ/GXO8A7IwWrIGC0f2tCg==}
+  image-minimizer-webpack-plugin@4.1.0:
+    resolution: {integrity: sha512-HZwGd1CxApD3Vi+/k1Vz+Lksooz2TIkCcfejhCkqUfHPRByIYY0HD5RvsxTAMU8nlom+WeknF6f7+2ZQSKiw2g==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
       '@squoosh/lib': '*'
@@ -12956,7 +12956,7 @@ snapshots:
 
   ignore@5.3.1: {}
 
-  image-minimizer-webpack-plugin@4.0.2(imagemin@9.0.0)(sharp@0.33.4)(webpack@5.93.0(@swc/core@1.7.3)(esbuild@0.21.5)(webpack-cli@5.1.4)):
+  image-minimizer-webpack-plugin@4.1.0(imagemin@9.0.0)(sharp@0.33.4)(webpack@5.93.0(@swc/core@1.7.3)(esbuild@0.21.5)(webpack-cli@5.1.4)):
     dependencies:
       schema-utils: 4.2.0
       serialize-javascript: 6.0.2
