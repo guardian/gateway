@@ -691,3 +691,69 @@ Resources:
         - !Ref 'TopicSendEmail'
       InsufficientDataActions:
         - !Ref 'TopicSendEmail'
+  OAuthAuthenticationCallbackInactivityAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmName: !Sub
+        - '${Priority} - ${App} ${Stage} has had no success OAuth Authorization code flow callbacks for Authentication in the last 20 minutes'
+        - Priority: !FindInMap [StageVariables, AlarmPriorities, P1]
+      AlarmDescription: No one has successfully completed OAuth Authorization code flow callbacks for Authentication in the last 20 minutes.
+      Metrics:
+        - Id: totalOAuthAuthenticationCallbackCount
+          Expression: oktaOAuthAuthenticationCallbackCount
+          Label: 'Total OAuth Authorization Callbacks for Authentication in Okta'
+        - Id: oktaOAuthAuthenticationCallbackCount
+          MetricStat:
+            Metric:
+              Namespace: Gateway
+              MetricName: 'OAuthAuthenticationCallback::Success'
+              Dimensions:
+                - Name: Stage
+                  Value: !Ref 'Stage'
+                - Name: ApiMode
+                  Value: identity-gateway
+            Period: 1200
+            Stat: Sum
+            Unit: Count
+          ReturnData: false
+      ComparisonOperator: LessThanThreshold
+      Threshold: 1
+      EvaluationPeriods: 1
+      AlarmActions:
+        - !Ref 'TopicSendEmail'
+      InsufficientDataActions:
+        - !Ref 'TopicSendEmail'
+  OAuthApplicationCallbackInactivityAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmName: !Sub
+        - '${Priority} - ${App} ${Stage} has had no success OAuth Authorization code flow callbacks for internal Gateway routes in the last 1 hour'
+        - Priority: !FindInMap [StageVariables, AlarmPriorities, P1]
+      AlarmDescription: No one has successfully completed OAuth Authorization code flow callbacks for internal Gateway routes in the last 1 hour.
+      Metrics:
+        - Id: totalOAuthApplicationCallbackCount
+          Expression: oktaOAuthApplicationCallbackCount
+          Label: 'Total OAuth Authorization Callbacks for internal Gateway routes in Okta'
+        - Id: oktaOAuthApplicationCallbackCount
+          MetricStat:
+            Metric:
+              Namespace: Gateway
+              MetricName: 'OAuthApplicationCallback::Success'
+              Dimensions:
+                - Name: Stage
+                  Value: !Ref 'Stage'
+                - Name: ApiMode
+                  Value: identity-gateway
+            Period: 3600
+            Stat: Sum
+            Unit: Count
+          ReturnData: false
+      ComparisonOperator: LessThanThreshold
+      Threshold: 1
+      EvaluationPeriods: 1
+      AlarmActions:
+        - !Ref 'TopicSendEmail'
+      InsufficientDataActions:
+        - !Ref 'TopicSendEmail'
