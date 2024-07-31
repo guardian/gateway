@@ -757,3 +757,36 @@ Resources:
         - !Ref 'TopicSendEmail'
       InsufficientDataActions:
         - !Ref 'TopicSendEmail'
+  DeletionInactivityAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmName: !Sub
+        - '${Priority} - ${App} ${Stage} has had no success self service user deletion in the last 6 hours'
+        - Priority: !FindInMap [StageVariables, AlarmPriorities, P2]
+      AlarmDescription: No one has successfully deleted their account in the last 6 hours.
+      Metrics:
+        - Id: totalDeletionCount
+          Expression: deleteAccountCount
+          Label: 'Total self service user deletions'
+        - Id: deleteAccountCount
+          MetricStat:
+            Metric:
+              Namespace: Gateway
+              MetricName: 'OAuthDeleteCallback::Success'
+              Dimensions:
+                - Name: Stage
+                  Value: !Ref 'Stage'
+                - Name: ApiMode
+                  Value: identity-gateway
+            Period: 21600
+            Stat: Sum
+            Unit: Count
+          ReturnData: false
+      ComparisonOperator: LessThanThreshold
+      Threshold: 1
+      EvaluationPeriods: 1
+      AlarmActions:
+        - !Ref 'TopicSendEmail'
+      InsufficientDataActions:
+        - !Ref 'TopicSendEmail'
