@@ -735,6 +735,90 @@ exports[`The IdentityGateway stack matches the snapshot 1`] = `
       },
       "Type": "AWS::AutoScaling::AutoScalingGroup",
     },
+    "DeletionInactivityAlarm": {
+      "Condition": "IsProd",
+      "Properties": {
+        "AlarmActions": [
+          {
+            "Ref": "TopicSendEmail",
+          },
+        ],
+        "AlarmDescription": "No one has successfully deleted their account in the last 6 hours.",
+        "AlarmName": {
+          "Fn::Sub": [
+            "\${Priority} - \${App} \${Stage} has had no success self service user deletion in the last 6 hours",
+            {
+              "Priority": {
+                "Fn::FindInMap": [
+                  "StageVariables",
+                  "AlarmPriorities",
+                  "P2",
+                ],
+              },
+            },
+          ],
+        },
+        "ComparisonOperator": "LessThanThreshold",
+        "EvaluationPeriods": 1,
+        "InsufficientDataActions": [
+          {
+            "Ref": "TopicSendEmail",
+          },
+        ],
+        "Metrics": [
+          {
+            "Expression": "deleteAccountCount",
+            "Id": "totalDeletionCount",
+            "Label": "Total self service user deletions",
+          },
+          {
+            "Id": "deleteAccountCount",
+            "MetricStat": {
+              "Metric": {
+                "Dimensions": [
+                  {
+                    "Name": "Stage",
+                    "Value": {
+                      "Ref": "Stage",
+                    },
+                  },
+                  {
+                    "Name": "ApiMode",
+                    "Value": "identity-gateway",
+                  },
+                ],
+                "MetricName": "OAuthDeleteCallback::Success",
+                "Namespace": "Gateway",
+              },
+              "Period": 21600,
+              "Stat": "Sum",
+              "Unit": "Count",
+            },
+            "ReturnData": false,
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "Threshold": 1,
+      },
+      "Type": "AWS::CloudWatch::Alarm",
+    },
     "GithubActionsSESSendEmailsRole": {
       "Condition": "NotIsProd",
       "Properties": {
@@ -1234,6 +1318,174 @@ systemctl start identity-gateway
       },
       "Type": "AWS::EC2::SecurityGroup",
     },
+    "OAuthApplicationCallbackInactivityAlarm": {
+      "Condition": "IsProd",
+      "Properties": {
+        "AlarmActions": [
+          {
+            "Ref": "TopicSendEmail",
+          },
+        ],
+        "AlarmDescription": "No one has successfully completed OAuth Authorization code flow callbacks for internal Gateway routes in the last 1 hour.",
+        "AlarmName": {
+          "Fn::Sub": [
+            "\${Priority} - \${App} \${Stage} has had no success OAuth Authorization code flow callbacks for internal Gateway routes in the last 1 hour",
+            {
+              "Priority": {
+                "Fn::FindInMap": [
+                  "StageVariables",
+                  "AlarmPriorities",
+                  "P1",
+                ],
+              },
+            },
+          ],
+        },
+        "ComparisonOperator": "LessThanThreshold",
+        "EvaluationPeriods": 1,
+        "InsufficientDataActions": [
+          {
+            "Ref": "TopicSendEmail",
+          },
+        ],
+        "Metrics": [
+          {
+            "Expression": "oktaOAuthApplicationCallbackCount",
+            "Id": "totalOAuthApplicationCallbackCount",
+            "Label": "Total OAuth Authorization Callbacks for internal Gateway routes in Okta",
+          },
+          {
+            "Id": "oktaOAuthApplicationCallbackCount",
+            "MetricStat": {
+              "Metric": {
+                "Dimensions": [
+                  {
+                    "Name": "Stage",
+                    "Value": {
+                      "Ref": "Stage",
+                    },
+                  },
+                  {
+                    "Name": "ApiMode",
+                    "Value": "identity-gateway",
+                  },
+                ],
+                "MetricName": "OAuthApplicationCallback::Success",
+                "Namespace": "Gateway",
+              },
+              "Period": 3600,
+              "Stat": "Sum",
+              "Unit": "Count",
+            },
+            "ReturnData": false,
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "Threshold": 1,
+      },
+      "Type": "AWS::CloudWatch::Alarm",
+    },
+    "OAuthAuthenticationCallbackInactivityAlarm": {
+      "Condition": "IsProd",
+      "Properties": {
+        "AlarmActions": [
+          {
+            "Ref": "TopicSendEmail",
+          },
+        ],
+        "AlarmDescription": "No one has successfully completed OAuth Authorization code flow callbacks for Authentication in the last 20 minutes.",
+        "AlarmName": {
+          "Fn::Sub": [
+            "\${Priority} - \${App} \${Stage} has had no success OAuth Authorization code flow callbacks for Authentication in the last 20 minutes",
+            {
+              "Priority": {
+                "Fn::FindInMap": [
+                  "StageVariables",
+                  "AlarmPriorities",
+                  "P1",
+                ],
+              },
+            },
+          ],
+        },
+        "ComparisonOperator": "LessThanThreshold",
+        "EvaluationPeriods": 1,
+        "InsufficientDataActions": [
+          {
+            "Ref": "TopicSendEmail",
+          },
+        ],
+        "Metrics": [
+          {
+            "Expression": "oktaOAuthAuthenticationCallbackCount",
+            "Id": "totalOAuthAuthenticationCallbackCount",
+            "Label": "Total OAuth Authorization Callbacks for Authentication in Okta",
+          },
+          {
+            "Id": "oktaOAuthAuthenticationCallbackCount",
+            "MetricStat": {
+              "Metric": {
+                "Dimensions": [
+                  {
+                    "Name": "Stage",
+                    "Value": {
+                      "Ref": "Stage",
+                    },
+                  },
+                  {
+                    "Name": "ApiMode",
+                    "Value": "identity-gateway",
+                  },
+                ],
+                "MetricName": "OAuthAuthenticationCallback::Success",
+                "Namespace": "Gateway",
+              },
+              "Period": 1200,
+              "Stat": "Sum",
+              "Unit": "Count",
+            },
+            "ReturnData": false,
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "Threshold": 1,
+      },
+      "Type": "AWS::CloudWatch::Alarm",
+    },
     "RegisterInactivityAlarm": {
       "Condition": "IsProd",
       "Properties": {
@@ -1531,6 +1783,90 @@ systemctl start identity-gateway
         ],
       },
       "Type": "AWS::SNS::Topic",
+    },
+    "UnsubscribeAllInactivityAlarm": {
+      "Condition": "IsProd",
+      "Properties": {
+        "AlarmActions": [
+          {
+            "Ref": "TopicSendEmail",
+          },
+        ],
+        "AlarmDescription": "No one has successfully unsubscribed all from email clients in the last hour.",
+        "AlarmName": {
+          "Fn::Sub": [
+            "\${Priority} - \${App} \${Stage} has had successful no unsubscribe all from email clients in the last hour",
+            {
+              "Priority": {
+                "Fn::FindInMap": [
+                  "StageVariables",
+                  "AlarmPriorities",
+                  "P2",
+                ],
+              },
+            },
+          ],
+        },
+        "ComparisonOperator": "LessThanThreshold",
+        "EvaluationPeriods": 1,
+        "InsufficientDataActions": [
+          {
+            "Ref": "TopicSendEmail",
+          },
+        ],
+        "Metrics": [
+          {
+            "Expression": "unsubscribeAllCount",
+            "Id": "totalUnsubscribeAllCount",
+            "Label": "Total unsubscribe all",
+          },
+          {
+            "Id": "unsubscribeAllCount",
+            "MetricStat": {
+              "Metric": {
+                "Dimensions": [
+                  {
+                    "Name": "Stage",
+                    "Value": {
+                      "Ref": "Stage",
+                    },
+                  },
+                  {
+                    "Name": "ApiMode",
+                    "Value": "identity-gateway",
+                  },
+                ],
+                "MetricName": "UnsubscribeAll::Success",
+                "Namespace": "Gateway",
+              },
+              "Period": 3600,
+              "Stat": "Sum",
+              "Unit": "Count",
+            },
+            "ReturnData": false,
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/gateway",
+          },
+          {
+            "Key": "Stack",
+            "Value": "identity",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
+        "Threshold": 1,
+      },
+      "Type": "AWS::CloudWatch::Alarm",
     },
   },
 }
