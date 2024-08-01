@@ -57,5 +57,6 @@
 		"react": {
 			"version": "detect"
 		}
-	}
+	},
+	"ignorePatterns": ["cdk/"]
 }

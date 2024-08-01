@@ -30,4 +30,4 @@ jobs:
             identity-gateway:
               - identity-gateway.zip
             gateway-cloudformation:
-              - cloudformation.yaml
+              - cdk/cdk.out
