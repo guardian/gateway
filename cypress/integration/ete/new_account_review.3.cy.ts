@@ -168,6 +168,11 @@ describe('New account review page', () => {
 });
 
 describe('New account newsletters page', () => {
+	beforeEach(() => {
+		cy.intercept('GET', 'https://m.code.dev-theguardian.com/**', (req) => {
+			req.reply(200);
+		});
+	});
 	it('should not redirect to the newsletters page if the geolocation is UK/EU', () => {
 		// We test that the GB geolocation flow works as expected in the tests above
 		// because they set the geolocation mock cookie to GB, and don't expect a redirect
