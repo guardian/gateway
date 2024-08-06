@@ -22,11 +22,11 @@ module.exports = {
 	},
 	plugins: ['functional'],
 	rules: {
+		// React Rules
 		'react/prop-types': 0,
-		'@typescript-eslint/explicit-function-return-type': 0,
-		'@typescript-eslint/explicit-module-boundary-types': 0,
-		'functional/prefer-readonly-type': 0,
-		'functional/no-method-signature': 0,
+		'react/no-unknown-property': ['error', { ignore: ['css'] }],
+
+		// Functional rules
 		'functional/immutable-data': [
 			'error',
 			{
@@ -35,15 +35,13 @@ module.exports = {
 		],
 		'functional/prefer-immutable-types': 0,
 		'functional/type-declaration-immutability': 0,
+
+		// eslint rules
 		'no-var': 'error',
 		'no-param-reassign': 'error',
-		'prefer-const': 'error',
 		'no-sequences': 'error',
 		'no-console': 'error',
-		'react/no-unknown-property': ['error', { ignore: ['css'] }],
-		'require-await': 'error',
-		'@typescript-eslint/await-thenable': 'error',
-		'@typescript-eslint/no-floating-promises': 'error',
+		'prefer-const': 'error',
 	},
 	overrides: [
 		{
