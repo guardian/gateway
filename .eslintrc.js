@@ -83,7 +83,6 @@ module.exports = {
 		'no-useless-catch': 0, // 1
 		'no-irregular-whitespace': 0, // 1
 		'@typescript-eslint/no-unnecessary-type-arguments': 0, // 1
-		'valid-typeof': 0, // 1
 	},
 	overrides: [
 		{
