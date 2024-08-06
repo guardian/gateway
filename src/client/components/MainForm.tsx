@@ -144,7 +144,7 @@ export const MainForm = ({
 				trackFormSubmit(formTrackingName);
 			}
 
-			const errorInSubmitHandler = onSubmit && onSubmit(event)?.errorOccurred;
+			const errorInSubmitHandler = onSubmit?.(event)?.errorOccurred;
 
 			if (disableOnSubmit) {
 				if (errorInSubmitHandler === undefined) {

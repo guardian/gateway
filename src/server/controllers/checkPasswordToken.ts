@@ -113,11 +113,7 @@ export const checkTokenInOkta = async (
 		try {
 			// Read the encrypted state cookie to get the state handle and email
 			const encryptedState = readEncryptedStateCookie(req);
-			if (
-				encryptedState &&
-				encryptedState.email &&
-				encryptedState.stateHandle
-			) {
+			if (encryptedState?.email && encryptedState.stateHandle) {
 				// introspect the stateHandle to make sure it's valid
 				const introspectResponse = await introspect(
 					{

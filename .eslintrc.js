@@ -63,7 +63,6 @@ module.exports = {
 		'@typescript-eslint/array-type': 0, // 18
 		'eslint-comments/no-unused-disable': 0, // 16
 		'@typescript-eslint/restrict-plus-operands': 0, // 14
-		'@typescript-eslint/prefer-optional-chain': 0, // 8
 		'import/no-cycle': 0, // 7
 	},
 	overrides: [
