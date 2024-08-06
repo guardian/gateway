@@ -21,6 +21,7 @@ import {
 	activateUser,
 	reactivateUser,
 	forgotPassword,
+	deactivateUser,
 } from '@/server/lib/okta/api/users';
 import { Status } from '@/server/models/okta/User';
 import { OktaError } from '@/server/models/okta/Error';
@@ -139,31 +140,80 @@ export const sendEmailInOkta = async (
 				}
 				break;
 			case Status.STAGED:
+			case Status.DEPROVISIONED:
 				{
 					// if the user is STAGED, we need to activate them before we can send them an email
 					// this will put them into the PROVISIONED state
 					// we will send them a create password email
-					const tokenResponse = await activateUser(user.id);
-					if (!tokenResponse?.token.length) {
-						throw new OktaError({
-							message: `Okta user activation failed: missing activation token`,
+					try {
+						const tokenResponse = await activateUser(user.id);
+						if (!tokenResponse?.token.length) {
+							throw new OktaError({
+								message: `Okta user activation failed: missing activation token`,
+							});
+						}
+						const emailIsSent = await sendCreatePasswordEmail({
+							to: user.profile.email,
+							setPasswordToken: await encryptOktaRecoveryToken({
+								token: tokenResponse.token,
+								appClientId,
+								request_id,
+							}),
+							ref,
+							refViewId,
 						});
-					}
-					const emailIsSent = await sendCreatePasswordEmail({
-						to: user.profile.email,
-						setPasswordToken: await encryptOktaRecoveryToken({
-							token: tokenResponse.token,
-							appClientId,
-							request_id,
-						}),
-						ref,
-						refViewId,
-					});
-					if (!emailIsSent) {
-						trackMetric(emailSendMetric('OktaCreatePassword', 'Failure'));
-						throw new OktaError({
-							message: `Okta user activation failed: Failed to send email`,
-						});
+						if (!emailIsSent) {
+							trackMetric(emailSendMetric('OktaCreatePassword', 'Failure'));
+							throw new OktaError({
+								message: `Okta user activation failed: Failed to send email`,
+							});
+						}
+					} catch (error) {
+						// these users are in a special state where they used a passcode to create their account
+						// but failed to complete the flow by setting a password, leaving them in an unusual state
+						// where they're in the STAGED state but cannot recover normally
+						// to remediate these users we have to deactivate them
+						// and then reactivate them in order to send them a create password email
+						if (error instanceof OktaError && error.code === 'E0000038') {
+							trackMetric(
+								'PasscodePasswordNotCompleteRemediation-ResetPassword-STAGED-Start',
+							);
+
+							// 1. deactivate the user
+							try {
+								await deactivateUser(user.id);
+								trackMetric('OktaDeactivateUser::Success');
+							} catch (error) {
+								trackMetric('OktaDeactivateUser::Failure');
+								logger.error(
+									'Okta user deactivation failed',
+									error instanceof OktaError ? error.message : error,
+									{
+										request_id,
+									},
+								);
+								throw error;
+							}
+
+							trackMetric(
+								'PasscodePasswordNotCompleteRemediation-ResetPassword-STAGED-Complete',
+							);
+
+							// rerun the sendEmailInOkta function to catch the user in the DEPROVISIONED state
+							return sendEmailInOkta(req, res);
+						}
+
+						logger.error(
+							'Okta user activation failed',
+							error instanceof OktaError ? error.message : error,
+							{
+								request_id,
+							},
+						);
+
+						// otherwise throw the error to the outer catch block
+						// as it's not handled in the if statement above
+						throw error;
 					}
 					trackMetric(emailSendMetric('OktaCreatePassword', 'Success'));
 				}
@@ -173,28 +223,77 @@ export const sendEmailInOkta = async (
 					// if the user is PROVISIONED, we need to reactivate them before we can send them an email
 					// this will keep them in the PROVISIONED state
 					// we will send them a create password email
-					const tokenResponse = await reactivateUser(user.id);
-					if (!tokenResponse?.token.length) {
-						throw new OktaError({
-							message: `Okta user reactivation failed: missing re-activation token`,
+					try {
+						const tokenResponse = await reactivateUser(user.id);
+						if (!tokenResponse?.token.length) {
+							throw new OktaError({
+								message: `Okta user reactivation failed: missing re-activation token`,
+							});
+						}
+						const emailIsSent = await sendCreatePasswordEmail({
+							to: user.profile.email,
+							setPasswordToken: await encryptOktaRecoveryToken({
+								token: tokenResponse.token,
+								appClientId,
+								request_id,
+							}),
+							ref,
+							refViewId,
 						});
+						if (!emailIsSent) {
+							trackMetric(emailSendMetric('OktaCreatePassword', 'Failure'));
+							throw new OktaError({
+								message: `Okta user reactivation failed: Failed to send email`,
+							});
+						}
+					} catch (error) {
+						// these users are in a special state where they used a passcode to create their account
+						// but failed to complete the flow by setting a password, leaving them in an unusual state
+						// where they're in the PROVISIONED state but cannot recover normally
+						// to remediate these users we have to deactivate them
+						// and then reactivate them in order to send them a create password email
+						if (error instanceof OktaError && error.code === 'E0000038') {
+							trackMetric(
+								'PasscodePasswordNotCompleteRemediation-ResetPassword-PROVISIONED-Start',
+							);
+
+							// 1. deactivate the user
+							try {
+								await deactivateUser(user.id);
+								trackMetric('OktaDeactivateUser::Success');
+							} catch (error) {
+								trackMetric('OktaDeactivateUser::Failure');
+								logger.error(
+									'Okta user deactivation failed',
+									error instanceof OktaError ? error.message : error,
+									{
+										request_id,
+									},
+								);
+								throw error;
+							}
+
+							trackMetric(
+								'PasscodePasswordNotCompleteRemediation-ResetPassword-PROVISIONED-Complete',
+							);
+
+							// rerun the sendEmailInOkta function to catch the user in the DEPROVISIONED state
+							return sendEmailInOkta(req, res);
+						}
+
+						logger.error(
+							'Okta user reactivation failed',
+							error instanceof OktaError ? error.message : error,
+							{
+								request_id,
+							},
+						);
+
+						// otherwise throw the error to the outer catch block
+						// as it's not handled in the if statement above
+						throw error;
 					}
-					const emailIsSent = await sendCreatePasswordEmail({
-						to: user.profile.email,
-						setPasswordToken: await encryptOktaRecoveryToken({
-							token: tokenResponse.token,
-							appClientId,
-							request_id,
-						}),
-						ref,
-						refViewId,
-					});
-					if (!emailIsSent) {
-						trackMetric(emailSendMetric('OktaCreatePassword', 'Failure'));
-						throw new OktaError({
-							message: `Okta user reactivation failed: Failed to send email`,
-						});
-					}
+
 					trackMetric(emailSendMetric('OktaCreatePassword', 'Success'));
 				}
 				break;
