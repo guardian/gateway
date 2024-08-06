@@ -167,6 +167,50 @@ export const activateUser = async (
 };
 
 /**
+ * @name deactivateUser
+ * @description Deactivates a user
+ *
+ * https://developer.okta.com/docs/reference/api/users/#deactivate-user
+ *
+ * This operation can only be performed on users that do not have a DEPROVISIONED status.
+ *
+ * - The user's transitioningToStatus property is DEPROVISIONED during deactivation to indicate that the user hasn't completed the asynchronous operation.
+ * - The user's status is DEPROVISIONED when the deactivation process is complete.
+ *
+ * Users who don't have a password must complete the welcome flow
+ * by visiting the activation link to complete the transition to `ACTIVE` status.
+ *
+ * Returns HTTP 200 in all cases.
+ *
+ * IMPORTANT: Deactivating a user is a destructive operation.
+ * The user is deprovisioned from all assigned applications which may destroy their data such as email or files.
+ * This action cannot be recovered!
+ *
+ * This should only be used for users who need to fixed from an incorrect state, after which the user should be reactivated.
+ *
+ * @param id accepts the Okta user ID
+ * @param sendEmail Sends an deactivation email to the user if true, default is false
+ *
+ * @returns Promise<TokenResponse | void>
+ */
+export const deactivateUser = async (
+	id: string,
+	sendEmail = false,
+): Promise<void> => {
+	const path = buildApiUrlWithQueryParams(
+		'/api/v1/users/:id/lifecycle/deactivate',
+		{ id },
+		{ sendEmail },
+	);
+	return await fetch(joinUrl(okta.orgUrl, path), {
+		method: 'POST',
+		headers: { ...defaultHeaders, ...authorizationHeader() },
+	}).then((response) => {
+		return handleVoidResponse(response);
+	});
+};
+
+/**
  * @name reactivateUser
  * @description Reactivates a user
  *
@@ -365,6 +409,9 @@ const handleActivationTokenResponse = async (
 		} catch (error) {
 			throw new OktaError({
 				message: 'Could not parse Okta activation token response',
+				// E0000038 - The code in okta for "User operation forbidden exception"
+				// which is usually why this would fail
+				code: 'E0000038',
 			});
 		}
 	} else {
