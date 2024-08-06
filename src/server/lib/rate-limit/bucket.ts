@@ -209,15 +209,11 @@ const getBucket = async (
 		};
 	}
 
-	try {
-		// If we are able to parse the bucket data, return it to the caller.
-		const tokenData: RateLimitBucketContents = JSON.parse(tokenDataValue);
-		return {
-			redisKey,
-			timeLeftUntilExpiry,
-			tokenData,
-		};
-	} catch (e) {
-		throw e;
-	}
+	// If we are able to parse the bucket data, return it to the caller.
+	const tokenData: RateLimitBucketContents = JSON.parse(tokenDataValue);
+	return {
+		redisKey,
+		timeLeftUntilExpiry,
+		tokenData,
+	};
 };
