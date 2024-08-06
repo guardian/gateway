@@ -42,14 +42,14 @@ const ErrorName = new Map<string, ErrorName>([
 
 export class OktaError extends Error {
 	name: ErrorName;
-	causes: Array<ErrorCause>;
+	causes: ErrorCause[];
 	status: number;
 	code?: string;
 	constructor(error: {
 		message?: string;
 		status?: number;
 		code?: string;
-		causes?: Array<ErrorCause> | null;
+		causes?: ErrorCause[] | null;
 	}) {
 		super(error.message);
 		this.name = (error.code && ErrorName.get(error.code)) || 'OktaError';

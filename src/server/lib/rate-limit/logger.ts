@@ -35,7 +35,7 @@ export const startGlobalBucketCapacityLogger = (
 		}
 	}, interval);
 
-const logValues = (keys: string[], values: (string | null)[]) => {
+const logValues = (keys: string[], values: Array<string | null>) => {
 	keys.forEach((key, index) => {
 		const value = values[index];
 		if (value) {

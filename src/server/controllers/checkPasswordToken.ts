@@ -96,7 +96,7 @@ export const checkTokenInOkta = async (
 	req: Request,
 	res: ResponseWithRequestState,
 	error?: ChangePasswordErrors,
-	fieldErrors?: Array<FieldError>,
+	fieldErrors?: FieldError[],
 ) => {
 	const state = res.locals;
 	const { token } = req.params;

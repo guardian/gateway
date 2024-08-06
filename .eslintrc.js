@@ -60,7 +60,6 @@ module.exports = {
 		'import/no-named-as-default': 0, // 25
 		'@typescript-eslint/no-unsafe-enum-comparison': 0, // 23
 		'import/no-named-as-default-member': 0, // 19
-		'@typescript-eslint/array-type': 0, // 18
 		'import/no-cycle': 0, // 7
 	},
 	overrides: [

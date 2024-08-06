@@ -53,11 +53,11 @@ interface IDAPIUserProfile {
 		firstName?: string;
 		secondName?: string;
 	};
-	userGroups: {
+	userGroups: Array<{
 		path: string;
 		packageCode: string;
 		joinedDate: string;
-	}[];
+	}>;
 	consents: Consent[];
 }
 

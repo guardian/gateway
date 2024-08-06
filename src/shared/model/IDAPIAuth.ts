@@ -5,6 +5,6 @@ interface IdapiCookie {
 }
 
 export interface IdapiCookies {
-	values: Array<IdapiCookie>;
+	values: IdapiCookie[];
 	expiresAt: string;
 }

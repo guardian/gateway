@@ -32,7 +32,7 @@ export interface PageData {
 	email?: string;
 	signInPageUrl?: string;
 	geolocation?: GeoLocation;
-	fieldErrors?: Array<FieldError>;
+	fieldErrors?: FieldError[];
 	formError?: string;
 	browserName?: string;
 	isNativeApp?: IsNativeApp;

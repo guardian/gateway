@@ -43,7 +43,7 @@ export const handleErrorResponse = async (response: Response) => {
  * @returns boolean
  */
 export const causesInclude = (
-	causes: Array<ErrorCause>,
+	causes: ErrorCause[],
 	substring: string,
 ): boolean => {
 	return causes.some((cause) => cause.errorSummary.includes(substring));
