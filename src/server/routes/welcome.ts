@@ -202,6 +202,7 @@ router.post(
 			});
 		} finally {
 			// otherwise redirect the user to the review page
+			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
 			return res.redirect(
 				303,
 				addQueryParamsToPath('/welcome/review', state.queryParams),
@@ -394,6 +395,7 @@ router.post(
 				returnUrl,
 				queryParams: state.queryParams,
 			});
+			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
 			return res.redirect(303, nextPage);
 		}
 	}),
@@ -463,6 +465,7 @@ router.post(
 			});
 			trackMetric('NewAccountNewslettersSubmit::Failure');
 		} finally {
+			// eslint-disable-next-line no-unsafe-finally -- we want to redirect and return regardless of any throws
 			return res.redirect(303, returnUrl);
 		}
 	},
