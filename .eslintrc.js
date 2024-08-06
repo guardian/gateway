@@ -79,7 +79,6 @@ module.exports = {
 		'@typescript-eslint/unbound-method': 0, // 1
 		'import/first': 0, // 1
 		'no-empty-pattern': 0, // 1
-		'@typescript-eslint/restrict-template-expressions': 0, // 1
 	},
 	overrides: [
 		{
